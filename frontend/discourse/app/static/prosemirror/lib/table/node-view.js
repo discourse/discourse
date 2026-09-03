@@ -9,13 +9,29 @@ import {
   emptyTrailingRows,
 } from "./commands";
 import dragAutoscroll from "./drag-autoscroll";
-import { isTable, tableGrid } from "./grid";
+import { columnTarget, isTable, rowTarget, tableGrid } from "./grid";
 import { runCommand, TABLE_MENU_IDENTIFIER } from "./menu";
 
 const APPEND_DRAG_THRESHOLD = 4;
 const APPEND_DRAG_MAX = { column: 8, row: 12 };
 const APPEND_DRAG_STEP_EM = { column: 5, row: 2 };
 const TOUCH_SCROLL_THRESHOLD = 8;
+
+// The commands that grow or shrink each axis, so one gesture can serve both.
+const AXES = {
+  column: {
+    target: columnTarget,
+    add: addColumn,
+    remove: deleteColumn,
+    emptyTrailing: emptyTrailingColumns,
+  },
+  row: {
+    target: rowTarget,
+    add: addRow,
+    remove: deleteRow,
+    emptyTrailing: emptyTrailingRows,
+  },
+};
 
 export function buildTableNodeView(pluginParams) {
   return class TableNodeView {
@@ -181,8 +197,13 @@ export function buildTableNodeView(pluginParams) {
       );
     }
 
-    #append(kind, count = 1) {
-      if (!this.view.editable) {
+    /**
+     * Grows the table by `delta` rows or columns, or drops that many trailing
+     * ones when negative. Removal only reaches what the drag has vouched is
+     * empty, so the gesture can never destroy anything the author typed.
+     */
+    #resize(kind, delta) {
+      if (!this.view.editable || !delta) {
         return;
       }
 
@@ -191,36 +212,20 @@ export function buildTableNodeView(pluginParams) {
         return;
       }
 
-      const { grid } = table;
-      const target =
-        kind === "column"
-          ? {
-              ...table,
-              rect: {
-                top: 0,
-                bottom: 0,
-                left: grid.width - 1,
-                right: grid.width - 1,
-              },
-            }
-          : {
-              ...table,
-              rect: {
-                top: grid.height - 1,
-                bottom: grid.height - 1,
-                left: 0,
-                right: 0,
-              },
-            };
+      const axis = AXES[kind];
+      const size = kind === "column" ? table.grid.width : table.grid.height;
+      const target = axis.target(
+        table,
+        delta > 0 ? size - 1 : size + delta,
+        size - 1
+      );
 
       const changed = runCommand(
         this.view,
-        kind === "column"
-          ? addColumn(1, target, count)
-          : addRow(1, target, count)
+        delta > 0 ? axis.add(1, target, delta) : axis.remove(target)
       );
       if (changed) {
-        this.#announceChange(kind, count);
+        this.#announceChange(kind, delta);
       }
     }
 
@@ -232,7 +237,7 @@ export function buildTableNodeView(pluginParams) {
           return;
         }
 
-        this.#append(kind);
+        this.#resize(kind, 1);
       });
 
       button.appendChild(iconElement("plus"));
@@ -282,28 +287,22 @@ export function buildTableNodeView(pluginParams) {
       const count = Math.abs(delta);
       const span = adding ? count * step : this.#trailingExtent(kind, count);
 
-      ghost.classList.add("--visible", adding ? "--add" : "--remove");
-      ghost.style.backgroundImage = `repeating-linear-gradient(${
-        kind === "column" ? "to right" : "to bottom"
-      }, transparent 0 ${span / count - 1}px, currentcolor ${
-        span / count - 1
-      }px ${span / count}px)`;
+      ghost.classList.add(
+        "--visible",
+        `--${kind}`,
+        adding ? "--add" : "--remove"
+      );
+      ghost.style.setProperty("--ghost-step", `${span / count}px`);
 
       if (kind === "column") {
         if (adding) {
           this.inner.style.paddingInlineEnd = `${span}px`;
         }
+        // Adding draws just past the edge, removing over the doomed columns.
+        const offset = adding ? bounds.width : bounds.width - span;
         Object.assign(ghost.style, {
           top: "0px",
-          left: `${
-            adding
-              ? rtl
-                ? -span
-                : bounds.width
-              : rtl
-                ? 0
-                : bounds.width - span
-          }px`,
+          left: `${rtl ? bounds.width - offset - span : offset}px`,
           width: `${span}px`,
           height: `${bounds.height}px`,
         });
@@ -404,31 +403,25 @@ export function buildTableNodeView(pluginParams) {
       setDragged(false);
       this.#stopAppendDrag?.();
 
-      const { pointerId } = startEvent;
-      const origin =
-        kind === "column" ? startEvent.clientX : startEvent.clientY;
       const table = this.#table();
       if (!table) {
         return;
       }
 
-      const bounds = this.contentDOM.getBoundingClientRect();
-      const measuredStep =
-        kind === "column"
-          ? bounds.width / table.grid.width
-          : bounds.height / table.grid.height;
-      const fontSize =
-        parseFloat(getComputedStyle(this.contentDOM).fontSize) || 16;
-      const step = Math.max(measuredStep, fontSize * APPEND_DRAG_STEP_EM[kind]);
-      const rtl = getComputedStyle(this.contentDOM).direction === "rtl";
-      const direction = kind === "column" && rtl ? -1 : 1;
+      const column = kind === "column";
+      const { pointerId } = startEvent;
+      const origin = column ? startEvent.clientX : startEvent.clientY;
 
-      // Dragging back only takes away what carries no content, so the gesture
-      // can never destroy anything the author typed.
-      const removable =
-        kind === "column"
-          ? emptyTrailingColumns(table.grid)
-          : emptyTrailingRows(table.grid);
+      const bounds = this.contentDOM.getBoundingClientRect();
+      const style = getComputedStyle(this.contentDOM);
+      const measuredStep = column
+        ? bounds.width / table.grid.width
+        : bounds.height / table.grid.height;
+      const fontSize = parseFloat(style.fontSize) || 16;
+      const step = Math.max(measuredStep, fontSize * APPEND_DRAG_STEP_EM[kind]);
+      const rtl = style.direction === "rtl";
+      const direction = column && rtl ? -1 : 1;
+      const removable = AXES[kind].emptyTrailing(table.grid);
 
       const countElement = button.querySelector(
         ".composer-table__append-count"
@@ -477,7 +470,7 @@ export function buildTableNodeView(pluginParams) {
 
       const autoscroll = dragAutoscroll(
         button.closest(".composer-table"),
-        kind === "column" ? "X" : "Y",
+        column ? "X" : "Y",
         (change) => {
           scrollDistance += change * direction;
           updateDelta();
@@ -489,7 +482,7 @@ export function buildTableNodeView(pluginParams) {
           return;
         }
 
-        current = kind === "column" ? event.clientX : event.clientY;
+        current = column ? event.clientX : event.clientY;
         if (!updateDelta()) {
           return;
         }
@@ -511,11 +504,7 @@ export function buildTableNodeView(pluginParams) {
           return;
         }
 
-        if (delta > 0) {
-          this.#append(kind, delta);
-        } else if (delta < 0) {
-          this.#trim(kind, -delta);
-        }
+        this.#resize(kind, delta);
       };
 
       this.#stopAppendDrag = () => {
@@ -529,44 +518,6 @@ export function buildTableNodeView(pluginParams) {
       document.addEventListener("pointermove", move);
       document.addEventListener("pointerup", finish);
       document.addEventListener("pointercancel", finish);
-    }
-
-    /** Drops the last `count` rows or columns, which the drag has vouched are empty. */
-    #trim(kind, count) {
-      if (!this.view.editable) {
-        return;
-      }
-
-      const table = this.#table();
-      if (!table) {
-        return;
-      }
-
-      const { grid } = table;
-      const rect =
-        kind === "column"
-          ? {
-              top: 0,
-              bottom: 0,
-              left: grid.width - count,
-              right: grid.width - 1,
-            }
-          : {
-              top: grid.height - count,
-              bottom: grid.height - 1,
-              left: 0,
-              right: 0,
-            };
-
-      const changed = runCommand(
-        this.view,
-        kind === "column"
-          ? deleteColumn({ ...table, rect })
-          : deleteRow({ ...table, rect })
-      );
-      if (changed) {
-        this.#announceChange(kind, -count);
-      }
     }
   };
 }

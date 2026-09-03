@@ -3,7 +3,14 @@ import { Decoration, DecorationSet } from "prosemirror-view";
 import { i18n } from "discourse-i18n";
 import { moveColumn, moveRow } from "./commands";
 import dragAutoscroll from "./drag-autoscroll";
-import { cellAround, cellCoords, findTable, isTable, tableGrid } from "./grid";
+import {
+  cellAround,
+  cellCoords,
+  findTable,
+  isTable,
+  rectFor,
+  tableGrid,
+} from "./grid";
 import { handleContextMenuKey, openGripMenu } from "./menu";
 
 const DRAG_THRESHOLD = 4;
@@ -130,21 +137,14 @@ function targetDecorations(state, target) {
   }
 
   const grid = tableGrid(node);
-  const rect =
-    target.kind === "row"
-      ? {
-          top: target.index,
-          bottom: target.index,
-          left: 0,
-          right: grid.width - 1,
-        }
-      : {
-          top: 0,
-          bottom: grid.height - 1,
-          left: target.index,
-          right: target.index,
-        };
+  const rect = rectFor(grid, target.kind, target.index);
   const decorations = [];
+
+  // The band is one row or one column, so only its two ends along the axis it
+  // runs down need marking; its long sides follow from the axis class.
+  const alongRow = target.kind === "row";
+  const first = alongRow ? rect.left : rect.top;
+  const last = alongRow ? rect.right : rect.bottom;
 
   for (let row = rect.top; row <= rect.bottom; row++) {
     for (let col = rect.left; col <= rect.right; col++) {
@@ -153,18 +153,14 @@ function targetDecorations(state, target) {
         continue;
       }
 
+      const index = alongRow ? col : row;
       const classes = ["is-structural-target", `--axis-${target.kind}`];
-      if (row === rect.top) {
-        classes.push("--edge-top");
+
+      if (index === first) {
+        classes.push("--edge-start");
       }
-      if (row === rect.bottom) {
-        classes.push("--edge-bottom");
-      }
-      if (col === rect.left) {
-        classes.push("--edge-left");
-      }
-      if (col === rect.right) {
-        classes.push("--edge-right");
+      if (index === last) {
+        classes.push("--edge-end");
       }
 
       const pos = target.tablePos + 1 + cell.offset;
@@ -324,6 +320,7 @@ function trackDrag(startEvent, context, target) {
   // the gesture runs, so measuring again mid-drag would read its own offset
   // back and chase itself.
   const spans = measureSpans(inner, grid, kind);
+  const forward = spanDirection(spans);
   const moving =
     kind === "row"
       ? [...(grid.rows[index]?.cells ?? [])]
@@ -335,9 +332,9 @@ function trackDrag(startEvent, context, target) {
   let avatar = null;
   let stopped = false;
   const updateLanding = () => {
-    const over = spanUnderPointer(spans, current);
+    const over = spanUnderPointer(spans, current, forward);
     dropIndex = over === index ? null : over > index ? over + 1 : over;
-    positionIndicator(indicator, kind, spans, dropIndex);
+    positionIndicator(indicator, kind, spans, dropIndex, forward);
   };
 
   const autoscroll = dragAutoscroll(inner, axis, (change) => {
@@ -544,7 +541,18 @@ function measureSpans(inner, grid, kind) {
   });
 }
 
-function spanUnderPointer(spans, position) {
+/** +1 when the axis grows with the index, -1 for columns in RTL. */
+function spanDirection(spans) {
+  if (spans.length < 2) {
+    return 1;
+  }
+
+  const first = spans[0];
+  const last = spans[spans.length - 1];
+  return Math.sign(last.start + last.end - (first.start + first.end)) || 1;
+}
+
+function spanUnderPointer(spans, position, forward) {
   if (!spans.length) {
     return 0;
   }
@@ -557,14 +565,10 @@ function spanUnderPointer(spans, position) {
   }
 
   const firstCenter = (spans[0].start + spans[0].end) / 2;
-  const last = spans[spans.length - 1];
-  const lastCenter = (last.start + last.end) / 2;
-  const direction = Math.sign(lastCenter - firstCenter) || 1;
-
-  return (position - firstCenter) * direction < 0 ? 0 : spans.length - 1;
+  return (position - firstCenter) * forward < 0 ? 0 : spans.length - 1;
 }
 
-function positionIndicator(indicator, kind, spans, dropIndex) {
+function positionIndicator(indicator, kind, spans, dropIndex, forward) {
   if (!indicator) {
     return;
   }
@@ -576,8 +580,6 @@ function positionIndicator(indicator, kind, spans, dropIndex) {
   }
 
   const after = dropIndex > 0 ? spans[dropIndex - 1] : null;
-  const forward =
-    spans.length < 2 || spans[1].offset > spans[0].offset ? 1 : -1;
   const edge = after
     ? after.offset + (forward > 0 ? after.size : 0)
     : spans[0].offset + (forward > 0 ? 0 : spans[0].size);

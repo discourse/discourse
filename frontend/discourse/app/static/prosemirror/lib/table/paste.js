@@ -1,6 +1,6 @@
 import { Fragment } from "prosemirror-model";
 import { currentCell } from "./commands";
-import { isTable, tableGrid } from "./grid";
+import { cellType, copyCell, isTable, tableGrid } from "./grid";
 
 // A table pasted into a cell can't nest, so its cells are written into the grid
 // starting at the target cell, growing the table when the paste overflows it.
@@ -27,10 +27,7 @@ export default function handlePaste(view, event, slice) {
   const built = [];
   for (let row = 0; row < height; row++) {
     const source = table.grid.rows[row];
-    const header = row === 0 && !!table.grid.head;
-    const type = header
-      ? schema.nodes.table_header_cell
-      : schema.nodes.table_cell;
+    const type = cellType(schema, row === 0 && !!table.grid.head);
     const cells = [];
 
     for (let col = 0; col < width; col++) {
@@ -41,13 +38,9 @@ export default function handlePaste(view, event, slice) {
       const existing = source?.cells[col]?.node;
 
       if (incoming) {
-        cells.push(
-          type.create({ alignment }, incoming.content, incoming.marks)
-        );
+        cells.push(copyCell(type, incoming, { alignment }));
       } else if (existing) {
-        cells.push(
-          type.create(existing.attrs, existing.content, existing.marks)
-        );
+        cells.push(copyCell(type, existing));
       } else {
         cells.push(type.createAndFill({ alignment }));
       }

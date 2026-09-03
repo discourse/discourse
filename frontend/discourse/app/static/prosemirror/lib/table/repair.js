@@ -1,5 +1,5 @@
 import { Fragment } from "prosemirror-model";
-import { isTable, tableGrid } from "./grid";
+import { cellType, isTable, tableGrid } from "./grid";
 
 /** Repairs malformed table structures within a document range. */
 export function fixTables(state, tr, from = 0, to = state.doc.content.size) {
@@ -40,9 +40,7 @@ function fixTable(state, { node, pos }, tr) {
   }
 
   for (const row of grid.rows) {
-    const expected = row.header
-      ? schema.nodes.table_header_cell
-      : schema.nodes.table_cell;
+    const expected = cellType(schema, row.header);
 
     for (const cell of row.cells) {
       if (cell.node.type !== expected) {
@@ -60,9 +58,7 @@ function fixTable(state, { node, pos }, tr) {
       continue;
     }
 
-    const type = row.header
-      ? schema.nodes.table_header_cell
-      : schema.nodes.table_cell;
+    const type = cellType(schema, row.header);
     const cells = Array.from({ length: missing }, (_, offset) =>
       type.createAndFill({
         alignment:

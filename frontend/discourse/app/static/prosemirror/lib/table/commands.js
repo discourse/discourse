@@ -1,6 +1,13 @@
 import { Fragment } from "prosemirror-model";
 import { TextSelection } from "prosemirror-state";
-import { cellAround, cellCoords, findTable, rowRange } from "./grid";
+import {
+  cellAround,
+  cellCoords,
+  cellType,
+  copyCell,
+  findTable,
+  rowRange,
+} from "./grid";
 
 export const ALIGNMENTS = ["left", "center", "right"];
 
@@ -34,6 +41,28 @@ export function currentCell(state) {
       left: coords.col,
       right: coords.col,
     },
+  };
+}
+
+/**
+ * A command over `target`, or over the table the caret is in when no target is
+ * given. `apply` builds the transaction and may return null to dispatch
+ * nothing; `enabled` rejects the command before it is dispatched.
+ */
+function tableCommand(target, apply, enabled) {
+  return (state, dispatch) => {
+    const table = target ?? currentCell(state);
+    if (!table || enabled?.(table) === false) {
+      return false;
+    }
+
+    if (dispatch) {
+      const tr = apply(state.tr, table);
+      if (tr) {
+        dispatch(tr);
+      }
+    }
+    return true;
   };
 }
 
@@ -80,81 +109,59 @@ export function columnAlignment(table, col) {
 }
 
 export function addColumn(side, target, count = 1) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table) {
-      return false;
-    }
-
-    if (dispatch) {
-      const col = side < 0 ? table.rect.left : table.rect.right + 1;
-      dispatch(insertColumn(state.tr, table, col, count).scrollIntoView());
-    }
-    return true;
-  };
+  return tableCommand(target, (tr, table) =>
+    insertColumn(
+      tr,
+      table,
+      side < 0 ? table.rect.left : table.rect.right + 1,
+      count
+    ).scrollIntoView()
+  );
 }
 
 export function deleteColumn(target) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table) {
-      return false;
+  return tableCommand(target, (tr, table) => {
+    const { left, right } = table.rect;
+
+    if (right - left + 1 >= table.grid.width) {
+      return tr.delete(table.pos, table.pos + table.node.nodeSize);
     }
 
-    if (dispatch) {
-      const { left, right } = table.rect;
-      const tr = state.tr;
-
-      if (right - left + 1 >= table.grid.width) {
-        tr.delete(table.pos, table.pos + table.node.nodeSize);
-      } else {
-        forEachRowBottomUp(table, (row) => {
-          for (let col = right; col >= left; col--) {
-            const cell = row.cells[col];
-            if (cell) {
-              tr.delete(
-                table.start + cell.offset,
-                table.start + cell.offset + cell.node.nodeSize
-              );
-            }
-          }
-        });
+    forEachRowBottomUp(table, (row) => {
+      for (let col = right; col >= left; col--) {
+        const cell = row.cells[col];
+        if (cell) {
+          tr.delete(
+            table.start + cell.offset,
+            table.start + cell.offset + cell.node.nodeSize
+          );
+        }
       }
+    });
 
-      dispatch(tr);
-    }
-    return true;
-  };
+    return tr;
+  });
 }
 
 export function duplicateColumn(target) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table) {
-      return false;
-    }
+  return tableCommand(target, (tr, table) => {
+    const { left, right } = table.rect;
 
-    if (dispatch) {
-      const { left, right } = table.rect;
-      const tr = state.tr;
+    forEachRowBottomUp(table, (row) => {
+      const copies = [];
+      for (let col = left; col <= right; col++) {
+        const cell = row.cells[col].node;
+        copies.push(copyCell(cell.type, cell));
+      }
+      const ref = row.cells[right];
+      tr.insert(
+        table.start + ref.offset + ref.node.nodeSize,
+        Fragment.from(copies)
+      );
+    });
 
-      forEachRowBottomUp(table, (row) => {
-        const copies = [];
-        for (let col = left; col <= right; col++) {
-          const cell = row.cells[col].node;
-          copies.push(cell.type.create(cell.attrs, cell.content, cell.marks));
-        }
-        const ref = row.cells[right];
-        tr.insert(
-          table.start + ref.offset + ref.node.nodeSize,
-          Fragment.from(copies)
-        );
-      });
-
-      dispatch(tr.scrollIntoView());
-    }
-    return true;
-  };
+    return tr.scrollIntoView();
+  });
 }
 
 /**
@@ -162,14 +169,9 @@ export function duplicateColumn(target) {
  * @param {number} to insertion index, in the coordinates of the unmoved grid
  */
 export function moveColumn(from, to, tableTarget) {
-  return (state, dispatch) => {
-    const table = tableTarget ?? currentCell(state);
-    if (!table || to === from || to === from + 1) {
-      return false;
-    }
-
-    if (dispatch) {
-      const tr = state.tr;
+  return tableCommand(
+    tableTarget,
+    (tr, table) => {
       const target = to > from ? to - 1 : to;
 
       forEachRowBottomUp(table, (row) => {
@@ -183,82 +185,57 @@ export function moveColumn(from, to, tableTarget) {
         );
       });
 
-      dispatch(tr);
-    }
-    return true;
-  };
+      return tr;
+    },
+    () => to !== from && to !== from + 1
+  );
 }
 
 export function setColumnAlignment(alignment, target) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table) {
-      return false;
-    }
-
-    if (dispatch) {
-      const tr = state.tr;
-      for (const row of table.grid.rows) {
-        for (let col = table.rect.left; col <= table.rect.right; col++) {
-          const cell = row.cells[col];
-          if (cell) {
-            tr.setNodeMarkup(table.start + cell.offset, null, {
-              ...cell.node.attrs,
-              alignment,
-            });
-          }
+  return tableCommand(target, (tr, table) => {
+    for (const row of table.grid.rows) {
+      for (let col = table.rect.left; col <= table.rect.right; col++) {
+        const cell = row.cells[col];
+        if (cell) {
+          tr.setNodeMarkup(table.start + cell.offset, null, {
+            ...cell.node.attrs,
+            alignment,
+          });
         }
       }
-      dispatch(tr);
     }
-    return true;
-  };
+
+    return tr;
+  });
 }
 
 export function addRow(side, target, count = 1) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table?.grid.body) {
-      return false;
-    }
-
-    if (dispatch) {
+  return tableCommand(
+    target,
+    (tr, table) => {
       const offset = headOffset(table.grid);
       const index =
         side < 0
           ? Math.max(table.rect.top - offset, 0)
           : table.rect.bottom - offset + 1;
 
-      const tr = state.tr;
       const pos = insertRow(tr, table, index, count);
-      dispatch(selectCellContent(tr, pos + 1).scrollIntoView());
-    }
-    return true;
-  };
+      return selectCellContent(tr, pos + 1).scrollIntoView();
+    },
+    (table) => !!table.grid.body
+  );
 }
 
 export function deleteRow(target) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table) {
-      return false;
-    }
-
-    if (dispatch) {
-      dispatch(removeRows(state.tr, table, table.rect.top, table.rect.bottom));
-    }
-    return true;
-  };
+  return tableCommand(target, (tr, table) =>
+    removeRows(tr, table, table.rect.top, table.rect.bottom)
+  );
 }
 
 export function duplicateRow(target) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table?.grid.body) {
-      return false;
-    }
-
-    if (dispatch) {
+  return tableCommand(
+    target,
+    (tr, table) => {
       const { top, bottom } = table.rect;
       const schema = table.node.type.schema;
       const copies = [];
@@ -269,20 +246,20 @@ export function duplicateRow(target) {
         row.node.forEach((cell) => {
           // A duplicated header row becomes a regular row: markdown allows only one.
           const type = row.header ? schema.nodes.table_cell : cell.type;
-          cells.push(type.create(cell.attrs, cell.content, cell.marks));
+          cells.push(copyCell(type, cell));
         });
         copies.push(schema.nodes.table_row.create(null, Fragment.from(cells)));
       }
 
-      const tr = state.tr;
       tr.insert(
         bodyInsertPos(table, bottom - headOffset(table.grid) + 1),
         Fragment.from(copies)
       );
-      dispatch(tr.scrollIntoView());
-    }
-    return true;
-  };
+
+      return tr.scrollIntoView();
+    },
+    (table) => !!table.grid.body
+  );
 }
 
 /**
@@ -290,41 +267,26 @@ export function duplicateRow(target) {
  * @param {number} to insertion index, in the coordinates of the unmoved grid
  */
 export function moveRow(from, to, tableTarget) {
-  return (state, dispatch) => {
-    const table = tableTarget ?? currentCell(state);
-    if (!table || to === from || to === from + 1) {
-      return false;
-    }
-
-    const row = table.grid.rows[from];
-    if (!row) {
-      return false;
-    }
-
-    // Markdown pins the header to the first row, not to a particular row's
-    // contents, so a move across that boundary is expressible: whichever row
-    // lands first becomes the header and its cells change type to match.
-    if (table.grid.head && (from === 0 || to === 0)) {
-      if (dispatch) {
-        dispatch(reorderAcrossHeader(state, table, from, to));
+  return tableCommand(
+    tableTarget,
+    (tr, table) => {
+      // Markdown pins the header to the first row, not to a particular row's
+      // contents, so a move across that boundary is expressible: whichever row
+      // lands first becomes the header and its cells change type to match.
+      if (table.grid.head && (from === 0 || to === 0)) {
+        return reorderAcrossHeader(tr, table, from, to);
       }
-      return true;
-    }
 
-    if (dispatch) {
-      const tr = state.tr;
       const range = rowRange(table, from);
       const target = bodyInsertPos(table, to - headOffset(table.grid));
 
       tr.delete(range.from, range.to);
+      tr.insert(tr.mapping.map(target), table.grid.rows[from].node);
 
-      const at = tr.mapping.map(target);
-      tr.insert(at, row.node);
-
-      dispatch(tr);
-    }
-    return true;
-  };
+      return tr;
+    },
+    (table) => to !== from && to !== from + 1 && !!table.grid.rows[from]
+  );
 }
 
 /**
@@ -332,7 +294,7 @@ export function moveRow(from, to, tableTarget) {
  * boundary re-types every cell in the rows that swap sections, which is simpler
  * and safer to express as one replacement than as surgery across two sections.
  */
-function reorderAcrossHeader(state, table, from, to) {
+function reorderAcrossHeader(tr, table, from, to) {
   const schema = table.node.type.schema;
   const order = table.grid.rows.map((row) => row.node);
   const [moved] = order.splice(from, 1);
@@ -340,12 +302,9 @@ function reorderAcrossHeader(state, table, from, to) {
   order.splice(landing, 0, moved);
 
   const rows = order.map((row, index) => {
-    const type =
-      index === 0 ? schema.nodes.table_header_cell : schema.nodes.table_cell;
+    const type = cellType(schema, index === 0);
     const cells = [];
-    row.forEach((cell) =>
-      cells.push(type.create(cell.attrs, cell.content, cell.marks))
-    );
+    row.forEach((cell) => cells.push(copyCell(type, cell)));
     return schema.nodes.table_row.create(null, Fragment.from(cells));
   });
 
@@ -354,27 +313,17 @@ function reorderAcrossHeader(state, table, from, to) {
     schema.nodes.table_body.create(null, Fragment.from(rows.slice(1))),
   ]);
 
-  const tr = state.tr.replaceWith(
+  return tr.replaceWith(
     table.pos,
     table.pos + table.node.nodeSize,
     replacement
   );
-
-  return tr;
 }
 
 export function deleteTable(target) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table) {
-      return false;
-    }
-
-    if (dispatch) {
-      dispatch(state.tr.delete(table.pos, table.pos + table.node.nodeSize));
-    }
-    return true;
-  };
+  return tableCommand(target, (tr, table) =>
+    tr.delete(table.pos, table.pos + table.node.nodeSize)
+  );
 }
 
 export function goToNextCell(dir) {
@@ -425,38 +374,26 @@ export function goToNextCell(dir) {
 }
 
 export function clearCellContents(target) {
-  return (state, dispatch) => {
-    const table = target ?? currentCell(state);
-    if (!table) {
-      return false;
-    }
-
-    if (dispatch) {
-      const cells = [];
-      for (let row = table.rect.top; row <= table.rect.bottom; row++) {
-        for (let col = table.rect.left; col <= table.rect.right; col++) {
-          const cell = table.grid.rows[row]?.cells[col];
-          if (cell) {
-            cells.push({ node: cell.node, pos: table.start + cell.offset });
-          }
+  return tableCommand(target, (tr, table) => {
+    const cells = [];
+    for (let row = table.rect.top; row <= table.rect.bottom; row++) {
+      for (let col = table.rect.left; col <= table.rect.right; col++) {
+        const cell = table.grid.rows[row]?.cells[col];
+        if (cell) {
+          cells.push({ node: cell.node, pos: table.start + cell.offset });
         }
-      }
-
-      const tr = state.tr;
-      for (let index = cells.length - 1; index >= 0; index--) {
-        const { node, pos } = cells[index];
-        if (node.content.size) {
-          tr.delete(pos + 1, pos + node.nodeSize - 1);
-        }
-      }
-
-      if (tr.docChanged) {
-        dispatch(tr);
       }
     }
 
-    return true;
-  };
+    for (let index = cells.length - 1; index >= 0; index--) {
+      const { node, pos } = cells[index];
+      if (node.content.size) {
+        tr.delete(pos + 1, pos + node.nodeSize - 1);
+      }
+    }
+
+    return tr.docChanged ? tr : null;
+  });
 }
 
 function headOffset(grid) {
@@ -467,13 +404,6 @@ function forEachRowBottomUp(table, f) {
   for (let index = table.grid.rows.length - 1; index >= 0; index--) {
     f(table.grid.rows[index], index);
   }
-}
-
-function createCell(schema, header, attrs) {
-  const type = header
-    ? schema.nodes.table_header_cell
-    : schema.nodes.table_cell;
-  return type.createAndFill(attrs);
 }
 
 function insertColumn(tr, table, col, count = 1) {
@@ -487,7 +417,7 @@ function insertColumn(tr, table, col, count = 1) {
         : table.start + row.cells[col].offset;
 
     const cells = Array.from({ length: count }, () =>
-      createCell(schema, row.header, null)
+      cellType(schema, row.header).createAndFill()
     );
     tr.insert(at, Fragment.from(cells));
   });
@@ -517,7 +447,9 @@ function insertRow(tr, table, bodyIndex, count = 1) {
 
   for (let col = 0; col < table.grid.width; col++) {
     cells.push(
-      createCell(schema, false, { alignment: columnAlignment(table, col) })
+      cellType(schema, false).createAndFill({
+        alignment: columnAlignment(table, col),
+      })
     );
   }
 
@@ -556,13 +488,7 @@ function removeRows(tr, table, top, bottom) {
     const headRow = grid.rows[0];
     const cells = [];
     promoted.node.forEach((cell) =>
-      cells.push(
-        schema.nodes.table_header_cell.create(
-          cell.attrs,
-          cell.content,
-          cell.marks
-        )
-      )
+      cells.push(copyCell(cellType(schema, true), cell))
     );
 
     tr.replaceWith(

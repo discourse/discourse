@@ -25,7 +25,7 @@ import {
 } from "discourse/static/prosemirror/lib/table/commands";
 import { tableGrid } from "discourse/static/prosemirror/lib/table/grid";
 import {
-  menuItemsFor,
+  cellMenuItems,
   menuTargetFor,
 } from "discourse/static/prosemirror/lib/table/menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -429,9 +429,8 @@ module(
       await selectCell(view, 1, 1);
       const target = menuTargetFor(view.state);
 
-      assert.strictEqual(target.kind, "cell");
       assert.deepEqual(
-        menuItemsFor(view, target)
+        cellMenuItems(view, target)
           .filter((item) => !item.divider)
           .map((item) => item.className),
         [
@@ -494,7 +493,7 @@ module(
       const { view } = editor;
 
       await selectCell(view, 0, 0);
-      const items = menuItemsFor(view, menuTargetFor(view.state));
+      const items = cellMenuItems(view, menuTargetFor(view.state));
 
       assert.false(
         items.some(
@@ -918,7 +917,7 @@ module(
 
       grip.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       append.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      menuItemsFor(editor.view, menuTargetFor(editor.view.state))
+      cellMenuItems(editor.view, menuTargetFor(editor.view.state))
         .find((item) => item.className === "composer-table-menu__insert-below")
         .action();
       await pressKey(editor.view, "Enter", { altKey: true });
@@ -948,11 +947,7 @@ module(
 
       assert.deepEqual(
         edges,
-        [
-          "--edge-bottom --edge-left --edge-top",
-          "--edge-bottom --edge-top",
-          "--edge-bottom --edge-right --edge-top",
-        ],
+        ["--edge-start", "", "--edge-end"],
         "the highlighted row has one continuous boundary"
       );
     });

@@ -11,7 +11,7 @@ import { buildTableNodeView } from "../lib/table/node-view";
 
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
-  nodeViews: { table: (params) => buildTableNodeView(params) },
+  nodeViews: { table: buildTableNodeView },
   nodeSpec: {
     table: {
       content: "table_head? table_body",
