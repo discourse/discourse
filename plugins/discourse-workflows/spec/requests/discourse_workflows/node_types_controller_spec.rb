@@ -47,7 +47,7 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(properties["operation"]).to include(
         "type" => "options",
         "default" => "create",
-        "options" => %w[create edit get list],
+        "options" => %w[create edit get list delete recover],
       )
       expect(properties["query"]).to include(
         "type" => "string",

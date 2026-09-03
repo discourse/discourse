@@ -139,6 +139,22 @@ module DiscourseWorkflows
                 author_username: "system",
               },
             },
+            {
+              name: "Delete the trigger post",
+              parameters: {
+                operation: "delete",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+            {
+              name: "Restore a deleted post",
+              parameters: {
+                operation: "recover",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
           ],
           "action:send_personal_message" => [
             {
@@ -247,6 +263,8 @@ module DiscourseWorkflows
             "review queue flag flagged spam moderation pending needs approval queued post akismet",
           "trigger:badge_granted" => "badge award achievement medal granted earned",
           "trigger:tag_created" => "taxonomy label keyword created new",
+          "trigger:post_destroyed" => "post deleted removed destroyed trashed",
+          "trigger:post_recovered" => "post recovered restored undeleted untrashed",
           "action:user" =>
             "user profile bio title trust level lock groups fields lookup edit update",
           "action:flag_post" =>

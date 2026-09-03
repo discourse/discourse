@@ -66,7 +66,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(node_type.dig(:properties, :operation, :default)).to eq("create")
         expect(node_type.dig(:properties, :limit)).to include(default: 30, min: 1, max: 800)
         expect(node_type[:operations].map { |operation| operation[:value] }).to eq(
-          %w[create edit get list],
+          %w[create edit get list delete recover],
         )
       end
 
