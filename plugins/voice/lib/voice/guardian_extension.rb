@@ -54,7 +54,7 @@ module Voice
       return false unless can_access_voice?
       return false unless room
 
-      is_staff? || room.creator_id == user.id || room.moderator_ids.include?(user.id)
+      is_staff? || room.creator_id == user.id || room.moderator?(user)
     end
 
     def ensure_can_manage_voice_room!(room)
@@ -73,7 +73,7 @@ module Voice
       return false unless can_access_voice?
       return false unless room
 
-      room.public? || room.member_ids.include?(user.id) || can_manage_voice_room?(room)
+      room.public? || room.member?(user) || can_manage_voice_room?(room)
     end
 
     def ensure_can_join_voice_room!(room)
@@ -128,7 +128,7 @@ module Voice
     def can_speak_in_voice_room?(room)
       return true if room.open?
       return true if user&.admin?
-      membership = room.room_memberships.find { |m| m.user_id == user&.id }
+      membership = room.membership_for(user)
       membership&.can_speak? || false
     end
 
