@@ -379,8 +379,11 @@ after_initialize do
     :topic_view,
     :discourse_post_event_first_post_event,
     include_condition: -> do
-      Array(object.posts).none? { |post| post.post_number == 1 } &&
-        object.topic.first_post&.event.present?
+      first_post = object.topic.first_post
+      event = first_post&.event
+
+      Array(object.posts).none? { |post| post.post_number == 1 } && event.present? &&
+        event.deleted_at.nil? && scope.can_see?(first_post)
     end,
   ) do
     first_post = object.topic.first_post
