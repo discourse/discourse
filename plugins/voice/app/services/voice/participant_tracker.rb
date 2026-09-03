@@ -5,6 +5,8 @@ module Voice
     KEY_NAMESPACE = "voice:room"
     RECENTLY_ACTIVE_ROOMS_KEY = "voice:recently_active_rooms"
     SAFETY_TTL = 30.minutes.to_i
+    RoomState =
+      Data.define(:participant_ids, :participant_metadata, :pinned_transport, :recording_info)
     # Must outlive one client heartbeat interval (10s) plus request latency,
     # so a beat already in flight when the user leaves can't resurrect them.
     LEFT_TOMBSTONE_TTL = 15
@@ -184,6 +186,49 @@ module Voice
         User.where(id: ids)
       end
 
+      def room_states(room_ids)
+        room_ids = room_ids.map(&:to_i).uniq
+        return {} if room_ids.empty?
+
+        cutoff = Time.now.to_f - SiteSetting.voice_participant_ttl_seconds
+        participant_futures = {}
+        metadata_futures = {}
+        scalar_future = nil
+
+        pipeline_result =
+          redis.pipelined do |pipeline|
+            room_ids.each do |room_id|
+              participant_futures[room_id] = pipeline.zrangebyscore(key(room_id), cutoff, "+inf")
+              metadata_futures[room_id] = pipeline.hgetall(metadata_key(room_id))
+            end
+
+            scalar_future =
+              pipeline.mget(
+                *room_ids.flat_map { |room_id| [transport_key(room_id), recording_key(room_id)] },
+              )
+          end
+
+        return room_states_individually(room_ids) if pipeline_result.nil?
+
+        scalar_values = scalar_future.value.each_slice(2).to_a
+        room_ids.each_with_index.to_h do |room_id, index|
+          transport, raw_recording = scalar_values[index]
+          [
+            room_id,
+            RoomState.new(
+              participant_ids: participant_futures[room_id].value.map(&:to_i).select(&:positive?),
+              participant_metadata: deserialize_all_metadata(metadata_futures[room_id].value),
+              pinned_transport: transport,
+              recording_info: deserialize_recording(raw_recording),
+            ),
+          ]
+        end
+      rescue Redis::CommandError => error
+        raise if error.message.exclude?("WRONGTYPE")
+
+        room_states_individually(room_ids)
+      end
+
       def user_ids(room_id, migrated: false)
         cutoff = Time.now.to_f - SiteSetting.voice_participant_ttl_seconds
         redis.zrangebyscore(key(room_id), cutoff, "+inf").map(&:to_i).select(&:positive?)
@@ -239,10 +284,7 @@ module Voice
       end
 
       def get_all_metadata(room_id)
-        raw = redis.hgetall(metadata_key(room_id))
-        raw
-          .transform_keys(&:to_i)
-          .transform_values { |value| JSON.parse(value, symbolize_names: true) }
+        deserialize_all_metadata(redis.hgetall(metadata_key(room_id)))
       end
 
       # A stable hash of the live (TTL-filtered) membership plus the metadata
@@ -307,8 +349,7 @@ module Voice
       end
 
       def recording(room_id)
-        raw = redis.get(recording_key(room_id))
-        raw.present? ? JSON.parse(raw, symbolize_names: true) : nil
+        deserialize_recording(redis.get(recording_key(room_id)))
       end
 
       def clear_recording(room_id)
@@ -334,6 +375,27 @@ module Voice
       end
 
       private
+
+      def deserialize_all_metadata(raw)
+        raw
+          .transform_keys(&:to_i)
+          .transform_values { |value| JSON.parse(value, symbolize_names: true) }
+      end
+
+      def deserialize_recording(raw)
+        raw.present? ? JSON.parse(raw, symbolize_names: true) : nil
+      end
+
+      def room_states_individually(room_ids)
+        room_ids.index_with do |room_id|
+          RoomState.new(
+            participant_ids: user_ids(room_id),
+            participant_metadata: get_all_metadata(room_id),
+            pinned_transport: pinned_transport(room_id),
+            recording_info: recording(room_id),
+          )
+        end
+      end
 
       def redis
         @redis ||= Discourse.redis

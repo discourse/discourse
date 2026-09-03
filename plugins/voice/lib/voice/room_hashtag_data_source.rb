@@ -68,14 +68,9 @@ module Voice
       visible_rooms(guardian, Voice::Room.all).take(limit).map { |room| room_to_hashtag_item(room) }
     end
 
-    # Visibility is a per-room Guardian question (membership, public flag,
-    # manager status), so it can't be expressed as a SQL scope; room counts
-    # are small, so filtering loaded records matches RoomsController#index.
     def self.visible_rooms(guardian, scope)
-      return [] unless guardian.can_access_voice? || guardian.voice_public_access?
-
       scope
-        .persistent
+        .merge(Voice::Room.visible_to(guardian))
         .includes(:room_memberships)
         .order(:name)
         .select { |room| guardian.can_see_voice_room?(room) }
