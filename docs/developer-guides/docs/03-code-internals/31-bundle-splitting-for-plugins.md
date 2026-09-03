@@ -75,36 +75,25 @@ export default async function showNewMessageModal(modal) {
 
 The path must be a literal, so that the build can find it. To pull in a group of modules with one import, re-export them from a single module and import that.
 
-When the thing you are loading is rendered, use `DAsyncContent` rather than tracking the load yourself. It re-runs the function whenever the tracked state it reads changes, so the import happens the first time the component is actually needed:
+When lazy-loading components, it normally makes sense to use the `DAsyncContent` wrapper from `ui-kit`. For example:
 
 ```gjs
-export default class CallLayer extends Component {
+export default class LazyLoader extends Component {
   @service callState;
 
-  @action
-  async loadWidget() {
-    if (!this.callState.active) {
-      return null;
-    }
-
-    return await import("./call-widget");
+  get complexComponent()
+    return import("./complex-component");
   }
 
   <template>
-    <DAsyncContent @asyncData={{this.loadWidget}}>
-      <:loading></:loading>
-      <:empty></:empty>
-      <:content as |module|>
-        <module.default />
+    <DAsyncContent @asyncData={{this.complexComponent}}>
+      <:content as |componentModule|>
+        <componentModule.default />
       </:content>
     </DAsyncContent>
   </template>
 }
 ```
-
-Give it empty `loading` and `empty` blocks when there is nothing to show yet. The default loading block is a spinner, which you do not want on every page.
-
-This only helps with `staticModules` enabled. Without it, every module is loaded at boot regardless of how it is imported.
 
 `DAsyncContent` registers its own test waiter. If your plugin uses qunit tests and you call `import()` yourself, wrap the promise in `waitForPromise` so that tests wait for it to load:
 
