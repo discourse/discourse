@@ -64,7 +64,9 @@ export default function discourseRouteMaps({
         );
       }
 
-      Object.assign(tables, routeTablesFor(deriveRoutes(root)));
+      const derived = deriveRoutes(root);
+
+      Object.assign(tables, { derived }, routeTablesFor(derived));
     },
   };
 }

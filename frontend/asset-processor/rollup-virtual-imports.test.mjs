@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import rollupVirtualImports, {
   privateVirtualImports,
+  routeNamesFor,
 } from "./rollup-virtual-imports";
 
 function entrypoint(moduleFilenames, opts = {}, extra) {
@@ -347,5 +348,21 @@ describe("privateVirtualImports", () => {
     expect(code).toContain(
       "args[optsIndex] = { ...args[optsIndex], [_INTERNAL_SOURCE_KEY]: SOURCE };"
     );
+  });
+});
+
+describe("routeNamesFor", () => {
+  it("reports only the routes a module list backs", () => {
+    const bundleByRoute = { chat: "default", "admin.hooks": "default" };
+
+    expect([
+      ...routeNamesFor(["discourse/routes/chat.js"], bundleByRoute),
+    ]).toEqual(["chat"]);
+    expect([
+      ...routeNamesFor(["discourse/templates/admin/hooks.hbs"], bundleByRoute),
+    ]).toEqual(["admin.hooks"]);
+    expect([
+      ...routeNamesFor(["discourse/services/chat.js"], bundleByRoute),
+    ]).toEqual([]);
   });
 });

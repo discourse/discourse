@@ -23,6 +23,8 @@ import discourseRegisterComponents from "./rollup-plugins/discourse-register-com
 import discourseRouteMaps from "./rollup-plugins/discourse-route-maps";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
+import { routeNamesFor } from "./rollup-virtual-imports";
+import { routeTablesFor } from "./route-map-parser";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 import transformActionSyntax from "./transform-action-syntax";
 import createVirtualFs from "./virtual-fs";
@@ -43,7 +45,7 @@ async function performRollup(modules, opts) {
   const fs = createVirtualFs(modules, basePath);
 
   // Filled in by `discourse-route-maps` before the entrypoint is generated from it.
-  const routeTables = { bundleByRoute: {}, urls: [] };
+  const routeTables = { bundleByRoute: {}, urls: [], derived: [] };
   opts.routeTables = routeTables;
 
   const cache = opts.pluginName ? caches.get(opts.pluginName) : false;
@@ -190,8 +192,18 @@ async function performRollup(modules, opts) {
       }
     }
 
+    // A bundle name means a different bundle in each entrypoint, so the urls have to come from
+    // this entrypoint's own routes rather than from every route the plugin declares.
+    const owned = routeNamesFor(
+      opts.entrypoints[entryName].modules,
+      routeTables.bundleByRoute
+    );
+    const { urls } = routeTablesFor(
+      routeTables.derived.filter((route) => owned.has(route.name))
+    );
+
     // Already ordered most specific first, which is the order Ruby matches them in.
-    return routeTables.urls
+    return urls
       .filter(({ bundleName }) => fileNameByBundle[bundleName])
       .map(({ bundleName, url }) => ({
         url,

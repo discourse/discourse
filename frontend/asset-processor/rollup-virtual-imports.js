@@ -168,6 +168,17 @@ export function routeBundlesFor(records, bundleByRoute) {
   }));
 }
 
+// The route names a module list contributes, so a caller can tell which entrypoint owns a route.
+export function routeNamesFor(moduleFilenames, bundleByRoute) {
+  const records = moduleFilenames.map((moduleFilename) => ({
+    compatModuleName: stripExtension(moduleFilename),
+  }));
+
+  return new Set(
+    routeBundlesFor(records, bundleByRoute).flatMap((bundle) => bundle.names)
+  );
+}
+
 function renderMap(name, records, identifiers) {
   return [
     `const ${name} = {`,
