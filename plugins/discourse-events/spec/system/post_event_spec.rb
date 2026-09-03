@@ -36,26 +36,18 @@ describe "Post event" do
     end
   end
 
-  it "shows the event hosts and organizer group" do
+  it "shows the event hosts" do
     first_host = Fabricate(:user, username: "event_host_maya")
     second_host = Fabricate(:user, username: "event_host_noah")
-    organizer_group = Fabricate(:group, name: "event-organizers")
     raw = <<~EVENT
-      [event start='2222-02-22 14:22' hosts='#{admin.username},#{first_host.username},#{second_host.username}' organizerGroup='#{organizer_group.name}']
+      [event start='2222-02-22 14:22' hosts='#{admin.username},#{first_host.username},#{second_host.username}']
       [/event]
     EVENT
     post = PostCreator.create!(admin, title: "Community meetup", raw:)
 
     visit(post.topic.url)
 
-    expect(post_event_page).to have_hosts_and_organizer_group(
-      hosts: [first_host, second_host],
-      organizer_group:,
-      cohosted: true,
-    )
-
-    post_event_page.visit_organizer_group
-    expect(page).to have_current_path("/g/#{organizer_group.name}")
+    expect(post_event_page).to have_hosts([first_host, second_host], cohosted: true)
   end
 
   it "joins the creator and host roles for the same user" do

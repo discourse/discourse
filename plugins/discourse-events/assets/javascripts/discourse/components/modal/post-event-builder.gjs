@@ -124,7 +124,6 @@ export default class PostEventBuilder extends Component {
           : this.event.status || "public",
       rawInvitees: this.event.rawInvitees ?? [],
       hosts: (this.event.hosts ?? []).map((host) => host.username),
-      organizerGroup: this.event.organizerGroup?.name ?? null,
       recurrence: this.event.recurrence ?? null,
       imageUpload: this.event.imageUpload?.url ?? null,
       timezone: this.event.timezone ?? null,
@@ -235,12 +234,6 @@ export default class PostEventBuilder extends Component {
   handleHostsChange(usernames, { set }) {
     set("hosts", usernames);
     this.event.hosts = usernames.map((username) => ({ username }));
-  }
-
-  @action
-  handleOrganizerGroupChange(name, { set }) {
-    set("organizerGroup", name || null);
-    this.event.organizerGroup = name ? { name } : null;
   }
 
   @action
@@ -470,7 +463,6 @@ export default class PostEventBuilder extends Component {
       allowedGroups: (this.event.rawInvitees || []).join(",") || null,
       hosts:
         (this.event.hosts || []).map((host) => host.username).join(",") || null,
-      organizerGroup: this.event.organizerGroup?.name ?? null,
       closed: !!this.event.isClosed,
       customFields: { ...(this.event.customFields || {}) },
     };
@@ -498,9 +490,6 @@ export default class PostEventBuilder extends Component {
     this.event.hosts = state.hosts
       ? state.hosts.split(",").map((username) => ({ username }))
       : [];
-    this.event.organizerGroup = state.organizerGroup
-      ? { name: state.organizerGroup }
-      : null;
     this.event.allDay = state.allDay;
     this.event.startsAt = state.startsAt;
     this.event.endsAt = state.endsAt;
@@ -1100,27 +1089,6 @@ export default class PostEventBuilder extends Component {
                       @value={{field.value}}
                       @onChange={{field.set}}
                       @options={{hash maximum=MAX_HOSTS}}
-                    />
-                  </field.Control>
-                </form.Field>
-
-                <form.Field
-                  @name="organizerGroup"
-                  @title={{i18n
-                    "discourse_post_event.builder_modal.organizer_group.label"
-                  }}
-                  @type="custom"
-                  @format="full"
-                  @onSet={{this.handleOrganizerGroupChange}}
-                  as |field|
-                >
-                  <field.Control>
-                    <GroupSelector
-                      @groupFinder={{this.groupFinder}}
-                      @groupNames={{field.value}}
-                      @onChange={{field.set}}
-                      @placeholderKey="discourse_post_event.builder_modal.organizer_group.placeholder"
-                      @single={{true}}
                     />
                   </field.Control>
                 </form.Field>

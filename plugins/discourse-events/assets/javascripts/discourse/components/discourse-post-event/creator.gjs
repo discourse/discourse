@@ -1,19 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { groupPath } from "discourse/lib/url";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { formatUsername } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
 const INITIAL_HOSTS_COUNT = 2;
 
 export default class DiscoursePostEventCreator extends Component {
-  @service a11y;
+  @tracked hostsCollapsed = false;
 
-  @tracked hostsExpanded = false;
+  #collapsedAtWidth = null;
 
   get creatorIsHost() {
     return this.args.hosts?.some(
@@ -25,10 +26,6 @@ export default class DiscoursePostEventCreator extends Component {
     return this.hosts.length > 0;
   }
 
-  get hasOrganizerGroup() {
-    return !!this.args.organizerGroup;
-  }
-
   get hosts() {
     return (this.args.hosts || []).filter(
       (host) => host.username !== this.args.user?.username
@@ -36,26 +33,26 @@ export default class DiscoursePostEventCreator extends Component {
   }
 
   get displayedHosts() {
-    return this.hostsExpanded
-      ? this.hosts
-      : this.hosts.slice(0, INITIAL_HOSTS_COUNT);
+    return this.hostsCollapsed ? [] : this.hosts.slice(0, INITIAL_HOSTS_COUNT);
   }
 
-  get hasAdditionalHosts() {
-    return this.hosts.length > INITIAL_HOSTS_COUNT;
+  get hasHostsMenu() {
+    return this.hostsCollapsed || this.hosts.length > INITIAL_HOSTS_COUNT;
   }
 
-  get additionalHostsCount() {
-    return this.hosts.length - INITIAL_HOSTS_COUNT;
-  }
-
-  get hostsToggleLabel() {
-    if (this.hostsExpanded) {
-      return i18n("discourse_post_event.show_fewer_hosts");
+  get hostsMenuLabel() {
+    if (this.hostsCollapsed) {
+      return this.allHostsTitle;
     }
 
     return i18n("discourse_post_event.other_hosts", {
-      count: this.additionalHostsCount,
+      count: this.hosts.length - INITIAL_HOSTS_COUNT,
+    });
+  }
+
+  get allHostsTitle() {
+    return i18n("discourse_post_event.all_hosts", {
+      count: this.hosts.length,
     });
   }
 
@@ -65,30 +62,32 @@ export default class DiscoursePostEventCreator extends Component {
       : "discourse_post_event.hosted_by";
   }
 
-  get organizerGroupName() {
-    return this.args.organizerGroup?.displayName;
-  }
-
-  get organizerGroupPath() {
-    return groupPath(this.args.organizerGroup?.name);
-  }
-
   get username() {
     return this.args.user.name || formatUsername(this.args.user.username);
   }
 
+  // Collapses every host into the menu once the hosts line wraps below the
+  // creator, and only tries the inline layout again once the row is wider than
+  // it was when it wrapped, so resizing cannot flip-flop between the two.
   @action
-  toggleHosts() {
-    this.hostsExpanded = !this.hostsExpanded;
-    this.a11y.announce(
-      i18n(
-        this.hostsExpanded
-          ? "discourse_post_event.additional_hosts_shown"
-          : "discourse_post_event.additional_hosts_hidden",
-        { count: this.additionalHostsCount }
-      ),
-      "polite"
-    );
+  syncHostsLayout([entry]) {
+    const row = entry.target;
+    const width = row.clientWidth;
+
+    if (this.hostsCollapsed) {
+      if (width > this.#collapsedAtWidth) {
+        this.#collapsedAtWidth = null;
+        this.hostsCollapsed = false;
+      }
+      return;
+    }
+
+    const creator = row.querySelector(".event-creator");
+    const hosts = row.querySelector(".event-hosts");
+    if (creator && hosts && hosts.offsetTop > creator.offsetTop) {
+      this.#collapsedAtWidth = width;
+      this.hostsCollapsed = true;
+    }
   }
 
   usernameFor(user) {
@@ -96,7 +95,7 @@ export default class DiscoursePostEventCreator extends Component {
   }
 
   <template>
-    <span class="creators">
+    <span class="creators" {{dOnResize this.syncHostsLayout}}>
       <span class="created-by">{{i18n
           (if
             this.creatorIsHost
@@ -126,29 +125,46 @@ export default class DiscoursePostEventCreator extends Component {
             </span>
           {{/each}}
 
-          {{#if this.hasAdditionalHosts}}
-            <DButton
+          {{#if this.hasHostsMenu}}
+            <DMenu
               class="event-hosts__toggle"
-              @action={{this.toggleHosts}}
-              @ariaExpanded={{this.hostsExpanded}}
-              @display="link"
-              @translatedLabel={{this.hostsToggleLabel}}
-            />
+              @identifier="discourse-post-event-hosts"
+              @modalForMobile={{true}}
+              @triggerComponent={{component
+                DButton
+                display="link"
+                translatedLabel=this.hostsMenuLabel
+              }}
+            >
+              <:content>
+                <div class="event-hosts-menu">
+                  <h3
+                    class="event-hosts-menu__title"
+                  >{{this.allHostsTitle}}</h3>
+                  <ul class="event-hosts-menu__list">
+                    {{#each this.hosts as |host|}}
+                      <li class="event-hosts-menu__item">
+                        <DUserLink
+                          class="event-hosts-menu__host"
+                          @user={{host}}
+                        >
+                          {{dAvatar host imageSize="small"}}
+                          <span class="event-hosts-menu__name">
+                            {{this.usernameFor host}}
+                          </span>
+                          {{#if host.name}}
+                            <span class="event-hosts-menu__username">
+                              {{formatUsername host.username}}
+                            </span>
+                          {{/if}}
+                        </DUserLink>
+                      </li>
+                    {{/each}}
+                  </ul>
+                </div>
+              </:content>
+            </DMenu>
           {{/if}}
-        </span>
-      {{/if}}
-
-      {{#if this.hasOrganizerGroup}}
-        <span class="separator">·</span>
-        <span class="event-organizer-group">
-          <span class="organized-by">{{i18n
-              "discourse_post_event.organized_by"
-            }}</span>
-
-          <a
-            class="event-organizer-group__link"
-            href={{this.organizerGroupPath}}
-          >{{this.organizerGroupName}}</a>
         </span>
       {{/if}}
     </span>

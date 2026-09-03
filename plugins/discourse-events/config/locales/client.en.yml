@@ -390,14 +390,9 @@ en:
       other_hosts:
         one: "and %{count} other"
         other: "and %{count} others"
-      show_fewer_hosts: "Show fewer hosts"
-      additional_hosts_shown:
-        one: "%{count} additional host shown"
-        other: "%{count} additional hosts shown"
-      additional_hosts_hidden:
-        one: "%{count} additional host hidden"
-        other: "%{count} additional hosts hidden"
-      organized_by: "Organized by"
+      all_hosts:
+        one: "%{count} host"
+        other: "%{count} hosts"
       bulk_invite: "Bulk Invite"
       close_event: "Close event"
       open_event: "Open event"
@@ -617,9 +612,6 @@ en:
         hosts:
           label: "Hosts"
           description: "Hosts are shown on the event alongside its creator."
-        organizer_group:
-          label: "Organizer group"
-          placeholder: "Optional"
         event_type:
           label: "Attendance type"
           public:

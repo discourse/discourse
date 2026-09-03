@@ -53,7 +53,7 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       );
   });
 
-  test("expands additional event hosts", async function (assert) {
+  test("lists additional event hosts in a menu", async function (assert) {
     stubApi.call(
       this,
       buildEvent({
@@ -79,8 +79,14 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
 
     assert
       .dom(".event-host")
-      .exists({ count: 4 }, "shows all hosts on request");
-    assert.dom(".event-hosts__toggle").hasText("Show fewer hosts");
+      .exists({ count: 2 }, "keeps the row compact while the menu is open");
+    assert.dom(".event-hosts-menu__title").hasText("4 hosts");
+    assert
+      .dom(".event-hosts-menu__host")
+      .exists({ count: 4 }, "lists every host in the menu");
+    assert
+      .dom(".event-hosts-menu__host[data-user-card='drew']")
+      .hasText("drew");
   });
 
   test("interpolates the ordinal and weekday into the monthly recurrence label", async function (assert) {

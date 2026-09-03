@@ -125,6 +125,7 @@ $show-interested: inherit;
 
   .event-info {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     min-width: 0;
     margin-right: 0.5rem;
@@ -147,8 +148,7 @@ $show-interested: inherit;
       }
 
       .created-by,
-      .hosted-by,
-      .organized-by {
+      .hosted-by {
         margin-right: 0.25em;
         white-space: nowrap;
 
@@ -158,7 +158,7 @@ $show-interested: inherit;
       }
 
       .username {
-        margin-left: 0.25em;
+        margin-inline-start: 0.25em;
         color: var(--primary);
 
         @include ellipsis;
@@ -166,8 +166,10 @@ $show-interested: inherit;
 
       .creators {
         display: flex;
+        flex: 1 1 auto;
         align-items: center;
         flex-wrap: wrap;
+        min-width: 0;
 
         .event-creator,
         .event-host {
@@ -181,19 +183,21 @@ $show-interested: inherit;
           }
         }
 
-        .event-hosts,
-        .event-organizer-group {
+        .event-hosts {
           display: flex;
           align-items: center;
+          gap: 0.25em;
           min-width: 0;
+
+          .hosted-by {
+            margin-right: 0;
+          }
         }
 
-        .event-host + .event-host {
-          margin-left: 0.25em;
-        }
-
-        .event-organizer-group__link {
-          @include ellipsis;
+        .event-hosts__toggle {
+          padding: 0;
+          font-size: inherit;
+          white-space: nowrap;
         }
       }
 
@@ -488,5 +492,51 @@ $show-interested: inherit;
     width: 5em;
     height: 2em;
     margin-right: 0.5em;
+  }
+}
+
+.event-hosts-menu {
+  min-width: 14em;
+  padding: 0.5em 0;
+
+  &__title {
+    margin: 0;
+    padding: 0.25em 1em 0.5em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__host {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.5em 1em;
+    color: var(--primary);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--d-hover);
+      text-decoration: none;
+    }
+  }
+
+  &__name {
+    @include ellipsis;
+  }
+
+  &__username {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    @include ellipsis;
   }
 }
