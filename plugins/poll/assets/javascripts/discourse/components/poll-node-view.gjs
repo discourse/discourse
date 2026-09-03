@@ -9,7 +9,6 @@ import PollInfo from "./poll-info";
 
 export default class PollNodeView extends Component {
   @service modal;
-  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -25,20 +24,12 @@ export default class PollNodeView extends Component {
     this.update(this.args.node);
   }
 
-  // only what the settings themselves say: a composer knows nothing about
-  // votes, and nothing about who will read the post
-  get canAddOptions() {
-    if (this.args.node.attrs.type === "number") {
-      return false;
-    }
-
-    return this.#optionCount < this.siteSettings.poll_maximum_options;
-  }
-
   get #optionCount() {
     return this.#optionList(this.args.node)?.node.childCount ?? 0;
   }
 
+  // only what the settings themselves say: a composer knows nothing about
+  // votes, and nothing about who will read the post
   get pollInfo() {
     const { attrs } = this.args.node;
     const closesAt = attrs.close ? moment(attrs.close) : null;
@@ -52,9 +43,7 @@ export default class PollNodeView extends Component {
       closesAt,
       isAutomaticallyClosed: !!closesAt?.isBefore(moment()),
       // read for its length, to phrase how many options can be picked
-      options: new Array(
-        this.#optionList(this.args.node)?.node.childCount ?? 0
-      ),
+      options: new Array(this.#optionCount),
     };
   }
 
@@ -65,11 +54,10 @@ export default class PollNodeView extends Component {
   @action
   editPoll() {
     const { node } = this.args;
-    const optionCount = this.#optionList(node)?.node.childCount ?? 0;
 
     this.modal.show(PollUiBuilder, {
       model: {
-        poll: { ...node.attrs, optionCount },
+        poll: { ...node.attrs, optionCount: this.#optionCount },
         onSave: (attrs) => this.#savePoll(attrs),
       },
     });
@@ -159,11 +147,6 @@ export default class PollNodeView extends Component {
   }
 
   <template>
-    {{#if this.canAddOptions}}
-      <span class="composer-poll-node__hint" contenteditable="false">{{i18n
-          "poll.ui_builder.poll_options.hint"
-        }}</span>
-    {{/if}}
     <div class="composer-poll-node__info" contenteditable="false">
       {{#let this.pollInfo as |info|}}
         <PollInfo

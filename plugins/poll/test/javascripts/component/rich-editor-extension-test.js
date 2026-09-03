@@ -1,4 +1,3 @@
-import { settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import {
   registerRichEditorExtension,
@@ -197,77 +196,6 @@ module(
         "[poll]\n# - pick one\n\n* Option 1\n\n[/poll]\n\n",
         "and does not escape it on the way back"
       );
-    });
-
-    // prosemirror-state is not importable from a plugin, so the selection
-    // class comes off the editor's own state
-    async function caretAtText(editorClass, text) {
-      const { view } = editorClass;
-      let target;
-
-      view.state.doc.descendants((node, pos) => {
-        if (target === undefined && node.isText && node.text.includes(text)) {
-          target = pos;
-        }
-      });
-
-      const { constructor: Selection } = view.state.selection;
-
-      view.dispatch(
-        view.state.tr.setSelection(
-          Selection.near(view.state.doc.resolve(target))
-        )
-      );
-      await settled();
-    }
-
-    test("the editor says how another option is added, once you are in one", async function (assert) {
-      const [editorClass] = await setupRichEditor(
-        assert,
-        "Before\n\n[poll]\n* Option 1\n* Option 2\n\n[/poll]\n\nAfter"
-      );
-
-      // the stylesheet is not loaded here, so the state class stands in for
-      // the hint being shown
-      await caretAtText(editorClass, "Before");
-      assert
-        .dom(".composer-poll-node")
-        .doesNotHaveClass(
-          "--editing",
-          "stays out of the way of a poll being read"
-        );
-
-      await caretAtText(editorClass, "Option 1");
-      assert
-        .dom(".composer-poll-node")
-        .hasClass("--editing", "and appears once the caret is in the poll");
-      assert.dom(".composer-poll-node__hint").exists("with the hint to show");
-    });
-
-    test("the hint goes once the poll holds all the options it may", async function (assert) {
-      this.siteSettings.poll_maximum_options = 2;
-
-      const [editorClass] = await setupRichEditor(
-        assert,
-        "[poll]\n* Option 1\n* Option 2\n\n[/poll]\n\n"
-      );
-      await caretAtText(editorClass, "Option 1");
-
-      assert
-        .dom(".composer-poll-node__hint")
-        .doesNotExist("there is no room for another one");
-    });
-
-    test("a numeric poll has no hint, since its options are generated", async function (assert) {
-      const [editorClass] = await setupRichEditor(
-        assert,
-        "[poll type=number max=2 min=1]\n[/poll]\n\n"
-      );
-      await caretAtText(editorClass, "1");
-
-      assert
-        .dom(".composer-poll-node__hint")
-        .doesNotExist("nothing to add by hand");
     });
 
     test("an untitled poll carries an empty title to type into", async function (assert) {

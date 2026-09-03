@@ -193,7 +193,6 @@ en:
           placeholder: Poll title
         poll_options:
           label: Options (one per line)
-          hint: Press Enter to add another option
           add: Add option
         automatic_close:
           label: Automatically close poll

@@ -629,26 +629,14 @@ body.crawler {
     display: contents;
   }
 
-  &__hint {
-    display: none;
-    grid-area: hint;
-    padding: 0 1em 1em;
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-  }
-
-  &.--editing &__hint {
-    display: block;
-  }
-
   // outranks the cooked grid, which also applies inside the editor
   .ProseMirror &.poll {
-    grid-template-areas: "poll" "hint" "info" "buttons";
+    grid-template-areas: "poll" "info" "buttons";
 
     @include viewport.from(sm) {
       // sized to its content, so a setting is not split across lines
       grid-template-columns: 1fr max-content;
-      grid-template-areas: "poll info" "hint info" "buttons buttons";
+      grid-template-areas: "poll info" "buttons buttons";
     }
   }
 
