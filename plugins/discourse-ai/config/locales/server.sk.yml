@@ -61,7 +61,6 @@ sk:
     ai_helper_automatic_chat_thread_title: "Automatické nastavenie názvov chatových vlákien na základe obsahu vlákna."
     post_ai_helper_allowed_groups: "Skupiny používateľov majú povolený prístup k funkciám AI Helper v príspevkoch"
     ai_embeddings_selected_model: "Použitie vybraného modelu na generovanie vložených súborov."
-    ai_embeddings_generate_for_pms: "Generovanie vložených osobných správ."
     ai_embeddings_semantic_related_topics_enabled: "Použite sémantické vyhľadávanie pre súvisiace témy."
     ai_embeddings_semantic_related_topics: "Maximálny počet tém, ktoré sa majú zobraziť v sekcii súvisiacich tém."
     ai_embeddings_backfill_batch_size: "Počet vnorení na zasypanie každých 15 minút."

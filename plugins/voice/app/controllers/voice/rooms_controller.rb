@@ -44,22 +44,35 @@ module Voice
     def index
       Voice::DefaultRoomSeeder.ensure!
 
+      # Capture before the room snapshot so a concurrent event is replayed rather than skipped.
+      index_message_bus_last_id = MessageBus.last_id(Voice.room_index_channel)
       rooms =
         Voice::Room
-          .persistent
+          .visible_to(guardian)
           .includes(:room_memberships)
-          .order(:created_at)
+          .order(:created_at, :id)
           .select { |room| guardian.can_see_voice_room?(room) }
+      directory_entries = Voice::RoomDirectoryPreloader.preload(rooms)
+      chat_rooms =
+        rooms.select do |room|
+          entry = directory_entries[room.id]
+          guardian.can_manage_voice_room?(room) ||
+            entry&.participant_users&.any? { |participant| participant.id == current_user&.id }
+        end
+      chat_availability = rooms.to_h { |room| [room.id, false] }
+      chat_availability.merge!(Voice::ChatSession.available_for_rooms(chat_rooms, guardian))
 
-      # Captured before serializing so clients subscribing from this position
-      # never miss a directory event published while the response was built.
-      index_message_bus_last_id = MessageBus.last_id(Voice.room_index_channel)
-
-      render json: {
-               rooms: serialize_data(rooms, Voice::RoomSerializer),
-               can_create_room: guardian.can_create_voice_room?,
-               index_message_bus_last_id: index_message_bus_last_id,
-             }
+      render_json_dump(
+        rooms:
+          serialize_data(
+            rooms,
+            Voice::RoomSerializer,
+            directory_entries: directory_entries,
+            chat_availability: chat_availability,
+          ),
+        can_create_room: guardian.can_create_voice_room?,
+        index_message_bus_last_id: index_message_bus_last_id,
+      )
     end
 
     def show

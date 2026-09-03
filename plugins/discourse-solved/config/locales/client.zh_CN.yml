@@ -168,9 +168,15 @@ zh_CN:
     admin:
       reports:
         related_items:
+          solved_topics:
+            title: "已解决的话题"
+            description: "标记为已解决的主题介于 %{startDate} 和 %{endDate}之间，最新主题排在最前面。"
           labels:
             topic: "话题"
+            solved_by: "已解决"
             category: "类别"
+          table_summary:
+            solved_topics_title: "%{date} 上已解决的话题"
       web_hooks:
         solved_event:
           group_name: "已解决的事件"

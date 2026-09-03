@@ -88,7 +88,7 @@
 #                                 are allowed based on authorized_extensions setting.
 #                               - max_file_size_kb: maximum file size in KB. If not specified,
 #                                 uses max_image_size_kb or max_attachment_size_kb.
-# type: group                 - A single group ID.
+# type: group                 - A single group ID. A name is converted to its ID on write.
 # type: group_list            - A list of group IDs.
 # type: tag_list              - A list of tag names.
 # type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)

@@ -4480,6 +4480,39 @@ ALTER SEQUENCE public.discourse_post_event_events_id_seq OWNED BY public.discour
 
 
 --
+-- Name: discourse_post_event_hosts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_post_event_hosts (
+    id bigint NOT NULL,
+    post_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_post_event_hosts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_post_event_hosts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_post_event_hosts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_post_event_hosts_id_seq OWNED BY public.discourse_post_event_hosts.id;
+
+
+--
 -- Name: discourse_post_event_invitees; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13835,6 +13868,13 @@ ALTER TABLE ONLY public.discourse_post_event_events ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: discourse_post_event_hosts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_post_event_hosts ALTER COLUMN id SET DEFAULT nextval('public.discourse_post_event_hosts_id_seq'::regclass);
+
+
+--
 -- Name: discourse_post_event_invitees id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16316,6 +16356,14 @@ ALTER TABLE ONLY public.discourse_kanban_columns
 
 ALTER TABLE ONLY public.discourse_post_event_events
     ADD CONSTRAINT discourse_post_event_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_post_event_hosts discourse_post_event_hosts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_post_event_hosts
+    ADD CONSTRAINT discourse_post_event_hosts_pkey PRIMARY KEY (id);
 
 
 --
@@ -20481,6 +20529,20 @@ CREATE INDEX index_discourse_post_event_events_on_image_upload_id ON public.disc
 
 
 --
+-- Name: index_discourse_post_event_hosts_on_post_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_post_event_hosts_on_post_id_and_user_id ON public.discourse_post_event_hosts USING btree (post_id, user_id);
+
+
+--
+-- Name: index_discourse_post_event_hosts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_post_event_hosts_on_user_id ON public.discourse_post_event_hosts USING btree (user_id);
+
+
+--
 -- Name: index_discourse_reactions_reaction_users_on_reaction_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24346,6 +24408,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260903065141'),
+('20260902150024'),
 ('20260901020329'),
 ('20260831162602'),
 ('20260828145150'),
@@ -24362,6 +24425,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260821164114'),
 ('20260820171539'),
 ('20260820143851'),
+('20260820092502'),
 ('20260819131113'),
 ('20260818143417'),
 ('20260818081537'),
@@ -26842,4 +26906,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-

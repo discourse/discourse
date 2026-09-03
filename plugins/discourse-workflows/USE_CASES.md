@@ -51,6 +51,9 @@ For each run, record:
 | `badge-grant` | `when a TL1 user posts in General with the word helpful, grant them the Basic badge` | `trigger:post_created -> condition:filter -> action:badge` | Uses declarative filter; resolves badge; no Code node. |
 | `group-add` | `when a TL1 user creates a topic in Support, add them to the helpers group` | `trigger:topic_created -> condition:filter -> action:group` | Uses `$json.post.username`; resolves group; no Code node. |
 | `tag-group-add` | `every week, add the current-campaign tag to the Marketing tag group` | `trigger:schedule -> action:tag_group` | Resolves the tag group; creates the tag if needed; no Code node. |
+| `deleted-post-chat` | `when a post in Support is deleted, message General chat with the post title` | `trigger:post_destroyed -> action:send_chat_message` | Uses `trigger:post_destroyed`; remembers `$json.user` is whoever deleted the post, not the author. |
+| `mirror-post-delete` | `when a post in Support is deleted, delete post 123` | `trigger:post_destroyed -> action:post (delete)` | Uses `action:post` with `operation: delete`, not `action:flag_post` with a review-delete flag type. |
+| `restore-mirror-post` | `when a deleted post in Support is restored, restore post 123` | `trigger:post_recovered -> action:post (recover)` | Uses `action:post` with `operation: recover`. |
 | `http-request-warning` | `when a new topic is created in Support, send the topic title to https://example.com/webhook` | `trigger:topic_created -> action:http_request` | Includes external HTTP risk; validates URL/method/body; no Code unless necessary. |
 
 ## Known edge cases to keep testing
@@ -64,5 +67,7 @@ For each run, record:
 - Condition builder entries must use `leftValue` and `rightValue`; `left`/`right` will not execute correctly.
 - Connections leaving `condition:filter` or `condition:if` use `connection_type: "main"`; select the passing branch with `output_index: 0` and the rejected branch with `output_index: 1`.
 - Group membership checks should use `action:group` with `operation: check_membership` and the resolved `group_id` instead of Code nodes. Branch with `condition:if` on `$json.group_membership.in_group` when different member and non-member paths are needed.
+- Deleting a post is `action:post` with `operation: delete`; `action:flag_post` with `review_delete` is for moderation flows that also need a reviewable. Restoring one is `operation: recover`.
+- `trigger:post_destroyed` and `trigger:post_recovered` expose `$json.user` as the acting moderator, not the post author; use `$json.post.username` for the author.
 - DM/personal-message notifications should use `action:send_personal_message` instead of chat or topic reply nodes.
 - Forum `search`/`read` should not be used for node/schema discovery; use `workflow_node_catalog` and `workflow_validate_patch`.

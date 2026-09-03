@@ -125,6 +125,13 @@ RSpec.describe DiscourseEvents::Events::Event::Action::AttributesFromRaw do
     expect(attributes[:raw_invitees]).to be_nil
   end
 
+  it "resolves hosts to user ids" do
+    host = Fabricate(:user, username: "EventHost")
+    raw_event.merge!(hosts: "eventhost, EventHost")
+
+    expect(attributes).to include(host_user_ids: [host.id])
+  end
+
   context "with custom fields" do
     it "only keeps fields listed in the site setting that have a value" do
       SiteSetting.discourse_post_event_allowed_custom_fields = "field_a|field_b"

@@ -29,6 +29,51 @@ RSpec.describe Voice::Room do
 
   fab!(:room, :voice_room)
 
+  describe ".visible_to" do
+    def visible_room_ids(guardian, room_ids)
+      described_class.visible_to(guardian).where(id: room_ids).pluck(:id)
+    end
+
+    it "matches room visibility for public access, members, creators, and staff" do
+      SiteSetting.voice_enabled = true
+      SiteSetting.voice_allowed_groups =
+        "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
+      owner = Fabricate(:user)
+      member = Fabricate(:user)
+      staff = Fabricate(:admin)
+      public_room = Fabricate(:voice_room, creator: owner, public: true)
+      private_room = Fabricate(:voice_room, creator: owner, public: false)
+      private_room.room_memberships.create!(user: member)
+      creator_only_room = Fabricate(:voice_room, creator: owner, public: false)
+      creator_only_room.room_memberships.delete_all
+      ephemeral_room = Fabricate(:voice_ephemeral_room, creator: owner, public: true)
+      room_ids = [public_room, private_room, creator_only_room, ephemeral_room].map(&:id)
+
+      expect(visible_room_ids(Guardian.new(nil), room_ids)).to contain_exactly(public_room.id)
+      expect(visible_room_ids(member.guardian, room_ids)).to contain_exactly(
+        public_room.id,
+        private_room.id,
+      )
+      expect(visible_room_ids(owner.guardian, room_ids)).to contain_exactly(
+        public_room.id,
+        private_room.id,
+        creator_only_room.id,
+      )
+      expect(visible_room_ids(staff.guardian, room_ids)).to contain_exactly(
+        public_room.id,
+        private_room.id,
+        creator_only_room.id,
+      )
+
+      SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:anonymous_users].to_s
+      expect(visible_room_ids(member.guardian, room_ids)).to contain_exactly(public_room.id)
+      expect(visible_room_ids(staff.guardian, room_ids)).to contain_exactly(public_room.id)
+
+      SiteSetting.voice_enabled = false
+      expect(visible_room_ids(Guardian.new(nil), room_ids)).to be_empty
+    end
+  end
+
   describe "slug generation" do
     it "appends a random suffix for ephemeral rooms so generic names never collide" do
       persistent = Fabricate(:voice_room, name: "Call")
@@ -90,6 +135,23 @@ RSpec.describe Voice::Room do
       room.update!(video_enabled: false)
 
       expect(room.video_allowed?).to eq(false)
+    end
+  end
+
+  describe "membership predicates" do
+    it "reuses loaded memberships" do
+      creator = room.creator
+      room.room_memberships.load
+
+      queries =
+        track_sql_queries do
+          expect(room.member?(creator)).to eq(true)
+          expect(room.moderator?(creator)).to eq(true)
+          expect(room.member_ids).to contain_exactly(room.creator_id)
+          expect(room.moderator_ids).to contain_exactly(room.creator_id)
+        end
+
+      expect(queries).to be_empty
     end
   end
 

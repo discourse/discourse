@@ -50,6 +50,12 @@ uk:
             delete_ai_secret: "Видалити секрет ШІ"
             update_ai_spam_settings: "Оновити налаштування спаму ШІ"
   js:
+    admin:
+      site_settings:
+        ai_ask_ai_summary_detail:
+          quiet: "Тихо (одне речення, без заголовка)"
+          balanced: "Збалансовано (один короткий абзац)"
+          detailed: "Детальний (два-три короткі абзаци)"
     discourse_workflows:
       node_unavailable:
         requires_ai: "Потрібно увімкнути плагін штучного інтелекту"
@@ -347,6 +353,7 @@ uk:
         search:
           name: "Пошук"
           description: "Покращує пошук, надаючи відповіді на запити, згенеровані штучним інтелектом"
+          discoveries: "Відкрити (застаріло)"
           ask_ai: "Запитайте ШІ"
           setting_groups:
             settings: "Основні налаштування"
@@ -1495,10 +1502,17 @@ uk:
         provider_fields:
           model_name: "Назва моделі"
         semantic_search: "Теми (семантикв)"
+        semantic_search_results:
+          toggle: "Пов'язані результати"
+          unavailable: "Пов’язані результати недоступні"
+          zero_results_expanded: "Не знайдено жодного результату, показано %{count} пов'язаних результатів"
         semantic_search_tooltips:
           results_explanation: "Якщо увімкнено, нижче будуть додані додаткові результати пошуку ШІ."
+          invalid_sort: "Результати пошуку мають бути відсортовані за релевантністю, щоб відображалися пов'язані результати"
           not_submitted: "Надішліть пошуковий запит, щоб увімкнути результати штучного інтелекту"
           no_results: "За цим пошуковим запитом не знайдено результатів ШІ"
+        semantic_search_unavailable_tooltip: "Результати пошуку мають бути відсортовані за релевантністю, щоб відображалися пов'язані результати"
+        ai_generated_result: "Пов'язаний результат пошуку знайдено за допомогою штучного інтелекту"
         ai_results_notice:
           no_results: "Точних збігів немає, але є кілька схожих результатів."
           few_results:
@@ -1664,7 +1678,15 @@ uk:
       discobot_discoveries:
         main_title: "Запитайте ШІ"
         loading_convo: "Завантаження розмови"
+        follow_up:
+          label: "Запитайте про подальші дії"
+          placeholder: "Запитайте про подальші дії"
+          submit: "Запитайте"
+        timed_out: "Функція «Запитай ШІ» зайняла забагато часу для завершення цього пошуку. Спробуйте ще раз або скористайтеся пошуком."
+        request_failed: "Не вдалося розпочати цей пошук за допомогою Ask AI. Спробуйте ще раз або скористайтеся пошуком."
+        no_answer: "Штучний інтелект не зміг знайти чіткої відповіді. Запитайте у спільноти."
         create_topic: "Створити тему"
+        answer_ready: "Запитайте у ШІ готову відповідь."
         user_setting: "Увімкнути пошук за допомогою штучного інтелекту"
         legacy:
           main_title: "Виявлення Discobot"
@@ -1680,8 +1702,19 @@ uk:
             actions:
               info: "Як це працює?"
               disable: "Вимкнути"
+        search_placeholder: "Пошук або запитайте ШІ"
         search_type: "ШІ"
+        ask_button: "Запитайте"
+        tip_ask: "запитує ШІ замість пошуку"
+        tip_search: "пошуки замість запитів у штучному інтелекті"
+        make_default: "Зробити ШІ моїм варіантом пошуку за замовчуванням"
+        dismiss_default_preference: "Приховати це налаштування"
+        default_preference_dismissed: "Цей параметр також доступний у ваших налаштуваннях користувача"
+        shortcut_hint: "або %{shortcut}"
+        advanced_with_shortcut: "Відкрити розширений пошук (%{shortcut})"
         search_all_topics: "Всі теми"
+        search_this_topic: "Ця тема"
+        search_in_context: "В %{name}"
         search_group_messages: "Повідомлення в %{group}"
         search_user_posts: "Повідомлення від %{username}"
         search_messages: "Повідомлення"

@@ -23,6 +23,7 @@ module DiscourseEvents
         :"max-attendees",
         :"all-day",
         :image,
+        :hosts,
       ]
 
       LEGACY_ESCAPED_ATTRS = %w[data-location]

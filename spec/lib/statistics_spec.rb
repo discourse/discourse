@@ -337,4 +337,132 @@ RSpec.describe Statistics do
       end
     end
   end
+
+  describe "admin onboarding" do
+    fab!(:first_admin) { Fabricate(:admin, created_at: 10.days.ago) }
+
+    def complete_step(step, at:, acting_user: first_admin)
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:admin_onboarding_step_completed],
+        acting_user: acting_user,
+        subject: step,
+        created_at: at,
+      )
+    end
+
+    def log_event(action, at:)
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[action],
+        acting_user: first_admin,
+        created_at: at,
+      )
+    end
+
+    describe ".onboarding_steps" do
+      it "counts each distinct step once" do
+        complete_step("select_theme", at: 9.days.ago)
+        complete_step("invite_collaborators", at: 8.days.ago)
+
+        expect(described_class.onboarding_steps).to eq(completed: 2)
+      end
+
+      it "does not double count a step completed more than once" do
+        complete_step("select_theme", at: 9.days.ago)
+        complete_step("select_theme", at: 8.days.ago)
+
+        expect(described_class.onboarding_steps).to eq(completed: 1)
+      end
+
+      it "ignores subjects that are not onboarding steps" do
+        complete_step("not_a_step", at: 9.days.ago)
+
+        expect(described_class.onboarding_steps).to eq(completed: 0)
+      end
+
+      it "is zero when nothing has been completed" do
+        expect(described_class.onboarding_steps).to eq(completed: 0)
+      end
+    end
+
+    describe ".onboarding_panel" do
+      it "flags completion and dismissal separately" do
+        log_event(:admin_onboarding_completed, at: 9.days.ago)
+
+        expect(described_class.onboarding_panel).to eq(completed: 1, dismissed: 0)
+      end
+
+      it "can flag both when an admin dismisses the panel and finishes later" do
+        log_event(:admin_onboarding_dismissed, at: 9.days.ago)
+        log_event(:admin_onboarding_completed, at: 8.days.ago)
+
+        expect(described_class.onboarding_panel).to eq(completed: 1, dismissed: 1)
+      end
+
+      it "is zero for both when the panel was never touched" do
+        expect(described_class.onboarding_panel).to eq(completed: 0, dismissed: 0)
+      end
+    end
+
+    describe ".onboarding_minutes_to" do
+      it "measures each step from the first admin signing up, across several days" do
+        complete_step("select_theme", at: first_admin.created_at + 30.minutes)
+        complete_step("invite_collaborators", at: first_admin.created_at + 2.days)
+        complete_step("start_posting", at: first_admin.created_at + 4.days)
+        log_event(:admin_onboarding_completed, at: first_admin.created_at + 4.days + 1.minute)
+
+        expect(described_class.onboarding_minutes_to).to eq(
+          select_theme: 30,
+          invite_collaborators: 2880,
+          start_posting: 5760,
+          completed: 5761,
+        )
+      end
+
+      it "measures from the first completion when a step is repeated" do
+        complete_step("select_theme", at: first_admin.created_at + 30.minutes)
+        complete_step("select_theme", at: first_admin.created_at + 3.days)
+
+        expect(described_class.onboarding_minutes_to[:select_theme]).to eq(30)
+      end
+
+      it "reports nil for steps that never happened" do
+        complete_step("select_theme", at: first_admin.created_at + 30.minutes)
+
+        expect(described_class.onboarding_minutes_to).to eq(
+          select_theme: 30,
+          invite_collaborators: nil,
+          start_posting: nil,
+          completed: nil,
+        )
+      end
+
+      it "measures from the lowest-id human admin, not a later one" do
+        later_admin = Fabricate(:admin, created_at: 2.days.ago)
+        complete_step("select_theme", at: first_admin.created_at + 1.hour, acting_user: later_admin)
+
+        expect(described_class.onboarding_minutes_to[:select_theme]).to eq(60)
+      end
+
+      it "reports nil when a step predates the current first admin" do
+        # The admin who did the onboarding has since been deleted, leaving a
+        # replacement whose signup date says nothing about when onboarding began.
+        complete_step("select_theme", at: first_admin.created_at - 2.days)
+
+        expect(described_class.onboarding_minutes_to[:select_theme]).to be_nil
+      end
+
+      it "reports nil throughout when the site has no human admin" do
+        User.where(admin: true).human_users.update_all(admin: false)
+
+        expect(described_class.onboarding_minutes_to).to eq(
+          select_theme: nil,
+          invite_collaborators: nil,
+          start_posting: nil,
+          completed: nil,
+        )
+      end
+    end
+  end
 end

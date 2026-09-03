@@ -384,6 +384,15 @@ en:
       edit_event: "Edit event"
       export_event: "Export event"
       created_by: "Created by"
+      created_and_hosted_by: "Created and hosted by"
+      hosted_by: "Hosted by"
+      co_hosted_by: "Co-hosted by"
+      other_hosts:
+        one: "and %{count} other"
+        other: "and %{count} others"
+      all_hosts:
+        one: "%{count} host"
+        other: "%{count} hosts"
       bulk_invite: "Bulk Invite"
       close_event: "Close event"
       open_event: "Open event"
@@ -600,6 +609,9 @@ en:
           placeholder: "Optional, defaults to topic title"
         invitees:
           label: "Invited groups"
+        hosts:
+          label: "Hosts"
+          description: "Hosts are shown on the event alongside its creator."
         event_type:
           label: "Attendance type"
           public:

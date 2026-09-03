@@ -5,3 +5,44 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  site_settings:
+    boards_enabled: "将主题和轻量级的独立“浮动”卡片组织成可配置的、拖放式的看板，所有这些都通过专门设计的管理用户界面和每个看板的访问控制来实现。"
+    boards_manage_board_allowed_groups: "允许创建和配置看板的群组。"
+  access_control_list:
+    errors:
+      "Boards::Board_user_will_lose_permission": "如果您进行此更改，您将失去管理此看板的权限。是否继续？"
+      "Boards::Board_user_will_lose_permission_on_create": "如果您使用这些权限创建此看板，您将无法管理它。是否继续？"
+  boards:
+    errors:
+      board_not_found: "看板未找到"
+      board_read_forbidden: "您没有权限查看此看板"
+      board_write_forbidden: "您无权修改此看板"
+      board_manage_forbidden: "你没有权限管理这个看板"
+      column_not_found: "未找到列"
+      column_move_out_of_bounds: "列无法再向该方向移动"
+      card_not_found: "未找到卡片"
+      invalid_card_type: "无效的卡片类型"
+      unknown_group_ids: "未知组 ID： %{group_ids}"
+      unknown_category_ids: "未知类别 ID： %{category_ids}"
+      unknown_tag_ids: "未知标签 ID： %{tag_ids}"
+      topic_covered_by_filter: "这是该主题在看板上唯一一张卡片，它与看板的筛选条件相匹配，因此无法移除。"
+      category_definition_topic: "类别定义主题无法添加到看板。"
+      topic_already_in_column: "该主题在该列中已有一张卡片。"
+      invalid_assignee: "找不到名为“%{name}”的用户或组。"
+      topic_does_not_match_constraints: "此主题与看板的类别和标签限制不符。"
+      unknown_tag_name: "未知标签名称：'%{tag_name}'"
+      unknown_tag_names: "未知标签名称： %{tag_names}"
+      cannot_assign: "您没有权限进行分配。"
+      assignment_carry_over_failed: "无法将卡片的任务分配到该主题。"
+      cannot_use_same_tag_multiple_times: "同一个面板中的列不能多次使用同一个标签（%{tag_name}）。"
+      cannot_reorder_recency_column: "按时间排序的卡片无法重新排序。"
+      invalid_column_sort: "无效的列排序： %{sort}"
+    onebox:
+      inline_to_card: "卡片 '%{card_name}' 在 '%{board_name}'"
+      inline_to_board: "看板'%{board_name}'"
+      created_by: "由 %{username} 创建"
+      column_count:
+        other: "%{count} 列"
+      board: "看板"
+      card: "看板卡片"
+      updated_by: "由 %{username} 更新"

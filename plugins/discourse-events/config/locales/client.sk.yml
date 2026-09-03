@@ -320,6 +320,9 @@ sk:
     group_timezones:
       search: "Hľadať"
       group_availability: "%{group} dostupnosť"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID témy"
     discourse_post_event:
       notifications:
         before_event_reminder: "Udalosť sa čoskoro začne"

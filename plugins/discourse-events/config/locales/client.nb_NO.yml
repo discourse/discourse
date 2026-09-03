@@ -26,6 +26,9 @@ nb_NO:
         year: "Det siste året"
     group_timezones:
       search: "Søk…"
+    discourse_workflows:
+      post_event:
+        topic_id: "Emne-ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

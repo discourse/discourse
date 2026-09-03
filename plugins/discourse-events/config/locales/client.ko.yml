@@ -88,6 +88,9 @@ ko:
       invite_user_notification: "%{username}님이 사용자님을 초대했습니다: %{description}"
     group_timezones:
       search: "검색..."
+    discourse_workflows:
+      post_event:
+        topic_id: "글 ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

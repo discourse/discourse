@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
@@ -11,6 +11,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
@@ -18,6 +19,7 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import { MAX_HOSTS } from "../../lib/constants";
 import { recurrenceContext } from "../../lib/event-recurrence";
 import {
   attendanceTransition,
@@ -121,6 +123,7 @@ export default class PostEventBuilder extends Component {
           ? this.previousRsvpStatus || "public"
           : this.event.status || "public",
       rawInvitees: this.event.rawInvitees ?? [],
+      hosts: (this.event.hosts ?? []).map((host) => host.username),
       recurrence: this.event.recurrence ?? null,
       imageUpload: this.event.imageUpload?.url ?? null,
       timezone: this.event.timezone ?? null,
@@ -225,6 +228,12 @@ export default class PostEventBuilder extends Component {
   handleInviteesChange(_, newInvitees) {
     this.formApi?.set("rawInvitees", newInvitees);
     this.event.rawInvitees = newInvitees;
+  }
+
+  @action
+  handleHostsChange(usernames, { set }) {
+    set("hosts", usernames);
+    this.event.hosts = usernames.map((username) => ({ username }));
   }
 
   @action
@@ -452,6 +461,8 @@ export default class PostEventBuilder extends Component {
         this.event.imageUpload?.url ??
         null,
       allowedGroups: (this.event.rawInvitees || []).join(",") || null,
+      hosts:
+        (this.event.hosts || []).map((host) => host.username).join(",") || null,
       closed: !!this.event.isClosed,
       customFields: { ...(this.event.customFields || {}) },
     };
@@ -475,6 +486,9 @@ export default class PostEventBuilder extends Component {
     this.event.reminders = state.reminders;
     this.event.rawInvitees = state.allowedGroups
       ? state.allowedGroups.split(",")
+      : [];
+    this.event.hosts = state.hosts
+      ? state.hosts.split(",").map((username) => ({ username }))
       : [];
     this.event.allDay = state.allDay;
     this.event.startsAt = state.startsAt;
@@ -1056,6 +1070,28 @@ export default class PostEventBuilder extends Component {
                     </form.Field>
                   {{/if}}
                 {{/if}}
+
+                <form.Field
+                  @name="hosts"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.hosts.label"
+                  }}
+                  @description={{i18n
+                    "discourse_post_event.builder_modal.hosts.description"
+                  }}
+                  @type="custom"
+                  @format="full"
+                  @onSet={{this.handleHostsChange}}
+                  as |field|
+                >
+                  <field.Control>
+                    <UserChooser
+                      @value={{field.value}}
+                      @onChange={{field.set}}
+                      @options={{hash maximum=MAX_HOSTS}}
+                    />
+                  </field.Control>
+                </form.Field>
 
                 <form.Field
                   @name="timezone"

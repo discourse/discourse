@@ -170,15 +170,84 @@ describe DiscourseAi::Discoveries::Retrieval do
       )
     end
 
-    it "returns no candidates for a personal-message search" do
+    it "uses keyword and semantic retrieval for personal messages the user can see" do
+      personal_message = Fabricate(:private_message_post, recipient: user, raw: "Anime plans")
+      inaccessible_message = Fabricate(:private_message_post, raw: "Hidden anime plans")
+      lexical_retriever =
+        instance_spy(
+          Proc,
+          call: [source(personal_message), source(inaccessible_message), source(post_1)],
+        )
+      semantic_retriever =
+        instance_spy(
+          Proc,
+          call: [source(personal_message), source(inaccessible_message), source(post_1)],
+        )
+
+      result =
+        described_class.new(user:, lexical_retriever:, semantic_retriever:).call(
+          "Which PMs discuss anime?",
+          keyword_query: "anime in:messages",
+          semantic_query: "private conversations about anime",
+        )
+
+      expect(lexical_retriever).to have_received(:call).with("anime in:messages")
+      expect(semantic_retriever).to have_received(:call).with("private conversations about anime")
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
+        [personal_message.topic_id],
+      )
+    end
+
+    it "uses only keyword retrieval when a personal-message query has an ordering operator" do
+      personal_message = Fabricate(:private_message_post, recipient: user, raw: "Anime plans")
+      semantic_retriever = instance_spy(Proc, call: [source(post_2)])
+
       result =
         described_class.new(
           user:,
-          lexical_retriever: ->(_query) { [source(post_1)] },
-          semantic_retriever: ->(_query) { [source(post_1)] },
-        ).call("cats in:messages")
+          lexical_retriever: ->(_query) { [source(personal_message)] },
+          semantic_retriever:,
+        ).call(
+          "My most viewed anime PM",
+          keyword_query: "anime in:messages order:views",
+          semantic_query: "",
+        )
 
-      expect(result.candidates).to eq([])
+      expect(semantic_retriever).not_to have_received(:call)
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
+        [personal_message.topic_id],
+      )
+    end
+
+    it "preserves a personal-message user filter without semantic broadening" do
+      matching_message = Fabricate(:private_message_post, recipient: user, raw: "Anime plans")
+      unrelated_message =
+        Fabricate(:private_message_post, recipient: user, raw: "Unrelated private plans")
+      query = "anime personal_messages:#{user.username}"
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(matching_message)] },
+          semantic_retriever: ->(_query) { [source(unrelated_message)] },
+        ).call(query, keyword_query: query, semantic_query: "private conversations about anime")
+
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
+        [matching_message.topic_id],
+      )
+    end
+
+    it "excludes personal messages from a regular search" do
+      personal_message = Fabricate(:private_message_post, recipient: user, raw: "Anime plans")
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(post_1), source(personal_message)] },
+          semantic_retriever: ->(_query) { [] },
+        ).call("anime")
+
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_1.id])
     end
 
     it "does not broaden explicit search filters through semantic retrieval" do
@@ -280,6 +349,21 @@ describe DiscourseAi::Discoveries::Retrieval do
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to contain_exactly(
         parent_post.topic_id,
         child_post.topic_id,
+      )
+    end
+
+    it "finds only personal messages the user can see" do
+      token = "privateneedle#{SecureRandom.hex(6)}"
+      personal_message = Fabricate(:private_message_post, recipient: user, raw: token)
+      inaccessible_message = Fabricate(:private_message_post, raw: token)
+      [personal_message, inaccessible_message].each do |post|
+        SearchIndexer.index(post, force: true)
+      end
+
+      result = described_class.new(user:).call("#{token} in:messages", semantic_query: "")
+
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
+        [personal_message.topic_id],
       )
     end
   end

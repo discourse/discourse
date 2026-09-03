@@ -294,6 +294,9 @@ da:
     group_timezones:
       search: "Søg..."
       group_availability: "%{group} tilgængelighed"
+    discourse_workflows:
+      post_event:
+        topic_id: "Emne ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

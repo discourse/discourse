@@ -6,6 +6,7 @@ module DiscourseEvents
       attributes :can_act_on_discourse_post_event
       attributes :can_update_attendance
       attributes :creator
+      attributes :hosts
       attributes :is_closed
       attributes :is_expired
       attributes :is_ongoing
@@ -150,6 +151,15 @@ module DiscourseEvents
 
       def creator
         BasicUserSerializer.new(object.post.user, embed: :objects, root: false)
+      end
+
+      def hosts
+        ActiveModel::ArraySerializer.new(
+          object.event_hosts.map(&:user),
+          each_serializer: EventHostSerializer,
+          scope:,
+          root: false,
+        )
       end
 
       def stats

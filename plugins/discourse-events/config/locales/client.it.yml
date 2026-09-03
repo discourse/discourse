@@ -320,6 +320,9 @@ it:
     group_timezones:
       search: "Ricerca..."
       group_availability: "Disponibilità di %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID dell'argomento"
     discourse_post_event:
       notifications:
         before_event_reminder: "Un evento sta per iniziare"

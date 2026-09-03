@@ -6,17 +6,45 @@
 
 zh_CN:
   llms_txt:
+    human_community_policy: "这是一个供人类讨论交流的社区。请勿冒充他人或擅自创建账号。只有当人类明确要求您执行特定操作时，才能发布内容、编辑文章或进行其他任何形式的写作操作。"
+    crawler_policy: "仅抓取用户特定请求所需的页面。请勿系统性地抓取或批量下载此社区。请遵守 `robots.txt` 文件、网站条款及其爬虫控制设置。如果服务器返回 HTTP 429 错误，请停止并等待 `Retry-After` 间隔后再重试。"
+    mcp_guidance: "如果您可以运行本地 MCP 服务器，Discourse MCP 是访问此社区的首选方式。请将其站点 URL 设置为 `%{base_url}`。它为主题、帖子、搜索、用户、分类和支持的社区操作提供权限感知工具。"
+    account_required: "社区内容只能提供给已验证的成员。"
     sections:
+      preferred_interface: "首选代理接口"
+      public_web_access: "公共网络访问"
       optional: "可选"
     links:
+      mcp:
+        label: "Discourse MCP 设置"
+        note: "安装本地服务器并将其连接到兼容 MCP 的客户端"
       search:
         label: "搜索"
+        note: "搜索针对特定用户请求的公开讨论；不抓取搜索结果页面"
+      filter:
+        label: "话题过滤器"
+        note: "使用 `?q=` 查询公共主题，并可使用 `category:`、`tag:`、`status:` 和 `order:` 等过滤器。"
+      latest:
+        label: "最新讨论"
+        note: "浏览近期活跃的公开话题"
       categories:
         label: "类别"
+        note: "浏览公开讨论类别"
+      sitemap:
+        label: "网站地图"
+        note: "发现 \"robots.txt\" 和 crawler 控制下的公开主题 URL"
       about:
         label: "关于"
+        note: "社区概况、管理人员及统计数据"
       guidelines:
         label: "准则"
+        note: "阅读社区指南"
+      tos:
+        label: "服务条款"
+        note: "阅读服务条款"
+      privacy:
+        label: "隐私政策"
+        note: "阅读隐私政策"
   dates:
     short_date_no_year: "MMM D 日"
     short_date: "YYYY 年 MMM D 日"
@@ -1931,6 +1959,7 @@ zh_CN:
     crawler_stale_chromium_major_version_cutoff: "在非活跃会话中，版本号小于等于该值的 Chromium 主版本会获得一个爬虫评分。仅在审核流量后再更新该值；过时的阈值会降低敏感度，而非提高。"
     slow_down_crawler_user_agents: "网页抓取工具的用户代理应按照 {{setting:slow_down_crawler_rate}} 设置中的配置进行速率限值。每个值的长度必须至少为 3 个字符。"
     slow_down_crawler_rate: "如果指定了 {{setting:slow_down_crawler_user_agents}}s，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
+    llms_txt: "请上传一个自定义文本文件，该文件将直接在 /llms.txt 上提供，而不是使用“即将进行的更改”中配置的默认生成文件。有关格式，请参阅 <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> 。要调整自动访问，请配置 {{setting:slow_down_crawler_user_agents}} 和 {{setting:slow_down_crawler_rate}}。"
     content_security_policy: "启用内容安全策略 (CSP)。CSP 是一个附加安全层，有助于防止某些类型的攻击，包括跨站脚本 (XSS) 和数据注入。只有在需要调试/测试时才应暂时将其禁用。"
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_report_uri: "通过 CSP <code>report-uri</code> 指令将 CSP 违规报告发送至此 URL。如果留空，则禁用报告功能。"
@@ -2679,6 +2708,7 @@ zh_CN:
     improved_crawler_detection: "启用改进的爬虫跟踪功能，从而可更精准地识别疑似爬虫，并确保流量统计的准确性。"
     enable_invite_modal_with_roles: "启用重新设计的邀请流程，管理员可以直接以管理员身份邀请他人。受邀者注册后即成为版主，在邀请人通过电子邮件确认后，受邀者将成为管理员。"
     update_pending_users_reminder_default: "我们将{{setting:pending_users_reminder_delay_minutes}}设置的默认值更新为 30 分钟，以便管理人员在有新成员等待审批时能够及时收到通知。如果您之前更改过此设置，则此次更改不会生效。"
+    enable_generated_llms_txt: "当未上传自定义文件时，生成简洁的 /llms.txt 文件。该文档描述了公共发现路径、首选的 Discourse MCP 接口以及负责的代理访问权限。要调整自动访问，请配置 {{setting:slow_down_crawler_user_agents}} 和 {{setting:slow_down_crawler_rate}}。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_date: "日期格式无效。请输入有效日期。"

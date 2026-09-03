@@ -322,6 +322,9 @@ pt_BR:
     group_timezones:
       search: "Pesquisar..."
       group_availability: "disponibilidade de %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID do tópico"
     discourse_post_event:
       notifications:
         before_event_reminder: "Um evento está prestes a começar"

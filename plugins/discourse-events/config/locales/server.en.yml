@@ -154,6 +154,10 @@ en:
           acting_user_not_allowed_to_create_event: "Current user is not allowed to create events."
           acting_user_not_allowed_to_act_on_this_event: "Current user is not allowed to act on this event."
           invalid_allowed_groups: "Invalid allowed groups."
+          invalid_hosts: "One or more hosts can't be added to this event."
+          too_many_hosts:
+            one: "An event is limited to %{count} host."
+            other: "An event is limited to %{count} hosts."
           acting_user_not_allowed_to_invite_these_groups: "Current user is not allowed to invite these groups."
           custom_field_is_invalid: "The custom field `%{field}` is not allowed."
           name:
