@@ -1,7 +1,8 @@
 @use "sass:math";
 @use "lib/viewport";
 
-.fk-d-menu[data-identifier="usercard"] {
+.fk-d-menu[data-identifier="usercard"],
+.fk-d-menu[data-identifier="category-card"] {
   max-width: calc(100vw - 2em);
   width: auto;
 
@@ -48,9 +49,9 @@
   }
 }
 
-// shared styles for user and group cards
 .user-card,
-.group-card {
+.group-card,
+.category-card {
   --card-width: 39em;
   --avatar-width: 8em;
   --avatar-margin: -3.3em; // extends the avatar above the card
