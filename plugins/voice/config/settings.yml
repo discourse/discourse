@@ -162,7 +162,7 @@ plugins:
   voice_analytics_enabled:
     default: true
   voice_session_retention_days:
-    default: 400
+    default: 1095
     min: 7
     max: 3650
   voice_chat_enabled:
