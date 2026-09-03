@@ -53,6 +53,36 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       );
   });
 
+  test("expands additional event hosts", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        hosts: [
+          { id: 6, username: "alex" },
+          { id: 7, username: "blake" },
+          { id: 8, username: "casey" },
+          { id: 9, username: "drew" },
+        ],
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-hosts");
+
+    assert
+      .dom(".event-host")
+      .exists({ count: 2 }, "shows the first two hosts initially");
+    assert.dom(".event-hosts__toggle").hasText("and 2 others");
+
+    await click(".event-hosts__toggle");
+
+    assert
+      .dom(".event-host")
+      .exists({ count: 4 }, "shows all hosts on request");
+    assert.dom(".event-hosts__toggle").hasText("Show fewer hosts");
+  });
+
   test("interpolates the ordinal and weekday into the monthly recurrence label", async function (assert) {
     stubApi.call(this, buildEvent({ recurrence: "every_month" }));
 

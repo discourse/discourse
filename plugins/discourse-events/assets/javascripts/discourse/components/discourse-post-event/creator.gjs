@@ -1,10 +1,20 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { groupPath } from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
+const INITIAL_HOSTS_COUNT = 2;
+
 export default class DiscoursePostEventCreator extends Component {
+  @service a11y;
+
+  @tracked hostsExpanded = false;
+
   get creatorIsHost() {
     return this.args.hosts?.some(
       (host) => host.username === this.args.user?.username
@@ -25,6 +35,30 @@ export default class DiscoursePostEventCreator extends Component {
     );
   }
 
+  get displayedHosts() {
+    return this.hostsExpanded
+      ? this.hosts
+      : this.hosts.slice(0, INITIAL_HOSTS_COUNT);
+  }
+
+  get hasAdditionalHosts() {
+    return this.hosts.length > INITIAL_HOSTS_COUNT;
+  }
+
+  get additionalHostsCount() {
+    return this.hosts.length - INITIAL_HOSTS_COUNT;
+  }
+
+  get hostsToggleLabel() {
+    if (this.hostsExpanded) {
+      return i18n("discourse_post_event.show_fewer_hosts");
+    }
+
+    return i18n("discourse_post_event.other_hosts", {
+      count: this.additionalHostsCount,
+    });
+  }
+
   get hostsLabel() {
     return this.creatorIsHost
       ? "discourse_post_event.co_hosted_by"
@@ -41,6 +75,20 @@ export default class DiscoursePostEventCreator extends Component {
 
   get username() {
     return this.args.user.name || formatUsername(this.args.user.username);
+  }
+
+  @action
+  toggleHosts() {
+    this.hostsExpanded = !this.hostsExpanded;
+    this.a11y.announce(
+      i18n(
+        this.hostsExpanded
+          ? "discourse_post_event.additional_hosts_shown"
+          : "discourse_post_event.additional_hosts_hidden",
+        { count: this.additionalHostsCount }
+      ),
+      "polite"
+    );
   }
 
   usernameFor(user) {
@@ -69,7 +117,7 @@ export default class DiscoursePostEventCreator extends Component {
         <span class="event-hosts">
           <span class="hosted-by">{{i18n this.hostsLabel}}</span>
 
-          {{#each this.hosts as |host|}}
+          {{#each this.displayedHosts as |host|}}
             <span class="event-host">
               <a class="topic-invitee-avatar" data-user-card={{host.username}}>
                 {{dAvatar host imageSize="tiny"}}
@@ -77,6 +125,16 @@ export default class DiscoursePostEventCreator extends Component {
               </a>
             </span>
           {{/each}}
+
+          {{#if this.hasAdditionalHosts}}
+            <DButton
+              class="event-hosts__toggle"
+              @action={{this.toggleHosts}}
+              @ariaExpanded={{this.hostsExpanded}}
+              @display="link"
+              @translatedLabel={{this.hostsToggleLabel}}
+            />
+          {{/if}}
         </span>
       {{/if}}
 

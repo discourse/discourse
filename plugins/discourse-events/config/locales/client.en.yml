@@ -387,6 +387,16 @@ en:
       created_and_hosted_by: "Created and hosted by"
       hosted_by: "Hosted by"
       co_hosted_by: "Co-hosted by"
+      other_hosts:
+        one: "and %{count} other"
+        other: "and %{count} others"
+      show_fewer_hosts: "Show fewer hosts"
+      additional_hosts_shown:
+        one: "%{count} additional host shown"
+        other: "%{count} additional hosts shown"
+      additional_hosts_hidden:
+        one: "%{count} additional host hidden"
+        other: "%{count} additional hosts hidden"
       organized_by: "Organized by"
       bulk_invite: "Bulk Invite"
       close_event: "Close event"
