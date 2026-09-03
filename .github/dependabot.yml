@@ -84,6 +84,12 @@ updates:
       babel:
         patterns:
           - "@babel*"
+      codemirror:
+        patterns:
+          - "@codemirror/*"
+      ember-decorators:
+        patterns:
+          - "@ember-decorators/*"
       embroider:
         patterns:
           - "@embroider*"
