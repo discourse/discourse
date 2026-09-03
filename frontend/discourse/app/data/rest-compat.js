@@ -161,9 +161,8 @@ export default class RestCompatModel extends WarpRestModel {
   beforeUpdate() {}
   afterUpdate() {}
 
-  // Legacy `RestModel#save`. If the subclass defines `static builders.save`,
-  // delegate to `WarpRestModel.save` (builder-driven, WarpDrive path);
-  // otherwise branch on `isNew` and use the legacy adapter pipeline.
+  // Legacy `RestModel#save`. Goes through the WarpDrive path when the subclass
+  // defines `static builders.save`; the legacy adapter pipeline otherwise.
   async save(data) {
     if (!this.constructor.builders?.save) {
       return this.isNew ? this._saveNew(data) : this.update(data);
@@ -176,8 +175,7 @@ export default class RestCompatModel extends WarpRestModel {
   }
 
   // Runs `fn` between the registered `addModelCallback` before/after callbacks
-  // for `kind` ("Create" | "Update" | "Destroy"), passing the request props to
-  // the before callbacks and `fn`'s result to the after callbacks.
+  // for `kind` ("Create" | "Update" | "Destroy").
   async #withCallbacks(kind, props, fn) {
     const modelName = this.#modelName;
     await applyModelCallbacks(modelName, `before${kind}`, this, props);
@@ -187,7 +185,7 @@ export default class RestCompatModel extends WarpRestModel {
   }
 
   // Merges plugin-registered save properties (see `addModelSaveProperty`) into
-  // the outgoing payload. Returns `data` untouched when none are registered.
+  // the outgoing payload.
   #withSaveProperties(data) {
     const extras = extraSavePropertiesFor(this.#modelName, this);
     return Object.keys(extras).length ? { ...data, ...extras } : data;
