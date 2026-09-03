@@ -113,6 +113,9 @@ TEXT
         :participating_users_last_day,
         :participating_users_7_days,
         :participating_users_30_days,
+        # onboarding stats are grouped under their stat type rather than being
+        # flat top-level keys
+        :onboarding,
       )
     end
 

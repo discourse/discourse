@@ -12,6 +12,10 @@ class UserHistory < ActiveRecord::Base
   belongs_to :category
   belongs_to :reviewable, optional: true
 
+  # Subjects logged alongside the :admin_onboarding_step_completed action, one
+  # per step of the admin onboarding panel.
+  ADMIN_ONBOARDING_STEPS = %w[select_theme invite_collaborators start_posting].freeze
+
   # Each value in the context should be shorter than this
   MAX_CONTEXT_LENGTH = 50_000
 
