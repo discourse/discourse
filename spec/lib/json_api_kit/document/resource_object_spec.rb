@@ -3,7 +3,7 @@
 RSpec.describe JsonApiKit::Document::ResourceObject do
   subject(:resource_object) { described_class.new(record, urls:, glossary:, meta:) }
 
-  let(:glossary) { JsonApiKit::Glossary.new([JsonApiKit::Glossary::CasingRule]) }
+  let(:glossary) { JsonApiKit::Glossary.kit }
 
   fab!(:topic) { Fabricate(:topic, title: "A row a document renders") }
 

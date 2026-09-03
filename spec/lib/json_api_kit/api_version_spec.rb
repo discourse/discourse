@@ -43,6 +43,28 @@ RSpec.describe JsonApiKit::ApiVersion do
     end
   end
 
+  describe "#eql?" do
+    context "when the other version has the same date" do
+      let(:other) { described_class.parse("2026-09-01") }
+
+      it { expect(version).to eql(other) }
+    end
+
+    context "when the other version has another date" do
+      let(:other) { described_class.parse("2026-11-15") }
+
+      it { expect(version).not_to eql(other) }
+    end
+  end
+
+  describe "#hash" do
+    let(:other) { described_class.parse("2026-09-01") }
+
+    it "is the same for two versions of one date" do
+      expect(version.hash).to eq(other.hash)
+    end
+  end
+
   describe "#<=>" do
     context "when the other version is later" do
       let(:other) { described_class.parse("2026-11-15") }

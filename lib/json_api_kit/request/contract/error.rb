@@ -26,12 +26,12 @@ module JsonApiKit
         def meta = @meta&.call(self) || {}
 
         def parameter
-          ParameterName.new(*error.attribute.to_s.split(".").map { member_name(it) })
+          ParameterName.new(*error.attribute.to_s.split(".").map { member_value(member(it)) })
         end
 
-        def name = member_name(options[:name])
+        def name = member_value(options[:name])
 
-        def key = member_name(options[:key])
+        def key = member_value(options[:key])
 
         def member_parameter(member = name) = parameter.member(member)
 
@@ -45,9 +45,11 @@ module JsonApiKit
 
         attr_reader :error, :glossary
 
-        def member_name(name) = glossary.member_name(name)
+        def member_value(name) = glossary.member_name(name).value
 
-        def page_parameter(name) = parameter.family.member(member_name(name))
+        def member(value) = Name::Member.new(value: value.to_s)
+
+        def page_parameter(name) = parameter.family.member(member_value(member(name)))
       end
     end
   end

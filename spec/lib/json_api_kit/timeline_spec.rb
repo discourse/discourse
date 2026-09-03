@@ -1,25 +1,49 @@
 # frozen_string_literal: true
 
+module JsonApiKitSpec
+  class MiddleTimelineChange < JsonApiKit::VersionChange
+    version "2026-11-15"
+    description "The middle change on the timeline."
+  end
+
+  class LatestTimelineChange < JsonApiKit::VersionChange
+    version "2027-01-05"
+    description "The latest change on the timeline."
+  end
+end
+
 RSpec.describe JsonApiKit::Timeline do
-  let(:earliest) { JsonApiKit::ApiVersion.parse("2026-09-01") }
+  let(:first) { described_class::FIRST_RELEASE }
   let(:middle) { JsonApiKit::ApiVersion.parse("2026-11-15") }
   let(:latest) { JsonApiKit::ApiVersion.parse("2027-01-05") }
-  let(:timeline) { described_class.new([earliest, middle, latest]) }
 
   before do
     freeze_time(Date.new(2027, 1, 20))
-    allow(described_class).to receive(:core).and_return(timeline)
+    allow(JsonApiKit::VersionChange).to receive(:all).and_return(
+      [
+        JsonApiKitSpec::MiddleTimelineChange.new(__FILE__),
+        JsonApiKitSpec::LatestTimelineChange.new(__FILE__),
+      ],
+    )
   end
 
   describe ".first" do
-    it "returns the earliest version" do
-      expect(described_class.first).to eq(earliest)
+    it "returns the first release" do
+      expect(described_class.first).to eq(first)
     end
   end
 
   describe ".current" do
-    it "returns the latest version" do
+    it "returns the version of the latest change" do
       expect(described_class.current).to eq(latest)
+    end
+
+    context "when there is no change" do
+      before { allow(JsonApiKit::VersionChange).to receive(:all).and_return([]) }
+
+      it "returns the first release" do
+        expect(described_class.current).to eq(first)
+      end
     end
   end
 
@@ -57,7 +81,7 @@ RSpec.describe JsonApiKit::Timeline do
     end
 
     context "when the date is earlier than the first version" do
-      let(:raw) { (earliest.date - 1.day).to_s }
+      let(:raw) { (first.date - 1.day).to_s }
 
       it { expect { version }.to raise_error(JsonApiKit::ApiVersion::Unknown) }
     end
