@@ -8,8 +8,10 @@ export function languageName(language) {
   try {
     const locale = I18n.currentBcp47Locale || "en";
     return (
-      new Intl.DisplayNames([locale], { type: "language" }).of(language) ||
-      language
+      new Intl.DisplayNames([locale], {
+        type: "language",
+        languageDisplay: "standard",
+      }).of(language) || language
     );
   } catch {
     return language;

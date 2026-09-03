@@ -18,8 +18,8 @@ module("Unit | Admin | Lib | format-language", function (hooks) {
     const cases = [
       [null, "", "missing language"],
       ["en", "English", "base language"],
-      ["en-US", "American English", "language with region"],
-      ["en-GB", "British English", "regional dialect"],
+      ["en-US", "English (United States)", "language with region"],
+      ["en-GB", "English (United Kingdom)", "regional dialect"],
       ["zh-Hant-TW", "Chinese (Traditional, Taiwan)", "script and region"],
       ["sr-Latn-RS", "Serbian (Latin, Serbia)", "non-default script"],
       ["iw-IL", "Hebrew (Israel)", "legacy language code"],
