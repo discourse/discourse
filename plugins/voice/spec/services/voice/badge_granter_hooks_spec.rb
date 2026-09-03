@@ -131,13 +131,16 @@ RSpec.describe Voice::BadgeGranterHooks do
         expect(user.badges.pluck(:name)).to include("Packed House")
       end
 
-      it "does not grant when room has no max_participants" do
+      it "falls back to the site-wide cap when the room has no max_participants" do
         room.update!(max_participants: nil)
-        participants = User.where(id: [user.id])
+        SiteSetting.voice_max_room_participants = 2
+        other = Fabricate(:user)
 
-        described_class.on_join(user, room, participants)
-
+        described_class.on_join(user, room, User.where(id: [user.id]))
         expect(user.badges.pluck(:name)).not_to include("Packed House")
+
+        described_class.on_join(user, room, User.where(id: [user.id, other.id]))
+        expect(user.badges.pluck(:name)).to include("Packed House")
       end
     end
 
@@ -193,6 +196,14 @@ RSpec.describe Voice::BadgeGranterHooks do
 
       expect(user.badges).to be_empty
     end
+
+    it "does nothing when analytics are disabled" do
+      SiteSetting.voice_analytics_enabled = false
+
+      described_class.on_room_create(user)
+
+      expect(user.badges).to be_empty
+    end
   end
 
   describe ".on_invite_redeemed" do
@@ -228,11 +239,13 @@ RSpec.describe Voice::BadgeGranterHooks do
       Badge.joins(:badge_grouping).where(badge_groupings: { name: "Voice" })
     end
 
-    it "creates all badges as disabled" do
-      described_class.disable_all!
-
+    it "creates all badges enabled" do
       expect(voice_badges.count).to eq(27)
-      expect(voice_badges.where(enabled: true).count).to eq(0)
+      expect(voice_badges.where(enabled: false).count).to eq(0)
+    end
+
+    it "never auto-revokes scheduled badges" do
+      expect(voice_badges.where.not(query: nil)).to all(have_attributes(auto_revoke: false))
     end
 
     it "creates the Voice badge grouping" do
@@ -265,11 +278,23 @@ RSpec.describe Voice::BadgeGranterHooks do
   describe ".enable_all!" do
     before { described_class.disable_all! }
 
-    it "enables all Voice badges" do
+    it "enables all Voice badges and schedules a backfill for the scheduled ones" do
       described_class.enable_all!
 
       voice_badges = Badge.joins(:badge_grouping).where(badge_groupings: { name: "Voice" })
       expect(voice_badges.where(enabled: false).count).to eq(0)
+      expect_job_enqueued(
+        job: :backfill_badge,
+        args: {
+          badge_id: Badge.find_by(name: "Rookie").id,
+        },
+      )
+      expect_not_enqueued_with(
+        job: :backfill_badge,
+        args: {
+          badge_id: Badge.find_by(name: "Mic Check").id,
+        },
+      )
     end
   end
 

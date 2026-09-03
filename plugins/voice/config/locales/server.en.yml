@@ -11,7 +11,7 @@ en:
     voice_max_room_participants: "Maximum number of people who can be in a voice room at the same time. A room's own participant limit can lower this, but never raise it."
     voice_auto_status_enabled: "Automatically set user status when they join a voice room (e.g. '🎙️ In Watercooler'). Requires the 'enable user status' site setting."
     voice_mesh_privacy_warning_enabled: "Warn users before they join a peer-to-peer voice room that other participants may be able to see their IP address, with an option to not show the warning again on that device. Calls hosted on a LiveKit server never show the warning."
-    voice_badges_enabled: "Enable voice chat badges. Grants badges for voice room milestones like time spent, rooms visited, and connections made."
+    voice_badges_enabled: "Enable voice chat badges. Grants badges for voice room milestones like time spent, rooms visited, and connections made. Toggling this enables or disables every badge in the Voice group at once. Requires {{setting:voice_analytics_enabled}}, which records the sessions the badges are computed from."
     voice_idle_threshold_minutes: "Minutes of inactivity before a voice room participant is marked as idle. Set to 0 to disable."
     voice_afk_auto_mute_threshold_minutes: "Minutes of inactivity before a voice room participant is automatically muted. Set to 0 to disable."
     voice_afk_disconnect_threshold_minutes: "Minutes of inactivity before a voice room participant is automatically disconnected. Set to 0 to disable."
