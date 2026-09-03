@@ -168,7 +168,10 @@ module DiscourseUpdates
     def update_new_features(response_json = nil)
       response_json ||= new_features_response_json
       Discourse.redis.set(new_features_key, response_json)
-      Discourse.redis.del(latest_new_feature_created_at_key)
+
+      # Derived on write rather than on read: computing it filters the feed,
+      # which can shell out to git once per entry.
+      refresh_latest_new_feature_created_at!
     end
 
     def new_features_response_json
@@ -176,6 +179,8 @@ module DiscourseUpdates
         Excon.new(new_features_full_endpoint_url).request(
           expects: [200],
           method: :Get,
+          connect_timeout: 5,
+          write_timeout: 5,
           read_timeout: 5,
         )
       response.body
@@ -240,7 +245,10 @@ module DiscourseUpdates
 
     def has_unseen_features?(user_id)
       latest_ts = latest_new_feature_created_at
-      return false if latest_ts.nil?
+      if latest_ts.nil?
+        enqueue_latest_new_feature_created_at_refresh
+        return false
+      end
 
       last_seen = new_features_last_seen(user_id)
       return true if last_seen.nil?
@@ -248,21 +256,32 @@ module DiscourseUpdates
       latest_ts.to_i > last_seen.to_i
     end
 
+    # Read-only on purpose. Deriving this value filters the feed, which can shell
+    # out to git once per entry, so it is only ever computed in the background by
+    # `refresh_latest_new_feature_created_at!`. A missing value means "nothing to
+    # show yet", not "compute it now".
     def latest_new_feature_created_at
       cached = Discourse.redis.get(latest_new_feature_created_at_key)
-      return Time.zone.parse(cached) if cached.present?
+      cached.present? ? Time.zone.parse(cached) : nil
+    end
 
+    # Must only be called from a background job, never while serving a request.
+    def refresh_latest_new_feature_created_at!
       entries =
         merge_new_features_with_upcoming_changes(
           new_features&.map { |item| item.symbolize_keys } || [],
         )
-      return nil if entries.blank?
 
       max_entry =
         entries.max_by do |item|
           val = item[:created_at]
           val.is_a?(String) ? Time.zone.parse(val).to_i : val.to_i
         end
+
+      if max_entry.blank?
+        clear_latest_new_feature_created_at_cache
+        return nil
+      end
 
       max_created_at =
         if max_entry[:created_at].is_a?(String)
@@ -277,6 +296,15 @@ module DiscourseUpdates
 
     def clear_latest_new_feature_created_at_cache
       Discourse.redis.del(latest_new_feature_created_at_key)
+    rescue Redis::CannotConnectError
+    end
+
+    # Nothing recomputes the timestamp between the daily job runs, so anything
+    # that invalidates it (a deploy, an upcoming change changing status) queues a
+    # refresh. Throttled because callers can be hit by every request.
+    def enqueue_latest_new_feature_created_at_refresh
+      return if !Discourse.redis.set(refresh_latest_new_feature_lock_key, 1, ex: 1.minute, nx: true)
+      Jobs.enqueue(:refresh_latest_new_feature)
     rescue Redis::CannotConnectError
     end
 
@@ -326,6 +354,7 @@ module DiscourseUpdates
         new_features_key,
         last_viewed_feature_dates_for_users_key,
         latest_new_feature_created_at_key,
+        refresh_latest_new_feature_lock_key,
         *Discourse.redis.keys("#{missing_versions_key_prefix}*"),
         *Discourse.redis.keys(new_features_last_seen_key("*")),
       )
@@ -390,6 +419,10 @@ module DiscourseUpdates
 
     def latest_new_feature_created_at_key
       "latest_new_feature_created_at"
+    end
+
+    def refresh_latest_new_feature_lock_key
+      "refresh_latest_new_feature_lock"
     end
 
     def last_viewed_feature_dates_for_users_key
