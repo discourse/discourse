@@ -240,5 +240,5 @@ en:
       long_description: "Awarded for accumulating 5 or more hours of voice chat on weekends."
     marathoner:
       name: "Marathoner"
-      description: "Stayed in a single voice session for 4 hours."
-      long_description: "Awarded for staying in a single continuous voice session for 4 or more hours."
+      description: "Spent 4 hours in a single voice session with company."
+      long_description: "Awarded for a single continuous voice session with 4 or more hours spent while at least one other person was in the room."

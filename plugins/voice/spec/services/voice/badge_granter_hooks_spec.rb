@@ -87,15 +87,26 @@ RSpec.describe Voice::BadgeGranterHooks do
     end
 
     describe "Marathoner" do
-      it "grants when session lasted 4+ hours" do
+      fab!(:companion, :user)
+
+      it "grants when 4+ hours of the session were spent with someone else" do
+        Fabricate(:voice_session, user: companion, room: room, joined_at: 4.5.hours.ago)
         session = build_session(joined_at: 5.hours.ago, left_at: Time.current)
         described_class.on_leave(user, session, room: room)
 
         expect(user.badges.pluck(:name)).to include("Marathoner")
       end
 
-      it "does not grant for shorter sessions" do
-        session = build_session(joined_at: 3.hours.ago, left_at: Time.current)
+      it "does not grant for 4+ hours spent alone" do
+        session = build_session(joined_at: 5.hours.ago, left_at: Time.current)
+        described_class.on_leave(user, session, room: room)
+
+        expect(user.badges.pluck(:name)).not_to include("Marathoner")
+      end
+
+      it "does not grant when company stayed under 4 hours" do
+        Fabricate(:voice_session, user: companion, room: room, joined_at: 3.hours.ago)
+        session = build_session(joined_at: 5.hours.ago, left_at: Time.current)
         described_class.on_leave(user, session, room: room)
 
         expect(user.badges.pluck(:name)).not_to include("Marathoner")

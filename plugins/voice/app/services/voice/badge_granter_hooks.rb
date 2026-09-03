@@ -75,8 +75,7 @@ module Voice
       end
 
       def marathoner?(session)
-        duration = (session.left_at - session.joined_at).to_i
-        duration >= 4.hours.to_i
+        session.accompanied_seconds >= 4.hours.to_i
       end
 
       def room_full?(room, participants)
