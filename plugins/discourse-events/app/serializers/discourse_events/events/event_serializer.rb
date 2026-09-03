@@ -187,8 +187,8 @@ module DiscourseEvents
       end
 
       def should_display_invitees
-        (object.public? && object.invitees.count > 0) ||
-          (object.private? && can_display_invitee_details? && Array(object.raw_invitees).count > 0)
+        (object.public? && object.invitees.exists?) ||
+          (object.private? && can_display_invitee_details? && Array(object.raw_invitees).any?)
       end
 
       def include_url?

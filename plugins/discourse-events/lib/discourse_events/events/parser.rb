@@ -28,8 +28,13 @@ module DiscourseEvents
       LEGACY_ESCAPED_ATTRS = %w[data-location]
       SCHEME_PREFIX = /\A[a-z][a-z0-9+.\-]*:/i
 
+      EVENT_MARKER = /\[event|discourse-post-event/i
+
       def self.extract_events(post)
-        cooked = PrettyText.cook(post.raw, topic_id: post.topic_id, user_id: post.user_id)
+        raw = post.raw.to_s
+        return [] if !raw.match?(EVENT_MARKER)
+
+        cooked = PrettyText.cook(raw, topic_id: post.topic_id, user_id: post.user_id)
         valid_options = valid_option_attributes
 
         valid_custom_fields =
