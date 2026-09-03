@@ -19,6 +19,7 @@ import "message-bus-client";
 import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
+import { clearExtraAttributes } from "discourse/data/extra-attributes";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setLoadedFaker } from "discourse/lib/load-faker";
@@ -350,6 +351,7 @@ export default async function setupTests(config) {
     testContainer.scrollLeft = 0;
 
     flushMap();
+    clearExtraAttributes();
 
     window.MessageBus.unsubscribe("*");
     localStorage.clear();
