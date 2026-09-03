@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PostEventBuilder from "../../discourse/components/modal/post-event-builder";
 import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
 
@@ -19,12 +20,13 @@ function eventWith(attrs = {}) {
   });
 }
 
-async function renderAdvanced(event) {
+async function renderAdvanced(event, modelOverrides = {}) {
   const model = {
     event,
     initialScreen: "advanced",
     onUpdate: () => {},
     toolbarEvent: {},
+    ...modelOverrides,
   };
   const closeModal = () => {};
 
@@ -118,37 +120,14 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
   test("typed custom field keeps its value when the location is edited", async function (assert) {
     this.siteSettings.discourse_post_event_allowed_custom_fields = "test1";
 
-    const event = DiscoursePostEventEvent.create({
-      name: "My event",
-      starts_at: "2022-07-01T10:00:00Z",
-      ends_at: "2022-07-01T11:00:00Z",
-      timezone: "UTC",
-      status: "public",
-      reminders: [],
-      raw_invitees: [],
-      custom_fields: {},
-    });
+    const event = eventWith();
 
     let updatedEvent = null;
-    const model = {
-      event,
-      initialScreen: "advanced",
+    await renderAdvanced(event, {
       onUpdate: (startsAt, endsAt, savedEvent) => {
         updatedEvent = savedEvent;
       },
-      toolbarEvent: {},
-    };
-    const closeModal = () => {};
-
-    await render(
-      <template>
-        <PostEventBuilder
-          @inline={{true}}
-          @model={{model}}
-          @closeModal={{closeModal}}
-        />
-      </template>
-    );
+    });
 
     await fillIn(`[data-name="customFields.test1"] input`, "hello");
     await fillIn(`[data-name="location"] input`, "Sydney");
@@ -168,37 +147,15 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
   test("typed custom field survives a compact-screen edit in between", async function (assert) {
     this.siteSettings.discourse_post_event_allowed_custom_fields = "test1";
 
-    const event = DiscoursePostEventEvent.create({
-      name: "My event",
-      starts_at: "2022-07-01T10:00:00Z",
-      ends_at: "2022-07-01T11:00:00Z",
-      timezone: "UTC",
-      status: "public",
-      reminders: [],
-      raw_invitees: [],
-      custom_fields: { test1: "seeded" },
-    });
+    const event = eventWith({ custom_fields: { test1: "seeded" } });
 
     let updatedEvent = null;
-    const model = {
-      event,
+    await renderAdvanced(event, {
       initialScreen: "compact",
       onUpdate: (startsAt, endsAt, savedEvent) => {
         updatedEvent = savedEvent;
       },
-      toolbarEvent: {},
-    };
-    const closeModal = () => {};
-
-    await render(
-      <template>
-        <PostEventBuilder
-          @inline={{true}}
-          @model={{model}}
-          @closeModal={{closeModal}}
-        />
-      </template>
-    );
+    });
 
     await click(".advanced-mode-btn");
     await fillIn(`[data-name="customFields.test1"] input`, "typed");
@@ -336,5 +293,20 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
         "or URL",
         "the label narrows once url has its own field"
       );
+  });
+
+  test("coerces end an hour after start when the picked end time is not after start", async function (assert) {
+    const event = eventWith({ ends_at: "2022-07-01T12:00:00Z" });
+    await renderAdvanced(event);
+
+    const toTime = selectKit(".to .d-time-input .select-kit");
+    await toTime.expand();
+    await toTime.selectRowByName("10:00 AM");
+
+    assert.strictEqual(
+      moment(event.endsAt).toISOString(),
+      "2022-07-01T11:00:00.000Z",
+      "an end time at or before start is pushed an hour past start"
+    );
   });
 });
