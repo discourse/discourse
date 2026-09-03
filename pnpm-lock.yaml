@@ -31,9 +31,6 @@ patchedDependencies:
   licensee@11.1.1:
     hash: 566956dc682db703e899e5b01c65b129e434ad9f0848f5b9f62c3c28afd086e9
     path: patches/licensee@11.1.1.patch
-  message-bus-client:
-    hash: b9b55d2643b1af05bfbcab2388fe5b68f20ed4ef8bcea9647ab82405bccc20f9
-    path: patches/message-bus-client.patch
   pikaday:
     hash: ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83
     path: patches/pikaday.patch
@@ -636,7 +633,7 @@ importers:
         version: 4.7.0
       message-bus-client:
         specifier: ^4.6.0
-        version: 4.6.0(patch_hash=b9b55d2643b1af05bfbcab2388fe5b68f20ed4ef8bcea9647ab82405bccc20f9)
+        version: 4.6.0
       pretender:
         specifier: ^3.4.7
         version: 3.4.7
@@ -9752,7 +9749,7 @@ snapshots:
   '@ember-decorators/utils@7.0.0(@babel/core@7.29.7)':
     dependencies:
       '@embroider/addon-shim': 1.10.3
-      decorator-transforms: 2.3.2(@babel/core@7.29.7)
+      decorator-transforms: 2.4.0(@babel/core@7.29.7)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -15124,7 +15121,7 @@ snapshots:
 
   mersenne-twister@1.1.0: {}
 
-  message-bus-client@4.6.0(patch_hash=b9b55d2643b1af05bfbcab2388fe5b68f20ed4ef8bcea9647ab82405bccc20f9): {}
+  message-bus-client@4.6.0: {}
 
   micromatch@4.0.8:
     dependencies:
