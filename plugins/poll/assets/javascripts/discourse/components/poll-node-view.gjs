@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import pollBounds from "discourse/plugins/poll/lib/poll-bounds";
 import PollUiBuilder from "./modal/poll-ui-builder";
 import PollInfo from "./poll-info";
 
@@ -28,18 +29,8 @@ export default class PollNodeView extends Component {
     return this.#optionList(this.args.node)?.node.childCount ?? 0;
   }
 
-  // the same reading the poll component applies to a stored poll, so an
-  // absent bound does not leave the summary with a line it cannot phrase
-  get #range() {
-    const { attrs } = this.args.node;
-    const min = parseInt(attrs.min, 10);
-    const max = parseInt(attrs.max, 10);
-    const count = this.#optionCount;
-
-    return {
-      min: isNaN(min) || min < 0 ? 1 : min,
-      max: isNaN(max) || max > count ? count : max,
-    };
+  get #bounds() {
+    return pollBounds(this.args.node.attrs, this.#optionCount);
   }
 
   // only what the settings themselves say: a composer knows nothing about
@@ -52,8 +43,8 @@ export default class PollNodeView extends Component {
       isMultiple: attrs.type === "multiple",
       isPublic: attrs.public === "true",
       isDynamic: attrs.dynamic === "true",
-      min: this.#range.min,
-      max: this.#range.max,
+      min: this.#bounds.min,
+      max: this.#bounds.max,
       closesAt,
       isAutomaticallyClosed: !!closesAt?.isBefore(moment()),
       // read for its length, to phrase how many options can be picked
