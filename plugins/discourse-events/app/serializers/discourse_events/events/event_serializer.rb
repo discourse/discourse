@@ -100,20 +100,14 @@ module DiscourseEvents
       end
 
       def reminders
-        (object.reminders || "")
-          .split(",")
-          .map do |reminder|
-            unit, value, type = reminder.split(".").reverse
-            type ||= "notification"
-
-            value = value.to_i
-            {
-              value: value.to_i.abs,
-              unit: unit,
-              period: value > 0 ? "before" : "after",
-              type: type,
-            }
-          end
+        object.parsed_reminders.map do |reminder|
+          {
+            value: reminder[:value].abs,
+            unit: reminder[:unit],
+            period: reminder[:value] > 0 ? "before" : "after",
+            type: reminder[:type],
+          }
+        end
       end
 
       def is_expired

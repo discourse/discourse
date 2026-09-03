@@ -16,12 +16,12 @@ module DiscourseEvents
           description: raw_event[:description],
           location: raw_event[:location],
           recurrence: raw_event[:recurrence],
-          recurrence_until: parse_in_zone(raw_event[:"recurrence-until"]),
+          recurrence_until:,
           timezone: raw_event[:timezone],
           show_local_time: raw_event[:"show-local-time"] == "true",
-          status: Event.statuses[raw_event[:status]&.to_sym] || current_status,
+          status:,
           reminders: raw_event[:reminders],
-          raw_invitees: raw_event[:"allowed-groups"]&.split(","),
+          raw_invitees:,
           minimal: raw_event[:minimal],
           closed: raw_event[:closed] || false,
           chat_enabled: raw_event[:"chat-enabled"]&.downcase == "true",
@@ -32,6 +32,28 @@ module DiscourseEvents
         }
       end
 
+      def starts_at
+        return timezone.parse(raw_event[:start]) unless all_day?
+        all_day_date(raw_event[:start])
+      end
+
+      def ends_at
+        return parse_in_zone(raw_event[:end]) unless all_day?
+        raw_event[:end] ? all_day_date(raw_event[:end]).end_of_day : nil
+      end
+
+      def recurrence_until
+        parse_in_zone(raw_event[:"recurrence-until"])
+      end
+
+      def status
+        Event.resolve_status(raw_event[:status], current_status)
+      end
+
+      def raw_invitees
+        raw_event[:"allowed-groups"]&.split(",")
+      end
+
       private
 
       def all_day?
@@ -39,21 +61,15 @@ module DiscourseEvents
       end
 
       def timezone
-        ActiveSupport::TimeZone[raw_event[:timezone] || Event::DEFAULT_TIMEZONE]
+        ActiveSupport::TimeZone[raw_event[:timezone].presence || Event::DEFAULT_TIMEZONE]
       end
 
       def parse_in_zone(value)
         value ? timezone.parse(value) : nil
       end
 
-      def starts_at
-        return timezone.parse(raw_event[:start]) unless all_day?
-        Time.utc(*raw_event[:start].split("-").map(&:to_i))
-      end
-
-      def ends_at
-        return parse_in_zone(raw_event[:end]) unless all_day?
-        raw_event[:end] ? Time.utc(*raw_event[:end].split("-").map(&:to_i)).end_of_day : nil
+      def all_day_date(value)
+        Date.parse(value).to_time(:utc)
       end
 
       def custom_fields
