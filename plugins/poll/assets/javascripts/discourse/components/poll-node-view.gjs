@@ -28,6 +28,20 @@ export default class PollNodeView extends Component {
     return this.#optionList(this.args.node)?.node.childCount ?? 0;
   }
 
+  // the same reading the poll component applies to a stored poll, so an
+  // absent bound does not leave the summary with a line it cannot phrase
+  get #range() {
+    const { attrs } = this.args.node;
+    const min = parseInt(attrs.min, 10);
+    const max = parseInt(attrs.max, 10);
+    const count = this.#optionCount;
+
+    return {
+      min: isNaN(min) || min < 0 ? 1 : min,
+      max: isNaN(max) || max > count ? count : max,
+    };
+  }
+
   // only what the settings themselves say: a composer knows nothing about
   // votes, and nothing about who will read the post
   get pollInfo() {
@@ -38,8 +52,8 @@ export default class PollNodeView extends Component {
       isMultiple: attrs.type === "multiple",
       isPublic: attrs.public === "true",
       isDynamic: attrs.dynamic === "true",
-      min: Number(attrs.min),
-      max: Number(attrs.max),
+      min: this.#range.min,
+      max: this.#range.max,
       closesAt,
       isAutomaticallyClosed: !!closesAt?.isBefore(moment()),
       // read for its length, to phrase how many options can be picked

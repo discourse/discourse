@@ -157,6 +157,17 @@ module(
         .exists({ count: 1 }, "claims no vote totals it cannot have");
     });
 
+    test("a multiple choice poll without bounds still phrases its hint", async function (assert) {
+      await setupRichEditor(
+        assert,
+        "[poll type=multiple]\n* Option 1\n* Option 2\n\n[/poll]\n\n"
+      );
+
+      assert
+        .dom(".composer-poll-node__info .multiple-help-text")
+        .hasAnyText("no line is left as a bare icon");
+    });
+
     test("a poll that has already closed does not say it will close", async function (assert) {
       await setupRichEditor(
         assert,
