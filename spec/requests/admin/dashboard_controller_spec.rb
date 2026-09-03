@@ -1552,6 +1552,49 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
+      it "does not expose password reset tokens that can reset another admin's password" do
+        victim = Fabricate(:admin, password: "original-password")
+        email_token =
+          Fabricate(:email_token, user: victim, scope: EmailToken.scopes[:password_reset])
+        reset_path = "/u/password-reset/#{email_token.token}"
+        alternate_reset_path = "/users/password-reset/#{email_token.token}"
+        [reset_path, alternate_reset_path].each_with_index do |path, index|
+          Fabricate(
+            :browser_pageview_event,
+            url: path,
+            normalized_url: path,
+            user_id: victim.id,
+            session_id: "victim-password-reset-#{index}",
+            source: BrowserPageviewEvent::SOURCE_BEACON,
+            created_at: "2026-05-10 10:02:00",
+          )
+        end
+
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(reset_path, alternate_reset_path)
+        expect(response.parsed_body.dig("dimensions", "top_urls")).to include(
+          {
+            "value" => "/u/password-reset/<redacted>",
+            "label" => "/u/password-reset/<redacted>",
+            "pageviews" => 1,
+          },
+          {
+            "value" => "/users/password-reset/<redacted>",
+            "label" => "/users/password-reset/<redacted>",
+            "pageviews" => 1,
+          },
+        )
+
+        sign_out
+        put "/u/password-reset/#{email_token.token}.json", params: { password: "attacker-password" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include("success" => true)
+        expect(victim.reload.confirm_password?("attacker-password")).to be(true)
+      end
+
       it "matches any selected value within a dimension and every selected dimension" do
         referrers = ["search.example/results?q=discourse", ""]
 
