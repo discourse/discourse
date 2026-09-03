@@ -10,7 +10,7 @@ export default class MathBlockPreview extends Component {
   @service siteSettings;
 
   // the renderers replace the element's content, so it is built outside of
-  // Glimmer's reach and rebuilt from scratch for each source
+  // Glimmer's reach
   renderMath = modifier((element, [source]) => {
     const math = document.createElement("div");
     math.classList.add("math");
