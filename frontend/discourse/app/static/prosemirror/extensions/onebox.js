@@ -114,6 +114,7 @@ const extension = {
   plugins({
     pmState: { Plugin },
     pmView: { Decoration, DecorationSet },
+    pmHistory: { isHistoryTransaction, redoDepth, undoDepth },
     getContext,
   }) {
     const failedUrls = { full: new Set(), inline: new Set() };
@@ -182,10 +183,27 @@ const extension = {
       key: oneboxPluginKey,
       state: {
         init() {
-          return DecorationSet.empty;
+          // undo restores the link a preview replaced, which is exactly the
+          // shape the scan promotes, so it would render right back and
+          // re-record the step that was just undone. skipScanUntilEdit holds
+          // the scan off until the user edits again.
+          return { decorations: DecorationSet.empty, skipScanUntilEdit: false };
         },
-        apply(tr, set) {
+        apply(tr, { decorations: set, skipScanUntilEdit }) {
           const meta = tr.getMeta(plugin);
+
+          if (isHistoryTransaction(tr)) {
+            skipScanUntilEdit = true;
+          } else if (
+            tr.docChanged &&
+            tr.getMeta("addToHistory") !== false &&
+            !tr.getMeta("skipSerialization") &&
+            !tr.getMeta("appendedTransaction")
+          ) {
+            // only the user's own edits release the scan — not renders
+            // (skipSerialization) or other plugins' appended reactions
+            skipScanUntilEdit = false;
+          }
 
           if (meta?.removeDecorations) {
             set = set.remove(meta.removeDecorations);
@@ -249,8 +267,19 @@ const extension = {
             }
 
             if (!meta?.forceOneboxUrl) {
-              return set;
+              return { decorations: set, skipScanUntilEdit };
             }
+          }
+
+          if (!meta?.forceOneboxUrl && skipScanUntilEdit) {
+            // a preview whose data already arrived would render from its
+            // decoration alone, without the scan
+            return {
+              decorations: set.remove(
+                set.find(undefined, undefined, (spec) => spec.oneboxDataLoaded)
+              ),
+              skipScanUntilEdit,
+            };
           }
 
           const decorations = scanForOneboxLinks(
@@ -260,13 +289,16 @@ const extension = {
             meta?.forceOneboxUrl
           );
 
-          return set.add(tr.doc, decorations);
+          return {
+            decorations: set.add(tr.doc, decorations),
+            skipScanUntilEdit,
+          };
         },
       },
 
       props: {
         decorations(state) {
-          return plugin.getState(state);
+          return plugin.getState(state).decorations;
         },
       },
 
@@ -275,7 +307,7 @@ const extension = {
 
         return {
           update(view) {
-            const decorations = plugin.getState(view.state);
+            const { decorations } = plugin.getState(view.state);
 
             this.processNew(view, decorations);
             this.processLoaded(view, decorations);
@@ -452,7 +484,18 @@ const extension = {
 
             if (removeDecorations.length || tr.docChanged) {
               tr.setMeta(plugin, { removeDecorations });
-              view.dispatch(tr.setMeta("addToHistory", false));
+              // the preview replaces the link, so it has to undo along with it,
+              // or undoing the edit that introduced the URL leaves it stranded
+              tr.setMeta("skipSerialization", true);
+
+              // ...but only when that edit is in the history: with nothing to
+              // reach back to, recording only adds a phantom undo step, and a
+              // recorded step would wipe a live redo stack
+              if (undoDepth(view.state) === 0 || redoDepth(view.state) > 0) {
+                tr.setMeta("addToHistory", false);
+              }
+
+              view.dispatch(tr);
             }
           },
         };
@@ -519,8 +562,8 @@ const extension = {
 
     function removeLoadingDecorations(view, urls, type) {
       const urlSet = typeof urls === "string" ? new Set([urls]) : new Set(urls);
-      const decoState = plugin.getState(view.state);
-      const toRemove = decoState.find(
+      const { decorations } = plugin.getState(view.state);
+      const toRemove = decorations.find(
         undefined,
         undefined,
         (spec) => spec.oneboxType === type && urlSet.has(spec.oneboxUrl)
