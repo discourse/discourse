@@ -104,49 +104,24 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         expect(average_session_duration).to eq(1.0 / browsers.size)
       end
 
-      it "orders browser dimensions by pageviews" do
-        browser_dimensions = result.traffic.dig(:dimensions, "browsers")
+      it "orders visitor dimensions by pageviews and labels unknown values" do
+        dimensions = result.traffic.fetch(:dimensions)
 
-        expect(browser_dimensions).to eq(
-          [
+        expect(dimensions.slice("browsers", "languages")).to eq(
+          "browsers" => [
             { value: "unknown", label: "Unknown browser", pageviews: 4 },
             { value: "chrome", label: "Google Chrome", pageviews: 3 },
             { value: "safari", label: "Safari", pageviews: 2 },
             { value: "edge", label: "Microsoft Edge", pageviews: 1 },
             { value: "firefox", label: "Firefox", pageviews: 1 },
           ],
-        )
-      end
-
-      it "orders language dimensions by pageviews and labels missing languages as unknown" do
-        language_dimensions = result.traffic.dig(:dimensions, "languages")
-
-        expect(language_dimensions).to eq(
-          [
+          "languages" => [
             { value: "en-US", label: "en-US", pageviews: 4 },
             { value: "", label: "Unknown", pageviews: 3 },
             { value: "fr", label: "fr", pageviews: 2 },
             { value: "de", label: "de", pageviews: 1 },
             { value: "zh-CN", label: "zh-CN", pageviews: 1 },
           ],
-        )
-      end
-
-      it "filters missing languages with an empty string" do
-        traffic = described_class.call(params: params.merge(language: [""])).traffic
-
-        expect(traffic.slice(:summary, :active_filters)).to eq(
-          summary: {
-            "pageviews" => 3,
-            "distinct_sessions" => 3,
-            "logged_in_share" => 0,
-            "bounce_rate" => 100,
-            "average_session_duration_seconds" => 0,
-          },
-          active_filters: [{ key: :language, value: "", label: "Unknown" }],
-        )
-        expect(traffic.dig(:dimensions, "languages")).to eq(
-          [{ value: "", label: "Unknown", pageviews: 3 }],
         )
       end
 
@@ -177,31 +152,38 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             organization: "Example Network",
           )
 
-        dimensions =
-          described_class.call(params: params.merge(country: "US", browser: "chrome")).traffic[
-            :dimensions
-          ]
+        traffic =
+          described_class.call(
+            params: params.merge(country: "US", browser: "unknown", language: [""]),
+          ).traffic
 
-        expect(dimensions).to eq(
+        expect(traffic.fetch(:dimensions)).to eq(
           "top_urls" => [
-            { value: "/browser-4", label: "/browser-4", pageviews: 1 },
-            { value: "/browser-5", label: "/browser-5", pageviews: 1 },
-            { value: "/browser-6", label: "/browser-6", pageviews: 1 },
+            { value: "/browser-0", label: "/browser-0", pageviews: 1 },
+            { value: "/browser-1", label: "/browser-1", pageviews: 1 },
+            { value: "/browser-2", label: "/browser-2", pageviews: 1 },
           ],
           "entry_urls" => [
-            { value: "/browser-4", label: "/browser-4", pageviews: 1 },
-            { value: "/browser-5", label: "/browser-5", pageviews: 1 },
-            { value: "/browser-6", label: "/browser-6", pageviews: 1 },
+            { value: "/browser-0", label: "/browser-0", pageviews: 1 },
+            { value: "/browser-1", label: "/browser-1", pageviews: 1 },
+            { value: "/browser-2", label: "/browser-2", pageviews: 1 },
           ],
           "referrers" => [{ value: "", label: "Direct / unknown", pageviews: 3 }],
           "countries" => [{ value: "US", label: "United States", pageviews: 3 }],
           "networks" => [{ value: "AS64496", label: "Example Network (AS64496)", pageviews: 3 }],
-          "browsers" => [{ value: "chrome", label: "Google Chrome", pageviews: 3 }],
-          "languages" => [{ value: "en-US", label: "en-US", pageviews: 3 }],
+          "browsers" => [{ value: "unknown", label: "Unknown browser", pageviews: 3 }],
+          "languages" => [{ value: "", label: "Unknown", pageviews: 3 }],
           "ip_addresses" => [
-            { value: "192.0.2.5", label: "192.0.2.5", pageviews: 1 },
-            { value: "192.0.2.6", label: "192.0.2.6", pageviews: 1 },
-            { value: "192.0.2.7", label: "192.0.2.7", pageviews: 1 },
+            { value: "192.0.2.1", label: "192.0.2.1", pageviews: 1 },
+            { value: "192.0.2.2", label: "192.0.2.2", pageviews: 1 },
+            { value: "192.0.2.3", label: "192.0.2.3", pageviews: 1 },
+          ],
+        )
+        expect(traffic.fetch(:active_filters)).to eq(
+          [
+            { key: :country, value: "US", label: "United States" },
+            { key: :browser, value: "unknown", label: "Unknown browser" },
+            { key: :language, value: "", label: "Unknown" },
           ],
         )
       end

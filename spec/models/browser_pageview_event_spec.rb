@@ -225,9 +225,17 @@ RSpec.describe BrowserPageviewEvent do
       described_class.enqueue_for_later(payload)
     end
 
-    it "queues payloads without flushing them synchronously" do
-      expect { described_class.enqueue_for_later(payload) }.not_to change { described_class.count }
+    it "queues serialized payloads without flushing them synchronously" do
+      language = "a" * (described_class::MAX_LANGUAGE_LENGTH + 1)
 
+      expect { described_class.enqueue_for_later(payload.merge(language:)) }.not_to change {
+        described_class.count
+      }
+
+      queued_payload = JSON.parse(Discourse.redis.lindex(described_class::REDIS_QUEUE_KEY, 0))
+      expect(queued_payload.fetch("language")).to eq(
+        language.slice(0, described_class::MAX_LANGUAGE_LENGTH),
+      )
       expect(described_class.queued_count).to eq(1)
     end
 
@@ -322,17 +330,6 @@ RSpec.describe BrowserPageviewEvent do
       described_class.enqueue_for_later(payload)
 
       expect(Discourse.redis.ttl(described_class::REDIS_QUEUE_KEY)).to be > 0
-    end
-
-    it "serializes a truncated language to Redis" do
-      language = "a" * (described_class::MAX_LANGUAGE_LENGTH + 1)
-
-      described_class.enqueue_for_later(payload.merge(language:))
-
-      queued_payload = JSON.parse(Discourse.redis.lindex(described_class::REDIS_QUEUE_KEY, 0))
-      expect(queued_payload.fetch("language")).to eq(
-        language.slice(0, described_class::MAX_LANGUAGE_LENGTH),
-      )
     end
   end
 end
