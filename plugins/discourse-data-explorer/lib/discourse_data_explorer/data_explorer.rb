@@ -10,6 +10,9 @@ module DiscourseDataExplorer
     # Used for ftype calls, see https://www.rubydoc.info/gems/pg/0.17.1/PG%2FResult:ftype
     # and /usr/include/postgresql/server/catalog/pg_type_d.h
     PG_TYPE_OID_JSON = 114
+    PG_TYPE_OID_TEXT = 25
+    PG_TYPE_OID_DATE = 1082
+    PG_TYPE_OID_TIMESTAMP = 1114
 
     # Run a data explorer query on the currently connected database.
     #
@@ -43,7 +46,8 @@ module DiscourseDataExplorer
       executable_sql = nil
       binds = []
       begin
-        executable_sql, binds = rewrite_to_binds(strip_comments(query.sql), values)
+        executable_sql, binds =
+          rewrite_to_binds(strip_comments(query.sql), values, bind_oid_hints(query))
       rescue ValidationError => e
         return { error: e, duration_nanos: 0 }
       end
@@ -148,7 +152,7 @@ module DiscourseDataExplorer
     # of placeholders so `IN (:ids)` keeps working, and an empty list becomes
     # `NULL`. A marker inside a dollar-quoted literal cannot be bound at all, so
     # it is rejected rather than silently left as literal text.
-    def self.rewrite_to_binds(sql, params)
+    def self.rewrite_to_binds(sql, params, bind_oid_hints = {})
       return sql, [] if params.blank?
 
       values = params.transform_keys(&:to_s)
@@ -161,7 +165,11 @@ module DiscourseDataExplorer
         when :code
           result << text.gsub(PARAM_REGEX) do |matched|
             name = $1
-            values.key?(name) ? (slots[name] ||= placeholders_for(values[name], binds)) : matched
+            if values.key?(name)
+              slots[name] ||= placeholders_for(values[name], binds, bind_oid_hints[name])
+            else
+              matched
+            end
           end
         when :dollar_quote
           if text.scan(PARAM_REGEX).any? { |match| values.key?(match.first) }
@@ -176,17 +184,38 @@ module DiscourseDataExplorer
       [result, binds]
     end
 
-    def self.placeholders_for(value, binds)
+    # Postgres can't infer a type for a parameter used only somewhere like a
+    # bare `:param IS NULL`, so bind these declared types explicitly rather
+    # than leaving them unknown. `time` is left out: its value is formatted as
+    # a full timestamp string, which isn't valid input for a bare `time` column.
+    DECLARED_TYPE_OIDS = {
+      string: PG_TYPE_OID_TEXT,
+      string_list: PG_TYPE_OID_TEXT,
+      date: PG_TYPE_OID_DATE,
+      datetime: PG_TYPE_OID_TIMESTAMP,
+    }.freeze
+
+    def self.bind_oid_hints(query)
+      query
+        .params
+        .each_with_object({}) do |param, hints|
+          oid = DECLARED_TYPE_OIDS[param.type]
+          hints[param.identifier.to_s] = oid if oid
+        end
+    end
+    private_class_method :bind_oid_hints
+
+    def self.placeholders_for(value, binds, oid_hint)
       if value.is_a?(Array)
         return "NULL" if value.empty?
         value
           .map do |element|
-            binds << bind_for(element)
+            binds << bind_for(element, oid_hint)
             "$#{binds.length}"
           end
           .join(", ")
       else
-        binds << bind_for(value)
+        binds << bind_for(value, oid_hint)
         "$#{binds.length}"
       end
     end
@@ -195,8 +224,8 @@ module DiscourseDataExplorer
     # Mirror how an inlined literal used to be typed: numbers and booleans carry
     # their PostgreSQL type so results decode back to the same Ruby class, while
     # everything else binds as an unknown-typed literal that the surrounding
-    # expression coerces and that reads back as text.
-    def self.bind_for(value)
+    # expression coerces and that reads back as text, unless `oid_hint` overrides it.
+    def self.bind_for(value, oid_hint = nil)
       case value
       when Integer
         { value: value.to_s, type: 20 }
@@ -205,11 +234,11 @@ module DiscourseDataExplorer
       when true, false
         { value: value.to_s, type: 16 }
       when nil
-        { value: nil, type: 0 }
+        { value: nil, type: oid_hint || 0 }
       when Time
-        { value: value.utc.iso8601, type: 0 }
+        { value: value.utc.iso8601, type: oid_hint || 0 }
       else
-        { value: value.to_s, type: 0 }
+        { value: value.to_s, type: oid_hint || 0 }
       end
     end
     private_class_method :bind_for
