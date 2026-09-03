@@ -114,4 +114,80 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
       expect(user.reload.silenced?).to eq(true)
     end
   end
+
+  context "when a silence from this flag was already lifted and a new one replaced it" do
+    before do
+      UserSilencer.silence(
+        user,
+        Discourse.system_user,
+        silenced_till: 10.minutes.from_now,
+        reason: I18n.t("chat.errors.auto_silence_from_flags"),
+        reviewable_id: reviewable.id,
+      )
+      UserSilencer.unsilence(user, moderator)
+
+      UserSilencer.silence(
+        user,
+        Discourse.system_user,
+        silenced_till: 10.minutes.from_now,
+        reason: "unrelated reason",
+      )
+    end
+
+    it "perform_disagree leaves the later, unrelated silence in place" do
+      reviewable.perform(moderator, :disagree)
+
+      expect(user.reload.silenced?).to eq(true)
+    end
+  end
+
+  describe "#perform_unsilence_user" do
+    def unsilence_action(guardian = moderator.guardian)
+      reviewable.actions_for(guardian).to_a.find { |a| a.server_action == "unsilence_user" }
+    end
+
+    it "is not offered when the author is not silenced" do
+      expect(unsilence_action).to eq(nil)
+    end
+
+    context "when the author is silenced" do
+      before do
+        UserSilencer.silence(
+          user,
+          Discourse.system_user,
+          silenced_till: 10.minutes.from_now,
+          reason: I18n.t("chat.errors.auto_silence_from_flags"),
+        )
+      end
+
+      it "is offered with a translated label" do
+        action = unsilence_action
+
+        expect(action).to be_present
+        expect(I18n.t(action.label)).to eq("Unsilence author")
+        expect(I18n.t(action.completed_message)).to eq("Author unsilenced.")
+      end
+
+      it "is not offered to a user who cannot unsilence the author" do
+        expect(unsilence_action(Fabricate(:user).guardian)).to eq(nil)
+      end
+
+      it "lifts the silence without resolving the flag" do
+        reviewable.perform(moderator, :unsilence_user)
+
+        expect(user.reload.silenced?).to eq(false)
+        expect(reviewable.reload).to be_pending
+      end
+
+      it "attributes the unsilence to the moderator and the reviewable" do
+        reviewable.perform(moderator, :unsilence_user)
+
+        history =
+          UserHistory.find_by(action: UserHistory.actions[:unsilence_user], target_user_id: user.id)
+
+        expect(history.acting_user_id).to eq(moderator.id)
+        expect(history.reviewable_id).to eq(reviewable.id)
+      end
+    end
+  end
 end
