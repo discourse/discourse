@@ -160,6 +160,8 @@ en:
       resolve_group_membership_requires_list: "resolve_group_membership can only be used with type: list"
       resolve_group_membership_requires_group_list: "resolve_group_membership requires list_type: group"
       resolve_group_membership_requires_groups_property: "resolve_group_membership can only be used with type: groups in object schemas. Invalid property: %{property}"
+      group_constraints_not_valid: "Setting `%{name}` has invalid group rules. %{error_messages}"
+      group_at_least_one_not_supported: "Property `%{property}` can't use at_least_one. Require a selection with validations min instead."
       objects:
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
@@ -3073,6 +3075,8 @@ en:
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       at_least_one_group_required: "You must specify at least one group for this setting."
+      unknown_group_ids: "The following group ids don't exist: %{ids}"
+      invalid_group_ids: "The following values aren't valid group ids: %{ids}"
       invalid_random_username_word_list: "This list must contain at least one word, and every word must be usable in a username on its own."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"

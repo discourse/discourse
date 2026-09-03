@@ -17,7 +17,7 @@ describe Chat::MessageBookmarkable do
   before do
     register_test_bookmarkable(described_class)
     Chat::UserChatChannelMembership.create(chat_channel: channel, user: user, following: true)
-    SiteSetting.chat_allowed_groups = chatters
+    SiteSetting.chat_allowed_groups = chatters.id
   end
 
   after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }

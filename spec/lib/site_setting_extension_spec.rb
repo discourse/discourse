@@ -1507,6 +1507,24 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "group list constraints on a themeable setting" do
+    it "normalizes a theme override that predates the rules" do
+      settings.setting(
+        :themeable_group_list,
+        "1",
+        type: :group_list,
+        themeable: true,
+        constraints: {
+          mandatory: %i[admins],
+          disallowed: %i[anonymous_users],
+        },
+      )
+      settings.theme_site_settings[7] = { themeable_group_list: "14|4" }
+
+      expect(settings.themeable_group_list(theme_id: 7)).to eq("1|14")
+    end
+  end
+
   describe "group settings" do
     fab!(:group)
 

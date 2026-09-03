@@ -15,11 +15,31 @@
 # locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
-#                         in the UI. Only applies to pipe-separated list type settings (e.g. group_list), as the values
-#                         are merged into the setting's value on both read and write.
-# disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
-#                         These groups cannot be selected and will be stripped if set via API.
-#                         Only applies to group_list type settings.
+#                         in the UI, as the values are merged into the setting's value on both read and write.
+#                         For a group_list setting, declare `constraints: { mandatory: [...] }` instead.
+# constraints           - The validity rules of a group_list setting. Three rules are available:
+#
+#                           constraints:
+#                             at_least_one: true                # or { message: "some.i18n.key" }
+#                             mandatory: [admins, moderators]   # always present, and locked in the group selector
+#                             disallowed: [anonymous_users]     # hidden from the selector and stripped on save
+#
+#                         Every group reference here, and in `default`, may be an automatic group name
+#                         (admins, moderators, staff, anonymous_users, logged_in_users, trust_level_0 ..
+#                         trust_level_4) or a numeric id. Names are yaml sugar only: the stored value is
+#                         always numeric ids.
+#
+#                         The `everyone` pseudogroup is being retired and has no name here. Target
+#                         `logged_in_users` and `anonymous_users` explicitly instead. Its id, 0, still
+#                         resolves, so an existing rule that has to keep stripping it can spell it out.
+#
+#                         Saving normalizes rather than rejects: mandatory ids are merged in first and
+#                         disallowed ids are stripped. Only `at_least_one` and a group id that does not
+#                         exist produce an error. `default` must already satisfy the rules it declares.
+#
+#                         `mandatory_values`, `disallowed_groups` and `validator: "AtLeastOneGroupValidator"`
+#                         are still accepted on a group_list as aliases of `mandatory`, `disallowed` and
+#                         `at_least_one`, but may not be combined with a `constraints` block.
 # requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
 #                         Valid values are "simple" (always display a confirmation dialog when the setting is changed),
 #                         "simple_on_enable" (only when the setting is enabled), and "simple_on_disable" (only when
@@ -463,16 +483,19 @@ basic:
     default: ""
     allow_any: false
     refresh: true
-    disallowed_groups: "0|4|5"
+    constraints:
+      # 0 is the retired everyone pseudogroup, which has no name in this schema.
+      disallowed: [0, anonymous_users, logged_in_users]
     area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list
     list_type: compact
-    default: "14"
+    default: "admins|moderators|trust_level_4"
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
-    mandatory_values: "1|2" # auto groups admins & moderators
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     area: "group_permissions"
   push_notifications_prompt:
     default: true
@@ -550,13 +573,15 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
-    disallowed_groups: "4"
+    constraints:
+      disallowed: [anonymous_users]
     area: "group_permissions"
   about_page_extra_groups:
     client: true
     default: ""
     type: group_list
-    disallowed_groups: "4"
+    constraints:
+      disallowed: [anonymous_users]
     area: "about"
   about_page_extra_groups_initial_members:
     client: true
@@ -1177,12 +1202,13 @@ users:
     default: false
     client: true
   anonymous_posting_allowed_groups:
-    default: "1|2|11" # auto group admins, moderators and trust_level_1
+    default: "admins|moderators|trust_level_1"
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
-    validator: "AtLeastOneGroupValidator"
+    constraints:
+      at_least_one: true
+      disallowed: [anonymous_users]
     area: "group_permissions"
   anonymous_account_duration_minutes:
     default: 10080
@@ -1463,12 +1489,13 @@ posting:
     default: true
     area: "posts_and_topics"
   personal_message_enabled_groups:
-    default: "1|2|11" # auto group admins, moderators, trust_level_1
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_1"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   editing_grace_period:
     default: 300
@@ -1487,12 +1514,13 @@ posting:
     default: ""
     area: "posts_and_topics"
   shared_drafts_allowed_groups:
-    default: "1|2" # auto group admins and moderators
+    default: "admins|moderators"
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
-    validator: "AtLeastOneGroupValidator"
+    constraints:
+      at_least_one: true
+      disallowed: [anonymous_users]
     area: "group_permissions"
   post_edit_time_limit:
     default: 1440
@@ -1595,12 +1623,13 @@ posting:
     default: 10
     area: "posts_and_topics"
   here_mention_allowed_groups:
-    default: "1|2|12" # auto group admins, moderators, trust_level_2
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_2"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   title_max_word_length:
     default: 30
@@ -1783,20 +1812,22 @@ posting:
     default: 0
     area: "posts_and_topics"
   approve_unless_allowed_groups:
-    default: "1|2|10" # auto groups admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   approve_new_topics_unless_allowed_groups:
-    default: "1|2|10" # auto groups admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   approve_suspect_users:
     default: true
@@ -1886,12 +1917,13 @@ posting:
     max: 36500
     area: "posts_and_topics"
   skip_review_media_groups:
-    default: "1|2|10" # auto groups admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   blur_tl0_flagged_posts_media:
     default: true
@@ -1980,8 +2012,9 @@ content_localization:
     list_type: compact
     allow_any: false
     client: true
-    default: "1|2" # admin, moderator
-    disallowed_groups: "4"
+    default: "admins|moderators"
+    constraints:
+      disallowed: [anonymous_users]
     area: "localization"
   content_localization_allow_author_localization:
     default: true
@@ -2307,12 +2340,13 @@ email:
     client: true
     area: "email"
   email_in_allowed_groups:
-    default: "1|2|12" # auto group admins, moderators, trust_level_2
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_2"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   email_in_authserv_id:
     default: ""
@@ -2517,10 +2551,11 @@ email:
   view_raw_email_allowed_groups:
     type: group_list
     list_type: compact
-    default: "1|2"
+    default: "admins|moderators"
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
+    constraints:
+      disallowed: [anonymous_users]
     area: "group_permissions"
 
 files:
@@ -2704,11 +2739,12 @@ files:
     default: true
   automatically_download_gravatars: true
   uploaded_avatars_allowed_groups:
-    default: "10"
+    default: "trust_level_0"
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
+    constraints:
+      disallowed: [anonymous_users]
     area: "group_permissions"
   default_avatars:
     default: ""
@@ -2878,60 +2914,67 @@ trust:
     enum: "TrustLevelSetting"
     area: "trust_levels"
   create_topic_allowed_groups:
-    default: "1|2|10" # auto group admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   topic_timers_allowed_groups:
-    default: "1|2|14" # auto group admins, moderators, trust_level_4
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_4"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   edit_wiki_post_allowed_groups:
-    default: "1|2|11" # auto group admins, moderators, trust_level_1
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_1"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   edit_post_allowed_groups:
-    default: "1|2|10" # auto group admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   self_wiki_allowed_groups:
-    default: "1|2|13" # auto group admins, moderators, trust_level_3
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_3"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   send_email_messages_allowed_groups:
-    default: "1|2|14" # auto group admins, moderators, trust_level_4
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_4"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   flag_post_allowed_groups:
-    default: "1|2|11" # auto group admins, moderators, trust_level_1
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_1"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "flags|group_permissions"
   allow_all_users_to_flag_illegal_content:
     default: false
@@ -2942,52 +2985,58 @@ trust:
     area: "flags"
     client: true
   post_links_allowed_groups:
-    default: "1|2|10" # auto group admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   embedded_media_post_allowed_groups:
-    default: "1|2|10" # auto group admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   profile_background_allowed_groups:
-    default: "1|2|10" # auto group admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   user_card_background_allowed_groups:
-    default: "1|2|10" # auto group admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   invite_allowed_groups:
-    default: "1|2|12" # auto group admins, moderators, trust_level_2
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_2"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   ignore_allowed_groups:
-    default: "1|2|12" # auto group admins, moderators, trust_level_2
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_2"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
@@ -3075,23 +3124,26 @@ trust:
     client: true
     area: "trust_levels"
   delete_all_posts_and_topics_allowed_groups:
-    default: "1|2" # auto group admins, moderators
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   edit_all_topic_groups:
-    default: "13"
+    default: "trust_level_3"
     type: group_list
-    disallowed_groups: "4"
+    constraints:
+      disallowed: [anonymous_users]
     area: "group_permissions"
   edit_all_post_groups:
-    default: "1|2|14" # auto group admins, moderators, and TL4
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_4"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
-    disallowed_groups: "4"
     area: "group_permissions"
 
 security:
@@ -3139,7 +3191,8 @@ security:
     type: group_list
     list_type: compact
     default: ""
-    disallowed_groups: "4"
+    constraints:
+      disallowed: [anonymous_users]
   moderators_view_emails:
     client: true
     default: false
@@ -4507,12 +4560,13 @@ user_api:
     default: ""
     hidden: true
   user_api_key_allowed_groups:
-    default: "1|2|10" # auto group admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   allowed_user_api_push_urls:
     default: ""
@@ -4578,28 +4632,31 @@ tags:
     client: true
     area: "categories_and_tags"
   create_tag_allowed_groups:
-    default: "1|2|13" # auto group admins, moderators, trust_level_3
-    mandatory_values: "1" # auto group admins
+    default: "admins|moderators|trust_level_3"
+    constraints:
+      mandatory: [admins]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   edit_tags_allowed_groups:
-    default: "1|2" # auto group admins, moderators
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     area: "group_permissions"
   tag_topic_allowed_groups:
-    default: "1|2|10" # auto group admins, moderators, trust_level_0
-    mandatory_values: "1|2" # auto group admins, moderators
+    default: "admins|moderators|trust_level_0"
+    constraints:
+      mandatory: [admins, moderators]
+      disallowed: [anonymous_users]
     type: group_list
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
     client: true
     area: "group_permissions"
   max_tag_search_results:
@@ -4629,7 +4686,8 @@ tags:
     default: ""
     allow_any: false
     refresh: true
-    disallowed_groups: "4"
+    constraints:
+      disallowed: [anonymous_users]
     area: "group_permissions"
   suppress_overlapping_tags_in_list:
     default: false

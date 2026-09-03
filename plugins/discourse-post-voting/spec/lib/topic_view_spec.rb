@@ -238,7 +238,7 @@ describe TopicView do
       )
     end
 
-    before { SiteSetting.whispers_allowed_groups = "admins" }
+    before { SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:admins] }
 
     it "returns all posts in chronological order when filtered by ACTIVITY" do
       topic_view = TopicView.new(topic.id, admin, filter: TopicView::ACTIVITY_FILTER)

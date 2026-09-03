@@ -535,7 +535,7 @@ RSpec.describe ListController do
     end
 
     it "should work for users who are allowed and direct links" do
-      SiteSetting.pm_tags_allowed_for_groups = group.name
+      SiteSetting.pm_tags_allowed_for_groups = group.id
       group.add(user)
       sign_in(user)
 
@@ -546,7 +546,7 @@ RSpec.describe ListController do
 
     it "returns only visible tagged private messages" do
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-      SiteSetting.pm_tags_allowed_for_groups = group.name
+      SiteSetting.pm_tags_allowed_for_groups = group.id
       group.add(user)
       group.update!(has_messages: true)
       direct_message = Fabricate(:private_message_topic, user: admin, recipient: user)

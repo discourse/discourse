@@ -376,7 +376,7 @@ RSpec.describe CategoriesController do
     end
 
     it "doesn't do more queries when more categories exist" do
-      SiteSetting.lazy_load_categories_groups = true
+      SiteSetting.lazy_load_categories_groups = Group::AUTO_GROUPS[:everyone]
       Theme.cache.clear
 
       Fabricate(:category, parent_category: Fabricate(:category))

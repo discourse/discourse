@@ -23,7 +23,7 @@ RSpec.describe Chat::ListChannelPins do
     let(:params) { { channel_id: channel.id } }
     let(:dependencies) { { guardian: } }
 
-    before { SiteSetting.chat_allowed_groups = chatters }
+    before { SiteSetting.chat_allowed_groups = chatters.id }
 
     context "when params are not valid" do
       let(:params) { {} }

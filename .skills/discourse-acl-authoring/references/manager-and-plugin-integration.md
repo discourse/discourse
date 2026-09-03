@@ -159,7 +159,9 @@ Use `TargetClass.with_acl_permission(guardian, permission)` or `TargetClass.with
 When migrating legacy permission columns into ACLs:
 
 - Preserve previous semantics intentionally and document any security-tightening changes.
-- Union mandatory ACL values into migrated rows; raw site setting rows may not include `mandatory_values`.
+- Union mandatory ACL values into migrated rows; a raw site setting row may not include the ids a
+  setting declares as mandatory (`mandatory_values`, or `constraints: { mandatory: [...] }` on a
+  group list), because those are merged in by the getter rather than stored.
 - Use `Group::AUTO_GROUPS` values or stable numeric IDs only when loading the Rails constants is unsafe in the migration context.
 - Cover blank legacy arrays, customized group lists, and default setting fallbacks in migration specs when possible.
 

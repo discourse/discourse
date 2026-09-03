@@ -633,7 +633,7 @@ module SiteSettingExtension
           if UpcomingChanges.exists?(name) || upcoming_change_default_overrides.key?(name)
             false
           else
-            val.to_s == defaults_view[name].to_s
+            normalized_provider_value(name, val) == defaults_view[name].to_s
           end
         end
 
@@ -821,16 +821,6 @@ module SiteSettingExtension
     sanitize_override = val.is_a?(String) && client_settings.include?(name)
 
     sanitized_val = sanitize_override ? sanitize_field(val) : val
-
-    if mandatory_values[name.to_sym]
-      sanitized_val =
-        (mandatory_values[name.to_sym].split("|") | sanitized_val.to_s.split("|")).join("|")
-    end
-
-    if disallowed_groups[name.to_sym]
-      disallowed = disallowed_groups[name.to_sym].split("|")
-      sanitized_val = sanitized_val.to_s.split("|").reject { |v| disallowed.include?(v) }.join("|")
-    end
 
     provider.save(name, sanitized_val, type)
     current[name] = type_supervisor.to_rb_value(name, sanitized_val)
@@ -1153,6 +1143,11 @@ module SiteSettingExtension
           settings_overridden_for_theme = theme_site_settings[scoped_to[:theme_id]]
           if settings_overridden_for_theme && settings_overridden_for_theme.key?(clean_name)
             value = settings_overridden_for_theme[clean_name]
+
+            if (constraints = type_supervisor.group_list_constraints(name))
+              return constraints.normalize(value)
+            end
+
             return enum_wrapper ? enum_wrapper.wrap(value.to_s) : value
           end
         end
@@ -1174,7 +1169,9 @@ module SiteSettingExtension
             current[name]
           end
 
-        if mandatory_values[name]
+        if (constraints = type_supervisor.group_list_constraints(name))
+          return constraints.normalize(value)
+        elsif mandatory_values[name]
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
 
@@ -1296,6 +1293,17 @@ module SiteSettingExtension
     ]
   end
 
+  # Projects a raw provider value the way the getter will, so that a stored row
+  # which normalizes to the default is not reported as an override.
+  #
+  # @param name [Symbol] the site setting name.
+  # @param value [Object] the raw value read from the provider.
+  # @return [String] the value as the getter would report it.
+  def normalized_provider_value(name, value)
+    constraints = type_supervisor.group_list_constraints(name)
+    constraints ? constraints.normalize(value) : value.to_s
+  end
+
   def apply_upcoming_change_default_overrides_for!(name, upcoming_change_enabled:)
     if upcoming_change_enabled
       defaults.activate_upcoming_change_override(name)
@@ -1330,11 +1338,30 @@ module SiteSettingExtension
 
     shadowed_val = nil
 
+    group_list_constraints = compile_group_list_constraints!(name, opts)
+
+    if group_list_constraints
+      default = resolve_group_list_default!(name, default, group_list_constraints)
+
+      if (override = opts[:upcoming_change_default_override])
+        override[:new_default] = resolve_group_list_default!(
+          name,
+          override[:new_default],
+          group_list_constraints,
+        )
+      end
+    end
+
     mutex.synchronize do
       defaults.load_setting(name, default, opts.delete(:locale_default))
 
-      mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
-      disallowed_groups[name] = opts[:disallowed_groups] if opts[:disallowed_groups]
+      if group_list_constraints
+        mandatory_values[name] = group_list_constraints.mandatory_values.presence
+        disallowed_groups[name] = group_list_constraints.disallowed_groups.presence
+        opts[:group_list_constraints] = group_list_constraints
+      else
+        mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
+      end
 
       requires_confirmation_settings[name] = (
         if SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.values.include?(
@@ -1480,6 +1507,70 @@ module SiteSettingExtension
   end
 
   private
+
+  # Compiles the declarative group rules of a setting definition. A bad rule is a
+  # developer mistake rather than invalid application state, so it aborts boot in
+  # development and test but only degrades the definition in production.
+  #
+  # @param name [Symbol] the site setting name.
+  # @param opts [Hash] the setting options, mutated to remove the consumed rule keys.
+  # @return [SiteSettings::GroupListConstraints, nil] nil unless this is a group list.
+  def compile_group_list_constraints!(name, opts)
+    constraints, errors =
+      SiteSettings::GroupListConstraints.from_opts!(
+        opts,
+        name: name,
+        group_type: opts[:type].to_s == "group_list",
+        lenient: Rails.env.production?,
+      )
+
+    report_group_list_schema_errors!(name, errors) if errors.present?
+
+    constraints
+  end
+
+  # Turns a declared default into the canonical pipe separated list of group ids and
+  # checks it against the setting's own rules.
+  #
+  # @param name [Symbol] the site setting name.
+  # @param default [String, Array, nil] the declared default, which may use group names.
+  # @param constraints [SiteSettings::GroupListConstraints] the compiled rules.
+  # @return [String] the resolved, normalized default.
+  def resolve_group_list_default!(name, default, constraints)
+    resolved = resolve_group_refs_for_default(name, default)
+    constraints.validate_default!(resolved, name: name)
+  rescue SiteSettings::GroupListConstraints::SchemaError => error
+    report_group_list_schema_errors!(name, [error.message])
+    constraints.normalize(resolved)
+  end
+
+  # Resolves the group references of a declared default. In production a reference
+  # that cannot be resolved is dropped instead of aborting boot.
+  #
+  # @param name [Symbol] the site setting name.
+  # @param default [String, Array, nil] the declared default.
+  # @return [String] the resolved ids, pipe separated.
+  def resolve_group_refs_for_default(name, default)
+    context = "#{name} default"
+    SiteSettings::GroupRefs.resolve_list(default, context: context)
+  rescue SiteSettings::GroupRefs::SchemaError => error
+    report_group_list_schema_errors!(name, [error.message])
+    tokens = default.is_a?(Array) ? default : default.to_s.split("|")
+    tokens.filter_map { |token| resolve_group_ref(token, context) }.join("|")
+  end
+
+  def resolve_group_ref(token, context)
+    SiteSettings::GroupRefs.resolve(token, context: context)
+  rescue SiteSettings::GroupRefs::SchemaError
+    nil
+  end
+
+  def report_group_list_schema_errors!(name, errors)
+    message = "Invalid group rules: #{errors.join(" ")}"
+    raise Discourse::InvalidParameters.new(message) if !Rails.env.production?
+
+    Discourse.warn_exception(Discourse::InvalidParameters.new(message), message: message)
+  end
 
   def hydrate_objects_setting_value(name, value, type_hash: nil)
     type_hash ||= type_supervisor.type_hash(name)

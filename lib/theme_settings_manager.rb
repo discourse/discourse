@@ -59,6 +59,14 @@ class ThemeSettingsManager
     @opts[:disallowed_groups]
   end
 
+  def mandatory_values
+    @opts[:mandatory_values]
+  end
+
+  def constraints
+    @opts[:constraints]
+  end
+
   def value=(new_value)
     ensure_is_valid_value!(new_value)
     value = new_value.to_s

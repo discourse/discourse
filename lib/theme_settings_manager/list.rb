@@ -10,11 +10,13 @@ class ThemeSettingsManager::List < ThemeSettingsManager
   end
 
   def value=(new_value)
-    if list_type == "group" && disallowed_groups.present?
-      disallowed_ids = disallowed_groups.to_s.split("|")
-      new_value = new_value.to_s.split("|").reject { |id| disallowed_ids.include?(id) }.join("|")
-    end
+    new_value = constraints.normalize!(new_value, name:) if list_type == "group"
 
     super
+  end
+
+  def value
+    current_value = super
+    list_type == "group" ? constraints.normalize(current_value) : current_value
   end
 end

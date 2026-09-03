@@ -27,6 +27,8 @@ class SiteSettings::TypeSupervisor
     authorized_extensions
     max_file_size_kb
     disallowed_groups
+    mandatory_values
+    group_list_constraints
   ].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema schema].freeze
 
@@ -114,6 +116,8 @@ class SiteSettings::TypeSupervisor
     @schemas = {}
     @authorized_extensions = {}
     @max_file_size_kb = {}
+    @mandatory_values = {}
+    @group_list_constraints = {}
     @dependencies = SiteSettings::DependencyGraph.new
   end
 
@@ -121,6 +125,8 @@ class SiteSettings::TypeSupervisor
 
   def load_setting(name_arg, opts = {})
     name = name_arg.to_sym
+
+    @group_list_constraints[name] = opts[:group_list_constraints] if opts[:group_list_constraints]
 
     @textareas[name] = opts[:textarea] if opts[:textarea]
     @authorized_extensions[name] = opts[:authorized_extensions] if opts[:authorized_extensions]
@@ -150,6 +156,7 @@ class SiteSettings::TypeSupervisor
       if type.to_sym == :list
         @allow_any[name] = opts[:allow_any] != false
         @list_type[name] = opts[:list_type] if opts[:list_type]
+        @mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
       end
 
       # add validator for objects
@@ -272,6 +279,16 @@ class SiteSettings::TypeSupervisor
     @list_type[name.to_sym]
   end
 
+  # The compiled group rules for a setting, or nil when the setting is not a group
+  # list. Every group list has one, even when it declares no rule, because the
+  # "these group ids must exist" check applies to all of them.
+  #
+  # @param name [String, Symbol] the site setting name.
+  # @return [SiteSettings::GroupListConstraints, nil]
+  def group_list_constraints(name)
+    @group_list_constraints[name.to_sym]
+  end
+
   def validate_value(name, type, val)
     if type == self.class.types[:enum] || (type == self.class.types[:list] && get_enum_class(name))
       if get_enum_class(name)
@@ -304,6 +321,8 @@ class SiteSettings::TypeSupervisor
         end
       end
     end
+
+    group_list_constraints(name)&.validate!(val, name: name)
 
     if (v = @validators[name])
       validator = v[:class].new(v[:opts])
@@ -339,7 +358,11 @@ class SiteSettings::TypeSupervisor
       )
     end
 
-    if type == self.class.types[:bool]
+    if type == self.class.types[:group_list] && @group_list_constraints[name]
+      val = @group_list_constraints[name].normalize!(val, name: name)
+    elsif type == self.class.types[:list] && @mandatory_values[name]
+      val = (@mandatory_values[name].split("|") | val.to_s.split("|")).join("|")
+    elsif type == self.class.types[:bool]
       val = (val == true || val == "t" || val == "true") ? "t" : "f"
     elsif type == self.class.types[:integer] && !val.is_a?(Integer)
       val = val.to_i
