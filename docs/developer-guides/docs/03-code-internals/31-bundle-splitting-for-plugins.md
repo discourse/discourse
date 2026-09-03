@@ -20,11 +20,11 @@ Add a `frontend` section to your plugin's `about.json`:
 }
 ```
 
-Two things happen.
+Two things happen:
 
 Your components, helpers, modifiers and lib code stop being loaded automatically. Instead, they are only loaded when referenced by an import in other code.
 
-Your routes, controllers & templates move into a separate file that loads on demand.
+Your routes, controllers & templates move into a separate bundle which loads on demand.
 
 ## Group your routes
 
@@ -120,6 +120,8 @@ When using staticModules, you should avoid using these legacy features:
 - Loading components via `.lookup()`
 
 - `requirejs.entries`, `require()`, `define()`
+
+- Loading your plugin's modules from other plugins (except those listed in `sharedModules`)
 
 ## Verification
 
