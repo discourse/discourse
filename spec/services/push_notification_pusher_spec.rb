@@ -317,5 +317,122 @@ RSpec.describe PushNotificationPusher do
         )
       end
     end
+
+    describe ".subscribe" do
+      it "sends the confirmation notification when the subscription already exists" do
+        params =
+          ActionController::Parameters.new(
+            endpoint: "endpoint",
+            keys: {
+              p256dh: "p256dh",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+
+        WebPush.expects(:payload_send).once
+
+        PushNotificationPusher.subscribe(user, params, "false")
+        PushNotificationPusher.subscribe(user, params, "true")
+
+        expect(user.push_subscriptions.count).to eq(1)
+      end
+
+      it "rejects a subscription destroyed by the confirmation notification" do
+        params =
+          ActionController::Parameters.new(
+            endpoint: "expired-endpoint",
+            keys: {
+              p256dh: "",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+
+        result = PushNotificationPusher.subscribe(user, params, "true")
+
+        expect(result).to eq(false)
+        expect(user.push_subscriptions).to be_empty
+      end
+
+      it "transfers an existing browser subscription to the current user" do
+        previous_user = Fabricate(:user)
+        params =
+          ActionController::Parameters.new(
+            endpoint: "shared-endpoint",
+            keys: {
+              p256dh: "p256dh",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+
+        PushNotificationPusher.subscribe(previous_user, params, "false")
+        PushNotificationPusher.subscribe(user, params, "false")
+
+        expect(PushSubscription.where(data: params.to_json).pluck(:user_id)).to eq([user.id])
+      end
+
+      it "rejects a registration whose login session ended before it acquired the endpoint lock" do
+        params =
+          ActionController::Parameters.new(
+            endpoint: "stale-endpoint",
+            keys: {
+              p256dh: "p256dh",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+        auth_token = UserAuthToken.generate!(user_id: user.id)
+        auth_token_id = auth_token.id
+
+        auth_token.destroy!
+        result =
+          PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token_id)
+
+        expect(result).to eq(false)
+        expect(PushSubscription.where(user: user, data: params.to_json)).to be_empty
+      end
+
+      it "removes a registration when its login session ends during the write" do
+        params =
+          ActionController::Parameters.new(
+            endpoint: "racing-endpoint",
+            keys: {
+              p256dh: "p256dh",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+        auth_token = UserAuthToken.generate!(user_id: user.id)
+        invalidate_token = ->(subscription) do
+          auth_token.destroy! if subscription.user_id == user.id
+        end
+        PushSubscription.set_callback(:create, :after, invalidate_token)
+
+        result =
+          PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token.id)
+
+        expect(result).to eq(false)
+        expect(PushSubscription.where(user: user, data: params.to_json)).to be_empty
+      ensure
+        PushSubscription.skip_callback(:create, :after, invalidate_token) if invalidate_token
+      end
+
+      it "accepts the active token when registering for its impersonated user" do
+        admin = Fabricate(:admin)
+        auth_token = UserAuthToken.generate!(user_id: admin.id)
+        auth_token.update!(impersonated_user_id: user.id)
+        params =
+          ActionController::Parameters.new(
+            endpoint: "impersonated-endpoint",
+            keys: {
+              p256dh: "p256dh",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+
+        result =
+          PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token.id)
+
+        expect(result).to eq(true)
+        expect(PushSubscription.where(user: user, data: params.to_json)).to exist
+      end
+    end
   end
 end

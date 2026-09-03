@@ -9,6 +9,11 @@ import { i18n } from "discourse-i18n";
 
 let primaryTab = false;
 let liveEnabled = false;
+// Kept out of localStorage so one bad boot can neither outlive the session
+// nor overwrite a real preference. "fallback" may bypass a stored opt-out:
+// older builds force-wrote it on every boot while push was on.
+let pushTransport = null;
+let pushTransportEpoch = 0;
 let havePermission = null;
 let mbClientId = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
@@ -27,6 +32,7 @@ export function clearDesktopNotificationHandlers() {
 // Called from an initializer
 function init(messageBus) {
   liveEnabled = false;
+  setPushTransport(null);
   mbClientId = messageBus.clientId;
 
   if (!User.current()) {
@@ -135,7 +141,14 @@ function canUserReceiveNotifications(user) {
     return false;
   }
 
-  if (keyValueStore.getItem("notifications-disabled") === "disabled") {
+  if (pushTransport === "delivering") {
+    return false;
+  }
+
+  if (
+    pushTransport !== "fallback" &&
+    keyValueStore.getItem("notifications-disabled") === "disabled"
+  ) {
     return false;
   }
 
@@ -229,6 +242,24 @@ function disable() {
   keyValueStore.setItem("notifications-disabled", "disabled");
 }
 
+function setPushTransport(value, { ifEpoch } = {}) {
+  if (ifEpoch !== undefined && ifEpoch !== pushTransportEpoch) {
+    return false;
+  }
+
+  pushTransport = value;
+  pushTransportEpoch++;
+  return true;
+}
+
+function currentPushTransportEpoch() {
+  return pushTransportEpoch;
+}
+
+function getPushTransport() {
+  return pushTransport;
+}
+
 export {
   context,
   init,
@@ -237,5 +268,8 @@ export {
   alertChannel,
   confirmNotification,
   disable,
+  setPushTransport,
+  currentPushTransportEpoch,
+  getPushTransport,
   canUserReceiveNotifications,
 };
