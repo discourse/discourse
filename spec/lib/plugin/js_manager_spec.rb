@@ -6,9 +6,9 @@ RSpec.describe Plugin::JsManager do
       {
         "main" => {
           "routeBundles" => [
-            { "url" => "chat/visualizer", "fileName" => "visualizer.js" },
+            { "url" => "chat/visualizer/*", "fileName" => "visualizer.js" },
             { "url" => "chat/*", "fileName" => "chat.js" },
-            { "url" => "u/*/preferences/chat", "fileName" => "preferences.js" },
+            { "url" => "u/*/preferences/chat/*", "fileName" => "preferences.js" },
           ],
         },
       }
@@ -49,7 +49,7 @@ RSpec.describe Plugin::JsManager do
 
     context "with a splat segment" do
       let(:manifest) do
-        { "main" => { "routeBundles" => [{ "url" => "c/**/edit", "fileName" => "edit.js" }] } }
+        { "main" => { "routeBundles" => [{ "url" => "c/**/edit/*", "fileName" => "edit.js" }] } }
       end
 
       it "matches one segment or many, because a splat eats the rest of the route path" do

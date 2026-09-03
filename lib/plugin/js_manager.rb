@@ -77,17 +77,15 @@ module Plugin
       "js/plugins/#{bundle["fileName"].delete_suffix(".js")}" if bundle
     end
 
-    # `*` is one segment, or the rest of the path when it is last. `**` is one or more, and
-    # stands for a splat route segment. A pattern only depends on its glob, so it never goes
-    # stale.
+    # Every url the build emits ends in `/*`, so a bundle covers its own route and everything
+    # beneath it. Within the rest, `*` is one segment and `**` is one or more, standing in for a
+    # splat route segment. A pattern only depends on its glob, so it never goes stale.
     def self.url_glob_pattern(glob)
       @url_glob_patterns[glob] ||= begin
-        segments = glob.split("/")
-        trailing_star = segments.last == "*"
-        segments = segments[0...-1] if trailing_star
-
         pattern =
-          segments
+          glob
+            .delete_suffix("/*")
+            .split("/")
             .map do |segment|
               case segment
               when "**"
@@ -100,9 +98,7 @@ module Plugin
             end
             .join("/")
 
-        pattern = segments.empty? ? ".*" : "#{pattern}(?:/.*)?" if trailing_star
-
-        /\A#{pattern}\z/
+        %r{\A#{pattern}(?:/.*)?\z}
       end
     end
     private_class_method :url_glob_pattern
