@@ -8,9 +8,10 @@ module DiscourseAi
       SYNTHESIS_LIMIT = 50
       SELECTED_SOURCE_LIMIT = 6
       EXCERPT_LIMIT = 1200
+      SEMANTIC_PRIVATE_MESSAGE_FILTER = /(?:\A|\s)in:(?:messages|personal)(?=\s|\z)/i
 
       Result =
-        Struct.new(:candidates, keyword_init: true) do
+        Struct.new(:candidates, :private_messages, keyword_init: true) do
           def synthesis_candidates
             candidates.first(Retrieval::SYNTHESIS_LIMIT)
           end
@@ -20,28 +21,31 @@ module DiscourseAi
         @user = user
         @guardian = Guardian.new(user)
         @lexical_retriever = lexical_retriever || method(:lexical_sources)
-        @semantic_retriever = semantic_retriever || method(:semantic_sources)
+        @semantic_retriever = semantic_retriever
       end
 
       def call(query, keyword_query: query, semantic_query: query)
-        return Result.new(candidates: []) if DiscourseAi::Discoveries.private_message_query?(query)
+        private_messages =
+          DiscourseAi::Discoveries.private_message_query?(query) ||
+            DiscourseAi::Discoveries.private_message_query?(keyword_query)
 
         rankings =
-          if self.class.explicit_filters?(query)
+          if self.class.explicit_filters_except_private_messages?(query)
             [retrieve(@lexical_retriever, query)]
-          elsif semantic_query.blank? || self.class.explicit_filters?(keyword_query)
+          elsif semantic_query.blank? ||
+                self.class.explicit_filters_except_private_messages?(keyword_query)
             [retrieve(@lexical_retriever, keyword_query)]
           else
-            retrieve_in_parallel(keyword_query, semantic_query)
+            retrieve_in_parallel(keyword_query, semantic_query, private_messages:)
           end
         candidates = reciprocal_rank_fusion(rankings)
-        candidates = revalidate_and_limit(candidates)
+        candidates = revalidate_and_limit(candidates, private_messages:)
         candidates =
           candidates.map.with_index do |candidate, index|
             candidate.merge("source_ref" => "source_#{index + 1}")
           end
 
-        Result.new(candidates:)
+        Result.new(candidates:, private_messages:)
       end
 
       def self.explicit_filters?(query)
@@ -53,7 +57,7 @@ module DiscourseAi
             cleaned = word.delete("\"'")
             direct_filter =
               cleaned.match?(
-                /\A(?:[lr]|t|order:\w+|in:title|topic:\d+|in:all(?:-posts)?|include:(?:invisible|unlisted))\z/i,
+                /\A(?:[lr]|t|order:\w+|in:title|topic:\d+|in:all(?:-posts)?|include:(?:invisible|unlisted)|personal_messages:\S+)\z/i,
               )
 
             direct_filter ||
@@ -61,6 +65,10 @@ module DiscourseAi
                 options[:enabled].call && cleaned.match?(options[:case_insensitive_matcher])
               end
           end
+      end
+
+      def self.explicit_filters_except_private_messages?(query)
+        explicit_filters?(query.to_s.gsub(SEMANTIC_PRIVATE_MESSAGE_FILTER, " "))
       end
 
       def validated_sources(result, source_refs)
@@ -74,7 +82,7 @@ module DiscourseAi
         selected = source_refs.filter_map { |source_ref| candidates_by_ref[source_ref] }
         return [] if selected.length != source_refs.length
 
-        revalidated = revalidate_and_limit(selected)
+        revalidated = revalidate_and_limit(selected, private_messages: result.private_messages)
         return [] if revalidated.length != selected.length
 
         revalidated
@@ -101,9 +109,12 @@ module DiscourseAi
           .first(CANDIDATE_LIMIT)
       end
 
-      def retrieve_in_parallel(keyword_query, semantic_query)
+      def retrieve_in_parallel(keyword_query, semantic_query, private_messages:)
         database = RailsMultisite::ConnectionManagement.current_db
-        searches = [[@lexical_retriever, keyword_query], [@semantic_retriever, semantic_query]]
+        searches = [
+          [@lexical_retriever, keyword_query],
+          [semantic_retriever(private_messages:), semantic_query],
+        ]
         threads =
           searches.map do |retriever, search_query|
             Thread.new do
@@ -140,11 +151,15 @@ module DiscourseAi
         [[], error]
       end
 
-      def semantic_sources(query)
+      def semantic_retriever(private_messages:)
+        @semantic_retriever || ->(query) { semantic_sources(query, private_messages:) }
+      end
+
+      def semantic_sources(query, private_messages:)
         guardian = Guardian.new(@user)
         DiscourseAi::Embeddings::SemanticSearch
           .new(guardian)
-          .search_for_topics(query, 1, hyde: false)
+          .search_for_topics(query, 1, hyde: false, private_messages:)
           .includes(:topic)
           .to_a
           .uniq(&:topic_id)
@@ -192,7 +207,7 @@ module DiscourseAi
         source.slice("post_id", "post_number", "url", "excerpt", "post_updated_at")
       end
 
-      def revalidate_and_limit(candidates)
+      def revalidate_and_limit(candidates, private_messages: false)
         post_ids =
           candidates.flat_map do |candidate|
             candidate.fetch("passages", [candidate]).map { |passage| passage.fetch("post_id") }
@@ -203,14 +218,36 @@ module DiscourseAi
             .includes(:user, topic: [{ category: :parent_category }, :tags])
             .index_by(&:id)
         hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
+        private_message_topic_ids = Set.new
+        if private_messages && @user
+          private_message_topic_ids =
+            Topic
+              .private_messages_for_user(@user)
+              .where(id: candidates.pluck("topic_id"))
+              .pluck(:id)
+              .to_set
+        end
+        visible_post_types = Topic.visible_post_types(@user)
 
         candidates
           .filter_map do |candidate|
             post = posts[candidate.fetch("post_id")]
             topic = post&.topic
             next if topic.nil? || topic.id != candidate.fetch("topic_id")
-            next if topic.archetype != Archetype.default || topic.deleted_at? || !topic.visible?
-            next if !@guardian.can_see?(post)
+            allowed_archetype =
+              if private_messages
+                topic.archetype == Archetype.private_message
+              else
+                topic.archetype == Archetype.default
+              end
+            next if !allowed_archetype
+            next if topic.deleted_at? || !topic.visible?
+            if topic.private_message?
+              next if !private_message_topic_ids.include?(topic.id)
+              next if post.hidden? || !visible_post_types.include?(post.post_type)
+            else
+              next if !@guardian.can_see?(post)
+            end
             if candidate["post_updated_at"] &&
                  candidate["post_updated_at"] != post.updated_at.iso8601(6)
               next
@@ -225,7 +262,13 @@ module DiscourseAi
               candidate_passages.filter_map do |passage|
                 passage_post = posts[passage.fetch("post_id")]
                 next if passage_post.nil? || passage_post.topic_id != topic.id
-                next if !@guardian.can_see?(passage_post)
+                if topic.private_message?
+                  if passage_post.hidden? || !visible_post_types.include?(passage_post.post_type)
+                    next
+                  end
+                elsif !@guardian.can_see?(passage_post)
+                  next
+                end
                 if passage["post_updated_at"] &&
                      passage["post_updated_at"] != passage_post.updated_at.iso8601(6)
                   next

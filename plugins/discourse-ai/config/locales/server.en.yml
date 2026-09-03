@@ -125,7 +125,7 @@ en:
     ai_helper_chat_thread_title_agent: "The agent to use for generating chat thread titles."
 
     ai_embeddings_selected_model: "Use the selected model for generating embeddings."
-    ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."
+    ai_embeddings_generate_for_pms: "Generate embeddings for personal messages. This is also required for semantic personal-message results in Ask AI."
     ai_embeddings_semantic_related_topics_enabled: "Use Semantic Search for related topics."
     ai_embeddings_semantic_related_topics: "Maximum number of topics to show in related topic section."
     ai_embeddings_backfill_batch_size: "Number of embeddings to backfill every 15 minutes."
@@ -167,7 +167,7 @@ en:
     ai_ask_ai_agent: "Agent that selects sources and writes Ask AI answers."
     ai_ask_ai_query_rewriter_agent: "Agent used to prepare separate keyword and semantic queries for Ask AI. If this agent or its model is unavailable, Ask AI searches with the user's original query."
     ai_ask_ai_follow_up_agent: "Agent used when a user wants to follow up an Ask AI result. The selected agent must be enabled, allow personal messages, and be available to the user."
-    ai_ask_ai_allowed_groups: "Groups allowed to use Ask AI and its follow-up handoff. The Ask AI agent's permissions, the follow-up agent's permissions, and normal topic and category visibility still apply. Personal messages are always excluded from search. Content from restricted categories visible to an allowed user may be sent to the configured LLM provider."
+    ai_ask_ai_allowed_groups: "Groups allowed to use Ask AI and its follow-up handoff. The Ask AI agent's permissions, the follow-up agent's permissions, and normal topic, category, and personal-message visibility still apply. Semantic personal-message search requires {{setting:ai_embeddings_generate_for_pms}}. Content visible to an allowed user, including restricted topics and personal messages, may be sent to the configured LLM provider."
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX for Google Custom Search API"
