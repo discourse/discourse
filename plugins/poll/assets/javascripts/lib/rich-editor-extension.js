@@ -132,7 +132,18 @@ const extension = {
     },
     poll_title(state, node) {
       state.write("# ");
-      state.renderInline(node, false);
+
+      // a title is one line of markdown: a break written as a newline would
+      // end the title and leave the rest of the poll unreadable to the parser
+      const { hard_break: hardBreak } = state.nodes;
+      state.nodes.hard_break = () => state.write("<br>");
+
+      try {
+        state.renderInline(node, false);
+      } finally {
+        state.nodes.hard_break = hardBreak;
+      }
+
       state.closeBlock(node);
     },
     poll_info() {},

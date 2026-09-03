@@ -193,6 +193,22 @@ module(
         .exists({ count: 1 }, "no total votes block");
     });
 
+    test("a line break in a title survives as markup", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        "[poll]\n# First<br>Second\n* Option 1\n[/poll]"
+      );
+
+      assert
+        .dom(".composer-poll-node__content .poll-title br")
+        .exists("keeps the break in the document");
+      assert.strictEqual(
+        editor.value,
+        "[poll]\n# First<br>Second\n\n* Option 1\n\n[/poll]\n\n",
+        "and writes it as markup, which would otherwise end the title"
+      );
+    });
+
     test("a title keeps markdown that would start a block", async function (assert) {
       const [editor] = await setupRichEditor(
         assert,
