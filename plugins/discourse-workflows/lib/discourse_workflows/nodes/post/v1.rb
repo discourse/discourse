@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module Post
       class V1 < NodeType
-        OPERATIONS = %w[create edit get list].freeze
+        OPERATIONS = %w[create edit get list delete recover].freeze
         STATUS_OPTIONS = %w[
           any
           open
@@ -135,7 +135,7 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: %w[edit get],
+                  operation: %w[edit get delete recover],
                 },
               },
             },
@@ -314,7 +314,7 @@ module DiscourseWorkflows
               },
               display_options: {
                 show: {
-                  operation: %w[get list],
+                  operation: %w[get list delete recover],
                 },
               },
             },
@@ -344,7 +344,6 @@ module DiscourseWorkflows
             "bypass_permission_checks" =>
               exec_ctx.get_node_parameter("bypass_permission_checks", item_index, default: false),
             "post_id" => exec_ctx.get_node_parameter("post_id", item_index),
-            "editor_username" => exec_ctx.get_node_parameter("editor_username", item_index),
             "include_raw" => exec_ctx.get_node_parameter("include_raw", item_index, default: true),
             "include_cooked" =>
               exec_ctx.get_node_parameter("include_cooked", item_index, default: false),
@@ -386,6 +385,10 @@ module DiscourseWorkflows
             wrap(get_post(exec_ctx, config, item_index))
           when "list"
             list_posts(exec_ctx, config, item_index).map { |data| wrap(data) }
+          when "delete"
+            wrap(delete_post(exec_ctx, config, item_index))
+          when "recover"
+            wrap(recover_post(exec_ctx, config, item_index))
           else
             raise_node_error!(
               I18n.t(
@@ -432,6 +435,20 @@ module DiscourseWorkflows
                 include_cooked: true,
               ),
           }
+        end
+
+        def delete_post(exec_ctx, config, item_index)
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          post = exec_ctx.destroy_post(user: actor, post_id: config["post_id"])
+
+          { post: exec_ctx.serialize_post(post, guardian: actor.guardian) }
+        end
+
+        def recover_post(exec_ctx, config, item_index)
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          post = exec_ctx.recover_post(user: actor, post_id: config["post_id"])
+
+          { post: exec_ctx.serialize_post(post, guardian: actor.guardian) }
         end
 
         def get_post(exec_ctx, config, item_index)

@@ -8,6 +8,10 @@ module DiscourseWorkflows
       WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
       NODE_ID_FIELD = "discourse_workflows_node_id"
 
+      # PostDestroyer leaves an author-deleted post as a stub unless this is below 1;
+      # a workflow delete should always actually delete
+      ALWAYS_TRASH = 0
+
       MISSING = ParameterResolver::MISSING
       RUN_CODE = CodeRunner::RUN_CODE
       RUN_ONCE_FOR_ALL_ITEMS = CodeRunner::RUN_ONCE_FOR_ALL_ITEMS
@@ -357,6 +361,7 @@ module DiscourseWorkflows
           raw: raw,
           reply_to_post_number: reply_to_post_number.presence,
           skip_workflows: true,
+          skip_rate_limits: true,
         }.compact
 
         if ActiveModel::Type::Boolean.new.cast(whisper)
@@ -385,13 +390,31 @@ module DiscourseWorkflows
         post = ::Post.find(post_id)
         raise Discourse::InvalidAccess if !user.guardian.can_edit_post?(post)
 
-        if !PostRevisor.new(post).revise!(user, { raw: raw }, skip_workflows: true)
+        opts = { skip_workflows: true, force_new_version: true }
+
+        if !PostRevisor.new(post).revise!(user, { raw: raw }, opts)
           errors = post.errors.full_messages.presence
           raise DiscourseWorkflows::NodeError,
                 errors&.join(", ") || I18n.t("discourse_workflows.errors.post.edit_failed")
         end
 
         post.reload
+      end
+
+      def destroy_post(user:, post_id:)
+        post = ::Post.find(post_id)
+        raise Discourse::InvalidAccess if !user.guardian.can_delete_post_or_topic?(post)
+
+        post_destroyer(user, post).destroy
+        post
+      end
+
+      def recover_post(user:, post_id:)
+        post = ::Post.with_deleted.find(post_id)
+        raise Discourse::InvalidAccess if !user.guardian.can_recover_post?(post)
+
+        post_destroyer(user, post).recover
+        post
       end
 
       def serialize_post(
@@ -491,6 +514,16 @@ module DiscourseWorkflows
       end
 
       private
+
+      def post_destroyer(user, post)
+        PostDestroyer.new(
+          user,
+          post,
+          context: I18n.t("discourse_workflows.post.destroy_context"),
+          skip_workflows: true,
+          delete_removed_posts_after: ALWAYS_TRASH,
+        )
+      end
 
       def record_permission_bypass!(post)
         post.custom_fields[BYPASSED_PERMISSION_CHECKS_FIELD] = "true"
