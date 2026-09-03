@@ -217,8 +217,8 @@ export default {
       ].join("\n");
     }
 
-    // `exports` maps the name other bundles import by to the module behind it, which is why the
-    // two are kept apart here. A cross-plugin import can spell the module either way.
+    // `exports` maps the name other bundles import by to the module behind it. That module can be
+    // named with or without the `/index` a colocated component adds.
     const publicNamesByPath = new Map();
 
     for (const [publicName, internalName] of Object.entries(
