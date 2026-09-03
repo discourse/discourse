@@ -3,6 +3,30 @@ import PollNodeView from "../discourse/components/poll-node-view";
 
 /** @type {RichEditorExtension} */
 const extension = {
+  // the hint only makes sense while the caret is in the poll it describes
+  plugins({ pmState: { Plugin }, pmView: { Decoration, DecorationSet } }) {
+    return new Plugin({
+      props: {
+        decorations(state) {
+          const { $from } = state.selection;
+
+          for (let depth = $from.depth; depth > 0; depth--) {
+            const node = $from.node(depth);
+
+            if (node.type.name === "poll") {
+              const pos = $from.before(depth);
+
+              return DecorationSet.create(state.doc, [
+                Decoration.node(pos, pos + node.nodeSize, {
+                  class: "--editing",
+                }),
+              ]);
+            }
+          }
+        },
+      },
+    });
+  },
   nodeViews: {
     poll: { component: PollNodeView, name: "poll", hasContent: true },
   },

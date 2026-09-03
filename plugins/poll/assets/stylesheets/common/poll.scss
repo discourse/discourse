@@ -630,10 +630,15 @@ body.crawler {
   }
 
   &__hint {
+    display: none;
     grid-area: hint;
     padding: 0 1em 1em;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+  }
+
+  &.--editing &__hint {
+    display: block;
   }
 
   // outranks the cooked grid, which also applies inside the editor
