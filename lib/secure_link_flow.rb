@@ -34,9 +34,7 @@ class SecureLinkFlow
   private
 
   def key(purpose)
-    if !PURPOSES.include?(purpose)
-      raise ArgumentError, "unknown secure link purpose"
-    end
+    raise ArgumentError, "unknown secure link purpose" if !PURPOSES.include?(purpose)
 
     "secure-link-#{purpose.to_s.dasherize}"
   end
