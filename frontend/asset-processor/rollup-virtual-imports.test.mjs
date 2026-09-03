@@ -10,7 +10,7 @@ function entrypoint(moduleFilenames, opts = {}, extra) {
       pluginName: "chat",
       ...opts,
     },
-    extra
+    { entrypointName: "main", ...extra }
   );
 }
 
@@ -211,10 +211,10 @@ describe("virtual:entrypoint", () => {
 
     it("groups routes into a bundle per declared name", () => {
       expect(output).toContain(
-        `{ names: ["chat.visualizer"], load: () => import("virtual:route:visualizer") },`
+        `{ names: ["chat.visualizer"], load: () => import("virtual:route:main:visualizer") },`
       );
       expect(output).toContain(
-        `{ names: ["chat","chat.channel"], load: () => import("virtual:route:chat") },`
+        `{ names: ["chat","chat.channel"], load: () => import("virtual:route:main:chat") },`
       );
     });
 
@@ -225,7 +225,31 @@ describe("virtual:entrypoint", () => {
       );
 
       expect(withIndex).toContain(
-        `{ names: ["chat","chat.channel","chat.index"], load: () => import("virtual:route:chat") },`
+        `{ names: ["chat","chat.channel","chat.index"], load: () => import("virtual:route:main:chat") },`
+      );
+    });
+
+    it("keeps a bundle name in one entrypoint clear of the same name in another", () => {
+      // Both entrypoints put their unnamed routes in `default`, and each is built from its own
+      // module list.
+      const shared = { bundleByRoute: { chat: "default", admin: "default" } };
+
+      const main = entrypoint(
+        ["discourse/routes/chat.js"],
+        { frontendConfig, routeTables: shared },
+        { entrypointName: "main" }
+      );
+      const admin = entrypoint(
+        ["discourse/routes/admin.js"],
+        { frontendConfig, routeTables: shared },
+        { entrypointName: "admin" }
+      );
+
+      expect(main).toContain(
+        `{ names: ["chat"], load: () => import("virtual:route:main:default") },`
+      );
+      expect(admin).toContain(
+        `{ names: ["admin"], load: () => import("virtual:route:admin:default") },`
       );
     });
 

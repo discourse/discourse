@@ -215,6 +215,7 @@ export default {
     );
 
     const bundles = routeBundlesFor(records, opts.routeTables?.bundleByRoute);
+    const entrypointName = extra?.entrypointName;
 
     const eager = records.filter((record) =>
       isEagerModule(record.compatModuleName)
@@ -240,7 +241,7 @@ export default {
       ...bundles.map(
         (bundle) =>
           `  { names: ${JSON.stringify(bundle.names)},` +
-          ` load: () => import("virtual:route:${bundle.bundleName}") },`
+          ` load: () => import("virtual:route:${entrypointName}:${bundle.bundleName}") },`
       ),
       "];",
       "export { compatModules };",

@@ -161,6 +161,8 @@ async function performRollup(modules, opts) {
 
   const routeVirtualPrefix = `${basePath}virtual:route:`;
 
+  // Keyed by the qualified `<entrypoint>:<bundle>` from the module id, because two entrypoints
+  // can each have a bundle of the same name.
   const bundleNameByFile = {};
   for (const chunk of bundle.output) {
     if (chunk.facadeModuleId?.startsWith(routeVirtualPrefix)) {
@@ -181,8 +183,10 @@ async function performRollup(modules, opts) {
     const fileNameByBundle = {};
 
     for (const fileName of owner?.dynamicImports ?? []) {
-      if (bundleNameByFile[fileName]) {
-        fileNameByBundle[bundleNameByFile[fileName]] = fileName;
+      const qualified = bundleNameByFile[fileName];
+
+      if (qualified?.startsWith(`${entryName}:`)) {
+        fileNameByBundle[qualified.slice(entryName.length + 1)] = fileName;
       }
     }
 
