@@ -18,6 +18,18 @@
     }
   }
 
+  &.--audio:not(.chat-composer-upload--in-progress) {
+    block-size: auto;
+    inline-size: 28rem;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    padding: 0.25rem;
+
+    .preview {
+      min-inline-size: 0;
+    }
+  }
+
   &:last-child {
     margin-right: 0;
   }
@@ -48,7 +60,7 @@
     justify-content: center;
     margin: 0;
 
-    .d-icon {
+    > .d-icon {
       font-size: var(--font-up-6);
       margin-right: 0.5rem;
     }

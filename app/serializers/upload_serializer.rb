@@ -14,7 +14,10 @@ class UploadSerializer < ApplicationSerializer
              :short_path,
              :retain_hours,
              :human_filesize,
-             :dominant_color
+             :dominant_color,
+             :audio_duration_ms,
+             :audio_waveform,
+             :audio_waveform_version
 
   has_one :thumbnail,
           serializer: UploadThumbnailSerializer,
@@ -50,5 +53,21 @@ class UploadSerializer < ApplicationSerializer
     else
       UrlHelper.cook_url(object.url, secure: SiteSetting.secure_uploads? && object.secure)
     end
+  end
+
+  def audio_waveform
+    object.audio_waveform_values
+  end
+
+  def include_audio_duration_ms?
+    object.audio_waveform.present?
+  end
+
+  def include_audio_waveform?
+    object.audio_waveform.present?
+  end
+
+  def include_audio_waveform_version?
+    object.audio_waveform.present?
   end
 end

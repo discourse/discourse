@@ -165,6 +165,9 @@ export default class UppyS3Multipart {
         for_private_message: file.meta.for_private_message,
         for_site_setting: file.meta.for_site_setting,
         site_setting_name: file.meta.site_setting_name,
+        audio_duration_ms: file.meta.audio_duration_ms,
+        audio_waveform: file.meta.audio_waveform,
+        audio_waveform_version: file.meta.audio_waveform_version,
       }),
       // uppy is inconsistent, an error here fires the upload-error event
     }).then((responseData) => {

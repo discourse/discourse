@@ -50,6 +50,7 @@ import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/ch
 import ChatComposerMessageDetails from "discourse/plugins/chat/discourse/components/chat-composer-message-details";
 import ChatComposerUploads from "discourse/plugins/chat/discourse/components/chat-composer-uploads";
 import ChatReplyingIndicator from "discourse/plugins/chat/discourse/components/chat-replying-indicator";
+import ChatVoiceRecorder from "discourse/plugins/chat/discourse/components/chat-voice-recorder";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
@@ -76,6 +77,8 @@ export default class ChatComposer extends Component {
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
+
+  #uploadsApi;
 
   get shouldRenderMessageDetails() {
     return (
@@ -234,8 +237,28 @@ export default class ChatComposer extends Component {
   }
 
   @action
+  registerUploadsApi(api) {
+    this.#uploadsApi = api;
+  }
+
+  @action
   uploadClicked() {
     document.querySelector(`#${this.fileUploadElementId}`).click();
+  }
+
+  @action
+  async uploadRecording(file, metadata) {
+    if (!this.#uploadsApi) {
+      throw new Error("Chat uploads are not ready");
+    }
+
+    const addedFileIds = await this.#uploadsApi.addFiles([file], {
+      meta: metadata,
+    });
+
+    if (addedFileIds.length !== 1) {
+      throw new Error("The voice recording could not be added");
+    }
   }
 
   @action
@@ -839,42 +862,57 @@ export default class ChatComposer extends Component {
             />
 
             {{#if this.site.desktopView}}
+              <ChatVoiceRecorder
+                @canAttachUploads={{this.canAttachUploads}}
+                @disabled={{this.disabled}}
+                @onRecordingReady={{this.uploadRecording}}
+                @sendEnabled={{this.sendEnabled}}
+              >
+                <DButton
+                  class="-send"
+                  disabled={{or this.disabled (not this.sendEnabled)}}
+                  tabindex={{if this.sendEnabled 0 -1}}
+                  title={{i18n "chat.composer.send"}}
+                  @icon="paper-plane"
+                  {{on "click" this.onSend}}
+                  {{on "mousedown" this.trapMouseDown}}
+                  {{on "focus" (fn this.computeIsFocused true)}}
+                  {{on "blur" (fn this.computeIsFocused false)}}
+                />
+              </ChatVoiceRecorder>
+            {{/if}}
+          </div>
+          {{#if this.site.mobileView}}
+            <ChatVoiceRecorder
+              @canAttachUploads={{this.canAttachUploads}}
+              @disabled={{this.disabled}}
+              @onRecordingReady={{this.uploadRecording}}
+              @sendEnabled={{this.sendEnabled}}
+            >
               <DButton
-                @icon="paper-plane"
                 class="-send"
-                title={{i18n "chat.composer.send"}}
                 disabled={{or this.disabled (not this.sendEnabled)}}
                 tabindex={{if this.sendEnabled 0 -1}}
+                title={{i18n "chat.composer.send"}}
+                @icon="paper-plane"
                 {{on "click" this.onSend}}
                 {{on "mousedown" this.trapMouseDown}}
                 {{on "focus" (fn this.computeIsFocused true)}}
                 {{on "blur" (fn this.computeIsFocused false)}}
               />
-            {{/if}}
-          </div>
-          {{#if this.site.mobileView}}
-            <DButton
-              @icon="paper-plane"
-              class="-send"
-              title={{i18n "chat.composer.send"}}
-              disabled={{or this.disabled (not this.sendEnabled)}}
-              tabindex={{if this.sendEnabled 0 -1}}
-              {{on "click" this.onSend}}
-              {{on "mousedown" this.trapMouseDown}}
-              {{on "focus" (fn this.computeIsFocused true)}}
-              {{on "blur" (fn this.computeIsFocused false)}}
-            />
+            </ChatVoiceRecorder>
           {{/if}}
         </div>
       </div>
 
       {{#if this.canAttachUploads}}
         <ChatComposerUploads
-          @fileUploadElementId={{this.fileUploadElementId}}
-          @onUploadChanged={{this.onUploadChanged}}
-          @existingUploads={{this.draft.uploads}}
-          @uploadDropZone={{@uploadDropZone}}
           @composerInputEl={{this.composer.textarea.element}}
+          @existingUploads={{this.draft.uploads}}
+          @fileUploadElementId={{this.fileUploadElementId}}
+          @onRegisterApi={{this.registerUploadsApi}}
+          @onUploadChanged={{this.onUploadChanged}}
+          @uploadDropZone={{@uploadDropZone}}
         />
       {{/if}}
 

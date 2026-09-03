@@ -80,6 +80,9 @@ class UploadsController < ApplicationController
           pasted:,
           is_api:,
           retain_hours:,
+          audio_duration_ms: params[:audio_duration_ms],
+          audio_waveform: params[:audio_waveform],
+          audio_waveform_version: params[:audio_waveform_version],
         )
     rescue => e
       render json: failed_json.merge(message: e.message&.split("\n")&.first),
@@ -302,7 +305,10 @@ class UploadsController < ApplicationController
     site_setting_name: nil,
     pasted:,
     is_api:,
-    retain_hours:
+    retain_hours:,
+    audio_duration_ms: nil,
+    audio_waveform: nil,
+    audio_waveform_version: nil
   )
     if file.nil?
       if url.present? && is_api
@@ -330,7 +336,16 @@ class UploadsController < ApplicationController
 
     return { errors: [I18n.t("upload.file_missing")] } if tempfile.nil?
 
-    opts = { type:, for_private_message:, for_site_setting:, site_setting_name:, pasted: }
+    opts = {
+      type:,
+      for_private_message:,
+      for_site_setting:,
+      site_setting_name:,
+      pasted:,
+      audio_duration_ms:,
+      audio_waveform:,
+      audio_waveform_version:,
+    }
 
     upload = UploadCreator.new(tempfile, filename, opts).create_for(current_user.id)
 

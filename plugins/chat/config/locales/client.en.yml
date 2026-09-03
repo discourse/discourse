@@ -543,6 +543,16 @@ en:
         type: "Chat message"
         message_in_channel: "Channel"
 
+      audio_player:
+        download: "Download audio"
+        error: "This audio couldn't be played."
+        more_actions: "More audio actions"
+        pause: "Pause audio"
+        play: "Play audio"
+        playback_rate: "Playback speed: %{rate}×"
+        seek: "%{current} of %{duration}"
+        seek_label: "Seek through audio"
+
       reactions:
         add: "React with %{emoji}"
         remove: "Remove your %{emoji} reaction"
@@ -571,6 +581,22 @@ en:
         bold_text: "strong text"
         code_text: "code text"
         send: "Send"
+
+      voice_recorder:
+        cancel: "Discard recording"
+        cancelled: "Recording discarded"
+        empty: "Nothing was recorded. Check your microphone and try again."
+        finish: "Finish recording"
+        maximum_reached: "The %{minutes}-minute recording limit was reached. Your recording is being uploaded."
+        maximum_size_exceeded: "The recording exceeded the maximum upload size. Record a shorter message and try again."
+        maximum_size_reached: "Recording stopped before exceeding the maximum upload size. Your recording is being uploaded."
+        permission_denied: "Microphone access is blocked. Allow microphone access in your browser's site settings, then try again."
+        recording: "Recording"
+        secure_connection_required: "Voice recording requires a secure HTTPS connection."
+        start: "Record a voice message"
+        unavailable: "Your microphone couldn't be used. Check that it is connected and not in use by another app, then try again."
+        upload_failed: "The recording couldn't be added. Try again."
+        uploading: "Recording finished and is being uploaded"
 
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'

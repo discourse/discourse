@@ -89,6 +89,9 @@ export default class ChatComposerUploads extends Component {
     super.didInsertElement(...arguments);
 
     this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
+    this.onRegisterApi?.({
+      addFiles: (...args) => this.uppyUpload.addFiles(...args),
+    });
   }
 
   willDestroyElement() {
@@ -98,10 +101,16 @@ export default class ChatComposerUploads extends Component {
       "paste",
       this._pasteEventListener
     );
+    this.onRegisterApi?.(null);
   }
 
   get showUploadsContainer() {
     return this.uploads?.length > 0 || this.inProgressUploads.length > 0;
+  }
+
+  @action
+  addFiles(files, options) {
+    return this.uppyUpload.addFiles(files, options);
   }
 
   @action

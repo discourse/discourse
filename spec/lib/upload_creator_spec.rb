@@ -825,6 +825,77 @@ RSpec.describe UploadCreator do
       end
     end
 
+    context "when audio metadata is provided" do
+      before { SiteSetting.authorized_extensions = "weba" }
+
+      it "stores the waveform on a supported audio upload" do
+        waveform = Array.new(Upload::AUDIO_WAVEFORM_SAMPLES) { |index| index }
+        upload =
+          described_class.new(
+            file_from_contents("recorded voice", "voice-message.weba"),
+            "voice-message.weba",
+            audio_duration_ms: 2_000,
+            audio_waveform: Base64.strict_encode64(waveform.pack("C*")),
+            audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+          ).create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload.audio_duration_ms).to eq(2_000)
+        expect(upload.audio_waveform_values).to eq(waveform)
+        expect(upload.audio_waveform_version).to eq(Upload::AUDIO_WAVEFORM_VERSION)
+      end
+
+      it "does not mutate a reused upload with client metadata" do
+        original =
+          described_class.new(
+            file_from_contents("reused voice", "voice-message.weba"),
+            "voice-message.weba",
+          ).create_for(user.id)
+        waveform = Array.new(Upload::AUDIO_WAVEFORM_SAMPLES, 255)
+
+        reused =
+          described_class.new(
+            file_from_contents("reused voice", "voice-message.weba"),
+            "voice-message.weba",
+            audio_duration_ms: 2_000,
+            audio_waveform: Base64.strict_encode64(waveform.pack("C*")),
+            audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+          ).create_for(admin.id)
+
+        expect(reused).to eq(original)
+        expect(reused.reload.audio_waveform).to eq(nil)
+      end
+
+      it "rejects oversized encoded waveform metadata before storing it" do
+        upload =
+          described_class.new(
+            file_from_contents("oversized metadata", "voice-message.weba"),
+            "voice-message.weba",
+            audio_duration_ms: 2_000,
+            audio_waveform: "A" * 10_000,
+            audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+          ).create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors[:audio_waveform]).to be_present
+      end
+
+      it "rejects oversized duration metadata before parsing it" do
+        waveform = Array.new(Upload::AUDIO_WAVEFORM_SAMPLES, 255)
+        upload =
+          described_class.new(
+            file_from_contents("oversized duration", "voice-message.weba"),
+            "voice-message.weba",
+            audio_duration_ms: "9" * 10_000,
+            audio_waveform: Base64.strict_encode64(waveform.pack("C*")),
+            audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+          ).create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors[:audio_waveform]).to be_present
+      end
+    end
+
     context "when the upload is an ICO favicon" do
       let(:filename) { "smallest.ico" }
       let(:file) { file_from_fixtures(filename, "images") }

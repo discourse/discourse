@@ -5,12 +5,21 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ChatAudioPlayer from "discourse/plugins/chat/discourse/components/chat-audio-player";
 
 export default class ChatComposerUpload extends Component {
   get fileName() {
     return this.args.isDone
       ? this.args.upload.original_filename
       : this.args.upload.fileName;
+  }
+
+  get isCompletedAudio() {
+    return this.args.isDone && isAudio(this.fileName);
+  }
+
+  get previewAudioSrc() {
+    return getURLWithCDN(this.args.upload?.url);
   }
 
   get previewImageSrc() {
@@ -23,6 +32,7 @@ export default class ChatComposerUpload extends Component {
         class={{dConcatClass
           "chat-composer-upload"
           (if (isImage this.fileName) "chat-composer-upload--image")
+          (if (isAudio this.fileName) "--audio")
           (unless @isDone "chat-composer-upload--in-progress")
         }}
       >
@@ -36,40 +46,51 @@ export default class ChatComposerUpload extends Component {
           {{else if (isVideo this.fileName)}}
             {{dIcon "file-video"}}
           {{else if (isAudio this.fileName)}}
-            {{dIcon "file-audio"}}
+            {{#if @isDone}}
+              <ChatAudioPlayer
+                @durationMs={{@upload.audio_duration_ms}}
+                @src={{this.previewAudioSrc}}
+                @waveform={{@upload.audio_waveform}}
+                @waveformVersion={{@upload.audio_waveform_version}}
+              />
+            {{else}}
+              {{dIcon "file-audio"}}
+            {{/if}}
           {{else}}
             {{dIcon "file-lines"}}
           {{/if}}
         </div>
 
-        <span class="data">
-          {{#unless (isImage this.fileName)}}
-            <div class="top-data">
-              <span class="file-name">{{this.fileName}}</span>
-            </div>
-          {{/unless}}
+        {{#unless this.isCompletedAudio}}
+          <span class="data">
+            {{#unless (isImage this.fileName)}}
+              <div class="top-data">
+                <span class="file-name">{{this.fileName}}</span>
+              </div>
+            {{/unless}}
 
-          <div class="bottom-data">
-            {{#if @isDone}}
-              {{#unless (isImage this.fileName)}}
-                <span class="extension-pill">{{@upload.extension}}</span>
-              {{/unless}}
-            {{else}}
-              {{#if @upload.processing}}
-                <span class="processing">{{i18n "processing"}}</span>
+            <div class="bottom-data">
+              {{#if @isDone}}
+                {{#unless (isImage this.fileName)}}
+                  <span class="extension-pill">{{@upload.extension}}</span>
+                {{/unless}}
               {{else}}
-                <span class="uploading">{{i18n "uploading"}}</span>
-              {{/if}}
+                {{#if @upload.processing}}
+                  <span class="processing">{{i18n "processing"}}</span>
+                {{else}}
+                  <span class="uploading">{{i18n "uploading"}}</span>
+                {{/if}}
 
-              <progress
-                class="upload-progress"
-                id="file"
-                max="100"
-                value={{@upload.progress}}
-              ></progress>
-            {{/if}}
-          </div>
-        </span>
+                <progress
+                  class="upload-progress"
+                  id="file"
+                  max="100"
+                  value={{@upload.progress}}
+                ></progress>
+              {{/if}}
+            </div>
+          </span>
+        {{/unless}}
 
         <DButton
           @action={{@onCancel}}

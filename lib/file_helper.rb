@@ -202,7 +202,7 @@ class FileHelper
   end
 
   def self.supported_audio
-    @@supported_audio ||= Set.new %w[mp3 ogg oga opus wav m4a m4b m4p m4r aac flac]
+    @@supported_audio ||= Set.new %w[mp3 ogg oga opus wav weba m4a m4b m4p m4r aac flac]
   end
 
   def self.supported_video

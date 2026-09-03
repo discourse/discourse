@@ -11,6 +11,9 @@ class Upload < ActiveRecord::Base
   URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
   DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
+  AUDIO_WAVEFORM_SAMPLES = 40
+  AUDIO_WAVEFORM_VERSION = 1
+  SUPPORTED_AUDIO_WAVEFORM_VERSIONS = [1].freeze
   # the maximum length of a base62 encoded sha1
   MAX_BASE62_SHA1_LENGTH = 27
 
@@ -47,6 +50,19 @@ class Upload < ActiveRecord::Base
   validates :filesize, presence: true
   validates :original_filename, presence: true
   validates :dominant_color, length: { is: 6 }, allow_blank: true
+  validates :audio_duration_ms,
+            numericality: {
+              only_integer: true,
+              greater_than: 0,
+              less_than_or_equal_to: 2_147_483_647,
+            },
+            allow_nil: true
+  validates :audio_waveform_version,
+            inclusion: {
+              in: SUPPORTED_AUDIO_WAVEFORM_VERSIONS,
+            },
+            allow_nil: true
+  validate :validate_audio_metadata
 
   validates_with UploadValidator
 
@@ -235,6 +251,14 @@ class Upload < ActiveRecord::Base
 
   def short_path
     self.class.short_path(sha1: sha1, extension: extension)
+  end
+
+  def audio_waveform_values
+    audio_waveform&.bytes
+  end
+
+  def audio_waveform_values=(values)
+    self.audio_waveform = values&.pack("C*")
   end
 
   def self.consider_for_reuse(upload, post)
@@ -673,6 +697,15 @@ class Upload < ActiveRecord::Base
 
   private
 
+  def validate_audio_metadata
+    values = [audio_duration_ms, audio_waveform, audio_waveform_version]
+    return if values.all?(&:nil?)
+
+    if values.any?(&:nil?) || audio_waveform.bytesize != AUDIO_WAVEFORM_SAMPLES
+      errors.add(:audio_waveform, :invalid)
+    end
+  end
+
   def short_url_basename
     "#{Upload.base62_sha1(sha1)}#{extension.present? ? ".#{extension}" : ""}"
   end
@@ -694,6 +727,9 @@ end
 #
 #  id                           :integer          not null, primary key
 #  animated                     :boolean
+#  audio_duration_ms            :integer
+#  audio_waveform               :binary
+#  audio_waveform_version       :integer
 #  dominant_color               :text
 #  etag                         :string
 #  extension                    :string(10)

@@ -59,6 +59,40 @@ module("Component | ChatComposerUploads", function (hooks) {
     assert.dom(".chat-composer-upload").exists({ count: 1 });
   });
 
+  test("registers an API for adding files", async function (assert) {
+    silenceConsoleErrorsMatching("[Uppy]");
+    setupUploadPretender();
+    this.siteSettings.authorized_extensions += "|weba";
+    this.set("registerApi", (api) => (this.uploadApi = api));
+
+    await render(
+      <template>
+        <ChatComposerUploads
+          @fileUploadElementId="chat-widget-uploader"
+          @onRegisterApi={{this.registerApi}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(
+      typeof this.uploadApi.addFiles,
+      "function",
+      "the parent can hand recorded files to the uploader"
+    );
+    const addedFileIds = await this.uploadApi.addFiles([
+      new File(["voice"], "voice.weba"),
+    ]);
+    assert.strictEqual(
+      addedFileIds.length,
+      1,
+      "the API reports the file Uppy accepted"
+    );
+    assert.strictEqual(typeof addedFileIds[0], "string");
+
+    await waitFor(".chat-composer-upload");
+    await click(".chat-composer-upload__remove-btn");
+  });
+
   test("upload starts and completes", async function (assert) {
     setupUploadPretender();
     this.set("onUploadChanged", () => {});

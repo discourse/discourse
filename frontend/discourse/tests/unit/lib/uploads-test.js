@@ -9,6 +9,7 @@ import {
   dialog,
   displayErrorForUpload,
   getUploadMarkdown,
+  isAudio,
   isImage,
   validateUploadedFiles,
 } from "discourse/lib/uploads";
@@ -248,6 +249,18 @@ module("Unit | Utility | uploads", function (hooks) {
     assert.false(isImage("file.txt"));
     assert.false(isImage("http://foo.bar/path/to/file.txt"));
     assert.false(isImage(""));
+  });
+
+  test("isAudio", function (assert) {
+    ["mp3", "ogg", "opus", "wav", "weba", "m4a", "aac", "flac"].forEach(
+      (extension) => {
+        const audio = `audio.${extension}`;
+        assert.true(isAudio(audio), `${audio} is recognized as audio`);
+      }
+    );
+
+    assert.false(isAudio("video.webm"), "WebM video is not treated as audio");
+    assert.false(isAudio("file.txt"), "non-audio files are rejected");
   });
 
   test("allowsImages", function (assert) {
