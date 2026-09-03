@@ -113,6 +113,53 @@ module(
         .exists({ count: 4 }, "the container plus its three children render");
     });
 
+    test("the outline uses the layout variant name", async function (assert) {
+      await _renderBlocks(
+        "homepage-blocks",
+        [
+          {
+            block: Section,
+            args: {},
+            children: [
+              {
+                block: Layout,
+                args: { mode: "row" },
+                children: [{ block: Heading, args: { text: "One" } }],
+              },
+            ],
+          },
+        ],
+        this.owner
+      );
+      const editor = this.owner.lookup("service:wireframe-workspace");
+      editor.siteSettings.wireframe_enabled = true;
+      logIn(this.owner);
+      editor.enter();
+
+      await render(
+        <template>
+          <div class="wireframe-shell"><OutlinePanel /></div>
+        </template>
+      );
+      await waitFor(".outline-block");
+      await settled();
+
+      const names = [...document.querySelectorAll(".outline-block__name")].map(
+        (element) => element.textContent.trim()
+      );
+      assert.true(
+        names.includes("Row"),
+        "the layout row uses its palette name"
+      );
+      assert.false(
+        names.includes("layout"),
+        "the underlying block name is not shown"
+      );
+      assert
+        .dom(".outline-block__mode")
+        .doesNotExist("the variant name is not repeated in a mode chip");
+    });
+
     test("shows each block's declared type icon on containers and leaves", async function (assert) {
       // A `section` container (icon `image`) holding three `heading` leaves
       // (icon `heading`); with only three children it renders expanded.

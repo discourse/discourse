@@ -134,12 +134,7 @@ export const MODE_PRESENTATION = {
   stack: { labelKey: "mode_stack", icon: "wf-arrow-down" },
   row: { labelKey: "mode_row", icon: "wf-arrow-right" },
   grid: { labelKey: "mode_grid", icon: "wf-layout-dashboard" },
-  tiles: { labelKey: "mode_tiles", icon: "wf-grid-3x2" },
 };
-
-// Units offered for the tiles `minItemWidth` control. The block schema
-// declares none, so the caller supplies them to `InspectorDimensionField`.
-const MIN_ITEM_WIDTH_UNITS = ["rem", "px"];
 
 // Auto-collapse options for grid / row layouts. Each value maps to a
 // `wf-layout--collapse-{id}` modifier class consumed by the
@@ -405,16 +400,14 @@ export default class InspectorLayoutForm extends Component {
     // segmented control highlights the right segment and the rest of
     // the form behaves consistently with the new naming.
     const raw = typeof this.#args.mode === "string" ? this.#args.mode : "stack";
-    return raw === "free-grid" ? "grid" : raw;
+    if (raw === "free-grid") {
+      return "grid";
+    }
+    return Object.hasOwn(MODE_PRESENTATION, raw) ? raw : "stack";
   }
 
   get isGrid() {
     return this.mode === "grid";
-  }
-
-  /** `true` only in tiles mode (auto-fit reflow grid). */
-  get isTiles() {
-    return this.mode === "tiles";
   }
 
   /**
@@ -448,8 +441,7 @@ export default class InspectorLayoutForm extends Component {
 
   /**
    * Whether to show the auto-collapse control. Only row and grid consume the
-   * responsive-collapse classes; stack is already single-column and tiles
-   * reflows on its own via `minmax(minItemWidth, 1fr)`, so neither needs it.
+   * responsive-collapse classes; stack is already single-column.
    */
   get showAutoCollapse() {
     return this.isRow || this.isGrid;
@@ -845,8 +837,8 @@ export default class InspectorLayoutForm extends Component {
         </form.Field>
 
         {{! Auto-collapse surfaces the responsive collapse behaviour and lets
-          authors tune the threshold per layout. Shown only for row and grid:
-          stack is already column-oriented and tiles reflows on its own.
+          authors tune the threshold per layout. Shown only for row and grid;
+          stack is already column-oriented.
           Service-live so the dynamic help text below reads the current value. }}
         {{#if this.showAutoCollapse}}
           <form.Field
@@ -868,26 +860,6 @@ export default class InspectorLayoutForm extends Component {
             {{dIcon "circle-info"}}
             <span>{{i18n this.autoCollapseHelpKey}}</span>
           </p>
-        {{/if}}
-
-        {{! Tiles-only: the minimum width each child gets before the auto-fit
-          grid wraps to another column. Draft-bound like gap; onFieldSet mirrors
-          it to the editor service. The label reuses core's block-schema key. }}
-        {{#if this.isTiles}}
-          <form.Field
-            @name="minItemWidth"
-            @title={{i18n "blocks.builtin.layout.min_item_width"}}
-            @type="custom"
-            @onSet={{this.onFieldSet}}
-            as |f|
-          >
-            <f.Control>
-              <InspectorDimensionField
-                @custom={{f}}
-                @units={{MIN_ITEM_WIDTH_UNITS}}
-              />
-            </f.Control>
-          </form.Field>
         {{/if}}
 
         {{#if this.isGrid}}
@@ -1033,25 +1005,21 @@ export default class InspectorLayoutForm extends Component {
           </f.Control>
         </form.Field>
 
-        {{! Justify-content applies to stack, row, and grid. Tiles ignores it
-          (its columns are auto-fit), so hide it there. }}
-        {{#unless this.isTiles}}
-          <form.Field
-            @name="justifyContent"
-            @title={{i18n "wireframe.inspector.layout.justify_content_legend"}}
-            @type="custom"
-            @onSet={{this.onFieldSet}}
-            as |f|
-          >
-            <f.Control>
-              <InspectorSegmentedField
-                @items={{this.justifyContentItems}}
-                @custom={{f}}
-                @name="wireframe-layout-justify-content"
-              />
-            </f.Control>
-          </form.Field>
-        {{/unless}}
+        <form.Field
+          @name="justifyContent"
+          @title={{i18n "wireframe.inspector.layout.justify_content_legend"}}
+          @type="custom"
+          @onSet={{this.onFieldSet}}
+          as |f|
+        >
+          <f.Control>
+            <InspectorSegmentedField
+              @items={{this.justifyContentItems}}
+              @custom={{f}}
+              @name="wireframe-layout-justify-content"
+            />
+          </f.Control>
+        </form.Field>
 
         {{#if this.isFlex}}
           <form.Field

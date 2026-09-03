@@ -15,6 +15,10 @@ export interface BlockDragPayload {
 export interface PaletteDragPayload {
   /** Registered block name. */
   blockName: string;
+  /** Stable palette choice represented by the drag source. */
+  paletteId?: string;
+  /** Label shown by drop targets while dragging. */
+  displayName?: string;
   /** Arguments applied when the block is inserted. */
   defaultArgs?: Record<string, unknown>;
 }
@@ -119,10 +123,15 @@ export default class WireframeDragSessionService extends Service {
    *
    * @param payload - Registration and initial arguments of the new block.
    */
-  beginPalette({ blockName, defaultArgs }: PaletteDragPayload): void {
+  beginPalette({
+    blockName,
+    paletteId,
+    displayName,
+    defaultArgs,
+  }: PaletteDragPayload): void {
     this.#state.source = {
       type: "wf-palette-block",
-      data: { blockName, defaultArgs },
+      data: { blockName, paletteId, displayName, defaultArgs },
     };
   }
 

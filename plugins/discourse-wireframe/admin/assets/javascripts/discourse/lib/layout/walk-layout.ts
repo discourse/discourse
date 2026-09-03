@@ -13,7 +13,7 @@
  * ```
  *
  * Each row carries
- * `{ depth, blockName, blockId, blockKey, args, conditions, hasChildren, path }`,
+ * `{ depth, blockName, displayName, blockId, blockKey, args, conditions, hasChildren, path }`,
  * where:
  *   - `depth` is the nesting level inside the outlet (0 for top-level).
  *   - `blockKey` is `${blockName}:${entry.__stableKey}`, matching the key
@@ -36,6 +36,7 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import type { BlockEntry } from "discourse/lib/blocks/-internals/types";
 import type { ValidationErrorDetails } from "discourse/lib/blocks/-internals/validation/args";
 import type BlocksService from "discourse/services/blocks";
+import { layoutPaletteDisplayName } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 
 /** A path segment used to relocate an outline row in its source layout. */
 export type OutlinePathSegment = number | "children" | "parts";
@@ -49,6 +50,8 @@ export type OutlineRow = {
   depth: number;
   /** Registered block name, or the unresolved string reference. */
   blockName: string;
+  /** Author-facing block or palette-variant label. */
+  displayName: string;
   /** Optional author-supplied block identifier. */
   blockId?: string;
   /** Composite key shared with the rendered block chrome. */
@@ -424,6 +427,8 @@ function walkEntries(
     rows.push({
       depth,
       blockName,
+      displayName:
+        layoutPaletteDisplayName(blockName, metadata, entry.args) ?? blockName,
       blockId: entry.id,
       blockKey,
       args: entry.args ?? {},

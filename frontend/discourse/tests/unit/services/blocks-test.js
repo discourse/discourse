@@ -145,8 +145,18 @@ module("Unit | Service | blocks", function (hooks) {
 
     test("prefetchThumbnails warms lazy loader thumbnails", async function (assert) {
       const loader = () => Promise.resolve(STUB_THUMBNAIL);
+      const variantLoader = () => Promise.resolve(STUB_THUMBNAIL);
 
-      @block("prefetch-thumb-block", { thumbnail: loader })
+      @block("prefetch-thumb-block", {
+        thumbnail: loader,
+        paletteVariants: [
+          {
+            id: "alternate",
+            displayName: "Alternate",
+            thumbnail: variantLoader,
+          },
+        ],
+      })
       class PrefetchThumbBlock extends Component {}
 
       withTestBlockRegistration(() => registerBlock(PrefetchThumbBlock));
@@ -160,6 +170,10 @@ module("Unit | Service | blocks", function (hooks) {
         "the block's thumbnail is already resolved after prefetch"
       );
       assert.strictEqual(data.value, STUB_THUMBNAIL);
+      assert.true(
+        this.blocks.thumbnailData(variantLoader).isResolved,
+        "the palette variant's thumbnail is also resolved"
+      );
     });
   });
 

@@ -14,6 +14,9 @@ module PageObjects
       GRID_SELECTOR = ".d-block-layout--grid"
       EMPTY_CELL_SELECTOR = ".wireframe-grid-cell"
       PALETTE_ENTRY_SELECTOR = ".wireframe-block-tile"
+      LAYOUT_PALETTE_ENTRY_SELECTOR = ".wireframe-block-row[data-palette-id^='layout:']"
+      LAYOUT_CHROME_SELECTOR =
+        ".wireframe-block-chrome[data-wf-block-name='layout']:not(.--outlet-root)"
 
       def enter
         find(".wireframe-pill").click
@@ -47,6 +50,36 @@ module PageObjects
 
       def palette_entry(block_name)
         find("#{PALETTE_ENTRY_SELECTOR}[data-block-name='#{block_name}']")
+      end
+
+      def has_layout_palette_variants?
+        has_css?(
+          "#{LAYOUT_PALETTE_ENTRY_SELECTOR}[data-palette-id='layout:stack']",
+          text: "Stack",
+        ) &&
+          has_css?("#{LAYOUT_PALETTE_ENTRY_SELECTOR}[data-palette-id='layout:row']", text: "Row") &&
+          has_css?("#{LAYOUT_PALETTE_ENTRY_SELECTOR}[data-palette-id='layout:grid']", text: "Grid")
+      end
+
+      def select_layout(name)
+        find(LAYOUT_CHROME_SELECTOR).click
+        all(".wireframe-breadcrumb__segment", exact_text: name).last.click
+      end
+
+      def has_layout_variant_name?(name)
+        has_css?(
+          "#{LAYOUT_CHROME_SELECTOR}.--selected .wireframe-block-toolbar__handle > span:first-of-type",
+          exact_text: name,
+        ) && has_css?(".wireframe-inspector__block-name", exact_text: name) &&
+          has_css?(".wireframe-breadcrumb__segment", exact_text: name)
+      end
+
+      def open_outline
+        find(".wireframe-activity-bar__entry[aria-label='Layers']").click
+      end
+
+      def has_layout_variant_in_outline?(name)
+        has_css?(".outline-block__name", exact_text: name)
       end
 
       def block_selector(name)

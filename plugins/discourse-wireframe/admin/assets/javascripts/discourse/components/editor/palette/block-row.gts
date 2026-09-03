@@ -60,7 +60,8 @@ export default class BlockRow extends Component<BlockRowSignature> {
       role="option"
       aria-label={{@entry.displayName}}
       aria-describedby={{this.descriptionId}}
-      data-block-name={{@entry.name}}
+      data-palette-id={{@entry.id}}
+      data-block-name={{@entry.blockName}}
       {{on this.activateOn this.activate}}
       ...attributes
     >

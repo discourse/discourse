@@ -39,6 +39,8 @@ export type {
   BlockMetadata,
   BlockNamespaceType,
   BlockOptions,
+  BlockPaletteVariant,
+  BlockPaletteVariantDefinition,
   BlockValidateFn,
   ChildArgSchema,
   LayoutEntry,

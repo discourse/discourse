@@ -1,5 +1,6 @@
 import {
   type BlockCategory,
+  type BlockMetadata,
   type BlockNamespaceType,
   type BlockThumbnail,
 } from "discourse/blocks/types";
@@ -15,7 +16,7 @@ import type BlocksService from "discourse/services/blocks";
  * are usually reached for.
  */
 export const RECENT_FALLBACK: readonly string[] = [
-  "layout",
+  "layout:stack",
   "heading",
   "paragraph",
   "image",
@@ -85,7 +86,10 @@ export function compareWithinCategory(
     return index === -1 ? leads.length : index;
   };
   return (
-    rank(a.name) - rank(b.name) || a.displayName.localeCompare(b.displayName)
+    rank(a.blockName) - rank(b.blockName) ||
+    (a.blockName === b.blockName
+      ? a.variantOrder - b.variantOrder
+      : a.displayName.localeCompare(b.displayName))
   );
 }
 
@@ -94,8 +98,17 @@ export function compareWithinCategory(
  * Every face of the palette consumes this shape.
  */
 export interface BlockPaletteEntry {
-  /** The registered block name. */
-  name: string;
+  /** Stable identity of this palette choice. */
+  id: string;
+
+  /** The registered block name inserted by this choice. */
+  blockName: string;
+
+  /** Initial arguments applied to the inserted block. */
+  defaultArgs: Readonly<Record<string, unknown>>;
+
+  /** Declaration order among variants of the same block. */
+  variantOrder: number;
 
   /** Human-readable display label. */
   displayName: string;
@@ -121,6 +134,35 @@ export interface BlockPaletteEntry {
 
   /** Whether the block is omitted from block-selection listings. */
   paletteHidden: boolean;
+}
+
+/**
+ * Resolves the palette label for a layout block's effective mode.
+ *
+ * @param blockName - Registered block name.
+ * @param metadata - Registered metadata carrying the palette variants.
+ * @param args - Live block arguments.
+ * @returns The matching palette label, or `null` for other blocks.
+ */
+export function layoutPaletteDisplayName(
+  blockName: string | null | undefined,
+  metadata: Partial<BlockMetadata> | null | undefined,
+  args: Readonly<Record<string, unknown>> | null | undefined
+): string | null {
+  if (blockName !== "layout") {
+    return null;
+  }
+
+  const rawMode = args?.mode ?? metadata?.args?.mode?.default ?? "stack";
+  const mode = rawMode === "free-grid" ? "grid" : rawMode;
+  if (typeof mode !== "string") {
+    return null;
+  }
+
+  return (
+    metadata?.paletteVariants?.find((variant) => variant.id === mode)
+      ?.displayName ?? null
+  );
 }
 
 /**
@@ -151,22 +193,42 @@ export function buildBlockPalette(
 ): BlockPaletteEntry[] {
   return blocksService
     .listBlocksWithMetadata()
-    .map(({ name, component, metadata }) => {
+    .flatMap(({ name, component, metadata }) => {
       // `getBlockDisplayMetadata` returns `null` only for an unresolved lazy
       // factory (exactly when `metadata` is `null`); every real registered
       // block resolves to a full metadata object, so the fallbacks below only
       // guard that impossible-in-practice path.
       const display = getBlockDisplayMetadata(component);
-      return {
-        name,
-        displayName: display?.displayName ?? "",
+      const base = {
+        blockName: name,
         icon: display?.icon ?? "",
         category: display?.category ?? "uncategorized",
-        description: metadata?.description ?? "",
         namespaceType: metadata?.namespaceType ?? "core",
-        thumbnail: display?.thumbnail ?? null,
         paletteHidden: display?.paletteHidden === true,
       };
+      const variants = metadata?.paletteVariants;
+      if (variants?.length) {
+        return variants.map((variant, variantOrder) => ({
+          ...base,
+          id: `${name}:${variant.id}`,
+          displayName: variant.displayName,
+          description: variant.description ?? metadata?.description ?? "",
+          defaultArgs: variant.defaultArgs ?? {},
+          thumbnail: variant.thumbnail ?? display?.thumbnail ?? null,
+          variantOrder,
+        }));
+      }
+      return [
+        {
+          ...base,
+          id: name,
+          displayName: display?.displayName ?? "",
+          description: metadata?.description ?? "",
+          defaultArgs: {},
+          thumbnail: display?.thumbnail ?? null,
+          variantOrder: 0,
+        },
+      ];
     })
     .filter((row) => !row.paletteHidden)
     .sort((a, b) => a.displayName.localeCompare(b.displayName));

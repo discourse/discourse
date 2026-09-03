@@ -584,9 +584,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     if (mode === "row") {
       return "row";
     }
-    if (mode === "tiles") {
-      return "tiles";
-    }
     if (mode === "grid" || mode === "free-grid") {
       return "grid";
     }
@@ -1020,9 +1017,10 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   }
 
   /**
-   * The toolbar badge label — the block's own display name (e.g. "Layout", or
-   * the outlet name at the outlet root). A child of an ordinal-naming container
-   * shows its position ("Tab 2" / "Slide 2") as a SEPARATE chip via
+   * The toolbar badge label — the block's palette variant when it has one, its
+   * registered display name otherwise, or the outlet name at the outlet root.
+   * A child of an ordinal-naming container shows its position ("Tab 2" /
+   * "Slide 2") as a separate chip via
    * `childOrdinal` / the toolbar's `@displayChip`, not in this label.
    *
    */
@@ -1031,7 +1029,8 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   }
 
   /**
-   * The block's own name, independent of any parent-aware ordinal override.
+   * The block's own author-facing name, independent of any parent-aware
+   * ordinal override.
    *
    */
   get #baseDisplayName() {
@@ -1043,9 +1042,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
         this.args.outletName
       );
     }
-    // Prefer the block's human-readable display name over its namespace-less
-    // short name, then the raw block name for unregistered blocks.
+    void this.wireframeLayoutSignal.version;
+    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
     return (
+      this.wireframeLayoutQuery.lookupEntryDisplayName(entry) ??
       this.metadata?.displayName ??
       this.metadata?.shortName ??
       this.args.blockName
@@ -1123,7 +1125,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   /**
    * The axis along which the block's siblings are arranged, so the toolbar
    * shows the matching reorder arrows: "horizontal" for a tabs / carousel
-   * parent and a `layout` in row or tiles mode (both horizontal flows),
+   * parent and a `layout` in row mode,
    * "vertical" otherwise (a grid keeps vertical arrows this round). Distinct
    * from `parentLayoutAxis`, which drives drop-zone CSS for `layout` containers
    * only.
@@ -1135,11 +1137,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     if (name === "tabs" || name === "carousel") {
       return "horizontal";
     }
-    if (
-      ctx &&
-      name === "layout" &&
-      (ctx.parent.args?.mode === "row" || ctx.parent.args?.mode === "tiles")
-    ) {
+    if (ctx && name === "layout" && ctx.parent.args?.mode === "row") {
       return "horizontal";
     }
     return "vertical";
@@ -1392,7 +1390,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   pickBlockForCell(blockEntry: BlockPaletteEntry): void {
     this.wireframeGridPlacement.placeInCell({
       cellKey: this.args.blockKey,
-      blockName: blockEntry.name,
+      blockName: blockEntry.blockName,
+      defaultArgs: { ...blockEntry.defaultArgs },
+      paletteId: blockEntry.id,
     });
   }
 
@@ -1406,7 +1406,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   @action
   pickBlockForContainer(blockEntry: BlockPaletteEntry): void {
     this.wireframeBlockMutations.insertBlock({
-      blockName: blockEntry.name,
+      blockName: blockEntry.blockName,
+      defaultArgs: { ...blockEntry.defaultArgs },
+      paletteId: blockEntry.id,
       targetKey: this.args.blockKey,
       position: "inside",
       targetOutletName: this.args.outletName,
@@ -1808,9 +1810,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    */
   get #isImageDropSlot(): boolean {
     const mode = this.containerDropMode;
-    return (
-      mode === "stack" || mode === "row" || mode === "tiles" || mode === "cell"
-    );
+    return mode === "stack" || mode === "row" || mode === "cell";
   }
 
   /**

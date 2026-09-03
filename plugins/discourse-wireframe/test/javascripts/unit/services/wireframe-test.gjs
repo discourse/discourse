@@ -886,20 +886,17 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
       assert.false(refused);
-      assert.deepEqual(
-        recent.names,
-        [],
-        "nothing recorded for a refused insert"
-      );
+      assert.deepEqual(recent.ids, [], "nothing recorded for a refused insert");
 
       const ok = mutationsOf(this.editor).insertBlock({
         blockName: "wf:svc-test-tile",
+        paletteId: "wf:svc-test-tile:alternate",
         targetKey: null,
         position: "after",
         targetOutletName: "homepage-blocks",
       });
       assert.true(ok);
-      assert.deepEqual(recent.names, ["wf:svc-test-tile"]);
+      assert.deepEqual(recent.ids, ["wf:svc-test-tile:alternate"]);
     });
 
     test("inserts inside the outlet root layout when targetKey is null", function (assert) {
@@ -2226,6 +2223,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("a palette edge drop mints exactly one new block", function (assert) {
+        const owner = getOwner(this);
+        owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
         const before = countContent(this.editor);
         const { gridB, gridBKey, keyIn } = refs(this.editor);
         const ok = gridOf(this.editor).drop({
@@ -2237,6 +2236,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
             kind: "new",
             blockName: "wf:svc-test-tile",
             defaultArgs: { title: "New" },
+            paletteId: "wf:svc-test-tile:alternate",
           },
         });
         assert.true(ok);
@@ -2244,6 +2244,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           countContent(this.editor),
           before + 1,
           "exactly one new block was added"
+        );
+        assert.deepEqual(
+          owner.lookup("service:wireframe-recent-blocks").ids,
+          ["wf:svc-test-tile:alternate"],
+          "the palette choice is remembered"
         );
       });
     }

@@ -15,9 +15,8 @@ module("Unit | Discourse Wireframe | reversed-flex", function () {
     assert.false(isReversedFlexLayout({ mode: "stack", reverse: false }));
   });
 
-  test("isReversedFlexLayout: false for grid / tiles even when reversed", function (assert) {
+  test("isReversedFlexLayout: false for grid even when reversed", function (assert) {
     assert.false(isReversedFlexLayout({ mode: "grid", reverse: true }));
-    assert.false(isReversedFlexLayout({ mode: "tiles", reverse: true }));
     assert.false(
       isReversedFlexLayout({ mode: "free-grid", reverse: true }),
       "the legacy free-grid mode coerces to grid"

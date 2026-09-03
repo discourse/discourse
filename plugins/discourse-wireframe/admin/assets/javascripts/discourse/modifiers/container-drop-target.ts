@@ -32,7 +32,6 @@ import type WireframeLayoutQueryService from "../services/wireframe-layout-query
 export type ContainerMode =
   | "stack"
   | "row"
-  | "tiles"
   | "cell"
   | "grid"
   | "grid-cell-leaf"
@@ -70,6 +69,10 @@ export type DragSource =
         blockName: string;
         /** Default arguments for the new entry. */
         defaultArgs?: Record<string, unknown>;
+        /** Stable palette choice represented by the drag source. */
+        paletteId?: string;
+        /** Label shown by drop previews. */
+        displayName?: string;
       };
     };
 
@@ -379,10 +382,10 @@ export function createContainerDropResolver({
   mode,
 }: ContainerDropResolverOptions): ContainerDropResolver {
   const isCell = mode === "cell";
-  // Row and tiles are horizontal flows (x); stack and cell are vertical (y).
+  // Rows are horizontal flows (x); stacks and cells are vertical (y).
   // A horizontal flow may wrap onto multiple lines, so its descriptor uses the
   // wrap-aware resolver (see `computeDescriptor`).
-  const axis: "x" | "y" = mode === "row" || mode === "tiles" ? "x" : "y";
+  const axis: "x" | "y" = mode === "row" ? "x" : "y";
 
   // Find the container element where block-chrome-wrappers are
   // direct siblings — that's the geometry `computeDescriptor`
@@ -603,7 +606,7 @@ export function computeDescriptor({
         : null;
     })
     .filter((child): child is ChildCandidate => Boolean(child));
-  // A horizontal flow (row / tiles) may wrap onto multiple visual lines, so it
+  // A horizontal row may wrap onto multiple visual lines, so it
   // uses the wrap-aware resolver — which groups the children into lines, picks
   // the line under the cursor, and delegates within the line to
   // `resolveLinearDrop`. When the container isn't wrapped it collapses to a
@@ -1541,6 +1544,7 @@ function insertDispatch({
       args: {
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
+        paletteId: source.data.paletteId,
         targetKey: targetKey ?? containerKey,
         position: targetKey ? position : "inside",
         targetOutletName: outletName,
@@ -1594,6 +1598,7 @@ function insideDispatch({
       args: {
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
+        paletteId: source.data.paletteId,
         targetKey,
         position: "inside",
         targetOutletName: outletName,
@@ -1634,6 +1639,7 @@ function cellDropDispatch({
         cellKey: targetKey,
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
+        paletteId: source.data.paletteId,
       },
     };
   }
@@ -1666,6 +1672,7 @@ function sourceDisplayName(
 ): string {
   if (source.type === "wf-palette-block") {
     return (
+      source.data.displayName ||
       layoutQuery.lookupBlockDisplayName?.(source.data.blockName) ||
       source.data.blockName ||
       "block"
@@ -1677,7 +1684,9 @@ function sourceDisplayName(
       blockKey == null ? null : layoutQuery.findEntryAndOutletSync(blockKey);
     if (located?.entry) {
       return decorateWithId(
-        layoutQuery.lookupBlockDisplayName?.(located.entry.block) || "block",
+        layoutQuery.lookupEntryDisplayName?.(located.entry) ||
+          layoutQuery.lookupBlockDisplayName?.(located.entry.block) ||
+          "block",
         located.entry.id
       );
     }

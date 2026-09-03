@@ -495,11 +495,17 @@ export default class Blocks extends Service {
    */
   prefetchThumbnails() {
     for (const { metadata } of this.listBlocksWithMetadata()) {
-      const thumbnail = metadata?.thumbnail;
-      // A component is itself a function, so a lazy loader is a function that is
-      // not already a renderable component.
-      if (typeof thumbnail === "function" && !isComponent(thumbnail)) {
-        this.thumbnailData(thumbnail);
+      const thumbnails = [
+        metadata?.thumbnail,
+        ...(metadata?.paletteVariants?.map((variant) => variant.thumbnail) ??
+          []),
+      ];
+      for (const thumbnail of thumbnails) {
+        // A component is itself a function, so a lazy loader is a function that is
+        // not already a renderable component.
+        if (typeof thumbnail === "function" && !isComponent(thumbnail)) {
+          this.thumbnailData(thumbnail);
+        }
       }
     }
   }

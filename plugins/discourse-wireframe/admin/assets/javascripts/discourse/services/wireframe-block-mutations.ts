@@ -66,6 +66,8 @@ export type InsertBlockArgs = {
   blockName: string;
   /** Initial arguments copied into the new entry. */
   defaultArgs?: Record<string, unknown>;
+  /** Stable palette choice to remember after insertion. */
+  paletteId?: string;
   /** Composite key of the destination entry, or `null` for the outlet root. */
   targetKey: string | null;
   /** Position relative to the destination entry. */
@@ -427,6 +429,7 @@ export default class WireframeBlockMutationsService extends Service {
   insertBlock({
     blockName,
     defaultArgs = {},
+    paletteId,
     targetKey,
     position,
     targetOutletName,
@@ -500,7 +503,7 @@ export default class WireframeBlockMutationsService extends Service {
       }
     );
     if (inserted) {
-      this.wireframeRecentBlocks.record(blockName);
+      this.wireframeRecentBlocks.record(paletteId ?? blockName);
     }
     return inserted;
   }

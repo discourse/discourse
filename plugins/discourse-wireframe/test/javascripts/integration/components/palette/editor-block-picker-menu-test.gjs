@@ -5,16 +5,30 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import EditorBlockPickerMenu from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/editor-block-picker-menu";
 
 const PALETTE = [
-  { name: "quote", displayName: "Quote", icon: "quote-left", description: "" },
-  { name: "heading", displayName: "Heading", icon: "heading", description: "" },
-  { name: "image", displayName: "Image", icon: "image", description: "" },
+  { id: "quote", blockName: "quote", displayName: "Quote", icon: "quote-left" },
   {
-    name: "paragraph",
+    id: "heading",
+    blockName: "heading",
+    displayName: "Heading",
+    icon: "heading",
+  },
+  { id: "image", blockName: "image", displayName: "Image", icon: "image" },
+  {
+    id: "paragraph",
+    blockName: "paragraph",
     displayName: "Paragraph",
     icon: "align-left",
-    description: "",
   },
-];
+].map((entry) => ({
+  ...entry,
+  defaultArgs: {},
+  variantOrder: 0,
+  category: "text",
+  description: "",
+  namespaceType: "core",
+  thumbnail: null,
+  paletteHidden: false,
+}));
 
 function labels() {
   return [...document.querySelectorAll(".wireframe-block-tile__label")].map(
@@ -86,7 +100,7 @@ module(
       );
 
       await click(".wireframe-block-tile"); // first suggestion (Paragraph)
-      assert.strictEqual(picked?.name, "paragraph");
+      assert.strictEqual(picked?.id, "paragraph");
     });
 
     test("Browse all reveals the sidebar palette and closes the menu", async function (assert) {

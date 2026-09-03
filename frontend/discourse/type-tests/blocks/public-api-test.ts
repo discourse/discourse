@@ -10,6 +10,8 @@ import {
   type BlockMetadata,
   type BlockNamespaceType,
   type BlockOptions,
+  type BlockPaletteVariant,
+  type BlockPaletteVariantDefinition,
   type BlockValidateFn,
   type ChildArgSchema,
   type LayoutEntry,
@@ -25,6 +27,8 @@ expectTypeOf<BlockConstraints>().not.toBeAny();
 expectTypeOf<BlockMetadata>().not.toBeAny();
 expectTypeOf<BlockNamespaceType>().not.toBeAny();
 expectTypeOf<BlockOptions>().not.toBeAny();
+expectTypeOf<BlockPaletteVariant>().not.toBeAny();
+expectTypeOf<BlockPaletteVariantDefinition>().not.toBeAny();
 expectTypeOf<BlockValidateFn>().not.toBeAny();
 expectTypeOf<ChildArgSchema>().not.toBeAny();
 expectTypeOf<LayoutEntry>().not.toBeAny();

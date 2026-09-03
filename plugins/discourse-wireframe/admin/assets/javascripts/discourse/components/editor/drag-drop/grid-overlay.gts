@@ -926,7 +926,12 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
       targetGridKey: this.args.gridKey,
       gesture: GRID_DROP_GESTURES.INTO,
       cell: { column: cell.column, row: cell.row },
-      source: { kind: "new", blockName: blockEntry.name },
+      source: {
+        kind: "new",
+        blockName: blockEntry.blockName,
+        defaultArgs: { ...blockEntry.defaultArgs },
+        paletteId: blockEntry.id,
+      },
     });
   }
 
@@ -1260,6 +1265,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
   #sourceDisplayName(source: DragSource): string {
     if (source.type === "wf-palette-block") {
       return (
+        source.data.displayName ||
         this.wireframeLayoutQuery.lookupBlockDisplayName(
           source.data.blockName
         ) ||
@@ -1276,9 +1282,8 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
       );
       if (located?.entry) {
         return (
-          this.wireframeLayoutQuery.lookupBlockDisplayName(
-            located.entry.block
-          ) || "block"
+          this.wireframeLayoutQuery.lookupEntryDisplayName(located.entry) ||
+          "block"
         );
       }
     }
@@ -1311,6 +1316,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
             kind: "new",
             blockName: source.data?.blockName,
             defaultArgs: source.data?.defaultArgs,
+            paletteId: source.data?.paletteId,
           }
         : { kind: "existing", key: source.data?.blockKey };
 
@@ -1808,11 +1814,9 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     }
     return {
       before:
-        this.wireframeLayoutQuery.lookupBlockDisplayName(beforeSlot.block) ||
-        "block",
+        this.wireframeLayoutQuery.lookupEntryDisplayName(beforeSlot) || "block",
       after:
-        this.wireframeLayoutQuery.lookupBlockDisplayName(afterSlot.block) ||
-        "block",
+        this.wireframeLayoutQuery.lookupEntryDisplayName(afterSlot) || "block",
     };
   }
 

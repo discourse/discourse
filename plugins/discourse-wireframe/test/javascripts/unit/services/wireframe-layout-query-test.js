@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { block } from "discourse/blocks";
 import { LAYOUT_SOURCE } from "discourse/blocks/block-outlet";
+import Layout from "discourse/blocks/builtin/layout";
 import { OUTLET_STATE } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 
 // Decorated test blocks give the metadata-reading methods (`metadataFor`,
@@ -306,6 +307,33 @@ module(
           query.lookupBlockDisplayName(CardBlock),
           "layout-query-test-card",
           "falls back to the block name when no display name is set"
+        );
+      });
+
+      test("lookupEntryDisplayName uses layout variant names", function (assert) {
+        const query = buildQuery(this.owner, {
+          blocksByName: { layout: Layout },
+        });
+
+        assert.strictEqual(
+          query.lookupEntryDisplayName({ block: "layout", args: {} }),
+          "Stack",
+          "the schema default identifies an entry with no explicit mode"
+        );
+        assert.strictEqual(
+          query.lookupEntryDisplayName({
+            block: "layout",
+            args: { mode: "row" },
+          }),
+          "Row"
+        );
+        assert.strictEqual(
+          query.lookupEntryDisplayName({
+            block: "layout",
+            args: { mode: "free-grid" },
+          }),
+          "Grid",
+          "the legacy mode uses the current palette name"
         );
       });
     });

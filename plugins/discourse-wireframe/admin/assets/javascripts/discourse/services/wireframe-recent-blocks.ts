@@ -23,7 +23,7 @@ interface ProxiedKeyValueStoreService extends KeyValueStoreService {
   ): void;
 }
 
-/** How many block names the Recent group holds. */
+/** Maximum number of choices kept in the Recent group. */
 export const RECENT_BLOCKS_LIMIT = 6;
 
 // Persisted under core's global key-value store; the `wireframe_` prefix
@@ -31,31 +31,25 @@ export const RECENT_BLOCKS_LIMIT = 6;
 const KEY_PREFIX = "wireframe_recentBlocks_";
 
 /**
- * Remembers which blocks were inserted most recently into the layout being
- * edited, so the palette can offer them first.
- *
- * The list is per theme: a theme's block layout is the thing an editing session
- * edits, so the blocks a page keeps using are the ones that belong at the top
- * for that theme and not another. It lives in the browser's key-value store,
- * so it survives a reload but is not shared between browsers or users.
+ * Remembers the palette choices inserted most recently into the active theme.
+ * The browser-local list survives reloads but is not shared between browsers
+ * or users.
  */
 export default class WireframeRecentBlocksService extends Service {
   @service declare keyValueStore: ProxiedKeyValueStoreService;
   @service declare wireframePublishTarget: WireframePublishTargetService;
 
   /**
-   * The list last written or read for its storage key. Written only by
-   * `record`, so `names` stays free of tracked writes and simply falls back to
-   * the store when the theme has changed; `@tracked` cannot sit on a `#`
-   * field, hence the prefix.
+   * Cached list for the current storage key. The decorator requires `_`
+   * instead of JavaScript private syntax.
    */
   @tracked _current: { key: string; list: readonly string[] } | null = null;
 
   /**
-   * Block names inserted most recently into the active theme's layout, most
-   * recent first. Empty when no theme is being edited.
+   * Palette choice ids inserted most recently into the active theme's layout,
+   * most recent first. Empty when no theme is being edited.
    */
-  get names(): readonly string[] {
+  get ids(): readonly string[] {
     const key = this.#key;
     if (!key) {
       return [];
@@ -71,16 +65,16 @@ export default class WireframeRecentBlocksService extends Service {
    * theme's list, dropping the oldest entry past the limit; ignored when no
    * theme is being edited.
    *
-   * @param blockName - The registered name of the inserted block.
+   * @param paletteId - The stable id of the inserted palette choice.
    */
-  record(blockName: string): void {
+  record(paletteId: string): void {
     const key = this.#key;
     if (!key) {
       return;
     }
     const list = [
-      blockName,
-      ...this.names.filter((name) => name !== blockName),
+      paletteId,
+      ...this.ids.filter((id) => id !== paletteId),
     ].slice(0, RECENT_BLOCKS_LIMIT);
     this.keyValueStore.setObject({ key, value: list });
     this._current = { key, list };

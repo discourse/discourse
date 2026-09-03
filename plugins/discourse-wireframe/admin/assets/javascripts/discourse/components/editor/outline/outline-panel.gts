@@ -24,7 +24,6 @@ import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import OutlineRowActions from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-row-actions";
 import {
-  normalizeLayoutMode,
   type OutletOutline,
   type OutlineRow,
   walkAllOutlets,
@@ -56,8 +55,6 @@ type DecoratedOutlineRow = OutlineRow & {
   hasError: boolean;
   /** Whether the row should use hidden-content presentation. */
   isMuted: boolean;
-  /** Normalized layout mode for a layout block. */
-  layoutMode: string | null;
   /** One-based accessibility tree level. */
   ariaLevel: number;
   /** Icon describing the row's current status. */
@@ -733,8 +730,13 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   ): boolean {
     if (normalizedQuery) {
       const name = row.blockName?.toLowerCase() ?? "";
+      const displayName = row.displayName.toLowerCase();
       const id = row.blockId?.toLowerCase() ?? "";
-      if (!name.includes(normalizedQuery) && !id.includes(normalizedQuery)) {
+      if (
+        !name.includes(normalizedQuery) &&
+        !displayName.includes(normalizedQuery) &&
+        !id.includes(normalizedQuery)
+      ) {
         return false;
       }
     }
@@ -786,16 +788,6 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
     // it's just not rendering right now. Dim the row so the outline
     // signals "won't show on the live page" without using error red.
     const isMuted = !hasError && conditionFailing;
-    // Nested `layout` blocks carry the same `mode` arg as the outlet's
-    // implicit root layout (stack / row / grid). Surface it as a chip on
-    // the row so the structure reads at a glance — mirrors the mode chip
-    // the outlet header shows for its root layout. Non-layout blocks get
-    // `null` so the badge only renders where a mode is meaningful.
-    const mode = row.args?.mode;
-    const layoutMode =
-      row.blockName === "layout"
-        ? normalizeLayoutMode(typeof mode === "string" ? mode : undefined)
-        : null;
     // `aria-level` for the flattened tree: the outlet header is level 1, so a
     // top-level row (depth 0) is level 2, and so on. Computed here in the single
     // decoration pass rather than as a per-row template getter.
@@ -807,7 +799,6 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
       hasValidationError,
       hasError,
       isMuted,
-      layoutMode,
       ariaLevel,
       statusIcon: this.#statusIconFor(row, conditionFailing),
       statusTooltip: this.#statusTooltipFor(row, conditionFailing),
@@ -1105,12 +1096,12 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
                     <span class="outline-block__type" aria-hidden="true">
                       {{dIcon row.typeIcon}}
                     </span>
-                    {{! The block name is the row's primary text; a child of an
-                      ordinal-naming container (a carousel slide, a tabs panel)
-                      gets its position as a separate chip below, and its own
-                      label as the row's hover tooltip. }}
+                    {{! The author-facing block or palette-variant name is the
+                      row's primary text. A child of an ordinal-naming container
+                      gets its position as a separate chip and its own label as
+                      the row's hover tooltip. }}
                     <span class="outline-block__name" title={{row.childLabel}}>
-                      {{row.blockName}}
+                      {{row.displayName}}
                     </span>
                     {{#if (this.isRowCollapsed row)}}
                       {{! Count badge surfacing how many child rows are hidden
@@ -1126,18 +1117,9 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
                     {{#if row.slideOrdinal}}
                       {{! A noun-framed container's child (a carousel slide, a tabs
                         panel) shows its 1-based position as a chip beside the
-                        block name, ahead of the layout-mode chip. }}
+                        block name. }}
                       <span class="outline-chip outline-block__ordinal">
                         {{i18n row.slideNumberKey number=row.slideOrdinal}}
-                      </span>
-                    {{/if}}
-                    {{#if row.layoutMode}}
-                      <span class="outline-chip outline-block__mode">
-                        {{i18n
-                          (concat
-                            "wireframe.inspector.layout.mode_" row.layoutMode
-                          )
-                        }}
                       </span>
                     {{/if}}
                     {{#if row.blockId}}

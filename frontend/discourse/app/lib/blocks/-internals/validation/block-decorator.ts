@@ -41,6 +41,7 @@ export const VALID_BLOCK_OPTIONS: readonly string[] = Object.freeze([
   "previewArgs",
   "thumbnail",
   "paletteHidden",
+  "paletteVariants",
   "transparent",
   "gridEditable",
   "data",
@@ -52,6 +53,16 @@ export const VALID_BLOCK_OPTIONS: readonly string[] = Object.freeze([
  * code-defined composition).
  */
 const VALID_PART_KEYS = Object.freeze(["id", "block", "args", "lock"]);
+
+const VALID_PALETTE_VARIANT_KEYS = Object.freeze([
+  "id",
+  "displayName",
+  "description",
+  "defaultArgs",
+  "thumbnail",
+]);
+
+const VALID_PALETTE_VARIANT_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /**
  * Valid keys for the `data` option (a block's declared data dependency).
@@ -160,33 +171,105 @@ export function validateDisplayMetadata(name, options) {
     }
   }
 
-  if (thumbnail != null) {
-    // A thumbnail is one of four forms:
-    // - a non-empty URL string (rendered through an `<img>`);
-    // - a `{ light, dark }` pair of URLs (rendered through `DLightDarkImg`);
-    // - a component reference (an inline SVG component), rendered inline so it
-    //   can use theme color tokens;
-    // - a loader function that resolves to such a component (a lazily-loaded
-    //   thumbnail, e.g. `() => import("...")`), so the component stays out of
-    //   any bundle that never renders the thumbnail.
-    // `isComponent` positively identifies a real component (class or
-    // template-only), so anything else is rejected here at decoration time.
-    const isUrl = typeof thumbnail === "string" && thumbnail.trim() !== "";
-    // A `{ light, dark }` pair must carry `light` (the default source); `dark`
-    // alone is invalid.
-    const isLightDark =
-      typeof thumbnail === "object" &&
-      thumbnail !== null &&
-      "light" in thumbnail;
-    // A component class is itself a function, so a lazy loader is any function
-    // that is not already a renderable component.
-    const isLazyLoader =
-      typeof thumbnail === "function" && !isComponent(thumbnail);
-    if (!isUrl && !isLightDark && !isComponent(thumbnail) && !isLazyLoader) {
+  validateThumbnail(name, "thumbnail", thumbnail);
+}
+
+/** Validates named starting configurations exposed by block-selection tools. */
+export function validatePaletteVariants(
+  name: string,
+  variants: BlockOptions["paletteVariants"]
+): void {
+  if (variants == null) {
+    return;
+  }
+  if (!Array.isArray(variants) || variants.length === 0) {
+    raiseBlockError(
+      `Block "${name}": "paletteVariants" must be a non-empty array.`
+    );
+  }
+
+  const ids = new Set<string>();
+  for (const [index, variant] of variants.entries()) {
+    const path = `paletteVariants[${index}]`;
+    if (
+      typeof variant !== "object" ||
+      variant === null ||
+      Array.isArray(variant)
+    ) {
+      raiseBlockError(`Block "${name}": "${path}" must be an object.`);
+    }
+
+    const unknownKeys = Object.keys(variant).filter(
+      (key) => !VALID_PALETTE_VARIANT_KEYS.includes(key)
+    );
+    if (unknownKeys.length > 0) {
       raiseBlockError(
-        `Block "${name}": "thumbnail" must be a non-empty URL string, a { light, dark } pair of URLs, an inline SVG component, or a loader that resolves to one (e.g. () => import(...)).`
+        `Block "${name}": unknown "${path}" key(s): ${unknownKeys.join(", ")}.`
       );
     }
+    if (!VALID_PALETTE_VARIANT_ID_PATTERN.test(variant.id)) {
+      raiseBlockError(
+        `Block "${name}": "${path}.id" must be a kebab-case identifier.`
+      );
+    }
+    if (ids.has(variant.id)) {
+      raiseBlockError(
+        `Block "${name}": "paletteVariants" has duplicate id "${variant.id}".`
+      );
+    }
+    ids.add(variant.id);
+
+    if (
+      typeof variant.displayName !== "string" ||
+      variant.displayName.trim() === ""
+    ) {
+      raiseBlockError(
+        `Block "${name}": "${path}.displayName" must be a non-empty string.`
+      );
+    }
+    if (
+      variant.description != null &&
+      (typeof variant.description !== "string" ||
+        variant.description.trim() === "")
+    ) {
+      raiseBlockError(
+        `Block "${name}": "${path}.description" must be a non-empty string.`
+      );
+    }
+    if (
+      variant.defaultArgs != null &&
+      !isPlainPaletteArgs(variant.defaultArgs)
+    ) {
+      raiseBlockError(
+        `Block "${name}": "${path}.defaultArgs" must be a plain object.`
+      );
+    }
+    validateThumbnail(name, `${path}.thumbnail`, variant.thumbnail);
+  }
+}
+
+function isPlainPaletteArgs(value: unknown): value is Record<string, unknown> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    Object.getPrototypeOf(value) === Object.prototype
+  );
+}
+
+function validateThumbnail(name: string, path: string, thumbnail: unknown) {
+  if (thumbnail == null) {
+    return;
+  }
+  const isUrl = typeof thumbnail === "string" && thumbnail.trim() !== "";
+  const isLightDark =
+    typeof thumbnail === "object" && thumbnail !== null && "light" in thumbnail;
+  const isLazyLoader =
+    typeof thumbnail === "function" && !isComponent(thumbnail);
+  if (!isUrl && !isLightDark && !isComponent(thumbnail) && !isLazyLoader) {
+    raiseBlockError(
+      `Block "${name}": "${path}" must be a non-empty URL string, a { light, dark } pair of URLs, an inline SVG component, or a loader that resolves to one (e.g. () => import(...)).`
+    );
   }
 }
 

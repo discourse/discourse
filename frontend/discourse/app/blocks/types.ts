@@ -339,6 +339,42 @@ export type BlockThumbnail =
   | ComponentLike
   | (() => Promise<ComponentLike | { default: ComponentLike }>);
 
+/** A named starting configuration exposed as a separate palette choice. */
+export interface BlockPaletteVariantDefinition {
+  /** Stable kebab-case identifier unique within the block. */
+  id: string;
+
+  /** Human-readable palette label. */
+  displayName: string;
+
+  /** Human-readable explanation of the starting configuration. */
+  description?: string;
+
+  /** Arguments copied into a block created from this palette choice. */
+  defaultArgs?: Record<string, unknown>;
+
+  /** Selection thumbnail for this palette choice. */
+  thumbnail?: BlockThumbnail;
+}
+
+/** A normalized, frozen palette variant recorded in block metadata. */
+export interface BlockPaletteVariant {
+  /** Stable kebab-case identifier unique within the block. */
+  readonly id: string;
+
+  /** Human-readable palette label. */
+  readonly displayName: string;
+
+  /** Human-readable explanation, or `null` to inherit the block description. */
+  readonly description: string | null;
+
+  /** Initial block arguments, or `null` when the variant supplies none. */
+  readonly defaultArgs: Readonly<Record<string, unknown>> | null;
+
+  /** Selection thumbnail, or `null` to inherit the block thumbnail. */
+  readonly thumbnail: BlockThumbnail | null;
+}
+
 /**
  * A composite block part, as declared in `@block({ parts: [...] })`. A part is
  * a nested block instance the composite renders in place of authored children.
@@ -428,6 +464,9 @@ export interface BlockOptions {
   /** When `true`, the block is omitted from block-selection listings. */
   paletteHidden?: boolean;
 
+  /** Starting configurations exposed instead of one generic palette entry. */
+  paletteVariants?: BlockPaletteVariantDefinition[];
+
   /** When `true`, the block renders without its own wrapper element. */
   transparent?: boolean;
 
@@ -505,6 +544,9 @@ export interface BlockMetadata {
 
   /** Whether the block is omitted from block-selection listings. */
   paletteHidden: boolean;
+
+  /** Frozen palette variants, or `null` when the block declares none. */
+  paletteVariants: readonly BlockPaletteVariant[] | null;
 
   /** Frozen composite parts, or `null` when the block declares none. */
   parts: readonly BlockPart[] | null;

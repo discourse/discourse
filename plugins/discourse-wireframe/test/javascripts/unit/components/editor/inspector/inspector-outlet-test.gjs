@@ -1,6 +1,8 @@
 import Service from "@ember/service";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import Layout from "discourse/blocks/builtin/layout";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-panel";
 
@@ -220,6 +222,23 @@ module(
       assert
         .dom(".wireframe-inspector__thumbnail.wireframe-outlet-thumbnail")
         .doesNotExist("a normal block never renders the outlet thumbnail");
+    });
+
+    test("the inspector uses the layout variant name", async function (assert) {
+      stubWireframe(this.owner, {
+        name: "layout",
+        isRegistered: true,
+        metadata: getBlockMetadata(Layout),
+        args: { mode: "grid" },
+        argsSnapshot: { mode: "grid" },
+        parentChildArgsSchema: null,
+      });
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-inspector__block-name")
+        .hasText("Grid", "the header reads the effective layout variant");
     });
 
     test("an unregistered block falls back to its raw name", async function (assert) {

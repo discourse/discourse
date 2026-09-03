@@ -451,7 +451,10 @@ export default class WireframeSelectionService extends Service {
         return {
           key: entryKey(entry),
           blockName,
-          displayName: meta?.shortName ?? blockName,
+          displayName:
+            this.wireframeLayoutQuery.lookupEntryDisplayName(entry) ??
+            meta?.shortName ??
+            blockName,
           isOutlet: false,
           outletName: located.outletName,
         };

@@ -4,11 +4,17 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
 
 const ENTRY = {
-  name: "heading",
+  id: "heading",
+  blockName: "heading",
+  defaultArgs: {},
+  variantOrder: 0,
   displayName: "Heading",
   icon: "heading",
+  category: "text",
   description: "A section title.",
+  namespaceType: "core",
   thumbnail: null,
+  paletteHidden: false,
 };
 
 // A stand-in for a block's inline SVG thumbnail component.

@@ -15,7 +15,7 @@ import type Blocks from "discourse/services/blocks";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const VALID_MODES = ["stack", "row", "grid", "tiles"];
+const VALID_MODES = ["stack", "row", "grid"];
 const VALID_ALIGNS = ["start", "center", "end", "stretch"];
 const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
 const VALID_JUSTIFY_CONTENT = [
@@ -55,7 +55,6 @@ interface LayoutSignature {
     rowTemplate?: string;
     rowHeight?: string;
     autoCollapse?: string;
-    minItemWidth?: string;
   };
 }
 
@@ -72,11 +71,6 @@ interface LayoutSignature {
  *     core's `WrappedBlockLayout` puts those CSS Grid declarations on
  *     the child's outer wrapper — the direct DOM child of this layout's
  *     container `<div>`.
- *  - `tiles` — CSS Grid that fits as many equal columns as the container
- *     width allows (`repeat(auto-fit, minmax(minItemWidth, 1fr))`).
- *     Children carry no placement and reflow automatically as the width
- *     changes, so this mode is for uniform sets (e.g. a card grid) rather
- *     than a deliberately-placed layout.
  */
 @block("layout", {
   thumbnail: () => import("discourse/blocks/thumbnails/layout"),
@@ -86,6 +80,29 @@ interface LayoutSignature {
   category: "layout",
   description:
     "A flexible container — stack (column), row, or grid with per-cell placement.",
+  paletteVariants: [
+    {
+      id: "stack",
+      displayName: i18n("blocks.builtin.layout.variants.stack.name"),
+      description: i18n("blocks.builtin.layout.variants.stack.description"),
+      defaultArgs: { mode: "stack" },
+      thumbnail: () => import("discourse/blocks/thumbnails/layout-stack"),
+    },
+    {
+      id: "row",
+      displayName: i18n("blocks.builtin.layout.variants.row.name"),
+      description: i18n("blocks.builtin.layout.variants.row.description"),
+      defaultArgs: { mode: "row" },
+      thumbnail: () => import("discourse/blocks/thumbnails/layout-row"),
+    },
+    {
+      id: "grid",
+      displayName: i18n("blocks.builtin.layout.variants.grid.name"),
+      description: i18n("blocks.builtin.layout.variants.grid.description"),
+      defaultArgs: { mode: "grid" },
+      thumbnail: () => import("discourse/blocks/thumbnails/layout-grid"),
+    },
+  ],
   args: {
     mode: {
       type: "string",
@@ -258,19 +275,6 @@ interface LayoutSignature {
       ui: {
         control: "radio-group",
         label: i18n("blocks.builtin.layout.auto_collapse_label"),
-      },
-    },
-    // Tiles mode only: the minimum width each child gets before the row
-    // wraps. The grid fits as many equal `minmax(minItemWidth, 1fr)` columns
-    // as the container width allows, so children reflow without any explicit
-    // placement.
-    minItemWidth: {
-      type: "string",
-      default: "16rem",
-      ui: {
-        label: i18n("blocks.builtin.layout.min_item_width"),
-        placeholder: i18n("blocks.builtin.layout.min_item_width_placeholder"),
-        conditional: { arg: "mode", equals: "tiles" },
       },
     },
   },
@@ -551,19 +555,6 @@ export default class Layout extends Component<LayoutSignature> {
       );
     }
 
-    if (mode === "tiles") {
-      // Auto-fit reflow: the stylesheet's `.d-block-layout--tiles` rule reads
-      // this min-item-width into `repeat(auto-fit, minmax(<width>, 1fr))`, so
-      // the browser decides the column count from the available width. No
-      // per-child placement is involved.
-      const minItemWidth =
-        (this.args.minItemWidth ?? "16rem").trim() || "16rem";
-      return trustHTML(
-        `--d-block-layout-min-item-width: ${minItemWidth}; ` +
-          `--d-block-layout-gap: ${gap}rem; --d-block-layout-align: ${align};`
-      );
-    }
-
     // Stack / row (flex). Both carry gap / align / justify-content; only row
     // exposes wrap (a column's flex-wrap is niche, so stack stays the implicit
     // `nowrap` by not emitting the var).
@@ -704,10 +695,6 @@ export default class Layout extends Component<LayoutSignature> {
           >
             <child.Component />
           </div>
-        {{/each}}
-      {{else if (eq this.resolvedMode "tiles")}}
-        {{#each this.sortedChildren key="key" as |child|}}
-          <child.Component />
         {{/each}}
       {{else}}
         {{! Stack / row: an inner flex wrapper holds the children. The flex

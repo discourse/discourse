@@ -1,5 +1,5 @@
 import Service from "@ember/service";
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Layout from "discourse/blocks/builtin/layout";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
@@ -148,38 +148,13 @@ module(
         );
     });
 
-    test("tiles mode: min-item-width, but no justify-content or auto-collapse", async function (assert) {
+    test("a removed mode falls back to stack", async function (assert) {
       stubWireframe(this.owner, { mode: "tiles" });
       await render(<template><InspectorLayoutForm /></template>);
 
-      // The min-item-width control is the only dimension field with a unit
-      // selector (gap is unitless), so the unit `<select>` identifies it.
       assert
-        .dom(".wireframe-dimension-field__unit")
-        .exists("min-item-width renders with its rem/px unit selector");
-      assert
-        .dom(".wireframe-layout-form")
-        .includesText("Min item width", "the field carries its label");
-      assert
-        .dom("input[name='wireframe-layout-justify-content']")
-        .doesNotExist("justify-content is hidden in tiles (auto-fit columns)");
-      assert
-        .dom("input[name='wireframe-layout-auto-collapse']")
-        .doesNotExist("auto-collapse is hidden in tiles (reflows on its own)");
-    });
-
-    test("editing min-item-width writes the arg through the service", async function (assert) {
-      stubWireframe(this.owner, { mode: "tiles", minItemWidth: "16rem" });
-      await render(<template><InspectorLayoutForm /></template>);
-
-      // The number input commits on `change`, which `fillIn` fires after
-      // setting the value; the field reserializes it under its rem unit.
-      await fillIn(".wireframe-dimension-field__number", "20");
-
-      const service = this.owner.lookup("service:wireframe-workspace");
-      assert.deepEqual(service.updateSelectedArgCalls, [
-        { name: "minItemWidth", value: "20rem" },
-      ]);
+        .dom("input[name='wireframe-layout-mode'][value='stack']")
+        .isChecked("legacy layouts remain editable as stacks");
     });
 
     test("toggling reverse writes the arg through the service", async function (assert) {

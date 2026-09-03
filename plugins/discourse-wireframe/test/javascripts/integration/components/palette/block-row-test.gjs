@@ -4,11 +4,17 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import BlockRow from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-row";
 
 const ENTRY = {
-  name: "heading",
+  id: "heading",
+  blockName: "heading",
+  defaultArgs: {},
+  variantOrder: 0,
   displayName: "Heading",
   icon: "heading",
+  category: "text",
   description: "A section title.",
+  namespaceType: "core",
   thumbnail: null,
+  paletteHidden: false,
 };
 
 module(
@@ -39,7 +45,7 @@ module(
 
     test("activates on click by default, and only on the configured event otherwise", async function (assert) {
       let activated = [];
-      const onActivate = (entry) => activated.push(entry.name);
+      const onActivate = (entry) => activated.push(entry.id);
 
       await render(
         <template>
@@ -70,6 +76,9 @@ module(
         <template><BlockRow @entry={{ENTRY}} data-test-row="yes" /></template>
       );
       assert.dom(".wireframe-block-row").hasAttribute("data-test-row", "yes");
+      assert
+        .dom(".wireframe-block-row")
+        .hasAttribute("data-palette-id", "heading");
       assert
         .dom(".wireframe-block-row")
         .hasAttribute("data-block-name", "heading");

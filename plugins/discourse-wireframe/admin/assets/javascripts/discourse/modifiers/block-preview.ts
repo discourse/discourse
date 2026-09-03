@@ -18,7 +18,7 @@ export const BLOCK_PREVIEW_OPEN_DELAY = 200;
 /** How long the preview survives once the pointer leaves every tile. */
 export const BLOCK_PREVIEW_CLOSE_GRACE = 150;
 
-const TILE_SELECTOR = ".wireframe-block-tile[data-block-name]";
+const TILE_SELECTOR = ".wireframe-block-tile[data-palette-id]";
 
 interface BlockPreviewSignature {
   /** The grid whose tiles get a preview. */
@@ -27,8 +27,8 @@ interface BlockPreviewSignature {
   Args: {
     /** Named modifier arguments. */
     Named: {
-      /** Resolves a tile's block name to the entry its preview describes. */
-      entryFor: (blockName: string) => BlockPaletteEntry | undefined;
+      /** Resolves a tile's palette id to the entry its preview describes. */
+      entryFor: (paletteId: string) => BlockPaletteEntry | undefined;
     };
     /** This modifier accepts no positional arguments. */
     Positional: [];
@@ -77,7 +77,7 @@ export default class BlockPreview extends Modifier<BlockPreviewSignature> {
     }
     this.#currentTile = tile;
 
-    const entry = tile ? this.#entryFor?.(tile.dataset.blockName!) : undefined;
+    const entry = tile ? this.#entryFor?.(tile.dataset.paletteId!) : undefined;
     if (!tile || !entry) {
       this.#cancelOpen();
       this.#scheduleClose();

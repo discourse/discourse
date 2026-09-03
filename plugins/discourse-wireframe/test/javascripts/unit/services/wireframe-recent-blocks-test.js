@@ -23,7 +23,7 @@ module(
       this.recent.record("paragraph");
       this.recent.record("heading");
 
-      assert.deepEqual(this.recent.names, ["heading", "paragraph"]);
+      assert.deepEqual(this.recent.ids, ["heading", "paragraph"]);
     });
 
     test("keeps only the newest entries once the limit is reached", function (assert) {
@@ -33,10 +33,10 @@ module(
         this.recent.record(`block-${i}`);
       }
 
-      assert.strictEqual(this.recent.names.length, RECENT_BLOCKS_LIMIT);
-      assert.strictEqual(this.recent.names[0], `block-${RECENT_BLOCKS_LIMIT}`);
+      assert.strictEqual(this.recent.ids.length, RECENT_BLOCKS_LIMIT);
+      assert.strictEqual(this.recent.ids[0], `block-${RECENT_BLOCKS_LIMIT}`);
       assert.false(
-        this.recent.names.includes("block-0"),
+        this.recent.ids.includes("block-0"),
         "the oldest entry fell off"
       );
     });
@@ -46,16 +46,16 @@ module(
       this.recent.record("heading");
 
       this.theme.setActiveTheme(8);
-      assert.deepEqual(this.recent.names, [], "a different theme starts empty");
+      assert.deepEqual(this.recent.ids, [], "a different theme starts empty");
       this.recent.record("card");
 
       this.theme.setActiveTheme(7);
-      assert.deepEqual(this.recent.names, ["heading"]);
+      assert.deepEqual(this.recent.ids, ["heading"]);
     });
 
     test("records nothing without a theme to attribute it to", function (assert) {
       this.recent.record("heading");
-      assert.deepEqual(this.recent.names, []);
+      assert.deepEqual(this.recent.ids, []);
     });
 
     test("survives a fresh service instance", function (assert) {
@@ -66,7 +66,7 @@ module(
       owner.unregister("service:wireframe-recent-blocks");
       const again = owner.lookup("service:wireframe-recent-blocks");
 
-      assert.deepEqual(again.names, ["heading"]);
+      assert.deepEqual(again.ids, ["heading"]);
     });
   }
 );

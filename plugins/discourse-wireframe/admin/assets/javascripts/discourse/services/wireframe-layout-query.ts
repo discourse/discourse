@@ -21,6 +21,7 @@ import {
   findEntryByStableKey,
   isLayoutBlockEntry,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
+import { layoutPaletteDisplayName } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 
 /**
  * Per-outlet resolved-layout record: the synchronously-available layout plus
@@ -411,6 +412,28 @@ export default class WireframeLayoutQueryService extends Service {
       return null;
     }
     return this.metadataForName(name)?.displayName ?? name;
+  }
+
+  /**
+   * Pulls the author-facing display name for a concrete layout entry.
+   * Palette variants take precedence over the underlying block type label.
+   *
+   * @param entry - Live entry whose effective configuration should be named.
+   */
+  lookupEntryDisplayName(entry: LayoutEntry | null): string | null {
+    if (!entry?.block) {
+      return null;
+    }
+    const name = this.#blockNameFor(entry.block);
+    if (!name) {
+      return null;
+    }
+    const metadata = this.lookupBlockMetadata(entry.block);
+    return (
+      layoutPaletteDisplayName(name, metadata, entry.args) ??
+      metadata?.displayName ??
+      name
+    );
   }
 
   /* Outlet state */

@@ -130,7 +130,7 @@ module(
       );
     });
 
-    test("a tab panel's toolbar reads its tab position with left/right move arrows", async function (assert) {
+    test("a tab panel's toolbar uses the layout variant name", async function (assert) {
       await render(<template><BlockOutlet @name={{OUTLET}} /></template>);
 
       // Add a second tab; it auto-activates and is selected, so its toolbar
@@ -146,8 +146,8 @@ module(
         .dom("[title='Move right']")
         .exists("a horizontal container shows a right move arrow");
 
-      // The selected panel's toolbar badge reads the block name plus a chip
-      // for its tab position.
+      // The selected panel's toolbar badge reads the layout's palette variant
+      // plus a chip for its tab position.
       const toolbar = document
         .querySelector("[title='Move left']")
         .closest(".wireframe-block-toolbar");
@@ -155,8 +155,8 @@ module(
         toolbar
           ?.querySelector(".wireframe-block-toolbar__handle span")
           ?.textContent.trim(),
-        "Layout",
-        "the badge reads the block name"
+        "Stack",
+        "the badge reads the effective layout variant"
       );
       assert.strictEqual(
         toolbar

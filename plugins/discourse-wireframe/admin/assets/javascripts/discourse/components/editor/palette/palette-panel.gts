@@ -76,8 +76,8 @@ const SECTION_ORDER: readonly BlockDisplayCategory[] = [
  * the keyboard's home, with the arrow keys moving an active row and Enter
  * inserting it (the combobox shape the inserter menu uses). The term narrows
  * the list by a case-insensitive substring match against `displayName`,
- * `name`, and `description`, and hides the Recent group while it is set so
- * matches are never listed twice.
+ * registered block name, and `description`. It hides the Recent group while
+ * set so matches are never listed twice.
  *
  * The block registry is frozen post-boot, so we read it once on
  * insertion and memoise the decorated rows via `@cached`.
@@ -156,7 +156,7 @@ export default class PalettePanel extends Component {
     return this.rows.filter(
       (row) =>
         row.displayName.toLowerCase().includes(term) ||
-        row.name.toLowerCase().includes(term) ||
+        row.blockName.toLowerCase().includes(term) ||
         row.description.toLowerCase().includes(term)
     );
   }
@@ -198,19 +198,19 @@ export default class PalettePanel extends Component {
     }
     const seen = new Set<string>();
     const rows: BlockPaletteEntry[] = [];
-    for (const name of [
-      ...this.wireframeRecentBlocks.names,
-      ...this.#mostUsedBlockNames(),
+    for (const id of [
+      ...this.wireframeRecentBlocks.ids,
+      ...this.#mostUsedPaletteIds(),
       ...RECENT_FALLBACK,
     ]) {
       if (rows.length === RECENT_BLOCKS_LIMIT) {
         break;
       }
-      const row = seen.has(name)
-        ? undefined
-        : this.rows.find((candidate) => candidate.name === name);
-      seen.add(name);
-      if (row) {
+      const row =
+        this.rows.find((candidate) => candidate.id === id) ??
+        this.rows.find((candidate) => candidate.blockName === id);
+      if (row && !seen.has(row.id)) {
+        seen.add(row.id);
         rows.push(row);
       }
     }
@@ -292,7 +292,9 @@ export default class PalettePanel extends Component {
       return;
     }
     this.wireframeBlockMutations.insertBlock({
-      blockName: entry.name,
+      blockName: entry.blockName,
+      defaultArgs: { ...entry.defaultArgs },
+      paletteId: entry.id,
       targetKey: selectedKey,
       position: selected.metadata?.isContainer ? "inside" : "after",
       targetOutletName: selected.outletName,
@@ -301,16 +303,14 @@ export default class PalettePanel extends Component {
 
   /**
    * Roving-focus activation handler. The modifier hands back the active row
-   * element, so resolve the entry by its `data-block-name` and delegate.
+   * element, so resolve the entry by its `data-palette-id` and delegate.
    * Double-click activation goes straight through `insertFromPalette`.
    *
    * @param element - The activated row.
    */
   @action
   activateRow(element: HTMLElement): void {
-    const entry = this.rows.find(
-      (row) => row.name === element.dataset.blockName
-    );
+    const entry = this.rows.find((row) => row.id === element.dataset.paletteId);
     if (entry) {
       this.insertFromPalette(entry);
     }
@@ -355,19 +355,30 @@ export default class PalettePanel extends Component {
   }
 
   /**
-   * Block names used across the editable outlets, most used first. The
+   * Palette choice ids used across the editable outlets, most used first. The
    * implicit root layout that wraps an outlet's content is not a choice the
    * author made, so counting starts at its children.
    *
-   * @returns Registered block names ordered by how often the layout uses them.
+   * @returns Stable choice ids ordered by how often the layout uses them.
    */
-  #mostUsedBlockNames(): string[] {
+  #mostUsedPaletteIds(): string[] {
     const counts = new Map<string, number>();
     const count = (entries: readonly LayoutEntry[]) => {
       for (const entry of entries) {
-        const name = this.wireframeLayoutQuery.blockNameOf(entry);
-        if (name) {
-          counts.set(name, (counts.get(name) ?? 0) + 1);
+        const blockName = this.wireframeLayoutQuery.blockNameOf(entry);
+        if (blockName) {
+          const choices = this.rows.filter(
+            (candidate) => candidate.blockName === blockName
+          );
+          const paletteId =
+            choices.find((candidate) =>
+              Object.entries(candidate.defaultArgs).every(
+                ([name, value]) => entry.args?.[name] === value
+              )
+            )?.id ??
+            choices[0]?.id ??
+            blockName;
+          counts.set(paletteId, (counts.get(paletteId) ?? 0) + 1);
         }
         if (entry.children?.length) {
           count(entry.children);
@@ -448,14 +459,19 @@ export default class PalettePanel extends Component {
               {{i18n "wireframe.palette.recent"}}
             </div>
             <div class="wireframe-palette__recent">
-              {{#each this.recentRows key="name" as |row|}}
+              {{#each this.recentRows key="id" as |row|}}
                 <BlockTile
                   @entry={{row}}
                   @onActivate={{this.insertFromPalette}}
                   @activateOn="dblclick"
                   {{dDragAndDropSource
                     type="wf-palette-block"
-                    data=(hash blockName=row.name)
+                    data=(hash
+                      blockName=row.blockName
+                      defaultArgs=row.defaultArgs
+                      paletteId=row.id
+                      displayName=row.displayName
+                    )
                     dragPreview=this.renderDragPreview
                     dragPreviewOffset=(hash x="1rem" y="0.5rem")
                     onDragStart=this.handleDragStart
@@ -469,7 +485,7 @@ export default class PalettePanel extends Component {
             <div class="wireframe-palette__section-header">
               {{i18n (concat "blocks.categories." section.category)}}
             </div>
-            {{#each section.rows key="name" as |row|}}
+            {{#each section.rows key="id" as |row|}}
               <BlockRow
                 @entry={{row}}
                 @onActivate={{this.insertFromPalette}}
@@ -478,7 +494,12 @@ export default class PalettePanel extends Component {
                     doesn't cover the drop point. }}
                 {{dDragAndDropSource
                   type="wf-palette-block"
-                  data=(hash blockName=row.name)
+                  data=(hash
+                    blockName=row.blockName
+                    defaultArgs=row.defaultArgs
+                    paletteId=row.id
+                    displayName=row.displayName
+                  )
                   dragPreview=this.renderDragPreview
                   dragPreviewOffset=(hash x="1rem" y="0.5rem")
                   onDragStart=this.handleDragStart

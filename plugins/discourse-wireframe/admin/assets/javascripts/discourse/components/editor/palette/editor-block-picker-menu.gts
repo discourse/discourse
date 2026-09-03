@@ -92,8 +92,8 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
   @tracked searchInput: HTMLInputElement | null = null;
 
   /** Resolves a tile back to its entry, for the shared hover preview. */
-  entryFor = (blockName: string): BlockPaletteEntry | undefined =>
-    this.results.find((entry) => entry.name === blockName);
+  entryFor = (paletteId: string): BlockPaletteEntry | undefined =>
+    this.results.find((entry) => entry.id === paletteId);
 
   /**
    * Stable id linking the input's `aria-controls` to the results listbox.
@@ -109,7 +109,7 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
     const targetOutletName = this.args.data.targetOutletName;
     return this.args.data.palette.filter((entry) =>
       this.wireframeDropAuthority.canInsertBlockAt({
-        blockName: entry.name,
+        blockName: entry.blockName,
         targetOutletName,
       })
     );
@@ -128,7 +128,7 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
       return valid.filter(
         (entry) =>
           entry.displayName.toLowerCase().includes(term) ||
-          entry.name.toLowerCase().includes(term) ||
+          entry.blockName.toLowerCase().includes(term) ||
           entry.description.toLowerCase().includes(term)
       );
     }
@@ -136,7 +136,11 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
       const index = CURATED_FIRST.indexOf(name);
       return index === -1 ? CURATED_FIRST.length : index;
     };
-    return [...valid].sort((a, b) => rank(a.name) - rank(b.name));
+    return [...valid].sort(
+      (a, b) =>
+        rank(a.blockName) - rank(b.blockName) ||
+        (a.blockName === b.blockName ? a.variantOrder - b.variantOrder : 0)
+    );
   }
 
   /** Captures the search input used as the combobox controller. */
@@ -169,7 +173,7 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
   @action
   activate(element: HTMLElement): void {
     const entry = this.results.find(
-      (row) => row.name === element.dataset.blockName
+      (row) => row.id === element.dataset.paletteId
     );
     if (entry) {
       this.pick(entry);

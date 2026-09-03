@@ -14,22 +14,36 @@ import blockPreview, {
 
 const ENTRIES = [
   {
-    name: "heading",
+    id: "heading",
+    blockName: "heading",
+    defaultArgs: {},
+    variantOrder: 0,
     displayName: "Heading",
     icon: "heading",
+    category: "text",
     description: "A title.",
+    namespaceType: "core",
+    thumbnail: null,
+    paletteHidden: false,
   },
   {
-    name: "paragraph",
+    id: "paragraph",
+    blockName: "paragraph",
+    defaultArgs: {},
+    variantOrder: 0,
     displayName: "Paragraph",
     icon: "paragraph",
+    category: "text",
     description: "Body text.",
+    namespaceType: "core",
+    thumbnail: null,
+    paletteHidden: false,
   },
 ];
 
-const entryFor = (name) => ENTRIES.find((entry) => entry.name === name);
+const entryFor = (id) => ENTRIES.find((entry) => entry.id === id);
 
-const tile = (name) => `.wireframe-block-tile[data-block-name="${name}"]`;
+const tile = (id) => `.wireframe-block-tile[data-palette-id="${id}"]`;
 
 const CARD = `.fk-d-tooltip__content[data-identifier="${BLOCK_PREVIEW_IDENTIFIER}"]`;
 
@@ -89,7 +103,7 @@ module(
         document.querySelector(tile("heading")),
         "anchored to the tile under the pointer"
       );
-      assert.strictEqual(preview.options.data.entry.name, "heading");
+      assert.strictEqual(preview.options.data.entry.id, "heading");
       assert
         .dom(`${CARD} .wireframe-block-preview__name`)
         .hasText("Heading", "the card is on screen for that entry");
@@ -111,7 +125,7 @@ module(
         "it now follows the new tile"
       );
       assert.strictEqual(
-        second.options.data.entry.name,
+        second.options.data.entry.id,
         "paragraph",
         "and describes the new entry"
       );

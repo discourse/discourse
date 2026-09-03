@@ -8,7 +8,7 @@
  * Two value shapes flow through here:
  *   - a bare `Number` (a "unitless" dimension, e.g. the layout gap stored as a
  *     plain rem count), and
- *   - a CSS string like `"16rem"` (the shape `minItemWidth` / `rowHeight` use).
+ *   - a CSS string like `"16rem"` (the shape `rowHeight` uses).
  *
  * `parseDimension` accepts either; the caller decides which shape to write back
  * via `formatDimension`.

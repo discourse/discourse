@@ -21,6 +21,7 @@ import InspectorOutletSection from "discourse/plugins/discourse-wireframe/discou
 import InspectorRawJson from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-raw-json";
 import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-thumbnail";
 import OutletThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/outlet-thumbnail";
+import { layoutPaletteDisplayName } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
 import type WireframeConditionsPanelService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-conditions-panel";
 import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
@@ -119,8 +120,8 @@ export default class InspectorPanel extends Component {
    *
    * - For an outlet root, the outlet's display name (the region the author
    *   selected), falling back to the raw outlet name.
-   * - For a registered block, the block's `displayName`, then its namespace-less
-   *   `shortName`.
+   * - For a registered block, its matching palette variant, then the block's
+   *   `displayName`, then its namespace-less `shortName`.
    * - For an unregistered block (no metadata), the raw block name, since the
    *   editor has no friendlier label to offer.
    */
@@ -129,7 +130,14 @@ export default class InspectorPanel extends Component {
       return this.#outletMeta?.displayName ?? this.data?.outletName;
     }
     return (
-      this.metadata?.displayName ?? this.metadata?.shortName ?? this.data?.name
+      layoutPaletteDisplayName(
+        this.data?.name,
+        this.metadata,
+        this.data?.args
+      ) ??
+      this.metadata?.displayName ??
+      this.metadata?.shortName ??
+      this.data?.name
     );
   }
 

@@ -4,6 +4,7 @@ import {
   fillIn,
   render,
   triggerKeyEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -31,6 +32,55 @@ module(
       assert.dom(".wireframe-block-row").exists();
       const entries = document.querySelectorAll(".wireframe-block-row");
       assert.true(entries.length >= 8);
+    });
+
+    test("palette variants replace the generic layout entry", async function (assert) {
+      await render(<template><PalettePanel /></template>);
+
+      const variants = [
+        ...document.querySelectorAll(
+          ".wireframe-block-row[data-block-name='layout']"
+        ),
+      ];
+      assert.deepEqual(
+        variants.map((element) => ({
+          id: element.dataset.paletteId,
+          label: element.getAttribute("aria-label"),
+        })),
+        [
+          { id: "layout:stack", label: "Stack" },
+          { id: "layout:row", label: "Row" },
+          { id: "layout:grid", label: "Grid" },
+        ],
+        "the three creation intents share one underlying block"
+      );
+      assert
+        .dom(".wireframe-block-row[aria-label='Layout']")
+        .doesNotExist("the ambiguous generic entry is omitted");
+    });
+
+    test("layout palette variants render distinct SVG thumbnails", async function (assert) {
+      await render(<template><PalettePanel /></template>);
+      await waitUntil(
+        () =>
+          document.querySelectorAll(
+            ".wireframe-block-row[data-palette-id='layout:stack'] svg rect"
+          ).length > 0
+      );
+
+      assert
+        .dom(
+          ".wireframe-block-row[data-palette-id='layout:stack'] svg rect[width='80']"
+        )
+        .exists({ count: 3 }, "Stack shows three horizontal blocks");
+      assert
+        .dom(
+          ".wireframe-block-row[data-palette-id='layout:row'] svg rect[height='48']"
+        )
+        .exists({ count: 3 }, "Row shows three vertical blocks");
+      assert
+        .dom(".wireframe-block-row[data-palette-id='layout:grid'] svg rect")
+        .exists({ count: 4 }, "Grid shows an asymmetric cell arrangement");
     });
 
     test("filters by the search input", async function (assert) {
@@ -85,13 +135,13 @@ module(
     test("offers the default blocks as Recent until the layout has taught it anything", async function (assert) {
       await render(<template><PalettePanel /></template>);
 
-      const recentNames = [
+      const recentIds = [
         ...document.querySelectorAll(
           ".wireframe-palette__recent .wireframe-block-tile"
         ),
-      ].map((el) => el.dataset.blockName);
-      assert.deepEqual(recentNames.slice(0, 2), ["layout", "heading"]);
-      assert.strictEqual(recentNames.length, 6, "the group is full");
+      ].map((el) => el.dataset.paletteId);
+      assert.deepEqual(recentIds.slice(0, 2), ["layout:stack", "heading"]);
+      assert.strictEqual(recentIds.length, 6, "the group is full");
     });
 
     test("tops Recent up with the block types the layout uses most", async function (assert) {
@@ -207,6 +257,43 @@ module(
 
       await triggerKeyEvent(".wireframe-palette__search", "keydown", "Enter");
       assert.strictEqual(lastInsert?.blockName, "paragraph");
+    });
+
+    test("a layout variant inserts the shared block with its mode defaults", async function (assert) {
+      let lastInsert = null;
+      stubService(this.owner, "wireframe-selection", {
+        selectedBlockKey: "para-1",
+        selectedBlockData: {
+          outletName: "homepage",
+          metadata: { isContainer: false },
+        },
+      });
+      stubService(this.owner, "wireframe-layout-query", {
+        editableOutlets: [],
+        findEntryAndOutletSync: () => ({ entry: { block: "paragraph" } }),
+        isGridContainer: () => false,
+        isGridCellEntry: () => false,
+      });
+      stubService(this.owner, "wireframe-block-mutations", {
+        insertBlock: (args) => (lastInsert = args),
+      });
+
+      await render(<template><PalettePanel /></template>);
+      await fillIn(".wireframe-palette__search", "grid");
+      await doubleClick(".wireframe-block-row[data-palette-id='layout:grid']");
+
+      assert.deepEqual(
+        {
+          blockName: lastInsert?.blockName,
+          defaultArgs: lastInsert?.defaultArgs,
+          paletteId: lastInsert?.paletteId,
+        },
+        {
+          blockName: "layout",
+          defaultArgs: { mode: "grid" },
+          paletteId: "layout:grid",
+        }
+      );
     });
 
     test("a single click on a row is a no-op (insert is double-click)", async function (assert) {

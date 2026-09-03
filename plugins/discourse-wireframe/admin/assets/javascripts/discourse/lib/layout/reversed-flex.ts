@@ -17,7 +17,7 @@ export type RelativePosition = "before" | "after";
  * ordering operation computed from VISUAL order (a drop's before/after, a
  * visual "move up") must be flipped to land correctly in the persisted array.
  *
- * Grid / tiles never reverse (grid is placement-sorted), so this is gated to
+ * Grid never reverses (it is placement-sorted), so this is gated to
  * the two flex modes. The legacy `"free-grid"` mode coerces to grid.
  *
  * @param args - A layout block entry's arguments.

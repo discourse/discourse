@@ -1,6 +1,8 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import Layout from "discourse/blocks/builtin/layout";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 
 // Stubs the layout-query seam methods the selection service reads through, so
 // `selectBlock` can hydrate / bind / resolve against a controllable fixture
@@ -91,6 +93,27 @@ module(
         assert.strictEqual(this.selection.selectedBlockData, null);
         assert.strictEqual(this.selection.selectionCount, 0);
       });
+    });
+
+    test("breadcrumb ancestry uses the layout variant name", function (assert) {
+      const entry = {
+        block: "layout",
+        __name: "layout",
+        __stableKey: 1,
+        args: { mode: "row" },
+      };
+      stubQuery(this.query, {
+        entries: { "layout:1": { entry, outletName: "home" } },
+        layouts: { home: { layout: [entry] } },
+        metadata: { layout: getBlockMetadata(Layout) },
+      });
+
+      this.selection.selectBlock({ key: "layout:1" });
+
+      assert.strictEqual(
+        this.selection.selectedBlockAncestry.at(-1).displayName,
+        "Row"
+      );
     });
 
     module("multi-selection", function () {

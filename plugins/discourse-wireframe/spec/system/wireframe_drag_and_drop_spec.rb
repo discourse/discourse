@@ -14,6 +14,8 @@
 # layer proves the coarser, higher-value fact: in a real browser the overlay
 # mounts and a palette block actually lands in a grid cell.
 describe "Wireframe editor drag and drop" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
 
   let(:editor) { PageObjects::Pages::WireframeEditor.new }
@@ -39,6 +41,32 @@ describe "Wireframe editor drag and drop" do
     # presence proves the grid drop target registered — the exact behaviour
     # the class-rename regression silently broke.
     expect(editor).to have_empty_cells
+  end
+
+  it "offers stack, row, and grid as distinct layout choices" do
+    visit("/latest")
+    editor.enter
+
+    expect(editor).to have_layout_palette_variants
+
+    screenshot_marker(label: "wireframe-layout-palette-variants", only: :desktop)
+  end
+
+  it "shows the selected layout's palette name throughout the editor" do
+    visit("/latest")
+    editor.enter
+
+    editor.select_layout("Grid")
+
+    expect(editor).to have_layout_variant_name("Grid")
+
+    screenshot_marker(label: "wireframe-layout-variant-name", only: :desktop)
+
+    editor.open_outline
+
+    expect(editor).to have_layout_variant_in_outline("Grid")
+
+    screenshot_marker(label: "wireframe-layout-variant-outline", only: :desktop)
   end
 
   it "drops a palette block onto an occupied cell, inserting it into the adjacent gap" do

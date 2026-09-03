@@ -5,12 +5,11 @@ import BlockOutlet, {
 } from "discourse/blocks/block-outlet";
 import Card from "discourse/blocks/builtin/card";
 import Heading from "discourse/blocks/builtin/heading";
-import Layout from "discourse/blocks/builtin/layout";
 import Section from "discourse/blocks/builtin/section";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Blocks | section card tiles", function (hooks) {
+module("Integration | Blocks | section and card", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.afterEach(function () {
@@ -128,42 +127,5 @@ module("Integration | Blocks | section card tiles", function (hooks) {
     assert
       .dom(".d-block-card .d-block-stretched-link")
       .doesNotExist("no stretched link without an href");
-  });
-
-  test("layout Tiles mode renders a placement-free auto-fit grid", async function (assert) {
-    withPluginApi((api) =>
-      api.renderBlocks("hero-blocks", [
-        {
-          block: Layout,
-          args: { mode: "tiles", minItemWidth: "20rem" },
-          children: [
-            { block: Card, args: { title: "One" } },
-            { block: Card, args: { title: "Two" } },
-          ],
-        },
-      ])
-    );
-
-    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
-
-    assert
-      .dom(".d-block-layout--tiles")
-      .exists("the layout renders in tiles mode");
-    assert
-      .dom(".d-block-layout--tiles .d-block-card")
-      .exists({ count: 2 }, "both card children render as tiles");
-
-    const tiles = document.querySelector(".d-block-layout--tiles");
-    assert.true(
-      tiles
-        .getAttribute("style")
-        .includes("--d-block-layout-min-item-width: 20rem"),
-      "the min item width is emitted for the auto-fit grid"
-    );
-    assert
-      .dom(".d-block-layout--tiles .d-block-layout__cell")
-      .doesNotExist(
-        "tiles mode wraps no per-child grid cells (placement-free)"
-      );
   });
 });

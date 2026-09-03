@@ -35,6 +35,7 @@ import {
   validateChildBlocks,
   validateDisplayMetadata,
   validateOutletRestrictions,
+  validatePaletteVariants,
 } from "discourse/lib/blocks/-internals/validation/block-decorator";
 import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
 
@@ -189,6 +190,24 @@ function freezeParts(
   );
 }
 
+function freezePaletteVariants(
+  variants: NonNullable<BlockOptions["paletteVariants"]>
+): NonNullable<BlockMetadata["paletteVariants"]> {
+  return Object.freeze(
+    variants.map((variant) =>
+      Object.freeze({
+        id: variant.id,
+        displayName: variant.displayName,
+        description: variant.description ?? null,
+        defaultArgs: variant.defaultArgs
+          ? Object.freeze({ ...variant.defaultArgs })
+          : null,
+        thumbnail: variant.thumbnail ?? null,
+      })
+    )
+  );
+}
+
 /**
  * Decorator that transforms a Glimmer component into a block component.
  *
@@ -241,6 +260,7 @@ export function block(
     previewArgs = null,
     thumbnail = null,
     paletteHidden = false,
+    paletteVariants = null,
     transparent = false,
     gridEditable = false,
     data: dataDeclaration = null,
@@ -312,6 +332,7 @@ export function block(
 
   // Shallow type-check the optional display-metadata fields.
   validateDisplayMetadata(name, options);
+  validatePaletteVariants(name, paletteVariants ?? undefined);
 
   return (target) => {
     setInternalComponentManager(BlockComponentManager, target);
@@ -342,6 +363,9 @@ export function block(
       namespace: parsed.namespace,
       namespaceType: parsed.type,
       paletteHidden: paletteHidden === true,
+      paletteVariants: paletteVariants
+        ? freezePaletteVariants(paletteVariants)
+        : null,
       parts: parts ? freezeParts(parts) : null,
       previewArgs: previewArgs ? Object.freeze({ ...previewArgs }) : null,
       shortName: parsed.name,

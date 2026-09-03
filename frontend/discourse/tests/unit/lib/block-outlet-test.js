@@ -103,6 +103,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.strictEqual(meta.category, null);
       assert.strictEqual(meta.previewArgs, null);
       assert.strictEqual(meta.thumbnail, null);
+      assert.strictEqual(meta.paletteVariants, null);
     });
 
     test("sets blockMetadata with description", function (assert) {
@@ -179,6 +180,66 @@ module("Unit | Lib | block-outlet", function (hooks) {
           getBlockMetadata(MetadataPreviewFrozenBlock).previewArgs
         )
       );
+    });
+
+    test("stores and freezes palette variants", function (assert) {
+      const thumbnail = () => Promise.resolve(HeadingThumbnail);
+
+      @block("metadata-palette-variants", {
+        args: { mode: { type: "string", enum: ["stack", "grid"] } },
+        paletteVariants: [
+          {
+            id: "stack",
+            displayName: "Stack",
+            description: "Arrange children vertically.",
+            defaultArgs: { mode: "stack" },
+            thumbnail,
+          },
+          {
+            id: "grid",
+            displayName: "Grid",
+            defaultArgs: { mode: "grid" },
+          },
+        ],
+      })
+      class MetadataPaletteVariantsBlock extends Component {}
+
+      const variants = getBlockMetadata(
+        MetadataPaletteVariantsBlock
+      ).paletteVariants;
+      assert.deepEqual(variants, [
+        {
+          id: "stack",
+          displayName: "Stack",
+          description: "Arrange children vertically.",
+          defaultArgs: { mode: "stack" },
+          thumbnail,
+        },
+        {
+          id: "grid",
+          displayName: "Grid",
+          description: null,
+          defaultArgs: { mode: "grid" },
+          thumbnail: null,
+        },
+      ]);
+      assert.true(Object.isFrozen(variants));
+      assert.true(Object.isFrozen(variants[0]));
+      assert.true(Object.isFrozen(variants[0].defaultArgs));
+    });
+
+    test("rejects duplicate palette variant ids", function (assert) {
+      assert.throws(() => {
+        @block("metadata-duplicate-palette-variants", {
+          paletteVariants: [
+            { id: "stack", displayName: "Stack" },
+            { id: "stack", displayName: "Another stack" },
+          ],
+        })
+        class DuplicatePaletteVariantsBlock extends Component {}
+
+        return DuplicatePaletteVariantsBlock;
+      }, /paletteVariants.*duplicate id "stack"/);
     });
 
     test("throws for empty displayName", function (assert) {
