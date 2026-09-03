@@ -158,6 +158,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_496,
         ip_address: "192.0.2.1",
         user_agent: chrome,
+        language: "en-US",
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "search.example/results?q=discourse",
@@ -170,6 +171,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_496,
         ip_address: "192.0.2.1",
         user_agent: chrome,
+        language: "en-US",
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "test.localhost/latest",
@@ -328,6 +330,15 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("browser")
+
+    traffic.select_tab(card: "visitors", tab: "Languages")
+    expect(traffic).to have_row(card: "visitors", label: "American English", count: "2")
+    traffic.filter_row(card: "visitors", label: "American English")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "American English")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=en-US&range=custom&start_date=2026-05-01",
+    )
+    traffic.remove_filter("language")
 
     traffic.select_tab(card: "visitors", tab: "Languages")
     traffic.filter_row(card: "visitors", label: "Unknown")
