@@ -11353,7 +11353,7 @@ snapshots:
   '@warp-drive/build-config@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)':
     dependencies:
       '@embroider/addon-shim': 1.10.3
-      '@embroider/macros': 1.20.4(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/macros': 1.20.6(@babel/core@7.29.7)(@glint/template@1.7.8)
       babel-import-util: 2.1.1
       babel-plugin-debug-macros: 2.0.0(@babel/core@7.29.7)
       semver: 7.8.5
@@ -11364,7 +11364,7 @@ snapshots:
 
   '@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)':
     dependencies:
-      '@embroider/macros': 1.20.4(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/macros': 1.20.6(@babel/core@7.29.7)(@glint/template@1.7.8)
       '@warp-drive/build-config': 5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)
     transitivePeerDependencies:
       - '@babel/core'
@@ -11374,7 +11374,7 @@ snapshots:
   '@warp-drive/ember@5.9.0-alpha.15(@babel/core@7.29.7)(@ember/test-waiters@4.1.1(@babel/core@7.29.7)(@glint/template@1.7.8))(@glint/template@1.7.8)':
     dependencies:
       '@ember/test-waiters': 4.1.1(@babel/core@7.29.7)(@glint/template@1.7.8)
-      '@embroider/macros': 1.20.4(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/macros': 1.20.6(@babel/core@7.29.7)(@glint/template@1.7.8)
       '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)
     transitivePeerDependencies:
       - '@babel/core'
@@ -11383,7 +11383,7 @@ snapshots:
 
   '@warp-drive/json-api@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8))':
     dependencies:
-      '@embroider/macros': 1.20.4(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/macros': 1.20.6(@babel/core@7.29.7)(@glint/template@1.7.8)
       '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)
       fuse.js: 7.1.0
       json-to-ast: 2.1.0
@@ -11394,7 +11394,7 @@ snapshots:
 
   '@warp-drive/legacy@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8))(@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)))':
     dependencies:
-      '@embroider/macros': 1.20.4(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/macros': 1.20.6(@babel/core@7.29.7)(@glint/template@1.7.8)
       '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)
       '@warp-drive/utilities': 5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8))
     transitivePeerDependencies:
@@ -11404,7 +11404,7 @@ snapshots:
 
   '@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8))':
     dependencies:
-      '@embroider/macros': 1.20.4(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/macros': 1.20.6(@babel/core@7.29.7)(@glint/template@1.7.8)
       '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7)(@glint/template@1.7.8)
     transitivePeerDependencies:
       - '@babel/core'
