@@ -51,15 +51,17 @@ module Plugin
       end
     end
 
+    def self.logical_path(file_name)
+      "js/plugins/#{file_name.delete_suffix(".js")}"
+    end
+
     def self.digested_logical_path_for(plugin_directory_name, entrypoint_name)
       manifest_entry = read_manifest(plugin_directory_name)[entrypoint_name]
-      "js/plugins/#{manifest_entry["fileName"].delete_suffix(".js")}" if manifest_entry
+      logical_path(manifest_entry["fileName"]) if manifest_entry
     end
 
     def self.import_paths_for(plugin_directory_name, entrypoint_name)
-      read_manifest(plugin_directory_name)[entrypoint_name]["imports"].map do
-        "js/plugins/#{it.delete_suffix(".js")}"
-      end
+      read_manifest(plugin_directory_name)[entrypoint_name]["imports"].map { logical_path(it) }
     end
 
     def self.external_plugin_imports(plugin_directory_name, entrypoint_name)
@@ -74,7 +76,7 @@ module Plugin
 
       bundle = bundles.to_a.find { |c| path.match?(url_glob_pattern(c["url"])) }
 
-      "js/plugins/#{bundle["fileName"].delete_suffix(".js")}" if bundle
+      logical_path(bundle["fileName"]) if bundle
     end
 
     # Every url the build emits ends in `/*`, so a bundle covers its own route and everything

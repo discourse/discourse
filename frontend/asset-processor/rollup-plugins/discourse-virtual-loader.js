@@ -72,11 +72,7 @@ export default function discourseVirtualLoader({
         return availableVirtualImports["virtual:entrypoint"](
           entrypointConfig.modules,
           opts,
-          {
-            basePath,
-            context: this,
-            entrypointName,
-          }
+          entrypointName
         );
       } else if (fromBase.startsWith("virtual:route:")) {
         // Entrypoints are built from separate module lists but share one bundle-name

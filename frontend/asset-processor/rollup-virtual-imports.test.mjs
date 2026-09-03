@@ -4,14 +4,14 @@ import rollupVirtualImports, {
   routeNamesFor,
 } from "./rollup-virtual-imports";
 
-function entrypoint(moduleFilenames, opts = {}, extra) {
+function entrypoint(moduleFilenames, opts = {}, entrypointName = "main") {
   return rollupVirtualImports["virtual:entrypoint"](
     moduleFilenames,
     {
       pluginName: "chat",
       ...opts,
     },
-    { entrypointName: "main", ...extra }
+    entrypointName
   );
 }
 
@@ -200,7 +200,7 @@ describe("virtual:entrypoint", () => {
       const output = entrypoint(
         TEST_MODULES,
         { frontendConfig: { staticModules: true, exports: {} } },
-        { entrypointName: "test" }
+        "test"
       );
 
       for (const filename of TEST_MODULES) {
@@ -216,7 +216,7 @@ describe("virtual:entrypoint", () => {
       const output = entrypoint(
         TEST_MODULES,
         { frontendConfig: { staticModules: true, exports: {} } },
-        { entrypointName: "main" }
+        "main"
       );
 
       expect(output).not.toContain('from "./components/chat-channel-test"');
@@ -281,12 +281,12 @@ describe("virtual:entrypoint", () => {
       const main = entrypoint(
         ["discourse/routes/chat.js"],
         { frontendConfig, routeTables: shared },
-        { entrypointName: "main" }
+        "main"
       );
       const admin = entrypoint(
         ["discourse/routes/admin.js"],
         { frontendConfig, routeTables: shared },
-        { entrypointName: "admin" }
+        "admin"
       );
 
       expect(main).toContain(
@@ -399,13 +399,17 @@ describe("routeNamesFor", () => {
     const bundleByRoute = { chat: "default", "admin.hooks": "default" };
 
     expect([
-      ...routeNamesFor(["discourse/routes/chat.js"], bundleByRoute),
+      ...routeNamesFor(["discourse/routes/chat.js"], {}, bundleByRoute),
     ]).toEqual(["chat"]);
     expect([
-      ...routeNamesFor(["discourse/templates/admin/hooks.hbs"], bundleByRoute),
+      ...routeNamesFor(
+        ["discourse/templates/admin/hooks.hbs"],
+        {},
+        bundleByRoute
+      ),
     ]).toEqual(["admin.hooks"]);
     expect([
-      ...routeNamesFor(["discourse/services/chat.js"], bundleByRoute),
+      ...routeNamesFor(["discourse/services/chat.js"], {}, bundleByRoute),
     ]).toEqual([]);
   });
 });

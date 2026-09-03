@@ -1,6 +1,5 @@
-// Route maps are parsed, never run: plugin and theme code is not trusted enough to evaluate
-// here. `mapping-router.js` is the reference for what a map means, and these rules can drift
-// from it.
+// Route maps are parsed, never run: plugin and theme code is not trusted enough to evaluate here.
+// `mapping-router.js` is the reference for what a map means, and these rules can drift from it.
 
 // `BareRouter#lazyRoute` dasherizes before matching, so derived names have to agree.
 function dasherize(value) {
@@ -16,11 +15,9 @@ function positionOf(source, offset) {
   return { line, column: offset - (upTo.lastIndexOf("\n") + 1) + 1 };
 }
 
-class RouteMapError extends Error {}
-
 function fail(context, node, message) {
   const { line, column } = positionOf(context.source, node.start);
-  throw new RouteMapError(
+  throw new Error(
     `[${context.label}] ${context.filename}:${line}:${column} — ${message}`
   );
 }
@@ -86,7 +83,7 @@ function readRouteCall(context, node) {
     }
   }
 
-  return { name: nameNode.value, options, children, node };
+  return { name: nameNode.value, options, children };
 }
 
 function readBody(context, block) {
@@ -205,11 +202,9 @@ function addRoutes(parent, routes, core, bundleName = null) {
         name: route.name,
         options,
         core,
-        children: [],
         byName: new Map(),
       };
       parent.byName.set(route.name, node);
-      parent.children.push(node);
     }
 
     // Only the map's own top level is seeded, because everything below it inherits.
@@ -234,7 +229,7 @@ function findPath(root, resource) {
 }
 
 export function buildRouteTree(maps) {
-  const root = { name: "root", options: {}, children: [], byName: new Map() };
+  const root = { name: "root", options: {}, byName: new Map() };
   const unmounted = [];
 
   for (const map of maps.filter((candidate) => !candidate.resource)) {
@@ -258,7 +253,7 @@ function joinUrl(parent, path) {
   return [...parent.split("/"), ...path.split("/")].filter(Boolean).join("/");
 }
 
-// `url_glob_matches?` reads `*` as one segment and `**` as one or more.
+// `Plugin::JsManager.url_glob_pattern` reads `*` as one segment and `**` as one or more.
 function globFor(url) {
   return url
     .split("/")
@@ -298,11 +293,11 @@ export function deriveRoutes(root) {
         bundleName,
       });
 
-      walk(node.children, { name, url, bundleName });
+      walk(node.byName.values(), { name, url, bundleName });
     }
   }
 
-  walk(root.children, { name: "", url: "", bundleName: null });
+  walk(root.byName.values(), { name: "", url: "", bundleName: null });
 
   return derived;
 }
@@ -325,9 +320,20 @@ function urlsFor(globs) {
   );
 }
 
-// Urls come out most specific first, so the first match wins whatever order routes were declared.
-export function routeTablesFor(derived) {
+export function bundleByRouteFor(derived) {
   const bundleByRoute = {};
+
+  for (const route of derived) {
+    if (route.bundleName) {
+      bundleByRoute[route.name] = route.bundleName;
+    }
+  }
+
+  return bundleByRoute;
+}
+
+// Urls come out most specific first, so the first match wins whatever order routes were declared.
+export function urlTableFor(derived) {
   const globsByBundle = new Map();
 
   for (const route of derived) {
@@ -335,14 +341,12 @@ export function routeTablesFor(derived) {
       continue;
     }
 
-    bundleByRoute[route.name] = route.bundleName;
-
     const globs = globsByBundle.get(route.bundleName) ?? [];
     globs.push(globFor(route.url));
     globsByBundle.set(route.bundleName, globs);
   }
 
-  const urls = [...globsByBundle]
+  return [...globsByBundle]
     .flatMap(([bundleName, globs]) =>
       urlsFor(globs).map((glob) => ({ bundleName, url: `${glob}/*` }))
     )
@@ -351,6 +355,4 @@ export function routeTablesFor(derived) {
         literalSegments(b.url) - literalSegments(a.url) ||
         segmentCount(b.url) - segmentCount(a.url)
     );
-
-  return { bundleByRoute, urls };
 }

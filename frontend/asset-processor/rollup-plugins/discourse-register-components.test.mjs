@@ -64,8 +64,7 @@ describe("discourse-register-components", () => {
   });
 
   it("registers a component wherever the plugin nests it", () => {
-    // The resolver finds `components/<name>` as a path suffix at any depth, so a plugin is free
-    // to keep them at the root or below an `app/` directory.
+    // The resolver finds `components/<name>` as a path suffix at any depth.
     expect(
       transform(`export default class A {}`, "components/survey.gjs")
     ).toContain(`"survey"`);
@@ -87,8 +86,7 @@ describe("discourse-register-components", () => {
   });
 
   it("leaves classic component templates alone", () => {
-    // The resolver's suffix trie skips anything under `templates/`, and these compile to a
-    // template factory rather than a component class.
+    // The resolver's suffix trie skips anything under `templates/`.
     expect(
       transform(
         `export default class A {}`,

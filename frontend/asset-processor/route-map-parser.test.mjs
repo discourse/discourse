@@ -2,9 +2,10 @@ import { parseAst as parse } from "rolldown/parseAst";
 import { describe, expect, it } from "vitest";
 import {
   buildRouteTree,
+  bundleByRouteFor,
   deriveRoutes,
   parseRouteMap,
-  routeTablesFor,
+  urlTableFor,
 } from "./route-map-parser";
 
 function read(source, opts = {}) {
@@ -23,7 +24,12 @@ function tablesFor(sources) {
       ? read(source)
       : { core: source.core, ...read(source.source, source) }
   );
-  return routeTablesFor(deriveRoutes(buildRouteTree(maps).root));
+  const derived = deriveRoutes(buildRouteTree(maps).root);
+
+  return {
+    bundleByRoute: bundleByRouteFor(derived),
+    urls: urlTableFor(derived),
+  };
 }
 
 describe("parseRouteMap", () => {

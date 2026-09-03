@@ -24,7 +24,7 @@ import discourseRouteMaps from "./rollup-plugins/discourse-route-maps";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import { labelFor, routeNamesFor } from "./rollup-virtual-imports";
-import { routeTablesFor } from "./route-map-parser";
+import { urlTableFor } from "./route-map-parser";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 import transformActionSyntax from "./transform-action-syntax";
 import createVirtualFs from "./virtual-fs";
@@ -194,9 +194,10 @@ async function performRollup(modules, opts) {
     // this entrypoint's own routes rather than from every route the plugin declares.
     const owned = routeNamesFor(
       opts.entrypoints[entryName].modules,
+      opts,
       routeTables.bundleByRoute
     );
-    const { urls } = routeTablesFor(
+    const urls = urlTableFor(
       routeTables.derived.filter((route) => owned.has(route.name))
     );
 

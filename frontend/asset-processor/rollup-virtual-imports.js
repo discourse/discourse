@@ -9,9 +9,7 @@ const SUPPORTED_FILE_EXTENSIONS = [
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
-// Looked up by name at runtime, so these have to stay registered with `define()`. The runtime
-// finds them at any depth — the resolver matches a path suffix, `OUTLET_REGEX` and the markdown
-// feature scan match anywhere — so plugins nest them however they like and this matches to suit.
+// Scanned by name at runtime, at any depth, so these have to stay registered with `define()`.
 const EAGER_DIRECTORIES = [
   "connectors",
   "services",
@@ -172,12 +170,12 @@ export function routeBundlesFor(records, bundleByRoute) {
 }
 
 // The route names a module list contributes, so a caller can tell which entrypoint owns a route.
-export function routeNamesFor(moduleFilenames, bundleByRoute) {
-  const names = moduleFilenames
-    .map((moduleFilename) => routeNameFor(stripExtension(moduleFilename)))
-    .filter((name) => name && bundleNameFor(name, bundleByRoute));
+export function routeNamesFor(moduleFilenames, opts, bundleByRoute) {
+  const { records } = normalizeModules(moduleFilenames, labelFor(opts));
 
-  return new Set(names);
+  return new Set(
+    routeBundlesFor(records, bundleByRoute).flatMap((bundle) => bundle.names)
+  );
 }
 
 export function labelFor({ pluginName, themeId }) {
@@ -208,9 +206,8 @@ function renderMap(name, records, identifiers) {
 }
 
 export default {
-  "virtual:entrypoint": (moduleFilenames, opts, extra) => {
+  "virtual:entrypoint": (moduleFilenames, opts, entrypointName) => {
     const { frontendConfig } = opts;
-    const entrypointName = extra?.entrypointName;
 
     const { records, warnings } = normalizeModules(
       moduleFilenames,
@@ -241,10 +238,10 @@ export default {
       const path = stripExtension(internalName);
 
       for (const candidate of [path, `${path}/index`]) {
-        publicNamesByPath.set(candidate, [
-          ...(publicNamesByPath.get(candidate) ?? []),
-          publicName,
-        ]);
+        if (!publicNamesByPath.has(candidate)) {
+          publicNamesByPath.set(candidate, []);
+        }
+        publicNamesByPath.get(candidate).push(publicName);
       }
     }
 
@@ -253,18 +250,17 @@ export default {
     const eager = records.filter((record) =>
       isEagerModule(record.compatModuleName)
     );
-    const shared = records.filter((record) =>
-      publicNamesByPath.has(stripExtension(record.importPath))
-    );
 
     // One module can be exported under several names.
-    const exported = shared.flatMap((record) =>
-      publicNamesByPath
-        .get(stripExtension(record.importPath))
-        .map((publicName) => ({ publicName, record }))
+    const exported = records.flatMap((record) =>
+      (publicNamesByPath.get(stripExtension(record.importPath)) ?? []).map(
+        (publicName) => ({ publicName, record })
+      )
     );
 
-    const imported = [...new Set([...eager, ...shared])];
+    const imported = [
+      ...new Set([...eager, ...exported.map(({ record }) => record)]),
+    ];
     const { lines, identifiers } = renderImports(imported);
 
     return [
@@ -297,7 +293,6 @@ export default {
       opts.routeTables?.bundleByRoute
     ).find((candidate) => candidate.bundleName === bundleName);
 
-    // Null rather than throwing, so the loader can name the entrypoint in the error.
     if (!bundle) {
       return null;
     }
