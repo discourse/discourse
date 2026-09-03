@@ -342,6 +342,13 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  def self.preload_author_penalties(reviewables)
+    histories = reviewables.flat_map(&:author_penalties).filter_map(&:history)
+    return if histories.empty?
+
+    ActiveRecord::Associations::Preloader.new(records: histories, associations: :acting_user).call
+  end
+
   def author_penalties
     @author_penalties ||= AuthorPenalty.all_for(target_created_by, target_post:, reviewable_id: id)
   end
