@@ -936,6 +936,12 @@ RSpec.describe Upload do
       upload.update!(url: Discourse.store.store_upload(file, upload))
       upload
     end
+    let(:ico_image) do
+      upload = Fabricate(:upload, extension: "ico")
+      file = file_from_fixtures("smallest.ico")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
+      upload
+    end
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -987,6 +993,36 @@ RSpec.describe Upload do
       expect(cached_tiny_color).to eq(calculated_tiny_color)
     end
 
+    it "uses libvips to calculate the dominant color when enabled" do
+      global_setting :enable_vips_image_processing, true
+
+      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("565342")
+    end
+
+    it "normalizes a 16-bit dominant color when libvips is enabled" do
+      global_setting :enable_vips_image_processing, true
+
+      color = high_color_image.dominant_color(calculate_if_missing: true)
+
+      expect(color).to eq("00A0F0")
+      expect(high_color_image.dominant_color).to eq(color)
+    end
+
+    it "stores an empty dominant color for ICO images" do
+      global_setting :enable_vips_image_processing, true
+
+      expect(ico_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(ico_image.dominant_color).to eq("")
+    end
+
+    it "retries the dominant color after image processing fails" do
+      global_setting :enable_vips_image_processing, true
+      DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error).then.returns("FFFFFF")
+
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
+    end
+
     it "can be backfilled" do
       expect(white_image.dominant_color).to eq(nil)
       expect(red_image.dominant_color).to eq(nil)
@@ -1033,16 +1069,22 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
-    it "correctly handles unparsable ImageMagick output" do
+    it "raises when ImageMagick returns an invalid dominant color" do
       ImageMagick.stubs(:magick).returns("someinvalidoutput")
 
       expect(invalid_image.dominant_color).to eq(nil)
-
       expect { invalid_image.dominant_color(calculate_if_missing: true) }.to raise_error(
         /Calculated dominant color but unable to parse output/,
       )
-
       expect(invalid_image.dominant_color).to eq(nil)
+    end
+
+    it "stores an empty string for an invalid dominant color response" do
+      global_setting :enable_vips_image_processing, true
+      DiscourseVips.stubs(:dominant_color).returns("invalid")
+
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color).to eq("")
     end
 
     it "correctly handles error when file is too large to download" do
