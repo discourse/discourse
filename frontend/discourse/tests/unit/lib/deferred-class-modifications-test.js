@@ -5,13 +5,14 @@ import {
   deferClassModification,
   lazyClassFor,
   registerModuleForModifyClass,
+  resetDeferredClassModifications,
 } from "discourse/lib/deferred-class-modifications";
 
 module("Unit | Lib | deferred-class-modifications", function (hooks) {
   setupTest(hooks);
 
   hooks.afterEach(function () {
-    applyDeferredClassModifications();
+    resetDeferredClassModifications();
   });
 
   test("keys a component by the name the resolver asks for", function (assert) {
@@ -34,6 +35,16 @@ module("Unit | Lib | deferred-class-modifications", function (hooks) {
 
     registerModuleForModifyClass("chat-header", Header);
     assert.strictEqual(applied, 1);
+  });
+
+  test("drops a modification whose module never arrives", function (assert) {
+    let applied = 0;
+    deferClassModification("component:never-loaded", () => applied++);
+
+    resetDeferredClassModifications();
+    applyDeferredClassModifications();
+
+    assert.strictEqual(applied, 0);
   });
 
   test("leaves modifications for other names alone", function (assert) {

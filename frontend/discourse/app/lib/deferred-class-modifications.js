@@ -25,6 +25,10 @@ export function registerModuleForModifyClass(path, klass) {
   applyPending(resolverName);
 }
 
+export function resetDeferredClassModifications() {
+  pendingModifications.clear();
+}
+
 // Route modules arrive as a batch through `Resolver#addModules` rather than one at a time.
 export function applyDeferredClassModifications() {
   for (const resolverName of [...pendingModifications.keys()]) {
