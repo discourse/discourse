@@ -439,17 +439,17 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
       rete-area-plugin:
-        specifier: ^2.1.5
-        version: 2.1.5(rete@2.0.6)
+        specifier: ^2.3.2
+        version: 2.3.2(rete@2.0.6)
       rete-connection-plugin:
         specifier: ^2.0.5
-        version: 2.0.5(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6)
+        version: 2.0.5(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6)
       rete-history-plugin:
         specifier: ^2.1.1
-        version: 2.1.1(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6)
+        version: 2.1.1(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6)
       rete-render-utils:
         specifier: ^2.0.3
-        version: 2.0.3(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6)
+        version: 2.0.3(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6)
       rrule:
         specifier: ^2.8.1
         version: 2.8.1
@@ -7276,8 +7276,8 @@ packages:
     resolution: {integrity: sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA==}
     engines: {node: '>=8'}
 
-  rete-area-plugin@2.1.5:
-    resolution: {integrity: sha512-iquEvwkQlcsO4cmgM3Z37TG0AWaE536dfA+lCJAze5YJzVx4RBaViUCqdB4dUA/utSytpBCkiDC4D3ztM9akGQ==}
+  rete-area-plugin@2.3.2:
+    resolution: {integrity: sha512-s7OrCz6xNwVl8EaJ7tXnJVQD9nbd+JAnf82qx/UDweRV86Q1qj2+nT8XkD5m1gSnvSZQqTlMptSiWUrouTEO+w==}
     peerDependencies:
       rete: ^2.0.0
 
@@ -16136,28 +16136,28 @@ snapshots:
       onetime: 5.1.2
       signal-exit: 3.0.7
 
-  rete-area-plugin@2.1.5(rete@2.0.6):
+  rete-area-plugin@2.3.2(rete@2.0.6):
     dependencies:
       '@babel/runtime': 7.29.7
       rete: 2.0.6
 
-  rete-connection-plugin@2.0.5(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6):
+  rete-connection-plugin@2.0.5(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6):
     dependencies:
       '@babel/runtime': 7.29.7
       rete: 2.0.6
-      rete-area-plugin: 2.1.5(rete@2.0.6)
+      rete-area-plugin: 2.3.2(rete@2.0.6)
 
-  rete-history-plugin@2.1.1(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6):
+  rete-history-plugin@2.1.1(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6):
     dependencies:
       '@babel/runtime': 7.29.7
       rete: 2.0.6
-      rete-area-plugin: 2.1.5(rete@2.0.6)
+      rete-area-plugin: 2.3.2(rete@2.0.6)
 
-  rete-render-utils@2.0.3(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6):
+  rete-render-utils@2.0.3(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6):
     dependencies:
       '@babel/runtime': 7.29.7
       rete: 2.0.6
-      rete-area-plugin: 2.1.5(rete@2.0.6)
+      rete-area-plugin: 2.3.2(rete@2.0.6)
 
   rete@2.0.6:
     dependencies:
