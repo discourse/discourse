@@ -19,6 +19,7 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import { MAX_HOSTS } from "../../lib/constants";
 import { recurrenceContext } from "../../lib/event-recurrence";
 import {
   attendanceTransition,
@@ -30,7 +31,6 @@ import {
   getCustomFieldNames,
   isLivestreamUrl,
   livestreamSource,
-  MAX_HOSTS,
   reconcileDefaultReminder,
 } from "../../lib/raw-event-helper";
 import CompactEventEditor from "../compact-event-editor";

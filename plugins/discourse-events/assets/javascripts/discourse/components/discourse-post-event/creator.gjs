@@ -32,11 +32,7 @@ export default class DiscoursePostEventCreator extends Component {
   }
 
   get organizerGroupName() {
-    return (
-      this.args.organizerGroup?.full_name ||
-      this.args.organizerGroup?.fullName ||
-      this.args.organizerGroup?.name
-    );
+    return this.args.organizerGroup?.displayName;
   }
 
   get organizerGroupPath() {

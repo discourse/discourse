@@ -3,6 +3,14 @@
 require "open-uri"
 
 task "javascript:update_constants" => :environment do
+  write_template(
+    "../plugins/discourse-events/assets/javascripts/discourse/lib/constants.js",
+    "update_constants",
+    <<~JS,
+    export const MAX_HOSTS = #{DiscourseEvents::Events::Event::MAX_HOSTS};
+  JS
+  )
+
   timezone_definitions =
     "https://raw.githubusercontent.com/moment/moment-timezone/develop/data/meta/latest.json"
 

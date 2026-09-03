@@ -1,8 +1,5 @@
 import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 
-// Keep in sync with `Event::MAX_HOSTS`, which enforces the same cap on save.
-export const MAX_HOSTS = 10;
-
 let lastSetting;
 let lastHosts;
 
