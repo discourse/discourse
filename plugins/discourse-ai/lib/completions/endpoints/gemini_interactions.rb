@@ -138,6 +138,8 @@ module DiscourseAi
         end
 
         def supports_interactions_minimal_thinking?
+          return false if gemini_model_id.include?("gemini-3.8-flash")
+
           gemini_model_id.match?(/gemini-3(?:\.\d+)?-flash(?:\s|\z|-)/) ||
             gemini_model_id.include?("gemini-3.1-flash-lite")
         end

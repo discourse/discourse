@@ -170,6 +170,27 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     )
   end
 
+  it "maps Gemini 3.8 minimal thinking effort to low" do
+    model.update!(name: "gemini-3.8-flash")
+    request_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_body = JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    expect(llm.generate("Think", user:, thinking_effort: "minimal")).to eq("Done")
+    expect(request_body.dig(:generation_config, :thinking_level)).to eq("low")
+  end
+
   it "omits the unsupported disabled thinking override for Gemini 2.5" do
     request_body = nil
     stub_request(:post, url).with(
