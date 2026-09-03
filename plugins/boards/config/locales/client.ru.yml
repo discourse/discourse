@@ -1,0 +1,46 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    boards:
+      board:
+        remove_card: "Отозвать"
+        new_topic: "Новая тема..."
+        title: "Название"
+        tags: "Теги"
+        assigned_to: "Назначен ответственный"
+        view_topic: "Просмотреть тему"
+        topic_reply_count:
+          one: "%{count} ответ"
+          few: "%{count} ответа"
+          many: "%{count} ответов"
+          other: "%{count} ответ"
+        assign: "Назначить"
+        reassign: "Переназначить"
+        unassign: "Снять ответственного"
+        unassign_from_topic: "Снять ответственного @%{username} с темы"
+        unassign_from_post: "Снять ответственного @%{username} с публикации #%{post_number}"
+        edit_assignments: "Изменить назначения..."
+        created_by: "Создано"
+      manage:
+        name: "Название"
+        slug: "Slug (текстовый идентификатор)"
+        constraint_categories: "Категории"
+        constraint_tags: "Теги"
+        advanced_settings: "Расширенные настройки"
+        columns:
+          remove: "Отозвать"
+          column_title: "Название"
+          icon: "Значок"
+          color: "Цвет"
+          default_sort_priority: "Приоритет"
+          tag: "Теги"
+          move_to_assigned_unassign: "Снять ответственного"
+          move_to_status_open: "Открытые"
+          move_to_status_closed: "Закрытое"
+          show_advanced: "Показать расширенные параметры"
+          hide_advanced: "Скрыть расширенные параметры"

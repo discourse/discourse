@@ -2,6 +2,18 @@ span.chcklst-stroked {
   text-decoration: line-through;
 }
 
+@keyframes checklist-pending-pulse {
+  from {
+    background-color: var(--primary-low);
+    box-shadow: 0 0 0 0.09em var(--primary-low);
+  }
+
+  to {
+    background-color: var(--primary-very-low);
+    box-shadow: 0 0 0 0.09em var(--primary-very-low);
+  }
+}
+
 @mixin checklist-svg-icon($svg) {
   &::before {
     background-color: var(--primary);
@@ -17,6 +29,7 @@ span.chcklst-stroked {
 }
 
 span.chcklst-box {
+  border-radius: 0.16em;
   display: inline-flex;
   position: relative;
   vertical-align: -0.125em;
@@ -25,24 +38,8 @@ span.chcklst-box {
     cursor: pointer;
     touch-action: manipulation;
 
-    .checklist-spinner {
-      animation: rotate-forever 2s infinite linear;
-      color: var(--primary);
-      display: none;
-      height: 1em;
-      inset: 0;
-      position: absolute;
-      width: 1em;
-    }
-
-    &.is-saving {
-      &::before {
-        visibility: hidden;
-      }
-
-      .checklist-spinner {
-        display: inline-block;
-      }
+    &.is-pending {
+      animation: checklist-pending-pulse 950ms ease-in-out infinite alternate;
     }
 
     &:focus-visible {
@@ -82,9 +79,18 @@ span.chcklst-box {
   }
 }
 
+@media (forced-colors: active) {
+  span.chcklst-box.is-interactive.is-pending {
+    outline: 0.09em solid CanvasText;
+    outline-offset: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  span.chcklst-box.is-interactive .checklist-spinner {
+  span.chcklst-box.is-interactive.is-pending {
     animation: none;
+    background-color: var(--primary-low);
+    box-shadow: 0 0 0 0.09em var(--primary-low);
   }
 }
 

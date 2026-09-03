@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    cakeday_enabled: "在使用者加入 Discourse 的日期，於使用者名稱旁顯示蛋糕日表情符號 [s]。"
+    cakeday_emoji: "在使用者加入 Discourse 的日期，顯示於使用者名稱旁的表情符號 [s]。可使用 smile|cake|smile 指定多個表情符號"
+    cakeday_birthday_enabled: "在使用者生日當天，於使用者名稱旁顯示生日表情符號 [s]。"
+    cakeday_birthday_emoji: "在使用者生日當天，顯示於使用者名稱旁的表情符號 [s]。可使用 smile|cake|smile 指定多個表情符號"

@@ -87,6 +87,11 @@ pt_BR:
           solved: "foram solucionados"
           unsolved: "não foram solucionados"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tópico"
+            category: "Categoria"
       web_hooks:
         solved_event:
           group_name: "Evento solucionado"

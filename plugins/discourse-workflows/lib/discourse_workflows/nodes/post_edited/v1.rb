@@ -14,7 +14,7 @@ module DiscourseWorkflows
             color: "violet",
           },
           group: "discourse_triggers",
-          events: [:post_edited],
+          event: :post_edited,
           output_contracts: [
             {
               schema:

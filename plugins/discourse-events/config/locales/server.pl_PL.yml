@@ -24,8 +24,8 @@ pl_PL:
       event_started:
         title: Wydarzenie rozpoczęte
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Podany przez Ciebie region świąt nie istnieje."
-    discourse_calendar_enable_holiday_failed: "Nie można włączyć tego święta, jest ono już włączone lub nie jest wyłączone."
+    discourse_events_holiday_region_invalid: "Podany przez Ciebie region świąt nie istnieje."
+    discourse_events_enable_holiday_failed: "Nie można włączyć tego święta, jest ono już włączone lub nie jest wyłączone."
     discourse_post_event_bulk_invite_succeeded:
       title: "Zdarzenie — zaproszenie zbiorcze powiodło się"
       subject_template: "Zaproszenie zbiorcze zostało pomyślnie przetworzone"
@@ -82,7 +82,7 @@ pl_PL:
     livestream_zoom_sdk_secret: "Tajny klucz klienta Zoom Meeting SDK."
     livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
     livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "Domyślny widok kalendarza"

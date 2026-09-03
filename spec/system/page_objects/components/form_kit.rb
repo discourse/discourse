@@ -48,7 +48,7 @@ module PageObjects
         when "menu"
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
-          PageObjects::Components::DSelect.new(component.find("select")).value
+          PageObjects::Components::DNativeSelect.new(component.find("select")).value
         when "radio-group"
           component.find("input[type='radio']:checked", visible: :all).value
         when "composer", "textarea"
@@ -170,9 +170,9 @@ module PageObjects
           picker.select_row_by_name(value)
           picker.collapse
         when "select"
-          PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
-            value,
-          )
+          PageObjects::Components::DNativeSelect.new(
+            component.find(".form-kit__control-select"),
+          ).select(value)
         when "menu"
           trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu-trigger")
           trigger.click
@@ -190,12 +190,12 @@ module PageObjects
       end
 
       def select_none
-        select(PageObjects::Components::DSelect::NO_VALUE_OPTION)
+        select(PageObjects::Components::DNativeSelect::NO_VALUE_OPTION)
       end
 
       def has_no_value?
         if control_type == "select"
-          PageObjects::Components::DSelect.new(
+          PageObjects::Components::DNativeSelect.new(
             component.find(".form-kit__control-select"),
           ).has_no_value?
         else
@@ -296,6 +296,10 @@ module PageObjects
 
       def has_no_field_with_name?(name)
         has_no_css?(".form-kit__field[data-name='#{name}']")
+      end
+
+      def has_no_enabled_field_with_name?(name)
+        has_no_css?(".form-kit__field[data-name='#{name}']:not([data-disabled])")
       end
 
       def container(name)

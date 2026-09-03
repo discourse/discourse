@@ -1,0 +1,908 @@
+// One step above the fixed site header so a widget dragged to the top edge
+// stays visible and grabbable, while everything that already outranked the
+// header (mobile composer, fullscreen layers, modals) keeps outranking the
+// widget. Menus opened from the widget sit one step higher still.
+$voice-widget-z: z("header") + 1;
+
+.voice-call-widget {
+  position: fixed;
+  inset-inline-end: max(1rem, env(safe-area-inset-right));
+  inset-block-end: max(1rem, env(safe-area-inset-bottom));
+  z-index: $voice-widget-z;
+
+  // border-box so the inline width/height set during resize match the
+  // border-box geometry the resize math measures (getBoundingClientRect);
+  // otherwise padding + border push the rendered box past the viewport.
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: min(24rem, calc(100vw - 2rem));
+
+  // Definite (not content-driven) height: the tile grid solves against the
+  // measured tile area, so the area must be settled before the tiles size —
+  // a content-driven box would chase its own layout.
+  height: min(21rem, 60vh);
+  padding: var(--space-3);
+  border: 1px solid var(--primary-low);
+  border-radius: 0.75rem;
+  background: var(--secondary);
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 20%);
+
+  &__header {
+    min-width: 0;
+  }
+
+  &__room {
+    width: 100%;
+    min-width: 0;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+  }
+
+  &__room-name {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // Tiles are uniform, sized by computeWidgetGrid from this box's measured
+  // size; flex wrapping breaks lines exactly at the solved column count and
+  // centers partial rows. `contain: size` keeps a transiently oversized tile
+  // from feeding back into the measurement (see video-grid-layout.js).
+  &__tiles {
+    flex: 1;
+    min-height: 0;
+    contain: size;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    overflow: hidden;
+  }
+
+  .voice-video-tile {
+    flex: 0 0 auto;
+    width: var(--voice-tile-width, 45%);
+    height: var(--voice-tile-height, 5rem);
+    min-height: 0;
+    transition:
+      width 0.2s ease-out,
+      height 0.2s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &__overflow-tile {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    width: var(--voice-tile-width, 45%);
+    height: var(--voice-tile-height, 5rem);
+    overflow: hidden;
+    padding: 0;
+    border: none;
+    border-radius: 0.5em;
+    background: var(--primary-very-low);
+    color: var(--primary-high);
+    cursor: pointer;
+    transition:
+      width 0.2s ease-out,
+      height 0.2s ease-out,
+      background 0.15s ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: var(--primary-low);
+      color: var(--primary);
+    }
+  }
+
+  &__overflow-avatars {
+    display: flex;
+
+    img {
+      width: 1.75rem;
+      height: 1.75rem;
+      border: 2px solid var(--secondary);
+      border-radius: 50%;
+
+      &:not(:first-child) {
+        margin-inline-start: -0.6rem;
+      }
+    }
+  }
+
+  &__overflow-count {
+    font-weight: 700;
+    font-size: var(--font-down-1);
+  }
+
+  .voice-video-tile__fullscreen {
+    display: none;
+  }
+
+  .voice-video-tile__avatar img {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .voice-video-tile__info {
+    font-size: var(--font-down-2);
+  }
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    // Stretch (not center) so every control shares the tallest button's height;
+    // icon-only DMenu triggers render a few px shorter otherwise. See the
+    // matching note on .voice-room-page__controls.
+    align-items: stretch;
+    gap: 0.35rem;
+
+    .--off,
+    .--active {
+      color: var(--tertiary);
+    }
+  }
+
+  &.--resizing {
+    user-select: none;
+  }
+
+  &.--extra-minimized {
+    width: auto;
+    min-width: 0;
+    height: auto;
+    padding: var(--space-2);
+
+    .voice-call-widget__controls {
+      flex-wrap: nowrap;
+    }
+  }
+
+  &.--dragging {
+    user-select: none;
+
+    .voice-call-widget__room {
+      cursor: grabbing;
+    }
+  }
+
+  // Corner hit targets for resizing. Dragging a corner moves that corner while
+  // the diagonal corner stays anchored in place. Corner-specific cursors, not
+  // the double-headed nwse/nesw pair: Firefox on macOS has no glyphs for those
+  // and falls back to the default arrow, hiding the resize affordance.
+  &__resize {
+    position: absolute;
+    z-index: 2;
+    width: 16px;
+    height: 16px;
+    touch-action: none;
+
+    &.--nw {
+      inset-block-start: -5px;
+      inset-inline-start: -5px;
+      cursor: nw-resize;
+    }
+
+    &.--ne {
+      inset-block-start: -5px;
+      inset-inline-end: -5px;
+      cursor: ne-resize;
+    }
+
+    &.--sw {
+      inset-block-end: -5px;
+      inset-inline-start: -5px;
+      cursor: sw-resize;
+    }
+
+    &.--se {
+      inset-block-end: -5px;
+      inset-inline-end: -5px;
+      cursor: se-resize;
+    }
+  }
+}
+
+// On touch devices the widget is a full-width bottom dock: corner resize is
+// hidden (component-side) and the header only drags it vertically, since
+// free positioning and tiny corner handles are awkward with a finger.
+html.discourse-touch .voice-call-widget {
+  inset-inline: 0.5rem;
+  width: auto;
+  height: min(19rem, 45vh);
+
+  &.--extra-minimized {
+    height: auto;
+  }
+}
+
+.voice-room-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  // A definite height (not just a floor) so the flex chain below actually
+  // constrains: without it a transiently oversized video tile stretches the
+  // whole page and pushes the control bar below the fold.
+  height: calc(100dvh - var(--header-offset, 4em) - 6em);
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--primary-high);
+    overflow-wrap: anywhere;
+  }
+
+  // The video column and the chat sidebar sit side by side; the column flexes
+  // and the sidebar takes a fixed width. min-height: 0 lets the grid and the
+  // chat message list scroll instead of pushing the page taller.
+  &__body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  &__sidebar {
+    flex: 0 0 22rem;
+    width: 22rem;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
+
+    // Animating the width (not just fading in place) makes the whole layout
+    // ease — the video column and controls resize smoothly instead of
+    // jumping the moment the panel claims its space.
+    animation: voice-sidebar-in 0.25s ease-out;
+
+    &.--closing {
+      animation: voice-sidebar-out 0.2s ease-in forwards;
+    }
+
+    // The panel keeps its full-width layout and gets revealed/clipped by the
+    // animating box, rather than squishing and rewrapping every frame.
+    .voice-chat {
+      min-width: 22rem;
+    }
+
+    // A (near) zero duration rather than none: leaving the closing state
+    // waits on animationend, which `animation: none` would never fire.
+    @media (prefers-reduced-motion: reduce) {
+      animation-duration: 0.01s;
+    }
+  }
+
+  &__chat-toggle {
+    &.--active {
+      color: var(--tertiary);
+    }
+  }
+
+  // Meet-style column: the video grid fills the space with tiles centered,
+  // and the control bar sits on the bottom row, level with the chat panel's
+  // composer next door.
+  &__stage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.75em;
+  }
+
+  &__presentation {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(9rem, 13rem);
+    gap: var(--space-2);
+  }
+
+  &__presentation-main {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+
+    .voice-video-tile {
+      width: 100%;
+      height: 100%;
+      border-radius: calc(var(--d-border-radius) - 1px);
+    }
+
+    .voice-video-tile.--screen .voice-video-tile__video,
+    .voice-video-tile.--avatar .voice-video-tile__video {
+      object-fit: contain;
+    }
+  }
+
+  &__presentation-rail {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-auto-rows: minmax(5rem, 8rem);
+    gap: var(--space-2);
+    align-content: start;
+    overflow: auto;
+    padding-inline-end: 1px;
+
+    .voice-video-tile {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__grid {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+
+    // The tile height is computed from this element's measured size, so its
+    // own size must never derive from the tiles: after exiting fullscreen the
+    // still-huge tiles would inflate the grid (the page only has a
+    // min-height), the remeasure would see that inflated box, and the layout
+    // would lock there instead of shrinking back.
+    contain: size;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+
+    // While the sidebar animates, tiles rewrap faster than their height
+    // recomputes — clip the transient overflow so it can't spill over the
+    // control bar below.
+    overflow: hidden;
+
+    &:fullscreen {
+      background: #000;
+      padding: 0.5em;
+    }
+  }
+
+  // Top-left so it never collides with the per-tile fullscreen buttons
+  // (top-right). Visible in fullscreen too, since it lives inside the grid.
+  &__fullscreen {
+    position: absolute;
+    inset-block-start: 0.35em;
+    inset-inline-start: 0.35em;
+    z-index: 1;
+    color: #fff;
+    background: rgb(0 0 0 / 45%);
+
+    .d-icon {
+      color: #fff;
+    }
+
+    html.discourse-no-touch & {
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+  }
+
+  html.discourse-no-touch &__grid:hover &__fullscreen,
+  &__fullscreen:focus-visible {
+    opacity: 1;
+  }
+
+  &__empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-medium);
+  }
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    // Stretch (not center) so every control shares the tallest button's height.
+    // Icon-only DMenu triggers (e.g. the overflow menu) render a few px shorter
+    // than their DButton/plain-<button> siblings; stretching equalizes them the
+    // same way the combo wrapper stretches its caret.
+    align-items: stretch;
+    gap: 0.5em;
+
+    .--off,
+    .--active {
+      color: var(--tertiary);
+    }
+  }
+}
+
+// Split "combo" button (mic/camera) shared by VoiceCallControls in both the
+// room page and the widget: the main toggle and its caret read as one button.
+// The main button drops its trailing border so the caret's leading border is
+// the only divider between them.
+.voice-call-controls__combo {
+  display: inline-flex;
+  align-items: stretch;
+
+  .voice-call-controls__combo-main {
+    position: relative;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-inline-end: none !important; // ensure core hover/active/focus rules don't restore the border
+  }
+
+  // Same look as the sidebar room lock: a tiny unobtrusive glyph tucked
+  // into the button's top-right corner, no backdrop.
+  .voice-call-controls__ns-badge {
+    position: absolute;
+    top: 0.15em;
+    right: 0.2em;
+    display: flex;
+
+    .d-icon {
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+
+    &.--starting {
+      animation: voice-ns-badge-pulse 1s ease-in-out infinite;
+    }
+  }
+
+  .voice-call-controls__combo-caret {
+    margin-inline-start: 0;
+    padding-inline: 0.4em;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-inline-start: 1px solid var(--primary-low-mid);
+  }
+}
+
+// Live subtitles. A zero-height flow child between the video area and the
+// control bar: lines are packed toward the bottom so they overflow upward,
+// floating over the tiles without shifting the layout when they appear.
+.voice-captions {
+  align-self: center;
+  width: min(100%, 46rem);
+  height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  row-gap: 0.25em;
+  z-index: 1;
+  pointer-events: none;
+
+  &__line {
+    margin: 0;
+    padding: 0.25em 0.75em;
+    max-width: 100%;
+    border-radius: var(--d-border-radius);
+    background: rgb(0 0 0 / 65%);
+    color: #fff;
+    text-align: center;
+    text-wrap: balance;
+
+    &.--loading {
+      color: rgb(255 255 255 / 75%);
+      font-style: italic;
+    }
+
+    // Provisional text that will be replaced when the speaker pauses.
+    &.--interim {
+      color: rgb(255 255 255 / 85%);
+    }
+  }
+
+  &__speaker {
+    font-weight: bold;
+
+    &::after {
+      content: ":";
+    }
+  }
+}
+
+@keyframes voice-ns-badge-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.voice-speak-queue-trigger {
+  position: relative;
+
+  .voice-speak-queue-trigger__count {
+    position: absolute;
+    top: -0.4em;
+    right: -0.4em;
+    min-width: 1.6em;
+    padding: 0 0.3em;
+    border-radius: 1em;
+    background: var(--tertiary);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
+    line-height: 1.6em;
+    text-align: center;
+  }
+}
+
+.voice-speak-queue {
+  min-width: 16em;
+  padding: 0.5em;
+
+  &__title {
+    margin: 0 0 0.5em;
+    font-size: var(--font-0);
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.25em;
+    border-radius: var(--d-border-radius);
+
+    &.--self {
+      background: var(--tertiary-very-low);
+    }
+  }
+
+  &__position {
+    min-width: 1.5em;
+    text-align: center;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__actions {
+    display: inline-flex;
+    gap: 0.25em;
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+    padding: 0.5em;
+  }
+}
+
+// Float-kit menus portal to a body-level layer at z("dropdown") (300), but the
+// persistent call widget sits above the site header and would otherwise cover
+// any menu opened from it. Lift the call menus above the widget. Harmless on
+// the room page, which has no competing high-z layer.
+.fk-d-menu[data-identifier^="voice-"] {
+  z-index: $voice-widget-z + 1;
+}
+
+// Below this the 22rem sidebar would squash the video column into a sliver,
+// so instead of sitting beside it the panel becomes a full-height drawer over
+// the page (above the docked call widget). Keep in sync with the close-button
+// breakpoint in voice-chat.scss.
+@media (width <= 1000px) {
+  .voice-room-page__presentation {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .voice-room-page__presentation-rail {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(8rem, 11rem);
+    grid-auto-rows: 6rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block-end: 1px;
+  }
+
+  .voice-room-page__sidebar {
+    position: fixed;
+    inset-block: var(--header-offset, 4em) 0;
+    inset-inline: 0;
+    z-index: 1050;
+    flex: none;
+    width: auto;
+    background: var(--secondary);
+    animation-name: voice-drawer-in;
+
+    &.--closing {
+      animation-name: voice-drawer-out;
+    }
+
+    .voice-chat {
+      min-width: 0;
+    }
+  }
+}
+
+.voice-video-tile {
+  position: relative;
+  flex: 0 0 auto;
+
+  // Rows share a height (computed per layout, published as
+  // --voice-tile-height); each tile sets its own aspect-ratio inline from
+  // its measured video, so portrait and landscape feeds coexist without
+  // cropping. The fallback height covers first paint before measurement.
+  height: var(--voice-tile-height, 12em);
+
+  // The computed height always lags the layout by a beat (resize observer →
+  // re-render); the hard cap keeps a stale value from ever growing the tile
+  // past the grid box, and the transition hides the catch-up step.
+  max-height: 100%;
+  transition: height 0.2s ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+  width: auto;
+  max-width: 100%;
+  border-radius: 0.5em;
+  overflow: hidden;
+  background: var(--primary-very-low);
+
+  // An overlay rather than an inset outline: the video fills the tile and
+  // paints over the tile's own outline, so the ring only ever showed on
+  // avatar tiles.
+  &.--speaking::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--success);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  // When the tile itself is fullscreen it fills the screen at the screen's
+  // aspect, so show the whole frame rather than cropping it to fill.
+  &:fullscreen {
+    border-radius: 0;
+    background: #000;
+  }
+
+  &:fullscreen &__video {
+    object-fit: contain;
+  }
+
+  &__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__fullscreen,
+  &__menu {
+    position: absolute;
+    inset-inline-end: 0.35em;
+    color: #fff;
+    background: rgb(0 0 0 / 45%);
+
+    .d-icon {
+      color: #fff;
+    }
+
+    // Discoverable on touch (no hover); revealed on hover/focus on pointer
+    // devices to keep the tile clean.
+    html.discourse-no-touch & {
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+  }
+
+  &__fullscreen {
+    inset-block-start: 0.35em;
+  }
+
+  &__menu {
+    inset-block-end: 0.35em;
+  }
+
+  html.discourse-no-touch &:hover &__fullscreen,
+  html.discourse-no-touch &:hover &__menu,
+  &__fullscreen:focus-visible,
+  &__menu:focus-visible {
+    opacity: 1;
+  }
+
+  &.--self:not(.--screen) &__video {
+    transform: scaleX(-1);
+  }
+
+  &.--screen &__video {
+    object-fit: contain;
+    background: var(--primary-very-high);
+  }
+
+  &__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    img {
+      width: 4em;
+      height: 4em;
+      border-radius: 50%;
+    }
+  }
+
+  &__info {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.25em 0.5em;
+
+    // Keep the name and status icons clear of the corner menu trigger.
+    padding-inline-end: 2.75em;
+    font-size: var(--font-down-1);
+
+    // Subtitle-style fixed colors, deliberately not palette vars: this text
+    // sits on arbitrary video frames, which don't change with the color
+    // scheme, so inverting with the theme is exactly what breaks it.
+    color: #fff;
+    text-shadow:
+      0 1px 2px rgb(0 0 0 / 80%),
+      0 0 4px rgb(0 0 0 / 50%);
+
+    .d-icon {
+      color: #fff;
+      filter: drop-shadow(0 1px 1px rgb(0 0 0 / 80%));
+    }
+  }
+
+  &__name {
+    overflow-wrap: anywhere;
+  }
+}
+
+@keyframes voice-sidebar-in {
+  from {
+    flex-basis: 0;
+    width: 0;
+    opacity: 0;
+  }
+
+  to {
+    flex-basis: 22rem;
+    width: 22rem;
+    opacity: 1;
+  }
+}
+
+@keyframes voice-sidebar-out {
+  from {
+    flex-basis: 22rem;
+    width: 22rem;
+    opacity: 1;
+  }
+
+  to {
+    flex-basis: 0;
+    width: 0;
+    opacity: 0;
+  }
+}
+
+// The narrow-viewport drawer overlays the page instead of participating in
+// its layout, so it slides over from the edge rather than animating width.
+@keyframes voice-drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@keyframes voice-drawer-out {
+  from {
+    transform: none;
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.voice-ringing-tile {
+  // No measured video to derive a shape from — assume the default tile
+  // aspect so it packs into the grid like everyone else.
+  aspect-ratio: 16 / 9;
+  border: 1px dashed var(--primary-low-mid);
+  background: var(--primary-very-low);
+
+  &__animation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    // Placeholder styling until the bespoke ringing SVG animation replaces
+    // the icon.
+    .d-icon {
+      font-size: var(--font-up-4);
+      color: var(--primary-medium);
+      animation: voice-ringing-pulse 1.4s ease-in-out infinite;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+  }
+
+  .voice-video-tile__name {
+    font-style: italic;
+  }
+}
+
+@keyframes voice-ringing-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}

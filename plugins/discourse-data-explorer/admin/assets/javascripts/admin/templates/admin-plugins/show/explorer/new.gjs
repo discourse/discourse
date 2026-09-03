@@ -3,6 +3,7 @@ import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import Form from "discourse/components/form";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -149,6 +150,16 @@ export default <template>
               {{on "input" @controller.updateDescription}}
               class="query-new__description-input"
             />
+
+            <label class="query-new__field-label">
+              {{i18n "explorer.allow_groups"}}
+            </label>
+            <GroupChooser
+              @value={{@controller.aiGroupIds}}
+              @content={{@controller.groupOptions}}
+              @onChange={{@controller.updateAiGroupIds}}
+              class="query-group-select"
+            />
           </div>
 
           <div class="query-new__actions">
@@ -192,6 +203,22 @@ export default <template>
             as |field|
           >
             <field.Control />
+          </form.Field>
+          <form.Field
+            @name="groupIds"
+            @title={{i18n "explorer.allow_groups"}}
+            @format="full"
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <GroupChooser
+                @value={{field.value}}
+                @content={{@controller.groupOptions}}
+                @onChange={{field.set}}
+                class="query-group-select"
+              />
+            </field.Control>
           </form.Field>
           <label class="query-new__sql-label">
             {{i18n "explorer.ai.sql_label"}}

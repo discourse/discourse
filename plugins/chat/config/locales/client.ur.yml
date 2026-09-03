@@ -77,6 +77,7 @@ ur:
         show: "پن کیا ہوا بینر دکھائیں"
         pinned_by_you: "آپ نے پن کیا"
         pinned_by_user: "%{username} نے پن کیا"
+        message_unpinned: "پیغام ان پن کیا گیا"
       pinned_bar:
         title: "پن کیا ہوا"
         jump_to_pinned: "پن کیے ہوئے پیغام پر جائیں"
@@ -401,6 +402,7 @@ ur:
         counted:
           one: "%{emoji} ردعمل، %{count} صارف"
           other: "%{emoji} ردعمل، %{count} صارفین"
+        only_you: "<span>آپ نے </span>:%{emoji}کے ساتھ رد عمل ظاہر کیا"
       composer:
         italic_text: "زور دیا گیا ٹَیکسٹ"
         bold_text: "گہرا ٹَیکسٹ"

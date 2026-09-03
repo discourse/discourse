@@ -7,6 +7,10 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import {
+  captureColorSchemeLinks,
+  restoreColorSchemeLinks,
+} from "discourse/admin/lib/color-scheme-manager";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -61,6 +65,14 @@ acceptance("Design wizard - admin launch", function (needs) {
 
   needs.hooks.beforeEach(function () {
     savedPayloads = [];
+    this.originalSchemeLinks = captureColorSchemeLinks();
+  });
+
+  // A wizard preview swaps the test page's real color-scheme links, and an
+  // exit that relies on a full page load (stubbed here) never puts them back.
+  // Left swapped, every later test in the run loses the color variables.
+  needs.hooks.afterEach(function () {
+    restoreColorSchemeLinks(this.originalSchemeLinks);
   });
 
   needs.pretender((server, helper) => {
@@ -115,6 +127,9 @@ acceptance("Design wizard - admin launch", function (needs) {
       .dom(".design-wizard__theme-card")
       .doesNotExist("the steps wait until the intro is acknowledged");
     assert.strictEqual(savedPayloads.length, 0, "nothing is saved yet");
+
+    // close the sheet so the palette preview does not leak into other tests
+    await click(".design-wizard__close");
   });
 
   test("closing a run that already saved a step offers to revert", async function (assert) {

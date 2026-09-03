@@ -612,6 +612,12 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
+    begin
+      RateLimiter.new(current_user, "check-username-#{request.remote_ip}", 10, 1.minute).performed!
+    rescue RateLimiter::LimitExceeded
+      return render json: failed_json.merge(errors: [I18n.t("rate_limiter.slow_down")])
+    end
+
     if !params[:username].present?
       params.require(:username) if !params[:email].present?
       return render(json: success_json)
@@ -1555,10 +1561,20 @@ class UsersController < ApplicationController
       query = query.where("created_at > ?", current_user.user_option.oldest_search_log_date)
     end
 
-    results =
-      query.group(:term).order("max(created_at) DESC").limit(MAX_RECENT_SEARCHES).pluck(:term)
+    rows =
+      query
+        .group(:term)
+        .order("max(created_at) DESC")
+        .limit(MAX_RECENT_SEARCHES)
+        .pluck(Arel.sql("term, MAX(created_at)"))
 
-    render json: success_json.merge(recent_searches: results)
+    render json:
+             success_json.merge(
+               recent_searches: rows.map(&:first),
+               # sent alongside the bare terms, which stay for existing callers,
+               # so a consumer can order these against a history of its own
+               recent_searches_detailed: rows.map { |term, at| { term: term, at: at&.iso8601 } },
+             )
   end
 
   def reset_recent_searches
@@ -1658,6 +1674,7 @@ class UsersController < ApplicationController
 
   def create_second_factor_totp
     require "rotp" if !defined?(ROTP)
+    require "rqrcode" if !defined?(RQRCode)
     totp_data = ROTP::Base32.random
     server_session["staged-totp-#{current_user.id}"] = totp_data
     qrcode_png =

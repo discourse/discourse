@@ -1898,6 +1898,11 @@ Discourse::Application.routes.draw do
            as: "list_#{filter}"
     end
 
+    DiscoursePluginRegistry._raw_homepage_options.each do |registration|
+      option = registration[:value]
+      get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+    end
+
     get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
 
     # special case for categories

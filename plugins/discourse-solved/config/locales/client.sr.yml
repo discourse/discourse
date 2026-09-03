@@ -28,6 +28,12 @@ sr:
         all: "sve"
       move_post_cancel: "Odustani"
       confirm_solved_removal_cancel: "Odustani"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tema"
+            category: "Kategorija"
     discourse_automation:
       triggerables:
         first_accepted_solution:

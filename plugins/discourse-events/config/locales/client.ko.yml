@@ -23,8 +23,7 @@ ko:
           fields:
             topic_id:
               label: 글 ID
-    discourse_calendar:
-      invite_user_notification: "%{username}님이 사용자님을 초대했습니다: %{description}"
+    discourse_events:
       on_holiday: "휴일"
       disable_holiday: "비활성화"
       enable_holiday: "활성화"
@@ -85,6 +84,8 @@ ko:
         week: "주"
         day: "일"
         year: "년"
+    discourse_calendar:
+      invite_user_notification: "%{username}님이 사용자님을 초대했습니다: %{description}"
     group_timezones:
       search: "검색..."
     discourse_post_event:

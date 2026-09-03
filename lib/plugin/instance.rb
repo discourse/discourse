@@ -250,8 +250,10 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def add_report(name, exclude_from_dashboard: false, &block)
-    reloadable_patch { |plugin| Report.add_report(name, exclude_from_dashboard:, &block) }
+  def add_report(name, exclude_from_dashboard: false, admin_only_related_items: false, &block)
+    reloadable_patch do |plugin|
+      Report.add_report(name, exclude_from_dashboard:, admin_only_related_items:, &block)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -762,6 +764,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_svg_icon(icon)
   end
 
+  # Registers a block returning icon names to include in the SVG sprite. Use this
+  # instead of `register_svg_icon` when the names are only known at runtime, such
+  # as when they are chosen by admins and stored in the database. The block is
+  # called while the sprite is built, so it must not run at boot, and its result
+  # is scoped to the current site.
+  #
+  # Call `SvgSprite.expire_cache` when the underlying data changes.
+  def register_svg_icon_source(&block)
+    DiscoursePluginRegistry.register_svg_icon_source(block, self)
+  end
+
   def extend_content_security_policy(extension)
     csp_extensions << extension
   end
@@ -1125,6 +1138,56 @@ class Plugin::Instance
   def register_calendar_subscription_feed(name:, scope:, description_key:, url:)
     DiscoursePluginRegistry.register_calendar_subscription_feed(
       { name: name, scope: scope, description_key: description_key, url: url },
+      self,
+    )
+  end
+
+  # Registers a plugin page as an option for the default_homepage site setting.
+  # The route is also mounted at `/` when the option is selected, while `path`
+  # remains the page's canonical URL for direct navigation.
+  #
+  # @param id [String, Symbol] stable identifier stored in the site setting
+  # @param name [String] client-side translation key used in the admin setting
+  # @param path [String] application path for the homepage
+  # @param route [String] Rails controller action, in `controller#action` form
+  # @param anonymous [Boolean] whether logged-out visitors may use this homepage
+  # @param server_side [Boolean] whether navigation requires a full page request
+  def register_homepage(id, name:, path:, route:, anonymous: false, server_side: false)
+    id = id.to_s
+
+    if !id.match?(/\A[a-z0-9][a-z0-9_-]*\z/)
+      raise ArgumentError,
+            "homepage id must contain only lowercase letters, numbers, underscores, and hyphens"
+    end
+    raise ArgumentError, "homepage name must be present" if name.blank?
+    raise ArgumentError, "homepage path must start with /" if !path.to_s.start_with?("/")
+    if !route.to_s.match?(/\A[^#]+#[^#]+\z/)
+      raise ArgumentError, "homepage route must use controller#action format"
+    end
+    if ![true, false].include?(anonymous)
+      raise ArgumentError, "homepage anonymous must be true or false"
+    end
+    if ![true, false].include?(server_side)
+      raise ArgumentError, "homepage server_side must be true or false"
+    end
+
+    registered_ids =
+      DiscoursePluginRegistry._raw_homepage_options.map { |entry| entry[:value][:id] }
+    core_homepage_ids =
+      Discourse.filters.map(&:to_s) + %w[categories custom blank finish_installation]
+    if core_homepage_ids.include?(id) || registered_ids.include?(id)
+      raise ArgumentError, "homepage id '#{id}' is already registered"
+    end
+
+    DiscoursePluginRegistry.register_homepage_option(
+      {
+        id: id,
+        name: name,
+        path: path.to_s,
+        route: route.to_s,
+        anonymous: anonymous,
+        server_side: server_side,
+      },
       self,
     )
   end

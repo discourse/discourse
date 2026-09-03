@@ -385,6 +385,20 @@ module DiscourseWorkflows
     REVIEWABLE_EVENT_SCHEMA =
       entity("reviewable", REVIEWABLE_PROPERTIES, "Review queue item payload")
 
+    TAG_PROPERTIES = JSON.parse(<<~JSON).freeze
+      {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "topic_count": { "type": "integer" },
+        "staff": { "type": "boolean" },
+        "description": { "type": ["string", "null"] },
+        "description_cooked": { "type": ["string", "null"] }
+      }
+    JSON
+
+    TAG_SCHEMA = entity("tag", TAG_PROPERTIES, "Tag created by Discourse")
+
     BADGE_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "id": { "type": "integer" },

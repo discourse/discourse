@@ -1,5 +1,6 @@
 import { click, currentURL, fillIn, select, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import reportsBulkFixtures from "discourse/tests/fixtures/reports-bulk";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Reports", function (needs) {
@@ -29,6 +30,37 @@ acceptance("Reports", function (needs) {
     await visit("/admin/reports/admin_logins");
 
     assert.dom(".export-csv-btn").exists();
+  });
+});
+
+acceptance("Reports | Moderator related items", function (needs) {
+  needs.user({ admin: false, moderator: true });
+
+  let requestParams;
+  needs.hooks.beforeEach(() => (requestParams = undefined));
+
+  needs.pretender((server, helper) => {
+    server.get("/admin/reports/bulk", (request) => {
+      if (
+        Object.keys(request.queryParams).some((key) =>
+          key.startsWith("reports[signups]")
+        )
+      ) {
+        requestParams = request.queryParams;
+      }
+      return helper.response(reportsBulkFixtures["/admin/reports/bulk"]);
+    });
+  });
+
+  test("moderators request only report aggregates", async function (assert) {
+    await visit("/admin/reports/signups");
+
+    assert.strictEqual(
+      requestParams["reports[signups][include_related_items]"],
+      undefined,
+      "omits the identity-level payload"
+    );
+    assert.dom(".admin-report.signups").exists("shows the aggregate report");
   });
 });
 

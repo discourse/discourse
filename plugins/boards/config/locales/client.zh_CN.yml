@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    boards:
+      board:
+        remove_card: "移除"
+        new_topic: "新建话题..."
+        title: "标题"
+        tags: "标签"
+        assigned_to: "已指定给"
+        view_topic: "查看话题"
+        topic_reply_count:
+          other: "%{count} 条回复"
+        assign: "指定"
+        reassign: "重新分配"
+        unassign: "取消指定"
+        unassign_from_topic: "从话题中取消指定 %{username}"
+        unassign_from_post: "从 #%{post_number} 中取消指定 @%{username}"
+        edit_assignments: "编辑指定…"
+        created_by: "创建者"
+      manage:
+        name: "名称"
+        slug: "缩略名"
+        constraint_categories: "类别"
+        constraint_tags: "标签"
+        advanced_settings: "高级设置"
+        card_style_simple: "简单"
+        columns:
+          remove: "移除"
+          column_title: "标题"
+          icon: "图标"
+          color: "颜色"
+          default_sort_priority: "优先级"
+          tag: "标签"
+          move_to_assigned_unassign: "取消指定"
+          move_to_status_open: "已打开"
+          move_to_status_closed: "已关闭"
+          show_advanced: "显示高级选项"
+          hide_advanced: "隐藏高级选项"

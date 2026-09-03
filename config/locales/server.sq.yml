@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sq:
+  llms_txt:
+    sections:
+      optional: "Fakultative"
+    links:
+      search:
+        label: "Kërko"
+      categories:
+        label: "Categories"
+      about:
+        label: "Rreth"
+      guidelines:
+        label: "Udhëzimet"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -478,6 +490,11 @@ sq:
         share: "Shpërndaje"
       types:
         staff: "Stafi"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Postime"
+        share: "Shpërndaje"
     trust_level_pipeline:
       labels:
         count: "Anëtarë"

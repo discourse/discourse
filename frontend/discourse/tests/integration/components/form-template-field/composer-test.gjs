@@ -296,7 +296,7 @@ module(
       await settled();
 
       const expected = "before ![image|10x10, 75%](upload://abc.png) after";
-      assert.dom("input[name='field-1']").hasValue(expected);
+      assert.dom("textarea[name='field-1']").hasValue(expected);
       assert.dom(".d-editor-input").hasValue(expected);
       assert.true(onChange.called, "onChange fires after the replacement");
     });
@@ -330,11 +330,11 @@ module(
 
       const expected =
         "![image|10x10, 75%](upload://abc.png) and ![image|10x10](upload://abc.png)";
-      assert.dom("input[name='field-1']").hasValue(expected);
+      assert.dom("textarea[name='field-1']").hasValue(expected);
       assert.dom(".d-editor-input").hasValue(expected);
     });
 
-    test("marks the backing input as required when the field is required", async function (assert) {
+    test("marks the backing textarea as required when the field is required", async function (assert) {
       stubAllowUpload(this, true);
 
       await render(
@@ -348,15 +348,15 @@ module(
       );
 
       assert
-        .dom("input[name='field-1']")
+        .dom("textarea[name='field-1']")
         .hasAttribute(
           "required",
           { any: true },
-          "the backing input is required"
+          "the backing textarea is required"
         );
     });
 
-    test("does not mark the backing input as required when the field is not required", async function (assert) {
+    test("does not mark the backing textarea as required when the field is not required", async function (assert) {
       stubAllowUpload(this, true);
 
       await render(
@@ -364,8 +364,35 @@ module(
       );
 
       assert
-        .dom("input[name='field-1']")
-        .doesNotHaveAttribute("required", "the backing input is not required");
+        .dom("textarea[name='field-1']")
+        .doesNotHaveAttribute(
+          "required",
+          "the backing textarea is not required"
+        );
+    });
+
+    test("the backing textarea preserves newlines in the field value", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const multiline = "## Heading\n\nParagraph one.\n\n- item a\n- item b";
+      this.set("initialValue", multiline);
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @value={{this.initialValue}}
+            @onChange={{noop}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("textarea[name='field-1']")
+        .hasValue(
+          multiline,
+          "newlines survive on the stand-in control, so the reply assembled from it stays multi-line"
+        );
     });
 
     test("labels the editor with the field label", async function (assert) {
@@ -466,7 +493,7 @@ module(
 
       await settled();
 
-      assert.dom("input[name='field-1']").hasValue("no images here");
+      assert.dom("textarea[name='field-1']").hasValue("no images here");
       assert.dom(".d-editor-input").hasValue("no images here");
       assert.false(onChange.called, "onChange does not fire");
     });

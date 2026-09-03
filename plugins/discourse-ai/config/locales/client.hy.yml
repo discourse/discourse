@@ -117,8 +117,6 @@ hy:
         successful: "Հաջողված"
         failed: "Ձախողված"
         unknown: "Անհայտ"
-        topic_id: "Թեմայի ID"
-        post_id: "Գրառման ID"
         time: "Ժամ"
         when: "Երբ"
         request: "Հարցում"
@@ -129,8 +127,7 @@ hy:
         post: "Գրառում"
         post_short: "Գրառում %{id}"
         actions: "Գործողություններ"
-        filters:
-          title: "Ֆիլտրներ"
+        view_details: "Մանրամասներ"
         periods:
           custom: "Մասնավոր"
         detail:
@@ -269,8 +266,10 @@ hy:
           table:
             total_count: "Ամբողջ"
       discobot_discoveries:
-        regular_results: "Թեմաներ"
-        collapse: "Կրճատել"
-        tooltip:
-          actions:
-            disable: "Անջատել"
+        legacy:
+          regular_results: "Թեմաներ"
+          collapse: "Կրճատել"
+          tooltip:
+            actions:
+              disable: "Անջատել"
+        search_messages: "Հաղորդագրություն"

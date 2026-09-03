@@ -9,32 +9,18 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   before_action :ensure_logged_in, except: %i[reactions_users_list post_reactions_users]
 
   def toggle
-    post = fetch_post_from_params
-    reaction = params[:reaction]
-
-    return render_json_error(post) unless DiscourseReactions::Reaction.valid?(reaction)
-
-    begin
-      manager =
-        DiscourseReactions::ReactionManager.new(
-          reaction_value: params[:reaction],
-          user: current_user,
-          post: post,
-        )
-      manager.toggle!
-    rescue ActiveRecord::RecordNotUnique
-      # If the user already performed this action, it's probably due to a different browser tab
-      # or non-debounced clicking. We can ignore.
+    DiscourseReactions::PostReaction::Toggle.call(
+      service_params.deep_merge(params: { post_id: params[:post_id], reaction: params[:reaction] }),
+    ) do |result|
+      on_success do |post:|
+        render_json_dump(PostSerializer.new(post, scope: guardian, root: false).as_json)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:can_see_post) { raise Discourse::InvalidAccess }
+      on_failed_policy(:reaction_is_valid) { |_policy, post:| render_json_error(post) }
+      on_exceptions(Discourse::InvalidAccess) { |exception| raise exception }
+      on_failure { render_json_error(result) }
     end
-
-    post.publish_change_to_clients!(:acted)
-    publish_change_to_clients!(
-      post,
-      reaction: manager.reaction_value,
-      previous_reaction: manager.previous_reaction_value,
-    )
-
-    render_json_dump(post_serializer(post).as_json)
   end
 
   def reactions_given
@@ -362,27 +348,11 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     likes.includes([:user]).limit(MAX_USERS_COUNT + 1).map { |like| format_like_user(like) }
   end
 
-  def post_serializer(post)
-    PostSerializer.new(post, scope: guardian, root: false)
-  end
-
   def fetch_post_from_params
     post_id = params[:post_id] || params[:id]
     post = Post.find(post_id)
     guardian.ensure_can_see!(post)
     post
-  end
-
-  def publish_change_to_clients!(post, reaction: nil, previous_reaction: nil)
-    return unless (topic = post.topic)
-
-    message = { post_id: post.id, reactions: [reaction, previous_reaction].compact.uniq }
-
-    opts = topic.secure_audience_publish_messages
-
-    if opts[:user_ids] != [] && opts[:group_ids] != []
-      MessageBus.publish("/topic/#{topic.id}/reactions", message, opts)
-    end
   end
 
   def secure_reaction_users!(reaction_users)

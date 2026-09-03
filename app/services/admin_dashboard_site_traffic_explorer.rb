@@ -390,10 +390,8 @@ class AdminDashboardSiteTrafficExplorer
           END,
           'average_session_duration_seconds', CASE
             WHEN session_summary.distinct_sessions = 0 THEN 0
-            ELSE ROUND(
-              session_summary.engaged_seconds::numeric /
-                session_summary.distinct_sessions
-            )::integer
+            ELSE session_summary.engaged_seconds::numeric /
+              session_summary.distinct_sessions
           END
         ) AS summary,
         COALESCE(

@@ -39,13 +39,6 @@ after_initialize do
       require_relative "lib/discourse_workflows/nodes/topic_received_vote/v1"
       DiscourseWorkflows::Nodes::TopicReceivedVote::V1
     end
-
-    on(:topic_voting_vote_created) do |vote|
-      DiscourseWorkflows::EventListener.handle(
-        DiscourseWorkflows::Nodes::TopicReceivedVote::V1,
-        vote,
-      )
-    end
   end
 
   reloadable_patch do

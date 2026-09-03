@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 el:
+  llms_txt:
+    sections:
+      optional: "Προαιρετικό"
+    links:
+      search:
+        label: "Αναζήτηση"
+      categories:
+        label: "Κατηγορίες"
+      about:
+        label: "Σχετικά"
+      guidelines:
+        label: "Οδηγίες"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -923,6 +935,11 @@ el:
         new_members: "Νέα μέλη"
         returning: "Επιστρέφοντες"
         staff: "Συνεργάτες"
+    posters_by_member_type_members:
+      labels:
+        user: "Χρήστης"
+        count: "Αναρτήσεις"
+        share: "Κοινοποίηση"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1303,7 +1320,6 @@ el:
     cors_origins: "Επιτρεπόμενες πηγές για αιτήσεις πολλαπλής προέλευσης (cross-origin requests, CORS). Η κάθε προέλευση πρέπει να περιέχει http:// or https://. Η env μεταβλητή DISCOURSE_ENABLE_CORS πρέπει να οριστεί σε αληθινή για να ενεργοποιηθεί το CORS."
     blocked_ip_blocks: "Μια λίστα από private IP blocks η οποία ποτέ δεν θα ανιχνεύεται από το Discourse"
     allowed_internal_hosts: "Μια λίστα από internal hosts την οποία το discourse μπορεί να ανιχνεύει με ασφάλεια για oneboxing και άλλους λόγους"
-    llms_txt: "Ανεβάστε ένα αρχείο κειμένου που θα εμφανίζεται στο /llms.txt για τους ανιχνευτές LLM. Δείτε στο <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> για περισσότερες πληροφορίες."
     share_links: "Καθόρισε ποια στοιχεία εμφανίζονται στον διάλογο διαμοιρασμού και με ποια σειρά."
     site_contact_username: "Ένα έγκυρο όνομα χρήστη των συνεργατών από το οποίο θα στέλνονται όλα τα αυτοματοποιημένα μηνύματα. Αν αφεθεί κενό, θα χρησιμοποιείται ο προκαθορισμένος λογαριασμός συστήματος. "
     site_contact_group_name: "Ένα έγκυρο όνομα για μια ομάδα που λαμβάνει πρόσκληση σε όλα τα αυτομάτως αποστέλλοντα προσωπικά μηνύματα."

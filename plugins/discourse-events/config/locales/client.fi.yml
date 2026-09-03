@@ -7,11 +7,10 @@
 fi:
   admin_js:
     admin:
-      calendar: "Tapahtumat"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "Tapahtumat"
+          discourse_events: "Tapahtumat"
   js:
     notifications:
       titles:
@@ -26,8 +25,8 @@ fi:
           fields:
             topic_id:
               label: Ketjun tunnus
-    discourse_calendar:
-      invite_user_notification: "%{username} kutsui sinut: %{description}"
+    discourse_events:
+      title: "Tapahtumat"
       on_holiday: "Lomalla"
       disable_holiday: "Poista käytöstä"
       enable_holiday: "Ota käyttöön"
@@ -316,6 +315,8 @@ fi:
         week: "Viikko"
         day: "Päivä"
         year: "Vuosi"
+    discourse_calendar:
+      invite_user_notification: "%{username} kutsui sinut: %{description}"
     group_timezones:
       search: "Hae..."
       group_availability: "%{group} – saatavuus"

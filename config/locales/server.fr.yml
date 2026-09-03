@@ -5,6 +5,19 @@
 # https://translate.discourse.org/
 
 fr:
+  llms_txt:
+    sections:
+      optional: "Facultatif"
+    links:
+      search:
+        label: "Recherche"
+      categories:
+        label: "Catégories"
+      about:
+        label: "À propos"
+      guidelines:
+        label: "Lignes directrices"
+        note: "Lisez les règles de la communauté"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -1349,6 +1362,11 @@ fr:
         new_members: "Nouveaux membres"
         returning: "Membres existants"
         staff: "Responsables"
+    posters_by_member_type_members:
+      labels:
+        user: "Utilisateur"
+        count: "Publications"
+        share: "Partager"
     trust_level_pipeline:
       title: "Évolution des niveaux de confiance"
       description: "Mouvements des membres entre les différents niveaux de confiance pour la période sélectionnée. Ce tableau comptabilise les membres actuellement à chaque niveau de confiance, leur part du nombre total de membres, le nombre de membres promus ou rétrogradés dans chaque niveau de confiance au cours de la période, ainsi que les nouvelles inscriptions."
@@ -1964,7 +1982,6 @@ fr:
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'indexation Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisations est définie."
     slow_down_crawler_user_agents: "Agents utilisateurs des robots d'exploration Web auxquels appliquer la limitation de débit configurée dans le paramètre {{setting:slow_down_crawler_rate}}. Chaque valeur doit comporter au moins 3 caractères."
     slow_down_crawler_rate: "Si {{setting:slow_down_crawler_user_agents}} est renseigné, ce délai s'appliquera à tous les robots d'exploration (nombre de secondes entre les requêtes)."
-    llms_txt: "Téléversez un fichier texte qui sera accessible à l'adresse /llms.txt pour les robots d'exploration des LLM. Consultez <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> pour en savoir plus."
     content_security_policy: "Activer la politique de sécurité du contenu (CSP). La CSP constitue une couche de sécurité supplémentaire qui aide à prévenir certains types d'attaques, notamment les scripts intersites (XSS) et l'injection de données. Elle ne doit être désactivée que temporairement à des fins de débogage ou de test."
     content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_report_uri: "Envoyer les rapports de violation de la CSP à cette URL au moyen de la directive CSP <code>report-uri</code>. Laissez ce champ vide pour désactiver les rapports."

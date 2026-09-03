@@ -7,3 +7,7 @@
 zh_TW:
   site_settings:
     checklist_enabled: "要啟用檢查清單外掛程式嗎？"
+  checklist:
+    checkboxes_changed: "此貼文自載入後已變更。請重新整理後再試一次。"
+    checkbox_locked: "無法變更此核取清單項目。"
+    revision_failed: "無法更新核取方塊。"

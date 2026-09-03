@@ -37,6 +37,7 @@ after_initialize do
     app/services/discourse_reactions/reaction_manager.rb
     app/services/discourse_reactions/reaction_notification.rb
     app/services/discourse_reactions/reaction_like_synchronizer.rb
+    app/services/discourse_reactions/post_reaction/toggle.rb
     lib/discourse_reactions/guardian_extension.rb
     lib/discourse_reactions/notification_extension.rb
     lib/discourse_reactions/post_alerter_extension.rb
@@ -63,11 +64,13 @@ after_initialize do
   end
 
   register_anonymous_action("react_to_post") do |user, params|
-    post = Post.find_by(id: params["post_id"])
-    next if !post || !user.guardian.can_see?(post)
-    reaction_value = params["reaction"].to_s
-    next if !DiscourseReactions::Reaction.valid?(reaction_value)
-    DiscourseReactions::ReactionManager.new(reaction_value:, user:, post:).toggle!
+    DiscourseReactions::PostReaction::Toggle.call(
+      params: {
+        post_id: params["post_id"],
+        reaction: params["reaction"],
+      },
+      guardian: user.guardian,
+    )
   end
 
   Discourse::Application.routes.append { mount DiscourseReactions::Engine, at: "/" }

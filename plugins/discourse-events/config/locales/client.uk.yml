@@ -7,11 +7,10 @@
 uk:
   admin_js:
     admin:
-      calendar: "Події"
       site_settings:
         categories:
           discourse_post_event: "Подія Discourse"
-          discourse_calendar: "Події"
+          discourse_events: "Події"
       web_hooks:
         calendar_event:
           group_name: "Календар подій"
@@ -32,10 +31,12 @@ uk:
           fields:
             topic_id:
               label: ID теми
-    discourse_calendar:
+    discourse_events:
+      title: "Події"
       livestream:
         zoom:
           join: "Приєднуйтесь до Zoom"
+          frame_title: "Вебінар у Zoom"
           open_in_zoom: "Відкрити в Zoom"
           load_error: "Ви покинули вебінар, або нам не вдається завантажити Zoom на цій сторінці."
           too_early: "Приєднатися до вебінару можна ближче до початку заходу"
@@ -44,9 +45,10 @@ uk:
           rsvp_to_event: "Підтвердіть свою участь у події, щоб розпочати спілкування"
           rsvp_to_event_with_link: "Підтвердіть свою присутність на <a href='%{url}'>події</a> , щоб розпочати чат"
           rsvp_body: "Спілкуйтеся з іншими учасниками до, під час та після заходу."
-      invite_user_notification: "%{username} запросили Вас на: %{description}"
       preferences:
+        all_events: "Події дискурсу — Усі події"
         all_events_description: "Усі події форуму"
+        my_events: "Події Дискурсу - Мої події"
         my_events_description: "Події, на які ви збираєтеся або які вас цікавлять"
       on_holiday: "У відпустці"
       disable_holiday: "Вимкнути"
@@ -338,6 +340,8 @@ uk:
         week: "Тиждень"
         day: "День"
         year: "Рік"
+    discourse_calendar:
+      invite_user_notification: "%{username} запросили Вас на: %{description}"
     group_timezones:
       search: "Пошук…"
       group_availability: "%{group} доступність"
@@ -469,6 +473,7 @@ uk:
         name_placeholder: "Назва події"
         end_date_placeholder: "Дата завершення"
         location_or_url_placeholder: "Додати місцезнаходження або URL-адресу"
+        location_placeholder: "Додати місцезнаходження"
         url_placeholder: "Додати URL"
         max_attendees_placeholder: "Необмежена кількість учасників"
         max_attendees_display:

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 ro:
+  llms_txt:
+    sections:
+      optional: "Opțional"
+    links:
+      search:
+        label: "Caută"
+      categories:
+        label: "Categorii"
+      about:
+        label: "Despre"
+      guidelines:
+        label: "Reguli generale"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D-MMM-YYYY"
@@ -723,6 +735,11 @@ ro:
         share: "Partajează"
       types:
         staff: "Echipa"
+    posters_by_member_type_members:
+      labels:
+        user: "Utilizator"
+        count: "Articole"
+        share: "Partajează"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

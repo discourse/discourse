@@ -247,7 +247,6 @@ fi:
       read_post:
         unknown_post: "viesti"
       agents:
-        default_llm_required: "Oletus-LLM-malli vaaditaan ennen chatin käyttöönottoa"
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:
           name: "GitHub-apulainen"
@@ -426,6 +425,7 @@ fi:
         random_picker: "Valitse satunnainen luku tai satunnainen luettelon elementti"
         categories: "Listaa kaikki foorumin julkisesti näkyvät alueet"
         delete_topic: "Poista ketju"
+        create_category: "Luo uusi alue"
         search: "Hae kaikista foorumin julkisista ketjuista"
         tags: "Listaa kaikki foorumin tunnisteet"
         time: "Etsi aika eri aikavyöhykkeillä"
@@ -485,10 +485,6 @@ fi:
         search_settings:
           one: "Ehdolla \"%{query}\" löytyi %{count} tulos"
           other: "Ehdolla \"%{query}\" löytyi %{count} tulosta"
-      discoveries:
-        continue_conversation:
-          title: "Löytökeskustelu: hae hakuehdolla %{query}"
-          raw: "Haussani hakuehdolla %{query} näytit minulle seuraavat tiedot:\n\n%{context}\n\nJatketaan keskustelua."
       close_topic:
         errors:
           not_found: "Ketjua ei löytynyt."
@@ -498,10 +494,13 @@ fi:
       delete_topic:
         errors:
           not_found: "Ketjua ei löytynyt."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Ketjua ei löytynyt."
       edit_category:
+        errors:
+          not_found: "Aluetta ei löytynyt."
+      change_topic_category:
         errors:
           not_found: "Ketjua ei löytynyt."
           category_not_found: "Aluetta ei löytynyt."

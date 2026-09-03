@@ -17,8 +17,7 @@ sl:
           fields:
             topic_id:
               label: ID teme
-    discourse_calendar:
-      invite_user_notification: "%{username} vas vabi na: %{description}"
+    discourse_events:
       on_holiday: "Na počitnicah"
       disable_holiday: "Onemogoči"
       enable_holiday: "Omogoči"
@@ -287,6 +286,8 @@ sl:
         week: "Teden"
         day: "Dan"
         year: "Leto"
+    discourse_calendar:
+      invite_user_notification: "%{username} vas vabi na: %{description}"
     group_timezones:
       search: "Išči..."
       group_availability: "Razpoložljivost %{group}"

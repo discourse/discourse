@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Pesquisar"
+      categories:
+        label: "Categorias"
+      about:
+        label: "Sobre"
+      guidelines:
+        label: "Diretrizes"
   dates:
     short_date_no_year: "D de MMM"
     short_date: "D de MMM de YYYY"
@@ -1274,6 +1286,11 @@ pt_BR:
         share: "Compartilhar"
       types:
         staff: "Equipe"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuário(a)"
+        count: "Postagens"
+        share: "Compartilhar"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1830,7 +1847,6 @@ pt_BR:
     allowed_iframes: "A lista de prefixos de URL do src iframe que o Discourse pode permitir com segurança nas postagens.* pode ser usado para corresponder a qualquer quantidade de caracteres diferentes de /."
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
     blocked_crawler_user_agents: "Palavra sem diferenciação de maiúsculas e minúsculas na linha do agente do(a) usuário(a) que identifica os rastreadores da web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
-    llms_txt: "Faça o upload de um arquivo de texto para ser disponibilizado em /llms.txt para os crawlers de LLM. Veja <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> para mais informações."
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Restrinja quem incorpora este site em iframes via CSP. Controle os hosts permitidos em <a href='%{base_path}/admin/customize/embedding'>Incorporação</a>"
     content_security_policy_script_src: "Fontes de scripts adicionais na lista de permissões. O host e CDN atual estão inclusos por padrão. Consulte <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigue ataques XSS com a política de segurança de conteúdo.</a> (CSP). Outras fontes de hosts são ignoradas, pois a dinâmica estrita está ativada."

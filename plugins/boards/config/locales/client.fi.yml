@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    boards:
+      board:
+        remove_card: "Poista"
+        new_topic: "Uusi ketju..."
+        title: "Otsikko"
+        tags: "Tunnisteet"
+        assigned_to: "Osoitettu käyttäjälle"
+        topic_reply_count:
+          one: "%{count} vastaus"
+          other: "%{count} vastausta"
+        assign: "Osoita"
+        reassign: "Osoita uudelleen"
+        unassign: "Peru osoitus"
+        unassign_from_topic: "Peru käyttäjän @%{username} osoitus ketjusta"
+        unassign_from_post: "Peru käyttäjän @%{username} osoitus viestistä %{post_number}"
+        edit_assignments: "Muokkaa osoituksia..."
+        created_by: "Luonut"
+      manage:
+        name: "Nimi"
+        slug: "Polkutunnus"
+        constraint_categories: "Kategoriat"
+        constraint_tags: "Tunnisteet"
+        columns:
+          remove: "Poista"
+          column_title: "Otsikko"
+          icon: "Kuvake"
+          color: "Väri"
+          default_sort_priority: "Prioriteetti"
+          tag: "Tunniste"
+          move_to_assigned_unassign: "Peru osoitus"
+          move_to_status_open: "Avoinna"
+          move_to_status_closed: "Suljettu"

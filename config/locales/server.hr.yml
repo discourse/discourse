@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 hr:
+  llms_txt:
+    sections:
+      optional: "Neobvezno"
+    links:
+      search:
+        label: "Pretraživanje"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nama"
+      guidelines:
+        label: "Vodić za uporabu"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, GGGG"
@@ -943,6 +955,11 @@ hr:
         share: "Podijeli"
       types:
         staff: "Osoblje"
+    posters_by_member_type_members:
+      labels:
+        user: "Korisnik"
+        count: "Postovi"
+        share: "Podijeli"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

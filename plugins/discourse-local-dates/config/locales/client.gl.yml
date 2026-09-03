@@ -14,9 +14,11 @@ gl:
         countdown:
           passed: superouse a data
       title: Inserir data e hora
+      edit_date: 'Editar: %{date}'
       create:
         form:
           insert: Inserir
+          save: Gardar
           format_description: "Formato usado para presentarlle a data ao usuario. Use Z para amosar o desprazamento e zz para o nome da zona horaria."
           timezones_title: Zonas horarias que presentar
           timezones_description: As zonas horarias utilizaranse para presentar datas na visualización previa e na alternativa.

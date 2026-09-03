@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    boards:
+      board:
+        remove_card: "Elimina"
+        title: "Títol"
+        tags: "Etiquetes"
+        assigned_to: "Assignat a"
+        topic_reply_count:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
+        assign: "Assigna"
+        unassign: "Desassigna"
+        created_by: "Creat per"
+      manage:
+        name: "Nom"
+        constraint_categories: "Categories"
+        constraint_tags: "Etiquetes"
+        columns:
+          remove: "Elimina"
+          column_title: "Títol"
+          icon: "Icona"
+          color: "Color"
+          move_to_assigned_unassign: "Desassigna"
+          move_to_status_open: "Obre"
+          move_to_status_closed: "Tancat"

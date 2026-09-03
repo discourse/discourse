@@ -467,6 +467,7 @@ en:
         since: "(since %{version})"
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
+      open_styleguide: "Open styleguide"
       disable_dev_tools: "Disable dev tools"
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
@@ -3827,6 +3828,10 @@ en:
         remove_preview: "Remove preview"
         link_copied: "Link copied!"
 
+      preview_node:
+        show_source: "Show source"
+        show_preview: "Show preview"
+
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
     notifications:
@@ -4037,10 +4042,11 @@ en:
         search_icon: "Search icon near profile avatar"
 
       type:
-        default: "Topics/posts"
+        label: "Search type"
+        default: "Posts"
         users: "Users"
         categories: "Categories"
-        categories_and_tags: "Categories/tags"
+        categories_and_tags: "Categories & tags"
 
       context:
         user: "Search posts by @%{username}"
@@ -6762,6 +6768,24 @@ en:
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
         chart:
           total: "Total: %{count}"
+        related_items:
+          showing: "Showing the newest %{shown} of %{total}."
+          users:
+            title: "Users"
+            signups:
+              description: "New accounts created between %{startDate} and %{endDate}, newest first."
+            new_contributors:
+              description: "Users who made their first post between %{startDate} and %{endDate}, newest first."
+          labels:
+            user: "User"
+            created_at: "Created at"
+            first_post: "First post created at"
+          table_summary:
+            trigger: "%{count}, show summary for %{date}"
+            users_title: "Users on %{date}"
+            loading: "Loading summary…"
+            empty: "No details are available."
+            error: "Couldn't load the summary."
 
       config_sections:
         account:

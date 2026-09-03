@@ -1,14 +1,22 @@
-import { schedule } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { iconHTML } from "discourse/lib/icon-library";
 import { registerOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import richEditorExtension from "../../lib/rich-editor-extension";
 
-const MINIMUM_SPINNER_DURATION = 200;
+const MINIMUM_PENDING_DURATION = 200;
 const MAX_CONFLICT_RETRIES = 2;
+
+function timestampsAreEqual(first, second) {
+  const firstTime = Date.parse(first);
+  const secondTime = Date.parse(second);
+  return (
+    !Number.isNaN(firstTime) &&
+    !Number.isNaN(secondTime) &&
+    firstTime === secondTime
+  );
+}
 
 function timestampIsOlder(candidate, reference) {
   const candidateTime = Date.parse(candidate);
@@ -134,298 +142,576 @@ function configureAccessibility(box, editable) {
   }
 }
 
-function addToggleBehavior(boxes, postModel, allBoxes = boxes) {
-  const renderedIndexes = new Map(allBoxes.map((box, index) => [box, index]));
-  const confirmedStates = boxes.map((box) => box.classList.contains("checked"));
-  const pendingStates = new Map();
-  const spinnerStates = new Map();
-  const cleanups = [];
-  let expectedRaw = postModel.raw;
-  let expectedUpdatedAt = postModel.updated_at;
-  let active = true;
-  let deferredCooked;
-  let saving = false;
-  let unregisterInFlightOptimisticUpdate;
+const checklistStates = new WeakMap();
 
-  const stopSpinner = (index) => {
-    clearTimeout(spinnerStates.get(index)?.timer);
-    spinnerStates.delete(index);
-    boxes[index].classList.remove("is-saving");
-    boxes[index].removeAttribute("aria-disabled");
+function checkboxKey(renderedIndex, checkboxCount) {
+  return `${renderedIndex}:${checkboxCount}`;
+}
+
+function checkboxTarget(box, renderedIndex, checkboxCount) {
+  return {
+    checkboxCount: box.dataset.chkSrc ? undefined : checkboxCount,
+    checkboxSource: box.dataset.chkSrc,
+    renderedIndex,
   };
+}
 
-  const updateBusyState = (index, busy) => {
-    const box = boxes[index];
+function checklistBindingSignature(boxes) {
+  return boxes
+    .filter((box) => !box.classList.contains("permanent"))
+    .map((box) => `${box.dataset.chkSrc ?? "legacy"}:${checkboxLabel(box)}`)
+    .join("\0");
+}
 
-    if (busy) {
-      clearTimeout(spinnerStates.get(index)?.timer);
-      if (!box.querySelector(".checklist-spinner")) {
-        box.insertAdjacentHTML(
-          "beforeend",
-          iconHTML("spinner", { class: "checklist-spinner" })
-        );
-      }
-      spinnerStates.set(index, { startedAt: performance.now() });
-      box.classList.add("is-saving");
-      box.setAttribute("aria-busy", "true");
-      box.setAttribute("aria-disabled", "true");
+function checklistFingerprint(raw, checkboxSources, includesLegacy) {
+  if (typeof raw !== "string") {
+    return;
+  }
+
+  if (includesLegacy) {
+    return raw.replace(/\[(?: |x)?\]/g, "[ ]");
+  }
+
+  const sourcesByLine = new Map();
+  checkboxSources.forEach((source) => {
+    const [line, nth] = source.split(":").map(Number);
+    if (!sourcesByLine.has(line)) {
+      sourcesByLine.set(line, new Set());
+    }
+    sourcesByLine.get(line).add(nth);
+  });
+
+  const lines = raw.split("\n");
+  let valid = true;
+  sourcesByLine.forEach((indexes, lineNumber) => {
+    if (lines[lineNumber] === undefined) {
+      valid = false;
       return;
     }
 
-    box.removeAttribute("aria-busy");
-    const spinnerState = spinnerStates.get(index);
-    if (!spinnerState) {
-      box.classList.remove("is-saving");
-      return;
-    }
-
-    clearTimeout(spinnerState.timer);
-    const elapsed = performance.now() - spinnerState.startedAt;
-    const remaining = Math.max(0, MINIMUM_SPINNER_DURATION - elapsed);
-
-    if (remaining === 0) {
-      stopSpinner(index);
-    } else {
-      spinnerState.timer = setTimeout(() => stopSpinner(index), remaining);
-    }
-  };
-
-  const restoreConfirmedStates = () => {
-    boxes.forEach((box, index) => {
-      setCheckboxState(box, confirmedStates[index]);
-      updateBusyState(index, false);
+    let markerIndex = -1;
+    lines[lineNumber] = lines[lineNumber].replace(/\[[ xX]?\]/g, (marker) => {
+      markerIndex += 1;
+      return indexes.has(markerIndex) ? "[ ]" : marker;
     });
-  };
+    if ([...indexes].some((index) => index > markerIndex)) {
+      valid = false;
+    }
+  });
+  return valid ? lines.join("\n") : undefined;
+}
 
-  const savePendingStates = async () => {
-    if (saving) {
-      return;
+class ChecklistState {
+  #baselineRaw;
+  #baselineUpdatedAt;
+  #binding;
+  #bindingSignature;
+  #checkboxSources = [];
+  #fingerprint;
+  #includesLegacy = false;
+  #indicators = new Map();
+  #intents = new Map();
+  #postModel;
+  #revision = 0;
+  #saving = false;
+
+  constructor(postModel) {
+    this.#postModel = postModel;
+    this.#baselineRaw = postModel.raw;
+    this.#baselineUpdatedAt = postModel.updated_at;
+  }
+
+  bind(boxes, allBoxes = boxes) {
+    this.#binding?.cleanup();
+
+    const renderedIndexes = new Map(allBoxes.map((box, index) => [box, index]));
+    const mutableBoxes = allBoxes.filter(
+      (box) => !box.classList.contains("permanent")
+    );
+    const bindingSignature = checklistBindingSignature(allBoxes);
+    const checkboxSources = mutableBoxes
+      .map((box) => box.dataset.chkSrc)
+      .filter(Boolean);
+    const includesLegacy = mutableBoxes.some((box) => !box.dataset.chkSrc);
+    const raw = this.#postModel.raw ?? this.#baselineRaw;
+    const fingerprint = checklistFingerprint(
+      raw,
+      checkboxSources,
+      includesLegacy
+    );
+
+    if (
+      (this.#fingerprint !== undefined &&
+        fingerprint !== undefined &&
+        this.#fingerprint !== fingerprint) ||
+      (this.#intents.size > 0 &&
+        fingerprint === undefined &&
+        this.#bindingSignature !== undefined &&
+        this.#bindingSignature !== bindingSignature)
+    ) {
+      this.#discardIntents();
     }
 
-    saving = true;
-    let retryBatch;
+    this.#bindingSignature = bindingSignature;
+    this.#checkboxSources = checkboxSources;
+    this.#includesLegacy = includesLegacy;
+    if (fingerprint !== undefined || this.#intents.size === 0) {
+      this.#fingerprint = fingerprint;
+    }
 
-    try {
-      while (active && (retryBatch || pendingStates.size > 0)) {
-        const batch = retryBatch ?? {
-          states: [...pendingStates],
-          conflictRetries: 0,
-        };
-        retryBatch = undefined;
-        batch.states.forEach(([index, state]) => {
-          if (pendingStates.get(index) === state) {
-            pendingStates.delete(index);
-          }
+    if (
+      !this.#saving &&
+      this.#intents.size === 0 &&
+      this.#postModel.raw != null &&
+      !timestampIsOlder(this.#postModel.updated_at, this.#baselineUpdatedAt)
+    ) {
+      this.#baselineRaw = this.#postModel.raw;
+      this.#baselineUpdatedAt = this.#postModel.updated_at;
+    }
+
+    const binding = {
+      cleaned: false,
+      cleanup: undefined,
+      cleanups: [],
+      controls: new Map(),
+    };
+
+    boxes.forEach((box) => {
+      if (box.classList.contains("permanent")) {
+        return;
+      }
+
+      const renderedIndex = renderedIndexes.get(box);
+      const key = checkboxKey(renderedIndex, allBoxes.length);
+      const target = checkboxTarget(box, renderedIndex, allBoxes.length);
+      binding.controls.set(key, box);
+
+      const toggle = () => {
+        const checked = !box.classList.contains("checked");
+        const previous = this.#intents.get(key);
+        this.#intents.set(key, {
+          checked,
+          confirmed: previous?.confirmed ?? !checked,
+          fingerprint: this.#fingerprint,
+          revision: (this.#revision += 1),
+          target,
         });
-
-        if (expectedRaw == null) {
-          try {
-            const post = await ajax(`/posts/${postModel.id}`);
-            expectedRaw = post.raw;
-            expectedUpdatedAt = post.updated_at;
-          } catch (error) {
-            pendingStates.clear();
-            restoreConfirmedStates();
-            popupAjaxError(error);
-            break;
-          }
-
-          if (!active) {
-            break;
-          }
+        setCheckboxState(box, checked);
+        this.#startIndicator(key);
+        void this.#save();
+      };
+      const onClick = (event) => {
+        event.preventDefault();
+        toggle();
+      };
+      const onKeyDown = (event) => {
+        if (event.key !== " " && event.key !== "Enter") {
+          return;
         }
 
-        const mutationId = crypto.randomUUID();
-        const {
-          startExpiration: startOptimisticUpdateExpiration,
-          unregister: unregisterOptimisticUpdate,
-        } = registerOptimisticPostUpdate(mutationId);
-        unregisterInFlightOptimisticUpdate = unregisterOptimisticUpdate;
-        const toggles = batch.states.map(([index, checked]) => {
-          const checkboxSource = boxes[index].dataset.chkSrc;
-          const toggle = {
-            checkbox_index: renderedIndexes.get(boxes[index]),
-            checkbox_source: checkboxSource,
-            checked,
-          };
-          if (!checkboxSource) {
-            toggle.checkbox_count = allBoxes.length;
-          }
-          return toggle;
-        });
-        const data = {
-          post_id: postModel.id,
-          toggles,
-          expected_raw: expectedRaw,
-          expected_updated_at: expectedUpdatedAt,
-          mutation_id: mutationId,
-        };
+        event.preventDefault();
+        toggle();
+      };
 
-        try {
-          const response = await ajax("/checklist/toggle", {
-            type: "PUT",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-          });
-          const responseIsStale = timestampIsOlder(
-            response.updated_at,
-            postModel.updated_at
-          );
-          if (!responseIsStale) {
-            postModel.last_editor_id = response.last_editor_id;
-            postModel.updated_at = response.updated_at;
-            postModel.version = response.version;
-          }
+      box.addEventListener("click", onClick);
+      box.addEventListener("keydown", onKeyDown);
+      binding.cleanups.push(() => {
+        box.removeEventListener("click", onClick);
+        box.removeEventListener("keydown", onKeyDown);
+      });
+    });
 
-          if (response.revised) {
-            startOptimisticUpdateExpiration();
-          } else {
-            unregisterOptimisticUpdate();
-          }
-          unregisterInFlightOptimisticUpdate = undefined;
+    for (const key of this.#intents.keys()) {
+      if (!binding.controls.has(key)) {
+        this.#discardIntent(key);
+      }
+    }
 
-          if (!responseIsStale && (!active || pendingStates.size === 0)) {
-            postModel.raw = response.raw;
-            if (active) {
-              deferredCooked = {
-                cooked: response.cooked,
-                updatedAt: response.updated_at,
-              };
-            } else {
-              postModel.cooked = response.cooked;
-            }
-          }
+    this.#binding = binding;
+    binding.controls.forEach((box, key) => this.#syncControl(key, box));
 
-          if (!active) {
+    binding.cleanup = () => {
+      if (binding.cleaned) {
+        return;
+      }
+
+      binding.cleaned = true;
+      binding.cleanups.forEach((cleanup) => cleanup());
+      binding.controls.forEach((box) => {
+        box.classList.remove("is-pending");
+        box.removeAttribute("aria-busy");
+      });
+      if (this.#binding === binding) {
+        this.#binding = undefined;
+      }
+    };
+    return binding.cleanup;
+  }
+
+  #applyBaseline(raw, updatedAt) {
+    this.#baselineRaw = raw;
+    this.#baselineUpdatedAt = updatedAt;
+  }
+
+  #clearIndicator(key, indicator = this.#indicators.get(key)) {
+    if (!indicator || this.#indicators.get(key) !== indicator) {
+      return;
+    }
+
+    clearTimeout(indicator.timer);
+    this.#indicators.delete(key);
+    const box = this.#binding?.controls.get(key);
+    box?.classList.remove("is-pending");
+    box?.removeAttribute("aria-busy");
+  }
+
+  #completeBatch(entries) {
+    entries.forEach(([key, saved]) => {
+      const current = this.#intents.get(key);
+      if (!current) {
+        return;
+      }
+
+      if (
+        current.checked === saved.checked &&
+        current.fingerprint === saved.fingerprint
+      ) {
+        this.#intents.delete(key);
+        this.#finishIndicator(key);
+      } else {
+        current.confirmed = saved.checked;
+      }
+    });
+  }
+
+  #currentEntries(entries) {
+    return entries
+      .map(([key, saved]) => {
+        const current = this.#intents.get(key);
+        return current?.checked === saved.checked ? [key, saved] : undefined;
+      })
+      .filter(Boolean);
+  }
+
+  #discardIntent(key) {
+    this.#intents.delete(key);
+    this.#clearIndicator(key);
+  }
+
+  #discardIntents() {
+    const keys = [...this.#intents.keys()];
+    this.#intents.clear();
+    keys.forEach((key) => this.#clearIndicator(key));
+  }
+
+  #failBatch(entries) {
+    entries.forEach(([key, failed]) => {
+      const current = this.#intents.get(key);
+      if (current?.revision !== failed.revision) {
+        return;
+      }
+
+      this.#intents.delete(key);
+      const box = this.#binding?.controls.get(key);
+      if (box) {
+        setCheckboxState(box, failed.confirmed);
+      }
+      this.#finishIndicator(key);
+    });
+  }
+
+  #finishIndicator(key) {
+    const indicator = this.#indicators.get(key);
+    const box = this.#binding?.controls.get(key);
+    box?.removeAttribute("aria-busy");
+    if (!indicator) {
+      box?.classList.remove("is-pending");
+      return;
+    }
+
+    clearTimeout(indicator.timer);
+    const remaining = Math.max(
+      0,
+      MINIMUM_PENDING_DURATION - (performance.now() - indicator.startedAt)
+    );
+    if (remaining === 0) {
+      this.#clearIndicator(key, indicator);
+    } else {
+      indicator.timer = setTimeout(
+        () => this.#clearIndicator(key, indicator),
+        remaining
+      );
+    }
+  }
+
+  #fingerprintFor(raw) {
+    return checklistFingerprint(
+      raw,
+      this.#checkboxSources,
+      this.#includesLegacy
+    );
+  }
+
+  #freshestBaseline(raw, updatedAt) {
+    if (
+      this.#postModel.raw != null &&
+      (timestampIsOlder(updatedAt, this.#postModel.updated_at) ||
+        (timestampsAreEqual(updatedAt, this.#postModel.updated_at) &&
+          raw !== this.#postModel.raw))
+    ) {
+      return {
+        raw: this.#postModel.raw,
+        updatedAt: this.#postModel.updated_at,
+      };
+    }
+
+    return { raw, updatedAt };
+  }
+
+  #refreshPost(reportError = false) {
+    const refresh = this.#postModel.topic?.postStream?.refreshPost(
+      this.#postModel.id
+    );
+    if (refresh) {
+      void refresh.catch(reportError ? popupAjaxError : () => {});
+    }
+  }
+
+  async #save() {
+    if (this.#saving) {
+      return;
+    }
+
+    this.#saving = true;
+    try {
+      while (this.#intents.size > 0) {
+        let entries = [...this.#intents].map(([key, intent]) => [
+          key,
+          { ...intent },
+        ]);
+        let retries = 0;
+
+        while ((entries = this.#currentEntries(entries)).length > 0) {
+          if (!(await this.#hydrate(entries))) {
+            break;
+          }
+          entries = this.#currentEntries(entries);
+          if (entries.length === 0) {
             break;
           }
 
-          batch.states.forEach(([index, desiredState]) => {
-            confirmedStates[index] = desiredState;
-            if (pendingStates.get(index) === desiredState) {
-              pendingStates.delete(index);
-            }
-          });
-          expectedRaw = response.raw;
-          expectedUpdatedAt = response.updated_at;
-        } catch (error) {
-          unregisterInFlightOptimisticUpdate = undefined;
-          unregisterOptimisticUpdate();
-
-          if (!active) {
-            break;
-          }
-
-          const conflict = error.jqXHR?.responseJSON;
+          const fingerprint = entries[0][1].fingerprint;
+          const baselineFingerprint = this.#fingerprintFor(this.#baselineRaw);
           if (
-            error.jqXHR?.status === 409 &&
-            conflict?.retryable &&
-            conflict.raw &&
-            conflict.updated_at &&
-            batch.conflictRetries < MAX_CONFLICT_RETRIES
+            fingerprint === undefined ||
+            baselineFingerprint === undefined ||
+            fingerprint !== baselineFingerprint
           ) {
-            expectedRaw = conflict.raw;
-            expectedUpdatedAt = conflict.updated_at;
-            if (!timestampIsOlder(conflict.updated_at, postModel.updated_at)) {
-              postModel.updated_at = conflict.updated_at;
-            }
-            retryBatch = {
-              states: batch.states,
-              conflictRetries: batch.conflictRetries + 1,
-            };
-            continue;
+            this.#failBatch(entries);
+            entries.forEach(([key]) => this.#clearIndicator(key));
+            this.#discardIntents();
+            this.#refreshPost(true);
+            break;
           }
 
-          pendingStates.clear();
-          restoreConfirmedStates();
-          const postStream = postModel.topic?.postStream;
-          if (postStream) {
-            void postStream.refreshPost(postModel.id).catch(() => {});
-          }
-          popupAjaxError(error);
-          break;
-        } finally {
-          if (active) {
-            const retryingIndexes = new Set(
-              retryBatch?.states.map(([index]) => index)
-            );
-            for (const [index] of batch.states) {
-              if (!retryingIndexes.has(index) && !pendingStates.has(index)) {
-                updateBusyState(index, false);
+          const mutationId = crypto.randomUUID();
+          const {
+            startExpiration: startOptimisticUpdateExpiration,
+            unregister: unregisterOptimisticUpdate,
+          } = registerOptimisticPostUpdate(mutationId);
+          const data = {
+            post_id: this.#postModel.id,
+            toggles: entries.map(([, intent]) => {
+              const toggle = {
+                checkbox_index: intent.target.renderedIndex,
+                checkbox_source: intent.target.checkboxSource,
+                checked: intent.checked,
+              };
+              if (!intent.target.checkboxSource) {
+                toggle.checkbox_count = intent.target.checkboxCount;
               }
+              return toggle;
+            }),
+            expected_raw: this.#baselineRaw,
+            expected_updated_at: this.#baselineUpdatedAt,
+            mutation_id: mutationId,
+          };
+
+          try {
+            const response = await ajax("/checklist/toggle", {
+              type: "PUT",
+              contentType: "application/json",
+              data: JSON.stringify(data),
+            });
+            const stale =
+              (Number.isFinite(response.version) &&
+                Number.isFinite(this.#postModel.version) &&
+                response.version < this.#postModel.version) ||
+              timestampIsOlder(response.updated_at, this.#postModel.updated_at);
+
+            if (response.revised) {
+              startOptimisticUpdateExpiration();
+            } else {
+              unregisterOptimisticUpdate();
             }
+
+            if (stale) {
+              if (response.raw === this.#postModel.raw) {
+                this.#completeBatch(entries);
+                this.#applyBaseline(
+                  this.#postModel.raw,
+                  this.#postModel.updated_at
+                );
+                break;
+              }
+
+              const baseline = this.#freshestBaseline(
+                response.raw,
+                response.updated_at
+              );
+              const canRetry =
+                retries < MAX_CONFLICT_RETRIES &&
+                this.#fingerprintFor(baseline.raw) === fingerprint;
+              this.#applyBaseline(baseline.raw, baseline.updatedAt);
+              if (canRetry) {
+                retries += 1;
+                continue;
+              }
+
+              this.#failBatch(entries);
+              this.#refreshPost();
+              break;
+            }
+
+            if (this.#fingerprint !== fingerprint) {
+              this.#applyBaseline(
+                this.#postModel.raw,
+                this.#postModel.updated_at
+              );
+              this.#refreshPost();
+              break;
+            }
+
+            this.#postModel.last_editor_id = response.last_editor_id;
+            this.#postModel.updated_at = response.updated_at;
+            this.#postModel.version = response.version;
+            this.#postModel.raw = response.raw;
+            this.#applyBaseline(response.raw, response.updated_at);
+            this.#completeBatch(entries);
+            if (this.#intents.size === 0) {
+              this.#postModel.cooked = response.cooked;
+            }
+            break;
+          } catch (error) {
+            unregisterOptimisticUpdate();
+            const conflict = error.jqXHR?.responseJSON;
+            const baseline =
+              conflict?.raw && conflict?.updated_at
+                ? this.#freshestBaseline(conflict.raw, conflict.updated_at)
+                : undefined;
+            const canRetry =
+              error.jqXHR?.status === 409 &&
+              conflict?.retryable &&
+              baseline &&
+              retries < MAX_CONFLICT_RETRIES &&
+              this.#fingerprintFor(baseline.raw) === entries[0][1].fingerprint;
+
+            if (canRetry) {
+              this.#applyBaseline(baseline.raw, baseline.updatedAt);
+              retries += 1;
+              continue;
+            }
+
+            this.#failBatch(entries);
+            if (baseline) {
+              this.#applyBaseline(baseline.raw, baseline.updatedAt);
+            } else if (!error.jqXHR || error.jqXHR.status === 0) {
+              this.#baselineRaw = undefined;
+            } else if (this.#postModel.raw != null) {
+              this.#applyBaseline(
+                this.#postModel.raw,
+                this.#postModel.updated_at
+              );
+            }
+            this.#refreshPost();
+            popupAjaxError(error);
+            break;
           }
         }
       }
     } finally {
-      saving = false;
+      this.#saving = false;
     }
-  };
+  }
 
-  boxes.forEach((box, index) => {
-    if (box.classList.contains("permanent")) {
-      return;
+  async #hydrate(entries) {
+    if (this.#baselineRaw != null) {
+      return true;
     }
 
-    const toggle = () => {
-      if (box.classList.contains("is-saving")) {
-        return;
+    try {
+      const post = await ajax(`/posts/${this.#postModel.id}`);
+      const baseline = this.#freshestBaseline(post.raw, post.updated_at);
+      const fingerprint = this.#fingerprintFor(baseline.raw);
+      const canUseBaseline =
+        timestampsAreEqual(this.#baselineUpdatedAt, baseline.updatedAt) ||
+        (this.#fingerprint !== undefined && fingerprint === this.#fingerprint);
+      if (!canUseBaseline || fingerprint === undefined) {
+        this.#failBatch(entries);
+        entries.forEach(([key]) => this.#clearIndicator(key));
+        this.#refreshPost(true);
+        return false;
       }
 
-      const desiredState = !box.classList.contains("checked");
-      setCheckboxState(box, desiredState);
-      pendingStates.set(index, desiredState);
-      updateBusyState(index, true);
-      void savePendingStates();
-    };
-
-    const onClick = (event) => {
-      event.preventDefault();
-      toggle();
-    };
-
-    const onKeyDown = (event) => {
-      if (event.key !== " " && event.key !== "Enter") {
-        return;
+      this.#fingerprint = fingerprint;
+      entries.forEach(([, intent]) => (intent.fingerprint = fingerprint));
+      for (const intent of this.#intents.values()) {
+        intent.fingerprint ??= fingerprint;
       }
+      this.#applyBaseline(baseline.raw, baseline.updatedAt);
+      if (this.#postModel.raw == null) {
+        this.#postModel.raw = baseline.raw;
+      }
+      return true;
+    } catch (error) {
+      this.#failBatch(entries);
+      popupAjaxError(error);
+      return false;
+    }
+  }
 
-      event.preventDefault();
-      toggle();
-    };
+  #startIndicator(key) {
+    const existing = this.#indicators.get(key);
+    clearTimeout(existing?.timer);
+    this.#indicators.set(key, { startedAt: performance.now() });
+    const box = this.#binding?.controls.get(key);
+    box?.classList.add("is-pending");
+    box?.setAttribute("aria-busy", "true");
+  }
 
-    box.addEventListener("click", onClick);
-    box.addEventListener("keydown", onKeyDown);
-    cleanups.push(() => {
-      box.removeEventListener("click", onClick);
-      box.removeEventListener("keydown", onKeyDown);
-    });
-  });
+  #syncControl(key, box) {
+    const intent = this.#intents.get(key);
+    if (intent) {
+      setCheckboxState(box, intent.checked);
+    }
 
-  return () => {
-    active = false;
-    pendingStates.clear();
-    unregisterInFlightOptimisticUpdate?.();
-    unregisterInFlightOptimisticUpdate = undefined;
-    spinnerStates.forEach(({ timer }) => clearTimeout(timer));
-    boxes.forEach((box) => {
-      box.classList.remove("is-saving");
+    const indicator = this.#indicators.get(key);
+    box.classList.toggle("is-pending", Boolean(indicator));
+    if (intent) {
+      box.setAttribute("aria-busy", "true");
+    } else {
       box.removeAttribute("aria-busy");
-      if (box.classList.contains("is-interactive")) {
-        box.removeAttribute("aria-disabled");
-      }
-    });
-    cleanups.forEach((cleanup) => cleanup());
-
-    const cookedUpdate = deferredCooked;
-    deferredCooked = undefined;
-    if (cookedUpdate) {
-      schedule("afterRender", () => {
-        if (!timestampIsOlder(cookedUpdate.updatedAt, postModel.updated_at)) {
-          postModel.cooked = cookedUpdate.cooked;
-        }
-      });
     }
-  };
+  }
+}
+
+function addToggleBehavior(boxes, postModel, allBoxes = boxes) {
+  let checklistState = checklistStates.get(postModel);
+  if (!checklistState) {
+    checklistState = new ChecklistState(postModel);
+    checklistStates.set(postModel, checklistState);
+  }
+  return checklistState.bind(boxes, allBoxes);
 }
 
 function isInsideSourcedQuote(box) {

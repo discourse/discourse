@@ -14,7 +14,7 @@ module DiscourseWorkflows
             color: "teal",
           },
           group: "discourse_triggers",
-          events: [:topic_created],
+          event: :topic_created,
           output_contracts: [
             { schema: Schema.merge(Schema::TOPIC_LIST_ITEM_SCHEMA, Schema::POST_SCHEMA) },
           ],
