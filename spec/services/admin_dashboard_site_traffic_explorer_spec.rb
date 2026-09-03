@@ -88,6 +88,62 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       end
     end
 
+    context "when traffic contains password reset URLs" do
+      let(:browsers) { [] }
+
+      it "redacts password reset tokens from URL dimensions" do
+        password_reset_token = "secret-token"
+        reset_paths = %W[
+          /u/password-reset/#{password_reset_token}
+          /users/password-reset/#{password_reset_token}
+        ]
+        reset_paths.each_with_index do |path, index|
+          Fabricate(
+            :browser_pageview_event,
+            url: path,
+            normalized_url: path,
+            ip_address: "192.0.2.1",
+            session_id: "password-reset-#{index}",
+            source: BrowserPageviewEvent::SOURCE_BEACON,
+            browser: :chrome,
+            created_at: Time.zone.local(2026, 5, 10, 11, index),
+          )
+        end
+
+        expect(result.traffic.fetch(:dimensions)).to eq(
+          "top_urls" => [
+            {
+              value: "/u/password-reset/<redacted>",
+              label: "/u/password-reset/<redacted>",
+              pageviews: 1,
+            },
+            {
+              value: "/users/password-reset/<redacted>",
+              label: "/users/password-reset/<redacted>",
+              pageviews: 1,
+            },
+          ],
+          "entry_urls" => [
+            {
+              value: "/u/password-reset/<redacted>",
+              label: "/u/password-reset/<redacted>",
+              pageviews: 1,
+            },
+            {
+              value: "/users/password-reset/<redacted>",
+              label: "/users/password-reset/<redacted>",
+              pageviews: 1,
+            },
+          ],
+          "referrers" => [{ value: "", label: "Direct / unknown", pageviews: 2 }],
+          "countries" => [],
+          "networks" => [],
+          "browsers" => [{ value: "chrome", label: "Google Chrome", pageviews: 2 }],
+          "ip_addresses" => [{ value: "192.0.2.1", label: "192.0.2.1", pageviews: 2 }],
+        )
+      end
+    end
+
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
 
