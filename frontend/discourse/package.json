@@ -59,7 +59,7 @@
     "@lezer/javascript": "^1.5.4",
     "@lezer/lr": "^1.4.8",
     "@warp-drive/core": "5.9.0-alpha.15",
-    "@warp-drive/ember": "5.9.0-alpha.15",
+    "@warp-drive/ember": "5.9.0-beta.1",
     "@warp-drive/json-api": "5.9.0-alpha.15",
     "@warp-drive/legacy": "5.9.0-alpha.15",
     "@warp-drive/utilities": "5.9.0-alpha.15",
