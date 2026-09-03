@@ -479,6 +479,7 @@ describe "Request tracking" do
         end
 
         expect(beacon_event[:session_id]).to eq(non_beacon_event[:session_id])
+        expect(beacon_event[:language]).to eq(page.evaluate_script("navigator.language"))
 
         all_events =
           DiscourseEvent.track_events do

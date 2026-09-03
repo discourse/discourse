@@ -273,7 +273,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_card_tabs(card: "acquisition", tabs: %w[Referrers Countries Networks])
     expect(traffic).to have_card_tabs(card: "pages", tabs: ["Top URLs", "Entry URLs"])
-    expect(traffic).to have_card_tabs(card: "visitors", tabs: ["Browsers", "IP addresses"])
+    expect(traffic).to have_card_tabs(card: "visitors", tabs: ["Browsers", "Languages", "IP addresses"])
     expect(traffic).to have_row(card: "acquisition", label: "Direct / unknown", count: "2")
     expect(traffic).to have_row(
       card: "acquisition",
@@ -325,6 +325,14 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("browser")
+
+    traffic.select_tab(card: "visitors", tab: "Languages")
+    traffic.filter_row(card: "visitors", label: "Unknown")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "Unknown")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=&range=custom&start_date=2026-05-01",
+    )
+    traffic.remove_filter("language")
 
     traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United States")
