@@ -626,8 +626,8 @@ importers:
         specifier: ^3.7.1
         version: 3.7.1
       js-yaml:
-        specifier: ^4.1.1
-        version: 4.2.0
+        specifier: ^5.4.0
+        version: 5.4.0
       jsuites:
         specifier: ^5.13.3
         version: 5.13.3
@@ -5833,8 +5833,12 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  js-yaml@4.2.0:
-    resolution: {integrity: sha512-ePWsvanv0DWuDRsW8dnt+R4jQ31SCRCQ7hhNcPXZPsoBZiemuZNYGf7adZdqX2D86j6rvKp3RpCxVTSb8WQlOw==}
+  js-yaml@4.3.1:
+    resolution: {integrity: sha512-CY6crGq313MX8GkwvB7tzgp99vjQxY1++5y10/BKN/GUfHqWaOGQMNZkBvqSzsZKWk/ijwHlWzzkLulsGHhjWQ==}
+    hasBin: true
+
+  js-yaml@5.4.0:
+    resolution: {integrity: sha512-jE7vUJIebKzYQI5xu4co5CRBDlDEYnHrdzsxs4O2giCz4v2SbVMYKpmt1D9L38OKQAeCWmrOTRiCV93u0UkaJA==}
     hasBin: true
 
   js2xmlparser@4.0.2:
@@ -12439,7 +12443,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
-      js-yaml: 4.2.0
+      js-yaml: 4.3.1
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
@@ -13032,7 +13036,7 @@ snapshots:
       ember-source: 6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)
       execa: 8.0.1
       fs-extra: 11.4.0
-      js-yaml: 4.2.0
+      js-yaml: 4.3.1
       npmlog: 7.0.1
       qunit: 2.25.0
       rimraf: 5.0.10
@@ -14613,7 +14617,11 @@ snapshots:
 
   js-tokens@4.0.0: {}
 
-  js-yaml@4.2.0:
+  js-yaml@4.3.1:
+    dependencies:
+      argparse: 2.0.1
+
+  js-yaml@5.4.0:
     dependencies:
       argparse: 2.0.1
 
@@ -16956,7 +16964,7 @@ snapshots:
       express: 5.2.1
       glob: 13.0.6
       http-proxy: 1.18.1(patch_hash=3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73)
-      js-yaml: 4.2.0
+      js-yaml: 4.3.1
       lodash: 4.18.1
       minimatch: 10.2.6
       mkdirp: 3.0.1
