@@ -1,5 +1,4 @@
 import {
-  buildQuery,
   createOne,
   deleteOne,
   readMany,
@@ -8,25 +7,26 @@ import {
   normalizeUserBadgeRecordPayload,
   normalizeUserBadgesPayload,
 } from "discourse/data/normalize";
+import { applyQueryParams } from "discourse/lib/url";
 
 // `/user-badges/:username` (dashed) and `/user_badges` (underscored) are
 // distinct Rails routes — not a typo.
 
 export function findUserBadgesByUsername(username, opts = {}) {
-  const query = buildQuery({ grouped: opts.grouped ? "true" : null });
-  return readMany(
-    `/user-badges/${encodeURIComponent(username)}.json${query}`,
-    normalizeUserBadgesPayload
+  const url = applyQueryParams(
+    `/user-badges/${encodeURIComponent(username)}.json`,
+    { grouped: opts.grouped ? "true" : null }
   );
+  return readMany(url, normalizeUserBadgesPayload);
 }
 
 export function findUserBadgesByBadgeId(badgeId, opts = {}) {
-  const query = buildQuery({
+  const url = applyQueryParams("/user_badges.json", {
     badge_id: badgeId,
     offset: opts.offset,
     username: opts.username,
   });
-  return readMany(`/user_badges.json${query}`, normalizeUserBadgesPayload);
+  return readMany(url, normalizeUserBadgesPayload);
 }
 
 export function grantUserBadge(badgeId, username, reason) {

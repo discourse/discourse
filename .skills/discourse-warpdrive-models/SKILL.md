@@ -28,7 +28,7 @@ A record is a proxy over the cache; reading a field the schema doesn't declare *
 ## Creating a new model
 
 1. **Schema** — `data/schemas/<type>.js`, using `withDefaults` + `attrs`/`belongsTo` from `schemas/helpers.js`. Annotate with `/** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema} */` (avoids a TS2883 d.ts issue). Register it in `schemas/index.js`.
-2. **Normalizer** — in `data/normalize.js` (or a per-resource file), build `{ data, included, meta }`. Use `pickSchemaAttributes(raw, Schema, identity)` for attributes (it also feeds the extras registry), `indexIncluded` + `maybeRelate` for relationships — `maybeRelate` drops pointers with no matching `included` entry, on purpose. Absent payload → `{ data: null }`, never `{ data: [] }` for single-record ops (wrap with the `recordOnly` pattern).
+2. **Normalizer** — in `data/normalize.js` (or a per-resource file), build `{ data, included, meta }`. Use `resourceFrom(type, Schema, raw)` for the resource object (it also feeds the extras registry; pass an explicit `id` for sub-resources), `indexIncluded` + `maybeRelate` for relationships — `maybeRelate` drops pointers with no matching `included` entry, on purpose. Absent payload → `{ data: null }`, never `{ data: [] }` for single-record ops (wrap with the `recordOnly` pattern).
 3. **Builders** — `data/builders/<resource>.js` using `readMany`/`readOne`/`createOne`/`updateOne`/`deleteOne` from `builders/helpers.js`; they carry the `op` and the `data: { type, id }` the cache needs. RPC-style endpoints (toggles, bulk ops) are plain inline `{ url, method, options }` objects with no `op`.
 4. **Model class** — in `app/models/`, extend `RestCompatModel` (only extend `WarpRestModel` directly if no caller uses the legacy store/`get`/`set` API):
 
@@ -76,13 +76,13 @@ Fetching and persisting:
 - `record.save(data)` has two paths: with `static builders.save` it goes through WarpDrive (`store.request`); without, it falls back to the legacy adapter pipeline. Both fire `addModelCallback` hooks and merge `addModelSaveProperty` extras.
 - `record.destroy()` (builder path) vs `record.destroyRecord()` (legacy adapter path).
 - One-off actions: `warpStore().request(someBuilder(...))` with an inline builder. A builder with no normalizer discards the response body (the handler returns `{ data: null }`) — callers needing it use `ajax` directly, as `UserBadge#revoke` does.
-- Optimistic updates: `store.push({ data: { type, id: String(id), attributes } })`, then `this._adoptCacheRecord()` so a draft wrapper sees the new value; push the previous attributes back if the request rejects (`UserBadge#favorite`).
+- Optimistic updates: `store.push({ data: { type, id: String(id), attributes } })`, then `this._adoptResource(this.id)` so a draft wrapper sees the new value; push the previous attributes back if the request rejects (`UserBadge#favorite`).
 
 Plugin-extension APIs (`api.addModelField`/`Getter`/`Method`/…) still work — fields land as tracked properties on the wrapper, not in the cache. Schema-contributed plugin fields are planned but **not built** — don't design anything that depends on them.
 
 ## Changing a converted model
 
-- **New server field**: add one line to the schema (`attrs(...)`) — `pickSchemaAttributes` picks it up automatically.
+- **New server field**: add one line to the schema (`attrs(...)`) — `resourceFrom` picks it up automatically.
 - **New client-only field**: also declare it in the schema (cheap, and keeps reads legal); mark it with a comment saying who sets it.
 - **New relationship**: schema `belongsTo` + normalizer `maybeRelate` + push the related resource into `included`. Only between migrated types.
 - **New endpoint**: add a builder; CRUD shapes use `builders/helpers.js`, RPC shapes are inline objects.

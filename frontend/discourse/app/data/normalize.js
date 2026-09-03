@@ -1,17 +1,17 @@
 import {
   indexIncluded,
   maybeRelate,
-  pickSchemaAttributes,
+  resourceFrom,
 } from "discourse/data/jsonapi-utils";
 import { BadgeSchema } from "discourse/data/schemas/badge";
 import { BadgeGroupingSchema } from "discourse/data/schemas/badge-grouping";
 import { BadgeTypeSchema } from "discourse/data/schemas/badge-type";
 import { TopicDetailsSchema } from "discourse/data/schemas/topic-details";
 import { UserBadgeSchema } from "discourse/data/schemas/user-badge";
-import { i18n } from "discourse-i18n";
+import { badgeGroupingDisplayName } from "discourse/models/badge-grouping";
 
 function badgeResource(raw, includedIds) {
-  const id = String(raw.id);
+  const resource = resourceFrom("badge", BadgeSchema, raw);
   const relationships = {};
   maybeRelate(
     relationships,
@@ -27,51 +27,25 @@ function badgeResource(raw, includedIds) {
     "badge-grouping",
     raw.badge_grouping_id
   );
-  return {
-    type: "badge",
-    id,
-    attributes: pickSchemaAttributes(raw, BadgeSchema, { type: "badge", id }),
-    relationships,
-  };
+  resource.relationships = relationships;
+  return resource;
 }
 
 function badgeTypeResource(raw) {
-  const id = String(raw.id);
-  return {
-    type: "badge-type",
-    id,
-    attributes: pickSchemaAttributes(raw, BadgeTypeSchema, {
-      type: "badge-type",
-      id,
-    }),
-  };
+  return resourceFrom("badge-type", BadgeTypeSchema, raw);
 }
 
 function badgeGroupingResource(raw) {
-  const id = String(raw.id);
-  const attributes = pickSchemaAttributes(raw, BadgeGroupingSchema, {
-    type: "badge-grouping",
-    id,
-  });
+  const resource = resourceFrom("badge-grouping", BadgeGroupingSchema, raw);
   if (raw.name) {
-    const i18nNameKey = raw.name.toLowerCase().replace(/\s/g, "_");
-    attributes.displayName = i18n(`badges.badge_grouping.${i18nNameKey}.name`, {
-      defaultValue: raw.name,
-    });
+    resource.attributes.displayName = badgeGroupingDisplayName(raw.name);
   }
-  return {
-    type: "badge-grouping",
-    id,
-    attributes,
-  };
+  return resource;
 }
 
 function userBadgeResource(raw, lookup, includedIds) {
-  const id = String(raw.id);
-  const attributes = pickSchemaAttributes(raw, UserBadgeSchema, {
-    type: "user-badge",
-    id,
-  });
+  const resource = resourceFrom("user-badge", UserBadgeSchema, raw);
+  const { attributes } = resource;
   // Inline sideloads as plain objects so templates can read arbitrary fields
   // without hitting LegacyMode's strict schema check on cached records.
   if (raw.user_id != null) {
@@ -86,12 +60,8 @@ function userBadgeResource(raw, lookup, includedIds) {
 
   const relationships = {};
   maybeRelate(relationships, "badge", includedIds, "badge", raw.badge_id);
-  return {
-    type: "user-badge",
-    id,
-    attributes,
-    relationships,
-  };
+  resource.relationships = relationships;
+  return resource;
 }
 
 function collectBadgeMetaIncluded(payload, included) {
@@ -204,15 +174,7 @@ export const normalizeUserBadgeRecordPayload = recordOnly(
 );
 
 export function normalizeTopicDetailsPayload({ topicId, details }) {
-  const id = String(topicId);
   return {
-    data: {
-      type: "topic-details",
-      id,
-      attributes: pickSchemaAttributes(details, TopicDetailsSchema, {
-        type: "topic-details",
-        id,
-      }),
-    },
+    data: resourceFrom("topic-details", TopicDetailsSchema, details, topicId),
   };
 }

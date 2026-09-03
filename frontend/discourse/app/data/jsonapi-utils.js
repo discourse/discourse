@@ -1,38 +1,53 @@
 import { recordExtraAttributes } from "discourse/data/extra-attributes";
 
-// Keeps the schema-declared attributes of `raw`. Pass `identity` to retain the
-// remaining keys as extra attributes for that resource rather than dropping
-// them — see `extra-attributes.js`.
-export function pickSchemaAttributes(raw, schema, identity) {
-  const out = {};
-  const declared = new Set();
+// Schemas are immutable module constants, so their field breakdown is computed
+// once rather than per normalized record.
+const schemaFields = new WeakMap();
 
-  if (schema.identity?.name) {
-    declared.add(schema.identity.name);
-  }
-
-  for (const field of schema.fields ?? []) {
-    declared.add(field.name);
-
-    if (field.kind !== "attribute") {
-      continue;
+function fieldsFor(schema) {
+  let entry = schemaFields.get(schema);
+  if (!entry) {
+    const declared = new Set();
+    const attributes = [];
+    if (schema.identity?.name) {
+      declared.add(schema.identity.name);
     }
-    if (field.name in raw) {
-      out[field.name] = raw[field.name];
-    }
-  }
-
-  if (identity) {
-    const extras = {};
-    for (const [name, value] of Object.entries(raw)) {
-      if (!declared.has(name)) {
-        extras[name] = value;
+    for (const field of schema.fields ?? []) {
+      declared.add(field.name);
+      if (field.kind === "attribute") {
+        attributes.push(field.name);
       }
     }
-    recordExtraAttributes(identity.type, identity.id, extras);
+    entry = { declared, attributes };
+    schemaFields.set(schema, entry);
+  }
+  return entry;
+}
+
+// Builds the JSON:API resource object for `raw`: schema-declared attributes go
+// on the resource, the remaining keys are retained as extra attributes (see
+// `extra-attributes.js`). `id` defaults to `raw.id` — pass it explicitly for
+// sub-resources whose identity comes from the parent.
+export function resourceFrom(type, schema, raw, id = raw.id) {
+  id = String(id);
+  const { declared, attributes } = fieldsFor(schema);
+
+  const out = {};
+  for (const name of attributes) {
+    if (name in raw) {
+      out[name] = raw[name];
+    }
   }
 
-  return out;
+  const extras = {};
+  for (const [name, value] of Object.entries(raw)) {
+    if (!declared.has(name)) {
+      extras[name] = value;
+    }
+  }
+  recordExtraAttributes(type, id, extras);
+
+  return { type, id, attributes: out };
 }
 
 export function indexIncluded(included) {

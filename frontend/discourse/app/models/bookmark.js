@@ -75,6 +75,8 @@ export default class Bookmark extends RestCompatModel {
 
   #topicForList;
 
+  #siteSettings;
+
   get newBookmark() {
     return this.id == null;
   }
@@ -154,14 +156,18 @@ export default class Bookmark extends RestCompatModel {
     return new Date(this.created_at);
   }
 
+  // Read per row on the bookmark list — cache the service lookup.
   get visibleListTags() {
-    const siteSettings = getOwnerWithFallback().lookup("service:site-settings");
-    if (!this.tags || !siteSettings.suppress_overlapping_tags_in_list) {
-      return this.tags;
+    const tags = this.tags;
+    this.#siteSettings ??= getOwnerWithFallback().lookup(
+      "service:site-settings"
+    );
+    if (!tags || !this.#siteSettings.suppress_overlapping_tags_in_list) {
+      return tags;
     }
 
-    const title = this.title;
-    return this.tags.filter((tag) => !title.toLowerCase().includes(tag));
+    const title = this.title.toLowerCase();
+    return tags.filter((tag) => !title.includes(tag));
   }
 
   get category() {

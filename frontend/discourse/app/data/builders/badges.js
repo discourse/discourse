@@ -1,5 +1,4 @@
 import {
-  buildQuery,
   createOne,
   deleteOne,
   readMany,
@@ -10,12 +9,13 @@ import {
   normalizeBadgeRecordPayload,
   normalizeBadgesPayload,
 } from "discourse/data/normalize";
+import { applyQueryParams } from "discourse/lib/url";
 
 export function findBadges(opts = {}) {
-  const query = buildQuery({
+  const url = applyQueryParams("/badges.json", {
     only_listable: opts.onlyListable ? "true" : null,
   });
-  return readMany(`/badges.json${query}`, normalizeBadgesPayload);
+  return readMany(url, normalizeBadgesPayload);
 }
 
 export function findBadge(id) {

@@ -35,6 +35,7 @@ export default class TopicDetails extends RestCompatModel {
   topic = null;
 
   #topicId;
+  #cachedRecord;
   #draft = {};
 
   constructor(topicId) {
@@ -61,11 +62,17 @@ export default class TopicDetails extends RestCompatModel {
   }
 
   // Falls back to `#draft` so attrs set via `create({...})` (or assigned
-  // before `updateFromJson`) are readable/writable.
+  // before `updateFromJson`) are readable/writable. The cached record is
+  // memoized — its identity is stable per (type, id) — because this getter
+  // backs every field forwarder and topic templates read those on every
+  // render; a store lookup per read is too hot.
   get __resource() {
     // See `id` — nothing private is reachable until `super()` has returned.
     if (!(#topicId in this)) {
       return undefined;
+    }
+    if (this.#cachedRecord) {
+      return this.#cachedRecord;
     }
     const id = this.#effectiveTopicId();
     if (id != null) {
@@ -74,7 +81,7 @@ export default class TopicDetails extends RestCompatModel {
         id,
       });
       if (cached) {
-        return cached;
+        return (this.#cachedRecord = cached);
       }
     }
     return this.#draft;

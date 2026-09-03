@@ -96,10 +96,10 @@ export default class UserBadge extends RestCompatModel {
       },
     });
 
-    // Optimistic flip. `_adoptCacheRecord` swaps a draft wrapper to the now-
+    // Optimistic flip. `_adoptResource` swaps a draft wrapper to the now-
     // cached record so the new value is visible.
     store.push(partial(!previous));
-    this._adoptCacheRecord();
+    this._adoptResource(this.id);
 
     try {
       await store.request(toggleFavoriteUserBadge(this.id));

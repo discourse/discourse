@@ -76,8 +76,7 @@ export default class WarpRestModel {
     }
   }
 
-  // Swap `__resource` to the cached record for `id`. Subclasses can define
-  // `_didReplaceResource` to react (e.g. clear draft state in rest-compat).
+  // Swap `__resource` to the cached record for `id`.
   _adoptResource(id) {
     if (id == null) {
       return;
@@ -89,7 +88,6 @@ export default class WarpRestModel {
     });
     if (cached && cached !== this.#resource) {
       this.#resource = cached;
-      this._didReplaceResource?.();
     }
     this._applyExtraAttributes(id);
   }
@@ -123,12 +121,6 @@ export default class WarpRestModel {
       return;
     }
     await warpStore().request(Klass.builders.delete(id));
-  }
-
-  // Call after `store.push` of an optimistic update — swaps a draft wrapper
-  // to the now-cached record so subsequent reads see the pushed attributes.
-  _adoptCacheRecord() {
-    this._adoptResource(this.id);
   }
 }
 
