@@ -24,6 +24,15 @@ RSpec.describe "events" do
                 },
                 description: "Include detailed event information (creator, invitees, stats, etc.)"
 
+      parameter name: :include_card,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :string,
+                  enum: %w[true false],
+                },
+                description: "Include card fields without detailed event HTML or statistics"
+
       parameter name: :category_id,
                 in: :query,
                 required: false,
@@ -94,6 +103,43 @@ RSpec.describe "events" do
                   maximum: 200,
                 },
                 description: "Maximum number of events to return (default: 200)"
+
+      parameter name: :tags,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :array,
+                  items: {
+                    type: :string,
+                  },
+                },
+                description: "Filter to events whose topic has every specified tag"
+
+      parameter name: :search,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :string,
+                },
+                description: "Search event names, descriptions, and locations"
+
+      parameter name: :status,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :string,
+                  enum: %w[public private standalone],
+                },
+                description: "Filter by event attendance status"
+
+      parameter name: :event_format,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :string,
+                  enum: %w[virtual in_person hybrid],
+                },
+                description: "Filter by whether the event has a URL, location, or both"
 
       produces "application/json"
 

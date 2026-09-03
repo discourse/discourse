@@ -12,8 +12,30 @@ module DiscourseEvents
           .then { |query| filter_by_attending_user(query, params, guardian, user) }
           .then { |query| filter_by_dates(query, params) }
           .then { |query| filter_by_category(query, params) }
+          .then { |query| filter_by_tags(query, params, guardian) }
+          .then { |query| filter_by_search(query, params) }
+          .then { |query| filter_by_status(query, params) }
+          .then { |query| filter_by_format(query, params) }
           .then { |query| apply_ordering(query, params) }
           .then { |query| apply_limit(query, params) }
+      end
+
+      def self.time_param(value, name)
+        return if value.blank?
+        return Time.current if value == "now"
+
+        value.to_datetime
+      rescue ArgumentError, Date::Error
+        raise Discourse::InvalidParameters.new(name)
+      end
+
+      def self.limit_param(value)
+        return if value.blank?
+
+        limit = Integer(value, exception: false)
+        raise Discourse::InvalidParameters.new(:limit) if limit.nil? || limit < 1
+
+        [limit, 200].min
       end
 
       private
@@ -117,8 +139,8 @@ module DiscourseEvents
       def self.filter_by_dates(events, params)
         return events if params[:before].blank? && params[:after].blank?
 
-        before_date = params[:before] == "now" ? Time.current : params[:before]&.to_datetime
-        after_date = params[:after] == "now" ? Time.current : params[:after]&.to_datetime
+        before_date = time_param(params[:before], :before)
+        after_date = time_param(params[:after], :after)
         include_ongoing = params[:include_ongoing].present?
 
         recurring_scope = build_recurring_date_scope(after_date, before_date)
@@ -186,6 +208,67 @@ module DiscourseEvents
         events.where(topics: { category_id: category_ids })
       end
 
+      def self.filter_by_tags(events, params, guardian)
+        tag_names =
+          Array(params[:tags])
+            .flat_map { |tag| tag.to_s.split(",") }
+            .filter_map { |tag| tag.strip.downcase.presence }
+            .uniq
+        return events if tag_names.empty?
+
+        tags = DiscourseTagging.visible_tags(guardian).where(name: tag_names)
+        return events.none unless tags.count == tag_names.length
+
+        matching_topic_ids =
+          TopicTag
+            .where(tag_id: tags.select(:id))
+            .group(:topic_id)
+            .having("COUNT(DISTINCT tag_id) = ?", tag_names.length)
+            .select(:topic_id)
+
+        events.where(topics: { id: matching_topic_ids })
+      end
+
+      def self.filter_by_search(events, params)
+        search = params[:search].to_s.strip[0, 100]
+        return events if search.blank?
+
+        pattern = "%#{ActiveRecord::Base.sanitize_sql_like(search)}%"
+        events.where(
+          "discourse_post_event_events.name ILIKE :pattern OR " \
+            "discourse_post_event_events.description ILIKE :pattern OR " \
+            "discourse_post_event_events.location ILIKE :pattern",
+          pattern:,
+        )
+      end
+
+      def self.filter_by_status(events, params)
+        statuses =
+          Array(params[:status])
+            .flat_map { |status| status.to_s.split(",") }
+            .filter_map { |status| Event.statuses[status.to_sym] }
+            .uniq
+        return events if params[:status].blank?
+        return events.none if statuses.empty?
+
+        events.where(status: statuses)
+      end
+
+      def self.filter_by_format(events, params)
+        case params[:event_format]
+        when nil, ""
+          events
+        when "virtual"
+          events.where.not(url: nil).where(location: [nil, ""])
+        when "in_person"
+          events.where(url: [nil, ""]).where.not(location: nil).where.not(location: "")
+        when "hybrid"
+          events.where.not(url: [nil, ""]).where.not(location: [nil, ""])
+        else
+          events.none
+        end
+      end
+
       def self.apply_ordering(events, params)
         order_direction = params[:order] == "desc" ? "DESC" : "ASC"
         events.order(
@@ -194,8 +277,7 @@ module DiscourseEvents
       end
 
       def self.apply_limit(events, params)
-        limit = params[:limit]&.to_i || 200
-        events.limit(limit.clamp(1, 200))
+        events.limit(limit_param(params[:limit]) || 200)
       end
 
       def self.listable_topics(guardian)
