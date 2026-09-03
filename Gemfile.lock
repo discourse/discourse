@@ -469,11 +469,10 @@ GEM
       racc
     pastel (0.8.0)
       tty-color (~> 0.5)
-    pdf-reader (2.15.1)
+    pdf-reader (2.16.0)
       Ascii85 (>= 1.0, < 3.0, != 2.0.0)
       afm (>= 0.2.1, < 2)
       hashery (~> 2.0)
-      ruby-rc4
       ttfunk
     pg (1.6.3-aarch64-linux)
     pg (1.6.3-aarch64-linux-musl)
@@ -1188,7 +1187,7 @@ CHECKSUMS
   parallel_tests (5.7.0) sha256=3f1762c46ca2c223b8af8ef877217f9d76974e191bfa934f2580b58bcf1d005c
   parser (3.3.11.1) sha256=d17ace7aabe3e72c3cc94043714be27cc6f852f104d81aa284c2281aecc65d54
   pastel (0.8.0) sha256=481da9fb7d2f6e6b1a08faf11fa10363172dc40fd47848f096ae21209f805a75
-  pdf-reader (2.15.1) sha256=18c6a986a84a3117fa49f4279fc2de51f5d2399b71833df5d2bccd595c7068ce
+  pdf-reader (2.16.0) sha256=bf1b5564c085264d8279bde3cf1467778b75841494d20c0fe7da3dad475f3732
   pg (1.6.3-aarch64-linux) sha256=0698ad563e02383c27510b76bf7d4cd2de19cd1d16a5013f375dd473e4be72ea
   pg (1.6.3-aarch64-linux-musl) sha256=06a75f4ea04b05140146f2a10550b8e0d9f006a79cdaf8b5b130cde40e3ecc2c
   pg (1.6.3-arm64-darwin) sha256=7240330b572e6355d7c75a7de535edb5dfcbd6295d9c7777df4d9dddfb8c0e5f
