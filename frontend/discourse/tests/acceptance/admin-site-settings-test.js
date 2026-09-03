@@ -372,7 +372,7 @@ acceptance("Admin - Site Settings", function (needs) {
     );
   });
 
-  test("labels the MCP settings category", async function (assert) {
+  test("labels the MCP settings category and client policies", async function (assert) {
     pretender.get("/admin/site_settings", () => {
       return [
         200,
@@ -380,26 +380,62 @@ acceptance("Admin - Site Settings", function (needs) {
         JSON.stringify({
           site_settings: [
             {
-              setting: "mcp_oauth_client_trust_policy",
-              humanized_name: "Mcp OAUTH client trust policy",
-              description: "Choose which OAuth clients may request access.",
-              default: "pre_registered",
-              value: "pre_registered",
+              setting: "mcp_oauth_client_id_metadata_policy",
+              humanized_name: "MCP OAuth Client ID metadata policy",
+              description:
+                "Choose how OAuth clients can register with this site. Users must still approve the access requested by each client.",
+              default: "any_domain",
+              value: "any_domain",
               category: "mcp",
               preview: null,
               secret: false,
               type: "enum",
+              valid_values: [
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.disabled",
+                  value: "disabled",
+                },
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.approved_domains",
+                  value: "approved_domains",
+                },
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.any_domain",
+                  value: "any_domain",
+                },
+              ],
+              translate_names: true,
             },
           ],
         }),
       ];
     });
 
-    await visit("/admin/site_settings?filter=mcp%20client%20trust");
+    await visit("/admin/site_settings?filter=mcp%20client%20id%20metadata");
 
     assert
       .dom(".admin-site-settings-category-nav__item.mcp a")
       .hasText("MCP (1)", "the MCP category has a translated label");
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] .form-kit__control-select'
+      )
+      .hasValue("any_domain", "CIMD from any domain is selected by default");
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="disabled"]'
+      )
+      .hasText("Admin-registered clients only");
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="approved_domains"]'
+      )
+      .hasText("Also allow metadata clients from approved domains");
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="any_domain"]'
+      )
+      .hasText("Also allow metadata clients from any domain");
   });
 
   test("shows all_results if current category has none", async function (assert) {

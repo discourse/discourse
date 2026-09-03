@@ -5,8 +5,8 @@ describe Admin::McpClientsController do
 
   before do
     sign_in(admin)
-    SiteSetting.mcp_oauth_client_trust_policy = "approved_domains"
-    SiteSetting.mcp_oauth_approved_domains = "client.example.com"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"
+    SiteSetting.mcp_oauth_client_id_metadata_domains = "client.example.com"
   end
 
   describe "#index" do

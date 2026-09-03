@@ -1,5 +1,9 @@
 en:
   js:
+    mcp_oauth_client_id_metadata_policy:
+      disabled: "Admin-registered clients only"
+      approved_domains: "Also allow metadata clients from approved domains"
+      any_domain: "Also allow metadata clients from any domain"
     ace_editor:
       resize: "Resize code editor"
     user_api_key:

@@ -117,8 +117,8 @@ describe McpOauthAuthorizationsController do
     sign_in(user)
     client_id = "https://client.example.com/oauth/client.json"
     redirect_uri = "https://client.example.com/callback"
-    SiteSetting.mcp_oauth_client_trust_policy = "approved_domains"
-    SiteSetting.mcp_oauth_approved_domains = "client.example.com"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"
+    SiteSetting.mcp_oauth_client_id_metadata_domains = "client.example.com"
     allow(DiscourseMcp::OAuth::ClientResolver).to receive(:fetch_metadata).and_return(
       {
         "client_id" => client_id,
@@ -143,7 +143,7 @@ describe McpOauthAuthorizationsController do
   end
 
   it "rate limits metadata lookups across unique client IDs" do
-    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
     RateLimiter.enable
     allow(DiscourseMcp::OAuth::ClientResolver).to receive(:fetch_metadata) do |uri|
       {

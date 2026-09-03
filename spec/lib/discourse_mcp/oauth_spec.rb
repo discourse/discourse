@@ -37,8 +37,8 @@ describe DiscourseMcp::OAuth do
 
   it "rejects an unapproved metadata domain before registering the client" do
     client_id = "https://unapproved.example.com/oauth/client.json"
-    SiteSetting.mcp_oauth_client_trust_policy = "approved_domains"
-    SiteSetting.mcp_oauth_approved_domains = "approved.example.com"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"
+    SiteSetting.mcp_oauth_client_id_metadata_domains = "approved.example.com"
     allow(described_class::ClientResolver).to receive(:fetch_metadata).and_return(
       {
         "client_id" => client_id,
@@ -54,7 +54,7 @@ describe DiscourseMcp::OAuth do
   end
 
   it "rejects a cached metadata client that the current trust policy does not allow" do
-    SiteSetting.mcp_oauth_client_trust_policy = "pre_registered"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "disabled"
     client_id = "https://client.example.com/oauth/client.json"
     McpOauthClient.create!(
       client_id:,
@@ -72,7 +72,7 @@ describe DiscourseMcp::OAuth do
   end
 
   it "rejects client ID URLs containing dot path segments" do
-    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
     client_id = "https://client.example.com/oauth/../client.json"
     allow(described_class::ClientResolver).to receive(:fetch_metadata).and_return(
       {
@@ -89,7 +89,7 @@ describe DiscourseMcp::OAuth do
   end
 
   it "rejects metadata that requires unsupported client authentication" do
-    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
     client_id = "https://client.example.com/oauth/client.json"
     allow(described_class::ClientResolver).to receive(:fetch_metadata).and_return(
       {
@@ -107,7 +107,7 @@ describe DiscourseMcp::OAuth do
   end
 
   it "handles metadata responses without a body chunk" do
-    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
     client_id = "https://client.example.com/oauth/client.json"
     response = instance_double(Net::HTTPResponse, code: "302")
     allow(response).to receive(:[]).with("Content-Type").and_return("text/html")
@@ -121,7 +121,7 @@ describe DiscourseMcp::OAuth do
   end
 
   it "rate limits metadata lookups across hostname case variants" do
-    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
     RateLimiter.enable
     users = 4.times.map { Fabricate(:user) }
     lowercase_host = "client-#{SecureRandom.hex}.example.com"
@@ -151,7 +151,7 @@ describe DiscourseMcp::OAuth do
   end
 
   it "rejects existing credentials when the current policy no longer allows the client" do
-    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
     client_id = "https://client.example.com/oauth/client.json"
     metadata_client =
       McpOauthClient.create!(
@@ -172,7 +172,7 @@ describe DiscourseMcp::OAuth do
     access_token = McpOauthAccessToken.issue!(authorization: metadata_authorization)
     refresh_token, = McpOauthRefreshToken.issue!(authorization: metadata_authorization)
     request = Struct.new(:authorization).new("Bearer #{access_token}")
-    SiteSetting.stubs(:mcp_oauth_client_trust_policy).returns("pre_registered")
+    SiteSetting.stubs(:mcp_oauth_client_id_metadata_policy).returns("disabled")
 
     expect { DiscourseMcp::Authenticator.new(request).authenticate! }.to raise_error(
       DiscourseMcp::AuthenticationError,
@@ -187,8 +187,8 @@ describe DiscourseMcp::OAuth do
   end
 
   it "revokes metadata client grants when an approved domain is removed" do
-    SiteSetting.mcp_oauth_client_trust_policy = "approved_domains"
-    SiteSetting.mcp_oauth_approved_domains = "client.example.com"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"
+    SiteSetting.mcp_oauth_client_id_metadata_domains = "client.example.com"
     client_id = "https://client.example.com/oauth/client.json"
     metadata_client =
       McpOauthClient.create!(
@@ -210,7 +210,7 @@ describe DiscourseMcp::OAuth do
     refresh_token, refresh_record =
       McpOauthRefreshToken.issue!(authorization: metadata_authorization)
 
-    SiteSetting.mcp_oauth_approved_domains = "other.example.com"
+    SiteSetting.mcp_oauth_client_id_metadata_domains = "other.example.com"
 
     expect(metadata_client.reload.trust_state).to eq("pending")
     expect(metadata_authorization.reload.status).to eq("consent_required")

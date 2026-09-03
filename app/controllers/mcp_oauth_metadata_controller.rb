@@ -24,7 +24,7 @@ class McpOauthMetadataController < ApplicationController
              code_challenge_methods_supported: ["S256"],
              authorization_response_iss_parameter_supported: true,
              client_id_metadata_document_supported:
-               SiteSetting.mcp_oauth_client_trust_policy != "pre_registered",
+               SiteSetting.mcp_oauth_client_id_metadata_policy != "disabled",
              token_endpoint_auth_methods_supported: ["none"],
              scopes_supported: DiscourseMcp.registry.scopes,
            }

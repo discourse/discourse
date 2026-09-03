@@ -6,26 +6,19 @@ module DiscourseMcp
       authorizations = Array(authorizations)
       return {} if authorizations.empty?
 
-      eligible_scopes_by_user_id =
-        Access.eligible_scopes_by_user(authorizations.map(&:user))
+      eligible_scopes_by_user_id = Access.eligible_scopes_by_user(authorizations.map(&:user))
       requirements = consent_requirements
 
       authorizations.to_h do |authorization|
         required_scopes =
-          scopes_by_authorization_id.fetch(authorization.id) do
-            authorization.scopes
-          end
+          scopes_by_authorization_id.fetch(authorization.id) { authorization.scopes }
         status =
           new(
             authorization,
-            eligible_scopes:
-              eligible_scopes_by_user_id.fetch(authorization.user_id, []),
+            eligible_scopes: eligible_scopes_by_user_id.fetch(authorization.user_id, []),
             consent_required_at:
-              consent_required_at(
-                requirements,
-                required_scopes: required_scopes
-              ),
-            required_scopes: required_scopes
+              consent_required_at(requirements, required_scopes: required_scopes),
+            required_scopes: required_scopes,
           ).status
         [authorization.id, status]
       end
@@ -36,9 +29,7 @@ module DiscourseMcp
         .where.not(consent_required_at: nil)
         .filter_map do |policy|
           primitive = DiscourseMcp.registry.find(policy.kind, policy.identifier)
-          if primitive.present?
-            [primitive.required_scopes, policy.consent_required_at]
-          end
+          [primitive.required_scopes, policy.consent_required_at] if primitive.present?
         end
     end
 
@@ -52,12 +43,7 @@ module DiscourseMcp
 
     private_class_method :consent_requirements, :consent_required_at
 
-    def initialize(
-      authorization,
-      eligible_scopes:,
-      consent_required_at:,
-      required_scopes:
-    )
+    def initialize(authorization, eligible_scopes:, consent_required_at:, required_scopes:)
       @authorization = authorization
       @eligible_scopes = eligible_scopes
       @consent_required_at = consent_required_at
@@ -65,9 +51,7 @@ module DiscourseMcp
     end
 
     def status
-      if authorization.status == "revoked" || authorization.revoked_at.present?
-        return "revoked"
-      end
+      return "revoked" if authorization.status == "revoked" || authorization.revoked_at.present?
       return "consent_required" if authorization.status == "consent_required"
       return "server_disabled" if !SiteSetting.mcp_server_enabled
       return "user_unavailable" if !Access.user_available?(authorization.user)
@@ -75,11 +59,8 @@ module DiscourseMcp
       if !OAuth::ClientResolver.allowed_by_current_policy?(authorization.client)
         return "client_not_approved"
       end
-      if authorization.client_metadata_hash !=
-           authorization.client.metadata_hash ||
-           !authorization.consent_current?(
-             consent_required_at: consent_required_at
-           )
+      if authorization.client_metadata_hash != authorization.client.metadata_hash ||
+           !authorization.consent_current?(consent_required_at: consent_required_at)
         return "consent_required"
       end
       return "access_removed" if (required_scopes - eligible_scopes).present?
@@ -89,9 +70,6 @@ module DiscourseMcp
 
     private
 
-    attr_reader :authorization,
-                :eligible_scopes,
-                :consent_required_at,
-                :required_scopes
+    attr_reader :authorization, :eligible_scopes, :consent_required_at, :required_scopes
   end
 end

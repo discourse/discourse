@@ -17,7 +17,7 @@ require "discourse_mcp/core_primitives"
 DiscourseMcp.reset_registry!
 
 DiscourseEvent.on(:site_setting_changed) do |name, _old_value, _new_value|
-  if %i[mcp_oauth_client_trust_policy mcp_oauth_approved_domains].include?(name)
+  if %i[mcp_oauth_client_id_metadata_policy mcp_oauth_client_id_metadata_domains].include?(name)
     DiscourseMcp::OAuth::ClientResolver.revoke_disallowed_clients!
   end
 end

@@ -4490,22 +4490,19 @@ mcp:
     min: 0
     max: 86400000
     area: "mcp"
-  mcp_oauth_client_trust_policy:
+  mcp_oauth_client_id_metadata_policy:
     type: enum
-    default: "pre_registered"
-    choices:
-      - pre_registered
-      - approved_domains
-      - any_cimd
+    default: "any_domain"
+    enum: "McpOauthClientIdMetadataPolicy"
     area: "mcp"
-  mcp_oauth_approved_domains:
+  mcp_oauth_client_id_metadata_domains:
     type: host_list
     default: ""
     area: "mcp"
     depends_on:
-      - mcp_oauth_client_trust_policy
+      - mcp_oauth_client_id_metadata_policy
     depends_on_values:
-      mcp_oauth_client_trust_policy:
+      mcp_oauth_client_id_metadata_policy:
         - approved_domains
     depends_behavior: "hidden"
     dependent_setting_display: "inline"

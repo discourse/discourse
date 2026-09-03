@@ -17,8 +17,15 @@ describe McpOauthMetadataController do
     expect(response.parsed_body["scopes_supported"]).to eq(DiscourseMcp.registry.scopes)
   end
 
+  it "advertises client ID metadata documents by default" do
+    get "/.well-known/oauth-authorization-server"
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["client_id_metadata_document_supported"]).to eq(true)
+  end
+
   it "does not advertise client ID metadata documents when clients must be pre-registered" do
-    SiteSetting.mcp_oauth_client_trust_policy = "pre_registered"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "disabled"
 
     get "/.well-known/oauth-authorization-server"
 
@@ -27,7 +34,7 @@ describe McpOauthMetadataController do
   end
 
   it "advertises client ID metadata documents when approved domains may register clients" do
-    SiteSetting.mcp_oauth_client_trust_policy = "approved_domains"
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"
 
     get "/.well-known/oauth-authorization-server"
 
