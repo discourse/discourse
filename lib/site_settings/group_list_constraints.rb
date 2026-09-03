@@ -277,7 +277,10 @@ class SiteSettings::GroupListConstraints
       errors << I18n.t(@at_least_one_message || "site_settings.errors.at_least_one_group_required")
     end
 
-    unknown_ids = normalized_ids - Group::AUTO_GROUPS.values
+    # Only settings that declare `at_least_one` are checked, which is exactly the
+    # set `AtLeastOneGroupValidator` guarded. Checking every group list would make
+    # a read-modify-write of a value holding a stale id start raising.
+    unknown_ids = @at_least_one ? normalized_ids - Group::AUTO_GROUPS.values : []
     if unknown_ids.any? && !GlobalSetting.skip_db?
       existing_ids = Group.where(id: unknown_ids).pluck(:id)
       missing_ids = unknown_ids - existing_ids

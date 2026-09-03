@@ -325,6 +325,8 @@ RSpec.describe "Theme group list constraints" do
           type: list
           list_type: group
           default: "1"
+          constraints:
+            at_least_one: true
       YAML
       missing_group_id = Group.maximum(:id).to_i + 1000
 

@@ -24,7 +24,7 @@ class ThemeSettingsManager::List < ThemeSettingsManager
   end
 
   def value=(new_value)
-    new_value = constraints.normalize!(new_value, name:) if list_type == "group"
+    new_value = constraints.normalize!(new_value, name:) if list_type == "group" && constraints
 
     super
   end
@@ -35,7 +35,7 @@ class ThemeSettingsManager::List < ThemeSettingsManager
   # alias below. Aliasing first would turn a stored 0 into 5, and a rule that
   # disallows 0 would never match it again.
   def normalized(value)
-    list_type == "group" ? constraints.normalize(value) : value
+    list_type == "group" && constraints ? constraints.normalize(value) : value
   end
 
   def alias_everyone_to_logged_in_users(value)

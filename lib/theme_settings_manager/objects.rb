@@ -67,7 +67,8 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
 
         case property_attributes[:type]
         when "groups"
-          constraints = @opts[:object_group_list_constraints].fetch(property_path)
+          constraints = @opts[:object_group_list_constraints]&.[](property_path)
+          next if constraints.nil?
           object[key] = constraints.normalize_ids(Array(object[key]))
         when "objects"
           nested_objects = object[key]

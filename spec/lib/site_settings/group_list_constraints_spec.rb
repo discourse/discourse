@@ -468,22 +468,32 @@ RSpec.describe SiteSettings::GroupListConstraints do
       expect(constraints.errors_for("")).to eq([I18n.t("site_settings.errors.invalid_group")])
     end
 
-    it "reports group ids that do not exist, listing only those ids" do
-      constraints = constraints_for({ type: "group_list" })
+    it "reports group ids that do not exist when at_least_one is declared" do
+      constraints = constraints_for({ type: "group_list", constraints: { at_least_one: true } })
 
       expect(constraints.errors_for("#{group.id}|123456789")).to eq(
         [I18n.t("site_settings.errors.unknown_group_ids", ids: "123456789")],
       )
     end
 
-    it "accepts ids of existing groups" do
+    # `AtLeastOneGroupValidator` rejected both a blank value and a nonexistent id,
+    # and it guarded only the settings that declared it. A setting that never had
+    # it keeps accepting a stale id, so a read-modify-write of a value holding one
+    # cannot start failing.
+    it "leaves nonexistent ids alone when no rule is declared" do
       constraints = constraints_for({ type: "group_list" })
+
+      expect(constraints.errors_for("#{group.id}|123456789")).to eq([])
+    end
+
+    it "accepts ids of existing groups" do
+      constraints = constraints_for({ type: "group_list", constraints: { at_least_one: true } })
 
       expect(constraints.errors_for(group.id.to_s)).to eq([])
     end
 
     it "does not query the database for automatic group ids" do
-      constraints = constraints_for({ type: "group_list" })
+      constraints = constraints_for({ type: "group_list", constraints: { at_least_one: true } })
       queries = track_sql_queries { expect(constraints.errors_for("0|1|2|3|4|5|14")).to eq([]) }
 
       expect(queries).to eq([])
@@ -491,7 +501,7 @@ RSpec.describe SiteSettings::GroupListConstraints do
 
     it "issues a single query for several non automatic ids" do
       other = Fabricate(:group)
-      constraints = constraints_for({ type: "group_list" })
+      constraints = constraints_for({ type: "group_list", constraints: { at_least_one: true } })
       # `fab!` refinds its record on first access, so the ids have to be read
       # before the queries are tracked.
       value = "1|#{group.id}|#{other.id}"
@@ -502,7 +512,7 @@ RSpec.describe SiteSettings::GroupListConstraints do
 
     it "skips the existence check when the database is unavailable" do
       GlobalSetting.stubs(:skip_db?).returns(true)
-      constraints = constraints_for({ type: "group_list" })
+      constraints = constraints_for({ type: "group_list", constraints: { at_least_one: true } })
 
       expect(constraints.errors_for("123456789")).to eq([])
     end

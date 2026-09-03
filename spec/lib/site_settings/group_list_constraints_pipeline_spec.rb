@@ -167,7 +167,14 @@ RSpec.describe SiteSettingExtension do
 
     it "rejects a saved group id that does not exist" do
       missing_group_id = Group.maximum(:id).to_i + 1000
-      settings.setting(:pipeline_missing_group, "", type: :group_list, constraints: {})
+      settings.setting(
+        :pipeline_missing_group,
+        "1",
+        type: :group_list,
+        constraints: {
+          at_least_one: true,
+        },
+      )
 
       expect { settings.pipeline_missing_group = missing_group_id.to_s }.to raise_error(
         Discourse::InvalidParameters,

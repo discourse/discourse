@@ -28,7 +28,7 @@ class ThemeSettingsValidator
       errors = []
 
       errors.concat(validate_resolve_group_membership(opts, type))
-      if type == types[:list] && opts[:list_type] == "group"
+      if type == types[:list] && opts[:list_type] == "group" && opts[:constraints]
         errors.concat(opts[:constraints].errors_for(value))
       end
 
