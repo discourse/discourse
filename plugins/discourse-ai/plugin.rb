@@ -254,11 +254,24 @@ after_initialize do
     face-meh
     face-angry
     circle-info
+    discourse-ai
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 
   add_model_callback(DiscourseAutomation::Automation, :after_save) do
     DiscourseAi::Configuration::Feature.feature_cache.flush!
+  end
+
+  add_model_callback(AiAgent, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
+  end
+
+  add_model_callback(LlmModel, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
   end
 
   add_custom_reviewable_filter(
