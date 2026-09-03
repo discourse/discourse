@@ -88,7 +88,6 @@ pt_BR:
     ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do bate-papo com base no conteúdo delas."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
-    ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
     ai_embeddings_semantic_related_topics_enabled: "Use Pesquisa semântica para tópicos relacionados."
     ai_embeddings_semantic_related_topics: "Número máximo de tópicos na seção do tópico relacionado."
     ai_embeddings_backfill_batch_size: "O número de incorporações para provisionamento a cada 15 minutos."

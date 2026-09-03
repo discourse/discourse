@@ -115,7 +115,6 @@ fr:
     ai_helper_post_illustrator_agent: "Agent à utiliser pour la fonctionnalité « Illustrer la publication » de l'assistant IA. Remarque : vous devez également créer un outil de génération d'images (Administration > Extensions > Discourse AI > Outils) pour que cette fonctionnalité fonctionne."
     ai_helper_chat_thread_title_agent: "Agent à utiliser pour générer les titres des fils de chat."
     ai_embeddings_selected_model: "Utilisez le modèle sélectionné pour générer des intégrations."
-    ai_embeddings_generate_for_pms: "Générez des intégrations pour les messages privés."
     ai_embeddings_semantic_related_topics_enabled: "Utilisez la recherche sémantique pour les sujets connexes."
     ai_embeddings_semantic_related_topics: "Nombre maximal de sujets à afficher dans la section des sujets connexes."
     ai_embeddings_backfill_batch_size: "Nombre d'intégrations à remplir toutes les 15 minutes."

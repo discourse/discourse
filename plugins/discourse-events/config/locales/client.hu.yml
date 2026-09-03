@@ -322,6 +322,9 @@ hu:
     group_timezones:
       search: "Keresés…"
       group_availability: "%{group} elérhetősége"
+    discourse_workflows:
+      post_event:
+        topic_id: "Témaazonosító"
     discourse_post_event:
       notifications:
         before_event_reminder: "Egy esemény hamarosan elkezdődik: "

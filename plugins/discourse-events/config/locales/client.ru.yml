@@ -331,6 +331,9 @@ ru:
     group_timezones:
       search: "Поиск…"
       group_availability: "доступность %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID темы"
     discourse_post_event:
       new_event: "Новое событие"
       notifications:

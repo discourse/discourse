@@ -36,6 +36,9 @@ ro:
         year: "An"
     group_timezones:
       search: "Caută..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID subiect"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

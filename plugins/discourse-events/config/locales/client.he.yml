@@ -322,6 +322,9 @@ he:
     group_timezones:
       search: "חיפוש…"
       group_availability: "זמינות %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "מזהה נושא"
     discourse_post_event:
       notifications:
         before_event_reminder: "אירוע עומד להתחיל"

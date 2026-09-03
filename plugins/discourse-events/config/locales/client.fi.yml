@@ -320,6 +320,9 @@ fi:
     group_timezones:
       search: "Hae..."
       group_availability: "%{group} – saatavuus"
+    discourse_workflows:
+      post_event:
+        topic_id: "Ketjun tunnus"
     discourse_post_event:
       notifications:
         before_event_reminder: "Tapahtuma on alkamassa"

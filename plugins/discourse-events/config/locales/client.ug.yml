@@ -30,6 +30,9 @@ ug:
         week: "ھەپتە"
         day: "كۈن"
         year: "يىل"
+    discourse_workflows:
+      post_event:
+        topic_id: "تېما كىملىكى"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

@@ -71,6 +71,9 @@ id:
       invite_user_notification: "%{username} mengundang Anda ke: %{description}"
     group_timezones:
       search: "Cari..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Topik"
     discourse_post_event:
       event_description:
         show_more: "Tampilkan lebih banyak"

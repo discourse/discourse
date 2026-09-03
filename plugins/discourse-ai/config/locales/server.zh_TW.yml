@@ -124,7 +124,6 @@ zh_TW:
     ai_helper_post_illustrator_agent: "用於 AI 助理「為貼文配圖」功能的代理程式。注意：你還必須建立圖像產生工具（管理 > 外掛 > Discourse AI > 工具），此功能才能運作。"
     ai_helper_chat_thread_title_agent: "用於產生聊天討論串標題的代理程式。"
     ai_embeddings_selected_model: "使用所選模型產生嵌入。"
-    ai_embeddings_generate_for_pms: "為私人訊息產生嵌入。"
     ai_embeddings_semantic_related_topics_enabled: "使用語意搜尋尋找相關主題。"
     ai_embeddings_semantic_related_topics: "相關主題區段中最多顯示的主題數量。"
     ai_embeddings_backfill_batch_size: "每 15 分鐘要回填的嵌入數量。"

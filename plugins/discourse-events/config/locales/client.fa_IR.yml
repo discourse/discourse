@@ -315,6 +315,9 @@ fa_IR:
       invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
     group_timezones:
       search: "جستجو..."
+    discourse_workflows:
+      post_event:
+        topic_id: "شناسه موضوع"
     discourse_post_event:
       notifications:
         before_event_reminder: "یک رویداد در حال شروع است"

@@ -331,6 +331,9 @@ nl:
     group_timezones:
       search: "Zoeken..."
       group_availability: "Beschikbaarheid %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "Topic-ID"
     discourse_post_event:
       notifications:
         before_event_reminder: "Een evenement gaat beginnen"

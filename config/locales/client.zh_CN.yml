@@ -6018,10 +6018,23 @@ zh_CN:
         chart:
           total: "总计：%{count}"
         related_items:
+          showing: "显示 %{total} 中最新的 %{shown}."
           users:
             title: "用户"
+            signups:
+              description: "在 %{startDate} 和 %{endDate} 之间创建的新帐户，最新优先。"
+            new_contributors:
+              description: "在 %{startDate} 和 %{endDate} 之间发表第一篇帖子的用户，最新优先。"
           labels:
             user: "用户"
+            created_at: "创建时间"
+            first_post: "第一个帖子创建于"
+          table_summary:
+            trigger: "%{count}，显示 %{date} 的摘要"
+            users_title: "用户在 %{date}"
+            loading: "正在加载摘要…"
+            empty: "没有可用的细节。"
+            error: "无法加载摘要。"
       config_sections:
         account:
           title: "帐户"

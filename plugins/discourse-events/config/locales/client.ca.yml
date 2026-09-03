@@ -26,6 +26,9 @@ ca:
         year: "Any"
     group_timezones:
       search: "Cerca..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID de tema"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

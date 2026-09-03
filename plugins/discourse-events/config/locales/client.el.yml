@@ -228,6 +228,9 @@ el:
     group_timezones:
       search: "Αναζήτηση..."
       group_availability: "Διαθεσιμότητα %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Θέματος"
     discourse_post_event:
       new_event: "Νέα εκδήλωση"
       notifications:
