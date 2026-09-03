@@ -48,6 +48,8 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const PENALTY_TOAST_KEY = "reviewable-author-penalty";
+
 const fieldComponents = {
   category: ReviewableFieldCategory,
   editor: ReviewableFieldEditor,
@@ -433,6 +435,7 @@ export default class ReviewableItem extends Component {
 
     this.toasts.success({
       autoClose: false,
+      key: `${PENALTY_TOAST_KEY}-${author.id}`,
       data: {
         title: performableAction.completed_message,
         message: i18n("review.author_penalty.toast.still_silenced", {
