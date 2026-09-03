@@ -68,20 +68,18 @@ module Plugin
 
     # The first match wins, so the build emits the most specific glob first.
     def self.route_bundle_for_path(plugin_directory_name, entrypoint_name, path)
+      return if path.nil?
+
       bundles = read_manifest(plugin_directory_name).dig(entrypoint_name, "routeBundles")
 
-      bundle = bundles.to_a.find { |candidate| url_glob_matches?(candidate["url"], path) }
+      bundle = bundles.to_a.find { |c| path.match?(url_glob_pattern(c["url"])) }
 
       "js/plugins/#{bundle["fileName"].delete_suffix(".js")}" if bundle
     end
 
     # `*` is one segment, or the rest of the path when it is last. `**` is one or more, and
-    # stands for a splat route segment.
-    def self.url_glob_matches?(glob, path)
-      path.match?(url_glob_pattern(glob))
-    end
-
-    # A pattern only ever depends on its glob, so cached entries never go stale.
+    # stands for a splat route segment. A pattern only depends on its glob, so it never goes
+    # stale.
     def self.url_glob_pattern(glob)
       @url_glob_patterns[glob] ||= begin
         segments = glob.split("/")
@@ -107,7 +105,7 @@ module Plugin
         /\A#{pattern}\z/
       end
     end
-    private_class_method :url_glob_matches?, :url_glob_pattern
+    private_class_method :url_glob_pattern
 
     def compile!
       log "Compiling #{Discourse.plugins.count} plugins..."

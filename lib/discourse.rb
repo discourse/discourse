@@ -511,12 +511,7 @@ module Discourse
             external_plugin_imports:
               Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
             route_bundle:
-              request_path &&
-                Plugin::JsManager.route_bundle_for_path(
-                  plugin.directory_name,
-                  "main",
-                  request_path,
-                ),
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "main", request_path),
           }
         end
       end
@@ -540,12 +535,7 @@ module Discourse
             external_plugin_imports:
               Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
             route_bundle:
-              request_path &&
-                Plugin::JsManager.route_bundle_for_path(
-                  plugin.directory_name,
-                  "admin",
-                  request_path,
-                ),
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "admin", request_path),
           }
         end
       end

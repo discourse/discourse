@@ -188,8 +188,6 @@ export function parseRouteMap(
   };
 }
 
-export { RouteMapError };
-
 // Mirrors `RouteNode`: a child with the same name is merged into, so several maps can extend
 // one route.
 function addRoutes(parent, routes, core, bundleName = null) {
@@ -237,7 +235,6 @@ function findPath(root, resource) {
 
 export function buildRouteTree(maps) {
   const root = { name: "root", options: {}, children: [], byName: new Map() };
-  const mounted = [];
   const unmounted = [];
 
   for (const map of maps.filter((candidate) => !candidate.resource)) {
@@ -249,13 +246,12 @@ export function buildRouteTree(maps) {
 
     if (node) {
       addRoutes(node, map.routes, map.core, map.bundleName);
-      mounted.push(map);
     } else {
       unmounted.push(map);
     }
   }
 
-  return { root, mounted, unmounted };
+  return { root, unmounted };
 }
 
 function joinUrl(parent, path) {
@@ -277,7 +273,7 @@ function globFor(url) {
 }
 
 // Nothing a plugin declares is eager, so a route naming no bundle still falls into one.
-export const DEFAULT_BUNDLE_NAME = "default";
+const DEFAULT_BUNDLE_NAME = "default";
 
 export function deriveRoutes(root) {
   const derived = [];

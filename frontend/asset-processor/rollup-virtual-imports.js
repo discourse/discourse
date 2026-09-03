@@ -34,7 +34,7 @@ function isEagerModule(compatModuleName) {
   );
 }
 
-function stripExtension(filename) {
+export function stripExtension(filename) {
   return filename.replace(/\.[^\.]+(\.es6)?$/, "");
 }
 
@@ -137,11 +137,11 @@ function bundleNameFor(routeName, bundleByRoute) {
 }
 
 export function routeBundlesFor(records, bundleByRoute) {
-  const bundles = new Map();
-
   if (!bundleByRoute) {
     return [];
   }
+
+  const bundles = new Map();
 
   for (const record of records) {
     const routeName = routeNameFor(record.compatModuleName);
@@ -170,13 +170,28 @@ export function routeBundlesFor(records, bundleByRoute) {
 
 // The route names a module list contributes, so a caller can tell which entrypoint owns a route.
 export function routeNamesFor(moduleFilenames, bundleByRoute) {
-  const records = moduleFilenames.map((moduleFilename) => ({
-    compatModuleName: stripExtension(moduleFilename),
-  }));
+  const names = moduleFilenames
+    .map((moduleFilename) => routeNameFor(stripExtension(moduleFilename)))
+    .filter((name) => name && bundleNameFor(name, bundleByRoute));
 
-  return new Set(
-    routeBundlesFor(records, bundleByRoute).flatMap((bundle) => bundle.names)
+  return new Set(names);
+}
+
+export function labelFor({ pluginName, themeId }) {
+  return pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
+}
+
+function renderImports(records) {
+  const identifiers = new Map(
+    records.map((record, i) => [record, `Mod${i + 1}`])
   );
+
+  const lines = records.map(
+    (record) =>
+      `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+  );
+
+  return { lines, identifiers };
 }
 
 function renderMap(name, records, identifiers) {
@@ -191,24 +206,20 @@ function renderMap(name, records, identifiers) {
 
 export default {
   "virtual:entrypoint": (moduleFilenames, opts, extra) => {
-    const { themeId, pluginName, frontendConfig } = opts;
-    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
+    const { frontendConfig } = opts;
+    const entrypointName = extra?.entrypointName;
 
-    const { records, warnings } = normalizeModules(moduleFilenames, label);
+    const { records, warnings } = normalizeModules(
+      moduleFilenames,
+      labelFor(opts)
+    );
 
     // QUnit only finds a test by running the module that registers it, so tests stay eager.
-    const isTestEntrypoint = extra?.entrypointName === "test";
-
-    if (isTestEntrypoint || !frontendConfig?.staticModules) {
-      const identifiers = new Map(
-        records.map((record, i) => [record, `Mod${i + 1}`])
-      );
+    if (entrypointName === "test" || !frontendConfig?.staticModules) {
+      const { lines, identifiers } = renderImports(records);
 
       return [
-        ...records.map(
-          (record) =>
-            `import * as ${identifiers.get(record)} from "./${record.importPath}";`
-        ),
+        ...lines,
         ...warnings,
         ...renderMap("compatModules", records, identifiers),
         "export { compatModules };",
@@ -235,7 +246,6 @@ export default {
     }
 
     const bundles = routeBundlesFor(records, opts.routeTables?.bundleByRoute);
-    const entrypointName = extra?.entrypointName;
 
     const eager = records.filter((record) =>
       isEagerModule(record.compatModuleName)
@@ -252,15 +262,10 @@ export default {
     );
 
     const imported = [...new Set([...eager, ...shared])];
-    const identifiers = new Map(
-      imported.map((record, i) => [record, `Mod${i + 1}`])
-    );
+    const { lines, identifiers } = renderImports(imported);
 
     return [
-      ...imported.map(
-        (record) =>
-          `import * as ${identifiers.get(record)} from "./${record.importPath}";`
-      ),
+      ...lines,
       ...warnings,
       ...renderMap("compatModules", eager, identifiers),
       "const pluginExports = {",
@@ -283,30 +288,21 @@ export default {
   },
   // The default export goes to `Resolver#addModules`, so it must be a plain module map.
   "virtual:route": (moduleFilenames, opts, bundleName) => {
-    const label = opts.pluginName
-      ? `PLUGIN ${opts.pluginName}`
-      : `THEME ${opts.themeId}`;
-
-    const { records } = normalizeModules(moduleFilenames, label);
+    const { records } = normalizeModules(moduleFilenames, labelFor(opts));
     const bundle = routeBundlesFor(
       records,
       opts.routeTables?.bundleByRoute
     ).find((candidate) => candidate.bundleName === bundleName);
 
-    // Null rather than throwing: the caller tries each entrypoint in turn.
+    // Null rather than throwing, so the loader can name the entrypoint in the error.
     if (!bundle) {
       return null;
     }
 
-    const identifiers = new Map(
-      bundle.records.map((record, i) => [record, `Mod${i + 1}`])
-    );
+    const { lines, identifiers } = renderImports(bundle.records);
 
     return [
-      ...bundle.records.map(
-        (record) =>
-          `import * as ${identifiers.get(record)} from "./${record.importPath}";`
-      ),
+      ...lines,
       ...renderMap("routeCompatModules", bundle.records, identifiers),
       "export default routeCompatModules;",
       "",

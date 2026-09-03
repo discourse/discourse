@@ -37,7 +37,8 @@ export default function discourseRouteMaps({
       // Core first, so a plugin extending a core route merges into it rather than creating it.
       filenames.sort(
         (a, b) =>
-          CORE_MAPS.indexOf(b) - CORE_MAPS.indexOf(a) || a.localeCompare(b)
+          Number(!CORE_MAPS.includes(a)) - Number(!CORE_MAPS.includes(b)) ||
+          a.localeCompare(b)
       );
 
       const maps = filenames.map((filename) => {
@@ -58,15 +59,20 @@ export default function discourseRouteMaps({
 
       const { root, unmounted } = buildRouteTree(maps);
 
-      for (const map of unmounted) {
+      const [unmountable] = unmounted;
+
+      if (unmountable) {
         throw new Error(
-          `[${label}] ${map.filename} mounts on "${map.resource}", which is not a route.`
+          `[${label}] ${unmountable.filename} mounts on "${unmountable.resource}", which is not a route.`
         );
       }
 
       const derived = deriveRoutes(root);
 
-      Object.assign(tables, { derived }, routeTablesFor(derived));
+      Object.assign(tables, {
+        derived,
+        bundleByRoute: routeTablesFor(derived).bundleByRoute,
+      });
     },
   };
 }

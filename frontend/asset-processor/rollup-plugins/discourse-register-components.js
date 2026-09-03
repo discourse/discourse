@@ -1,4 +1,5 @@
 import MagicString from "magic-string";
+import { stripExtension } from "../rollup-virtual-imports";
 
 const STORE = "discourse/lib/deferred-class-modifications";
 const BINDING = "__discourseComponentClass";
@@ -13,9 +14,7 @@ function componentPathFor(id, basePath) {
 
   const match = id.slice(basePath.length).match(COMPONENT_REGEX);
 
-  return match
-    ? match[1].replace(/\.[^./]+$/, "").replace(/\/index$/, "")
-    : null;
+  return match ? stripExtension(match[1]).replace(/\/index$/, "") : null;
 }
 
 // Components are reached by import, so nothing can look one up by name. Each module says what
