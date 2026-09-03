@@ -127,6 +127,7 @@ class SiteSettings::TypeSupervisor
     name = name_arg.to_sym
 
     @group_list_constraints[name] = opts[:group_list_constraints] if opts[:group_list_constraints]
+    @mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
 
     @textareas[name] = opts[:textarea] if opts[:textarea]
     @authorized_extensions[name] = opts[:authorized_extensions] if opts[:authorized_extensions]
@@ -156,7 +157,6 @@ class SiteSettings::TypeSupervisor
       if type.to_sym == :list
         @allow_any[name] = opts[:allow_any] != false
         @list_type[name] = opts[:list_type] if opts[:list_type]
-        @mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
       end
 
       # add validator for objects
@@ -360,7 +360,7 @@ class SiteSettings::TypeSupervisor
 
     if type == self.class.types[:group_list] && @group_list_constraints[name]
       val = @group_list_constraints[name].normalize!(val, name: name)
-    elsif type == self.class.types[:list] && @mandatory_values[name]
+    elsif @mandatory_values[name]
       val = (@mandatory_values[name].split("|") | val.to_s.split("|")).join("|")
     elsif type == self.class.types[:bool]
       val = (val == true || val == "t" || val == "true") ? "t" : "f"

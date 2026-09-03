@@ -1489,6 +1489,17 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "mandatory_values on a non-list setting type" do
+    it "still merges into the stored value, as it did before constraints existed" do
+      settings.setting(:legacy_mandatory_setting, "a", type: :value_list, mandatory_values: "x|y")
+
+      settings.legacy_mandatory_setting = "a"
+
+      expect(settings.legacy_mandatory_setting).to eq("x|y|a")
+      expect(provider_local.find(:legacy_mandatory_setting).value).to eq("x|y|a")
+    end
+  end
+
   describe "disallowed_groups for group list settings" do
     it "strips disallowed groups when setting a value" do
       SiteSetting.whispers_allowed_groups = "0|1|2"
