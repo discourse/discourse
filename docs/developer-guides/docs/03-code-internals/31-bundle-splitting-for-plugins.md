@@ -79,9 +79,7 @@ When lazy-loading components, it normally makes sense to use the `DAsyncContent`
 
 ```gjs
 export default class LazyLoader extends Component {
-  @service callState;
-
-  get complexComponent()
+  get complexComponent() {
     return import("./complex-component");
   }
 
