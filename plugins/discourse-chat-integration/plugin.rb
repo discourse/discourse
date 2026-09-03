@@ -46,7 +46,7 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
-      require_relative "lib/discourse_workflows/nodes/channel_selection"
+      require_relative "lib/discourse_workflows/nodes/chat_integration_channel_selection"
       require_relative "lib/discourse_workflows/nodes/send_chat_integration_message/v1"
 
       [DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1]
