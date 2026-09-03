@@ -5,17 +5,31 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_topic_voting: "Discourse 主題投票"
   js:
     category:
       sort_options:
         votes: "票數"
     topic_voting:
+      notification_label:
+        vote_released: "已退回投票"
+        voting_closed: "投票已關閉"
+      hot_nav_help: "熱門的近期主題，包含最近有投票的主題"
       voted: "您已在此主題投票過了"
       vote_title: "投票"
       vote_title_plural: "票數"
+      voting_closed_description: "此主題的投票已關閉"
+      see_votes: "您還有 %{count}/%{max} 票"
+      locked_description: "提升您的信任等級以投票"
       votes:
         other: "%{count} 票"
       remove_vote: "移除投票"
+      watch_topic: "有新貼文時通知我"
+      no_votes_yet: "尚未有人為此投票"
       and_more_voters: "和%{count}更多。"
       show_voters: "顯示投票人"
       vote_count_thousands: "%{count} 千"
@@ -24,11 +38,26 @@ zh_TW:
     filters:
       votes:
         title: "票數"
+        help: "歷來獲得最多投票的主題"
       my_votes:
         title: "我的投票"
         help: "您投過票的主題"
     search:
       most_votes: "票數最多"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "主題投票事件"
+          topic_upvote: "當使用者為主題投票時"
+          topic_unvote: "當使用者取消主題投票時"
     discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "需要啟用主題投票"
+      nodes:
+        "trigger:topic_received_vote": "主題收到投票"
+      node_descriptions:
+        "trigger:topic_received_vote": "當使用者為主題投票時觸發"
       topic_received_vote:
+        category_ids_description: "只針對這些分類中的主題觸發。留白可符合所有分類。"
         tag_names: "標記"
+        tag_names_description: "只針對至少具有其中一個標籤的主題觸發"

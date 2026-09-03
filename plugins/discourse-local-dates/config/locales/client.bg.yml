@@ -9,6 +9,7 @@ bg:
     discourse_local_dates:
       create:
         form:
+          save: Запази
           date_title: Дата
           time_title: Време
           timezone: Часова зона

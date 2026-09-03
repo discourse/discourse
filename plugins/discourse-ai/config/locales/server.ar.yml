@@ -49,6 +49,7 @@ ar:
         flagged_post: |
           %{score_reason}
           %{response}
+        flagged_post_response: "الاستجابة من النموذج: %{llm_response}"
         notify_author_pm:
           subject: "تمت إزالة منشورك مؤقتًا للمراجعة."
           body: |
@@ -426,7 +427,6 @@ ar:
         failed: "تعذَّر إكمال الإجراء: %{error}"
         unexpected_error: "حدث خطأ غير متوقَّع"
       agents:
-        default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
         cannot_delete_system_agent: "لا يمكن حذف وكلاء النظام، يُرجى إيقافها بدلًا من ذلك"
         cannot_edit_system_agent: "يمكن إعادة تسمية وكلاء النظام فقط، ولا يجوز لك تعديل الأدوات أو رسائل مطالبة النظام. بل يمكنك إيقافها وإنشاء نسخة منها."
         cannot_have_duplicate_tools: "لا يمكن وجود أدوات مكررة"
@@ -632,7 +632,8 @@ ar:
         lock_post: "قفل المنشور"
         delete_topic: "حذف الموضوع"
         edit_post: "تعديل المنشور"
-        edit_tags: "تعديل الوسوم"
+        edit_tag: "تعديل الوسم"
+        create_category: "إنشاء فئة"
         edit_category: "تعديل الفئة"
         set_topic_timer: "تعيين مؤقِّت للموضوع"
         set_slow_mode: "ضبط الوضع البطيء"
@@ -683,8 +684,9 @@ ar:
         lock_post: "قفل منشور أو فتح قفله"
         delete_topic: "حذف موضوع"
         edit_post: "تعديل محتوى منشور"
-        edit_tags: "تعديل الوسوم الخاصة بموضوع ما"
-        edit_category: "نقل موضوع إلى فئة أخرى"
+        change_topic_tags: "تعديل الوسوم الخاصة بموضوع ما"
+        create_category: "إنشاء فئة جديدة"
+        change_topic_category: "نقل موضوع إلى فئة أخرى"
         set_topic_timer: "تعيين مؤقت على موضوع لإغلاقه أو فتحه أو حذفه أو رفعه"
         set_slow_mode: "تفعيل أو إيقاف الوضع البطيء في موضوع"
         move_posts: "نقل منشورات إلى موضوع جديد أو موجود مسبقًا"
@@ -738,8 +740,8 @@ ar:
         lock_post: "قفل المنشور %{post_id} (مقفل: %{locked})"
         delete_topic: "حذف الموضوع %{topic_id} (محذوف: %{deleted})"
         edit_post: "تعديل المنشور %{post_id}"
-        edit_tags: "تعديل الوسوم المتعلقة بالموضوع %{topic_id}: %{tags}"
-        edit_category: "نقل الموضوع %{topic_id} إلى الفئة %{category_id}"
+        change_topic_tags: "تعديل الوسوم المتعلقة بالموضوع %{topic_id}: %{tags}"
+        change_topic_category: "نقل الموضوع %{topic_id} إلى الفئة %{category_id}"
         set_topic_timer: "تعيين مؤقت %{timer_type} للموضوع %{topic_id} (%{duration_hours} ساعة)"
         set_slow_mode: "تعيين الوضع البطيء للموضوع %{topic_id} (%{slow_mode_seconds} ثانية)"
         move_posts: "نقل المنشورات %{post_ids} من الموضوع %{topic_id}"
@@ -817,10 +819,6 @@ ar:
           other: "تم العثور على %{count} نتيجة لاستعلام البحث '%{query}'"
         read_site_setting: "جارٍ قراءة إعداد الموقع %{setting_name}"
         change_site_setting: "جارٍ تغيير إعداد الموقع %{setting_name} إلى '%{value}'"
-      discoveries:
-        continue_conversation:
-          title: "محادثة الاستكشاف: البحث عن %{query}"
-          raw: "في أثناء بحثي عن %{query}، قدّمت لي المعلومات التالية:\n\n%{context}\n\nدعنا نُتابع المحادثة."
       flag_post:
         errors:
           no_context: "لا يتوفر سياق للمنشور لتقديم بلاغ عنه."
@@ -879,14 +877,23 @@ ar:
           no_reason: "يلزم إدخال سبب التعديل."
           revision_failed: "فشل تعديل المنشور."
         success: "تم تعديل المنشور بنجاح."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "الموضوع غير موجود."
           not_allowed: "غير مسموح لك بتعديل الوسوم في هذا الموضوع."
           no_reason: "يجب تحديد سبب لتعديل الوسوم."
           tagging_disabled: "الوسوم غير مفعّلة في هذا الموقع."
         success: "تم تحديث الوسوم بنجاح."
+      create_tag:
+        errors:
+          tagging_disabled: "الوسوم غير مفعّلة في هذا الموقع."
+      edit_tag:
+        errors:
+          tagging_disabled: "الوسوم غير مفعّلة في هذا الموقع."
       edit_category:
+        errors:
+          not_found: "لم يتم العثور على الفئة."
+      change_topic_category:
         errors:
           not_found: "الموضوع غير موجود."
           not_allowed: "غير مسموح لك بنقل هذا الموضوع."
@@ -1102,7 +1109,6 @@ ar:
       no_user_specified: اسم المستخدم أو معلمة user_unique_id مطلوبة، يُرجى تحديدها.
       user_not_found: المستخدم المحدَّد غير موجود. تحقَّق من معلمة username.
       agent_disabled: "الوكيل المحدَّد غير مُفعّل. يُرجى التحقق من معلمات agent_name أو agent_id (أو المعلمات القديمة: persona_name أو persona_id)."
-      no_default_llm: يجب تحديد نموذج لغوي افتراضي للوكيل (default_llm).
       user_not_allowed: غير مسموح للمستخدم بالمشاركة في الموضوع.
       invalid_stream_resume_token: رمز resume_token غير صالح أو انتهت صلاحيته.
       no_tool_results_specified: المعلمة tool_results مطلوبة عند استئناف الدفق.

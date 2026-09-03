@@ -12,7 +12,7 @@ bs_BA:
           fields:
             topic_id:
               label: ID teme
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "Onemogući"
       enable_holiday: "Omogući"
       date: "Datum"

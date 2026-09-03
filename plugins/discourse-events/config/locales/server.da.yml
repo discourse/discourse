@@ -44,7 +44,7 @@ da:
     working_day_start_hour: "Starttidspunkt for arbejdsdagstiderne."
     working_day_end_hour: "Sluttidspunkt for arbejdsdagstiderne."
     close_to_working_day_hours_extension: "Indstil udvidelsestid i arbejdstimer for at fremhæve tidszonerne."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Dag"

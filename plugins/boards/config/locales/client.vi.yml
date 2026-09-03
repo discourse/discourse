@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    boards:
+      board:
+        remove_card: "Bỏ"
+        new_topic: "Chủ đề mới..."
+        title: "Tiêu đề"
+        tags: "Thẻ"
+        assigned_to: "Được chỉ định cho"
+        topic_reply_count:
+          other: "%{count} trả lời"
+        created_by: "Tạo bởi"
+      manage:
+        name: "Tên"
+        slug: "tên đường dẫn"
+        constraint_categories: "Danh mục"
+        constraint_tags: "Thẻ"
+        advanced_settings: "Cài đặt nâng cao"
+        columns:
+          remove: "Bỏ"
+          column_title: "Tiêu đề"
+          icon: "Biểu tượng"
+          color: "Màu sắc"
+          tag: "Thẻ"
+          move_to_status_open: "Mở"
+          move_to_status_closed: "Đã đóng"

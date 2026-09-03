@@ -4767,6 +4767,16 @@ dashboard:
     client: true
 
 experimental:
+  enable_generated_llms_txt:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      allow_enabled_for:
+        - everyone
+      learn_more_url: "https://meta.discourse.org/t/-/411435"
   reporting_improvements:
     default: false
     client: true

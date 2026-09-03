@@ -142,9 +142,14 @@ export default class PluginsExplorerController extends Controller {
 
   get groupOptions() {
     return this.groups
-      .filter((g) => g.id !== AUTO_GROUPS.everyone.id)
-      .map((g) => {
-        return { id: g.id, name: g.name };
+      .filter(
+        (group) =>
+          group.id !== AUTO_GROUPS.everyone.id &&
+          group.id !== AUTO_GROUPS.anonymous_users.id &&
+          group.id !== AUTO_GROUPS.logged_in_users.id
+      )
+      .map((group) => {
+        return { id: group.id, name: group.name };
       });
   }
 

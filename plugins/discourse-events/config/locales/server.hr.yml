@@ -10,8 +10,8 @@ hr:
       labels:
         username: Korisničko ime
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Regija za odmor koju ste naveli ne postoji."
-    discourse_calendar_enable_holiday_failed: "Ovaj praznik nije mogao biti omogućen, već je omogućen ili nije onemogućen."
+    discourse_events_holiday_region_invalid: "Regija za odmor koju ste naveli ne postoji."
+    discourse_events_enable_holiday_failed: "Ovaj praznik nije mogao biti omogućen, već je omogućen ili nije onemogućen."
     discourse_post_event_bulk_invite_succeeded:
       title: "Događaj - Skupni poziv je uspio"
       subject_template: "Skupni poziv uspješno obrađen"
@@ -27,7 +27,7 @@ hr:
         ```tekst
         %{logs}
         ```
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Dan"

@@ -293,7 +293,6 @@ ja:
       read_post:
         unknown_post: "投稿"
       agents:
-        default_llm_required: "チャットを有効にする前に、デフォルトの LLM モデルが必要です"
         cannot_have_duplicate_tools: "重複するツールは使用できません"
         github_helper:
           name: "GitHub ヘルパー"
@@ -482,6 +481,7 @@ ja:
         random_picker: "ランダムな数字またはリストのランダムな要素を選択する"
         categories: "フォーラムのすべての公開カテゴリをリストする"
         flag_post: "現在の投稿をスタッフによるレビュー対象として通報する"
+        create_category: "新しいカテゴリを作成する"
         search: "フォーラムのすべての公開トピックを検索する"
         tags: "フォーラムのすべてのタグをリストする"
         time: "様々なタイムゾーンの時間を調べる"
@@ -534,10 +534,6 @@ ja:
           other: "調査: %{goals}\n\n「%{filter}」に一致する投稿が %{count} 件見つかりました"
         search_settings:
           other: "「%{query}」の結果が %{count} 件見つかりました"
-      discoveries:
-        continue_conversation:
-          title: "発見の会話: %{query} を検索"
-          raw: "%{query} の検索において、次の情報を提供してくれました:\n\n%{context}\n\n会話を続けましょう。"
       flag_post:
         errors:
           no_context: "通報できる投稿コンテンツがありません。"
@@ -556,10 +552,10 @@ ja:
       delete_topic:
         errors:
           not_found: "トピックが見つかりませんでした."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "トピックが見つかりませんでした."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "トピックが見つかりませんでした."
       set_topic_timer:

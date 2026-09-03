@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 ko:
+  llms_txt:
+    sections:
+      optional: "선택 사항"
+    links:
+      search:
+        label: "검색"
+      categories:
+        label: "카테고리"
+      about:
+        label: "소개"
+      guidelines:
+        label: "가이드라인"
   dates:
     short_date_no_year: "M월 D일"
     short_date: "YYYY-M-D"
@@ -932,6 +944,11 @@ ko:
         share: "공유하기"
       types:
         staff: "스태프"
+    posters_by_member_type_members:
+      labels:
+        user: "사용자"
+        count: "글"
+        share: "공유하기"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

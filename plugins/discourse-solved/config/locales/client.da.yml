@@ -64,6 +64,11 @@ da:
           solved: "er løst"
           unsolved: "er uløst"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Emne"
+            category: "Kategori"
       web_hooks:
         solved_event:
           group_name: "Løst begivenhed"

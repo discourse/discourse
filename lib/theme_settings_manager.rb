@@ -36,7 +36,15 @@ class ThemeSettingsManager
   end
 
   def value
-    has_record? ? db_record.value : default
+    configured_value
+  end
+
+  def default_value
+    default
+  end
+
+  def value_for_editing
+    value
   end
 
   def type_name
@@ -113,5 +121,11 @@ class ThemeSettingsManager
   def has_max?
     max = @opts[:max]
     (max.is_a?(::Integer) || max.is_a?(::Float)) && max != ::Float::INFINITY
+  end
+
+  protected
+
+  def configured_value
+    has_record? ? db_record.value : default
   end
 end

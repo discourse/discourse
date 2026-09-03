@@ -15,8 +15,8 @@ sv:
       event_started:
         title: Händelsen startad
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Den semesterregion som du angav finns inte."
-    discourse_calendar_enable_holiday_failed: "Denna semester kunde inte aktiveras, den är redan aktiverad eller den är inte inaktiverad."
+    discourse_events_holiday_region_invalid: "Den semesterregion som du angav finns inte."
+    discourse_events_enable_holiday_failed: "Denna semester kunde inte aktiveras, den är redan aktiverad eller den är inte inaktiverad."
     discourse_post_event_bulk_invite_succeeded:
       title: "Evenemang - Massinbjudan lyckades"
       subject_template: "Massinbjudan har bearbetats framgångsrikt"
@@ -48,7 +48,7 @@ sv:
     working_day_end_hour: "Sluttid för arbetsdagens timmar."
     close_to_working_day_hours_extension: "Ställ in förlängningstid i arbetsdagstimmar för att markera tidszonerna."
     events_calendar_categories: "Visa en evenemangskalender högst upp i en kategori."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Dag"

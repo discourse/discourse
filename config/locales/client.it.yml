@@ -440,6 +440,7 @@ it:
         theme: "Tema"
         fonts: "Caratteri"
         homepage: "Homepage"
+        search: "Cerca"
       theme:
         selected: "Selezionato"
       colors:
@@ -2024,7 +2025,6 @@ it:
         watch_topic: "Osserva l'argomento"
         track_topic: "Traccia l'argomento"
         do_nothing: "Non fare nulla"
-      topics_unread_when_closed: "Considera gli argomenti come non letti quando sono chiusi"
       invited:
         title: "Inviti"
         pending_tab: "In sospeso"
@@ -2663,6 +2663,11 @@ it:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Invio"
+      option: "Opzione"
+      period: "Periodo"
+      tab: "Tab"
+      delete: "Elimina"
+      home: "Pagina principale"
     conditional_loading_section:
       loading: Caricamento…
     category_row:
@@ -2815,7 +2820,6 @@ it:
       create_whisper: "Sussurro"
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
-      title: "Oppure premi %{modifier}Invio"
       discard: "Elimina"
       users_placeholder: "Aggiungi utenti o gruppi"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
@@ -3128,10 +3132,10 @@ it:
         search_field: "Campo di ricerca nell'intestazione del sito"
         search_icon: "Icona di ricerca vicino all'avatar del profilo"
       type:
-        default: "Argomenti/messaggi"
+        default: "Messaggi"
         users: "Utenti"
         categories: "Categorie"
-        categories_and_tags: "Categorie/etichette"
+        categories_and_tags: "Categorie ed etichette"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
@@ -3144,7 +3148,6 @@ it:
         in: "filtra per metadati (per es. in:title, in:personal, in:pinned)"
         status: "filtra per stato dell'argomento"
         full_search: "avvia la ricerca a pagina intera"
-        full_search_key: "%{modifier} + Invio"
         me: "mostra solo i tuoi messaggi"
       advanced:
         title: Filtri avanzati
@@ -3826,7 +3829,6 @@ it:
       reply_as_new_private_message: "Rispondi come nuovo messaggio agli stessi destinatari"
       continue_discussion: "Continua la discussione da %{postLink}:"
       follow_quote: "vai al messaggio citato"
-      show_full: "Mostra Messaggio Completo"
       show_hidden: "Visualizza contenuto ignorato."
       deleted_by_author_simple: "(messaggio eliminato dall'autore)"
       collapse: "comprimi"
@@ -4538,12 +4540,8 @@ it:
     invalid_video_url: Questo video non può essere riprodotto perché l'URL non è valido o non è disponibile.
     keyboard_shortcuts_help:
       search_placeholder: "Cerca una scorciatoia tramite descrizione o combinazione di tasti"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Tasti di scelta rapida"
       short_title: "Scorciatoie"
       search_ctrl_f_tip: "Per cercare nell'intero forum, premi <kbd>/</kbd>"
@@ -5210,6 +5208,11 @@ it:
         group_traffic: "Traffico"
         group_members: "Membri"
         group_other: "Altri"
+        related_items:
+          users:
+            title: "Utenti"
+          labels:
+            user: "Utente"
       config_sections:
         account:
           title: "Account"
@@ -5416,7 +5419,6 @@ it:
           header_description: "Configura le impostazioni di ricerca, tra cui la registrazione e la tokenizzazione per le lingue cinese e giapponese"
         search_everything:
           title: "Cerca"
-          header_description: "Qui puoi trovare qualsiasi cosa nell'interfaccia di amministrazione. Puoi filtrare i risultati qui sotto e le tue preferenze verranno memorizzate. Per aprire questa ricerca in qualsiasi punto dell'interfaccia di amministrazione, premi %{shortcutHTML}."
         security:
           title: "Sicurezza"
           header_description: "Configura le impostazioni di sicurezza, tra cui l'autenticazione a due fattori, i privilegi di moderatore e le policy di sicurezza dei contenuti"
@@ -5720,6 +5722,8 @@ it:
               share: "Condividi"
             whos_posting:
               staff: "Staff"
+              modal:
+                apply: "Salva"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nuovo"
@@ -5732,6 +5736,11 @@ it:
             table:
               searches: "Ricerche"
               status: "Stato"
+          system:
+            title: "Sistema"
+            status: "Stato"
+            discourse_updated: "Discourse aggiornato"
+            dashboard_updated: "Dashboard aggiornato"
         reports_section:
           header_action: "Gestisci"
           no_data: "Non ci sono dati da mostrare"
@@ -5784,6 +5793,14 @@ it:
           average_for_sample: "Media per campione"
           total: "Totale generale"
           no_data: "Non ci sono dati da mostrare."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} utente"
+              other: "%{count} utenti"
+            posts_count:
+              one: "%{count} messaggio"
+              other: "%{count} messaggi"
+            deselect: "Deseleziona %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Ricerche nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'

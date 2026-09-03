@@ -86,7 +86,6 @@ const TextField = Component.extend({
     "form",
     "maxlength",
     "minlength",
-    "placeholder",
     "readonly",
     "required",
     "selectionDirection",

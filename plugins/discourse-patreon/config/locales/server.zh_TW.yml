@@ -5,3 +5,29 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    patreon_enabled: '啟用 discourse-patreon 外掛'
+    patreon_login_enabled: '啟用 Patreon 社群登入'
+    patreon_client_id: '產生的 Patreon 用戶端 ID'
+    patreon_client_secret: '產生的 Patreon 用戶端密鑰'
+    patreon_webhook_secret: '產生的 Patreon Webhook 密鑰'
+    patreon_creator_discourse_username: "透過「Patreon 社群登入」登入 Patreon 創作者帳號時所使用的 Discourse 帳號使用者名稱"
+    patreon_creator_access_token: "產生的 Patreon 創作者存取權杖"
+    patreon_creator_refresh_token: "產生的 Patreon 創作者更新權杖"
+    patreon_declined_pledges_grace_period_days: "贊助遭完全拒絕前的寬限期（天數）。"
+    max_patreon_api_reqs_per_hr: "每小時 Patreon API 要求數上限"
+    max_patreon_api_reqs_per_day: "每日 Patreon API 要求數上限"
+    patreon_verbose_log: '啟用 Patreon 酬載的詳細記錄'
+    patreon_donation_prompt_enabled: "啟用捐款提示？"
+    patreon_donation_prompt_show_after_topics: "檢視 n 個主題後顯示捐款提示"
+    patreon_api_version: "Patreon API 版本。版本 1 已淘汰 — 請在 Patreon 建立新的 OAuth 用戶端並切換至版本 2。"
+    patreon_donation_prompt_campaign_url: "捐款提示活動 URL"
+    errors:
+      patreon_creator_username_not_set: "啟用 Patreon 登入前，必須先設定「Patreon 創作者 Discourse 使用者名稱」。"
+  dashboard:
+    problem:
+      access_token_invalid: "Patreon 創作者的存取權杖與更新權杖值不正確。您必須從<a href='https://www.patreon.com/platform/documentation/clients'>Patreon 網站</a>複製並貼上新的權杖至<a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>網站設定</a>。"
+      patreon_api_v1_deprecated: "您正在使用已淘汰的 Patreon API v1。請<a href='https://www.patreon.com/portal/registration/register-clients'>在 Patreon 建立新的 v2 OAuth 用戶端</a>、更新憑證，然後在<a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon_api_version'>網站設定</a>中切換至 API v2。"
+  patreon:
+    error:
+      invalid_response: "Patreon API 的回應無效"

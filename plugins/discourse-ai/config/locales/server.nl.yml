@@ -359,7 +359,6 @@ nl:
       chat_tool_approval:
         unexpected_error: "er is een onverwachte fout opgetreden"
       agents:
-        default_llm_required: "Standaard LLM-model is vereist voordat Chat wordt ingeschakeld"
         cannot_delete_system_agent: "Systeemagenten kunnen niet worden verwijderd. Schakel deze in plaats daarvan uit."
         cannot_edit_system_agent: "Systeemagenten kunnen alleen worden hernoemd. Je kunt tools of systeemprompts niet bewerken. Je kunt ze wel uitschakelen en een kopie maken."
         cannot_have_duplicate_tools: "Mag geen dubbele tools hebben"
@@ -543,7 +542,8 @@ nl:
         lock_post: "Bericht vergrendelen"
         delete_topic: "Topic verwijderen"
         edit_post: "Bericht bewerken"
-        edit_tags: "Tags bewerken"
+        edit_tag: "Tag bewerken"
+        create_category: "Categorie maken"
         edit_category: "Categorie bewerken"
         set_topic_timer: "Topictimer instellen"
         set_slow_mode: "Langzame modus instellen"
@@ -588,8 +588,9 @@ nl:
         lock_post: "Vergrendel of ontgrendel een bericht"
         delete_topic: "Verwijder een topic"
         edit_post: "Bewerk de inhoud van een bericht"
-        edit_tags: "Bewerk de tags van een topic"
-        edit_category: "Verplaats een topic naar een andere categorie"
+        change_topic_tags: "Bewerk de tags van een topic"
+        create_category: "Nieuwe categorie maken"
+        change_topic_category: "Verplaats een topic naar een andere categorie"
         set_topic_timer: "Stel een timer in voor een topic om het te sluiten, te openen, te verwijderen of omhoog te plaatsen"
         set_slow_mode: "Langzame modus voor een topic in- of uitschakelen"
         move_posts: "Verplaats berichten naar een nieuw of bestaand topic"
@@ -633,8 +634,8 @@ nl:
         lock_post: "Bericht %{post_id} vergrendelen (vergrendeld: %{locked})"
         delete_topic: "Topic %{topic_id} verwijderen (verwijderd: %{deleted})"
         edit_post: "Bericht bewerken %{post_id}"
-        edit_tags: "Tags van topic %{topic_id} bewerken: %{tags}"
-        edit_category: "Topic %{topic_id} verplaatsen naar categorie %{category_id}"
+        change_topic_tags: "Tags van topic %{topic_id} bewerken: %{tags}"
+        change_topic_category: "Topic %{topic_id} verplaatsen naar categorie %{category_id}"
         set_topic_timer: "Timer %{timer_type} instellen voor topic %{topic_id} (%{duration_hours} u)"
         set_slow_mode: "Langzame modus instellen voor topic %{topic_id} (%{slow_mode_seconds}s)"
         move_posts: "Berichten %{post_ids} verplaatsen van topic %{topic_id}"
@@ -676,10 +677,6 @@ nl:
         search_settings:
           one: "%{count} resultaat gevonden voor '%{query}'"
           other: "%{count} resultaten gevonden voor '%{query}'"
-      discoveries:
-        continue_conversation:
-          title: "Ontdekkingsgesprek: zoek naar %{query}"
-          raw: "Tijdens het zoeken naar %{query} heb je me de volgende informatie laten zien:\n\n%{context}\n\nLaten we het gesprek voortzetten."
       flag_post:
         errors:
           no_context: "Geen berichtcontext beschikbaar om te markeren."
@@ -727,14 +724,23 @@ nl:
           no_reason: "Een bewerkingsreden is vereist."
           revision_failed: "Bericht herzien is mislukt."
         success: "Bericht bewerkt."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Topic niet gevonden."
           not_allowed: "Je mag geen tags bewerken in dit topic."
           no_reason: "Er is een reden vereist om tags te bewerken."
           tagging_disabled: "Tagging is niet ingeschakeld op deze site."
         success: "Tags bijgewerkt."
+      create_tag:
+        errors:
+          tagging_disabled: "Tagging is niet ingeschakeld op deze site."
+      edit_tag:
+        errors:
+          tagging_disabled: "Tagging is niet ingeschakeld op deze site."
       edit_category:
+        errors:
+          not_found: "Categorie niet gevonden."
+      change_topic_category:
         errors:
           not_found: "Topic niet gevonden."
           not_allowed: "Je mag dit topic niet verplaatsen."
@@ -898,7 +904,6 @@ nl:
       no_user_for_agent: Er is geen gebruiker gekoppeld aan de opgegeven agent.
       no_user_specified: De gebruikersnaam of de parameter user_unique_id is vereist. Geef deze op.
       user_not_found: De opgegeven gebruiker bestaat niet. Controleer de gebruikersnaamparameter.
-      no_default_llm: Er moet een default_llm zijn gedefinieerd voor de agent.
       user_not_allowed: De gebruiker mag niet deelnemen aan het topic.
       invalid_stream_resume_token: Het resume_token is ongeldig of verlopen.
       no_tool_results_specified: De parameter tool_results is vereist bij het hervatten van een stream.

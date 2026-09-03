@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 hy:
+  llms_txt:
+    sections:
+      optional: "Ընտրովի"
+    links:
+      search:
+        label: "Որոնում"
+      categories:
+        label: "Կատեգորիաներ"
+      about:
+        label: "Մասին"
+      guidelines:
+        label: "Ուղեցույց"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -781,6 +793,11 @@ hy:
         share: "Կիսվել"
       types:
         staff: "Անձնակազմ"
+    posters_by_member_type_members:
+      labels:
+        user: "Օգտատեր"
+        count: "Գրառումներ"
+        share: "Կիսվել"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

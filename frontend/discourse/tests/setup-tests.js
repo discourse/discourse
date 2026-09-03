@@ -10,6 +10,7 @@ import { run } from "@ember/runloop";
 import {
   getSettledState,
   isSettled,
+  pauseTest,
   setApplication,
   setResolver,
 } from "@ember/test-helpers";
@@ -63,7 +64,6 @@ let started = false;
 function createApplication(config, settings) {
   const app = Application.create(config);
 
-  app.injectTestHelpers();
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
@@ -217,6 +217,9 @@ export default async function setupTests(config) {
 
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
+
+  // Available in tests without an import
+  window.pauseTest = pauseTest;
 
   // Stop the message bus so we don't get ajax calls
   window.MessageBus.stop();

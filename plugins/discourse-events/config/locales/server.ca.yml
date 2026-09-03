@@ -9,7 +9,7 @@ ca:
     currently_away:
       labels:
         username: Nom d'usuari
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Dia"

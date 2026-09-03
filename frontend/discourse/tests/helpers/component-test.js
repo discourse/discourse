@@ -18,6 +18,10 @@ class RouterStub extends Service {
 
   on() {}
   off() {}
+
+  isActive(routeName) {
+    return routeName === this.currentRouteName;
+  }
 }
 
 export function setupRenderingTest(hooks, opts = {}) {

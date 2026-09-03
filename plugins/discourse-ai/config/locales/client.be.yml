@@ -115,14 +115,13 @@ be:
         successful: "Паспяховая"
         failed: "Няўдалыя"
         unknown: "Невядома"
-        topic_id: "Ідэнтыфікатар тэмы"
-        post_id: "Ідэнтыфікатар допісу"
         when: "Калі"
         request: "Запыт"
         user: "Карыстальнік"
         topic: "Тэма"
         post: "пост"
         actions: "Дзеянні"
+        view_details: "Падрабязнасці"
         detail:
           request: "Запыт"
         retention:
@@ -224,7 +223,10 @@ be:
           table:
             total_count: "агульны"
       discobot_discoveries:
-        regular_results: "тэмы"
-        tooltip:
-          actions:
-            disable: "Адключыць"
+        legacy:
+          regular_results: "тэмы"
+          tooltip:
+            actions:
+              disable: "Адключыць"
+        search_all_topics: "Усе тэмы"
+        search_messages: "Паведамленні"

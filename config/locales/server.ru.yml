@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 ru:
+  llms_txt:
+    sections:
+      optional: "Опционально"
+    links:
+      search:
+        label: "Искать"
+      categories:
+        label: "Категории"
+      about:
+        label: "Информация"
+      guidelines:
+        label: "Рекомендации"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -1450,6 +1462,11 @@ ru:
         share: "Поделиться"
       types:
         staff: "Персонал"
+    posters_by_member_type_members:
+      labels:
+        user: "Пользователь"
+        count: "Записи"
+        share: "Поделиться"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -2015,7 +2032,6 @@ ru:
     allowed_iframes: "Список префиксов URL-адресов для iframe src, которые Discourse может безопасно разрешить в публикациях. Символ * может использоваться для обозначения любого количества символов, кроме «/»."
     allowed_crawler_user_agents: "Перечень поисковых роботов, которым должен быть разрешён доступ к сайту. ВНИМАНИЕ! УСТАНОВКА ЭТОГО ПАРАМЕТРА ЗАПРЕТИТ ДОСТУП ВСЕМ ПОИСКОВЫМ БОТАМ, НЕ УКАЗАННЫМ В ПЕРЕЧНЕ!"
     blocked_crawler_user_agents: "Уникальное нечувствительное к регистру слово в строке User-Agent, идентифицирующее поисковых роботов, которым запрещён доступ к сайту. Не применяется, если определён белый список."
-    llms_txt: "Загрузите текстовый файл, который будет доступен по адресу /llms.txt для обходчиков LLM. Дополнительную информацию см. на сайте <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a>."
     content_security_policy_report_only: "Включить Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Ограничить через CSP число тех, кто может встроить этот сайт в iframes. Перечень разрешённых хостов настраивается на закладке <a href='%{base_path}/admin/customize/embedding'>Встраивание</a>."
     content_security_policy_script_src: "Дополнительные источники сценариев в белом списке. Текущий хост и CDN включены по умолчанию. См. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>«Смягчение атак XSS с помощью политики безопасности контента (CSP)».</a> Другие хост-источники игнорируются, так как включена директива strict-dynamic."

@@ -31,11 +31,13 @@ vi:
         smart_dates:
           name: "Ngày thông minh"
       tool_summary:
+        create_category: "Tạo chuyên mục"
         search: "Tìm kiếm"
         time: "Thời gian"
         summarize: "Tóm tắt"
       tool_help:
         delete_topic: "Xóa chủ đề"
+        create_category: "Tạo Chủ đề mới"
       tool_description:
         search:
           other: "Đã tìm thấy %{count} <a href='%{url}'>kết quả</a> cho '%{query}'"
@@ -52,10 +54,13 @@ vi:
       delete_topic:
         errors:
           not_found: "Không tìm thấy chủ đề."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Không tìm thấy chủ đề."
       edit_category:
+        errors:
+          not_found: "Không tìm thấy chuyên mục."
+      change_topic_category:
         errors:
           not_found: "Không tìm thấy chủ đề."
           category_not_found: "Không tìm thấy chuyên mục."

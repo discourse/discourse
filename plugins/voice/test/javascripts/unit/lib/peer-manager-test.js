@@ -64,6 +64,7 @@ module("Voice | Unit | Lib | peer-manager", function (hooks) {
   });
 
   hooks.afterEach(function () {
+    this.manager?.destroyAll();
     globalThis.RTCPeerConnection = this.originalRTCPeerConnection;
   });
 
@@ -71,7 +72,7 @@ module("Voice | Unit | Lib | peer-manager", function (hooks) {
     let shouldRestart = true;
     let sentSignals = 0;
 
-    const manager = new PeerManager({
+    const manager = (this.manager = new PeerManager({
       getIceServers: () => [],
       getLocalStream: () => null,
       sendSignal: () => {
@@ -83,7 +84,7 @@ module("Voice | Unit | Lib | peer-manager", function (hooks) {
       clearSignalQueue: () => {},
       onPeerDestroyed: () => {},
       shouldRestartPeer: () => shouldRestart,
-    });
+    }));
 
     await manager.create(1, 2);
     assert.true(manager.has(1, 2), "creates the initial peer");
@@ -154,7 +155,7 @@ module("Voice | Unit | Lib | peer-manager", function (hooks) {
   test("alignScreenAudioTransceiverForAnswer adopts the negotiated m-line and migrates the orphaned track", async function (assert) {
     const screenAudioTrack = { id: "screen-audio", kind: "audio" };
 
-    const manager = new PeerManager({
+    const manager = (this.manager = new PeerManager({
       getIceServers: () => [],
       getLocalStream: () => null,
       getLocalScreenAudioTrack: () => screenAudioTrack,
@@ -163,7 +164,7 @@ module("Voice | Unit | Lib | peer-manager", function (hooks) {
       onTrack: () => {},
       clearSignalQueue: () => {},
       onPeerDestroyed: () => {},
-    });
+    }));
 
     const pc = await manager.create(1, 2);
     await Promise.resolve();
@@ -228,7 +229,7 @@ module("Voice | Unit | Lib | peer-manager", function (hooks) {
   });
 
   test("alignScreenAudioTransceiverForAnswer leaves single-audio offers from older clients alone", async function (assert) {
-    const manager = new PeerManager({
+    const manager = (this.manager = new PeerManager({
       getIceServers: () => [],
       getLocalStream: () => null,
       sendSignal: () => Promise.resolve(),
@@ -236,7 +237,7 @@ module("Voice | Unit | Lib | peer-manager", function (hooks) {
       onTrack: () => {},
       clearSignalQueue: () => {},
       onPeerDestroyed: () => {},
-    });
+    }));
 
     const pc = await manager.create(1, 2);
     const preAllocated = PeerManager.screenAudioTransceiverFor(pc);

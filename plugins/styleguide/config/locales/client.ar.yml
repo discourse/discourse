@@ -100,6 +100,30 @@ ar:
           title: "المزيد من الموضوعات"
         post_menu:
           title: "قائمة المشاركة"
+        roving_focus:
+          toolbar:
+            bold: "عريض"
+            italic: "مائل"
+            copy: "نسخ"
+          tags:
+            design: "تصميم"
+            support: "الدعم"
+          adjacent:
+            label: "المرشحات"
+            field: "البحث"
+            placeholder: "موضوعات البحث"
+            open: "فتح"
+            recent: "الحديثة"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "يوميًا"
+            weekly: "أسبوعيًا"
+            monthly: "شهريًا"
+            never: "أبدًا"
+          tree:
+            components: "المكوِّنان"
+            select: "تحديد"
         docked_composer:
           title: "أداة إنشاء مثبتة"
         modal:

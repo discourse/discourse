@@ -1,0 +1,41 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    boards:
+      board:
+        remove_card: "Odstrániť"
+        new_topic: "Nová téma..."
+        title: "Názov"
+        tags: "Značky"
+        assigned_to: "Priradené k"
+        topic_reply_count:
+          one: "%{count} odpoveď"
+          few: "%{count} odpovede"
+          many: "%{count} odpovedí"
+          other: "%{count} odpovedí"
+        assign: "Priradiť"
+        unassign: "Nepriradené"
+        unassign_from_topic: "Zrušenie priradenia @%{username} z témy"
+        unassign_from_post: "Zrušenie priradenia @%{username} z #%{post_number}"
+        edit_assignments: "Úprava priradenia..."
+        created_by: "Vytvoril"
+      manage:
+        name: "Meno"
+        slug: "Slug"
+        constraint_categories: "Kategórie"
+        constraint_tags: "Značky"
+        columns:
+          remove: "Odstrániť"
+          column_title: "Názov"
+          icon: "Ikona"
+          color: "Farba"
+          default_sort_priority: "Priorita"
+          tag: "Značka"
+          move_to_assigned_unassign: "Nepriradené"
+          move_to_status_open: "Zahájiť"
+          move_to_status_closed: "Hlasovanie ukončené"

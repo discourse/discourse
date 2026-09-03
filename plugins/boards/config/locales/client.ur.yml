@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    boards:
+      board:
+        remove_card: "مٹائیں"
+        new_topic: "نیا موضوع..."
+        title: "عنوان"
+        tags: "ٹیگز"
+        assigned_to: "کو تفویض کیا گیا"
+        topic_reply_count:
+          one: "%{count} جواب"
+          other: "%{count} جوابات"
+        assign: "تفویض"
+        reassign: "دوبارہ تفویض"
+        unassign: "غیر اسائین کریں"
+        created_by: "نے بنایا"
+      manage:
+        name: "نام"
+        slug: "سلگ"
+        constraint_categories: "زمرہ جات"
+        constraint_tags: "ٹیگز"
+        advanced_settings: "اعلی درجے کی ترتیبات"
+        columns:
+          remove: "مٹائیں"
+          column_title: "عنوان"
+          icon: "آئیکن"
+          color: "رنگ"
+          default_sort_priority: "ترجیح"
+          tag: "ٹیگ"
+          move_to_assigned_unassign: "غیر اسائین کریں"
+          move_to_status_open: "کھولیں"
+          move_to_status_closed: "بند کیا"

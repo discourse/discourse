@@ -33,7 +33,7 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def value
-    object.value
+    object.value_for_editing
   end
 
   def description

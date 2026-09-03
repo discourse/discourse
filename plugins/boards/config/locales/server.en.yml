@@ -1,0 +1,43 @@
+en:
+  site_settings:
+    boards_enabled: "Organize topics, and lightweight standalone “floater” cards, into configurable, drag-and-drop kanban-style boards, all with a purpose-built management UI and per-board access control"
+    boards_manage_board_allowed_groups: "Groups allowed to create and configure boards."
+  access_control_list:
+    errors:
+      "Boards::Board_user_will_lose_permission": "You will lose permissions to manage this board if you make this change. Continue?"
+      "Boards::Board_user_will_lose_permission_on_create": "If you create this board with these permissions, you will not be able to manage it. Continue?"
+  boards:
+    errors:
+      board_not_found: "Board not found"
+      board_read_forbidden: "You do not have permission to view this board"
+      board_write_forbidden: "You do not have permission to modify this board"
+      board_manage_forbidden: "You do not have permission to manage this board"
+      column_not_found: "Column not found"
+      column_move_out_of_bounds: "Column cannot be moved further in that direction"
+      card_not_found: "Card not found"
+      invalid_card_type: "Invalid card type"
+      unknown_group_ids: "Unknown group ids: %{group_ids}"
+      unknown_category_ids: "Unknown category ids: %{category_ids}"
+      unknown_tag_ids: "Unknown tag ids: %{tag_ids}"
+      topic_covered_by_filter: "This is the only card for this topic on the board and it matches the board's filters, so it cannot be removed."
+      category_definition_topic: "Category definition topics cannot be added to a board."
+      topic_already_in_column: "This topic already has a card in that column."
+      invalid_assignee: "Could not find user or group named '%{name}'."
+      topic_does_not_match_constraints: "This topic does not match the board's category and tag constraints."
+      unknown_tag_name: "Unknown tag name: '%{tag_name}'"
+      unknown_tag_names: "Unknown tag names: %{tag_names}"
+      cannot_assign: "You do not have permission to assign."
+      assignment_carry_over_failed: "Could not carry the card's assignment to the topic."
+      cannot_use_same_tag_multiple_times: "You cannot use the same tag (%{tag_name}) multiple times for columns in the same board."
+      cannot_reorder_recency_column: "Cards in recency-sorted columns cannot be reordered."
+      invalid_column_sort: "Invalid column sort: %{sort}"
+    onebox:
+      inline_to_card: "Card '%{card_name}' on board '%{board_name}'"
+      inline_to_board: "Board '%{board_name}'"
+      created_by: "Created by %{username}"
+      column_count:
+        one: "%{count} column"
+        other: "%{count} columns"
+      board: "Board"
+      card: "Board card"
+      updated_by: "Updated by %{username}"

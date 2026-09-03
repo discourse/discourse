@@ -281,6 +281,28 @@ RSpec.describe "Theme group list constraints" do
       expect(theme.reload.settings[:groups_setting].value).to eq("1|14")
     end
 
+    it "applies the rules before the everyone display alias" do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+      set_settings(<<~YAML)
+        groups_setting:
+          type: list
+          list_type: group
+          default: "1"
+      YAML
+      theme.settings[:groups_setting].value = "0|1"
+      set_settings(<<~YAML)
+        groups_setting:
+          type: list
+          list_type: group
+          default: "1"
+          constraints:
+            disallowed: [0]
+      YAML
+
+      # If the alias ran first, the stored 0 would become 5 and survive the rule.
+      expect(theme.reload.settings[:groups_setting].value).to eq("1")
+    end
+
     it "rejects an assignment that at_least_one normalization makes empty" do
       set_settings(<<~YAML)
         groups_setting:

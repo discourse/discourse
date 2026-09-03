@@ -96,6 +96,11 @@ el:
           solved: "έχουν επιλυθεί"
           unsolved: "δεν έχουν επιλυθεί"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Νήμα"
+            category: "Κατηγορία"
       web_hooks:
         solved_event:
           group_name: "Συμβάν επίλυσης"

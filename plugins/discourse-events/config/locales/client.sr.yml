@@ -12,7 +12,7 @@ sr:
           fields:
             topic_id:
               label: ID Teme
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "Onemogući"
       enable_holiday: "Omogući"
       region:
@@ -21,6 +21,7 @@ sr:
         today: "Danas"
         month: "Mesec"
         week: "Nedelja"
+        day: "Dan"
         year: "Godina"
     discourse_post_event:
       event_description:

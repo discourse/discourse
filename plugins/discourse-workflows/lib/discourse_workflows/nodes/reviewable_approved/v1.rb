@@ -12,7 +12,7 @@ module DiscourseWorkflows
             color: "green",
           },
           group: "discourse_triggers",
-          events: [:reviewable_transitioned_to],
+          event: :reviewable_transitioned_to,
           output_contracts: [{ schema: Schema::REVIEWABLE_EVENT_SCHEMA }],
           properties: -> do
             {

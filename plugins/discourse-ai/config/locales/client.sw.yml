@@ -110,8 +110,6 @@ sw:
         successful: "Fanikiwa"
         failed: "Kushindwa"
         unknown: "Haijulikani"
-        topic_id: "Utambulisho wa Mada"
-        post_id: "Utambulisho wa Ujumbe"
         time: "Muda"
         when: "Lini"
         request: "Ombi"
@@ -121,8 +119,7 @@ sw:
         topic: "Mada"
         post: "Ujumbe"
         actions: "Vitendo"
-        filters:
-          title: "Inachujwa"
+        view_details: "Taarifa"
         periods:
           custom: "Binafsi"
         detail:
@@ -243,8 +240,10 @@ sw:
           table:
             total_count: "Jumla"
       discobot_discoveries:
-        regular_results: "Mada"
-        collapse: "Kunja"
-        tooltip:
-          actions:
-            disable: "Sitisha"
+        legacy:
+          regular_results: "Mada"
+          collapse: "Kunja"
+          tooltip:
+            actions:
+              disable: "Sitisha"
+        search_messages: "Ujumbe"

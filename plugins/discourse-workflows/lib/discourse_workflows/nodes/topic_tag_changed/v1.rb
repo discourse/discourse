@@ -24,7 +24,7 @@ module DiscourseWorkflows
             color: "deep-orange",
           },
           group: "discourse_triggers",
-          events: [:topic_tags_changed],
+          event: :topic_tags_changed,
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
             category_ids: {

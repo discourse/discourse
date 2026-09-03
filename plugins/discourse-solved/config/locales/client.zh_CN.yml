@@ -24,8 +24,34 @@ zh_CN:
             headline:
               titles:
                 insufficient_activity: "尚无足够的支持活动"
+                resolution_rate_and_first_reply_time_improved: "在所选时间段内，问题解决率和首次回复时间均有所提高。"
+                resolution_rate_improved: "在所选时间段内，问题解决率有所提高"
+                first_reply_time_decreased: "在所选时间段内，首次回复时间有所缩短。"
+                resolution_rate_and_first_reply_time_declined: "在所选时间段内，问题解决率和首次回复时间均有所下降。"
+                resolution_rate_decreased: "在所选时间段内，解决率有所下降"
+                first_reply_time_increased: "在所选时间段内，首次回复时间有所增加。"
+                support_steady: "在选定的时间段内，参与度保持稳定。"
               summaries:
                 insufficient_activity: "此期间尚无支持活动。一旦有话题出现，您将看到您的社区是如何处理这些话题的。"
+                more_answers_and_faster_replies: "越来越多的问题得到了解答，而且解答速度也越来越快。"
+                more_answers_but_slower_replies: "问题得到了更多解答，但首次回复时间有所增加。"
+                more_answers_first_reply_time_flat: "越来越多的问题得到了解答，但首次回复时间却保持不变。"
+                faster_replies_but_lower_resolution_rate: "会员得到的回复速度更快了，但问题解决率却下降了。"
+                faster_replies_resolution_rate_steady: "会员得到的回复速度更快了，但问题解决率却停滞不前。"
+                fewer_answers_and_slower_replies: "会员收到的回复越来越少，等待首次回复的时间也越来越长。"
+                fewer_answers_first_reply_time_steady: "会员收到的回复数量减少了，但首次回复时间保持稳定。"
+                slower_replies_resolution_rate_steady: "会员等待首次回复的时间有所延长，但问题解决率保持稳定。"
+                resolution_rate_and_first_reply_time_steady: "问题解决率或首次回复时间均无显著变化。"
+                more_answers: "越来越多的问题得到了解答。"
+                fewer_answers: "会员得到的答复越来越少。"
+                resolution_rate_steady: "解决率未出现明显变化。"
+                faster_replies: "会员可以获得更快的回复。"
+                slower_replies: "会员等待首次回复的时间更长了。"
+                first_reply_time_steady: "首次回复时间没有实质性变化。"
+              cta:
+                unanswered: "查看尚未解答的问题，看看你能解答哪些问题。"
+                in_progress: "查看正在进行中的主题，看看是否有应该标记为答案的回复。"
+                in_progress_and_unanswered: "调查正在进行中和尚未解答的问题，以确保成员能够及时获得回复。"
             kpi:
               resolution_rate:
                 label: "解决率"
@@ -140,6 +166,11 @@ zh_CN:
           solved: "已被解决"
           unsolved: "尚未解决"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "话题"
+            category: "类别"
       web_hooks:
         solved_event:
           group_name: "已解决的事件"
