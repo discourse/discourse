@@ -58,8 +58,8 @@ class TopicsController < ApplicationController
 
   def id_for_slug
     topic = Topic.find_by_slug(params[:slug])
-    guardian.ensure_can_see!(topic)
     raise Discourse::NotFound unless topic
+    guardian.ensure_can_see!(topic)
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
   end
 

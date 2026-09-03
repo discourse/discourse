@@ -2269,6 +2269,11 @@ RSpec.describe TopicsController do
       get "/t/id_for/#{pm.slug}.json"
       expect(response).to be_forbidden
     end
+
+    it "returns 404 when no topic matches the slug" do
+      get "/t/id_for/a-slug-that-does-not-exist.json"
+      expect(response).to be_not_found
+    end
   end
 
   describe "#update" do
