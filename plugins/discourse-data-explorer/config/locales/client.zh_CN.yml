@@ -50,7 +50,9 @@ zh_CN:
         description_placeholder: "例如，显示不同时间段的注册情况"
         regenerate_placeholder: "例如，更新查询以将结果数限制为 50 条。"
         prompt_label: "提示"
+        workflow_title: "AI查询助手"
         generate: "生成"
+        regenerate: "生成查询"
         generating: "正在使用 AI 生成查询…"
         generation_timeout: "AI 查询生成超时。您可以手动编写 SQL 语句。"
         generation_error: "生成查询时出错。"
@@ -158,6 +160,8 @@ zh_CN:
       sql:
         operation: "操作"
         operation_description: "如何运行查询"
+        operation_queries: "预定义查询"
+        operation_raw: "原始 SQL 查询"
         query_id: "查询"
         query_id_description: "选择一个已保存的查询以运行"
         query_params: "查询参数"

@@ -20,6 +20,8 @@ nb_NO:
         search: "Søk"
         time: "Tid"
         summarize: "Oppsummer"
+      tool_help:
+        create_category: "Opprett en ny kategori"
       close_topic:
         errors:
           not_found: "Fant ikke emnet."
@@ -29,10 +31,13 @@ nb_NO:
       delete_topic:
         errors:
           not_found: "Fant ikke emnet."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Fant ikke emnet."
       edit_category:
+        errors:
+          not_found: "Kategorien finnes ikke."
+      change_topic_category:
         errors:
           not_found: "Fant ikke emnet."
           category_not_found: "Kategorien finnes ikke."

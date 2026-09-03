@@ -13,7 +13,7 @@ pt:
     triggerables:
       event_started:
         title: Evento iniciado
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Dia"

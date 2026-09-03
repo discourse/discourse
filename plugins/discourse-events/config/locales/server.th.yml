@@ -9,7 +9,7 @@ th:
     currently_away:
       labels:
         username: ชื่อผู้ใช้
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         week: "สัปดาห์"

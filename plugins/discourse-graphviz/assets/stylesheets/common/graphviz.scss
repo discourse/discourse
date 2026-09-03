@@ -11,10 +11,11 @@ div.graphviz.is-loading,
   }
 }
 
-// Match the cooked diagram frame and keep long source inside it.
+// The block frames the diagram as the cooked wrapper does, so both faces fit
+// that frame and scroll whatever does not fit inside it.
 .composer-graphviz-node {
+  --composer-preview-node-source-max-height: 100%;
   aspect-ratio: 16 / 9;
-  min-height: 3em;
 }
 
 // Hide the raw DOT source until the client replaces the placeholder.

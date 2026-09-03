@@ -200,7 +200,8 @@ module DiscourseAi
             post = posts[source["post_id"]]
             topic = post&.topic
             visible =
-              topic && topic.id == source["topic_id"] && topic.archetype == Archetype.default &&
+              topic && topic.id == source["topic_id"] &&
+                [Archetype.default, Archetype.private_message].include?(topic.archetype) &&
                 topic.deleted_at.nil? && topic.visible? && guardian.can_see?(post) &&
                 topic.category_id == source["category_id"] &&
                 post.updated_at.iso8601(6) == source["post_updated_at"]

@@ -1009,7 +1009,7 @@ Allows to render a description.
 
 ## Select
 
-Renders a `<DSelect />` component.
+Renders a `<DNativeSelect />` component.
 
 ### @includeNone
 

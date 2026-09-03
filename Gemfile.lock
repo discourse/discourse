@@ -213,6 +213,7 @@ GEM
       faker (~> 3.5.1)
       literate_randomizer
     discourse_math_bundle (1.0.1)
+    discourse_voice_assets (0.1.0)
     docile (1.4.1)
     drb (2.2.3)
     dry-initializer (3.2.0)
@@ -344,7 +345,7 @@ GEM
       nokogiri (>= 1.12.0)
     lru_redux (1.1.0)
     lz4-ruby (0.3.3)
-    mail (2.9.0)
+    mail (2.9.1)
       logger
       mini_mime (>= 0.1.1)
       net-imap
@@ -385,12 +386,12 @@ GEM
     mustache (1.1.2)
     net-http (0.9.1)
       uri (>= 0.11.1)
-    net-imap (0.6.4.1)
+    net-imap (0.6.6)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.2.2)
+    net-protocol (0.3.0)
       timeout
     net-smtp (0.5.1)
       net-protocol
@@ -854,6 +855,7 @@ DEPENDENCIES
   discourse_ai-tokenizers
   discourse_dev_assets
   discourse_math_bundle
+  discourse_voice_assets
   dry-initializer (~> 3.1)
   ed25519
   email_reply_trimmer
@@ -1047,6 +1049,7 @@ CHECKSUMS
   discourse_ai-tokenizers (0.4.2) sha256=61c2f254582a3ae69255115b2b072904361003612b5b0f52aa64773817aae413
   discourse_dev_assets (0.0.6) sha256=4dfe7946927aa3d61a4ba89b5aef39d6daaeb70e35d7125dc481806a5c0aea4e
   discourse_math_bundle (1.0.1) sha256=c7d82fa65c9680cab2f77daeba32c1b89e500faccd2269e050ab27d5e1bc8337
+  discourse_voice_assets (0.1.0) sha256=67bfbc3e9eaa1805e71ac3c5e2172d8beefdecbfa7b956ed5426e7e057c10cc2
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dry-initializer (3.2.0) sha256=37d59798f912dc0a1efe14a4db4a9306989007b302dcd5f25d0a2a20c166c4e3
@@ -1124,7 +1127,7 @@ CHECKSUMS
   loofah (2.25.1) sha256=d436c73dbd0c1147b16c4a41db097942d217303e1f7728704b37e4df9f6d2e04
   lru_redux (1.1.0) sha256=ee71d0ccab164c51de146c27b480a68b3631d5b4297b8ffe8eda1c72de87affb
   lz4-ruby (0.3.3) sha256=011be5ee230cfddc8308d4e2e0b05300c7bc755a887de799377ca6c5b6aede89
-  mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
+  mail (2.9.1) sha256=06574eca475253d6c18145dd70af80d0eb970182d55053497c5f4d797ea160e8
   markbridge (0.4.0) sha256=27645fd47489d2fd42068153fa471b7e5231dd8dabb31c1bf38c88aa37535b12
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   maxminddb (0.1.22) sha256=50933be438fbed9dceabef4163eab41884bd8830d171fdb8f739bee769c4907e
@@ -1152,9 +1155,9 @@ CHECKSUMS
   multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
   mustache (1.1.2) sha256=d420243400354da78ded2d81541b381ad8d94e8e9b95022d0d71d66f8ef36c00
   net-http (0.9.1) sha256=25ba0b67c63e89df626ed8fac771d0ad24ad151a858af2cc8e6a716ca4336996
-  net-imap (0.6.4.1) sha256=29f0360d75a7efd3539f16ac1957dea5c0a51ddeceb348db4553c3120914ea0d
+  net-imap (0.6.6) sha256=96aa4ee50df3060203e649efc341f53480b791d49e150f2fdebf68beb141a8df
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
-  net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
+  net-protocol (0.3.0) sha256=ba310c3d4f1cad46bb1ab20336b06669b1ff8f7c568d9cb9342b32a718547472
   net-smtp (0.5.1) sha256=ed96a0af63c524fceb4b29b0d352195c30d82dd916a42f03c62a3a70e5b70736
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
   nokogiri (1.19.3-aarch64-linux-gnu) sha256=46b89e5d7b9e844c2ee360794240c6ea2a4e6fa0c5892a4ed487db621224b639

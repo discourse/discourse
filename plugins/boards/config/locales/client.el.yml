@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  js:
+    boards:
+      board:
+        remove_card: "Αφαίρεση"
+        new_topic: "Νέο θέμα..."
+        title: "Τίτλος"
+        tags: "Ετικέτες"
+        assigned_to: "Ανατέθηκε σε"
+        topic_reply_count:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
+        assign: "Ανάθεση"
+        unassign: "Ακύρωση ανάθεσης"
+        created_by: "Δημιουργήθηκε από"
+      manage:
+        name: "Όνομα"
+        slug: "Slug"
+        constraint_categories: "Κατηγορίες"
+        constraint_tags: "Ετικέτες"
+        advanced_settings: "Προηγμένες ρυθμίσεις"
+        columns:
+          remove: "Αφαίρεση"
+          column_title: "Τίτλος"
+          icon: "Εικονίδιο"
+          color: "Χρώμα"
+          tag: "Ετικέτα"
+          move_to_assigned_unassign: "Ακύρωση ανάθεσης"
+          move_to_status_open: "Άνοιγμα"
+          move_to_status_closed: "Κλειστή"
+          show_advanced: "Εμφάνιση προχωρημένων επιλογών"
+          hide_advanced: "Απόκρυψη προχωρημένων επιλογών"

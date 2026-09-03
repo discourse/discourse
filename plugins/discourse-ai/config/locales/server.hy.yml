@@ -21,6 +21,8 @@ hy:
       tool_summary:
         search: "Որոնում"
         time: "Ժամ"
+      tool_help:
+        create_category: "Ստեղծել նոր Կատեգորիա"
       close_topic:
         errors:
           not_found: "Թեման չի գտնվել."
@@ -30,10 +32,13 @@ hy:
       delete_topic:
         errors:
           not_found: "Թեման չի գտնվել."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Թեման չի գտնվել."
       edit_category:
+        errors:
+          not_found: "Կատեգորիան չի գտնվել."
+      change_topic_category:
         errors:
           not_found: "Թեման չի գտնվել."
           category_not_found: "Կատեգորիան չի գտնվել."

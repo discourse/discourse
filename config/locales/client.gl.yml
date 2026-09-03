@@ -275,6 +275,7 @@ gl:
         theme: "Tema"
         fonts: "Tipos de letra"
         homepage: "Páxina de inicio"
+        search: "Buscar"
       colors:
         light: "Claro"
         dark: "Escuro"
@@ -1790,6 +1791,8 @@ gl:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Intro"
+      delete: "Eliminar"
+      home: "Inicio"
     category_row:
       subcategory_count:
         one: "+%{count} subcategoría"
@@ -2094,6 +2097,7 @@ gl:
       categories: "Categorías"
       tags: "Etiquetas"
       type:
+        default: "Publicacións"
         users: "Usuarios"
         categories: "Categorías"
       context:
@@ -2605,7 +2609,6 @@ gl:
       reply_as_new_private_message: "Responderlles como nova mensaxe aos mesmos destinatarios"
       continue_discussion: "Continuar a discusión de %{postLink}:"
       follow_quote: "ir á publicación citada"
-      show_full: "Amosar a publicación completa"
       show_hidden: "Ver o contido ignorado."
       collapse: "reducir"
       expand_collapse: "ampliar/reducir"
@@ -3125,11 +3128,8 @@ gl:
       content_load_error: '<a href="%url%">O contido</a> non puido cargarse.'
       image_load_error: '<a href="%url%">A imaxe</a> non puido cargarse.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ou %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atallos do teclado"
       description_header: "Descrición"
       key_header: "Chave"
@@ -3457,6 +3457,11 @@ gl:
         group_traffic: "Tráfico"
         group_members: "Membros"
         group_other: "Outro"
+        related_items:
+          users:
+            title: "Usuarios"
+          labels:
+            user: "Usuario"
       config_sections:
         account:
           title: "Conta"
@@ -3703,6 +3708,8 @@ gl:
               share: "Compartir"
             whos_posting:
               staff: "Equipo"
+              modal:
+                apply: "Gardar"
             trust_level_pipeline:
               trust_levels:
                 "0": "Novo"
@@ -3715,6 +3722,11 @@ gl:
             table:
               searches: "Buscas"
               status: "Estado"
+          system:
+            title: "Sistema"
+            status: "Estado"
+            discourse_updated: "Actualización de Discourse"
+            dashboard_updated: "Actualización do panel"
         reports_section:
           header_action: "Xestionar"
           no_data: "Non hai datos que amosar"
@@ -3751,6 +3763,13 @@ gl:
           average_for_sample: "Media por mostra"
           total: "Total global"
           no_data: "Non hai datos que amosar."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuario"
+              other: "%{count} usuarios"
+            posts_count:
+              one: "%{count} publicación"
+              other: "%{count} publicacións"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Buscar rexistros</a>'
             disabled: 'O informe de busca de tendencias está desactivado. Activa as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de busca de rexistros</a> para obter datos.'

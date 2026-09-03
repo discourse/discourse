@@ -377,6 +377,7 @@ fa_IR:
       sections:
         theme: "قالب"
         homepage: "صفحه اصلی"
+        search: "جستجو"
       theme:
         selected: "انتخاب شده"
       colors:
@@ -1889,7 +1890,6 @@ fa_IR:
         watch_topic: "موضوع را دنبال کنید"
         track_topic: "موضوع را پیگیری کنید"
         do_nothing: "هیچ کاری نکن"
-      topics_unread_when_closed: "موضوعات خوانده نشده را در صورت بسته شدن در نظر بگیر"
       invited:
         title: "دعوت‌ها"
         pending_tab: "در انتظار"
@@ -2493,6 +2493,10 @@ fa_IR:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "وارد شدن "
+      period: "دوره زمانی"
+      tab: "زبانه"
+      delete: "حذف"
+      home: "خانه"
     conditional_loading_section:
       loading: در حال بارگیری…
     category_row:
@@ -2634,7 +2638,6 @@ fa_IR:
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
-      title: "یا %{modifier}Enter را فشار دهید"
       discard: "حذف"
       users_placeholder: "افزودن کاربران یا گروه‌ها"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
@@ -2916,10 +2919,9 @@ fa_IR:
       recent: "جستجوهای اخیر"
       clear_recent: "جستجوهای اخیر را پاک کن"
       type:
-        default: "موضوعات/پست‌ها"
+        default: "فرسته‌ها"
         users: "کاربران"
         categories: "دسته‌بندی‌ها"
-        categories_and_tags: "دسته‌بندی‌ها/برچسب‌ها"
       context:
         user: "جستجوی نوشته‌ها با @%{username}"
         category: "جستجوی دسته‌بندی #%{category}"
@@ -2932,7 +2934,6 @@ fa_IR:
         in: "بر اساس ابرداده فیلتر می‌کند (به عنوان مثال در: عنوان، در: شخصی، در: سنجاق شده)"
         status: " بر اساس وضعیت موضوع فیلتر می‌کند"
         full_search: "جستجوی تمام صفحه را راه‌اندازی می‌کند"
-        full_search_key: "%{modifier} + Enter"
         me: "فقط نوشته‌های شما را نشان می‌دهد"
       advanced:
         title: فیلترهای پیشرفته
@@ -3600,7 +3601,6 @@ fa_IR:
       reply_as_new_private_message: "پاسخ به عنوان پیام جدید به همین دریافت کنندگان"
       continue_discussion: "ادامه دادن بحث از %{postLink}:"
       follow_quote: "برو به نوشته ای که نقل‌قول شده"
-      show_full: "نمایش کامل نوشته"
       show_hidden: "دیدن محتوای نادیده گرفته‌شد"
       deleted_by_author_simple: "(پست توسط نویسنده حذف شد)"
       collapse: "جمع کردن"
@@ -4285,12 +4285,8 @@ fa_IR:
     cannot_render_video: این ویدیو قابل ارائه نیست، چون مرورگر شما از کدک پشتیبانی نمی‌کند.
     invalid_video_url: این ویدیو قابل پخش نیست زیرا URL آن نامعتبر یا در دسترس نیست.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} یا %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "میانبر‌های صفحه‌کلید"
       short_title: "میانبرها"
       description_header: "توضیح"
@@ -4881,6 +4877,11 @@ fa_IR:
         group_traffic: "ترافیک"
         group_members: "اعضاء"
         group_other: "دیگر"
+        related_items:
+          users:
+            title: "کاربران"
+          labels:
+            user: "کاربر"
       config_sections:
         account:
           title: "حساب کاربری"
@@ -5223,6 +5224,8 @@ fa_IR:
               share: "اشتراک‌گذاری"
             whos_posting:
               staff: "همکاران"
+              modal:
+                apply: "ذخیره"
             trust_level_pipeline:
               trust_levels:
                 "0": "جدید"
@@ -5235,6 +5238,11 @@ fa_IR:
             table:
               searches: "جستجوها"
               status: "وضعیت"
+          system:
+            title: "سیستم"
+            status: "وضعیت"
+            discourse_updated: "دیسکورس بروزرسانی شد"
+            dashboard_updated: "داشبورد بروزرسانی شد"
         reports_section:
           header_action: "مدیریت"
           modal:
@@ -5282,6 +5290,13 @@ fa_IR:
           average_for_sample: "میانگین نمونه‌ها"
           total: "کل مقدار در طول زمان"
           no_data: "تاریخی برای نمایش وجود ندارد"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} کاربر"
+              other: "%{count} کاربر"
+            posts_count:
+              one: "%{count} فرسته"
+              other: "%{count} نوشته"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سوابق جستجو</a>'
             disabled: 'گزارش جستجوی پرطرفدار غیرفعال است. برای جمع‌آوری داده‌ها، <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ درخواست‌های جستجو</a> را فعال کنید.'

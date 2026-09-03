@@ -174,6 +174,7 @@ class UserHistory < ActiveRecord::Base
         admin_onboarding_completed: 129,
         admin_onboarding_dismissed: 130,
         removed_avatar: 131,
+        create_group: 132,
       )
   end
 
@@ -309,6 +310,7 @@ class UserHistory < ActiveRecord::Base
       admin_onboarding_completed
       admin_onboarding_dismissed
       removed_avatar
+      create_group
     ]
   end
 

@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    boards:
+      board:
+        remove_card: "제거"
+        new_topic: "새 글..."
+        title: "제목"
+        tags: "태그"
+        assigned_to: "다음으로 할당"
+        topic_reply_count:
+          other: "%{count} 댓글"
+        assign: "할당"
+        unassign: "할당 해제"
+        created_by: "작성자"
+      manage:
+        name: "그룹명"
+        slug: "강타"
+        constraint_categories: "카테고리"
+        constraint_tags: "태그"
+        columns:
+          remove: "제거"
+          column_title: "제목"
+          icon: "아이콘"
+          color: "색상"
+          tag: "태그"
+          move_to_assigned_unassign: "할당 해제"
+          move_to_status_open: "열기"
+          move_to_status_closed: "닫힘"

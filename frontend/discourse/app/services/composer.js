@@ -19,6 +19,7 @@ import {
 } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -120,7 +121,6 @@ export default class ComposerService extends Service {
   @service store;
   @service toasts;
 
-  @tracked allowPreview = false;
   @tracked selectedTranslationLocale = null;
   checkedMessages = false;
   messageCount = null;
@@ -137,6 +137,7 @@ export default class ComposerService extends Service {
   topic = null;
   linkLookup = null;
 
+  @tracked _allowPreview = null;
   @tracked _showPreview;
 
   @tracked _isStaffUserOverride;
@@ -251,6 +252,44 @@ export default class ComposerService extends Service {
     this._showPreview = value;
   }
 
+  // predicted from the editor mode that will load, so the composer is sized
+  // correctly before the editor mounts and sets the authoritative value
+  get allowPreview() {
+    if (this._allowPreview !== null) {
+      return this._allowPreview;
+    }
+
+    if (!this.currentUser) {
+      return false;
+    }
+
+    if (this.hasFormTemplate) {
+      return this.siteSettings.show_preview_for_form_templates;
+    }
+
+    const forcedMode = applyValueTransformer(
+      "composer-force-editor-mode",
+      null,
+      {
+        model: this.model,
+      }
+    );
+
+    return forcedMode !== null
+      ? forcedMode !== USER_OPTION_COMPOSITION_MODES.rich
+      : !this.currentUser.useRichEditor;
+  }
+
+  set allowPreview(value) {
+    // the editor confirms the prediction during render; skipping the no-op
+    // write avoids dirtying an already-consumed tag
+    if (this.allowPreview === value) {
+      return;
+    }
+
+    this._allowPreview = value;
+  }
+
   /**
    * @returns {import("discourse/controllers/topic").default};
    */
@@ -260,6 +299,10 @@ export default class ComposerService extends Service {
 
   get isPreviewVisible() {
     return this.showPreview && this.allowPreview;
+  }
+
+  get isPreviewActive() {
+    return Boolean(this.visible && this.isPreviewVisible);
   }
 
   @computed("model.action", "model.post.can_localize_post")
@@ -2081,7 +2124,11 @@ export default class ComposerService extends Service {
 
     document.activeElement?.blur();
     document.documentElement.style.removeProperty("--composer-height");
-    this.setProperties({ model: null, lastValidatedAt: null });
+    this.setProperties({
+      model: null,
+      lastValidatedAt: null,
+      _allowPreview: null,
+    });
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);

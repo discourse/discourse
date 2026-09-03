@@ -46,6 +46,23 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(jobs).to be_empty
   end
 
+  it "enqueues tag created workflows with the tag payload" do
+    create_published_workflow("tag-created-trigger", "trigger:tag_created")
+
+    created_tag = Fabricate(:tag, name: "new-workflow-tag")
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("tag-created-trigger")
+    expect(trigger_data_for("tag-created-trigger")).to include(
+      "tag" =>
+        include(
+          "id" => created_tag.id,
+          "name" => created_tag.name,
+          "slug" => created_tag.slug,
+          "description" => created_tag.description,
+        ),
+    )
+  end
+
   it "only enqueues topic closed workflows matching the category and tags" do
     topic.tags << tag
     create_published_workflow(

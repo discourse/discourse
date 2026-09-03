@@ -7,11 +7,10 @@
 nl:
   admin_js:
     admin:
-      calendar: "Gebeurtenissen"
       site_settings:
         categories:
           discourse_post_event: "Discourse-evenement"
-          discourse_calendar: "Gebeurtenissen"
+          discourse_events: "Gebeurtenissen"
       web_hooks:
         calendar_event:
           group_name: "Kalenderevenement"
@@ -32,8 +31,8 @@ nl:
           fields:
             topic_id:
               label: Topic-ID
-    discourse_calendar:
-      invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
+    discourse_events:
+      title: "Gebeurtenissen"
       preferences:
         all_events_description: "Alle forumevenementen"
         my_events_description: "Evenementen waar je naartoe gaat of in geïnteresseerd bent"
@@ -327,9 +326,14 @@ nl:
         week: "Week"
         day: "Dag"
         year: "Jaar"
+    discourse_calendar:
+      invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
     group_timezones:
       search: "Zoeken..."
       group_availability: "Beschikbaarheid %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "Topic-ID"
     discourse_post_event:
       notifications:
         before_event_reminder: "Een evenement gaat beginnen"

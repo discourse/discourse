@@ -1,0 +1,51 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    boards_enabled: "Організуйте теми та легкі окремі картки з плаваючими елементами в налаштовувані дошки в стилі канбан з функцією перетягування, усі вони мають спеціально розроблений інтерфейс керування та контроль доступу для кожної дошки."
+    boards_manage_board_allowed_groups: "Групам дозволено створювати та налаштовувати дошки."
+  access_control_list:
+    errors:
+      "Boards::Board_user_will_lose_permission": "Ви втратите дозволи на керування цією дошкою, якщо внесете цю зміну. Продовжити?"
+      "Boards::Board_user_will_lose_permission_on_create": "Якщо ви створите цю дошку з такими дозволами, ви не зможете нею керувати. Продовжити?"
+  boards:
+    errors:
+      board_not_found: "Дошка не знайдена"
+      board_read_forbidden: "У вас немає дозволу на перегляд цієї дошки"
+      board_write_forbidden: "У вас немає дозволу на змінення цієї дошки"
+      board_manage_forbidden: "У вас немає дозволу керувати цією дошкою"
+      column_not_found: "Стовпець не знайдено"
+      column_move_out_of_bounds: "Колонку не можна перемістити далі в цьому напрямку"
+      card_not_found: "Картка не знайдена"
+      invalid_card_type: "Недійсний тип картки"
+      unknown_group_ids: "Невідомі ідентифікатори груп: %{group_ids}"
+      unknown_category_ids: "Невідомі ідентифікатори категорій: %{category_ids}"
+      unknown_tag_ids: "Невідомі ідентифікатори тегів: %{tag_ids}"
+      topic_covered_by_filter: "Це єдина картка для цієї теми на дошці, і вона відповідає фільтрам дошки, тому її не можна видалити."
+      category_definition_topic: "Теми визначення категорій не можна додавати до дошки."
+      topic_already_in_column: "У цій колонці вже є картка для цієї теми."
+      invalid_assignee: "Не вдалося знайти користувача або групу з ім'ям '%{name}'."
+      topic_does_not_match_constraints: "Ця тема не відповідає обмеженням категорії та тегу форуму."
+      unknown_tag_name: "Невідома назва тегу: '%{tag_name}'"
+      unknown_tag_names: "Невідомі назви тегів: %{tag_names}"
+      cannot_assign: "У вас немає дозволу на призначення."
+      assignment_carry_over_failed: "Не вдалося перенести завдання картки до теми."
+      cannot_use_same_tag_multiple_times: "Ви не можете використовувати один і той самий тег (%{tag_name}) кілька разів для стовпців на одній дошці."
+      cannot_reorder_recency_column: "Картки у стовпцях, відсортованих за новизною, не можна перевпорядкувати."
+      invalid_column_sort: "Недійсне сортування стовпця: %{sort}"
+    onebox:
+      inline_to_card: "Картка '%{card_name}' на дошці '%{board_name}'"
+      inline_to_board: "Дошка '%{board_name}'"
+      created_by: "Створено %{username}"
+      column_count:
+        one: "%{count} колонка"
+        few: "%{count} колонки"
+        many: "%{count} колонок"
+        other: "%{count} колонок"
+      board: "Дошка"
+      card: "Картка на дошці"
+      updated_by: "Оновлено користувачем %{username}"

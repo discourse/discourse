@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    boards:
+      board:
+        remove_card: "Հեռացնել"
+        title: "Վերնագիր"
+        tags: "Պիտակներ"
+        assigned_to: "Վերագրված է"
+        topic_reply_count:
+          one: "%{count} պատասխան"
+          other: "%{count} պատասխան"
+        assign: "Վերագրել"
+        unassign: "Ետ կանչել վերագրումը"
+        created_by: "Ստեղծել է՝"
+      manage:
+        name: "Անուն"
+        constraint_categories: "Կատեգորիաներ"
+        constraint_tags: "Պիտակներ"
+        columns:
+          remove: "Հեռացնել"
+          column_title: "Վերնագիր"
+          icon: "Պատկերակ"
+          color: "Գույն"
+          move_to_assigned_unassign: "Ետ կանչել վերագրումը"
+          move_to_status_open: "Բացել"
+          move_to_status_closed: "Փակված է"

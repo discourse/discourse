@@ -79,7 +79,6 @@ he:
     ai_helper_automatic_chat_thread_title: "הגדרת כותרות שרשור הצ׳אט אוטומטית לפי תוכן השרשור."
     post_ai_helper_allowed_groups: "קבוצות משתמשים שמורשות לגשת ליכולות מסייע בינה מלאכותית בפוסטים"
     ai_embeddings_selected_model: "להשתמש במודל הנבחר ליצירת הטמעות."
-    ai_embeddings_generate_for_pms: "יצירת הטמעות להודעות פרטיות."
     ai_embeddings_semantic_related_topics_enabled: "להשתמש בחיפוש סמנטי לנושאים קשורים."
     ai_embeddings_semantic_related_topics: "מספר הנושאים המרבי להצגה בסעיף הנושאים הקשורים."
     ai_embeddings_backfill_batch_size: "מספר ההטבעות למילוי חוזר כל 15 דקות."
@@ -276,7 +275,6 @@ he:
       read_post:
         unknown_post: "פרסום"
       agents:
-        default_llm_required: "ברירת מחדל של מודל שפה הגדול נחוצה בטרם הפעלת הצ׳אט"
         cannot_have_duplicate_tools: "לא יכולים להיות כלים כפולים"
         github_helper:
           name: "מסייע GitHub"
@@ -430,6 +428,8 @@ he:
         suspend_user: "השעיית משתמש"
         silence_user: "השתקת משתמש"
         edit_post: "עריכת פוסט"
+        edit_tag: "עריכת תגית"
+        create_category: "יצירת קטגוריה"
         search: "חיפוש"
         tags: "הצגת תגיות"
         time: "מועד"
@@ -458,6 +458,7 @@ he:
         random_picker: "נא לבחור מספר אקראי או רכיב אקראי מרשימה"
         categories: "הצגת כל הקטגוריות החשופות לציבור בפורום"
         delete_topic: "מחיקת נושא"
+        create_category: "יצירת קטגוריה חדשה"
         search: "חיפוש בכל הנושאים הציבוריים בפורום"
         tags: "הצגת כל התגיות בפורום"
         time: "איתור זמן באזורי זמן שונים"
@@ -494,49 +495,37 @@ he:
         categories:
           one: "נמצאה קטגוריה"
           two: "נמצאו שתי קטגוריות"
-          many: "נמצאו %{count} קטגוריות"
           other: "נמצאו %{count} קטגוריות"
         tags:
           one: "נמצאה תגית"
           two: "נמצאו שתי תגיות"
-          many: "נמצאו %{count} תגיות"
           other: "נמצאו %{count} תגיות"
         search:
           one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
           two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
           other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         search_meta_discourse:
           one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
           two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
           other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         google:
           one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
           two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
           other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         setting_context: "נקרא הקשר עבור: %{setting_name}"
         schema: "%{tables}"
         researcher_dry_run:
           one: "יעדים מוצעים: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
           two: "יעדים מוצעים: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
-          many: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
           other: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
         researcher:
           one: "במהלך מחקר: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
           two: "במהלך מחקר: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
-          many: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
           other: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
         search_settings:
           one: "נמצאה תוצאה לחיפוש אחר ‚%{query}’"
           two: "נמצאו שתי תוצאות לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
           other: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
-      discoveries:
-        continue_conversation:
-          title: "שיחת גילוי: חיפוש אחר %{query}"
-          raw: "בחיפוש שלי אחר %{query}, הצגת לי את המידע הבא:\n\n%{context}\n\nאפשר להמשיך את השיחה."
       close_topic:
         errors:
           not_found: "הנושא לא נמצא."
@@ -546,10 +535,13 @@ he:
       delete_topic:
         errors:
           not_found: "הנושא לא נמצא."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "הנושא לא נמצא."
       edit_category:
+        errors:
+          not_found: "לא נמצאה קטגוריה."
+      change_topic_category:
         errors:
           not_found: "הנושא לא נמצא."
           category_not_found: "לא נמצאה קטגוריה."
@@ -575,7 +567,6 @@ he:
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."
         two: "יש להגדיר את ההגדרות האלו תחילה: %{settings}."
-        many: "יש להגדיר את ההגדרות האלו תחילה: %{settings}."
         other: "יש להגדיר את ההגדרות האלו תחילה: %{settings}."
       chat:
         no_targets: "לא היו הודעות במהלך התקופה הנבחרת."
@@ -607,12 +598,10 @@ he:
         configuration_hint:
           one: "נא לוודא שההגדרה `%{settings}` הוגדרה."
           two: "נא לוודא שההגדרות האלו הוגדרו: %{settings}"
-          many: "נא לוודא שההגדרות האלו הוגדרו: %{settings}"
           other: "נא לוודא שההגדרות האלו הוגדרו: %{settings}"
       delete_failed:
         one: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמש בו. נא לעדכן את ההגדרות לנסות שוב."
         two: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
-        many: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
         other: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
     agents:
@@ -647,5 +636,4 @@ he:
       custom_tool_exists:
         one: "כבר קיים כלי מותאם בשם %{names}."
         two: "כבר קיימים כלים מותאמים בשמות %{names}."
-        many: "כבר קיימים כלים מותאמים בשמות %{names}."
         other: "כבר קיימים כלים מותאמים בשמות %{names}."

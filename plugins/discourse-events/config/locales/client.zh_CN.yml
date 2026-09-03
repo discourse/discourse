@@ -7,11 +7,10 @@
 zh_CN:
   admin_js:
     admin:
-      calendar: "活动"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "活动"
+          discourse_events: "活动"
       web_hooks:
         calendar_event:
           group_name: "日历活动"
@@ -32,10 +31,12 @@ zh_CN:
           fields:
             topic_id:
               label: 话题 ID
-    discourse_calendar:
+    discourse_events:
+      title: "活动"
       livestream:
         zoom:
           join: "加入 Zoom"
+          frame_title: "Zoom网络研讨会"
           open_in_zoom: "在 Zoom 中打开"
           load_error: "您已离开网络研讨会，或者我们无法在此页面加载 Zoom。"
           too_early: "您可以在临近活动开始时间加入网络研讨会"
@@ -44,10 +45,11 @@ zh_CN:
           rsvp_to_event: "回复参加活动以开始聊天"
           rsvp_to_event_with_link: "回复参加<a href='%{url}'>活动</a>以开始聊天"
           rsvp_body: "在活动开始前、进行中和结束后与其他与会者建立联系。"
-      invite_user_notification: "%{username} 邀请您加入：%{description}"
       preferences:
-        all_events_description: "所有论坛事件"
-        my_events_description: "您将要参加或感兴趣的事件"
+        all_events: "Discourse 活动 - 所有活动"
+        all_events_description: "所有论坛活动"
+        my_events: "Discourse 活动 - 我的活动"
+        my_events_description: "您将要参加或感兴趣的活动"
       on_holiday: "休假"
       disable_holiday: "禁用"
       enable_holiday: "启用"
@@ -338,9 +340,23 @@ zh_CN:
         week: "周"
         day: "天"
         year: "年"
+    discourse_calendar:
+      invite_user_notification: "%{username} 邀请您加入：%{description}"
     group_timezones:
       search: "搜索…"
       group_availability: "%{group} 可用性"
+    discourse_workflows:
+      node_unavailable:
+        requires_post_event: "需要启用事件。"
+      nodes:
+        "trigger:event_ended": "活动已结束"
+        "trigger:event_participation_changed": "活动参与情况发生变化"
+      node_descriptions:
+        "trigger:event_ended": "当事件发生到结束时间时触发"
+        "trigger:event_participation_changed": "当用户添加、更改或撤回其 RSVP 时触发"
+      post_event:
+        topic_id: "话题 ID"
+        topic_id_description: "仅触发此话题中的活动。留空则匹配所有活动。"
     discourse_post_event:
       new_event: "新活动"
       notifications:
@@ -454,6 +470,7 @@ zh_CN:
         name_placeholder: "活动名称"
         end_date_placeholder: "结束日期"
         location_or_url_placeholder: "添加位置或网址"
+        location_placeholder: "添加位置"
         url_placeholder: "添加 URL"
         max_attendees_placeholder: "参与人数不限"
         max_attendees_display:

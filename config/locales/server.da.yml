@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 da:
+  llms_txt:
+    sections:
+      optional: "Valgfri"
+    links:
+      search:
+        label: "Søg"
+      categories:
+        label: "Kategorier"
+      about:
+        label: "Om"
+      guidelines:
+        label: "Retningslinjer"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -969,6 +981,11 @@ da:
         share: "Del"
       types:
         staff: "Personale"
+    posters_by_member_type_members:
+      labels:
+        user: "Bruger"
+        count: "Indlæg"
+        share: "Del"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

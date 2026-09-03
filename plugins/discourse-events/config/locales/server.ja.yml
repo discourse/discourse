@@ -19,8 +19,8 @@ ja:
       event_started:
         title: イベント開始
   system_messages:
-    discourse_calendar_holiday_region_invalid: "指定された祝祭日の地域は存在しません。"
-    discourse_calendar_enable_holiday_failed: "この祝祭日を有効にできませんでした。すでに有効であるか無効になっていません。"
+    discourse_events_holiday_region_invalid: "指定された祝祭日の地域は存在しません。"
+    discourse_events_enable_holiday_failed: "この祝祭日を有効にできませんでした。すでに有効であるか無効になっていません。"
     discourse_post_event_bulk_invite_succeeded:
       title: "イベント - 一括招待に成功しました"
       subject_template: "一括招待は正常に処理されました"
@@ -64,7 +64,7 @@ ja:
     event_participation_buttons: "ユーザーが使用できるイベント参加ボタンのリスト。"
     sidebar_show_upcoming_events: "サイドバーの「もっと」の下に今後のイベントのリンクを表示する。"
     calendar_first_day_of_week: "カレンダーに表示する週の最初の曜日を設定します。オプションは、土曜日、日曜日、または月曜日です。"
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "日"

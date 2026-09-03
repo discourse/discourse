@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 vi:
+  llms_txt:
+    sections:
+      optional: "Không bắt buộc"
+    links:
+      search:
+        label: "Tìm"
+      categories:
+        label: "Danh mục"
+      about:
+        label: "Giới thiệu"
+      guidelines:
+        label: "Hướng dẫn"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -817,6 +829,11 @@ vi:
         share: "Chia sẻ"
       types:
         staff: "Nhân viên"
+    posters_by_member_type_members:
+      labels:
+        user: "Người dùng"
+        count: "Số lượng bài viết"
+        share: "Chia sẻ"
     trust_level_pipeline:
       description: "Sự chuyển dịch của thành viên giữa các cấp độ tin cậy trong khoảng thời gian đã chọn. Bao gồm số thành viên hiện tại ở từng cấp độ, tỷ lệ so với tổng số thành viên, số lượng thành viên được thăng cấp hoặc hạ cấp và số lượt đăng ký mới."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"

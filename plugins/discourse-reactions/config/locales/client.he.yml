@@ -29,7 +29,6 @@ he:
       reaction_multiple_users:
         one: "%{username} ועוד %{count}"
         two: "%{username} ועוד %{count}"
-        many: "%{username} ועוד %{count}"
         other: "%{username} ועוד %{count}"
       titles:
         reaction: "תגובת אמוג׳י חדשה"

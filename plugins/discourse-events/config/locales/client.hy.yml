@@ -12,7 +12,7 @@ hy:
           fields:
             topic_id:
               label: Թեմայի ID
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "Անջատել"
       enable_holiday: "Միացնել"
       date: "Ամսաթիվ"
@@ -26,6 +26,9 @@ hy:
         year: "Տարի"
     group_timezones:
       search: "Որոնում..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Թեմայի ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

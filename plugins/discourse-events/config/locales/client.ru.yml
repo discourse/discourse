@@ -7,11 +7,10 @@
 ru:
   admin_js:
     admin:
-      calendar: "События"
       site_settings:
         categories:
           discourse_post_event: "Мероприятие Discourse"
-          discourse_calendar: "События"
+          discourse_events: "События"
       web_hooks:
         calendar_event:
           group_name: "Событие календаря"
@@ -32,8 +31,8 @@ ru:
           fields:
             topic_id:
               label: ID темы
-    discourse_calendar:
-      invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
+    discourse_events:
+      title: "События"
       preferences:
         all_events_description: "Все события форума"
         my_events_description: "Мероприятия, которые вы собираетесь посетить или которыми вы интересуетесь."
@@ -327,9 +326,14 @@ ru:
         week: "За неделю"
         day: "Дата"
         year: "За год"
+    discourse_calendar:
+      invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
     group_timezones:
       search: "Поиск…"
       group_availability: "доступность %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID темы"
     discourse_post_event:
       new_event: "Новое событие"
       notifications:

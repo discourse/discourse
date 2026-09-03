@@ -78,7 +78,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     Fabricate(
       :browser_pageview_session_engagement,
       session_id: "engaged-session",
-      engaged_seconds: 20,
+      engaged_seconds: 1,
     )
     Fabricate(
       :browser_pageview_event,
@@ -95,8 +95,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     traffic.visit(start_date: "2026-05-14", end_date: "2026-05-14")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
-    expect(traffic).to have_metric(label: "Bounce rate", value: "50%")
-    expect(traffic).to have_metric(label: "Average session duration", value: "10s")
+    expect(traffic).to have_metric(label: "Bounce rate", value: "100%")
+    expect(traffic).to have_metric(label: "Average session duration", value: "0.5s")
   end
 
   it "lets an admin preview traffic type filters before applying them",

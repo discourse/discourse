@@ -44,7 +44,7 @@ export default <template>
               <label>{{i18n "admin.badges.badge"}}</label>
               <ComboBox
                 @value={{@controller.selectedBadgeId}}
-                @content={{@controller.availableBadges}}
+                @content={{@controller.badgeOptions}}
                 @onChange={{fn (mut @controller.selectedBadgeId)}}
                 @options={{hash filterable=true}}
               />

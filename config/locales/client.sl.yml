@@ -329,6 +329,7 @@ sl:
       next: "Naprej"
       sections:
         theme: "Videz"
+        search: "Išči"
       homepage:
         topics: "Tem"
         categories: "Kategorije"
@@ -1983,6 +1984,9 @@ sl:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      tab: "Zavihek"
+      delete: "Izbriši"
+      home: "Domov"
     conditional_loading_section:
       loading: Nalagam...
     category_row:
@@ -2290,7 +2294,7 @@ sl:
       tags: "Oznake"
       recent: "Nedavna iskanja"
       type:
-        default: "Teme/objave"
+        default: "Prispevki"
         users: "Uporabniki"
         categories: "Kategorije"
       context:
@@ -2843,7 +2847,6 @@ sl:
       reply_as_new_private_message: "Odgovori kot zasebno sporočilo z enakimi naslovniki"
       continue_discussion: "Nadaljevanje pogovora iz %{postLink}:"
       follow_quote: "pojdi na citiran prispevek"
-      show_full: "Prikaži cel prispevek"
       show_hidden: "Prikaži prezrto vsebino."
       collapse: "skrči"
       expand_collapse: "razširi/skrči"
@@ -3395,11 +3398,8 @@ sl:
       content_load_error: '<a href="%url%">Te vsebina</a> ne moremo naložiti.'
       image_load_error: '<a href="%url%">Te slike</a> ne moremo naložiti.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ali %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Bližnjice na tipkovnici"
       description_header: "Opis"
       search_aliases:
@@ -3777,6 +3777,11 @@ sl:
         group_traffic: "Promet"
         group_members: "Člani"
         group_other: "Drugo"
+        related_items:
+          users:
+            title: "Uporabniki"
+          labels:
+            user: "Uporabnik"
       config_sections:
         account:
           title: "Račun"
@@ -4004,6 +4009,8 @@ sl:
               share: "Deli"
             whos_posting:
               staff: "Osebje"
+              modal:
+                apply: "Shrani"
             trust_level_pipeline:
               trust_levels:
                 "0": "Novi"
@@ -4016,6 +4023,11 @@ sl:
             table:
               searches: "Iskanj"
               status: "Status"
+          system:
+            title: "Sistem"
+            status: "Status"
+            discourse_updated: "Discourse posodobljen"
+            dashboard_updated: "Nadzorna plošča posodobljena"
         reports_section:
           header_action: "Upravljaj"
           no_data: "Ni podatkov za prikaz"
@@ -4053,6 +4065,17 @@ sl:
           average_for_sample: "Povprečje za vzorec"
           total: "Skupaj vseh časov"
           no_data: "Ni podatkov za prikaz."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} uporabnik"
+              two: "%{count} uporabnika"
+              few: "%{count} uporabniki"
+              other: "%{count} uporabnikov"
+            posts_count:
+              one: "%{count} prispevek"
+              two: "%{count} prispevka"
+              few: "%{count} prispevki"
+              other: "%{count} prispevkov"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnik iskanj</a>'
           sort_button: "Razvrsti po %{column}"

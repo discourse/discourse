@@ -529,6 +529,8 @@ el:
         theme: "Θέμα"
         fonts: "Γραμματοσειρές"
         homepage: "Αρχική Σελίδα"
+        welcome_banner: "Banner καλωσορίσματος"
+        search: "Αναζήτηση"
       theme:
         selected: "Επιλεγμένο"
       colors:
@@ -2197,7 +2199,6 @@ el:
         watch_topic: "Παρακολούθηση θέματος"
         track_topic: "Επιτήρηση θέματος"
         do_nothing: "Μην κάνετε τίποτα"
-      topics_unread_when_closed: "Θεώρησε τα θέματα αδιάβαστα όταν είναι κλειστά"
       invited:
         title: "Προσκλήσεις"
         pending_tab: "Εκρεμείς"
@@ -2844,6 +2845,10 @@ el:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Επιλογή"
+      tab: "Καρτέλα"
+      delete: "Σβήσιμο"
+      home: "Αρχική σελίδα"
     conditional_loading_section:
       loading: Φορτώνεται…
     category_row:
@@ -3034,7 +3039,6 @@ el:
       create_whisper: "Ψυθίρισμα"
       create_shared_draft: "Δημιουργήστε κοινόχρηστο προσχέδιο"
       edit_shared_draft: "Επεξεργασία κοινόχρηστου προσχεδίου"
-      title: "Ή πατήστε %{modifier}Enter"
       save_and_close: "Αποθήκευση και κλείσιμο"
       discard: "Απόρριψη"
       cancel_edit: "Ακύρωση επεξεργασίας"
@@ -3412,10 +3416,10 @@ el:
         search_field: "Πεδίο αναζήτησης στην κεφαλίδα του ιστότοπου"
         search_icon: "Εικονίδιο αναζήτησης κοντά στην εικόνα προφίλ"
       type:
-        default: "Θέματα/αναρτήσεις"
+        default: "Αναρτήσεις"
         users: "Χρήστες"
         categories: "Κατηγορίες"
-        categories_and_tags: "Κατηγορίες/ετικέτες"
+        categories_and_tags: "Κατηγορίες & ετικέτες"
       context:
         user: "Ψάξε στις αναρτήσεις του χρήστη @%{username}"
         category: "Αναζήτηση στην κατηγορία #%{category} "
@@ -3428,7 +3432,6 @@ el:
         in: "φίλτρα με βάση μεταδεδομένα (π.χ. in:title, in:personal, in:pinned)"
         status: "φίλτρα κατά κατάσταση θέματος"
         full_search: "ξεκινά αναζήτηση πλήρους σελίδας"
-        full_search_key: "%{modifier} + Enter"
         me: "εμφανίζει μόνο τις αναρτήσεις σου"
       advanced:
         title: Προηγμένα φίλτρα
@@ -4268,7 +4271,6 @@ el:
       reply_as_new_private_message: "Απάντηση ως νέο μήνυμα στον ίδιο παραλήπτη"
       continue_discussion: "Συνέχιση της συζήτησης από το %{postLink}:"
       follow_quote: "πήγαινε στην παρατεθειμένη ανάρτηση"
-      show_full: "Δείξε Πλήρη Ανάρτηση "
       show_hidden: "Προβολή αγνοημένου περιεχομένου."
       deleted_by_author_simple: "(η ανάρτηση διαγράφηκε από τον συντάκτη)"
       collapse: "σύμπτυξη"
@@ -5030,12 +5032,8 @@ el:
     invalid_video_url: Δεν είναι δυνατή η αναπαραγωγή αυτού του βίντεο επειδή το URL δεν είναι έγκυρο ή δεν είναι διαθέσιμο.
     keyboard_shortcuts_help:
       search_placeholder: "Αναζήτηση συντόμευσης βάσει περιγραφής ή συνδυασμού πλήκτρων"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ή %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Συντομεύσεις πληκτρολογίου"
       short_title: "Συντομεύσεις"
       search_ctrl_f_tip: "Για αναζήτηση σε ολόκληρο το φόρουμ, πατήστε <kbd>/</kbd>"
@@ -5791,6 +5789,11 @@ el:
         group_other: "Άλλα"
         chart:
           total: "Σύνολο: %{count}"
+        related_items:
+          users:
+            title: "Χρήστες"
+          labels:
+            user: "Χρήστης"
       config_sections:
         account:
           title: "Λογαριασμός"
@@ -6054,7 +6057,6 @@ el:
           header_description: "Διαμόρφωση ρυθμίσεων αναζήτησης, συμπεριλαμβανομένης της καταγραφής και της δημιουργίας διακριτικών για Κινεζικές και Ιαπωνικές γλώσσες"
         search_everything:
           title: "Αναζήτηση"
-          header_description: "Βρείτε οτιδήποτε στη διεπαφή διαχειριστή εδώ. Μπορείτε να φιλτράρετε τα παρακάτω αποτελέσματα και οι προτιμήσεις σας θα αποθηκευτούν. Για να ανοίξετε αυτήν την αναζήτηση οπουδήποτε στη διεπαφή διαχειριστή, πατήστε %{shortcutHTML}."
         security:
           title: "Ασφάλεια"
         spam:
@@ -6343,6 +6345,12 @@ el:
               returning: "Επιστρέφοντες"
               staff: "Προσωπικό"
               empty: "Δεν υπάρχουν αναρτήσεις στην επιλεγμένη περίοδο."
+              modal:
+                apply: "Αποθήκευση"
+                enable: "Ενεργοποίηση %{title}"
+                disable: "Απενεργοποίηση %{title}"
+                move_up: "Μετακίνηση %{title} προς τα πάνω"
+                move_down: "Μετακίνηση %{title} προς τα κάτω"
             trust_level_pipeline:
               trust_levels:
                 "0": "Νέος"
@@ -6383,6 +6391,11 @@ el:
                 no_match_tooltip: "Όροι αναζήτησης με ποσοστό κλικ (CTR) 0%."
                 poor_match: "Φτωχή αντιστοιχία"
                 poor_match_tooltip: "Όροι αναζήτησης με ποσοστό κλικ (CTR) μεταξύ 1-20%."
+          system:
+            title: "Σύστημα"
+            status: "Κατάσταση"
+            discourse_updated: "Το Discourse ενημερώθηκε"
+            dashboard_updated: "Το ταμπλό ενημερώθηκε"
         reports_section:
           header_action: "Διαχειριστείτε"
           add: "Προσθήκη αναφοράς"
@@ -6499,6 +6512,14 @@ el:
           average_for_sample: "Μέσος όρος για το δείγμα"
           total: "Σύνολο όλων των εποχών"
           no_data: "Δεν υπάρχουν δεδομένα για προβολή."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} χρήστης"
+              other: "%{count} χρήστες"
+            posts_count:
+              one: "%{count} ανάρτηση"
+              other: "%{count} αναρτήσεις"
+            deselect: "Αποεπιλογή %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Αναζήτηση αρχείων καταγραφής</a>'
             disabled: 'Η αναφορά τάσεων αναζήτησης είναι απενεργοποιημένη. Ενεργοποιήστε <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">την καταγραφή των ερωτημάτων αναζήτησης</a> για τη συλλογή δεδομένων.'

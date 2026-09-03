@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    boards:
+      board:
+        remove_card: "తొలగించు"
+        title: "శీర్షిక"
+        tags: "ట్యాగులు"
+        topic_reply_count:
+          one: "%{count} ప్రత్యుత్తరం"
+          other: "%{count} ప్రత్యుత్తరాలు"
+        created_by: "సృష్టికర్త"
+      manage:
+        name: "పేరు"
+        slug: "స్లగ్"
+        constraint_categories: "వర్గాలు"
+        constraint_tags: "ట్యాగులు"
+        columns:
+          remove: "తొలగించు"
+          column_title: "శీర్షిక"
+          icon: "చిహ్నం"
+          color: "రంగు"
+          tag: "ట్యాగ్"
+          move_to_status_closed: "మూసివేయబడినవి"

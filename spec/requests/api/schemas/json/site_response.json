@@ -155,7 +155,7 @@
         "suggested_edit_accepted": {
           "type": "integer"
         },
-        "resenha_invitation": {
+        "voice_invitation": {
           "type": "integer"
         }
       },

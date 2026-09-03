@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  theme_metadata:
+    description: "經典的 Discourse 佈景主題，非常適合依照社群的特定需求進行自訂。"

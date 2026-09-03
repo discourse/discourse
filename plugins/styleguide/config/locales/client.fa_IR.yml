@@ -71,6 +71,22 @@ fa_IR:
           title: "موضوعات بیشتر"
         post_menu:
           title: "منوی نوشته"
+        roving_focus:
+          toolbar:
+            copy: "کپی"
+          adjacent:
+            label: "فیلترها"
+            field: "جستجو"
+            open: "باز"
+            recent: "اخیر"
+          combobox:
+            daily: "روزانه"
+            weekly: "هفتگی"
+            monthly: "ماهانه"
+            never: "هیچ‌وقت"
+          tree:
+            components: "کامپوننت‌ها"
+            select: "انتخاب"
         modal:
           title: "مدال"
           header: "عنوان مدال"

@@ -17,6 +17,7 @@ packages:
 - "frontend/asset-processor"
 - "frontend/discourse-types"
 - "plugins/automation"
+- "plugins/boards"
 - "plugins/chat"
 - "plugins/checklist"
 - "plugins/discourse-adplugin"
@@ -58,6 +59,7 @@ packages:
 - "plugins/poll"
 - "plugins/spoiler-alert"
 - "plugins/styleguide"
+- "plugins/voice"
 - "themes/horizon"
 patchedDependencies:
   "ember-this-fallback@0.4.0": "patches/ember-this-fallback@0.4.0.patch"

@@ -13,7 +13,7 @@ import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
+import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 import I18n, { i18n } from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";

@@ -121,7 +121,7 @@ import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
-import { setupDSelectAssertions } from "./d-select-assertions";
+import { setupDNativeSelectAssertions } from "./d-native-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
@@ -508,7 +508,7 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 setupFormKitAssertions();
-setupDSelectAssertions();
+setupDNativeSelectAssertions();
 setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {
