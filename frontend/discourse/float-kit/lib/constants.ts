@@ -357,6 +357,9 @@ export interface ToastOptions {
 
   /** A class added to the toast element. */
   class?: string;
+
+  /** Replaces any showing toast with the same key, so only the newest is kept. */
+  key?: string;
 }
 
 export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {

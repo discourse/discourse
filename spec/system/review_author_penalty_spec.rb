@@ -79,6 +79,26 @@ describe "Review queue | author penalty" do
       expect(author.reload).to be_silenced
     end
 
+    it "keeps only the newest undo toast when several flags share an author" do
+      other_post = Fabricate(:post, user: author, topic: flagged_post.topic)
+      other_reviewable = PostActionCreator.spam(flagger, other_post).reviewable
+      other_post.update!(hidden: true, hidden_at: Time.zone.now)
+
+      page.visit("/review")
+
+      review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)
+      expect(page).to have_css(".fk-d-default-toast__title", text: "Post deleted.")
+
+      review_page.select_bundled_action(
+        other_reviewable,
+        "post-agree_and_keep_hidden",
+        bundle_index: 1,
+      )
+      expect(page).to have_css(".fk-d-default-toast__title", text: "Post kept hidden.")
+
+      expect(page).to have_css(".reviewable-undo-penalty", count: 1)
+    end
+
     it "offers an undo on that toast" do
       review_page.visit_reviewable(reviewable)
 
