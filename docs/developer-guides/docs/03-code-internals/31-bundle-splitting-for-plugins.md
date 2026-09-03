@@ -87,19 +87,21 @@ await waitForPromise(import("./my-module"));
 
 ## Sharing code with other themes and plugins
 
-Enabling `staticModules` puts a boundary around your plugin. If another plugin or theme needs to import one of your modules, list it under `sharedModules` in `about.json`:
+Enabling `staticModules` puts a boundary around your plugin. If another plugin or theme needs to import one of your modules, list it under `exports` in `about.json`:
 
 ```json
 {
   "frontend": {
     "staticModules": true,
-    "sharedModules": [
-      "discourse/components/chat-channel",
-      "discourse/models/chat-channel"
-    ]
+    "exports": {
+      "discourse/components/chat-channel": "discourse/components/chat-channel",
+      "discourse/models/chat-channel": "discourse/models/chat-channel"
+    }
   }
 }
 ```
+
+The key is the name other plugins import by, and the value is the module behind it. Keeping the two apart means you can move a module without breaking anyone, and you can export the same module under more than one name. Other plugins reach these as `discourse/plugins/<your-plugin>/<key>`.
 
 Adding a module here will cause it to be eagerly loaded when the application boots, and therefore carries a performance cost. Consider providing an asynchronous-friendly entrypoint for any shared components/libs, so that most code is only loaded on the first use.
 
@@ -121,7 +123,7 @@ When using staticModules, you should avoid using these legacy features:
 
 - `requirejs.entries`, `require()`, `define()`
 
-- Loading your plugin's modules from other plugins (except those listed in `sharedModules`)
+- Loading your plugin's modules from other plugins (except those listed in `exports`)
 
 ## Verification
 

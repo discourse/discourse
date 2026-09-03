@@ -217,13 +217,22 @@ export default {
       ].join("\n");
     }
 
-    // A cross-plugin import can spell it either way.
-    const sharedPaths = new Set(
-      (frontendConfig.sharedModules ?? []).flatMap((shared) => {
-        const path = stripExtension(shared);
-        return [path, `${path}/index`];
-      })
-    );
+    // `exports` maps the name other bundles import by to the module behind it, which is why the
+    // two are kept apart here. A cross-plugin import can spell the module either way.
+    const publicNamesByPath = new Map();
+
+    for (const [publicName, internalName] of Object.entries(
+      frontendConfig.exports ?? {}
+    )) {
+      const path = stripExtension(internalName);
+
+      for (const candidate of [path, `${path}/index`]) {
+        publicNamesByPath.set(candidate, [
+          ...(publicNamesByPath.get(candidate) ?? []),
+          publicName,
+        ]);
+      }
+    }
 
     const bundles = routeBundlesFor(records, opts.routeTables?.bundleByRoute);
     const entrypointName = extra?.entrypointName;
@@ -232,7 +241,14 @@ export default {
       isEagerModule(record.compatModuleName)
     );
     const shared = records.filter((record) =>
-      sharedPaths.has(stripExtension(record.importPath))
+      publicNamesByPath.has(stripExtension(record.importPath))
+    );
+
+    // One module can be exported under several names.
+    const exported = shared.flatMap((record) =>
+      publicNamesByPath
+        .get(stripExtension(record.importPath))
+        .map((publicName) => ({ publicName, record }))
     );
 
     const imported = [...new Set([...eager, ...shared])];
@@ -247,7 +263,12 @@ export default {
       ),
       ...warnings,
       ...renderMap("compatModules", eager, identifiers),
-      ...renderMap("sharedModules", shared, identifiers),
+      "const pluginExports = {",
+      ...exported.map(
+        ({ publicName, record }) =>
+          `  "${publicName}": ${identifiers.get(record)},`
+      ),
+      "};",
       "export const routes = [",
       ...bundles.map(
         (bundle) =>
@@ -256,7 +277,7 @@ export default {
       ),
       "];",
       "export { compatModules };",
-      "export default sharedModules;",
+      "export default pluginExports;",
       "",
     ].join("\n");
   },

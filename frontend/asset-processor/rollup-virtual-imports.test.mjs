@@ -47,7 +47,7 @@ describe("virtual:entrypoint", () => {
 
       expect(output).toContain("export { compatModules };");
       expect(output).toContain("export default compatModules;");
-      expect(output).not.toContain("sharedModules");
+      expect(output).not.toContain("pluginExports");
     });
 
     it("skips type declarations and warns about unsupported files", () => {
@@ -67,18 +67,19 @@ describe("virtual:entrypoint", () => {
     const output = entrypoint(MODULES, {
       frontendConfig: {
         staticModules: true,
-        sharedModules: [
-          "discourse/components/chat-channel.gjs",
-          "discourse/models/channel.js",
-        ],
+        exports: {
+          "discourse/components/chat-channel":
+            "discourse/components/chat-channel.gjs",
+          "discourse/models/channel": "discourse/models/channel.js",
+        },
       },
     });
 
     const compatModules = output.slice(
       output.indexOf("const compatModules"),
-      output.indexOf("const sharedModules")
+      output.indexOf("const pluginExports")
     );
-    const sharedModules = output.slice(output.indexOf("const sharedModules"));
+    const pluginExports = output.slice(output.indexOf("const pluginExports"));
 
     it("registers everything Discourse resolves by name", () => {
       for (const name of [
@@ -116,11 +117,28 @@ describe("virtual:entrypoint", () => {
       );
     });
 
-    it("exports only the declared sharedModules as the cross-bundle API", () => {
-      expect(sharedModules).toContain('"discourse/components/chat-channel":');
-      expect(sharedModules).toContain('"discourse/models/channel":');
-      expect(sharedModules).not.toContain('"discourse/services/chat":');
-      expect(output).toContain("export default sharedModules;");
+    it("exports only the declared modules as the cross-bundle API", () => {
+      expect(pluginExports).toContain('"discourse/components/chat-channel":');
+      expect(pluginExports).toContain('"discourse/models/channel":');
+      expect(pluginExports).not.toContain('"discourse/services/chat":');
+      expect(output).toContain("export default pluginExports;");
+    });
+
+    it("keys the export by its public name, not the module behind it", () => {
+      const aliased = entrypoint(MODULES, {
+        frontendConfig: {
+          staticModules: true,
+          exports: {
+            "discourse/chat-channel": "discourse/components/chat-channel.gjs",
+            "discourse/channel": "discourse/components/chat-channel.gjs",
+          },
+        },
+      });
+      const map = aliased.slice(aliased.indexOf("const pluginExports"));
+
+      expect(map).toContain('"discourse/chat-channel":');
+      expect(map).toContain('"discourse/channel":');
+      expect(map).not.toContain('"discourse/components/chat-channel":');
     });
 
     it("imports a module shared and registered only once", () => {
@@ -156,7 +174,7 @@ describe("virtual:entrypoint", () => {
     it("eagerly imports every module despite staticModules", () => {
       const output = entrypoint(
         TEST_MODULES,
-        { frontendConfig: { staticModules: true, sharedModules: [] } },
+        { frontendConfig: { staticModules: true, exports: {} } },
         { entrypointName: "test" }
       );
 
@@ -166,13 +184,13 @@ describe("virtual:entrypoint", () => {
       }
 
       expect(output).toContain("export default compatModules;");
-      expect(output).not.toContain("sharedModules");
+      expect(output).not.toContain("pluginExports");
     });
 
     it("still tree-shakes the same modules for a non-test entrypoint", () => {
       const output = entrypoint(
         TEST_MODULES,
-        { frontendConfig: { staticModules: true, sharedModules: [] } },
+        { frontendConfig: { staticModules: true, exports: {} } },
         { entrypointName: "main" }
       );
 
@@ -257,7 +275,7 @@ describe("virtual:entrypoint", () => {
     it("keeps split route files out of the eager set", () => {
       const compatModules = output.slice(
         output.indexOf("const compatModules"),
-        output.indexOf("const sharedModules")
+        output.indexOf("const pluginExports")
       );
 
       expect(compatModules).not.toContain('"discourse/routes/chat"');
@@ -280,7 +298,7 @@ describe("virtual:entrypoint", () => {
     it("only treats top-level routes/controllers/templates as routes", () => {
       const compatModules = output.slice(
         output.indexOf("const compatModules"),
-        output.indexOf("const sharedModules")
+        output.indexOf("const pluginExports")
       );
 
       expect(compatModules).not.toContain(
