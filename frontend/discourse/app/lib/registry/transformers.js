@@ -61,6 +61,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-subcategories",
   "category-text-color",
   "category-visibility-private-locked",
+  "code-login-user-field-values",
   "composer-actions-content",
   "composer-editing-post",
   "composer-editor-quoted-post-avatar-template",
