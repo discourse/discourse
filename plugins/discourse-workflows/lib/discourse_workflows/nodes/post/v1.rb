@@ -20,6 +20,19 @@ module DiscourseWorkflows
         POST_TYPE_OPTIONS = %w[regular all first reply moderator_action small_action whisper].freeze
         ORDER_OPTIONS = %w[latest oldest latest_topic oldest_topic likes].freeze
         DEFAULT_LIMIT = 30
+        DEFAULTS = {
+          "operation" => "create",
+          "whisper" => false,
+          "bypass_permission_checks" => false,
+          "include_raw" => true,
+          "include_cooked" => false,
+          "body_character_limit" => 0,
+          "post_type" => "regular",
+          "status" => "any",
+          "order" => "latest",
+          "limit" => DEFAULT_LIMIT,
+          "offset" => 0,
+        }.freeze
         MAX_LIMIT = 800
 
         def self.list_string_property(control: nil, hidden: false)
@@ -334,45 +347,9 @@ module DiscourseWorkflows
         private
 
         def config_for(exec_ctx, item_index)
-          {
-            "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "create"),
-            "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
-            "raw" => exec_ctx.get_node_parameter("raw", item_index),
-            "reply_to_post_number" =>
-              exec_ctx.get_node_parameter("reply_to_post_number", item_index),
-            "whisper" => exec_ctx.get_node_parameter("whisper", item_index, default: false),
-            "bypass_permission_checks" =>
-              exec_ctx.get_node_parameter("bypass_permission_checks", item_index, default: false),
-            "post_id" => exec_ctx.get_node_parameter("post_id", item_index),
-            "include_raw" => exec_ctx.get_node_parameter("include_raw", item_index, default: true),
-            "include_cooked" =>
-              exec_ctx.get_node_parameter("include_cooked", item_index, default: false),
-            "body_character_limit" =>
-              exec_ctx.get_node_parameter("body_character_limit", item_index, default: 0),
-            "query" => exec_ctx.get_node_parameter("query", item_index),
-            "created_after" => exec_ctx.get_node_parameter("created_after", item_index),
-            "created_before" => exec_ctx.get_node_parameter("created_before", item_index),
-            "topic_created_after" => exec_ctx.get_node_parameter("topic_created_after", item_index),
-            "topic_created_before" =>
-              exec_ctx.get_node_parameter("topic_created_before", item_index),
-            "categories" => exec_ctx.get_node_parameter("categories", item_index),
-            "exclude_categories" => exec_ctx.get_node_parameter("exclude_categories", item_index),
-            "exact_category_match" =>
-              exec_ctx.get_node_parameter("exact_category_match", item_index),
-            "tags" => exec_ctx.get_node_parameter("tags", item_index),
-            "exclude_tags" => exec_ctx.get_node_parameter("exclude_tags", item_index),
-            "topics" => exec_ctx.get_node_parameter("topics", item_index),
-            "usernames" => exec_ctx.get_node_parameter("usernames", item_index),
-            "groups" => exec_ctx.get_node_parameter("groups", item_index),
-            "post_type" => exec_ctx.get_node_parameter("post_type", item_index, default: "regular"),
-            "status" => exec_ctx.get_node_parameter("status", item_index, default: "any"),
-            "keywords" => exec_ctx.get_node_parameter("keywords", item_index),
-            "topic_keywords" => exec_ctx.get_node_parameter("topic_keywords", item_index),
-            "order" => exec_ctx.get_node_parameter("order", item_index, default: "latest"),
-            "limit" => exec_ctx.get_node_parameter("limit", item_index, default: DEFAULT_LIMIT),
-            "offset" => exec_ctx.get_node_parameter("offset", item_index, default: 0),
-            "advanced_filter" => exec_ctx.get_node_parameter("advanced_filter", item_index),
-          }
+          Hash.new do |config, key|
+            config[key] = exec_ctx.get_node_parameter(key, item_index, default: DEFAULTS[key])
+          end
         end
 
         def execute_with_config(exec_ctx, config, item_index)
