@@ -51,12 +51,7 @@ module DiscourseEvents
         events_by_topic =
           DiscourseEvents::Events::Event
             .where(id: first_post_ids)
-            .includes(
-              :image_upload,
-              :organizer_group,
-              { event_hosts: :user },
-              post: [:user, { topic: :category }],
-            )
+            .includes(:image_upload, { event_hosts: :user }, post: [:user, { topic: :category }])
             .index_by { |event| event.post.topic_id }
         return {} if events_by_topic.empty?
 

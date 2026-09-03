@@ -125,12 +125,11 @@ RSpec.describe DiscourseEvents::Events::Event::Action::AttributesFromRaw do
     expect(attributes[:raw_invitees]).to be_nil
   end
 
-  it "resolves hosts and an organizer group" do
+  it "resolves hosts to user ids" do
     host = Fabricate(:user, username: "EventHost")
-    organizer_group = Fabricate(:group, name: "event-organizers")
-    raw_event.merge!(hosts: "eventhost, EventHost", "organizer-group": organizer_group.name)
+    raw_event.merge!(hosts: "eventhost, EventHost")
 
-    expect(attributes).to include(host_user_ids: [host.id], organizer_group_id: organizer_group.id)
+    expect(attributes).to include(host_user_ids: [host.id])
   end
 
   context "with custom fields" do

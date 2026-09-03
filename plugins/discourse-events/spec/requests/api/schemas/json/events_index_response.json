@@ -72,25 +72,6 @@
           "custom_fields": {
             "type": ["object", "null"]
           },
-          "organizer_group": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "id": {
-                "type": "integer"
-              },
-              "name": {
-                "type": "string"
-              },
-              "display_name": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "id",
-              "name"
-            ]
-          },
           "post": {
             "type": "object",
             "additionalProperties": false,

@@ -158,8 +158,6 @@ en:
           too_many_hosts:
             one: "An event is limited to %{count} host."
             other: "An event is limited to %{count} hosts."
-          invalid_organizer_group: "Invalid organizer group."
-          acting_user_not_allowed_to_set_organizer_group: "Current user is not allowed to set this organizer group."
           acting_user_not_allowed_to_invite_these_groups: "Current user is not allowed to invite these groups."
           custom_field_is_invalid: "The custom field `%{field}` is not allowed."
           name:

@@ -30,7 +30,6 @@ module DiscourseEvents
           all_day: all_day?,
           custom_fields: custom_fields,
           host_user_ids: host_user_ids,
-          organizer_group_id: organizer_group_id,
         }
       end
 
@@ -48,17 +47,6 @@ module DiscourseEvents
         by_username =
           User.human_users.where(username_lower: usernames).pluck(:username_lower, :id).to_h
         usernames.filter_map { |username| by_username[username] }
-      end
-
-      def organizer_group_id
-        name = raw_event[:"organizer-group"]
-        return nil if name.blank?
-
-        begin
-          Group.lookup_group(name.to_sym)&.id
-        rescue ArgumentError
-          nil
-        end
       end
 
       def all_day?

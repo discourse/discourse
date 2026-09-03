@@ -142,25 +142,6 @@
               ]
             }
           },
-          "organizer_group": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "id": {
-                "type": "integer"
-              },
-              "name": {
-                "type": "string"
-              },
-              "display_name": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "id",
-              "name"
-            ]
-          },
           "custom_fields": {
             "type": [
               "object",

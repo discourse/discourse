@@ -4455,8 +4455,7 @@ CREATE TABLE public.discourse_post_event_events (
     max_attendees integer,
     all_day boolean DEFAULT false NOT NULL,
     image_upload_id bigint,
-    livestream boolean DEFAULT false NOT NULL,
-    organizer_group_id bigint
+    livestream boolean DEFAULT false NOT NULL
 );
 
 
@@ -20529,13 +20528,6 @@ CREATE INDEX index_discourse_post_event_events_on_image_upload_id ON public.disc
 
 
 --
--- Name: index_discourse_post_event_events_on_organizer_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_discourse_post_event_events_on_organizer_group_id ON public.discourse_post_event_events USING btree (organizer_group_id);
-
-
---
 -- Name: index_discourse_post_event_hosts_on_post_id_and_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24414,7 +24406,6 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260902150036'),
 ('20260902150024'),
 ('20260901020329'),
 ('20260831162602'),

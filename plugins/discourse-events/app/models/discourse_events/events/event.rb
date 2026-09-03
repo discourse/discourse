@@ -25,7 +25,6 @@ module DiscourseEvents
       has_many :hosts, through: :event_hosts, source: :user
       belongs_to :post, foreign_key: :id
       belongs_to :image_upload, class_name: "Upload", optional: true
-      belongs_to :organizer_group, class_name: "Group", optional: true
       has_many :upload_references, as: :target, dependent: :destroy
 
       scope :visible, -> { where(deleted_at: nil) }
@@ -66,7 +65,6 @@ module DiscourseEvents
       validate :allowed_custom_fields
       validate :url_is_a_uri, if: :url_changed?
       validate :hosts_are_valid
-      validate :organizer_group_exists
 
       def self.attributes_protected_by_default
         super - %w[id]
@@ -283,16 +281,6 @@ module DiscourseEvents
         return if (ids - known_ids).empty?
 
         errors.add(:base, I18n.t("discourse_post_event.errors.models.event.invalid_hosts"))
-      end
-
-      def organizer_group_exists
-        return if organizer_group_id.blank?
-        return if organizer_group && !Group::PSEUDOGROUP_IDS.include?(organizer_group_id)
-
-        errors.add(
-          :base,
-          I18n.t("discourse_post_event.errors.models.event.invalid_organizer_group"),
-        )
       end
 
       def ends_before_start
@@ -807,10 +795,8 @@ end
 #  url                :string(1000)
 #  chat_channel_id    :bigint
 #  image_upload_id    :bigint
-#  organizer_group_id :bigint
 #
 # Indexes
 #
-#  index_discourse_post_event_events_on_image_upload_id     (image_upload_id)
-#  index_discourse_post_event_events_on_organizer_group_id  (organizer_group_id)
+#  index_discourse_post_event_events_on_image_upload_id  (image_upload_id)
 #

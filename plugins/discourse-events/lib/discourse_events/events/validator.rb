@@ -38,7 +38,6 @@ module DiscourseEvents
 
         return false unless can_invite_groups?(extracted_event)
         return false unless valid_hosts?(extracted_event)
-        return false unless valid_organizer_group?(extracted_event)
 
         if @post.acting_user && @post.event
           if !@post.acting_user.guardian.can_act_on_discourse_post_event?(@post.event)
@@ -197,39 +196,6 @@ module DiscourseEvents
           .map { |username| username.strip.downcase }
           .reject(&:blank?)
           .uniq
-      end
-
-      def valid_organizer_group?(event)
-        name = event[:"organizer-group"]
-        return true if name.blank?
-
-        group =
-          begin
-            Group.lookup_group(name.to_sym)
-          rescue ArgumentError
-            nil
-          end
-
-        guardian = @post.acting_user.guardian
-
-        if !group || Group::PSEUDOGROUP_IDS.include?(group.id) || !guardian.can_see_group?(group)
-          @post.errors.add(
-            :base,
-            I18n.t("discourse_post_event.errors.models.event.invalid_organizer_group"),
-          )
-          return false
-        end
-
-        return true if @post.event&.organizer_group_id == group.id
-        return true if guardian.can_edit_group?(group)
-
-        @post.errors.add(
-          :base,
-          I18n.t(
-            "discourse_post_event.errors.models.event.acting_user_not_allowed_to_set_organizer_group",
-          ),
-        )
-        false
       end
 
       def can_invite_groups?(event)
