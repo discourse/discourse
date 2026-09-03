@@ -184,6 +184,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_497,
         ip_address: "198.51.100.2",
         user_agent: firefox,
+        language: "en-GB",
         session_id: "anonymous-session",
         created_at: "2026-05-11 10:00:00",
       },
@@ -332,9 +333,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.remove_filter("browser")
 
     traffic.select_tab(card: "visitors", tab: "Languages")
-    expect(traffic).to have_row(card: "visitors", label: "American English", count: "2")
-    traffic.filter_row(card: "visitors", label: "American English")
-    expect(traffic).to have_filter_pill(dimension: "language", label: "American English")
+    expect(traffic).to have_row(card: "visitors", label: "English (US)", count: "2")
+    expect(traffic).to have_row(card: "visitors", label: "English (UK)", count: "1")
+    traffic.filter_row(card: "visitors", label: "English (US)")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "English (US)")
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=en-US&range=custom&start_date=2026-05-01",
     )
