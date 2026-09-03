@@ -1,4 +1,4 @@
-import { settled, visit } from "@ember/test-helpers";
+import { currentURL, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
@@ -109,5 +109,66 @@ acceptance("Permalink not found for /t/:slug/:id", function (needs) {
     await visit("/t/some-slug-that-does-not-exist/999999");
 
     assert.dom(".not-found").exists("the not found page is rendered");
+  });
+});
+
+acceptance("Permalink redirect for /c/:slug", function (needs) {
+  let requestedPath;
+
+  needs.pretender((server, helper) => {
+    server.get("/permalink-check.json", (request) => {
+      requestedPath = request.queryParams.path;
+      return helper.response({
+        found: true,
+        target_url: "https://www.example.com",
+      });
+    });
+  });
+
+  test("redirects when the category slug matches a permalink", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectAbsolute");
+
+    await visitWithRedirects("/c/some-category-that-does-not-exist");
+
+    assert.strictEqual(requestedPath, "/c/some-category-that-does-not-exist");
+    assert.true(
+      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com")
+    );
+  });
+});
+
+acceptance("Permalink redirect for /c/:slug/:id", function (needs) {
+  let requestedPath;
+
+  needs.pretender((server, helper) => {
+    server.get("/permalink-check.json", (request) => {
+      requestedPath = request.queryParams.path;
+      return helper.response({
+        found: true,
+        target_url: "https://www.example.com",
+      });
+    });
+  });
+
+  test("redirects when the category slug/id matches a permalink", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectAbsolute");
+
+    await visitWithRedirects("/c/some-category-that-does-not-exist/999999");
+
+    assert.strictEqual(
+      requestedPath,
+      "/c/some-category-that-does-not-exist/999999"
+    );
+    assert.true(
+      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com")
+    );
+  });
+});
+
+acceptance("Permalink not found for /c/:slug", function () {
+  test("shows the 404 page when no permalink matches", async function (assert) {
+    await visit("/c/some-category-that-does-not-exist/999999");
+
+    assert.strictEqual(currentURL(), "/404");
   });
 });
