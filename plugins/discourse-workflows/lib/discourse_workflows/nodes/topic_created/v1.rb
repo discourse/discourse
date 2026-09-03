@@ -4,8 +4,6 @@ module DiscourseWorkflows
   module Nodes
     module TopicCreated
       class V1 < NodeType
-        TOPIC_TYPE_OPTIONS = %w[all topics personal_messages].freeze
-
         description(
           name: "trigger:topic_created",
           version: "1.0",
@@ -103,47 +101,20 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_topic_type?(trigger_ctx.get_node_parameter("topic_type", "topics")) &&
-            matches_group_inbox?(trigger_ctx.get_node_parameter("group_inbox_id")) &&
+          matches_topic_type?(@topic, trigger_ctx.get_node_parameter("topic_type", "topics")) &&
+            matches_group_inbox?(@topic, trigger_ctx.get_node_parameter("group_inbox_id")) &&
             matches_category_ids?(
               @topic.category_id,
               category_ids_parameter(trigger_ctx),
               include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+            ) &&
+            matches_tags?(@topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
         end
 
         private
 
         def post_data(post)
           serialize_post(post)
-        end
-
-        def matches_topic_type?(topic_type)
-          case topic_type.presence || "topics"
-          when "all"
-            true
-          when "topics"
-            !@topic.private_message?
-          when "personal_messages"
-            @topic.private_message?
-          else
-            false
-          end
-        end
-
-        def matches_group_inbox?(group_id)
-          return true if group_id.blank?
-          return false if !@topic.private_message?
-
-          @topic.allowed_groups.exists?(id: group_id.to_i)
-        end
-
-        def matches_tags?(tag_names)
-          tag_names.empty? || (topic_tag_names & tag_names).any?
-        end
-
-        def topic_tag_names
-          @topic_tag_names ||= @topic.tags.pluck(:name)
         end
       end
     end
