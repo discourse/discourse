@@ -64,6 +64,10 @@ module JsonApiKit
       date <=> other.date
     end
 
+    def eql?(other) = (self <=> other) == 0
+
+    def hash = date.hash
+
     def future? = date.future?
 
     def to_s = date.iso8601

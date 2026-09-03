@@ -3,7 +3,8 @@
 module JsonApiKit
   class Document
     def self.build(parameters, resource:, urls:, glossary:)
-      declared_parameters = Request::Parameters.new(parameters.to_hash, glossary:).to_h
+      declared_parameters =
+        Request::Parameters.new(parameters.to_hash.deep_stringify_keys, glossary:, resource:).to_h
       contract_class
         .new(
           **declared_parameters.deep_dup,

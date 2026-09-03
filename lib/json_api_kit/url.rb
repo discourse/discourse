@@ -7,8 +7,7 @@ module JsonApiKit
     KIT = Glossary.kit
     REPLACED_MEMBERS =
       %w[after before anchor before_size after_size include_anchor]
-        .map { KIT.member_name(it) }
-        .freeze
+        .map { KIT.member_name(Name::Member.new(value: it)).value }
         .freeze
 
     def initialize(address, parameters = {})
@@ -33,7 +32,9 @@ module JsonApiKit
 
     def page_parameters = parameters.fetch(PAGE, {})
 
-    def member_names(page) = page.transform_keys { KIT.member_name(it) }
+    def member_names(page)
+      page.transform_keys { KIT.member_name(Name::Member.new(value: it.to_s)).value }
+    end
 
     def query_string = Rack::Utils.build_nested_query(parameters).presence.try { "?#{it}" }
   end
