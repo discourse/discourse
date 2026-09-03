@@ -70,6 +70,63 @@ module PageObjects
         self
       end
 
+      def drag_rich_editor_block(source:, after:, &block)
+        draggable_blocks = "#{RICH_EDITOR} > *, #{RICH_EDITOR} li"
+        source_block = find(draggable_blocks, text: source, exact_text: true)
+        target_block = find(draggable_blocks, text: after, exact_text: true)
+
+        page.driver.with_playwright_page do |pw_page|
+          source_bounds = source_block.native.bounding_box
+          source_x = source_bounds["x"] + 120
+          source_y = source_bounds["y"] + 6
+          pw_page.mouse.move(source_x, source_y)
+
+          handle =
+            pw_page.wait_for_selector(
+              ".composer-drag-handle.--visible",
+              state: "visible",
+              timeout: Capybara.default_max_wait_time * 1000,
+            )
+          handle_bounds = handle.bounding_box
+          target_bounds = target_block.native.bounding_box
+
+          pw_page.mouse.move(
+            handle_bounds["x"] + handle_bounds["width"] / 2,
+            handle_bounds["y"] + handle_bounds["height"] / 2,
+            steps: 10,
+          )
+          pw_page.mouse.down
+          pw_page.mouse.move(
+            target_bounds["x"] + target_bounds["width"] / 2,
+            target_bounds["y"] + target_bounds["height"] - 1,
+            steps: 10,
+          )
+        end
+
+        begin
+          yield if block
+        ensure
+          page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+        end
+        self
+      end
+
+      def has_dragging_rich_editor_block?
+        has_css?("#{RICH_EDITOR}.is-dragging-block")
+      end
+
+      def has_rich_editor_drop_indicator?
+        has_css?(".composer-drag-handle__drop-indicator.--visible")
+      end
+
+      def has_rich_editor_blocks?(*blocks)
+        ordered_text =
+          Regexp.new(blocks.map { |text| Regexp.escape(text) }.join(".*"), Regexp::MULTILINE)
+
+        has_css?(RICH_EDITOR, text: ordered_text) &&
+          blocks.all? { |text| has_css?("#{RICH_EDITOR} > *", text:, exact_text: true, count: 1) }
+      end
+
       # The composer's height is driven by this variable, so matching it is how the
       # resize is observed. Named for what it reads rather than for the height, which
       # would suggest measuring the box.
@@ -416,6 +473,15 @@ module PageObjects
 
       def has_nested_list_item?(text)
         has_css?("#{RICH_EDITOR} li > ul > li", text:, exact_text: true)
+      end
+
+      def has_nested_list_items?(*items)
+        selector = "#{RICH_EDITOR} li > :is(ul, ol) > li"
+        ordered_text =
+          Regexp.new(items.map { |text| Regexp.escape(text) }.join(".*"), Regexp::MULTILINE)
+
+        has_css?(selector, count: items.length) &&
+          has_css?("#{RICH_EDITOR} li > :is(ul, ol)", text: ordered_text)
       end
 
       def has_top_level_list_item?(text)

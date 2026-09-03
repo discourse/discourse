@@ -3801,6 +3801,17 @@ en:
         show_source: "Show source"
         show_preview: "Show preview"
 
+      node:
+        handle: "Drag to move, click for actions"
+        move_up: "Move up"
+        move_down: "Move down"
+        duplicate: "Duplicate"
+        delete: "Delete"
+        moved_up: "Block moved up"
+        moved_down: "Block moved down"
+        duplicated: "Block duplicated"
+        deleted: "Block deleted"
+
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
     notifications:

@@ -22,6 +22,7 @@ import type MenuService from "discourse/float-kit/services/menu";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import type Session from "discourse/models/session";
 import type Site from "discourse/models/site";
+import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
@@ -60,6 +61,8 @@ export interface PluginContext {
   siteSettings: Record<string, unknown>;
   /** Application event bus. */
   appEvents: AppEventsService;
+  /** Service used to announce editor changes to assistive technology. */
+  a11y: A11yService;
   /** Service used to show confirmation and alert dialogs. */
   dialog: DialogService;
   /** Replaces or restores the toolbar displayed by the editor container. */
@@ -109,6 +112,8 @@ export interface PluginParams {
   pmSchemaList: typeof import("prosemirror-schema-list");
   /** Schema used by the editor instance. */
   schema: Schema;
+  /** Extensions active in the editor instance. */
+  extensions: readonly RichEditorExtension[];
   /** Returns application context for the editor instance. */
   getContext: () => PluginContext;
 }
@@ -269,6 +274,57 @@ export interface MarkSerializerSpec {
   escape?: boolean;
 }
 
+/** An actionable entry in a node's drag-handle menu. */
+export interface NodeActionItem {
+  /** Icon name shown before the label. */
+  icon?: string;
+  /** Already-translated label. */
+  label: string;
+  /** Class applied to the button, for styling and for tests to target. */
+  className?: string;
+  /** Shortcut hint, in `DShortcut` form, e.g. `"mod+d"`. */
+  shortcutKeys?: string;
+  /** Draws the entry as destructive. */
+  dangerous?: boolean;
+  /** Draws the entry as the current choice. */
+  active?: boolean;
+  /** Already-translated result announced after the action runs. */
+  announcement?: string;
+  /** Runs the entry. */
+  action: () => void;
+  /** Distinguishes actions from divider entries. */
+  divider?: false;
+}
+
+/** A separator between groups in a node's drag-handle menu. */
+export interface NodeActionDivider {
+  divider: true;
+}
+
+/** One entry in a node's drag-handle menu. */
+export type NodeAction = NodeActionItem | NodeActionDivider;
+
+export interface NodeActionsParams {
+  /** The node the handle belongs to. */
+  node: Node;
+  /** Its position in the document. */
+  pos: number;
+  /** Editor view containing the node. */
+  view: EditorView;
+  /** Extension API for the editor instance. */
+  pluginParams: PluginParams;
+}
+
+/**
+ * Actions contributed to a block's drag-handle menu, keyed by node type name.
+ * Callbacks run when the menu opens. The `*` key applies to every block, and
+ * its entries come last.
+ */
+export type NodeActionsSpec = Record<
+  string,
+  (params: NodeActionsParams) => NodeAction[]
+>;
+
 export type KeymapSpec = Record<string, Command>;
 export type RichKeymap = KeymapSpec | ((params: PluginParams) => KeymapSpec);
 
@@ -306,6 +362,8 @@ export interface RichEditorExtension {
   commands?: (params: PluginParams) => Record<string, RichCommand>;
   /** Custom toolbar state contributed by the extension. */
   state?: StateFunction;
+  /** Entries this extension adds to a block's drag-handle menu. */
+  nodeActions?: NodeActionsSpec;
 }
 
 const registeredExtensions: RichEditorExtension[] = [];
@@ -351,4 +409,27 @@ export async function resetRichEditorExtensions() {
  */
 export function getExtensions(): RichEditorExtension[] {
   return registeredExtensions;
+}
+
+/**
+ * Every action in the supplied extension set for a node type, followed by those
+ * registered for all blocks. Read at the moment the menu opens so an extension
+ * registered late is still honoured.
+ */
+export function nodeActionsFor(
+  nodeName: string,
+  params: NodeActionsParams,
+  extensions: readonly RichEditorExtension[] = registeredExtensions
+): NodeAction[] {
+  const collect = (key: string) =>
+    extensions.flatMap(
+      (extension) => extension.nodeActions?.[key]?.(params) ?? []
+    );
+
+  const specific = collect(nodeName);
+  const shared = collect("*");
+
+  return specific.length && shared.length
+    ? [...specific, { divider: true }, ...shared]
+    : [...specific, ...shared];
 }
