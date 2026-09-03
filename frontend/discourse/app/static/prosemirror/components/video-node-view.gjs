@@ -209,6 +209,12 @@ export default class VideoNodeView extends Component {
     this.poster =
       resolvedUrl(lookupCachedUploadUrl(posterShortUrl).url) ?? this.poster;
 
+    // The server resolves the extensionless short URL to the video's own
+    // upload when no thumbnail was generated. A video is not a usable poster.
+    if (this.poster && this.poster === this.source) {
+      this.poster = null;
+    }
+
     if (!this.source) {
       this.#setError("invalid_video_url", "polite");
       return false;

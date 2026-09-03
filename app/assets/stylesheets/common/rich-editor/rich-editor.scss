@@ -575,8 +575,10 @@
   width: 100%;
 
   &__error {
+    background-color: var(--highlight-bg);
     inset-block-start: 0;
     inset-inline: 0;
+    padding: var(--space-2);
     position: absolute;
     z-index: 1;
   }

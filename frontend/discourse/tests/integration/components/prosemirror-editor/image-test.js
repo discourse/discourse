@@ -203,6 +203,35 @@ module(
       );
     });
 
+    test("video player ignores a poster that resolves to the video", async function (assert) {
+      // With no generated thumbnail, the extensionless short URL resolves to
+      // the video upload itself.
+      const videoUrl = "/uploads/video.mp4";
+      pretender.post("/uploads/lookup-urls", (request) =>
+        response(
+          requestedShortUrls(request).map((short_url) => ({
+            short_url,
+            url: videoUrl,
+          }))
+        )
+      );
+
+      await setupRichEditor(
+        assert,
+        "![alt text|video](upload://posterlessHash.mp4)"
+      );
+
+      assert
+        .dom(".composer-video-node video")
+        .doesNotHaveAttribute(
+          "poster",
+          "the video is not used as its own poster"
+        );
+      assert
+        .dom(".composer-video-node__error")
+        .doesNotExist("a missing thumbnail is not an error");
+    });
+
     test("video player can be selected before and after playback", async function (assert) {
       pretender.post("/uploads/lookup-urls", (request) =>
         videoLookupResponse(request, "selectableVideoHash")
