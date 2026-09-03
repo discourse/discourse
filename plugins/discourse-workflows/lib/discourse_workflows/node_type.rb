@@ -329,30 +329,6 @@ module DiscourseWorkflows
       category_ids.flat_map { |id| ::Category.subcategory_ids(id) }.uniq
     end
 
-    def self.matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
-      return true if category_ids.empty?
-
-      category_ids = expand_subcategory_ids(category_ids) if include_subcategories != false
-      category_ids.include?(topic_category_id)
-    end
-
-    def self.matches_user_groups?(user, group_ids)
-      raw_group_ids = Array.wrap(group_ids).reject(&:blank?)
-      return true if raw_group_ids.empty?
-
-      group_ids =
-        raw_group_ids.filter_map do |group_id|
-          value = group_id.to_s
-          value.to_i if value.match?(/\A\d+\z/)
-        end
-      group_ids.present? && !!user&.in_any_groups?(group_ids)
-    end
-
-    def self.matches_reviewable_types?(reviewable, reviewable_types)
-      reviewable_types = Array.wrap(reviewable_types).compact_blank
-      reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
-    end
-
     def self.reviewable_type_options
       Reviewable
         .types
@@ -416,7 +392,11 @@ module DiscourseWorkflows
     end
 
     def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
-      self.class.matches_category_ids?(topic_category_id, category_ids, include_subcategories:)
+      return true if category_ids.empty?
+
+      category_ids = self.class.expand_subcategory_ids(category_ids) if include_subcategories !=
+        false
+      category_ids.include?(topic_category_id)
     end
 
     def matches_topic_type?(topic, topic_type)
@@ -463,11 +443,20 @@ module DiscourseWorkflows
     end
 
     def matches_user_groups?(user, group_ids)
-      self.class.matches_user_groups?(user, group_ids)
+      raw_group_ids = Array.wrap(group_ids).reject(&:blank?)
+      return true if raw_group_ids.empty?
+
+      group_ids =
+        raw_group_ids.filter_map do |group_id|
+          value = group_id.to_s
+          value.to_i if value.match?(/\A\d+\z/)
+        end
+      group_ids.present? && !!user&.in_any_groups?(group_ids)
     end
 
     def matches_reviewable_types?(reviewable, reviewable_types)
-      self.class.matches_reviewable_types?(reviewable, reviewable_types)
+      reviewable_types = Array.wrap(reviewable_types).compact_blank
+      reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
     end
 
     def reviewable_data(reviewable)
