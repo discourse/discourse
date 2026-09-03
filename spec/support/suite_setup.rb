@@ -3,9 +3,6 @@
 # One-time suite bootstrap: disable expensive subsystems, check for pending
 # migrations, (on CI) widen INT foreign-key columns to BIGINT, quiet noisy
 # output, wire the test current-user provider, and reset themes.
-task_specs_requested =
-  RSpec.configuration.files_to_run.any? { |file| file.match?(%r{(^|/)spec/(?:lib/)?tasks/}) }
-
 RSpec.configure do |config|
   config.before(:suite) do
     CachedCounting.disable
@@ -53,14 +50,14 @@ RSpec.configure do |config|
     SeedFu.quiet = true
 
     # json-schema's MultiJSON support is deprecated.
-    JSON::Validator.use_multi_json = false if defined?(JSON::Validator)
+    JSON::Validator.use_multi_json = false
 
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 
     DiscoursePluginRegistry.reset! if ENV["LOAD_PLUGINS"] != "1"
     Discourse.current_user_provider = TestCurrentUserProvider
-    Discourse::Application.load_tasks if task_specs_requested
+    Discourse::Application.load_tasks
 
     SystemThemesManager.clear_system_theme_user_history!
     ThemeField.delete_all

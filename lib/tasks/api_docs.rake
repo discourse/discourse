@@ -15,8 +15,6 @@ if Rails.env.local?
 
       desc "Generate Swagger JSON files from integration specs (including plugins)"
       RSpec::Core::RakeTask.new("swaggerize") do |t|
-        require "rswag/specs"
-
         # Automatically load plugins for API documentation
         ENV["LOAD_PLUGINS"] = "1" unless ENV["LOAD_PLUGINS"]
 

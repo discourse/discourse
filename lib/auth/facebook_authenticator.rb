@@ -20,7 +20,6 @@ class Auth::FacebookAuthenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    require "omniauth-facebook"
     omniauth.provider :facebook,
                       setup:
                         lambda { |env|

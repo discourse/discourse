@@ -3,6 +3,8 @@
 RSpec.describe User do
   subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
+  fab!(:group)
+
   it_behaves_like "it has custom fields"
 
   describe "#reload" do
@@ -16,9 +18,9 @@ RSpec.describe User do
   end
 
   it do
-    expect(described_class.allocate).to have_many(:pending_posts).class_name(
-      "ReviewableQueuedPost",
-    ).with_foreign_key(:target_created_by_id)
+    is_expected.to have_many(:pending_posts).class_name("ReviewableQueuedPost").with_foreign_key(
+      :target_created_by_id,
+    )
   end
 
   describe ".in_any_groups?" do
@@ -258,8 +260,6 @@ RSpec.describe User do
       end
 
       describe "when group with a same name already exists" do
-        fab!(:group)
-
         it "should not be valid" do
           new_user = Fabricate.build(:user, username: group.name.upcase)
 
@@ -2076,8 +2076,6 @@ RSpec.describe User do
     end
 
     context "when the user has a group" do
-      fab!(:group)
-
       before do
         group.usernames = user.username
         group.save

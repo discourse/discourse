@@ -29,7 +29,6 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    require "omniauth-google-oauth2"
     options = {
       setup:
         lambda do |env|

@@ -284,8 +284,6 @@ module Categories
         # Also validates that any site_settings keys are real SiteSettings (a
         # runtime check that cannot be expressed in JSON Schema).
         def validate_schema!
-          require "json_schemer" if !defined?(JSONSchemer)
-
           # Normalize Ruby symbol keys/values to strings via JSON round-trip
           schema_as_json = JSON.parse(configuration_schema.to_json)
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "json-schema"
-
 RSpec::Matchers.define :match_response_schema do |schema|
   match do |object|
     schema_directory = "#{Dir.pwd}/plugins/chat/spec/support/api/schemas"

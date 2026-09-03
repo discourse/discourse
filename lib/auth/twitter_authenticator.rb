@@ -18,7 +18,6 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
   end
 
   def healthy?
-    require "omniauth-twitter"
     consumer_key = SiteSetting.twitter_consumer_key
     consumer_secret = SiteSetting.twitter_consumer_secret
 
@@ -41,7 +40,6 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    require "omniauth-twitter"
     omniauth.provider :twitter,
                       setup:
                         lambda { |env|
