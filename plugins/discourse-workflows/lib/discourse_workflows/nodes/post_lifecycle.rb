@@ -5,40 +5,9 @@ module DiscourseWorkflows
     module PostLifecycle
       I18N_SCOPE = "post_lifecycle"
       PROPERTIES = {
-        topic_type: {
-          type: :options,
-          required: true,
-          default: "topics",
-          options: NodeType::TOPIC_TYPE_OPTIONS,
-        },
-        category_ids: {
-          type: :array,
-          required: false,
-          ui: {
-            control: :category,
-            multiple: true,
-          },
-        },
-        include_subcategories: {
-          type: :boolean,
-          required: false,
-          default: true,
-          ui: {
-            control: :checkbox,
-          },
-          display_options: {
-            show: {
-              category_ids: [{ condition: { exists: true } }],
-            },
-          },
-        },
-        tag_names: {
-          type: :string,
-          required: false,
-          ui: {
-            control: :tags,
-          },
-        },
+        **NodeType::TOPIC_TYPE_FILTER_PROPERTIES,
+        **NodeType::CATEGORY_FILTER_PROPERTIES,
+        **NodeType::TAG_FILTER_PROPERTIES,
       }.freeze
 
       OUTPUT_CONTRACTS = [
