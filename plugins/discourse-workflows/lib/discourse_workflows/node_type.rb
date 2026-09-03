@@ -7,6 +7,49 @@ module DiscourseWorkflows
 
     TOPIC_TYPE_OPTIONS = %w[all topics personal_messages].freeze
 
+    TOPIC_TYPE_FILTER_PROPERTIES = {
+      topic_type: {
+        type: :options,
+        required: true,
+        default: "topics",
+        options: TOPIC_TYPE_OPTIONS,
+      },
+    }.freeze
+
+    CATEGORY_FILTER_PROPERTIES = {
+      category_ids: {
+        type: :array,
+        required: false,
+        ui: {
+          control: :category,
+          multiple: true,
+        },
+      },
+      include_subcategories: {
+        type: :boolean,
+        required: false,
+        default: true,
+        ui: {
+          control: :checkbox,
+        },
+        display_options: {
+          show: {
+            category_ids: [{ condition: { exists: true } }],
+          },
+        },
+      },
+    }.freeze
+
+    TAG_FILTER_PROPERTIES = {
+      tag_names: {
+        type: :string,
+        required: false,
+        ui: {
+          control: :tags,
+        },
+      },
+    }.freeze
+
     DESCRIPTION_DEFAULTS = {
       version: "1.0",
       defaults: {

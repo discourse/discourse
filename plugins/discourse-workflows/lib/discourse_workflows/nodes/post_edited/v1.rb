@@ -32,34 +32,8 @@ module DiscourseWorkflows
               default: "first_post",
               options: POST_SCOPE_OPTIONS,
             },
-            category_ids: {
-              type: :array,
-              required: false,
-              ui: {
-                control: :category,
-                multiple: true,
-              },
-            },
-            include_subcategories: {
-              type: :boolean,
-              required: false,
-              default: true,
-              ui: {
-                control: :checkbox,
-              },
-              display_options: {
-                show: {
-                  category_ids: [{ condition: { exists: true } }],
-                },
-              },
-            },
-            tag_names: {
-              type: :string,
-              required: false,
-              ui: {
-                control: :tags,
-              },
-            },
+            **CATEGORY_FILTER_PROPERTIES,
+            **TAG_FILTER_PROPERTIES,
             trust_levels: {
               type: :multi_options,
               required: false,

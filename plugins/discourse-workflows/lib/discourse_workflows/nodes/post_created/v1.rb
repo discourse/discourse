@@ -24,12 +24,7 @@ module DiscourseWorkflows
             },
           ],
           properties: {
-            topic_type: {
-              type: :options,
-              required: true,
-              default: "topics",
-              options: TOPIC_TYPE_OPTIONS,
-            },
+            **TOPIC_TYPE_FILTER_PROPERTIES,
             group_inbox_id: {
               type: :integer,
               required: false,
@@ -51,34 +46,8 @@ module DiscourseWorkflows
                 none: "discourse_workflows.post_created.group_inbox_id_placeholder",
               },
             },
-            category_ids: {
-              type: :array,
-              required: false,
-              ui: {
-                control: :category,
-                multiple: true,
-              },
-            },
-            include_subcategories: {
-              type: :boolean,
-              required: false,
-              default: true,
-              ui: {
-                control: :checkbox,
-              },
-              display_options: {
-                show: {
-                  category_ids: [{ condition: { exists: true } }],
-                },
-              },
-            },
-            tag_names: {
-              type: :string,
-              required: false,
-              ui: {
-                control: :tags,
-              },
-            },
+            **CATEGORY_FILTER_PROPERTIES,
+            **TAG_FILTER_PROPERTIES,
           },
         )
 
