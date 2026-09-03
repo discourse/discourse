@@ -38,11 +38,20 @@ export default class UserBadge extends RestCompatModel {
     return requestOne(this, grantUserBadge(badgeId, username, reason));
   }
 
+  #badge;
+  #badgeResource;
+
   // Wraps the cached resource in a `Badge` so callers can read its computed
-  // getters (`.url`, `.badgeTypeClassName`, ...).
+  // getters (`.url`, `.badgeTypeClassName`, ...). Memoized against that
+  // resource — a fresh instance per read would fire `init` callbacks and break
+  // identity — while the unconditional read keeps its tracked tag consumed.
   get badge() {
     const resource = this.__resource?.badge;
-    return resource ? new Badge(resource) : undefined;
+    if (resource !== this.#badgeResource) {
+      this.#badgeResource = resource;
+      this.#badge = resource ? new Badge(resource) : undefined;
+    }
+    return this.#badge;
   }
 
   // Getter: null → undefined (test contract).

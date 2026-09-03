@@ -6,6 +6,7 @@ import {
   applyModelCallbacks,
   applyRegisteredFields,
   extraSavePropertiesFor,
+  modelNameFor,
 } from "discourse/lib/model-extensions";
 
 // Attrs bags handed to `create`, as opposed to cached records. Tracked by
@@ -97,7 +98,14 @@ export default class RestCompatModel extends WarpRestModel {
 
     // Fires `init` callbacks (see `addModelCallback`) with the create args
     // already in place, matching `RestModel`.
-    applyModelCallbacks(this.constructor.type, "init", this);
+    applyModelCallbacks(modelNameFor(this), "init", this);
+  }
+
+  // Both "topicDetails" and "topic-details" resolve, and the plugin API keys
+  // its registrations by whichever spelling was used. `constructor.type` would
+  // apply a plugin's fields but silently drop its callbacks and save properties.
+  get #modelName() {
+    return modelNameFor(this);
   }
 
   _didReplaceResource() {
@@ -147,6 +155,14 @@ export default class RestCompatModel extends WarpRestModel {
     return hash;
   }
 
+  // Subclass hooks from `RestModel`. Fired by the legacy save path only — new
+  // code on the WarpDrive path uses `addModelCallback`.
+  beforeCreate() {}
+  afterCreate() {}
+
+  beforeUpdate() {}
+  afterUpdate() {}
+
   // Legacy `RestModel#save`. If the subclass defines `static builders.save`,
   // delegate to `WarpRestModel.save` (builder-driven, WarpDrive path);
   // otherwise branch on `isNew` and use the legacy adapter pipeline. The legacy
@@ -156,7 +172,7 @@ export default class RestCompatModel extends WarpRestModel {
       return this.isNew ? this._saveNew(data) : this.update(data);
     }
 
-    const modelName = this.constructor.type;
+    const modelName = this.#modelName;
     const creating = this.isNew;
     const props = this.#withSaveProperties(data);
 
@@ -179,14 +195,15 @@ export default class RestCompatModel extends WarpRestModel {
   // Merges plugin-registered save properties (see `addModelSaveProperty`) into
   // the outgoing payload. Returns `data` untouched when none are registered.
   #withSaveProperties(data) {
-    const extras = extraSavePropertiesFor(this.constructor.type, this);
+    const extras = extraSavePropertiesFor(this.#modelName, this);
     return Object.keys(extras).length ? { ...data, ...extras } : data;
   }
 
   async _saveNew(props) {
     props = this.#withSaveProperties(props);
-    const modelName = this.constructor.type;
+    const modelName = this.#modelName;
     return this.#withSaving(async () => {
+      this.beforeCreate(props);
       await applyModelCallbacks(modelName, "beforeCreate", this, props);
       const adapter = this.store.adapterFor(this.__type);
       const res = await adapter.createRecord(this.store, this.__type, props);
@@ -195,6 +212,7 @@ export default class RestCompatModel extends WarpRestModel {
         this.__state = "created";
       }
       res.target = this;
+      this.afterCreate(res);
       await applyModelCallbacks(modelName, "afterCreate", this, res);
       return res;
     });
@@ -202,8 +220,9 @@ export default class RestCompatModel extends WarpRestModel {
 
   async update(props) {
     props = this.#withSaveProperties(props);
-    const modelName = this.constructor.type;
+    const modelName = this.#modelName;
     return this.#withSaving(async () => {
+      this.beforeUpdate(props);
       await applyModelCallbacks(modelName, "beforeUpdate", this, props);
       const res = await this.store.update(
         this.__type,
@@ -215,13 +234,14 @@ export default class RestCompatModel extends WarpRestModel {
         this.setProperties(payload);
       }
       res.target = this;
+      this.afterUpdate(res);
       await applyModelCallbacks(modelName, "afterUpdate", this, res);
       return res;
     });
   }
 
   async destroyRecord() {
-    const modelName = this.constructor.type;
+    const modelName = this.#modelName;
     await applyModelCallbacks(modelName, "beforeDestroy", this);
     const res = await this.store.destroyRecord(this.__type, this);
     await applyModelCallbacks(modelName, "afterDestroy", this);
@@ -230,7 +250,7 @@ export default class RestCompatModel extends WarpRestModel {
 
   // `WarpRestModel#destroy` (builder-driven delete), wrapped with callbacks.
   async destroy() {
-    const modelName = this.constructor.type;
+    const modelName = this.#modelName;
     await applyModelCallbacks(modelName, "beforeDestroy", this);
     await super.destroy();
     await applyModelCallbacks(modelName, "afterDestroy", this);

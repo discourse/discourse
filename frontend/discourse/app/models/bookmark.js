@@ -73,6 +73,8 @@ export default class Bookmark extends RestCompatModel {
     await applyModelTransformations("bookmark", bookmarks);
   }
 
+  #topicForList;
+
   get newBookmark() {
     return this.id == null;
   }
@@ -176,17 +178,18 @@ export default class Bookmark extends RestCompatModel {
 
   // For topic-level bookmarks, no linked post number — let the topic-link
   // helper jump to the last unread post by default.
+  //
+  // Built once: read from a list row, where a fresh `Topic` per read would fire
+  // `init` callbacks on every rerender and hand out a new identity each time.
   get topicForList() {
-    const linkedPostNumber =
-      this.bookmarkable_type === "Topic" ? null : this.linked_post_number;
-
-    return Topic.create({
+    return (this.#topicForList ??= Topic.create({
       id: this.topic_id,
       fancy_title: this.fancy_title,
-      linked_post_number: linkedPostNumber,
+      linked_post_number:
+        this.bookmarkable_type === "Topic" ? null : this.linked_post_number,
       last_read_post_number: this.last_read_post_number,
       highest_post_number: this.highest_post_number,
-    });
+    }));
   }
 
   get bookmarkableTopicAlike() {
