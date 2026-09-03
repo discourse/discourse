@@ -509,7 +509,7 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     form.field("eventType").select("private")
-    find(".group-selector").click
+    form.field("rawInvitees").component.find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
     form.field("customFields.custom").fill_in("custom value")
@@ -525,7 +525,12 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")
-    expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
+    expect(
+      form
+        .field("rawInvitees")
+        .component
+        .find(".group-selector .d-multi-select-trigger__selection"),
+    ).to have_text(group.name)
     expect(form.field("customFields.custom")).to have_value("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"

@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
+import Group from "discourse/models/group";
 import User from "discourse/models/user";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
   discourseImport: "optional",
@@ -106,13 +107,13 @@ export default class DiscoursePostEventEvent {
   @tracked customFields;
   @tracked channel;
   @tracked imageUpload;
-  @tracked organizerGroup;
 
   @tracked _watchingInvitee;
   @tracked _sampleInvitees;
   @tracked _stats;
   @tracked _creator;
   @tracked _hosts;
+  @tracked _organizerGroup;
   @tracked _reminders;
 
   constructor(args = {}) {
@@ -220,6 +221,14 @@ export default class DiscoursePostEventEvent {
     );
   }
 
+  get organizerGroup() {
+    return this._organizerGroup;
+  }
+
+  set organizerGroup(group) {
+    this._organizerGroup = this.#initGroupModel(group);
+  }
+
   get isPublic() {
     return this.status === "public";
   }
@@ -299,6 +308,14 @@ export default class DiscoursePostEventEvent {
     }
 
     return User.create(user);
+  }
+
+  #initGroupModel(group) {
+    if (!group || group instanceof Group) {
+      return group;
+    }
+
+    return Group.create(group);
   }
 
   #initStatsModel(stats) {

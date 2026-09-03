@@ -19,6 +19,22 @@ module("Unit | Model | DiscoursePostEventEvent", function () {
     );
   });
 
+  test("hydrates the organizer group from the API response", function (assert) {
+    const event = DiscoursePostEventEvent.create({
+      id: 1,
+      organizer_group: {
+        name: "event-organizers",
+        display_name: "Event organizers",
+      },
+    });
+
+    assert.strictEqual(
+      event.organizerGroup.displayName,
+      "Event organizers",
+      "uses the group model display name"
+    );
+  });
+
   test("pastEventTimeframe allows a grace period after the end time", function (assert) {
     const endedRecently = DiscoursePostEventEvent.create({
       id: 1,
