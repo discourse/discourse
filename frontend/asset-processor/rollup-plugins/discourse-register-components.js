@@ -4,17 +4,25 @@ import { stripExtension } from "../rollup-virtual-imports";
 const STORE = "discourse/lib/deferred-class-modifications";
 const BINDING = "__discourseComponentClass";
 
-// Anchored to the top-level segment, so `routes/chat/components/thing` is not a component.
-const COMPONENT_REGEX = /^[^/]+\/components\/(.+)$/;
+// What the resolver's suffix lookup accepts: `components/<name>` at any depth, and never a
+// module under `templates/`. `lookupModuleBySuffix` also falls back to `<name>/index`.
+const COMPONENT_REGEX = /(^|\/)components\/(.+)$/;
+const CLASSIC_TEMPLATE_REGEX = /(^|\/)templates\//;
 
 function componentPathFor(id, basePath) {
   if (!id.startsWith(basePath)) {
     return null;
   }
 
-  const match = id.slice(basePath.length).match(COMPONENT_REGEX);
+  const path = id.slice(basePath.length);
 
-  return match ? stripExtension(match[1]).replace(/\/index$/, "") : null;
+  if (CLASSIC_TEMPLATE_REGEX.test(path)) {
+    return null;
+  }
+
+  const match = path.match(COMPONENT_REGEX);
+
+  return match ? stripExtension(match[2]).replace(/\/index$/, "") : null;
 }
 
 // Components are reached by import, so nothing can look one up by name. Each module says what

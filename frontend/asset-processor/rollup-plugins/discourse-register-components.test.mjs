@@ -63,18 +63,43 @@ describe("discourse-register-components", () => {
     ).toContain(`"channel-icon"`);
   });
 
+  it("registers a component wherever the plugin nests it", () => {
+    // The resolver finds `components/<name>` as a path suffix at any depth, so a plugin is free
+    // to keep them at the root or below an `app/` directory.
+    expect(
+      transform(`export default class A {}`, "components/survey.gjs")
+    ).toContain(`"survey"`);
+    expect(
+      transform(
+        `export default class A {}`,
+        "discourse/app/components/panel.gjs"
+      )
+    ).toContain(`"panel"`);
+  });
+
   it("leaves everything that is not a component alone", () => {
     expect(
       transform(`export default class A {}`, "discourse/routes/chat/channel.js")
     ).toBe(null);
     expect(
+      transform(`export const a = 1;`, "discourse/components/no-default.js")
+    ).toBe(null);
+  });
+
+  it("leaves classic component templates alone", () => {
+    // The resolver's suffix trie skips anything under `templates/`, and these compile to a
+    // template factory rather than a component class.
+    expect(
       transform(
         `export default class A {}`,
-        "discourse/routes/chat/components/thing.js"
+        "discourse/templates/components/legacy.hbs"
       )
     ).toBe(null);
     expect(
-      transform(`export const a = 1;`, "discourse/components/no-default.js")
+      transform(
+        `export default class A {}`,
+        "discourse/templates/foo/components/bar.hbs"
+      )
     ).toBe(null);
   });
 });
