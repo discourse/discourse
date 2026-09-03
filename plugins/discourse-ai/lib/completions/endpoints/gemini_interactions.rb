@@ -28,6 +28,7 @@ module DiscourseAi
             model_params.delete(:temperature)
           end
           model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
+          strip_unsupported_gemini_3_8_params!(model_params)
           model_params
         end
 
@@ -138,7 +139,7 @@ module DiscourseAi
         end
 
         def supports_interactions_minimal_thinking?
-          return false if gemini_model_id.include?("gemini-3.8-flash")
+          return false if gemini_3_8_flash?
 
           gemini_model_id.match?(/gemini-3(?:\.\d+)?-flash(?:\s|\z|-)/) ||
             gemini_model_id.include?("gemini-3.1-flash-lite")
