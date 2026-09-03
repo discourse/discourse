@@ -363,7 +363,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2026.0414)
+    mime-types-data (3.2026.0701)
     mini_mime (1.1.5)
     mini_racer (0.22.0)
       libv8-node (~> 24.12.0.1)
@@ -484,7 +484,7 @@ GEM
     pitchfork (0.18.2)
       logger
       rack (>= 2.0)
-    playwright-ruby-client (1.60.0)
+    playwright-ruby-client (1.62.0)
       base64
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
@@ -1142,7 +1142,7 @@ CHECKSUMS
   migrations-importer (0.0.1)
   migrations-tooling (0.0.1)
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
-  mime-types-data (3.2026.0414) sha256=461c4c655373a44bd6c5fe54bcf5b7776026ea96e808144b1ec465c4b99148cc
+  mime-types-data (3.2026.0701) sha256=cd8811e1fb89d836499ba0582368a10ee74cef929ba956d1d5ddca045e6a730f
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_racer (0.22.0) sha256=52e4c1797bcb01be550d8317764ac5ca8aa96b37f8f72dec6e090db99847ae30
   mini_scheduler (0.20.0) sha256=bd8948228bf4a48a603a8e20de850d16b68295413d8651c8c05288f4c6997b05
@@ -1196,7 +1196,7 @@ CHECKSUMS
   pg (1.6.3-x86_64-linux) sha256=5d9e188c8f7a0295d162b7b88a768d8452a899977d44f3274d1946d67920ae8d
   pg (1.6.3-x86_64-linux-musl) sha256=9c9c90d98c72f78eb04c0f55e9618fe55d1512128e411035fe229ff427864009
   pitchfork (0.18.2) sha256=95d0b5a25792ebc94d627abd8a206652ff22acff1cc32ecd42c71669ead4ab94
-  playwright-ruby-client (1.60.0) sha256=942242d6130e797b21213d9c49dc09d31235cab429a9edae73401ed112c94853
+  playwright-ruby-client (1.62.0) sha256=44eb6051ab7987f68a1288a7db7892403e59680116739987729c5fecfdb55715
   pp (0.6.4) sha256=dfcb0fce700c41456265922884f9fe195d7fbb0674a3578e6c0f69588e82b570
   prettier_print (1.2.1) sha256=a72838b5f23facff21f90a5423cdcdda19e4271092b41f4ea7f50b83929e6ff9
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
