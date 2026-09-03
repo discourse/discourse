@@ -5,13 +5,13 @@ import getURL from "discourse/lib/get-url";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
-import VoiceCreateRoomModal from "discourse/plugins/voice/discourse/components/modal/voice-create-room";
 import VoiceParticipantSidebarContextMenu from "discourse/plugins/voice/discourse/components/voice-participant-sidebar-context-menu";
 import VoiceParticipantSidebarSuffix from "discourse/plugins/voice/discourse/components/voice-participant-sidebar-suffix";
 import VoiceRoomSidebarContextMenu from "discourse/plugins/voice/discourse/components/voice-room-sidebar-context-menu";
 import buildAnonRoomsSection from "../lib/voice/anon-rooms-section";
 import { humanKeyName } from "../lib/voice/ptt-utils";
 import roomIcon, { roomBadge } from "../lib/voice/room-icon";
+import showCreateRoomModal from "../lib/voice/show-create-room-modal";
 import virtualElementFromEvent from "../lib/voice/virtual-element-from-event";
 
 const LINK_NAME_PREFIX = "voice-room-";
@@ -489,7 +489,7 @@ export default {
                   {
                     id: "createVoiceRoom",
                     title: i18n("voice.sidebar.create"),
-                    action: () => modalService.show(VoiceCreateRoomModal),
+                    action: () => showCreateRoomModal(modalService),
                   },
                 ];
               }

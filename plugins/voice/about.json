@@ -1,0 +1,5 @@
+{
+  "frontend": {
+    "staticModules": true
+  }
+}
