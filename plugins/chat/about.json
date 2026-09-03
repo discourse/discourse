@@ -10,10 +10,7 @@
     "exports": {
       "discourse/components/channel-title": "discourse/components/channel-title",
       "discourse/components/chat-channel": "discourse/components/chat-channel",
-      "discourse/models/chat-channel": "discourse/models/chat-channel",
-      "discourse/components/chat-channel-card": "discourse/components/chat-channel-card",
-      "discourse/lib/fabricators": "discourse/lib/fabricators",
-      "discourse/components/chat-channel-preview-card": "discourse/components/chat-channel-preview-card"
+      "discourse/models/chat-channel": "discourse/models/chat-channel"
     }
   }
 }
