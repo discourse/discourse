@@ -125,7 +125,7 @@ RSpec.describe Admin::ImpersonateController do
     it "raises a not found error when experimental impersonation is disabled" do
       SiteSetting.experimental_impersonation = false
 
-      delete "/admin/impersonate.json"
+      delete "/admin/impersonate"
 
       expect(response.status).to eq(404)
     end
@@ -134,7 +134,7 @@ RSpec.describe Admin::ImpersonateController do
       SiteSetting.experimental_impersonation = true
       User.any_instance.stubs(:is_impersonating).returns(false)
 
-      delete "/admin/impersonate.json"
+      delete "/admin/impersonate"
 
       expect(response.status).to eq(404)
     end
@@ -146,6 +146,24 @@ RSpec.describe Admin::ImpersonateController do
       delete "/admin/impersonate.json"
 
       expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to eq(admin.id)
+    end
+
+    context "when enforce_second_factor is enabled and impersonated user has no 2FA" do
+      before do
+        SiteSetting.experimental_impersonation = true
+        SiteSetting.enforce_second_factor = "all"
+        Fabricate(:user_second_factor_totp, user: admin)
+      end
+
+      it "stops impersonating despite 2FA enforcement on the impersonated user" do
+        post "/admin/impersonate.json", params: { username_or_email: user.username }
+
+        delete "/admin/impersonate"
+
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(admin.id)
+      end
     end
   end
 end
