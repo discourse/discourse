@@ -643,12 +643,17 @@ class AdminDashboardSiteTrafficExplorer
 
   def decorate_dimension_row(dimension, row)
     value = row.fetch("value")
+    value = redact_password_reset_token(value) if %w[top_urls entry_urls].include?(dimension)
     value = BrowserPageviewEvent.browsers.key(value.to_i) || "unknown" if dimension == "browsers"
     {
       value: value,
       label: dimension_label(dimension, value, row["representative_ip"]),
       pageviews: row.fetch("pageviews"),
     }
+  end
+
+  def redact_password_reset_token(value)
+    value.sub(%r{\A(/(?:u|users)/password-reset)/[^/]+\z}, "\\1/<redacted>")
   end
 
   def dimension_label(dimension, value, representative_ip)
