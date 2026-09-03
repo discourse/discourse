@@ -198,6 +198,19 @@ module(
       );
     });
 
+    test("the hint goes once the poll holds all the options it may", async function (assert) {
+      this.siteSettings.poll_maximum_options = 2;
+
+      await setupRichEditor(
+        assert,
+        "[poll]\n* Option 1\n* Option 2\n\n[/poll]\n\n"
+      );
+
+      assert
+        .dom(".composer-poll-node__hint")
+        .doesNotExist("there is no room for another one");
+    });
+
     test("the editor says how another option is added", async function (assert) {
       await setupRichEditor(
         assert,

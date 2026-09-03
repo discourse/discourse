@@ -9,6 +9,7 @@ import PollInfo from "./poll-info";
 
 export default class PollNodeView extends Component {
   @service modal;
+  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -26,8 +27,16 @@ export default class PollNodeView extends Component {
 
   // only what the settings themselves say: a composer knows nothing about
   // votes, and nothing about who will read the post
-  get acceptsOptions() {
-    return this.args.node.attrs.type !== "number";
+  get canAddOptions() {
+    if (this.args.node.attrs.type === "number") {
+      return false;
+    }
+
+    return this.#optionCount < this.siteSettings.poll_maximum_options;
+  }
+
+  get #optionCount() {
+    return this.#optionList(this.args.node)?.node.childCount ?? 0;
   }
 
   get pollInfo() {
@@ -150,7 +159,7 @@ export default class PollNodeView extends Component {
   }
 
   <template>
-    {{#if this.acceptsOptions}}
+    {{#if this.canAddOptions}}
       <span class="composer-poll-node__hint" contenteditable="false">{{i18n
           "poll.ui_builder.poll_options.hint"
         }}</span>
