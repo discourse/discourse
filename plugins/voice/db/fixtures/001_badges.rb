@@ -171,10 +171,11 @@ end
     b.target_posts = false
     b.show_posts = false
     b.query = <<~SQL
-      SELECT user_id, current_timestamp granted_at
-      FROM voice_sessions
-      GROUP BY user_id
-      HAVING COUNT(DISTINCT room_id) >= #{count}
+      SELECT s.user_id, current_timestamp granted_at
+      FROM voice_sessions s
+      JOIN voice_rooms r ON r.id = s.room_id AND NOT r.ephemeral
+      GROUP BY s.user_id
+      HAVING COUNT(DISTINCT s.room_id) >= #{count}
     SQL
     b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
@@ -240,6 +241,7 @@ end
       SELECT r.creator_id user_id, current_timestamp granted_at
       FROM voice_rooms r
       JOIN voice_sessions s ON s.room_id = r.id AND s.user_id <> r.creator_id
+      WHERE NOT r.ephemeral
       GROUP BY r.creator_id
       HAVING COUNT(DISTINCT s.user_id) >= #{count}
     SQL

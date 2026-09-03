@@ -103,11 +103,13 @@ RSpec.describe BadgeGranter, ".backfill" do
   end
 
   describe "exploration" do
-    it "grants Explorer for five distinct rooms" do
+    it "grants Explorer for five distinct rooms, ignoring ephemeral ones" do
       rooms = Array.new(4) { Fabricate(:voice_room) }
       rooms.each do |visited|
         2.times { create_session(user_id: user.id, room_id: visited.id, joined_at: 1.day.ago) }
       end
+      call_room = Fabricate(:voice_ephemeral_room)
+      create_session(user_id: user.id, room_id: call_room.id, joined_at: 1.day.ago)
       backfill("Explorer")
       expect(holders_of("Explorer")).to be_empty
 
@@ -136,10 +138,12 @@ RSpec.describe BadgeGranter, ".backfill" do
   describe "hosting" do
     fab!(:hosted_room, :voice_room) { Fabricate(:voice_room, creator: user) }
 
-    it "grants Crowd Puller for fifty distinct visitors, ignoring repeat and self joins" do
+    it "grants Crowd Puller for fifty distinct visitors, ignoring repeat, self and call joins" do
       49.times do |index|
         create_session(user_id: 100_000 + index, room_id: hosted_room.id, joined_at: 1.day.ago)
       end
+      call_room = Fabricate(:voice_ephemeral_room, creator: user)
+      create_session(user_id: 300_000, room_id: call_room.id, joined_at: 1.day.ago)
       5.times { create_session(user_id: 100_000, room_id: hosted_room.id, joined_at: 1.hour.ago) }
       5.times { create_session(user_id: user.id, room_id: hosted_room.id, joined_at: 1.hour.ago) }
       backfill("Crowd Puller")

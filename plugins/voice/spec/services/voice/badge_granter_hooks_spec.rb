@@ -20,29 +20,29 @@ RSpec.describe Voice::BadgeGranterHooks do
     end
 
     describe "Mic Check" do
-      it "grants when session is 30+ seconds and others are in the room" do
-        other = Fabricate(:user)
-        Voice::ParticipantTracker.add(room.id, other.id)
+      fab!(:other, :user)
+
+      it "grants after 30 seconds spent with someone else in the room" do
+        Fabricate(:voice_session, user: other, room: room, joined_at: 2.minutes.ago)
 
         session = build_session(joined_at: 1.minute.ago, left_at: Time.current)
-        described_class.on_leave(user, session, room: room)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).to include("Mic Check")
       end
 
-      it "does not grant when session is under 30 seconds" do
-        other = Fabricate(:user)
-        Voice::ParticipantTracker.add(room.id, other.id)
+      it "does not grant when the other person was present for under 30 seconds" do
+        Fabricate(:voice_session, user: other, room: room, joined_at: 20.seconds.ago)
 
-        session = build_session(joined_at: 20.seconds.ago, left_at: Time.current)
-        described_class.on_leave(user, session, room: room)
+        session = build_session(joined_at: 1.minute.ago, left_at: Time.current)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).not_to include("Mic Check")
       end
 
-      it "does not grant when room is empty" do
+      it "does not grant when alone in the room" do
         session = build_session(joined_at: 1.minute.ago, left_at: Time.current)
-        described_class.on_leave(user, session, room: room)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).not_to include("Mic Check")
       end
@@ -56,7 +56,7 @@ RSpec.describe Voice::BadgeGranterHooks do
         left = joined + 5.minutes
 
         session = build_session(joined_at: joined, left_at: left)
-        described_class.on_leave(user, session, room: room)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).to include("Night Owl")
       end
@@ -67,7 +67,7 @@ RSpec.describe Voice::BadgeGranterHooks do
         left = joined + 5.minutes
 
         session = build_session(joined_at: joined, left_at: left)
-        described_class.on_leave(user, session, room: room)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).not_to include("Night Owl")
       end
@@ -80,7 +80,7 @@ RSpec.describe Voice::BadgeGranterHooks do
         left = joined + 5.minutes
 
         session = build_session(joined_at: joined, left_at: left)
-        described_class.on_leave(user, session, room: room)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).to include("Early Bird")
       end
@@ -92,14 +92,14 @@ RSpec.describe Voice::BadgeGranterHooks do
       it "grants when 4+ hours of the session were spent with someone else" do
         Fabricate(:voice_session, user: companion, room: room, joined_at: 4.5.hours.ago)
         session = build_session(joined_at: 5.hours.ago, left_at: Time.current)
-        described_class.on_leave(user, session, room: room)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).to include("Marathoner")
       end
 
       it "does not grant for 4+ hours spent alone" do
         session = build_session(joined_at: 5.hours.ago, left_at: Time.current)
-        described_class.on_leave(user, session, room: room)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).not_to include("Marathoner")
       end
@@ -107,7 +107,7 @@ RSpec.describe Voice::BadgeGranterHooks do
       it "does not grant when company stayed under 4 hours" do
         Fabricate(:voice_session, user: companion, room: room, joined_at: 3.hours.ago)
         session = build_session(joined_at: 5.hours.ago, left_at: Time.current)
-        described_class.on_leave(user, session, room: room)
+        described_class.on_leave(user, session)
 
         expect(user.badges.pluck(:name)).not_to include("Marathoner")
       end
@@ -117,14 +117,14 @@ RSpec.describe Voice::BadgeGranterHooks do
       SiteSetting.voice_badges_enabled = false
 
       session = build_session(joined_at: 5.hours.ago, left_at: Time.current)
-      described_class.on_leave(user, session, room: room)
+      described_class.on_leave(user, session)
 
       expect(user.badges).to be_empty
     end
 
     it "does nothing when session has no left_at" do
       session = Voice::Session.create!(user: user, room: room, joined_at: 5.hours.ago)
-      described_class.on_leave(user, session, room: room)
+      described_class.on_leave(user, session)
 
       expect(user.badges).to be_empty
     end

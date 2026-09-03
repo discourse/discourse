@@ -2,11 +2,11 @@
 
 module Voice
   class BadgeGranterHooks
-    def self.on_leave(user, session, room:)
+    def self.on_leave(user, session)
       return unless badges_enabled?
       return if session&.left_at.blank?
 
-      grant("Mic Check", user) if mic_check?(session, room)
+      grant("Mic Check", user) if mic_check?(session)
       grant("Night Owl", user) if night_owl?(user, session)
       grant("Early Bird", user) if early_bird?(user, session)
       grant("Marathoner", user) if marathoner?(session)
@@ -59,9 +59,8 @@ module Voice
         BadgeGranter.grant(badge, user) if badge&.enabled?
       end
 
-      def mic_check?(session, room)
-        duration = (session.left_at - session.joined_at).to_i
-        duration >= 30 && Voice::ParticipantTracker.user_ids(room.id).any?
+      def mic_check?(session)
+        session.accompanied_seconds >= 30
       end
 
       def night_owl?(user, session)
