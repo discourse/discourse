@@ -96,6 +96,31 @@ describe("virtual:entrypoint", () => {
       }
     });
 
+    it("registers them wherever the plugin nests them", () => {
+      // The resolver matches a path suffix, and the connector and markdown scans match anywhere,
+      // so a plugin is free to keep these below the top level.
+      const nested = entrypoint(
+        [
+          "discourse/app/services/voice-webrtc.js",
+          "discourse/lib/discourse-markdown/spoiler.js",
+          "discourse-markdown/graphviz.js",
+          "pre-initializers/h-captcha.js",
+          "discourse/templates/connectors/user-menu/chat.hbs",
+        ],
+        { frontendConfig: { staticModules: true } }
+      );
+
+      for (const name of [
+        "discourse/app/services/voice-webrtc",
+        "discourse/lib/discourse-markdown/spoiler",
+        "discourse-markdown/graphviz",
+        "pre-initializers/h-captcha",
+        "discourse/templates/connectors/user-menu/chat",
+      ]) {
+        expect(nested, name).toContain(`"${name}":`);
+      }
+    });
+
     it("does not register routes, controllers or route templates", () => {
       for (const name of [
         "discourse/routes/chat/channel",

@@ -9,26 +9,29 @@ const SUPPORTED_FILE_EXTENSIONS = [
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
-// Looked up by name at runtime, so these have to stay registered with `define()`.
+// Looked up by name at runtime, so these have to stay registered with `define()`. The runtime
+// finds them at any depth — the resolver matches a path suffix, `OUTLET_REGEX` and the markdown
+// feature scan match anywhere — so plugins nest them however they like and this matches to suit.
 const EAGER_DIRECTORIES = [
   "connectors",
   "services",
   "models",
   "adapters",
   "discourse-markdown",
+  "markdown-it",
+  "pre-initializers",
+  "initializers",
+  "api-initializers",
+  "instance-initializers",
 ];
 
 const EAGER_DIRECTORY_REGEX = new RegExp(
-  `^[^/]+/(${EAGER_DIRECTORIES.join("|")})/`
+  `(^|/)(${EAGER_DIRECTORIES.join("|")})/`
 );
 
 function isEagerModule(compatModuleName) {
   return (
     EAGER_DIRECTORY_REGEX.test(compatModuleName) ||
-    // Unanchored: `loadInitializers` scans the whole registry.
-    /\/(pre-initializers|initializers|api-initializers|instance-initializers)\//.test(
-      compatModuleName
-    ) ||
     // `mapRoutes` matches on the suffix alone.
     /route-map$/.test(compatModuleName)
   );
