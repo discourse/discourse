@@ -155,6 +155,30 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
     );
   });
 
+  test("the to date picker is bounded by the from date", async function (assert) {
+    this.setProperties({
+      state: { from: DEFAULT_DATE_TIME, to: moment("2019-01-30 16:45") },
+    });
+
+    await render(
+      <template>
+        <DDateTimeInputRange
+          @from={{this.state.from}}
+          @to={{this.state.to}}
+          @onChange={{fn (mut this.state)}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".to.d-date-time-input .date-picker")
+      .hasAttribute(
+        "min",
+        "2019-01-29",
+        "days before the start are not selectable"
+      );
+  });
+
   test("timezone support", async function (assert) {
     this.setProperties({
       state: {
