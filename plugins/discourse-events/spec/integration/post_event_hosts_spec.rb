@@ -67,4 +67,16 @@ RSpec.describe "post-event hosts" do
       )
     }.to raise_error(I18n.t("discourse_post_event.errors.models.event.invalid_hosts"))
   end
+
+  it "rejects pseudogroup organizer groups" do
+    Group.refresh_automatic_group!(:everyone)
+
+    expect {
+      PostCreator.create!(
+        admin,
+        title: "Community meetup",
+        raw: "[event start=\"#{1.day.from_now.iso8601}\" organizerGroup=\"everyone\"]\n[/event]",
+      )
+    }.to raise_error(I18n.t("discourse_post_event.errors.models.event.invalid_organizer_group"))
+  end
 end

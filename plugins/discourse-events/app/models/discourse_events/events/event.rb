@@ -287,7 +287,7 @@ module DiscourseEvents
 
       def organizer_group_exists
         return if organizer_group_id.blank?
-        return if Group.exists?(id: organizer_group_id)
+        return if organizer_group && !Group::PSEUDOGROUP_IDS.include?(organizer_group_id)
 
         errors.add(
           :base,

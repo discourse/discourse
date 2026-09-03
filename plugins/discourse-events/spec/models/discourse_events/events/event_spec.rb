@@ -20,6 +20,18 @@ describe DiscourseEvents::Events::Event do
     ).is_at_most(DiscourseEvents::Events::Event::MAX_NAME_LENGTH)
   end
 
+  describe "organizer group validation" do
+    it "rejects pseudogroups" do
+      Group.refresh_automatic_group!(:everyone)
+      event = Fabricate.build(:event, organizer_group_id: Group::AUTO_GROUPS[:everyone])
+
+      expect(event).to be_invalid
+      expect(event.errors.full_messages).to include(
+        I18n.t("discourse_post_event.errors.models.event.invalid_organizer_group"),
+      )
+    end
+  end
+
   describe "#warm_livestream_onebox" do
     let(:livestream_url) { "https://www.youtube.com/live/abc123" }
 

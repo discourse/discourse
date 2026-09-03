@@ -212,7 +212,7 @@ module DiscourseEvents
 
         guardian = @post.acting_user.guardian
 
-        if !group || !guardian.can_see_group?(group)
+        if !group || Group::PSEUDOGROUP_IDS.include?(group.id) || !guardian.can_see_group?(group)
           @post.errors.add(
             :base,
             I18n.t("discourse_post_event.errors.models.event.invalid_organizer_group"),

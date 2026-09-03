@@ -119,6 +119,7 @@ class Group < ActiveRecord::Base
   }
 
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
+  PSEUDOGROUP_IDS = AUTO_GROUPS.values_at(:everyone, :anonymous_users, :logged_in_users).freeze
   STAFF_GROUPS = %i[admins moderators staff]
 
   AUTO_GROUPS_ADD = "add"
