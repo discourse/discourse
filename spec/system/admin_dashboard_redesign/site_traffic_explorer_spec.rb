@@ -333,10 +333,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.remove_filter("browser")
 
     traffic.select_tab(card: "visitors", tab: "Languages")
-    expect(traffic).to have_row(card: "visitors", label: "English (US)", count: "2")
-    expect(traffic).to have_row(card: "visitors", label: "English (UK)", count: "1")
-    traffic.filter_row(card: "visitors", label: "English (US)")
-    expect(traffic).to have_filter_pill(dimension: "language", label: "English (US)")
+    expect(traffic).to have_row(card: "visitors", label: "American English", count: "2")
+    expect(traffic).to have_row(card: "visitors", label: "British English", count: "1")
+    traffic.filter_row(card: "visitors", label: "American English")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "American English")
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=en-US&range=custom&start_date=2026-05-01",
     )

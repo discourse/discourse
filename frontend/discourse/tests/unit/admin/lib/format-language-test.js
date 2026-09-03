@@ -18,11 +18,11 @@ module("Unit | Admin | Lib | format-language", function (hooks) {
     const cases = [
       [null, "", "missing language"],
       ["en", "English", "base language"],
-      ["en-US", "English (US)", "language with region"],
-      ["en-GB", "English (UK)", "British English"],
-      ["zh-Hant-TW", "Chinese (Traditional, TW)", "script and region"],
-      ["sr-Latn-RS", "Serbian (Latin, RS)", "non-default script"],
-      ["iw-IL", "Hebrew (IL)", "legacy language code"],
+      ["en-US", "American English", "language with region"],
+      ["en-GB", "British English", "regional dialect"],
+      ["zh-Hant-TW", "Chinese (Traditional, Taiwan)", "script and region"],
+      ["sr-Latn-RS", "Serbian (Latin, Serbia)", "non-default script"],
+      ["iw-IL", "Hebrew (Israel)", "legacy language code"],
       ["not_a_locale", "not_a_locale", "malformed language"],
     ];
 
