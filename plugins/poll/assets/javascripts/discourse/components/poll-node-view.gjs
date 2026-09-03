@@ -26,6 +26,10 @@ export default class PollNodeView extends Component {
 
   // only what the settings themselves say: a composer knows nothing about
   // votes, and nothing about who will read the post
+  get acceptsOptions() {
+    return this.args.node.attrs.type !== "number";
+  }
+
   get pollInfo() {
     const { attrs } = this.args.node;
     const closesAt = attrs.close ? moment(attrs.close) : null;
@@ -146,6 +150,11 @@ export default class PollNodeView extends Component {
   }
 
   <template>
+    {{#if this.acceptsOptions}}
+      <span class="composer-poll-node__hint" contenteditable="false">{{i18n
+          "poll.ui_builder.poll_options.hint"
+        }}</span>
+    {{/if}}
     <div class="composer-poll-node__info" contenteditable="false">
       {{#let this.pollInfo as |info|}}
         <PollInfo
@@ -171,9 +180,6 @@ export default class PollNodeView extends Component {
         @icon="pencil"
         @label="poll.ui_builder.edit"
       />
-      <span class="composer-poll-node__hint">{{i18n
-          "poll.ui_builder.options_hint"
-        }}</span>
     </div>
   </template>
 }

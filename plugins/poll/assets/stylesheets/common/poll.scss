@@ -630,8 +630,38 @@ body.crawler {
   }
 
   &__hint {
+    grid-area: hint;
+    padding: 0 1em 1em;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+  }
+
+  // outranks the cooked grid, which also applies inside the editor
+  .ProseMirror &.poll {
+    grid-template-areas: "poll" "hint" "info" "buttons";
+
+    @include viewport.from(sm) {
+      // sized to its content, so a setting is not split across lines
+      grid-template-columns: 1fr max-content;
+      grid-template-areas: "poll info" "hint info" "buttons buttons";
+    }
+  }
+
+  .ProseMirror &.poll &__info .poll-info {
+    max-width: 18em;
+  }
+
+  // the cooked column has a fixed width, so its lines share it by percentage;
+  // here the column follows the text, which then needs its natural width
+  .ProseMirror
+    &.poll
+    &__info
+    .poll-info_instructions
+    li:not(:first-child:last-child) {
+    .d-icon,
+    span {
+      width: auto;
+    }
   }
 
   // outranks the cooked option styles, which also apply inside the editor
@@ -641,9 +671,11 @@ body.crawler {
 
   // a lone instruction is centred by the cooked styles, which lets the icon
   // fall onto a line of its own here: centre the pair instead
-  &.poll &__info .poll-info_instructions li:first-child:last-child {
-    display: flex;
-    justify-content: center;
+  @include viewport.from(sm) {
+    &.poll &__info .poll-info_instructions li:first-child:last-child {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   &.--untitled &__content > .poll-title::before {

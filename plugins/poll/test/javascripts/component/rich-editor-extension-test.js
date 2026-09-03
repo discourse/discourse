@@ -198,6 +198,28 @@ module(
       );
     });
 
+    test("the editor says how another option is added", async function (assert) {
+      await setupRichEditor(
+        assert,
+        "[poll]\n* Option 1\n* Option 2\n\n[/poll]\n\n"
+      );
+
+      assert
+        .dom(".composer-poll-node__hint")
+        .exists("explains that a line is an option");
+    });
+
+    test("a numeric poll does not, since its options are generated", async function (assert) {
+      await setupRichEditor(
+        assert,
+        "[poll type=number max=2 min=1]\n[/poll]\n\n"
+      );
+
+      assert
+        .dom(".composer-poll-node__hint")
+        .doesNotExist("nothing to add by hand");
+    });
+
     test("an untitled poll carries an empty title to type into", async function (assert) {
       const markdown = "[poll]\n* Option 1\n* Option 2\n\n[/poll]\n\n";
       const [editor] = await setupRichEditor(assert, markdown);

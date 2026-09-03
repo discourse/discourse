@@ -191,9 +191,9 @@ en:
         poll_title:
           label: Title (optional)
           placeholder: Poll title
-        options_hint: Press Enter for another option
         poll_options:
           label: Options (one per line)
+          hint: Each line is an option — press Enter to start another
           add: Add option
         automatic_close:
           label: Automatically close poll
