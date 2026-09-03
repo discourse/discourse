@@ -617,8 +617,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       expect-type:
-        specifier: ^1.3.0
-        version: 1.3.0
+        specifier: ^1.4.0
+        version: 1.4.0
       jquery:
         specifier: ^3.7.1
         version: 3.7.1
@@ -4882,6 +4882,10 @@ packages:
 
   expect-type@1.3.0:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
+    engines: {node: '>=12.0.0'}
+
+  expect-type@1.4.0:
+    resolution: {integrity: sha512-KfYbmpRm0VbLjEvVa9yGwCi9GI34xvi7A/HXYWQO65CSD2u3MczUJSuwXKFIxlGsgBQizV9q5J9NHj4VG0n+pA==}
     engines: {node: '>=12.0.0'}
 
   exponential-backoff@3.1.1:
@@ -13582,6 +13586,8 @@ snapshots:
       homedir-polyfill: 1.0.3
 
   expect-type@1.3.0: {}
+
+  expect-type@1.4.0: {}
 
   exponential-backoff@3.1.1: {}
 
