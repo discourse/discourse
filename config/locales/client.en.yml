@@ -3213,6 +3213,8 @@ en:
       social_login_available: "You'll also be able to sign in with any social login using that email."
       your_email: "Your account email address is <b>%{email}</b>."
       accept_invite: "Accept Invitation"
+      send_code: "Send code"
+      code_instructions: "We'll send a one-time code to %{email} to confirm your email address."
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"

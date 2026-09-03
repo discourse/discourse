@@ -86,6 +86,46 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .exists("the form advances after the request succeeds");
   });
 
+  test("email invitations request a code without exposing the address", async function (assert) {
+    let requestParams;
+    pretender.get("/session/hp.json", () =>
+      response({ value: "hp-value", challenge: "abc", expires_in: 300 })
+    );
+    pretender.post("/session/login-code", (request) => {
+      requestParams = new URLSearchParams(request.requestBody);
+      return response({ success: "OK" });
+    });
+
+    await render(
+      <template>
+        <CodeLoginForm
+          @context="invite"
+          @emailLocked={{true}}
+          @initialEmail="u***@example.com"
+          @inviteKey="invite-key"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".code-login-form__email-step input")
+      .doesNotExist("the masked address is not rendered in an editable field");
+
+    await click(".code-login-form__continue");
+
+    assert.strictEqual(
+      requestParams.get("invite_key"),
+      "invite-key",
+      "the code request identifies the invitation"
+    );
+    assert
+      .dom(".code-login-form__code-step")
+      .exists("the code entry step is shown");
+    assert
+      .dom(".code-login-form__change-email")
+      .doesNotExist("the scoped invitation address cannot be changed");
+  });
+
   test("shows a request error without advancing to the code step", async function (assert) {
     const error =
       "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member.";
