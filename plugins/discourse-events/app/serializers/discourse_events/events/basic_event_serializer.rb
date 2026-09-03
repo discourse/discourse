@@ -31,7 +31,7 @@ module DiscourseEvents
       def organizer_group
         group = object.organizer_group
 
-        { id: group.id, name: group.name, full_name: group.full_name }
+        { id: group.id, name: group.name, display_name: group.full_name.presence || group.name }
       end
 
       def post

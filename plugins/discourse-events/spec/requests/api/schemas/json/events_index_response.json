@@ -82,11 +82,8 @@
               "name": {
                 "type": "string"
               },
-              "full_name": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+              "display_name": {
+                "type": "string"
               }
             },
             "required": [

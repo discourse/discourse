@@ -33,6 +33,7 @@ RSpec.describe "post-event hosts" do
     expect(basic_json.dig(:basic_event, :organizer_group)).to include(
       id: organizer_group.id,
       name: organizer_group.name,
+      display_name: organizer_group.name,
     )
   end
 
