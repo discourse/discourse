@@ -24,6 +24,7 @@ import navigationStacked from "../components/sections/molecules/navigation-stack
 import postMenu from "../components/sections/molecules/post-menu";
 import rovingFocus from "../components/sections/molecules/roving-focus";
 import segmentedControl from "../components/sections/molecules/segmented-control";
+import select from "../components/sections/molecules/select";
 import signupCta from "../components/sections/molecules/signup-cta";
 import toasts from "../components/sections/molecules/toasts";
 import tooltips from "../components/sections/molecules/tooltips";
@@ -88,6 +89,7 @@ const SECTIONS = [
   },
   { component: postMenu, category: "molecules", id: "post-menu" },
   { component: rovingFocus, category: "molecules", id: "roving-focus" },
+  { component: select, category: "molecules", id: "select" },
   { component: tooltips, category: "molecules", id: "tooltips" },
   { component: menus, category: "molecules", id: "menus" },
   { component: multiselect, category: "molecules", id: "multi-select" },
