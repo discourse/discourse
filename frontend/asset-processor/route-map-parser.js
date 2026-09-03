@@ -1,5 +1,5 @@
 // Route maps are parsed, never run: plugin and theme code is not trusted enough to evaluate here.
-// `mapping-router.js` is the reference for what a map means, and these rules can drift from it.
+// `mapping-router.js` is the reference for what a map means.
 
 // `BareRouter#lazyRoute` dasherizes before matching, so derived names have to agree.
 function dasherize(value) {

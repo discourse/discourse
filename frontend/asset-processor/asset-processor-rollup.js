@@ -190,11 +190,9 @@ async function performRollup(modules, opts) {
       }
     }
 
-    // A bundle name means a different bundle in each entrypoint, so the urls have to come from
-    // this entrypoint's own routes rather than from every route the plugin declares.
+    // A bundle name means a different bundle in each entrypoint.
     const owned = routeNamesFor(
       opts.entrypoints[entryName].modules,
-      opts,
       routeTables.bundleByRoute
     );
     const urls = urlTableFor(

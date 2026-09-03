@@ -293,10 +293,8 @@ class _PluginApi {
 
     const klass = this._resolveClass(resolverName);
     if (!klass) {
-      // The module may not have been evaluated yet, and registers itself when it is.
-      deferClassModification(
-        this.container.registry.normalize(resolverName),
-        () => this.modifyClass(resolverName, changes, opts)
+      this.#deferModification(resolverName, () =>
+        this.modifyClass(resolverName, changes, opts)
       );
       return;
     }
@@ -339,9 +337,8 @@ class _PluginApi {
 
     const klass = this._resolveClass(resolverName);
     if (!klass) {
-      deferClassModification(
-        this.container.registry.normalize(resolverName),
-        () => this.modifyClassStatic(resolverName, changes, opts)
+      this.#deferModification(resolverName, () =>
+        this.modifyClassStatic(resolverName, changes, opts)
       );
       return;
     }
@@ -3946,6 +3943,14 @@ class _PluginApi {
    */
   registerBlockConditionType(ConditionClass) {
     _registerConditionType(ConditionClass, this.source);
+  }
+
+  // The module may not have been evaluated yet, and registers itself when it is.
+  #deferModification(resolverName, retry) {
+    deferClassModification(
+      this.container.registry.normalize(resolverName),
+      retry
+    );
   }
 
   #deprecateModifyClass(resolverName, apiName) {

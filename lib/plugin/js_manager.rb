@@ -167,13 +167,15 @@ module Plugin
         end
       end
 
-      # Read from source, so plugin compilation does not wait on core's build. Being in `tree`
-      # puts them in the digest below, so a core route change rebuilds every plugin.
-      CORE_ROUTE_MAPS.each do |name, source_path|
-        tree["__core__/#{name}"] = File.read(Rails.root.join(source_path))
-      end
-
       frontend_config = plugin.about_json_metadata&.dig("frontend")
+
+      # Read from source, so plugin compilation does not wait on core's build. Being in `tree`
+      # puts them in the digest below, so a core route change rebuilds the plugins that split.
+      if frontend_config&.dig("staticModules")
+        CORE_ROUTE_MAPS.each do |name, source_path|
+          tree["__core__/#{name}"] = File.read(Rails.root.join(source_path))
+        end
+      end
 
       hex_digest =
         Digest::SHA1.hexdigest(

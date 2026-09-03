@@ -169,9 +169,8 @@ export function routeBundlesFor(records, bundleByRoute) {
   }));
 }
 
-// The route names a module list contributes, so a caller can tell which entrypoint owns a route.
-export function routeNamesFor(moduleFilenames, opts, bundleByRoute) {
-  const { records } = normalizeModules(moduleFilenames, labelFor(opts));
+export function routeNamesFor(moduleFilenames, bundleByRoute) {
+  const { records } = normalizeModules(moduleFilenames);
 
   return new Set(
     routeBundlesFor(records, bundleByRoute).flatMap((bundle) => bundle.names)

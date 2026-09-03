@@ -399,17 +399,13 @@ describe("routeNamesFor", () => {
     const bundleByRoute = { chat: "default", "admin.hooks": "default" };
 
     expect([
-      ...routeNamesFor(["discourse/routes/chat.js"], {}, bundleByRoute),
+      ...routeNamesFor(["discourse/routes/chat.js"], bundleByRoute),
     ]).toEqual(["chat"]);
     expect([
-      ...routeNamesFor(
-        ["discourse/templates/admin/hooks.hbs"],
-        {},
-        bundleByRoute
-      ),
+      ...routeNamesFor(["discourse/templates/admin/hooks.hbs"], bundleByRoute),
     ]).toEqual(["admin.hooks"]);
     expect([
-      ...routeNamesFor(["discourse/services/chat.js"], {}, bundleByRoute),
+      ...routeNamesFor(["discourse/services/chat.js"], bundleByRoute),
     ]).toEqual([]);
   });
 });

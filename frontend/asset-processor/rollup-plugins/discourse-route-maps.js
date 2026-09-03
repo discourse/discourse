@@ -12,7 +12,7 @@ const CORE_MAP_REGEX = /^__core__\//;
 const ROUTE_MAP_REGEX = /route-map\.js$/;
 
 function isCoreMap(filename) {
-  return CORE_MAP_REGEX.test(filename) && ROUTE_MAP_REGEX.test(filename);
+  return CORE_MAP_REGEX.test(filename);
 }
 
 // Fills `tables` before any module loads, because the entrypoint's source is generated from it.

@@ -60,7 +60,6 @@ export default function discourseRegisterComponents({ basePath }) {
         } else if (declaration.type === "ClassDeclaration" && declaration.id) {
           binding = declaration.id.name;
         } else {
-          // An anonymous class, or any other expression, has no name to pass along.
           binding = BINDING;
           const terminated = code[exported.end - 1] === ";";
 
