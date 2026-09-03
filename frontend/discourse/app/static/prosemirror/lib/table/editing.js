@@ -14,9 +14,13 @@ export default function tableEditing() {
       handleTextInput: (view, from, to, text) =>
         replaceCrossCellSelection(view, { text }),
       handleDOMEvents: {
-        beforeinput: handleBeforeInput,
+        beforeinput: handleDelete((event) =>
+          event.inputType?.startsWith("delete")
+        ),
         cut: handleCut,
-        keydown: handleDeleteKeyDown,
+        keydown: handleDelete(
+          (event) => event.key === "Backspace" || event.key === "Delete"
+        ),
       },
     },
 
@@ -111,18 +115,6 @@ function handlePaste(view, event, slice) {
   });
 }
 
-function handleBeforeInput(view, event) {
-  if (!event.inputType?.startsWith("delete")) {
-    return false;
-  }
-
-  const handled = replaceCrossCellSelection(view);
-  if (handled) {
-    event.preventDefault();
-  }
-  return handled;
-}
-
 function handleCut(view, event) {
   if (!crossCellRange(view.state) || !event.clipboardData) {
     return false;
@@ -138,16 +130,18 @@ function handleCut(view, event) {
   return replaceCrossCellSelection(view);
 }
 
-function handleDeleteKeyDown(view, event) {
-  if (event.key !== "Backspace" && event.key !== "Delete") {
-    return false;
-  }
+function handleDelete(deleting) {
+  return (view, event) => {
+    if (!deleting(event)) {
+      return false;
+    }
 
-  const handled = replaceCrossCellSelection(view);
-  if (handled) {
-    event.preventDefault();
-  }
-  return handled;
+    const handled = replaceCrossCellSelection(view);
+    if (handled) {
+      event.preventDefault();
+    }
+    return handled;
+  };
 }
 
 /** Returns the changed span that may contain a malformed table. */

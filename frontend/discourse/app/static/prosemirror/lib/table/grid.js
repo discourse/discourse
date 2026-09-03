@@ -10,6 +10,15 @@ export function isTable(node) {
   return node?.type.spec.tableRole === "table";
 }
 
+export function cellType(schema, header) {
+  return header ? schema.nodes.table_header_cell : schema.nodes.table_cell;
+}
+
+/** Re-creates a cell as `type`, carrying its content and marks over. */
+export function copyCell(type, cell, attrs = cell.attrs) {
+  return type.create(attrs, cell.content, cell.marks);
+}
+
 /**
  * Flattened geometry of a table.
  *
@@ -128,4 +137,28 @@ export function rowRange(table, row) {
     from: table.start + offset,
     to: table.start + offset + node.nodeSize,
   };
+}
+
+/**
+ * The rectangle covering a row or column band, or a single cell.
+ *
+ * Commands read `rect` alone, so these are how a caller says which part of the
+ * table an operation applies to.
+ */
+export function rectFor(grid, kind, index, through = index) {
+  return kind === "row"
+    ? { top: index, bottom: through, left: 0, right: grid.width - 1 }
+    : { top: 0, bottom: grid.height - 1, left: index, right: through };
+}
+
+export function rowTarget(table, row, through = row) {
+  return { ...table, rect: rectFor(table.grid, "row", row, through) };
+}
+
+export function columnTarget(table, col, through = col) {
+  return { ...table, rect: rectFor(table.grid, "column", col, through) };
+}
+
+export function cellTarget(table, row, col) {
+  return { ...table, rect: { top: row, bottom: row, left: col, right: col } };
 }

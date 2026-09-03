@@ -16,6 +16,7 @@ import {
   moveRow,
   setColumnAlignment,
 } from "./commands";
+import { cellTarget, columnTarget, rowTarget } from "./grid";
 
 /** Identifier of the menu shown from a table grip. */
 export const TABLE_MENU_IDENTIFIER = "composer-table-menu";
@@ -41,7 +42,7 @@ export async function openGripMenu({ kind, view, pluginParams, grip }, target) {
   });
 }
 
-export async function showMenu(pluginParams, view, trigger, items, options) {
+async function showMenu(pluginParams, view, trigger, items, options) {
   if (!view.editable) {
     return;
   }
@@ -231,110 +232,91 @@ function alignmentItems(view, alignment, target) {
   }));
 }
 
+// A markdown table's first row is its header, so nothing goes above it.
+function insertRowAboveItems(view, table, row, target) {
+  return table.grid.rows[row].header
+    ? []
+    : [ITEMS.insertRowAbove(view, target)];
+}
+
+function rowMoveItems(view, table, row, target) {
+  return [
+    ...(row > 0 ? [ITEMS.moveRowUp(view, row, target)] : []),
+    ...(row < table.grid.height - 1
+      ? [ITEMS.moveRowDown(view, row, target)]
+      : []),
+  ];
+}
+
+function columnMoveItems(view, table, col, target) {
+  const last = table.grid.width - 1;
+  const rtl = isRtl(view);
+
+  return [
+    ...((rtl ? col < last : col > 0)
+      ? [ITEMS.moveColumnLeft(view, col, target)]
+      : []),
+    ...((rtl ? col > 0 : col < last)
+      ? [ITEMS.moveColumnRight(view, col, target)]
+      : []),
+  ];
+}
+
 function rowMenuItems(view, { table, row }) {
-  const items = [];
   const target = rowTarget(table, row);
 
-  // A markdown table's first row is its header, so nothing goes above it.
-  if (!table.grid.rows[row].header) {
-    items.push(ITEMS.insertRowAbove(view, target));
-  }
-
-  items.push(
+  return [
+    ...insertRowAboveItems(view, table, row, target),
     ITEMS.insertRowBelow(view, target),
-    ITEMS.duplicateRow(view, target)
-  );
-
-  if (row > 0) {
-    items.push(ITEMS.moveRowUp(view, row, target));
-  }
-  if (row < table.grid.height - 1) {
-    items.push(ITEMS.moveRowDown(view, row, target));
-  }
-
-  items.push(
+    ITEMS.duplicateRow(view, target),
+    ...rowMoveItems(view, table, row, target),
     ITEMS.clearContents(view, target),
     { divider: true },
-    ITEMS.deleteRow(view, target)
-  );
-
-  return items;
+    ITEMS.deleteRow(view, target),
+  ];
 }
 
 function columnMenuItems(view, { table, col }) {
   const target = columnTarget(table, col);
-  const items = [
+
+  return [
     ITEMS.insertColumnLeft(view, target),
     ITEMS.insertColumnRight(view, target),
     ITEMS.duplicateColumn(view, target),
-  ];
-
-  const rtl = isRtl(view);
-  if (rtl ? col < table.grid.width - 1 : col > 0) {
-    items.push(ITEMS.moveColumnLeft(view, col, target));
-  }
-  if (rtl ? col > 0 : col < table.grid.width - 1) {
-    items.push(ITEMS.moveColumnRight(view, col, target));
-  }
-
-  items.push(
+    ...columnMoveItems(view, table, col, target),
     { divider: true },
     ...alignmentItems(view, columnAlignment(table, col), target),
     { divider: true },
     ITEMS.clearContents(view, target),
-    ITEMS.deleteColumn(view, target)
-  );
-
-  return items;
+    ITEMS.deleteColumn(view, target),
+  ];
 }
 
 // Everything that applies to the cell the caret is in. This is the only menu
 // reachable without a pointer, so it has to cover both axes.
-function cellMenuItems(view, { table, row, col }) {
-  const items = [];
+export function cellMenuItems(view, { table, row, col }) {
   const cell = cellTarget(table, row, col);
   const column = columnTarget(table, col);
-  const rowTargetValue = rowTarget(table, row);
+  const rowBand = rowTarget(table, row);
 
-  if (!table.grid.rows[row].header) {
-    items.push(ITEMS.insertRowAbove(view, rowTargetValue));
-  }
-
-  items.push(
-    ITEMS.insertRowBelow(view, rowTargetValue),
+  return [
+    ...insertRowAboveItems(view, table, row, rowBand),
+    ITEMS.insertRowBelow(view, rowBand),
     ITEMS.insertColumnLeft(view, column),
     ITEMS.insertColumnRight(view, column),
     { divider: true },
-    ITEMS.duplicateRow(view, rowTargetValue),
-    ITEMS.duplicateColumn(view, column)
-  );
-
-  if (row > 0) {
-    items.push(ITEMS.moveRowUp(view, row, rowTargetValue));
-  }
-  if (row < table.grid.height - 1) {
-    items.push(ITEMS.moveRowDown(view, row, rowTargetValue));
-  }
-
-  const rtl = isRtl(view);
-  if (rtl ? col < table.grid.width - 1 : col > 0) {
-    items.push(ITEMS.moveColumnLeft(view, col, column));
-  }
-  if (rtl ? col > 0 : col < table.grid.width - 1) {
-    items.push(ITEMS.moveColumnRight(view, col, column));
-  }
-
-  items.push(
+    ITEMS.duplicateRow(view, rowBand),
+    ITEMS.duplicateColumn(view, column),
+    ...rowMoveItems(view, table, row, rowBand),
+    ...columnMoveItems(view, table, col, column),
     { divider: true },
     ...alignmentItems(view, columnAlignment(table, col), column),
     { divider: true },
     ITEMS.clearContents(view, cell),
-    ITEMS.deleteRow(view, rowTargetValue),
+    ITEMS.deleteRow(view, rowBand),
     ITEMS.deleteColumn(view, column),
-    ITEMS.deleteTable(view, table)
-  );
-
-  return items;
+    ITEMS.deleteTable(view, table),
+  ];
 }
 
 function isRtl(view) {
@@ -344,7 +326,7 @@ function isRtl(view) {
 /**
  * What a context menu opened right now would act on.
  *
- * @returns {{ table: object, row: number, col: number, kind: "cell" }| null}
+ * @returns {{ table: object, row: number, col: number } | null}
  */
 export function menuTargetFor(state) {
   const table = currentCell(state);
@@ -352,40 +334,13 @@ export function menuTargetFor(state) {
     return null;
   }
 
-  return {
-    table,
-    row: table.rect.top,
-    col: table.rect.left,
-    kind: "cell",
-  };
-}
-
-export function menuItemsFor(view, target) {
-  return cellMenuItems(view, target);
-}
-
-function cellTarget(table, row, col) {
-  return { ...table, rect: { top: row, bottom: row, left: col, right: col } };
-}
-
-function columnTarget(table, col) {
-  return {
-    ...table,
-    rect: { top: 0, bottom: table.grid.height - 1, left: col, right: col },
-  };
-}
-
-function rowTarget(table, row) {
-  return {
-    ...table,
-    rect: { top: row, bottom: row, left: 0, right: table.grid.width - 1 },
-  };
+  return { table, row: table.rect.top, col: table.rect.left };
 }
 
 // Shift+F10 and the ContextMenu key are the platform gesture for "open the menu
 // for what is focused", but macOS has neither a ContextMenu key nor F-keys that
 // reach the page by default, so Alt+Enter carries the same meaning there.
-export function opensTableMenu(event) {
+function opensTableMenu(event) {
   return (
     event.key === "ContextMenu" ||
     (event.key === "F10" && event.shiftKey) ||
@@ -410,7 +365,7 @@ export function handleContextMenuKey(view, event, pluginParams) {
     view.nodeDOM(table.start + table.grid.rows[row].cells[col].offset) ??
     view.dom;
 
-  showMenu(pluginParams, view, anchor, menuItemsFor(view, target), {
+  showMenu(pluginParams, view, anchor, cellMenuItems(view, target), {
     placement: "bottom-start",
   });
 

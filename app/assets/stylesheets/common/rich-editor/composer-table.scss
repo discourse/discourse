@@ -56,7 +56,8 @@
       min-width: 5em;
 
       // Composed rather than set per side, so a corner cell can draw both of
-      // the edges it owns.
+      // the edges it owns. A band's long sides follow from its axis; only its
+      // two ends need marking.
       &.is-structural-target {
         --edge-top: 0 0 0 0 transparent;
         --edge-right: 0 0 0 0 transparent;
@@ -67,34 +68,48 @@
           var(--edge-top), var(--edge-right), var(--edge-bottom),
           var(--edge-left);
 
-        &.--edge-top {
+        &.--axis-row {
           --edge-top: inset 0 2px 0 0 var(--token-color-border-focused);
-        }
-
-        &.--edge-right {
-          --edge-right: inset -2px 0 0 0 var(--token-color-border-focused);
-        }
-
-        &.--edge-bottom {
           --edge-bottom: inset 0 -2px 0 0 var(--token-color-border-focused);
+
+          &.--edge-start {
+            --edge-left: inset 2px 0 0 0 var(--token-color-border-focused);
+          }
+
+          &.--edge-end {
+            --edge-right: inset -2px 0 0 0 var(--token-color-border-focused);
+          }
         }
 
-        &.--edge-left {
+        &.--axis-column {
           --edge-left: inset 2px 0 0 0 var(--token-color-border-focused);
+          --edge-right: inset -2px 0 0 0 var(--token-color-border-focused);
+
+          &.--edge-start {
+            --edge-top: inset 0 2px 0 0 var(--token-color-border-focused);
+          }
+
+          &.--edge-end {
+            --edge-bottom: inset 0 -2px 0 0 var(--token-color-border-focused);
+          }
         }
       }
     }
 
+    // A row band runs the other way in RTL, so its ends swap sides. Physical
+    // offsets, because box-shadow has no logical form.
     html[dir="rtl"] & {
       th,
       td {
-        &.is-structural-target {
-          &.--edge-right {
-            --edge-right: inset 2px 0 0 0 var(--token-color-border-focused);
+        &.is-structural-target.--axis-row {
+          &.--edge-start {
+            --edge-left: 0 0 0 0 transparent;
+            --edge-right: inset -2px 0 0 0 var(--token-color-border-focused);
           }
 
-          &.--edge-left {
-            --edge-left: inset -2px 0 0 0 var(--token-color-border-focused);
+          &.--edge-end {
+            --edge-right: 0 0 0 0 transparent;
+            --edge-left: inset 2px 0 0 0 var(--token-color-border-focused);
           }
         }
       }
@@ -330,16 +345,32 @@
     // What the drag is about to do, drawn at the edge it will grow from. The
     // inner element is padded to match so the scroll box does not clip it.
     &__ghost {
+      // Size and direction of one pending row or column, set by the drag.
+      --ghost-step: 0px;
+      --ghost-flow: to right;
       position: absolute;
       z-index: 1;
       display: none;
       border: 1px dashed var(--token-color-border-focused);
       border-radius: var(--token-radius-normal);
       background-color: var(--token-color-background-accent-subtlest);
+      background-image: repeating-linear-gradient(
+        var(--ghost-flow),
+        transparent 0 calc(var(--ghost-step) - 1px),
+        currentcolor calc(var(--ghost-step) - 1px) var(--ghost-step)
+      );
       pointer-events: none;
 
       &.--visible {
         display: block;
+      }
+
+      &.--column {
+        --ghost-flow: to right;
+      }
+
+      &.--row {
+        --ghost-flow: to bottom;
       }
 
       // `currentcolor` draws the divisions, so one property sets both.
