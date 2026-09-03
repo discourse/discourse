@@ -10,6 +10,9 @@
     "exports": {
       "discourse/components/channel-title": "discourse/components/channel-title",
       "discourse/components/chat-channel": "discourse/components/chat-channel",
+      "discourse/components/chat-skeleton": "discourse/components/chat-skeleton",
+      "discourse/components/chat-thread": "discourse/components/chat-thread",
+      "discourse/components/chat/navbar": "discourse/components/chat/navbar",
       "discourse/models/chat-channel": "discourse/models/chat-channel"
     }
   }
