@@ -8,11 +8,19 @@ import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+// Chat's own loading skeleton doubles as the panel's loading state, so the hand-off to the
+// thread's identical skeleton reads as one continuous load instead of a spinner flashing into
+// a skeleton.
+import ChatSkeleton from "discourse/plugins/chat/discourse/components/chat-skeleton" with {
+  discourseImport: "optional",
+};
+import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread" with {
+  discourseImport: "optional",
+};
 
 export default class VoiceChatPanel extends Component {
   @service chat;
@@ -27,19 +35,6 @@ export default class VoiceChatPanel extends Component {
   @tracked draft = "";
   @tracked sending = false;
   @tracked hideSkeleton = false;
-
-  // Resolved at runtime rather than statically imported: cross-plugin static
-  // imports aren't resolvable in the compiled plugin bundle and break the
-  // whole bundle load.
-  chatThread = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat-thread"
-  );
-  // Chat's own loading skeleton doubles as the panel's loading state, so the
-  // hand-off to the thread's identical skeleton reads as one continuous load
-  // instead of a spinner flashing into a skeleton.
-  chatSkeleton = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat-skeleton"
-  );
 
   textareaElement = null;
   #sessionPath = null;
@@ -293,14 +288,14 @@ export default class VoiceChatPanel extends Component {
         {{on "keydown" this.interceptEscape capture=true}}
       >
         {{#if this.loading}}
-          {{#if this.chatSkeleton}}
-            <this.chatSkeleton />
+          {{#if ChatSkeleton}}
+            <ChatSkeleton />
           {{else}}
             <DConditionalLoadingSpinner @condition={{true}} />
           {{/if}}
-        {{else if (and this.chatThread this.thread)}}
+        {{else if (and ChatThread this.thread)}}
           {{#each (array this.thread) key="id" as |thread|}}
-            <this.chatThread @thread={{thread}} />
+            <ChatThread @thread={{thread}} />
           {{/each}}
         {{else if this.unavailable}}
           <div class="voice-chat__empty">
