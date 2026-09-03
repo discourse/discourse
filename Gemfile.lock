@@ -214,7 +214,6 @@ GEM
       literate_randomizer
     discourse_math_bundle (1.0.1)
     discourse_voice_assets (0.1.0)
-    docile (1.4.1)
     drb (2.2.3)
     dry-initializer (3.2.0)
     ed25519 (1.4.0)
@@ -717,12 +716,7 @@ GEM
       logger
       rack (>= 2.2.4, < 3.3)
       redis-client (>= 0.23.0, < 1)
-    simplecov (0.22.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-      simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.13.2)
-    simplecov_json_formatter (0.1.4)
+    simplecov (1.1.1)
     simpleidn (0.2.3)
     smarter_json (1.2.6)
       bigdecimal
@@ -1052,7 +1046,6 @@ CHECKSUMS
   discourse_dev_assets (0.0.6) sha256=4dfe7946927aa3d61a4ba89b5aef39d6daaeb70e35d7125dc481806a5c0aea4e
   discourse_math_bundle (1.0.1) sha256=c7d82fa65c9680cab2f77daeba32c1b89e500faccd2269e050ab27d5e1bc8337
   discourse_voice_assets (0.1.0) sha256=67bfbc3e9eaa1805e71ac3c5e2172d8beefdecbfa7b956ed5426e7e057c10cc2
-  docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dry-initializer (3.2.0) sha256=37d59798f912dc0a1efe14a4db4a9306989007b302dcd5f25d0a2a20c166c4e3
   ed25519 (1.4.0) sha256=16e97f5198689a154247169f3453ef4cfd3f7a47481fde0ae33206cdfdcac506
@@ -1285,9 +1278,7 @@ CHECKSUMS
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   shoulda-matchers (8.0.1) sha256=5dbb46e5765b9da225111b085e0819e8c8a121ff94bba430a153eb1ea2c60288
   sidekiq (7.3.10) sha256=781eb4f65ef36042534ad73d72f211283afb7fee82eec786ada4ed1972ef8e3c
-  simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
-  simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246
-  simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
+  simplecov (1.1.1) sha256=25825ef13f0b2e74694d769817dad6ab8e90131dabdaa666e522fea105521e78
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
   smarter_json (1.2.6) sha256=6638a2d23954e26d268212b4c8f5b9871d31b72f3d169371cca1082c1a722b45
   snaky_hash (2.0.4) sha256=2b12758c57defa6796341a1620f84b1a23737421d8d7e2575d0550b53cc4fece
