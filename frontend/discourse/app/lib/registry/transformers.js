@@ -19,6 +19,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "create-account",
+  "create-topic-button-click",
   "custom-homepage-model",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
