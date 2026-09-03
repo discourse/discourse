@@ -8,8 +8,8 @@ export default class EmailLogin extends DiscourseRoute {
     return i18n("login.title");
   }
 
-  model(params) {
-    return ajax(`/session/email-login/${params.token}.json`);
+  model() {
+    return ajax("/session/email-login.json");
   }
 
   setupController(controller, model) {

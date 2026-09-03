@@ -13,7 +13,7 @@ class SessionController < ApplicationController
                      :check_xhr,
                      only: %i[sso sso_login sso_provider destroy one_time_password]
 
-  skip_before_action :check_xhr, only: %i[second_factor_auth_show]
+  skip_before_action :check_xhr, only: %i[email_login_info second_factor_auth_show]
 
   allow_in_readonly_mode :email_login
   allow_in_staff_writes_only_mode :create, :forgot_password, :create_login_code, :verify_login_code
@@ -426,14 +426,42 @@ class SessionController < ApplicationController
   end
 
   def email_login_info
-    token = params[:token]
+    if params[:token].present?
+      raise Discourse::NotFound if request.format.json?
+
+      secure_link_flow.clear(:email_login)
+      session.delete(:email_login_safe_mode)
+      matched_token = EmailToken.confirmable(params[:token], scope: EmailToken.scopes[:email_login])
+      if matched_token
+        secure_link_flow.stage(:email_login, params[:token])
+        safe_mode =
+          if params[:safe_mode].is_a?(String)
+            params[:safe_mode].split(",") & [NO_PLUGINS, NO_THEMES, LEGACY_NO_THEMES]
+          end
+        if safe_mode.present?
+          session[:email_login_safe_mode] = {
+            value: safe_mode.join(","),
+            expires_at: SecureLinkFlow::EXPIRY.from_now.to_i,
+          }
+        end
+      end
+      return finish_secure_link_landing("/session/email-login")
+    end
+
+    return render "default/empty" if request.format.html?
+
+    token = secure_link_flow.credential(:email_login)
     matched_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])
     user = matched_token&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
 
     if matched_token
-      response = { can_login: true, token: token, token_email: matched_token.email }
+      response = {
+        can_login: true,
+        token_email: matched_token.email,
+        safe_mode: email_login_safe_mode,
+      }
 
       matched_user = matched_token.user
       if matched_user&.totp_enabled?
@@ -463,7 +491,7 @@ class SessionController < ApplicationController
   end
 
   def email_login
-    token = params[:token]
+    token = secure_link_flow.credential(:email_login)
     user = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
@@ -487,6 +515,8 @@ class SessionController < ApplicationController
       else
         user.update_timezone_if_missing(params[:timezone])
         log_on_user(user, replay_anonymous_action: true)
+        secure_link_flow.clear(:email_login)
+        session.delete(:email_login_safe_mode)
         return render json: success_json
       end
     end
@@ -528,18 +558,22 @@ class SessionController < ApplicationController
   end
 
   def one_time_password
-    @otp_username = otp_username = Discourse.redis.get "otp_#{params[:token]}"
+    if params[:token].present?
+      secure_link_flow.clear(:one_time_password)
+      otp_username = Discourse.redis.get("otp_#{params[:token]}")
+      secure_link_flow.stage(:one_time_password, params[:token]) if otp_username
+      return finish_secure_link_landing("/session/otp")
+    end
+
+    token = secure_link_flow.credential(:one_time_password)
+    @otp_username = otp_username = Discourse.redis.get("otp_#{token}") if token
 
     if otp_username && user = User.find_by_username(otp_username)
-      if current_user&.username == otp_username
-        Discourse.redis.del "otp_#{params[:token]}"
-        return redirect_to path("/")
-      elsif request.post?
+      if request.post?
         log_on_user(user, replay_anonymous_action: true)
-        Discourse.redis.del "otp_#{params[:token]}"
+        Discourse.redis.del("otp_#{token}")
+        secure_link_flow.clear(:one_time_password)
         return redirect_to path("/")
-      else
-        # Display the form
       end
     else
       @error = I18n.t("user_api_key.invalid_token")
@@ -768,7 +802,11 @@ class SessionController < ApplicationController
         nil # best-effort: malformed push_subscription should never block logout
       end
 
+    unsubscribe_credential = secure_link_flow.credential(:unsubscribe)
     reset_session
+    if unsubscribe_credential
+      SecureLinkFlow.new(server_session).stage(:unsubscribe, unsubscribe_credential)
+    end
     log_off_user(push_subscription:)
 
     if request.xhr?

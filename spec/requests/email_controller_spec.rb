@@ -4,8 +4,13 @@ RSpec.describe EmailController do
   fab!(:user)
 
   describe "#perform_unsubscribe" do
+    def perform_unsubscribe(key, params: {})
+      get "/email/unsubscribe/#{key}"
+      post "/email/unsubscribe.json", params: params
+    end
+
     it "raises not found on invalid key" do
-      post "/email/unsubscribe/123.json"
+      perform_unsubscribe "123"
       expect(response.status).to eq(404)
     end
 
@@ -20,7 +25,7 @@ RSpec.describe EmailController do
           mailing_list_mode: true,
         )
 
-        post "/email/unsubscribe/#{key}.json", params: { unsubscribe_all: "1" }
+        perform_unsubscribe key, params: { unsubscribe_all: "1" }
 
         expect(response.status).to eq(302)
 
@@ -40,7 +45,7 @@ RSpec.describe EmailController do
       it "can disable mailing list" do
         user.user_option.update_columns(mailing_list_mode: true)
 
-        post "/email/unsubscribe/#{key}.json", params: { disable_mailing_list: "1" }
+        perform_unsubscribe key, params: { disable_mailing_list: "1" }
 
         expect(response.status).to eq(302)
         expect(user.user_option.reload.mailing_list_mode).to eq(false)
@@ -115,10 +120,7 @@ RSpec.describe EmailController do
         weekly_interval_minutes = 10_080
         user.user_option.update_columns(email_digests: true, digest_after_minutes: 0)
 
-        post "/email/unsubscribe/#{key}.json",
-             params: {
-               digest_after_minutes: weekly_interval_minutes.to_s,
-             }
+        perform_unsubscribe key, params: { digest_after_minutes: weekly_interval_minutes.to_s }
 
         expect(response.status).to eq(302)
         expect(user.user_option.reload.digest_after_minutes).to eq(weekly_interval_minutes)
@@ -127,7 +129,7 @@ RSpec.describe EmailController do
       it "Can disable email digests setting frequency to zero" do
         user.user_option.update_columns(email_digests: true, digest_after_minutes: 10_080)
 
-        post "/email/unsubscribe/#{key}.json", params: { digest_after_minutes: "0" }
+        perform_unsubscribe key, params: { digest_after_minutes: "0" }
 
         expect(response.status).to eq(302)
         user.user_option.reload
@@ -147,7 +149,7 @@ RSpec.describe EmailController do
           notification_level: TopicUser.notification_levels[:watching],
         )
 
-        post "/email/unsubscribe/#{key}.json", params: { unwatch_topic: "1" }
+        perform_unsubscribe key, params: { unwatch_topic: "1" }
 
         expect(response.status).to eq(302)
         expect(TopicUser.get(a_post.topic, user).notification_level).to eq(
@@ -162,7 +164,7 @@ RSpec.describe EmailController do
           notification_level: TopicUser.notification_levels[:watching],
         )
 
-        post "/email/unsubscribe/#{key}.json", params: { mute_topic: "1" }
+        perform_unsubscribe key, params: { mute_topic: "1" }
 
         expect(response.status).to eq(302)
         expect(TopicUser.get(a_post.topic, user).notification_level).to eq(
@@ -178,7 +180,7 @@ RSpec.describe EmailController do
             notification_level: CategoryUser.notification_levels[:watching],
           )
 
-        post "/email/unsubscribe/#{key}.json", params: { unwatch_category: "1" }
+        perform_unsubscribe key, params: { unwatch_category: "1" }
 
         expect(response.status).to eq(302)
         expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
@@ -192,7 +194,7 @@ RSpec.describe EmailController do
             notification_level: CategoryUser.notification_levels[:watching_first_post],
           )
 
-        post "/email/unsubscribe/#{key}.json", params: { unwatch_category: "1" }
+        perform_unsubscribe key, params: { unwatch_category: "1" }
 
         expect(response.status).to eq(302)
         expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
@@ -260,12 +262,27 @@ RSpec.describe EmailController do
       let(:post) { nil }
 
       it "displays log out button if wrong user logged in" do
-        sign_in(Fabricate(:admin))
+        admin = Fabricate(:admin)
+        sign_in(admin)
 
         navigate_to_unsubscribe
 
         expect(response.body).to include(I18n.t("unsubscribe.log_out"))
         expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
+
+        delete "/session/#{admin.username}.json",
+               params: {
+                 return_url: "/email/unsubscribe",
+               },
+               xhr: true
+
+        expect(response.parsed_body["redirect_url"]).to eq("/email/unsubscribe")
+
+        get "/email/unsubscribe"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(I18n.t("unsubscribe.different_user_description"))
+        expect(response.body).to include(I18n.t("unsubscribe.all", sitename: SiteSetting.title))
       end
 
       it "displays correct label when email_digests is set to false" do

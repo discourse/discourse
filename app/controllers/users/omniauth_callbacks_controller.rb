@@ -159,7 +159,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       path = Discourse.route_for(@origin)
       return true unless path
       return true if path[:controller] != "invites" || path[:action] != "show"
-      !Invite.find_by(invite_key: path[:id])&.redeemable?
+
+      credential = secure_link_flow.credential(:invite)
+      invite_key = path[:id] || credential&.dig(:invite_key) || credential&.dig("invite_key")
+      !Invite.find_by(invite_key: invite_key)&.redeemable?
     end
   end
 

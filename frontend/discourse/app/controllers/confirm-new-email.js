@@ -17,7 +17,7 @@ export default class ConfirmNewEmailController extends Controller {
   async confirm() {
     this.loading = true;
     try {
-      await ajax(`/u/confirm-new-email/${this.model.token}.json`, {
+      await ajax("/u/confirm-new-email.json", {
         type: "PUT",
       });
     } catch (error) {

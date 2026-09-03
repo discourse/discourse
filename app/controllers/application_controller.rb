@@ -456,6 +456,7 @@ class ApplicationController < ActionController::Base
     return unless guardian.can_enable_safe_mode?
 
     safe_mode = params[SAFE_MODE]
+    safe_mode ||= email_login_safe_mode
     if safe_mode.is_a?(String)
       safe_mode = safe_mode.split(",")
       request.env[NO_THEMES] = safe_mode.include?(NO_THEMES) || safe_mode.include?(LEGACY_NO_THEMES)
@@ -1116,6 +1117,25 @@ class ApplicationController < ActionController::Base
 
   def service_params
     { params: params.to_unsafe_h, guardian: }
+  end
+
+  def secure_link_flow
+    @secure_link_flow ||= SecureLinkFlow.new(server_session)
+  end
+
+  def email_login_safe_mode
+    state = session[:email_login_safe_mode]
+    return if !state.is_a?(Hash)
+
+    expires_at = state[:expires_at] || state["expires_at"]
+    return state[:value] || state["value"] if expires_at.to_i > Time.now.to_i
+
+    session.delete(:email_login_safe_mode)
+    nil
+  end
+
+  def finish_secure_link_landing(destination)
+    head :see_other, location: Discourse.base_url_no_prefix + path(destination)
   end
 
   def set_crawler_header

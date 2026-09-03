@@ -105,7 +105,6 @@ class UsersController < ApplicationController
                        update_activation_email
                        password_reset_show
                        password_reset_update
-                       confirm_email_token
                        email_login
                        admin_login
                        confirm_admin
@@ -860,9 +859,15 @@ class UsersController < ApplicationController
 
   def password_reset_show
     expires_now
-    token = params[:token]
+    if params[:token].present?
+      secure_link_flow.clear(:password_reset)
+      password_reset_find_user(params[:token])
+      secure_link_flow.stage(:password_reset, params[:token]) if @user
+      return finish_secure_link_landing("/u/password-reset")
+    end
 
-    password_reset_find_user(token, committing_change: false)
+    token = secure_link_flow.credential(:password_reset)
+    password_reset_find_user(token)
 
     if !@error
       security_params = {
@@ -919,9 +924,9 @@ class UsersController < ApplicationController
   def password_reset_update
     expires_now
 
-    token = params[:token]
+    token = secure_link_flow.credential(:password_reset)
 
-    password_reset_find_user(token, committing_change: true)
+    password_reset_find_user(token)
     rate_limit_second_factor!(@user)
 
     raise Discourse::ReadOnly if @staff_writes_only_mode && !@user&.staff?
@@ -960,11 +965,22 @@ class UsersController < ApplicationController
         @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
-        @user.user_auth_tokens.destroy_all
 
-        if @user.save
+        password_changed = false
+        if @user.valid?
+          User.transaction do
+            EmailToken.confirmable(token, scope: EmailToken.scopes[:password_reset])&.lock!
+            confirmed_user = EmailToken.confirm(token, scope: EmailToken.scopes[:password_reset])
+            raise ActiveRecord::Rollback if confirmed_user != @user
+
+            @user.save!
+            @user.user_auth_tokens.destroy_all
+            password_changed = true
+          end
+        end
+
+        if password_changed
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
-          server_session.delete("password-#{token}")
           server_session.delete("second-factor-#{token}")
 
           if SiteSetting.delete_associated_accounts_on_password_reset
@@ -979,6 +995,9 @@ class UsersController < ApplicationController
 
           reset_csrf_token(request)
           logon_after_password_reset
+          secure_link_flow.clear(:password_reset)
+        else
+          @error = I18n.t("password_reset.no_token", base_url: Discourse.base_url)
         end
       end
     end
@@ -1014,7 +1033,8 @@ class UsersController < ApplicationController
                    friendly_messages: @user&.errors&.full_messages,
                    is_developer: UsernameCheckerService.is_developer?(@user&.email),
                    admin: @user&.admin?,
-                 }
+                 },
+                 status: token ? :ok : :not_found
         else
           render json: {
                    success: true,
@@ -1025,12 +1045,6 @@ class UsersController < ApplicationController
         end
       end
     end
-  end
-
-  def confirm_email_token
-    expires_now
-    EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
-    render json: success_json
   end
 
   def logon_after_password_reset
@@ -1161,6 +1175,13 @@ class UsersController < ApplicationController
   def activate_account
     expires_now
 
+    if params[:token].present?
+      secure_link_flow.clear(:account_activation)
+      email_token = EmailToken.confirmable(params[:token], scope: EmailToken.scopes[:signup])
+      secure_link_flow.stage(:account_activation, params[:token]) if email_token
+      return finish_secure_link_landing("/u/activate-account")
+    end
+
     raise Discourse::NotFound if current_user.present?
 
     respond_to do |format|
@@ -1173,7 +1194,10 @@ class UsersController < ApplicationController
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
     raise Discourse::NotFound if current_user.present?
 
-    if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
+    token = secure_link_flow.credential(:account_activation)
+
+    if @user = EmailToken.confirm(token, scope: EmailToken.scopes[:signup])
+      secure_link_flow.clear(:account_activation)
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
@@ -1603,15 +1627,31 @@ class UsersController < ApplicationController
   end
 
   def confirm_admin
-    @confirmation = AdminConfirmation.find_by_code(params[:token])
+    if params[:token].present?
+      secure_link_flow.clear(:admin_confirmation)
+      confirmation =
+        begin
+          AdminConfirmation.find_by_code(params[:token])
+        rescue ActiveRecord::RecordNotFound
+          nil
+        end
+      secure_link_flow.stage(:admin_confirmation, params[:token]) if confirmation
+      return finish_secure_link_landing("/u/confirm-admin")
+    end
+
+    if !current_user
+      cookies[:destination_url] = path("/u/confirm-admin")
+      return redirect_to path("/login")
+    end
+
+    @confirmation = AdminConfirmation.find_by_code(secure_link_flow.credential(:admin_confirmation))
 
     raise Discourse::NotFound unless @confirmation
-    unless @confirmation.performed_by.id == (current_user&.id || @confirmation.performed_by.id)
-      raise Discourse::InvalidAccess.new
-    end
+    raise Discourse::InvalidAccess.new if @confirmation.performed_by.id != current_user.id
 
     if request.post?
       @confirmation.email_confirmed!
+      secure_link_flow.clear(:admin_confirmation)
       @confirmed = true
     end
 
@@ -2180,20 +2220,8 @@ class UsersController < ApplicationController
     end
   end
 
-  def password_reset_find_user(token, committing_change:)
-    @user =
-      if committing_change
-        EmailToken.confirm(token, scope: EmailToken.scopes[:password_reset])
-      else
-        EmailToken.confirmable(token, scope: EmailToken.scopes[:password_reset])&.user
-      end
-
-    if @user
-      server_session["password-#{token}"] = @user.id
-    else
-      user_id = server_session["password-#{token}"].to_i
-      @user = User.find(user_id) if user_id > 0
-    end
+  def password_reset_find_user(token)
+    @user = EmailToken.confirmable(token, scope: EmailToken.scopes[:password_reset])&.user if token
 
     @error = I18n.t("password_reset.no_token", base_url: Discourse.base_url) if !@user
   end

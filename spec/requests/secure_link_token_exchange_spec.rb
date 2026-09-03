@@ -41,6 +41,8 @@ RSpec.describe "Secure link token exchange" do
       "/users/confirm-new-email/#{token}.json",
       "/u/confirm-admin/#{token}.json",
       "/users/confirm-admin/#{token}.json",
+      "/u/confirm-email-token/#{token}.json",
+      "/users/confirm-email-token/#{token}.json",
       "/session/email-login/#{token}.json",
       "/session/otp/#{token}.json",
       "/associate/#{token}.json",

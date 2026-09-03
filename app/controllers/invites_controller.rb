@@ -22,15 +22,29 @@ class InvitesController < ApplicationController
   skip_before_action :redirect_to_login_if_required
   skip_before_action :redirect_to_profile_if_required
 
-  before_action :ensure_invites_allowed, only: %i[show perform_accept_invitation]
-  before_action :ensure_new_registrations_allowed, only: %i[show perform_accept_invitation]
+  before_action :ensure_invites_allowed,
+                only: %i[show perform_accept_invitation],
+                unless: :secure_link_landing?
+  before_action :ensure_new_registrations_allowed,
+                only: %i[show perform_accept_invitation],
+                unless: :secure_link_landing?
 
   def show
     expires_now
 
+    if params[:id].present?
+      secure_link_flow.clear(:invite)
+      invite = Invite.find_by(invite_key: params[:id])
+      if invite
+        secure_link_flow.stage(:invite, { invite_key: params[:id], email_token: params[:t] })
+      end
+      return finish_secure_link_landing("/invite")
+    end
+
     RateLimiter.new(nil, "invites-show-#{request.remote_ip}", 100, 1.minute).performed!
 
-    invite = Invite.find_by(invite_key: params[:id])
+    credential = secure_link_flow.credential(:invite)
+    invite = Invite.find_by(invite_key: credential&.dig(:invite_key))
 
     if !invite.present? || !invite.redeemable?
       show_irredeemable_invite(invite)
@@ -46,7 +60,7 @@ class InvitesController < ApplicationController
       end
     end
 
-    show_invite(invite)
+    show_invite(invite, email_token: credential[:email_token])
   rescue RateLimiter::LimitExceeded => e
     flash.now[:error] = e.description
     render layout: "no_ember"
@@ -367,7 +381,6 @@ class InvitesController < ApplicationController
     # via the SSO flow (SessionController#sso_login)
     raise Discourse::NotFound if SiteSetting.enable_discourse_connect
 
-    params.require(:id)
     params.permit(
       :email,
       :username,
@@ -379,7 +392,8 @@ class InvitesController < ApplicationController
       },
     )
 
-    invite = Invite.find_by(invite_key: params[:id])
+    credential = secure_link_flow.credential(:invite)
+    invite = Invite.find_by(invite_key: credential&.dig(:invite_key))
     redeeming_user = current_user
 
     if invite.present?
@@ -402,7 +416,7 @@ class InvitesController < ApplicationController
           else
             # Otherwise we always use the email from the invitation.
             attrs[:email] = invite.email
-            attrs[:email_token] = params[:email_token] if params[:email_token].present?
+            attrs[:email_token] = credential[:email_token] if credential[:email_token].present?
           end
         end
 
@@ -428,6 +442,7 @@ class InvitesController < ApplicationController
       user.update_timezone_if_missing(params[:timezone])
       post_process_invite(user)
       create_topic_invite_notifications(invite, user)
+      secure_link_flow.clear(:invite)
 
       topic = invite.topics.first
       response = {}
@@ -580,11 +595,15 @@ class InvitesController < ApplicationController
 
   private
 
+  def secure_link_landing?
+    params[:id].present? && request.get?
+  end
+
   def skip_email_param
     !SiteSetting.allow_email_invites || params[:skip_email]
   end
 
-  def show_invite(invite)
+  def show_invite(invite, email_token:)
     email = Email.obfuscate(invite.email)
 
     # Show email if the user already authenticated their email
@@ -601,7 +620,7 @@ class InvitesController < ApplicationController
       end
     end
 
-    email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
+    email_verified_by_link = invite.email_token.present? && email_token == invite.email_token
 
     email = invite.email if email_verified_by_link
 

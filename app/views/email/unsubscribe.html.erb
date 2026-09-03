@@ -16,7 +16,7 @@
     <br/>
     <h2><%= t 'unsubscribe.title'%> <%= @user.email %></h2>
     <br/>
-    <%= form_tag(email_perform_unsubscribe_path(key: params[:key])) do %>
+    <%= form_tag(clean_email_unsubscribe_path) do %>
       <%if @topic %>
         <% if @watching_topic %>
           <p>

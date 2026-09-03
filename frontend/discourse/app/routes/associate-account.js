@@ -13,16 +13,12 @@ export default class extends DiscourseRoute {
     if (!this.currentUser) {
       transition.send("showLogin");
     } else {
-      const { token } = this.paramsFor("associate-account");
-
       this.router
         .replaceWith("preferences.account", this.currentUser)
         .followRedirects()
         .then(async () => {
           try {
-            const model = await ajax(
-              `/associate/${encodeURIComponent(token)}.json`
-            );
+            const model = await ajax("/associate.json");
             this.modal.show(AssociateAccountConfirm, { model });
           } catch (e) {
             popupAjaxError(e);

@@ -539,7 +539,14 @@ Discourse::Application.routes.draw do
       delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace
 
-    get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"
+    get "email/unsubscribe" => "email#unsubscribe", :as => "clean_email_unsubscribe"
+    post "email/unsubscribe" => "email#perform_unsubscribe",
+         :as => "perform_clean_email_unsubscribe"
+    get "email/unsubscribe/:key" => "email#unsubscribe",
+        :as => "email_unsubscribe",
+        :constraints => {
+          format: :html,
+        }
     get "email/unsubscribed" => "email#unsubscribed", :as => "email_unsubscribed"
     post "email/unsubscribe/:key" => "email#perform_unsubscribe", :as => "email_perform_unsubscribe"
 
@@ -597,12 +604,21 @@ Discourse::Application.routes.draw do
     get "session/current" => "session#current"
     get "session/csrf" => "session#csrf"
     get "session/hp" => "session#get_honeypot_value"
-    get "session/email-login/:token" => "session#email_login_info"
-    post "session/email-login/:token" => "session#email_login"
+    get "session/email-login" => "session#email_login_info"
+    post "session/email-login" => "session#email_login"
+    get "session/email-login/:token" => "session#email_login_info",
+        :constraints => {
+          format: %r{(html|\*/\*)},
+        }
     post "session/login-code" => "session#create_login_code"
     post "session/login-code/verify" => "session#verify_login_code"
-    get "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
-    post "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
+    get "session/otp" => "session#one_time_password"
+    post "session/otp" => "session#one_time_password"
+    get "session/otp/:token" => "session#one_time_password",
+        :constraints => {
+          token: /[0-9a-f]+/,
+          format: :html,
+        }
     get "session/2fa" => "session#second_factor_auth_show"
     post "session/2fa" => "session#second_factor_auth_perform"
     if Rails.env.test?
@@ -701,46 +717,49 @@ Discourse::Application.routes.draw do
       get "#{root_path}/account-created/resent" => "users#account_created"
       get "#{root_path}/account-created/edit-email" => "users#account_created"
       get(
-        { "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
-          index == 1 ? { as: :password_reset_token } : {},
-        ),
-      )
-      get "#{root_path}/confirm-email-token/:token" => "users#confirm_email_token",
+        {
+          "#{root_path}/password-reset/:token" => "users#password_reset_show",
           :constraints => {
-            format: "json",
-          }
-      put "#{root_path}/password-reset/:token" => "users#password_reset_update"
+            format: :html,
+          },
+        }.merge(index == 1 ? { as: :password_reset_token } : {}),
+      )
+      if index == 1
+        get "#{root_path}/password-reset" => "users#password_reset_show"
+        put "#{root_path}/password-reset" => "users#password_reset_update"
+        get "#{root_path}/activate-account" => "users#activate_account"
+        put "#{root_path}/activate-account" => "users#perform_account_activation"
+        get "#{root_path}/confirm-old-email" => "users_email#show_confirm_old_email"
+        put "#{root_path}/confirm-old-email" => "users_email#confirm_old_email"
+        get "#{root_path}/confirm-new-email" => "users_email#show_confirm_new_email"
+        put "#{root_path}/confirm-new-email" => "users_email#confirm_new_email"
+        get "#{root_path}/confirm-admin" => "users#confirm_admin"
+        post "#{root_path}/confirm-admin" => "users#confirm_admin"
+      end
       get "#{root_path}/activate-account/:token" => "users#activate_account",
           :constraints => {
             token: /[0-9a-f]+/,
+            format: :html,
           }
-      put(
-        {
-          "#{root_path}/activate-account/:token" => "users#perform_account_activation",
+      get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email",
           :constraints => {
-            token: /[0-9a-f]+/,
-          },
-        }.merge(index == 1 ? { as: "perform_activate_account" } : {}),
-      )
+            format: :html,
+          }
 
-      get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
-      put "#{root_path}/confirm-old-email/:token" => "users_email#confirm_old_email"
-
-      get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email"
-      put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
+      get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email",
+          :constraints => {
+            format: :html,
+          }
 
       get(
         {
           "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
           :constraints => {
             token: /[0-9a-f]+/,
+            format: :html,
           },
         }.merge(index == 1 ? { as: "confirm_admin" } : {}),
       )
-      post "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
-           :constraints => {
-             token: /[0-9a-f]+/,
-           }
       get "#{root_path}/:username/private-messages" => "users#show",
           :constraints => {
             username: RouteFormat.username,
@@ -1347,16 +1366,13 @@ Discourse::Application.routes.draw do
     get "/auth/:provider", to: "users/omniauth_callbacks#confirm_request"
     post "/auth/discourse_id/revoke" => "users/discourse_id#revoke"
     match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: %i[get post]
+    get "/associate", to: "users/associate_accounts#connect_info"
+    post "/associate", to: "users/associate_accounts#connect"
     get "/associate/:token",
         to: "users/associate_accounts#connect_info",
         constraints: {
-          token: /\h{32}/,
+          format: %r{(html|\*/\*)},
         }
-    post "/associate/:token",
-         to: "users/associate_accounts#connect",
-         constraints: {
-           token: /\h{32}/,
-         }
 
     post "/clicks/track" => "clicks#track", :as => "track_clicks"
 
@@ -1677,6 +1693,8 @@ Discourse::Application.routes.draw do
     get "raw/:topic_id(/:post_number)" => "posts#markdown_num"
 
     resources :invites, only: %i[create update destroy]
+    get "/invite" => "invites#show"
+    put "/invite" => "invites#perform_accept_invitation"
     get "/invites/:id" => "invites#show", :constraints => { format: :html }
     post "invites/create-multiple" => "invites#create_multiple", :constraints => { format: :json }
 
@@ -1685,7 +1703,6 @@ Discourse::Application.routes.draw do
     post "invites/reinvite" => "invites#resend_invite"
     post "invites/reinvite-all" => "invites#resend_all_invites"
     delete "invites" => "invites#destroy"
-    put "invites/show/:id" => "invites#perform_accept_invitation", :as => "perform_accept_invite"
     get "invites/retrieve" => "invites#retrieve"
 
     post "/export_csv/export_entity" => "export_csv#export_entity",

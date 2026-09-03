@@ -54,14 +54,16 @@ class UsersEmailController < ApplicationController
   end
 
   def confirm_new_email
-    change_request = load_change_request(:new)
+    token = secure_link_flow.credential(:email_update_new)
+    change_request = load_change_request(:new, token:)
 
     result =
       run_second_factor!(SecondFactor::Actions::ConfirmEmail, target_user: change_request.user)
 
     if result.no_second_factors_enabled? || result.second_factor_auth_completed?
       updater = EmailUpdater.new
-      if updater.confirm(params[:token]) == :complete
+      if updater.confirm(token) == :complete
+        secure_link_flow.clear(:email_update_new)
         updater.user.user_stat.reset_bounce_score!
         render json: success_json
       else
@@ -71,22 +73,22 @@ class UsersEmailController < ApplicationController
   end
 
   def show_confirm_new_email
+    return exchange_email_token(:new) if params[:token].present?
     return render "default/empty" if request.format.html?
 
-    change_request = load_change_request(:new)
+    change_request =
+      load_change_request(:new, token: secure_link_flow.credential(:email_update_new))
 
-    render json: {
-             new_email: change_request.new_email,
-             old_email: change_request.old_email,
-             token: params[:token],
-           }
+    render json: { new_email: change_request.new_email, old_email: change_request.old_email }
   end
 
   def confirm_old_email
-    load_change_request(:old)
+    token = secure_link_flow.credential(:email_update_old)
+    load_change_request(:old, token:)
 
     updater = EmailUpdater.new
-    if updater.confirm(params[:token]) == :authorizing_new
+    if updater.confirm(token) == :authorizing_new
+      secure_link_flow.clear(:email_update_old)
       render json: success_json
     else
       render json: { error: I18n.t("change_email.already_done") }, status: :bad_request
@@ -94,27 +96,40 @@ class UsersEmailController < ApplicationController
   end
 
   def show_confirm_old_email
+    return exchange_email_token(:old) if params[:token].present?
     return render "default/empty" if request.format.html?
 
-    change_request = load_change_request(:old)
+    change_request =
+      load_change_request(:old, token: secure_link_flow.credential(:email_update_old))
 
-    render json: {
-             new_email: change_request.new_email,
-             old_email: change_request.old_email,
-             token: params[:token],
-           }
+    render json: { new_email: change_request.new_email, old_email: change_request.old_email }
   end
 
   private
 
-  def load_change_request(type)
+  def exchange_email_token(type)
+    purpose = type == :old ? :email_update_old : :email_update_new
+    secure_link_flow.clear(purpose)
+
+    change_request =
+      begin
+        load_change_request(type, token: params[:token], enforce_actor: false)
+      rescue ActiveRecord::RecordNotFound, Discourse::NotFound, Discourse::InvalidAccess
+        nil
+      end
+    secure_link_flow.stage(purpose, params[:token]) if change_request
+
+    finish_secure_link_landing("/u/confirm-#{type}-email")
+  end
+
+  def load_change_request(type, token:, enforce_actor: true)
     expires_now
 
-    token = EmailToken.confirmable(params[:token], scope: EmailToken.scopes[:email_update])
+    token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_update])
 
     raise Discourse::NotFound if !token || !token.user
 
-    if current_user && token.user.id != current_user.id
+    if enforce_actor && current_user && token.user.id != current_user.id
       raise Discourse::InvalidAccess.new "You are logged in, but this email change link belongs to another user account. Please log out and try again."
     end
 

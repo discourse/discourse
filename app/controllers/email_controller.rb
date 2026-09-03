@@ -11,7 +11,14 @@ class EmailController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:unsubscribe], if: :one_click_unsubscribe?
 
   def unsubscribe
-    key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
+    if params[:key].present?
+      secure_link_flow.clear(:unsubscribe)
+      key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
+      secure_link_flow.stage(:unsubscribe, params[:key]) if key
+      return finish_secure_link_landing("/email/unsubscribe")
+    end
+
+    key = UnsubscribeKey.includes(:user).find_by(key: secure_link_flow.credential(:unsubscribe))
     @found = key.present?
     @key_owner_found = key&.user.present?
 
@@ -28,7 +35,10 @@ class EmailController < ApplicationController
   def perform_unsubscribe
     RateLimiter.new(nil, "unsubscribe_#{request.ip}", 10, 1.minute).performed!
 
-    key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
+    raise Discourse::NotFound if params[:key].present? && !one_click_unsubscribe?
+
+    credential = params[:key] || secure_link_flow.credential(:unsubscribe)
+    key = UnsubscribeKey.includes(:user).find_by(key: credential)
     raise Discourse::NotFound if key.nil? || key.user.nil?
     user = key.user
 
@@ -49,6 +59,7 @@ class EmailController < ApplicationController
     updated = UnsubscribeKey.get_unsubscribe_strategy_for(key)&.unsubscribe(resolved_params)
 
     if updated
+      secure_link_flow.clear(:unsubscribe) if !one_click_unsubscribe?
       cache_key = "unsub_#{SecureRandom.hex}"
       Discourse.cache.write cache_key, user.email, expires_in: 1.hour
 
