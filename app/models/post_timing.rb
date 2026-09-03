@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class PostTiming < ActiveRecord::Base
+  # The table has no primary key. This is its unique index.
+  self.implicit_order_column = %i[topic_id post_number user_id]
+
   belongs_to :topic
   belongs_to :user
 

@@ -650,10 +650,12 @@ module DiscourseEvents
       end
 
       def reset_invitee_notifications
-        invitees.where(
-          "status != :going OR recurring = FALSE",
-          going: Invitee.statuses[:going],
-        ).update_all(status: nil, notified: false, recurring: false)
+        # Keep the columns qualified: PostgreSQL updates a joined relation through an alias, so an
+        # unqualified name matches two copies of the table.
+        invitees
+          .where.not(status: Invitee.statuses[:going])
+          .or(invitees.where(recurring: false))
+          .update_all(status: nil, notified: false, recurring: false)
       end
 
       def notify_if_new_event

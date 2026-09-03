@@ -53,16 +53,16 @@ GEM
   remote: https://rubygems.org/
   specs:
     Ascii85 (2.0.1)
-    actionmailer (8.0.5.1)
-      actionpack (= 8.0.5.1)
-      actionview (= 8.0.5.1)
-      activejob (= 8.0.5.1)
-      activesupport (= 8.0.5.1)
+    actionmailer (8.1.3.1)
+      actionpack (= 8.1.3.1)
+      actionview (= 8.1.3.1)
+      activejob (= 8.1.3.1)
+      activesupport (= 8.1.3.1)
       mail (>= 2.8.0)
       rails-dom-testing (~> 2.2)
-    actionpack (8.0.5.1)
-      actionview (= 8.0.5.1)
-      activesupport (= 8.0.5.1)
+    actionpack (8.1.3.1)
+      actionview (= 8.1.3.1)
+      activesupport (= 8.1.3.1)
       nokogiri (>= 1.8.5)
       rack (>= 2.2.4)
       rack-session (>= 1.0.1)
@@ -70,8 +70,8 @@ GEM
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
       useragent (~> 0.16)
-    actionview (8.0.5.1)
-      activesupport (= 8.0.5.1)
+    actionview (8.1.3.1)
+      activesupport (= 8.1.3.1)
       builder (~> 3.1)
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
@@ -80,23 +80,23 @@ GEM
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (8.0.5.1)
-      activesupport (= 8.0.5.1)
+    activejob (8.1.3.1)
+      activesupport (= 8.1.3.1)
       globalid (>= 0.3.6)
-    activemodel (8.0.5.1)
-      activesupport (= 8.0.5.1)
-    activerecord (8.0.5.1)
-      activemodel (= 8.0.5.1)
-      activesupport (= 8.0.5.1)
+    activemodel (8.1.3.1)
+      activesupport (= 8.1.3.1)
+    activerecord (8.1.3.1)
+      activemodel (= 8.1.3.1)
+      activesupport (= 8.1.3.1)
       timeout (>= 0.4.0)
-    activesupport (8.0.5.1)
+    activesupport (8.1.3.1)
       base64
-      benchmark (>= 0.3)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.3.1)
       connection_pool (>= 2.2.5)
       drb
       i18n (>= 1.6, < 2)
+      json
       logger (>= 1.4.2)
       minitest (>= 5.1)
       securerandom (>= 0.3)
@@ -333,7 +333,7 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.10)
     literate_randomizer (0.4.0)
     logger (1.7.0)
-    lograge (0.14.0)
+    lograge (0.15.0)
       actionpack (>= 4)
       activesupport (>= 4)
       railties (>= 4)
@@ -535,12 +535,12 @@ GEM
       activerecord (>= 6.1, < 9.0)
       concurrent-ruby
       railties (>= 6.1, < 9.0)
-    rails_multisite (7.0.0)
-      activerecord (>= 7.1)
-      railties (>= 7.1)
-    railties (8.0.5.1)
-      actionpack (= 8.0.5.1)
-      activesupport (= 8.0.5.1)
+    rails_multisite (8.0.0)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
+    railties (8.1.3.1)
+      actionpack (= 8.1.3.1)
+      activesupport (= 8.1.3.1)
       irb (~> 1.13)
       rackup (>= 1.0.0)
       rake (>= 12.2)
@@ -817,14 +817,14 @@ PLATFORMS
 
 DEPENDENCIES
   Ascii85
-  actionmailer (~> 8.0.0)
-  actionpack (~> 8.0.0)
-  actionview (~> 8.0.0)
+  actionmailer (~> 8.1.0)
+  actionpack (~> 8.1.0)
+  actionview (~> 8.1.0)
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (~> 8.0.0)
-  activerecord (~> 8.0.0)
-  activesupport (~> 8.0.0)
+  activemodel (~> 8.1.0)
+  activerecord (~> 8.1.0)
+  activesupport (~> 8.1.0)
   addressable
   afm
   annotaterb
@@ -833,6 +833,7 @@ DEPENDENCIES
   aws-sdk-s3
   aws-sdk-sns
   aws-sdk-sts
+  benchmark
   better_errors
   bootsnap
   bullet
@@ -931,8 +932,8 @@ DEPENDENCIES
   rack-protection
   rails-dom-testing
   rails_failover
-  rails_multisite
-  railties (~> 8.0.0)
+  rails_multisite (< 9)
+  railties (~> 8.1.0)
   raindrops
   rake
   rb-fsevent
@@ -988,15 +989,15 @@ DEPENDENCIES
 
 CHECKSUMS
   Ascii85 (2.0.1) sha256=15cb5d941808543cbb9e7e6aea3c8ec3877f154c3461e8b3673e97f7ecedbe5a
-  actionmailer (8.0.5.1) sha256=c3d2b3f96e1989ea25f51699786a97fcb2536eb7abfc2a667cb8f2376ec08403
-  actionpack (8.0.5.1) sha256=a5595c9d824d68884ddc4d3965ab78c897760d3752e190df7efe897371caa1eb
-  actionview (8.0.5.1) sha256=472a108b9cc2295c4ac3ff09b028045e619875801f48c556f0085210b9cb1440
+  actionmailer (8.1.3.1) sha256=88ea441b28ff02a0c6c006468892642a3d9942affce9d294e81a74504aa5c43c
+  actionpack (8.1.3.1) sha256=974cb7154548e81f470b1b0f247b99cb38e87825899dca58610596e2817723d0
+  actionview (8.1.3.1) sha256=2da68b8414c47b43bfbed1ce69c5afe1c04f78c267aacb5660a4cab5ca12cfb6
   actionview_precompiler (0.4.0) sha256=33b6bd6ec4c1b856e02fdf5f6512c9eb4a92ac1c0545e941b3e354b7d540ed1c
   active_model_serializers (0.8.4) sha256=7350e3d3b6a5946bbec033241d908013cc85ff4d584230e6aa074225547c754c
-  activejob (8.0.5.1) sha256=142407a21b6c3cbc6ddd92ca111ac18ea5c40298eb94d81845cd897a072a6880
-  activemodel (8.0.5.1) sha256=559be32aa9c40db7a3ee0aef926d4508a9ebd22f96f7276c11326d21a7dff4a4
-  activerecord (8.0.5.1) sha256=9252968fce404d75eb17092498a440d472167f2f8deee32b4658d6552b1eeea7
-  activesupport (8.0.5.1) sha256=329a4280c4fbcfcf338ae2cb9df28b0b14527929dba105e10b3604516d998710
+  activejob (8.1.3.1) sha256=1c8dd275df930df40deecffec63d913a550a33fd94bd298f69721dd96939954a
+  activemodel (8.1.3.1) sha256=99cc02ce2faec371d14440949d85787ebd23a907c9baef0a9d4bcd4d21888f88
+  activerecord (8.1.3.1) sha256=0a2fb6c28f4938f6b013a3a549bec0a7e37d535f3dc8990e804bcc3258c0403b
+  activesupport (8.1.3.1) sha256=85458765f25ea48b9019c46b6bb3fa5683197bf4280d9f06710a6e8d7a831376
   addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
   afm (1.0.0) sha256=5bd4d6f6241e7014ef090985ec6f4c3e9745f6de0828ddd58bc1efdd138f4545
   annotaterb (4.20.0) sha256=871b2e898d1d60c23bdc59b72a5b840678a56355bf5f6fdeb8c79d317ff98bf7
@@ -1121,7 +1122,7 @@ CHECKSUMS
   listen (3.10.0) sha256=c6e182db62143aeccc2e1960033bebe7445309c7272061979bb098d03760c9d2
   literate_randomizer (0.4.0) sha256=05073c9b383983b1ed7e26c40b963468e91bc86e663b3eeff3a4af91b84217b1
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
-  lograge (0.14.0) sha256=42371a75823775f166f727639f5ddce73dd149452a55fc94b90c303213dc9ae1
+  lograge (0.15.0) sha256=34072c1f50b95019dc185137f5fec1a6759f5a1b6d55c28163d0cba204e6df16
   logstash-event (1.2.02) sha256=89a7dc60fac67070a5f60ba07409e541b09cb58906c391e90cb74b9f217467ae
   logster (2.21.0) sha256=5edc71ea98d5f89fe081556893f77b7c4d2617341dae7d421fc37539cfb13a02
   loofah (2.25.1) sha256=d436c73dbd0c1147b16c4a41db097942d217303e1f7728704b37e4df9f6d2e04
@@ -1216,8 +1217,8 @@ CHECKSUMS
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.7.0) sha256=28b145cceaf9cc214a9874feaa183c3acba036c9592b19886e0e45efc62b1e89
   rails_failover (2.3.0) sha256=eed6ea0674fd6f9f6b070ad297ad2ead121ecf9202920f6068b6a4f29d9491c9
-  rails_multisite (7.0.0) sha256=7aacf364ed86d2bee73fb679cbfe6c343ce89067b9746b3d5857fffc57f036f2
-  railties (8.0.5.1) sha256=da1958e1d9dab04691a2f8721b3ff7fab323715d37f103c19972dedfd644d5c7
+  rails_multisite (8.0.0) sha256=8e2216c7c455a9a3790991936439fd8043562bc5d8f24e01e1c28208f79e2bea
+  railties (8.1.3.1) sha256=2388a232579a00cefea4487de66c8553c3408c1300abdc6cf1799d86ffb04487
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   raindrops (0.20.1) sha256=aa0eb9ff6834f2d9e232ba688bd49cb30be893bc5a3452e74722c94c1fab4730
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701

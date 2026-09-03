@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class PollVote < ActiveRecord::Base
+  # The table has no primary key. This is its unique index.
+  self.implicit_order_column = %i[poll_id poll_option_id user_id]
+
   belongs_to :poll
   belongs_to :poll_option
   belongs_to :user

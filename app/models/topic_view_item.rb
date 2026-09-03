@@ -5,6 +5,8 @@ require "ipaddr"
 # awkward TopicView is taken
 class TopicViewItem < ActiveRecord::Base
   self.table_name = "topic_views"
+  # The table has no primary key. This is its unique index.
+  self.implicit_order_column = %i[user_id ip_address topic_id]
   belongs_to :user
   belongs_to :topic
   validates :topic_id, :ip_address, :viewed_at, presence: true

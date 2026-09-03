@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class PostReply < ActiveRecord::Base
+  # The table has no primary key. This is its unique index.
+  self.implicit_order_column = %i[post_id reply_post_id]
+
   belongs_to :post
   belongs_to :reply, foreign_key: :reply_post_id, class_name: "Post"
 

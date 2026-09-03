@@ -4,9 +4,6 @@
 # Clean up a text
 #
 
-# We use ActiveSupport mb_chars from here to properly support non ascii downcase
-require "active_support/core_ext/string/multibyte"
-
 class TextCleaner
   def self.title_options
     # cf. http://meta.discourse.org/t/should-we-have-auto-replace-rules-in-titles/5687
@@ -42,13 +39,12 @@ class TextCleaner
     text.gsub!(/\?+/, "?") if opts[:deduplicate_question_marks]
 
     # Replace all-caps text with regular case letters
-    text = downcase(text.mb_chars, opts).to_s if opts[:replace_all_upper_case] &&
-      (text == upcase(text.mb_chars, opts))
+    text = downcase(text, opts) if opts[:replace_all_upper_case] && (text == upcase(text, opts))
 
     # Capitalize first letter, but only when entire first word is lowercase
     first, rest = text.split(" ", 2)
-    if first && opts[:capitalize_first_letter] && first == downcase(first.mb_chars, opts)
-      text = +"#{capitalize(first.mb_chars, opts)}#{rest ? " " + rest : ""}"
+    if first && opts[:capitalize_first_letter] && first == downcase(first, opts)
+      text = +"#{capitalize(first, opts)}#{rest ? " " + rest : ""}"
     end
 
     # Remove unnecessary periods at the end

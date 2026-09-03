@@ -8,13 +8,13 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "~> 8.0.0"
-gem "actionpack", "~> 8.0.0"
-gem "actionview", "~> 8.0.0"
-gem "activemodel", "~> 8.0.0"
-gem "activerecord", "~> 8.0.0"
-gem "activesupport", "~> 8.0.0"
-gem "railties", "~> 8.0.0"
+gem "actionmailer", "~> 8.1.0"
+gem "actionpack", "~> 8.1.0"
+gem "actionview", "~> 8.1.0"
+gem "activemodel", "~> 8.1.0"
+gem "activerecord", "~> 8.1.0"
+gem "activesupport", "~> 8.1.0"
+gem "railties", "~> 8.1.0"
 
 gem "propshaft"
 gem "json"
@@ -57,7 +57,8 @@ gem "discourse_math_bundle"
 
 gem "message_bus"
 
-gem "rails_multisite"
+# 9.0.0 raises on an unknown db or host by default. That change needs its own work.
+gem "rails_multisite", "< 9"
 
 gem "fastimage"
 
@@ -272,6 +273,9 @@ gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
 gem "csv", require: false
+
+# Rails 8.1 drops its own dependency on `benchmark`.
+gem "benchmark", require: false
 
 # dependencies for the automation plugin
 gem "iso8601"

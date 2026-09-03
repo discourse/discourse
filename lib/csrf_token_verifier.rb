@@ -5,7 +5,9 @@ class CSRFTokenVerifier
   class InvalidCSRFToken < StandardError
   end
 
-  include ActiveSupport::Configurable
+  # `ActionController::RequestForgeryProtection` delegates its settings to `config`, and Rails 8.1
+  # dropped `ActiveSupport::Configurable`. This is what `AbstractController::Base` now does.
+  class_attribute :config, instance_predicate: false, default: ActiveSupport::OrderedOptions.new
   include ActionController::RequestForgeryProtection
 
   # Use config from ActionController::Base

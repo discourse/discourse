@@ -89,7 +89,10 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 8.0
+    config.load_defaults 8.1
+    # Rails 8.1 would raise on a path relative redirect. Three admin authored fields can
+    # still hold one, so keep the log behaviour until they validate their input.
+    config.action_controller.action_on_path_relative_redirect = :log
     config.yjit = GlobalSetting.yjit_enabled
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
@@ -102,6 +105,10 @@ module Discourse
     ]
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
     config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
+
+    # Rails 8.1 lets `ActionDispatch::MissingController` escape instead of turning it into a
+    # routing error, which would answer 500 where Discourse answers 404.
+    config.action_dispatch.rescue_responses["ActionDispatch::MissingController"] = :not_found
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
     config.active_record.dump_schema_after_migration = false

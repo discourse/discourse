@@ -1390,7 +1390,12 @@ module Email
           target_id: Post.where(topic_id: options[:topic_id]).select(:id),
         ).pluck("DISTINCT upload_id")
 
-      upload_shas = Upload.where(id: upload_ids).pluck("DISTINCT COALESCE(original_sha1, sha1)")
+      upload_shas =
+        if upload_ids.empty?
+          []
+        else
+          Upload.where(id: upload_ids).pluck("DISTINCT COALESCE(original_sha1, sha1)")
+        end
 
       is_duplicate = ->(upload_id, upload_sha, attachment) do
         return true if upload_id && upload_ids.include?(upload_id)

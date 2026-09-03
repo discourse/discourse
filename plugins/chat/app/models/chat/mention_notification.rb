@@ -3,6 +3,8 @@
 module Chat
   class MentionNotification < ActiveRecord::Base
     self.table_name = "chat_mention_notifications"
+    # The table has no primary key. This is its unique index.
+    self.implicit_order_column = :notification_id
 
     belongs_to :chat_mention, class_name: "Chat::Mention"
     belongs_to :notification, dependent: :destroy
