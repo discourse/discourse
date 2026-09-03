@@ -2,7 +2,11 @@
 
 module Plugin
   class JsManager
-    @cache = {}
+    class Cache < ActiveSupport::CurrentAttributes
+      # Cache which persists for the duration of a request
+      attribute :request_cache
+    end
+
     @url_glob_patterns = {}
 
     # A plugin route map can mount on a core route, so the build needs these to derive its urls.
@@ -24,25 +28,25 @@ module Plugin
     end
 
     def self.js_asset_exists?(plugin_directory_name)
-      maybe_cache("js_asset_exists_#{plugin_directory_name}") do
+      get_set_cache("js_asset_exists_#{plugin_directory_name}") do
         has_source_files_in_dir(plugin_directory_name, "assets/javascripts")
       end
     end
 
     def self.admin_js_asset_exists?(plugin_directory_name)
-      maybe_cache("admin_js_asset_exists_#{plugin_directory_name}") do
+      get_set_cache("admin_js_asset_exists_#{plugin_directory_name}") do
         has_source_files_in_dir(plugin_directory_name, "admin/assets/javascripts")
       end
     end
 
     def self.test_js_asset_exists?(plugin_directory_name)
-      maybe_cache("test_js_asset_exists_#{plugin_directory_name}") do
+      get_set_cache("test_js_asset_exists_#{plugin_directory_name}") do
         has_source_files_in_dir(plugin_directory_name, "test/javascripts")
       end
     end
 
     def self.read_manifest(plugin_directory_name)
-      maybe_cache("manifest_#{plugin_directory_name}") do
+      get_set_cache("manifest_#{plugin_directory_name}") do
         manifest_path =
           "#{Rails.root.join("app/assets/generated/#{plugin_directory_name}/manifest.json")}"
         JSON.parse(File.read(manifest_path))
@@ -293,11 +297,18 @@ module Plugin
       STDERR.puts message
     end
 
-    private_class_method def self.maybe_cache(key, &blk)
-      if Rails.env.production?
-        @cache.fetch(key, &blk)
+    private_class_method def self.get_set_cache(key, &blk)
+      store =
+        if Rails.env.development?
+          Cache.request_cache ||= {}
+        else
+          @production_cache ||= {}
+        end
+
+      if store.key?(key)
+        store[key]
       else
-        blk.call
+        store[key] = blk.call
       end
     end
 

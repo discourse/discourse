@@ -1463,7 +1463,6 @@ class BulkImport::Base
     user[:staged] = false if user[:staged].nil?
     user[:admin] ||= false
     user[:moderator] ||= false
-    user[:last_emailed_at] ||= NOW
     user[:created_at] ||= NOW
     user[:updated_at] ||= user[:created_at]
 
