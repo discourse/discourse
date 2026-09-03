@@ -82,24 +82,22 @@ RSpec.configure do |config|
     # this workaround for now where we will retry the block once before raising the error.
     #
     # Potentially related: https://bugs.ruby-lang.org/issues/20172
-    if defined?(Capybara) && Capybara.respond_to?(:using_session)
-      module Capybara
-        class << self
-          def using_session_with_localhost_resolution(name, &block)
-            attempts = 0
-            _using_session(name, &block)
-          rescue Socket::ResolutionError
-            puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
-            attempts += 1
-            attempts <= 1 ? retry : raise
-          end
+    module Capybara
+      class << self
+        def using_session_with_localhost_resolution(name, &block)
+          attempts = 0
+          _using_session(name, &block)
+        rescue Socket::ResolutionError
+          puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
+          attempts += 1
+          attempts <= 1 ? retry : raise
         end
       end
+    end
 
-      Capybara.singleton_class.class_eval do
-        alias_method :_using_session, :using_session
-        alias_method :using_session, :using_session_with_localhost_resolution
-      end
+    Capybara.singleton_class.class_eval do
+      alias_method :_using_session, :using_session
+      alias_method :using_session, :using_session_with_localhost_resolution
     end
   end
 

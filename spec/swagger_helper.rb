@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "json_schemer"
-require "rswag/specs"
 
 # Require schema files
 Dir["./spec/requests/api/schemas/*.rb"].each { |file| require file }

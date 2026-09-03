@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+GIT_INITIAL_BRANCH_SUPPORTED =
+  Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
+
 module Helpers
   extend ActiveSupport::Concern
 
@@ -177,7 +180,7 @@ module Helpers
   def setup_git_repo(files)
     repo_dir = Dir.mktmpdir
     system(
-      "git -C #{repo_dir} init -q . #{"--initial-branch=main" if git_initial_branch_supported?}",
+      "git -C #{repo_dir} init -q . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}",
       exception: true,
     )
     system("git -C #{repo_dir} config user.email 'someone@cool.com'", exception: true)
@@ -195,11 +198,6 @@ module Helpers
       exception: false,
     )
     repo_dir
-  end
-
-  def git_initial_branch_supported?
-    @git_initial_branch_supported ||=
-      Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
   end
 
   def setup_remote_upstream(path)

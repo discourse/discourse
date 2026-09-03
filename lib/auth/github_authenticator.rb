@@ -56,7 +56,6 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    require "omniauth-github"
     omniauth.provider :github,
                       setup:
                         lambda { |env|

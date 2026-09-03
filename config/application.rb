@@ -56,17 +56,6 @@ if defined?(Bundler)
   Bundler.require(*bundler_groups)
 end
 
-if Rails.env.production?
-  require "json_schemer"
-  require "omniauth-facebook"
-  require "omniauth-github"
-  require "omniauth-google-oauth2"
-  require "omniauth-twitter"
-  require "rqrcode"
-end
-
-require "discourse_dev_assets" if Rails.env.development?
-
 require_relative "../lib/require_dependency_backward_compatibility"
 
 module Discourse
