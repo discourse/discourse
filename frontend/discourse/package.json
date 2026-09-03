@@ -32,7 +32,7 @@
     "@codemirror/language": "^6.12.4",
     "@codemirror/state": "^6.6.0",
     "@codemirror/view": "^6.43.9",
-    "@dagrejs/dagre": "^3.0.0",
+    "@dagrejs/dagre": "^3.1.1",
     "@discourse/gif": "^1.0.0",
     "@discourse/heic": "^1.0.0",
     "@discourse/jpeg": "^1.0.0",
