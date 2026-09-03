@@ -724,6 +724,14 @@ export default class CodeLoginForm extends Component {
             <field.Control autofocus="autofocus" autocomplete="username" />
           </form.Field>
 
+          {{! Lets a signup flow add its own fields to this form — an agreement
+          it needs accepted before the account exists, say — so they are
+          validated and submitted together with the email. }}
+          <PluginOutlet
+            @name="code-login-email-step-fields"
+            @outletArgs={{lazyHash form=form context=@context}}
+          />
+
           {{#if this.codeError}}
             <div class="code-login-form__error" aria-live="polite" role="alert">
               {{this.codeError}}
