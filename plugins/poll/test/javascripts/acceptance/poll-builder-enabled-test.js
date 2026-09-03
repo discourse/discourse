@@ -215,6 +215,16 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await click(".composer-toggle-switch");
     await waitFor(".ProseMirror");
     await settled();
+    assert
+      .dom(".composer-poll-node")
+      .hasClass("--untitled", "offers an empty title slot");
+    assert
+      .dom(".composer-poll-node__content")
+      .doesNotHaveAttribute(
+        "contenteditable",
+        "whose title is editable like any other content"
+      );
+
     await click(".composer-poll-node__edit");
 
     assert.dom(".poll-options-min").hasValue("0", "restores the lower bound");
@@ -271,25 +281,6 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       .hasValue(
         "[poll type=regular]\n* 1\n* 2\n* 3\n\n[/poll]\n\n",
         "keeps the generated options as authored ones"
-      );
-  });
-
-  test("a poll title can be typed into a numeric poll", async function (assert) {
-    await visit("/");
-    await click("#create-topic");
-    await fillIn(".d-editor-input", "[poll type=number min=1 max=2]\n[/poll]");
-    await click(".composer-toggle-switch");
-    await waitFor(".ProseMirror");
-    await settled();
-
-    assert
-      .dom(".composer-poll-node")
-      .hasClass("--untitled", "offers an empty title slot");
-    assert
-      .dom(".composer-poll-node__content")
-      .doesNotHaveAttribute(
-        "contenteditable",
-        "the title is editable like any other content"
       );
   });
 

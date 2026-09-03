@@ -593,6 +593,9 @@ body.crawler {
   }
 }
 
+// The cooked poll styles above also apply inside the editor, so the rules here
+// that carry a `.poll` or a media query are deliberately written to outrank a
+// specific one of them.
 .composer-poll-node {
   &__content {
     min-width: 0;
@@ -629,7 +632,6 @@ body.crawler {
     display: contents;
   }
 
-  // outranks the cooked grid, which also applies inside the editor
   .ProseMirror &.poll {
     grid-template-areas: "poll" "info" "buttons";
 
@@ -659,7 +661,6 @@ body.crawler {
     }
   }
 
-  // outranks the cooked option styles, which also apply inside the editor
   &.poll &__content > ul > li {
     cursor: text;
   }
@@ -680,7 +681,6 @@ body.crawler {
     pointer-events: none;
   }
 
-  // outranks the cooked poll styles, which also apply inside the editor:
   // the parsed info node is replaced by the one rendered below it
   &.poll &__content > .poll-info {
     display: none;
