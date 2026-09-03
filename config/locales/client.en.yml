@@ -9340,6 +9340,7 @@ en:
             admin_onboarding_step_completed: "complete admin onboarding step"
             admin_onboarding_completed: "complete admin onboarding"
             admin_onboarding_dismissed: "dismiss admin onboarding"
+            create_group: "create group"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
