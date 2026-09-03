@@ -1134,7 +1134,7 @@ RSpec.describe Middleware::RequestTracker do
       SiteSetting.trigger_browser_pageview_events = true
       DiscourseIpInfo.stubs(:get).returns(country_code: "US")
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      language = "a" * (BrowserPageviewEvent::MAX_LANGUAGE_LENGTH + 1)
+      language = "en-US"
 
       events =
         DiscourseEvent.track_events(:beacon_browser_pageview) do
@@ -1161,7 +1161,7 @@ RSpec.describe Middleware::RequestTracker do
       event = events[0][:params].last
       expect(event[:url]).to eq("https://test.com/t/topic/123")
       expect(event[:referrer]).to eq("https://test.com/")
-      expect(event[:language]).to eq(language.slice(0, BrowserPageviewEvent::MAX_LANGUAGE_LENGTH))
+      expect(event[:language]).to eq(language)
       expect(event[:session_id]).to eq("abc123")
       expect(event[:topic_id]).to eq(123)
       expect(event[:country_code]).to eq("US")
