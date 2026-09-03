@@ -29,7 +29,7 @@ class McpOauthAuthorization < ActiveRecord::Base
     consent_required_at.blank? || consented_at >= consent_required_at
   end
 
-  def self.require_consent!(scopes: nil)
+  def self.require_consent!(scopes: nil, client_ids: nil)
     transaction do
       authorizations = active
       if scopes.present?
@@ -37,6 +37,7 @@ class McpOauthAuthorization < ActiveRecord::Base
           McpOauthAuthorizationScope.where(name: scopes).select(:mcp_oauth_authorization_id)
         authorizations = authorizations.where(id: authorization_ids)
       end
+      authorizations = authorizations.where(mcp_oauth_client_id: client_ids) if client_ids.present?
       authorization_ids = authorizations.select(:id)
       now = Time.zone.now
       McpOauthAccessToken.where(

@@ -203,6 +203,17 @@ describe "MCP transport" do
     expect(response.parsed_body.dig("result", "resultType")).to eq("complete")
   end
 
+  it "records tool calls with long JSON-RPC request IDs" do
+    request_id = "a" * 256
+
+    expect do
+      post "/mcp", params: payload.merge(id: request_id).to_json, headers: headers
+    end.to change(McpAuditLog, :count).by(1)
+
+    expect(response.status).to eq(200)
+    expect(McpAuditLog.last.request_id).to eq(request_id)
+  end
+
   it "records at most one rate-limit audit event per client each minute" do
     SiteSetting.mcp_global_rate_limit_per_minute = 10
     RateLimiter.enable

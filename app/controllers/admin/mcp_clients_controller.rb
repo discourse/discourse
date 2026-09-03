@@ -47,7 +47,12 @@ class Admin::McpClientsController < Admin::AdminController
 
   def refresh
     raise Discourse::InvalidParameters if client.registration_type != "cimd"
-    refreshed = DiscourseMcp::OAuth::ClientResolver.resolve!(client.client_id, force: true)
+    refreshed =
+      DiscourseMcp::OAuth::ClientResolver.resolve!(
+        client.client_id,
+        force: true,
+        user: current_user,
+      )
     render json: { client: serialize(refreshed) }
   end
 

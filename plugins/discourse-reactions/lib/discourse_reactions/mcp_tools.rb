@@ -8,15 +8,16 @@ module DiscourseReactions
         if post.blank? || !request_context.guardian.can_see?(post)
           raise DiscourseMcp::ToolError, "Post not found"
         end
+        reaction = arguments.fetch("reaction")
+        if !DiscourseReactions::Reaction.valid?(reaction)
+          raise DiscourseMcp::ToolError, I18n.t("discourse_reactions.errors.reaction_unavailable")
+        end
         DiscourseReactions::ReactionManager.new(
-          reaction_value: arguments.fetch("reaction"),
+          reaction_value: reaction,
           user: request_context.user,
           post: post,
         ).toggle!
-        DiscourseMcp::ToolHelpers.text_and_structured(
-          post_id: post.id,
-          reaction: arguments.fetch("reaction"),
-        )
+        DiscourseMcp::ToolHelpers.text_and_structured(post_id: post.id, reaction: reaction)
       end
     end
   end

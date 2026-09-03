@@ -35,6 +35,34 @@ describe McpOauthAuthorizationsController do
     expect(labels).to include(I18n.t("mcp.oauth.resource"))
   end
 
+  it "prevents the authorization page from being framed when site embedding is enabled" do
+    SiteSetting.allow_embedding_site_in_an_iframe = true
+    SiteSetting.content_security_policy = false
+    client =
+      McpOauthClient.create!(
+        client_id: "framing-protection-client",
+        name: "Framing protection client",
+        registration_type: "pre_registered",
+        trust_state: "approved",
+        redirect_uris: ["http://127.0.0.1/callback"],
+      )
+
+    get "/oauth2/mcp/authorize",
+        params: {
+          client_id: client.client_id,
+          redirect_uri: client.redirect_uris.first,
+          response_type: "code",
+          code_challenge: "a" * 43,
+          code_challenge_method: "S256",
+          resource: DiscourseMcp.resource_url,
+          scope: "mcp:profile:read",
+        }
+
+    expect(response.status).to eq(200)
+    expect(response.headers["X-Frame-Options"]).to eq("DENY")
+    expect(response.headers["Content-Security-Policy"]).to include("frame-ancestors 'none'")
+  end
+
   it "rejects an authorization request without the initial scope" do
     client =
       McpOauthClient.create!(
@@ -112,5 +140,32 @@ describe McpOauthAuthorizationsController do
 
     expect(response.status).to eq(403)
     expect(McpOauthClient.find_by(client_id:)).to eq(nil)
+  end
+
+  it "rate limits metadata lookups across unique client IDs" do
+    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    RateLimiter.enable
+    allow(DiscourseMcp::OAuth::ClientResolver).to receive(:fetch_metadata) do |uri|
+      {
+        "client_id" => uri.to_s,
+        "client_name" => "Metadata client",
+        "redirect_uris" => ["https://client.example.com/callback"],
+      }
+    end
+
+    11.times do |index|
+      get "/oauth2/mcp/authorize",
+          params: {
+            client_id: "https://client.example.com/oauth/client-#{index}.json",
+            redirect_uri: "https://client.example.com/callback",
+            response_type: "code",
+            code_challenge: "a" * 43,
+            code_challenge_method: "S256",
+            resource: DiscourseMcp.resource_url,
+            scope: "mcp:profile:read",
+          }
+    end
+
+    expect(response.status).to eq(429)
   end
 end

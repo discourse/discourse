@@ -47,10 +47,184 @@ describe DiscourseMcp::OAuth do
       },
     )
 
-    expect { described_class::ClientResolver.resolve!(client_id) }.to raise_error(
+    expect { described_class::ClientResolver.resolve!(client_id, user:) }.to raise_error(
       Discourse::InvalidAccess,
     )
     expect(McpOauthClient.find_by(client_id:)).to eq(nil)
+  end
+
+  it "rejects a cached metadata client that the current trust policy does not allow" do
+    SiteSetting.mcp_oauth_client_trust_policy = "pre_registered"
+    client_id = "https://client.example.com/oauth/client.json"
+    McpOauthClient.create!(
+      client_id:,
+      name: "Cached metadata client",
+      registration_type: "cimd",
+      trust_state: "approved",
+      metadata_uri: client_id,
+      metadata_expires_at: 1.hour.from_now,
+      redirect_uris: ["https://client.example.com/callback"],
+    )
+
+    expect { described_class::ClientResolver.resolve!(client_id, user:) }.to raise_error(
+      Discourse::InvalidAccess,
+    )
+  end
+
+  it "rejects client ID URLs containing dot path segments" do
+    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    client_id = "https://client.example.com/oauth/../client.json"
+    allow(described_class::ClientResolver).to receive(:fetch_metadata).and_return(
+      {
+        "client_id" => client_id,
+        "client_name" => "Invalid metadata client",
+        "redirect_uris" => ["https://client.example.com/callback"],
+      },
+    )
+
+    expect { described_class::ClientResolver.resolve!(client_id, user:) }.to raise_error(
+      Discourse::InvalidAccess,
+    )
+    expect(McpOauthClient.find_by(client_id:)).to eq(nil)
+  end
+
+  it "rejects metadata that requires unsupported client authentication" do
+    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    client_id = "https://client.example.com/oauth/client.json"
+    allow(described_class::ClientResolver).to receive(:fetch_metadata).and_return(
+      {
+        "client_id" => client_id,
+        "client_name" => "Confidential metadata client",
+        "redirect_uris" => ["https://client.example.com/callback"],
+        "token_endpoint_auth_method" => "private_key_jwt",
+      },
+    )
+
+    expect { described_class::ClientResolver.resolve!(client_id, user:) }.to raise_error(
+      Discourse::InvalidAccess,
+    )
+    expect(McpOauthClient.find_by(client_id:)).to eq(nil)
+  end
+
+  it "handles metadata responses without a body chunk" do
+    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    client_id = "https://client.example.com/oauth/client.json"
+    response = instance_double(Net::HTTPResponse, code: "302")
+    allow(response).to receive(:[]).with("Content-Type").and_return("text/html")
+    destination = instance_double(FinalDestination)
+    allow(FinalDestination).to receive(:new).and_return(destination)
+    allow(destination).to receive(:get).and_yield(response, nil, nil)
+
+    expect { described_class::ClientResolver.resolve!(client_id, user:) }.to raise_error(
+      Discourse::InvalidAccess,
+    )
+  end
+
+  it "rate limits metadata lookups across hostname case variants" do
+    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    RateLimiter.enable
+    users = 4.times.map { Fabricate(:user) }
+    lowercase_host = "client-#{SecureRandom.hex}.example.com"
+    uppercase_host = lowercase_host.upcase
+    allow(described_class::ClientResolver).to receive(:fetch_metadata) do |uri|
+      {
+        "client_id" => uri.to_s,
+        "client_name" => "Metadata client",
+        "redirect_uris" => ["https://client.example.com/callback"],
+      }
+    end
+
+    30.times do |index|
+      host = index.even? ? lowercase_host : uppercase_host
+      described_class::ClientResolver.resolve!(
+        "https://#{host}/oauth/client-#{index}.json",
+        user: users[index % users.length],
+      )
+    end
+
+    expect do
+      described_class::ClientResolver.resolve!(
+        "https://#{uppercase_host}/oauth/client-30.json",
+        user: users.last,
+      )
+    end.to raise_error(RateLimiter::LimitExceeded)
+  end
+
+  it "rejects existing credentials when the current policy no longer allows the client" do
+    SiteSetting.mcp_oauth_client_trust_policy = "any_cimd"
+    client_id = "https://client.example.com/oauth/client.json"
+    metadata_client =
+      McpOauthClient.create!(
+        client_id:,
+        name: "Metadata client",
+        registration_type: "cimd",
+        trust_state: "approved",
+        metadata_uri: client_id,
+        redirect_uris: ["https://client.example.com/callback"],
+      )
+    metadata_authorization =
+      described_class::AuthorizationGrant.create!(
+        user:,
+        client: metadata_client,
+        redirect_uri: metadata_client.redirect_uris.first,
+        requested_scopes: granted_scopes,
+      )
+    access_token = McpOauthAccessToken.issue!(authorization: metadata_authorization)
+    refresh_token, = McpOauthRefreshToken.issue!(authorization: metadata_authorization)
+    request = Struct.new(:authorization).new("Bearer #{access_token}")
+    SiteSetting.stubs(:mcp_oauth_client_trust_policy).returns("pre_registered")
+
+    expect { DiscourseMcp::Authenticator.new(request).authenticate! }.to raise_error(
+      DiscourseMcp::AuthenticationError,
+    )
+    expect do
+      described_class::TokenIssuer.refresh!(
+        refresh_token:,
+        client_id:,
+        resource: DiscourseMcp.resource_url,
+      )
+    end.to raise_error(Discourse::InvalidAccess)
+  end
+
+  it "revokes metadata client grants when an approved domain is removed" do
+    SiteSetting.mcp_oauth_client_trust_policy = "approved_domains"
+    SiteSetting.mcp_oauth_approved_domains = "client.example.com"
+    client_id = "https://client.example.com/oauth/client.json"
+    metadata_client =
+      McpOauthClient.create!(
+        client_id:,
+        name: "Metadata client",
+        registration_type: "cimd",
+        trust_state: "approved",
+        metadata_uri: client_id,
+        redirect_uris: ["https://client.example.com/callback"],
+      )
+    metadata_authorization =
+      described_class::AuthorizationGrant.create!(
+        user:,
+        client: metadata_client,
+        redirect_uri: metadata_client.redirect_uris.first,
+        requested_scopes: granted_scopes,
+      )
+    access_token = McpOauthAccessToken.issue!(authorization: metadata_authorization)
+    refresh_token, refresh_record =
+      McpOauthRefreshToken.issue!(authorization: metadata_authorization)
+
+    SiteSetting.mcp_oauth_approved_domains = "other.example.com"
+
+    expect(metadata_client.reload.trust_state).to eq("pending")
+    expect(metadata_authorization.reload.status).to eq("consent_required")
+    expect(
+      McpOauthAccessToken.find_by(token_hash: McpOauthAccessToken.digest(access_token)).revoked_at,
+    ).to be_present
+    expect(refresh_record.reload.revoked_at).to be_present
+    expect do
+      described_class::TokenIssuer.refresh!(
+        refresh_token:,
+        client_id:,
+        resource: DiscourseMcp.resource_url,
+      )
+    end.to raise_error(Discourse::InvalidAccess)
   end
 
   it "authorizes scopes combined from all of the user's groups" do

@@ -4,12 +4,14 @@ class McpOauthAuthorizationsController < ApplicationController
   layout "no_ember"
   requires_login
   skip_before_action :check_xhr, :preload_json
+  skip_after_action :conditionally_allow_site_embedding
   before_action :validate_request
   before_action :ensure_mcp_access
+  after_action :prevent_framing
 
   def show
     raise Discourse::InvalidAccess if current_user.is_impersonating
-    @client = DiscourseMcp::OAuth::ClientResolver.resolve!(params[:client_id])
+    @client = DiscourseMcp::OAuth::ClientResolver.resolve!(params[:client_id], user: current_user)
     validate_redirect!(@client)
     @requested_scopes = requested_scopes
     if !@requested_scopes.include?(DiscourseMcp::INITIAL_SCOPE) ||
@@ -21,7 +23,7 @@ class McpOauthAuthorizationsController < ApplicationController
 
   def create
     raise Discourse::InvalidAccess if current_user.is_impersonating
-    client = DiscourseMcp::OAuth::ClientResolver.resolve!(params[:client_id])
+    client = DiscourseMcp::OAuth::ClientResolver.resolve!(params[:client_id], user: current_user)
     validate_redirect!(client)
     return redirect_with(error: "access_denied") if params[:decision] != "approve"
 
@@ -43,6 +45,10 @@ class McpOauthAuthorizationsController < ApplicationController
   end
 
   private
+
+  def prevent_framing
+    response.headers["X-Frame-Options"] = "DENY"
+  end
 
   def ensure_mcp_access
     if !SiteSetting.mcp_server_enabled || !DiscourseMcp::Access.allowed?(current_user)
