@@ -8,7 +8,8 @@ import {
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
 import { countryName } from "discourse/admin/lib/format-country";
-import I18n, { i18n } from "discourse-i18n";
+import { languageName } from "discourse/admin/lib/format-language";
+import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
   "traffic_type",
@@ -40,34 +41,6 @@ const DIMENSION_KEYS = {
   language: "languages",
   ip: "ip_addresses",
 };
-
-function languageName(language) {
-  if (!language) {
-    return "";
-  }
-
-  try {
-    const locale = I18n.currentBcp47Locale || "en";
-    const languageLocale = new Intl.Locale(language);
-    const name = new Intl.DisplayNames([locale], { type: "language" }).of(
-      languageLocale.language
-    );
-    const region =
-      languageLocale.region === "GB" ? "UK" : languageLocale.region;
-    const script = languageLocale.script
-      ? new Intl.DisplayNames([locale], { type: "script" }).of(
-          languageLocale.script
-        )
-      : null;
-    const qualifiers = [script, region].filter(Boolean);
-
-    return qualifiers.length
-      ? `${name} (${qualifiers.join(", ")})`
-      : name || language;
-  } catch {
-    return language;
-  }
-}
 
 export default class AdminSiteTrafficController extends Controller {
   @tracked range = DEFAULT_PERIOD;
