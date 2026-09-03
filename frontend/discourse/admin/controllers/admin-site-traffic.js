@@ -18,6 +18,7 @@ const FILTER_KEYS = [
   "country",
   "network",
   "browser",
+  "language",
   "ip",
 ];
 
@@ -36,6 +37,7 @@ const DIMENSION_KEYS = {
   country: "countries",
   network: "networks",
   browser: "browsers",
+  language: "languages",
   ip: "ip_addresses",
 };
 
@@ -50,6 +52,7 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked country = null;
   @tracked network = null;
   @tracked browser = null;
+  @tracked language = null;
   @tracked ip = null;
   @tracked traffic = null;
   @tracked fetchError = null;

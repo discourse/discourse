@@ -35,6 +35,10 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       ]
     end
 
+    let(:languages) do
+      [nil, "", nil, "fr", "en-US", "en-US", "en-US", "fr", "de", "zh-CN", "en-US"]
+    end
+
     let!(:pageviews) do
       browsers.each_with_index do |browser, index|
         Fabricate(
@@ -46,6 +50,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           session_id: "browser-#{index}",
           source: BrowserPageviewEvent::SOURCE_BEACON,
           browser:,
+          language: languages[index],
           created_at: Time.zone.local(2026, 5, 10, 10, index),
         )
       end
@@ -113,6 +118,38 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
         )
       end
 
+      it "orders language dimensions by pageviews and labels missing languages as unknown" do
+        language_dimensions = result.traffic.dig(:dimensions, "languages")
+
+        expect(language_dimensions).to eq(
+          [
+            { value: "en-US", label: "en-US", pageviews: 4 },
+            { value: "", label: "Unknown", pageviews: 3 },
+            { value: "fr", label: "fr", pageviews: 2 },
+            { value: "de", label: "de", pageviews: 1 },
+            { value: "zh-CN", label: "zh-CN", pageviews: 1 },
+          ],
+        )
+      end
+
+      it "filters missing languages with an empty string" do
+        traffic = described_class.call(params: params.merge(language: [""])).traffic
+
+        expect(traffic.slice(:summary, :active_filters)).to eq(
+          summary: {
+            "pageviews" => 3,
+            "distinct_sessions" => 3,
+            "logged_in_share" => 0,
+            "bounce_rate" => 100,
+            "average_session_duration_seconds" => 0,
+          },
+          active_filters: [{ key: :language, value: "", label: "Unknown" }],
+        )
+        expect(traffic.dig(:dimensions, "languages")).to eq(
+          [{ value: "", label: "Unknown", pageviews: 3 }],
+        )
+      end
+
       it "applies all filters to every dimension" do
         Fabricate(
           :browser_pageview_event,
@@ -160,6 +197,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           "countries" => [{ value: "US", label: "United States", pageviews: 3 }],
           "networks" => [{ value: "AS64496", label: "Example Network (AS64496)", pageviews: 3 }],
           "browsers" => [{ value: "chrome", label: "Google Chrome", pageviews: 3 }],
+          "languages" => [{ value: "en-US", label: "en-US", pageviews: 3 }],
           "ip_addresses" => [
             { value: "192.0.2.5", label: "192.0.2.5", pageviews: 1 },
             { value: "192.0.2.6", label: "192.0.2.6", pageviews: 1 },

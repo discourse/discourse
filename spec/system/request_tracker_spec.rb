@@ -753,6 +753,8 @@ describe "Request tracking" do
             expect(event[:session_id]).to be_present
             expect(event[:topic_id]).to eq(topic.id)
           end
+
+          expect(beacon_event[:language]).to eq(page.evaluate_script("navigator.language"))
         end
       end
 

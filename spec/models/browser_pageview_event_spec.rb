@@ -188,6 +188,7 @@ RSpec.describe BrowserPageviewEvent do
         url: "a" * (described_class::MAX_URL_LENGTH + 1),
         referrer: "a" * (described_class::MAX_REFERRER_LENGTH + 1),
         user_agent: "a" * (described_class::MAX_USER_AGENT_LENGTH + 1),
+        language: "a" * (described_class::MAX_LANGUAGE_LENGTH + 1),
         ip_address: "1.2.3.4",
         session_id: "a" * (described_class::MAX_SESSION_ID_LENGTH + 1),
         normalized_referrer: "a" * (described_class::MAX_NORMALIZED_REFERRER_LENGTH + 1),
@@ -196,6 +197,7 @@ RSpec.describe BrowserPageviewEvent do
     expect(event.url.length).to eq(described_class::MAX_URL_LENGTH)
     expect(event.referrer.length).to eq(described_class::MAX_REFERRER_LENGTH)
     expect(event.user_agent.length).to eq(described_class::MAX_USER_AGENT_LENGTH)
+    expect(event.language.length).to eq(described_class::MAX_LANGUAGE_LENGTH)
     expect(event.session_id.length).to eq(described_class::MAX_SESSION_ID_LENGTH)
     expect(event.normalized_referrer.length).to eq(described_class::MAX_NORMALIZED_REFERRER_LENGTH)
   end
@@ -211,6 +213,7 @@ RSpec.describe BrowserPageviewEvent do
         asn: 12_345,
         referrer: "https://www.example.com/path?utm_source=x",
         user_agent: "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
+        language: "en-AU",
         session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
         topic_id: 123,
         source: described_class::SOURCE_BEACON,
@@ -245,6 +248,7 @@ RSpec.describe BrowserPageviewEvent do
       expect(event.created_at).to eq_time(occurred_at)
       expect(event.source).to eq("beacon")
       expect(event.browser).to eq("edge")
+      expect(event.language).to eq("en-AU")
       expect(described_class.queued_count).to eq(0)
     end
 
@@ -318,6 +322,17 @@ RSpec.describe BrowserPageviewEvent do
       described_class.enqueue_for_later(payload)
 
       expect(Discourse.redis.ttl(described_class::REDIS_QUEUE_KEY)).to be > 0
+    end
+
+    it "serializes a truncated language to Redis" do
+      language = "a" * (described_class::MAX_LANGUAGE_LENGTH + 1)
+
+      described_class.enqueue_for_later(payload.merge(language:))
+
+      queued_payload = JSON.parse(Discourse.redis.lindex(described_class::REDIS_QUEUE_KEY, 0))
+      expect(queued_payload.fetch("language")).to eq(
+        language.slice(0, described_class::MAX_LANGUAGE_LENGTH),
+      )
     end
   end
 end

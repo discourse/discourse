@@ -7371,6 +7371,9 @@ en:
           browser:
             one: "Filtering to %{count} browser"
             other: "Filtering to %{count} browsers"
+          language:
+            one: "Filtering to %{count} language"
+            other: "Filtering to %{count} languages"
           ip:
             one: "Filtering to %{count} IP address"
             other: "Filtering to %{count} IP addresses"
@@ -7397,6 +7400,7 @@ en:
           top_urls: "Top URLs"
           entry_urls: "Entry URLs"
           browsers: "Browsers"
+          languages: "Languages"
           ip_addresses: "IP addresses"
         filters:
           traffic_type: "Traffic type"
@@ -7406,6 +7410,7 @@ en:
           country: "Country"
           network: "Network"
           browser: "Browser"
+          language: "Language"
           ip: "IP address"
         headline:
           one: "%{formatted_count} pageview"

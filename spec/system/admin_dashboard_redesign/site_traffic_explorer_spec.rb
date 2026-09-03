@@ -273,7 +273,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_card_tabs(card: "acquisition", tabs: %w[Referrers Countries Networks])
     expect(traffic).to have_card_tabs(card: "pages", tabs: ["Top URLs", "Entry URLs"])
-    expect(traffic).to have_card_tabs(card: "visitors", tabs: ["Browsers", "Languages", "IP addresses"])
+    expect(traffic).to have_card_tabs(
+      card: "visitors",
+      tabs: ["Browsers", "Languages", "IP addresses"],
+    )
     expect(traffic).to have_row(card: "acquisition", label: "Direct / unknown", count: "2")
     expect(traffic).to have_row(
       card: "acquisition",

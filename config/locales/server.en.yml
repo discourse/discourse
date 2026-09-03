@@ -1179,6 +1179,7 @@ en:
 
   admin_site_traffic_explorer:
     direct_or_unknown: "Direct / unknown"
+    unknown: "Unknown"
     traffic_types:
       logged_in: "Logged in"
       anonymous: "Anonymous"
