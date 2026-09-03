@@ -640,8 +640,10 @@ body.crawler {
     }
   }
 
-  .ProseMirror &.poll &__info .poll-info {
-    max-width: 18em;
+  @include viewport.from(sm) {
+    .ProseMirror &.poll &__info .poll-info {
+      max-width: 18em;
+    }
   }
 
   // the cooked column has a fixed width, so its lines share it by percentage;

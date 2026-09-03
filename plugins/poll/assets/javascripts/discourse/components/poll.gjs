@@ -393,7 +393,7 @@ export default class PollComponent extends Component {
   }
 
   get #bounds() {
-    return pollBounds(this.poll, this.poll.options.length);
+    return pollBounds(this.poll, this.poll.options?.length ?? 0);
   }
 
   get min() {

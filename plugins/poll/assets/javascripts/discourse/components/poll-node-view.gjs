@@ -43,6 +43,7 @@ export default class PollNodeView extends Component {
       isMultiple: attrs.type === "multiple",
       isPublic: attrs.public === "true",
       isDynamic: attrs.dynamic === "true",
+      results: attrs.results,
       min: this.#bounds.min,
       max: this.#bounds.max,
       closesAt,
@@ -159,6 +160,7 @@ export default class PollNodeView extends Component {
           @isMultiple={{info.isMultiple}}
           @isPublic={{info.isPublic}}
           @isDynamic={{info.isDynamic}}
+          @results={{info.results}}
           @min={{info.min}}
           @max={{info.max}}
           @closesAt={{info.closesAt}}

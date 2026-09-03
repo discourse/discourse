@@ -145,12 +145,16 @@ module(
         .dom(".composer-poll-node__info .poll-info_instructions li")
         .exists(
           { count: 3 },
-          "and leaves out what depends on who is reading the post"
+          "and leaves out only what it cannot know, such as votes cast"
         );
+      // whether results visibility is stated depends on who is reading, which
+      // this harness has no user for: the browser is where that one shows
       assert
-        .dom(".composer-poll-node__info .results-on-vote")
-        .doesNotExist(
-          "results visibility depends on the reader, not a setting"
+        .dom(".poll")
+        .hasAttribute(
+          "data-poll-results",
+          "on_vote",
+          "and carries the setting the post reads it from"
         );
       assert
         .dom(".composer-poll-node__info .poll-info_counts-count")
@@ -206,6 +210,19 @@ module(
         editor.value,
         "[poll]\n# First<br>Second\n\n* Option 1\n\n[/poll]\n\n",
         "and writes it as markup, which would otherwise end the title"
+      );
+    });
+
+    test("a title's line break does not leak into the rest of the document", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        "[poll]\n# A<br>B\n* Option 1\n[/poll]\n\nOne\nTwo"
+      );
+
+      assert.strictEqual(
+        editor.value,
+        "[poll]\n# A<br>B\n\n* Option 1\n\n[/poll]\n\nOne\nTwo",
+        "a break outside the title is still written as a newline"
       );
     });
 
