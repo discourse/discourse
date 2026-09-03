@@ -169,7 +169,7 @@
     "js-yaml": "^5.4.0",
     "jsuites": "^5.13.3",
     "loader.js": "^4.7.0",
-    "message-bus-client": "^4.4.1",
+    "message-bus-client": "^4.6.0",
     "pretender": "^3.4.7",
     "qunit": "^2.25.0",
     "qunit-dom": "^3.5.1",
