@@ -5,6 +5,8 @@ module DiscourseWorkflows
     include NodeErrorHandling
     extend NodeTypeDescriptor
 
+    TOPIC_TYPE_OPTIONS = %w[all topics personal_messages].freeze
+
     DESCRIPTION_DEFAULTS = {
       version: "1.0",
       defaults: {
@@ -372,6 +374,35 @@ module DiscourseWorkflows
 
     def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
       self.class.matches_category_ids?(topic_category_id, category_ids, include_subcategories:)
+    end
+
+    def matches_topic_type?(topic, topic_type)
+      case topic_type.presence || "topics"
+      when "all"
+        true
+      when "topics"
+        !topic.private_message?
+      when "personal_messages"
+        topic.private_message?
+      else
+        false
+      end
+    end
+
+    def matches_group_inbox?(topic, group_id)
+      return true if group_id.blank?
+      return false if !topic.private_message?
+
+      topic.allowed_groups.exists?(id: group_id.to_i)
+    end
+
+    def matches_tags?(topic, tag_names)
+      tag_names.empty? || (topic_tag_names(topic) & tag_names).any?
+    end
+
+    def topic_tag_names(topic)
+      @topic_tag_names ||= {}
+      @topic_tag_names[topic.id] ||= topic.tags.pluck(:name)
     end
 
     def resolve_timezone(exec_ctx, item_index)

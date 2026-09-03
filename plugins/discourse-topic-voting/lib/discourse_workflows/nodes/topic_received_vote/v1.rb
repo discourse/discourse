@@ -79,7 +79,8 @@ if defined?(DiscourseWorkflows)
               topic.category_id,
               category_ids_parameter(trigger_ctx),
               include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+            ) &&
+              matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
           end
 
           private
@@ -90,10 +91,6 @@ if defined?(DiscourseWorkflows)
 
           def voter
             @voter ||= @vote&.user
-          end
-
-          def matches_tags?(tag_names)
-            tag_names.empty? || (topic.tags.pluck(:name) & tag_names).any?
           end
         end
       end

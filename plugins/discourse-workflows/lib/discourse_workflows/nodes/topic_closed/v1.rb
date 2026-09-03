@@ -66,17 +66,8 @@ module DiscourseWorkflows
             @topic.category_id,
             category_ids_parameter(trigger_ctx),
             include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-          ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
-        end
-
-        private
-
-        def matches_tags?(tag_names)
-          tag_names.empty? || (topic_tag_names & tag_names).any?
-        end
-
-        def topic_tag_names
-          @topic_tag_names ||= @topic.tags.pluck(:name)
+          ) &&
+            matches_tags?(@topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
         end
       end
     end
