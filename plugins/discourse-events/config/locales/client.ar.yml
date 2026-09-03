@@ -342,6 +342,9 @@ ar:
     group_timezones:
       search: "بحث..."
       group_availability: "توافر %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "معرِّف الموضوع"
     discourse_post_event:
       new_event: "حدث جديد"
       notifications:

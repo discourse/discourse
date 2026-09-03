@@ -345,6 +345,9 @@ zh_TW:
     group_timezones:
       search: "搜尋……"
       group_availability: "%{group} 可用時段"
+    discourse_workflows:
+      post_event:
+        topic_id: "主題 ID"
     discourse_post_event:
       new_event: "新增活動"
       notifications:

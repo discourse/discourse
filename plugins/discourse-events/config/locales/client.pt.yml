@@ -29,6 +29,9 @@ pt:
         year: "Ano"
     group_timezones:
       search: "Pesquisar..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Id. do Tópico"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username}%{description}"

@@ -331,6 +331,9 @@ tr_TR:
     group_timezones:
       search: "Ara..."
       group_availability: "%{group} uygunluğu"
+    discourse_workflows:
+      post_event:
+        topic_id: "Konu kimliği"
     discourse_post_event:
       notifications:
         before_event_reminder: "Bir etkinlik başlamak üzere"

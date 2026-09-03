@@ -233,6 +233,9 @@ vi:
       invite_user_notification: "%{username} đã mời bạn tham gia: %{description}"
     group_timezones:
       search: "Tìm kiếm..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Chủ đề"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

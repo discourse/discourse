@@ -345,6 +345,18 @@ pl_PL:
     group_timezones:
       search: "Wyszukiwanie..."
       group_availability: "Dostępność %{group}"
+    discourse_workflows:
+      node_unavailable:
+        requires_post_event: "Wymaga włączenia wydarzeń"
+      nodes:
+        "trigger:event_ended": "Wydarzenie zakończyło się"
+        "trigger:event_participation_changed": "Zmieniono uczestnictwo w wydarzeniu"
+      node_descriptions:
+        "trigger:event_ended": "Wyzwala się, gdy wydarzenie osiągnie swój czas zakończenia"
+        "trigger:event_participation_changed": "Wyzwala się, gdy użytkownik dodaje, zmienia lub wycofuje swoją odpowiedź"
+      post_event:
+        topic_id: "Identyfikator tematu"
+        topic_id_description: "Wyzwalacz dotyczy tylko wydarzeń tego tematu. Pozostaw puste, aby uwzględnić wszystkie wydarzenia."
     discourse_post_event:
       new_event: "Nowe wydarzenie"
       notifications:

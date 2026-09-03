@@ -322,6 +322,9 @@ ja:
     group_timezones:
       search: "検索..."
       group_availability: "%{group} の空き状況"
+    discourse_workflows:
+      post_event:
+        topic_id: "トピック ID"
     discourse_post_event:
       notifications:
         before_event_reminder: "イベントが間もなく開始します"

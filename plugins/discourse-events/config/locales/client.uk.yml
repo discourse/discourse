@@ -345,6 +345,9 @@ uk:
     group_timezones:
       search: "Пошук…"
       group_availability: "%{group} доступність"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID теми"
     discourse_post_event:
       new_event: "Нова подія"
       notifications:

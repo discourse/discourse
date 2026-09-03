@@ -322,6 +322,9 @@ cs:
     group_timezones:
       search: "Hledat…"
       group_availability: "Dostupnost %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID tématu"
     discourse_post_event:
       notifications:
         before_event_reminder: "Brzy začne událost"

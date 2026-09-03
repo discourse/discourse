@@ -345,6 +345,18 @@ zh_CN:
     group_timezones:
       search: "搜索…"
       group_availability: "%{group} 可用性"
+    discourse_workflows:
+      node_unavailable:
+        requires_post_event: "需要启用事件。"
+      nodes:
+        "trigger:event_ended": "活动已结束"
+        "trigger:event_participation_changed": "活动参与情况发生变化"
+      node_descriptions:
+        "trigger:event_ended": "当事件发生到结束时间时触发"
+        "trigger:event_participation_changed": "当用户添加、更改或撤回其 RSVP 时触发"
+      post_event:
+        topic_id: "话题 ID"
+        topic_id_description: "仅触发此话题中的活动。留空则匹配所有活动。"
     discourse_post_event:
       new_event: "新活动"
       notifications:

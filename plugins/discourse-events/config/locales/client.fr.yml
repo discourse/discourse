@@ -342,6 +342,9 @@ fr:
     group_timezones:
       search: "Recherche…"
       group_availability: "disponibilité de %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID du sujet"
     discourse_post_event:
       new_event: "Nouvel événement"
       notifications:
