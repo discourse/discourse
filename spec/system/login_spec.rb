@@ -56,6 +56,7 @@ shared_examples "login scenarios" do
 
       activation_link = wait_for_email_link(user, :activation)
       visit activation_link
+      expect(page).to have_current_path("/u/activate-account")
 
       activate_account.click_activate_account
       activate_account.click_continue
@@ -71,6 +72,7 @@ shared_examples "login scenarios" do
 
       activation_link = wait_for_email_link(admin, :activation)
       visit activation_link
+      expect(page).to have_current_path("/u/activate-account")
 
       activate_account.click_activate_account
       expect(page).to have_current_path(%r{/wizard})
@@ -117,6 +119,7 @@ shared_examples "login scenarios" do
 
       login_link = wait_for_email_link(user, :email_login)
       visit login_link
+      expect(page).to have_current_path("/session/email-login")
 
       find(".email-login-form .btn-primary").click
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -366,6 +369,7 @@ shared_examples "login scenarios" do
 
       login_link = wait_for_email_link(user, :email_login)
       visit login_link
+      expect(page).to have_current_path("/session/email-login")
       totp = ROTP::TOTP.new(user_second_factor.data).now
       find(".second-factor-token-input").fill_in(with: totp)
       find(".email-login-form .btn-primary").click
@@ -378,6 +382,7 @@ shared_examples "login scenarios" do
 
       login_link = wait_for_email_link(user, :email_login)
       visit login_link
+      expect(page).to have_current_path("/session/email-login")
       find(".toggle-second-factor-method").click
       find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
       find(".email-login-form .btn-primary").click

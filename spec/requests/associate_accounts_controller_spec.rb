@@ -48,12 +48,20 @@ RSpec.describe Users::AssociateAccountsController do
       # Request associate info
       uri = URI.parse(response.redirect_url)
       get "#{uri.path}.json"
+      expect(response).to have_http_status(:not_found)
+
+      get uri.path
+      expect(response).to redirect_to("/associate")
+
+      get "/associate.json"
       data = response.parsed_body
       expect(data["provider_name"]).to eq("google_oauth2")
       expect(data["account_description"]).to eq("someemail@test.com")
+      expect(data).not_to have_key("token")
+      expect(response.body).not_to include(uri.path.split("/").last)
 
       # Make the connection
-      events = DiscourseEvent.track_events { post "#{uri.path}.json" }
+      events = DiscourseEvent.track_events { post "/associate.json" }
       expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
       expect(
         events.any? do |e|
@@ -66,7 +74,7 @@ RSpec.describe Users::AssociateAccountsController do
       expect(UserAssociatedAccount.count).to eq(1)
 
       # Token cannot be reused
-      get "#{uri.path}.json"
+      get "/associate.json"
       expect(response.status).to eq(404)
     end
 
@@ -85,14 +93,17 @@ RSpec.describe Users::AssociateAccountsController do
       expect(UserAssociatedAccount.count).to eq(0) # Reconnect has not yet happened
 
       uri = URI.parse(response.redirect_url)
-      get "#{uri.path}.json"
+      get uri.path
+      expect(response).to redirect_to("/associate")
+
+      get "/associate.json"
       data = response.parsed_body
       expect(data["provider_name"]).to eq("google_oauth2")
       expect(data["account_description"]).to eq("someemail@test.com")
 
       cookies.delete "_forum_session"
 
-      get "#{uri.path}.json"
+      get "/associate.json"
       expect(response.status).to eq(404)
     end
 

@@ -334,6 +334,7 @@ shared_examples "signup scenarios" do
     it "can signup with invite link" do
       invite = Fabricate(:invite)
       visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      expect(page).to have_current_path("/invite")
 
       find("#new-account-password").fill_in(with: "supersecurepassword")
       find("#new-account-username").fill_in(with: "johndoe")
@@ -352,6 +353,7 @@ shared_examples "signup scenarios" do
     Fabricate(:user_field, name: "test", show_on_signup: false)
 
     visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+    expect(page).to have_current_path("/invite")
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
     expect(page).to have_no_css(".user-field-test")

@@ -38,11 +38,16 @@ describe "Changing email" do
     mail.body.to_s[%r{/u/confirm-#{type}-email/\S+}, 0]
   end
 
+  def expect_clean_confirmation_path(type)
+    expect(page).to have_current_path("/u/confirm-#{type}-email")
+  end
+
   it "allows regular user to change their email" do
     sign_in user
 
     visit generate_confirm_link
 
+    expect_clean_confirmation_path(:new)
     find(".confirm-new-email .btn-primary").click
 
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
@@ -90,6 +95,7 @@ describe "Changing email" do
 
     visit confirm_link
 
+    expect_clean_confirmation_path(:new)
     find(".confirm-new-email .btn-primary").click
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
     find("button[type=submit]:not([disabled])").click
@@ -105,6 +111,7 @@ describe "Changing email" do
 
     # Confirm old email
     visit confirm_old_link
+    expect_clean_confirmation_path(:old)
     find(".confirm-old-email .btn-primary").click
     expect(page).to have_css(
       ".dialog-body",
@@ -121,6 +128,7 @@ describe "Changing email" do
 
     visit confirm_new_link
 
+    expect_clean_confirmation_path(:new)
     find(".confirm-new-email .btn-primary").click
 
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
@@ -139,6 +147,7 @@ describe "Changing email" do
 
     # Confirm old email
     visit confirm_old_link
+    expect_clean_confirmation_path(:old)
     find(".confirm-old-email .btn-primary").click
     expect(page).to have_css(
       ".dialog-body",
@@ -155,6 +164,7 @@ describe "Changing email" do
 
     visit confirm_new_link
 
+    expect_clean_confirmation_path(:new)
     find(".confirm-new-email .btn-primary").click
 
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))

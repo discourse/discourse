@@ -398,6 +398,8 @@ RSpec.describe EmailController do
 
     def navigate_to_unsubscribe(key = unsubscribe_key)
       get "/email/unsubscribe/#{key}"
+      expect(response).to redirect_to("/email/unsubscribe")
+      get "/email/unsubscribe"
     end
   end
 end

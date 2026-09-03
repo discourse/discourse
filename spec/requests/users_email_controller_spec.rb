@@ -52,8 +52,16 @@ RSpec.describe UsersEmailController do
 
       it "confirms with a correct token" do
         user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
+        token = updater.change_req.new_email_token.token
 
-        put "/u/confirm-new-email/#{updater.change_req.new_email_token.token}.json"
+        get "/u/confirm-new-email/#{token}"
+        expect(response).to redirect_to("/u/confirm-new-email")
+
+        get "/u/confirm-new-email.json"
+        expect(response.parsed_body).not_to have_key("token")
+        expect(response.body).not_to include(token)
+
+        put "/u/confirm-new-email.json"
 
         expect(response.status).to eq(200)
         user.reload
@@ -110,14 +118,21 @@ RSpec.describe UsersEmailController do
         sign_in(moderator)
         updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
         email_change_request = updater.change_to("bubblegum@adventuretime.ooo")
+        token = email_change_request.old_email_token.token
 
-        get "/u/confirm-old-email/#{email_change_request.old_email_token.token}.json"
+        get "/u/confirm-old-email/#{token}"
+
+        expect(response).to redirect_to("/u/confirm-old-email")
+
+        get "/u/confirm-old-email.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["old_email"]).to eq(moderator.email)
         expect(response.parsed_body["new_email"]).to eq("bubblegum@adventuretime.ooo")
+        expect(response.parsed_body).not_to have_key("token")
+        expect(response.body).not_to include(token)
 
-        put "/u/confirm-old-email/#{email_change_request.old_email_token.token}.json"
+        put "/u/confirm-old-email.json"
 
         expect(response.status).to eq(200)
       end
