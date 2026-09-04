@@ -119,6 +119,24 @@ RSpec.describe DiscourseConnect do
     expect(user.persisted?).to eq(true)
   end
 
+  it "allows users with watched-word usernames to be created and log in" do
+    WatchedWord.create!(word: "blockedword", action: WatchedWord.actions[:block])
+
+    sso = new_discourse_sso
+    sso.username = "blockedword"
+    sso.name = ""
+    sso.email = "blockedword@example.com"
+    sso.external_id = "C"
+    sso.suppress_welcome_message = true
+
+    user = sso.lookup_or_create_user(ip_address)
+    returning_user = sso.lookup_or_create_user(ip_address)
+
+    expect(user).to be_persisted
+    expect(user.username).to eq("blockedword")
+    expect(returning_user).to eq(user)
+  end
+
   it "always creates new users when using plus addressing" do
     SiteSetting.stubs(:normalize_emails).returns(true)
 
