@@ -41,7 +41,7 @@ export default class RovingTabindexStrategy {
 
   /** Resolves the current item from DOM focus, then the established tab stop. */
   current(items: HTMLElement[]): HTMLElement | null {
-    const active = document.activeElement;
+    const active = this.#scope.container.ownerDocument.activeElement;
     for (let index = items.length - 1; index >= 0; index--) {
       if (items[index] === active || items[index].contains(active)) {
         return items[index];

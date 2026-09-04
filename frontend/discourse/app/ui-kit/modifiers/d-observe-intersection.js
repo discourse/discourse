@@ -24,10 +24,15 @@ export default modifier(
     // A selector is resolved against the live document, so it only works once the root is
     // already mounted. An element can be handed over directly, which is the only race-free
     // option when the root and the observed node mount in the same render.
+    // eslint-disable-next-line no-restricted-globals
     let rootElement = document;
     if (root) {
-      rootElement =
-        typeof root === "string" ? document.querySelector(root) : root;
+      if (typeof root === "string") {
+        // eslint-disable-next-line no-restricted-globals
+        rootElement = document.querySelector(root);
+      } else {
+        rootElement = root;
+      }
     }
 
     const observer = new IntersectionObserver(

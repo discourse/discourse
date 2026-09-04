@@ -444,6 +444,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       // Scoped to the document because the controller is deliberately OUTSIDE the group it
       // drives. A selector shared by several instances of the same widget therefore resolves to
       // the first match for all of them; pass the element itself when more than one can exist.
+      // eslint-disable-next-line no-restricted-globals
       return document.querySelector<HTMLElement>(controllerElement);
     }
     // `null`/`undefined` is a legitimate transient: the controller may not have rendered yet, and

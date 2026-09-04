@@ -109,11 +109,14 @@ function radioGroupRepresentative(
   }
 
   const tree = radio.getRootNode();
-  if (!(tree instanceof Document || tree instanceof ShadowRoot)) {
+  if (
+    tree.nodeType !== Node.DOCUMENT_NODE &&
+    (tree.nodeType !== Node.DOCUMENT_FRAGMENT_NODE || !("host" in tree))
+  ) {
     return radio;
   }
 
-  const members = radiosWithin(tree, scan).filter(
+  const members = radiosWithin(tree as Document | ShadowRoot, scan).filter(
     (member) =>
       member.name === radio.name &&
       member.form === radio.form &&
@@ -126,8 +129,10 @@ function radioGroupRepresentative(
 
 function isRadio(element: HTMLElement): element is HTMLInputElement {
   return (
-    element instanceof HTMLInputElement &&
-    element.type.toLowerCase() === "radio"
+    element.nodeType === Node.ELEMENT_NODE &&
+    element.namespaceURI === "http://www.w3.org/1999/xhtml" &&
+    element.localName === "input" &&
+    (element as HTMLInputElement).type.toLowerCase() === "radio"
   );
 }
 
@@ -199,7 +204,7 @@ export function adjacentTabStop(
   {
     forward,
     ignore,
-    root = document.body,
+    root,
   }: {
     forward: boolean;
     ignore?: HTMLElement | null;
@@ -209,7 +214,7 @@ export function adjacentTabStop(
   // One scan for the whole query, so resolving the anchor's own group below reuses what
   // enumerating the stops already measured instead of walking the tree a second time.
   const scan = createScan(ignore);
-  let stops = collectTabStops(root, scan);
+  let stops = collectTabStops(root ?? anchor.ownerDocument.body, scan);
   const index = stops.indexOf(anchor);
 
   if (index !== -1) {

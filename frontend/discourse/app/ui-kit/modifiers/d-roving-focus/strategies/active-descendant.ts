@@ -239,7 +239,9 @@ export default class ActiveDescendantStrategy {
     let node: HTMLElement | null = element.parentElement;
     while (
       node &&
+      // eslint-disable-next-line no-restricted-globals
       node !== document.body &&
+      // eslint-disable-next-line no-restricted-globals
       node !== document.documentElement
     ) {
       const overflowY = getComputedStyle(node).overflowY;

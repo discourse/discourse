@@ -58,21 +58,24 @@ export default class DDraggableModifier extends Modifier {
       }
 
       // Register a global event to capture mouse moves when element 'clicked'.
+      // eslint-disable-next-line no-restricted-globals
       document.addEventListener("touchmove", this.drag, { passive: false });
+      // eslint-disable-next-line no-restricted-globals
       document.addEventListener("mousemove", this.drag, { passive: false });
+      // eslint-disable-next-line no-restricted-globals
       document.addEventListener("dragover", this.drag, { passive: false });
+      // eslint-disable-next-line no-restricted-globals
       this.#bodyClassLease = new ElementClassLease(document.body, "dragging");
 
       // On leaving click, stop moving.
+      // eslint-disable-next-line no-restricted-globals
       document.addEventListener("touchend", this.didEndDrag, {
         passive: false,
       });
-      document.addEventListener("mouseup", this.didEndDrag, {
-        passive: false,
-      });
-      document.addEventListener("drop", this.didEndDrag, {
-        passive: false,
-      });
+      // eslint-disable-next-line no-restricted-globals
+      document.addEventListener("mouseup", this.didEndDrag, { passive: false });
+      // eslint-disable-next-line no-restricted-globals
+      document.addEventListener("drop", this.didEndDrag, { passive: false });
     }
   }
 
@@ -88,8 +91,11 @@ export default class DDraggableModifier extends Modifier {
     if (this.hasStarted) {
       this.didEndDragCallback(e, this.element);
 
+      // eslint-disable-next-line no-restricted-globals
       document.removeEventListener("touchmove", this.drag);
+      // eslint-disable-next-line no-restricted-globals
       document.removeEventListener("mousemove", this.drag);
+      // eslint-disable-next-line no-restricted-globals
       document.removeEventListener("dragover", this.drag);
 
       this.#bodyClassLease?.release();
@@ -99,14 +105,23 @@ export default class DDraggableModifier extends Modifier {
   }
 
   cleanup() {
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("touchstart", this.dragMove);
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("mousedown", this.dragMove);
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("dragenter", this.dragMove);
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("touchend", this.didEndDrag);
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("mouseup", this.didEndDrag);
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("drop", this.didEndDrag);
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("mousemove", this.drag);
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("touchmove", this.drag);
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("dragover", this.drag);
     this.#bodyClassLease?.release();
     this.#bodyClassLease = null;

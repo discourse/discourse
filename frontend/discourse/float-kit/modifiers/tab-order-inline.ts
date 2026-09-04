@@ -111,7 +111,10 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     // element in the page, which is what a native Shift+Tab reaches.
     const triggerStops = tabStopsWithin(trigger);
     const lastTriggerStop = triggerStops.at(-1);
-    if (!lastTriggerStop || document.activeElement !== lastTriggerStop) {
+    if (
+      !lastTriggerStop ||
+      trigger.ownerDocument.activeElement !== lastTriggerStop
+    ) {
       return;
     }
 
@@ -143,10 +146,15 @@ export default class FloatKitTabOrderInline extends Modifier<FloatKitTabOrderInl
     }
 
     const forward = !event.shiftKey;
-    const active = document.activeElement;
-    if (!(active instanceof HTMLElement)) {
+    const activeElement = content.ownerDocument.activeElement;
+    if (
+      !activeElement ||
+      activeElement.nodeType !== Node.ELEMENT_NODE ||
+      activeElement.namespaceURI !== "http://www.w3.org/1999/xhtml"
+    ) {
       return;
     }
+    const active = activeElement as HTMLElement;
 
     const internalTarget = adjacentTabStop(active, { forward, root: content });
     if (internalTarget) {

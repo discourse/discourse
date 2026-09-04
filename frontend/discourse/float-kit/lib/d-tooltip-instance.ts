@@ -54,15 +54,21 @@ export default class DTooltipInstance extends FloatKitInstance {
 
   set trigger(element: FloatKitTrigger) {
     this._trigger = element;
-    this.id =
-      (element instanceof HTMLElement && element.id) || guidFor(element);
+    this.id = this.triggerElement?.id || guidFor(element);
     this.setupListeners();
   }
 
   get portalOutletElement() {
+    const triggerDocument =
+      this.triggerElement?.ownerDocument ??
+      ("contextElement" in this.trigger
+        ? this.trigger.contextElement?.ownerDocument
+        : undefined);
+
     return (
       this.portalOutletOverrideElement ||
-      document.getElementById("d-tooltip-portals")
+      triggerDocument?.getElementById("d-tooltip-portals") ||
+      null
     );
   }
 

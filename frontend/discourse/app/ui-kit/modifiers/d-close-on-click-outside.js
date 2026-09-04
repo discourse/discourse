@@ -18,7 +18,7 @@ export default class DCloseOnClickOutside extends Modifier {
     this.targetSelector = targetSelector;
     this.secondaryTargetSelector = secondaryTargetSelector;
 
-    document.addEventListener("pointerdown", this.check, {
+    element.ownerDocument.addEventListener("pointerdown", this.check, {
       passive: true,
     });
   }
@@ -29,12 +29,14 @@ export default class DCloseOnClickOutside extends Modifier {
       return;
     }
 
-    const target = this.target ?? document.querySelector(this.targetSelector);
+    const target =
+      this.target ??
+      this.element.ownerDocument.querySelector(this.targetSelector);
 
     if (
       target?.contains(event.target) ||
       (this.secondaryTargetSelector &&
-        document
+        this.element.ownerDocument
           .querySelector(this.secondaryTargetSelector)
           ?.contains(event.target))
     ) {
@@ -45,7 +47,8 @@ export default class DCloseOnClickOutside extends Modifier {
   }
 
   cleanup() {
-    document.removeEventListener("pointerdown", this.check, {
+    // A modifier destroyed before it ever modified has no element to ask.
+    this.element?.ownerDocument.removeEventListener("pointerdown", this.check, {
       passive: true,
     });
   }

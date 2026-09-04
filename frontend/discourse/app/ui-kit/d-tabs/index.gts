@@ -151,6 +151,7 @@ export default class DTabs extends Component<DTabsSignature> {
    * because by then the outgoing content is already gone.
    */
   panelEffects = modifier((element: HTMLElement, [active]: [unknown]) => {
+    const { ownerDocument } = element;
     const onFocusIn = () => (this.#focusWasInPanel = true);
     const onFocusOut = (event: FocusEvent) => {
       if (event.relatedTarget instanceof Node) {
@@ -167,7 +168,7 @@ export default class DTabs extends Component<DTabsSignature> {
         if (
           previousTarget instanceof Node &&
           previousTarget.isConnected &&
-          !element.contains(document.activeElement)
+          !element.contains(ownerDocument.activeElement)
         ) {
           this.#focusWasInPanel = false;
         }
@@ -191,10 +192,13 @@ export default class DTabs extends Component<DTabsSignature> {
 
         // Focus on body is the removal signature; any real control means the
         // user moved on. Recomputing afterwards heals a stale flag.
-        if (this.#focusWasInPanel && document.activeElement === document.body) {
+        if (
+          this.#focusWasInPanel &&
+          ownerDocument.activeElement === ownerDocument.body
+        ) {
           element.focus();
         }
-        this.#focusWasInPanel = element.contains(document.activeElement);
+        this.#focusWasInPanel = element.contains(ownerDocument.activeElement);
       });
     }
     this.#lastSwapActive = active;

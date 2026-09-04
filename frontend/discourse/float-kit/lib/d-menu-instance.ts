@@ -71,9 +71,16 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   get portalOutletElement() {
+    const triggerDocument =
+      this.triggerElement?.ownerDocument ??
+      ("contextElement" in this.trigger
+        ? this.trigger.contextElement?.ownerDocument
+        : undefined);
+
     return (
       this.portalOutletOverrideElement ||
-      document.getElementById("d-menu-portals")
+      triggerDocument?.getElementById("d-menu-portals") ||
+      null
     );
   }
 
@@ -83,8 +90,7 @@ export default class DMenuInstance extends FloatKitInstance {
 
   set trigger(element: FloatKitTrigger) {
     this._trigger = element;
-    this.id =
-      (element instanceof HTMLElement && element.id) || guidFor(element);
+    this.id = this.triggerElement?.id || guidFor(element);
     this.setupListeners();
   }
 
@@ -98,7 +104,7 @@ export default class DMenuInstance extends FloatKitInstance {
    * strands focus on a removed element and the browser drops it to the body.
    */
   get #ownsFocus(): boolean {
-    return !!this.content?.contains(document.activeElement);
+    return !!this.content?.contains(this.content.ownerDocument.activeElement);
   }
 
   @action
@@ -131,8 +137,9 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   get #focusIsUnowned(): boolean {
-    const { activeElement } = document;
-    return !activeElement || activeElement === document.body;
+    const { ownerDocument } = this.content;
+    const { activeElement } = ownerDocument;
+    return !activeElement || activeElement === ownerDocument.body;
   }
 
   @action

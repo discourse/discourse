@@ -83,7 +83,15 @@ export default abstract class FloatKitInstance {
    * is a no-op rather than a runtime error.
    */
   get triggerElement(): HTMLElement | null {
-    return this.trigger instanceof HTMLElement ? this.trigger : null;
+    const trigger = this.trigger;
+    if (!("ownerDocument" in trigger)) {
+      return null;
+    }
+
+    return trigger.nodeType === Node.ELEMENT_NODE &&
+      trigger.namespaceURI === "http://www.w3.org/1999/xhtml"
+      ? (trigger as HTMLElement)
+      : null;
   }
 
   /** The element the rendered float body is portalled into. */

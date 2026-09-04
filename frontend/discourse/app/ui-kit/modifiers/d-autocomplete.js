@@ -221,6 +221,7 @@ export default class DAutocompleteModifier extends Modifier {
     element.addEventListener("paste", this.handlePaste);
 
     // Global click handler to close autocomplete
+    // eslint-disable-next-line no-restricted-globals
     document.addEventListener("click", this.handleGlobalClick);
   }
 
@@ -233,6 +234,7 @@ export default class DAutocompleteModifier extends Modifier {
       this.targetElement.removeEventListener("paste", this.handlePaste);
     }
 
+    // eslint-disable-next-line no-restricted-globals
     document.removeEventListener("click", this.handleGlobalClick);
     this.menu.close("d-autocomplete");
   }

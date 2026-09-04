@@ -425,6 +425,7 @@ export function registerPointerDrag(
     }
     if (args.bodyClass) {
       try {
+        // eslint-disable-next-line no-restricted-globals
         bodyClassLease = new ElementClassLease(document.body, args.bodyClass);
       } catch {
         // Same as above: a rejected token costs the page-level styling only.

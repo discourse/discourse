@@ -413,7 +413,9 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     element.addEventListener("keydown", this.#onKeyDown);
     element.addEventListener("keyup", this.#onKeyUp);
     element.addEventListener("blur", this.#onBlur);
+    // eslint-disable-next-line no-restricted-globals
     window.addEventListener("blur", this.#onBlur);
+    // eslint-disable-next-line no-restricted-globals
     window.addEventListener("pagehide", this.#onBlur);
   }
 
@@ -430,7 +432,9 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#element?.removeEventListener("keydown", this.#onKeyDown);
     this.#element?.removeEventListener("keyup", this.#onKeyUp);
     this.#element?.removeEventListener("blur", this.#onBlur);
+    // eslint-disable-next-line no-restricted-globals
     window.removeEventListener("blur", this.#onBlur);
+    // eslint-disable-next-line no-restricted-globals
     window.removeEventListener("pagehide", this.#onBlur);
   }
 

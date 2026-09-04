@@ -88,7 +88,7 @@ export async function updatePosition(
   content: HTMLElement,
   options: PositioningOptions
 ): Promise<void> {
-  const padding = getPadding(options);
+  const padding = getPadding(options, content);
   const detectOverflowOptions = buildDetectOverflowOptions(options, padding);
   const centered = isCenteredPlacement(options);
 
@@ -209,10 +209,16 @@ function applyComputedPosition(
   }
 }
 
-function getPadding(options: PositioningOptions): Padding {
+function getPadding(
+  options: PositioningOptions,
+  content?: HTMLElement
+): Padding {
   return (
     options.padding ?? {
-      top: headerOffset(),
+      top:
+        content && content.ownerDocument !== globalThis.document
+          ? 10
+          : headerOffset(),
       left: 10,
       right: 10,
       bottom: 10,

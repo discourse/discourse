@@ -278,13 +278,16 @@ function declareEffectFor(
   }
   effectDeclarers.set(element, { token, getArgsRef });
   if (!stopDeclaringEffects) {
+    // eslint-disable-next-line no-restricted-globals
     window.addEventListener("dragstart", declareEffectAllowed, {
       capture: true,
     });
-    stopDeclaringEffects = () =>
+    stopDeclaringEffects = () => {
+      // eslint-disable-next-line no-restricted-globals
       window.removeEventListener("dragstart", declareEffectAllowed, {
         capture: true,
       });
+    };
   }
 
   return () => {

@@ -55,7 +55,8 @@ export default class DTrapTabModifier extends Modifier<DTrapTabSignature> {
 
     if (
       autofocus &&
-      (!autofocusedElement || document.activeElement !== autofocusedElement)
+      (!autofocusedElement ||
+        element.ownerDocument.activeElement !== autofocusedElement)
     ) {
       // if there's not autofocus, or the activeElement, is not the autofocusable element
       // attempt to focus the first of the focusable elements or just the modal-body
@@ -99,12 +100,12 @@ export default class DTrapTabModifier extends Modifier<DTrapTabSignature> {
       filteredFocusableElements[filteredFocusableElements.length - 1];
 
     if (event.shiftKey) {
-      if (document.activeElement === firstFocusableElement) {
+      if (this.#element.ownerDocument.activeElement === firstFocusableElement) {
         lastFocusableElement?.focus();
         event.preventDefault();
       }
     } else {
-      if (document.activeElement === lastFocusableElement) {
+      if (this.#element.ownerDocument.activeElement === lastFocusableElement) {
         event.preventDefault();
         (
           this.#element.querySelector<HTMLElement>(".modal-close") ||

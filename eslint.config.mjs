@@ -47,6 +47,28 @@ export default [
     },
   },
   {
+    files: [
+      "frontend/discourse/float-kit/**/*.{js,gjs,ts,gts}",
+      "frontend/discourse/app/ui-kit/modifiers/**/*.{js,gjs,ts,gts}",
+      "frontend/discourse/app/ui-kit/d-tabs/**/*.{js,gjs,ts,gts}",
+    ],
+    rules: {
+      "no-restricted-globals": [
+        "error",
+        {
+          name: "document",
+          message:
+            "Resolve the document from the element's ownerDocument instead.",
+        },
+        {
+          name: "window",
+          message:
+            "Resolve the window from the element's ownerDocument.defaultView instead.",
+        },
+      ],
+    },
+  },
+  {
     languageOptions: {
       parserOptions: {
         babelOptions: {
