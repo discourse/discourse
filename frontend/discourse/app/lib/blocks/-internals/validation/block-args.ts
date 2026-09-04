@@ -81,6 +81,7 @@ const VALID_UI_PROPERTIES = Object.freeze([
   "hidden",
   "conditional",
   "optionIcons",
+  "optionLabels",
   // Variant hint for a `richInline` arg ("plain" / "heading" / "paragraph") —
   // selects the allowed marks / line breaks for in-session rich-text editing.
   // An opaque string to the core validator; consumers map it to their own
@@ -216,6 +217,29 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
 
   if (uiDef.optionIcons !== undefined) {
     validateUIOptionIcons(uiDef.optionIcons, argName, blockName, argLabel);
+  }
+
+  if (uiDef.optionLabels !== undefined) {
+    validateUIOptionLabels(uiDef.optionLabels, argName, blockName, argLabel);
+  }
+}
+
+function validateUIOptionLabels(optionLabels, argName, blockName, argLabel) {
+  if (
+    optionLabels === null ||
+    typeof optionLabels !== "object" ||
+    Array.isArray(optionLabels)
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.optionLabels" value. Must be an object mapping enum values to display labels.`
+    );
+  }
+  for (const [key, value] of Object.entries(optionLabels)) {
+    if (typeof value !== "string" || value.length === 0) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.optionLabels.${key}". Must be a non-empty string.`
+      );
+    }
   }
 }
 

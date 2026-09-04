@@ -44,6 +44,27 @@ module("Integration | Wireframe | InspectorSegmentedField", function (hooks) {
       .exists({ count: 1 }, "only the iconned option renders an icon");
   });
 
+  test("uses translated enum option labels", async function (assert) {
+    const options = ["transparent", "subtle"];
+    const optionLabels = {
+      transparent: "Transparent",
+      subtle: "Subtle",
+    };
+
+    await render(
+      <template>
+        <InspectorSegmentedField
+          @options={{options}}
+          @optionLabels={{optionLabels}}
+          @value="transparent"
+        />
+      </template>
+    );
+
+    assert.dom(".d-segmented-control").includesText("Transparent");
+    assert.dom(".d-segmented-control").includesText("Subtle");
+  });
+
   test("falls back to a dropdown when there are too many options", async function (assert) {
     const items = ["one", "two", "three", "four", "five", "six", "seven"].map(
       (value) => ({ value, label: value })

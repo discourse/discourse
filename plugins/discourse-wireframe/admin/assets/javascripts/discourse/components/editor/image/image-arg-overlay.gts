@@ -41,6 +41,8 @@ interface ImageArgOverlaySignature {
     getChromeEl?: () => Element | null;
     /** File handed off by the chrome for a passive background marker. */
     pendingFile?: File;
+    /** Hides the resting passive prompt when the container owns the empty UI. */
+    suppressEmptyPrompt?: boolean;
   };
   /** The overlay and optional hidden file input rendered by this component. */
   Element: HTMLDivElement | HTMLInputElement;
@@ -282,6 +284,7 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
   get showEmptyContent(): boolean {
     return (
       this.args.isEmpty &&
+      !(this.markerPassive && this.args.suppressEmptyPrompt) &&
       (!this.markerPassive || this.isSelected || this.isDragOver)
     );
   }

@@ -425,6 +425,37 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     return this.pendingBackgroundFile ?? undefined;
   }
 
+  get emptyBackgroundArgName(): string | undefined {
+    if (!this.emptyHost) {
+      return undefined;
+    }
+    const passiveName = this.#passiveImageArgName();
+    return this.imageArgEntries.find(
+      (entry) => entry.name === passiveName && entry.isEmpty
+    )?.name;
+  }
+
+  get emptyHost(): HTMLElement | null {
+    const host = this.chromeEl?.querySelector<HTMLElement>(
+      "[data-wf-empty-host]"
+    );
+    if (host?.closest(".wireframe-block-chrome") !== this.chromeEl) {
+      return null;
+    }
+    return host;
+  }
+
+  get hasBackgroundImage(): boolean {
+    const passiveName = this.#passiveImageArgName();
+    return this.imageArgEntries.some(
+      (entry) => entry.name === passiveName && !entry.isEmpty
+    );
+  }
+
+  get ownsEmptyPrompt(): boolean {
+    return this.isEmptyContainer && Boolean(this.emptyHost);
+  }
+
   /**
    * Block metadata (description, namespace, isContainer, args schema, etc.)
    * for the wrapped block, or `null` if the registry has no entry for this
@@ -1158,6 +1189,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     return i18n("wireframe.canvas.empty_hint");
   }
 
+  get emptyActionHint(): string {
+    return this.emptyHost
+      ? i18n("wireframe.canvas.add_content")
+      : this.emptyHint;
+  }
+
   /**
    * The persistence state of the outlet this block belongs to (one of
    * `OUTLET_STATE`). Drives the outlet-root badge and the read-only suppression.
@@ -1424,6 +1461,18 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   @action
   selectSelf(): void {
     this.#selectThisBlock();
+  }
+
+  @action
+  addBackgroundImage(file: File): void {
+    const argName = this.emptyBackgroundArgName;
+    if (!argName) {
+      return;
+    }
+    void this.wireframeImageUpload.uploadImageForArg(file, {
+      blockKey: this.args.blockKey,
+      argName,
+    });
   }
 
   /**
@@ -2095,6 +2144,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             (if this.isOutletRoot "--outlet-root")
             (if this.isReadOnlyOutlet "--read-only")
             (if this.isEmptyContainer "--empty-container")
+            (if this.hasBackgroundImage "--media-background")
             (if this.hasGridOverlap "--overlapping")
             (if this.isOutOfBounds "--out-of-bounds")
             (if this.hasUnresolvedImageArg "--unresolved-image")
@@ -2238,6 +2288,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
               @isEmpty={{imageArg.isEmpty}}
               @getChromeEl={{this.getChromeEl}}
               @pendingFile={{this.optionalPendingBackgroundFile}}
+              @suppressEmptyPrompt={{this.ownsEmptyPrompt}}
             />
           {{/each}}
 
@@ -2289,13 +2340,33 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
           {{/if}}
 
           {{#if this.isEmptyContainer}}
-            <EditorEmptyDropPlaceholder
-              @hint={{this.emptyHint}}
-              @palette={{this.palette}}
-              @targetOutletName={{@outletName}}
-              @onActivate={{this.selectSelf}}
-              @onPick={{this.pickBlockForContainer}}
-            />
+            {{#if this.emptyHost}}
+              {{#in-element this.emptyHost insertBefore=null}}
+                <EditorEmptyDropPlaceholder
+                  @hint={{this.emptyActionHint}}
+                  @backgroundHint={{i18n
+                    "wireframe.canvas.add_background_image"
+                  }}
+                  @groupActions={{true}}
+                  @palette={{this.palette}}
+                  @targetOutletName={{@outletName}}
+                  @onActivate={{this.selectSelf}}
+                  @onPick={{this.pickBlockForContainer}}
+                  @onAddBackground={{if
+                    this.emptyBackgroundArgName
+                    this.addBackgroundImage
+                  }}
+                />
+              {{/in-element}}
+            {{else}}
+              <EditorEmptyDropPlaceholder
+                @hint={{this.emptyHint}}
+                @palette={{this.palette}}
+                @targetOutletName={{@outletName}}
+                @onActivate={{this.selectSelf}}
+                @onPick={{this.pickBlockForContainer}}
+              />
+            {{/if}}
           {{/if}}
         </div>
       </div>

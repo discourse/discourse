@@ -52,6 +52,8 @@ export interface InspectorField {
   conditional: ArgUiConditional | null;
   /** Icon IDs keyed by enum value. */
   optionIcons: Record<string, string> | null;
+  /** Display labels keyed by enum value. */
+  optionLabels: Record<string, string> | null;
   /** Enum choices for selection controls. */
   options: string[] | null;
   /** Placeholder text for the control. */
@@ -187,6 +189,7 @@ export function schemaToFields(
         ? ([...argDef.enum] as string[])
         : null,
       optionIcons: ui.optionIcons ?? null,
+      optionLabels: ui.optionLabels ?? null,
       conditional: ui.conditional ?? null,
       schema: argDef,
     });

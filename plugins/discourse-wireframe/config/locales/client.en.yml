@@ -415,6 +415,8 @@ en:
         edit_url: "Edit URL"
         empty_hint: "Drag a block here"
         empty_hint_child: "Add a %{noun} to get started"
+        add_content: "Add content"
+        add_background_image: "Add background image"
         image_empty_label: "Add an image"
         image_empty_label_named: "Add %{label}"
         image_drop_replace: "Image will be overwritten"

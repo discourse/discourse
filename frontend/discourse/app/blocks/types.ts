@@ -134,6 +134,9 @@ export interface ArgUiHint {
   /** Per-option icons, keyed by option value (for enum-style controls). */
   optionIcons?: Record<string, string>;
 
+  /** Per-option display labels, keyed by option value. */
+  optionLabels?: Record<string, string>;
+
   /** Variant hint for a rich-inline argument; opaque to the core validator. */
   schema?: string;
 

@@ -975,8 +975,8 @@ importers:
   plugins/discourse-wireframe:
     dependencies:
       discourse:
-        specifier: npm:@discourse/types@2026.9.0-c0ef3a11
-        version: '@discourse/types@2026.9.0-c0ef3a11'
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
     devDependencies:
       lucide-static:
         specifier: ^1.16.0

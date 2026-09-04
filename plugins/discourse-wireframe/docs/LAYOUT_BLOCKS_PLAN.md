@@ -94,14 +94,23 @@ Schemas use only existing arg types/controls except the new `array itemType:"obj
 copied from `media-card.gjs` (backdrop + `data-block-arg` markers), `layout.gjs` (container + childArgs +
 container-query collapse), `featured-topics.gjs`/`recent-topics.gjs` (data hook), `composite.js` (parts).
 
-### 1a. `section` / `hero` — container (children overlay)
-- **args:** `background{image, allowDark, defaultFit:"cover"}`, `backgroundColor{color}`, `gradient{string}`,
-  `overlayColor{color}`, `overlayOpacity{number 0–1}`, `minHeight{string}`, `contentAlign{enum start/center/end}`,
-  `contentWidth{enum contained/wide/full}`, `href{url}` (stretched-link).
-- **childArgs:** optional `stack` namespace (alignSelf, flexGrow) mirroring `layout`.
-- **render:** `<section>` with `background-image` custom props (light/dark) lifted from `media-card.gjs:129-186`
-  + `data-block-arg="background"` `data-drop-fills-block`; `__overlay` tint div; `__content` renders `{{#each @children}}`.
-  Stretched-link = `::after` over content when `@href` set.
+### 1a. `section` — semantic surface container
+
+- **Purpose:** owns a page region's semantics, surface, padding, minimum height, and inner content boundary. It does
+  not arrange or align children; authors nest a `layout` when they need controlled gap, rows, columns, or child
+  placement. A hero is a reusable composition built from Section plus ordinary content blocks, not a second
+  all-purpose container contract.
+- **args:** `surface{enum transparent/default/subtle/accent}`, `backgroundImage{image, allowDark,
+  defaultFit:"cover"}`, `backgroundPosition{nine-position enum}`, `scrim{enum none/subtle/medium/strong}`,
+  `padding{enum none/small/medium/large}`, `contentWidth{enum full/wide/narrow}`,
+  `minHeight{enum content/small/medium/large/viewport}`, `verticalAlign{enum start/center/end}`, and optional
+  `accessibleLabel{string}`.
+- **render:** a semantic `<section>` with an absolute image host, scheme-aware scrim, and stable `__content`
+  boundary. The content boundary uses normal document flow and full width by default, so nested layout blocks do
+  not shrink. Editing mode marks it as the container's drop and empty-state host.
+- **editor:** the empty state is mounted inside `__content` and offers one primary “add content” action plus a
+  secondary background-image upload. Background and nested-grid editing affordances use opaque theme surfaces for
+  contrast without altering the authored reader rendering.
 
 ### 1b. `card` — container via composite `parts`
 - **args (shell):** `href{url}` (stretched-link, rendered as a sibling `::after`, not a wrapper), `variant{enum vertical/horizontal}`, `background{color}`.

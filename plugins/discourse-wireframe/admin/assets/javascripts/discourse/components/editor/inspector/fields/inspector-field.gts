@@ -282,21 +282,22 @@ const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
       {{#if (eq @field.control "select")}}
         <formField.Control as |select|>
           {{#each @field.options as |option|}}
-            <select.Option @value={{option}}>{{option}}</select.Option>
+            <select.Option @value={{option}}>
+              {{or (get @field.optionLabels option) option}}
+            </select.Option>
           {{/each}}
         </formField.Control>
       {{else if
         (or (eq @field.control "radio-group") (eq @field.control "segmented"))
       }}
-        {{! Single-select enum. The unified field renders icon segments (with a
-          tooltip per option) and falls back to a dropdown when the options
-          don't fit a segmented row. Icons come from the arg's optionIcons map;
-          the value doubles as the label / tooltip. }}
+        {{! Single-select enum. The unified field renders icon segments and
+          falls back to a dropdown when the options don't fit. }}
         <formField.Control>
           <InspectorSegmentedField
             @custom={{formField}}
             @options={{@field.options}}
             @optionIcons={{@field.optionIcons}}
+            @optionLabels={{@field.optionLabels}}
           />
         </formField.Control>
       {{else if (eq @field.control "image")}}

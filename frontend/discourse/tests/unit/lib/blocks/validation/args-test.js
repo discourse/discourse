@@ -1074,6 +1074,39 @@ module("Unit | Lib | blocks/validation/args", function () {
       assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
     });
 
+    test("ui hints: accepts translated enum option labels", function (assert) {
+      const schema = {
+        surface: {
+          type: "string",
+          enum: ["transparent", "subtle"],
+          ui: {
+            control: "segmented",
+            optionLabels: {
+              transparent: "Transparent",
+              subtle: "Subtle",
+            },
+          },
+        },
+      };
+
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: rejects invalid enum option labels", function (assert) {
+      const schema = {
+        surface: {
+          type: "string",
+          enum: ["transparent", "subtle"],
+          ui: { optionLabels: { transparent: "Transparent", subtle: 42 } },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.optionLabels\.subtle"/
+      );
+    });
+
     test("ui hints: throws for non-object ui value", function (assert) {
       const schema = { title: { type: "string", ui: "text" } };
       assert.throws(

@@ -63,6 +63,8 @@ interface InspectorSegmentedFieldSignature {
     options?: string[] | null;
     /** Optional icon per option value, used with `@options`. */
     optionIcons?: Record<string, string> | null;
+    /** Optional display label per option value, used with `@options`. */
+    optionLabels?: Record<string, string> | null;
   };
   /** Root segmented control or dropdown element. */
   Element: HTMLElement;
@@ -144,9 +146,8 @@ const DSegmentedControl = DSegmentedControlUntyped as unknown as ComponentLike<{
  *   - **Standalone:** pass `@value` + `@onChange` (the bespoke layout form).
  *
  * Items come either pre-built via `@items` (`{value, label, icon?, title?}` — the
- * layout form supplies axis-aware icons) or from `@options` + the optional
- * `@optionIcons` map (the generic form), in which case the value doubles as the
- * label and tooltip.
+ * layout form supplies axis-aware icons) or from `@options` plus optional icon
+ * and translated-label maps supplied by the generic form.
  */
 export default class InspectorSegmentedField extends Component<InspectorSegmentedFieldSignature> {
   /** Current value from the active FormKit or standalone source. */
@@ -169,11 +170,12 @@ export default class InspectorSegmentedField extends Component<InspectorSegmente
     }
     const options = this.args.options ?? [];
     const icons = this.args.optionIcons ?? {};
+    const labels = this.args.optionLabels ?? {};
     return options.map((value) => ({
       value,
-      label: value,
+      label: labels[value] ?? value,
       icon: icons[value],
-      title: value,
+      title: labels[value] ?? value,
     }));
   }
 

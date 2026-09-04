@@ -4,43 +4,50 @@ interface SectionThumbnailSignature {
   Element: SVGSVGElement;
 }
 
-/** Palette thumbnail for the `section` block: a container wrapping child blocks. */
 const SectionThumbnail: TemplateOnlyComponent<SectionThumbnailSignature> =
   <template>
     <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
       <rect
         x="10"
-        y="12"
+        y="10"
         width="100"
-        height="56"
+        height="60"
         rx="6"
-        fill="none"
+        fill="var(--primary-very-low)"
         stroke="var(--primary-low-mid)"
         stroke-width="2"
-        stroke-dasharray="5 4"
       />
       <rect
         x="20"
-        y="22"
+        y="20"
         width="80"
-        height="14"
-        rx="3"
+        height="40"
+        rx="4"
+        fill="var(--secondary)"
+        stroke="var(--primary-low)"
+      />
+      <rect
+        x="29"
+        y="30"
+        width="42"
+        height="5"
+        rx="2.5"
+        fill="var(--primary-medium)"
+      />
+      <rect
+        x="29"
+        y="41"
+        width="62"
+        height="4"
+        rx="2"
         fill="var(--primary-low)"
       />
       <rect
-        x="20"
-        y="42"
-        width="38"
-        height="16"
-        rx="3"
-        fill="var(--primary-low)"
-      />
-      <rect
-        x="62"
-        y="42"
-        width="38"
-        height="16"
-        rx="3"
+        x="29"
+        y="49"
+        width="50"
+        height="4"
+        rx="2"
         fill="var(--primary-low)"
       />
     </svg>

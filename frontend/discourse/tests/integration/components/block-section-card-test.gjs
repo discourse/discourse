@@ -5,7 +5,12 @@ import BlockOutlet, {
 } from "discourse/blocks/block-outlet";
 import Card from "discourse/blocks/builtin/card";
 import Heading from "discourse/blocks/builtin/heading";
+import Layout from "discourse/blocks/builtin/layout";
 import Section from "discourse/blocks/builtin/section";
+import {
+  DEBUG_CALLBACK,
+  debugHooks,
+} from "discourse/lib/blocks/-internals/debug-hooks";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -13,10 +18,94 @@ module("Integration | Blocks | section and card", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.afterEach(function () {
+    debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, null);
     _resetOutletLayoutsForTesting();
   });
 
-  test("section renders its children over a persistent backdrop marker", async function (assert) {
+  test("section renders a semantic surface with a persistent background marker", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Section,
+          args: {
+            accessibleLabel: "Featured discussions",
+            backgroundImage: {
+              url: "/images/featured-light.png",
+              width: 1600,
+              height: 900,
+              dark: {
+                url: "/images/featured-dark.png",
+                width: 1600,
+                height: 900,
+              },
+            },
+            backgroundPosition: "top-right",
+            contentWidth: "wide",
+            minHeight: "medium",
+            padding: "large",
+            scrim: "strong",
+            surface: "subtle",
+            verticalAlign: "center",
+          },
+          children: [{ block: Heading, args: { text: "Hello", level: 2 } }],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".d-block-section")
+      .hasAttribute("aria-label", "Featured discussions")
+      .hasClass("--surface-subtle")
+      .hasClass("--position-top-right")
+      .hasClass("--scrim-strong")
+      .hasClass("--padding-large")
+      .hasClass("--width-wide")
+      .hasClass("--height-medium")
+      .hasClass("--align-center");
+    assert
+      .dom(
+        ".d-block-section__backdrop[data-block-arg='backgroundImage'][data-drop-passive]"
+      )
+      .exists("the image arg keeps a persistent backdrop marker")
+      .doesNotHaveAttribute(
+        "data-drop-fills-block",
+        "consumers measure the backdrop instead of the outer wrapper"
+      );
+    assert
+      .dom(".d-block-section__backdrop img")
+      .hasAttribute("src", /featured-light\.png/)
+      .hasAttribute("alt", "");
+
+    const sectionRect = document
+      .querySelector(".d-block-section")
+      .getBoundingClientRect();
+    const backdropRect = document
+      .querySelector(".d-block-section__backdrop")
+      .getBoundingClientRect();
+
+    assert.closeTo(
+      backdropRect.width,
+      sectionRect.width,
+      1,
+      "the backdrop spans the section width"
+    );
+    assert.closeTo(
+      backdropRect.height,
+      sectionRect.height,
+      1,
+      "the backdrop spans the section height"
+    );
+    assert.dom(".d-block-section__scrim").exists("the selected scrim renders");
+    assert
+      .dom(".d-block-section__content .d-block-heading")
+      .exists("the section content renders the child heading");
+  });
+
+  test("section exposes its stable content host only to editing tools", async function (assert) {
+    debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => true);
+
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -29,39 +118,51 @@ module("Integration | Blocks | section and card", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    assert.dom(".d-block-section").exists("the section renders");
     assert
-      .dom(".d-block-section__backdrop[data-block-arg='background']")
-      .exists("the background arg keeps a persistent backdrop marker");
-    assert
-      .dom(".d-block-section__content .d-block-heading")
-      .exists("the overlay content renders the child heading");
-    assert
-      .dom(".d-block-section .d-block-stretched-link")
-      .doesNotExist("no stretched link without an href");
+      .dom(".d-block-section__content")
+      .hasAttribute("data-wf-drop-container", "true")
+      .hasAttribute(
+        "data-wf-empty-host",
+        "true",
+        "consumers can mount an empty affordance inside the content area"
+      );
   });
 
-  test("section with an href renders an accessible stretched link", async function (assert) {
+  test("section does not shrink a nested layout", async function (assert) {
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
           block: Section,
-          args: { href: "https://example.com", linkLabel: "Read more" },
-          children: [{ block: Heading, args: { text: "Hello", level: 2 } }],
+          args: {},
+          children: [
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 2 },
+              children: [
+                { block: Heading, args: { text: "One", level: 2 } },
+                { block: Heading, args: { text: "Two", level: 2 } },
+              ],
+            },
+          ],
         },
       ])
     );
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    assert
-      .dom(".d-block-section .d-block-stretched-link")
-      .hasAttribute("href", "https://example.com")
-      .hasAttribute(
-        "aria-label",
-        "Read more",
-        "the stretched link carries an accessible name"
-      );
+    const contentWidth = document
+      .querySelector(".d-block-section__content")
+      .getBoundingClientRect().width;
+    const layoutWidth = document
+      .querySelector(".d-block-section__content .d-block-layout")
+      .getBoundingClientRect().width;
+
+    assert.closeTo(
+      layoutWidth,
+      contentWidth,
+      1,
+      "the nested layout spans the section content boundary"
+    );
   });
 
   test("card renders an empty image marker and a whole-card link", async function (assert) {

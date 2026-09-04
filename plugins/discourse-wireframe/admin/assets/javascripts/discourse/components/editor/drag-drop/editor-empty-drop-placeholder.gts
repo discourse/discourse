@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type MenuService from "discourse/float-kit/services/menu";
+import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import EditorBlockPickerMenu from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/editor-block-picker-menu";
 import type { BlockPaletteEntry } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
@@ -21,6 +22,15 @@ interface EditorEmptyDropPlaceholderSignature {
       /** Palette entry selected by the author. */
       block: BlockPaletteEntry
     ) => void;
+    /** Accessible label for the optional background-image action. */
+    backgroundHint?: string;
+    /** Keeps the primary action on a readable grouped surface. */
+    groupActions?: boolean;
+    /** Uploads the image selected by the optional background action. */
+    onAddBackground?: (
+      /** Image file selected by the author. */
+      file: File
+    ) => void;
     /** Blocks available for insertion. */
     palette: BlockPaletteEntry[];
     /** Outlet used to filter valid blocks. */
@@ -34,10 +44,9 @@ interface EditorEmptyDropPlaceholderSignature {
  * container, an empty merged cell, and each unoccupied cell of a grid
  * `wf:layout`.
  *
- * Visual: a single clickable bar with a `+` icon and a contextual hint.
- * The whole area is the click target; on click it opens a FloatKit menu
- * (`@service menu`) anchored to the button, hosting the shared
- * `EditorBlockPickerMenu` with the palette + pick callback.
+ * The primary clickable bar opens the shared block picker. Containers with a
+ * passive background image arg can also provide a secondary upload action,
+ * keeping both ways to initialize the container in one coherent empty state.
  *
  * Responsive degradation: the root sets a `wireframe-empty` CSS container so
  * SCSS collapses the visible hint text below ~12rem, leaving just the centered
@@ -64,11 +73,17 @@ export default class EditorEmptyDropPlaceholder extends Component<EditorEmptyDro
   /** Opens and closes the block-picker menu. */
   @service declare menu: MenuService;
 
+  #backgroundInputEl: HTMLInputElement | null = null;
+
   /** Button used as the FloatKit menu anchor. */
   #buttonEl: HTMLButtonElement | null = null;
 
   /** Open picker-menu instance, or `null` while the picker is closed. */
   #menuInstance: DMenuInstance | null = null;
+
+  get usesActionGroup(): boolean {
+    return Boolean(this.args.groupActions || this.args.onAddBackground);
+  }
 
   /**
    * Captures the button used as the menu anchor.
@@ -126,18 +141,71 @@ export default class EditorEmptyDropPlaceholder extends Component<EditorEmptyDro
     this.#menuInstance = null;
   }
 
+  @action
+  addBackground(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) {
+      this.args.onAddBackground?.(file);
+    }
+    input.value = "";
+  }
+
+  @action
+  captureBackgroundInput(element: HTMLInputElement): void {
+    this.#backgroundInputEl = element;
+  }
+
+  @action
+  openBackgroundPicker(): void {
+    this.args.onActivate?.();
+    this.#backgroundInputEl?.click();
+  }
+
   <template>
-    <button
-      type="button"
-      class="wireframe-empty-drop-placeholder"
-      aria-label={{@hint}}
-      {{didInsert this.captureButton}}
-      {{on "click" this.openPicker}}
-    >
-      <span class="wireframe-empty-drop-placeholder__icon">
-        {{dIcon "plus"}}
-      </span>
-      <span class="wireframe-empty-drop-placeholder__hint">{{@hint}}</span>
-    </button>
+    {{#if this.usesActionGroup}}
+      <div class="wireframe-empty-drop-actions">
+        <button
+          type="button"
+          class="wireframe-empty-drop-placeholder"
+          aria-label={{@hint}}
+          {{didInsert this.captureButton}}
+          {{on "click" this.openPicker}}
+        >
+          <span class="wireframe-empty-drop-placeholder__icon">
+            {{dIcon "plus"}}
+          </span>
+          <span class="wireframe-empty-drop-placeholder__hint">{{@hint}}</span>
+        </button>
+        {{#if @onAddBackground}}
+          <DButton
+            class="wireframe-empty-drop-actions__background btn-flat"
+            @icon="image"
+            @translatedLabel={{@backgroundHint}}
+            @action={{this.openBackgroundPicker}}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            {{didInsert this.captureBackgroundInput}}
+            {{on "change" this.addBackground}}
+          />
+        {{/if}}
+      </div>
+    {{else}}
+      <button
+        type="button"
+        class="wireframe-empty-drop-placeholder"
+        aria-label={{@hint}}
+        {{didInsert this.captureButton}}
+        {{on "click" this.openPicker}}
+      >
+        <span class="wireframe-empty-drop-placeholder__icon">
+          {{dIcon "plus"}}
+        </span>
+        <span class="wireframe-empty-drop-placeholder__hint">{{@hint}}</span>
+      </button>
+    {{/if}}
   </template>
 }

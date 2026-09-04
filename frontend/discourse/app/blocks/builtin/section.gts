@@ -1,17 +1,28 @@
 import Component from "@glimmer/component";
-import { type TrustedHTML, trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import { HEX_COLOR_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
+import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
+import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
 
-const VALID_CONTENT_ALIGNS = ["start", "center", "end"];
-const VALID_CONTENT_WIDTHS = ["contained", "wide", "full"];
+const SURFACES = ["transparent", "default", "subtle", "accent"];
+const BACKGROUND_POSITIONS = [
+  "top-left",
+  "top",
+  "top-right",
+  "left",
+  "center",
+  "right",
+  "bottom-left",
+  "bottom",
+  "bottom-right",
+];
+const SCRIMS = ["none", "subtle", "medium", "strong"];
+const PADDINGS = ["none", "small", "medium", "large"];
+const CONTENT_WIDTHS = ["full", "wide", "narrow"];
+const MIN_HEIGHTS = ["content", "small", "medium", "large", "viewport"];
+const VERTICAL_ALIGNS = ["start", "center", "end"];
 
-/**
- * An image argument value: a resolved upload with intrinsic dimensions and an
- * optional dark-scheme variant of the same shape.
- */
 interface BlockImageValue {
   url?: string;
   width?: number;
@@ -22,247 +33,246 @@ interface BlockImageValue {
 interface SectionSignature {
   Args: {
     children?: ChildBlockResult[];
-    background?: BlockImageValue;
-    backgroundColor?: string;
-    gradient?: string;
-    overlayColor?: string;
-    overlayOpacity?: number;
-    minHeight?: string;
-    contentAlign?: string;
+    surface?: string;
+    backgroundImage?: BlockImageValue;
+    backgroundPosition?: string;
+    scrim?: string;
+    padding?: string;
     contentWidth?: string;
-    href?: string;
-    linkLabel?: string;
+    minHeight?: string;
+    verticalAlign?: string;
+    accessibleLabel?: string;
   };
 }
 
-/**
- * Full-bleed section / hero. A container whose own content (a heading, some
- * text, a button) is composed from ordinary child blocks, rendered over an
- * optional background (image, solid colour, or gradient) and an optional
- * colour overlay.
- *
- * When an `href` is set the whole section becomes a single link via the
- * stretched-link affordance (a positioned anchor covering the section) rather
- * than wrapping the children in an `<a>` — that keeps any inner links or
- * buttons clickable and the markup valid. The `linkLabel` supplies the link's
- * accessible name.
- */
 @block("section", {
   thumbnail: () => import("discourse/blocks/thumbnails/section"),
   container: true,
-  displayName: "Section",
-  icon: "image",
+  displayName: i18n("blocks.builtin.section.name"),
+  icon: "layer-group",
   category: "layout",
-  description:
-    "A full-bleed section with an optional background and overlaid content.",
+  description: i18n("blocks.builtin.section.description"),
   args: {
-    background: {
+    surface: {
+      type: "string",
+      default: "transparent",
+      enum: SURFACES,
+      ui: {
+        control: "segmented",
+        group: i18n("blocks.builtin.section.groups.appearance"),
+        label: i18n("blocks.builtin.section.surface"),
+        optionLabels: {
+          transparent: i18n("blocks.builtin.section.options.transparent"),
+          default: i18n("blocks.builtin.section.options.default"),
+          subtle: i18n("blocks.builtin.section.options.subtle"),
+          accent: i18n("blocks.builtin.section.options.accent"),
+        },
+      },
+    },
+    backgroundImage: {
       type: "image",
       allowDark: true,
       allowResize: false,
       aspectRatio: "auto",
       defaultFit: "cover",
       ui: {
-        label: i18n("blocks.builtin.section.background"),
-        group: "Background",
+        group: i18n("blocks.builtin.section.groups.background"),
+        label: i18n("blocks.builtin.section.background_image"),
       },
     },
-    backgroundColor: {
-      type: "string",
-      pattern: HEX_COLOR_PATTERN,
-      ui: {
-        control: "color",
-        group: "Background",
-        label: i18n("blocks.builtin.section.background_color"),
-      },
-    },
-    gradient: {
-      type: "string",
-      default: "",
-      ui: {
-        group: "Background",
-        label: i18n("blocks.builtin.section.gradient"),
-        placeholder: i18n("blocks.builtin.section.gradient_placeholder"),
-      },
-    },
-    overlayColor: {
-      type: "string",
-      pattern: HEX_COLOR_PATTERN,
-      ui: {
-        control: "color",
-        group: "Overlay",
-        label: i18n("blocks.builtin.section.overlay_color"),
-      },
-    },
-    overlayOpacity: {
-      type: "number",
-      default: 0,
-      min: 0,
-      max: 1,
-      ui: {
-        group: "Overlay",
-        label: i18n("blocks.builtin.section.overlay_opacity"),
-      },
-    },
-    minHeight: {
-      type: "string",
-      default: "",
-      ui: {
-        label: i18n("blocks.builtin.section.min_height"),
-        placeholder: i18n("blocks.builtin.section.min_height_placeholder"),
-      },
-    },
-    contentAlign: {
+    backgroundPosition: {
       type: "string",
       default: "center",
-      enum: VALID_CONTENT_ALIGNS,
+      enum: BACKGROUND_POSITIONS,
       ui: {
-        control: "radio-group",
-        label: i18n("blocks.builtin.section.content_align"),
-        optionIcons: {
-          start: "wf-align-left",
-          center: "wf-align-center",
-          end: "wf-align-right",
+        control: "select",
+        group: i18n("blocks.builtin.section.groups.background"),
+        label: i18n("blocks.builtin.section.background_position"),
+        optionLabels: {
+          "top-left": i18n("blocks.builtin.section.options.top_left"),
+          top: i18n("blocks.builtin.section.options.top"),
+          "top-right": i18n("blocks.builtin.section.options.top_right"),
+          left: i18n("blocks.builtin.section.options.left"),
+          center: i18n("blocks.builtin.section.options.center"),
+          right: i18n("blocks.builtin.section.options.right"),
+          "bottom-left": i18n("blocks.builtin.section.options.bottom_left"),
+          bottom: i18n("blocks.builtin.section.options.bottom"),
+          "bottom-right": i18n("blocks.builtin.section.options.bottom_right"),
+        },
+      },
+    },
+    scrim: {
+      type: "string",
+      default: "medium",
+      enum: SCRIMS,
+      ui: {
+        control: "segmented",
+        group: i18n("blocks.builtin.section.groups.background"),
+        label: i18n("blocks.builtin.section.scrim"),
+        optionLabels: {
+          none: i18n("blocks.builtin.section.options.none"),
+          subtle: i18n("blocks.builtin.section.options.subtle"),
+          medium: i18n("blocks.builtin.section.options.medium"),
+          strong: i18n("blocks.builtin.section.options.strong"),
+        },
+      },
+    },
+    padding: {
+      type: "string",
+      default: "medium",
+      enum: PADDINGS,
+      ui: {
+        control: "segmented",
+        group: i18n("blocks.builtin.section.groups.layout"),
+        label: i18n("blocks.builtin.section.padding"),
+        optionLabels: {
+          none: i18n("blocks.builtin.section.options.none"),
+          small: i18n("blocks.builtin.section.options.small"),
+          medium: i18n("blocks.builtin.section.options.medium"),
+          large: i18n("blocks.builtin.section.options.large"),
         },
       },
     },
     contentWidth: {
       type: "string",
-      default: "contained",
-      enum: VALID_CONTENT_WIDTHS,
+      default: "full",
+      enum: CONTENT_WIDTHS,
       ui: {
-        control: "radio-group",
+        control: "segmented",
+        group: i18n("blocks.builtin.section.groups.layout"),
         label: i18n("blocks.builtin.section.content_width"),
+        optionLabels: {
+          full: i18n("blocks.builtin.section.options.full"),
+          wide: i18n("blocks.builtin.section.options.wide"),
+          narrow: i18n("blocks.builtin.section.options.narrow"),
+        },
       },
     },
-    href: {
+    minHeight: {
       type: "string",
-      pattern: URL_PATTERN,
+      default: "content",
+      enum: MIN_HEIGHTS,
       ui: {
-        control: "url",
-        group: "Link",
-        label: i18n("blocks.builtin.section.href"),
-        helpText: i18n("blocks.builtin.section.href_help"),
+        control: "select",
+        group: i18n("blocks.builtin.section.groups.layout"),
+        label: i18n("blocks.builtin.section.min_height"),
+        optionLabels: {
+          content: i18n("blocks.builtin.section.options.content"),
+          small: i18n("blocks.builtin.section.options.small"),
+          medium: i18n("blocks.builtin.section.options.medium"),
+          large: i18n("blocks.builtin.section.options.large"),
+          viewport: i18n("blocks.builtin.section.options.viewport"),
+        },
       },
     },
-    linkLabel: {
+    verticalAlign: {
+      type: "string",
+      default: "start",
+      enum: VERTICAL_ALIGNS,
+      ui: {
+        control: "segmented",
+        group: i18n("blocks.builtin.section.groups.layout"),
+        label: i18n("blocks.builtin.section.vertical_align"),
+        optionLabels: {
+          start: i18n("blocks.builtin.section.options.start"),
+          center: i18n("blocks.builtin.section.options.center"),
+          end: i18n("blocks.builtin.section.options.end"),
+        },
+      },
+    },
+    accessibleLabel: {
       type: "string",
       default: "",
       ui: {
-        group: "Link",
-        label: i18n("blocks.builtin.section.link_label"),
-        helpText: i18n("blocks.builtin.section.link_label_help"),
-        conditional: { arg: "href", notEmpty: true },
+        group: i18n("blocks.builtin.section.groups.accessibility"),
+        label: i18n("blocks.builtin.section.accessible_label"),
+        helpText: i18n("blocks.builtin.section.accessible_label_help"),
       },
     },
   },
 })
 export default class Section extends Component<SectionSignature> {
-  /**
-   * Inline style for the section backdrop, emitted as CSS custom properties
-   * the stylesheet consumes. A cover image (with optional dark variant) wins;
-   * otherwise a gradient; a solid colour and a min-height layer in
-   * independently. Painted via `background-image` (not an `<img>`) so it sits
-   * behind the content without affecting layout.
-   */
-  get backdropStyle(): TrustedHTML | null {
-    const decls: string[] = [];
-    const image = this.args.background;
-    if (image?.url) {
-      decls.push(`--d-block-section-bg-image-light: ${cssUrl(image.url)}`);
-      if (image.dark?.url) {
-        decls.push(
-          `--d-block-section-bg-image-dark: ${cssUrl(image.dark.url)}`
-        );
-      }
-    } else if (this.args.gradient) {
-      decls.push(`--d-block-section-bg-image-light: ${this.args.gradient}`);
-    }
-    if (this.args.backgroundColor) {
-      decls.push(`--d-block-section-bg-color: ${this.args.backgroundColor}`);
-    }
-    if (this.args.minHeight) {
-      decls.push(`--d-block-section-min-height: ${this.args.minHeight}`);
-    }
-    return decls.length ? trustHTML(decls.join("; ")) : null;
+  get isEditing(): boolean {
+    return debugHooks.isEditPresentation;
   }
 
-  /**
-   * Inline style for the colour overlay laid between the backdrop and the
-   * content. Returns null (so the overlay element is dropped) unless both a
-   * colour and a non-zero opacity are set.
-   */
-  get overlayStyle(): TrustedHTML | null {
-    const color = this.args.overlayColor;
-    const opacity = this.args.overlayOpacity ?? 0;
-    if (!color || !opacity) {
-      return null;
-    }
-    return trustHTML(`background-color: ${color}; opacity: ${opacity};`);
+  get accessibleLabel(): string | undefined {
+    return this.args.accessibleLabel?.trim() || undefined;
   }
 
-  /**
-   * BEM class list with the content alignment and width modifiers.
-   */
+  get hasScrim(): boolean {
+    return Boolean(this.args.backgroundImage?.url && this.scrim !== "none");
+  }
+
+  get scrim(): string {
+    return validChoice(this.args.scrim, SCRIMS, "medium");
+  }
+
   get className(): string {
-    const align = VALID_CONTENT_ALIGNS.includes(this.args.contentAlign)
-      ? this.args.contentAlign
-      : "center";
-    const width = VALID_CONTENT_WIDTHS.includes(this.args.contentWidth)
-      ? this.args.contentWidth
-      : "contained";
-    return (
-      `d-block-section d-block-section--align-${align} ` +
-      `d-block-section--width-${width}`
+    const surface = validChoice(this.args.surface, SURFACES, "transparent");
+    const position = validChoice(
+      this.args.backgroundPosition,
+      BACKGROUND_POSITIONS,
+      "center"
     );
+    const padding = validChoice(this.args.padding, PADDINGS, "medium");
+    const width = validChoice(this.args.contentWidth, CONTENT_WIDTHS, "full");
+    const height = validChoice(this.args.minHeight, MIN_HEIGHTS, "content");
+    const align = validChoice(
+      this.args.verticalAlign,
+      VERTICAL_ALIGNS,
+      "start"
+    );
+
+    return [
+      "d-block-section",
+      `--surface-${surface}`,
+      `--position-${position}`,
+      `--scrim-${this.scrim}`,
+      `--padding-${padding}`,
+      `--width-${width}`,
+      `--height-${height}`,
+      `--align-${align}`,
+    ].join(" ");
   }
 
   <template>
-    <section class={{this.className}} style={{this.backdropStyle}}>
-      {{! Always render the backdrop marker so edit tooling can anchor an
-          image-drop target over it even with no background set. The empty
-          modifier collapses it on the reader page; the drop-passive marker
-          keeps it click-through behind the content. }}
+    <section class={{this.className}} aria-label={{this.accessibleLabel}}>
       <div
-        class="d-block-section__backdrop
-          {{unless this.backdropStyle 'd-block-section__backdrop--empty'}}"
-        data-block-arg="background"
+        class="d-block-section__backdrop"
+        data-block-arg="backgroundImage"
         data-drop-passive
-        data-drop-fills-block
-      ></div>
+      >
+        {{#if @backgroundImage.url}}
+          <DLightDarkImg
+            @lightImg={{@backgroundImage}}
+            @darkImg={{@backgroundImage.dark}}
+            alt=""
+          />
+        {{/if}}
+      </div>
 
-      {{#if this.overlayStyle}}
-        <div class="d-block-section__overlay" style={{this.overlayStyle}}></div>
+      {{#if this.hasScrim}}
+        <div class="d-block-section__scrim"></div>
       {{/if}}
 
-      <div class="d-block-section__content">
+      <div
+        class="d-block-section__content"
+        data-wf-drop-container={{if this.isEditing "true"}}
+        data-wf-empty-host={{if this.isEditing "true"}}
+      >
         {{#each @children key="key" as |child|}}
           <child.Component />
         {{/each}}
       </div>
-
-      {{#if @href}}
-        <a
-          class="d-block-stretched-link"
-          href={{@href}}
-          aria-label={{@linkLabel}}
-          data-block-arg="href"
-        ></a>
-      {{/if}}
     </section>
   </template>
 }
 
-/**
- * Wraps a URL in CSS `url("...")` syntax with escaped quotes/backslashes so it
- * is safe to interpolate into an inline `style`. The URL comes from the
- * trusted upload pipeline; this only guards against a stray quote in a
- * CDN-rewritten path.
- *
- * @param url - The raw upload URL to wrap.
- * @returns The URL wrapped in CSS `url("...")` syntax.
- */
-function cssUrl(url: string): string {
-  const escaped = url.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-  return `url("${escaped}")`;
+function validChoice(
+  value: string | undefined,
+  choices: readonly string[],
+  fallback: string
+): string {
+  return value && choices.includes(value) ? value : fallback;
 }

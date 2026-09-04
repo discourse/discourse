@@ -42,6 +42,27 @@ module("Unit | Discourse Wireframe | schemaToFields", function () {
     assert.deepEqual(fields[0].options, ["small", "large"]);
   });
 
+  test("propagates translated enum option labels", function (assert) {
+    const fields = schemaToFields({
+      surface: {
+        type: "string",
+        enum: ["transparent", "subtle"],
+        ui: {
+          control: "segmented",
+          optionLabels: {
+            transparent: "Transparent",
+            subtle: "Subtle",
+          },
+        },
+      },
+    });
+
+    assert.deepEqual(fields[0].optionLabels, {
+      transparent: "Transparent",
+      subtle: "Subtle",
+    });
+  });
+
   test("maps a number arg to a number control", function (assert) {
     const fields = schemaToFields({ count: { type: "number" } });
     assert.strictEqual(fields[0].control, "number");
