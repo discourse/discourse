@@ -63,6 +63,12 @@ module Migrations
             }xi
             private_constant :IMAGE_PATTERN, :ATTACHMENT_PATTERN, :LINK_PATTERN, :PLAIN_LINK_PATTERN
 
+            # The `upload://` form on its own, with no `![…](…)` around it: a
+            # reference definition's destination, which the engine tier
+            # confirmed as an image's or a link's source.
+            SHORT_URL = %r{\Aupload://(?<url>[^\s)]{1,512})\z}
+            private_constant :SHORT_URL
+
             def detect(input, pos, byte)
               case byte
               when 0x21 # `!`
@@ -71,6 +77,19 @@ module Migrations
                 detect_attachment(input, pos) || detect_link(input, pos) ||
                   detect_plain_link(input, pos)
               end
+            end
+
+            # The node for a bare {SHORT_URL} spelling, whose whole span is the
+            # URL itself — the alt text and the dimensions live in the
+            # `![alt][id]` that uses the definition and stay there.
+            #
+            # @return [Markbridge::AST::Upload, nil]
+            def reference_for(url)
+              match = SHORT_URL.match(url)
+              return nil unless match
+
+              sha1, filename = parse_upload_url(match[:url])
+              Markbridge::AST::Upload.new(sha1:, filename:, raw: url)
             end
 
             private

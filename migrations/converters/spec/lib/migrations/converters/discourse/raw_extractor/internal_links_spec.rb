@@ -563,11 +563,122 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_id: 12, target_suffix: "#reply")
     end
 
-    it "does not treat an image of an internal URL as a link" do
-      raw = "![pic](/t/slug/1)"
+    # An image's source moves to the destination site like a link's: the origin
+    # is stale, and a route in its path names a record whose id changes. The
+    # recorded span is the whole `![alt](src)`, so the importer splices the new
+    # destination into it and the image stays an image.
+    it "defers an image whose source is an internal route" do
+      link, result = link_for("![pic](/t/slug/1)")
+
+      expect(link).to include(
+        url: "/t/slug/1",
+        text: "pic",
+        target_type: enums::LinkTarget::TOPIC,
+        target_id: 1,
+        original_markdown: "![pic](/t/slug/1)",
+        url_offset: 7,
+      )
+      expect(result).to eq(link[:placeholder])
+    end
+
+    it "defers an image whose source is a route-less page on the source's host" do
+      link, result = link_for("![Tag](https://forum.example.com/tags)")
+
+      expect(link).to include(
+        url: "https://forum.example.com/tags",
+        text: "Tag",
+        target_type: enums::LinkTarget::SITE,
+        target_suffix: "/tags",
+        original_markdown: "![Tag](https://forum.example.com/tags)",
+        url_offset: 7,
+      )
+      expect(result).to eq(link[:placeholder])
+    end
+
+    # An avatar URL, the shape a quoted post's header carries.
+    it "defers an image with an empty alt text" do
+      raw = "![](https://forum.example.com/user_avatar/forum.example.com/bob/40/1_1.png)"
+      link, result = link_for(raw)
+
+      expect(link).to include(
+        text: "",
+        target_type: enums::LinkTarget::SITE,
+        target_suffix: "/user_avatar/forum.example.com/bob/40/1_1.png",
+        original_markdown: raw,
+        url_offset: 4,
+      )
+      expect(result).to eq(link[:placeholder])
+    end
+
+    it "leaves an image whose source is on a foreign host alone" do
+      raw = "![pic](https://elsewhere.example.org/logo.png)"
 
       expect(extract(raw)).to eq(raw)
       expect(buffer.links).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    # CommonMark allows balanced parentheses in a destination.
+    it "takes a destination with a parenthesized query whole" do
+      raw = "[these](https://forum.example.com/search?q=(oauth2_basic)%20x)"
+      link, result = link_for(raw)
+
+      expect(link).to include(
+        url: "https://forum.example.com/search?q=(oauth2_basic)%20x",
+        text: "these",
+        target_type: enums::LinkTarget::SITE,
+        target_suffix: "/search?q=(oauth2_basic)%20x",
+        original_markdown: raw,
+        url_offset: 8,
+      )
+      expect(result).to eq(link[:placeholder])
+    end
+
+    # A space ends the destination, so core forms no link and linkifies the
+    # host on its own. The URL is rewritten where it sits and the broken syntax
+    # around it stays the author's.
+    it "rewrites the linkified host of a destination core rejected" do
+      link, result = link_for("[x](https://forum.example.com /categories) tail")
+
+      expect(link).to include(
+        url: "https://forum.example.com",
+        text: nil,
+        target_type: enums::LinkTarget::SITE,
+        target_suffix: nil,
+        original_markdown: "https://forum.example.com",
+        url_offset: 0,
+      )
+      expect(result).to eq("[x](#{link[:placeholder]} /categories) tail")
+    end
+
+    it "rewrites the linkified prefix of a destination whose path holds a space" do
+      link, result = link_for("[staff](https://forum.example.com/à propos) checked")
+
+      expect(link).to include(
+        url: "https://forum.example.com/à",
+        target_type: enums::LinkTarget::SITE,
+        target_suffix: "/à",
+        original_markdown: "https://forum.example.com/à",
+        url_offset: 0,
+      )
+      expect(result).to eq("[staff](#{link[:placeholder]} propos) checked")
+    end
+
+    # Links don't nest, so the emphasis-wrapped image is not a label any link
+    # grammar takes. The image is deferred at its own `![`, and the outer
+    # destination is rewritten as the bare URL it sits as.
+    it "rewrites the outer destination of a link whose label is an emphasized image" do
+      result = extract("[**![a|10x10](upload://#{sha1}.png)**](https://forum.example.com/)")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+      link = buffer.links.first
+      expect(link).to include(
+        url: "https://forum.example.com/",
+        text: nil,
+        target_type: enums::LinkTarget::SITE,
+        target_suffix: "/",
+      )
+      expect(result).to eq("[**#{buffer.uploads.first[:placeholder]}**](#{link[:placeholder]})")
     end
 
     it "leaves a relative URL inside a prose paren group literal" do

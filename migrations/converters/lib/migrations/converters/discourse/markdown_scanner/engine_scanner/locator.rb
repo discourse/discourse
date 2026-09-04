@@ -193,23 +193,27 @@ module Migrations
               # grammar accepts, so leaving exactly those bytes literal is
               # correct — core re-linkifies the whole thing after resolution.
               # `allow_prefix` bounds what may stay uncovered
-              # ({Constructs::Base.swallowed_tail?}).
-              construct_match_at(offset, occurrence, allow_prefix: true)
+              # ({Constructs::Base.swallowed_tail?}). Inside a destination's
+              # parens there is no linkify tail to leave behind: the bytes the
+              # grammar stopped at belong to the URL, so the whole occurrence
+              # must be covered or nothing is.
+              construct_match_at(
+                offset,
+                occurrence,
+                allow_prefix: !link_destination_before?(@input, offset),
+              )
             end
 
             # A confirmed occurrence that is its own whole construct: a bare
             # schemeless domain (linkify links it, but no construct grammar has
             # a byte to trigger on) or a reference definition's destination. The
             # engine's href carries the scheme the route parses from; the span
-            # replaced is exactly the raw spelling. The confirmation already
-            # answered "is this really a link here?", so only the linkify
-            # opening boundary is re-checked, mirroring what core requires ahead
-            # of a bare URL.
+            # replaced is exactly the raw spelling.
             def bare_value_match(value, occurrence)
-              return nil unless bare_url_boundary_before?(@input, occurrence.offset)
-
               raw_spelling = @input.byteslice(occurrence.offset, occurrence.length)
-              node = @scanner.bare_url_node(route_url: value, url: raw_spelling)
+              node =
+                definition_upload_node(value, occurrence, raw_spelling) ||
+                  bare_link_node(value, occurrence, raw_spelling)
               return nil if node.nil?
 
               Constructs::Match.new(
@@ -239,6 +243,26 @@ module Migrations
             end
 
             private
+
+            # A definition whose destination is an upload defines the upload
+            # itself, so the upload constructs answer for it: the `![alt][id]`
+            # that uses the definition keeps its own syntax and only the
+            # destination is replaced.
+            def definition_upload_node(value, occurrence, raw_spelling)
+              key = [occurrence.offset, occurrence.length]
+              return nil unless definition_offsets(value).include?(key)
+
+              @scanner.upload_node(raw_spelling)
+            end
+
+            # The confirmation already answered "is this really a link here?",
+            # so only the linkify opening boundary is re-checked, mirroring what
+            # core requires ahead of a bare URL.
+            def bare_link_node(value, occurrence, raw_spelling)
+              return nil unless linkify_boundary_before?(@input, occurrence.offset)
+
+              @scanner.bare_url_node(route_url: value, url: raw_spelling)
+            end
 
             def build_line_index
               @line_starts = [0]

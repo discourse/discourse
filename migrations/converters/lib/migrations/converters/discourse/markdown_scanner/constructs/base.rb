@@ -42,15 +42,17 @@ module Migrations
             # The shared bare-URL detection. A normal `[text](url)` is consumed
             # whole at its `[` trigger, so an inner URL is only reached when the
             # outer bracket wasn't a handled link — a nested image
-            # `[![…](…)](url)` or an old lightbox, where rewriting the outer URL
-            # in place is what we want. A relative URL is a link only at a
-            # `](…)` target; bare in prose it stays plain text once cooked, so
+            # `[![…](…)](url)`, an old lightbox, or a destination core rejected
+            # itself (`[x](https://host /categories)`, which linkify then turns
+            # into a bare link to the host). Rewriting the URL in place is what
+            # we want in all of them. A relative URL is a link only at a `](…)`
+            # target; bare in prose it stays plain text once cooked, so
             # rewriting it there would turn text into a link.
             #
             # `pattern` is the construct's own `\G`-anchored bare-URL grammar;
             # the block turns an admitted MatchData into a {Match}.
             def detect_bare_url(input, pos, pattern)
-              return nil unless bare_url_boundary_before?(input, pos)
+              return nil unless linkify_boundary_before?(input, pos)
 
               match = match_at(pattern, input, pos)
               return nil unless match

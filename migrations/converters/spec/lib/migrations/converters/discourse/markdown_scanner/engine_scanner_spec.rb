@@ -179,19 +179,35 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
-    it "refuses a recognized link no grammar can take, instead of calling it handled" do
+    it "refuses a recognized reference no grammar can take, instead of calling it handled" do
       # CommonMark allows an escaped `]` inside a label; the construct grammar
-      # does not, so the matched destination cannot be anchored to a node.
-      # The reference is real and stays stale — that must land on the
-      # must-resolve tally, never report as success. The mention beside it is
-      # still extracted.
-      raw = "@alice sees [a \\] b](https://forum.example.com/t/slug/5) `y`"
+      # does not. An internal URL there is still rewritten as the destination it
+      # is, but an `upload://` one carries its alt text and dimensions in the
+      # syntax around it, so a destination-only rewrite would lose them. The
+      # reference is real and stays stale — that must land on the must-resolve
+      # tally, never report as success. The mention beside it is still
+      # extracted.
+      raw = "@alice sees [a \\] b](upload://#{sha1}.png) `y`"
       output = extract(raw)
 
-      expect(buffer.links).to be_empty
+      expect(buffer.uploads).to be_empty
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
-      expect(output).to include("[a \\] b](https://forum.example.com/t/slug/5)")
+      expect(output).to include("[a \\] b](upload://#{sha1}.png)")
       expect(refusals).to eq(%i[unanchored])
+    end
+
+    it "rewrites the destination of a link whose label no grammar can take" do
+      raw = "sees [a \\] b](https://forum.example.com/t/slug/5) `y`"
+      output = extract(raw)
+
+      expect(buffer.links.first).to include(
+        url: "https://forum.example.com/t/slug/5",
+        text: nil,
+        original_markdown: "https://forum.example.com/t/slug/5",
+        url_offset: 0,
+      )
+      expect(output).to eq("sees [a \\] b](#{buffer.links.first[:placeholder]}) `y`")
+      expect(refusals).to be_empty
     end
 
     it "leaves an external link untouched" do

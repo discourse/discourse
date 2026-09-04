@@ -30,6 +30,8 @@ module Migrations
     #
     #   * `user(id)` => `{ username:, name: }`, `post(id)` => `{ topic_id:,
     #     post_number: }`, `badge(id)` => `{ id:, slug: }`
+    #   * `upload(id)` => `{ short_url:, url: }`, the destination upload's
+    #     `upload://` spelling and its absolute URL
     #   * `group_name(id)`, `tag_name(id)`, `topic_id(id)`, `category_id(id)`,
     #     `category_slug_path(id)` (`"slug"` or `"parent:child"`)
     #   * `upload_markdown(id)`, `poll_markdown(id)`, `event_markdown(id)`
@@ -179,7 +181,23 @@ module Migrations
         external_host = row[:external_host]
         return nil if external_host && !@trusted_upload_hosts.include?(external_host.downcase)
 
-        @maps.upload_markdown(row[:upload_id])
+        render_upload(row)
+      end
+
+      # A snippet that is nothing but a destination — a reference definition's
+      # URL, or a full URL core linkified on its own — has to come back as a URL
+      # in the source's own spelling: image markdown would break the definition
+      # and turn the prose link into an image. Only a definition can hold a bare
+      # `upload://`, because core doesn't tokenize one in prose, which is also
+      # why a full URL can't be answered with the short form.
+      def render_upload(row)
+        snippet = row[:original_markdown].to_s
+        if snippet.empty? || snippet.start_with?("![", "[")
+          return @maps.upload_markdown(row[:upload_id])
+        end
+
+        spelling = snippet.start_with?("upload://") ? :short_url : :url
+        @maps.upload(row[:upload_id])&.dig(spelling)
       end
 
       # Builds the opening `[quote="…"]` tag only (see EmbedBuffer#quote). A

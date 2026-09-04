@@ -18,23 +18,6 @@ module Migrations
           module Boundaries
             private
 
-            # Where a bare URL may start — the cheap first gate only. The URL
-            # constructs narrow it further once a match tells them whether the
-            # URL is relative or absolute.
-            def bare_url_boundary_before?(input, pos)
-              return true if pos.zero?
-
-              # Only the `)](` shape is admitted after a `](`, so branch off
-              # before the general linkify boundary — a bare `(` is itself a
-              # linkify boundary and would otherwise admit any `](`.
-              if input.getbyte(pos - 1) == 0x28 && pos >= 2 && input.getbyte(pos - 2) == 0x5d
-                # 0x28 = `(`, 0x5d = `]`
-                return link_target_boundary_before?(input, pos)
-              end
-
-              linkify_boundary_before?(input, pos)
-            end
-
             # markdown-it linkifies a bare absolute schemed URL (`https://…`) in
             # prose unless the character right before its scheme is an ASCII
             # letter, digit, `+` or `\`. Two of core's engines feed this and
@@ -102,19 +85,19 @@ module Migrations
             # `](` and a `)` closes right before the `]`. That only happens when
             # the bracket wrapped a construct that was already consumed — the
             # outer link of a nested image `[![img](upload)](/t/5)` or an old
-            # lightbox — so the URL here is a genuine link target, and a
-            # relative URL is rewritten only at this boundary, where it is a
-            # link and not prose.
-            #
-            # A `](…)` after plain bracket text (`[pic](…)`, `![alt](…)`) is the
-            # link's or image's own target, handled at its own trigger, so
-            # firing here would rewrite an image's source or double-report a
-            # foreign host.
+            # lightbox — so the URL here is a genuine link target, which is
+            # where `Base#detect_bare_url` admits a relative one.
             def link_target_boundary_before?(input, pos)
-              return false if pos < 3
+              # 0x29 = `)`
+              pos >= 3 && link_destination_before?(input, pos) && input.getbyte(pos - 3) == 0x29
+            end
 
-              input.getbyte(pos - 1) == 0x28 && input.getbyte(pos - 2) == 0x5d &&
-                input.getbyte(pos - 3) == 0x29
+            # A `](` right before `pos`: the destination of a link or image,
+            # whose parens delimit the URL. {#link_target_boundary_before?}
+            # names the narrower nested-construct shape.
+            def link_destination_before?(input, pos)
+              # 0x28 = `(`, 0x5d = `]`
+              pos >= 2 && input.getbyte(pos - 1) == 0x28 && input.getbyte(pos - 2) == 0x5d
             end
 
             def bang_before?(input, pos)

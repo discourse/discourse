@@ -368,5 +368,21 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       hit = FakePlaceholderMaps.new(upload_markdown: { "abcdef" => "![shot](upload://new.jpeg)" })
       expect(resolve("x #{token} y", maps: hit)).to eq("x ![shot](upload://new.jpeg) y")
     end
+
+    it "restores a reference definition's destination when the upload is unmapped" do
+      original = "upload://abcdef.jpg"
+      token = create_embed(:upload, upload_id: "abcdef", original_markdown: original)
+
+      expect(resolve("[1]: #{token}")).to eq("[1]: #{original}")
+      expect(resolver.unresolved_embeds.map(&:kind)).to eq(%i[upload])
+    end
+
+    it "restores a prose full URL when the upload is unmapped" do
+      original = "https://old.example.com/uploads/default/original/1X/abcdef.jpg"
+      token = create_embed(:upload, upload_id: "abcdef", original_markdown: original)
+
+      expect(resolve("see #{token} here")).to eq("see #{original} here")
+      expect(resolver.unresolved_embeds.map(&:entity_id)).to eq(["abcdef"])
+    end
   end
 end

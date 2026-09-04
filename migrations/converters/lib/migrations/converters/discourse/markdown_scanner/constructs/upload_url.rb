@@ -209,6 +209,17 @@ module Migrations
               end
             end
 
+            # The node for a URL with no `![…](…)` syntax around it — a
+            # reference definition's destination, whose whole span is the URL.
+            # The caller filters with {.tracked_value?}, so the match here
+            # covers the value.
+            #
+            # @return [UploadUrlReference, nil]
+            def reference_for(url)
+              match = ANCHORED_URL.match(url)
+              match && reference_from(match)
+            end
+
             private
 
             def detect_bare(input, pos)
@@ -221,6 +232,12 @@ module Migrations
             end
 
             def build_match(pos, match)
+              node = reference_from(match)
+              node && Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
+            end
+
+            # Nil when a short-URL token decodes to no sha1.
+            def reference_from(match)
               sha1 = match[:sha1] || self.class.sha1_from_short_token(match[:short_token])
               return nil if sha1.nil?
 
@@ -231,11 +248,7 @@ module Migrations
               # `UploadUrlReference`).
               rest = origin ? url.byteslice(origin.bytesize..) : url
 
-              Match.new(
-                start_pos: pos,
-                end_pos: match.byteoffset(0).last,
-                node: UploadUrlReference.new(sha1:, host:, rest:),
-              )
+              UploadUrlReference.new(sha1:, host:, rest:)
             end
           end
         end

@@ -84,6 +84,9 @@ module Migrations
             @quote_construct = required(constructs, Constructs::Quote)
             @internal_link_construct = required(constructs, Constructs::InternalLink)
             @emoji_construct = constructs.find { |construct| construct.is_a?(Constructs::Emoji) }
+            @upload_construct = constructs.find { |construct| construct.is_a?(Constructs::Upload) }
+            @upload_url_construct =
+              constructs.find { |construct| construct.is_a?(Constructs::UploadUrl) }
 
             # URL constructs are matched from their syntax anchor: `[`, `!`, or
             # the first byte of a bare URL.
@@ -256,6 +259,18 @@ module Migrations
           # spelling at the occurrence.
           def bare_url_node(route_url:, url:)
             @internal_link_construct.reference_for(route_url:, url:)
+          end
+
+          # For a reference definition's destination that is an upload rather
+          # than a link — `[1]: upload://…`, the definition half of a
+          # `![alt][1]` image. Nil when the source has no upload constructs
+          # wired or the URL is no upload after all.
+          def upload_node(url)
+            if url.start_with?("upload://")
+              @upload_construct&.reference_for(url)
+            elsif Constructs::UploadUrl.tracked_value?(url)
+              @upload_url_construct&.reference_for(url)
+            end
           end
 
           private

@@ -15,6 +15,7 @@ class FakePlaceholderMaps
     group_name
     post
     topic_id
+    upload
     upload_markdown
     poll_markdown
     event_markdown

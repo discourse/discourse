@@ -612,4 +612,48 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extractor.engine_refusals).to be_empty
     end
   end
+
+  # A reference-style image `![alt][1]` keeps its alt text and dimensions where
+  # they are and takes its source from the definition line, so the definition's
+  # destination is the whole recorded span.
+  describe "uploads behind a reference definition" do
+    let(:internal_link_hosts) { { source_host => nil } }
+
+    it "defers the destination of a short-URL definition" do
+      url = "upload://wfnzm0tBLXg6BRQWnIoNfnl8HNs.jpg"
+      result = extract("![a|1x1][1]\n\n[1]: #{url}")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: "wfnzm0tBLXg6BRQWnIoNfnl8HNs", original_markdown: url)
+      expect(result).to eq("![a|1x1][1]\n\n[1]: #{upload[:placeholder]}")
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "defers the destination of a full-URL definition" do
+      url = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
+      result = extract("![a][1]\n\n[1]: #{url}")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: url, external_host: nil)
+      expect(result).to eq("![a][1]\n\n[1]: #{upload[:placeholder]}")
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "marks a foreign host on a definition destination" do
+      url = "https://cdn.example.org/uploads/default/original/1X/#{sha1}.png"
+      extract("![a][1]\n\n[1]: #{url}")
+
+      expect(buffer.uploads.first).to include(upload_id: sha1, external_host: "cdn.example.org")
+    end
+
+    it "keeps a definition-shaped line inside a fence verbatim" do
+      url = "upload://wfnzm0tBLXg6BRQWnIoNfnl8HNs.jpg"
+      raw = "![a|1x1][1]\n\n[1]: #{url}\n\n```\n[2]: #{url}\n```\n"
+      result = extract(raw)
+
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to include("```\n[2]: #{url}\n```")
+      expect(result).to include("[1]: #{buffer.uploads.first[:placeholder]}")
+    end
+  end
 end

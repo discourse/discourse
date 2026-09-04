@@ -25,7 +25,7 @@ module Migrations
           # also links, contains no character a construct can trigger on, so the
           # engine tier rewrites that form in place instead.
           class InternalLink < Base
-            TRIGGERS = ["[", "h", "H", "/"].freeze
+            TRIGGERS = ["!", "[", "h", "H", "/"].freeze
 
             # The route segments this construct understands, shared by the
             # presence gate and the bare-URL pattern.
@@ -42,13 +42,39 @@ module Migrations
             URL_BODY = /[^#{Base::URL_TERMINATORS}]/
             private_constant :URL_BODY
 
+            # A URL-body character outside a parenthesis, for the destination
+            # runs below.
+            DESTINATION_BODY = /[^(#{Base::URL_TERMINATORS}]/
+            private_constant :DESTINATION_BODY
+
+            # A destination, with the one level of balanced parentheses
+            # CommonMark allows (`/search?q=(oauth2_basic)%20x`). The balanced
+            # pair is tried before a lone `(`, which still ends up in the
+            # destination the way it did before the pair was allowed. Every run
+            # is capped and atomic, so a `(` that never closes is scanned once
+            # (see the ReDoS note in `Base`).
+            DESTINATION =
+              /(?>(?:#{DESTINATION_BODY}{1,255}|\((?>#{DESTINATION_BODY}{0,255})\)|\(){1,32})/
+            private_constant :DESTINATION
+
             # The destination takes the padding, optional title and `<…>` form
             # CommonMark allows (see `Base::LINK_TAIL`), or an internal link
             # written with a title would keep pointing at the source site. The
             # `<…>` alternative repeats the `url` group name, which Ruby allows.
-            LINK =
-              /\G\[(?<text>#{Base::LINK_TEXT})\]\(#{Base::LINK_GAP}(?:<(?<url>[^<>\n]{1,2048})>|(?<url>#{URL_BODY}{1,2048}))#{Base::LINK_TAIL}/
+            LINK_SYNTAX =
+              /\[(?<text>#{Base::LINK_TEXT})\]\(#{Base::LINK_GAP}(?:<(?<url>[^<>\n]{1,2048})>|(?<url>#{DESTINATION}))#{Base::LINK_TAIL}/
+            private_constant :LINK_SYNTAX
+
+            LINK = /\G#{LINK_SYNTAX}/
             private_constant :LINK
+
+            # An image whose source is an internal URL — an avatar, an emoji
+            # sprite, a hotlinked screenshot of another topic. Core rewrites
+            # nothing about it, but its origin (and any route in its path) has
+            # to move to the destination site like a link's does, so the whole
+            # `![alt](src)` is recorded with the alt text as the label.
+            IMAGE = /\G!#{LINK_SYNTAX}/
+            private_constant :IMAGE
 
             # The bare form fires at every whitespace-preceded `h` and `/` the
             # scanner walks past, so it must reject ordinary words inside the
@@ -104,6 +130,8 @@ module Migrations
 
             def detect(input, pos, byte)
               case byte
+              when 0x21 # `!`
+                detect_image(input, pos)
               when 0x5b # `[`
                 detect_link(input, pos)
               when 0x68, 0x48, 0x2f
@@ -166,11 +194,19 @@ module Migrations
               Regexp.union(ROUTE_PRESENCE, *@hosts.keys.map { |host| /#{Regexp.escape(host)}/i })
             end
 
-            # A markdown link, unless it's the `[` of an image `![…](…)`.
+            # A markdown link, unless it's the `[` of an image `![…](…)`, which
+            # {#detect_image} takes whole at the `!`.
             def detect_link(input, pos)
               return nil if bang_before?(input, pos)
 
               match = match_at(LINK, input, pos)
+              return nil unless match
+
+              build(pos, match, url: match[:url], text: match[:text])
+            end
+
+            def detect_image(input, pos)
+              match = match_at(IMAGE, input, pos)
               return nil unless match
 
               build(pos, match, url: match[:url], text: match[:text])

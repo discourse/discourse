@@ -16,7 +16,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 
   let(:fragments) do
-    ["[quote=x", "![x](upload://a", "![x](/uploads/original/2X/ab/", "[f|attachment](upload://a"]
+    [
+      "[quote=x",
+      "![x](upload://a",
+      "![x](/uploads/original/2X/ab/",
+      "[f|attachment](upload://a",
+      "[x](/t/5/a(",
+    ]
   end
 
   it "keeps repeated unclosed openers within the engine-tier ceiling" do

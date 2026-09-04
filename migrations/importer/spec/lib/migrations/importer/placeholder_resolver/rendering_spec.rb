@@ -170,6 +170,53 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
   end
 
+  describe "bare upload destinations" do
+    let(:maps) do
+      FakePlaceholderMaps.new(
+        upload: {
+          "sha1" => {
+            short_url: "upload://new.jpg",
+            url: "https://dest.example.com/uploads/default/original/1X/new.jpg",
+          },
+        },
+        upload_markdown: {
+          "sha1" => "![x|10x10](upload://new.jpg)",
+        },
+      )
+    end
+
+    it "renders a reference definition's destination as the new short URL" do
+      upload = create_embed(:upload, upload_id: "sha1", original_markdown: "upload://old.jpg")
+
+      expect(resolve("[1]: #{upload}")).to eq("[1]: upload://new.jpg")
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
+    it "renders a linkified full URL as the destination's full URL" do
+      upload =
+        create_embed(
+          :upload,
+          upload_id: "sha1",
+          original_markdown: "https://old.example.com/uploads/default/original/1X/old.jpg",
+        )
+
+      expect(resolve("see #{upload} here")).to eq(
+        "see https://dest.example.com/uploads/default/original/1X/new.jpg here",
+      )
+    end
+
+    it "still renders a whole image construct as the destination's markdown" do
+      upload =
+        create_embed(
+          :upload,
+          upload_id: "sha1",
+          original_markdown: "![old|10x10](upload://old.jpg)",
+        )
+
+      expect(resolve("x #{upload} y")).to eq("x ![x|10x10](upload://new.jpg) y")
+    end
+  end
+
   describe "#unresolved_embeds" do
     let(:maps) { FakePlaceholderMaps.new(post: { 100 => { topic_id: 42, post_number: 3 } }) }
 

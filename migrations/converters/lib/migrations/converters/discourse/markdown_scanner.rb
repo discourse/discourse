@@ -67,6 +67,11 @@ module Migrations
       #   * A custom emoji name outside {Constructs::Emoji}'s presence shape
       #     never reaches the engine tier at all: the gate cannot see it, so
       #     nothing is extracted and nothing is reported.
+      #   * A mail gateway's link-scanner wrapper around an upload URL
+      #     (`…/__https:/host/secure-uploads/…__;!!…$`) is the scanner's link,
+      #     not the site's: the upload shape inside it is what the value tracks,
+      #     so a wrapper in prose keeps the file and loses the redirect, and one
+      #     in a destination refuses on its trailing marker.
       module MarkdownScanner
       end
     end
