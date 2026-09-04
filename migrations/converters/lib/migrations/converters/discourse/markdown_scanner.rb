@@ -81,10 +81,10 @@ module Migrations
       #     never reaches the engine tier at all: the gate cannot see it, so
       #     nothing is extracted and nothing is reported.
       #   * A mail gateway's link-scanner wrapper around an upload URL
-      #     (`…/__https:/host/secure-uploads/…__;!!…$`) is the scanner's link,
-      #     not the site's: the upload shape inside it is what the value tracks,
-      #     so a wrapper in prose keeps the file and loses the redirect, and one
-      #     in a destination refuses on its trailing marker.
+      #     (`…/__https:/host/secure-uploads/…__;!!…$`) is recorded as an
+      #     upload on the gateway's host. The importer maps a foreign host's
+      #     uploads only when the operator trusts that host, so the wrapper
+      #     stays verbatim and shows up on the import report instead.
       module MarkdownScanner
       end
     end
