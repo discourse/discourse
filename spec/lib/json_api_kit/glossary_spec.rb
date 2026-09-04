@@ -74,6 +74,32 @@ RSpec.describe JsonApiKit::Glossary do
       expect(declared_name).to eq(name.with(value: "created_at"))
     end
 
+    context "when the name was converted before" do
+      before do
+        allow(described_class::CasingRule).to receive(:declared_name).and_call_original
+        glossary.declared_name(name)
+      end
+
+      it "does not ask the rules again" do
+        declared_name
+        expect(described_class::CasingRule).to have_received(:declared_name).once
+      end
+    end
+
+    context "when the name was refused before" do
+      let(:value) { "created_at" }
+
+      before do
+        allow(described_class::CasingRule).to receive(:declared_name).and_call_original
+        suppress(described_class::NotAMemberName) { glossary.declared_name(name) }
+      end
+
+      it "asks the rules again" do
+        suppress(described_class::NotAMemberName) { declared_name }
+        expect(described_class::CasingRule).to have_received(:declared_name).twice
+      end
+    end
+
     context "when the name is not a member name" do
       let(:value) { "created_at" }
 
@@ -149,6 +175,18 @@ RSpec.describe JsonApiKit::Glossary do
 
     it "returns the member name" do
       expect(member_name).to eq(name.with(value: "createdAt"))
+    end
+
+    context "when the name was converted before" do
+      before do
+        allow(described_class::CasingRule).to receive(:member_name).and_call_original
+        glossary.member_name(name)
+      end
+
+      it "does not ask the rules again" do
+        member_name
+        expect(described_class::CasingRule).to have_received(:member_name).once
+      end
     end
 
     context "with a version rule" do
