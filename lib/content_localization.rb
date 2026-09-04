@@ -11,10 +11,6 @@ class ContentLocalization
     automatically_translate_anonymously?(scope&.request&.cookies)
   end
 
-  def self.show_original?(scope)
-    !automatically_translate?(scope)
-  end
-
   # @param cookies [ActionDispatch::Cookies::CookieJar, Hash]
   # @return [Boolean]
   def self.automatically_translate_anonymously?(cookies)
@@ -39,8 +35,14 @@ class ContentLocalization
   # @param post [Post] The post object
   # @return [Boolean]
   def self.show_translated_post?(post, scope)
-    SiteSetting.content_localization_enabled && post.raw.present? && post.locale.present? &&
+    SiteSetting.content_localization_enabled && post&.raw.present? && post.locale.present? &&
       !post.in_user_locale? && automatically_translate?(scope) && !understands?(post.locale, scope)
+  end
+
+  def self.translated_post_cooked(post, scope)
+    return if !show_translated_post?(post, scope)
+
+    post.get_localization&.cooked.presence
   end
 
   # This method returns true when we should try to show the translated topic.
@@ -48,8 +50,20 @@ class ContentLocalization
   # @param topic [Topic] The topic record
   # @return [Boolean]
   def self.show_translated_topic?(topic, scope)
-    SiteSetting.content_localization_enabled && topic.locale.present? && !topic.in_user_locale? &&
+    SiteSetting.content_localization_enabled && topic&.locale.present? && !topic.in_user_locale? &&
       automatically_translate?(scope) && !understands?(topic.locale, scope)
+  end
+
+  def self.translated_topic_title(topic, scope)
+    return if !show_translated_topic?(topic, scope)
+
+    topic.get_localization&.title.presence
+  end
+
+  def self.translated_topic_fancy_title(topic, scope)
+    return if !show_translated_topic?(topic, scope)
+
+    topic.get_localization&.fancy_title.presence
   end
 
   # This method returns true when we should try to show the translated category.
