@@ -41,7 +41,8 @@ class InvitesController < ApplicationController
 
     RateLimiter.new(nil, "invites-show-#{request.remote_ip}", 100, 1.minute).performed!
 
-    credential = secure_link_flow.claim(:invite)
+    credential =
+      request.format.json? ? secure_link_flow.claim(:invite) : secure_link_flow.credential(:invite)
     invite = Invite.find_by(invite_key: credential&.dig(:invite_key))
 
     if !invite.present? || !invite.redeemable?

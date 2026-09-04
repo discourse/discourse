@@ -373,17 +373,28 @@ RSpec.describe InvitesController do
       expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
     end
 
-    it "moves the invite key from the secure link flow into the clean page model" do
+    it "moves the invite key from the secure link flow into the clean JSON model" do
       get "/invites/#{invite.invite_key}"
-      get "/invite"
+      get "/invite.json"
 
       expect(response.status).to eq(200)
       expect(SecureLinkFlow.new(server_session).credential(:invite)).to be_nil
       expect(server_session["invite-key"]).to eq(invite.invite_key)
-      expect(response.body).to have_tag("script#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.text)
-        invite_info = JSON.parse(json["invite_info"])
-        expect(invite_info["token"]).to eq(invite.invite_key)
+      expect(response.parsed_body["token"]).to eq(invite.invite_key)
+    end
+
+    it "keeps the invite available across the external authentication round trip" do
+      get "/invites/#{invite.invite_key}"
+
+      2.times do
+        get "/invite"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
+          invite_info = JSON.parse(json["invite_info"])
+          expect(invite_info["token"]).to eq(invite.invite_key)
+        end
       end
     end
 
