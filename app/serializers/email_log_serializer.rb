@@ -16,6 +16,7 @@ class EmailLogSerializer < ApplicationSerializer
     return if object.cc_addresses.blank?
     object.cc_addresses_split
   end
+
   def include_reply_key?
     reply_keys = @options[:reply_keys]
     reply_keys.present? && reply_keys[[object.post_id, object.user_id]]

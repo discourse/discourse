@@ -320,6 +320,7 @@ module ApplicationHelper
   def is_crawler_homepage?
     request.path == "/" && use_crawler_layout?
   end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
