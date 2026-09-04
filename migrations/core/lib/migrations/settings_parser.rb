@@ -8,12 +8,18 @@ module Migrations
     class ValidationError < StandardError
     end
 
-    REQUIRED_KEYS = %i[source_db_path output_db_path root_paths]
+    REQUIRED_KEYS = %i[intermediate_db root_paths]
+
+    # Keys that used to live in the settings file and now come from CLI flags
+    # only. A leftover key here is almost certainly a stale config, so we point
+    # the user at the flag instead of silently ignoring it.
+    REMOVED_KEYS = { fix_missing: "--fix-missing", create_optimized_images: "--optimize" }.freeze
 
     def initialize(options)
       @options = options
 
       validate!
+      apply_defaults
     end
 
     def [](key)
@@ -38,8 +44,8 @@ module Migrations
 
     def validate!
       validate_required_keys
+      validate_removed_keys
       validate_paths
-      validate_options
     end
 
     def validate_required_keys
@@ -48,8 +54,17 @@ module Migrations
       raise ValidationError, "Missing required keys: #{missing.join(", ")}" if missing.any?
     end
 
+    def validate_removed_keys
+      REMOVED_KEYS.each do |key, flag|
+        next unless @options.key?(key)
+
+        raise ValidationError,
+              "`#{key}` has moved to the #{flag} flag; remove it from the settings file."
+      end
+    end
+
     def validate_paths
-      %i[source_db_path output_db_path].each do |key|
+      %i[intermediate_db files_db].each do |key|
         path = @options[key]
 
         next unless path
@@ -67,16 +82,14 @@ module Migrations
       end
     end
 
-    def validate_options
-      validate_thread_count_factor if @options[:thread_count_factor]
-    end
+    # Both files live next to the IntermediateDB by default; either can still be
+    # set explicitly in the settings file. Deriving them here means the rest of
+    # the run reads final values and never has to fall back to a default.
+    def apply_defaults
+      intermediate_db = @options[:intermediate_db]
 
-    def validate_thread_count_factor
-      count = @options[:thread_count_factor]
-
-      unless count.is_a?(Numeric) && count.positive?
-        raise ValidationError, "Thread count factor must be numeric and positive"
-      end
+      @options[:files_db] ||= CompanionPaths.files_db(intermediate_db)
+      @options[:download_cache_path] ||= CompanionPaths.download_cache_path(intermediate_db)
     end
   end
 end

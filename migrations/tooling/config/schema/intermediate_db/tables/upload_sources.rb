@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Migrations::Tooling::Schema.table :uploads do
+Migrations::Tooling::Schema.table :upload_sources do
   model :manual
 
   synthetic!

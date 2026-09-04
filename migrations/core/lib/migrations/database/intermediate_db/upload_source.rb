@@ -3,9 +3,9 @@
 module Migrations
   module Database
     module IntermediateDB
-      module Upload
+      module UploadSource
         SQL = <<~SQL
-          INSERT OR IGNORE INTO uploads (
+          INSERT OR IGNORE INTO upload_sources (
               id,
               filename,
               path,
