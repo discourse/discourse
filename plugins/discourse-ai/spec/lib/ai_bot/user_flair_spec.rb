@@ -27,6 +27,17 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
     expect(group.users).to contain_exactly(bot_user)
   end
 
+  it "backfills flair for users attached to an LLM model" do
+    model = Fabricate(:llm_model)
+    model.update_column(:user_id, bot_user.id)
+
+    described_class.sync_all!
+
+    group = Group.find_by(name: described_class::GROUP_NAME)
+    expect(bot_user.reload.flair_group_id).to eq(group.id)
+    expect(group.users).to contain_exactly(bot_user)
+  end
+
   it "updates the flair icon on an existing AI users group" do
     agent = Fabricate(:ai_agent, user: bot_user)
     group = Group.find_by(name: described_class::GROUP_NAME)

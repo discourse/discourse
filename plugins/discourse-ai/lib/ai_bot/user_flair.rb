@@ -25,14 +25,18 @@ module DiscourseAi::AiBot::UserFlair
   end
 
   def self.sync_user_ids!(user_ids)
-    user_ids.compact.uniq.each { |user_id| sync_user!(user_id) }
+    user_ids = user_ids.compact.uniq
+    return if user_ids.empty?
+
+    associated_user_ids = associated_user_ids(user_ids:).to_set
+
+    User
+      .where(id: user_ids)
+      .find_each { |user| sync_user!(user, associated: associated_user_ids.include?(user.id)) }
   end
 
-  def self.sync_user!(user_id)
-    user = User.find_by(id: user_id)
-    return if !user
-
-    if associated_user?(user_id)
+  def self.sync_user!(user, associated:)
+    if associated
       group = ensure_group!
       group.add(user, automatic: true)
       user.update!(flair_group_id: group.id) if user.flair_group_id != group.id
@@ -40,20 +44,20 @@ module DiscourseAi::AiBot::UserFlair
       group.remove(user)
     end
   end
+  private_class_method :sync_user!
 
-  def self.associated_user_ids
-    AiAgent
-      .where.not(user_id: nil)
-      .pluck(:user_id)
-      .concat(LlmModel.where.not(user_id: nil).pluck(:user_id))
-      .uniq
+  def self.associated_user_ids(user_ids: nil)
+    agents = AiAgent.with_user
+    models = LlmModel.with_user
+
+    if user_ids
+      agents = agents.where(user_id: user_ids)
+      models = models.where(user_id: user_ids)
+    end
+
+    agents.pluck(:user_id).concat(models.pluck(:user_id)).uniq
   end
   private_class_method :associated_user_ids
-
-  def self.associated_user?(user_id)
-    AiAgent.exists?(user_id: user_id) || LlmModel.exists?(user_id: user_id)
-  end
-  private_class_method :associated_user?
 
   def self.ensure_group!
     group = Group.find_or_initialize_by(name: GROUP_NAME)
