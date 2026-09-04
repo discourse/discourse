@@ -632,6 +632,49 @@ if generic_import_dependencies_available
       ensure
         source_db&.close
       end
+
+      it "accepts a delta-local post number while still checking the reply parent" do
+        parent = topic.first_post
+        reply = Fabricate(:post, topic: topic, reply_to_post_number: nil)
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(<<~SQL)
+        CREATE TABLE posts (
+          id INTEGER PRIMARY KEY,
+          topic_id INTEGER,
+          created_at TEXT,
+          post_number INTEGER,
+          reply_to_post_id INTEGER
+        )
+      SQL
+        source_db.execute(
+          "INSERT INTO posts (id, topic_id, created_at, post_number, reply_to_post_id) " \
+            "VALUES (?, ?, ?, ?, ?)",
+          [4_000_000_000, 3_000_000_000, reply.created_at.iso8601, 2, 4_000_000_001],
+        )
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        errors = []
+        mappings = {
+          posts: {
+            4_000_000_000 => reply.id,
+            4_000_000_001 => parent.id,
+          },
+          topics: {
+            3_000_000_000 => topic.id,
+          },
+        }
+
+        importer.preflight_posts(mappings, errors)
+
+        expect(errors).to be_empty
+
+        mappings[:posts][4_000_000_001] = Fabricate(:post, topic: topic).id
+        importer.preflight_posts(mappings, errors)
+
+        expect(errors).to contain_exactly("post 4000000000 changes immutable reply parent")
+      ensure
+        source_db&.close
+      end
     end
 
     describe "delta user aliases" do

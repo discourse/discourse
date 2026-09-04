@@ -585,10 +585,6 @@ class BulkImport::Generic < BulkImport::Base
       mapped_topic_id = mappings[:topics][row["topic_id"].to_i]
       errors << "post #{row["id"]} changes immutable topic" if mapped_topic_id != post[:topic_id]
 
-      if row["post_number"].present? && row["post_number"].to_i != post[:post_number]
-        errors << "post #{row["id"]} changes immutable post number"
-      end
-
       next if row["reply_to_post_id"].blank?
 
       parent_id = mappings[:posts][row["reply_to_post_id"].to_i]
