@@ -59,7 +59,7 @@ if generic_import_dependencies_available
         expect(mappings).to eq(9_223_372_036_854_775_000 => canonical_user.id)
       end
 
-      it "keeps the oldest source mapping canonical for a deduplicated user" do
+      it "keeps the oldest source mapping canonical unless the delta only exports a newer one" do
         UserCustomField.create!(
           user: canonical_user,
           name: "import_id",
@@ -72,10 +72,18 @@ if generic_import_dependencies_available
           value: "20",
           created_at: 1.day.ago,
         )
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE users (id INTEGER PRIMARY KEY)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
 
-        mappings = described_class.allocate.canonical_user_import_mappings
+        expect(importer.canonical_user_import_mappings).to eq(10 => canonical_user.id)
 
-        expect(mappings).to eq(10 => canonical_user.id)
+        source_db.execute("INSERT INTO users (id) VALUES (20)")
+
+        expect(importer.canonical_user_import_mappings).to eq(20 => canonical_user.id)
+      ensure
+        source_db&.close
       end
     end
 
@@ -280,6 +288,45 @@ if generic_import_dependencies_available
         expect(
           importer.instance_variable_get(:@delta_username_conflict_source_ids),
         ).to contain_exactly(1)
+      ensure
+        source_db&.close
+      end
+
+      it "accepts an email owned by the base-imported account of a declared alias" do
+        UserCustomField.create!(user: conflicting_user, name: "import_id", value: "2")
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(<<~SQL)
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY,
+          username TEXT,
+          email TEXT,
+          created_at TEXT
+        )
+      SQL
+        source_db.execute(
+          "CREATE TABLE user_aliases (alias_user_id INTEGER PRIMARY KEY, canonical_user_id INTEGER NOT NULL)",
+        )
+        source_db.execute(
+          "INSERT INTO users (id, username, email, created_at) VALUES (?, ?, ?, ?)",
+          [1, mapped_user.username, conflicting_user.email, mapped_user.created_at.iso8601],
+        )
+        source_db.execute("INSERT INTO user_aliases VALUES (2, 1)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        errors = []
+
+        importer.preflight_users({ 1 => mapped_user.id }, errors)
+
+        expect(errors).to be_empty
+
+        source_db.execute("DELETE FROM user_aliases")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.preflight_users({ 1 => mapped_user.id }, errors)
+
+        expect(errors).to contain_exactly(
+          "user 1 email belongs to Discourse user #{conflicting_user.id}",
+        )
       ensure
         source_db&.close
       end
@@ -582,6 +629,195 @@ if generic_import_dependencies_available
         importer.preflight_posts(mappings, errors)
 
         expect(errors).to contain_exactly("post 4000000000 changes immutable topic")
+      ensure
+        source_db&.close
+      end
+    end
+
+    describe "delta user aliases" do
+      COUNTERS = %i[
+        badge
+        bookmark
+        category_group
+        category
+        chat_channel
+        chat_direct_message_channel
+        chat_message
+        chat_thread
+        discourse_reaction
+        group
+        poll
+        poll_option
+        post_action
+        post
+        sso_record
+        topic
+        upload
+        user_avatar
+        user
+      ]
+
+      def build_delta_user_importer(source_db, users:)
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(
+          :@raw_connection,
+          ActiveRecord::Base.connection.raw_connection,
+        )
+        COUNTERS.each { |name| importer.instance_variable_set(:"@last_#{name}_id", 0) }
+        importer.instance_variable_set(:@last_user_email_id, UserEmail.maximum(:id))
+        importer.instance_variable_set(:@users, users)
+        importer.instance_variable_set(:@delta_update_mappings, users: users)
+        importer.instance_variable_set(:@delta_stats, users: { updated_ids: Set.new })
+        importer.instance_variable_set(:@delta_username_conflict_source_ids, Set.new)
+        importer.instance_variable_set(:@mapped_usernames, {})
+        importer.instance_variable_set(:@usernames_lower, Set.new)
+        importer.instance_variable_set(:@user_ids_by_username_lower, {})
+        importer.instance_variable_set(:@usernames_by_id, {})
+        importer.instance_variable_set(:@user_full_names_by_id, {})
+        importer.instance_variable_set(
+          :@import_issue_log_path,
+          File.join(Dir.mktmpdir, "issues.log"),
+        )
+        allow(importer).to receive(:update_records) do |rows, name, columns, keys: [:id]|
+          model = name.classify.constantize
+          rows.each do |row|
+            attributes = row.slice(*columns).compact
+            model.find_by!(row.slice(*keys)).update_columns(attributes) if attributes.any?
+          end
+          { updated_keys: rows.map { |row| row[:id] } }
+        end
+        importer
+      end
+
+      it "merges a base-imported alias into its winner so the winner can take over the email" do
+        winner = Fabricate(:user, username: "winner", email: "old@example.com")
+        alias_user = Fabricate(:user, username: "alias", email: "current@example.com")
+        alias_username = alias_user.username
+        UserCustomField.create!(user: winner, name: "import_id", value: "1")
+        UserCustomField.create!(user: alias_user, name: "import_id", value: "2")
+        moved_post = Fabricate(:post, user: alias_user)
+
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(<<~SQL)
+          CREATE TABLE users (
+            id INTEGER PRIMARY KEY,
+            username TEXT,
+            email TEXT,
+            created_at TEXT,
+            last_seen_at TEXT,
+            anonymized INTEGER
+          )
+        SQL
+        source_db.execute(
+          "INSERT INTO users (id, username, email, created_at) VALUES (?, ?, ?, ?)",
+          [1, winner.username, "current@example.com", winner.created_at.iso8601],
+        )
+        source_db.execute(
+          "CREATE TABLE user_aliases (alias_user_id INTEGER PRIMARY KEY, canonical_user_id INTEGER NOT NULL)",
+        )
+        source_db.execute("INSERT INTO user_aliases VALUES (2, 1)")
+        importer =
+          build_delta_user_importer(source_db, users: { 1 => winner.id, 2 => alias_user.id })
+        # rows COPYed earlier in a run outrun the sequence the merger inserts with
+        UserEmail.connection.execute(
+          "SELECT setval('#{UserEmail.sequence_name}', #{alias_user.primary_email.id - 1})",
+        )
+
+        expect { importer.merge_delta_user_aliases }.to change { User.exists?(alias_user.id) }.to(
+          false,
+        )
+        expect(importer.instance_variable_get(:@last_user_email_id)).to eq(UserEmail.maximum(:id))
+        expect(importer.user_id_from_original_username(alias_username)).to be_nil
+        expect(importer.user_id_from_original_username(winner.username)).to eq(winner.id)
+        expect(importer.instance_variable_get(:@emails)).to include(
+          "current@example.com" => winner.id,
+        )
+        importer.update_delta_users
+
+        expect(moved_post.reload.user_id).to eq(winner.id)
+        expect(importer.user_id_from_imported_id(2)).to eq(winner.id)
+        expect(
+          UserCustomField.where(user: winner, name: "import_id").pluck(:value),
+        ).to contain_exactly("1", "2")
+        expect(winner.reload.email).to eq("current@example.com")
+        expect(UserEmail.where(user: winner).count).to eq(1)
+
+        expect { importer.merge_delta_user_aliases }.not_to change { User.count }
+        importer.update_delta_users
+        expect(importer).to have_received(:update_records).with([], "user_email", [:email])
+      ensure
+        source_db&.close
+      end
+
+      it "clears both rows when two users exchange identities so the create pass rebuilds them" do
+        first = Fabricate(:user)
+        second = Fabricate(:user)
+        Fabricate(:user_associated_account, user: first, provider_name: "khoros", provider_uid: "a")
+        Fabricate(
+          :user_associated_account,
+          user: second,
+          provider_name: "khoros",
+          provider_uid: "b",
+        )
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, anonymized INTEGER)")
+        source_db.execute(
+          "CREATE TABLE user_associated_accounts (user_id INTEGER, provider_name TEXT, provider_uid TEXT)",
+        )
+        source_db.execute("INSERT INTO users (id) VALUES (1), (2)")
+        source_db.execute("INSERT INTO user_associated_accounts VALUES (1, 'khoros', 'b')")
+        source_db.execute("INSERT INTO user_associated_accounts VALUES (2, 'khoros', 'a')")
+        importer = build_delta_user_importer(source_db, users: { 1 => first.id, 2 => second.id })
+
+        importer.update_delta_user_associated_accounts
+
+        expect(UserAssociatedAccount.where(provider_name: "khoros")).to be_empty
+        expect(File.read(importer.instance_variable_get(:@import_issue_log_path))).to include(
+          "khoros/a moved from user #{first.id} to user #{second.id}",
+          "khoros/b moved from user #{second.id} to user #{first.id}",
+        )
+      ensure
+        source_db&.close
+      end
+
+      it "moves a provider identity to the delta's owner and drops userless rows" do
+        owner = Fabricate(:user)
+        previous_owner = Fabricate(:user)
+        Fabricate(
+          :user_associated_account,
+          user: owner,
+          provider_name: "khoros",
+          provider_uid: "stale",
+        )
+        Fabricate(
+          :user_associated_account,
+          user: previous_owner,
+          provider_name: "khoros",
+          provider_uid: "current",
+        )
+        UserAssociatedAccount.create!(user_id: nil, provider_name: "khoros", provider_uid: "orphan")
+
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, anonymized INTEGER)")
+        source_db.execute(
+          "CREATE TABLE user_associated_accounts (user_id INTEGER, provider_name TEXT, provider_uid TEXT)",
+        )
+        source_db.execute("INSERT INTO users (id) VALUES (1), (3)")
+        source_db.execute("INSERT INTO user_associated_accounts VALUES (1, 'khoros', 'current')")
+        source_db.execute("INSERT INTO user_associated_accounts VALUES (3, 'khoros', 'orphan')")
+        newcomer = Fabricate(:user)
+        importer = build_delta_user_importer(source_db, users: { 1 => owner.id, 3 => newcomer.id })
+
+        importer.update_delta_user_associated_accounts
+
+        expect(
+          UserAssociatedAccount.where(provider_name: "khoros").pluck(:user_id, :provider_uid),
+        ).to contain_exactly([owner.id, "current"])
+        expect(File.read(importer.instance_variable_get(:@import_issue_log_path))).to include(
+          "khoros/current moved from user #{previous_owner.id} to user #{owner.id}",
+          "khoros/orphan moved from user nil to user #{newcomer.id}",
+        )
       ensure
         source_db&.close
       end
