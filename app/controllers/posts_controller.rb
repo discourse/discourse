@@ -83,7 +83,7 @@ class PostsController < ApplicationController
           .visible
           .where(post_type: Post.types[:regular])
           .order(id: :desc)
-          .includes(topic: :category)
+          .includes(topic: %i[category localizations])
           .includes(user: %i[primary_group flair_group])
           .includes(:reply_to_user)
           .where("categories.id" => Category.secured(guardian).select(:id))

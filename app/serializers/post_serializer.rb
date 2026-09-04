@@ -153,6 +153,13 @@ class PostSerializer < BasicPostSerializer
     ContentLocalization.translated_topic_fancy_title(topic, scope) || topic&.fancy_title
   end
 
+  def excerpt
+    translated_cooked = ContentLocalization.translated_post_cooked(object, scope)
+    return object.excerpt if !translated_cooked
+
+    Post.excerpt(translated_cooked, nil, post: object)
+  end
+
   def posts_count
     topic&.posts_count
   end
