@@ -390,6 +390,19 @@ pl_PL:
       edit_event: "Edytuj wydarzenie"
       export_event: "Eksportuj wydarzenie"
       created_by: "Stworzone przez"
+      created_and_hosted_by: "Stworzone i hostowane przez"
+      hosted_by: "Hostowane przez"
+      co_hosted_by: "Współhostowane przez"
+      other_hosts:
+        one: "i %{count} inny"
+        few: "i %{count} inne"
+        many: "i %{count} innych"
+        other: "i %{count} innych"
+      all_hosts:
+        one: "%{count} host"
+        few: "%{count} hosty"
+        many: "%{count} hostów"
+        other: "%{count} hostów"
       bulk_invite: "Zaproszenie zbiorcze"
       close_event: "Zamknij wydarzenie"
       open_event: "Wydarzenie otwarte"
@@ -623,6 +636,9 @@ pl_PL:
           placeholder: "Opcjonalne, domyślnie jest to tytuł tematu"
         invitees:
           label: "Zaproszone grupy"
+        hosts:
+          label: "Hosty"
+          description: "Hosty są wyświetlane na wydarzeniu wraz z jego twórcą."
         event_type:
           label: "Rodzaj obecności"
           public:

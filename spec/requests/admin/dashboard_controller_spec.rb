@@ -1255,6 +1255,7 @@ RSpec.describe Admin::DashboardController do
     let(:fake_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "fake_source"
+
         def self.fetch_many(identifiers, guardian:, filters: {})
           identifiers.each_with_object({}) do |id, h|
             h[id.to_s] = { id: id.to_s, filters: filters }
@@ -1266,6 +1267,7 @@ RSpec.describe Admin::DashboardController do
     let(:raising_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "raising_source"
+
         def self.fetch_many(identifiers, guardian:, filters: {})
           identifiers.each_with_object({}) do |id, h|
             raise "boom" if id == "broken"
@@ -2329,6 +2331,7 @@ RSpec.describe Admin::DashboardController do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "fake_source"
         def self.label = "Fake"
+
         def self.accessible_ids(identifiers, guardian:)
           identifiers.map(&:to_s).reject { |id| id == "forbidden" }.to_set
         end

@@ -911,6 +911,7 @@ fa_IR:
       windows: "مایکروسافت ویندوز"
       unknown: "سیستم‌عامل ناشناخته"
   admin_site_traffic_explorer:
+    unknown: "ناشناس"
     traffic_types:
       anonymous: "ناشناس"
   change_email:

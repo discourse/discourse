@@ -193,6 +193,8 @@ ur:
           add: "URL شامل کریں"
         description:
           label: "تفصیل"
+        hosts:
+          label: "ہوسٹس"
         event_type:
           public:
             title: "عوامی"

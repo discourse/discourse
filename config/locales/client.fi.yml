@@ -5651,6 +5651,7 @@ fi:
         filters:
           country: "Maa"
           browser: "Selain"
+          language: "Kieli"
           ip: "IP-osoite"
         series:
           anonymous_human: "Anonyymeja"

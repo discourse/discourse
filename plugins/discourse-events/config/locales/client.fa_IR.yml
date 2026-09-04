@@ -469,6 +469,8 @@ fa_IR:
           placeholder: "اختیاری، پیش‌فرض عنوان موضوع است"
         invitees:
           label: "گروه‌های دعوت شده"
+        hosts:
+          label: "میزبانان"
         event_type:
           public:
             title: "عمومی"

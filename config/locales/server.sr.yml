@@ -281,6 +281,7 @@ sr:
   password_reset:
     title: "Resetujte Šifru"
   admin_site_traffic_explorer:
+    unknown: "Nepoznato"
     traffic_types:
       logged_in: "Prijavljen"
       anonymous: "Anonimno"

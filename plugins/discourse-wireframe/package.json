@@ -1,7 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "discourse": "npm:@discourse/types@2026.9.0-eb242063"
+    "discourse": "npm:@discourse/types@2026.9.0-c0ef3a11"
   },
   "devDependencies": {
     "lucide-static": "^1.16.0"

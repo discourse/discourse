@@ -6,6 +6,10 @@ ignoredBuiltDependencies:
 - "@zoom/meetingsdk"
 - core-js
 - rete
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+- "@discourse/*"
+- discourse
 packages:
 - "docs/developer-guides"
 - "frontend/deprecation-silencer"

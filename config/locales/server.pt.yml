@@ -621,6 +621,7 @@ pt:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Desconhecido"
     traffic_types:
       anonymous: "Anónimo"
   change_email:

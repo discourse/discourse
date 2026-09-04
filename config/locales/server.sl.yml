@@ -492,6 +492,7 @@ sl:
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   admin_site_traffic_explorer:
+    unknown: "Neznano"
     traffic_types:
       anonymous: "Anonimni"
   change_email:

@@ -366,10 +366,6 @@ vi:
           ai_image_caption: "Chú thích hình ảnh"
           ai_summarization: "Tóm tắt"
           ai_spam: "Rác"
-        model_description:
-          open_ai-gpt-5-6-sol: "Mô hình tiên tiến nhất của OpenAI dành cho các tác vụ chuyên môn phức tạp"
-          open_ai-gpt-5-6-terra: "Cân bằng giữa trí thông minh và chi phí cho các tác vụ yêu cầu cao"
-          open_ai-gpt-5-6-luna: "Tối ưu hóa chi phí cho các tác vụ khối lượng lớn"
         next:
           title: "Kế tiếp"
         tests:

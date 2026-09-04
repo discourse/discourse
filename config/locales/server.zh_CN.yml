@@ -1008,6 +1008,7 @@ zh_CN:
       unknown: "未知操作系统"
   admin_site_traffic_explorer:
     direct_or_unknown: "直接 / 未知"
+    unknown: "未知"
     traffic_types:
       logged_in: "登录成员"
       anonymous: "匿名"
@@ -1978,7 +1979,7 @@ zh_CN:
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
     site_contact_username: "用于发送所有自动消息的有效管理人员用户名。如果留空，将使用默认系统帐户。"
-    site_contact_group_name: "受邀接收所有自动发送的个人消息的群组的有效名称。"
+    site_contact_group_name: "受邀接收所有自动发送的个人消息的群组。"
     send_welcome_message: "向所有新用户发送带有快速入门指南的欢迎消息。"
     send_tl1_welcome_message: "向新的信任级别 1 用户发送欢迎消息。"
     send_tl2_promotion_message: "向新的信任级别 2 用户发送有关升级的消息。"
@@ -2716,7 +2717,7 @@ zh_CN:
       invalid_email: "无效的电子邮件地址。"
       invalid_username: "没有使用该用户名的用户。"
       valid_username: "存在一个使用该用户名的用户。"
-      invalid_group: "没有使用该名称的群组。"
+      invalid_group: "没有这样的群组。"
       invalid_svg: "SVG 图片无效。它必须包含 SVG 元素，且不能包含任何脚本或事件处理程序。"
       invalid_upload: "上传内容无效或不存在。"
       invalid_topic: "没有与该 ID 匹配的话题。"

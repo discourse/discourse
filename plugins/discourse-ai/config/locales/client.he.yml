@@ -704,10 +704,6 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-7: "המודל החכם ביותר של Anthropic"
-          anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
-          anthropic-claude-haiku-4-5: "מהיר וחסכוני"
-          google-gemini-3-1-pro-preview: "המודל החכם ביותר של Google"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"

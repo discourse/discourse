@@ -6367,6 +6367,7 @@ tr_TR:
         filters:
           country: "Ülke"
           browser: "Tarayıcı"
+          language: "Dil"
           ip: "IP adresi"
         series:
           anonymous_human: "Anonim"

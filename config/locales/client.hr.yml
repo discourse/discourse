@@ -5838,6 +5838,7 @@ hr:
           pages: "Stranice"
           visitors: "Posjetitelji"
         filters:
+          language: "Jezik"
           ip: "IP adrese"
         series:
           anonymous_human: "Anonimno"

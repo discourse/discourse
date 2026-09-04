@@ -90,6 +90,7 @@ class AiAgent < ActiveRecord::Base
   end
 
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }
+  scope :with_user, -> { where.not(user_id: nil) }
 
   def self.all_agents(enabled_only: true)
     agent_cache[:value] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)

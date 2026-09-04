@@ -138,6 +138,7 @@ class LlmModel < ActiveRecord::Base
           model_ids = DiscourseAi::Configuration::LlmEnumerator.global_usage.keys
           where(id: model_ids)
         end
+  scope :with_user, -> { where.not(user_id: nil) }
 
   def self.enabled_chat_bot_ids
     SiteSetting.ai_bot_enabled_llms.split("|").map(&:to_i).reject(&:zero?)

@@ -840,6 +840,11 @@ module Discourse
 
             @mutex.synchronize do
               @dbs.each do |db|
+                if !RailsMultisite::ConnectionManagement.has_db?(db)
+                  @dbs.delete(db)
+                  next
+                end
+
                 RailsMultisite::ConnectionManagement.with_connection(db) do
                   @dbs.delete(db) if !Discourse.redis.expire(key, ttl)
                 end

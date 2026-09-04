@@ -189,6 +189,7 @@ RSpec.describe BrowserPageviewEvent do
         referrer: "a" * (described_class::MAX_REFERRER_LENGTH + 1),
         user_agent: "a" * (described_class::MAX_USER_AGENT_LENGTH + 1),
         language: "a" * (described_class::MAX_LANGUAGE_LENGTH + 1),
+        normalized_language: "a" * (described_class::MAX_NORMALIZED_LANGUAGE_LENGTH + 1),
         ip_address: "1.2.3.4",
         session_id: "a" * (described_class::MAX_SESSION_ID_LENGTH + 1),
         normalized_referrer: "a" * (described_class::MAX_NORMALIZED_REFERRER_LENGTH + 1),
@@ -198,6 +199,7 @@ RSpec.describe BrowserPageviewEvent do
     expect(event.referrer.length).to eq(described_class::MAX_REFERRER_LENGTH)
     expect(event.user_agent.length).to eq(described_class::MAX_USER_AGENT_LENGTH)
     expect(event.language.length).to eq(described_class::MAX_LANGUAGE_LENGTH)
+    expect(event.normalized_language.length).to eq(described_class::MAX_NORMALIZED_LANGUAGE_LENGTH)
     expect(event.session_id.length).to eq(described_class::MAX_SESSION_ID_LENGTH)
     expect(event.normalized_referrer.length).to eq(described_class::MAX_NORMALIZED_REFERRER_LENGTH)
   end
@@ -249,6 +251,7 @@ RSpec.describe BrowserPageviewEvent do
       expect(event.source).to eq("beacon")
       expect(event.browser).to eq("edge")
       expect(event.language).to eq("en-AU")
+      expect(event.normalized_language).to eq("en")
       expect(described_class.queued_count).to eq(0)
     end
 

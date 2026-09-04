@@ -355,6 +355,9 @@ hu:
       edit_event: "Esemény szerkesztése"
       export_event: "Esemény exportálása"
       created_by: "Létrehozta:"
+      other_hosts:
+        one: "és még %{count} felhasználó"
+        other: "és még %{count} felhasználó"
       bulk_invite: "Csoportos meghívás"
       close_event: "Esemény lezárása"
       open_event: "Nyílt esemény"
@@ -518,6 +521,8 @@ hu:
           placeholder: "Nem kötelező, alapértelmezés szerint a téma címe"
         invitees:
           label: "Meghívott csoportok"
+        hosts:
+          label: "Gazdagépek"
         event_type:
           public:
             title: "Nyilvános"

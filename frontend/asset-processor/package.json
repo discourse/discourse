@@ -20,7 +20,7 @@
     "autoprefixer": "^10.5.4",
     "babel-plugin-ember-template-compilation": "^4.0.0",
     "content-tag": "^4.0.0",
-    "core-js": "^3.49.0",
+    "core-js": "^3.50.0",
     "decorator-transforms": "^2.4.0",
     "discourse": "workspace:0.0.0",
     "ember-cli-htmlbars": "^7.0.1",
@@ -36,7 +36,7 @@
     "rolldown": "1.2.5",
     "source-map-js": "^1.2.1",
     "strip-test-selectors": "^0.1.0",
-    "terser": "^5.47.1"
+    "terser": "^5.51.2"
   },
   "engines": {
     "node": ">= 20",
@@ -45,6 +45,6 @@
     "pnpm": "^10"
   },
   "devDependencies": {
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.11"
   }
 }

@@ -720,6 +720,7 @@ da:
       windows: "Microsoft Windows"
       unknown: "ukendt operativsystem"
   admin_site_traffic_explorer:
+    unknown: "Ukendt"
     traffic_types:
       anonymous: "Anonym"
   change_email:
@@ -1619,7 +1620,6 @@ da:
     errors:
       invalid_email: "Ugyldig e-mail-adresse"
       invalid_username: "Der er ingen bruger med det brugernavn."
-      invalid_group: "Der er ingen gruppe med dette navn."
       invalid_integer_min_max: "Værdien skal være mellem %{min} og %{max}."
       invalid_integer_min: "Værdien skal være %{min} eller større."
       invalid_integer_max: "Værdien kan ikke være højere end %{max}."

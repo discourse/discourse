@@ -132,6 +132,7 @@ module DiscourseAi
             Tools::ReadSiteSetting,
             Tools::ChangeSiteSetting,
             Tools::RandomPicker,
+            Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
             Tools::GithubDiff,

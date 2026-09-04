@@ -570,6 +570,7 @@ ro:
     success: "Ți-ai schimbat cu succes parola și acum ești autentificat."
     success_unapproved: "Ți-ai schimbat cu succes parola."
   admin_site_traffic_explorer:
+    unknown: "Necunoscută"
     traffic_types:
       anonymous: "Anonimi"
   change_email:

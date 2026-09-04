@@ -6781,6 +6781,7 @@ fr:
           referrer: "Source de trafic"
           country: "Pays"
           browser: "Navigateur"
+          language: "Langue "
           ip: "Adresse IP"
         metrics:
           logged_in_share:

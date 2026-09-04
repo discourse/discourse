@@ -6710,6 +6710,7 @@ ru:
         filters:
           country: "Страна"
           browser: "Браузер"
+          language: "Язык"
           ip: "IP-адрес"
         series:
           anonymous_human: "Анонимные просмотры"
