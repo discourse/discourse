@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^3.0.0",
-    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^3.0.1",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^3.1.0",
     "@codemirror/autocomplete": "^6.20.3",
     "@codemirror/commands": "^6.11.0",
     "@codemirror/lang-javascript": "^6.2.5",
