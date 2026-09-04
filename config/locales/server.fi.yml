@@ -1130,7 +1130,8 @@ fi:
   uploads:
     marked_insecure_from_theme_component_reason: "latausta käytetään teemakomponentissa"
   unsubscribe:
-    title: "Peru tilaus"
+    title: "Peru tilaus %{email}"
+    submit_button: "Peru tilaus"
     stop_watching_topic: "Lopeta ketjun tarkkailu, %{link}"
     mute_topic: "Vaimenna kaikki ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"

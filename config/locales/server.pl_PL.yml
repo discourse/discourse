@@ -1404,7 +1404,8 @@ pl_PL:
   uploads:
     marked_insecure_from_theme_component_reason: "przesyłanie użyte w komponencie motywu"
   unsubscribe:
-    title: "Wypisz"
+    title: "Wypisz %{email}"
+    submit_button: "Wypisz"
     stop_watching_topic: "Przestań obserwować ten temat, %{link}"
     mute_topic: "Wycisz wszystkie powiadomienia dla tego tematu, %{link}"
     unwatch_category: "Przestań obserwować wszystkie tematy w %{category}"

@@ -705,7 +705,8 @@ pt:
   unsubscribed:
     topic_description: "Para re-subscrever a %{link}, use o controle de notificação no fundo ou à direita do tópico."
   unsubscribe:
-    title: "Cancelar subscrição"
+    title: "Cancelar subscrição %{email}"
+    submit_button: "Cancelar subscrição"
     stop_watching_topic: "Parar de vigiar este tópico, %{link}"
     mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
     unwatch_category: "Deixar de seguir todos os tópicos em %{category}"

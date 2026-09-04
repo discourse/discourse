@@ -1283,7 +1283,8 @@ sk:
   uploads:
     marked_insecure_from_theme_component_reason: "upload použitý v komponente témy"
   unsubscribe:
-    title: "Odhlásiť"
+    title: "Odhlásiť %{email}"
+    submit_button: "Odhlásiť"
     stop_watching_topic: "Prestať pozerať túto tému, %{link}"
     mute_topic: "Stíšiť všetky upozornenia pre túto tému, %{link}"
     unwatch_category: "Prestať pozerať všetky témy v kategórii %{category}"

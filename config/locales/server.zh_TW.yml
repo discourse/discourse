@@ -1137,7 +1137,8 @@ zh_TW:
   uploads:
     marked_insecure_from_theme_component_reason: "佈景主題元件中使用的上傳項目"
   unsubscribe:
-    title: "退訂"
+    title: "退訂 %{email}"
+    submit_button: "退訂"
     stop_watching_topic: "停止關注此主題，%{link}"
     mute_topic: "將此主題的所有通知設為免打擾，%{link}"
     unwatch_category: "停止關注%{category}中的所有主題"

@@ -816,7 +816,8 @@ ko:
   uploads:
     marked_insecure_from_theme_component_reason: "테마 구성 요소에 사용된 업로드"
   unsubscribe:
-    title: "구독 해제"
+    title: "구독 해제 %{email}"
+    submit_button: "구독 해제"
     stop_watching_topic: "이 주제 구독 중지, %{link}"
     mute_topic: "이 주제에 대한 모든 알림 뮤트, %{link}"
     unwatch_category: "%{category} 카테고리의 모든 주제 구독 중지"

@@ -929,7 +929,8 @@ ur:
   uploads:
     marked_insecure_from_theme_component_reason: "تھیم جزو میں استعمال شدہ اپ لوڈ"
   unsubscribe:
-    title: "غیر سَبسکرائب"
+    title: "غیر سَبسکرائب %{email}"
+    submit_button: "غیر سَبسکرائب"
     stop_watching_topic: "اس ٹاپک کو دیکھنا چھوڑ دیں، %{link}"
     mute_topic: "اِس ٹاپک کیلئے تمام اطلاعات کو خاموش کر دیں، %{link}"
     unwatch_category: "%{category} میں تمام ٹاپکس کو دیکھنا چھوڑ دیں"

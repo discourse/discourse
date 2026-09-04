@@ -1142,7 +1142,8 @@ pt_BR:
   uploads:
     marked_insecure_from_theme_component_reason: "envio usado no componente de tema"
   unsubscribe:
-    title: "Cancelar associação"
+    title: "Cancelar associação %{email}"
+    submit_button: "Cancelar associação"
     stop_watching_topic: "Parar de acompanhar este tópico, %{link}"
     mute_topic: "Silenciar todas as notificações para este tópico, %{link} "
     unwatch_category: "Parar de acompanhar todos os tópicos na categoria %{category}"

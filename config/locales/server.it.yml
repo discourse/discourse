@@ -1130,7 +1130,8 @@ it:
   uploads:
     marked_insecure_from_theme_component_reason: "caricamento utilizzato nel componente del tema"
   unsubscribe:
-    title: "Annulla iscrizione"
+    title: "Annulla iscrizione %{email}"
+    submit_button: "Annulla iscrizione"
     stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"

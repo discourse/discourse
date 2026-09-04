@@ -1347,7 +1347,8 @@ en:
     marked_insecure_from_theme_component_reason: "upload used in theme component"
 
   unsubscribe:
-    title: "Unsubscribe"
+    title: "Unsubscribe %{email}"
+    submit_button: "Unsubscribe"
     stop_watching_topic: "Stop watching this topic, %{link}"
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"

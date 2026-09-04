@@ -655,7 +655,8 @@ ro:
   unsubscribed:
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
-    title: "Dezabonare"
+    title: "Dezabonare %{email}"
+    submit_button: "Dezabonare"
     stop_watching_topic: "Încetează să urmărești activ acest subiect, %{link}"
     mute_topic: "Setează pe silențios toate notificările cu privire la acest subiect, %{link}"
     unwatch_category: "Încetează să urmărești activ toate subiectele din categoria %{category}"

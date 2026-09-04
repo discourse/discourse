@@ -1031,7 +1031,8 @@ fa_IR:
     topic_description: "برای اشتراک مجدد در %{link}، از مدیریت آگاه‌سازی در قسمت پایین یا راست موضوع استفاده کنید."
     private_topic_description: "برای اشتراک مجدد، از کنترل اعلان در پایین یا سمت راست موضوع استفاده کنید."
   unsubscribe:
-    title: "لغو اشتراک"
+    title: "لغو اشتراک %{email}"
+    submit_button: "لغو اشتراک"
     stop_watching_topic: "این موضوع را مشاهده نکنید، %{link}"
     mute_topic: "نادیده گرفتن تمام اطلاعیه‌های این موضوع، %{link}"
     unwatch_category: "موضوعات دسته‌بندی %{category} را مشاهده نکنید"

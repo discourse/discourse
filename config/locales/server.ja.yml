@@ -1061,7 +1061,8 @@ ja:
   uploads:
     marked_insecure_from_theme_component_reason: "アップロードはテーマのコンポーネントに使用されています"
   unsubscribe:
-    title: "購読解除"
+    title: "購読解除 %{email}"
+    submit_button: "購読解除"
     stop_watching_topic: "%{link} のトピックのウォッチを停止する"
     mute_topic: "%{link} のトピックのすべての通知をミュートにする"
     unwatch_category: "%{category} 内のすべてのトピックのウォッチを停止する"

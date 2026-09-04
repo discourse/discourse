@@ -397,7 +397,8 @@ bs_BA:
         make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
   unsubscribe:
-    title: "Odjavi se"
+    title: "Odjavi se %{email}"
+    submit_button: "Odjavi se"
     log_out: "Izloguj se"
     digest_frequency:
       never: "nikad"

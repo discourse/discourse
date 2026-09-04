@@ -1404,7 +1404,8 @@ uk:
   uploads:
     marked_insecure_from_theme_component_reason: "завантаження, що використовується в компоненті теми"
   unsubscribe:
-    title: "Відписатися"
+    title: "Відписатися %{email}"
+    submit_button: "Відписатися"
     stop_watching_topic: "Перестати слідкувати за цією темою, %{link}"
     mute_topic: "Відмовитись від усіх повідомлень з теми, %{link}"
     unwatch_category: "Перестати слідкувати за всіма темами в розділі %{category}"

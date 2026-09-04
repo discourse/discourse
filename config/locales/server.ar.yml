@@ -1513,7 +1513,8 @@ ar:
   uploads:
     marked_insecure_from_theme_component_reason: "التحميل المُستخدَم في مكوِّن السمة"
   unsubscribe:
-    title: "إلغاء الاشتراك"
+    title: "إلغاء الاشتراك %{email}"
+    submit_button: "إلغاء الاشتراك"
     stop_watching_topic: "إيقاف مراقبة هذا الموضوع، %{link}"
     mute_topic: "كتم جميع الإشعارات لهذا الموضوع، %{link}"
     unwatch_category: "إيقاف مراقبة كل الموضوعات في %{category}"

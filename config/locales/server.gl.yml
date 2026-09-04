@@ -802,7 +802,8 @@ gl:
   uploads:
     marked_insecure_from_theme_component_reason: "subida utilizada no compoñente do tema"
   unsubscribe:
-    title: "Cancelar subscrición"
+    title: "Cancelar subscrición %{email}"
+    submit_button: "Cancelar subscrición"
     stop_watching_topic: "Deixar de seguir este tema, %{link}"
     mute_topic: "Silenciar todas as notificacións para este tema, %{link}"
     unwatch_category: "Deixar de seguir todos os temas en %{category}"

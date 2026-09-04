@@ -1309,7 +1309,8 @@ ru:
   uploads:
     marked_insecure_from_theme_component_reason: "загрузить используемый в теме компонент"
   unsubscribe:
-    title: "Отписаться"
+    title: "Отписаться %{email}"
+    submit_button: "Отписаться"
     stop_watching_topic: "Прекратить наблюдение за этой темой: %{link}"
     mute_topic: "Отключить все уведомления по этой теме: %{link}"
     unwatch_category: "Прекратить наблюдение за всеми темами категории «%{category}»"

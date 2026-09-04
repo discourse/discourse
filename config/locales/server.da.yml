@@ -857,7 +857,8 @@ da:
   uploads:
     marked_insecure_from_theme_component_reason: "overførsel anvendt i temakomponenten"
   unsubscribe:
-    title: "Frameld"
+    title: "Frameld %{email}"
+    submit_button: "Frameld"
     stop_watching_topic: "Følg ikke længere dette emne, %{link}"
     mute_topic: "Tavshed fra alle notifikationer for dette emne/indlæg, %{link}"
     unwatch_category: "Følg ikke længere disse emner i %{category}"

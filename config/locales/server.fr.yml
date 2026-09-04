@@ -1194,7 +1194,8 @@ fr:
   uploads:
     marked_insecure_from_theme_component_reason: "fichier utilisé dans un composant de thème"
   unsubscribe:
-    title: "Se désabonner"
+    title: "Se désabonner %{email}"
+    submit_button: "Se désabonner"
     stop_watching_topic: "Arrêter de surveiller ce sujet, %{link}"
     mute_topic: "Ignorer toutes les notifications pour ce sujet, %{link}"
     unwatch_category: "Arrêter de surveiller les sujets de la catégorie %{category}"

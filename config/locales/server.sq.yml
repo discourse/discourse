@@ -428,7 +428,8 @@ sq:
   unsubscribed:
     topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
   unsubscribe:
-    title: "Çregjistrohuni"
+    title: "Çregjistrohuni %{email}"
+    submit_button: "Çregjistrohuni"
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
     log_out: "Shkëputu"

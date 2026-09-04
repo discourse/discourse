@@ -1157,7 +1157,8 @@ nl:
   uploads:
     marked_insecure_from_theme_component_reason: "upload gebruikt in themaonderdeel"
   unsubscribe:
-    title: "Uitschrijven"
+    title: "Uitschrijven %{email}"
+    submit_button: "Uitschrijven"
     stop_watching_topic: "Dit topic niet meer observeren, %{link}"
     mute_topic: "Alle meldingen voor dit topic negeren, %{link}"
     unwatch_category: "Geen topics in %{category} meer observeren"
