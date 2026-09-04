@@ -51,6 +51,10 @@ RSpec/InstanceVariable:
   Include:
     - spec/models/**/*
 
+Style/AccessModifierDeclarations:
+  Enabled: true
+  AllowModifiersOnSymbols: false
+
 Style/RedundantFreeze:
   Enabled: true
 
