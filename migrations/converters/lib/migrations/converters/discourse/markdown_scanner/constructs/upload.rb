@@ -21,7 +21,7 @@ module Migrations
             # (`[Juan [John] Hernandez.pdf|attachment]`). Line ends stay in,
             # as in core: an AI-captioned image carries its caption on a line
             # of its own inside the alt.
-            LABEL = /(?>[^|\[\]]{0,999}(?:\[[^\[\]]{0,999}\](?!\()[^|\[\]]{0,999}){0,32})/
+            LABEL = /(?>[^|\[\]]{0,4999}(?:\[[^\[\]]{0,4999}\](?!\()[^|\[\]]{0,4999}){0,32})/
             private_constant :LABEL
 
             # The URL and dimensions classes exclude the newline (a destination

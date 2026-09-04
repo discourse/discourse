@@ -22,10 +22,10 @@ module Migrations
             private_constant :EMPTY_OCCURRENCES
 
             # How far back a link's `[`/`!` anchor is searched from its
-            # destination. The construct grammars cap a label around a thousand
-            # bytes, so a wider window cannot anchor anything and only costs
-            # time on line-terminator-free bodies.
-            ANCHOR_WINDOW = 2048
+            # destination. Far above any real label, AI captions of a few
+            # thousand bytes included; it only bounds the walk on bodies with
+            # no anchor to find.
+            ANCHOR_WINDOW = 16_384
             private_constant :ANCHOR_WINDOW
 
             def initialize(scanner, input)

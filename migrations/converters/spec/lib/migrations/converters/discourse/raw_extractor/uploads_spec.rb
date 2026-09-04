@@ -658,6 +658,16 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   describe "multi-line alt text" do
+    it "defers an image whose alt text runs to several thousand bytes" do
+      alt = "The image shows a chat window. " * 100
+      raw = "![#{alt} (Captioned by AI)|690x77](upload://k9k7D6IBBk6Sg7EuRM59QL72xXn.png)"
+
+      result = extract(raw)
+
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to eq(buffer.uploads.first[:placeholder])
+    end
+
     it "defers an image whose alt text spans lines" do
       raw =
         "![Screenshot of a form.\nAssistant:\n (Captioned by AI)|690x77](upload://k9k7D6IBBk6Sg7EuRM59QL72xXn.png) tail"

@@ -119,12 +119,14 @@ module Migrations
             # construct without recording it. Failing there matches core: links
             # don't nest.
             #
-            # Every quantifier is capped (CommonMark's own label limit is 999
-            # characters) and the whole run is atomic: nested unbounded stars
-            # made a bracket-dense body without a closing `](` backtrack across
-            # every bracket split, quadratically. The run ends at the first `](`
-            # either way, so atomicity changes cost, not matches.
-            LINK_TEXT = /(?>[^\[\]]{0,999}(?:\[[^\[\]]{0,999}\](?!\()[^\[\]]{0,999}){0,32})/
+            # Every quantifier is capped and the whole run is atomic: nested
+            # unbounded stars made a bracket-dense body without a closing `](`
+            # backtrack across every bracket split, quadratically. The run ends
+            # at the first `](` either way, so atomicity changes cost, not
+            # matches. The cap only bounds that cost; inline link text has no
+            # length limit in CommonMark, and AI-captioned images carry alt
+            # texts of several thousand bytes.
+            LINK_TEXT = /(?>[^\[\]]{0,4999}(?:\[[^\[\]]{0,4999}\](?!\()[^\[\]]{0,4999}){0,32})/
 
             # The padding CommonMark allows inside a link's parentheses. The
             # destination and title may sit on separate lines, but not across a
