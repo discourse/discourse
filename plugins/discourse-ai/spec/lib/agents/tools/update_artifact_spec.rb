@@ -21,6 +21,46 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
   end
 
   describe "#process" do
+    it "ignores non-text completion events while updating artifact code" do
+      updated_source = <<~TXT.strip
+        [HTML]
+        <div>Updated safely</div>
+        [/HTML]
+      TXT
+      thinking =
+        DiscourseAi::Completions::Thinking.new(
+          message: nil,
+          provider_info: {
+            gemini_interactions: {
+              steps: [{ signature: "signed-context" }],
+            },
+          },
+        )
+      tool = nil
+      result = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([[updated_source, thinking]]) do
+        tool =
+          described_class.new(
+            { artifact_id: artifact.id, instructions: "Update safely" },
+            bot_user: bot_user,
+            llm: llm_model.to_llm,
+            agent_options: {
+              "update_algorithm" => "full",
+            },
+            context: DiscourseAi::Agents::BotContext.new(messages: [], post: post),
+          )
+
+        result = tool.invoke {}
+      end
+
+      expect(result[:status]).to eq("success")
+      expect(artifact.versions.order(:version_number).last.html).to eq("<div>Updated safely</div>")
+      expect(tool.custom_raw).not_to include(
+        thinking.provider_info_for(:gemini_interactions)[:steps].first[:signature],
+      )
+    end
+
     it "correctly updates artifact using section markers" do
       responses = [<<~TXT.strip]
         [HTML]

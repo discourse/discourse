@@ -56,6 +56,8 @@ module DiscourseAi
             cancel_manager: cancel_manager,
             execution_context:,
           ) do |partial|
+            next if !partial.is_a?(String)
+
             progress.call(partial) if progress
             response << partial
           end
