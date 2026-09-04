@@ -12,7 +12,7 @@
     "@rdil/parallel-prettier": "^3.0.0",
     "concurrently": "^10.0.5",
     "eslint": "10.6.0",
-    "execa": "^9.6.0",
+    "execa": "^10.0.1",
     "jsdoc": "^4.0.5",
     "lefthook": "^2.1.12",
     "licensee": "^11.1.1",
