@@ -46,7 +46,9 @@ module Migrations
     #   * `badge(original_id)`              => `{ id:, slug: }` for the destination
     #                                          badge, or `nil`
     #   * `emoji_name(source_name)`         => the destination custom emoji name (a
-    #                                          conflict may rename it) or `nil`
+    #                                          conflict may rename it) or `nil`. The
+    #                                          name comes in {NameNormalizer}-folded,
+    #                                          so the map must key it the same way
     #   * `base_url`                        => the destination site's base URL
     #   * `here_mention`                    => the destination's `here_mention` site
     #                                          setting value (the name that acts as the
@@ -63,6 +65,8 @@ module Migrations
     # An internal link that can't be resolved does have a fallback (its source URL),
     # but it is still reported: a stale internal link points at the wrong record
     # rather than failing loudly, so operators need the report (see #render_link).
+    # A quote whose recorded post coordinates don't resolve is reported for the
+    # same reason (see #render_quote).
     #
     # A token with no linkage row at all is an orphan — the token and its row were
     # not written together upstream. It is stripped (so no U+E000 character reaches
@@ -347,12 +351,16 @@ module Migrations
       private_constant :TAG_SUBCATEGORY_FILTERS
 
       # The `none`/`all` subcategory filter a category+tag path may open with; the
-      # intersection form has no filter position.
+      # intersection form has no filter position. A single segment is always the
+      # tag, never a filter — a tag can be named "none" or "all", and eating the
+      # only segment would leave the route with no tag to resolve.
       def tag_path_filter(row)
         return nil unless row[:target_type] == Enums::LinkTarget::CATEGORY_TAG
 
-        first = row[:target_tag_path].to_s.split("/").first
-        TAG_SUBCATEGORY_FILTERS.include?(first) ? first : nil
+        segments = row[:target_tag_path].to_s.split("/")
+        return nil unless segments.size > 1
+
+        TAG_SUBCATEGORY_FILTERS.include?(segments.first) ? segments.first : nil
       end
 
       def tag_path_tags(row)
@@ -511,27 +519,71 @@ module Migrations
       # That is only warranted when something actually resolved; a full miss
       # restores the verbatim source tag, which may carry syntax the reference
       # columns don't model (casing, spacing, parameters core ignores).
+      #
+      # Recorded post coordinates that don't resolve take the same fallback and
+      # are reported, however well the quoted user resolved: rendering the user
+      # alone would turn a quote of one specific post into a bare attribution,
+      # and a quote whose `post:`/`topic:` silently disappeared is the same class
+      # of wrong-target failure #render_link reports. So the verbatim source tag
+      # comes back when the row carries one, and only a row without one is
+      # rebuilt from whatever did resolve.
       def render_quote(row)
         user = row[:quoted_user_id] ? @maps.user(row[:quoted_user_id]) : nil
         username = user&.dig(:username) || row[:quoted_username]
         name = user&.dig(:name) || row[:quoted_name]
 
-        if row[:quoted_post_id] && (post = @maps.post(row[:quoted_post_id]))
-          topic_id = post[:topic_id]
-          post_number = post[:post_number]
+        post = row[:quoted_post_id] ? @maps.post(row[:quoted_post_id]) : nil
+        topic_id = post&.dig(:topic_id)
+        post_number = post&.dig(:post_number)
+
+        lost_coordinates = quoted_post_recorded?(row) && !(topic_id && post_number)
+        report_unresolved_quote(row) if lost_coordinates
+
+        if row[:original_markdown].present? && (lost_coordinates || (user.nil? && post.nil?))
+          return row[:original_markdown]
         end
 
-        return row[:original_markdown] if user.nil? && post.nil? && row[:original_markdown].present?
-
-        return "[quote]" if username.blank? && name.blank?
-
-        parts = []
-        parts << (name.presence || username)
+        parts = [name.presence || username.presence]
         parts << "post:#{post_number}" if post_number.present?
         parts << "topic:#{topic_id}" if topic_id.present?
         parts << "username:#{username}" if username.present? && name.present? && name != username
 
+        return "[quote]" if parts.compact.empty?
+
+        # Coordinates without an author keep the leading segment empty, because
+        # core's header parser reads the first segment as the username: it would
+        # attribute `[quote="post:4, topic:9"]` to a user named "post:4", while
+        # `[quote=", post:4, topic:9"]` keeps the coordinates and no author.
         "[quote=\"#{parts.join(", ")}\"]"
+      end
+
+      # Whether the row points at one specific quoted post — by source id, or by
+      # the source coordinates the load phase tries to turn into one. Any of the
+      # three columns counts: a pair the source posts don't have and a lone
+      # coordinate are both unresolvable, and both would vanish from the header.
+      def quoted_post_recorded?(row)
+        row[:quoted_post_id].present? || row[:quoted_topic_id].present? ||
+          row[:quoted_post_number].present?
+      end
+
+      def report_unresolved_quote(row)
+        # A coordinate-form quote has no post id to name; the coordinates the
+        # author's header carried are the most useful identifier for it.
+        entity_id = row[:quoted_post_id] || quoted_coordinates(row)
+
+        @unresolved_embeds << UnresolvedEmbed.new(
+          kind: :quote,
+          entity_id:,
+          owner_id: row[:owner_id],
+          owner_url: owner_url_for(row[:owner_id]),
+        )
+      end
+
+      def quoted_coordinates(row)
+        [
+          ("topic:#{row[:quoted_topic_id]}" if row[:quoted_topic_id].present?),
+          ("post:#{row[:quoted_post_number]}" if row[:quoted_post_number].present?),
+        ].compact.join(", ")
       end
 
       # An external link (no `target_type`) passes through as-is. A `SITE` link points
@@ -804,8 +856,12 @@ module Migrations
       # case a conflict renamed it. A map miss puts the source name back verbatim; no
       # unresolved report — the source value is the fallback, as with mentions and
       # hashtags.
+      #
+      # The lookup folds case and Unicode form the way the name lookups in
+      # {NameResolver} do, because the row keeps the author's spelling
+      # (`:MYEMOJI:`) while core lowercases a shortcode before looking it up.
       def render_emoji(row)
-        name = @maps.emoji_name(row[:name]) || row[:name]
+        name = @maps.emoji_name(Migrations::NameNormalizer.normalize(row[:name])) || row[:name]
         ":#{name}:"
       end
 

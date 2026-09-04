@@ -81,6 +81,69 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved[1]).to eq("x [quote] y")
     end
 
+    it "keeps the resolved coordinates when nothing identifies the quoted author" do
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: quote,
+        quoted_post_id: 200,
+      )
+      maps = FakePlaceholderMaps.new(post: { 200 => { topic_id: 9, post_number: 4 } })
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      # The empty leading segment is what core's header parser needs to read
+      # `post:`/`topic:` as coordinates instead of as the username.
+      expect(resolved[1]).to eq('x [quote=", post:4, topic:9"] y')
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
+    it "rebuilds from what resolved and reports when the quoted post is unmapped" do
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: quote,
+        quoted_post_id: 200,
+        quoted_user_id: 5,
+        quoted_username: "sam",
+      )
+      maps = FakePlaceholderMaps.new(user: { 5 => { username: "sammy" } })
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="sammy"] y')
+      expect(resolver.unresolved_embeds).to contain_exactly(
+        described_class::UnresolvedEmbed.new(
+          kind: :quote,
+          entity_id: 200,
+          owner_id: 1,
+          owner_url: nil,
+        ),
+      )
+    end
+
+    it "reports the source coordinates of a quote that has no resolvable post" do
+      quote = placeholder.mint(:quote)
+      # A `post:` with no `topic:` can never resolve to a source post, and the
+      # source's own post number is meaningless on the destination.
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: quote,
+        quoted_post_number: 2,
+        quoted_username: "sam",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="sam"] y')
+      expect(resolver.unresolved_embeds.map(&:entity_id)).to eq(["post:2"])
+    end
+
     it "drops an entity-backed embed whose markdown is unavailable" do
       poll = placeholder.mint(:poll)
       Migrations::Database::IntermediateDB::EmbedPoll.create(
@@ -242,6 +305,15 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     it "does not record quotes, external links or mentions (they fall back to source values)" do
       link = placeholder.mint(:link)
       mention = placeholder.mint(:mention)
+      quote = placeholder.mint(:quote)
+      # A quote that names no post loses nothing when its user is unmapped, so
+      # it stays out of the report; only lost coordinates are reported.
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: embed_owner::POST,
+        owner_id: 100,
+        placeholder: quote,
+        quoted_username: "ghost",
+      )
       Migrations::Database::IntermediateDB::EmbedLink.create(
         owner_type: embed_owner::POST,
         owner_id: 100,
@@ -256,7 +328,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         name: "ghost",
       )
 
-      resolver.resolve_all([{ id: 100, raw: "#{link} #{mention}" }])
+      resolver.resolve_all([{ id: 100, raw: "#{quote} #{link} #{mention}" }])
 
       expect(resolver.unresolved_embeds).to be_empty
     end
@@ -365,6 +437,29 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "nice #{emoji} work" }])
 
       expect(resolved[1]).to eq("nice :party_parrot: work")
+    end
+
+    it "matches the map regardless of the case the author typed" do
+      # The converter records the author's spelling; core lowercases a shortcode
+      # before looking it up, so the map is keyed by the folded name.
+      emoji = placeholder.mint(:emoji)
+      create_emoji(emoji, "MYEMOJI")
+      maps = FakePlaceholderMaps.new(emoji_name: { "myemoji" => "my_emoji" })
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "hi #{emoji}" }])
+
+      expect(resolved[1]).to eq("hi :my_emoji:")
+    end
+
+    it "keeps the author's case on a miss" do
+      emoji = placeholder.mint(:emoji)
+      create_emoji(emoji, "MyEmoji")
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "hi #{emoji}" }])
+
+      expect(resolved[1]).to eq("hi :MyEmoji:")
     end
 
     it "falls back to the source name when the emoji is unmapped, without a report" do

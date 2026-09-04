@@ -308,6 +308,35 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         expect(resolved).to eq("x https://dest.example.com/tags/intersection/official/vino y")
       end
 
+      it "treats a lone none/all segment as the tag, not as a subcategory filter" do
+        create_tag(5, "none")
+        maps =
+          FakePlaceholderMaps.new(
+            category_id: {
+              2 => 20,
+            },
+            category_slug_path: {
+              2 => "addons:plugin",
+            },
+            tag_name: {
+              5 => "nothing",
+            },
+          )
+
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/none",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "none",
+            },
+            maps:,
+          )
+
+        expect(resolved).to eq("x https://dest.example.com/tags/c/addons/plugin/20/nothing y")
+      end
+
       it "falls back to the source URL when the category does not map" do
         maps = FakePlaceholderMaps.new(tag_name: { 3 => "official" })
 

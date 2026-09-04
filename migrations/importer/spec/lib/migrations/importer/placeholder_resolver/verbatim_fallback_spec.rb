@@ -309,6 +309,28 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolve("#{token}\ntext\n[/quote]")).to eq("#{original}\ntext\n[/quote]")
     end
 
+    it "restores the source tag and reports when the quoted post did not resolve" do
+      # The user resolving is not enough: dropping `post:`/`topic:` would leave
+      # an attribution pointing at no post at all.
+      original = %{[quote="bob, post:2, topic:3"]}
+      token =
+        create_embed(
+          :quote,
+          original_markdown: original,
+          quoted_user_id: 5,
+          quoted_username: "bob",
+          quoted_post_id: 200,
+        )
+
+      maps = FakePlaceholderMaps.new(user: { 5 => { username: "robert" } })
+      resolver = described_class.new(intermediate_db, maps, owner_type:)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: token.to_s }])[1]
+
+      expect(resolved).to eq(original)
+      expect(resolver.unresolved_embeds.map(&:kind)).to eq(%i[quote])
+    end
+
     it "rebuilds canonically once the quoted user resolved" do
       token =
         create_embed(
