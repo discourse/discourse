@@ -452,11 +452,15 @@ module Voice
       wants_camera = params.key?(:video) && bool.cast(params[:video])
       wants_screen = params.key?(:screen) && bool.cast(params[:screen])
 
-      if wants_camera || wants_screen
-        unless @room.video_allowed? && guardian.can_speak_in_voice_room?(@room)
-          raise Discourse::InvalidAccess.new(I18n.t("voice.errors.video_not_allowed"))
-        end
+      if wants_camera && !guardian.can_publish_video_in_voice_room?(@room)
+        raise Discourse::InvalidAccess.new(I18n.t("voice.errors.video_not_allowed"))
+      end
 
+      if wants_screen && !guardian.can_screen_share_in_voice_room?(@room)
+        raise Discourse::InvalidAccess.new(I18n.t("voice.errors.screen_share_not_allowed"))
+      end
+
+      if wants_camera || wants_screen
         if video_publisher_count(@room, exclude_user_id: current_user.id) >=
              SiteSetting.voice_video_max_publishers
           raise Discourse::InvalidParameters.new(I18n.t("voice.errors.video_publisher_limit"))

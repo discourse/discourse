@@ -96,12 +96,6 @@ module Voice
       [max_participants, SiteSetting.voice_max_room_participants].compact.min
     end
 
-    # Room-level capability only; per-user publish rights are guardian-driven
-    # (stage listeners never publish even when this is true).
-    def video_allowed?
-      SiteSetting.voice_video_enabled && video_enabled
-    end
-
     def membership_for(user)
       return if user.blank?
 

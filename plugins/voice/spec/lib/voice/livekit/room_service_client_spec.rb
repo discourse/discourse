@@ -75,8 +75,6 @@ RSpec.describe Voice::Livekit::RoomServiceClient do
   end
 
   describe ".update_participant" do
-    before { SiteSetting.voice_video_enabled = true }
-
     it "sends the full permission set for a speaker in a video room" do
       room.update!(video_enabled: true)
       stub = twirp_stub("UpdateParticipant")

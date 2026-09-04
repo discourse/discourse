@@ -23,6 +23,7 @@ module Voice
                :visit_count,
                :video_enabled,
                :video_allowed,
+               :screen_share_allowed,
                :chat_channel_id,
                :chat_idle_minutes,
                :chat_available,
@@ -110,8 +111,23 @@ module Voice
       scope.user.present? && @options[:include_visit_count]
     end
 
+    # Per-user publish rights, so they are omitted from the anonymously-scoped
+    # directory broadcasts (the client keeps the ones it already knows) and the
+    # room's own video_enabled remains the field a broadcast revokes through.
     def video_allowed
-      object.video_allowed?
+      scope.can_publish_video_in_voice_room?(object)
+    end
+
+    def include_video_allowed?
+      scope.user.present?
+    end
+
+    def screen_share_allowed
+      scope.can_screen_share_in_voice_room?(object)
+    end
+
+    def include_screen_share_allowed?
+      scope.user.present?
     end
 
     def chat_available

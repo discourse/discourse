@@ -19,6 +19,11 @@ export function participantCanSpeak(room, userId) {
 // authority, so a track is only registered and played when the sender's
 // server-side role and the room's media policy allow publishing it.
 //
+// The room's media flag is the authority here rather than the viewer's own
+// publish rights: which groups may publish camera or screen is enforced where
+// media is published (the state endpoint and the SFU's track-source grants),
+// and a viewer who may not publish still watches everyone who may.
+//
 // Mic audio arrives with the sender's stream attached; the pre-negotiated
 // screen-audio transceiver delivers a bare track (see RemoteStreamRegistry).
 export function remoteTrackAllowed(room, userId, track, streams) {
@@ -27,7 +32,7 @@ export function remoteTrackAllowed(room, userId, track, streams) {
   }
 
   const isScreenAudio = track.kind === "audio" && !streams?.length;
-  if ((track.kind === "video" || isScreenAudio) && !room.video_allowed) {
+  if ((track.kind === "video" || isScreenAudio) && !room.video_enabled) {
     return false;
   }
 

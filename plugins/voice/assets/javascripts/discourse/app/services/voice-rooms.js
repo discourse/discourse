@@ -4,13 +4,16 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 
 // Directory broadcasts are serialized without a user, so fields the server
-// gates per user (chat availability, manager-only chat settings) are absent
-// from them. A broadcast replaces the whole room object; carry over what this
-// client already knows so a mid-call room update doesn't wipe its own state.
+// gates per user (media publish rights, chat availability, manager-only chat
+// settings) are absent from them. A broadcast replaces the whole room object;
+// carry over what this client already knows so a mid-call room update doesn't
+// wipe its own state.
 const USER_GATED_ROOM_FIELDS = [
   "chat_available",
   "chat_channel_id",
   "chat_idle_minutes",
+  "video_allowed",
+  "screen_share_allowed",
 ];
 
 // Participant broadcasts arrive in arbitrary database order, so every list

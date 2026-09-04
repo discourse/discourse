@@ -95,9 +95,24 @@ plugins:
     client: true
   voice_livekit_recording_filepath:
     default: "voice/{room_name}-{utc}"
-  voice_video_enabled:
-    default: true
-    client: true
+  voice_video_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "5" # auto group logged_in_users
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0|4"
+    depends_on:
+      - voice_enabled
+  voice_screen_share_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "5" # auto group logged_in_users
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0|4"
+    depends_on:
+      - voice_enabled
   voice_video_max_publishers:
     default: 8
     min: 2

@@ -248,4 +248,48 @@ RSpec.describe Voice::GuardianExtension do
       expect(anonymous_guardian.can_request_to_speak_in_voice_room?(public_room)).to eq(false)
     end
   end
+
+  describe "media publish permissions" do
+    it "grants both capabilities to a member of the allowed groups" do
+      expect(member.guardian.can_publish_video_in_voice_room?(public_room)).to eq(true)
+      expect(member.guardian.can_screen_share_in_voice_room?(public_room)).to eq(true)
+    end
+
+    it "gates each capability on its own group setting" do
+      SiteSetting.voice_video_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_4]}"
+
+      expect(member.guardian.can_publish_video_in_voice_room?(public_room)).to eq(false)
+      expect(member.guardian.can_screen_share_in_voice_room?(public_room)).to eq(true)
+
+      SiteSetting.voice_screen_share_allowed_groups = ""
+
+      expect(member.guardian.can_screen_share_in_voice_room?(public_room)).to eq(false)
+    end
+
+    it "is false for both when the room has media disabled" do
+      public_room.update!(video_enabled: false)
+
+      expect(member.guardian.can_publish_video_in_voice_room?(public_room)).to eq(false)
+      expect(member.guardian.can_screen_share_in_voice_room?(public_room)).to eq(false)
+    end
+
+    it "is false for a stage listener, who publishes nothing" do
+      private_room.update!(room_type: Voice::Room::ROOM_TYPE_STAGE)
+
+      expect(member.guardian.can_publish_video_in_voice_room?(private_room)).to eq(false)
+      expect(member.guardian.can_screen_share_in_voice_room?(private_room)).to eq(false)
+      expect(room_speaker.guardian.can_publish_video_in_voice_room?(private_room)).to eq(true)
+      expect(room_speaker.guardian.can_screen_share_in_voice_room?(private_room)).to eq(true)
+    end
+
+    it "is false for a user who cannot join the room" do
+      expect(outsider.guardian.can_publish_video_in_voice_room?(private_room)).to eq(false)
+      expect(outsider.guardian.can_screen_share_in_voice_room?(private_room)).to eq(false)
+    end
+
+    it "is false for anonymous visitors" do
+      expect(anonymous_guardian.can_publish_video_in_voice_room?(public_room)).to eq(false)
+      expect(anonymous_guardian.can_screen_share_in_voice_room?(public_room)).to eq(false)
+    end
+  end
 end
