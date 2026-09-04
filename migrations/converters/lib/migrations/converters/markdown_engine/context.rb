@@ -20,29 +20,37 @@ module Migrations
         # with a larger ceiling (see `EngineScanner`) instead of a refusal.
         EVAL_TIMEOUT_MS = 3_000
 
+        # @return [Config] the source-site inputs this engine was built from,
+        #   for a caller that needs the name sets beside the engine
+        attr_reader :config
+
         def initialize(bundle:, config:)
           @bundle = bundle
           @config = config
           @timeout_ms = EVAL_TIMEOUT_MS
           @needs_rebuild = false
+          @monitor = Mutex.new
+          @watchdog_signal = ConditionVariable.new
           @fork_hook = ForkManager.after_fork_child { discard! }
           build_context(@timeout_ms)
         end
 
         # @param posts [Array<Hash>] `{ id:, raw: }` per post
-        # @param timeout_ms [Integer, nil] a one-off ceiling for this scan,
-        #   for a caller retrying a body that ran into the default. MiniRacer
-        #   fixes the timeout at construction, so switching ceilings rebuilds
-        #   the isolate (about 0.15s) — fine, because retries are rare — and
-        #   the next default-ceiling scan rebuilds back the same way.
+        # @param timeout_ms [Integer, nil] a one-off ceiling for this scan, for
+        #   a caller retrying a body that ran into the default. MiniRacer fixes
+        #   an isolate's timeout at construction, so the isolate keeps the
+        #   widest ceiling it was asked for (rebuilding it costs about 0.15s)
+        #   and anything below that is enforced by {#with_ceiling}: a caller
+        #   counting a per-body deadline down lowers the ceiling on every call
+        #   and must not pay for a rebuild each time.
         # @return [Array<Hash>] per-post block/construct data from scan.js
         def scan(posts, timeout_ms: nil)
           wanted = timeout_ms || @timeout_ms
           if @context.nil?
             raise DiscardedError unless @needs_rebuild
             build_context(wanted)
-          elsif @current_timeout_ms != wanted
-            @context.dispose
+          elsif wanted > @ceiling_ms
+            dispose_context
             build_context(wanted)
           end
 
@@ -52,7 +60,7 @@ module Migrations
               raw = raw.scrub unless raw.valid_encoding?
               { "id" => post[:id], "raw" => raw }
             end
-          @context.call("__scanPosts", payload)
+          with_ceiling(wanted) { @context.call("__scanPosts", payload) }
         end
 
         # Throws the V8 state away after a per-input engine failure (a timeout
@@ -60,15 +68,14 @@ module Migrations
         # scan — the caller keeps one healthy engine without knowing when it
         # was last replaced.
         def reset!
-          @context&.dispose
-          @context = nil
+          dispose_context
           @needs_rebuild = true
         end
 
         def close
-          @context&.dispose
-          @context = nil
+          dispose_context
           @needs_rebuild = false
+          stop_watchdog
 
           if @fork_hook
             ForkManager.remove_after_fork_child(@fork_hook)
@@ -84,15 +91,110 @@ module Migrations
         def discard!
           @context = nil
           @needs_rebuild = false
+          # Threads do not survive a fork, and a lock the watchdog held while
+          # the parent forked would still be held here, so the whole
+          # arrangement starts over with the child's own context.
+          @monitor = Mutex.new
+          @watchdog_signal = ConditionVariable.new
+          @watchdog = nil
+          @deadline = nil
         end
 
         private
 
         def build_context(timeout_ms)
           @context = MiniRacer::Context.new(timeout: timeout_ms, ensure_gc_after_idle: 2000)
-          @current_timeout_ms = timeout_ms
+          @ceiling_ms = timeout_ms
           @needs_rebuild = false
           evaluate_all(@bundle, @config)
+        end
+
+        # Disposal races the watchdog thread, which must not reach for a
+        # context that is going away.
+        def dispose_context
+          @monitor.synchronize do
+            @context&.dispose
+            @context = nil
+          end
+        end
+
+        # A ceiling below the isolate's own is enforced from a helper thread:
+        # `MiniRacer::Context#stop` terminates the running script the way V8's
+        # built-in watchdog does, so the caller sees the same
+        # `ScriptTerminatedError` either way.
+        def with_ceiling(timeout_ms)
+          return yield if timeout_ms >= @ceiling_ms
+
+          arm_watchdog(timeout_ms)
+          terminated = false
+          begin
+            yield
+          rescue MiniRacer::ScriptTerminatedError
+            terminated = true
+            raise
+          ensure
+            # The watchdog can fire in the moment between the script finishing
+            # and the disarm. V8 keeps a termination request it could not
+            # deliver for its next entry, so the isolate goes rather than a
+            # later scan being cut short by it.
+            reset! if disarm_watchdog && !terminated
+          end
+        end
+
+        def arm_watchdog(timeout_ms)
+          @monitor.synchronize do
+            @deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout_ms / 1000.0
+            @fired = false
+            @watchdog ||= Thread.new { watch }
+            @watchdog_signal.signal
+          end
+        end
+
+        # @return [Boolean] whether the watchdog terminated the script
+        def disarm_watchdog
+          @monitor.synchronize do
+            @deadline = nil
+            @fired
+          end
+        end
+
+        def stop_watchdog
+          watchdog = nil
+          @monitor.synchronize do
+            @closing = true
+            watchdog = @watchdog
+            @watchdog = nil
+            @watchdog_signal.signal
+          end
+          watchdog&.join
+        end
+
+        # Sleeps until the armed deadline, an earlier disarm, or `close`. The
+        # monitor is held only between waits, never while a script runs, so
+        # arming and disarming stay cheap enough for every scan.
+        def watch
+          @monitor.synchronize do
+            until @closing
+              if @deadline.nil?
+                @watchdog_signal.wait(@monitor)
+                next
+              end
+
+              remaining = @deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+              if remaining > 0
+                @watchdog_signal.wait(@monitor, remaining)
+              else
+                @deadline = nil
+                @fired = true
+                begin
+                  @context&.stop
+                rescue MiniRacer::ContextDisposedError
+                  # Raced a disposal that beat this thread to the monitor.
+                  nil
+                end
+              end
+            end
+          end
         end
 
         def evaluate_all(bundle, config)
@@ -114,7 +216,7 @@ module Migrations
 
           @context.eval(<<~JS, filename: "migrations/scan-config.js")
             __scanConfig = {
-              categorySlugs: #{config.category_slugs.to_h { |slug| [slug, true] }.to_json},
+              categorySlugs: #{config.category_lookup_slugs.to_h { |slug| [slug, true] }.to_json},
               tagNames: #{config.tag_names.to_h { |name| [name, true] }.to_json}
             };
           JS

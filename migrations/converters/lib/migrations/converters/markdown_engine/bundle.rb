@@ -35,34 +35,6 @@ module Migrations
 
         CACHE_DIR = "tmp/migrations"
 
-        # Mirrors `PrettyText::BUNDLED_DISCOURSE_MODULES` and the dependency
-        # globs of `PrettyText::CORE_BUNDLE`. Inside a booted application the
-        # host bundle is used directly; standalone, an identical twin is built
-        # under the host stand-ins — `PrettyText` itself cannot load there
-        # (it requires gems the converter doesn't carry). The rails parity job
-        # asserts the mirror matches the host definition, and the parity spec
-        # surfaces any drift in the produced context regardless.
-        BUNDLED_DISCOURSE_MODULES = %w[
-          deprecation-workflow
-          lib/avatar-utils
-          lib/case-converter
-          lib/escape
-          lib/get-url
-          lib/object
-          loader
-          static/markdown-it/features
-        ].freeze
-
-        CORE_BUNDLE_GLOBS =
-          (
-            %w[
-              node_modules/.pnpm/lock.yaml
-              frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
-              frontend/pretty-text/addon/**/*.js
-              frontend/discourse-markdown-it/src/**/*.js
-            ] + BUNDLED_DISCOURSE_MODULES.map { |m| "frontend/discourse/app/#{m}.js" }
-          ).freeze
-
         # What the bundled plugins register as `:vendored_pretty_text` /
         # `:vendored_core_pretty_text` assets (see each plugin.rb and
         # `DiscoursePluginRegistry::VENDORED_CORE_PRETTY_TEXT_MAP`): plugin
@@ -210,6 +182,7 @@ module Migrations
 
           require File.join(root, "lib", "precompiled_bundle")
           require File.join(root, "lib", "asset_processor")
+          require File.join(root, "lib", "pretty_text", "core_bundle")
         end
 
         def self.input_digest(root)
@@ -217,7 +190,7 @@ module Migrations
           digest.update("v#{VERSION}")
           digest.update("compiler-v#{::AssetProcessor::BASE_COMPILER_VERSION}")
           digest_globs(digest, root, ::AssetProcessor::BUNDLE.dependency_globs)
-          digest_globs(digest, root, CORE_BUNDLE_GLOBS)
+          digest_globs(digest, root, core_bundle_globs)
 
           (input_files(root) + EmojiData.data_files).each do |path|
             digest.update(path)
@@ -255,36 +228,23 @@ module Migrations
           Dir[pattern].sort.filter { |path| File.file?(path) }
         end
 
-        # In a booted application the host's own bundle is reused (same cache,
-        # same build); standalone — only ever the build subprocess — the
-        # mirror builds an identical file under the host stand-ins.
-        def self.core_bundle_source(root)
-          if Object.const_defined?(:PrettyText)
-            ::PrettyText.load_or_build_core_bundle
-          else
-            core_bundle_mirror.load_or_build
-          end
+        # The host's own definition, so there is one bundle: a booted
+        # application shares this object with `PrettyText` and the same cache
+        # file; standalone — only ever the build subprocess — the host stand-ins
+        # carry its build block.
+        def self.host_core_bundle
+          require_host_build_classes(MarkdownEngine.discourse_root)
+          ::PrettyText::CoreBundle::BUNDLE
         end
 
-        def self.core_bundle_mirror
-          ::PrecompiledBundle.new(
-            dir: "tmp/pretty-text-processor",
-            filename_prefix: "pretty-text",
-            dependency_globs: CORE_BUNDLE_GLOBS,
-          ) do
-            ::Discourse::Utils.execute_command(
-              "pnpm",
-              "-C=frontend/pretty-text-processor",
-              "node",
-              "build.mjs",
-              "--discourse-modules=#{BUNDLED_DISCOURSE_MODULES.join(",")}",
-              chdir: ::Rails.root.to_s,
-            )
-          end
+        # @return [Array<String>] the dependency globs of the host core bundle,
+        #   the JavaScript sources the produced context is built from
+        def self.core_bundle_globs
+          host_core_bundle.dependency_globs
         end
 
         def self.build_entries(root)
-          entries = [["pretty-text.js", core_bundle_source(root)]]
+          entries = [["pretty-text.js", host_core_bundle.load_or_build]]
 
           PLUGIN_VENDOR_FILES.each { |path| entries << [path, File.read(File.join(root, path))] }
 
@@ -323,8 +283,7 @@ module Migrations
                              :digest_globs,
                              :input_files,
                              :plugin_files,
-                             :core_bundle_source,
-                             :core_bundle_mirror,
+                             :host_core_bundle,
                              :build_entries,
                              :transpiled_entry,
                              :entry_pair?,

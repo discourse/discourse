@@ -38,41 +38,10 @@ module PrettyText
     ctx.eval(transpiled, filename: module_name)
   end
 
-  # The only modules from the `discourse` package which may be bundled into the
-  # server-side renderer. Additions must not transitively depend on
-  # browser-only APIs.
-  BUNDLED_DISCOURSE_MODULES = %w[
-    deprecation-workflow
-    lib/avatar-utils
-    lib/case-converter
-    lib/escape
-    lib/get-url
-    lib/object
-    loader
-    static/markdown-it/features
-  ]
-
-  CORE_BUNDLE =
-    PrecompiledBundle.new(
-      dir: "tmp/pretty-text-processor",
-      filename_prefix: "pretty-text",
-      dependency_globs:
-        %w[
-          node_modules/.pnpm/lock.yaml
-          frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
-          frontend/pretty-text/addon/**/*.js
-          frontend/discourse-markdown-it/src/**/*.js
-        ] + BUNDLED_DISCOURSE_MODULES.map { "frontend/discourse/app/#{it}.js" },
-    ) do
-      Discourse::Utils.execute_command(
-        "pnpm",
-        "-C=frontend/pretty-text-processor",
-        "node",
-        "build.mjs",
-        "--discourse-modules=#{BUNDLED_DISCOURSE_MODULES.join(",")}",
-        chdir: Rails.root.to_s,
-      )
-    end
+  # Defined in `pretty_text/core_bundle.rb`: the bundle definition has to stay
+  # loadable outside a booted application, `PrettyText` does not.
+  BUNDLED_DISCOURSE_MODULES = CoreBundle::DISCOURSE_MODULES
+  CORE_BUNDLE = CoreBundle::BUNDLE
 
   def self.load_or_build_core_bundle
     CORE_BUNDLE.load_or_build

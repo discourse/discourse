@@ -142,15 +142,6 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context, :rails do
     )
   end
 
-  # The standalone build subprocess mirrors the host's core-bundle definition
-  # because `PrettyText` itself cannot load there; this pins the mirror to the
-  # host constants so a change on either side fails here instead of drifting.
-  it "mirrors the host's core bundle definition" do
-    bundle = Migrations::Converters::MarkdownEngine::Bundle
-    expect(bundle::BUNDLED_DISCOURSE_MODULES).to eq(PrettyText::BUNDLED_DISCOURSE_MODULES)
-    expect(bundle::CORE_BUNDLE_GLOBS).to eq(PrettyText::CORE_BUNDLE.dependency_globs)
-  end
-
   # `Bundle` still transpiles plugin markdown features per file through
   # `AssetProcessor`. That is the only reason a cold build boots in-process
   # V8 and therefore runs in a separate build process. When the host one day

@@ -61,6 +61,8 @@ module Migrations
         #   `SETTING_KEYS` are used, other keys are ignored. String values for
         #   boolean/integer settings (as stored in a Discourse site_settings
         #   table) are coerced against the default's type.
+        # @param category_slugs [Array<String>] the source's category slug
+        #   paths, a nested category as `parent:child`
         def initialize(
           source_settings: {},
           category_slugs: [],
@@ -85,6 +87,22 @@ module Migrations
           @tag_names = tag_names.map { |name| NameNormalizer.normalize(name) }
           @custom_emoji_names = custom_emoji_names.map(&:to_s)
           @additional_options = additional_options
+        end
+
+        # The lookup set runtime.js answers `#slug` against: a category is
+        # addressed by its own slug, so a nested category enters the set as its
+        # leaf, without the parent path the extractor still validates against
+        # {#hashtag_names}.
+        def category_lookup_slugs
+          @category_lookup_slugs ||=
+            @category_slugs.map { |path| path.split(":").last }.compact.uniq
+        end
+
+        # Every hashtag name the source has, in the form a construct in a post
+        # spells it — the set a `RawExtractor` resolves against, where a nested
+        # category is the full path.
+        def hashtag_names
+          @hashtag_names ||= CompactStringSet.new(@category_slugs + @tag_names)
         end
 
         def avatar_sizes

@@ -60,6 +60,30 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
       expect(config.tag_names).to eq([Migrations::NameNormalizer.normalize("café")])
     end
 
+    it "derives the engine's lookup set from the leaf slug of a category path" do
+      config = described_class.new(category_slugs: %w[Support:Billing news])
+      # The engine resolves `#support:billing` by its child slug, the way the
+      # destination's lookup does.
+      expect(config.category_lookup_slugs).to eq(%w[billing news])
+    end
+
+    it "drops a dangling separator and duplicate leaves from the lookup set" do
+      config = described_class.new(category_slugs: ["support:", "a:news", "b:news", ""])
+      expect(config.category_lookup_slugs).to eq(%w[support news])
+    end
+
+    it "exposes the extractor's name set as full paths plus tag names" do
+      config = described_class.new(category_slugs: %w[support:billing], tag_names: %w[Bug])
+      names = config.hashtag_names
+
+      expect(names).to be_a(Migrations::CompactStringSet)
+      expect(names).to include("support:billing")
+      expect(names).to include("bug")
+      # The extractor resolves what a post spells, so the leaf alone is not a
+      # name the source has.
+      expect(names).not_to include("billing")
+    end
+
     it "builds a custom emoji map keyed by name" do
       expect(config.custom_emoji).to eq("partyparrot" => "/images/emoji/custom/partyparrot.png")
     end
@@ -93,7 +117,7 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
       files = []
       # Only the JavaScript sources — the core-bundle globs also cover build
       # configs and the lockfile, which read no site settings.
-      bundle::CORE_BUNDLE_GLOBS.each do |pattern|
+      bundle.core_bundle_globs.each do |pattern|
         files.concat(Dir.glob(pattern, base: root).grep(/\.js\z/).map { |f| File.join(root, f) })
       end
       bundle::CORE_MARKDOWN_PLUGINS.each do |plugin|

@@ -34,13 +34,12 @@ module MarkdownEngineHelper
   # An engine configuration matching a raw-extractor spec's Ruby-side name
   # sets. Whether a slug resolves as a category or a tag does not reach the
   # extracted rows (the forced type comes from the source's `::type` suffix),
-  # so every name goes into both lookup sets; `parent:child` category paths
-  # are addressed by their leaf slug in the engine's lookup.
+  # so every name goes into both name sets — `Config` derives what the
+  # engine's lookup needs from them.
   def self.context_for_names(hashtag_names:, custom_emoji_names: [], settings: {})
-    names = hashtag_names.flat_map { |name| [name, name.split(":").last] }.uniq
     context_for(
-      category_slugs: names,
-      tag_names: names,
+      category_slugs: hashtag_names,
+      tag_names: hashtag_names,
       custom_emoji_names:,
       settings: { "unicode_usernames" => true }.merge(settings),
     )

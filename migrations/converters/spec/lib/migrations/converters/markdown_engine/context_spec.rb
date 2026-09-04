@@ -27,6 +27,44 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context do
     expect(scan_one("hi @sam").dig("blocks", 0, "mentions")).to eq(["@sam"])
   end
 
+  it "widens the isolate's ceiling when a scan asks for more time" do
+    expect(scan_one("hi @sam").dig("blocks", 0, "mentions")).to eq(["@sam"])
+
+    result = context.scan([{ id: 1, raw: "hi @sam" }], timeout_ms: 30_000).first
+    expect(result.dig("blocks", 0, "mentions")).to eq(["@sam"])
+  end
+
+  # A caller counting a per-body deadline down lowers the ceiling on every
+  # call, so a lower ceiling must not cost an isolate: MiniRacer fixes its
+  # timeout at construction, and rebuilding evaluates the whole bundle again.
+  it "keeps one isolate while the ceiling counts down" do
+    context.scan([{ id: 1, raw: "warm up" }], timeout_ms: 5_000)
+
+    allow(MiniRacer::Context).to receive(:new).and_call_original
+
+    [2_000, 1_000, 500].each do |timeout_ms|
+      result = context.scan([{ id: 1, raw: "hi @sam" }], timeout_ms:).first
+      expect(result.dig("blocks", 0, "mentions")).to eq(["@sam"])
+    end
+
+    expect(MiniRacer::Context).not_to have_received(:new)
+  end
+
+  it "terminates a body that outruns a ceiling below the isolate's" do
+    context.scan([{ id: 1, raw: "warm up" }], timeout_ms: 5_000)
+
+    # No post is guaranteed to parse forever, so the scan entry point is
+    # replaced with one that does — the isolate's own ceiling is five seconds
+    # here, and only the enforced 200 ms can end this call sooner.
+    context.instance_variable_get(:@context).eval("__scanPosts = () => { while (true) {} };")
+
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    expect { context.scan([{ id: 1, raw: "x" }], timeout_ms: 200) }.to raise_error(
+      MiniRacer::ScriptTerminatedError,
+    )
+    expect(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).to be < 2
+  end
+
   # Empty-destination links once looped the label-hit counter forever
   # (indexOf with an empty needle never advances), burning the full parse
   # timeout on bodies as small as four bytes.
