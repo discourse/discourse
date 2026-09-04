@@ -21,11 +21,8 @@ class ServerSession
   end
 
   def set(key, val, expires: expiry)
-    Discourse.redis.setex(
-      prefixed_key(key),
-      expires.to_i,
-      ActiveSupport::MessagePack.dump(val)
-    )
+    payload = ActiveSupport::MessagePack.dump(val)
+    Discourse.redis.setex(prefixed_key(key), expires.to_i, payload)
     true
   end
   alias_method :[]=, :set
