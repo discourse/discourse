@@ -18,18 +18,11 @@
 # Needs a booted Rails environment, so it is tagged `:rails` and runs only under
 # `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
-  # The extractor requires both name sets; the mention sentinel needs its name in
-  # one of them.
-  def mention_names
+  include_context "with parity extractor"
+
+  # The mention sentinel only defers when the source has its name.
+  let(:mention_names) do
     Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("alice")])
-  end
-
-  def hashtag_names
-    Migrations::CompactStringSet.new([])
-  end
-
-  def markdown_engine
-    MarkdownEngineHelper.context_for_names(hashtag_names: [])
   end
 
   # The sentinels the rows plant. A mention is the cheap one; an upload is
@@ -238,13 +231,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   # Whether the extractor left the sentinel alone, i.e. read it as code.
   def construct_treats_as_code?(raw)
-    buffer =
-      Migrations::Converters::EmbedBuffer.new(
-        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
-      )
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
-      raw,
-    )
+    buffer = new_buffer
+    build_extractor(buffer).extract(raw)
     raw.include?(upload) ? buffer.uploads.empty? : buffer.mentions.empty?
   end
 

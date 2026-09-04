@@ -19,12 +19,12 @@
 # Needs a booted Rails environment, so it is tagged `:rails` and runs only under
 # `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
+  include_context "with parity extractor"
+
+  # The sentinel mention only defers when the source has its name.
   let(:mention_names) do
     Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("alice")])
   end
-
-  let(:hashtag_names) { Migrations::CompactStringSet.new([]) }
-  let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: []) }
 
   # Constructs whose content core treats as code: the sentinel mention must
   # survive cooking as plain text, and we must leave the body alone.
@@ -62,15 +62,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   end
 
   def extract(raw)
-    buffer =
-      Migrations::Converters::EmbedBuffer.new(
-        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
-      )
-    result =
-      described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
-        raw,
-      )
-    [buffer, result]
+    buffer = new_buffer
+    [buffer, build_extractor(buffer).extract(raw)]
   end
 
   it "leaves the body of every code form alone, as core does" do

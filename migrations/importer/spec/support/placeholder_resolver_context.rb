@@ -63,6 +63,35 @@ RSpec.shared_context "with placeholder resolver" do
     token
   end
 
+  # The source records a resolver example looks a recorded name up against.
+
+  def create_user(original_id, username)
+    Migrations::Database::IntermediateDB::User.create(
+      original_id:,
+      username:,
+      created_at: Time.now,
+      trust_level: 0,
+    )
+  end
+
+  def create_category(original_id, slug, parent_category_id: nil)
+    Migrations::Database::IntermediateDB::Category.create(
+      original_id:,
+      name: slug,
+      slug:,
+      parent_category_id:,
+      user_id: 1,
+    )
+  end
+
+  def create_tag(original_id, name)
+    Migrations::Database::IntermediateDB::Tag.create(original_id:, name:, slug: name)
+  end
+
+  def create_topic(original_id, slug)
+    Migrations::Database::IntermediateDB::Topic.create(original_id:, title: slug, slug:)
+  end
+
   # Resolves one owner-1 body; `maps:` builds a fresh resolver over those
   # lookups, without it the shared subject resolves (so an example can inspect
   # `resolver.unresolved_embeds` afterwards).

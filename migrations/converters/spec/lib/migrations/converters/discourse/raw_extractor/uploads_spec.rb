@@ -219,8 +219,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   describe "full-URL uploads" do
-    let(:sha1) { "0123456789abcdef0123456789abcdef01234567" }
-
     it "defers an image referenced by a root-relative upload URL" do
       url = "/uploads/default/original/2X/a/ab/#{sha1}.png"
       result = extract("before ![pic](#{url}) after")
@@ -265,15 +263,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(upload).to include(upload_id: sha1, original_markdown: body)
       expect(result).to eq(upload[:placeholder])
       expect(extractor.engine_refusals).to be_empty
-    end
-
-    it "defers a bare, whitespace-delimited upload URL" do
-      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png"
-      result = extract("see #{url} thanks")
-
-      upload = buffer.uploads.first
-      expect(upload).to include(upload_id: sha1, original_markdown: url)
-      expect(result).to eq("see #{upload[:placeholder]} thanks")
     end
 
     it "reads the sha1 from an optimized image variant" do

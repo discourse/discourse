@@ -109,14 +109,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   describe "constructs on the engine tier" do
-    it "extracts hashtags and custom emoji" do
-      output = extract("`c` #support and :parrot: but not :smile:")
-
-      expect(buffer.hashtags.map { |row| row[:name] }).to eq(%w[support])
-      expect(buffer.emojis.map { |row| row[:name] }).to eq(%w[parrot])
-      expect(output).to include(":smile:")
-    end
-
     it "extracts an upload image whole, keeping its alt and dimensions in the row source" do
       raw = "see `code`\n\n![pic|100x100](upload://2Yjf3WE4KOQ88YUb4fUMubKB9My.png)"
       output = extract(raw)
@@ -135,13 +127,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.links.first[:original_markdown]).to eq(
         %{[topic](https://forum.example.com/t/slug/5 "context")},
       )
-    end
-
-    it "extracts a bare internal link" do
-      extract("`x` and https://forum.example.com/t/slug/5 ends it")
-
-      expect(buffer.links.size).to eq(1)
-      expect(buffer.links.first[:url]).to eq("https://forum.example.com/t/slug/5")
     end
 
     it "covers both occurrences of a self-link with one node" do
@@ -488,7 +473,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           mention_names:,
           hashtag_names:,
           markdown_engine: counting_engine,
-          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+          on_engine_refusal:,
         )
       max =
         Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::SubstitutionPass::MAX_SUBSTITUTIONS
@@ -618,7 +603,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           mention_names:,
           hashtag_names:,
           markdown_engine: retrying_engine,
-          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+          on_engine_refusal:,
           on_slow_parse: -> { slow_parses_seen += 1 },
         )
 
@@ -652,7 +637,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           hashtag_names:,
           markdown_engine: failing_engine,
           slow_timeout_ms: nil,
-          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+          on_engine_refusal:,
         )
 
       expect(extractor.extract("@alice `x`")).to eq("@alice `x`")
@@ -683,7 +668,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           mention_names:,
           hashtag_names:,
           markdown_engine: retrying_engine,
-          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+          on_engine_refusal:,
         )
 
       # Count matching cannot split this pair, so the body needs its check —
@@ -724,7 +709,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           mention_names:,
           hashtag_names:,
           markdown_engine: slow_engine,
-          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+          on_engine_refusal:,
         )
 
       # One copy in code and five in prose: counts cannot match, so every

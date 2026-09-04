@@ -97,3 +97,27 @@ RSpec.shared_context "with raw extractor" do
     [buffer.links.first, result]
   end
 end
+
+# Scaffolding for the `:rails` parity batteries. They compare one construct
+# against `PrettyText.cook` row by row, so each row needs its own buffer rather
+# than the shared subject above.
+RSpec.shared_context "with parity extractor" do
+  # A battery is about one construct; the extractor requires both name sets
+  # anyway, and an empty one defers nothing. A spec whose construct is gated on
+  # a name overrides the set it needs.
+  let(:mention_names) { Migrations::CompactStringSet.new([]) }
+  let(:hashtag_names) { Migrations::CompactStringSet.new([]) }
+  let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: []) }
+
+  def new_buffer
+    Migrations::Converters::EmbedBuffer.new(
+      owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
+    )
+  end
+
+  def build_extractor(buffer, **overrides)
+    described_class.new(
+      **{ embeds: buffer, mention_names:, hashtag_names:, markdown_engine: }.merge(overrides),
+    )
+  end
+end

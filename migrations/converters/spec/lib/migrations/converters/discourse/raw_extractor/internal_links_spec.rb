@@ -584,13 +584,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("(#{link[:placeholder]})")
     end
 
-    it "rewrites an absolute self-host bare URL in prose" do
-      link, result = link_for("look at https://forum.example.com/t/slug/5 please")
-
-      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
-      expect(result).to eq("look at #{link[:placeholder]} please")
-    end
-
     # Core linkifies a bare absolute URL after anything but an ASCII letter, digit
     # or `+` (see `internal_links_parity_spec.rb`), so a URL glued right after
     # prose punctuation is a link once cooked — the construct rewrites it too.

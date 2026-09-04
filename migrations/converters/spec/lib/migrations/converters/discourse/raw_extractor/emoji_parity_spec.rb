@@ -19,15 +19,8 @@
 # Needs a booted Rails environment, so it is tagged `:rails` and runs only under
 # `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
-  # This spec is about neither mentions nor hashtags; the extractor requires
-  # both name sets anyway, and an empty one defers nothing.
-  def mention_names
-    Migrations::CompactStringSet.new([])
-  end
+  include_context "with parity extractor"
 
-  def hashtag_names
-    Migrations::CompactStringSet.new([])
-  end
   before do
     SiteSetting.enable_emoji = true
     # The mode where the preceding-character boundary is enforced (with inline
@@ -45,54 +38,15 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   before { create_custom_emoji("parrot") }
 
-  # The 32 ASCII punctuation characters (CommonMark), which already include the
-  # ASCII symbols `$ + < = > ^ \` | ~`, plus letters, whitespace, and Unicode
-  # punctuation/symbol characters that exercise the boundary from both sides. The
-  # telling ones are the wide spaces (NBSP, ideographic space), the zero-width
-  # space, `²`/`½` (category No) and `­` (soft hyphen, Cf): none is whitespace the
-  # emoji rule counts or a punctuation/symbol, so they separate core's emoji
-  # boundary from a plain "not a word character" one.
-  def boundary_chars
-    ascii_punctuation =
-      [0x21..0x2f, 0x3a..0x40, 0x5b..0x60, 0x7b..0x7e].flat_map(&:to_a)
-        .to_h { |cp| [format("U+%04X", cp), cp.chr(Encoding::UTF_8)] }
-
-    {
-      "letter a" => "a",
-      "digit 9" => "9",
-      "e-acute" => "é",
-      "han" => "漢",
-      "space" => " ",
-      "tab" => "\t",
-      "newline" => "\n",
-      "no-break space" => "\u00A0",
-      "ideographic space" => "\u3000",
-      "zero-width space" => "\u200B",
-      "em dash" => "—",
-      "low double quote" => "„",
-      "left guillemet" => "«",
-      "ellipsis" => "…",
-      "euro sign" => "€",
-      "superscript two" => "²",
-      "vulgar half" => "½",
-      "soft hyphen" => "\u00AD",
-    }.merge(ascii_punctuation)
-  end
-
   def markdown_engine_for(name)
     MarkdownEngineHelper.context_for_names(hashtag_names: [], custom_emoji_names: [name])
   end
 
   def construct_extracts?(raw, name = "parrot")
-    buffer =
-      Migrations::Converters::EmbedBuffer.new(
-        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
-      )
-    described_class.new(
-      embeds: buffer,
+    buffer = new_buffer
+    build_extractor(
+      buffer,
       markdown_engine: markdown_engine_for(name),
-      mention_names:,
-      hashtag_names:,
       custom_emoji_names: [name],
     ).extract(raw)
     buffer.emojis.any? { |emoji| emoji[:name] == name }
@@ -106,20 +60,17 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     html.include?('class="emoji emoji-custom"') && html.include?(%(title=":#{name}:"))
   end
 
-  def describe_char(char)
-    codepoints = char.each_codepoint.map { |cp| format("U+%04X", cp) }.join(" ")
-    "#{char.inspect} (#{codepoints})"
-  end
-
   def deviations_for(direction)
-    boundary_chars.filter_map do |label, char|
-      raw = direction == :before ? "a#{char}:parrot: x" : "a :parrot:#{char} x"
-      extracted = construct_extracts?(raw)
-      cooked = core_cooks?(raw)
-      next if extracted == cooked
+    BoundaryCorpus
+      .chars(zero_width_space: true)
+      .filter_map do |label, char|
+        raw = direction == :before ? "a#{char}:parrot: x" : "a :parrot:#{char} x"
+        extracted = construct_extracts?(raw)
+        cooked = core_cooks?(raw)
+        next if extracted == cooked
 
-      "#{direction} #{label} #{describe_char(char)}: construct=#{extracted} core=#{cooked}"
-    end
+        "#{direction} #{label} #{BoundaryCorpus.describe(char)}: construct=#{extracted} core=#{cooked}"
+      end
   end
 
   it "defers exactly when core cooks, for every character before the opening `:`" do

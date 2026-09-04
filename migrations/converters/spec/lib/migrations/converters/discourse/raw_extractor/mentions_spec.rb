@@ -151,13 +151,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
-    it "defers a mention whose username is in the set" do
-      result = extract("hey @alice there")
-
-      expect(buffer.mentions.first[:name]).to eq("alice")
-      expect(result).to eq("hey #{buffer.mentions.first[:placeholder]} there")
-    end
-
     it "leaves an @word that names nothing on the source as literal text" do
       raw = "meet at @3pm please"
 
@@ -187,12 +180,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       extract("cc @café_team here")
 
       expect(buffer.mentions.first[:name]).to eq("café_team")
-    end
-
-    it "defers a dotted username in the set" do
-      extract("hi @john.doe there")
-
-      expect(buffer.mentions.first[:name]).to eq("john.doe")
     end
 
     it "requires the names, so no caller can defer every @word by accident" do

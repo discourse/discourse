@@ -10,6 +10,8 @@
 # core's regex. Needs a booted Rails environment, so it is tagged `:rails` and runs
 # only under `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
+  include_context "with parity extractor"
+
   # The construct reads a username the Unicode-aware way (`@café`), which can only
   # be a real source username when the source ran with unicode usernames on, so
   # that is the setting under which the two sides are comparable. With it off core
@@ -29,50 +31,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("someuser")])
   end
 
-  # This spec is not about hashtags; the extractor requires the set anyway.
-  let(:hashtag_names) { Migrations::CompactStringSet.new([]) }
-  let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: []) }
-
-  # The 32 ASCII punctuation characters (CommonMark), which already include the
-  # ASCII symbols `$ + < = > ^ \` | ~`, plus letters, whitespace, and Unicode
-  # punctuation/symbol characters that exercise the boundary from both sides. The
-  # last three are the telling ones: `²` and `½` are category No and `­` (soft
-  # hyphen) is category Cf — none are a word character, a space, or punctuation, so
-  # they separate a plain word boundary from core's punctuation-or-space boundary.
-  def boundary_chars
-    ascii_punctuation =
-      [0x21..0x2f, 0x3a..0x40, 0x5b..0x60, 0x7b..0x7e].flat_map(&:to_a)
-        .to_h { |cp| [format("U+%04X", cp), cp.chr(Encoding::UTF_8)] }
-
-    {
-      "letter a" => "a",
-      "digit 9" => "9",
-      "e-acute" => "é",
-      "han" => "漢",
-      "space" => " ",
-      "tab" => "\t",
-      "newline" => "\n",
-      "no-break space" => "\u00A0",
-      "ideographic space" => "\u3000",
-      "em dash" => "—",
-      "low double quote" => "„",
-      "left guillemet" => "«",
-      "ellipsis" => "…",
-      "euro sign" => "€",
-      "superscript two" => "²",
-      "vulgar half" => "½",
-      "soft hyphen" => "\u00AD",
-    }.merge(ascii_punctuation)
-  end
-
   def construct_extracts?(raw)
-    buffer =
-      Migrations::Converters::EmbedBuffer.new(
-        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
-      )
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
-      raw,
-    )
+    buffer = new_buffer
+    build_extractor(buffer).extract(raw)
     buffer.mentions.any?
   end
 
@@ -83,19 +44,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     PrettyText.cook(raw, user_id: user.id).include?('<a class="mention"')
   end
 
-  def describe_char(char)
-    codepoints = char.each_codepoint.map { |cp| format("U+%04X", cp) }.join(" ")
-    "#{char.inspect} (#{codepoints})"
-  end
-
   def deviations_for(direction)
-    boundary_chars.filter_map do |label, char|
+    BoundaryCorpus.chars.filter_map do |label, char|
       raw = direction == :before ? "a#{char}@someuser x" : "a @someuser#{char} x"
       extracted = construct_extracts?(raw)
       cooked = core_cooks?(raw)
       next if extracted == cooked
 
-      "#{direction} #{label} #{describe_char(char)}: construct=#{extracted} core=#{cooked}"
+      "#{direction} #{label} #{BoundaryCorpus.describe(char)}: construct=#{extracted} core=#{cooked}"
     end
   end
 
@@ -116,17 +72,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   describe "name shapes" do
     def extracted_name(raw, name)
-      buffer =
-        Migrations::Converters::EmbedBuffer.new(
-          owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
-        )
+      buffer = new_buffer
       names = Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize(name)])
-      described_class.new(
-        embeds: buffer,
-        mention_names: names,
-        hashtag_names:,
-        markdown_engine:,
-      ).extract(raw)
+      build_extractor(buffer, mention_names: names).extract(raw)
       buffer.mentions.first&.[](:name)
     end
 
@@ -163,16 +111,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     # core's cap without duplicating it.
     long = "u#{"a" * 60}" # 61 characters
     names = Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize(long)])
-    buffer =
-      Migrations::Converters::EmbedBuffer.new(
-        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
-      )
-    described_class.new(
-      embeds: buffer,
-      mention_names: names,
-      hashtag_names:,
-      markdown_engine:,
-    ).extract("hi @#{long} x")
+    buffer = new_buffer
+    build_extractor(buffer, mention_names: names).extract("hi @#{long} x")
 
     expect(buffer.mentions).to be_empty
     expect(core_cooks?("hi @#{long} x")).to be(false)

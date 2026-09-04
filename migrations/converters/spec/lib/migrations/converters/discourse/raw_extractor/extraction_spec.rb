@@ -59,13 +59,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads).to be_empty
     end
 
-    it "does not extract from an indented block after a heading" do
-      raw = "# Title\n\n    #{upload}\n"
-
-      expect(extract(raw)).to eq(raw)
-      expect(buffer.uploads).to be_empty
-    end
-
     # Nothing needs a blank line before it: a heading is a leaf block that closes
     # itself, so the next line opens code straight away.
     it "does not extract from an indented block right under a heading" do
@@ -266,7 +259,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("general")])
     end
     let(:internal_link_hosts) { { source_host => nil } }
-    let(:link_extractor) { extractor }
 
     [
       "[link](https://external.com/@bob)",
@@ -280,7 +272,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       "x_https://external.com/@bob",
     ].each do |raw|
       it "leaves a mention inside #{raw} alone" do
-        expect(link_extractor.extract(raw)).to eq(raw)
+        expect(extract(raw)).to eq(raw)
         expect(buffer.mentions).to be_empty
       end
     end
@@ -288,7 +280,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "leaves a hashtag inside a link alone" do
       raw = "see https://external.com/x/#general now"
 
-      expect(link_extractor.extract(raw)).to eq(raw)
+      expect(extract(raw)).to eq(raw)
       expect(buffer.hashtags).to be_empty
     end
 
@@ -311,7 +303,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       %([x](https://external.com/@bob extra "t")),
     ].each do |raw|
       it "leaves a mention alone in #{raw.inspect}" do
-        expect(link_extractor.extract(raw)).to eq(raw)
+        expect(extract(raw)).to eq(raw)
         expect(buffer.mentions).to be_empty
       end
     end
@@ -319,13 +311,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # Core builds no link here and does not linkify anything, so the mention is
     # ordinary text and must still be deferred.
     it "still defers a mention in parentheses that are not a link" do
-      link_extractor.extract("[x](not a link @bob)")
+      extract("[x](not a link @bob)")
 
       expect(buffer.mentions.map { |mention| mention[:name] }).to eq(%w[bob])
     end
 
     it "still defers a mention in prose next to a link" do
-      link_extractor.extract("hi @bob see https://external.com/@carol now")
+      extract("hi @bob see https://external.com/@carol now")
 
       expect(buffer.mentions.map { |mention| mention[:name] }).to eq(%w[bob])
     end
@@ -333,13 +325,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # The skip must not swallow a link another construct wants, or the embed it
     # carries would go unrecorded.
     it "still defers an internal link" do
-      link_extractor.extract("[t](https://forum.example.com/t/slug/5)")
+      extract("[t](https://forum.example.com/t/slug/5)")
 
       expect(buffer.links.size).to eq(1)
     end
 
     it "still defers an upload inside a link" do
-      link_extractor.extract("[f](https://cdn.example.com/uploads/default/original/1X/#{sha1}.png)")
+      extract("[f](https://cdn.example.com/uploads/default/original/1X/#{sha1}.png)")
 
       expect(buffer.uploads.size).to eq(1)
     end
@@ -347,7 +339,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # The outer bracket must not match, or the walk would never reach the inner
     # image and the upload would be lost.
     it "still defers the inner image of a linked image on a foreign host" do
-      link_extractor.extract("[![alt](upload://abc.png)](https://external.com/@bob)")
+      extract("[![alt](upload://abc.png)](https://external.com/@bob)")
 
       expect(buffer.uploads.size).to eq(1)
       expect(buffer.mentions).to be_empty
@@ -358,7 +350,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "leaves a mention alone in a nested-text link's relative destination" do
       raw = "[see [1]](/x/@bob) end"
 
-      expect(link_extractor.extract(raw)).to eq(raw)
+      expect(extract(raw)).to eq(raw)
       expect(buffer.mentions).to be_empty
     end
 
@@ -367,7 +359,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "leaves a mention alone in the destination of a link too nested to match" do
       raw = "[a [b [c]]](/x/@bob) end"
 
-      expect(link_extractor.extract(raw)).to eq(raw)
+      expect(extract(raw)).to eq(raw)
       expect(buffer.mentions).to be_empty
     end
   end
@@ -500,12 +492,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer).to be_empty
     end
 
-    it "captures a whole Unicode username, not just its ASCII prefix" do
-      extract("cc @café_team here")
-
-      expect(buffer.mentions.first[:name]).to eq("café_team")
-    end
-
     it "captures a username with a combining mark (decomposed form)" do
       name = "José".unicode_normalize(:nfd)
       extract("ping @#{name} thanks")
@@ -518,13 +504,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       extract("hi @田中 there")
 
       expect(buffer.mentions.first[:name]).to eq("田中")
-    end
-
-    it "does not treat @name after a Unicode letter as a mention" do
-      raw = "café@john"
-
-      expect(extract(raw)).to eq(raw)
-      expect(buffer.mentions).to be_empty
     end
 
     it "preserves Unicode around an extracted embed and stays valid encoding" do

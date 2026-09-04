@@ -17,19 +17,8 @@
 # inline in a sentence, so no onebox block path. Needs a booted Rails environment,
 # so it is tagged `:rails` and runs only under `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
-  # This spec is about neither mentions nor hashtags; the extractor requires
-  # both name sets anyway, and an empty one defers nothing.
-  def mention_names
-    Migrations::CompactStringSet.new([])
-  end
+  include_context "with parity extractor"
 
-  def hashtag_names
-    Migrations::CompactStringSet.new([])
-  end
-
-  def markdown_engine
-    MarkdownEngineHelper.context_for_names(hashtag_names: [])
-  end
   before { SiteSetting.enable_markdown_linkify = true }
 
   # The construct treats an absolute URL as internal only when its host is one it
@@ -43,26 +32,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     "https://#{host}/t/slug/5"
   end
 
-  def build_extractor(buffer)
-    described_class.new(
-      embeds: buffer,
-      markdown_engine:,
-      mention_names:,
-      hashtag_names:,
-      internal_link_hosts: {
-        host => nil,
-      },
-    )
-  end
-
   # What the extractor did with the URL: `:link` (a row was recorded),
   # `:refused` (the body landed on the refusal tally), or `:none`.
   def construct_outcome(raw)
-    buffer =
-      Migrations::Converters::EmbedBuffer.new(
-        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
-      )
-    extractor = build_extractor(buffer)
+    buffer = new_buffer
+    extractor = build_extractor(buffer, internal_link_hosts: { host => nil })
     extractor.extract(raw)
     return :link if buffer.links.any?
 
@@ -82,18 +56,18 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   it "records a link exactly when core linkifies, for every character before the URL" do
     deviations =
-      LinkifyBoundaryCorpus.chars.filter_map do |label, char|
+      BoundaryCorpus.chars.filter_map do |label, char|
         raw = "a#{char}#{url} b"
         outcome = construct_outcome(raw)
         core = core_reading(raw)
 
         if (outcome != :none) != core[:linkified]
-          "before #{label} #{LinkifyBoundaryCorpus.describe(char)}: " \
+          "before #{label} #{BoundaryCorpus.describe(char)}: " \
             "construct=#{outcome} core=#{core[:linkified]}"
         elsif outcome == :refused
           # Nothing follows the URL here, so its route is intact; a refusal
           # would hide a regression from recording links to refusing them.
-          "before #{label} #{LinkifyBoundaryCorpus.describe(char)}: refused instead of recording"
+          "before #{label} #{BoundaryCorpus.describe(char)}: refused instead of recording"
         end
       end
     expect(deviations).to be_empty, -> { deviations.join("\n") }
@@ -101,19 +75,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   it "records a link exactly when core linkifies, for every character after the URL" do
     deviations =
-      LinkifyBoundaryCorpus.chars.filter_map do |label, char|
+      BoundaryCorpus.chars.filter_map do |label, char|
         raw = "a #{url}#{char} b"
         outcome = construct_outcome(raw)
         core = core_reading(raw)
 
         if (outcome != :none) != core[:linkified]
-          "forward #{label} #{LinkifyBoundaryCorpus.describe(char)}: " \
+          "forward #{label} #{BoundaryCorpus.describe(char)}: " \
             "construct=#{outcome} core=#{core[:linkified]}"
         elsif outcome == :refused && !core[:extended]
           # A refusal is only right when core swallowed the character into the
           # href and made the trailing id a junk coordinate path. With the
           # href unchanged, refusing instead of recording is a regression.
-          "forward #{label} #{LinkifyBoundaryCorpus.describe(char)}: refused instead of recording"
+          "forward #{label} #{BoundaryCorpus.describe(char)}: refused instead of recording"
         end
       end
     expect(deviations).to be_empty, -> { deviations.join("\n") }
@@ -127,11 +101,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # refusal tally.
   it "refuses a coordinate-shaped trailing-word URL that core linkifies whole" do
     raw = "a #{url}a b"
-    buffer =
-      Migrations::Converters::EmbedBuffer.new(
-        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
-      )
-    extractor = build_extractor(buffer)
+    buffer = new_buffer
+    extractor = build_extractor(buffer, internal_link_hosts: { host => nil })
 
     expect(extractor.extract(raw)).to eq(raw)
     expect(buffer.links).to be_empty

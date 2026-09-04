@@ -96,47 +96,8 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
   end
 
   describe "internal link resolution" do
-    def create_link(placeholder_token, **attrs)
-      Migrations::Database::IntermediateDB::EmbedLink.create(
-        owner_type: embed_owner::POST,
-        owner_id: 1,
-        placeholder: placeholder_token,
-        **attrs,
-      )
-    end
-
-    def create_user(original_id, username)
-      Migrations::Database::IntermediateDB::User.create(
-        original_id:,
-        username:,
-        created_at: Time.now,
-        trust_level: 0,
-      )
-    end
-
-    def create_category(original_id, slug, parent_category_id: nil)
-      Migrations::Database::IntermediateDB::Category.create(
-        original_id:,
-        name: slug,
-        slug:,
-        parent_category_id:,
-        user_id: 1,
-      )
-    end
-
-    def create_tag(original_id, name)
-      Migrations::Database::IntermediateDB::Tag.create(original_id:, name:, slug: name)
-    end
-
-    def create_topic(original_id, slug)
-      Migrations::Database::IntermediateDB::Topic.create(original_id:, title: slug, slug:)
-    end
-
     def render(attrs, maps:)
-      link = placeholder.mint(:link)
-      create_link(link, **attrs)
-      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
-      resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])[1]
+      resolve("x #{create_embed(:link, **attrs)} y", maps:)
     end
 
     # Rendering a resolved target through the maps (the id is already known here;
@@ -478,13 +439,13 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     it "restores the source URL when several topics share the slug" do
       create_topic(300, "dup-slug")
       create_topic(301, "dup-slug")
-      link = placeholder.mint(:link)
-      create_link(
-        link,
-        url: "https://old.example.com/t/dup-slug",
-        target_type: link_target::TOPIC,
-        target_name: "dup-slug",
-      )
+      link =
+        create_embed(
+          :link,
+          url: "https://old.example.com/t/dup-slug",
+          target_type: link_target::TOPIC,
+          target_name: "dup-slug",
+        )
       maps = FakePlaceholderMaps.new(topic_id: { 300 => 99, 301 => 100 })
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
@@ -566,13 +527,13 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     # but is still recorded, since a stale internal link points at the wrong record.
 
     it "falls back to the source URL and reports an unresolved internal link" do
-      link = placeholder.mint(:link)
-      create_link(
-        link,
-        url: "https://old.example.com/t/slug/300",
-        target_type: link_target::TOPIC,
-        target_id: 300,
-      )
+      link =
+        create_embed(
+          :link,
+          url: "https://old.example.com/t/slug/300",
+          target_type: link_target::TOPIC,
+          target_id: 300,
+        )
       maps = FakePlaceholderMaps.new(post: { 1 => { topic_id: 42, post_number: 3 } })
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
@@ -590,8 +551,8 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
 
     it "reports the failing name when a named target can't be resolved" do
-      link = placeholder.mint(:link)
-      create_link(link, url: "/u/ghost", target_type: link_target::USER, target_name: "ghost")
+      link =
+        create_embed(:link, url: "/u/ghost", target_type: link_target::USER, target_name: "ghost")
 
       resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
 
@@ -599,8 +560,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
 
     it "does not report an external link that falls back" do
-      link = placeholder.mint(:link)
-      create_link(link, url: "https://elsewhere.example.com/page")
+      link = create_embed(:link, url: "https://elsewhere.example.com/page")
 
       resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
 
