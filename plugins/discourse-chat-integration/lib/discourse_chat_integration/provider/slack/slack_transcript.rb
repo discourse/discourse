@@ -75,6 +75,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
     def first_message_number
       @first_message_index < 0 ? @messages.length + @first_message_index : @first_message_index
     end
+
     def last_message_number
       @last_message_index < 0 ? @messages.length + @last_message_index : @last_message_index
     end

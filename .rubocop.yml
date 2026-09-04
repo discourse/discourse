@@ -5,6 +5,9 @@ inherit_mode:
   merge:
     - Exclude
 
+Layout/EmptyLineBetweenDefs:
+  Enabled: true
+
 # Still work to do in ensuring we don't link old files
 Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
   Enabled: false
