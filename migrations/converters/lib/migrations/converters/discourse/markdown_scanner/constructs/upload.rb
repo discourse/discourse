@@ -16,11 +16,12 @@ module Migrations
           class Upload < Base
             TRIGGERS = ["!", "["].freeze
 
-            # Like `Base::LINK_TEXT`, but with `|` and the newline kept out of
-            # the plain runs: the label ends at the pipe that starts the
-            # metadata (`[Juan [John] Hernandez.pdf|attachment]`), and labels
-            # stay on one line.
-            LABEL = /(?>[^|\[\]\n]{0,999}(?:\[[^\[\]\n]{0,999}\](?!\()[^|\[\]\n]{0,999}){0,32})/
+            # Like `Base::LINK_TEXT`, but with `|` kept out of the plain runs:
+            # the label ends at the pipe that starts the metadata
+            # (`[Juan [John] Hernandez.pdf|attachment]`). Line ends stay in,
+            # as in core: an AI-captioned image carries its caption on a line
+            # of its own inside the alt.
+            LABEL = /(?>[^|\[\]]{0,999}(?:\[[^\[\]]{0,999}\](?!\()[^|\[\]]{0,999}){0,32})/
             private_constant :LABEL
 
             # The URL and dimensions classes exclude the newline (a destination

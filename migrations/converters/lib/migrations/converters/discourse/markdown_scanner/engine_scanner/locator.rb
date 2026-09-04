@@ -160,14 +160,13 @@ module Migrations
               )
             end
 
-            # Try, nearest first, every possible syntax anchor between the
-            # occurrence and the start of the previous line (a link's
-            # destination may sit one line below its `[` — see
-            # `Base::LINK_GAP`), then the occurrence itself as a bare URL.
+            # Try, nearest first, every possible syntax anchor within
+            # `ANCHOR_WINDOW` bytes before the occurrence (a label may span
+            # lines, so no line bound), then the occurrence itself as a bare
+            # URL.
             def anchor_match(occurrence)
               offset = occurrence.offset
-              line = @line_starts.bsearch_index { |start| start > offset } || @line_starts.size
-              from = [@line_starts[[line - 2, 0].max], offset - ANCHOR_WINDOW].max
+              from = [offset - ANCHOR_WINDOW, 0].max
 
               pos = offset - 1
               while pos >= from

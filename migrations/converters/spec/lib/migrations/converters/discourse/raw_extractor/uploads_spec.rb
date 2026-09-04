@@ -656,4 +656,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to include("[1]: #{buffer.uploads.first[:placeholder]}")
     end
   end
+
+  describe "multi-line alt text" do
+    it "defers an image whose alt text spans lines" do
+      raw =
+        "![Screenshot of a form.\nAssistant:\n (Captioned by AI)|690x77](upload://k9k7D6IBBk6Sg7EuRM59QL72xXn.png) tail"
+
+      result = extract(raw)
+
+      expect(buffer.uploads.size).to eq(1)
+      upload = buffer.uploads.first
+      expect(upload[:upload_id]).to eq("k9k7D6IBBk6Sg7EuRM59QL72xXn")
+      expect(upload[:original_markdown]).to eq(raw.delete_suffix(" tail"))
+      expect(result).to eq("#{upload[:placeholder]} tail")
+    end
+  end
 end
