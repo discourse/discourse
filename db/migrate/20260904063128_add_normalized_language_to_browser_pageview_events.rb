@@ -2,6 +2,6 @@
 
 class AddNormalizedLanguageToBrowserPageviewEvents < ActiveRecord::Migration[8.0]
   def change
-    add_column :browser_pageview_events, :normalized_language, :string, limit: 13
+    add_column :browser_pageview_events, :normalized_language, :string
   end
 end

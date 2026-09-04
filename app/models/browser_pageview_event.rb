@@ -299,7 +299,7 @@ end
 #  country_code                :string(2)
 #  ip_address                  :inet             not null
 #  language                    :string(255)
-#  normalized_language         :string(13)
+#  normalized_language         :string
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
 #  normalized_url              :string(2000)

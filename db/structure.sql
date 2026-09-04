@@ -2113,7 +2113,7 @@ CREATE TABLE public.browser_pageview_events (
     normalized_url_version integer,
     browser smallint,
     language character varying(255),
-    normalized_language character varying(13)
+    normalized_language character varying
 );
 
 
