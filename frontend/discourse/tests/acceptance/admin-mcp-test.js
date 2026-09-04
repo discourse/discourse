@@ -469,7 +469,7 @@ acceptance("Admin - MCP", function (needs) {
     assert
       .dom(".admin-mcp__client-form")
       .includesText(
-        "--callback-port 8080",
+        i18n("admin.config.mcp.clients.preset_help.claude_code"),
         "the application instructions explain how to use the fixed port"
       );
 

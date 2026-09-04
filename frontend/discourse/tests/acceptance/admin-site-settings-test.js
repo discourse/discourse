@@ -9,6 +9,7 @@ import { test } from "qunit";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -415,7 +416,11 @@ acceptance("Admin - Site Settings", function (needs) {
 
     assert
       .dom(".admin-site-settings-category-nav__item.mcp a")
-      .hasText("MCP (1)", "the MCP category has a translated label");
+      .hasAttribute(
+        "title",
+        i18n("admin.site_settings.categories.mcp"),
+        "the MCP category has a translated label"
+      );
     assert
       .dom(
         '[data-setting="mcp_oauth_client_id_metadata_policy"] .form-kit__control-select'
@@ -425,17 +430,17 @@ acceptance("Admin - Site Settings", function (needs) {
       .dom(
         '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="disabled"]'
       )
-      .hasText("Admin-registered clients only");
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.disabled"));
     assert
       .dom(
         '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="approved_domains"]'
       )
-      .hasText("Also allow metadata clients from approved domains");
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.approved_domains"));
     assert
       .dom(
         '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="any_domain"]'
       )
-      .hasText("Also allow metadata clients from any domain");
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.any_domain"));
   });
 
   test("shows all_results if current category has none", async function (assert) {
