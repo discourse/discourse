@@ -104,7 +104,7 @@ class AdminDashboardSiteTrafficExplorer
         if language.length > BrowserPageviewEvent::MAX_LANGUAGE_LENGTH
           raise Discourse::InvalidParameters.new(key)
         end
-        language
+        BrowserPageviewEventLanguageNormalizer.normalize(language)
       when :ip
         IPAddr.new(value.to_s).to_s
       when :referrer
@@ -136,9 +136,6 @@ class AdminDashboardSiteTrafficExplorer
       series_colors: series_colors,
       dimensions: decorate_dimensions(row.fetch("dimensions")),
     }
-    if filters[:language]
-      filters = filters.merge(language: row.fetch("normalized_language_filters"))
-    end
     active_filters =
       decorate_active_filters(row.fetch("active_filter_representative_ips"), filters:)
     traffic[:active_filters] = active_filters if active_filters.any?
@@ -206,7 +203,7 @@ class AdminDashboardSiteTrafficExplorer
       country: "(NOT :country_filtered OR country_code IN (:countries))",
       network: "(NOT :network_filtered OR asn IN (:network_asns))",
       browser: "(NOT :browser_filtered OR browser IN (:browsers))",
-      language: "(NOT :language_filtered OR language IN (SELECT language FROM language_filters))",
+      language: "(NOT :language_filtered OR language IN (:languages))",
       ip: "(NOT :ip_filtered OR host(ip_address) IN (:ip_addresses))",
       traffic_type: <<~SQL.squish,
           (
@@ -221,40 +218,12 @@ class AdminDashboardSiteTrafficExplorer
     predicates.values.join("\n          AND ")
   end
 
-  def normalized_language_sql(column)
-    normalized_language = "replace(#{column}, '_', '-')"
-
-    <<~SQL.squish
-      CASE
-        WHEN #{normalized_language} ~ '^[A-Za-z]{2,8}(?:-[A-Za-z]{3}){0,3}(?:-[A-Za-z]{4})?(?:-[A-Za-z0-9]{1,8})*$'
-        THEN
-          lower(split_part(#{normalized_language}, '-', 1)) ||
-          CASE
-            WHEN substring(
-              #{normalized_language}
-              FROM '^[A-Za-z]{2,8}(?:-[A-Za-z]{3}){0,3}-([A-Za-z]{4})(?:-|$)'
-            ) IS NOT NULL
-            THEN '-' || initcap(lower(substring(
-              #{normalized_language}
-              FROM '^[A-Za-z]{2,8}(?:-[A-Za-z]{3}){0,3}-([A-Za-z]{4})(?:-|$)'
-            )))
-            ELSE ''
-          END
-        ELSE COALESCE(#{column}, '')
-      END
-    SQL
-  end
-
   def query(start_date:, end_date:)
     source_condition =
       BrowserPageviewEvent.rollup_source_condition(table: "bpe", start_date:, end_date:)
 
     <<~SQL
-      WITH language_filters AS MATERIALIZED (
-        SELECT DISTINCT #{normalized_language_sql("selected_language.value")} AS language
-        FROM unnest(ARRAY[:languages]::text[]) AS selected_language(value)
-      ),
-      population AS MATERIALIZED (
+      WITH population AS MATERIALIZED (
         SELECT
           bpe.id,
           bpe.created_at,
@@ -266,7 +235,7 @@ class AdminDashboardSiteTrafficExplorer
           bpe.asn,
           bpe.ip_address,
           COALESCE(bpe.browser, #{BrowserPageviewEvent::BROWSER_UNKNOWN}) AS browser,
-          #{normalized_language_sql("bpe.language")} AS language,
+          COALESCE(bpe.normalized_language, '') AS language,
           bpe.score
         FROM browser_pageview_events bpe
         WHERE bpe.created_at >= :start_date
@@ -404,10 +373,6 @@ class AdminDashboardSiteTrafficExplorer
           SELECT population_boundary.oldest_created_at
           FROM population_boundary
         ) AS oldest_pageview_at,
-        (
-          SELECT COALESCE(jsonb_agg(language ORDER BY language), '[]'::jsonb)
-          FROM language_filters
-        ) AS normalized_language_filters,
         jsonb_build_object(
           'country', (
             SELECT COALESCE(jsonb_object_agg(country_code, representative_ip), '{}'::jsonb)

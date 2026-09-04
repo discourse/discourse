@@ -2112,7 +2112,8 @@ CREATE TABLE public.browser_pageview_events (
     normalized_url character varying(2000),
     normalized_url_version integer,
     browser smallint,
-    language character varying(255)
+    language character varying(255),
+    normalized_language character varying(13)
 );
 
 
@@ -18464,6 +18465,13 @@ CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING bt
 
 
 --
+-- Name: idx_bpe_normalized_language_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_normalized_language_backfill ON public.browser_pageview_events USING btree (source, created_at DESC, id DESC) WHERE ((normalized_language IS NULL) AND (language IS NOT NULL));
+
+
+--
 -- Name: idx_bpe_normalized_referrer_version; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24407,6 +24415,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260904063613'),
+('20260904063128'),
 ('20260903065141'),
 ('20260902150024'),
 ('20260901020329'),

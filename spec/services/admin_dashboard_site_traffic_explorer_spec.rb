@@ -116,18 +116,19 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             { value: "firefox", label: "Firefox", pageviews: 1 },
           ],
           "languages" => [
+            { value: "", label: "Unknown", pageviews: 4 },
             { value: "en", label: "en", pageviews: 4 },
-            { value: "", label: "Unknown", pageviews: 3 },
             { value: "fr", label: "fr", pageviews: 2 },
-            { value: "_", label: "_", pageviews: 1 },
             { value: "zh-Hant", label: "zh-Hant", pageviews: 1 },
           ],
         )
 
-        invalid_language_dimensions =
-          described_class.call(params: params.merge(language: "_")).traffic.fetch(:dimensions)
-        expect(invalid_language_dimensions.fetch("languages")).to eq(
-          [{ value: "_", label: "_", pageviews: 1 }],
+        unknown_language_traffic = described_class.call(params: params.merge(language: "_")).traffic
+        expect(unknown_language_traffic.fetch(:dimensions).fetch("languages")).to eq(
+          [{ value: "", label: "Unknown", pageviews: 4 }],
+        )
+        expect(unknown_language_traffic.fetch(:active_filters)).to eq(
+          [{ key: :language, value: "", label: "Unknown" }],
         )
 
         regional_language_traffic =

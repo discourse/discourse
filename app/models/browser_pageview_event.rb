@@ -6,6 +6,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_REFERRER_LENGTH = 2000
   MAX_USER_AGENT_LENGTH = 1000
   MAX_LANGUAGE_LENGTH = 255
+  MAX_NORMALIZED_LANGUAGE_LENGTH = 13
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
   MAX_NORMALIZED_URL_LENGTH = 2000
   RETENTION_PERIOD = 3.months
@@ -191,6 +192,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
       normalized_referrer = BrowserPageviewEventUrlNormalizer.normalize_referrer(payload[:referrer])
       normalized_url = BrowserPageviewEventUrlNormalizer.normalize_site_path(payload[:url])
       user_agent = payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH)
+      language = payload[:language]&.slice(0, MAX_LANGUAGE_LENGTH)
 
       {
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
@@ -203,7 +205,8 @@ class BrowserPageviewEvent < ActiveRecord::Base
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         user_agent: user_agent,
-        language: payload[:language]&.slice(0, MAX_LANGUAGE_LENGTH),
+        language: language,
+        normalized_language: BrowserPageviewEventLanguageNormalizer.normalize(language),
         browser: BROWSERS.fetch(BrowserDetection.browser(user_agent), BROWSER_UNKNOWN),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
@@ -273,6 +276,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
     self.referrer = referrer.slice(0, MAX_REFERRER_LENGTH) if referrer.present?
     self.user_agent = user_agent.slice(0, MAX_USER_AGENT_LENGTH) if user_agent.present?
     self.language = language.slice(0, MAX_LANGUAGE_LENGTH) if language.present?
+    if normalized_language.present?
+      self.normalized_language = normalized_language.slice(0, MAX_NORMALIZED_LANGUAGE_LENGTH)
+    end
     self.session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH) if session_id.present?
     if normalized_referrer.present?
       self.normalized_referrer = normalized_referrer.slice(0, MAX_NORMALIZED_REFERRER_LENGTH)
@@ -293,6 +299,7 @@ end
 #  country_code                :string(2)
 #  ip_address                  :inet             not null
 #  language                    :string(255)
+#  normalized_language         :string(13)
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
 #  normalized_url              :string(2000)
@@ -314,6 +321,7 @@ end
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
+#  idx_bpe_normalized_language_backfill         (source,created_at DESC,id DESC) WHERE ((normalized_language IS NULL) AND (language IS NOT NULL))
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_normalized_url_version               (normalized_url_version)
 #  idx_bpe_session_created_at                   (session_id,created_at)

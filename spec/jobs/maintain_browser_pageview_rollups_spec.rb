@@ -761,5 +761,24 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(edge.reload.browser).to eq("edge")
       end
     end
+
+    context "when backfilling languages" do
+      it "resumes bounded batches and preserves meaningful scripts" do
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        english = Fabricate(:browser_pageview_event, language: "en-US", normalized_language: nil)
+        traditional_chinese =
+          Fabricate(:browser_pageview_event, language: "zh-Hant-TW", normalized_language: nil)
+
+        job.execute({})
+
+        expect(
+          [english.reload.normalized_language, traditional_chinese.reload.normalized_language],
+        ).to eq([nil, "zh-Hant"])
+
+        job.execute({})
+
+        expect(english.reload.normalized_language).to eq("en")
+      end
+    end
   end
 end
