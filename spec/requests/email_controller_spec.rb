@@ -267,6 +267,12 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
+        SecureLinkFlow.new(request.server_session).stage(
+          :unsubscribe,
+          unsubscribe_key,
+          expires: 2.minutes,
+        )
+
         expect(response.body).to include(I18n.t("unsubscribe.log_out"))
         expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
 
@@ -277,6 +283,9 @@ RSpec.describe EmailController do
                xhr: true
 
         expect(response.parsed_body["redirect_url"]).to eq("/email/unsubscribe")
+        expect(
+          SecureLinkFlow.new(request.server_session).expires_in_seconds(:unsubscribe),
+        ).to be_within(1).of(2.minutes)
 
         get "/email/unsubscribe"
 

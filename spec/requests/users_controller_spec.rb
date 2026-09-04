@@ -415,6 +415,21 @@ RSpec.describe UsersController do
         expect(UserAuthToken.exists?(preserved_auth_token.id)).to eq(true)
       end
 
+      it "returns password validation errors without reporting an invalid link" do
+        SiteSetting.block_common_passwords = true
+        CommonPasswords.stubs(:common_password?).returns(true)
+
+        reset_password email_token.token, format: :json, params: { password: "common-password" }
+
+        expect(response.parsed_body["message"]).to be_nil
+        expect(response.parsed_body["errors"]).to eq(
+          "user_password.password" => [
+            I18n.t("activerecord.errors.models.user_password.attributes.password.common"),
+          ],
+        )
+        expect(email_token.reload.confirmed).to eq(false)
+      end
+
       it "disallows double password reset" do
         reset_password email_token.token, params: { password: "hg9ow8yHG32O" }
         reset_password email_token.token, params: { password: "test123987AsdfXYZ" }

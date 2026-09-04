@@ -67,7 +67,7 @@ class Users::AssociateAccountsController < ApplicationController
   end
 
   def secure_link_landing?
-    params[:token].present?
+    action_name == "connect_info" && request.get? && params[:token].present?
   end
 
   def self.key(token)

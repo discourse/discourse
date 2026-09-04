@@ -803,9 +803,15 @@ class SessionController < ApplicationController
       end
 
     unsubscribe_credential = secure_link_flow.credential(:unsubscribe)
+    unsubscribe_expires_in_seconds =
+      secure_link_flow.expires_in_seconds(:unsubscribe) if unsubscribe_credential
     reset_session
-    if unsubscribe_credential
-      SecureLinkFlow.new(server_session).stage(:unsubscribe, unsubscribe_credential)
+    if unsubscribe_expires_in_seconds&.positive?
+      SecureLinkFlow.new(server_session).stage(
+        :unsubscribe,
+        unsubscribe_credential,
+        expires: unsubscribe_expires_in_seconds,
+      )
     end
     log_off_user(push_subscription:)
 

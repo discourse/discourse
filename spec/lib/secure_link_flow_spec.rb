@@ -8,7 +8,7 @@ RSpec.describe "SecureLinkFlow" do
     flow.stage(:password_reset, "secret")
 
     expect(flow.credential(:password_reset)).to eq("secret")
-    expect(server_session.ttl("secure-link-password-reset")).to be_between(599, 600)
+    expect(flow.expires_in_seconds(:password_reset)).to be_between(599, 600)
   end
 
   it "replaces an older credential for the same purpose" do

@@ -996,7 +996,7 @@ class UsersController < ApplicationController
           reset_csrf_token(request)
           logon_after_password_reset
           secure_link_flow.clear(:password_reset)
-        else
+        elsif @user.errors.empty?
           @error = I18n.t("password_reset.no_token", base_url: Discourse.base_url)
         end
       end

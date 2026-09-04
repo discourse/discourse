@@ -123,6 +123,9 @@ RSpec.describe Users::AssociateAccountsController do
       get "/associate/#{SecureRandom.hex}"
       get "/associate.json"
       expect(response.status).to eq(403)
+
+      post "/associate.json", params: { token: SecureRandom.hex }
+      expect(response.status).to eq(403)
     end
   end
 end

@@ -27,6 +27,10 @@ class SecureLinkFlow
     @server_session[key(purpose)]
   end
 
+  def expires_in_seconds(purpose)
+    @server_session.ttl(key(purpose))
+  end
+
   def clear(purpose)
     @server_session.delete(key(purpose))
   end
@@ -34,7 +38,9 @@ class SecureLinkFlow
   private
 
   def key(purpose)
-    raise ArgumentError, "unknown secure link purpose" if !PURPOSES.include?(purpose)
+    if !PURPOSES.include?(purpose)
+      raise ArgumentError, "unknown secure link purpose"
+    end
 
     "secure-link-#{purpose.to_s.dasherize}"
   end
