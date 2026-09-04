@@ -79,6 +79,43 @@ function isElementNaturallyFocusable(element) {
   return false;
 }
 
+const SOFT_KEYBOARD_INPUT_TYPES = [
+  "text",
+  "search",
+  "email",
+  "url",
+  "tel",
+  "password",
+  "number",
+];
+
+/**
+ * Whether focusing an element summons a soft keyboard on touch devices:
+ * text-like inputs, textareas, and contenteditable regions. Other
+ * focusables (select, checkbox, date, ...) open pickers or nothing, and
+ * readonly/disabled fields or `inputmode="none"` suppress the keyboard.
+ *
+ * @param {Element|null} element
+ * @returns {boolean}
+ */
+export function summonsSoftKeyboard(element) {
+  if (
+    !element ||
+    element.readOnly ||
+    element.disabled ||
+    element.closest("[inputmode='none']")
+  ) {
+    return false;
+  }
+
+  return !!(
+    element.isContentEditable ||
+    element.matches("textarea") ||
+    (element.matches("input") &&
+      SOFT_KEYBOARD_INPUT_TYPES.includes(element.type))
+  );
+}
+
 function offset(element) {
   // note that getBoundingClientRect forces a reflow.
   // When used in critical performance conditions
