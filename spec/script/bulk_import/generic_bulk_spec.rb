@@ -867,6 +867,34 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#create_posts" do
+      it "does not resolve or persist an import ID for a post skipped due to NUL content" do
+        topic = Fabricate(:topic)
+        importer = described_class.new
+        importer.instance_variable_set(:@last_post_id, Post.maximum(:id) || 0)
+        importer.instance_variable_set(:@posts, {})
+        importer.instance_variable_set(:@highest_post_number_by_topic_id, {})
+        importer.instance_variable_set(:@post_number_by_post_id, {})
+        importer.instance_variable_set(:@topic_id_by_post_id, {})
+        importer.instance_variable_set(
+          :@import_issue_log_path,
+          File.join(Dir.mktmpdir, "issues.log"),
+        )
+        allow(importer).to receive(:pre_cook).and_return("cooked")
+
+        expect {
+          importer.create_posts(
+            [{ imported_id: 123, topic_id: topic.id, raw: "bad\0raw" }],
+          ) { |row| row }
+        }.not_to change { Post.count }
+
+        expect(importer.post_id_from_imported_id(123)).to be_nil
+        expect(PostCustomField.where(name: "import_id", value: "123")).to be_empty
+      ensure
+        importer&.instance_variable_get(:@raw_connection)&.close
+      end
+    end
+
     describe "#pre_cook" do
       it "links unicode mentions to imported users and groups" do
         importer = described_class.allocate
