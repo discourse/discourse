@@ -1619,16 +1619,7 @@ class BulkImport::Generic < BulkImport::Base
       email_result[:updated_keys].filter_map { |id| updated_user_ids_by_email_id[id.to_i] },
     )
 
-    User
-      .unscoped
-      .where(id: updates.map { |update| update[:id] })
-      .find_each do |user|
-        @usernames_lower << user.username_lower
-        @user_ids_by_username_lower[user.username_lower] = user.id
-        @usernames_by_id[user.id] = user.username
-        @user_full_names_by_id[user.id] = user.name if user.name.present?
-      end
-    @emails = UserEmail.pluck(:email, :user_id).to_h
+    refresh_user_lookup_caches(updates.map { |update| update[:id] })
   ensure
     rows&.close
   end
@@ -2100,6 +2091,13 @@ class BulkImport::Generic < BulkImport::Base
       pinned_globally
       subtype
     ]
+    indexed_columns =
+      Topic
+        .unscoped
+        .where(id: delta_update_mapping(:topics).values)
+        .pluck(:id, :title, :category_id)
+        .to_h { |id, title, category_id| [id, [title, category_id]] }
+    reindex_ids = []
     rows = query("SELECT * FROM topics ORDER BY id")
     updates =
       rows.filter_map do |row|
@@ -2141,16 +2139,22 @@ class BulkImport::Generic < BulkImport::Base
             update[column] = to_datetime(row[column.to_s])
           end
         end
+        current_title, current_category_id = indexed_columns[discourse_id]
+        if (update[:title] && update[:title] != current_title) ||
+             (update[:category_id] && update[:category_id] != current_category_id)
+          reindex_ids << discourse_id
+        end
         update
       end
     result = update_records(updates, "topic", columns)
     record_delta_updates(:topics, result)
 
-    # direct SQL updates bypass the model callbacks that keep search in sync
-    Topic
-      .unscoped
-      .where(id: result[:updated_keys])
-      .find_each { |topic| SearchIndexer.index(topic, force: true) }
+    # direct SQL updates bypass the model callbacks that keep search in sync;
+    # only the title and category feed the index, so reindex just those
+    reindex_ids &= result[:updated_keys].map(&:to_i)
+    reindex_ids.each_slice(1_000) do |ids|
+      Topic.unscoped.where(id: ids).find_each { |topic| SearchIndexer.index(topic, force: true) }
+    end
   ensure
     rows&.close
   end
@@ -3524,7 +3528,10 @@ class BulkImport::Generic < BulkImport::Base
       result[:updated_keys].filter_map { |id| users_by_avatar_id[id.to_i] },
     )
 
+    updated_avatar_ids = result[:updated_keys].map(&:to_i).to_set
     updates.each do |update|
+      next if updated_avatar_ids.exclude?(update[:id])
+
       UploadReference.ensure_exist!(
         upload_ids: [update[:custom_upload_id]],
         target_type: "UserAvatar",

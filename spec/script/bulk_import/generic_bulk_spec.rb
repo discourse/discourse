@@ -242,6 +242,60 @@ if generic_import_dependencies_available
       ensure
         source_db&.close
       end
+
+      it "reindexes only topics whose title or category changed" do
+        title_changed = Fabricate(:topic, title: "Original topic title", views: 10)
+        category_changed = Fabricate(:topic, category: Fabricate(:category), views: 20)
+        views_changed = Fabricate(:topic, title: "Views only topic", views: 30)
+        replacement_category = Fabricate(:category)
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(
+          "CREATE TABLE topics (id INTEGER PRIMARY KEY, title TEXT, category_id INTEGER, views INTEGER)",
+        )
+        source_db.execute(
+          "INSERT INTO topics (id, title, category_id, views) VALUES " \
+            "(10, 'Replacement title', NULL, NULL), " \
+            "(20, NULL, 2000, NULL), " \
+            "(30, NULL, NULL, 31)",
+        )
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(
+          :@delta_update_mappings,
+          topics: {
+            10 => title_changed.id,
+            20 => category_changed.id,
+            30 => views_changed.id,
+          },
+        )
+        importer.instance_variable_set(:@categories, { 2000 => replacement_category.id })
+        allow(importer).to receive(:update_records) do |updates, _name, columns|
+          updated_keys =
+            updates.filter_map do |update|
+              topic = Topic.find(update[:id])
+              attributes = update.slice(*columns).compact
+              next if attributes.all? { |column, value| topic.public_send(column) == value }
+
+              topic.update_columns(attributes)
+              topic.id
+            end
+          { updated_keys: updated_keys }
+        end
+        indexed_topic_ids = []
+        allow(SearchIndexer).to receive(:index) do |topic, force:|
+          indexed_topic_ids << topic.id
+          expect(force).to eq(true)
+        end
+
+        importer.update_delta_topics
+
+        expect(indexed_topic_ids).to contain_exactly(title_changed.id, category_changed.id)
+        expect(title_changed.reload.title).to eq("Replacement title")
+        expect(category_changed.reload.category_id).to eq(replacement_category.id)
+        expect(views_changed.reload.views).to eq(31)
+      ensure
+        source_db&.close
+      end
     end
 
     describe "delta preflight" do
@@ -861,6 +915,64 @@ if generic_import_dependencies_available
           "khoros/current moved from user #{previous_owner.id} to user #{owner.id}",
           "khoros/orphan moved from user nil to user #{newcomer.id}",
         )
+      ensure
+        source_db&.close
+      end
+    end
+
+    describe "#update_delta_user_avatars" do
+      it "persists an upload reference only for an avatar that changed" do
+        changed_user = Fabricate(:user)
+        unchanged_user = Fabricate(:user)
+        old_upload = Fabricate(:upload)
+        new_upload = Fabricate(:upload)
+        unchanged_upload = Fabricate(:upload)
+        changed_avatar = Fabricate(:user_avatar, user: changed_user)
+        unchanged_avatar = Fabricate(:user_avatar, user: unchanged_user)
+        changed_avatar.update_column(:custom_upload_id, old_upload.id)
+        unchanged_avatar.update_column(:custom_upload_id, unchanged_upload.id)
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(
+          "CREATE TABLE users (id INTEGER PRIMARY KEY, avatar_upload_id INTEGER, anonymized INTEGER)",
+        )
+        source_db.execute("INSERT INTO users VALUES (1, 101, NULL), (2, 102, NULL)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(
+          :@delta_update_mappings,
+          users: {
+            1 => changed_user.id,
+            2 => unchanged_user.id,
+          },
+        )
+        importer.instance_variable_set(
+          :@uploads_mapping,
+          { "101" => new_upload.id, "102" => unchanged_upload.id },
+        )
+        importer.instance_variable_set(:@delta_stats, users: { updated_ids: Set.new })
+        allow(importer).to receive(:update_records) do |updates, _name, _columns|
+          updated_keys =
+            updates.filter_map do |update|
+              avatar = UserAvatar.find(update[:id])
+              next if avatar.custom_upload_id == update[:custom_upload_id]
+
+              avatar.update_column(:custom_upload_id, update[:custom_upload_id])
+              avatar.id
+            end
+          { updated_keys: updated_keys }
+        end
+
+        importer.update_delta_user_avatars
+
+        expect(changed_avatar.reload.custom_upload_id).to eq(new_upload.id)
+        expect(
+          UploadReference.where(target_type: "UserAvatar", target_id: changed_avatar.id).pluck(
+            :upload_id,
+          ),
+        ).to contain_exactly(new_upload.id)
+        expect(
+          UploadReference.where(target_type: "UserAvatar", target_id: unchanged_avatar.id),
+        ).to be_empty
       ensure
         source_db&.close
       end
