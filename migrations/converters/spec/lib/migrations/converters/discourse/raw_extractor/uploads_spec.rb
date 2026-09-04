@@ -683,19 +683,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   describe "lightbox links" do
-    it "defers both the image and the link destination of a link wrapping its own image" do
+    it "defers the destination of a link wrapping its own image" do
+      # Core renders an image inside an upload link as the alt text, so the
+      # inner image is no construct; the destination is the one live upload.
       short = "upload://bnqOrMUuNaz4vwpObqnsFgpgPUF.jpeg"
       result = extract("[![image|690x97](#{short})](#{short})")
 
       expect(extractor.engine_refusals).to be_empty
-      expect(buffer.uploads.size).to eq(2)
-      expect(buffer.uploads.map { |row| row[:upload_id] }.uniq).to eq(
-        ["bnqOrMUuNaz4vwpObqnsFgpgPUF"],
+      expect(buffer.uploads.size).to eq(1)
+      expect(buffer.uploads.first).to include(
+        upload_id: "bnqOrMUuNaz4vwpObqnsFgpgPUF",
+        original_markdown: short,
       )
-      expect(buffer.uploads.last[:original_markdown]).to eq(short)
-      expect(result).to eq(
-        "[#{buffer.uploads.first[:placeholder]}](#{buffer.uploads.last[:placeholder]})",
-      )
+      expect(result).to eq("[![image|690x97](#{short})](#{buffer.uploads.first[:placeholder]})")
     end
   end
 end
