@@ -223,7 +223,7 @@ GEM
     excon (1.5.0)
       logger
     exifr (1.5.1)
-    extralite-bundle (2.14)
+    extralite-bundle (3.0.1)
     fabrication (3.0.0)
     faker (3.5.3)
       i18n (>= 1.8.11, < 2)
@@ -1054,7 +1054,7 @@ CHECKSUMS
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   excon (1.5.0) sha256=c503ad1d0123bc8ab2a062ff3789dc891ec368cb9e13765ab88a9c58c8bb6d50
   exifr (1.5.1) sha256=ad87a5dbc92946fbf1d8ccd178d557d95d9168e8b3c5c5f381ea2bffcc312521
-  extralite-bundle (2.14) sha256=906c6e61dba586d6a0857e96ba985eef458ecd1b5ee009c8495c2c92ce6f18f4
+  extralite-bundle (3.0.1) sha256=49b9b6d459b194b44519d80936d6a98a9e54522e34a8a725fd4e81fdb3944aac
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
   faker (3.5.3) sha256=b961482dc0bb15ccb9a98ea7878b925669e9ae8f5e59b607da540b768137d765
   faraday (2.14.3) sha256=1882247e6766615c8220b4392bf1d27f6ebb63d8e28267587cef1fb0bf37f278
