@@ -13,9 +13,6 @@ Style/AccessModifierDeclarations:
   Enabled: true
   AllowModifiersOnSymbols: false
 
-Layout/EmptyLineBetweenDefs:
-  Enabled: true
-
 Layout/ClassStructure:
   Enabled: true
   AutoCorrect: false
