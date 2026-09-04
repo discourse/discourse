@@ -104,7 +104,7 @@ class AdminDashboardSiteTrafficExplorer
         if language.length > BrowserPageviewEvent::MAX_LANGUAGE_LENGTH
           raise Discourse::InvalidParameters.new(key)
         end
-        language
+        BrowserPageviewEventLanguageNormalizer.normalize(language)
       when :ip
         IPAddr.new(value.to_s).to_s
       when :referrer
@@ -235,7 +235,7 @@ class AdminDashboardSiteTrafficExplorer
           bpe.asn,
           bpe.ip_address,
           COALESCE(bpe.browser, #{BrowserPageviewEvent::BROWSER_UNKNOWN}) AS browser,
-          COALESCE(bpe.language, '') AS language,
+          COALESCE(bpe.normalized_language, '') AS language,
           bpe.score
         FROM browser_pageview_events bpe
         WHERE bpe.created_at >= :start_date
