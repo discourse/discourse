@@ -462,6 +462,8 @@ RSpec.describe Users::OmniauthCallbacksController do
           invite = Fabricate(:invite)
           get "/invites/#{invite.invite_key}"
           expect(response).to redirect_to("/invite")
+          get "/invite"
+          expect(response.status).to eq(200)
 
           Rails.application.env_config["omniauth.origin"] = "/invite"
 
