@@ -155,6 +155,12 @@ pl_PL:
           acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
           acting_user_not_allowed_to_act_on_this_event: "Obecny użytkownik nie może działać w związku z tym wydarzeniem."
           invalid_allowed_groups: "Nieprawidłowe dozwolone grupy."
+          invalid_hosts: "Do tego wydarzenia nie można dodać jednego lub więcej hostów."
+          too_many_hosts:
+            one: "Wydarzenie jest ograniczone do %{count} hosta."
+            few: "Wydarzenie jest ograniczone do %{count} hostów."
+            many: "Wydarzenie jest ograniczone do %{count} hostów."
+            other: "Wydarzenie jest ograniczone do %{count} hostów."
           acting_user_not_allowed_to_invite_these_groups: "Bieżący użytkownik nie może zapraszać tych grup."
           custom_field_is_invalid: "Pole niestandardowe `%{field}` jest niedozwolone."
           name:

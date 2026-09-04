@@ -966,11 +966,6 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-7: "Het intelligentste model van Antropic"
-          anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
-          anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
-          google-gemini-3-1-pro-preview: "Het intelligentste model van Google"
-          open_router-moonshotai-kimi-k2-6: "Het multimodale model van Moonshot met zichtmogelijkheden"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"

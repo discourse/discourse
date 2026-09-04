@@ -632,6 +632,7 @@ vi:
       windows: "Máy tính Windows"
       unknown: "thiết bị không rõ"
   admin_site_traffic_explorer:
+    unknown: "Không biết"
     traffic_types:
       anonymous: "Ẩn danh"
   change_email:
@@ -1182,6 +1183,7 @@ vi:
     top_menu: "Xác định các mục điều hướng xuất hiện trên trang khám phá và thứ tự hiển thị của chúng."
     share_links: "Xác định các mục nào hiển thị trên hộp thoại chia sẻ, và theo thứ tự nào."
     site_contact_username: "Tên tài khoản quản trị viên hợp lệ để gửi tất cả các thông báo tự động. Nếu để trống, tài khoản mặc định của hệ thống sẽ được sử dụng."
+    site_contact_group_name: "Nhóm người được mời tham gia sẽ tự động nhận được tin nhắn cá nhân."
     send_welcome_message: "Gửi tất cả các thành viên mới một thông điệp chào mừng kèm theo hướng dẫn nhanh."
     suppress_reply_directly_below: "Không hiện bộ đếm trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên dưới bài viết này."
     suppress_reply_directly_above: "Không hiện trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên trên bài viết này."

@@ -376,6 +376,9 @@ de:
       edit_event: "Ereignis bearbeiten"
       export_event: "Ereignis exportieren"
       created_by: "Erstellt von"
+      other_hosts:
+        one: "und %{count} andere Person"
+        other: "und %{count} andere"
       bulk_invite: "Masseneinladung"
       close_event: "Ereignis beenden"
       open_event: "Ereignis öffnen"
@@ -590,6 +593,8 @@ de:
           placeholder: "Optional, standardmäßig Titel des Themas"
         invitees:
           label: "Eingeladene Gruppen"
+        hosts:
+          label: "Hosts"
         event_type:
           label: "Art der Teilnahme"
           public:

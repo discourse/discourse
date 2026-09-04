@@ -6255,6 +6255,7 @@ el:
         filters:
           country: "Χώρα"
           browser: "Περιηγητής"
+          language: "Γλώσσα"
           ip: "IP διεύθυνση"
         metrics:
           logged_in_share:

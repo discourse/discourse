@@ -980,6 +980,7 @@ it:
       windows: "Microsoft Windows"
       unknown: "sistema operativo sconosciuto"
   admin_site_traffic_explorer:
+    unknown: "Sconosciuto"
     traffic_types:
       anonymous: "Anonimo"
   change_email:
@@ -1818,7 +1819,7 @@ it:
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
     allow_username_in_share_links: "Consenti ai nomi utente di essere inclusi nei link di condivisione. Questo permette di assegnare i distintivi in base ai visitatori unici."
     site_contact_username: "Un utente dello staff valido da cui inviare tutti i messaggi automatici. Se lasciato vuoto verrà usato l'account predefinito di Sistema."
-    site_contact_group_name: "Nome di gruppo valido che riceve inviti per tutti i messaggi personali inviati automaticamente."
+    site_contact_group_name: "Il gruppo che riceve inviti per tutti i messaggi personali inviati automaticamente."
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     send_tl1_welcome_message: "Invia ai nuovi utenti del livello di attendibilità 1 un messaggio di benvenuto."
     send_tl2_promotion_message: "Invia ai nuovi utenti del livello di attendibilità 2 un messaggio sulla promozione."
@@ -2392,7 +2393,6 @@ it:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
       valid_username: "C'è un membro con questo nome utente."
-      invalid_group: "Non esiste un gruppo con quel nome."
       invalid_integer_min_max: "Il valore deve essere tra %{min} e %{max}."
       invalid_integer_min: "Il valore deve essere %{min} o maggiore."
       invalid_integer_max: "Il valore non può essere maggiore di %{max}."

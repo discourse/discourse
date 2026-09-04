@@ -745,10 +745,6 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-7: "Anthropic の最もインテリジェントなモデル"
-          anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
-          anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
-          google-gemini-3-1-pro-preview: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"

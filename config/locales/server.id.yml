@@ -712,6 +712,7 @@ id:
       windows: "Microsoft Windows"
       unknown: "sistem operasi yang tidak dikenal"
   admin_site_traffic_explorer:
+    unknown: "Tidak diketahui"
     traffic_types:
       anonymous: "Anonim"
   change_email:

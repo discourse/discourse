@@ -791,6 +791,7 @@ ur:
       windows: "مائیکروسافٹ وِنڈَوز"
       unknown: "نامعلوم آپریٹنگ سسٹم"
   admin_site_traffic_explorer:
+    unknown: "نامعلوم"
     traffic_types:
       logged_in: "لاگ ان شدہ"
       anonymous: "گمنام"
@@ -1531,7 +1532,7 @@ ur:
     markdown_typographer_quotation_marks: "ڈبل اور سِنگل قَوٹس کے متبادل جوڑوں کی فہرست"
     post_undo_action_window_mins: "منٹوں کی تعداد جب تک صارفین کو ایک پوسٹ پر حالیہ کارروائیوں (لائیک، فلَیگ، وغیرہ) کو واپس کرلینے کی اجازت ہے۔"
     pending_users_reminder_delay_minutes: "اگر نئے اراکین اس سے زیادہ منٹوں سے منظوری کا انتظار کر رہے ہیں تو نگرانوں کو مطلع کریں۔ اطلاعات کو غیر فعال کرنے کے لیے 1- پر سیٹ کریں۔"
-    maximum_session_age: "آخری وزٹ سے ن گھنٹوں بعد تک صارف کو لاگڈ اِن رکھا جائے گا"
+    maximum_session_age: "آخری دورے سے n گھنٹوں بعد تک صارف کو لاگڈ اِن رکھا جائے گا"
     enable_escaped_fragments: "اگر کسی وَیب کرالر کا پتہ نہ لگے تو گُوگل اَیجَیکس-کرالِنگ API کا استعمال کریں۔ دیکھیے <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "نگرانوں کو دھاگہ کی ملکیت تبدیل کرنے کی اجازت دیں۔"
     cors_origins: "وہ اَوریجِن جن کیلئے کراس-اَوریجِن درخواستوں (CORS) کی اجازت ہے۔ ہراَوریجِن میں http:// یا https:// شامل ہونا ضروری ہے۔ CORS کو فعال کرنے کیلئے DISCOURSE_ENABLE_CORS کی وَیلِیو ٹرُو پر مقرر ہونا لاذمی ہے۔"
@@ -1541,6 +1542,7 @@ ur:
     invalidate_inactive_admin_email_after_days: "ایڈمن اکاؤنٹس جنہوں نے دنوں کی اتنی تعداد میں سائٹ کا دورہ نہیں کیا، اُن کو لاگ اِن کرنے سے پہلے اپنے ایمیل ایڈریس کی دوبارہ توثیق کرنے کی ضرورت ہوگی۔ غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔"
     share_links: "اِس بات کا تعین کریں کہ شیئر ڈائیلاگ پر کونسی، اور کس ترتیب کے ساتھ اشیاء ظاہر ہوں۔"
     site_contact_username: "ایک درست عملہ کا اسمِ صارف جس کی طرف سے تمام خود کار طریقے سے پیغامات بھیجے جائیں۔ اگر خالی چھوڑ دیا گیا ہو تو ڈیفالٹ سِسٹم اکاؤنٹ استعمال کیا جائے گا۔"
+    site_contact_group_name: "وہ گروپ جو خود بخود بھیجے گئے تمام ذاتی پیغامات میں مدعو کیا جاتا ہے۔"
     send_welcome_message: "تمام نئے صارفین کو فوری شروعات کے گائیڈ کے ساتھ خوش آمدید کا پیغام بھیجیں۔"
     send_tl1_welcome_message: "نئے فعالیت کے درجہ 1 پہ اراکین کو خوش آمدید کا پیغام بھیجیں۔"
     send_tl2_promotion_message: "نئے فعالیت کے درجہ 2 پہ اراکین کو فروغ کے بارے میں ایک پیغام بھیجیں۔"
@@ -1927,7 +1929,6 @@ ur:
       invalid_email: "غلط ای میل ایڈریس۔"
       invalid_username: "اِس اسمِ صارف والا کوئی صارف نہیں ہے۔"
       valid_username: "اِس اسمِ صارف والا کوئی صارف موجود ہے۔"
-      invalid_group: "اِس نام کے ساتھ کوئی گروپ موجود نہیں۔"
       invalid_integer_min_max: "قدر کا %{min} اور %{max} کے درمیان ہونا ضروری ہے۔"
       invalid_integer_min: "قدر کا %{min} یا زیادہ ہونا ضروری ہے۔"
       invalid_integer_max: "قدر %{max} سے زیادہ نہیں ہوسکتی۔"

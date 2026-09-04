@@ -1004,6 +1004,7 @@ tr_TR:
       windows: "Microsoft Windows"
       unknown: "bilinmeyen işletim sistemi"
   admin_site_traffic_explorer:
+    unknown: "Bilinmeyen"
     traffic_types:
       anonymous: "Anonim"
   change_email:
@@ -1880,7 +1881,7 @@ tr_TR:
     share_links: "Paylaş iletişim kutusunda hangi ögelerin ve hangi sırada görüneceğini belirleyin."
     allow_username_in_share_links: "Kullanıcı adlarının paylaşım bağlantılarına dahil edilmesine izin verin. Bu, benzersiz ziyaretçilere dayalı rozetleri ödüllendirmek için kullanışlıdır."
     site_contact_username: "Tüm otomatik mesajların gönderileceği geçerli bir personel kullanıcı adı. Boş bırakılırsa varsayılan Sistem hesabı kullanılır."
-    site_contact_group_name: "Otomatik olarak gönderilen tüm kişisel mesajlara davet edilen bir grubun geçerli adı."
+    site_contact_group_name: "Otomatik olarak gönderilen tüm kişisel mesajlara davet edilen grup."
     send_welcome_message: "Tüm yeni kullanıcılara hızlı başlangıç kılavuzu içeren bir karşılama mesajı gönderin."
     send_tl1_welcome_message: "Yeni güven seviyesi 1 kullanıcılarına bir karşılama mesajı gönderin."
     send_tl2_promotion_message: "Yeni güven seviyesi 2 kullanıcılarına yükselme hakkında bir mesaj gönderin."
@@ -2502,7 +2503,6 @@ tr_TR:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adına sahip bir kullanıcı yok."
       valid_username: "Bu kullanıcı adına sahip bir kullanıcı var."
-      invalid_group: "Bu ada sahip bir grup yok."
       invalid_svg: "SVG görüntüsü geçersiz. SVG öğesi içermeli ve komut dosyası veya olay işleyicisi içermemelidir."
       invalid_upload: "Yükleme geçersiz veya mevcut değil."
       invalid_topic: "Bu kimlik numarasıyla ilgili konu yok."

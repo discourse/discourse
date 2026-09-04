@@ -7984,6 +7984,7 @@ ar:
           referrer: "المُحيل"
           country: "البلد"
           browser: "المتصفح"
+          language: "اللغة"
           ip: "عنوان IP"
         metrics:
           logged_in_share:

@@ -682,6 +682,7 @@ ko:
       windows: "마이크로소프트 윈도우"
       unknown: "알 수 없는 운영체제"
   admin_site_traffic_explorer:
+    unknown: "알수없음"
     traffic_types:
       anonymous: "익명"
   change_email:
@@ -1789,7 +1790,6 @@ ko:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 아이디의 사용자가 없습니다."
       valid_username: "해당 아이디의 사용자가 있습니다."
-      invalid_group: "이 이름을 가진 그룹이 없습니다."
       invalid_integer_min_max: "값은 %{min} 및 %{max} 사이여야 합니다."
       invalid_integer_min: "값은 %{min} 이상이어야 합니다."
       invalid_integer_max: "값은 %{max} 이하이어야 합니다."

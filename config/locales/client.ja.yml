@@ -5734,6 +5734,7 @@ ja:
         filters:
           country: "国"
           browser: "ブラウザ"
+          language: "言語"
           ip: "IP アドレス"
         series:
           anonymous_human: "匿名ユーザー"
