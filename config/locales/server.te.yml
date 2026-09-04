@@ -1630,7 +1630,6 @@ te:
       invalid_email: "చెల్లని ఈమెయిలు చిరునామా."
       invalid_username: "ఆ పేరుతో ఏ వాడురకీ లేరు."
       valid_username: "ఆ సభ్యనామంతో ఒక సభ్యుడు ఉన్నారు."
-      invalid_group: "ఆ పేరుతో సమూహం లేదు."
       invalid_integer_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
       invalid_integer_min: "విలువ %{min} లేదా అంతకంటే ఎక్కువ ఉండాలి."
       invalid_integer_max: "విలువ %{max} కంటే ఎక్కువగా ఉండకూడదు."

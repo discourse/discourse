@@ -6651,6 +6651,7 @@ zh_TW:
           country: "國家／地區"
           network: "網路"
           browser: "瀏覽器"
+          language: "語言"
           ip: "IP 位址"
         headline:
           other: "%{formatted_count} 次瀏覽"

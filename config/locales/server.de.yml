@@ -1039,6 +1039,7 @@ de:
       windows: "Microsoft Windows"
       unknown: "unbekanntes Betriebssystem"
   admin_site_traffic_explorer:
+    unknown: "Unbekannt"
     traffic_types:
       logged_in: "Angemeldet"
       anonymous: "Anonym"
@@ -1999,7 +2000,7 @@ de:
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     allow_username_in_share_links: "Benutzernamen in Freigabelinks erlauben. Dies ist nützlich, um Abzeichen für einzelne Besucher zu vergeben."
     site_contact_username: "Gültiger Benutzername eines Team-Mitglieds, in dessen Namen alle automatisch erzeugten Nachrichten versendet werden sollen. Falls leer, wird das Standard-System-Konto verwendet."
-    site_contact_group_name: "Ein gültiger Name einer Gruppe, die zu allen automatisch versendeten persönlichen Nachrichten eingeladen wird."
+    site_contact_group_name: "Die Gruppe, die zu allen automatisch versendeten, persönlichen Nachrichten eingeladen wird."
     send_welcome_message: "Sende allen neuen Benutzern eine Begrüßungsnachricht mit einer Kurzanleitung."
     send_tl1_welcome_message: "Sende neuen Benutzern der Vertrauensstufe 1 eine Begrüßungsnachricht."
     send_tl2_promotion_message: "Sende neuen Benutzern der Vertrauensstufe 2 eine Nachricht über die Beförderung."
@@ -2724,7 +2725,6 @@ de:
       invalid_email: "Ungültige E-Mail-Adresse."
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
       valid_username: "Es gibt einen Benutzer mit diesem Benutzernamen."
-      invalid_group: "Es gibt keine Gruppe mit diesem Namen."
       invalid_svg: "Das SVG-Bild ist ungültig. Es muss ein SVG-Element enthalten und darf keine Skripte oder Event-Handler enthalten."
       invalid_upload: "Der Upload ist ungültig oder existiert nicht."
       invalid_topic: "Es gibt kein Thema mit dieser ID."

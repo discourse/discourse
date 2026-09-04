@@ -364,6 +364,9 @@ es:
       edit_event: "Editar evento"
       export_event: "Exportar evento"
       created_by: "Creado por"
+      other_hosts:
+        one: "y %{count} otros"
+        other: "y %{count} otros"
       bulk_invite: "Invitaciones en masa"
       close_event: "Cerrar evento"
       open_event: "Abrir evento"
@@ -531,6 +534,8 @@ es:
           placeholder: "Opcional, por defecto es el título del tema"
         invitees:
           label: "Grupos invitados"
+        hosts:
+          label: "Anfitriones"
         event_type:
           public:
             title: "Público"

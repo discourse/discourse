@@ -354,6 +354,8 @@ ja:
       edit_event: "イベントを編集"
       export_event: "イベントをエクスポート"
       created_by: "作成者"
+      other_hosts:
+        other: "および他 %{count} 人"
       bulk_invite: "一括招待"
       close_event: "イベントを終了"
       open_event: "イベントを開く"
@@ -511,6 +513,8 @@ ja:
           placeholder: "オプション、デフォルトはトピックタイトル"
         invitees:
           label: "招待されたグループ"
+        hosts:
+          label: "ホスト"
         event_type:
           public:
             title: "公開"

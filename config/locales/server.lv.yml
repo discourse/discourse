@@ -223,6 +223,7 @@ lv:
   password_reset:
     title: "Atjaunot paroli"
   admin_site_traffic_explorer:
+    unknown: "Nezināms"
     traffic_types:
       anonymous: "Anonīmi"
   reviewable_score_types:

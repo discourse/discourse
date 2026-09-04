@@ -7600,6 +7600,11 @@ pl_PL:
             few: "Filtrowanie do %{count} przeglądarek"
             many: "Filtrowanie do %{count} przeglądarek"
             other: "Filtrowanie do %{count} przeglądarek"
+          language:
+            one: "Filtrowanie do %{count} języka"
+            few: "Filtrowanie do %{count} języków"
+            many: "Filtrowanie do %{count} języków"
+            other: "Filtrowanie do %{count} języków"
           ip:
             one: "Filtrowanie do %{count} adresu IP"
             few: "Filtrowanie do %{count} adresów IP"
@@ -7629,6 +7634,7 @@ pl_PL:
           top_urls: "Najpopularniejsze adresy URL"
           entry_urls: "Wpisowe adresy URL"
           browsers: "Przeglądarki"
+          languages: "Języki"
           ip_addresses: "Adresy IP"
         filters:
           traffic_type: "Rodzaj ruchu"
@@ -7638,6 +7644,7 @@ pl_PL:
           country: "Kraj"
           network: "Sieć"
           browser: "Przeglądarka"
+          language: "Język"
           ip: "Adres IP"
         headline:
           one: "%{formatted_count} odsłona"
@@ -9618,6 +9625,7 @@ pl_PL:
             admin_onboarding_step_completed: "ukończony etap wdrażania administratora"
             admin_onboarding_completed: "pełne wdrożenie administratora"
             admin_onboarding_dismissed: "odwołaj wdrożenie administratora"
+            create_group: "utwórz grupę"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."

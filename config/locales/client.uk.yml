@@ -7645,6 +7645,7 @@ uk:
           country: "Країна"
           network: "Мережа"
           browser: "Оглядач"
+          language: "Мова"
           ip: "IP-адреса"
         headline:
           one: "%{formatted_count} перегляд сторінки"

@@ -6153,6 +6153,7 @@ hu:
         filters:
           country: "Ország"
           browser: "Böngésző"
+          language: "Nyelv"
           ip: "ip cím"
         series:
           anonymous_human: "Névtelen"

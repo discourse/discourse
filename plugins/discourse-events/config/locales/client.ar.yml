@@ -630,6 +630,8 @@ ar:
           placeholder: "اختياري، الإعدادات الافتراضية لعنوان الموضوع"
         invitees:
           label: "المجموعات المدعوة"
+        hosts:
+          label: "المضيفون"
         event_type:
           label: "نوع الحضور"
           public:

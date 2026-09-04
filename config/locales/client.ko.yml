@@ -4044,6 +4044,7 @@ ko:
           visitors: "방문자"
         filters:
           browser: "브라우저"
+          language: "언어"
           ip: "IP 주소"
         series:
           anonymous_human: "익명"
