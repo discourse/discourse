@@ -399,7 +399,7 @@ jobs:
           delete-merged: true
 
       - name: Notify Patch Triage about flaky tests
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.merge-flaky-test-reports.outputs.artifact-id != ''
+        if: steps.merge-flaky-test-reports.outputs.artifact-id != ''
         continue-on-error: true
         env:
           PATCH_TRIAGE_FLAKY_TEST_REPORT_URL: ${{ secrets.PATCH_TRIAGE_FLAKY_TEST_REPORT_URL }}
