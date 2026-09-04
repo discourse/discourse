@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ -z "${PATCH_TRIAGE_FLAKY_TEST_REPORT_URL:-}" || -z "${PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET:-}" ]]; then
+  echo "::warning::Patch Triage flaky-test delivery secrets are not configured; skipping notification"
+  exit 0
+fi
+
+payload=$(jq -nc \
+  --arg repository "$GITHUB_REPOSITORY" \
+  --argjson workflow_run_id "$GITHUB_RUN_ID" \
+  --argjson run_attempt "$GITHUB_RUN_ATTEMPT" \
+  --argjson report_artifact_id "$REPORT_ARTIFACT_ID" \
+  --arg screenshot_artifact_id "${SCREENSHOT_ARTIFACT_ID:-}" \
+  '{
+    repository: $repository,
+    workflow_run_id: $workflow_run_id,
+    run_attempt: $run_attempt,
+    report_artifact_id: $report_artifact_id
+  } + if $screenshot_artifact_id == "" then {} else {
+    screenshot_artifact_id: ($screenshot_artifact_id | tonumber)
+  } end')
+
+signature=$(
+  printf '%s' "$payload" |
+    openssl dgst -sha256 -hmac "$PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" -hex |
+    sed 's/^.* //'
+)
+
+curl --fail-with-body \
+  --retry 3 \
+  --retry-all-errors \
+  --connect-timeout 5 \
+  --max-time 30 \
+  --header "Content-Type: application/json" \
+  --header "X-Hub-Signature-256: sha256=$signature" \
+  --data-binary "$payload" \
+  "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL"
