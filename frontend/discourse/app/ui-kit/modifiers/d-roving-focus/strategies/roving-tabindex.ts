@@ -1,3 +1,4 @@
+import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
 import type { DRovingFocusConfig } from "../config";
 import {
   fallsBackToFirst,
@@ -5,7 +6,6 @@ import {
   isMarked,
   prefersSelected,
 } from "../entry-policy";
-import ItemScope from "../item-scope";
 
 /** Maintains the single-tab-stop strategy and focus restoration state. */
 export default class RovingTabindexStrategy {

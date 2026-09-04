@@ -1,0 +1,159 @@
+@use "lib/viewport";
+
+/* The reorderable-list shell. The interaction pieces carry their own styles
+   (d-drag-handle, d-drag-and-drop); what lives here is only what the list
+   itself owns. */
+
+.d-reorderable-list {
+  /* The :where() tag guards carry zero specificity, so only the default
+     ul/li rendering is reached and a consumer's row class overrides these at
+     equal specificity. */
+
+  &:where(ul) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__row:where(li) {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding-block: 0.25em;
+  }
+
+  /* An emptied group member is a live drop target with no rows to give it
+     height; the min-height is what keeps it reachable by pointer. */
+
+  &.--empty-drop-target {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4em;
+    padding: 0.5em;
+    border: 1px dashed var(--primary-low);
+    border-radius: var(--d-border-radius);
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  /* Sized to the grip rather than to a button, so the handle never drives a
+     dense row's height. Chained with `.btn` to outrank the base button rules
+     it would otherwise tie with on source order alone. */
+
+  &__handle.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Sized explicitly: the screen-reader description is a block, and a
+       button with a block gets none of an icon-only button's spacing, leaving
+       a press target smaller than the guidelines accept. */
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--primary-low-mid);
+    cursor: grab;
+
+    .d-icon {
+      margin: 0;
+      color: var(--primary-low-mid);
+    }
+
+    /* A real ring: the button family's focus background is indistinguishable
+       at this size, and often the handle is the row's only control. */
+
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -1px;
+      border-radius: var(--d-border-radius);
+    }
+  }
+
+  /* Sized to match the handle, so the two controls the list places read as
+     one family. */
+
+  &__remove.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--primary-low-mid);
+
+    .d-icon {
+      margin: 0;
+      color: var(--primary-low-mid);
+    }
+
+    &:hover .d-icon,
+    &:focus-visible .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  /* A frozen row renders no handle, so the row itself carries the ring.
+     `:focus` rather than `:focus-within` deliberately: the latter matches
+     every ancestor, so a row hosting a list of its own would frame the whole
+     section whenever anything inside took focus. */
+
+  &__row:focus {
+    outline: 2px solid var(--d-input-focused-color);
+    outline-offset: -2px;
+  }
+
+  &__create {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+  }
+}
+
+/* In a table cell an inline-level box lands on the text baseline, so the
+   grip would ride low against the label beside it. */
+
+td .d-reorderable-list__handle.btn {
+  vertical-align: middle;
+}
+
+.d-reorderable-list__move-item {
+  justify-content: start;
+}
+
+/* Inside a menu, focus is the cursor, and a pointer press does not set
+   `:focus-visible` — a highlight keyed on that alone opens onto an invisible
+   cursor. Kept identical to the dropdown's `:hover` and `:focus-visible`
+   declaration so the three agree. */
+
+.d-reorderable-list__move-item:focus:not(:focus-visible) {
+  background: var(--d-hover);
+  color: var(--primary);
+}
+
+/* Selected above the shortcut component's own specificity, whose margin
+   reset would otherwise leave the chip column ragged. */
+
+kbd.d-shortcut.d-reorderable-list__move-shortcut {
+  margin-inline-start: auto;
+
+  @include viewport.until(sm) {
+    display: none;
+  }
+}
+
+/* Reorderable lists are routinely hosted inside a modal, where the default
+   dropdown layer sits under the backdrop and its clicks are swallowed. This
+   is the layer the scale reserves for exactly that. */
+
+[data-identifier="reorderable-list-move"] {
+  z-index: z("modal", "dropdown");
+}
