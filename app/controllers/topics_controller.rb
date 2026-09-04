@@ -57,8 +57,11 @@ class TopicsController < ApplicationController
   skip_before_action :check_xhr, only: %i[show feed]
 
   def id_for_slug
-    topic = Topic.find_by_slug(params[:slug])
-    raise Discourse::NotFound unless topic
+    topic = Topic.with_deleted.find_by_slug(params[:slug])
+    raise Discourse::NotFound if topic.blank?
+
+    raise Discourse::NotFound if !guardian.can_see?(topic) && deleted_for_permalink?(topic)
+
     guardian.ensure_can_see!(topic)
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
   end
@@ -149,9 +152,7 @@ class TopicsController < ApplicationController
       # If the user can't see the topic, clean up notifications for it.
       Notification.remove_for(current_user.id, params[:topic_id]) if current_user
 
-      deleted =
-        guardian.can_see_topic?(ex.obj, false) ||
-          (!guardian.can_see_topic?(ex.obj) && ex.obj&.access_topic_via_group && ex.obj.deleted_at)
+      deleted = deleted_for_permalink?(ex.obj)
 
       if SiteSetting.detailed_404
         if deleted
@@ -1414,6 +1415,11 @@ class TopicsController < ApplicationController
   def requested_topic_id
     topic_id = params[:topic_id].presence || params[:id].presence
     topic_id.to_s if topic_id.to_s.match?(/\A\d+\z/)
+  end
+
+  def deleted_for_permalink?(topic)
+    guardian.can_see_topic?(topic, false) ||
+      (!guardian.can_see_topic?(topic) && topic&.access_topic_via_group && topic.deleted_at)
   end
 
   def render_topic_with_tags(topic)

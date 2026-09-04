@@ -19,8 +19,11 @@ export default class TopicBySlugOrId extends DiscourseRoute {
 
     return Topic.idForSlug(params.slug_or_id)
       .then((data) => ({ url: `/t/${data.slug}/${data.topic_id}` }))
-      .catch((error) =>
-        resolvePermalink(`/t/${params.slug_or_id}`, transition).then(
+      .catch((error) => {
+        if (error?.jqXHR?.status !== 404) {
+          throw error;
+        }
+        return resolvePermalink(`/t/${params.slug_or_id}`, transition).then(
           (result) => {
             if (result.type === "redirect") {
               // The permalink redirect already navigated away
@@ -29,7 +32,7 @@ export default class TopicBySlugOrId extends DiscourseRoute {
             // Rethrow so the app-level 404 handling applies
             throw error;
           }
-        )
-      );
+        );
+      });
   }
 }
