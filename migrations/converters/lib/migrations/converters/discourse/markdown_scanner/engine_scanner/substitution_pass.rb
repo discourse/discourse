@@ -213,6 +213,10 @@ module Migrations
               return :not_construct, 0 if removed.empty? && added.empty?
 
               if entry[:kind] == :quote
+                # An opener core made no quote of (no closer, say) is text; the
+                # header may hold a mention that moves, but no quote does.
+                return :not_construct, 0 if removed.keys.none? { |key| quote_key?(key) }
+
                 # The marker keeps the quote a quote, so only its header fields
                 # move; the body's own blocks stay where they are.
                 unless removed.size == 1 && quote_key?(removed.keys.first) &&

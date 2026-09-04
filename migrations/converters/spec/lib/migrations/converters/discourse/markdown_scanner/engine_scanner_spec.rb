@@ -1076,6 +1076,20 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
+    it "leaves an unclosed opener holding a mention alone without refusing" do
+      # Core makes no quote of an opener without a closer; the `@alice` in its
+      # header is a live mention, and the opener itself is just text.
+      body = "[quote=\"@alice\"]\nno closer here and `@alice`"
+      result = extract(body)
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.quotes).to be_empty
+      expect(buffer.mentions.size).to eq(1)
+      expect(result).to eq(
+        "[quote=\"#{buffer.mentions.first[:placeholder]}\"]\nno closer here and `@alice`",
+      )
+    end
+
     it "confirms an angle-bracket autolink in a body with CR line endings" do
       raw = "Subject: Re\r\n\r\n <https://#{source_host}> \r\n\r\nthanks\r\n"
       result = extract(raw)
