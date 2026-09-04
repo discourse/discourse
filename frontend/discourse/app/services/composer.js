@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
-import EmberObject, { action, computed, set } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
@@ -122,7 +122,6 @@ export default class ComposerService extends Service {
   @service toasts;
 
   @tracked selectedTranslationLocale = null;
-  checkedMessages = false;
   messageCount = null;
   showEditReason = false;
   editReason = null;
@@ -140,9 +139,6 @@ export default class ComposerService extends Service {
   #onSaved = null;
   @tracked _allowPreview = null;
   @tracked _showPreview;
-
-  @tracked _isStaffUserOverride;
-  @tracked _whispererOverride;
 
   init() {
     super.init(...arguments);
@@ -175,51 +171,19 @@ export default class ComposerService extends Service {
     );
   }
 
-  @computed("site.mobileView", "showPreview")
-  get forcePreview() {
-    return this.site?.mobileView && this.showPreview;
-  }
-
-  @computed("site.categoriesList")
-  get categories() {
-    return this.site?.categoriesList;
-  }
-
-  set categories(value) {
-    set(this, "site.categoriesList", value);
-  }
-
   @computed("topicController.model")
   get topicModel() {
     return this.topicController?.model;
   }
 
-  set topicModel(value) {
-    set(this, "topicController.model", value);
-  }
-
   @computed("currentUser.staff")
   get isStaffUser() {
-    if (this._isStaffUserOverride !== undefined) {
-      return this._isStaffUserOverride;
-    }
     return this.currentUser?.staff;
-  }
-
-  set isStaffUser(value) {
-    this._isStaffUserOverride = value;
   }
 
   @computed("currentUser.whisperer")
   get whisperer() {
-    if (this._whispererOverride !== undefined) {
-      return this._whispererOverride;
-    }
     return this.currentUser?.whisperer;
-  }
-
-  set whisperer(value) {
-    this._whispererOverride = value;
   }
 
   @computed("model.creatingTopic", "isStaffUser")
@@ -578,11 +542,9 @@ export default class ComposerService extends Service {
 
     if (conditionType === "undefined") {
       option.condition = true;
-    } else if (conditionType === "boolean") {
-      // uses existing value
     } else if (conditionType === "function") {
       option.condition = option.condition(this);
-    } else {
+    } else if (conditionType !== "boolean") {
       option.condition = this.get(option.condition);
     }
 
@@ -1604,10 +1566,10 @@ export default class ComposerService extends Service {
    @param {Number} [opts.prioritizedCategoryId]
    @param {Number} [opts.readOnlyCategoryId] Shows category as read-only in category chooser, with a read-only badge
    @param {Number} [opts.formTemplateId]
-   @param {String} [opts.draftSequence]
+   @param {Number} [opts.draftSequence]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
    @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
-   @param {String} [opts.hijackPreview] Option to hijack the preview with a custom component, you must pass { component: CustomPreviewComponent, model: { ... } }
+   @param {Object} [opts.hijackPreview] Replaces the preview pane, as { component, model }
    @param {String} [opts.selectedTranslationLocale] The locale to use for the translation
    @param {Function} [opts.onSaved] Called once after this composer session is saved, never if it is closed, discarded or replaced.
    **/
@@ -1633,11 +1595,9 @@ export default class ComposerService extends Service {
       prioritizedCategoryId: null,
       readOnlyCategoryId: null,
       skipAutoSave: true,
+      skipJumpOnSave: !!opts.skipJumpOnSave,
+      skipFormTemplate: !!opts.skipFormTemplate,
     });
-
-    this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
-
-    this.set("skipFormTemplate", !!opts.skipFormTemplate);
 
     if (opts.hijackPreview) {
       this.set("hijackPreview", opts.hijackPreview);
@@ -1671,9 +1631,8 @@ export default class ComposerService extends Service {
       opts.draftKey !== composerModel.draftKey &&
       composerModel.composeState === Composer.DRAFT
     ) {
-      // Check if content is dirty before auto-closing
       if (composerModel.anyDirty) {
-        const retry = await this.cancelComposer(opts);
+        const retry = await this.cancelComposer();
         if (retry) {
           await this.open(opts);
         }
@@ -1712,7 +1671,7 @@ export default class ComposerService extends Service {
           }
         }
 
-        const retry = await this.cancelComposer(opts);
+        const retry = await this.cancelComposer();
         if (retry) {
           await this.open(opts);
         }
@@ -1900,7 +1859,7 @@ export default class ComposerService extends Service {
     }
   }
 
-  async destroyDraft(draftSequence = null) {
+  async destroyDraft() {
     const key = this.get("model.draftKey");
     if (!key) {
       return;
@@ -1908,11 +1867,10 @@ export default class ComposerService extends Service {
 
     if (this._saveDraftPromise) {
       await this._saveDraftPromise;
-      return await this.destroyDraft();
+      return this.destroyDraft();
     }
 
-    const sequence = draftSequence || this.get("model.draftSequence");
-    await Draft.clear(key, sequence);
+    await Draft.clear(key, this.get("model.draftSequence"));
     this.appEvents.trigger("draft:destroyed", key);
   }
 
@@ -1963,20 +1921,18 @@ export default class ComposerService extends Service {
   }
 
   saveAndCloseComposer() {
-    // Always save the draft if the user had typed something
-    // or had started setting up a title/tags/category
-    if (this.model.anyDirty) {
-      this.skipAutoSave = true;
-      this._saveDraft(true);
-      this.model.clearState();
-      this.close();
-      this.appEvents.trigger("composer:cancelled");
-      this.skipAutoSave = false;
-      return true;
-    } else {
-      // Otherwise just close the composer and discard any empty draft
+    if (!this.model.anyDirty) {
       return this.cancelComposer();
     }
+
+    this.skipAutoSave = true;
+    this._saveDraft(true);
+    this.model.clearState();
+    this.close();
+    this.appEvents.trigger("composer:cancelled");
+    this.skipAutoSave = false;
+
+    return true;
   }
 
   unshrink() {
@@ -2122,24 +2078,22 @@ export default class ComposerService extends Service {
   }
 
   close() {
+    const elem = document.documentElement;
+
     // the 'fullscreen-composer' class is added to remove scrollbars from the
     // document while in fullscreen mode. If the composer is closed for any reason
     // this class should be removed
-
-    const elem = document.documentElement;
-    elem.classList.remove("fullscreen-composer");
-    elem.classList.remove("composer-open");
+    elem.classList.remove("fullscreen-composer", "composer-open");
+    elem.style.removeProperty("--composer-height");
 
     document.activeElement?.blur();
-    document.documentElement.style.removeProperty("--composer-height");
+
     this.setProperties({
       model: null,
       lastValidatedAt: null,
       _allowPreview: null,
+      formTemplateInitialValues: undefined,
     });
-
-    // This is a temporary solution to reset the saved form template state while we don't store drafts
-    this.set("formTemplateInitialValues", undefined);
 
     this.composerActionState.clear();
 
