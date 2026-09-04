@@ -235,7 +235,7 @@ module Migrations
             def bare_value_match(value, occurrence)
               raw_spelling = @input.byteslice(occurrence.offset, occurrence.length)
               node =
-                definition_upload_node(value, occurrence, raw_spelling) ||
+                destination_upload_node(value, occurrence, raw_spelling) ||
                   bare_link_node(value, occurrence, raw_spelling)
               return nil if node.nil?
 
@@ -267,13 +267,17 @@ module Migrations
 
             private
 
-            # A definition whose destination is an upload defines the upload
-            # itself, so the upload constructs answer for it: the `![alt][id]`
-            # that uses the definition keeps its own syntax and only the
-            # destination is replaced.
-            def definition_upload_node(value, occurrence, raw_spelling)
+            # A destination that is an upload defines the upload itself, so the
+            # upload constructs answer for it and only the destination is
+            # replaced: the `![alt][id]` that uses a definition keeps its own
+            # syntax, and so does a `[![…](upload://x)](upload://x)` lightbox
+            # link, whose label no grammar takes whole.
+            def destination_upload_node(value, occurrence, raw_spelling)
               key = [occurrence.offset, occurrence.length]
-              return nil unless definition_offsets(value).include?(key)
+              unless definition_offsets(value).include?(key) ||
+                       link_destination_before?(@input, occurrence.offset)
+                return nil
+              end
 
               @scanner.upload_node(raw_spelling)
             end

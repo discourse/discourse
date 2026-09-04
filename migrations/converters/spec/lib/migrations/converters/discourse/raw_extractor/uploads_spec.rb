@@ -681,4 +681,21 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("#{upload[:placeholder]} tail")
     end
   end
+
+  describe "lightbox links" do
+    it "defers both the image and the link destination of a link wrapping its own image" do
+      short = "upload://bnqOrMUuNaz4vwpObqnsFgpgPUF.jpeg"
+      result = extract("[![image|690x97](#{short})](#{short})")
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads.size).to eq(2)
+      expect(buffer.uploads.map { |row| row[:upload_id] }.uniq).to eq(
+        ["bnqOrMUuNaz4vwpObqnsFgpgPUF"],
+      )
+      expect(buffer.uploads.last[:original_markdown]).to eq(short)
+      expect(result).to eq(
+        "[#{buffer.uploads.first[:placeholder]}](#{buffer.uploads.last[:placeholder]})",
+      )
+    end
+  end
 end
