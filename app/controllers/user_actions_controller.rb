@@ -32,7 +32,9 @@ class UserActionsController < ApplicationController
 
     stream = UserAction.stream(opts).to_a
 
-    response = { user_actions: serialize_data(stream, UserActionSerializer) }
+    response = {
+      user_actions: serialize_data(stream, UserActionSerializer, localization_opts(stream)),
+    }
 
     if guardian.can_lazy_load_categories?
       category_ids = stream.map(&:category_id).compact.uniq
@@ -53,10 +55,25 @@ class UserActionsController < ApplicationController
 
     ensure_user_actions_visible!(user, [stream_item.action_type])
 
-    render_serialized(stream_item, UserActionSerializer)
+    render_serialized(stream_item, UserActionSerializer, localization_opts([stream_item]))
   end
 
   private
+
+  def localization_opts(stream)
+    return {} if !SiteSetting.content_localization_enabled
+
+    {
+      localized_topics:
+        Topic.where(id: stream.map(&:topic_id)).includes(:localizations).index_by(&:id),
+      localized_posts:
+        Post
+          .with_deleted
+          .where(id: stream.map(&:cooked_post_id))
+          .includes(:localizations)
+          .index_by(&:id),
+    }
+  end
 
   def ensure_user_actions_visible!(user, action_types)
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
