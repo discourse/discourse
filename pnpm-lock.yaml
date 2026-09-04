@@ -759,8 +759,8 @@ importers:
   plugins/chat:
     dependencies:
       discourse:
-        specifier: npm:@discourse/types@2026.6.0-06d03da3
-        version: '@discourse/types@2026.6.0-06d03da3'
+        specifier: npm:@discourse/types@2026.9.0-eb242063
+        version: '@discourse/types@2026.9.0-eb242063'
 
   plugins/checklist:
     dependencies:
@@ -831,14 +831,14 @@ importers:
   plugins/discourse-events:
     dependencies:
       discourse:
-        specifier: npm:@discourse/types@2026.6.0-06d03da3
-        version: '@discourse/types@2026.6.0-06d03da3'
+        specifier: npm:@discourse/types@2026.9.0-eb242063
+        version: '@discourse/types@2026.9.0-eb242063'
 
   plugins/discourse-gamification:
     dependencies:
       discourse:
-        specifier: npm:@discourse/types@2026.6.0-06d03da3
-        version: '@discourse/types@2026.6.0-06d03da3'
+        specifier: npm:@discourse/types@2026.9.0-eb242063
+        version: '@discourse/types@2026.9.0-eb242063'
 
   plugins/discourse-github:
     dependencies:
@@ -975,8 +975,8 @@ importers:
   plugins/discourse-wireframe:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@*
-        version: link:../../frontend/discourse-types
+        specifier: npm:@discourse/types@2026.9.0-eb242063
+        version: '@discourse/types@2026.9.0-eb242063'
     devDependencies:
       lucide-static:
         specifier: ^1.16.0

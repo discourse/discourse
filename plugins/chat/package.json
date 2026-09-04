@@ -1,6 +1,6 @@
 {
   "private": true,
   "dependencies": {
-    "discourse": "npm:@discourse/types@2026.6.0-06d03da3"
+    "discourse": "npm:@discourse/types@2026.9.0-eb242063"
   }
 }
