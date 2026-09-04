@@ -1988,7 +1988,7 @@ en:
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
     max_emojis_in_title: "Maximum allowed emojis in topic title.  If the set value is zero, it prevents the use of any emojis in topic titles."
     min_search_term_length: "Minimum valid search term length in characters"
-    allow_anonymous_search: "Allow anonymous visitors to use /search."
+    allow_anonymous_search: "Allow anonymous visitors to use /search. When disabled, anonymous visitors cannot access /search and interface controls that use /search are hidden."
     search_tokenize_chinese: "Force search to tokenize Chinese even on non Chinese sites"
     search_tokenize_japanese: "Force search to tokenize Japanese even on non Japanese sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
