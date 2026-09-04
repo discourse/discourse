@@ -8,11 +8,14 @@ module DiscourseAi
 
         class Error < StandardError
         end
+
         class NoMatchError < Error
         end
 
-        def self.apply(content, search, replace)
-          new.apply(content, search, replace)
+        class << self
+          def apply(content, search, replace)
+            new.apply(content, search, replace)
+          end
         end
 
         def apply(content, search, replace)

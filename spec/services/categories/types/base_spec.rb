@@ -273,17 +273,19 @@ RSpec.describe Categories::Types::Base do
     it "accepts a category custom field with depends_on" do
       test_type =
         Class.new(described_class) do
-          def self.configuration_schema
-            {
-              category_custom_fields: {
-                my_field: {
-                  default: false,
-                  type: :bool,
-                  label: "My Field",
-                  depends_on: "other_field",
+          class << self
+            def configuration_schema
+              {
+                category_custom_fields: {
+                  my_field: {
+                    default: false,
+                    type: :bool,
+                    label: "My Field",
+                    depends_on: "other_field",
+                  },
                 },
-              },
-            }
+              }
+            end
           end
         end
       expect { test_type.validate_schema! }.not_to raise_error
@@ -292,8 +294,17 @@ RSpec.describe Categories::Types::Base do
     it "accepts a valid site_texts field" do
       test_type =
         Class.new(described_class) do
-          def self.configuration_schema
-            { site_texts: { "js.some.key" => { label: "Some label", depends_on: "other_field" } } }
+          class << self
+            def configuration_schema
+              {
+                site_texts: {
+                  "js.some.key" => {
+                    label: "Some label",
+                    depends_on: "other_field",
+                  },
+                },
+              }
+            end
           end
         end
       expect { test_type.validate_schema! }.not_to raise_error
@@ -302,8 +313,10 @@ RSpec.describe Categories::Types::Base do
     it "raises when a site_texts field is missing :label" do
       test_type =
         Class.new(described_class) do
-          def self.configuration_schema
-            { site_texts: { "js.some.key" => { description: "No label here" } } }
+          class << self
+            def configuration_schema
+              { site_texts: { "js.some.key" => { description: "No label here" } } }
+            end
           end
         end
       expect { test_type.validate_schema! }.to raise_error(ArgumentError)
@@ -503,17 +516,19 @@ RSpec.describe Categories::Types::Base do
         Class.new(described_class) do
           type_id :test_custom_field_depends_on
 
-          def self.configuration_schema
-            {
-              category_custom_fields: {
-                my_field: {
-                  default: false,
-                  type: :bool,
-                  label: "My Field",
-                  depends_on: "other_field",
+          class << self
+            def configuration_schema
+              {
+                category_custom_fields: {
+                  my_field: {
+                    default: false,
+                    type: :bool,
+                    label: "My Field",
+                    depends_on: "other_field",
+                  },
                 },
-              },
-            }
+              }
+            end
           end
         end
 
@@ -527,8 +542,17 @@ RSpec.describe Categories::Types::Base do
         Class.new(described_class) do
           type_id :test_site_texts
 
-          def self.configuration_schema
-            { site_texts: { "js.some.key" => { label: "Some label", depends_on: "other_field" } } }
+          class << self
+            def configuration_schema
+              {
+                site_texts: {
+                  "js.some.key" => {
+                    label: "Some label",
+                    depends_on: "other_field",
+                  },
+                },
+              }
+            end
           end
         end
 

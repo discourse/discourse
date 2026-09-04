@@ -6,53 +6,55 @@ module DiscourseAi
       class ListReviewables < Tool
         MAX_RESULTS = 20
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Lists pending review queue items. Can filter by reviewable type and age. Returns a summary of each item including its ID, type, score, creation date, target details, and available actions.",
-            parameters: [
-              {
-                name: "type",
-                description:
-                  "Filter by reviewable type: ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost. Leave blank for all types.",
-                type: "string",
-              },
-              {
-                name: "min_hours_old",
-                description:
-                  "Only return items that have been in the queue for at least this many hours",
-                type: "integer",
-              },
-              {
-                name: "max_hours_old",
-                description:
-                  "Only return items that have been in the queue for at most this many hours",
-                type: "integer",
-              },
-              { name: "category_id", description: "Filter by category ID", type: "integer" },
-              {
-                name: "status",
-                description:
-                  "Filter by status: pending (default), approved, rejected, ignored, deleted",
-                type: "string",
-              },
-              {
-                name: "has_notes",
-                description:
-                  "Filter by whether the item already has notes. Set to false to only return items that have no notes yet, true to only return items that already have notes.",
-                type: "boolean",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Lists pending review queue items. Can filter by reviewable type and age. Returns a summary of each item including its ID, type, score, creation date, target details, and available actions.",
+              parameters: [
+                {
+                  name: "type",
+                  description:
+                    "Filter by reviewable type: ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost. Leave blank for all types.",
+                  type: "string",
+                },
+                {
+                  name: "min_hours_old",
+                  description:
+                    "Only return items that have been in the queue for at least this many hours",
+                  type: "integer",
+                },
+                {
+                  name: "max_hours_old",
+                  description:
+                    "Only return items that have been in the queue for at most this many hours",
+                  type: "integer",
+                },
+                { name: "category_id", description: "Filter by category ID", type: "integer" },
+                {
+                  name: "status",
+                  description:
+                    "Filter by status: pending (default), approved, rejected, ignored, deleted",
+                  type: "string",
+                },
+                {
+                  name: "has_notes",
+                  description:
+                    "Filter by whether the item already has notes. Set to false to only return items that have no notes yet, true to only return items that already have notes.",
+                  type: "boolean",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "list_reviewables"
-        end
+          def name
+            "list_reviewables"
+          end
 
-        def self.requires_approval?
-          false
+          def requires_approval?
+            false
+          end
         end
 
         def invoke

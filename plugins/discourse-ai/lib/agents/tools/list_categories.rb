@@ -4,16 +4,18 @@ module DiscourseAi
   module Agents
     module Tools
       class ListCategories < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Will list the categories on the current discourse instance, prefer to format with # in front of the category name",
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Will list the categories on the current discourse instance, prefer to format with # in front of the category name",
+            }
+          end
 
-        def self.name
-          "categories"
+          def name
+            "categories"
+          end
         end
 
         def invoke

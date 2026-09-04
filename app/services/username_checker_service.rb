@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class UsernameCheckerService
+  class << self
+    def is_developer?(email)
+      UsernameCheckerService.new.is_developer?(email)
+    end
+  end
+
   def initialize(allow_reserved_username: false)
     @allow_reserved_username = allow_reserved_username
   end
@@ -30,9 +36,5 @@ class UsernameCheckerService
   def is_developer?(value)
     Rails.configuration.respond_to?(:developer_emails) &&
       Rails.configuration.developer_emails.include?(value)
-  end
-
-  def self.is_developer?(email)
-    UsernameCheckerService.new.is_developer?(email)
   end
 end

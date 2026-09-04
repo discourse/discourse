@@ -96,35 +96,114 @@ class PostRevisor
   # Extensions can inspect revision options via the `:post_edited` event payload.
   attr_reader :category_changed, :post_revision, :opts
 
+  USER_ACTIONS_TO_REMOVE = [UserAction::REPLY, UserAction::RESPONSE]
+
+  class << self
+    def tracked_topic_fields
+      @@tracked_topic_fields ||= {}
+      @@tracked_topic_fields
+    end
+
+    def valid_post_type?(post_type)
+      [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]].include?(
+        post_type,
+      )
+    end
+
+    def track_topic_field(field, &block)
+      tracked_topic_fields[field] = block
+
+      # Define it in the serializer unless it already has been defined
+      if PostRevisionSerializer.instance_methods(false).exclude?(:"#{field}_changes")
+        PostRevisionSerializer.add_compared_field(field)
+      end
+    end
+
+    def track_and_revise(topic_changes, field, attribute)
+      topic_changes.record_change(field, topic_changes.topic.public_send(field), attribute)
+      topic_changes.topic.public_send("#{field}=", attribute)
+    end
+
+    def create_small_action_for_category_change(topic:, user:, old_category:, new_category:)
+      if !old_category || !new_category || !SiteSetting.create_post_for_category_and_tag_changes ||
+           SiteSetting.whispers_allowed_groups.blank?
+        return
+      end
+
+      topic.add_moderator_post(
+        user,
+        I18n.t(
+          "topic_category_changed",
+          from: "##{old_category.slug_ref}",
+          to: "##{new_category.slug_ref}",
+        ),
+        post_type: Post.types[:whisper],
+        action_code: "category_changed",
+      )
+    end
+
+    def create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)
+      if !SiteSetting.create_post_for_category_and_tag_changes ||
+           SiteSetting.whispers_allowed_groups.blank?
+        return
+      end
+
+      topic.add_moderator_post(
+        user,
+        tags_changed_raw(added: added_tags, removed: removed_tags),
+        post_type: Post.types[:whisper],
+        action_code: "tags_changed",
+        custom_fields: {
+          tags_added: added_tags,
+          tags_removed: removed_tags,
+        },
+      )
+    end
+
+    def tags_changed_raw(added:, removed:)
+      if removed.present? && added.present?
+        I18n.t(
+          "topic_tag_changed.added_and_removed",
+          added: tag_list_to_raw(added),
+          removed: tag_list_to_raw(removed),
+        )
+      elsif added.present?
+        I18n.t("topic_tag_changed.added", added: tag_list_to_raw(added))
+      elsif removed.present?
+        I18n.t("topic_tag_changed.removed", removed: tag_list_to_raw(removed))
+      end
+    end
+
+    def tag_list_to_raw(tag_list)
+      tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
+    end
+
+    def tag_change_noop?(topic, incoming)
+      return topic.tags.empty? if incoming.blank?
+
+      ids =
+        if incoming.first.is_a?(String)
+          unique_names = incoming.map(&:downcase).uniq
+          found = Tag.where_name(unique_names).pluck(:id)
+          return false if found.size != unique_names.size
+          found
+        else
+          return false if incoming.any? { |t| t[:id].blank? }
+          incoming.filter_map { |t| t[:id]&.to_i }
+        end
+      return false if ids.blank?
+
+      canonical_ids = Tag.where(id: ids).pluck(Arel.sql("COALESCE(target_tag_id, id)")).uniq.sort
+      canonical_ids == topic.tags.pluck(:id).sort
+    end
+  end
+
   def initialize(post, topic = post.topic)
     @post = post
     @topic = topic
 
     # Make sure we have only one Topic instance
     post.topic = topic
-  end
-
-  def self.tracked_topic_fields
-    @@tracked_topic_fields ||= {}
-    @@tracked_topic_fields
-  end
-
-  def self.valid_post_type?(post_type)
-    [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]].include?(post_type)
-  end
-
-  def self.track_topic_field(field, &block)
-    tracked_topic_fields[field] = block
-
-    # Define it in the serializer unless it already has been defined
-    if PostRevisionSerializer.instance_methods(false).exclude?(:"#{field}_changes")
-      PostRevisionSerializer.add_compared_field(field)
-    end
-  end
-
-  def self.track_and_revise(topic_changes, field, attribute)
-    topic_changes.record_change(field, topic_changes.topic.public_send(field), attribute)
-    topic_changes.topic.public_send("#{field}=", attribute)
   end
 
   track_topic_field(:title) do |topic_changes, attribute|
@@ -191,79 +270,6 @@ class PostRevisor
     else
       track_and_revise topic_changes, :featured_link, featured_link
     end
-  end
-
-  def self.create_small_action_for_category_change(topic:, user:, old_category:, new_category:)
-    if !old_category || !new_category || !SiteSetting.create_post_for_category_and_tag_changes ||
-         SiteSetting.whispers_allowed_groups.blank?
-      return
-    end
-
-    topic.add_moderator_post(
-      user,
-      I18n.t(
-        "topic_category_changed",
-        from: "##{old_category.slug_ref}",
-        to: "##{new_category.slug_ref}",
-      ),
-      post_type: Post.types[:whisper],
-      action_code: "category_changed",
-    )
-  end
-
-  def self.create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)
-    if !SiteSetting.create_post_for_category_and_tag_changes ||
-         SiteSetting.whispers_allowed_groups.blank?
-      return
-    end
-
-    topic.add_moderator_post(
-      user,
-      tags_changed_raw(added: added_tags, removed: removed_tags),
-      post_type: Post.types[:whisper],
-      action_code: "tags_changed",
-      custom_fields: {
-        tags_added: added_tags,
-        tags_removed: removed_tags,
-      },
-    )
-  end
-
-  def self.tags_changed_raw(added:, removed:)
-    if removed.present? && added.present?
-      I18n.t(
-        "topic_tag_changed.added_and_removed",
-        added: tag_list_to_raw(added),
-        removed: tag_list_to_raw(removed),
-      )
-    elsif added.present?
-      I18n.t("topic_tag_changed.added", added: tag_list_to_raw(added))
-    elsif removed.present?
-      I18n.t("topic_tag_changed.removed", removed: tag_list_to_raw(removed))
-    end
-  end
-
-  def self.tag_list_to_raw(tag_list)
-    tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
-  end
-
-  def self.tag_change_noop?(topic, incoming)
-    return topic.tags.empty? if incoming.blank?
-
-    ids =
-      if incoming.first.is_a?(String)
-        unique_names = incoming.map(&:downcase).uniq
-        found = Tag.where_name(unique_names).pluck(:id)
-        return false if found.size != unique_names.size
-        found
-      else
-        return false if incoming.any? { |t| t[:id].blank? }
-        incoming.filter_map { |t| t[:id]&.to_i }
-      end
-    return false if ids.blank?
-
-    canonical_ids = Tag.where(id: ids).pluck(Arel.sql("COALESCE(target_tag_id, id)")).uniq.sort
-    canonical_ids == topic.tags.pluck(:id).sort
   end
 
   # Revises a post with the given fields and options.
@@ -581,8 +587,6 @@ class PostRevisor
     create_or_update_revision
     remove_flags_and_unhide_post
   end
-
-  USER_ACTIONS_TO_REMOVE = [UserAction::REPLY, UserAction::RESPONSE]
 
   def update_post
     if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id && @post.user_id != nil

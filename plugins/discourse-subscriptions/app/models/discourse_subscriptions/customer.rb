@@ -8,8 +8,10 @@ module DiscourseSubscriptions
 
     has_many :subscriptions
 
-    def self.create_customer(user, customer)
-      create(customer_id: customer[:id], user_id: user.id)
+    class << self
+      def create_customer(user, customer)
+        create(customer_id: customer[:id], user_id: user.id)
+      end
     end
   end
 end

@@ -4,28 +4,30 @@ module DiscourseAi
   module Agents
     module Tools
       class Summarize < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Will summarize a topic attempting to answer question in guidance",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The discourse topic id to summarize",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "guidance",
-                description: "Special guidance on how to summarize the topic",
-                type: "string",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Will summarize a topic attempting to answer question in guidance",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The discourse topic id to summarize",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "guidance",
+                  description: "Special guidance on how to summarize the topic",
+                  type: "string",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "summary"
+          def name
+            "summary"
+          end
         end
 
         def topic_id

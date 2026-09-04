@@ -4,55 +4,58 @@ module DiscourseAi
   module Agents
     module Tools
       class Assign < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Assigns or unassigns a topic to a user or group based on the assigned parameter.",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The ID of the topic",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "assigned",
-                description: "true to assign, false to unassign",
-                type: "boolean",
-                required: true,
-              },
-              {
-                name: "username",
-                description: "The username to assign the topic to (required when assigning)",
-                type: "string",
-              },
-              {
-                name: "group_name",
-                description: "The group name to assign the topic to, as an alternative to username",
-                type: "string",
-              },
-              {
-                name: "note",
-                description: "An optional note to include with the assignment",
-                type: "string",
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the topic is being assigned or unassigned",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Assigns or unassigns a topic to a user or group based on the assigned parameter.",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The ID of the topic",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "assigned",
+                  description: "true to assign, false to unassign",
+                  type: "boolean",
+                  required: true,
+                },
+                {
+                  name: "username",
+                  description: "The username to assign the topic to (required when assigning)",
+                  type: "string",
+                },
+                {
+                  name: "group_name",
+                  description:
+                    "The group name to assign the topic to, as an alternative to username",
+                  type: "string",
+                },
+                {
+                  name: "note",
+                  description: "An optional note to include with the assignment",
+                  type: "string",
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the topic is being assigned or unassigned",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "assign"
-        end
+          def name
+            "assign"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

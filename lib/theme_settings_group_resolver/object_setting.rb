@@ -10,8 +10,10 @@ class ThemeSettingsGroupResolver
   #   input: { menu_sections: [{ "groups" => [1, 2], "name" => "Main" }] }
   #   output: { menu_sections: [{ "user_in_groups" => true, "name" => "Main" }] }
   class ObjectSetting
-    def self.applies?(setting_info)
-      setting_info[:type] == "objects"
+    class << self
+      def applies?(setting_info)
+        setting_info[:type] == "objects"
+      end
     end
 
     def initialize(setting_name:, setting_info:, guardian:)

@@ -9,63 +9,68 @@ class HashtagAutocompleteService
     { type: "tag", context: "topic-composer", priority: 50 },
   ]
 
-  def self.search_conditions
-    @search_conditions ||= Enum.new(contains: 0, starts_with: 1)
+  class << self
+    def search_conditions
+      @search_conditions ||= Enum.new(contains: 0, starts_with: 1)
+    end
+
+    public
+
+    def data_sources
+      # Category and Tag data sources are in core and always should be
+      # included for searches and lookups.
+      Set.new(DEFAULT_DATA_SOURCES | DiscoursePluginRegistry.hashtag_autocomplete_data_sources)
+    end
+
+    def contextual_type_priorities
+      # Category and Tag type priorities for the composer are default and
+      # always are included.
+      Set.new(
+        DEFAULT_CONTEXTUAL_TYPE_PRIORITIES |
+          DiscoursePluginRegistry.hashtag_autocomplete_contextual_type_priorities,
+      )
+    end
+
+    def enabled_data_sources
+      data_sources.filter(&:enabled?)
+    end
+
+    def data_source_types
+      enabled_data_sources.map(&:type)
+    end
+
+    def data_source_icon_map
+      enabled_data_sources.map { |ds| [ds.type, ds.icon] }.to_h
+    end
+
+    def data_source_from_type(type)
+      enabled_data_sources.find { |ds| ds.type == type }
+    end
+
+    def find_priorities_for_context(context)
+      contextual_type_priorities.select { |ctp| ctp[:context] == context }
+    end
+
+    def unique_contexts
+      contextual_type_priorities.map { |ctp| ctp[:context] }.uniq
+    end
+
+    def ordered_types_for_context(context)
+      find_priorities_for_context(context)
+        .sort_by { |ctp| -ctp[:priority] }
+        .map { |ctp| ctp[:type] }
+        .reject { |type| data_source_types.exclude?(type) }
+    end
+
+    def contexts_with_ordered_types
+      Hash[unique_contexts.map { |context| [context, ordered_types_for_context(context)] }]
+    end
   end
 
   attr_reader :guardian
 
   # NOTE: This is not meant to be called directly; use `enabled_data_sources`
   # or the individual data_source_X methods instead.
-  def self.data_sources
-    # Category and Tag data sources are in core and always should be
-    # included for searches and lookups.
-    Set.new(DEFAULT_DATA_SOURCES | DiscoursePluginRegistry.hashtag_autocomplete_data_sources)
-  end
-
-  def self.contextual_type_priorities
-    # Category and Tag type priorities for the composer are default and
-    # always are included.
-    Set.new(
-      DEFAULT_CONTEXTUAL_TYPE_PRIORITIES |
-        DiscoursePluginRegistry.hashtag_autocomplete_contextual_type_priorities,
-    )
-  end
-
-  def self.enabled_data_sources
-    data_sources.filter(&:enabled?)
-  end
-
-  def self.data_source_types
-    enabled_data_sources.map(&:type)
-  end
-
-  def self.data_source_icon_map
-    enabled_data_sources.map { |ds| [ds.type, ds.icon] }.to_h
-  end
-
-  def self.data_source_from_type(type)
-    enabled_data_sources.find { |ds| ds.type == type }
-  end
-
-  def self.find_priorities_for_context(context)
-    contextual_type_priorities.select { |ctp| ctp[:context] == context }
-  end
-
-  def self.unique_contexts
-    contextual_type_priorities.map { |ctp| ctp[:context] }.uniq
-  end
-
-  def self.ordered_types_for_context(context)
-    find_priorities_for_context(context)
-      .sort_by { |ctp| -ctp[:priority] }
-      .map { |ctp| ctp[:type] }
-      .reject { |type| data_source_types.exclude?(type) }
-  end
-
-  def self.contexts_with_ordered_types
-    Hash[unique_contexts.map { |context| [context, ordered_types_for_context(context)] }]
-  end
 
   class HashtagItem
     # The text to display in the UI autocomplete menu for the item.

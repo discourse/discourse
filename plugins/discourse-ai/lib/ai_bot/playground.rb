@@ -16,225 +16,232 @@ module DiscourseAi
       # The bot will take care of completions while this class updates the topic title
       # and stream replies.
 
-      def self.find_chat_agent(message, channel, user)
-        if channel.direct_message_channel?
-          AiAgent
-            .allowed_modalities(allow_chat_direct_messages: true)
-            .find do |p|
-              p[:user_id].in?(channel.allowed_user_ids) && (user.group_ids & p[:allowed_group_ids])
-            end
-        else
-          # let's defer on the parse if there is no @ in the message
-          if message.message.include?("@")
-            mentions = message.parsed_mentions.parsed_direct_mentions
-            if mentions.present?
-              AiAgent
-                .allowed_modalities(allow_chat_channel_mentions: true)
-                .find { |p| p[:username].in?(mentions) && (user.group_ids & p[:allowed_group_ids]) }
-            end
-          end
-        end
-      end
-
-      def self.schedule_chat_reply(message, channel, user, context)
-        return if !SiteSetting.ai_bot_enabled
-
-        all_chat =
-          AiAgent.allowed_modalities(
-            allow_chat_channel_mentions: true,
-            allow_chat_direct_messages: true,
-          )
-        return if all_chat.blank?
-        return if all_chat.any? { |m| m[:user_id] == user.id }
-
-        agent = find_chat_agent(message, channel, user)
-        return if !agent
-
-        post_ids = nil
-        post_ids = context.dig(:context, :post_ids) if context.is_a?(Hash)
-
-        ::Jobs.enqueue(
-          :create_ai_chat_reply,
-          channel_id: channel.id,
-          message_id: message.id,
-          agent_id: agent[:id],
-          context_post_ids: post_ids,
-        )
-      end
-
-      def self.is_bot_user_id?(user_id)
-        # this will catch everything and avoid any feedback loops
-        # we could get feedback loops between say discobot and ai-bot or third party plugins
-        # and bots
-        user_id.to_i <= 0
-      end
-
-      def self.get_bot_user(post:, all_llm_users:, mentionables:)
-        bot_user = nil
-        if post.topic.private_message?
-          # this ensures that we reply using the correct llm
-          # 1. if we have a preferred llm user we use that
-          # 2. if we don't just take first topic allowed user
-          # 3. if we don't have that we take the first mentionable
-          bot_user = nil
-          if preferred_user =
-               all_llm_users.find { |id, username|
-                 id == post.topic.custom_fields[BOT_USER_PREF_ID_CUSTOM_FIELD].to_i
-               }
-            bot_user = User.find_by(id: preferred_user[0])
-          end
-          bot_user ||=
-            post.topic.topic_allowed_users.where(user_id: all_llm_users.map(&:first)).first&.user
-          bot_user ||=
-            post
-              .topic
-              .topic_allowed_users
-              .where(user_id: mentionables.map { |m| m[:user_id] })
-              .first
-              &.user
-        end
-        bot_user
-      end
-
-      def self.schedule_reply(post)
-        return if is_bot_user_id?(post.user_id)
-        mentionables = nil
-
-        if post.topic.private_message?
-          mentionables = AiAgent.allowed_modalities(user: post.user, allow_personal_messages: true)
-        else
-          mentionables = AiAgent.allowed_modalities(user: post.user, allow_topic_mentions: true)
-        end
-
-        mentioned = nil
-
-        all_llm_users =
-          LlmModel
-            .where(id: LlmModel.enabled_chat_bot_ids)
-            .joins(:user)
-            .pluck("users.id", "users.username_lower")
-
-        bot_user =
-          get_bot_user(post: post, all_llm_users: all_llm_users, mentionables: mentionables)
-
-        mentions = nil
-        if mentionables.present? || (bot_user && post.topic.private_message?)
-          mentions = post.mentions.map(&:downcase)
-
-          # in case we are replying to a post by a bot
-          if post.reply_to_post_number && post.reply_to_post&.user
-            mentions << post.reply_to_post.user.username_lower
-          end
-        end
-
-        if mentionables.present?
-          mentioned = mentionables.find { |mentionable| mentions.include?(mentionable[:username]) }
-
-          # direct PM to mentionable
-          if !mentioned && bot_user
-            mentioned = mentionables.find { |mentionable| bot_user.id == mentionable[:user_id] }
-          end
-
-          # public topic so we need to use the agent user
-          bot_user ||= User.find_by(id: mentioned[:user_id]) if mentioned
-        end
-
-        if !mentioned && bot_user && post.reply_to_post_number && !post.reply_to_post.user&.bot?
-          # replying to a non-bot user
-          return
-        end
-
-        if bot_user
-          topic_agent_id = post.topic.custom_fields["ai_agent_id"]
-          topic_agent_id = topic_agent_id.to_i if topic_agent_id.present?
-
-          authorization_user = post.user
-          if mentioned
-            agent_id = mentioned[:id]
+      class << self
+        def find_chat_agent(message, channel, user)
+          if channel.direct_message_channel?
+            AiAgent
+              .allowed_modalities(allow_chat_direct_messages: true)
+              .find do |p|
+                p[:user_id].in?(channel.allowed_user_ids) &&
+                  (user.group_ids & p[:allowed_group_ids])
+              end
           else
-            agent_id = topic_agent_id
-            authorization_user = post.topic.user if topic_agent_id
-          end
-
-          agent = nil
-
-          agent =
-            DiscourseAi::Agents::Agent.find_by(
-              user: authorization_user,
-              id: agent_id.to_i,
-            ) if agent_id && authorization_user
-
-          if !agent && (agent_name = post.topic.custom_fields["ai_agent"])
-            authorization_user = post.topic.user
-            agent =
-              DiscourseAi::Agents::Agent.find_by(
-                user: authorization_user,
-                name: agent_name,
-              ) if authorization_user
-          end
-
-          # edge case, llm was mentioned in an ai agent conversation
-          if agent_id == topic_agent_id && post.topic.private_message? && agent &&
-               all_llm_users.present?
-            if !agent.force_default_llm && mentions.present?
-              mentioned_llm_user_id, _ =
-                all_llm_users.find { |id, username| mentions.include?(username) }
-
-              if mentioned_llm_user_id
-                bot_user = User.find_by(id: mentioned_llm_user_id) || bot_user
+            # let's defer on the parse if there is no @ in the message
+            if message.message.include?("@")
+              mentions = message.parsed_mentions.parsed_direct_mentions
+              if mentions.present?
+                AiAgent
+                  .allowed_modalities(allow_chat_channel_mentions: true)
+                  .find do |p|
+                    p[:username].in?(mentions) && (user.group_ids & p[:allowed_group_ids])
+                  end
               end
             end
           end
+        end
 
-          if !agent
-            agent = DiscourseAi::Agents::General
-            authorization_user = post.user
+        def schedule_chat_reply(message, channel, user, context)
+          return if !SiteSetting.ai_bot_enabled
+
+          all_chat =
+            AiAgent.allowed_modalities(
+              allow_chat_channel_mentions: true,
+              allow_chat_direct_messages: true,
+            )
+          return if all_chat.blank?
+          return if all_chat.any? { |m| m[:user_id] == user.id }
+
+          agent = find_chat_agent(message, channel, user)
+          return if !agent
+
+          post_ids = nil
+          post_ids = context.dig(:context, :post_ids) if context.is_a?(Hash)
+
+          ::Jobs.enqueue(
+            :create_ai_chat_reply,
+            channel_id: channel.id,
+            message_id: message.id,
+            agent_id: agent[:id],
+            context_post_ids: post_ids,
+          )
+        end
+
+        def is_bot_user_id?(user_id)
+          # this will catch everything and avoid any feedback loops
+          # we could get feedback loops between say discobot and ai-bot or third party plugins
+          # and bots
+          user_id.to_i <= 0
+        end
+
+        def get_bot_user(post:, all_llm_users:, mentionables:)
+          bot_user = nil
+          if post.topic.private_message?
+            # this ensures that we reply using the correct llm
+            # 1. if we have a preferred llm user we use that
+            # 2. if we don't just take first topic allowed user
+            # 3. if we don't have that we take the first mentionable
+            bot_user = nil
+            if preferred_user =
+                 all_llm_users.find { |id, username|
+                   id == post.topic.custom_fields[BOT_USER_PREF_ID_CUSTOM_FIELD].to_i
+                 }
+              bot_user = User.find_by(id: preferred_user[0])
+            end
+            bot_user ||=
+              post.topic.topic_allowed_users.where(user_id: all_llm_users.map(&:first)).first&.user
+            bot_user ||=
+              post
+                .topic
+                .topic_allowed_users
+                .where(user_id: mentionables.map { |m| m[:user_id] })
+                .first
+                &.user
+          end
+          bot_user
+        end
+
+        def schedule_reply(post)
+          return if is_bot_user_id?(post.user_id)
+          mentionables = nil
+
+          if post.topic.private_message?
+            mentionables =
+              AiAgent.allowed_modalities(user: post.user, allow_personal_messages: true)
+          else
+            mentionables = AiAgent.allowed_modalities(user: post.user, allow_topic_mentions: true)
           end
 
-          bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
+          mentioned = nil
 
-          bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
-          new(bot).update_playground_with(post, authorization_user: authorization_user)
+          all_llm_users =
+            LlmModel
+              .where(id: LlmModel.enabled_chat_bot_ids)
+              .joins(:user)
+              .pluck("users.id", "users.username_lower")
+
+          bot_user =
+            get_bot_user(post: post, all_llm_users: all_llm_users, mentionables: mentionables)
+
+          mentions = nil
+          if mentionables.present? || (bot_user && post.topic.private_message?)
+            mentions = post.mentions.map(&:downcase)
+
+            # in case we are replying to a post by a bot
+            if post.reply_to_post_number && post.reply_to_post&.user
+              mentions << post.reply_to_post.user.username_lower
+            end
+          end
+
+          if mentionables.present?
+            mentioned =
+              mentionables.find { |mentionable| mentions.include?(mentionable[:username]) }
+
+            # direct PM to mentionable
+            if !mentioned && bot_user
+              mentioned = mentionables.find { |mentionable| bot_user.id == mentionable[:user_id] }
+            end
+
+            # public topic so we need to use the agent user
+            bot_user ||= User.find_by(id: mentioned[:user_id]) if mentioned
+          end
+
+          if !mentioned && bot_user && post.reply_to_post_number && !post.reply_to_post.user&.bot?
+            # replying to a non-bot user
+            return
+          end
+
+          if bot_user
+            topic_agent_id = post.topic.custom_fields["ai_agent_id"]
+            topic_agent_id = topic_agent_id.to_i if topic_agent_id.present?
+
+            authorization_user = post.user
+            if mentioned
+              agent_id = mentioned[:id]
+            else
+              agent_id = topic_agent_id
+              authorization_user = post.topic.user if topic_agent_id
+            end
+
+            agent = nil
+
+            agent =
+              DiscourseAi::Agents::Agent.find_by(
+                user: authorization_user,
+                id: agent_id.to_i,
+              ) if agent_id && authorization_user
+
+            if !agent && (agent_name = post.topic.custom_fields["ai_agent"])
+              authorization_user = post.topic.user
+              agent =
+                DiscourseAi::Agents::Agent.find_by(
+                  user: authorization_user,
+                  name: agent_name,
+                ) if authorization_user
+            end
+
+            # edge case, llm was mentioned in an ai agent conversation
+            if agent_id == topic_agent_id && post.topic.private_message? && agent &&
+                 all_llm_users.present?
+              if !agent.force_default_llm && mentions.present?
+                mentioned_llm_user_id, _ =
+                  all_llm_users.find { |id, username| mentions.include?(username) }
+
+                if mentioned_llm_user_id
+                  bot_user = User.find_by(id: mentioned_llm_user_id) || bot_user
+                end
+              end
+            end
+
+            if !agent
+              agent = DiscourseAi::Agents::General
+              authorization_user = post.user
+            end
+
+            bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
+
+            bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
+            new(bot).update_playground_with(post, authorization_user: authorization_user)
+          end
         end
-      end
 
-      def self.reply_to_post(
-        post:,
-        user: nil,
-        agent_id: nil,
-        whisper: nil,
-        add_user_to_pm: false,
-        stream_reply: false,
-        auto_set_title: false,
-        silent_mode: false,
-        feature_name: nil,
-        attributed_user: nil,
-        feature_context: nil
-      )
-        ai_agent = AiAgent.find_by(id: agent_id)
-        raise Discourse::InvalidParameters.new(:agent_id) if !ai_agent
-        agent_class = ai_agent.class_instance
-        agent = agent_class.new
-
-        bot_user = user || ai_agent.user
-        raise Discourse::InvalidParameters.new(:user) if bot_user.nil?
-        bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
-        playground = new(bot)
-
-        playground.reply_to(
-          post,
-          whisper: whisper,
-          context_style: :topic,
-          add_user_to_pm: add_user_to_pm,
-          stream_reply: stream_reply,
-          auto_set_title: auto_set_title,
-          silent_mode: silent_mode,
-          feature_name: feature_name,
-          attributed_user: attributed_user,
-          feature_context: feature_context,
+        def reply_to_post(
+          post:,
+          user: nil,
+          agent_id: nil,
+          whisper: nil,
+          add_user_to_pm: false,
+          stream_reply: false,
+          auto_set_title: false,
+          silent_mode: false,
+          feature_name: nil,
+          attributed_user: nil,
+          feature_context: nil
         )
-      rescue => e
-        raise e
+          ai_agent = AiAgent.find_by(id: agent_id)
+          raise Discourse::InvalidParameters.new(:agent_id) if !ai_agent
+          agent_class = ai_agent.class_instance
+          agent = agent_class.new
+
+          bot_user = user || ai_agent.user
+          raise Discourse::InvalidParameters.new(:user) if bot_user.nil?
+          bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
+          playground = new(bot)
+
+          playground.reply_to(
+            post,
+            whisper: whisper,
+            context_style: :topic,
+            add_user_to_pm: add_user_to_pm,
+            stream_reply: stream_reply,
+            auto_set_title: auto_set_title,
+            silent_mode: silent_mode,
+            feature_name: feature_name,
+            attributed_user: attributed_user,
+            feature_context: feature_context,
+          )
+        rescue => e
+          raise e
+        end
       end
 
       def initialize(bot)

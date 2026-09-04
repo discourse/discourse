@@ -12,8 +12,10 @@ module Onebox
       matches_domain("flic.kr")
       always_https
 
-      def self.matches_path(path)
-        path.start_with?("/p/")
+      class << self
+        def matches_path(path)
+          path.start_with?("/p/")
+        end
       end
     end
   end

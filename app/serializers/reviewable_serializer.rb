@@ -40,6 +40,32 @@ class ReviewableSerializer < ApplicationSerializer
   # Used to keep track of our payload attributes
   class_attribute :_payload_for_serialization
 
+  class << self
+    def create_attribute(name, field)
+      attribute(name)
+
+      class_eval <<~RUBY
+      def #{name}
+        #{field}
+      end
+
+      def include_#{name}?
+        #{name}.present?
+      end
+    RUBY
+    end
+
+    # This is easier than creating an AMS method for each attribute
+    def target_attributes(*attributes)
+      attributes.each { |a| create_attribute(a, "object.target&.#{a}") }
+    end
+
+    def payload_attributes(*attributes)
+      self._payload_for_serialization ||= []
+      self._payload_for_serialization += attributes.map(&:to_s)
+    end
+  end
+
   def bundled_actions
     args = {}
     args[:claimed_by] = claimed_by if @options[:claimed_topics]
@@ -63,30 +89,6 @@ class ReviewableSerializer < ApplicationSerializer
 
   def include_claimed_by?
     @options[:claimed_topics]
-  end
-
-  def self.create_attribute(name, field)
-    attribute(name)
-
-    class_eval <<~RUBY
-      def #{name}
-        #{field}
-      end
-
-      def include_#{name}?
-        #{name}.present?
-      end
-    RUBY
-  end
-
-  # This is easier than creating an AMS method for each attribute
-  def self.target_attributes(*attributes)
-    attributes.each { |a| create_attribute(a, "object.target&.#{a}") }
-  end
-
-  def self.payload_attributes(*attributes)
-    self._payload_for_serialization ||= []
-    self._payload_for_serialization += attributes.map(&:to_s)
   end
 
   def attributes

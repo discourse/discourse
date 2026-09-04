@@ -34,6 +34,239 @@ class AiTool < ActiveRecord::Base
   validate :validate_parameters_enum
   validate :validate_secret_contracts
 
+  class << self
+    # Load a JavaScript file from the ai_tool_scripts directory
+    def load_script(filename)
+      path = File.join(__dir__, "../../lib/ai_tool_scripts", filename)
+      File.read(path)
+    end
+
+    def preamble
+      load_script("preamble.js")
+    end
+
+    def presets
+      (
+        [
+          {
+            preset_id: "browse_web_jina",
+            name: "Browse Web",
+            tool_name: "browse_web",
+            description: "Browse the web as a markdown document",
+            parameters: [
+              { name: "url", type: "string", required: true, description: "The URL to browse" },
+            ],
+            script: "#{preamble}\n#{load_script("presets/browse_web_jina.js")}",
+          },
+          {
+            preset_id: "exchange_rate",
+            name: "Exchange Rate",
+            tool_name: "exchange_rate",
+            description: "Get current exchange rates for various currencies",
+            parameters: [
+              {
+                name: "base_currency",
+                type: "string",
+                required: true,
+                description: "The base currency code (e.g., USD, EUR)",
+              },
+              {
+                name: "target_currency",
+                type: "string",
+                required: true,
+                description: "The target currency code (e.g., EUR, JPY)",
+              },
+              { name: "amount", type: "number", description: "Amount to convert eg: 123.45" },
+            ],
+            script: "#{preamble}\n#{load_script("presets/exchange_rate.js")}",
+            summary: "Get current exchange rates between two currencies",
+          },
+          {
+            preset_id: "stock_quote",
+            name: "Stock Quote (AlphaVantage)",
+            tool_name: "stock_quote",
+            description: "Get real-time stock quote information using AlphaVantage API",
+            parameters: [
+              {
+                name: "symbol",
+                type: "string",
+                required: true,
+                description: "The stock symbol (e.g., AAPL, GOOGL)",
+              },
+            ],
+            secret_contracts: [{ alias: "alphavantage_api_key" }],
+            script: "#{preamble}\n#{load_script("presets/stock_quote.js")}",
+            summary: "Get real-time stock quotes using AlphaVantage API",
+          },
+        ] + image_generation_presets +
+          [
+            {
+              preset_id: "empty_tool",
+              script: "#{preamble}\n#{load_script("presets/empty_tool.js")}",
+            },
+          ]
+      ).map do |preset|
+        preset[:preset_name] = I18n.t("discourse_ai.tools.presets.#{preset[:preset_id]}.name")
+        preset
+      end
+    end
+
+    def image_generation_presets
+      [
+        { preset_id: "image_generation_category", is_category: true, category: "image_generation" },
+        {
+          preset_id: "image_generation_custom",
+          name: "Custom",
+          tool_name: "image_generation_custom",
+          description: "Configure a custom image generation API",
+          parameters: [
+            {
+              name: "prompt",
+              type: "string",
+              required: true,
+              description: "The text prompt for image generation",
+            },
+          ],
+          script: "#{preamble}\n#{load_script("presets/image_generation/custom.js")}",
+          summary: "Custom image generation",
+          category: "image_generation",
+        },
+        {
+          preset_id: "image_generation_openai",
+          name: "GPT Image",
+          provider: "OpenAI",
+          model_name: "GPT Image 1",
+          tool_name: "image_generation_openai",
+          description: "Generate images using OpenAI's GPT Image 1 model",
+          parameters: [
+            {
+              name: "prompt",
+              type: "string",
+              required: true,
+              description: "The text prompt for image generation",
+            },
+            {
+              name: "size",
+              type: "string",
+              required: false,
+              description: "Image size (1024x1024, 1792x1024, or 1024x1792)",
+            },
+            {
+              name: "image_urls",
+              type: "array",
+              item_type: "string",
+              required: false,
+              description:
+                "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
+            },
+          ],
+          secret_contracts: [{ alias: "openai_api_key" }],
+          script: "#{preamble}\n#{load_script("presets/image_generation/openai.js")}",
+          summary: "Generate images with OpenAI GPT Image 1 model",
+          category: "image_generation",
+        },
+        {
+          preset_id: "image_generation_gemini",
+          name: "Nano Banana",
+          provider: "Google Nano Banana",
+          model_name: "Gemini 2.5 Flash Image",
+          tool_name: "image_generation_gemini",
+          description: "Generate images using Gemini 2.5 Flash Image (Nano Banana)",
+          parameters: [
+            {
+              name: "prompt",
+              type: "string",
+              required: true,
+              description: "The text prompt for image generation",
+            },
+            {
+              name: "image_urls",
+              type: "array",
+              item_type: "string",
+              required: false,
+              description:
+                "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
+            },
+          ],
+          secret_contracts: [{ alias: "google_api_key" }],
+          script: "#{preamble}\n#{load_script("presets/image_generation/gemini.js")}",
+          summary: "Generate images with Gemini 2.5 Flash Image",
+          category: "image_generation",
+        },
+        {
+          preset_id: "image_generation_flux",
+          name: "FLUX 1.1 Pro",
+          provider: "Together.ai",
+          model_name: "FLUX 1.1 Pro",
+          tool_name: "image_generation",
+          description:
+            "Generate images using the FLUX 1.1 Pro model from Black Forest Labs via Together.ai",
+          parameters: [
+            {
+              name: "prompt",
+              type: "string",
+              required: true,
+              description: "The text prompt for image generation",
+            },
+            {
+              name: "seed",
+              type: "number",
+              required: false,
+              description: "Optional seed for random number generation",
+            },
+            {
+              name: "image_urls",
+              type: "array",
+              item_type: "string",
+              required: false,
+              description:
+                "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
+            },
+          ],
+          secret_contracts: [{ alias: "together_api_key" }],
+          script: "#{preamble}\n#{load_script("presets/image_generation/flux_together.js")}",
+          summary: "Generate images with FLUX 1.1 Pro",
+          category: "image_generation",
+        },
+        {
+          preset_id: "image_generation_flux2",
+          name: "FLUX 2 Pro",
+          provider: "Black Forest Labs",
+          model_name: "FLUX 2 Pro",
+          tool_name: "image_generation_flux2",
+          description:
+            "Generate and edit images using FLUX 2 Pro directly via Black Forest Labs API. Supports multi-image editing.",
+          parameters: [
+            {
+              name: "prompt",
+              type: "string",
+              required: true,
+              description: "The text prompt for image generation or editing",
+            },
+            {
+              name: "seed",
+              type: "number",
+              required: false,
+              description: "Optional seed for reproducible results",
+            },
+            {
+              name: "image_urls",
+              type: "array",
+              item_type: "string",
+              required: false,
+              description:
+                "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
+            },
+          ],
+          secret_contracts: [{ alias: "bfl_api_key" }],
+          script: "#{preamble}\n#{load_script("presets/image_generation/flux_2_bfl.js")}",
+          summary: "Generate and edit images with FLUX 2 Pro",
+          category: "image_generation",
+        },
+      ]
+    end
+  end
+
   def signature
     {
       name: function_call_name,
@@ -273,237 +506,6 @@ class AiTool < ActiveRecord::Base
         aliases << alias_name
       end
     end
-  end
-
-  # Load a JavaScript file from the ai_tool_scripts directory
-  def self.load_script(filename)
-    path = File.join(__dir__, "../../lib/ai_tool_scripts", filename)
-    File.read(path)
-  end
-
-  def self.preamble
-    load_script("preamble.js")
-  end
-
-  def self.presets
-    (
-      [
-        {
-          preset_id: "browse_web_jina",
-          name: "Browse Web",
-          tool_name: "browse_web",
-          description: "Browse the web as a markdown document",
-          parameters: [
-            { name: "url", type: "string", required: true, description: "The URL to browse" },
-          ],
-          script: "#{preamble}\n#{load_script("presets/browse_web_jina.js")}",
-        },
-        {
-          preset_id: "exchange_rate",
-          name: "Exchange Rate",
-          tool_name: "exchange_rate",
-          description: "Get current exchange rates for various currencies",
-          parameters: [
-            {
-              name: "base_currency",
-              type: "string",
-              required: true,
-              description: "The base currency code (e.g., USD, EUR)",
-            },
-            {
-              name: "target_currency",
-              type: "string",
-              required: true,
-              description: "The target currency code (e.g., EUR, JPY)",
-            },
-            { name: "amount", type: "number", description: "Amount to convert eg: 123.45" },
-          ],
-          script: "#{preamble}\n#{load_script("presets/exchange_rate.js")}",
-          summary: "Get current exchange rates between two currencies",
-        },
-        {
-          preset_id: "stock_quote",
-          name: "Stock Quote (AlphaVantage)",
-          tool_name: "stock_quote",
-          description: "Get real-time stock quote information using AlphaVantage API",
-          parameters: [
-            {
-              name: "symbol",
-              type: "string",
-              required: true,
-              description: "The stock symbol (e.g., AAPL, GOOGL)",
-            },
-          ],
-          secret_contracts: [{ alias: "alphavantage_api_key" }],
-          script: "#{preamble}\n#{load_script("presets/stock_quote.js")}",
-          summary: "Get real-time stock quotes using AlphaVantage API",
-        },
-      ] + image_generation_presets +
-        [
-          {
-            preset_id: "empty_tool",
-            script: "#{preamble}\n#{load_script("presets/empty_tool.js")}",
-          },
-        ]
-    ).map do |preset|
-      preset[:preset_name] = I18n.t("discourse_ai.tools.presets.#{preset[:preset_id]}.name")
-      preset
-    end
-  end
-
-  def self.image_generation_presets
-    [
-      { preset_id: "image_generation_category", is_category: true, category: "image_generation" },
-      {
-        preset_id: "image_generation_custom",
-        name: "Custom",
-        tool_name: "image_generation_custom",
-        description: "Configure a custom image generation API",
-        parameters: [
-          {
-            name: "prompt",
-            type: "string",
-            required: true,
-            description: "The text prompt for image generation",
-          },
-        ],
-        script: "#{preamble}\n#{load_script("presets/image_generation/custom.js")}",
-        summary: "Custom image generation",
-        category: "image_generation",
-      },
-      {
-        preset_id: "image_generation_openai",
-        name: "GPT Image",
-        provider: "OpenAI",
-        model_name: "GPT Image 1",
-        tool_name: "image_generation_openai",
-        description: "Generate images using OpenAI's GPT Image 1 model",
-        parameters: [
-          {
-            name: "prompt",
-            type: "string",
-            required: true,
-            description: "The text prompt for image generation",
-          },
-          {
-            name: "size",
-            type: "string",
-            required: false,
-            description: "Image size (1024x1024, 1792x1024, or 1024x1792)",
-          },
-          {
-            name: "image_urls",
-            type: "array",
-            item_type: "string",
-            required: false,
-            description:
-              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
-          },
-        ],
-        secret_contracts: [{ alias: "openai_api_key" }],
-        script: "#{preamble}\n#{load_script("presets/image_generation/openai.js")}",
-        summary: "Generate images with OpenAI GPT Image 1 model",
-        category: "image_generation",
-      },
-      {
-        preset_id: "image_generation_gemini",
-        name: "Nano Banana",
-        provider: "Google Nano Banana",
-        model_name: "Gemini 2.5 Flash Image",
-        tool_name: "image_generation_gemini",
-        description: "Generate images using Gemini 2.5 Flash Image (Nano Banana)",
-        parameters: [
-          {
-            name: "prompt",
-            type: "string",
-            required: true,
-            description: "The text prompt for image generation",
-          },
-          {
-            name: "image_urls",
-            type: "array",
-            item_type: "string",
-            required: false,
-            description:
-              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
-          },
-        ],
-        secret_contracts: [{ alias: "google_api_key" }],
-        script: "#{preamble}\n#{load_script("presets/image_generation/gemini.js")}",
-        summary: "Generate images with Gemini 2.5 Flash Image",
-        category: "image_generation",
-      },
-      {
-        preset_id: "image_generation_flux",
-        name: "FLUX 1.1 Pro",
-        provider: "Together.ai",
-        model_name: "FLUX 1.1 Pro",
-        tool_name: "image_generation",
-        description:
-          "Generate images using the FLUX 1.1 Pro model from Black Forest Labs via Together.ai",
-        parameters: [
-          {
-            name: "prompt",
-            type: "string",
-            required: true,
-            description: "The text prompt for image generation",
-          },
-          {
-            name: "seed",
-            type: "number",
-            required: false,
-            description: "Optional seed for random number generation",
-          },
-          {
-            name: "image_urls",
-            type: "array",
-            item_type: "string",
-            required: false,
-            description:
-              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
-          },
-        ],
-        secret_contracts: [{ alias: "together_api_key" }],
-        script: "#{preamble}\n#{load_script("presets/image_generation/flux_together.js")}",
-        summary: "Generate images with FLUX 1.1 Pro",
-        category: "image_generation",
-      },
-      {
-        preset_id: "image_generation_flux2",
-        name: "FLUX 2 Pro",
-        provider: "Black Forest Labs",
-        model_name: "FLUX 2 Pro",
-        tool_name: "image_generation_flux2",
-        description:
-          "Generate and edit images using FLUX 2 Pro directly via Black Forest Labs API. Supports multi-image editing.",
-        parameters: [
-          {
-            name: "prompt",
-            type: "string",
-            required: true,
-            description: "The text prompt for image generation or editing",
-          },
-          {
-            name: "seed",
-            type: "number",
-            required: false,
-            description: "Optional seed for reproducible results",
-          },
-          {
-            name: "image_urls",
-            type: "array",
-            item_type: "string",
-            required: false,
-            description:
-              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
-          },
-        ],
-        secret_contracts: [{ alias: "bfl_api_key" }],
-        script: "#{preamble}\n#{load_script("presets/image_generation/flux_2_bfl.js")}",
-        summary: "Generate and edit images with FLUX 2 Pro",
-        category: "image_generation",
-      },
-    ]
   end
 end
 

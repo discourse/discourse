@@ -13,22 +13,24 @@ module DiscourseAi
                   :provider_output_tokens,
                   :reserved_output_tokens
 
-      def self.normalize_effort(value)
-        value = value.to_s.strip
-        return if value.blank? || value == "default"
-        value if VALUES.include?(value)
-      end
+      class << self
+        def normalize_effort(value)
+          value = value.to_s.strip
+          return if value.blank? || value == "default"
+          value if VALUES.include?(value)
+        end
 
-      def self.disabled(canonical_effort: nil)
-        new(canonical_effort: canonical_effort, enabled: false)
-      end
+        def disabled(canonical_effort: nil)
+          new(canonical_effort: canonical_effort, enabled: false)
+        end
 
-      def self.explicit_none
-        new(canonical_effort: "none", enabled: false, explicit_none: true)
-      end
+        def explicit_none
+          new(canonical_effort: "none", enabled: false, explicit_none: true)
+        end
 
-      def self.unsupported(canonical_effort: nil)
-        new(canonical_effort: canonical_effort, enabled: false, unsupported: true)
+        def unsupported(canonical_effort: nil)
+          new(canonical_effort: canonical_effort, enabled: false, unsupported: true)
+        end
       end
 
       def initialize(

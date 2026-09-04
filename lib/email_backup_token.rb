@@ -1,29 +1,31 @@
 # frozen_string_literal: true
 
 class EmailBackupToken
-  def self.key(user_id)
-    "email-backup-token:#{user_id}"
-  end
+  class << self
+    def key(user_id)
+      "email-backup-token:#{user_id}"
+    end
 
-  def self.generate
-    SecureRandom.hex
-  end
+    def generate
+      SecureRandom.hex
+    end
 
-  def self.set(user_id)
-    token = generate
-    Discourse.redis.setex key(user_id), 1.day.to_i, token
-    token
-  end
+    def set(user_id)
+      token = generate
+      Discourse.redis.setex key(user_id), 1.day.to_i, token
+      token
+    end
 
-  def self.get(user_id)
-    Discourse.redis.get key(user_id)
-  end
+    def get(user_id)
+      Discourse.redis.get key(user_id)
+    end
 
-  def self.del(user_id)
-    Discourse.redis.del key(user_id)
-  end
+    def del(user_id)
+      Discourse.redis.del key(user_id)
+    end
 
-  def self.compare(user_id, token)
-    token == get(user_id)
+    def compare(user_id, token)
+      token == get(user_id)
+    end
   end
 end

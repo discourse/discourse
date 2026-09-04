@@ -31,8 +31,309 @@ class Theme < ActiveRecord::Base
   attr_accessor :child_components
   attr_accessor :skip_child_components_update
 
-  def self.cache
-    @cache ||= DistributedCache.new("theme:compiler:#{AssetProcessor::BASE_COMPILER_VERSION}")
+  class << self
+    def cache
+      @cache ||= DistributedCache.new("theme:compiler:#{AssetProcessor::BASE_COMPILER_VERSION}")
+    end
+
+    public
+
+    def compiler_version
+      get_set_cache "compiler_version" do
+        dependencies = [
+          AssetProcessor::BASE_COMPILER_VERSION,
+          AssetProcessor.ember_version,
+          GlobalSetting.cdn_url,
+          GlobalSetting.s3_cdn_url,
+          GlobalSetting.s3_endpoint,
+          GlobalSetting.s3_bucket,
+          Discourse.current_hostname,
+        ]
+        Digest::SHA1.hexdigest(dependencies.join)
+      end
+    end
+
+    def get_set_cache(key, &blk)
+      cache.defer_get_set(key, &blk)
+    end
+
+    def theme_ids
+      get_set_cache "theme_ids" do
+        Theme.pluck(:id)
+      end
+    end
+
+    def parent_theme_ids
+      get_set_cache "parent_theme_ids" do
+        Theme.where(component: false).pluck(:id)
+      end
+    end
+
+    def is_parent_theme?(id)
+      parent_theme_ids.include?(id)
+    end
+
+    def user_theme_ids
+      get_set_cache "user_theme_ids" do
+        Theme.user_selectable.pluck(:id)
+      end
+    end
+
+    def enabled_theme_and_component_ids
+      get_set_cache "enabled_theme_and_component_ids" do
+        theme_ids = Theme.user_selectable.where(enabled: true).pluck(:id)
+        component_ids =
+          ChildTheme
+            .where(parent_theme_id: theme_ids)
+            .joins(:child_theme)
+            .where(themes: { enabled: true })
+            .pluck(:child_theme_id)
+        (theme_ids | component_ids)
+      end
+    end
+
+    def allowed_remote_theme_ids
+      return nil if GlobalSetting.allowed_theme_repos.blank?
+
+      get_set_cache "allowed_remote_theme_ids" do
+        urls = GlobalSetting.allowed_theme_repos.split(",").map(&:strip)
+        Theme.joins(:remote_theme).where("remote_themes.remote_url in (?)", urls).pluck(:id)
+      end
+    end
+
+    def components_for(theme_id)
+      get_set_cache "theme_components_for_#{theme_id}" do
+        ChildTheme.where(parent_theme_id: theme_id).pluck(:child_theme_id)
+      end
+    end
+
+    def expire_site_cache!
+      Site.clear_anon_cache!
+      clear_cache!
+      ApplicationSerializer.expire_cache_fragment!("user_themes")
+      ColorScheme.hex_cache.clear
+      CSP::Extension.clear_theme_extensions_cache!
+      SvgSprite.expire_cache
+    end
+
+    def expire_site_setting_cache!
+      Theme
+        .not_components
+        .pluck(:id)
+        .each do |theme_id|
+          Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
+        end
+
+      Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(nil))
+    end
+
+    def clear_default!
+      SiteSetting.default_theme_id = -1
+      expire_site_cache!
+    end
+
+    def transform_ids(id)
+      return [] if id.blank?
+      id = id.to_i
+
+      get_set_cache "transformed_ids_#{id}" do
+        all_ids =
+          if is_parent_theme?(id)
+            components = components_for(id).tap { |c| c.sort!.uniq! }
+            [id, *components]
+          else
+            [id]
+          end
+
+        disabled_ids =
+          Theme
+            .where(id: all_ids)
+            .includes(:remote_theme)
+            .select { |t| !t.supported? || !t.enabled? }
+            .map(&:id)
+
+        all_ids - disabled_ids
+      end
+    end
+
+    def find_default
+      find_by(id: SiteSetting.default_theme_id)
+    end
+
+    def lookup_field(theme_id, target, field, skip_transformation: false, csp_nonce: nil)
+      return "" if theme_id.blank?
+
+      theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
+      resolved = resolve_baked_field(theme_ids, target.to_sym, field) || ""
+      resolved = resolved.gsub(ThemeField::CSP_NONCE_PLACEHOLDER, csp_nonce) if csp_nonce
+      resolved.html_safe
+    end
+
+    # An array of `{ url:, theme_id:, external_plugin_imports: }` hashes describing
+    # the theme's baked `extra_js` javascript caches.
+    def js_asset_info(theme_id, skip_transformation: false)
+      return [] if theme_id.blank?
+
+      theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
+
+      get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
+        require_rebake =
+          ThemeField
+            .where(theme_id: theme_ids, target_id: targets[:extra_js])
+            .where.not(compiler_version: compiler_version)
+
+        ActiveRecord::Base.transaction do
+          require_rebake.each(&:ensure_baked!)
+          Theme.where(id: require_rebake.map(&:theme_id)).each(&:update_javascript_cache!)
+        end
+
+        JavascriptCache
+          .where(theme_id: theme_ids)
+          .index_by(&:theme_id)
+          .values_at(*theme_ids)
+          .compact
+          .map do |c|
+            { url: c.url, theme_id: c.theme_id, external_plugin_imports: c.external_plugin_imports }
+          end
+      end
+    end
+
+    def lookup_modifier(theme_ids, modifier_name)
+      theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
+
+      get_set_cache("#{theme_ids.join(",")}:modifier:#{modifier_name}:#{Theme.compiler_version}") do
+        ThemeModifierSet.resolve_modifier_for_themes(theme_ids, modifier_name)
+      end
+    end
+
+    def remove_from_cache!
+      clear_cache!
+    end
+
+    def clear_cache!
+      cache.clear
+    end
+
+    def targets
+      @targets ||=
+        Enum.new(
+          common: 0,
+          desktop: 1,
+          mobile: 2,
+          settings: 3,
+          translations: 4,
+          extra_scss: 5,
+          extra_js: 6,
+          tests_js: 7,
+          migrations: 8,
+          about: 9,
+        )
+    end
+
+    def lookup_target(target_id)
+      targets.invert[target_id]
+    end
+
+    def notify_theme_change(
+      theme_ids,
+      with_scheme: false,
+      clear_manager_cache: true,
+      all_themes: false
+    )
+      Stylesheet::Manager.clear_theme_cache!
+      targets = %i[common_theme mobile_theme desktop_theme]
+
+      if with_scheme
+        targets.prepend(:common, :admin)
+        targets.append(
+          *Discourse.find_plugin_css_assets(
+            mobile_view: true,
+            desktop_view: true,
+            include_admin: true,
+          ),
+        )
+        Stylesheet::Manager.cache.clear if clear_manager_cache
+      end
+
+      if all_themes
+        message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
+      else
+        message = refresh_message_for_targets(targets, theme_ids).flatten
+      end
+
+      MessageBus.publish("/file-change", message)
+    end
+
+    def refresh_message_for_targets(targets, theme_ids)
+      theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
+
+      targets.each_with_object([]) do |target, data|
+        theme_ids.each do |theme_id|
+          data << Stylesheet::Manager.new(theme_id: theme_id).stylesheet_data(target.to_sym)
+        end
+      end
+    end
+
+    def resolve_baked_field(theme_ids, target, name)
+      target = target.to_sym
+      name = name&.to_sym
+
+      target = :mobile if target == :mobile_theme
+      target = :desktop if target == :desktop_theme
+
+      case target
+      when :translations
+        theme_field_values(theme_ids, :translations, I18n.fallbacks[name])
+          .to_a
+          .select(&:second)
+          .uniq { |((theme_id, _, _), _)| theme_id }
+          .flat_map(&:second)
+          .join("\n")
+      else
+        theme_field_values(theme_ids, [:common, target], name).values.compact.flatten.join("\n")
+      end
+    end
+
+    def theme_field_values(theme_ids, targets, names)
+      cache.defer_get_set_bulk(
+        Array(theme_ids).product(Array(targets), Array(names)),
+        lambda do |(theme_id, target, name)|
+          "#{theme_id}:#{target}:#{name}:#{Theme.compiler_version}"
+        end,
+      ) do |keys|
+        keys = keys.map { |theme_id, target, name| [theme_id, Theme.targets[target], name.to_s] }
+
+        keys
+          .map do |theme_id, target_id, name|
+            ThemeField.where(theme_id: theme_id, target_id: target_id, name: name)
+          end
+          .inject { |a, b| a.or(b) }
+          .each(&:ensure_baked!)
+          .map { |tf| [[tf.theme_id, tf.target_id, tf.name], tf.value_baked || tf.value] }
+          .group_by(&:first)
+          .transform_values { |x| x.map(&:second) }
+          .values_at(*keys)
+      end
+    end
+
+    def list_baked_fields(theme_ids, target, name)
+      target = target.to_sym
+      name = name&.to_sym
+
+      if target == :translations
+        fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
+      else
+        target = :common if target == :common_theme
+        target = :mobile if target == :mobile_theme
+        target = :desktop if target == :desktop_theme
+        fields = ThemeField.find_by_theme_ids(theme_ids).where(target_id: Theme.targets[target])
+        fields = fields.where(name: name.to_s) unless name.nil?
+        fields = fields.order(:target_id)
+      end
+
+      fields.each(&:ensure_baked!)
+      fields
+    end
   end
 
   belongs_to :user
@@ -248,124 +549,6 @@ class Theme < ActiveRecord::Base
     Theme.expire_site_cache!
   end
 
-  def self.compiler_version
-    get_set_cache "compiler_version" do
-      dependencies = [
-        AssetProcessor::BASE_COMPILER_VERSION,
-        AssetProcessor.ember_version,
-        GlobalSetting.cdn_url,
-        GlobalSetting.s3_cdn_url,
-        GlobalSetting.s3_endpoint,
-        GlobalSetting.s3_bucket,
-        Discourse.current_hostname,
-      ]
-      Digest::SHA1.hexdigest(dependencies.join)
-    end
-  end
-
-  def self.get_set_cache(key, &blk)
-    cache.defer_get_set(key, &blk)
-  end
-
-  def self.theme_ids
-    get_set_cache "theme_ids" do
-      Theme.pluck(:id)
-    end
-  end
-
-  def self.parent_theme_ids
-    get_set_cache "parent_theme_ids" do
-      Theme.where(component: false).pluck(:id)
-    end
-  end
-
-  def self.is_parent_theme?(id)
-    parent_theme_ids.include?(id)
-  end
-
-  def self.user_theme_ids
-    get_set_cache "user_theme_ids" do
-      Theme.user_selectable.pluck(:id)
-    end
-  end
-
-  def self.enabled_theme_and_component_ids
-    get_set_cache "enabled_theme_and_component_ids" do
-      theme_ids = Theme.user_selectable.where(enabled: true).pluck(:id)
-      component_ids =
-        ChildTheme
-          .where(parent_theme_id: theme_ids)
-          .joins(:child_theme)
-          .where(themes: { enabled: true })
-          .pluck(:child_theme_id)
-      (theme_ids | component_ids)
-    end
-  end
-
-  def self.allowed_remote_theme_ids
-    return nil if GlobalSetting.allowed_theme_repos.blank?
-
-    get_set_cache "allowed_remote_theme_ids" do
-      urls = GlobalSetting.allowed_theme_repos.split(",").map(&:strip)
-      Theme.joins(:remote_theme).where("remote_themes.remote_url in (?)", urls).pluck(:id)
-    end
-  end
-
-  def self.components_for(theme_id)
-    get_set_cache "theme_components_for_#{theme_id}" do
-      ChildTheme.where(parent_theme_id: theme_id).pluck(:child_theme_id)
-    end
-  end
-
-  def self.expire_site_cache!
-    Site.clear_anon_cache!
-    clear_cache!
-    ApplicationSerializer.expire_cache_fragment!("user_themes")
-    ColorScheme.hex_cache.clear
-    CSP::Extension.clear_theme_extensions_cache!
-    SvgSprite.expire_cache
-  end
-
-  def self.expire_site_setting_cache!
-    Theme
-      .not_components
-      .pluck(:id)
-      .each do |theme_id|
-        Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
-      end
-
-    Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(nil))
-  end
-
-  def self.clear_default!
-    SiteSetting.default_theme_id = -1
-    expire_site_cache!
-  end
-
-  def self.transform_ids(id)
-    return [] if id.blank?
-    id = id.to_i
-
-    get_set_cache "transformed_ids_#{id}" do
-      all_ids =
-        if is_parent_theme?(id)
-          components = components_for(id).tap { |c| c.sort!.uniq! }
-          [id, *components]
-        else
-          [id]
-        end
-
-      disabled_ids =
-        Theme
-          .where(id: all_ids)
-          .includes(:remote_theme)
-          .select { |t| !t.supported? || !t.enabled? }
-          .map(&:id)
-
-      all_ids - disabled_ids
-    end
-  end
-
   def set_default!
     if component
       raise Discourse::InvalidParameters.new(I18n.t("themes.errors.component_no_default"))
@@ -452,190 +635,11 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def self.find_default
-    find_by(id: SiteSetting.default_theme_id)
-  end
-
-  def self.lookup_field(theme_id, target, field, skip_transformation: false, csp_nonce: nil)
-    return "" if theme_id.blank?
-
-    theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-    resolved = resolve_baked_field(theme_ids, target.to_sym, field) || ""
-    resolved = resolved.gsub(ThemeField::CSP_NONCE_PLACEHOLDER, csp_nonce) if csp_nonce
-    resolved.html_safe
-  end
-
-  # An array of `{ url:, theme_id:, external_plugin_imports: }` hashes describing
-  # the theme's baked `extra_js` javascript caches.
-  def self.js_asset_info(theme_id, skip_transformation: false)
-    return [] if theme_id.blank?
-
-    theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-
-    get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
-      require_rebake =
-        ThemeField
-          .where(theme_id: theme_ids, target_id: targets[:extra_js])
-          .where.not(compiler_version: compiler_version)
-
-      ActiveRecord::Base.transaction do
-        require_rebake.each(&:ensure_baked!)
-        Theme.where(id: require_rebake.map(&:theme_id)).each(&:update_javascript_cache!)
-      end
-
-      JavascriptCache
-        .where(theme_id: theme_ids)
-        .index_by(&:theme_id)
-        .values_at(*theme_ids)
-        .compact
-        .map do |c|
-          { url: c.url, theme_id: c.theme_id, external_plugin_imports: c.external_plugin_imports }
-        end
-    end
-  end
-
-  def self.lookup_modifier(theme_ids, modifier_name)
-    theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
-
-    get_set_cache("#{theme_ids.join(",")}:modifier:#{modifier_name}:#{Theme.compiler_version}") do
-      ThemeModifierSet.resolve_modifier_for_themes(theme_ids, modifier_name)
-    end
-  end
-
-  def self.remove_from_cache!
-    clear_cache!
-  end
-
-  def self.clear_cache!
-    cache.clear
-  end
-
-  def self.targets
-    @targets ||=
-      Enum.new(
-        common: 0,
-        desktop: 1,
-        mobile: 2,
-        settings: 3,
-        translations: 4,
-        extra_scss: 5,
-        extra_js: 6,
-        tests_js: 7,
-        migrations: 8,
-        about: 9,
-      )
-  end
-
-  def self.lookup_target(target_id)
-    targets.invert[target_id]
-  end
-
-  def self.notify_theme_change(
-    theme_ids,
-    with_scheme: false,
-    clear_manager_cache: true,
-    all_themes: false
-  )
-    Stylesheet::Manager.clear_theme_cache!
-    targets = %i[common_theme mobile_theme desktop_theme]
-
-    if with_scheme
-      targets.prepend(:common, :admin)
-      targets.append(
-        *Discourse.find_plugin_css_assets(
-          mobile_view: true,
-          desktop_view: true,
-          include_admin: true,
-        ),
-      )
-      Stylesheet::Manager.cache.clear if clear_manager_cache
-    end
-
-    if all_themes
-      message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
-    else
-      message = refresh_message_for_targets(targets, theme_ids).flatten
-    end
-
-    MessageBus.publish("/file-change", message)
-  end
-
   def notify_theme_change(with_scheme: false)
     DB.after_commit do
       theme_ids = Theme.transform_ids(id)
       self.class.notify_theme_change(theme_ids, with_scheme: with_scheme)
     end
-  end
-
-  def self.refresh_message_for_targets(targets, theme_ids)
-    theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
-
-    targets.each_with_object([]) do |target, data|
-      theme_ids.each do |theme_id|
-        data << Stylesheet::Manager.new(theme_id: theme_id).stylesheet_data(target.to_sym)
-      end
-    end
-  end
-
-  def self.resolve_baked_field(theme_ids, target, name)
-    target = target.to_sym
-    name = name&.to_sym
-
-    target = :mobile if target == :mobile_theme
-    target = :desktop if target == :desktop_theme
-
-    case target
-    when :translations
-      theme_field_values(theme_ids, :translations, I18n.fallbacks[name])
-        .to_a
-        .select(&:second)
-        .uniq { |((theme_id, _, _), _)| theme_id }
-        .flat_map(&:second)
-        .join("\n")
-    else
-      theme_field_values(theme_ids, [:common, target], name).values.compact.flatten.join("\n")
-    end
-  end
-
-  def self.theme_field_values(theme_ids, targets, names)
-    cache.defer_get_set_bulk(
-      Array(theme_ids).product(Array(targets), Array(names)),
-      lambda do |(theme_id, target, name)|
-        "#{theme_id}:#{target}:#{name}:#{Theme.compiler_version}"
-      end,
-    ) do |keys|
-      keys = keys.map { |theme_id, target, name| [theme_id, Theme.targets[target], name.to_s] }
-
-      keys
-        .map do |theme_id, target_id, name|
-          ThemeField.where(theme_id: theme_id, target_id: target_id, name: name)
-        end
-        .inject { |a, b| a.or(b) }
-        .each(&:ensure_baked!)
-        .map { |tf| [[tf.theme_id, tf.target_id, tf.name], tf.value_baked || tf.value] }
-        .group_by(&:first)
-        .transform_values { |x| x.map(&:second) }
-        .values_at(*keys)
-    end
-  end
-
-  def self.list_baked_fields(theme_ids, target, name)
-    target = target.to_sym
-    name = name&.to_sym
-
-    if target == :translations
-      fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
-    else
-      target = :common if target == :common_theme
-      target = :mobile if target == :mobile_theme
-      target = :desktop if target == :desktop_theme
-      fields = ThemeField.find_by_theme_ids(theme_ids).where(target_id: Theme.targets[target])
-      fields = fields.where(name: name.to_s) unless name.nil?
-      fields = fields.order(:target_id)
-    end
-
-    fields.each(&:ensure_baked!)
-    fields
   end
 
   # def foundation_theme

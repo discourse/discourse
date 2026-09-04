@@ -12,45 +12,47 @@ class IncomingLink < ActiveRecord::Base
 
   attr_accessor :url
 
-  def self.add(opts)
-    user_id, host, referer = nil
-    current_user = opts[:current_user]
+  class << self
+    def add(opts)
+      user_id, host, referer = nil
+      current_user = opts[:current_user]
 
-    username = opts[:username]
-    username = nil if !(String === username)
-    username = nil if username&.include?("\0")
-    if username
-      u = User.select(:id).find_by(username_lower: username.downcase)
-      user_id = u.id if u
-    end
-    ip_address = opts[:ip_address]
-
-    if opts[:referer].present?
-      begin
-        host = URI.parse(opts[:referer]).host
-        referer = opts[:referer][0..999]
-      rescue URI::Error
-        # bad uri, skip
+      username = opts[:username]
+      username = nil if !(String === username)
+      username = nil if username&.include?("\0")
+      if username
+        u = User.select(:id).find_by(username_lower: username.downcase)
+        user_id = u.id if u
       end
-    end
+      ip_address = opts[:ip_address]
 
-    if host != opts[:host] && (user_id || referer)
-      post_id = opts[:post_id]
-      post_id ||=
-        Post.where(topic_id: opts[:topic_id], post_number: opts[:post_number] || 1).pick(:id)
+      if opts[:referer].present?
+        begin
+          host = URI.parse(opts[:referer]).host
+          referer = opts[:referer][0..999]
+        rescue URI::Error
+          # bad uri, skip
+        end
+      end
 
-      cid = current_user ? current_user.id : nil
-      ip_address = nil if cid
+      if host != opts[:host] && (user_id || referer)
+        post_id = opts[:post_id]
+        post_id ||=
+          Post.where(topic_id: opts[:topic_id], post_number: opts[:post_number] || 1).pick(:id)
 
-      unless cid && cid == user_id
-        if post_id
-          create(
-            referer: referer,
-            user_id: user_id,
-            post_id: post_id,
-            current_user_id: cid,
-            ip_address: ip_address,
-          )
+        cid = current_user ? current_user.id : nil
+        ip_address = nil if cid
+
+        unless cid && cid == user_id
+          if post_id
+            create(
+              referer: referer,
+              user_id: user_id,
+              post_id: post_id,
+              current_user_id: cid,
+              ip_address: ip_address,
+            )
+          end
         end
       end
     end

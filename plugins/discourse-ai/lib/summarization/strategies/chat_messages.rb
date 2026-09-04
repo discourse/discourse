@@ -4,17 +4,17 @@ module DiscourseAi
   module Summarization
     module Strategies
       class ChatMessages < Base
+        def initialize(target, since)
+          super(target)
+          @since = since
+        end
+
         def type
           AiSummary.summary_types[:complete]
         end
 
         def highest_target_number
           nil # We don't persist so we can return nil.
-        end
-
-        def initialize(target, since)
-          super(target)
-          @since = since
         end
 
         def targets_data

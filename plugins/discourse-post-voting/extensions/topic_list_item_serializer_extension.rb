@@ -2,8 +2,10 @@
 
 module PostVoting
   module TopicListItemSerializerExtension
-    def self.included(base)
-      base.attributes :is_post_voting
+    class << self
+      def included(base)
+        base.attributes :is_post_voting
+      end
     end
 
     def is_post_voting

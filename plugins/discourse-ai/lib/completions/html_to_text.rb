@@ -7,8 +7,10 @@ module DiscourseAi
 
       MAX_INPUT_BYTES = 1 * 1024 * 1024
 
-      def self.convert(path)
-        new(path).convert
+      class << self
+        def convert(path)
+          new(path).convert
+        end
       end
 
       def initialize(path)

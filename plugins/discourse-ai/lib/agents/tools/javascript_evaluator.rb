@@ -10,23 +10,25 @@ module DiscourseAi
         MAX_MEMORY = 10_000_000
         MARSHAL_STACK_DEPTH = 20
 
-        def self.signature
-          {
-            name: name,
-            description: "Evaluates JavaScript code using MiniRacer",
-            parameters: [
-              {
-                name: "script",
-                description: "The JavaScript code to evaluate",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Evaluates JavaScript code using MiniRacer",
+              parameters: [
+                {
+                  name: "script",
+                  description: "The JavaScript code to evaluate",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "javascript_evaluator"
+          def name
+            "javascript_evaluator"
+          end
         end
 
         def script

@@ -17,54 +17,57 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
 
   MIN_DISTINCT_INTERACTIONS = 2
 
-  def self.engaged_sql(table)
-    signals = INTERACTION_COLUMNS.map { |column| "(#{table}.#{column} > 0)::int" }.join(" + ")
-    "(#{signals}) >= #{MIN_DISTINCT_INTERACTIONS}"
-  end
+  class << self
+    def engaged_sql(table)
+      signals = INTERACTION_COLUMNS.map { |column| "(#{table}.#{column} > 0)::int" }.join(" + ")
+      "(#{signals}) >= #{MIN_DISTINCT_INTERACTIONS}"
+    end
 
-  def self.upsert_from_payload(
-    session_id:,
-    mouse_move_events:,
-    click_events:,
-    key_events:,
-    scroll_events:,
-    touch_events:,
-    back_forward_events:,
-    engaged_seconds:,
-    time_to_first_interaction_ms:
-  )
-    return if session_id.blank?
-
-    session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH)
-
-    upsert_all(
-      [
-        {
-          session_id:,
-          mouse_move_events:,
-          click_events:,
-          key_events:,
-          scroll_events:,
-          touch_events:,
-          back_forward_events:,
-          engaged_seconds:,
-          time_to_first_interaction_ms:,
-        },
-      ],
-      unique_by: :session_id,
-      on_duplicate: greatest_on_duplicate_clause,
-      record_timestamps: true,
+    def upsert_from_payload(
+      session_id:,
+      mouse_move_events:,
+      click_events:,
+      key_events:,
+      scroll_events:,
+      touch_events:,
+      back_forward_events:,
+      engaged_seconds:,
+      time_to_first_interaction_ms:
     )
+      return if session_id.blank?
+
+      session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH)
+
+      upsert_all(
+        [
+          {
+            session_id:,
+            mouse_move_events:,
+            click_events:,
+            key_events:,
+            scroll_events:,
+            touch_events:,
+            back_forward_events:,
+            engaged_seconds:,
+            time_to_first_interaction_ms:,
+          },
+        ],
+        unique_by: :session_id,
+        on_duplicate: greatest_on_duplicate_clause,
+        record_timestamps: true,
+      )
+    end
+
+    def greatest_on_duplicate_clause
+      assignments =
+        GREATEST_COLUMNS.map do |column|
+          "#{column} = GREATEST(#{table_name}.#{column}, EXCLUDED.#{column})"
+        end
+      assignments << "updated_at = EXCLUDED.updated_at"
+      Arel.sql(assignments.join(", "))
+    end
   end
 
-  def self.greatest_on_duplicate_clause
-    assignments =
-      GREATEST_COLUMNS.map do |column|
-        "#{column} = GREATEST(#{table_name}.#{column}, EXCLUDED.#{column})"
-      end
-    assignments << "updated_at = EXCLUDED.updated_at"
-    Arel.sql(assignments.join(", "))
-  end
   private_class_method :greatest_on_duplicate_clause
 end
 

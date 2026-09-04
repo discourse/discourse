@@ -271,25 +271,28 @@ class DiscourseDiff
   class HtmlTokenizer < Nokogiri::XML::SAX::Document
     attr_accessor :tokens
 
+    USELESS_TAGS = %w[html body]
+    AUTOCLOSING_TAGS = %w[area base br col embed hr img input meta]
+
+    class << self
+      def tokenize(html)
+        me = new
+        parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8)
+        parser.parse("<html><body>#{html}</body></html>")
+        me.tokens
+      end
+    end
+
     def initialize
       @tokens = []
     end
 
-    def self.tokenize(html)
-      me = new
-      parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8)
-      parser.parse("<html><body>#{html}</body></html>")
-      me.tokens
-    end
-
-    USELESS_TAGS = %w[html body]
     def start_element(name, attributes = [])
       return if USELESS_TAGS.include?(name)
       attrs = attributes.map { |a| " #{a[0]}=\"#{CGI.escapeHTML(a[1])}\"" }.join
       @tokens << "<#{name}#{attrs}>"
     end
 
-    AUTOCLOSING_TAGS = %w[area base br col embed hr img input meta]
     def end_element(name)
       return if USELESS_TAGS.include?(name) || AUTOCLOSING_TAGS.include?(name)
       @tokens << "</#{name}>"

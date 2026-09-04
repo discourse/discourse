@@ -4,24 +4,26 @@ module DiscourseAi
   module Agents
     module Tools
       class WebBrowser < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Visits a web page, retrieves the HTML content, extracts the main content, converts it to plain text, and returns the result.",
-            parameters: [
-              {
-                name: "url",
-                description: "The URL of the web page to visit.",
-                required: true,
-                type: "string",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Visits a web page, retrieves the HTML content, extracts the main content, converts it to plain text, and returns the result.",
+              parameters: [
+                {
+                  name: "url",
+                  description: "The URL of the web page to visit.",
+                  required: true,
+                  type: "string",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "web_browser"
+          def name
+            "web_browser"
+          end
         end
 
         def url

@@ -10,8 +10,10 @@ module Autospec
 end
 
 class Autospec::Manager
-  def self.run(opts = {})
-    new(opts).run
+  class << self
+    def run(opts = {})
+      new(opts).run
+    end
   end
 
   def initialize(opts = {})

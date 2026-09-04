@@ -11,6 +11,15 @@ module DiscourseAi
       SOURCES_SECTION_PATTERN =
         /\n{2,}(?:\#{1,6}\s*)?(?:\*\*|__)?(?:sources|references)\s*:?(?:\*\*|__)?\s*\n.*\z/im
 
+      class << self
+        def meaningful_answer?(answer)
+          normalized = answer.to_s.squish.downcase
+          normalized.present? &&
+            PLACEHOLDER_ANSWERS.none? { |placeholder| placeholder.start_with?(normalized) } &&
+            normalized.match?(/[[:alnum:]]/)
+        end
+      end
+
       def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
         @user = user
         @ai_agent = ai_agent
@@ -99,13 +108,6 @@ module DiscourseAi
         return empty_result if !result.answerable
 
         valid_result?(result, candidates:, related_count:) ? result : empty_result
-      end
-
-      def self.meaningful_answer?(answer)
-        normalized = answer.to_s.squish.downcase
-        normalized.present? &&
-          PLACEHOLDER_ANSWERS.none? { |placeholder| placeholder.start_with?(normalized) } &&
-          normalized.match?(/[[:alnum:]]/)
       end
 
       private

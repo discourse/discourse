@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class EnableSsoValidator
+  MIN_SECRET_LENGTH = 10
+
   def initialize(opts = {})
     @opts = opts
   end
-
-  MIN_SECRET_LENGTH = 10
 
   def valid_value?(val)
     return true if val == "f"

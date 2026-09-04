@@ -6,8 +6,59 @@ class TagsController < ::ApplicationController
 
   before_action :ensure_tags_enabled
 
-  def self.show_methods
-    Discourse.anonymous_filters.map { |f| :"show_#{f}" }
+  LIST_LIMIT = 51
+
+  class << self
+    def show_methods
+      Discourse.anonymous_filters.map { |f| :"show_#{f}" }
+    end
+
+    public
+
+    def tag_counts_json(tags, guardian)
+      show_pm_tags = guardian.can_tag_pms?
+      target_tag_ids = tags.filter_map(&:target_tag_id).uniq
+      target_tags =
+        if target_tag_ids.present?
+          Tag.visible(guardian).where(id: target_tag_ids).select(:id, :name, :slug)
+        else
+          []
+        end
+
+      tags.map do |t|
+        topic_count = t.public_send(Tag.topic_count_column(guardian))
+
+        tag_name = t.name
+        tag_description = t.description
+
+        if ContentLocalization.show_translated_tag?(t, guardian)
+          localization = t.get_localization
+          tag_name = localization&.name || tag_name
+          tag_description = localization&.description || tag_description
+        end
+
+        attrs = {
+          id: t.id,
+          text: tag_name,
+          name: tag_name,
+          slug: t.slug.presence || "#{t.id}-tag",
+          description: tag_description,
+          count: topic_count,
+          pm_only: topic_count == 0 && t.pm_topic_count > 0,
+          target_tag:
+            if t.target_tag_id
+              target = target_tags.find { |x| x.id == t.target_tag_id }
+              target ? { id: target.id, name: target.name, slug: target.slug } : nil
+            end,
+        }
+
+        if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
+          attrs[:pm_count] = t.pm_topic_count
+        end
+
+        attrs
+      end
+    end
   end
 
   requires_login except: [:index, :show, :tag_feed, :search, :info, *show_methods]
@@ -98,8 +149,6 @@ class TagsController < ::ApplicationController
       format.json { render json: { tags: @tags, extras: @extras } }
     end
   end
-
-  LIST_LIMIT = 51
 
   def list
     offset = params[:offset].to_i || 0
@@ -566,51 +615,6 @@ class TagsController < ::ApplicationController
     return "/edit" if request.path.delete_prefix(Discourse.base_path).end_with?("/edit")
 
     ""
-  end
-
-  def self.tag_counts_json(tags, guardian)
-    show_pm_tags = guardian.can_tag_pms?
-    target_tag_ids = tags.filter_map(&:target_tag_id).uniq
-    target_tags =
-      if target_tag_ids.present?
-        Tag.visible(guardian).where(id: target_tag_ids).select(:id, :name, :slug)
-      else
-        []
-      end
-
-    tags.map do |t|
-      topic_count = t.public_send(Tag.topic_count_column(guardian))
-
-      tag_name = t.name
-      tag_description = t.description
-
-      if ContentLocalization.show_translated_tag?(t, guardian)
-        localization = t.get_localization
-        tag_name = localization&.name || tag_name
-        tag_description = localization&.description || tag_description
-      end
-
-      attrs = {
-        id: t.id,
-        text: tag_name,
-        name: tag_name,
-        slug: t.slug.presence || "#{t.id}-tag",
-        description: tag_description,
-        count: topic_count,
-        pm_only: topic_count == 0 && t.pm_topic_count > 0,
-        target_tag:
-          if t.target_tag_id
-            target = target_tags.find { |x| x.id == t.target_tag_id }
-            target ? { id: target.id, name: target.name, slug: target.slug } : nil
-          end,
-      }
-
-      if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
-        attrs[:pm_count] = t.pm_topic_count
-      end
-
-      attrs
-    end
   end
 
   def set_category

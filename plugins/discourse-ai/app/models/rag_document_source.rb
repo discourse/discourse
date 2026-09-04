@@ -28,12 +28,14 @@ class RagDocumentSource < ActiveRecord::Base
 
   scope :due, -> { where(next_refresh_at: nil).or(where("next_refresh_at <= ?", Time.zone.now)) }
 
-  def self.promote_pending_upload(target:, upload:)
-    find_by(target:, pending_upload_id: upload.id)&.promote_pending_upload!(upload)
-  end
+  class << self
+    def promote_pending_upload(target:, upload:)
+      find_by(target:, pending_upload_id: upload.id)&.promote_pending_upload!(upload)
+    end
 
-  def self.mark_indexing_failed(target:, upload:, error:)
-    find_by(target:, pending_upload_id: upload.id)&.mark_indexing_failed!(error)
+    def mark_indexing_failed(target:, upload:, error:)
+      find_by(target:, pending_upload_id: upload.id)&.mark_indexing_failed!(error)
+    end
   end
 
   def due?

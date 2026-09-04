@@ -1496,25 +1496,27 @@ RSpec.describe CategoriesController do
             Class.new(Categories::Types::Base) do
               type_id :test_plugin_type
 
-              def self.enable_plugin
-              end
+              class << self
+                def enable_plugin
+                end
 
-              def self.plugin_enabled?
-                false
-              end
+                def plugin_enabled?
+                  false
+                end
 
-              def self.category_matches?(category)
-                false
-              end
+                def category_matches?(category)
+                  false
+                end
 
-              def self.find_matches
-                Category.none
-              end
+                def find_matches
+                  Category.none
+                end
 
-              def self.configure_category(category, guardian:, configuration_values: {})
-              end
+                def configure_category(category, guardian:, configuration_values: {})
+                end
 
-              def self.unconfigure_category(category, guardian:)
+                def unconfigure_category(category, guardian:)
+                end
               end
             end
           end

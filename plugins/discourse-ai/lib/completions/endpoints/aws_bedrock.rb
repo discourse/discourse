@@ -10,12 +10,14 @@ module DiscourseAi
         include AnthropicShared
         attr_reader :dialect
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "aws_bedrock"
-        end
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "aws_bedrock"
+          end
 
-        def self.requires_configured_url?
-          false
+          def requires_configured_url?
+            false
+          end
         end
 
         def default_options(dialect)

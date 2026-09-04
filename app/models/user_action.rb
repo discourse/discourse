@@ -45,151 +45,6 @@ class UserAction < ActiveRecord::Base
 
   USER_ACTED_TYPES = [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE]
 
-  def self.types
-    @types ||=
-      Enum.new(
-        like: 1,
-        was_liked: 2,
-        # NOTE: Previously type 3 was bookmark but this was removed when we
-        # changed to using the Bookmark model.
-        new_topic: 4,
-        reply: 5,
-        response: 6,
-        mention: 7,
-        quote: 9,
-        edit: 11,
-        new_private_message: 12,
-        got_private_message: 13,
-        solved: 15,
-        assigned: 16,
-        linked: 17,
-      )
-  end
-
-  def self.private_types
-    @private_types ||= [WAS_LIKED, RESPONSE, MENTION, QUOTE, EDIT]
-  end
-
-  def self.last_action_in_topic(user_id, topic_id)
-    UserAction
-      .where(user_id: user_id, target_topic_id: topic_id, action_type: [RESPONSE, MENTION, QUOTE])
-      .order("created_at DESC")
-      .pick(:target_post_id)
-  end
-
-  def self.stats(user_id, guardian)
-    # Sam: I tried this in AR and it got complex
-    builder = DB.build <<~SQL
-
-      SELECT action_type, COUNT(*) count
-      FROM user_actions a
-      LEFT JOIN topics t ON t.id = a.target_topic_id
-      LEFT JOIN posts p on p.id = a.target_post_id
-      LEFT JOIN posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
-      LEFT JOIN categories c ON c.id = t.category_id
-      /*where*/
-      GROUP BY action_type
-    SQL
-
-    builder.where("a.user_id = :user_id", user_id: user_id)
-
-    apply_common_filters(builder, user_id, guardian)
-
-    results = builder.query
-    results.sort! { |a, b| ORDER[a.action_type] <=> ORDER[b.action_type] }
-    results
-  end
-
-  def self.private_messages_stats(user_id, guardian)
-    return unless guardian.can_see_private_messages?(user_id)
-
-    # list the stats for: all/mine/unread/groups (topic-based)
-
-    sql = <<-SQL
-      SELECT COUNT(*) "all"
-           , SUM(CASE WHEN t.user_id = :user_id THEN 1 ELSE 0 END) "mine"
-           , SUM(CASE WHEN tu.last_read_post_number IS NULL OR tu.last_read_post_number < t.highest_post_number THEN 1 ELSE 0 END) "unread"
-        FROM topics t
-   LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = :user_id
-       WHERE t.deleted_at IS NULL
-         AND t.archetype = 'private_message'
-         AND t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id)
-    SQL
-
-    # map is there due to count returning nil
-    all, mine, unread = DB.query_single(sql, user_id: user_id).map(&:to_i)
-
-    sql = <<-SQL
-      SELECT  g.name, COUNT(*) "count"
-        FROM topics t
-        JOIN topic_allowed_groups tg ON topic_id = t.id
-        JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
-        JOIN groups g ON g.id = gu.group_id
-       WHERE deleted_at IS NULL
-         AND archetype = 'private_message'
-       GROUP BY g.name
-    SQL
-
-    result = { all: all, mine: mine, unread: unread }
-
-    DB
-      .query(sql, user_id: user_id)
-      .each { |row| (result[:groups] ||= []) << { name: row.name, count: row.count.to_i } }
-
-    result
-  end
-
-  def self.count_daily_engaged_users(start_date = nil, end_date = nil)
-    if start_date && end_date
-      sql = <<~SQL
-        SELECT day, COUNT(*) AS count
-        FROM (
-          SELECT DISTINCT date(created_at) AS day, user_id
-          FROM user_actions
-          WHERE action_type IN (:action_types)
-            AND created_at > :start_date
-            AND created_at < :end_date
-        ) distinct_daily_users
-        GROUP BY day
-        ORDER BY day
-      SQL
-
-      DB
-        .query(sql, action_types: USER_ACTED_TYPES, start_date: start_date, end_date: end_date)
-        .each_with_object({}) { |row, counts| counts[row.day] = row.count }
-    else
-      sql = <<~SQL
-        WITH RECURSIVE engaged_users AS (
-          (
-            SELECT user_id
-            FROM user_actions
-            WHERE action_type IN (:action_types)
-            ORDER BY user_id
-            LIMIT 1
-          )
-          UNION ALL
-          SELECT (
-            SELECT user_id
-            FROM user_actions
-            WHERE user_id > engaged_users.user_id
-              AND action_type IN (:action_types)
-            ORDER BY user_id
-            LIMIT 1
-          )
-          FROM engaged_users
-          WHERE engaged_users.user_id IS NOT NULL
-        )
-        SELECT COUNT(*) FROM engaged_users WHERE user_id IS NOT NULL
-      SQL
-
-      DB.query_single(sql, action_types: USER_ACTED_TYPES).first
-    end
-  end
-
-  def self.stream_item(action_id, guardian)
-    stream(action_id: action_id, guardian: guardian).first
-  end
-
   NULL_QUEUED_STREAM_COLS =
     %i[
       cooked
@@ -214,30 +69,176 @@ class UserAction < ActiveRecord::Base
       topic_archived
     ].map! { |s| "NULL as #{s}" }.join(", ")
 
-  def self.stream(opts = nil)
-    opts ||= {}
-
-    action_types = opts[:action_types]
-    user_id = opts[:user_id]
-    action_id = opts[:action_id]
-    guardian = opts[:guardian]
-    ignore_private_messages = opts[:ignore_private_messages]
-    offset = opts[:offset] || 0
-    limit = opts[:limit] || 60
-    acting_username = opts[:acting_username]
-
-    # Acting user columns. Can be extended by plugins to include custom avatar
-    # columns
-    acting_cols = ["u.id AS acting_user_id", "u.name AS acting_name"]
-
-    UserLookup.lookup_columns.each do |c|
-      next if c == :id || c["."]
-      acting_cols << "u.#{c} AS acting_#{c}"
+  class << self
+    def types
+      @types ||=
+        Enum.new(
+          like: 1,
+          was_liked: 2,
+          # NOTE: Previously type 3 was bookmark but this was removed when we
+          # changed to using the Bookmark model.
+          new_topic: 4,
+          reply: 5,
+          response: 6,
+          mention: 7,
+          quote: 9,
+          edit: 11,
+          new_private_message: 12,
+          got_private_message: 13,
+          solved: 15,
+          assigned: 16,
+          linked: 17,
+        )
     end
 
-    # The weird thing is that target_post_id can be null, so it makes everything
-    #  ever so more complex. Should we allow this, not sure.
-    builder = DB.build <<~SQL
+    def private_types
+      @private_types ||= [WAS_LIKED, RESPONSE, MENTION, QUOTE, EDIT]
+    end
+
+    def last_action_in_topic(user_id, topic_id)
+      UserAction
+        .where(user_id: user_id, target_topic_id: topic_id, action_type: [RESPONSE, MENTION, QUOTE])
+        .order("created_at DESC")
+        .pick(:target_post_id)
+    end
+
+    def stats(user_id, guardian)
+      # Sam: I tried this in AR and it got complex
+      builder = DB.build <<~SQL
+
+      SELECT action_type, COUNT(*) count
+      FROM user_actions a
+      LEFT JOIN topics t ON t.id = a.target_topic_id
+      LEFT JOIN posts p on p.id = a.target_post_id
+      LEFT JOIN posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
+      LEFT JOIN categories c ON c.id = t.category_id
+      /*where*/
+      GROUP BY action_type
+    SQL
+
+      builder.where("a.user_id = :user_id", user_id: user_id)
+
+      apply_common_filters(builder, user_id, guardian)
+
+      results = builder.query
+      results.sort! { |a, b| ORDER[a.action_type] <=> ORDER[b.action_type] }
+      results
+    end
+
+    def private_messages_stats(user_id, guardian)
+      return unless guardian.can_see_private_messages?(user_id)
+
+      # list the stats for: all/mine/unread/groups (topic-based)
+
+      sql = <<-SQL
+      SELECT COUNT(*) "all"
+           , SUM(CASE WHEN t.user_id = :user_id THEN 1 ELSE 0 END) "mine"
+           , SUM(CASE WHEN tu.last_read_post_number IS NULL OR tu.last_read_post_number < t.highest_post_number THEN 1 ELSE 0 END) "unread"
+        FROM topics t
+   LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = :user_id
+       WHERE t.deleted_at IS NULL
+         AND t.archetype = 'private_message'
+         AND t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id)
+    SQL
+
+      # map is there due to count returning nil
+      all, mine, unread = DB.query_single(sql, user_id: user_id).map(&:to_i)
+
+      sql = <<-SQL
+      SELECT  g.name, COUNT(*) "count"
+        FROM topics t
+        JOIN topic_allowed_groups tg ON topic_id = t.id
+        JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
+        JOIN groups g ON g.id = gu.group_id
+       WHERE deleted_at IS NULL
+         AND archetype = 'private_message'
+       GROUP BY g.name
+    SQL
+
+      result = { all: all, mine: mine, unread: unread }
+
+      DB
+        .query(sql, user_id: user_id)
+        .each { |row| (result[:groups] ||= []) << { name: row.name, count: row.count.to_i } }
+
+      result
+    end
+
+    def count_daily_engaged_users(start_date = nil, end_date = nil)
+      if start_date && end_date
+        sql = <<~SQL
+        SELECT day, COUNT(*) AS count
+        FROM (
+          SELECT DISTINCT date(created_at) AS day, user_id
+          FROM user_actions
+          WHERE action_type IN (:action_types)
+            AND created_at > :start_date
+            AND created_at < :end_date
+        ) distinct_daily_users
+        GROUP BY day
+        ORDER BY day
+      SQL
+
+        DB
+          .query(sql, action_types: USER_ACTED_TYPES, start_date: start_date, end_date: end_date)
+          .each_with_object({}) { |row, counts| counts[row.day] = row.count }
+      else
+        sql = <<~SQL
+        WITH RECURSIVE engaged_users AS (
+          (
+            SELECT user_id
+            FROM user_actions
+            WHERE action_type IN (:action_types)
+            ORDER BY user_id
+            LIMIT 1
+          )
+          UNION ALL
+          SELECT (
+            SELECT user_id
+            FROM user_actions
+            WHERE user_id > engaged_users.user_id
+              AND action_type IN (:action_types)
+            ORDER BY user_id
+            LIMIT 1
+          )
+          FROM engaged_users
+          WHERE engaged_users.user_id IS NOT NULL
+        )
+        SELECT COUNT(*) FROM engaged_users WHERE user_id IS NOT NULL
+      SQL
+
+        DB.query_single(sql, action_types: USER_ACTED_TYPES).first
+      end
+    end
+
+    def stream_item(action_id, guardian)
+      stream(action_id: action_id, guardian: guardian).first
+    end
+
+    def stream(opts = nil)
+      opts ||= {}
+
+      action_types = opts[:action_types]
+      user_id = opts[:user_id]
+      action_id = opts[:action_id]
+      guardian = opts[:guardian]
+      ignore_private_messages = opts[:ignore_private_messages]
+      offset = opts[:offset] || 0
+      limit = opts[:limit] || 60
+      acting_username = opts[:acting_username]
+
+      # Acting user columns. Can be extended by plugins to include custom avatar
+      # columns
+      acting_cols = ["u.id AS acting_user_id", "u.name AS acting_name"]
+
+      UserLookup.lookup_columns.each do |c|
+        next if c == :id || c["."]
+        acting_cols << "u.#{c} AS acting_#{c}"
+      end
+
+      # The weird thing is that target_post_id can be null, so it makes everything
+      #  ever so more complex. Should we allow this, not sure.
+      builder = DB.build <<~SQL
       SELECT
         a.id,
         t.title, a.action_type, a.created_at, t.id topic_id,
@@ -274,112 +275,112 @@ class UserAction < ActiveRecord::Base
       /*limit*/
     SQL
 
-    apply_common_filters(builder, user_id, guardian, ignore_private_messages)
+      apply_common_filters(builder, user_id, guardian, ignore_private_messages)
 
-    if action_id
-      builder.where("a.id = :id", id: action_id.to_i)
-    else
-      builder.where("a.user_id = :user_id", user_id: user_id.to_i)
-      if action_types && action_types.length > 0
-        builder.where("a.action_type in (:action_types)", action_types: action_types)
+      if action_id
+        builder.where("a.id = :id", id: action_id.to_i)
+      else
+        builder.where("a.user_id = :user_id", user_id: user_id.to_i)
+        if action_types && action_types.length > 0
+          builder.where("a.action_type in (:action_types)", action_types: action_types)
+        end
+
+        if acting_username
+          builder.where(
+            "u.username_lower = :acting_username",
+            acting_username: acting_username.downcase,
+          )
+        end
+
+        unless SiteSetting.enable_mentions?
+          builder.where("a.action_type <> :mention_type", mention_type: UserAction::MENTION)
+        end
+
+        builder.order_by("a.created_at desc").offset(offset.to_i).limit(limit.to_i)
       end
 
-      if acting_username
-        builder.where(
-          "u.username_lower = :acting_username",
-          acting_username: acting_username.downcase,
-        )
-      end
+      DiscoursePluginRegistry.apply_modifier(:user_action_stream_builder, builder)
 
-      unless SiteSetting.enable_mentions?
-        builder.where("a.action_type <> :mention_type", mention_type: UserAction::MENTION)
-      end
-
-      builder.order_by("a.created_at desc").offset(offset.to_i).limit(limit.to_i)
+      builder.query
     end
 
-    DiscoursePluginRegistry.apply_modifier(:user_action_stream_builder, builder)
+    def log_action!(hash)
+      required_parameters = %i[action_type user_id acting_user_id target_post_id target_topic_id]
 
-    builder.query
-  end
+      require_parameters(hash, *required_parameters)
 
-  def self.log_action!(hash)
-    required_parameters = %i[action_type user_id acting_user_id target_post_id target_topic_id]
+      transaction(requires_new: true) do
+        # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
-    require_parameters(hash, *required_parameters)
+        # protect against dupes, for some reason this is failing in some cases
+        action = find_by(hash.select { |k, _| required_parameters.include?(k) })
+        return action if action
 
-    transaction(requires_new: true) do
-      # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
+        action = new(hash)
 
-      # protect against dupes, for some reason this is failing in some cases
-      action = find_by(hash.select { |k, _| required_parameters.include?(k) })
-      return action if action
+        action.created_at = hash[:created_at] if hash[:created_at]
+        action.save!
 
-      action = new(hash)
+        user_id = hash[:user_id]
 
-      action.created_at = hash[:created_at] if hash[:created_at]
-      action.save!
+        topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
 
-      user_id = hash[:user_id]
+        update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
 
-      topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
+        user_ids = user_id != action.acting_user_id ? [user_id] : nil
 
-      update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
+        group_ids = nil
+        if topic&.category&.read_restricted
+          group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
+        end
 
-      user_ids = user_id != action.acting_user_id ? [user_id] : nil
+        if action.user && (user_ids.present? || group_ids.present?)
+          MessageBus.publish(
+            "/u/#{action.user.username_lower}",
+            action.id,
+            user_ids: user_ids,
+            group_ids: group_ids,
+          )
+        end
 
-      group_ids = nil
-      if topic&.category&.read_restricted
-        group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
+        action
+      rescue ActiveRecord::RecordNotUnique
+        # can happen, don't care already logged
+        raise ActiveRecord::Rollback
       end
-
-      if action.user && (user_ids.present? || group_ids.present?)
-        MessageBus.publish(
-          "/u/#{action.user.username_lower}",
-          action.id,
-          user_ids: user_ids,
-          group_ids: group_ids,
-        )
-      end
-
-      action
-    rescue ActiveRecord::RecordNotUnique
-      # can happen, don't care already logged
-      raise ActiveRecord::Rollback
     end
-  end
 
-  def self.remove_action!(hash)
-    require_parameters(
-      hash,
-      :action_type,
-      :user_id,
-      :acting_user_id,
-      :target_topic_id,
-      :target_post_id,
-    )
-    if action = UserAction.find_by(hash.except(:created_at))
-      action.destroy
-      MessageBus.publish(
-        "/user/#{action.user_id}",
-        { user_action_id: action.id, remove: true },
-        user_ids: [action.user_id],
+    def remove_action!(hash)
+      require_parameters(
+        hash,
+        :action_type,
+        :user_id,
+        :acting_user_id,
+        :target_topic_id,
+        :target_post_id,
       )
+      if action = UserAction.find_by(hash.except(:created_at))
+        action.destroy
+        MessageBus.publish(
+          "/user/#{action.user_id}",
+          { user_action_id: action.id, remove: true },
+          user_ids: [action.user_id],
+        )
+      end
+
+      if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
+        update_like_count(hash[:user_id], hash[:action_type], -1)
+      end
     end
 
-    if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
-      update_like_count(hash[:user_id], hash[:action_type], -1)
-    end
-  end
-
-  def self.synchronize_target_topic_ids(post_ids = nil, limit: nil)
-    # nuke all dupes, using magic
-    builder = DB.build <<~SQL
+    def synchronize_target_topic_ids(post_ids = nil, limit: nil)
+      # nuke all dupes, using magic
+      builder = DB.build <<~SQL
       DELETE FROM user_actions USING user_actions ua2
       /*where*/
     SQL
 
-    builder.where <<~SQL
+      builder.where <<~SQL
       user_actions.action_type = ua2.action_type AND
       user_actions.user_id = ua2.user_id AND
       user_actions.acting_user_id = ua2.acting_user_id AND
@@ -388,7 +389,7 @@ class UserAction < ActiveRecord::Base
       user_actions.id > ua2.id
     SQL
 
-    builder.where(<<~SQL, limit: limit) if limit
+      builder.where(<<~SQL, limit: limit) if limit
         user_actions.target_post_id IN (
           SELECT target_post_id
           FROM user_actions
@@ -396,20 +397,22 @@ class UserAction < ActiveRecord::Base
         )
       SQL
 
-    builder.where("user_actions.target_post_id in (:post_ids)", post_ids: post_ids) if post_ids
+      builder.where("user_actions.target_post_id in (:post_ids)", post_ids: post_ids) if post_ids
 
-    builder.exec
+      builder.exec
 
-    builder = DB.build <<~SQL
+      builder = DB.build <<~SQL
       UPDATE user_actions
       SET target_topic_id = (select topic_id from posts where posts.id = target_post_id)
       /*where*/
     SQL
 
-    builder.where("target_topic_id <> (select topic_id from posts where posts.id = target_post_id)")
-    builder.where("target_post_id in (:post_ids)", post_ids: post_ids) if post_ids
+      builder.where(
+        "target_topic_id <> (select topic_id from posts where posts.id = target_post_id)",
+      )
+      builder.where("target_post_id in (:post_ids)", post_ids: post_ids) if post_ids
 
-    builder.where(<<~SQL, limit: limit) if limit
+      builder.where(<<~SQL, limit: limit) if limit
         target_post_id IN (
           SELECT target_post_id
           FROM user_actions
@@ -417,58 +420,60 @@ class UserAction < ActiveRecord::Base
         )
       SQL
 
-    builder.exec
-  end
-
-  def self.ensure_consistency!(limit = nil)
-    synchronize_target_topic_ids(nil, limit: limit)
-  end
-
-  def self.update_like_count(user_id, action_type, delta)
-    if action_type == LIKE
-      UserStat.where(user_id: user_id).update_all("likes_given = likes_given + #{delta.to_i}")
-    elsif action_type == WAS_LIKED
-      UserStat.where(user_id: user_id).update_all("likes_received = likes_received + #{delta.to_i}")
+      builder.exec
     end
-  end
 
-  def self.apply_common_filters(builder, user_id, guardian, ignore_private_messages = false)
-    # We never return deleted topics in activity
-    builder.where("t.deleted_at is null")
+    def ensure_consistency!(limit = nil)
+      synchronize_target_topic_ids(nil, limit: limit)
+    end
 
-    # We will return deleted posts though if the user can see it
-    unless guardian.can_see_deleted_posts?
-      builder.where("p.deleted_at is null and p2.deleted_at is null")
+    def update_like_count(user_id, action_type, delta)
+      if action_type == LIKE
+        UserStat.where(user_id: user_id).update_all("likes_given = likes_given + #{delta.to_i}")
+      elsif action_type == WAS_LIKED
+        UserStat.where(user_id: user_id).update_all(
+          "likes_received = likes_received + #{delta.to_i}",
+        )
+      end
+    end
 
-      current_user_id = -2
-      current_user_id = guardian.user.id if guardian.user
-      builder.where(<<~SQL, current_user_id: current_user_id)
+    def apply_common_filters(builder, user_id, guardian, ignore_private_messages = false)
+      # We never return deleted topics in activity
+      builder.where("t.deleted_at is null")
+
+      # We will return deleted posts though if the user can see it
+      unless guardian.can_see_deleted_posts?
+        builder.where("p.deleted_at is null and p2.deleted_at is null")
+
+        current_user_id = -2
+        current_user_id = guardian.user.id if guardian.user
+        builder.where(<<~SQL, current_user_id: current_user_id)
         NOT COALESCE(p.hidden, p2.hidden, false) OR
         CASE WHEN p.id IS NULL THEN p2.user_id ELSE p.user_id END = :current_user_id
       SQL
+      end
+
+      visible_post_types = Topic.visible_post_types(guardian.user)
+      builder.where(
+        "COALESCE(p.post_type, p2.post_type) IN (:visible_post_types)",
+        visible_post_types: visible_post_types,
+      )
+
+      if !guardian.is_staff? && (guardian.user.nil? || guardian.user.id != user_id)
+        builder.where("t.visible")
+      end
+
+      filter_private_messages(builder, user_id, guardian, ignore_private_messages)
+      filter_categories(builder, guardian)
+      filter_ignored_users(builder, guardian)
     end
 
-    visible_post_types = Topic.visible_post_types(guardian.user)
-    builder.where(
-      "COALESCE(p.post_type, p2.post_type) IN (:visible_post_types)",
-      visible_post_types: visible_post_types,
-    )
-
-    if !guardian.is_staff? && (guardian.user.nil? || guardian.user.id != user_id)
-      builder.where("t.visible")
-    end
-
-    filter_private_messages(builder, user_id, guardian, ignore_private_messages)
-    filter_categories(builder, guardian)
-    filter_ignored_users(builder, guardian)
-  end
-
-  def self.filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)
-    if !guardian.can_see_private_messages?(user_id) || ignore_private_messages || !guardian.user
-      builder.where("t.archetype <> :private_message", private_message: Archetype.private_message)
-    else
-      unless guardian.is_admin?
-        sql = <<~SQL
+    def filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)
+      if !guardian.can_see_private_messages?(user_id) || ignore_private_messages || !guardian.user
+        builder.where("t.archetype <> :private_message", private_message: Archetype.private_message)
+      else
+        unless guardian.is_admin?
+          sql = <<~SQL
         t.archetype <> :private_message OR
         EXISTS (
           SELECT 1 FROM topic_allowed_users tu WHERE tu.topic_id = t.id AND tu.user_id = :current_user_id
@@ -480,37 +485,37 @@ class UserAction < ActiveRecord::Base
         )
         SQL
 
-        builder.where(
-          sql,
-          private_message: Archetype.private_message,
-          current_user_id: guardian.user.id,
-        )
+          builder.where(
+            sql,
+            private_message: Archetype.private_message,
+            current_user_id: guardian.user.id,
+          )
+        end
       end
+      builder
     end
-    builder
-  end
 
-  def self.filter_categories(builder, guardian)
-    unless guardian.is_admin?
-      allowed = guardian.secure_category_ids
-      if allowed.present?
-        builder.where(
-          "( c.read_restricted IS NULL OR
+    def filter_categories(builder, guardian)
+      unless guardian.is_admin?
+        allowed = guardian.secure_category_ids
+        if allowed.present?
+          builder.where(
+            "( c.read_restricted IS NULL OR
                          NOT c.read_restricted OR
                         (c.read_restricted and c.id in (:cats)) )",
-          cats: guardian.secure_category_ids,
-        )
-      else
-        builder.where("(c.read_restricted IS NULL OR NOT c.read_restricted)")
+            cats: guardian.secure_category_ids,
+          )
+        else
+          builder.where("(c.read_restricted IS NULL OR NOT c.read_restricted)")
+        end
       end
+      builder
     end
-    builder
-  end
 
-  def self.filter_ignored_users(builder, guardian)
-    return unless guardian&.user
+    def filter_ignored_users(builder, guardian)
+      return unless guardian&.user
 
-    builder.where(<<~SQL, current_user_id: guardian.user.id)
+      builder.where(<<~SQL, current_user_id: guardian.user.id)
       NOT EXISTS (
         SELECT 1 FROM ignored_users ig
         INNER JOIN users iu ON iu.id = ig.ignored_user_id
@@ -519,10 +524,11 @@ class UserAction < ActiveRecord::Base
           AND ig.ignored_user_id <> :current_user_id
       )
     SQL
-  end
+    end
 
-  def self.require_parameters(data, *params)
-    params.each { |p| raise Discourse::InvalidParameters.new(p) if data[p].nil? }
+    def require_parameters(data, *params)
+      params.each { |p| raise Discourse::InvalidParameters.new(p) if data[p].nil? }
+    end
   end
 end
 

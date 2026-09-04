@@ -26,6 +26,14 @@ class BulkImport::Generic < BulkImport::Base
   CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
   LAST_VIEWED_AT_PLACEHOLDER = "1970-01-01 00:00:00"
 
+  class << self
+    def validate_modes!(merge_import:, delta_import:)
+      return unless merge_import && delta_import
+
+      raise "MERGE_IMPORT and DELTA_IMPORT cannot be enabled together"
+    end
+  end
+
   def initialize(db_path, uploads_db_path = nil)
     self.class.validate_modes!(merge_import: MERGE_IMPORT, delta_import: DELTA_IMPORT)
     super()
@@ -42,12 +50,6 @@ class BulkImport::Generic < BulkImport::Base
     elsif DELTA_IMPORT
       puts "DELTA_IMPORT mode enabled"
     end
-  end
-
-  def self.validate_modes!(merge_import:, delta_import:)
-    return unless merge_import && delta_import
-
-    raise "MERGE_IMPORT and DELTA_IMPORT cannot be enabled together"
   end
 
   def delta_import?

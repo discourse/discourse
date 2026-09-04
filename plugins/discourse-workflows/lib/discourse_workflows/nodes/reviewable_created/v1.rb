@@ -28,10 +28,12 @@ module DiscourseWorkflows
           end,
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "reviewable_types"
-            reviewable_type_options.select { |option| context.matches_filter?(option[:name]) }
+        class << self
+          def load_options_context(context)
+            case context.method_name
+            when "reviewable_types"
+              reviewable_type_options.select { |option| context.matches_filter?(option[:name]) }
+            end
           end
         end
 

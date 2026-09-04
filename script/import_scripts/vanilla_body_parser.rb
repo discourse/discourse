@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class VanillaBodyParser
-  def self.configure(lookup:, uploader:, host:, uploads_path:)
-    @@lookup = lookup
-    @@uploader = uploader
-    @@host = host
-    @@uploads_path = uploads_path
+  class << self
+    def configure(lookup:, uploader:, host:, uploads_path:)
+      @@lookup = lookup
+      @@uploader = uploader
+      @@host = host
+      @@uploads_path = uploads_path
+    end
   end
 
   def initialize(row, user_id)

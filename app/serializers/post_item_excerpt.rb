@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module PostItemExcerpt
-  def self.included(base)
-    base.attributes(:excerpt, :truncated)
+  class << self
+    def included(base)
+      base.attributes(:excerpt, :truncated)
+    end
   end
 
   def cooked

@@ -5,42 +5,25 @@ class TopicFeaturedUsers
 
   attr_reader :topic
 
-  def initialize(topic)
-    @topic = topic
-  end
+  class << self
+    def count
+      4
+    end
 
-  def self.count
-    4
-  end
+    def recent_poster_count
+      count - FREQUENT_POSTER_COUNT
+    end
 
-  def self.recent_poster_count
-    count - FREQUENT_POSTER_COUNT
-  end
+    def ensure_consistency!(topic_id = nil)
+      filter = "#{"AND t.id = #{topic_id.to_i}" if topic_id}"
+      filter2 = "#{"AND tt.id = #{topic_id.to_i}" if topic_id}"
 
-  # Chooses which topic users to feature
-  def choose(args = {})
-    self.class.ensure_consistency!(topic.id.to_i)
-    update_participant_count
-  end
+      # The topic list shows up to five posters in this order: the OP, two frequent posters,
+      # and two recent posters. Recent posters are excluded from frequent posters, and the OP
+      # is excluded from both. The latest poster is handled separately and replaces a recent
+      # poster unless the OP is the latest poster.
 
-  def user_ids
-    slot_user_ids.uniq.compact
-  end
-
-  def recent_user_ids
-    slot_user_ids.last(self.class.recent_poster_count).compact
-  end
-
-  def self.ensure_consistency!(topic_id = nil)
-    filter = "#{"AND t.id = #{topic_id.to_i}" if topic_id}"
-    filter2 = "#{"AND tt.id = #{topic_id.to_i}" if topic_id}"
-
-    # The topic list shows up to five posters in this order: the OP, two frequent posters,
-    # and two recent posters. Recent posters are excluded from frequent posters, and the OP
-    # is excluded from both. The latest poster is handled separately and replaces a recent
-    # poster unless the OP is the latest poster.
-
-    sql = <<SQL
+      sql = <<SQL
 
 WITH poster_stats as (
     SELECT
@@ -131,7 +114,26 @@ WHERE tt.id = tt2.id AND
 #{filter2}
 SQL
 
-    DB.exec(sql)
+      DB.exec(sql)
+    end
+  end
+
+  def initialize(topic)
+    @topic = topic
+  end
+
+  # Chooses which topic users to feature
+  def choose(args = {})
+    self.class.ensure_consistency!(topic.id.to_i)
+    update_participant_count
+  end
+
+  def user_ids
+    slot_user_ids.uniq.compact
+  end
+
+  def recent_user_ids
+    slot_user_ids.last(self.class.recent_poster_count).compact
   end
 
   private

@@ -5,13 +5,26 @@
 #
 
 class DiscourseRedis
-  def self.raw_connection(config = nil)
-    config ||= self.config
-    Redis.new(config)
-  end
+  class << self
+    def raw_connection(config = nil)
+      config ||= self.config
+      Redis.new(config)
+    end
 
-  def self.config
-    GlobalSetting.redis_config
+    def config
+      GlobalSetting.redis_config
+    end
+
+    def ignore_readonly
+      yield
+    rescue Redis::ReadOnlyError
+      Discourse.received_redis_readonly!
+      nil
+    end
+
+    def new_redis_store
+      Cache.new
+    end
   end
 
   def initialize(config = nil, namespace: true, raw_redis: nil)
@@ -23,13 +36,6 @@ class DiscourseRedis
   def without_namespace
     # Only use this if you want to store and fetch data that's shared between sites
     @redis
-  end
-
-  def self.ignore_readonly
-    yield
-  rescue Redis::ReadOnlyError
-    Discourse.received_redis_readonly!
-    nil
   end
 
   # prefix the key with the namespace
@@ -224,10 +230,6 @@ class DiscourseRedis
 
   def namespace
     RailsMultisite::ConnectionManagement.current_db
-  end
-
-  def self.new_redis_store
-    Cache.new
   end
 
   def multi

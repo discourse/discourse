@@ -6,9 +6,194 @@ class Site
 
   cattr_accessor :preloaded_category_custom_fields
 
-  def self.reset_preloaded_category_custom_fields
-    self.preloaded_category_custom_fields = Set.new
+  SITE_JSON_CHANNEL = "/site_json"
+
+  class << self
+    def reset_preloaded_category_custom_fields
+      self.preloaded_category_custom_fields = Set.new
+    end
+
+    public
+
+    def add_categories_callbacks(enabled: -> { true }, &block)
+      categories_callbacks << { block:, enabled: }
+    end
+
+    def categories_callbacks
+      @categories_callbacks ||= []
+    end
+
+    def access_control_target_classes
+      (
+        AclTarget.target_classes +
+          DiscoursePluginRegistry.acl_target_classes.filter_map do |target_class|
+            if target_class.is_a?(String)
+              target_class = target_class.safe_constantize
+              if target_class.nil?
+                Rails.logger.warn(
+                  "[ACL] Unknown target class in plugin registry for site (#{target_class}) maybe the plugin is gone, the class has been renamed, or the class does not include AclTarget",
+                )
+              end
+              target_class
+            else
+              target_class
+            end
+          end
+      ).compact.uniq
+    end
+
+    def access_control
+      {
+        mandatory_acl:
+          access_control_target_classes.each_with_object({}) do |target_class, mandatory_acl|
+            next if !target_class.respond_to?(:has_mandatory_acl?)
+            next if !target_class.has_mandatory_acl?
+
+            mandatory_acl[target_class.acl_target_key] = target_class.mandatory_acl
+          end,
+        banned_acl:
+          access_control_target_classes.each_with_object({}) do |target_class, banned_acl|
+            next if !target_class.respond_to?(:has_banned_acl?)
+            next if !target_class.has_banned_acl?
+
+            banned_acl[target_class.acl_target_key] = target_class.banned_acl
+          end,
+      }
+    end
+
+    def categories_cache_key
+      "site_categories_#{I18n.locale}_#{Discourse.git_version}"
+    end
+
+    def clear_cache
+      Discourse.cache.delete(categories_cache_key)
+    end
+
+    def all_categories_cache
+      # Categories do not change often so there is no need for us to run the
+      # same query and spend time creating ActiveRecord objects for every requests.
+      #
+      # Do note that any new association added to the eager loading needs a
+      # corresponding ActiveRecord callback to clear the categories cache.
+      Discourse
+        .cache
+        .fetch(categories_cache_key, expires_in: 30.minutes) do
+          categories =
+            begin
+              query =
+                Category
+                  .includes(
+                    :uploaded_logo,
+                    :uploaded_logo_dark,
+                    :uploaded_background,
+                    :uploaded_background_dark,
+                    :category_required_tag_groups,
+                    :form_templates,
+                  )
+                  .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+                  .select("categories.*, t.slug topic_slug")
+                  .order(:position)
+              query =
+                DiscoursePluginRegistry.apply_modifier(
+                  :site_all_categories_cache_query,
+                  query,
+                  self,
+                )
+              query.to_a
+            end
+
+          if preloaded_category_custom_fields.present?
+            Category.preload_custom_fields(categories, preloaded_category_custom_fields)
+          end
+
+          ActiveModel::ArraySerializer.new(
+            categories,
+            each_serializer: SiteCategorySerializer,
+          ).as_json
+        end
+    end
+
+    def json_for(guardian)
+      if guardian.anonymous? && SiteSetting.login_required
+        return(
+          {
+            periods: TopTopic.periods.map(&:to_s),
+            filters: Discourse.filters.map(&:to_s),
+            anonymous_list_filters: Discourse.anonymous_list_filters.map(&:to_s),
+            user_fields:
+              UserField
+                .includes(:user_field_options)
+                .order(:position)
+                .all
+                .map do |userfield|
+                  UserFieldSerializer.new(userfield, root: false, scope: guardian)
+                end,
+            auth_providers:
+              Discourse.enabled_auth_providers.map do |provider|
+                AuthProviderSerializer.new(provider, root: false, scope: guardian)
+              end,
+            full_name_required_for_signup:,
+            full_name_visible_in_signup:,
+            tos_url: Discourse.tos_url,
+            privacy_policy_url: Discourse.privacy_policy_url,
+            upcoming_changes_with_css: UpcomingChanges.including_css,
+          }.to_json
+        )
+      end
+
+      seq = nil
+      use_localized_anon_cache = SiteSetting.content_localization_enabled && guardian.anonymous?
+
+      locale = I18n.locale
+      cache_key = "site_json"
+      seq_key = "site_json_seq"
+      version_key = "site_json_version"
+
+      if use_localized_anon_cache
+        cache_key += "_#{locale}"
+        seq_key += "_#{locale}"
+        version_key += "_#{locale}"
+      end
+
+      if guardian.anonymous?
+        seq = MessageBus.last_id("/site_json")
+        cached_json, cached_seq, cached_version =
+          Discourse.redis.mget(cache_key, seq_key, version_key)
+
+        if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
+          return cached_json
+        end
+      end
+
+      site = Site.new(guardian)
+      json = MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
+
+      if guardian.anonymous?
+        Discourse.redis.multi do |transaction|
+          transaction.setex cache_key, 1800, json
+          transaction.set seq_key, seq
+          transaction.set version_key, Discourse.git_version
+        end
+      end
+
+      json
+    end
+
+    def clear_anon_cache!
+      # publishing forces the sequence up
+      # the cache is validated based on the sequence
+      MessageBus.publish(SITE_JSON_CHANNEL, "")
+    end
+
+    def full_name_required_for_signup
+      SiteSetting.full_name_requirement == "required_at_signup"
+    end
+
+    def full_name_visible_in_signup
+      SiteSetting.full_name_requirement != "hidden_at_signup"
+    end
   end
+
   reset_preloaded_category_custom_fields
 
   ##
@@ -24,14 +209,6 @@ class Site
   # These are passed down to markdown rules on opts.discourse.additionalOptions.
   cattr_accessor :markdown_additional_options
   self.markdown_additional_options = {}
-
-  def self.add_categories_callbacks(enabled: -> { true }, &block)
-    categories_callbacks << { block:, enabled: }
-  end
-
-  def self.categories_callbacks
-    @categories_callbacks ||= []
-  end
 
   def initialize(guardian)
     @guardian = guardian
@@ -55,92 +232,6 @@ class Site
 
   def access_control
     self.class.access_control
-  end
-
-  def self.access_control_target_classes
-    (
-      AclTarget.target_classes +
-        DiscoursePluginRegistry.acl_target_classes.filter_map do |target_class|
-          if target_class.is_a?(String)
-            target_class = target_class.safe_constantize
-            if target_class.nil?
-              Rails.logger.warn(
-                "[ACL] Unknown target class in plugin registry for site (#{target_class}) maybe the plugin is gone, the class has been renamed, or the class does not include AclTarget",
-              )
-            end
-            target_class
-          else
-            target_class
-          end
-        end
-    ).compact.uniq
-  end
-
-  def self.access_control
-    {
-      mandatory_acl:
-        access_control_target_classes.each_with_object({}) do |target_class, mandatory_acl|
-          next if !target_class.respond_to?(:has_mandatory_acl?)
-          next if !target_class.has_mandatory_acl?
-
-          mandatory_acl[target_class.acl_target_key] = target_class.mandatory_acl
-        end,
-      banned_acl:
-        access_control_target_classes.each_with_object({}) do |target_class, banned_acl|
-          next if !target_class.respond_to?(:has_banned_acl?)
-          next if !target_class.has_banned_acl?
-
-          banned_acl[target_class.acl_target_key] = target_class.banned_acl
-        end,
-    }
-  end
-
-  def self.categories_cache_key
-    "site_categories_#{I18n.locale}_#{Discourse.git_version}"
-  end
-
-  def self.clear_cache
-    Discourse.cache.delete(categories_cache_key)
-  end
-
-  def self.all_categories_cache
-    # Categories do not change often so there is no need for us to run the
-    # same query and spend time creating ActiveRecord objects for every requests.
-    #
-    # Do note that any new association added to the eager loading needs a
-    # corresponding ActiveRecord callback to clear the categories cache.
-    Discourse
-      .cache
-      .fetch(categories_cache_key, expires_in: 30.minutes) do
-        categories =
-          begin
-            query =
-              Category
-                .includes(
-                  :uploaded_logo,
-                  :uploaded_logo_dark,
-                  :uploaded_background,
-                  :uploaded_background_dark,
-                  :category_required_tag_groups,
-                  :form_templates,
-                )
-                .joins("LEFT JOIN topics t on t.id = categories.topic_id")
-                .select("categories.*, t.slug topic_slug")
-                .order(:position)
-            query =
-              DiscoursePluginRegistry.apply_modifier(:site_all_categories_cache_query, query, self)
-            query.to_a
-          end
-
-        if preloaded_category_custom_fields.present?
-          Category.preload_custom_fields(categories, preloaded_category_custom_fields)
-        end
-
-        ActiveModel::ArraySerializer.new(
-          categories,
-          each_serializer: SiteCategorySerializer,
-        ).as_json
-      end
   end
 
   def categories
@@ -239,85 +330,5 @@ class Site
 
   def auth_providers
     Discourse.enabled_auth_providers
-  end
-
-  def self.json_for(guardian)
-    if guardian.anonymous? && SiteSetting.login_required
-      return(
-        {
-          periods: TopTopic.periods.map(&:to_s),
-          filters: Discourse.filters.map(&:to_s),
-          anonymous_list_filters: Discourse.anonymous_list_filters.map(&:to_s),
-          user_fields:
-            UserField
-              .includes(:user_field_options)
-              .order(:position)
-              .all
-              .map { |userfield| UserFieldSerializer.new(userfield, root: false, scope: guardian) },
-          auth_providers:
-            Discourse.enabled_auth_providers.map do |provider|
-              AuthProviderSerializer.new(provider, root: false, scope: guardian)
-            end,
-          full_name_required_for_signup:,
-          full_name_visible_in_signup:,
-          tos_url: Discourse.tos_url,
-          privacy_policy_url: Discourse.privacy_policy_url,
-          upcoming_changes_with_css: UpcomingChanges.including_css,
-        }.to_json
-      )
-    end
-
-    seq = nil
-    use_localized_anon_cache = SiteSetting.content_localization_enabled && guardian.anonymous?
-
-    locale = I18n.locale
-    cache_key = "site_json"
-    seq_key = "site_json_seq"
-    version_key = "site_json_version"
-
-    if use_localized_anon_cache
-      cache_key += "_#{locale}"
-      seq_key += "_#{locale}"
-      version_key += "_#{locale}"
-    end
-
-    if guardian.anonymous?
-      seq = MessageBus.last_id("/site_json")
-      cached_json, cached_seq, cached_version =
-        Discourse.redis.mget(cache_key, seq_key, version_key)
-
-      if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
-        return cached_json
-      end
-    end
-
-    site = Site.new(guardian)
-    json = MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
-
-    if guardian.anonymous?
-      Discourse.redis.multi do |transaction|
-        transaction.setex cache_key, 1800, json
-        transaction.set seq_key, seq
-        transaction.set version_key, Discourse.git_version
-      end
-    end
-
-    json
-  end
-
-  SITE_JSON_CHANNEL = "/site_json"
-
-  def self.clear_anon_cache!
-    # publishing forces the sequence up
-    # the cache is validated based on the sequence
-    MessageBus.publish(SITE_JSON_CHANNEL, "")
-  end
-
-  def self.full_name_required_for_signup
-    SiteSetting.full_name_requirement == "required_at_signup"
-  end
-
-  def self.full_name_visible_in_signup
-    SiteSetting.full_name_requirement != "hidden_at_signup"
   end
 end

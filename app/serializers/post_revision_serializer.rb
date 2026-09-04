@@ -31,20 +31,22 @@ class PostRevisionSerializer < ApplicationSerializer
              :can_edit,
              :diff_error
 
-  # Creates a field called field_name_changes with previous and
-  # current members if a field has changed in this revision
-  def self.add_compared_field(field)
-    changes_name = :"#{field}_changes"
+  class << self
+    # Creates a field called field_name_changes with previous and
+    # current members if a field has changed in this revision
+    def add_compared_field(field)
+      changes_name = :"#{field}_changes"
 
-    attributes changes_name
-    define_method(changes_name) do
-      return if suppress_hidden_diffs?
+      attributes changes_name
+      define_method(changes_name) do
+        return if suppress_hidden_diffs?
 
-      { previous: previous[field], current: current[field] }
-    end
+        { previous: previous[field], current: current[field] }
+      end
 
-    define_method("include_#{changes_name}?") do
-      !suppress_hidden_diffs? && previous[field] != current[field]
+      define_method("include_#{changes_name}?") do
+        !suppress_hidden_diffs? && previous[field] != current[field]
+      end
     end
   end
 

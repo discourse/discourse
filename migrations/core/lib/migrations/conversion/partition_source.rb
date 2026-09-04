@@ -23,12 +23,14 @@ module Migrations
       REQUIRED = %i[count_all chunk_filter].freeze
       SCAN = %i[boundaries_by_scan each_partition_key].freeze # at least one
 
-      # The interface methods `source` doesn't provide (empty when it satisfies the
-      # contract).
-      def self.missing_from(source)
-        missing = REQUIRED.reject { |method| source.respond_to?(method) }
-        missing << SCAN.join(" or ") if SCAN.none? { |method| source.respond_to?(method) }
-        missing
+      class << self
+        # The interface methods `source` doesn't provide (empty when it satisfies the
+        # contract).
+        def missing_from(source)
+          missing = REQUIRED.reject { |method| source.respond_to?(method) }
+          missing << SCAN.join(" or ") if SCAN.none? { |method| source.respond_to?(method) }
+          missing
+        end
       end
     end
   end

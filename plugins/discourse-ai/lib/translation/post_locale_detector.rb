@@ -3,22 +3,24 @@
 module DiscourseAi
   module Translation
     class PostLocaleDetector
-      def self.detect_locale(post)
-        return if post.blank?
+      class << self
+        def detect_locale(post)
+          return if post.blank?
 
-        text = PostDetectionText.get_text(post)
+          text = PostDetectionText.get_text(post)
 
-        if text.blank?
-          locale = SiteSetting.default_locale
-        else
-          detected_locale = LanguageDetector.new(text, post:).detect
-          return if detected_locale.blank?
+          if text.blank?
+            locale = SiteSetting.default_locale
+          else
+            detected_locale = LanguageDetector.new(text, post:).detect
+            return if detected_locale.blank?
 
-          locale = LocaleNormalizer.normalize_to_i18n(detected_locale)
+            locale = LocaleNormalizer.normalize_to_i18n(detected_locale)
+          end
+
+          post.update_column(:locale, locale)
+          locale
         end
-
-        post.update_column(:locale, locale)
-        locale
       end
     end
   end

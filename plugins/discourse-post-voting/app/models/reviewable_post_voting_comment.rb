@@ -3,17 +3,19 @@
 class ReviewablePostVotingComment < Reviewable
   include ReviewableActionBuilder
 
-  def serializer
-    ReviewablePostVotingCommentSerializer
+  class << self
+    def action_aliases
+      {
+        agree_and_keep_hidden: :agree_and_delete,
+        agree_and_silence: :agree_and_delete,
+        agree_and_suspend: :agree_and_delete,
+        delete_and_agree: :agree_and_delete,
+      }
+    end
   end
 
-  def self.action_aliases
-    {
-      agree_and_keep_hidden: :agree_and_delete,
-      agree_and_silence: :agree_and_delete,
-      agree_and_suspend: :agree_and_delete,
-      delete_and_agree: :agree_and_delete,
-    }
+  def serializer
+    ReviewablePostVotingCommentSerializer
   end
 
   def flagged_by_user_ids

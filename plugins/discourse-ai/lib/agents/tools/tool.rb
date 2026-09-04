@@ -64,6 +64,77 @@ module DiscourseAi
               DiscourseAi::Agents::Tools::Custom.class_instance(tool_id)
             end
           end
+
+          public
+
+          def send_http_request(url, headers: {}, follow_redirects: false, method: :get, body: nil)
+            raise "Expecting caller to use a block" if !block_given?
+
+            uri = nil
+            url = UrlHelper.normalized_encode(url)
+            uri =
+              begin
+                URI.parse(url)
+              rescue StandardError
+                nil
+              end
+
+            return if !uri
+
+            if follow_redirects
+              fd =
+                FinalDestination.new(
+                  url,
+                  validate_uri: true,
+                  max_redirects: 5,
+                  follow_canonical: true,
+                )
+
+              uri = fd.resolve
+            end
+
+            return if uri.blank?
+
+            request = nil
+            if method == :get
+              request = FinalDestination::HTTP::Get.new(uri)
+            elsif method == :post
+              request = FinalDestination::HTTP::Post.new(uri)
+            elsif method == :put
+              request = FinalDestination::HTTP::Put.new(uri)
+            elsif method == :patch
+              request = FinalDestination::HTTP::Patch.new(uri)
+            elsif method == :delete
+              request = FinalDestination::HTTP::Delete.new(uri)
+            end
+
+            raise ArgumentError, "Invalid method: #{method}" if !request
+
+            request.body = body if body
+
+            request["User-Agent"] = DiscourseAi::AiBot::USER_AGENT
+            headers.each { |k, v| request[k] = v }
+
+            FinalDestination::HTTP.start(uri.hostname, uri.port, use_ssl: uri.port != 80) do |http|
+              http.request(request) { |response| yield response, uri }
+            end
+          end
+
+          def read_response_body(response, max_length: nil)
+            max_length ||= MAX_RESPONSE_BODY_LENGTH
+
+            body = +""
+            response.read_body do |chunk|
+              body << chunk
+              break if body.bytesize > max_length
+            end
+
+            if body.bytesize > max_length
+              body[0...max_length].scrub
+            else
+              body.scrub
+            end
+          end
         end
 
         # llm being public makes it a bit easier to test
@@ -181,81 +252,6 @@ module DiscourseAi
 
         def github_client
           ::Discourse::GithubApi.for(token: SiteSetting.ai_bot_github_access_token)
-        end
-
-        def self.send_http_request(
-          url,
-          headers: {},
-          follow_redirects: false,
-          method: :get,
-          body: nil
-        )
-          raise "Expecting caller to use a block" if !block_given?
-
-          uri = nil
-          url = UrlHelper.normalized_encode(url)
-          uri =
-            begin
-              URI.parse(url)
-            rescue StandardError
-              nil
-            end
-
-          return if !uri
-
-          if follow_redirects
-            fd =
-              FinalDestination.new(
-                url,
-                validate_uri: true,
-                max_redirects: 5,
-                follow_canonical: true,
-              )
-
-            uri = fd.resolve
-          end
-
-          return if uri.blank?
-
-          request = nil
-          if method == :get
-            request = FinalDestination::HTTP::Get.new(uri)
-          elsif method == :post
-            request = FinalDestination::HTTP::Post.new(uri)
-          elsif method == :put
-            request = FinalDestination::HTTP::Put.new(uri)
-          elsif method == :patch
-            request = FinalDestination::HTTP::Patch.new(uri)
-          elsif method == :delete
-            request = FinalDestination::HTTP::Delete.new(uri)
-          end
-
-          raise ArgumentError, "Invalid method: #{method}" if !request
-
-          request.body = body if body
-
-          request["User-Agent"] = DiscourseAi::AiBot::USER_AGENT
-          headers.each { |k, v| request[k] = v }
-
-          FinalDestination::HTTP.start(uri.hostname, uri.port, use_ssl: uri.port != 80) do |http|
-            http.request(request) { |response| yield response, uri }
-          end
-        end
-
-        def self.read_response_body(response, max_length: nil)
-          max_length ||= MAX_RESPONSE_BODY_LENGTH
-
-          body = +""
-          response.read_body do |chunk|
-            body << chunk
-            break if body.bytesize > max_length
-          end
-
-          if body.bytesize > max_length
-            body[0...max_length].scrub
-          else
-            body.scrub
-          end
         end
 
         def read_response_body(response, max_length: nil)

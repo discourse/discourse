@@ -1627,8 +1627,10 @@ RSpec.describe TopicQuery do
             true
           end
 
-          def self.custom_suggested_topics(topic, pm_params, topic_query)
-            { result: Topic.order("id desc").limit(1), params: {} }
+          class << self
+            def custom_suggested_topics(topic, pm_params, topic_query)
+              { result: Topic.order("id desc").limit(1), params: {} }
+            end
           end
         end
       end

@@ -26,17 +26,24 @@ module ::DiscourseSolved
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
   MAX_ACCEPTED_SOLUTIONS_CATEGORY_IDS = 50
 
-  def self.accept_answer!(post, acting_user, topic: nil)
-    DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, guardian: acting_user.guardian)
-  end
+  class << self
+    def accept_answer!(post, acting_user, topic: nil)
+      DiscourseSolved::AcceptAnswer.call(
+        params: {
+          post_id: post.id,
+        },
+        guardian: acting_user.guardian,
+      )
+    end
 
-  def self.unaccept_answer!(post, topic: nil)
-    DiscourseSolved::UnacceptAnswer.call(
-      params: {
-        post_id: post.id,
-      },
-      guardian: Discourse.system_user.guardian,
-    )
+    def unaccept_answer!(post, topic: nil)
+      DiscourseSolved::UnacceptAnswer.call(
+        params: {
+          post_id: post.id,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
+    end
   end
 end
 

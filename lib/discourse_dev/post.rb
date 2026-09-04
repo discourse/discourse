@@ -7,6 +7,46 @@ module DiscourseDev
   class Post < Record
     attr_reader :topic
 
+    class << self
+      def add_replies!(args)
+        if !args[:topic_id]
+          puts "Topic ID is required. Aborting."
+          return
+        end
+
+        if !::Topic.find_by_id(args[:topic_id])
+          puts "Topic ID does not match topic in DB, aborting."
+          return
+        end
+
+        topic = ::Topic.find_by_id(args[:topic_id])
+        count = args[:count] ? args[:count].to_i : 50
+
+        puts "Creating #{count} replies in '#{topic.title}'"
+
+        count.times do |i|
+          user = User.random
+          reply =
+            Faker::DiscourseMarkdown.with_user(user.id) do
+              {
+                topic_id: topic.id,
+                raw: Faker::DiscourseMarkdown.sandwich(sentences: 5),
+                skip_validations: true,
+              }
+            end
+          PostCreator.new(user, reply).create!
+        rescue ActiveRecord::RecordNotSaved => e
+          puts e
+        end
+
+        puts "Done!"
+      end
+
+      def random
+        super(::Post)
+      end
+    end
+
     def initialize(topic, count)
       super(::Post, count)
       @topic = topic
@@ -75,44 +115,6 @@ module DiscourseDev
 
     def current_count
       topic.posts_count - 1
-    end
-
-    def self.add_replies!(args)
-      if !args[:topic_id]
-        puts "Topic ID is required. Aborting."
-        return
-      end
-
-      if !::Topic.find_by_id(args[:topic_id])
-        puts "Topic ID does not match topic in DB, aborting."
-        return
-      end
-
-      topic = ::Topic.find_by_id(args[:topic_id])
-      count = args[:count] ? args[:count].to_i : 50
-
-      puts "Creating #{count} replies in '#{topic.title}'"
-
-      count.times do |i|
-        user = User.random
-        reply =
-          Faker::DiscourseMarkdown.with_user(user.id) do
-            {
-              topic_id: topic.id,
-              raw: Faker::DiscourseMarkdown.sandwich(sentences: 5),
-              skip_validations: true,
-            }
-          end
-        PostCreator.new(user, reply).create!
-      rescue ActiveRecord::RecordNotSaved => e
-        puts e
-      end
-
-      puts "Done!"
-    end
-
-    def self.random
-      super(::Post)
     end
   end
 end

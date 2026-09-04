@@ -30,9 +30,15 @@ class PostVotingComment < ActiveRecord::Base
 
   MARKDOWN_IT_RULES = %w[emphasis backticks linkify link]
 
-  def self.cook(raw)
-    raw.gsub!(/(\n)+/, " ")
-    PrettyText.cook(raw, features_override: MARKDOWN_FEATURES, markdown_it_rules: MARKDOWN_IT_RULES)
+  class << self
+    def cook(raw)
+      raw.gsub!(/(\n)+/, " ")
+      PrettyText.cook(
+        raw,
+        features_override: MARKDOWN_FEATURES,
+        markdown_it_rules: MARKDOWN_IT_RULES,
+      )
+    end
   end
 
   def url

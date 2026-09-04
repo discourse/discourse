@@ -2,18 +2,20 @@
 
 module DiscourseSolved
   class FirstAcceptedPostSolutionValidator
-    def self.check(post, trust_level:)
-      return false if post.archetype != Archetype.default
-      return false if !post&.user&.human?
+    class << self
+      def check(post, trust_level:)
+        return false if post.archetype != Archetype.default
+        return false if !post&.user&.human?
 
-      if trust_level != "any" && TrustLevel.compare(post&.user&.trust_level, trust_level.to_i)
-        return false
+        if trust_level != "any" && TrustLevel.compare(post&.user&.trust_level, trust_level.to_i)
+          return false
+        end
+
+        !DiscourseSolved::TopicAnswer
+          .joins(:post)
+          .where("posts.user_id = ? AND posts.id != ?", post.user_id, post.id)
+          .exists?
       end
-
-      !DiscourseSolved::TopicAnswer
-        .joins(:post)
-        .where("posts.user_id = ? AND posts.id != ?", post.user_id, post.id)
-        .exists?
     end
   end
 end

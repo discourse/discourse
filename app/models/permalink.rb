@@ -12,6 +12,38 @@ class Permalink < ActiveRecord::Base
   validates :url, uniqueness: true
   validate :exactly_one_association
 
+  class << self
+    def normalize_url(url)
+      if url
+        url = url.strip
+        url = url[1..-1] if url[0, 1] == "/"
+      end
+
+      normalizations = SiteSetting.permalink_normalizations
+
+      @normalizer = Normalizer.new(normalizations) unless @normalizer &&
+        @normalizer.source == normalizations
+      @normalizer.normalize(url)
+    end
+
+    def find_by_url(url)
+      find_by(url: normalize_url(url))
+    end
+
+    def filter_by(url = nil)
+      permalinks =
+        Permalink.includes(:topic, :post, :category, :tag, :user).order(
+          "permalinks.created_at desc",
+        )
+
+      if url.present?
+        permalinks.where!("url ILIKE :url OR external_url ILIKE :url", url: "%#{url}%")
+      end
+      permalinks.limit!(100)
+      permalinks.to_a
+    end
+  end
+
   def internal?
     external_url.blank?
   end
@@ -58,23 +90,6 @@ class Permalink < ActiveRecord::Base
     end
   end
 
-  def self.normalize_url(url)
-    if url
-      url = url.strip
-      url = url[1..-1] if url[0, 1] == "/"
-    end
-
-    normalizations = SiteSetting.permalink_normalizations
-
-    @normalizer = Normalizer.new(normalizations) unless @normalizer &&
-      @normalizer.source == normalizations
-    @normalizer.normalize(url)
-  end
-
-  def self.find_by_url(url)
-    find_by(url: normalize_url(url))
-  end
-
   def target_url
     return relative_external_url if external_url
     return post.relative_url if post
@@ -83,15 +98,6 @@ class Permalink < ActiveRecord::Base
     return tag.relative_url if tag
     return user.relative_url if user
     nil
-  end
-
-  def self.filter_by(url = nil)
-    permalinks =
-      Permalink.includes(:topic, :post, :category, :tag, :user).order("permalinks.created_at desc")
-
-    permalinks.where!("url ILIKE :url OR external_url ILIKE :url", url: "%#{url}%") if url.present?
-    permalinks.limit!(100)
-    permalinks.to_a
   end
 
   private

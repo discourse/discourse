@@ -4,16 +4,18 @@ module DiscourseAutomation
   module Logger
     PREFIX = "[discourse-automation]"
 
-    def self.warn(message)
-      Rails.logger.warn("#{PREFIX} #{message}")
-    end
+    class << self
+      def warn(message)
+        Rails.logger.warn("#{PREFIX} #{message}")
+      end
 
-    def self.error(message)
-      Rails.logger.error("#{PREFIX} #{message}")
-    end
+      def error(message)
+        Rails.logger.error("#{PREFIX} #{message}")
+      end
 
-    def self.info(message)
-      Rails.logger.info("#{PREFIX} #{message}")
+      def info(message)
+        Rails.logger.info("#{PREFIX} #{message}")
+      end
     end
   end
 end

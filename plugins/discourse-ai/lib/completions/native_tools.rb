@@ -61,32 +61,34 @@ module DiscourseAi
         Definition.new(id: CODE_EXECUTION, providers: %w[gemini_interactions]),
       ].freeze
 
-      def self.all
-        DEFINITIONS
-      end
+      class << self
+        def all
+          DEFINITIONS
+        end
 
-      def self.find(id)
-        id = strip_prefix(id)
-        DEFINITIONS.find { |definition| definition.id == id }
-      end
+        def find(id)
+          id = strip_prefix(id)
+          DEFINITIONS.find { |definition| definition.id == id }
+        end
 
-      def self.valid?(id)
-        !find(id).nil?
-      end
+        def valid?(id)
+          !find(id).nil?
+        end
 
-      # ids supported by a given LlmModel (encapsulates the Responses-API nuance)
-      def self.supported_ids_for(llm_model)
-        return [] if llm_model.blank?
-        DEFINITIONS.select { |definition| definition.supported?(llm_model) }.map(&:id)
-      end
+        # ids supported by a given LlmModel (encapsulates the Responses-API nuance)
+        def supported_ids_for(llm_model)
+          return [] if llm_model.blank?
+          DEFINITIONS.select { |definition| definition.supported?(llm_model) }.map(&:id)
+        end
 
-      def self.prefixed?(name)
-        name.is_a?(String) && name.start_with?(PREFIX)
-      end
+        def prefixed?(name)
+          name.is_a?(String) && name.start_with?(PREFIX)
+        end
 
-      def self.strip_prefix(name)
-        return name unless prefixed?(name)
-        name.delete_prefix(PREFIX)
+        def strip_prefix(name)
+          return name unless prefixed?(name)
+          name.delete_prefix(PREFIX)
+        end
       end
     end
   end

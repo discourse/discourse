@@ -31,220 +31,190 @@ class Statistics
     SK
   ]
 
-  def self.active_users
-    {
-      last_day: valid_users.where("last_seen_at > ?", 1.day.ago).count,
-      "7_days": valid_users.where("last_seen_at > ?", 7.days.ago).count,
-      "30_days": valid_users.where("last_seen_at > ?", 30.days.ago).count,
-    }
-  end
-
-  def self.likes
-    likes = UserAction.where(action_type: UserAction::LIKE)
-
-    {
-      last_day: likes.where("created_at > ?", 1.day.ago).count,
-      "7_days": likes.where("created_at > ?", 7.days.ago).count,
-      "30_days": likes.where("created_at > ?", 30.days.ago).count,
-      count: likes.count,
-    }
-  end
-
-  def self.posts
-    {
-      last_day: Post.where("created_at > ?", 1.day.ago).count,
-      "7_days": Post.where("created_at > ?", 7.days.ago).count,
-      "30_days": Post.where("created_at > ?", 30.days.ago).count,
-      count: Post.count,
-    }
-  end
-
-  def self.topics
-    topics = Topic.listable_topics
-
-    {
-      last_day: topics.where("created_at > ?", 1.day.ago).count,
-      "7_days": topics.where("created_at > ?", 7.days.ago).count,
-      "30_days": topics.where("created_at > ?", 30.days.ago).count,
-      count: topics.count,
-    }
-  end
-
-  def self.users
-    {
-      last_day: valid_users.where("created_at > ?", 1.day.ago).count,
-      "7_days": valid_users.where("created_at > ?", 7.days.ago).count,
-      "30_days": valid_users.where("created_at > ?", 30.days.ago).count,
-      count: valid_users.count,
-    }
-  end
-
-  def self.participating_users
-    {
-      last_day: participating_users_count(1.day.ago),
-      "7_days": participating_users_count(7.days.ago),
-      "30_days": participating_users_count(30.days.ago),
-    }
-  end
-
-  def self.visitors
-    periods = [[1.day.ago, :last_day], [7.days.ago, :"7_days"], [30.days.ago, :"30_days"]]
-
-    periods
-      .map do |(period, key)|
-        anon_page_views =
-          ApplicationRequest.request_type_count_for_period(:page_view_anon_browser, period)
-
-        logged_in_visitors = logged_in_visitors_count(period)
-        next key, anon_page_views if logged_in_visitors == 0
-
-        logged_in_page_views =
-          ApplicationRequest.request_type_count_for_period(:page_view_logged_in_browser, period)
-        next key, anon_page_views + logged_in_visitors if logged_in_page_views == 0
-
-        total_visitors = logged_in_visitors
-        avg_logged_in_page_view_per_user = logged_in_page_views.to_f / logged_in_visitors
-        anon_visitors = (anon_page_views / avg_logged_in_page_view_per_user).round
-        total_visitors += anon_visitors
-        [key, total_visitors]
-      end
-      .to_h
-  end
-
-  def self.eu_visitors
-    periods = [[1.day.ago, :last_day], [7.days.ago, :"7_days"], [30.days.ago, :"30_days"]]
-
-    periods
-      .map do |(period, key)|
-        logged_in_page_views =
-          ApplicationRequest.request_type_count_for_period(:page_view_logged_in_browser, period)
-        anon_page_views =
-          ApplicationRequest.request_type_count_for_period(:page_view_anon_browser, period)
-
-        all_logged_in_visitors = logged_in_visitors_count(period)
-        eu_logged_in_visitors = eu_logged_in_visitors_count(period)
-
-        next key, 0 if all_logged_in_visitors == 0 || eu_logged_in_visitors == 0
-        next key, eu_logged_in_visitors if logged_in_page_views == 0
-
-        avg_logged_in_page_view_per_user = logged_in_page_views / all_logged_in_visitors.to_f
-
-        eu_logged_in_visitors_ratio = eu_logged_in_visitors / all_logged_in_visitors.to_f
-
-        eu_anon_visitors =
-          ((anon_page_views / avg_logged_in_page_view_per_user) * eu_logged_in_visitors_ratio).round
-        eu_visitors = eu_logged_in_visitors + eu_anon_visitors
-        [key, eu_visitors]
-      end
-      .to_h
-  end
-
-  # The admin onboarding panel is a one-time flow shown only to a site's first
-  # human admin, and only while their account is newer than
-  # `site_owner_onboarding_max_days`. These three stats therefore only ever
-  # climb, and freeze once that window closes.
-
-  def self.onboarding_steps
-    { completed: onboarding_step_events.distinct.count(:subject) }
-  end
-
-  def self.onboarding_panel
-    {
-      completed: onboarding_event_exists?(:admin_onboarding_completed),
-      dismissed: onboarding_event_exists?(:admin_onboarding_dismissed),
-    }
-  end
-
-  # Minutes from the first admin signing up to each step being completed, so
-  # that "completed within N hours" stays derivable after the fact. A step that
-  # never happened is nil rather than 0, to keep it distinct from one completed
-  # instantly.
-  def self.onboarding_minutes_to
-    signed_up_at = first_admin_created_at
-    steps = UserHistory::ADMIN_ONBOARDING_STEPS
-
-    return steps.index_with(nil).symbolize_keys.merge(completed: nil) if signed_up_at.nil?
-
-    completed_at = onboarding_events(:admin_onboarding_completed).minimum(:created_at)
-    first_completed_at = onboarding_step_events.group(:subject).minimum(:created_at)
-
-    steps
-      .index_with { |step| minutes_between(signed_up_at, first_completed_at[step]) }
-      .symbolize_keys
-      .merge(completed: minutes_between(signed_up_at, completed_at))
-  end
-
-  private
-
-  def self.onboarding_events(action)
-    UserHistory.where(action: UserHistory.actions[action])
-  end
-
-  def self.onboarding_step_events
-    onboarding_events(:admin_onboarding_step_completed).where(
-      subject: UserHistory::ADMIN_ONBOARDING_STEPS,
-    )
-  end
-
-  # Reported as 1/0 flags rather than booleans, to match the integer shape of
-  # every other stat.
-  def self.onboarding_event_exists?(action)
-    onboarding_events(action).exists? ? 1 : 0
-  end
-
-  # Mirrors the user the onboarding panel is shown to: the lowest-id human admin.
-  def self.first_admin_created_at
-    User.where(admin: true).human_users.order(:id).limit(1).pick(:created_at)
-  end
-
-  # nil rather than a negative number when the event predates the baseline,
-  # which happens when the original first admin has since been deleted or
-  # demoted: the replacement's signup is not the date onboarding started, so the
-  # duration is unknowable rather than zero.
-  def self.minutes_between(from, to)
-    return nil if to.nil? || to < from
-    ((to - from) / 60).round
-  end
-
-  def self.valid_users
-    users = User.real.activated.not_suspended.not_silenced
-    users = users.approved if SiteSetting.must_approve_users
-    users
-  end
-
-  def self.participating_users_count(date)
-    subqueries = [
-      "SELECT DISTINCT user_id FROM user_actions WHERE created_at > :date AND action_type IN (:action_types)",
-    ]
-
-    if ActiveRecord::Base.connection.data_source_exists?("chat_messages")
-      subqueries << "SELECT DISTINCT user_id FROM chat_messages WHERE created_at > :date AND deleted_at IS NULL"
+  class << self
+    def active_users
+      {
+        last_day: valid_users.where("last_seen_at > ?", 1.day.ago).count,
+        "7_days": valid_users.where("last_seen_at > ?", 7.days.ago).count,
+        "30_days": valid_users.where("last_seen_at > ?", 30.days.ago).count,
+      }
     end
 
-    if ActiveRecord::Base.connection.data_source_exists?("chat_message_reactions")
-      subqueries << "SELECT DISTINCT user_id FROM chat_message_reactions WHERE created_at > :date"
+    def likes
+      likes = UserAction.where(action_type: UserAction::LIKE)
+
+      {
+        last_day: likes.where("created_at > ?", 1.day.ago).count,
+        "7_days": likes.where("created_at > ?", 7.days.ago).count,
+        "30_days": likes.where("created_at > ?", 30.days.ago).count,
+        count: likes.count,
+      }
     end
 
-    sql = <<~SQL
+    def posts
+      {
+        last_day: Post.where("created_at > ?", 1.day.ago).count,
+        "7_days": Post.where("created_at > ?", 7.days.ago).count,
+        "30_days": Post.where("created_at > ?", 30.days.ago).count,
+        count: Post.count,
+      }
+    end
+
+    def topics
+      topics = Topic.listable_topics
+
+      {
+        last_day: topics.where("created_at > ?", 1.day.ago).count,
+        "7_days": topics.where("created_at > ?", 7.days.ago).count,
+        "30_days": topics.where("created_at > ?", 30.days.ago).count,
+        count: topics.count,
+      }
+    end
+
+    def users
+      {
+        last_day: valid_users.where("created_at > ?", 1.day.ago).count,
+        "7_days": valid_users.where("created_at > ?", 7.days.ago).count,
+        "30_days": valid_users.where("created_at > ?", 30.days.ago).count,
+        count: valid_users.count,
+      }
+    end
+
+    def participating_users
+      {
+        last_day: participating_users_count(1.day.ago),
+        "7_days": participating_users_count(7.days.ago),
+        "30_days": participating_users_count(30.days.ago),
+      }
+    end
+
+    def visitors
+      periods = [[1.day.ago, :last_day], [7.days.ago, :"7_days"], [30.days.ago, :"30_days"]]
+
+      periods
+        .map do |(period, key)|
+          anon_page_views =
+            ApplicationRequest.request_type_count_for_period(:page_view_anon_browser, period)
+
+          logged_in_visitors = logged_in_visitors_count(period)
+          next key, anon_page_views if logged_in_visitors == 0
+
+          logged_in_page_views =
+            ApplicationRequest.request_type_count_for_period(:page_view_logged_in_browser, period)
+          next key, anon_page_views + logged_in_visitors if logged_in_page_views == 0
+
+          total_visitors = logged_in_visitors
+          avg_logged_in_page_view_per_user = logged_in_page_views.to_f / logged_in_visitors
+          anon_visitors = (anon_page_views / avg_logged_in_page_view_per_user).round
+          total_visitors += anon_visitors
+          [key, total_visitors]
+        end
+        .to_h
+    end
+
+    def eu_visitors
+      periods = [[1.day.ago, :last_day], [7.days.ago, :"7_days"], [30.days.ago, :"30_days"]]
+
+      periods
+        .map do |(period, key)|
+          logged_in_page_views =
+            ApplicationRequest.request_type_count_for_period(:page_view_logged_in_browser, period)
+          anon_page_views =
+            ApplicationRequest.request_type_count_for_period(:page_view_anon_browser, period)
+
+          all_logged_in_visitors = logged_in_visitors_count(period)
+          eu_logged_in_visitors = eu_logged_in_visitors_count(period)
+
+          next key, 0 if all_logged_in_visitors == 0 || eu_logged_in_visitors == 0
+          next key, eu_logged_in_visitors if logged_in_page_views == 0
+
+          avg_logged_in_page_view_per_user = logged_in_page_views / all_logged_in_visitors.to_f
+
+          eu_logged_in_visitors_ratio = eu_logged_in_visitors / all_logged_in_visitors.to_f
+
+          eu_anon_visitors =
+            (
+              (anon_page_views / avg_logged_in_page_view_per_user) * eu_logged_in_visitors_ratio
+            ).round
+          eu_visitors = eu_logged_in_visitors + eu_anon_visitors
+          [key, eu_visitors]
+        end
+        .to_h
+    end
+
+    # The admin onboarding panel is a one-time flow shown only to a site's first
+    # human admin, and only while their account is newer than
+    # `site_owner_onboarding_max_days`. These three stats therefore only ever
+    # climb, and freeze once that window closes.
+    def onboarding_steps
+      { completed: onboarding_step_events.distinct.count(:subject) }
+    end
+
+    def onboarding_panel
+      {
+        completed: onboarding_event_exists?(:admin_onboarding_completed),
+        dismissed: onboarding_event_exists?(:admin_onboarding_dismissed),
+      }
+    end
+
+    # Minutes from the first admin signing up to each step being completed, so
+    # that "completed within N hours" stays derivable after the fact. A step that
+    # never happened is nil rather than 0, to keep it distinct from one completed
+    # instantly.
+    def onboarding_minutes_to
+      signed_up_at = first_admin_created_at
+      steps = UserHistory::ADMIN_ONBOARDING_STEPS
+
+      return steps.index_with(nil).symbolize_keys.merge(completed: nil) if signed_up_at.nil?
+
+      completed_at = onboarding_events(:admin_onboarding_completed).minimum(:created_at)
+      first_completed_at = onboarding_step_events.group(:subject).minimum(:created_at)
+
+      steps
+        .index_with { |step| minutes_between(signed_up_at, first_completed_at[step]) }
+        .symbolize_keys
+        .merge(completed: minutes_between(signed_up_at, completed_at))
+    end
+
+    def valid_users
+      users = User.real.activated.not_suspended.not_silenced
+      users = users.approved if SiteSetting.must_approve_users
+      users
+    end
+
+    def participating_users_count(date)
+      subqueries = [
+        "SELECT DISTINCT user_id FROM user_actions WHERE created_at > :date AND action_type IN (:action_types)",
+      ]
+
+      if ActiveRecord::Base.connection.data_source_exists?("chat_messages")
+        subqueries << "SELECT DISTINCT user_id FROM chat_messages WHERE created_at > :date AND deleted_at IS NULL"
+      end
+
+      if ActiveRecord::Base.connection.data_source_exists?("chat_message_reactions")
+        subqueries << "SELECT DISTINCT user_id FROM chat_message_reactions WHERE created_at > :date"
+      end
+
+      sql = <<~SQL
       WITH valid_users AS (#{valid_users.select(:id).to_sql})
       SELECT COUNT(DISTINCT user_id) 
       FROM (#{subqueries.join(" UNION ")}) participating_users
       JOIN valid_users ON valid_users.id = participating_users.user_id
     SQL
 
-    DB.query_single(sql, date: date, action_types: UserAction::USER_ACTED_TYPES).first
-  end
+      DB.query_single(sql, date: date, action_types: UserAction::USER_ACTED_TYPES).first
+    end
 
-  def self.logged_in_visitors_count(since)
-    DB.query_single(<<~SQL, since:).first
+    def logged_in_visitors_count(since)
+      DB.query_single(<<~SQL, since:).first
       SELECT COUNT(DISTINCT user_id)
       FROM user_visits
       WHERE visited_at >= :since
     SQL
-  end
+    end
 
-  def self.eu_logged_in_visitors_count(since)
-    results = DB.query_hash(<<~SQL, since:)
+    def eu_logged_in_visitors_count(since)
+      results = DB.query_hash(<<~SQL, since:)
       SELECT DISTINCT(user_id), ip_address
       FROM user_visits uv
       INNER JOIN users u
@@ -252,9 +222,44 @@ class Statistics
       WHERE visited_at >= :since AND ip_address IS NOT NULL
     SQL
 
-    results.reduce(0) do |sum, hash|
-      ip_info = DiscourseIpInfo.get(hash["ip_address"].to_s)
-      sum + (EU_COUNTRIES.include?(ip_info[:country_code]) ? 1 : 0)
+      results.reduce(0) do |sum, hash|
+        ip_info = DiscourseIpInfo.get(hash["ip_address"].to_s)
+        sum + (EU_COUNTRIES.include?(ip_info[:country_code]) ? 1 : 0)
+      end
+    end
+
+    private
+
+    def onboarding_events(action)
+      UserHistory.where(action: UserHistory.actions[action])
+    end
+
+    def onboarding_step_events
+      onboarding_events(:admin_onboarding_step_completed).where(
+        subject: UserHistory::ADMIN_ONBOARDING_STEPS,
+      )
+    end
+
+    # Reported as 1/0 flags rather than booleans, to match the integer shape of
+    # every other stat.
+    def onboarding_event_exists?(action)
+      onboarding_events(action).exists? ? 1 : 0
+    end
+
+    # Mirrors the user the onboarding panel is shown to: the lowest-id human admin.
+    def first_admin_created_at
+      User.where(admin: true).human_users.order(:id).limit(1).pick(:created_at)
+    end
+
+    # nil rather than a negative number when the event predates the baseline,
+    # which happens when the original first admin has since been deleted or
+    # demoted: the replacement's signup is not the date onboarding started, so the
+    # duration is unknowable rather than zero.
+    def minutes_between(from, to)
+      return nil if to.nil? || to < from
+      ((to - from) / 60).round
     end
   end
+
+  private
 end

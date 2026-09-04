@@ -10,8 +10,10 @@ module Onebox
       always_https
       requires_iframe_origins "https://bandcamp.com"
 
-      def self.matches_path(path)
-        path.match?(%r{^/(album|track)/})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/(album|track)/})
+        end
       end
 
       def placeholder_html

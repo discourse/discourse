@@ -6,28 +6,29 @@ class TopicHotScore < ActiveRecord::Base
   DEFAULT_BATCH_SIZE = 1000
   CACHE_KEY = "hot_topics_ids"
 
-  def self.hottest_topic_ids
-    Discourse.cache.read(CACHE_KEY).presence || Set.new
-  end
+  class << self
+    def hottest_topic_ids
+      Discourse.cache.read(CACHE_KEY).presence || Set.new
+    end
 
-  def self.recreate_hottest_topic_ids_cache
-    hot_topics =
-      Topic
-        .where(archetype: Archetype.default)
-        .where(visible: true)
-        .where.not(id: Category.topic_ids)
+    def recreate_hottest_topic_ids_cache
+      hot_topics =
+        Topic
+          .where(archetype: Archetype.default)
+          .where(visible: true)
+          .where.not(id: Category.topic_ids)
 
-    # 10% of the topics with activity since the hot topics cutoff.
-    limit =
-      hot_topics
-        .where("last_posted_at > ?", SiteSetting.hot_topics_recent_days.days.ago)
-        .count
-        .to_i * 0.1
+      # 10% of the topics with activity since the hot topics cutoff.
+      limit =
+        hot_topics
+          .where("last_posted_at > ?", SiteSetting.hot_topics_recent_days.days.ago)
+          .count
+          .to_i * 0.1
 
-    # capped at 100 topics
-    limit = [limit, 100].min
+      # capped at 100 topics
+      limit = [limit, 100].min
 
-    sql = <<~SQL
+      sql = <<~SQL
       SELECT topic_id
       FROM topic_hot_scores
       WHERE topic_id IN (#{hot_topics.select(:id).to_sql})
@@ -35,30 +36,30 @@ class TopicHotScore < ActiveRecord::Base
       LIMIT :limit
     SQL
 
-    Discourse.cache.write(CACHE_KEY, DB.query_single(sql, limit:).to_set)
-  end
+      Discourse.cache.write(CACHE_KEY, DB.query_single(sql, limit:).to_set)
+    end
 
-  def self.update_scores(max = DEFAULT_BATCH_SIZE)
-    # score is
-    # (total likes - 1) / (age in hours + 2) ^ gravity
+    def update_scores(max = DEFAULT_BATCH_SIZE)
+      # score is
+      # (total likes - 1) / (age in hours + 2) ^ gravity
 
-    # 1. insert a new record if one does not exist (up to batch size)
-    # 2. update recently created (up to batch size)
-    # 3. update all top scoring topics (up to batch size)
+      # 1. insert a new record if one does not exist (up to batch size)
+      # 2. update recently created (up to batch size)
+      # 3. update all top scoring topics (up to batch size)
 
-    now = Time.zone.now
+      now = Time.zone.now
 
-    args = {
-      now: now,
-      gravity: SiteSetting.hot_topics_gravity,
-      max: max,
-      private_message: Archetype.private_message,
-      recent_cutoff: now - SiteSetting.hot_topics_recent_days.days,
-      regular: Post.types[:regular],
-    }
+      args = {
+        now: now,
+        gravity: SiteSetting.hot_topics_gravity,
+        max: max,
+        private_message: Archetype.private_message,
+        recent_cutoff: now - SiteSetting.hot_topics_recent_days.days,
+        regular: Post.types[:regular],
+      }
 
-    # insert up to BATCH_SIZE records that are missing from table
-    DB.exec(<<~SQL, args)
+      # insert up to BATCH_SIZE records that are missing from table
+      DB.exec(<<~SQL, args)
       INSERT INTO topic_hot_scores (
         topic_id,
         score,
@@ -88,8 +89,8 @@ class TopicHotScore < ActiveRecord::Base
       LIMIT :max
     SQL
 
-    # update recent counts for batch
-    DB.exec(<<~SQL, args)
+      # update recent counts for batch
+      DB.exec(<<~SQL, args)
       UPDATE topic_hot_scores thsOrig
       SET
           recent_likes = COALESCE(new_values.likes_count, 0),
@@ -139,10 +140,10 @@ class TopicHotScore < ActiveRecord::Base
       WHERE thsOrig.topic_id = ths.topic_id
     SQL
 
-    # we may end up update 2x batch size, this is ok
-    # we need to update 1 batch of high scoring topics
-    # we need to update a second batch of recently bumped topics
-    sql = <<~SQL
+      # we may end up update 2x batch size, this is ok
+      # we need to update 1 batch of high scoring topics
+      # we need to update a second batch of recently bumped topics
+      sql = <<~SQL
       WITH topic_ids AS (
         SELECT topic_id FROM (
           SELECT th3.topic_id FROM topic_hot_scores th3
@@ -181,11 +182,12 @@ class TopicHotScore < ActiveRecord::Base
       ) AND ths.topic_id = topics.id AND topics.created_at <= :now
     SQL
 
-    DB.exec(sql, args)
+      DB.exec(sql, args)
 
-    recreate_hottest_topic_ids_cache
+      recreate_hottest_topic_ids_cache
 
-    DiscourseEvent.trigger(:topic_hot_scores_updated)
+      DiscourseEvent.trigger(:topic_hot_scores_updated)
+    end
   end
 end
 

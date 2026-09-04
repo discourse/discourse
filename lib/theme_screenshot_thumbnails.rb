@@ -15,32 +15,35 @@ class ThemeScreenshotThumbnails
   # every request, since a failed conversion leaves nothing behind
   RETRY_INTERVAL = 1.hour
 
-  def self.url_for(theme, name)
-    upload = theme.screenshot_upload(name)
-    return if upload.blank?
-
-    existing =
-      upload.optimized_images.find_by(width: WIDTH, height: HEIGHT, extension: ".#{FORMAT}")
-    return existing.url if existing
-
-    enqueue_generation(theme)
-    nil
-  end
-
-  def self.generate!(theme)
-    NAMES.each do |name|
+  class << self
+    def url_for(theme, name)
       upload = theme.screenshot_upload(name)
-      next if upload.blank?
+      return if upload.blank?
 
-      upload.get_optimized_image(WIDTH, HEIGHT, format: FORMAT)
+      existing =
+        upload.optimized_images.find_by(width: WIDTH, height: HEIGHT, extension: ".#{FORMAT}")
+      return existing.url if existing
+
+      enqueue_generation(theme)
+      nil
+    end
+
+    def generate!(theme)
+      NAMES.each do |name|
+        upload = theme.screenshot_upload(name)
+        next if upload.blank?
+
+        upload.get_optimized_image(WIDTH, HEIGHT, format: FORMAT)
+      end
+    end
+
+    def enqueue_generation(theme)
+      key = "theme_screenshot_thumbnails_#{theme.id}"
+      return if !Discourse.redis.set(key, "1", ex: RETRY_INTERVAL.to_i, nx: true)
+
+      Jobs.enqueue(:generate_theme_screenshot_thumbnails, theme_id: theme.id)
     end
   end
 
-  def self.enqueue_generation(theme)
-    key = "theme_screenshot_thumbnails_#{theme.id}"
-    return if !Discourse.redis.set(key, "1", ex: RETRY_INTERVAL.to_i, nx: true)
-
-    Jobs.enqueue(:generate_theme_screenshot_thumbnails, theme_id: theme.id)
-  end
   private_class_method :enqueue_generation
 end

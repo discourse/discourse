@@ -36,8 +36,10 @@ module DiscourseAssign
       end
     end
 
-    def self.call(...)
-      new(...).call
+    class << self
+      def call(...)
+        new(...).call
+      end
     end
 
     attr_reader :assignment, :user, :mark_as_read, :assignment_type

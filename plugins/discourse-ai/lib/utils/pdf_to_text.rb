@@ -37,8 +37,10 @@ class DiscourseAi::Utils::PdfToText
 
   attr_reader :upload
 
-  def self.as_fake_file(upload:, user: nil, llm_model: nil, execution_context: nil)
-    Reader.new(upload: upload, user: user, llm_model: llm_model, execution_context:)
+  class << self
+    def as_fake_file(upload:, user: nil, llm_model: nil, execution_context: nil)
+      Reader.new(upload: upload, user: user, llm_model: llm_model, execution_context:)
+    end
   end
 
   def initialize(upload:, user: nil, llm_model: nil, execution_context: nil)

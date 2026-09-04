@@ -2,8 +2,10 @@
 
 RSpec.describe "RSpec Mocks from_described_class" do
   class TestClass
-    def self.clock_time
-      Time.now.to_f
+    class << self
+      def clock_time
+        Time.now.to_f
+      end
     end
 
     def instance_method

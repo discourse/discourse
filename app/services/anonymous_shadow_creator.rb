@@ -3,12 +3,14 @@
 class AnonymousShadowCreator
   attr_reader :user
 
-  def self.get_master(user)
-    new(user).get_master
-  end
+  class << self
+    def get_master(user)
+      new(user).get_master
+    end
 
-  def self.get(user)
-    new(user).get
+    def get(user)
+      new(user).get
+    end
   end
 
   def initialize(user)

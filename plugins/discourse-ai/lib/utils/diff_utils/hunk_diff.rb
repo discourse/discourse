@@ -82,8 +82,10 @@ module DiscourseAi
           end
         end
 
-        def self.apply(text, diff)
-          new(text, diff).apply
+        class << self
+          def apply(text, diff)
+            new(text, diff).apply
+          end
         end
 
         def initialize(text, diff)

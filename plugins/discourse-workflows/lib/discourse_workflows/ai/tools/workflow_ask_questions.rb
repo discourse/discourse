@@ -8,57 +8,59 @@ module DiscourseWorkflows
         MAX_OPTIONS = 8
         MAX_TEXT_LENGTH = 500
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Ask the workflow admin concise clarification questions and pause workflow authoring until the admin answers.",
-            json_schema: {
-              type: "object",
-              additionalProperties: false,
-              required: %w[questions],
-              properties: {
-                questions: {
-                  type: "array",
-                  minItems: 1,
-                  maxItems: MAX_QUESTIONS,
-                  items: {
-                    type: "object",
-                    additionalProperties: false,
-                    required: %w[id question options],
-                    properties: {
-                      id: {
-                        type: "string",
-                        description: "Stable short identifier for this question.",
-                      },
-                      question: {
-                        type: "string",
-                        description: "The question to show to the admin.",
-                      },
-                      multi_select: {
-                        type: "boolean",
-                        description: "Whether the admin may choose more than one option.",
-                      },
-                      custom_allowed: {
-                        type: "boolean",
-                        description: "Whether the admin may type a custom answer.",
-                      },
-                      options: {
-                        type: "array",
-                        minItems: 2,
-                        maxItems: MAX_OPTIONS,
-                        items: {
-                          type: "object",
-                          additionalProperties: false,
-                          required: %w[label description],
-                          properties: {
-                            label: {
-                              type: "string",
-                              description: "Short option label.",
-                            },
-                            description: {
-                              type: "string",
-                              description: "One sentence describing what this option means.",
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Ask the workflow admin concise clarification questions and pause workflow authoring until the admin answers.",
+              json_schema: {
+                type: "object",
+                additionalProperties: false,
+                required: %w[questions],
+                properties: {
+                  questions: {
+                    type: "array",
+                    minItems: 1,
+                    maxItems: MAX_QUESTIONS,
+                    items: {
+                      type: "object",
+                      additionalProperties: false,
+                      required: %w[id question options],
+                      properties: {
+                        id: {
+                          type: "string",
+                          description: "Stable short identifier for this question.",
+                        },
+                        question: {
+                          type: "string",
+                          description: "The question to show to the admin.",
+                        },
+                        multi_select: {
+                          type: "boolean",
+                          description: "Whether the admin may choose more than one option.",
+                        },
+                        custom_allowed: {
+                          type: "boolean",
+                          description: "Whether the admin may type a custom answer.",
+                        },
+                        options: {
+                          type: "array",
+                          minItems: 2,
+                          maxItems: MAX_OPTIONS,
+                          items: {
+                            type: "object",
+                            additionalProperties: false,
+                            required: %w[label description],
+                            properties: {
+                              label: {
+                                type: "string",
+                                description: "Short option label.",
+                              },
+                              description: {
+                                type: "string",
+                                description: "One sentence describing what this option means.",
+                              },
                             },
                           },
                         },
@@ -67,12 +69,12 @@ module DiscourseWorkflows
                   },
                 },
               },
-            },
-          }
-        end
+            }
+          end
 
-        def self.name
-          "workflow_ask_questions"
+          def name
+            "workflow_ask_questions"
+          end
         end
 
         def invoke

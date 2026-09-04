@@ -14,12 +14,14 @@ RSpec.describe Jobs::Scheduled do
 
               @called = 0
 
-              def self.count
-                @called
-              end
+              class << self
+                def count
+                  @called
+                end
 
-              def self.increment
-                @called += 1
+                def increment
+                  @called += 1
+                end
               end
 
               def execute(args)
@@ -41,12 +43,14 @@ RSpec.describe Jobs::Scheduled do
 
               @called = 0
 
-              def self.count
-                @called
-              end
+              class << self
+                def count
+                  @called
+                end
 
-              def self.increment
-                @called += 1
+                def increment
+                  @called += 1
+                end
               end
 
               def execute(args)

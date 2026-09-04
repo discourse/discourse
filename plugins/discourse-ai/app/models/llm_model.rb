@@ -41,23 +41,382 @@ class LlmModel < ActiveRecord::Base
     },
   }.freeze
 
-  def self.spending_component_sql(component, table)
-    info = COST_COMPONENTS.fetch(component)
-    qt = connection.quote_table_name(table.to_s)
-    "COALESCE(#{qt}.#{info[:tokens]}, 0) * COALESCE(llm_models.#{info[:cost]}, 0)"
-  end
+  class << self
+    def spending_component_sql(component, table)
+      info = COST_COMPONENTS.fetch(component)
+      qt = connection.quote_table_name(table.to_s)
+      "COALESCE(#{qt}.#{info[:tokens]}, 0) * COALESCE(llm_models.#{info[:cost]}, 0)"
+    end
 
-  def self.spending_sql(table)
-    COST_COMPONENTS.keys.map { |k| spending_component_sql(k, table) }.join(" + ")
-  end
+    def spending_sql(table)
+      COST_COMPONENTS.keys.map { |k| spending_component_sql(k, table) }.join(" + ")
+    end
 
-  def self.spending_dollars_sql(table)
-    "(#{spending_sql(table)}) / 1000000.0"
-  end
+    def spending_dollars_sql(table)
+      "(#{spending_sql(table)}) / 1000000.0"
+    end
 
-  def self.estimated_or_calculated_spending_sql(table)
-    qt = connection.quote_table_name(table.to_s)
-    "COALESCE(#{qt}.estimated_cost, CASE WHEN llm_models.id IS NULL THEN NULL ELSE #{spending_dollars_sql(table)} END)"
+    def estimated_or_calculated_spending_sql(table)
+      qt = connection.quote_table_name(table.to_s)
+      "COALESCE(#{qt}.estimated_cost, CASE WHEN llm_models.id IS NULL THEN NULL ELSE #{spending_dollars_sql(table)} END)"
+    end
+
+    def enabled_chat_bot_ids
+      SiteSetting.ai_bot_enabled_llms.split("|").map(&:to_i).reject(&:zero?)
+    end
+
+    def provider_params
+      params = {
+        aws_bedrock: {
+          access_key_id: :secret,
+          role_arn: :text,
+          region: :text,
+          inference_profile_arn: :text,
+          enable_reasoning: :checkbox,
+          adaptive_thinking: {
+            type: :checkbox,
+            depends_on: :enable_reasoning,
+          },
+          reasoning_tokens: {
+            type: :number,
+            depends_on: :enable_reasoning,
+            hidden_if: :adaptive_thinking,
+          },
+          effort: {
+            type: :enum,
+            values: [
+              "default",
+              *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES,
+            ],
+            default: "default",
+          },
+          disable_native_tools: :checkbox,
+          disable_native_structured_output: :checkbox,
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: %i[enable_reasoning adaptive_thinking],
+          },
+          disable_top_p: {
+            type: :checkbox,
+            hidden_if: %i[enable_reasoning adaptive_thinking],
+          },
+          prompt_caching: {
+            type: :enum,
+            values: %w[never tool_results always],
+            default: "tool_results",
+          },
+        },
+        aws_bedrock_converse: {
+          access_key_id: :secret,
+          role_arn: :text,
+          region: :text,
+          enable_reasoning: :checkbox,
+          adaptive_thinking: {
+            type: :checkbox,
+            depends_on: :enable_reasoning,
+          },
+          reasoning_tokens: {
+            type: :number,
+            depends_on: :enable_reasoning,
+            hidden_if: :adaptive_thinking,
+          },
+          effort: {
+            type: :enum,
+            values: [
+              "default",
+              *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES,
+            ],
+            default: "default",
+          },
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: %i[enable_reasoning adaptive_thinking],
+          },
+          disable_top_p: {
+            type: :checkbox,
+            hidden_if: %i[enable_reasoning adaptive_thinking],
+          },
+          prompt_caching: {
+            type: :enum,
+            values: %w[never tool_results always],
+            default: "tool_results",
+          },
+          extra_model_fields: :text,
+        },
+        anthropic: {
+          enable_reasoning: :checkbox,
+          adaptive_thinking: {
+            type: :checkbox,
+            depends_on: :enable_reasoning,
+          },
+          reasoning_tokens: {
+            type: :number,
+            depends_on: :enable_reasoning,
+            hidden_if: :adaptive_thinking,
+          },
+          effort: {
+            type: :enum,
+            values: [
+              "default",
+              *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES,
+            ],
+            default: "default",
+          },
+          disable_native_tools: :checkbox,
+          disable_native_structured_output: :checkbox,
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: %i[enable_reasoning adaptive_thinking],
+          },
+          disable_top_p: {
+            type: :checkbox,
+            hidden_if: %i[enable_reasoning adaptive_thinking],
+          },
+          prompt_caching: {
+            type: :enum,
+            values: %w[never tool_results always],
+            default: "tool_results",
+          },
+        },
+        open_ai: {
+          organization: :text,
+          disable_native_tools: :checkbox,
+          reasoning_effort: {
+            type: :enum,
+            values: %w[default none minimal low medium high xhigh max],
+            default: "default",
+          },
+          reasoning_mode: {
+            type: :enum,
+            values: ["default", *OPEN_AI_REASONING_MODES],
+            default: "default",
+            tooltip: "discourse_ai.llms.provider_field_hints.reasoning_mode",
+          },
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: %i[reasoning_effort reasoning_mode],
+          },
+          disable_top_p: {
+            type: :checkbox,
+            hidden_if: %i[reasoning_effort reasoning_mode],
+          },
+          disable_streaming: :checkbox,
+          service_tier: {
+            type: :enum,
+            values: %w[default auto flex priority],
+            default: "default",
+          },
+        },
+        groq: {
+          disable_native_tools: :checkbox,
+          reasoning_effort: {
+            type: :enum,
+            values: %w[default none minimal low medium high xhigh],
+            default: "default",
+          },
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: :reasoning_effort,
+          },
+          disable_top_p: {
+            type: :checkbox,
+            hidden_if: :reasoning_effort,
+          },
+          disable_streaming: :checkbox,
+        },
+        mistral: {
+          disable_native_tools: :checkbox,
+        },
+        gemini_interactions: {
+          disable_native_tools: :checkbox,
+          thinking_level: {
+            type: :enum,
+            values: %w[default minimal low medium high],
+            default: "default",
+            label: "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+          },
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: :thinking_level,
+          },
+          disable_top_p: :checkbox,
+          service_tier: {
+            type: :enum,
+            values: %w[default standard flex priority],
+            default: "default",
+          },
+        },
+        google: {
+          disable_native_tools: :checkbox,
+          enable_thinking: :checkbox,
+          thinking_level: {
+            type: :enum,
+            values: %w[default minimal low medium high],
+            default: "default",
+            depends_on: :enable_thinking,
+          },
+          thinking_tokens: {
+            type: :number,
+            depends_on: :enable_thinking,
+            hidden_if: :thinking_level,
+          },
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: :enable_thinking,
+          },
+          disable_top_p: :checkbox,
+          service_tier: {
+            type: :enum,
+            values: %w[default standard flex priority],
+            default: "default",
+          },
+        },
+        google_vertex_ai: {
+          project_id: :text,
+          region: :text,
+          disable_native_tools: :checkbox,
+          enable_thinking: :checkbox,
+          thinking_level: {
+            type: :enum,
+            values: %w[default minimal low medium high],
+            default: "default",
+            depends_on: :enable_thinking,
+          },
+          thinking_tokens: {
+            type: :number,
+            depends_on: :enable_thinking,
+            hidden_if: :thinking_level,
+          },
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: :enable_thinking,
+          },
+          disable_top_p: :checkbox,
+        },
+        azure: {
+          disable_native_tools: :checkbox,
+          reasoning_effort: {
+            type: :enum,
+            values: %w[default none minimal low medium high xhigh max],
+            default: "default",
+            tooltip: "discourse_ai.llms.provider_field_hints.azure_reasoning_effort",
+          },
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: :reasoning_effort,
+          },
+          disable_top_p: {
+            type: :checkbox,
+            hidden_if: :reasoning_effort,
+          },
+          disable_streaming: :checkbox,
+          service_tier: {
+            type: :enum,
+            values: %w[default auto flex priority],
+            default: "default",
+          },
+        },
+        hugging_face: {
+          disable_system_prompt: :checkbox,
+          disable_native_tools: :checkbox,
+        },
+        vllm: {
+          disable_system_prompt: :checkbox,
+          disable_native_tools: :checkbox,
+          reasoning_parser: {
+            type: :enum,
+            values: [
+              { id: "default", name: "Server default" },
+              { id: "deepseek_r1", name: "deepseek_r1" },
+              { id: "qwen3", name: "qwen3" },
+              { id: "deepseek_v3", name: "deepseek_v3" },
+              { id: "deepseek_v4", name: "deepseek_v4" },
+              { id: "gemma4", name: "gemma4" },
+              { id: "granite", name: "granite" },
+              { id: "glm45", name: "glm45" },
+              { id: "hunyuan_a13b", name: "hunyuan_a13b" },
+              { id: "cohere_command3", name: "cohere_command3" },
+              { id: "ernie45", name: "ernie45" },
+              { id: "holo2", name: "holo2" },
+              { id: "minimax_m2_append_think", name: "minimax_m2_append_think" },
+            ],
+            default: "default",
+            tooltip: "discourse_ai.llms.provider_field_hints.reasoning_parser",
+          },
+          thinking_override: {
+            type: :enum,
+            values: [
+              { id: "default", name: "Server default" },
+              { id: "on", name: "Force on" },
+              { id: "off", name: "Force off" },
+            ],
+            default: "default",
+            depends_on: :reasoning_parser,
+            tooltip: "discourse_ai.llms.provider_field_hints.thinking_override",
+          },
+          reasoning_effort: {
+            type: :enum,
+            values: [
+              { id: "default", name: "Server default" },
+              { id: "none", name: "None" },
+              { id: "low", name: "Low" },
+              { id: "medium", name: "Medium" },
+              { id: "high", name: "High" },
+            ],
+            default: "default",
+            depends_on: :reasoning_parser,
+            tooltip: "discourse_ai.llms.provider_field_hints.reasoning_effort",
+          },
+          thinking_token_budget: {
+            type: :number,
+            depends_on: :reasoning_parser,
+            tooltip: "discourse_ai.llms.provider_field_hints.thinking_token_budget",
+          },
+          disable_temperature: {
+            type: :checkbox,
+            hidden_if: :reasoning_effort,
+          },
+          disable_top_p: {
+            type: :checkbox,
+            hidden_if: :reasoning_effort,
+          },
+          disable_streaming: :checkbox,
+        },
+        ollama: {
+          disable_system_prompt: :checkbox,
+          enable_native_tool: :checkbox,
+          disable_streaming: :checkbox,
+        },
+        open_router: {
+          disable_native_tools: :checkbox,
+          provider_order: :text,
+          provider_quantizations: :text,
+          disable_streaming: :checkbox,
+          disable_temperature: :checkbox,
+          disable_top_p: :checkbox,
+        },
+      }
+
+      unless SiteSetting.ai_llm_temperature_top_p_enabled
+        params.each_value do |provider_config|
+          provider_config.delete(:disable_temperature)
+          provider_config.delete(:disable_top_p)
+        end
+      end
+
+      params
+    end
+
+    def normalize_attachment_types(value)
+      normalized =
+        Array(value)
+          .map { |v| v.to_s.downcase.strip }
+          .map { |v| ATTACHMENT_TYPE_ALIASES[v] || v }
+          .reject(&:blank?)
+          .uniq
+      normalized = DEFAULT_ALLOWED_ATTACHMENT_TYPES if normalized.empty?
+      normalized
+    end
   end
 
   def estimated_cost_for_tokens(
@@ -139,345 +498,8 @@ class LlmModel < ActiveRecord::Base
           where(id: model_ids)
         end
 
-  def self.enabled_chat_bot_ids
-    SiteSetting.ai_bot_enabled_llms.split("|").map(&:to_i).reject(&:zero?)
-  end
-
   def enabled_chat_bot?
     self.class.enabled_chat_bot_ids.include?(id)
-  end
-
-  def self.provider_params
-    params = {
-      aws_bedrock: {
-        access_key_id: :secret,
-        role_arn: :text,
-        region: :text,
-        inference_profile_arn: :text,
-        enable_reasoning: :checkbox,
-        adaptive_thinking: {
-          type: :checkbox,
-          depends_on: :enable_reasoning,
-        },
-        reasoning_tokens: {
-          type: :number,
-          depends_on: :enable_reasoning,
-          hidden_if: :adaptive_thinking,
-        },
-        effort: {
-          type: :enum,
-          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
-          default: "default",
-        },
-        disable_native_tools: :checkbox,
-        disable_native_structured_output: :checkbox,
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: %i[enable_reasoning adaptive_thinking],
-        },
-        disable_top_p: {
-          type: :checkbox,
-          hidden_if: %i[enable_reasoning adaptive_thinking],
-        },
-        prompt_caching: {
-          type: :enum,
-          values: %w[never tool_results always],
-          default: "tool_results",
-        },
-      },
-      aws_bedrock_converse: {
-        access_key_id: :secret,
-        role_arn: :text,
-        region: :text,
-        enable_reasoning: :checkbox,
-        adaptive_thinking: {
-          type: :checkbox,
-          depends_on: :enable_reasoning,
-        },
-        reasoning_tokens: {
-          type: :number,
-          depends_on: :enable_reasoning,
-          hidden_if: :adaptive_thinking,
-        },
-        effort: {
-          type: :enum,
-          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
-          default: "default",
-        },
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: %i[enable_reasoning adaptive_thinking],
-        },
-        disable_top_p: {
-          type: :checkbox,
-          hidden_if: %i[enable_reasoning adaptive_thinking],
-        },
-        prompt_caching: {
-          type: :enum,
-          values: %w[never tool_results always],
-          default: "tool_results",
-        },
-        extra_model_fields: :text,
-      },
-      anthropic: {
-        enable_reasoning: :checkbox,
-        adaptive_thinking: {
-          type: :checkbox,
-          depends_on: :enable_reasoning,
-        },
-        reasoning_tokens: {
-          type: :number,
-          depends_on: :enable_reasoning,
-          hidden_if: :adaptive_thinking,
-        },
-        effort: {
-          type: :enum,
-          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
-          default: "default",
-        },
-        disable_native_tools: :checkbox,
-        disable_native_structured_output: :checkbox,
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: %i[enable_reasoning adaptive_thinking],
-        },
-        disable_top_p: {
-          type: :checkbox,
-          hidden_if: %i[enable_reasoning adaptive_thinking],
-        },
-        prompt_caching: {
-          type: :enum,
-          values: %w[never tool_results always],
-          default: "tool_results",
-        },
-      },
-      open_ai: {
-        organization: :text,
-        disable_native_tools: :checkbox,
-        reasoning_effort: {
-          type: :enum,
-          values: %w[default none minimal low medium high xhigh max],
-          default: "default",
-        },
-        reasoning_mode: {
-          type: :enum,
-          values: ["default", *OPEN_AI_REASONING_MODES],
-          default: "default",
-          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_mode",
-        },
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: %i[reasoning_effort reasoning_mode],
-        },
-        disable_top_p: {
-          type: :checkbox,
-          hidden_if: %i[reasoning_effort reasoning_mode],
-        },
-        disable_streaming: :checkbox,
-        service_tier: {
-          type: :enum,
-          values: %w[default auto flex priority],
-          default: "default",
-        },
-      },
-      groq: {
-        disable_native_tools: :checkbox,
-        reasoning_effort: {
-          type: :enum,
-          values: %w[default none minimal low medium high xhigh],
-          default: "default",
-        },
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: :reasoning_effort,
-        },
-        disable_top_p: {
-          type: :checkbox,
-          hidden_if: :reasoning_effort,
-        },
-        disable_streaming: :checkbox,
-      },
-      mistral: {
-        disable_native_tools: :checkbox,
-      },
-      gemini_interactions: {
-        disable_native_tools: :checkbox,
-        thinking_level: {
-          type: :enum,
-          values: %w[default minimal low medium high],
-          default: "default",
-          label: "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
-        },
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: :thinking_level,
-        },
-        disable_top_p: :checkbox,
-        service_tier: {
-          type: :enum,
-          values: %w[default standard flex priority],
-          default: "default",
-        },
-      },
-      google: {
-        disable_native_tools: :checkbox,
-        enable_thinking: :checkbox,
-        thinking_level: {
-          type: :enum,
-          values: %w[default minimal low medium high],
-          default: "default",
-          depends_on: :enable_thinking,
-        },
-        thinking_tokens: {
-          type: :number,
-          depends_on: :enable_thinking,
-          hidden_if: :thinking_level,
-        },
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: :enable_thinking,
-        },
-        disable_top_p: :checkbox,
-        service_tier: {
-          type: :enum,
-          values: %w[default standard flex priority],
-          default: "default",
-        },
-      },
-      google_vertex_ai: {
-        project_id: :text,
-        region: :text,
-        disable_native_tools: :checkbox,
-        enable_thinking: :checkbox,
-        thinking_level: {
-          type: :enum,
-          values: %w[default minimal low medium high],
-          default: "default",
-          depends_on: :enable_thinking,
-        },
-        thinking_tokens: {
-          type: :number,
-          depends_on: :enable_thinking,
-          hidden_if: :thinking_level,
-        },
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: :enable_thinking,
-        },
-        disable_top_p: :checkbox,
-      },
-      azure: {
-        disable_native_tools: :checkbox,
-        reasoning_effort: {
-          type: :enum,
-          values: %w[default none minimal low medium high xhigh max],
-          default: "default",
-          tooltip: "discourse_ai.llms.provider_field_hints.azure_reasoning_effort",
-        },
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: :reasoning_effort,
-        },
-        disable_top_p: {
-          type: :checkbox,
-          hidden_if: :reasoning_effort,
-        },
-        disable_streaming: :checkbox,
-        service_tier: {
-          type: :enum,
-          values: %w[default auto flex priority],
-          default: "default",
-        },
-      },
-      hugging_face: {
-        disable_system_prompt: :checkbox,
-        disable_native_tools: :checkbox,
-      },
-      vllm: {
-        disable_system_prompt: :checkbox,
-        disable_native_tools: :checkbox,
-        reasoning_parser: {
-          type: :enum,
-          values: [
-            { id: "default", name: "Server default" },
-            { id: "deepseek_r1", name: "deepseek_r1" },
-            { id: "qwen3", name: "qwen3" },
-            { id: "deepseek_v3", name: "deepseek_v3" },
-            { id: "deepseek_v4", name: "deepseek_v4" },
-            { id: "gemma4", name: "gemma4" },
-            { id: "granite", name: "granite" },
-            { id: "glm45", name: "glm45" },
-            { id: "hunyuan_a13b", name: "hunyuan_a13b" },
-            { id: "cohere_command3", name: "cohere_command3" },
-            { id: "ernie45", name: "ernie45" },
-            { id: "holo2", name: "holo2" },
-            { id: "minimax_m2_append_think", name: "minimax_m2_append_think" },
-          ],
-          default: "default",
-          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_parser",
-        },
-        thinking_override: {
-          type: :enum,
-          values: [
-            { id: "default", name: "Server default" },
-            { id: "on", name: "Force on" },
-            { id: "off", name: "Force off" },
-          ],
-          default: "default",
-          depends_on: :reasoning_parser,
-          tooltip: "discourse_ai.llms.provider_field_hints.thinking_override",
-        },
-        reasoning_effort: {
-          type: :enum,
-          values: [
-            { id: "default", name: "Server default" },
-            { id: "none", name: "None" },
-            { id: "low", name: "Low" },
-            { id: "medium", name: "Medium" },
-            { id: "high", name: "High" },
-          ],
-          default: "default",
-          depends_on: :reasoning_parser,
-          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_effort",
-        },
-        thinking_token_budget: {
-          type: :number,
-          depends_on: :reasoning_parser,
-          tooltip: "discourse_ai.llms.provider_field_hints.thinking_token_budget",
-        },
-        disable_temperature: {
-          type: :checkbox,
-          hidden_if: :reasoning_effort,
-        },
-        disable_top_p: {
-          type: :checkbox,
-          hidden_if: :reasoning_effort,
-        },
-        disable_streaming: :checkbox,
-      },
-      ollama: {
-        disable_system_prompt: :checkbox,
-        enable_native_tool: :checkbox,
-        disable_streaming: :checkbox,
-      },
-      open_router: {
-        disable_native_tools: :checkbox,
-        provider_order: :text,
-        provider_quantizations: :text,
-        disable_streaming: :checkbox,
-        disable_temperature: :checkbox,
-        disable_top_p: :checkbox,
-      },
-    }
-
-    unless SiteSetting.ai_llm_temperature_top_p_enabled
-      params.each_value do |provider_config|
-        provider_config.delete(:disable_temperature)
-        provider_config.delete(:disable_top_p)
-      end
-    end
-
-    params
   end
 
   def to_llm
@@ -558,17 +580,6 @@ class LlmModel < ActiveRecord::Base
 
   def tokenizer_class
     tokenizer.constantize
-  end
-
-  def self.normalize_attachment_types(value)
-    normalized =
-      Array(value)
-        .map { |v| v.to_s.downcase.strip }
-        .map { |v| ATTACHMENT_TYPE_ALIASES[v] || v }
-        .reject(&:blank?)
-        .uniq
-    normalized = DEFAULT_ALLOWED_ATTACHMENT_TYPES if normalized.empty?
-    normalized
   end
 
   def allowed_attachment_types

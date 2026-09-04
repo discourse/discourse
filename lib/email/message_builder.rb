@@ -9,6 +9,23 @@ module Email
     ALLOW_REPLY_BY_EMAIL_HEADER = "X-Discourse-Allow-Reply-By-Email"
     INSTRUCTIONS_SEPARATOR = "---\n"
 
+    class << self
+      def custom_headers(string)
+        result = {}
+        string
+          .split("|")
+          .each do |item|
+            header = item.split(":", 2)
+            if header.length == 2
+              name = header[0].strip
+              value = header[1].strip
+              result[name] = value if name.length > 0 && value.length > 0
+            end
+          end unless string.nil?
+        result
+      end
+    end
+
     def initialize(to, opts = nil)
       @to = to
       @opts = opts || {}
@@ -312,21 +329,6 @@ module Email
       end
 
       result.merge(MessageBuilder.custom_headers(SiteSetting.email_custom_headers))
-    end
-
-    def self.custom_headers(string)
-      result = {}
-      string
-        .split("|")
-        .each do |item|
-          header = item.split(":", 2)
-          if header.length == 2
-            name = header[0].strip
-            value = header[1].strip
-            result[name] = value if name.length > 0 && value.length > 0
-          end
-        end unless string.nil?
-      result
     end
 
     protected

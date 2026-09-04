@@ -1,21 +1,6 @@
 # frozen_string_literal: true
 
 class AdminUserIndexQuery
-  def initialize(
-    params = {},
-    klass = User,
-    trust_levels = TrustLevel.levels,
-    guardian: nil,
-    **kwargs
-  )
-    @params = params.merge(kwargs)
-    @query = initialize_query_with_order(klass)
-    @trust_levels = trust_levels
-    @guardian = guardian
-  end
-
-  attr_reader :params, :trust_levels, :guardian
-
   SORTABLE_MAPPING = {
     "created" => "created_at",
     "last_emailed" => "COALESCE(last_emailed_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
@@ -31,11 +16,24 @@ class AdminUserIndexQuery
     "silence_reason" => "silence_reason",
     "suspend_reason" => "suspend_reason",
   }
-
   SAME_IP_ADDRESS_COLUMNS = { "last" => :ip_address, "registration" => :registration_ip_address }
-
   FILTER_SPLIT_REGEX = /[,\s]+/
   MAX_FILTER_TERMS = 100
+
+  def initialize(
+    params = {},
+    klass = User,
+    trust_levels = TrustLevel.levels,
+    guardian: nil,
+    **kwargs
+  )
+    @params = params.merge(kwargs)
+    @query = initialize_query_with_order(klass)
+    @trust_levels = trust_levels
+    @guardian = guardian
+  end
+
+  attr_reader :params, :trust_levels, :guardian
 
   def find_users(limit = 100)
     page = params[:page].to_i - 1

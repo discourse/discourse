@@ -30,60 +30,62 @@ module DiscourseWorkflows
 
         MAX_TOPICS_PER_RUN = 100
 
-        def self.trigger_data_for(trigger_ctx)
-          hours = trigger_ctx.get_node_parameter("hours", 24)
-          category_ids = category_ids_parameter(trigger_ctx)
-          include_subcategories = trigger_ctx.get_node_parameter("include_subcategories", true)
-          tag_names = normalize_tag_names(trigger_ctx.get_node_parameter("tag_names"))
+        class << self
+          def trigger_data_for(trigger_ctx)
+            hours = trigger_ctx.get_node_parameter("hours", 24)
+            category_ids = category_ids_parameter(trigger_ctx)
+            include_subcategories = trigger_ctx.get_node_parameter("include_subcategories", true)
+            tag_names = normalize_tag_names(trigger_ctx.get_node_parameter("tag_names"))
 
-          stale_topics(
-            hours: hours,
-            category_ids: category_ids,
-            include_subcategories: include_subcategories,
-            tag_names: tag_names,
-            limit: MAX_TOPICS_PER_RUN,
-          ).map { |topic| { topic: topic_data(topic) } }
-        end
-
-        def self.stale_topics(
-          hours:,
-          category_ids: [],
-          include_subcategories: true,
-          tag_names: [],
-          limit:
-        )
-          threshold = hours.to_i.clamp(1..).hours.ago
-
-          scope =
-            ::Topic
-              .where("GREATEST(topics.created_at, topics.last_posted_at) < ?", threshold)
-              .where(closed: false, archived: false, visible: true)
-              .where("topics.archetype = ?", Archetype.default)
-              .includes(first_post: :user)
-
-          if category_ids.present?
-            scoped_category_ids =
-              if include_subcategories == false
-                category_ids
-              else
-                expand_subcategory_ids(category_ids)
-              end
-            scope = scope.where(category_id: scoped_category_ids)
+            stale_topics(
+              hours: hours,
+              category_ids: category_ids,
+              include_subcategories: include_subcategories,
+              tag_names: tag_names,
+              limit: MAX_TOPICS_PER_RUN,
+            ).map { |topic| { topic: topic_data(topic) } }
           end
 
-          scope = scope.joins(:tags).where(tags: { name: tag_names }).distinct if tag_names.any?
+          def stale_topics(
+            hours:,
+            category_ids: [],
+            include_subcategories: true,
+            tag_names: [],
+            limit:
+          )
+            threshold = hours.to_i.clamp(1..).hours.ago
 
-          scope.limit(limit).to_a
-        end
+            scope =
+              ::Topic
+                .where("GREATEST(topics.created_at, topics.last_posted_at) < ?", threshold)
+                .where(closed: false, archived: false, visible: true)
+                .where("topics.archetype = ?", Archetype.default)
+                .includes(first_post: :user)
 
-        def self.topic_data(topic)
-          MultiJson.load(
-            DiscourseWorkflows::TopicListItemSerializer.new(
-              topic,
-              scope: Discourse.system_user.guardian,
-              root: false,
-            ).to_json,
-          ).deep_symbolize_keys
+            if category_ids.present?
+              scoped_category_ids =
+                if include_subcategories == false
+                  category_ids
+                else
+                  expand_subcategory_ids(category_ids)
+                end
+              scope = scope.where(category_id: scoped_category_ids)
+            end
+
+            scope = scope.joins(:tags).where(tags: { name: tag_names }).distinct if tag_names.any?
+
+            scope.limit(limit).to_a
+          end
+
+          def topic_data(topic)
+            MultiJson.load(
+              DiscourseWorkflows::TopicListItemSerializer.new(
+                topic,
+                scope: Discourse.system_user.guardian,
+                root: false,
+              ).to_json,
+            ).deep_symbolize_keys
+          end
         end
       end
     end

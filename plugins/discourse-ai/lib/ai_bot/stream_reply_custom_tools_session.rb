@@ -17,13 +17,15 @@ module DiscourseAi
       class InvalidToolResults < ProtocolError
       end
 
-      def self.resume_state_exists?(resume_token)
-        return false if resume_token.blank?
-        Discourse.redis.exists?(redis_key(resume_token))
-      end
+      class << self
+        def resume_state_exists?(resume_token)
+          return false if resume_token.blank?
+          Discourse.redis.exists?(redis_key(resume_token))
+        end
 
-      def self.redis_key(resume_token)
-        "#{RESUME_STATE_PREFIX}#{resume_token}"
+        def redis_key(resume_token)
+          "#{RESUME_STATE_PREFIX}#{resume_token}"
+        end
       end
 
       def initialize(

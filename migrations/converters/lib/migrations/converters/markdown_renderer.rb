@@ -66,6 +66,35 @@ module Migrations
       }.freeze
       private_constant :MENTION_TYPES
 
+      class << self
+        # Markbridge's default rules cover CommonMark legality only: they unwrap a
+        # link nested in a link and hoist block or multi-line-code content out of
+        # an inline container. A linked image is legal CommonMark and Discourse
+        # cooks it fine (the anchor simply wraps the image), so an image stays
+        # inside its link — the defaults leave it alone and we add nothing for it.
+        #
+        # Our one rule turns a mention inside a link label into plain text.
+        # Discourse doesn't cook mentions inside links, so nothing is lost — and as
+        # text the label stays deferrable, so the link keeps its import-time
+        # rewrite instead of falling back to native rendering. Trade-off: the
+        # mention becomes frozen source text instead of being remapped through the
+        # user map — acceptable, because Discourse would only render it as plain
+        # label text inside a link anyway.
+        #
+        # Built once; safe to share, the frozen normalizer keeps no per-run state.
+        def normalizer
+          @normalizer ||=
+            Markbridge::Normalizer
+              .default
+              .rule(
+                parent: Markbridge::AST::Url,
+                child: Markbridge::AST::Mention,
+                strategy: :textify,
+              )
+              .freeze
+        end
+      end
+
       # @param format [Symbol] one of {FORMATS}.
       # @param embeds [#upload, #quote, #mention, #link, nil] the embed collector;
       #   when nil the embeds render natively.
@@ -79,29 +108,6 @@ module Migrations
 
         @embeds = embeds
         @renderer = embeds ? build_deferring_renderer(defer) : nil
-      end
-
-      # Markbridge's default rules cover CommonMark legality only: they unwrap a
-      # link nested in a link and hoist block or multi-line-code content out of
-      # an inline container. A linked image is legal CommonMark and Discourse
-      # cooks it fine (the anchor simply wraps the image), so an image stays
-      # inside its link — the defaults leave it alone and we add nothing for it.
-      #
-      # Our one rule turns a mention inside a link label into plain text.
-      # Discourse doesn't cook mentions inside links, so nothing is lost — and as
-      # text the label stays deferrable, so the link keeps its import-time
-      # rewrite instead of falling back to native rendering. Trade-off: the
-      # mention becomes frozen source text instead of being remapped through the
-      # user map — acceptable, because Discourse would only render it as plain
-      # label text inside a link anyway.
-      #
-      # Built once; safe to share, the frozen normalizer keeps no per-run state.
-      def self.normalizer
-        @normalizer ||=
-          Markbridge::Normalizer
-            .default
-            .rule(parent: Markbridge::AST::Url, child: Markbridge::AST::Mention, strategy: :textify)
-            .freeze
       end
 
       # @param source [String] the source post body.

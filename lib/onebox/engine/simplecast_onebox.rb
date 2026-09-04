@@ -10,8 +10,10 @@ module Onebox
       always_https
       requires_iframe_origins("https://player.simplecast.com")
 
-      def self.matches_path(path)
-        path.match?(%r{^/(episodes|s)/.+})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/(episodes|s)/.+})
+        end
       end
 
       def to_html

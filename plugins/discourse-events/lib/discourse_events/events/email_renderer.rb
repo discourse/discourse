@@ -5,8 +5,10 @@ module DiscourseEvents
     class EmailRenderer
       RECURRENCE_ORDINALS = %w[first second third fourth]
 
-      def self.render(event_node, post)
-        new(event_node, post).to_html
+      class << self
+        def render(event_node, post)
+          new(event_node, post).to_html
+        end
       end
 
       def initialize(event_node, post)

@@ -3,10 +3,11 @@
 module DiscourseAi
   module Automation
     class ReportRunner
-      def self.default_instructions
-        # not localizing for now cause non English LLM will require
-        # a fair bit of experimentation
-        <<~TEXT
+      class << self
+        def default_instructions
+          # not localizing for now cause non English LLM will require
+          # a fair bit of experimentation
+          <<~TEXT
         Generate report:
 
         ## Report Guidelines:
@@ -27,10 +28,11 @@ module DiscourseAi
         - Highlighted content: 5 paragraphs highlighting important topics people should know about. If possible have each paragraph link to multiple related topics.
         - Key insights and trends linking to a selection of posts that back them
         TEXT
-      end
+        end
 
-      def self.run!(**args)
-        new(**args).run!
+        def run!(**args)
+          new(**args).run!
+        end
       end
 
       def initialize(

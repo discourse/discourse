@@ -6,6 +6,12 @@ require "faker"
 
 module DiscourseDev
   class Group < Record
+    class << self
+      def random
+        super(::Group)
+      end
+    end
+
     def initialize
       super(::Group, DiscourseDev.config.group[:count])
     end
@@ -28,10 +34,6 @@ module DiscourseDev
           group.save!
         end
       end
-    end
-
-    def self.random
-      super(::Group)
     end
   end
 end

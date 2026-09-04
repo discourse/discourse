@@ -3,6 +3,41 @@
 class TopicsBulkAction
   attr_reader :errors
 
+  class << self
+    def operations
+      @operations ||= %w[
+        change_category
+        close
+        archive
+        change_notification_level
+        destroy_post_timing
+        dismiss_posts
+        delete
+        unlist
+        archive_messages
+        move_messages_to_inbox
+        change_tags
+        append_tags
+        remove_tags
+        manage_tags
+        relist
+        dismiss_topics
+        reset_bump_dates
+        pin
+        unpin
+        convert_to_public_topic
+        convert_to_private_message
+        enable_nested_view
+        disable_nested_view
+      ]
+    end
+
+    def register_operation(name, &block)
+      operations << name
+      define_method(name, &block)
+    end
+  end
+
   def initialize(user, topic_ids, operation, options = {})
     @user = user
     @topic_ids = topic_ids
@@ -27,39 +62,6 @@ class TopicsBulkAction
         count: count,
       }
     end
-  end
-
-  def self.operations
-    @operations ||= %w[
-      change_category
-      close
-      archive
-      change_notification_level
-      destroy_post_timing
-      dismiss_posts
-      delete
-      unlist
-      archive_messages
-      move_messages_to_inbox
-      change_tags
-      append_tags
-      remove_tags
-      manage_tags
-      relist
-      dismiss_topics
-      reset_bump_dates
-      pin
-      unpin
-      convert_to_public_topic
-      convert_to_private_message
-      enable_nested_view
-      disable_nested_view
-    ]
-  end
-
-  def self.register_operation(name, &block)
-    operations << name
-    define_method(name, &block)
   end
 
   def perform!

@@ -3,11 +3,13 @@
 class SlugSetting < EnumSiteSetting
   VALUES = %w[ascii encoded none]
 
-  def self.valid_value?(val)
-    VALUES.include?(val)
-  end
+  class << self
+    def valid_value?(val)
+      VALUES.include?(val)
+    end
 
-  def self.values
-    VALUES.map { |l| { name: l, value: l } }
+    def values
+      VALUES.map { |l| { name: l, value: l } }
+    end
   end
 end

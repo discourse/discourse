@@ -13,8 +13,10 @@ class DiscourseChatIntegration::Channel < DiscourseChatIntegration::PluginModel
 
   validate :provider_valid?, :data_valid?
 
-  def self.key_prefix
-    "channel:"
+  class << self
+    def key_prefix
+      "channel:"
+    end
   end
 
   def rules

@@ -20,10 +20,6 @@ module DiscourseWorkflows
 
     before_destroy :drop_storage_table
 
-    def columns
-      DataTables::Storage.columns(id)
-    end
-
     class << self
       def column_name(column)
         column.respond_to?(:name) ? column.name.to_s : column.fetch("name").to_s
@@ -32,6 +28,10 @@ module DiscourseWorkflows
       def column_type(column)
         column.respond_to?(:column_type) ? column.column_type.to_s : column.fetch("type").to_s
       end
+    end
+
+    def columns
+      DataTables::Storage.columns(id)
     end
 
     private

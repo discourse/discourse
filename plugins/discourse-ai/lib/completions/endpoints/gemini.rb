@@ -30,8 +30,10 @@ module DiscourseAi
           thinkingBudget
         ].freeze
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "google"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "google"
+          end
         end
 
         def default_options

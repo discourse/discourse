@@ -26,6 +26,38 @@ class Poll < ActiveRecord::Base
 
   after_initialize { @has_voted = {} }
 
+  class << self
+    def preload!(polls, user_id: nil)
+      poll_ids = polls.map(&:id)
+
+      voters_count =
+        PollVote
+          .where(poll_id: poll_ids)
+          .group(:poll_id)
+          .pluck(:poll_id, "COUNT(DISTINCT user_id)")
+          .to_h
+
+      option_voters_count =
+        PollVote
+          .where(poll_option_id: PollOption.where(poll_id: poll_ids).select(:id))
+          .group(:poll_option_id)
+          .pluck(:poll_option_id, "COUNT(*)")
+          .to_h
+
+      polls.each do |poll|
+        poll.voters_count = voters_count[poll.id] || 0
+        poll.poll_options.each do |poll_option|
+          poll_option.voters_count = option_voters_count[poll_option.id] || 0
+        end
+      end
+
+      if user_id
+        has_voted = PollVote.where(poll_id: poll_ids, user_id: user_id).pluck(:poll_id).to_set
+        polls.each { |poll| poll.has_voted[user_id] = has_voted.include?(poll.id) }
+      end
+    end
+  end
+
   def reload(options = nil)
     @has_voted = {}
     super
@@ -64,36 +96,6 @@ class Poll < ActiveRecord::Base
 
   def ranked_choice?
     type == "ranked_choice"
-  end
-
-  def self.preload!(polls, user_id: nil)
-    poll_ids = polls.map(&:id)
-
-    voters_count =
-      PollVote
-        .where(poll_id: poll_ids)
-        .group(:poll_id)
-        .pluck(:poll_id, "COUNT(DISTINCT user_id)")
-        .to_h
-
-    option_voters_count =
-      PollVote
-        .where(poll_option_id: PollOption.where(poll_id: poll_ids).select(:id))
-        .group(:poll_option_id)
-        .pluck(:poll_option_id, "COUNT(*)")
-        .to_h
-
-    polls.each do |poll|
-      poll.voters_count = voters_count[poll.id] || 0
-      poll.poll_options.each do |poll_option|
-        poll_option.voters_count = option_voters_count[poll_option.id] || 0
-      end
-    end
-
-    if user_id
-      has_voted = PollVote.where(poll_id: poll_ids, user_id: user_id).pluck(:poll_id).to_set
-      polls.each { |poll| poll.has_voted[user_id] = has_voted.include?(poll.id) }
-    end
   end
 end
 

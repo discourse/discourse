@@ -97,24 +97,26 @@ end
 module Sidekiq
   @pauser = SidekiqPauser.new
 
-  def self.pause!(key = nil)
-    key ? @pauser.pause!(key) : @pauser.pause!
-  end
+  class << self
+    def pause!(key = nil)
+      key ? @pauser.pause!(key) : @pauser.pause!
+    end
 
-  def self.paused?
-    @pauser.paused?
-  end
+    def paused?
+      @pauser.paused?
+    end
 
-  def self.unpause!
-    @pauser.unpause!
-  end
+    def unpause!
+      @pauser.unpause!
+    end
 
-  def self.unpause_all!
-    @pauser.unpause_all!
-  end
+    def unpause_all!
+      @pauser.unpause_all!
+    end
 
-  def self.paused_dbs
-    @pauser.paused_dbs
+    def paused_dbs
+      @pauser.paused_dbs
+    end
   end
 end
 

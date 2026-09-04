@@ -13,6 +13,12 @@ module DiscourseAi
       attr_reader :tool, :parameters, :llm
       attr_accessor :running_attached_function, :timeout, :custom_raw
 
+      include HTTP
+      include Llm
+      include Index
+      include Upload
+      include Discourse
+      include Crypto
       TooManyRequestsError = Class.new(StandardError)
 
       DEFAULT_TIMEOUT = 2000
@@ -27,13 +33,6 @@ module DiscourseAi
       MAX_CUSTOM_FIELD_VALUE_LENGTH = 1024
 
       CUSTOM_FIELD_MODELS = { "post" => Post, "topic" => Topic, "user" => User }.freeze
-
-      include HTTP
-      include Llm
-      include Index
-      include Upload
-      include Discourse
-      include Crypto
 
       def initialize(
         parameters:,

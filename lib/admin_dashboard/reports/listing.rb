@@ -5,8 +5,10 @@ module AdminDashboard
     class Listing
       PAGE_SIZE = 30
 
-      def self.call(cursor:, search:)
-        new(cursor: cursor, search: search).call
+      class << self
+        def call(cursor:, search:)
+          new(cursor: cursor, search: search).call
+        end
       end
 
       def initialize(cursor:, search:)

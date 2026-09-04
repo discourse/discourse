@@ -44,84 +44,87 @@ module NestedReplies
       return members[1]
     LUA
 
-    def self.enqueue(topic_id, requested_at: Time.current)
-      topic_id = topic_id.to_i
-      return :invalid unless topic_id.positive?
+    class << self
+      def enqueue(topic_id, requested_at: Time.current)
+        topic_id = topic_id.to_i
+        return :invalid unless topic_id.positive?
 
-      result =
-        ENQUEUE_SCRIPT.eval(
-          Discourse.redis,
-          [redis_key(QUEUE_KEY), redis_key(COOLDOWN_KEY)],
-          [
-            topic_id,
-            requested_at.to_f,
-            SiteSetting.nested_replies_hot_max_pending_topics,
-            requested_at.to_f - SiteSetting.nested_replies_hot_max_queue_age_minutes.minutes.to_i,
-          ],
+        result =
+          ENQUEUE_SCRIPT.eval(
+            Discourse.redis,
+            [redis_key(QUEUE_KEY), redis_key(COOLDOWN_KEY)],
+            [
+              topic_id,
+              requested_at.to_f,
+              SiteSetting.nested_replies_hot_max_pending_topics,
+              requested_at.to_f - SiteSetting.nested_replies_hot_max_queue_age_minutes.minutes.to_i,
+            ],
+          )
+        return :unavailable if result.nil?
+
+        { -2 => :cooldown, -1 => :full, 0 => :duplicate, 1 => :queued }.fetch(
+          result.to_i,
+          :unavailable,
         )
-      return :unavailable if result.nil?
+      rescue Redis::BaseError
+        :unavailable
+      end
 
-      { -2 => :cooldown, -1 => :full, 0 => :duplicate, 1 => :queued }.fetch(
-        result.to_i,
-        :unavailable,
-      )
-    rescue Redis::BaseError
-      :unavailable
+      def pop(now: Time.current)
+        POP_SCRIPT.eval(
+          Discourse.redis,
+          [redis_key(QUEUE_KEY)],
+          [now.to_f - SiteSetting.nested_replies_hot_max_queue_age_minutes.minutes.to_i],
+        )&.to_i
+      rescue Redis::BaseError
+        nil
+      end
+
+      def cooldown(topic_id, duration:, now: Time.current)
+        topic_id = topic_id.to_i
+        return if !topic_id.positive? || duration.to_i <= 0
+
+        Discourse.redis.zadd(COOLDOWN_KEY, now.to_f + duration.to_i, topic_id)
+      rescue Redis::BaseError
+        nil
+      end
+
+      def clear_cooldown(topic_id)
+        Discourse.redis.zrem(COOLDOWN_KEY, topic_id.to_i)
+      rescue Redis::BaseError
+        nil
+      end
+
+      def size
+        Discourse.redis.zcard(QUEUE_KEY).to_i
+      rescue Redis::BaseError
+        0
+      end
+
+      def oldest_age(now: Time.current)
+        first_entry = Discourse.redis.zrange(QUEUE_KEY, 0, 0, with_scores: true).first
+        return 0.0 if first_entry.blank?
+
+        [now.to_f - first_entry.last.to_f, 0.0].max
+      rescue Redis::BaseError
+        0.0
+      end
+
+      def claim_cleanup
+        !!Discourse.redis.set(CLEANUP_CLAIM_KEY, "1", nx: true, ex: CLEANUP_INTERVAL.to_i)
+      rescue Redis::BaseError
+        false
+      end
+
+      def clear
+        Discourse.redis.del(QUEUE_KEY, COOLDOWN_KEY, CLEANUP_CLAIM_KEY)
+      end
+
+      def redis_key(key)
+        Discourse.redis.namespace_key(key)
+      end
     end
 
-    def self.pop(now: Time.current)
-      POP_SCRIPT.eval(
-        Discourse.redis,
-        [redis_key(QUEUE_KEY)],
-        [now.to_f - SiteSetting.nested_replies_hot_max_queue_age_minutes.minutes.to_i],
-      )&.to_i
-    rescue Redis::BaseError
-      nil
-    end
-
-    def self.cooldown(topic_id, duration:, now: Time.current)
-      topic_id = topic_id.to_i
-      return if !topic_id.positive? || duration.to_i <= 0
-
-      Discourse.redis.zadd(COOLDOWN_KEY, now.to_f + duration.to_i, topic_id)
-    rescue Redis::BaseError
-      nil
-    end
-
-    def self.clear_cooldown(topic_id)
-      Discourse.redis.zrem(COOLDOWN_KEY, topic_id.to_i)
-    rescue Redis::BaseError
-      nil
-    end
-
-    def self.size
-      Discourse.redis.zcard(QUEUE_KEY).to_i
-    rescue Redis::BaseError
-      0
-    end
-
-    def self.oldest_age(now: Time.current)
-      first_entry = Discourse.redis.zrange(QUEUE_KEY, 0, 0, with_scores: true).first
-      return 0.0 if first_entry.blank?
-
-      [now.to_f - first_entry.last.to_f, 0.0].max
-    rescue Redis::BaseError
-      0.0
-    end
-
-    def self.claim_cleanup
-      !!Discourse.redis.set(CLEANUP_CLAIM_KEY, "1", nx: true, ex: CLEANUP_INTERVAL.to_i)
-    rescue Redis::BaseError
-      false
-    end
-
-    def self.clear
-      Discourse.redis.del(QUEUE_KEY, COOLDOWN_KEY, CLEANUP_CLAIM_KEY)
-    end
-
-    def self.redis_key(key)
-      Discourse.redis.namespace_key(key)
-    end
     private_class_method :redis_key
   end
 end

@@ -16,6 +16,88 @@ module FileStore
              :complete_multipart,
              to: :s3_helper
 
+    # The following are canned ACLs defined by AWS S3 and not some generic value which we decide to use.
+    # https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html
+    CANNED_ACL_PUBLIC_READ = "public-read"
+    CANNED_ACL_PRIVATE = "private"
+    # S3 limits total request header/metadata size to 2 KB. Content-Disposition
+    # includes the filename twice (filename= and filename*=UTF-8''), so we
+    # limit the full header to 1600 bytes to stay within that budget.
+    MAX_CONTENT_DISPOSITION_BYTES = 1_600
+
+    class << self
+      def acl_option_value(secure:)
+        return if !SiteSetting.s3_use_acls
+        secure ? CANNED_ACL_PRIVATE : CANNED_ACL_PUBLIC_READ
+      end
+
+      def visibility_tagging_option_value(secure:, encode_form: true)
+        return if !SiteSetting.s3_enable_access_control_tags
+
+        key = SiteSetting.s3_access_control_tag_key
+        return if key.blank?
+
+        option_value = {
+          key =>
+            (
+              if secure
+                SiteSetting.s3_access_control_tag_private_value
+              else
+                SiteSetting.s3_access_control_tag_public_value
+              end
+            ),
+        }
+
+        encode_form ? URI.encode_www_form(option_value) : option_value
+      end
+
+      def default_s3_options(secure:)
+        options = {}
+
+        if acl_value = acl_option_value(secure:)
+          options[:acl] = acl_value
+        end
+
+        if tagging_option_value = visibility_tagging_option_value(secure:)
+          options[:tagging] = tagging_option_value
+        end
+
+        options
+      end
+
+      def content_disposition_for(filename, disposition: nil)
+        disposition ||= FileHelper.is_inline_safe?(filename) ? "inline" : "attachment"
+        return "" if filename.blank?
+
+        header = ActionDispatch::Http::ContentDisposition.format(disposition:, filename:)
+        return header if header.bytesize <= MAX_CONTENT_DISPOSITION_BYTES
+
+        extension = File.extname(filename)
+        basename = File.basename(filename, extension)
+
+        # Binary search for the longest basename that fits within the limit
+        low = 1
+        high = basename.length
+
+        while low < high
+          mid = (low + high + 1) / 2
+          candidate = "#{basename[0...mid]}#{extension}"
+          test_header =
+            ActionDispatch::Http::ContentDisposition.format(disposition:, filename: candidate)
+          if test_header.bytesize <= MAX_CONTENT_DISPOSITION_BYTES
+            low = mid
+          else
+            high = mid - 1
+          end
+        end
+
+        ActionDispatch::Http::ContentDisposition.format(
+          disposition:,
+          filename: "#{basename[0...low]}#{extension}",
+        )
+      end
+    end
+
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper
     end
@@ -380,93 +462,12 @@ module FileStore
       s3_helper.create_multipart(key, content_type, metadata:, **default_s3_options(secure: true))
     end
 
-    # The following are canned ACLs defined by AWS S3 and not some generic value which we decide to use.
-    # https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html
-    CANNED_ACL_PUBLIC_READ = "public-read"
-    CANNED_ACL_PRIVATE = "private"
-
-    def self.acl_option_value(secure:)
-      return if !SiteSetting.s3_use_acls
-      secure ? CANNED_ACL_PRIVATE : CANNED_ACL_PUBLIC_READ
-    end
-
     def acl_option_value(secure:)
       self.class.acl_option_value(secure:)
     end
 
-    def self.visibility_tagging_option_value(secure:, encode_form: true)
-      return if !SiteSetting.s3_enable_access_control_tags
-
-      key = SiteSetting.s3_access_control_tag_key
-      return if key.blank?
-
-      option_value = {
-        key =>
-          (
-            if secure
-              SiteSetting.s3_access_control_tag_private_value
-            else
-              SiteSetting.s3_access_control_tag_public_value
-            end
-          ),
-      }
-
-      encode_form ? URI.encode_www_form(option_value) : option_value
-    end
-
-    def self.default_s3_options(secure:)
-      options = {}
-
-      if acl_value = acl_option_value(secure:)
-        options[:acl] = acl_value
-      end
-
-      if tagging_option_value = visibility_tagging_option_value(secure:)
-        options[:tagging] = tagging_option_value
-      end
-
-      options
-    end
-
     def default_s3_options(secure:)
       self.class.default_s3_options(secure:)
-    end
-
-    # S3 limits total request header/metadata size to 2 KB. Content-Disposition
-    # includes the filename twice (filename= and filename*=UTF-8''), so we
-    # limit the full header to 1600 bytes to stay within that budget.
-    MAX_CONTENT_DISPOSITION_BYTES = 1_600
-
-    def self.content_disposition_for(filename, disposition: nil)
-      disposition ||= FileHelper.is_inline_safe?(filename) ? "inline" : "attachment"
-      return "" if filename.blank?
-
-      header = ActionDispatch::Http::ContentDisposition.format(disposition:, filename:)
-      return header if header.bytesize <= MAX_CONTENT_DISPOSITION_BYTES
-
-      extension = File.extname(filename)
-      basename = File.basename(filename, extension)
-
-      # Binary search for the longest basename that fits within the limit
-      low = 1
-      high = basename.length
-
-      while low < high
-        mid = (low + high + 1) / 2
-        candidate = "#{basename[0...mid]}#{extension}"
-        test_header =
-          ActionDispatch::Http::ContentDisposition.format(disposition:, filename: candidate)
-        if test_header.bytesize <= MAX_CONTENT_DISPOSITION_BYTES
-          low = mid
-        else
-          high = mid - 1
-        end
-      end
-
-      ActionDispatch::Http::ContentDisposition.format(
-        disposition:,
-        filename: "#{basename[0...low]}#{extension}",
-      )
     end
 
     private

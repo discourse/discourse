@@ -15,8 +15,10 @@ class GroupMessage
 
   RECENT_MESSAGE_PERIOD = 3.months
 
-  def self.create(group_name, message_type, opts = {})
-    GroupMessage.new(group_name, message_type, opts).create
+  class << self
+    def create(group_name, message_type, opts = {})
+      GroupMessage.new(group_name, message_type, opts).create
+    end
   end
 
   def initialize(group_name, message_type, opts = {})

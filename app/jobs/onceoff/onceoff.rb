@@ -13,10 +13,19 @@ class Jobs::Onceoff < ::Jobs::Base
     def onceoff_job_klasses
       @@onceoff_job_klasses
     end
-  end
 
-  def self.name_for(klass)
-    klass.name.sub(/\AJobs\:\:/, "")
+    def name_for(klass)
+      klass.name.sub(/\AJobs\:\:/, "")
+    end
+
+    def enqueue_all
+      previously_ran = OnceoffLog.pluck(:job_name).uniq
+
+      onceoff_job_klasses.each do |klass|
+        job_name = name_for(klass)
+        Jobs.enqueue(job_name.underscore.to_sym) if previously_ran.exclude?(job_name)
+      end
+    end
   end
 
   def running_key_name
@@ -37,15 +46,6 @@ class Jobs::Onceoff < ::Jobs::Base
       ensure
         Discourse.redis.del(running_key_name) if has_lock
       end
-    end
-  end
-
-  def self.enqueue_all
-    previously_ran = OnceoffLog.pluck(:job_name).uniq
-
-    onceoff_job_klasses.each do |klass|
-      job_name = name_for(klass)
-      Jobs.enqueue(job_name.underscore.to_sym) if previously_ran.exclude?(job_name)
     end
   end
 end

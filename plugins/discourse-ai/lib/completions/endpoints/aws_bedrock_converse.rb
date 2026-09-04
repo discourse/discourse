@@ -6,16 +6,18 @@ module DiscourseAi
       class AwsBedrockConverse < Base
         include AnthropicShared
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "aws_bedrock_converse"
-        end
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "aws_bedrock_converse"
+          end
 
-        def self.supports_environment_credentials?
-          true
-        end
+          def supports_environment_credentials?
+            true
+          end
 
-        def self.requires_configured_url?
-          false
+          def requires_configured_url?
+            false
+          end
         end
 
         def provider_id

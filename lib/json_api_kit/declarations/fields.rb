@@ -7,9 +7,11 @@ module JsonApiKit
 
       RESERVED = %w[type id].freeze
 
-      def self.for(names, **declarations)
-        return All.new(**declarations) unless names
-        new(names, **declarations)
+      class << self
+        def for(names, **declarations)
+          return All.new(**declarations) unless names
+          new(names, **declarations)
+        end
       end
 
       def initialize(names, guardian:, attributes:, relationships:, schema:)

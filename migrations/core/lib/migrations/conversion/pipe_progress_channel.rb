@@ -11,6 +11,22 @@ module Migrations
     # escapes any newline in the result as `\n` — one physical line, whatever the
     # result contains, so it survives `gets`.
     class PipeProgressChannel
+      class << self
+        # Parses one line the worker wrote. Returns `[:progress, increment, warnings,
+        # errors]`, `[:result, object]`, or nil for an unknown tag.
+        def parse(line)
+          tag, payload = line.split(" ", 2)
+
+          case tag
+          when "p"
+            increment, warnings, errors = payload.split
+            [:progress, increment.to_i, warnings.to_i, errors.to_i]
+          when "r"
+            [:result, JSON.parse(payload)]
+          end
+        end
+      end
+
       def initialize(io)
         @io = io
       end
@@ -21,20 +37,6 @@ module Migrations
 
       def report_result(result)
         @io.write("r #{JSON.generate(result)}\n")
-      end
-
-      # Parses one line the worker wrote. Returns `[:progress, increment, warnings,
-      # errors]`, `[:result, object]`, or nil for an unknown tag.
-      def self.parse(line)
-        tag, payload = line.split(" ", 2)
-
-        case tag
-        when "p"
-          increment, warnings, errors = payload.split
-          [:progress, increment.to_i, warnings.to_i, errors.to_i]
-        when "r"
-          [:result, JSON.parse(payload)]
-        end
       end
     end
   end

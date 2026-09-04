@@ -4,48 +4,50 @@ module DiscourseWorkflows
   class ExpressionResolver
     WHOLE_EXPRESSION_REGEX = /\A\{\{\s*([^{}]*?)\s*\}\}\z/
 
-    def self.find_matching_close(template, start)
-      depth = 1
-      cursor = start
+    class << self
+      def find_matching_close(template, start)
+        depth = 1
+        cursor = start
 
-      while cursor < template.length - 1 && depth > 0
-        if template[cursor] == "{" && template[cursor + 1] == "{"
-          depth += 1
-          cursor += 2
-        elsif template[cursor] == "}" && template[cursor + 1] == "}"
-          depth -= 1
-          return cursor if depth == 0
-          cursor += 2
-        else
-          cursor += 1
+        while cursor < template.length - 1 && depth > 0
+          if template[cursor] == "{" && template[cursor + 1] == "{"
+            depth += 1
+            cursor += 2
+          elsif template[cursor] == "}" && template[cursor + 1] == "}"
+            depth -= 1
+            return cursor if depth == 0
+            cursor += 2
+          else
+            cursor += 1
+          end
         end
+
+        nil
       end
 
-      nil
-    end
+      def resolve(value, context: {}, user: nil)
+        with_owned_sandbox(context, user: user) { |resolver| resolver.resolve(value) }
+      end
 
-    def self.resolve(value, context: {}, user: nil)
-      with_owned_sandbox(context, user: user) { |resolver| resolver.resolve(value) }
-    end
+      def resolve_hash(hash, context: {}, user: nil)
+        with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_hash(hash) }
+      end
 
-    def self.resolve_hash(hash, context: {}, user: nil)
-      with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_hash(hash) }
-    end
+      def resolve_segments(template, context: {}, user: nil)
+        with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_segments(template) }
+      rescue MiniRacer::Error, JsSandbox::BudgetExceededError, JsSandbox::SandboxError => e
+        Rails.logger.warn("Expression evaluation failed: #{e.message}")
+        []
+      end
 
-    def self.resolve_segments(template, context: {}, user: nil)
-      with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_segments(template) }
-    rescue MiniRacer::Error, JsSandbox::BudgetExceededError, JsSandbox::SandboxError => e
-      Rails.logger.warn("Expression evaluation failed: #{e.message}")
-      []
-    end
-
-    def self.with_owned_sandbox(context, user: nil)
-      sandbox = JsSandbox.new(context, user: user)
-      resolver = new(context, user: user, sandbox: sandbox)
-      yield resolver
-    ensure
-      resolver&.dispose
-      sandbox&.dispose
+      def with_owned_sandbox(context, user: nil)
+        sandbox = JsSandbox.new(context, user: user)
+        resolver = new(context, user: user, sandbox: sandbox)
+        yield resolver
+      ensure
+        resolver&.dispose
+        sandbox&.dispose
+      end
     end
 
     def initialize(context, sandbox:, user: nil, **_)

@@ -46,8 +46,10 @@ module Migrations
           include Migrations::CLI::PresentableError
         end
 
-        def self.run
-          new.run
+        class << self
+          def run
+            new.run
+          end
         end
 
         # @param exempt_tables [Array<String>] model names held out of the reference

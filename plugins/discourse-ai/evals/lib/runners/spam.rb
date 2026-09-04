@@ -6,8 +6,10 @@ module DiscourseAi
   module Evals
     module Runners
       class Spam < Base
-        def self.can_handle?(full_feature_name)
-          full_feature_name&.start_with?("spam:")
+        class << self
+          def can_handle?(full_feature_name)
+            full_feature_name&.start_with?("spam:")
+          end
         end
 
         def run(eval_case, llm, execution_context:)

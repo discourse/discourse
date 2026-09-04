@@ -121,62 +121,64 @@ module DiscourseWorkflows
           ],
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "groups"
-            ::Group
-              .order(:name)
-              .pluck(:id, :name)
-              .select { |_, name| context.matches_filter?(name) }
-              .map { |id, name| { id:, name: } }
-          end
-        end
-
-        def self.normalized_group_ids(parameters)
-          Array
-            .wrap(parameters["group_ids"])
-            .filter_map do |group_id|
-              value = group_id.to_s
-              value.to_i if value.match?(/\A\d+\z/)
+        class << self
+          def load_options_context(context)
+            case context.method_name
+            when "groups"
+              ::Group
+                .order(:name)
+                .pluck(:id, :name)
+                .select { |_, name| context.matches_filter?(name) }
+                .map { |id, name| { id:, name: } }
             end
-        end
+          end
 
-        def self.available_to?(user, parameters)
-          return false if user.blank?
+          def normalized_group_ids(parameters)
+            Array
+              .wrap(parameters["group_ids"])
+              .filter_map do |group_id|
+                value = group_id.to_s
+                value.to_i if value.match?(/\A\d+\z/)
+              end
+          end
 
-          group_ids = normalized_group_ids(parameters)
-          group_ids.present? && user.in_any_groups?(group_ids)
-        end
+          def available_to?(user, parameters)
+            return false if user.blank?
 
-        def self.normalized_post_number(parameters)
-          value = parameters["post_number"].to_s
-          value.to_i if value.match?(/\A[1-9]\d*\z/)
-        end
+            group_ids = normalized_group_ids(parameters)
+            group_ids.present? && user.in_any_groups?(group_ids)
+          end
 
-        def self.resolved_post_number(parameters)
-          value = parameters["post_number"]
-          return if value.to_s.strip.empty?
+          def normalized_post_number(parameters)
+            value = parameters["post_number"].to_s
+            value.to_i if value.match?(/\A[1-9]\d*\z/)
+          end
 
-          normalized_post_number(parameters) || INVALID_POST_NUMBER
-        end
+          def resolved_post_number(parameters)
+            value = parameters["post_number"]
+            return if value.to_s.strip.empty?
 
-        def self.matches_post_number?(post, parameters)
-          post_number = resolved_post_number(parameters)
-          return true if post_number.nil?
+            normalized_post_number(parameters) || INVALID_POST_NUMBER
+          end
 
-          post.present? && post.post_number == post_number
-        end
+          def matches_post_number?(post, parameters)
+            post_number = resolved_post_number(parameters)
+            return true if post_number.nil?
 
-        def self.resolved_position(parameters)
-          position = parameters["position"].presence || "last"
-          return position if position != "relative"
+            post.present? && post.post_number == post_number
+          end
 
-          direction = parameters["position_direction"].presence || "before"
-          anchor = parameters["position_anchor"].presence || "reply"
-          anchor = parameters["position_custom_key"].to_s.strip.presence if anchor == "custom"
-          return "last" if anchor.blank?
+          def resolved_position(parameters)
+            position = parameters["position"].presence || "last"
+            return position if position != "relative"
 
-          "#{direction}_#{anchor}"
+            direction = parameters["position_direction"].presence || "before"
+            anchor = parameters["position_anchor"].presence || "reply"
+            anchor = parameters["position_custom_key"].to_s.strip.presence if anchor == "custom"
+            return "last" if anchor.blank?
+
+            "#{direction}_#{anchor}"
+          end
         end
 
         def initialize(post)

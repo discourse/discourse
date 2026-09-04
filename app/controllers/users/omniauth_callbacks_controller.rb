@@ -15,6 +15,20 @@ class Users::OmniauthCallbacksController < ApplicationController
   # These are usually GET requests but some providers use POST requests
   allow_in_staff_writes_only_mode :complete
 
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat unauthorized].index_by { it }
+
+  class << self
+    def find_authenticator(name)
+      if SiteSetting.enable_discourse_connect
+        raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
+      end
+      Discourse.enabled_authenticators.each do |authenticator|
+        return authenticator if authenticator.name == name
+      end
+      raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
+    end
+  end
+
   def confirm_request
     self.class.find_authenticator(params[:provider])
     render locals: { hide_auth_buttons: true }
@@ -105,8 +119,6 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
-  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat unauthorized].index_by { it }
-
   def failure
     error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence
     error = ALLOWED_FAILURE_ERRORS.fetch(error_name, "generic")
@@ -125,16 +137,6 @@ class Users::OmniauthCallbacksController < ApplicationController
     flash[:error] = I18n.t("login.omniauth_error.#{error}", provider:)
 
     render "failure"
-  end
-
-  def self.find_authenticator(name)
-    if SiteSetting.enable_discourse_connect
-      raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
-    end
-    Discourse.enabled_authenticators.each do |authenticator|
-      return authenticator if authenticator.name == name
-    end
-    raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
   end
 
   protected

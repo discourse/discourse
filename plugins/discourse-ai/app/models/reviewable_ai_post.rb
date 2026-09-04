@@ -3,14 +3,16 @@
 require_dependency "reviewable"
 
 class ReviewableAiPost < Reviewable
-  # Penalties are handled by the modal after the action is performed
-  def self.action_aliases
-    {
-      agree_and_keep_hidden: :agree_and_keep,
-      agree_and_silence: :agree_and_keep,
-      agree_and_suspend: :agree_and_keep,
-      disagree_and_restore: :disagree,
-    }
+  class << self
+    # Penalties are handled by the modal after the action is performed
+    def action_aliases
+      {
+        agree_and_keep_hidden: :agree_and_keep,
+        agree_and_silence: :agree_and_keep,
+        agree_and_suspend: :agree_and_keep,
+        disagree_and_restore: :disagree,
+      }
+    end
   end
 
   def build_actions(actions, guardian, args)

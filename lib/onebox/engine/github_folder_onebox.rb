@@ -10,8 +10,10 @@ module Onebox
       matches_domain("github.com", "www.github.com")
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/[\w\-]+/[\w\-]+/tree/})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/[\w\-]+/[\w\-]+/tree/})
+        end
       end
 
       private

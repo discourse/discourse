@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 module DiscourseGamification
   class ReactionReceived < Scorable
-    def self.enabled?(leaderboard: nil)
-      defined?(DiscourseReactions) && SiteSetting.discourse_reactions_enabled && super
-    end
+    class << self
+      def enabled?(leaderboard: nil)
+        defined?(DiscourseReactions) && SiteSetting.discourse_reactions_enabled && super
+      end
 
-    def self.category_filter(leaderboard: nil)
-      return "" if scorable_category_list(leaderboard:).empty?
+      def category_filter(leaderboard: nil)
+        return "" if scorable_category_list(leaderboard:).empty?
 
-      <<~SQL
+        <<~SQL
         AND t.category_id IN (#{scorable_category_list(leaderboard:)})
       SQL
-    end
+      end
 
-    def self.query(leaderboard: nil)
-      <<~SQL
+      def query(leaderboard: nil)
+        <<~SQL
         SELECT
           p.user_id AS user_id,
           date_trunc('day', reactions.created_at) AS date,
@@ -34,6 +35,7 @@ module DiscourseGamification
         GROUP BY
           1, 2
       SQL
+      end
     end
   end
 end

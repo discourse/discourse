@@ -15,17 +15,19 @@ class ApplicationSerializer < ActiveModel::Serializer
     end
   end
 
-  def self.expire_cache_fragment!(name_or_regexp)
-    case name_or_regexp
-    when String
-      fragment_cache.delete(name_or_regexp)
-    when Regexp
-      fragment_cache.clear_regex(name_or_regexp)
+  class << self
+    def expire_cache_fragment!(name_or_regexp)
+      case name_or_regexp
+      when String
+        fragment_cache.delete(name_or_regexp)
+      when Regexp
+        fragment_cache.clear_regex(name_or_regexp)
+      end
     end
-  end
 
-  def self.fragment_cache
-    @cache ||= DistributedCache.new("am_serializer_fragment_cache")
+    def fragment_cache
+      @cache ||= DistributedCache.new("am_serializer_fragment_cache")
+    end
   end
 
   protected

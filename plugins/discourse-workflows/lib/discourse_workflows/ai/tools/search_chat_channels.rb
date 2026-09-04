@@ -7,30 +7,32 @@ module DiscourseWorkflows
         MAX_RESULTS = 20
         CHANNEL_NAME_SQL = "COALESCE(chat_channels.name, categories.name)"
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Searches open Discourse chat channels and returns channel names and IDs for workflow chat node parameters.",
-            parameters: [
-              {
-                name: "query",
-                description:
-                  "Partial channel name, slug, category name, or #channel mention to search for",
-                type: "string",
-                required: false,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Searches open Discourse chat channels and returns channel names and IDs for workflow chat node parameters.",
+              parameters: [
+                {
+                  name: "query",
+                  description:
+                    "Partial channel name, slug, category name, or #channel mention to search for",
+                  type: "string",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "search_chat_channels"
-        end
+          def name
+            "search_chat_channels"
+          end
 
-        def self.available?
-          defined?(::Chat::Channel) && defined?(SiteSetting.chat_enabled) &&
-            SiteSetting.chat_enabled
+          def available?
+            defined?(::Chat::Channel) && defined?(SiteSetting.chat_enabled) &&
+              SiteSetting.chat_enabled
+          end
         end
 
         def invoke

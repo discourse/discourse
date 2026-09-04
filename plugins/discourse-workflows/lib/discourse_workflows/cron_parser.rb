@@ -93,101 +93,103 @@ module DiscourseWorkflows
       ),
     ].freeze
 
-    def self.matches?(expression, time)
-      compiled = compile(expression)
-      compiled.present? && compiled.matches?(time)
-    end
-
-    def self.valid?(expression)
-      compile(expression).present?
-    end
-
-    def self.minute_granularity?(expression)
-      fields = tokenize(expression)
-      second_field = compile_field(fields.first, FIELD_DEFINITIONS.first)
-      second_field.values == Set[0]
-    rescue InvalidExpression
-      false
-    end
-
-    def self.compile(expression)
-      fields = tokenize(expression)
-
-      compiled_fields =
-        FIELD_DEFINITIONS.each_with_index.to_h do |definition, index|
-          [definition.name, compile_field(fields[index], definition)]
-        end
-
-      CompiledExpression.new(fields: compiled_fields.freeze)
-    rescue InvalidExpression
-      nil
-    end
-
-    def self.tokenize(expression)
-      raise InvalidExpression if expression.blank?
-
-      fields = expression.strip.split(/\s+/)
-      fields.unshift("0") if fields.size == FIELD_DEFINITIONS.size - 1
-      raise InvalidExpression unless fields.size == FIELD_DEFINITIONS.size
-
-      fields
-    end
-
-    def self.compile_field(field, definition)
-      values = Set.new
-
-      field
-        .split(",")
-        .each do |part|
-          raise InvalidExpression if part.blank?
-
-          expand_part(part, definition).each { |value| values << value }
-        end
-
-      raise InvalidExpression if values.empty?
-
-      CompiledField.new(definition: definition, values: values.freeze, unrestricted: field == "*")
-    end
-
-    def self.expand_part(part, definition)
-      case part
-      when "*"
-        normalize_values(definition.range, definition)
-      when %r{\A\*/(\d+)\z}
-        expand_range(definition.range.begin, definition.range.end, $1, definition)
-      when %r{\A([[:alnum:]]+)-([[:alnum:]]+)(?:/(\d+))?\z}
-        expand_range(
-          definition.value_from_token($1),
-          definition.value_from_token($2),
-          $3 || 1,
-          definition,
-        )
-      when /\A[[:alnum:]]+\z/
-        [normalize_value(definition.value_from_token(part), definition)]
-      else
-        raise InvalidExpression
+    class << self
+      def matches?(expression, time)
+        compiled = compile(expression)
+        compiled.present? && compiled.matches?(time)
       end
-    end
 
-    def self.expand_range(start_value, end_value, step, definition)
-      step = Integer(step)
+      def valid?(expression)
+        compile(expression).present?
+      end
 
-      raise InvalidExpression if step <= 0
-      raise InvalidExpression if start_value > end_value
-      raise InvalidExpression unless definition.range.cover?(start_value)
-      raise InvalidExpression unless definition.range.cover?(end_value)
+      def minute_granularity?(expression)
+        fields = tokenize(expression)
+        second_field = compile_field(fields.first, FIELD_DEFINITIONS.first)
+        second_field.values == Set[0]
+      rescue InvalidExpression
+        false
+      end
 
-      normalize_values((start_value..end_value).step(step), definition)
-    end
+      def compile(expression)
+        fields = tokenize(expression)
 
-    def self.normalize_value(value, definition)
-      raise InvalidExpression unless definition.range.cover?(value)
+        compiled_fields =
+          FIELD_DEFINITIONS.each_with_index.to_h do |definition, index|
+            [definition.name, compile_field(fields[index], definition)]
+          end
 
-      definition.normalize(value)
-    end
+        CompiledExpression.new(fields: compiled_fields.freeze)
+      rescue InvalidExpression
+        nil
+      end
 
-    def self.normalize_values(values, definition)
-      values.map { |value| definition.normalize(value) }
+      def tokenize(expression)
+        raise InvalidExpression if expression.blank?
+
+        fields = expression.strip.split(/\s+/)
+        fields.unshift("0") if fields.size == FIELD_DEFINITIONS.size - 1
+        raise InvalidExpression unless fields.size == FIELD_DEFINITIONS.size
+
+        fields
+      end
+
+      def compile_field(field, definition)
+        values = Set.new
+
+        field
+          .split(",")
+          .each do |part|
+            raise InvalidExpression if part.blank?
+
+            expand_part(part, definition).each { |value| values << value }
+          end
+
+        raise InvalidExpression if values.empty?
+
+        CompiledField.new(definition: definition, values: values.freeze, unrestricted: field == "*")
+      end
+
+      def expand_part(part, definition)
+        case part
+        when "*"
+          normalize_values(definition.range, definition)
+        when %r{\A\*/(\d+)\z}
+          expand_range(definition.range.begin, definition.range.end, $1, definition)
+        when %r{\A([[:alnum:]]+)-([[:alnum:]]+)(?:/(\d+))?\z}
+          expand_range(
+            definition.value_from_token($1),
+            definition.value_from_token($2),
+            $3 || 1,
+            definition,
+          )
+        when /\A[[:alnum:]]+\z/
+          [normalize_value(definition.value_from_token(part), definition)]
+        else
+          raise InvalidExpression
+        end
+      end
+
+      def expand_range(start_value, end_value, step, definition)
+        step = Integer(step)
+
+        raise InvalidExpression if step <= 0
+        raise InvalidExpression if start_value > end_value
+        raise InvalidExpression unless definition.range.cover?(start_value)
+        raise InvalidExpression unless definition.range.cover?(end_value)
+
+        normalize_values((start_value..end_value).step(step), definition)
+      end
+
+      def normalize_value(value, definition)
+        raise InvalidExpression unless definition.range.cover?(value)
+
+        definition.normalize(value)
+      end
+
+      def normalize_values(values, definition)
+        values.map { |value| definition.normalize(value) }
+      end
     end
 
     private_class_method :tokenize, :compile_field, :expand_part, :expand_range

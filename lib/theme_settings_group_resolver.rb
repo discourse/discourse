@@ -13,8 +13,10 @@ require_relative "theme_settings_group_resolver/object_setting"
 class ThemeSettingsGroupResolver
   RESOLVERS = [ThemeSettingsGroupResolver::ListSetting, ThemeSettingsGroupResolver::ObjectSetting]
 
-  def self.resolve(settings_hash:, type_info:, guardian:)
-    new(settings_hash:, type_info:, guardian:).resolve
+  class << self
+    def resolve(settings_hash:, type_info:, guardian:)
+      new(settings_hash:, type_info:, guardian:).resolve
+    end
   end
 
   def initialize(settings_hash:, type_info:, guardian:)

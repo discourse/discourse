@@ -22,36 +22,38 @@ class UserEmail < ActiveRecord::Base
   before_save -> { destroy_email_tokens(email_was) }, if: :will_save_change_to_email?
 
   after_destroy { destroy_email_tokens(email) }
-  def self.ensure_consistency!
-    user_ids_without_primary_email = DB.query_single <<~SQL
+  class << self
+    def ensure_consistency!
+      user_ids_without_primary_email = DB.query_single <<~SQL
       SELECT u.id
       FROM users u
       LEFT JOIN user_emails ue ON u.id = ue.user_id AND ue.primary = true
       WHERE ue.id IS NULL;
     SQL
 
-    user_ids_without_primary_email.each do |user_id|
-      UserEmail.create!(
-        user_id: user_id,
-        # 64 max character length of local-part for the email address https://datatracker.ietf.org/doc/html/rfc5321#section-4.5.3.1.1
-        email: "#{SecureRandom.alphanumeric(64)}@missing-primary-email.invalid",
-        primary: true,
-      )
+      user_ids_without_primary_email.each do |user_id|
+        UserEmail.create!(
+          user_id: user_id,
+          # 64 max character length of local-part for the email address https://datatracker.ietf.org/doc/html/rfc5321#section-4.5.3.1.1
+          email: "#{SecureRandom.alphanumeric(64)}@missing-primary-email.invalid",
+          primary: true,
+        )
+      end
     end
-  end
 
-  # Strips dots from the local part and everything between "+" and "@", so that
-  # aliases of the same address share a single normalized form.
-  def self.normalize(email)
-    local_part, domain = email.to_s.split("@", 2)
-    return if local_part.blank? || domain.blank?
+    # Strips dots from the local part and everything between "+" and "@", so that
+    # aliases of the same address share a single normalized form.
+    def normalize(email)
+      local_part, domain = email.to_s.split("@", 2)
+      return if local_part.blank? || domain.blank?
 
-    "#{local_part.gsub(".", "").gsub(/\+.*/, "")}@#{domain}"
-  end
+      "#{local_part.gsub(".", "").gsub(/\+.*/, "")}@#{domain}"
+    end
 
-  def self.find_by_normalized(email)
-    normalized = normalize(Email.downcase(email))
-    where("lower(normalized_email) = ?", normalized).first if normalized.present?
+    def find_by_normalized(email)
+      normalized = normalize(Email.downcase(email))
+      where("lower(normalized_email) = ?", normalized).first if normalized.present?
+    end
   end
 
   def normalize_email

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager::Objects < ThemeSettingsManager
-  def self.extract_value_from_row(row)
-    row.json_value
+  class << self
+    def extract_value_from_row(row)
+      row.json_value
+    end
   end
 
   def default

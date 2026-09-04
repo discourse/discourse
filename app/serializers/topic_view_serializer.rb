@@ -7,12 +7,14 @@ class TopicViewSerializer < ApplicationSerializer
   include ApplicationHelper
   include LocalizedFancyTopicTitleMixin
 
-  def self.attributes_from_topic(*list)
-    [list].flatten.each do |attribute|
-      attributes(attribute)
-      class_eval %{def #{attribute}
+  class << self
+    def attributes_from_topic(*list)
+      [list].flatten.each do |attribute|
+        attributes(attribute)
+        class_eval %{def #{attribute}
         object.topic.#{attribute}
       end}
+      end
     end
   end
 

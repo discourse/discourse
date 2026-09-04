@@ -5,158 +5,160 @@ require "enum_site_setting"
 module DiscourseAi
   module Configuration
     class LlmEnumerator < ::EnumSiteSetting
-      def self.global_usage
-        rval = Hash.new { |h, k| h[k] = [] }
+      class << self
+        def global_usage
+          rval = Hash.new { |h, k| h[k] = [] }
 
-        if SiteSetting.ai_bot_enabled
-          LlmModel.enabled_chat_bot_ids.each do |llm_id|
-            rval[llm_id] << { type: :ai_bot, id: DiscourseAi::Configuration::Module::BOT_ID }
-          end
-        end
-
-        # this is unconditional, so it is clear that we always signal configuration
-        AiAgent
-          .where.not(default_llm_id: nil)
-          .pluck(:default_llm_id, :name, :id)
-          .each { |llm_id, name, id| rval[llm_id] << { type: :ai_agent, name: name, id: id } }
-
-        if SiteSetting.ai_helper_enabled
-          {
-            "#{I18n.t("js.discourse_ai.features.ai_helper.proofread")}" =>
-              SiteSetting.ai_helper_proofreader_agent,
-            "#{I18n.t("js.discourse_ai.features.ai_helper.title_suggestions")}" =>
-              SiteSetting.ai_helper_title_suggestions_agent,
-            "#{I18n.t("js.discourse_ai.features.ai_helper.explain")}" =>
-              SiteSetting.ai_helper_explain_agent,
-            "#{I18n.t("js.discourse_ai.features.ai_helper.illustrate_post")}" =>
-              SiteSetting.ai_helper_post_illustrator_agent,
-            "#{I18n.t("js.discourse_ai.features.ai_helper.smart_dates")}" =>
-              SiteSetting.ai_helper_smart_dates_agent,
-            "#{I18n.t("js.discourse_ai.features.ai_helper.translator")}" =>
-              SiteSetting.ai_helper_translator_agent,
-            "#{I18n.t("js.discourse_ai.features.ai_helper.markdown_tables")}" =>
-              SiteSetting.ai_helper_markdown_tables_agent,
-            "#{I18n.t("js.discourse_ai.features.ai_helper.custom_prompt")}" =>
-              SiteSetting.ai_helper_custom_prompt_agent,
-          }.each do |helper_type, agent_id|
-            next if agent_id.blank?
-
-            agent = AiAgent.find_by(id: agent_id)
-            next if agent.blank? || agent.default_llm_id.blank?
-
-            model_id = agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
-            rval[model_id] << {
-              type: :ai_helper,
-              name: helper_type,
-              id: DiscourseAi::Configuration::Module::AI_HELPER_ID,
-            }
-          end
-        end
-
-        if SiteSetting.ai_post_image_captions_enabled
-          image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_image_caption_agent)
-
-          if image_caption_agent.present?
-            model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
-
-            rval[model_id] << {
-              type: :ai_image_caption,
-              id: DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
-            }
-          end
-        end
-
-        if SiteSetting.ai_summarization_enabled
-          summarization_agent = AiAgent.find_by(id: SiteSetting.ai_summarization_agent)
-          model_id = summarization_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
-
-          rval[model_id] << {
-            type: :ai_summarization,
-            id: DiscourseAi::Configuration::Module::SUMMARIZATION_ID,
-          }
-        end
-
-        if SiteSetting.ai_embeddings_semantic_search_enabled
-          search_agent = AiAgent.find_by(id: SiteSetting.ai_embeddings_semantic_search_hyde_agent)
-          model_id = search_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
-
-          rval[model_id] << {
-            type: :ai_embeddings_semantic_search,
-            id: DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
-          }
-        end
-
-        if SiteSetting.ai_spam_detection_enabled && AiModerationSetting.spam.present?
-          model_id = AiModerationSetting.spam[:llm_model_id]
-          rval[model_id] << { type: :ai_spam, id: DiscourseAi::Configuration::Module::SPAM_ID }
-        end
-
-        if defined?(DiscourseAutomation::Automation) && SiteSetting.discourse_automation_enabled
-          DiscourseAutomation::Automation
-            .joins(:fields)
-            .where(script: %w[llm_report llm_triage])
-            .where("discourse_automation_fields.name = ?", "model")
-            .pluck(
-              "metadata ->> 'value', discourse_automation_automations.name, discourse_automation_automations.id",
-            )
-            .each do |model_text, name, id|
-              next if model_text.blank?
-              model_id = model_text.to_i
-              rval[model_id] << { type: :automation, name: name, id: id } if model_id.present?
+          if SiteSetting.ai_bot_enabled
+            LlmModel.enabled_chat_bot_ids.each do |llm_id|
+              rval[llm_id] << { type: :ai_bot, id: DiscourseAi::Configuration::Module::BOT_ID }
             end
-        end
-
-        LlmModel
-          .where.not(vision_llm_model_id: nil)
-          .pluck(:vision_llm_model_id, :display_name, :id)
-          .each do |llm_id, name, id|
-            rval[llm_id] << { type: :vision_delegate, name: name, id: id }
           end
 
-        rval
-      end
+          # this is unconditional, so it is clear that we always signal configuration
+          AiAgent
+            .where.not(default_llm_id: nil)
+            .pluck(:default_llm_id, :name, :id)
+            .each { |llm_id, name, id| rval[llm_id] << { type: :ai_agent, name: name, id: id } }
 
-      def self.valid_value?(_val)
-        true
-      end
+          if SiteSetting.ai_helper_enabled
+            {
+              "#{I18n.t("js.discourse_ai.features.ai_helper.proofread")}" =>
+                SiteSetting.ai_helper_proofreader_agent,
+              "#{I18n.t("js.discourse_ai.features.ai_helper.title_suggestions")}" =>
+                SiteSetting.ai_helper_title_suggestions_agent,
+              "#{I18n.t("js.discourse_ai.features.ai_helper.explain")}" =>
+                SiteSetting.ai_helper_explain_agent,
+              "#{I18n.t("js.discourse_ai.features.ai_helper.illustrate_post")}" =>
+                SiteSetting.ai_helper_post_illustrator_agent,
+              "#{I18n.t("js.discourse_ai.features.ai_helper.smart_dates")}" =>
+                SiteSetting.ai_helper_smart_dates_agent,
+              "#{I18n.t("js.discourse_ai.features.ai_helper.translator")}" =>
+                SiteSetting.ai_helper_translator_agent,
+              "#{I18n.t("js.discourse_ai.features.ai_helper.markdown_tables")}" =>
+                SiteSetting.ai_helper_markdown_tables_agent,
+              "#{I18n.t("js.discourse_ai.features.ai_helper.custom_prompt")}" =>
+                SiteSetting.ai_helper_custom_prompt_agent,
+            }.each do |helper_type, agent_id|
+              next if agent_id.blank?
 
-      # returns an array of hashes (id: , name:, vision_enabled:, supported_native_tools:)
-      def self.values_for_serialization
-        return [] unless table_exists?
+              agent = AiAgent.find_by(id: agent_id)
+              next if agent.blank? || agent.default_llm_id.blank?
 
-        llm_models = LlmModel.includes(:vision_llm_model).index_by(&:id)
+              model_id = agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+              rval[model_id] << {
+                type: :ai_helper,
+                name: helper_type,
+                id: DiscourseAi::Configuration::Module::AI_HELPER_ID,
+              }
+            end
+          end
 
-        DB
-          .query_hash(<<~SQL)
+          if SiteSetting.ai_post_image_captions_enabled
+            image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_image_caption_agent)
+
+            if image_caption_agent.present?
+              model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+
+              rval[model_id] << {
+                type: :ai_image_caption,
+                id: DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
+              }
+            end
+          end
+
+          if SiteSetting.ai_summarization_enabled
+            summarization_agent = AiAgent.find_by(id: SiteSetting.ai_summarization_agent)
+            model_id = summarization_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+
+            rval[model_id] << {
+              type: :ai_summarization,
+              id: DiscourseAi::Configuration::Module::SUMMARIZATION_ID,
+            }
+          end
+
+          if SiteSetting.ai_embeddings_semantic_search_enabled
+            search_agent = AiAgent.find_by(id: SiteSetting.ai_embeddings_semantic_search_hyde_agent)
+            model_id = search_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+
+            rval[model_id] << {
+              type: :ai_embeddings_semantic_search,
+              id: DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
+            }
+          end
+
+          if SiteSetting.ai_spam_detection_enabled && AiModerationSetting.spam.present?
+            model_id = AiModerationSetting.spam[:llm_model_id]
+            rval[model_id] << { type: :ai_spam, id: DiscourseAi::Configuration::Module::SPAM_ID }
+          end
+
+          if defined?(DiscourseAutomation::Automation) && SiteSetting.discourse_automation_enabled
+            DiscourseAutomation::Automation
+              .joins(:fields)
+              .where(script: %w[llm_report llm_triage])
+              .where("discourse_automation_fields.name = ?", "model")
+              .pluck(
+                "metadata ->> 'value', discourse_automation_automations.name, discourse_automation_automations.id",
+              )
+              .each do |model_text, name, id|
+                next if model_text.blank?
+                model_id = model_text.to_i
+                rval[model_id] << { type: :automation, name: name, id: id } if model_id.present?
+              end
+          end
+
+          LlmModel
+            .where.not(vision_llm_model_id: nil)
+            .pluck(:vision_llm_model_id, :display_name, :id)
+            .each do |llm_id, name, id|
+              rval[llm_id] << { type: :vision_delegate, name: name, id: id }
+            end
+
+          rval
+        end
+
+        def valid_value?(_val)
+          true
+        end
+
+        # returns an array of hashes (id: , name:, vision_enabled:, supported_native_tools:)
+        def values_for_serialization
+          return [] unless table_exists?
+
+          llm_models = LlmModel.includes(:vision_llm_model).index_by(&:id)
+
+          DB
+            .query_hash(<<~SQL)
             SELECT id, display_name AS name, vision_enabled
             FROM llm_models
           SQL
-          .map do |row|
-            row = row.symbolize_keys
-            llm_model = llm_models[row[:id]]
-            row[:vision_mode] = llm_model.vision_mode
-            row[:agent_image_capable] = llm_model.agent_image_capable?
-            row[:supported_native_tools] = DiscourseAi::Completions::NativeTools.supported_ids_for(
-              llm_model,
-            )
-            row
-          end
-      end
+            .map do |row|
+              row = row.symbolize_keys
+              llm_model = llm_models[row[:id]]
+              row[:vision_mode] = llm_model.vision_mode
+              row[:agent_image_capable] = llm_model.agent_image_capable?
+              row[
+                :supported_native_tools
+              ] = DiscourseAi::Completions::NativeTools.supported_ids_for(llm_model)
+              row
+            end
+        end
 
-      def self.values
-        return [] unless table_exists?
+        def values
+          return [] unless table_exists?
 
-        DB.query_hash(<<~SQL).map(&:symbolize_keys)
+          DB.query_hash(<<~SQL).map(&:symbolize_keys)
           SELECT display_name AS name, id AS value
           FROM llm_models
         SQL
-      end
+        end
 
-      def self.table_exists?
-        DB.exec("SELECT 1 FROM llm_models LIMIT 0")
-        true
-      rescue StandardError
-        false
+        def table_exists?
+          DB.exec("SELECT 1 FROM llm_models LIMIT 0")
+          true
+        rescue StandardError
+          false
+        end
       end
     end
   end

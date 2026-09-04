@@ -18,8 +18,10 @@ class ContentLocalization
   # PostSerializer#include_localized_oneboxes? is the request-aware gate. Any
   # new caller must apply the same gate.
   class OneboxLocalizer
-    def self.build(...)
-      new(...).build
+    class << self
+      def build(...)
+        new(...).build
+      end
     end
 
     # @param posts [Array<Post>] the posts on the page

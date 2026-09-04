@@ -32,12 +32,14 @@ class UserApiKeyScope < ActiveRecord::Base
     ],
   }
 
-  def self.all_scopes
-    scopes = SCOPES
-    DiscoursePluginRegistry.user_api_key_scope_mappings.each do |mapping|
-      scopes = scopes.merge!(mapping)
+  class << self
+    def all_scopes
+      scopes = SCOPES
+      DiscoursePluginRegistry.user_api_key_scope_mappings.each do |mapping|
+        scopes = scopes.merge!(mapping)
+      end
+      scopes
     end
-    scopes
   end
 
   def permits?(env)

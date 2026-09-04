@@ -3,8 +3,10 @@
 class ClassificationResult < ActiveRecord::Base
   belongs_to :target, polymorphic: true
 
-  def self.has_sentiment_classification?
-    where(classification_type: "sentiment").exists?
+  class << self
+    def has_sentiment_classification?
+      where(classification_type: "sentiment").exists?
+    end
   end
 end
 

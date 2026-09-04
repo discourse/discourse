@@ -2,10 +2,9 @@
 
 module Chat
   class Thread < ActiveRecord::Base
-    MAX_TITLE_LENGTH = 100
-
     include Chat::ThreadCache
     include HasCustomFields
+    MAX_TITLE_LENGTH = 100
 
     self.table_name = "chat_threads"
 
@@ -30,6 +29,51 @@ module Chat
                class_name: "Chat::Message",
                foreign_key: :last_message_id,
                optional: true
+    class << self
+      def grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)
+        DB.query(<<~SQL, message_ids: message_ids, thread_ids: thread_ids)
+        SELECT thread_id,
+          array_agg(chat_messages.id ORDER BY chat_messages.created_at, chat_messages.id) AS thread_message_ids,
+          chat_threads.original_message_id
+        FROM chat_messages
+        INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
+        WHERE thread_id IS NOT NULL
+        #{thread_ids ? "AND thread_id IN (:thread_ids)" : ""}
+        #{message_ids ? "AND chat_messages.id IN (:message_ids)" : ""}
+        #{include_original_message ? "" : "AND chat_messages.id != chat_threads.original_message_id"}
+        GROUP BY thread_id, chat_threads.original_message_id;
+      SQL
+      end
+
+      def ensure_consistency!
+        update_counts
+      end
+
+      def update_counts
+        # NOTE: Chat::Thread#replies_count is not updated every time
+        # a message is created or deleted in a channel, the UI will lag
+        # behind unless it is kept in sync with MessageBus. The count
+        # has 1 subtracted from it to account for the original message.
+        #
+        # It is updated eventually via Jobs::Chat::PeriodicalUpdates. In
+        # future we may want to update this more frequently.
+        updated_thread_ids = DB.query_single <<~SQL
+        UPDATE chat_threads ct
+        SET replies_count = GREATEST(COALESCE(subquery.new_count, 0), 0)
+        FROM (
+          SELECT cm.thread_id, COUNT(cm.*) - 1 AS new_count
+          FROM chat_threads
+          LEFT JOIN chat_messages cm ON cm.thread_id = chat_threads.id AND cm.deleted_at IS NULL
+          GROUP BY cm.thread_id
+        ) AS subquery
+        WHERE ct.id = subquery.thread_id AND ct.replies_count IS DISTINCT FROM GREATEST(COALESCE(subquery.new_count, 0), 0)
+        RETURNING ct.id AS thread_id
+      SQL
+        return if updated_thread_ids.empty?
+        clear_caches!(updated_thread_ids)
+      end
+    end
+
     def last_message
       super || NullMessage.new
     end
@@ -131,49 +175,6 @@ module Chat
         thread_id: id,
         anchor_message_id: anchor_message_id,
       ).first
-    end
-
-    def self.grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)
-      DB.query(<<~SQL, message_ids: message_ids, thread_ids: thread_ids)
-        SELECT thread_id,
-          array_agg(chat_messages.id ORDER BY chat_messages.created_at, chat_messages.id) AS thread_message_ids,
-          chat_threads.original_message_id
-        FROM chat_messages
-        INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
-        WHERE thread_id IS NOT NULL
-        #{thread_ids ? "AND thread_id IN (:thread_ids)" : ""}
-        #{message_ids ? "AND chat_messages.id IN (:message_ids)" : ""}
-        #{include_original_message ? "" : "AND chat_messages.id != chat_threads.original_message_id"}
-        GROUP BY thread_id, chat_threads.original_message_id;
-      SQL
-    end
-
-    def self.ensure_consistency!
-      update_counts
-    end
-
-    def self.update_counts
-      # NOTE: Chat::Thread#replies_count is not updated every time
-      # a message is created or deleted in a channel, the UI will lag
-      # behind unless it is kept in sync with MessageBus. The count
-      # has 1 subtracted from it to account for the original message.
-      #
-      # It is updated eventually via Jobs::Chat::PeriodicalUpdates. In
-      # future we may want to update this more frequently.
-      updated_thread_ids = DB.query_single <<~SQL
-        UPDATE chat_threads ct
-        SET replies_count = GREATEST(COALESCE(subquery.new_count, 0), 0)
-        FROM (
-          SELECT cm.thread_id, COUNT(cm.*) - 1 AS new_count
-          FROM chat_threads
-          LEFT JOIN chat_messages cm ON cm.thread_id = chat_threads.id AND cm.deleted_at IS NULL
-          GROUP BY cm.thread_id
-        ) AS subquery
-        WHERE ct.id = subquery.thread_id AND ct.replies_count IS DISTINCT FROM GREATEST(COALESCE(subquery.new_count, 0), 0)
-        RETURNING ct.id AS thread_id
-      SQL
-      return if updated_thread_ids.empty?
-      clear_caches!(updated_thread_ids)
     end
   end
 end

@@ -9,8 +9,10 @@ class UserApiKeyClientScope < ActiveRecord::Base
               message: "%{value} is not a valid scope",
             }
 
-  def self.allowed
-    Set.new(SiteSetting.allow_user_api_key_client_scopes.split("|"))
+  class << self
+    def allowed
+      Set.new(SiteSetting.allow_user_api_key_client_scopes.split("|"))
+    end
   end
 end
 

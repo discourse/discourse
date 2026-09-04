@@ -3,30 +3,42 @@
 class ReviewableUser < Reviewable
   include ReviewableActionBuilder
 
-  def self.create_for(user)
-    create(created_by_id: Discourse.system_user.id, target: user)
+  class << self
+    def create_for(user)
+      create(created_by_id: Discourse.system_user.id, target: user)
+    end
+
+    public
+
+    def payload_for(user)
+      profile = user.user_profile
+      avatar = user.uploaded_avatar
+
+      {
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        bio: profile&.bio_raw,
+        website: profile&.website,
+        avatar_upload_id: avatar&.id,
+        avatar_url: avatar && Discourse.store.cdn_url(avatar.url),
+      }
+    end
+
+    def additional_args(params)
+      { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
+    end
+
+    # Update's the user's fields for approval but does not save. This
+    # can be used when generating a new user that is approved on create
+    def set_approved_fields!(user, approved_by)
+      user.approved = true
+      user.approved_by ||= approved_by
+      user.approved_at ||= Time.zone.now
+    end
   end
 
   after_create :retain_avatar_snapshot
-
-  def self.payload_for(user)
-    profile = user.user_profile
-    avatar = user.uploaded_avatar
-
-    {
-      username: user.username,
-      name: user.name,
-      email: user.email,
-      bio: profile&.bio_raw,
-      website: profile&.website,
-      avatar_upload_id: avatar&.id,
-      avatar_url: avatar && Discourse.store.cdn_url(avatar.url),
-    }
-  end
-
-  def self.additional_args(params)
-    { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
-  end
 
   def build_combined_actions(actions, guardian, args)
     build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
@@ -175,14 +187,6 @@ class ReviewableUser < Reviewable
     args[:block_email] = true
     args[:block_ip] = true
     perform_delete_user(performed_by, args)
-  end
-
-  # Update's the user's fields for approval but does not save. This
-  # can be used when generating a new user that is approved on create
-  def self.set_approved_fields!(user, approved_by)
-    user.approved = true
-    user.approved_by ||= approved_by
-    user.approved_at ||= Time.zone.now
   end
 
   def is_a_suspect_user?

@@ -2,22 +2,23 @@
 
 module DiscourseReactions
   class PostReactionsQuery
-    def self.call(post:, reaction_filter: nil, limit: 30, offset: 0, current_user_id: nil)
-      query =
-        new(
-          post: post,
-          reaction_filter: reaction_filter,
-          limit: limit,
-          offset: offset,
-          current_user_id: current_user_id,
-        )
-      [query.rows, query.total]
-    end
+    class << self
+      def call(post:, reaction_filter: nil, limit: 30, offset: 0, current_user_id: nil)
+        query =
+          new(
+            post: post,
+            reaction_filter: reaction_filter,
+            limit: limit,
+            offset: offset,
+            current_user_id: current_user_id,
+          )
+        [query.rows, query.total]
+      end
 
-    def self.apply_ignored_users_filter(scope, user_column:, current_user_id:)
-      return scope if current_user_id.blank?
+      def apply_ignored_users_filter(scope, user_column:, current_user_id:)
+        return scope if current_user_id.blank?
 
-      scope.where(<<~SQL, current_user_id: current_user_id)
+        scope.where(<<~SQL, current_user_id: current_user_id)
         NOT EXISTS (
           SELECT 1 FROM ignored_users ig
           WHERE ig.user_id = :current_user_id
@@ -25,6 +26,7 @@ module DiscourseReactions
             AND ig.ignored_user_id <> :current_user_id
         )
       SQL
+      end
     end
 
     def initialize(post:, reaction_filter: nil, limit: 30, offset: 0, current_user_id: nil)

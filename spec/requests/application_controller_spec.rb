@@ -2354,7 +2354,12 @@ RSpec.describe ApplicationController do
   end
 
   describe "when authorizing mini_profiler" do
-    mini_profiler_stub = Class.new { def self.authorize_request = nil }
+    mini_profiler_stub =
+      Class.new do
+        class << self
+          def authorize_request = nil
+        end
+      end
 
     around do |example|
       stub_const(ApplicationController, :MINI_PROFILER_CLASS, mini_profiler_stub) { example.run }

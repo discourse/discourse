@@ -3,8 +3,10 @@
 # Time / clock control for specs.
 
 class TrackTimeStub
-  def self.stubbed
-    false
+  class << self
+    def stubbed
+      false
+    end
   end
 end
 
@@ -59,30 +61,32 @@ module TimeHelpers
 end
 
 module BrowserTime
-  # Install the clock at the desired time and immediately resume it so
-  # the browser starts at `time` but `Date.now()` keeps advancing with the
-  # wall clock.
-  #
-  # `set_fixed_time` pins `Date.now()` forever, which breaks Ember's runloop: `next()`/`later()`
-  # schedule timers via `Date.now() + wait` and only fire them once
-  # `Date.now()` has advanced past that, so any action deferred through
-  # the runloop (e.g. DButton, which uses `next()` to optimise INP)
-  # would silently never run.
-  #
-  # Playwright warns about this "stuck page" behaviour for pinned clocks too.
-  def self.freeze(page, time)
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.clock.install(time:)
-      pw_page.clock.resume
+  class << self
+    # Install the clock at the desired time and immediately resume it so
+    # the browser starts at `time` but `Date.now()` keeps advancing with the
+    # wall clock.
+    #
+    # `set_fixed_time` pins `Date.now()` forever, which breaks Ember's runloop: `next()`/`later()`
+    # schedule timers via `Date.now() + wait` and only fire them once
+    # `Date.now()` has advanced past that, so any action deferred through
+    # the runloop (e.g. DButton, which uses `next()` to optimise INP)
+    # would silently never run.
+    #
+    # Playwright warns about this "stuck page" behaviour for pinned clocks too.
+    def freeze(page, time)
+      page.driver.with_playwright_page do |pw_page|
+        pw_page.clock.install(time:)
+        pw_page.clock.resume
+      end
     end
-  end
 
-  # Apply timezone override via CDP if timezone metadata is present.
-  # We use CDP instead of the driver's timezoneId option because the driver
-  # instance is cached and reused between tests, so timezoneId only affects
-  # the first test. CDP override works at runtime for each test.
-  def self.override_timezone(pw_page, timezone)
-    cdp = pw_page.context.new_cdp_session(pw_page)
-    cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
+    # Apply timezone override via CDP if timezone metadata is present.
+    # We use CDP instead of the driver's timezoneId option because the driver
+    # instance is cached and reused between tests, so timezoneId only affects
+    # the first test. CDP override works at runtime for each test.
+    def override_timezone(pw_page, timezone)
+      cdp = pw_page.context.new_cdp_session(pw_page)
+      cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
+    end
   end
 end

@@ -9,6 +9,16 @@ module Jobs
 
     include Email::BuildEmailHelper
 
+    POLL_MAILBOX_TIMEOUT_ERROR_KEY = "poll_mailbox_timeout_error_key"
+    POLL_MAILBOX_ERRORS_KEY = "poll_mailbox_errors"
+
+    class << self
+      def errors_in_past_24_hours
+        Discourse.redis.zremrangebyscore(POLL_MAILBOX_ERRORS_KEY, 0, 24.hours.ago.to_i)
+        Discourse.redis.zcard(POLL_MAILBOX_ERRORS_KEY).to_i
+      end
+    end
+
     def execute(args)
       @args = args
       poll_pop3 if should_poll?
@@ -28,8 +38,6 @@ module Jobs
     def process_popmail(mail_string)
       Email::Processor.process!(mail_string, source: :pop3_poll)
     end
-
-    POLL_MAILBOX_TIMEOUT_ERROR_KEY = "poll_mailbox_timeout_error_key"
 
     def poll_pop3
       pop3 = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
@@ -81,13 +89,6 @@ module Jobs
       mark_as_errored!
       track_problem(:poll_pop3_auth_error)
       Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming emails."))
-    end
-
-    POLL_MAILBOX_ERRORS_KEY = "poll_mailbox_errors"
-
-    def self.errors_in_past_24_hours
-      Discourse.redis.zremrangebyscore(POLL_MAILBOX_ERRORS_KEY, 0, 24.hours.ago.to_i)
-      Discourse.redis.zcard(POLL_MAILBOX_ERRORS_KEY).to_i
     end
 
     def mail_too_old?(mail_string)

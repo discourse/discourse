@@ -2,6 +2,15 @@
 
 module Email
   class Cleaner
+    class << self
+      def delete_rejected!
+        IncomingEmail.delete_by(
+          "rejection_message IS NOT NULL AND created_at < ?",
+          SiteSetting.delete_rejected_email_after_days.days.ago,
+        )
+      end
+    end
+
     def initialize(mail, remove_attachments: true, truncate: true, rejected: false)
       @mail = Mail.new(mail)
       @mail.charset = "UTF-8"
@@ -20,13 +29,6 @@ module Email
       @mail.without_attachments! if @remove_attachments
       truncate! if @truncate
       remove_null_byte(@mail.to_s)
-    end
-
-    def self.delete_rejected!
-      IncomingEmail.delete_by(
-        "rejection_message IS NOT NULL AND created_at < ?",
-        SiteSetting.delete_rejected_email_after_days.days.ago,
-      )
     end
 
     private

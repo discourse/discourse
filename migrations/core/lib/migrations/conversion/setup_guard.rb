@@ -17,8 +17,10 @@ module Migrations
         end
       end
 
-      def self.run(processor)
-        Database::IntermediateDB.with_connection(NoWriteConnection.new) { processor.setup }
+      class << self
+        def run(processor)
+          Database::IntermediateDB.with_connection(NoWriteConnection.new) { processor.setup }
+        end
       end
     end
   end

@@ -10,8 +10,10 @@ module Onebox
       always_https
       requires_iframe_origins "https://store.steampowered.com"
 
-      def self.matches_path(path)
-        path.match?(%r{^/app/\d+$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/app/\d+$})
+        end
       end
 
       def placeholder_html

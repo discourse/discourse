@@ -2,14 +2,16 @@
 
 module DiscourseDataExplorer
   class QueryFinder
-    def self.find(id)
-      default_query = Queries.default[id.to_s]
-      return raise ActiveRecord::RecordNotFound unless default_query
+    class << self
+      def find(id)
+        default_query = Queries.default[id.to_s]
+        return raise ActiveRecord::RecordNotFound unless default_query
 
-      query = Query.find_by(id: id) || Query.new
-      query.attributes = default_query
-      query.user_id = Discourse::SYSTEM_USER_ID.to_s
-      query
+        query = Query.find_by(id: id) || Query.new
+        query.attributes = default_query
+        query.user_id = Discourse::SYSTEM_USER_ID.to_s
+        query
+      end
     end
   end
 
@@ -32,8 +34,34 @@ module DiscourseDataExplorer
 
     scope :user_queries, -> { where(hidden: false).where("id > 0") }
 
-    def self.is_default_query?(id)
-      id.to_i < 0
+    class << self
+      def is_default_query?(id)
+        id.to_i < 0
+      end
+
+      def find(id)
+        return super unless is_default_query?(id)
+        QueryFinder.find(id)
+      end
+
+      def unpersisted_defaults(search: nil)
+        persisted_ids = where(hidden: false).where("id < 0").pluck(:id).to_set
+        query_text = search&.downcase
+
+        Queries.default.filter_map do |_, attributes|
+          next if persisted_ids.include?(attributes["id"])
+
+          if query_text
+            name_match = attributes["name"]&.downcase&.include?(query_text)
+            desc_match = attributes["description"]&.downcase&.include?(query_text)
+            next unless name_match || desc_match
+          end
+
+          record = new(attributes.slice("id", "sql", "name", "description"))
+          record.user_id = Discourse::SYSTEM_USER_ID.to_s
+          record
+        end
+      end
     end
 
     def params
@@ -55,30 +83,6 @@ module DiscourseDataExplorer
     def record_run!
       persisted? ? update_columns(last_run_at: Time.now) : update!(last_run_at: Time.now)
       DiscourseDataExplorer::QueryStat.log(id) unless Query.is_default_query?(id)
-    end
-
-    def self.find(id)
-      return super unless is_default_query?(id)
-      QueryFinder.find(id)
-    end
-
-    def self.unpersisted_defaults(search: nil)
-      persisted_ids = where(hidden: false).where("id < 0").pluck(:id).to_set
-      query_text = search&.downcase
-
-      Queries.default.filter_map do |_, attributes|
-        next if persisted_ids.include?(attributes["id"])
-
-        if query_text
-          name_match = attributes["name"]&.downcase&.include?(query_text)
-          desc_match = attributes["description"]&.downcase&.include?(query_text)
-          next unless name_match || desc_match
-        end
-
-        record = new(attributes.slice("id", "sql", "name", "description"))
-        record.user_id = Discourse::SYSTEM_USER_ID.to_s
-        record
-      end
     end
 
     private

@@ -3,19 +3,20 @@
 module DiscourseAi
   module Translation
     class TagCandidates < BaseCandidates
-      def self.progress_summary
-        connection = ActiveRecord::Base.connection
-        supported_bases =
-          SiteSetting
-            .content_localization_supported_locales
-            .split("|")
-            .map { |locale| locale.downcase.tr("-", "_").split("_").first }
-            .uniq
-        bases_sql =
-          "ARRAY[#{supported_bases.map { |base| connection.quote(base) }.join(",")}]::text[]"
-        tags_sql = get.select(:id, :locale).to_sql
+      class << self
+        def progress_summary
+          connection = ActiveRecord::Base.connection
+          supported_bases =
+            SiteSetting
+              .content_localization_supported_locales
+              .split("|")
+              .map { |locale| locale.downcase.tr("-", "_").split("_").first }
+              .uniq
+          bases_sql =
+            "ARRAY[#{supported_bases.map { |base| connection.quote(base) }.join(",")}]::text[]"
+          tags_sql = get.select(:id, :locale).to_sql
 
-        sql = <<~SQL
+          sql = <<~SQL
           WITH supported(base) AS MATERIALIZED (
             SELECT unnest(#{bases_sql})
           )
@@ -46,21 +47,21 @@ module DiscourseAi
           FROM (#{tags_sql}) tag
         SQL
 
-        result = DB.query(sql).first
+          result = DB.query(sql).first
 
-        {
-          target_type: "tag",
-          total_count: result.total_count,
-          translated_count: result.translated_count,
-          needs_language_detection_count: result.needs_language_detection_count,
-        }
-      end
+          {
+            target_type: "tag",
+            total_count: result.total_count,
+            translated_count: result.translated_count,
+            needs_language_detection_count: result.needs_language_detection_count,
+          }
+        end
 
-      def self.progress_details
-        supported_locales =
-          ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
+        def progress_details
+          supported_locales =
+            ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
 
-        sql = <<~SQL
+          sql = <<~SQL
           WITH supported AS MATERIALIZED (
             SELECT DISTINCT ON (
                      split_part(lower(replace(locale, '-', '_')), '_', 1)
@@ -129,33 +130,31 @@ module DiscourseAi
           ORDER BY supported.locale
         SQL
 
-        {
-          target_type: "tag",
-          locales:
-            DB
-              .query(sql)
-              .map do |row|
-                {
-                  locale: row.locale,
-                  translated_count: row.translated_count,
-                  pending_count: row.pending_count,
-                  total_count: row.total_count,
-                }
-              end,
-        }
-      end
+          {
+            target_type: "tag",
+            locales:
+              DB
+                .query(sql)
+                .map do |row|
+                  {
+                    locale: row.locale,
+                    translated_count: row.translated_count,
+                    pending_count: row.pending_count,
+                    total_count: row.total_count,
+                  }
+                end,
+          }
+        end
 
-      private
+        public
 
-      # all tags that are eligible for translation based on site settings,
-      # including those without locale detected yet.
-      def self.get
-        Tag.all
-      end
+        def get
+          Tag.all
+        end
 
-      def self.calculate_completion_per_locale(locale)
-        base_locale = "#{locale.split("_").first}%"
-        sql = <<~SQL
+        def calculate_completion_per_locale(locale)
+          base_locale = "#{locale.split("_").first}%"
+          sql = <<~SQL
           WITH eligible_tags AS (
             #{get.where.not(tags: { locale: nil }).to_sql}
           ),
@@ -172,9 +171,15 @@ module DiscourseAi
           FROM total_count t, done_count d
         SQL
 
-        done, total = DB.query_single(sql, base_locale:)
-        { done:, total: }
+          done, total = DB.query_single(sql, base_locale:)
+          { done:, total: }
+        end
       end
+
+      private
+
+      # all tags that are eligible for translation based on site settings,
+      # including those without locale detected yet.
     end
   end
 end

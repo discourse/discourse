@@ -1,37 +1,39 @@
 # frozen_string_literal: true
 
 class ThemesInstallTask
-  def self.install(themes)
-    counts = { installed: 0, updated: 0, errors: 0, skipped: 0 }
-    log = []
-    themes.each do |name, val|
-      installer = new(val)
-      next if installer.url.nil?
+  class << self
+    def install(themes)
+      counts = { installed: 0, updated: 0, errors: 0, skipped: 0 }
+      log = []
+      themes.each do |name, val|
+        installer = new(val)
+        next if installer.url.nil?
 
-      if installer.theme_exists?
-        if installer.options.fetch(:skip_update, nil)
-          log << "#{name}: is already installed. Skipping update."
-          counts[:skipped] += 1
-        elsif installer.update
-          log << "#{name}: is already installed. Updating from remote."
-          counts[:updated] += 1
+        if installer.theme_exists?
+          if installer.options.fetch(:skip_update, nil)
+            log << "#{name}: is already installed. Skipping update."
+            counts[:skipped] += 1
+          elsif installer.update
+            log << "#{name}: is already installed. Updating from remote."
+            counts[:updated] += 1
+          else
+            log << "#{name}: is already installed, but there was an error updating from remote."
+            counts[:errors] += 1
+          end
         else
-          log << "#{name}: is already installed, but there was an error updating from remote."
-          counts[:errors] += 1
-        end
-      else
-        begin
-          installer.install
-          log << "#{name}: installed from #{installer.url}"
-          counts[:installed] += 1
-        rescue RemoteTheme::ImportError, Discourse::InvalidParameters => err
-          log << "#{name}: #{err.message}"
-          counts[:errors] += 1
+          begin
+            installer.install
+            log << "#{name}: installed from #{installer.url}"
+            counts[:installed] += 1
+          rescue RemoteTheme::ImportError, Discourse::InvalidParameters => err
+            log << "#{name}: #{err.message}"
+            counts[:errors] += 1
+          end
         end
       end
-    end
 
-    [log, counts]
+      [log, counts]
+    end
   end
 
   attr_reader :url, :options

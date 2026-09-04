@@ -159,164 +159,170 @@ if defined?(DiscourseWorkflows)
             end,
           )
 
-          def self.default_button_rows
-            [
-              {
-                "label" => I18n.t("discourse_workflows.chat_approval.default_approve_label"),
-                "value" => "approve",
-              },
-              {
-                "label" => I18n.t("discourse_workflows.chat_approval.default_deny_label"),
-                "value" => "deny",
-              },
-            ]
-          end
-
-          def self.default_buttons
-            { "values" => default_button_rows }
-          end
-
-          def self.button_rows(parameters)
-            value = DiscourseWorkflows::CollectionParameters.fetch_value(parameters, :buttons)
-            value = default_buttons if value.nil?
-            DiscourseWorkflows::CollectionParameters
-              .rows_from_value(value)
-              .map { |row| row.respond_to?(:deep_stringify_keys) ? row.deep_stringify_keys : row }
-          end
-
-          def self.allowed_actions(parameters)
-            ACTION_IDS.first(button_rows(parameters).size)
-          end
-
-          def self.button_value(parameters, action)
-            index = ACTION_IDS.index(action.to_s)
-            return if index.nil?
-
-            row = button_rows(parameters)[index]
-            row["value"].to_s if row.is_a?(Hash)
-          end
-
-          def self.valid_interaction?(interaction, action:, parameters:)
-            configured_channel_id =
-              Integer(
-                DiscourseWorkflows::CollectionParameters.fetch_value(parameters, :channel_id),
-                exception: false,
-              )
-            return false if configured_channel_id.nil?
-
-            configured_value = button_value(parameters, action)
-            action_id = interaction.action["action_id"].to_s
-            message_action =
-              interaction
-                .message
-                .blocks
-                &.filter_map { |block| block["elements"] }
-                .to_a
-                .flatten
-                .find { |element| element["action_id"].to_s == action_id }
-
-            configured_value.present? &&
-              interaction.message.chat_channel_id == configured_channel_id &&
-              interaction.action["value"].to_s == configured_value &&
-              message_action == interaction.action
-          end
-
-          def self.resume_user(interaction)
-            interaction.user
-          end
-
-          def self.response_items(action:, interaction:)
-            if ACTION_IDS.exclude?(action.to_s)
-              raise ArgumentError, "Unsupported chat approval action: #{action}"
+          class << self
+            def default_button_rows
+              [
+                {
+                  "label" => I18n.t("discourse_workflows.chat_approval.default_approve_label"),
+                  "value" => "approve",
+                },
+                {
+                  "label" => I18n.t("discourse_workflows.chat_approval.default_deny_label"),
+                  "value" => "deny",
+                },
+              ]
             end
 
-            user = interaction.user
-            channel = interaction.message.chat_channel
-            scope = user.guardian
-            channel_data =
-              Chat::WorkflowChannelSerializer.new(channel, scope: scope, root: false).as_json
-            user_data = BasicUserSerializer.new(user, scope: scope, root: false).as_json
-
-            [
-              DiscourseWorkflows::Item.wrap(
-                { value: interaction.action["value"].to_s, channel: channel_data, user: user_data },
-                paired_item: 0,
-              ),
-            ]
-          end
-
-          def self.validate_configuration(configuration, errors)
-            button_validation_errors(button_rows(configuration)).each do |message|
-              errors.add(:base, message)
-            end
-          end
-
-          def self.button_validation_errors(rows)
-            errors = []
-
-            if rows.empty?
-              errors << I18n.t("discourse_workflows.errors.chat_approval.buttons_required")
-              return errors
+            def default_buttons
+              { "values" => default_button_rows }
             end
 
-            if rows.length > MAX_BUTTONS
-              errors << I18n.t(
-                "discourse_workflows.errors.chat_approval.too_many_buttons",
-                max: MAX_BUTTONS,
-              )
+            def button_rows(parameters)
+              value = DiscourseWorkflows::CollectionParameters.fetch_value(parameters, :buttons)
+              value = default_buttons if value.nil?
+              DiscourseWorkflows::CollectionParameters
+                .rows_from_value(value)
+                .map { |row| row.respond_to?(:deep_stringify_keys) ? row.deep_stringify_keys : row }
             end
 
-            rows.each_with_index do |row, index|
-              label = row.is_a?(Hash) ? row["label"].to_s : ""
-              value = row.is_a?(Hash) ? row["value"].to_s : ""
-              style = row.is_a?(Hash) ? row["style"].to_s : ""
-              icon = row.is_a?(Hash) ? row["icon"].to_s : ""
-              position = index + 1
+            def allowed_actions(parameters)
+              ACTION_IDS.first(button_rows(parameters).size)
+            end
 
-              if label.blank?
-                errors << I18n.t(
-                  "discourse_workflows.errors.chat_approval.button_label_required",
-                  position: position,
+            def button_value(parameters, action)
+              index = ACTION_IDS.index(action.to_s)
+              return if index.nil?
+
+              row = button_rows(parameters)[index]
+              row["value"].to_s if row.is_a?(Hash)
+            end
+
+            def valid_interaction?(interaction, action:, parameters:)
+              configured_channel_id =
+                Integer(
+                  DiscourseWorkflows::CollectionParameters.fetch_value(parameters, :channel_id),
+                  exception: false,
                 )
-              elsif label.length > MAX_LABEL_LENGTH
-                errors << I18n.t(
-                  "discourse_workflows.errors.chat_approval.button_label_too_long",
-                  position: position,
-                  max: MAX_LABEL_LENGTH,
-                )
+              return false if configured_channel_id.nil?
+
+              configured_value = button_value(parameters, action)
+              action_id = interaction.action["action_id"].to_s
+              message_action =
+                interaction
+                  .message
+                  .blocks
+                  &.filter_map { |block| block["elements"] }
+                  .to_a
+                  .flatten
+                  .find { |element| element["action_id"].to_s == action_id }
+
+              configured_value.present? &&
+                interaction.message.chat_channel_id == configured_channel_id &&
+                interaction.action["value"].to_s == configured_value &&
+                message_action == interaction.action
+            end
+
+            def resume_user(interaction)
+              interaction.user
+            end
+
+            def response_items(action:, interaction:)
+              if ACTION_IDS.exclude?(action.to_s)
+                raise ArgumentError, "Unsupported chat approval action: #{action}"
               end
 
-              if value.blank?
-                errors << I18n.t(
-                  "discourse_workflows.errors.chat_approval.button_value_required",
-                  position: position,
-                )
-              elsif value.length > MAX_VALUE_LENGTH
-                errors << I18n.t(
-                  "discourse_workflows.errors.chat_approval.button_value_too_long",
-                  position: position,
-                  max: MAX_VALUE_LENGTH,
-                )
-              end
+              user = interaction.user
+              channel = interaction.message.chat_channel
+              scope = user.guardian
+              channel_data =
+                Chat::WorkflowChannelSerializer.new(channel, scope: scope, root: false).as_json
+              user_data = BasicUserSerializer.new(user, scope: scope, root: false).as_json
 
-              if style.present? && BUTTON_STYLES.exclude?(style)
-                errors << I18n.t(
-                  "discourse_workflows.errors.chat_approval.button_style_invalid",
-                  position: position,
-                  styles: BUTTON_STYLES.join(", "),
-                )
-              end
+              [
+                DiscourseWorkflows::Item.wrap(
+                  {
+                    value: interaction.action["value"].to_s,
+                    channel: channel_data,
+                    user: user_data,
+                  },
+                  paired_item: 0,
+                ),
+              ]
+            end
 
-              if icon.length > MAX_ICON_LENGTH
-                errors << I18n.t(
-                  "discourse_workflows.errors.chat_approval.button_icon_too_long",
-                  position: position,
-                  max: MAX_ICON_LENGTH,
-                )
+            def validate_configuration(configuration, errors)
+              button_validation_errors(button_rows(configuration)).each do |message|
+                errors.add(:base, message)
               end
             end
 
-            errors
+            def button_validation_errors(rows)
+              errors = []
+
+              if rows.empty?
+                errors << I18n.t("discourse_workflows.errors.chat_approval.buttons_required")
+                return errors
+              end
+
+              if rows.length > MAX_BUTTONS
+                errors << I18n.t(
+                  "discourse_workflows.errors.chat_approval.too_many_buttons",
+                  max: MAX_BUTTONS,
+                )
+              end
+
+              rows.each_with_index do |row, index|
+                label = row.is_a?(Hash) ? row["label"].to_s : ""
+                value = row.is_a?(Hash) ? row["value"].to_s : ""
+                style = row.is_a?(Hash) ? row["style"].to_s : ""
+                icon = row.is_a?(Hash) ? row["icon"].to_s : ""
+                position = index + 1
+
+                if label.blank?
+                  errors << I18n.t(
+                    "discourse_workflows.errors.chat_approval.button_label_required",
+                    position: position,
+                  )
+                elsif label.length > MAX_LABEL_LENGTH
+                  errors << I18n.t(
+                    "discourse_workflows.errors.chat_approval.button_label_too_long",
+                    position: position,
+                    max: MAX_LABEL_LENGTH,
+                  )
+                end
+
+                if value.blank?
+                  errors << I18n.t(
+                    "discourse_workflows.errors.chat_approval.button_value_required",
+                    position: position,
+                  )
+                elsif value.length > MAX_VALUE_LENGTH
+                  errors << I18n.t(
+                    "discourse_workflows.errors.chat_approval.button_value_too_long",
+                    position: position,
+                    max: MAX_VALUE_LENGTH,
+                  )
+                end
+
+                if style.present? && BUTTON_STYLES.exclude?(style)
+                  errors << I18n.t(
+                    "discourse_workflows.errors.chat_approval.button_style_invalid",
+                    position: position,
+                    styles: BUTTON_STYLES.join(", "),
+                  )
+                end
+
+                if icon.length > MAX_ICON_LENGTH
+                  errors << I18n.t(
+                    "discourse_workflows.errors.chat_approval.button_icon_too_long",
+                    position: position,
+                    max: MAX_ICON_LENGTH,
+                  )
+                end
+              end
+
+              errors
+            end
           end
 
           def execute(exec_ctx)

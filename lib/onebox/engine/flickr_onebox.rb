@@ -11,8 +11,10 @@ module Onebox
       matches_domain("www.flickr.com")
       always_https
 
-      def self.matches_path(path)
-        path.start_with?("/photos/")
+      class << self
+        def matches_path(path)
+          path.start_with?("/photos/")
+        end
       end
 
       def to_html

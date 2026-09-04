@@ -4,24 +4,26 @@ module DiscourseAi
   module Agents
     module Tools
       class DbSchema < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Will load schema information for specific tables in the database",
-            parameters: [
-              {
-                name: "tables",
-                description:
-                  "list of tables to load schema information for, comma separated list eg: (users,posts))",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Will load schema information for specific tables in the database",
+              parameters: [
+                {
+                  name: "tables",
+                  description:
+                    "list of tables to load schema information for, comma separated list eg: (users,posts))",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "schema"
+          def name
+            "schema"
+          end
         end
 
         def tables

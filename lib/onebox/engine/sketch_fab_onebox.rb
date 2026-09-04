@@ -10,8 +10,10 @@ module Onebox
       always_https
       requires_iframe_origins("https://sketchfab.com")
 
-      def self.matches_path(path)
-        path.match?(%r{^/(models/|3d-models/[^/\s]+-)?[a-z0-9]{32}})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/(models/|3d-models/[^/\s]+-)?[a-z0-9]{32}})
+        end
       end
 
       def to_html

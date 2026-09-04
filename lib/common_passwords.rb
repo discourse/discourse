@@ -17,9 +17,30 @@ class CommonPasswords
 
   @mutex = Mutex.new
 
-  def self.common_password?(password)
-    return false if password.blank?
-    password_list.include?(password)
+  class << self
+    def common_password?(password)
+      return false if password.blank?
+      password_list.include?(password)
+    end
+
+    public
+
+    def password_list
+      @mutex.synchronize { load_passwords if redis.scard(LIST_KEY) <= 0 }
+      RedisPasswordList.new
+    end
+
+    def redis
+      Discourse.redis.without_namespace
+    end
+
+    def load_passwords
+      passwords = File.readlines(PASSWORD_FILE)
+      redis.sadd?(LIST_KEY, passwords.map!(&:chomp))
+    rescue Errno::ENOENT
+      # tolerate this so we don't block signups
+      Rails.logger.error "Common passwords file #{PASSWORD_FILE} is not found! Common password checking is skipped."
+    end
   end
 
   private
@@ -28,22 +49,5 @@ class CommonPasswords
     def include?(password)
       CommonPasswords.redis.sismember CommonPasswords::LIST_KEY, password
     end
-  end
-
-  def self.password_list
-    @mutex.synchronize { load_passwords if redis.scard(LIST_KEY) <= 0 }
-    RedisPasswordList.new
-  end
-
-  def self.redis
-    Discourse.redis.without_namespace
-  end
-
-  def self.load_passwords
-    passwords = File.readlines(PASSWORD_FILE)
-    redis.sadd?(LIST_KEY, passwords.map!(&:chomp))
-  rescue Errno::ENOENT
-    # tolerate this so we don't block signups
-    Rails.logger.error "Common passwords file #{PASSWORD_FILE} is not found! Common password checking is skipped."
   end
 end

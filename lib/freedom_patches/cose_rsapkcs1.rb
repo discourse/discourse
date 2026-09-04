@@ -8,8 +8,10 @@ require "openssl/signature_algorithm/rsapkcs1"
 # ones, RSASSA-PKCS1-v1_5.
 module COSE
   module Algorithm
-    def self.registered_algorithm_ids
-      @registered_by_id.keys
+    class << self
+      def registered_algorithm_ids
+        @registered_by_id.keys
+      end
     end
 
     class RSAPKCS1 < SignatureAlgorithm

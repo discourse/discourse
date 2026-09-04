@@ -2,48 +2,48 @@
 
 module Voice
   class BadgeGranterHooks
-    def self.on_leave(user, session, room:)
-      return unless badges_enabled?
-      return if session&.left_at.blank?
-
-      grant("Mic Check", user) if mic_check?(session, room)
-      grant("Night Owl", user) if night_owl?(user, session)
-      grant("Early Bird", user) if early_bird?(user, session)
-      grant("Marathoner", user) if marathoner?(session)
-    end
-
-    def self.on_join(user, room, participants)
-      return unless badges_enabled?
-
-      grant("Packed House", user) if room_full?(room, participants)
-      grant("Icebreaker", user) if icebreaker?(user, participants)
-    end
-
-    def self.on_room_create(user)
-      return unless badges_enabled?
-      grant("Host", user)
-    end
-
-    def self.on_invite_redeemed(invite)
-      return unless badges_enabled?
-
-      inviter = invite.invited_by
-      grant("Plus One", inviter) if inviter
-    end
-
     BADGE_GROUP_NAME = "Voice"
 
-    def self.enable_all!
-      grouping = BadgeGrouping.find_by(name: BADGE_GROUP_NAME)
-      Badge.where(badge_grouping_id: grouping.id).update_all(enabled: true) if grouping
-    end
-
-    def self.disable_all!
-      grouping = BadgeGrouping.find_by(name: BADGE_GROUP_NAME)
-      Badge.where(badge_grouping_id: grouping.id).update_all(enabled: false) if grouping
-    end
-
     class << self
+      def on_leave(user, session, room:)
+        return unless badges_enabled?
+        return if session&.left_at.blank?
+
+        grant("Mic Check", user) if mic_check?(session, room)
+        grant("Night Owl", user) if night_owl?(user, session)
+        grant("Early Bird", user) if early_bird?(user, session)
+        grant("Marathoner", user) if marathoner?(session)
+      end
+
+      def on_join(user, room, participants)
+        return unless badges_enabled?
+
+        grant("Packed House", user) if room_full?(room, participants)
+        grant("Icebreaker", user) if icebreaker?(user, participants)
+      end
+
+      def on_room_create(user)
+        return unless badges_enabled?
+        grant("Host", user)
+      end
+
+      def on_invite_redeemed(invite)
+        return unless badges_enabled?
+
+        inviter = invite.invited_by
+        grant("Plus One", inviter) if inviter
+      end
+
+      def enable_all!
+        grouping = BadgeGrouping.find_by(name: BADGE_GROUP_NAME)
+        Badge.where(badge_grouping_id: grouping.id).update_all(enabled: true) if grouping
+      end
+
+      def disable_all!
+        grouping = BadgeGrouping.find_by(name: BADGE_GROUP_NAME)
+        Badge.where(badge_grouping_id: grouping.id).update_all(enabled: false) if grouping
+      end
+
       private
 
       def grant(badge_name, user)

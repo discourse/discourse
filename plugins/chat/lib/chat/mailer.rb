@@ -2,40 +2,41 @@
 
 module Chat
   class Mailer
-    def self.send_unread_mentions_summary
-      return unless SiteSetting.chat_enabled
+    class << self
+      def send_unread_mentions_summary
+        return unless SiteSetting.chat_enabled
 
-      User
-        .real
-        .activated
-        .not_staged
-        .not_suspended
-        .where(id: users_with_unreads)
-        .find_each do |user|
-          if DiscoursePluginRegistry.apply_modifier(:chat_mailer_send_summary_to_user, true, user)
-            Jobs.enqueue(
-              :user_email,
-              type: "chat_summary",
-              user_id: user.id,
-              to_address: user.email,
-              force_respect_seen_recently: true,
-            )
+        User
+          .real
+          .activated
+          .not_staged
+          .not_suspended
+          .where(id: users_with_unreads)
+          .find_each do |user|
+            if DiscoursePluginRegistry.apply_modifier(:chat_mailer_send_summary_to_user, true, user)
+              Jobs.enqueue(
+                :user_email,
+                type: "chat_summary",
+                user_id: user.id,
+                to_address: user.email,
+                force_respect_seen_recently: true,
+              )
+            end
           end
-        end
-    end
+      end
 
-    private
+      public
 
-    def self.users_with_unreads
-      groups_join_sql =
-        if Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
-             Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
-          ""
-        else
-          "JOIN group_users gu ON gu.user_id = u.id AND gu.group_id IN (#{Chat.allowed_group_ids.join(",")})"
-        end
+      def users_with_unreads
+        groups_join_sql =
+          if Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+               Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+            ""
+          else
+            "JOIN group_users gu ON gu.user_id = u.id AND gu.group_id IN (#{Chat.allowed_group_ids.join(",")})"
+          end
 
-      DB.query_single <<~SQL
+        DB.query_single <<~SQL
         WITH eligible_users AS NOT MATERIALIZED (
           SELECT u.id, uo.allow_private_messages, uo.email_level, uo.chat_email_frequency
           FROM users u
@@ -106,6 +107,9 @@ module Chat
         UNION
         SELECT user_id FROM unread_threads
       SQL
+      end
     end
+
+    private
   end
 end

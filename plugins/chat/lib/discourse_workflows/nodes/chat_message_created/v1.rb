@@ -92,18 +92,20 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          class << self
+            def load_options_context(context)
+              case context.method_name
+              when "chat_channels"
+                ChatChannelSelection.load_options(context)
+              end
+            end
+          end
+
           def initialize(message, channel, user, *)
             super(parameters: {})
             @message = message
             @channel = channel
             @user = user
-          end
-
-          def self.load_options_context(context)
-            case context.method_name
-            when "chat_channels"
-              ChatChannelSelection.load_options(context)
-            end
           end
 
           def valid?

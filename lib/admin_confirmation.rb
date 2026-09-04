@@ -5,6 +5,25 @@ class AdminConfirmation
   attr_reader :performed_by
   attr_reader :target_user
 
+  class << self
+    def exists_for?(user_id)
+      Discourse.redis.exists? "admin-confirmation:#{user_id}"
+    end
+
+    def find_by_code(token)
+      json = Discourse.redis.get("admin-confirmation-token:#{token}")
+      return nil unless json
+
+      parsed = JSON.parse(json)
+      target_user = User.find(parsed["target_user_id"].to_i)
+      performed_by = User.find(parsed["performed_by"].to_i)
+
+      ac = AdminConfirmation.new(target_user, performed_by)
+      ac.token = token
+      ac
+    end
+  end
+
   def initialize(target_user, performed_by)
     @target_user = target_user
     @performed_by = performed_by
@@ -37,22 +56,5 @@ class AdminConfirmation
     StaffActionLogger.new(@performed_by).log_grant_admin(@target_user)
     Discourse.redis.del "admin-confirmation:#{@target_user.id}"
     Discourse.redis.del "admin-confirmation-token:#{@token}"
-  end
-
-  def self.exists_for?(user_id)
-    Discourse.redis.exists? "admin-confirmation:#{user_id}"
-  end
-
-  def self.find_by_code(token)
-    json = Discourse.redis.get("admin-confirmation-token:#{token}")
-    return nil unless json
-
-    parsed = JSON.parse(json)
-    target_user = User.find(parsed["target_user_id"].to_i)
-    performed_by = User.find(parsed["performed_by"].to_i)
-
-    ac = AdminConfirmation.new(target_user, performed_by)
-    ac.token = token
-    ac
   end
 end

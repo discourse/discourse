@@ -3,6 +3,12 @@
 class SpamRule::AutoSilence
   attr_reader :group_message
 
+  class << self
+    def prevent_posting?(user)
+      user.blank? || user.silenced? || new(user).should_autosilence?
+    end
+  end
+
   def initialize(user, post = nil)
     @user = user
     @post = post
@@ -10,10 +16,6 @@ class SpamRule::AutoSilence
 
   def perform
     I18n.with_locale(SiteSetting.default_locale) { silence_user if should_autosilence? }
-  end
-
-  def self.prevent_posting?(user)
-    user.blank? || user.silenced? || new(user).should_autosilence?
   end
 
   def should_autosilence?

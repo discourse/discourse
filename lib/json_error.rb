@@ -41,7 +41,9 @@ module JsonError
     JsonError.generic_error
   end
 
-  def self.generic_error
-    { errors: [I18n.t("js.generic_error")] }
+  class << self
+    def generic_error
+      { errors: [I18n.t("js.generic_error")] }
+    end
   end
 end

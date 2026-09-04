@@ -16,16 +16,18 @@ class DashboardRollupRebuilder
     user_visit
   ].freeze
 
-  def self.names
-    NAMES
-  end
+  class << self
+    def names
+      NAMES
+    end
 
-  def self.known?(name)
-    NAMES.include?(name.to_s)
-  end
+    def known?(name)
+      NAMES.include?(name.to_s)
+    end
 
-  def self.rebuild!(name = nil, io: $stdout)
-    new(io: io).rebuild!(name)
+    def rebuild!(name = nil, io: $stdout)
+      new(io: io).rebuild!(name)
+    end
   end
 
   def initialize(io: $stdout)

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class QuoteComparer
-  def self.whitespace
-    " \t\r\n"
+  class << self
+    def whitespace
+      " \t\r\n"
+    end
   end
 
   def initialize(topic_id, post_number, text)

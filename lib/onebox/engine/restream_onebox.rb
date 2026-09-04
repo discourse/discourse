@@ -10,8 +10,10 @@ module Onebox
       always_https
       requires_iframe_origins "https://player.restream.io"
 
-      def self.matches_path(path)
-        path.nil? || path.empty? || path == "/"
+      class << self
+        def matches_path(path)
+          path.nil? || path.empty? || path == "/"
+        end
       end
 
       def placeholder_html

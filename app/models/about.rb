@@ -18,12 +18,14 @@ class About
   include ActiveModel::Serialization
   include StatsCacheable
 
-  def self.stats_cache_key
-    "about-stats"
-  end
+  class << self
+    def stats_cache_key
+      "about-stats"
+    end
 
-  def self.fetch_stats
-    Stat.api_stats
+    def fetch_stats
+      Stat.api_stats
+    end
   end
 
   def initialize(user = nil, locale: I18n.locale, show_original: false)

@@ -42,6 +42,12 @@ class UploadCreator
     use
   ].each(&:freeze)
 
+  MIN_PIXELS_TO_CONVERT_TO_JPEG = 1280 * 720
+  MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
+  MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
+  MAX_CONVERT_FORMAT_SECONDS = 20
+  MAX_FIX_ORIENTATION_TIME = 5
+
   # Available options
   #  - type (string)
   #  - origin (string)
@@ -324,17 +330,12 @@ class UploadCreator
     end
   end
 
-  MIN_PIXELS_TO_CONVERT_TO_JPEG = 1280 * 720
-
   def convert_png_to_jpeg?
     return false unless @image_info.type == :png
     return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100
     return true if @opts[:pasted]
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
-
-  MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
-  MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
   def convert_favicon_to_png!
     png_tempfile = Tempfile.new(%w[image .png])
@@ -436,7 +437,6 @@ class UploadCreator
     extract_image_info!
   end
 
-  MAX_CONVERT_FORMAT_SECONDS = 20
   def execute_convert(from, to, opts = {}, read: [], write: [])
     command = [from, "-auto-orient", "-background", "white", "-interlace", "none"]
     command << "-flatten" unless opts[:flatten] == false
@@ -548,7 +548,6 @@ class UploadCreator
     @image_info.orientation.to_i > 1
   end
 
-  MAX_FIX_ORIENTATION_TIME = 5
   def fix_orientation!
     path = @file.path
 

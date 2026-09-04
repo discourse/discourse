@@ -4,14 +4,16 @@ class LetterAvatar
   class Identity
     attr_accessor :color, :letter
 
-    def self.from_username(username)
-      identity = new
-      identity.color =
-        LetterAvatar::COLORS[
-          Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length
-        ]
-      identity.letter = username[0].upcase
-      identity
+    class << self
+      def from_username(username)
+        identity = new
+        identity.color =
+          LetterAvatar::COLORS[
+            Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length
+          ]
+        identity.letter = username[0].upcase
+        identity
+      end
     end
   end
 
@@ -21,120 +23,6 @@ class LetterAvatar
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
   POINTSIZE = 280
-
-  class << self
-    def version
-      "#{VERSION}_#{image_magick_version}"
-    end
-
-    def cache_path
-      "tmp/letter_avatars/#{version}"
-    end
-
-    # Run `script/letter_avatar_pixel_diff` to inspect rendering changes.
-    def generate(username, size, opts = nil)
-      DistributedMutex.synchronize("letter_avatar_#{version}_#{username}") do
-        identity = (opts && opts[:identity]) || LetterAvatar::Identity.from_username(username)
-
-        cache = true
-        cache = false if opts && opts[:cache] == false
-
-        size = FULLSIZE if size > FULLSIZE
-        filename = cached_path(identity, size)
-
-        return filename if cache && File.exist?(filename)
-
-        fullsize = fullsize_path(identity)
-        generate_fullsize(identity) if !cache || !File.exist?(fullsize)
-
-        # Optimizing here is dubious, it can save up to 2x for large images (eg 359px)
-        # BUT... we are talking 2400 bytes down to 1200 bytes, both fit in one packet
-        # The cost of this is huge, its a 40% perf hit
-        OptimizedImage.resize(fullsize, filename, size, size)
-
-        filename
-      end
-    end
-
-    def cached_path(identity, size)
-      dir = "#{cache_path}/#{identity.letter}/#{identity.color.join("_")}"
-      FileUtils.mkdir_p(dir)
-      File.expand_path "#{dir}/#{size}.png"
-    end
-
-    def fullsize_path(identity)
-      File.expand_path cached_path(identity, FULLSIZE)
-    end
-
-    def generate_fullsize(identity)
-      color = identity.color
-      letter = identity.letter
-
-      filename = fullsize_path(identity)
-
-      # Use NimbusSans-Regular, except for macOS where it is unavailable, use Helvetica there
-      font = RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "NimbusSans-Regular"
-      # and adjust vertical offset accordingly
-      vertical_offset = font == "Helvetica" ? 26 : 34
-
-      instructions = %W[
-        -size
-        #{FULLSIZE}x#{FULLSIZE}
-        xc:#{to_rgb(color)}
-        -pointsize
-        #{POINTSIZE}
-        -fill
-        #FFFFFFCC
-        -font
-        #{font}
-        -gravity
-        Center
-        -annotate
-        -0+#{vertical_offset}
-        #{letter}
-        -depth
-        8
-        #{filename}
-      ]
-
-      ImageMagick.magick(
-        *instructions,
-        operation: :letter_avatar_render,
-        write: [File.dirname(filename)],
-      )
-
-      ## do not optimize image, it will end up larger than original
-      filename
-    end
-
-    def to_rgb(color)
-      r, g, b = color
-      "rgb(#{r},#{g},#{b})"
-    end
-
-    def image_magick_version
-      @image_magick_version ||=
-        Digest::MD5.hexdigest(
-          ImageMagick.magick("--version", operation: :letter_avatar_version) << ImageMagick.magick(
-            "-list",
-            "font",
-            operation: :letter_avatar_font_list,
-          ),
-        )
-    end
-
-    def cleanup_old
-      skip = File.basename(cache_path)
-      parent_path = File.dirname(cache_path)
-      Dir
-        .entries(parent_path)
-        .each do |path|
-          FileUtils.rm_rf(parent_path + "/" + path) unless %w[. ..].include?(path) || path == skip
-        end
-    rescue Errno::ENOENT
-      # no worries, folder doesn't exists
-    end
-  end
 
   # palette of optimally distinct colors
   # cf. http://tools.medialab.sciences-po.fr/iwanthue/index.php
@@ -360,4 +248,118 @@ class LetterAvatar
     [218, 105, 73],
     [126, 169, 36],
   ]
+
+  class << self
+    def version
+      "#{VERSION}_#{image_magick_version}"
+    end
+
+    def cache_path
+      "tmp/letter_avatars/#{version}"
+    end
+
+    # Run `script/letter_avatar_pixel_diff` to inspect rendering changes.
+    def generate(username, size, opts = nil)
+      DistributedMutex.synchronize("letter_avatar_#{version}_#{username}") do
+        identity = (opts && opts[:identity]) || LetterAvatar::Identity.from_username(username)
+
+        cache = true
+        cache = false if opts && opts[:cache] == false
+
+        size = FULLSIZE if size > FULLSIZE
+        filename = cached_path(identity, size)
+
+        return filename if cache && File.exist?(filename)
+
+        fullsize = fullsize_path(identity)
+        generate_fullsize(identity) if !cache || !File.exist?(fullsize)
+
+        # Optimizing here is dubious, it can save up to 2x for large images (eg 359px)
+        # BUT... we are talking 2400 bytes down to 1200 bytes, both fit in one packet
+        # The cost of this is huge, its a 40% perf hit
+        OptimizedImage.resize(fullsize, filename, size, size)
+
+        filename
+      end
+    end
+
+    def cached_path(identity, size)
+      dir = "#{cache_path}/#{identity.letter}/#{identity.color.join("_")}"
+      FileUtils.mkdir_p(dir)
+      File.expand_path "#{dir}/#{size}.png"
+    end
+
+    def fullsize_path(identity)
+      File.expand_path cached_path(identity, FULLSIZE)
+    end
+
+    def generate_fullsize(identity)
+      color = identity.color
+      letter = identity.letter
+
+      filename = fullsize_path(identity)
+
+      # Use NimbusSans-Regular, except for macOS where it is unavailable, use Helvetica there
+      font = RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "NimbusSans-Regular"
+      # and adjust vertical offset accordingly
+      vertical_offset = font == "Helvetica" ? 26 : 34
+
+      instructions = %W[
+        -size
+        #{FULLSIZE}x#{FULLSIZE}
+        xc:#{to_rgb(color)}
+        -pointsize
+        #{POINTSIZE}
+        -fill
+        #FFFFFFCC
+        -font
+        #{font}
+        -gravity
+        Center
+        -annotate
+        -0+#{vertical_offset}
+        #{letter}
+        -depth
+        8
+        #{filename}
+      ]
+
+      ImageMagick.magick(
+        *instructions,
+        operation: :letter_avatar_render,
+        write: [File.dirname(filename)],
+      )
+
+      ## do not optimize image, it will end up larger than original
+      filename
+    end
+
+    def to_rgb(color)
+      r, g, b = color
+      "rgb(#{r},#{g},#{b})"
+    end
+
+    def image_magick_version
+      @image_magick_version ||=
+        Digest::MD5.hexdigest(
+          ImageMagick.magick("--version", operation: :letter_avatar_version) << ImageMagick.magick(
+            "-list",
+            "font",
+            operation: :letter_avatar_font_list,
+          ),
+        )
+    end
+
+    def cleanup_old
+      skip = File.basename(cache_path)
+      parent_path = File.dirname(cache_path)
+      Dir
+        .entries(parent_path)
+        .each do |path|
+          FileUtils.rm_rf(parent_path + "/" + path) unless %w[. ..].include?(path) || path == skip
+        end
+    rescue Errno::ENOENT
+      # no worries, folder doesn't exists
+    end
+  end
 end

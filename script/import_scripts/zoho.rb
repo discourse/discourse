@@ -32,6 +32,12 @@ class ImportScripts::Zoho < ImportScripts::Base
 
   BATCH_SIZE = 1000
 
+  # Note that Zoho doesn't render code blocks the same way all the time,
+  # but this seems to catch the most common format:
+  ZOHO_CODE_BLOCK_START = /<ol style="list-style-position: outside;(.)*">/
+  TOO_MANY_LINE_BREAKS = /[\n ]{3,}/
+  STYLE_ATTR = /(\s)*style="(.)*"/
+
   def initialize(path)
     @path = path
     @all_posts = []
@@ -164,13 +170,6 @@ class ImportScripts::Zoho < ImportScripts::Base
       @topic_mapping[@current_row.permalink] = post.topic_id
     end
   end
-
-  # Note that Zoho doesn't render code blocks the same way all the time,
-  # but this seems to catch the most common format:
-  ZOHO_CODE_BLOCK_START = /<ol style="list-style-position: outside;(.)*">/
-
-  TOO_MANY_LINE_BREAKS = /[\n ]{3,}/
-  STYLE_ATTR = /(\s)*style="(.)*"/
 
   def cleanup_post(raw)
     # Check if Zoho's most common form of a code block is present.

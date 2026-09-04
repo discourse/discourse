@@ -13,12 +13,14 @@
 module I18n
   # this accelerates translation a tiny bit (halves the time it takes)
   class << self
+    LRU_CACHE_SIZE = 400
+    LOAD_MUTEX = Mutex.new
+    RELOAD_MUTEX = Mutex.new
+
     alias_method :translate_no_cache, :translate
     alias_method :exists_no_cache?, :exists?
     alias_method :reload_no_cache!, :reload!
     alias_method :locale_no_cache=, :locale=
-
-    LRU_CACHE_SIZE = 400
 
     def init_accelerator!(overrides_enabled: true)
       @overrides_enabled = overrides_enabled
@@ -29,8 +31,6 @@ module I18n
     def reload!
       @requires_reload = true
     end
-
-    LOAD_MUTEX = Mutex.new
 
     def load_locale(locale)
       locale = locale.to_sym
@@ -253,8 +253,6 @@ module I18n
     end
 
     private
-
-    RELOAD_MUTEX = Mutex.new
 
     def execute_reload
       RELOAD_MUTEX.synchronize do

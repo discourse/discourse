@@ -7,6 +7,12 @@ module DiscourseDev
   class User < Record
     attr_reader :images
 
+    class << self
+      def random
+        super(::User, use_existing_records: false)
+      end
+    end
+
     def initialize
       super(::User, DiscourseDev.config.user[:count])
 
@@ -47,10 +53,6 @@ module DiscourseDev
             group.add(user)
           end
       end
-    end
-
-    def self.random
-      super(::User, use_existing_records: false)
     end
 
     def set_random_avatar(user)

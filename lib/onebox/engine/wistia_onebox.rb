@@ -10,8 +10,10 @@ module Onebox
       requires_iframe_origins("https://fast.wistia.com", "https://fast.wistia.net")
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/(medias|embed)/.*$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/(medias|embed)/.*$})
+        end
       end
 
       def to_html

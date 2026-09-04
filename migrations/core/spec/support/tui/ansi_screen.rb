@@ -18,6 +18,12 @@ class AnsiScreen
 
   attr_reader :width, :wrap_mode
 
+  class << self
+    def display_width(string)
+      Unicode::DisplayWidth.of(string.gsub(SGR, ""))
+    end
+  end
+
   # wrap_mode: :truncate (xterm-like, a long row stays one physical row) or
   # :reflow (modern emulators / tmux, a long row rewraps into several rows).
   def initialize(width: 80, wrap_mode: :truncate)
@@ -56,10 +62,6 @@ class AnsiScreen
   # Non-empty rows only — handy for asserting "this text is present, in order".
   def content_rows
     rows.reject(&:empty?)
-  end
-
-  def self.display_width(string)
-    Unicode::DisplayWidth.of(string.gsub(SGR, ""))
   end
 
   private

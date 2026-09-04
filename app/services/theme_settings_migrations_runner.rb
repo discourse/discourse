@@ -62,11 +62,13 @@ class ThemeSettingsMigrationsRunner
 
   private_constant :MIGRATION_ENTRY_POINT_JS
 
-  def self.loader_js_lib_content
-    @loader_js_lib_content ||=
-      File.read(
-        Rails.root.join("frontend/discourse/node_modules/loader.js/dist/loader/loader.js").to_s,
-      )
+  class << self
+    def loader_js_lib_content
+      @loader_js_lib_content ||=
+        File.read(
+          Rails.root.join("frontend/discourse/node_modules/loader.js/dist/loader/loader.js").to_s,
+        )
+    end
   end
 
   def initialize(theme, limit: 100, timeout: 100, memory: 2.megabytes)

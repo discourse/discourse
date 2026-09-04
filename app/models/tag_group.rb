@@ -32,6 +32,59 @@ class TagGroup < ActiveRecord::Base
 
   attr_reader :permissions
 
+  class << self
+    # TODO: long term we can cache this if TONs of tag groups exist
+    def find_id_by_slug(slug)
+      pluck(:id, :name).each { |id, name| return id if Slug.for(name) == slug }
+      nil
+    end
+
+    # Same as Tag#find_by_name
+    def find_by_name_insensitive(name)
+      find_by("lower(name) = ?", name.downcase)
+    end
+
+    def resolve_permissions(permissions)
+      permissions.map do |group, permission|
+        group_id = Group.group_id_from_param(group)
+        permission =
+          if permission.is_a?(Integer)
+            permission
+          else
+            TagGroupPermission.permission_types[permission.to_sym]
+          end
+        [group_id, permission]
+      end
+    end
+
+    def visible(guardian)
+      if guardian.is_admin?
+        TagGroup
+      else
+        # (
+        #   tag group is restricted to a category you can see
+        #   OR
+        #   tag group is not restricted to any categories
+        # )
+        # AND tag group can be seen by everyone
+        filter_sql = <<~SQL
+        (
+          id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id IN (?))
+          OR
+          id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+        )
+        AND id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id IN (?))
+      SQL
+
+        TagGroup.where(
+          filter_sql,
+          guardian.allowed_category_ids,
+          DiscourseTagging.permitted_group_ids(guardian),
+        )
+      end
+    end
+  end
+
   def tag_names=(tags_arg)
     DiscourseTagging.add_or_create_tags_by_name(self, tags_arg, unlimited: true)
   end
@@ -65,30 +118,6 @@ class TagGroup < ActiveRecord::Base
     @permissions = TagGroup.resolve_permissions(permissions)
   end
 
-  # TODO: long term we can cache this if TONs of tag groups exist
-  def self.find_id_by_slug(slug)
-    pluck(:id, :name).each { |id, name| return id if Slug.for(name) == slug }
-    nil
-  end
-
-  # Same as Tag#find_by_name
-  def self.find_by_name_insensitive(name)
-    find_by("lower(name) = ?", name.downcase)
-  end
-
-  def self.resolve_permissions(permissions)
-    permissions.map do |group, permission|
-      group_id = Group.group_id_from_param(group)
-      permission =
-        if permission.is_a?(Integer)
-          permission
-        else
-          TagGroupPermission.permission_types[permission.to_sym]
-        end
-      [group_id, permission]
-    end
-  end
-
   def init_permissions
     unless tag_group_permissions.present? || @permissions
       tag_group_permissions.build(
@@ -114,33 +143,6 @@ class TagGroup < ActiveRecord::Base
 
   def remove_parent_from_group
     tags.delete(parent_tag) if tags.include?(parent_tag)
-  end
-
-  def self.visible(guardian)
-    if guardian.is_admin?
-      TagGroup
-    else
-      # (
-      #   tag group is restricted to a category you can see
-      #   OR
-      #   tag group is not restricted to any categories
-      # )
-      # AND tag group can be seen by everyone
-      filter_sql = <<~SQL
-        (
-          id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id IN (?))
-          OR
-          id NOT IN (SELECT tag_group_id FROM category_tag_groups)
-        )
-        AND id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id IN (?))
-      SQL
-
-      TagGroup.where(
-        filter_sql,
-        guardian.allowed_category_ids,
-        DiscourseTagging.permitted_group_ids(guardian),
-      )
-    end
   end
 end
 

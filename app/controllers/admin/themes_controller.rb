@@ -9,6 +9,13 @@ class Admin::ThemesController < Admin::AdminController
   before_action :ensure_admin
   before_action :ensure_theme_creation_is_allowed, only: %i[create import]
 
+  THEME_CONTENT_TYPES = %w[
+    application/gzip
+    application/x-gzip
+    application/x-zip-compressed
+    application/zip
+  ]
+
   def preview
     theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless theme
@@ -40,13 +47,6 @@ class Admin::ThemesController < Admin::AdminController
     Discourse.redis.setex("ssh_key_#{k.ssh_public_key}", 1.hour, k.private_key)
     render json: { public_key: k.ssh_public_key }
   end
-
-  THEME_CONTENT_TYPES = %w[
-    application/gzip
-    application/x-gzip
-    application/x-zip-compressed
-    application/zip
-  ]
 
   def import
     @theme = nil
@@ -127,21 +127,6 @@ class Admin::ThemesController < Admin::AdminController
   rescue Theme::SettingsMigrationError => err
     render_json_error err.message
   end
-
-  def create_remote_theme_placeholder(remote, branch:, private_key:)
-    Theme.transaction do
-      remote_theme =
-        RemoteTheme.create!(remote_url: remote, branch: branch, private_key: private_key)
-
-      Theme.create!(
-        user_id: theme_user&.id || -1,
-        name: remote.gsub(/\.git\z/, "").split("/").last,
-        remote_theme: remote_theme,
-      )
-    end
-  end
-
-  private :create_remote_theme_placeholder
 
   def index
     @themes = Theme.strict_loading.include_relations.order(:name)
@@ -436,6 +421,19 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   private
+
+  def create_remote_theme_placeholder(remote, branch:, private_key:)
+    Theme.transaction do
+      remote_theme =
+        RemoteTheme.create!(remote_url: remote, branch: branch, private_key: private_key)
+
+      Theme.create!(
+        user_id: theme_user&.id || -1,
+        name: remote.gsub(/\.git\z/, "").split("/").last,
+        remote_theme: remote_theme,
+      )
+    end
+  end
 
   def ban_in_allowlist_mode!
     raise Discourse::InvalidAccess if !Theme.allowed_remote_theme_ids.nil?

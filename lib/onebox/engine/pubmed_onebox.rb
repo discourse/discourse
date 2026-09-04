@@ -8,8 +8,10 @@ module Onebox
 
       matches_domain("ncbi.nlm.nih.gov", allow_subdomains: true)
 
-      def self.matches_path(path)
-        path.match?(%r{^/pubmed/\d+$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/pubmed/\d+$})
+        end
       end
 
       private

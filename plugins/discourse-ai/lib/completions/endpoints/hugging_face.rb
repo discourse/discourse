@@ -4,8 +4,10 @@ module DiscourseAi
   module Completions
     module Endpoints
       class HuggingFace < Base
-        def self.can_contact?(llm_model)
-          llm_model.provider == "hugging_face"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "hugging_face"
+          end
         end
 
         def normalize_model_params(model_params)

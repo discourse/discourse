@@ -7,31 +7,34 @@ module DiscourseWorkflows
         MAX_RESULTS = 10
         PROMPT_EXCERPT_LENGTH = 500
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Searches existing Discourse AI agents so workflow drafts can reuse a suitable enabled agent instead of creating a duplicate.",
-            json_schema: {
-              type: "object",
-              additionalProperties: false,
-              properties: {
-                query: {
-                  type: "string",
-                  description: "Search terms for the needed agent behavior, name, or description.",
-                },
-                include_disabled: {
-                  type: "boolean",
-                  description:
-                    "Whether to include disabled agents for awareness. Defaults to false; disabled agents should not be used in workflow nodes.",
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Searches existing Discourse AI agents so workflow drafts can reuse a suitable enabled agent instead of creating a duplicate.",
+              json_schema: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                  query: {
+                    type: "string",
+                    description:
+                      "Search terms for the needed agent behavior, name, or description.",
+                  },
+                  include_disabled: {
+                    type: "boolean",
+                    description:
+                      "Whether to include disabled agents for awareness. Defaults to false; disabled agents should not be used in workflow nodes.",
+                  },
                 },
               },
-            },
-          }
-        end
+            }
+          end
 
-        def self.name
-          "workflow_ai_agent_catalog"
+          def name
+            "workflow_ai_agent_catalog"
+          end
         end
 
         def invoke

@@ -120,36 +120,41 @@ class SecondFactor::AuthManager
 
   attr_reader :allowed_methods
 
-  def self.find_second_factor_challenge(nonce:, server_session:, target_user:)
-    challenge_json = server_session["current_second_factor_auth_challenge"]
-    if challenge_json.blank?
-      raise SecondFactor::BadChallenge.new(
-              "second_factor_auth.challenge_not_found",
-              status_code: 404,
-            )
-    end
+  class << self
+    def find_second_factor_challenge(nonce:, server_session:, target_user:)
+      challenge_json = server_session["current_second_factor_auth_challenge"]
+      if challenge_json.blank?
+        raise SecondFactor::BadChallenge.new(
+                "second_factor_auth.challenge_not_found",
+                status_code: 404,
+              )
+      end
 
-    challenge = JSON.parse(challenge_json).deep_symbolize_keys
-    if challenge[:nonce] != nonce
-      raise SecondFactor::BadChallenge.new(
-              "second_factor_auth.challenge_not_found",
-              status_code: 404,
-            )
-    end
+      challenge = JSON.parse(challenge_json).deep_symbolize_keys
+      if challenge[:nonce] != nonce
+        raise SecondFactor::BadChallenge.new(
+                "second_factor_auth.challenge_not_found",
+                status_code: 404,
+              )
+      end
 
-    if target_user && (challenge[:target_user_id] != target_user.id)
-      raise SecondFactor::BadChallenge.new(
-              "second_factor_auth.challenge_not_found",
-              status_code: 404,
-            )
-    end
+      if target_user && (challenge[:target_user_id] != target_user.id)
+        raise SecondFactor::BadChallenge.new(
+                "second_factor_auth.challenge_not_found",
+                status_code: 404,
+              )
+      end
 
-    generated_at = challenge[:generated_at]
-    if generated_at < MAX_CHALLENGE_AGE.ago.to_i
-      raise SecondFactor::BadChallenge.new("second_factor_auth.challenge_expired", status_code: 401)
-    end
+      generated_at = challenge[:generated_at]
+      if generated_at < MAX_CHALLENGE_AGE.ago.to_i
+        raise SecondFactor::BadChallenge.new(
+                "second_factor_auth.challenge_expired",
+                status_code: 401,
+              )
+      end
 
-    challenge
+      challenge
+    end
   end
 
   def initialize(guardian, action, target_user:)

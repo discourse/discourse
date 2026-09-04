@@ -46,32 +46,34 @@ module Voice
     scope :persistent, -> { where(ephemeral: false) }
     scope :ephemeral, -> { where(ephemeral: true) }
 
-    def self.visible_to(guardian)
-      rooms = persistent
-      return rooms.none unless SiteSetting.voice_enabled?
+    class << self
+      def visible_to(guardian)
+        rooms = persistent
+        return rooms.none unless SiteSetting.voice_enabled?
 
-      unless guardian.can_access_voice?
-        return guardian.voice_public_access? ? rooms.public_rooms : rooms.none
+        unless guardian.can_access_voice?
+          return guardian.voice_public_access? ? rooms.public_rooms : rooms.none
+        end
+
+        return rooms if guardian.is_staff?
+
+        rooms.where(<<~SQL, user_id: guardian.user.id)
+            "voice_rooms"."public"
+            OR "voice_rooms"."creator_id" = :user_id
+            OR EXISTS (
+              SELECT 1
+              FROM "voice_room_memberships"
+              WHERE "voice_room_memberships"."room_id" = "voice_rooms"."id"
+                AND "voice_room_memberships"."user_id" = :user_id
+            )
+          SQL
       end
 
-      return rooms if guardian.is_staff?
-
-      rooms.where(<<~SQL, user_id: guardian.user.id)
-          "voice_rooms"."public"
-          OR "voice_rooms"."creator_id" = :user_id
-          OR EXISTS (
-            SELECT 1
-            FROM "voice_room_memberships"
-            WHERE "voice_room_memberships"."room_id" = "voice_rooms"."id"
-              AND "voice_room_memberships"."user_id" = :user_id
-          )
-        SQL
-    end
-
-    # Strict by design: the column is an integer, so letting an unknown name
-    # through means AR casts it with to_i and silently produces an open room.
-    def self.room_type_from_name!(name)
-      ROOM_TYPES.fetch(name.to_s) { raise Discourse::InvalidParameters.new(:room_type) }
+      # Strict by design: the column is an integer, so letting an unknown name
+      # through means AR casts it with to_i and silently produces an open room.
+      def room_type_from_name!(name)
+        ROOM_TYPES.fetch(name.to_s) { raise Discourse::InvalidParameters.new(:room_type) }
+      end
     end
 
     def open?

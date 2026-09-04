@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 class TestCachedCounting
-  def self.clear!
-    @data = nil
-  end
+  class << self
+    def clear!
+      @data = nil
+    end
 
-  def self.data
-    @data ||= {}
-  end
+    def data
+      @data ||= {}
+    end
 
-  def self.write_cache!(key, count, date)
-    data[key] = count
+    def write_cache!(key, count, date)
+      data[key] = count
+    end
   end
 end
 
@@ -56,16 +58,18 @@ RSpec.describe CachedCounting do
       include CachedCounting
       self.table_name = "posts"
 
-      def self.cache_data
-        @cache_data ||= {}
-      end
+      class << self
+        def cache_data
+          @cache_data ||= {}
+        end
 
-      def self.clear_cache_data
-        @cache_data = nil
-      end
+        def clear_cache_data
+          @cache_data = nil
+        end
 
-      def self.write_cache!(key, val, date)
-        cache_data[[key, date]] = val
+        def write_cache!(key, val, date)
+          cache_data[[key, date]] = val
+        end
       end
     end
 

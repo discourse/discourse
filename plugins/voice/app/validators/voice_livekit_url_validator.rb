@@ -6,8 +6,10 @@
 # for the signaling WebSocket and the derived HTTPS API calls. Address-level
 # SSRF protection happens at request time via FinalDestination.
 class VoiceLivekitUrlValidator
-  def self.acceptable?(value)
-    value.present? && VoiceLivekitUrlValidator.new.valid_value?(value)
+  class << self
+    def acceptable?(value)
+      value.present? && VoiceLivekitUrlValidator.new.valid_value?(value)
+    end
   end
 
   def initialize(opts = {})

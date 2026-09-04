@@ -70,109 +70,116 @@ module DiscourseGithubPlugin
       end
     end
 
-    def self.grant!
-      grant_committer_badges!
-      grant_contributor_badges!
-    end
+    class << self
+      def grant!
+        grant_committer_badges!
+        grant_contributor_badges!
+      end
 
-    def self.grant_committer_badges!
-      emails =
-        GithubCommit.where(merge_commit: false, role_id: CommitsPopulator::ROLES[:committer]).pluck(
-          :email,
+      def grant_committer_badges!
+        emails =
+          GithubCommit.where(
+            merge_commit: false,
+            role_id: CommitsPopulator::ROLES[:committer],
+          ).pluck(:email)
+
+        bronze, silver, gold = committer_badges
+
+        granter = GithubBadges::Granter.new(emails)
+        granter.add_badge(bronze, as_title: false, threshold: 1)
+        granter.add_badge(silver, as_title: true, threshold: 25)
+        granter.add_badge(gold, as_title: true, threshold: 1000)
+        granter.grant!
+      end
+
+      def grant_contributor_badges!
+        emails =
+          GithubCommit.where(
+            merge_commit: false,
+            role_id: CommitsPopulator::ROLES[:contributor],
+          ).pluck(:email)
+
+        bronze, silver, gold = contributor_badges
+
+        granter = GithubBadges::Granter.new(emails)
+        granter.add_badge(bronze, as_title: false, threshold: 1)
+        granter.add_badge(
+          silver,
+          as_title: true,
+          threshold: SiteSetting.github_silver_badge_min_commits,
         )
-
-      bronze, silver, gold = committer_badges
-
-      granter = GithubBadges::Granter.new(emails)
-      granter.add_badge(bronze, as_title: false, threshold: 1)
-      granter.add_badge(silver, as_title: true, threshold: 25)
-      granter.add_badge(gold, as_title: true, threshold: 1000)
-      granter.grant!
-    end
-
-    def self.grant_contributor_badges!
-      emails =
-        GithubCommit.where(
-          merge_commit: false,
-          role_id: CommitsPopulator::ROLES[:contributor],
-        ).pluck(:email)
-
-      bronze, silver, gold = contributor_badges
-
-      granter = GithubBadges::Granter.new(emails)
-      granter.add_badge(bronze, as_title: false, threshold: 1)
-      granter.add_badge(
-        silver,
-        as_title: true,
-        threshold: SiteSetting.github_silver_badge_min_commits,
-      )
-      granter.add_badge(gold, as_title: true, threshold: SiteSetting.github_gold_badge_min_commits)
-      granter.grant!
-    end
-
-    def self.ensure_badge(name, attrs)
-      badge = Badge.find_by("name ILIKE ?", name)
-
-      # Check for letter-case differences
-      badge.update!(name: name) if badge && badge.name != name
-
-      badge || Badge.create!(name: name, **attrs)
-    end
-
-    def self.contributor_badges
-      bronze =
-        ensure_badge(
-          BADGE_NAME_BRONZE,
-          description: "Contributed an accepted pull request",
-          badge_type_id: 3,
-          default_icon: "fab-git-alt",
+        granter.add_badge(
+          gold,
+          as_title: true,
+          threshold: SiteSetting.github_gold_badge_min_commits,
         )
+        granter.grant!
+      end
 
-      silver =
-        ensure_badge(
-          BADGE_NAME_SILVER,
-          description: "Contributed 25 accepted pull requests",
-          badge_type_id: 2,
-          default_icon: "fab-git-alt",
-        )
+      def ensure_badge(name, attrs)
+        badge = Badge.find_by("name ILIKE ?", name)
 
-      gold =
-        ensure_badge(
-          BADGE_NAME_GOLD,
-          description: "Contributed 250 accepted pull requests",
-          badge_type_id: 1,
-          default_icon: "fab-git-alt",
-        )
+        # Check for letter-case differences
+        badge.update!(name: name) if badge && badge.name != name
 
-      [bronze, silver, gold]
-    end
+        badge || Badge.create!(name: name, **attrs)
+      end
 
-    def self.committer_badges
-      bronze =
-        ensure_badge(
-          COMMITTER_BADGE_NAME_BRONZE,
-          description: "Created a commit",
-          enabled: false,
-          badge_type_id: 3,
-        )
+      def contributor_badges
+        bronze =
+          ensure_badge(
+            BADGE_NAME_BRONZE,
+            description: "Contributed an accepted pull request",
+            badge_type_id: 3,
+            default_icon: "fab-git-alt",
+          )
 
-      silver =
-        ensure_badge(
-          COMMITTER_BADGE_NAME_SILVER,
-          description: "Created 25 commits",
-          enabled: false,
-          badge_type_id: 2,
-        )
+        silver =
+          ensure_badge(
+            BADGE_NAME_SILVER,
+            description: "Contributed 25 accepted pull requests",
+            badge_type_id: 2,
+            default_icon: "fab-git-alt",
+          )
 
-      gold =
-        ensure_badge(
-          COMMITTER_BADGE_NAME_GOLD,
-          description: "Created 1000 commits",
-          enabled: false,
-          badge_type_id: 1,
-        )
+        gold =
+          ensure_badge(
+            BADGE_NAME_GOLD,
+            description: "Contributed 250 accepted pull requests",
+            badge_type_id: 1,
+            default_icon: "fab-git-alt",
+          )
 
-      [bronze, silver, gold]
+        [bronze, silver, gold]
+      end
+
+      def committer_badges
+        bronze =
+          ensure_badge(
+            COMMITTER_BADGE_NAME_BRONZE,
+            description: "Created a commit",
+            enabled: false,
+            badge_type_id: 3,
+          )
+
+        silver =
+          ensure_badge(
+            COMMITTER_BADGE_NAME_SILVER,
+            description: "Created 25 commits",
+            enabled: false,
+            badge_type_id: 2,
+          )
+
+        gold =
+          ensure_badge(
+            COMMITTER_BADGE_NAME_GOLD,
+            description: "Created 1000 commits",
+            enabled: false,
+            badge_type_id: 1,
+          )
+
+        [bronze, silver, gold]
+      end
     end
   end
 end

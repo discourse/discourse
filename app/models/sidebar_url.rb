@@ -71,6 +71,14 @@ class SidebarUrl < ActiveRecord::Base
   before_validation :remove_internal_hostname, :set_external
   before_validation :set_default_locale
 
+  class << self
+    def built_in_community_section_link_value?(value)
+      normalized_value =
+        value.to_s.sub(%r{\Ahttps?://#{Regexp.escape(Discourse.current_hostname)}}, "")
+      COMMUNITY_SECTION_LINK_PATHS.include?(normalized_value)
+    end
+  end
+
   def path_validator
     return true if !external?
     raise ActionController::RoutingError.new("Not Found") if value !~ Discourse::Utils::URI_REGEXP
@@ -91,12 +99,6 @@ class SidebarUrl < ActiveRecord::Base
 
   def set_default_locale
     self.locale = SiteSetting.default_locale.to_s if locale.blank?
-  end
-
-  def self.built_in_community_section_link_value?(value)
-    normalized_value =
-      value.to_s.sub(%r{\Ahttps?://#{Regexp.escape(Discourse.current_hostname)}}, "")
-    COMMUNITY_SECTION_LINK_PATHS.include?(normalized_value)
   end
 
   def built_in_community_section_link?

@@ -4,16 +4,18 @@ module Migrations
   module Tooling
     module Schema
       class ModelWriter
+        class << self
+          def filename_for(table)
+            "#{table.name.singularize}.rb"
+          end
+        end
+
         def initialize(model_namespace, enum_namespace, header)
           @model_namespace = model_namespace
           @enum_namespace = enum_namespace
           @header = header.gsub(/^/, "# ")
           @namespace_parts = model_namespace.split("::")
           @base_indent = "  " * (@namespace_parts.size - 1)
-        end
-
-        def self.filename_for(table)
-          "#{table.name.singularize}.rb"
         end
 
         def output_table(table, output_stream, custom_code: nil)
@@ -38,6 +40,7 @@ module Migrations
           emit "    private_constant :SQL"
           emit
 
+          emit "    class << self"
           emit_conflict_strategy(table)
 
           if table.model_mode == :extended
@@ -47,14 +50,15 @@ module Migrations
             emit
           end
 
-          emit method_documentation(table.name, columns)
-          emit "    def self.create("
-          emit method_parameters(columns)
-          emit "    )"
-          emit "      #{@model_namespace}.insert("
-          emit "        SQL,"
-          emit insertion_arguments(columns)
+          emit method_documentation(table.name, columns).gsub(/^/, "  ")
+          emit "      def create("
+          emit method_parameters(columns).gsub(/^/, "  ")
           emit "      )"
+          emit "        #{@model_namespace}.insert("
+          emit "          SQL,"
+          emit insertion_arguments(columns).gsub(/^/, "  ")
+          emit "        )"
+          emit "      end"
           emit "    end"
           (@namespace_parts.size + 1).times { emit "  end" }
         ensure
@@ -83,9 +87,9 @@ module Migrations
         def emit_conflict_strategy(table)
           return unless table.conflict_strategy == :ignore
 
-          emit "    def self.conflict_strategy"
-          emit "      :ignore"
-          emit "    end"
+          emit "      def conflict_strategy"
+          emit "        :ignore"
+          emit "      end"
           emit
         end
 

@@ -7,7 +7,9 @@ describe AdminDashboardCacheWarmer do
   let(:prewarming_provider) do
     calls = prewarm_calls
     Class.new(AdminDashboard::Reports::SourceProvider) do
-      def self.source_name = "prewarming_source"
+      class << self
+        def source_name = "prewarming_source"
+      end
 
       define_singleton_method(:resolve_many) do |identifiers, guardian:|
         next {} if guardian.nil?
@@ -31,10 +33,12 @@ describe AdminDashboardCacheWarmer do
   end
   let(:failing_provider) do
     Class.new(prewarming_provider) do
-      def self.source_name = "failing_source"
+      class << self
+        def source_name = "failing_source"
 
-      def self.prewarm(...)
-        raise StandardError, "prewarm failed"
+        def prewarm(...)
+          raise StandardError, "prewarm failed"
+        end
       end
     end
   end

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager::Float < ThemeSettingsManager
-  def self.cast(value)
-    value.to_f
+  class << self
+    def cast(value)
+      value.to_f
+    end
   end
 
   def value

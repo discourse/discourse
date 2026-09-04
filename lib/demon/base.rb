@@ -7,46 +7,61 @@ end
 class Demon::Base
   HOSTNAME = Socket.gethostname
 
-  def self.demons
-    @demons
+  class << self
+    def demons
+      @demons
+    end
+
+    public
+
+    if Rails.env.test?
+      def set_demons(demons)
+        @demons = demons
+      end
+
+      def reset_demons
+        @demons = {}
+      end
+    end
+
+    def start(count = 1, verbose: false, logger: nil)
+      @demons ||= {}
+      count.times { |i| (@demons["#{prefix}_#{i}"] ||= new(i, verbose:, logger:)).start }
+    end
+
+    def stop
+      return unless @demons
+      @demons.values.each { |demon| demon.stop }
+    end
+
+    def restart
+      return unless @demons
+      @demons.values.each { |demon| demon.restart }
+    end
+
+    def ensure_running
+      @demons.values.each { |demon| demon.ensure_running }
+    end
+
+    def kill(signal)
+      return unless @demons
+      @demons.values.each { |demon| demon.kill(signal) }
+    end
+
+    public
+
+    def alive?(pid)
+      Process.kill(0, pid)
+      true
+    rescue StandardError
+      false
+    end
   end
 
   if Rails.env.test?
-    def self.set_demons(demons)
-      @demons = demons
-    end
-
-    def self.reset_demons
-      @demons = {}
-    end
-
     def set_pid(pid)
       @pid = pid
     end
-  end
-
-  def self.start(count = 1, verbose: false, logger: nil)
-    @demons ||= {}
-    count.times { |i| (@demons["#{prefix}_#{i}"] ||= new(i, verbose:, logger:)).start }
-  end
-
-  def self.stop
-    return unless @demons
-    @demons.values.each { |demon| demon.stop }
-  end
-
-  def self.restart
-    return unless @demons
-    @demons.values.each { |demon| demon.restart }
-  end
-
-  def self.ensure_running
-    @demons.values.each { |demon| demon.ensure_running }
-  end
-
-  def self.kill(signal)
-    return unless @demons
-    @demons.values.each { |demon| demon.kill(signal) }
   end
 
   attr_reader :pid, :parent_pid, :started, :index
@@ -198,13 +213,6 @@ class Demon::Base
     end
 
     nil
-  end
-
-  def self.alive?(pid)
-    Process.kill(0, pid)
-    true
-  rescue StandardError
-    false
   end
 
   private

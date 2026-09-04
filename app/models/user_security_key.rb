@@ -11,8 +11,10 @@ class UserSecurityKey < ActiveRecord::Base
   validates :name, length: { maximum: MAX_NAME_LENGTH }, if: :name_changed?
   validate :count_per_user_does_not_exceed_limit, on: :create
 
-  def self.factor_types
-    @factor_types ||= Enum.new(second_factor: 0, first_factor: 1, multi_factor: 2)
+  class << self
+    def factor_types
+      @factor_types ||= Enum.new(second_factor: 0, first_factor: 1, multi_factor: 2)
+    end
   end
 
   def first_factor?

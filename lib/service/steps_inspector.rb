@@ -22,10 +22,12 @@ class Service::StepsInspector
 
     alias error? failure?
 
-    def self.for(step, result, nesting_level: 0, color: nil)
-      class_name =
-        "#{module_parent_name}::#{step.class.name.split("::").last.sub(/^(\w+)Step$/, "\\1")}"
-      class_name.constantize.new(step, result, nesting_level:, color:)
+    class << self
+      def for(step, result, nesting_level: 0, color: nil)
+        class_name =
+          "#{module_parent_name}::#{step.class.name.split("::").last.sub(/^(\w+)Step$/, "\\1")}"
+        class_name.constantize.new(step, result, nesting_level:, color:)
+      end
     end
 
     def initialize(step, result, nesting_level: 0, color: nil)

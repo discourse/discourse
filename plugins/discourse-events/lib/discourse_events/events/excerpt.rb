@@ -5,8 +5,10 @@ module DiscourseEvents
     # Replaces each event node in an excerpt fragment (see PrettyText.excerpt)
     # with a short plain-text summary — "📅 name · dates · location"
     class Excerpt
-      def self.call(fragment, post: nil)
-        new(fragment, post: post).call
+      class << self
+        def call(fragment, post: nil)
+          new(fragment, post: post).call
+        end
       end
 
       def initialize(fragment, post: nil)

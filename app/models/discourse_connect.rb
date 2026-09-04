@@ -7,24 +7,28 @@ class DiscourseConnect < DiscourseConnectBase
   class BannedExternalId < StandardError
   end
 
-  def self.sso_url
-    SiteSetting.discourse_connect_url
-  end
+  BANNED_EXTERNAL_IDS = %w[none nil blank null]
 
-  def self.sso_secret
-    SiteSetting.discourse_connect_secret
-  end
+  class << self
+    def sso_url
+      SiteSetting.discourse_connect_url
+    end
 
-  def self.generate_sso(return_path = "/", server_session:)
-    sso = new(server_session:)
-    sso.nonce = SecureRandom.hex
-    sso.register_nonce(return_path)
-    sso.return_sso_url = Discourse.base_url + "/session/sso_login"
-    sso
-  end
+    def sso_secret
+      SiteSetting.discourse_connect_secret
+    end
 
-  def self.generate_url(return_path = "/", server_session:)
-    generate_sso(return_path, server_session:).to_url
+    def generate_sso(return_path = "/", server_session:)
+      sso = new(server_session:)
+      sso.nonce = SecureRandom.hex
+      sso.register_nonce(return_path)
+      sso.return_sso_url = Discourse.base_url + "/session/sso_login"
+      sso
+    end
+
+    def generate_url(return_path = "/", server_session:)
+      generate_sso(return_path, server_session:).to_url
+    end
   end
 
   def initialize(server_session:)
@@ -94,8 +98,6 @@ class DiscourseConnect < DiscourseConnectBase
   def used_nonce_key
     "USED_SSO_NONCE_#{nonce}"
   end
-
-  BANNED_EXTERNAL_IDS = %w[none nil blank null]
 
   def lookup_or_create_user(ip_address = nil)
     # we don't want to ban 0 from being an external id

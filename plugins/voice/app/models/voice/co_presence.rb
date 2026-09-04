@@ -9,18 +9,22 @@ module Voice
 
     validates :user_id_1, comparison: { less_than: :user_id_2 }
 
-    def self.top_contacts_for(user_id, since:, limit: 10)
-      uid = user_id.to_i
-      where("(user_id_1 = :uid OR user_id_2 = :uid) AND date >= :since", uid: uid, since: since)
-        .select(
-          Arel.sql("CASE WHEN user_id_1 = #{uid} THEN user_id_2 ELSE user_id_1 END AS contact_id"),
-          Arel.sql("SUM(total_seconds) AS total_seconds"),
-          Arel.sql("SUM(session_count) AS session_count"),
-          Arel.sql("MAX(date) AS last_co_present_on"),
-        )
-        .group(Arel.sql("contact_id"))
-        .order(Arel.sql("total_seconds DESC"))
-        .limit(limit)
+    class << self
+      def top_contacts_for(user_id, since:, limit: 10)
+        uid = user_id.to_i
+        where("(user_id_1 = :uid OR user_id_2 = :uid) AND date >= :since", uid: uid, since: since)
+          .select(
+            Arel.sql(
+              "CASE WHEN user_id_1 = #{uid} THEN user_id_2 ELSE user_id_1 END AS contact_id",
+            ),
+            Arel.sql("SUM(total_seconds) AS total_seconds"),
+            Arel.sql("SUM(session_count) AS session_count"),
+            Arel.sql("MAX(date) AS last_co_present_on"),
+          )
+          .group(Arel.sql("contact_id"))
+          .order(Arel.sql("total_seconds DESC"))
+          .limit(limit)
+      end
     end
   end
 end

@@ -6,6 +6,18 @@ module DiscourseAutomation
 
     MANUAL_TRIGGER_KEY = :manual_trigger
 
+    class << self
+      def add(identifier, &block)
+        @all_triggers = nil
+        define_method("__triggerable_#{identifier}", block || proc {})
+      end
+
+      def all
+        @all_triggers ||=
+          DiscourseAutomation::Triggerable.instance_methods(false).grep(/^__triggerable_/)
+      end
+    end
+
     def initialize(name, automation = nil)
       @name = name
       @placeholders = []
@@ -128,16 +140,6 @@ module DiscourseAutomation
         end
 
       required.to_a
-    end
-
-    def self.add(identifier, &block)
-      @all_triggers = nil
-      define_method("__triggerable_#{identifier}", block || proc {})
-    end
-
-    def self.all
-      @all_triggers ||=
-        DiscourseAutomation::Triggerable.instance_methods(false).grep(/^__triggerable_/)
     end
   end
 end

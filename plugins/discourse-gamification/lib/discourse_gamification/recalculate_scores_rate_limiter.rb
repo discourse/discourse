@@ -2,12 +2,14 @@
 
 module DiscourseGamification
   class RecalculateScoresRateLimiter
-    def self.perform!
-      new.perform!
-    end
+    class << self
+      def perform!
+        new.perform!
+      end
 
-    def self.remaining
-      new.remaining
+      def remaining
+        new.remaining
+      end
     end
 
     def initialize

@@ -20,8 +20,10 @@ module DiscourseAi
       class EntryTooLargeError < StandardError
       end
 
-      def self.convert(path)
-        new(path).convert
+      class << self
+        def convert(path)
+          new(path).convert
+        end
       end
 
       def initialize(path)

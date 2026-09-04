@@ -26,6 +26,66 @@ class S3Helper
   # * presigned put_object URLs for direct S3 uploads
   UPLOAD_URL_EXPIRES_AFTER_SECONDS = 10.minutes.to_i
 
+  class << self
+    def build_from_config(use_db_s3_config: false, for_backup: false, s3_client: nil)
+      setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
+      options = S3Helper.s3_options(setting_klass)
+      options[:client] = s3_client if s3_client.present?
+      options[:use_accelerate_endpoint] = !for_backup &&
+        SiteSetting.Upload.enable_s3_transfer_acceleration
+      options[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
+
+      bucket =
+        if for_backup
+          setting_klass.s3_backup_bucket
+        else
+          use_db_s3_config ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
+        end
+
+      S3Helper.new(bucket.downcase, "", options)
+    end
+
+    def get_bucket_and_folder_path(s3_bucket_name)
+      s3_bucket_name.downcase.split("/", 2)
+    end
+
+    def s3_options(obj)
+      opts = { region: obj.s3_region }
+
+      opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
+      opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
+      opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
+
+      creds = s3_credentials(obj)
+      opts[:credentials] = creds if creds
+
+      opts
+    end
+
+    def s3_credentials(obj, stub_responses: false)
+      return nil if obj.s3_use_iam_profile
+
+      if obj.s3_role_arn.present?
+        # RoleSessionName max 64 chars: https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
+        session_name = obj.s3_role_session_name.presence || Discourse.os_hostname[0...64]
+        sts_client =
+          Aws::STS::Client.new(
+            region: obj.s3_region,
+            access_key_id: obj.s3_access_key_id,
+            secret_access_key: obj.s3_secret_access_key,
+            stub_responses: stub_responses,
+          )
+        Aws::AssumeRoleCredentials.new(
+          role_arn: obj.s3_role_arn,
+          role_session_name: session_name,
+          client: sts_client,
+        )
+      else
+        Aws::Credentials.new(obj.s3_access_key_id, obj.s3_secret_access_key)
+      end
+    end
+  end
+
   def initialize(s3_bucket_name, tombstone_prefix = "", options = {})
     @s3_client = options.delete(:client)
     @s3_bucket = options.delete(:bucket)
@@ -43,28 +103,6 @@ class S3Helper
       else
         tombstone_prefix
       end
-  end
-
-  def self.build_from_config(use_db_s3_config: false, for_backup: false, s3_client: nil)
-    setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
-    options = S3Helper.s3_options(setting_klass)
-    options[:client] = s3_client if s3_client.present?
-    options[:use_accelerate_endpoint] = !for_backup &&
-      SiteSetting.Upload.enable_s3_transfer_acceleration
-    options[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
-
-    bucket =
-      if for_backup
-        setting_klass.s3_backup_bucket
-      else
-        use_db_s3_config ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
-      end
-
-    S3Helper.new(bucket.downcase, "", options)
-  end
-
-  def self.get_bucket_and_folder_path(s3_bucket_name)
-    s3_bucket_name.downcase.split("/", 2)
   end
 
   def upload(file, path, options = {})
@@ -289,42 +327,6 @@ class S3Helper
 
   def object(path)
     s3_bucket.object(get_path_for_s3_upload(path))
-  end
-
-  def self.s3_options(obj)
-    opts = { region: obj.s3_region }
-
-    opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
-    opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
-    opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
-
-    creds = s3_credentials(obj)
-    opts[:credentials] = creds if creds
-
-    opts
-  end
-
-  def self.s3_credentials(obj, stub_responses: false)
-    return nil if obj.s3_use_iam_profile
-
-    if obj.s3_role_arn.present?
-      # RoleSessionName max 64 chars: https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
-      session_name = obj.s3_role_session_name.presence || Discourse.os_hostname[0...64]
-      sts_client =
-        Aws::STS::Client.new(
-          region: obj.s3_region,
-          access_key_id: obj.s3_access_key_id,
-          secret_access_key: obj.s3_secret_access_key,
-          stub_responses: stub_responses,
-        )
-      Aws::AssumeRoleCredentials.new(
-        role_arn: obj.s3_role_arn,
-        role_session_name: session_name,
-        client: sts_client,
-      )
-    else
-      Aws::Credentials.new(obj.s3_access_key_id, obj.s3_secret_access_key)
-    end
   end
 
   def upload_file(filename, source_path, **options)

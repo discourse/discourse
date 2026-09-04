@@ -8,15 +8,28 @@ class DiscourseChatIntegration::PluginModel < PluginStoreRow
   after_initialize :init_plugin_model
   before_save :set_key
 
-  def self.default_scope
-    where(type_name: "JSON").where(plugin_name: self::PLUGIN_NAME).where(
-      "key LIKE ?",
-      "#{key_prefix}%",
-    )
-  end
+  class << self
+    def default_scope
+      where(type_name: "JSON").where(plugin_name: self::PLUGIN_NAME).where(
+        "key LIKE ?",
+        "#{key_prefix}%",
+      )
+    end
 
-  def self.key_prefix
-    raise "Not implemented"
+    def key_prefix
+      raise "Not implemented"
+    end
+
+    public
+
+    def alloc_key
+      DistributedMutex.synchronize("#{self::PLUGIN_NAME}_#{key_prefix}_id") do
+        max_id = PluginStore.get(self::PLUGIN_NAME, "#{key_prefix}_id")
+        max_id = 1 unless max_id
+        PluginStore.set(self::PLUGIN_NAME, "#{key_prefix}_id", max_id + 1)
+        "#{key_prefix}#{max_id}"
+      end
+    end
   end
 
   private
@@ -28,14 +41,5 @@ class DiscourseChatIntegration::PluginModel < PluginStoreRow
   def init_plugin_model
     self.type_name ||= "JSON"
     self.plugin_name ||= PLUGIN_NAME
-  end
-
-  def self.alloc_key
-    DistributedMutex.synchronize("#{self::PLUGIN_NAME}_#{key_prefix}_id") do
-      max_id = PluginStore.get(self::PLUGIN_NAME, "#{key_prefix}_id")
-      max_id = 1 unless max_id
-      PluginStore.set(self::PLUGIN_NAME, "#{key_prefix}_id", max_id + 1)
-      "#{key_prefix}#{max_id}"
-    end
   end
 end

@@ -6,23 +6,25 @@ module DiscourseAi
       class SetTopicSummary < Tool
         MAX_SUMMARY_LENGTH = 1_000
 
-        def self.signature
-          {
-            name: name,
-            description: "Sets the final short topic summary",
-            parameters: [
-              {
-                name: "summary",
-                description: "The final topic summary, in no more than 40 words",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Sets the final short topic summary",
+              parameters: [
+                {
+                  name: "summary",
+                  description: "The final topic summary, in no more than 40 words",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "set_topic_summary"
+          def name
+            "set_topic_summary"
+          end
         end
 
         def invoke

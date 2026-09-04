@@ -16,9 +16,11 @@ module DesignWizard
       { key: "dracula", light: nil, dark: "Dracula" },
     ].freeze
 
-    def self.for_theme(theme)
-      owned = ColorScheme.includes(:color_scheme_colors).where(theme_id: theme.id).order(:id).to_a
-      owned.present? ? new(theme).theme_pairs(owned) : new(theme).built_in_pairs
+    class << self
+      def for_theme(theme)
+        owned = ColorScheme.includes(:color_scheme_colors).where(theme_id: theme.id).order(:id).to_a
+        owned.present? ? new(theme).theme_pairs(owned) : new(theme).built_in_pairs
+      end
     end
 
     def initialize(theme)

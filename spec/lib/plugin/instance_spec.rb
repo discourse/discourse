@@ -1126,7 +1126,11 @@ TEXT
   describe "#register_admin_dashboard_report_source" do
     let(:plugin) { Plugin::Instance.new }
     let(:fake_provider) do
-      Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "fake_source" }
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        class << self
+          def source_name = "fake_source"
+        end
+      end
     end
 
     after do
@@ -1153,7 +1157,11 @@ TEXT
       plugin.register_admin_dashboard_report_source(fake_provider)
 
       conflicting =
-        Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "fake_source" }
+        Class.new(AdminDashboard::Reports::SourceProvider) do
+          class << self
+            def source_name = "fake_source"
+          end
+        end
 
       expect { plugin.register_admin_dashboard_report_source(conflicting) }.to raise_error(
         ArgumentError,
@@ -1173,7 +1181,11 @@ TEXT
 
     it "raises against core source_name collisions too" do
       core_clash =
-        Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "core_report" }
+        Class.new(AdminDashboard::Reports::SourceProvider) do
+          class << self
+            def source_name = "core_report"
+          end
+        end
 
       expect { plugin.register_admin_dashboard_report_source(core_clash) }.to raise_error(
         ArgumentError,
@@ -1295,12 +1307,14 @@ TEXT
     it "registers a section with settings, normalizing keys to strings" do
       setting_class =
         Class.new do
-          def self.permit
-            [:category_id]
-          end
+          class << self
+            def permit
+              [:category_id]
+            end
 
-          def self.validate(attrs)
-            attrs
+            def validate(attrs)
+              attrs
+            end
           end
         end
 
@@ -1318,8 +1332,10 @@ TEXT
     it "raises when a setting class doesn't respond to .validate" do
       setting_class =
         Class.new do
-          def self.permit
-            []
+          class << self
+            def permit
+              []
+            end
           end
         end
 
@@ -1336,8 +1352,10 @@ TEXT
     it "raises when a setting class doesn't respond to .permit" do
       setting_class =
         Class.new do
-          def self.validate(attrs)
-            attrs
+          class << self
+            def validate(attrs)
+              attrs
+            end
           end
         end
 

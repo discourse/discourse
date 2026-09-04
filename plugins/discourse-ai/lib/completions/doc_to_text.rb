@@ -16,41 +16,43 @@ module DiscourseAi
         processes: 0,
       }
 
-      def self.convert(path)
-        return if !antiword_installed?
+      class << self
+        def convert(path)
+          return if !antiword_installed?
 
-        Discourse::SafeExec.capture(
-          "antiword",
-          "-w",
-          "0",
-          path,
-          read: sandbox_read_paths(path),
-          execute: Discourse::SafeExec.default_execute_paths,
-          timeout: ANTIWORD_TIMEOUT_SECONDS,
-          env: SAFE_EXEC_ENV,
-          unsetenv_others: true,
-          rlimits: ANTIWORD_RLIMITS,
-          seccomp_deny_network: true,
-          max_output_bytes: MAX_CONVERSION_OUTPUT_BYTES,
-          truncate_output: true,
-          failure_message: "Failed to convert .doc upload to text",
-        )
-      end
+          Discourse::SafeExec.capture(
+            "antiword",
+            "-w",
+            "0",
+            path,
+            read: sandbox_read_paths(path),
+            execute: Discourse::SafeExec.default_execute_paths,
+            timeout: ANTIWORD_TIMEOUT_SECONDS,
+            env: SAFE_EXEC_ENV,
+            unsetenv_others: true,
+            rlimits: ANTIWORD_RLIMITS,
+            seccomp_deny_network: true,
+            max_output_bytes: MAX_CONVERSION_OUTPUT_BYTES,
+            truncate_output: true,
+            failure_message: "Failed to convert .doc upload to text",
+          )
+        end
 
-      def self.antiword_installed?
-        return @antiword_installed if defined?(@antiword_installed)
+        def antiword_installed?
+          return @antiword_installed if defined?(@antiword_installed)
 
-        @antiword_installed =
-          begin
-            Discourse::Utils.execute_command("which", "antiword")
-            true
-          rescue Discourse::Utils::CommandError
-            false
-          end
-      end
+          @antiword_installed =
+            begin
+              Discourse::Utils.execute_command("which", "antiword")
+              true
+            rescue Discourse::Utils::CommandError
+              false
+            end
+        end
 
-      def self.sandbox_read_paths(path)
-        Discourse::SafeExec.default_read_paths + [File.realpath(path)]
+        def sandbox_read_paths(path)
+          Discourse::SafeExec.default_read_paths + [File.realpath(path)]
+        end
       end
     end
   end

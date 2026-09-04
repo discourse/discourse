@@ -9,11 +9,24 @@ class GroupShowSerializer < BasicGroupSerializer
              :flair_icon,
              :flair_type
 
-  def self.admin_attributes(*attrs)
-    attributes(*attrs)
-    attrs.each do |attr|
-      define_method "include_#{attr}?" do
-        scope.is_admin?
+  class << self
+    def admin_attributes(*attrs)
+      attributes(*attrs)
+      attrs.each do |attr|
+        define_method "include_#{attr}?" do
+          scope.is_admin?
+        end
+      end
+    end
+
+    public
+
+    def admin_or_owner_attributes(*attrs)
+      attributes(*attrs)
+      attrs.each do |attr|
+        define_method "include_#{attr}?" do
+          scope.is_admin? || (include_is_group_owner? && is_group_owner)
+        end
       end
     end
   end
@@ -38,15 +51,6 @@ class GroupShowSerializer < BasicGroupSerializer
                    :message_count,
                    :allow_unknown_sender_topic_replies,
                    :associated_group_ids
-
-  def self.admin_or_owner_attributes(*attrs)
-    attributes(*attrs)
-    attrs.each do |attr|
-      define_method "include_#{attr}?" do
-        scope.is_admin? || (include_is_group_owner? && is_group_owner)
-      end
-    end
-  end
 
   admin_or_owner_attributes :watching_category_ids,
                             :tracking_category_ids,

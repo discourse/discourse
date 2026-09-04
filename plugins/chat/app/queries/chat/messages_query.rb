@@ -42,198 +42,201 @@ module Chat
     #   - When true and the direction is set to "future", the query will include messages starting from and including the target message.
     #   - When false, the query will exclude the target message, fetching only those messages strictly before or after it, depending on the direction.
 
-    def self.call(
-      channel:,
-      guardian:,
-      thread_id: nil,
-      target_message_id: nil,
-      include_thread_messages: false,
-      page_size: PAST_MESSAGE_LIMIT + FUTURE_MESSAGE_LIMIT,
-      direction: nil,
-      target_date: nil,
-      include_target_message_id: false
-    )
-      include_bookmarks = guardian.user.present?
-      messages = base_query(channel: channel, include_bookmarks: include_bookmarks)
-      messages = messages.with_deleted if guardian.can_moderate_chat?(channel.chatable)
-      if thread_id.present?
-        include_thread_messages = true
-        messages = messages.where(thread_id: thread_id)
-      end
-
-      if include_thread_messages
-        if !thread_id.present?
-          messages =
-            messages.left_joins(:thread).where(
-              "chat_threads.id IS NULL OR chat_threads.force = false OR chat_messages.id = chat_threads.original_message_id",
-            )
+    class << self
+      def call(
+        channel:,
+        guardian:,
+        thread_id: nil,
+        target_message_id: nil,
+        include_thread_messages: false,
+        page_size: PAST_MESSAGE_LIMIT + FUTURE_MESSAGE_LIMIT,
+        direction: nil,
+        target_date: nil,
+        include_target_message_id: false
+      )
+        include_bookmarks = guardian.user.present?
+        messages = base_query(channel: channel, include_bookmarks: include_bookmarks)
+        messages = messages.with_deleted if guardian.can_moderate_chat?(channel.chatable)
+        if thread_id.present?
+          include_thread_messages = true
+          messages = messages.where(thread_id: thread_id)
         end
-      else
-        messages = messages.where(<<~SQL, channel_id: channel.id)
+
+        if include_thread_messages
+          if !thread_id.present?
+            messages =
+              messages.left_joins(:thread).where(
+                "chat_threads.id IS NULL OR chat_threads.force = false OR chat_messages.id = chat_threads.original_message_id",
+              )
+          end
+        else
+          messages = messages.where(<<~SQL, channel_id: channel.id)
           chat_messages.thread_id IS NULL OR chat_messages.id IN (
             SELECT original_message_id
             FROM chat_threads
             WHERE chat_threads.channel_id = :channel_id
           )
         SQL
-      end
+        end
 
-      if target_message_id.present? && direction.blank?
-        query_around_target(
-          target_message_id,
-          channel,
-          messages,
-          include_bookmarks: include_bookmarks,
-        )
-      else
-        if target_date.present?
-          query_by_date(target_date, channel, messages)
-        else
-          query_paginated_messages(
-            direction,
-            page_size,
+        if target_message_id.present? && direction.blank?
+          query_around_target(
+            target_message_id,
             channel,
             messages,
-            target_message_id: target_message_id,
-            include_target_message_id: include_target_message_id,
+            include_bookmarks: include_bookmarks,
           )
-        end
-      end
-    end
-
-    def self.base_query(channel:, include_bookmarks: true)
-      query =
-        Chat::Message
-          .includes(in_reply_to: [:user, chat_webhook_event: [:incoming_chat_webhook]])
-          .includes(:revisions)
-          .includes(user: :primary_group)
-          .includes(chat_webhook_event: :incoming_chat_webhook)
-          .includes(reactions: :user)
-          .includes(uploads: { optimized_videos: :optimized_upload })
-          .includes(chat_channel: :chatable)
-          .includes(:pinned_message)
-          .where(chat_channel_id: channel.id)
-
-      query = query.includes(:bookmarks) if include_bookmarks
-
-      user_includes = SiteSetting.enable_user_status ? %i[user_status user_option] : %i[user_option]
-      query.includes(
-        user: user_includes,
-        user_mentions: {
-          user: user_includes,
-        },
-        thread: {
-          original_message: [{ user: user_includes }, { user_mentions: { user: user_includes } }],
-          last_message: [:uploads, { user: user_includes }],
-        },
-      )
-    end
-
-    def self.query_around_target(target_message_id, channel, messages, include_bookmarks: true)
-      target_message =
-        base_query(channel: channel, include_bookmarks: include_bookmarks).with_deleted.find_by(
-          id: target_message_id,
-        )
-
-      past_messages =
-        messages
-          .where("chat_messages.created_at < ?", target_message.created_at)
-          .order(created_at: :desc)
-          .limit(PAST_MESSAGE_LIMIT)
-          .to_a
-
-      future_messages =
-        messages
-          .where("chat_messages.created_at > ?", target_message.created_at)
-          .order(created_at: :asc)
-          .limit(FUTURE_MESSAGE_LIMIT)
-          .to_a
-
-      can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
-      can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
-
-      {
-        past_messages: past_messages,
-        future_messages: future_messages,
-        target_message: target_message,
-        can_load_more_past: can_load_more_past,
-        can_load_more_future: can_load_more_future,
-      }
-    end
-
-    def self.query_paginated_messages(
-      direction,
-      page_size,
-      channel,
-      messages,
-      target_message_id: nil,
-      include_target_message_id: false
-    )
-      page_size = [page_size || MAX_PAGE_SIZE, MAX_PAGE_SIZE].min
-
-      if target_message_id.present?
-        condition = nil
-
-        if include_target_message_id
-          condition = direction == PAST ? "<=" : ">="
         else
-          condition = direction == PAST ? "<" : ">"
+          if target_date.present?
+            query_by_date(target_date, channel, messages)
+          else
+            query_paginated_messages(
+              direction,
+              page_size,
+              channel,
+              messages,
+              target_message_id: target_message_id,
+              include_target_message_id: include_target_message_id,
+            )
+          end
+        end
+      end
+
+      def base_query(channel:, include_bookmarks: true)
+        query =
+          Chat::Message
+            .includes(in_reply_to: [:user, chat_webhook_event: [:incoming_chat_webhook]])
+            .includes(:revisions)
+            .includes(user: :primary_group)
+            .includes(chat_webhook_event: :incoming_chat_webhook)
+            .includes(reactions: :user)
+            .includes(uploads: { optimized_videos: :optimized_upload })
+            .includes(chat_channel: :chatable)
+            .includes(:pinned_message)
+            .where(chat_channel_id: channel.id)
+
+        query = query.includes(:bookmarks) if include_bookmarks
+
+        user_includes =
+          SiteSetting.enable_user_status ? %i[user_status user_option] : %i[user_option]
+        query.includes(
+          user: user_includes,
+          user_mentions: {
+            user: user_includes,
+          },
+          thread: {
+            original_message: [{ user: user_includes }, { user_mentions: { user: user_includes } }],
+            last_message: [:uploads, { user: user_includes }],
+          },
+        )
+      end
+
+      def query_around_target(target_message_id, channel, messages, include_bookmarks: true)
+        target_message =
+          base_query(channel: channel, include_bookmarks: include_bookmarks).with_deleted.find_by(
+            id: target_message_id,
+          )
+
+        past_messages =
+          messages
+            .where("chat_messages.created_at < ?", target_message.created_at)
+            .order(created_at: :desc)
+            .limit(PAST_MESSAGE_LIMIT)
+            .to_a
+
+        future_messages =
+          messages
+            .where("chat_messages.created_at > ?", target_message.created_at)
+            .order(created_at: :asc)
+            .limit(FUTURE_MESSAGE_LIMIT)
+            .to_a
+
+        can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
+        can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
+
+        {
+          past_messages: past_messages,
+          future_messages: future_messages,
+          target_message: target_message,
+          can_load_more_past: can_load_more_past,
+          can_load_more_future: can_load_more_future,
+        }
+      end
+
+      def query_paginated_messages(
+        direction,
+        page_size,
+        channel,
+        messages,
+        target_message_id: nil,
+        include_target_message_id: false
+      )
+        page_size = [page_size || MAX_PAGE_SIZE, MAX_PAGE_SIZE].min
+
+        if target_message_id.present?
+          condition = nil
+
+          if include_target_message_id
+            condition = direction == PAST ? "<=" : ">="
+          else
+            condition = direction == PAST ? "<" : ">"
+          end
+
+          messages = messages.where("chat_messages.id #{condition} ?", target_message_id.to_i)
         end
 
-        messages = messages.where("chat_messages.id #{condition} ?", target_message_id.to_i)
+        order = direction == FUTURE ? "ASC" : "DESC"
+
+        messages =
+          messages
+            .order("chat_messages.created_at #{order}, chat_messages.id #{order}")
+            .limit(page_size)
+            .to_a
+
+        if direction == FUTURE
+          can_load_more_future = messages.size == page_size
+        elsif direction == PAST
+          can_load_more_past = messages.size == page_size
+        else
+          # When direction is blank, we'll return the latest messages.
+          can_load_more_future = false
+          can_load_more_past = messages.size == page_size
+        end
+
+        {
+          messages: direction == FUTURE ? messages : messages.reverse,
+          can_load_more_past: can_load_more_past,
+          can_load_more_future: can_load_more_future,
+        }
       end
 
-      order = direction == FUTURE ? "ASC" : "DESC"
+      def query_by_date(target_date, channel, messages)
+        past_messages =
+          messages
+            .where("chat_messages.created_at <= ?", target_date.to_time.utc)
+            .order(created_at: :desc)
+            .limit(PAST_MESSAGE_LIMIT)
+            .to_a
 
-      messages =
-        messages
-          .order("chat_messages.created_at #{order}, chat_messages.id #{order}")
-          .limit(page_size)
-          .to_a
+        future_messages =
+          messages
+            .where("chat_messages.created_at > ?", target_date.to_time.utc)
+            .order(created_at: :asc)
+            .limit(FUTURE_MESSAGE_LIMIT)
+            .to_a
 
-      if direction == FUTURE
-        can_load_more_future = messages.size == page_size
-      elsif direction == PAST
-        can_load_more_past = messages.size == page_size
-      else
-        # When direction is blank, we'll return the latest messages.
-        can_load_more_future = false
-        can_load_more_past = messages.size == page_size
+        can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
+        can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
+
+        {
+          target_message_id: future_messages.first&.id,
+          past_messages: past_messages,
+          future_messages: future_messages,
+          target_date: target_date,
+          can_load_more_past: can_load_more_past,
+          can_load_more_future: can_load_more_future,
+        }
       end
-
-      {
-        messages: direction == FUTURE ? messages : messages.reverse,
-        can_load_more_past: can_load_more_past,
-        can_load_more_future: can_load_more_future,
-      }
-    end
-
-    def self.query_by_date(target_date, channel, messages)
-      past_messages =
-        messages
-          .where("chat_messages.created_at <= ?", target_date.to_time.utc)
-          .order(created_at: :desc)
-          .limit(PAST_MESSAGE_LIMIT)
-          .to_a
-
-      future_messages =
-        messages
-          .where("chat_messages.created_at > ?", target_date.to_time.utc)
-          .order(created_at: :asc)
-          .limit(FUTURE_MESSAGE_LIMIT)
-          .to_a
-
-      can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
-      can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
-
-      {
-        target_message_id: future_messages.first&.id,
-        past_messages: past_messages,
-        future_messages: future_messages,
-        target_date: target_date,
-        can_load_more_past: can_load_more_past,
-        can_load_more_future: can_load_more_future,
-      }
     end
   end
 end

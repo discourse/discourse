@@ -79,13 +79,16 @@ module Checklist
       step :revise_post
     end
 
-    def self.retryable_conflict?(post:, expected_raw:)
-      normalize_checkbox_states(expected_raw) == normalize_checkbox_states(post.reload.raw)
+    class << self
+      def retryable_conflict?(post:, expected_raw:)
+        normalize_checkbox_states(expected_raw) == normalize_checkbox_states(post.reload.raw)
+      end
+
+      def normalize_checkbox_states(raw)
+        raw.gsub(/\[(?: |x)?\]/, "[ ]")
+      end
     end
 
-    def self.normalize_checkbox_states(raw)
-      raw.gsub(/\[(?: |x)?\]/, "[ ]")
-    end
     private_class_method :normalize_checkbox_states
 
     private

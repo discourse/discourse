@@ -3,7 +3,9 @@
 describe CanonicalURL::ControllerExtensions do
   let(:host_class) do
     Class.new do
-      def self.helper_method(*)
+      class << self
+        def helper_method(*)
+        end
       end
 
       include CanonicalURL::ControllerExtensions

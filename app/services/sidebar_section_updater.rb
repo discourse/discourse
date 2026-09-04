@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class SidebarSectionUpdater
-  def self.update!(sidebar_section:, user:, section_params:, links_params:)
-    new(sidebar_section:, user:, section_params:, links_params:).update!
+  class << self
+    def update!(sidebar_section:, user:, section_params:, links_params:)
+      new(sidebar_section:, user:, section_params:, links_params:).update!
+    end
   end
 
   def initialize(sidebar_section:, user:, section_params:, links_params:)

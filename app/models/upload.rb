@@ -17,6 +17,279 @@ class Upload < ActiveRecord::Base
   belongs_to :user
   belongs_to :access_control_post, class_name: "Post"
 
+  class << self
+    def verification_statuses
+      @verification_statuses ||=
+        Enum.new(
+          unchecked: 1,
+          verified: 2,
+          invalid_etag: 3, # Used by S3Inventory to mark S3 Upload records that have an invalid ETag value compared to the ETag value of the inventory file
+          s3_file_missing_confirmed: 4, # Used by S3Inventory to skip S3 Upload records that are confirmed to not be backed by a file in the S3 file store
+        )
+    end
+
+    def fetch_from(sha1:, url:)
+      sha1.presence.try { |_| find_by(sha1:) } || get_from_url(url)
+    end
+
+    def mark_invalid_s3_uploads_as_missing
+      Upload.with_invalid_etag_verification_status.update_all(
+        verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
+      )
+    end
+
+    def add_unused_callback(&block)
+      (@unused_callbacks ||= []) << block
+    end
+
+    def unused_callbacks
+      @unused_callbacks
+    end
+
+    def reset_unused_callbacks
+      @unused_callbacks = []
+    end
+
+    def add_in_use_callback(&block)
+      (@in_use_callbacks ||= []) << block
+    end
+
+    def in_use_callbacks
+      @in_use_callbacks
+    end
+
+    def reset_in_use_callbacks
+      @in_use_callbacks = []
+    end
+
+    def with_no_non_post_relations
+      joins(
+        "LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'",
+      ).where("ur.upload_id IS NULL")
+    end
+
+    def consider_for_reuse(upload, post)
+      return upload if !SiteSetting.secure_uploads? || upload.blank? || post.blank?
+      if !upload.matching_access_control_post?(post) ||
+           upload.uploaded_before_secure_uploads_enabled?
+        return nil
+      end
+      upload
+    end
+
+    def secure_uploads_url?(url)
+      # we do not want to exclude topic links that for whatever reason
+      # have secure-uploads in the URL e.g. /t/secure-uploads-are-cool/223452
+      route = UrlHelper.rails_route_from_url(url)
+      return false if route.blank?
+      route[:action] == "show_secure" && route[:controller] == "uploads" &&
+        FileHelper.is_supported_media?(url)
+    rescue ActionController::RoutingError
+      false
+    end
+
+    def signed_url_from_secure_uploads_url(url, include_content_disposition:)
+      route = UrlHelper.rails_route_from_url(url)
+      url = Rails.application.routes.url_for(route.merge(only_path: true))
+      secure_upload_s3_path = url[url.index(route[:path])..-1]
+      Discourse.store.signed_url_for_path(secure_upload_s3_path, include_content_disposition:)
+    end
+
+    def secure_uploads_url_from_upload_url(url)
+      return url if !url.include?(SiteSetting.Upload.absolute_base_url)
+      uri = URI.parse(url)
+      Rails.application.routes.url_for(
+        controller: "uploads",
+        action: "show_secure",
+        path: uri.path[1..-1],
+        only_path: true,
+      )
+    end
+
+    def short_path(sha1:, extension:)
+      @url_helpers ||= Rails.application.routes.url_helpers
+
+      @url_helpers.upload_short_path(base62: base62_sha1(sha1), extension: extension)
+    end
+
+    def base62_sha1(sha1)
+      Base62.encode(sha1.hex)
+    end
+
+    def sha1_from_short_path(path)
+      sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
+    end
+
+    def sha1_from_short_url(url)
+      sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
+    end
+
+    def sha1_from_long_url(url)
+      $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
+    end
+
+    def sha1_from_base62_encoded(encoded_sha1)
+      return nil if encoded_sha1.length > MAX_BASE62_SHA1_LENGTH
+      sha1 = Base62.decode(encoded_sha1).to_s(16)
+
+      if sha1.length > SHA1_LENGTH
+        nil
+      else
+        sha1.rjust(SHA1_LENGTH, "0")
+      end
+    end
+
+    def generate_digest(path)
+      Digest::SHA1.file(path).hexdigest
+    end
+
+    def migrate_to_new_scheme(limit: nil)
+      problems = []
+
+      DistributedMutex.synchronize("migrate_upload_to_new_scheme") do
+        if SiteSetting.migrate_to_new_scheme
+          max_file_size_kb = [
+            SiteSetting.max_image_size_kb,
+            SiteSetting.max_attachment_size_kb,
+          ].max.kilobytes
+
+          local_store = FileStore::LocalStore.new
+          db = RailsMultisite::ConnectionManagement.current_db
+
+          scope =
+            Upload
+              .by_users
+              .where("url NOT LIKE '%/original/_X/%' AND url LIKE ?", "%/uploads/#{db}%")
+              .order(id: :desc)
+
+          scope = scope.limit(limit) if limit
+
+          if scope.count == 0
+            SiteSetting.migrate_to_new_scheme = false
+            return problems
+          end
+
+          remap_scope = nil
+
+          scope.each do |upload|
+            # keep track of the url
+            previous_url = upload.url.dup
+            # where is the file currently stored?
+            external = previous_url =~ %r{\A//}
+            # download if external
+            if external
+              url = SiteSetting.scheme + ":" + previous_url
+
+              begin
+                retries ||= 0
+
+                file =
+                  FileHelper.download(
+                    url,
+                    max_file_size: max_file_size_kb,
+                    tmp_file_name: "discourse",
+                    follow_redirect: true,
+                  )
+              rescue OpenURI::HTTPError
+                retry if (retries += 1) < 1
+                next
+              end
+
+              path = file.path
+            else
+              path = local_store.path_for(upload)
+            end
+            # compute SHA if missing
+            upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
+
+            # store to new location & update the filesize
+            File.open(path) do |f|
+              upload.url = Discourse.store.store_upload(f, upload)
+              upload.filesize = f.size
+              upload.save!(validate: false)
+            end
+            # remap the URLs
+            DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
+
+            DbHelper.remap(
+              previous_url,
+              upload.url,
+              excluded_tables: %w[
+                posts
+                post_search_data
+                incoming_emails
+                notifications
+                single_sign_on_records
+                stylesheet_cache
+                topic_search_data
+                users
+                user_emails
+                draft_sequences
+                optimized_images
+              ],
+            )
+
+            remap_scope ||=
+              Post
+                .with_deleted
+                .where(
+                  "raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'",
+                )
+                .select(:id, :raw, :cooked)
+                .all
+
+            remap_scope.each do |post|
+              post.raw.gsub!(previous_url, upload.url)
+              post.cooked.gsub!(previous_url, upload.url)
+              if post.changed?
+                Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked)
+              end
+            end
+
+            upload.optimized_images.find_each(&:destroy!)
+            upload.rebake_posts_on_old_scheme
+            # remove the old file (when local)
+            FileUtils.rm(path, force: true) unless external
+          rescue => e
+            problems << { upload: upload, ex: e }
+          ensure
+            file&.unlink
+            file&.close
+          end
+        end
+      end
+
+      problems
+    end
+
+    def extract_upload_ids(raw)
+      return [] if raw.blank?
+
+      sha1s = []
+
+      raw.scan(/\/(\h{40})/).each { |match| sha1s << match[0] }
+
+      raw
+        .scan(%r{/([a-zA-Z0-9]+)})
+        .each { |match| sha1s << Upload.sha1_from_base62_encoded(match[0]) }
+
+      Upload.where(sha1: sha1s.uniq).pluck(:id)
+    end
+
+    def backfill_dominant_colors!(count)
+      Upload
+        .where(dominant_color: nil)
+        .order("id desc")
+        .first(count)
+        .each { |upload| upload.calculate_dominant_color! }
+    end
+  end
+
+  def initialize(*args)
+    super
+    self.validate_file_size = true
+  end
+
   # when we access this post we don't care if the post
   # is deleted
   def access_control_post
@@ -72,61 +345,6 @@ class Upload < ActiveRecord::Base
 
   scope :with_invalid_etag_verification_status,
         -> { where(verification_status: Upload.verification_statuses[:invalid_etag]) }
-
-  def self.verification_statuses
-    @verification_statuses ||=
-      Enum.new(
-        unchecked: 1,
-        verified: 2,
-        invalid_etag: 3, # Used by S3Inventory to mark S3 Upload records that have an invalid ETag value compared to the ETag value of the inventory file
-        s3_file_missing_confirmed: 4, # Used by S3Inventory to skip S3 Upload records that are confirmed to not be backed by a file in the S3 file store
-      )
-  end
-
-  def self.fetch_from(sha1:, url:)
-    sha1.presence.try { |_| find_by(sha1:) } || get_from_url(url)
-  end
-
-  def self.mark_invalid_s3_uploads_as_missing
-    Upload.with_invalid_etag_verification_status.update_all(
-      verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
-    )
-  end
-
-  def self.add_unused_callback(&block)
-    (@unused_callbacks ||= []) << block
-  end
-
-  def self.unused_callbacks
-    @unused_callbacks
-  end
-
-  def self.reset_unused_callbacks
-    @unused_callbacks = []
-  end
-
-  def self.add_in_use_callback(&block)
-    (@in_use_callbacks ||= []) << block
-  end
-
-  def self.in_use_callbacks
-    @in_use_callbacks
-  end
-
-  def self.reset_in_use_callbacks
-    @in_use_callbacks = []
-  end
-
-  def self.with_no_non_post_relations
-    joins(
-      "LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'",
-    ).where("ur.upload_id IS NULL")
-  end
-
-  def initialize(*args)
-    super
-    self.validate_file_size = true
-  end
 
   def to_s
     url
@@ -235,53 +453,6 @@ class Upload < ActiveRecord::Base
 
   def short_path
     self.class.short_path(sha1: sha1, extension: extension)
-  end
-
-  def self.consider_for_reuse(upload, post)
-    return upload if !SiteSetting.secure_uploads? || upload.blank? || post.blank?
-    if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_uploads_enabled?
-      return nil
-    end
-    upload
-  end
-
-  def self.secure_uploads_url?(url)
-    # we do not want to exclude topic links that for whatever reason
-    # have secure-uploads in the URL e.g. /t/secure-uploads-are-cool/223452
-    route = UrlHelper.rails_route_from_url(url)
-    return false if route.blank?
-    route[:action] == "show_secure" && route[:controller] == "uploads" &&
-      FileHelper.is_supported_media?(url)
-  rescue ActionController::RoutingError
-    false
-  end
-
-  def self.signed_url_from_secure_uploads_url(url, include_content_disposition:)
-    route = UrlHelper.rails_route_from_url(url)
-    url = Rails.application.routes.url_for(route.merge(only_path: true))
-    secure_upload_s3_path = url[url.index(route[:path])..-1]
-    Discourse.store.signed_url_for_path(secure_upload_s3_path, include_content_disposition:)
-  end
-
-  def self.secure_uploads_url_from_upload_url(url)
-    return url if !url.include?(SiteSetting.Upload.absolute_base_url)
-    uri = URI.parse(url)
-    Rails.application.routes.url_for(
-      controller: "uploads",
-      action: "show_secure",
-      path: uri.path[1..-1],
-      only_path: true,
-    )
-  end
-
-  def self.short_path(sha1:, extension:)
-    @url_helpers ||= Rails.application.routes.url_helpers
-
-    @url_helpers.upload_short_path(base62: base62_sha1(sha1), extension: extension)
-  end
-
-  def self.base62_sha1(sha1)
-    Base62.encode(sha1.hex)
   end
 
   def base62_sha1
@@ -456,33 +627,6 @@ class Upload < ActiveRecord::Base
     test_quality if @file_quality == 0 || @file_quality > test_quality
   end
 
-  def self.sha1_from_short_path(path)
-    sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
-  end
-
-  def self.sha1_from_short_url(url)
-    sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
-  end
-
-  def self.sha1_from_long_url(url)
-    $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
-  end
-
-  def self.sha1_from_base62_encoded(encoded_sha1)
-    return nil if encoded_sha1.length > MAX_BASE62_SHA1_LENGTH
-    sha1 = Base62.decode(encoded_sha1).to_s(16)
-
-    if sha1.length > SHA1_LENGTH
-      nil
-    else
-      sha1.rjust(SHA1_LENGTH, "0")
-    end
-  end
-
-  def self.generate_digest(path)
-    Digest::SHA1.file(path).hexdigest
-  end
-
   def human_filesize
     number_to_human_size(filesize)
   end
@@ -530,145 +674,6 @@ class Upload < ActiveRecord::Base
       security_last_changed_reason: reason + " | source: #{source}",
       security_last_changed_at: Time.zone.now,
     }
-  end
-
-  def self.migrate_to_new_scheme(limit: nil)
-    problems = []
-
-    DistributedMutex.synchronize("migrate_upload_to_new_scheme") do
-      if SiteSetting.migrate_to_new_scheme
-        max_file_size_kb = [
-          SiteSetting.max_image_size_kb,
-          SiteSetting.max_attachment_size_kb,
-        ].max.kilobytes
-
-        local_store = FileStore::LocalStore.new
-        db = RailsMultisite::ConnectionManagement.current_db
-
-        scope =
-          Upload
-            .by_users
-            .where("url NOT LIKE '%/original/_X/%' AND url LIKE ?", "%/uploads/#{db}%")
-            .order(id: :desc)
-
-        scope = scope.limit(limit) if limit
-
-        if scope.count == 0
-          SiteSetting.migrate_to_new_scheme = false
-          return problems
-        end
-
-        remap_scope = nil
-
-        scope.each do |upload|
-          # keep track of the url
-          previous_url = upload.url.dup
-          # where is the file currently stored?
-          external = previous_url =~ %r{\A//}
-          # download if external
-          if external
-            url = SiteSetting.scheme + ":" + previous_url
-
-            begin
-              retries ||= 0
-
-              file =
-                FileHelper.download(
-                  url,
-                  max_file_size: max_file_size_kb,
-                  tmp_file_name: "discourse",
-                  follow_redirect: true,
-                )
-            rescue OpenURI::HTTPError
-              retry if (retries += 1) < 1
-              next
-            end
-
-            path = file.path
-          else
-            path = local_store.path_for(upload)
-          end
-          # compute SHA if missing
-          upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
-
-          # store to new location & update the filesize
-          File.open(path) do |f|
-            upload.url = Discourse.store.store_upload(f, upload)
-            upload.filesize = f.size
-            upload.save!(validate: false)
-          end
-          # remap the URLs
-          DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
-
-          DbHelper.remap(
-            previous_url,
-            upload.url,
-            excluded_tables: %w[
-              posts
-              post_search_data
-              incoming_emails
-              notifications
-              single_sign_on_records
-              stylesheet_cache
-              topic_search_data
-              users
-              user_emails
-              draft_sequences
-              optimized_images
-            ],
-          )
-
-          remap_scope ||=
-            Post
-              .with_deleted
-              .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
-              .select(:id, :raw, :cooked)
-              .all
-
-          remap_scope.each do |post|
-            post.raw.gsub!(previous_url, upload.url)
-            post.cooked.gsub!(previous_url, upload.url)
-            if post.changed?
-              Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked)
-            end
-          end
-
-          upload.optimized_images.find_each(&:destroy!)
-          upload.rebake_posts_on_old_scheme
-          # remove the old file (when local)
-          FileUtils.rm(path, force: true) unless external
-        rescue => e
-          problems << { upload: upload, ex: e }
-        ensure
-          file&.unlink
-          file&.close
-        end
-      end
-    end
-
-    problems
-  end
-
-  def self.extract_upload_ids(raw)
-    return [] if raw.blank?
-
-    sha1s = []
-
-    raw.scan(/\/(\h{40})/).each { |match| sha1s << match[0] }
-
-    raw
-      .scan(%r{/([a-zA-Z0-9]+)})
-      .each { |match| sha1s << Upload.sha1_from_base62_encoded(match[0]) }
-
-    Upload.where(sha1: sha1s.uniq).pluck(:id)
-  end
-
-  def self.backfill_dominant_colors!(count)
-    Upload
-      .where(dominant_color: nil)
-      .order("id desc")
-      .first(count)
-      .each { |upload| upload.calculate_dominant_color! }
   end
 
   private

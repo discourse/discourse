@@ -3,14 +3,16 @@
 module DiscourseWorkflows
   CachedPublishedTrigger =
     Data.define(:workflow_id, :workflow_version_id, :trigger_node) do
-      def self.from_hash(hash)
-        attrs = hash.with_indifferent_access
+      class << self
+        def from_hash(hash)
+          attrs = hash.with_indifferent_access
 
-        new(
-          workflow_id: attrs[:workflow_id],
-          workflow_version_id: attrs[:workflow_version_id],
-          trigger_node: attrs[:trigger_node],
-        )
+          new(
+            workflow_id: attrs[:workflow_id],
+            workflow_version_id: attrs[:workflow_version_id],
+            trigger_node: attrs[:trigger_node],
+          )
+        end
       end
 
       def trigger_node_id

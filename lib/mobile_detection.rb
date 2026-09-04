@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 
 module MobileDetection
-  # if the criteria for mobile_device? changes, update the code for `isMobileDevice` in
-  # `frontend/discourse/app/services/capabilities.js`
-  def self.mobile_device?(user_agent)
-    user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
+  class << self
+    # if the criteria for mobile_device? changes, update the code for `isMobileDevice` in
+    # `frontend/discourse/app/services/capabilities.js`
+    def mobile_device?(user_agent)
+      user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
+    end
+
+    public
+
+    def modern_mobile_device?(user_agent)
+      user_agent[0...USER_AGENT_MAX_LENGTH].match?(MODERN_MOBILE_REGEX)
+    end
   end
 
   MODERN_MOBILE_REGEX =
@@ -20,8 +28,4 @@ module MobileDetection
   }x
 
   USER_AGENT_MAX_LENGTH = 400
-
-  def self.modern_mobile_device?(user_agent)
-    user_agent[0...USER_AGENT_MAX_LENGTH].match?(MODERN_MOBILE_REGEX)
-  end
 end

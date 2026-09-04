@@ -4,45 +4,47 @@ module DiscourseAi
   module Agents
     module Tools
       class EditPost < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Edits the content of a post, and optionally the topic title.",
-            parameters: [
-              {
-                name: "post_id",
-                description: "The ID of the post to edit",
-                type: "integer",
-                required: true,
-              },
-              { name: "raw", description: "The new raw content for the post", type: "string" },
-              {
-                name: "title",
-                description: "The new title for the topic (only applies to the first post)",
-                type: "string",
-              },
-              {
-                name: "edit_reason",
-                description: "Short explanation of what was changed",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "public_edit_reason",
-                description:
-                  "Whether the edit reason should be visible in the post's revision history",
-                type: "boolean",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Edits the content of a post, and optionally the topic title.",
+              parameters: [
+                {
+                  name: "post_id",
+                  description: "The ID of the post to edit",
+                  type: "integer",
+                  required: true,
+                },
+                { name: "raw", description: "The new raw content for the post", type: "string" },
+                {
+                  name: "title",
+                  description: "The new title for the topic (only applies to the first post)",
+                  type: "string",
+                },
+                {
+                  name: "edit_reason",
+                  description: "Short explanation of what was changed",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "public_edit_reason",
+                  description:
+                    "Whether the edit reason should be visible in the post's revision history",
+                  type: "boolean",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "edit_post"
-        end
+          def name
+            "edit_post"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

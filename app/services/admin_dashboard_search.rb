@@ -17,8 +17,10 @@ class AdminDashboardSearch
                    :POOR_MATCH_MAX_CTR_PERCENT,
                    :TRENDING_PERIODS_BY_MAX_DAYS
 
-  def self.build(start_date:, end_date:)
-    new(start_date: start_date, end_date: end_date).build
+  class << self
+    def build(start_date:, end_date:)
+      new(start_date: start_date, end_date: end_date).build
+    end
   end
 
   def initialize(start_date:, end_date:)

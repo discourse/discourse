@@ -223,14 +223,16 @@ describe AdminDashboardSectionConfiguration do
 
     let(:fake_setting) do
       Class.new do
-        def self.permit
-          [:category_id]
-        end
+        class << self
+          def permit
+            [:category_id]
+          end
 
-        def self.validate(attrs)
-          id = attrs[:category_id]
-          raise Discourse::InvalidParameters.new(:category_id) if id.blank?
-          { "category_id" => id.to_i }
+          def validate(attrs)
+            id = attrs[:category_id]
+            raise Discourse::InvalidParameters.new(:category_id) if id.blank?
+            { "category_id" => id.to_i }
+          end
         end
       end
     end
@@ -570,14 +572,16 @@ describe AdminDashboardSectionConfiguration do
 
     let(:fake_setting) do
       Class.new do
-        def self.permit
-          [:category_id]
-        end
+        class << self
+          def permit
+            [:category_id]
+          end
 
-        def self.validate(attrs)
-          id = attrs[:category_id]
-          raise Discourse::InvalidParameters.new(:category_id) if id.blank?
-          { "category_id" => id.to_i }
+          def validate(attrs)
+            id = attrs[:category_id]
+            raise Discourse::InvalidParameters.new(:category_id) if id.blank?
+            { "category_id" => id.to_i }
+          end
         end
       end
     end

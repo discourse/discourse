@@ -6,6 +6,61 @@ module PageObjects
       class WorkflowEditor < PageObjects::Pages::Base
         WORKFLOWS_PATH = "/admin/plugins/discourse-workflows/workflows"
 
+        NODE_TYPE_LABELS = {
+          "trigger:topic_closed" => "Topic closed",
+          "trigger:post_created" => "Post created",
+          "trigger:topic_created" => "Topic created",
+          "trigger:webhook" => "Webhook",
+          "trigger:manual" => "Manual trigger",
+          "trigger:stale_topic" => "Stale topic",
+          "trigger:schedule" => "Schedule",
+          "condition:if" => "If",
+          "condition:filter" => "Filter",
+          "action:topic_tags" => "Topic tags",
+          "action:code" => "Code",
+          "action:topic" => "Topic",
+          "action:post" => "Post",
+          "action:set_fields" => "Set fields",
+          "action:split_out" => "Split Out",
+          "action:http_request" => "HTTP Request",
+          "action:data_table" => "Data Table",
+          "flow:loop_over_items" => "Loop Over Items",
+        }.freeze
+        NODE_TYPE_OPERATION_LABELS = {
+          "action:badge" => {
+            "grant" => "Grant badge",
+            "revoke" => "Revoke badge",
+          },
+          "action:topic_tags" => {
+            "add" => "Add",
+            "remove" => "Remove",
+          },
+          "action:group" => {
+            "add" => "Add to group",
+            "remove" => "Remove from group",
+            "get" => "Get group",
+            "check_membership" => "Check membership",
+          },
+          "action:data_table" => {
+            "insert" => "Insert",
+            "get" => "Get",
+            "update" => "Update",
+            "delete" => "Delete",
+            "upsert" => "Upsert",
+          },
+          "action:topic" => {
+            "create" => "Create topic",
+            "get" => "Get topic",
+            "list" => "List topics",
+          },
+          "action:post" => {
+            "create" => "Create post",
+            "edit" => "Edit post",
+            "get" => "Get post",
+            "list" => "List posts",
+          },
+        }.freeze
+
         def visit_new
           page.visit("#{WORKFLOWS_PATH}/new")
           self
@@ -107,62 +162,6 @@ module PageObjects
         def has_empty_state_add_node?
           page.has_css?(".workflows-canvas__empty-state-trigger")
         end
-
-        NODE_TYPE_LABELS = {
-          "trigger:topic_closed" => "Topic closed",
-          "trigger:post_created" => "Post created",
-          "trigger:topic_created" => "Topic created",
-          "trigger:webhook" => "Webhook",
-          "trigger:manual" => "Manual trigger",
-          "trigger:stale_topic" => "Stale topic",
-          "trigger:schedule" => "Schedule",
-          "condition:if" => "If",
-          "condition:filter" => "Filter",
-          "action:topic_tags" => "Topic tags",
-          "action:code" => "Code",
-          "action:topic" => "Topic",
-          "action:post" => "Post",
-          "action:set_fields" => "Set fields",
-          "action:split_out" => "Split Out",
-          "action:http_request" => "HTTP Request",
-          "action:data_table" => "Data Table",
-          "flow:loop_over_items" => "Loop Over Items",
-        }.freeze
-
-        NODE_TYPE_OPERATION_LABELS = {
-          "action:badge" => {
-            "grant" => "Grant badge",
-            "revoke" => "Revoke badge",
-          },
-          "action:topic_tags" => {
-            "add" => "Add",
-            "remove" => "Remove",
-          },
-          "action:group" => {
-            "add" => "Add to group",
-            "remove" => "Remove from group",
-            "get" => "Get group",
-            "check_membership" => "Check membership",
-          },
-          "action:data_table" => {
-            "insert" => "Insert",
-            "get" => "Get",
-            "update" => "Update",
-            "delete" => "Delete",
-            "upsert" => "Upsert",
-          },
-          "action:topic" => {
-            "create" => "Create topic",
-            "get" => "Get topic",
-            "list" => "List topics",
-          },
-          "action:post" => {
-            "create" => "Create post",
-            "edit" => "Edit post",
-            "get" => "Get post",
-            "list" => "List posts",
-          },
-        }.freeze
 
         def select_node_type(identifier, operation: nil)
           label = NODE_TYPE_LABELS.fetch(identifier, identifier)

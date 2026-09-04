@@ -3,12 +3,10 @@
 module ImportScripts
   module CsvHelper
     class RowResolver
-      def load(row)
-        @row = row
-      end
-
-      def self.create(cols)
-        Class.new(RowResolver).new(cols)
+      class << self
+        def create(cols)
+          Class.new(RowResolver).new(cols)
+        end
       end
 
       def initialize(cols)
@@ -17,6 +15,10 @@ module ImportScripts
             .class
             .public_send(:define_method, col.downcase.gsub(/[\W]/, "_").squeeze("_")) { @row[idx] }
         end
+      end
+
+      def load(row)
+        @row = row
       end
     end
 

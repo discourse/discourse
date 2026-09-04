@@ -5,22 +5,24 @@ class Thread
 end
 
 class ThreadDetective
-  def self.test_thread
-    Thread.new { sleep 1 }
-  end
+  class << self
+    def test_thread
+      Thread.new { sleep 1 }
+    end
 
-  def self.start(max_threads)
-    @thread ||= Thread.new { new.monitor(max_threads) }
+    def start(max_threads)
+      @thread ||= Thread.new { new.monitor(max_threads) }
 
-    @trace = TracePoint.new(:thread_begin) { |tp| Thread.current.origin = Thread.current.inspect }
-    @trace.enable
-  end
+      @trace = TracePoint.new(:thread_begin) { |tp| Thread.current.origin = Thread.current.inspect }
+      @trace.enable
+    end
 
-  def self.stop
-    @thread&.kill
-    @thread = nil
-    @trace&.disable
-    @trace.stop
+    def stop
+      @thread&.kill
+      @thread = nil
+      @trace&.disable
+      @trace.stop
+    end
   end
 
   def monitor(max_threads)

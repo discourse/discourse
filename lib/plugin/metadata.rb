@@ -9,6 +9,7 @@ class Plugin::Metadata
   OFFICIAL_PLUGINS = Set.new(JSON.load_file(Rails.root.join("config/official_plugins.json").to_s))
 
   FIELDS = %i[name about version authors contact_emails url required_version meta_topic_id label]
+
   attr_accessor(*FIELDS)
 
   MAX_FIELD_LENGTHS = {
@@ -20,6 +21,14 @@ class Plugin::Metadata
     label: 20,
   }
 
+  class << self
+    def parse(text)
+      metadata = new
+      text.each_line { |line| break unless metadata.parse_line(line) }
+      metadata
+    end
+  end
+
   def meta_topic_id=(value)
     @meta_topic_id =
       begin
@@ -27,12 +36,6 @@ class Plugin::Metadata
       rescue StandardError
         nil
       end
-  end
-
-  def self.parse(text)
-    metadata = new
-    text.each_line { |line| break unless metadata.parse_line(line) }
-    metadata
   end
 
   def official?

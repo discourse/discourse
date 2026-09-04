@@ -3,23 +3,25 @@
 class Auth::AuthProvider
   include ActiveModel::Serialization
 
-  def initialize(params = {})
-    params.each { |key, value| public_send "#{key}=", value }
+  class << self
+    def auth_attributes
+      %i[
+        authenticator
+        custom_url
+        frame_height
+        frame_width
+        icon
+        icon_setting
+        pretty_name
+        pretty_name_setting
+        title
+        title_setting
+      ]
+    end
   end
 
-  def self.auth_attributes
-    %i[
-      authenticator
-      custom_url
-      frame_height
-      frame_width
-      icon
-      icon_setting
-      pretty_name
-      pretty_name_setting
-      title
-      title_setting
-    ]
+  def initialize(params = {})
+    params.each { |key, value| public_send "#{key}=", value }
   end
 
   attr_accessor(*auth_attributes)

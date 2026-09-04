@@ -22,8 +22,10 @@ class CompletionPrompt < ActiveRecord::Base
 
   after_commit { DiscourseAi::AiHelper::Assistant.clear_prompt_cache! }
 
-  def self.enabled_by_name(name)
-    where(enabled: true).find_by(name: name)
+  class << self
+    def enabled_by_name(name)
+      where(enabled: true).find_by(name: name)
+    end
   end
 
   attr_accessor :custom_instruction

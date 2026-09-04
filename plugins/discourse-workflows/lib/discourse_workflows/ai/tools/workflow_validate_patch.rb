@@ -4,40 +4,54 @@ module DiscourseWorkflows
   module Ai
     module Tools
       class WorkflowValidatePatch < Base
-        def self.signature
-          {
-            name: name,
-            description:
-              "Dry-runs a workflow patch and returns validation errors, normalized graph data, inferred node input/output fields, proposed created resources, and a diff summary without saving anything.",
-            json_schema: {
-              type: "object",
-              additionalProperties: false,
-              required: %w[operations],
-              properties: {
-                workflow_id: {
-                  type: "integer",
-                  description: "Workflow ID.",
-                },
-                workflow_name: {
-                  type: "string",
-                  description: "Name to use when validating a brand-new workflow patch.",
-                },
-                operations: {
-                  type: "array",
-                  description:
-                    "Array of workflow patch operation objects. Each item must be an object, not a JSON string.",
-                  items: {
-                    type: "object",
-                    additionalProperties: true,
+        CONDITION_NODE_TYPES = %w[condition:filter condition:if].freeze
+        JSON_REFERENCE_REGEX =
+          /
+          \$json
+          (?:
+            \.[A-Za-z_$][A-Za-z0-9_$]*
+            |
+            \[(?:\d+|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')\]
+          )+
+        /x
+        MAX_AVAILABLE_PATHS = 12
+
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Dry-runs a workflow patch and returns validation errors, normalized graph data, inferred node input/output fields, proposed created resources, and a diff summary without saving anything.",
+              json_schema: {
+                type: "object",
+                additionalProperties: false,
+                required: %w[operations],
+                properties: {
+                  workflow_id: {
+                    type: "integer",
+                    description: "Workflow ID.",
+                  },
+                  workflow_name: {
+                    type: "string",
+                    description: "Name to use when validating a brand-new workflow patch.",
+                  },
+                  operations: {
+                    type: "array",
+                    description:
+                      "Array of workflow patch operation objects. Each item must be an object, not a JSON string.",
+                    items: {
+                      type: "object",
+                      additionalProperties: true,
+                    },
                   },
                 },
               },
-            },
-          }
-        end
+            }
+          end
 
-        def self.name
-          "workflow_validate_patch"
+          def name
+            "workflow_validate_patch"
+          end
         end
 
         def invoke
@@ -79,19 +93,6 @@ module DiscourseWorkflows
         end
 
         private
-
-        CONDITION_NODE_TYPES = %w[condition:filter condition:if].freeze
-
-        JSON_REFERENCE_REGEX =
-          /
-          \$json
-          (?:
-            \.[A-Za-z_$][A-Za-z0-9_$]*
-            |
-            \[(?:\d+|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')\]
-          )+
-        /x
-        MAX_AVAILABLE_PATHS = 12
 
         def resolved_node_fields(nodes, connections)
           resolution = DiscourseWorkflows::Schema.resolve_graph(nodes, connections)

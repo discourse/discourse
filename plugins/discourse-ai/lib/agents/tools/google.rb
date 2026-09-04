@@ -4,27 +4,29 @@ module DiscourseAi
   module Agents
     module Tools
       class Google < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Will search using Google - global internet search (supports all Google search operators)",
-            parameters: [
-              { name: "query", description: "The search query", type: "string", required: true },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Will search using Google - global internet search (supports all Google search operators)",
+              parameters: [
+                { name: "query", description: "The search query", type: "string", required: true },
+              ],
+            }
+          end
 
-        def self.custom_system_message
-          "You were trained on OLD data, lean on search to get up to date information from the web"
-        end
+          def custom_system_message
+            "You were trained on OLD data, lean on search to get up to date information from the web"
+          end
 
-        def self.name
-          "google"
-        end
+          def name
+            "google"
+          end
 
-        def self.accepted_options
-          [option(:base_query, type: :string)]
+          def accepted_options
+            [option(:base_query, type: :string)]
+          end
         end
 
         def query

@@ -4,41 +4,43 @@ module DiscourseAi
   module Agents
     module Tools
       class MarkAsSolved < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Marks or unmarks a post as the accepted solution for its topic based on the solved parameter.",
-            parameters: [
-              {
-                name: "post_id",
-                description: "The ID of the post to mark or unmark as the solution",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "solved",
-                description: "true to mark as solved, false to unmark",
-                type: "boolean",
-                required: true,
-              },
-              {
-                name: "reason",
-                description:
-                  "Short explanation of why the post is being marked or unmarked as solved",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Marks or unmarks a post as the accepted solution for its topic based on the solved parameter.",
+              parameters: [
+                {
+                  name: "post_id",
+                  description: "The ID of the post to mark or unmark as the solution",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "solved",
+                  description: "true to mark as solved, false to unmark",
+                  type: "boolean",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description:
+                    "Short explanation of why the post is being marked or unmarked as solved",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "mark_as_solved"
-        end
+          def name
+            "mark_as_solved"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

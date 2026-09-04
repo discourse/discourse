@@ -3,11 +3,12 @@
 module DiscourseAi
   module AiModeration
     class SpamReport
-      def self.generate(min_date: 1.week.ago)
-        spam_status = [Reviewable.statuses[:approved], Reviewable.statuses[:deleted]]
-        ham_status = [Reviewable.statuses[:rejected], Reviewable.statuses[:ignored]]
+      class << self
+        def generate(min_date: 1.week.ago)
+          spam_status = [Reviewable.statuses[:approved], Reviewable.statuses[:deleted]]
+          ham_status = [Reviewable.statuses[:rejected], Reviewable.statuses[:ignored]]
 
-        sql = <<~SQL
+          sql = <<~SQL
           WITH spam_stats AS (
             SELECT
               asl.reviewable_id,
@@ -35,13 +36,14 @@ module DiscourseAi
           FROM spam_stats
         SQL
 
-        DB.query(
-          sql,
-          spam: spam_status,
-          ham: ham_status,
-          min_date: min_date,
-          spam_score_type: ReviewableScore.types[:spam],
-        ).first
+          DB.query(
+            sql,
+            spam: spam_status,
+            ham: ham_status,
+            min_date: min_date,
+            spam_score_type: ReviewableScore.types[:spam],
+          ).first
+        end
       end
     end
   end

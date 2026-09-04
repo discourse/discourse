@@ -3,8 +3,9 @@
 class BadgePostsViewManager
   VIEW_NAME = "badge_posts"
 
-  def self.create!
-    sql = <<~SQL
+  class << self
+    def create!
+      sql = <<~SQL
     CREATE VIEW #{VIEW_NAME} AS
     SELECT p.*
     FROM posts p
@@ -18,17 +19,17 @@ class BadgePostsViewManager
           p.post_type IN (1,2,3)
     SQL
 
-    DB.exec(sql)
-    raise "Failed to create '#{VIEW_NAME}' view" unless badge_posts_view_exists?
-  end
+      DB.exec(sql)
+      raise "Failed to create '#{VIEW_NAME}' view" unless badge_posts_view_exists?
+    end
 
-  def self.drop!
-    DB.exec("DROP VIEW #{VIEW_NAME}")
-    raise "Failed to drop '#{VIEW_NAME}' view" if badge_posts_view_exists?
-  end
+    def drop!
+      DB.exec("DROP VIEW #{VIEW_NAME}")
+      raise "Failed to drop '#{VIEW_NAME}' view" if badge_posts_view_exists?
+    end
 
-  def self.badge_posts_view_exists?
-    sql = <<~SQL
+    def badge_posts_view_exists?
+      sql = <<~SQL
     SELECT 1
     FROM pg_catalog.pg_views
     WHERE schemaname
@@ -36,6 +37,7 @@ class BadgePostsViewManager
     AND viewname = '#{VIEW_NAME}';
     SQL
 
-    DB.exec(sql) == 1
+      DB.exec(sql) == 1
+    end
   end
 end

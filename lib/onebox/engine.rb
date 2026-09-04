@@ -2,46 +2,48 @@
 
 module Onebox
   module Engine
-    def self.included(object)
-      object.extend(ClassMethods)
-      object.singleton_class.class_eval do
-        def method_added(method_name)
-          if method_name == :matches_path
-            raise "Define matches_path as a class method (def self.matches_path) in #{self}"
+    class << self
+      def included(object)
+        object.extend(ClassMethods)
+        object.singleton_class.class_eval do
+          def method_added(method_name)
+            if method_name == :matches_path
+              raise "Define matches_path as a class method (def self.matches_path) in #{self}"
+            end
           end
         end
       end
-    end
 
-    def self.engines
-      constants.select { |constant| constant.to_s =~ /Onebox\z/ }.sort.map(&method(:const_get))
-    end
+      def engines
+        constants.select { |constant| constant.to_s =~ /Onebox\z/ }.sort.map(&method(:const_get))
+      end
 
-    def self.all_iframe_origins
-      engines.flat_map { |e| e.iframe_origins }.uniq.compact
-    end
+      def all_iframe_origins
+        engines.flat_map { |e| e.iframe_origins }.uniq.compact
+      end
 
-    def self.origins_to_regexes(origins)
-      return [/.*/] if origins.include?("*")
+      def origins_to_regexes(origins)
+        return [/.*/] if origins.include?("*")
 
-      origins.map do |origin|
-        escaped_origin = Regexp.escape(origin)
-        if origin.start_with?("*.", "https://*.", "http://*.")
-          escaped_origin = escaped_origin.sub("\\*") { "[^/?#\\\\]*" }
-        end
-
-        origin_boundary =
-          if origin.match?(%r{\Ahttps?://[^/?#]+\z}i)
-            if origin.match?(/:\d+\z/)
-              "(?:[/?#]|\\z)"
-            else
-              "(?::\\d+(?:[/?#]|\\z)|[/?#]|\\z)"
-            end
-          else
-            ""
+        origins.map do |origin|
+          escaped_origin = Regexp.escape(origin)
+          if origin.start_with?("*.", "https://*.", "http://*.")
+            escaped_origin = escaped_origin.sub("\\*") { "[^/?#\\\\]*" }
           end
 
-        Regexp.new("\\A#{escaped_origin}#{origin_boundary}", "i")
+          origin_boundary =
+            if origin.match?(%r{\Ahttps?://[^/?#]+\z}i)
+              if origin.match?(/:\d+\z/)
+                "(?:[/?#]|\\z)"
+              else
+                "(?::\\d+(?:[/?#]|\\z)|[/?#]|\\z)"
+              end
+            else
+              ""
+            end
+
+          Regexp.new("\\A#{escaped_origin}#{origin_boundary}", "i")
+        end
       end
     end
 

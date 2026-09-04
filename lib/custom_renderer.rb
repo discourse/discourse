@@ -11,6 +11,10 @@ class CustomRenderer < AbstractController::Base
   self.view_paths = "app/views"
   include CurrentUser
 
+  def initialize(parent)
+    @parent = parent
+  end
+
   def action_name
     ""
   end
@@ -25,9 +29,5 @@ class CustomRenderer < AbstractController::Base
 
   def session
     @parent.public_send(:session)
-  end
-
-  def initialize(parent)
-    @parent = parent
   end
 end

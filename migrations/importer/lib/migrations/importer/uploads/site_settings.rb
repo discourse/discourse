@@ -7,6 +7,12 @@ module Migrations
         class S3UploadsConfigurationError < StandardError
         end
 
+        class << self
+          def configure!(options)
+            new(options).configure!
+          end
+        end
+
         def initialize(options)
           @options = options
         end
@@ -15,10 +21,6 @@ module Migrations
           configure_basic_uploads
           configure_multisite if @options[:multisite]
           configure_s3 if @options[:enable_s3_uploads]
-        end
-
-        def self.configure!(options)
-          new(options).configure!
         end
 
         private
@@ -34,11 +36,14 @@ module Migrations
           Rails.configuration.multisite = true
 
           RailsMultisite::ConnectionManagement.class_eval do
-            def self.current_db_override=(value)
-              @current_db_override = value
-            end
-            def self.current_db
-              @current_db_override
+            class << self
+              def current_db_override=(value)
+                @current_db_override = value
+              end
+
+              def current_db
+                @current_db_override
+              end
             end
           end
 

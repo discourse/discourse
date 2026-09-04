@@ -113,13 +113,21 @@ after_initialize do
   # alphabetically) — refresh it so chat transcripts quoted inside posts can
   # cook room hashtags too. The snapshot also bakes in each source's enabled?
   # state, so it must be refreshed again when voice_enabled toggles.
-  def self.refresh_chat_hashtag_configurations
-    return unless defined?(::Chat) && Site.markdown_additional_options["chat"]
+  refresh_chat_hashtag_configurations =
+    lambda do
+      next unless defined?(::Chat) && Site.markdown_additional_options["chat"]
 
-    Site.markdown_additional_options["chat"][
-      :hashtag_configurations
-    ] = HashtagAutocompleteService.contexts_with_ordered_types
-  end
+      Site.markdown_additional_options["chat"][
+        :hashtag_configurations
+      ] = HashtagAutocompleteService.contexts_with_ordered_types
+    end
+
+  clear_all_voice_statuses =
+    lambda do
+      UserStatus
+        .where(emoji: [Voice::UserStatusManager::EMOJI, Voice::UserStatusManager::AFK_EMOJI])
+        .find_each { |status| User.find_by(id: status.user_id)&.clear_status! }
+    end
 
   # Rooms rank below chat channels (200) but above categories (100) in the
   # chat composer, and below everything (category 100, tag 50, channel 10) in
@@ -127,7 +135,7 @@ after_initialize do
   register_hashtag_data_source(Voice::RoomHashtagDataSource)
   register_hashtag_type_priority_for_context("room", "chat-composer", 150)
   register_hashtag_type_priority_for_context("room", "topic-composer", 5)
-  refresh_chat_hashtag_configurations
+  refresh_chat_hashtag_configurations.call
 
   # Gates the user-card call button: the viewer needs the direct-call
   # permission and the target must be callable by them — voice-room access,
@@ -163,8 +171,8 @@ after_initialize do
   # covers the disabling transition itself.
   on_enabled_change do |_old_value, new_value|
     Voice::DefaultRoomSeeder.ensure! if new_value
-    clear_all_voice_statuses unless new_value
-    refresh_chat_hashtag_configurations
+    clear_all_voice_statuses.call unless new_value
+    refresh_chat_hashtag_configurations.call
   end
 
   on(:user_destroyed) do |user|
@@ -186,7 +194,7 @@ after_initialize do
       end
     end
 
-    clear_all_voice_statuses if name.to_sym == :voice_auto_status_enabled && !new_value
+    clear_all_voice_statuses.call if name.to_sym == :voice_auto_status_enabled && !new_value
 
     # Surface a bad URL or key pair on the admin status panel within seconds
     # of saving, not at the first user's failed join.
@@ -198,11 +206,5 @@ after_initialize do
       voice_livekit_mesh_fallback
     ]
     Jobs.enqueue(:voice_livekit_probe) if livekit_settings.include?(name.to_sym)
-  end
-
-  def self.clear_all_voice_statuses
-    UserStatus
-      .where(emoji: [Voice::UserStatusManager::EMOJI, Voice::UserStatusManager::AFK_EMOJI])
-      .find_each { |status| User.find_by(id: status.user_id)&.clear_status! }
   end
 end

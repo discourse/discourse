@@ -15,30 +15,32 @@ class UserExport < ActiveRecord::Base
 
   DESTROY_CREATED_BEFORE = 2.days
 
-  def self.remove_old_exports
-    UserExport
-      .where("created_at < ?", DESTROY_CREATED_BEFORE.ago)
-      .find_each do |user_export|
-        UserExport.transaction do
-          Post.where(topic_id: user_export.topic_id).find_each { |p| p.destroy! }
-          user_export.destroy!
-        rescue => e
-          Rails.logger.warn(
-            "Failed to remove user_export record with id #{user_export.id}: #{e.message}\n#{e.backtrace.join("\n")}",
-          )
+  class << self
+    def remove_old_exports
+      UserExport
+        .where("created_at < ?", DESTROY_CREATED_BEFORE.ago)
+        .find_each do |user_export|
+          UserExport.transaction do
+            Post.where(topic_id: user_export.topic_id).find_each { |p| p.destroy! }
+            user_export.destroy!
+          rescue => e
+            Rails.logger.warn(
+              "Failed to remove user_export record with id #{user_export.id}: #{e.message}\n#{e.backtrace.join("\n")}",
+            )
+          end
         end
-      end
+    end
+
+    def base_directory
+      Rails
+        .public_path
+        .join("uploads", "csv_exports", RailsMultisite::ConnectionManagement.current_db)
+        .to_s
+    end
   end
 
   def retain_hours
     (created_at + DESTROY_CREATED_BEFORE - Time.zone.now).to_i / 1.hour
-  end
-
-  def self.base_directory
-    Rails
-      .public_path
-      .join("uploads", "csv_exports", RailsMultisite::ConnectionManagement.current_db)
-      .to_s
   end
 end
 

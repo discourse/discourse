@@ -68,6 +68,496 @@ class BulkImport::Base
     "utf8" => Encoding::UTF_8,
   }
 
+  MAPPING_TYPES =
+    Enum.new(
+      upload: 1,
+      badge: 2,
+      poll: 3,
+      poll_option: 4,
+      direct_message_channel: 5,
+      chat_channel: 6,
+      chat_thread: 7,
+      chat_message: 8,
+      discourse_reactions_reaction: 9,
+    )
+
+  GROUP_COLUMNS = %i[
+    id
+    name
+    full_name
+    public_admission
+    public_exit
+    allow_membership_requests
+    title
+    bio_raw
+    bio_cooked
+    visibility_level
+    members_visibility_level
+    mentionable_level
+    messageable_level
+    created_at
+    updated_at
+  ]
+  USER_COLUMNS = %i[
+    id
+    username
+    username_lower
+    name
+    locale
+    title
+    active
+    staged
+    trust_level
+    manual_locked_trust_level
+    admin
+    moderator
+    approved
+    approved_at
+    approved_by_id
+    date_of_birth
+    ip_address
+    registration_ip_address
+    primary_group_id
+    suspended_at
+    suspended_till
+    last_seen_at
+    last_emailed_at
+    created_at
+    updated_at
+  ]
+  USER_EMAIL_COLUMNS = %i[id user_id email primary created_at updated_at]
+  USER_STAT_COLUMNS = %i[
+    user_id
+    topics_entered
+    time_read
+    days_visited
+    posts_read_count
+    likes_given
+    likes_received
+    new_since
+    read_faq
+    first_post_created_at
+    post_count
+    topic_count
+    bounce_score
+    reset_bounce_score_after
+    digest_attempted_at
+  ]
+  USER_HISTORY_COLUMNS = %i[action acting_user_id target_user_id details created_at updated_at]
+  USER_AVATAR_COLUMNS = %i[id user_id custom_upload_id created_at updated_at]
+  USER_PROFILE_COLUMNS = %i[user_id location website bio_raw bio_cooked views]
+  USER_SSO_RECORD_COLUMNS = %i[
+    id
+    user_id
+    external_id
+    last_payload
+    created_at
+    updated_at
+    external_username
+    external_email
+    external_name
+    external_avatar_url
+    external_profile_background_url
+    external_card_background_url
+  ]
+  USER_ASSOCIATED_ACCOUNT_COLUMNS = %i[
+    provider_name
+    provider_uid
+    user_id
+    last_used
+    info
+    credentials
+    extra
+    created_at
+    updated_at
+  ]
+  USER_OPTION_COLUMNS = %i[
+    user_id
+    mailing_list_mode
+    mailing_list_mode_frequency
+    email_level
+    email_messages_level
+    email_previous_replies
+    email_in_reply_to
+    email_digests
+    digest_after_minutes
+    include_tl0_in_digests
+    automatically_unpin_topics
+    enable_quoting
+    enable_smart_lists
+    enable_markdown_monospace_font
+    external_links_in_new_tab
+    dynamic_favicon
+    new_topic_duration_minutes
+    auto_track_topics_after_msecs
+    notification_level_when_replying
+    like_notification_frequency
+    skip_new_user_tips
+    hide_profile_and_presence
+    hide_profile
+    hide_presence
+    sidebar_link_to_filtered_list
+    sidebar_show_count_of_new_items
+    timezone
+    composition_mode
+  ]
+  USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
+  GROUP_USER_COLUMNS = %i[group_id user_id owner created_at updated_at]
+  USER_CUSTOM_FIELD_COLUMNS = %i[user_id name value created_at updated_at]
+  POST_CUSTOM_FIELD_COLUMNS = %i[post_id name value created_at updated_at]
+  TOPIC_CUSTOM_FIELD_COLUMNS = %i[topic_id name value created_at updated_at]
+  USER_ACTION_COLUMNS = %i[
+    action_type
+    user_id
+    target_topic_id
+    target_post_id
+    target_user_id
+    acting_user_id
+    created_at
+    updated_at
+  ]
+  MUTED_USER_COLUMNS = %i[user_id muted_user_id created_at updated_at]
+  CATEGORY_COLUMNS = %i[
+    id
+    name
+    name_lower
+    slug
+    user_id
+    description
+    position
+    parent_category_id
+    uploaded_logo_id
+    created_at
+    updated_at
+    show_subcategory_list
+    subcategory_list_style
+    minimum_required_tags
+    color
+    text_color
+  ]
+  CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
+  CATEGORY_GROUP_COLUMNS = %i[id category_id group_id permission_type created_at updated_at]
+  CATEGORY_TAG_GROUP_COLUMNS = %i[category_id tag_group_id created_at updated_at]
+  CATEGORY_USER_COLUMNS = %i[category_id user_id notification_level last_seen_at]
+  CATEGORY_MODERATION_GROUP_COLUMNS = %i[category_id group_id created_at updated_at]
+  TOPIC_COLUMNS = %i[
+    id
+    archetype
+    title
+    fancy_title
+    slug
+    user_id
+    last_post_user_id
+    category_id
+    visible
+    closed
+    archived
+    pinned_at
+    pinned_until
+    pinned_globally
+    views
+    subtype
+    created_at
+    bumped_at
+    updated_at
+  ]
+  POST_COLUMNS = %i[
+    id
+    user_id
+    last_editor_id
+    topic_id
+    post_number
+    sort_order
+    reply_to_post_number
+    like_count
+    raw
+    cooked
+    hidden
+    word_count
+    created_at
+    last_version_at
+    updated_at
+  ]
+  POST_ACTION_COLUMNS = %i[
+    id
+    post_id
+    user_id
+    post_action_type_id
+    deleted_at
+    created_at
+    updated_at
+    deleted_by_id
+    related_post_id
+    staff_took_action
+    deferred_by_id
+    targets_topic
+    agreed_at
+    agreed_by_id
+    deferred_at
+    disagreed_at
+    disagreed_by_id
+  ]
+  TOPIC_ALLOWED_USER_COLUMNS = %i[topic_id user_id created_at updated_at]
+  TOPIC_ALLOWED_GROUP_COLUMNS = %i[topic_id group_id created_at updated_at]
+  TOPIC_TAG_COLUMNS = %i[topic_id tag_id created_at updated_at]
+  TOPIC_USER_COLUMNS = %i[
+    user_id
+    topic_id
+    last_read_post_number
+    last_visited_at
+    first_visited_at
+    notification_level
+    notifications_changed_at
+    notifications_reason_id
+    total_msecs_viewed
+  ]
+  BOOKMARK_COLUMNS = %i[
+    id
+    user_id
+    bookmarkable_id
+    bookmarkable_type
+    name
+    reminder_at
+    reminder_set_at
+    reminder_last_sent_at
+    auto_delete_preference
+    pinned
+    created_at
+    updated_at
+  ]
+  TAG_USER_COLUMNS = %i[tag_id user_id notification_level created_at updated_at]
+  UPLOAD_COLUMNS = %i[
+    id
+    user_id
+    original_filename
+    filesize
+    width
+    height
+    url
+    created_at
+    updated_at
+    sha1
+    origin
+    retain_hours
+    extension
+    thumbnail_width
+    thumbnail_height
+    etag
+    secure
+    access_control_post_id
+    original_sha1
+    animated
+    verification_status
+    security_last_changed_at
+    security_last_changed_reason
+    dominant_color
+  ]
+  UPLOAD_REFERENCE_COLUMNS = %i[upload_id target_type target_id created_at updated_at]
+  OPTIMIZED_IMAGE_COLUMNS = %i[
+    sha1
+    extension
+    width
+    height
+    upload_id
+    url
+    filesize
+    etag
+    version
+    created_at
+    updated_at
+  ]
+  POST_VOTING_VOTE_COLUMNS = %i[user_id votable_type votable_id direction created_at]
+  TOPIC_VOTING_COLUMNS = %i[topic_id user_id archive created_at updated_at]
+  BADGE_COLUMNS = %i[
+    id
+    name
+    description
+    badge_type_id
+    badge_grouping_id
+    long_description
+    image_upload_id
+    created_at
+    updated_at
+    multiple_grant
+    query
+    allow_title
+    icon
+    listable
+    target_posts
+    enabled
+    auto_revoke
+    trigger
+    show_posts
+  ]
+  USER_BADGE_COLUMNS = %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
+  GAMIFICATION_SCORE_EVENT_COLUMNS = %i[user_id date points description created_at updated_at]
+  SOLVED_TOPIC_COLUMNS = %i[topic_id created_at updated_at]
+  TOPIC_ANSWER_COLUMNS = %i[solved_topic_id answer_post_id accepter_user_id created_at updated_at]
+  POST_EVENT_COLUMNS = %i[
+    id
+    status
+    original_starts_at
+    original_ends_at
+    deleted_at
+    raw_invitees
+    name
+    url
+    custom_fields
+    reminders
+    recurrence
+    timezone
+    minimal
+  ]
+  POST_EVENT_DATES_COLUMNS = %i[
+    event_id
+    starts_at
+    ends_at
+    reminder_counter
+    event_will_start_sent_at
+    event_started_sent_at
+    finished_at
+    created_at
+    updated_at
+  ]
+  POLL_COLUMNS = %i[
+    id
+    post_id
+    name
+    close_at
+    type
+    status
+    results
+    visibility
+    min
+    max
+    step
+    anonymous_voters
+    created_at
+    updated_at
+    chart_type
+    groups
+    title
+  ]
+  POLL_OPTION_COLUMNS = %i[id poll_id digest html anonymous_votes created_at updated_at]
+  POLL_VOTE_COLUMNS = %i[poll_id poll_option_id user_id created_at updated_at]
+  PLUGIN_STORE_ROW_COLUMNS = %i[plugin_name key type_name value]
+  PERMALINK_COLUMNS = %i[
+    url
+    topic_id
+    post_id
+    category_id
+    tag_id
+    user_id
+    external_url
+    created_at
+    updated_at
+  ]
+  CHAT_DIRECT_MESSAGE_CHANNEL_COLUMNS = %i[id group created_at updated_at]
+  CHAT_CHANNEL_COLUMNS = %i[
+    id
+    name
+    description
+    slug
+    status
+    chatable_id
+    chatable_type
+    user_count
+    messages_count
+    type
+    created_at
+    updated_at
+    allow_channel_wide_mentions
+    auto_join_users
+    threading_enabled
+  ]
+  USER_CHAT_CHANNEL_MEMBERSHIP_COLUMNS = %i[
+    chat_channel_id
+    user_id
+    created_at
+    updated_at
+    following
+    muted
+    desktop_notification_level
+    mobile_notification_level
+    last_read_message_id
+    join_mode
+    last_viewed_at
+  ]
+  DIRECT_MESSAGE_USER_COLUMNS = %i[direct_message_channel_id user_id created_at updated_at]
+  CHAT_THREAD_COLUMNS = %i[
+    id
+    channel_id
+    original_message_id
+    original_message_user_id
+    status
+    title
+    created_at
+    updated_at
+    replies_count
+  ]
+  USER_CHAT_THREAD_MEMBERSHIP_COLUMNS = %i[
+    user_id
+    thread_id
+    notification_level
+    created_at
+    updated_at
+  ]
+  CHAT_MESSAGE_COLUMNS = %i[
+    id
+    chat_channel_id
+    user_id
+    created_at
+    updated_at
+    deleted_at
+    deleted_by_id
+    in_reply_to_id
+    message
+    cooked
+    cooked_version
+    last_editor_id
+    thread_id
+  ]
+  CHAT_MESSAGE_REACTION_COLUMNS = %i[chat_message_id user_id emoji created_at updated_at]
+  CHAT_MENTION_COLUMNS = %i[chat_message_id target_id type created_at updated_at]
+  REACTION_USER_COLUMNS = %i[reaction_id user_id created_at updated_at post_id]
+  REACTION_COLUMNS = %i[
+    id
+    post_id
+    reaction_type
+    reaction_value
+    reaction_users_count
+    created_at
+    updated_at
+  ]
+  USER_OPTION_DEFAULTS = {
+    mailing_list_mode: SiteSetting.default_email_mailing_list_mode,
+    mailing_list_mode_frequency: SiteSetting.default_email_mailing_list_mode_frequency,
+    email_level: SiteSetting.default_email_level,
+    email_messages_level: SiteSetting.default_email_messages_level,
+    email_previous_replies: SiteSetting.default_email_previous_replies,
+    email_in_reply_to: SiteSetting.default_email_in_reply_to,
+    email_digests: SiteSetting.default_email_digest_frequency.to_i > 0,
+    digest_after_minutes: SiteSetting.default_email_digest_frequency,
+    include_tl0_in_digests: SiteSetting.default_include_tl0_in_digests,
+    automatically_unpin_topics: SiteSetting.default_topics_automatic_unpin,
+    enable_quoting: SiteSetting.default_other_enable_quoting,
+    enable_smart_lists: SiteSetting.default_other_enable_smart_lists,
+    enable_markdown_monospace_font: SiteSetting.default_other_enable_markdown_monospace_font,
+    external_links_in_new_tab: SiteSetting.default_other_external_links_in_new_tab,
+    dynamic_favicon: SiteSetting.default_other_dynamic_favicon,
+    new_topic_duration_minutes: SiteSetting.default_other_new_topic_duration_minutes,
+    auto_track_topics_after_msecs: SiteSetting.default_other_auto_track_topics_after_msecs,
+    notification_level_when_replying: SiteSetting.default_other_notification_level_when_replying,
+    like_notification_frequency: SiteSetting.default_other_like_notification_frequency,
+    skip_new_user_tips: SiteSetting.default_other_skip_new_user_tips,
+    hide_profile_and_presence: false,
+    hide_profile: SiteSetting.default_hide_profile,
+    hide_presence: SiteSetting.default_hide_presence,
+    sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
+    sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
+    composition_mode: SiteSetting.default_composition_mode,
+  }
+
   def initialize
     charset = ENV["DB_CHARSET"] || "utf8"
     db = ActiveRecord::Base.connection_db_config.configuration_hash
@@ -146,19 +636,6 @@ class BulkImport::Base
     I18n.t("test")
     ActiveSupport::Inflector.transliterate("test")
   end
-
-  MAPPING_TYPES =
-    Enum.new(
-      upload: 1,
-      badge: 2,
-      poll: 3,
-      poll_option: 4,
-      direct_message_channel: 5,
-      chat_channel: 6,
-      chat_thread: 7,
-      chat_message: 8,
-      discourse_reactions_reaction: 9,
-    )
 
   def create_migration_mappings_table
     puts "Creating migration mappings table..."
@@ -579,513 +1056,7 @@ class BulkImport::Base
     @discourse_reaction_mapping[id.to_s]&.to_i
   end
 
-  GROUP_COLUMNS = %i[
-    id
-    name
-    full_name
-    public_admission
-    public_exit
-    allow_membership_requests
-    title
-    bio_raw
-    bio_cooked
-    visibility_level
-    members_visibility_level
-    mentionable_level
-    messageable_level
-    created_at
-    updated_at
-  ]
   GROUP_COLUMNS << :assignable_level if defined?(DiscourseAssign)
-
-  USER_COLUMNS = %i[
-    id
-    username
-    username_lower
-    name
-    locale
-    title
-    active
-    staged
-    trust_level
-    manual_locked_trust_level
-    admin
-    moderator
-    approved
-    approved_at
-    approved_by_id
-    date_of_birth
-    ip_address
-    registration_ip_address
-    primary_group_id
-    suspended_at
-    suspended_till
-    last_seen_at
-    last_emailed_at
-    created_at
-    updated_at
-  ]
-
-  USER_EMAIL_COLUMNS = %i[id user_id email primary created_at updated_at]
-
-  USER_STAT_COLUMNS = %i[
-    user_id
-    topics_entered
-    time_read
-    days_visited
-    posts_read_count
-    likes_given
-    likes_received
-    new_since
-    read_faq
-    first_post_created_at
-    post_count
-    topic_count
-    bounce_score
-    reset_bounce_score_after
-    digest_attempted_at
-  ]
-
-  USER_HISTORY_COLUMNS = %i[action acting_user_id target_user_id details created_at updated_at]
-
-  USER_AVATAR_COLUMNS = %i[id user_id custom_upload_id created_at updated_at]
-
-  USER_PROFILE_COLUMNS = %i[user_id location website bio_raw bio_cooked views]
-
-  USER_SSO_RECORD_COLUMNS = %i[
-    id
-    user_id
-    external_id
-    last_payload
-    created_at
-    updated_at
-    external_username
-    external_email
-    external_name
-    external_avatar_url
-    external_profile_background_url
-    external_card_background_url
-  ]
-
-  USER_ASSOCIATED_ACCOUNT_COLUMNS = %i[
-    provider_name
-    provider_uid
-    user_id
-    last_used
-    info
-    credentials
-    extra
-    created_at
-    updated_at
-  ]
-
-  USER_OPTION_COLUMNS = %i[
-    user_id
-    mailing_list_mode
-    mailing_list_mode_frequency
-    email_level
-    email_messages_level
-    email_previous_replies
-    email_in_reply_to
-    email_digests
-    digest_after_minutes
-    include_tl0_in_digests
-    automatically_unpin_topics
-    enable_quoting
-    enable_smart_lists
-    enable_markdown_monospace_font
-    external_links_in_new_tab
-    dynamic_favicon
-    new_topic_duration_minutes
-    auto_track_topics_after_msecs
-    notification_level_when_replying
-    like_notification_frequency
-    skip_new_user_tips
-    hide_profile_and_presence
-    hide_profile
-    hide_presence
-    sidebar_link_to_filtered_list
-    sidebar_show_count_of_new_items
-    timezone
-    composition_mode
-  ]
-
-  USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
-
-  GROUP_USER_COLUMNS = %i[group_id user_id owner created_at updated_at]
-
-  USER_CUSTOM_FIELD_COLUMNS = %i[user_id name value created_at updated_at]
-
-  POST_CUSTOM_FIELD_COLUMNS = %i[post_id name value created_at updated_at]
-
-  TOPIC_CUSTOM_FIELD_COLUMNS = %i[topic_id name value created_at updated_at]
-
-  USER_ACTION_COLUMNS = %i[
-    action_type
-    user_id
-    target_topic_id
-    target_post_id
-    target_user_id
-    acting_user_id
-    created_at
-    updated_at
-  ]
-
-  MUTED_USER_COLUMNS = %i[user_id muted_user_id created_at updated_at]
-
-  CATEGORY_COLUMNS = %i[
-    id
-    name
-    name_lower
-    slug
-    user_id
-    description
-    position
-    parent_category_id
-    uploaded_logo_id
-    created_at
-    updated_at
-    show_subcategory_list
-    subcategory_list_style
-    minimum_required_tags
-    color
-    text_color
-  ]
-
-  CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
-
-  CATEGORY_GROUP_COLUMNS = %i[id category_id group_id permission_type created_at updated_at]
-
-  CATEGORY_TAG_GROUP_COLUMNS = %i[category_id tag_group_id created_at updated_at]
-
-  CATEGORY_USER_COLUMNS = %i[category_id user_id notification_level last_seen_at]
-
-  CATEGORY_MODERATION_GROUP_COLUMNS = %i[category_id group_id created_at updated_at]
-
-  TOPIC_COLUMNS = %i[
-    id
-    archetype
-    title
-    fancy_title
-    slug
-    user_id
-    last_post_user_id
-    category_id
-    visible
-    closed
-    archived
-    pinned_at
-    pinned_until
-    pinned_globally
-    views
-    subtype
-    created_at
-    bumped_at
-    updated_at
-  ]
-
-  POST_COLUMNS = %i[
-    id
-    user_id
-    last_editor_id
-    topic_id
-    post_number
-    sort_order
-    reply_to_post_number
-    like_count
-    raw
-    cooked
-    hidden
-    word_count
-    created_at
-    last_version_at
-    updated_at
-  ]
-
-  POST_ACTION_COLUMNS = %i[
-    id
-    post_id
-    user_id
-    post_action_type_id
-    deleted_at
-    created_at
-    updated_at
-    deleted_by_id
-    related_post_id
-    staff_took_action
-    deferred_by_id
-    targets_topic
-    agreed_at
-    agreed_by_id
-    deferred_at
-    disagreed_at
-    disagreed_by_id
-  ]
-
-  TOPIC_ALLOWED_USER_COLUMNS = %i[topic_id user_id created_at updated_at]
-
-  TOPIC_ALLOWED_GROUP_COLUMNS = %i[topic_id group_id created_at updated_at]
-
-  TOPIC_TAG_COLUMNS = %i[topic_id tag_id created_at updated_at]
-
-  TOPIC_USER_COLUMNS = %i[
-    user_id
-    topic_id
-    last_read_post_number
-    last_visited_at
-    first_visited_at
-    notification_level
-    notifications_changed_at
-    notifications_reason_id
-    total_msecs_viewed
-  ]
-
-  BOOKMARK_COLUMNS = %i[
-    id
-    user_id
-    bookmarkable_id
-    bookmarkable_type
-    name
-    reminder_at
-    reminder_set_at
-    reminder_last_sent_at
-    auto_delete_preference
-    pinned
-    created_at
-    updated_at
-  ]
-
-  TAG_USER_COLUMNS = %i[tag_id user_id notification_level created_at updated_at]
-
-  UPLOAD_COLUMNS = %i[
-    id
-    user_id
-    original_filename
-    filesize
-    width
-    height
-    url
-    created_at
-    updated_at
-    sha1
-    origin
-    retain_hours
-    extension
-    thumbnail_width
-    thumbnail_height
-    etag
-    secure
-    access_control_post_id
-    original_sha1
-    animated
-    verification_status
-    security_last_changed_at
-    security_last_changed_reason
-    dominant_color
-  ]
-
-  UPLOAD_REFERENCE_COLUMNS = %i[upload_id target_type target_id created_at updated_at]
-
-  OPTIMIZED_IMAGE_COLUMNS = %i[
-    sha1
-    extension
-    width
-    height
-    upload_id
-    url
-    filesize
-    etag
-    version
-    created_at
-    updated_at
-  ]
-
-  POST_VOTING_VOTE_COLUMNS = %i[user_id votable_type votable_id direction created_at]
-
-  TOPIC_VOTING_COLUMNS = %i[topic_id user_id archive created_at updated_at]
-
-  BADGE_COLUMNS = %i[
-    id
-    name
-    description
-    badge_type_id
-    badge_grouping_id
-    long_description
-    image_upload_id
-    created_at
-    updated_at
-    multiple_grant
-    query
-    allow_title
-    icon
-    listable
-    target_posts
-    enabled
-    auto_revoke
-    trigger
-    show_posts
-  ]
-
-  USER_BADGE_COLUMNS = %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
-
-  GAMIFICATION_SCORE_EVENT_COLUMNS = %i[user_id date points description created_at updated_at]
-
-  SOLVED_TOPIC_COLUMNS = %i[topic_id created_at updated_at]
-  TOPIC_ANSWER_COLUMNS = %i[solved_topic_id answer_post_id accepter_user_id created_at updated_at]
-
-  POST_EVENT_COLUMNS = %i[
-    id
-    status
-    original_starts_at
-    original_ends_at
-    deleted_at
-    raw_invitees
-    name
-    url
-    custom_fields
-    reminders
-    recurrence
-    timezone
-    minimal
-  ]
-
-  POST_EVENT_DATES_COLUMNS = %i[
-    event_id
-    starts_at
-    ends_at
-    reminder_counter
-    event_will_start_sent_at
-    event_started_sent_at
-    finished_at
-    created_at
-    updated_at
-  ]
-
-  POLL_COLUMNS = %i[
-    id
-    post_id
-    name
-    close_at
-    type
-    status
-    results
-    visibility
-    min
-    max
-    step
-    anonymous_voters
-    created_at
-    updated_at
-    chart_type
-    groups
-    title
-  ]
-
-  POLL_OPTION_COLUMNS = %i[id poll_id digest html anonymous_votes created_at updated_at]
-
-  POLL_VOTE_COLUMNS = %i[poll_id poll_option_id user_id created_at updated_at]
-
-  PLUGIN_STORE_ROW_COLUMNS = %i[plugin_name key type_name value]
-
-  PERMALINK_COLUMNS = %i[
-    url
-    topic_id
-    post_id
-    category_id
-    tag_id
-    user_id
-    external_url
-    created_at
-    updated_at
-  ]
-
-  CHAT_DIRECT_MESSAGE_CHANNEL_COLUMNS = %i[id group created_at updated_at]
-
-  CHAT_CHANNEL_COLUMNS = %i[
-    id
-    name
-    description
-    slug
-    status
-    chatable_id
-    chatable_type
-    user_count
-    messages_count
-    type
-    created_at
-    updated_at
-    allow_channel_wide_mentions
-    auto_join_users
-    threading_enabled
-  ]
-
-  USER_CHAT_CHANNEL_MEMBERSHIP_COLUMNS = %i[
-    chat_channel_id
-    user_id
-    created_at
-    updated_at
-    following
-    muted
-    desktop_notification_level
-    mobile_notification_level
-    last_read_message_id
-    join_mode
-    last_viewed_at
-  ]
-
-  DIRECT_MESSAGE_USER_COLUMNS = %i[direct_message_channel_id user_id created_at updated_at]
-
-  CHAT_THREAD_COLUMNS = %i[
-    id
-    channel_id
-    original_message_id
-    original_message_user_id
-    status
-    title
-    created_at
-    updated_at
-    replies_count
-  ]
-
-  USER_CHAT_THREAD_MEMBERSHIP_COLUMNS = %i[
-    user_id
-    thread_id
-    notification_level
-    created_at
-    updated_at
-  ]
-
-  CHAT_MESSAGE_COLUMNS = %i[
-    id
-    chat_channel_id
-    user_id
-    created_at
-    updated_at
-    deleted_at
-    deleted_by_id
-    in_reply_to_id
-    message
-    cooked
-    cooked_version
-    last_editor_id
-    thread_id
-  ]
-
-  CHAT_MESSAGE_REACTION_COLUMNS = %i[chat_message_id user_id emoji created_at updated_at]
-
-  CHAT_MENTION_COLUMNS = %i[chat_message_id target_id type created_at updated_at]
-
-  REACTION_USER_COLUMNS = %i[reaction_id user_id created_at updated_at post_id]
-
-  REACTION_COLUMNS = %i[
-    id
-    post_id
-    reaction_type
-    reaction_value
-    reaction_users_count
-    created_at
-    updated_at
-  ]
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
@@ -1541,35 +1512,6 @@ class BulkImport::Base
     user_profile[:views] ||= 0
     user_profile
   end
-
-  USER_OPTION_DEFAULTS = {
-    mailing_list_mode: SiteSetting.default_email_mailing_list_mode,
-    mailing_list_mode_frequency: SiteSetting.default_email_mailing_list_mode_frequency,
-    email_level: SiteSetting.default_email_level,
-    email_messages_level: SiteSetting.default_email_messages_level,
-    email_previous_replies: SiteSetting.default_email_previous_replies,
-    email_in_reply_to: SiteSetting.default_email_in_reply_to,
-    email_digests: SiteSetting.default_email_digest_frequency.to_i > 0,
-    digest_after_minutes: SiteSetting.default_email_digest_frequency,
-    include_tl0_in_digests: SiteSetting.default_include_tl0_in_digests,
-    automatically_unpin_topics: SiteSetting.default_topics_automatic_unpin,
-    enable_quoting: SiteSetting.default_other_enable_quoting,
-    enable_smart_lists: SiteSetting.default_other_enable_smart_lists,
-    enable_markdown_monospace_font: SiteSetting.default_other_enable_markdown_monospace_font,
-    external_links_in_new_tab: SiteSetting.default_other_external_links_in_new_tab,
-    dynamic_favicon: SiteSetting.default_other_dynamic_favicon,
-    new_topic_duration_minutes: SiteSetting.default_other_new_topic_duration_minutes,
-    auto_track_topics_after_msecs: SiteSetting.default_other_auto_track_topics_after_msecs,
-    notification_level_when_replying: SiteSetting.default_other_notification_level_when_replying,
-    like_notification_frequency: SiteSetting.default_other_like_notification_frequency,
-    skip_new_user_tips: SiteSetting.default_other_skip_new_user_tips,
-    hide_profile_and_presence: false,
-    hide_profile: SiteSetting.default_hide_profile,
-    hide_presence: SiteSetting.default_hide_presence,
-    sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
-    sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
-    composition_mode: SiteSetting.default_composition_mode,
-  }
 
   def process_user_option(user_option)
     if !user_option[:hide_profile_and_presence].nil?

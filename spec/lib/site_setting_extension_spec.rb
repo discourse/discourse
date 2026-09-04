@@ -421,12 +421,14 @@ RSpec.describe SiteSettingExtension do
 
   describe "int enum" do
     class TestIntEnumClass
-      def self.valid_value?(v)
-        true
-      end
+      class << self
+        def valid_value?(v)
+          true
+        end
 
-      def self.values
-        [1, 2, 3]
+        def values
+          [1, 2, 3]
+        end
       end
     end
 
@@ -441,16 +443,18 @@ RSpec.describe SiteSettingExtension do
 
   describe "enum setting" do
     class TestEnumClass
-      def self.valid_value?(v)
-        values.include?(v)
-      end
+      class << self
+        def valid_value?(v)
+          values.include?(v)
+        end
 
-      def self.values
-        ["en"]
-      end
+        def values
+          ["en"]
+        end
 
-      def self.translate_names?
-        false
+        def translate_names?
+          false
+        end
       end
     end
 

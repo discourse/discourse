@@ -11,8 +11,10 @@ module Onebox
       matches_domain("twitter.com", "www.twitter.com", "mobile.twitter.com", "x.com", "www.x.com")
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/.+?/status(es)?/\d+(/(video|photo)/\d?)?(/?\?.*)?/?$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/.+?/status(es)?/\d+(/(video|photo)/\d?)?(/?\?.*)?/?$})
+        end
       end
 
       def to_html(ignore_errors = false)

@@ -5,11 +5,14 @@ module Helpers
 
   class NotAThemeError < StandardError
   end
+
   class NotAComponentThemeError < StandardError
   end
 
-  def self.next_seq
-    @next_seq = (@next_seq || 0) + 1
+  class << self
+    def next_seq
+      @next_seq = (@next_seq || 0) + 1
+    end
   end
 
   def log_in(fabricator = nil)

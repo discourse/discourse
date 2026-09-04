@@ -5,17 +5,31 @@ module DiscourseZendeskPlugin
   end
 
   module Helper
-    def self.oauth_configured?
-      SiteSetting.zendesk_oauth_client_id.present? &&
-        SiteSetting.zendesk_oauth_client_secret.present?
-    end
+    class << self
+      def oauth_configured?
+        SiteSetting.zendesk_oauth_client_id.present? &&
+          SiteSetting.zendesk_oauth_client_secret.present?
+      end
 
-    def self.api_token_configured?
-      SiteSetting.zendesk_jobs_email.present? && SiteSetting.zendesk_jobs_api_token.present?
-    end
+      def api_token_configured?
+        SiteSetting.zendesk_jobs_email.present? && SiteSetting.zendesk_jobs_api_token.present?
+      end
 
-    def self.configured?
-      oauth_configured? || api_token_configured?
+      def configured?
+        oauth_configured? || api_token_configured?
+      end
+
+      public
+
+      def autogeneration_category?(category_id)
+        return false if category_id.blank?
+
+        if SiteSetting.zendesk_autogenerate_all_categories?
+          true
+        else
+          SiteSetting.zendesk_autogenerate_categories.split("|").include?(category_id.to_s)
+        end
+      end
     end
 
     def zendesk_client
@@ -44,16 +58,6 @@ module DiscourseZendeskPlugin
       end
 
       client
-    end
-
-    def self.autogeneration_category?(category_id)
-      return false if category_id.blank?
-
-      if SiteSetting.zendesk_autogenerate_all_categories?
-        true
-      else
-        SiteSetting.zendesk_autogenerate_categories.split("|").include?(category_id.to_s)
-      end
     end
 
     def create_ticket(post)

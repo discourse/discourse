@@ -8,8 +8,10 @@ class SearchController < ApplicationController
 
   PAGE_LIMIT = 10
 
-  def self.valid_context_types
-    %w[user topic category private_messages tag]
+  class << self
+    def valid_context_types
+      %w[user topic category private_messages tag]
+    end
   end
 
   def show

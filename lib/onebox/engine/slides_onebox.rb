@@ -10,8 +10,10 @@ module Onebox
       always_https
       requires_iframe_origins "https://slides.com"
 
-      def self.matches_path(path)
-        path.match?(%r{^/[\p{Alnum}_\-]+/[\p{Alnum}_\-]+$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/[\p{Alnum}_\-]+/[\p{Alnum}_\-]+$})
+        end
       end
 
       def to_html

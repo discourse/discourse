@@ -19,53 +19,27 @@ module DiscourseAi
                   :category,
                   :retry_after
 
-      def self.from_response(provider:, response:)
-        body =
-          begin
-            parsed = JSON.parse(response.body.to_s)
-            parsed.is_a?(Hash) ? parsed : {}
-          rescue JSON::ParserError
-            {}
-          end
-        attributes = provider_attributes(provider, body)
-        new(
-          provider: provider,
-          http_status: response.status,
-          provider_error_type: attributes[:type],
-          provider_error_code: attributes[:code],
-          category: classify(provider, response.status.to_i, attributes),
-          retry_after: retry_after(response.headers["retry-after"]),
-          message: attributes[:message],
-        )
-      end
-
-      def initialize(
-        provider:,
-        category:,
-        http_status: nil,
-        provider_error_type: nil,
-        provider_error_code: nil,
-        retry_after: nil,
-        message: nil
-      )
-        @provider = provider.to_s.first(100)
-        @category = category.to_sym
-        @http_status = http_status&.to_i
-        @provider_error_type = provider_error_type.to_s.first(100).presence
-        @provider_error_code = provider_error_code.to_s.first(100).presence
-        @retry_after = retry_after
-        super(sanitize(message).presence || "Embedding provider request failed (#{category})")
-      end
-
-      def terminal?
-        TERMINAL_CATEGORIES.include?(category)
-      end
-
-      def retryable?
-        RETRYABLE_CATEGORIES.include?(category)
-      end
-
       class << self
+        def from_response(provider:, response:)
+          body =
+            begin
+              parsed = JSON.parse(response.body.to_s)
+              parsed.is_a?(Hash) ? parsed : {}
+            rescue JSON::ParserError
+              {}
+            end
+          attributes = provider_attributes(provider, body)
+          new(
+            provider: provider,
+            http_status: response.status,
+            provider_error_type: attributes[:type],
+            provider_error_code: attributes[:code],
+            category: classify(provider, response.status.to_i, attributes),
+            retry_after: retry_after(response.headers["retry-after"]),
+            message: attributes[:message],
+          )
+        end
+
         private
 
         def provider_attributes(provider, body)
@@ -108,6 +82,32 @@ module DiscourseAi
           seconds = Integer(value, exception: false)
           seconds&.clamp(0, 300)
         end
+      end
+
+      def initialize(
+        provider:,
+        category:,
+        http_status: nil,
+        provider_error_type: nil,
+        provider_error_code: nil,
+        retry_after: nil,
+        message: nil
+      )
+        @provider = provider.to_s.first(100)
+        @category = category.to_sym
+        @http_status = http_status&.to_i
+        @provider_error_type = provider_error_type.to_s.first(100).presence
+        @provider_error_code = provider_error_code.to_s.first(100).presence
+        @retry_after = retry_after
+        super(sanitize(message).presence || "Embedding provider request failed (#{category})")
+      end
+
+      def terminal?
+        TERMINAL_CATEGORIES.include?(category)
+      end
+
+      def retryable?
+        RETRYABLE_CATEGORIES.include?(category)
       end
 
       private

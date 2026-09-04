@@ -717,12 +717,6 @@ class Guardian
     end
   end
 
-  def is_api?
-    @user && request&.env&.dig(Auth::DefaultCurrentUserProvider::API_KEY_ENV)
-  end
-
-  protected
-
   def category_group_moderation_allowed?
     authenticated? && SiteSetting.enable_category_group_moderation
   end
@@ -734,4 +728,10 @@ class Guardian
       },
     )
   end
+
+  def is_api?
+    @user && request&.env&.dig(Auth::DefaultCurrentUserProvider::API_KEY_ENV)
+  end
+
+  protected
 end

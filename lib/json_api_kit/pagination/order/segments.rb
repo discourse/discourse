@@ -8,7 +8,9 @@ module JsonApiKit
 
         delegate :each, :size, :last, :empty?, to: :segments
 
-        def self.for(keyset, digest: nil) = new(Segment.split(keyset, digest:))
+        class << self
+          def for(keyset, digest: nil) = new(Segment.split(keyset, digest:))
+        end
 
         def initialize(segments)
           @segments = segments

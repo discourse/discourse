@@ -4,35 +4,37 @@ module DiscourseWorkflows
   class WebhookResponse
     attr_reader :body, :headers, :status, :status_code, :workflow_data
 
-    def self.coerce(response)
-      return response if response.is_a?(self)
+    class << self
+      def coerce(response)
+        return response if response.is_a?(self)
 
-      response = response.to_h.with_indifferent_access
-      new(
-        body: response[:body],
-        headers: response[:headers] || {},
-        no_body: response[:no_body] || false,
-        status: response[:status],
-        status_code: response[:status_code] || response[:status],
-      )
-    end
+        response = response.to_h.with_indifferent_access
+        new(
+          body: response[:body],
+          headers: response[:headers] || {},
+          no_body: response[:no_body] || false,
+          status: response[:status],
+          status_code: response[:status_code] || response[:status],
+        )
+      end
 
-    def self.respond(status:, body: {}, headers: {})
-      new(body: body, headers: headers, status: status, status_code: status)
-    end
+      def respond(status:, body: {}, headers: {})
+        new(body: body, headers: headers, status: status, status_code: status)
+      end
 
-    def self.resume(workflow_data:, status: :ok, body: {}, headers: {})
-      new(
-        body: body,
-        headers: headers,
-        status: status,
-        status_code: status,
-        workflow_data: workflow_data,
-      )
-    end
+      def resume(workflow_data:, status: :ok, body: {}, headers: {})
+        new(
+          body: body,
+          headers: headers,
+          status: status,
+          status_code: status,
+          workflow_data: workflow_data,
+        )
+      end
 
-    def self.success
-      new(body: { success: true }, status_code: 200)
+      def success
+        new(body: { success: true }, status_code: 200)
+      end
     end
 
     def initialize(

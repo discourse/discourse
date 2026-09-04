@@ -47,173 +47,191 @@ class RemoteTheme < ActiveRecord::Base
               allow_nil: true,
             }
 
-  def self.extract_theme_info(importer)
-    if importer.file_size("about.json") > MAX_METADATA_FILE_SIZE
-      raise ImportError.new I18n.t(
-                              "themes.import_error.about_json_too_big",
-                              limit:
-                                ActiveSupport::NumberHelper.number_to_human_size(
-                                  MAX_METADATA_FILE_SIZE,
-                                ),
-                            )
-    end
+  class << self
+    def extract_theme_info(importer)
+      if importer.file_size("about.json") > MAX_METADATA_FILE_SIZE
+        raise ImportError.new I18n.t(
+                                "themes.import_error.about_json_too_big",
+                                limit:
+                                  ActiveSupport::NumberHelper.number_to_human_size(
+                                    MAX_METADATA_FILE_SIZE,
+                                  ),
+                              )
+      end
 
-    begin
-      json = JSON.parse(importer["about.json"])
-      json.fetch("name")
-      json
-    rescue TypeError, JSON::ParserError, KeyError
-      raise ImportError.new I18n.t("themes.import_error.about_json")
-    end
-  end
-
-  def self.update_zipped_theme(
-    filename,
-    original_filename,
-    user: Discourse.system_user,
-    theme_id: nil,
-    update_components: nil,
-    run_migrations: true
-  )
-    update_theme(
-      ThemeStore::ZipImporter.new(filename, original_filename),
-      user:,
-      theme_id:,
-      update_components:,
-      run_migrations:,
-    )
-  end
-
-  def self.import_theme_from_directory(
-    directory,
-    theme_id: nil,
-    allow_out_of_sequence_migration: false,
-    before_save: nil
-  )
-    update_theme(
-      ThemeStore::DirectoryImporter.new(directory),
-      update_components: "none",
-      theme_id: theme_id,
-      allow_out_of_sequence_migration: allow_out_of_sequence_migration,
-      before_save: before_save,
-    )
-  end
-
-  def self.update_theme(
-    importer,
-    user: Discourse.system_user,
-    theme_id: nil,
-    update_components: nil,
-    run_migrations: true,
-    allow_out_of_sequence_migration: false,
-    before_save: nil
-  )
-    importer.import!
-
-    theme_info = RemoteTheme.extract_theme_info(importer)
-    theme = Theme.find_by(id: theme_id) if theme_id # New theme CLI method
-
-    existing = true
-    if theme.blank?
-      theme =
-        Theme.new(
-          id: theme_id,
-          user_id: user&.id || -1,
-          name: theme_info["name"],
-          auto_update: false,
-        )
-      existing = false
-    end
-
-    theme.component = theme_info["component"].to_s == "true"
-    theme.child_components = child_components = theme_info["components"].presence || []
-    theme.skip_child_components_update = true if update_components == "none"
-
-    remote_theme = new
-    remote_theme.theme = theme
-    remote_theme.remote_url = ""
-
-    do_update_child_components = false
-
-    theme.transaction do
-      remote_theme.update_from_remote(
-        importer,
-        skip_update: true,
-        already_in_transaction: true,
-        run_migrations:,
-        allow_out_of_sequence_migration:,
-        before_save: before_save,
-      )
-
-      if existing && update_components.present? && update_components != "none"
-        child_components = child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
-
-        if update_components == "sync"
-          ChildTheme
-            .joins(child_theme: :remote_theme)
-            .where.not(remote_themes: { remote_url: child_components })
-            .delete_all
-        end
-
-        child_components -=
-          theme
-            .child_themes
-            .joins(:remote_theme)
-            .where("remote_themes.remote_url IN (?)", child_components)
-            .pluck("remote_themes.remote_url")
-        theme.child_components = child_components
-        do_update_child_components = true
+      begin
+        json = JSON.parse(importer["about.json"])
+        json.fetch("name")
+        json
+      rescue TypeError, JSON::ParserError, KeyError
+        raise ImportError.new I18n.t("themes.import_error.about_json")
       end
     end
 
-    theme.update_child_components if do_update_child_components
-    theme
-  ensure
-    begin
-      importer.cleanup!
-    rescue => e
-      Rails.logger.warn("Failed cleanup remote path #{e}")
+    def update_zipped_theme(
+      filename,
+      original_filename,
+      user: Discourse.system_user,
+      theme_id: nil,
+      update_components: nil,
+      run_migrations: true
+    )
+      update_theme(
+        ThemeStore::ZipImporter.new(filename, original_filename),
+        user:,
+        theme_id:,
+        update_components:,
+        run_migrations:,
+      )
     end
-  end
-  private_class_method :update_theme
 
-  def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
-    importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
-    importer.import!
-
-    theme_info = RemoteTheme.extract_theme_info(importer)
-
-    component = [true, "true"].include?(theme_info["component"])
-    theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
-    theme.child_components = theme_info["components"].presence || []
-
-    remote_theme = new
-    theme.remote_theme = remote_theme
-
-    remote_theme.private_key = private_key
-    remote_theme.branch = branch
-    remote_theme.remote_url = importer.url
-
-    remote_theme.update_from_remote(importer)
-
-    theme
-  ensure
-    begin
-      importer.cleanup!
-    rescue => e
-      Rails.logger.warn("Failed cleanup remote git #{e}")
+    def import_theme_from_directory(
+      directory,
+      theme_id: nil,
+      allow_out_of_sequence_migration: false,
+      before_save: nil
+    )
+      update_theme(
+        ThemeStore::DirectoryImporter.new(directory),
+        update_components: "none",
+        theme_id: theme_id,
+        allow_out_of_sequence_migration: allow_out_of_sequence_migration,
+        before_save: before_save,
+      )
     end
-  end
 
-  def self.out_of_date_themes
-    joined_remotes
-      .where("commits_behind > 0 OR remote_version <> local_version")
-      .where(themes: { enabled: true })
-      .pluck("themes.name", "themes.id")
-  end
+    def import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
+      importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
+      importer.import!
 
-  def self.unreachable_themes
-    joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
+      theme_info = RemoteTheme.extract_theme_info(importer)
+
+      component = [true, "true"].include?(theme_info["component"])
+      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
+      theme.child_components = theme_info["components"].presence || []
+
+      remote_theme = new
+      theme.remote_theme = remote_theme
+
+      remote_theme.private_key = private_key
+      remote_theme.branch = branch
+      remote_theme.remote_url = importer.url
+
+      remote_theme.update_from_remote(importer)
+
+      theme
+    ensure
+      begin
+        importer.cleanup!
+      rescue => e
+        Rails.logger.warn("Failed cleanup remote git #{e}")
+      end
+    end
+
+    def out_of_date_themes
+      joined_remotes
+        .where("commits_behind > 0 OR remote_version <> local_version")
+        .where(themes: { enabled: true })
+        .pluck("themes.name", "themes.id")
+    end
+
+    def unreachable_themes
+      joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
+    end
+
+    def create_upload(theme:, path:, relative_path:, skip_validations: false)
+      new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
+
+      # OptimizedImage has strict file name restrictions, so rename temporarily
+      File.rename(path, new_path)
+
+      UploadCreator.new(
+        File.open(new_path),
+        File.basename(relative_path),
+        for_theme: true,
+        skip_validations: skip_validations,
+      ).create_for(theme.user_id)
+    end
+
+    private
+
+    def update_theme(
+      importer,
+      user: Discourse.system_user,
+      theme_id: nil,
+      update_components: nil,
+      run_migrations: true,
+      allow_out_of_sequence_migration: false,
+      before_save: nil
+    )
+      importer.import!
+
+      theme_info = RemoteTheme.extract_theme_info(importer)
+      theme = Theme.find_by(id: theme_id) if theme_id # New theme CLI method
+
+      existing = true
+      if theme.blank?
+        theme =
+          Theme.new(
+            id: theme_id,
+            user_id: user&.id || -1,
+            name: theme_info["name"],
+            auto_update: false,
+          )
+        existing = false
+      end
+
+      theme.component = theme_info["component"].to_s == "true"
+      theme.child_components = child_components = theme_info["components"].presence || []
+      theme.skip_child_components_update = true if update_components == "none"
+
+      remote_theme = new
+      remote_theme.theme = theme
+      remote_theme.remote_url = ""
+
+      do_update_child_components = false
+
+      theme.transaction do
+        remote_theme.update_from_remote(
+          importer,
+          skip_update: true,
+          already_in_transaction: true,
+          run_migrations:,
+          allow_out_of_sequence_migration:,
+          before_save: before_save,
+        )
+
+        if existing && update_components.present? && update_components != "none"
+          child_components =
+            child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+
+          if update_components == "sync"
+            ChildTheme
+              .joins(child_theme: :remote_theme)
+              .where.not(remote_themes: { remote_url: child_components })
+              .delete_all
+          end
+
+          child_components -=
+            theme
+              .child_themes
+              .joins(:remote_theme)
+              .where("remote_themes.remote_url IN (?)", child_components)
+              .pluck("remote_themes.remote_url")
+          theme.child_components = child_components
+          do_update_child_components = true
+        end
+      end
+
+      theme.update_child_components if do_update_child_components
+      theme
+    ensure
+      begin
+        importer.cleanup!
+      rescue => e
+        Rails.logger.warn("Failed cleanup remote path #{e}")
+      end
+    end
   end
 
   def out_of_date?
@@ -564,20 +582,6 @@ class RemoteTheme < ActiveRecord::Base
 
   def is_git?
     remote_url.present?
-  end
-
-  def self.create_upload(theme:, path:, relative_path:, skip_validations: false)
-    new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
-
-    # OptimizedImage has strict file name restrictions, so rename temporarily
-    File.rename(path, new_path)
-
-    UploadCreator.new(
-      File.open(new_path),
-      File.basename(relative_path),
-      for_theme: true,
-      skip_validations: skip_validations,
-    ).create_for(theme.user_id)
   end
 end
 

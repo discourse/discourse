@@ -3,8 +3,10 @@
 class Service::ActionBase
   extend Dry::Initializer
 
-  def self.call(...)
-    new(...).call
+  class << self
+    def call(...)
+      new(...).call
+    end
   end
 
   def call

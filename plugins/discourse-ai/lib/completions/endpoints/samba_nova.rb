@@ -4,8 +4,10 @@ module DiscourseAi
   module Completions
     module Endpoints
       class SambaNova < Base
-        def self.can_contact?(llm_model)
-          llm_model.provider == "samba_nova"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "samba_nova"
+          end
         end
 
         def normalize_model_params(model_params)

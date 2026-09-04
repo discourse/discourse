@@ -11,26 +11,27 @@ module Chat
     # or decrease this as we find performance issues.
     MAX_CHANNELS = 1000
 
-    ##
-    # @param channel_ids [Array<Integer>] The IDs of the channels to count.
-    # @param user_id [Integer] The ID of the user to count for.
-    # @param include_missing_memberships [Boolean] Whether to include channels
-    #   that the user is not a member of. These counts will always be 0.
-    # @param include_read [Boolean] Whether to include channels that the user
-    #   is a member of where they have read all the messages. This overrides
-    #   include_missing_memberships.
-    def self.call(channel_ids:, user_id:, include_missing_memberships: false, include_read: true)
-      # The CTE picks the candidate channel set up front and resolves the
-      # static per-channel filters (chatable_type, threading_enabled, muted,
-      # last_read_message_id) into columns. The three LATERAL aggregates then
-      # run once per candidate, instead of three correlated subqueries each
-      # joining tables that explode with the user's full membership lists.
-      #
-      # The unread_count aggregate is split into three additive pieces so the
-      # planner can use index-friendly filters per piece, instead of an
-      # OR-bag that forces a sequential scan over every message past
-      # last_read_message_id (the previous bottleneck).
-      sql = <<~SQL
+    class << self
+      ##
+      # @param channel_ids [Array<Integer>] The IDs of the channels to count.
+      # @param user_id [Integer] The ID of the user to count for.
+      # @param include_missing_memberships [Boolean] Whether to include channels
+      #   that the user is not a member of. These counts will always be 0.
+      # @param include_read [Boolean] Whether to include channels that the user
+      #   is a member of where they have read all the messages. This overrides
+      #   include_missing_memberships.
+      def call(channel_ids:, user_id:, include_missing_memberships: false, include_read: true)
+        # The CTE picks the candidate channel set up front and resolves the
+        # static per-channel filters (chatable_type, threading_enabled, muted,
+        # last_read_message_id) into columns. The three LATERAL aggregates then
+        # run once per candidate, instead of three correlated subqueries each
+        # joining tables that explode with the user's full membership lists.
+        #
+        # The unread_count aggregate is split into three additive pieces so the
+        # planner can use index-friendly filters per piece, instead of an
+        # OR-bag that forces a sequential scan over every message past
+        # last_read_message_id (the previous bottleneck).
+        sql = <<~SQL
         WITH limited_channels AS (
           SELECT
             memberships.chat_channel_id,
@@ -131,14 +132,14 @@ module Chat
         ) watched_calc ON true
       SQL
 
-      sql = <<~SQL if !include_read
+        sql = <<~SQL if !include_read
         SELECT * FROM (
           #{sql}
         ) AS channel_tracking
         WHERE (unread_count > 0 OR mention_count > 0 OR watched_threads_unread_count > 0)
       SQL
 
-      sql += <<~SQL if include_missing_memberships && include_read
+        sql += <<~SQL if include_missing_memberships && include_read
         UNION ALL
         SELECT chat_channels.id AS channel_id, 0 AS unread_count, 0 AS mention_count, 0 AS watched_threads_unread_count
         FROM chat_channels
@@ -149,14 +150,15 @@ module Chat
         LIMIT :limit
       SQL
 
-      DB.query(
-        sql,
-        channel_ids: channel_ids,
-        user_id: user_id,
-        notification_type_mention: ::Notification.types[:chat_mention],
-        watching_level: ::Chat::UserChatThreadMembership.notification_levels[:watching],
-        limit: MAX_CHANNELS,
-      )
+        DB.query(
+          sql,
+          channel_ids: channel_ids,
+          user_id: user_id,
+          notification_type_mention: ::Notification.types[:chat_mention],
+          watching_level: ::Chat::UserChatThreadMembership.notification_levels[:watching],
+          limit: MAX_CHANNELS,
+        )
+      end
     end
   end
 end

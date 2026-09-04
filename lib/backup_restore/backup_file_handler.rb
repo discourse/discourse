@@ -6,6 +6,20 @@ module BackupRestore
 
     delegate :log, to: :@logger, private: true
 
+    class << self
+      def download(url)
+        FileHelper.download(
+          url,
+          max_file_size: Float::INFINITY,
+          tmp_file_name: File.basename(URI.parse(url).path),
+          follow_redirect: true,
+          skip_rate_limit: true,
+          validate_uri: false,
+          verbose: true,
+        )
+      end
+    end
+
     def initialize(logger, filename, current_db, root_tmp_directory: Rails.root, location: nil)
       @logger = logger
       if filename.start_with?("http://", "https://")
@@ -44,18 +58,6 @@ module BackupRestore
       FileUtils.rm_rf(@tmp_directory) if Dir[@tmp_directory].present?
     rescue => ex
       log "Something went wrong while removing the following tmp directory: #{@tmp_directory}", ex
-    end
-
-    def self.download(url)
-      FileHelper.download(
-        url,
-        max_file_size: Float::INFINITY,
-        tmp_file_name: File.basename(URI.parse(url).path),
-        follow_redirect: true,
-        skip_rate_limit: true,
-        validate_uri: false,
-        verbose: true,
-      )
     end
 
     protected

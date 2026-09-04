@@ -10,22 +10,102 @@ require "optparse"
 require "etc"
 require "open3"
 
+module ImportScripts::Smf2Regex
+  class << self
+    # [tag param=value param2=value2]
+    #   text
+    #   [tag nested=true]text[/tag]
+    # [/tag]
+    # => match[:params] == 'param=value param2=value2'
+    #    match[:inner] == "\n  text\n  [tag nested=true]text[/tag]\n"
+    def build_nested_tag_regex(ltag, rtag = nil)
+      rtag ||= "/" + ltag
+      /
+        \[#{ltag}(?-x:[ =](?<params>[^\]]*))?\]            # consume open tag, followed by...
+          (?<inner>(?:
+            (?> [^\[]+ )                                   # non-tags, or...
+            |
+            \[(?! #{ltag}(?-x:[ =][^\]]*)?\] | #{rtag}\])  # different tags, or ...
+            |
+            (?<re>                                         # recursively matched tags of the same kind
+              \[#{ltag}(?-x:[ =][^\]]*)?\]
+                (?:
+                  (?> [^\[]+ )
+                  |
+                  \[(?! #{ltag}(?-x:[ =][^\]]*)?\] | #{rtag}\])
+                  |
+                  \g<re>                                   # recursion here
+                )*
+              \[#{rtag}\]
+            )
+          )*)
+        \[#{rtag}\]
+      /x
+    end
+  end
+end
+
 class ImportScripts::Smf2 < ImportScripts::Base
   BATCH_SIZE = 5000
 
-  def self.run
-    options = Options.new
+  GUEST_GROUP = -1
+  MEMBER_GROUP = 0
+  ADMIN_GROUP = 1
+  MODERATORS_GROUP = 2
+
+  TRTR_TABLE =
     begin
-      options.parse!
-    rescue Options::SettingsError => err
-      $stderr.puts "Cannot load SMF settings: #{err.message}"
-      exit 1
-    rescue Options::Error => err
-      $stderr.puts err.to_s.capitalize
-      $stderr.puts options.usage
-      exit 1
+      from = "ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ"
+      to = "SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy"
+      from.chars.zip(to.chars)
     end
-    new(options).perform
+  IGNORED_BBCODE = %w[
+    black
+    blue
+    center
+    color
+    email
+    flash
+    font
+    glow
+    green
+    iurl
+    left
+    list
+    move
+    red
+    right
+    shadown
+    size
+    table
+    time
+    white
+  ]
+  QuoteParamsPattern = /^topic=(?<topic>\d+).msg(?<msg>\d+)#msg\k<msg>$/
+  XListPattern = /(?<xblock>(?>^\[x\]\s*(?<line>.*)$\n?)+)/
+  QuotePattern = ImportScripts::Smf2Regex.build_nested_tag_regex("quote")
+  ColorPattern = ImportScripts::Smf2Regex.build_nested_tag_regex("color")
+  ListPattern = ImportScripts::Smf2Regex.build_nested_tag_regex("list")
+  AttachmentPatterns = [
+    [/^\[attach(?:|img|url|mini)=(?<num>\d+)\]$/, ->(u) { "\n" + get_upload_markdown(u) + "\n" }],
+    [/\[attach(?:|img|url|mini)=(?<num>\d+)\]/, ->(u) { get_upload_markdown(u) }],
+  ]
+
+  class << self
+    def run
+      options = Options.new
+      begin
+        options.parse!
+      rescue Options::SettingsError => err
+        $stderr.puts "Cannot load SMF settings: #{err.message}"
+        exit 1
+      rescue Options::Error => err
+        $stderr.puts err.to_s.capitalize
+        $stderr.puts options.usage
+        exit 1
+      end
+      new(options).perform
+    end
   end
 
   attr_reader :options
@@ -86,11 +166,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
       WHERE min_posts = -1 AND group_type IN (1, 2)
     SQL
   end
-
-  GUEST_GROUP = -1
-  MEMBER_GROUP = 0
-  ADMIN_GROUP = 1
-  MODERATORS_GROUP = 2
 
   def import_users
     puts "", "creating users"
@@ -449,13 +524,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
     )
   end
 
-  TRTR_TABLE =
-    begin
-      from = "ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ"
-      to = "SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy"
-      from.chars.zip(to.chars)
-    end
-
   def find_smf_attachment_path(attachment_id, file_hash, filename)
     cleaned_name = filename.dup
     TRTR_TABLE.each { |from, to| cleaned_name.gsub!(from, to) }
@@ -532,29 +600,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
         end
       end
   end
-
-  IGNORED_BBCODE = %w[
-    black
-    blue
-    center
-    color
-    email
-    flash
-    font
-    glow
-    green
-    iurl
-    left
-    list
-    move
-    red
-    right
-    shadown
-    size
-    table
-    time
-    white
-  ]
 
   def convert_bbcode(raw)
     return "" if raw.blank?
@@ -651,51 +696,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
         h
       end
   end
-
-  class << self
-    private
-
-    # [tag param=value param2=value2]
-    #   text
-    #   [tag nested=true]text[/tag]
-    # [/tag]
-    # => match[:params] == 'param=value param2=value2'
-    #    match[:inner] == "\n  text\n  [tag nested=true]text[/tag]\n"
-    def build_nested_tag_regex(ltag, rtag = nil)
-      rtag ||= "/" + ltag
-      /
-        \[#{ltag}(?-x:[ =](?<params>[^\]]*))?\]            # consume open tag, followed by...
-          (?<inner>(?:
-            (?> [^\[]+ )                                   # non-tags, or...
-            |
-            \[(?! #{ltag}(?-x:[ =][^\]]*)?\] | #{rtag}\])  # different tags, or ...
-            |
-            (?<re>                                         # recursively matched tags of the same kind
-              \[#{ltag}(?-x:[ =][^\]]*)?\]
-                (?:
-                  (?> [^\[]+ )
-                  |
-                  \[(?! #{ltag}(?-x:[ =][^\]]*)?\] | #{rtag}\])
-                  |
-                  \g<re>                                   # recursion here
-                )*
-              \[#{rtag}\]
-            )
-          )*)
-        \[#{rtag}\]
-      /x
-    end
-  end
-
-  QuoteParamsPattern = /^topic=(?<topic>\d+).msg(?<msg>\d+)#msg\k<msg>$/
-  XListPattern = /(?<xblock>(?>^\[x\]\s*(?<line>.*)$\n?)+)/
-  QuotePattern = build_nested_tag_regex("quote")
-  ColorPattern = build_nested_tag_regex("color")
-  ListPattern = build_nested_tag_regex("list")
-  AttachmentPatterns = [
-    [/^\[attach(?:|img|url|mini)=(?<num>\d+)\]$/, ->(u) { "\n" + get_upload_markdown(u) + "\n" }],
-    [/\[attach(?:|img|url|mini)=(?<num>\d+)\]/, ->(u) { get_upload_markdown(u) }],
-  ]
 
   # Provides command line options and parses the SMF settings file.
   class Options

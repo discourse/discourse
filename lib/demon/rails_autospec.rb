@@ -3,8 +3,10 @@
 require "demon/base"
 
 class Demon::RailsAutospec < Demon::Base
-  def self.prefix
-    "rails-autospec"
+  class << self
+    def prefix
+      "rails-autospec"
+    end
   end
 
   def stop_signal

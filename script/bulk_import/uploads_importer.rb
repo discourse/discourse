@@ -27,6 +27,7 @@ module BulkImport
   class UploadsImporter
     class DownloadFailedError < StandardError
     end
+
     class UploadSizeExceededError < DownloadFailedError
     end
 
@@ -774,11 +775,14 @@ module BulkImport
         Rails.configuration.multisite = true
 
         RailsMultisite::ConnectionManagement.class_eval do
-          def self.current_db_override=(value)
-            @current_db_override = value
-          end
-          def self.current_db
-            @current_db_override
+          class << self
+            def current_db_override=(value)
+              @current_db_override = value
+            end
+
+            def current_db
+              @current_db_override
+            end
           end
         end
         RailsMultisite::ConnectionManagement.current_db_override = settings[:multisite_db_name]

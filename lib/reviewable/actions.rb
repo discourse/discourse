@@ -6,19 +6,21 @@ class Reviewable < ActiveRecord::Base
   class Actions < Reviewable::Collection
     attr_reader :bundles, :reviewable
 
+    class << self
+      # Add common actions here to make them easier for reviewables to re-use. If it's a
+      # one off, add it manually.
+      def common_actions
+        {
+          approve: Action.new(:approve, "thumbs-up", "reviewables.actions.approve.title"),
+          reject: Action.new(:reject, "thumbs-down", "reviewables.actions.reject.title"),
+          delete: Action.new(:delete, "trash-can", "reviewables.actions.delete.title"),
+        }
+      end
+    end
+
     def initialize(reviewable, guardian, args = nil)
       super(reviewable, guardian, args)
       @bundles = []
-    end
-
-    # Add common actions here to make them easier for reviewables to re-use. If it's a
-    # one off, add it manually.
-    def self.common_actions
-      {
-        approve: Action.new(:approve, "thumbs-up", "reviewables.actions.approve.title"),
-        reject: Action.new(:reject, "thumbs-down", "reviewables.actions.reject.title"),
-        delete: Action.new(:delete, "trash-can", "reviewables.actions.delete.title"),
-      }
     end
 
     class Bundle < Item

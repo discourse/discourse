@@ -7,19 +7,21 @@ module AutomationSpecHelpers
 end
 
 module DiscourseAutomation::CapturedContext
-  def self.add(context)
-    @contexts << context if @capturing
-  end
+  class << self
+    def add(context)
+      @contexts << context if @capturing
+    end
 
-  def self.capture
-    raise StandardError, "Nested capture is not supported" if @capturing
-    raise StandardError, "Expecting a block" if !block_given?
-    @capturing = true
-    @contexts = []
-    yield
-    @contexts
-  ensure
-    @capturing = false
+    def capture
+      raise StandardError, "Nested capture is not supported" if @capturing
+      raise StandardError, "Expecting a block" if !block_given?
+      @capturing = true
+      @contexts = []
+      yield
+      @contexts
+    ensure
+      @capturing = false
+    end
   end
 end
 

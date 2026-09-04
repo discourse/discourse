@@ -8,50 +8,52 @@ module DiscourseAi
         # `duration_days.days.from_now` inside a representable time range.
         MAX_DURATION_DAYS = 36_500
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Suspends (bans) a user, fully blocking them from logging in or posting until the suspension ends.",
-            parameters: [
-              {
-                name: "username",
-                description: "The username of the user to suspend/ban",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "duration_days",
-                description:
-                  "How many days to suspend the user for. Use a very large number (e.g. 36500) for a permanent ban.",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the user is being suspended/banned",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "message",
-                description: "Optional message sent to the user explaining the suspension",
-                type: "string",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Suspends (bans) a user, fully blocking them from logging in or posting until the suspension ends.",
+              parameters: [
+                {
+                  name: "username",
+                  description: "The username of the user to suspend/ban",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "duration_days",
+                  description:
+                    "How many days to suspend the user for. Use a very large number (e.g. 36500) for a permanent ban.",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the user is being suspended/banned",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "message",
+                  description: "Optional message sent to the user explaining the suspension",
+                  type: "string",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "suspend_user"
-        end
+          def name
+            "suspend_user"
+          end
 
-        def self.requires_approval?
-          true
-        end
+          def requires_approval?
+            true
+          end
 
-        def self.attribute_to_approver?
-          true
+          def attribute_to_approver?
+            true
+          end
         end
 
         def invoke

@@ -13,16 +13,17 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
     AND topics.category_id IS NOT NULL
   SQL
 
-  def self.period_totals(
-    prev_start:,
-    current_start:,
-    current_end:,
-    category_ids: nil,
-    secure_category_ids: nil
-  )
-    page_views = human_page_views_expr
+  class << self
+    def period_totals(
+      prev_start:,
+      current_start:,
+      current_end:,
+      category_ids: nil,
+      secure_category_ids: nil
+    )
+      page_views = human_page_views_expr
 
-    builder = DB.build(<<~SQL)
+      builder = DB.build(<<~SQL)
       SELECT
         c.id,
         c.name,
@@ -41,52 +42,71 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
       HAVING SUM(r.topics + r.posts + #{page_views}) > 0
     SQL
 
-    builder.where("r.date >= :prev_start AND r.date <= :current_end")
-    builder.where("c.id IN (:category_ids)", category_ids: category_ids) if category_ids.present?
-    builder.secure_category(secure_category_ids) unless secure_category_ids.nil?
+      builder.where("r.date >= :prev_start AND r.date <= :current_end")
+      builder.where("c.id IN (:category_ids)", category_ids: category_ids) if category_ids.present?
+      builder.secure_category(secure_category_ids) unless secure_category_ids.nil?
 
-    builder.query(prev_start: prev_start, current_start: current_start, current_end: current_end)
-  end
-
-  def self.human_page_views_expr
-    return "r.page_views" if !CrawlerScorer.enabled?
-
-    "GREATEST(r.page_views - r.likely_crawler_page_views, 0)"
-  end
-  private_class_method :human_page_views_expr
-
-  def self.earliest_activity_date
-    Topic.where(ELIGIBLE_TOPICS).minimum(:created_at)&.to_date
-  end
-
-  def self.rebuild!
-    start_date = [earliest_activity_date, minimum(:date)].compact.min
-    return if start_date.nil?
-
-    aggregate(start_date: start_date, end_date: Time.zone.today)
-  end
-
-  def self.aggregate(start_date:, end_date:)
-    start_date = start_date.to_date
-    end_date = end_date.to_date
-
-    while start_date <= end_date
-      chunk_end = [start_date + AGGREGATION_CHUNK_DAYS - 1, end_date].min
-
-      DistributedMutex.synchronize(AGGREGATE_LOCK_KEY, validity: AGGREGATE_LOCK_VALIDITY) do
-        rows = daily_counts(start_date, chunk_end)
-        transaction { replace!(start_date: start_date, end_date: chunk_end, rows: rows) }
-      end
-
-      start_date = chunk_end + 1.day
+      builder.query(prev_start: prev_start, current_start: current_start, current_end: current_end)
     end
 
-    nil
-  end
+    def earliest_activity_date
+      Topic.where(ELIGIBLE_TOPICS).minimum(:created_at)&.to_date
+    end
 
-  def self.daily_counts(start_date, end_date)
-    DB.query(
-      <<~SQL,
+    def rebuild!
+      start_date = [earliest_activity_date, minimum(:date)].compact.min
+      return if start_date.nil?
+
+      aggregate(start_date: start_date, end_date: Time.zone.today)
+    end
+
+    def aggregate(start_date:, end_date:)
+      start_date = start_date.to_date
+      end_date = end_date.to_date
+
+      while start_date <= end_date
+        chunk_end = [start_date + AGGREGATION_CHUNK_DAYS - 1, end_date].min
+
+        DistributedMutex.synchronize(AGGREGATE_LOCK_KEY, validity: AGGREGATE_LOCK_VALIDITY) do
+          rows = daily_counts(start_date, chunk_end)
+          transaction { replace!(start_date: start_date, end_date: chunk_end, rows: rows) }
+        end
+
+        start_date = chunk_end + 1.day
+      end
+
+      nil
+    end
+
+    def crawler_page_views_without_events(start_date, end_date)
+      dates_with_events =
+        DB.query_single(<<~SQL, start_date: start_date, end_date: end_date.to_date + 1)
+        SELECT DISTINCT created_at::date
+        FROM browser_pageview_events
+        WHERE created_at >= :start_date
+          AND created_at < :end_date
+          AND #{BrowserPageviewEvent.rollup_source_condition}
+      SQL
+
+      scope = where(date: start_date..end_date).where("likely_crawler_page_views > 0")
+      scope = scope.where.not(date: dates_with_events) if dates_with_events.present?
+
+      scope
+        .pluck(:date, :category_id, :likely_crawler_page_views)
+        .to_h { |date, category_id, count| [[date, category_id], count] }
+    end
+
+    private
+
+    def human_page_views_expr
+      return "r.page_views" if !CrawlerScorer.enabled?
+
+      "GREATEST(r.page_views - r.likely_crawler_page_views, 0)"
+    end
+
+    def daily_counts(start_date, end_date)
+      DB.query(
+        <<~SQL,
       WITH topic_counts AS (
         SELECT topics.created_at::date AS date, topics.category_id, COUNT(*) AS topics
         FROM topics
@@ -149,55 +169,37 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
         AND crawler_view_counts.category_id = combined.category_id
       GROUP BY combined.date, combined.category_id
     SQL
-      start_date: start_date,
-      end_date: end_date + 1.day,
-      regular_post_type: Post.types[:regular],
-    )
-  end
-  private_class_method :daily_counts
-
-  def self.replace!(start_date:, end_date:, rows:)
-    if rows.empty?
-      where(date: start_date..end_date).delete_all
-      return
+        start_date: start_date,
+        end_date: end_date + 1.day,
+        regular_post_type: Post.types[:regular],
+      )
     end
 
-    preserved = crawler_page_views_without_events(start_date, end_date)
-    where(date: start_date..end_date).delete_all
+    def replace!(start_date:, end_date:, rows:)
+      if rows.empty?
+        where(date: start_date..end_date).delete_all
+        return
+      end
 
-    insert_all!(
-      rows.map do |row|
-        {
-          date: row.date,
-          category_id: row.category_id,
-          topics: row.topics,
-          posts: row.posts,
-          page_views: row.page_views,
-          likely_crawler_page_views:
-            preserved.fetch([row.date, row.category_id], row.likely_crawler_page_views),
-        }
-      end,
-    )
+      preserved = crawler_page_views_without_events(start_date, end_date)
+      where(date: start_date..end_date).delete_all
+
+      insert_all!(
+        rows.map do |row|
+          {
+            date: row.date,
+            category_id: row.category_id,
+            topics: row.topics,
+            posts: row.posts,
+            page_views: row.page_views,
+            likely_crawler_page_views:
+              preserved.fetch([row.date, row.category_id], row.likely_crawler_page_views),
+          }
+        end,
+      )
+    end
   end
-  private_class_method :replace!
 
-  def self.crawler_page_views_without_events(start_date, end_date)
-    dates_with_events =
-      DB.query_single(<<~SQL, start_date: start_date, end_date: end_date.to_date + 1)
-        SELECT DISTINCT created_at::date
-        FROM browser_pageview_events
-        WHERE created_at >= :start_date
-          AND created_at < :end_date
-          AND #{BrowserPageviewEvent.rollup_source_condition}
-      SQL
-
-    scope = where(date: start_date..end_date).where("likely_crawler_page_views > 0")
-    scope = scope.where.not(date: dates_with_events) if dates_with_events.present?
-
-    scope
-      .pluck(:date, :category_id, :likely_crawler_page_views)
-      .to_h { |date, category_id, count| [[date, category_id], count] }
-  end
   private_class_method :crawler_page_views_without_events
 end
 

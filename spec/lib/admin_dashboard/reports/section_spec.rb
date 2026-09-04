@@ -6,23 +6,25 @@ RSpec.describe AdminDashboard::Reports::Section do
 
   let(:fake_provider) do
     Class.new(AdminDashboard::Reports::SourceProvider) do
-      def self.source_name = "fake"
+      class << self
+        def source_name = "fake"
 
-      def self.label = "Fake"
+        def label = "Fake"
 
-      def self.resolve_many(identifiers, guardian:)
-        identifiers
-          .reject { |id| id.to_s.start_with?("missing_") }
-          .each_with_object({}) do |id, hash|
-            hash[id.to_s] = AdminDashboard::Reports::ResolvedReport.new(
-              source: "fake",
-              identifier: id.to_s,
-              title: "Title for #{id}",
-              description: "Desc for #{id}",
-              label: label,
-              url: "/fake/#{id}",
-            )
-          end
+        def resolve_many(identifiers, guardian:)
+          identifiers
+            .reject { |id| id.to_s.start_with?("missing_") }
+            .each_with_object({}) do |id, hash|
+              hash[id.to_s] = AdminDashboard::Reports::ResolvedReport.new(
+                source: "fake",
+                identifier: id.to_s,
+                title: "Title for #{id}",
+                description: "Desc for #{id}",
+                label: label,
+                url: "/fake/#{id}",
+              )
+            end
+        end
       end
     end
   end

@@ -6,8 +6,10 @@ module Service
     class Context
       delegate :slice, :dig, :merge!, to: :store
 
-      def self.build(context = {})
-        self === context ? context : new(context)
+      class << self
+        def build(context = {})
+          self === context ? context : new(context)
+        end
       end
 
       def initialize(context = {})

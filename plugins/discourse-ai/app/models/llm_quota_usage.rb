@@ -19,19 +19,21 @@ class LlmQuotaUsage < ActiveRecord::Base
   validates :started_at, presence: true
   validates :reset_at, presence: true
 
-  def self.find_or_create_for(user:, llm_quota:)
-    find_by(user: user, llm_quota: llm_quota) ||
-      create_or_find_by!(user: user, llm_quota: llm_quota) do |usage|
-        now = Time.current
-        usage.started_at = now
-        usage.reset_at = now + llm_quota.duration_seconds.seconds
-        usage.input_tokens_used = 0
-        usage.output_tokens_used = 0
-        usage.cache_read_tokens_used = 0
-        usage.cache_write_tokens_used = 0
-        usage.cost_used = 0
-        usage.usages = 0
-      end
+  class << self
+    def find_or_create_for(user:, llm_quota:)
+      find_by(user: user, llm_quota: llm_quota) ||
+        create_or_find_by!(user: user, llm_quota: llm_quota) do |usage|
+          now = Time.current
+          usage.started_at = now
+          usage.reset_at = now + llm_quota.duration_seconds.seconds
+          usage.input_tokens_used = 0
+          usage.output_tokens_used = 0
+          usage.cache_read_tokens_used = 0
+          usage.cache_write_tokens_used = 0
+          usage.cost_used = 0
+          usage.usages = 0
+        end
+    end
   end
 
   def reset_if_needed!

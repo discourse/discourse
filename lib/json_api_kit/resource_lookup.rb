@@ -5,7 +5,9 @@ module JsonApiKit
     MissingResource = Class.new(StandardError)
     UnsupportedResource = Class.new(StandardError)
 
-    def self.resource(...) = new(...).resource
+    class << self
+      def resource(...) = new(...).resource
+    end
 
     private_class_method :new
 

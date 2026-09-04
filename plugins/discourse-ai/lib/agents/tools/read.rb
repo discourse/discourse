@@ -6,34 +6,36 @@ module DiscourseAi
 
     module Tools
       class Read < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Will read a topic or a post on this Discourse instance",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "the id of the topic to read",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "post_numbers",
-                description: "the post numbers to read (optional)",
-                type: "array",
-                item_type: "integer",
-                required: false,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Will read a topic or a post on this Discourse instance",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "the id of the topic to read",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "post_numbers",
+                  description: "the post numbers to read (optional)",
+                  type: "array",
+                  item_type: "integer",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.accepted_options
-          [option(:read_private, type: :boolean)]
-        end
+          def accepted_options
+            [option(:read_private, type: :boolean)]
+          end
 
-        def self.name
-          "read"
+          def name
+            "read"
+          end
         end
 
         attr_reader :title, :url

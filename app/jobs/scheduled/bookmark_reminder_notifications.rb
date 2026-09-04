@@ -7,13 +7,15 @@ module Jobs
   class BookmarkReminderNotifications < ::Jobs::Scheduled
     every 5.minutes
 
-    def self.max_reminder_notifications_per_run
-      @@max_reminder_notifications_per_run ||= 300
-      @@max_reminder_notifications_per_run
-    end
+    class << self
+      def max_reminder_notifications_per_run
+        @@max_reminder_notifications_per_run ||= 300
+        @@max_reminder_notifications_per_run
+      end
 
-    def self.max_reminder_notifications_per_run=(max)
-      @@max_reminder_notifications_per_run = max
+      def max_reminder_notifications_per_run=(max)
+        @@max_reminder_notifications_per_run = max
+      end
     end
 
     def execute(args = nil)

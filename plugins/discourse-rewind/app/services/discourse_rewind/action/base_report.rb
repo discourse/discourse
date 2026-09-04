@@ -6,12 +6,14 @@ module DiscourseRewind
       option :user
       option :date
 
-      def call
-        raise NotImplementedError
+      class << self
+        def enabled?
+          true
+        end
       end
 
-      def self.enabled?
-        true
+      def call
+        raise NotImplementedError
       end
 
       def should_use_fake_data?

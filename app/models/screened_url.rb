@@ -15,24 +15,27 @@ class ScreenedUrl < ActiveRecord::Base
   validates :url, presence: true, uniqueness: true
   validates :domain, presence: true
 
+  class << self
+    def watch(url, domain, opts = {})
+      find_match(url) ||
+        create(opts.slice(:action_type, :ip_address).merge(url: url, domain: domain))
+    end
+
+    def find_match(url)
+      find_by_url normalize_url(url)
+    end
+
+    def normalize_url(url)
+      normalized = url.gsub(%r{http(s?)://}i, "")
+      normalized.gsub!(%r{(/)+\z}, "") # trim trailing slashes
+      normalized.gsub!(%r{\A([^/]+)(?:/)?}) { |m| m.downcase } # downcase the domain part of the url
+      normalized
+    end
+  end
+
   def normalize
     self.url = ScreenedUrl.normalize_url(url) if url
     self.domain = domain.downcase.sub(/\Awww\./, "") if domain
-  end
-
-  def self.watch(url, domain, opts = {})
-    find_match(url) || create(opts.slice(:action_type, :ip_address).merge(url: url, domain: domain))
-  end
-
-  def self.find_match(url)
-    find_by_url normalize_url(url)
-  end
-
-  def self.normalize_url(url)
-    normalized = url.gsub(%r{http(s?)://}i, "")
-    normalized.gsub!(%r{(/)+\z}, "") # trim trailing slashes
-    normalized.gsub!(%r{\A([^/]+)(?:/)?}) { |m| m.downcase } # downcase the domain part of the url
-    normalized
   end
 end
 

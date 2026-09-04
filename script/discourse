@@ -4,8 +4,10 @@
 require "thor"
 
 class DiscourseCLI < Thor
-  def self.exit_on_failure?
-    true
+  class << self
+    def exit_on_failure?
+      true
+    end
   end
 
   desc "remap [--global,--regex,--force, --skip-max-length-violations] FROM TO",
@@ -365,31 +367,29 @@ class DiscourseCLI < Thor
   end
 
   def do_remap(from, to)
-    
-      remap_options = {
-        verbose: true,
-        skip_max_length_violations: options[:skip_max_length_violations],
-      }
+    remap_options = {
+      verbose: true,
+      skip_max_length_violations: options[:skip_max_length_violations],
+    }
 
-      if options[:regex]
-        DbHelper.regexp_replace(from, to, **remap_options)
-      else
-        DbHelper.remap(from, to, **remap_options)
-      end
+    if options[:regex]
+      DbHelper.regexp_replace(from, to, **remap_options)
+    else
+      DbHelper.remap(from, to, **remap_options)
+    end
 
-      puts "Done", ""
-    rescue PG::StringDataRightTruncation => e
-      puts <<~TEXT
+    puts "Done", ""
+  rescue PG::StringDataRightTruncation => e
+    puts <<~TEXT
         #{e}
         One or more remapped texts exceeded the maximum column length constraint. Either fix the offending
         column(s) mentioned in the error above or re-run the script with --skip-max-length-violations to skip these rows.
       TEXT
-      exit(1)
-    rescue => ex
-      puts "Error: #{ex}"
-      puts "The remap has only been partially applied due to the error above. Please re-run the script again."
-      exit(1)
-    
+    exit(1)
+  rescue => ex
+    puts "Error: #{ex}"
+    puts "The remap has only been partially applied due to the error above. Please re-run the script again."
+    exit(1)
   end
 end
 

@@ -33,6 +33,49 @@ module DiscourseWorkflows
                   :static_data_state
       attr_accessor :execution
 
+      RESUME_TOKEN_BYTES = 32
+      EXECUTION_VALUE_SOURCES = {
+        "id" => ->(execution_context, _extra_context) { execution_context.execution&.id },
+        "workflow_id" => ->(execution_context, _extra_context) { execution_context.workflow&.id },
+        "workflow_name" => ->(execution_context, _extra_context) do
+          execution_context.workflow_name
+        end,
+        "called_by" => ->(execution_context, _extra_context) do
+          execution_context.workflow_call_caller
+        end,
+        "resume_url" =>
+          lambda do |execution_context, extra_context|
+            token = execution_context.resume_token
+            execution_id = execution_context.execution&.id
+            return if token.blank? || execution_id.blank?
+
+            suffix = extra_context&.dig("__webhook_suffix")
+            DiscourseWorkflows::WaitingExecution.webhook_url(
+              execution_id: execution_id,
+              resume_token: token,
+              suffix: suffix,
+            )
+          end,
+        "resumeFormUrl" =>
+          lambda do |execution_context, _extra_context|
+            token = execution_context.resume_token
+            execution_id = execution_context.execution&.id
+            return if token.blank? || execution_id.blank?
+
+            DiscourseWorkflows::WaitingExecution.form_waiting_url_for(
+              execution_id: execution_id,
+              resume_token: token,
+              absolute: true,
+            )
+          end,
+      }.freeze
+
+      class << self
+        def generate_resume_token
+          SecureRandom.urlsafe_base64(RESUME_TOKEN_BYTES)
+        end
+      end
+
       def initialize(
         workflow:,
         trigger_data:,
@@ -51,12 +94,6 @@ module DiscourseWorkflows
         @execution = execution
         @static_data_state = StaticDataState.from_workflow(workflow)
         reset!
-      end
-
-      RESUME_TOKEN_BYTES = 32
-
-      def self.generate_resume_token
-        SecureRandom.urlsafe_base64(RESUME_TOKEN_BYTES)
       end
 
       def reset!(resume_token: self.class.generate_resume_token)
@@ -181,42 +218,6 @@ module DiscourseWorkflows
       end
 
       private
-
-      EXECUTION_VALUE_SOURCES = {
-        "id" => ->(execution_context, _extra_context) { execution_context.execution&.id },
-        "workflow_id" => ->(execution_context, _extra_context) { execution_context.workflow&.id },
-        "workflow_name" => ->(execution_context, _extra_context) do
-          execution_context.workflow_name
-        end,
-        "called_by" => ->(execution_context, _extra_context) do
-          execution_context.workflow_call_caller
-        end,
-        "resume_url" =>
-          lambda do |execution_context, extra_context|
-            token = execution_context.resume_token
-            execution_id = execution_context.execution&.id
-            return if token.blank? || execution_id.blank?
-
-            suffix = extra_context&.dig("__webhook_suffix")
-            DiscourseWorkflows::WaitingExecution.webhook_url(
-              execution_id: execution_id,
-              resume_token: token,
-              suffix: suffix,
-            )
-          end,
-        "resumeFormUrl" =>
-          lambda do |execution_context, _extra_context|
-            token = execution_context.resume_token
-            execution_id = execution_context.execution&.id
-            return if token.blank? || execution_id.blank?
-
-            DiscourseWorkflows::WaitingExecution.form_waiting_url_for(
-              execution_id: execution_id,
-              resume_token: token,
-              absolute: true,
-            )
-          end,
-      }.freeze
 
       def execution_variables(extra_context = {})
         schema_fields = ExpressionContextSchema.environment_symbols.dig("$execution", :fields) || {}

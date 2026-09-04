@@ -5,8 +5,10 @@ require_dependency "email/message_builder"
 class AssignMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
-  def self.levels
-    @levels ||= Enum.new(never: "never", different_users: "different_users", always: "always")
+  class << self
+    def levels
+      @levels ||= Enum.new(never: "never", different_users: "different_users", always: "always")
+    end
   end
 
   def send_assignment(to_address, topic, assigned_by)

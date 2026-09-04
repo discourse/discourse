@@ -4,43 +4,45 @@ module DiscourseAi
   module Agents
     module Tools
       class CreateTag < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Creates a new tag without applying it to any topic. Use change_topic_tags to apply tags to a topic.",
-            parameters: [
-              {
-                name: "name",
-                description: "The name for the new tag",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "description",
-                description: "A short description for the new tag",
-                type: "string",
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the tag is being created",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Creates a new tag without applying it to any topic. Use change_topic_tags to apply tags to a topic.",
+              parameters: [
+                {
+                  name: "name",
+                  description: "The name for the new tag",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "description",
+                  description: "A short description for the new tag",
+                  type: "string",
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the tag is being created",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "create_tag"
-        end
+          def name
+            "create_tag"
+          end
 
-        def self.requires_approval?
-          true
-        end
+          def requires_approval?
+            true
+          end
 
-        def self.attribute_to_approver?
-          true
+          def attribute_to_approver?
+            true
+          end
         end
 
         def invoke

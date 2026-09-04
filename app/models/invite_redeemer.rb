@@ -25,6 +25,100 @@ class InviteRedeemer
               :email_token,
               :redeeming_user
 
+  class << self
+    # This will _never_ be called if there is a redeeming_user being passed
+    # in to InviteRedeemer -- see invited_user below.
+    def create_user_from_invite(
+      email:,
+      invite:,
+      username: nil,
+      name: nil,
+      password: nil,
+      user_custom_fields: nil,
+      ip_address: nil,
+      session: nil,
+      email_token: nil
+    )
+      if username && UsernameValidator.new(username).valid_format? &&
+           User.username_available?(username, email)
+        available_username = username
+      else
+        available_username = UserNameSuggester.suggest(email)
+      end
+
+      user = User.where(staged: true).with_email(email.strip.downcase).first
+      user.unstage! if user
+      user ||= User.new
+
+      user.attributes = {
+        email: email,
+        username: available_username,
+        name: name || available_username,
+        active: false,
+        trust_level: SiteSetting.default_invitee_trust_level,
+        ip_address: ip_address,
+        registration_ip_address: ip_address,
+      }
+
+      if (!SiteSetting.must_approve_users && SiteSetting.invite_only) ||
+           (SiteSetting.must_approve_users? && EmailValidator.can_auto_approve_user?(user.email))
+        ReviewableUser.set_approved_fields!(user, Discourse.system_user)
+      end
+
+      user_fields = UserField.all
+      if user_custom_fields.present? && user_fields.present?
+        field_params = user_custom_fields || {}
+        fields = user.custom_fields
+
+        user_fields.each do |f|
+          field_params[f.id.to_s] = nil if field_params[f.id.to_s] === "false"
+          field_val = field_params[f.id.to_s]
+          fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
+            0...UserField.max_length
+          ] if field_val.present?
+        end
+        user.custom_fields = fields
+      end
+
+      if (invite.moderator? && invite.invited_by.staff?) ||
+           InviteRedeemer.admin_invite_grantable?(invite)
+        user.moderator = true
+      end
+
+      if password
+        user.password = password
+        user.password_required!
+      end
+
+      authenticator = UserAuthenticator.new(user, session, require_password: false)
+
+      if !authenticator.has_authenticator? && !SiteSetting.enable_local_logins
+        raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
+      end
+
+      authenticator.start
+
+      if authenticator.email_valid? && !authenticator.authenticated?
+        raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
+      end
+
+      user.save!
+      authenticator.finish
+
+      if invite.emailed_status != Invite.emailed_status_types[:not_required] &&
+           email == invite.email && invite.email_token.present? && email_token == invite.email_token
+        user.activate
+      end
+
+      User.find(user.id)
+    end
+
+    def admin_invite_grantable?(invite)
+      invite.admin? && invite.invited_by&.admin? &&
+        UpcomingChanges.enabled_for_user?(:enable_invite_modal_with_roles, invite.invited_by)
+    end
+  end
+
   def initialize(
     invite:,
     email: nil,
@@ -78,98 +172,6 @@ class InviteRedeemer
     end
 
     raise Discourse::InvalidParameters if @email.blank?
-  end
-
-  # This will _never_ be called if there is a redeeming_user being passed
-  # in to InviteRedeemer -- see invited_user below.
-  def self.create_user_from_invite(
-    email:,
-    invite:,
-    username: nil,
-    name: nil,
-    password: nil,
-    user_custom_fields: nil,
-    ip_address: nil,
-    session: nil,
-    email_token: nil
-  )
-    if username && UsernameValidator.new(username).valid_format? &&
-         User.username_available?(username, email)
-      available_username = username
-    else
-      available_username = UserNameSuggester.suggest(email)
-    end
-
-    user = User.where(staged: true).with_email(email.strip.downcase).first
-    user.unstage! if user
-    user ||= User.new
-
-    user.attributes = {
-      email: email,
-      username: available_username,
-      name: name || available_username,
-      active: false,
-      trust_level: SiteSetting.default_invitee_trust_level,
-      ip_address: ip_address,
-      registration_ip_address: ip_address,
-    }
-
-    if (!SiteSetting.must_approve_users && SiteSetting.invite_only) ||
-         (SiteSetting.must_approve_users? && EmailValidator.can_auto_approve_user?(user.email))
-      ReviewableUser.set_approved_fields!(user, Discourse.system_user)
-    end
-
-    user_fields = UserField.all
-    if user_custom_fields.present? && user_fields.present?
-      field_params = user_custom_fields || {}
-      fields = user.custom_fields
-
-      user_fields.each do |f|
-        field_params[f.id.to_s] = nil if field_params[f.id.to_s] === "false"
-        field_val = field_params[f.id.to_s]
-        fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
-          0...UserField.max_length
-        ] if field_val.present?
-      end
-      user.custom_fields = fields
-    end
-
-    if (invite.moderator? && invite.invited_by.staff?) ||
-         InviteRedeemer.admin_invite_grantable?(invite)
-      user.moderator = true
-    end
-
-    if password
-      user.password = password
-      user.password_required!
-    end
-
-    authenticator = UserAuthenticator.new(user, session, require_password: false)
-
-    if !authenticator.has_authenticator? && !SiteSetting.enable_local_logins
-      raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
-    end
-
-    authenticator.start
-
-    if authenticator.email_valid? && !authenticator.authenticated?
-      raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
-    end
-
-    user.save!
-    authenticator.finish
-
-    if invite.emailed_status != Invite.emailed_status_types[:not_required] &&
-         email == invite.email && invite.email_token.present? && email_token == invite.email_token
-      user.activate
-    end
-
-    User.find(user.id)
-  end
-
-  def self.admin_invite_grantable?(invite)
-    invite.admin? && invite.invited_by&.admin? &&
-      UpcomingChanges.enabled_for_user?(:enable_invite_modal_with_roles, invite.invited_by)
   end
 
   private

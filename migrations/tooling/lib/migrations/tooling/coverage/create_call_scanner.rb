@@ -32,21 +32,23 @@ module Migrations
         # the call site locations per non-resolving model name.
         Result = Data.define(:columns, :unknown_models)
 
-        # @param source [String] Ruby source to analyse
-        # @param path [String] source location, used in error messages and
-        #   unknown model call site locations
-        # @return [Result]
-        def self.scan(source, path:)
-          result = Prism.parse(source)
+        class << self
+          # @param source [String] Ruby source to analyse
+          # @param path [String] source location, used in error messages and
+          #   unknown model call site locations
+          # @return [Result]
+          def scan(source, path:)
+            result = Prism.parse(source)
 
-          unless result.success?
-            details = result.errors.map { |e| "#{e.message} (line #{e.location.start_line})" }
-            raise AnalysisError, "Failed to parse #{path}: #{details.join(", ")}"
+            unless result.success?
+              details = result.errors.map { |e| "#{e.message} (line #{e.location.start_line})" }
+              raise AnalysisError, "Failed to parse #{path}: #{details.join(", ")}"
+            end
+
+            scanner = new(path)
+            result.value.accept(scanner)
+            Result.new(columns: scanner.columns, unknown_models: scanner.unknown_models)
           end
-
-          scanner = new(path)
-          result.value.accept(scanner)
-          Result.new(columns: scanner.columns, unknown_models: scanner.unknown_models)
         end
 
         attr_reader :columns, :unknown_models

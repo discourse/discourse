@@ -5,6 +5,26 @@ inherit_mode:
   merge:
     - Exclude
 
+Style/ClassMethodsDefinitions:
+  Enabled: true
+  EnforcedStyle: self_class
+
+Style/AccessModifierDeclarations:
+  Enabled: true
+  AllowModifiersOnSymbols: false
+
+Layout/ClassStructure:
+  Enabled: true
+  AutoCorrect: false
+  ExpectedOrder:
+    - module_inclusion
+    - constants
+    - class_singleton
+    - initializer
+    - public_methods
+    - protected_methods
+    - private_methods
+
 # Still work to do in ensuring we don't link old files
 Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
   Enabled: false

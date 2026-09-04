@@ -35,23 +35,25 @@ module DiscourseWorkflows
         }.freeze
         MAX_LIMIT = 800
 
-        def self.list_string_property(control: nil, hidden: false)
-          property = {
-            type: :string,
-            required: false,
-            display_options: {
-              show: {
-                operation: ["list"],
+        class << self
+          def list_string_property(control: nil, hidden: false)
+            property = {
+              type: :string,
+              required: false,
+              display_options: {
+                show: {
+                  operation: ["list"],
+                },
               },
-            },
-          }
+            }
 
-          ui = {}
-          ui[:control] = control if control
-          ui[:hidden] = true if hidden
-          property[:ui] = ui if ui.present?
+            ui = {}
+            ui[:control] = control if control
+            ui[:hidden] = true if hidden
+            property[:ui] = ui if ui.present?
 
-          property
+            property
+          end
         end
 
         description(

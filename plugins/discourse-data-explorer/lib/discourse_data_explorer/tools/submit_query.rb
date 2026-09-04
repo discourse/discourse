@@ -6,41 +6,43 @@ module DiscourseDataExplorer
       CONTEXT_KEY = :data_explorer_generated_query
       VALIDATED_SQL_KEY = :data_explorer_validated_sql
 
-      def self.signature
-        {
-          name: name,
-          description:
-            "Submits the final verified Data Explorer query after schema lookup and SQL validation are complete.",
-          parameters: [
-            {
-              name: "name",
-              description: "a short descriptive name for the query, under 60 characters",
-              type: "string",
-              required: true,
-            },
-            {
-              name: "description",
-              description: "a one-sentence description of what the query does",
-              type: "string",
-              required: true,
-            },
-            {
-              name: "sql",
-              description:
-                "the exact SQL from the final successful run_sql call, including -- [params] comments, without a trailing semicolon",
-              type: "string",
-              required: true,
-            },
-          ],
-        }
-      end
+      class << self
+        def signature
+          {
+            name: name,
+            description:
+              "Submits the final verified Data Explorer query after schema lookup and SQL validation are complete.",
+            parameters: [
+              {
+                name: "name",
+                description: "a short descriptive name for the query, under 60 characters",
+                type: "string",
+                required: true,
+              },
+              {
+                name: "description",
+                description: "a one-sentence description of what the query does",
+                type: "string",
+                required: true,
+              },
+              {
+                name: "sql",
+                description:
+                  "the exact SQL from the final successful run_sql call, including -- [params] comments, without a trailing semicolon",
+                type: "string",
+                required: true,
+              },
+            ],
+          }
+        end
 
-      def self.custom?
-        true
-      end
+        def custom?
+          true
+        end
 
-      def self.name
-        "submit_query"
+        def name
+          "submit_query"
+        end
       end
 
       def invoke

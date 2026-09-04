@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class BrowserPageviewCountryDailyRollup < ActiveRecord::Base
-  def self.aggregate(start_date:, end_date:)
-    start_date = start_date.to_date
-    end_date = end_date.to_date + 1
+  class << self
+    def aggregate(start_date:, end_date:)
+      start_date = start_date.to_date
+      end_date = end_date.to_date + 1
 
-    DB.exec(<<~SQL, start_date:, end_date:)
+      DB.exec(<<~SQL, start_date:, end_date:)
       INSERT INTO browser_pageview_country_daily_rollups (
         date, country_code, count, logged_in_count, likely_crawler_count, likely_crawler_logged_in_count
       )
@@ -29,6 +30,7 @@ class BrowserPageviewCountryDailyRollup < ActiveRecord::Base
           likely_crawler_count = EXCLUDED.likely_crawler_count,
           likely_crawler_logged_in_count = EXCLUDED.likely_crawler_logged_in_count
     SQL
+    end
   end
 end
 

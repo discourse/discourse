@@ -5,86 +5,91 @@ module DiscourseAi
     class EntryPoint
       Bot = Struct.new(:id, :name, :llm)
 
-      def self.all_bot_ids
-        AiAgent
-          .agent_users
-          .map { |agent| agent[:user_id] }
-          .concat(LlmModel.where(id: LlmModel.enabled_chat_bot_ids).pluck(:user_id).compact)
-      end
+      class << self
+        def all_bot_ids
+          AiAgent
+            .agent_users
+            .map { |agent| agent[:user_id] }
+            .concat(LlmModel.where(id: LlmModel.enabled_chat_bot_ids).pluck(:user_id).compact)
+        end
 
-      def self.find_participant_in(participant_ids)
-        model = LlmModel.includes(:user).where(user_id: participant_ids).last
-        return if model.nil?
+        def find_participant_in(participant_ids)
+          model = LlmModel.includes(:user).where(user_id: participant_ids).last
+          return if model.nil?
 
-        bot_user = model.user
+          bot_user = model.user
 
-        Bot.new(bot_user.id, bot_user.username_lower, model.name)
-      end
+          Bot.new(bot_user.id, bot_user.username_lower, model.name)
+        end
 
-      def self.find_user_from_model(model_name)
-        # Hack(Roman): Added this because Command R Plus had a different in the bot settings.
-        # Will eventually amend it with a data migration.
-        name = model_name
-        name = "command-r-plus" if name == "cohere-command-r-plus"
+        def find_user_from_model(model_name)
+          # Hack(Roman): Added this because Command R Plus had a different in the bot settings.
+          # Will eventually amend it with a data migration.
+          name = model_name
+          name = "command-r-plus" if name == "cohere-command-r-plus"
 
-        LlmModel.joins(:user).where(name: name).last&.user
-      end
+          LlmModel.joins(:user).where(name: name).last&.user
+        end
 
-      def self.enabled_user_ids_and_models_map
-        enabled_ids = LlmModel.enabled_chat_bot_ids
-        return [] if enabled_ids.empty?
+        def enabled_user_ids_and_models_map
+          enabled_ids = LlmModel.enabled_chat_bot_ids
+          return [] if enabled_ids.empty?
 
-        DB.query_hash(<<~SQL, ids: enabled_ids)
+          DB.query_hash(<<~SQL, ids: enabled_ids)
           SELECT users.username AS username, users.id AS id, llms.id AS llm_model_id, llms.name AS model_name, llms.display_name AS display_name
           FROM llm_models llms
           INNER JOIN users ON llms.user_id = users.id
           WHERE llms.id IN (:ids)
         SQL
-      end
+        end
 
-      def self.personal_message_bot_user_ids(user)
-        return [] if user.blank? || !SiteSetting.ai_bot_enabled
+        def personal_message_bot_user_ids(user)
+          return [] if user.blank? || !SiteSetting.ai_bot_enabled
 
-        bot_user_ids = []
+          bot_user_ids = []
 
-        if user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+          if user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+            bot_user_ids.concat(
+              LlmModel
+                .where(id: LlmModel.enabled_chat_bot_ids)
+                .where.not(user_id: nil)
+                .pluck(:user_id),
+            )
+          end
+
           bot_user_ids.concat(
-            LlmModel
-              .where(id: LlmModel.enabled_chat_bot_ids)
-              .where.not(user_id: nil)
-              .pluck(:user_id),
+            AiAgent
+              .allowed_modalities(user: user, allow_personal_messages: true)
+              .map { |agent| agent[:user_id] },
           )
+
+          bot_user_ids.compact
         end
 
-        bot_user_ids.concat(
-          AiAgent
-            .allowed_modalities(user: user, allow_personal_messages: true)
-            .map { |agent| agent[:user_id] },
-        )
+        # Most errors are simply "not_allowed"
+        # we do not want to reveal information about this system
+        # the 2 exceptions are "other_people_in_pm" and "other_content_in_pm"
+        # in both cases you have access to the PM so we are not revealing anything
+        def ai_share_error(topic, guardian)
+          return nil if guardian.can_share_ai_bot_conversation?(topic)
 
-        bot_user_ids.compact
-      end
+          return :not_allowed if !guardian.can_see?(topic)
 
-      # Most errors are simply "not_allowed"
-      # we do not want to reveal information about this system
-      # the 2 exceptions are "other_people_in_pm" and "other_content_in_pm"
-      # in both cases you have access to the PM so we are not revealing anything
-      def self.ai_share_error(topic, guardian)
-        return nil if guardian.can_share_ai_bot_conversation?(topic)
+          # other people in PM
+          if topic
+               .topic_allowed_users
+               .where("user_id > 0 and user_id <> ?", guardian.user.id)
+               .exists?
+            return :other_people_in_pm
+          end
 
-        return :not_allowed if !guardian.can_see?(topic)
+          # other content in PM
+          if topic.posts.where("user_id > 0 and user_id <> ?", guardian.user.id).exists?
+            return :other_content_in_pm
+          end
 
-        # other people in PM
-        if topic.topic_allowed_users.where("user_id > 0 and user_id <> ?", guardian.user.id).exists?
-          return :other_people_in_pm
+          :not_allowed
         end
-
-        # other content in PM
-        if topic.posts.where("user_id > 0 and user_id <> ?", guardian.user.id).exists?
-          return :other_content_in_pm
-        end
-
-        :not_allowed
       end
 
       def inject_into(plugin)

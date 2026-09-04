@@ -14,30 +14,32 @@ module DiscourseWorkflows
                 :on_error,
                 :continue_on_fail
 
-    def self.from_snapshot_node(
-      node,
-      include_node_parameters: false,
-      include_credentials: false,
-      include_webhook_id: false
-    )
-      return if node.blank?
-
-      direct_settings =
-        DiscourseWorkflows::NodeData
-          .direct_settings(node)
-          .transform_keys { |key| DiscourseWorkflows::NodeData::NODE_DIRECT_SETTING_KEYS[key] }
-
-      new(
-        id: node.id,
-        name: node.name,
-        type: node.type,
-        type_version: node.type_version,
-        position: node.position,
-        webhook_id: include_webhook_id ? node.webhook_id : nil,
-        parameters: include_node_parameters ? node.parameters : nil,
-        credentials: include_credentials ? node.credentials : nil,
-        **direct_settings,
+    class << self
+      def from_snapshot_node(
+        node,
+        include_node_parameters: false,
+        include_credentials: false,
+        include_webhook_id: false
       )
+        return if node.blank?
+
+        direct_settings =
+          DiscourseWorkflows::NodeData
+            .direct_settings(node)
+            .transform_keys { |key| DiscourseWorkflows::NodeData::NODE_DIRECT_SETTING_KEYS[key] }
+
+        new(
+          id: node.id,
+          name: node.name,
+          type: node.type,
+          type_version: node.type_version,
+          position: node.position,
+          webhook_id: include_webhook_id ? node.webhook_id : nil,
+          parameters: include_node_parameters ? node.parameters : nil,
+          credentials: include_credentials ? node.credentials : nil,
+          **direct_settings,
+        )
+      end
     end
 
     def initialize(

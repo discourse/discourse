@@ -16,6 +16,20 @@ module DiscourseWorkflows
 
     attribute :steps
 
+    STEP_FIELDS = %w[
+      node_id
+      node_name
+      node_type
+      position
+      status
+      input
+      output
+      error
+      metadata
+      started_at
+      finished_at
+    ].freeze
+
     def workflow_name
       object.workflow_snapshot_name
     end
@@ -30,20 +44,6 @@ module DiscourseWorkflows
     def include_workflow_call_caller?
       workflow_call_caller.present?
     end
-
-    STEP_FIELDS = %w[
-      node_id
-      node_name
-      node_type
-      position
-      status
-      input
-      output
-      error
-      metadata
-      started_at
-      finished_at
-    ].freeze
 
     def steps
       return [] unless object.execution_data

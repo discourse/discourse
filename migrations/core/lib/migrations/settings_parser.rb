@@ -4,10 +4,19 @@ module Migrations
   class SettingsParser
     class InvalidYaml < StandardError
     end
+
     class ValidationError < StandardError
     end
 
     REQUIRED_KEYS = %i[source_db_path output_db_path root_paths]
+
+    class << self
+      def parse!(path)
+        new(YAML.load_file(path, symbolize_names: true))
+      rescue Psych::SyntaxError => e
+        raise InvalidYaml.new(e.message)
+      end
+    end
 
     def initialize(options)
       @options = options
@@ -25,12 +34,6 @@ module Migrations
 
     def fetch(key, default)
       @options.fetch(key, default)
-    end
-
-    def self.parse!(path)
-      new(YAML.load_file(path, symbolize_names: true))
-    rescue Psych::SyntaxError => e
-      raise InvalidYaml.new(e.message)
     end
 
     private

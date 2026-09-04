@@ -31,23 +31,25 @@ module Migrations
       # good balance.
       CHUNKS_PER_FORK = 8
 
-      # The chunk boundaries and the step's total row count, from one source opened
-      # only here. Boundaries are empty for an unpartitioned step (one worker reads
-      # the whole source). The workers don't know the total once they start claiming
-      # chunks, so the parent counts it up front (`max_progress` with no chunk set
-      # counts the whole source). Runs on the coordinator's thread — or, for a
-      # fork-starved step, on the scheduler's planner thread while other steps run.
-      #
-      # @return [Array(Array, Integer)] `[boundaries, total]`
-      def self.compute_plan(step_class:, step_factory:, fork_count:)
-        step = step_factory.call(step_class)
-        begin
-          source = step.source
-          boundaries =
-            fork_count > 1 ? source.partition_boundaries(fork_count * CHUNKS_PER_FORK) : []
-          [boundaries, source.max_progress]
-        ensure
-          step.source.cleanup
+      class << self
+        # The chunk boundaries and the step's total row count, from one source opened
+        # only here. Boundaries are empty for an unpartitioned step (one worker reads
+        # the whole source). The workers don't know the total once they start claiming
+        # chunks, so the parent counts it up front (`max_progress` with no chunk set
+        # counts the whole source). Runs on the coordinator's thread — or, for a
+        # fork-starved step, on the scheduler's planner thread while other steps run.
+        #
+        # @return [Array(Array, Integer)] `[boundaries, total]`
+        def compute_plan(step_class:, step_factory:, fork_count:)
+          step = step_factory.call(step_class)
+          begin
+            source = step.source
+            boundaries =
+              fork_count > 1 ? source.partition_boundaries(fork_count * CHUNKS_PER_FORK) : []
+            [boundaries, source.max_progress]
+          ensure
+            step.source.cleanup
+          end
         end
       end
 

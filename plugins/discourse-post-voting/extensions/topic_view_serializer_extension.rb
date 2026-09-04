@@ -2,15 +2,17 @@
 
 module PostVoting
   module TopicViewSerializerExtension
-    def self.included(base)
-      base.attributes(
-        :is_post_voting,
-        :last_answered_at,
-        :last_commented_on,
-        :answer_count,
-        :last_answer_post_number,
-        :last_answerer,
-      )
+    class << self
+      def included(base)
+        base.attributes(
+          :is_post_voting,
+          :last_answered_at,
+          :last_commented_on,
+          :answer_count,
+          :last_answer_post_number,
+          :last_answerer,
+        )
+      end
     end
 
     def is_post_voting

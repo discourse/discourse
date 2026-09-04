@@ -18,6 +18,32 @@ class UserApiKey < ActiveRecord::Base
 
   after_initialize :generate_key
 
+  class << self
+    # Scopes allowed to be requested by external services
+    def allowed_scopes
+      Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))
+    end
+
+    def available_scopes
+      @available_scopes ||= Set.new(UserApiKeyScopes.all_scopes.keys.map(&:to_s))
+    end
+
+    def push_clients_for(user)
+      return [] if SiteSetting.allow_user_api_key_scopes.split("|").exclude?("push")
+      return [] if SiteSetting.allowed_user_api_push_urls.blank?
+
+      user
+        .user_api_keys
+        .active
+        .joins(:scopes, :client)
+        .where("user_api_key_scopes.name IN ('push', 'notifications')")
+        .where("push_url IS NOT NULL AND push_url <> ''")
+        .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
+        .order("user_api_key_clients.client_id ASC")
+        .pluck("user_api_key_clients.client_id, user_api_keys.push_url")
+    end
+  end
+
   def generate_key
     if !key_hash
       @key ||= SecureRandom.hex
@@ -50,15 +76,6 @@ class UserApiKey < ActiveRecord::Base
     update_columns(**update_args)
   end
 
-  # Scopes allowed to be requested by external services
-  def self.allowed_scopes
-    Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))
-  end
-
-  def self.available_scopes
-    @available_scopes ||= Set.new(UserApiKeyScopes.all_scopes.keys.map(&:to_s))
-  end
-
   def has_push?
     scopes.any? { |s| s.name == "push" || s.name == "notifications" } && push_url.present? &&
       SiteSetting.allowed_user_api_push_urls.include?(push_url)
@@ -66,21 +83,6 @@ class UserApiKey < ActiveRecord::Base
 
   def expired?
     expires_at.present? && expires_at <= Time.zone.now
-  end
-
-  def self.push_clients_for(user)
-    return [] if SiteSetting.allow_user_api_key_scopes.split("|").exclude?("push")
-    return [] if SiteSetting.allowed_user_api_push_urls.blank?
-
-    user
-      .user_api_keys
-      .active
-      .joins(:scopes, :client)
-      .where("user_api_key_scopes.name IN ('push', 'notifications')")
-      .where("push_url IS NOT NULL AND push_url <> ''")
-      .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
-      .order("user_api_key_clients.client_id ASC")
-      .pluck("user_api_key_clients.client_id, user_api_keys.push_url")
   end
 
   def allow?(env)

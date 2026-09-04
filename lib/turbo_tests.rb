@@ -26,20 +26,22 @@ module TurboTests
   class FakeException < Exception
     attr_reader :backtrace, :message, :cause
 
+    class << self
+      def from_obj(obj)
+        if obj
+          obj = obj.symbolize_keys
+
+          klass = Class.new(FakeException) { define_singleton_method(:name) { obj[:class_name] } }
+
+          klass.new(obj[:backtrace], obj[:message], FakeException.from_obj(obj[:cause]))
+        end
+      end
+    end
+
     def initialize(backtrace, message, cause)
       @backtrace = backtrace
       @message = message
       @cause = cause
-    end
-
-    def self.from_obj(obj)
-      if obj
-        obj = obj.symbolize_keys
-
-        klass = Class.new(FakeException) { define_singleton_method(:name) { obj[:class_name] } }
-
-        klass.new(obj[:backtrace], obj[:message], FakeException.from_obj(obj[:cause]))
-      end
     end
   end
 
@@ -52,17 +54,20 @@ module TurboTests
       :exception,
       :pending_exception,
     )
+
   class FakeExecutionResult
-    def self.from_obj(obj)
-      obj = obj.symbolize_keys
-      new(
-        obj[:example_skipped?],
-        obj[:pending_message],
-        obj[:status].to_sym,
-        obj[:pending_fixed?],
-        FakeException.from_obj(obj[:exception]),
-        FakeException.from_obj(obj[:pending_exception]),
-      )
+    class << self
+      def from_obj(obj)
+        obj = obj.symbolize_keys
+        new(
+          obj[:example_skipped?],
+          obj[:pending_message],
+          obj[:status].to_sym,
+          obj[:pending_fixed?],
+          FakeException.from_obj(obj[:exception]),
+          FakeException.from_obj(obj[:pending_exception]),
+        )
+      end
     end
   end
 
@@ -79,28 +84,30 @@ module TurboTests
     )
 
   class FakeExample
-    def self.from_obj(obj, process_id:, command_string:)
-      obj = obj.symbolize_keys
-      metadata = obj[:metadata].symbolize_keys
+    class << self
+      def from_obj(obj, process_id:, command_string:)
+        obj = obj.symbolize_keys
+        metadata = obj[:metadata].symbolize_keys
 
-      metadata[:shared_group_inclusion_backtrace].map! do |frame|
-        frame = frame.symbolize_keys
-        RSpec::Core::SharedExampleGroupInclusionStackFrame.new(
-          frame[:shared_group_name],
-          frame[:inclusion_location],
+        metadata[:shared_group_inclusion_backtrace].map! do |frame|
+          frame = frame.symbolize_keys
+          RSpec::Core::SharedExampleGroupInclusionStackFrame.new(
+            frame[:shared_group_name],
+            frame[:inclusion_location],
+          )
+        end
+
+        new(
+          FakeExecutionResult.from_obj(obj[:execution_result]),
+          obj[:location],
+          obj[:description],
+          obj[:full_description],
+          metadata,
+          obj[:location_rerun_argument],
+          process_id,
+          command_string,
         )
       end
-
-      new(
-        FakeExecutionResult.from_obj(obj[:execution_result]),
-        obj[:location],
-        obj[:description],
-        obj[:full_description],
-        metadata,
-        obj[:location_rerun_argument],
-        process_id,
-        command_string,
-      )
     end
 
     def notification

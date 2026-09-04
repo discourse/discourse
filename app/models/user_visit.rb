@@ -3,19 +3,20 @@
 class UserVisit < ActiveRecord::Base
   belongs_to :user
 
-  def self.counts_by_day_query(start_date, end_date, group_id = nil)
-    result = where("visited_at >= ? and visited_at <= ?", start_date.to_date, end_date.to_date)
+  class << self
+    def counts_by_day_query(start_date, end_date, group_id = nil)
+      result = where("visited_at >= ? and visited_at <= ?", start_date.to_date, end_date.to_date)
 
-    if group_id
-      result = result.joins("INNER JOIN users ON users.id = user_visits.user_id")
-      result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
-      result = result.where("group_users.group_id = ?", group_id)
+      if group_id
+        result = result.joins("INNER JOIN users ON users.id = user_visits.user_id")
+        result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
+        result = result.where("group_users.group_id = ?", group_id)
+      end
+      result.group(:visited_at).order(:visited_at)
     end
-    result.group(:visited_at).order(:visited_at)
-  end
 
-  def self.count_by_active_users(start_date, end_date)
-    sql = <<~SQL
+    def count_by_active_users(start_date, end_date)
+      sql = <<~SQL
       WITH island_boundaries AS (
         -- A user's visit days merge into an "active island" when gaps are
         -- 30 days or less; the user counts toward MAU from each island's
@@ -76,20 +77,20 @@ class UserVisit < ActiveRecord::Base
       ORDER BY dau.date
     SQL
 
-    DB.query_hash(sql, start_date: start_date, end_date: end_date)
-  end
+      DB.query_hash(sql, start_date: start_date, end_date: end_date)
+    end
 
-  # A count of visits in a date range by day
-  def self.by_day(start_date, end_date, group_id = nil)
-    counts_by_day_query(start_date, end_date, group_id).count
-  end
+    # A count of visits in a date range by day
+    def by_day(start_date, end_date, group_id = nil)
+      counts_by_day_query(start_date, end_date, group_id).count
+    end
 
-  def self.mobile_by_day(start_date, end_date, group_id = nil)
-    counts_by_day_query(start_date, end_date, group_id).where(mobile: true).count
-  end
+    def mobile_by_day(start_date, end_date, group_id = nil)
+      counts_by_day_query(start_date, end_date, group_id).where(mobile: true).count
+    end
 
-  def self.counts_by_day_and_mobile(start_date, end_date, group_id: nil)
-    sql = <<~SQL
+    def counts_by_day_and_mobile(start_date, end_date, group_id: nil)
+      sql = <<~SQL
       SELECT
         visited_at,
         mobile,
@@ -103,14 +104,14 @@ class UserVisit < ActiveRecord::Base
       ORDER BY visited_at
     SQL
 
-    params = { start_date: start_date, end_date: end_date, prev_start: start_date - 30.days }
-    params[:group_id] = group_id.to_i if group_id
+      params = { start_date: start_date, end_date: end_date, prev_start: start_date - 30.days }
+      params[:group_id] = group_id.to_i if group_id
 
-    DB.query(sql, **params)
-  end
+      DB.query(sql, **params)
+    end
 
-  def self.ensure_consistency!
-    DB.exec <<~SQL
+    def ensure_consistency!
+      DB.exec <<~SQL
       UPDATE user_stats u set days_visited =
       (
         SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.user_id
@@ -120,6 +121,7 @@ class UserVisit < ActiveRecord::Base
         SELECT COUNT(*) FROM user_visits v WHERE v.user_id = u.user_id
       )
     SQL
+    end
   end
 end
 

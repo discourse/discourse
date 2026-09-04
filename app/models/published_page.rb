@@ -7,6 +7,33 @@ class PublishedPage < ActiveRecord::Base
   validates :slug, :topic_id, uniqueness: true
 
   validate :slug_format
+  class << self
+    def publish!(publisher, topic, slug, options = {})
+      pp = nil
+
+      results =
+        transaction do
+          pp = find_or_initialize_by(topic: topic)
+          pp.slug = slug.strip
+          pp.public = options[:public] || false
+
+          if pp.save
+            StaffActionLogger.new(publisher).log_published_page(topic.id, slug)
+            [true, pp]
+          end
+        end
+
+      results || [false, pp]
+    end
+
+    def unpublish!(publisher, topic)
+      if pp = PublishedPage.find_by(topic_id: topic.id)
+        pp.destroy!
+        StaffActionLogger.new(publisher).log_unpublished_page(topic.id, pp.slug)
+      end
+    end
+  end
+
   def slug_format
     if slug !~ /\A[a-zA-Z\-\_0-9]+\z/
       errors.add(:slug, I18n.t("publish_page.slug_errors.invalid"))
@@ -21,31 +48,6 @@ class PublishedPage < ActiveRecord::Base
 
   def url
     "#{Discourse.base_url}#{path}"
-  end
-
-  def self.publish!(publisher, topic, slug, options = {})
-    pp = nil
-
-    results =
-      transaction do
-        pp = find_or_initialize_by(topic: topic)
-        pp.slug = slug.strip
-        pp.public = options[:public] || false
-
-        if pp.save
-          StaffActionLogger.new(publisher).log_published_page(topic.id, slug)
-          [true, pp]
-        end
-      end
-
-    results || [false, pp]
-  end
-
-  def self.unpublish!(publisher, topic)
-    if pp = PublishedPage.find_by(topic_id: topic.id)
-      pp.destroy!
-      StaffActionLogger.new(publisher).log_unpublished_page(topic.id, pp.slug)
-    end
   end
 end
 
