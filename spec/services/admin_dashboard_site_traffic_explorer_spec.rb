@@ -36,7 +36,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     end
 
     let(:languages) do
-      [nil, "", nil, "fr", "en-US", "en-US", "en-US", "fr", "de", "zh-CN", "en-US"]
+      [nil, "", nil, "fr-FR", "en-US", "en-GB", "en-US", "fr-CA", "_", "zh-cmn-Hant-TW", "en-US"]
     end
 
     let!(:pageviews) do
@@ -116,12 +116,27 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
             { value: "firefox", label: "Firefox", pageviews: 1 },
           ],
           "languages" => [
-            { value: "en-US", label: "en-US", pageviews: 4 },
+            { value: "en", label: "en", pageviews: 4 },
             { value: "", label: "Unknown", pageviews: 3 },
             { value: "fr", label: "fr", pageviews: 2 },
-            { value: "de", label: "de", pageviews: 1 },
-            { value: "zh-CN", label: "zh-CN", pageviews: 1 },
+            { value: "_", label: "_", pageviews: 1 },
+            { value: "zh-Hant", label: "zh-Hant", pageviews: 1 },
           ],
+        )
+
+        invalid_language_dimensions =
+          described_class.call(params: params.merge(language: "_")).traffic.fetch(:dimensions)
+        expect(invalid_language_dimensions.fetch("languages")).to eq(
+          [{ value: "_", label: "_", pageviews: 1 }],
+        )
+
+        regional_language_traffic =
+          described_class.call(params: params.merge(language: "en-US")).traffic
+        expect(regional_language_traffic.fetch(:dimensions).fetch("languages")).to eq(
+          [{ value: "en", label: "en", pageviews: 4 }],
+        )
+        expect(regional_language_traffic.fetch(:active_filters)).to eq(
+          [{ key: :language, value: "en", label: "en" }],
         )
       end
 
@@ -174,7 +189,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           "countries" => [{ value: "US", label: "United States", pageviews: 3 }],
           "networks" => [{ value: "AS64496", label: "Example Network (AS64496)", pageviews: 3 }],
           "browsers" => [{ value: "chrome", label: "Google Chrome", pageviews: 3 }],
-          "languages" => [{ value: "en-US", label: "en-US", pageviews: 3 }],
+          "languages" => [{ value: "en", label: "en", pageviews: 3 }],
           "ip_addresses" => [
             { value: "192.0.2.5", label: "192.0.2.5", pageviews: 1 },
             { value: "192.0.2.6", label: "192.0.2.6", pageviews: 1 },
