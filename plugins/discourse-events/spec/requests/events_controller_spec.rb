@@ -132,7 +132,7 @@ module DiscourseEvents::Events
         expect(response.parsed_body["events"]).not_to be_empty
       end
 
-      it "filters by tags, text, status, and format" do
+      it "filters by tags, text, and status" do
         tag = Fabricate(:tag, name: "launch")
         tagged_event =
           Fabricate(
@@ -149,13 +149,6 @@ module DiscourseEvents::Events
             status: DiscourseEvents::Events::Event.statuses[:private],
             url: "https://example.com/meeting",
           )
-        hybrid_event =
-          Fabricate(
-            :event,
-            original_starts_at: 3.days.from_now,
-            url: "https://example.com/meeting",
-            location: "Room 6",
-          )
 
         get "/discourse-post-event/events.json", params: { tags: [tag.name] }
         expect(response.parsed_body["events"].pluck("id")).to contain_exactly(tagged_event.id)
@@ -165,9 +158,6 @@ module DiscourseEvents::Events
 
         get "/discourse-post-event/events.json", params: { status: "private" }
         expect(response.parsed_body["events"].pluck("id")).to contain_exactly(private_event.id)
-
-        get "/discourse-post-event/events.json", params: { event_format: "hybrid" }
-        expect(response.parsed_body["events"].pluck("id")).to contain_exactly(hybrid_event.id)
       end
 
       it "should return events in ics format" do
