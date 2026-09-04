@@ -4,6 +4,7 @@ module PageObjects
   module Pages
     class AdminReport < PageObjects::Pages::Base
       CATEGORY_FILTER = ".admin-report .chart__additional-filters .multiple-categories-selector"
+
       def visit_index(group: nil)
         page.visit("/admin/reports#{group ? "?group=#{group}" : ""}")
         self

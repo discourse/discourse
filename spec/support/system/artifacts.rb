@@ -3,8 +3,8 @@
 # Per-example debugging artifacts for system specs, captured when the example is
 # tagged `video: true` or `trace: true`.
 module SystemArtifacts
-  # Save a screen recording for the example.
   class << self
+    # Save a screen recording for the example.
     def record_video(example)
       return unless example.metadata[:video]
 

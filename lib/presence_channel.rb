@@ -120,9 +120,9 @@ class PresenceChannel
 
   LUA_SCRIPTS = {}
 
-  # Designed to be run periodically. Checks the channel list for channels with expired members,
-  # and runs auto_leave for each eligible channel
   class << self
+    # Designed to be run periodically. Checks the channel list for channels with expired members,
+    # and runs auto_leave for each eligible channel
     def auto_leave_all
       channels_with_expiring_members =
         PresenceChannel.redis.zrangebyscore(redis_key_channel_list, "-inf", Time.zone.now.to_i)

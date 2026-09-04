@@ -55,6 +55,7 @@ module DiscourseAi
         temporal_context
         top_categories
       ]
+
       def initialize(
         post: nil,
         topic: nil,

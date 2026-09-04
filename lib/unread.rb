@@ -7,6 +7,7 @@ class Unread
     TopicUser.notification_levels[:muted],
     TopicUser.notification_levels[:regular],
   ]
+
   def initialize(topic, topic_user, guardian)
     @guardian = guardian
     @topic = topic

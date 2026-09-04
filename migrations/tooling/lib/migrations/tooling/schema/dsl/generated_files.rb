@@ -16,11 +16,11 @@ module Migrations
           # it, which is how generated files are told apart from them.
           MARKER = "This file is auto-generated from the"
 
-          # Absolute paths of the model and enum files generation produces for
-          # `resolved`, rooted at `root`. Manual models are hand-written, so they
-          # are excluded. The SQL schema file is not included — callers that need
-          # it add it themselves.
           class << self
+            # Absolute paths of the model and enum files generation produces for
+            # `resolved`, rooted at `root`. Manual models are hand-written, so they
+            # are excluded. The SQL schema file is not included — callers that need
+            # it add it themselves.
             def expected_paths(resolved, output_config, root)
               models_dir = File.expand_path(output_config.models_directory, root)
               enums_dir = File.expand_path(output_config.enums_directory, root)

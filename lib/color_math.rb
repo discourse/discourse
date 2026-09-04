@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module ColorMath
-  # Equivalent to dc-color-brightness() in variables.scss
   class << self
+    # Equivalent to dc-color-brightness() in variables.scss
     def brightness(color)
       rgb = Converters.hex_to_rgb(color)
       (rgb[0].to_i * 299 + rgb[1].to_i * 587 + rgb[2].to_i * 114) / 1000.0

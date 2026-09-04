@@ -34,9 +34,9 @@ class ApplicationController < ActionController::Base
   # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.js`
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
 
-  # If a controller requires a plugin, it will raise an exception if that plugin is
-  # disabled. This allows plugins to be disabled programmatically.
   class << self
+    # If a controller requires a plugin, it will raise an exception if that plugin is
+    # disabled. This allows plugins to be disabled programmatically.
     def requires_plugin(plugin_name)
       before_action do
         if plugin = Discourse.plugins_by_name[plugin_name]

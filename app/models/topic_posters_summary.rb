@@ -2,9 +2,9 @@
 
 # This is used in topic lists
 class TopicPostersSummary
-  # localization is fast, but this allows us to avoid
-  # calling it in a loop which adds up
   class << self
+    # localization is fast, but this allows us to avoid
+    # calling it in a loop which adds up
     def translations
       {
         original_poster: I18n.t(:original_poster),

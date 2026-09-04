@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module MobileDetection
-  # if the criteria for mobile_device? changes, update the code for `isMobileDevice` in
-  # `frontend/discourse/app/services/capabilities.js`
   class << self
+    # if the criteria for mobile_device? changes, update the code for `isMobileDevice` in
+    # `frontend/discourse/app/services/capabilities.js`
     def mobile_device?(user_agent)
       user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
     end

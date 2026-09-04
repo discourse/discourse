@@ -34,9 +34,9 @@ module DiscourseAi
 
       CASES_GLOB = File.join(__dir__, "../cases", "*/*.yml")
 
-      # @return [Array<DiscourseAi::Evals::Eval>] all cases sorted by path so
-      #   the CLI emits a deterministic order.
       class << self
+        # @return [Array<DiscourseAi::Evals::Eval>] all cases sorted by path so
+        #   the CLI emits a deterministic order.
         def available_cases
           Dir.glob(CASES_GLOB).sort.map { |path| new(path: path) }
         end

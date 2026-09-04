@@ -27,8 +27,8 @@ module Migrations
     # Matches one whole token, from any run.
     PATTERN = /#{DELIMITER}[^#{DELIMITER}]+#{DELIMITER}/
 
-    # @return [Array<String>] every token in `text`, in order.
     class << self
+      # @return [Array<String>] every token in `text`, in order.
       def scan(text)
         text.to_s.scan(PATTERN)
       end

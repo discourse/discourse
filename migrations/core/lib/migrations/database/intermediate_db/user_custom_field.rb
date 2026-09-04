@@ -21,15 +21,15 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `user_custom_fields` record in the IntermediateDB.
-        #
-        # @param user_id      [Integer, String]
-        # @param name         [String]
-        # @param value        [String]
-        # @param created_at   [Time, nil]
-        #
-        # @return [void]
         class << self
+          # Creates a new `user_custom_fields` record in the IntermediateDB.
+          #
+          # @param user_id      [Integer, String]
+          # @param name         [String]
+          # @param value        [String]
+          # @param created_at   [Time, nil]
+          #
+          # @return [void]
           def create(user_id:, name:, value:, created_at: nil)
             Migrations::Database::IntermediateDB.insert(
               SQL,

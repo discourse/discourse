@@ -32,11 +32,11 @@ module Migrations
         # the call site locations per non-resolving model name.
         Result = Data.define(:columns, :unknown_models)
 
-        # @param source [String] Ruby source to analyse
-        # @param path [String] source location, used in error messages and
-        #   unknown model call site locations
-        # @return [Result]
         class << self
+          # @param source [String] Ruby source to analyse
+          # @param path [String] source location, used in error messages and
+          #   unknown model call site locations
+          # @return [Result]
           def scan(source, path:)
             result = Prism.parse(source)
 

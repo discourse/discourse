@@ -7,6 +7,7 @@ module PageObjects
       SEARCH_FIELD_SELECTOR = ".floating-search-input .search-menu"
       SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
       SEARCH_PAGE_SELECTOR = "body.search-page"
+
       def type_in_search(input)
         filter = find("input.full-page-search")
         filter.click

@@ -21,6 +21,7 @@ module DiscourseAutomation
       min_run_time: 0,
       max_run_time: 0,
     }
+
     def last_updated_by
       BasicUserSerializer.new(object.last_updated_by || Discourse.system_user, root: false).as_json
     end

@@ -31,7 +31,6 @@ module Migrations
             ].map { |number| ::SiteSettings::TypeSupervisor.types[number].to_s }
 
           DISALLOWED_SITE_SETTINGS = Set.new([:permalink_normalizations]).freeze
-
           private_constant :DATATYPES_WITH_DEPENDENCY, :DISALLOWED_SITE_SETTINGS
 
           def execute

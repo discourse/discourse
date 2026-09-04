@@ -20,14 +20,14 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `topic_tags` record in the IntermediateDB.
-        #
-        # @param topic_id     [Integer, String]
-        # @param tag_id       [Integer, String]
-        # @param created_at   [Time, nil]
-        #
-        # @return [void]
         class << self
+          # Creates a new `topic_tags` record in the IntermediateDB.
+          #
+          # @param topic_id     [Integer, String]
+          # @param tag_id       [Integer, String]
+          # @param created_at   [Time, nil]
+          #
+          # @return [void]
           def create(topic_id:, tag_id:, created_at: nil)
             Migrations::Database::IntermediateDB.insert(
               SQL,

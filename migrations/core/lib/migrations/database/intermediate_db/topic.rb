@@ -40,34 +40,34 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `topics` record in the IntermediateDB.
-        #
-        # @param original_id            [Integer, String]
-        # @param archetype              [String, nil]
-        # @param archived               [Boolean, nil]
-        # @param bannered_until         [Time, nil]
-        # @param category_id            [Integer, String, nil]
-        # @param closed                 [Boolean, nil]
-        # @param created_at             [Time, nil]
-        # @param deleted_at             [Time, nil]
-        # @param deleted_by_id          [Integer, String, nil]
-        # @param external_id            [Integer, String, nil]
-        # @param featured_link          [String, nil]
-        # @param locale                 [String, nil]
-        # @param og_image_upload_id     [String, nil]
-        # @param pinned_at              [Time, nil]
-        # @param pinned_globally        [Boolean, nil]
-        # @param pinned_until           [Time, nil]
-        # @param slow_mode_seconds      [Integer, nil]
-        # @param subtype                [String, nil]
-        # @param title                  [String]
-        # @param user_id                [Integer, String, nil]
-        # @param views                  [Integer, nil]
-        # @param visibility_reason_id   [Integer, String, nil]
-        # @param visible                [Boolean, nil]
-        #
-        # @return [void]
         class << self
+          # Creates a new `topics` record in the IntermediateDB.
+          #
+          # @param original_id            [Integer, String]
+          # @param archetype              [String, nil]
+          # @param archived               [Boolean, nil]
+          # @param bannered_until         [Time, nil]
+          # @param category_id            [Integer, String, nil]
+          # @param closed                 [Boolean, nil]
+          # @param created_at             [Time, nil]
+          # @param deleted_at             [Time, nil]
+          # @param deleted_by_id          [Integer, String, nil]
+          # @param external_id            [Integer, String, nil]
+          # @param featured_link          [String, nil]
+          # @param locale                 [String, nil]
+          # @param og_image_upload_id     [String, nil]
+          # @param pinned_at              [Time, nil]
+          # @param pinned_globally        [Boolean, nil]
+          # @param pinned_until           [Time, nil]
+          # @param slow_mode_seconds      [Integer, nil]
+          # @param subtype                [String, nil]
+          # @param title                  [String]
+          # @param user_id                [Integer, String, nil]
+          # @param views                  [Integer, nil]
+          # @param visibility_reason_id   [Integer, String, nil]
+          # @param visible                [Boolean, nil]
+          #
+          # @return [void]
           def create(
             original_id:,
             archetype: nil,

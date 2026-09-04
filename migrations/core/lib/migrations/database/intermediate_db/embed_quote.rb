@@ -26,23 +26,23 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `embed_quotes` record in the IntermediateDB.
-        #
-        # @param owner_id             [Integer, String]
-        # @param owner_type           [Integer]
-        #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder          [String]
-        # @param quoted_name          [String, nil]
-        # @param quoted_post_id       [Integer, String, nil]
-        # @param quoted_post_number   [Integer, nil]
-        # @param quoted_topic_id      [Integer, String, nil]
-        # @param quoted_user_id       [Integer, String, nil]
-        # @param quoted_username      [String, nil]
-        #
-        # @return [void]
-        #
-        # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         class << self
+          # Creates a new `embed_quotes` record in the IntermediateDB.
+          #
+          # @param owner_id             [Integer, String]
+          # @param owner_type           [Integer]
+          #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
+          # @param placeholder          [String]
+          # @param quoted_name          [String, nil]
+          # @param quoted_post_id       [Integer, String, nil]
+          # @param quoted_post_number   [Integer, nil]
+          # @param quoted_topic_id      [Integer, String, nil]
+          # @param quoted_user_id       [Integer, String, nil]
+          # @param quoted_username      [String, nil]
+          #
+          # @return [void]
+          #
+          # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
           def create(
             owner_id:,
             owner_type:,

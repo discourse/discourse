@@ -34,6 +34,7 @@ class PostsController < ApplicationController
 
   MAX_POST_REPLIES = 20
   DELETED_POSTS_MAX_LIMIT = 100
+
   def markdown_id
     markdown Post.find_by(id: params[:id].to_i)
   end

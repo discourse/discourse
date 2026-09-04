@@ -5,6 +5,7 @@ class Flag < ActiveRecord::Base
   MAX_SYSTEM_FLAG_ID = 1000
   MAX_NAME_LENGTH = 200
   MAX_DESCRIPTION_LENGTH = 1000
+
   scope :enabled, -> { where(enabled: true) }
   scope :system, -> { where("id < 1000") }
   scope :custom, -> { where("id >= 1000") }

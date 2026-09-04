@@ -123,6 +123,7 @@ class UsersController < ApplicationController
   AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar]
   BOOKMARKS_LIMIT = 20
   USER_MENU_LIST_LIMIT = 20
+
   def index
   end
 

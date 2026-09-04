@@ -5,6 +5,7 @@ module PageObjects
     class Category < PageObjects::Pages::Base
       D_EDITOR_SELECTOR = ".d-editor"
       CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR = ".category-navigation .nav-item_new"
+
       def visit(category)
         page.visit("/c/#{category.id}")
         self

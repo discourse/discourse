@@ -37,15 +37,15 @@ class S3CorsRulesets
   RULE_STATUS_EXISTED = "rules_already_existed"
   RULE_STATUS_APPLIED = "rules_applied"
 
-  ##
-  # Used by the s3:ensure_cors_rules rake task to make sure the
-  # relevant CORS rules are applied to allow for direct uploads to
-  # S3, and in the case of assets rules so there are fonts and other
-  # public assets for the site loaded correctly.
-  #
-  # The use_db_s3_config param comes from ENV, and if the S3 client
-  # is not provided it is initialized by the S3Helper.
   class << self
+    ##
+    # Used by the s3:ensure_cors_rules rake task to make sure the
+    # relevant CORS rules are applied to allow for direct uploads to
+    # S3, and in the case of assets rules so there are fonts and other
+    # public assets for the site loaded correctly.
+    #
+    # The use_db_s3_config param comes from ENV, and if the S3 client
+    # is not provided it is initialized by the S3Helper.
     def sync(use_db_s3_config:, s3_client: nil)
       return if !SiteSetting.s3_install_cors_rule
       return if !(GlobalSetting.use_s3? || SiteSetting.enable_s3_uploads)

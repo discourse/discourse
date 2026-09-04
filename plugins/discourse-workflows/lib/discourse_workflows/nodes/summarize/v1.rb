@@ -137,9 +137,9 @@ module DiscourseWorkflows
           },
         )
 
-        # The output keys depend on how the node is configured, so the contract is derived
-        # from the configuration rather than declared as a constant.
         class << self
+          # The output keys depend on how the node is configured, so the contract is derived
+          # from the configuration rather than declared as a constant.
           def output_schemas(configuration = {}, input_schemas: [])
             config = (configuration || {}).deep_stringify_keys
             rows = Array(config.dig("fields_to_summarize", "values"))

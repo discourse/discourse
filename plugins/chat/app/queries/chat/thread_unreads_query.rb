@@ -22,19 +22,19 @@ module Chat
     # because the LIMIT is applied after the thread_ids filter.
     MAX_THREADS = 500
 
-    ##
-    # @param channel_ids [Array<Integer>] (Optional) The IDs of the channels to count threads for.
-    #  If only this is provided, all threads across the channels provided will be counted.
-    # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count. If this
-    #  is used in tandem with channel_ids, it will just further filter the results of
-    #  the thread counts from those channels.
-    # @param user_id [Integer] The ID of the user to count for.
-    # @param include_missing_memberships [Boolean] Whether to include threads
-    #   that the user is not a member of. These counts will always be 0.
-    # @param include_read [Boolean] Whether to include threads that the user
-    #   is a member of where they have read all the messages. This overrides
-    #   include_missing_memberships.
     class << self
+      ##
+      # @param channel_ids [Array<Integer>] (Optional) The IDs of the channels to count threads for.
+      #  If only this is provided, all threads across the channels provided will be counted.
+      # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count. If this
+      #  is used in tandem with channel_ids, it will just further filter the results of
+      #  the thread counts from those channels.
+      # @param user_id [Integer] The ID of the user to count for.
+      # @param include_missing_memberships [Boolean] Whether to include threads
+      #   that the user is not a member of. These counts will always be 0.
+      # @param include_read [Boolean] Whether to include threads that the user
+      #   is a member of where they have read all the messages. This overrides
+      #   include_missing_memberships.
       def call(
         channel_ids: nil,
         thread_ids: nil,

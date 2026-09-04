@@ -2,8 +2,8 @@
 module DiscourseAi
   module AiBot
     module SharedAiConversationsHelper
-      # keeping it here for caching
       class << self
+        # keeping it here for caching
         def share_asset_url(asset_name)
           if !%w[share.css highlight.js].include?(asset_name)
             raise StandardError, "unknown asset type #{asset_name}"

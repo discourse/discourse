@@ -11,10 +11,10 @@ module AdminDashboard
     # Every method on the provider is batch-shaped to keep the dashboard
     # render path bounded — never one-by-one resolution.
     class SourceProvider
-      # @return [String] the value stored in admin_dashboard_reports.source for
-      #                  rows this provider owns. Examples: "core_report",
-      #                  "data_explorer_query".
       class << self
+        # @return [String] the value stored in admin_dashboard_reports.source for
+        #                  rows this provider owns. Examples: "core_report",
+        #                  "data_explorer_query".
         def source_name
           raise NotImplementedError
         end

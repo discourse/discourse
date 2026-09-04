@@ -10,6 +10,7 @@ module Jobs
     ImageTooLargeError = HotlinkedMediaDownloader::ImageTooLargeError
     ImageBrokenError = HotlinkedMediaDownloader::ImageBrokenError
     UploadCreateError = HotlinkedMediaDownloader::UploadCreateError
+
     def execute(args)
       disable_if_low_on_disk_space
 

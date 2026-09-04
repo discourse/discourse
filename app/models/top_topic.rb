@@ -3,8 +3,8 @@
 class TopTopic < ActiveRecord::Base
   belongs_to :topic
 
-  # The top topics we want to refresh often
   class << self
+    # The top topics we want to refresh often
     def refresh_daily!
       DistributedMutex.synchronize("update_top_topics", validity: 5.minutes) do
         transaction do

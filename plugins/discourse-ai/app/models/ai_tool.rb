@@ -34,8 +34,8 @@ class AiTool < ActiveRecord::Base
   validate :validate_parameters_enum
   validate :validate_secret_contracts
 
-  # Load a JavaScript file from the ai_tool_scripts directory
   class << self
+    # Load a JavaScript file from the ai_tool_scripts directory
     def load_script(filename)
       path = File.join(__dir__, "../../lib/ai_tool_scripts", filename)
       File.read(path)

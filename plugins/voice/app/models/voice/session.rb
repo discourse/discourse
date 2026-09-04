@@ -22,10 +22,10 @@ module Voice
 
     scope :orphaned, -> { where(left_at: nil) }
 
-    # People who shared time in this room with the user, most time together
-    # first. Overlap is computed pairwise from session intervals; a session
-    # still in progress counts up to now.
     class << self
+      # People who shared time in this room with the user, most time together
+      # first. Overlap is computed pairwise from session intervals; a session
+      # still in progress counts up to now.
       def top_room_companions_for(user_id, room_id, since:, limit: 10)
         overlap_seconds = <<~SQL
           LEAST(

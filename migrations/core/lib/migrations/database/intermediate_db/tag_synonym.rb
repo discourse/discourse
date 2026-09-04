@@ -19,13 +19,13 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `tag_synonyms` record in the IntermediateDB.
-        #
-        # @param synonym_tag_id   [Integer, String]
-        # @param target_tag_id    [Integer, String]
-        #
-        # @return [void]
         class << self
+          # Creates a new `tag_synonyms` record in the IntermediateDB.
+          #
+          # @param synonym_tag_id   [Integer, String]
+          # @param target_tag_id    [Integer, String]
+          #
+          # @return [void]
           def create(synonym_tag_id:, target_tag_id:)
             Migrations::Database::IntermediateDB.insert(SQL, synonym_tag_id, target_tag_id)
           end

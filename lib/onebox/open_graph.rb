@@ -3,6 +3,7 @@
 module Onebox
   class OpenGraph < Normalizer
     COLLECTIONS = %i[article_section article_section_color article_tag]
+
     def initialize(doc)
       @data = extract(doc)
     end

@@ -37,6 +37,7 @@ class ImportScripts::Zoho < ImportScripts::Base
   ZOHO_CODE_BLOCK_START = /<ol style="list-style-position: outside;(.)*">/
   TOO_MANY_LINE_BREAKS = /[\n ]{3,}/
   STYLE_ATTR = /(\s)*style="(.)*"/
+
   def initialize(path)
     @path = path
     @all_posts = []

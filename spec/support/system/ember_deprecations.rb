@@ -4,9 +4,9 @@
 # plugins/themes into raising on Ember deprecations, surface fatal deprecations,
 # and count non-fatal ones.
 module EmberDeprecations
-  # Raise on Ember deprecations only for code we own (core specs, preinstalled
-  # plugins, preinstalled themes), unless the caller already set the flag.
   class << self
+    # Raise on Ember deprecations only for code we own (core specs, preinstalled
+    # plugins, preinstalled themes), unless the caller already set the flag.
     def set_raise_on_deprecation!(example)
       return unless ENV["EMBER_RAISE_ON_DEPRECATION"].nil?
 

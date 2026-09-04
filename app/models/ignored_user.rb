@@ -6,8 +6,8 @@ class IgnoredUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :ignored_user, class_name: "User"
 
-  # Excludes self and staff to match topic post filtering.
   class << self
+    # Excludes self and staff to match topic post filtering.
     def ignored_ids_for(user)
       return [] unless user
 

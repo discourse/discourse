@@ -6,8 +6,8 @@ module BackupRestore
     BackupFileExists = Class.new(RuntimeError)
     StorageError = Class.new(RuntimeError)
 
-    # @return [BackupStore]
     class << self
+      # @return [BackupStore]
       def create(opts = {})
         case opts[:location] || SiteSetting.backup_location
         when BackupLocationSiteSetting::LOCAL

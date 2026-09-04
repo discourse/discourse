@@ -14,10 +14,10 @@ module Voice
     # only refreshes statuses that still exist, so a wrong clear would stick.
     STALE_GRACE_PERIOD = 30.seconds
 
-    # Statuses carry no ends_at: they mirror room presence, not a timer, so
-    # the tooltip shows no "until" line. Leave/kick clear them directly;
-    # crashed or lapsed clients are reaped by clear_stale_statuses.
     class << self
+      # Statuses carry no ends_at: they mirror room presence, not a timer, so
+      # the tooltip shows no "until" line. Leave/kick clear them directly;
+      # crashed or lapsed clients are reaped by clear_stale_statuses.
       def set_voice_status(user, room)
         return unless SiteSetting.enable_user_status
         return unless SiteSetting.voice_auto_status_enabled

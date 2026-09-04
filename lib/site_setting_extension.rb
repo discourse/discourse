@@ -9,10 +9,10 @@ module SiteSettingExtension
 
   delegate :description, :keywords, :placeholder, :humanized_name, to: SiteSettings::LabelFormatter
 
-  # support default_locale being set via global settings
-  # this also adds support for testing the extension and global settings
-  # for site locale
   class << self
+    # support default_locale being set via global settings
+    # this also adds support for testing the extension and global settings
+    # for site locale
     def extended(klass)
       if GlobalSetting.respond_to?(:default_locale) && GlobalSetting.default_locale.present?
         # protected

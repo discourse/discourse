@@ -40,11 +40,8 @@ module Migrations
           emit "    private_constant :SQL"
           emit
 
-          singleton_open = table.conflict_strategy == :ignore
-          if singleton_open
-            emit "    class << self"
-            emit_conflict_strategy(table)
-          end
+          emit "    class << self"
+          emit_conflict_strategy(table)
 
           if table.model_mode == :extended
             emit "    # -- custom code --"
@@ -53,10 +50,7 @@ module Migrations
             emit
           end
 
-          documentation = method_documentation(table.name, columns)
-          documentation = documentation.gsub(/^/, "  ") if singleton_open
-          emit documentation
-          emit "    class << self" unless singleton_open
+          emit method_documentation(table.name, columns).gsub(/^/, "  ")
           emit "      def create("
           emit method_parameters(columns).gsub(/^/, "  ")
           emit "      )"

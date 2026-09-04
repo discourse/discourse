@@ -9,6 +9,7 @@ module DiscourseAi
       COMPRESSED_CONTEXT_PREFIX = "<compressed_context>"
       COMPRESSED_CONTEXT_SUFFIX = "</compressed_context>"
       COMPRESSED_CONTEXT_ACK = "Understood, I have the context."
+
       attr_reader :chat_context_posts
       attr_accessor :topic
 

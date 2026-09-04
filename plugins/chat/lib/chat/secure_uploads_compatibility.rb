@@ -2,14 +2,14 @@
 
 module Chat
   class SecureUploadsCompatibility
-    ##
-    # At this point in time, secure uploads is not compatible with chat,
-    # so if it is enabled then chat uploads must be disabled to avoid undesirable
-    # behaviour.
-    #
-    # The env var DISCOURSE_ALLOW_UNSECURE_CHAT_UPLOADS can be set to keep
-    # it enabled, but this is strongly advised against.
     class << self
+      ##
+      # At this point in time, secure uploads is not compatible with chat,
+      # so if it is enabled then chat uploads must be disabled to avoid undesirable
+      # behaviour.
+      #
+      # The env var DISCOURSE_ALLOW_UNSECURE_CHAT_UPLOADS can be set to keep
+      # it enabled, but this is strongly advised against.
       def update_settings
         if SiteSetting.secure_uploads && SiteSetting.chat_allow_uploads &&
              !GlobalSetting.allow_unsecure_chat_uploads

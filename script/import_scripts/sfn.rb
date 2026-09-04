@@ -62,6 +62,7 @@ class ImportScripts::Sfn < ImportScripts::Base
     "{E4891409-0F4F-4151-B550-ECE53655E231}" => 48, # "Scientific Research",
     "{9613BAC2-229B-4563-9E1C-35C31CDDCE2F}" => 49, # "Students",
   }
+
   def execute
     load_external_users
     import_users

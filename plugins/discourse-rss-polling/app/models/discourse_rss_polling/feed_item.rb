@@ -29,6 +29,7 @@ module DiscourseRssPolling
       time
       u
     ]
+
     def initialize(rss_item, accessor = ::FeedItemAccessor)
       @accessor = accessor.new(rss_item)
     end

@@ -17,6 +17,31 @@ module DiscourseAi
           end
         end
 
+      class << self
+        def explicit_filters?(query)
+          query
+            .to_s
+            .scan(/(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/)
+            .filter_map { |word,| word.presence }
+            .any? do |word|
+              cleaned = word.delete("\"'")
+              direct_filter =
+                cleaned.match?(
+                  /\A(?:[lr]|t|order:\w+|in:title|topic:\d+|in:all(?:-posts)?|include:(?:invisible|unlisted)|personal_messages:\S+)\z/i,
+                )
+
+              direct_filter ||
+                Search.advanced_filters.values.any? do |options|
+                  options[:enabled].call && cleaned.match?(options[:case_insensitive_matcher])
+                end
+            end
+        end
+
+        def explicit_filters_except_private_messages?(query)
+          explicit_filters?(query.to_s.gsub(SEMANTIC_PRIVATE_MESSAGE_FILTER, " "))
+        end
+      end
+
       def initialize(user:, lexical_retriever: nil, semantic_retriever: nil)
         @user = user
         @guardian = Guardian.new(user)
@@ -46,29 +71,6 @@ module DiscourseAi
           end
 
         Result.new(candidates:, private_messages:)
-      end
-
-      def self.explicit_filters?(query)
-        query
-          .to_s
-          .scan(/(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/)
-          .filter_map { |word,| word.presence }
-          .any? do |word|
-            cleaned = word.delete("\"'")
-            direct_filter =
-              cleaned.match?(
-                /\A(?:[lr]|t|order:\w+|in:title|topic:\d+|in:all(?:-posts)?|include:(?:invisible|unlisted)|personal_messages:\S+)\z/i,
-              )
-
-            direct_filter ||
-              Search.advanced_filters.values.any? do |options|
-                options[:enabled].call && cleaned.match?(options[:case_insensitive_matcher])
-              end
-          end
-      end
-
-      def self.explicit_filters_except_private_messages?(query)
-        explicit_filters?(query.to_s.gsub(SEMANTIC_PRIVATE_MESSAGE_FILTER, " "))
       end
 
       def validated_sources(result, source_refs)

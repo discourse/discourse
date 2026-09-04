@@ -7,17 +7,19 @@ module ::Boards
     config.autoload_paths << File.join(config.root, "lib")
   end
 
-  def self.card_onebox_template
-    path = Rails.root.join("plugins/boards/lib/onebox/templates/boards_card.mustache")
-    return File.read(path) if Rails.env.development?
+  class << self
+    def card_onebox_template
+      path = Rails.root.join("plugins/boards/lib/onebox/templates/boards_card.mustache")
+      return File.read(path) if Rails.env.development?
 
-    @card_onebox_template ||= File.read(path)
-  end
+      @card_onebox_template ||= File.read(path)
+    end
 
-  def self.board_onebox_template
-    path = Rails.root.join("plugins/boards/lib/onebox/templates/boards_board.mustache")
-    return File.read(path) if Rails.env.development?
+    def board_onebox_template
+      path = Rails.root.join("plugins/boards/lib/onebox/templates/boards_board.mustache")
+      return File.read(path) if Rails.env.development?
 
-    @board_onebox_template ||= File.read(path)
+      @board_onebox_template ||= File.read(path)
+    end
   end
 end

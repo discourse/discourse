@@ -2,29 +2,29 @@
 
 module ChatSDK
   class Message
-    # Creates a new message in a chat channel.
-    #
-    # @param raw [String] The content of the message.
-    # @param channel_id [Integer] The ID of the chat channel.
-    # @param guardian [Guardian] The user's guardian object, for policy enforcement.
-    # @param in_reply_to_id [Integer, nil] The ID of the message this is in reply to (optional).
-    # @param thread_id [Integer, nil] The ID of the thread this message belongs to (optional).
-    # @param upload_ids [Array<Integer>, nil] The IDs of any uploads associated with the message (optional).
-    # @param streaming [Boolean] Whether the message is part of a streaming operation (default: false).
-    # @param enforce_membership [Boolean] Allows to ensure the guardian will be allowed in the channel (default: false).
-    # @yield [helper, message] Offers a block with a helper and the message for streaming operations.
-    # @yieldparam helper [Helper] The helper object for streaming operations.
-    # @yieldparam message [Message] The newly created message object.
-    # @return [Chat::Message] The created message object.
-    #
-    # @example Creating a simple message
-    #   ChatSDK::Message.create(raw: "Hello, world!", channel_id: 1, guardian: Guardian.new)
-    #
-    # @example Creating a message with a block for streaming
-    #   ChatSDK::Message.create_with_stream(raw: "Streaming message", channel_id: 1, guardian: Guardian.new) do |helper, message|
-    #     helper.stream(raw: "Continuation of the message")
-    #   end
     class << self
+      # Creates a new message in a chat channel.
+      #
+      # @param raw [String] The content of the message.
+      # @param channel_id [Integer] The ID of the chat channel.
+      # @param guardian [Guardian] The user's guardian object, for policy enforcement.
+      # @param in_reply_to_id [Integer, nil] The ID of the message this is in reply to (optional).
+      # @param thread_id [Integer, nil] The ID of the thread this message belongs to (optional).
+      # @param upload_ids [Array<Integer>, nil] The IDs of any uploads associated with the message (optional).
+      # @param streaming [Boolean] Whether the message is part of a streaming operation (default: false).
+      # @param enforce_membership [Boolean] Allows to ensure the guardian will be allowed in the channel (default: false).
+      # @yield [helper, message] Offers a block with a helper and the message for streaming operations.
+      # @yieldparam helper [Helper] The helper object for streaming operations.
+      # @yieldparam message [Message] The newly created message object.
+      # @return [Chat::Message] The created message object.
+      #
+      # @example Creating a simple message
+      #   ChatSDK::Message.create(raw: "Hello, world!", channel_id: 1, guardian: Guardian.new)
+      #
+      # @example Creating a message with a block for streaming
+      #   ChatSDK::Message.create_with_stream(raw: "Streaming message", channel_id: 1, guardian: Guardian.new) do |helper, message|
+      #     helper.stream(raw: "Continuation of the message")
+      #   end
       def create(...)
         new.create(...)
       end

@@ -8,9 +8,9 @@ module Migrations
   class NoSettingsFound < StandardError
   end
 
-  # Each gem registers its `config/locales` directory so that `enable_i18n`
-  # loads the union of all translations (and an isolated gem still sees its own).
   class << self
+    # Each gem registers its `config/locales` directory so that `enable_i18n`
+    # loads the union of all translations (and an isolated gem still sees its own).
     def locale_load_paths
       @locale_load_paths ||= []
     end

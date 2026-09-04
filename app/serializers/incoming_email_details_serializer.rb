@@ -4,6 +4,7 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
   attributes :error, :error_description, :rejection_message, :headers, :subject, :body
 
   EMAIL_RECEIVER_ERROR_PREFIX = "Email::Receiver::"
+
   def initialize(incoming_email, opts)
     super
     @error_string = incoming_email.error

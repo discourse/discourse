@@ -25,6 +25,7 @@ class HtmlToMarkdown
     nav
     section
   ]
+
   def initialize(html, opts = {})
     @opts = opts
     @within_html_block = false

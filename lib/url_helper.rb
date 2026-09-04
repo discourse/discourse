@@ -3,11 +3,11 @@
 class UrlHelper
   MAX_URL_LENGTH = 2_000
 
-  # At the moment this handles invalid URLs that browser address bar accepts
-  # where second # is not encoded
-  #
-  # Longer term we can add support of simpleidn and encode unicode domains
   class << self
+    # At the moment this handles invalid URLs that browser address bar accepts
+    # where second # is not encoded
+    #
+    # Longer term we can add support of simpleidn and encode unicode domains
     def relaxed_parse(url)
       url, fragment = url.split("#", 2)
       uri = URI.parse(url)

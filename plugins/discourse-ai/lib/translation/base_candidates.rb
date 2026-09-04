@@ -7,9 +7,9 @@ module DiscourseAi
 
       private
 
-      # ModelType that are eligible for translation based on site settings
-      # @return [ActiveRecord::Relation] the ActiveRecord relation of the candidates
       class << self
+        # ModelType that are eligible for translation based on site settings
+        # @return [ActiveRecord::Relation] the ActiveRecord relation of the candidates
         def get
           raise NotImplementedError
         end

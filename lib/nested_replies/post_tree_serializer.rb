@@ -8,6 +8,7 @@ module NestedReplies
       related_topics
       related_messages
     ].freeze
+
     def initialize(topic:, topic_view:, guardian:)
       @topic = topic
       @topic_view = topic_view

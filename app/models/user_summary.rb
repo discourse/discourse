@@ -9,6 +9,7 @@ class UserSummary
   alias read_attribute_for_serialization send
 
   REPLY_ACTIONS = [UserAction::RESPONSE, UserAction::QUOTE, UserAction::MENTION]
+
   def initialize(user, guardian)
     @user = user
     @guardian = guardian

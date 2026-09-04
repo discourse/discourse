@@ -25,9 +25,9 @@ class InviteRedeemer
               :email_token,
               :redeeming_user
 
-  # This will _never_ be called if there is a redeeming_user being passed
-  # in to InviteRedeemer -- see invited_user below.
   class << self
+    # This will _never_ be called if there is a redeeming_user being passed
+    # in to InviteRedeemer -- see invited_user below.
     def create_user_from_invite(
       email:,
       invite:,

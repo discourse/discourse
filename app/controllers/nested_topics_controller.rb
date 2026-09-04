@@ -42,10 +42,10 @@ class NestedTopicsController < ApplicationController
 
   TOPIC_ROUTE_QUERY_PARAMS = %w[sort collapse_replies context embed_mode class_name].freeze
 
-  # Screen-tracking only advances last_read for posts the viewport renders,
-  # so collapsed/hidden replies leave a nested topic stuck unread in the
-  # sidebar. Treat the visit itself as catching up.
   class << self
+    # Screen-tracking only advances last_read for posts the viewport renders,
+    # so collapsed/hidden replies leave a nested topic stuck unread in the
+    # sidebar. Treat the visit itself as catching up.
     def defer_mark_caught_up(topic_id, user_id)
       Scheduler::Defer.later "Nested Topic Catch Up" do
         user = User.find_by(id: user_id)

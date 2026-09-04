@@ -72,6 +72,7 @@ class Post < ActiveRecord::Base
 
   validates_with PostValidator, unless: :skip_validation
   MAX_EDIT_REASON_LENGTH = 1000
+
   validates :edit_reason, length: { maximum: MAX_EDIT_REASON_LENGTH }
 
   before_save :ensure_edit_reason_length

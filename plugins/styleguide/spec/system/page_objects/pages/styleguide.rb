@@ -4,6 +4,7 @@ module PageObjects
   module Pages
     class Styleguide < PageObjects::Pages::Base
       COLOR_MODE_MENU = "styleguide-color-mode"
+
       def visit_index
         visit("/styleguide")
         self

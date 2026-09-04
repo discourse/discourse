@@ -5,6 +5,7 @@ module PageObjects
     class UserPreferences < PageObjects::Pages::Base
       INTERFACE_LINK_CSS_SELECTOR = ".user-nav__preferences-tracking"
       ACCOUNT_LINK_CSS_SELECTOR = ".user-nav__preferences-account"
+
       def visit(user)
         page.visit("/u/#{user.username}/preferences")
         self

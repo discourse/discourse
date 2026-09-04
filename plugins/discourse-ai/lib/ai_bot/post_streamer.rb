@@ -3,8 +3,8 @@
 module DiscourseAi
   module AiBot
     class PostStreamer
-      # test only
       class << self
+        # test only
         def on_callback=(on_callback)
           @on_callback = on_callback
         end

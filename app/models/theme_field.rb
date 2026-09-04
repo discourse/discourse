@@ -88,6 +88,7 @@ class ThemeField < ActiveRecord::Base
   # ThemeFileMatcher must be defined before FILE_MATCHERS is initialized.
   class ThemeFileMatcher
     OPTIONS = %i[name type target]
+
     # regex: used to match file names to fields (import).
     #        can contain named capture groups for name/type/target
     # canonical: a lambda which converts name/type/target

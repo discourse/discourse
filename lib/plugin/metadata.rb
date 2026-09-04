@@ -9,6 +9,7 @@ class Plugin::Metadata
   OFFICIAL_PLUGINS = Set.new(JSON.load_file(Rails.root.join("config/official_plugins.json").to_s))
 
   FIELDS = %i[name about version authors contact_emails url required_version meta_topic_id label]
+
   attr_accessor(*FIELDS)
 
   MAX_FIELD_LENGTHS = {

@@ -14,17 +14,17 @@ class DiscoursePluginRegistry
       "frontend/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
   }
 
-  # Plugins often need to be able to register additional handlers, data, or
-  # classes that will be used by core classes. This should be used if you
-  # need to control which type the registry is, and if it doesn't need to
-  # be removed if the plugin is disabled.
-  #
-  # Shortcut to create new register in the plugin registry
-  #   - Register is created in a class variable using the specified name/type
-  #   - Defines singleton method to access the register
-  #   - Defines instance method as a shortcut to the singleton method
-  #   - Automatically deletes the register on registry.reset!
   class << self
+    # Plugins often need to be able to register additional handlers, data, or
+    # classes that will be used by core classes. This should be used if you
+    # need to control which type the registry is, and if it doesn't need to
+    # be removed if the plugin is disabled.
+    #
+    # Shortcut to create new register in the plugin registry
+    #   - Register is created in a class variable using the specified name/type
+    #   - Defines singleton method to access the register
+    #   - Defines instance method as a shortcut to the singleton method
+    #   - Automatically deletes the register on registry.reset!
     def define_register(register_name, type)
       return if respond_to?(register_name)
       @@register_names << register_name

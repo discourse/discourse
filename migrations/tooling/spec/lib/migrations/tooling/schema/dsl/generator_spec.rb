@@ -170,6 +170,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         expect(model_content).to include("INSERT INTO users")
         expect(model_content).not_to include("INSERT OR IGNORE")
         expect(model_content).to include("class << self")
+        expect(model_content).to match(/class << self\n\s+# Creates a new/)
         expect(model_content).to include("def create")
         expect(model_content).not_to include("def conflict_strategy")
       end
@@ -274,7 +275,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         model_path = File.join(paths[:models], "upload.rb")
         original = File.read(model_path)
         custom_method = <<~RUBY
-          def self.create_for_file(path:)
+          def create_for_file(path:)
             create(id: path.hash)
           end
         RUBY
@@ -292,7 +293,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
 
         regenerated = File.read(model_path)
         expect(regenerated).to include("# -- custom code --")
-        expect(regenerated).to include("def self.create_for_file(path:)")
+        expect(regenerated).to include("def create_for_file(path:)")
         expect(regenerated).to include("# -- end custom code --")
       end
     end

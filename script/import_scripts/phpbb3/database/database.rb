@@ -4,8 +4,8 @@ require "mysql2"
 
 module ImportScripts::PhpBB3
   class Database
-    # @param database_settings [ImportScripts::PhpBB3::DatabaseSettings]
     class << self
+      # @param database_settings [ImportScripts::PhpBB3::DatabaseSettings]
       def create(database_settings)
         Database.new(database_settings).create_database
       end

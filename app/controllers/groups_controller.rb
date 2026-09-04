@@ -44,6 +44,7 @@ class GroupsController < ApplicationController
   MEMBERS_MAX_PAGE_SIZE = 1_000
   MEMBERS_DEFAULT_PAGE_SIZE = 50
   MAX_NOTIFIED_OWNERS = 20
+
   def index
     unless SiteSetting.enable_group_directory? || current_user&.staff?
       raise Discourse::InvalidAccess.new(:enable_group_directory)

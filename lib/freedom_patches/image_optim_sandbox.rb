@@ -19,8 +19,8 @@ class ImageOptim
   # DiscourseScratchDestination must be defined before it can be prepended.
   ImageOptim::Path.prepend(DiscourseScratchDestination)
 
-  # Per-thread tmp directory, so that we don't have to grant access to the global tmpdir
   class << self
+    # Per-thread tmp directory, so that we don't have to grant access to the global tmpdir
     def discourse_tmp_root
       Thread.current[:discourse_image_optim_tmp_root] ||= Dir.mktmpdir("discourse-image-optim-")
     end

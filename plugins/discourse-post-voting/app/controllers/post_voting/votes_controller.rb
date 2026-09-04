@@ -10,6 +10,7 @@ module PostVoting
     before_action :ensure_post_voting_enabled, only: %i[create destroy]
 
     VOTERS_LIMIT = 20
+
     def create
       ensure_can_vote(@post)
 

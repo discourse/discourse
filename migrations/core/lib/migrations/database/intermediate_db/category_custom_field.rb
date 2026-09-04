@@ -20,14 +20,14 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `category_custom_fields` record in the IntermediateDB.
-        #
-        # @param category_id   [Integer, String]
-        # @param name          [String]
-        # @param value         [String, nil]
-        #
-        # @return [void]
         class << self
+          # Creates a new `category_custom_fields` record in the IntermediateDB.
+          #
+          # @param category_id   [Integer, String]
+          # @param name          [String]
+          # @param value         [String, nil]
+          #
+          # @return [void]
           def create(category_id:, name:, value: nil)
             Migrations::Database::IntermediateDB.insert(SQL, category_id, name, value)
           end

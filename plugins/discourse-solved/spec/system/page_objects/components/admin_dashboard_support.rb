@@ -6,6 +6,7 @@ module PageObjects
       SELECTOR = ".db-main [data-section-id='support']"
 
       CATEGORY_FILTER = "#{SELECTOR} .db-support__filter .multiple-categories-selector"
+
       def has_section?
         has_css?(SELECTOR)
       end

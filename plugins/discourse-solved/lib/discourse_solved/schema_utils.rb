@@ -2,19 +2,19 @@
 
 module DiscourseSolved
   module SchemaUtils
-    # Generates Schema.org microdata attributes for the crawler view of solved topics.
-    #
-    # Structure: QAPage > Question (mainEntity) > acceptedAnswer / suggestedAnswer
-    #
-    # - First post gets no schema (its content bubbles up to the Question scope)
-    # - Ineligible replies (small actions, hidden, or textless onebox/image-only posts)
-    #   get no schema attributes; the crawler view suppresses their microdata so nothing
-    #   attaches to the surrounding Question scope
-    # - The solved post is marked as acceptedAnswer, other replies as suggestedAnswer
-    #
-    # Spec: https://schema.org/QAPage
-    # Validator: https://validator.schema.org/
     class << self
+      # Generates Schema.org microdata attributes for the crawler view of solved topics.
+      #
+      # Structure: QAPage > Question (mainEntity) > acceptedAnswer / suggestedAnswer
+      #
+      # - First post gets no schema (its content bubbles up to the Question scope)
+      # - Ineligible replies (small actions, hidden, or textless onebox/image-only posts)
+      #   get no schema attributes; the crawler view suppresses their microdata so nothing
+      #   attaches to the surrounding Question scope
+      # - The solved post is marked as acceptedAnswer, other replies as suggestedAnswer
+      #
+      # Spec: https://schema.org/QAPage
+      # Validator: https://validator.schema.org/
       def schema_markup_enabled?(topic)
         return false unless Guardian.new.allow_accepted_answers?(topic)
 

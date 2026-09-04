@@ -2,19 +2,19 @@
 
 module ChatSDK
   class Channel
-    # Retrieves messages from a specified channel.
-    #
-    # @param channel_id [Integer] The ID of the chat channel from which to fetch messages.
-    # @param guardian [Guardian] The guardian object representing the user's permissions.
-    # @return [Array<ChMessage>] An array of message objects from the specified channel.
-    #
-    # @example Fetching messages from a channel with additional parameters
-    #   ChatSDK::Channel.messages(channel_id: 1, guardian: Guardian.new)
-    #
-    # @raise [RuntimeError] Raises an "Unexpected error" if the message retrieval fails for an unspecified reason.
-    # @raise [RuntimeError] Raises "Guardian can't view channel" if the user's permissions are insufficient to view the channel.
-    # @raise [RuntimeError] Raises "Target message doesn't exist" if the specified target message cannot be found in the channel.
     class << self
+      # Retrieves messages from a specified channel.
+      #
+      # @param channel_id [Integer] The ID of the chat channel from which to fetch messages.
+      # @param guardian [Guardian] The guardian object representing the user's permissions.
+      # @return [Array<ChMessage>] An array of message objects from the specified channel.
+      #
+      # @example Fetching messages from a channel with additional parameters
+      #   ChatSDK::Channel.messages(channel_id: 1, guardian: Guardian.new)
+      #
+      # @raise [RuntimeError] Raises an "Unexpected error" if the message retrieval fails for an unspecified reason.
+      # @raise [RuntimeError] Raises "Guardian can't view channel" if the user's permissions are insufficient to view the channel.
+      # @raise [RuntimeError] Raises "Target message doesn't exist" if the specified target message cannot be found in the channel.
       def messages(...)
         new.messages(...)
       end

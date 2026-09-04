@@ -11,9 +11,9 @@ module Migrations
     # escapes any newline in the result as `\n` — one physical line, whatever the
     # result contains, so it survives `gets`.
     class PipeProgressChannel
-      # Parses one line the worker wrote. Returns `[:progress, increment, warnings,
-      # errors]`, `[:result, object]`, or nil for an unknown tag.
       class << self
+        # Parses one line the worker wrote. Returns `[:progress, increment, warnings,
+        # errors]`, `[:result, object]`, or nil for an unknown tag.
         def parse(line)
           tag, payload = line.split(" ", 2)
 

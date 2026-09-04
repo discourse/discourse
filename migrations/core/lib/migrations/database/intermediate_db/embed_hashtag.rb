@@ -23,22 +23,22 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `embed_hashtags` record in the IntermediateDB.
-        #
-        # @param hashtag_type   [Integer, nil]
-        #   Any constant from HashtagType (e.g. HashtagType::CATEGORY)
-        # @param name           [String]
-        # @param owner_id       [Integer, String]
-        # @param owner_type     [Integer]
-        #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder    [String]
-        # @param target_id      [Integer, String, nil]
-        #
-        # @return [void]
-        #
-        # @see Migrations::Database::IntermediateDB::Enums::HashtagType
-        # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         class << self
+          # Creates a new `embed_hashtags` record in the IntermediateDB.
+          #
+          # @param hashtag_type   [Integer, nil]
+          #   Any constant from HashtagType (e.g. HashtagType::CATEGORY)
+          # @param name           [String]
+          # @param owner_id       [Integer, String]
+          # @param owner_type     [Integer]
+          #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
+          # @param placeholder    [String]
+          # @param target_id      [Integer, String, nil]
+          #
+          # @return [void]
+          #
+          # @see Migrations::Database::IntermediateDB::Enums::HashtagType
+          # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
           def create(hashtag_type: nil, name:, owner_id:, owner_type:, placeholder:, target_id: nil)
             Migrations::Database::IntermediateDB.insert(
               SQL,

@@ -55,8 +55,8 @@ class Reviewable < ActiveRecord::Base
     Jobs.enqueue(:notify_reviewable, reviewable_id: id) if pending?
   end
 
-  # Can be used if several actions are equivalent
   class << self
+    # Can be used if several actions are equivalent
     def action_aliases
       {}
     end

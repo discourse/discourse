@@ -20,19 +20,19 @@ module DiscourseDataExplorer
       PG_TYPE_OID_JSONB_ARRAY,
     ]
 
-    # Run a data explorer query on the currently connected database.
-    #
-    # @param [Query] query the Query object to run
-    # @param [Hash] params the colon-style query parameters for the query
-    # @param [Hash] opts hash of options
-    #   explain - include a query plan in the result
-    # @return [Hash]
-    #   error - any exception that was raised in the execution. Check this
-    #     first before looking at any other fields.
-    #   pg_result - the PG::Result object
-    #   duration_nanos - the query duration, in nanoseconds
-    #   explain - the query
     class << self
+      # Run a data explorer query on the currently connected database.
+      #
+      # @param [Query] query the Query object to run
+      # @param [Hash] params the colon-style query parameters for the query
+      # @param [Hash] opts hash of options
+      #   explain - include a query plan in the result
+      # @return [Hash]
+      #   error - any exception that was raised in the execution. Check this
+      #     first before looking at any other fields.
+      #   pg_result - the PG::Result object
+      #   duration_nanos - the query duration, in nanoseconds
+      #   explain - the query
       def run_query(query, req_params = {}, opts = {})
         run_query_with_values(query, query.cast_params(req_params, opts), opts)
       rescue ValidationError => e

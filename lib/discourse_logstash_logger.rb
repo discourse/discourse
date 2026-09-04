@@ -21,18 +21,18 @@ class DiscourseLogstashLogger < Logger
     HTTP_X_FORWARDED_FOR
   ]
 
-  # Creates a new logger instance.
-  #
-  # @param logdev [String, IO, nil] The log device. This can be one of:
-  #   - A string filepath: entries are written to the file at that path. If the file exists, new entries are appended.
-  #   - An IO stream (typically +$stdout+, +$stderr+, or an open file): entries are written to the given stream.
-  #   - nil or File::NULL: no entries are written.
-  # @param type [String] The type of log messages. This will add a `type` field to all log messages.
-  # @param customize_event [Proc, nil] A proc that customizes the log event before it is written to the log device.
-  #   The proc is called with a hash of log event data and can be modified in place.
-  #
-  # @return [Logger] A new logger instance with the specified log device and type.
   class << self
+    # Creates a new logger instance.
+    #
+    # @param logdev [String, IO, nil] The log device. This can be one of:
+    #   - A string filepath: entries are written to the file at that path. If the file exists, new entries are appended.
+    #   - An IO stream (typically +$stdout+, +$stderr+, or an open file): entries are written to the given stream.
+    #   - nil or File::NULL: no entries are written.
+    # @param type [String] The type of log messages. This will add a `type` field to all log messages.
+    # @param customize_event [Proc, nil] A proc that customizes the log event before it is written to the log device.
+    #   The proc is called with a hash of log event data and can be modified in place.
+    #
+    # @return [Logger] A new logger instance with the specified log device and type.
     def logger(logdev:, type:, customize_event: nil, level: Logger::INFO)
       logger = new(logdev)
       logger.type = type

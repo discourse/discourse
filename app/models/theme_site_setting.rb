@@ -29,17 +29,17 @@ class ThemeSiteSetting < ActiveRecord::Base
     end
   end
 
-  # Gets a list of themes that have theme site setting records
-  # and the associated values for those settings, where the
-  # value is different from the default site setting value.
-  #
-  # @return [Array<Hash>] an array of hashes where each hash contains:
-  #   - :theme_id [Integer] the ID of the theme
-  #   - :theme_name [String] the name of the theme
-  #   - :setting_name [Symbol] the name of the setting
-  #   - :value [String] the value of the setting
-  #   - :data_type [Integer] the data type of the setting
   class << self
+    # Gets a list of themes that have theme site setting records
+    # and the associated values for those settings, where the
+    # value is different from the default site setting value.
+    #
+    # @return [Array<Hash>] an array of hashes where each hash contains:
+    #   - :theme_id [Integer] the ID of the theme
+    #   - :theme_name [String] the name of the theme
+    #   - :setting_name [Symbol] the name of the setting
+    #   - :value [String] the value of the setting
+    #   - :data_type [Integer] the data type of the setting
     def themes_with_overridden_settings
       sql = <<~SQL
       SELECT theme.id AS theme_id, theme.name AS theme_name,

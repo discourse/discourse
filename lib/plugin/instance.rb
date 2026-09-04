@@ -68,8 +68,8 @@ class Plugin::Instance
     }
   end
 
-  # This method returns Core stats + stats registered by plugins
   class << self
+    # This method returns Core stats + stats registered by plugins
     def stats
       Stat.all_stats
     end

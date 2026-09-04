@@ -9,6 +9,7 @@ module PageObjects
         SELECTOR = "#d-sidebar"
 
         NEW_START_DM_SELECTOR = ".sidebar-section-link[data-link-name='new-chat-dm']"
+
         def component
           page.find(SELECTOR)
         end

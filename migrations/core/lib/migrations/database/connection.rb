@@ -9,10 +9,10 @@ module Migrations
       TRANSACTION_BATCH_SIZE = 1000
       PREPARED_STATEMENT_CACHE_SIZE = 5
 
-      # `journal_mode` defaults to WAL for the run DB. A shard passes "off": it has a
-      # single writer, is never read while written, and is thrown away on any
-      # failure, so it needs no journal.
       class << self
+        # `journal_mode` defaults to WAL for the run DB. A shard passes "off": it has a
+        # single writer, is never read while written, and is thrown away on any
+        # failure, so it needs no journal.
         def open_database(path:, journal_mode: "wal")
           path = File.expand_path(path, Migrations.root_path)
           FileUtils.mkdir_p(File.dirname(path))

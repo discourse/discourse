@@ -8,9 +8,9 @@ class ReviewableScore < ActiveRecord::Base
 
   enum :status, { pending: 0, agreed: 1, disagreed: 2, ignored: 3 }
 
-  # To keep things simple the types correspond to `PostActionType` for backwards
-  # compatibility, but we can add extra reasons for scores.
   class << self
+    # To keep things simple the types correspond to `PostActionType` for backwards
+    # compatibility, but we can add extra reasons for scores.
     def types
       PostActionType.flag_types.merge(PostActionType.score_types).merge(@api_types || {})
     end

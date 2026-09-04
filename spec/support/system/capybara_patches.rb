@@ -70,9 +70,9 @@ module CapybaraTimeoutExtension
     end
   end
 
-  # Appends the server-thread backtraces captured above (for
-  # `dump_threads_on_failure` specs) to a failure-output buffer.
   class << self
+    # Appends the server-thread backtraces captured above (for
+    # `dump_threads_on_failure` specs) to a failure-output buffer.
     def append_server_thread_backtraces(lines, backtraces)
       lines << "~~~~~~~ SERVER THREADS BACKTRACES ~~~~~~~"
 

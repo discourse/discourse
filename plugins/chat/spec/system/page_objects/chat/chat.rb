@@ -4,6 +4,7 @@ module PageObjects
   module Pages
     class Chat < PageObjects::Pages::Base
       NEW_CHANNEL_BUTTON_SELECTOR = ".c-navbar__new-channel-button"
+
       def message_creator
         @message_creator ||= PageObjects::Components::Chat::MessageCreator.new
       end

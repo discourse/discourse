@@ -8,6 +8,7 @@ module ImportScripts::Mbox
   class Indexer
     METADATA_FILENAME = "metadata.yml"
     IGNORED_FILE_EXTENSIONS = %w[.dbindex .dbnames .digest .subjects .yml]
+
     # @param database [ImportScripts::Mbox::Database]
     # @param settings [ImportScripts::Mbox::Settings]
     def initialize(database, settings)

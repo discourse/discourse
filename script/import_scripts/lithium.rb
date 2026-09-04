@@ -71,6 +71,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     "catembarrassed" => "kissing_cat",
     "catlol" => "joy_cat",
   }
+
   def initialize
     super
 

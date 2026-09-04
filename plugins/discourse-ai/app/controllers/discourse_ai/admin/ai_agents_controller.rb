@@ -14,6 +14,7 @@ module DiscourseAi
       MAX_STREAM_REPLY_TOOL_RESULTS = 20
       MAX_STREAM_REPLY_CUSTOM_TOOL_DEFINITION_BYTES = 10_000
       MAX_STREAM_REPLY_TOOL_RESULT_CONTENT_BYTES = 100 * 1024
+
       def index
         ai_agents =
           AiAgent

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module ImageSizer
-  # Resize an image to the aspect ratio we want
   class << self
+    # Resize an image to the aspect ratio we want
     def resize(width, height, opts = {})
       return if width.blank? || height.blank?
 

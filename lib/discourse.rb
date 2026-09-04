@@ -15,13 +15,13 @@ module Discourse
   class Utils
     URI_REGEXP = URI.regexp(%w[http https])
 
-    # Usage:
-    #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
-    # or with a block
-    #   Discourse::Utils.execute_command(chdir: 'mydirectory') do |runner|
-    #     runner.exec("pwd")
-    #   end
     class << self
+      # Usage:
+      #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
+      # or with a block
+      #   Discourse::Utils.execute_command(chdir: 'mydirectory') do |runner|
+      #     runner.exec("pwd")
+      #   end
       def execute_command(*command, **args)
         runner = CommandRunner.new(**args)
 
@@ -209,12 +209,12 @@ module Discourse
     def reset_job_exception_stats!
       @job_exception_stats = Hash.new(0)
     end
-  end
 
-  reset_job_exception_stats!
+    Discourse.reset_job_exception_stats!
 
-  if Rails.env.test?
-    class << self
+    public
+
+    if Rails.env.test?
       def catch_job_exceptions!
         raise "tests only" if !Rails.env.test?
         @catch_job_exceptions = true
@@ -225,15 +225,7 @@ module Discourse
         remove_instance_variable(:@catch_job_exceptions)
       end
     end
-  end
 
-  # Log an exception.
-  #
-  # If your code is in a scheduled job, it is recommended to use the
-  # error_context() method in Jobs::Base to pass the job arguments and any
-  # other desired context.
-  # See app/jobs/base.rb for the error_context function.
-  class << self
     def handle_job_exception(ex, context = {}, parent_logger = nil)
       return if ex.class == Jobs::HandledExceptionWrapper
 
@@ -259,100 +251,9 @@ module Discourse
 
       raise ex if Rails.env.test? && !@catch_job_exceptions
     end
-  end
 
-  # Expected less matches than what we got in a find
-  class TooManyMatches < StandardError
-  end
+    public
 
-  # When they try to do something they should be logged in for
-  class NotLoggedIn < StandardError
-  end
-
-  # When the input is somehow bad
-  class InvalidParameters < StandardError
-  end
-
-  # Same as InvalidParameters, but carries an HTML-rendered variant of the
-  # message for surfaces that can render it (e.g. the admin settings UI).
-  # The plain #message stays free of markup so generic rescuers can display it.
-  class InvalidHTMLParameters < InvalidParameters
-    attr_reader :html_message
-
-    def initialize(message = nil, html_message: nil)
-      super(message)
-      @html_message = html_message || message
-    end
-  end
-
-  # When they don't have permission to do something
-  class InvalidAccess < StandardError
-    attr_reader :obj
-    attr_reader :opts
-    attr_reader :custom_message
-    attr_reader :custom_message_params
-    attr_reader :group
-
-    def initialize(msg = nil, obj = nil, opts = nil)
-      super(msg)
-
-      @opts = opts || {}
-      @obj = obj
-      @custom_message = opts[:custom_message] if @opts[:custom_message]
-      @custom_message_params = opts[:custom_message_params] if @opts[:custom_message_params]
-      @group = opts[:group] if @opts[:group]
-    end
-  end
-
-  # When something they want is not found
-  class NotFound < StandardError
-    attr_reader :status
-    attr_reader :check_permalinks
-    attr_reader :original_path
-    attr_reader :custom_message
-
-    def initialize(
-      msg = nil,
-      status: 404,
-      check_permalinks: false,
-      original_path: nil,
-      custom_message: nil
-    )
-      super(msg)
-
-      @status = status
-      @check_permalinks = check_permalinks
-      @original_path = original_path
-      @custom_message = custom_message
-    end
-  end
-
-  # When a setting is missing
-  class SiteSettingMissing < StandardError
-  end
-
-  # When ImageMagick is missing
-  class ImageMagickMissing < StandardError
-  end
-
-  # When read-only mode is enabled
-  class ReadOnly < StandardError
-  end
-
-  # Cross site request forgery
-  class CSRF < StandardError
-  end
-
-  class Deprecation < StandardError
-  end
-
-  class MissingIconError < StandardError
-  end
-
-  class ScssError < StandardError
-  end
-
-  class << self
     def filters
       @filters ||= %i[latest unread new unseen top read posted bookmarks hot]
     end
@@ -374,12 +275,9 @@ module Discourse
     def anonymous_top_menu_items
       @anonymous_top_menu_items ||= Discourse.anonymous_filters + %i[categories top]
     end
-  end
 
-  # list of pixel ratios Discourse tries to optimize for
-  PIXEL_RATIOS = [1, 1.5, 2, 3]
+    public
 
-  class << self
     def avatar_sizes
       # TODO: should cache these when we get a notification system for site settings
       Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
@@ -600,34 +498,9 @@ module Discourse
           digest
         end
     end
-  end
 
-  BUILTIN_AUTH = [
-    Auth::AuthProvider.new(
-      authenticator: Auth::DiscourseIdAuthenticator.new,
-      icon: "fab-discourse",
-    ),
-    Auth::AuthProvider.new(
-      authenticator: Auth::FacebookAuthenticator.new,
-      frame_width: 580,
-      frame_height: 400,
-      icon: "fab-facebook",
-    ),
-    Auth::AuthProvider.new(
-      authenticator: Auth::GoogleOAuth2Authenticator.new,
-      frame_width: 850,
-      frame_height: 500,
-    ), # Custom icon implemented in client
-    Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
-    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-x-twitter"),
-    Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord"),
-    Auth::AuthProvider.new(
-      authenticator: Auth::LinkedInOidcAuthenticator.new,
-      icon: "fab-linkedin-in",
-    ),
-  ]
+    public
 
-  class << self
     def auth_providers
       BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.to_a
     end
@@ -743,13 +616,9 @@ module Discourse
     def engagement_tracking_path
       "#{Discourse.base_path}/srv/se"
     end
-  end
 
-  class << self
     alias_method :base_url_no_path, :base_url_no_prefix
-  end
 
-  class << self
     def urls_cache
       @urls_cache ||= DistributedCache.new("urls_cache")
     end
@@ -795,28 +664,9 @@ module Discourse
     def clear_urls!
       urls_cache.clear
     end
-  end
 
-  LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
+    public
 
-  READONLY_MODE_KEY_TTL = 60
-  READONLY_MODE_KEY = "readonly_mode"
-  PG_READONLY_MODE_KEY = "readonly_mode:postgres"
-  PG_READONLY_MODE_KEY_TTL = 300
-  USER_READONLY_MODE_KEY = "readonly_mode:user"
-  PG_FORCE_READONLY_MODE_KEY = "readonly_mode:postgres_force"
-
-  # Pseudo readonly mode, where staff can still write
-  STAFF_WRITES_ONLY_MODE_KEY = "readonly_mode:staff_writes_only"
-
-  READONLY_KEYS = [
-    READONLY_MODE_KEY,
-    PG_READONLY_MODE_KEY,
-    USER_READONLY_MODE_KEY,
-    PG_FORCE_READONLY_MODE_KEY,
-  ]
-
-  class << self
     def enable_readonly_mode(key = READONLY_MODE_KEY, expires: nil)
       if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
         Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
@@ -1013,16 +863,14 @@ module Discourse
         ) if SiteSetting.site_contact_username.present?
       user ||= system_user || User.admins.real.order(:id).first
     end
-  end
 
-  # A global override bypasses the write-time name-to-id conversion.
-  def self.site_contact_group
-    Group.find_by_id_or_name(SiteSetting.site_contact_group_name)
-  end
+    public
 
-  SYSTEM_USER_ID = -1
+    # A global override bypasses the write-time name-to-id conversion.
+    def site_contact_group
+      Group.find_by_id_or_name(SiteSetting.site_contact_group_name)
+    end
 
-  class << self
     def system_user
       @system_users ||= {}
       current_db = RailsMultisite::ConnectionManagement.current_db
@@ -1219,11 +1067,9 @@ module Discourse
       end
       warning
     end
-  end
 
-  SIDEKIQ_NAMESPACE = "sidekiq"
+    public
 
-  class << self
     def sidekiq_redis_config
       GlobalSetting
         .redis_config
@@ -1253,11 +1099,9 @@ module Discourse
     def clear_site_creation_date_cache
       @creation_dates = {}
     end
-  end
 
-  cattr_accessor :last_ar_cache_reset
+    public
 
-  class << self
     def reset_active_record_cache_if_needed(e)
       last_cache_reset = Discourse.last_ar_cache_reset
       if e && e.message =~ /UndefinedColumn/ &&
@@ -1363,11 +1207,9 @@ module Discourse
     ensure
       @preloaded_rails = true
     end
-  end
 
-  mattr_accessor :redis
+    public
 
-  class << self
     def is_parallel_test?
       ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
     end
@@ -1432,4 +1274,157 @@ module Discourse
         (defined?(@@sidekiq_logging_enabled) && @@sidekiq_logging_enabled)
     end
   end
+
+  # Log an exception.
+  #
+  # If your code is in a scheduled job, it is recommended to use the
+  # error_context() method in Jobs::Base to pass the job arguments and any
+  # other desired context.
+  # See app/jobs/base.rb for the error_context function.
+
+  # Expected less matches than what we got in a find
+  class TooManyMatches < StandardError
+  end
+
+  # When they try to do something they should be logged in for
+  class NotLoggedIn < StandardError
+  end
+
+  # When the input is somehow bad
+  class InvalidParameters < StandardError
+  end
+
+  # Same as InvalidParameters, but carries an HTML-rendered variant of the
+  # message for surfaces that can render it (e.g. the admin settings UI).
+  # The plain #message stays free of markup so generic rescuers can display it.
+  class InvalidHTMLParameters < InvalidParameters
+    attr_reader :html_message
+
+    def initialize(message = nil, html_message: nil)
+      super(message)
+      @html_message = html_message || message
+    end
+  end
+
+  # When they don't have permission to do something
+  class InvalidAccess < StandardError
+    attr_reader :obj
+    attr_reader :opts
+    attr_reader :custom_message
+    attr_reader :custom_message_params
+    attr_reader :group
+
+    def initialize(msg = nil, obj = nil, opts = nil)
+      super(msg)
+
+      @opts = opts || {}
+      @obj = obj
+      @custom_message = opts[:custom_message] if @opts[:custom_message]
+      @custom_message_params = opts[:custom_message_params] if @opts[:custom_message_params]
+      @group = opts[:group] if @opts[:group]
+    end
+  end
+
+  # When something they want is not found
+  class NotFound < StandardError
+    attr_reader :status
+    attr_reader :check_permalinks
+    attr_reader :original_path
+    attr_reader :custom_message
+
+    def initialize(
+      msg = nil,
+      status: 404,
+      check_permalinks: false,
+      original_path: nil,
+      custom_message: nil
+    )
+      super(msg)
+
+      @status = status
+      @check_permalinks = check_permalinks
+      @original_path = original_path
+      @custom_message = custom_message
+    end
+  end
+
+  # When a setting is missing
+  class SiteSettingMissing < StandardError
+  end
+
+  # When ImageMagick is missing
+  class ImageMagickMissing < StandardError
+  end
+
+  # When read-only mode is enabled
+  class ReadOnly < StandardError
+  end
+
+  # Cross site request forgery
+  class CSRF < StandardError
+  end
+
+  class Deprecation < StandardError
+  end
+
+  class MissingIconError < StandardError
+  end
+
+  class ScssError < StandardError
+  end
+
+  # list of pixel ratios Discourse tries to optimize for
+  PIXEL_RATIOS = [1, 1.5, 2, 3]
+
+  BUILTIN_AUTH = [
+    Auth::AuthProvider.new(
+      authenticator: Auth::DiscourseIdAuthenticator.new,
+      icon: "fab-discourse",
+    ),
+    Auth::AuthProvider.new(
+      authenticator: Auth::FacebookAuthenticator.new,
+      frame_width: 580,
+      frame_height: 400,
+      icon: "fab-facebook",
+    ),
+    Auth::AuthProvider.new(
+      authenticator: Auth::GoogleOAuth2Authenticator.new,
+      frame_width: 850,
+      frame_height: 500,
+    ), # Custom icon implemented in client
+    Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
+    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-x-twitter"),
+    Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord"),
+    Auth::AuthProvider.new(
+      authenticator: Auth::LinkedInOidcAuthenticator.new,
+      icon: "fab-linkedin-in",
+    ),
+  ]
+
+  LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
+
+  READONLY_MODE_KEY_TTL = 60
+  READONLY_MODE_KEY = "readonly_mode"
+  PG_READONLY_MODE_KEY = "readonly_mode:postgres"
+  PG_READONLY_MODE_KEY_TTL = 300
+  USER_READONLY_MODE_KEY = "readonly_mode:user"
+  PG_FORCE_READONLY_MODE_KEY = "readonly_mode:postgres_force"
+
+  # Pseudo readonly mode, where staff can still write
+  STAFF_WRITES_ONLY_MODE_KEY = "readonly_mode:staff_writes_only"
+
+  READONLY_KEYS = [
+    READONLY_MODE_KEY,
+    PG_READONLY_MODE_KEY,
+    USER_READONLY_MODE_KEY,
+    PG_FORCE_READONLY_MODE_KEY,
+  ]
+
+  SYSTEM_USER_ID = -1
+
+  SIDEKIQ_NAMESPACE = "sidekiq"
+
+  cattr_accessor :last_ar_cache_reset
+
+  mattr_accessor :redis
 end

@@ -32,8 +32,8 @@ class TagGroup < ActiveRecord::Base
 
   attr_reader :permissions
 
-  # TODO: long term we can cache this if TONs of tag groups exist
   class << self
+    # TODO: long term we can cache this if TONs of tag groups exist
     def find_id_by_slug(slug)
       pluck(:id, :name).each { |id, name| return id if Slug.for(name) == slug }
       nil

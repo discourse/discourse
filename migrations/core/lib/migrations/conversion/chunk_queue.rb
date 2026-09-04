@@ -24,8 +24,8 @@ module Migrations
       # 8 KiB budget, which is itself well under the smallest pipe buffer we run on.
       MAX_BYTES = 8 * 1024 # 8 KiB
 
-      # Fills a fresh queue with the indices `0...count`.
       class << self
+        # Fills a fresh queue with the indices `0...count`.
         def filled(count)
           reader, writer = IO.pipe
           # Guard so a bad caller fails loudly instead of deadlocking on a full pipe.

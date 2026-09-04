@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module NestedReplies
-  # Walks the reply_to_post_number chain from `start_post_number` toward root
-  # in a single recursive CTE. Returns an array of result objects, each with
-  # .id, .post_number, .reply_to_post_number, and .depth (1 = start post).
   class << self
+    # Walks the reply_to_post_number chain from `start_post_number` toward root
+    # in a single recursive CTE. Returns an array of result objects, each with
+    # .id, .post_number, .reply_to_post_number, and .depth (1 = start post).
     def walk_ancestors(
       topic_id:,
       start_post_number:,

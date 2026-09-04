@@ -84,6 +84,7 @@ module Middleware
 
       MIN_TIME_TO_CHECK = 0.05
       ADP = "action_dispatch.request.parameters"
+
       def initialize(env, request = nil)
         @env = env
         @user_agent = HttpUserAgentEncoder.ensure_utf8(@env[USER_AGENT])

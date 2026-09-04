@@ -557,6 +557,7 @@ class BulkImport::Base
     sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
     composition_mode: SiteSetting.default_composition_mode,
   }
+
   def initialize
     charset = ENV["DB_CHARSET"] || "utf8"
     db = ActiveRecord::Base.connection_db_config.configuration_hash

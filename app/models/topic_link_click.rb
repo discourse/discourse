@@ -11,8 +11,8 @@ class TopicLinkClick < ActiveRecord::Base
 
   ALLOWED_REDIRECT_HOSTNAMES = Set.new(%W[www.youtube.com youtu.be])
 
-  # Create a click from a URL and post_id
   class << self
+    # Create a click from a URL and post_id
     def create_from(args = {})
       url = args[:url][0...TopicLink.max_url_length]
       return nil if url.blank?

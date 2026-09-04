@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PostAnalyzer
-  # from rack ... compat with ruby 2.2
   class << self
+    # from rack ... compat with ruby 2.2
     def parse_uri_rfc2396(uri)
       @parser ||= defined?(URI::RFC2396_Parser) ? URI::RFC2396_Parser.new : URI
       @parser.parse(uri)

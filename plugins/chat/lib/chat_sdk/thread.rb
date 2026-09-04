@@ -2,17 +2,17 @@
 
 module ChatSDK
   class Thread
-    # Updates the title of a specified chat thread.
-    #
-    # @param title [String] The new title for the chat thread.
-    # @param thread_id [Integer] The ID of the chat thread to be updated.
-    # @param guardian [Guardian] The guardian object representing the user's permissions.
-    # @return [Chat::Thread] The updated thread object with the new title.
-    #
-    # @example Updating the title of a chat thread
-    #   ChatSDK::Thread.update_title(title: "New Thread Title", thread_id: 1, guardian: Guardian.new)
-    #
     class << self
+      # Updates the title of a specified chat thread.
+      #
+      # @param title [String] The new title for the chat thread.
+      # @param thread_id [Integer] The ID of the chat thread to be updated.
+      # @param guardian [Guardian] The guardian object representing the user's permissions.
+      # @return [Chat::Thread] The updated thread object with the new title.
+      #
+      # @example Updating the title of a chat thread
+      #   ChatSDK::Thread.update_title(title: "New Thread Title", thread_id: 1, guardian: Guardian.new)
+      #
       def update_title(thread_id:, guardian:, title:)
         new.update(thread_id:, guardian:, title:)
       end

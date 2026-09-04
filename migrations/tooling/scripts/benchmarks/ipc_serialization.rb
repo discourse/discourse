@@ -208,10 +208,10 @@ module Codecs
 end
 
 module Payloads
-  # ~32 fields, shaped like the `users` step item (SELECT u.* plus avatar
-  # columns): several timestamps, a date, two inet columns, realistic string
-  # lengths, many nils
   class << self
+    # ~32 fields, shaped like the `users` step item (SELECT u.* plus avatar
+    # columns): several timestamps, a date, two inet columns, realistic string
+    # lengths, many nils
     def users_item(i, primitive:)
       created_at = Time.utc(2019, 12, 31, 23, 59, 59) + i
       last_seen_at = created_at + 86_400

@@ -4,10 +4,10 @@
 # candidate media in cooked HTML, and downloading it into an Upload with the
 # status that gets recorded against the target.
 module HotlinkedMedia
-  # Nodes in +html+ whose media may be hotlinked. Avatars and lightbox thumbnails
-  # are skipped: the former are never hotlinked, the latter duplicate the link
-  # that wraps them.
   class << self
+    # Nodes in +html+ whose media may be hotlinked. Avatars and lightbox thumbnails
+    # are skipped: the former are never hotlinked, the latter duplicate the link
+    # that wraps them.
     def extract_candidates(html)
       doc = html.is_a?(Nokogiri::XML::Node) ? html : Nokogiri::HTML5.fragment(html)
 

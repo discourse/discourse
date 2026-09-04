@@ -4,8 +4,8 @@ class DistributedMemoizer
   # never wait for longer that 1 second for a cross process lock
   MAX_WAIT = 1
 
-  # memoize a key across processes and machines
   class << self
+    # memoize a key across processes and machines
     def memoize(key, duration = 60 * 60 * 24, redis = Discourse.redis)
       redis_lock_key = self.redis_lock_key(key)
       redis_key = self.redis_key(key)

@@ -72,286 +72,286 @@ module DiscourseWorkflows
       previewable: false,
     }.freeze
 
-    def self.inherited(subclass)
-      super
-      DiscourseWorkflows::NodeType.registered_nodes << subclass
-    end
-
-    def self.registered_nodes
-      @registered_nodes ||= []
-    end
-
-    def self.waiting_identifiers
-      registered_nodes.select(&:waits_for_resume?).map(&:identifier)
-    end
-
-    def self.find_in(nodes)
-      Array(nodes).find { |node| node["type"] == identifier }
-    end
-
-    def self.description(value = nil)
-      if value
-        @output_contracts = nil
-        @description = DESCRIPTION_DEFAULTS.deep_merge(value.deep_symbolize_keys).freeze
-      else
-        @description || DESCRIPTION_DEFAULTS
-      end
-    end
-
-    def self.identifier
-      description.fetch(:name) { raise NotImplementedError }
-    end
-
-    def self.version
-      description.fetch(:version)
-    end
-
-    def self.icon
-      description.dig(:defaults, :icon)
-    end
-
-    def self.color
-      description.dig(:defaults, :color)
-    end
-
-    def self.palette_visible?
-      description_value(:palette_visible)
-    end
-
-    def self.previewable?
-      description_value(:previewable)
-    end
-
-    def self.available?
-      description_value(:available)
-    end
-
-    def self.unavailable_reason_key(configuration = nil)
-      return nil unless description.key?(:unavailable_reason_key)
-
-      description_value(:unavailable_reason_key, configuration:)
-    end
-
-    def self.inputs(configuration = {})
-      description_value(:inputs, configuration:)
-    end
-
-    def self.outputs(configuration = {})
-      description_value(:outputs, configuration:)
-    end
-
-    def self.properties
-      description_value(:properties)
-    end
-
-    def self.credentials
-      description_value(:credentials)
-    end
-
-    def self.webhooks(configuration = {})
-      Array(description_value(:webhooks, configuration:)).map do |webhook|
-        webhook.deep_symbolize_keys
-      end
-    end
-
-    def self.waiting_webhook_for(http_method:, path:, node_type:)
-      webhooks.find do |webhook|
-        webhook[:restart_webhook] == true && webhook[:node_type].to_s == node_type.to_s &&
-          webhook[:http_method].to_s.casecmp?(http_method.to_s) &&
-          webhook.fetch(:path) { "" }.to_s == path.to_s
-      end
-    end
-
-    def self.property_schema
-      properties
-    end
-
-    def self.output_schemas(configuration = {}, input_schemas: [])
-      input_schema = Schema.union(*input_schemas.compact)
-
-      active_output_contracts(configuration).map.with_index do |candidates, index|
-        resolved =
-          Schema.union(
-            *candidates.map do |contract|
-              Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
-            end,
-          )
-
-        Schema.augment(resolved, active_output_extensions(index, configuration))
-      end
-    end
-
-    def self.output_schema_resolver
-      description_value(:output_schema_resolver)
-    end
-
-    def self.output_contracts
-      @output_contracts ||=
-        begin
-          declarations = Array(description.fetch(:output_contracts))
-          declarations = Array.new(ports.length) { {} } if declarations.empty?
-
-          if declarations.length != ports.length
-            raise ArgumentError,
-                  "#{identifier} declares #{declarations.length} output contracts for #{ports.length} outputs"
-          end
-
-          declarations.map { |contract| normalize_output_contract(contract) }
-        end
-    end
-
     EMPTY_OUTPUT_CONTRACT = { schema: {}, mode: :replace, display_options: {} }.freeze
 
-    def self.active_output_contracts(configuration = {})
-      output_contracts.map { |contract| contract_candidates(contract, configuration) }
-    end
+    class << self
+      def inherited(subclass)
+        super
+        DiscourseWorkflows::NodeType.registered_nodes << subclass
+      end
 
-    def self.active_output_extensions(output_index, configuration = {})
-      contract = output_contracts[output_index]
-      return [] if contract.nil?
+      def registered_nodes
+        @registered_nodes ||= []
+      end
 
-      contract
-        .fetch(:extensions)
-        .select { |extension| Schema.visible?(extension.fetch(:display_options), configuration) }
-        .map { |extension| extension.fetch(:schema) }
-    end
+      def waiting_identifiers
+        registered_nodes.select(&:waits_for_resume?).map(&:identifier)
+      end
 
-    def self.contract_candidates(contract, configuration)
-      candidates = []
+      def find_in(nodes)
+        Array(nodes).find { |node| node["type"] == identifier }
+      end
 
-      contract
-        .fetch(:variants)
-        .each do |variant|
-          state = Schema.display_state(variant.fetch(:display_options), configuration)
-          next if state == :hidden
+      def description(value = nil)
+        if value
+          @output_contracts = nil
+          @description = DESCRIPTION_DEFAULTS.deep_merge(value.deep_symbolize_keys).freeze
+        else
+          @description || DESCRIPTION_DEFAULTS
+        end
+      end
 
-          candidates << variant
-          # Nothing after a definite match can be picked at runtime.
-          return candidates if state == :visible
+      def identifier
+        description.fetch(:name) { raise NotImplementedError }
+      end
+
+      def version
+        description.fetch(:version)
+      end
+
+      def icon
+        description.dig(:defaults, :icon)
+      end
+
+      def color
+        description.dig(:defaults, :color)
+      end
+
+      def palette_visible?
+        description_value(:palette_visible)
+      end
+
+      def previewable?
+        description_value(:previewable)
+      end
+
+      def available?
+        description_value(:available)
+      end
+
+      def unavailable_reason_key(configuration = nil)
+        return nil unless description.key?(:unavailable_reason_key)
+
+        description_value(:unavailable_reason_key, configuration:)
+      end
+
+      def inputs(configuration = {})
+        description_value(:inputs, configuration:)
+      end
+
+      def outputs(configuration = {})
+        description_value(:outputs, configuration:)
+      end
+
+      def properties
+        description_value(:properties)
+      end
+
+      def credentials
+        description_value(:credentials)
+      end
+
+      def webhooks(configuration = {})
+        Array(description_value(:webhooks, configuration:)).map do |webhook|
+          webhook.deep_symbolize_keys
+        end
+      end
+
+      def waiting_webhook_for(http_method:, path:, node_type:)
+        webhooks.find do |webhook|
+          webhook[:restart_webhook] == true && webhook[:node_type].to_s == node_type.to_s &&
+            webhook[:http_method].to_s.casecmp?(http_method.to_s) &&
+            webhook.fetch(:path) { "" }.to_s == path.to_s
+        end
+      end
+
+      def property_schema
+        properties
+      end
+
+      def output_schemas(configuration = {}, input_schemas: [])
+        input_schema = Schema.union(*input_schemas.compact)
+
+        active_output_contracts(configuration).map.with_index do |candidates, index|
+          resolved =
+            Schema.union(
+              *candidates.map do |contract|
+                Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
+              end,
+            )
+
+          Schema.augment(resolved, active_output_extensions(index, configuration))
+        end
+      end
+
+      def output_schema_resolver
+        description_value(:output_schema_resolver)
+      end
+
+      def output_contracts
+        @output_contracts ||=
+          begin
+            declarations = Array(description.fetch(:output_contracts))
+            declarations = Array.new(ports.length) { {} } if declarations.empty?
+
+            if declarations.length != ports.length
+              raise ArgumentError,
+                    "#{identifier} declares #{declarations.length} output contracts for #{ports.length} outputs"
+            end
+
+            declarations.map { |contract| normalize_output_contract(contract) }
+          end
+      end
+
+      def active_output_contracts(configuration = {})
+        output_contracts.map { |contract| contract_candidates(contract, configuration) }
+      end
+
+      def active_output_extensions(output_index, configuration = {})
+        contract = output_contracts[output_index]
+        return [] if contract.nil?
+
+        contract
+          .fetch(:extensions)
+          .select { |extension| Schema.visible?(extension.fetch(:display_options), configuration) }
+          .map { |extension| extension.fetch(:schema) }
+      end
+
+      def event_name
+        description[:event]&.to_sym
+      end
+
+      def manually_triggerable?
+        capability_enabled?(:manually_triggerable)
+      end
+
+      def provides_current_user?
+        capability_enabled?(:provides_current_user)
+      end
+
+      def waits_for_resume?
+        capability_enabled?(:waits_for_resume)
+      end
+
+      def max_nodes
+        description_value(:max_nodes)
+      end
+
+      def description_value(key, configuration: nil)
+        value = description.fetch(key)
+        return value unless value.respond_to?(:call)
+
+        configuration.nil? ? value.call : value.call(configuration)
+      end
+
+      def capability_enabled?(key)
+        description.dig(:capabilities, key) == true
+      end
+
+      def normalize_tag_names(value)
+        Array
+          .wrap(value)
+          .flat_map { |name| name.to_s.split(",") }
+          .filter_map { |name| name.strip.presence }
+      end
+
+      def normalize_category_ids(value)
+        Array.wrap(value).filter_map { |entry| entry.to_s.strip.presence&.to_i }.uniq
+      end
+
+      # TODO JOFFREY (01-2027): drop the category_id fallback once the post_migrate
+      # stripping the legacy key has been promoted.
+      def category_ids_parameter(trigger_ctx)
+        value = trigger_ctx.get_node_parameter("category_ids")
+        value = trigger_ctx.get_node_parameter("category_id") if value.nil?
+        normalize_category_ids(value)
+      end
+
+      def expand_subcategory_ids(category_ids)
+        category_ids.flat_map { |id| ::Category.subcategory_ids(id) }.uniq
+      end
+
+      def reviewable_type_options
+        Reviewable
+          .types
+          .uniq(&:sti_name)
+          .sort_by(&:name)
+          .map { |klass| { id: klass.sti_name, name: klass.name.demodulize.underscore.humanize } }
+      end
+
+      def trust_level_options
+        TrustLevel.levels.map do |name, level|
+          { value: level.to_s, label_key: "trust_levels.names.#{name}" }
+        end
+      end
+
+      def expression_value?(value)
+        Schema.expression_value?(value)
+      end
+
+      def validate_timezone_configuration(configuration, errors)
+        timezone = (configuration || {}).deep_stringify_keys["timezone"].presence
+        return if timezone.nil? || expression_value?(timezone) || WorkflowTimezone.valid?(timezone)
+
+        errors.add(:base, I18n.t("discourse_workflows.errors.invalid_timezone", timezone: timezone))
+      end
+
+      private
+
+      def contract_candidates(contract, configuration)
+        candidates = []
+
+        contract
+          .fetch(:variants)
+          .each do |variant|
+            state = Schema.display_state(variant.fetch(:display_options), configuration)
+            next if state == :hidden
+
+            candidates << variant
+            # Nothing after a definite match can be picked at runtime.
+            return candidates if state == :visible
+          end
+
+        if Schema.visible?(contract.fetch(:display_options), configuration)
+          candidates << contract.except(:variants)
+        end
+        # An unknown schema absorbs the union of everything it contends with, so
+        # drop it rather than let it erase what the others declare.
+        candidates.reject! { |candidate| unknown_contract?(candidate) }
+
+        candidates.presence || [EMPTY_OUTPUT_CONTRACT]
+      end
+
+      def unknown_contract?(contract)
+        contract.fetch(:mode) == :replace && Schema.unknown?(contract.fetch(:schema))
+      end
+
+      def normalize_output_contract(contract)
+        contract = contract.deep_symbolize_keys
+        normalize_contract_fields(contract).merge(
+          variants:
+            Array(contract[:variants]).map do |variant|
+              normalize_contract_fields(variant.deep_symbolize_keys)
+            end,
+          extensions:
+            Array(contract[:extensions]).map do |extension|
+              normalize_contract_fields(extension.deep_symbolize_keys)
+            end,
+        )
+      end
+
+      def normalize_contract_fields(contract)
+        mode = contract.fetch(:mode, :replace).to_sym
+        if Schema::MODES.exclude?(mode)
+          raise ArgumentError, "Unknown output schema mode: #{mode.inspect}"
         end
 
-      if Schema.visible?(contract.fetch(:display_options), configuration)
-        candidates << contract.except(:variants)
+        {
+          schema: Schema.normalize(contract.fetch(:schema, {})),
+          mode:,
+          display_options: contract.fetch(:display_options, {}),
+        }
       end
-      # An unknown schema absorbs the union of everything it contends with, so
-      # drop it rather than let it erase what the others declare.
-      candidates.reject! { |candidate| unknown_contract?(candidate) }
-
-      candidates.presence || [EMPTY_OUTPUT_CONTRACT]
-    end
-    private_class_method :contract_candidates
-
-    def self.unknown_contract?(contract)
-      contract.fetch(:mode) == :replace && Schema.unknown?(contract.fetch(:schema))
-    end
-    private_class_method :unknown_contract?
-
-    def self.event_name
-      description[:event]&.to_sym
-    end
-
-    def self.manually_triggerable?
-      capability_enabled?(:manually_triggerable)
-    end
-
-    def self.provides_current_user?
-      capability_enabled?(:provides_current_user)
-    end
-
-    def self.waits_for_resume?
-      capability_enabled?(:waits_for_resume)
-    end
-
-    def self.max_nodes
-      description_value(:max_nodes)
-    end
-
-    def self.description_value(key, configuration: nil)
-      value = description.fetch(key)
-      return value unless value.respond_to?(:call)
-
-      configuration.nil? ? value.call : value.call(configuration)
-    end
-
-    def self.capability_enabled?(key)
-      description.dig(:capabilities, key) == true
-    end
-
-    def self.normalize_output_contract(contract)
-      contract = contract.deep_symbolize_keys
-      normalize_contract_fields(contract).merge(
-        variants:
-          Array(contract[:variants]).map do |variant|
-            normalize_contract_fields(variant.deep_symbolize_keys)
-          end,
-        extensions:
-          Array(contract[:extensions]).map do |extension|
-            normalize_contract_fields(extension.deep_symbolize_keys)
-          end,
-      )
-    end
-    private_class_method :normalize_output_contract
-
-    def self.normalize_contract_fields(contract)
-      mode = contract.fetch(:mode, :replace).to_sym
-      if Schema::MODES.exclude?(mode)
-        raise ArgumentError, "Unknown output schema mode: #{mode.inspect}"
-      end
-
-      {
-        schema: Schema.normalize(contract.fetch(:schema, {})),
-        mode:,
-        display_options: contract.fetch(:display_options, {}),
-      }
-    end
-    private_class_method :normalize_contract_fields
-
-    def self.normalize_tag_names(value)
-      Array
-        .wrap(value)
-        .flat_map { |name| name.to_s.split(",") }
-        .filter_map { |name| name.strip.presence }
-    end
-
-    def self.normalize_category_ids(value)
-      Array.wrap(value).filter_map { |entry| entry.to_s.strip.presence&.to_i }.uniq
-    end
-
-    # TODO JOFFREY (01-2027): drop the category_id fallback once the post_migrate
-    # stripping the legacy key has been promoted.
-    def self.category_ids_parameter(trigger_ctx)
-      value = trigger_ctx.get_node_parameter("category_ids")
-      value = trigger_ctx.get_node_parameter("category_id") if value.nil?
-      normalize_category_ids(value)
-    end
-
-    def self.expand_subcategory_ids(category_ids)
-      category_ids.flat_map { |id| ::Category.subcategory_ids(id) }.uniq
-    end
-
-    def self.reviewable_type_options
-      Reviewable
-        .types
-        .uniq(&:sti_name)
-        .sort_by(&:name)
-        .map { |klass| { id: klass.sti_name, name: klass.name.demodulize.underscore.humanize } }
-    end
-
-    def self.trust_level_options
-      TrustLevel.levels.map do |name, level|
-        { value: level.to_s, label_key: "trust_levels.names.#{name}" }
-      end
-    end
-
-    def self.expression_value?(value)
-      Schema.expression_value?(value)
-    end
-
-    def self.validate_timezone_configuration(configuration, errors)
-      timezone = (configuration || {}).deep_stringify_keys["timezone"].presence
-      return if timezone.nil? || expression_value?(timezone) || WorkflowTimezone.valid?(timezone)
-
-      errors.add(:base, I18n.t("discourse_workflows.errors.invalid_timezone", timezone: timezone))
     end
 
     def initialize(**)

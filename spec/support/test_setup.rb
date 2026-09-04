@@ -4,8 +4,8 @@
 # block. `before_next_spec` queues one-shot cleanups that TestSetup drains here.
 
 module TestSetup
-  # This is run before each test and before each before_all block
   class << self
+    # This is run before each test and before each before_all block
     def test_setup(x = nil)
       # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
       DB.test_transaction = ActiveRecord::Base.connection.current_transaction

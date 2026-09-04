@@ -19,6 +19,7 @@ class CategorySetting < ActiveRecord::Base
              if: :saved_change_to_nested_replies_default?
 
   GROUP_BASED_MODES = %w[everyone_except no_one_except].freeze
+
   def require_topic_approval=(value)
     self.topic_posting_review_mode =
       ActiveModel::Type::Boolean.new.cast(value) ? :everyone : :no_one

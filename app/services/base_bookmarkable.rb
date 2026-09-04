@@ -15,10 +15,10 @@
 class BaseBookmarkable
   attr_reader :model, :serializer, :preload_associations
 
-  # @return [ActiveRecord::Base] The ActiveRecord model class which will be used to denote
-  #                              the type of the bookmarkable upon registration along with
-  #                              querying.
   class << self
+    # @return [ActiveRecord::Base] The ActiveRecord model class which will be used to denote
+    #                              the type of the bookmarkable upon registration along with
+    #                              querying.
     def model
       raise NotImplementedError
     end

@@ -4,6 +4,7 @@ module TurboTests
   module Flaky
     class FailedExample
       SCREENSHOT_PREFIX = "[Screenshot Image]: "
+
       # @param [TurboTests::FakeExample] failed_example
       def initialize(failed_example)
         @failed_example = failed_example

@@ -38,9 +38,9 @@ module Migrations
             end
           end
 
-        # @return [Hash{String => Model}] generated models keyed by their constant
-        #   name (e.g. "User"), in sorted order.
         class << self
+          # @return [Hash{String => Model}] generated models keyed by their constant
+          #   name (e.g. "User"), in sorted order.
           def call
             namespace = Migrations::Database::IntermediateDB
 

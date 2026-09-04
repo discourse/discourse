@@ -2,6 +2,7 @@
 
 class EnableSsoValidator
   MIN_SECRET_LENGTH = 10
+
   def initialize(opts = {})
     @opts = opts
   end

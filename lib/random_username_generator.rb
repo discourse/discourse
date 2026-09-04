@@ -5,9 +5,9 @@
 # derive one. The word lists are site settings so communities can tailor them
 # to their tone or language.
 module RandomUsernameGenerator
-  # Returns nil when the site has opted out, or when the configured word lists
-  # can't produce a usable name, so callers fall back to their own suggestion.
   class << self
+    # Returns nil when the site has opted out, or when the configured word lists
+    # can't produce a usable name, so callers fall back to their own suggestion.
     def generate
       return nil if !SiteSetting.enable_random_usernames
 

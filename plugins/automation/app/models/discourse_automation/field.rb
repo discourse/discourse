@@ -172,6 +172,7 @@ module DiscourseAutomation
         },
       },
     }
+
     def on_update_callback
       automation.fields.reload
 

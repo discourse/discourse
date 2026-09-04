@@ -10,9 +10,9 @@ require "tmpdir"
 module MigrationsSpecSetup
   CORE_SPEC_DIR = __dir__
 
-  # @param gem [String] the gem entrypoint to require (e.g. "migrations-core")
-  # @param spec_dir [String] the calling gem's spec directory (__dir__)
   class << self
+    # @param gem [String] the gem entrypoint to require (e.g. "migrations-core")
+    # @param spec_dir [String] the calling gem's spec directory (__dir__)
     def call(gem:, spec_dir:)
       boot_rails(spec_dir) if ENV["MIGRATIONS_RAILS"]
 
@@ -51,6 +51,11 @@ module MigrationsSpecSetup
     # `disco` binary does before loading the Rails environment.
     def boot_rails(spec_dir)
       rails_root = File.expand_path("../../..", spec_dir)
+
+      # RSpec resolves its default spec path lazily. Resolve it before changing
+      # directories, or it discovers the host application's specs instead of
+      # the migration gem's specs while rails_helper is loading.
+      RSpec.configuration.files_to_run
       Dir.chdir(rails_root) { require File.join(rails_root, "spec", "rails_helper") }
     end
 

@@ -22,19 +22,19 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `embed_uploads` record in the IntermediateDB.
-        #
-        # @param original_markdown   [String, nil]
-        # @param owner_id            [Integer, String]
-        # @param owner_type          [Integer]
-        #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder         [String]
-        # @param upload_id           [String, nil]
-        #
-        # @return [void]
-        #
-        # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         class << self
+          # Creates a new `embed_uploads` record in the IntermediateDB.
+          #
+          # @param original_markdown   [String, nil]
+          # @param owner_id            [Integer, String]
+          # @param owner_type          [Integer]
+          #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
+          # @param placeholder         [String]
+          # @param upload_id           [String, nil]
+          #
+          # @return [void]
+          #
+          # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
           def create(original_markdown: nil, owner_id:, owner_type:, placeholder:, upload_id: nil)
             Migrations::Database::IntermediateDB.insert(
               SQL,

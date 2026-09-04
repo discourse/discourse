@@ -65,17 +65,17 @@ module DiscourseWebauthn
   class UnknownCOSEAlgorithmError < SecurityKeyError
   end
 
-  ##
-  # Usage:
-  #
-  # These methods should be used in controllers where we
-  # are challenging the user that has a security key, and
-  # they must respond with a valid webauthn response and
-  # credentials.
-  #
-  # @param user [User] the user to stage the challenge for
-  # @param server_session [ServerSession] the session to store the challenge in
   class << self
+    ##
+    # Usage:
+    #
+    # These methods should be used in controllers where we
+    # are challenging the user that has a security key, and
+    # they must respond with a valid webauthn response and
+    # credentials.
+    #
+    # @param user [User] the user to stage the challenge for
+    # @param server_session [ServerSession] the session to store the challenge in
     def stage_challenge(user, server_session)
       ::DiscourseWebauthn::ChallengeGenerator.generate.commit_to_session(
         server_session,

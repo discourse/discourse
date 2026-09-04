@@ -70,6 +70,7 @@ class TopicUser < ActiveRecord::Base
                     AND NOT EXISTS(SELECT 1
                                    FROM topic_users AS ftu
                                    WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)"
+
     # Enums
     def notification_levels
       NotificationLevels.topic_levels

@@ -68,6 +68,7 @@ class SiteSerializer < ApplicationSerializer
   has_many :anonymous_sidebar_sections, embed: :objects, serializer: SidebarSectionSerializer
 
   SIDEBAR_TOP_TAGS_TO_SHOW = 5
+
   def user_themes
     cache_fragment("user_themes") do
       themes =

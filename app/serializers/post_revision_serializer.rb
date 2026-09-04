@@ -31,9 +31,9 @@ class PostRevisionSerializer < ApplicationSerializer
              :can_edit,
              :diff_error
 
-  # Creates a field called field_name_changes with previous and
-  # current members if a field has changed in this revision
   class << self
+    # Creates a field called field_name_changes with previous and
+    # current members if a field has changed in this revision
     def add_compared_field(field)
       changes_name = :"#{field}_changes"
 

@@ -22,16 +22,16 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `user_suspensions` record in the IntermediateDB.
-        #
-        # @param user_id           [Integer, String]
-        # @param suspended_at      [Time]
-        # @param reason            [String, nil]
-        # @param suspended_by_id   [Integer, String, nil]
-        # @param suspended_till    [Time, nil]
-        #
-        # @return [void]
         class << self
+          # Creates a new `user_suspensions` record in the IntermediateDB.
+          #
+          # @param user_id           [Integer, String]
+          # @param suspended_at      [Time]
+          # @param reason            [String, nil]
+          # @param suspended_by_id   [Integer, String, nil]
+          # @param suspended_till    [Time, nil]
+          #
+          # @return [void]
           def create(
             user_id:,
             suspended_at:,

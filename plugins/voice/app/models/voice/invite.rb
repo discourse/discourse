@@ -15,10 +15,10 @@ module Voice
 
     scope :redeemed, -> { where.not(redeemed_at: nil) }
 
-    # A join that followed an invite — a notification and a shared link both
-    # carry the inviter's username. Returns the invite only on its first
-    # redemption, so the inviter is credited at most once per invitee per room.
     class << self
+      # A join that followed an invite — a notification and a shared link both
+      # carry the inviter's username. Returns the invite only on its first
+      # redemption, so the inviter is credited at most once per invitee per room.
       def redeem!(room:, user:, inviter_username:)
         inviter = User.find_by(username_lower: inviter_username.to_s.downcase)
         return if inviter.nil? || inviter.id == user.id

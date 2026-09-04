@@ -36,14 +36,14 @@ class UsernameValidator
   INVALID_TRAILING_CHAR_PATTERN = /[^\p{Alnum}\p{M}]+\z/
   REPEATED_SPECIAL_CHAR_PATTERN = /[-_.]{2,}/
 
-  # Public: Perform the validation of a field in a given object
-  # it adds the errors (if any) to the object that we're giving as parameter
-  #
-  # object - Object in which we're performing the validation
-  # field_name - name of the field that we're validating
-  #
-  # Example: UsernameValidator.perform_validation(user, 'name')
   class << self
+    # Public: Perform the validation of a field in a given object
+    # it adds the errors (if any) to the object that we're giving as parameter
+    #
+    # object - Object in which we're performing the validation
+    # field_name - name of the field that we're validating
+    #
+    # Example: UsernameValidator.perform_validation(user, 'name')
     def perform_validation(object, field_name, opts = {})
       validator = UsernameValidator.new(object.public_send(field_name), object:, **opts)
       unless validator.valid_format?

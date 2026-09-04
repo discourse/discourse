@@ -29,6 +29,7 @@ module DiscourseWorkflows
       started_at
       finished_at
     ].freeze
+
     def workflow_name
       object.workflow_snapshot_name
     end

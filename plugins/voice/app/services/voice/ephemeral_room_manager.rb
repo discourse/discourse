@@ -13,11 +13,11 @@ module Voice
     # before the TTL cleanup runs.
     MAX_LIVE_ROOMS_PER_CREATOR = 10
 
-    # Inviting into a room is a moderator ability, so `moderators` is how a
-    # consumer makes the parties peers (a direct call, where either side may
-    # pull someone else in), while `members` fits an audience invited to a
-    # room someone else runs.
     class << self
+      # Inviting into a room is a moderator ability, so `moderators` is how a
+      # consumer makes the parties peers (a direct call, where either side may
+      # pull someone else in), while `members` fits an audience invited to a
+      # room someone else runs.
       def create!(creator:, name:, members: [], moderators: [], **attrs)
         room = nil
 

@@ -9,6 +9,7 @@ module ImportScripts::PhpBB3::BBCode
     ELEMENTS_WITHOUT_LEADING_WHITESPACES = %w[LIST LI]
     ELEMENTS_WITH_HARD_LINEBREAKS = %w[B I U]
     EXPLICIT_LINEBREAK_THRESHOLD = 2
+
     def initialize(xml, opts = {})
       @username_from_user_id = opts[:username_from_user_id]
       @smilie_to_emoji = opts[:smilie_to_emoji]

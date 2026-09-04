@@ -17,6 +17,7 @@ class LocaleFileChecker
   # Some languages should always use %{count} in pluralized strings.
   # https://meta.discourse.org/t/always-use-count-variable-when-translating-pluralized-strings/83969
   FORCE_PLURAL_COUNT_LOCALES = %w[bs fr lt lv ru sl sr uk]
+
   def check(locale)
     @errors = {}
     @locale = locale.to_s

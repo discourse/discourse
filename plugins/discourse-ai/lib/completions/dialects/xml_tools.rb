@@ -6,6 +6,7 @@ module DiscourseAi
       class XmlTools
         DONE_MESSAGE =
           "Regardless of what you think, REPLY IMMEDIATELY, WITHOUT MAKING ANY FURTHER TOOL CALLS, YOU ARE OUT OF TOOL CALL QUOTA!"
+
         def initialize(tools)
           @raw_tools = tools
         end

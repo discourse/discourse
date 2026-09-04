@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class LocaleNormalizer
-  # Normalizes locale string, matching the list of I18n.locales where possible
-  # @param locale [String,Symbol] the locale to normalize
-  # @return [String] the normalized locale
   class << self
+    # Normalizes locale string, matching the list of I18n.locales where possible
+    # @param locale [String,Symbol] the locale to normalize
+    # @return [String] the normalized locale
     def normalize_to_i18n(locale)
       return nil if locale.blank?
       locale = locale.to_s.gsub("-", "_")

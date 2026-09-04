@@ -3,6 +3,7 @@
 module ImportScripts::PhpBB3
   class MessageImporter
     RE_PREFIX = "re: "
+
     # @param database [ImportScripts::PhpBB3::Database_3_0 | ImportScripts::PhpBB3::Database_3_1]
     # @param lookup [ImportScripts::LookupContainer]
     # @param text_processor [ImportScripts::PhpBB3::TextProcessor]

@@ -11,15 +11,15 @@ module Chat
     # or decrease this as we find performance issues.
     MAX_CHANNELS = 1000
 
-    ##
-    # @param channel_ids [Array<Integer>] The IDs of the channels to count.
-    # @param user_id [Integer] The ID of the user to count for.
-    # @param include_missing_memberships [Boolean] Whether to include channels
-    #   that the user is not a member of. These counts will always be 0.
-    # @param include_read [Boolean] Whether to include channels that the user
-    #   is a member of where they have read all the messages. This overrides
-    #   include_missing_memberships.
     class << self
+      ##
+      # @param channel_ids [Array<Integer>] The IDs of the channels to count.
+      # @param user_id [Integer] The ID of the user to count for.
+      # @param include_missing_memberships [Boolean] Whether to include channels
+      #   that the user is not a member of. These counts will always be 0.
+      # @param include_read [Boolean] Whether to include channels that the user
+      #   is a member of where they have read all the messages. This overrides
+      #   include_missing_memberships.
       def call(channel_ids:, user_id:, include_missing_memberships: false, include_read: true)
         # The CTE picks the candidate channel set up front and resolves the
         # static per-channel filters (chatable_type, threading_enabled, muted,

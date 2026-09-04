@@ -54,6 +54,7 @@ module TurboTests
       :exception,
       :pending_exception,
     )
+
   class FakeExecutionResult
     class << self
       def from_obj(obj)

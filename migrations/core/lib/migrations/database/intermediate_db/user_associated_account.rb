@@ -23,17 +23,17 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `user_associated_accounts` record in the IntermediateDB.
-        #
-        # @param user_id         [Integer, String]
-        # @param provider_name   [String]
-        # @param created_at      [Time, nil]
-        # @param info            [Object, nil]
-        # @param last_used       [Time, nil]
-        # @param provider_uid    [String]
-        #
-        # @return [void]
         class << self
+          # Creates a new `user_associated_accounts` record in the IntermediateDB.
+          #
+          # @param user_id         [Integer, String]
+          # @param provider_name   [String]
+          # @param created_at      [Time, nil]
+          # @param info            [Object, nil]
+          # @param last_used       [Time, nil]
+          # @param provider_uid    [String]
+          #
+          # @return [void]
           def create(
             user_id:,
             provider_name:,

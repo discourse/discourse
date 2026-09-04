@@ -3,9 +3,9 @@
 class ContentLocalization
   AUTOMATICALLY_TRANSLATE_COOKIE = "automatically_translate"
 
-  # @param scope [Object] The serializer scope from which the method is called
-  # @return [Boolean]
   class << self
+    # @param scope [Object] The serializer scope from which the method is called
+    # @return [Boolean]
     def automatically_translate?(scope)
       return scope.user.user_option.automatically_translate if scope&.user
 

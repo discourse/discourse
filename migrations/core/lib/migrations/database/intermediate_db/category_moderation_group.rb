@@ -20,14 +20,14 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `category_moderation_groups` record in the IntermediateDB.
-        #
-        # @param category_id   [Integer, String]
-        # @param group_id      [Integer, String]
-        # @param created_at    [Time, nil]
-        #
-        # @return [void]
         class << self
+          # Creates a new `category_moderation_groups` record in the IntermediateDB.
+          #
+          # @param category_id   [Integer, String]
+          # @param group_id      [Integer, String]
+          # @param created_at    [Time, nil]
+          #
+          # @return [void]
           def create(category_id:, group_id:, created_at: nil)
             Migrations::Database::IntermediateDB.insert(
               SQL,

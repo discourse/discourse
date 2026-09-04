@@ -7,8 +7,8 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   NEXT_CATEGORY_ID_KEY = "category-featured-topic:next-category-id"
   DEFAULT_BATCH_SIZE = 100
 
-  # Populates the category featured topics.
   class << self
+    # Populates the category featured topics.
     def feature_topics(batched: false, batch_size: nil)
       current = {}
       CategoryFeaturedTopic

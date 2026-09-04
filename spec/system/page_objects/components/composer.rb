@@ -12,6 +12,7 @@ module PageObjects
 
       EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"
       FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
+
       def initialize(composer_id = COMPOSER_ID)
         @composer_id = composer_id
       end

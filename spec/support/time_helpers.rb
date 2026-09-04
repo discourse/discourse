@@ -61,18 +61,18 @@ module TimeHelpers
 end
 
 module BrowserTime
-  # Install the clock at the desired time and immediately resume it so
-  # the browser starts at `time` but `Date.now()` keeps advancing with the
-  # wall clock.
-  #
-  # `set_fixed_time` pins `Date.now()` forever, which breaks Ember's runloop: `next()`/`later()`
-  # schedule timers via `Date.now() + wait` and only fire them once
-  # `Date.now()` has advanced past that, so any action deferred through
-  # the runloop (e.g. DButton, which uses `next()` to optimise INP)
-  # would silently never run.
-  #
-  # Playwright warns about this "stuck page" behaviour for pinned clocks too.
   class << self
+    # Install the clock at the desired time and immediately resume it so
+    # the browser starts at `time` but `Date.now()` keeps advancing with the
+    # wall clock.
+    #
+    # `set_fixed_time` pins `Date.now()` forever, which breaks Ember's runloop: `next()`/`later()`
+    # schedule timers via `Date.now() + wait` and only fire them once
+    # `Date.now()` has advanced past that, so any action deferred through
+    # the runloop (e.g. DButton, which uses `next()` to optimise INP)
+    # would silently never run.
+    #
+    # Playwright warns about this "stuck page" behaviour for pinned clocks too.
     def freeze(page, time)
       page.driver.with_playwright_page do |pw_page|
         pw_page.clock.install(time:)

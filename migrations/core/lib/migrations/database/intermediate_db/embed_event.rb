@@ -21,18 +21,18 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `embed_events` record in the IntermediateDB.
-        #
-        # @param event_id      [Integer, String, nil]
-        # @param owner_id      [Integer, String]
-        # @param owner_type    [Integer]
-        #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder   [String]
-        #
-        # @return [void]
-        #
-        # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         class << self
+          # Creates a new `embed_events` record in the IntermediateDB.
+          #
+          # @param event_id      [Integer, String, nil]
+          # @param owner_id      [Integer, String]
+          # @param owner_type    [Integer]
+          #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
+          # @param placeholder   [String]
+          #
+          # @return [void]
+          #
+          # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
           def create(event_id: nil, owner_id:, owner_type:, placeholder:)
             Migrations::Database::IntermediateDB.insert(
               SQL,

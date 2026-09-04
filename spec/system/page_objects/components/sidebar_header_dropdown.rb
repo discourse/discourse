@@ -4,6 +4,7 @@ module PageObjects
   module Components
     class SidebarHeaderDropdown < PageObjects::Components::Base
       SIDEBAR_HAMBURGER_DROPDOWN = ".sidebar-hamburger-dropdown"
+
       def click
         page.find(".hamburger-dropdown").click
         wait_for_animation(find(".menu-panel"), timeout: 5)

@@ -19,6 +19,7 @@ class AdminUserIndexQuery
   SAME_IP_ADDRESS_COLUMNS = { "last" => :ip_address, "registration" => :registration_ip_address }
   FILTER_SPLIT_REGEX = /[,\s]+/
   MAX_FILTER_TERMS = 100
+
   def initialize(
     params = {},
     klass = User,

@@ -18,12 +18,12 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `permalink_normalizations` record in the IntermediateDB.
-        #
-        # @param normalization   [String]
-        #
-        # @return [void]
         class << self
+          # Creates a new `permalink_normalizations` record in the IntermediateDB.
+          #
+          # @param normalization   [String]
+          #
+          # @return [void]
           def create(normalization:)
             Migrations::Database::IntermediateDB.insert(SQL, normalization)
           end

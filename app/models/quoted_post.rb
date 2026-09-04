@@ -4,10 +4,10 @@ class QuotedPost < ActiveRecord::Base
   belongs_to :post
   belongs_to :quoted_post, class_name: "Post"
 
-  # NOTE we already have a path that does this for topic links,
-  #  however topic links exclude quotes and links within a topic
-  #  we are double parsing this fragment, this may be worth optimising later
   class << self
+    # NOTE we already have a path that does this for topic links,
+    #  however topic links exclude quotes and links within a topic
+    #  we are double parsing this fragment, this may be worth optimising later
     def extract_from(post)
       doc = Nokogiri::HTML5.fragment(post.cooked)
 

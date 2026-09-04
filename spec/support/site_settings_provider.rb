@@ -6,10 +6,10 @@
 class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
   attr_accessor :current_site
 
-  # We nuke the DB storage provider from site settings, so we yank out the
-  # existing (seeded) settings and pretend they're defaults, then swap in this
-  # in-memory provider.
   class << self
+    # We nuke the DB storage provider from site settings, so we yank out the
+    # existing (seeded) settings and pretend they're defaults, then swap in this
+    # in-memory provider.
     def install!
       SiteSetting.current.each do |k, v|
         # skip setting defaults for settings that are in unloaded plugins

@@ -3,8 +3,8 @@
 class Jobs::ReviewablePriorities < ::Jobs::Scheduled
   every 1.day
 
-  # We need this many reviewables before we'll calculate priorities
   class << self
+    # We need this many reviewables before we'll calculate priorities
     def min_reviewables
       15
     end

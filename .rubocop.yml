@@ -10,6 +10,7 @@ Style/ClassMethodsDefinitions:
   EnforcedStyle: self_class
 
 Style/AccessModifierDeclarations:
+  Enabled: true
   AllowModifiersOnSymbols: false
 
 Layout/EmptyLineBetweenDefs:

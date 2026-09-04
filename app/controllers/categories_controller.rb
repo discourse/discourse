@@ -40,6 +40,7 @@ class CategoriesController < ApplicationController
   MAX_CATEGORY_SEARCH_WORDS = 25
 
   MAX_DESCRIPTION_PARAM_LENGTH = 1000
+
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
     redirect_to path("/c/#{params[:path]}")

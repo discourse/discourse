@@ -60,6 +60,7 @@ module PageObjects
             "list" => "List posts",
           },
         }.freeze
+
         def visit_new
           page.visit("#{WORKFLOWS_PATH}/new")
           self

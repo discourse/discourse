@@ -28,27 +28,27 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `embed_links` record in the IntermediateDB.
-        #
-        # @param owner_id             [Integer, String]
-        # @param owner_type           [Integer]
-        #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder          [String]
-        # @param target_id            [Integer, String, nil]
-        # @param target_name          [String, nil]
-        # @param target_post_number   [Integer, nil]
-        # @param target_suffix        [String, nil]
-        # @param target_topic_id      [Integer, String, nil]
-        # @param target_type          [Integer, nil]
-        #   Any constant from LinkTarget (e.g. LinkTarget::TOPIC)
-        # @param text                 [String, nil]
-        # @param url                  [String, nil]
-        #
-        # @return [void]
-        #
-        # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
-        # @see Migrations::Database::IntermediateDB::Enums::LinkTarget
         class << self
+          # Creates a new `embed_links` record in the IntermediateDB.
+          #
+          # @param owner_id             [Integer, String]
+          # @param owner_type           [Integer]
+          #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
+          # @param placeholder          [String]
+          # @param target_id            [Integer, String, nil]
+          # @param target_name          [String, nil]
+          # @param target_post_number   [Integer, nil]
+          # @param target_suffix        [String, nil]
+          # @param target_topic_id      [Integer, String, nil]
+          # @param target_type          [Integer, nil]
+          #   Any constant from LinkTarget (e.g. LinkTarget::TOPIC)
+          # @param text                 [String, nil]
+          # @param url                  [String, nil]
+          #
+          # @return [void]
+          #
+          # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
+          # @see Migrations::Database::IntermediateDB::Enums::LinkTarget
           def create(
             owner_id:,
             owner_type:,

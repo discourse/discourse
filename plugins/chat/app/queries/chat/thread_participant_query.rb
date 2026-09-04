@@ -19,10 +19,10 @@ module Chat
   class ThreadParticipantQuery
     MAX_PARTICIPANTS = 10
 
-    # @param thread_ids [Array<Integer>] The IDs of the threads to query.
-    # @param preview [Boolean] Determines the number of participants to return.
-    # @return [Hash<Integer, Hash>] A hash of thread IDs to participant data.
     class << self
+      # @param thread_ids [Array<Integer>] The IDs of the threads to query.
+      # @param preview [Boolean] Determines the number of participants to return.
+      # @return [Hash<Integer, Hash>] A hash of thread IDs to participant data.
       def call(thread_ids:)
         return {} if thread_ids.blank?
 

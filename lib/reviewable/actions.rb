@@ -6,9 +6,9 @@ class Reviewable < ActiveRecord::Base
   class Actions < Reviewable::Collection
     attr_reader :bundles, :reviewable
 
-    # Add common actions here to make them easier for reviewables to re-use. If it's a
-    # one off, add it manually.
     class << self
+      # Add common actions here to make them easier for reviewables to re-use. If it's a
+      # one off, add it manually.
       def common_actions
         {
           approve: Action.new(:approve, "thumbs-up", "reviewables.actions.approve.title"),

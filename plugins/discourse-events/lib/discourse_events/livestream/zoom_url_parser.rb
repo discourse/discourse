@@ -8,9 +8,9 @@ module DiscourseEvents
       SUPPORTED_HOST = /(\A|\.)zoom\.us\z/i
       SUPPORTED_PATH_SEGMENTS = %w[j w wc].freeze
 
-      # The single source of truth for "is this a Zoom livestream URL we can
-      # join?". A URL that parses is one the Meeting SDK can be handed.
       class << self
+        # The single source of truth for "is this a Zoom livestream URL we can
+        # join?". A URL that parses is one the Meeting SDK can be handed.
         def zoom_url?(url)
           parse(url).present?
         end

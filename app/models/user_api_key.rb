@@ -18,8 +18,8 @@ class UserApiKey < ActiveRecord::Base
 
   after_initialize :generate_key
 
-  # Scopes allowed to be requested by external services
   class << self
+    # Scopes allowed to be requested by external services
     def allowed_scopes
       Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))
     end
