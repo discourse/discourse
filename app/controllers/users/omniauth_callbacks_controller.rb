@@ -21,7 +21,9 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def complete
-    raise Discourse::ReadOnly if @readonly_mode && !@staff_writes_only_mode
+    if @readonly_mode && !@staff_writes_only_mode && !SiteSetting.allow_login_in_readonly_mode
+      raise Discourse::ReadOnly
+    end
     raise Discourse::NotFound unless auth = request.env["omniauth.auth"]
 
     auth[:session] = session
