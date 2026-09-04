@@ -1,0 +1,149 @@
+.d-block-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+
+  &.--surface-default {
+    background: var(--secondary);
+  }
+
+  &.--surface-subtle {
+    background: var(--primary-very-low);
+  }
+
+  &.--surface-accent {
+    background: var(--tertiary-very-low);
+  }
+
+  &.--padding-none {
+    padding: 0;
+  }
+
+  &.--padding-small {
+    padding: var(--space-4, 1rem);
+  }
+
+  &.--padding-medium {
+    padding: var(--space-8, 2rem);
+  }
+
+  &.--padding-large {
+    padding: var(--space-12, 3rem);
+  }
+
+  &.--height-small {
+    min-height: 12rem;
+  }
+
+  &.--height-medium {
+    min-height: 24rem;
+  }
+
+  &.--height-large {
+    min-height: 36rem;
+  }
+
+  &.--height-viewport {
+    min-height: 100svh;
+  }
+
+  &.--align-center {
+    justify-content: center;
+  }
+
+  &.--align-end {
+    justify-content: flex-end;
+  }
+}
+
+.d-block-section__backdrop,
+.d-block-section__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.d-block-section__backdrop {
+  overflow: hidden;
+
+  picture,
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.d-block-section.--position-top-left .d-block-section__backdrop img {
+  object-position: left top;
+}
+
+.d-block-section.--position-top .d-block-section__backdrop img {
+  object-position: center top;
+}
+
+.d-block-section.--position-top-right .d-block-section__backdrop img {
+  object-position: right top;
+}
+
+.d-block-section.--position-left .d-block-section__backdrop img {
+  object-position: left center;
+}
+
+.d-block-section.--position-center .d-block-section__backdrop img {
+  object-position: center;
+}
+
+.d-block-section.--position-right .d-block-section__backdrop img {
+  object-position: right center;
+}
+
+.d-block-section.--position-bottom-left .d-block-section__backdrop img {
+  object-position: left bottom;
+}
+
+.d-block-section.--position-bottom .d-block-section__backdrop img {
+  object-position: center bottom;
+}
+
+.d-block-section.--position-bottom-right .d-block-section__backdrop img {
+  object-position: right bottom;
+}
+
+.d-block-section__scrim {
+  background: rgb(var(--secondary-rgb), 0.4);
+}
+
+.d-block-section.--scrim-subtle .d-block-section__scrim {
+  background: rgb(var(--secondary-rgb), 0.2);
+}
+
+.d-block-section.--scrim-strong .d-block-section__scrim {
+  background: rgb(var(--secondary-rgb), 0.62);
+}
+
+.d-block-section__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+.d-block-section.--width-wide .d-block-section__content {
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+.d-block-section.--width-narrow .d-block-section__content {
+  max-width: 40rem;
+  margin-inline: auto;
+}

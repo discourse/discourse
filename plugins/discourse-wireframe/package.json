@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "dependencies": {
+    "discourse": "workspace:@discourse/types@*"
+  },
+  "devDependencies": {
+    "lucide-static": "^1.16.0"
+  }
+}

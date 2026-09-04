@@ -39,6 +39,17 @@ en:
           other: "%{formatted_number} chat messages"
 
     chat:
+      blocks:
+        channel_card:
+          channel_id: "Channel"
+          channel_id_help: "The ID of the chat channel to show."
+          show_membership_button: "Show join/leave button"
+        featured_channels:
+          channels: "Channels"
+          channels_help: "Channel IDs separated by `|` (e.g. `1|3|7`)."
+          browse_link: "Show \"browse all channels\" link"
+          browse_label: "\"Browse all channels\" label"
+          show_membership_button: "Show join/leave buttons"
       edit_category:
         tab_title: "Chat"
         channel: "Channel"

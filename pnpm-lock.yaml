@@ -63,6 +63,9 @@ importers:
       eslint:
         specifier: 10.6.0
         version: 10.6.0(jiti@2.6.1)
+      eslint-plugin-tsdoc:
+        specifier: ^0.5.2
+        version: 0.5.2(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3)
       execa:
         specifier: ^9.6.0
         version: 9.6.1
@@ -968,6 +971,16 @@ importers:
       discourse:
         specifier: npm:@discourse/types@2026.9.0-c0ef3a11
         version: '@discourse/types@2026.9.0-c0ef3a11'
+
+  plugins/discourse-wireframe:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
+    devDependencies:
+      lucide-static:
+        specifier: ^1.16.0
+        version: 1.33.0
 
   plugins/discourse-zendesk-plugin:
     dependencies:
@@ -6111,6 +6124,9 @@ packages:
 
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
+
+  lucide-static@1.33.0:
+    resolution: {integrity: sha512-jNGgvTNcLUfVRX4N9PH9pVVTJzoph/BmYmgU838bYBQodkUJL4nAThkuymFz1x3OUYMhJxPndC7rdg1sxOPYKg==}
 
   magic-string@0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
@@ -14892,6 +14908,8 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
+
+  lucide-static@1.33.0: {}
 
   magic-string@0.25.9:
     dependencies:

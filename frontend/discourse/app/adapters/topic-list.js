@@ -5,10 +5,12 @@ import PreloadStore from "discourse/lib/preload-store";
 import Topic from "discourse/models/topic";
 
 export default class TopicListAdapter extends RestAdapter {
-  async find(store, type, { filter, params }) {
+  async find(store, type, { filter, params }, opts) {
     const result =
       (await this.#preloadedList(filter)) ??
-      (await ajax(this.#url(filter, params)));
+      (await ajax(this.#url(filter, params), {
+        ignoreUnsent: opts?.ignoreUnsent,
+      }));
 
     result.filter = filter;
     result.params = params;

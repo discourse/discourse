@@ -63,7 +63,11 @@ interface HeadBlockSignature {
  */
 @block("head", {
   container: true,
-  description: "Renders only the first child whose conditions pass",
+  displayName: "Conditional",
+  icon: "code-branch",
+  category: "layout",
+  description: "Shows the first child whose conditions match.",
+  thumbnail: () => import("discourse/blocks/thumbnails/head"),
 })
 export default class HeadBlock extends Component<HeadBlockSignature> {
   @service declare blocks: Blocks;
@@ -98,7 +102,7 @@ export default class HeadBlock extends Component<HeadBlockSignature> {
         - The first visible child (actually rendered)
         - Ghosts for children hidden by priority
       }}
-      {{#each @children as |child|}}
+      {{#each @children key="key" as |child|}}
         {{#if child.isGhost}}
           {{! Child failed its own conditions - already a ghost }}
           <child.Component />

@@ -25,6 +25,8 @@ const packageNames = [
   "@types/rsvp",
   "@types/sinon",
   "discourse-i18n",
+  "ember-async-data",
+  "ember-curry-component",
   "ember-modifier",
   "ember-qunit",
   "ember-source",

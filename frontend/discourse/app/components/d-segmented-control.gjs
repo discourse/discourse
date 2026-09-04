@@ -79,6 +79,7 @@ export default class DSegmentedControl extends Component {
             item.class
             (if item.disabled "is-disabled")
           }}
+          title={{item.title}}
           {{on "click" (fn this.handleClick item.value)}}
         >
           <input
@@ -88,8 +89,12 @@ export default class DSegmentedControl extends Component {
             checked={{eq @value item.value}}
             disabled={{item.disabled}}
             class="d-segmented-control__input"
+            aria-label={{item.title}}
             {{on "change" (fn this.handleChange item.value)}}
           />
+          {{! The title doubles as the hover tooltip (on the label) and the
+            accessible name (on the input), so an icon-only segment — one with
+            an icon and no visible label — is still announced and discoverable. }}
           <span class="d-segmented-control__text">
             {{#if item.icon}}{{dIcon item.icon}}{{/if}}
             {{item.label}}
