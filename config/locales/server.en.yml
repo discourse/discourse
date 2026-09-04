@@ -5935,6 +5935,11 @@ en:
     submit_button: "Send Email"
     safe_mode: "Safe Mode: disable all themes/plugins when logging in"
 
+  panel_dock:
+    window_reconnecting_body: "Reload that page to reconnect it, or close this window."
+    window_reconnecting_title: "This panel lost the page it belongs to"
+    window_title: "Panel - %{site_title}"
+
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports

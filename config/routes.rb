@@ -1943,6 +1943,11 @@ Discourse::Application.routes.draw do
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
+    get "/panel-window/:key" => "panel_windows#show",
+        :constraints => {
+          key: /[a-zA-Z0-9][a-zA-Z0-9_\-]{0,63}/,
+        }
+
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 

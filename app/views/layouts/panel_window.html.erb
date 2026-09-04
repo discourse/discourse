@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="<%= html_lang %>" class="<%= html_classes %>" data-d-panel-dock="<%= @panel_key %>">
+  <head>
+    <meta charset="utf-8">
+    <title><%= t("panel_dock.window_title", site_title: SiteSetting.title) %></title>
+    <%= discourse_theme_color_meta_tags %>
+    <%= discourse_color_scheme_meta_tag %>
+    <%= render partial: "common/discourse_stylesheet" %>
+  </head>
+  <body class="<%= body_classes %>">
+    <%= yield %>
+  </body>
+</html>

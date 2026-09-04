@@ -211,6 +211,10 @@
     justify-content: center;
     padding: var(--space-4);
     text-align: center;
+
+    &[hidden] {
+      display: none;
+    }
   }
 
   &.is-reconnecting {
