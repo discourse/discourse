@@ -58,7 +58,8 @@ class DiscourseSolved::SolvedPostSerializer < ApplicationSerializer
   end
 
   def topic_title
-    object.topic.fancy_title
+    ContentLocalization.translated_topic_fancy_title(object.topic, scope) ||
+      object.topic.fancy_title
   end
 
   def url

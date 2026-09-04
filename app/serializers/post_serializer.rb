@@ -146,11 +146,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def topic_title
-    topic&.title
+    ContentLocalization.translated_topic_title(topic, scope) || topic&.title
   end
 
   def topic_html_title
-    topic&.fancy_title
+    ContentLocalization.translated_topic_fancy_title(topic, scope) || topic&.fancy_title
   end
 
   def posts_count
