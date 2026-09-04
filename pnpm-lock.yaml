@@ -649,6 +649,9 @@ importers:
       sinon:
         specifier: ^22.0.0
         version: 22.0.0
+      source-map-js:
+        specifier: ^1.2.1
+        version: 1.2.1
       testem:
         specifier: ^3.20.1
         version: 3.20.1(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8)
