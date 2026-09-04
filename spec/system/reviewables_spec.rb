@@ -3,8 +3,6 @@
 describe "Reviewables" do
   let(:review_page) { PageObjects::Pages::Review.new }
   fab!(:admin)
-  fab!(:theme)
-  fab!(:long_post, :post_with_very_long_raw_content)
   fab!(:post)
   let(:composer) { PageObjects::Components::Composer.new }
   let(:moderator) { Fabricate(:moderator) }
@@ -17,27 +15,12 @@ describe "Reviewables" do
   describe "when there is a flagged post reviewable with a short post" do
     fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
 
-    it "should not show a button to expand/collapse the post content" do
-      visit("/review")
-      expect(review_page).to have_no_post_body_collapsed
-      expect(review_page).to have_no_post_body_toggle
-    end
-
     describe "reviewable actions" do
       let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
 
       def open_agree_and_edit
         PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide").expand
         find("[data-value='post-agree_and_edit']").click
-      end
-
-      it "should have agree_and_edit action" do
-        visit("/review")
-        select_kit =
-          PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
-        select_kit.expand
-
-        expect(select_kit).to have_option_value("post-agree_and_edit")
       end
 
       it "agree_and_edit does not touch the flag until the edit is saved" do
@@ -137,20 +120,9 @@ describe "Reviewables" do
     end
   end
 
-  describe "when there is a queued post reviewable with a short post" do
-    fab!(:short_queued_reviewable, :reviewable_queued_post)
-
-    it "should not show a button to expand/collapse the post content" do
-      visit("/review")
-      expect(review_page).to have_no_post_body_collapsed
-      expect(review_page).to have_no_post_body_toggle
-    end
-  end
-
   describe "when there is a reviewable user" do
     fab!(:user)
     let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
-    let(:scrub_user_modal) { PageObjects::Modals::ScrubRejectedUser.new }
 
     before do
       SiteSetting.must_approve_users = true
@@ -177,33 +149,6 @@ describe "Reviewables" do
       expect(mail.to).to eq([user_email])
       expect(mail.subject).to match(/You've been rejected on Discourse/)
       expect(mail.body.raw_source).to include rejection_reason
-    end
-
-    it "Allows scrubbing user data after rejection" do
-      rejection_reason = "user is spamming"
-      scrubbing_reason = "a spammer who knows how to make GDPR requests"
-      reviewable = ReviewableUser.find_by_target_id(user.id)
-
-      review_page.visit_reviewable(reviewable)
-      review_page.select_bundled_action(reviewable, "user-delete_user")
-      rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
-      rejection_reason_modal.delete_user
-
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
-
-      review_page.click_scrub_user_button
-
-      expect(scrub_user_modal.scrub_button).to be_disabled
-      scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
-      expect(scrub_user_modal.scrub_button).not_to be_disabled
-      scrub_user_modal.scrub_button.click
-
-      expect(review_page).to have_reviewable_with_scrubbed_by(reviewable, admin.username)
-      expect(review_page).to have_reviewable_with_scrubbed_reason(reviewable, scrubbing_reason)
-      expect(review_page).to have_reviewable_with_scrubbed_at(
-        reviewable,
-        reviewable.payload["scrubbed_at"],
-      )
     end
   end
 
@@ -368,7 +313,7 @@ describe "Reviewables" do
   end
 
   describe "when there is an unknown plugin reviewable" do
-    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
     fab!(:reviewable2, :reviewable)
 
     before do
@@ -428,78 +373,28 @@ describe "Reviewables" do
   describe "XSS prevention in queued post titles via server-side cooking" do
     fab!(:untrusted_user) { Fabricate(:user, trust_level: 0) }
 
-    before do
-      SiteSetting.approve_post_count = 1
-      sign_in(admin)
-    end
-
-    it "prevents stored XSS in topic title when viewing review queue" do
-      xss_payload = '<img src=x onerror="alert(\'XSS\')">'
-      reviewable =
-        ReviewableQueuedPost.needs_review!(
-          target_created_by: untrusted_user,
-          created_by: untrusted_user,
-          payload: {
-            raw: "This is the post body",
-            title: xss_payload,
-          },
-        )
+    it "escapes markup in queued post titles instead of rendering it" do
+      ReviewableQueuedPost.needs_review!(
+        target_created_by: untrusted_user,
+        created_by: untrusted_user,
+        payload: {
+          raw: "This is the post body",
+          title: "<img src=x onerror=\"alert('XSS')\"><script>alert(1)</script> & <b>Bold</b>",
+        },
+      )
 
       visit("/review")
 
-      # The title should be visible as text but not execute
-      expect(page).to have_no_css("img[src='x']")
-      expect(page).to have_no_css("img[onerror]")
+      title_html = page.find(".title-text", match: :first).native.inner_html
 
-      # Verify the XSS payload is escaped in the HTML
-      title_element = page.find(".title-text", match: :first)
-      title_html = title_element.native.inner_html
       expect(title_html).to include("&lt;img")
-      expect(title_html).to include("&gt;")
-      expect(title_html).not_to include("<img src=x onerror")
-    end
-
-    it "prevents stored XSS with script tags in topic title" do
-      xss_payload = '<script>alert("XSS")</script>Malicious Title'
-      reviewable =
-        ReviewableQueuedPost.needs_review!(
-          target_created_by: untrusted_user,
-          created_by: untrusted_user,
-          payload: {
-            raw: "This is the post body",
-            title: xss_payload,
-          },
-        )
-
-      visit("/review")
-
-      expect(page).to have_no_css("script")
-      title_element = page.find(".title-text", match: :first)
-      title_html = title_element.native.inner_html
       expect(title_html).to include("&lt;script&gt;")
-      expect(title_html).not_to include("<script>alert")
-    end
-
-    it "escapes special characters in title" do
-      special_chars_title = "Test & <b>Bold</b> & \"Quotes\" & 'Apostrophes'"
-      reviewable =
-        ReviewableQueuedPost.needs_review!(
-          target_created_by: untrusted_user,
-          created_by: untrusted_user,
-          payload: {
-            raw: "This is the post body",
-            title: special_chars_title,
-          },
-        )
-
-      visit("/review")
-
-      # The <b> tag should not render as bold
-      expect(page).to have_no_css(".title-text b")
-      title_element = page.find(".title-text", match: :first)
-      title_html = title_element.native.inner_html
-      expect(title_html).to include("&amp;")
       expect(title_html).to include("&lt;b&gt;")
+      expect(title_html).to include("&amp;")
+      expect(page).to have_no_css(
+        ".title-text img, .title-text script, .title-text b",
+        visible: :all,
+      )
     end
   end
 

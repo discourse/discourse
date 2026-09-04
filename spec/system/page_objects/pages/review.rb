@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class Review < PageObjects::Pages::Base
-      POST_BODY_TOGGLE_SELECTOR = ".post-body__toggle-btn"
-      POST_BODY_COLLAPSED_SELECTOR = ".post-body.is-collapsed"
       REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
 
       def visit_reviewable(reviewable)
@@ -48,26 +46,6 @@ module PageObjects
       def delete_user_from_reviewable(reviewable, action, confirm: true)
         select_bundled_action(reviewable, action, bundle_index: 1)
         PageObjects::Components::Dialog.new.click_danger if confirm
-      end
-
-      def click_post_body_toggle
-        find(POST_BODY_TOGGLE_SELECTOR).click
-      end
-
-      def has_post_body_toggle?
-        page.has_css?(POST_BODY_TOGGLE_SELECTOR)
-      end
-
-      def has_no_post_body_toggle?
-        page.has_no_css?(POST_BODY_TOGGLE_SELECTOR)
-      end
-
-      def has_post_body_collapsed?
-        page.has_css?(POST_BODY_COLLAPSED_SELECTOR)
-      end
-
-      def has_no_post_body_collapsed?
-        page.has_no_css?(POST_BODY_COLLAPSED_SELECTOR)
       end
 
       def has_reviewable_action_dropdown?

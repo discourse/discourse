@@ -8,7 +8,6 @@ import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
-import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -241,34 +240,28 @@ export default class ReviewableItem extends Component {
   }
 
   get scoreSummary() {
-    const scoreData = this.args.reviewable?.reviewable_scores?.reduce(
-      (acc, score) => {
-        if (!acc[score.score_type.type]) {
-          acc[score.score_type.type] = {
-            title: score.score_type.title,
-            type: score.score_type.type,
-            count: 0,
-          };
-        }
+    const scores = this.args.reviewable?.reviewable_scores ?? [];
+    const summaries = {};
 
-        acc[score.score_type.type].count += 1;
-        return acc;
-      },
-      {}
-    );
+    for (const { score_type } of scores) {
+      summaries[score_type.type] ??= {
+        title: score_type.title,
+        type: score_type.type,
+        count: 0,
+      };
+      summaries[score_type.type].count += 1;
+    }
 
-    return Object.values(scoreData);
+    return Object.values(summaries);
   }
 
   get reviewableTypeLabel() {
     const { reviewable } = this.args;
 
-    // handle plugin types
     if (reviewableTypeLabels[reviewable?.type]) {
       return reviewableTypeLabels[reviewable?.type];
     }
 
-    // core types
     if (reviewable?.type === "ReviewableUser") {
       return "review.user_label";
     }
@@ -288,7 +281,6 @@ export default class ReviewableItem extends Component {
       return "review.post_flagged_as";
     }
 
-    // fallback
     return "review.flagged_as";
   }
 
@@ -459,42 +451,37 @@ export default class ReviewableItem extends Component {
     if (!this.currentUser) {
       return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     }
-    const post = await this.store.find("post", reviewable.post_id);
-    const topic_json = await Topic.find(post.topic_id, {});
 
-    const topic = Topic.create(topic_json);
-    post.set("topic", topic);
+    const post = await this.store.find("post", reviewable.post_id);
 
     if (!post.can_edit) {
       return false;
     }
 
-    const opts = {
+    const topic = Topic.create(await Topic.find(post.topic_id, {}));
+    post.set("topic", topic);
+
+    return this.composer.open({
       post,
       action: Composer.EDIT,
-      draftKey: post.get("topic.draft_key"),
-      draftSequence: post.get("topic.draft_sequence"),
+      draftKey: topic.draft_key,
+      draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
       onSaved: () => performAction().catch(popupAjaxError),
-    };
-
-    return this.composer.open(opts);
+    });
   }
 
   _penalize(adminToolMethod, reviewable, performAction) {
-    let adminTools = this.adminTools;
-    if (adminTools) {
-      let createdBy = reviewable.target_created_by;
-      let postId = reviewable.post_id;
-      let postEdit = reviewable.raw ?? reviewable.payload?.raw;
-
-      return adminTools[adminToolMethod](createdBy, {
-        postId,
-        postEdit,
-        reviewableId: reviewable.id,
-        before: performAction,
-      });
+    if (!this.adminTools) {
+      return;
     }
+
+    return this.adminTools[adminToolMethod](reviewable.target_created_by, {
+      postId: reviewable.post_id,
+      postEdit: reviewable.raw ?? reviewable.payload?.raw,
+      reviewableId: reviewable.id,
+      before: performAction,
+    });
   }
 
   async #claimReviewable() {
@@ -536,14 +523,6 @@ export default class ReviewableItem extends Component {
     } catch (e) {
       popupAjaxError(e);
     }
-  }
-
-  @action
-  explainReviewable(reviewable, event) {
-    event.preventDefault();
-    this.modal.show(ExplainReviewableModal, {
-      model: { reviewable },
-    });
   }
 
   @action

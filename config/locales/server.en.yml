@@ -6410,31 +6410,6 @@ en:
       approve_and_unhide:
         title: "Yes"
         complete: "Post approved and unhidden"
-      # New separated post actions
-      post_actions:
-        bundle_title: "What do you want to do with the post?"
-      delete_post:
-        title: "Delete post"
-        description: "Delete this post"
-        complete: "Post deleted"
-      hide_post:
-        title: "Hide post"
-        description: "Hide this post from public view"
-        complete: "Post hidden"
-      unhide_post:
-        title: "Unhide post"
-        description: "Make this post visible to all users"
-        complete: "Post unhidden"
-      restore_post:
-        title: "Restore post"
-        description: "Restore this deleted post"
-        complete: "Post restored"
-      edit_post:
-        title: "Edit post"
-        description: "Edit this post content"
-        complete: "Post edited"
-      user_actions:
-        bundle_title: "What do you want to do with the user?"
       silence_user:
         title: "Silence user"
         description: "Prevent the user from posting or sending messages"
