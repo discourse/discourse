@@ -1471,7 +1471,6 @@ class BulkImport::Base
       user[:approved_at] ||= user[:created_at]
       user[:approved_by_id] ||= Discourse::SYSTEM_USER_ID
     end
-    user[:suspended_at] ||= user[:suspended_at]
     user[:suspended_till] ||= user[:suspended_till] ||
       (200.years.from_now if user[:suspended_at].present?)
 

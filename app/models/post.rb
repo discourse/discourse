@@ -1259,7 +1259,7 @@ class Post < ActiveRecord::Base
   def add_to_quoted_post_numbers(num)
     return if num.blank?
     self.quoted_post_numbers ||= []
-    self.quoted_post_numbers << num
+    quoted_post_numbers << num
   end
 
   def create_reply_relationship_with(post)
