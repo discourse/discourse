@@ -128,4 +128,32 @@ RSpec.describe Users::AssociateAccountsController do
       expect(response.status).to eq(403)
     end
   end
+
+  describe "#connect_info" do
+    token = "a" * 64
+
+    it "exchanges the token landing without rendering the token" do
+      get "/associate/#{token}"
+
+      expect(response).to have_http_status(:see_other)
+      expect(response.location).to eq("#{Discourse.base_url}/associate")
+      expect(response.body).to be_empty
+    end
+
+    it "returns 404 for a token-bearing JSON route" do
+      get "/associate/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#connect" do
+    token = "a" * 64
+
+    it "returns 404 for a token-bearing mutation route" do
+      post "/associate/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

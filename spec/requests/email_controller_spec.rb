@@ -427,4 +427,49 @@ RSpec.describe EmailController do
       get "/email/unsubscribe"
     end
   end
+
+  describe "#unsubscribe" do
+    token = "a" * 64
+
+    it "exchanges the token landing without rendering the token" do
+      get "/email/unsubscribe/#{token}"
+
+      expect(response).to have_http_status(:see_other)
+      expect(response.location).to eq("#{Discourse.base_url}/email/unsubscribe")
+      expect(response.body).to be_empty
+    end
+
+    it "returns 404 for a token-bearing JSON route" do
+      get "/email/unsubscribe/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a valid unsubscribe token API" do
+      user = Fabricate(:user)
+      unsubscribe_key = UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE)
+
+      get "/email/unsubscribe/#{unsubscribe_key}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#perform_unsubscribe" do
+    token = "a" * 64
+
+    it "returns 404 for token-bearing human unsubscribe mutation routes" do
+      user = Fabricate(:user)
+      unsubscribe_key = UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE)
+
+      post "/email/unsubscribe/#{token}.json"
+      expect(response).to have_http_status(:not_found)
+
+      post "/email/unsubscribe/#{unsubscribe_key}.json", params: { digest_after_minutes: "0" }
+      expect(response).to have_http_status(:not_found)
+
+      post "/email/unsubscribe/#{unsubscribe_key}", params: { digest_after_minutes: "0" }
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

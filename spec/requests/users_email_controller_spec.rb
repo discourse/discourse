@@ -358,4 +358,128 @@ RSpec.describe UsersEmailController do
       end
     end
   end
+
+  describe "#show_confirm_new_email" do
+    token = "a" * 64
+
+    {
+      "/u/confirm-new-email/#{token}" => "/u/confirm-new-email",
+      "/users/confirm-new-email/#{token}" => "/u/confirm-new-email",
+    }.each do |token_path, clean_path|
+      it "exchanges GET #{token_path} without rendering the token" do
+        get token_path
+
+        expect(response).to have_http_status(:see_other)
+        expect(response.location).to eq("#{Discourse.base_url}#{clean_path}")
+        expect(response.body).to be_empty
+      end
+    end
+
+    [
+      "/u/confirm-new-email/#{token}.json",
+      "/users/confirm-new-email/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for GET #{token_path}" do
+        get token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid new-email token API" do
+      updater = EmailUpdater.new(guardian: user.guardian, user:)
+      token = updater.change_to("new-email@example.com").new_email_token.token
+
+      get "/u/confirm-new-email/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#confirm_new_email" do
+    token = "a" * 64
+
+    [
+      "/u/confirm-new-email/#{token}.json",
+      "/users/confirm-new-email/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for PUT #{token_path}" do
+        put token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid new-email token API" do
+      updater = EmailUpdater.new(guardian: user.guardian, user:)
+      token = updater.change_to("new-email@example.com").new_email_token.token
+
+      put "/u/confirm-new-email/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#show_confirm_old_email" do
+    token = "a" * 64
+
+    {
+      "/u/confirm-old-email/#{token}" => "/u/confirm-old-email",
+      "/users/confirm-old-email/#{token}" => "/u/confirm-old-email",
+    }.each do |token_path, clean_path|
+      it "exchanges GET #{token_path} without rendering the token" do
+        get token_path
+
+        expect(response).to have_http_status(:see_other)
+        expect(response.location).to eq("#{Discourse.base_url}#{clean_path}")
+        expect(response.body).to be_empty
+      end
+    end
+
+    [
+      "/u/confirm-old-email/#{token}.json",
+      "/users/confirm-old-email/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for GET #{token_path}" do
+        get token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid old-email token API" do
+      admin = Fabricate(:admin)
+      updater = EmailUpdater.new(guardian: admin.guardian, user: admin)
+      token = updater.change_to("new-admin-email@example.com").old_email_token.token
+
+      get "/u/confirm-old-email/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#confirm_old_email" do
+    token = "a" * 64
+
+    [
+      "/u/confirm-old-email/#{token}.json",
+      "/users/confirm-old-email/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for PUT #{token_path}" do
+        put token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid old-email token API" do
+      admin = Fabricate(:admin)
+      updater = EmailUpdater.new(guardian: admin.guardian, user: admin)
+      token = updater.change_to("new-admin-email@example.com").old_email_token.token
+
+      put "/u/confirm-old-email/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

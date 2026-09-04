@@ -4480,4 +4480,86 @@ RSpec.describe SessionController do
       end
     end
   end
+
+  describe "#email_login_info" do
+    token = "a" * 64
+
+    it "exchanges the token landing without rendering the token" do
+      get "/session/email-login/#{token}"
+
+      expect(response).to have_http_status(:see_other)
+      expect(response.location).to eq("#{Discourse.base_url}/session/email-login")
+      expect(response.body).to be_empty
+    end
+
+    it "returns 404 for a token-bearing JSON route" do
+      get "/session/email-login/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a valid email-login token API" do
+      user = Fabricate(:user)
+      email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:email_login]).token
+
+      get "/session/email-login/#{email_token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#email_login" do
+    token = "a" * 64
+
+    it "returns 404 for a token-bearing mutation route" do
+      post "/session/email-login/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a valid email-login token API" do
+      user = Fabricate(:user)
+      email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:email_login]).token
+
+      post "/session/email-login/#{email_token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#one_time_password" do
+    token = "a" * 64
+
+    it "exchanges the token landing without rendering the token" do
+      get "/session/otp/#{token}"
+
+      expect(response).to have_http_status(:see_other)
+      expect(response.location).to eq("#{Discourse.base_url}/session/otp")
+      expect(response.body).to be_empty
+    end
+
+    it "returns 404 for a token-bearing JSON route" do
+      get "/session/otp/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a token-bearing mutation route" do
+      post "/session/otp/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for valid OTP token APIs" do
+      user = Fabricate(:user)
+      otp_token = SecureRandom.hex
+      Discourse.redis.setex("otp_#{otp_token}", 10.minutes, user.username)
+
+      get "/session/otp/#{otp_token}.json"
+      expect(response).to have_http_status(:not_found)
+
+      post "/session/otp/#{otp_token}.json"
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

@@ -8855,4 +8855,282 @@ RSpec.describe UsersController do
   def stub_server_session_confirmed
     UsersController.any_instance.stubs(:server_session_confirmed?).returns(true)
   end
+
+  describe "#password_reset_show" do
+    token = "a" * 64
+
+    {
+      "/u/password-reset/#{token}" => "/u/password-reset",
+      "/users/password-reset/#{token}" => "/u/password-reset",
+    }.each do |token_path, clean_path|
+      it "exchanges GET #{token_path} without rendering the token" do
+        get token_path
+
+        expect(response).to have_http_status(:see_other)
+        expect(response.location).to eq("#{Discourse.base_url}#{clean_path}")
+        expect(response.body).to be_empty
+      end
+    end
+
+    [
+      "/u/password-reset/#{token}.json",
+      "/users/password-reset/#{token}.json",
+      "/u/confirm-email-token/#{token}.json",
+      "/users/confirm-email-token/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for GET #{token_path}" do
+        get token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid password-reset token API" do
+      user = Fabricate(:user)
+      email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:password_reset]).token
+
+      get "/u/password-reset/#{email_token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "does not treat a token query parameter on the clean route as a landing" do
+      user = Fabricate(:user)
+      email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:password_reset]).token
+
+      get "/u/password-reset", params: { token: email_token }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.location).to be_nil
+      expect(response.body).not_to include(email_token)
+    end
+  end
+
+  describe "#password_reset_update" do
+    token = "a" * 64
+
+    ["/u/password-reset/#{token}.json", "/users/password-reset/#{token}.json"].each do |token_path|
+      it "returns 404 for PUT #{token_path}" do
+        put token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid password-reset token API" do
+      user = Fabricate(:user)
+      email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:password_reset]).token
+
+      put "/u/password-reset/#{email_token}.json", params: { password: SecureRandom.hex }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "does not fall back to staged state when the submitted token is invalid" do
+      user = Fabricate(:user, password: "old-password")
+      email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:password_reset]).token
+
+      get "/u/password-reset/#{email_token}"
+      expect(response).to redirect_to("/u/password-reset")
+
+      put "/u/password-reset.json",
+          params: {
+            token: SecureRandom.hex,
+            password: "new-secure-password",
+          }
+
+      expect(response.parsed_body["success"]).to eq(false)
+      expect(user.reload.confirm_password?("old-password")).to eq(true)
+    end
+
+    it "binds each password reset form to the token returned for that page" do
+      first_user = Fabricate(:user, password: "first-old-password")
+      second_user = Fabricate(:user, password: "second-old-password")
+      first_token =
+        Fabricate(:email_token, user: first_user, scope: EmailToken.scopes[:password_reset]).token
+      second_token =
+        Fabricate(:email_token, user: second_user, scope: EmailToken.scopes[:password_reset]).token
+
+      get "/u/password-reset/#{first_token}"
+      get "/u/password-reset.json"
+      first_form_token = response.parsed_body["token"]
+      expect(SecureLinkFlow.new(request.server_session).credential(:password_reset)).to be_nil
+
+      get "/u/password-reset/#{second_token}"
+      get "/u/password-reset.json"
+      second_form_token = response.parsed_body["token"]
+
+      put "/u/password-reset.json",
+          params: {
+            token: first_form_token,
+            password: "first-new-password",
+          }
+
+      expect(response.parsed_body["success"]).to eq(true)
+      expect(first_user.reload.confirm_password?("first-new-password")).to eq(true)
+      expect(second_user.reload.confirm_password?("second-old-password")).to eq(true)
+      expect(first_form_token).to eq(first_token)
+      expect(second_form_token).to eq(second_token)
+    end
+  end
+
+  describe "#activate_account" do
+    token = "a" * 64
+
+    {
+      "/u/activate-account/#{token}" => "/u/activate-account",
+      "/users/activate-account/#{token}" => "/u/activate-account",
+    }.each do |token_path, clean_path|
+      it "exchanges GET #{token_path} without rendering the token" do
+        get token_path
+
+        expect(response).to have_http_status(:see_other)
+        expect(response.location).to eq("#{Discourse.base_url}#{clean_path}")
+        expect(response.body).to be_empty
+      end
+    end
+
+    [
+      "/u/activate-account/#{token}.json",
+      "/users/activate-account/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for GET #{token_path}" do
+        get token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid activation token API" do
+      user = Fabricate(:user, active: false)
+      email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:signup]).token
+
+      get "/u/activate-account/#{email_token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#perform_account_activation" do
+    token = "a" * 64
+
+    [
+      "/u/activate-account/#{token}.json",
+      "/users/activate-account/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for PUT #{token_path}" do
+        put token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid activation token API" do
+      user = Fabricate(:user, active: false)
+      email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:signup]).token
+
+      put "/u/activate-account/#{email_token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#confirm_admin" do
+    token = "a" * 64
+
+    {
+      "/u/confirm-admin/#{token}" => "/u/confirm-admin",
+      "/users/confirm-admin/#{token}" => "/u/confirm-admin",
+    }.each do |token_path, clean_path|
+      it "exchanges GET #{token_path} without rendering the token" do
+        get token_path
+
+        expect(response).to have_http_status(:see_other)
+        expect(response.location).to eq("#{Discourse.base_url}#{clean_path}")
+        expect(response.body).to be_empty
+      end
+    end
+
+    ["/u/confirm-admin/#{token}.json", "/users/confirm-admin/#{token}.json"].each do |token_path|
+      it "returns 404 for GET #{token_path}" do
+        get token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns 404 for POST #{token_path}" do
+        post token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for valid admin-confirmation token APIs" do
+      confirmation = AdminConfirmation.new(Fabricate(:user), Fabricate(:admin))
+      confirmation.create_confirmation
+
+      get "/u/confirm-admin/#{confirmation.token}.json"
+      expect(response).to have_http_status(:not_found)
+
+      post "/u/confirm-admin/#{confirmation.token}.json"
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "binds an admin confirmation to the admin who initiated it" do
+      acting_admin = Fabricate(:admin)
+      target_user = Fabricate(:user)
+      confirmation = AdminConfirmation.new(target_user, acting_admin)
+      confirmation.create_confirmation
+      sign_in(acting_admin)
+
+      get "/u/confirm-admin/#{confirmation.token}"
+
+      expect(response).to redirect_to("/u/confirm-admin")
+      expect(target_user.reload).not_to be_admin
+
+      get "/u/confirm-admin"
+      post "/u/confirm-admin.json", params: { token: confirmation.token }
+
+      expect(response).to have_http_status(:ok)
+      expect(target_user.reload).to be_admin
+    end
+
+    it "rejects an admin confirmation from a different admin" do
+      acting_admin = Fabricate(:admin)
+      target_user = Fabricate(:user)
+      confirmation = AdminConfirmation.new(target_user, acting_admin)
+      confirmation.create_confirmation
+      sign_in(Fabricate(:admin))
+
+      get "/u/confirm-admin/#{confirmation.token}"
+
+      expect(response).to redirect_to("/u/confirm-admin")
+
+      post "/u/confirm-admin.json", params: { token: confirmation.token }
+
+      expect(response).not_to be_successful
+      expect(target_user.reload).not_to be_admin
+    end
+
+    it "returns a logged-out acting admin to the clean confirmation route" do
+      acting_admin = Fabricate(:admin)
+      target_user = Fabricate(:user)
+      confirmation = AdminConfirmation.new(target_user, acting_admin)
+      confirmation.create_confirmation
+
+      get "/u/confirm-admin/#{confirmation.token}"
+      expect(response).to redirect_to("/u/confirm-admin")
+
+      get "/u/confirm-admin"
+      expect(response).to redirect_to("/login")
+      expect(response.cookies["destination_url"]).to eq("/u/confirm-admin")
+
+      sign_in(acting_admin)
+      get "/u/confirm-admin"
+      post "/u/confirm-admin.json", params: { token: confirmation.token }
+
+      expect(response).to have_http_status(:ok)
+      expect(target_user.reload).to be_admin
+    end
+  end
 end

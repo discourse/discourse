@@ -2383,4 +2383,48 @@ RSpec.describe InvitesController do
       end
     end
   end
+
+  describe "#show secure link routes" do
+    token = "a" * 64
+
+    it "exchanges the token landing without rendering the token" do
+      get "/invites/#{token}?t=#{token}"
+
+      expect(response).to have_http_status(:see_other)
+      expect(response.location).to eq("#{Discourse.base_url}/invite")
+      expect(response.body).to be_empty
+    end
+
+    it "returns 404 for a token-bearing JSON route" do
+      get "/invites/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a valid invite token API" do
+      invite = Fabricate(:invite)
+
+      get "/invites/#{invite.invite_key}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#perform_accept_invitation secure link routes" do
+    token = "a" * 64
+
+    it "returns 404 for a token-bearing mutation route" do
+      put "/invites/show/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a valid invite token API" do
+      invite = Fabricate(:invite)
+
+      put "/invites/show/#{invite.invite_key}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end
