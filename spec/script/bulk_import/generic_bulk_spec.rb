@@ -25,6 +25,23 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#initialize" do
+      it "refuses a missing intermediate database instead of creating one" do
+        expect { described_class.new("/nonexistent/intermediate.db") }.to raise_error(
+          RuntimeError,
+          /Intermediate database not found/,
+        )
+      end
+
+      it "refuses a missing uploads database instead of creating one" do
+        Tempfile.create(%w[intermediate .db]) do |intermediate|
+          expect {
+            described_class.new(intermediate.path, "/nonexistent/uploads.db")
+          }.to raise_error(RuntimeError, /Uploads database not found/)
+        end
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)

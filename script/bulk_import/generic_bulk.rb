@@ -28,6 +28,11 @@ class BulkImport::Generic < BulkImport::Base
 
   def initialize(db_path, uploads_db_path = nil)
     self.class.validate_modes!(merge_import: MERGE_IMPORT, delta_import: DELTA_IMPORT)
+    # SQLite would silently create an empty database for a mistyped path
+    {
+      "Intermediate database" => db_path,
+      "Uploads database" => uploads_db_path,
+    }.each { |label, path| raise "#{label} not found: #{path}" if path && !File.file?(path) }
     super()
     @source_db = create_connection(db_path)
     @uploads_db = create_connection(uploads_db_path) if uploads_db_path
