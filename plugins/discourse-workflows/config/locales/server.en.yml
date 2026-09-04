@@ -125,6 +125,10 @@ en:
         no_tag_names: "No tag names provided."
         operation_failed: "Tag operation failed: %{errors}"
         personal_message_not_allowed: "'%{username}' cannot tag personal messages. Add one of their groups to the 'pm_tags_allowed_for_groups' site setting."
+      tag_group:
+        no_tag_names: "No tag names provided."
+        no_valid_tag_names: "No valid tag names provided."
+        operation_failed: "Tag group operation failed: %{errors}"
       topic_category:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."
@@ -179,6 +183,8 @@ en:
         execution_failed: "Called workflow finished with status '%{status}'."
         execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
+    post:
+      destroy_context: "Deleted by a workflow"
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
     user:

@@ -7,11 +7,10 @@
 fr:
   admin_js:
     admin:
-      calendar: "Événements"
       site_settings:
         categories:
           discourse_post_event: "Événement Discourse"
-          discourse_calendar: "Événements"
+          discourse_events: "Événements"
       web_hooks:
         calendar_event:
           group_name: "Événement du calendrier"
@@ -32,7 +31,8 @@ fr:
           fields:
             topic_id:
               label: ID du sujet
-    discourse_calendar:
+    discourse_events:
+      title: "Événements"
       livestream:
         zoom:
           join: "Rejoindre dans Zoom"
@@ -44,7 +44,6 @@ fr:
           rsvp_to_event: "Confirmez votre participation à l'événement pour commencer à discuter"
           rsvp_to_event_with_link: "Confirmez votre participation à <a href='%{url}'>l'événement</a> pour commencer à discuter"
           rsvp_body: "Échangez avec les autres participants avant, pendant et après l'événement."
-      invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
       preferences:
         all_events_description: "Tous les événements du forum"
         my_events_description: "Événements auxquels vous participez ou qui vous intéressent"
@@ -63,7 +62,7 @@ fr:
       local_time: "Heure locale"
       region:
         title: "Région"
-        none: "Aucune"
+        none: "Jamais"
         use_current_region: "Utiliser la région actuelle"
         select_region: "Sélectionnez une région..."
         names:
@@ -338,9 +337,14 @@ fr:
         week: "Semaine"
         day: "Jour"
         year: "Année"
+    discourse_calendar:
+      invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
     group_timezones:
       search: "Recherche…"
       group_availability: "disponibilité de %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID du sujet"
     discourse_post_event:
       new_event: "Nouvel événement"
       notifications:

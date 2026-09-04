@@ -488,6 +488,7 @@ pl_PL:
         since: "(od %{version})"
       toggle_safe_mode: "Przełącz tryb awaryjny"
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
+      open_styleguide: "Otwórz przewodnik po stylach"
       disable_dev_tools: "Wyłącz narzędzia programistyczne"
       toggle_upcoming_changes_debug: "Przełącz debugowanie nadchodzących zmian"
     s3:
@@ -596,7 +597,7 @@ pl_PL:
       dismiss: "Odrzuć konfigurację"
       select_theme:
         title: "Dostosuj swoją witrynę"
-        description: "Wybierz kolory, czcionki i stronę główną."
+        description: "Wybierz kolory, czcionki i układ swojej witryny."
         action: "Zobacz opcje"
         completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
@@ -632,18 +633,33 @@ pl_PL:
             body: "Podziel się swoim ulubionym jedzeniem ze społecznością! Zacznę: uwielbiam pizzę, szczególnie z dodatkowym serem i pepperoni."
     design_wizard:
       title: "Dostosuj swoją witrynę"
-      subtitle: "Wybierz kolory, czcionki i stronę główną."
+      subtitle: "Wybierz kolory, czcionki i układ swojej witryny."
       step_label: "Przejdź do kroku %{index}"
       save: "Zapisz i zakończ"
       back: "Wstecz"
       next: "Dalej"
+      launch: "Kreator projektowania"
+      launch_description: "Przejrzyj jeszcze raz motyw, kolory, czcionki i układ swojej witryny."
+      intro:
+        description: "Ten kreator przeprowadzi Cię przez motyw, kolory, czcionki, układ strony głównej, baner powitalny i styl wyszukiwania Twojej witryny."
+        autosave: "Każdy krok jest zapisywany na bieżąco, więc członkowie od razu widzą zmiany. Możesz przywrócić wszystko, gdy zamkniesz konto."
+        start: "Rozpocznij"
+      close:
+        message: "Zapisano już pewne zmiany w projekcie witryny. Czy chcesz je utrzymać?"
+        message_without_revert: "Zapisano już pewne zmiany w projekcie swojej witryny. Nie można ich stąd cofnąć."
+        keep: "Zachowaj zmiany"
+        revert: "Cofnij zmiany"
+        continue_editing: "Kontynuuj edycję"
       sections:
         theme: "Motyw"
         colors: "Domyślny kolor"
         fonts: "Czcionki"
         homepage: "Strona główna"
+        welcome_banner: "Baner powitalny"
+        search: "Szukaj"
       theme:
         selected: "Wybrany"
+        applying: "Zastosowanie…"
         custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
       colors:
         light: "Jasny"
@@ -668,6 +684,21 @@ pl_PL:
           boxes: "Pola"
           with_topics: "Kategorie z tematami"
           only: "Tylko kategorie"
+      welcome_banner:
+        enable: "Pokaż baner powitalny"
+        enable_description: "Przywitaj odwiedzających, podając nazwę swojej witryny i pole wyszukiwania"
+        location: "Lokalizacja banera"
+        locations:
+          below_site_header: "Poniżej nagłówka witryny"
+          above_topic_content: "Nad listą tematów"
+      search:
+        experiences:
+          search_icon:
+            title: "Ikona wyszukiwania"
+            description: "Lupa w nagłówku otwierająca wyszukiwanie."
+          search_field:
+            title: "Pole wyszukiwania"
+            description: "Pełne pole wyszukiwania w nagłówku, zawsze widoczne."
     about:
       edit: "Edytuj tę stronę"
       simple_title: "O stronie"
@@ -1058,6 +1089,7 @@ pl_PL:
       deleted_post: "(wpis usunięty)"
       deleted_user: "(użytkownik usunięty)"
       user:
+        avatar: "Awatar po oflagowaniu"
         bio: "Biografia"
         website: "Stronie internetowej"
         username: "Nazwa użytkownika"
@@ -2534,7 +2566,6 @@ pl_PL:
         watch_topic: "Obserwuj temat"
         track_topic: "Śledź temat"
         do_nothing: "Nic nie rób"
-      topics_unread_when_closed: "Uznaj tematy za nieprzeczytane po ich zamknięciu"
       invited:
         title: "Zaproszenia"
         pending_tab: "Oczekujący"
@@ -3134,6 +3165,7 @@ pl_PL:
       account_ready_continue: "Kontynuuj"
       username_label: "Nazwa użytkownika"
       username_placeholder: "Wybierz nazwę użytkownika"
+      regenerate_username: "Zaproponuj losową nazwę użytkownika"
       change_avatar: "Zmień awatar"
       username_taken: "Ta nazwa użytkownika jest zajęta. Spróbuj innej."
       username_unavailable: "Ta nazwa użytkownika jest niedostępna. Spróbuj %{suggestion}."
@@ -3301,6 +3333,36 @@ pl_PL:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Wejść"
+      command: "Command"
+      option: "Option"
+      control: "Control"
+      arrow_up: "Strzałka w górę"
+      arrow_down: "Strzałka w dół"
+      arrow_left: "Strzałka w lewo"
+      arrow_right: "Strzałka w prawo"
+      period: "Kropka"
+      comma: "Przecinek"
+      slash: "Ukośnik"
+      backslash: "Ukośnik odwrotny"
+      question_mark: "Znak zapytania"
+      exclamation_mark: "Wykrzyknik"
+      hash: "Hash"
+      equals: "Równa się"
+      minus: "Minus"
+      plus: "Plus"
+      semicolon: "Średnik"
+      apostrophe: "Apostrof"
+      backquote: "Odwrotny apostrof"
+      left_bracket: "Lewy nawias"
+      right_bracket: "Prawy nawias"
+      space: "Spacja"
+      tab: "Tab"
+      backspace: "Backspace"
+      delete: "Delete"
+      home: "Home"
+      end: "End"
+      page_up: "Page Up"
+      page_down: "Page Down"
     conditional_loading_section:
       loading: Ładowanie…
     category_row:
@@ -3611,7 +3673,7 @@ pl_PL:
       create_whisper: "Szept"
       create_shared_draft: "Utwórz udostępniony szkic"
       edit_shared_draft: "Edytuj udostępniony szkic"
-      title: "Lub naciśnij %{modifier}Enter"
+      submit_shortcut_title: "Albo naciśnij %{shortcut}"
       save_and_close: "Zapisz i zamknij"
       discard: "Odrzuć"
       cancel_edit: "Anuluj edycję"
@@ -3638,6 +3700,8 @@ pl_PL:
       resize: "Zmień rozmiar kompozytora"
       switch_to_markdown: "Przełącz się na standardowy edytor Markdown (%{keyboardShortcut})"
       switch_to_rich_text: "Przełącz się na nowy edytor tekstu sformatowanego (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Przełącz na standardowy edytor Markdown"
+      switch_to_rich_text_no_shortcut: "Przełącz się na nowy edytor tekstu sformatowanego"
       quote_post_title: "Cytuj cały wpis"
       bold_label: "B"
       bold_title: "Pogrubienie"
@@ -3793,6 +3857,9 @@ pl_PL:
         visit: "Otwórz link"
         remove_preview: "Usuń podgląd"
         link_copied: "Link skopiowany!"
+      preview_node:
+        show_source: "Pokaż źródło"
+        show_preview: "Pokaż podgląd"
       unsupported_token: "Edytor tekstu sformatowanego nie obsługuje wszystkich funkcji przedstawionych w tym poście; w związku z tym przełączymy Cię do edytora Markdown."
     notifications:
       tooltip:
@@ -4029,10 +4096,11 @@ pl_PL:
         search_field: "Pole wyszukiwania w nagłówku strony"
         search_icon: "Ikona wyszukiwania obok awatara profilu"
       type:
-        default: "Tematy/wpisy"
+        label: "Typ wyszukiwania"
+        default: "Wpisy"
         users: "Użytkownicy"
         categories: "Kategorie"
-        categories_and_tags: "Kategorie/tagi"
+        categories_and_tags: "Kategorie i tagi"
       context:
         user: "Szukaj wpisów @%{username}"
         category: "Szukaj w kategorii #%{category}"
@@ -4045,7 +4113,6 @@ pl_PL:
         in: "filtruje według metadanych (np. in:title, in:personal, in:pinned)"
         status: "filtry według statusu tematu"
         full_search: "uruchamia wyszukiwanie pełnej strony"
-        full_search_key: "%{modifier} + Enter"
         me: "pokazuje tylko twoje wpisy"
       advanced:
         title: Zaawansowane filtry
@@ -5089,7 +5156,7 @@ pl_PL:
       reply_as_new_private_message: "Odpowiedź w nowej wiadomości do tego samego odbiorcy"
       continue_discussion: "Kontynuując dyskusję z %{postLink}:"
       follow_quote: "idź do cytowanego wpisu"
-      show_full: "Pokaż pełny wpis"
+      show_more: "Pokaż więcej…"
       show_hidden: "Wyświetl ignorowaną treść."
       deleted_by_author_simple: "(post usunięty przez autora)"
       collapse: "zawalić się"
@@ -6012,12 +6079,8 @@ pl_PL:
     keyboard_shortcuts_help:
       search_label: "Skróty wyszukiwania"
       search_placeholder: "Wyszukaj skrót według opisu lub kombinacji klawiszy"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} lub %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1}%{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Skróty klawiszowe"
       short_title: "Skróty"
       search_ctrl_f_tip: "Aby przeszukać całe forum, naciśnij <kbd>/</kbd>"
@@ -6891,6 +6954,24 @@ pl_PL:
         legacy_warning: "To jest starszy raport. Wkrótce zostanie wycofany. Jeśli potrzebujesz pomocy w znalezieniu zamiennika, skontaktuj się z pomocą techniczną."
         chart:
           total: "Razem: %{count}"
+        related_items:
+          showing: "Wyświetlanie najnowszych %{shown} z %{total}."
+          users:
+            title: "Użytkownicy"
+            signups:
+              description: "Nowe konta zostały utworzone pomiędzy %{startDate} a %{endDate}, najpierw najnowsze."
+            new_contributors:
+              description: "Użytkownicy, którzy zamieścili swój pierwszy post pomiędzy %{startDate} a %{endDate}, najnowsze na górze."
+          labels:
+            user: "Użytkownik"
+            created_at: "Utworzono"
+            first_post: "Pierwszy wpis utworzono"
+          table_summary:
+            trigger: "%{count}, pokaż podsumowanie dla %{date}"
+            users_title: "Użytkownicy dnia %{date}"
+            loading: "Ładowanie podsumowania…"
+            empty: "Szczegóły nie są dostępne."
+            error: "Nie udało się załadować podsumowania."
       config_sections:
         account:
           title: "Konto"
@@ -7228,7 +7309,8 @@ pl_PL:
           header_description: "Skonfiguruj ustawienia wyszukiwania, w tym rejestrowanie i tokenizację dla języków chińskiego i japońskiego."
         search_everything:
           title: "Szukaj"
-          header_description: "Tutaj znajdziesz wszystko w interfejsie administratora. Możesz filtrować wyniki poniżej, a Twoje preferencje zostaną zapamiętane. Aby otworzyć to wyszukiwanie w dowolnym miejscu interfejsu administratora, naciśnij %{shortcutHTML}."
+          header_description: "Tutaj znajdziesz wszystko w interfejsie administratora. Możesz filtrować wyniki poniżej, a Twoje preferencje zostaną zapamiętane."
+          header_shortcut: "Aby otworzyć to wyszukiwanie w dowolnym miejscu interfejsu administratora, naciśnij %{shortcutHTML}."
         security:
           title: "Bezpieczeństwo"
           header_description: "Skonfiguruj ustawienia zabezpieczeń, w tym uwierzytelnianie dwuskładnikowe, uprawnienia moderatora i zasady bezpieczeństwa treści."
@@ -7692,6 +7774,21 @@ pl_PL:
               staff: "Zespół"
               empty: "Brak wpisów w wybranym okresie."
               save_error: "Nie udało się zapisać wyboru na następny raz."
+              add_group: "Dodaj grupę"
+              modal:
+                title: "Porównaj grupy"
+                search_placeholder: "Wyszukaj grupy..."
+                counter: "Wybrano %{count} z %{max} grup"
+                apply: "Zapisz"
+                enable: "Włącz %{title}"
+                disable: "Wyłącz %{title}"
+                move_up: "Przesuń %{title} w górę"
+                move_down: "Przesuń %{title} w dół"
+                footer_note: "Zmiany te będą dotyczyć wszystkich użytkowników."
+                descriptions:
+                  new_members: "Zarejestrowano w wybranym okresie"
+                  returning: "Zarejestrowano przed wybranym okresem"
+                  staff: "Administratorzy i moderatorzy"
             trust_level_pipeline:
               title: "Potok poziomu zaufania"
               trust_levels:
@@ -7866,6 +7963,30 @@ pl_PL:
                 no_match_tooltip: "Terminy wyszukiwania mające współczynnik klikalności (CTR) wynoszący 0%."
                 poor_match: "Słabe dopasowanie"
                 poor_match_tooltip: "Hasła wyszukiwania ze współczynnikiem klikalności (CTR) wynoszącym od 1 do 20%."
+          system:
+            title: "System"
+            storage: "Pamięć"
+            status: "Status"
+            fetch_error: "Nie udało się załadować informacji o systemie. Spróbuj odświeżyć stronę."
+            commits:
+              one: "+%{count} zatwierdzenie"
+              few: "+%{count} zatwierdzenia"
+              many: "+%{count} zatwierdzeń"
+              other: "+%{count} zatwierdzeń"
+            view_on_github: "Zobacz na GitHubie"
+            update_check_failed: "Sprawdzenie aktualizacji nie powiodło się — upewnij się, że Sidekiq jest uruchomiony."
+            update_available: "Dostępna aktualizacja: %{version}"
+            space_free: "%{size} wolnego"
+            backups_size:
+              one: "%{size} kopia zapasowa (%{count})"
+              few: "%{size} kopie zapasowe (%{count})"
+              many: "%{size} kopii zapasowych (%{count})"
+              other: "%{size} kopii zapasowych (%{count})"
+            uploads_size: "%{size} przesłań"
+            latest_backup: "Najnowsza kopia zapasowa %{date}"
+            manage_backups: "Zarządzaj kopiami zapasowymi"
+            discourse_updated: "Discourse zaktualizowano"
+            dashboard_updated: "Panel zaktualizowano"
         reports_section:
           header_action: "Zarządzaj"
           description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
@@ -8031,6 +8152,20 @@ pl_PL:
           average_for_sample: "Średnio na próbkowanie"
           total: "Całkowity czas"
           no_data: "Brak danych do wyświetlenia."
+          posters_by_member_type_members:
+            title: "%{name} — %{users} · %{posts}"
+            users_count:
+              one: "%{count} użytkownik"
+              few: "%{count} użytkownicy"
+              many: "%{count} użytkowników"
+              other: "%{count} użytkownicy"
+            posts_count:
+              one: "%{count} wpis"
+              few: "%{count} posty"
+              many: "%{count} postów"
+              other: "%{count} wpisów"
+            deselect: "Odznacz %{name}"
+            fetch_error: "Nie udało się załadować użytkowników tej grupy."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logi wyszukiwania</a>'
             disabled: 'Raport wyszukiwań zyskujących popularność jest wyłączony. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dziennik zapytań wyszukiwarki</a>, aby zbierać dane.'
@@ -9390,6 +9525,7 @@ pl_PL:
             deleted_tag: "usunięty tag"
             update_directory_columns: "zaktualizuj kolumny katalogu"
             deleted_unused_tags: "usunięto nieużywane tagi"
+            created_tag: "utworzono tag"
             renamed_tag: "zmieniona nazwa tag'u"
             revoke_email: "cofnąć e-mail"
             lock_trust_level: "Zablokuj poziom zaufania"
@@ -9417,6 +9553,7 @@ pl_PL:
             change_name: "zmień nazwe"
             topic_timestamps_changed: "zmieniono znaczniki czasowe wątku"
             approve_user: "zatwierdzony użytkownik"
+            removed_avatar: "usunięto awatar"
             web_hook_create: "utwórz webhooka"
             web_hook_update: "zaktualizuj webhooka"
             web_hook_destroy: "zniszcz webhooka"

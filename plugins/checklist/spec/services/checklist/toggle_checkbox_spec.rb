@@ -28,6 +28,19 @@ RSpec.describe Checklist::ToggleCheckbox do
     it { is_expected.to validate_length_of(:mutation_id).is_at_most(100) }
   end
 
+  describe ".retryable_conflict?" do
+    fab!(:post) { Fabricate(:post, raw: "[] first\n[X] fixed") }
+
+    it "normalizes legacy mutable markers but not permanent markers" do
+      expect(
+        described_class.retryable_conflict?(post:, expected_raw: "[x] first\n[X] fixed"),
+      ).to eq(true)
+      expect(described_class.retryable_conflict?(post:, expected_raw: "[] first\n[x] fixed")).to eq(
+        false,
+      )
+    end
+  end
+
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 

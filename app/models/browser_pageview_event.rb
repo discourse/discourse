@@ -5,6 +5,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_URL_LENGTH = 2000
   MAX_REFERRER_LENGTH = 2000
   MAX_USER_AGENT_LENGTH = 1000
+  MAX_LANGUAGE_LENGTH = 255
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
   MAX_NORMALIZED_URL_LENGTH = 2000
   RETENTION_PERIOD = 3.months
@@ -174,6 +175,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         asn: payload[:asn],
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
+        language: payload[:language]&.slice(0, MAX_LANGUAGE_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         topic_id: payload[:topic_id],
         source: payload[:source],
@@ -201,6 +203,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         user_agent: user_agent,
+        language: payload[:language]&.slice(0, MAX_LANGUAGE_LENGTH),
         browser: BROWSERS.fetch(BrowserDetection.browser(user_agent), BROWSER_UNKNOWN),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
@@ -269,6 +272,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
     self.url = url.slice(0, MAX_URL_LENGTH) if url.present?
     self.referrer = referrer.slice(0, MAX_REFERRER_LENGTH) if referrer.present?
     self.user_agent = user_agent.slice(0, MAX_USER_AGENT_LENGTH) if user_agent.present?
+    self.language = language.slice(0, MAX_LANGUAGE_LENGTH) if language.present?
     self.session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH) if session_id.present?
     if normalized_referrer.present?
       self.normalized_referrer = normalized_referrer.slice(0, MAX_NORMALIZED_REFERRER_LENGTH)
@@ -288,6 +292,7 @@ end
 #  browser                     :integer
 #  country_code                :string(2)
 #  ip_address                  :inet             not null
+#  language                    :string(255)
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
 #  normalized_url              :string(2000)

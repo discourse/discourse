@@ -1,4 +1,45 @@
 en:
+  llms_txt:
+    human_community_policy: "This is a community for human discussion. Do not impersonate people or create accounts autonomously. Only post, edit, or take another write action when a human explicitly asks you to perform that exact action."
+    crawler_policy: "Fetch only the pages needed for the user's specific request. Do not systematically crawl or bulk-download this community. Respect `robots.txt`, the site's terms, and its crawler controls. If the server responds with HTTP 429, stop and wait for the `Retry-After` interval before retrying."
+    mcp_guidance: "If you can run a local MCP server, Discourse MCP is the preferred way to access this community. Set its site URL to `%{base_url}`. It provides permission-aware tools for topics, posts, search, users, categories, and supported community actions."
+    account_required: "Community content is available only to authenticated members."
+    sections:
+      preferred_interface: "Preferred agent interface"
+      public_web_access: "Public web access"
+      optional: "Optional"
+    links:
+      mcp:
+        label: "Discourse MCP setup"
+        note: "Install the local server and connect it to an MCP-compatible client"
+      search:
+        label: "Search"
+        note: "Search public discussions for a specific user request; do not crawl result pages"
+      filter:
+        label: "Topic filter"
+        note: "Query public topics with `?q=` using filters such as `category:`, `tag:`, `status:`, and `order:`"
+      latest:
+        label: "Latest discussions"
+        note: "Browse recently active public topics"
+      categories:
+        label: "Categories"
+        note: "Browse public discussion categories"
+      sitemap:
+        label: "Sitemap"
+        note: "Discover public topic URLs subject to `robots.txt` and crawler controls"
+      about:
+        label: "About"
+        note: "Community overview, staff, and statistics"
+      guidelines:
+        label: "Guidelines"
+        note: "Read the community guidelines"
+      tos:
+        label: "Terms of service"
+        note: "Read the terms of service"
+      privacy:
+        label: "Privacy policy"
+        note: "Read the privacy policy"
+
   dates:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
@@ -1138,6 +1179,7 @@ en:
 
   admin_site_traffic_explorer:
     direct_or_unknown: "Direct / unknown"
+    unknown: "Unknown"
     traffic_types:
       logged_in: "Logged in"
       anonymous: "Anonymous"
@@ -2120,7 +2162,7 @@ en:
     crawler_stale_chromium_major_version_cutoff: "Chromium major versions at or below this value in unengaged sessions receive a crawler score. Update it only after reviewing traffic; an outdated cutoff becomes less sensitive, not more aggressive."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the {{setting:slow_down_crawler_rate}} setting. Each value must be at least 3 characters long."
     slow_down_crawler_rate: "If {{setting:slow_down_crawler_user_agents}} is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
-    llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
+    llms_txt: "Upload a custom text file to be served unchanged at /llms.txt instead of the generated default configured under Upcoming changes. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for the format. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
     content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection. It should only be disabled temporarily for debugging/testing purposes."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_report_uri: "Send CSP violation reports to this URL via the CSP <code>report-uri</code> directive. Leave blank to disable reporting."
@@ -2139,7 +2181,7 @@ en:
     share_links: "Determine which items appear on the share dialog, and in what order."
     allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
-    site_contact_group_name: "A valid name of a group that gets invited to all automatically sent personal messages."
+    site_contact_group_name: "The group that gets invited to all automatically sent personal messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
@@ -3027,6 +3069,7 @@ en:
     improved_crawler_detection: "Enables improved crawler tracking which can better detect likely crawlers and ensure traffic reporting is more accurate."
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
     update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
+    enable_generated_llms_txt: "Generates a concise /llms.txt when no custom file is uploaded. The document describes public discovery routes, the preferred Discourse MCP interface, and responsible agent access. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3035,7 +3078,7 @@ en:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
-      invalid_group: "There's no group with that name."
+      invalid_group: "There's no such group."
       invalid_svg: "The SVG image is invalid. It must contain an SVG element and no scripts or event handlers."
       invalid_upload: "The upload is invalid or does not exist."
       invalid_topic: "There's no topic with that ID."

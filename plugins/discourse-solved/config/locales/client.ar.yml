@@ -155,6 +155,11 @@ ar:
           solved: "محلولة"
           unsolved: "غير محلولة"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "الموضوع"
+            category: "الفئة"
       web_hooks:
         solved_event:
           group_name: "حدث تم حله"

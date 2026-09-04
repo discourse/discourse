@@ -17,6 +17,7 @@ packages:
 - "frontend/asset-processor"
 - "frontend/discourse-types"
 - "plugins/automation"
+- "plugins/boards"
 - "plugins/chat"
 - "plugins/checklist"
 - "plugins/discourse-adplugin"
@@ -59,6 +60,7 @@ packages:
 - "plugins/poll"
 - "plugins/spoiler-alert"
 - "plugins/styleguide"
+- "plugins/voice"
 - "themes/horizon"
 patchedDependencies:
   "ember-this-fallback@0.4.0": "patches/ember-this-fallback@0.4.0.patch"
@@ -67,7 +69,6 @@ patchedDependencies:
   "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch"
   "ember-source@6.10.1": "patches/ember-source@6.10.1.patch"
   "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
-  "message-bus-client": "patches/message-bus-client.patch"
   "ember-buffered-proxy": "patches/ember-buffered-proxy.patch"
   "pikaday": "patches/pikaday.patch"
 peerDependencyRules:

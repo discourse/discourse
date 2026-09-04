@@ -5,8 +5,10 @@ import postcss from "postcss";
 import postcssNesting from "postcss-nesting";
 import { browsers } from "../discourse/config/targets";
 import postcssVariablePrefixer from "./postcss-variable-prefixer";
+import postcssVariableRenamer from "./postcss-variable-renamer";
 
 const postCssProcessor = postcss([
+  postcssVariableRenamer(),
   autoprefixer({
     overrideBrowserslist: browsers,
   }),

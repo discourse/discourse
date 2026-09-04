@@ -13,7 +13,7 @@ lt:
           fields:
             topic_id:
               label: Temos ID
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "Išjungti"
       enable_holiday: "Įgalinti"
       date: "Data"
@@ -27,6 +27,9 @@ lt:
         year: "Metai"
     group_timezones:
       search: "Paieška..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Temos ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

@@ -155,6 +155,29 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorWorkflowTrigger do
       )
     end
 
+    it "passes the failed run's trigger data through so the error workflow can re-drive it" do
+      error_wf = build_error_workflow
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true)
+      workflow.update!(error_workflow_id: error_wf.id)
+      execution =
+        Fabricate(
+          :discourse_workflows_error_execution,
+          workflow: workflow,
+          trigger_data: {
+            "post" => {
+              "id" => 42,
+            },
+          },
+        )
+      handler = build_handler(workflow, build_steps, execution: execution)
+
+      handler.trigger_error_workflow(StandardError.new("boom"))
+
+      trigger_data =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
+      expect(trigger_data["trigger"]).to eq("post" => { "id" => 42 })
+    end
+
     it "exposes execution.error with null id/url when no execution record is available" do
       error_wf = build_error_workflow
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true)

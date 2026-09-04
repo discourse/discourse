@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 fi:
+  llms_txt:
+    sections:
+      optional: "Valinnainen"
+    links:
+      search:
+        label: "Haku"
+      categories:
+        label: "Kategoriat"
+      about:
+        label: "Tietoja"
+      guidelines:
+        label: "Ohjeet"
   dates:
     short_date_no_year: "D. MMMM[ta]"
     short_date: "D. MMMM[ta] YYYY"
@@ -1253,6 +1265,11 @@ fi:
         share: "Jaa"
       types:
         staff: "Henkilökunta"
+    posters_by_member_type_members:
+      labels:
+        user: "Käyttäjä"
+        count: "Viestejä"
+        share: "Jaa"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

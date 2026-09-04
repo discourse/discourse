@@ -40,6 +40,12 @@ sw:
     topic_statuses:
       solved:
         help: "Hii mada ina suluhisho"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Mada"
+            category: "Kikundi"
     discourse_automation:
       triggerables:
         first_accepted_solution:

@@ -7020,6 +7020,24 @@ en:
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
         chart:
           total: "Total: %{count}"
+        related_items:
+          showing: "Showing the newest %{shown} of %{total}."
+          users:
+            title: "Users"
+            signups:
+              description: "New accounts created between %{startDate} and %{endDate}, newest first."
+            new_contributors:
+              description: "Users who made their first post between %{startDate} and %{endDate}, newest first."
+          labels:
+            user: "User"
+            created_at: "Created at"
+            first_post: "First post created at"
+          table_summary:
+            trigger: "%{count}, show summary for %{date}"
+            users_title: "Users on %{date}"
+            loading: "Loading summary…"
+            empty: "No details are available."
+            error: "Couldn't load the summary."
 
       config_sections:
         account:
@@ -7636,6 +7654,9 @@ en:
           browser:
             one: "Filtering to %{count} browser"
             other: "Filtering to %{count} browsers"
+          language:
+            one: "Filtering to %{count} language"
+            other: "Filtering to %{count} languages"
           ip:
             one: "Filtering to %{count} IP address"
             other: "Filtering to %{count} IP addresses"
@@ -7662,6 +7683,7 @@ en:
           top_urls: "Top URLs"
           entry_urls: "Entry URLs"
           browsers: "Browsers"
+          languages: "Languages"
           ip_addresses: "IP addresses"
         filters:
           traffic_type: "Traffic type"
@@ -7671,6 +7693,7 @@ en:
           country: "Country"
           network: "Network"
           browser: "Browser"
+          language: "Language"
           ip: "IP address"
         headline:
           one: "%{formatted_count} pageview"
@@ -9605,6 +9628,7 @@ en:
             admin_onboarding_step_completed: "complete admin onboarding step"
             admin_onboarding_completed: "complete admin onboarding"
             admin_onboarding_dismissed: "dismiss admin onboarding"
+            create_group: "create group"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

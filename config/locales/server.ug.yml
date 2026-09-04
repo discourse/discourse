@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 ug:
+  llms_txt:
+    sections:
+      optional: "تاللاشچان"
+    links:
+      search:
+        label: "ئىزدە"
+      categories:
+        label: "سەھىپە"
+      about:
+        label: "ھەققىدە"
+      guidelines:
+        label: "كۆرسەتمە"
   dates:
     short_date_no_year: "D-MMMM"
     short_date: "YYYY-يىلى D-MMMM"
@@ -1250,6 +1262,11 @@ ug:
         share: "ھەمبەھىر"
       types:
         staff: "باشقۇرغۇچى خادىم"
+    posters_by_member_type_members:
+      labels:
+        user: "ئىشلەتكۈچى"
+        count: "يازما"
+        share: "ھەمبەھىر"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

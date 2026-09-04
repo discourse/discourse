@@ -5,5 +5,19 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    discourse_templates_enabled: "允許可查看下方指定分類的使用者使用可用範本"
+    discourse_templates_categories: "要從中取得範本的分類"
+    discourse_templates_enable_private_templates: "啟用私人範本的使用"
+    discourse_templates_groups_allowed_private_templates: "允許使用私人範本的群組。工作人員一律允許。"
+    discourse_templates_private_templates_tags: "用來將個人訊息識別為私人範本的標籤"
   default_category_template:
     name: 範本
+    description: |
+      此分類用於儲存範本。
+
+      範本讓使用者可儲存經常重複使用的內容。
+
+      此分類中的每個主題代表不同的範本。每個主題的**第一篇貼文**會作為範本的模型。
+
+      請注意，所有可存取此分類的使用者都可使用範本。

@@ -9,7 +9,17 @@ class AdminDashboardSiteTrafficExplorer
   STATEMENT_TIMEOUT_MS = 10_000
   private_constant :STATEMENT_TIMEOUT_MS
 
-  FILTER_KEYS = %i[traffic_type top_url entry_url referrer country network browser ip].freeze
+  FILTER_KEYS = %i[
+    traffic_type
+    top_url
+    entry_url
+    referrer
+    country
+    network
+    browser
+    language
+    ip
+  ].freeze
 
   FILTER_DIMENSIONS = {
     top_url: "top_urls",
@@ -18,6 +28,7 @@ class AdminDashboardSiteTrafficExplorer
     country: "countries",
     network: "networks",
     browser: "browsers",
+    language: "languages",
     ip: "ip_addresses",
   }.freeze
   private_constant :FILTER_DIMENSIONS
@@ -38,6 +49,7 @@ class AdminDashboardSiteTrafficExplorer
     attribute :country, :array
     attribute :network, :array
     attribute :browser, :array
+    attribute :language, :array
     attribute :ip, :array
 
     validates :start_date, :end_date, presence: true
@@ -64,7 +76,7 @@ class AdminDashboardSiteTrafficExplorer
     end
 
     def normalize_filter_value(key, value)
-      return "" if key == :referrer && value == ""
+      return "" if %i[referrer language].include?(key) && value == ""
       raise Discourse::InvalidParameters.new(key) if value.blank?
 
       case key
@@ -87,6 +99,12 @@ class AdminDashboardSiteTrafficExplorer
         browser = value.to_s
         raise Discourse::InvalidParameters.new(key) if !BROWSER_VALUES.include?(browser)
         browser
+      when :language
+        language = value.to_s
+        if language.length > BrowserPageviewEvent::MAX_LANGUAGE_LENGTH
+          raise Discourse::InvalidParameters.new(key)
+        end
+        language
       when :ip
         IPAddr.new(value.to_s).to_s
       when :referrer
@@ -161,6 +179,8 @@ class AdminDashboardSiteTrafficExplorer
       browser_filtered: filters[:browser].present?,
       browsers:
         filters[:browser]&.map { |browser| BrowserPageviewEvent.browsers.fetch(browser) } || [nil],
+      language_filtered: filters[:language].present?,
+      languages: filters[:language].presence || [nil],
       ip_filtered: filters[:ip].present?,
       ip_addresses: filters[:ip].presence || [nil],
       traffic_type_filtered: filters[:traffic_type].present?,
@@ -183,6 +203,7 @@ class AdminDashboardSiteTrafficExplorer
       country: "(NOT :country_filtered OR country_code IN (:countries))",
       network: "(NOT :network_filtered OR asn IN (:network_asns))",
       browser: "(NOT :browser_filtered OR browser IN (:browsers))",
+      language: "(NOT :language_filtered OR language IN (:languages))",
       ip: "(NOT :ip_filtered OR host(ip_address) IN (:ip_addresses))",
       traffic_type: <<~SQL.squish,
           (
@@ -214,6 +235,7 @@ class AdminDashboardSiteTrafficExplorer
           bpe.asn,
           bpe.ip_address,
           COALESCE(bpe.browser, #{BrowserPageviewEvent::BROWSER_UNKNOWN}) AS browser,
+          COALESCE(bpe.language, '') AS language,
           bpe.score
         FROM browser_pageview_events bpe
         WHERE bpe.created_at >= :start_date
@@ -251,6 +273,7 @@ class AdminDashboardSiteTrafficExplorer
           population.asn,
           population.ip_address,
           population.browser,
+          population.language,
           (
             population.normalized_referrer IS NULL
             OR split_part(
@@ -275,6 +298,7 @@ class AdminDashboardSiteTrafficExplorer
           classified.asn,
           classified.ip_address,
           classified.browser,
+          classified.language,
           classified.likely_crawler,
           CASE
             WHEN classified.acquisition_entry THEN classified.normalized_url
@@ -390,10 +414,8 @@ class AdminDashboardSiteTrafficExplorer
           END,
           'average_session_duration_seconds', CASE
             WHEN session_summary.distinct_sessions = 0 THEN 0
-            ELSE ROUND(
-              session_summary.engaged_seconds::numeric /
-                session_summary.distinct_sessions
-            )::integer
+            ELSE session_summary.engaged_seconds::numeric /
+              session_summary.distinct_sessions
           END
         ) AS summary,
         COALESCE(
@@ -542,6 +564,25 @@ class AdminDashboardSiteTrafficExplorer
               LIMIT :dimension_limit
             ) rows
           ),
+          'languages', (
+            SELECT COALESCE(
+              jsonb_agg(
+                jsonb_build_object('value', value, 'pageviews', pageviews)
+                ORDER BY pageviews DESC, value
+              ),
+              '[]'::jsonb
+            )
+            FROM (
+              SELECT
+                language AS value,
+                COUNT(*)::integer AS pageviews
+              FROM dimensioned
+              WHERE #{filter_predicate}
+              GROUP BY language
+              ORDER BY pageviews DESC, value
+              LIMIT :dimension_limit
+            ) rows
+          ),
           'ip_addresses', (
             SELECT COALESCE(
               jsonb_agg(
@@ -663,6 +704,8 @@ class AdminDashboardSiteTrafficExplorer
       network_label(value, representative_ip)
     when "browsers"
       I18n.t("browsers.#{value}", default: value)
+    when "languages"
+      value.presence || I18n.t("admin_site_traffic_explorer.unknown")
     else
       value
     end

@@ -71,6 +71,8 @@ RSpec.describe GitUtils do
   end
 
   describe ".has_commit?" do
+    before { GitUtils.instance_variable_set(:@has_commit, nil) }
+
     it "validates commit existence and format" do
       within_temp_git_repo do
         create_commit
@@ -81,6 +83,66 @@ RSpec.describe GitUtils do
         expect(GitUtils.has_commit?("a" * 40)).to eq(false)
         expect(GitUtils.has_commit?("invalid")).to eq(false)
       end
+    end
+
+    it "only shells out once per hash" do
+      within_temp_git_repo do
+        create_commit
+        sha = `git rev-parse HEAD`.strip
+
+        GitUtils.expects(:try_git).once.returns("0")
+
+        expect(GitUtils.has_commit?(sha)).to eq(true)
+        expect(GitUtils.has_commit?(sha)).to eq(true)
+      end
+    end
+
+    it "does not lazily fetch a commit missing from a partial clone" do
+      clone_dir = File.join(temp_dir, "partial")
+
+      within_temp_git_repo do
+        create_commit
+        run("git config uploadpack.allowfilter true")
+        run("git clone --quiet --filter=tree:0 file://#{temp_dir} #{clone_dir}")
+      end
+
+      Dir.chdir(clone_dir) do
+        # An unroutable promisor remote: reaching for it would stall until the
+        # command timeout rather than fail fast.
+        run("git remote set-url origin https://10.255.255.1/unreachable.git")
+
+        elapsed = Benchmark.realtime { expect(GitUtils.has_commit?("a" * 40)).to eq(false) }
+        expect(elapsed).to be < GitUtils::COMMAND_TIMEOUT_SECONDS
+      end
+    end
+
+    it "does not memoize a result when git is unavailable" do
+      GitUtils.expects(:try_git).twice.returns(nil)
+
+      expect(GitUtils.has_commit?("a" * 40)).to eq(false)
+      expect(GitUtils.has_commit?("a" * 40)).to eq(false)
+    end
+  end
+
+  describe ".try_git" do
+    it "returns the fallback value and kills the process when it times out" do
+      expect(GitUtils.try_git("sleep 5; echo nope", "fallback", timeout: 0.1)).to eq("fallback")
+    end
+
+    it "does not include stderr in the returned value" do
+      expect(GitUtils.try_git("echo oops 1>&2; echo out", "fallback")).to eq("out")
+    end
+
+    it "passes the given environment to the command" do
+      expect(GitUtils.try_git("echo $SOME_VAR", "fallback", env: { "SOME_VAR" => "set" })).to eq(
+        "set",
+      )
+    end
+
+    it "returns the fallback value when the command does not exist" do
+      expect(GitUtils.try_git("definitely-not-a-real-command-xyz 2> /dev/null", "fallback")).to eq(
+        "fallback",
+      )
     end
   end
 

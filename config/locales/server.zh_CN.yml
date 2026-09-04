@@ -5,6 +5,46 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  llms_txt:
+    human_community_policy: "这是一个供人类讨论交流的社区。请勿冒充他人或擅自创建账号。只有当人类明确要求您执行特定操作时，才能发布内容、编辑文章或进行其他任何形式的写作操作。"
+    crawler_policy: "仅抓取用户特定请求所需的页面。请勿系统性地抓取或批量下载此社区。请遵守 `robots.txt` 文件、网站条款及其爬虫控制设置。如果服务器返回 HTTP 429 错误，请停止并等待 `Retry-After` 间隔后再重试。"
+    mcp_guidance: "如果您可以运行本地 MCP 服务器，Discourse MCP 是访问此社区的首选方式。请将其站点 URL 设置为 `%{base_url}`。它为主题、帖子、搜索、用户、分类和支持的社区操作提供权限感知工具。"
+    account_required: "社区内容只能提供给已验证的成员。"
+    sections:
+      preferred_interface: "首选代理接口"
+      public_web_access: "公共网络访问"
+      optional: "可选"
+    links:
+      mcp:
+        label: "Discourse MCP 设置"
+        note: "安装本地服务器并将其连接到兼容 MCP 的客户端"
+      search:
+        label: "搜索"
+        note: "搜索针对特定用户请求的公开讨论；不抓取搜索结果页面"
+      filter:
+        label: "话题过滤器"
+        note: "使用 `?q=` 查询公共主题，并可使用 `category:`、`tag:`、`status:` 和 `order:` 等过滤器。"
+      latest:
+        label: "最新讨论"
+        note: "浏览近期活跃的公开话题"
+      categories:
+        label: "类别"
+        note: "浏览公开讨论类别"
+      sitemap:
+        label: "网站地图"
+        note: "发现 \"robots.txt\" 和 crawler 控制下的公开主题 URL"
+      about:
+        label: "关于"
+        note: "社区概况、管理人员及统计数据"
+      guidelines:
+        label: "准则"
+        note: "阅读社区指南"
+      tos:
+        label: "服务条款"
+        note: "阅读服务条款"
+      privacy:
+        label: "隐私政策"
+        note: "阅读隐私政策"
   dates:
     short_date_no_year: "MMM D 日"
     short_date: "YYYY 年 MMM D 日"
@@ -52,6 +92,10 @@ zh_CN:
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证您选择的链接是否确实发布到了论坛。如果您仍想继续，请选择下面的链接。"
   on_another_topic: "在另一个话题中"
+  access_control_list:
+    errors:
+      user_will_not_have_permission: "如果您删除此 ACL 条目，您将失去对该实体的访问权限。"
+      user_will_not_have_permission_on_create: "如果您使用这些权限创建此实体，您将无法访问它。是否继续？"
   topic_category_changed: "从 %{from} 到 %{to}"
   topic_tag_changed:
     added_and_removed: "%{added}添加，%{removed}移除"
@@ -196,6 +240,8 @@ zh_CN:
           other: "最多必须有 %{count} 个标记名称"
         humanize_not_valid_upload_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是有效的上传 id。"
         not_valid_upload_value: "必须是有效的上传 id"
+        humanize_not_valid_icon_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是图标名称。"
+        not_valid_icon_value: "必须是图标名称"
         humanize_string_value_not_valid_min:
           other: "JSON 指针 '%{property_json_pointer}' 处属性的长度必须至少为 %{count} 个字符。"
         string_value_not_valid_min:
@@ -926,13 +972,20 @@ zh_CN:
   email_login_code:
     invalid_code: "该验证码错误或已过期。请申请新的验证码并重试。"
   browsers:
+    android_browser: "Android浏览器"
+    baidu_browser: "百度浏览器"
     chrome: "Google Chrome"
     discoursehub: "DiscourseHub 应用"
     edge: "Microsoft Edge"
     firefox: "Firefox"
     ie: "Internet Explorer"
+    kaios_browser: "KaiOS浏览器"
     opera: "Opera"
+    qq_browser: "QQ浏览器"
     safari: "Safari"
+    samsung_browser: "三星浏览器"
+    uc_browser: "UC浏览器"
+    unknown: "未知浏览器"
   user_auth_tokens:
     device:
       android: "Android 设备"
@@ -954,6 +1007,7 @@ zh_CN:
       windows: "Microsoft Windows"
       unknown: "未知操作系统"
   admin_site_traffic_explorer:
+    direct_or_unknown: "直接 / 未知"
     traffic_types:
       logged_in: "登录成员"
       anonymous: "匿名"
@@ -1278,6 +1332,11 @@ zh_CN:
         new_members: "新成员"
         returning: "回访成员"
         staff: "管理人员"
+    posters_by_member_type_members:
+      labels:
+        user: "用户"
+        count: "帖子"
+        share: "占比"
     trust_level_pipeline:
       title: "信任级别管道"
       description: "所选期间信任级别之间的成员变动情况。统计当前处于各信任级别的成员数量及其占总成员数的比例、该期间内升级或降级至各信任级别的成员数量，以及新注册成员数量。"
@@ -1468,7 +1527,10 @@ zh_CN:
         country_code: "国家/地区代码"
         count: "访问量"
     top_entry_urls:
+      title: "热门条目网址"
+      description: "在选定的时间段内，获得最多直接或外部浏览器访问的页面。"
       labels:
+        entry_url: "入口网址"
         count: "访问量"
     top_referrers_by_browser_pageviews:
       title: "热门推荐人"
@@ -1706,6 +1768,8 @@ zh_CN:
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
       starttls_disabled: "外发电子邮件配置已禁用 STARTTLS。这几乎没有必要。考虑从您的环境中移除 <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre>。有关详情，请参阅<a href='https://meta.discourse.org/t/387286'>此话题</a>。"
     back_from_logster_text: "返回网站"
+  random_username:
+    unavailable: "无法生成随机用户名。请检查网站设置中的随机用户名词库。"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1895,7 +1959,7 @@ zh_CN:
     crawler_stale_chromium_major_version_cutoff: "在非活跃会话中，版本号小于等于该值的 Chromium 主版本会获得一个爬虫评分。仅在审核流量后再更新该值；过时的阈值会降低敏感度，而非提高。"
     slow_down_crawler_user_agents: "网页抓取工具的用户代理应按照 {{setting:slow_down_crawler_rate}} 设置中的配置进行速率限值。每个值的长度必须至少为 3 个字符。"
     slow_down_crawler_rate: "如果指定了 {{setting:slow_down_crawler_user_agents}}s，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
-    llms_txt: "上传一个文本文件，该文件将通过 /llms.txt 提供给 LLM 爬虫。有关详情，请参阅 <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a>。"
+    llms_txt: "请上传一个自定义文本文件，该文件将直接在 /llms.txt 上提供，而不是使用“即将进行的更改”中配置的默认生成文件。有关格式，请参阅 <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> 。要调整自动访问，请配置 {{setting:slow_down_crawler_user_agents}} 和 {{setting:slow_down_crawler_rate}}。"
     content_security_policy: "启用内容安全策略 (CSP)。CSP 是一个附加安全层，有助于防止某些类型的攻击，包括跨站脚本 (XSS) 和数据注入。只有在需要调试/测试时才应暂时将其禁用。"
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_report_uri: "通过 CSP <code>report-uri</code> 指令将 CSP 违规报告发送至此 URL。如果留空，则禁用报告功能。"
@@ -1971,6 +2035,7 @@ zh_CN:
     discourse_connect_url: "DiscourseConnect 端点的 URL（必须包含 http:// 或 https://，并且不得包含末尾的斜杠）"
     discourse_connect_secret: "用于加密验证 DiscourseConnect 信息的密钥字符串，确保长度至少为 10 个字符"
     discourse_connect_provider_secrets: "使用 DiscourseConnect 的网域-密钥对列表。确保 DiscourseConnect 密钥长度至少为 10 个字符。通配符 * 可用于匹配任何网域或仅匹配其中的一部分（例如 *.example.com）。"
+    discourse_connect_provider_claims: "启用 {{setting:enable_discourse_connect_provider}} 后，可以选择在提供商响应中包含哪些可选用户声明。有效负载已签名但未加密。稳定的外部 ID 和用户名始终包含在内。为保证兼容性，默认情况下会选中所有声明；移除声明可能会导致依赖这些声明进行帐户链接、授权或个人资料同步的网站出现故障。"
     discourse_connect_overrides_bio: "替换用户个人资料中的用户个人简介，并阻止用户对其进行更改"
     discourse_connect_overrides_groups: "将所有手动群组成员资格与群组特性中指定的群组同步（警告：如果您不指定群组，将为用户清除所有手动群组成员资格）"
     auth_overrides_email: "在每次登录时使用外部网站电子邮件替换本地电子邮件，并禁止进行本地更改。适用于所有身份验证服务提供商。（警告：由于本地电子邮件的规范化，可能会出现差异）"
@@ -1987,6 +2052,9 @@ zh_CN:
     enable_local_logins: "启用基于本地用户名和密码登录的帐户。警告：如果禁用，并且您之前没有配置至少一种备用登录方法，您可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
     enable_local_logins_via_code: "允许成员使用一次性电子邮件验证码 (OTP) 更快地注册和登录。"
+    enable_random_usernames: '使用一次性电子邮件验证码创建的帐户会生成随机用户名，格式为“形容词+名词+两个随机数字”（例如：QuietFalcon34）。新会员可以在注册过程中更改用户名。'
+    random_username_adjectives: '用作随机生成用户名前半部分的单词。单词组合时，首字母大写。'
+    random_username_nouns: '用作随机生成用户名后半部分的单词。单词组合时，首字母大写。'
     allow_passkeys_for_2fa: "允许用户在确认敏感操作时使用通行密钥进行双重身份验证。"
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
     enable_signup_cta: "向回访匿名用户显示通知，提示他们注册帐户。"
@@ -2039,6 +2107,7 @@ zh_CN:
     top_topics_formula_first_post_likes_multiplier: "热门话题中第一个帖子点赞因子 (n) 值的公式：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "热门话题中每个帖子的最少点赞因子 (n) 值的公式：`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "允许用户进入安全模式以调试插件。"
+    instrument_image_processing: "记录图像处理操作的实际耗时和成功情况。默认情况下禁用。"
     rate_limit_create_topic: "创建话题后，用户必须等待 (n) 秒才能创建另一个话题。"
     rate_limit_create_post: "发帖后，用户必须等待 (n) 秒才能创建另一个帖子。"
     rate_limit_new_user_create_post: "发帖后，新用户必须等待 (n) 秒才能创建另一个帖子。"
@@ -2216,6 +2285,7 @@ zh_CN:
     user_profile_view_duration_hours: "每个 IP/用户每 N 小时计算一次新用户个人资料浏览"
     levenshtein_distance_spammer_emails: "在匹配垃圾信息发布者电子邮件时，仍然允许模糊匹配的字符数差异。"
     max_new_accounts_per_registration_ip: "如果已经有 (n) 个来自此 IP 的信任级别 0 帐户（并且没有一个是管理人员或者是 TL2 或更高级别），则停止接受来自该 IP 的新注册。设为 0 将禁用限制。"
+    min_ban_entries_for_roll_up: "当同一子网内至少有 (N) 个被阻止的 IP 地址时， <a href='https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/clean_up_unmatched_ips.rb'>CleanUpUnmatchedIPs</a> 作业将每天创建一个新的子网禁止条目。"
     max_age_unmatched_emails: "在 (N) 天后删除不匹配的已屏蔽电子邮件条目。"
     max_age_unmatched_ips: "在 (N) 天后删除不匹配的已屏蔽 IP 条目。"
     num_flaggers_to_close_topic: "自动暂停话题以进行干预所需的最小唯一举报次数"
@@ -2257,6 +2327,7 @@ zh_CN:
     auto_generated_allowlist: "不会检查自动生成内容的电子邮件地址列表。示例：foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "阻止识别为自动生成的传入电子邮件。"
     ignore_by_title: "根据标题忽略传入电子邮件。"
+    ignore_by_title_regex: "使用正则表达式根据邮件标题忽略收到的邮件。"
     mailgun_api_key: "用于验证网络钩子消息的 Mailgun Secret API 密钥。"
     sendgrid_verification_key: "用于验证网络钩子消息的 Sendgrid 验证密钥。"
     aws_sns_topic_arn_allowlist: "SNS 话题 ARN 允许发送Amazon SES 退回网络钩子通知。"
@@ -2547,6 +2618,7 @@ zh_CN:
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
+    site_traffic_explorer_event_limit: "控制网站流量分析器处理的近期页面浏览量上限。更高的限制可以覆盖更多流量，但在资源较低的数据库服务器上，加载时间可能会更长，甚至可能超时。"
     gravatar_enabled: "使用 <a href='https://gravatar.com/'>Gravatar</a> 服务制作用户头像。禁用将阻止用户改用 Gravatar 制作头像，但不会影响已使用 Gravatar 的用户。"
     gravatar_name: "指定 Gravatar 服务提供商的名称。此名称通常用于标识向网站提供 Gravatar 头像的来源。"
     gravatar_base_url: "指定用于访问 Gravatar 提供商的 API 的 URL。此设置对于将电子邮件地址转换为存储头像图片的 Gravatar URL 至关重要。"
@@ -2636,6 +2708,7 @@ zh_CN:
     improved_crawler_detection: "启用改进的爬虫跟踪功能，从而可更精准地识别疑似爬虫，并确保流量统计的准确性。"
     enable_invite_modal_with_roles: "启用重新设计的邀请流程，管理员可以直接以管理员身份邀请他人。受邀者注册后即成为版主，在邀请人通过电子邮件确认后，受邀者将成为管理员。"
     update_pending_users_reminder_default: "我们将{{setting:pending_users_reminder_delay_minutes}}设置的默认值更新为 30 分钟，以便管理人员在有新成员等待审批时能够及时收到通知。如果您之前更改过此设置，则此次更改不会生效。"
+    enable_generated_llms_txt: "当未上传自定义文件时，生成简洁的 /llms.txt 文件。该文档描述了公共发现路径、首选的 Discourse MCP 接口以及负责的代理访问权限。要调整自动访问，请配置 {{setting:slow_down_crawler_user_agents}} 和 {{setting:slow_down_crawler_rate}}。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_date: "日期格式无效。请输入有效日期。"
@@ -2678,6 +2751,7 @@ zh_CN:
       email_polling_disabled: "您必须先启用手动、POP3 轮询或启用自定义邮件轮询器，然后才能通过电子邮件进行回复。"
       user_locale_not_enabled: "在启用此设置之前，您必须先启用 'allow user locale'。"
       at_least_one_group_required: "您必须为此设置至少指定一个群组。"
+      invalid_random_username_word_list: "此列表必须至少包含一个单词，并且每个单词都必须能够单独用作用户名。"
       invalid_regex: "正则表达式无效或不被允许。"
       invalid_regex_with_message: "正则表达式 '%{regex}' 有一个错误：%{message}"
       email_editable_enabled: "在启用此设置之前，您必须先禁用 'email editable'。"
@@ -2716,6 +2790,7 @@ zh_CN:
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 站点设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
       content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
+      content_localization_language_switcher_requirements: "语言切换器需要启用 {{setting:allow_user_locale}} ，并且 {{setting:content_localization_supported_locales}} 至少包含一种语言。 {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "在启用此设置之前，您必须先启用 'set locale from param'。"
       mediaconvert_role_arn_required: "使用 AWS MediaConvert 进行视频转换时需要具有 AWS IAM 角色 ARN。"
       mediaconvert_output_subdirectory_required: "MediaConvert 输出子目录为必选项。"
@@ -2793,6 +2868,8 @@ zh_CN:
       order: "按特定字段排列话题"
       category: "显示特定类别中的话题"
       category_any: "显示任意指定类别（以逗号分隔）中的话题"
+      topic: "按 ID 显示特定主题"
+      topic_any: "按指定顺序显示主题（以逗号分隔的 ID）"
       exclude_category: "排除特定类别中的话题"
       category_without_subcategories: "只显示父类别中的话题，排除子类别"
       exclude_category_without_subcategories: "仅排除父类别中的话题，不排除子类别"
@@ -4280,6 +4357,11 @@ zh_CN:
     user_posted_pm_staged:
       title: "暂存用户发布私信"
       subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+
+        %{respond_instructions}
     account_suspended:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
@@ -4781,6 +4863,8 @@ zh_CN:
     title: "隐私政策"
     body: "## [论坛管理员，下面是一个您应该为您的网站定制的隐私政策的示例起始模板。]\n\n<a name=\"collect\"></a>\n\n## [我们收集哪些信息？](#collect)\n\n当您在我们的网站上注册时，我们会收集您的信息，当您通过阅读、撰写和评价本论坛上分享的内容参与本论坛时，我们会收集您的数据。\n\n在我们的网站上注册时，您可能会被要求输入您的姓名和电子邮件地址。不过，您可以在不注册的情况下访问我们的网站。您的电子邮件地址将通过包含唯一链接的电子邮件进行验证。如果访问了该链接，我们便知道您对该电子邮件地址有控制权。 \n\n在注册和发帖时，我们会记录帖子所来自的 IP 地址。我们还可能保留服务器日志，其中包含向我们的服务器发送的每个请求的 IP 地址。 \n\n<a name=\"use\"></a>\n\n## [我们使用您的信息做什么](#use)\n\n我们从您处收集的任何信息都可能通过下列一种方式使用：\n\n* 个性化设置您的体验 &mdash; 您的信息可以帮助我们更好地满足您的个人需求。\n* 改进我们的网站 &mdash; 我们根据您提供给我们的信息和反馈，不断努力改进我们的网站。 \n* 改进客户服务 &mdash; 您的信息可以帮助我们更高效地回应您的客户服务请求和支持需求。\n* 定期发送电子邮件 &mdash; 您提供的电子邮件地址可能被用于向您发送信息、您请求的关于话题变更的通知、回应您的用户名、回复查询和/或其他请求或问题。\n\n<a name=\"protect\"></a>\n\n## [我们如何保护您的信息？](#protect)\n\n我们采取各种安全措施，确保在您输入、提交或访问您的个人信息时您个人信息的安全。\n\n<a name=\"data-retention\"></a>\n\n## [数据保留策略是什么？](#data-retention)\n\n我们会尽最大努力：\n\n* 将服务器日志保留不超过 [天数] 天。\n\n<a name=\"cookies\"></a>\n\n## [我们使用 Cookie 吗？](#cookies)\n\n是的。Cookie 是在您允许的情况下，网站或其服务提供商通过您的 Web 浏览器传输到您计算机硬盘上的小文件。这些 Cookie 使网站能够识别您的浏览器，并且如果您有注册帐户，将其与您的注册帐户相关联。\n\n我们使用 Cookie 来了解和保存您的偏好以便将来访问，并收集关于网站流量和网站互动的汇总数据，以便将来可以提供更好的网站体验和工具。我们可能与第三方服务提供商签订合同，以帮助我们更好地了解我们的网站访客。这些服务提供商不允许使用代表我们收集的信息，除非为了帮助我们开展和改进业务。\n\n<a name=\"disclose\"></a>\n\n## [我们是否向外界披露任何信息？](#disclose)\n\n我们不向外界出售、交易或以其他方式转让您的个人身份信息。这不包括协助我们运营网站、经营业务或为您提供服务的可信第三方，前提是这些第三方同意对这些信息保密。当我们认为为了遵守法律、执行我们的网站政策或保护我们或他人的权利、财产或安全而适合发布时，我们也可能发布您的信息。不过，无法识别个人身份的访客信息可能被提供给其他方，用于营销、广告或其他用途。\n\n<a name=\"third-party\"></a>\n\n## [第三方链接](#third-party)\n\n有时，我们可能自行决定在我们的网站上包含或提供第三方产品或服务。这些第三方网站具有单独和独立的隐私政策。因此，我们对这些链接网站的内容和活动不承担责任和义务。尽管如此，我们仍努力保护我们网站的完整性并欢迎对这些网站提供任何反馈。\n\n<a name=\"coppa\"></a>\n\n## [美国《儿童在线隐私保护法》合规性](#coppa)\n\n我们的网站、产品和服务全部面向 18 岁或以上人群。如果此服务器在美国，而且您未满 18 岁，根据 COPPA（[儿童在线隐私保护法](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)），请勿使用本网站。\n\n<a name=\"online\"></a>\n\n## [仅在线隐私政策](#online)\n\n本在线隐私政策仅适用于通过我们的网站收集的信息，不适用于离线收集的信息。\n\n<a name=\"consent\"></a>\n\n## [您的同意](#consent)\n\n使用本网站，即表示您同意我们网站的隐私政策。\n\n<a name=\"changes\"></a>\n\n## [我们隐私政策的变更](#changes)\n\n如果我们决定更改我们的隐私政策，我们将在此页面上发布这些变更。 \n\n本文档为 CC-BY-SA。它的最后更新日期为 [在此处插入最后更新日期]。\n"
   badges:
+    errors:
+      cant_delete_system_badge: 系统徽章无法删除。
     mass_award:
       errors:
         invalid_csv: 我们在第 %{line_number} 行遇到错误。请确认 CSV 每行有一个电子邮件。
@@ -5270,6 +5354,7 @@ zh_CN:
       group: "不在指定群组中的用户的回复必须经过管理人员批准。请参阅%{link}。"
       new_topics_unless_trust_level: "低信任级别的用户的话题必须由管理人员批准。请参阅%{link}。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾信息发布者所为。请参阅%{link}。"
+      fast_typer_with_time: "新用户发布的第一条帖子速度异常快（%{typing_time}），怀疑是机器人或垃圾邮件发送者的行为。参见 %{link}。"
       fast_typer_time:
         other: "%{count} 秒"
       auto_silence_regex: "第一个帖子与%{link}设置匹配的新用户。"
@@ -5388,6 +5473,10 @@ zh_CN:
       reject_post:
         title: "拒绝帖子"
         complete: "帖子被拒绝。"
+      remove_avatar:
+        title: "移除头像"
+        description: "将此用户的个人资料图片重置为系统默认图片"
+        complete: "头像已移除。"
       approve_user:
         title: "是"
         complete: "用户已被批准。"
@@ -5396,10 +5485,12 @@ zh_CN:
         delete:
           title: "删除用户"
           description: "删除用户，但不屏蔽其电子邮件地址或 IP 地址"
+          confirm: "您确定要删除 @%{username} 吗？"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
           description: "删除用户并屏蔽其电子邮件地址和 IP 地址"
+          confirm: "您确定要删除并屏蔽 @%{username} 吗？"
           complete: "用户已被删除并被屏蔽。"
       confirm_spam:
         title: "是"

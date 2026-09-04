@@ -139,7 +139,72 @@ class Statistics
       .to_h
   end
 
+  # The admin onboarding panel is a one-time flow shown only to a site's first
+  # human admin, and only while their account is newer than
+  # `site_owner_onboarding_max_days`. These three stats therefore only ever
+  # climb, and freeze once that window closes.
+
+  def self.onboarding_steps
+    { completed: onboarding_step_events.distinct.count(:subject) }
+  end
+
+  def self.onboarding_panel
+    {
+      completed: onboarding_event_exists?(:admin_onboarding_completed),
+      dismissed: onboarding_event_exists?(:admin_onboarding_dismissed),
+    }
+  end
+
+  # Minutes from the first admin signing up to each step being completed, so
+  # that "completed within N hours" stays derivable after the fact. A step that
+  # never happened is nil rather than 0, to keep it distinct from one completed
+  # instantly.
+  def self.onboarding_minutes_to
+    signed_up_at = first_admin_created_at
+    steps = UserHistory::ADMIN_ONBOARDING_STEPS
+
+    return steps.index_with(nil).symbolize_keys.merge(completed: nil) if signed_up_at.nil?
+
+    completed_at = onboarding_events(:admin_onboarding_completed).minimum(:created_at)
+    first_completed_at = onboarding_step_events.group(:subject).minimum(:created_at)
+
+    steps
+      .index_with { |step| minutes_between(signed_up_at, first_completed_at[step]) }
+      .symbolize_keys
+      .merge(completed: minutes_between(signed_up_at, completed_at))
+  end
+
   private
+
+  def self.onboarding_events(action)
+    UserHistory.where(action: UserHistory.actions[action])
+  end
+
+  def self.onboarding_step_events
+    onboarding_events(:admin_onboarding_step_completed).where(
+      subject: UserHistory::ADMIN_ONBOARDING_STEPS,
+    )
+  end
+
+  # Reported as 1/0 flags rather than booleans, to match the integer shape of
+  # every other stat.
+  def self.onboarding_event_exists?(action)
+    onboarding_events(action).exists? ? 1 : 0
+  end
+
+  # Mirrors the user the onboarding panel is shown to: the lowest-id human admin.
+  def self.first_admin_created_at
+    User.where(admin: true).human_users.order(:id).limit(1).pick(:created_at)
+  end
+
+  # nil rather than a negative number when the event predates the baseline,
+  # which happens when the original first admin has since been deleted or
+  # demoted: the replacement's signup is not the date onboarding started, so the
+  # duration is unknowable rather than zero.
+  def self.minutes_between(from, to)
+    return nil if to.nil? || to < from
+    ((to - from) / 60).round
+  end
 
   def self.valid_users
     users = User.real.activated.not_suspended.not_silenced

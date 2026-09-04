@@ -351,6 +351,11 @@
 
     > * {
       grid-area: 1 / 1;
+
+      // a face fits the block and scrolls its own overflow, rather than
+      // sizing the shared cell to fit its content
+      min-width: 0;
+      min-height: 0;
     }
 
     &.ProseMirror-selectednode {
@@ -363,6 +368,12 @@
     &:not(.--source) .composer-preview-node__source,
     &.--source .composer-preview-node__preview {
       visibility: hidden;
+    }
+
+    // a long source scrolls within a bounded face instead of growing the block.
+    // A preview that frames itself overrides the bound to match that frame.
+    &__source {
+      max-height: var(--composer-preview-node-source-max-height, 14lh);
     }
 
     &__source pre {

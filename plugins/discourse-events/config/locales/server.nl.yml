@@ -23,8 +23,8 @@ nl:
       event_started:
         title: Evenement begonnen
   system_messages:
-    discourse_calendar_holiday_region_invalid: "De opgegeven feestdagenregio bestaat niet."
-    discourse_calendar_enable_holiday_failed: "Deze feestdag kon niet worden ingeschakeld, is al ingeschakeld of is niet uitgeschakeld."
+    discourse_events_holiday_region_invalid: "De opgegeven feestdagenregio bestaat niet."
+    discourse_events_enable_holiday_failed: "Deze feestdag kon niet worden ingeschakeld, is al ingeschakeld of is niet uitgeschakeld."
     discourse_post_event_bulk_invite_succeeded:
       title: "Evenement - bulkuitnodiging geslaagd"
       subject_template: "Bulkuitnodiging verwerkt"
@@ -68,7 +68,7 @@ nl:
     event_participation_buttons: "Lijst met knoppen voor evenementdeelname die gebruikers kunnen gebruiken."
     sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
     calendar_first_day_of_week: "Stel de eerste dag van de week in voor de kalenderweergave. Opties zijn zaterdag, zondag en maandag."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Dag"

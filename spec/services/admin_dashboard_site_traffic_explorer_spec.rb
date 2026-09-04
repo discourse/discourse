@@ -35,6 +35,10 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       ]
     end
 
+    let(:languages) do
+      [nil, "", nil, "fr", "en-US", "en-US", "en-US", "fr", "de", "zh-CN", "en-US"]
+    end
+
     let!(:pageviews) do
       browsers.each_with_index do |browser, index|
         Fabricate(
@@ -46,6 +50,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           session_id: "browser-#{index}",
           source: BrowserPageviewEvent::SOURCE_BEACON,
           browser:,
+          language: languages[index],
           created_at: Time.zone.local(2026, 5, 10, 10, index),
         )
       end
@@ -91,16 +96,31 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
 
-      it "orders browser dimensions by pageviews" do
-        browser_dimensions = result.traffic.dig(:dimensions, "browsers")
+      it "returns a fractional average session duration" do
+        Fabricate(:browser_pageview_session_engagement, session_id: "browser-0", engaged_seconds: 1)
 
-        expect(browser_dimensions).to eq(
-          [
+        average_session_duration = result.traffic.dig(:summary, "average_session_duration_seconds")
+
+        expect(average_session_duration).to eq(1.0 / browsers.size)
+      end
+
+      it "returns ordered browser and language dimensions with labels" do
+        dimensions = result.traffic.fetch(:dimensions)
+
+        expect(dimensions.slice("browsers", "languages")).to eq(
+          "browsers" => [
             { value: "unknown", label: "Unknown browser", pageviews: 4 },
             { value: "chrome", label: "Google Chrome", pageviews: 3 },
             { value: "safari", label: "Safari", pageviews: 2 },
             { value: "edge", label: "Microsoft Edge", pageviews: 1 },
             { value: "firefox", label: "Firefox", pageviews: 1 },
+          ],
+          "languages" => [
+            { value: "en-US", label: "en-US", pageviews: 4 },
+            { value: "", label: "Unknown", pageviews: 3 },
+            { value: "fr", label: "fr", pageviews: 2 },
+            { value: "de", label: "de", pageviews: 1 },
+            { value: "zh-CN", label: "zh-CN", pageviews: 1 },
           ],
         )
       end
@@ -133,7 +153,9 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           )
 
         dimensions =
-          described_class.call(params: params.merge(country: "US", browser: "chrome")).traffic[
+          described_class.call(
+            params: params.merge(country: "US", browser: "chrome", language: "en-US"),
+          ).traffic[
             :dimensions
           ]
 
@@ -152,6 +174,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           "countries" => [{ value: "US", label: "United States", pageviews: 3 }],
           "networks" => [{ value: "AS64496", label: "Example Network (AS64496)", pageviews: 3 }],
           "browsers" => [{ value: "chrome", label: "Google Chrome", pageviews: 3 }],
+          "languages" => [{ value: "en-US", label: "en-US", pageviews: 3 }],
           "ip_addresses" => [
             { value: "192.0.2.5", label: "192.0.2.5", pageviews: 1 },
             { value: "192.0.2.6", label: "192.0.2.6", pageviews: 1 },

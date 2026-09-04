@@ -317,6 +317,22 @@ RSpec.describe Stylesheet::Manager do
       expect(digest1).not_to eq(digest2)
     end
 
+    it "accounts for the asset cachebuster in theme digests" do
+      theme = Fabricate(:theme)
+
+      builder =
+        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+      digest1 = builder.digest
+
+      Stylesheet::Manager.stubs(:fs_asset_cachebuster).returns("changed")
+
+      builder =
+        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+      digest2 = builder.digest
+
+      expect(digest1).not_to eq(digest2)
+    end
+
     it "can correctly account for settings in theme's components" do
       theme = Fabricate(:theme)
       child = Fabricate(:theme, component: true)
@@ -1129,6 +1145,12 @@ RSpec.describe Stylesheet::Manager do
         new_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!
         expect(new_cachebuster).not_to eq(initial_cachebuster)
       end
+    end
+
+    it "includes the variable rename map in its inputs" do
+      expect(Stylesheet::Manager.send(:list_files)).to include(
+        Stylesheet::Manager::VARIABLE_RENAMES_PATH.to_s,
+      )
     end
   end
 end

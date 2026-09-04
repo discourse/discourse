@@ -223,7 +223,7 @@ module DiscourseAi
             user: post.user,
             feature_name: context.feature_name,
             cancel_manager: context.cancel_manager,
-          ) { |partial| results << partial }
+          ) { |partial| results << partial if partial.is_a?(String) }
 
           @progress_dots ||= 0
           @progress_dots += 1

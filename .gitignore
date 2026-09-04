@@ -36,6 +36,7 @@
 !/plugins/discourse-lazy-videos
 !/plugins/automation
 /plugins/automation/gems
+!/plugins/boards
 !/plugins/chat
 !/plugins/poll
 !/plugins/styleguide
@@ -77,6 +78,9 @@
 !/plugins/discourse-rewind
 !/plugins/discourse-workflows
 !/plugins/discourse-wireframe
+!/plugins/voice
+/plugins/voice/gems
+/plugins/voice/public/javascripts
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

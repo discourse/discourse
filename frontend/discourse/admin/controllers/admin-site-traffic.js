@@ -8,6 +8,7 @@ import {
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
 import { countryName } from "discourse/admin/lib/format-country";
+import { languageName } from "discourse/admin/lib/format-language";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
@@ -18,6 +19,7 @@ const FILTER_KEYS = [
   "country",
   "network",
   "browser",
+  "language",
   "ip",
 ];
 
@@ -36,6 +38,7 @@ const DIMENSION_KEYS = {
   country: "countries",
   network: "networks",
   browser: "browsers",
+  language: "languages",
   ip: "ip_addresses",
 };
 
@@ -50,6 +53,7 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked country = null;
   @tracked network = null;
   @tracked browser = null;
+  @tracked language = null;
   @tracked ip = null;
   @tracked traffic = null;
   @tracked fetchError = null;
@@ -138,16 +142,28 @@ export default class AdminSiteTrafficController extends Controller {
 
   #decorateTraffic(traffic) {
     const countries = traffic.dimensions?.countries ?? [];
-    const activeFilters = (traffic.active_filters ?? []).map((filter) =>
-      filter.key === "country"
-        ? { ...filter, label: countryName(filter.value) }
-        : filter
-    );
+    const languages = traffic.dimensions?.languages ?? [];
+    const activeFilters = (traffic.active_filters ?? []).map((filter) => {
+      if (filter.key === "country") {
+        return { ...filter, label: countryName(filter.value) };
+      }
+      if (filter.key === "language") {
+        return {
+          ...filter,
+          label: languageName(filter.value) || filter.label,
+        };
+      }
+      return filter;
+    });
     const dimensions = {
       ...traffic.dimensions,
       countries: countries.map((row) => ({
         ...row,
         label: countryName(row.value),
+      })),
+      languages: languages.map((row) => ({
+        ...row,
+        label: languageName(row.value) || row.label,
       })),
     };
 

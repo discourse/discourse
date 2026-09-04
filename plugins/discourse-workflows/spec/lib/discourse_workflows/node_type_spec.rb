@@ -332,35 +332,33 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
-  describe ".matches_category_ids?" do
+  describe "#matches_category_ids?" do
+    subject(:node) { Class.new(described_class) { public :matches_category_ids? }.new }
+
     fab!(:parent_category, :category)
     fab!(:subcategory) { Fabricate(:category, parent_category: parent_category) }
     fab!(:other_category, :category)
 
-    it "matches everything when no categories are configured" do
-      expect(described_class.matches_category_ids?(subcategory.id, [])).to eq(true)
-      expect(described_class.matches_category_ids?(nil, [])).to eq(true)
+    it "matches everything when no categories are configured", :aggregate_failures do
+      expect(node.matches_category_ids?(subcategory.id, [])).to eq(true)
+      expect(node.matches_category_ids?(nil, [])).to eq(true)
     end
 
-    it "expands subcategories by default" do
-      expect(described_class.matches_category_ids?(subcategory.id, [parent_category.id])).to eq(
-        true,
-      )
-      expect(described_class.matches_category_ids?(subcategory.id, [other_category.id])).to eq(
-        false,
-      )
+    it "expands subcategories by default", :aggregate_failures do
+      expect(node.matches_category_ids?(subcategory.id, [parent_category.id])).to eq(true)
+      expect(node.matches_category_ids?(subcategory.id, [other_category.id])).to eq(false)
     end
 
-    it "matches exactly when include_subcategories is false" do
+    it "matches exactly when include_subcategories is false", :aggregate_failures do
       expect(
-        described_class.matches_category_ids?(
+        node.matches_category_ids?(
           subcategory.id,
           [parent_category.id],
           include_subcategories: false,
         ),
       ).to eq(false)
       expect(
-        described_class.matches_category_ids?(
+        node.matches_category_ids?(
           parent_category.id,
           [parent_category.id],
           include_subcategories: false,
@@ -370,7 +368,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
 
     it "expands subcategories when include_subcategories is nil" do
       expect(
-        described_class.matches_category_ids?(
+        node.matches_category_ids?(
           subcategory.id,
           [parent_category.id],
           include_subcategories: nil,
@@ -380,10 +378,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
 
     it "matches against the union of all configured categories" do
       expect(
-        described_class.matches_category_ids?(
-          subcategory.id,
-          [other_category.id, parent_category.id],
-        ),
+        node.matches_category_ids?(subcategory.id, [other_category.id, parent_category.id]),
       ).to eq(true)
     end
   end

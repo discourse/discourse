@@ -10,6 +10,7 @@ sw:
       create:
         form:
           insert: Weka
+          save: Hifadhi
           timezones_title: Majira za saa za kuonyeshwa
           timezones_description: Majina ya saa yatatumika kuonyesha tarehe kwenye kihakiki na marejesho ya mfumo.
           recurring_title: Kurudiarudia

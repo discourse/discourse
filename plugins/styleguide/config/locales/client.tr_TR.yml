@@ -99,6 +99,29 @@ tr_TR:
           title: "Daha Fazla Konu"
         post_menu:
           title: "Gönderi Menüsü"
+        roving_focus:
+          toolbar:
+            copy: "Kopyala"
+          tags:
+            remove: "%{tag} öğesini kaldır"
+            design: "Tasarım"
+            support: "Destek"
+          adjacent:
+            label: "Filtreler"
+            field: "Ara"
+            placeholder: "Konuları ara"
+            open: "Aç"
+            recent: "Yakın zaman"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Günlük"
+            weekly: "Haftalık"
+            monthly: "Aylık"
+            never: "Asla"
+          tree:
+            components: "Bileşenler"
+            select: "Seç"
         docked_composer:
           title: "Docked Composer"
         modal:

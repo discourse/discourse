@@ -7,11 +7,10 @@
 el:
   admin_js:
     admin:
-      calendar: "Συμβάντα"
       site_settings:
         categories:
           discourse_post_event: "Εκδήλωση Discourse"
-          discourse_calendar: "Συμβάντα"
+          discourse_events: "Συμβάντα"
       web_hooks:
         calendar_event:
           group_name: "Εκδήλωση ημερολογίου"
@@ -32,8 +31,8 @@ el:
           fields:
             topic_id:
               label: ID Θέματος
-    discourse_calendar:
-      invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
+    discourse_events:
+      title: "Συμβάντα"
       preferences:
         all_events_description: "Όλες οι εκδηλώσεις του φόρουμ"
         my_events_description: "Εκδηλώσεις στις οποίες θα παραστείτε ή ενδιαφέρεστε"
@@ -155,6 +154,7 @@ el:
           it: "Ιταλία"
           je: "Τζέρσεϊ"
           jp: "Ιαπωνία"
+          ke: "Κενύα"
           li: "Λιχτενστάιν"
           lt: "Λιθουανία"
           lu: "Λουξεμβούργο"
@@ -223,9 +223,14 @@ el:
         week: "Εβδομάδα"
         day: "Ημέρα"
         year: "Χρόνος"
+    discourse_calendar:
+      invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
     group_timezones:
       search: "Αναζήτηση..."
       group_availability: "Διαθεσιμότητα %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Θέματος"
     discourse_post_event:
       new_event: "Νέα εκδήλωση"
       notifications:

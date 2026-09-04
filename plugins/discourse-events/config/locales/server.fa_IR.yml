@@ -20,7 +20,7 @@ fa_IR:
   site_settings:
     events_calendar_categories: "نمایش رویدادهای تقویم در بالای دسته‌بندی"
     sidebar_show_upcoming_events: "پیوند رویدادهای آینده را در نوار کناری زیر «بیشتر» نمایش دهید."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "روز"

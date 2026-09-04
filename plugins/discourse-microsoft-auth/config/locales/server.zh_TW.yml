@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    microsoft_auth_enabled: "允許使用者透過 Microsoft 進行驗證嗎？"
+    microsoft_auth_client_id: 'Microsoft 應用程式 ID／用戶端 ID（不是秘密 ID）— 若要設定，請造訪 <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>'
+    microsoft_auth_client_secret: "Microsoft 秘密密碼（請使用「值」，不是秘密 ID）"
+    microsoft_auth_email_verified: "預設將所有 Microsoft 電子郵件視為已驗證。警告：只有在你確定所有使用者的電子郵件都已驗證時，才啟用此設定。"
+    microsoft_auth_tenant_id: 'Microsoft 租用戶 ID（common 是標準值；除單一租用戶外，其他所有情況都必須設定）— 若要尋找 ID，請造訪 <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

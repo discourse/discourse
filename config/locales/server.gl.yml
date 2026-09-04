@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 gl:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Buscar"
+      categories:
+        label: "Categorías"
+      about:
+        label: "Verbo de"
+      guidelines:
+        label: "Directrices"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -918,6 +930,11 @@ gl:
         share: "Compartir"
       types:
         staff: "Equipo"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuario"
+        count: "Publicacións"
+        share: "Compartir"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

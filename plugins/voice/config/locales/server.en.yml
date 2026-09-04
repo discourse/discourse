@@ -1,0 +1,242 @@
+en:
+  site_settings:
+    voice_enabled: "Enable the voice rooms plugin."
+    voice_allowed_groups: "Groups that can access voice rooms."
+    voice_create_room_allowed_groups: "Groups that can create new voice rooms."
+    voice_direct_calls_allowed_groups: "Groups that can start a direct call with another user from their user card or profile. Empty disables direct calls. Callers also need to be in {{setting:voice_allowed_groups}}; anyone with voice room access can receive a call."
+    voice_max_rooms_per_user: "Maximum number of voice rooms a single user can own. Temporary rooms created automatically by other features do not count."
+    voice_max_invites_per_day: "Maximum number of voice room invite notifications a single user can send per day. Repeated invites to the same person in the same room don't notify again (and don't count) until a day has passed."
+    voice_ephemeral_room_ttl_minutes: "Minutes a temporary room (created automatically by another feature, such as a direct call) can sit empty before it is deleted. Rooms with people in them are never deleted."
+    voice_participant_ttl_seconds: "Seconds to keep active speaker presence in Redis before automatic cleanup. Client heartbeat refreshes every 10 seconds."
+    voice_max_room_participants: "Maximum number of people who can be in a voice room at the same time. A room's own participant limit can lower this, but never raise it."
+    voice_auto_status_enabled: "Automatically set user status when they join a voice room (e.g. '🎙️ In Watercooler'). Requires the 'enable user status' site setting."
+    voice_mesh_privacy_warning_enabled: "Warn users before they join a peer-to-peer voice room that other participants may be able to see their IP address, with an option to not show the warning again on that device. Calls hosted on a LiveKit server never show the warning."
+    voice_badges_enabled: "Enable voice chat badges. Grants badges for voice room milestones like time spent, rooms visited, and connections made."
+    voice_idle_threshold_minutes: "Minutes of inactivity before a voice room participant is marked as idle. Set to 0 to disable."
+    voice_afk_auto_mute_threshold_minutes: "Minutes of inactivity before a voice room participant is automatically muted. Set to 0 to disable."
+    voice_afk_disconnect_threshold_minutes: "Minutes of inactivity before a voice room participant is automatically disconnected. Set to 0 to disable."
+    voice_video_enabled: "Enable camera video and screen sharing in voice rooms. Rooms can individually opt out via their room settings."
+    voice_video_max_publishers: "Maximum number of participants who can share video or their screen at the same time in a room. On peer-to-peer rooms, higher values increase CPU and bandwidth load for everyone watching; on rooms using a LiveKit media server, they mainly increase load on that server."
+    voice_video_background_blur_enabled: "Allow participants to blur their camera background. Segmentation runs on the publisher's device via MediaPipe, which increases CPU/GPU load while their camera is on."
+    voice_subtitles_enabled: "Allow participants to turn on live subtitles for other people's speech. Transcription runs entirely on the viewer's device via an NVIDIA Parakeet speech-to-text model (~2.5 GB, downloaded on first use, WebGPU required); no audio leaves the browser."
+    voice_stt_model_base_url: "Optional base URL for a self-hosted mirror of the subtitles model. When blank, the model files are downloaded on first use from Discourse's HuggingFace repository (Discourse/parakeet-tdt-0.6b-v3-onnx). A mirror must serve the same four files under their original names, reachable by browsers with CORS allowed — see docs/subtitles-model-mirror.md in the plugin."
+    voice_max_voice_quality: "Highest microphone audio quality participants may choose in their voice settings. Standard is the browser's speech default (~32 kbps); high (~64 kbps) and maximum (~128 kbps) improve fidelity for good microphones at the cost of bandwidth."
+    voice_max_camera_quality: "Highest camera quality participants may choose in their video settings. Standard captures at 720p; high captures at 1080p; maximum additionally stops automatic quality reduction as viewer count grows on peer-to-peer rooms, which multiplies the sender's upload bandwidth and CPU use."
+    voice_max_screen_share_quality: "Highest screen share quality participants may choose in their video settings. Standard targets 15 fps at a modest bitrate; high allows 30 fps at a higher bitrate; maximum allows 60 fps at a very high bitrate ceiling, letting fast connections share high-resolution screens at full quality."
+    voice_chat_enabled: "Allow voice rooms to be linked to a chat channel. Each chat session opens a thread in that channel; messages are real chat messages, so participants can also follow along in the chat UI."
+    voice_stun_servers: "STUN server URIs (stun:host:port), separated by |, used by peer-to-peer voice rooms for NAT traversal. Can be left empty when {{setting:voice_turn_secret_servers}} is configured — clients then discover their public address through the TURN server itself."
+    voice_turn_servers: "TURN server URIs (turn:host:port or turns:host:port), separated by |, used to relay voice traffic when a direct connection cannot be established. Authenticated with {{setting:voice_turn_username}} and {{setting:voice_turn_credential}}; for servers supporting short-lived credentials, use {{setting:voice_turn_secret_servers}} instead."
+    voice_turn_username: "Static username for the TURN servers in {{setting:voice_turn_servers}}."
+    voice_turn_credential: "Static password for the TURN servers in {{setting:voice_turn_servers}}."
+    voice_turn_secret: "Shared secret used to mint short-lived TURN credentials for the servers in {{setting:voice_turn_secret_servers}} (TURN REST API, coturn's use-auth-secret mode). Must match the secret configured on those TURN servers."
+    voice_turn_secret_servers: "TURN server URIs (turn:host:port or turns:host:port), separated by |, that authenticate with short-lived per-user credentials derived from {{setting:voice_turn_secret}} instead of a static username and password, so credentials cannot be reused by third parties."
+    voice_livekit_url: "WebSocket URL (wss://, or ws:// outside production) of a self-hosted LiveKit server. Together with the API key and secret, lets voice rooms use it as their media server (SFU) instead of the peer-to-peer mesh. The server must be reachable at a public address."
+    voice_livekit_api_key: "API key of the LiveKit server."
+    voice_livekit_api_secret: "API secret of the LiveKit server, used to sign short-lived room access tokens."
+    voice_livekit_room_policy: "Which rooms use the LiveKit media server instead of the peer-to-peer mesh. Changes never affect calls already in progress — each room switches when its next call starts."
+    voice_livekit_room_prefix: "Namespace prefix for room names on the LiveKit server. Leave empty to use the site's database name."
+    voice_livekit_mesh_fallback: "When a LiveKit access token cannot be issued and the room is empty, start the call on the peer-to-peer mesh instead of failing the join. Off by default because silent degradation can hide a LiveKit outage."
+    voice_livekit_recording_enabled: "Allow room moderators to record calls that run on the LiveKit media server. Recordings are produced by LiveKit's Egress service and stored wherever that deployment is configured to write (S3, GCS, local disk) — they are not uploaded to this site."
+    voice_livekit_recording_filepath: "Filepath passed to LiveKit Egress for recordings. Supports LiveKit's template placeholders such as {room_name}, {room_id}, {time} and {utc}; the file extension is added automatically."
+    errors:
+      voice_turn_secret_servers_requires_secret: "Set voice_turn_secret before adding TURN servers that use short-lived credentials."
+      voice_livekit_policy_requires_url: "Set voice_livekit_url to a valid wss:// URL before enabling a LiveKit room policy."
+      voice_livekit_url_invalid: "The LiveKit URL must be a ws:// or wss:// URL with a hostname and no embedded credentials."
+      voice_livekit_url_requires_wss: "The LiveKit URL must use wss:// in production."
+      voice_livekit_policy_requires_api_key: "Set voice_livekit_api_key before enabling a LiveKit room policy."
+      voice_livekit_policy_requires_api_secret: "Set voice_livekit_api_secret before enabling a LiveKit room policy."
+  voice:
+    defaults:
+      watercooler_description: "Join for casual drop-in voice chats with other community members."
+    chat:
+      default_thread_title: "Voice chat in %{room}"
+      default_thread_opener: "In %{room} - %{message}"
+    user_status:
+      in_room: "In %{room_name}"
+      in_private_room: "In a voice room"
+      afk_in_room: "AFK in %{room_name}"
+      afk_in_private_room: "AFK in a voice room"
+    errors:
+      not_enabled: "Voice rooms are disabled."
+      not_authorized: "You are not allowed to perform that action for this room."
+      room_limit: "You reached the maximum number of rooms you can create."
+      missing_payload: "Signal payload is required."
+      participant_session_required: "Your call session has expired. Rejoin the room to start a new one."
+      room_full: "This room is full."
+      invalid_signal: "The signal payload is malformed or exceeds the allowed size."
+      state_change_required: "A state change is required."
+      ephemeral_room_limit: "You have too many ongoing calls. End one before starting another."
+      cannot_call_user: "Sorry, you cannot call that user."
+      cannot_kick_self: "You cannot kick yourself from the room."
+      cannot_kick_creator: "You cannot kick the room creator."
+      listeners_cannot_unmute: "Listeners cannot unmute in a Stage room."
+      video_not_allowed: "Video is not enabled in this room."
+      video_publisher_limit: "The maximum number of simultaneous video streams for this room has been reached."
+      chat_unavailable: "Chat is not available for this room."
+      chat_requires_presence: "Join the voice room to use its chat."
+      flag_target_never_joined: "That user has not joined this room."
+      flag_already_handled: "Thanks, we have already been notified about this user and are looking into it."
+      chat_threading_disabled: "The linked chat channel no longer has threading enabled, so a chat session can't be started."
+      livekit_unavailable: "The voice server is unavailable. Contact your site administrator."
+      livekit_room_instance_ended: "This call has ended. Rejoin the room to start a new one."
+      livekit_no_signaling: "This room's call uses a media server; peer-to-peer signaling is disabled."
+      recording_unavailable: "Recording is not available for this call."
+      recording_already_active: "This call is already being recorded."
+      recording_not_active: "This call is not being recorded."
+      recording_failed: "The recording could not be started. Contact your site administrator."
+      recording_stop_failed: "The recording could not be stopped. Please try again."
+    reviewable_score_types:
+      notify_moderators:
+        pm_title: "A voice room participant requires staff attention"
+        pm_body: "@%{username} in the voice room [%{room_name}](%{link}) requires staff attention:\n\n%{message}"
+    reviewables:
+      actions:
+        agree_and_keep:
+          title: "Agree"
+          description: "Agree with the flag."
+        agree_and_suspend:
+          title: "Suspend user"
+          description: "Agree with the flag and suspend the user."
+        agree_and_silence:
+          title: "Silence user"
+          description: "Agree with the flag and silence the user."
+        disagree:
+          title: "Disagree"
+          description: "Disagree with the flag."
+        ignore:
+          title: "Ignore flag"
+          description: "Remove the flag from the queue without taking action."
+    invite_notification:
+      title: "%{username} invited you to %{room_name}"
+      excerpt: "Join the voice room %{room_name}"
+    call_notification:
+      title: "%{username} is calling you"
+      excerpt: "Join %{room_name} to answer"
+    call:
+      room_name: "📞 %{caller} + %{callee}"
+    recording_ready_pm:
+      title: "Your recording of %{room_name} is ready"
+      body_with_link: |
+        Your recording of the voice room **%{room_name}** (%{duration}) is ready:
+
+        [Download the recording](%{link})
+
+        Anyone with this link can access the recording — share it carefully.
+      body_with_path: |
+        Your recording of the voice room **%{room_name}** (%{duration}) has finished.
+
+        It is stored on the recording server at:
+
+        `%{filepath}`
+
+        Ask your site administrator for access.
+      unknown_duration: "unknown duration"
+  badges:
+    mic_check:
+      name: "Mic Check"
+      description: "Completed your first voice chat session."
+      long_description: "Awarded after spending at least 30 seconds in a voice room with another person."
+    rookie:
+      name: "Rookie"
+      description: "Spent 1 hour in voice chat."
+      long_description: "Awarded for accumulating 1 hour of total voice time."
+    chatterbox:
+      name: "Chatterbox"
+      description: "Spent 10 hours in voice chat."
+      long_description: "Awarded for accumulating 10 hours of total voice time."
+    silver_tongue:
+      name: "Silver Tongue"
+      description: "Spent 100 hours in voice chat."
+      long_description: "Awarded for accumulating 100 hours of total voice time."
+    icebreaker:
+      name: "Icebreaker"
+      description: "Joined a room full of strangers."
+      long_description: "Awarded for joining a voice room where you had no prior co-presence history with anyone."
+    social_butterfly:
+      name: "Social Butterfly"
+      description: "Chatted with 10 different people."
+      long_description: "Awarded for achieving co-presence with 10 or more distinct users."
+    life_of_the_party:
+      name: "Life of the Party"
+      description: "Chatted with 50 different people."
+      long_description: "Awarded for achieving co-presence with 50 or more distinct users."
+    familiar_face:
+      name: "Familiar Face"
+      description: "Spent 2 hours chatting with the same person."
+      long_description: "Awarded for achieving co-presence with one specific user for 2 or more hours total."
+    inner_circle:
+      name: "Inner Circle"
+      description: "Spent 10 hours chatting with the same person."
+      long_description: "Awarded for achieving co-presence with one specific user for 10 or more hours total."
+    partners_in_crime:
+      name: "Partners in Crime"
+      description: "Spent 50 hours chatting with the same person."
+      long_description: "Awarded for achieving co-presence with one specific user for 50 or more hours total."
+    explorer:
+      name: "Explorer"
+      description: "Joined 5 different voice rooms."
+      long_description: "Awarded for joining 5 different voice rooms."
+    nomad:
+      name: "Nomad"
+      description: "Joined 20 different voice rooms."
+      long_description: "Awarded for joining 20 different voice rooms."
+    omnipresent:
+      name: "Omnipresent"
+      description: "Joined 50 different voice rooms."
+      long_description: "Awarded for joining 50 different voice rooms."
+    patron:
+      name: "Patron"
+      description: "Visited the same room on 10 different days."
+      long_description: "Awarded for joining the same voice room on 10 distinct days."
+    barfly:
+      name: "Barfly"
+      description: "Visited the same room on 30 different days."
+      long_description: "Awarded for joining the same voice room on 30 distinct days."
+    the_mayor:
+      name: "The Mayor"
+      description: "Visited the same room on 100 different days."
+      long_description: "Awarded for joining the same voice room on 100 distinct days."
+    host:
+      name: "Host"
+      description: "Created your first voice room."
+      long_description: "Awarded for creating your first voice room."
+    crowd_puller:
+      name: "Crowd Puller"
+      description: "A room you created reached 50 total joins."
+      long_description: "Awarded when a voice room you created accumulates 50 or more total joins."
+    master_of_ceremonies:
+      name: "Master of Ceremonies"
+      description: "A room you created reached 500 total joins."
+      long_description: "Awarded when a voice room you created accumulates 500 or more total joins."
+    plus_one:
+      name: "Plus One"
+      description: "Someone joined a voice room through your invite."
+      long_description: "Awarded the first time a person you invited joins a voice room through your invite."
+    connector:
+      name: "Connector"
+      description: "10 people joined voice rooms through your invites."
+      long_description: "Awarded when 10 different people join voice rooms through your invites."
+    people_magnet:
+      name: "People Magnet"
+      description: "50 people joined voice rooms through your invites."
+      long_description: "Awarded when 50 different people join voice rooms through your invites."
+    night_owl:
+      name: "Night Owl"
+      description: "Chatted between midnight and 5 AM."
+      long_description: "Awarded for participating in a voice session between midnight and 5 AM in your local timezone."
+    early_bird:
+      name: "Early Bird"
+      description: "Chatted between 5 AM and 9 AM."
+      long_description: "Awarded for participating in a voice session between 5 AM and 9 AM in your local timezone."
+    packed_house:
+      name: "Packed House"
+      description: "Was in a room when it hit max capacity."
+      long_description: "Awarded for being in a voice room at the exact moment it reaches maximum capacity."
+    weekend_warrior:
+      name: "Weekend Warrior"
+      description: "Spent 5 hours chatting on weekends."
+      long_description: "Awarded for accumulating 5 or more hours of voice chat on weekends."
+    marathoner:
+      name: "Marathoner"
+      description: "Stayed in a single voice session for 4 hours."
+      long_description: "Awarded for staying in a single continuous voice session for 4 or more hours."

@@ -7,11 +7,10 @@
 hu:
   admin_js:
     admin:
-      calendar: "Események"
       site_settings:
         categories:
           discourse_post_event: "Discourse esemény"
-          discourse_calendar: "Események"
+          discourse_events: "Események"
   js:
     notifications:
       titles:
@@ -26,8 +25,8 @@ hu:
           fields:
             topic_id:
               label: Témaazonosító
-    discourse_calendar:
-      invite_user_notification: "%{username} meghívta erre: %{description}"
+    discourse_events:
+      title: "Események"
       on_holiday: "Szabadságon"
       disable_holiday: "Letiltás"
       enable_holiday: "Engedélyezés"
@@ -318,9 +317,14 @@ hu:
         week: "Utolsó 7 nap"
         day: "Nap"
         year: "Elmúlt év"
+    discourse_calendar:
+      invite_user_notification: "%{username} meghívta erre: %{description}"
     group_timezones:
       search: "Keresés…"
       group_availability: "%{group} elérhetősége"
+    discourse_workflows:
+      post_event:
+        topic_id: "Témaazonosító"
     discourse_post_event:
       notifications:
         before_event_reminder: "Egy esemény hamarosan elkezdődik: "

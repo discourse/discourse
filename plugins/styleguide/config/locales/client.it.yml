@@ -91,6 +91,26 @@ it:
           title: "Altri argomenti"
         post_menu:
           title: "Menu Messaggio"
+        roving_focus:
+          toolbar:
+            copy: "Copia"
+          tags:
+            support: "Sostienici"
+          adjacent:
+            label: "Filtri"
+            field: "Cerca"
+            open: "Aperta"
+            recent: "Recenti"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Giornaliero"
+            weekly: "Settimanale"
+            monthly: "Mensile"
+            never: "Mai"
+          tree:
+            components: "Componenti"
+            select: "Seleziona"
         modal:
           title: "Finestra Dialogo"
           header: "Titolo Finestra Dialogo"

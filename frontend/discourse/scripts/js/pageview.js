@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
         session_id: trackViewSessionId,
         url: window.location.href,
         referrer: document.referrer.length ? document.referrer : null,
+        language: navigator.language,
       };
       fetch(`${root}/srv/pv`, {
         method: "POST",

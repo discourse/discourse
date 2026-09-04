@@ -23,6 +23,8 @@ import {
 import { i18n } from "discourse-i18n";
 
 acceptance("AI Discoveries - welcome search", function (needs) {
+  let submittedRequestId;
+
   needs.user({
     can_use_ask_ai: true,
   });
@@ -31,6 +33,26 @@ acceptance("AI Discoveries - welcome search", function (needs) {
     discourse_ai_enabled: true,
     ai_ask_ai_enabled: true,
     ai_ask_ai_agent: -41,
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/discourse-ai/credits/status", () => helper.response({}));
+    server.get("/discourse-ai/discoveries/recent", () =>
+      helper.response({ recent_asks: [] })
+    );
+    server.get("/tags/filter/search", () =>
+      helper.response({
+        results: [{ id: 87, text: "film", name: "film", slug: "film" }],
+      })
+    );
+    server.post("/discourse-ai/discoveries/reply", (request) => {
+      submittedRequestId = helper.parsePostData(request.requestBody).request_id;
+      return helper.response({ request_id: submittedRequestId });
+    });
+  });
+
+  needs.hooks.beforeEach(() => {
+    submittedRequestId = undefined;
   });
 
   test("the placeholder offers both ways to resolve a term", async function (assert) {
@@ -42,6 +64,25 @@ acceptance("AI Discoveries - welcome search", function (needs) {
         "placeholder",
         i18n("discourse_ai.discobot_discoveries.search_placeholder")
       );
+  });
+
+  test("tag suggestions step aside for an Ask AI answer", async function (assert) {
+    await visit("/");
+    await fillIn(
+      "#welcome-banner-search-input",
+      "となりのトトロ #general #film"
+    );
+    await waitFor(".search-menu-assistant .search-menu-assistant-item");
+
+    find(".ai-discoveries-search-options__option.--ask").dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
+    await waitFor(".ai-discobot-discoveries");
+    await waitUntil(() => submittedRequestId);
+
+    assert
+      .dom(".search-menu-assistant .search-menu-assistant-item")
+      .doesNotExist("the tag suggestion no longer appears below the answer");
   });
 });
 
@@ -394,6 +435,26 @@ acceptance("AI Discoveries - header search", function (needs) {
       .dom(".ai-discoveries-search-options__option.--topic")
       .doesNotHaveClass("is-active", "picking all topics releases the scope");
     assert.dom(".search-result-topic").exists("and searches beyond the topic");
+  });
+
+  test("topic scope can be selected with keyboard navigation", async function (assert) {
+    updateCurrentUser({ user_option: { ai_ask_ai_default: true } });
+
+    await visit("/t/internationalization-localization/280");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+
+    assert
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .isFocused("arrow navigation focuses the topic scope option");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    assert
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .hasClass("is-active", "enter scopes the search to the topic");
   });
 
   test("still offers itself from a message inbox", async function (assert) {

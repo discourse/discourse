@@ -7,11 +7,10 @@
 sk:
   admin_js:
     admin:
-      calendar: "Udalosti"
       site_settings:
         categories:
           discourse_post_event: "Discourse udalosť"
-          discourse_calendar: "Udalosti"
+          discourse_events: "Udalosti"
   js:
     notifications:
       titles:
@@ -26,8 +25,8 @@ sk:
           fields:
             topic_id:
               label: ID témy
-    discourse_calendar:
-      invite_user_notification: "%{username} vás pozval na: %{description}"
+    discourse_events:
+      title: "Udalosti"
       on_holiday: "Na dovolenke"
       disable_holiday: "Zakázať"
       enable_holiday: "Povoliť"
@@ -316,9 +315,14 @@ sk:
         week: "Týždeň"
         day: "Deň"
         year: "Rok"
+    discourse_calendar:
+      invite_user_notification: "%{username} vás pozval na: %{description}"
     group_timezones:
       search: "Hľadať"
       group_availability: "%{group} dostupnosť"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID témy"
     discourse_post_event:
       notifications:
         before_event_reminder: "Udalosť sa čoskoro začne"

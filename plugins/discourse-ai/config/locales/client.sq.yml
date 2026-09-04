@@ -119,8 +119,6 @@ sq:
         apply: "Apliko"
         failed: "Dështoi"
         unknown: "I panjohur"
-        topic_id: "ID e temës"
-        post_id: "ID e postimit"
         time: "Koha"
         when: "Kur"
         request: "Kërkesë"
@@ -131,6 +129,7 @@ sq:
         post_short: "Postimi %{id}"
         duration: "Kohëzgjatja"
         actions: "Veprimet"
+        view_details: "Detaje"
         periods:
           custom: "Grupet e krijuara"
         detail:
@@ -264,8 +263,10 @@ sq:
         chat:
           summarize: "Përmblidhni"
       discobot_discoveries:
-        regular_results: "Topics"
-        collapse: "Zvogëloni"
-        tooltip:
-          actions:
-            disable: "Çaktivizoni"
+        legacy:
+          regular_results: "Topics"
+          collapse: "Zvogëloni"
+          tooltip:
+            actions:
+              disable: "Çaktivizoni"
+        search_messages: "Mesazhet"

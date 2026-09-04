@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 it:
+  llms_txt:
+    sections:
+      optional: "Facoltativo"
+    links:
+      search:
+        label: "Cerca"
+      categories:
+        label: "Categorie"
+      about:
+        label: "Informazioni su"
+      guidelines:
+        label: "Linee guida"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -1253,6 +1265,11 @@ it:
         share: "Condividi"
       types:
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "Utente"
+        count: "Messaggi"
+        share: "Condividi"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

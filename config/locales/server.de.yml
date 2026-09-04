@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 de:
+  llms_txt:
+    sections:
+      optional: "Optional"
+    links:
+      search:
+        label: "Suche"
+      categories:
+        label: "Kategorien"
+      about:
+        label: "Details"
+      guidelines:
+        label: "Richtlinien"
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM YYYY"
@@ -1349,6 +1361,11 @@ de:
         new_members: "Neue Mitglieder"
         returning: "Zurückkehrende"
         staff: "Team"
+    posters_by_member_type_members:
+      labels:
+        user: "Nutzer"
+        count: "Beiträge"
+        share: "Teilen"
     trust_level_pipeline:
       title: "Verlauf der Vertrauensstufen"
       description: "Mitgliederbewegungen zwischen den Vertrauensstufen im ausgewählten Zeitraum. Zeigt die Anzahl der Mitglieder an, die sich derzeit auf jeder Vertrauensstufe befinden, ihren Anteil an der Gesamtmitgliederzahl, die Anzahl der Mitglieder, die im Laufe des Zeitraums in die jeweilige Vertrauensstufe auf- oder abgestuft wurden, sowie die Neuanmeldungen."
@@ -1964,7 +1981,6 @@ de:
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
     slow_down_crawler_user_agents: "Browserkennungen von Webcrawlern, die wie in der Einstellung {{setting:slow_down_crawler_rate}} konfiguriert, einer Durchsatzratenbegrenzung unterworfen werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein."
     slow_down_crawler_rate: "Wenn {{setting:slow_down_crawler_user_agents}} ausgewählt ist, wird diese Anfragenbegrenzung auf alle Crawler angewendet (Anzahl der Sekunden zwischen zwei Anfragen)"
-    llms_txt: "Lade eine Textdatei hoch, die unter /llms.txt für LLM-Crawler bereitgestellt wird. Siehe <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> für weitere Informationen."
     content_security_policy: "Aktiviere die Content-Security-Policy (CSP). CSP ist eine zusätzliche Sicherheitsebene, die hilft, bestimmte Arten von Angriffen zu verhindern, z. B. Cross Site Scripting (XSS) und Data Injection. Sollte nur vorübergehend zu Debugging- oder Testzwecken deaktiviert werden."
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) aktivieren"
     content_security_policy_report_uri: "Melde CSP-Verstöße über die CSP-Direktive <code>report-uri</code> an diese URL. Lass das Feld leer, um die Meldefunktion zu deaktivieren."

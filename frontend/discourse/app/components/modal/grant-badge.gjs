@@ -6,6 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import {
+  grantableBadgeOptions,
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
@@ -30,6 +31,10 @@ export default class GrantBadgeModal extends Component {
 
   get noAvailableBadges() {
     !this.availableBadges.length;
+  }
+
+  get badgeOptions() {
+    return grantableBadgeOptions(this.availableBadges);
   }
 
   get post() {
@@ -106,7 +111,7 @@ export default class GrantBadgeModal extends Component {
             <p>
               <ComboBox
                 @value={{this.selectedBadgeId}}
-                @content={{this.availableBadges}}
+                @content={{this.badgeOptions}}
                 @onChange={{fn (mut this.selectedBadgeId)}}
                 @options={{hash filterable=true none="badges.none"}}
               />

@@ -121,8 +121,6 @@ sr:
         apply: "Primeni"
         failed: "Neuspešno"
         unknown: "Nepoznato"
-        topic_id: "ID Teme"
-        post_id: "ID Poruke"
         time: "Vreme"
         when: "Kada"
         user: "Korisnik"
@@ -131,6 +129,7 @@ sr:
         post: "Post"
         post_short: "Poruka %{id}"
         actions: "Akcije"
+        view_details: "Detalji"
         periods:
           day: "Последња 24 сата"
           week: "Последњих 7 дана"
@@ -253,8 +252,10 @@ sr:
           table:
             total_count: "Ukupno"
       discobot_discoveries:
-        regular_results: "Teme"
-        collapse: "Spusti"
-        tooltip:
-          actions:
-            disable: "Onemogući"
+        legacy:
+          regular_results: "Teme"
+          collapse: "Spusti"
+          tooltip:
+            actions:
+              disable: "Onemogući"
+        search_messages: "Poruke"

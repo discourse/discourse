@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 bg:
+  llms_txt:
+    sections:
+      optional: "По избор"
+    links:
+      search:
+        label: "Търсене"
+      categories:
+        label: "Категории"
+      about:
+        label: "Относно"
+      guidelines:
+        label: "Насоки"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -546,6 +558,11 @@ bg:
         share: "Споделяне"
       types:
         staff: "Персонал"
+    posters_by_member_type_members:
+      labels:
+        user: "Потребител"
+        count: "Публикации"
+        share: "Споделяне"
     trust_level_pipeline:
       labels:
         count: "Членове"

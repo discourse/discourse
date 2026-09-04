@@ -12,8 +12,7 @@ id:
           fields:
             topic_id:
               label: ID Topik
-    discourse_calendar:
-      invite_user_notification: "%{username} mengundang Anda ke: %{description}"
+    discourse_events:
       on_holiday: "Saat Liburan"
       disable_holiday: "Nonaktifkan"
       enable_holiday: "Aktifkan"
@@ -68,8 +67,13 @@ id:
       toolbar_button:
         today: "Hari ini"
         day: "Hari"
+    discourse_calendar:
+      invite_user_notification: "%{username} mengundang Anda ke: %{description}"
     group_timezones:
       search: "Cari..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Topik"
     discourse_post_event:
       event_description:
         show_more: "Tampilkan lebih banyak"

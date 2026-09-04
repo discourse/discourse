@@ -1,6 +1,6 @@
 {
   "private": true,
   "dependencies": {
-    "discourse": "workspace:@discourse/types@*"
+    "discourse": "npm:@discourse/types@2026.6.0-06d03da3"
   }
 }

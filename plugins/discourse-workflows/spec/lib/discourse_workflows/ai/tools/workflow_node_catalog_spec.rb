@@ -83,6 +83,29 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
   end
 
+  it "finds the Tag group action with its example and output fields", :aggregate_failures do
+    result = invoke_tool(query: "organize tag group", include_examples: true)
+    node = result[:nodes].find { |candidate| candidate[:type] == "action:tag_group" }
+
+    expect(node[:examples]).to contain_exactly(
+      include(
+        name: "Add tags to a tag group",
+        parameters:
+          include(
+            operation: "add",
+            tag_group_id: 123,
+            tag_names: "needs-review, escalated",
+            actor_username: "system",
+          ),
+      ),
+    )
+    expect(node.dig(:output_contracts, 0, :fields)).to include(
+      "tag_group_id" => "integer",
+      "tag_group_name" => "string",
+      "tag_names" => "array<string>",
+    )
+  end
+
   it "exposes post author, topic link, and action output fields", :aggregate_failures do
     expect(result[:status]).to eq("success")
     expect(output_fields_by_type.fetch("trigger:topic_created")).to include(
@@ -130,6 +153,15 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "topic.closed" => "boolean",
       "topic.archived" => "boolean",
     )
+    expect(output_fields_by_type.fetch("trigger:tag_created")).to include(
+      "tag.id" => "integer",
+      "tag.name" => "string",
+      "tag.slug" => "string",
+      "tag.topic_count" => "integer",
+      "tag.staff" => "boolean",
+      "tag.description" => "string|null",
+      "tag.description_cooked" => "string|null",
+    )
     {
       "trigger:user_added_to_group" => "\"added\"",
       "trigger:user_removed_from_group" => "\"removed\"",
@@ -158,6 +190,11 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
     expect(output_fields_by_type.fetch("action:topic_tags")).to include(
       "topic_id" => "integer",
+      "tag_names" => "array<string>",
+    )
+    expect(output_fields_by_type.fetch("action:tag_group")).to include(
+      "tag_group_id" => "integer",
+      "tag_group_name" => "string",
       "tag_names" => "array<string>",
     )
     expect(output_fields_by_type.fetch("action:post")).to include(
@@ -243,6 +280,12 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(output_fields_by_type.fetch("action:ai_agent")).to include("result" => "string")
   end
 
+  it "finds the tag created trigger by taxonomy keywords" do
+    result = invoke_tool(query: "taxonomy keyword")
+
+    expect(result[:nodes].map { |node| node[:type] }).to include("trigger:tag_created")
+  end
+
   it "matches broad multi-term catalog queries", :aggregate_failures do
     result =
       described_class.new(
@@ -324,6 +367,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
     expect(post_node[:examples]).to contain_exactly(
       include(parameters: include(operation: "create", topic_id: "={{ $json.topic.id }}")),
+      include(parameters: include(operation: "delete", post_id: "={{ $json.post.id }}")),
+      include(parameters: include(operation: "recover", post_id: "={{ $json.post.id }}")),
     )
     expect(group_node[:examples]).to contain_exactly(
       include(
