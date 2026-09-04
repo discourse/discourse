@@ -217,6 +217,31 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.unresolved_embeds.map(&:entity_id)).to eq(["sha1"])
     end
 
+    it "maps an external-host row when the host is explicitly trusted" do
+      upload = placeholder.mint(:upload)
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: upload,
+        upload_id: "sha1",
+        original_markdown: "![x](https://cdn.example.com/uploads/original/sha1.png)",
+        external_host: "cdn.example.com",
+      )
+      maps = FakePlaceholderMaps.new(upload_markdown: { "sha1" => "![x](upload://sha1.png)" })
+      resolver =
+        described_class.new(
+          intermediate_db,
+          maps,
+          owner_type: embed_owner::POST,
+          trusted_upload_hosts: ["CDN.EXAMPLE.COM"],
+        )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{upload} y" }])
+
+      expect(resolved[1]).to eq("x ![x](upload://sha1.png) y")
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
     it "prefers the mapped upload markdown over the verbatim snippet" do
       upload = placeholder.mint(:upload)
       Migrations::Database::IntermediateDB::EmbedUpload.create(

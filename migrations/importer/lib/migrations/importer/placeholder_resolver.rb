@@ -100,12 +100,17 @@ module Migrations
       # @param owner_type [Integer] the owner kind this resolver serves, an
       #   `Enums::EmbedOwner` value (e.g. `EmbedOwner::POST`).
       # @param maps see the class description for the methods it must answer.
+      # @param trusted_upload_hosts [Enumerable<String>] external hosts whose upload
+      #   URLs belong to the source site, such as its CDN or old object-storage
+      #   domain. Their recorded upload ids may use the imported upload map. Every
+      #   other external host keeps its verbatim URL, even when its id happens to map.
       # @param unresolved_embeds [#<<] collects {UnresolvedEmbed}s.
       # @param orphan_placeholders [#<<] collects {OrphanPlaceholder}s.
       def initialize(
         intermediate_db,
         maps,
         owner_type:,
+        trusted_upload_hosts: [],
         unresolved_embeds: [],
         orphan_placeholders: []
       )
@@ -113,6 +118,7 @@ module Migrations
         @owner_type = owner_type
         @unresolved_embeds = unresolved_embeds
         @orphan_placeholders = orphan_placeholders
+        @trusted_upload_hosts = trusted_upload_hosts.map { |host| host.to_s.downcase }.to_set
         @linkages = PlaceholderLinkages.new(intermediate_db)
       end
 
@@ -226,12 +232,13 @@ module Migrations
       end
 
       # A row whose URL pointed at a host the conversion didn't recognize is
-      # never mapped — a foreign 40-hex basename can collide with a source
-      # upload sha1, and mapping it would rewrite another site's file.
-      # Declined rows take the verbatim fallback through the caller's miss
-      # path.
+      # mapped only when the operator trusts that host as part of the source's
+      # upload storage. Otherwise a foreign 40-hex basename could collide with
+      # a source upload sha1 and rewrite another site's file. Declined rows take
+      # the verbatim fallback through the caller's miss path.
       def resolve_upload(row)
-        return nil if row[:external_host]
+        external_host = row[:external_host]
+        return nil if external_host && !@trusted_upload_hosts.include?(external_host.downcase)
 
         @maps.upload_markdown(row[:upload_id])
       end

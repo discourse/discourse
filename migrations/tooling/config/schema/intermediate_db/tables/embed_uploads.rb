@@ -14,8 +14,9 @@
 # `external_host` is set when a full-URL upload points at a host the conversion does
 # not recognize as the source's own. A foreign URL whose 40-hex basename happens to
 # collide with a source upload sha1 must not be rewritten to the imported file, so
-# the importer maps such a row only when the conversion explicitly allowlists the
-# host (a CDN, an old S3 bucket) — otherwise the verbatim snippet is restored.
+# `PlaceholderResolver` maps such a row only when `trusted_upload_hosts` explicitly
+# includes the host (a CDN or old object-storage domain) — otherwise the verbatim
+# snippet is restored.
 #
 # NOTE: `upload_id` is `:text`, not `:numeric`. Upload `original_id`s in the
 # IntermediateDB are content hashes (see `uploads.id`, also `:text`). This matches
