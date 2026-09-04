@@ -75,8 +75,11 @@ uk:
       pinned_messages:
         title: "Закріплені повідомлення"
         close: "Закрити закріплені повідомлення"
+        dismiss: "Закрити закріплений банер для мене"
+        show: "Показати закріплений банер"
         pinned_by_you: "Закріплено вами"
         pinned_by_user: "Закріплено користувачем %{username}"
+        message_unpinned: "Повідомлення відкріплено"
       pinned_bar:
         title: "Закріплені"
         jump_to_pinned: "Перейти до закріпленого повідомлення"
@@ -347,6 +350,8 @@ uk:
       remove_upload: "Видалити файл"
       react: "Реагувати з emoji"
       reply: "Відповідь"
+      message_actions: "Дії з повідомленнями"
+      more_message_actions: "Більше дій з повідомленнями"
       edit: "Редагувати"
       copy_link: "Скопіювати посилання"
       copy_text: "Копіювати текст"
@@ -377,6 +382,7 @@ uk:
         other: "%{count} нових повідомлень"
       sound:
         title: "Звук сповіщення у чаті"
+        preview: "Відтворити попередній перегляд вибраного звуку"
       sounds:
         none: "Немає"
         classic: "Класичний та чистий"
@@ -398,6 +404,7 @@ uk:
         few: "%{count} файли"
         many: "%{count} файлів"
         other: "%{count} файлів"
+      youtube: "YouTube"
       you_flagged: "Ви поскаржилися на це повідомлення"
       exit: "вийти з чату"
       channel_status:
@@ -503,6 +510,7 @@ uk:
         empty_state:
           title: "Це початок %{channelName}"
           joined_title: "Ви перший в %{channelName}"
+          direct_message_title: "Почніть розмову з %{name}"
           guest_tip: "Ви читаєте як гість. Розмова починається з моменту публікації дописів учасниками — приєднуйтесь, щоб стати одним із них."
           joined_tip: "Будьте першим, хто опублікує допис та розпочне розмову."
           members_here:
@@ -596,6 +604,7 @@ uk:
         type: "Повідомлення чату"
         message_in_channel: "Канал"
       reactions:
+        add: "Реагуйте за допомогою %{emoji}"
         remove: "Видалити вашу реакцію %{emoji}"
         counted:
           one: "%{emoji} реакція, %{count} особа"

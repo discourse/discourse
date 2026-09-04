@@ -305,9 +305,11 @@ tr_TR:
         search:
           name: "Ara"
           description: "Sorgulara YZ tarafından oluşturulan yanıtlar sağlayarak arama deneyimini geliştirir"
-          discoveries: "Keşifler"
+          ask_ai: "YZ'ye sor"
           setting_groups:
             settings: "Temel Ayarlar"
+            agents: "Ajanlar"
+            access_control: "Erişim Kontrolü"
         embeddings:
           name: "Gömmeler"
           description: "Metnin anlamsal temsillerini oluşturarak İlgili Konular ve YZ Arama gibi özellikleri güçlendirir"
@@ -547,8 +549,6 @@ tr_TR:
         successful: "Başarılı"
         failed: "Başarısız"
         unknown: "Bilinmeyen"
-        topic_id: "Konu kimliği"
-        post_id: "Gönderi kimliği"
         time: "Saat"
         when: "Ne zaman"
         outcome: "Sonuç"
@@ -564,9 +564,7 @@ tr_TR:
         duration: "Süre"
         cost: "Maliyet"
         actions: "Eylemler"
-        filters:
-          title: "Filtreler"
-          period: "Zaman aralığı"
+        view_details: "Detaylar"
         periods:
           hour: "Son bir saat"
           day: "Son 24 saat"
@@ -627,7 +625,6 @@ tr_TR:
         create_user: Kullanıcı oluştur
         create_user_help: İsterseniz bu ajana bir kullanıcı atayabilirsiniz. Bunu yaparsanız, yapay zeka taleplere yanıt vermek için bu kullanıcıyı kullanacaktır.
         default_llm: Varsayılan dil modeli
-        default_llm_help: Bu ajan için kullanılacak varsayılan dil modeli. Ajanı herkese açık paylaşımlarda belirtmek istiyorsanız bu bilgi zorunludur.
         system_prompt: Sistem istemi
         forced_tool_strategy: Zorlanmış araç stratejisi
         allow_chat_direct_messages: "Doğrudan sohbet mesajlarına izin ver"
@@ -969,11 +966,6 @@ tr_TR:
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-7: "Antropic'in en akıllı modeli"
-          anthropic-claude-sonnet-4-6: "Hız ve maliyetin optimum dengesi"
-          anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
-          google-gemini-3-1-pro-preview: "Google'ın en akıllı modeli"
-          open_router-moonshotai-kimi-k2-6: "Moonshot'ın vizyon yeteneklerine sahip multimodal modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
           title: "Yapılandırılmış LLM'ler"
@@ -1153,17 +1145,10 @@ tr_TR:
         provider_fields:
           model_name: "Model adı"
         semantic_search: "Konular (Semantik)"
-        semantic_search_results:
-          toggle: "AI sonuçları"
-          unavailable: "YZ sonuçları kullanılamıyor"
-          zero_results_expanded: "Hiçbir sonuç bulunamadı, %{count} AI sonucu gösteriliyor"
         semantic_search_tooltips:
           results_explanation: "Etkinleştirildiğinde ek YZ arama sonuçları aşağıya eklenir."
-          invalid_sort: "YZ sonuçlarını göstermek için arama sonuçları İlgi Seviyesine göre sıralanmalıdır"
           not_submitted: "AI sonuçlarını etkinleştirmek için arama gönderin"
           no_results: "Bu arama için AI sonucu bulunamadı"
-        semantic_search_unavailable_tooltip: "YZ sonuçlarını göstermek için arama sonuçları İlgi Seviyesine göre sıralanmalıdır"
-        ai_generated_result: "YZ kullanılarak bulunan arama sonucu"
         ai_results_notice:
           no_results: "Tam olarak eşleşen sonuç bulunamadı, ancak işte bazı ilgili sonuçlar."
           few_results:
@@ -1305,20 +1290,29 @@ tr_TR:
             expanded: "Genişletilmiş"
             expanded_description: "YZ özetleriyle"
       discobot_discoveries:
-        main_title: "Discobot keşifleri"
-        regular_results: "Konular"
-        tell_me_more: "Daha fazla bilgi verin..."
-        continue_convo: "Konuşmaya devam edin..."
+        main_title: "YZ'ye sor"
         loading_convo: "Konuşma yükleniyor"
-        collapse: "Daralt"
-        timed_out: "Discobot herhangi bir keşif bulamadı. Bir şeyler ters gitti."
         user_setting: "AI arama keşiflerini etkinleştir"
-        tooltip:
-          header: "YZ destekli arama"
-          content: "%{model} tarafından desteklenen doğal dil araması"
-          actions:
-            info: "Nasıl çalışır?"
-            disable: "Devre dışı bırak"
+        legacy:
+          main_title: "Discobot keşifleri"
+          regular_results: "Konular"
+          tell_me_more: "Daha fazla bilgi verin..."
+          continue_convo: "Konuşmaya devam edin..."
+          loading_convo: "Konuşma yükleniyor"
+          collapse: "Daralt"
+          timed_out: "Discobot herhangi bir keşif bulamadı. Bir şeyler ters gitti."
+          tooltip:
+            header: "YZ destekli arama"
+            content: "%{model} tarafından desteklenen doğal dil araması"
+            actions:
+              info: "Nasıl çalışır?"
+              disable: "Devre dışı bırak"
+        search_type: "YZ"
+        search_all_topics: "Tüm konular"
+        search_messages: "İletiler"
+        ask_ai: "YZ"
+        sources:
+          related_discussions: "İlgili konular"
       user_preferences:
         empty: "Şu anda ilgili bir ayar bulunmuyor"
     review:

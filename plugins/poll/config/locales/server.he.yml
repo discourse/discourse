@@ -27,12 +27,10 @@ he:
     default_poll_must_have_less_options:
       one: "לסקר חייבת להיות פחות מאפשרות אחת."
       two: "לסקר חייבות להיות פחות מ־%{count} אפשרויות."
-      many: "לסקר חייבות להיות פחות מ־%{count} אפשרויות."
       other: "לסקר חייבות להיות פחות מ־%{count} אפשרויות."
     named_poll_must_have_less_options:
       one: "לסקר בשם <strong>%{name}</strong> צריכה להיות פחות מאפשרות אחת."
       two: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ־%{count} אפשרויות."
-      many: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ־%{count} אפשרויות."
       other: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ־%{count} אפשרויות."
     default_poll_must_have_different_options: "לסקר חייבות להיות אפשרויות שונות זו מזו."
     named_poll_must_have_different_options: "לסקר בשם <strong>%{name}</strong> צריך שתהיינה אפשרויות שונות."
@@ -56,12 +54,10 @@ he:
     max_vote_per_user:
       one: רק הצבעה %{count} מותרת לסקר זה.
       two: רק %{count} הצבעות מותרות לסקר זה.
-      many: רק %{count} הצבעות מותרות לסקר זה.
       other: רק %{count} הצבעות מותרות לסקר זה.
     min_vote_per_user:
       one: כמות מזערית של הצבעה %{count} נדרשת לסקר זה.
       two: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
-      many: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
       other: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
     ranked_choice:
       vote_options_mismatch: "לסקר מדורג, מספר הבחירות שנעשו בהצבעה חייבות להיות תואמות למספר האפשרויות. מספר האפשרויות הוא %{count} ומספר הבחירות שנעשו היה %{provided}."

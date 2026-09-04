@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 ru:
+  llms_txt:
+    sections:
+      optional: "Опционально"
+    links:
+      search:
+        label: "Искать"
+      categories:
+        label: "Категории"
+      about:
+        label: "Информация"
+      guidelines:
+        label: "Рекомендации"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -1144,6 +1156,7 @@ ru:
       windows: "Microsoft Windows"
       unknown: "Неизвестная операционная система"
   admin_site_traffic_explorer:
+    unknown: "Расположение неизвестно"
     traffic_types:
       anonymous: "Анонимные просмотры"
   change_email:
@@ -1450,6 +1463,11 @@ ru:
         share: "Поделиться"
       types:
         staff: "Персонал"
+    posters_by_member_type_members:
+      labels:
+        user: "Пользователь"
+        count: "Записи"
+        share: "Поделиться"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -2015,7 +2033,6 @@ ru:
     allowed_iframes: "Список префиксов URL-адресов для iframe src, которые Discourse может безопасно разрешить в публикациях. Символ * может использоваться для обозначения любого количества символов, кроме «/»."
     allowed_crawler_user_agents: "Перечень поисковых роботов, которым должен быть разрешён доступ к сайту. ВНИМАНИЕ! УСТАНОВКА ЭТОГО ПАРАМЕТРА ЗАПРЕТИТ ДОСТУП ВСЕМ ПОИСКОВЫМ БОТАМ, НЕ УКАЗАННЫМ В ПЕРЕЧНЕ!"
     blocked_crawler_user_agents: "Уникальное нечувствительное к регистру слово в строке User-Agent, идентифицирующее поисковых роботов, которым запрещён доступ к сайту. Не применяется, если определён белый список."
-    llms_txt: "Загрузите текстовый файл, который будет доступен по адресу /llms.txt для обходчиков LLM. Дополнительную информацию см. на сайте <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a>."
     content_security_policy_report_only: "Включить Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Ограничить через CSP число тех, кто может встроить этот сайт в iframes. Перечень разрешённых хостов настраивается на закладке <a href='%{base_path}/admin/customize/embedding'>Встраивание</a>."
     content_security_policy_script_src: "Дополнительные источники сценариев в белом списке. Текущий хост и CDN включены по умолчанию. См. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>«Смягчение атак XSS с помощью политики безопасности контента (CSP)».</a> Другие хост-источники игнорируются, так как включена директива strict-dynamic."
@@ -2029,7 +2046,7 @@ ru:
     share_links: "Укажите, какие элементы должны отображаться в окне «Поделиться» и в какой последовательности."
     allow_username_in_share_links: "Разрешить включать имена пользователей в ссылки доступа. Может быть полезно для награждения за привлечение уникальных посетителей."
     site_contact_username: "Все автоматические сообщения будут отправляться от имени указанного здесь пользователя. Если оставить поле пустым, то будет использован системный аккаунт по умолчанию — System."
-    site_contact_group_name: "Допустимое имя группы для приглашения ко всем автоматическим личным сообщениям."
+    site_contact_group_name: "Группа пользователей, получающих все автоматические уведомления в виде личных сообщений."
     send_welcome_message: "Отправлять всем новым пользователям приветственное сообщение с коротким описанием возможностей форума."
     send_tl1_welcome_message: "Отправлять всем новым пользователям с уровнем доверия 1 приветственное сообщение."
     send_tl2_promotion_message: "Отправлять новым пользователям с уровня доверия 2 сообщение о повышении."
@@ -2648,7 +2665,6 @@ ru:
       invalid_email: "Неправильный адрес электронной почты."
       invalid_username: "Такое имя пользователя не обнаружено."
       valid_username: "Такое имя пользователя уже существует."
-      invalid_group: "Нет группы с таким названием."
       invalid_svg: "Изображение в формате SVG недопустимо. Оно должно содержать элемент SVG и не содержать скриптов или обработчиков событий."
       invalid_upload: "Загруженный файл недействителен или отсутствует."
       invalid_topic: "Нет темы с таким ID."

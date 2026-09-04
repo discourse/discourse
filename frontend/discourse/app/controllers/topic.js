@@ -38,6 +38,7 @@ import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
 import { deepMerge } from "discourse/lib/object";
+import { consumeOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
@@ -2079,9 +2080,11 @@ export default class TopicController extends Controller {
 
     switch (data.type) {
       case "acted":
-        postStream.triggerChangedPost(data.id, data.updated_at, {
-          preserveCooked: true,
-        });
+        void postStream
+          .triggerChangedPost(data.id, data.updated_at, {
+            preserveCooked: true,
+          })
+          .catch(() => {});
         break;
       case "read": {
         postStream.triggerReadPost(data.id, data.readers_count);
@@ -2099,7 +2102,11 @@ export default class TopicController extends Controller {
       }
       case "revised":
       case "rebaked": {
-        postStream.triggerChangedPost(data.id, data.updated_at);
+        if (!consumeOptimisticPostUpdate(data.preserve_cooked_token)) {
+          void postStream
+            .triggerChangedPost(data.id, data.updated_at)
+            .catch(() => {});
+        }
         break;
       }
       case "deleted": {
@@ -2111,7 +2118,7 @@ export default class TopicController extends Controller {
         break;
       }
       case "recovered": {
-        postStream.triggerRecoveredPost(data.id);
+        void postStream.triggerRecoveredPost(data.id).catch(() => {});
         break;
       }
       case "created": {

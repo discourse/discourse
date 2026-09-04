@@ -5,7 +5,7 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <a
     class="clear-search"
-    aria-label="clear_input"
+    aria-label={{i18n "search.clear_search"}}
     title={{i18n "search.clear_search"}}
     href
     {{on "click" @clearSearch}}

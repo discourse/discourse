@@ -310,6 +310,7 @@ ko:
         theme: "테마"
         fonts: "글꼴"
         homepage: "홈페이지"
+        search: "검색"
       colors:
         light: "라이트"
         dark: "다크"
@@ -2034,6 +2035,8 @@ ko:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "시작"
+      delete: "삭제"
+      home: "홈"
     category_row:
       subcategory_count:
         other: "+%{count}개의 하위 카테고리"
@@ -2132,7 +2135,6 @@ ko:
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 생성"
       edit_shared_draft: "공유 초안 편집"
-      title: "또는 %{modifier}Enter를 누르세요"
       discard: "취소"
       users_placeholder: "사용자 또는 그룹 추가"
       title_placeholder: "토론 주제를 한 문장으로 적으세요"
@@ -2364,10 +2366,9 @@ ko:
       recent: "최근 검색"
       clear_recent: "최근 검색 지우기"
       type:
-        default: "글/댓글"
+        default: "글"
         users: "사용자"
         categories: "카테고리"
-        categories_and_tags: "카테고리/태그"
       context:
         user: "@%{username} 님의 게시물 검색"
         category: "#%{category} 카테고리에서 검색"
@@ -2380,7 +2381,6 @@ ko:
         in: "메타데이터로 필터링(예: in:title, in:personal, in:pinned)"
         status: "글 상태로 필터링"
         full_search: "전체 페이지 검색 시작"
-        full_search_key: "%{modifier} + 엔터"
         me: "내 게시물만 표시"
       advanced:
         title: 고급 필터
@@ -2926,7 +2926,6 @@ ko:
       reply_as_new_private_message: "같은 수신자에게 새 메시지로 댓글 달기"
       continue_discussion: "%{postLink}에서 토론 계속하기:"
       follow_quote: "인용한 게시물로 이동"
-      show_full: "전체 게시물 표시"
       show_hidden: "무시된 콘텐츠를 봅니다."
       deleted_by_author_simple: "(작성자가 삭제한 게시물)"
       collapse: "접기"
@@ -3455,11 +3454,8 @@ ko:
       image_load_error: '<a href="%url%">이미지</a>를 로드할 수 없습니다.'
     cannot_render_video: 브라우저가 코덱을 지원하지 않기 때문에 이 비디오를 렌더링할 수 없습니다.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ","
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} 또는 %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1} / %{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "키보드 단축키"
       short_title: "단축키"
       description_header: "내용"
@@ -3850,6 +3846,11 @@ ko:
         group_traffic: "트래픽"
         group_members: "회원"
         group_other: "기타"
+        related_items:
+          users:
+            title: "사용자들"
+          labels:
+            user: "사용자"
       config_sections:
         account:
           title: "계정"
@@ -4043,6 +4044,7 @@ ko:
           visitors: "방문자"
         filters:
           browser: "브라우저"
+          language: "언어"
           ip: "IP 주소"
         series:
           anonymous_human: "익명"
@@ -4110,6 +4112,8 @@ ko:
               share: "공유하기"
             whos_posting:
               staff: "스태프"
+              modal:
+                apply: "저장"
             trust_level_pipeline:
               trust_levels:
                 "0": "신규"
@@ -4122,6 +4126,10 @@ ko:
             table:
               searches: "검색"
               status: "상태"
+          system:
+            title: "시스템"
+            status: "상태"
+            discourse_updated: "Discourse 업데이트"
         reports_section:
           header_action: "관리"
           no_data: "표시할 정보가 없습니다"
@@ -4161,6 +4169,11 @@ ko:
           average_for_sample: "샘플 평균"
           total: "전체 시간 합계"
           no_data: "표시할 데이터가 없습니다."
+          posters_by_member_type_members:
+            users_count:
+              other: "사용자 %{count}명"
+            posts_count:
+              other: "글 %{count}개"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">검색 로그</a>'
             disabled: '인기 검색 리포트가 비활성화되었습니다. <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">로그 검색 쿼리</a> 를 활성화하여 데이터를 수집하세요.'

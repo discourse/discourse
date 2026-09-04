@@ -115,7 +115,6 @@ de:
     ai_helper_post_illustrator_agent: "Der Agent, der für die Funktion „Beitrag illustrieren“ des KI-Helfers verwendet werden soll. Hinweis: Du musst auch ein Tool zur Bilderzeugung erstellen (Administration > Plug-ins > KI > Tools), damit diese Funktion funktioniert."
     ai_helper_chat_thread_title_agent: "Der Agent, der zum Generieren von Chat-Thread-Titeln verwendet wird."
     ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
-    ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
     ai_embeddings_semantic_related_topics_enabled: "Verwende die semantische Suche für verwandte Themen."
     ai_embeddings_semantic_related_topics: "Maximale Anzahl der Themen, die im Abschnitt für verwandte Themen angezeigt werden sollen."
     ai_embeddings_backfill_batch_size: "Anzahl der Einbettungen, die alle 15 Minuten aufgefüllt werden."
@@ -415,7 +414,6 @@ de:
         failed: "Aktion konnte nicht abgeschlossen werden: %{error}"
         unexpected_error: "ein unerwarteter Fehler ist aufgetreten"
       agents:
-        default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
         cannot_delete_system_agent: "System-Agenten können nicht gelöscht werden, bitte deaktiviere ihn stattdessen"
         cannot_edit_system_agent: "System-Agenten können nur umbenannt werden. Du darfst keine Tools oder die System-Eingabeaufforderung bearbeiten, sondern musst ihn deaktivieren und eine Kopie erstellen"
         cannot_have_duplicate_tools: "Es kann keine doppelten Werkzeuge geben"
@@ -621,7 +619,8 @@ de:
         lock_post: "Beitrag sperren"
         delete_topic: "Thema löschen"
         edit_post: "Beitrag bearbeiten"
-        edit_tags: "Schlagwörter bearbeiten"
+        edit_tag: "Schlagwort bearbeiten"
+        create_category: "Kategorie erstellen"
         edit_category: "Kategorie bearbeiten"
         set_topic_timer: "Themen-Timer einstellen"
         set_slow_mode: "Langsamen Modus aktivieren"
@@ -672,8 +671,9 @@ de:
         lock_post: "Einen Beitrag sperren oder entsperren"
         delete_topic: "Ein Thema löschen"
         edit_post: "Den Inhalt eines Beitrags bearbeiten"
-        edit_tags: "Die Schlagwörter eines Themas bearbeiten"
-        edit_category: "Ein Thema in eine andere Kategorie verschieben"
+        change_topic_tags: "Die Schlagwörter eines Themas bearbeiten"
+        create_category: "Eine neue Kategorie erstellen"
+        change_topic_category: "Ein Thema in eine andere Kategorie verschieben"
         set_topic_timer: "Einen Timer für ein Thema setzen, um es zu schließen, zu öffnen, zu löschen oder nach oben zu verschieben"
         set_slow_mode: "Den langsamen Modus für ein Thema aktivieren oder deaktivieren"
         move_posts: "Beiträge in ein neues oder vorhandenes Thema verschieben"
@@ -723,8 +723,8 @@ de:
         lock_post: "Sperren des Beitrags %{post_id} (gesperrt: %{locked})"
         delete_topic: "Löschen des Themas %{topic_id} (gelöscht: %{deleted})"
         edit_post: "Bearbeiten des Beitrags %{post_id}"
-        edit_tags: "Bearbeiten der Schlagwörter des Themas %{topic_id}: %{tags}"
-        edit_category: "Verschieben des Themas %{topic_id} in die Kategorie %{category_id}"
+        change_topic_tags: "Bearbeiten der Schlagwörter des Themas %{topic_id}: %{tags}"
+        change_topic_category: "Verschieben des Themas %{topic_id} in die Kategorie %{category_id}"
         set_topic_timer: "Einstellung des Timers %{timer_type} zum Thema %{topic_id} (%{duration_hours} Std.)"
         set_slow_mode: "Einstellen des langsamen Modus des Themas %{topic_id} (%{slow_mode_seconds} Sek.)"
         move_posts: "Verschieben von Beiträgen %{post_ids} vom Thema %{topic_id}"
@@ -770,10 +770,6 @@ de:
           other: "%{count} Ergebnisse für „%{query}“ gefunden"
         read_site_setting: "Website-Einstellung %{setting_name} lesen"
         change_site_setting: "Website-Einstellung %{setting_name} zu '%{value}' ändern"
-      discoveries:
-        continue_conversation:
-          title: "Entdeckungsunterhaltung: Suche nach %{query}"
-          raw: "Bei meiner Suche nach %{query} hast du mir die folgenden Informationen gezeigt:\n\n%{context}\n\nLass uns die Unterhaltung fortsetzen."
       flag_post:
         errors:
           no_context: "Kein Kontext für den Beitrag verfügbar, um ihn zu melden."
@@ -832,14 +828,23 @@ de:
           no_reason: "Ein Bearbeitungsgrund ist erforderlich."
           revision_failed: "Der Beitrag konnte nicht überarbeitet werden."
         success: "Beitrag erfolgreich bearbeitet."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Thema nicht gefunden."
           not_allowed: "Du darfst die Schlagwörter dieses Thema nicht bearbeiten."
           no_reason: "Zum Bearbeiten der Schlagwörter ist eine Begründung erforderlich."
           tagging_disabled: "Schlagwörter sind auf dieser Website nicht aktiviert."
         success: "Schlagwörter erfolgreich aktualisiert."
+      create_tag:
+        errors:
+          tagging_disabled: "Schlagwörter sind auf dieser Website nicht aktiviert."
+      edit_tag:
+        errors:
+          tagging_disabled: "Schlagwörter sind auf dieser Website nicht aktiviert."
       edit_category:
+        errors:
+          not_found: "Kategorie nicht gefunden."
+      change_topic_category:
         errors:
           not_found: "Thema nicht gefunden."
           not_allowed: "Du darfst dieses Thema nicht verschieben."
@@ -1039,7 +1044,6 @@ de:
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.
       user_not_found: Der angegebene Benutzer existiert nicht. Überprüfe den Parameter username.
       agent_disabled: "Der angegebene Agent ist deaktiviert. Überprüfe die Parameter „agent_name“ oder „agent_id“ (früher: „persona_name“ oder „persona_id“)."
-      no_default_llm: Der Agent muss ein default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       invalid_stream_resume_token: Der resume_token ist ungültig oder abgelaufen.
       no_tool_results_specified: Der Parameter tool_results ist beim Fortsetzen eines Streams erforderlich.

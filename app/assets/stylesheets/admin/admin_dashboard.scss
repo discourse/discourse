@@ -486,6 +486,7 @@ $db-bar-height: var(--space-2);
     &.--grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: 320px;
       gap: var(--space-4);
 
       @include viewport.until(sm) {

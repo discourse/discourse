@@ -65,7 +65,8 @@ export default class SiteTrafficExplorer extends Component {
           "admin.dashboard.site_traffic.kpi.average_session_duration.tooltip"
         ),
         value: formatMinutesSeconds(
-          this.summary.average_session_duration_seconds ?? 0
+          this.summary.average_session_duration_seconds ?? 0,
+          { subsecondPrecision: 2 }
         ),
       },
     ];
@@ -160,6 +161,7 @@ export default class SiteTrafficExplorer extends Component {
   get visitorsTabs() {
     return [
       this.#tab({ dimension: "browsers", filter: "browser" }),
+      this.#tab({ dimension: "languages", filter: "language" }),
       this.#tab({ dimension: "ip_addresses", filter: "ip" }),
     ];
   }

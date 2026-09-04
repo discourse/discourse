@@ -427,6 +427,8 @@ ja:
         theme: "テーマ"
         fonts: "フォント"
         homepage: "ホームページ"
+        welcome_banner: "ウェルカムバナー"
+        search: "検索"
       theme:
         selected: "選択済み"
       colors:
@@ -2012,7 +2014,6 @@ ja:
         watch_topic: "トピックをウォッチ"
         track_topic: "トピックを追跡"
         do_nothing: "何もしない"
-      topics_unread_when_closed: "トピックが閉じられている場合は未読と見なす"
       invited:
         title: "招待"
         pending_tab: "保留中"
@@ -2629,6 +2630,11 @@ ja:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "オプション"
+      period: "期間"
+      tab: "Tab"
+      delete: "削除"
+      home: "ホーム"
     conditional_loading_section:
       loading: 読み込み中…
     category_row:
@@ -2781,7 +2787,6 @@ ja:
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
-      title: "または %{modifier}Enter キーを押します"
       save_and_close: "保存して閉じる"
       discard: "破棄"
       draft_saved: "下書きが保存されました！"
@@ -3116,10 +3121,10 @@ ja:
         search_field: "サイトヘッダーの検索フィールド"
         search_icon: "プロファイルアバターの近くの検索アイコン"
       type:
-        default: "トピック/投稿"
+        default: "投稿"
         users: "ユーザー"
         categories: "カテゴリ"
-        categories_and_tags: "カテゴリ/タグ"
+        categories_and_tags: "カテゴリとタグ"
       context:
         user: "@%{username} の投稿を検索"
         category: "#%{category} カテゴリを検索"
@@ -3132,7 +3137,6 @@ ja:
         in: "メタデータでフィルタします (例: in:title、in:personal、in:pinned)"
         status: "トピックのステータスでフィルタします"
         full_search: "全ページ検索を開始します"
-        full_search_key: "%{modifier} + Enter"
         me: "自分の投稿のみを表示します"
       advanced:
         title: 高度なフィルタ
@@ -3800,7 +3804,6 @@ ja:
       reply_as_new_private_message: "同じ受信者に新規メッセージとして返信する"
       continue_discussion: "%{postLink} からディスカッションを続行:"
       follow_quote: "引用した投稿に移動"
-      show_full: "投稿全文を表示"
       show_hidden: "無視したコンテンツを表示します。"
       deleted_by_author_simple: "(作成者が削除した投稿)"
       collapse: "折りたたむ"
@@ -4531,12 +4534,8 @@ ja:
     invalid_video_url: URL が無効であるか利用できないため、この動画を再生できません。
     keyboard_shortcuts_help:
       search_placeholder: "説明またはキーの組み合わせでショートカットを検索する"
-      shortcut_key_delimiter_comma: "、"
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} または %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "ショートカットキー"
       short_title: "ショートカット"
       search_ctrl_f_tip: "このフォーラム全体を検索するするには <kbd>/</kbd> を押します"
@@ -5203,6 +5202,11 @@ ja:
         group_traffic: "トラフィック"
         group_members: "メンバー"
         group_other: "その他"
+        related_items:
+          users:
+            title: "ユーザー"
+          labels:
+            user: "ユーザー"
       config_sections:
         account:
           title: "アカウント"
@@ -5498,7 +5502,6 @@ ja:
           header_description: "ログ記録やトークン化など、中国語と日本語の検索設定を構成します"
         search_everything:
           title: "検索"
-          header_description: "ここで管理者インターフェースのあらゆる項目を検索できます。検索結果は以下で絞り込め、設定は記憶されます。この検索を管理者インターフェースの任意の場所で開くには、%{shortcutHTML} を押してください。"
         security:
           title: "セキュリティ"
           header_description: "二要素認証、モデレーター権限、コンテンツセキュリティポリシーなどのセキュリティ設定を構成します"
@@ -5731,6 +5734,7 @@ ja:
         filters:
           country: "国"
           browser: "ブラウザ"
+          language: "言語"
           ip: "IP アドレス"
         series:
           anonymous_human: "匿名ユーザー"
@@ -5805,6 +5809,8 @@ ja:
               share: "共有"
             whos_posting:
               staff: "スタッフ"
+              modal:
+                apply: "保存"
             trust_level_pipeline:
               trust_levels:
                 "0": "新規"
@@ -5817,6 +5823,11 @@ ja:
             table:
               searches: "検索数"
               status: "ステータス"
+          system:
+            title: "システム"
+            status: "ステータス"
+            discourse_updated: "Discourse が更新されました"
+            dashboard_updated: "ダッシュボードが更新されました"
         reports_section:
           header_action: "管理"
           modal:
@@ -5866,6 +5877,12 @@ ja:
           average_for_sample: "サンプルの平均"
           total: "全期間合計"
           no_data: "表示するデータはありません。"
+          posters_by_member_type_members:
+            users_count:
+              other: "%{count} 人のユーザー"
+            posts_count:
+              other: "投稿 %{count} 件"
+            deselect: "%{name} を選択解除"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">検索ログ</a>'
             disabled: 'トレンド検索レポートは無効です。データを収集するには、<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">ログ検索クエリ</a>を有効にしてください。'

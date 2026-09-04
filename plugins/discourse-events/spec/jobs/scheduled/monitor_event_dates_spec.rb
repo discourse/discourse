@@ -164,10 +164,13 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         (past_date_no_end_time.starts_at + 7.days).to_s,
       )
 
-      expect(events).to include(event_name: :discourse_post_event_event_ended, params: [past_event])
       expect(events).to include(
         event_name: :discourse_post_event_event_ended,
-        params: [past_event_no_end_time],
+        params: [past_event, past_date],
+      )
+      expect(events).to include(
+        event_name: :discourse_post_event_event_ended,
+        params: [past_event_no_end_time, past_date_no_end_time],
       )
     end
 

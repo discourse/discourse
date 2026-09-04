@@ -19,8 +19,8 @@ fi:
       event_started:
         title: Tapahtuma alkoi
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Antamaasi juhlapyhäaluetta ei ole olemassa."
-    discourse_calendar_enable_holiday_failed: "Tätä juhlapyhää ei voitu ottaa käyttöön; se on jo käytössä tai sitä ei ole poistettu käytöstä."
+    discourse_events_holiday_region_invalid: "Antamaasi juhlapyhäaluetta ei ole olemassa."
+    discourse_events_enable_holiday_failed: "Tätä juhlapyhää ei voitu ottaa käyttöön; se on jo käytössä tai sitä ei ole poistettu käytöstä."
     discourse_post_event_bulk_invite_succeeded:
       title: "Tapahtuma – joukkokutsu onnistui"
       subject_template: "Joukkokutsun käsittely onnistui"
@@ -62,7 +62,7 @@ fi:
     calendar_automatic_holidays_enabled: "Aseta lomatila automaattisesti käyttäjän alueen mukaan (huomaa: voit poistaa tietyt automaattiset lomat käytöstä lisäosan asetuksissa)"
     event_participation_buttons: "Luettelo tapahtuman osallistumispainikkeista, joita käyttäjät voivat käyttää."
     sidebar_show_upcoming_events: "Näytä tulevat tapahtumat -linkki sivupalkissa Lisää-kohdan alla."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Päivä"

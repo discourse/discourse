@@ -59,6 +59,9 @@ pl_PL:
           tabs:
             ads: "Reklamy"
             settings: "Ustawienia"
+          above_site_header:
+            title: "Nagłówek powyżej witryny"
+            description: "Reklamy będą wyświetlane na górze strony, nad nagłówkiem witryny."
           topic_list_top:
             title: "Reklama nad listą tematów"
             description: "Reklamy do wyświetlania na górze listy tematów."

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sv:
+  llms_txt:
+    sections:
+      optional: "Valfritt"
+    links:
+      search:
+        label: "Sök"
+      categories:
+        label: "Kategorier"
+      about:
+        label: "Om"
+      guidelines:
+        label: "Riktlinjer"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -801,6 +813,7 @@ sv:
       windows: "Microsoft Windows"
       unknown: "okänt operativsystem"
   admin_site_traffic_explorer:
+    unknown: "Okänd"
     traffic_types:
       anonymous: "Anonym"
   change_email:
@@ -1081,6 +1094,11 @@ sv:
         share: "Dela"
       types:
         staff: "Personal"
+    posters_by_member_type_members:
+      labels:
+        user: "Användare"
+        count: "Inlägg"
+        share: "Dela"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -2030,7 +2048,6 @@ sv:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
       valid_username: "Det finns redan en användare med det användarnamnet."
-      invalid_group: "Det finns ingen grupp med det namnet."
       invalid_integer_min_max: "Värdet måste vara mellan %{min} och %{max}."
       invalid_integer_min: "Värdet måste vara %{min} eller större."
       invalid_integer_max: "Värdet får inte vara större än %{max}."

@@ -657,6 +657,56 @@ RSpec.describe SessionController do
       expect(response.body).to eq(existing_email_body)
     end
 
+    context "when the signup IP has reached the account limit" do
+      let(:ip_address) { "192.0.2.1" }
+
+      before do
+        Fabricate(:user, ip_address:, trust_level: TrustLevel[0])
+        SiteSetting.max_new_accounts_per_registration_ip = 1
+      end
+
+      it "returns the account limit error without sending a code for any email" do
+        expect_not_enqueued_with(job: :send_email_login_code) do
+          post "/session/login-code.json",
+               params: honeypot_magic(email: user.email, signup: true),
+               env: {
+                 REMOTE_ADDR: ip_address,
+               }
+          existing_email_response = response.parsed_body
+
+          post "/session/login-code.json",
+               params: honeypot_magic(email: "unknown@example.com", signup: true),
+               env: {
+                 REMOTE_ADDR: ip_address,
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(existing_email_response)
+          expect(response.parsed_body["error"]).to eq(
+            I18n.t(
+              "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
+            ),
+          )
+        end
+
+        expect(EmailLoginCode.count).to eq(0)
+      end
+
+      it "continues to send login codes for existing accounts" do
+        expect_enqueued_with(job: :send_email_login_code, args: { to_address: user.email }) do
+          post "/session/login-code.json",
+               params: honeypot_magic(email: user.email, signup: false),
+               env: {
+                 REMOTE_ADDR: ip_address,
+               }
+        end
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(EmailLoginCode.for_email(user.email).count).to eq(1)
+      end
+    end
+
     context "when rate limited" do
       before { RateLimiter.enable }
 
@@ -958,6 +1008,31 @@ RSpec.describe SessionController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).to eq(I18n.t("login.new_registrations_disabled"))
         expect(session[:current_user_id]).to be_nil
+      end
+
+      it "renders the account limit error when the request IP has created too many accounts" do
+        ip_address = "192.0.2.1"
+        SiteSetting.max_new_accounts_per_registration_ip = 2
+        2.times { Fabricate(:user, ip_address:, trust_level: TrustLevel[0]) }
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+             },
+             env: {
+               REMOTE_ADDR: ip_address,
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(
+          I18n.t(
+            "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
+          ),
+        )
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
       end
 
       context "when required signup fields exist" do

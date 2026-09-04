@@ -511,6 +511,8 @@ es:
         theme: "Tema"
         fonts: "Tipos de letra"
         homepage: "Página de inicio"
+        welcome_banner: "Banner de bienvenida"
+        search: "Buscar"
       theme:
         selected: "Seleccionado"
       colors:
@@ -2208,7 +2210,6 @@ es:
         watch_topic: "Ver tema"
         track_topic: "Seguir tema"
         do_nothing: "No hacer nada"
-      topics_unread_when_closed: "Considerar temas no leídos cuando se cierran"
       invited:
         title: "Invitaciones"
         pending_tab: "Pendiente"
@@ -2861,6 +2862,11 @@ es:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Intro"
+      option: "Opción"
+      period: "Período"
+      tab: "Tabulador"
+      delete: "Eliminar"
+      home: "Inicio"
     conditional_loading_section:
       loading: Cargando…
     category_row:
@@ -3044,7 +3050,6 @@ es:
       create_whisper: "Susurrar"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
-      title: "O pulsa %{modifier}Intro"
       save_and_close: "Guardar y cerrar"
       discard: "Descartar"
       draft_saved: "¡Borrador guardado!"
@@ -3401,10 +3406,10 @@ es:
         search_field: "Campo de búsqueda en el encabezado del sitio"
         search_icon: "Icono de búsqueda cerca del avatar del perfil"
       type:
-        default: "Temas/respuestas"
+        default: "Publicaciones"
         users: "Usuarios"
         categories: "Categorías"
-        categories_and_tags: "Categorías/etiquetas"
+        categories_and_tags: "Categorías y etiquetas"
       context:
         user: "Buscar publicaciones de @%{username}"
         category: "Buscar la categoría #%{category}"
@@ -3417,7 +3422,6 @@ es:
         in: "filtra según los metadatos (por ejemplo, in:title, in:personal, in:pinned)"
         status: "filtra por el estado del tema"
         full_search: "lanza la página de búsqueda"
-        full_search_key: "%{modifier} + Intro"
         me: "muestra solo tus publicaciones"
       advanced:
         title: Filtros avanzados
@@ -4204,7 +4208,6 @@ es:
       reply_as_new_private_message: "Responder como mensaje nuevo a los mismos destinatarios"
       continue_discussion: "Continuando la discusión desde %{postLink}:"
       follow_quote: "ir a la publicación citada"
-      show_full: "Mostrar la publicación completa"
       show_hidden: "Ver contenido ignorado."
       deleted_by_author_simple: "(publicación eliminada por su autor/a)"
       collapse: "contraer"
@@ -4999,12 +5002,8 @@ es:
     invalid_video_url: Este vídeo no se puede reproducir porque la URL no es válida o no está disponible.
     keyboard_shortcuts_help:
       search_placeholder: "Buscar un acceso directo por descripción o combinación de teclas"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Atajos de teclado"
       short_title: "Atajos"
       search_ctrl_f_tip: "Para buscar en todo este foro, pulsa <kbd>/</kbd>"
@@ -5718,6 +5717,11 @@ es:
         group_moderation_and_security: "Moderación y seguridad"
         group_other: "Otros"
         legacy_warning: "Este es un informe heredado. Se retirará pronto. Si necesitas ayuda para encontrar un sustituto, ponte en contacto con el servicio de asistencia."
+        related_items:
+          users:
+            title: "Usuarios"
+          labels:
+            user: "Usuario"
       config_sections:
         account:
           title: "Cuenta"
@@ -6032,7 +6036,6 @@ es:
           header_description: "Configura los ajustes de búsqueda, incluidos el registro y la tokenización para los idiomas chino y japonés"
         search_everything:
           title: "Buscar"
-          header_description: "Encuentra cualquier cosa de la interfaz de administración aquí. Puedes filtrar los resultados a continuación. Tus preferencias se recordarán. Para abrir esta búsqueda en cualquier lugar de la interfaz de administración, pulsa %{shortcutHTML}."
         security:
           title: "Seguridad"
           header_description: "Configura los ajustes de seguridad, incluida la autenticación de dos factores, los privilegios de moderador y las políticas de seguridad de contenidos."
@@ -6270,6 +6273,7 @@ es:
         filters:
           country: "País"
           browser: "Navegador"
+          language: "Idioma"
           ip: "Dirección IP"
         series:
           anonymous_human: "Anónimas"
@@ -6346,6 +6350,8 @@ es:
               share: "Compartir"
             whos_posting:
               staff: "Personal"
+              modal:
+                apply: "Guardar"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nuevo"
@@ -6358,6 +6364,11 @@ es:
             table:
               searches: "Búsquedas"
               status: "Estado"
+          system:
+            title: "Sistema"
+            status: "Estado"
+            discourse_updated: "Última actualización de Discourse"
+            dashboard_updated: "Última actualización del panel de control"
         reports_section:
           header_action: "Gestionar"
           no_data: "No hay datos que mostrar"
@@ -6412,6 +6423,14 @@ es:
           average_for_sample: "Promedio por muestra"
           total: "Total en todo el tiempo"
           no_data: "No hay datos que mostrar."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuario"
+              other: "%{count} usuarios"
+            posts_count:
+              one: "%{count} publicación"
+              other: "%{count} publicaciones"
+            deselect: "Deseleccionar %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de búsqueda</a>'
             disabled: 'El informe de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recopilar datos.'

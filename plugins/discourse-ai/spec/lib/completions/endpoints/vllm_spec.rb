@@ -614,10 +614,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
     it "streams Thinking partials followed by content" do
       chunks = []
 
-      chunks << "data: #{({ choices: [{ delta: { role: "assistant", reasoning: "Let me " } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { reasoning: "think." } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: "The answer" } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }).to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { role: "assistant", reasoning: "Let me " } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { reasoning: "think." } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: "The answer" } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }.to_json}\n\n"
       chunks << "data: [DONE]\n\n"
 
       stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
@@ -651,9 +651,9 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
     it "finalizes Thinking before content when a delta carries both" do
       chunks = []
 
-      chunks << "data: #{({ choices: [{ delta: { role: "assistant", reasoning: "Let me " } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: "The answer", reasoning: "think." } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: " is 4." } }] }).to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { role: "assistant", reasoning: "Let me " } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: "The answer", reasoning: "think." } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: " is 4." } }] }.to_json}\n\n"
       chunks << "data: [DONE]\n\n"
 
       stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
@@ -780,10 +780,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
     it "streams Thinking partials followed by content" do
       chunks = []
 
-      chunks << "data: #{({ choices: [{ delta: { role: "assistant", reasoning_content: "Let me " } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { reasoning_content: "think." } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: "The answer" } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }).to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { role: "assistant", reasoning_content: "Let me " } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { reasoning_content: "think." } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: "The answer" } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }.to_json}\n\n"
       chunks << "data: [DONE]\n\n"
 
       stub_request(:post, "https://test.dev/v1/chat/completions").to_return(

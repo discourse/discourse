@@ -12,9 +12,9 @@ et:
           fields:
             topic_id:
               label: Teema ID
-    discourse_calendar:
-      disable_holiday: "Keela"
-      enable_holiday: "Luba"
+    discourse_events:
+      disable_holiday: "Lülita välja"
+      enable_holiday: "Lülita sisse"
       date: "Kuupäev"
       region:
         none: "Pole"
@@ -26,6 +26,9 @@ et:
         year: "Aasta"
     group_timezones:
       search: "Otsi..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Teema ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

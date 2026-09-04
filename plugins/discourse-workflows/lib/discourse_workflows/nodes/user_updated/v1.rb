@@ -24,7 +24,7 @@ module DiscourseWorkflows
             color: "teal",
           },
           group: "discourse_triggers",
-          events: [:user_updated],
+          event: :user_updated,
           output_contracts: [{ schema: Schema::USER_UPDATED_EVENT_SCHEMA }],
           properties: {
             changed_fields: {

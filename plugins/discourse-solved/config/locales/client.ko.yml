@@ -57,6 +57,11 @@ ko:
         statuses:
           solved: "해결되다"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "글"
+            category: "카테고리"
       web_hooks:
         solved_event:
           group_name: "해결 된 이벤트"

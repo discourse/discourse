@@ -2,6 +2,7 @@
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
+import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -3383,9 +3384,16 @@ class _PluginApi {
    * @param {string} translationKey
    * @param {string} searchTypeId
    * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   * @param {Object} [options]
+   * @param {string} [options.after] - Id of the search type this one should follow; appended last when omitted or unknown.
    */
-  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
-    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc, options) {
+    registerFullPageSearchType(
+      translationKey,
+      searchTypeId,
+      searchFunc,
+      options
+    );
   }
 
   /**
@@ -3655,6 +3663,22 @@ class _PluginApi {
    */
   registerReportModeComponent(mode, componentClass) {
     registerReportModeComponent(mode, componentClass);
+  }
+
+  /**
+   * Registers components that render related items for an admin report.
+   *
+   * @param {String} reportType - The report's identifier
+   * @param {Object} renderer - The related-item renderer configuration
+   * @param {Class} [renderer.relatedItemsComponent] - Component for the report detail view
+   * @param {Object} [renderer.tableSummary] - Configuration for table cell summaries
+   * @param {Class} renderer.tableSummary.itemComponent - Component for each summary item
+   * @param {String} renderer.tableSummary.itemsKey - Related-items response key
+   * @param {String} [renderer.tableSummary.listClass] - Class for the summary list
+   * @param {String} renderer.tableSummary.titleKey - Summary title translation key
+   */
+  registerAdminReportRelatedItemsRenderer(reportType, renderer) {
+    registerAdminReportRelatedItemsRenderer(reportType, renderer);
   }
 
   /**

@@ -5,8 +5,16 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  category_types:
+    ideas:
+      name: "點子"
+      title: "點子"
+      description: "成員可在此提交點子，並為最想要的點子投票。"
   site_settings:
+    enable_ideas_category_type_setup: "在分類建立設定中啟用「點子」分類類型選項。"
+    enable_topic_voting_badges: "啟用主題投票徽章，當其他人為成員的點子投票時授予。"
     topic_voting_enabled: '允許使用者對話題投票？'
+    topic_voting_enable_vote_limits: '依信任等級限制每位使用者的投票數'
     topic_voting_tl0_vote_limit: '允許TL0 使用者有多少票可用？'
     topic_voting_tl1_vote_limit: '允許TL1 使用者有多少票可用？'
     topic_voting_tl2_vote_limit: '允許TL2 使用者有多少票可用？'
@@ -19,7 +27,46 @@ zh_TW:
     category_type:
       show_who_voted:
         label: "顯示投票人"
+      show_votes_on_profile:
+        label: "在個人檔案中顯示投票"
+      enable_vote_limits:
+        label: "限制成員投票"
+      tl0_vote_limit:
+        label: "TL0 投票上限"
+      tl1_vote_limit:
+        label: "TL1 投票上限"
+      tl2_vote_limit:
+        label: "TL2 投票上限"
+      tl3_vote_limit:
+        label: "TL3 投票上限"
+      tl4_vote_limit:
+        label: "TL4 投票上限"
+      alert_votes_left:
+        label: "剩餘票數提醒"
     votes_moved:
       other: "%{count} 投票已被搬移。"
     duplicated_votes:
       other: "%{count} 票無法搬移，因為他們的使用者已經在其他主題中投票過。"
+    filter:
+      description:
+        topic_votes_min: "主題投票最小數量"
+        topic_votes_max: "主題投票最大數量"
+        order_topic_votes: "依最多票數排序主題"
+        order_topic_votes_asc: "依最少票數排序主題"
+  badges:
+    daydreamer:
+      name: "空想家"
+      description: "您的主題收到一票"
+      long_description: "此徽章會在您的某個主題收到投票時授予。:white_check_mark: 好點子。:+1:"
+    brainstormer:
+      name: "腦力激盪者"
+      description: "您的主題收到 5 票"
+      long_description: "此徽章會在您的某個主題收到 5 票時授予。:white_check_mark: 您的主題正受到關注。"
+    innovator:
+      name: "創新者"
+      description: "您的主題收到 15 票"
+      long_description: "此徽章會在您的某個主題收到 15 票時授予。:white_check_mark: 好到無法忽視。"
+    visionary:
+      name: "遠見者"
+      description: "您的主題收到 25 票"
+      long_description: "此徽章會在您的某個主題收到 25 票時授予。:white_check_mark: 給大家想要的！:clap:"

@@ -379,6 +379,7 @@ lt:
       sections:
         theme: "Tema"
         homepage: "Pagrindinis puslapis"
+        search: "Paieška"
       colors:
         light: "Šviesi"
         dark: "Tamsi"
@@ -1855,7 +1856,6 @@ lt:
         watch_topic: "Stebėjimo tema"
         track_topic: "Sekti temą"
         do_nothing: "Nieko nedaryti"
-      topics_unread_when_closed: "Uždarytas temas laikyti neskaitytomis"
       invited:
         title: "Pakvietimai"
         pending_tab: "Laukiama"
@@ -2380,6 +2380,8 @@ lt:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Įeiti"
+      delete: "Pašalinti"
+      home: "Pradinis"
     conditional_loading_section:
       loading: 'IST yra dviprasmiškas, pasirinkite konkrečią laiko juostą (pvz.: Azija/Kolkata)'
     category_row:
@@ -2487,7 +2489,6 @@ lt:
       create_whisper: "Gandas"
       create_shared_draft: "Sukurti bendrinamą juodraštį"
       edit_shared_draft: "Redaguoti bendrinamą juodraštį"
-      title: "Arba paspauskite %{modifier}Enter"
       discard: "Išmesti"
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
       title_placeholder_redesign: "Antraštė"
@@ -2723,10 +2724,9 @@ lt:
       recent: "Naujausios paieškos"
       clear_recent: "Išvalyti naujausias paieškas"
       type:
-        default: "Temos/įrašai"
+        default: "Pranešimai"
         users: "Nariai"
         categories: "Kategorijos"
-        categories_and_tags: "Kategorijos/žymos"
       context:
         user: "Ieškoti įrašų nuo @%{username}"
         category: "Ieškoti #%{category}kategorijoje"
@@ -2738,7 +2738,6 @@ lt:
         author: "filtruoti pagal įrašo autorių"
         status: "filtruoti pagal temos būseną"
         full_search: "paleidžiama viso puslapio paieška"
-        full_search_key: "%{modifier} + Įveskite"
       advanced:
         title: Išplėstiniai filtrai
         posted_by:
@@ -3280,7 +3279,6 @@ lt:
       reply_as_new_private_message: "Atsakyti kaip naują pranešimą tiems patiems gavėjams"
       continue_discussion: "Tęsiama %{postLink} diskusija:"
       follow_quote: "eiti į cituotą įrašą"
-      show_full: "Rodyti Pilną Įrašą"
       show_hidden: "Peržiūrėti ignoruojamą turinį."
       deleted_by_author_simple: "(pašalinta autoriaus)"
       collapse: "suskleisti"
@@ -3840,11 +3838,8 @@ lt:
       close: "Uždaryti (Esc)"
       content_load_error: '<a href="%url%">Turinio</a> nepavyko įkelti.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} arba %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Klaviatūros trumpiniai"
       description_header: "Aprašymas"
       key_header: "Raktas"
@@ -4223,6 +4218,11 @@ lt:
         group_traffic: "Srautas"
         group_members: "Nariai"
         group_other: "Kiti"
+        related_items:
+          users:
+            title: "Vartotojai"
+          labels:
+            user: "Narys"
       config_sections:
         account:
           title: "Paskyra"
@@ -4399,6 +4399,7 @@ lt:
           visitors: "Lankytojai"
         filters:
           browser: "Naršyklė"
+          language: "Kalba"
           ip: "IP adresas"
         series:
           anonymous_human: "Anonimas"
@@ -4463,6 +4464,8 @@ lt:
               share: "Dalintis"
             whos_posting:
               staff: "Personalas"
+              modal:
+                apply: "Saugoti"
             trust_level_pipeline:
               trust_levels:
                 "0": "Naujas"
@@ -4475,6 +4478,11 @@ lt:
             table:
               searches: "Paieškos"
               status: "Statusas"
+          system:
+            title: "Sistema"
+            status: "Statusas"
+            discourse_updated: "Discourse atnaujinta"
+            dashboard_updated: "Informacijos suvestinė atnaujinta"
         reports_section:
           header_action: "Redaguoti"
           no_data: "Nėra rodomų duomenų"
@@ -4512,6 +4520,17 @@ lt:
           average_for_sample: "Pavyzdžio vidurkis"
           total: "Visas laikas iš viso"
           no_data: "Nėra rodomų duomenų."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} vartotojas"
+              few: "%{count} vartotojų"
+              many: "%{count} vartotojų"
+              other: "%{count} vartotojų"
+            posts_count:
+              one: "%{count} pranešimas"
+              few: "%{count} pranešimai"
+              many: "%{count} pranešimų"
+              other: "%{count} pranešimų"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Paieškos įrašai</a>'
           sort_button: "Rūšiuoti pagal %{column}"

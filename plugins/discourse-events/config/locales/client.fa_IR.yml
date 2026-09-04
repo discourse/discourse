@@ -7,11 +7,10 @@
 fa_IR:
   admin_js:
     admin:
-      calendar: "رویدادها"
       site_settings:
         categories:
           discourse_post_event: "رویداد دیسکورس"
-          discourse_calendar: "رویدادها"
+          discourse_events: "رویدادها"
   js:
     notifications:
       titles:
@@ -26,8 +25,8 @@ fa_IR:
           fields:
             topic_id:
               label: شناسه موضوع
-    discourse_calendar:
-      invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
+    discourse_events:
+      title: "رویدادها"
       on_holiday: "در تعطیلات"
       disable_holiday: "غیرفعال کردن"
       enable_holiday: "فعال کردن"
@@ -312,8 +311,13 @@ fa_IR:
         week: "هفته"
         day: "روز"
         year: "سال"
+    discourse_calendar:
+      invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
     group_timezones:
       search: "جستجو..."
+    discourse_workflows:
+      post_event:
+        topic_id: "شناسه موضوع"
     discourse_post_event:
       notifications:
         before_event_reminder: "یک رویداد در حال شروع است"
@@ -465,6 +469,8 @@ fa_IR:
           placeholder: "اختیاری، پیش‌فرض عنوان موضوع است"
         invitees:
           label: "گروه‌های دعوت شده"
+        hosts:
+          label: "میزبانان"
         event_type:
           public:
             title: "عمومی"

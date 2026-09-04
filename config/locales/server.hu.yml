@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 hu:
+  llms_txt:
+    sections:
+      optional: "Nem kötelező"
+    links:
+      search:
+        label: "Keresés"
+      categories:
+        label: "Kategóriák"
+      about:
+        label: "Névjegy"
+      guidelines:
+        label: "Irányelvek"
   dates:
     short_date_no_year: "MMM D."
     short_date: "YYYY. MMM D."
@@ -983,6 +995,7 @@ hu:
       windows: "Microsoft Windows"
       unknown: "ismeretlen operációs rendszer"
   admin_site_traffic_explorer:
+    unknown: "Ismeretlen"
     traffic_types:
       anonymous: "Névtelen"
   change_email:
@@ -1274,6 +1287,11 @@ hu:
         share: "Megosztás"
       types:
         staff: "Stáb"
+    posters_by_member_type_members:
+      labels:
+        user: "Felhasználó"
+        count: "Bejegyzések"
+        share: "Megosztás"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1831,7 +1849,6 @@ hu:
     allowed_iframes: "Az iframe src URL előtagok listája, amelyeket a Discourse biztonságosan engedélyez a bejegyzésekben. A * karakter tetszőleges számú, nem-/ karaktert helyettesíthet."
     allowed_crawler_user_agents: "Azon webes keresőrobotok felhasználói ügynökei, amelyek számára engedélyezett a webhely elérése. FIGYELMEZTETÉS! ENNEK BEÁLLÍTÁSA MEGTILTJA AZ ÖSSZES ITT NEM FELSOROLT KERESŐROBOT HOZZÁFÉRÉSÉT!"
     blocked_crawler_user_agents: "A felhasználói ügynök karakterláncban szereplő egyedi, kis- és nagybetűkre nem érzékeny szó, amely azonosítja azokat a webes keresőrobotokat, amelyek számára nem engedélyezett a webhely elérése. Nem alkalmazandó, ha az engedélyezési lista definiálva van."
-    llms_txt: "Töltsön fel egy szöveges fájlt, amely az /llms.txt útvonalon lesz elérhető az LLM-robotok (crawlerek) számára. További információért látogasson el az <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> oldalra."
     content_security_policy_report_only: "Engedélyezze a Tartalombiztonsági Szabályzat Csak Jelentés Módját (CSP)"
     content_security_policy_frame_ancestors: "Korlátozza, ki ágyazhatja be ezt a webhelyet iframe-ekbe a CSP segítségével. Az engedélyezett kiszolgálók szabályozása a <a href='%{base_path}/admin/customize/embedding'>Beágyazás</a> oldalon történik"
     content_security_policy_script_src: "További engedélyezett szkriptforrások. Az aktuális kiszolgáló és CDN alapértelmezetten szerepel. Lásd <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS támadások mérséklése Tartalombiztonsági Szabályzattal.</a> (CSP). Egyéb kiszolgálóforrások figyelmen kívül maradnak, mivel a strict-dynamic engedélyezve van."
@@ -1844,7 +1861,7 @@ hu:
     share_links: "Határozza meg, mely elemek jelenjenek meg a megosztási párbeszédablakban, és milyen sorrendben."
     allow_username_in_share_links: "Engedélyezze, hogy a felhasználónevek szerepeljenek a megosztási linkekben. Ez hasznos a jelvények jutalmazásához egyedi látogatók alapján."
     site_contact_username: "Stábtag felhasználónév, amelyről minden automatikus levél küldésre kerül. Ha üresen hagyja, akkor az alapértelmezett rendszerfiók kerül felhasználásra."
-    site_contact_group_name: "Egy csoport érvényes neve, amely meghívást kap minden automatikusan elküldött személyes üzenetre."
+    site_contact_group_name: "Egy olyan csoport, amely meghívást kap minden automatikusan elküldött személyes üzenetre."
     send_welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak."
     send_tl1_welcome_message: "Küldjön üdvözlő üzenetet az új 1-es megbízhatósági szintű felhasználóknak."
     send_tl2_promotion_message: "Küldjön üzenetet az új 2-es megbízhatósági szintű felhasználóknak az előléptetésükről."
@@ -2450,7 +2467,6 @@ hu:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
       valid_username: "Van egy ilyen nevű felhasználó."
-      invalid_group: "Nincs ilyen nevű csoport."
       invalid_svg: "Az SVG kép érvénytelen. Tartalmaznia kell egy SVG elemet, továbbá nem tartalmazhat szkripteket vagy eseménykezelőket."
       invalid_upload: "A feltöltés érvénytelen vagy nem létezik."
       invalid_topic: "Nincs ilyen azonosítóval rendelkező téma."

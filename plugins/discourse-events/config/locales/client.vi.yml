@@ -7,11 +7,10 @@
 vi:
   admin_js:
     admin:
-      calendar: "Sự kiện"
       site_settings:
         categories:
           discourse_post_event: "Sự kiện Discourse"
-          discourse_calendar: "Sự kiện"
+          discourse_events: "Sự kiện"
       web_hooks:
         calendar_event:
           group_name: "Sự kiện lịch"
@@ -32,7 +31,8 @@ vi:
           fields:
             topic_id:
               label: ID Chủ đề
-    discourse_calendar:
+    discourse_events:
+      title: "Sự kiện"
       livestream:
         zoom:
           join: "Tham gia Zoom"
@@ -45,7 +45,6 @@ vi:
           rsvp_to_event: "Đăng ký tham gia sự kiện để bắt đầu trò chuyện"
           rsvp_to_event_with_link: "Đăng ký <a href='%{url}'>tham gia sự kiện</a> để bắt đầu trò chuyện"
           rsvp_body: "Kết nối với những người tham dự khác trước, trong và sau sự kiện."
-      invite_user_notification: "%{username} đã mời bạn tham gia: %{description}"
       preferences:
         all_events: "Sự kiện Discourse - Tất cả sự kiện"
         all_events_description: "Tất cả sự kiện trên diễn đàn"
@@ -66,7 +65,7 @@ vi:
       local_time: "Giờ địa phương"
       region:
         title: "Khu vực"
-        none: "Không có gì"
+        none: "Không"
         use_current_region: "Sử dụng khu vực hiện tại"
         select_region: "Chọn một khu vực..."
         names:
@@ -162,7 +161,7 @@ vi:
           de: "Đức (Germany)"
           dk: "Đan Mạch (Denmark)"
           ee: "Estonia"
-          el: "Hy Lạp (Greece - el)"
+          el: "Hy Lạp (Greece - gr)"
           gr: "Hy Lạp (Greece - gr)"
           es_an: "Tây Ban Nha - Andalusia (AN)"
           es_ar: "Tây Ban Nha - Aragon (AR)"
@@ -223,14 +222,20 @@ vi:
           it_tv: "Ý - Treviso (TV)"
           it_ve: "Ý - Venice (Venezia - VE)"
           ru: "Liên bang Nga"
+          tr: "Thổ Nhĩ Kỳ"
       toolbar_button:
         today: "Hôm nay"
         month: "Tháng"
         week: "Tuần"
         day: "Ngày"
         year: "Năm"
+    discourse_calendar:
+      invite_user_notification: "%{username} đã mời bạn tham gia: %{description}"
     group_timezones:
       search: "Tìm kiếm..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Chủ đề"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -305,6 +310,8 @@ vi:
           add: "Thêm liên kết (URL)"
         description:
           label: "Mô tả"
+        hosts:
+          label: "Máy chủ"
         event_type:
           public:
             title: "Công khai"

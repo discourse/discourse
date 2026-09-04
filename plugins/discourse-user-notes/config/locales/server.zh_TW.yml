@@ -5,9 +5,20 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    user_notes_enabled: "允許工作人員為使用者附加備註"
+    user_notes_icon_placement: "貼文中使用者備註提示圖示的位置"
+    user_notes_moderators_delete: "允許板主刪除使用者備註"
+  user_notes:
+    official_warning: "收到 @%{username} 發出的正式警告 -- %{warning_link}"
+    note_too_long: "使用者備註不得超過 %{max} 個字元。"
+    user_suspended: "@%{username} 已將此帳號停權至 %{suspended_till}。原因：%{reason}"
+    user_silenced: "@%{username} 已將此帳號禁言至 %{silenced_till}。原因：%{reason}"
   reports:
     user_notes:
+      title: "使用者備註"
+      description: "列出最近的使用者備註。"
       labels:
         user: 使用者
-        note: ' 分類已經沒有其它話題了。'
+        note: 備註
         moderator: 板主

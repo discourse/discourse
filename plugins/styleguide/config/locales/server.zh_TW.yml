@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    styleguide_enabled: '啟用「/styleguide」路徑以協助設定 Discourse 樣式'
+    styleguide_admin_only: "僅限管理員可查看樣式指南"
+    styleguide_allowed_groups: "僅限指定群組的成員可查看樣式指南"

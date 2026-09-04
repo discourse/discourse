@@ -7,10 +7,9 @@
 ug:
   admin_js:
     admin:
-      calendar: "پائالىيەت"
       site_settings:
         categories:
-          discourse_calendar: "پائالىيەت"
+          discourse_events: "پائالىيەت"
   js:
     discourse_automation:
       triggerables:
@@ -18,7 +17,8 @@ ug:
           fields:
             topic_id:
               label: تېما كىملىكى
-    discourse_calendar:
+    discourse_events:
+      title: "پائالىيەت"
       disable_holiday: "چەكلە"
       enable_holiday: "قوزغات"
       date: "چېسلا"
@@ -30,6 +30,9 @@ ug:
         week: "ھەپتە"
         day: "كۈن"
         year: "يىل"
+    discourse_workflows:
+      post_event:
+        topic_id: "تېما كىملىكى"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -39,6 +42,9 @@ ug:
       show_all: "ھەممىنى كۆرسەت"
       add_to_calendar: "يىلنامەگە قوش"
       created_by: "قۇرغۇچى"
+      other_hosts:
+        one: "ۋە باشقا %{count}"
+        other: "ۋە باشقا %{count}"
       bulk_invite: "توپ تەكلىپ"
       bulk_invite_modal:
         confirm: "جەزملە"
@@ -101,6 +107,8 @@ ug:
           add: "تور ئادرېسى قوش"
         description:
           label: "چۈشەندۈرۈش"
+        hosts:
+          label: "مۇلازىمېتىر"
         event_type:
           public:
             title: "ئاممىۋى"

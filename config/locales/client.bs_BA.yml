@@ -290,6 +290,7 @@ bs_BA:
       next: "Iduće"
       sections:
         theme: "Izgled"
+        search: "Pretraži"
       homepage:
         topics: "Topics"
         categories: "Kategorije"
@@ -1676,6 +1677,8 @@ bs_BA:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Naprijed"
+      delete: "Delete"
+      home: "Naslovnica"
     category_row:
       subcategories: "+ Podkategorije"
     select_kit:
@@ -1940,6 +1943,7 @@ bs_BA:
       categories: "Kategorije"
       tags: "Tagovi"
       type:
+        default: "Objave"
         users: "Korisnici"
         categories: "Kategorije"
       context:
@@ -2398,7 +2402,6 @@ bs_BA:
       reply_as_new_private_message: "Odgovori kao nova poruka istim primaocima"
       continue_discussion: "Nastavak diskusije od teme %{postLink}:"
       follow_quote: "idi na citiran post"
-      show_full: "Prikaži cijelu objavu"
       show_hidden: "Prikaz zanemarenog sadržaja."
       collapse: "spusti"
       expand_collapse: "digni/spusti"
@@ -2873,8 +2876,6 @@ bs_BA:
       content_load_error: '<a href="%url%">Sadržaj</a> nije moguće učitati.'
       image_load_error: '<a href="%url%">Slika</a> se ne može učitati.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", \\ T"
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ili %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1} / %{shortcut2}"
       title: "Kratice tipkovnice"
@@ -3191,6 +3192,11 @@ bs_BA:
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Other"
+        related_items:
+          users:
+            title: "Korisnici"
+          labels:
+            user: "User"
       config_sections:
         account:
           title: "Račun"
@@ -3425,6 +3431,8 @@ bs_BA:
               share: "Dijeli"
             whos_posting:
               staff: "Staff"
+              modal:
+                apply: "Sačuvaj"
             trust_level_pipeline:
               trust_levels:
                 "0": "Novo"
@@ -3437,6 +3445,11 @@ bs_BA:
             table:
               searches: "Pretraživanja"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Diskurs ažuriran"
+            dashboard_updated: "Nadzorna ploča je ažurirana"
         reports_section:
           header_action: "Uredi"
           no_data: "Nema podataka za prikaz"
@@ -3472,6 +3485,15 @@ bs_BA:
           average_for_sample: "Prosjek za uzorak"
           total: "Ukupno vrijeme"
           no_data: "Nema podataka za prikaz."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} korisnik"
+              few: "%{count} korisnika"
+              other: "%{count} korisnika"
+            posts_count:
+              one: "%{count} objava"
+              few: "%{count} objave"
+              other: "%{count} objava"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Pretraživanje dnevnika</a>'
             disabled: 'Izvješće o pretraživanju trendova je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upite pretraživanja dnevnika</a> za prikupljanje podataka.'

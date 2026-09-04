@@ -892,8 +892,6 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    after { DiscoursePluginRegistry.reset! }
-
     it "is in the `hidden_settings` collection" do
       expect(settings.hidden_settings.include?(:superman_identity)).to eq(true)
     end
@@ -915,25 +913,32 @@ RSpec.describe SiteSettingExtension do
     it "does not call the hidden_site_settings plugin modifier in a loop" do
       called = 0
       plugin = Plugin::Instance.new
-      plugin.register_modifier(:hidden_site_settings) do |defaults|
+      modifier = ->(defaults) do
         called += 1
         defaults + [:other_setting]
       end
+      plugin.register_modifier(:hidden_site_settings, &modifier)
+
       settings.all_settings(include_hidden: true)
       expect(called).to eq(1)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :hidden_site_settings, &modifier)
     end
 
     it "calls the site_setting_result modifier for each setting" do
       plugin = Plugin::Instance.new
-      plugin.register_modifier(:site_setting_result) do |opts|
+      modifier = ->(opts) do
         opts[:custom_attribute] = "test_value" if opts[:setting] == :other_setting
         opts
       end
+      plugin.register_modifier(:site_setting_result, &modifier)
 
       result = settings.all_settings
       other_setting = result.find { |s| s[:setting] == :other_setting }
 
       expect(other_setting[:custom_attribute]).to eq("test_value")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :site_setting_result, &modifier)
     end
   end
 

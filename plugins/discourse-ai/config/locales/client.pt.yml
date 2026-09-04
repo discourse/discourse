@@ -116,7 +116,6 @@ pt:
           topic_summaries: "Resumos de tópico"
         search:
           name: "Pesquisar"
-          discoveries: "Descobertas"
         embeddings:
           hyde: "HyDE"
         discord:
@@ -211,8 +210,6 @@ pt:
         successful: "Sucesso"
         failed: "Falhado"
         unknown: "Desconhecido"
-        topic_id: "Id. do Tópico"
-        post_id: "Id. da Publicação"
         time: "Hora"
         when: "Quando"
         feature: "Funcionalidade"
@@ -226,8 +223,7 @@ pt:
         post_short: "Publicação %{id}"
         duration: "Duração"
         actions: "Ações"
-        filters:
-          title: "Filtros"
+        view_details: "Detalhes"
         periods:
           day: "Últimas 24 horas"
           week: "Últimos 7 Dias"
@@ -331,8 +327,6 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -392,8 +386,12 @@ pt:
         topic:
           regenerate_summaries_option: "Resumos de tópico"
       discobot_discoveries:
-        regular_results: "Tópicos"
-        collapse: "Colapsar"
-        tooltip:
-          actions:
-            disable: "Desativar"
+        legacy:
+          regular_results: "Tópicos"
+          collapse: "Colapsar"
+          tooltip:
+            actions:
+              disable: "Desativar"
+        search_type: "IA"
+        search_messages: "Mensagens"
+        ask_ai: "IA"

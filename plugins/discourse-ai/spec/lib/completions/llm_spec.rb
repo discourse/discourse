@@ -1,6 +1,42 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::Llm do
+  describe "upload skips" do
+    fab!(:vision_model) { Fabricate(:anthropic_model, vision_enabled: true) }
+
+    it "hands the execution context's collector to the prompt it is about to translate" do
+      upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+      execution_context = DiscourseAi::Completions::ExecutionContext.new
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "system",
+          messages: [{ type: :user, content: ["look", { upload_id: upload.id }] }],
+        )
+
+      stub_request(:post, "https://api.anthropic.com/v1/messages").to_return(
+        body: {
+          id: "msg_1",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "done" }],
+          model: "claude-3-opus",
+          usage: {
+            input_tokens: 1,
+            output_tokens: 1,
+          },
+        }.to_json,
+      )
+
+      vision_model.to_llm.generate(
+        prompt,
+        user: Discourse.system_user,
+        execution_context: execution_context,
+      )
+
+      expect(execution_context.upload_skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
+    end
+  end
+
   fab!(:user)
   fab!(:model, :llm_model)
 
@@ -33,6 +69,29 @@ RSpec.describe DiscourseAi::Completions::Llm do
 
       data: [DONE]
     SSE
+  end
+
+  describe ".text_from_response" do
+    it "returns only text from heterogeneous completion responses" do
+      thinking = DiscourseAi::Completions::Thinking.new(message: "Private reasoning")
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(id: "tool-1", name: "search", parameters: {})
+      structured_output =
+        DiscourseAi::Completions::StructuredOutput.new(message: { type: "string" })
+      structured_output << '{"message":"Visible response"}'
+      structured_output.finish
+
+      expect(described_class.text_from_response(["Visible", thinking, " response"])).to eq(
+        "Visible response",
+      )
+      expect(described_class.text_from_response("Visible response")).to eq("Visible response")
+      expect(described_class.text_from_response(structured_output)).to eq(
+        '{"message":"Visible response"}',
+      )
+      expect(described_class.text_from_response(thinking)).to eq("")
+      expect(described_class.text_from_response(tool_call)).to eq("")
+      expect(described_class.text_from_response(nil)).to eq("")
+    end
   end
 
   describe ".proxy" do

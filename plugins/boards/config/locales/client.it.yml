@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    boards:
+      board:
+        remove_card: "Rimuovi"
+        new_topic: "Nuovo argomento..."
+        title: "Titolo"
+        tags: "Etichette"
+        assigned_to: "Assegnato a"
+        topic_reply_count:
+          one: "%{count} risposta"
+          other: "%{count} risposte"
+        assign: "Assegna"
+        reassign: "Riassegna"
+        unassign: "Annulla assegnazione"
+        unassign_from_topic: "Annulla l'assegnazione di @%{username} dall'argomento"
+        unassign_from_post: "Annulla assegnazione di @%{username} da #%{post_number}"
+        edit_assignments: "Modifica assegnazioni..."
+        created_by: "Creato da"
+      manage:
+        name: "Nome"
+        slug: "Abbreviazione"
+        constraint_categories: "Categorie"
+        constraint_tags: "Etichette"
+        columns:
+          remove: "Rimuovi"
+          column_title: "Titolo"
+          icon: "Icona"
+          color: "Colore"
+          default_sort_priority: "Priorità"
+          tag: "Etichetta"
+          move_to_assigned_unassign: "Annulla assegnazione"
+          move_to_status_open: "Aperta"
+          move_to_status_closed: "Chiuso"

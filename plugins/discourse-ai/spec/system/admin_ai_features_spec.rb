@@ -51,6 +51,62 @@ RSpec.describe "Admin AI features configuration" do
     expect(ai_features_page).to have_feature_groups("topic_summaries", [group_1.name, group_2.name])
   end
 
+  it "lists Discover and Ask AI as separate search features" do
+    ask_ai_agent = Fabricate(:ai_agent)
+    query_rewriter = Fabricate(:ai_agent)
+    follow_up_agent =
+      Fabricate(
+        :ai_agent,
+        allow_personal_messages: true,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
+    enable_legacy_discover
+    SiteSetting.ai_discover_agent = summarization_agent.id
+    SiteSetting.ai_ask_ai_enabled = true
+    SiteSetting.ai_ask_ai_agent = ask_ai_agent.id
+    SiteSetting.ai_ask_ai_query_rewriter_agent = query_rewriter.id
+    SiteSetting.ai_ask_ai_follow_up_agent = follow_up_agent.id
+
+    ai_features_page.visit
+    ai_features_page.toggle_enabled
+
+    expect(ai_features_page).to have_feature("discoveries", "Discover (deprecated)")
+    expect(ai_features_page).to have_feature("ask_ai", "Ask AI")
+    expect(ai_features_page).to have_feature_agent("discoveries", summarization_agent.name)
+    expect(ai_features_page).to have_feature_agent("ask_ai", ask_ai_agent.name)
+    expect(ai_features_page).to have_feature_agent("ask_ai", query_rewriter.name)
+    expect(ai_features_page).to have_feature_agent("ask_ai", follow_up_agent.name)
+  end
+
+  it "hides Discover when it is disabled" do
+    SiteSetting.ai_discover_enabled = false
+    SiteSetting.ai_ask_ai_enabled = true
+
+    ai_features_page.visit
+    ai_features_page.toggle_enabled
+
+    expect(ai_features_page).to have_no_feature("discoveries")
+    expect(ai_features_page).to have_feature("ask_ai", "Ask AI")
+  end
+
+  it "only allows existing enabled sites to configure Discover" do
+    enable_legacy_discover
+
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::SEARCH_ID}/edit",
+    )
+
+    expect(form.field("ai_discover_enabled")).to be_enabled
+
+    SiteSetting.ai_discover_enabled = false
+
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::SEARCH_ID}/edit",
+    )
+
+    expect(form).to have_no_enabled_field_with_name("ai_discover_enabled")
+  end
+
   it "shows edit page with grouped settings" do
     ai_features_page.visit
 

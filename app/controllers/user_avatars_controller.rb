@@ -87,9 +87,10 @@ class UserAvatarsController < ApplicationController
     is_asset_path
 
     # we need multisite support to keep a single origin pull for CDNs
-    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      hijack { show_in_site(params[:hostname]) }
-    end
+    RailsMultisite::ConnectionManagement.with_hostname(
+      params[:hostname],
+      raise_on_missing: false,
+    ) { hijack { show_in_site(params[:hostname]) } }
   end
 
   protected

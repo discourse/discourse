@@ -74,9 +74,8 @@ export default class Query extends RestModel {
 
   createProperties() {
     if (this.sql) {
-      // Importing or saving with SQL
       return this.updateProperties();
     }
-    return this.getProperties("name", "description");
+    return this.getProperties("name", "description", "group_ids");
   }
 }

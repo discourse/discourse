@@ -7,11 +7,10 @@
 it:
   admin_js:
     admin:
-      calendar: "Eventi"
       site_settings:
         categories:
           discourse_post_event: "Evento Discourse"
-          discourse_calendar: "Eventi"
+          discourse_events: "Eventi"
   js:
     notifications:
       titles:
@@ -26,8 +25,8 @@ it:
           fields:
             topic_id:
               label: ID dell'argomento
-    discourse_calendar:
-      invite_user_notification: "%{username} ti ha invitato a: %{description}"
+    discourse_events:
+      title: "Eventi"
       on_holiday: "In vacanza"
       disable_holiday: "Disabilita"
       enable_holiday: "Abilita"
@@ -316,9 +315,14 @@ it:
         week: "Settimana"
         day: "Giorno"
         year: "Anno"
+    discourse_calendar:
+      invite_user_notification: "%{username} ti ha invitato a: %{description}"
     group_timezones:
       search: "Ricerca..."
       group_availability: "Disponibilità di %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID dell'argomento"
     discourse_post_event:
       notifications:
         before_event_reminder: "Un evento sta per iniziare"
@@ -349,6 +353,9 @@ it:
       edit_event: "Modifica evento"
       export_event: "Esporta evento"
       created_by: "Creato da"
+      other_hosts:
+        one: "e %{count} altro"
+        other: "e %{count} altri"
       bulk_invite: "Invito collettivo"
       close_event: "Chiudi evento"
       open_event: "Apri evento"
@@ -506,6 +513,8 @@ it:
           placeholder: "Facoltativo, valore predefinito titolo dell'argomento"
         invitees:
           label: "Gruppi invitati"
+        hosts:
+          label: "Host"
         event_type:
           public:
             title: "Pubblico"

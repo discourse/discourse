@@ -90,6 +90,13 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  register_modifier(:site_setting_result) do |setting_result|
+    if setting_result[:setting] == :ai_discover_enabled && !SiteSetting.ai_discover_enabled
+      setting_result[:disabled] = true
+    end
+    setting_result
+  end
+
   if defined?(Rack::MiniProfiler)
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end
@@ -128,6 +135,7 @@ after_initialize do
     DiscourseAi::AiModeration::EntryPoint.new,
     DiscourseAi::Translation::EntryPoint.new,
     DiscourseAi::Discover::EntryPoint.new,
+    DiscourseAi::Discoveries::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
@@ -148,6 +156,7 @@ after_initialize do
 
   on(:user_destroyed) do |user|
     DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
+    DiscourseAi::Discoveries.clear_recent_asks(user_id: user.id)
     AiAgent.detach_user!(user.id)
   end
 
@@ -245,11 +254,24 @@ after_initialize do
     face-meh
     face-angry
     circle-info
+    discourse-ai
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 
   add_model_callback(DiscourseAutomation::Automation, :after_save) do
     DiscourseAi::Configuration::Feature.feature_cache.flush!
+  end
+
+  add_model_callback(AiAgent, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
+  end
+
+  add_model_callback(LlmModel, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
   end
 
   add_custom_reviewable_filter(

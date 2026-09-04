@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 id:
+  llms_txt:
+    sections:
+      optional: "Opsional"
+    links:
+      search:
+        label: "Cari"
+      categories:
+        label: "Kategori"
+      about:
+        label: "Tentang"
+      guidelines:
+        label: "Panduan"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -700,6 +712,7 @@ id:
       windows: "Microsoft Windows"
       unknown: "sistem operasi yang tidak dikenal"
   admin_site_traffic_explorer:
+    unknown: "Tidak diketahui"
     traffic_types:
       anonymous: "Anonim"
   change_email:
@@ -954,6 +967,10 @@ id:
         count: "Pos"
       types:
         staff: "Staf"
+    posters_by_member_type_members:
+      labels:
+        user: "Pengguna"
+        count: "Pos"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

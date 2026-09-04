@@ -66,6 +66,15 @@ export type FloatContentRole = "dialog" | "none" | "presentation";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- a relay callback must accept consumer functions of any argument shape; `unknown[]` would reject them.
 export type FloatCallback = (...args: any[]) => void;
 
+/** Options accepted when closing an anchored float. */
+export interface FloatCloseOptions {
+  /** Data passed to the float's `onClose` callback. */
+  data?: unknown;
+
+  /** Whether a menu restores focus to its trigger after closing. */
+  focusTrigger?: boolean;
+}
+
 /**
  * The events that open (or close) a float. Either a single list applied on every
  * viewport, or a split of `mobile`/`desktop` lists resolved against the current view.
@@ -170,7 +179,7 @@ export interface TooltipOptions {
   /** Whether to trap Tab focus within the content. */
   trapTab: boolean;
 
-  /** Called after the float closes. */
+  /** Called after the float closes, with any data supplied to `close`. */
   onClose: FloatCallback | null;
 
   /** Called after the float shows. */

@@ -1,0 +1,72 @@
+@use "lib/viewport";
+
+.solved-admin-report-related-items {
+  &__table tr {
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__topic-cell {
+    width: 40%;
+
+    @include viewport.until(sm) {
+      grid-column: 1 / -1;
+      width: auto;
+    }
+  }
+
+  &__solved-by-cell {
+    width: 25%;
+
+    @include viewport.until(sm) {
+      width: auto;
+    }
+  }
+
+  &__category-cell {
+    width: 35%;
+
+    @include viewport.until(sm) {
+      width: auto;
+    }
+  }
+
+  &__category-cell > .badge-category__wrapper {
+    max-width: 100%;
+  }
+
+  &__solved-by-users {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__topic-link {
+    overflow-wrap: anywhere;
+  }
+}
+
+.solved-admin-report-table-summary {
+  &__list {
+    gap: var(--space-4);
+  }
+
+  &__topic-link {
+    overflow-wrap: anywhere;
+  }
+
+  &__topic-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-start: var(--space-1);
+  }
+
+  &__topic-meta > .badge-category__wrapper {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+  }
+}

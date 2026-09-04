@@ -8,6 +8,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
   describe "POST /admin/plugins/discourse-workflows/dynamic-node-parameters/options" do
     fab!(:badge) { Fabricate(:badge, name: "Helpful") }
     fab!(:group_1) { Fabricate(:group, name: "alpha") }
+    fab!(:tag_group) { Fabricate(:tag_group, name: "Workflow tags") }
 
     it "returns options for a known load options method" do
       post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
@@ -43,6 +44,30 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include("id" => group_1.id, "name" => group_1.name)
+    end
+
+    it "returns filtered tag groups for the Tag group node" do
+      Fabricate(:tag_group, name: "Unrelated")
+
+      post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
+           params: {
+             nodeTypeAndVersion: {
+               name: "action:tag_group",
+               version: "1.0",
+             },
+             path: "tag_group_id",
+             methodName: "tag_groups",
+             currentNodeParameters: {
+             },
+             filter: "workflow",
+           },
+           as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to contain_exactly(
+        "id" => tag_group.id,
+        "name" => tag_group.name,
+      )
     end
 
     it "returns 404 for an unknown node type" do

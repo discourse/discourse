@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  llms_txt:
+    sections:
+      optional: "Valgfritt"
+    links:
+      search:
+        label: "Søk"
+      categories:
+        label: "Kategorier"
+      about:
+        label: "Om"
+      guidelines:
+        label: "Retningslinjer"
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM, YYYY"
@@ -509,6 +521,7 @@ nb_NO:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Ukjent"
     traffic_types:
       anonymous: "Anonym"
   change_email:
@@ -701,6 +714,11 @@ nb_NO:
         share: "Del"
       types:
         staff: "Stab"
+    posters_by_member_type_members:
+      labels:
+        user: "Bruker"
+        count: "Innlegg"
+        share: "Del"
     trust_level_pipeline:
       labels:
         count: "Medlemmer"

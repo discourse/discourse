@@ -72,6 +72,11 @@ sl:
           solved: "so rešene"
           unsolved: "so nerešene"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tema"
+            category: "Kategorija"
       web_hooks:
         solved_event:
           group_name: "Rešen dogodek"

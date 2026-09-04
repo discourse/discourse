@@ -7,10 +7,9 @@
 ro:
   admin_js:
     admin:
-      calendar: "Evenimente"
       site_settings:
         categories:
-          discourse_calendar: "Evenimente"
+          discourse_events: "Evenimente"
   js:
     discourse_automation:
       triggerables:
@@ -18,7 +17,8 @@ ro:
           fields:
             topic_id:
               label: ID subiect
-    discourse_calendar:
+    discourse_events:
+      title: "Evenimente"
       disable_holiday: "Dezactivează"
       enable_holiday: "Activează"
       date: "Dată"
@@ -26,6 +26,7 @@ ro:
       region:
         none: "Nimic"
         names:
+          el: "Grecia"
           gr: "Grecia"
       toolbar_button:
         today: "Astăzi"
@@ -35,6 +36,9 @@ ro:
         year: "An"
     group_timezones:
       search: "Caută..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID subiect"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -131,6 +135,8 @@ ro:
           add: "Adaugă URL"
         description:
           label: "Descriere"
+        hosts:
+          label: "Gazde"
         event_type:
           public:
             title: "Public"

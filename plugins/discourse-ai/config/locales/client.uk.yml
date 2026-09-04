@@ -50,6 +50,12 @@ uk:
             delete_ai_secret: "Видалити секрет ШІ"
             update_ai_spam_settings: "Оновити налаштування спаму ШІ"
   js:
+    admin:
+      site_settings:
+        ai_ask_ai_summary_detail:
+          quiet: "Тихо (одне речення, без заголовка)"
+          balanced: "Збалансовано (один короткий абзац)"
+          detailed: "Детальний (два-три короткі абзаци)"
     discourse_workflows:
       node_unavailable:
         requires_ai: "Потрібно увімкнути плагін штучного інтелекту"
@@ -234,10 +240,16 @@ uk:
     discourse_ai:
       title: "ШІ"
       copied: "Скопійовано"
+      view_raw: "Переглянути необроблені дані"
+      view_decoded: "Переглянути розшифроване"
       ai_decoded_transcript:
         thinking: "Мислення"
+        tool_calls: "Виклики інструментів"
+        tool_results: "Результати інструменту"
         tool: "Інструмент"
         arguments: "Аргументи"
+        tool_result: "Результат інструменту"
+        call_id: "Ідентифікатор виклику"
         type: "Тип"
         error: "Помилка"
         response: "відповідь"
@@ -341,9 +353,12 @@ uk:
         search:
           name: "Пошук"
           description: "Покращує пошук, надаючи відповіді на запити, згенеровані штучним інтелектом"
-          discoveries: "Відкриття"
+          discoveries: "Відкрити (застаріло)"
+          ask_ai: "Запитайте ШІ"
           setting_groups:
             settings: "Основні налаштування"
+            agents: "Агенти"
+            access_control: "Контроль доступу"
         embeddings:
           name: "Вбудовування"
           description: "Посилює такі функції, як \"Пов'язані теми\" та пошук зі штучним інтелектом, створюючи семантичне представлення тексту"
@@ -410,6 +425,7 @@ uk:
           topic_title_translator: "Перекладач назви теми"
           short_text_translator: "Перекладач коротких текстів"
           schedule_untranslated: "Розклад перекладів"
+          schedule_topic_only_success: "Запланований переклад цієї теми."
           schedule_topic_success:
             one: "Заплановано переклад для неперекладеного %{count} допису."
             few: "Заплановано переклад для неперекладені %{count} дописи."
@@ -439,6 +455,8 @@ uk:
         title: "Переклади"
         description: "Автоматично перекладати весь вміст на вашому форумі на бажану мову користувача"
         supported_locales: "Підтримувані мови"
+        max_locales_reached: "Ви можете вибрати не більше ніж %{max} мов."
+        locale_count: "%{count}/%{max} вибрано"
         category_scope: "Розділи"
         category_scope_description: "Виберіть, чи застосовуватимуться автоматичні переклади до контенту у всіх категоріях, загальнодоступних категоріях чи вибраних категоріях."
         cached_results_notice: "Показ кешованих результатів з %{relative_time}."
@@ -554,6 +572,8 @@ uk:
           localization_settings: "Налаштування мови програми"
           enable_translations: "Увімкнути автоматичний переклад"
           enable_translations_disabled: "Щоб увімкнути переклади, потрібно додати підтримувану мову"
+          show_language_switcher: "Показувати перемикач мов у заголовку"
+          show_language_switcher_description: "Дозволяє кожному вибрати мову та переглядати ваш сайт нею."
         stats:
           title: "Статистика перекладів"
           backfill_disabled: "Автозаповнення вимкнено, перекладатимуться лише нові публікації."
@@ -689,9 +709,11 @@ uk:
         credit_allocations: "Кредитні асигнування"
       logs:
         short_title: "Logs"
+        description: "Перевірка окремих запитів, надісланих до моделей штучного інтелекту, та їхніх відповідей"
+        refresh: "Оновити журнали"
         retry: "Спробуйте ще раз"
         apply: "Застосувати"
-        find: "Знайти"
+        clear_filters: "Очистити всі фільтри"
         all_outcomes: "Усі результати"
         all_models: "Всі моделі"
         all_features: "Усі функції"
@@ -701,12 +723,8 @@ uk:
         has_retries: "Має повторні спроби"
         retried: "Повторна спроба"
         unattributed: "Без посилання"
+        search_placeholder: "Пошук за @ім'ям_користувача або ID (наприклад, @user1 topic:123 log:45)"
         feature_placeholder: "Назва функції"
-        user_placeholder: "Фільтрувати за іменем користувача"
-        id_placeholder: "Введіть ідентифікатор"
-        log_id: "Ідентифікатор журналу"
-        topic_id: "ID теми"
-        post_id: "ID допису"
         time: "Час"
         when: "Коли"
         outcome: "Результат"
@@ -727,19 +745,19 @@ uk:
         post: "Допис"
         post_short: "Допис %{id}"
         duration: "Тривалість"
+        tokens_direction: "Токени (вхід → вихід)"
         first_token: "Перший токен"
         cost: "Вартість"
         actions: "Дії"
         table_caption: "Запити ШІ, надіслані до мовних моделей, та їх результати"
-        view_details: "Переглянути деталі"
+        view_details: "Подробиці"
         no_results: "Жоден журнал ШІ не відповідає цим фільтрам."
         no_logs: "Не знайдено жодних збережених журналів ШІ."
-        filters:
-          title: "Фільтри"
-          period: "Період часу"
-          date_range: "Діапазон дат"
-          id_type: "Тип ідентифікатора"
-          id_value: "Значення ідентифікатора"
+        new_logs_count:
+          one: "Див. %{count} новий журнал"
+          few: "Див. %{count} нові журнали"
+          many: "Див. %{count} нові журнали"
+          other: "Див. %{count} нові журнали"
         periods:
           hour: "Остання година"
           day: "Останні 24 години"
@@ -754,6 +772,7 @@ uk:
           tabs_label: "Розділи корисного навантаження журналу ШІ"
           copy_request: "Скопіювати запит"
           copy_response: "Копіювати відповідь"
+          copy_raw_response: "Копіювати необроблену відповідь"
           copy_context: "Копіювати контекст"
           payload_unavailable: "Корисне навантаження недоступне"
           payload_truncated: "Цей вміст занадто великий, щоб відобразити його повністю, тому його було скорочено."
@@ -860,7 +879,7 @@ uk:
         create_user: Створити користувача
         create_user_help: За бажанням, ви можете прив’язати користувача до цього агента. Якщо ви це зробите, ШІ використовуватиме цього користувача для відповіді на запити.
         default_llm: Мовна модель за замовчуванням
-        default_llm_help: Мовна модель за замовчуванням, яка використовуватиметься для цього агента. Обов’язково, якщо ви хочете згадати агента в публічних публікаціях.
+        default_llm_help: Мовна модель за замовчуванням, яка використовуватиметься цим агентом. Якщо поле пусте, використовується мовна модель сайту за замовчуванням.
         system_prompt: Системний запит
         forced_tool_strategy: Стратегія примусового використання інструментів
         allow_chat_direct_messages: "Дозволити прямі повідомлення в чаті"
@@ -979,6 +998,29 @@ uk:
         llms_list: "LLM:"
       rag:
         title: "RAG"
+        sources:
+          title: "Джерела URL-адрес"
+          description: "Веб-сторінки, які періодично завантажуються та індексуються як знання агента."
+          urls: "URL-адреси"
+          urls_description: "Вводьте одну URL-адресу на рядок."
+          refresh_interval_hours: "Оновлювати кожні (години)"
+          add: "Додати джерела URL-адрес"
+          edit: "Редагувати джерела URL-адрес"
+          save: "Зберегти джерела URL-адрес"
+          modal_title: "Налаштування джерел URL-адрес"
+          empty: "Джерела URL не налаштовані."
+          summary:
+            one: "%{count} URL джерела"
+            few: "%{count} URL джерел"
+            many: "%{count} URL джерел"
+            other: "%{count} URL джерел"
+          more:
+            one: "І ще %{count} URL-адреса"
+            few: "%{count} URL джерел"
+            many: "%{count} URL джерел"
+            other: "%{count} URL джерел"
+          too_many: "Введіть не більше %{count} URL-адрес."
+          invalid_url: "Недійсна URL-адреса: %{url}"
         options:
           rag_chunk_tokens: "Завантажити токени фрагментів"
           rag_chunk_tokens_help: "Кількість токенів, які будуть використані для кожного фрагмента в моделі RAG. Збільште, щоб збільшити кількість контексту, який може використовувати ШІ. (Зміна призведе до повторної переіндексації всіх завантажень)"
@@ -1244,20 +1286,6 @@ uk:
           other: "Ця модель зараз використовується: %{settings}. У разі неправильного налаштування функція не працюватиме належним чином. "
         model_description:
           none: "Загальні налаштування, що працюють для більшості мовних моделей"
-          anthropic-claude-opus-4-7: "Найрозумніша модель Anthropic"
-          anthropic-claude-sonnet-4-6: "Оптимальний баланс швидкості та витрат"
-          anthropic-claude-haiku-4-5: "Швидко та економічно ефективно"
-          google-gemini-3-1-pro-preview: "Найрозумніша модель Google"
-          google-gemini-3-6-flash: "Швидкий інтелект передового рівня для агентських навантажень"
-          open_ai-gpt-5-6-sol: "Передова модель OpenAI для складної професійної роботи"
-          open_ai-gpt-5-6-terra: "Балансує інтелект та вартість для вимогливих робочих навантажень"
-          open_ai-gpt-5-6-luna: "Оптимізовано для економічно чутливих, високооб'ємних робочих навантажень"
-          open_router-moonshotai-kimi-k2-6: "Мультимодальна модель Moonshot з можливостями технічного зору"
-          open_router-deepseek-deepseek-v4-flash: "Остання високопродуктивна модель DeepSeek з контекстом 1М"
-          open_router-minimax-minimax-m2-7: "Модель MiniMax з широким контекстом"
-          open_router-x-ai-grok-4-1-fast: "Швидка мультимодальна модель xAI з дуже великим контекстом"
-          open_router-z-ai-glm-5-1: "Модель Z-AI, орієнтована на міркування"
-          open_router-qwen-qwen3-6-plus: "Мультимодальна модель Qwen з 1M контекстом"
         preseeded_model_description: "Попередньо налаштована модель з відкритим кодом, що використовує %{model}"
         configured:
           title: "Налаштовані LLM"
@@ -1461,16 +1489,16 @@ uk:
           model_name: "Назва моделі"
         semantic_search: "Теми (семантикв)"
         semantic_search_results:
-          toggle: "Результати ШІ"
-          unavailable: "Результати ШІ недоступні"
-          zero_results_expanded: "Не знайдено жодного результату, показано %{count} результатів ШІ"
+          toggle: "Пов'язані результати"
+          unavailable: "Пов’язані результати недоступні"
+          zero_results_expanded: "Не знайдено жодного результату, показано %{count} пов'язаних результатів"
         semantic_search_tooltips:
           results_explanation: "Якщо увімкнено, нижче будуть додані додаткові результати пошуку ШІ."
-          invalid_sort: "Результати пошуку повинні бути відсортовані за релевантністю для відображення результатів ШІ"
+          invalid_sort: "Результати пошуку мають бути відсортовані за релевантністю, щоб відображалися пов'язані результати"
           not_submitted: "Надішліть пошуковий запит, щоб увімкнути результати штучного інтелекту"
           no_results: "За цим пошуковим запитом не знайдено результатів ШІ"
-        semantic_search_unavailable_tooltip: "Результати пошуку повинні бути відсортовані за релевантністю для відображення результатів ШІ"
-        ai_generated_result: "Результат пошуку знайдено за допомогою ШІ"
+        semantic_search_unavailable_tooltip: "Результати пошуку мають бути відсортовані за релевантністю, щоб відображалися пов'язані результати"
+        ai_generated_result: "Пов'язаний результат пошуку знайдено за допомогою штучного інтелекту"
         ai_results_notice:
           no_results: "Точних збігів немає, але є кілька схожих результатів."
           few_results:
@@ -1634,20 +1662,52 @@ uk:
             expanded: "Розгорнуто"
             expanded_description: "з резюме ШІ"
       discobot_discoveries:
-        main_title: "Виявлення Discobot"
-        regular_results: "Теми"
-        tell_me_more: "Розкажи мені більше..."
-        continue_convo: "Продовжити розмову..."
+        main_title: "Запитайте ШІ"
         loading_convo: "Завантаження розмови"
-        collapse: "Згорнути"
-        timed_out: "Discobot не зміг знайти жодних знахідок. Щось пішло не так."
+        follow_up:
+          label: "Запитайте про подальші дії"
+          placeholder: "Запитайте про подальші дії"
+          submit: "Запитайте"
+        timed_out: "Функція «Запитай ШІ» зайняла забагато часу для завершення цього пошуку. Спробуйте ще раз або скористайтеся пошуком."
+        request_failed: "Не вдалося розпочати цей пошук за допомогою Ask AI. Спробуйте ще раз або скористайтеся пошуком."
+        no_answer: "Штучний інтелект не зміг знайти чіткої відповіді. Запитайте у спільноти."
+        create_topic: "Створити тему"
+        answer_ready: "Запитайте у ШІ готову відповідь."
         user_setting: "Увімкнути пошук за допомогою штучного інтелекту"
-        tooltip:
-          header: "Пошук зі штучним інтелектом"
-          content: "Пошук природною мовою за допомогою %{model}"
-          actions:
-            info: "Як це працює?"
-            disable: "Вимкнути"
+        legacy:
+          main_title: "Виявлення Discobot"
+          regular_results: "Теми"
+          tell_me_more: "Розкажи мені більше..."
+          continue_convo: "Продовжити розмову..."
+          loading_convo: "Завантаження розмови"
+          collapse: "Згорнути"
+          timed_out: "Discobot не зміг знайти жодних знахідок. Щось пішло не так."
+          tooltip:
+            header: "Пошук зі штучним інтелектом"
+            content: "Пошук природною мовою за допомогою %{model}"
+            actions:
+              info: "Як це працює?"
+              disable: "Вимкнути"
+        search_placeholder: "Пошук або запитайте ШІ"
+        search_type: "ШІ"
+        ask_button: "Запитайте"
+        tip_ask: "запитує ШІ замість пошуку"
+        tip_search: "пошуки замість запитів у штучному інтелекті"
+        make_default: "Зробити ШІ моїм варіантом пошуку за замовчуванням"
+        dismiss_default_preference: "Приховати це налаштування"
+        default_preference_dismissed: "Цей параметр також доступний у ваших налаштуваннях користувача"
+        shortcut_hint: "або %{shortcut}"
+        advanced_with_shortcut: "Відкрити розширений пошук (%{shortcut})"
+        search_all_topics: "Всі теми"
+        search_this_topic: "Ця тема"
+        search_in_context: "В %{name}"
+        search_group_messages: "Повідомлення в %{group}"
+        search_user_posts: "Повідомлення від %{username}"
+        search_messages: "Повідомлення"
+        ask_ai: "ШІ"
+        sources:
+          related_discussions: "Пов'язані теми"
+          show_all_matching: "Показати всі відповідні теми"
       user_preferences:
         empty: "Наразі немає відповідних налаштувань"
     review:
@@ -1657,6 +1717,8 @@ uk:
         rejected_tool_action:
           title: "Інструмент відхилено"
       types:
+        discourse_ai_triage:
+          title: "ШІ-сортування"
         reviewable_ai_post:
           title: "Повідомлення з позначкою ШІ"
         reviewable_ai_chat_message:

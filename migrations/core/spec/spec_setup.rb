@@ -56,6 +56,7 @@ module MigrationsSpecSetup
     ENV["RAILS_ENV"] = "test"
 
     rails_root = File.expand_path("../../..", spec_dir)
+    RSpec.configuration.files_to_run
     Dir.chdir(rails_root) do
       require File.join(rails_root, "spec", "rails_helper")
       warm_asset_processor

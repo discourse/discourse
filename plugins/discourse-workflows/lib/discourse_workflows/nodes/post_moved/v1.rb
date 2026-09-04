@@ -26,37 +26,11 @@ module DiscourseWorkflows
             color: "deep-orange",
           },
           group: "discourse_triggers",
-          events: [:post_moved],
+          event: :post_moved,
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
-            category_ids: {
-              type: :array,
-              required: false,
-              ui: {
-                control: :category,
-                multiple: true,
-              },
-            },
-            include_subcategories: {
-              type: :boolean,
-              required: false,
-              default: true,
-              ui: {
-                control: :checkbox,
-              },
-              display_options: {
-                show: {
-                  category_ids: [{ condition: { exists: true } }],
-                },
-              },
-            },
-            tag_names: {
-              type: :string,
-              required: false,
-              ui: {
-                control: :tags,
-              },
-            },
+            **CATEGORY_FILTER_PROPERTIES,
+            **TAG_FILTER_PROPERTIES,
           },
         )
 
@@ -84,7 +58,11 @@ module DiscourseWorkflows
             destination_topic.category_id,
             category_ids_parameter(trigger_ctx),
             include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-          ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+          ) &&
+            matches_tags?(
+              destination_topic,
+              normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")),
+            )
         end
 
         private
@@ -99,14 +77,6 @@ module DiscourseWorkflows
 
         def original_topic
           @original_topic ||= ::Topic.find_by(id: @original_topic_id)
-        end
-
-        def matches_tags?(tag_names)
-          tag_names.empty? || (destination_topic_tag_names & tag_names).any?
-        end
-
-        def destination_topic_tag_names
-          @destination_topic_tag_names ||= destination_topic.tags.pluck(:name)
         end
       end
     end

@@ -271,9 +271,10 @@ pt_BR:
         search:
           name: "Pesquisar"
           description: "Melhore a experiência de pesquisa ao fornecer respostas geradas por IA para as consultas"
-          discoveries: "Descobertas"
+          ask_ai: "Perguntar à IA"
           setting_groups:
             settings: "Configurações básicas"
+            access_control: "Controle de acesso"
         embeddings:
           name: "Incorporações"
           description: "Alimenta recursos, como tópicos relacionados e pesquisa com IA, ao gerar representações semânticas do texto"
@@ -503,8 +504,6 @@ pt_BR:
         successful: "Realizado(a)"
         failed: "Falha"
         unknown: "Desconhecido"
-        topic_id: "ID do tópico"
-        post_id: "ID da postagem"
         time: "Hora"
         when: "Quando"
         outcome: "Resultado"
@@ -520,9 +519,7 @@ pt_BR:
         duration: "Duração"
         cost: "Custo"
         actions: "Ações"
-        filters:
-          title: "Filtros"
-          period: "Período"
+        view_details: "Detalhes"
         periods:
           hour: "Última hora"
           day: "Últimas 24 horas"
@@ -786,11 +783,6 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-7: "Modelo mais inteligente da Anthropic"
-          anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
-          anthropic-claude-haiku-4-5: "Rápido e econômico"
-          google-gemini-3-1-pro-preview: "O modelo mais inteligente do Google"
-          open_router-moonshotai-kimi-k2-6: "Modelo multimodal da Moonshot com recursos de visão"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
           title: "LLMs configurados"
@@ -961,17 +953,10 @@ pt_BR:
         provider_fields:
           model_name: "Nome do modelo"
         semantic_search: "Tópicos (semântica)"
-        semantic_search_results:
-          toggle: "Resultados de IA"
-          unavailable: "Resultados de IA indisponíveis"
-          zero_results_expanded: "Nenhum resultado encontrado; exibindo %{count} resultados de IA"
         semantic_search_tooltips:
           results_explanation: "Ao ativar esta opção, os resultados de pesquisa com IA são adicionados abaixo."
-          invalid_sort: "Os resultados das pesquisas devem ser classificados por ordem de relevância para exibir resultados com IA"
           not_submitted: "Envie uma pesquisa para ativar os resultados da IA."
           no_results: "Nenhum resultado de IA foi encontrado para esta pesquisa."
-        semantic_search_unavailable_tooltip: "Os resultados das pesquisas devem ser classificados por ordem de relevância para exibir resultados com IA"
-        ai_generated_result: "Resultado de pesquisa encontrado usando IA"
         quick_search:
           suffix: "em todos os tópicos e postagens com IA"
       ai_artifact:
@@ -1101,20 +1086,29 @@ pt_BR:
             expanded: "Expandido(a)"
             expanded_description: "com resumos de IA"
       discobot_discoveries:
-        main_title: "Descobertas do Discobot"
-        regular_results: "Tópicos"
-        tell_me_more: "Conte mais..."
-        continue_convo: "Continuar conversa"
+        main_title: "Perguntar à IA"
         loading_convo: "Carregando conversa"
-        collapse: "Recolher"
-        timed_out: "O discobot não conseguiu encontrar mais nenhuma descoberta. Algo deu errado."
         user_setting: "Ativar descobertas de pesquisa com IA"
-        tooltip:
-          header: "Pesquisa alimentada por IA"
-          content: "Pequisa em linguagem natural desenvolvida pelo %{model}"
-          actions:
-            info: "Como funciona?"
-            disable: "Desativar"
+        legacy:
+          main_title: "Descobertas do Discobot"
+          regular_results: "Tópicos"
+          tell_me_more: "Conte mais..."
+          continue_convo: "Continuar conversa"
+          loading_convo: "Carregando conversa"
+          collapse: "Recolher"
+          timed_out: "O discobot não conseguiu encontrar mais nenhuma descoberta. Algo deu errado."
+          tooltip:
+            header: "Pesquisa alimentada por IA"
+            content: "Pequisa em linguagem natural desenvolvida pelo %{model}"
+            actions:
+              info: "Como funciona?"
+              disable: "Desativar"
+        search_type: "IA"
+        search_all_topics: "Todos os tópicos"
+        search_messages: "Mensagens"
+        ask_ai: "IA"
+        sources:
+          related_discussions: "Tópicos relacionados"
       user_preferences:
         empty: "Não há configurações relevantes disponíveis no momento"
     review:

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Pesquisar"
+      categories:
+        label: "Categorias"
+      about:
+        label: "Sobre"
+      guidelines:
+        label: "Diretrizes"
   dates:
     short_date_no_year: "D de MMM"
     short_date: "D de MMM de YYYY"
@@ -979,6 +991,7 @@ pt_BR:
       windows: "Microsoft Windows"
       unknown: "sistema operacional desconhecido"
   admin_site_traffic_explorer:
+    unknown: "Desconhecido"
     traffic_types:
       anonymous: "Anônimo(a)"
   change_email:
@@ -1274,6 +1287,11 @@ pt_BR:
         share: "Compartilhar"
       types:
         staff: "Equipe"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuário(a)"
+        count: "Postagens"
+        share: "Compartilhar"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1830,7 +1848,6 @@ pt_BR:
     allowed_iframes: "A lista de prefixos de URL do src iframe que o Discourse pode permitir com segurança nas postagens.* pode ser usado para corresponder a qualquer quantidade de caracteres diferentes de /."
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
     blocked_crawler_user_agents: "Palavra sem diferenciação de maiúsculas e minúsculas na linha do agente do(a) usuário(a) que identifica os rastreadores da web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
-    llms_txt: "Faça o upload de um arquivo de texto para ser disponibilizado em /llms.txt para os crawlers de LLM. Veja <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> para mais informações."
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Restrinja quem incorpora este site em iframes via CSP. Controle os hosts permitidos em <a href='%{base_path}/admin/customize/embedding'>Incorporação</a>"
     content_security_policy_script_src: "Fontes de scripts adicionais na lista de permissões. O host e CDN atual estão inclusos por padrão. Consulte <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigue ataques XSS com a política de segurança de conteúdo.</a> (CSP). Outras fontes de hosts são ignoradas, pois a dinâmica estrita está ativada."
@@ -1843,7 +1860,7 @@ pt_BR:
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento e em qual ordem."
     allow_username_in_share_links: "Permitir que nomes de usuário sejam incluídos em links de compartilhamento. Isso é útil para recompensar emblemas com base em visitantes únicos."
     site_contact_username: "Um nome de usuário(a) válido da equipe do qual enviar todas as mensagens automáticas. Se for deixado em branco, a conta padrão do sistema será utilizada."
-    site_contact_group_name: "Um nome válido de um grupo convidado para todas as mensagens pessoais enviadas automaticamente."
+    site_contact_group_name: "O grupo convidado para todas as mensagens pessoais enviadas automaticamente."
     send_welcome_message: "Envie aos(às) novos(as) usuários(as) uma mensagem de boas-vindas com um guia de início rápido."
     send_tl1_welcome_message: "Envie aos(às) novos(as) usuários(as) do nível de confiança 1 uma mensagem de boas-vindas."
     send_tl2_promotion_message: "Envie a usuários(as) de nível de confiança 2 uma mensagem sobre promoção."
@@ -2450,7 +2467,6 @@ pt_BR:
       invalid_email: "Endereço de e-mail inválido"
       invalid_username: "Não há nenhum(a) usuário(a) com este nome de usuário(a)."
       valid_username: "Há um(a) usuário(a) com este nome de usuário(a)."
-      invalid_group: "Não há nenhum grupo com este nome."
       invalid_svg: "A imagem SVG é inválida. Ela deve conter um elemento SVG e nenhum script ou manipulador de eventos."
       invalid_upload: "O arquivo carregado é inválido ou não existe."
       invalid_topic: "Não há nenhum tópico com este ID."

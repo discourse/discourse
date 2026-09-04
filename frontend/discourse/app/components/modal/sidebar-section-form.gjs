@@ -24,7 +24,7 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { eq, has, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
-import DSelect from "discourse/ui-kit/d-select";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -460,7 +460,7 @@ export default class SidebarSectionForm extends Component {
           "sidebar_sections",
           this.currentUser.sidebar_sections.concat(data.sidebar_section)
         );
-        this.closeModal();
+        this.closeModal({ createdSection: data.sidebar_section });
       })
       .catch((e) => {
         this.flash = sanitize(extractError(e));
@@ -1237,7 +1237,7 @@ export default class SidebarSectionForm extends Component {
                 data-locale={{group.locale}}
               >
                 <div class="sidebar-section-translations__language-header">
-                  <DSelect
+                  <DNativeSelect
                     @value={{group.locale}}
                     @onChange={{fn this.setGroupLocale group}}
                     @includeNone={{false}}
@@ -1253,7 +1253,7 @@ export default class SidebarSectionForm extends Component {
                         disabled={{locale.disabled}}
                       >{{locale.name}}</select.Option>
                     {{/each}}
-                  </DSelect>
+                  </DNativeSelect>
 
                   <DButton
                     @action={{fn this.removeLanguage group}}
@@ -1306,7 +1306,7 @@ export default class SidebarSectionForm extends Component {
                   {{i18n "sidebar.sections.custom.localizations.language"}}
                 </label>
 
-                <DSelect
+                <DNativeSelect
                   @value={{this.transformedModel.locale}}
                   @onChange={{this.setSourceLocale}}
                   @includeNone={{false}}
@@ -1319,7 +1319,7 @@ export default class SidebarSectionForm extends Component {
                       @value={{locale.value}}
                     >{{locale.name}}</select.Option>
                   {{/each}}
-                </DSelect>
+                </DNativeSelect>
 
                 <p class="sidebar-section-form__source-locale-description">
                   {{i18n

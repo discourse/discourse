@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 hr:
+  llms_txt:
+    sections:
+      optional: "Neobvezno"
+    links:
+      search:
+        label: "Pretraživanje"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nama"
+      guidelines:
+        label: "Vodić za uporabu"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, GGGG"
@@ -726,6 +738,7 @@ hr:
       windows: "Microsoft Windows"
       unknown: "nepoznati operacijski sustav"
   admin_site_traffic_explorer:
+    unknown: "Nepoznato"
     traffic_types:
       anonymous: "Anonimno"
   change_email:
@@ -943,6 +956,11 @@ hr:
         share: "Podijeli"
       types:
         staff: "Osoblje"
+    posters_by_member_type_members:
+      labels:
+        user: "Korisnik"
+        count: "Postovi"
+        share: "Podijeli"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1300,6 +1318,7 @@ hr:
     cors_origins: "Dopušteni izvori za zahtjeve s različitim izvorima (CORS). Svako podrijetlo mora sadržavati http:// ili https://. Varijabla env DISCOURSE_ENABLE_CORS mora biti postavljena na true da bi se omogućio CORS."
     blocked_ip_blocks: "Popis privatnih IP blokova koje Discourse nikada ne bi trebao indeksirati"
     allowed_internal_hosts: "Popis internih hostova koje diskurs može sigurno indeksirati za oneboxing i druge svrhe"
+    site_contact_group_name: "Grupa koja je pozvana na sve automatski poslane osobne poruke."
     version_checks: "Pingaj Discourse Hub za dostupna ažuriranja i prikaži obavijesti o novim verzijama na <a href='%{base_path}/admin' target='_blank'>/admin</a> nadzornoj ploči"
     min_username_length: "Minimalna duljina korisničkog imena u znakovima. UPOZORENJE: ako bilo koji postojeći korisnik ili grupa ima imena kraća od ovoga, vaša stranica će se pokvariti!"
     max_username_length: "Maksimalna duljina korisničkog imena u znakovima. UPOZORENJE: ako postojeći korisnici ili grupe imaju imena duža od ovog, vaša će stranica pokvariti!"
@@ -1508,7 +1527,6 @@ hr:
       invalid_email: "Nevažeća adresa e-pošte."
       invalid_username: "Ne postoji korisnik s tim korisničkim imenom."
       valid_username: "Postoji korisnik s tim korisničkim imenom."
-      invalid_group: "Ne postoji grupa s tim nazivom."
       invalid_integer_min_max: "Vrijednost mora biti između %{min} i %{max}."
       invalid_integer_min: "Vrijednost mora biti %{min} ili veća."
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."

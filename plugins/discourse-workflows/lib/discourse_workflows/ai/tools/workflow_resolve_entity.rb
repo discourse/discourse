@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Ai
     module Tools
       class WorkflowResolveEntity < Base
-        SUPPORTED_KINDS = %w[category tag user group badge data_table].freeze
+        SUPPORTED_KINDS = %w[category tag tag_group user group badge data_table].freeze
         MAX_RESULTS = 10
 
         def self.signature
@@ -60,6 +60,15 @@ module DiscourseWorkflows
         def resolve_tag(query)
           Tag
             .where("name ILIKE ?", "%#{Tag.sanitize_sql_like(query)}%")
+            .order(:name)
+            .limit(MAX_RESULTS)
+            .pluck(:id, :name)
+            .map { |id, name| { id: id, name: name } }
+        end
+
+        def resolve_tag_group(query)
+          ::TagGroup
+            .where("name ILIKE ?", "%#{::TagGroup.sanitize_sql_like(query)}%")
             .order(:name)
             .limit(MAX_RESULTS)
             .pluck(:id, :name)
