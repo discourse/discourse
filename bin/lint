@@ -21,6 +21,29 @@ module Logging
   end
 end
 
+module ArgumentBatcher
+  MAX_ARGV_BYTES = 100_000
+
+  def self.batches(files, per_file_overhead: 1)
+    batches = [[]]
+    size = 0
+
+    files.each do |file|
+      entry = file.bytesize + per_file_overhead
+
+      if size + entry > MAX_ARGV_BYTES && batches.last.any?
+        batches << []
+        size = 0
+      end
+
+      batches.last << file
+      size += entry
+    end
+
+    batches
+  end
+end
+
 class ExternalLinter
   include Logging
 
@@ -85,8 +108,16 @@ class ExternalLinter
     frozen = @fix ? {} : { "BUNDLE_FROZEN" => "true" }
     return @results << ["bundle install", false] unless run_cmd("bundle", "install", env: frozen)
 
-    run_linter("stree", "bundle", "exec", "stree", @fix ? "write" : "check", *files)
-    run_linter("rubocop", "bundle", "exec", "rubocop", *(@fix ? ["--autocorrect"] : []), *files)
+    ArgumentBatcher
+      .batches(files)
+      .each do |batch|
+        run_linter("stree", "bundle", "exec", "stree", @fix ? "write" : "check", *batch)
+      end
+    ArgumentBatcher
+      .batches(files)
+      .each do |batch|
+        run_linter("rubocop", "bundle", "exec", "rubocop", *(@fix ? ["--autocorrect"] : []), *batch)
+      end
   end
 
   def run_js_linters(files)
@@ -98,7 +129,9 @@ class ExternalLinter
       matching = files.select { |file| extension_in?(file, extensions) }
       next if matching.empty?
 
-      run_linter(name, *PNPM, name, *(@fix ? fix_args : check_args), *matching)
+      ArgumentBatcher
+        .batches(matching)
+        .each { |batch| run_linter(name, *PNPM, name, *(@fix ? fix_args : check_args), *batch) }
     end
   end
 end
@@ -133,7 +166,11 @@ class LefthookLinter
   ].freeze
   RUBY_SHEBANG = "#!/usr/bin/env ruby"
 
-  MAX_ARGV_BYTES = 100_000
+  CORE_FRONTEND_PATHS = %w[frontend/ plugins/ themes/].freeze
+  CORE_STYLESHEET_PATHS = %w[app/assets/stylesheets/].freeze
+  DEVELOPER_DOCS_PATH = "docs/developer-guides/"
+  DEVELOPER_DOCS_EXTENSIONS = %w[md json mjs yml].freeze
+
   FILE_FLAG_BYTES = "--file".bytesize + 2
 
   def initialize(options = {})
@@ -158,7 +195,9 @@ class LefthookLinter
     return if files.empty?
 
     core, external = partition_files(files)
+    core, skipped = core.partition { |file| core_lintable_file?(file) }
 
+    log "No core linter for: #{skipped.join(", ")}" if skipped.any?
     run_lefthook(hook, core) if core.any?
     external.each { |root, paths| run_external(root, paths) }
   end
@@ -237,9 +276,11 @@ class LefthookLinter
   def expand_directory(path)
     files =
       git_lines("ls-files", "--cached", "--others", "--exclude-standard", "--", path, quiet: true)
-    files = Dir.glob(File.join(path, "**", "*")) if files.empty?
+    files = [path] if files.empty?
 
-    files.select { |file| File.file?(file) && lintable_file?(file) }
+    files
+      .flat_map { |file| File.directory?(file) ? Dir.glob(File.join(file, "**", "*")) : file }
+      .select { |file| File.file?(file) && lintable_file?(file) }
   end
 
   def git_lines(*args, quiet: false)
@@ -265,6 +306,26 @@ class LefthookLinter
 
   def wip_files
     git_lines("diff", "main...HEAD", "--name-only") + staged_files + unstaged_files
+  end
+
+  def core_lintable_file?(file)
+    return false if file.start_with?("../")
+    return true if file == "Gemfile"
+
+    extension = File.extname(file)[1..]
+    return ruby_script?(file) if extension.nil? || extension.empty?
+    return true if ExternalLinter::RUBY_EXTENSIONS.include?(extension)
+    return true if %w[yml yaml].include?(extension)
+
+    if file.start_with?(DEVELOPER_DOCS_PATH)
+      return true if DEVELOPER_DOCS_EXTENSIONS.include?(extension)
+    end
+
+    return false unless ExternalLinter::JS_EXTENSIONS.include?(extension)
+
+    paths = CORE_FRONTEND_PATHS
+    paths += CORE_STYLESHEET_PATHS if %w[css scss].include?(extension)
+    paths.any? { |path| file.start_with?(path) }
   end
 
   def lintable_file?(file)
@@ -334,35 +395,18 @@ class LefthookLinter
     log "Running core linters via lefthook..."
 
     outcomes =
-      batch_files(files).map do |batch|
-        cmd = ["pnpm", "lefthook", "run", hook]
-        batch.each { |file| cmd << "--file" << file }
-        cmd << "--verbose" if @verbose
+      ArgumentBatcher
+        .batches(files, per_file_overhead: FILE_FLAG_BYTES)
+        .map do |batch|
+          cmd = ["pnpm", "lefthook", "run", hook]
+          batch.each { |file| cmd << "--file" << file }
+          cmd << "--verbose" if @verbose
 
-        debug "Running: #{cmd.shelljoin}"
-        system({ "LEFTHOOK" => "1" }, *cmd)
-      end
+          debug "Running: #{cmd.shelljoin}"
+          system({ "LEFTHOOK" => "1" }, *cmd)
+        end
 
     @results << ["core linters", outcomes.all?]
-  end
-
-  def batch_files(files)
-    batches = [[]]
-    size = 0
-
-    files.each do |file|
-      entry = file.bytesize + FILE_FLAG_BYTES
-
-      if size + entry > MAX_ARGV_BYTES && batches.last.any?
-        batches << []
-        size = 0
-      end
-
-      batches.last << file
-      size += entry
-    end
-
-    batches
   end
 
   def normalize_relative_path(file)
