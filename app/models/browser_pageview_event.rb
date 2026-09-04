@@ -321,7 +321,6 @@ end
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
-#  idx_bpe_normalized_language_backfill         (source,created_at DESC,id DESC) WHERE ((normalized_language IS NULL) AND (language IS NOT NULL))
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_normalized_url_version               (normalized_url_version)
 #  idx_bpe_session_created_at                   (session_id,created_at)

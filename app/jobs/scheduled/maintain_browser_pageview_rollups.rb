@@ -17,7 +17,6 @@ module Jobs
       backfill_urls(recompute_entry_urls: entry_url_rollups_initialized)
       aggregate_entry_urls if referrer_backfill_complete? && url_backfill_complete?
       backfill_browsers
-      backfill_languages
     end
 
     private
@@ -325,38 +324,6 @@ module Jobs
           WHERE created_at >= :retention_cutoff
             AND #{BrowserPageviewEvent.rollup_source_condition}
             AND browser IS NULL
-          ORDER BY created_at DESC, id DESC
-          LIMIT :limit
-        SQL
-    end
-
-    def backfill_languages
-      rows = language_batch
-      return if rows.empty?
-
-      ids = rows.map(&:id)
-      normalized_languages =
-        rows.map { |row| BrowserPageviewEventLanguageNormalizer.normalize(row.language) }
-
-      DB.exec(<<~SQL, ids: ids, normalized_languages: normalized_languages)
-          UPDATE browser_pageview_events AS events
-          SET normalized_language = data.normalized_language
-          FROM unnest(
-            ARRAY[:ids]::bigint[],
-            ARRAY[:normalized_languages]::text[]
-          ) AS data(id, normalized_language)
-          WHERE events.id = data.id
-        SQL
-    end
-
-    def language_batch
-      DB.query(<<~SQL, retention_cutoff: BrowserPageviewEvent.retention_cutoff, limit: batch_size)
-          SELECT id, language
-          FROM browser_pageview_events
-          WHERE created_at >= :retention_cutoff
-            AND #{BrowserPageviewEvent.rollup_source_condition}
-            AND language IS NOT NULL
-            AND normalized_language IS NULL
           ORDER BY created_at DESC, id DESC
           LIMIT :limit
         SQL
