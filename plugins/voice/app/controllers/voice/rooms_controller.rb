@@ -428,17 +428,14 @@ module Voice
 
     def participants
       guardian.ensure_can_join_voice_room!(@room)
-      all_metadata = Voice::ParticipantTracker.get_all_metadata(@room.id)
       render json: {
                participants:
-                 Voice::ParticipantTracker
-                   .list(@room.id)
-                   .map do |user|
-                     BasicUserSerializer
-                       .new(user, scope: guardian, root: false)
-                       .as_json
-                       .merge(all_metadata[user.id] || {})
-                   end,
+                 Voice::RoomBroadcaster.participant_entries(
+                   @room,
+                   Voice::ParticipantTracker.list(@room.id),
+                   guardian: guardian,
+                   metadata: Voice::ParticipantTracker.get_all_metadata(@room.id),
+                 ),
              }
     end
 

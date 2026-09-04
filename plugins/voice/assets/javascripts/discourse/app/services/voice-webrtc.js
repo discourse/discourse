@@ -393,6 +393,8 @@ export default class VoiceWebrtcService extends Service {
         this.#remoteStreamRegistry.userIdsFor(roomId),
       removeRemoteStream: (roomId, userId) =>
         this.#removeRemoteStream(roomId, userId),
+      removeRemoteMedia: (roomId, userId, options) =>
+        this.#remoteStreamRegistry.removeMedia(roomId, userId, options),
       removeAllRemoteStreams: (roomId) => this.#removeAllRemoteStreams(roomId),
       getLocalVideoKind: () => this.localVideoKind,
       syncVideoSenders: (roomId) => this.#localVideo.syncSenders(roomId),
@@ -1783,18 +1785,25 @@ export default class VoiceWebrtcService extends Service {
   }
 
   // Mesh receive-side media boundary: only register (and therefore play) a
-  // remote track the sender's server-attested role and the room's media
-  // policy allow. On LiveKit the SFU enforces publish permissions instead.
+  // remote track the sender's server-attested role, entitlements and the
+  // room's media policy allow. On LiveKit the SFU enforces publish
+  // permissions instead.
   #registerRemoteTrack(roomId, userId, track, streams) {
     const room = this.voiceRooms?.roomById(roomId);
-    if (!remoteTrackAllowed(room, userId, track, streams)) {
+    const mesh = this.#isMeshRoom(roomId);
+    if (!remoteTrackAllowed(room, userId, track, streams, { mesh })) {
       voiceLog.warn(
         `[voice] dropping ${track?.kind} track from peer: not allowed to publish in room ${roomId}`
       );
-      try {
-        track?.stop();
-      } catch {
-        // a remote track may already be ended
+      // A pre-negotiated video or screen-audio receiver keeps one track for
+      // the connection's lifetime, so stopping it would leave the sender dark
+      // even once allowed. Left unregistered, it is never played.
+      if (track?.kind === "audio" && streams?.length) {
+        try {
+          track.stop();
+        } catch {
+          // a remote track may already be ended
+        }
       }
       return;
     }

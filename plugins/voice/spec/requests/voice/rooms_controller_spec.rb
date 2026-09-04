@@ -1370,6 +1370,17 @@ RSpec.describe Voice::RoomsController do
       participant_ids = response.parsed_body["participants"].map { |p| p["id"] }
       expect(participant_ids).to include(private_room_member.id)
     end
+
+    it "carries each participant's media entitlements, like the broadcast roster" do
+      SiteSetting.voice_video_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      SiteSetting.voice_screen_share_allowed_groups = ""
+      sign_in(private_room_member)
+
+      get "/voice/rooms/#{private_room.id}/participants.json"
+
+      entry = response.parsed_body["participants"].find { |p| p["id"] == private_room_member.id }
+      expect(entry).to include("can_publish_video" => true, "can_screen_share" => false)
+    end
   end
 
   describe "#heartbeat on a private room" do

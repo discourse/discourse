@@ -311,6 +311,33 @@ RSpec.describe Voice::GuardianExtension do
       expect(room_speaker.guardian.can_screen_share_in_voice_room?(private_room)).to eq(true)
     end
 
+    # Clients apply the role themselves, so a promotion takes effect without
+    # the room being re-serialized for the promoted user.
+    it "keeps a stage listener eligible so a promotion needs no fresh payload" do
+      private_room.update!(room_type: Voice::Room::ROOM_TYPE_STAGE)
+
+      expect(member.guardian.eligible_to_publish_video_in_voice_room?(private_room)).to eq(true)
+      expect(member.guardian.eligible_to_screen_share_in_voice_room?(private_room)).to eq(true)
+    end
+
+    it "is not eligible when the group or access says no" do
+      SiteSetting.voice_video_allowed_groups = ""
+
+      expect(member.guardian.eligible_to_publish_video_in_voice_room?(private_room)).to eq(false)
+      expect(outsider.guardian.eligible_to_screen_share_in_voice_room?(private_room)).to eq(false)
+    end
+
+    # The room flag reaches clients through anonymous broadcasts that can't
+    # refresh a per-user field, so folding it in would strand a "no" after
+    # the room's media is turned back on.
+    it "stays eligible while the room's media is off, but cannot publish" do
+      private_room.update!(video_enabled: false)
+
+      expect(member.guardian.eligible_to_screen_share_in_voice_room?(private_room)).to eq(true)
+      expect(member.guardian.can_screen_share_in_voice_room?(private_room)).to eq(false)
+      expect(member.guardian.can_publish_video_in_voice_room?(private_room)).to eq(false)
+    end
+
     it "is false for a user who cannot join the room" do
       expect(outsider.guardian.can_publish_video_in_voice_room?(private_room)).to eq(false)
       expect(outsider.guardian.can_screen_share_in_voice_room?(private_room)).to eq(false)

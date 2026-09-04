@@ -74,12 +74,12 @@ module Voice
     end
 
     def active_participants
-      tracked_participants.map do |user|
-        BasicUserSerializer
-          .new(user, scope: scope, root: false)
-          .as_json
-          .merge(participant_metadata[user.id] || {})
-      end
+      Voice::RoomBroadcaster.participant_entries(
+        object,
+        tracked_participants,
+        guardian: scope,
+        metadata: participant_metadata,
+      )
     end
 
     def room_type
@@ -112,10 +112,11 @@ module Voice
     end
 
     # Per-user publish rights, so they are omitted from the anonymously-scoped
-    # directory broadcasts (the client keeps the ones it already knows) and the
-    # room's own video_enabled remains the field a broadcast revokes through.
+    # directory broadcasts (the client keeps the ones it already knows). The
+    # room's own video_enabled and the stage role are left out: broadcasts
+    # carry both live and the client combines them with these.
     def video_allowed
-      scope.can_publish_video_in_voice_room?(object)
+      scope.eligible_to_publish_video_in_voice_room?(object)
     end
 
     def include_video_allowed?
@@ -123,7 +124,7 @@ module Voice
     end
 
     def screen_share_allowed
-      scope.can_screen_share_in_voice_room?(object)
+      scope.eligible_to_screen_share_in_voice_room?(object)
     end
 
     def include_screen_share_allowed?
