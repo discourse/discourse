@@ -51,6 +51,8 @@ RSpec/InstanceVariable:
 Style/AccessModifierDeclarations:
   Enabled: true
   AllowModifiersOnSymbols: false
+  Exclude:
+    - "**/spec/fabricators/**/*.rb"
 
 Style/RedundantFreeze:
   Enabled: true

@@ -22,9 +22,7 @@ class CSRFTokenVerifier
     raise InvalidCSRFToken unless verified_request?
   end
 
-  # rubocop:disable Style/AccessModifierDeclarations
-  public :form_authenticity_token
-  # rubocop:enable Style/AccessModifierDeclarations
+  public :form_authenticity_token # rubocop:disable Style/AccessModifierDeclarations
 
   private
 

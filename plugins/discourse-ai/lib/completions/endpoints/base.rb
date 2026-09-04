@@ -203,6 +203,155 @@ module DiscourseAi
           )
         end
 
+        def final_log_update(log)
+          # for people that need to override
+        end
+
+        def estimated_cost_for(log)
+          llm_model.estimated_cost_for_tokens(
+            request_tokens: log.request_tokens,
+            response_tokens: log.response_tokens,
+            cache_read_tokens: log.cache_read_tokens,
+            cache_write_tokens: log.cache_write_tokens,
+          )
+        end
+
+        def default_options
+          raise NotImplementedError
+        end
+
+        def provider_id
+          raise NotImplementedError
+        end
+
+        def prompt_size(prompt)
+          tokenizer.size(extract_prompt_for_tokenizer(prompt))
+        end
+
+        attr_reader :llm_model
+
+        # Extra HTTP headers contributed by registered providers for this
+        # request. Endpoints that want them merge the result into their request
+        # headers. Provider failures are isolated so they can never break a
+        # completion.
+        def extra_request_headers
+          providers = self.class.request_headers_providers
+          return {} if providers.blank?
+
+          context =
+            RequestHeaderContext.new(
+              llm_model: llm_model,
+              feature_name: @feature_name,
+              feature_context: @feature_context,
+              has_images: @request_has_images,
+              streaming: @streaming_mode,
+            )
+
+          providers.each_with_object({}) do |provider, headers|
+            result = provider.call(context)
+            headers.merge!(result.stringify_keys) if result.is_a?(Hash)
+          rescue StandardError => e
+            Discourse.warn_exception(
+              e,
+              message: "Discourse AI request header provider raised an error; skipping it",
+            )
+          end
+        end
+
+        protected
+
+        def tokenizer
+          llm_model.tokenizer_class
+        end
+
+        # Detects whether the translated prompt carries image content, so
+        # providers can flag vision requests. Mirrors the OpenAI-compatible
+        # shape (messages with an array content holding "image_url" parts) used
+        # by the providers that consume this; degrades to false otherwise.
+        def prompt_has_images?(translated_prompt)
+          return false if !translated_prompt.is_a?(Array)
+
+          translated_prompt.any? do |message|
+            content = message[:content] if message.is_a?(Hash)
+            content.is_a?(Array) &&
+              content.any? { |part| part.is_a?(Hash) && part[:type] == "image_url" }
+          end
+        rescue StandardError
+          false
+        end
+
+        # should normalize temperature, max_tokens, stop_words to endpoint specific values
+        def normalize_model_params(model_params)
+          raise NotImplementedError
+        end
+
+        def resolve_thinking_config(_model_params)
+          DiscourseAi::Completions::ThinkingConfig.disabled
+        end
+
+        def apply_thinking_config_to_model_params(model_params)
+          return model_params if thinking_config.blank?
+
+          if thinking_config.reserved_output_tokens
+            model_params[:reserved_output_tokens] = thinking_config.reserved_output_tokens
+          end
+
+          model_params
+        end
+
+        def thinking_configured?
+          thinking_config.present? && !thinking_config.unsupported? &&
+            (thinking_config.enabled? || thinking_config.explicit_none?)
+        end
+
+        def strip_sampling_params_for_thinking!(model_params)
+          return model_params if thinking_config.blank?
+
+          model_params.delete(:temperature) if thinking_config.strip_temperature?
+          model_params.delete(:top_p) if thinking_config.strip_top_p?
+          model_params
+        end
+
+        def model_uri
+          raise NotImplementedError
+        end
+
+        def prepare_payload(_prompt, _model_params)
+          raise NotImplementedError
+        end
+
+        def provider_model_params(model_params)
+          model_params.except(:thinking_effort, :reserved_output_tokens, :provider_output_tokens)
+        end
+
+        def prepare_request(_payload)
+          raise NotImplementedError
+        end
+
+        def decode(_response_raw)
+          raise NotImplementedError
+        end
+
+        def decode_chunk_finish
+          []
+        end
+
+        def decode_chunk(_chunk)
+          raise NotImplementedError
+        end
+
+        def extract_prompt_for_tokenizer(prompt)
+          prompt.map { |message| message[:content] || message["content"] || "" }.join("\n")
+        end
+
+        def xml_tools_enabled?
+          raise NotImplementedError
+        end
+
+        def disable_streaming?
+          @disable_streaming = !!llm_model.lookup_custom_param("disable_streaming")
+        end
+
         private
 
         def replay_non_streaming_as_streaming!(
@@ -502,159 +651,6 @@ module DiscourseAi
         rescue IOError, StandardError
           raise if !cancelled
         end
-
-        public
-
-        def final_log_update(log)
-          # for people that need to override
-        end
-
-        def estimated_cost_for(log)
-          llm_model.estimated_cost_for_tokens(
-            request_tokens: log.request_tokens,
-            response_tokens: log.response_tokens,
-            cache_read_tokens: log.cache_read_tokens,
-            cache_write_tokens: log.cache_write_tokens,
-          )
-        end
-
-        def default_options
-          raise NotImplementedError
-        end
-
-        def provider_id
-          raise NotImplementedError
-        end
-
-        def prompt_size(prompt)
-          tokenizer.size(extract_prompt_for_tokenizer(prompt))
-        end
-
-        attr_reader :llm_model
-
-        # Extra HTTP headers contributed by registered providers for this
-        # request. Endpoints that want them merge the result into their request
-        # headers. Provider failures are isolated so they can never break a
-        # completion.
-        def extra_request_headers
-          providers = self.class.request_headers_providers
-          return {} if providers.blank?
-
-          context =
-            RequestHeaderContext.new(
-              llm_model: llm_model,
-              feature_name: @feature_name,
-              feature_context: @feature_context,
-              has_images: @request_has_images,
-              streaming: @streaming_mode,
-            )
-
-          providers.each_with_object({}) do |provider, headers|
-            result = provider.call(context)
-            headers.merge!(result.stringify_keys) if result.is_a?(Hash)
-          rescue StandardError => e
-            Discourse.warn_exception(
-              e,
-              message: "Discourse AI request header provider raised an error; skipping it",
-            )
-          end
-        end
-
-        protected
-
-        def tokenizer
-          llm_model.tokenizer_class
-        end
-
-        # Detects whether the translated prompt carries image content, so
-        # providers can flag vision requests. Mirrors the OpenAI-compatible
-        # shape (messages with an array content holding "image_url" parts) used
-        # by the providers that consume this; degrades to false otherwise.
-        def prompt_has_images?(translated_prompt)
-          return false if !translated_prompt.is_a?(Array)
-
-          translated_prompt.any? do |message|
-            content = message[:content] if message.is_a?(Hash)
-            content.is_a?(Array) &&
-              content.any? { |part| part.is_a?(Hash) && part[:type] == "image_url" }
-          end
-        rescue StandardError
-          false
-        end
-
-        # should normalize temperature, max_tokens, stop_words to endpoint specific values
-        def normalize_model_params(model_params)
-          raise NotImplementedError
-        end
-
-        def resolve_thinking_config(_model_params)
-          DiscourseAi::Completions::ThinkingConfig.disabled
-        end
-
-        def apply_thinking_config_to_model_params(model_params)
-          return model_params if thinking_config.blank?
-
-          if thinking_config.reserved_output_tokens
-            model_params[:reserved_output_tokens] = thinking_config.reserved_output_tokens
-          end
-
-          model_params
-        end
-
-        def thinking_configured?
-          thinking_config.present? && !thinking_config.unsupported? &&
-            (thinking_config.enabled? || thinking_config.explicit_none?)
-        end
-
-        def strip_sampling_params_for_thinking!(model_params)
-          return model_params if thinking_config.blank?
-
-          model_params.delete(:temperature) if thinking_config.strip_temperature?
-          model_params.delete(:top_p) if thinking_config.strip_top_p?
-          model_params
-        end
-
-        def model_uri
-          raise NotImplementedError
-        end
-
-        def prepare_payload(_prompt, _model_params)
-          raise NotImplementedError
-        end
-
-        def provider_model_params(model_params)
-          model_params.except(:thinking_effort, :reserved_output_tokens, :provider_output_tokens)
-        end
-
-        def prepare_request(_payload)
-          raise NotImplementedError
-        end
-
-        def decode(_response_raw)
-          raise NotImplementedError
-        end
-
-        def decode_chunk_finish
-          []
-        end
-
-        def decode_chunk(_chunk)
-          raise NotImplementedError
-        end
-
-        def extract_prompt_for_tokenizer(prompt)
-          prompt.map { |message| message[:content] || message["content"] || "" }.join("\n")
-        end
-
-        def xml_tools_enabled?
-          raise NotImplementedError
-        end
-
-        def disable_streaming?
-          @disable_streaming = !!llm_model.lookup_custom_param("disable_streaming")
-        end
-
-        private
 
         def start_completion_log(
           request_body:,
