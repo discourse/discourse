@@ -24,6 +24,13 @@ describe "Reviewables" do
     end
 
     describe "reviewable actions" do
+      let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
+
+      def open_agree_and_edit
+        PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide").expand
+        find("[data-value='post-agree_and_edit']").click
+      end
+
       it "should have agree_and_edit action" do
         visit("/review")
         select_kit =
@@ -33,17 +40,42 @@ describe "Reviewables" do
         expect(select_kit).to have_option_value("post-agree_and_edit")
       end
 
-      it "agree_and_edit should open the composer" do
+      it "agree_and_edit does not touch the flag until the edit is saved" do
         visit("/review")
-        select_kit =
-          PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
-        select_kit.expand
 
-        find("[data-value='post-agree_and_edit']").click
+        open_agree_and_edit
 
-        expect(composer).to be_opened
-        expect(composer.composer_input.value).to eq(post.raw)
+        expect(composer).to have_value(post.raw)
+        expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
+
+        composer.fill_content("The moderator changed their mind about this.")
+        composer.discard
+
+        expect(discard_draft_modal).to be_open
+
+        discard_draft_modal.click_discard
+
+        expect(composer).to be_closed
+        expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
+        expect(short_reviewable.reload).to be_pending
+        expect(post.reload.revisions.count).to eq(0)
+      end
+
+      it "agree_and_edit agrees with the flag once the edit is saved" do
+        visit("/review")
+
+        open_agree_and_edit
+
+        expect(composer).to have_value(post.raw)
+
+        composer.fill_content("This post has been edited by a moderator.")
+        composer.submit
+
+        expect(composer).to be_closed
         expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
+        expect(review_page).to have_reviewable_with_approved_status(short_reviewable)
+        expect(short_reviewable.reload).to be_approved
+        expect(post.reload.raw).to eq("This post has been edited by a moderator.")
       end
 
       it "should open a modal when suspending a user" do

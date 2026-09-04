@@ -475,11 +475,10 @@ export default class ReviewableItem extends Component {
       draftKey: post.get("topic.draft_key"),
       draftSequence: post.get("topic.draft_sequence"),
       skipJumpOnSave: true,
+      onSaved: () => performAction().catch(popupAjaxError),
     };
 
-    this.composer.open(opts);
-
-    return performAction();
+    return this.composer.open(opts);
   }
 
   _penalize(adminToolMethod, reviewable, performAction) {

@@ -137,6 +137,7 @@ export default class ComposerService extends Service {
   topic = null;
   linkLookup = null;
 
+  #onSaved = null;
   @tracked _allowPreview = null;
   @tracked _showPreview;
 
@@ -1487,6 +1488,8 @@ export default class ComposerService extends Service {
           return DiscourseURL.routeTo(result.responseJson.route_to);
         }
 
+        const onSaved = this.#onSaved;
+
         this.close();
 
         this.currentUser.set("any_posts", true);
@@ -1499,6 +1502,8 @@ export default class ComposerService extends Service {
             skipIfOnScreen: true,
           });
         }
+
+        onSaved?.();
       })
       .catch((error) => {
         composer.set("disableDrafts", false);
@@ -1604,6 +1609,7 @@ export default class ComposerService extends Service {
    @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
    @param {String} [opts.hijackPreview] Option to hijack the preview with a custom component, you must pass { component: CustomPreviewComponent, model: { ... } }
    @param {String} [opts.selectedTranslationLocale] The locale to use for the translation
+   @param {Function} [opts.onSaved] Called once after this composer session is saved, never if it is closed, discarded or replaced.
    **/
   async open(opts = {}) {
     if (!opts.draftKey) {
@@ -1718,6 +1724,8 @@ export default class ComposerService extends Service {
       }
 
       await this._setModel(composerModel, opts);
+
+      this.#onSaved = opts.onSaved ?? null;
     } finally {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });
@@ -2134,6 +2142,8 @@ export default class ComposerService extends Service {
     this.set("formTemplateInitialValues", undefined);
 
     this.composerActionState.clear();
+
+    this.#onSaved = null;
   }
 
   @computed("model.action")

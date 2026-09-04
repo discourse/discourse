@@ -6291,8 +6291,8 @@ en:
         complete: "Post hidden, user has been notified."
       agree_and_edit:
         title: "Edit post"
-        description: "Agree with flag and open a composer window to edit the post."
-        complete: "Flag acknowledged, you can now edit the post."
+        description: "Agree with flag once you save the edit."
+        complete: "Post edited and flag acknowledged."
       delete:
         title: "Delete"
         complete: "Post deleted."
