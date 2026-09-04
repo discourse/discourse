@@ -11,34 +11,75 @@ module Migrations
             # path string — the construct has already decided the URL is
             # internal.
             class RouteParser
-              # A `/u/<name>` segment, read like `Base::WORD_SOURCE` but
-              # unanchored.
-              WORD = /#{Base::WORD_SOURCE}/
+              # A percent-encoded byte. A Unicode username reaches the parser
+              # this way: email notifications write the link encoded, and the
+              # engine's normalized href is encoded even where the author typed
+              # the name literally.
+              PCT_BYTE = /%\h\h/
+              private_constant :PCT_BYTE
+
+              # A name character: a Unicode alphanumeric or mark, the way core's
+              # `UsernameValidator` (and the markdown-it mentions rule) reads
+              # one — `\p{Alnum}\p{M}` rather than ASCII-only `\w`, which would
+              # cut `café` to `caf`.
+              NAME_CHAR = /[\p{Alnum}\p{M}]|#{PCT_BYTE}/
+              private_constant :NAME_CHAR
+
+              # A `/u/<name>` segment: it starts with a name character or `_`,
+              # its interior may also hold `.` and `-`, and it ends on a name
+              # character. So `/u/bob.` leaves the `.` out while `/u/john.doe`
+              # matches whole. Each separator run binds to the character behind
+              # it, so a name has exactly one parse and the run is scanned once.
+              WORD = /(?:#{NAME_CHAR}|_)(?:[._-]*(?:#{NAME_CHAR}))*/
               private_constant :WORD
 
               # A single path segment, up to the next `/`, `?` or `#`.
               SEGMENT = %r{[^/?#]+}
               private_constant :SEGMENT
 
+              # A decoded name may hold neither path structure nor control
+              # characters: only a name that could have been written literally
+              # names a record.
+              UNDECODABLE = %r{[\x00-\x1f/?\#]}
+              private_constant :UNDECODABLE
+
+              # Rails takes a `.json`/`.rss` format extension off a route before
+              # matching it, so an id run ends there and the extension rides in
+              # the suffix. Letters only — `/t/slug/5.2` names no route on the
+              # destination either.
+              FORMAT = /\.[a-zA-Z]+/
+              private_constant :FORMAT
+
+              # Where an id ends: the path may continue, stop, or carry a format
+              # extension. Nothing is consumed, so the tail becomes the suffix.
+              ID_END = %r{(?=(?:#{FORMAT})?(?:[/?\#]|\z))}
+              private_constant :ID_END
+
+              # Where a route that consumed the whole path ends. A trailing `/`
+              # stays outside the match, so the suffix keeps it and the rebuilt
+              # URL ends the way the author wrote it.
+              PATH_END = %r{(?=/?(?:[?\#]|\z))}
+              private_constant :PATH_END
+
               # `/t/<id>` or `/t/<id>/<post_number>`, the id-only forms.
               TOPIC_NUMERIC =
-                %r{\A/t/(?<id>#{Base::ID_PATTERN})(?:/(?<post_number>#{Base::ID_PATTERN}))?(?=[/?#]|\z)}
+                %r{\A/t/(?<id>#{Base::ID_PATTERN})(?:/(?<post_number>#{Base::ID_PATTERN}))?#{ID_END}}
               private_constant :TOPIC_NUMERIC
 
               # `/t/<slug>/<id>` or `/t/<slug>/<id>/<post_number>`. The slug is
               # `-` for the slugless form.
               TOPIC_SLUG =
-                %r{\A/t/#{SEGMENT}/(?<id>#{Base::ID_PATTERN})(?:/(?<post_number>#{Base::ID_PATTERN}))?(?=[/?#]|\z)}
+                %r{\A/t/#{SEGMENT}/(?<id>#{Base::ID_PATTERN})(?:/(?<post_number>#{Base::ID_PATTERN}))?#{ID_END}}
               private_constant :TOPIC_SLUG
 
               # `/t/<slug>` alone — core routes it to the topic with that slug.
               # One segment only, and never all digits: a short digit run is an
               # id, an overlong one is the id-or-numeric-title ambiguity,
               # refused rather than guessed.
-              TOPIC_SLUG_ONLY = %r{\A/t/(?<slug>(?!\d+(?=[/?#]|\z))#{SEGMENT})(?=[?#]|\z)}
+              TOPIC_SLUG_ONLY = %r{\A/t/(?<slug>(?!\d+(?=[/?#]|\z))#{SEGMENT})#{PATH_END}}
               private_constant :TOPIC_SLUG_ONLY
 
-              POST = %r{\A/p/(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
+              POST = %r{\A/p/(?<id>#{Base::ID_PATTERN})#{ID_END}}
               private_constant :POST
 
               # The boundary keeps `/u/bob!!!` from reading as user `bob` — such
@@ -78,7 +119,7 @@ module Migrations
               # Being unable to run past the tail also keeps an intersection
               # URL's tag id out of the category.
               CATEGORY_ID =
-                %r{\A/(?:c|category)/(?:(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*?)/)?(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
+                %r{\A/(?:c|category)/(?:(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*?)/)?(?<id>#{Base::ID_PATTERN})#{ID_END}}
               private_constant :CATEGORY_ID
 
               # The legacy id-less form, whose segments join with `:` into a
@@ -105,7 +146,7 @@ module Migrations
               # which core's canonical route order would read as a tag id —
               # leaves the route unparsed, so the ambiguity refuses instead of
               # picking a reading.
-              TAG_ROUTE_END = %r{(?=/l/(?:#{CATEGORY_FILTER})(?=[/?#]|\z)|[?#]|\z)}
+              TAG_ROUTE_END = %r{(?:(?=/l/(?:#{CATEGORY_FILTER})(?=[/?#]|\z))|#{PATH_END})}
               private_constant :TAG_ROUTE_END
 
               # The tag segment of a category+tag route. All-numeric is the
@@ -134,7 +175,7 @@ module Migrations
               # listed tag. Two names minimum: core routes a single-segment form
               # as that one tag's page, which the TAG route already reads.
               TAG_INTERSECTION =
-                %r{\A/tags/intersection/(?<tags>#{SEGMENT}(?:/#{SEGMENT})+)(?=[?#]|\z)}
+                %r{\A/tags/intersection/(?<tags>#{SEGMENT}(?:/#{SEGMENT})+)#{PATH_END}}
               private_constant :TAG_INTERSECTION
 
               GROUP = %r{\A/(?:g|groups?)/(?<name>#{SEGMENT})}
@@ -149,7 +190,7 @@ module Migrations
               # `/badges/<id>` or `/badges/<id>/<slug>`; the slug is regenerated
               # at import, so the route consumes it rather than keeping it as
               # suffix.
-              BADGE = %r{\A/badges/(?<id>#{Base::ID_PATTERN})(?:/#{SEGMENT})?(?=[/?#]|\z)}
+              BADGE = %r{\A/badges/(?<id>#{Base::ID_PATTERN})(?:/#{SEGMENT})?#{ID_END}}
               private_constant :BADGE
 
               class << self
@@ -203,7 +244,10 @@ module Migrations
 
                 def user(rest)
                   match = USER.match(rest)
-                  match && target(match, :user, target_name: match[:name])
+                  return nil unless match
+
+                  name = decoded_name(match[:name])
+                  name && target(match, :user, target_name: name)
                 end
 
                 def category(rest)
@@ -216,7 +260,10 @@ module Migrations
 
                 def tag(rest)
                   match = TAG.match(rest)
-                  match && target(match, :tag, target_name: match[:name])
+                  return nil unless match
+
+                  name = decoded_name(match[:name])
+                  name && target(match, :tag, target_name: name)
                 end
 
                 # The tag path keeps the optional `none`/`all` filter in front
@@ -226,7 +273,10 @@ module Migrations
                   match = TAG_CATEGORY_ID.match(rest) || TAG_CATEGORY_SLUG.match(rest)
                   return nil unless match
 
-                  tag_path = [match[:filter], match[:tag]].compact.join("/")
+                  tag_name = decoded_name(match[:tag])
+                  return nil unless tag_name
+
+                  tag_path = [match[:filter], tag_name].compact.join("/")
                   if match.names.include?("id") && match[:id]
                     target(
                       match,
@@ -246,17 +296,45 @@ module Migrations
 
                 def tag_intersection(rest)
                   match = TAG_INTERSECTION.match(rest)
-                  match && target(match, :tag_intersection, target_tag_path: match[:tags])
+                  return nil unless match
+
+                  names = match[:tags].split("/").map { |name| decoded_name(name) }
+                  return nil unless names.all?
+
+                  target(match, :tag_intersection, target_tag_path: names.join("/"))
                 end
 
                 def group(rest)
                   match = GROUP.match(rest)
-                  match && target(match, :group, target_name: match[:name])
+                  return nil unless match
+
+                  name = decoded_name(match[:name])
+                  name && target(match, :group, target_name: name)
                 end
 
                 def badge(rest)
                   match = BADGE.match(rest)
                   match && target(match, :badge, target_id: match[:id].to_i)
+                end
+
+                # A Unicode username, group name or tag name travels
+                # percent-encoded and is stored decoded, so the name the
+                # importer looks up has to be decoded here. Slugs are the
+                # exception: core writes an encoded-method slug into the column
+                # percent-encoded, so a topic or category slug is compared the
+                # way it arrives.
+                #
+                # Nil for bytes that are not valid UTF-8 or that decode to
+                # something no name can hold — the route then refuses instead of
+                # naming a record it guessed at.
+                def decoded_name(name)
+                  return name unless name.include?("%")
+
+                  decoded = name.b.gsub(PCT_BYTE) { |escape| escape[1, 2].hex.chr }
+                  decoded.force_encoding(Encoding::UTF_8)
+                  return nil unless decoded.valid_encoding?
+
+                  UNDECODABLE.match?(decoded) ? nil : decoded
                 end
 
                 def target(

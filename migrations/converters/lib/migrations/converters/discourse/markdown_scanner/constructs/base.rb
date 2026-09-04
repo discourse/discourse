@@ -67,16 +67,6 @@ module Migrations
               url.start_with?("/") && !url.start_with?("//")
             end
 
-            # A username the way core's `UsernameValidator` (and the markdown-it
-            # mentions rule) reads it: it starts with a Unicode alphanumeric,
-            # mark or `_`; its interior may also hold `.` and `-`; and it ends
-            # on an alphanumeric or mark. So `@bob.` leaves the `.` out while
-            # `@john.doe` matches whole. `\p{Alnum}\p{M}` rather than ASCII-only
-            # `\w`, which would cut `@café` to `@caf`.
-            #
-            # Shared with `InternalLink::RouteParser::WORD`, unanchored.
-            WORD_SOURCE = "[\\p{Alnum}\\p{M}_](?:[\\p{Alnum}\\p{M}._-]*[\\p{Alnum}\\p{M}])?"
-
             # A record id: at most 18 digits. Ids are stored as SQLite signed
             # 64-bit integers, and a 19-digit run overflows that range (binding
             # the bignum raises); a longer run names no record anyway.
