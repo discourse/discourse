@@ -56,6 +56,7 @@ module Jobs
 
         return if event_date.event.recurrence.blank?
         event_date.event.set_next_recurrent_event_date
+        TopicTrackingState.publish_latest(event_date.event.post.topic)
         event_date.event.set_topic_bump
       end
 
