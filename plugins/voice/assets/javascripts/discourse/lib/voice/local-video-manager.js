@@ -52,6 +52,7 @@ export default class LocalVideoManager {
   #isBlurAllowed;
   #setParticipantVideoState;
   #showError;
+  #onScreenShareEnded;
 
   constructor(options) {
     this.#peerManager = options.peerManager;
@@ -71,6 +72,7 @@ export default class LocalVideoManager {
     this.#isBlurAllowed = options.isBlurAllowed;
     this.#setParticipantVideoState = options.setParticipantVideoState;
     this.#showError = options.showError;
+    this.#onScreenShareEnded = options.onScreenShareEnded;
   }
 
   get blurSupported() {
@@ -207,10 +209,12 @@ export default class LocalVideoManager {
     }
   }
 
-  #revertBlurPreference() {
+  #revertBlurPreference({ silent = false } = {}) {
     this.blurEnabled = false;
     BackgroundBlurManager.setPreference(false);
-    this.#showError("voice.video_settings.blur_failed");
+    if (!silent) {
+      this.#showError("voice.video_settings.blur_failed");
+    }
   }
 
   setBlurAmount(value) {
@@ -334,9 +338,6 @@ export default class LocalVideoManager {
     }
 
     track.contentHint = "motion";
-    track.addEventListener("ended", () => this.#handleTrackEnded(), {
-      once: true,
-    });
 
     const oldStream = this.stream;
     const oldRaw = this.#rawStream;
@@ -368,6 +369,13 @@ export default class LocalVideoManager {
     this.#backgroundBlur = blurResult?.manager ?? null;
     this.#rawStream = blurResult ? newStream : null;
     this.stream = outgoingStream;
+
+    const swappedEpoch = ++this.#epoch;
+    track.addEventListener(
+      "ended",
+      () => this.#handleTrackEnded(swappedEpoch, "camera"),
+      { once: true }
+    );
 
     oldStream?.getTracks().forEach((streamTrack) => streamTrack.stop());
     if (oldRaw && oldRaw !== oldStream) {
@@ -414,14 +422,16 @@ export default class LocalVideoManager {
     }
   }
 
-  async start(kind) {
+  async start(kind, { shouldContinue, silent = false } = {}) {
     const roomId = this.#getFirstActiveRoomId();
     if (!roomId) {
       return;
     }
 
     if (!this.#canPublishVideo(roomId)) {
-      this.#showError("voice.video.publisher_limit");
+      if (!silent) {
+        this.#showError("voice.video.publisher_limit");
+      }
       return;
     }
 
@@ -461,14 +471,18 @@ export default class LocalVideoManager {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(`[voice] failed to obtain ${kind} stream`, error);
-      if (error?.name !== "NotAllowedError" && error?.name !== "AbortError") {
+      if (
+        !silent &&
+        error?.name !== "NotAllowedError" &&
+        error?.name !== "AbortError"
+      ) {
         this.#showError("voice.video.capture_failed");
       }
       return;
     }
 
     // The user may have left the room while the capture picker was open.
-    if (!this.#isActiveRoom(roomId)) {
+    if (!this.#isActiveRoom(roomId) || (shouldContinue && !shouldContinue())) {
       stream.getTracks().forEach((streamTrack) => streamTrack.stop());
       return;
     }
@@ -495,7 +509,7 @@ export default class LocalVideoManager {
     const epoch = ++this.#epoch;
 
     track.contentHint = kind === "screen" ? "detail" : "motion";
-    track.addEventListener("ended", () => this.#handleTrackEnded(), {
+    track.addEventListener("ended", () => this.#handleTrackEnded(epoch, kind), {
       once: true,
     });
 
@@ -514,7 +528,11 @@ export default class LocalVideoManager {
     ) {
       const result = await this.#createBackgroundBlur(stream);
 
-      if (epoch !== this.#epoch || !this.#isActiveRoom(roomId)) {
+      if (
+        epoch !== this.#epoch ||
+        !this.#isActiveRoom(roomId) ||
+        (shouldContinue && !shouldContinue())
+      ) {
         result?.manager.teardown();
         stream.getTracks().forEach((streamTrack) => streamTrack.stop());
         return;
@@ -525,7 +543,7 @@ export default class LocalVideoManager {
         this.#rawStream = stream;
         outgoingStream = result.processed;
       } else {
-        this.#revertBlurPreference();
+        this.#revertBlurPreference({ silent });
       }
     }
 
@@ -536,11 +554,29 @@ export default class LocalVideoManager {
       await this.#broadcastState(roomId);
     } catch (error) {
       await this.stop({ broadcast: false });
-      popupAjaxError(error);
+      if (!silent) {
+        popupAjaxError(error);
+      }
+      return;
+    }
+
+    if (!this.#ownsPipeline(epoch, outgoingStream, kind)) {
+      return;
+    }
+    if (shouldContinue && !shouldContinue()) {
+      await this.stop();
       return;
     }
 
     await this.syncSenders(roomId);
+
+    if (!this.#ownsPipeline(epoch, outgoingStream, kind)) {
+      return;
+    }
+    if (shouldContinue && !shouldContinue()) {
+      await this.stop();
+      return;
+    }
 
     // Applies any blur preference change that raced this startup (e.g. the
     // toggle was flipped while the model loaded for the initial wrap).
@@ -563,19 +599,31 @@ export default class LocalVideoManager {
     if (roomId) {
       await this.syncSenders(roomId);
       if (broadcast) {
-        this.#broadcastState(roomId).catch(() => {});
+        await this.#broadcastState(roomId).catch(() => {});
       }
     }
   }
 
-  #handleTrackEnded() {
-    if (!this.kind) {
+  #ownsPipeline(epoch, stream, kind) {
+    return (
+      epoch === this.#epoch && this.stream === stream && this.kind === kind
+    );
+  }
+
+  #handleTrackEnded(epoch, endedKind) {
+    if (epoch !== this.#epoch || endedKind !== this.kind) {
       return;
     }
-    this.stop().catch((error) => {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to stop local video", error);
-    });
+    this.stop()
+      .then(() => {
+        if (endedKind === "screen") {
+          this.#onScreenShareEnded?.();
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.warn("[voice] failed to stop local video", error);
+      });
   }
 
   #applyContentHint() {
