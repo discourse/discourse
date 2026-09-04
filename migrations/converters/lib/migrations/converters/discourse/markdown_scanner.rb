@@ -77,9 +77,6 @@ module Migrations
       #     counts one occurrence too many and escalates. A body with hundreds
       #     of such pairs runs out of substitution budget and keeps its tail
       #     verbatim.
-      #   * A URL inside a link label that the engine reads as raw HTML — an
-      #     `<img src="…">` wrapped in `[…](…)` — is no token of its own and
-      #     no label hit either, so the body counts one occurrence too many.
       #   * A custom emoji name outside {Constructs::Emoji}'s presence shape
       #     never reaches the engine tier at all: the gate cannot see it, so
       #     nothing is extracted and nothing is reported.
