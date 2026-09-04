@@ -127,8 +127,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3(postcss@8.5.26)
       '@rollup/browser':
-        specifier: ^4.63.0
-        version: 4.63.0
+        specifier: ^4.63.1
+        version: 4.63.1
       '@rollup/plugin-babel':
         specifier: ^7.0.0
         version: 7.1.0(@babel/core@7.29.7)
@@ -2781,8 +2781,8 @@ packages:
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
 
-  '@rollup/browser@4.63.0':
-    resolution: {integrity: sha512-pIfhDqHdIEJi4MwYr/0BrjiAjK3nRSo4NE/Ng9gmzMmjS1aJSSHg5T2OQFHnh6mfF8Z0DhqY86BPP+IhKr+PcQ==}
+  '@rollup/browser@4.63.1':
+    resolution: {integrity: sha512-qsJijWUL79BPPzuVazW3E/tVQAkSMmjHVk/NQfRbr3BmviFqwxPb7twF0RfneJqebBikfAL2RxXGvzC6O1JEqg==}
 
   '@rollup/plugin-babel@7.1.0':
     resolution: {integrity: sha512-h9Y+xYha6p4wKO+FwdiPIkE+eIYCm8MzZPpX1iARIoFBnmKP9CnpT1p9dDf/DTFm6fyN8PmuLyRI5qZgchnitw==}
@@ -10767,7 +10767,7 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.1': {}
 
-  '@rollup/browser@4.63.0':
+  '@rollup/browser@4.63.1':
     dependencies:
       '@types/estree': 1.0.9
 
