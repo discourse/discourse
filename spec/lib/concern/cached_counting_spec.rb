@@ -48,6 +48,20 @@ RSpec.describe CachedCounting do
 
         expect(TestCachedCounting.data).to eq({ "a,a" => 2, "b" => 1 })
       end
+
+      it "drops counts for a site that no longer exists" do
+        Discourse.redis.without_namespace.hincrby(
+          CachedCounting::COUNTER_REDIS_HASH,
+          "TestCachedCounting,gone-site,#{Time.zone.now.strftime("%Y%m%d")},a",
+          1,
+        )
+        CachedCounting.queue("b", TestCachedCounting)
+
+        CachedCounting.flush_in_memory
+        CachedCounting.flush_to_db
+
+        expect(TestCachedCounting.data).to eq({ "b" => 1 })
+      end
     end
   end
 
