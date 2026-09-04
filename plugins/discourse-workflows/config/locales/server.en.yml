@@ -165,6 +165,10 @@ en:
         credential_required: "Credential is required for authentication mode '%{mode}'."
         exec_ctx_required: "Execution context is required for authentication mode '%{mode}'."
         header_name_invalid: "Header name contains invalid characters."
+        oauth2_unsupported_client_authentication: "OAuth client authentication method is unsupported."
+        oauth2_token_request_failed: "OAuth token request failed with status %{status}."
+        oauth2_token_response_invalid: "OAuth token response is not valid JSON."
+        oauth2_access_token_missing: "OAuth token response does not include an access token."
       data_table:
         unknown_column: "Unknown column name '%{column}'."
         invalid_query: "Invalid query: %{errors}"

@@ -217,11 +217,11 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(http_request[:credentials]).to contain_exactly(
           a_hash_including(
             name: "auth",
-            credential_types: %w[basic_auth bearer_token header_auth],
+            credential_types: %w[basic_auth bearer_token oauth2_client_credentials header_auth],
             required: false,
             display_options: {
               show: {
-                authentication: %w[basic_auth bearer_token header_auth],
+                authentication: %w[basic_auth bearer_token oauth2_client_credentials header_auth],
               },
             },
           ),

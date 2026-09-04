@@ -32,7 +32,7 @@ module DiscourseWorkflows
             },
             authentication: {
               type: :options,
-              options: %w[none basic_auth bearer_token header_auth],
+              options: %w[none basic_auth bearer_token oauth2_client_credentials header_auth],
               default: "none",
               no_data_expression: true,
             },
@@ -173,11 +173,11 @@ module DiscourseWorkflows
           credentials: [
             {
               name: "auth",
-              credential_types: %w[basic_auth bearer_token header_auth],
+              credential_types: %w[basic_auth bearer_token oauth2_client_credentials header_auth],
               required: false,
               display_options: {
                 show: {
-                  authentication: %w[basic_auth bearer_token header_auth],
+                  authentication: %w[basic_auth bearer_token oauth2_client_credentials header_auth],
                 },
               },
               label_key: "discourse_workflows.http_request.credential",
