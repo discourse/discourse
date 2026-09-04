@@ -696,6 +696,13 @@ acceptance("Admin - MCP", function (needs) {
     await visit("/admin/config/mcp/clients");
 
     assert
+      .dom(".d-page-subheader__learn-more a")
+      .hasAttribute(
+        "href",
+        "https://meta.discourse.org/t/connecting-your-apps-to-discourse-mcp-server/411637#p-2033870-connecting-apps-via-oauth-2",
+        "the OAuth clients documentation is linked"
+      );
+    assert
       .dom(".admin-mcp__table th:last-child .sr-only")
       .hasText(
         i18n("admin.config.mcp.clients.actions"),

@@ -1483,6 +1483,7 @@ export default class AdminMcp extends Component {
       <DPageSubheader
         @titleLabel={{i18n "admin.config.mcp.clients.title"}}
         @descriptionLabel={{i18n "admin.config.mcp.clients.description"}}
+        @learnMoreUrl="https://meta.discourse.org/t/connecting-your-apps-to-discourse-mcp-server/411637#p-2033870-connecting-apps-via-oauth-2"
       >
         <:actions as |actions|>
           <actions.Primary

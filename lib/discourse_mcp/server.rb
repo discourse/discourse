@@ -22,6 +22,8 @@ module DiscourseMcp
       mcp_response
     end
 
+    private
+
     def process(payload)
       validate_request!(payload)
       id = payload["id"]
@@ -53,9 +55,6 @@ module DiscourseMcp
       Discourse.warn_exception(error, message: "MCP request failed")
       Response.new(http_status: 500, body: failure(payload&.dig("id"), protocol_error), headers: {})
     end
-    private :process
-
-    private
 
     attr_reader :request, :request_context, :catalog
 
