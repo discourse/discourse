@@ -32,10 +32,12 @@ __Ruby = {
     return null;
   },
   hashtag_lookup(slug, cookingUserId, typesInPriorityOrder) {
-    // The counterpart of Ruby's NameNormalizer (Unicode NFC, then downcase):
-    // the injected name sets are normalized that way, so the sought slug must
-    // be too, or a decomposed spelling in a post misses the composed name.
-    const ref = slug.normalize("NFC").toLowerCase();
+    // The counterpart of Ruby's NameNormalizer (Unicode NFC, then downcase,
+    // both sigmas as one): the injected name sets are normalized that way, so
+    // the sought slug must be too, or a decomposed spelling in a post misses
+    // the composed name. toLowerCase writes a word-final sigma as U+03C2 where
+    // Ruby writes U+03C3, hence the replacement.
+    const ref = slug.normalize("NFC").toLowerCase().replace(/\u03c2/g, "\u03c3");
     // `#slug::type` forces one type; `#parent:child` addresses a category by
     // its child slug; `ref` preserves the typed form including a `::type`
     // suffix, like the host lookup service. This mirrors that service far

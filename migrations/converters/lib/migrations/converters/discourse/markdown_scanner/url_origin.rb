@@ -54,6 +54,47 @@ module Migrations
             [host, rest || ""]
           end
 
+          # Where a URL sits relative to the source's own hosts and prefixes.
+          # `host` is nil for a relative URL. `path` is the remainder inside
+          # the owning prefix when the URL is the source's own, else nil.
+          # `prefix` is the prefix `path` was measured against, so a caller
+          # that resolves the host from one spelling of a URL can measure a
+          # second spelling against the same prefix. `foreign` marks an
+          # absolute URL whose host is not configured — the signal a
+          # conversion may want to hear about once per host.
+          Origin = Data.define(:host, :rest, :path, :prefix, :foreign)
+
+          # The one place that combines {.split} and {.path_within_prefix}
+          # with the configured hosts, so a construct grammar and the
+          # engine tier's value filter read a URL identically. Returns nil
+          # for anything that is not an internal-URL shape at all.
+          #
+          # @param hosts [Hash{String => (String, nil)}] host => path prefix
+          # @param base_prefix [String, nil] the prefix for relative URLs
+          # @return [Origin, nil]
+          def self.classify(url, hosts:, base_prefix:)
+            host, rest = split(url)
+            return nil if rest.nil?
+
+            if host
+              unless hosts.key?(host)
+                return Origin.new(host:, rest:, path: nil, prefix: nil, foreign: true)
+              end
+
+              prefix = hosts[host]
+            else
+              prefix = base_prefix
+            end
+
+            Origin.new(
+              host:,
+              rest:,
+              path: path_within_prefix(rest, prefix),
+              prefix:,
+              foreign: false,
+            )
+          end
+
           # The path remainder after `prefix`, or nil when the URL falls
           # outside it (it belongs to another app beside the forum). A nil
           # prefix (root install) owns every path. The prefix must end on a

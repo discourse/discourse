@@ -67,10 +67,12 @@ module Migrations
         #   is extracted; anything else stays literal text. Required for the same
         #   reason as `mention_names`.
         # @param custom_emoji_names [Enumerable<String>, nil] the source's custom
-        #   emoji names. When given (and non-empty) a `:name:` shortcode naming one
-        #   of them is extracted; standard shortcodes always stay plain text. Without
-        #   them the emoji construct is left out entirely, so posts don't pay for its
-        #   `:` trigger.
+        #   emoji names, in any spelling — they are folded here, like the mention
+        #   and hashtag names arrive folded. When given (and non-empty) a `:name:`
+        #   shortcode naming one of them is extracted whatever case the author
+        #   wrote it in (core lowercases a shortcode before its own lookup);
+        #   standard shortcodes always stay plain text. Without them the emoji
+        #   construct is left out entirely, so posts don't pay for its `:` trigger.
         # @param internal_link_hosts [Hash{String => (String, nil)}] the source's own
         #   hosts (its base URL and any former domains), each downcased and mapped to
         #   its path prefix — `"/forum"` for a subdirectory install (no trailing
@@ -149,7 +151,12 @@ module Migrations
           constructs << Constructs::Mention.new(names: mention_names)
           constructs << Constructs::Hashtag.new(names: hashtag_names)
           if custom_emoji_names.present?
-            constructs << Constructs::Emoji.new(names: custom_emoji_names)
+            constructs << Constructs::Emoji.new(
+              names:
+                Migrations::CompactStringSet.new(
+                  custom_emoji_names.map { |name| Migrations::NameNormalizer.normalize(name) },
+                ),
+            )
           end
 
           # The constructs carry no per-post state (the internal-link one only
@@ -180,14 +187,15 @@ module Migrations
         #
         #   * unexpected failure — `:unanchored` (the engine recognized a tracked
         #     occurrence, but no construct grammar could place it),
-        #     `:engine_error`, `:overlap`, `:probe_desync`;
+        #     `:engine_error`, `:overlap`;
         #   * known unsupported source content — `:invalid_internal_route` (a
         #     coordinate-shaped path that parses no route, usually a link that
         #     was already broken on the source), `:count_mismatch`, `:entity`,
         #     `:cr_line_endings` (genuinely ambiguous spellings the passes
         #     refuse rather than guess);
-        #   * budget — `:substitution_limit`, `:substitution_budget`, `:url_volume`
-        #     (bounded work on pathological bodies);
+        #   * budget — `:substitution_limit`, `:substitution_budget`,
+        #     `:url_volume`, `:name_volume` (bounded work on pathological
+        #     bodies);
         #   * the rest of a partially extracted body (the confirmed constructs
         #     were still replaced).
         attr_reader :engine_refusals

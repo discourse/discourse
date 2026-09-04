@@ -14,7 +14,7 @@ Style/Send:
 
 # Autocorrects `unless x.include?(…)` to ActiveSupport's `exclude?`, which exists
 # only on the types ActiveSupport patches. These gems pass around plain classes
-# carrying their own `include?` (SortedStringSet), so the rewrite turns working
+# carrying their own `include?` (CompactStringSet), so the rewrite turns working
 # code into a NoMethodError that lint still reports as clean. Dropping just that
 # pair is not possible — RuboCop merges a cop's hash parameters with the
 # inherited ones instead of replacing them — and the cop is `Safe: false`

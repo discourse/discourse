@@ -8,22 +8,33 @@ module Migrations
           # The per-body count-matching pass; the scanner itself stays
           # reusable across bodies.
           #
-          # The pass answers one question: does the number of deduplicated raw
-          # occurrences equal the number of engine tokens, exactly. Any
+          # The pass answers one question: does the number of raw occurrences
+          # of a value equal the number of engine tokens for it, exactly. Any
           # inequality escalates to the substitution pass, and so does any
           # value where the two numbers can legitimately differ (a reference
           # definition serving several links). The pass never accepts on
           # unequal counts and never decides from the shape of the bytes —
           # deciding what bytes mean is the engine's job, and the substitution
           # pass is the only place that asks it about a single occurrence.
+          #
+          # Counting is dumb on purpose. Every live construct spells its value
+          # in the raw and one raw occurrence yields at most one token, so the
+          # raw count can only be greater than or equal to the token count,
+          # and equality then forces every occurrence to be live. Any rule
+          # that could reject a raw occurrence — a boundary condition, a name
+          # grammar, "this looks like a longer URL" — can only lower the count,
+          # which is precisely how a look-alike inside a code span ends up
+          # matched to a live token. Two conditions do survive, because they
+          # protect the premise that the bytes are there at all: a body with a
+          # construct-capable character entity refuses (`&commat;bob` yields a
+          # token whose bytes appear nowhere), and names are counted folded, at
+          # least as coarsely as the engine folds them ({FoldedText}).
           class CountingPass
-            include Locating
-
-            def initialize(scanner, input, data)
+            def initialize(scanner, input, data, locator)
               @scanner = scanner
               @input = input
               @data = data
-              build_line_index
+              @locator = locator
             end
 
             def result
@@ -32,14 +43,14 @@ module Migrations
               cause = collect_expected
               cause ||= match_all_counts
               cause ||= resolve_urls(spans)
-              cause ||= resolve_probed(spans)
+              cause ||= resolve_names(spans)
               cause ||= resolve_quotes(spans)
               return refusal(cause) if cause
 
               ordered = spans.values.sort_by(&:start_pos)
-              return refusal(:overlap) if overlapping?(ordered)
+              return refusal(:overlap) if @locator.overlapping?(ordered)
 
-              Result.new(output: ordered.empty? ? @input : splice(ordered), cause: nil)
+              Result.new(output: ordered.empty? ? @input : @locator.splice(ordered), cause: nil)
             end
 
             private
@@ -48,20 +59,13 @@ module Migrations
               Result.new(output: @input, cause:)
             end
 
-            def region_range(map)
-              return nil if map.nil?
-
-              from = @line_starts[map[0]]
-              return nil if from.nil?
-
-              to = @line_starts[map[1]] || @input.bytesize
-              from...to
-            end
-
             # Groups the engine's construct values: per (kind, value) the
             # expected count in each block region and in total. Values the
             # migration does not remap (external links, unknown names,
-            # standard emoji) never enter count matching.
+            # standard emoji) never enter count matching. A name's key is its
+            # folded spelling, so several token values that fold alike — `@Bob`
+            # and `@bob`, or a hashtag slug the engine already lowercased —
+            # add up into one count.
             def collect_expected
               @expected = {}
               regions_with_constructs = []
@@ -70,24 +74,24 @@ module Migrations
                 # Not every inline block has a line map; table cells do not.
                 # A mapless block's constructs are counted against the whole
                 # body, and the entity check widens accordingly.
-                range = region_range(block["map"]) || (0...@input.bytesize)
+                range = @locator.region_range(block["map"]) || (0...@input.bytesize)
 
                 had = false
                 block["mentions"].each do |content|
                   next unless @scanner.mention_tracked?(content.delete_prefix("@"))
                   had = true
-                  add_expected(:mention, content, range, 1)
+                  add_expected(:mention, FoldedText.fold(content), range, 1)
                 end
                 block["hashtags"].each do |hashtag|
                   text = @scanner.hashtag_text(hashtag["slug"])
                   next if text.nil?
                   had = true
-                  add_expected(:hashtag, text, range, 1)
+                  add_expected(:hashtag, FoldedText.fold(text), range, 1)
                 end
                 block["emojis"].each do |name|
                   next unless @scanner.emoji_tracked?(name)
                   had = true
-                  add_expected(:emoji, ":#{name}:", range, 1)
+                  add_expected(:emoji, FoldedText.fold(":#{name}:"), range, 1)
                 end
                 block["links"].each do |link|
                   href = link["href"]
@@ -105,12 +109,15 @@ module Migrations
               end
 
               url_values = @expected.count { |(kind, _), _| kind == :url }
-              return :url_volume if url_values > MAX_URL_VALUES
+              return :url_volume if url_values > MAX_SCANNED_VALUES
+              return :name_volume if @expected.size - url_values > MAX_SCANNED_VALUES
 
               # Entities decode before the engine's text rules run, so a
               # token value may not exist as literal bytes in the raw text.
               # Counting cannot see through that.
-              regions_with_constructs.uniq.each { |range| return :entity if entity_in?(range) }
+              regions_with_constructs.uniq.each do |range|
+                return :entity if @locator.entity_in?(range)
+              end
 
               nil
             end
@@ -138,7 +145,7 @@ module Migrations
               @matched = {}
 
               @expected.each do |(kind, value), entry|
-                return :count_mismatch if kind == :url && definition_offsets(value).any?
+                return :count_mismatch if kind == :url && @locator.definition_offsets(value).any?
 
                 occurrences = match_region_counts(kind, value, entry)
 
@@ -147,7 +154,7 @@ module Migrations
                   next
                 end
 
-                return :entity if entity_offsets.any?
+                return :entity if @locator.entity_offsets.any?
 
                 global = match_counts_in(kind, value, whole, entry[:total])
                 return :count_mismatch if global.nil?
@@ -174,12 +181,12 @@ module Migrations
             # The occurrences of a value in a range, when their number equals
             # what the engine saw; nil otherwise.
             def match_counts_in(kind, value, range, expected)
-              if kind == :url
-                spans, overlapping = url_spans(value, range)
-                return nil if overlapping
-              else
-                spans = occurrences_within(probed_occurrences(kind, value), range)
-              end
+              spans =
+                if kind == :url
+                  @locator.url_spans(value, range)
+                else
+                  @locator.occurrences_within(@locator.folded_occurrences(kind, value), range)
+                end
 
               spans if spans.size == expected
             end
@@ -198,7 +205,9 @@ module Migrations
                 next unless kind == :url
 
                 occurrences.each do |occurrence|
-                  match = anchor_match(occurrence) || bare_value_match(value, occurrence)
+                  match =
+                    @locator.anchor_match(occurrence) ||
+                      @locator.bare_value_match(value, occurrence)
                   return @scanner.unplaced_url_cause(value) if match.nil?
                   spans[[match.start_pos, match.end_pos]] ||= match
                 end
@@ -207,17 +216,14 @@ module Migrations
               nil
             end
 
-            # Mentions, hashtags and emoji: their matched occurrences came
-            # from the constructs, so probing again returns the node directly.
-            def resolve_probed(spans)
+            # Mentions, hashtags and emoji cover exactly their matched
+            # occurrence, so the node is read straight off those raw bytes.
+            def resolve_names(spans)
               @matched.each do |(kind, _value), occurrences|
                 next if kind == :url
 
                 occurrences.each do |occurrence|
-                  match = probe_match_at(kind, occurrence)
-                  # The index was built from construct matches; a miss here
-                  # means the pass is inconsistent with itself.
-                  return :probe_desync if match.nil?
+                  match = @locator.node_match(kind, occurrence)
                   spans[[match.start_pos, match.end_pos]] ||= match
                 end
               end
@@ -233,10 +239,10 @@ module Migrations
               @data["blockTokens"].each do |token|
                 next unless token["type"] == "bbcode_open" && token["tag"] == "blockquote"
 
-                range = region_range(token["map"])
+                range = @locator.region_range(token["map"])
                 next if range.nil?
 
-                line_end = @line_starts[token["map"][0] + 1] || @input.bytesize
+                line_end = @locator.line_starts[token["map"][0] + 1] || @input.bytesize
                 opener = @input.byteindex(/\[quote=/i, range.begin)
                 next if opener.nil? || opener >= line_end
 

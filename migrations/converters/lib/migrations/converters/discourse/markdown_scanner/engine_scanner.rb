@@ -19,6 +19,16 @@ module Migrations
         # whole post — the same exact equality, just without relying on the
         # engine's line attribution.
         #
+        # What counts as an occurrence is decided by the bytes alone: every
+        # place the value's bytes appear (folded, for a name — see
+        # {FoldedText}), with no boundary or grammar condition that could
+        # reject one. That is what makes the equality mean something. A raw
+        # occurrence can yield at most one token, so the raw count is never
+        # below the token count, and equality then leaves no room for a
+        # look-alike; a condition that drops an occurrence core does cook
+        # breaks exactly that, and the freed token gets matched to the
+        # look-alike instead — a corrupted post.
+        #
         # When the counts cannot be matched (duplicate values in mixed
         # contexts, a character entity that could form a construct, CR line
         # endings), a {SubstitutionPass} confirms the occurrences one by one: it
@@ -27,9 +37,11 @@ module Migrations
         # post is reported with a cause. This can refuse a post, but it can
         # never corrupt one.
         #
-        # Matched occurrences are turned into nodes by the {Constructs},
-        # anchored at the matched offsets, so the recorded embeds have the
-        # same shape as everywhere else in the pipeline.
+        # A confirmed name occurrence becomes a node from its own raw bytes; a
+        # confirmed URL occurrence is anchored into the construct that
+        # surrounds it (its `[`, its `!`, or the bare URL itself). Both go
+        # through the {Constructs}, so the recorded embeds have the same shape
+        # as everywhere else in the pipeline.
         class EngineScanner
           # `output` is the post with every confirmed construct replaced; it is
           # the input itself when nothing was replaced. `cause` says why at
@@ -63,12 +75,13 @@ module Migrations
           class RetryDeadlineError < StandardError
           end
 
-          # Locating URL occurrences scans the post once per distinct value.
-          # A generated post with thousands of distinct links would cost
-          # value count times post size in Ruby, outside any V8 timeout.
-          # Above this count the post refuses with `:url_volume`. Real posts
-          # stay far below it.
-          MAX_URL_VALUES = 256
+          # Locating occurrences scans the post once per distinct value, for
+          # names as much as for URLs. A generated post with thousands of
+          # distinct values would cost value count times post size in Ruby,
+          # outside any V8 timeout. Above this many of either kind the post
+          # refuses with `:url_volume` or `:name_volume`. Real posts stay far
+          # below it.
+          MAX_SCANNED_VALUES = 256
 
           # @param slow_timeout_ms [Integer, nil] the retry ceiling for a body
           #   whose parse the engine terminated; nil disables the retry and a
@@ -89,14 +102,16 @@ module Migrations
             @base_prefix = internal_link_base_prefix
             @on_node = on_node
 
-            @mention_construct =
-              constructs.find { |construct| construct.is_a?(Constructs::Mention) }
-            @hashtag_construct =
-              constructs.find { |construct| construct.is_a?(Constructs::Hashtag) }
+            # Everything but the emoji construct is structural here: the
+            # scanner reads token values through it, and a missing one would
+            # silently drop every construct of that kind. A source with no
+            # custom emoji leaves that construct out on purpose, so it is the
+            # one the scanner guards for instead.
+            @mention_construct = required(constructs, Constructs::Mention)
+            @hashtag_construct = required(constructs, Constructs::Hashtag)
+            @quote_construct = required(constructs, Constructs::Quote)
+            @internal_link_construct = required(constructs, Constructs::InternalLink)
             @emoji_construct = constructs.find { |construct| construct.is_a?(Constructs::Emoji) }
-            @quote_construct = constructs.find { |construct| construct.is_a?(Constructs::Quote) }
-            @internal_link_construct =
-              constructs.find { |construct| construct.is_a?(Constructs::InternalLink) }
 
             # URL constructs are matched from their syntax anchor: `[`, `!`,
             # or the first byte of a bare URL.
@@ -109,24 +124,6 @@ module Migrations
             end
             @url_dispatch.each_value(&:freeze)
             @url_dispatch.freeze
-
-            # The name-gated constructs by trigger byte, for the one-walk
-            # occurrence index. The trigger bytes are disjoint, so each byte
-            # maps to exactly one (kind, construct) pair.
-            @probe_dispatch = {}
-            {
-              mention: @mention_construct,
-              hashtag: @hashtag_construct,
-              emoji: @emoji_construct,
-            }.each do |kind, construct|
-              next if construct.nil?
-              construct.triggers.each do |char|
-                @probe_dispatch[char.ord] = [kind, construct].freeze
-              end
-            end
-            @probe_dispatch.freeze
-            @probe_stop =
-              Regexp.new("[#{@probe_dispatch.keys.map { |byte| Regexp.escape(byte.chr) }.join}]")
           end
 
           # @param input [String]
@@ -207,15 +204,20 @@ module Migrations
           def attempt(input, scan_data)
             data = scan_data || engine_scan([{ id: nil, raw: input }]).first
 
+            # One locator per body, shared by both passes: the line index, the
+            # folded copy and every occurrence list a refused count-matching
+            # pass built are what the substitution pass needs next.
+            locator = Locator.new(self, input)
+
             # The line index follows the engine's maps, and those count lines
             # after markdown-it normalized CR endings away. A CR body goes
             # straight to the map-free substitution pass.
             cause = :cr_line_endings
             unless input.include?("\r")
-              result = CountingPass.new(self, input, data).result
+              result = CountingPass.new(self, input, data, locator).result
               return result if result.cause.nil?
               # Substitution checks would pay the same per-value cost the cap avoids.
-              return result if result.cause == :url_volume
+              return result if result.cause == :url_volume || result.cause == :name_volume
               cause = result.cause
             end
 
@@ -223,6 +225,7 @@ module Migrations
               self,
               input,
               data,
+              locator,
               cause,
               seconds_budget: substitution_seconds_budget,
             ).result
@@ -248,13 +251,11 @@ module Migrations
                       :emoji_construct,
                       :quote_construct,
                       :url_dispatch,
-                      :probe_dispatch,
-                      :probe_stop,
                       :on_node
 
-          # The constructs hold the name sets and the normalization, so the
-          # token filter here and the grammar that later anchors a construct
-          # cannot drift apart.
+          # The constructs hold the name sets and the folding, so the token
+          # filter here and the node built for a confirmed occurrence cannot
+          # drift apart.
           def mention_tracked?(name)
             @mention_construct.tracked_name?(name)
           end
@@ -265,9 +266,9 @@ module Migrations
 
           # The text to match for an engine hashtag slug; nil when the name
           # is not tracked. Core's matcher lets trailing colons into the slug
-          # and its lookup drops them, while the construct grammar keeps a
-          # dangling `:` outside the construct — the matched text must do
-          # the same. A `::type` suffix takes no part in the name check.
+          # and its lookup drops them, so the text to look for in the raw
+          # drops them too. A `::type` suffix takes no part in the name
+          # check.
           def hashtag_text(slug)
             ref = slug.sub(/:+\z/, "")
             return nil if ref.empty?
@@ -341,6 +342,14 @@ module Migrations
           def bare_url_node(route_url:, url:)
             @internal_link_construct.reference_for(route_url:, url:)
           end
+
+          def required(constructs, klass)
+            construct = constructs.find { |candidate| candidate.is_a?(klass) }
+            return construct if construct
+
+            raise ArgumentError, "the engine scanner needs a #{klass} construct"
+          end
+          private :required
         end
       end
     end

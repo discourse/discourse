@@ -27,8 +27,6 @@ module Migrations
           # {MAX_SUBSTITUTIONS}. Count matching refuses well under 1% of engine-tier
           # bodies, so this stays cheap.
           class SubstitutionPass
-            include Locating
-
             # A body with hundreds of occurrences of a tracked value keeps
             # its tail unconfirmed instead of paying hundreds of parses.
             MAX_SUBSTITUTIONS = 48
@@ -42,17 +40,24 @@ module Migrations
             # longer than this whole default.
             SUBSTITUTION_SECONDS_BUDGET = 10.0
 
-            def initialize(scanner, input, data, cause, seconds_budget: SUBSTITUTION_SECONDS_BUDGET)
+            def initialize(
+              scanner,
+              input,
+              data,
+              locator,
+              cause,
+              seconds_budget: SUBSTITUTION_SECONDS_BUDGET
+            )
               @scanner = scanner
               @input = input
               @data = data
+              @locator = locator
               @cause = cause
               @seconds_budget = seconds_budget
               @substitutions = 0
               @started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
               @limit_hit = nil
               @unplaced_cause = nil
-              build_line_index
             end
 
             def result
@@ -60,11 +65,16 @@ module Migrations
               expected = tracked_expected(base)
               marker = build_marker
 
+              # Locating occurrences costs one body scan per value; see
+              # `EngineScanner::MAX_SCANNED_VALUES`. A body with CR line
+              # endings skips the count-matching pass, so the cap is checked
+              # here too.
               url_values = expected.count { |entry| entry[:kind] == :url }
-              if url_values > MAX_URL_VALUES
-                # Locating occurrences costs one body scan per URL value; see
-                # `EngineScanner::MAX_URL_VALUES`.
+              if url_values > MAX_SCANNED_VALUES
                 return Result.new(output: @input, cause: :url_volume)
+              end
+              if expected.size - url_values > MAX_SCANNED_VALUES
+                return Result.new(output: @input, cause: :name_volume)
               end
 
               # The loops stop once the limit or the budget is hit; the tail
@@ -91,7 +101,7 @@ module Migrations
               unconfirmed = expected.sum { |entry| entry[:count] } - confirmed + unconfirmed_quotes
 
               Result.new(
-                output: ordered.empty? ? @input : splice(ordered),
+                output: ordered.empty? ? @input : @locator.splice(ordered),
                 cause: unconfirmed > 0 ? (@limit_hit || @unplaced_cause || @cause) : nil,
               )
             end
@@ -129,17 +139,19 @@ module Migrations
                 next unless key.is_a?(Array)
 
                 kind, value = key
+                # The multiset key keeps the engine's exact value so a
+                # substitution delta still matches its token; the text to look
+                # for in the raw is folded, exactly as in the count-matching
+                # pass.
                 text =
                   case kind
                   when :mention
-                    value if @scanner.mention_tracked?(value.delete_prefix("@"))
+                    FoldedText.fold(value) if @scanner.mention_tracked?(value.delete_prefix("@"))
                   when :hashtag
-                    # The multiset key keeps the engine's exact value so the
-                    # substitution delta still matches its token; the matched text
-                    # comes from the same helper the count-matching pass uses.
-                    @scanner.hashtag_text(value)
+                    hashtag = @scanner.hashtag_text(value)
+                    FoldedText.fold(hashtag) if hashtag
                   when :emoji
-                    ":#{value}:" if @scanner.emoji_tracked?(value)
+                    FoldedText.fold(":#{value}:") if @scanner.emoji_tracked?(value)
                   when :url
                     value if @scanner.url_tracked?(value)
                   end
@@ -151,11 +163,9 @@ module Migrations
 
             def occurrences_for(entry)
               if entry[:kind] == :url
-                # Overlapping readings are exactly what substitution can
-                # attribute, so the spans are probed anyway.
-                url_spans(entry[:text], 0...@input.bytesize).first
+                @locator.url_spans(entry[:text], 0...@input.bytesize)
               else
-                probed_occurrences(entry[:kind], entry[:text])
+                @locator.folded_occurrences(entry[:kind], entry[:text])
               end
             end
 
@@ -231,7 +241,7 @@ module Migrations
             end
 
             def definition_occurrence?(text, occurrence)
-              definition_offsets(text).include?([occurrence.offset, occurrence.length])
+              @locator.definition_offsets(text).include?([occurrence.offset, occurrence.length])
             end
 
             def diff(left, right)
@@ -242,29 +252,31 @@ module Migrations
             end
 
             def place(entry, occurrence, spans)
-              match =
-                if entry[:kind] == :url
-                  anchor_match(occurrence) || bare_value_match(entry[:key][1], occurrence)
-                else
-                  probe_match_at(entry[:kind], occurrence)
-                end
+              if entry[:kind] == :url
+                match =
+                  @locator.anchor_match(occurrence) ||
+                    @locator.bare_value_match(entry[:key][1], occurrence)
 
-              # The position is confirmed, but no grammar can take the construct
-              # whole (an escaped-bracket label, a form beyond the pattern
-              # caps). It stays unchanged AND counts as unconfirmed — a stale
-              # reference the caller must hear about. The recorded cause says
-              # which class it was.
-              if match.nil?
-                @unplaced_cause ||=
-                  if entry[:kind] == :url
-                    @scanner.unplaced_url_cause(entry[:key][1])
-                  else
-                    :unanchored
-                  end
-                return false
+                # The position is confirmed, but no grammar can take the
+                # construct whole (an escaped-bracket label, a form beyond the
+                # pattern caps). It stays unchanged AND counts as unconfirmed —
+                # a stale reference the caller must hear about. The recorded
+                # cause says which class it was.
+                if match.nil?
+                  @unplaced_cause ||= @scanner.unplaced_url_cause(entry[:key][1])
+                  return false
+                end
+              else
+                match = @locator.node_match(entry[:kind], occurrence)
               end
 
-              spans[[match.start_pos, match.end_pos]] ||= match
+              # A span already placed is one construct already counted: two
+              # readings of one URL, or a self-link's label and destination,
+              # can both confirm the same match.
+              key = [match.start_pos, match.end_pos]
+              return false if spans.key?(key)
+
+              spans[key] = match
               true
             end
 
@@ -295,7 +307,7 @@ module Migrations
                 end
 
                 occurrence =
-                  Locating::Occurrence.new(
+                  Locator::Occurrence.new(
                     offset: match.start_pos,
                     length: match.end_pos - match.start_pos,
                   )

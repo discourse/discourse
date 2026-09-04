@@ -24,26 +24,20 @@ module Migrations
         #   Nil or blank disables here-detection, so no name will classify as HERE.
         # @param group_names [Enumerable<String>] the source's group names.
         def initialize(here_mention: "here", group_names: [])
-          @here_mention = normalize(here_mention) if here_mention.present?
-          @group_names = group_names.map { |name| normalize(name) }.to_set
+          @here_mention = NameNormalizer.normalize(here_mention) if here_mention.present?
+          @group_names = group_names.map { |name| NameNormalizer.normalize(name) }.to_set
         end
 
         # @param name [String] the mention name (without the leading `@`).
         # @return [Integer] a {MentionType} enum value.
         def call(name)
-          normalized = normalize(name)
+          normalized = NameNormalizer.normalize(name)
 
           return MentionType::HERE if @here_mention && normalized == @here_mention
           return MentionType::ALL if normalized == "all"
           return MentionType::GROUP if @group_names.include?(normalized)
 
           MentionType::USER
-        end
-
-        private
-
-        def normalize(name)
-          Migrations::NameNormalizer.normalize(name)
         end
       end
     end

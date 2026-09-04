@@ -5,72 +5,55 @@ module Migrations
     module Discourse
       module MarkdownScanner
         module Constructs
-          # Detects a custom emoji shortcode (`:name:`) and defers it only when the
-          # name is one of the source's own custom emoji. Standard emoji, a stray
-          # `:word:` in prose, and clock times all pass through untouched. This
-          # construct requires its name set (there's nothing to defer without it).
+          # Custom emoji shortcodes (`:name:`), deferred only when the name is one of
+          # the source's own custom emoji. Standard emoji, a stray `:word:` in prose
+          # and clock times all pass through untouched. This construct requires its
+          # name set — there is nothing to defer without it — and a source with no
+          # custom emoji leaves it out entirely, so those posts never pay for the `:`
+          # trigger.
           #
-          # This follows core's emoji rule (`discourse-markdown-it/src/features/
-          # emoji.js`): the opening `:` must sit on the rule's boundary — start of
-          # input, a tab/space/newline, a Unicode punctuation or symbol (which
-          # includes the closing colon of an adjacent shortcode, `:smile::wink:`),
-          # or a zero-width space (see {Boundaries#emoji_boundary_before?}). The rule
-          # imposes no boundary after the closing `:` (verified against PrettyText:
-          # `:name:x` still renders), so neither do we. We diverge in one small way:
-          # the name is restricted to real emoji-name characters rather than
-          # "anything up to the next colon".
+          # Whether a shortcode opens where it sits, and what a tone suffix resolves
+          # to, is core's business: the {EngineScanner} reads the shortcodes the real
+          # parse reported and locates them in the raw by counting. Core lowercases a
+          # shortcode before the custom lookup, so `:MYEMOJI:` is the same emoji as
+          # `:myemoji:` and counting folds the raw the same way.
           class Emoji < Base
             TRIGGERS = [":"].freeze
 
-            # Emoji names are lowercase; `_`, `+` and `-` appear in a few (`:+1:`,
-            # `:-1:`, `:t-rex:`).
-            NAME = /[a-z0-9_+-]+/
-            private_constant :NAME
-
-            # The lookahead rejects a toned shortcode (`:name:t4:`): core resolves a
-            # tone suffix to the toned standard emoji even when a custom emoji has
-            # the same name (the custom lookup runs on the tone-inclusive code and
-            # never matches), so a toned shortcode can't mean the source's custom
-            # emoji and must stay literal. Without the closing colon (`:name:t4`)
-            # there is no tone and the shortcode is the custom emoji as usual.
-            PATTERN = /\G:(?<name>#{NAME}):(?!t[2-6]:)/
-            private_constant :PATTERN
-
-            # A bare `:` is far too common for the gate's presence check, but the
-            # `:name:` shape is selective enough to keep plain posts skipping all
-            # work (see {Base#presence_pattern}).
-            PRESENCE_PATTERN = /:#{NAME}:/
+            # A bare `:` is far too common for the gate's presence check, while the
+            # `:name:` shape keeps plain posts skipping all work. Wider than a custom
+            # emoji name (which core spells lowercase and ASCII): the raw may spell
+            # the name in any case, and a source's own name may hold anything the
+            # importer can look up again.
+            PRESENCE_PATTERN = /:[[:alnum:]_+-]+:/
             private_constant :PRESENCE_PATTERN
 
-            # @param names [Enumerable<String>] the source's custom emoji names.
+            # @param names [Migrations::CompactStringSet] the source's custom emoji
+            #   names, already folded.
             def initialize(names:)
-              @names = names.to_set
+              @names = names
             end
+
+            # The folded name set, for the {TierGate}'s candidate probe, which
+            # folds the raw itself and so needs the set unmediated.
+            attr_reader :names
 
             def presence_pattern
               PRESENCE_PATTERN
             end
 
-            # Custom emoji names are matched byte-exact — core's emoji rule
-            # does no case folding or normalization on them.
+            # Whether `name` is one of the source's custom emoji — the engine
+            # tier's token filter asks the construct so filter and node share
+            # one name set and one folding.
             def tracked_name?(name)
-              @names.include?(name)
+              @names.include?(normalize(name))
             end
 
-            def detect(input, pos, _byte)
-              return nil unless emoji_boundary_before?(input, pos)
-
-              match = match_at(PATTERN, input, pos)
-              return nil unless match
-
-              name = match[:name]
-              return nil unless tracked_name?(name)
-
-              Match.new(
-                start_pos: pos,
-                end_pos: match.byteoffset(0).last,
-                node: EmojiReference.new(name:),
-              )
+            # The node for a confirmed occurrence, from its raw bytes. The name
+            # keeps the author's spelling, which the importer folds when it
+            # looks the emoji up.
+            def node_for(text)
+              EmojiReference.new(name: text.delete_prefix(":").delete_suffix(":"))
             end
           end
         end

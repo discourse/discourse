@@ -156,20 +156,17 @@ module Migrations
               }x
             private_constant :URL
 
-            # `\G` anchors each match at `pos` so scanning stays linear. The alt
-            # class excludes `[` for the same reason as `LINK` below: a nested image
-            # `![![…](…)](…)` must not match from the outer `!`.
-            # The label caps are CommonMark's own 999-character link-label limit.
-            IMAGE = /\G!\[[^\[\]]{0,999}\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
+            # `\G` anchors each match at `pos` so scanning stays linear. Alt text
+            # and link text are the one shared label grammar (see
+            # `Base::LINK_TEXT`): they take the single level of balanced brackets
+            # CommonMark allows, so `[see [1]](<upload url>)` is deferred, but no
+            # nested link or image — the `[` of `[![…](…)](…)` never starts a match
+            # at the outer bracket, and the inner image is deferred on its own at
+            # the `!` trigger.
+            IMAGE = /\G!\[#{Base::LINK_TEXT}\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
             private_constant :IMAGE
 
-            # The text class excludes `[` so the `[` of a nested image
-            # `[![…](…)](…)` never starts a match at the outer bracket — otherwise
-            # `[^\]]*` would run across the `![…]` and match from the outer `[` down to
-            # the inner `)`, consuming the image and leaving a dangling `](…)`. With
-            # `[` excluded the outer bracket fails here and the inner image is deferred
-            # on its own at the `!` trigger.
-            LINK = /\G\[[^\[\]]{0,999}\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
+            LINK = /\G\[#{Base::LINK_TEXT}\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
             private_constant :LINK
 
             BARE = /\G#{URL}/
@@ -244,25 +241,8 @@ module Migrations
 
             private
 
-            # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
-            # right kind of `(…)`; see {Boundaries#bare_url_boundary_before?}). A normal
-            # `[text](url)` is consumed whole at its `[` trigger, so an inner URL is
-            # only reached when the outer bracket wasn't a handled link — a nested
-            # image `[![…](…)](url)` or an old lightbox, where rewriting the outer URL
-            # in place is what we want.
-            #
-            # A relative upload URL is a link only at a `](…)` target; bare in prose it
-            # stays plain text once cooked, so we leave it literal there. The match's
-            # first bytes tell relative (`/…`) from absolute (`//host` or a scheme).
             def detect_bare(input, pos)
-              return nil unless bare_url_boundary_before?(input, pos)
-
-              match = match_at(BARE, input, pos)
-              return nil unless match
-              return nil if inadmissible_protocol_relative?(input, pos, match[0])
-              return nil if relative_url?(match[0]) && !link_target_boundary_before?(input, pos)
-
-              build_match(pos, match)
+              detect_bare_url(input, pos, BARE) { |match| build_match(pos, match) }
             end
 
             def match_with(pattern, input, pos)
@@ -286,12 +266,6 @@ module Migrations
                 end_pos: match.byteoffset(0).last,
                 node: UploadUrlReference.new(sha1:, host:, rest:),
               )
-            end
-
-            # A relative URL starts with a single `/`; `//host` is protocol-relative
-            # (absolute) and `https://…` schemed.
-            def relative_url?(url)
-              url.start_with?("/") && !url.start_with?("//")
             end
           end
         end

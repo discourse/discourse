@@ -69,7 +69,7 @@ module Migrations
 
             # A relative link (`/t/5`) contains no character of the gate's
             # built-in presence check, so route segments contribute their own
-            # (see {Base#presence_pattern}).
+            # (see {Detection#presence_pattern}).
             ROUTE_PRESENCE = %r{/(?:#{ROUTE_SEGMENT})/}
             private_constant :ROUTE_PRESENCE
 
@@ -105,7 +105,7 @@ module Migrations
             # route-less one (`/faq`, `/search?q=…`) becomes a `:site` link exactly
             # like the same URL in link syntax. Whatever follows the host is the path,
             # which also covers a subfolder install (`//host/forum/t/5`) — the prefix
-            # comes off via `UrlOrigin.path_within_prefix`.
+            # comes off with the host's own (see `UrlOrigin.classify`).
             #
             # The scheme is case-insensitive because linkify-it reads it that way, so
             # core links `HTTPS://…` too. The insensitivity stops at the scheme: route
@@ -169,7 +169,54 @@ module Migrations
               end
             end
 
+            # For the engine tier, which filters URL values before any construct
+            # runs and so never reaches `build` for a foreign link: the same
+            # once-per-host signal for an absolute URL whose host isn't
+            # configured.
+            def note_foreign_url(url)
+              origin = classify(url)
+              note_foreign_host(origin.host, origin.rest) if origin&.foreign
+            end
+
+            # A reference for a URL whose position the engine tier already
+            # confirmed but whose surrounding bytes are the URL itself (a bare
+            # schemeless domain linkify links, a reference definition's
+            # destination). `route_url` is the engine's href and only resolves
+            # the host and its prefix — it is a normalized spelling
+            # (percent-encoding, an added scheme), and a normalized spelling
+            # must never be written back into a post. The route and the stored
+            # suffix are read from `url`, the raw spelling at the occurrence,
+            # which is also stored as the fallback and the whole construct (so
+            # its destination span is the entire snippet). A raw path the route
+            # parser cannot read builds no typed target; the coordinate-shape
+            # rule then decides between a `:site` rewrite and no node, as
+            # everywhere else. The value was tracked before this is called, so
+            # no foreign-host signal fires here.
+            def reference_for(route_url:, url:)
+              origin = classify(route_url)
+              return nil if origin.nil? || origin.foreign
+
+              rest = raw_rest(url)
+              return nil if rest.nil?
+
+              path = UrlOrigin.path_within_prefix(rest, origin.prefix)
+              return nil if path.nil?
+
+              route_or_site_node(
+                url:,
+                text: nil,
+                path:,
+                host: origin.host,
+                url_offset: 0,
+                label_url_offset: nil,
+              )
+            end
+
             private
+
+            def classify(url)
+              UrlOrigin.classify(url, hosts: @hosts, base_prefix: @base_prefix)
+            end
 
             # A route-less absolute URL (`https://host/faq`) carries none of the
             # gate's built-in signals and no route segment, so without an
@@ -198,8 +245,7 @@ module Migrations
               match = match_at(LINK, input, pos)
               return nil unless match
 
-              # Link syntax: the URL is a link, so a relative one is fine here.
-              build(pos, match, url: match[:url], text: match[:text], allow_relative: true)
+              build(pos, match, url: match[:url], text: match[:text])
             end
 
             # The destination's byte offset within the matched construct, and —
@@ -224,108 +270,40 @@ module Migrations
               [url_offset, label_offset]
             end
 
-            # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
-            # right kind of `(…)`; see {Boundaries#bare_url_boundary_before?}). A normal
-            # `[text](url)` is consumed whole at its `[` trigger, so an inner URL is
-            # only reached when the outer bracket wasn't a handled link — a nested
-            # image `[![…](…)](url)` whose outer target we do want, versus an image's
-            # own `![alt](url)` src or a foreign link's target, which the paren check
-            # deliberately leaves alone.
-            #
-            # A bare relative URL is a link only at a `](…)` target; in prose it stays
-            # plain text once cooked, so there we leave it literal (only an absolute
-            # bare URL is rewritten in prose). `UrlOrigin.split` reports the relative case
-            # inside `build`, so the boundary form we admit at is passed down.
             def detect_bare(input, pos)
-              return nil unless bare_url_boundary_before?(input, pos)
-
-              match = match_at(BARE, input, pos)
-              return nil unless match
-              return nil if inadmissible_protocol_relative?(input, pos, match[:url])
-
-              build(
-                pos,
-                match,
-                url: match[:url],
-                text: nil,
-                allow_relative: link_target_boundary_before?(input, pos),
-              )
+              detect_bare_url(input, pos, BARE) do |match|
+                build(pos, match, url: match[:url], text: nil)
+              end
             end
 
-            # For the engine tier, which filters URL values before any construct
-            # runs and so never reaches `build` for a foreign link: the same
-            # once-per-host signal for an absolute URL whose host isn't
-            # configured.
-            def note_foreign_url(url)
-              host, rest = UrlOrigin.split(url)
-              note_foreign_host(host, rest) if host && rest && !@hosts.key?(host)
-            end
-            public :note_foreign_url
+            def build(pos, match, url:, text:)
+              origin = classify(url)
+              return nil if origin.nil?
 
-            def build(pos, match, url:, text:, allow_relative:)
-              host, rest = UrlOrigin.split(url)
-              return nil unless rest
-              return nil if host.nil? && !allow_relative
-
-              if host
-                unless @hosts.key?(host)
-                  note_foreign_host(host, rest)
-                  return nil
-                end
-                prefix = @hosts[host]
-              else
-                prefix = @base_prefix
+              if origin.foreign
+                note_foreign_host(origin.host, origin.rest)
+                return nil
               end
 
               # On a prefixed host only paths inside the prefix belong to the forum;
               # a sibling app's path (or a relative link that isn't the subfolder
               # site's own) stays literal — no route, no `:site` rewrite, no signal.
-              path = UrlOrigin.path_within_prefix(rest, prefix)
-              return nil if path.nil?
+              return nil if origin.path.nil?
 
               url_offset, label_url_offset = destination_spans(pos, match, url)
-              node = route_or_site_node(url:, text:, path:, host:, url_offset:, label_url_offset:)
+              node =
+                route_or_site_node(
+                  url:,
+                  text:,
+                  path: origin.path,
+                  host: origin.host,
+                  url_offset:,
+                  label_url_offset:,
+                )
               return nil unless node
 
               Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
             end
-
-            # A reference for a URL whose position the engine tier already
-            # confirmed but whose surrounding bytes are the URL itself (a bare
-            # schemeless domain linkify links, a reference definition's
-            # destination). `route_url` is the engine's href and only resolves
-            # the host — it is a normalized spelling (percent-encoding, an
-            # added scheme), and a normalized spelling must never be written
-            # back into a post. The route and the stored suffix are read from
-            # `url`, the raw spelling at the occurrence, which is also stored
-            # as the fallback and the whole construct (so its destination span
-            # is the entire snippet). A raw path the route parser cannot read
-            # builds no typed target; the coordinate-shape rule then decides
-            # between a `:site` rewrite and no node, as everywhere else. The
-            # value was tracked before this is called, so no foreign-host
-            # signal fires here.
-            def reference_for(route_url:, url:)
-              host, href_rest = UrlOrigin.split(route_url)
-              return nil unless href_rest
-              prefix = host ? @hosts[host] : @base_prefix
-              return nil if host && !@hosts.key?(host)
-
-              rest = raw_rest(url)
-              return nil if rest.nil?
-
-              path = UrlOrigin.path_within_prefix(rest, prefix)
-              return nil if path.nil?
-
-              route_or_site_node(
-                url:,
-                text: nil,
-                path:,
-                host:,
-                url_offset: 0,
-                label_url_offset: nil,
-              )
-            end
-            public :reference_for
 
             # The path/query/fragment part of the raw spelling. A schemeful or
             # protocol-relative raw URL splits like any other; a bare

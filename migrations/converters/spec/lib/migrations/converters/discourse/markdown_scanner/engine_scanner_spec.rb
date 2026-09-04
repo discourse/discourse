@@ -263,6 +263,44 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(refusals).to be_empty
     end
 
+    # markdown-it strips a backslash escape before the text rules run, so core
+    # cooks `\\@bob` as a mention. A counter that read the escape as a
+    # rejection counted one occurrence too few here and handed the token to the
+    # code-span look-alike — the post came back with its code span rewritten.
+    [
+      ["mention", "\\@bob", "`@bob`", :mentions, "bob"],
+      ["hashtag", "\\#support", "`#support`", :hashtags, "support"],
+      ["custom emoji", "\\:parrot:", "`:parrot:`", :emojis, "parrot"],
+    ].each do |kind, escaped, shielded, rows, name|
+      it "rewrites an escaped #{kind} and leaves the code-span copy alone" do
+        output = extract("#{escaped} and #{shielded}")
+
+        expect(buffer.public_send(rows).map { |row| row[:name] }).to eq([name])
+        placeholder = buffer.public_send(rows).first[:placeholder]
+        expect(output).to eq("\\#{placeholder} and #{shielded}")
+        expect(refusals).to be_empty
+      end
+    end
+
+    it "rewrites a shortcode the author upper-cased and leaves the code-span copy alone" do
+      # Core lowercases a shortcode before it looks a custom emoji up, so
+      # `:PARROT:` is the same emoji — and counting has to fold the raw the
+      # same way, or the engine's one token lands on the code span.
+      output = extract(":PARROT: and `:parrot:`")
+
+      expect(buffer.emojis.map { |row| row[:name] }).to eq(%w[PARROT])
+      expect(output).to eq("#{buffer.emojis.first[:placeholder]} and `:parrot:`")
+      expect(refusals).to be_empty
+    end
+
+    it "records a shortcode in the author's own case" do
+      output = extract("nice :ParRot: work")
+
+      expect(buffer.emojis.map { |row| row[:name] }).to eq(%w[ParRot])
+      expect(output).to eq("nice #{buffer.emojis.first[:placeholder]} work")
+      expect(refusals).to be_empty
+    end
+
     it "stores the raw spelling of a swallowed query, not the href's percent-encoding" do
       # Linkify takes the quote and everything after it into the href and
       # percent-encodes it there. The href may only resolve the host: the
@@ -365,13 +403,62 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "refuses a body with more distinct tracked URLs than the value cap" do
-      count = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::MAX_URL_VALUES + 1
+      count =
+        Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::MAX_SCANNED_VALUES + 1
       raw = (1..count).map { |i| "https://forum.example.com/t/s/#{i}" }.join(" ")
       output = extract(raw)
 
       expect(output).to eq(raw)
       expect(buffer.links).to be_empty
       expect(refusals).to eq(%i[url_volume])
+    end
+
+    it "extracts both mentions when one name is a prefix of the other" do
+      # `@bob` occurs twice in the raw — once on its own, once inside `@bobby` —
+      # against the engine's one token, so counting escalates. Substitution
+      # then confirms the standalone one and rejects the spelling inside the
+      # longer name, which is what keeps both mentions and their spans right.
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:
+            Migrations::CompactStringSet.new(
+              %w[bob bobby].map { |name| Migrations::NameNormalizer.normalize(name) },
+            ),
+          hashtag_names:,
+          markdown_engine:,
+          on_engine_refusal:,
+        )
+
+      output = extractor.extract("@bob and @bobby")
+
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[bob bobby])
+      placeholders = buffer.mentions.map { |row| row[:placeholder] }
+      expect(output).to eq("#{placeholders[0]} and #{placeholders[1]}")
+      expect(refusals).to be_empty
+    end
+
+    it "refuses a body with more distinct tracked names than the value cap" do
+      # Locating a name costs one scan of the body, exactly as a URL does.
+      count =
+        Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::MAX_SCANNED_VALUES + 1
+      names = (1..count).map { |i| format("user%04d", i) }
+      raw = names.map { |name| "@#{name}" }.join(" ")
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:
+            Migrations::CompactStringSet.new(
+              names.map { |name| Migrations::NameNormalizer.normalize(name) },
+            ),
+          hashtag_names:,
+          markdown_engine:,
+          on_engine_refusal:,
+        )
+
+      expect(extractor.extract(raw)).to eq(raw)
+      expect(buffer.mentions).to be_empty
+      expect(refusals).to eq(%i[name_volume])
     end
 
     it "reports quote headers beyond the substitution limit instead of calling them handled" do

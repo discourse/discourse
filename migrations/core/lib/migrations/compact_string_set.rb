@@ -56,6 +56,7 @@ module Migrations
       # defaults to binary): the confirm slices compare against UTF-8 queries,
       # and equal bytes in incompatible encodings are not equal strings.
       @count = 0
+      @max_byte_length = 0
       buffer = String.new(capacity: 4096, encoding: Encoding::UTF_8)
       offsets = String.new(capacity: 1024, encoding: Encoding::BINARY)
       offsets << [0].pack("V")
@@ -101,9 +102,9 @@ module Migrations
       @count
     end
 
-    def empty?
-      @count == 0
-    end
+    # The longest member in bytes. A scanner that has to decide whether some
+    # run of raw bytes could spell a member reads no more than this many.
+    attr_reader :max_byte_length
 
     private
 
@@ -175,6 +176,7 @@ module Migrations
       buffer << name
       offsets << [position].pack("V")
       @count += 1
+      @max_byte_length = name.bytesize if name.bytesize > @max_byte_length
     end
 
     # Doubles the probe table and re-places every member. The name and offset

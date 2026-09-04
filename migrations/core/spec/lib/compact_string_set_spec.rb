@@ -4,15 +4,14 @@ RSpec.describe Migrations::CompactStringSet do
   it "handles an empty set" do
     set = described_class.new([])
 
-    expect(set).to be_empty
     expect(set.size).to eq(0)
+    expect(set.max_byte_length).to eq(0)
     expect(set.include?("anything")).to be false
   end
 
   it "handles a single entry" do
     set = described_class.new(["alice"])
 
-    expect(set).not_to be_empty
     expect(set.size).to eq(1)
     expect(set.include?("alice")).to be true
     expect(set.include?("bob")).to be false
@@ -52,6 +51,13 @@ RSpec.describe Migrations::CompactStringSet do
     expect(set.size).to eq(2)
     expect(set.include?("alice")).to be true
     expect(set.include?("bob")).to be true
+  end
+
+  it "reports the longest member in bytes, counting a multibyte name's bytes" do
+    expect(described_class.new(%w[bob alice]).max_byte_length).to eq(5)
+    # "café" is 5 bytes, one more than its 4 characters.
+    expect(described_class.new(%w[bob café]).max_byte_length).to eq(5)
+    expect(described_class.new(%w[alice alice]).max_byte_length).to eq(5)
   end
 
   it "answers correctly across probe-table growth" do

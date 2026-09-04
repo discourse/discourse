@@ -21,7 +21,12 @@ module Migrations
           # holds: it cooks `data-username="post:5"` and no `data-post` at all, so
           # there are no coordinates there to remap. Rewriting it would mean giving
           # the header a reading core does not have.
-          class Quote < Base
+          class Quote
+            # No {Base} here: that contract belongs to the constructs the
+            # scanner dispatches by trigger byte, and this one is reached only
+            # at a parsed quote block token, through the two methods below.
+            include Detection
+
             # Case-insensitive because core's bbcode rules are: `[QUOTE=bob]` renders
             # the same block, and missing it leaves the header's source numbering in
             # the imported raw.
@@ -41,7 +46,7 @@ module Migrations
             # could not take it" — the engine tier reports the latter, since an
             # unparseable header may still hold remappable fields.
             def parseable_opener?(input, pos)
-              match_at(OPENING, input, pos) ? true : false
+              !match_at(OPENING, input, pos).nil?
             end
 
             def detect_block_opener(input, pos)

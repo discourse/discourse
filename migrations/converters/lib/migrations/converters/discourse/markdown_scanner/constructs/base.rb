@@ -5,11 +5,13 @@ module Migrations
     module Discourse
       module MarkdownScanner
         module Constructs
-          # Base class for the construct classes. The boundary look-arounds
-          # they share live in {Boundaries}; the constants here are the
-          # shared pattern building blocks.
+          # Base class for the constructs that parse inline syntax. The
+          # boundary look-arounds they share live in {Boundaries} and the
+          # syntax-independent part of the contract in {Detection}; the
+          # constants here are the shared pattern building blocks.
           class Base
             include Boundaries
+            include Detection
 
             # The characters this construct can match at (each subclass's `TRIGGERS`).
             # The scanner dispatches by character, so a position only runs the
@@ -29,18 +31,6 @@ module Migrations
               raise NotImplementedError, "#{self.class} must implement #detect"
             end
 
-            # A regexp the {TierGate} adds to its presence check when this
-            # class is wired: a body matching neither the gate's built-in
-            # check nor any class's pattern is returned without any work.
-            # Only a class whose matches don't always contain one of the
-            # gate's base presence characters needs one; nil (the default)
-            # means the built-in check already covers this class.
-            #
-            # @return [Regexp, nil]
-            def presence_pattern
-              nil
-            end
-
             private
 
             # Same normalization the importer applies when it resolves the name to a
@@ -50,13 +40,36 @@ module Migrations
               Migrations::NameNormalizer.normalize(name)
             end
 
-            # Anchored match at a byte offset: every PATTERN here is `\G`-anchored, so
-            # `byteindex` matches at `pos` or not at all — the byte-offset analogue of
-            # `PATTERN.match(input, pos)`, but positioned in O(1) no matter how many
-            # multibyte characters precede `pos`. The returned MatchData's
-            # `byteoffset`s are byte offsets into `input`.
-            def match_at(pattern, input, pos)
-              input.byteindex(pattern, pos) && Regexp.last_match
+            # The shared bare-URL detection: a bare URL starts at a bare-URL
+            # boundary (line start, whitespace, or the right kind of `(…)`; see
+            # {Boundaries#bare_url_boundary_before?}). A normal `[text](url)` is
+            # consumed whole at its `[` trigger, so an inner URL is only reached
+            # when the outer bracket wasn't a handled link — a nested image
+            # `[![…](…)](url)` or an old lightbox, where rewriting the outer URL
+            # in place is what we want.
+            #
+            # A relative URL is a link only at a `](…)` target; bare in prose it
+            # stays plain text once cooked, so rewriting it there would turn text
+            # into a link. The match's first bytes tell relative (`/…`) from
+            # absolute (`//host` or a scheme).
+            #
+            # `pattern` is the construct's own `\G`-anchored bare-URL grammar; the
+            # block turns an admitted MatchData into the construct's {Match}.
+            def detect_bare_url(input, pos, pattern)
+              return nil unless bare_url_boundary_before?(input, pos)
+
+              match = match_at(pattern, input, pos)
+              return nil unless match
+              return nil if inadmissible_protocol_relative?(input, pos, match[0])
+              return nil if relative_url?(match[0]) && !link_target_boundary_before?(input, pos)
+
+              yield match
+            end
+
+            # A relative URL starts with a single `/`; `//host` is protocol-relative
+            # (absolute) and `https://…` schemed.
+            def relative_url?(url)
+              url.start_with?("/") && !url.start_with?("//")
             end
 
             # A username the way core's `UsernameValidator` (and the markdown-it
@@ -70,11 +83,6 @@ module Migrations
             # The source is shared with `InternalLink::RouteParser::WORD`, which
             # reads a `/u/<name>` segment the same way but unanchored.
             WORD_SOURCE = "[\\p{Alnum}\\p{M}_](?:[\\p{Alnum}\\p{M}._-]*[\\p{Alnum}\\p{M}])?"
-
-            # `\G` anchors the match at `pos`, so we match in place instead of slicing
-            # off the tail of the input first.
-            WORD_PATTERN = /\G#{WORD_SOURCE}/
-            private_constant :WORD_PATTERN
 
             # A record id: at most 18 digits. Ids are stored as SQLite signed 64-bit
             # integers, and a 19-digit run overflows that range (binding the bignum
@@ -146,13 +154,6 @@ module Migrations
             # reads `[text](url)` accepts the same shapes — a link carrying a title
             # is still a link, and one that doesn't match here is never rewritten.
             LINK_TAIL = /(?:#{LINK_GAP}#{LINK_TITLE})?#{LINK_GAP}\)/
-
-            # Extract a word starting at the byte offset, or `""` when nothing there
-            # can open one (`WORD_PATTERN` needs a valid leading character). Caller
-            # must ensure pos is within bounds (`pos <= input.bytesize`).
-            def extract_word(input, pos)
-              match_at(WORD_PATTERN, input, pos)&.[](0) || ""
-            end
           end
         end
       end

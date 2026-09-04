@@ -28,8 +28,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: %w[general]) }
 
   # The 32 ASCII punctuation characters (CommonMark), which already include the
-  # ASCII symbols `$ + < = > ^ \` | ~`, plus the letters, whitespace, and Unicode
-  # punctuation/symbol characters that exercise the boundary from both sides.
+  # ASCII symbols `$ + < = > ^ \` | ~`, plus letters, whitespace, and Unicode
+  # punctuation/symbol characters that exercise the boundary from both sides. The
+  # last three are the telling ones: `²` and `½` are category No and `­` (soft
+  # hyphen) is category Cf — none are a word character, a space, or punctuation, so
+  # they separate a plain word boundary from core's punctuation-or-space boundary.
   def boundary_chars
     ascii_punctuation =
       [0x21..0x2f, 0x3a..0x40, 0x5b..0x60, 0x7b..0x7e].flat_map(&:to_a)
@@ -50,6 +53,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       "left guillemet" => "«",
       "ellipsis" => "…",
       "euro sign" => "€",
+      "superscript two" => "²",
+      "vulgar half" => "½",
+      "soft hyphen" => "\u00AD",
     }.merge(ascii_punctuation)
   end
 

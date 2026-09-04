@@ -241,6 +241,32 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
+    # One label grammar for every `[label](dest)` construct
+    # (`Constructs::Base::LINK_TEXT`): a citation-style label used to leave the
+    # upload URL unanchored, so the engine tier refused the post instead of
+    # extracting it.
+    it "defers a link whose label carries one level of nested brackets" do
+      url = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
+      body = "[see [1]](#{url})"
+      result = extract(body)
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: body)
+      expect(result).to eq(upload[:placeholder])
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "defers an image whose alt text carries one level of nested brackets" do
+      url = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
+      body = "![see [1]](#{url})"
+      result = extract(body)
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: body)
+      expect(result).to eq(upload[:placeholder])
+      expect(extractor.engine_refusals).to be_empty
+    end
+
     it "defers a bare, whitespace-delimited upload URL" do
       url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png"
       result = extract("see #{url} thanks")

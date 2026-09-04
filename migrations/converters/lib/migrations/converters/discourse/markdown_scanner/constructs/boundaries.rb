@@ -5,129 +5,19 @@ module Migrations
     module Discourse
       module MarkdownScanner
         module Constructs
-          # The boundary look-arounds shared by the constructs: whether core's
-          # engines let a construct open (or close) at a position, given what
-          # sits next to it. Each takes the input and a byte offset, first
-          # tests the neighboring byte as ASCII, and falls back to the
-          # recovered character for a Unicode-aware test. Mixed into {Base},
-          # so every construct shares one reading of each boundary.
+          # The boundary look-arounds the URL constructs share: whether core
+          # lets a link open at a position, given what sits next to it. Each
+          # takes the input and a byte offset, first tests the neighboring byte
+          # as ASCII, and falls back to the recovered character for a
+          # Unicode-aware test. Mixed into {Base}, so every construct shares
+          # one reading of each boundary.
+          #
+          # The name-gated constructs (mentions, hashtags, custom emoji) have
+          # no boundary rules at all: the engine tier reads what core actually
+          # recognized and counts it in the raw, which is why nothing here
+          # mirrors their opening conditions any more.
           module Boundaries
-            # The boundary markdown-it's text-post-process engine enforces around a
-            # whole match: whitespace or, per markdown-it's `isPunctChar`, a Unicode
-            # punctuation or symbol character. `\p{Z}` covers the wide spaces (NBSP,
-            # ideographic space) markdown-it counts as whitespace that Ruby's `\s`
-            # misses. Shared by the classes whose construct only fires on such a
-            # boundary (mentions, hashtags). Verified against PrettyText — this
-            # boundary is imposed by the engine, not shown by the rule's own regex.
-            PUNCTUATION_OR_SYMBOL = /[\p{P}\p{S}\p{Z}]/
-            private_constant :PUNCTUATION_OR_SYMBOL
-
-            # The character set core's emoji rule (`discourse-markdown-it/src/
-            # features/emoji.js`) accepts before a shortcode's opening `:`, per
-            # markdown-it's `isPunctChar`: a Unicode punctuation or symbol. Unlike
-            # {PUNCTUATION_OR_SYMBOL} (the text-post-process boundary shared by
-            # mentions and hashtags) this leaves out `\p{Z}`: the emoji rule's
-            # `isSpace`/`isPunctChar` both reject the wide spaces (NBSP, ideographic
-            # space, category Zs), so a shortcode glued right after one stays
-            # literal. Verified against PrettyText.
-            EMOJI_PUNCTUATION_OR_SYMBOL = /[\p{P}\p{S}]/
-            private_constant :EMOJI_PUNCTUATION_OR_SYMBOL
-
-            # The zero-width space the emoji rule special-cases as a valid character
-            # before the opening `:`, alongside whitespace and punctuation. It is
-            # category Cf, so neither `isSpace` nor `isPunctChar` covers it.
-            ZERO_WIDTH_SPACE = "\u200B"
-            private_constant :ZERO_WIDTH_SPACE
-
             private
-
-            # A mention (`@name`) opens only when the `@` sits on a boundary: the
-            # start of input, whitespace, or a punctuation/symbol character. Verified
-            # against PrettyText: the engine's boundary is punctuation-or-space, not
-            # "not a word character", so a `_` before the `@` (`a_@name`) opens a
-            # mention (core cooks it) while `@` glued to a letter or digit does not.
-            #
-            # `pos` is a byte offset, so `getbyte(pos - 1)` is the last byte of the
-            # previous character. An ASCII byte (< 0x80) is that whole character; a
-            # byte >= 0x80 is the trailing byte of a multibyte character, so we recover
-            # the actual character with {#previous_char} and test it Unicode-aware.
-            def mention_boundary_before?(input, pos)
-              return true if pos.zero?
-
-              byte = input.getbyte(pos - 1)
-              # A `\` escapes the `@` into a literal (`\@name`), so it never opens a
-              # mention even though `\` is itself punctuation.
-              return false if byte == 0x5c # `\`
-
-              if byte < 0x80
-                whitespace_byte?(byte) || ascii_punct_or_symbol_byte?(byte)
-              else
-                PUNCTUATION_OR_SYMBOL.match?(previous_char(input, pos))
-              end
-            end
-
-            # The forward half of the same boundary: `pos` is the byte right after the
-            # name, and the mention opens only when that is the end of input,
-            # whitespace, or a punctuation/symbol character. Verified against
-            # PrettyText: `@name²` (a `²`, category No, right after the name) is not a
-            # boundary, so core leaves it literal. The name match already stops on a
-            # non-word character, so this only rejects the few that are neither a
-            # boundary nor a word character (numbers like `²`, format characters).
-            def mention_boundary_after?(input, pos)
-              return true if pos >= input.bytesize
-
-              byte = input.getbyte(pos)
-              if byte < 0x80
-                whitespace_byte?(byte) || ascii_punct_or_symbol_byte?(byte)
-              else
-                PUNCTUATION_OR_SYMBOL.match?(char_at(input, pos))
-              end
-            end
-
-            # A custom-emoji shortcode opens only when its `:` sits on core's emoji
-            # boundary (`emoji.js`'s `isValidEmojiPrecedingChar`): the start of
-            # input, a tab or space (markdown-it's narrow `isSpace`) or a newline (a
-            # line break splits the text into separate tokens before the emoji rule
-            # runs, so a shortcode after one opens at the start of its own fragment),
-            # a Unicode punctuation or symbol (`isPunctChar` — which includes the
-            # closing `:` of an adjacent shortcode, so `:a::b:` defers both), or the
-            # zero-width space the rule special-cases. Verified against PrettyText:
-            # NBSP and ideographic space (both Zs), a soft hyphen (Cf), and `²`/`½`
-            # (No) are none of these, so core leaves a shortcode after one literal.
-            #
-            # `pos` is a byte offset, so `getbyte(pos - 1)` is the previous
-            # character's last byte: an ASCII byte is that whole character, a byte
-            # >= 0x80 its trailing byte, recovered with {#previous_char} and tested
-            # Unicode-aware.
-            def emoji_boundary_before?(input, pos)
-              return true if pos.zero?
-
-              byte = input.getbyte(pos - 1)
-              # A `\` escapes the `:` into a literal `:` (core drops the shortcode),
-              # so nothing opens after it even though `\` is itself punctuation.
-              return false if byte == 0x5c # `\`
-
-              if byte < 0x80
-                emoji_space_byte?(byte) || ascii_punct_or_symbol_byte?(byte)
-              else
-                char = previous_char(input, pos)
-                char == ZERO_WIDTH_SPACE || EMOJI_PUNCTUATION_OR_SYMBOL.match?(char)
-              end
-            end
-
-            # markdown-it's `isSpace` (tab and space) widened by the newline that a
-            # line break leaves in front of a shortcode's own text fragment. ASCII-
-            # only, so a byte >= 0x80 (part of a multibyte character) is never one of
-            # these.
-            def emoji_space_byte?(byte)
-              byte == 0x20 || byte == 0x09 || byte == 0x0a
-            end
-
-            # `/\s/` as a byte test: space plus `\t\n\v\f\r`. ASCII-only, so a byte
-            # >= 0x80 (part of a multibyte character) is never whitespace here.
-            def whitespace_byte?(byte)
-              byte == 0x20 || (byte >= 0x09 && byte <= 0x0d)
-            end
 
             # Where a bare URL may start. This is only the cheap first gate — the URL
             # constructs narrow it further once a match tells them whether the URL is
@@ -263,16 +153,6 @@ module Migrations
               input.getbyte(pos - 1) == 0x21 # `!`
             end
 
-            # Every printable ASCII punctuation or symbol character — the four ranges
-            # around the digits and letters (`!`..`/`, `:`..`@`, `[`..`` ` ``,
-            # `{`..`~`). These are exactly the ASCII characters markdown-it's
-            # `isPunctChar` accepts, so they mirror {PUNCTUATION_OR_SYMBOL} for
-            # ASCII input. Space (0x20) is whitespace, tested separately.
-            def ascii_punct_or_symbol_byte?(byte)
-              (byte >= 0x21 && byte <= 0x2f) || (byte >= 0x3a && byte <= 0x40) ||
-                (byte >= 0x5b && byte <= 0x60) || (byte >= 0x7b && byte <= 0x7e)
-            end
-
             # The character ending just before `pos`, for the Unicode-aware
             # look-backs. `pos` sits on a character boundary, so when the previous
             # character is multibyte its bytes are the continuation bytes
@@ -282,16 +162,6 @@ module Migrations
               start = pos - 1
               start -= 1 while (input.getbyte(start) & 0xC0) == 0x80
               input.byteslice(start, pos - start)
-            end
-
-            # The character starting at the byte offset `pos`, for the Unicode-aware
-            # forward look-aheads. `pos` sits on a character boundary, so walk forward
-            # over that character's continuation bytes (`10xxxxxx`) and byteslice the
-            # one character. Caller must ensure `pos < input.bytesize`.
-            def char_at(input, pos)
-              stop = pos + 1
-              stop += 1 while stop < input.bytesize && (input.getbyte(stop) & 0xC0) == 0x80
-              input.byteslice(pos, stop - pos)
             end
           end
         end

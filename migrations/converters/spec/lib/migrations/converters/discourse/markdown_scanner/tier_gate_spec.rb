@@ -13,6 +13,9 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
   let(:hashtag_names) do
     Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("support")])
   end
+  let(:emoji_names) do
+    Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("parrot")])
+  end
 
   let(:constructs) do
     [
@@ -28,7 +31,7 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       ),
       scanner::Constructs::Mention.new(names: mention_names),
       scanner::Constructs::Hashtag.new(names: hashtag_names),
-      scanner::Constructs::Emoji.new(names: %w[parrot]),
+      scanner::Constructs::Emoji.new(names: emoji_names),
     ]
   end
 
@@ -52,6 +55,28 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
 
     it "routes a known mention to :engine" do
       expect(gate.classify("hello @alice")).to eq(:engine)
+    end
+
+    it "routes an escaped mention to :engine, because core still cooks it" do
+      # markdown-it strips the escape before the mentions rule runs. A gate
+      # that read `\\@` as "not a mention" skipped the body silently, and the
+      # engine tier never saw the token it was going to have to place.
+      expect(gate.classify("say \\@alice now")).to eq(:engine)
+      expect(gate.classify("\\@alice")).to eq(:engine)
+    end
+
+    it "routes a name spelled in another case to :engine" do
+      expect(gate.classify("ping @ALICE")).to eq(:engine)
+      expect(gate.classify("filed under #Support")).to eq(:engine)
+      expect(gate.classify(":PARROT:")).to eq(:engine)
+    end
+
+    it "over-approximates rather than reading a name's syntax" do
+      # `#support::channel` is a chat hashtag core leaves as inert text, and a
+      # mid-word `@` names nobody either. Both hold a tracked name, so both
+      # cost an engine parse — which is the cheap side of the trade.
+      expect(gate.classify("chat in #support::channel today")).to eq(:engine)
+      expect(gate.classify("mail bob@alice.example")).to eq(:engine)
     end
 
     it "routes a known hashtag to :engine" do
@@ -103,6 +128,13 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
     it "counts a custom emoji as a candidate but not a standard one" do
       expect(gate.classify(":parrot:")).to eq(:engine)
       expect(gate.classify(":smile:")).to eq(:none)
+    end
+
+    it "requires the shortcode's closing colon, so a bare name is no candidate" do
+      # `:` is far too common to make a candidate of every tracked name that
+      # follows one.
+      expect(gate.classify("see parrot: the bird")).to eq(:none)
+      expect(gate.classify("see :parrot the bird")).to eq(:none)
     end
 
     it "probes candidates the same next to context-sensitive syntax" do

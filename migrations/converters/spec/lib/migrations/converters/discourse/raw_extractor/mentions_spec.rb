@@ -13,6 +13,23 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("hey #{mention[:placeholder]}, welcome")
     end
 
+    context "with a name ending in a capital sigma" do
+      # JavaScript folds a word-final Σ to ς and Ruby to σ; the engine reports
+      # the mention verbatim, but the gate and the counter fold it and must not
+      # miss the spelling the engine's own fold produces.
+      let(:mention_names) do
+        Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("Οδυσσευς")])
+      end
+
+      it "extracts the mention whatever case the author wrote it in" do
+        result = extract("hey @ΟΔΥΣΣΕΥΣ and `@ΟΔΥΣΣΕΥΣ`")
+
+        expect(buffer.mentions.size).to eq(1)
+        expect(buffer.mentions.first[:name]).to eq("ΟΔΥΣΣΕΥΣ")
+        expect(result).to eq("hey #{buffer.mentions.first[:placeholder]} and `@ΟΔΥΣΣΕΥΣ`")
+      end
+    end
+
     it "defers a mention at the very start of the body" do
       result = extract("@bob hi")
 
@@ -57,11 +74,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.first[:name]).to eq("alice")
     end
 
-    it "treats a preceding backslash as an escape and skips the mention" do
-      raw = "say \\@alice now"
+    it "defers a mention after an escaping backslash, which core cooks too" do
+      # markdown-it strips the escape before the mentions rule runs, so
+      # `\\@alice` is a mention on both sides of the migration; the backslash
+      # stays where the author put it.
+      result = extract("say \\@alice now")
 
-      expect(extract(raw)).to eq(raw)
-      expect(buffer.mentions).to be_empty
+      expect(buffer.mentions.first[:name]).to eq("alice")
+      expect(result).to eq("say \\#{buffer.mentions.first[:placeholder]} now")
     end
 
     it "rejects a trailing character that is neither whitespace nor punctuation" do
