@@ -3,12 +3,15 @@
 class Sitemap < ActiveRecord::Base
   RECENT_SITEMAP_NAME = "recent"
   NEWS_SITEMAP_NAME = "news"
+  PUBLISHED_PAGES_SITEMAP_NAME = "published_pages"
 
   class << self
     def regenerate_sitemaps
       names_used = [RECENT_SITEMAP_NAME, NEWS_SITEMAP_NAME]
 
       names_used.each { |name| touch(name) }
+
+      names_used << PUBLISHED_PAGES_SITEMAP_NAME if sync_published_pages_sitemap!
 
       count = Category.where(read_restricted: false).sum(:topic_count)
       max_page_size = SiteSetting.sitemap_page_size
@@ -29,6 +32,36 @@ class Sitemap < ActiveRecord::Base
         sitemap.update!(last_posted_at: sitemap.last_posted_topic || 3.days.ago, enabled: true)
       end
     end
+
+    # Returns PublishedPage records that are safe to expose in a public
+    # sitemap. Mirrors PublishedPagesController's anonymous access gates so
+    # we never advertise a URL the controller would refuse to serve without a
+    # guardian check.
+    def publishable_pages
+      if !SiteSetting.enable_page_publishing? || SiteSetting.secure_uploads ||
+           SiteSetting.login_required?
+        return PublishedPage.none
+      end
+
+      PublishedPage
+        .where(public: true)
+        .joins(topic: :category)
+        .where(topics: { visible: true }, categories: { read_restricted: false })
+    end
+
+    def published_pages_sitemap_available?
+      count = publishable_pages.limit(SiteSetting.sitemap_page_size + 1).count
+      count.positive? && count <= SiteSetting.sitemap_page_size
+    end
+
+    def sync_published_pages_sitemap!
+      if published_pages_sitemap_available?
+        touch(PUBLISHED_PAGES_SITEMAP_NAME)
+      else
+        where(name: PUBLISHED_PAGES_SITEMAP_NAME).update_all(enabled: false)
+        nil
+      end
+    end
   end
 
   def topics
@@ -41,8 +74,27 @@ class Sitemap < ActiveRecord::Base
     end
   end
 
+  # Returns the page rows used to render the published-pages sitemap:
+  # [[slug, updated_at], ...]. Only meaningful when name ==
+  # PUBLISHED_PAGES_SITEMAP_NAME.
+  def published_pages
+    self
+      .class
+      .publishable_pages
+      .order(:id)
+      .limit(SiteSetting.sitemap_page_size)
+      .pluck(:slug, "published_pages.updated_at")
+  end
+
   def last_posted_topic
-    sitemap_topics.maximum(:updated_at)
+    if name == PUBLISHED_PAGES_SITEMAP_NAME
+      PublishedPage
+        .where(public: true)
+        .joins(topic: :category)
+        .maximum("GREATEST(published_pages.updated_at, topics.updated_at, categories.updated_at)")
+    else
+      sitemap_topics.maximum(:updated_at)
+    end
   end
 
   def max_page_size
