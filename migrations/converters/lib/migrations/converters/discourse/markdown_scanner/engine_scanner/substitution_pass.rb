@@ -185,7 +185,7 @@ module Migrations
               end
 
               substituted_body =
-                "#{@input.byteslice(0, occurrence.offset)}#{marker}" \
+                "#{@input.byteslice(0, occurrence.offset)}#{replacement_for(entry, marker)}" \
                   "#{@input.byteslice((occurrence.offset + occurrence.length)..)}"
               begin
                 substituted =
@@ -316,6 +316,17 @@ module Migrations
               end
 
               [kept, dropped]
+            end
+
+            # An `upload://` value is replaced by a marker of the same scheme:
+            # core leaves the alt text of an upload image alone but linkifies a
+            # URL in any other image's alt, so a bare marker would add a token
+            # the occurrence never produced and fail a live construct.
+            def replacement_for(entry, marker)
+              value = entry[:kind] == :url ? entry[:key][1] : nil
+              return marker unless value&.start_with?("upload://")
+
+              "upload://#{marker}#{File.extname(value)}"
             end
 
             def build_marker

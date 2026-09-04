@@ -1037,4 +1037,17 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(output).to eq("$$ #{buffer.mentions.first[:placeholder]} $$")
     end
   end
+
+  describe "upload markers" do
+    it "confirms an upload image whose alt text is a URL when a code span forces substitution" do
+      short = "upload://qNuWIDpKrjDez7zGdN66jhn5JHW.png"
+      body = "![https://cdn.example.com/v4/letter/r/45.png|45x45](#{short}) and `#{short}`"
+
+      result = extract(body)
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to eq("#{buffer.uploads.first[:placeholder]} and `#{short}`")
+    end
+  end
 end
