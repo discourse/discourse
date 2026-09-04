@@ -79,6 +79,7 @@ reviewed:
     - rubyzip # Ruby
     - securerandom # Ruby
     - sidekiq # LGPL (Sidekiq)
+    - snaky_hash # MIT
     - tilt # MIT
     - ttfunk # Ruby or GPLv2/GPLv3
     - unf # BSD-2-Clause
