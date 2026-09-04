@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
+          token: ${{ secrets.GH_PUSH_TOKEN }}
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -51,8 +52,39 @@ jobs:
           package_version="${discourse_version}-${commit_hash}"
 
           echo "@discourse/types version: ${package_version}"
+          echo "package_version=${package_version}" >> "$GITHUB_ENV"
           sed -i -E  "s/\"version\": \"0\.0\.0\"/\"version\": \"${package_version}\"/" frontend/discourse-types/package.json
 
       - name: Publish the package
         working-directory: frontend/discourse-types
         run: pnpm publish --no-git-checks --tag latest
+
+      - name: Bump @discourse/types in workspace package.json files
+        run: |
+          git checkout -- frontend/discourse-types/package.json
+
+          pnpm update --filter './plugins/**' --filter './themes/**' \
+            "discourse@npm:@discourse/types@${package_version}"
+
+      - name: Open a PR with the bump
+        env:
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+        run: |
+          git config --global user.email "team@discourse.org"
+          git config --global user.name "discoursebot"
+
+          branch="types-bump/${package_version}"
+          git checkout -b "$branch"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "Nothing to bump, skipping PR"
+            exit 0
+          fi
+
+          git commit -m "DEV: Bump @discourse/types to ${package_version}"
+          git push -f origin "$branch"
+
+          title="DEV: Bump @discourse/types to ${package_version}"
+          gh pr create --base main --head "$branch" --title "$title" --body "" ||
+            gh pr edit "$branch" --title "$title"
