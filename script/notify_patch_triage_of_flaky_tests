@@ -1,96 +1,39 @@
-#!/usr/bin/env ruby
-# frozen_string_literal: true
+#!/usr/bin/env bash
 
-require "json"
-require "net/http"
-require "openssl"
-require "uri"
+set -euo pipefail
 
-module NotifyPatchTriageOfFlakyTests
-  MAX_ATTEMPTS = 4
-  OPEN_TIMEOUT_SECONDS = 5
-  REQUEST_TIMEOUT_SECONDS = 25
-  RETRY_DELAY_SECONDS = 1
-  DeliveryError = Class.new(StandardError)
+if [[ -z "${PATCH_TRIAGE_FLAKY_TEST_REPORT_URL:-}" || -z "${PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET:-}" ]]; then
+  echo "::warning::Patch Triage flaky-test delivery secrets are not configured; skipping notification"
+  exit 0
+fi
 
-  private_constant :MAX_ATTEMPTS,
-                   :OPEN_TIMEOUT_SECONDS,
-                   :REQUEST_TIMEOUT_SECONDS,
-                   :RETRY_DELAY_SECONDS,
-                   :DeliveryError
+payload=$(jq -nc \
+  --arg repository "$GITHUB_REPOSITORY" \
+  --argjson workflow_run_id "$GITHUB_RUN_ID" \
+  --argjson run_attempt "$GITHUB_RUN_ATTEMPT" \
+  --argjson report_artifact_id "$REPORT_ARTIFACT_ID" \
+  --arg screenshot_artifact_id "${SCREENSHOT_ARTIFACT_ID:-}" \
+  '{
+    repository: $repository,
+    workflow_run_id: $workflow_run_id,
+    run_attempt: $run_attempt,
+    report_artifact_id: $report_artifact_id
+  } + if $screenshot_artifact_id == "" then {} else {
+    screenshot_artifact_id: ($screenshot_artifact_id | tonumber)
+  } end')
 
-  class << self
-    def call(environment: ENV)
-      unless configured?(environment)
-        warn "::warning::Patch Triage flaky-test delivery secrets are not configured; skipping notification"
-        return
-      end
+signature=$(
+  printf '%s' "$payload" |
+    openssl dgst -sha256 -hmac "$PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" -hex |
+    sed 's/^.* //'
+)
 
-      deliver(
-        build_payload(environment),
-        endpoint: URI(environment.fetch("PATCH_TRIAGE_FLAKY_TEST_REPORT_URL")),
-        signing_secret: environment.fetch("PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET"),
-      )
-    end
-
-    private
-
-    def configured?(environment)
-      !environment.fetch("PATCH_TRIAGE_FLAKY_TEST_REPORT_URL", "").empty? &&
-        !environment.fetch("PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET", "").empty?
-    end
-
-    def build_payload(environment)
-      payload = {
-        repository: environment.fetch("GITHUB_REPOSITORY"),
-        workflow_run_id: Integer(environment.fetch("GITHUB_RUN_ID")),
-        run_attempt: Integer(environment.fetch("GITHUB_RUN_ATTEMPT")),
-        report_artifact_id: Integer(environment.fetch("REPORT_ARTIFACT_ID")),
-      }
-
-      screenshot_artifact_id = environment.fetch("SCREENSHOT_ARTIFACT_ID", "")
-      payload[:screenshot_artifact_id] = Integer(
-        screenshot_artifact_id,
-      ) if screenshot_artifact_id != ""
-
-      JSON.generate(payload)
-    end
-
-    def deliver(payload, endpoint:, signing_secret:)
-      attempt = 0
-
-      begin
-        attempt += 1
-        response = send_request(payload, endpoint:, signing_secret:)
-        unless response.is_a?(Net::HTTPSuccess)
-          raise DeliveryError, "HTTP #{response.code}: #{response.body}"
-        end
-      rescue DeliveryError, IOError, SystemCallError, SocketError, Timeout::Error
-        raise if attempt >= MAX_ATTEMPTS
-
-        sleep RETRY_DELAY_SECONDS * (2**(attempt - 1))
-        retry
-      end
-    end
-
-    def send_request(payload, endpoint:, signing_secret:)
-      request = Net::HTTP::Post.new(endpoint)
-      request["Content-Type"] = "application/json"
-      request["X-Hub-Signature-256"] = "sha256=#{signature(payload, signing_secret)}"
-      request.body = payload
-
-      http = Net::HTTP.new(endpoint.host, endpoint.port)
-      http.use_ssl = endpoint.scheme == "https"
-      http.open_timeout = OPEN_TIMEOUT_SECONDS
-      http.read_timeout = REQUEST_TIMEOUT_SECONDS
-      http.write_timeout = REQUEST_TIMEOUT_SECONDS
-      http.request(request)
-    end
-
-    def signature(payload, signing_secret)
-      OpenSSL::HMAC.hexdigest("SHA256", signing_secret, payload)
-    end
-  end
-end
-
-NotifyPatchTriageOfFlakyTests.call if __FILE__ == $PROGRAM_NAME
+curl --fail-with-body \
+  --retry 3 \
+  --retry-all-errors \
+  --connect-timeout 5 \
+  --max-time 30 \
+  --header "Content-Type: application/json" \
+  --header "X-Hub-Signature-256: sha256=$signature" \
+  --data-binary "$payload" \
+  "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL"
