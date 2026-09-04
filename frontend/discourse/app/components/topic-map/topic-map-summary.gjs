@@ -292,60 +292,69 @@ export default class TopicMapSummary extends Component {
       {{/if}}
 
       {{#if this.hasLikes}}
-        <DMenu
-          @arrow={{true}}
-          @identifier="topic-map__likes"
-          @interactive={{true}}
-          @modalForMobile={{true}}
-          @placement="right"
-          @groupIdentifier="topic-map"
-          @inline={{true}}
-          @autofocus={{true}}
-        >
-          <:trigger>
+        {{#if this.site.can_search}}
+          <DMenu
+            @arrow={{true}}
+            @autofocus={{true}}
+            @groupIdentifier="topic-map"
+            @identifier="topic-map__likes"
+            @inline={{true}}
+            @interactive={{true}}
+            @modalForMobile={{true}}
+            @placement="right"
+          >
+            <:trigger>
+              {{dNumber @topic.like_count noTitle="true"}}
+              <span class="topic-map__stat-label">
+                {{i18n "likes_lowercase" count=@topic.like_count}}
+              </span>
+            </:trigger>
+            <:content>
+              <h3 {{didInsert this.fetchMostLiked}}>{{i18n
+                  "topic_map.menu_titles.replies"
+                }}</h3>
+              <DConditionalLoadingSpinner @condition={{this.loading}}>
+                <PluginOutlet
+                  @name="most-liked-replies"
+                  @outletArgs={{lazyHash
+                    posts=this.top3LikedPosts
+                    postUrl=this.postUrl
+                  }}
+                >
+                  <ul>
+                    {{#each this.top3LikedPosts as |post|}}
+                      <li>
+                        <a href={{this.postUrl post}}>
+                          <span class="like-section__user">
+                            {{dBoundAvatarTemplate
+                              post.avatar_template
+                              "tiny"
+                              (hash title=post.username)
+                            }}
+                            {{post.username}}
+                          </span>
+                          <span class="like-section__likes">
+                            {{post.like_count}}
+                            {{dIcon "heart"}}</span>
+                          <p>
+                            {{trustHTML (emojiUnescape post.blurb)}}
+                          </p>
+                        </a>
+                      </li>
+                    {{/each}}
+                  </ul>
+                </PluginOutlet>
+              </DConditionalLoadingSpinner>
+            </:content>
+          </DMenu>
+        {{else}}
+          <div class="topic-map__stat topic-map__likes">
             {{dNumber @topic.like_count noTitle="true"}}
             <span class="topic-map__stat-label">
               {{i18n "likes_lowercase" count=@topic.like_count}}
             </span>
-          </:trigger>
-          <:content>
-            <h3 {{didInsert this.fetchMostLiked}}>{{i18n
-                "topic_map.menu_titles.replies"
-              }}</h3>
-            <DConditionalLoadingSpinner @condition={{this.loading}}>
-              <PluginOutlet
-                @name="most-liked-replies"
-                @outletArgs={{lazyHash
-                  posts=this.top3LikedPosts
-                  postUrl=this.postUrl
-                }}
-              >
-                <ul>
-                  {{#each this.top3LikedPosts as |post|}}
-                    <li>
-                      <a href={{this.postUrl post}}>
-                        <span class="like-section__user">
-                          {{dBoundAvatarTemplate
-                            post.avatar_template
-                            "tiny"
-                            (hash title=post.username)
-                          }}
-                          {{post.username}}
-                        </span>
-                        <span class="like-section__likes">
-                          {{post.like_count}}
-                          {{dIcon "heart"}}</span>
-                        <p>
-                          {{trustHTML (emojiUnescape post.blurb)}}
-                        </p>
-                      </a>
-                    </li>
-                  {{/each}}
-                </ul>
-              </PluginOutlet>
-            </DConditionalLoadingSpinner>
-          </:content>
-        </DMenu>
+          </div>
+        {{/if}}
       {{/if}}
 
       {{#if this.linksCount}}

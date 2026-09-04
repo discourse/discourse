@@ -62,6 +62,7 @@ export default class Icons extends Component {
 
   get showSearchButton() {
     if (
+      !this.site.can_search ||
       this.header.headerButtonsHidden.includes("search") ||
       ALL_PAGES_EXCLUDED_ROUTES.some(
         (name) => name === this.router.currentRouteName

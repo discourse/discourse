@@ -278,6 +278,14 @@ RSpec.describe ApplicationHelper do
           expect(sitelinks_search_tag["name"]).to eq(SiteSetting.title)
           expect(sitelinks_search_tag["url"]).to eq(Discourse.base_url)
         end
+
+        it "omits the sitelinks search tag when anonymous users cannot search" do
+          SiteSetting.allow_anonymous_search = false
+          helper.stubs(:current_page?).returns(false)
+          helper.stubs(:current_page?).with("/").returns(true)
+
+          expect(helper.render_sitelinks_search_tag).to be_nil
+        end
       end
       context "when not on homepage" do
         it "will not return sitelinks search tag" do
