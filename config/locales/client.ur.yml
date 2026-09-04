@@ -2385,6 +2385,7 @@ ur:
           hide_advanced: "ایڈوانس آپشنز چھپائیں"
           description: "تفصیل"
           restrict: "تک محدود"
+          restrict_help: "اس دعوت نامے کی قبالیت کو محدود کرنے کے لئے ای میل یا ای میل کی ڈومین درج کریں"
           restrict_email: "ای میل تک محدود"
           restrict_domain: "ڈومین تک محدود"
           email_or_domain_placeholder: "name@example.com یا example.com"
@@ -2394,6 +2395,7 @@ ur:
           expires_at: "پر ختم"
           expires_after: "کے بعدختم"
           custom_message: "حسب ضرورت پیغام"
+          custom_message_help: "یہ متن دعوتی ای میل میں شامل ہو گا۔"
           custom_message_placeholder: "اپنی دعوت میں ذاتی نوٹ شامل کریں"
           send_invite_email: "محفوظ کریں اور ای میل بھیجیں"
           send_invite_email_instructions: "ای میل پر مدعوکے لئے دعوت نامہ کی ای میل کو محدود کریں"
@@ -3754,7 +3756,7 @@ ur:
         user_requires_approval: "%{username} کو منظوری درکار"
         default_item: "قابل جائزہ شے #%{reviewable_id}"
     topics:
-      new_messages_marker: "آخری وزٹ"
+      new_messages_marker: "آخری دورہ"
       bulk:
         select: "اکھٹے انتخاب کریں"
         confirm: "تصدیق کریں"
