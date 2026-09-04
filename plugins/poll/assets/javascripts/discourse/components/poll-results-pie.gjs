@@ -14,9 +14,6 @@ import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
 export default class PollResultsPieComponent extends Component {
-  /** @type {import("chart.js").Chart | null} */
-  _chart = null;
-
   htmlLegendPlugin = {
     id: "htmlLegend",
 
@@ -109,6 +106,9 @@ export default class PollResultsPieComponent extends Component {
   registerCanvasElement = modifier((element) => {
     this.canvasElement = element;
   });
+
+  /** @type {import("chart.js").Chart | null} */
+  _chart = null;
 
   get canvasId() {
     return trustHTML(`poll-results-chart-${this.args.id}`);
