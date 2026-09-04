@@ -804,16 +804,19 @@ RSpec.describe GroupsController do
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
     end
 
-    it "returns the translated excerpt" do
+    it "returns the translated topic title and excerpt" do
       viewer = Fabricate(:user, locale: "ja")
       SiteSetting.content_localization_enabled = true
       post = Fabricate(:post, user: user, raw: "Original group post body", locale: "en")
+      post.topic.update!(locale: "en")
+      Fabricate(:topic_localization, topic: post.topic, locale: "ja", title: "翻訳された題名")
       Fabricate(:post_localization, post: post, locale: "ja", cooked: "<p>翻訳された本文</p>")
 
       sign_in(viewer)
       get "/groups/#{group.name}/posts.json"
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].first["topic_title"]).to eq("翻訳された題名")
       expect(response.parsed_body["posts"].first["excerpt"]).to eq("翻訳された本文")
     end
 
