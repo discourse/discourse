@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { userPath } from "discourse/lib/url";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 
@@ -65,6 +66,7 @@ export default class ChatUserAvatar extends Component {
           tabindex={{if this.ariaHidden "-1"}}
         >
           {{this.avatar}}
+          <DUserAvatarFlair @user={{@user}} />
         </a>
       {{else}}
         <span
@@ -72,6 +74,7 @@ export default class ChatUserAvatar extends Component {
           aria-hidden={{if this.ariaHidden "true"}}
         >
           {{this.avatar}}
+          <DUserAvatarFlair @user={{@user}} />
         </span>
       {{/if}}
     </div>
