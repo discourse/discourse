@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class DiscourseSolved::SolvedPostSerializer < ApplicationSerializer
+  include PostItemExcerpt
+
   attributes :created_at,
              :archived,
              :avatar_template,
              :category_id,
              :closed,
              :cooked,
-             :excerpt,
              :name,
              :post_id,
              :post_number,
@@ -16,7 +17,6 @@ class DiscourseSolved::SolvedPostSerializer < ApplicationSerializer
              :slug,
              :topic_id,
              :topic_title,
-             :truncated,
              :url,
              :user_id,
              :username
@@ -35,10 +35,6 @@ class DiscourseSolved::SolvedPostSerializer < ApplicationSerializer
 
   def closed
     object.topic.closed
-  end
-
-  def excerpt
-    @excerpt ||= PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
   end
 
   def name
@@ -63,14 +59,6 @@ class DiscourseSolved::SolvedPostSerializer < ApplicationSerializer
 
   def topic_title
     object.topic.fancy_title
-  end
-
-  def truncated
-    true
-  end
-
-  def include_truncated?
-    cooked.length > 300
   end
 
   def url

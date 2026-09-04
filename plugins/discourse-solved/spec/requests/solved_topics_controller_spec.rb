@@ -24,6 +24,19 @@ describe DiscourseSolved::SolvedTopicsController do
         expect(result["user_solved_posts"][0]["post_id"]).to eq(answer_post.id)
       end
 
+      it "returns the translated excerpt" do
+        viewer = Fabricate(:user, locale: "ja")
+        SiteSetting.content_localization_enabled = true
+        answer_post.update!(raw: "Original answer body", locale: "en")
+        Fabricate(:post_localization, post: answer_post, locale: "ja", cooked: "<p>翻訳された回答</p>")
+
+        sign_in(viewer)
+        get "/solution/by_user.json", params: { username: user.username }
+
+        solved_post = response.parsed_body["user_solved_posts"][0]
+        expect(solved_post["excerpt"]).to eq("翻訳された回答")
+      end
+
       it "returns escaped topic_title" do
         topic.update_columns(title: "<script>alert('xss')</script> test", fancy_title: nil)
         sign_in(user)

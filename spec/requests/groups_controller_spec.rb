@@ -804,6 +804,19 @@ RSpec.describe GroupsController do
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
     end
 
+    it "returns the translated excerpt" do
+      viewer = Fabricate(:user, locale: "ja")
+      SiteSetting.content_localization_enabled = true
+      post = Fabricate(:post, user: user, raw: "Original group post body", locale: "en")
+      Fabricate(:post_localization, post: post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+
+      sign_in(viewer)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].first["excerpt"]).to eq("翻訳された本文")
+    end
+
     it "omits hidden posts from other users", :aggregate_failures do
       visible_post = Fabricate(:post, user: user, raw: "visible group post")
       hidden_post = Fabricate(:post, user: user, raw: "private hidden group post", hidden: true)

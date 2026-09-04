@@ -6,7 +6,9 @@ module PostItemExcerpt
   end
 
   def cooked
-    @cooked ||= object.cooked || PrettyText.cook(object.raw)
+    @cooked ||=
+      ContentLocalization.translated_post_cooked(excerpt_source_post, scope) ||
+        excerpt_source_post&.cooked || object.cooked || PrettyText.cook(object.raw)
   end
 
   def excerpt
@@ -33,8 +35,16 @@ module PostItemExcerpt
 
   private
 
+  def post_item_excerpt_post
+    nil
+  end
+
+  def excerpt_source_post
+    post_item_excerpt_post || (object if object.is_a?(Post))
+  end
+
   def can_see_post_item_excerpt?
-    return true if !respond_to?(:post_item_excerpt_post) || post_item_excerpt_post.blank?
+    return true if post_item_excerpt_post.blank?
     scope&.can_see_post?(post_item_excerpt_post)
   end
 end
