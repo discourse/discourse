@@ -36,7 +36,7 @@
     "rolldown": "1.2.5",
     "source-map-js": "^1.2.1",
     "strip-test-selectors": "^0.1.0",
-    "terser": "^5.47.1"
+    "terser": "^5.51.2"
   },
   "engines": {
     "node": ">= 20",
