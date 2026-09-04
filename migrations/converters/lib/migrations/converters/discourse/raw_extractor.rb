@@ -21,6 +21,22 @@ module Migrations
       # custom emoji. Polls and events are self-contained (no id remapping needed), so
       # they're left in `raw` verbatim.
       class RawExtractor
+        # A body normalized and classified once, ready for bounded batch scanning
+        # and later extraction with the matching scan data.
+        PreparedBody =
+          Data.define(:id, :raw, :topic_id, :tier) do
+            def engine_bound?
+              tier == :engine
+            end
+          end
+
+        # The measured throughput sweet spot is 32 ordinary posts per V8 call.
+        # The byte cap prevents those calls from becoming arbitrarily large;
+        # one body over the cap still runs alone so valid large posts are not
+        # rejected merely because they cannot be batched.
+        DEFAULT_BATCH_POSTS = 32
+        DEFAULT_BATCH_BYTES = 4 * 1024 * 1024
+
         Constructs = MarkdownScanner::Constructs
         private_constant :Constructs
 
@@ -208,63 +224,98 @@ module Migrations
         # @param topic_id [Integer, nil] the source topic id of the containing post,
         #   used to complete a quote reference that names a `post:` but no `topic:`
         #   (Discourse omits `topic:` when a post quotes another in the same topic).
-        # @param scan_data [Hash, nil] a precomputed `MarkdownEngine::Context#scan`
-        #   element for this body, from a caller that batched several bodies into
-        #   one engine call (see {#engine_bound?}). Used only when normalization
-        #   leaves the body byte-identical — otherwise the engine saw different
-        #   bytes than every offset here would read, so the data is ignored and
-        #   the body is scanned live.
         # @return [String, nil] the body with embeds replaced by placeholder tokens.
         #   Invalid bytes are scrubbed first (and non-UTF-8 encodings converted), and
         #   the returned body is built from that normalized string: the gate, the
         #   engine and every byte offset must all read the same bytes, so exactly one
         #   normalization happens, here at the top.
-        def extract(raw, topic_id: nil, scan_data: nil)
-          return raw if raw.nil?
+        def extract(raw, topic_id: nil)
+          extract_prepared(prepare(raw:, topic_id:))
+        end
 
-          @topic_id = topic_id
+        # Normalizes and classifies one body. A batching caller prepares each
+        # body once, passes the resulting values to {#scan_batches}, then calls
+        # {#extract_prepared} with the scan data keyed by id.
+        def prepare(raw:, id: nil, topic_id: nil)
+          return PreparedBody.new(id:, raw:, topic_id:, tier: :none) if raw.nil?
+
           normalized = normalize_input(raw)
-          scan_data = nil unless normalized.equal?(raw)
-
-          @gate.classify(normalized) == :none ? normalized : extract_engine(normalized, scan_data)
+          PreparedBody.new(id:, raw: normalized, topic_id:, tier: @gate.classify(normalized))
         end
 
-        # Whether `raw` would take the engine path — for a caller that wants to
-        # batch several bodies into one `MarkdownEngine::Context#scan` call and
-        # pass each result back via `extract(..., scan_data:)`.
-        def engine_bound?(raw)
-          return false if raw.nil?
-
-          @gate.classify(normalize_input(raw)) == :engine
-        end
-
-        # One V8 call for several engine-bound bodies (`{ id:, raw: }` each),
-        # returning scan data keyed by id for `extract(..., scan_data:)`. One
-        # pathological body terminates the whole batched call, so a failed
-        # batch returns no data at all; each of its bodies then goes through
-        # the normal per-body path (fast attempt, slow retry, refusal), and
-        # the engine is reset so the next call gets a working context.
-        # Process and resource failures are not rescued, same as in the
-        # per-body path.
+        # Scans prepared engine-bound bodies, partitioning them by both count
+        # and aggregate bytes. Returns scan data keyed by id. If one partition
+        # terminates, only that partition returns no data; its bodies recover
+        # through the normal per-body path in {#extract_prepared}.
         #
-        # A posts step should batch: the per-call V8 overhead (~0.5ms) is
-        # comparable to an average parse itself. On a real 1.5M-post corpus at
-        # 18 workers, batches of 32 measured 45.2s wall / 360.4s V8 against
-        # 70.9s / 684.4s unbatched, with identical extraction results.
-        def scan_batch(posts)
-          ids = posts.map { |post| post[:id] }
-          if ids.uniq.size != ids.size
-            # `index_by` would keep only one result per id, silently.
-            raise ArgumentError, "scan_batch posts must have unique ids"
+        # The per-call V8 overhead (~0.5ms) is comparable to an average parse.
+        # On a real 1.5M-post corpus at 18 workers, batches of 32 measured 45.2s
+        # wall / 360.4s V8 against 70.9s / 684.4s unbatched.
+        def scan_batches(
+          prepared_bodies,
+          max_posts: DEFAULT_BATCH_POSTS,
+          max_bytes: DEFAULT_BATCH_BYTES
+        )
+          validate_batch_limits!(max_posts, max_bytes)
+          bodies = prepared_bodies.select(&:engine_bound?)
+          ids = bodies.map(&:id)
+          raise ArgumentError, "prepared bodies must have non-nil ids" if ids.any?(&:nil?)
+          raise ArgumentError, "prepared bodies must have unique ids" if ids.uniq.size != ids.size
+
+          data = {}
+          each_scan_batch(bodies, max_posts:, max_bytes:) do |batch|
+            data.merge!(scan_prepared_batch(batch))
+          end
+          data
+        end
+
+        # Extracts a prepared body, using its matching precomputed scan data
+        # when supplied. The same normalized bytes feed the gate, engine offsets,
+        # construct locators, and final splicing.
+        def extract_prepared(prepared_body, scan_data: nil)
+          @topic_id = prepared_body.topic_id
+          return prepared_body.raw unless prepared_body.engine_bound?
+
+          extract_engine(prepared_body.raw, scan_data)
+        end
+
+        private
+
+        def validate_batch_limits!(max_posts, max_bytes)
+          unless max_posts.is_a?(Integer) && max_posts.positive?
+            raise ArgumentError, "max_posts must be a positive integer"
+          end
+          unless max_bytes.is_a?(Integer) && max_bytes.positive?
+            raise ArgumentError, "max_bytes must be a positive integer"
+          end
+        end
+
+        def each_scan_batch(bodies, max_posts:, max_bytes:)
+          batch = []
+          bytes = 0
+
+          bodies.each do |body|
+            body_bytes = body.raw.bytesize
+            if batch.any? && (batch.size >= max_posts || bytes + body_bytes > max_bytes)
+              yield batch
+              batch = []
+              bytes = 0
+            end
+
+            batch << body
+            bytes += body_bytes
           end
 
+          yield batch if batch.any?
+        end
+
+        def scan_prepared_batch(batch)
+          posts = batch.map { |body| { id: body.id, raw: body.raw } }
           @markdown_engine.scan(posts).index_by { |data| data["id"] }
         rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError
           @markdown_engine.reset!
           {}
         end
-
-        private
 
         def normalize_input(raw)
           if raw.encoding == Encoding::UTF_8

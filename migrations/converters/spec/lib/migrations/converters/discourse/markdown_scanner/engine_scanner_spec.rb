@@ -77,7 +77,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.quotes).to be_empty
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
-      expect(extractor.engine_bound?("[quote]\nquoted prose\n[/quote]")).to be(false)
+      prepared = extractor.prepare(raw: "[quote]\nquoted prose\n[/quote]")
+      expect(prepared).not_to be_engine_bound
     end
 
     it "matches a decomposed hashtag spelling against its composed name" do
@@ -746,18 +747,28 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
-  describe "batched scan data" do
+  describe "prepared batch scanning" do
     let(:body) { "@alice wrote `@bob` and [docs](https://forum.example.com/t/slug/5)" }
 
-    it "classifies bodies for a batching caller" do
-      expect(extractor.engine_bound?(body)).to be(true)
-      expect(extractor.engine_bound?("plain text, nothing to find")).to be(false)
-      expect(extractor.engine_bound?(nil)).to be(false)
+    it "normalizes and classifies a body once for a batching caller" do
+      invalid = (+"\xFF @alice").force_encoding(Encoding::UTF_8)
+
+      candidate = extractor.prepare(id: 1, raw: invalid, topic_id: 4)
+      plain = extractor.prepare(id: 2, raw: "plain text, nothing to find")
+      empty = extractor.prepare(id: 3, raw: nil)
+
+      expect(candidate.raw).to be_valid_encoding
+      expect(candidate.raw).to eq("� @alice")
+      expect(candidate.topic_id).to eq(4)
+      expect(candidate).to be_engine_bound
+      expect(plain).not_to be_engine_bound
+      expect(empty).not_to be_engine_bound
     end
 
-    it "extracts from a precomputed engine scan like from a live one" do
-      scan_data = markdown_engine.scan([{ id: 1, raw: body }]).first
-      output = extractor.extract(body, scan_data:)
+    it "extracts prepared bytes with their precomputed scan data" do
+      prepared = extractor.prepare(id: 1, raw: body)
+      scan_data = extractor.scan_batches([prepared])
+      output = extractor.extract_prepared(prepared, scan_data: scan_data[1])
 
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(buffer.links.map { |row| row[:target_id] }).to eq([5])
@@ -765,41 +776,79 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(output).to include(buffer.mentions.first[:placeholder])
     end
 
-    it "ignores scan data when normalization changed the body's bytes" do
+    it "scans and extracts the same normalized bytes" do
       invalid = (+"\xFF @alice").force_encoding(Encoding::UTF_8)
-      # Scan data computed from any bytes; normalization rewrites the body, so
-      # the extractor must scan live instead of trusting mismatched offsets.
-      scan_data = markdown_engine.scan([{ id: 1, raw: invalid }]).first
+      prepared = extractor.prepare(id: 1, raw: invalid)
+      scan_data = extractor.scan_batches([prepared])
 
-      output = extractor.extract(invalid, scan_data:)
+      output = extractor.extract_prepared(prepared, scan_data: scan_data[1])
 
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to start_with("� ")
+      expect(output).to include(buffer.mentions.first[:placeholder])
+    end
+
+    it "returns scan data keyed by id and omits bodies that do not need the engine" do
+      candidate = extractor.prepare(id: 7, raw: body)
+      plain = extractor.prepare(id: 9, raw: "plain text")
+      data = extractor.scan_batches([candidate, plain])
+
+      expect(data.keys).to contain_exactly(7)
+      output = extractor.extract_prepared(candidate, scan_data: data[7])
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to include(buffer.mentions.first[:placeholder])
     end
 
-    it "scans a batch in one call, keyed by post id" do
-      data = extractor.scan_batch([{ id: 7, raw: body }, { id: 9, raw: "plain @alice" }])
+    it "rejects engine-bound bodies with duplicate ids" do
+      first = extractor.prepare(id: 7, raw: body)
+      second = extractor.prepare(id: 7, raw: "hi @alice")
 
-      expect(data.keys).to contain_exactly(7, 9)
-      output = extractor.extract(body, scan_data: data[7])
-      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
-      expect(output).to include(buffer.mentions.first[:placeholder])
-    end
-
-    it "rejects a batch with duplicate post ids" do
       # Keying by id would silently keep only one of the results.
-      expect {
-        extractor.scan_batch([{ id: 7, raw: body }, { id: 7, raw: "hi @alice" }])
-      }.to raise_error(ArgumentError, /unique ids/)
+      expect { extractor.scan_batches([first, second]) }.to raise_error(ArgumentError, /unique ids/)
     end
 
-    it "returns no data when the batched call is terminated, and per-body extraction recovers" do
-      # One pathological body terminates the whole batched V8 call; the
-      # contract is that the batch yields nothing and every body falls back to
-      # the normal per-body ladder — which must find a healthy engine.
+    it "bounds each engine call by post count and aggregate bytes" do
+      bounded_engine = instance_double(Migrations::Converters::MarkdownEngine::Context)
+      allow(bounded_engine).to receive(:scan) do |posts, timeout_ms: nil|
+        raise "oversized scan" if posts.size > 2 || posts.sum { |post| post[:raw].bytesize } > 80
+
+        markdown_engine.scan(posts, timeout_ms:)
+      end
+      allow(bounded_engine).to receive(:reset!)
+      batching_extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          custom_emoji_names:,
+          internal_link_hosts:,
+          markdown_engine: bounded_engine,
+        )
+      prepared = [
+        batching_extractor.prepare(id: 7, raw: body),
+        batching_extractor.prepare(id: 8, raw: "hi @alice"),
+        batching_extractor.prepare(id: 9, raw: "bye @alice"),
+        batching_extractor.prepare(id: 10, raw: "cc @alice"),
+      ]
+
+      data = batching_extractor.scan_batches(prepared, max_posts: 2, max_bytes: 80)
+
+      expect(data.keys).to contain_exactly(7, 8, 9, 10)
+    end
+
+    it "scans a single body that exceeds the batch byte target" do
+      prepared = extractor.prepare(id: 7, raw: "@alice #{"x" * 100}")
+
+      data = extractor.scan_batches([prepared], max_bytes: 10)
+
+      expect(data.keys).to contain_exactly(7)
+    end
+
+    it "keeps successful partitions when another partition terminates" do
       flaky_engine = instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
       allow(flaky_engine).to receive(:scan) do |posts, timeout_ms: nil|
-        raise MiniRacer::ScriptTerminatedError if posts.size > 1
+        raise MiniRacer::ScriptTerminatedError if posts.any? { |post| post[:id] == 7 }
+
         markdown_engine.scan(posts, timeout_ms:)
       end
       batching_extractor =
@@ -812,11 +861,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           markdown_engine: flaky_engine,
         )
 
-      data = batching_extractor.scan_batch([{ id: 7, raw: body }, { id: 9, raw: "hi @alice" }])
+      failed = batching_extractor.prepare(id: 7, raw: body)
+      successful = batching_extractor.prepare(id: 9, raw: "hi @alice")
+      data = batching_extractor.scan_batches([failed, successful], max_posts: 1)
 
-      expect(data).to eq({})
+      expect(data.keys).to contain_exactly(9)
       expect(flaky_engine).to have_received(:reset!)
-      output = batching_extractor.extract(body, scan_data: data[7])
+      output = batching_extractor.extract_prepared(failed, scan_data: data[7])
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to include(buffer.mentions.first[:placeholder])
     end

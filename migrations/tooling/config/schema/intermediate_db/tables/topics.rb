@@ -2,6 +2,7 @@
 
 Migrations::Tooling::Schema.table :topics do
   index :archetype
+  index :slug
 
   # The destination regenerates its own slug from the title, but the SOURCE
   # slug is what a slug-only `/t/<slug>` link in a post body carries — the
