@@ -36,6 +36,11 @@ const CLIENT_PRESETS = {
     client_id: "codex",
     redirect_uris: "http://127.0.0.1/callback",
   },
+  chatgpt: {
+    name: "ChatGPT",
+    client_id: "https://chatgpt.com/oauth/client.json",
+    redirect_uris: "https://chatgpt.com/connector_platform_oauth_redirect",
+  },
   claude_code: {
     name: "Claude Code",
     client_id: "claude-code",
@@ -50,7 +55,7 @@ const CLIENT_PRESETS = {
   visual_studio_code: {
     name: "Visual Studio Code",
     client_id: "visual-studio-code",
-    redirect_uris: "https://vscode.dev/redirect",
+    redirect_uris: "http://127.0.0.1:33418\nhttps://vscode.dev/redirect",
   },
   custom: { name: "", client_id: "", redirect_uris: "" },
 };

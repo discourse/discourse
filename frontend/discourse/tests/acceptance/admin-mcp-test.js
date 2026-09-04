@@ -430,7 +430,7 @@ acceptance("Admin - MCP", function (needs) {
     assert
       .dom("[data-client-preset-id]")
       .exists(
-        { count: 5 },
+        { count: 6 },
         "the known applications and custom option are shown"
       );
     assert
@@ -455,6 +455,28 @@ acceptance("Admin - MCP", function (needs) {
       .hasValue(
         "http://127.0.0.1/callback",
         "Codex has its portless loopback callback"
+      );
+
+    await click(".admin-mcp__change-client-preset");
+    await click('[data-client-preset-id="chatgpt"] button');
+
+    assert
+      .dom(".admin-mcp__client-form")
+      .includesText(
+        i18n("admin.config.mcp.clients.preset_help.chatgpt"),
+        "the ChatGPT instructions explain when registration is needed"
+      );
+    assert
+      .dom('[name="client_id"]')
+      .hasValue(
+        "https://chatgpt.com/oauth/client.json",
+        "ChatGPT has its stable metadata client ID"
+      );
+    assert
+      .dom('[name="redirect_uris"]')
+      .hasValue(
+        "https://chatgpt.com/connector_platform_oauth_redirect",
+        "ChatGPT has its stable hosted callback"
       );
 
     await click(".admin-mcp__change-client-preset");
@@ -489,8 +511,8 @@ acceptance("Admin - MCP", function (needs) {
     assert
       .dom('[name="redirect_uris"]')
       .hasValue(
-        "https://vscode.dev/redirect",
-        "Visual Studio Code has its hosted callback"
+        "http://127.0.0.1:33418\nhttps://vscode.dev/redirect",
+        "Visual Studio Code allows its loopback and hosted callbacks"
       );
 
     await click(".admin-mcp__change-client-preset");

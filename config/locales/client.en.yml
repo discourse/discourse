@@ -7000,18 +7000,21 @@ en:
             use_preset: "Set up"
             presets:
               codex: "Codex"
+              chatgpt: "ChatGPT"
               claude_code: "Claude Code"
               mcp_inspector: "MCP Inspector"
               visual_studio_code: "Visual Studio Code"
               custom: "Custom"
             preset_descriptions:
               codex: "Use Codex's standard local callback."
+              chatgpt: "Pre-register ChatGPT when CIMD is disabled."
               claude_code: "Use Claude Code with a fixed local callback port."
               mcp_inspector: "Allow the Inspector's browser and command-line callbacks."
               visual_studio_code: "Use Visual Studio Code's hosted callback."
               custom: "Enter the client ID and redirect URIs yourself."
             preset_help:
               codex: "In Codex, use the client ID below and confirm that its callback URI matches."
+              chatgpt: "Only needed when CIMD clients are disabled. Otherwise, ChatGPT identifies itself automatically."
               claude_code: "Use the client ID below and --callback-port 8080 when adding this server to Claude Code."
               mcp_inspector: "Use the client ID below in MCP Inspector's OAuth settings. Both web and command-line callbacks are included."
               visual_studio_code: "When Visual Studio Code asks for client registration details, enter the client ID below."
