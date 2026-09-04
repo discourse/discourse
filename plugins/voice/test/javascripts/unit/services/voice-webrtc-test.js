@@ -1243,7 +1243,12 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
     this.room.video_enabled = false;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "participant" },
-      { id: 2, role: "participant" },
+      {
+        id: 2,
+        role: "participant",
+        is_video_on: true,
+        can_publish_video: true,
+      },
     ];
 
     try {
@@ -3071,6 +3076,7 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
             role: "participant",
             is_video_on: true,
             is_screen_sharing: false,
+            can_publish_video: true,
           },
         ],
       });

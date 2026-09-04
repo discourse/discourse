@@ -386,6 +386,8 @@ export default class VoiceWebrtcService extends Service {
         this.#remoteStreamRegistry.userIdsFor(roomId),
       removeRemoteStream: (roomId, userId) =>
         this.#removeRemoteStream(roomId, userId),
+      removeRemoteMedia: (roomId, userId) =>
+        this.#remoteStreamRegistry.removeMedia(roomId, userId),
       removeAllRemoteStreams: (roomId) => this.#removeAllRemoteStreams(roomId),
       getLocalVideoKind: () => this.localVideoKind,
       syncVideoSenders: (roomId) => this.#localVideo.syncSenders(roomId),
@@ -1789,11 +1791,13 @@ export default class VoiceWebrtcService extends Service {
   }
 
   // Mesh receive-side media boundary: only register (and therefore play) a
-  // remote track the sender's server-attested role and the room's media
-  // policy allow. On LiveKit the SFU enforces publish permissions instead.
+  // remote track the sender's server-attested role, entitlements and the
+  // room's media policy allow. On LiveKit the SFU enforces publish
+  // permissions instead.
   #registerRemoteTrack(roomId, userId, track, streams) {
     const room = this.voiceRooms?.roomById(roomId);
-    if (!remoteTrackAllowed(room, userId, track, streams)) {
+    const mesh = this.#isMeshRoom(roomId);
+    if (!remoteTrackAllowed(room, userId, track, streams, { mesh })) {
       // eslint-disable-next-line no-console
       console.warn(
         `[voice] dropping ${track?.kind} track from user ${userId}: not allowed to publish in room ${roomId}`

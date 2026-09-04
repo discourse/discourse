@@ -136,11 +136,22 @@ module Voice
     # must allow media at all, the user must be able to speak in it (a stage
     # listener publishes nothing), and their groups must carry the capability.
     def can_publish_video_in_voice_room?(room)
-      can_publish_voice_media?(room, SiteSetting.voice_video_allowed_groups_map)
+      eligible_to_publish_video_in_voice_room?(room) && can_speak_in_voice_room?(room)
     end
 
     def can_screen_share_in_voice_room?(room)
-      can_publish_voice_media?(room, SiteSetting.voice_screen_share_allowed_groups_map)
+      eligible_to_screen_share_in_voice_room?(room) && can_speak_in_voice_room?(room)
+    end
+
+    # The same capability minus the stage role, which clients track live from
+    # role_change broadcasts. This is the half that gets serialized, so a
+    # promotion doesn't need the room re-serialized to take effect.
+    def eligible_to_publish_video_in_voice_room?(room)
+      voice_media_entitlements(room)[:can_publish_video]
+    end
+
+    def eligible_to_screen_share_in_voice_room?(room)
+      voice_media_entitlements(room)[:can_screen_share]
     end
 
     # Only stage-room listeners have anything to request — anyone who can
@@ -158,12 +169,10 @@ module Voice
 
     private
 
-    def can_publish_voice_media?(room, groups)
-      return false unless room&.video_enabled?
-      return false unless can_join_voice_room?(room)
-      return false unless can_speak_in_voice_room?(room)
+    def voice_media_entitlements(room)
+      return Voice::MediaEntitlements::NONE unless can_join_voice_room?(room)
 
-      user.in_any_groups?(groups)
+      Voice::MediaEntitlements.for_user(room, user)
     end
   end
 end

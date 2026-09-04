@@ -110,6 +110,34 @@ export default class RemoteStreamRegistry {
     }
   }
 
+  // Revokes a sender's video and screen audio while leaving their microphone
+  // playing — what a lost publish entitlement costs them.
+  removeMedia(roomId, userId) {
+    const entry = (this.#streams.get(roomId) || []).find(
+      (candidate) => Number(candidate?.userId) === Number(userId)
+    );
+
+    if (!entry) {
+      return false;
+    }
+
+    const videoTracks = entry.stream.getVideoTracks();
+    const screenAudioTracks = entry.screenAudioStream?.getTracks() || [];
+
+    if (!videoTracks.length && !screenAudioTracks.length) {
+      return false;
+    }
+
+    videoTracks.forEach((track) => entry.stream.removeTrack(track));
+    screenAudioTracks.forEach((track) =>
+      entry.screenAudioStream.removeTrack(track)
+    );
+    entry.screenAudioStream = null;
+
+    this.#onChange();
+    return true;
+  }
+
   remove(roomId, userId) {
     if (!roomId || !userId) {
       return false;

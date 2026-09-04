@@ -14,6 +14,37 @@ RSpec.describe Voice::RoomSerializer do
     described_class.new(room, scope: scope, root: false).as_json
   end
 
+  describe "roster media entitlements" do
+    fab!(:speaker, :user)
+
+    before do
+      Voice::ParticipantTracker.add(room.id, user.id)
+      Voice::ParticipantTracker.add(room.id, speaker.id)
+    end
+
+    # Mesh receivers decide what to play from the sender's entry, so every
+    # participant carries its own entitlements — including in the
+    # anonymously-scoped broadcasts.
+    it "stamps each participant with their own capabilities" do
+      SiteSetting.voice_screen_share_allowed_groups = ""
+
+      participants = serialize(Guardian.new(nil))[:active_participants]
+
+      expect(participants.size).to eq(2)
+      expect(participants.map { |p| p[:can_publish_video] }).to all(eq(true))
+      expect(participants.map { |p| p[:can_screen_share] }).to all(eq(false))
+    end
+
+    it "stamps nothing when the room has media disabled" do
+      room.update!(video_enabled: false)
+
+      participants = serialize(user.guardian)[:active_participants]
+
+      expect(participants.map { |p| p[:can_publish_video] }).to all(eq(false))
+      expect(participants.map { |p| p[:can_screen_share] }).to all(eq(false))
+    end
+  end
+
   describe "media publish rights" do
     it "reports each capability separately" do
       SiteSetting.voice_screen_share_allowed_groups = ""

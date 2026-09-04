@@ -4,7 +4,7 @@ import {
   playUserLeftSound,
   stopCallSounds,
 } from "./sound-effects";
-import { participantCanSpeak } from "./stage-roles";
+import { participantCanSpeak, participantMayPublishMedia } from "./stage-roles";
 
 // Handles the roster-shaped room messages ("participants", "role_change",
 // "hand_raise"): diffing the roster into mesh peer create/destroy (or the
@@ -27,6 +27,7 @@ export default class RosterHandler {
   #registerTrack;
   #getRemoteUserIds;
   #removeRemoteStream;
+  #removeRemoteMedia;
   #removeAllRemoteStreams;
   #getLocalVideoKind;
   #syncVideoSenders;
@@ -52,6 +53,7 @@ export default class RosterHandler {
     registerTrack,
     getRemoteUserIds = () => [],
     removeRemoteStream,
+    removeRemoteMedia = () => {},
     removeAllRemoteStreams,
     getLocalVideoKind,
     syncVideoSenders,
@@ -76,6 +78,7 @@ export default class RosterHandler {
     this.#registerTrack = registerTrack;
     this.#getRemoteUserIds = getRemoteUserIds;
     this.#removeRemoteStream = removeRemoteStream;
+    this.#removeRemoteMedia = removeRemoteMedia;
     this.#removeAllRemoteStreams = removeAllRemoteStreams;
     this.#getLocalVideoKind = getLocalVideoKind;
     this.#syncVideoSenders = syncVideoSenders;
@@ -186,6 +189,7 @@ export default class RosterHandler {
 
     this.#syncRemoteVideoTracks(roomId, participants);
     this.#dropDisallowedStreams(roomId, participants, { isStage });
+    this.#dropUnentitledMedia(roomId, participants);
 
     if (!this.#isMeshRoom(roomId)) {
       // Publisher-count changes move camera subscriptions between simulcast
@@ -238,6 +242,25 @@ export default class RosterHandler {
     for (const userId of this.#getRemoteUserIds(roomId)) {
       if (!allowedToPublish.has(userId)) {
         this.#removeRemoteStream(roomId, userId);
+      }
+    }
+  }
+
+  // The receive-side policy stops new tracks; this drops the camera or screen
+  // media of a mesh sender whose entitlement was revoked while it played.
+  #dropUnentitledMedia(roomId, participants) {
+    if (!this.#isMeshRoom(roomId)) {
+      return;
+    }
+
+    for (const participant of participants || []) {
+      const participantId = Number(participant?.id);
+      if (!participantId || participantId === this.#getCurrentUserId()) {
+        continue;
+      }
+
+      if (!participantMayPublishMedia(participant)) {
+        this.#removeRemoteMedia(roomId, participantId);
       }
     }
   }
