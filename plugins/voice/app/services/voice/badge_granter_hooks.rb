@@ -2,11 +2,11 @@
 
 module Voice
   class BadgeGranterHooks
-    def self.on_leave(user, session, room:)
+    def self.on_leave(user, session)
       return unless badges_enabled?
       return if session&.left_at.blank?
 
-      grant("Mic Check", user) if mic_check?(session, room)
+      grant("Mic Check", user) if mic_check?(session)
       grant("Night Owl", user) if night_owl?(user, session)
       grant("Early Bird", user) if early_bird?(user, session)
       grant("Marathoner", user) if marathoner?(session)
@@ -33,14 +33,22 @@ module Voice
 
     BADGE_GROUP_NAME = "Voice"
 
+    # The site setting is a master switch over the whole grouping. Badges are
+    # flipped in bulk, so the per-badge save callbacks that keep user badge
+    # counts consistent run once here instead.
     def self.enable_all!
-      grouping = BadgeGrouping.find_by(name: BADGE_GROUP_NAME)
-      Badge.where(badge_grouping_id: grouping.id).update_all(enabled: true) if grouping
+      badges = voice_badges
+      badges.update_all(enabled: true)
+      sync_user_badges!
+      badges
+        .where.not(query: nil)
+        .pluck(:id)
+        .each { |badge_id| Jobs.enqueue(:backfill_badge, badge_id: badge_id) }
     end
 
     def self.disable_all!
-      grouping = BadgeGrouping.find_by(name: BADGE_GROUP_NAME)
-      Badge.where(badge_grouping_id: grouping.id).update_all(enabled: false) if grouping
+      voice_badges.update_all(enabled: false)
+      sync_user_badges!
     end
 
     class << self
@@ -51,9 +59,8 @@ module Voice
         BadgeGranter.grant(badge, user) if badge&.enabled?
       end
 
-      def mic_check?(session, room)
-        duration = (session.left_at - session.joined_at).to_i
-        duration >= 30 && Voice::ParticipantTracker.user_ids(room.id).any?
+      def mic_check?(session)
+        session.accompanied_seconds >= 30
       end
 
       def night_owl?(user, session)
@@ -67,12 +74,11 @@ module Voice
       end
 
       def marathoner?(session)
-        duration = (session.left_at - session.joined_at).to_i
-        duration >= 4.hours.to_i
+        session.accompanied_seconds >= 4.hours.to_i
       end
 
       def room_full?(room, participants)
-        room.max_participants.present? && participants.count >= room.max_participants
+        participants.count >= room.effective_max_participants
       end
 
       def icebreaker?(user, participants)
@@ -90,8 +96,20 @@ module Voice
         time.in_time_zone(tz).hour
       end
 
+      def voice_badges
+        Badge.joins(:badge_grouping).where(badge_groupings: { name: BADGE_GROUP_NAME })
+      end
+
+      def sync_user_badges!
+        UserBadge.ensure_consistency!
+        UserStat.update_distinct_badge_count
+      end
+
+      # Every badge here is derived from analytics sessions, so without them
+      # nothing can be earned.
       def badges_enabled?
-        SiteSetting.enable_badges && SiteSetting.voice_badges_enabled
+        SiteSetting.enable_badges && SiteSetting.voice_badges_enabled &&
+          SiteSetting.voice_analytics_enabled
       end
     end
   end
