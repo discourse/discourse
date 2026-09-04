@@ -19,6 +19,15 @@ interface DockPickerSignature {
 
     /** Called with the side the user picks. */
     onSelect: (side: DockSide) => void;
+
+    /** Whether the panel is currently in a window of its own. */
+    isWindowed?: () => boolean;
+
+    /**
+     * Called when the user asks for the panel to move into its own window.
+     * Omitting it leaves the choice out, for a panel that cannot.
+     */
+    onSelectWindow?: () => void;
   };
 }
 
@@ -87,6 +96,40 @@ const DockPicker: TemplateOnlyComponent<DockPickerSignature> = <template>
         </svg>
       </button>
     {{/each}}
+
+    {{#if @onSelectWindow}}
+      <button
+        type="button"
+        class={{dConcatClass "d-panel-dock__dock-button" "--window"}}
+        aria-pressed={{booleanString (@isWindowed) omitFalse=false}}
+        aria-label={{i18n "panel_dock.dock_window"}}
+        title={{i18n "panel_dock.dock_window"}}
+        {{on "click" @onSelectWindow}}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+          <rect
+            x="1.5"
+            y="4.5"
+            width="9"
+            height="7"
+            rx="1.5"
+            stroke="currentColor"
+            fill="none"
+            stroke-width="1.5"
+          />
+          <rect
+            x="6.5"
+            y="2.5"
+            width="8"
+            height="6"
+            rx="1.5"
+            stroke="currentColor"
+            fill="var(--secondary)"
+            stroke-width="1.5"
+          />
+        </svg>
+      </button>
+    {{/if}}
   </div>
 </template>;
 

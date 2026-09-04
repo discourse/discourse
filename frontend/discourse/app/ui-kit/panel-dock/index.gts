@@ -5,7 +5,9 @@ import { action } from "@ember/object";
 import type { ComponentLike } from "@glint/template";
 import DButton from "discourse/ui-kit/d-button";
 import DTabs from "discourse/ui-kit/d-tabs";
-import PanelDockChassis from "discourse/ui-kit/panel-dock/-internals/panel";
+import PanelDockChassis, {
+  type DockMode,
+} from "discourse/ui-kit/panel-dock/-internals/panel";
 import type { DockSide } from "discourse/ui-kit/panel-dock/-internals/sides";
 import { i18n } from "discourse-i18n";
 
@@ -51,6 +53,15 @@ interface DPanelDockSignature {
 
     /** The initial panel width in pixels. */
     defaultWidth?: number;
+
+    /**
+     * Whether the panel may be moved into a browser window of its own, and a
+     * window left open by a previous visit taken back.
+     */
+    windowable?: boolean;
+
+    /** Called when the panel moves between an edge of the page and its own window. */
+    onModeChange?: (mode: DockMode) => void;
   };
 }
 
@@ -105,20 +116,22 @@ export default class DPanelDock extends Component<DPanelDockSignature> {
   }
 
   <template>
-    {{#if this.hasMultipleTabs}}
-      <PanelDockChassis
-        class={{concat "--context-" @context}}
-        ...attributes
-        @isOpen={{@isOpen}}
-        @storageKey={{@context}}
-        @dockable={{@dockable}}
-        @defaultSide={{@defaultSide}}
-        @defaultWidth={{@defaultWidth}}
-      >
-        {{! The tab strip and the panel it drives are one widget, so they
-            take the whole interior and rebuild the header row around the
-            tablist rather than being split across the chassis blocks. }}
-        <:main as |controls|>
+    <PanelDockChassis
+      class={{concat "--context-" @context}}
+      ...attributes
+      @isOpen={{@isOpen}}
+      @storageKey={{@context}}
+      @dockable={{@dockable}}
+      @defaultSide={{@defaultSide}}
+      @defaultWidth={{@defaultWidth}}
+      @windowable={{@windowable}}
+      @onModeChange={{@onModeChange}}
+    >
+      <:main as |controls|>
+        {{#if this.hasMultipleTabs}}
+          {{! The tab strip and the panel it drives are one widget, so they
+              take the whole interior and rebuild the header row around the
+              tablist rather than being split across the chassis blocks. }}
           <DTabs
             class="d-panel-dock__tabs-host"
             @active={{this.activeTabId}}
@@ -159,36 +172,32 @@ export default class DPanelDock extends Component<DPanelDockSignature> {
               {{/each}}
             </:default>
           </DTabs>
-        </:main>
-      </PanelDockChassis>
-    {{else}}
-      <PanelDockChassis
-        class={{concat "--context-" @context}}
-        ...attributes
-        @isOpen={{@isOpen}}
-        @storageKey={{@context}}
-        @dockable={{@dockable}}
-        @defaultSide={{@defaultSide}}
-        @defaultWidth={{@defaultWidth}}
-      >
-        <:actions>
-          {{#if @onClose}}
-            <DButton
-              class="btn-transparent d-panel-dock__close"
-              @icon="xmark"
-              @action={{@onClose}}
-              @title="panel_dock.close"
-              @ariaLabel="panel_dock.close"
-            />
-          {{/if}}
-        </:actions>
+        {{else}}
+          <div class="d-panel-dock__header">
+            <div class="d-panel-dock__actions">
+              {{#if @dockable}}
+                <controls.DockPicker />
+              {{/if}}
 
-        <:body>
-          {{#if this.activeComponent}}
-            {{component this.activeComponent}}
-          {{/if}}
-        </:body>
-      </PanelDockChassis>
-    {{/if}}
+              {{#if @onClose}}
+                <DButton
+                  class="btn-transparent d-panel-dock__close"
+                  @icon="xmark"
+                  @action={{@onClose}}
+                  @title="panel_dock.close"
+                  @ariaLabel="panel_dock.close"
+                />
+              {{/if}}
+            </div>
+          </div>
+
+          <div class="d-panel-dock__body">
+            {{#if this.activeComponent}}
+              {{component this.activeComponent}}
+            {{/if}}
+          </div>
+        {{/if}}
+      </:main>
+    </PanelDockChassis>
   </template>
 }

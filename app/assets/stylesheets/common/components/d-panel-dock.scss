@@ -123,12 +123,23 @@
     &[aria-pressed="true"] {
       background: var(--primary-low);
       color: var(--tertiary);
+
+      // Backgrounds are dropped in forced colors, so the pressed state needs an
+      // outline to survive as the only thing distinguishing it.
+      @media (forced-colors: active) {
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
+      }
     }
 
     + .d-panel-dock__dock-button {
       border-inline-start: 1px solid var(--content-border-color);
     }
 
+    // Both, deliberately: the layout marks a right-to-left site with a class
+    // and never with `dir`, while a panel sitting inside right-to-left content
+    // inherits its direction from an ancestor instead.
+    html.rtl &,
     [dir="rtl"] & {
       &.--start svg {
         transform: scaleX(-1);
@@ -160,4 +171,63 @@
       background: var(--tertiary);
     }
   }
+}
+
+// The shell of a panel that has been moved into a browser window of its own.
+// It lives in a document with no application in it: everything inside belongs
+// to the page that opened it and is rendered across documents.
+.d-panel-dock-window {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--secondary);
+  color: var(--primary);
+
+  &__mount {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  // Zero-sized on purpose: the floats inside are positioned against the
+  // viewport, so the outlet must not take part in the layout.
+  &__portals {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+  }
+
+  &__reconnecting {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    text-align: center;
+  }
+
+  &.is-reconnecting {
+    .d-panel-dock-window__mount {
+      display: none;
+    }
+  }
+}
+
+// In a window the panel is the whole document, so the edge geometry that
+// positions it against the page does not apply.
+.d-panel-dock.--window {
+  position: static;
+  flex: 1 1 auto;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  border: 0;
+  box-shadow: none;
 }

@@ -34,6 +34,7 @@ export default class DevToolsDockHost extends Component {
         @context="dev-tools"
         @isOpen={{this.state.open}}
         @dockable={{true}}
+        @windowable={{true}}
         @defaultSide="bottom"
         @tabs={{this.tabs}}
         @activeTab={{this.state.activeTool}}

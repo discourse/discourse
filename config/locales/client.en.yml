@@ -3390,12 +3390,16 @@ en:
 
     panel_dock:
       close: "Close panel"
-      dock: "Dock side"
+      dock: "Panel placement"
       dock_bottom: "Dock to the bottom"
       dock_end: "Dock to the right"
       dock_start: "Dock to the left"
+      dock_window: "Open in a separate window"
       resize: "Resize panel"
       tabs: "Panel tabs"
+      window_reconnecting_body: "Reload that page to reconnect it, or close this window."
+      window_reconnecting_title: "This panel lost the page it belongs to"
+      window_title: "Panel - %{site_title}"
 
     filter_input:
       clear: "Clear filter"

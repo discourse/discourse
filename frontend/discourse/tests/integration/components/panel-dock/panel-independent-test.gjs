@@ -518,6 +518,38 @@ module(
 
         await clearRender();
       }
+
+      this.store.setObject({
+        key: "malformed-window-geometry",
+        value: {
+          mode: "docked",
+          side: "bottom",
+          width: 480,
+          height: 250,
+          window: { width: 0, height: 600, left: 40, top: Infinity },
+        },
+      });
+      this.storageKey = "malformed-window-geometry";
+
+      await render(
+        <template>
+          <PanelDockChassis @isOpen={{true}} @storageKey={{this.storageKey}} />
+        </template>
+      );
+
+      assert
+        .dom(".d-panel-dock")
+        .hasClass(
+          "--dock-bottom",
+          "invalid window geometry does not discard the side"
+        );
+      assert
+        .dom(".d-panel-dock__resizer")
+        .hasAttribute(
+          "aria-valuenow",
+          "250",
+          "invalid window geometry does not discard the docked size"
+        );
     });
 
     test("a stored size is clamped to a viewport-derived maximum in ARIA", async function (assert) {

@@ -1,9 +1,17 @@
 import { tracked } from "@glimmer/tracking";
-import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  clearRender,
+  click,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { IframeWindowHost } from "discourse/tests/helpers/panel-dock-window-host";
 import DPanelDock from "discourse/ui-kit/panel-dock";
+import { WINDOW_HOST_REGISTRATION } from "discourse/ui-kit/panel-dock/-internals/window-host";
 
 const PanelA = <template>
   <div data-test-panel="a">alpha panel content</div>
@@ -33,6 +41,18 @@ function threeTabs() {
  */
 module("Integration | Component | DPanelDock", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.afterEach(function () {
+    this.windowHost?.teardown();
+  });
+
+  function registerWindowHost(context) {
+    context.windowHost = new IframeWindowHost();
+    context.owner.register(WINDOW_HOST_REGISTRATION, context.windowHost, {
+      instantiate: false,
+    });
+    return context.windowHost;
+  }
 
   test("renders the active tab's content in a labelled tabpanel", async function (assert) {
     const tabs = threeTabs();
@@ -286,18 +306,152 @@ module("Integration | Component | DPanelDock", function (hooks) {
       .exists("the recognizable parts of the layout still apply");
   });
 
-  test("tolerates a window-mode layout it cannot yet honor", async function (assert) {
-    new KeyValueStore("d_panel_dock_").setObject({
+  test("window mode falls back and is rewritten when its window is gone", async function (assert) {
+    const store = new KeyValueStore("d_panel_dock_");
+    const geometry = { width: 800, height: 600, left: 40, top: 40 };
+    store.setObject({
       key: "test-tools",
       value: {
         mode: "window",
         side: "bottom",
         width: 400,
         height: 300,
-        window: { width: 800, height: 600, left: 40, top: 40 },
+        window: geometry,
       },
     });
+    const host = registerWindowHost(this);
     const tabs = threeTabs();
+
+    await render(
+      <template>
+        <DPanelDock
+          @context="test-tools"
+          @isOpen={{true}}
+          @tabs={{tabs}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(
+      host.adoptCount,
+      1,
+      "the public component tries to adopt"
+    );
+    assert
+      .dom("[data-test-panel='a']")
+      .exists("the content falls back into the page");
+    assert
+      .dom("[class*='--dock-bottom']")
+      .exists("the docked side still applies");
+    assert.deepEqual(store.getObject("test-tools"), {
+      mode: "docked",
+      side: "bottom",
+      width: 400,
+      height: 300,
+      window: geometry,
+    });
+  });
+
+  test("window mode is never adopted by a panel that is not windowable", async function (assert) {
+    const store = new KeyValueStore("d_panel_dock_");
+    const original = {
+      mode: "window",
+      side: "end",
+      width: 410,
+      height: 310,
+      window: { width: 780, height: 560, left: 50, top: 60 },
+    };
+    store.setObject({ key: "test-tools", value: original });
+    const host = registerWindowHost(this);
+    host.seedPreparedWindow("test-tools", "test-tools");
+    const tabs = threeTabs();
+
+    await render(
+      <template>
+        <DPanelDock
+          @context="test-tools"
+          @isOpen={{true}}
+          @tabs={{tabs}}
+          @windowable={{false}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(host.adoptCount, 0, "the host is never asked");
+    assert.dom("[class*='--dock-end']").exists("the panel renders docked");
+    assert.deepEqual(
+      store.getObject("test-tools"),
+      original,
+      "storage for a window it cannot own is untouched"
+    );
+
+    await clearRender();
+    await render(
+      <template>
+        <DPanelDock
+          @context="test-tools"
+          @isOpen={{true}}
+          @tabs={{tabs}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(host.adoptCount, 1, "an eligible panel does ask");
+    assert
+      .dom("[data-test-panel='a']", host.windowFor("test-tools").document)
+      .exists("the prepared window receives the public panel");
+  });
+
+  test("keeps the same panel element when the tab count crosses one", async function (assert) {
+    const state = new (class {
+      @tracked
+      tabs = [
+        { id: "alpha", label: "Alpha", component: PanelA },
+        { id: "beta", label: "Beta", component: PanelB },
+      ];
+    })();
+
+    await render(
+      <template>
+        <DPanelDock
+          @context="test-tools"
+          @isOpen={{true}}
+          @tabs={{state.tabs}}
+        />
+      </template>
+    );
+
+    const panel = document.querySelector(".d-panel-dock");
+    assert.dom(panel).exists("the panel is rendered with two tabs");
+
+    state.tabs = [{ id: "alpha", label: "Alpha", component: PanelA }];
+    await settled();
+
+    assert.dom("[role='tablist']").doesNotExist("a lone tab loses the strip");
+    assert.strictEqual(
+      document.querySelector(".d-panel-dock"),
+      panel,
+      "dropping to one tab reshapes the panel rather than rebuilding it"
+    );
+
+    state.tabs = [
+      { id: "alpha", label: "Alpha", component: PanelA },
+      { id: "beta", label: "Beta", component: PanelB },
+    ];
+    await settled();
+
+    assert.dom("[role='tablist']").exists("a second tab brings the strip back");
+    assert.strictEqual(
+      document.querySelector(".d-panel-dock"),
+      panel,
+      "and growing back is the same panel too"
+    );
+  });
+
+  test("keeps the header row for a lone tab with no close button", async function (assert) {
+    const tabs = [{ id: "alpha", label: "Alpha", component: PanelA }];
 
     await render(
       <template>
@@ -306,11 +460,14 @@ module("Integration | Component | DPanelDock", function (hooks) {
     );
 
     assert
-      .dom("[data-test-panel='a']")
-      .exists("a reserved future mode renders as docked today");
+      .dom(".d-panel-dock__header")
+      .exists("the header row is not conditional on having controls in it");
     assert
-      .dom("[class*='--dock-bottom']")
-      .exists("the docked side still applies");
+      .dom(".d-panel-dock__actions")
+      .exists("and neither is the slot those controls would go in");
+    assert
+      .dom("[data-test-panel='a']")
+      .exists("the lone tab's content is the body");
   });
 
   test("reflects a tabs change without losing the open panel", async function (assert) {

@@ -1,22 +1,70 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { warn } from "@ember/debug";
+import {
+  isDestroyed,
+  isDestroying,
+  registerDestructor,
+} from "@ember/destroyable";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import Owner, { getOwner } from "@ember/owner";
+import { next, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import type { ComponentLike } from "@glint/template";
 import curryComponent from "ember-curry-component";
+import { modifier } from "ember-modifier";
+import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import type { Side } from "discourse/lib/geometry";
 import KeyValueStore from "discourse/lib/key-value-store";
-import { or } from "discourse/truth-helpers";
+import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import DockPicker from "discourse/ui-kit/panel-dock/-internals/parts/dock-picker";
+import PanelDockInterior, {
+  type PanelDockControls,
+} from "discourse/ui-kit/panel-dock/-internals/parts/interior";
 import {
   type DockSide,
   SIDES,
 } from "discourse/ui-kit/panel-dock/-internals/sides";
+import {
+  type PanelWindowGeometry,
+  type PanelWindowHandle,
+  type PanelWindowHost,
+  type PanelWindowStrings,
+  windowHostFor,
+} from "discourse/ui-kit/panel-dock/-internals/window-host";
 import { i18n } from "discourse-i18n";
+
+/**
+ * @returns The stored window rectangle when it is one a window could be opened
+ * at, or `undefined` — a partly-measured or zero-sized one is worse than none.
+ */
+function restoreGeometry(stored: unknown): PanelWindowGeometry | undefined {
+  if (typeof stored !== "object" || stored === null) {
+    return undefined;
+  }
+
+  const { width, height, left, top } = stored as Record<string, unknown>;
+  const numbers = [width, height, left, top];
+
+  if (!numbers.every((value) => typeof value === "number" && isFinite(value))) {
+    return undefined;
+  }
+
+  if ((width as number) <= 0 || (height as number) <= 0) {
+    return undefined;
+  }
+
+  return {
+    width: width as number,
+    height: height as number,
+    left: left as number,
+    top: top as number,
+  };
+}
 
 const STORE_NAMESPACE = "d_panel_dock_";
 const DEFAULT_WIDTH = 320;
@@ -25,6 +73,12 @@ const MAX_WIDTH = 720;
 const DEFAULT_HEIGHT = 320;
 const MIN_HEIGHT = 160;
 const MAX_HEIGHT = 600;
+
+/**
+ * Where a panel is: against an edge of the page, or in a browser window of its
+ * own. Orthogonal to which edge it is against, which it remembers either way.
+ */
+export type DockMode = DockLayout["mode"];
 
 /** The panel's placement and sizes, as persisted between visits. */
 interface DockLayout {
@@ -40,12 +94,6 @@ interface DockLayout {
   };
 }
 
-/** The panel's own controls, for a `main` block to place. */
-interface PanelDockControls {
-  /** The control that moves the panel between viewport edges. */
-  DockPicker: ComponentLike<{ Element: HTMLDivElement }>;
-}
-
 interface PanelDockChassisSignature {
   /** The panel itself; the surrounding layer is not addressable. */
   Element: HTMLDivElement;
@@ -57,6 +105,9 @@ interface PanelDockChassisSignature {
      * Name under which the panel's layout is remembered across visits.
      * Omitting it makes a resize or dock change last only as long as the panel
      * is rendered.
+     *
+     * Read once, when the panel is created: a panel that changed key mid-life
+     * would write the layout it restored under the old one into the new one.
      */
     storageKey?: string;
 
@@ -84,6 +135,18 @@ interface PanelDockChassisSignature {
      * resize finishes.
      */
     onResize?: (size: number) => void;
+
+    /**
+     * Whether the panel may be moved into a browser window of its own.
+     *
+     * Off by default, because a panel that is part of the page it belongs to
+     * has nothing to gain from it. Turning it on adds a choice to the dock
+     * picker and lets a window left open by a previous visit be taken back.
+     */
+    windowable?: boolean;
+
+    /** Called when the panel moves between an edge of the page and its own window. */
+    onModeChange?: (mode: DockMode) => void;
   };
   Blocks: {
     /** The panel's header row. Omitting it leaves the panel headerless. */
@@ -134,13 +197,146 @@ interface PanelDockChassisSignature {
  * place.
  */
 export default class PanelDockChassis extends Component<PanelDockChassisSignature> {
+  /**
+   * The injected value is the dynamic, per-request settings object built by the
+   * `site-settings` service factory, not an instance of that module's class shim.
+   */
+  @service declare siteSettings: Record<string, unknown>;
+
+  /** Retries a held adoption once the panel is rendered and allowed to. */
+  openedGuard = modifier((_element, [windowable]: [boolean | undefined]) => {
+    if (this.#adoptionPending && windowable) {
+      // A full turn, not a render pass: at render time a panel that is being
+      // taken apart still looks live, and acquiring a window for it would leave
+      // one leased with nothing left to release it.
+      next(() => {
+        if (!this.#isReleasing) {
+          this.#adoptStoredWindow();
+        }
+      });
+    }
+  });
+
+  /**
+   * The window branch's own lifetime.
+   *
+   * Deliberately takes no arguments and is never rebuilt: an `ember-modifier`
+   * update tears down synchronously before reinstalling, which would read as
+   * the panel having left the window.
+   */
+  windowLifetime = modifier(() => {
+    const generation = this.#generation;
+    const mount = ++this.#branchMounts;
+    this.#commitWindow(generation);
+
+    return () => {
+      if (this.#generation !== generation) {
+        return;
+      }
+
+      // The branch went away with the panel still live, which only happens
+      // when the panel was closed. Bring it back so the window is not orphaned.
+      // Deferred a full turn, and re-checked when it runs, because at cleanup
+      // time a panel that is being taken apart still looks like a live one.
+      next(() => {
+        // A panel that closed and opened again inside one turn is already back
+        // in its window, and returning it now would close a live one.
+        if (!this.#isReleasing && this.#branchMounts === mount) {
+          this.#redock();
+        }
+      });
+    };
+  });
+
+  /**
+   * Watches for the panel losing permission to be in a window, which the
+   * rendering condition cannot notice because it follows the mode alone.
+   */
+  windowableGuard = modifier(
+    (_element, [windowable]: [boolean | undefined]) => {
+      if (!windowable && this.isWindowed) {
+        // Re-checked when it runs: permission may have come back in the
+        // meantime, and returning the panel then would close a window it is
+        // entitled to.
+        schedule("afterRender", () => {
+          if (!this.args.windowable && !this.#isReleasing) {
+            this.#redock();
+          }
+        });
+      }
+    }
+  );
   #store = new KeyValueStore(STORE_NAMESPACE);
+  #host: PanelWindowHost;
+  #windowGeometry: PanelWindowGeometry | null = null;
+
+  /**
+   * Bumped on every move between placements, so that work armed under an
+   * earlier one — a window's own events, a scheduled callback, the readiness
+   * acknowledgement — can tell that it has been overtaken.
+   */
+  #generation = 0;
+
+  /**
+   * Whether the panel has entered window mode but not yet proved it: nothing is
+   * stored and nobody is told until the window has really rendered, so a window
+   * that never appears leaves no trace of having been asked for.
+   */
+  #awaitingWindow = false;
+  /** The placement the consumer has been told about. */
+  #reportedMode: DockMode = "docked";
+
+  /**
+   * Whether a stored window is still waiting to be taken back. A panel that is
+   * closed cannot render into a window, so it holds the attempt until it opens.
+   */
+  #adoptionPending = false;
+
+  /**
+   * Whether the panel itself is going away, as opposed to merely closing.
+   *
+   * Tracked here rather than asked of the framework at the moment it matters:
+   * a modifier's cleanup can run before the component is marked, so the two
+   * cases are told apart by this flag instead of by destruction bookkeeping
+   * that is not yet true.
+   */
+  #releasing = false;
+
+  /**
+   * How many times the window branch has been mounted, so that work deferred
+   * by one mount can tell that another has since taken over.
+   */
+  #branchMounts = 0;
+
+  /**
+   * The name the panel's layout is stored under, captured with the layout it
+   * belongs to: reading it live would let a panel whose key changed write the
+   * layout it restored under the old name into the new one.
+   */
+  #storageKey?: string;
+
+  /** The key the window is leased under, which outlives an unnamed panel. */
+  #windowKey!: string;
   @tracked _side: DockSide;
   @tracked _width: number;
   @tracked _height: number;
 
+  /** Where the panel is. The only thing the template branches on. */
+  @tracked _mode: DockMode = "docked";
+
+  /**
+   * The window the panel is in, when it is in one.
+   *
+   * Tracked rather than `#private` because the mount the panel renders into is
+   * derived from it, and `@tracked` cannot decorate a private field.
+   */
+  @tracked _handle: PanelWindowHandle | null = null;
+
   constructor(owner: Owner, args: PanelDockChassisSignature["Args"]) {
     super(owner, args);
+
+    this.#storageKey = args.storageKey;
+    this.#windowKey = this.#storageKey ?? guidFor(this);
 
     // Read once at construction rather than in getters. The stored layout is
     // only a starting point, and re-reading it on every render would undo a
@@ -149,10 +345,39 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
     this._side = layout.side;
     this._width = layout.width;
     this._height = layout.height;
+    this.#windowGeometry = layout.window ?? null;
+    this.#host = windowHostFor(owner);
+    this.#adoptionPending = layout.mode === "window";
+
+    // Before the first render rather than after it, so a panel that belongs in
+    // a window never appears against an edge on the way there.
+    this.#adoptStoredWindow();
+
+    registerDestructor(this, () => {
+      this.#releasing = true;
+      this._handle?.dispose();
+    });
   }
 
   get side() {
     return this._side;
+  }
+
+  /** Whether the panel is in a window of its own rather than against an edge. */
+  get isWindowed() {
+    return this._mode === "window";
+  }
+
+  /** Where the panel's tree renders while it is in a window. */
+  get popupMount() {
+    return this._handle?.mount ?? null;
+  }
+
+  /** The window's title, which is also the panel's accessible name in it. */
+  get windowTitle() {
+    return i18n("panel_dock.window_title", {
+      site_title: String(this.siteSettings?.title ?? ""),
+    });
   }
 
   get isBottom() {
@@ -179,6 +404,10 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    * @returns A width in pixels.
    */
   get maxWidth() {
+    if (this.isWindowed) {
+      return MAX_WIDTH;
+    }
+
     return Math.min(MAX_WIDTH, Math.round(window.innerWidth * 0.9));
   }
 
@@ -188,6 +417,10 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
   }
 
   get maxHeight() {
+    if (this.isWindowed) {
+      return MAX_HEIGHT;
+    }
+
     return Math.min(MAX_HEIGHT, Math.round(window.innerHeight * 0.8));
   }
 
@@ -237,7 +470,15 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
   get dockPicker() {
     return curryComponent(
       DockPicker,
-      { isSide: this.isSide, onSelect: this.setSide },
+      {
+        isSide: this.isSide,
+        onSelect: this.setSide,
+        isWindowed: this.isWindowedNow,
+        // Reading the argument here is what rebuilds the picker when a panel
+        // becomes windowable; the two above stay stable so the pressed state
+        // re-renders without the picker being replaced.
+        onSelectWindow: this.args.windowable ? this.undock : undefined,
+      },
       getOwner(this)!
     );
   }
@@ -275,6 +516,7 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    */
   @action
   setSide(side: DockSide) {
+    this.#redock();
     this._side = side;
     this.#persist();
     this.args.onDock?.(side);
@@ -282,21 +524,221 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
 
   @action
   isSide(side: DockSide) {
-    return this._side === side;
+    return this._mode === "docked" && this._side === side;
+  }
+
+  @action
+  isWindowedNow() {
+    return this.isWindowed;
+  }
+
+  /**
+   * Moves the panel into a window of its own.
+   *
+   * Must run straight from the gesture that asked for it: a browser refuses a
+   * window opened any later. Nothing is stored or reported here — that waits
+   * until the window has actually rendered.
+   */
+  @action
+  undock() {
+    if (this.isWindowed) {
+      this._handle?.focus();
+      return;
+    }
+
+    const outcome = this.#host.open(
+      this.#windowKey,
+      this.#windowStrings,
+      this.#windowGeometry
+    );
+
+    if (outcome.status === "unavailable") {
+      warn("The panel's window was refused, so it stays docked.", false, {
+        id: "discourse.panel-dock.popup-blocked",
+      });
+      return;
+    }
+
+    if (outcome.status === "already-leased") {
+      warn(
+        "Another panel already holds this window, so it stays docked.",
+        false,
+        {
+          id: "discourse.panel-dock.duplicate-context",
+        }
+      );
+      return;
+    }
+
+    this.#takeWindow(outcome.handle);
+  }
+
+  /**
+   * Brings the panel back to the edge it came from.
+   *
+   * The window is measured before anything else, because a window that has
+   * begun closing reports nothing worth keeping.
+   */
+  #redock() {
+    if (!this.isWindowed) {
+      return;
+    }
+
+    const handle = this._handle;
+    const measured = handle?.measure();
+    if (measured) {
+      this.#windowGeometry = measured;
+    }
+
+    // A window mode that never proved itself is rolled back in silence: the
+    // consumer was never told it happened and storage never recorded it.
+    const wasCommitted = !this.#awaitingWindow;
+    this.#enter("docked", null);
+
+    // After the render barrier, so the tree has left the window before the
+    // window does.
+    schedule("afterRender", () => handle?.dispose());
+
+    if (wasCommitted) {
+      this.#persist();
+      this.#report("docked");
+    }
+  }
+
+  /** What the window shows: its title, and the note left when this page goes. */
+  get #windowStrings(): PanelWindowStrings {
+    return {
+      title: this.windowTitle,
+      note: {
+        title: i18n("panel_dock.window_reconnecting_title"),
+        body: i18n("panel_dock.window_reconnecting_body"),
+      },
+    };
+  }
+
+  /**
+   * Takes back the window a previous visit left open.
+   *
+   * A panel that cannot render cannot adopt, so a closed one keeps the attempt
+   * until it opens. Only a definite absence rewrites the stored mode: a window
+   * held by another panel is that panel's to record, not this one's.
+   */
+  #adoptStoredWindow() {
+    if (!this.#adoptionPending || !this.args.windowable || !this.args.isOpen) {
+      return;
+    }
+
+    this.#adoptionPending = false;
+    const outcome = this.#host.adopt(this.#windowKey, this.#windowStrings);
+
+    if (outcome.status === "acquired") {
+      this.#takeWindow(outcome.handle);
+      return;
+    }
+
+    if (outcome.status === "unavailable") {
+      this.#persist();
+    }
+  }
+
+  /**
+   * Enters window mode and starts waiting for the branch to prove it.
+   *
+   * The wait is bounded: a branch that never renders — because it threw, or
+   * because there was nothing to render into — would otherwise leave the
+   * window leased with no panel in it and nothing to release it.
+   */
+  #takeWindow(handle: PanelWindowHandle) {
+    this.#enter("window", handle);
+    this.#awaitingWindow = true;
+    this.#arm(handle);
+
+    // Outside the render queue, so it still fires if the render itself threw.
+    const generation = this.#generation;
+    next(() => {
+      if (
+        this.#generation === generation &&
+        this.#awaitingWindow &&
+        !this.#isReleasing
+      ) {
+        this.#redock();
+      }
+    });
+  }
+
+  /** Subscribes to the window's own life, under the current generation. */
+  #arm(handle: PanelWindowHandle) {
+    const generation = this.#generation;
+
+    handle.onPagehide(() => {
+      if (this.#generation === generation && !this.#isReleasing) {
+        this.#redock();
+      }
+    });
+
+    handle.onResize(() => {
+      if (this.#generation !== generation || this.#awaitingWindow) {
+        return;
+      }
+
+      const measured = handle.measure();
+      if (measured) {
+        this.#windowGeometry = measured;
+        this.#persist();
+      }
+    });
+  }
+
+  /** Whether the panel is being taken apart rather than merely closed. */
+  get #isReleasing() {
+    return this.#releasing || isDestroying(this) || isDestroyed(this);
+  }
+
+  /** Records that the panel really is where it says it is. */
+  #commitWindow(generation: number) {
+    if (this.#generation !== generation || !this.#awaitingWindow) {
+      return;
+    }
+
+    this.#awaitingWindow = false;
+    this._handle?.clearNote();
+    this.#persist();
+    this.#report("window");
+  }
+
+  /** Moves the panel, without recording or reporting anything. */
+  #enter(mode: DockMode, handle: PanelWindowHandle | null) {
+    this.#generation++;
+    this.#awaitingWindow = false;
+    this._mode = mode;
+    this._handle = handle;
+  }
+
+  /** Tells the consumer, at most once per placement. */
+  #report(mode: DockMode) {
+    // A callback fired at a consumer that is going away is not a placement
+    // change; it is a stray call into something that has stopped listening.
+    if (this.#reportedMode === mode || this.#isReleasing) {
+      return;
+    }
+
+    this.#reportedMode = mode;
+    this.args.onModeChange?.(mode);
   }
 
   #persist() {
-    if (!this.args.storageKey) {
+    if (!this.#storageKey) {
       return;
     }
 
     this.#store.setObject({
-      key: this.args.storageKey,
+      key: this.#storageKey,
       value: {
-        mode: "docked",
+        mode: this._mode,
         side: this.side,
         width: this.width,
         height: this.height,
+        ...(this.#windowGeometry ? { window: this.#windowGeometry } : {}),
       } satisfies DockLayout,
     });
   }
@@ -317,11 +759,11 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
       height: DEFAULT_HEIGHT,
     };
 
-    if (!this.args.storageKey) {
+    if (!this.#storageKey) {
       return fallback;
     }
 
-    const stored = this.#store.getObject(this.args.storageKey) as
+    const stored = this.#store.getObject(this.#storageKey) as
       | {
           side?: unknown;
           width?: unknown;
@@ -340,10 +782,13 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
       typeof stored.height === "number"
     ) {
       return {
-        mode: "docked",
+        mode: stored.mode === "window" ? "window" : "docked",
         side: stored.side as DockSide,
         width: stored.width,
         height: stored.height,
+        ...(restoreGeometry(stored.window)
+          ? { window: restoreGeometry(stored.window)! }
+          : {}),
       };
     }
 
@@ -352,57 +797,74 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
 
   <template>
     {{#if @isOpen}}
-      {{! The layer spans the viewport so the panel can be positioned against
-          its edges, but lets pointer events through so the page underneath
-          stays usable. The panel itself takes them back. }}
-      <div class="d-panel-dock-layer">
-        <div
-          class={{dConcatClass "d-panel-dock" (concat "--dock-" this.side)}}
-          style={{this.style}}
-          ...attributes
-        >
-          {{#if (has-block "main")}}
-            {{yield (hash DockPicker=this.dockPicker) to="main"}}
-          {{else}}
-            {{! The header row also hosts the dock picker and the caller's
-                actions, so it must render whenever any of the three exist —
-                otherwise a headerless dockable panel would silently lose its
-                controls. }}
-            {{#if (or (has-block "header") @dockable (has-block "actions"))}}
-              <div class="d-panel-dock__header">
-                {{yield to="header"}}
+      {{#if this.isWindowed}}
+        <DConditionalInElement @element={{this.popupMount}}>
+          <div
+            class={{dConcatClass "d-panel-dock" "--window"}}
+            role="region"
+            aria-label={{this.windowTitle}}
+            tabindex="-1"
+            ...attributes
+            {{this.windowLifetime}}
+            {{this.windowableGuard @windowable}}
+          >
+            <PanelDockInterior
+              @dockable={{@dockable}}
+              @dockPicker={{this.dockPicker}}
+              @hasActions={{has-block "actions"}}
+              @hasHeader={{has-block "header"}}
+              @hasMain={{has-block "main"}}
+            >
+              <:header>{{yield to="header"}}</:header>
+              <:actions>{{yield to="actions"}}</:actions>
+              <:body>{{yield to="body"}}</:body>
+              <:main as |controls|>{{yield controls to="main"}}</:main>
+            </PanelDockInterior>
+          </div>
 
-                <div class="d-panel-dock__actions">
-                  {{#if @dockable}}
-                    <DockPicker
-                      @isSide={{this.isSide}}
-                      @onSelect={{this.setSide}}
-                    />
-                  {{/if}}
+          {{! A live region is only read in the document that has focus, so the
+              page's own regions are inaudible from here. Same service, second
+              mount. }}
+          <A11yLiveRegions />
+        </DConditionalInElement>
+      {{else}}
+        {{! The layer spans the viewport so the panel can be positioned against
+            its edges, but lets pointer events through so the page underneath
+            stays usable. The panel itself takes them back. }}
+        <div class="d-panel-dock-layer">
+          <div
+            class={{dConcatClass "d-panel-dock" (concat "--dock-" this.side)}}
+            style={{this.style}}
+            ...attributes
+            {{this.openedGuard @windowable}}
+          >
+            <PanelDockInterior
+              @dockable={{@dockable}}
+              @dockPicker={{this.dockPicker}}
+              @hasActions={{has-block "actions"}}
+              @hasHeader={{has-block "header"}}
+              @hasMain={{has-block "main"}}
+            >
+              <:header>{{yield to="header"}}</:header>
+              <:actions>{{yield to="actions"}}</:actions>
+              <:body>{{yield to="body"}}</:body>
+              <:main as |controls|>{{yield controls to="main"}}</:main>
+            </PanelDockInterior>
 
-                  {{yield to="actions"}}
-                </div>
-              </div>
-            {{/if}}
-
-            <div class="d-panel-dock__body">
-              {{yield to="body"}}
-            </div>
-          {{/if}}
-
-          <DResizeSeparator
-            class="d-panel-dock__resizer"
-            @axis={{if this.isBottom "vertical" "horizontal"}}
-            @side={{this.anchoredSide}}
-            @value={{this.size}}
-            @min={{this.minSize}}
-            @max={{this.maxSize}}
-            @label={{i18n "panel_dock.resize"}}
-            @onResize={{this.previewSize}}
-            @onResizeEnd={{this.commitSize}}
-          />
+            <DResizeSeparator
+              class="d-panel-dock__resizer"
+              @axis={{if this.isBottom "vertical" "horizontal"}}
+              @side={{this.anchoredSide}}
+              @value={{this.size}}
+              @min={{this.minSize}}
+              @max={{this.maxSize}}
+              @label={{i18n "panel_dock.resize"}}
+              @onResize={{this.previewSize}}
+              @onResizeEnd={{this.commitSize}}
+            />
+          </div>
         </div>
-      </div>
+      {{/if}}
     {{/if}}
   </template>
 }

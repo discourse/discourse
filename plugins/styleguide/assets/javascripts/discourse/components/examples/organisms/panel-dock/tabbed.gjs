@@ -30,6 +30,9 @@ const History = <template>
   <p>Move the panel with the picker in the header, then reload the page. It
     comes back where you left it, at the width you left it, because the layout
     is stored under the panel's context.</p>
+  <p>The last choice in the picker moves the panel into a browser window of its
+    own. That is remembered too: reload the page while the panel is out there
+    and it is taken back into the same window rather than opening a second one.</p>
 </template>;
 
 const TABS = [
@@ -41,6 +44,7 @@ const TABS = [
 export default class PanelDockTabbedExample extends Component {
   @tracked isOpen = false;
   @tracked activeTab = "outline";
+  @tracked mode = "docked";
 
   tabs = TABS;
 
@@ -59,6 +63,11 @@ export default class PanelDockTabbedExample extends Component {
     this.activeTab = id;
   }
 
+  @action
+  changeMode(mode) {
+    this.mode = mode;
+  }
+
   <template>
     <div class="styleguide-panel-dock styleguide-panel-dock--tabbed">
       <div class="styleguide-panel-dock__controls">
@@ -70,6 +79,8 @@ export default class PanelDockTabbedExample extends Component {
         />
         <span class="styleguide-panel-dock__status">Active tab:
           {{this.activeTab}}</span>
+        <span class="styleguide-panel-dock__status">Placement:
+          {{this.mode}}</span>
       </div>
 
       <DPanelDock
@@ -80,6 +91,8 @@ export default class PanelDockTabbedExample extends Component {
         @onActivateTab={{this.activate}}
         @onClose={{this.close}}
         @dockable={{true}}
+        @windowable={{true}}
+        @onModeChange={{this.changeMode}}
         @defaultSide="end"
       />
     </div>
