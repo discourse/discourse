@@ -18,8 +18,24 @@ module Migrations
             # the engine's value).
             Occurrence = Data.define(:offset, :length)
 
+            # One spelling of a URL value. `schemeless` marks a reading the
+            # scheme was stripped from, which is the only kind linkify can turn
+            # back into a link on its own. `pattern` is set where the raw may
+            # spell the reading with fewer escapes than the engine's href
+            # ({#url_pattern}); it subsumes the plain scan for that text.
+            Reading = Data.define(:text, :schemeless, :pattern)
+            private_constant :Reading
+
+            # The characters markdown-it's destination normalization leaves
+            # alone; every other one it percent-escapes.
+            URL_SAFE = %r{[A-Za-z0-9;/?:@&=+$,\-_.!~*'()#]}
+            private_constant :URL_SAFE
+
             EMPTY_OCCURRENCES = [].freeze
             private_constant :EMPTY_OCCURRENCES
+
+            EMPTY_VALUES = Set.new.freeze
+            private_constant :EMPTY_VALUES
 
             # How far back a link's `[`/`!` anchor is searched from its
             # destination. Far above any real label, AI captions of a few
@@ -33,7 +49,11 @@ module Migrations
               @input = input
               @occurrences = {}
               @url_spans = {}
+              @raw_url_spans = {}
               @url_readings = {}
+              @pattern_spans = {}
+              @tracked_url_values = nil
+              @unfiltered_url_values = EMPTY_VALUES
               @definition_offsets = {}
               build_line_index
             end
@@ -93,20 +113,23 @@ module Migrations
             # the code span — the union counts 2 against the engine's 1 and
             # refuses, so the substitution pass can confirm which span is live.
             #
+            # Hits that sit inside another tracked value's occurrence are then
+            # dropped ({#reject_nested}).
+            #
             # Memoized per (value, range), and bounded by
             # `EngineScanner::MAX_SCANNED_VALUES`.
             #
             # @return [Array<Occurrence>] sorted by offset
             def url_spans(value, range)
-              @url_spans[[value, range]] ||= begin
-                spans = []
-                url_readings_for(value).each { |reading| collect_url_spans(reading, range, spans) }
-                spans.uniq!
-                # Outermost first, so coalescing keeps the widest reading of a
-                # nested pair.
-                spans.sort_by! { |span| [span.offset, -span.length] }
-                coalesce(spans).freeze
-              end
+              @url_spans[[value, range]] ||= reject_nested(value, raw_url_spans(value, range))
+            end
+
+            # The tracked URL values of the body, so a hit can be recognized as
+            # part of another value's occurrence (see {#reject_nested}).
+            # `unfiltered` names the values that keep every hit.
+            def track_url_values(values, unfiltered:)
+              @tracked_url_values = values
+              @unfiltered_url_values = unfiltered
             end
 
             # The `[offset, length]` pairs of every spelling of `value` in
@@ -118,11 +141,12 @@ module Migrations
               @definition_offsets[value] ||= begin
                 offsets = Set.new
                 url_readings_for(value).each do |reading|
+                  text = reading.text
                   pattern =
-                    /^ {0,3}\[[^\]\n]*\]:[^\S\n]*<?(?<dest>#{Regexp.escape(reading)})>?(?=\s|\z)/
+                    /^ {0,3}\[[^\]\n]*\]:[^\S\n]*<?(?<dest>#{Regexp.escape(text)})>?(?=\s|\z)/
                   pos = 0
                   while (match = pattern.match(@input, pos))
-                    offsets << [match.byteoffset(:dest).first, reading.bytesize]
+                    offsets << [match.byteoffset(:dest).first, text.bytesize]
                     pos = match.end(0)
                   end
                 end
@@ -304,18 +328,100 @@ module Migrations
               @url_readings[value] ||= url_readings(value)
             end
 
+            # The union of the readings of one value in `range`, before the
+            # cross-value pass. Memoized on its own, because that pass reads the
+            # unfiltered spans of every tracked value.
+            def raw_url_spans(value, range)
+              @raw_url_spans[[value, range]] ||= begin
+                spans = []
+                url_readings_for(value).each { |reading| collect_url_spans(reading, range, spans) }
+                spans.uniq!
+                # Outermost first, so coalescing keeps the widest reading of a
+                # nested pair.
+                spans.sort_by! { |span| [span.offset, -span.length] }
+                coalesce(spans).freeze
+              end
+            end
+
             def collect_url_spans(reading, range, spans)
-              length = reading.bytesize
+              if reading.pattern
+                pattern_spans(reading).each do |span|
+                  if span.offset >= range.begin && span.offset + span.length <= range.end
+                    spans << span
+                  end
+                end
+                return
+              end
+
+              text = reading.text
+              length = text.bytesize
               return if length == 0
 
               pos = range.begin
               limit = range.end - length
-              while pos <= limit && (index = @input.byteindex(reading, pos))
+              while pos <= limit && (index = @input.byteindex(text, pos))
                 break if index > limit
 
-                spans << Occurrence.new(offset: index, length:)
+                spans << Occurrence.new(offset: index, length:) unless scheme_tail?(reading, index)
                 pos = index + 1
               end
+            end
+
+            # A schemeless reading right after `//` is the tail of some scheme-ful
+            # spelling: linkify starts no bare-domain link there, and a
+            # destination or autolink written that way would carry its scheme,
+            # so no live link can spell the value at this position.
+            def scheme_tail?(reading, offset)
+              reading.schemeless && offset >= 2 && @input.byteslice(offset - 2, 2) == "//"
+            end
+
+            # Hits of `value` that lie strictly inside a hit of another tracked
+            # value are dropped: the enclosing bytes are one contiguous URL run,
+            # so a live link there spells the longer value, and where the run is
+            # shielded — a code span, a link label — both hits are shielded
+            # alike. Values whose engine count includes a label hit keep every
+            # hit, because there the shorter value is expected twice inside the
+            # longer one's link.
+            def reject_nested(value, spans)
+              return spans if @tracked_url_values.nil? || @unfiltered_url_values.include?(value)
+
+              offsets, ends = enclosing_spans
+              return spans if offsets.empty?
+
+              spans.reject { |span| enclosed?(offsets, ends, span) }.freeze
+            end
+
+            # Every tracked value's hits over the whole body, as start offsets
+            # sorted ascending plus the running maximum of their end offsets, so
+            # a containment test is two binary searches.
+            def enclosing_spans
+              @enclosing_spans ||=
+                begin
+                  whole = 0...@input.bytesize
+                  all = @tracked_url_values.flat_map { |value| raw_url_spans(value, whole) }
+                  all.uniq!
+                  all.sort_by!(&:offset)
+                  furthest = 0
+                  ends = all.map { |span| furthest = [furthest, span.offset + span.length].max }
+                  [all.map(&:offset).freeze, ends.freeze]
+                end
+            end
+
+            def enclosed?(offsets, ends, span)
+              finish = span.offset + span.length
+              # A hit starting earlier encloses as soon as it reaches as far; one
+              # starting here has to reach further, or it is the hit itself.
+              before = last_index_below(offsets, span.offset)
+              return true if before && ends[before] >= finish
+
+              here = last_index_below(offsets, span.offset + 1)
+              !here.nil? && ends[here] > finish
+            end
+
+            def last_index_below(offsets, limit)
+              index = offsets.bsearch_index { |offset| offset >= limit }
+              index = offsets.size if index.nil?
+              index > 0 ? index - 1 : nil
             end
 
             # Readings of one value can nest — the schemeless reading of a
@@ -335,17 +441,86 @@ module Migrations
               kept
             end
 
+            # Scanned over the whole body once, because a pattern cannot start
+            # its search at a byte offset the way `byteindex` does.
+            def pattern_spans(reading)
+              @pattern_spans[reading.text] ||= begin
+                spans = []
+                pos = 0
+                while (match = reading.pattern.match(@input, pos))
+                  from, to = match.byteoffset(0)
+                  unless scheme_tail?(reading, from)
+                    spans << Occurrence.new(offset: from, length: to - from)
+                  end
+                  pos = match.begin(0) + 1
+                end
+                spans.freeze
+              end
+            end
+
+            # A pattern that also accepts the raw spellings the engine's href
+            # escaped on its way in: markdown-it escapes every unsafe character
+            # of a destination and keeps the author's own `%xx` verbatim, so
+            # each escape in the href may stand for either, independently.
+            # `<…/search?q="%20%40name">` reaches the engine as
+            # `…/search?q=%22%20%40name%22`. Nil unless the value has such an
+            # escape.
+            def url_pattern(text)
+              parts = []
+              mixed = false
+              pos = 0
+
+              while (match = /%\h\h(?:%\h\h)*/.match(text, pos))
+                parts << Regexp.escape(text[pos...match.begin(0)])
+                escapes = match[0]
+                pos = match.end(0)
+
+                decoded = percent_decode(escapes)
+                if decoded.nil?
+                  parts << Regexp.escape(escapes)
+                  next
+                end
+
+                cursor = 0
+                decoded.each_char do |char|
+                  escaped = escapes[cursor, 3 * char.bytesize]
+                  cursor += escaped.length
+                  if char.match?(URL_SAFE)
+                    parts << Regexp.escape(escaped)
+                  else
+                    mixed = true
+                    parts << "(?:#{Regexp.escape(escaped)}|#{literal_branch(char)})"
+                  end
+                end
+              end
+              return nil unless mixed
+
+              parts << Regexp.escape(text[pos..])
+              Regexp.new(parts.join)
+            end
+
+            # A raw `%` only reaches the href as `%25` when it starts no escape
+            # of its own; everything else stands for itself.
+            def literal_branch(char)
+              char == "%" ? "%(?!\\h\\h)" : Regexp.escape(char)
+            end
+
             def url_readings(value)
-              readings = [value]
+              texts = [value]
               decoded = percent_decode(value)
-              readings << decoded if decoded && decoded != value
+              texts << decoded if decoded && decoded != value
+              schemeful = texts.size
+
               bare = value.sub(%r{\Ahttps?://}i, "")
               if bare != value
-                readings << bare
+                texts << bare
                 bare_decoded = percent_decode(bare)
-                readings << bare_decoded if bare_decoded && !readings.include?(bare_decoded)
+                texts << bare_decoded if bare_decoded && !texts.include?(bare_decoded)
               end
-              readings
+
+              texts.each_with_index.map do |text, index|
+                Reading.new(text:, schemeless: index >= schemeful, pattern: url_pattern(text))
+              end
             end
 
             # Percent-decoding only — `CGI.unescape` would also turn `+` into a

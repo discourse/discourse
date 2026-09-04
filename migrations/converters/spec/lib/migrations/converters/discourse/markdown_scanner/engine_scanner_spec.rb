@@ -404,6 +404,99 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(refusals).to be_empty
     end
 
+    # One parse means the body matched by counting; every further parse is a
+    # substitution check.
+    def extractor_recording_parses(parses)
+      engine = instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(engine).to receive(:scan) do |posts, timeout_ms: nil|
+        parses << posts
+        markdown_engine.scan(posts)
+      end
+      described_class.new(
+        embeds: buffer,
+        mention_names:,
+        hashtag_names:,
+        markdown_engine: engine,
+        internal_link_hosts:,
+        on_engine_refusal:,
+      )
+    end
+
+    it "counts a root link once when longer links on the same host follow it" do
+      # The root link's schemeless reading also sits in every `/u/…` link on the
+      # host, so a digest post used to escalate once per user it names.
+      parses = []
+      raw =
+        "welcome to https://forum.example.com/\n\n" \
+          "[bob](https://forum.example.com/u/bob) and [carol](https://forum.example.com/u/carol)"
+      output = extractor_recording_parses(parses).extract(raw)
+
+      expect(parses.size).to eq(1)
+      expect(buffer.links.size).to eq(3)
+      buffer.links.each { |row| expect(output).to include(row[:placeholder]) }
+      expect(refusals).to be_empty
+    end
+
+    it "still escalates when a root link's own spelling sits in a code span" do
+      parses = []
+      raw =
+        "`https://forum.example.com/` and https://forum.example.com/ " \
+          "and [bob](https://forum.example.com/u/bob)"
+      output = extractor_recording_parses(parses).extract(raw)
+
+      expect(parses.size).to be > 1
+      expect(buffer.links.size).to eq(2)
+      expect(output).to start_with("`https://forum.example.com/` and ")
+      expect(refusals).to be_empty
+    end
+
+    it "counts a post link that another tracked link spells as its prefix" do
+      # A table of contents links post 3 and post 30 of the same topic: the
+      # shorter destination occurs inside the longer one, and every such pair
+      # used to cost the body its substitution budget.
+      parses = []
+      raw =
+        "1. [three](https://forum.example.com/t/slug/5/3)\n" \
+          "2. [thirty](https://forum.example.com/t/slug/5/30)\n"
+      output = extractor_recording_parses(parses).extract(raw)
+
+      expect(parses.size).to eq(1)
+      expect(buffer.links.map { |row| row[:target_post_number] }).to contain_exactly(3, 30)
+      buffer.links.each { |row| expect(output).to include(row[:placeholder]) }
+      expect(refusals).to be_empty
+    end
+
+    it "confirms the prefix link when the longer one also sits in a code span" do
+      # The code copy shares the block with the live links, so the longer value
+      # counts two against one and the body escalates — and the shorter value's
+      # hits inside both copies must stay dropped, or a confirmed span would
+      # cover the code span.
+      code = "`https://forum.example.com/t/slug/5/30`"
+      parses = []
+      raw =
+        "see [three](https://forum.example.com/t/slug/5/3) and " \
+          "[thirty](https://forum.example.com/t/slug/5/30) and #{code}\n"
+      output = extractor_recording_parses(parses).extract(raw)
+
+      expect(parses.size).to be > 1
+      expect(buffer.links.map { |row| row[:target_post_number] }).to contain_exactly(3, 30)
+      expect(output).to include(code)
+      expect(refusals).to be_empty
+    end
+
+    it "matches a destination the engine escaped further than the author wrote it" do
+      # markdown-it escapes the quotes of the destination and keeps the author's
+      # own `%20`, so its href occurs nowhere in the raw. Each escape is read as
+      # either spelling, one character at a time.
+      raw = %{see <https://forum.example.com/t/slug/5?q="%20a%20b"> now}
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first).to include(target_id: 5, target_suffix: %{?q="%20a%20b"})
+      expect(output).to eq("see <#{buffer.links.first[:placeholder]}> now")
+      expect(refusals).to be_empty
+    end
+
     it "refuses a body with more distinct tracked URLs than the value cap" do
       count =
         Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::MAX_SCANNED_VALUES + 1
@@ -467,10 +560,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       # CR endings force every quote onto the substitution path; two more quotes
       # than MAX_SUBSTITUTIONS leaves two headers stale, which must show up on the
       # tally rather than reading as a fully handled body.
-      quotes = (1..50).map { |i| "[quote=\"alice, post:#{i}, topic:9\"]\r\nbody #{i}\r\n[/quote]" }
+      max =
+        Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::SubstitutionPass::MAX_SUBSTITUTIONS
+      quotes =
+        (1..(max + 2)).map { |i| "[quote=\"alice, post:#{i}, topic:9\"]\r\nbody #{i}\r\n[/quote]" }
       output = extract(quotes.join("\r\n"))
 
-      expect(buffer.quotes.size).to eq(48)
+      expect(buffer.quotes.size).to eq(max)
       expect(output.scan(/\[quote=/).size).to eq(2)
       expect(refusals).to eq(%i[substitution_limit])
     end

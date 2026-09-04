@@ -42,6 +42,19 @@ module Migrations
       #     a word-final `Σ`, and a fold coarser than the engine's is what the
       #     argument above needs.
       #
+      # Two byte-level exclusions drop URL hits anyway, because no live link
+      # can spell them:
+      #
+      #   * a hit of a schemeless reading right after `//` is the tail of some
+      #     scheme-ful spelling, since linkify starts no bare-domain link
+      #     there;
+      #   * a hit that lies strictly inside a hit of another tracked value is
+      #     part of that longer value's byte run, so a live link there spells
+      #     the longer value — and where the run is shielded, both hits are.
+      #     A value the engine counted inside a link label is exempt, because
+      #     there the shorter value really does occur inside the longer one's
+      #     link.
+      #
       # Counts that cannot be matched escalate to
       # {EngineScanner::SubstitutionPass}, which asks the engine about one
       # occurrence at a time.
@@ -60,10 +73,13 @@ module Migrations
       #     percent-encoding with lowercase hex digits, say, which the engine's
       #     href normalizes to uppercase — is not counted, so the body refuses
       #     instead of being rewritten.
-      #   * A tracked value that also occurs inside a longer one — `/t/x/5` in
-      #     `/t/x/55`, `@bob` in `@bobby` — counts one occurrence too many and
-      #     escalates. A body with hundreds of such pairs runs out of
-      #     substitution budget and keeps its tail verbatim.
+      #   * A name that also occurs inside a longer one — `@bob` in `@bobby` —
+      #     counts one occurrence too many and escalates. A body with hundreds
+      #     of such pairs runs out of substitution budget and keeps its tail
+      #     verbatim.
+      #   * A URL inside a link label that the engine reads as raw HTML — an
+      #     `<img src="…">` wrapped in `[…](…)` — is no token of its own and
+      #     no label hit either, so the body counts one occurrence too many.
       #   * A custom emoji name outside {Constructs::Emoji}'s presence shape
       #     never reaches the engine tier at all: the gate cannot see it, so
       #     nothing is extracted and nothing is reported.

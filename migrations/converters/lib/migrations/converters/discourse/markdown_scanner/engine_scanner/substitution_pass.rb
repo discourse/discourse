@@ -24,8 +24,10 @@ module Migrations
           # engine-tier bodies, so this stays cheap.
           class SubstitutionPass
             # A body with hundreds of occurrences of a tracked value keeps its
-            # tail unconfirmed instead of paying hundreds of parses.
-            MAX_SUBSTITUTIONS = 48
+            # tail unconfirmed instead of paying hundreds of parses. One check
+            # costs about a millisecond; a corpus run needed fewer than ninety
+            # for every body but a generated keyword report.
+            MAX_SUBSTITUTIONS = 128
 
             # Default time limit across a body's substitution checks. The parse
             # count alone does not bound the work: one generated worst-case body

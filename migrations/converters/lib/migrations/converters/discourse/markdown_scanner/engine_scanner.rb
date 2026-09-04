@@ -283,6 +283,7 @@ module Migrations
             # occurrence lists — is exactly what the substitution pass needs
             # next.
             locator = Locator.new(self, input)
+            track_url_values(locator, data)
 
             # The engine's maps count lines after markdown-it normalized CR
             # endings away, so a CR body goes straight to the map-free
@@ -305,6 +306,28 @@ module Migrations
               cause,
               seconds_budget: substitution_seconds_budget,
             ).result
+          end
+
+          # The cross-value nesting rule needs every tracked value of the body up
+          # front, so both passes see the same spans. A value the engine counted
+          # inside a link label is exempt: there the shorter value really does
+          # occur inside the longer one's link twice.
+          def track_url_values(locator, data)
+            values = Set.new
+            unfiltered = Set.new
+
+            data["blocks"].each do |block|
+              block["links"].each do |link|
+                href = link["href"]
+                next unless url_tracked?(href)
+
+                values << href
+                unfiltered << href if link["labelHits"] > 0
+              end
+              block["images"].each { |src| values << src if url_tracked?(src) }
+            end
+
+            locator.track_url_values(values, unfiltered:)
           end
 
           # On the slow path one parse may take tens of seconds, so the
