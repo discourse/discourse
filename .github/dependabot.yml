@@ -76,6 +76,7 @@ updates:
       default-days: 7
       exclude:
         - "@discourse/*"
+        - "discourse" # npm alias for @discourse/types in plugins
     open-pull-requests-limit: 40
     versioning-strategy: increase
     ignore:
