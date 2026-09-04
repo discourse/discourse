@@ -173,7 +173,7 @@
     "pretender": "^3.4.7",
     "qunit": "^2.25.0",
     "qunit-dom": "^3.5.1",
-    "rolldown": "1.2.5",
+    "rolldown": "1.2.6",
     "sinon": "^22.1.0",
     "testem": "^3.20.2",
     "typescript": "^5.9.3",
