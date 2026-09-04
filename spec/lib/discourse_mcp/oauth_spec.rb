@@ -242,15 +242,16 @@ describe DiscourseMcp::OAuth do
     end.to raise_error(Discourse::InvalidAccess)
   end
 
-  it "rejects a requested scope that none of the user's groups provide" do
-    expect do
+  it "grants only requested scopes that the user is eligible for" do
+    authorization =
       described_class::AuthorizationGrant.create!(
         user: user,
         client: client,
         redirect_uri: client.redirect_uris.first,
         requested_scopes: %w[mcp:profile:read mcp:content:write],
       )
-    end.to raise_error(Discourse::InvalidAccess)
+
+    expect(authorization.scopes).to eq(["mcp:profile:read"])
   end
 
   it "does not add newly eligible scopes during refresh" do

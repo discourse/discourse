@@ -7,6 +7,8 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
+import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
@@ -27,6 +29,31 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
+
+const CLIENT_PRESETS = {
+  codex: {
+    name: "Codex",
+    client_id: "codex",
+    redirect_uris: "http://127.0.0.1/callback",
+  },
+  claude_code: {
+    name: "Claude Code",
+    client_id: "claude-code",
+    redirect_uris: "http://localhost:8080/callback",
+  },
+  mcp_inspector: {
+    name: "MCP Inspector",
+    client_id: "mcp-inspector",
+    redirect_uris:
+      "http://localhost:6274/oauth/callback\nhttp://127.0.0.1:6276/oauth/callback",
+  },
+  visual_studio_code: {
+    name: "Visual Studio Code",
+    client_id: "visual-studio-code",
+    redirect_uris: "https://vscode.dev/redirect",
+  },
+  custom: { name: "", client_id: "", redirect_uris: "" },
+};
 
 function listValue(value) {
   return Array.isArray(value) ? value.join(", ") : value || "";
@@ -70,6 +97,7 @@ export default class AdminMcp extends Component {
   @tracked clientRecord;
   @tracked clientNextCursor;
   @tracked clientLoading = false;
+  @tracked selectedClientPresetId;
   @tracked primitiveRecords;
   @tracked updatingPrimitiveId;
   @tracked authorizations;
@@ -92,6 +120,7 @@ export default class AdminMcp extends Component {
   clientFilterFormData = { clientFilter: "" };
   authorizationFilterFormData = { authorizationFilter: "" };
   activityFilterFormData = { activityFilter: "", activityOutcome: "all" };
+  clientPresetIds = Object.keys(CLIENT_PRESETS);
   clientRequestId = 0;
   authorizationRequestId = 0;
   activityRequestId = 0;
@@ -332,7 +361,7 @@ export default class AdminMcp extends Component {
   }
 
   get newClientFormData() {
-    return { name: "", client_id: "", redirect_uris: "" };
+    return { ...CLIENT_PRESETS[this.selectedClientPresetId] };
   }
 
   get primitiveFormData() {
@@ -680,6 +709,16 @@ export default class AdminMcp extends Component {
     } finally {
       this.saving = false;
     }
+  }
+
+  @action
+  resetClientPreset() {
+    this.selectedClientPresetId = null;
+  }
+
+  @action
+  selectClientPreset(preset) {
+    this.selectedClientPresetId = preset;
   }
 
   @action
@@ -1563,52 +1602,100 @@ export default class AdminMcp extends Component {
         />
       {{/if}}
     {{else if (eq @section "client-new")}}
-      <BackButton
-        @route="adminConfig.mcp.clients"
-        @label="admin.config.mcp.clients.back"
-      />
-      <AdminConfigAreaCard
-        @heading="admin.config.mcp.clients.new_title"
-        class="admin-mcp__form-card"
-      >
-        <:content>
-          <Form
-            @data={{this.newClientFormData}}
-            @onSubmit={{this.createClient}}
-            @isLoading={{this.saving}}
-            as |form|
-          >
-            <form.Field
-              @name="name"
-              @title={{i18n "admin.config.mcp.clients.name"}}
-              @validation="required"
-              @type="input"
-              as |field|
-            ><field.Control /></form.Field>
-            <form.Field
-              @name="client_id"
-              @title={{i18n "admin.config.mcp.clients.client_id"}}
-              @description={{i18n
-                "admin.config.mcp.clients.client_id_description"
-              }}
-              @validation="required"
-              @type="input"
-              as |field|
-            ><field.Control /></form.Field>
-            <form.Field
-              @name="redirect_uris"
-              @title={{i18n "admin.config.mcp.clients.redirect_uris"}}
-              @description={{i18n
-                "admin.config.mcp.clients.redirect_uris_description"
-              }}
-              @validation="required"
-              @type="textarea"
-              as |field|
-            ><field.Control @height={{100}} /></form.Field>
-            <form.Submit @label="admin.config.mcp.clients.create" />
-          </Form>
-        </:content>
-      </AdminConfigAreaCard>
+      {{#if this.selectedClientPresetId}}
+        <DButton
+          class="btn-transparent back-button admin-mcp__change-client-preset"
+          @action={{this.resetClientPreset}}
+          @icon="chevron-left"
+          @label="admin.config.mcp.clients.back_to_presets"
+        />
+        <AdminConfigAreaCard
+          class="admin-mcp__client-form"
+          @heading="admin.config.mcp.clients.new_title"
+        >
+          <:content>
+            <p>{{i18n
+                (concat
+                  "admin.config.mcp.clients.preset_help."
+                  this.selectedClientPresetId
+                )
+              }}</p>
+            <Form
+              @data={{this.newClientFormData}}
+              @isLoading={{this.saving}}
+              @onSubmit={{this.createClient}}
+              as |form|
+            >
+              <form.Field
+                @description={{i18n
+                  "admin.config.mcp.clients.name_description"
+                }}
+                @format="large"
+                @name="name"
+                @title={{i18n "admin.config.mcp.clients.name"}}
+                @type="input"
+                @validation="required"
+                as |field|
+              ><field.Control /></form.Field>
+              <form.Field
+                @description={{i18n
+                  "admin.config.mcp.clients.client_id_description"
+                }}
+                @format="large"
+                @name="client_id"
+                @title={{i18n "admin.config.mcp.clients.client_id"}}
+                @type="input"
+                @validation="required"
+                as |field|
+              ><field.Control /></form.Field>
+              <form.Field
+                @description={{i18n
+                  "admin.config.mcp.clients.redirect_uris_description"
+                }}
+                @format="large"
+                @name="redirect_uris"
+                @title={{i18n "admin.config.mcp.clients.redirect_uris"}}
+                @type="textarea"
+                @validation="required"
+                as |field|
+              ><field.Control @height={{100}} /></form.Field>
+              <form.Submit @label="admin.config.mcp.clients.create" />
+            </Form>
+          </:content>
+        </AdminConfigAreaCard>
+      {{else}}
+        <BackButton
+          @label="admin.config.mcp.clients.back"
+          @route="adminConfig.mcp.clients"
+        />
+        <section class="admin-mcp__client-presets">
+          <h2>{{i18n "admin.config.mcp.clients.preset_title"}}</h2>
+          <p>{{i18n "admin.config.mcp.clients.preset_description"}}</p>
+          <AdminSectionLandingWrapper>
+            {{#each this.clientPresetIds as |preset|}}
+              <AdminSectionLandingItem
+                data-client-preset-id={{preset}}
+                @descriptionLabel={{concat
+                  "admin.config.mcp.clients.preset_descriptions."
+                  preset
+                }}
+                @titleLabel={{concat
+                  "admin.config.mcp.clients.presets."
+                  preset
+                }}
+              >
+                <:buttons as |buttons|>
+                  <buttons.Default
+                    @action={{fn this.selectClientPreset preset}}
+                    @icon="gear"
+                    @label="admin.config.mcp.clients.use_preset"
+                  />
+                </:buttons>
+              </AdminSectionLandingItem>
+            {{/each}}
+          </AdminSectionLandingWrapper>
+        </section>
+      {{/if}}
     {{else if (eq @section "client-detail")}}
       <BackButton
         @route="adminConfig.mcp.clients"

@@ -13,9 +13,14 @@
     <dd><code><%= params[:resource] %></code></dd>
   </dl>
 
-  <h2><%= t("mcp.oauth.requested_permissions") %></h2>
-  <ul>
-    <% @requested_scopes.each do |scope| %>
+  <p class="mcp-consent__scope-summary">
+    <%= t("mcp.oauth.requested_permission_count", client_name: @client.name, count: @requested_scopes.length) %>
+    <%= t("mcp.oauth.eligible_permission_count", count: @granted_scopes.length) %>
+  </p>
+
+  <h2><%= t("mcp.oauth.granted_permissions", count: @granted_scopes.length) %></h2>
+  <ul class="mcp-consent__granted-scopes">
+    <% @granted_scopes.each do |scope| %>
       <li><code><%= scope %></code></li>
     <% end %>
   </ul>

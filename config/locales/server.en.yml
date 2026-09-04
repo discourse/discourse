@@ -6,7 +6,15 @@ en:
       client_id: "Client ID"
       redirect_uri: "Redirect URI"
       resource: "MCP server"
-      requested_permissions: "Requested permissions"
+      requested_permission_count:
+        one: "%{client_name} requested %{count} permission."
+        other: "%{client_name} requested %{count} permissions."
+      eligible_permission_count:
+        one: "Your account is eligible for %{count}."
+        other: "Your account is eligible for %{count}."
+      granted_permissions:
+        one: "The following permission will be granted"
+        other: "The following permissions will be granted"
       guardian_notice: "The client acts as your account and remains subject to your normal Discourse permissions."
       deny: "Deny"
       approve: "Authorize"
@@ -2927,7 +2935,7 @@ en:
     mcp_server_enabled: "Enable the site's Model Context Protocol server. MCP clients act as an authorized Discourse user and remain subject to normal permissions."
     mcp_server_instructions: "Optional instructions sent to MCP clients to explain how to use this server."
     mcp_cache_ttl_ms: "How long MCP clients may consider a cacheable response fresh, in milliseconds. Set to 0 to make responses immediately stale."
-    mcp_oauth_client_id_metadata_policy: "Choose which OAuth clients may use Client ID Metadata Documents. Clients registered by an administrator are always allowed. Users must still approve requested access."
+    mcp_oauth_client_id_metadata_policy: "Choose whether OAuth clients can register using Client ID Metadata Documents (CIMD). Admin-registered clients are always allowed. Users must still approve requested access."
     mcp_oauth_client_id_metadata_domains: "Hosts allowed to provide Client ID Metadata Documents when {{setting:mcp_oauth_client_id_metadata_policy}} is set to approved domains. Subdomains are not included unless listed separately."
     mcp_access_token_lifetime_minutes: "How long an MCP access token remains valid, in minutes."
     mcp_refresh_token_lifetime_days: "How long an MCP refresh token family remains valid, in days."

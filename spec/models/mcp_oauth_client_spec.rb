@@ -23,12 +23,17 @@ describe McpOauthClient do
       ).to all(be(true))
     end
 
-    it "does not relax other redirect URI components or non-IP hosts" do
+    it "allows a different port for a registered localhost redirect" do
+      client = McpOauthClient.new(redirect_uris: ["http://localhost/callback"])
+
+      expect(client.allows_redirect_uri?("http://localhost:49152/callback")).to eq(true)
+    end
+
+    it "does not relax other redirect URI components or remote hosts" do
       client =
         McpOauthClient.new(
           redirect_uris: %w[
             http://127.0.0.1/callback?source=codex
-            http://localhost/callback
             https://client.example.com/callback
           ],
         )
@@ -37,7 +42,6 @@ describe McpOauthClient do
         [
           client.allows_redirect_uri?("http://127.0.0.1:49152/other?source=codex"),
           client.allows_redirect_uri?("http://127.0.0.1:49152/callback?source=other"),
-          client.allows_redirect_uri?("http://localhost:49152/callback"),
           client.allows_redirect_uri?("https://client.example.com:49152/callback"),
         ],
       ).to all(be(false))

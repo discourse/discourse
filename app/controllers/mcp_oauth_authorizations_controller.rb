@@ -14,10 +14,11 @@ class McpOauthAuthorizationsController < ApplicationController
     @client = DiscourseMcp::OAuth::ClientResolver.resolve!(params[:client_id], user: current_user)
     validate_redirect!(@client)
     @requested_scopes = requested_scopes
-    if !@requested_scopes.include?(DiscourseMcp::INITIAL_SCOPE) ||
-         (@requested_scopes - DiscourseMcp::Access.eligible_scopes(current_user)).present?
-      raise Discourse::InvalidAccess
-    end
+    @granted_scopes =
+      DiscourseMcp::OAuth::AuthorizationGrant.grantable_scopes(
+        user: current_user,
+        requested_scopes: @requested_scopes,
+      )
     render :show
   end
 

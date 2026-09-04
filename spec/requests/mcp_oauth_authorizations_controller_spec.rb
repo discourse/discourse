@@ -87,6 +87,71 @@ describe McpOauthAuthorizationsController do
     expect(response.status).to eq(403)
   end
 
+  it "explains when only some requested scopes can be granted" do
+    sign_in(user)
+    group = Fabricate(:group)
+    group.add(user)
+    McpGroupScope.create!(group:, scope: "mcp:profile:read")
+    client =
+      McpOauthClient.create!(
+        client_id: "partial-consent-client",
+        name: "Partial consent client",
+        registration_type: "pre_registered",
+        trust_state: "approved",
+        redirect_uris: ["http://127.0.0.1/callback"],
+      )
+
+    get "/oauth2/mcp/authorize",
+        params: {
+          client_id: client.client_id,
+          redirect_uri: client.redirect_uris.first,
+          response_type: "code",
+          code_challenge: "a" * 43,
+          code_challenge_method: "S256",
+          resource: DiscourseMcp.resource_url,
+          scope: "mcp:profile:read mcp:content:read mcp:content:write",
+        }
+
+    expect(response.status).to eq(200)
+    document = Nokogiri.HTML5(response.body)
+    expect(document.at_css(".mcp-consent__scope-summary").text.squish).to eq(
+      "Partial consent client requested 3 permissions. Your account is eligible for 1.",
+    )
+    expect(document.css(".mcp-consent__granted-scopes code").map(&:text)).to eq(
+      ["mcp:profile:read"],
+    )
+  end
+
+  it "grants only the requested scopes available to the user" do
+    sign_in(user)
+    group = Fabricate(:group)
+    group.add(user)
+    McpGroupScope.create!(group:, scope: "mcp:profile:read")
+    client =
+      McpOauthClient.create!(
+        client_id: "partial-grant-client",
+        name: "Partial grant client",
+        registration_type: "pre_registered",
+        trust_state: "approved",
+        redirect_uris: ["http://127.0.0.1/callback"],
+      )
+
+    post "/oauth2/mcp/authorize",
+         params: {
+           client_id: client.client_id,
+           redirect_uri: client.redirect_uris.first,
+           response_type: "code",
+           code_challenge: "a" * 43,
+           code_challenge_method: "S256",
+           resource: DiscourseMcp.resource_url,
+           scope: "mcp:profile:read mcp:content:read mcp:content:write",
+           decision: "approve",
+         }
+
+    expect(response).to redirect_to(/\A#{Regexp.escape(client.redirect_uris.first)}\?code=/)
+    expect(McpOauthAuthorization.find_by(user:, client:).scopes).to eq(["mcp:profile:read"])
+  end
+
   it "authorizes a loopback redirect using the client's active port" do
     client =
       McpOauthClient.create!(

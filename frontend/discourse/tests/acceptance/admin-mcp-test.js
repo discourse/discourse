@@ -421,6 +421,87 @@ acceptance("Admin - MCP", function (needs) {
       .exists("the incomplete setup checklist is visible");
   });
 
+  test("prefills known OAuth client applications", async function (assert) {
+    await visit("/admin/config/mcp/clients/new");
+
+    assert
+      .dom(".admin-mcp__client-presets")
+      .exists("the application choices are shown first");
+    assert
+      .dom("[data-client-preset-id]")
+      .exists(
+        { count: 5 },
+        "the known applications and custom option are shown"
+      );
+    assert
+      .dom(".admin-mcp__client-form")
+      .doesNotExist("the form is hidden until an application is selected");
+
+    await click('[data-client-preset-id="codex"] button');
+
+    assert
+      .dom(".admin-mcp__client-presets")
+      .doesNotExist("the application choices are hidden while editing");
+    assert
+      .dom(".admin-mcp__client-form")
+      .includesText(
+        i18n("admin.config.mcp.clients.preset_help.codex"),
+        "the selected application instructions are shown"
+      );
+    assert.dom('[name="name"]').hasValue("Codex", "Codex has a name");
+    assert.dom('[name="client_id"]').hasValue("codex", "Codex has a client ID");
+    assert
+      .dom('[name="redirect_uris"]')
+      .hasValue(
+        "http://127.0.0.1/callback",
+        "Codex has its portless loopback callback"
+      );
+
+    await click(".admin-mcp__change-client-preset");
+    await click('[data-client-preset-id="claude_code"] button');
+
+    assert
+      .dom('[name="redirect_uris"]')
+      .hasValue(
+        "http://localhost:8080/callback",
+        "Claude Code has a fixed callback port"
+      );
+    assert
+      .dom(".admin-mcp__client-form")
+      .includesText(
+        "--callback-port 8080",
+        "the application instructions explain how to use the fixed port"
+      );
+
+    await click(".admin-mcp__change-client-preset");
+    await click('[data-client-preset-id="mcp_inspector"] button');
+
+    assert
+      .dom('[name="redirect_uris"]')
+      .hasValue(
+        "http://localhost:6274/oauth/callback\nhttp://127.0.0.1:6276/oauth/callback",
+        "MCP Inspector allows its web and command-line callbacks"
+      );
+
+    await click(".admin-mcp__change-client-preset");
+    await click('[data-client-preset-id="visual_studio_code"] button');
+
+    assert
+      .dom('[name="redirect_uris"]')
+      .hasValue(
+        "https://vscode.dev/redirect",
+        "Visual Studio Code has its hosted callback"
+      );
+
+    await click(".admin-mcp__change-client-preset");
+    await click('[data-client-preset-id="custom"] button');
+
+    assert.dom('[name="name"]').hasValue("", "a custom client starts empty");
+    assert
+      .dom('[name="client_id"]')
+      .hasValue("", "a custom client ID starts empty");
+  });
+
   test("adds group access on a dedicated page", async function (assert) {
     await visit("/admin/config/mcp/access");
     await click(".admin-mcp__access-section .btn-primary");

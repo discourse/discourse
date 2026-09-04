@@ -27,11 +27,11 @@ class McpOauthClient < ActiveRecord::Base
     return true if redirect_uris.include?(value)
 
     requested_uri = URI.parse(value)
-    return false if !loopback_ip_redirect_uri?(requested_uri)
+    return false if !local_redirect_uri?(requested_uri)
 
     redirect_uris.any? do |registered_value|
       registered_uri = URI.parse(registered_value)
-      loopback_ip_redirect_uri?(registered_uri) &&
+      local_redirect_uri?(registered_uri) &&
         redirect_uris_match_except_port?(registered_uri, requested_uri)
     end
   rescue URI::InvalidURIError
@@ -52,8 +52,8 @@ class McpOauthClient < ActiveRecord::Base
 
   private
 
-  def loopback_ip_redirect_uri?(uri)
-    uri.scheme == "http" && LOOPBACK_IP_HOSTS.include?(uri.hostname&.downcase)
+  def local_redirect_uri?(uri)
+    uri.scheme == "http" && LOCAL_REDIRECT_HOSTS.include?(uri.hostname&.downcase)
   end
 
   def redirect_uris_match_except_port?(registered_uri, requested_uri)

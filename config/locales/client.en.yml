@@ -1,9 +1,9 @@
 en:
   js:
     mcp_oauth_client_id_metadata_policy:
-      disabled: "Admin-registered clients only"
-      approved_domains: "Also allow metadata clients from approved domains"
-      any_domain: "Also allow metadata clients from any domain"
+      disabled: "Admin registration only"
+      approved_domains: "CIMD from approved domains"
+      any_domain: "CIMD from any domain"
     ace_editor:
       resize: "Resize code editor"
     user_api_key:
@@ -6993,11 +6993,34 @@ en:
             unblock: "Unblock"
             add: "Add OAuth client"
             back: "Back to OAuth clients"
-            new_title: "Add pre-registered OAuth client"
+            back_to_presets: "Back to applications"
+            new_title: "Add OAuth client"
+            preset_title: "Choose an application"
+            preset_description: "Start with values for a common MCP application, or configure the OAuth client manually."
+            use_preset: "Set up"
+            presets:
+              codex: "Codex"
+              claude_code: "Claude Code"
+              mcp_inspector: "MCP Inspector"
+              visual_studio_code: "Visual Studio Code"
+              custom: "Custom"
+            preset_descriptions:
+              codex: "Use Codex's standard local callback."
+              claude_code: "Use Claude Code with a fixed local callback port."
+              mcp_inspector: "Allow the Inspector's browser and command-line callbacks."
+              visual_studio_code: "Use Visual Studio Code's hosted callback."
+              custom: "Enter the client ID and redirect URIs yourself."
+            preset_help:
+              codex: "In Codex, use the client ID below and confirm that its callback URI matches."
+              claude_code: "Use the client ID below and --callback-port 8080 when adding this server to Claude Code."
+              mcp_inspector: "Use the client ID below in MCP Inspector's OAuth settings. Both web and command-line callbacks are included."
+              visual_studio_code: "When Visual Studio Code asks for client registration details, enter the client ID below."
+              custom: "Enter the OAuth details provided by the application."
             name: "Client name"
-            client_id_description: "A stable identifier supplied by the client. This does not need to be a URL for pre-registered clients."
+            name_description: "Shown to users when they approve this application."
+            client_id_description: "An identifier for this application. Enter the same value when configuring the client."
             redirect_uris: "Redirect URIs"
-            redirect_uris_description: "Enter one exact redirect URI per line. HTTPS is required except for localhost loopback callbacks."
+            redirect_uris_description: "Where the browser returns after a user approves access. Enter one exact URI per line."
             create: "Add client"
             created: "OAuth client added."
             empty: "No OAuth clients are registered."
