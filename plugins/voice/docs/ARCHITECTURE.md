@@ -19,6 +19,7 @@ Voice adds lightweight WebRTC voice rooms to Discourse without proxying audio/vi
   - `RoomMembershipsController` lets moderators manage explicit memberships.
 - **Authorization**
   - Guardian extensions gate room visibility, membership, and management. Site settings define who can create/manage rooms and cap per-user ownership tallies.
+  - Camera and screen sharing are separate group-gated capabilities, resolved per user against the room's own media flag and their speaking rights. Publishing is enforced at the state endpoint and, on LiveKit rooms, by the token's track-source grants; each room's serialization carries the two rights for the UI.
 
 ## Frontend
 
