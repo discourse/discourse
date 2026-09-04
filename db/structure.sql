@@ -2111,7 +2111,8 @@ CREATE TABLE public.browser_pageview_events (
     source smallint DEFAULT 1 NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
-    browser smallint
+    browser smallint,
+    language character varying(255)
 );
 
 
@@ -24406,6 +24407,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260903065141'),
 ('20260902150024'),
 ('20260901020329'),
 ('20260831162602'),

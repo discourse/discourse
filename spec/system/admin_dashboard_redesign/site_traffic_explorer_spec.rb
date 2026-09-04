@@ -158,6 +158,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_496,
         ip_address: "192.0.2.1",
         user_agent: chrome,
+        language: "en-US",
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "search.example/results?q=discourse",
@@ -170,6 +171,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_496,
         ip_address: "192.0.2.1",
         user_agent: chrome,
+        language: "en-US",
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "test.localhost/latest",
@@ -182,6 +184,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_497,
         ip_address: "198.51.100.2",
         user_agent: firefox,
+        language: "en-GB",
         session_id: "anonymous-session",
         created_at: "2026-05-11 10:00:00",
       },
@@ -273,7 +276,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_card_tabs(card: "acquisition", tabs: %w[Referrers Countries Networks])
     expect(traffic).to have_card_tabs(card: "pages", tabs: ["Top URLs", "Entry URLs"])
-    expect(traffic).to have_card_tabs(card: "visitors", tabs: ["Browsers", "IP addresses"])
+    expect(traffic).to have_card_tabs(
+      card: "visitors",
+      tabs: ["Browsers", "Languages", "IP addresses"],
+    )
     expect(traffic).to have_row(card: "acquisition", label: "Direct / unknown", count: "2")
     expect(traffic).to have_row(
       card: "acquisition",
@@ -325,6 +331,24 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("browser")
+
+    traffic.select_tab(card: "visitors", tab: "Languages")
+    expect(traffic).to have_row(card: "visitors", label: "English (United States)", count: "2")
+    expect(traffic).to have_row(card: "visitors", label: "English (United Kingdom)", count: "1")
+    traffic.filter_row(card: "visitors", label: "English (United States)")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "English (United States)")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=en-US&range=custom&start_date=2026-05-01",
+    )
+    traffic.remove_filter("language")
+
+    traffic.select_tab(card: "visitors", tab: "Languages")
+    traffic.filter_row(card: "visitors", label: "Unknown")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "Unknown")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=&range=custom&start_date=2026-05-01",
+    )
+    traffic.remove_filter("language")
 
     traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United States")
