@@ -17,7 +17,7 @@ jobs:
     name: publish
     runs-on: ubuntu-latest
     if: github.repository == 'discourse/discourse'
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v7
@@ -58,6 +58,17 @@ jobs:
       - name: Publish the package
         working-directory: frontend/discourse-types
         run: pnpm publish --no-git-checks --tag latest
+
+      - name: Wait for the published version to be resolvable
+        run: |
+          for i in $(seq 1 30); do
+            pnpm view "@discourse/types@${package_version}" version && exit 0
+            echo "Not yet resolvable, waiting..."
+            sleep 10
+          done
+
+          echo "Timed out waiting for @discourse/types@${package_version} to become resolvable" >&2
+          exit 1
 
       - name: Bump @discourse/types in workspace package.json files
         run: |
