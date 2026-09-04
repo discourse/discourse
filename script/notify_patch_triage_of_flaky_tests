@@ -22,18 +22,12 @@ payload=$(jq -nc \
     screenshot_artifact_id: ($screenshot_artifact_id | tonumber)
   } end')
 
-signature=$(
-  printf '%s' "$payload" |
-    openssl dgst -sha256 -hmac "$PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" -hex |
-    sed 's/^.* //'
-)
-
 curl --fail-with-body \
   --retry 3 \
   --retry-all-errors \
   --connect-timeout 5 \
   --max-time 30 \
   --header "Content-Type: application/json" \
-  --header "X-Hub-Signature-256: sha256=$signature" \
+  --header "Authorization: Bearer $PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" \
   --data-binary "$payload" \
   "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL"
