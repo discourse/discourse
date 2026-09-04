@@ -111,7 +111,11 @@ function __scanOne(post) {
   const tokens = __pt.parse(post.raw);
   const blocks = [];
   const blockTokens = [];
+  let quoteHeader = null;
   for (const token of tokens) {
+    if (token.type === "bbcode_open" && token.attrGet("data-username") !== null) {
+      quoteHeader = token;
+    }
     if (token.type === "inline") {
       const block = {
         map: token.map,
@@ -143,7 +147,17 @@ function __scanOne(post) {
         // tag.
         token.type === "bbcode_open")
     ) {
-      blockTokens.push({ type: token.type, tag: token.tag, map: token.map });
+      const entry = { type: token.type, tag: token.tag, map: token.map };
+      if (token.type === "bbcode_open" && token.tag === "blockquote" && quoteHeader) {
+        // The header fields make one quote distinguishable from another, so
+        // a substitution check can see its own quote change. They sit on the
+        // mapless aside token that opens the quote, not on this one.
+        entry.username = quoteHeader.attrGet("data-username");
+        entry.post = quoteHeader.attrGet("data-post");
+        entry.topic = quoteHeader.attrGet("data-topic");
+        quoteHeader = null;
+      }
+      blockTokens.push(entry);
     }
   }
   return { id: post.id, blocks, blockTokens };

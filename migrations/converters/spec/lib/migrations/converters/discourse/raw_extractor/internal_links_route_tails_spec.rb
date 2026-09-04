@@ -138,4 +138,41 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 18_978)
     end
   end
+
+  describe "coordinate-free family pages" do
+    let(:internal_link_hosts) { { source_host => nil } }
+
+    it "records a bare family index page as a site link" do
+      link, result = link_for("see https://#{source_host}/u/ now")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::SITE,
+        url: "https://#{source_host}/u/",
+      )
+      expect(result).to eq("see #{link[:placeholder]} now")
+    end
+
+    it "records a family index page with a query as a site link" do
+      link, = link_for("[badges](https://#{source_host}/badges/?_escaped_fragment_=1)")
+
+      expect(link).to include(target_type: enums::LinkTarget::SITE)
+    end
+
+    it "keeps an empty slug in front of an id a refusal" do
+      raw = "[x](https://#{source_host}/t//209)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+    end
+
+    it "takes a bare trailing dot after the id as an empty format" do
+      link, = link_for("[x](https://#{source_host}/t/using-object-storage/148916.)")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::TOPIC,
+        target_id: 148_916,
+        target_suffix: ".",
+      )
+    end
+  end
 end

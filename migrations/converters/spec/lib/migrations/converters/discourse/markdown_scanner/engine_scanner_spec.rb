@@ -1060,4 +1060,29 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("#{buffer.uploads.first[:placeholder]} and `#{short}`")
     end
   end
+
+  describe "substitution markers keep the construct's shape" do
+    it "confirms a quote whose body is indented code" do
+      # Without the quote, the indented body would become a code block of its
+      # own; the marker keeps the quote so only its header changes.
+      quote = "[quote=\"sam, post:6, topic:23077\"]\n    cd /var/discourse\n[/quote]"
+      result = extract("#{quote}\n\n@alice and `@alice`", topic_id: 1)
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.quotes.size).to eq(1)
+      expect(buffer.quotes.first).to include(quoted_post_number: 6, quoted_topic_id: 23_077)
+      expect(result).to start_with(
+        "#{buffer.quotes.first[:placeholder]}\n    cd /var/discourse\n[/quote]",
+      )
+    end
+
+    it "confirms an angle-bracket autolink in a body with CR line endings" do
+      raw = "Subject: Re\r\n\r\n <https://#{source_host}> \r\n\r\nthanks\r\n"
+      result = extract(raw)
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.links.first).to include(target_type: enums::LinkTarget::SITE)
+      expect(result).to eq(raw.sub("https://#{source_host}", buffer.links.first[:placeholder]))
+    end
+  end
 end

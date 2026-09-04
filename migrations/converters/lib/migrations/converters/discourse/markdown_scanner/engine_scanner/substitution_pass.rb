@@ -114,7 +114,9 @@ module Migrations
                 counts[:code] += block["code"]
               end
               data["blockTokens"].each do |token|
-                counts[[:block, token["type"], token["tag"]]] += 1
+                key = [:block, token["type"], token["tag"]]
+                key.push(token["username"], token["post"], token["topic"]) if quote_key?(key)
+                counts[key] += 1
               end
 
               counts
@@ -209,17 +211,30 @@ module Migrations
               removed = diff(base, substituted)
               added = diff(substituted, base)
               return :not_construct, 0 if removed.empty? && added.empty?
-              return :mismatch, 0 if removed.keys != [entry[:key]]
 
-              covered = removed[entry[:key]]
-              if covered != 1
-                unless entry[:kind] == :url && definition_occurrence?(entry[:text], occurrence)
+              if entry[:kind] == :quote
+                # The marker keeps the quote a quote, so only its header fields
+                # move; the body's own blocks stay where they are.
+                unless removed.size == 1 && quote_key?(removed.keys.first) &&
+                         removed.values.first == 1
                   return :mismatch, 0
+                end
+                covered = 1
+              else
+                return :mismatch, 0 if removed.keys != [entry[:key]]
+
+                covered = removed[entry[:key]]
+                if covered != 1
+                  unless entry[:kind] == :url && definition_occurrence?(entry[:text], occurrence)
+                    return :mismatch, 0
+                  end
                 end
               end
 
               added.each_key do |key|
-                return :mismatch, 0 unless key.is_a?(Array) && key[1].to_s.include?(marker)
+                unless key.is_a?(Array) && key.any? { |part| part.to_s.include?(marker) }
+                  return :mismatch, 0
+                end
               end
               [:confirmed, covered]
             end
@@ -268,9 +283,9 @@ module Migrations
             # no username (nothing to remap), and a check that answered "not a
             # live construct" (a `[quote=` inside a code fence).
             def confirm_quotes(base, marker, spans)
-              return 0 if base.fetch([:block, "bbcode_open", "blockquote"], 0) == 0
+              return 0 if base.keys.none? { |key| quote_key?(key) }
 
-              quote_entry = { kind: :quote, key: [:block, "bbcode_open", "blockquote"], text: nil }
+              quote_entry = { kind: :quote, key: nil, text: nil }
               unconfirmed = 0
               pos = 0
               while (offset = @input.byteindex(/\[quote=/i, pos))
@@ -318,15 +333,30 @@ module Migrations
               [kept, dropped]
             end
 
-            # An `upload://` value is replaced by a marker of the same scheme:
-            # core leaves the alt text of an upload image alone but linkifies a
-            # URL in any other image's alt, so a bare marker would add a token
-            # the occurrence never produced and fail a live construct.
+            # The marker keeps the shape core dispatches on, or the marked parse
+            # gains or loses tokens the occurrence never produced: an
+            # `upload://` source keeps its scheme (core leaves an upload
+            # image's alt alone but linkifies a URL in any other alt), a web
+            # URL keeps its scheme, and a quote opener stays a quote opener.
             def replacement_for(entry, marker)
-              value = entry[:kind] == :url ? entry[:key][1] : nil
-              return marker unless value&.start_with?("upload://")
+              return "[quote=\"#{marker}\"]" if entry[:kind] == :quote
+              return marker unless entry[:kind] == :url
 
-              "upload://#{marker}#{File.extname(value)}"
+              value = entry[:key][1]
+              if value.start_with?("upload://")
+                "upload://#{marker}#{File.extname(value)}"
+              elsif (scheme = value[%r{\A(https?)://}i, 1])
+                # An autolink `<…>` stays an autolink only with a scheme; the
+                # bare word alone on a line would parse as an HTML block.
+                "#{scheme}://#{marker}"
+              else
+                marker
+              end
+            end
+
+            def quote_key?(key)
+              key.is_a?(Array) && key[0] == :block && key[1] == "bbcode_open" &&
+                key[2] == "blockquote"
             end
 
             def build_marker

@@ -46,8 +46,9 @@ module Migrations
               # Rails takes a `.json`/`.rss` format extension off a route before
               # matching it, so an id run ends there and the extension rides in
               # the suffix. Letters only — `/t/slug/5.2` names no route on the
-              # destination either.
-              FORMAT = /\.[a-zA-Z]+/
+              # destination either — but a bare trailing dot is an empty format
+              # and still routes.
+              FORMAT = /\.[a-zA-Z]*/
               private_constant :FORMAT
 
               # Where an id ends: the path may continue, stop, or carry a format
@@ -182,9 +183,11 @@ module Migrations
               private_constant :GROUP
 
               # A path that steps INTO a coordinate-bearing route family — the
-              # family segment followed by `/`. A bare family segment (`/u`,
-              # `/badges`) is that family's coordinate-free index page.
-              COORDINATE_OPENER = %r{\A/(?:t|p|u|users|c|category|g|groups?|tags?|badges)/}
+              # family segment followed by `/` and more path. A bare family
+              # segment, with or without the slash (`/u`, `/badges/`,
+              # `/g/?x=1`), is that family's coordinate-free index page.
+              COORDINATE_OPENER =
+                %r{\A/(?:t|p|u|users|c|category|g|groups?|tags?|badges)/(?![?\#]|\z)}
               private_constant :COORDINATE_OPENER
 
               # `/badges/<id>` or `/badges/<id>/<slug>`; the slug is regenerated
