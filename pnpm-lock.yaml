@@ -445,8 +445,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6)
       rete-history-plugin:
-        specifier: ^2.1.1
-        version: 2.1.1(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6)
+        specifier: ^2.2.0
+        version: 2.2.0(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6)
       rete-render-utils:
         specifier: ^2.0.3
         version: 2.0.3(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6)
@@ -7199,11 +7199,15 @@ packages:
       rete: ^2.0.1
       rete-area-plugin: ^2.0.0
 
-  rete-history-plugin@2.1.1:
-    resolution: {integrity: sha512-Kb2FF51qwl9axSVzusZDJ7ojksg0qPBY3CIhAusHxTLYzO5Di1Nu3cAzHUOHik6kcb3eZI+GYdfqaj/E8xggxQ==}
+  rete-history-plugin@2.2.0:
+    resolution: {integrity: sha512-bKsoEJkt473kBlVQz+MySO5DAs2bEEz79ufmSLqyG0mhmOmfABa9uMTieX/Xm/ZfrXd/J3ZMJ1sTHoEiRV3NOw==}
     peerDependencies:
       rete: ^2.0.1
       rete-area-plugin: ^2.0.0
+      rete-comment-plugin: ^2.2.0
+    peerDependenciesMeta:
+      rete-comment-plugin:
+        optional: true
 
   rete-render-utils@2.0.3:
     resolution: {integrity: sha512-Oz4W2PNayHocRvlzadb5BCNf+tDzJ8RhTwB3ucBPCdCLKZ974wWDiTSCRfA287L2hmHVzRfBdyAwC03K9eP+4g==}
@@ -16045,7 +16049,7 @@ snapshots:
       rete: 2.0.6
       rete-area-plugin: 2.3.2(rete@2.0.6)
 
-  rete-history-plugin@2.1.1(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6):
+  rete-history-plugin@2.2.0(rete-area-plugin@2.3.2(rete@2.0.6))(rete@2.0.6):
     dependencies:
       '@babel/runtime': 7.29.7
       rete: 2.0.6

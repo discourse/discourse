@@ -105,7 +105,7 @@
     "rete": "^2.0.6",
     "rete-area-plugin": "^2.3.2",
     "rete-connection-plugin": "^2.0.5",
-    "rete-history-plugin": "^2.1.1",
+    "rete-history-plugin": "^2.2.0",
     "rete-render-utils": "^2.0.3",
     "rrule": "^2.8.1",
     "strip-test-selectors": "^0.1.0"
