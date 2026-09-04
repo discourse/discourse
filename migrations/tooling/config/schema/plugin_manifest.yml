@@ -44,6 +44,8 @@ plugins:
     columns:
       user_options:
         - chat_announce_new_messages
+        - chat_channel_list_filter
+        - chat_channel_list_sort
         - chat_email_frequency
         - chat_enabled
         - chat_header_indicator_preference
@@ -245,7 +247,7 @@ plugins:
 plugin_checksums:
   automation: e69972690991bc04d92b2d161aac8921
   boards: 3f7be99d5aaac4cf66318ef036e231a2
-  chat: 3324ff0e829d9282accc917503038f18
+  chat: ab866e1148b3ab93d658a44dc4417951
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
   discourse-ai: 1dbe6a6155758187d0a34e7fb0b24181

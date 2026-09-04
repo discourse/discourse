@@ -54,6 +54,57 @@ describe UsersController do
     end
   end
 
+  describe "#update" do
+    fab!(:user)
+    fab!(:other_user, :user)
+
+    before { sign_in(user) }
+
+    it "persists chat channel list preferences while chat is disabled" do
+      SiteSetting.chat_enabled = false
+
+      put "/u/#{user.username}.json",
+          params: {
+            chat_channel_list_filter: "unread",
+            chat_channel_list_sort: "priority",
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(user.user_option.reload).to have_attributes(
+        chat_channel_list_filter: "unread",
+        chat_channel_list_sort: "priority",
+      )
+    end
+
+    it "rejects invalid chat channel list preferences" do
+      put "/u/#{user.username}.json",
+          params: {
+            chat_channel_list_filter: "invalid",
+            chat_channel_list_sort: "priority",
+          }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(user.user_option.reload).to have_attributes(
+        chat_channel_list_filter: "all",
+        chat_channel_list_sort: "alphabetical",
+      )
+    end
+
+    it "rejects an invalid sort preference" do
+      put "/u/#{user.username}.json", params: { chat_channel_list_sort: "invalid" }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(user.user_option.reload.chat_channel_list_sort).to eq("alphabetical")
+    end
+
+    it "does not allow another user to update the preferences" do
+      put "/u/#{other_user.username}.json", params: { chat_channel_list_filter: "unread" }
+
+      expect(response).to have_http_status(:forbidden)
+      expect(other_user.user_option.reload.chat_channel_list_filter).to eq("all")
+    end
+  end
+
   describe "#show_card" do
     fab!(:user)
     fab!(:another_user, :user)

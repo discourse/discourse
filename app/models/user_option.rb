@@ -293,6 +293,8 @@ end
 #  automatically_unpin_topics                     :boolean          default(TRUE), not null
 #  bookmark_auto_delete_preference                :integer          default(3), not null
 #  chat_announce_new_messages                     :boolean          default(TRUE), not null
+#  chat_channel_list_filter                       :integer          default("all"), not null
+#  chat_channel_list_sort                         :integer          default("alphabetical"), not null
 #  chat_email_frequency                           :integer          default("when_away"), not null
 #  chat_enabled                                   :boolean          default(TRUE), not null
 #  chat_header_indicator_preference               :integer          default("all_new"), not null

@@ -1,6 +1,11 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import {
+  CHAT_CHANNEL_LIST_FILTERS,
+  CHAT_CHANNEL_LIST_SORTS,
+} from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 
@@ -598,6 +603,352 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
         result[1].id,
         unstarredDM.id,
         "unstarred DM channel is after starred"
+      );
+    });
+  });
+
+  module("#sidebarPublicMessageChannels", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      this.buildChannel = ({
+        id,
+        slug,
+        createdAt,
+        unreadCount = 0,
+        mentionCount = 0,
+        watchedThreadsUnreadCount = 0,
+        muted = false,
+      }) => {
+        const channel = this.fabricators.channel({
+          id,
+          chatable: this.fabricators.coreFabricators.category({ slug }),
+        });
+        channel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: false,
+          muted,
+        });
+        channel.lastMessage = this.fabricators.message({
+          id: id * 10,
+          channel,
+          created_at: createdAt,
+        });
+        channel.tracking.unreadCount = unreadCount;
+        channel.tracking.mentionCount = mentionCount;
+        channel.tracking.watchedThreadsUnreadCount = watchedThreadsUnreadCount;
+        this.subject.store(channel);
+        return channel;
+      };
+    });
+
+    test("sorts channels alphabetically by default", function (assert) {
+      this.buildChannel({ id: 1, slug: "zulu", createdAt: "2026-09-03" });
+      this.buildChannel({ id: 2, slug: "alpha", createdAt: "2026-09-01" });
+
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels.map(
+          (channel) => channel.slug
+        ),
+        ["alpha", "zulu"],
+        "channels are sorted by slug"
+      );
+    });
+
+    test("sorts channels by recent activity", function (assert) {
+      this.preferences.sort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
+      this.buildChannel({ id: 1, slug: "older", createdAt: "2026-09-01" });
+      this.buildChannel({ id: 2, slug: "newer", createdAt: "2026-09-03" });
+      const emptyChannel = this.buildChannel({
+        id: 3,
+        slug: "empty",
+        createdAt: "2026-09-04",
+      });
+      emptyChannel.lastMessage = null;
+
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels.map(
+          (channel) => channel.slug
+        ),
+        ["newer", "older", "empty"],
+        "newer channels are first and empty channels are last"
+      );
+    });
+
+    test("sorts urgent, unread, and read channels by priority", function (assert) {
+      this.preferences.sort = CHAT_CHANNEL_LIST_SORTS.PRIORITY;
+      this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
+      this.buildChannel({
+        id: 2,
+        slug: "unread",
+        createdAt: "2026-09-01",
+        unreadCount: 1,
+      });
+      this.buildChannel({
+        id: 3,
+        slug: "urgent",
+        createdAt: "2026-08-30",
+        mentionCount: 1,
+      });
+
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels.map(
+          (channel) => channel.slug
+        ),
+        ["urgent", "unread", "read"],
+        "priority groups are ordered"
+      );
+    });
+
+    test("filters channels by recent activity", function (assert) {
+      const clock = sinon.useFakeTimers(new Date("2026-09-03T12:00:00Z"));
+
+      try {
+        this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.ACTIVE;
+        this.buildChannel({
+          id: 1,
+          slug: "active",
+          createdAt: "2026-08-05T12:00:00Z",
+        });
+        this.buildChannel({
+          id: 2,
+          slug: "boundary",
+          createdAt: "2026-08-04T12:00:00Z",
+        });
+        this.buildChannel({
+          id: 3,
+          slug: "inactive",
+          createdAt: "2026-08-03T11:59:59Z",
+        });
+
+        assert.deepEqual(
+          this.subject.sidebarPublicMessageChannels.map(
+            (channel) => channel.slug
+          ),
+          ["active", "boundary"],
+          "the 30-day boundary is inclusive"
+        );
+      } finally {
+        clock.restore();
+      }
+    });
+
+    test("keeps the active channel visible when it does not match", function (assert) {
+      this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+      const activeChannel = this.buildChannel({
+        id: 1,
+        slug: "active",
+        createdAt: "2026-09-03",
+      });
+      const chat = getOwner(this).lookup("service:chat");
+      const chatStateManager = getOwner(this).lookup(
+        "service:chat-state-manager"
+      );
+      chat.activeChannel = activeChannel;
+      chatStateManager.isDrawerExpanded = true;
+
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels.map(
+          (channel) => channel.slug
+        ),
+        ["active"],
+        "the channel being viewed remains available"
+      );
+    });
+
+    test("filters unread and mention channels and excludes muted activity", function (assert) {
+      this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
+      this.buildChannel({
+        id: 2,
+        slug: "unread",
+        createdAt: "2026-09-02",
+        unreadCount: 1,
+      });
+      this.buildChannel({
+        id: 3,
+        slug: "mention",
+        createdAt: "2026-09-01",
+        mentionCount: 1,
+      });
+      this.buildChannel({
+        id: 4,
+        slug: "muted",
+        createdAt: "2026-09-03",
+        mentionCount: 1,
+        muted: true,
+      });
+
+      this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels.map(
+          (channel) => channel.slug
+        ),
+        ["mention", "unread"],
+        "all visible unread activity is included"
+      );
+
+      this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.MENTIONS;
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels.map(
+          (channel) => channel.slug
+        ),
+        ["mention"],
+        "only non-muted urgent activity is included"
+      );
+    });
+
+    test("falls back to showing channels for an unknown filter", function (assert) {
+      this.preferences.filter = "unknown";
+      this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
+
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels.map(
+          (channel) => channel.slug
+        ),
+        ["read"],
+        "an invalid persisted value does not hide the channel list"
+      );
+    });
+  });
+
+  module("#sidebarDirectMessageChannels", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      this.buildDirectMessageChannel = ({
+        id,
+        title,
+        createdAt = "2026-09-03",
+        unreadCount = 0,
+        mentionCount = 0,
+        muted = false,
+        starred = false,
+      }) => {
+        const channel = this.fabricators.channel({
+          id,
+          chatable: this.fabricators.directMessage(),
+          title,
+        });
+        channel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          muted,
+          starred,
+        });
+        channel.lastMessage = this.fabricators.message({
+          id: id * 10,
+          channel,
+          created_at: createdAt,
+        });
+        channel.tracking.unreadCount = unreadCount;
+        channel.tracking.mentionCount = mentionCount;
+        this.subject.store(channel);
+        return channel;
+      };
+    });
+
+    test("sorts direct messages alphabetically by title", function (assert) {
+      this.buildDirectMessageChannel({ id: 1, title: "Zulu" });
+      this.buildDirectMessageChannel({ id: 2, title: "Alpha" });
+
+      assert.deepEqual(
+        this.subject.sidebarDirectMessageChannels.map(
+          (channel) => channel.title
+        ),
+        ["Alpha", "Zulu"],
+        "direct messages use their titles for alphabetical sorting"
+      );
+    });
+
+    test("keeps an active direct message within the sidebar limit", function (assert) {
+      for (let index = 0; index < 50; index++) {
+        this.buildDirectMessageChannel({
+          id: index + 1,
+          title: `Channel ${String(index).padStart(2, "0")}`,
+        });
+      }
+      const activeChannel = this.buildDirectMessageChannel({
+        id: 51,
+        title: "Zulu",
+      });
+      const chat = getOwner(this).lookup("service:chat");
+      const chatStateManager = getOwner(this).lookup(
+        "service:chat-state-manager"
+      );
+      chat.activeChannel = activeChannel;
+      chatStateManager.isDrawerExpanded = true;
+
+      assert.strictEqual(
+        this.subject.sidebarDirectMessageChannels.length,
+        50,
+        "the sidebar limit remains enforced"
+      );
+      assert.true(
+        this.subject.sidebarDirectMessageChannels.includes(activeChannel),
+        "the direct message being viewed remains available"
+      );
+    });
+
+    test("applies non-default sorting to starred channels", function (assert) {
+      this.buildDirectMessageChannel({
+        id: 1,
+        title: "Older",
+        createdAt: "2026-09-01",
+        starred: true,
+      });
+      this.buildDirectMessageChannel({
+        id: 2,
+        title: "Newer",
+        createdAt: "2026-09-03",
+        starred: true,
+      });
+      this.preferences.sort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
+
+      assert.deepEqual(
+        this.subject.sidebarStarredChannels.map((channel) => channel.title),
+        ["Newer", "Older"],
+        "starred channels honor the selected activity sort"
+      );
+    });
+
+    test("filters unstarred and starred direct messages by unread activity", function (assert) {
+      this.buildDirectMessageChannel({ id: 1, title: "Read" });
+      this.buildDirectMessageChannel({
+        id: 2,
+        title: "Unread",
+        unreadCount: 1,
+      });
+      this.buildDirectMessageChannel({
+        id: 3,
+        title: "Muted",
+        unreadCount: 1,
+        muted: true,
+      });
+      this.buildDirectMessageChannel({
+        id: 4,
+        title: "Starred read",
+        starred: true,
+      });
+      this.buildDirectMessageChannel({
+        id: 5,
+        title: "Starred unread",
+        mentionCount: 1,
+        starred: true,
+      });
+      this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+
+      assert.deepEqual(
+        this.subject.sidebarDirectMessageChannels.map(
+          (channel) => channel.title
+        ),
+        ["Unread"],
+        "only non-muted unstarred direct messages with activity remain"
+      );
+      assert.deepEqual(
+        this.subject.sidebarStarredChannels.map((channel) => channel.title),
+        ["Starred unread"],
+        "the unread filter also applies to starred direct messages"
       );
     });
   });

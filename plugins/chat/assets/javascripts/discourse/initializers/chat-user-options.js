@@ -10,6 +10,8 @@ export default {
       if (chat_enabled) {
         // Chat settings
         api.addSaveableUserOption("chat_announce_new_messages");
+        api.addSaveableUserOption("chat_channel_list_filter");
+        api.addSaveableUserOption("chat_channel_list_sort");
         api.addSaveableUserOption("chat_new_message_sound");
         api.addSaveableUserOption("chat_enabled");
         api.addSaveableUserOption("chat_quick_reaction_type");

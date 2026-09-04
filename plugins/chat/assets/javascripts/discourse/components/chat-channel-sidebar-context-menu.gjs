@@ -1,11 +1,29 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { trackedSet } from "@ember/reactive/collections";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
+
+const pendingStarredUpdates = trackedSet();
+
+function restoreSidebarScrollPosition(sidebar, scrollTop) {
+  if (!sidebar || scrollTop === undefined) {
+    return;
+  }
+
+  // A moved active link schedules its own scroll after insertion.
+  schedule("afterRender", () => {
+    schedule("afterRender", () => {
+      if (sidebar.isConnected) {
+        sidebar.scrollTop = scrollTop;
+      }
+    });
+  });
+}
 
 export default class ChatChannelSidebarContextMenu extends Component {
   @service chatApi;
@@ -15,14 +33,16 @@ export default class ChatChannelSidebarContextMenu extends Component {
   @service chatChannelsManager;
   @service currentUser;
 
-  @tracked isTogglingStarred;
-
   get channel() {
     return this.args.data.channel;
   }
 
   get currentUserMembership() {
     return this.channel?.currentUserMembership;
+  }
+
+  get isTogglingStarred() {
+    return pendingStarredUpdates.has(this.currentUserMembership);
   }
 
   get starIcon() {
@@ -43,26 +63,40 @@ export default class ChatChannelSidebarContextMenu extends Component {
 
   @action
   async toggleStarred() {
-    if (!this.currentUserMembership || this.isTogglingStarred) {
+    const channel = this.channel;
+    const membership = this.currentUserMembership;
+
+    if (!membership || pendingStarredUpdates.has(membership)) {
       return;
     }
 
-    this.isTogglingStarred = true;
-    const previousValue = this.currentUserMembership.starred;
+    pendingStarredUpdates.add(membership);
+    const previousValue = membership.starred;
     const newValue = !previousValue;
+    const menuIdentifier = channel.isDirectMessageChannel
+      ? "chat-direct-message-channel-menu"
+      : "chat-channel-menu";
+    const sidebar = this.menu
+      .getByIdentifier(menuIdentifier)
+      ?.triggerElement?.closest(".sidebar-sections");
+    const sidebarScrollTop = sidebar?.scrollTop;
+    const chatApi = this.chatApi;
+    const menu = this.menu;
 
-    this.currentUserMembership.starred = newValue;
+    await menu.close(menuIdentifier);
+    membership.starred = newValue;
+    restoreSidebarScrollPosition(sidebar, sidebarScrollTop);
 
     try {
-      await this.chatApi.updateCurrentUserChannelMembership(this.channel.id, {
+      await chatApi.updateCurrentUserChannelMembership(channel.id, {
         starred: newValue,
       });
-      this.args.close();
     } catch (err) {
-      this.currentUserMembership.starred = previousValue;
+      membership.starred = previousValue;
+      restoreSidebarScrollPosition(sidebar, sidebarScrollTop);
       popupAjaxError(err);
     } finally {
-      this.isTogglingStarred = false;
+      pendingStarredUpdates.delete(membership);
     }
   }
 

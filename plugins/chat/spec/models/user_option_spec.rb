@@ -27,6 +27,32 @@ RSpec.describe UserOption do
     end
   end
 
+  describe "#chat_channel_list_filter" do
+    it "defaults to all" do
+      expect(described_class.new.chat_channel_list_filter).to eq("all")
+    end
+
+    it "validates assigned values" do
+      user_option = described_class.new(chat_channel_list_filter: "invalid")
+
+      expect(user_option).not_to be_valid
+      expect(user_option.errors[:chat_channel_list_filter]).to be_present
+    end
+  end
+
+  describe "#chat_channel_list_sort" do
+    it "defaults to alphabetical" do
+      expect(described_class.new.chat_channel_list_sort).to eq("alphabetical")
+    end
+
+    it "validates assigned values" do
+      user_option = described_class.new(chat_channel_list_sort: "invalid")
+
+      expect(user_option).not_to be_valid
+      expect(user_option.errors[:chat_channel_list_sort]).to be_present
+    end
+  end
+
   describe "#chat_send_shortcut" do
     fab!(:user)
 

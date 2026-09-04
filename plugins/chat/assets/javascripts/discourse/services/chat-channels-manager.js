@@ -5,6 +5,11 @@ import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { debounce } from "discourse/lib/decorators";
+import {
+  CHAT_CHANNEL_LIST_ACTIVE_DAYS,
+  CHAT_CHANNEL_LIST_FILTERS,
+  CHAT_CHANNEL_LIST_SORTS,
+} from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -17,7 +22,9 @@ const DIRECT_MESSAGE_CHANNELS_LIMIT = 50;
 */
 
 export default class ChatChannelsManager extends Service {
+  @service chat;
   @service chatApi;
+  @service chatChannelListPreferences;
   @service chatSubscriptionsManager;
   @service chatStateManager;
   @service currentUser;
@@ -418,6 +425,34 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
+  get sidebarPublicMessageChannels() {
+    return this.#filterAndSortSidebarChannels(
+      this.unstarredPublicMessageChannels
+    );
+  }
+
+  get sidebarDirectMessageChannels() {
+    return this.#limitSidebarChannels(
+      this.#filterAndSortSidebarChannels(this.unstarredDirectMessageChannels),
+      DIRECT_MESSAGE_CHANNELS_LIMIT
+    );
+  }
+
+  get sidebarStarredChannels() {
+    const channels = this.#filterSidebarChannels(this.starredChannels);
+
+    if (
+      this.chatChannelListPreferences.sort ===
+      CHAT_CHANNEL_LIST_SORTS.ALPHABETICAL
+    ) {
+      return channels;
+    }
+
+    return channels.sort((channelA, channelB) => {
+      return this.#compareSidebarChannels(channelA, channelB);
+    });
+  }
+
   /**
    * Returns direct message channels that are not starred.
    * Falls back to all DM channels if starring is disabled.
@@ -478,6 +513,159 @@ export default class ChatChannelsManager extends Service {
     }
 
     return true;
+  }
+
+  #channelMatchesSidebarFilter(channel, activeCutoff) {
+    const filter = this.chatChannelListPreferences.filter;
+
+    if (filter === CHAT_CHANNEL_LIST_FILTERS.ALL) {
+      return true;
+    }
+
+    if (filter === CHAT_CHANNEL_LIST_FILTERS.ACTIVE) {
+      if (!channel.lastMessage?.id || !channel.lastMessage.createdAt) {
+        return false;
+      }
+
+      return new Date(channel.lastMessage.createdAt).getTime() >= activeCutoff;
+    }
+
+    if (channel.currentUserMembership?.muted) {
+      return false;
+    }
+
+    if (filter === CHAT_CHANNEL_LIST_FILTERS.UNREAD) {
+      return this.#sidebarUnreadCount(channel) > 0;
+    }
+
+    if (filter === CHAT_CHANNEL_LIST_FILTERS.MENTIONS) {
+      return this.#sidebarUrgentCount(channel) > 0;
+    }
+
+    return true;
+  }
+
+  #filterAndSortSidebarChannels(channels) {
+    return this.#filterSidebarChannels(channels).sort((channelA, channelB) => {
+      return this.#compareSidebarChannels(channelA, channelB);
+    });
+  }
+
+  #filterSidebarChannels(channels) {
+    const activeCutoff =
+      this.chatChannelListPreferences.filter ===
+      CHAT_CHANNEL_LIST_FILTERS.ACTIVE
+        ? Date.now() - CHAT_CHANNEL_LIST_ACTIVE_DAYS * 24 * 60 * 60 * 1000
+        : undefined;
+
+    return channels.filter((channel) => {
+      return (
+        this.#channelMatchesSidebarFilter(channel, activeCutoff) ||
+        this.#isActiveSidebarChannel(channel)
+      );
+    });
+  }
+
+  #limitSidebarChannels(channels, limit) {
+    const limitedChannels = channels.slice(0, limit);
+    const activeChannel = channels.find((channel) => {
+      return this.#isActiveSidebarChannel(channel);
+    });
+
+    if (!activeChannel || limitedChannels.includes(activeChannel)) {
+      return limitedChannels;
+    }
+
+    return [...limitedChannels.slice(0, -1), activeChannel];
+  }
+
+  #compareChannelsAlphabetically(channelA, channelB) {
+    const channelAName = channelA.isDirectMessageChannel
+      ? channelA.title
+      : channelA.slug;
+    const channelBName = channelB.isDirectMessageChannel
+      ? channelB.title
+      : channelB.slug;
+    const alphabetical = (channelAName || "").localeCompare(channelBName || "");
+    return alphabetical || channelA.id - channelB.id;
+  }
+
+  #compareSidebarChannels(channelA, channelB) {
+    if (
+      this.chatChannelListPreferences.sort ===
+      CHAT_CHANNEL_LIST_SORTS.ALPHABETICAL
+    ) {
+      return this.#compareChannelsAlphabetically(channelA, channelB);
+    }
+
+    if (
+      this.chatChannelListPreferences.sort === CHAT_CHANNEL_LIST_SORTS.PRIORITY
+    ) {
+      const priority =
+        this.#sidebarChannelPriority(channelA) -
+        this.#sidebarChannelPriority(channelB);
+      if (priority) {
+        return priority;
+      }
+    }
+
+    return (
+      this.#compareChannelsByRecency(channelA, channelB) ||
+      this.#compareChannelsAlphabetically(channelA, channelB)
+    );
+  }
+
+  #compareChannelsByRecency(channelA, channelB) {
+    const channelAHasActivity =
+      channelA.lastMessage?.id && channelA.lastMessage.createdAt;
+    const channelBHasActivity =
+      channelB.lastMessage?.id && channelB.lastMessage.createdAt;
+
+    if (!!channelAHasActivity !== !!channelBHasActivity) {
+      return channelAHasActivity ? -1 : 1;
+    }
+
+    if (!channelAHasActivity) {
+      return 0;
+    }
+
+    return this.#compareByLastActivity(channelA, channelB);
+  }
+
+  #isActiveSidebarChannel(channel) {
+    return (
+      channel.id === this.chat.activeChannel?.id &&
+      (this.chatStateManager.isDrawerExpanded ||
+        this.chatStateManager.isFullPageActive)
+    );
+  }
+
+  #sidebarChannelPriority(channel) {
+    if (channel.currentUserMembership?.muted) {
+      return 2;
+    }
+
+    if (this.#sidebarUrgentCount(channel) > 0) {
+      return 0;
+    }
+
+    return this.#sidebarUnreadCount(channel) > 0 ? 1 : 2;
+  }
+
+  #sidebarUnreadCount(channel) {
+    return (
+      (channel.tracking?.unreadCount ?? 0) +
+      (channel.tracking?.mentionCount ?? 0) +
+      (channel.tracking?.watchedThreadsUnreadCount ?? 0) +
+      (channel.unreadThreadsCountSinceLastViewed ?? 0)
+    );
+  }
+
+  #sidebarUrgentCount(channel) {
+    return (
+      (channel.tracking?.mentionCount ?? 0) +
+      (channel.tracking?.watchedThreadsUnreadCount ?? 0)
+    );
   }
 
   #cache(channel) {

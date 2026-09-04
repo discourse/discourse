@@ -646,6 +646,28 @@ en:
       channel_list:
         title: "Channels"
         aria_label: "Switch to channels list"
+        options:
+          title: "Channel list options"
+          filter: "Filter"
+          sort: "Sort"
+          current_filter: "Filter: %{filter}"
+          current_sort: "Sort: %{sort}"
+        filter:
+          title: "Filter channels by:"
+          all: "All channels"
+          active: "Active only"
+          active_description: "New activity in last %{days} days"
+          unread: "Unreads"
+          mentions: "Mentions"
+        sort:
+          title: "Sort channels by:"
+          alphabetical: "Alphabetically"
+          recent_activity: "Recent activity"
+          priority: "Priority"
+          priority_description: "Mentions, then unreads, then recent activity"
+        empty:
+          filtered: "No channels match this filter."
+          show_all: "Show all channels"
 
       incoming_webhooks:
         back: "Back"

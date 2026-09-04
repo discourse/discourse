@@ -55,6 +55,30 @@ module Chat
         base.enum :chat_quick_reaction_type, { frequent: 0, custom: 1 }, prefix: true
       end
 
+      def base.chat_channel_list_filters
+        @chat_channel_list_filters ||= { all: 0, active: 1, unread: 2, mentions: 3 }
+      end
+
+      if !base.method_defined?(:chat_channel_list_filter_all?)
+        base.enum :chat_channel_list_filter,
+                  base.chat_channel_list_filters,
+                  prefix: true,
+                  scopes: false,
+                  validate: true
+      end
+
+      def base.chat_channel_list_sorts
+        @chat_channel_list_sorts ||= { alphabetical: 0, recent_activity: 1, priority: 2 }
+      end
+
+      if !base.method_defined?(:chat_channel_list_sort_alphabetical?)
+        base.enum :chat_channel_list_sort,
+                  base.chat_channel_list_sorts,
+                  prefix: true,
+                  scopes: false,
+                  validate: true
+      end
+
       if !base.method_defined?(:chat_send_shortcut)
         base.define_method(:chat_send_shortcut) { send_shortcut }
         base.define_method(:chat_send_shortcut=) { |value| self.send_shortcut = value }

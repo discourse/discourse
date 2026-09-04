@@ -12132,7 +12132,9 @@ CREATE TABLE public.user_options (
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     send_shortcut integer DEFAULT 0 NOT NULL,
-    ai_ask_ai_default boolean DEFAULT true NOT NULL
+    ai_ask_ai_default boolean DEFAULT true NOT NULL,
+    chat_channel_list_filter integer DEFAULT 0 NOT NULL,
+    chat_channel_list_sort integer DEFAULT 0 NOT NULL
 );
 
 
@@ -24344,6 +24346,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260904000537'),
 ('20260901020329'),
 ('20260831162602'),
 ('20260828145150'),

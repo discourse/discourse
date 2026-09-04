@@ -49,7 +49,7 @@ export default class ChannelsListDirect extends Component {
 
   get channelList() {
     if (this.inSidebar) {
-      return this.chatChannelsManager.truncatedUnstarredDirectMessageChannels;
+      return this.chatChannelsManager.sidebarDirectMessageChannels;
     }
     // In mobile/drawer, show all channels including starred, sorted by activity
     return this.chatChannelsManager.truncatedDirectMessageChannelsByActivity;
