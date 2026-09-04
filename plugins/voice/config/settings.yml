@@ -18,6 +18,8 @@ plugins:
     allow_any: false
     refresh: true
     disallowed_groups: "0"
+    depends_on:
+      - voice_enabled
   voice_create_room_allowed_groups:
     type: group_list
     list_type: compact
@@ -26,6 +28,8 @@ plugins:
     refresh: true
     mandatory_values: "1" # auto group admins
     disallowed_groups: "0|4"
+    depends_on:
+      - voice_enabled
   voice_direct_calls_allowed_groups:
     type: group_list
     list_type: compact
@@ -33,6 +37,8 @@ plugins:
     allow_any: false
     refresh: true
     disallowed_groups: "0|4"
+    depends_on:
+      - voice_enabled
   voice_max_rooms_per_user:
     default: 5
   voice_max_invites_per_day:

@@ -1,6 +1,6 @@
 en:
   site_settings:
-    voice_enabled: "Enable the voice rooms plugin."
+    voice_enabled: "Voice brings integrated voice and video rooms to Discourse, with screen sharing, background blur, noise suppression, live subtitles, direct calls, room chat, and group-based permissions. Members can keep browsing while they talk, with no external app required."
     voice_allowed_groups: "Groups that can access voice rooms."
     voice_create_room_allowed_groups: "Groups that can create new voice rooms."
     voice_direct_calls_allowed_groups: "Groups that can start a direct call with another user from their user card or profile. Empty disables direct calls. Callers also need to be in {{setting:voice_allowed_groups}}; anyone with voice room access can receive a call."
