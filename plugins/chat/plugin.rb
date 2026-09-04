@@ -112,12 +112,6 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
-      require_relative "lib/discourse_workflows/nodes/chat_channel_selection"
-      require_relative "lib/discourse_workflows/nodes/send_chat_message/v1"
-      require_relative "lib/discourse_workflows/nodes/chat_approval/v1"
-      require_relative "lib/discourse_workflows/nodes/chat_approval/v2"
-      require_relative "lib/discourse_workflows/nodes/chat_message_created/v1"
-
       [
         DiscourseWorkflows::Nodes::SendChatMessage::V1,
         DiscourseWorkflows::Nodes::ChatApproval::V1,

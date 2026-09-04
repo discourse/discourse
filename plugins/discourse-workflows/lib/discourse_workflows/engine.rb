@@ -7,6 +7,8 @@ module DiscourseWorkflows
     config.autoload_paths << File.join(config.root, "lib")
     initializer "discourse_workflows.plugin_autoloading", before: :setup_main_autoloader do
       Discourse.plugins.each do |plugin|
+        next if plugin.name == PLUGIN_NAME
+
         %w[lib/discourse_workflows discourse_workflows].each do |relative_path|
           directory = File.join(plugin.directory, relative_path)
           if Dir.exist?(directory)
