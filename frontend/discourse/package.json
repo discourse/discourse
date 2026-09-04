@@ -103,7 +103,7 @@
     "prosemirror-transform": "^1.12.0",
     "prosemirror-view": "^1.41.8",
     "rete": "^2.0.6",
-    "rete-area-plugin": "^2.1.5",
+    "rete-area-plugin": "^2.3.2",
     "rete-connection-plugin": "^2.0.5",
     "rete-history-plugin": "^2.1.1",
     "rete-render-utils": "^2.0.3",
