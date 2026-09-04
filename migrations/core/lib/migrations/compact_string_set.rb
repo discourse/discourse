@@ -3,33 +3,29 @@
 module Migrations
   # An immutable membership set for a large number of short strings (usernames,
   # tag names) whose bulk lives in malloc'd buffers the GC never writes into, so
-  # it stays copy-on-write-stable across forks no matter when it is built.
+  # it stays copy-on-write-stable across forks.
   #
   # A step's args are built after the scheduler's one-time `Process.warmup`, so
   # their objects are still young when the step's workers fork. Ruby's
-  # generational GC then stamps age bits into every live object's slot during the
-  # children's early GC cycles, and that write privatizes the copy-on-write page
-  # the slot sits on. A `Set` of a million usernames is a million such slots
-  # (names of 23 bytes or fewer are embedded, so their characters live in the
-  # slot too) — on the order of 80-110 MB that every fork ends up copying.
+  # generational GC then stamps age bits into every live object's slot during
+  # the children's early GC cycles, and that write privatizes the copy-on-write
+  # page the slot sits on. A `Set` of a million usernames is a million such
+  # slots (names of 23 bytes or fewer are embedded, so their characters live in
+  # the slot too) — on the order of 80-110 MB that every fork ends up copying.
   #
-  # Here the names are held as a few frozen Strings: the name bytes
-  # concatenated into one buffer, their byte offsets packed into another, and an
+  # Here the names are held as a few frozen Strings: the name bytes concatenated
+  # into one buffer, their byte offsets packed into another, and an
   # open-addressing probe table of packed 32-bit fingerprints beside them. That
-  # is a fixed number of heap slots regardless of the name count; the character,
-  # offset and fingerprint bytes sit in malloc space the GC leaves alone.
+  # is a fixed number of heap slots regardless of the name count.
   #
-  # Membership is a hash probe, not a search: `String#hash` picks the slot, the
-  # packed fingerprint filters non-members without touching the name bytes
-  # (`unpack1` reads an Integer, so a miss allocates nothing), and only a
-  # fingerprint hit pays for one `byteslice` to confirm the bytes — membership
-  # stays exact, never probabilistic. Forked children inherit the parent's
-  # `String#hash` seed, so a table built before fork answers correctly after it.
+  # Membership is a hash probe: `String#hash` picks the slot, the packed
+  # fingerprint filters non-members without touching the name bytes, and only a
+  # fingerprint hit pays for one `byteslice` to confirm — so membership stays
+  # exact, never probabilistic. Forked children inherit the parent's
+  # `String#hash` seed, so a table built before fork answers after it.
   #
-  # Construction streams: `names` is any Enumerable, consumed once, and
-  # duplicates are dropped by the same probe the lookups use — no intermediate
-  # sorted array or uniqueness hash, so the build-time peak is just the buffers
-  # (plus one exact-size copy of each at the end to shed append slack).
+  # Construction streams: `names` is consumed once and duplicates are dropped by
+  # the same probe the lookups use, so the build-time peak is just the buffers.
   class CompactStringSet
     # Offsets and probe entries are 32-bit, so the name buffer must stay
     # addressable in 32 bits.
@@ -37,24 +33,22 @@ module Migrations
     private_constant :MAX_TOTAL_BYTES
 
     # A stored fingerprint of 0 marks an empty probe slot; a real fingerprint
-    # that hashes to 0 is nudged to 1. The nudge only widens that fingerprint's
-    # filter by one value in four billion — the byte confirm keeps the answer
-    # exact either way.
+    # that hashes to 0 is nudged to 1, which only widens that fingerprint's
+    # filter by one value in four billion.
     EMPTY = 0
     private_constant :EMPTY
 
-    # Probe table density. Above this share of filled slots the table doubles;
-    # at 50% the expected probe sequence for a miss stays around two slots.
+    # Above this share of filled slots the table doubles; at 50% the expected
+    # probe sequence for a miss stays around two slots.
     MAX_LOAD = 0.5
     private_constant :MAX_LOAD
 
-    # @param names [Enumerable<String>] the members; deduped here, consumed once.
+    # @param names [Enumerable<String>] the members; deduped here, consumed
+    #   once.
     def initialize(names)
-      # The buffers grow by appending during the build and are copied to exact
-      # size at the end; `capacity:` just seeds them large enough that small
-      # sets never reallocate. The name buffer must be UTF-8 (`String.new`
-      # defaults to binary): the confirm slices compare against UTF-8 queries,
-      # and equal bytes in incompatible encodings are not equal strings.
+      # The name buffer must be UTF-8 (`String.new` defaults to binary): the
+      # confirm slices compare against UTF-8 queries, and equal bytes in
+      # incompatible encodings are not equal strings.
       @count = 0
       @max_byte_length = 0
       buffer = String.new(capacity: 4096, encoding: Encoding::UTF_8)
@@ -66,9 +60,8 @@ module Migrations
       table = empty_table(@capacity)
 
       names.each do |name|
-        # Membership before growth: a duplicate arriving exactly at the
-        # threshold must not double the table for nothing (growth rehashes
-        # every slot, so it can only happen before the new member's probe).
+        # Membership before growth, so a duplicate arriving exactly at the
+        # threshold does not double the table for nothing.
         next if build_member?(table, buffer, offsets, name)
 
         table = grow(table, buffer, offsets) if @count >= @capacity * MAX_LOAD
@@ -102,8 +95,8 @@ module Migrations
       @count
     end
 
-    # The longest member in bytes. A scanner that has to decide whether some
-    # run of raw bytes could spell a member reads no more than this many.
+    # The longest member in bytes, so a scanner deciding whether a run of raw
+    # bytes could spell a member reads no more than this many.
     attr_reader :max_byte_length
 
     private
@@ -129,7 +122,7 @@ module Migrations
     end
 
     # `unpack1` allocates one object per call, so the probe path assembles its
-    # little-endian 32-bit reads from `getbyte`, which allocates nothing.
+    # little-endian 32-bit reads from `getbyte`.
     def read32(string, byte_offset)
       string.getbyte(byte_offset) | (string.getbyte(byte_offset + 1) << 8) |
         (string.getbyte(byte_offset + 2) << 16) | (string.getbyte(byte_offset + 3) << 24)
@@ -154,8 +147,8 @@ module Migrations
       end
     end
 
-    # Probes to the first empty slot and claims it; the caller established the
-    # name is absent, so no equality checks are needed on the way.
+    # The caller established the name is absent, so no equality checks are
+    # needed on the way.
     def claim_absent(table, buffer, offsets, name)
       hash = name.hash
       index = hash & @mask
@@ -179,9 +172,8 @@ module Migrations
       @max_byte_length = name.bytesize if name.bytesize > @max_byte_length
     end
 
-    # Doubles the probe table and re-places every member. The name and offset
-    # buffers are already deduplicated and only ever append, so they carry over
-    # untouched; only the slots are recomputed.
+    # The name and offset buffers only ever append, so they carry over
+    # untouched.
     def grow(table, buffer, offsets)
       @capacity *= 2
       @mask = @capacity - 1

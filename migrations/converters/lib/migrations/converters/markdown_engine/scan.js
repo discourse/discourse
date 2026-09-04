@@ -1,12 +1,12 @@
 /* eslint-disable no-undef, no-unused-vars */
-// Reads the parsed token tree into compact per-post data: per inline block,
-// the construct values the engine recognized plus the block's line map, and
+// Reads the parsed token tree into compact per-post data: per inline block, the
+// construct values the engine recognized plus the block's line map, and
 // separately the line maps of code/html/quote blocks. Only this compact data
 // crosses the V8 boundary, never the token tree itself.
 
 function __scanCountOccurrences(haystack, needle) {
-  // An empty needle would match at every position without ever advancing
-  // the cursor (indexOf("") is always the current index).
+  // An empty needle would match at every position without ever advancing the
+  // cursor (indexOf("") is always the current index).
   if (needle.length === 0) {
     return 0;
   }
@@ -21,10 +21,8 @@ function __scanCountOccurrences(haystack, needle) {
 
 // How often the link's destination also appears in its label text — a
 // `[URL](same URL)` self-link writes the value twice in the raw, so count
-// matching must expect both occurrences. The schemeless reading covers
-// a label spelling the bare domain of a linkified destination. Empty-
-// destination links (`[text]()`, `[](https://)` whose schemeless reading is
-// empty) can never be self-links.
+// matching must expect both occurrences. The schemeless reading covers a label
+// spelling the bare domain of a linkified destination.
 function __scanLabelHits(label, href) {
   if (href.length === 0) {
     return 0;
@@ -54,8 +52,7 @@ function __scanWalk(children, block) {
     } else if (child.type === "link_open") {
       const hashtagType = child.attrGet("data-type");
       // The upload protocol rewrites unresolved short URLs into a placeholder
-      // and stores the original in data-orig-*; the original is the
-      // construct.
+      // and stores the original in data-orig-*; the original is the construct.
       const href = child.attrGet("data-orig-href") || child.attrGet("href");
       if (hashtagType !== null) {
         // For a hashtag the slug and type are the construct — the href shape
@@ -66,11 +63,10 @@ function __scanWalk(children, block) {
         });
         linkStack.push(null);
       } else if (href !== null && href[0] !== "#") {
-        // Fragment-only hrefs are intra-post anchors — some synthesized from
-        // headings, none in need of remapping — so they are not constructs.
-        // A linkified or autolinked URL is its own label but exists once in
-        // the raw, so only an explicit `[label](dest)` link can contribute
-        // label occurrences.
+        // Fragment-only hrefs are intra-post anchors, never remapped. A
+        // linkified or autolinked URL is its own label but exists once in the
+        // raw, so only an explicit `[label](dest)` link contributes label
+        // occurrences.
         const explicit = child.markup !== "linkify" && child.info !== "auto";
         linkStack.push({ href, label: "", explicit });
       } else {
@@ -143,8 +139,8 @@ function __scanOne(post) {
         token.type === "code_block" ||
         token.type === "html_block" ||
         // A quote's outer aside token carries no map; the inner blockquote
-        // bbcode token does, so any mapped bbcode block is recorded with its
-        // tag for downstream disambiguation.
+        // bbcode token does, so every mapped bbcode block is recorded with its
+        // tag.
         token.type === "bbcode_open")
     ) {
       blockTokens.push({ type: token.type, tag: token.tag, map: token.map });

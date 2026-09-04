@@ -7,25 +7,22 @@ module Migrations
         class EngineScanner
           # The byte-domain machinery for one body: finding a value's
           # occurrences in the raw, turning an occurrence into a match that
-          # covers the whole construct, and splicing the accepted matches.
-          #
-          # One locator serves both passes of a body, so the line index, the
-          # folded copy, the occurrence lists and the URL spans are built at
-          # most once no matter how many passes ask — the count-matching pass
-          # computes them and the substitution pass reuses them.
+          # covers the whole construct, and splicing the accepted matches. One
+          # locator serves both passes, so the line index, the folded copy, the
+          # occurrence lists and the URL spans are built at most once.
           class Locator
             include Constructs::Boundaries
 
-            # A matched raw occurrence: where it starts and how many bytes
-            # the matched reading spans there (an alternate URL reading can
-            # differ in length from the engine's value).
+            # Where an occurrence starts and how many bytes the matched reading
+            # spans there (an alternate URL reading can differ in length from
+            # the engine's value).
             Occurrence = Data.define(:offset, :length)
 
             EMPTY_OCCURRENCES = [].freeze
             private_constant :EMPTY_OCCURRENCES
 
-            # A link's `[`/`!` anchor is searched backwards from its
-            # destination; the construct grammars cap a label around a thousand
+            # How far back a link's `[`/`!` anchor is searched from its
+            # destination. The construct grammars cap a label around a thousand
             # bytes, so a wider window cannot anchor anything and only costs
             # time on line-terminator-free bodies.
             ANCHOR_WINDOW = 2048
@@ -41,13 +38,12 @@ module Migrations
               build_line_index
             end
 
-            # The byte offset of every line start. The engine's maps count
-            # lines after markdown-it normalized CR endings away, so only a
-            # CR-free body may read regions off these.
+            # The byte offset of every line start. The engine's maps count lines
+            # after markdown-it normalized CR endings away, so only a CR-free
+            # body may read regions off these.
             attr_reader :line_starts
 
-            # The byte range of a token map's lines, or nil when the map names
-            # a line the body does not have.
+            # Nil when the map names a line the body does not have.
             def region_range(map)
               return nil if map.nil?
 
@@ -59,22 +55,12 @@ module Migrations
             end
 
             # Every raw span that folds to `value`, for a mention, hashtag or
-            # custom emoji. Counting here is deliberately dumb: non-overlapping
-            # hits of the folded value in the folded body, left to right, and
-            # nothing else. No boundary rule and no name grammar takes part,
-            # because any rule that rejects a raw spelling core does cook
-            # lowers the count — and a count that is short by one is exactly
-            # what lets a look-alike inside a code span stand in for a live
-            # token.
-            #
-            # The count can therefore only be too high, never too low: live
-            # constructs occupy disjoint spans and each spells the value, and
-            # a leftmost scan for a fixed-length needle returns a maximum set
-            # of disjoint hits. So equality with the engine's token count
-            # forces every hit to be live, and any inequality escalates.
-            #
-            # Memoized per value, and one scan per value — the same cost the
-            # URL spans pay, bounded the same way.
+            # custom emoji: non-overlapping hits of the folded value in the
+            # folded body, left to right, and nothing else — no boundary rule
+            # and no name grammar (see {MarkdownScanner}). A leftmost scan for a
+            # fixed-length needle returns a maximum set of disjoint hits, so the
+            # count can only be too high. Memoized per value, one scan per
+            # value.
             def folded_occurrences(kind, value)
               return EMPTY_OCCURRENCES if value.empty?
 
@@ -88,8 +74,7 @@ module Migrations
                     pos = index + value.bytesize
                   else
                     # A hit that denotes no raw span is no occurrence, so the
-                    # next one may start inside it; only a counted occurrence
-                    # moves the cursor past itself.
+                    # next one may start inside it.
                     pos = index + 1
                   end
                 end
@@ -98,9 +83,9 @@ module Migrations
             end
 
             # The occurrences of a URL value in `range` — every reading (the
-            # engine normalizes URLs: percent-encoding, linkify adding a
-            # scheme to a bare-domain autolink) unioned, deduplicated, and
-            # coalesced where readings of one occurrence nest.
+            # engine normalizes URLs: percent-encoding, linkify adding a scheme
+            # to a bare-domain autolink) unioned, deduplicated, and coalesced
+            # where readings of one occurrence nest.
             #
             # The readings must be counted as ONE union, never independently:
             # with `` `http://host/t/5` `` in code and the schemeless spelling
@@ -108,11 +93,8 @@ module Migrations
             # the code span — the union counts 2 against the engine's 1 and
             # refuses, so the substitution pass can confirm which span is live.
             #
-            # Memoized per (value, range): a mapless block, the global
-            # fallback and the substitution pass all ask for the same whole-body
-            # range and share one walk. The search itself is still one scan
-            # per value — `EngineScanner::MAX_SCANNED_VALUES` bounds how many
-            # distinct URL values a body may bring here.
+            # Memoized per (value, range), and bounded by
+            # `EngineScanner::MAX_SCANNED_VALUES`.
             #
             # @return [Array<Occurrence>] sorted by offset
             def url_spans(value, range)
@@ -127,11 +109,11 @@ module Migrations
               end
             end
 
-            # The `[offset, length]` pairs of every spelling of `value` that
-            # sits in destination position on a reference-definition line
-            # (`[label]: <url>`). Memoized per value; both passes ask for it —
-            # count matching to accept a definition serving several links, a
-            # substitution check to accept the matching token delta.
+            # The `[offset, length]` pairs of every spelling of `value` in
+            # destination position on a reference-definition line (`[label]:
+            # <url>`). Both passes ask for it — count matching to refuse a
+            # definition serving several links, a substitution check to accept
+            # the matching token delta.
             def definition_offsets(value)
               @definition_offsets[value] ||= begin
                 offsets = Set.new
@@ -155,9 +137,8 @@ module Migrations
               end
             end
 
-            # Byte offsets of every construct-capable character reference, one
-            # scan for the whole body, so each region precondition is a binary
-            # search instead of a byteslice plus a fresh scan.
+            # One scan for the whole body, so each region precondition is a
+            # binary search instead of a byteslice plus a fresh scan.
             def entity_offsets
               @entity_offsets ||= TierGate.construct_capable_entity_offsets(@input)
             end
@@ -167,11 +148,9 @@ module Migrations
               !index.nil? && entity_offsets[index] < range.end
             end
 
-            # The whole-construct match for a confirmed mention, hashtag or
-            # emoji occurrence. The node is built from the raw bytes at the
-            # occurrence, so the author's own spelling is what gets recorded
-            # (`@Bob`, `#Support::CATEGORY`, `:MYEMOJI:`) even though the
-            # engine reported a folded value.
+            # Built from the raw bytes, so the author's own spelling is recorded
+            # (`@Bob`, `#Support::CATEGORY`, `:MYEMOJI:`) even though the engine
+            # reported a folded value.
             def node_match(kind, occurrence)
               text = @input.byteslice(occurrence.offset, occurrence.length)
               Constructs::Match.new(
@@ -185,7 +164,6 @@ module Migrations
             # occurrence and the start of the previous line (a link's
             # destination may sit one line below its `[` — see
             # `Base::LINK_GAP`), then the occurrence itself as a bare URL.
-            # The walk descends byte by byte, so no anchor list is allocated.
             def anchor_match(occurrence)
               offset = occurrence.offset
               line = @line_starts.bsearch_index { |start| start > offset } || @line_starts.size
@@ -196,8 +174,8 @@ module Migrations
                 byte = @input.getbyte(pos)
                 if byte == 0x5b && pos > from && @input.getbyte(pos - 1) == 0x21 # `![`
                   # The image's `!` outranks its `[`: the `[` alone also
-                  # matches, as a link, and being nearer would otherwise
-                  # capture `[alt](…)` out of `![alt](…)`.
+                  # matches, as a link, and being nearer would otherwise capture
+                  # `[alt](…)` out of `![alt](…)`.
                   match =
                     construct_match_at(pos - 1, occurrence) || construct_match_at(pos, occurrence)
                   return match if match
@@ -211,23 +189,22 @@ module Migrations
                 end
               end
 
-              # The occurrence itself, as a bare URL. Linkify can take
-              # trailing bytes into the href that no URL grammar accepts, so
-              # the matched occurrence may run past what a construct can take;
-              # leaving exactly those bytes literal is correct — core will
-              # re-linkify both after resolution. `allow_prefix` bounds what
-              # may stay uncovered ({Constructs::Base.swallowed_tail?}).
+              # Linkify can take trailing bytes into the href that no URL
+              # grammar accepts, so leaving exactly those bytes literal is
+              # correct — core re-linkifies the whole thing after resolution.
+              # `allow_prefix` bounds what may stay uncovered
+              # ({Constructs::Base.swallowed_tail?}).
               construct_match_at(offset, occurrence, allow_prefix: true)
             end
 
             # A confirmed occurrence that is its own whole construct: a bare
             # schemeless domain (linkify links it, but no construct grammar has
-            # a byte to trigger on) or a reference definition's destination.
-            # The engine's href carries the scheme the route parses from; the
-            # span replaced is exactly the raw spelling. The confirmation came from
-            # count matching or a substitution check, so "is this really a link here?" is
-            # already answered — only the linkify opening boundary is
-            # re-checked, mirroring what core requires ahead of a bare URL.
+            # a byte to trigger on) or a reference definition's destination. The
+            # engine's href carries the scheme the route parses from; the span
+            # replaced is exactly the raw spelling. The confirmation already
+            # answered "is this really a link here?", so only the linkify
+            # opening boundary is re-checked, mirroring what core requires ahead
+            # of a bare URL.
             def bare_value_match(value, occurrence)
               return nil unless bare_url_boundary_before?(@input, occurrence.offset)
 
@@ -276,12 +253,11 @@ module Migrations
               @folded ||= FoldedText.new(@input)
             end
 
-            # The raw span a folded hit denotes, or nil when it denotes none: a
-            # hit that starts or ends inside a grapheme cluster names no raw
-            # bytes, and the round trip re-folds the raw slice so a mapping
-            # that does not reproduce the value is dropped rather than trusted.
-            # Both only ever lower the count, so they escalate instead of
-            # placing anything wrong.
+            # Nil when the hit denotes no raw span: one starting or ending
+            # inside a grapheme cluster names no raw bytes, and the round trip
+            # re-folds the raw slice so a mapping that does not reproduce the
+            # value is dropped rather than trusted. Both only ever lower the
+            # count, so they escalate.
             def raw_span_of(offset, length, value)
               span = folded.raw_span(offset, length)
               return nil if span.nil?
@@ -320,11 +296,11 @@ module Migrations
             end
 
             # Readings of one value can nest — the schemeless reading of a
-            # scheme-ful spelling sits inside it, and so does a decoded one
-            # inside its encoded spelling — and a single raw occurrence must
-            # count once. Two distinct links cannot share bytes, so
-            # overlapping spans are always readings of one occurrence and the
-            # outermost is the span the constructs anchor from.
+            # scheme-ful spelling sits inside it, a decoded one inside its
+            # encoded spelling — and a single raw occurrence must count once.
+            # Two distinct links cannot share bytes, so overlapping spans are
+            # always readings of one occurrence and the outermost is the span
+            # the constructs anchor from.
             def coalesce(spans)
               kept = []
               spans.each do |span|
@@ -350,10 +326,9 @@ module Migrations
             end
 
             # Percent-decoding only — `CGI.unescape` would also turn `+` into a
-            # space, which is form encoding, not URL encoding. Decoding runs on
-            # the bytes: a value that mixes non-ASCII characters with `%xx`
-            # would otherwise raise on the substitution of a binary escape into
-            # a UTF-8 string.
+            # space, which is form encoding. Decoding runs on the bytes: a value
+            # mixing non-ASCII characters with `%xx` would otherwise raise on
+            # substituting a binary escape into a UTF-8 string.
             def percent_decode(value)
               return value unless value.include?("%")
 
@@ -382,8 +357,7 @@ module Migrations
               nil
             end
 
-            # The only tail a match may leave uncovered; see
-            # {Constructs::Base.swallowed_tail?}.
+            # See {Constructs::Base.swallowed_tail?}.
             def swallowed_tail?(from, to)
               Constructs::Base.swallowed_tail?(@input.byteslice(from, to - from))
             end

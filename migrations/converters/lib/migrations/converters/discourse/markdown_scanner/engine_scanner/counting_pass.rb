@@ -5,30 +5,14 @@ module Migrations
     module Discourse
       module MarkdownScanner
         class EngineScanner
-          # The per-body count-matching pass; the scanner itself stays
-          # reusable across bodies.
-          #
-          # The pass answers one question: does the number of raw occurrences
-          # of a value equal the number of engine tokens for it, exactly. Any
-          # inequality escalates to the substitution pass, and so does any
-          # value where the two numbers can legitimately differ (a reference
-          # definition serving several links). The pass never accepts on
-          # unequal counts and never decides from the shape of the bytes —
-          # deciding what bytes mean is the engine's job, and the substitution
-          # pass is the only place that asks it about a single occurrence.
-          #
-          # Counting is dumb on purpose. Every live construct spells its value
-          # in the raw and one raw occurrence yields at most one token, so the
-          # raw count can only be greater than or equal to the token count,
-          # and equality then forces every occurrence to be live. Any rule
-          # that could reject a raw occurrence — a boundary condition, a name
-          # grammar, "this looks like a longer URL" — can only lower the count,
-          # which is precisely how a look-alike inside a code span ends up
-          # matched to a live token. Two conditions do survive, because they
-          # protect the premise that the bytes are there at all: a body with a
-          # construct-capable character entity refuses (`&commat;bob` yields a
-          # token whose bytes appear nowhere), and names are counted folded, at
-          # least as coarsely as the engine folds them ({FoldedText}).
+          # The pass answers one question: does the number of raw occurrences of
+          # a value equal the number of engine tokens for it, exactly. Any
+          # inequality escalates to the substitution pass, and so does any value
+          # where the two numbers can legitimately differ (a reference
+          # definition serving several links). It never accepts on unequal
+          # counts and never decides from the shape of the bytes —
+          # {MarkdownScanner} explains why that is what makes the equality mean
+          # anything.
           class CountingPass
             def initialize(scanner, input, data, locator)
               @scanner = scanner
@@ -61,19 +45,18 @@ module Migrations
 
             # Groups the engine's construct values: per (kind, value) the
             # expected count in each block region and in total. Values the
-            # migration does not remap (external links, unknown names,
-            # standard emoji) never enter count matching. A name's key is its
-            # folded spelling, so several token values that fold alike — `@Bob`
-            # and `@bob`, or a hashtag slug the engine already lowercased —
+            # migration does not remap (external links, unknown names, standard
+            # emoji) never enter count matching. A name's key is its folded
+            # spelling, so token values that fold alike — `@Bob` and `@bob` —
             # add up into one count.
             def collect_expected
               @expected = {}
               regions_with_constructs = []
 
               @data["blocks"].each do |block|
-                # Not every inline block has a line map; table cells do not.
-                # A mapless block's constructs are counted against the whole
-                # body, and the entity check widens accordingly.
+                # Not every inline block has a line map; table cells do not. A
+                # mapless block's constructs are counted against the whole body,
+                # and the entity check widens accordingly.
                 range = @locator.region_range(block["map"]) || (0...@input.bytesize)
 
                 had = false
@@ -112,9 +95,8 @@ module Migrations
               return :url_volume if url_values > MAX_SCANNED_VALUES
               return :name_volume if @expected.size - url_values > MAX_SCANNED_VALUES
 
-              # Entities decode before the engine's text rules run, so a
-              # token value may not exist as literal bytes in the raw text.
-              # Counting cannot see through that.
+              # Entities decode before the engine's text rules run, so a token
+              # value may not exist as literal bytes at all.
               regions_with_constructs.uniq.each do |range|
                 return :entity if @locator.entity_in?(range)
               end
@@ -128,18 +110,17 @@ module Migrations
               entry[:total] += count
             end
 
-            # Two-stage count matching per value. A value matched inside its regions
-            # replaces only those occurrences; the same value inside
-            # a code fence elsewhere stays untouched. A value matched against the whole
-            # body replaces every occurrence, and the entity check widens to
-            # the whole body.
+            # Two-stage count matching per value. A value matched inside its
+            # regions replaces only those occurrences, so the same value in a
+            # code fence elsewhere stays untouched; a value matched against the
+            # whole body replaces every occurrence, and the entity check widens
+            # accordingly.
             #
             # A value with a reference-definition line never matches by
-            # counting. One definition can serve several `[text][label]`
-            # links, so the token count no longer says how many raw
-            # occurrences are live — an equality can hold while one of the
-            # counted occurrences is a copy inside a code fence. Only the
-            # substitution pass can tell those apart.
+            # counting. One definition can serve several `[text][label]` links,
+            # so the token count no longer says how many raw occurrences are
+            # live — an equality can hold while one of the counted occurrences
+            # is a copy inside a code fence.
             def match_all_counts
               whole = 0...@input.bytesize
               @matched = {}
@@ -165,8 +146,7 @@ module Migrations
               nil
             end
 
-            # All regions matched and concatenated; nil when any region's
-            # count does not match.
+            # Nil when any region's count does not match.
             def match_region_counts(kind, value, entry)
               occurrences = []
               entry[:regions].each do |range, expected|
@@ -178,8 +158,7 @@ module Migrations
               occurrences
             end
 
-            # The occurrences of a value in a range, when their number equals
-            # what the engine saw; nil otherwise.
+            # Nil unless the number of occurrences equals what the engine saw.
             def match_counts_in(kind, value, range, expected)
               spans =
                 if kind == :url
@@ -192,14 +171,13 @@ module Migrations
             end
 
             # Turns matched URL occurrences into node matches that cover the
-            # whole construct. A destination inside `[text](…)` must be
-            # replaced together with its syntax, so the classes match from the `[`
-            # or `!` anchor; that also covers both occurrences of a
-            # `[URL](same URL)` self-link with one node. An occurrence that
-            # is its own syntax (a bare schemeless domain, a reference
-            # definition's destination) resolves through the engine's href.
-            # One that neither can take refuses the body; the substitution pass then
-            # extracts what it can and the rest is reported.
+            # whole construct. A destination inside `[text](…)` must be replaced
+            # together with its syntax, so the classes match from the `[` or `!`
+            # anchor; that also covers both occurrences of a `[URL](same URL)`
+            # self-link with one node. An occurrence that is its own syntax (a
+            # bare schemeless domain, a reference definition's destination)
+            # resolves through the engine's href. One that neither can take
+            # refuses the body.
             def resolve_urls(spans)
               @matched.each do |(kind, value), occurrences|
                 next unless kind == :url
@@ -217,7 +195,7 @@ module Migrations
             end
 
             # Mentions, hashtags and emoji cover exactly their matched
-            # occurrence, so the node is read straight off those raw bytes.
+            # occurrence.
             def resolve_names(spans)
               @matched.each do |(kind, _value), occurrences|
                 next if kind == :url
@@ -232,8 +210,7 @@ module Migrations
             end
 
             # Quote openers come from block tokens: the engine reports the
-            # quote's line range directly, so no counting is needed. The
-            # header on the opening line is parsed in place. This includes
+            # quote's line range directly, so no counting is needed. Includes
             # the single-line `[quote=…]body[/quote]` form.
             def resolve_quotes(spans)
               @data["blockTokens"].each do |token|
@@ -246,10 +223,10 @@ module Migrations
                 opener = @input.byteindex(/\[quote=/i, range.begin)
                 next if opener.nil? || opener >= line_end
 
-                # A header that parses but has no username has nothing to
-                # remap; core renders it without coordinates. A header the
-                # grammar could not read at all may still hold remappable
-                # fields, so it refuses instead of keeping stale data.
+                # A header that parses but has no username has nothing to remap;
+                # core renders it without coordinates. A header the grammar
+                # could not read at all may still hold remappable fields, so it
+                # refuses instead of keeping stale data.
                 match = @scanner.quote_construct.detect_block_opener(@input, opener)
                 if match
                   spans[[match.start_pos, match.end_pos]] ||= match

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module PrettyText
-  # The server-side markdown bundle, defined in a file of its own so that code
-  # which runs the markdown pipeline outside a booted application can require
-  # it directly — `PrettyText` itself is not loadable there.
+  # The server-side markdown bundle, in a file of its own so that code running
+  # the markdown pipeline outside a booted application can require it directly —
+  # `PrettyText` itself is not loadable there.
   module CoreBundle
-    # The only modules from the `discourse` package which may be bundled into the
-    # server-side renderer. Additions must not transitively depend on
+    # The only modules from the `discourse` package which may be bundled into
+    # the server-side renderer. Additions must not transitively depend on
     # browser-only APIs.
     DISCOURSE_MODULES = %w[
       deprecation-workflow

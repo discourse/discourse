@@ -6,26 +6,21 @@ module Migrations
       module MarkdownScanner
         # One folded copy of a post body, with the byte map back to the raw.
         #
-        # Counting looks for the values the engine reported in the raw bytes,
-        # and for names the engine reports a folded spelling: it lowercases an
-        # emoji shortcode and a hashtag slug before it looks either up. A
-        # counter that folds at least as coarsely as the engine can never see
-        # fewer raw occurrences than the engine made tokens, which is what
-        # keeps count matching sound — so both sides go through {.fold}, the
-        # same NFC-then-downcase the source's name sets and the importer's
-        # resolution use.
+        # The engine reports a folded spelling for a name: it lowercases an
+        # emoji shortcode and a hashtag slug before it looks either up. Both
+        # sides therefore go through {.fold} — a fold at least as coarse as the
+        # engine's is what count matching needs (see {MarkdownScanner}).
         #
         # The map back is per grapheme cluster: composition and case mapping
         # both stay inside one cluster, so a cluster's folded bytes belong to
-        # exactly that cluster's raw bytes. A folded hit that does not start
-        # and end on cluster boundaries denotes no raw span and is dropped,
-        # which can only lower the count and so only ever escalates.
+        # exactly that cluster's raw bytes. A folded hit that does not start and
+        # end on cluster boundaries denotes no raw span and is dropped, which
+        # can only lower the count and so only ever escalates.
         class FoldedText
           # @param text [String]
           # @return [String] the folded spelling
           def self.fold(text)
-            # NFC leaves ASCII alone, so an ASCII-only string needs only the
-            # case mapping — and most bodies and every built-in name are ASCII.
+            # NFC leaves ASCII alone, and most bodies are ASCII.
             text.ascii_only? ? text.downcase : Migrations::NameNormalizer.normalize(text)
           end
 
@@ -42,12 +37,10 @@ module Migrations
           # @return [String] the whole body, folded
           attr_reader :text
 
-          # The raw span a folded span denotes.
-          #
           # @param offset [Integer] byte offset into {#text}
           # @param length [Integer] byte length within {#text}
-          # @return [Array(Integer, Integer), nil] the raw offset and length,
-          #   or nil when the folded span crosses a cluster boundary
+          # @return [Array(Integer, Integer), nil] the raw offset and length, or
+          #   nil when the folded span crosses a cluster boundary
           def raw_span(offset, length)
             return offset, length if @cluster_starts.nil?
             return nil unless cluster_start?(offset)
@@ -61,17 +54,15 @@ module Migrations
 
           private
 
-          # Whether the folded byte at `offset` is the first of its cluster.
           # Cluster raw offsets rise strictly, so a change in the recorded raw
-          # offset marks the boundary.
+          # offset marks a cluster boundary.
           def cluster_start?(offset)
             offset.zero? || @cluster_starts[offset] != @cluster_starts[offset - 1]
           end
 
-          # Folds cluster by cluster and records, for every folded byte, where
-          # its cluster starts in the raw and how long it is there. A cluster
-          # whose fold is empty contributes no folded byte, so its raw bytes
-          # belong to no folded span and no occurrence can span them.
+          # Records, for every folded byte, where its cluster starts in the raw
+          # and how long it is there. A cluster whose fold is empty contributes
+          # no folded byte, so no occurrence can span its raw bytes.
           def build_map
             @text = +""
             @cluster_starts = []

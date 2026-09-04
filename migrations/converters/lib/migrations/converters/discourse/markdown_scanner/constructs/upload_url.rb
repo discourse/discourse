@@ -5,47 +5,35 @@ module Migrations
     module Discourse
       module MarkdownScanner
         module Constructs
-          # Detects uploads referenced by a full URL instead of a short `upload://`
-          # one — markdown images `![alt](url)`, markdown links `[text](url)` and
-          # bare whitespace-delimited URLs. Three URL shapes are supported,
-          # matching what core's file stores write (see core's `Upload` and
-          # `FileStore`):
+          # Detects uploads referenced by a full URL instead of a short
+          # `upload://` one — markdown images, markdown links and bare
+          # whitespace-delimited URLs. Three URL shapes are supported, matching
+          # what core's file stores write:
           #
-          #   * a long URL: an `/uploads/` or `/secure-uploads/` segment with an
-          #     `original/` or `optimized/` path below it, and a basename that
-          #     starts with the upload's 40-hex sha1;
-          #   * an S3/CDN URL: the same `original/` or `optimized/` path with no
-          #     `/uploads/` segment, directly under the host or below a bucket
-          #     prefix. Only with a host — no local store writes a relative
-          #     `/original/…` path, so a relative one stays unrecognized;
-          #   * a short-URL path: `/uploads/short-url/<token>[.ext]`, where the
-          #     token is the base62-encoded sha1 (core's `Upload#short_path`).
-          #     It is decoded here, so the row carries the same 40-hex sha1 as a
-          #     long URL and resolves the same way at import.
+          #   * a long URL: an `/uploads/` or `/secure-uploads/` segment with
+          #     an `original/` or `optimized/` path below it, and a basename
+          #     starting with the upload's 40-hex sha1;
+          #   * an S3/CDN URL: the same storage path with no `/uploads/`
+          #     segment, directly under the host or below a bucket prefix.
+          #     Only with a host — no local store writes `/original/…`;
+          #   * a short-URL path: `/uploads/short-url/<token>[.ext]`, whose
+          #     base62 token decodes here into the same 40-hex sha1.
           #
           # The storage shape must sit in the URL's path: every path segment
           # stops at `?` and `#`, so an upload path inside a query or fragment
           # (`/redirect?to=/uploads/…`) makes no upload URL — rewriting the
-          # redirect would swap the author's link for the file it points at.
-          # Any other `/uploads/` path (a WordPress `wp-content/uploads/…` URL,
-          # some unrelated site's file) is not an upload reference: it matches
-          # no shape and is left alone.
+          # redirect would swap the author's link for the file it points at. Any
+          # other `/uploads/` path matches no shape and is left alone.
           #
-          # The whole URL is taken, including its query and fragment. Both are
-          # capped (1024 and 255 bytes) so a generated URL cannot make the
-          # pattern scan without bounds. A URL beyond a cap matches no shape at
-          # all and stays as written — replacing only a prefix of a URL would
-          # leave its tail behind the placeholder.
+          # The whole URL is taken, query and fragment included, both capped so
+          # a generated URL cannot make the pattern scan without bounds. A URL
+          # beyond a cap matches no shape at all and stays as written —
+          # replacing only a prefix would leave its tail behind the placeholder.
           #
-          # Recognition does no host allowlisting: a URL that has a supported
-          # shape but points at some other site still resolves to nothing at
-          # import and comes back verbatim (see `UploadUrlReference`), so
-          # matching it is safe. Both relative and absolute (http/https and
-          # protocol-relative) forms are recognized in image and link syntax. A
-          # bare URL follows the same rule as an internal link: an absolute bare
-          # URL is recognized in prose, a relative one only at a `](…)` link
-          # target — a relative path bare in prose stays plain text once cooked,
-          # so rewriting it would turn text into a link.
+          # Recognition does no host allowlisting: a supported shape pointing at
+          # some other site still resolves to nothing at import and comes back
+          # verbatim (see `UploadUrlReference`). Bare URLs follow the same rule
+          # as an internal link (see `Base#detect_bare_url`).
           class UploadUrl < Base
             TRIGGERS = ["!", "[", "h", "H", "/"].freeze
 
@@ -58,8 +46,8 @@ module Migrations
             SEGMENT = /[^\/?##{Base::URL_TERMINATORS}]{1,255}/
             private_constant :SEGMENT
 
-            # The scheme and host. The scheme is case-insensitive because
-            # linkify-it reads it that way, so core links `HTTPS://…` too.
+            # The scheme is case-insensitive because linkify-it reads it that
+            # way, so core links `HTTPS://…` too.
             ORIGIN = %r{(?<origin>(?i:https?:)?//#{SEGMENT})}
             private_constant :ORIGIN
 
@@ -70,14 +58,13 @@ module Migrations
             private_constant :STORAGE
 
             # An optional query and fragment, taken whole or not at all. The
-            # lookahead after each part requires that nothing of it is left
-            # over except sentence punctuation at a URL boundary, so an
-            # over-cap query fails the whole URL instead of matching up to a
-            # mid-query cut. A bare `?` or `#` with nothing after it is part
-            # of the URL too — a markdown destination like `(…21.png?)` keeps
-            # it, and so does the engine. The final guard backs sentence
-            # punctuation out of the end of the match, except when that end
-            # is such a bare marker.
+            # lookahead after each part requires that nothing is left over
+            # except sentence punctuation at a URL boundary, so an over-cap
+            # query fails the whole URL instead of matching up to a mid-query
+            # cut. A bare `?` or `#` with nothing after it is part of the URL
+            # too — a markdown destination like `(…21.png?)` keeps it, and so
+            # does the engine. The final guard backs sentence punctuation out of
+            # the match's end, except at such a marker.
             QUERY_FRAGMENT =
               /
                 (?:
@@ -101,12 +88,9 @@ module Migrations
             # From the storage marker down to the basename and whatever follows
             # it: partition segments, the sha1, the extension or `_WxH` suffix
             # ending on a word character (a sentence's `.` after a bare URL
-            # stays out), then an optional query and fragment. The caps take a
-            # signed CDN URL whole; beyond them the URL matches no shape at
-            # all (see the class comment). The repeated groups are atomic with
-            # a lookahead deciding where they stop, so a failing candidate is
-            # scanned once and never backtracked into; the segment-count and
-            # length caps bound a single candidate.
+            # stays out), then the query and fragment. The repeated groups are
+            # atomic with a lookahead deciding where they stop, so a failing
+            # candidate is scanned once.
             STORAGE_TAIL =
               %r{
                 #{STORAGE}
@@ -126,11 +110,9 @@ module Migrations
               }x
             private_constant :LONG_TAIL
 
-            # The short-URL shape. The token is base62, the extension optional
-            # (core routes both spellings). `(?![\w/-])` stops the match when
-            # more path follows — core's short-URL route has exactly one
-            # segment after `short-url/` — and a query or fragment may follow
-            # the segment like on any URL.
+            # The token is base62, the extension optional (core routes both
+            # spellings). `(?![\w/-])` stops the match when more path follows —
+            # core's short-URL route has exactly one segment after `short-url/`.
             SHORT_TAIL =
               %r{
                 /uploads/short-url/
@@ -141,10 +123,8 @@ module Migrations
               }x
             private_constant :SHORT_TAIL
 
-            # The three shapes. The `/uploads/` segment may be absent only in
-            # the schemed or protocol-relative form — that is the S3/CDN
-            # shape, where the storage path sits directly under the host or
-            # below a bucket prefix. A relative URL must carry `/uploads/`.
+            # The `/uploads/` segment may be absent only in the schemed or
+            # protocol-relative form — the S3/CDN shape.
             URL =
               %r{
                 (?<upload_url>
@@ -156,13 +136,9 @@ module Migrations
               }x
             private_constant :URL
 
-            # `\G` anchors each match at `pos` so scanning stays linear. Alt text
-            # and link text are the one shared label grammar (see
-            # `Base::LINK_TEXT`): they take the single level of balanced brackets
-            # CommonMark allows, so `[see [1]](<upload url>)` is deferred, but no
-            # nested link or image — the `[` of `[![…](…)](…)` never starts a match
-            # at the outer bracket, and the inner image is deferred on its own at
-            # the `!` trigger.
+            # Alt text and link text are the one shared label grammar (see
+            # `Base::LINK_TEXT`), so a nested image's inner construct is
+            # deferred on its own at the `!` trigger.
             IMAGE = /\G!\[#{Base::LINK_TEXT}\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
             private_constant :IMAGE
 
@@ -180,12 +156,9 @@ module Migrations
             ANCHORED_URL = /\A#{URL}/
             private_constant :ANCHORED_URL
 
-            # Whether `raw` can contain a supported upload URL at all. This is
-            # the cheap presence check for the {TierGate}: every supported
-            # shape carries one of these markers, and a body with only
-            # unrelated `/uploads/` paths (WordPress and friends) does not
-            # become a candidate. A storage marker alone is not enough — the
-            # S3/CDN shape needs a host, and the long shape an `uploads/`
+            # The cheap presence check for the {TierGate}: every supported shape
+            # carries one of these markers. A storage marker alone is not enough
+            # — the S3/CDN shape needs a host and the long shape an `uploads/`
             # segment, so prose that merely mentions `original/` sends nothing
             # to the engine.
             def self.candidate?(raw)
@@ -195,13 +168,11 @@ module Migrations
               raw.include?("//") || raw.include?("uploads/")
             end
 
-            # Whether an engine href/src value has a supported upload shape.
-            # The {EngineScanner} tracks upload values with this, so the filter
-            # and the grammar that later anchors the construct cannot disagree.
-            # The match must start at the value's first byte — a substring
-            # match would track a URL that merely contains an upload path, the
-            # redirect case again, one level up — and may leave only wordless
-            # linkify junk uncovered ({Base.swallowed_tail?}).
+            # The {EngineScanner}'s tracked-value filter. The match must start
+            # at the value's first byte, or a URL that merely contains an upload
+            # path would be tracked (the redirect case, one level up), and may
+            # leave only wordless linkify junk uncovered
+            # ({Base.swallowed_tail?}).
             def self.tracked_value?(value)
               return false unless candidate?(value)
 
@@ -211,8 +182,7 @@ module Migrations
               swallowed_tail?(value.byteslice(match.byteoffset(0).last..))
             end
 
-            # The 40-hex sha1 for a short-URL token, or nil when the token is
-            # not a valid base62 sha1. Mirrors core's
+            # Nil when the token is not a valid base62 sha1. Mirrors core's
             # `Upload.sha1_from_base62_encoded`.
             def self.sha1_from_short_token(token)
               value = 0
@@ -257,8 +227,8 @@ module Migrations
               origin = match[:origin]
               host = origin && UrlOrigin.split(origin)&.first
               url = match[:upload_url]
-              # The path part of the matched URL, for the ownership check
-              # against a configured path prefix (see `UploadUrlReference`).
+              # For the ownership check against a configured path prefix (see
+              # `UploadUrlReference`).
               rest = origin ? url.byteslice(origin.bytesize..) : url
 
               Match.new(

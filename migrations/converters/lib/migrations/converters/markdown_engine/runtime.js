@@ -6,8 +6,7 @@
 // answers from source-site data injected as `__scanConfig`.
 
 __Ruby = {
-  // The processor's i18n shim routes translations here; the key is
-  // deterministic and never reaches the token data the scan extracts.
+  // The key is deterministic and never reaches the token data.
   t(key) {
     return key;
   },
@@ -32,16 +31,13 @@ __Ruby = {
     return null;
   },
   hashtag_lookup(slug, cookingUserId, typesInPriorityOrder) {
-    // The counterpart of Ruby's NameNormalizer (Unicode NFC, then downcase,
-    // both sigmas as one): the injected name sets are normalized that way, so
-    // the sought slug must be too, or a decomposed spelling in a post misses
-    // the composed name. toLowerCase writes a word-final sigma as U+03C2 where
-    // Ruby writes U+03C3, hence the replacement.
+    // The counterpart of Ruby's NameNormalizer, which the injected name sets
+    // went through: NFC, downcase, and both lowercase sigmas as one (see that
+    // module for why the sigma matters).
     const ref = slug.normalize("NFC").toLowerCase().replace(/\u03c2/g, "\u03c3");
     // `#slug::type` forces one type; `#parent:child` addresses a category by
-    // its child slug; `ref` preserves the typed form including a `::type`
-    // suffix, like the host lookup service. This mirrors that service far
-    // enough for scanning, where only slug, type, and ref shape the tokens.
+    // its child slug; `ref` keeps the typed form, like the host lookup service.
+    // Only slug, type and ref shape the tokens a scan reads.
     const [name, forcedType] = ref.split("::");
     const types = forcedType ? [forcedType] : typesInPriorityOrder;
 
@@ -52,8 +48,7 @@ __Ruby = {
         // empty tail, hence the filter.
         const slugPart = name.split(":").filter((part) => part !== "").pop() || "";
         if (slugPart !== "" && __scanConfig.categorySlugs[slugPart]) {
-          // `text` becomes the rendered label; the scan reads slug and type,
-          // so the slug is label enough.
+          // `text` becomes the rendered label, which no scan reads.
           return {
             relative_url: "/c/" + slugPart,
             text: slugPart,

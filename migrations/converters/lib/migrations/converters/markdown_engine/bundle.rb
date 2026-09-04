@@ -9,22 +9,18 @@ module Migrations
   module Converters
     module MarkdownEngine
       # The ordered JavaScript a `Context` evaluates: the host application's
-      # precompiled pretty-text bundle (pretty-text, discourse-markdown-it,
-      # and the allowlisted application modules, built out of process by
+      # precompiled pretty-text bundle (built out of process by
       # `frontend/pretty-text-processor`), the supported plugins' vendored
       # libraries and markdown features (the latter transpiled through the
       # host's `AssetProcessor`), and the generated emoji replacement table.
       #
       # Cached on disk keyed by a digest of every input. On a cache miss the
-      # build runs in a SUBPROCESS that writes the cache and exits: the
-      # pretty-text bundle is built by an external node command, but
-      # transpiling the plugin features boots `AssetProcessor`'s own V8, and
-      # V8 initialized multithreaded is not fork-safe — the converter parent
-      # forks workers, so it must never hold V8 state (nor the Rails/Discourse
-      # stand-ins the host build code needs, which would otherwise contaminate
-      # the process; see {HostShims}). The parent only computes the digest and
-      # reads JSON; workers only evaluate. A warm cache needs neither node nor
-      # pnpm.
+      # build runs in a SUBPROCESS that writes the cache and exits, because
+      # transpiling the plugin features boots `AssetProcessor`'s own V8 and V8
+      # initialized multithreaded is not fork-safe — the converter parent forks
+      # workers, so it must never hold V8 state, nor the Rails/Discourse
+      # stand-ins the host build code needs ({HostShims}). A warm cache needs
+      # neither node nor pnpm.
       class Bundle
         class BuildError < StandardError
         end
@@ -36,28 +32,24 @@ module Migrations
         CACHE_DIR = "tmp/migrations"
 
         # What the bundled plugins register as `:vendored_pretty_text` /
-        # `:vendored_core_pretty_text` assets (see each plugin.rb and
-        # `DiscoursePluginRegistry::VENDORED_CORE_PRETTY_TEXT_MAP`): plugin
-        # feature modules reference these as plain globals.
+        # `:vendored_core_pretty_text` assets; plugin feature modules reference
+        # these as plain globals.
         PLUGIN_VENDOR_FILES = %w[
           frontend/discourse/node_modules/moment/moment.js
           frontend/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js
           plugins/footnote/assets/vendor/javascripts/markdown-it-footnote.js
         ].freeze
 
-        # The supported plugins: every one bundled with the host application
-        # whose markdown features change tokenization. Their constructs must
-        # tokenize the way the destination will see them, or text inside e.g.
-        # a `[poll]` or `$$…$$` would be scanned as ordinary prose and a
-        # mention in there would be replaced. The set is fixed, not
-        # configuration: `Config::SETTING_KEYS` covers exactly these plugins'
-        # parse-relevant settings (a spec checks that per plugin), so a
-        # plugin outside the list would run its markdown rules with absent
-        # settings. A drift spec compares this list against the plugins that
-        # actually ship markdown files, so a newly added plugin fails a test
-        # instead of being scanned without its rules. discourse-ai is the one
-        # deliberate exclusion: its markdown modules only allowlist HTML
-        # attributes and register no rules.
+        # Every plugin bundled with the host application whose markdown features
+        # change tokenization. Their constructs must tokenize the way the
+        # destination will see them, or text inside e.g. a `[poll]` or `$$…$$`
+        # would be scanned as ordinary prose and a mention in there would be
+        # replaced. The set is fixed, not configuration: `Config::SETTING_KEYS`
+        # covers exactly these plugins' parse-relevant settings, so a plugin
+        # outside the list would run its markdown rules with absent settings. A
+        # drift spec compares this list against the plugins that actually ship
+        # markdown files. discourse-ai is the one deliberate exclusion: its
+        # markdown modules only allowlist HTML attributes and register no rules.
         CORE_MARKDOWN_PLUGINS = %w[
           chat
           checklist
@@ -72,9 +64,8 @@ module Migrations
           spoiler-alert
         ].freeze
 
-        # Digesting reads the host constants and file globs only; V8 boots on
-        # a transpile, which never happens in this process, and the host
-        # classes are Rails-free until their build/transpile methods run.
+        # Digesting reads the host constants and file globs only, so no V8 boots
+        # here and the host classes stay Rails-free.
         def self.load_or_build(cache_dir: nil)
           root = MarkdownEngine.discourse_root
           cache_dir ||= File.join(root, CACHE_DIR)
@@ -106,14 +97,13 @@ module Migrations
           # rubocop:enable Discourse/NoChdir
         end
 
-        # The build itself. Run this only in the separate process that
-        # `load_or_build` spawns: it initializes V8 and installs the host
-        # stand-ins, and neither may live in the forking converter parent.
-        # Writes via temp file and atomic rename, so a crashed build cannot
-        # leave a truncated cache another run would trust.
+        # Run this only in the separate process that `load_or_build` spawns, for
+        # the reason in the class comment. Writes via temp file and atomic
+        # rename, so a crashed build cannot leave a truncated cache another run
+        # trusts.
         def self.build_and_write(root, cache_file)
-          # discourse-emojis decides whether to load its railtie by checking
-          # for `Rails`, so it must load before the Rails stand-in exists.
+          # discourse-emojis decides whether to load its railtie by checking for
+          # `Rails`, so it must load before the stand-in exists.
           require "discourse_emojis"
           require "mini_racer"
           HostShims.install!(root)
@@ -128,8 +118,6 @@ module Migrations
               File.write(temp_file, JSON.generate({ "entries" => entries }))
               File.rename(temp_file, cache_file)
             ensure
-              # A failed write or rename must not leave the temporary file
-              # behind.
               File.delete(temp_file) if File.exist?(temp_file)
             end
           end
@@ -137,11 +125,10 @@ module Migrations
         end
 
         # A missing file, a truncated or corrupt one, and valid JSON with the
-        # wrong shape are all cache misses. Without the shape check,
-        # `{"entries":"corrupt"}` would reach the context and raise a
-        # NoMethodError there instead of rebuilding. An empty list is a miss
-        # too: no build produces zero entries, so it can only be a damaged
-        # file, and evaluating it would give a context with no engine at all.
+        # wrong shape are all cache misses; without the shape check,
+        # `{"entries":"corrupt"}` would reach the context and raise there
+        # instead of rebuilding. An empty list is a miss too: no build produces
+        # zero entries.
         def self.read_cache(cache_file)
           entries = JSON.parse(File.read(cache_file))["entries"]
           return nil unless entries.is_a?(Array)
@@ -175,8 +162,8 @@ module Migrations
           @entries = entries
         end
 
-        # `AssetProcessor` references `PrecompiledBundle` in its class body,
-        # so the load order matters; a booted application has both already.
+        # `AssetProcessor` references `PrecompiledBundle` in its class body, so
+        # the load order matters. A booted application has both already.
         def self.require_host_build_classes(root)
           return if Object.const_defined?(:AssetProcessor)
 
@@ -230,8 +217,7 @@ module Migrations
 
         # The host's own definition, so there is one bundle: a booted
         # application shares this object with `PrettyText` and the same cache
-        # file; standalone — only ever the build subprocess — the host stand-ins
-        # carry its build block.
+        # file; standalone, the host stand-ins carry its build block.
         def self.host_core_bundle
           require_host_build_classes(MarkdownEngine.discourse_root)
           ::PrettyText::CoreBundle::BUNDLE
@@ -250,9 +236,9 @@ module Migrations
 
           CORE_MARKDOWN_PLUGINS.each do |plugin|
             plugin_files(root, plugin).each do |path|
-              # The directory name stands in for the plugin's registered name;
-              # feature discovery only pattern-matches the `discourse/plugins/`
-              # prefix and the file name, so the middle segment is free-form.
+              # Feature discovery only pattern-matches the `discourse/plugins/`
+              # prefix and the file name, so the directory name can stand in for
+              # the plugin's registered name.
               module_name =
                 path.sub(%r{\A.+assets/javascripts/}, "discourse/plugins/#{plugin}/").sub(
                   /\.js(\.es6)?\z/,
@@ -272,7 +258,7 @@ module Migrations
         end
 
         # Runs under the build lock, so no concurrent starter can be reading a
-        # stale file while it disappears.
+        # stale file as it disappears.
         def self.cleanup_stale_caches(cache_dir, current_file)
           Dir[File.join(cache_dir, "markdown-engine-bundle-*.json")].each do |path|
             File.delete(path) if path != current_file

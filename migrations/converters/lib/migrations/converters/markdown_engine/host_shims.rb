@@ -10,13 +10,11 @@ module Migrations
     module MarkdownEngine
       # The host application's build classes (`PrecompiledBundle` for the
       # pretty-text bundle, `AssetProcessor` for plugin-feature transpiles)
-      # reach for a few host constants: `Rails.root`/`Rails.logger`,
-      # `GlobalSetting`, and `Discourse::Utils` to shell out and to write
-      # caches atomically. In a converter's build subprocess none of these
-      # exist, and booting the application to get them is exactly what this
-      # component avoids, so the minimal stand-ins are installed instead.
-      # Inside a booted application (the parity specs) every constant is
-      # already defined and nothing here runs.
+      # reach for `Rails.root`/`Rails.logger`, `GlobalSetting`, and
+      # `Discourse::Utils`. A converter's build subprocess has none of them, and
+      # booting the application to get them is what this component avoids, so
+      # minimal stand-ins go in instead. Inside a booted application every
+      # constant is already defined and nothing here runs.
       module HostShims
         def self.install!(discourse_root)
           install_rails(discourse_root) unless defined?(::Rails)

@@ -7,11 +7,9 @@ module Migrations
   module Converters
     module MarkdownEngine
       # The unicode-emoji-to-name replacement table `__PrettyText.setUnicode`
-      # expects. This mirrors `Emoji.unicode_replacements` in the host
-      # application, which cannot be required here because the `Emoji` model
-      # drags in site caches and settings; both read the same static
-      # discourse-emojis data, and a parity spec asserts the outputs stay
-      # identical.
+      # expects. Mirrors `Emoji.unicode_replacements` in the host application,
+      # which cannot be required here because the `Emoji` model drags in site
+      # caches and settings; a parity spec asserts the outputs stay identical.
       module EmojiData
         FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff].freeze
 
