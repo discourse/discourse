@@ -203,6 +203,8 @@ module DiscourseAi
           )
         end
 
+        private
+
         def replay_non_streaming_as_streaming!(
           dialect,
           user,
@@ -501,9 +503,7 @@ module DiscourseAi
           raise if !cancelled
         end
 
-        private :replay_non_streaming_as_streaming!,
-                :build_structured_output,
-                :perform_completion_request_with_retries
+        public
 
         def final_log_update(log)
           # for people that need to override
