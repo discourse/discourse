@@ -2,7 +2,10 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
 import Site from "discourse/models/site";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -28,6 +31,8 @@ function preloadInvite({
   existing_user = false,
 } = {}) {
   const info = {
+    token: "invite-token",
+    email_token: "invite-email-token",
     invited_by: {
       id: 123,
       username: "foobar",
@@ -565,11 +570,14 @@ acceptance("Associate link", function (needs) {
     preloadInvite({ link: true });
     pretender.get("/associate.json", () => {
       return response({
+        token: "associate-token",
         provider_name: "facebook",
       });
     });
 
-    pretender.post("/associate", () => {
+    let submittedToken;
+    pretender.post("/associate", (request) => {
+      submittedToken = parsePostData(request.requestBody).token;
       return response({ success: true });
     });
 
@@ -583,6 +591,11 @@ acceptance("Associate link", function (needs) {
 
     await click(".d-modal .btn-primary");
     assert.strictEqual(currentURL(), "/u/eviltrout/preferences/account");
+    assert.strictEqual(
+      submittedToken,
+      "associate-token",
+      "submits the token returned by the clean endpoint"
+    );
   });
 });
 
@@ -603,6 +616,7 @@ acceptance("Associate link, with an error", function (needs) {
     preloadInvite({ link: true });
     pretender.get("/associate.json", () => {
       return response({
+        token: "associate-token",
         provider_name: "facebook",
       });
     });

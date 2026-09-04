@@ -11,7 +11,7 @@ describe EmailController do
       user.user_option.send_chat_email_when_away!
 
       get "/email/unsubscribe/#{key}"
-      post "/email/unsubscribe.json", params: { chat_email_frequency: never_freq }
+      post "/email/unsubscribe.json", params: { token: key, chat_email_frequency: never_freq }
 
       expect(response.status).to eq(302)
 

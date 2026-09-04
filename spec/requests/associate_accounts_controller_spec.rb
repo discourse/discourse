@@ -57,11 +57,11 @@ RSpec.describe Users::AssociateAccountsController do
       data = response.parsed_body
       expect(data["provider_name"]).to eq("google_oauth2")
       expect(data["account_description"]).to eq("someemail@test.com")
-      expect(data).not_to have_key("token")
-      expect(response.body).not_to include(uri.path.split("/").last)
+      expect(data["token"]).to eq(uri.path.split("/").last)
 
       # Make the connection
-      events = DiscourseEvent.track_events { post "/associate.json" }
+      events =
+        DiscourseEvent.track_events { post "/associate.json", params: { token: data["token"] } }
       expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
       expect(
         events.any? do |e|

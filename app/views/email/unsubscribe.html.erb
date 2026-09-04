@@ -9,6 +9,7 @@
       <p><%= t("unsubscribe.different_user_description").html_safe %></p>
       <%= form_tag(session_path(id: current_user.username_lower), method: :delete) do %>
         <%= hidden_field_tag(:return_url, @return_url) %>
+        <%= hidden_field_tag(:unsubscribe_token, @secure_link_token) %>
         <%= submit_tag t('unsubscribe.log_out'), class: 'btn btn-danger' %>
       <%- end %>
     <%- end %>
@@ -17,6 +18,7 @@
     <h2><%= t 'unsubscribe.title'%> <%= @user.email %></h2>
     <br/>
     <%= form_tag(clean_email_unsubscribe_path) do %>
+      <%= hidden_field_tag(:token, @secure_link_token) %>
       <%if @topic %>
         <% if @watching_topic %>
           <p>

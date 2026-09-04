@@ -6,7 +6,7 @@ RSpec.describe EmailController do
   describe "#perform_unsubscribe" do
     def perform_unsubscribe(key, params: {})
       get "/email/unsubscribe/#{key}"
-      post "/email/unsubscribe.json", params: params
+      post "/email/unsubscribe.json", params: params.merge(token: key)
     end
 
     it "raises not found on invalid key" do
@@ -267,26 +267,25 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        SecureLinkFlow.new(request.server_session).stage(
-          :unsubscribe,
-          unsubscribe_key,
-          expires: 2.minutes,
-        )
-
         expect(response.body).to include(I18n.t("unsubscribe.log_out"))
         expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
+        expect(response.body).to have_tag(
+          "input",
+          with: {
+            name: "unsubscribe_token",
+            type: "hidden",
+            value: unsubscribe_key,
+          },
+        )
 
         delete "/session/#{admin.username}.json",
                params: {
                  return_url: "/email/unsubscribe",
+                 unsubscribe_token: unsubscribe_key,
                },
                xhr: true
 
         expect(response.parsed_body["redirect_url"]).to eq("/email/unsubscribe")
-        expect(
-          SecureLinkFlow.new(request.server_session).expires_in_seconds(:unsubscribe),
-        ).to be_within(1).of(2.minutes)
-
         get "/email/unsubscribe"
 
         expect(response.status).to eq(200)

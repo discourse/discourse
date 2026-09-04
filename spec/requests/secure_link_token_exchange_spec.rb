@@ -182,20 +182,62 @@ RSpec.describe "Secure link token exchange" do
     expect(response).to have_http_status(:not_found)
   end
 
-  it "clears an older flow when a same-purpose landing is invalid" do
+  it "does not fall back to staged state when the submitted token is invalid" do
     user = Fabricate(:user, password: "old-password")
     email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:password_reset]).token
 
     get "/u/password-reset/#{email_token}"
     expect(response).to redirect_to("/u/password-reset")
 
-    get "/u/password-reset/#{SecureRandom.hex}"
-    expect(response).to redirect_to("/u/password-reset")
+    put "/u/password-reset.json",
+        params: {
+          token: SecureRandom.hex,
+          password: "new-secure-password",
+        }
 
-    put "/u/password-reset.json", params: { password: "new-secure-password" }
-
-    expect(response).not_to be_successful
+    expect(response.parsed_body["success"]).to eq(false)
     expect(user.reload.confirm_password?("old-password")).to eq(true)
+  end
+
+  it "binds each password reset form to the token returned for that page" do
+    first_user = Fabricate(:user, password: "first-old-password")
+    second_user = Fabricate(:user, password: "second-old-password")
+    first_token =
+      Fabricate(:email_token, user: first_user, scope: EmailToken.scopes[:password_reset]).token
+    second_token =
+      Fabricate(:email_token, user: second_user, scope: EmailToken.scopes[:password_reset]).token
+
+    get "/u/password-reset/#{first_token}"
+    get "/u/password-reset.json"
+    first_form_token = response.parsed_body["token"]
+    expect(SecureLinkFlow.new(request.server_session).credential(:password_reset)).to be_nil
+
+    get "/u/password-reset/#{second_token}"
+    get "/u/password-reset.json"
+    second_form_token = response.parsed_body["token"]
+
+    put "/u/password-reset.json",
+        params: {
+          token: first_form_token,
+          password: "first-new-password",
+        }
+
+    expect(response.parsed_body["success"]).to eq(true)
+    expect(first_user.reload.confirm_password?("first-new-password")).to eq(true)
+    expect(second_user.reload.confirm_password?("second-old-password")).to eq(true)
+    expect(first_form_token).to eq(first_token)
+    expect(second_form_token).to eq(second_token)
+  end
+
+  it "does not treat a token query parameter on a clean route as a landing" do
+    user = Fabricate(:user)
+    email_token = Fabricate(:email_token, user:, scope: EmailToken.scopes[:password_reset]).token
+
+    get "/u/password-reset", params: { token: email_token }
+
+    expect(response).to have_http_status(:ok)
+    expect(response.location).to be_nil
+    expect(response.body).not_to include(email_token)
   end
 
   it "binds an admin confirmation to the admin who initiated it" do
@@ -210,7 +252,8 @@ RSpec.describe "Secure link token exchange" do
     expect(response).to redirect_to("/u/confirm-admin")
     expect(target_user.reload).not_to be_admin
 
-    post "/u/confirm-admin.json"
+    get "/u/confirm-admin"
+    post "/u/confirm-admin.json", params: { token: confirmation.token }
 
     expect(response).to have_http_status(:ok)
     expect(target_user.reload).to be_admin
@@ -227,7 +270,7 @@ RSpec.describe "Secure link token exchange" do
 
     expect(response).to redirect_to("/u/confirm-admin")
 
-    post "/u/confirm-admin.json"
+    post "/u/confirm-admin.json", params: { token: confirmation.token }
 
     expect(response).not_to be_successful
     expect(target_user.reload).not_to be_admin
@@ -247,7 +290,8 @@ RSpec.describe "Secure link token exchange" do
     expect(response.cookies["destination_url"]).to eq("/u/confirm-admin")
 
     sign_in(acting_admin)
-    post "/u/confirm-admin.json"
+    get "/u/confirm-admin"
+    post "/u/confirm-admin.json", params: { token: confirmation.token }
 
     expect(response).to have_http_status(:ok)
     expect(target_user.reload).to be_admin

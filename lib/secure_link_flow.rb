@@ -27,8 +27,8 @@ class SecureLinkFlow
     @server_session[key(purpose)]
   end
 
-  def expires_in_seconds(purpose)
-    @server_session.ttl(key(purpose))
+  def claim(purpose)
+    @server_session.getdel(key(purpose))
   end
 
   def clear(purpose)

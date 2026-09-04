@@ -36,6 +36,8 @@ RSpec.describe "Discobot welcome post" do
         expect do
           put "/invite.json",
               params: {
+                token: invite.invite_key,
+                email_token: invite.email_token,
                 username: "somename",
                 name: "testing",
                 password: "verystrongpassword",

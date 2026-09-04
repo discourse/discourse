@@ -160,8 +160,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       return true unless path
       return true if path[:controller] != "invites" || path[:action] != "show"
 
-      credential = secure_link_flow.credential(:invite)
-      invite_key = path[:id] || credential&.dig(:invite_key) || credential&.dig("invite_key")
+      invite_key = path[:id] || server_session["invite-key"]
       !Invite.find_by(invite_key: invite_key)&.redeemable?
     end
   end

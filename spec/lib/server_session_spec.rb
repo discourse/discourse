@@ -61,4 +61,13 @@ RSpec.describe ServerSession do
       expect { session.delete(:key) }.to change { Discourse.redis.exists?("abckey") }.to(false)
     end
   end
+
+  describe "#getdel" do
+    before { session[:key] = { token: "secret" } }
+
+    it "returns the value and deletes the key atomically" do
+      expect(session.getdel(:key)).to eq(token: "secret")
+      expect(session[:key]).to be_nil
+    end
+  end
 end

@@ -25,6 +25,7 @@ RSpec.describe SessionController do
 
   def post_email_login(token, **request_options)
     get "/session/email-login/#{token}"
+    request_options[:params] = (request_options[:params] || {}).merge(token: token)
     post "/session/email-login.json", **request_options
   end
 
@@ -82,24 +83,26 @@ RSpec.describe SessionController do
 
         get "/session/email-login.json"
 
-        expect(response.parsed_body["can_login"]).to eq(true)
+        expect(response.parsed_body).to include(
+          "can_login" => true,
+          "token" => email_token.token,
+          "token_email" => email_token.email,
+          "safe_mode" => nil,
+        )
         expect(response.parsed_body["second_factor_required"]).to eq(nil)
-        expect(response.parsed_body).not_to have_key("token")
-        expect(response.body).not_to include(email_token.token)
 
         # Does not log in the user
         expect(session[:current_user_id]).to be_nil
       end
 
-      it "returns safe mode without exposing the token" do
+      it "returns safe mode with the token in the clean page model" do
         get "/session/email-login/#{email_token.token}?safe_mode=no_plugins,no_themes"
         expect(response).to redirect_to("/session/email-login")
 
         get "/session/email-login.json"
 
         expect(response.parsed_body["safe_mode"]).to eq("no_plugins,no_themes")
-        expect(response.parsed_body).not_to have_key("token")
-        expect(response.body).not_to include(email_token.token)
+        expect(response.parsed_body["token"]).to eq(email_token.token)
       end
 
       it "stores only recognized safe mode options" do
@@ -3447,6 +3450,14 @@ RSpec.describe SessionController do
           expect(response.body).to include(
             I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username),
           )
+          expect(response.body).to have_tag(
+            "input",
+            with: {
+              name: "token",
+              type: "hidden",
+              value: token,
+            },
+          )
           expect(Discourse.redis.get("otp_#{token}")).to eq(user.username)
 
           expect(session[:current_user_id]).to eq(nil)
@@ -3476,7 +3487,7 @@ RSpec.describe SessionController do
           get "/session/otp/#{token}"
           expect(response).to redirect_to("/session/otp")
 
-          post "/session/otp"
+          post "/session/otp", params: { token: token }
 
           expect(response.status).to eq(302)
           expect(response).to redirect_to("/")

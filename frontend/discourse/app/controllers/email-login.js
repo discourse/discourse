@@ -22,6 +22,7 @@ export default class EmailLoginController extends Controller {
   @action
   async finishLogin() {
     let data = {
+      token: this.model.token,
       second_factor_method: this.secondFactorMethod,
       timezone: moment.tz.guess(),
     };

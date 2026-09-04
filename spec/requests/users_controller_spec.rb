@@ -63,6 +63,7 @@ RSpec.describe UsersController do
 
     def activate_account(token, **request_options)
       get "/u/activate-account/#{token}"
+      request_options[:params] = (request_options[:params] || {}).merge(token: token)
       put "/u/activate-account", **request_options
     end
 
@@ -81,6 +82,17 @@ RSpec.describe UsersController do
     end
 
     context "with valid token" do
+      it "includes the token in the clean page model" do
+        get "/u/activate-account/#{email_token.token}"
+        get "/u/activate-account"
+
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
+          expect(JSON.parse(json["account_activation"])).to eq("token" => email_token.token)
+        end
+        expect(SecureLinkFlow.new(server_session).credential(:account_activation)).to be_nil
+      end
+
       context "with welcome message" do
         it "enqueues a welcome message if the user object indicates so" do
           SiteSetting.send_welcome_message = true
@@ -297,6 +309,7 @@ RSpec.describe UsersController do
 
     def reset_password(token, format: nil, **request_options)
       get "/u/password-reset/#{token}"
+      request_options[:params] = (request_options[:params] || {}).merge(token: token)
       put "/u/password-reset#{".json" if format == :json}", **request_options
     end
 
@@ -355,7 +368,7 @@ RSpec.describe UsersController do
       it "responds with proper error message" do
         reset_password "evil_trout!", format: :json, params: { password: "awesomeSecretPassword" }
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(200)
         expect(response.parsed_body["message"]).to eq(
           I18n.t("password_reset.no_token", base_url: Discourse.base_url),
         )
@@ -392,8 +405,14 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(response.body).to have_tag("script#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.text)
-          expect(json["password_reset"]).to include(
-            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+          expect(JSON.parse(json["password_reset"])).to eq(
+            "token" => email_token.token,
+            "is_developer" => false,
+            "admin" => false,
+            "second_factor_required" => false,
+            "security_key_required" => false,
+            "backup_enabled" => false,
+            "multiple_second_factor_methods" => false,
           )
         end
 
@@ -569,8 +588,14 @@ RSpec.describe UsersController do
 
           expect(response.body).to have_tag("script#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.text)
-            expect(json["password_reset"]).to include(
-              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+            expect(JSON.parse(json["password_reset"])).to eq(
+              "token" => email_token.token,
+              "is_developer" => false,
+              "admin" => false,
+              "second_factor_required" => true,
+              "security_key_required" => false,
+              "backup_enabled" => false,
+              "multiple_second_factor_methods" => false,
             )
           end
 
@@ -590,6 +615,7 @@ RSpec.describe UsersController do
 
           put "/u/password-reset",
               params: {
+                token: email_token.token,
                 password: "hg9ow8yHG32O",
                 second_factor_token: ROTP::TOTP.new(second_factor.data).now,
                 second_factor_method: UserSecondFactor.methods[:totp],
@@ -714,7 +740,7 @@ RSpec.describe UsersController do
         expect(session[:current_user_id]).to be_blank
         expect(email_token.reload.confirmed).to eq(false)
 
-        put "/u/password-reset.json", params: { password: "ksjafh928r" }
+        put "/u/password-reset.json", params: { token: email_token.token, password: "ksjafh928r" }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to be_blank
@@ -4948,7 +4974,8 @@ RSpec.describe UsersController do
 
     def confirm_admin(token)
       get "/u/confirm-admin/#{token}"
-      post "/u/confirm-admin.json"
+      get "/u/confirm-admin"
+      post "/u/confirm-admin.json", params: { token: token }
     end
 
     it "fails without a valid token" do
@@ -4976,8 +5003,17 @@ RSpec.describe UsersController do
 
       ac = AdminConfirmation.new(user1, admin)
       ac.create_confirmation
-      show_admin_confirmation ac.token
+      get "/u/confirm-admin/#{ac.token}"
+      get "/u/confirm-admin"
       expect(response.status).to eq(200)
+      expect(response.body).to have_tag(
+        "input",
+        with: {
+          name: "token",
+          type: "hidden",
+          value: ac.token,
+        },
+      )
 
       user1.reload
       expect(user1.admin?).to eq(false)

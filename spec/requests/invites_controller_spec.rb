@@ -16,6 +16,7 @@ RSpec.describe InvitesController do
     email_token = request_options.dig(:params, :email_token)
     path += "?t=#{email_token}" if email_token
     get path
+    request_options[:params] = (request_options[:params] || {}).merge(token: invite_key)
     put "/invite.json", **request_options
   end
 
@@ -43,6 +44,7 @@ RSpec.describe InvitesController do
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["token"]).to eq(invite.invite_key)
         expect(invite_info["username"]).to eq("")
         expect(invite_info["email"]).to eq("i*****g@a***********e.ooo")
       end
@@ -56,6 +58,7 @@ RSpec.describe InvitesController do
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["email_token"]).to eq(invite.email_token)
         expect(invite_info["username"]).to eq("") # Default is that we don't use emails to suggest usernames
         expect(invite_info["email"]).to eq(invite.email)
       end
@@ -370,12 +373,14 @@ RSpec.describe InvitesController do
       expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
     end
 
-    it "stores the invite key in the server session if invite exists" do
-      show_invite invite.invite_key
+    it "moves the invite key from the secure link flow into the clean page model" do
+      get "/invites/#{invite.invite_key}"
+      get "/invite.json"
+
       expect(response.status).to eq(200)
-      expect(SecureLinkFlow.new(server_session).credential(:invite)[:invite_key]).to eq(
-        invite.invite_key,
-      )
+      expect(SecureLinkFlow.new(server_session).credential(:invite)).to be_nil
+      expect(server_session["invite-key"]).to eq(invite.invite_key)
+      expect(response.parsed_body["token"]).to eq(invite.invite_key)
     end
 
     it "returns error if invite has already been redeemed" do

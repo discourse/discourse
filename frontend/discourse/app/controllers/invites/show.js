@@ -408,6 +408,8 @@ export default class InvitesShowController extends Controller {
     }
 
     const data = {
+      token: this.model.token,
+      email_token: this.model.email_token,
       username: this.accountUsername,
       name: this.accountName,
       password: this.accountPassword,

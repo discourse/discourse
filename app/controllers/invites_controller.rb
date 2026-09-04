@@ -32,18 +32,17 @@ class InvitesController < ApplicationController
   def show
     expires_now
 
-    if params[:id].present?
+    if (invite_key = request.path_parameters[:id]).present?
       secure_link_flow.clear(:invite)
-      invite = Invite.find_by(invite_key: params[:id])
-      if invite
-        secure_link_flow.stage(:invite, { invite_key: params[:id], email_token: params[:t] })
-      end
+      invite = Invite.find_by(invite_key: invite_key)
+      secure_link_flow.stage(:invite, { invite_key: invite_key, email_token: params[:t] }) if invite
       return finish_secure_link_landing("/invite")
     end
 
     RateLimiter.new(nil, "invites-show-#{request.remote_ip}", 100, 1.minute).performed!
 
-    credential = secure_link_flow.credential(:invite)
+    credential =
+      request.format.json? ? secure_link_flow.claim(:invite) : secure_link_flow.credential(:invite)
     invite = Invite.find_by(invite_key: credential&.dig(:invite_key))
 
     if !invite.present? || !invite.redeemable?
@@ -387,13 +386,13 @@ class InvitesController < ApplicationController
       :name,
       :password,
       :timezone,
+      :token,
       :email_token,
       user_custom_fields: {
       },
     )
 
-    credential = secure_link_flow.credential(:invite)
-    invite = Invite.find_by(invite_key: credential&.dig(:invite_key))
+    invite = Invite.find_by(invite_key: params[:token])
     redeeming_user = current_user
 
     if invite.present?
@@ -416,7 +415,7 @@ class InvitesController < ApplicationController
           else
             # Otherwise we always use the email from the invitation.
             attrs[:email] = invite.email
-            attrs[:email_token] = credential[:email_token] if credential[:email_token].present?
+            attrs[:email_token] = params[:email_token] if params[:email_token].present?
           end
         end
 
@@ -596,7 +595,7 @@ class InvitesController < ApplicationController
   private
 
   def secure_link_landing?
-    params[:id].present? && request.get?
+    request.path_parameters[:id].present? && request.get?
   end
 
   def skip_email_param
@@ -633,6 +632,8 @@ class InvitesController < ApplicationController
     end
 
     info = {
+      token: invite.invite_key,
+      email_token: email_token,
       invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
       email: email,
       hidden_email: hidden_email,

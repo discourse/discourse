@@ -147,6 +147,7 @@ export default class PasswordResetController extends Controller {
         url: userPath("password-reset.json"),
         type: "PUT",
         data: {
+          token: this.model.token,
           password: this.accountPassword,
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,

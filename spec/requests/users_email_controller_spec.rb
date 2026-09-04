@@ -15,7 +15,7 @@ RSpec.describe UsersEmailController do
 
     def confirm_new_email(token)
       get "/u/confirm-new-email/#{token}"
-      put "/u/confirm-new-email.json"
+      put "/u/confirm-new-email.json", params: { token: token }
     end
 
     it "does not redirect to login for signed out accounts, this route works fine as anon user" do
@@ -74,10 +74,13 @@ RSpec.describe UsersEmailController do
         expect(response).to redirect_to("/u/confirm-new-email")
 
         get "/u/confirm-new-email.json"
-        expect(response.parsed_body).not_to have_key("token")
-        expect(response.body).not_to include(token)
+        expect(response.parsed_body).to eq(
+          "token" => token,
+          "new_email" => "bubblegum@adventuretime.ooo",
+          "old_email" => user.email,
+        )
 
-        put "/u/confirm-new-email.json"
+        put "/u/confirm-new-email.json", params: { token: token }
 
         expect(response.status).to eq(200)
         user.reload
@@ -102,7 +105,7 @@ RSpec.describe UsersEmailController do
 
       new_password = SecureRandom.hex
       get "/u/password-reset/#{email_token.token}"
-      put "/u/password-reset.json", params: { password: new_password }
+      put "/u/password-reset.json", params: { token: email_token.token, password: new_password }
       expect(response.parsed_body["success"]).to eq(false)
       expect(response.parsed_body["message"]).to eq(
         I18n.t("password_reset.no_token", base_url: Discourse.base_url),
@@ -151,10 +154,13 @@ RSpec.describe UsersEmailController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["old_email"]).to eq(moderator.email)
         expect(response.parsed_body["new_email"]).to eq("bubblegum@adventuretime.ooo")
-        expect(response.parsed_body).not_to have_key("token")
-        expect(response.body).not_to include(token)
+        expect(response.parsed_body).to eq(
+          "token" => token,
+          "new_email" => "bubblegum@adventuretime.ooo",
+          "old_email" => moderator.email,
+        )
 
-        put "/u/confirm-old-email.json"
+        put "/u/confirm-old-email.json", params: { token: token }
 
         expect(response.status).to eq(200)
       end
@@ -215,6 +221,7 @@ RSpec.describe UsersEmailController do
           get "/u/password-reset/#{password_reset_token}"
           put "/u/password-reset.json",
               params: {
+                token: password_reset_token,
                 password: SecureRandom.hex,
               },
               headers: {

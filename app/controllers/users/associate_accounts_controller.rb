@@ -11,16 +11,18 @@ class Users::AssociateAccountsController < ApplicationController
       raise Discourse::NotFound if request.format.json?
 
       secure_link_flow.clear(:associate_account)
-      token = params[:token]
+      token = request.path_parameters[:token]
       secure_link_flow.stage(:associate_account, token) if server_session[self.class.key(token)]
       return finish_secure_link_landing("/associate")
     end
 
     return render "default/empty" if request.format.html?
 
+    @secure_link_token = secure_link_flow.claim(:associate_account)
     account_description = authenticator.description_for_auth_hash(auth_hash)
     existing_account_description = authenticator.description_for_user(current_user).presence
     render json: {
+             token: @secure_link_token,
              provider_name: auth_hash.provider,
              account_description: account_description,
              existing_account_description: existing_account_description,
@@ -36,9 +38,8 @@ class Users::AssociateAccountsController < ApplicationController
     auth_result = authenticator.after_authenticate(auth_hash, existing_account: current_user)
     DiscourseEvent.trigger(:after_auth, authenticator, auth_result, session, cookies, request)
 
-    token = secure_link_flow.credential(:associate_account)
+    token = params[:token]
     server_session.delete(self.class.key(token))
-    secure_link_flow.clear(:associate_account)
 
     render json: success_json
   end
@@ -48,7 +49,7 @@ class Users::AssociateAccountsController < ApplicationController
   def auth_hash
     @auth_hash ||=
       begin
-        token = secure_link_flow.credential(:associate_account)
+        token = params[:token] || @secure_link_token
         json = server_session[self.class.key(token)]
         raise Discourse::NotFound if json.nil?
 
@@ -67,7 +68,7 @@ class Users::AssociateAccountsController < ApplicationController
   end
 
   def secure_link_landing?
-    action_name == "connect_info" && request.get? && params[:token].present?
+    action_name == "connect_info" && request.get? && request.path_parameters[:token].present?
   end
 
   def self.key(token)

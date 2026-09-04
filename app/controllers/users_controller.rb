@@ -859,18 +859,19 @@ class UsersController < ApplicationController
 
   def password_reset_show
     expires_now
-    if params[:token].present?
+    if (landing_token = request.path_parameters[:token]).present?
       secure_link_flow.clear(:password_reset)
-      password_reset_find_user(params[:token])
-      secure_link_flow.stage(:password_reset, params[:token]) if @user
+      password_reset_find_user(landing_token)
+      secure_link_flow.stage(:password_reset, landing_token) if @user
       return finish_secure_link_landing("/u/password-reset")
     end
 
-    token = secure_link_flow.credential(:password_reset)
+    token = secure_link_flow.claim(:password_reset)
     password_reset_find_user(token)
 
     if !@error
       security_params = {
+        token: token,
         is_developer: UsernameCheckerService.is_developer?(@user.email),
         admin: @user.admin?,
         second_factor_required: @user.totp_enabled?,
@@ -924,7 +925,7 @@ class UsersController < ApplicationController
   def password_reset_update
     expires_now
 
-    token = secure_link_flow.credential(:password_reset)
+    token = params[:token]
 
     password_reset_find_user(token)
     rate_limit_second_factor!(@user)
@@ -995,7 +996,6 @@ class UsersController < ApplicationController
 
           reset_csrf_token(request)
           logon_after_password_reset
-          secure_link_flow.clear(:password_reset)
         elsif @user.errors.empty?
           @error = I18n.t("password_reset.no_token", base_url: Discourse.base_url)
         end
@@ -1009,6 +1009,7 @@ class UsersController < ApplicationController
         DiscourseWebauthn.stage_challenge(@user, server_session)
 
         security_params = {
+          token: token,
           is_developer: UsernameCheckerService.is_developer?(@user.email),
           admin: @user.admin?,
           second_factor_required: @user.totp_enabled?,
@@ -1175,18 +1176,23 @@ class UsersController < ApplicationController
   def activate_account
     expires_now
 
-    if params[:token].present?
+    if (landing_token = request.path_parameters[:token]).present?
       secure_link_flow.clear(:account_activation)
-      email_token = EmailToken.confirmable(params[:token], scope: EmailToken.scopes[:signup])
-      secure_link_flow.stage(:account_activation, params[:token]) if email_token
+      email_token = EmailToken.confirmable(landing_token, scope: EmailToken.scopes[:signup])
+      secure_link_flow.stage(:account_activation, landing_token) if email_token
       return finish_secure_link_landing("/u/activate-account")
     end
 
     raise Discourse::NotFound if current_user.present?
 
+    token = secure_link_flow.claim(:account_activation)
+
     respond_to do |format|
-      format.html { render "default/empty" }
-      format.json { render json: success_json }
+      format.html do
+        store_preloaded("account_activation", MultiJson.dump(token: token))
+        render "default/empty"
+      end
+      format.json { render json: { token: token } }
     end
   end
 
@@ -1194,10 +1200,9 @@ class UsersController < ApplicationController
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
     raise Discourse::NotFound if current_user.present?
 
-    token = secure_link_flow.credential(:account_activation)
+    token = params[:token]
 
     if @user = EmailToken.confirm(token, scope: EmailToken.scopes[:signup])
-      secure_link_flow.clear(:account_activation)
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
@@ -1627,15 +1632,15 @@ class UsersController < ApplicationController
   end
 
   def confirm_admin
-    if params[:token].present?
+    if request.get? && (landing_token = request.path_parameters[:token]).present?
       secure_link_flow.clear(:admin_confirmation)
       confirmation =
         begin
-          AdminConfirmation.find_by_code(params[:token])
+          AdminConfirmation.find_by_code(landing_token)
         rescue ActiveRecord::RecordNotFound
           nil
         end
-      secure_link_flow.stage(:admin_confirmation, params[:token]) if confirmation
+      secure_link_flow.stage(:admin_confirmation, landing_token) if confirmation
       return finish_secure_link_landing("/u/confirm-admin")
     end
 
@@ -1644,14 +1649,15 @@ class UsersController < ApplicationController
       return redirect_to path("/login")
     end
 
-    @confirmation = AdminConfirmation.find_by_code(secure_link_flow.credential(:admin_confirmation))
+    @secure_link_token =
+      request.post? ? params[:token] : secure_link_flow.claim(:admin_confirmation)
+    @confirmation = AdminConfirmation.find_by_code(@secure_link_token)
 
     raise Discourse::NotFound unless @confirmation
     raise Discourse::InvalidAccess.new if @confirmation.performed_by.id != current_user.id
 
     if request.post?
       @confirmation.email_confirmed!
-      secure_link_flow.clear(:admin_confirmation)
       @confirmed = true
     end
 

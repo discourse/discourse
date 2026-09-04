@@ -52,6 +52,7 @@ export default class extends Component {
       const response = await ajax("/u/activate-account.json", {
         type: "PUT",
         data: {
+          token: this.args.model.token,
           password_confirmation: hp.value,
           challenge: hp.challenge.split("").reverse().join(""),
         },

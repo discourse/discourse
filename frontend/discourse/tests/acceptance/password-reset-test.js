@@ -7,10 +7,16 @@ import { parsePostData } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
+const secureLinkToken = "password-reset-token";
+let submittedTokens;
+
 acceptance("Password Reset", function (needs) {
+  needs.hooks.beforeEach(() => (submittedTokens = []));
+
   needs.pretender((server, helper) => {
     server.put("/u/password-reset.json", (request) => {
       const body = parsePostData(request.requestBody);
+      submittedTokens.push(body.token);
       if (body.password === "jonesyAlienSlayer") {
         return helper.response({
           success: false,
@@ -51,7 +57,10 @@ acceptance("Password Reset", function (needs) {
   });
 
   test("Password Reset Page", async function (assert) {
-    PreloadStore.store("password_reset", { is_developer: false });
+    PreloadStore.store("password_reset", {
+      token: secureLinkToken,
+      is_developer: false,
+    });
 
     await visit("/u/password-reset");
     assert.dom(".password-reset input").exists("shows the input");
@@ -92,10 +101,16 @@ acceptance("Password Reset", function (needs) {
     sinon.stub(DiscourseURL, "redirectTo");
     await click(".password-reset form button[type='submit']");
     assert.true(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
+    assert.deepEqual(
+      submittedTokens,
+      [secureLinkToken, secureLinkToken],
+      "submits the page token with every attempt"
+    );
   });
 
   test("Password Reset Page With Second Factor", async function (assert) {
     PreloadStore.store("password_reset", {
+      token: secureLinkToken,
       is_developer: false,
       second_factor_required: true,
     });
@@ -127,6 +142,11 @@ acceptance("Password Reset", function (needs) {
     assert.true(
       DiscourseURL.redirectTo.calledWith("/"),
       "it redirects after submitting form"
+    );
+    assert.deepEqual(
+      submittedTokens,
+      [secureLinkToken, secureLinkToken, secureLinkToken],
+      "submits the same page token through the second-factor flow"
     );
   });
 });
