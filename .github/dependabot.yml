@@ -108,6 +108,9 @@ updates:
       uppy:
         patterns:
           - "@uppy*"
+      warp-drive:
+        patterns:
+          - "@warp-drive/*"
       fullcalendar:
         patterns:
           - "@fullcalendar/*"
