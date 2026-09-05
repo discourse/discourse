@@ -82,8 +82,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(eslint@10.6.0(jiti@2.6.1))
       playwright:
-        specifier: 1.59.1
-        version: 1.59.1
+        specifier: 1.62.1
+        version: 1.62.1
       postcss-selector-parser:
         specifier: ^7.1.4
         version: 7.1.5
@@ -6776,14 +6776,14 @@ packages:
     resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
     engines: {node: '>=8'}
 
-  playwright-core@1.59.1:
-    resolution: {integrity: sha512-HBV/RJg81z5BiiZ9yPzIiClYV/QMsDCKUyogwH9p3MCP6IYjUFu/MActgYAvK0oWyV9NlwM3GLBjADyWgydVyg==}
-    engines: {node: '>=18'}
+  playwright-core@1.62.1:
+    resolution: {integrity: sha512-wPYSwEBJY9GHraISXqyqtx0na0LpO3XEX7jNDhntbex7tzUS7kLnZsOlFruFJB4Hi/rhDMjXGqHewDZ68nYZVw==}
+    engines: {node: '>=20'}
     hasBin: true
 
-  playwright@1.59.1:
-    resolution: {integrity: sha512-C8oWjPR3F81yljW9o5OxcWzfh6avkVwDD2VYdwIGqTkl+OGFISgypqzfu7dOe4QNLL2aqcWBmI3PMtLIK233lw==}
-    engines: {node: '>=18'}
+  playwright@1.62.1:
+    resolution: {integrity: sha512-0M+L3LAD8/nm554LOla9Ayx0j0tmFZ0FBcoQ7F1VuVHpM/XpiC8RcDzBQB8W5+hA8L22THxELzeF+2WcUzvcLg==}
+    engines: {node: '>=20'}
     hasBin: true
 
   polyfill-crypto.getrandomvalues@1.0.0:
@@ -15574,11 +15574,11 @@ snapshots:
     dependencies:
       find-up: 3.0.0
 
-  playwright-core@1.59.1: {}
+  playwright-core@1.62.1: {}
 
-  playwright@1.59.1:
+  playwright@1.62.1:
     dependencies:
-      playwright-core: 1.59.1
+      playwright-core: 1.62.1
     optionalDependencies:
       fsevents: 2.3.2
 
