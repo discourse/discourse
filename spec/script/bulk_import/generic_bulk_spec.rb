@@ -42,6 +42,280 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#import_user_notes" do
+      fab!(:note_owner, :user)
+      fab!(:note_author, :user)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@users, { 10 => note_owner.id, 20 => note_author.id })
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      before do
+        allow(importer).to receive(:delta_import?).and_return(true)
+        source_db.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, anonymized INTEGER)")
+        source_db.execute("INSERT INTO users (id) VALUES (10), (20)")
+        source_db.execute(<<~SQL)
+          CREATE TABLE user_notes (
+            id INTEGER PRIMARY KEY, user_id INTEGER, raw TEXT,
+            created_by_user_id INTEGER, created_at TEXT
+          )
+        SQL
+      end
+
+      around do |example|
+        plugin_defined = Object.const_defined?(:DiscourseUserNotes)
+        Object.const_set(:DiscourseUserNotes, Module.new) unless plugin_defined
+        example.run
+      ensure
+        Object.send(:remove_const, :DiscourseUserNotes) unless plugin_defined
+      end
+
+      after { source_db.close }
+
+      def add_source_note(id, raw, owner: 10, author: 20, timestamp: "2024-01-02T00:00:00Z")
+        source_db.execute(
+          "INSERT INTO user_notes VALUES (?, ?, ?, ?, ?)",
+          [id, owner, raw, author, timestamp],
+        )
+      end
+
+      def stored_note(raw, **extra)
+        {
+          "id" => SecureRandom.hex(16),
+          "user_id" => note_owner.id,
+          "raw" => raw,
+          "created_by" => note_author.id,
+          "created_at" => "2024-01-02T00:00:00Z",
+        }.merge(extra.stringify_keys)
+      end
+
+      it "adds missing notes while preserving existing IDs, content, metadata, and ordering" do
+        existing = [stored_note("Imported note"), stored_note("Staff note", post_id: 123)]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "2")
+        add_source_note(1, "Imported note")
+        add_source_note(2, "New note")
+
+        importer.import_user_notes
+        importer.import_user_note_counts
+
+        notes = PluginStore.get("user_notes", "notes:#{note_owner.id}")
+        expect(notes.first(2)).to eq(existing)
+        expect(notes.last).to include("raw" => "New note", "created_by" => note_author.id)
+        expect(notes.last["id"]).to match(/\A[0-9a-f]{32}\z/)
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("3")
+
+        stored_value =
+          PluginStoreRow.find_by(plugin_name: "user_notes", key: "notes:#{note_owner.id}").value
+        importer.import_user_notes
+        expect(
+          PluginStoreRow.find_by(plugin_name: "user_notes", key: "notes:#{note_owner.id}").value,
+        ).to eq(stored_value)
+      end
+
+      it "counts identical occurrences across aliases and ignores reordered source IDs on reruns" do
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", [stored_note("Repeated")])
+        source_db.execute("INSERT INTO users (id) VALUES (11)")
+        importer.instance_variable_get(:@users)[11] = note_owner.id
+        add_source_note(3, "Repeated")
+        add_source_note(1, "Repeated", owner: 11)
+        add_source_note(2, "Other")
+
+        importer.import_user_notes
+
+        notes = PluginStore.get("user_notes", "notes:#{note_owner.id}")
+        expect(notes.map { |note| note["raw"] }).to eq(%w[Repeated Other Repeated])
+        expect(notes.map { |note| note["id"] }.uniq.size).to eq(3)
+        source_db.execute("UPDATE user_notes SET id = 100 - id")
+
+        importer.import_user_notes
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(notes)
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("3")
+      end
+
+      it "matches equivalent timestamps and resolved author aliases without rewriting existing JSON" do
+        existing = stored_note("Same", created_at: "2024-01-01T19:00:00.123-05:00")
+        row =
+          PluginStoreRow.create!(
+            plugin_name: "user_notes",
+            key: "notes:#{note_owner.id}",
+            type_name: "JSON",
+            value: JSON.pretty_generate([existing]),
+          )
+        importer.instance_variable_get(:@users)[21] = note_author.id
+        add_source_note(1, "Same", author: 21, timestamp: "2024-01-02T00:00:00.123Z")
+        UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "99")
+
+        expect { importer.import_user_notes }.not_to change { row.reload.value }
+
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("1")
+      end
+
+      it "retains changed source text as another note and leaves absent notes in place" do
+        existing = [stored_note("Original"), stored_note("Absent from delta")]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        add_source_note(1, "Edited")
+
+        importer.import_user_notes
+
+        notes = PluginStore.get("user_notes", "notes:#{note_owner.id}")
+        expect(notes.first(2)).to eq(existing)
+        expect(notes.last["raw"]).to eq("Edited")
+      end
+
+      it "creates notes for newly mapped users and uses the system user for unresolved authors" do
+        add_source_note(1, "Missing author", author: 99, timestamp: nil)
+        add_source_note(2, "No author", author: nil, timestamp: nil)
+
+        importer.import_user_notes
+        importer.import_user_notes
+
+        notes = PluginStore.get("user_notes", "notes:#{note_owner.id}")
+        expect(notes.map { |note| note.values_at("raw", "created_by", "created_at") }).to eq(
+          [
+            ["Missing author", Discourse::SYSTEM_USER_ID, nil],
+            ["No author", Discourse::SYSTEM_USER_ID, nil],
+          ],
+        )
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("2")
+      end
+
+      it "matches legacy unset authors to the system fallback without modifying existing metadata" do
+        existing = stored_note("Legacy", created_by: nil, created_at: nil)
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", [existing])
+        add_source_note(1, "Legacy", author: nil, timestamp: nil)
+
+        importer.import_user_notes
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq([existing])
+      end
+
+      it "skips anonymized, unmapped, missing-destination, and unverified owners" do
+        source_db.execute(
+          "INSERT INTO users (id, anonymized) VALUES (30, 1), (40, 0), (50, 0), (60, 0)",
+        )
+        importer.instance_variable_get(:@users).merge!(
+          30 => note_owner.id,
+          50 => note_owner.id,
+          60 => User.maximum(:id) + 1000,
+        )
+        importer.instance_variable_set(:@delta_unverified_user_source_ids, Set[50])
+        [30, 40, 50, 60].each { |owner| add_source_note(owner, "Excluded", owner: owner) }
+
+        importer.import_user_notes
+        importer.import_user_note_counts
+
+        expect(PluginStoreRow.where(plugin_name: "user_notes")).to be_empty
+        expect(UserCustomField.where(name: "user_notes_count")).to be_empty
+      end
+
+      it "leaves notes and counts untouched when the source has no notes" do
+        existing = [stored_note("Existing")]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        count_field =
+          UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
+
+        importer.import_user_notes
+        importer.import_user_note_counts
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
+        expect(count_field.reload.value).to eq("1")
+      end
+
+      it "rolls back appended notes if saving their count fails" do
+        existing = [stored_note("Existing")]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        count_field =
+          UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
+        add_source_note(1, "New")
+        DB.exec(
+          "ALTER TABLE user_custom_fields ADD CONSTRAINT delta_note_count_test CHECK (name <> 'user_notes_count' OR value <> '2')",
+        )
+
+        expect { importer.import_user_notes }.to raise_error(ActiveRecord::StatementInvalid)
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
+        expect(count_field.reload.value).to eq("1")
+      end
+
+      it "rejects malformed stored notes without leaking private content or replacing the row" do
+        private_text = "Private staff note"
+        row =
+          PluginStoreRow.create!(
+            plugin_name: "user_notes",
+            key: "notes:#{note_owner.id}",
+            type_name: "JSON",
+            value: private_text,
+          )
+        add_source_note(1, "New")
+        [
+          private_text,
+          { raw: private_text }.to_json,
+          [{ id: "old", raw: private_text, created_at: private_text }].to_json,
+        ].each do |value|
+          row.update!(value: value)
+
+          expect { importer.import_user_notes }.to raise_error(RuntimeError) do |error|
+            expect(error.message).to include("user #{note_owner.id}")
+            expect(error.full_message).not_to include(private_text)
+            expect(error.cause).to be_nil
+          end
+
+          expect(row.reload.value).to eq(value)
+        end
+        expect(UserCustomField.where(name: "user_notes_count")).to be_empty
+      end
+
+      it "skips notes and counts when the plugin is missing" do
+        hide_const("DiscourseUserNotes")
+        add_source_note(1, "New")
+
+        importer.import_user_notes
+        importer.import_user_note_counts
+
+        expect(PluginStoreRow.where(plugin_name: "user_notes")).to be_empty
+        expect(UserCustomField.where(name: "user_notes_count")).to be_empty
+      end
+
+      [false, true].each do |merge_import|
+        it "preserves existing notes and counts in #{merge_import ? "merge" : "ordinary"} imports" do
+          allow(importer).to receive(:delta_import?).and_return(false)
+          existing = [stored_note("Existing")]
+          PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+          UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
+          add_source_note(1, "New")
+
+          stub_const(described_class, :MERGE_IMPORT, merge_import) do
+            importer.import_user_notes
+            importer.import_user_note_counts
+          end
+
+          expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
+          expect(
+            UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+          ).to eq("1")
+        end
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)

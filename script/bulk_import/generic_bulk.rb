@@ -3236,6 +3236,8 @@ class BulkImport::Generic < BulkImport::Base
       return
     end
 
+    return import_delta_user_notes if delta_import?
+
     user_notes = query(<<~SQL)
       SELECT un.user_id,
              JSON_GROUP_ARRAY(JSON_OBJECT('raw', un.raw, 'created_by', un.created_by_user_id,
@@ -3283,7 +3285,93 @@ class BulkImport::Generic < BulkImport::Base
     user_notes.close
   end
 
+  def import_delta_user_notes
+    notes_by_user = Hash.new { |notes, user_id| notes[user_id] = [] }
+    query(<<~SQL) do |rows|
+      SELECT un.*
+        FROM user_notes un
+             JOIN users u ON u.id = un.user_id
+       WHERE u.anonymized IS NOT TRUE
+       ORDER BY un.user_id, un.id
+    SQL
+      rows.each do |row|
+        source_user_id = row["user_id"].to_i
+        next if @delta_unverified_user_source_ids&.include?(source_user_id)
+
+        user_id = user_id_from_imported_id(source_user_id)
+        next unless user_id
+
+        author_id = user_id_from_imported_id(row["created_by_user_id"]) if row["created_by_user_id"]
+        notes_by_user[user_id] << {
+          "user_id" => user_id,
+          "raw" => row["raw"],
+          "created_by" => author_id || Discourse::SYSTEM_USER_ID,
+          "created_at" => row["created_at"],
+        }
+      end
+    end
+
+    notes_by_user.each do |user_id, incoming_notes|
+      User.transaction(requires_new: true) do
+        next unless User.lock.find_by(id: user_id)
+
+        stored_row =
+          PluginStoreRow.find_or_initialize_by(plugin_name: "user_notes", key: "notes:#{user_id}")
+        notes = delta_stored_user_notes(stored_row, user_id)
+        # Source IDs may be positional; match occurrences of the stored values instead.
+        unmatched_counts = notes.map { |note| delta_user_note_key(note, user_id) }.tally
+        original_count = notes.size
+
+        incoming_notes.each do |note|
+          key = delta_user_note_key(note, user_id)
+          if unmatched_counts.fetch(key, 0) > 0
+            unmatched_counts[key] -= 1
+          else
+            notes << note.merge("id" => SecureRandom.hex(16))
+          end
+        end
+
+        if notes.size != original_count
+          stored_row.type_name = "JSON"
+          stored_row.value = notes.to_json
+          stored_row.save!
+        end
+
+        count_field =
+          UserCustomField.find_or_initialize_by(user_id: user_id, name: "user_notes_count")
+        count_field.value = notes.size.to_s
+        count_field.save! if count_field.changed?
+      end
+    end
+  end
+
+  def delta_stored_user_notes(row, user_id)
+    return [] if row.new_record?
+
+    notes = JSON.parse(row.value)
+    unless row.type_name == "JSON" && notes.is_a?(Array) &&
+             notes.all? { |note|
+               note.is_a?(Hash) && note["id"].is_a?(String) && note["id"].present? &&
+                 note["raw"].is_a?(String)
+             }
+      raise ArgumentError
+    end
+    notes
+  rescue JSON::ParserError, ArgumentError, TypeError
+    raise "Invalid stored user notes for user #{user_id}", cause: nil
+  end
+
+  def delta_user_note_key(note, user_id)
+    timestamp = to_datetime(note["created_at"])&.new_offset(0)
+    author = Integer((note["created_by"] || Discourse::SYSTEM_USER_ID).to_s, 10)
+    [note.fetch("raw"), timestamp, author]
+  rescue ArgumentError, TypeError, KeyError
+    raise "Invalid user-note metadata for user #{user_id}", cause: nil
+  end
+
   def import_user_note_counts
+    return if delta_import?
+
     puts "", "Importing user note counts..."
 
     unless defined?(DiscourseUserNotes)
