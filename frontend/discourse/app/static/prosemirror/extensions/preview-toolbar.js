@@ -9,6 +9,15 @@ import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 
 const MENU_PADDING = 8;
 
+function isPreviewBlock(node, schema) {
+  const previewSource = schema.nodes.preview_source;
+
+  return (
+    (!!previewSource && node.firstChild?.type === previewSource) ||
+    !!node.type.spec.isPreviewBlock?.(node)
+  );
+}
+
 /**
  * Finds the preview block a selection acts on: one selected as a node, or the
  * one whose source the caret is in.
@@ -16,15 +25,9 @@ const MENU_PADDING = 8;
  * @returns {{ node: import("prosemirror-model").Node, pos: number }|null}
  */
 export function activePreviewBlock({ selection, schema }) {
-  const previewSource = schema.nodes.preview_source;
-
-  if (!previewSource) {
-    return null;
-  }
-
   if (
     selection instanceof NodeSelection &&
-    selection.node.firstChild?.type === previewSource
+    isPreviewBlock(selection.node, schema)
   ) {
     return { node: selection.node, pos: selection.from };
   }
@@ -34,7 +37,7 @@ export function activePreviewBlock({ selection, schema }) {
   for (let depth = $head.depth; depth > 0; depth--) {
     const node = $head.node(depth);
 
-    if (node.firstChild?.type === previewSource) {
+    if (isPreviewBlock(node, schema)) {
       return { node, pos: $head.before(depth) };
     }
   }
@@ -74,6 +77,7 @@ class PreviewToolbar extends ToolbarBase {
 }
 
 class PreviewToolbarPluginView {
+  #destroyed = false;
   #menuInstance;
   #menuTrigger;
   #replacedToolbar;
@@ -203,7 +207,9 @@ class PreviewToolbarPluginView {
       fallbackPlacements: ["top-end"],
       padding: MENU_PADDING,
       data: this.#toolbar,
-      portalOutletElement: trigger,
+      // outside the editor DOM, so mounting it can never affect the block's
+      // layout or be read back by the editor as a document change
+      portalOutletElement: this.#view.dom.parentElement,
       closeOnClickOutside: false,
       closeOnEscape: false,
       closeOnScroll: false,
@@ -224,6 +230,13 @@ class PreviewToolbarPluginView {
       },
     });
 
+    // destroyed while the instance was being created
+    if (this.#destroyed) {
+      this.#menuInstance?.destroy();
+      this.#menuInstance = null;
+      return;
+    }
+
     await this.#menuInstance.show();
   }
 
@@ -242,6 +255,7 @@ class PreviewToolbarPluginView {
   }
 
   destroy() {
+    this.#destroyed = true;
     this.#resetToolbar();
     this.#toolbars.clear();
     this.#toolbar = null;
@@ -265,13 +279,11 @@ const extension = {
           }
 
           const { selection, schema } = view.state;
-          const previewSource = schema.nodes.preview_source;
 
           // only from the selected block: inside the source, Tab is typing
           if (
-            !previewSource ||
             !(selection instanceof NodeSelection) ||
-            selection.node.firstChild?.type !== previewSource
+            !isPreviewBlock(selection.node, schema)
           ) {
             return false;
           }

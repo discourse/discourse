@@ -304,12 +304,41 @@ export interface RichEditorExtension {
   keymap?: RichKeymap;
   /** Commands exposed on the editor view state. */
   commands?: (params: PluginParams) => Record<string, RichCommand>;
+  /**
+   * Preview components for fenced code blocks, keyed by language (the first
+   * word of the block's info string, case-insensitive). A `code_block` whose
+   * language has a component renders it in place of the code, with a toggle
+   * back to the source; the document node stays a plain `code_block`.
+   *
+   * The block carries `data-language` while previewing, which is the hook for
+   * styling one language's preview — the node view's own class is shared by
+   * all of them. Toggling destroys and rebuilds the component, so a preview
+   * holding its own state (zoom, scroll) starts over on each flip.
+   *
+   * An older core ignores this field, so a consumer needs no version check.
+   *
+   * Which preview mechanism to use: content written as a fenced code block
+   * registers here — one entry and a component. Content with its own markup
+   * (a wrapping tag, custom delimiters) defines its own node with a
+   * `preview_source` child and renders through `composer/preview-node-view`
+   * instead, since it also needs to parse and serialize that markup.
+   */
+  codeBlockPreviews?: Record<string, unknown>;
   /** Custom toolbar state contributed by the extension. */
   state?: StateFunction;
 }
 
 const registeredExtensions: RichEditorExtension[] = [];
 let defaultExtensionsRegistered = false;
+let registrationVersion = 0;
+
+/**
+ * Increments whenever the registered extension list changes, so derived
+ * lookups can be memoized against it.
+ */
+export function getRichEditorExtensionsVersion(): number {
+  return registrationVersion;
+}
 
 export function markDefaultExtensionsRegistered() {
   defaultExtensionsRegistered = true;
@@ -326,6 +355,7 @@ export function areDefaultExtensionsRegistered() {
  */
 export function registerRichEditorExtension(extension: RichEditorExtension) {
   registeredExtensions.push(extension);
+  registrationVersion++;
 }
 
 export async function clearRichEditorExtensions() {
@@ -337,6 +367,7 @@ export async function clearRichEditorExtensions() {
   );
   registeredExtensions.length = 0;
   defaultExtensionsRegistered = false;
+  registrationVersion++;
   return module;
 }
 

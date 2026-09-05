@@ -7,9 +7,20 @@ export const TOOLBAR_IDENTIFIER = "composer-preview-toolbar";
 
 const nodeViews = new WeakMap();
 
-/** @returns {PreviewNodeView|undefined} the view rendering the block at `dom` */
+/**
+ * The view rendering the block at `dom`, whatever its class: the toolbar uses
+ * it only through the `toggleSource()`/`showingSource` seam.
+ */
 export function previewNodeViewFor(dom) {
   return nodeViews.get(dom);
+}
+
+/**
+ * Registers a view under its block's `dom`, so the preview toolbar can reach
+ * its `toggleSource()`/`showingSource` seam.
+ */
+export function registerPreviewNodeView(dom, nodeView) {
+  nodeViews.set(dom, nodeView);
 }
 
 /**
@@ -48,7 +59,7 @@ export default class PreviewNodeView extends Component {
     this.args.contentDOM?.classList.add("composer-preview-node__source");
     this.#syncMode();
 
-    nodeViews.set(this.args.dom, this);
+    registerPreviewNodeView(this.args.dom, this);
     this.args.onSetup?.(this);
   }
 
@@ -96,14 +107,6 @@ export default class PreviewNodeView extends Component {
 
   deselectNode() {
     this.args.dom.classList.remove("ProseMirror-selectednode");
-  }
-
-  // the toolbar is portaled into this node view, so its clicks are not document clicks
-  stopEvent(event) {
-    return (
-      event.target instanceof Node &&
-      !!event.target.closest?.(`[data-identifier="${TOOLBAR_IDENTIFIER}"]`)
-    );
   }
 
   #syncMode() {

@@ -211,6 +211,28 @@
 
   pre {
     position: relative;
+
+    // a previewable code block's faces share one footprint policy so flipping
+    // does not reflow the document below: both are bounded by the same knob
+    // the preview block primitive already ships, the code face holds the
+    // height the preview last rendered at, and overflow scrolls inside
+    &.--source {
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      overflow-y: auto;
+      min-height: min(
+        var(--composer-preview-node-height, 0px),
+        var(--composer-preview-node-source-max-height, 14lh)
+      );
+      max-height: var(--composer-preview-node-source-max-height, 14lh);
+
+      // the code element paints the backdrop, so it fills the held footprint
+      // without shrinking below its own content
+      code {
+        flex: 1 0 auto;
+      }
+    }
   }
 
   .html-block {
@@ -398,6 +420,14 @@
         display: none;
       }
     }
+  }
+
+  // a code block's rendered face is bounded by the same knob as a source
+  // face, scrolling its overflow, so both faces share one footprint policy;
+  // features raise or clear the bound by overriding the token
+  .composer-code-block-preview-node .composer-preview-node__preview {
+    max-height: var(--composer-preview-node-source-max-height, 14lh);
+    overflow: auto;
   }
 
   .onebox-loading {
