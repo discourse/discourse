@@ -5182,6 +5182,7 @@ en:
         permanently_delete: "Permanently delete"
         permanently_delete_post_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this post and remove it from the database."
         permanently_delete_topic_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this topic and remove it from the database."
+        permanently_delete_topic_with_replies_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this topic and all replies and remove them from the database."
         permanently_delete_confirm_phrase: "permanently delete"
         wiki: "Make Wiki"
         wiki_description: "let allowed groups edit this post"

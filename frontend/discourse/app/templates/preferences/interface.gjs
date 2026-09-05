@@ -258,7 +258,7 @@ export default <template>
         data-setting-name="user-bulk-permanent-topic-deletion"
         class="pref-bulk-permanent-topic-deletion"
       />
-      <div class="instructions">
+      <div class="instructions pref-bulk-permanent-topic-deletion-instructions">
         {{i18n "user.bulk_permanent_topic_deletion_description"}}
       </div>
     {{/if}}
