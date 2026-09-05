@@ -51,6 +51,131 @@ module("Unit | Utility | download-calendar", function (hooks) {
     assert.true(data.includes("END:VCALENDAR"));
   });
 
+  test("timezone ICS includes a VTIMEZONE definition", function (assert) {
+    const data = generateIcsData("testevent 2", [
+      {
+        startsAt: "2026-08-11T15:00:00.000Z",
+        endsAt: "2026-08-11T17:15:00.000Z",
+        timezone: "Europe/Berlin",
+      },
+    ]);
+
+    assert.true(
+      data.includes(
+        [
+          "BEGIN:VTIMEZONE",
+          "TZID:Europe/Berlin",
+          "BEGIN:DAYLIGHT",
+          "DTSTART:20260329T020000",
+          "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU",
+          "TZOFFSETFROM:+0100",
+          "TZOFFSETTO:+0200",
+          "TZNAME:CEST",
+          "END:DAYLIGHT",
+        ].join("\r\n")
+      ),
+      "includes the Berlin daylight-saving observance"
+    );
+    assert.true(
+      data.includes(
+        [
+          "BEGIN:STANDARD",
+          "DTSTART:20261025T030000",
+          "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU",
+          "TZOFFSETFROM:+0200",
+          "TZOFFSETTO:+0100",
+          "TZNAME:CET",
+          "END:STANDARD",
+          "END:VTIMEZONE",
+        ].join("\r\n")
+      ),
+      "includes the Berlin standard-time observance"
+    );
+    assert.true(data.includes("DTSTART;TZID=Europe/Berlin:20260811T170000"));
+    assert.true(data.includes("DTEND;TZID=Europe/Berlin:20260811T191500"));
+  });
+
+  test("VTIMEZONE supports North American DST rules", function (assert) {
+    const data = generateIcsData("New York event", [
+      {
+        startsAt: "2026-07-15T16:00:00.000Z",
+        endsAt: "2026-07-15T17:00:00.000Z",
+        timezone: "America/New_York",
+      },
+    ]);
+
+    assert.true(
+      data.includes(
+        [
+          "BEGIN:DAYLIGHT",
+          "DTSTART:20260308T020000",
+          "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU",
+          "TZOFFSETFROM:-0500",
+          "TZOFFSETTO:-0400",
+          "TZNAME:EDT",
+          "END:DAYLIGHT",
+        ].join("\r\n")
+      ),
+      "includes the New York daylight-saving observance"
+    );
+    assert.true(
+      data.includes(
+        [
+          "BEGIN:STANDARD",
+          "DTSTART:20261101T020000",
+          "RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU",
+          "TZOFFSETFROM:-0400",
+          "TZOFFSETTO:-0500",
+          "TZNAME:EST",
+          "END:STANDARD",
+        ].join("\r\n")
+      ),
+      "includes the New York standard-time observance"
+    );
+    assert.true(data.includes("DTSTART;TZID=America/New_York:20260715T120000"));
+  });
+
+  test("VTIMEZONE supports zones with a stable current offset", function (assert) {
+    const data = generateIcsData("Kolkata event", [
+      {
+        startsAt: "2026-08-11T12:00:00.000Z",
+        endsAt: "2026-08-11T13:00:00.000Z",
+        timezone: "Asia/Kolkata",
+      },
+    ]);
+
+    assert.true(data.includes("BEGIN:VTIMEZONE"));
+    assert.true(data.includes("TZID:Asia/Kolkata"));
+    assert.true(data.includes("BEGIN:STANDARD"));
+    assert.true(data.includes("TZOFFSETTO:+0530"));
+    assert.true(data.includes("TZNAME:IST"));
+    assert.false(data.includes("BEGIN:DAYLIGHT"));
+    assert.true(data.includes("DTSTART;TZID=Asia/Kolkata:20260811T173000"));
+  });
+
+  test("VTIMEZONE identifies seasonal transitions without relying on isDST", function (assert) {
+    const data = generateIcsData("Casablanca event", [
+      {
+        startsAt: "2025-08-11T12:00:00.000Z",
+        endsAt: "2025-08-11T13:00:00.000Z",
+        timezone: "Africa/Casablanca",
+      },
+    ]);
+
+    assert.true(
+      data.includes("BEGIN:DAYLIGHT\r\nDTSTART:20250406T020000"),
+      "identifies the transition to the higher seasonal offset as daylight time"
+    );
+    assert.true(
+      data.includes("BEGIN:STANDARD\r\nDTSTART:20260215T030000"),
+      "identifies the transition to the lower seasonal offset as standard time"
+    );
+    assert.true(data.includes("TZOFFSETFROM:+0000"));
+    assert.true(data.includes("TZOFFSETTO:+0100"));
+    assert.true(data.includes("TZOFFSETFROM:+0100"));
+    assert.true(data.includes("TZOFFSETTO:+0000"));
+  });
+
   test("correct data for ICS without timezone (UTC)", function (assert) {
     const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
     sinon.useFakeTimers({
