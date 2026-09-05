@@ -121,8 +121,8 @@ importers:
         specifier: ^7.29.2
         version: 7.29.7(@babel/core@7.29.7)
       '@babel/standalone':
-        specifier: ^7.29.7
-        version: 7.29.7
+        specifier: ^8.0.4
+        version: 8.0.4
       '@csstools/postcss-light-dark-function':
         specifier: ^3.0.3
         version: 3.0.3(postcss@8.5.26)
@@ -467,8 +467,8 @@ importers:
         specifier: ^7.29.7
         version: 7.29.7(@babel/core@7.29.7)
       '@babel/standalone':
-        specifier: ^7.29.7
-        version: 7.29.7
+        specifier: ^8.0.4
+        version: 8.0.4
       '@colors/colors':
         specifier: ^1.6.0
         version: 1.6.0
@@ -1678,9 +1678,9 @@ packages:
     resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/standalone@7.29.7':
-    resolution: {integrity: sha512-oFh9XoGL20UuHIeIuBQHOvF7r2dOCRnZW0r4SageGb9SWnt6HhbuPLREykNaEnP7/SRpMUwr50SSMJLrmeHvnQ==}
-    engines: {node: '>=6.9.0'}
+  '@babel/standalone@8.0.4':
+    resolution: {integrity: sha512-z8WgyJCfEl7qGAfJJksICOL5zQPpfwa6Yew+91Txf1k3xuDtlDdDe5GX2QdIhgx0HD7oYOCLoF8Y6CwNdawJwQ==}
+    engines: {node: ^22.18.0 || >=24.11.0}
 
   '@babel/template@7.29.7':
     resolution: {integrity: sha512-puq+Gf35oI24FeN11LkoUQFqv9uwNeWpxXZi/Ji3rRIoKAzKnxRaZ+Gkj0vKS9ZCiTESfng1N9LyOyXvo+m+Gg==}
@@ -9354,7 +9354,7 @@ snapshots:
 
   '@babel/runtime@7.29.7': {}
 
-  '@babel/standalone@7.29.7': {}
+  '@babel/standalone@8.0.4': {}
 
   '@babel/template@7.29.7':
     dependencies:
