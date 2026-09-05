@@ -4066,6 +4066,49 @@ RSpec.describe Topic do
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
 
+    it "does not return the remaining-posts error for an opted-in admin" do
+      create_post(user: user, topic_id: topic.id, raw: "some post content")
+      PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+
+      SiteSetting.can_permanently_delete = true
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+      admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+      expect(topic.reload.cannot_permanently_delete_reason(admin)).to eq(nil)
+    end
+
+    it "still returns the remaining-posts error for another admin who has not opted in" do
+      create_post(user: user, topic_id: topic.id, raw: "some post content")
+      PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+
+      SiteSetting.can_permanently_delete = true
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+      admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+      another_admin = Fabricate(:admin)
+
+      expect(topic.reload.cannot_permanently_delete_reason(another_admin)).to eq(
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
+      )
+    end
+
+    it "restores the remaining-posts error when the hidden gate is disabled again" do
+      create_post(user: user, topic_id: topic.id, raw: "some post content")
+      PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+
+      SiteSetting.can_permanently_delete = true
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+      admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+      expect(topic.reload.cannot_permanently_delete_reason(admin)).to eq(nil)
+
+      SiteSetting.allow_bulk_permanent_topic_deletion = false
+
+      expect(topic.reload.cannot_permanently_delete_reason(admin)).to eq(
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
+      )
+    end
+
     it "returns error message if same admin and time did not pass" do
       PostDestroyer.new(admin, post).destroy
       expect(topic.reload.cannot_permanently_delete_reason(admin)).to eq(

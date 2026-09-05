@@ -1910,6 +1910,8 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
+      bulk_permanent_topic_deletion: "Allow permanent topic deletion to delete all posts"
+      bulk_permanent_topic_deletion_description: "When permanently deleting a topic, also permanently delete all remaining posts instead of requiring them to be permanently deleted individually."
       automatically_translate: "Automatically translate topics and posts in other languages"
       content_languages:
         title: "Content languages"
@@ -9277,6 +9279,7 @@ en:
             backup_destroy: "destroy backup"
             reviewed_post: "reviewed post"
             custom_staff: "plugin custom action"
+            change_bulk_permanent_topic_deletion_preference: "change bulk permanent topic deletion preference"
             post_locked: "post locked"
             post_edit: "post edit"
             post_unlocked: "post unlocked"

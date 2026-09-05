@@ -12167,7 +12167,8 @@ CREATE TABLE public.user_options (
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     send_shortcut integer DEFAULT 0 NOT NULL,
-    ai_ask_ai_default boolean DEFAULT true NOT NULL
+    ai_ask_ai_default boolean DEFAULT true NOT NULL,
+    bulk_permanent_topic_deletion boolean DEFAULT false NOT NULL
 );
 
 
@@ -24408,6 +24409,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260905123814'),
 ('20260904065041'),
 ('20260904063128'),
 ('20260903195501'),

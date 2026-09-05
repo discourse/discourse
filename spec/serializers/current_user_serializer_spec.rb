@@ -540,6 +540,48 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_enable_bulk_permanent_topic_deletion" do
+    fab!(:bulk_deletion_admin, :admin)
+    fab!(:bulk_deletion_user, :user)
+
+    let(:admin_serializer) do
+      described_class.new(
+        bulk_deletion_admin,
+        scope: Guardian.new(bulk_deletion_admin),
+        root: false,
+      )
+    end
+
+    let(:user_serializer) do
+      described_class.new(bulk_deletion_user, scope: Guardian.new(bulk_deletion_user), root: false)
+    end
+
+    before do
+      SiteSetting.can_permanently_delete = true
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+    end
+
+    it "is available to admins when both site-level gates are enabled" do
+      expect(admin_serializer.as_json[:can_enable_bulk_permanent_topic_deletion]).to eq(true)
+    end
+
+    it "is not included for non-admin users" do
+      expect(user_serializer.as_json).not_to have_key(:can_enable_bulk_permanent_topic_deletion)
+    end
+
+    it "is not included when permanent deletion is disabled" do
+      SiteSetting.can_permanently_delete = false
+
+      expect(admin_serializer.as_json).not_to have_key(:can_enable_bulk_permanent_topic_deletion)
+    end
+
+    it "is not included when the hidden bulk deletion gate is disabled" do
+      SiteSetting.allow_bulk_permanent_topic_deletion = false
+
+      expect(admin_serializer.as_json).not_to have_key(:can_enable_bulk_permanent_topic_deletion)
+    end
+  end
+
   describe "#has_new_upcoming_changes" do
     def serialize_for(user)
       described_class.new(user, scope: user.guardian, root: false).as_json

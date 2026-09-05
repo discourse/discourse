@@ -56,6 +56,26 @@ class StaffActionLogger
     UserHistory.create!(attrs)
   end
 
+  def log_bulk_permanent_topic_deletion_preference_change(
+    user,
+    previous_value,
+    new_value,
+    opts = {}
+  )
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:custom_staff],
+        custom_type: "change_bulk_permanent_topic_deletion_preference",
+        target_user_id: user.id,
+        subject: "bulk_permanent_topic_deletion",
+        previous_value: previous_value.to_s,
+        new_value: new_value.to_s,
+      ),
+    )
+  end
+
   def edit_directory_columns_details(column_data, directory_column)
     directory_column = directory_column.attributes.transform_values(&:to_s)
     previous_value = directory_column
