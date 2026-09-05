@@ -13,7 +13,7 @@ class HashtagRemapper
       TagLocalizationStore,
       SiteSettingLocalizationStore,
       CategoryLocalizationStore,
-    ]
+    ] | DiscoursePluginRegistry.hashtag_content_stores.to_a
   end
 
   def self.enqueue(remaps)
