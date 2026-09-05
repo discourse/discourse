@@ -284,6 +284,13 @@ $hpad: 0.65em;
     right: 0;
     height: var(--d-nav-underline-height);
     background: var(--d-nav-color--active);
+
+    // Forced colors drop backgrounds, which is the only thing that marks
+    // the active item.
+    @media (forced-colors: active) {
+      background: Highlight;
+      forced-color-adjust: none;
+    }
   }
 }
 
@@ -294,6 +301,116 @@ $hpad: 0.65em;
   .d-icon {
     color: var(--d-nav-color--active);
   }
+}
+
+// A strip that hides its scrollbar and fades the edge beyond which more
+// content lies. The fade reads the data-d-scroll-* attributes stamped by
+// the scroll-edges watcher, which DOverflowControls and the dScrollEdges
+// modifier both run. Its first --fade-inset is fully transparent, so a
+// chevron sitting on the edge is not masked over. #000 is deliberate: a
+// mask reads only alpha, so a colour token would be wrong here.
+@mixin scroll-strip() {
+  // The bands are capped so the two ends cannot cross on a narrow strip.
+  // Crossed bands leave no opaque middle.
+  --scroll-strip-fade-start: min(var(--fade-inset, 0px), 15%);
+  --scroll-strip-fade-end: min(
+    calc(var(--fade-inset, 0px) + var(--fade-width, 2em)),
+    40%
+  );
+  min-width: 0;
+  min-height: 0;
+  scrollbar-width: none;
+  scroll-padding: calc(var(--fade-inset, 0px) + var(--fade-width, 2em));
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // Forced colors drop the mask, which would otherwise lower text contrast
+  // for exactly the users who opted out of decoration.
+  @media (forced-colors: none) {
+    &[data-d-scroll-axis="horizontal"][data-d-scroll-overflow] {
+      mask-image: linear-gradient(
+        to right,
+        transparent var(--scroll-strip-fade-start),
+        #000 var(--scroll-strip-fade-end),
+        #000 calc(100% - var(--scroll-strip-fade-end)),
+        transparent calc(100% - var(--scroll-strip-fade-start))
+      );
+
+      // The edges are logical, the gradients physical, so RTL swaps them.
+      &[data-d-scroll-at-start] {
+        mask-image: linear-gradient(
+          to right,
+          #000 calc(100% - var(--scroll-strip-fade-end)),
+          transparent calc(100% - var(--scroll-strip-fade-start))
+        );
+
+        .rtl & {
+          mask-image: linear-gradient(
+            to left,
+            #000 calc(100% - var(--scroll-strip-fade-end)),
+            transparent calc(100% - var(--scroll-strip-fade-start))
+          );
+        }
+      }
+
+      &[data-d-scroll-at-end] {
+        mask-image: linear-gradient(
+          to right,
+          transparent var(--scroll-strip-fade-start),
+          #000 var(--scroll-strip-fade-end)
+        );
+
+        .rtl & {
+          mask-image: linear-gradient(
+            to left,
+            transparent var(--scroll-strip-fade-start),
+            #000 var(--scroll-strip-fade-end)
+          );
+        }
+      }
+    }
+
+    &[data-d-scroll-axis="vertical"][data-d-scroll-overflow] {
+      mask-image: linear-gradient(
+        to bottom,
+        transparent var(--scroll-strip-fade-start),
+        #000 var(--scroll-strip-fade-end),
+        #000 calc(100% - var(--scroll-strip-fade-end)),
+        transparent calc(100% - var(--scroll-strip-fade-start))
+      );
+
+      &[data-d-scroll-at-start] {
+        mask-image: linear-gradient(
+          to bottom,
+          #000 calc(100% - var(--scroll-strip-fade-end)),
+          transparent calc(100% - var(--scroll-strip-fade-start))
+        );
+      }
+
+      &[data-d-scroll-at-end] {
+        mask-image: linear-gradient(
+          to bottom,
+          transparent var(--scroll-strip-fade-start),
+          #000 var(--scroll-strip-fade-end)
+        );
+      }
+    }
+
+    &[data-d-scroll-overflow][data-d-scroll-at-start][data-d-scroll-at-end],
+    .rtl
+      &[data-d-scroll-overflow][data-d-scroll-at-start][data-d-scroll-at-end] {
+      mask-image: none;
+    }
+  }
+}
+
+// The scroll strip on the horizontal axis. The caller keeps its own items
+// on one row; the mixin does not.
+@mixin horizontal-scroll-strip() {
+  @include scroll-strip;
+  overflow-x: auto;
 }
 
 @mixin click-counter-badge {

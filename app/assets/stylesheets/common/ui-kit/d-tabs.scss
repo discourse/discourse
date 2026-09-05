@@ -1,0 +1,97 @@
+@use "lib/viewport";
+
+.d-tabs {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  &__strip {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  &__strip-controls {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__tablist {
+    @include horizontal-scroll-strip;
+    display: flex;
+    gap: 0.5em;
+
+    &[aria-orientation="vertical"] {
+      flex-direction: column;
+      align-items: stretch;
+
+      // The strip watches only the vertical axis, so a long label wraps
+      // instead of scrolling sideways with no affordance.
+      overflow: hidden auto;
+
+      .d-tabs__tab {
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+    }
+  }
+
+  &__tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0.65em 0.75em;
+    color: var(--d-nav-color);
+    background: var(--d-nav-bg-color);
+    border: 0;
+    border-radius: var(--d-nav-pill-border-radius);
+    line-height: var(--line-height-small);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: var(--d-button-transition);
+
+    @include viewport.between(sm, lg) {
+      font-size: var(--font-0);
+      padding: var(--space-2) var(--space-3);
+    }
+
+    .d-icon {
+      margin-right: 5px;
+      color: var(--primary-high);
+      transition: color 0.2s;
+    }
+
+    &:hover {
+      @include nav-hover;
+    }
+
+    &[aria-selected="true"] {
+      @include nav-active;
+    }
+
+    &[aria-disabled="true"] {
+      color: var(--primary-low-mid);
+      background: var(--d-nav-bg-color);
+      cursor: not-allowed;
+
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+
+      // aria-disabled gets no system colour of its own.
+      @media (forced-colors: active) {
+        color: GrayText;
+      }
+    }
+
+    &:focus-visible {
+      @include default-focus;
+      outline-offset: -2px;
+    }
+  }
+
+  &__panel {
+    min-width: 0;
+  }
+}
