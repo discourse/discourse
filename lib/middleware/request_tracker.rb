@@ -122,8 +122,7 @@ class Middleware::RequestTracker
 
     if tracks_browser_page_view?(data)
       if data[:is_embed]
-        count_embed = beacon_pageviews_enabled? ? data[:is_beacon] : !data[:is_beacon]
-        ApplicationRequest.increment!(:page_view_embed) if count_embed
+        ApplicationRequest.increment!(:page_view_embed) if data[:is_beacon]
       elsif data[:is_beacon]
         if data[:has_auth_cookie]
           ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
@@ -429,7 +428,7 @@ class Middleware::RequestTracker
   def log_later(data, env, request)
     Scheduler::Defer.later("Track view") do
       if Discourse.pg_readonly_mode?
-        self.class.track_browser_pageview(data) if SiteSetting.persist_browser_pageview_events
+        self.class.track_browser_pageview(data)
       else
         self.class.log_request(data)
         self.class.track_browser_pageview(data)
@@ -597,27 +596,19 @@ class Middleware::RequestTracker
       status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !is_ajax_request &&
         is_html_request
 
-    # This Discourse-Deferred-Track-View header is piggybacked on a
-    # follow-up MessageBus request after a real browser loads up a page
-    # to avoid bots influencing browser page views when loading HTML
-    # versions of a page.
-    #
-    # See `scripts/pageview.js` and `instance-initializers/page-tracking.js`
     env_deferred_track_view = env["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"]
-    deferred_track_view = %w[1 true].include?(env_deferred_track_view)
+    deferred_track_view =
+      %w[1 true].include?(env_deferred_track_view) && !is_pageview_tracking_request?(request)
 
     # This only indicates that we are tracking a page view of some kind, not
     # using an API key. In #log_request is where we are determining which
     # of these count as browser page views.
     #
-    # TL;DR -- Explicit and Deferred page views count as browser page views (BPVs),
-    # explicit and implicit page views count as legacy page views.
+    # Explicit and implicit page views count as legacy page views. Explicit,
+    # deferred, and beacon page views count as browser page views (BPVs).
     #
     # If this is true, then the X-Discourse-TrackView header is included in
     # the response.
-    #
-    # If the page view is explicit or deferred, then the X-Discourse-BrowserPageView header
-    # is included in the response.
     track_view = !!(explicit_track_view || implicit_track_view)
     browser_page_view = !!(explicit_track_view || deferred_track_view)
 
@@ -667,13 +658,12 @@ class Middleware::RequestTracker
     true
   end
 
-  def self.beacon_pageviews_enabled?
-    UpcomingChanges.enabled?(:dashboard_improvements) &&
-      (SiteSetting.persist_browser_pageview_events || SiteSetting.trigger_browser_pageview_events)
+  def self.is_beacon_tracking_request?(request)
+    request.post? && request.path == Discourse.beacon_pv_tracking_path
   end
 
-  def self.is_beacon_tracking_request?(request)
-    beacon_pageviews_enabled? && request.post? && request.path == Discourse.beacon_pv_tracking_path
+  def self.is_pageview_tracking_request?(request)
+    request.post? && request.path == "#{Discourse.base_path}/pageview"
   end
 
   def self.same_origin_request?(request)
@@ -689,13 +679,8 @@ class Middleware::RequestTracker
     false
   end
 
-  def self.is_pageview_tracking_request?(request)
-    request.post? && request.path == "#{Discourse.base_path}/pageview"
-  end
-
   def self.is_engagement_tracking_request?(request)
-    SiteSetting.persist_browser_pageview_events && request.post? &&
-      request.path == Discourse.engagement_tracking_path
+    request.post? && request.path == Discourse.engagement_tracking_path
   end
 
   def self.track_session_engagement(env)
@@ -755,7 +740,6 @@ class Middleware::RequestTracker
     {
       track_view: false,
       explicit_track_view: false,
-      deferred_track_view: true,
       implicit_track_view: false,
       browser_page_view: true,
       is_beacon: true,
@@ -771,29 +755,12 @@ class Middleware::RequestTracker
   private_class_method :extract_beacon_view_tracking_data
 
   def self.track_browser_pageview(data)
+    return if !data[:is_beacon]
     return if !tracks_browser_page_view?(data)
-    if !SiteSetting.persist_browser_pageview_events && !SiteSetting.trigger_browser_pageview_events
-      return
-    end
 
     payload = build_browser_pageview_event_payload(data)
-
-    persist_browser_pageview_event(payload) if SiteSetting.persist_browser_pageview_events
-
-    if data[:is_beacon]
-      trigger_beacon_browser_pageview_event(payload)
-    else
-      trigger_browser_pageview_event(payload)
-    end
+    persist_browser_pageview_event(payload)
   end
-
-  def self.trigger_browser_pageview_event(payload)
-    return if SiteSetting.persist_browser_pageview_events
-    return if !SiteSetting.trigger_browser_pageview_events
-
-    DiscourseEvent.trigger(:browser_pageview, payload)
-  end
-  private_class_method :trigger_browser_pageview_event
 
   def self.persist_browser_pageview_event(payload)
     if REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS.any? { |key| payload[key].blank? }
@@ -834,15 +801,6 @@ class Middleware::RequestTracker
   end
   private_class_method :queue_browser_pageview_event
 
-  def self.trigger_beacon_browser_pageview_event(payload)
-    return if !UpcomingChanges.enabled?(:dashboard_improvements)
-    return if SiteSetting.persist_browser_pageview_events
-    return if !SiteSetting.trigger_browser_pageview_events
-
-    DiscourseEvent.trigger(:beacon_browser_pageview, payload)
-  end
-  private_class_method :trigger_beacon_browser_pageview_event
-
   def self.build_browser_pageview_event_payload(data)
     ip_info = DiscourseIpInfo.get(data[:request_remote_ip])
     {
@@ -857,14 +815,6 @@ class Middleware::RequestTracker
       session_id: data[:tracking_session_id],
       topic_id: data[:topic_id],
       occurred_at: data[:occurred_at],
-      source:
-        (
-          if data[:is_beacon]
-            BrowserPageviewEvent::SOURCE_BEACON
-          else
-            BrowserPageviewEvent::SOURCE_PIGGYBACK
-          end
-        ),
     }
   end
   private_class_method :build_browser_pageview_event_payload
@@ -872,25 +822,17 @@ class Middleware::RequestTracker
   private
 
   def instrument_browser_page_view(env, request, data)
-    return unless data[:browser_page_view]
+    return unless data[:is_beacon]
     return unless DiscourseLograge.enabled?
     return unless self.class.bpv_notifications_enabled
 
     request ||= Rack::Request.new(env)
 
-    if data[:is_beacon]
-      action = "beacon"
-      path = request.fullpath
-    else
-      action = "piggyback"
-      path = "#{Discourse.base_path}/pageview"
-    end
-
     payload = {
       controller: "PageviewController",
-      action: action,
+      action: "beacon",
       method: "POST",
-      path: path,
+      path: request.fullpath,
       format: :json,
       status: 204,
       params: {

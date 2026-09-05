@@ -187,8 +187,6 @@ RSpec.describe Admin::DashboardController do
       end
 
       context "with traffic_data" do
-        before { SiteSetting.persist_browser_pageview_events = false }
-
         let(:traffic_data) { section_payloads["traffic"]&.dig("data") }
 
         it "returns the site traffic payload for the selected dates" do
@@ -219,6 +217,12 @@ RSpec.describe Admin::DashboardController do
               },
               "logged_in_share" => {
                 "value" => 33,
+              },
+              "bounce_rate" => {
+                "value" => nil,
+              },
+              "average_session_duration_seconds" => {
+                "value" => nil,
               },
             },
             "pageview_series" => [
@@ -263,12 +267,23 @@ RSpec.describe Admin::DashboardController do
                 ],
               },
             ],
+            "top_countries" => {
+              "rows" => [],
+              "error" => nil,
+            },
+            "top_referrers" => {
+              "rows" => [],
+              "error" => nil,
+            },
+            "top_entry_urls" => {
+              "rows" => [],
+              "error" => nil,
+            },
           )
         end
 
         it "does not expose admin-only browser pageview cards to moderators" do
           SiteSetting.use_legacy_pageviews = false
-          SiteSetting.persist_browser_pageview_events = true
           configure_dashboard_sections(%w[traffic])
 
           country_code = "US"
@@ -287,7 +302,6 @@ RSpec.describe Admin::DashboardController do
               country_code: country_code,
               normalized_referrer: normalized_referrer,
               created_at: event_date,
-              source: "beacon",
             )
           end
 
@@ -1421,9 +1435,7 @@ RSpec.describe Admin::DashboardController do
       freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
       SiteSetting.dashboard_improvements = true
       SiteSetting.improved_crawler_detection = true
-      SiteSetting.persist_browser_pageview_events = true
       SiteSetting.use_legacy_pageviews = false
-      BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
       Discourse.stubs(:current_hostname).returns("test.localhost")
       DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
       DiscourseIpInfo
@@ -1459,7 +1471,6 @@ RSpec.describe Admin::DashboardController do
           session_id: "admin-session",
           normalized_referrer: "search.example/results?q=discourse",
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:00:00",
         )
       end
@@ -1476,7 +1487,6 @@ RSpec.describe Admin::DashboardController do
           session_id: "admin-session",
           normalized_referrer: "test.localhost/landing",
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:01:00",
         )
       end
@@ -1490,7 +1500,6 @@ RSpec.describe Admin::DashboardController do
           ip_address: "198.51.100.2",
           user_agent: "Mozilla/5.0 Firefox/126.0",
           session_id: "anonymous-session",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-11 10:00:00",
         )
       end
@@ -1668,7 +1677,6 @@ RSpec.describe Admin::DashboardController do
             url: "https://test.localhost/same-site-full-load",
             normalized_referrer: "test.localhost/previous-page",
             session_id: "same-site-full-load",
-            source: BrowserPageviewEvent::SOURCE_BEACON,
             created_at: "2026-05-11 11:00:00",
           )
 
@@ -1708,7 +1716,6 @@ RSpec.describe Admin::DashboardController do
           ip_address: "192.0.2.1",
           user_agent: chrome,
           session_id: "first-retained",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-02-15 09:00:00",
         )
         Fabricate(
@@ -1719,7 +1726,6 @@ RSpec.describe Admin::DashboardController do
           ip_address: "198.51.100.2",
           user_agent: firefox,
           session_id: "latest-retained",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:00:00",
         )
 
@@ -1798,7 +1804,6 @@ RSpec.describe Admin::DashboardController do
           asn: 64_496,
           ip_address: "192.0.2.1",
           user_agent: chrome,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: created_at,
         }
       end
@@ -1886,7 +1891,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     context "when the selected date range exceeds retention and traffic reaches the cap" do
-      let(:event_attributes) { { asn: 64_496, source: BrowserPageviewEvent::SOURCE_BEACON } }
+      let(:event_attributes) { { asn: 64_496 } }
       let!(:first_retained) do
         Fabricate(
           :browser_pageview_event,

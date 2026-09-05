@@ -161,28 +161,6 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
       expect(described_class.count).to eq(0)
     end
 
-    it "counts only rollup-source pageviews, even within a single session" do
-      SiteSetting.dashboard_improvements = true
-      UpcomingChangeEvent.create!(
-        upcoming_change_name: "dashboard_improvements",
-        event_type: :manual_opt_in,
-        created_at: Time.utc(2026, 6, 1, 9),
-      )
-      beacon_event =
-        Fabricate(:browser_pageview_event, source: :beacon, created_at: Time.utc(2026, 6, 10, 9))
-      Fabricate(
-        :browser_pageview_event,
-        session_id: beacon_event.session_id,
-        source: :piggyback,
-        created_at: Time.utc(2026, 6, 10, 10),
-      )
-      Fabricate(:browser_pageview_event, source: :piggyback, created_at: Time.utc(2026, 6, 10, 9))
-
-      described_class.aggregate(start_date:, end_date:)
-
-      expect(described_class.all).to contain_exactly(have_attributes(sessions: 1, bounced: 1))
-    end
-
     it "clears a session's previous logged-in partition when it flips across runs" do
       event = Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 10, 9))
       described_class.aggregate(start_date:, end_date:)

@@ -252,19 +252,19 @@ module DiscourseDataExplorer
           id: -42,
           name: "Crawler and Bot Traffic Overview",
           description:
-            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
+            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
         },
         "crawler-traffic-detailed": {
           id: -43,
           name: "Crawler and Bot Traffic Detailed Report",
           description:
-            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both this report will be empty. Accepts 'hours' and 'min_score' parameters.",
+            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it this report will be empty. Accepts 'hours' and 'min_score' parameters.",
         },
         "suspected-bot-networks": {
           id: -44,
           name: "Suspected Automated Traffic by IP and Network",
           description:
-            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. WARNING: requires browser pageview event collection to be enabled (hidden site setting persist_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
+            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
         },
       }.with_indifferent_access
 
@@ -1516,7 +1516,6 @@ module DiscourseDataExplorer
           SELECT score
           FROM browser_pageview_events
           WHERE created_at >= NOW() - (:hours * INTERVAL '1 hour')
-            AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       )
       SELECT 'Not scored (pending or no signals)' AS bucket, COUNT(*) FILTER (WHERE score IS NULL) AS pageviews FROM events
       UNION ALL
@@ -1574,7 +1573,6 @@ module DiscourseDataExplorer
       FROM browser_pageview_events e
       JOIN browser_pageview_event_scores s ON s.event_id = e.id
       WHERE e.created_at >= NOW() - (:hours * INTERVAL '1 hour')
-          AND e.source = #{BrowserPageviewEvent::SOURCE_BEACON}
           AND e.score > :min_score
       GROUP BY e.ip_address, e.user_agent, e.asn, e.country_code, e.user_id, e.session_id
       ORDER BY max_score DESC, pageviews DESC
@@ -1601,7 +1599,6 @@ module DiscourseDataExplorer
           (array_agg(user_agent ORDER BY created_at DESC))[1] AS sample_user_agent
       FROM browser_pageview_events
       WHERE created_at >= CURRENT_DATE - :days_ago
-          AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       GROUP BY ip_address, asn, country_code
       ORDER BY asn_total_pageviews DESC, pageviews DESC
       LIMIT 100

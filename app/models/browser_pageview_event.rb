@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BrowserPageviewEvent < ActiveRecord::Base
+  self.ignored_columns += %i[source] # TODO(02-2027): Remove after the column is dropped
+
   MAX_SESSION_ID_LENGTH = 32
   MAX_URL_LENGTH = 2000
   MAX_REFERRER_LENGTH = 2000
@@ -10,8 +12,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
   MAX_NORMALIZED_URL_LENGTH = 2000
   RETENTION_PERIOD = 3.months
-  SOURCE_PIGGYBACK = 1
-  SOURCE_BEACON = 2
   BROWSER_UNKNOWN = 0
   BROWSERS = {
     unknown: BROWSER_UNKNOWN,
@@ -34,7 +34,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
   REDIS_QUEUE_MAX_SIZE = 1_000_000
   REDIS_QUEUE_TTL = 1.day
 
-  enum :source, { piggyback: SOURCE_PIGGYBACK, beacon: SOURCE_BEACON }, scopes: false
   enum :browser, BROWSERS, prefix: true, scopes: false
 
   class << self
@@ -97,29 +96,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
       Discourse.redis.llen(REDIS_QUEUE_KEY).to_i
     end
 
-    def beacon_cutover_date
-      return if SiteSetting.use_legacy_pageviews
-      return if !UpcomingChanges.enabled?(:dashboard_improvements)
-      if !SiteSetting.trigger_browser_pageview_events &&
-           !SiteSetting.persist_browser_pageview_events
-        return
-      end
-
-      enabled_at = [
-        UpcomingChangeEvent.where(
-          upcoming_change_name: "dashboard_improvements",
-          event_type: %i[manual_opt_in automatically_promoted],
-        ).maximum(:created_at),
-        SiteSetting.where(name: "dashboard_improvements").maximum(:updated_at),
-      ].compact.max
-
-      return enabled_at.utc.to_date.tomorrow if enabled_at
-
-      ApplicationRequest.where(
-        req_type: %w[page_view_logged_in_browser_beacon page_view_anon_browser_beacon],
-      ).minimum(:date)
-    end
-
     def clear_queued!
       Discourse.redis.del(REDIS_QUEUE_KEY)
     end
@@ -179,7 +155,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
         language: payload[:language]&.slice(0, MAX_LANGUAGE_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         topic_id: payload[:topic_id],
-        source: payload[:source],
         occurred_at: payload[:occurred_at],
       }
     end
@@ -211,7 +186,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
         topic_id: payload[:topic_id],
-        source: payload[:source],
         created_at: payload[:occurred_at],
       }
     end
@@ -239,23 +213,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
 
   def self.retention_cutoff
     RETENTION_PERIOD.ago.beginning_of_day
-  end
-
-  def self.rollup_source_condition(table: nil, start_date: nil, end_date: nil)
-    prefix = table ? "#{table}." : ""
-    cutover_date = beacon_cutover_date
-    return "#{prefix}source = #{SOURCE_PIGGYBACK}" if cutover_date.nil?
-    return "#{prefix}source = #{SOURCE_PIGGYBACK}" if end_date && end_date.to_date <= cutover_date
-    return "#{prefix}source = #{SOURCE_BEACON}" if start_date && start_date.to_date >= cutover_date
-
-    sanitize_sql_array(
-      [
-        "(#{prefix}created_at < ? AND #{prefix}source = #{SOURCE_PIGGYBACK} " \
-          "OR #{prefix}created_at >= ? AND #{prefix}source = #{SOURCE_BEACON})",
-        cutover_date,
-        cutover_date,
-      ],
-    )
   end
 
   def self.rollup_count_sql
@@ -306,7 +263,6 @@ end
 #  normalized_url_version      :integer
 #  referrer                    :string(2000)
 #  score                       :integer
-#  source                      :integer          default("piggyback"), not null
 #  url                         :string(2000)     not null
 #  user_agent                  :string(1000)     not null
 #  created_at                  :datetime         not null
@@ -316,9 +272,9 @@ end
 #
 # Indexes
 #
-#  idx_bpe_beacon_created_at_id                 (created_at,id) WHERE (source = 2)
-#  idx_bpe_browser_backfill                     (source,created_at DESC,id DESC) WHERE (browser IS NULL)
+#  idx_bpe_browser_backfill                     (created_at,id) WHERE (browser IS NULL)
 #  idx_bpe_created_at_country_code              (created_at,country_code)
+#  idx_bpe_created_at_id                        (created_at,id)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
