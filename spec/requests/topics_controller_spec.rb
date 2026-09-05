@@ -2229,6 +2229,22 @@ RSpec.describe TopicsController do
         )
       end
 
+      it "force destroys the topic and all remaining posts for an opted-in admin" do
+        other_post = Fabricate(:post, topic: topic, post_number: 2)
+
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+
+        SiteSetting.allow_bulk_permanent_topic_deletion = true
+        admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+        delete "/t/#{topic.id}.json", params: { force_destroy: true }
+
+        expect(response.status).to eq(200)
+        expect(Topic.with_deleted.find_by(id: topic.id)).to eq(nil)
+        expect(Post.with_deleted.find_by(id: post.id)).to eq(nil)
+        expect(Post.with_deleted.find_by(id: other_post.id)).to eq(nil)
+      end
+
       it "does not allow to destroy topic if not all posts were force destroyed" do
         _other_post = Fabricate(:post, topic: topic, post_number: 2)
         PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy

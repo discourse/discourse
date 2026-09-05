@@ -156,6 +156,7 @@ let userOptionFields = [
   "title_count_mode",
   "understood_languages",
   "watched_precedence_over_muted",
+  "bulk_permanent_topic_deletion",
 ];
 
 export function addSaveableUserOptionField(fieldName) {

@@ -37,6 +37,147 @@ RSpec.describe UserUpdater do
     fab!(:tag)
     fab!(:tag2, :tag)
 
+    describe "bulk permanent topic deletion preference" do
+      fab!(:bulk_deletion_admin, :admin)
+      fab!(:another_bulk_deletion_admin, :admin)
+      fab!(:bulk_deletion_user, :user)
+
+      before do
+        SiteSetting.can_permanently_delete = true
+        SiteSetting.allow_bulk_permanent_topic_deletion = true
+      end
+
+      it "allows an admin to enable their own preference" do
+        UserUpdater.new(bulk_deletion_admin, bulk_deletion_admin).update(
+          bulk_permanent_topic_deletion: true,
+        )
+
+        expect(bulk_deletion_admin.reload.user_option.bulk_permanent_topic_deletion).to eq(true)
+      end
+
+      it "does not allow a non-admin to enable the preference" do
+        UserUpdater.new(bulk_deletion_user, bulk_deletion_user).update(
+          bulk_permanent_topic_deletion: true,
+        )
+
+        expect(bulk_deletion_user.reload.user_option.bulk_permanent_topic_deletion).to eq(false)
+      end
+
+      it "does not allow an admin to enable the preference for another admin" do
+        UserUpdater.new(bulk_deletion_admin, another_bulk_deletion_admin).update(
+          bulk_permanent_topic_deletion: true,
+        )
+
+        expect(another_bulk_deletion_admin.reload.user_option.bulk_permanent_topic_deletion).to eq(
+          false,
+        )
+      end
+
+      it "does not allow the preference to be enabled while the hidden gate is disabled" do
+        SiteSetting.allow_bulk_permanent_topic_deletion = false
+
+        UserUpdater.new(bulk_deletion_admin, bulk_deletion_admin).update(
+          bulk_permanent_topic_deletion: true,
+        )
+
+        expect(bulk_deletion_admin.reload.user_option.bulk_permanent_topic_deletion).to eq(false)
+      end
+
+      it "does not allow the preference to be enabled while permanent deletion is disabled" do
+        SiteSetting.can_permanently_delete = false
+
+        UserUpdater.new(bulk_deletion_admin, bulk_deletion_admin).update(
+          bulk_permanent_topic_deletion: true,
+        )
+
+        expect(bulk_deletion_admin.reload.user_option.bulk_permanent_topic_deletion).to eq(false)
+      end
+
+      it "logs when an admin enables their own preference" do
+        expect {
+          UserUpdater.new(bulk_deletion_admin, bulk_deletion_admin).update(
+            bulk_permanent_topic_deletion: true,
+          )
+        }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:custom_staff],
+            custom_type: "change_bulk_permanent_topic_deletion_preference",
+          ).count
+        }.by(1)
+
+        log =
+          UserHistory.where(
+            action: UserHistory.actions[:custom_staff],
+            custom_type: "change_bulk_permanent_topic_deletion_preference",
+          ).last
+
+        aggregate_failures do
+          expect(log.acting_user_id).to eq(bulk_deletion_admin.id)
+          expect(log.target_user_id).to eq(bulk_deletion_admin.id)
+          expect(log.subject).to eq("bulk_permanent_topic_deletion")
+          expect(log.previous_value).to eq("false")
+          expect(log.new_value).to eq("true")
+        end
+      end
+
+      it "logs when an admin disables their own preference" do
+        bulk_deletion_admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+        expect {
+          UserUpdater.new(bulk_deletion_admin, bulk_deletion_admin).update(
+            bulk_permanent_topic_deletion: false,
+          )
+        }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:custom_staff],
+            custom_type: "change_bulk_permanent_topic_deletion_preference",
+          ).count
+        }.by(1)
+
+        log =
+          UserHistory.where(
+            action: UserHistory.actions[:custom_staff],
+            custom_type: "change_bulk_permanent_topic_deletion_preference",
+          ).last
+
+        aggregate_failures do
+          expect(log.acting_user_id).to eq(bulk_deletion_admin.id)
+          expect(log.target_user_id).to eq(bulk_deletion_admin.id)
+          expect(log.subject).to eq("bulk_permanent_topic_deletion")
+          expect(log.previous_value).to eq("true")
+          expect(log.new_value).to eq("false")
+        end
+      end
+
+      it "does not log when the preference value does not change" do
+        bulk_deletion_admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+        expect {
+          UserUpdater.new(bulk_deletion_admin, bulk_deletion_admin).update(
+            bulk_permanent_topic_deletion: true,
+          )
+        }.not_to change {
+          UserHistory.where(
+            action: UserHistory.actions[:custom_staff],
+            custom_type: "change_bulk_permanent_topic_deletion_preference",
+          ).count
+        }
+      end
+
+      it "does not log a rejected preference change" do
+        expect {
+          UserUpdater.new(bulk_deletion_admin, another_bulk_deletion_admin).update(
+            bulk_permanent_topic_deletion: true,
+          )
+        }.not_to change {
+          UserHistory.where(
+            action: UserHistory.actions[:custom_staff],
+            custom_type: "change_bulk_permanent_topic_deletion_preference",
+          ).count
+        }
+      end
+    end
+
     it "saves user" do
       user = Fabricate(:user, name: "Billy Bob")
       updater = UserUpdater.new(user, user)

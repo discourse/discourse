@@ -12558,7 +12558,8 @@ CREATE TABLE public.user_options (
     chat_channel_list_sort_starred integer DEFAULT 0 NOT NULL,
     chat_channel_list_sort_dms integer DEFAULT 2 NOT NULL,
     chat_channel_list_filter_starred integer DEFAULT 0 NOT NULL,
-    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL
+    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL,
+    bulk_permanent_topic_deletion boolean DEFAULT false NOT NULL
 );
 
 
@@ -25071,6 +25072,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
+('20260905123814'),
 ('20260904065041'),
 ('20260904063128'),
 ('20260904000537'),
