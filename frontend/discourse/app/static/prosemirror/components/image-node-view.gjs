@@ -17,7 +17,7 @@ import ImageAltTextInput from "./image-alt-text-input";
 
 const PLACEHOLDER_CLASSES = ["upload-placeholder", "--image"];
 
-const MIN_SCALE = 50;
+const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const SCALE_STEP = 25;
 
