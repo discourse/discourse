@@ -4,7 +4,7 @@ RSpec.describe UserResource do
   fab!(:user) { Fabricate(:user, username: "someone") }
 
   let(:guardian) { Guardian.new }
-  let(:glossary) { JsonApiKit::Glossary.resource }
+  let(:glossary) { JsonApiKit::Glossary.kit }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/users")
   end

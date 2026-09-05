@@ -18,7 +18,7 @@ RSpec.describe JsonApiKit::Document do
     end
   end
   let(:guardian) { Guardian.new }
-  let(:glossary) { JsonApiKit::Glossary.new([JsonApiKit::Glossary::CasingRule]) }
+  let(:glossary) { JsonApiKit::Glossary.kit }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
   end

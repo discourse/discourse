@@ -115,13 +115,23 @@ module JsonApiKit
 
             def check_anchor_name
               ([anchor_name.to_s] - resource.anchor_names).each do
-                errors.add(:anchor, :no_such_name, name: it, message: "no such name")
+                errors.add(
+                  :anchor,
+                  :no_such_name,
+                  name: Name::Anchor.new(value: it.to_s, type: resource.type),
+                  message: "no such name",
+                )
               end
             end
 
             def check_anchor_value
               return unless anchor_value.is_a?(Enumerable)
-              errors.add(:anchor, :bad_value, name: anchor_name, message: "bad value")
+              errors.add(
+                :anchor,
+                :bad_value,
+                name: Name::Anchor.new(value: anchor_name.to_s, type: resource.type),
+                message: "bad value",
+              )
             end
 
             def check_anchor_ordering
@@ -129,8 +139,12 @@ module JsonApiKit
               errors.add(
                 :anchor,
                 :not_the_sort,
-                name: anchor_name,
-                key: resource.order(ordering).leading.name,
+                name: Name::Anchor.new(value: anchor_name.to_s, type: resource.type),
+                key:
+                  Name::Sort.new(
+                    value: resource.order(ordering).leading.name.to_s,
+                    type: resource.type,
+                  ),
                 message: "not the sort",
               )
             end

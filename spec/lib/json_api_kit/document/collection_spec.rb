@@ -3,7 +3,7 @@
 RSpec.describe JsonApiKit::Document::Collection do
   subject(:document) { described_class.new(listing, urls:, glossary:) }
 
-  let(:glossary) { JsonApiKit::Glossary.new([JsonApiKit::Glossary::CasingRule]) }
+  let(:glossary) { JsonApiKit::Glossary.kit }
 
   fab!(:first_topic) do
     Fabricate(:topic, title: "Segments of a listing", created_at: Time.utc(2026, 8, 1))

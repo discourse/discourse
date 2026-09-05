@@ -10,14 +10,16 @@ module JsonApiKit
       private
 
       def resolve_version
-        response.headers[ApiVersion::HEADER] = Timeline.resolve(requested_version).to_s
+        response.headers[ApiVersion::HEADER] = version.to_s
       rescue Error => error
         render_document(Document::Errors.new(error))
       end
 
+      def version = @version ||= Timeline.resolve(requested_version)
+
       def requested_version = request.headers[ApiVersion::HEADER]
 
-      def glossary = @glossary ||= Glossary.resource
+      def glossary = @glossary ||= Glossary.resource(version)
     end
   end
 end

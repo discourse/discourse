@@ -98,7 +98,7 @@ RSpec.shared_context "with a listing of topics" do
   let(:current) { "https://example.com/api/topics" }
   let(:query) { {} }
   let(:scoped_to) { nil }
-  let(:glossary) { JsonApiKit::Glossary.new([JsonApiKit::Glossary::CasingRule]) }
+  let(:glossary) { JsonApiKit::Glossary.kit }
   let(:urls) { JsonApiKit::Urls.new(base:, current:, parameters: query) }
 
   let(:document) do
