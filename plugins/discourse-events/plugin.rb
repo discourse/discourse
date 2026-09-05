@@ -1074,3 +1074,32 @@ after_initialize do
     DiscourseEvents::Livestream.publish_livestream_chat_status(membership, user: user) if membership
   end
 end
+
+after_initialize do
+  require_relative "lib/discourse_events/mcp_tools"
+  register_mcp_tool(
+    "discourse_calendar_event_list",
+    title: "List events",
+    description: "Lists upcoming events whose posts are visible to the authenticated user.",
+    implementation: DiscourseEvents::McpTools::ListEvents,
+    input_schema: {
+      type: "object",
+      properties: {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+      },
+      additionalProperties: false,
+    },
+    required_scopes: %w[discourse-calendar:read],
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> do
+      SiteSetting.discourse_events_enabled && SiteSetting.discourse_post_event_enabled
+    end,
+  )
+end

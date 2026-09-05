@@ -268,3 +268,34 @@ after_initialize do
     )
   end
 end
+
+after_initialize do
+  require_relative "lib/discourse_topic_voting/mcp_tools"
+  register_mcp_tool(
+    "discourse_topic_voting_vote_set",
+    title: "Set topic vote",
+    description: "Casts or removes the authenticated user's vote on a visible votable topic.",
+    implementation: DiscourseTopicVoting::McpTools::SetVote,
+    input_schema: {
+      type: "object",
+      properties: {
+        topic_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        voted: {
+          type: "boolean",
+        },
+      },
+      required: %w[topic_id voted],
+      additionalProperties: false,
+    },
+    required_scopes: %w[discourse-topic-voting:write],
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.topic_voting_enabled },
+  )
+end

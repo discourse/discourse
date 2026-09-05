@@ -62,6 +62,23 @@ describe "Admin Site Setting Requires Confirmation" do
       settings_page.toggle_bool_setting("can_permanently_delete")
       expect(dialog).to be_closed
     end
+
+    it "explains the effect of enabling the MCP server" do
+      settings_page.visit("mcp_server_enabled")
+      settings_page.toggle_bool_setting("mcp_server_enabled")
+
+      expect(dialog).to be_open
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.mcp_server_enabled.prompt",
+        ),
+      )
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.mcp_server_enabled.confirm",
+        ),
+      )
+    end
   end
 
   context "with simple_on_disable confirmation type" do

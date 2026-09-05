@@ -4475,6 +4475,73 @@ user_preferences:
     default: false
     area: "categories_and_tags|user_defaults"
 
+mcp:
+  mcp_server_enabled:
+    default: false
+    client: true
+    area: "mcp"
+    requires_confirmation: simple_on_enable
+  mcp_server_instructions:
+    default: ""
+    textarea: true
+    area: "mcp"
+  mcp_cache_ttl_ms:
+    default: 300000
+    min: 0
+    max: 86400000
+    area: "mcp"
+  mcp_oauth_client_id_metadata_policy:
+    type: enum
+    default: "any_domain"
+    enum: "McpOauthClientIdMetadataPolicy"
+    area: "mcp"
+  mcp_oauth_client_id_metadata_domains:
+    type: host_list
+    default: ""
+    area: "mcp"
+    depends_on:
+      - mcp_oauth_client_id_metadata_policy
+    depends_on_values:
+      mcp_oauth_client_id_metadata_policy:
+        - approved_domains
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
+  mcp_access_token_lifetime_minutes:
+    default: 60
+    min: 5
+    max: 1440
+    area: "mcp"
+  mcp_refresh_token_lifetime_days:
+    default: 30
+    min: 1
+    max: 365
+    area: "mcp"
+  mcp_authorization_code_lifetime_seconds:
+    default: 300
+    min: 60
+    max: 600
+    area: "mcp"
+  mcp_global_rate_limit_per_minute:
+    default: 120
+    min: 10
+    max: 10000
+    area: "mcp"
+  mcp_audit_log_retention_days:
+    default: 90
+    min: 1
+    max: 3650
+    area: "mcp"
+  mcp_max_request_bytes:
+    default: 1048576
+    min: 16384
+    max: 5242880
+    hidden: true
+  mcp_max_response_bytes:
+    default: 5242880
+    min: 16384
+    max: 10485760
+    hidden: true
+
 api:
   retain_web_hook_events_period_days:
     default: 30

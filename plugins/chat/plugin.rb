@@ -606,3 +606,83 @@ after_initialize do
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
   end
 end
+
+after_initialize do
+  require_relative "lib/chat/mcp_tools"
+
+  register_mcp_tool(
+    "chat_channel_list",
+    title: "List chat channels",
+    description:
+      "Lists chat channels followed by the authenticated user, including direct-message channels.",
+    implementation: Chat::McpTools::ListChannels,
+    required_scopes: %w[chat:read],
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "chat_message_list",
+    title: "List chat messages",
+    description: "Reads a bounded page of messages from a visible chat channel.",
+    implementation: Chat::McpTools::ListMessages,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+      },
+      required: ["channel_id"],
+      additionalProperties: false,
+    },
+    required_scopes: %w[chat:read],
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "chat_message_create",
+    title: "Create chat message",
+    description: "Creates a message in a chat channel as the authenticated user.",
+    implementation: Chat::McpTools::CreateMessage,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        message: {
+          type: "string",
+          minLength: 1,
+        },
+        thread_id: {
+          type: "integer",
+        },
+        reply_to_message_id: {
+          type: "integer",
+        },
+      },
+      required: %w[channel_id message],
+      additionalProperties: false,
+    },
+    required_scopes: %w[chat:write],
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.chat_enabled },
+  )
+end
