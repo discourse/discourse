@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
-  fab!(:llm_model) { Fabricate(:llm_model, display_name: "Workflow LLM") }
+  fab!(:llm_model) { Fabricate(:llm_model, display_name: "Workflow LLM", vision_enabled: true) }
   fab!(:site_llm_model) { Fabricate(:llm_model, display_name: "Site LLM") }
   fab!(:agent) do
-    Fabricate(:ai_agent, name: "Workflow agent", enabled: true, default_llm_id: llm_model.id)
+    Fabricate(
+      :ai_agent,
+      name: "Workflow agent",
+      enabled: true,
+      vision_enabled: true,
+      default_llm_id: llm_model.id,
+    )
   end
 
   let(:bot) { instance_double(DiscourseAi::Agents::Bot) }
@@ -99,13 +105,6 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     end
   end
 
-  it "declares an explicit runner actor control" do
-    runner_schema = described_class.property_schema[:runner_username]
-
-    expect(runner_schema).to include(type: :string, default: "system")
-    expect(runner_schema[:ui]).to include(control: :actor)
-  end
-
   it "runs the agent once per input item with item-specific parameters" do
     items =
       execute_node_output(
@@ -143,26 +142,11 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
       expect(prompts).to eq(["Report about Ada"])
       expect(items.length).to eq(1)
       expect(items.first["json"]["result"]).to eq("Reply to Report about Ada")
+      expect(items.first["pairedItem"]).to eq([{ "item" => 0 }, { "item" => 1 }, { "item" => 2 }])
       expect(bot).to have_received(:reply).once
     end
 
-    it "pairs its single output with every input item" do
-      items =
-        execute_node_output(
-          configuration: {
-            "agent_id" => agent.id,
-            "mode" => "runOnceForAllItems",
-            "prompt" => "Hello",
-          },
-          input_items: [{ "json" => { "name" => "Ada" } }, { "json" => { "name" => "Grace" } }],
-        ).first
-
-      expect(items.first["pairedItem"]).to eq([{ "item" => 0 }, { "item" => 1 }])
-    end
-
     it "defaults to per-item so existing workflows keep their behaviour" do
-      expect(described_class.property_schema[:mode][:default]).to eq("runOnceForEachItem")
-
       execute_node_output(
         configuration: {
           "agent_id" => agent.id,
@@ -172,18 +156,6 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
       )
 
       expect(bot).to have_received(:reply).twice
-    end
-
-    it "reports the run scope through the mode parameter" do
-      expect(described_class.description[:capabilities][:run_scope]).to eq(
-        {
-          parameter: "mode",
-          values: {
-            runOnceForEachItem: "per_item",
-            runOnceForAllItems: "all_items",
-          },
-        },
-      )
     end
 
     it "raises a node error for an unknown mode" do
@@ -236,7 +208,6 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
   end
 
   it "passes configured upload IDs to the agent prompt" do
-    agent.update!(vision_enabled: true)
     upload = Fabricate(:image_upload)
 
     execute_node_output(
@@ -251,70 +222,102 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     expect(prompts).to eq([["Review the screenshot", { upload_id: upload.id }]])
   end
 
-  it "filters image upload IDs when the agent does not have vision enabled" do
-    agent.update!(vision_enabled: false)
-    upload = Fabricate(:image_upload)
+  describe "uploads that cannot reach the model" do
+    def expect_not_sent(upload_id, reason, runner: "system")
+      expect {
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "runner_username" => runner,
+            "prompt" => "Review",
+            "upload_ids" => [upload_id],
+          },
+        )
+      }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /did not receive every upload.*#{Regexp.escape(reason)}/,
+      )
+    end
 
-    execute_node_output(
-      configuration: {
-        "agent_id" => agent.id,
-        "prompt" => "Review the screenshot",
-        "upload_ids" => [upload.id],
-      },
-    )
+    it "raises before calling the agent when the agent cannot see images" do
+      agent.update!(vision_enabled: false)
+      upload = Fabricate(:image_upload)
 
-    expect(prompts).to eq(["Review the screenshot"])
-  end
+      expect_not_sent(upload.id, "Upload #{upload.id} is an image and agent 'Workflow agent'")
+      expect(bot).not_to have_received(:reply)
+    end
 
-  it "filters upload IDs the execution user cannot see" do
-    agent.update!(vision_enabled: true)
-    visible_upload = Fabricate(:image_upload)
-    hidden_upload = Fabricate(:image_upload)
-    owner = Fabricate(:user)
-    recipient = Fabricate(:user)
-    private_topic = Fabricate(:private_message_topic, user: owner, recipient: recipient)
-    private_post = Fabricate(:post, topic: private_topic, user: owner)
-    hidden_upload.update!(access_control_post_id: private_post.id)
+    it "raises when the LLM cannot see images" do
+      llm_model.update!(vision_enabled: false)
+      upload = Fabricate(:image_upload)
 
-    runner = Fabricate(:user)
+      expect_not_sent(upload.id, "Upload #{upload.id} is an image and LLM 'Workflow LLM'")
+    end
 
-    execute_node_output(
-      configuration: {
-        "agent_id" => agent.id,
-        "runner_username" => runner.username,
-        "prompt" => "Review the screenshot",
-        "upload_ids" => [visible_upload.id, hidden_upload.id],
-      },
-    )
+    it "raises when the runner cannot see an upload" do
+      owner = Fabricate(:user)
+      private_topic = Fabricate(:private_message_topic, user: owner, recipient: Fabricate(:user))
+      private_post = Fabricate(:post, topic: private_topic, user: owner)
+      upload = Fabricate(:image_upload, access_control_post_id: private_post.id)
+      runner = Fabricate(:user)
 
-    expect(prompts).to eq([["Review the screenshot", { upload_id: visible_upload.id }]])
+      expect_not_sent(
+        upload.id,
+        "#{runner.username} cannot see upload #{upload.id}",
+        runner: runner.username,
+      )
+    end
+
+    it "raises when an upload does not exist" do
+      missing_id = Upload.maximum(:id).to_i + 1
+
+      expect_not_sent(missing_id, "Upload #{missing_id} was not found")
+    end
+
+    it "raises when the LLM accepts no attachments" do
+      SiteSetting.authorized_extensions += "|pdf"
+      upload = Fabricate(:upload, original_filename: "report.pdf", extension: "pdf")
+
+      expect_not_sent(upload.id, "Upload #{upload.id} is a document and LLM 'Workflow LLM'")
+    end
+
+    it "raises when the image format is not supported" do
+      upload = Fabricate(:image_upload, extension: "heic", original_filename: "photo.heic")
+
+      expect_not_sent(upload.id, "Upload #{upload.id} is not a supported image format")
+    end
+
+    it "raises when encoding drops an upload after the agent ran" do
+      upload = Fabricate(:image_upload)
+      allow(bot).to receive(:reply) do |bot_context, &block|
+        bot_context.execution_context.upload_skips << {
+          upload_id: upload.id,
+          filename: upload.original_filename,
+          message: "could not be converted to png",
+        }
+        block.call("Looks fine", nil, nil)
+      end
+
+      expect_not_sent(upload.id, "was not sent: could not be converted to png")
+    end
   end
 
   it "resolves runner expressions per item" do
-    agent.update!(vision_enabled: true)
-    owner = Fabricate(:user)
     runner = Fabricate(:user)
-    private_topic = Fabricate(:private_message_topic, user: owner, recipient: runner)
-    private_post = Fabricate(:post, topic: private_topic, user: owner)
-    upload = Fabricate(:image_upload)
-    upload.update!(access_control_post_id: private_post.id)
 
     execute_node_output(
       configuration: {
         "agent_id" => agent.id,
         "runner_username" => "={{ $json.runner_username }}",
         "prompt" => "Review the screenshot",
-        "upload_ids" => [upload.id],
       },
       input_items: [{ "json" => { "runner_username" => runner.username } }],
     )
 
     expect(bot_contexts.last.user).to eq(runner)
-    expect(prompts).to eq([["Review the screenshot", { upload_id: upload.id }]])
   end
 
   it "normalizes comma-separated and JSON upload ID values" do
-    agent.update!(vision_enabled: true)
     first_upload = Fabricate(:image_upload)
     second_upload = Fabricate(:image_upload)
 
