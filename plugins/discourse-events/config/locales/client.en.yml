@@ -347,12 +347,21 @@ en:
       nodes:
         "trigger:event_ended": "Event ended"
         "trigger:event_participation_changed": "Event participation changed"
+        "action:event": "Event"
       node_descriptions:
         "trigger:event_ended": "Fires when an event occurrence reaches its end time"
         "trigger:event_participation_changed": "Fires when a user adds, changes, or withdraws their RSVP"
+        "action:event": "Close or open an event"
       post_event:
         topic_id: "Topic ID"
         topic_id_description: "Only trigger for events in this topic. Leave empty to match all events."
+      event:
+        operation: "Operation"
+        operations:
+          close: "Close event"
+          open: "Open event"
+        topic_id: "Topic ID"
+        actor_username: "Performed by user"
     discourse_post_event:
       new_event: "New Event"
       notifications:
