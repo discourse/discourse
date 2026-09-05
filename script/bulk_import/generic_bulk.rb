@@ -28,6 +28,11 @@ class BulkImport::Generic < BulkImport::Base
 
   def initialize(db_path, uploads_db_path = nil)
     self.class.validate_modes!(merge_import: MERGE_IMPORT, delta_import: DELTA_IMPORT)
+    # SQLite would silently create an empty database for a mistyped path
+    {
+      "Intermediate database" => db_path,
+      "Uploads database" => uploads_db_path,
+    }.each { |label, path| raise "#{label} not found: #{path}" if path && !File.file?(path) }
     super()
     @source_db = create_connection(db_path)
     @uploads_db = create_connection(uploads_db_path) if uploads_db_path
@@ -209,7 +214,11 @@ class BulkImport::Generic < BulkImport::Base
       SQL
   end
 
+  # A destination user can carry several source ids (base-import email merges,
+  # alias merges); prefer the one this delta still exports so its updates apply.
   def canonical_user_import_mappings
+    delta_source_ids =
+      query("SELECT id FROM users") { |rows| rows.map { |row| row["id"].to_i }.to_set }
     rows = DB.query(<<~SQL)
       SELECT value, user_id AS discourse_id, created_at, id
         FROM user_custom_fields
@@ -221,9 +230,120 @@ class BulkImport::Generic < BulkImport::Base
       .group_by(&:discourse_id)
       .values
       .to_h do |mapping_rows|
-        row = mapping_rows.first
+        row =
+          mapping_rows.find { |mapping| delta_source_ids.include?(Integer(mapping.value, 10)) } ||
+            mapping_rows.first
         [Integer(row.value, 10), row.discourse_id.to_i]
       end
+  end
+
+  # The converter may consolidate several source accounts into one winner. The
+  # optional user_aliases table lists those alias -> winner pairs so a delta can
+  # merge destination accounts the base import created separately.
+  def delta_user_aliases
+    @delta_user_aliases ||=
+      if table_column_names("user_aliases").any?
+        query(
+          "SELECT alias_user_id, canonical_user_id FROM user_aliases ORDER BY alias_user_id",
+        ) { |rows| rows.map { |row| [row["alias_user_id"].to_i, row["canonical_user_id"].to_i] } }
+      else
+        []
+      end
+  end
+
+  def delta_alias_accounts_by_canonical
+    base_mappings = plain_import_mappings("user")
+    delta_user_aliases.each_with_object(
+      Hash.new { |hash, key| hash[key] = Set.new },
+    ) do |(alias_id, canonical_id), result|
+      account_id = base_mappings[alias_id]
+      result[canonical_id] << account_id if account_id
+    end
+  end
+
+  # Runs once before existing users are updated (both accounts came from the
+  # base import) and once after the delta's new users, profiles, and stats
+  # exist (the winner is new to this delta). Each pass is a no-op for pairs that
+  # already share one account, so reruns are safe.
+  def merge_delta_user_aliases
+    pending_merges =
+      delta_user_aliases.filter_map do |alias_source_id, canonical_source_id|
+        source_id = user_id_from_imported_id(alias_source_id)
+        target_id = user_id_from_imported_id(canonical_source_id)
+        next if source_id.nil? || target_id.nil? || source_id == target_id
+
+        source_user = User.unscoped.find_by(id: source_id)
+        target_user = User.unscoped.find_by(id: target_id)
+        next unless source_user && target_user
+
+        [alias_source_id, canonical_source_id, source_user, target_user]
+      end
+    return if pending_merges.empty?
+
+    # UserMerger inserts through ActiveRecord, but this run has COPYed rows with
+    # importer-assigned ids that the sequences only learn about at the end.
+    fix_primary_keys
+    removed_users = pending_merges.map { |_, _, source_user, _| source_user }
+
+    pending_merges.each do |alias_source_id, canonical_source_id, source_user, target_user|
+      begin
+        UserMerger.new(source_user, target_user).merge!
+      rescue StandardError => e
+        raise "Merging alias user #{alias_source_id} into user #{canonical_source_id} failed: #{e.message}"
+      end
+
+      # UserMerger keeps the target's own import_id and drops the alias's; keep
+      # it on the survivor so reruns and later deltas still resolve the alias.
+      UserCustomField.find_or_create_by!(
+        user_id: target_user.id,
+        name: "import_id",
+        value: alias_source_id.to_s,
+      )
+      @users[alias_source_id] = target_user.id
+      @delta_stats[:users][:updated_ids] << target_user.id if @delta_stats
+    end
+
+    # the merger's replacement addresses took ids above the importer's counter
+    @last_user_email_id = last_id(UserEmail)
+    refresh_user_lookup_caches(
+      pending_merges.map { |_, _, _, target_user| target_user.id }.uniq,
+      removed_users: removed_users,
+    )
+
+    merged_source_ids = pending_merges.map(&:first)
+    shown_ids = merged_source_ids.first(20)
+    suffix =
+      (
+        if merged_source_ids.length > shown_ids.length
+          " +#{merged_source_ids.length - shown_ids.length} more"
+        else
+          ""
+        end
+      )
+    puts "  Merged #{merged_source_ids.length} alias accounts into their winners (source IDs: #{shown_ids.join(", ")}#{suffix})"
+  end
+
+  def refresh_user_lookup_caches(user_ids, removed_users: [])
+    removed_users.each do |user|
+      @usernames_lower.delete(user.username_lower)
+      @user_ids_by_username_lower.delete(user.username_lower)
+      @usernames_by_id.delete(user.id)
+      @user_full_names_by_id.delete(user.id)
+    end
+
+    user_ids.each_slice(10_000) do |ids|
+      User
+        .unscoped
+        .where(id: ids)
+        .pluck(:id, :username, :username_lower, :name)
+        .each do |id, username, username_lower, name|
+          @usernames_lower << username_lower
+          @user_ids_by_username_lower[username_lower] = id
+          @usernames_by_id[id] = username
+          @user_full_names_by_id[id] = name if name.present?
+        end
+    end
+    @emails = UserEmail.pluck(:email, :user_id).to_h
   end
 
   def delta_update_mapping(name)
@@ -240,6 +360,7 @@ class BulkImport::Generic < BulkImport::Base
     email_owners = UserEmail.pluck(Arel.sql("LOWER(email)"), :user_id).to_h
     username_owners = User.unscoped.pluck(:username_lower, :id).to_h
     username_lower_by_id = User.unscoped.pluck(:id, :username_lower).to_h
+    alias_accounts = delta_alias_accounts_by_canonical
     seen_emails = {}
     seen_usernames = {}
 
@@ -273,7 +394,8 @@ class BulkImport::Generic < BulkImport::Base
       if row["email"].present?
         email = row["email"].downcase
         owner_id = email_owners[email]
-        if owner_id && owner_id != discourse_id
+        if owner_id && owner_id != discourse_id &&
+             !alias_accounts.fetch(row["id"].to_i, Set.new).include?(owner_id)
           errors << "user #{row["id"]} email belongs to Discourse user #{owner_id}"
         end
 
@@ -463,10 +585,6 @@ class BulkImport::Generic < BulkImport::Base
       mapped_topic_id = mappings[:topics][row["topic_id"].to_i]
       errors << "post #{row["id"]} changes immutable topic" if mapped_topic_id != post[:topic_id]
 
-      if row["post_number"].present? && row["post_number"].to_i != post[:post_number]
-        errors << "post #{row["id"]} changes immutable post number"
-      end
-
       next if row["reply_to_post_id"].blank?
 
       parent_id = mappings[:posts][row["reply_to_post_id"].to_i]
@@ -576,6 +694,7 @@ class BulkImport::Generic < BulkImport::Base
     import_bookmarks
 
     import_user_stats
+    merge_delta_user_aliases if delta_import?
 
     import_permalink_normalizations
     import_permalinks
@@ -1345,7 +1464,10 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing users..."
 
     start_delta_entity(:users, "users", :users, @last_user_id)
-    update_delta_users if delta_import?
+    if delta_import?
+      merge_delta_user_aliases
+      update_delta_users
+    end
 
     users = query(<<~SQL)
       SELECT *
@@ -1476,9 +1598,12 @@ class BulkImport::Generic < BulkImport::Base
       end
       updates << update
 
-      if row["email"].present? && (primary_email = primary_emails[discourse_id])
+      if row["email"].present? && (primary_email = primary_emails[discourse_id]) &&
+           !primary_email.email.casecmp?(row["email"])
         email = row["email"].downcase
         if EmailAddressValidator.valid_value?(email)
+          # UserMerger may have moved the address over as a secondary email
+          UserEmail.where(user_id: discourse_id, email:).where.not(id: primary_email.id).delete_all
           email_updates << { id: primary_email.id, user_id: discourse_id, email: email }
         else
           log_import_issue("invalid email update skipped", "user #{row["id"]}")
@@ -1494,16 +1619,7 @@ class BulkImport::Generic < BulkImport::Base
       email_result[:updated_keys].filter_map { |id| updated_user_ids_by_email_id[id.to_i] },
     )
 
-    User
-      .unscoped
-      .where(id: updates.map { |update| update[:id] })
-      .find_each do |user|
-        @usernames_lower << user.username_lower
-        @user_ids_by_username_lower[user.username_lower] = user.id
-        @usernames_by_id[user.id] = user.username
-        @user_full_names_by_id[user.id] = user.name if user.name.present?
-      end
-    @emails = UserEmail.pluck(:email, :user_id).to_h
+    refresh_user_lookup_caches(updates.map { |update| update[:id] })
   ensure
     rows&.close
   end
@@ -1806,6 +1922,8 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_associated_accounts
     puts "", "Importing user associated accounts..."
 
+    update_delta_user_associated_accounts if delta_import?
+
     accounts = query(<<~SQL)
       SELECT a.*, COALESCE(u.last_seen_at, u.created_at) AS last_used_at, u.email, u.username
         FROM user_associated_accounts a
@@ -1833,6 +1951,61 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     accounts.close
+  end
+
+  # Source and destination share the identity provider, so the source's current
+  # provider UID wins over whichever destination account still holds it,
+  # including the userless rows UserMerger leaves behind.
+  def update_delta_user_associated_accounts
+    wanted_by_identity = {}
+    users_by_account_id = {}
+    rows = query(<<~SQL)
+      SELECT a.user_id, a.provider_name, a.provider_uid
+        FROM user_associated_accounts a
+             JOIN users u ON u.id = a.user_id
+       WHERE u.anonymized IS NOT TRUE
+       ORDER BY a.user_id, a.provider_name
+    SQL
+    rows.each do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      wanted_by_identity[[row["provider_name"], row["provider_uid"]]] = user_id if user_id
+    end
+
+    # rows whose identity the delta gives to someone else go first, so both
+    # unique indexes stay satisfied; a user left without a row is created by
+    # the regular loop below, which also covers two users swapping identities
+    displaced_ids = []
+    current_by_user = {}
+    UserAssociatedAccount
+      .pluck(:id, :user_id, :provider_name, :provider_uid)
+      .each do |id, user_id, provider_name, provider_uid|
+        wanted_by = wanted_by_identity[[provider_name, provider_uid]]
+        if wanted_by && wanted_by != user_id
+          log_import_issue(
+            "associated account reassigned",
+            "#{provider_name}/#{provider_uid} moved from user #{user_id.inspect} to user #{wanted_by}",
+          )
+          displaced_ids << id
+        elsif user_id
+          current_by_user[[user_id, provider_name]] = [id, provider_uid]
+        end
+      end
+    displaced_ids.each_slice(1_000) { |ids| UserAssociatedAccount.where(id: ids).delete_all }
+
+    updates =
+      wanted_by_identity.filter_map do |(provider_name, provider_uid), user_id|
+        current_id, current_uid = current_by_user[[user_id, provider_name]]
+        next if current_id.nil? || current_uid == provider_uid
+
+        users_by_account_id[current_id] = user_id
+        { id: current_id, provider_uid: provider_uid }
+      end
+    result = update_records(updates, "user_associated_account", [:provider_uid])
+    @delta_stats[:users][:updated_ids].merge(
+      result[:updated_keys].filter_map { |id| users_by_account_id[id.to_i] },
+    )
+  ensure
+    rows&.close
   end
 
   def import_topics
@@ -1918,6 +2091,13 @@ class BulkImport::Generic < BulkImport::Base
       pinned_globally
       subtype
     ]
+    indexed_columns =
+      Topic
+        .unscoped
+        .where(id: delta_update_mapping(:topics).values)
+        .pluck(:id, :title, :category_id)
+        .to_h { |id, title, category_id| [id, [title, category_id]] }
+    reindex_ids = []
     rows = query("SELECT * FROM topics ORDER BY id")
     updates =
       rows.filter_map do |row|
@@ -1959,16 +2139,22 @@ class BulkImport::Generic < BulkImport::Base
             update[column] = to_datetime(row[column.to_s])
           end
         end
+        current_title, current_category_id = indexed_columns[discourse_id]
+        if (update[:title] && update[:title] != current_title) ||
+             (update[:category_id] && update[:category_id] != current_category_id)
+          reindex_ids << discourse_id
+        end
         update
       end
     result = update_records(updates, "topic", columns)
     record_delta_updates(:topics, result)
 
-    # direct SQL updates bypass the model callbacks that keep search in sync
-    Topic
-      .unscoped
-      .where(id: result[:updated_keys])
-      .find_each { |topic| SearchIndexer.index(topic, force: true) }
+    # direct SQL updates bypass the model callbacks that keep search in sync;
+    # only the title and category feed the index, so reindex just those
+    reindex_ids &= result[:updated_keys].map(&:to_i)
+    reindex_ids.each_slice(1_000) do |ids|
+      Topic.unscoped.where(id: ids).find_each { |topic| SearchIndexer.index(topic, force: true) }
+    end
   ensure
     rows&.close
   end
@@ -3342,7 +3528,10 @@ class BulkImport::Generic < BulkImport::Base
       result[:updated_keys].filter_map { |id| users_by_avatar_id[id.to_i] },
     )
 
+    updated_avatar_ids = result[:updated_keys].map(&:to_i).to_set
     updates.each do |update|
+      next if updated_avatar_ids.exclude?(update[:id])
+
       UploadReference.ensure_exist!(
         upload_ids: [update[:custom_upload_id]],
         target_type: "UserAvatar",
