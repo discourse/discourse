@@ -38,6 +38,12 @@ const bundle = await rolldown({
           find: /^pretty-text\//,
           replacement: `${FRONTEND}pretty-text/addon/`,
         },
+        {
+          // Polyfill the base64 globals (atob/btoa) that bundled deps like
+          // entities v8 assume exist but MiniRacer does not provide.
+          find: /^shims\/base64-polyfill$/,
+          replacement: SHIM("base64-polyfill.js"),
+        },
       ],
     }),
     {
