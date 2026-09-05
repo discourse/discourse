@@ -114,5 +114,6 @@ Ask these questions during code review:
 - `DAccessControlField` cancellation leaves the proposed ACL in draft state. `preventSubmit` is not a rollback API.
 - `DAccessControlField` uses `@aclTarget.type` for class lookup and frontend metadata lookup, while site metadata is keyed by `acl_target_key`. A custom key cannot currently satisfy both paths.
 - Loss confirmation is browser UX, not write-path proof. API clients can bypass it unless the write service has a separate confirmation contract.
-- Mandatory ACLs from site settings need extra care in migrations because raw stored settings may omit `mandatory_values`.
+- Mandatory ACLs from site settings need extra care in migrations because a raw stored row may omit
+  the ids the setting declares as mandatory; read through the setting getter, not the row.
 - `flattened_list` skips stale group IDs, stale user IDs, and unknown target classes, so a missing row can disappear from serialized ACL output while cleanup or validation catches up.

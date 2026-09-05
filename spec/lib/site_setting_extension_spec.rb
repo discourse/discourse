@@ -1489,6 +1489,17 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "mandatory_values on a non-list setting type" do
+    it "still merges into the stored value, as it did before constraints existed" do
+      settings.setting(:legacy_mandatory_setting, "a", type: :value_list, mandatory_values: "x|y")
+
+      settings.legacy_mandatory_setting = "a"
+
+      expect(settings.legacy_mandatory_setting).to eq("x|y|a")
+      expect(provider_local.find(:legacy_mandatory_setting).value).to eq("x|y|a")
+    end
+  end
+
   describe "disallowed_groups for group list settings" do
     it "strips disallowed groups when setting a value" do
       SiteSetting.whispers_allowed_groups = "0|1|2"
@@ -1504,6 +1515,24 @@ RSpec.describe SiteSettingExtension do
     it "is included in all_settings output" do
       setting = SiteSetting.all_settings.find { |s| s[:setting] == :whispers_allowed_groups }
       expect(setting[:disallowed_groups]).to eq("0|4|5")
+    end
+  end
+
+  describe "group list constraints on a themeable setting" do
+    it "normalizes a theme override that predates the rules" do
+      settings.setting(
+        :themeable_group_list,
+        "1",
+        type: :group_list,
+        themeable: true,
+        constraints: {
+          mandatory: %i[admins],
+          disallowed: %i[anonymous_users],
+        },
+      )
+      settings.theme_site_settings[7] = { themeable_group_list: "14|4" }
+
+      expect(settings.themeable_group_list(theme_id: 7)).to eq("1|14")
     end
   end
 

@@ -4559,7 +4559,7 @@ RSpec.describe PostsController do
 
       it "blocks deleted raw email for allowed non-staff users" do
         sign_in(user)
-        SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
+        SiteSetting.view_raw_email_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
         get "/posts/#{post.id}/raw-email.json"
 
@@ -4570,7 +4570,7 @@ RSpec.describe PostsController do
       it "can view raw email if the user is in the allowed group" do
         allowed_post = Fabricate(:post, user: Fabricate(:user), raw_email: "email_content")
         sign_in(user)
-        SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
+        SiteSetting.view_raw_email_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
         get "/posts/#{allowed_post.id}/raw-email.json"
         expect(response.status).to eq(200)

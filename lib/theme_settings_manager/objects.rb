@@ -10,7 +10,8 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   end
 
   def value
-    has_record? ? hydrate_uploads(db_record.json_value) : default
+    objects = has_record? ? hydrate_uploads(db_record.json_value) : default
+    remove_disallowed_groups(objects)
   end
 
   def value=(objects)
@@ -34,7 +35,7 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   def remove_disallowed_groups(objects)
     return objects if objects.blank?
 
-    remove_disallowed_groups_from_objects(objects.deep_dup, schema[:properties])
+    remove_disallowed_groups_from_objects(objects.deep_dup, schema[:properties], path: [])
   end
 
   def categories(guardian)
@@ -56,24 +57,26 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
 
   private
 
-  def remove_disallowed_groups_from_objects(objects, properties)
+  def remove_disallowed_groups_from_objects(objects, properties, path:)
     objects.each do |object|
       properties.each do |property_name, property_attributes|
         key = object_key(object, property_name)
         next if key.nil?
 
+        property_path = path + [property_name]
+
         case property_attributes[:type]
         when "groups"
-          next if property_attributes[:disallowed_groups].blank?
-
-          disallowed_ids = property_attributes[:disallowed_groups].to_s.split("|").map(&:to_i)
-          object[key] = Array(object[key]).reject { |id| disallowed_ids.include?(id) }
+          constraints = @opts[:object_group_list_constraints]&.[](property_path)
+          next if constraints.nil?
+          object[key] = constraints.normalize_ids(Array(object[key]))
         when "objects"
           nested_objects = object[key]
           if nested_objects.is_a?(Array)
             remove_disallowed_groups_from_objects(
               nested_objects,
               property_attributes[:schema][:properties],
+              path: property_path,
             )
           end
         end

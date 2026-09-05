@@ -21,7 +21,7 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
     let(:params) { { channel_id: channel.id, message_id: message_1.id } }
     let(:dependencies) { { guardian: } }
 
-    before { SiteSetting.chat_allowed_groups = chatters }
+    before { SiteSetting.chat_allowed_groups = chatters.id }
 
     context "when params are not valid" do
       before { params.delete(:message_id) }
@@ -120,7 +120,7 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
         end
 
         context "with DM channel reply threads" do
-          fab!(:other_user, :user)
+          fab!(:other_user) { Fabricate(:user, group_ids: [chatters.id]) }
           fab!(:dm_channel) do
             Fabricate(:direct_message_channel, users: [current_user, other_user])
           end

@@ -59,7 +59,7 @@ RSpec.describe "Categories Page" do
 
   describe "dropdown filter" do
     it "is shown for users in lazy_load_categories_groups" do
-      SiteSetting.lazy_load_categories_groups = "admins"
+      SiteSetting.lazy_load_categories_groups = Group::AUTO_GROUPS[:admins]
       sign_in(admin)
       category_page.visit_general(category)
       category_selector =

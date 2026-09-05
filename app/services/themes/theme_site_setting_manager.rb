@@ -67,7 +67,7 @@ class Themes::ThemeSiteSettingManager
     setting_db_value, setting_data_type =
       SiteSetting.type_supervisor.to_db_value(params.name, params.value)
     setting_ruby_value =
-      SiteSetting.type_supervisor.to_rb_value(params.name, params.value, setting_data_type)
+      SiteSetting.type_supervisor.to_rb_value(params.name, setting_db_value, setting_data_type)
 
     context[:setting_db_value] = setting_db_value
     context[:setting_data_type] = setting_data_type
