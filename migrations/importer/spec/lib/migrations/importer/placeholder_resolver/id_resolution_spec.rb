@@ -94,33 +94,9 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
   end
 
   describe "hashtag resolution" do
-    def create_hashtag(placeholder_token, **attrs)
-      Migrations::Database::IntermediateDB::EmbedHashtag.create(
-        owner_type: embed_owner::POST,
-        owner_id: 1,
-        placeholder: placeholder_token,
-        **attrs,
-      )
-    end
-
-    def create_category(original_id, slug, parent_category_id: nil)
-      Migrations::Database::IntermediateDB::Category.create(
-        original_id:,
-        name: slug,
-        slug:,
-        parent_category_id:,
-        user_id: 1,
-      )
-    end
-
-    def create_tag(original_id, name)
-      Migrations::Database::IntermediateDB::Tag.create(original_id:, name:, slug: name)
-    end
-
     it "resolves a bare hashtag to a category, honoring an import-time slug rename" do
       create_category(10, "support")
-      hashtag = placeholder.mint(:hashtag)
-      create_hashtag(hashtag, name: "support")
+      hashtag = create_embed(:hashtag, name: "support")
       maps = FakePlaceholderMaps.new(category_slug_path: { 10 => "help" })
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
@@ -132,8 +108,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     it "resolves a parent:child hashtag by its full slug path" do
       create_category(10, "support")
       create_category(11, "billing", parent_category_id: 10)
-      hashtag = placeholder.mint(:hashtag)
-      create_hashtag(hashtag, name: "support:billing")
+      hashtag = create_embed(:hashtag, name: "support:billing")
       maps = FakePlaceholderMaps.new(category_slug_path: { 11 => "support:billing" })
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
@@ -146,8 +121,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       create_category(10, "news")
       create_category(20, "parent")
       create_category(21, "news", parent_category_id: 20)
-      hashtag = placeholder.mint(:hashtag)
-      create_hashtag(hashtag, name: "news")
+      hashtag = create_embed(:hashtag, name: "news")
       maps = FakePlaceholderMaps.new(category_slug_path: { 10 => "news", 21 => "parent:news" })
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
@@ -158,8 +132,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "resolves a bare hashtag to a tag when no category matches, always suffixing ::tag" do
       create_tag(30, "release")
-      hashtag = placeholder.mint(:hashtag)
-      create_hashtag(hashtag, name: "release")
+      hashtag = create_embed(:hashtag, name: "release")
       maps = FakePlaceholderMaps.new(tag_name: { 30 => "shipped" })
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
@@ -172,8 +145,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       create_tag(30, "release")
       create_tag(31, "ship")
       Migrations::Database::IntermediateDB::TagSynonym.create(synonym_tag_id: 31, target_tag_id: 30)
-      hashtag = placeholder.mint(:hashtag)
-      create_hashtag(hashtag, name: "ship")
+      hashtag = create_embed(:hashtag, name: "ship")
       maps = FakePlaceholderMaps.new(tag_name: { 30 => "release" })
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
@@ -185,8 +157,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     it "skips category precedence when the source forced the tag type" do
       create_category(10, "release")
       create_tag(30, "release")
-      hashtag = placeholder.mint(:hashtag)
-      create_hashtag(hashtag, name: "release", hashtag_type: hashtag_type::TAG)
+      hashtag = create_embed(:hashtag, name: "release", hashtag_type: hashtag_type::TAG)
       maps =
         FakePlaceholderMaps.new(
           category_slug_path: {
@@ -205,10 +176,8 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
 
     it "rebuilds the source text for an unresolved hashtag, keeping a source-forced suffix" do
-      forced = placeholder.mint(:hashtag)
-      bare = placeholder.mint(:hashtag)
-      create_hashtag(forced, name: "ghost", hashtag_type: hashtag_type::CATEGORY)
-      create_hashtag(bare, name: "missing")
+      forced = create_embed(:hashtag, name: "ghost", hashtag_type: hashtag_type::CATEGORY)
+      bare = create_embed(:hashtag, name: "missing")
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
       resolved = resolver.resolve_all([{ id: 1, raw: "a #{forced} b #{bare} c" }])
@@ -219,8 +188,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "rebuilds the source text when the name resolved but the destination dropped it" do
       create_category(10, "support")
-      hashtag = placeholder.mint(:hashtag)
-      create_hashtag(hashtag, name: "support")
+      hashtag = create_embed(:hashtag, name: "support")
       # Category resolves against the IDB, but the maps have no destination slug for it.
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 

@@ -40,6 +40,46 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved[1]).to eq("x https://dest.example.com/t/42/3 y")
     end
 
+    it "rewrites a SITE link's origin, keeping its path, query and fragment" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: link,
+        url: "https://old.example.com/faq?x=1#y",
+        target_type: link_target::SITE,
+        target_suffix: "/faq?x=1#y",
+      )
+      maps = FakePlaceholderMaps.new
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x https://dest.example.com/faq?x=1#y y")
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
+    it "writes a SITE suffix back in the author's spelling" do
+      # The suffix is stored as the author wrote it — a quote stays a quote,
+      # never the percent-encoding the parser's normalized href used.
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: link,
+        url: %{https://old.example.com/new?public_key="abc"},
+        target_type: link_target::SITE,
+        target_suffix: %{/new?public_key="abc"},
+      )
+      maps = FakePlaceholderMaps.new
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq(%{x https://dest.example.com/new?public_key="abc" y})
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
     it "keeps the source URL for a link without a target" do
       link = placeholder.mint(:link)
       Migrations::Database::IntermediateDB::EmbedLink.create(
@@ -56,43 +96,8 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
   end
 
   describe "internal link resolution" do
-    def create_link(placeholder_token, **attrs)
-      Migrations::Database::IntermediateDB::EmbedLink.create(
-        owner_type: embed_owner::POST,
-        owner_id: 1,
-        placeholder: placeholder_token,
-        **attrs,
-      )
-    end
-
-    def create_user(original_id, username)
-      Migrations::Database::IntermediateDB::User.create(
-        original_id:,
-        username:,
-        created_at: Time.now,
-        trust_level: 0,
-      )
-    end
-
-    def create_category(original_id, slug, parent_category_id: nil)
-      Migrations::Database::IntermediateDB::Category.create(
-        original_id:,
-        name: slug,
-        slug:,
-        parent_category_id:,
-        user_id: 1,
-      )
-    end
-
-    def create_tag(original_id, name)
-      Migrations::Database::IntermediateDB::Tag.create(original_id:, name:, slug: name)
-    end
-
     def render(attrs, maps:)
-      link = placeholder.mint(:link)
-      create_link(link, **attrs)
-      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
-      resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])[1]
+      resolve("x #{create_embed(:link, **attrs)} y", maps:)
     end
 
     # Rendering a resolved target through the maps (the id is already known here;
@@ -136,6 +141,213 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = render({ url: "/c/x/2", target_type: link_target::CATEGORY, target_id: 2 }, maps:)
 
       expect(resolved).to eq("x https://dest.example.com/c/support/billing/20 y")
+    end
+
+    it "reattaches a category's filter tail after the destination id" do
+      maps =
+        FakePlaceholderMaps.new(
+          category_id: {
+            2 => 20,
+          },
+          category_slug_path: {
+            2 => "support:billing",
+          },
+        )
+
+      resolved =
+        render(
+          {
+            url: "/c/support/billing/2/l/latest",
+            target_type: link_target::CATEGORY,
+            target_id: 2,
+            target_suffix: "/l/latest",
+          },
+          maps:,
+        )
+
+      expect(resolved).to eq("x https://dest.example.com/c/support/billing/20/l/latest y")
+    end
+
+    # A multi-tag route names several records; it is rebuilt only when the
+    # category and every tag map, and any miss restores the source URL.
+    describe "multi-tag routes" do
+      let(:category_tag_maps) do
+        FakePlaceholderMaps.new(
+          category_id: {
+            2 => 20,
+          },
+          category_slug_path: {
+            2 => "addons:plugin",
+          },
+          tag_name: {
+            3 => "official-stuff",
+          },
+        )
+      end
+
+      before { create_tag(3, "official") }
+
+      it "renders a category+tag target from the mapped coordinates" do
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/official",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "official",
+            },
+            maps: category_tag_maps,
+          )
+
+        expect(resolved).to eq(
+          "x https://dest.example.com/tags/c/addons/plugin/20/official-stuff y",
+        )
+      end
+
+      it "keeps the subcategory filter and the suffix around the mapped parts" do
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/none/official/l/top?period=yearly",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "none/official",
+              target_suffix: "/l/top?period=yearly",
+            },
+            maps: category_tag_maps,
+          )
+
+        expect(resolved).to eq(
+          "x https://dest.example.com/tags/c/addons/plugin/20/none/official-stuff/l/top?period=yearly y",
+        )
+      end
+
+      it "resolves a legacy slug-path category the way category links do" do
+        create_category(7, "howto")
+        create_category(8, "devs", parent_category_id: 7)
+        maps =
+          FakePlaceholderMaps.new(
+            category_id: {
+              8 => 80,
+            },
+            category_slug_path: {
+              8 => "guides:devs",
+            },
+            tag_name: {
+              3 => "official",
+            },
+          )
+
+        resolved =
+          render(
+            {
+              url: "/tags/c/howto/devs/official",
+              target_type: link_target::CATEGORY_TAG,
+              target_name: "howto:devs",
+              target_tag_path: "official",
+            },
+            maps:,
+          )
+
+        expect(resolved).to eq("x https://dest.example.com/tags/c/guides/devs/80/official y")
+      end
+
+      it "renders an intersection target with every tag mapped" do
+        create_tag(4, "wine")
+        maps = FakePlaceholderMaps.new(tag_name: { 3 => "official", 4 => "vino" })
+
+        resolved =
+          render(
+            {
+              url: "/tags/intersection/official/wine",
+              target_type: link_target::TAG_INTERSECTION,
+              target_tag_path: "official/wine",
+            },
+            maps:,
+          )
+
+        expect(resolved).to eq("x https://dest.example.com/tags/intersection/official/vino y")
+      end
+
+      it "treats a lone none/all segment as the tag, not as a subcategory filter" do
+        create_tag(5, "none")
+        maps =
+          FakePlaceholderMaps.new(
+            category_id: {
+              2 => 20,
+            },
+            category_slug_path: {
+              2 => "addons:plugin",
+            },
+            tag_name: {
+              5 => "nothing",
+            },
+          )
+
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/none",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "none",
+            },
+            maps:,
+          )
+
+        expect(resolved).to eq("x https://dest.example.com/tags/c/addons/plugin/20/nothing y")
+      end
+
+      it "falls back to the source URL when the category does not map" do
+        maps = FakePlaceholderMaps.new(tag_name: { 3 => "official" })
+
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/official",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "official",
+            },
+            maps:,
+          )
+
+        # The report itself flows through the shared unresolved-link branch,
+        # covered below with the other miss cases.
+        expect(resolved).to eq("x /tags/c/plugin/2/official y")
+      end
+
+      it "falls back whole when one of the intersection tags does not map" do
+        create_tag(4, "wine")
+        maps = FakePlaceholderMaps.new(tag_name: { 3 => "official" })
+
+        resolved =
+          render(
+            {
+              url: "/tags/intersection/official/wine",
+              target_type: link_target::TAG_INTERSECTION,
+              target_tag_path: "official/wine",
+            },
+            maps:,
+          )
+
+        expect(resolved).to eq("x /tags/intersection/official/wine y")
+      end
+
+      it "falls back when a tag name is not a source tag at all" do
+        resolved =
+          render(
+            {
+              url: "/tags/c/plugin/2/mystery",
+              target_type: link_target::CATEGORY_TAG,
+              target_id: 2,
+              target_tag_path: "mystery",
+            },
+            maps: category_tag_maps,
+          )
+
+        expect(resolved).to eq("x /tags/c/plugin/2/mystery y")
+      end
     end
 
     it "renders a badge target with the destination id and slug" do
@@ -192,6 +404,55 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         render({ url: "/u/old_bob", target_type: link_target::USER, target_name: "old_bob" }, maps:)
 
       expect(resolved).to eq("x https://dest.example.com/u/new_bob y")
+    end
+
+    # A slug-only `/t/<slug>` link carries no id; the slug resolves against the
+    # source topics, and only an unambiguous one rewrites.
+
+    it "resolves a slug-only topic link when exactly one topic carries the slug" do
+      create_topic(300, "how-to-fix-it")
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 99 })
+
+      resolved =
+        render(
+          {
+            url: "/t/how-to-fix-it?page=2",
+            target_type: link_target::TOPIC,
+            target_name: "how-to-fix-it",
+            target_suffix: "?page=2",
+          },
+          maps:,
+        )
+
+      expect(resolved).to eq("x https://dest.example.com/t/99?page=2 y")
+    end
+
+    it "restores the source URL for an unknown slug" do
+      url = "https://old.example.com/t/ghost-topic"
+
+      resolved =
+        render({ url:, target_type: link_target::TOPIC, target_name: "ghost-topic" }, maps:)
+
+      expect(resolved).to eq("x #{url} y")
+    end
+
+    it "restores the source URL when several topics share the slug" do
+      create_topic(300, "dup-slug")
+      create_topic(301, "dup-slug")
+      link =
+        create_embed(
+          :link,
+          url: "https://old.example.com/t/dup-slug",
+          target_type: link_target::TOPIC,
+          target_name: "dup-slug",
+        )
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 99, 301 => 100 })
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x https://old.example.com/t/dup-slug y")
+      expect(resolver.unresolved_embeds.map(&:kind)).to eq([:link])
     end
 
     it "resolves a category target by its parent:child slug path" do
@@ -266,13 +527,13 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     # but is still recorded, since a stale internal link points at the wrong record.
 
     it "falls back to the source URL and reports an unresolved internal link" do
-      link = placeholder.mint(:link)
-      create_link(
-        link,
-        url: "https://old.example.com/t/slug/300",
-        target_type: link_target::TOPIC,
-        target_id: 300,
-      )
+      link =
+        create_embed(
+          :link,
+          url: "https://old.example.com/t/slug/300",
+          target_type: link_target::TOPIC,
+          target_id: 300,
+        )
       maps = FakePlaceholderMaps.new(post: { 1 => { topic_id: 42, post_number: 3 } })
       resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
 
@@ -290,8 +551,8 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
 
     it "reports the failing name when a named target can't be resolved" do
-      link = placeholder.mint(:link)
-      create_link(link, url: "/u/ghost", target_type: link_target::USER, target_name: "ghost")
+      link =
+        create_embed(:link, url: "/u/ghost", target_type: link_target::USER, target_name: "ghost")
 
       resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
 
@@ -299,8 +560,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
 
     it "does not report an external link that falls back" do
-      link = placeholder.mint(:link)
-      create_link(link, url: "https://elsewhere.example.com/page")
+      link = create_embed(:link, url: "https://elsewhere.example.com/page")
 
       resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
 
