@@ -881,37 +881,23 @@ module ApplicationHelper
   end
 
   def discourse_color_scheme_stylesheets
-    light_href =
-      stylesheet_manager.color_scheme_stylesheet_link_tag_href(scheme_id, fallback_to_base: true)
-    add_resource_preload_list(light_href, "style")
+    light = stylesheet_manager.color_scheme_stylesheet_details(scheme_id, fallback_to_base: true)
+    add_resource_preload_list(light[:new_href], "style")
 
-    dark_href = nil
+    dark = nil
     if dark_scheme_id != -1
-      dark_href =
-        stylesheet_manager.color_scheme_stylesheet_link_tag_href(
-          dark_scheme_id,
-          fallback_to_base: false,
-        )
+      dark =
+        stylesheet_manager.color_scheme_stylesheet_details(dark_scheme_id, fallback_to_base: false)
     end
 
     result = +""
-    if dark_href && dark_href != light_href
-      add_resource_preload_list(dark_href, "style")
+    if dark && dark[:new_href] != light[:new_href]
+      add_resource_preload_list(dark[:new_href], "style")
 
-      result << color_scheme_stylesheet_link_tag(
-        light_href,
-        light_elements_media_query,
-        "light-scheme",
-        scheme_id,
-      )
-      result << color_scheme_stylesheet_link_tag(
-        dark_href,
-        dark_elements_media_query,
-        "dark-scheme",
-        dark_scheme_id,
-      )
+      result << color_scheme_stylesheet_link_tag(light, light_elements_media_query, "light-scheme")
+      result << color_scheme_stylesheet_link_tag(dark, dark_elements_media_query, "dark-scheme")
     else
-      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme", scheme_id)
+      result << color_scheme_stylesheet_link_tag(light, "all", "light-scheme")
     end
     result.html_safe
   end
@@ -1106,8 +1092,10 @@ module ApplicationHelper
       end
   end
 
-  def color_scheme_stylesheet_link_tag(href, media, css_class, scheme_id)
-    scheme_id = Integer(scheme_id, exception: false)
-    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"#{scheme_id && scheme_id != -1 ? %[ data-scheme-id="#{scheme_id}"] : ""}/>]
+  def color_scheme_stylesheet_link_tag(stylesheet, media, css_class)
+    data = +%[ data-target="color_definitions"]
+    data << %[ data-scheme-id="#{stylesheet[:color_scheme_id]}"]
+    data << %[ data-theme-id="#{stylesheet[:theme_id]}"] if stylesheet[:theme_id]
+    %[<link href="#{stylesheet[:new_href]}" media="#{media}" rel="stylesheet" class="#{css_class}"#{data}/>]
   end
 end
