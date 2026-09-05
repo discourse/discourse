@@ -688,19 +688,19 @@ GEM
     sanitize (7.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.16.8)
-    sass-embedded (1.100.0-aarch64-linux-gnu)
+    sass-embedded (1.104.0-aarch64-linux-gnu)
       google-protobuf (~> 4.31)
-    sass-embedded (1.100.0-aarch64-linux-musl)
+    sass-embedded (1.104.0-aarch64-linux-musl)
       google-protobuf (~> 4.31)
-    sass-embedded (1.100.0-arm64-darwin)
+    sass-embedded (1.104.0-arm64-darwin)
       google-protobuf (~> 4.31)
-    sass-embedded (1.100.0-x86_64-darwin)
+    sass-embedded (1.104.0-x86_64-darwin)
       google-protobuf (~> 4.31)
-    sass-embedded (1.100.0-x86_64-linux-gnu)
+    sass-embedded (1.104.0-x86_64-linux-gnu)
       google-protobuf (~> 4.31)
-    sass-embedded (1.100.0-x86_64-linux-musl)
+    sass-embedded (1.104.0-x86_64-linux-musl)
       google-protobuf (~> 4.31)
-    sassc-embedded (1.80.8)
+    sassc-embedded (1.80.9)
       sass-embedded (~> 1.80)
     sawyer (0.9.3)
       addressable (>= 2.3.5)
@@ -1265,13 +1265,13 @@ CHECKSUMS
   rubyzip (3.5.0) sha256=f77c49d737a849b662f6ca4de473f31b4ecd8288f1c9f901a5c820641f0f8d7c
   samovar (2.5.1) sha256=8a9fc41eb8868084f0321eb41678c485cfbc7d282fb306c0be67c3284b1d2394
   sanitize (7.0.0) sha256=269d1b9d7326e69307723af5643ec032ff86ad616e72a3b36d301ac75a273984
-  sass-embedded (1.100.0-aarch64-linux-gnu) sha256=c13187f8eaae7e7e64246b18eb896534a84465a17198829ef65730db4662860e
-  sass-embedded (1.100.0-aarch64-linux-musl) sha256=1b0945a66cd4e40f505db73b1e790e2561e07e6d9fd04ef6ebbf279835666b3f
-  sass-embedded (1.100.0-arm64-darwin) sha256=d294b32c3b7bed293ad39bd392713c07f1df5454e65fa0f8d80dadbdba8a0cf4
-  sass-embedded (1.100.0-x86_64-darwin) sha256=3db80c837a60712de3461d5aa1be43c7056a0584d7182a8ae7a8996d64ab46d3
-  sass-embedded (1.100.0-x86_64-linux-gnu) sha256=58dd0a8a4f0dd78881b90d8b0e4d0eed042d54865b19b71384d91091ade93e18
-  sass-embedded (1.100.0-x86_64-linux-musl) sha256=03dbee81bf93e770c725caf0c895e04c7b049ebef56b8a7002fcf21e6bedf7c5
-  sassc-embedded (1.80.8) sha256=ea62825e4031cc8267e6befd492bcf8e29f11ccc18500f4e8ee9adb7feb6d563
+  sass-embedded (1.104.0-aarch64-linux-gnu) sha256=99e2b95e8101928f8976c7a3f7cced5c5e4289ceb8aca0e1dedd9bb13645e417
+  sass-embedded (1.104.0-aarch64-linux-musl) sha256=d54f9dc45e753d29a999021f24cfc126b49c61f14bcb8e96209a02288cde22c3
+  sass-embedded (1.104.0-arm64-darwin) sha256=b1409415e06931b43c2a498fc430fe8ddbad9706be5bb3c4e20b60c14f56b122
+  sass-embedded (1.104.0-x86_64-darwin) sha256=d463b65e6fefcae614352f7a4dcea61d399f35a1238822b38d88471cee954717
+  sass-embedded (1.104.0-x86_64-linux-gnu) sha256=7aeaa07beff7db254836599f1524ac7b67216729613ebc57e3828b94345f0488
+  sass-embedded (1.104.0-x86_64-linux-musl) sha256=bc14555f68aa7057e923d400726c1623bb603101eef6340962e4e80ee89e67ba
+  sassc-embedded (1.80.9) sha256=bf90ad875181548646c1dcc317f985471980a7f5a71a87103536a6d3810dfeaa
   sawyer (0.9.3) sha256=0d0f19298408047037638639fe62f4794483fb04320269169bd41af2bdcf5e41
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   shoulda-matchers (8.0.1) sha256=5dbb46e5765b9da225111b085e0819e8c8a121ff94bba430a153eb1ea2c60288
