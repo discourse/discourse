@@ -23,11 +23,11 @@ module LlmsTxt
 
       if !SiteSetting.login_required
         public_links = [
-          translated_local_link(:search, "/search"),
           translated_local_link(:filter, "/filter"),
           translated_local_link(:latest, "/latest"),
           translated_local_link(:categories, "/categories"),
         ]
+        public_links.unshift(translated_local_link(:search, "/search")) if Guardian.new.can_search?
         if SiteSetting.enable_sitemap
           public_links << translated_local_link(:sitemap, "/sitemap.xml")
         end

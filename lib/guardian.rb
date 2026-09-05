@@ -204,6 +204,10 @@ class Guardian
     @user.in_any_groups?(group_ids)
   end
 
+  def can_search?
+    authenticated? || SiteSetting.allow_anonymous_search
+  end
+
   # Can the user see the object?
   def can_see?(obj)
     if obj

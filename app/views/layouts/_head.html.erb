@@ -19,4 +19,6 @@
 <% if SiteSetting.google_site_verification_token.present? %>
   <meta name="google-site-verification" content="<%= SiteSetting.google_site_verification_token %>">
 <% end %>
-<link rel="search" type="application/opensearchdescription+xml" href="<%= Discourse.base_url %>/opensearch.xml" title="<%= SiteSetting.title %> Search">
+<% if guardian.can_search? %>
+  <link rel="search" type="application/opensearchdescription+xml" href="<%= Discourse.base_url %>/opensearch.xml" title="<%= SiteSetting.title %> Search">
+<% end %>

@@ -40,6 +40,7 @@ export default class Contents extends Component {
 
   get showHeaderSearch() {
     if (
+      !this.site.can_search ||
       this.site.mobileView ||
       this.args.narrowDesktop ||
       ALL_PAGES_EXCLUDED_ROUTES.some(
