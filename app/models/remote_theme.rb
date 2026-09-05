@@ -347,9 +347,14 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     theme_size = 0
+    icon_set_map_filename =
+      if theme_info["icon_set"].is_a?(Hash) && (map = theme_info["icon_set"]["map"]).is_a?(String)
+        Pathname.new(map).cleanpath.to_s.delete_prefix("/")
+      end
 
     all_files.each do |filename|
-      next unless opts = ThemeField.opts_from_file_path(filename)
+      opts = ThemeField.opts_from_file_path(filename)
+      next if !opts && filename != icon_set_map_filename
 
       file_size = importer.file_size(filename)
 
@@ -372,8 +377,21 @@ class RemoteTheme < ActiveRecord::Base
               )
       end
 
+      next if !opts
+
       value = importer[filename]
       updated_fields << theme.set_field(**opts.merge(value: value))
+    end
+
+    if theme_info.key?("icon_set")
+      begin
+        updated_fields << import_icon_set_field(theme, theme_info["icon_set"], importer)
+      rescue ImportError => err
+        # Persisted like a clone failure, so it survives the request.
+        self.last_error_text = err.message
+        save!
+        raise
+      end
     end
 
     if !skip_update
@@ -439,6 +457,119 @@ class RemoteTheme < ActiveRecord::Base
     override = hex.downcase
     override = nil if override !~ /\A[0-9a-f]{6}\z/
     override
+  end
+
+  ICON_SET_KEYS = %w[map ignore_setting]
+
+  def import_icon_set_field(theme, icon_set, importer)
+    raise ImportError, I18n.t("themes.import_error.icon_set_not_object") if !icon_set.is_a?(Hash)
+
+    # Ignored, not rejected, like every other unrecognised about.json key: a
+    # theme using a sub-key a newer core added must still install here.
+    if (unknown_keys = icon_set.keys - ICON_SET_KEYS).present?
+      Rails.logger.warn(
+        "Theme #{theme.name}: ignoring unknown about.json icon_set keys: #{unknown_keys.join(", ")}",
+      )
+    end
+
+    map = icon_set["map"]
+
+    if map.is_a?(String)
+      path = importer.real_path(map)
+      raise ImportError, I18n.t("themes.import_error.icon_set_map_missing", path: map) if path.nil?
+
+      begin
+        if !File.file?(path)
+          raise ImportError, I18n.t("themes.import_error.icon_set_map_not_file", path: map)
+        end
+
+        if File.size(path) > MAX_ASSET_FILE_SIZE
+          raise ImportError,
+                I18n.t(
+                  "themes.import_error.asset_too_big",
+                  filename: map,
+                  limit: ActiveSupport::NumberHelper.number_to_human_size(MAX_ASSET_FILE_SIZE),
+                )
+        end
+
+        map = JSON.parse(File.read(path))
+      rescue JSON::ParserError, SystemCallError => e
+        raise ImportError, I18n.t("themes.import_error.icon_set_invalid", error: e.message)
+      end
+    end
+
+    raise ImportError, I18n.t("themes.import_error.icon_set_map_not_object") if !map.is_a?(Hash)
+    raise ImportError, I18n.t("themes.import_error.icon_set_map_empty") if map.empty?
+
+    invalid =
+      map.filter_map do |name, glyph|
+        if !SvgSprite.valid_icon_name?(name)
+          "\"#{name.to_s.truncate(40)}\" (not a valid icon name)"
+        elsif !glyph.is_a?(String)
+          "\"#{name}\" (glyph is not a string)"
+        end
+      end
+
+    if invalid.present?
+      raise ImportError,
+            I18n.t(
+              "themes.import_error.icon_set_map_entries_invalid",
+              count: invalid.size,
+              entries: invalid.first(5).join(", "),
+            )
+    end
+
+    declaration = { "map" => map }
+    ignore_setting = icon_set["ignore_setting"]
+    if ignore_setting.present?
+      if !ignore_setting.is_a?(String)
+        raise ImportError, I18n.t("themes.import_error.icon_set_ignore_setting_invalid")
+      end
+      declaration["ignore_setting"] = ignore_setting
+    end
+
+    validate_icon_set_settings!(declaration, importer)
+
+    theme.set_field(
+      target: :common,
+      name: SvgSprite::ICON_SET_FIELD_NAME,
+      type: :json,
+      value: declaration.to_json,
+    )
+  end
+
+  # A typo'd placeholder resolves to an empty string and quietly drops the whole
+  # set back to the defaults. Checkable here because both sides are in this import.
+  def validate_icon_set_settings!(declaration, importer)
+    wanted =
+      SvgSprite.icon_set_placeholders(declaration["map"]) + [declaration["ignore_setting"]].compact
+    return if wanted.empty?
+
+    declared = declared_theme_setting_names(importer)
+    return if declared.nil? # malformed YAML reports itself; don't blame the map too
+
+    missing = wanted.uniq - declared
+    return if missing.empty?
+
+    raise ImportError,
+          I18n.t(
+            "themes.import_error.icon_set_settings_missing",
+            count: missing.size,
+            settings: missing.join(", "),
+          )
+  end
+
+  # The importer, not the theme: set_field writes through a fresh query, so the
+  # theme still reports the previous import's settings at this point.
+  def declared_theme_setting_names(importer)
+    yaml = %w[settings.yml settings.yaml].lazy.filter_map { |name| importer[name] }.first
+    return [] if yaml.blank?
+
+    names = []
+    ThemeSettingsParser.new(ThemeField.new(value: yaml)).load { |name, *_| names << name.to_s }
+    names
+  rescue ThemeSettingsParser::InvalidYaml
+    nil
   end
 
   def update_theme_color_schemes(theme, schemes)

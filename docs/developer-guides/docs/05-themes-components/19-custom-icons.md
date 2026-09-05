@@ -103,3 +103,57 @@ Here the icon name follows the `d-icon-` prefix. So in this example it's `d-unli
 Most of our icons follow the icon names from https://fontawesome.com/, but there are exceptions (which is why checking the ID in your inspector is the most reliable method). You can see all the exceptions in the `const REPLACEMENTS` block [here on github](https://github.com/discourse/discourse/blob/0b5d5b0d40ecf4b1588a442598410ea64d7869d5/app/assets/javascripts/discourse-common/addon/lib/icon-library.js#L14).
 
 That's it. You can now style Discourse with your own custom icons!
+
+# Step 4 (recommended for full icon sets) - Declare an `icon_set`
+
+If your theme replaces most of Discourse's icons (a full multi-weight set), per-icon `replaceIcon` calls have a cost: the bundle ships both the replaced default icons and your replacements, and a set with multiple weights ships every weight even though only one is used.
+
+Declaring an `icon_set` in about.json moves the replacement to the server. Each mapped glyph from your sprite is bundled under the canonical icon id, so no `replaceIcon` calls are needed and only the glyphs actually rendered are served. Icons you don't map keep their Discourse defaults.
+
+```json
+"assets": {
+  "icons-sprite": "/assets/icons-sprite.svg"
+},
+"icon_set": {
+  "map": "/assets/icon-map.json"
+}
+```
+
+`map` maps a canonical Discourse icon name to a `<symbol>` id in your sprite. It can be an inline object (`{ "bell": "ph-regular-bell" }`) or a path to a JSON file of the same shape.
+
+A map key is the id something asks for: the id you see on the `<use href="#...">` in your inspector. That is usually a canonical Discourse icon name, but it can be any id a theme, plugin or site setting requests (see below). Discourse also has client-side _aliases_ (the `notification.*` and `d-*` names in the `REPLACEMENTS` block linked above), which resolve to a canonical icon before the sprite is consulted; mapping an alias has no effect, so map the icon it resolves to instead. A key that names no icon is silently ignored.
+
+Map values may contain `{placeholder}` tokens, each resolving from the theme setting of the same name. With `"bell": "ph-{weight}-bell"` and a `weight` setting set to `bold`, the `ph-bold-bell` symbol is served as `bell` - and changing the setting re-resolves the bundle. A set can have any number of variant axes (weight, style, fill, ...), each its own setting. An icon that should always use one variant maps to a fixed id instead (`"heart": "ph-fill-heart"`).
+
+Add `"ignore_setting": "<setting name>"` to name a list setting whose icons keep their Discourse default glyph, so admins can opt out of the replacement per icon. It defaults to `ignored_icons`. Both this and every `{placeholder}` must name a setting the theme declares in `settings.yml`, or the import fails, a placeholder bound to a setting that isn't there resolves to nothing and would silently drop the whole set back to the defaults. Mapped icons that don't resolve to a glyph in your sprite fall back to the default too, and are logged in the server logs to help catch typos.
+
+When an `icon_set` is declared, the declaring theme's sprite is used only as a source for mapped glyphs: symbols no map entry resolves to (such as the other weights) are not bundled. Other themes' sprites and `replaceIcon` keep working, with one change noted below.
+
+If another theme or plugin sprite defines the same canonical icon id, its explicit override wins while the icon set is active. This differs from the legacy no-set behavior, where duplicate symbols are emitted after the core symbol and the core glyph wins. Source glyph ids are otherwise omitted unless they are explicitly requested server-side, for example through `register_svg_icon`, an icon setting, or `svg_icon_subset`.
+
+Note that even though only the used glyphs are served, the whole sprite you upload must fit the theme sprite size limit (1 MB), since it is parsed server-side. A very large multi-weight catalog may need to be trimmed to the weights and icons you actually map.
+
+Icon sets are resolved per theme. The admin icon picker follows the theme of the request, but lookups with no theme context (`raw_svg` layouts and the single-icon endpoint) reflect the site's **default** theme only.
+
+Plugins can declare an icon set too, with the same shape, using the plugin's `svg-icons` sprite as the glyph source and site settings for `{placeholder}` tokens. `ignore_setting` optionally names a list site setting whose icons keep their default glyph:
+
+```ruby
+# plugin.rb
+register_icon_set(map: "icon-map.json", ignore_setting: "my_plugin_ignored_icons")
+```
+
+A theme-declared icon set takes precedence over plugin-registered ones.
+
+## Using one glyph from someone else's icon set
+
+A component that needs a specific glyph from the active set does not need that set to change. Name the source glyph id in the component's own `svg_icons` modifier and it is served as-is:
+
+```json
+"modifiers": {
+  "svg_icons": ["ph-duotone-storefront"]
+}
+```
+
+The glyph has to exist in the declaring theme's sprite, and naming an exact id pins that variant, so it will not follow the set's variant settings. A component that needs a glyph the set's sprite does not contain ships it in its own `icons-sprite.svg` instead; other themes' sprites are unaffected by an active icon set.
+
+Only one icon set applies to a theme. That falls out of resolving the map on the server: pages rendered without JavaScript (`raw_svg` layouts, category badges) get set glyphs too, but the sprite has to answer to the id the client already asks for, so a single glyph has to win per id. Two themes can each declare a different set and both work; it is stacking two sets on one theme that does not. If more than one theme in the tree declares one, the first in component order wins and the rest are ignored (reported on the admin dashboard), a component cannot extend another theme's set. A component that needs a glyph the active set doesn't map has two options that need no change upstream: ship it in its own `icons-sprite.svg` (other themes' sprites are left alone), or, to use a glyph that is already in the set's sprite, name that source id in its own `svg_icons` theme modifier. The second keeps a single copy of the glyph but pins the exact variant, so it does not follow the set's variant settings.

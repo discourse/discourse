@@ -84,6 +84,7 @@ class ProblemCheck
     ProblemCheck::MissingAwsSnsTopicArn,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
+    ProblemCheck::InactiveIconSets,
     ProblemCheck::PollPop3Timeout,
     ProblemCheck::PollPop3AuthError,
     ProblemCheck::QqMailSmtp,

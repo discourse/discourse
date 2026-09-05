@@ -946,6 +946,17 @@ class Theme < ActiveRecord::Base
         end
       end
 
+      # Stored inline (file refs resolve at import), so this round-trips.
+      if (field = theme_fields.find(&:icon_set_field?))
+        icon_set =
+          begin
+            JSON.parse(field.value)
+          rescue JSON::ParserError
+            nil
+          end
+        meta[:icon_set] = icon_set if icon_set.present?
+      end
+
       meta[
         :learn_more
       ] = "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
