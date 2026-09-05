@@ -1,9 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import { click, render, settled, waitFor } from "@ember/test-helpers";
+import ModalContainer from "discourse/components/modal-container";
+import DMenus from "discourse/float-kit/components/d-menus";
 import DEditor from "discourse/ui-kit/d-editor";
 
 export async function setupRichEditor(assert, markdown, opts = {}) {
-  const { multiToggle = false, markdownOptions } = opts;
+  const {
+    disabled = false,
+    multiToggle = false,
+    markdownOptions,
+    withMenus = false,
+  } = opts;
   const self = new (class {
     @tracked value = markdown;
     @tracked view;
@@ -16,10 +23,15 @@ export async function setupRichEditor(assert, markdown, opts = {}) {
     <template>
       <DEditor
         @value={{self.value}}
+        @disabled={{disabled}}
         @processPreview={{false}}
         @onSetup={{handleSetup}}
         @markdownOptions={{markdownOptions}}
       />
+      {{#if withMenus}}
+        <DMenus />
+        <ModalContainer />
+      {{/if}}
     </template>
   );
 

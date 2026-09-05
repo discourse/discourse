@@ -6,6 +6,7 @@ import {
 import bulletList from "./bullet-list";
 import code from "./code";
 import codeBlock from "./code-block";
+import dragHandle from "./drag-handle";
 import emoji from "./emoji";
 import grid from "./grid";
 import hardBreak from "./hard-break";
@@ -71,6 +72,8 @@ const defaultExtensions: RichEditorExtension[] = [
   uploadPlaceholder,
   previewSource,
   previewToolbar,
+  // Last: its context-menu gesture is a fallback for nodes without one.
+  dragHandle,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);
