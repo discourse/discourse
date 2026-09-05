@@ -52,7 +52,8 @@ class UserOptionSerializer < ApplicationSerializer
              :send_shortcut,
              :automatically_translate,
              :understood_languages,
-             :hidden_composer_toolbar_buttons
+             :hidden_composer_toolbar_buttons,
+             :bulk_permanent_topic_deletion
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

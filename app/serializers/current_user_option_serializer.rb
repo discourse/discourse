@@ -30,7 +30,8 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :send_shortcut,
              :automatically_translate,
              :understood_languages,
-             :hidden_composer_toolbar_buttons
+             :hidden_composer_toolbar_buttons,
+             :bulk_permanent_topic_deletion
 
   def likes_notifications_disabled
     object.likes_notifications_disabled?
