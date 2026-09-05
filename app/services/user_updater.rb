@@ -65,6 +65,7 @@ class UserUpdater
     send_shortcut
     automatically_translate
     understood_languages
+    bulk_permanent_topic_deletion
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -194,6 +195,14 @@ class UserUpdater
         attributes[:text_size]
     end
 
+    if attributes.key?(:bulk_permanent_topic_deletion) &&
+         (
+           !@actor&.admin? || @actor.id != user.id || !SiteSetting.can_permanently_delete ||
+             !SiteSetting.allow_bulk_permanent_topic_deletion
+         )
+      attributes.delete(:bulk_permanent_topic_deletion)
+    end
+
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)
         save_options = true
@@ -258,9 +267,21 @@ class UserUpdater
       end
 
       name_changed = user.name_changed?
+      user_option_saved = !save_options || user.user_option.save
+
+      if user_option_saved && attributes.key?(:bulk_permanent_topic_deletion) &&
+           user.user_option.saved_change_to_bulk_permanent_topic_deletion?
+        previous_value, new_value = user.user_option.saved_change_to_bulk_permanent_topic_deletion
+
+        StaffActionLogger.new(@actor).log_bulk_permanent_topic_deletion_preference_change(
+          user,
+          previous_value,
+          new_value,
+        )
+      end
+
       saved =
-        (!save_options || user.user_option.save) &&
-          (user_notification_schedule.nil? || user_notification_schedule.save) &&
+        user_option_saved && (user_notification_schedule.nil? || user_notification_schedule.save) &&
           user_profile.save && user.save
 
       if saved && name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0

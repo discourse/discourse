@@ -292,6 +292,7 @@ end
 #  automatically_translate                        :boolean          default(TRUE), not null
 #  automatically_unpin_topics                     :boolean          default(TRUE), not null
 #  bookmark_auto_delete_preference                :integer          default(3), not null
+#  bulk_permanent_topic_deletion                  :boolean          default(FALSE), not null
 #  chat_announce_new_messages                     :boolean          default(TRUE), not null
 #  chat_email_frequency                           :integer          default("when_away"), not null
 #  chat_enabled                                   :boolean          default(TRUE), not null

@@ -251,6 +251,17 @@ export default <template>
       data-setting-name="user-enable-markdown-monospace-font"
       class="pref-enable-markdown-monospace-font"
     />
+    {{#if @controller.canEnableBulkPermanentTopicDeletion}}
+      <PreferenceCheckbox
+        @labelKey="user.bulk_permanent_topic_deletion"
+        @checked={{@controller.model.user_option.bulk_permanent_topic_deletion}}
+        data-setting-name="user-bulk-permanent-topic-deletion"
+        class="pref-bulk-permanent-topic-deletion"
+      />
+      <div class="instructions pref-bulk-permanent-topic-deletion-instructions">
+        {{i18n "user.bulk_permanent_topic_deletion_description"}}
+      </div>
+    {{/if}}
     <div
       class="controls controls-dropdown pref-page-title"
       data-setting-name="user-page-title"

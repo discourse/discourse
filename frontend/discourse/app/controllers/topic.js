@@ -1085,8 +1085,17 @@ export default class TopicController extends Controller {
       return this.dialog.alert(result.reason);
     }
 
+    const bulkPermanentTopicDeletion =
+      post.firstPost &&
+      this.currentUser?.can_enable_bulk_permanent_topic_deletion &&
+      this.currentUser?.user_option?.bulk_permanent_topic_deletion;
+
     const message = post.firstPost
-      ? i18n("post.controls.permanently_delete_topic_confirmation")
+      ? i18n(
+          bulkPermanentTopicDeletion
+            ? "post.controls.permanently_delete_topic_with_replies_confirmation"
+            : "post.controls.permanently_delete_topic_confirmation"
+        )
       : i18n("post.controls.permanently_delete_post_confirmation");
 
     return this.modal.show(PermanentlyDeleteConfirmModal, {
