@@ -1,0 +1,12 @@
+.category-card-content {
+  &__title {
+    font-size: var(--font-up-5);
+  }
+
+  &__type {
+    background-color: var(--mention-background-color);
+    font-size: var(--font-down-2);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--d-border-radius);
+  }
+}
