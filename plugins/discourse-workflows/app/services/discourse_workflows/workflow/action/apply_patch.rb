@@ -281,7 +281,13 @@ module DiscourseWorkflows
         raise PatchError, "#{node_label(node)} references disabled AI agent #{agent.name.inspect}"
       end
 
-      parameters["agent_name"] ||= agent.name
+      ai_agent_parameters(agent).each do |key, value|
+        parameters[key] = value if parameters[key].blank?
+      end
+    end
+
+    def ai_agent_parameters(agent)
+      { "agent_name" => agent.name, "agent_response_format" => agent.response_format }
     end
 
     def ai_agent_ref(value)
@@ -367,7 +373,7 @@ module DiscourseWorkflows
         next if agent.blank?
 
         parameters["agent_id"] = agent.id
-        parameters["agent_name"] = agent.name
+        parameters.merge!(ai_agent_parameters(agent))
       end
     end
 
