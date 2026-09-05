@@ -20,7 +20,7 @@ module("Integration | Component | voice-room-form", function (hooks) {
   hooks.beforeEach(function () {
     this.siteSettings.chat_enabled = true;
     this.siteSettings.voice_chat_enabled = true;
-    this.siteSettings.voice_video_enabled = false;
+    this.owner.lookup("service:site").set("voice_video_available", false);
 
     this.owner.unregister("service:chat-api");
     this.owner.register("service:chat-api", ChatApiStub);
@@ -93,6 +93,26 @@ module("Integration | Component | voice-room-form", function (hooks) {
       .set("voice_livekit_per_room_available", false);
     await render(<template><VoiceRoomForm @room={{this.room}} /></template>);
     assert.dom('[data-name="livekit_enabled"]').doesNotExist();
+  });
+
+  test("shows the room's media toggle only when a group may publish", async function (assert) {
+    this.room = {
+      name: "Chill",
+      description: "",
+      public: true,
+      room_type: "open",
+      max_participants: null,
+      video_enabled: true,
+      chat_channel_id: null,
+      chat_idle_minutes: 15,
+    };
+
+    await render(<template><VoiceRoomForm @room={{this.room}} /></template>);
+    assert.dom('[data-name="video_enabled"]').doesNotExist();
+
+    this.owner.lookup("service:site").set("voice_video_available", true);
+    await render(<template><VoiceRoomForm @room={{this.room}} /></template>);
+    assert.dom('[data-name="video_enabled"]').exists();
   });
 
   test("hides the chat settings when no chat channel is linked", async function (assert) {

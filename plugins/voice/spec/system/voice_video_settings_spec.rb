@@ -17,7 +17,6 @@ describe "Voice video settings" do
     SiteSetting.voice_mesh_privacy_warning_enabled = false
     SiteSetting.voice_allowed_groups =
       "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
-    SiteSetting.voice_video_enabled = true
     sign_in(user)
     install_voice_fake_media
   end
@@ -39,6 +38,24 @@ describe "Voice video settings" do
       click_button(I18n.t("js.voice.video_settings.title"))
     end
     expect(page).to have_css(".voice-video-settings-modal")
+  end
+
+  it "hides the screen share button from groups not allowed to share a screen" do
+    SiteSetting.voice_screen_share_allowed_groups = ""
+
+    join_room
+
+    expect(page).to have_button(I18n.t("js.voice.video.camera_on"))
+    expect(page).to have_no_button(I18n.t("js.voice.video.screen_share_start"))
+  end
+
+  it "hides the camera button from groups not allowed to share a camera" do
+    SiteSetting.voice_video_allowed_groups = ""
+
+    join_room
+
+    expect(page).to have_button(I18n.t("js.voice.video.screen_share_start"))
+    expect(page).to have_no_button(I18n.t("js.voice.video.camera_on"))
   end
 
   it "offers voice and video settings from the call menus" do

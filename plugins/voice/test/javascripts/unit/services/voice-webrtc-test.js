@@ -1240,10 +1240,15 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
 
     this.room.room_type = "open";
     this.room.membership.role_name = "participant";
-    this.room.video_allowed = false;
+    this.room.video_enabled = false;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "participant" },
-      { id: 2, role: "participant" },
+      {
+        id: 2,
+        role: "participant",
+        is_video_on: true,
+        can_publish_video: true,
+      },
     ];
 
     try {
@@ -1261,7 +1266,7 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
         "video is dropped while the room's media policy disallows it"
       );
 
-      this.room.video_allowed = true;
+      this.room.video_enabled = true;
       pc.ontrack({ streams: [], track: createFakeTrack("real-cam", "video") });
       await wait(10);
 
@@ -2087,7 +2092,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("leaving the room page stops an active camera publication", async function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.siteSettings.voice_video_max_publishers = 8;
 
     this.room.room_type = "open";
@@ -2214,7 +2220,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   }
 
   function setupCameraRoom(context) {
-    context.siteSettings.voice_video_enabled = true;
+    context.room.video_allowed = true;
+    context.room.screen_share_allowed = true;
     context.siteSettings.voice_video_max_publishers = 8;
 
     context.room.room_type = "open";
@@ -3026,14 +3033,12 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   test("remote camera start exposes the negotiated video track without a refresh", async function (assert) {
     assert.timeout(2000);
 
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.siteSettings.voice_video_max_publishers = 8;
 
     this.room.room_type = "open";
     this.room.video_enabled = true;
-    // The serializer's combined room+site flag; the receive-side track
-    // policy consults it before registering the remote video track.
-    this.room.video_allowed = true;
     this.room.membership = { role_name: "participant" };
     this.room.active_participants = [
       { id: this.currentUser.id, role: "participant" },
@@ -3071,6 +3076,7 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
             role: "participant",
             is_video_on: true,
             is_screen_sharing: false,
+            can_publish_video: true,
           },
         ],
       });
@@ -3091,7 +3097,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn denies a stage listener", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.room.video_enabled = true;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "listener" },
@@ -3105,7 +3112,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn allows a stage speaker", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.room.video_enabled = true;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "speaker" },
@@ -3119,7 +3127,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn allows a stage moderator", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.room.video_enabled = true;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "moderator" },
@@ -3133,7 +3142,7 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn still requires the room's video flag for a stage speaker", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
     this.room.video_enabled = false;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "speaker" },
@@ -3147,7 +3156,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn does not role-gate open rooms", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.room.room_type = "open";
     this.room.video_enabled = true;
     this.room.active_participants = [
@@ -3159,6 +3169,47 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
       this.subject.videoAllowedIn(this.room),
       "open-room participants can publish video regardless of role"
     );
+  });
+
+  test("camera and screen sharing are allowed independently", function (assert) {
+    this.room.room_type = "open";
+    this.room.video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = false;
+    this.room.active_participants = [
+      { id: this.currentUser.id, role: "participant" },
+    ];
+
+    assert.true(
+      this.subject.videoAllowedIn(this.room),
+      "the camera follows its own server-granted right"
+    );
+    assert.false(
+      this.subject.screenShareAllowedIn(this.room),
+      "screen sharing follows its own server-granted right"
+    );
+
+    this.room.video_allowed = false;
+    this.room.screen_share_allowed = true;
+
+    assert.false(this.subject.videoAllowedIn(this.room), "camera revoked");
+    assert.true(
+      this.subject.screenShareAllowedIn(this.room),
+      "screen sharing granted"
+    );
+  });
+
+  test("a room with media disabled overrides both granted rights", function (assert) {
+    this.room.room_type = "open";
+    this.room.video_enabled = false;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
+    this.room.active_participants = [
+      { id: this.currentUser.id, role: "participant" },
+    ];
+
+    assert.false(this.subject.videoAllowedIn(this.room));
+    assert.false(this.subject.screenShareAllowedIn(this.room));
   });
 
   function createDeviceTrack(id, deviceId) {

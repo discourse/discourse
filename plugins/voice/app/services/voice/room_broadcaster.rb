@@ -39,18 +39,19 @@ module Voice
     def publish_participants(fingerprint: nil)
       guardian = Guardian.new(nil)
       all_metadata = Voice::ParticipantTracker.get_all_metadata(room.id)
+      users = Voice::ParticipantTracker.list(room.id)
+      entitlements = Voice::MediaEntitlements.for_users(room, users)
       payload = {
         type: "participants",
         room_id: room.id,
         participants:
-          Voice::ParticipantTracker
-            .list(room.id)
-            .map do |user|
-              BasicUserSerializer
-                .new(user, scope: guardian, root: false)
-                .as_json
-                .merge(all_metadata[user.id] || {})
-            end,
+          users.map do |user|
+            BasicUserSerializer
+              .new(user, scope: guardian, root: false)
+              .as_json
+              .merge(all_metadata[user.id] || {})
+              .merge(entitlements[user.id] || Voice::MediaEntitlements::NONE)
+          end,
       }
 
       MessageBus.publish(Voice.room_channel(room.id), payload, **room_message_bus_targets)

@@ -280,7 +280,7 @@ export default class VoiceWebrtcService extends Service {
       getFirstActiveRoomId: () => this.#firstActiveRoomId(),
       getActiveRoomId: () => this.activeRoomId,
       getRoom: (roomId) => this.voiceRooms?.roomById(roomId),
-      canPublishVideo: (roomId) => this.canPublishVideo(roomId),
+      canPublish: (kind, roomId) => this.canPublish(kind, roomId),
       getCameraQuality: (roomId) => this.effectiveCameraQuality(roomId),
       getScreenQuality: (roomId) => this.effectiveScreenQuality(roomId),
       getScreenContent: () => this.screenContent,
@@ -386,6 +386,8 @@ export default class VoiceWebrtcService extends Service {
         this.#remoteStreamRegistry.userIdsFor(roomId),
       removeRemoteStream: (roomId, userId) =>
         this.#removeRemoteStream(roomId, userId),
+      removeRemoteMedia: (roomId, userId) =>
+        this.#remoteStreamRegistry.removeMedia(roomId, userId),
       removeAllRemoteStreams: (roomId) => this.#removeAllRemoteStreams(roomId),
       getLocalVideoKind: () => this.localVideoKind,
       syncVideoSenders: (roomId) => this.#localVideo.syncSenders(roomId),
@@ -690,7 +692,7 @@ export default class VoiceWebrtcService extends Service {
       this.watchingRoomId !== roomId ||
       this.localVideoKind ||
       !this.#cameraPreferred(userId) ||
-      !this.canPublishVideo(roomId)
+      !this.canPublishCamera(roomId)
     ) {
       return;
     }
@@ -704,7 +706,7 @@ export default class VoiceWebrtcService extends Service {
           this.watchingRoomId === roomId &&
           (!this.localVideoKind || this.localVideoKind === "camera") &&
           this.#cameraPreferred(userId) &&
-          this.canPublishVideo(roomId),
+          this.canPublishCamera(roomId),
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -1265,8 +1267,20 @@ export default class VoiceWebrtcService extends Service {
   }
 
   videoAllowedIn(room) {
+    return this.#mediaAllowedIn(room, room?.video_allowed);
+  }
+
+  screenShareAllowedIn(room) {
+    return this.#mediaAllowedIn(room, room?.screen_share_allowed);
+  }
+
+  // The server-computed right, re-checked against the two things a broadcast
+  // can change under a live call: the room's own media flag (a per-user right
+  // is absent from anonymously-scoped broadcasts, so it survives them stale)
+  // and the caller's stage role.
+  #mediaAllowedIn(room, allowed) {
     return !!(
-      this.siteSettings.voice_video_enabled &&
+      allowed &&
       room?.video_enabled &&
       (room?.room_type !== "stage" || this.#canSpeakInRoom(room))
     );
@@ -1280,9 +1294,25 @@ export default class VoiceWebrtcService extends Service {
     ).length;
   }
 
-  canPublishVideo(roomId) {
+  canPublishCamera(roomId) {
+    return this.#canPublishIn(roomId, (room) => this.videoAllowedIn(room));
+  }
+
+  canPublishScreen(roomId) {
+    return this.#canPublishIn(roomId, (room) =>
+      this.screenShareAllowedIn(room)
+    );
+  }
+
+  canPublish(kind, roomId) {
+    return kind === "screen"
+      ? this.canPublishScreen(roomId)
+      : this.canPublishCamera(roomId);
+  }
+
+  #canPublishIn(roomId, allowedIn) {
     const room = this.voiceRooms?.roomById(roomId);
-    if (!room || !this.videoAllowedIn(room)) {
+    if (!room || !allowedIn(room)) {
       return false;
     }
     if (!this.#activeRoomIds.has(roomId)) {
@@ -1506,7 +1536,12 @@ export default class VoiceWebrtcService extends Service {
     }
 
     const room = this.voiceRooms?.roomById(roomId);
-    if (room && !this.videoAllowedIn(room)) {
+    const stillAllowed =
+      this.localVideoKind === "screen"
+        ? this.screenShareAllowedIn(room)
+        : this.videoAllowedIn(room);
+
+    if (room && !stillAllowed) {
       this.#localVideo.stop().catch(() => {});
       this.toasts.default({
         duration: 5000,
@@ -1756,11 +1791,13 @@ export default class VoiceWebrtcService extends Service {
   }
 
   // Mesh receive-side media boundary: only register (and therefore play) a
-  // remote track the sender's server-attested role and the room's media
-  // policy allow. On LiveKit the SFU enforces publish permissions instead.
+  // remote track the sender's server-attested role, entitlements and the
+  // room's media policy allow. On LiveKit the SFU enforces publish
+  // permissions instead.
   #registerRemoteTrack(roomId, userId, track, streams) {
     const room = this.voiceRooms?.roomById(roomId);
-    if (!remoteTrackAllowed(room, userId, track, streams)) {
+    const mesh = this.#isMeshRoom(roomId);
+    if (!remoteTrackAllowed(room, userId, track, streams, { mesh })) {
       // eslint-disable-next-line no-console
       console.warn(
         `[voice] dropping ${track?.kind} track from user ${userId}: not allowed to publish in room ${roomId}`

@@ -132,6 +132,28 @@ module Voice
       membership&.can_speak? || false
     end
 
+    # Camera and screen sharing are gated independently, per user: the room
+    # must allow media at all, the user must be able to speak in it (a stage
+    # listener publishes nothing), and their groups must carry the capability.
+    def can_publish_video_in_voice_room?(room)
+      eligible_to_publish_video_in_voice_room?(room) && can_speak_in_voice_room?(room)
+    end
+
+    def can_screen_share_in_voice_room?(room)
+      eligible_to_screen_share_in_voice_room?(room) && can_speak_in_voice_room?(room)
+    end
+
+    # The same capability minus the stage role, which clients track live from
+    # role_change broadcasts. This is the half that gets serialized, so a
+    # promotion doesn't need the room re-serialized to take effect.
+    def eligible_to_publish_video_in_voice_room?(room)
+      voice_media_entitlements(room)[:can_publish_video]
+    end
+
+    def eligible_to_screen_share_in_voice_room?(room)
+      voice_media_entitlements(room)[:can_screen_share]
+    end
+
     # Only stage-room listeners have anything to request — anyone who can
     # already speak (including admins and everyone in open rooms) cannot.
     def can_request_to_speak_in_voice_room?(room)
@@ -143,6 +165,14 @@ module Voice
       unless can_request_to_speak_in_voice_room?(room)
         raise Discourse::InvalidAccess.new(I18n.t("voice.errors.not_authorized"))
       end
+    end
+
+    private
+
+    def voice_media_entitlements(room)
+      return Voice::MediaEntitlements::NONE unless can_join_voice_room?(room)
+
+      Voice::MediaEntitlements.for_user(room, user)
     end
   end
 end
