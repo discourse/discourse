@@ -2179,25 +2179,57 @@ RSpec.describe UsersController do
       expect(response.status).to eq(400)
     end
 
-    it "rate limits requests per IP" do
-      RateLimiter.enable
+    describe "rate limiting" do
+      before { RateLimiter.enable }
 
-      10.times { get "/u/check_username.json", params: { username: "available" } }
-      get "/u/check_username.json", params: { username: "available" }
+      it "reports a taken username as available once the per IP limit is exceeded" do
+        60.times { get "/u/check_username.json", params: { username: user1.username } }
+        expect(response.parsed_body["available"]).to eq(false)
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body).not_to have_key("available")
-      expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("rate_limiter.slow_down"))
+        get "/u/check_username.json", params: { username: user1.username }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("available" => true)
+      end
+
+      it "does not rate limit staff" do
+        sign_in(moderator)
+
+        61.times { get "/u/check_username.json", params: { username: user1.username } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["available"]).to eq(false)
+      end
     end
 
-    it "does not rate limit staff" do
-      RateLimiter.enable
-      sign_in(moderator)
+    describe "when new registrations are closed" do
+      it "denies anonymous requests when new registrations are disabled" do
+        SiteSetting.allow_new_registrations = false
 
-      11.times { get "/u/check_username.json", params: { username: "available" } }
+        get "/u/check_username.json", params: { username: user1.username }
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["available"]).to eq(true)
+        expect(response.status).to eq(403)
+      end
+
+      it "denies anonymous requests when DiscourseConnect is enabled" do
+        SiteSetting.discourse_connect_url = "http://example.com/sso"
+        SiteSetting.discourse_connect_secret = "sso_secret_12345"
+        SiteSetting.enable_discourse_connect = true
+
+        get "/u/check_username.json", params: { username: user1.username }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "still answers logged in users" do
+        SiteSetting.allow_new_registrations = false
+        sign_in(user1)
+
+        get "/u/check_username.json", params: { username: "BruceWayne" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["available"]).to eq(true)
+      end
     end
 
     shared_examples "when username is unavailable" do

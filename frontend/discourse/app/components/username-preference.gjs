@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
@@ -69,7 +70,7 @@ export default class UsernamePreference extends Component {
   }
 
   @action
-  async onInput(event) {
+  onInput(event) {
     this.newUsername = event.target.value;
     this.taken = false;
     this.errorMessage = null;
@@ -87,17 +88,7 @@ export default class UsernamePreference extends Component {
       return;
     }
 
-    const result = await User.checkUsername(
-      this.newUsername,
-      undefined,
-      this.args.user.id
-    );
-
-    if (result.errors) {
-      this.errorMessage = result.errors.join(" ");
-    } else if (result.available === false) {
-      this.taken = true;
-    }
+    discourseDebounce(this, this.#checkUsernameAvailability, 500);
   }
 
   @action
@@ -119,6 +110,25 @@ export default class UsernamePreference extends Component {
         }
       },
     });
+  }
+
+  async #checkUsernameAvailability() {
+    const username = this.newUsername;
+    const result = await User.checkUsername(
+      username,
+      undefined,
+      this.args.user.id
+    );
+
+    if (username !== this.newUsername) {
+      return;
+    }
+
+    if (result.errors) {
+      this.errorMessage = result.errors.join(" ");
+    } else if (result.available === false) {
+      this.taken = true;
+    }
   }
 
   <template>
