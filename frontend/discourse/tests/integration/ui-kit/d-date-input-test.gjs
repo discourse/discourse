@@ -1,4 +1,4 @@
-import { fillIn, render, triggerEvent } from "@ember/test-helpers";
+import { fillIn, render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDateInput from "discourse/ui-kit/d-date-input";
@@ -46,6 +46,37 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
     await triggerEvent(".date-picker", "change");
 
     assert.true(this.date.isSame(moment("2019-02-02")));
+  });
+
+  test("bounds the picker to the relative date and follows its changes", async function (assert) {
+    this.setProperties({
+      date: DEFAULT_DATE,
+      relativeDate: moment("2019-01-20"),
+    });
+
+    await render(
+      <template>
+        <DDateInput @date={{this.date}} @relativeDate={{this.relativeDate}} />
+      </template>
+    );
+
+    assert
+      .dom(".date-picker")
+      .hasAttribute("min", "2019-01-20", "the bound is applied on load");
+
+    this.set("relativeDate", moment("2019-01-25"));
+    await settled();
+
+    assert
+      .dom(".date-picker")
+      .hasAttribute("min", "2019-01-25", "the bound tracks the relative date");
+
+    this.set("relativeDate", null);
+    await settled();
+
+    assert
+      .dom(".date-picker")
+      .hasAttribute("min", "", "the bound is dropped with the relative date");
   });
 
   test("always shows date in timezone of input timestamp", async function (assert) {
