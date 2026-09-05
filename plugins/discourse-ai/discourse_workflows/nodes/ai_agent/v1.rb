@@ -7,6 +7,7 @@ if defined?(DiscourseWorkflows)
         class V1 < DiscourseWorkflows::NodeType
           RUN_ONCE_FOR_ALL_ITEMS = "runOnceForAllItems"
           RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
+          RESULT_PROPERTY = { "result" => { "type" => "string" } }.freeze
 
           description(
             name: "action:ai_agent",
@@ -19,6 +20,7 @@ if defined?(DiscourseWorkflows)
             available: -> { SiteSetting.discourse_ai_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_ai",
             i18n_prefix: "discourse_ai.discourse_workflows",
+            output_schema_resolver: "ai-agent",
             capabilities: {
               run_scope: {
                 parameter: "mode",
@@ -28,19 +30,7 @@ if defined?(DiscourseWorkflows)
                 },
               },
             },
-            output_contracts: [
-              {
-                schema: {
-                  "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
-                  "type" => "object",
-                  "properties" => {
-                    "result" => {
-                      "type" => "string",
-                    },
-                  },
-                },
-              },
-            ],
+            output_contracts: [{ schema: DiscourseWorkflows::Schema.document(RESULT_PROPERTY) }],
             properties: {
               agent_id: {
                 type: :integer,
@@ -64,11 +54,19 @@ if defined?(DiscourseWorkflows)
                     agent_name: "name",
                     agent_force_default_llm: "force_default_llm",
                     agent_resolved_llm_name: "resolved_llm_name",
+                    agent_response_format: "response_format",
                   },
                 },
               },
               agent_name: {
                 type: :string,
+                ui: {
+                  hidden: true,
+                },
+              },
+              agent_response_format: {
+                type: :array,
+                default: [],
                 ui: {
                   hidden: true,
                 },
@@ -152,6 +150,14 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          def self.output_schemas(configuration = {}, input_schemas: [])
+            fields =
+              Array((configuration || {}).deep_stringify_keys["agent_response_format"]).grep(Hash)
+            properties = DiscourseAi::Agents::Bot.json_schema_properties(fields).deep_stringify_keys
+
+            [DiscourseWorkflows::Schema.document(RESULT_PROPERTY.merge(properties))]
+          end
+
           def self.group_definition
             { icon: "robot", label_key: "discourse_workflows.add_node.categories.ai", order: 40 }
           end
@@ -170,16 +176,16 @@ if defined?(DiscourseWorkflows)
               ::AiAgent
                 .where(enabled: true)
                 .order(:name)
-                .pluck(:id, :name, :default_llm_id, :force_default_llm)
+                .pluck(:id, :name, :default_llm_id, :force_default_llm, :response_format)
 
             site_default_llm_id = SiteSetting.ai_default_llm_model.presence&.to_i
-            llm_model_ids = agents.map { |_id, _name, default_llm_id, _force| default_llm_id }
+            llm_model_ids = agents.map { |_id, _name, default_llm_id, *| default_llm_id }
             llm_model_ids << site_default_llm_id
             llm_models_by_id = ::LlmModel.where(id: llm_model_ids.compact.uniq).index_by(&:id)
 
             default_llm = llm_models_by_id[site_default_llm_id]
 
-            agents.map do |id, name, default_llm_id, force_default_llm|
+            agents.map do |id, name, default_llm_id, force_default_llm, response_format|
               configured_llm = llm_models_by_id[default_llm_id]
               resolved_llm = force_default_llm ? configured_llm : configured_llm || default_llm
               {
@@ -189,6 +195,7 @@ if defined?(DiscourseWorkflows)
                 force_default_llm: force_default_llm,
                 resolved_llm_id: resolved_llm&.id,
                 resolved_llm_name: resolved_llm&.display_name,
+                response_format: response_format || [],
               }
             end
           end
@@ -223,7 +230,7 @@ if defined?(DiscourseWorkflows)
                     runner(exec_ctx, item_index),
                   )
 
-                wrap({ "result" => result }, paired_item: exec_ctx.paired_item_for(item))
+                wrap(result, paired_item: exec_ctx.paired_item_for(item))
               end
 
             [items]
@@ -235,7 +242,7 @@ if defined?(DiscourseWorkflows)
             result = run_agent(agent, item_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
 
             wrap(
-              { "result" => result },
+              result,
               paired_item: exec_ctx.input_items.map { |item| exec_ctx.paired_item_for(item) },
             )
           end
@@ -401,17 +408,18 @@ if defined?(DiscourseWorkflows)
                 execution_context: execution_context,
               )
 
-            result = collect_reply(agent[:bot], bot_context, log)
+            result, structured = collect_reply(agent[:bot], bot_context, log)
 
             skipped =
               execution_context.upload_skips.map { |skip| error_text("upload_skipped", **skip) }
             raise_uploads_not_sent!(agent_record, skipped) if skipped.any?
 
-            result
+            { "result" => result }.merge(structured_fields(structured, agent_record))
           end
 
           def collect_reply(bot, bot_context, log)
             result = +""
+            structured = nil
             tool_calls = 0
 
             bot.reply(bot_context) do |partial, _, type|
@@ -419,6 +427,7 @@ if defined?(DiscourseWorkflows)
                 tool_calls += 1
                 log.info("Tool call: #{partial}") if partial.is_a?(String)
               elsif type == :structured_output
+                structured = partial
                 result = partial.to_s.dup
               elsif type.blank?
                 result << partial
@@ -428,7 +437,18 @@ if defined?(DiscourseWorkflows)
             log.info("Tool calls: #{tool_calls}") if tool_calls > 0
             log.info("Result length: #{result.size} chars")
 
-            result
+            [result, structured]
+          end
+
+          def structured_fields(structured, agent_record)
+            return {} if structured.nil?
+
+            Array(agent_record.response_format)
+              .grep(Hash)
+              .to_h do |field|
+                key = field["key"].to_s
+                [key, structured.read_buffered_property(key.to_sym)]
+              end
           end
         end
       end
