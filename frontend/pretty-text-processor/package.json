@@ -10,7 +10,7 @@
     "base-64": "^1.0.0",
     "discourse": "workspace:0.0.0",
     "discourse-markdown-it": "workspace:*",
-    "markdown-it": "^15.0.0",
+    "markdown-it": "^15.0.1",
     "pretty-text": "workspace:*",
     "rolldown": "1.1.2",
     "xss": "^1.0.15"
