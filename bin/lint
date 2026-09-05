@@ -11,6 +11,8 @@ PROJECT_ROOT_PATH = Pathname.new(PROJECT_ROOT)
 PROJECT_ROOT_REALPATH = PROJECT_ROOT_PATH.realpath
 INVOCATION_PWD = Dir.pwd
 
+LintAborted = Class.new(StandardError)
+
 module Logging
   def log(message)
     puts "[bin/lint] #{message}"
@@ -185,7 +187,10 @@ class LefthookLinter
     lint(determine_files)
     print_summary
 
-    exit 1 if @results.any? { |_, ok| !ok }
+    @results.all? { |_, ok| ok }
+  rescue LintAborted => e
+    warn "[bin/lint] #{e.message}"
+    false
   end
 
   private
@@ -234,7 +239,7 @@ class LefthookLinter
 
     if @selector.nil?
       resolved.filter_map(&:last).each { |problem| warn "[bin/lint] Skipping #{problem}" }
-      abort "[bin/lint] Nothing to lint" if files.empty?
+      raise LintAborted, "Nothing to lint" if files.empty?
     end
 
     files
@@ -275,7 +280,15 @@ class LefthookLinter
 
   def expand_directory(path)
     files =
-      git_lines("ls-files", "--cached", "--others", "--exclude-standard", "--", path, quiet: true)
+      git_lines(
+        "ls-files",
+        "--cached",
+        "--others",
+        "--exclude-standard",
+        "--",
+        path,
+        on_failure: :ignore,
+      )
     files = [path] if files.empty?
 
     files
@@ -283,12 +296,12 @@ class LefthookLinter
       .select { |file| File.file?(file) && lintable_file?(file) }
   end
 
-  def git_lines(*args, quiet: false)
+  def git_lines(*args, on_failure: :abort)
     output, error, status = Open3.capture3("git", *args)
     return output.lines.map(&:strip).reject(&:empty?) if status.success?
+    return [] if on_failure == :ignore
 
-    warn "[bin/lint] git #{args.first} failed: #{error.lines.first&.strip}" unless quiet
-    []
+    raise LintAborted, "git #{args.first} failed: #{error.lines.first&.strip}"
   end
 
   def recent_files
@@ -309,7 +322,7 @@ class LefthookLinter
   end
 
   def core_lintable_file?(file)
-    return false if file.start_with?("../")
+    return false if outside_project?(file)
     return true if file == "Gemfile"
 
     extension = File.extname(file)[1..]
@@ -329,14 +342,24 @@ class LefthookLinter
   end
 
   def lintable_file?(file)
-    return false if SKIPPED_PATHS.include?(file)
-    return false if file.split("/").any? { |segment| SKIPPED_SEGMENTS.include?(segment) }
+    return false if skipped_project_path?(file)
     return true if File.basename(file) == "Gemfile"
 
     extension = File.extname(file)[1..]
     return ruby_script?(file) if extension.nil? || extension.empty?
 
     LINTABLE_EXTENSIONS.include?(extension)
+  end
+
+  def outside_project?(file)
+    file.start_with?("../")
+  end
+
+  def skipped_project_path?(file)
+    return false if outside_project?(file)
+    return true if SKIPPED_PATHS.include?(file)
+
+    file.split("/").any? { |segment| SKIPPED_SEGMENTS.include?(segment) }
   end
 
   def ruby_script?(file)
@@ -354,7 +377,7 @@ class LefthookLinter
   end
 
   def external_plugin_root(file)
-    return standalone_plugin_root(file) if file.start_with?("..")
+    return standalone_plugin_root(file) if outside_project?(file)
     return nil unless file.start_with?("plugins/")
 
     parts = file.split("/")
@@ -377,7 +400,7 @@ class LefthookLinter
     @bundled_plugins ||=
       begin
         output, status = Open3.capture2(File.join(PROJECT_ROOT, "script", "list_bundled_plugins"))
-        abort "Failed to list bundled plugins" unless status.success?
+        raise LintAborted, "Failed to list bundled plugins" unless status.success?
 
         Set.new(output.lines.map(&:strip).reject(&:empty?))
       end
@@ -468,5 +491,5 @@ end
 if __FILE__ == $0
   options = parse_options
   Dir.chdir(PROJECT_ROOT) # rubocop:disable Discourse/NoChdir
-  LefthookLinter.new(options).run
+  exit 1 unless LefthookLinter.new(options).run
 end
