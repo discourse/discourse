@@ -17,7 +17,9 @@ RSpec.describe StepsController do
   end
 
   context "as an admin" do
-    before { sign_in(Fabricate(:admin)) }
+    fab!(:admin, :admin)
+
+    before { sign_in(admin) }
 
     it "raises an error if the wizard is disabled" do
       SiteSetting.wizard_enabled = false
@@ -35,6 +37,22 @@ RSpec.describe StepsController do
           }
 
       expect(response.status).to eq(200)
+    end
+
+    it "does not update the first admin password from the setup wizard" do
+      password = "CorrectHorseBatteryStaple123!"
+
+      put "/wizard/steps/setup.json",
+          params: {
+            fields: {
+              title: "FooBar",
+              default_locale: SiteSetting.default_locale,
+              password: password,
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(admin.reload.confirm_password?(password)).to eq(false)
     end
 
     it "returns errors if the field has them" do
