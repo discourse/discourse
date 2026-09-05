@@ -5,7 +5,8 @@
   --poll-bar-color--chosen: var(--tertiary);
 }
 
-div.poll-outer {
+div.poll-outer,
+.ProseMirror {
   div.poll {
     margin: 1em 0;
     border: 1px solid var(--content-border-color);
@@ -592,74 +593,115 @@ body.crawler {
   }
 }
 
-.ProseMirror {
-  .poll {
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    padding: 1rem;
-    margin-bottom: 1rem;
+// The cooked poll styles above also apply inside the editor, so the rules here
+// that carry a `.poll` or a media query are deliberately written to outrank a
+// specific one of them.
+.composer-poll-node {
+  &__content {
+    min-width: 0;
 
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
+    > ul {
+      margin: 0;
 
-    li {
-      p {
-        display: inline;
+      > li {
+        position: relative;
+        padding: 0.5em 0;
+        padding-inline-start: 1.5em;
+        overflow-wrap: anywhere;
+
+        > p {
+          margin: 0;
+        }
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset-inline-start: 0;
+          top: 0.75em;
+          width: 0.9em;
+          height: 0.9em;
+          box-sizing: border-box;
+          border: 2px solid var(--primary);
+          border-radius: 50%;
+        }
       }
     }
+  }
 
-    li::before {
-      position: relative;
-      vertical-align: baseline;
-      border: 2px solid var(--primary);
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 0.5em;
-      width: 12px;
-      height: 12px;
-      content: "";
+  &__info {
+    display: contents;
+  }
+
+  .ProseMirror &.poll {
+    grid-template-areas: "poll" "info" "buttons";
+
+    @include viewport.from(sm) {
+      // sized to its content, so a setting is not split across lines
+      grid-template-columns: 1fr max-content;
+      grid-template-areas: "poll info" "buttons buttons";
     }
+  }
 
-    &[data-poll-type="multiple"],
-    &[data-poll-type="ranked_choice"] {
+  @include viewport.from(sm) {
+    .ProseMirror &.poll &__info .poll-info {
+      max-width: 18em;
+    }
+  }
+
+  // the cooked column has a fixed width, so its lines share it by percentage;
+  // here the column follows the text, which then needs its natural width
+  .ProseMirror
+    &.poll
+    &__info
+    .poll-info_instructions
+    li:not(:first-child:last-child) {
+    .d-icon,
+    span {
+      width: auto;
+    }
+  }
+
+  &.poll &__content > ul > li {
+    cursor: text;
+  }
+
+  // a lone instruction is centred by the cooked styles, which lets the icon
+  // fall onto a line of its own here: centre the pair instead
+  @include viewport.from(sm) {
+    &.poll &__info .poll-info_instructions li:first-child:last-child {
       display: flex;
-      align-items: center;
+      justify-content: center;
     }
   }
 
-  &[data-poll-type="multiple"] {
-    li::before {
-      border-radius: 3px;
-    }
+  &.--untitled &__content > .poll-title::before {
+    content: var(--poll-title-placeholder, "");
+    color: var(--primary-medium);
+    position: absolute;
+    pointer-events: none;
   }
 
-  &[data-poll-type="ranked_choice"] {
-    li {
-      position: relative;
+  // the parsed info node is replaced by the one rendered below it
+  &.poll &__content > .poll-info {
+    display: none;
+  }
 
-      &::before {
-        mask-image: svg-uri(
-          '<svg width="0.75em" height="0.75em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">\3c !--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>'
-        );
-        z-index: 1;
-        width: 0.75em;
-        margin-right: 0.75em;
-        left: 0.2em;
-        background: var(--primary-high);
-        border-radius: var(--d-button-border-radius);
-        border: none;
-      }
+  &[data-poll-type="multiple"] &__content > ul > li::before {
+    border-radius: 0.15em;
+  }
 
-      &::after {
-        content: "";
-        position: absolute;
-        height: 1.125em;
-        width: 1.125em;
-        background: var(--primary-low);
-        border-radius: var(--d-button-border-radius);
-      }
+  &[data-poll-type="ranked_choice"] &__content > ul {
+    counter-reset: poll-option;
+
+    > li::before {
+      counter-increment: poll-option;
+      content: counter(poll-option);
+      top: 0.5em;
+      width: 1em;
+      height: auto;
+      border: none;
+      border-radius: 0;
+      color: var(--primary-medium);
     }
   }
 }
