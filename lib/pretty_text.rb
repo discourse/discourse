@@ -275,6 +275,14 @@ module PrettyText
     protect { v8.call("__PrettyText.sanitize", html.to_s, opts) }
   end
 
+  def self.scan_hashtags(raw)
+    protect { v8.call("__PrettyText.scanHashtags", raw.to_s) }
+  end
+
+  def self.splice_hashtags(raw, replacements)
+    protect { v8.call("__PrettyText.spliceHashtags", raw.to_s, replacements) }
+  end
+
   def self.unescape_emoji(title)
     return title unless SiteSetting.enable_emoji? && title
 
