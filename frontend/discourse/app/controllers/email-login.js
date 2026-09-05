@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
@@ -8,8 +7,6 @@ import DiscourseURL from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
 export default class EmailLoginController extends Controller {
-  @service router;
-
   secondFactorMethod;
   secondFactorToken;
 
@@ -25,6 +22,7 @@ export default class EmailLoginController extends Controller {
   @action
   async finishLogin() {
     let data = {
+      token: this.model.token,
       second_factor_method: this.secondFactorMethod,
       timezone: moment.tz.guess(),
     };
@@ -37,7 +35,7 @@ export default class EmailLoginController extends Controller {
 
     try {
       const result = await ajax({
-        url: `/session/email-login/${this.model.token}`,
+        url: "/session/email-login",
         type: "POST",
         data,
       });
@@ -49,10 +47,7 @@ export default class EmailLoginController extends Controller {
 
       let destination = "/";
 
-      const safeMode = new URL(
-        this.router.currentURL,
-        window.location.origin
-      ).searchParams.get("safe_mode");
+      const safeMode = this.model.safe_mode;
 
       if (safeMode) {
         const params = new URLSearchParams();

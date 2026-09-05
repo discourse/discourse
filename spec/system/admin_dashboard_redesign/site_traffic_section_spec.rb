@@ -265,9 +265,9 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
       {
         "/t/viral-topic/1" => 5,
-        "/associate/secret-token" => 4,
+        "/associate" => 4,
         "/categories" => 3,
-        "/email/unsubscribe/secret-key" => 2,
+        "/email/unsubscribe" => 2,
         "/faq" => 1,
       }.each do |entry_url, count|
         Fabricate(:browser_pageview_entry_url_daily_rollup, date: "2026-05-12", entry_url:, count:)
@@ -279,9 +279,9 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       expect(traffic).to have_top_entry_url_rows(
         [
           { path: "/t/viral-topic/1", percent: 33, count: 5 },
-          { path: "/associate/secret-token", percent: 27, count: 4 },
+          { path: "/associate", percent: 27, count: 4 },
           { path: "/categories", percent: 20, count: 3 },
-          { path: "/email/unsubscribe/secret-key", percent: 13, count: 2 },
+          { path: "/email/unsubscribe", percent: 13, count: 2 },
           { path: "/faq", percent: 7, count: 1 },
         ],
       )

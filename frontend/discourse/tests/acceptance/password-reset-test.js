@@ -7,35 +7,30 @@ import { parsePostData } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
+const secureLinkToken = "password-reset-token";
+let submittedTokens;
+
 acceptance("Password Reset", function (needs) {
+  needs.hooks.beforeEach(() => (submittedTokens = []));
+
   needs.pretender((server, helper) => {
-    server.get("/u/confirm-email-token/myvalidtoken.json", () =>
-      helper.response({ success: "OK" })
-    );
-
-    server.get("/u/confirm-email-token/requiretwofactor.json", () =>
-      helper.response({ success: "OK" })
-    );
-
-    server.put("/u/password-reset/myvalidtoken.json", (request) => {
+    server.put("/u/password-reset.json", (request) => {
       const body = parsePostData(request.requestBody);
+      submittedTokens.push(body.token);
       if (body.password === "jonesyAlienSlayer") {
         return helper.response({
           success: false,
           errors: { "user_password.password": ["is the name of your cat"] },
           friendly_messages: ["Password is the name of your cat"],
         });
-      } else {
+      } else if (!body.second_factor_token) {
         return helper.response({
           success: "OK",
           message:
             "You successfully changed your password and are now logged in.",
         });
       }
-    });
 
-    server.put("/u/password-reset/requiretwofactor.json", (request) => {
-      const body = parsePostData(request.requestBody);
       if (
         body.password === "perf3ctly5ecur3" &&
         body.second_factor_token === "123123"
@@ -62,9 +57,12 @@ acceptance("Password Reset", function (needs) {
   });
 
   test("Password Reset Page", async function (assert) {
-    PreloadStore.store("password_reset", { is_developer: false });
+    PreloadStore.store("password_reset", {
+      token: secureLinkToken,
+      is_developer: false,
+    });
 
-    await visit("/u/password-reset/myvalidtoken");
+    await visit("/u/password-reset");
     assert.dom(".password-reset input").exists("shows the input");
 
     await fillIn(".password-reset input", "perf3ctly5ecur3");
@@ -103,15 +101,21 @@ acceptance("Password Reset", function (needs) {
     sinon.stub(DiscourseURL, "redirectTo");
     await click(".password-reset form button[type='submit']");
     assert.true(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
+    assert.deepEqual(
+      submittedTokens,
+      [secureLinkToken, secureLinkToken],
+      "submits the page token with every attempt"
+    );
   });
 
   test("Password Reset Page With Second Factor", async function (assert) {
     PreloadStore.store("password_reset", {
+      token: secureLinkToken,
       is_developer: false,
       second_factor_required: true,
     });
 
-    await visit("/u/password-reset/requiretwofactor");
+    await visit("/u/password-reset");
 
     assert.dom("#new-account-password").doesNotExist("does not show the input");
     assert.dom("#second-factor").exists("shows the second factor prompt");
@@ -138,6 +142,11 @@ acceptance("Password Reset", function (needs) {
     assert.true(
       DiscourseURL.redirectTo.calledWith("/"),
       "it redirects after submitting form"
+    );
+    assert.deepEqual(
+      submittedTokens,
+      [secureLinkToken, secureLinkToken, secureLinkToken],
+      "submits the same page token through the second-factor flow"
     );
   });
 });

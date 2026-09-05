@@ -8,8 +8,21 @@ RSpec.describe UsersEmailController do
   fab!(:moderator)
 
   describe "#confirm-new-email" do
+    def show_confirm_new_email(token)
+      get "/u/confirm-new-email/#{token}"
+      get "/u/confirm-new-email.json"
+    end
+
+    def confirm_new_email(token)
+      get "/u/confirm-new-email/#{token}"
+      put "/u/confirm-new-email.json", params: { token: token }
+    end
+
     it "does not redirect to login for signed out accounts, this route works fine as anon user" do
       get "/u/confirm-new-email/invalidtoken"
+      expect(response).to redirect_to("/u/confirm-new-email")
+
+      get "/u/confirm-new-email"
 
       expect(response.status).to eq(200)
     end
@@ -17,6 +30,9 @@ RSpec.describe UsersEmailController do
     it "does not redirect to login for signed out accounts on login_required sites, this route works fine as anon user" do
       SiteSetting.login_required = true
       get "/u/confirm-new-email/invalidtoken"
+      expect(response).to redirect_to("/u/confirm-new-email")
+
+      get "/u/confirm-new-email"
 
       expect(response.status).to eq(200)
     end
@@ -24,21 +40,21 @@ RSpec.describe UsersEmailController do
     it "errors out for invalid tokens" do
       sign_in(user)
 
-      get "/u/confirm-new-email/invalidtoken.json"
+      show_confirm_new_email "invalidtoken"
 
       expect(response.status).to eq(404)
     end
 
     it "does not change email if accounts mismatch for a signed in user" do
       updater = EmailUpdater.new(guardian: user.guardian, user: user)
-      updater.change_to("bubblegum@adventuretime.ooo")
+      email_change_request = updater.change_to("bubblegum@adventuretime.ooo")
 
       old_email = user.email
 
       sign_in(moderator)
 
-      put "/u/confirm-new-email/#{email_token.token}.json"
-      expect(response.status).to eq(404)
+      confirm_new_email email_change_request.new_email_token.token
+      expect(response.status).to eq(403)
       expect(user.reload.email).to eq(old_email)
     end
 
@@ -52,8 +68,19 @@ RSpec.describe UsersEmailController do
 
       it "confirms with a correct token" do
         user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
+        token = updater.change_req.new_email_token.token
 
-        put "/u/confirm-new-email/#{updater.change_req.new_email_token.token}.json"
+        get "/u/confirm-new-email/#{token}"
+        expect(response).to redirect_to("/u/confirm-new-email")
+
+        get "/u/confirm-new-email.json"
+        expect(response.parsed_body).to eq(
+          "token" => token,
+          "new_email" => "bubblegum@adventuretime.ooo",
+          "old_email" => user.email,
+        )
+
+        put "/u/confirm-new-email.json", params: { token: token }
 
         expect(response.status).to eq(200)
         user.reload
@@ -73,11 +100,12 @@ RSpec.describe UsersEmailController do
       updater.change_to("bubblegum@adventuretime.ooo")
 
       sign_in(user)
-      put "/u/confirm-new-email/#{updater.change_req.new_email_token.token}.json"
+      confirm_new_email updater.change_req.new_email_token.token
       expect(response.status).to eq(200)
 
       new_password = SecureRandom.hex
-      put "/u/password-reset/#{email_token.token}.json", params: { password: new_password }
+      get "/u/password-reset/#{email_token.token}"
+      put "/u/password-reset.json", params: { token: email_token.token, password: new_password }
       expect(response.parsed_body["success"]).to eq(false)
       expect(response.parsed_body["message"]).to eq(
         I18n.t("password_reset.no_token", base_url: Discourse.base_url),
@@ -87,20 +115,25 @@ RSpec.describe UsersEmailController do
   end
 
   describe "#confirm-old-email" do
+    def show_confirm_old_email(token)
+      get "/u/confirm-old-email/#{token}"
+      get "/u/confirm-old-email.json"
+    end
+
     it "errors out for invalid tokens" do
       sign_in(user)
 
-      get "/u/confirm-old-email/invalidtoken.json"
+      show_confirm_old_email "invalidtoken"
 
       expect(response.status).to eq(404)
     end
 
-    it "bans change when accounts do not match" do
+    it "preserves the account mismatch error after removing the token from the URL" do
       sign_in(user)
       updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
       email_change_request = updater.change_to("bubblegum@adventuretime.ooo")
 
-      get "/u/confirm-old-email/#{email_change_request.old_email_token.token}.json"
+      show_confirm_old_email email_change_request.old_email_token.token
 
       expect(response.status).to eq(403)
     end
@@ -110,14 +143,24 @@ RSpec.describe UsersEmailController do
         sign_in(moderator)
         updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
         email_change_request = updater.change_to("bubblegum@adventuretime.ooo")
+        token = email_change_request.old_email_token.token
 
-        get "/u/confirm-old-email/#{email_change_request.old_email_token.token}.json"
+        get "/u/confirm-old-email/#{token}"
+
+        expect(response).to redirect_to("/u/confirm-old-email")
+
+        get "/u/confirm-old-email.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["old_email"]).to eq(moderator.email)
         expect(response.parsed_body["new_email"]).to eq("bubblegum@adventuretime.ooo")
+        expect(response.parsed_body).to eq(
+          "token" => token,
+          "new_email" => "bubblegum@adventuretime.ooo",
+          "old_email" => moderator.email,
+        )
 
-        put "/u/confirm-old-email/#{email_change_request.old_email_token.token}.json"
+        put "/u/confirm-old-email.json", params: { token: token }
 
         expect(response.status).to eq(200)
       end
@@ -175,8 +218,10 @@ RSpec.describe UsersEmailController do
               .create!(email: user.email, scope: EmailToken.scopes[:password_reset])
               .token
 
-          put "/u/password-reset/#{password_reset_token}.json",
+          get "/u/password-reset/#{password_reset_token}"
+          put "/u/password-reset.json",
               params: {
+                token: password_reset_token,
                 password: SecureRandom.hex,
               },
               headers: {
@@ -311,6 +356,130 @@ RSpec.describe UsersEmailController do
           end.to change(EmailChangeRequest, :count)
         end
       end
+    end
+  end
+
+  describe "#show_confirm_new_email" do
+    token = "a" * 64
+
+    {
+      "/u/confirm-new-email/#{token}" => "/u/confirm-new-email",
+      "/users/confirm-new-email/#{token}" => "/u/confirm-new-email",
+    }.each do |token_path, clean_path|
+      it "exchanges GET #{token_path} without rendering the token" do
+        get token_path
+
+        expect(response).to have_http_status(:see_other)
+        expect(response.location).to eq("#{Discourse.base_url}#{clean_path}")
+        expect(response.body).to be_empty
+      end
+    end
+
+    [
+      "/u/confirm-new-email/#{token}.json",
+      "/users/confirm-new-email/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for GET #{token_path}" do
+        get token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid new-email token API" do
+      updater = EmailUpdater.new(guardian: user.guardian, user:)
+      token = updater.change_to("new-email@example.com").new_email_token.token
+
+      get "/u/confirm-new-email/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#confirm_new_email" do
+    token = "a" * 64
+
+    [
+      "/u/confirm-new-email/#{token}.json",
+      "/users/confirm-new-email/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for PUT #{token_path}" do
+        put token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid new-email token API" do
+      updater = EmailUpdater.new(guardian: user.guardian, user:)
+      token = updater.change_to("new-email@example.com").new_email_token.token
+
+      put "/u/confirm-new-email/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#show_confirm_old_email" do
+    token = "a" * 64
+
+    {
+      "/u/confirm-old-email/#{token}" => "/u/confirm-old-email",
+      "/users/confirm-old-email/#{token}" => "/u/confirm-old-email",
+    }.each do |token_path, clean_path|
+      it "exchanges GET #{token_path} without rendering the token" do
+        get token_path
+
+        expect(response).to have_http_status(:see_other)
+        expect(response.location).to eq("#{Discourse.base_url}#{clean_path}")
+        expect(response.body).to be_empty
+      end
+    end
+
+    [
+      "/u/confirm-old-email/#{token}.json",
+      "/users/confirm-old-email/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for GET #{token_path}" do
+        get token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid old-email token API" do
+      admin = Fabricate(:admin)
+      updater = EmailUpdater.new(guardian: admin.guardian, user: admin)
+      token = updater.change_to("new-admin-email@example.com").old_email_token.token
+
+      get "/u/confirm-old-email/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#confirm_old_email" do
+    token = "a" * 64
+
+    [
+      "/u/confirm-old-email/#{token}.json",
+      "/users/confirm-old-email/#{token}.json",
+    ].each do |token_path|
+      it "returns 404 for PUT #{token_path}" do
+        put token_path
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    it "returns 404 for a valid old-email token API" do
+      admin = Fabricate(:admin)
+      updater = EmailUpdater.new(guardian: admin.guardian, user: admin)
+      token = updater.change_to("new-admin-email@example.com").old_email_token.token
+
+      put "/u/confirm-old-email/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

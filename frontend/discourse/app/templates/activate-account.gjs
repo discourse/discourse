@@ -49,16 +49,14 @@ export default class extends Component {
     }
 
     try {
-      const response = await ajax(
-        `/u/activate-account/${this.args.model.token}.json`,
-        {
-          type: "PUT",
-          data: {
-            password_confirmation: hp.value,
-            challenge: hp.challenge.split("").reverse().join(""),
-          },
-        }
-      );
+      const response = await ajax("/u/activate-account.json", {
+        type: "PUT",
+        data: {
+          token: this.args.model.token,
+          password_confirmation: hp.value,
+          challenge: hp.challenge.split("").reverse().join(""),
+        },
+      });
 
       if (!response.success) {
         this.errorMessage = i18n("user.activate_account.already_done");

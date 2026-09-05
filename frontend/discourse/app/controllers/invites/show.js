@@ -22,7 +22,6 @@ export default class InvitesShowController extends Controller {
   @tracked isDeveloper;
   @autoTrackedArray rejectedEmails = [];
 
-  queryParams = ["t"];
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper({
     getAccountEmail: () => this.accountEmail,
@@ -409,6 +408,8 @@ export default class InvitesShowController extends Controller {
     }
 
     const data = {
+      token: this.model.token,
+      email_token: this.model.email_token,
       username: this.accountUsername,
       name: this.accountName,
       password: this.accountPassword,
@@ -418,12 +419,10 @@ export default class InvitesShowController extends Controller {
 
     if (this.isInviteLink) {
       data.email = this.email;
-    } else {
-      data.email_token = this.t;
     }
 
     ajax({
-      url: `/invites/show/${this.get("model.token")}.json`,
+      url: "/invite.json",
       type: "PUT",
       data,
     })

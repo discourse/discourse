@@ -1,6 +1,5 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -12,16 +11,12 @@ export default class InvitesShow extends DiscourseRoute {
     return i18n("invites.accept_title");
   }
 
-  model(params) {
+  model() {
     if (PreloadStore.get("invite_info")) {
-      return PreloadStore.getAndRemove("invite_info").then((json) =>
-        deepMerge(params, json)
-      );
-    } else {
-      return ajax(`/invites/${params.token}`).then((json) =>
-        deepMerge(params, json)
-      );
+      return PreloadStore.getAndRemove("invite_info");
     }
+
+    return ajax("/invite.json");
   }
 
   activate() {

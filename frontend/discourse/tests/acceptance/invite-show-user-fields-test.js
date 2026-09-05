@@ -44,7 +44,7 @@ acceptance("Accept Invite - User Fields", function (needs) {
       is_invite_link: false,
     });
 
-    await visit("/invites/myvalidinvitetoken");
+    await visit("/invite");
     assert.dom(".invites-show").exists("shows the accept invite page");
     assert.dom(".user-field").exists("has at least one user field");
     assert.dom(".invites-show .btn-primary").isDisabled("submit is disabled");

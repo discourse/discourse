@@ -15,7 +15,8 @@ describe UsersController do
       user = Fabricate(:user, last_seen_at: 1.minute.ago, active: false, trust_level: 1)
       email_token = Fabricate(:email_token, user: user)
 
-      put "/u/activate-account/#{email_token.token}"
+      get "/u/activate-account/#{email_token.token}"
+      put "/u/activate-account", params: { token: email_token.token }
 
       expect(response.status).to eq(200)
       membership = Chat::UserChatChannelMembership.find_by(user: user, chat_channel: channel)

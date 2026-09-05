@@ -24,6 +24,7 @@ shared_examples "forgot password scenarios" do
     it "should allow a user to reset their password" do
       visit_reset_password_link
 
+      expect(page).to have_current_path("/u/password-reset")
       user_reset_password_page.fill_in_new_password("newsuperpassword").submit_new_password
 
       expect(user_reset_password_page).to have_logged_in_user

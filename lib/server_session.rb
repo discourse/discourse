@@ -21,18 +21,18 @@ class ServerSession
   end
 
   def set(key, val, expires: expiry)
-    Discourse.redis.setex(prefixed_key(key), expires.to_i, ActiveSupport::MessagePack.dump(val))
+    payload = ActiveSupport::MessagePack.dump(val)
+    Discourse.redis.setex(prefixed_key(key), expires.to_i, payload)
     true
   end
   alias_method :[]=, :set
 
   def [](key)
-    raw = Discourse.redis.get(prefixed_key(key))
-    begin
-      ActiveSupport::MessagePack.load(raw)
-    rescue StandardError
-      raw
-    end
+    deserialize(Discourse.redis.get(prefixed_key(key)))
+  end
+
+  def getdel(key)
+    deserialize(Discourse.redis.getdel(prefixed_key(key)))
   end
 
   def delete(key)
@@ -44,6 +44,12 @@ class ServerSession
   end
 
   private
+
+  def deserialize(raw)
+    ActiveSupport::MessagePack.load(raw)
+  rescue StandardError
+    raw
+  end
 
   def prefixed_key(key)
     "#{@prefix}#{key}"

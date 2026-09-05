@@ -95,14 +95,14 @@ export default function () {
 
   // User routes
   this.route("users", { path: "/u" });
-  this.route("password-reset", { path: "/u/password-reset/:token" });
+  this.route("password-reset", { path: "/u/password-reset" });
   this.route("account-created", { path: "/u/account-created" }, function () {
     this.route("resent");
     this.route("edit-email");
   });
-  this.route("activate-account", { path: "/u/activate-account/:token" });
-  this.route("confirm-new-email", { path: "/u/confirm-new-email/:token" });
-  this.route("confirm-old-email", { path: "/u/confirm-old-email/:token" });
+  this.route("activate-account", { path: "/u/activate-account" });
+  this.route("confirm-new-email", { path: "/u/confirm-new-email" });
+  this.route("confirm-old-email", { path: "/u/confirm-old-email" });
   this.route("user", { path: "/u/:username" }, function () {
     this.route("profile-hidden");
     this.route("summary");
@@ -196,13 +196,13 @@ export default function () {
   });
   this.route("signup");
   this.route("login");
-  this.route("email-login", { path: "/session/email-login/:token" });
+  this.route("email-login", { path: "/session/email-login" });
   this.route("second-factor-auth", { path: "/session/2fa" });
   this.route("user-api-key-new", { path: "/user-api-key/new" });
   this.route("user-api-key-result", { path: "/user-api-key" });
   this.route("user-api-key-activate", { path: "/user-api-key/activate" });
   this.route("user-api-key-otp", { path: "/user-api-key/otp" });
-  this.route("associate-account", { path: "/associate/:token" });
+  this.route("associate-account", { path: "/associate" });
   this.route("login-preferences");
   this.route("forgot-password", { path: "/password-reset" });
 
@@ -305,8 +305,8 @@ export default function () {
     this.route("new");
   });
 
-  this.route("invites", function () {
-    this.route("show", { path: "/:token" });
+  this.route("invites", { path: "/invite" }, function () {
+    this.route("show", { path: "/" });
   });
 
   this.route("wizard", function () {

@@ -48,12 +48,20 @@ RSpec.describe Users::AssociateAccountsController do
       # Request associate info
       uri = URI.parse(response.redirect_url)
       get "#{uri.path}.json"
+      expect(response).to have_http_status(:not_found)
+
+      get uri.path
+      expect(response).to redirect_to("/associate")
+
+      get "/associate.json"
       data = response.parsed_body
       expect(data["provider_name"]).to eq("google_oauth2")
       expect(data["account_description"]).to eq("someemail@test.com")
+      expect(data["token"]).to eq(uri.path.split("/").last)
 
       # Make the connection
-      events = DiscourseEvent.track_events { post "#{uri.path}.json" }
+      events =
+        DiscourseEvent.track_events { post "/associate.json", params: { token: data["token"] } }
       expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
       expect(
         events.any? do |e|
@@ -66,7 +74,7 @@ RSpec.describe Users::AssociateAccountsController do
       expect(UserAssociatedAccount.count).to eq(1)
 
       # Token cannot be reused
-      get "#{uri.path}.json"
+      get "/associate.json"
       expect(response.status).to eq(404)
     end
 
@@ -85,31 +93,67 @@ RSpec.describe Users::AssociateAccountsController do
       expect(UserAssociatedAccount.count).to eq(0) # Reconnect has not yet happened
 
       uri = URI.parse(response.redirect_url)
-      get "#{uri.path}.json"
+      get uri.path
+      expect(response).to redirect_to("/associate")
+
+      get "/associate.json"
       data = response.parsed_body
       expect(data["provider_name"]).to eq("google_oauth2")
       expect(data["account_description"]).to eq("someemail@test.com")
 
       cookies.delete "_forum_session"
 
-      get "#{uri.path}.json"
+      get "/associate.json"
       expect(response.status).to eq(404)
     end
 
     it "returns the correct response for non-existent tokens" do
       sign_in(user)
 
-      get "/associate/12345678901234567890123456789012.json"
+      get "/associate/12345678901234567890123456789012"
+      get "/associate.json"
       expect(response.status).to eq(404)
 
-      get "/associate/shorttoken.json"
+      get "/associate/shorttoken"
+      get "/associate.json"
       expect(response.status).to eq(404)
     end
 
     it "requires login" do
-      # XHR should 403
-      get "/associate/#{SecureRandom.hex}.json"
+      get "/associate/#{SecureRandom.hex}"
+      get "/associate.json"
       expect(response.status).to eq(403)
+
+      post "/associate.json", params: { token: SecureRandom.hex }
+      expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#connect_info" do
+    token = "a" * 64
+
+    it "exchanges the token landing without rendering the token" do
+      get "/associate/#{token}"
+
+      expect(response).to have_http_status(:see_other)
+      expect(response.location).to eq("#{Discourse.base_url}/associate")
+      expect(response.body).to be_empty
+    end
+
+    it "returns 404 for a token-bearing JSON route" do
+      get "/associate/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#connect" do
+    token = "a" * 64
+
+    it "returns 404 for a token-bearing mutation route" do
+      post "/associate/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

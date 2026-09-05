@@ -217,12 +217,15 @@ RSpec.describe Admin::BackupsController do
         expect(response.headers["Content-Disposition"]).to match(/attachment; filename/)
       end
 
-      it "returns 422 when token is bad" do
-        get "/admin/backups/#{backup_filename}.json", params: { token: "bad_value" }
+      it "returns an analytics-free error when token is bad" do
+        bad_token = "bad_value"
+        get "/admin/backups/#{backup_filename}.json", params: { token: bad_token }
 
         expect(response.status).to eq(422)
         expect(response.headers["Content-Disposition"]).not_to match(/attachment; filename/)
         expect(response.body).to include(I18n.t("download_backup_mailer.no_token"))
+        expect(response.body).not_to include("<script")
+        expect(response.body).not_to include(bad_token)
       end
 
       it "returns 404 when the backup does not exist" do

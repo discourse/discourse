@@ -31,13 +31,16 @@ RSpec.describe "Discobot welcome post" do
       end
 
       it "should delay the welcome post until the user logs in" do
+        get "/invites/#{invite.invite_key}", params: { t: invite.email_token }
+
         expect do
-          put "/invites/show/#{invite.invite_key}.json",
+          put "/invite.json",
               params: {
+                token: invite.invite_key,
+                email_token: invite.email_token,
                 username: "somename",
                 name: "testing",
                 password: "verystrongpassword",
-                email_token: invite.email_token,
               }
         end.to change { User.count }.by(1)
 

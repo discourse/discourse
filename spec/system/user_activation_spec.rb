@@ -28,6 +28,7 @@ describe "Account activation" do
 
     visit activate_link
 
+    expect(page).to have_current_path("/u/activate-account")
     expect(user.reload.active).to eq(false)
 
     find(".activate-account-button").click

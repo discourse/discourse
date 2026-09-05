@@ -4,11 +4,27 @@ RSpec.describe InvitesController do
   fab!(:admin)
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
+  def show_invite(invite_key, email_token: nil)
+    path = "/invites/#{invite_key}"
+    path += "?t=#{email_token}" if email_token
+    get path
+    get "/invite"
+  end
+
+  def accept_invite(invite_key, **request_options)
+    path = "/invites/#{invite_key}"
+    email_token = request_options.dig(:params, :email_token)
+    path += "?t=#{email_token}" if email_token
+    get path
+    request_options[:params] = (request_options[:params] || {}).merge(token: invite_key)
+    put "/invite.json", **request_options
+  end
+
   describe "#show" do
     fab!(:invite)
 
     it "shows the accept invite page" do
-      get "/invites/#{invite.invite_key}"
+      show_invite invite.invite_key
       expect(response.status).to eq(200)
       expect(response.body).to have_tag(
         :script,
@@ -28,19 +44,21 @@ RSpec.describe InvitesController do
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["token"]).to eq(invite.invite_key)
         expect(invite_info["username"]).to eq("")
         expect(invite_info["email"]).to eq("i*****g@a***********e.ooo")
       end
     end
 
     it "includes unobfuscated email when email_token present" do
-      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      show_invite invite.invite_key, email_token: invite.email_token
       expect(response.status).to eq(200)
       expect(response.body).to include(invite.email)
 
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["email_token"]).to eq(invite.email_token)
         expect(invite_info["username"]).to eq("") # Default is that we don't use emails to suggest usernames
         expect(invite_info["email"]).to eq(invite.email)
       end
@@ -50,7 +68,7 @@ RSpec.describe InvitesController do
       before { server_session[:authentication] = { email: invite.email } }
 
       it "shows unobfuscated email" do
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
         expect(response.body).to_not have_tag(:body, with: { class: "no-ember" })
         expect(response.body).to include(invite.email)
@@ -64,7 +82,7 @@ RSpec.describe InvitesController do
       staged_user.set_user_field(user_field.id, "some value")
       staged_user.save_custom_fields
 
-      get "/invites/#{invite.invite_key}"
+      show_invite invite.invite_key
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
@@ -81,7 +99,7 @@ RSpec.describe InvitesController do
 
       server_session[:authentication] = { email: invite.email, email_valid: false }
 
-      get "/invites/#{invite.invite_key}"
+      show_invite invite.invite_key
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
@@ -98,7 +116,7 @@ RSpec.describe InvitesController do
 
       server_session[:authentication] = { email: invite.email, email_valid: true }
 
-      get "/invites/#{invite.invite_key}"
+      show_invite invite.invite_key
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
@@ -113,7 +131,7 @@ RSpec.describe InvitesController do
       staged_user.set_user_field(user_field.id, "some value")
       staged_user.save_custom_fields
 
-      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      show_invite invite.invite_key, email_token: invite.email_token
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
@@ -123,14 +141,14 @@ RSpec.describe InvitesController do
     end
 
     it "includes token validity boolean" do
-      get "/invites/#{invite.invite_key}"
+      show_invite invite.invite_key
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["email_verified_by_link"]).to eq(false)
       end
 
-      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      show_invite invite.invite_key, email_token: invite.email_token
       expect(response.body).to have_tag("script#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
@@ -146,7 +164,7 @@ RSpec.describe InvitesController do
       it "automatically redirects to the topic if the user can access it" do
         invite.update!(topics: [Fabricate(:topic)])
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(302)
         expect(response.location).to eq(invite.topics.first.url)
       end
@@ -157,7 +175,7 @@ RSpec.describe InvitesController do
           topics: [Fabricate(:topic, category: Fabricate(:private_category, group: secret_group))],
         )
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
       end
 
@@ -165,7 +183,7 @@ RSpec.describe InvitesController do
         invite.update!(topics: [Fabricate(:topic)])
         invite.update!(expires_at: 1.day.ago)
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
 
         expect(response.body).to have_tag(:body, with: { class: "no-ember" })
@@ -176,7 +194,7 @@ RSpec.describe InvitesController do
         invite.update!(topics: [Fabricate(:topic)])
         InvitedGroup.create!(invite: invite, group: group)
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
         expect(response.body).not_to have_tag(:body, with: { class: "no-ember" })
         expect(response.body).not_to include(
@@ -194,7 +212,7 @@ RSpec.describe InvitesController do
         group.add(user)
         InvitedGroup.create!(invite: invite, group: group)
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(302)
         expect(response.location).to eq(invite.topics.first.url)
       end
@@ -202,7 +220,7 @@ RSpec.describe InvitesController do
       it "shows the accept invite page when user's email matches the invite email" do
         invite.update_columns(email: user.email)
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
         expect(response.body).to_not have_tag(:body, with: { class: "no-ember" })
         expect(response.body).not_to include(
@@ -227,7 +245,7 @@ RSpec.describe InvitesController do
         invite.update!(email: nil, domain: "discourse.org")
         user.update!(email: "someguy@discourse.org")
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
         expect(response.body).to_not have_tag(:body, with: { class: "no-ember" })
         expect(response.body).not_to include(
@@ -252,7 +270,7 @@ RSpec.describe InvitesController do
         user.update!(email: "someguy@discourse.com")
         invite.update!(email: nil, domain: "discourse.org")
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
 
         expect(response.body).to have_tag("script#data-preloaded") do |element|
@@ -268,7 +286,7 @@ RSpec.describe InvitesController do
       it "does not allow the user to accept the invite when their email does not match the invite" do
         invite.update_columns(email: "notuseremail@discourse.org")
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
 
         expect(response.body).to have_tag("script#data-preloaded") do |element|
@@ -282,7 +300,7 @@ RSpec.describe InvitesController do
         invite.update!(email: nil, max_redemptions_allowed: 10)
         expect(invite.redeem(redeeming_user: user)).not_to eq(nil)
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
 
         expect(response.body).to have_tag("script#data-preloaded") do |element|
@@ -299,7 +317,7 @@ RSpec.describe InvitesController do
       it "allows the user to accept the invite when its an invite link that they have not redeemed" do
         invite.update!(email: nil, max_redemptions_allowed: 10)
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
 
         expect(response.body).to have_tag("script#data-preloaded") do |element|
@@ -321,7 +339,7 @@ RSpec.describe InvitesController do
       end
 
       it "blocks anonymous visitors with the registration-disabled error" do
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
         expect(response.body).to have_tag(:body, with: { class: "no-ember" })
         expect(response.body).to include(I18n.t("login.new_registrations_disabled"))
@@ -330,7 +348,7 @@ RSpec.describe InvitesController do
       it "still shows the accept invite page to an existing logged-in user" do
         sign_in(user)
 
-        get "/invites/#{invite.invite_key}"
+        show_invite invite.invite_key
         expect(response.status).to eq(200)
         expect(response.body).not_to have_tag(:body, with: { class: "no-ember" })
         expect(response.body).not_to include(I18n.t("login.new_registrations_disabled"))
@@ -338,7 +356,7 @@ RSpec.describe InvitesController do
     end
 
     it "fails if invite does not exist" do
-      get "/invites/missing"
+      show_invite "missing"
       expect(response.status).to eq(200)
 
       expect(response.body).to have_tag(:body, with: { class: "no-ember" })
@@ -348,23 +366,42 @@ RSpec.describe InvitesController do
     it "fails if invite expired" do
       invite.update(expires_at: 1.day.ago)
 
-      get "/invites/#{invite.invite_key}"
+      show_invite invite.invite_key
       expect(response.status).to eq(200)
 
       expect(response.body).to have_tag(:body, with: { class: "no-ember" })
       expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
     end
 
-    it "stores the invite key in the server session if invite exists" do
+    it "moves the invite key from the secure link flow into the clean JSON model" do
       get "/invites/#{invite.invite_key}"
+      get "/invite.json"
+
       expect(response.status).to eq(200)
+      expect(SecureLinkFlow.new(server_session).credential(:invite)).to be_nil
       expect(server_session["invite-key"]).to eq(invite.invite_key)
+      expect(response.parsed_body["token"]).to eq(invite.invite_key)
+    end
+
+    it "keeps the invite available across the external authentication round trip" do
+      get "/invites/#{invite.invite_key}"
+
+      2.times do
+        get "/invite"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
+          invite_info = JSON.parse(json["invite_info"])
+          expect(invite_info["token"]).to eq(invite.invite_key)
+        end
+      end
     end
 
     it "returns error if invite has already been redeemed" do
       expect(invite.redeem).not_to eq(nil)
 
-      get "/invites/#{invite.invite_key}"
+      show_invite invite.invite_key
       expect(response.status).to eq(200)
 
       expect(response.body).to have_tag(:body, with: { class: "no-ember" })
@@ -378,7 +415,7 @@ RSpec.describe InvitesController do
 
       invite.update!(email: nil) # convert to email invite
 
-      get "/invites/#{invite.invite_key}"
+      show_invite invite.invite_key
       expect(response.status).to eq(200)
 
       expect(response.body).to have_tag(:body, with: { class: "no-ember" })
@@ -1316,7 +1353,7 @@ RSpec.describe InvitesController do
   describe "#perform_accept_invitation" do
     context "with an invalid invite" do
       it "redirects to the root" do
-        put "/invites/show/doesntexist.json"
+        accept_invite "doesntexist"
         expect(response.status).to eq(404)
         expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_found_json"))
         expect(session[:current_user_id]).to be_blank
@@ -1329,7 +1366,7 @@ RSpec.describe InvitesController do
       before { invite.trash! }
 
       it "redirects to the root" do
-        put "/invites/show/#{invite.invite_key}.json"
+        accept_invite invite.invite_key
         expect(response.status).to eq(404)
         expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_found_json"))
         expect(session[:current_user_id]).to be_blank
@@ -1340,7 +1377,7 @@ RSpec.describe InvitesController do
       fab!(:invite) { Fabricate(:invite, expires_at: 1.day.ago) }
 
       it "response is not successful" do
-        put "/invites/show/#{invite.invite_key}.json"
+        accept_invite invite.invite_key
         expect(response.status).to eq(404)
         expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_found_json"))
         expect(session[:current_user_id]).to be_blank
@@ -1352,17 +1389,14 @@ RSpec.describe InvitesController do
       let(:invite) { Invite.generate(topic.user, email: "iceking@adventuretime.ooo", topic: topic) }
 
       it "redeems the invite" do
-        put "/invites/show/#{invite.invite_key}.json"
+        accept_invite invite.invite_key
         expect(invite.reload.redeemed?).to be_truthy
       end
 
       it "logs in the user" do
         events =
           DiscourseEvent.track_events do
-            put "/invites/show/#{invite.invite_key}.json",
-                params: {
-                  email_token: invite.email_token,
-                }
+            accept_invite invite.invite_key, params: { email_token: invite.email_token }
           end
 
         expect(events.map { |event| event[:event_name] }).to include(
@@ -1378,7 +1412,7 @@ RSpec.describe InvitesController do
       end
 
       it "redirects to the first topic the user was invited to" do
-        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        accept_invite invite.invite_key, params: { email_token: invite.email_token }
         expect(response.status).to eq(200)
         expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
         expect(
@@ -1390,7 +1424,7 @@ RSpec.describe InvitesController do
       end
 
       it "sets the timezone of the user in user_options" do
-        put "/invites/show/#{invite.invite_key}.json", params: { timezone: "Australia/Melbourne" }
+        accept_invite invite.invite_key, params: { timezone: "Australia/Melbourne" }
         expect(response.status).to eq(200)
         invite.reload
         user = User.find(invite.invited_users.first.user_id)
@@ -1398,7 +1432,7 @@ RSpec.describe InvitesController do
       end
 
       it "does not log in the user if there are validation errors" do
-        put "/invites/show/#{invite.invite_key}.json", params: { password: "password" }
+        accept_invite invite.invite_key, params: { password: "password" }
 
         expect(response.status).to eq(412)
         expect(session[:current_user_id]).to eq(nil)
@@ -1407,18 +1441,18 @@ RSpec.describe InvitesController do
       it "does not log in the user if they were not approved" do
         SiteSetting.must_approve_users = true
 
-        put "/invites/show/#{invite.invite_key}.json",
-            params: {
-              password: SecureRandom.hex,
-              email_token: invite.email_token,
-            }
+        accept_invite invite.invite_key,
+                      params: {
+                        password: SecureRandom.hex,
+                        email_token: invite.email_token,
+                      }
 
         expect(session[:current_user_id]).to eq(nil)
         expect(response.parsed_body["message"]).to eq(I18n.t("activation.approval_required"))
       end
 
       it "does not log in the user if they were not activated" do
-        put "/invites/show/#{invite.invite_key}.json", params: { password: SecureRandom.hex }
+        accept_invite invite.invite_key, params: { password: SecureRandom.hex }
 
         expect(session[:current_user_id]).to eq(nil)
         expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
@@ -1427,7 +1461,7 @@ RSpec.describe InvitesController do
       it "fails when local login is disabled and no external auth is configured" do
         SiteSetting.enable_local_logins = false
 
-        put "/invites/show/#{invite.invite_key}.json"
+        accept_invite invite.invite_key
         expect(response.status).to eq(404)
       end
 
@@ -1436,7 +1470,7 @@ RSpec.describe InvitesController do
         SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
-        put "/invites/show/#{invite.invite_key}.json"
+        accept_invite invite.invite_key
         expect(response.status).to eq(404)
       end
 
@@ -1481,9 +1515,9 @@ RSpec.describe InvitesController do
           SiteSetting.auth_overrides_name = true
           invite.update!(email: authenticated_email)
 
-          expect {
-            put "/invites/show/#{invite.invite_key}.json", params: { name: "somename" }
-          }.to change { User.with_email(authenticated_email).exists? }.to(true)
+          expect { accept_invite invite.invite_key, params: { name: "somename" } }.to change {
+            User.with_email(authenticated_email).exists?
+          }.to(true)
           expect(response.status).to eq(200)
 
           user = User.find_by_email(authenticated_email)
@@ -1495,12 +1529,12 @@ RSpec.describe InvitesController do
           SiteSetting.enable_local_logins = false
           invite.update!(email: authenticated_email)
 
-          put "/invites/show/#{invite.invite_key}.json"
+          accept_invite invite.invite_key
           expect(response.status).to eq(200)
         end
 
         it "returns the right response if authenticated email does not match invite email" do
-          put "/invites/show/#{invite.invite_key}.json"
+          accept_invite invite.invite_key
           expect(response.status).to eq(412)
         end
       end
@@ -1509,7 +1543,7 @@ RSpec.describe InvitesController do
         it "sends a welcome message if set" do
           SiteSetting.send_welcome_message = true
           user.send_welcome_message = true
-          put "/invites/show/#{invite.invite_key}.json"
+          accept_invite invite.invite_key
           expect(response.status).to eq(200)
 
           expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
@@ -1519,7 +1553,7 @@ RSpec.describe InvitesController do
           topic.user.grant_admin!
           invite.update!(moderator: true)
 
-          put "/invites/show/#{invite.invite_key}.json"
+          accept_invite invite.invite_key
           expect(response.status).to eq(200)
 
           expect(invite.invited_users.first.user.groups.pluck(:name)).to contain_exactly(
@@ -1530,7 +1564,7 @@ RSpec.describe InvitesController do
 
         context "without password" do
           it "sends password reset email" do
-            put "/invites/show/#{invite.invite_key}.json"
+            accept_invite invite.invite_key
             expect(response.status).to eq(200)
 
             expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(1)
@@ -1544,11 +1578,11 @@ RSpec.describe InvitesController do
 
             it "does not send an activation email and activates the user" do
               expect do
-                put "/invites/show/#{invite.invite_key}.json",
-                    params: {
-                      password: "verystrongpassword",
-                      email_token: invite.email_token,
-                    }
+                accept_invite invite.invite_key,
+                              params: {
+                                password: "verystrongpassword",
+                                email_token: invite.email_token,
+                              }
               end.to change { UserAuthToken.count }.by(1)
 
               expect(response.status).to eq(200)
@@ -1563,10 +1597,7 @@ RSpec.describe InvitesController do
 
             it "does not activate user if email token is missing" do
               expect do
-                put "/invites/show/#{invite.invite_key}.json",
-                    params: {
-                      password: "verystrongpassword",
-                    }
+                accept_invite invite.invite_key, params: { password: "verystrongpassword" }
               end.not_to change { UserAuthToken.count }
 
               expect(response.status).to eq(200)
@@ -1587,10 +1618,7 @@ RSpec.describe InvitesController do
 
             it "sends an activation email and does not activate the user" do
               expect do
-                put "/invites/show/#{invite.invite_key}.json",
-                    params: {
-                      password: "verystrongpassword",
-                    }
+                accept_invite invite.invite_key, params: { password: "verystrongpassword" }
               end.not_to change { UserAuthToken.count }
 
               expect(response.status).to eq(200)
@@ -1628,11 +1656,11 @@ RSpec.describe InvitesController do
 
       it "creates an user if email matches domain" do
         expect {
-          put "/invites/show/#{invite.invite_key}.json",
-              params: {
-                email: "test@example.com",
-                password: "verystrongpassword",
-              }
+          accept_invite invite.invite_key,
+                        params: {
+                          email: "test@example.com",
+                          password: "verystrongpassword",
+                        }
         }.to change { User.count }
 
         expect(response.status).to eq(200)
@@ -1645,11 +1673,11 @@ RSpec.describe InvitesController do
 
       it "does not create an user if email does not match domain" do
         expect {
-          put "/invites/show/#{invite.invite_key}.json",
-              params: {
-                email: "test@example2.com",
-                password: "verystrongpassword",
-              }
+          accept_invite invite.invite_key,
+                        params: {
+                          email: "test@example2.com",
+                          password: "verystrongpassword",
+                        }
         }.not_to change { User.count }
 
         expect(response.status).to eq(412)
@@ -1670,11 +1698,11 @@ RSpec.describe InvitesController do
           .times
           .map do
             Thread.new do
-              put "/invites/show/#{invite.invite_key}.json",
-                  params: {
-                    email: "test@example.com",
-                    password: "verystrongpassword",
-                  }
+              accept_invite invite.invite_key,
+                            params: {
+                              email: "test@example.com",
+                              password: "verystrongpassword",
+                            }
             end
           end
           .each(&:join)
@@ -1686,11 +1714,11 @@ RSpec.describe InvitesController do
 
       it "sends an activation email and does not activate the user" do
         expect {
-          put "/invites/show/#{invite.invite_key}.json",
-              params: {
-                email: "test@example.com",
-                password: "verystrongpassword",
-              }
+          accept_invite invite.invite_key,
+                        params: {
+                          email: "test@example.com",
+                          password: "verystrongpassword",
+                        }
         }.not_to change { UserAuthToken.count }
 
         expect(response.status).to eq(200)
@@ -1717,11 +1745,11 @@ RSpec.describe InvitesController do
         pending_email_invite =
           Fabricate(:invite, invited_by: Fabricate(:user), email: "target@example.com")
 
-        put "/invites/show/#{invite.invite_key}.json",
-            params: {
-              email: pending_email_invite.email,
-              password: "verystrongpassword",
-            }
+        accept_invite invite.invite_key,
+                      params: {
+                        email: pending_email_invite.email,
+                        password: "verystrongpassword",
+                      }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
@@ -1739,11 +1767,11 @@ RSpec.describe InvitesController do
 
       it "does not automatically log in the user if their email matches an existing user's and shows an error" do
         Fabricate(:user, email: "test@example.com")
-        put "/invites/show/#{invite.invite_key}.json",
-            params: {
-              email: "test@example.com",
-              password: "verystrongpassword",
-            }
+        accept_invite invite.invite_key,
+                      params: {
+                        email: "test@example.com",
+                        password: "verystrongpassword",
+                      }
         expect(session[:current_user_id]).to be_blank
         expect(response.status).to eq(412)
         expect(response.parsed_body["message"]).to include("Primary email has already been taken")
@@ -1752,11 +1780,11 @@ RSpec.describe InvitesController do
 
       it "does not automatically log in the user if their email matches an existing admin's and shows an error" do
         Fabricate(:admin, email: "test@example.com")
-        put "/invites/show/#{invite.invite_key}.json",
-            params: {
-              email: "test@example.com",
-              password: "verystrongpassword",
-            }
+        accept_invite invite.invite_key,
+                      params: {
+                        email: "test@example.com",
+                        password: "verystrongpassword",
+                      }
         expect(session[:current_user_id]).to be_blank
         expect(response.status).to eq(412)
         expect(response.parsed_body["message"]).to include("Primary email has already been taken")
@@ -1771,7 +1799,7 @@ RSpec.describe InvitesController do
       before { SiteSetting.allow_new_registrations = false }
 
       it "does not redeem the invite" do
-        put "/invites/show/#{invite.invite_key}.json"
+        accept_invite invite.invite_key
         expect(response.status).to eq(200)
         expect(invite.reload.invited_users).to be_blank
         expect(invite.redeemed?).to be_falsey
@@ -1789,7 +1817,7 @@ RSpec.describe InvitesController do
         end
 
         it "redeems the invite and adds the existing user to the group" do
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(200)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
           expect(invite.reload.invited_users.map(&:user)).to include(user)
@@ -1807,7 +1835,7 @@ RSpec.describe InvitesController do
         fab!(:group)
 
         it "redeems the invitation and creates the invite accepted notification" do
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(200)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
           invite.reload
@@ -1824,7 +1852,7 @@ RSpec.describe InvitesController do
         it "redirects to the first topic the user was invited to and creates the topic notification" do
           topic = Fabricate(:topic)
           TopicInvite.create!(invite: invite, topic: topic)
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(200)
           expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
           expect(
@@ -1838,7 +1866,7 @@ RSpec.describe InvitesController do
         it "adds the user to the private topic" do
           topic = Fabricate(:private_message_topic)
           TopicInvite.create!(invite: invite, topic: topic)
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(200)
           expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
           expect(TopicAllowedUser.exists?(user: user, topic: topic)).to eq(true)
@@ -1854,7 +1882,7 @@ RSpec.describe InvitesController do
           TopicInvite.create!(invite: invite, topic: topic)
           InvitedGroup.create!(invite: invite, group: group)
 
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(200)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
           expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
@@ -1871,7 +1899,7 @@ RSpec.describe InvitesController do
 
         it "does not try to log in the user automatically" do
           expect do
-            put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+            accept_invite invite.invite_key, params: { id: invite.invite_key }
           end.not_to change { UserAuthToken.count }
           expect(response.status).to eq(200)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
@@ -1879,7 +1907,7 @@ RSpec.describe InvitesController do
 
         it "errors if the user's email doesn't match the invite email" do
           user.update!(email: "blah@test.com")
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(412)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_matching_email"))
         end
@@ -1887,7 +1915,7 @@ RSpec.describe InvitesController do
         it "errors if the user's email domain doesn't match the invite domain" do
           user.update!(email: "blah@test.com")
           invite.update!(email: nil, domain: "example.com")
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(412)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.domain_not_allowed"))
         end
@@ -1899,7 +1927,7 @@ RSpec.describe InvitesController do
         fab!(:group)
 
         it "redeems the invitation and creates the invite accepted notification" do
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(200)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
           invite.reload
@@ -1916,7 +1944,7 @@ RSpec.describe InvitesController do
         it "redirects to the first topic the user was invited to and creates the topic notification" do
           topic = Fabricate(:topic)
           TopicInvite.create!(invite: invite, topic: topic)
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(200)
           expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
           expect(
@@ -1937,7 +1965,7 @@ RSpec.describe InvitesController do
           TopicInvite.create!(invite: invite, topic: topic)
           InvitedGroup.create!(invite: invite, group: group)
 
-          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          accept_invite invite.invite_key, params: { id: invite.invite_key }
           expect(response.status).to eq(200)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
           expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
@@ -1954,7 +1982,7 @@ RSpec.describe InvitesController do
 
         it "does not try to log in the user automatically" do
           expect do
-            put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+            accept_invite invite.invite_key, params: { id: invite.invite_key }
           end.not_to change { UserAuthToken.count }
           expect(response.status).to eq(200)
           expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
@@ -1976,7 +2004,7 @@ RSpec.describe InvitesController do
         topic = Fabricate(:topic)
         TopicInvite.create!(invite: invite, topic: topic)
 
-        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        accept_invite invite.invite_key, params: { email_token: invite.email_token }
         expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
         expect(
           Notification.where(
@@ -1990,7 +2018,7 @@ RSpec.describe InvitesController do
         topic = Fabricate(:topic)
         TopicInvite.create!(invite: invite, topic: topic)
 
-        put "/invites/show/#{invite.invite_key}.json"
+        accept_invite invite.invite_key
         expect(cookies["destination_url"]).to eq(topic.relative_url)
         expect(
           Notification.where(
@@ -2004,7 +2032,7 @@ RSpec.describe InvitesController do
         topic = Fabricate(:topic, category: secured_category)
         TopicInvite.create!(invite: invite, topic: topic)
 
-        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        accept_invite invite.invite_key, params: { email_token: invite.email_token }
         expect(response.parsed_body["redirect_to"]).to eq("/")
         expect(
           Notification.where(
@@ -2022,12 +2050,12 @@ RSpec.describe InvitesController do
       it "can keep the old username" do
         old_username = staged_user.username
 
-        put "/invites/show/#{invite.invite_key}.json",
-            params: {
-              username: staged_user.username,
-              password: "Password123456",
-              email_token: invite.email_token,
-            }
+        accept_invite invite.invite_key,
+                      params: {
+                        username: staged_user.username,
+                        password: "Password123456",
+                        email_token: invite.email_token,
+                      }
 
         expect(response.status).to eq(200)
         expect(invite.reload.redeemed?).to be_truthy
@@ -2036,12 +2064,12 @@ RSpec.describe InvitesController do
       end
 
       it "can change the username" do
-        put "/invites/show/#{invite.invite_key}.json",
-            params: {
-              username: "new_username",
-              password: "Password123456",
-              email_token: invite.email_token,
-            }
+        accept_invite invite.invite_key,
+                      params: {
+                        username: "new_username",
+                        password: "Password123456",
+                        email_token: invite.email_token,
+                      }
 
         expect(response.status).to eq(200)
         expect(invite.reload.redeemed?).to be_truthy
@@ -2353,6 +2381,50 @@ RSpec.describe InvitesController do
           expect(response.parsed_body["errors"]).to include("Custom error message")
         end
       end
+    end
+  end
+
+  describe "#show secure link routes" do
+    token = "a" * 64
+
+    it "exchanges the token landing without rendering the token" do
+      get "/invites/#{token}?t=#{token}"
+
+      expect(response).to have_http_status(:see_other)
+      expect(response.location).to eq("#{Discourse.base_url}/invite")
+      expect(response.body).to be_empty
+    end
+
+    it "returns 404 for a token-bearing JSON route" do
+      get "/invites/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a valid invite token API" do
+      invite = Fabricate(:invite)
+
+      get "/invites/#{invite.invite_key}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "#perform_accept_invitation secure link routes" do
+    token = "a" * 64
+
+    it "returns 404 for a token-bearing mutation route" do
+      put "/invites/show/#{token}.json"
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a valid invite token API" do
+      invite = Fabricate(:invite)
+
+      put "/invites/show/#{invite.invite_key}.json"
+
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

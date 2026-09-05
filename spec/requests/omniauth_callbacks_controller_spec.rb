@@ -458,6 +458,21 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(data["requires_invite"]).to eq(nil)
         end
 
+        it "accepts a staged invite from the clean invite origin" do
+          invite = Fabricate(:invite)
+          get "/invites/#{invite.invite_key}"
+          expect(response).to redirect_to("/invite")
+          get "/invite"
+          expect(response.status).to eq(200)
+
+          Rails.application.env_config["omniauth.origin"] = "/invite"
+
+          get "/auth/google_oauth2/callback.json"
+
+          data = JSON.parse(response.cookies["authentication_data"])
+          expect(data["requires_invite"]).to eq(nil)
+        end
+
         it "requires invite when origin is a non-invite route containing an invite key" do
           invite = Fabricate(:invite)
           Rails.application.env_config["omniauth.origin"] = "/t/#{invite.invite_key}"

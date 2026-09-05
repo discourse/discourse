@@ -29,6 +29,7 @@ describe "Admin email login in readonly mode" do
         admin.email_tokens.create!(email: admin.email, scope: EmailToken.scopes[:email_login])
 
       page.visit "/session/email-login/#{email_token.token}"
+      expect(page).to have_current_path("/session/email-login")
 
       find(".email-login-form .btn-primary").click
 

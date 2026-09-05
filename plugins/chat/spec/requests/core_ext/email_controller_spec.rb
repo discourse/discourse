@@ -10,7 +10,8 @@ describe EmailController do
       key = UnsubscribeKey.create_key_for(user, "chat_summary")
       user.user_option.send_chat_email_when_away!
 
-      post "/email/unsubscribe/#{key}.json", params: { chat_email_frequency: never_freq }
+      get "/email/unsubscribe/#{key}"
+      post "/email/unsubscribe.json", params: { token: key, chat_email_frequency: never_freq }
 
       expect(response.status).to eq(302)
 

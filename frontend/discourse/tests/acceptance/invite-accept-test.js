@@ -2,7 +2,10 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
 import Site from "discourse/models/site";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -28,6 +31,8 @@ function preloadInvite({
   existing_user = false,
 } = {}) {
   const info = {
+    token: "invite-token",
+    email_token: "invite-email-token",
     invited_by: {
       id: 123,
       username: "foobar",
@@ -72,7 +77,7 @@ acceptance("Invite accept", function () {
       is_invite_link: false,
     });
 
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
 
     assert
       .dom(".col-form")
@@ -99,7 +104,7 @@ acceptance("Invite accept", function () {
       is_invite_link: true,
     });
 
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
 
     assert
       .dom(document.body)
@@ -175,7 +180,7 @@ acceptance("Invite accept", function () {
     site.set("full_name_visible_in_signup", true);
 
     preloadInvite();
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
     assert.dom("#new-account-name").exists();
     assert
       .dom(".name-input.name-required")
@@ -188,7 +193,7 @@ acceptance("Invite accept", function () {
     site.set("full_name_visible_in_signup", false);
 
     preloadInvite();
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
     assert.dom("#new-account-name").doesNotExist();
   });
 
@@ -198,7 +203,7 @@ acceptance("Invite accept", function () {
     site.set("full_name_visible_in_signup", true);
 
     preloadInvite();
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
     assert.dom("#new-account-name").exists();
     assert.dom(".name-input.name-required").exists("full name is required");
   });
@@ -210,7 +215,7 @@ acceptance("Invite accept when local login is disabled", function (needs) {
   test("invite link", async function (assert) {
     preloadInvite({ link: true });
 
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
 
     assert.dom(".btn-social.facebook").exists("shows Facebook login button");
     assert.dom("form").doesNotExist("does not display the form");
@@ -218,7 +223,7 @@ acceptance("Invite accept when local login is disabled", function (needs) {
 
   test("email invite link", async function (assert) {
     preloadInvite();
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
 
     assert.dom(".btn-social.facebook").exists("shows Facebook login button");
     assert.dom("form").doesNotExist("does not display the form");
@@ -236,7 +241,7 @@ acceptance(
     test("invite link", async function (assert) {
       preloadInvite({ link: true });
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom(".btn-social.facebook")
@@ -256,7 +261,7 @@ acceptance(
     test("invite link (as logged in user)", async function (assert) {
       preloadInvite({ link: true, existing_user: true });
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom(".btn-social.facebook")
@@ -276,7 +281,7 @@ acceptance(
     test("email invite link", async function (assert) {
       preloadInvite();
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom(".btn-social.facebook")
@@ -295,7 +300,7 @@ acceptance(
     test("email invite link (as logged in user)", async function (assert) {
       preloadInvite({ existing_user: true });
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom(".btn-social.facebook")
@@ -324,7 +329,7 @@ acceptance(
     test("invite link", async function (assert) {
       preloadInvite({ link: true });
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
       assert.dom("form").doesNotExist("does not display the form");
       assert
         .dom(".accept-invitation")
@@ -347,7 +352,7 @@ acceptance("Invite link with authentication data", function (needs) {
   test("form elements and buttons are correct ", async function (assert) {
     preloadInvite({ link: true });
 
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
 
     assert
       .dom(".btn-social.facebook")
@@ -385,7 +390,7 @@ acceptance("Email Invite link with authentication data", function (needs) {
   test("email invite link with authentication data when email does not match", async function (assert) {
     preloadInvite();
 
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
 
     assert
       .dom("#account-email-validation")
@@ -413,7 +418,7 @@ acceptance(
     test("confirm form and buttons", async function (assert) {
       preloadInvite();
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom(".btn-social.facebook")
@@ -455,7 +460,7 @@ acceptance(
     test("display information that email is invalid", async function (assert) {
       preloadInvite({ different_external_email: true, hidden_email: true });
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom(".bad")
@@ -482,7 +487,7 @@ acceptance(
     test("confirm form and buttons", async function (assert) {
       preloadInvite({ email_verified_by_link: true });
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom("#new-account-email")
@@ -511,7 +516,7 @@ acceptance(
     test("confirm form and buttons", async function (assert) {
       preloadInvite({ email_verified_by_link: false });
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom("#new-account-email")
@@ -533,13 +538,13 @@ acceptance(
       email_valid: true,
       username: "foobar",
       name: "barfoo",
-      associate_url: "/associate/abcde",
+      associate_url: "/associate",
     });
 
     test("shows the associate link", async function (assert) {
       preloadInvite({ link: true });
 
-      await visit("/invites/my-valid-invite-token");
+      await visit("/invite");
 
       assert
         .dom(".create-account-associate-link")
@@ -558,23 +563,25 @@ acceptance("Associate link", function (needs) {
     email_valid: true,
     username: "foobar",
     name: "barfoo",
-    associate_url: "/associate/abcde",
+    associate_url: "/associate",
   });
 
   test("associates the account", async function (assert) {
     preloadInvite({ link: true });
-    pretender.get("/associate/abcde.json", () => {
+    pretender.get("/associate.json", () => {
       return response({
-        token: "abcde",
+        token: "associate-token",
         provider_name: "facebook",
       });
     });
 
-    pretender.post("/associate/abcde", () => {
+    let submittedToken;
+    pretender.post("/associate", (request) => {
+      submittedToken = parsePostData(request.requestBody).token;
       return response({ success: true });
     });
 
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
     assert
       .dom(".create-account-associate-link")
       .exists("shows the associate account link");
@@ -584,6 +591,11 @@ acceptance("Associate link", function (needs) {
 
     await click(".d-modal .btn-primary");
     assert.strictEqual(currentURL(), "/u/eviltrout/preferences/account");
+    assert.strictEqual(
+      submittedToken,
+      "associate-token",
+      "submits the token returned by the clean endpoint"
+    );
   });
 });
 
@@ -597,23 +609,23 @@ acceptance("Associate link, with an error", function (needs) {
     email_valid: true,
     username: "foobar",
     name: "barfoo",
-    associate_url: "/associate/abcde",
+    associate_url: "/associate",
   });
 
   test("shows the error", async function (assert) {
     preloadInvite({ link: true });
-    pretender.get("/associate/abcde.json", () => {
+    pretender.get("/associate.json", () => {
       return response({
-        token: "abcde",
+        token: "associate-token",
         provider_name: "facebook",
       });
     });
 
-    pretender.post("/associate/abcde", () => {
+    pretender.post("/associate", () => {
       return response({ error: "sorry, no" });
     });
 
-    await visit("/invites/my-valid-invite-token");
+    await visit("/invite");
     await click(".create-account-associate-link a");
     await click(".d-modal .btn-primary");
 

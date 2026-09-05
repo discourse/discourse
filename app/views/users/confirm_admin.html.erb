@@ -8,6 +8,7 @@
     <br/>
 
     <%= form_tag do %>
+      <%= hidden_field_tag(:token, @secure_link_token) %>
       <%= submit_tag t('activation.admin_confirm.grant'), class: 'btn btn-primary' %>
     <% end %>
   <% else %>

@@ -144,9 +144,10 @@ export default class PasswordResetController extends Controller {
       this.set("isLoading", true);
 
       const result = await ajax({
-        url: userPath(`password-reset/${this.get("model.token")}.json`),
+        url: userPath("password-reset.json"),
         type: "PUT",
         data: {
+          token: this.model.token,
           password: this.accountPassword,
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,

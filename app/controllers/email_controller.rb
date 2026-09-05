@@ -11,7 +11,15 @@ class EmailController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:unsubscribe], if: :one_click_unsubscribe?
 
   def unsubscribe
-    key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
+    if (landing_key = request.path_parameters[:key]).present?
+      secure_link_flow.clear(:unsubscribe)
+      key = UnsubscribeKey.includes(:user).find_by(key: landing_key)
+      secure_link_flow.stage(:unsubscribe, landing_key) if key
+      return finish_secure_link_landing("/email/unsubscribe")
+    end
+
+    @secure_link_token = secure_link_flow.claim(:unsubscribe)
+    key = UnsubscribeKey.includes(:user).find_by(key: @secure_link_token)
     @found = key.present?
     @key_owner_found = key&.user.present?
 
@@ -28,7 +36,10 @@ class EmailController < ApplicationController
   def perform_unsubscribe
     RateLimiter.new(nil, "unsubscribe_#{request.ip}", 10, 1.minute).performed!
 
-    key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
+    raise Discourse::NotFound if request.path_parameters[:key].present? && !one_click_unsubscribe?
+
+    credential = one_click_unsubscribe? ? request.path_parameters[:key] : params[:token]
+    key = UnsubscribeKey.includes(:user).find_by(key: credential)
     raise Discourse::NotFound if key.nil? || key.user.nil?
     user = key.user
 

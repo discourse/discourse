@@ -7,7 +7,7 @@ export default class ConfirmNewEmailRoute extends DiscourseRoute {
     return i18n("user.change_email.title");
   }
 
-  model(params) {
-    return ajax(`/u/confirm-new-email/${params.token}.json`);
+  model() {
+    return ajax("/u/confirm-new-email.json");
   }
 }

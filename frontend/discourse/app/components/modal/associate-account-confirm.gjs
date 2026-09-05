@@ -19,8 +19,9 @@ export default class AssociateAccountConfirm extends Component {
   async finishConnect() {
     try {
       const result = await ajax({
-        url: `/associate/${encodeURIComponent(this.args.model.token)}`,
+        url: "/associate",
         type: "POST",
+        data: { token: this.args.model.token },
       });
 
       if (result.success) {

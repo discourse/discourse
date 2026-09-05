@@ -96,8 +96,7 @@ class Admin::BackupsController < Admin::AdminController
 
   def show
     if !EmailBackupToken.compare(current_user.id, params.fetch(:token))
-      @error = I18n.t("download_backup_mailer.no_token")
-      return render layout: "no_ember", status: :unprocessable_entity, formats: [:html]
+      return render plain: I18n.t("download_backup_mailer.no_token"), status: :unprocessable_entity
     end
 
     store = BackupRestore::BackupStore.create
