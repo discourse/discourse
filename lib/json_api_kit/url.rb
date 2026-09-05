@@ -35,6 +35,6 @@ module JsonApiKit
 
     def member_names(page) = page.transform_keys { KIT.member_name(it) }
 
-    def query_string = parameters.to_query.presence&.then { "?#{it}" }
+    def query_string = Rack::Utils.build_nested_query(parameters).presence.try { "?#{it}" }
   end
 end
