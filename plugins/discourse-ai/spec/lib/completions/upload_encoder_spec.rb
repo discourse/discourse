@@ -209,6 +209,25 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     expect(skips.first[:message]).to include("unsupported image format")
   end
 
+  it "records documents whose attachment type the caller does not accept" do
+    SiteSetting.authorized_extensions += "|pdf"
+    upload = Fabricate(:upload, original_filename: "report.pdf", extension: "pdf")
+    skips = []
+
+    described_class.encode(
+      upload_ids: [upload.id],
+      max_pixels: MAX_PIXELS,
+      allowed_kinds: %i[image document],
+      allowed_attachment_types: ["docx"],
+      skips: skips,
+    )
+
+    expect(skips.first).to include(
+      upload_id: upload.id,
+      message: "pdf attachments are not accepted by this model",
+    )
+  end
+
   it "reaches the collector a prompt was handed" do
     upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
     execution_context = DiscourseAi::Completions::ExecutionContext.new

@@ -209,13 +209,16 @@ if defined?(DiscourseWorkflows)
             mode = exec_ctx.get_node_parameter("mode", 0, default: RUN_ONCE_FOR_EACH_ITEM)
             validate_mode!(mode)
 
-            return [[run_once_for_all_items(exec_ctx)]] if mode == RUN_ONCE_FOR_ALL_ITEMS
+            agent = resolve_agent(exec_ctx)
+
+            return [[run_once_for_all_items(exec_ctx, agent)]] if mode == RUN_ONCE_FOR_ALL_ITEMS
 
             items =
               exec_ctx.input_items.map.with_index do |item, item_index|
                 result =
                   run_agent(
-                    agent_config(exec_ctx, item_index),
+                    agent,
+                    item_config(exec_ctx, item_index),
                     exec_ctx.log,
                     runner(exec_ctx, item_index),
                   )
@@ -228,8 +231,8 @@ if defined?(DiscourseWorkflows)
 
           private
 
-          def run_once_for_all_items(exec_ctx)
-            result = run_agent(agent_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
+          def run_once_for_all_items(exec_ctx, agent)
+            result = run_agent(agent, item_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
 
             wrap(
               { "result" => result },
@@ -237,13 +240,28 @@ if defined?(DiscourseWorkflows)
             )
           end
 
-          def agent_config(exec_ctx, item_index)
+          def item_config(exec_ctx, item_index)
             {
-              "agent_id" => exec_ctx.get_node_parameter("agent_id", item_index),
-              "llm_model_id" => exec_ctx.get_node_parameter("llm_model_id", item_index),
               "prompt" => exec_ctx.get_node_parameter("prompt", item_index),
               "upload_ids" => exec_ctx.get_node_parameter("upload_ids", item_index),
             }
+          end
+
+          def resolve_agent(exec_ctx)
+            agent_id = exec_ctx.get_node_parameter("agent_id", 0)
+            record = ::AiAgent.find_by(id: agent_id)
+            raise_node_error!("AI Agent with id #{agent_id} not found") if record.nil?
+            raise_node_error!("AI Agent '#{record.name}' is disabled") if !record.enabled
+
+            llm_model = resolve_llm_model(record, exec_ctx.get_node_parameter("llm_model_id", 0))
+            bot =
+              DiscourseAi::Agents::Bot.as(
+                Discourse.system_user,
+                agent: record.class_instance.new,
+                model: llm_model,
+              )
+
+            { record: record, llm_model: llm_model, bot: bot }
           end
 
           def runner(exec_ctx, item_index)
@@ -253,9 +271,7 @@ if defined?(DiscourseWorkflows)
           def validate_mode!(mode)
             return if [RUN_ONCE_FOR_ALL_ITEMS, RUN_ONCE_FOR_EACH_ITEM].include?(mode)
 
-            raise_node_error!(
-              I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.invalid_mode", mode: mode),
-            )
+            raise_node_error!(error_text("invalid_mode", mode: mode))
           end
 
           def resolve_llm_model(agent_record, requested_llm_model_id)
@@ -264,24 +280,14 @@ if defined?(DiscourseWorkflows)
                 ::LlmModel.find_by(id: agent_record.default_llm_id) if agent_record.default_llm_id
               return llm_model if llm_model.present?
 
-              raise_node_error!(
-                I18n.t(
-                  "discourse_ai.discourse_workflows.ai_agent.errors.locked_default_llm_missing",
-                  agent: agent_record.name,
-                ),
-              )
+              raise_node_error!(error_text("locked_default_llm_missing", agent: agent_record.name))
             end
 
             if requested_llm_model_id.present?
               llm_model = ::LlmModel.find_by(id: requested_llm_model_id)
               return llm_model if llm_model.present?
 
-              raise_node_error!(
-                I18n.t(
-                  "discourse_ai.discourse_workflows.ai_agent.errors.llm_not_found",
-                  llm_model_id: requested_llm_model_id,
-                ),
-              )
+              raise_node_error!(error_text("llm_not_found", llm_model_id: requested_llm_model_id))
             end
 
             [agent_record.default_llm_id, SiteSetting.ai_default_llm_model].each do |llm_model_id|
@@ -289,33 +295,62 @@ if defined?(DiscourseWorkflows)
               return llm_model if llm_model.present?
             end
 
-            raise_node_error!(
-              I18n.t(
-                "discourse_ai.discourse_workflows.ai_agent.errors.no_llm_configured",
-                agent: agent_record.name,
-              ),
-            )
+            raise_node_error!(error_text("no_llm_configured", agent: agent_record.name))
           end
 
-          def prompt_content(prompt, upload_ids, agent_record, llm_model, guardian, log)
-            upload_ids = filtered_upload_ids(upload_ids, agent_record, llm_model, guardian)
+          def prompt_content(prompt, upload_ids, agent_record, llm_model, runner, log)
+            upload_ids = normalize_upload_ids(upload_ids)
             return prompt if upload_ids.blank?
+
+            uploads_by_id =
+              ::DiscourseAi::Completions::PromptMessagesBuilder.uploads_for_prompt(
+                upload_ids,
+              ).index_by(&:id)
+            guardian = runner.guardian
+            reasons =
+              upload_ids.filter_map do |upload_id|
+                key = drop_reason_key(uploads_by_id[upload_id], agent_record, llm_model, guardian)
+                next if key.nil?
+
+                error_text(
+                  key,
+                  upload_id: upload_id,
+                  agent: agent_record.name,
+                  llm: llm_model.display_name,
+                  username: runner.username,
+                  formats: ::DiscourseAi::Completions::UploadEncoder::SUPPORTED_IMAGE_FORMATS,
+                )
+              end
+            raise_uploads_not_sent!(agent_record, reasons) if reasons.any?
 
             log.info("Attachments: #{upload_ids.size} upload(s)")
             [prompt, *upload_ids.map { |upload_id| { upload_id: upload_id } }]
           end
 
-          def filtered_upload_ids(upload_ids, agent_record, llm_model, guardian)
-            upload_ids = normalize_upload_ids(upload_ids)
-            return [] if upload_ids.blank?
+          def drop_reason_key(upload, agent_record, llm_model, guardian)
+            return "upload_not_found" if upload.nil?
+            return "upload_not_visible" if !guardian.can_see_upload?(upload)
 
-            ::DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_for_prompt(
-              upload_ids,
-              include_image_uploads: agent_record.vision_enabled,
-              include_document_uploads: llm_model.allowed_attachment_types.present?,
-              allowed_attachment_types: llm_model.allowed_attachment_types,
-              guardian: guardian,
-            ) || []
+            encoder = ::DiscourseAi::Completions::UploadEncoder
+            if !encoder.image?(upload)
+              return "llm_cannot_read_documents" if llm_model.allowed_attachment_types.blank?
+
+              return
+            end
+            return "agent_cannot_see_images" if !agent_record.vision_enabled
+            return "llm_cannot_see_images" if !llm_model.agent_image_capable?
+            "unsupported_image_format" if !encoder.supported_image_upload?(upload)
+          end
+
+          def raise_uploads_not_sent!(agent_record, reasons)
+            raise_node_error!(
+              error_text("uploads_not_sent", agent: agent_record.name),
+              description: reasons.join(". "),
+            )
+          end
+
+          def error_text(key, **args)
+            I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.#{key}", **args)
           end
 
           def normalize_upload_ids(upload_ids)
@@ -329,10 +364,12 @@ if defined?(DiscourseWorkflows)
               upload_ids.flatten
             else
               Array.wrap(upload_ids)
-            end.filter_map do |upload_id|
-              id = Integer(upload_id, exception: false)
-              id if id&.positive?
             end
+              .filter_map do |upload_id|
+                id = Integer(upload_id, exception: false)
+                id if id&.positive?
+              end
+              .uniq
           end
 
           def parse_upload_ids_json(upload_ids)
@@ -341,50 +378,39 @@ if defined?(DiscourseWorkflows)
             nil
           end
 
-          def run_agent(config, log, runner)
-            agent_id = config["agent_id"]
+          def run_agent(agent, config, log, runner)
+            agent_record = agent[:record]
+            llm_model = agent[:llm_model]
             prompt = config["prompt"].to_s
-
-            agent_record = ::AiAgent.find_by(id: agent_id)
-            raise_node_error!("AI Agent with id #{agent_id} not found") if agent_record.nil?
-
-            if !agent_record.enabled
-              raise_node_error!("AI Agent '#{agent_record.name}' is disabled")
-            end
-
-            agent_instance = agent_record.class_instance.new
-            llm_model = resolve_llm_model(agent_record, config["llm_model_id"])
 
             log.info("Agent: #{agent_record.name}")
             log.info("Runner: #{runner.username}")
             log.info("LLM: #{llm_model.display_name} (#{llm_model.id})")
-            log.info("Prompt: #{prompt.to_s[0..200]}")
-
-            bot =
-              DiscourseAi::Agents::Bot.as(
-                Discourse.system_user,
-                agent: agent_instance,
-                model: llm_model,
-              )
+            log.info("Prompt: #{prompt[0..200]}")
 
             content =
-              prompt_content(
-                prompt,
-                config["upload_ids"],
-                agent_record,
-                llm_model,
-                runner.guardian,
-                log,
-              )
+              prompt_content(prompt, config["upload_ids"], agent_record, llm_model, runner, log)
 
+            execution_context = DiscourseAi::Completions::ExecutionContext.new
             bot_context =
               DiscourseAi::Agents::BotContext.new(
                 user: runner,
                 guardian: runner.guardian,
                 messages: [{ type: :user, content: content }],
                 feature_name: "workflow",
+                execution_context: execution_context,
               )
 
+            result = collect_reply(agent[:bot], bot_context, log)
+
+            skipped =
+              execution_context.upload_skips.map { |skip| error_text("upload_skipped", **skip) }
+            raise_uploads_not_sent!(agent_record, skipped) if skipped.any?
+
+            result
+          end
+
+          def collect_reply(bot, bot_context, log)
             result = +""
             tool_calls = 0
 
@@ -393,7 +419,7 @@ if defined?(DiscourseWorkflows)
                 tool_calls += 1
                 log.info("Tool call: #{partial}") if partial.is_a?(String)
               elsif type == :structured_output
-                result = partial.to_s
+                result = partial.to_s.dup
               elsif type.blank?
                 result << partial
               end
