@@ -311,6 +311,14 @@ en:
           locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
           llm_not_found: "LLM model with id %{llm_model_id} not found"
           no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+          uploads_not_sent: "Agent '%{agent}' did not receive every upload"
+          upload_not_found: "Upload %{upload_id} was not found"
+          upload_not_visible: "%{username} cannot see upload %{upload_id}"
+          agent_cannot_see_images: "Upload %{upload_id} is an image and agent '%{agent}' has vision disabled"
+          llm_cannot_see_images: "Upload %{upload_id} is an image and LLM '%{llm}' has vision disabled"
+          llm_cannot_read_documents: "Upload %{upload_id} is a document and LLM '%{llm}' accepts no attachments"
+          unsupported_image_format: "Upload %{upload_id} is not a supported image format (%{formats})"
+          upload_skipped: "Upload %{upload_id} (%{filename}) was not sent: %{message}"
 
     tools:
       custom_name: "%{name} (custom)"

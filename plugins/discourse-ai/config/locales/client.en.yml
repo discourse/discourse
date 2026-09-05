@@ -273,7 +273,7 @@ en:
           runner_username: "Run as"
           runner_username_tooltip: "User whose permissions are used for upload visibility and AI agent tools. Use system for workflow-owned automation."
           upload_ids: "Upload IDs"
-          upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Image uploads are included when the agent has vision enabled; document uploads are included when the selected LLM supports their file type."
+          upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Every upload must reach the model or the node fails: images need vision on the agent and the LLM, documents need their file type enabled on the LLM."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Select an agent..."
 

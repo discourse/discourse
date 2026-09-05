@@ -490,7 +490,15 @@ module DiscourseAi
 
               next if is_image && !allow_images
               next if is_document && !allow_documents
-              next if upload_filter && !upload_filter.call(encoded)
+
+              if upload_filter && !upload_filter.call(encoded)
+                prompt.record_upload_skip(
+                  upload_id: c[:upload_id],
+                  filename: encoded[:filename],
+                  message: "not accepted by this model",
+                )
+                next
+              end
 
               if !current_string.empty?
                 result << text_encoder.call(current_string)
