@@ -69,6 +69,7 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
           force_default_llm: false,
           resolved_llm_id: llm_model.id,
           resolved_llm_name: llm_model.display_name,
+          response_format: [],
         },
       )
     end
@@ -364,6 +365,78 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     )
 
     expect(prompts).to eq([["Review the document", { upload_id: upload.id }]])
+  end
+
+  describe "structured output" do
+    let(:response_format) do
+      [
+        { "key" => "verdict", "type" => "string" },
+        { "key" => "confident", "type" => "boolean" },
+        { "key" => "reasons", "type" => "array", "array_type" => "string" },
+      ]
+    end
+
+    before do
+      agent.update!(response_format: response_format)
+      allow(bot).to receive(:reply) do |_bot_context, &block|
+        structured =
+          DiscourseAi::Completions::StructuredOutput.new(
+            DiscourseAi::Agents::Bot.json_schema_properties(response_format),
+          )
+        structured << { verdict: "reject", confident: true, reasons: %w[nsfw] }.to_json
+        structured.finish
+        block.call(structured, nil, :structured_output)
+      end
+    end
+
+    it "emits each response format field next to the raw result" do
+      item = execute_node(configuration: { "agent_id" => agent.id, "prompt" => "Check" })
+
+      expect(item).to eq(
+        "result" => { verdict: "reject", confident: true, reasons: %w[nsfw] }.to_json,
+        "verdict" => "reject",
+        "confident" => true,
+        "reasons" => %w[nsfw],
+      )
+      expect(item).to match_node_output_schema(
+        described_class,
+        configuration: {
+          "agent_response_format" => response_format,
+        },
+      )
+    end
+
+    it "declares the picked agent's response format fields in the output schema" do
+      schema = described_class.output_schemas({ "agent_response_format" => response_format }).first
+
+      expect(schema["properties"]).to eq(
+        "result" => {
+          "type" => "string",
+        },
+        "verdict" => {
+          "type" => "string",
+        },
+        "confident" => {
+          "type" => "boolean",
+        },
+        "reasons" => {
+          "type" => "array",
+          "items" => {
+            "type" => "string",
+          },
+        },
+      )
+      expect(
+        described_class.output_schemas({ "agent_response_format" => "" }).first["properties"].keys,
+      ).to eq(["result"])
+      expect(
+        described_class.output_schemas(
+          { "agent_response_format" => [{ "type" => "string" }] },
+        ).first[
+          "properties"
+        ].keys,
+      ).to eq(["result"])
+    end
   end
 
   it "uses an empty string when the optional prompt is blank" do
