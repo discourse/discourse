@@ -39,20 +39,35 @@ module Jobs
 
       def finish(event_date)
         return if !event_date.ended?
-        event_date.update!(finished_at: Time.current)
 
-        # The occurrence goes along with the event: `set_next_date` below moves
-        # the event on to the next one, so it can no longer name the one that ended.
-        DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
+        event = event_date.event
+        recurring = event.recurrence.present?
+        create_successor_topic =
+          recurring && SiteSetting.discourse_post_event_recurring_topic_mode == "create_next_topic"
+
+        if create_successor_topic
+          DiscourseEvents::Events::Event.transaction do
+            event_date.update!(finished_at: Time.current)
+            DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event_date)
+          end
+        else
+          event_date.update!(finished_at: Time.current)
+        end
+
+        # Use the Event instance captured before rollover. In create-next-topic
+        # mode the persisted Event is rewritten as one-off, while event-ended
+        # should retain the series metadata for the occurrence that just ended.
+        DiscourseEvent.trigger(:discourse_post_event_event_ended, event, event_date)
         MessageBus.publish(
-          "/topic/#{event_date.event.post.topic_id}",
+          "/topic/#{event.post.topic_id}",
           reload_topic: true,
           refresh_stream: true,
         )
 
-        return if event_date.event.recurrence.blank?
-        event_date.event.set_next_date
-        event_date.event.set_topic_bump
+        return if !recurring || create_successor_topic
+
+        event.set_next_date
+        event.set_topic_bump
       end
 
       def due_reminders(event_date)
