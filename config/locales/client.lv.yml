@@ -282,6 +282,7 @@ lv:
       next: "Nākamais"
       sections:
         theme: "Tēma"
+        search: "Meklēt"
       homepage:
         topics: "Tēmas"
         categories: "Sadaļas"
@@ -1685,6 +1686,8 @@ lv:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Ievadīt"
+      delete: "Dzēst"
+      home: "Mājas"
     category_row:
       subcategories: "+ Apakšsadaļas"
     select_kit:
@@ -1853,6 +1856,7 @@ lv:
       categories: "Sadaļas"
       tags: "Tagi"
       type:
+        default: "Ieraksti"
         users: "Lietotāji"
         categories: "Sadaļas"
       context:
@@ -2278,7 +2282,6 @@ lv:
       reply_as_new_private_message: "Atbildēt jaunā vēstulē tiem pašiem adresātiem"
       continue_discussion: "Turpinot diskusiju no %{postLink}:"
       follow_quote: "doties uz citēto ierakstu"
-      show_full: "Parādīt visu ierakstu"
       collapse: "sakļaut"
       expand_collapse: "paplašināt/minimizēt"
       gap:
@@ -2924,6 +2927,11 @@ lv:
         group_traffic: "Datu plūsma"
         group_members: "Dalībnieki"
         group_other: "Citi"
+        related_items:
+          users:
+            title: "Lietotāji"
+          labels:
+            user: "Lietotājs"
       config_sections:
         account:
           title: "Konts"
@@ -3073,15 +3081,10 @@ lv:
       search:
         title: "Meklēt"
       site_traffic_explorer:
-        pageviews: "Lapu skatījumi"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP adrese"
+        metric_information: "Par %{metric}"
+        apply: "Pielietot"
         filters:
           ip: "IP adrese"
-        metrics:
-          pageviews:
-            label: "Lapu skatījumi"
         series:
           anonymous_human: "Anonīmi"
       dashboard:
@@ -3124,6 +3127,8 @@ lv:
               share: "Dalīties"
             whos_posting:
               staff: "Personāls"
+              modal:
+                apply: "Saglabāt"
             trust_level_pipeline:
               trust_levels:
                 "0": "Jauns"
@@ -3133,6 +3138,9 @@ lv:
             title: "Meklēt"
             table:
               status: "Statuss"
+          system:
+            title: "Sistēma"
+            status: "Statuss"
         reports_section:
           header_action: "Pārvaldīt"
           modal:
@@ -3158,6 +3166,15 @@ lv:
           monthly: Mēneša
           weekly: Nedēļas
           groups: "Visas grupas"
+          posters_by_member_type_members:
+            users_count:
+              zero: "%{count} lietotāji"
+              one: "%{count} lietotājs"
+              other: "%{count} lietotāji"
+            posts_count:
+              zero: "%{count} raksti"
+              one: "%{count} raksts"
+              other: "%{count} raksti"
           sort_ascending: "augoši"
           sort_descending: "dilstoši"
           filters:

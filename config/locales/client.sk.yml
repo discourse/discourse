@@ -403,6 +403,7 @@ sk:
       sections:
         theme: "Téma"
         fonts: "Fonty"
+        search: "Hľadať"
       theme:
         selected: "Vybrané"
       colors:
@@ -2122,7 +2123,6 @@ sk:
         watch_topic: "Sledujte tému"
         track_topic: "Sledovať tému"
         do_nothing: "Nerobiť nič"
-      topics_unread_when_closed: "Považujte témy za neprečítané, keď sú zatvorené"
       invited:
         title: "Pozvánky"
         pending_tab: "Čakajúce"
@@ -2812,6 +2812,11 @@ sk:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Zadajte"
+      option: "Možnosť"
+      period: "Obdobie"
+      tab: "Tab"
+      delete: "Odstrániť"
+      home: "Domov"
     conditional_loading_section:
       loading: Načítava sa…
     category_row:
@@ -2991,7 +2996,6 @@ sk:
       create_whisper: "Šepot"
       create_shared_draft: "Vytvorenie zdieľaného návrhu"
       edit_shared_draft: "Upraviť zdieľaný návrh"
-      title: "Alebo stlačte %{modifier}Enter"
       discard: "Zahodiť"
       users_placeholder: "Pridanie používateľov alebo skupín"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
@@ -3014,6 +3018,8 @@ sk:
       hide_preview: "skryť náhľad"
       switch_to_markdown: "Prepnutie na štandardný editor Markdown (%{keyboardShortcut})"
       switch_to_rich_text: "Prepnutie na nový textový editor (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Prepnutie na štandardný editor Markdown"
+      switch_to_rich_text_no_shortcut: "Prepnutie na nový textový editor"
       quote_post_title: "Citovať celý príspevok"
       bold_label: "B"
       bold_title: "Výrazne"
@@ -3329,10 +3335,10 @@ sk:
         search_field: "Vyhľadávacie pole v záhlaví stránky"
         search_icon: "Ikona vyhľadávania pri avatare profilu"
       type:
-        default: "Témy/príspevky"
+        default: "Príspevky"
         users: "Používatelia"
         categories: "Kategórie"
-        categories_and_tags: "Kategórie/značky"
+        categories_and_tags: "Kategórie a značky"
       context:
         user: "Vyhľadávanie podľa @%{username}"
         category: "Vyhľadať kategóriu #%{category}"
@@ -3345,7 +3351,6 @@ sk:
         in: "filtre podľa metadát (napr. in:title, in:personal, in:pinned)"
         status: "filtre podľa stavu témy"
         full_search: "spustí celostránkové vyhľadávanie"
-        full_search_key: "%{modifier} + Enter"
         me: "zobrazuje iba vaše príspevky"
       advanced:
         title: Rozšírené filtre
@@ -4107,7 +4112,6 @@ sk:
       reply_as_new_private_message: "Odpovedzte ako novú správu tým istým príjemcom"
       continue_discussion: "Pokračovanie diskusie z %{postLink}:"
       follow_quote: "prejsť na citovaný príspevok"
-      show_full: "Zobraziť celý príspevok"
       show_hidden: "Zobraziť ignorovaný obsah."
       deleted_by_author_simple: "(príspevok vymazaný autorom)"
       collapse: "zbaliť"
@@ -4896,12 +4900,8 @@ sk:
     cannot_render_video: Toto video nemožno zobraziť, pretože váš prehliadač nepodporuje tento kodek.
     invalid_video_url: Toto video nemožno prehrať, pretože adresa URL je neplatná alebo nedostupná.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} alebo %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Klávesové skratky"
       short_title: "Skratky"
       search_ctrl_f_tip: "Ak chcete vyhľadávať v celom tomto fóre, stlačte tlačidlo <kbd>/</kbd>"
@@ -5616,6 +5616,11 @@ sk:
         group_traffic: "Vyťaženie"
         group_members: "Členovia"
         group_other: "Ostatné"
+        related_items:
+          users:
+            title: "Používatelia"
+          labels:
+            user: "Používateľ"
       config_sections:
         account:
           title: "Účet"
@@ -5820,7 +5825,7 @@ sk:
           header_description: "Konfigurácia nastavení vyhľadávania vrátane protokolovania a tokenizácie pre čínštinu a japončinu"
         search_everything:
           title: "Hľadať"
-          header_description: "Tu nájdete čokoľvek v rozhraní správcu. Výsledky môžete filtrovať nižšie a vaše preferencie sa zapamätajú. Ak chcete otvoriť toto vyhľadávanie kdekoľvek v rozhraní správcu, stlačte tlačidlo %{shortcutHTML}."
+          header_description: "Tu nájdete čokoľvek v rozhraní správcu. Výsledky môžete filtrovať nižšie a vaše preferencie sa zapamätajú."
         security:
           title: "Bezpečnosť"
           header_description: "Konfigurácia nastavení zabezpečenia vrátane dvojfaktorového overovania, oprávnení moderátora a zásad zabezpečenia obsahu"
@@ -6042,21 +6047,17 @@ sk:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
       site_traffic_explorer:
-        pageviews: "Zobrazenia stránky"
+        metric_information: "O %{metric}"
+        clear_all: "Vymazať všetko"
+        apply: "Použi"
         view_more: "Zobraziť viac"
         cards:
           pages: "Stránky"
           visitors: "Návštevníci"
-        columns:
-          top_urls: "URL"
-          browsers: "Prehliadač"
-          ip_addresses: "IP adresy"
         filters:
           browser: "Prehliadač"
+          language: "Jazyk"
           ip: "IP adresy"
-        metrics:
-          pageviews:
-            label: "Zobrazenia stránky"
         series:
           anonymous_human: "Anonymný"
       dashboard:
@@ -6132,6 +6133,8 @@ sk:
               share: "Zdieľať"
             whos_posting:
               staff: "Personál"
+              modal:
+                apply: "Uložiť"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nový"
@@ -6144,6 +6147,11 @@ sk:
             table:
               searches: "Vyhľadávania"
               status: "Stav"
+          system:
+            title: "Systém"
+            status: "Stav"
+            discourse_updated: "Discourse bol aktualizovaný"
+            dashboard_updated: "Informačný panel bol aktualizovaný"
         reports_section:
           header_action: "Spravovať"
           no_data: "Žiadne údaje na zobrazenie"
@@ -6202,6 +6210,18 @@ sk:
           average_for_sample: "Priemer pre vzorku"
           total: "Celkom za celý čas"
           no_data: "Žiadne údaje na zobrazenie."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} používateľ"
+              few: "%{count} používatelia"
+              many: "%{count} používateľov"
+              other: "%{count} používateľov"
+            posts_count:
+              one: "jeden príspevok"
+              few: "%{count} príspevky"
+              many: "%{count} príspevkov"
+              other: "%{count} príspevkov"
+            deselect: "Zrušiť výber %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">V denníkoch vyhľadávania</a>'
             disabled: 'Prehľad trendov vo vyhľadávaní je zakázaný. Povoľte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">denníkové vyhľadávacie dopyty</a> na zhromažďovanie údajov.'

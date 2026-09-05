@@ -6,12 +6,12 @@ describe "Post event" do
   fab!(:group)
 
   let(:composer) { PageObjects::Components::Composer.new }
-  let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
-  let(:post_event_form_page) { PageObjects::Pages::DiscourseCalendar::PostEventForm.new }
-  let(:bulk_invite_modal_page) { PageObjects::Pages::DiscourseCalendar::BulkInviteModal.new }
+  let(:post_event_page) { PageObjects::Pages::DiscourseEvents::PostEvent.new }
+  let(:post_event_form_page) { PageObjects::Pages::DiscourseEvents::PostEventForm.new }
+  let(:bulk_invite_modal_page) { PageObjects::Pages::DiscourseEvents::BulkInviteModal.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_custom_fields = "custom"
     sign_in(admin)
@@ -34,6 +34,29 @@ describe "Post event" do
       expect(post_event_page).to have_location("123 Main St, Brisbane, Australia example.com")
       expect(page).to have_css(".event-location a[href='http://example.com']")
     end
+  end
+
+  it "shows the event hosts" do
+    first_host = Fabricate(:user, username: "event_host_maya")
+    second_host = Fabricate(:user, username: "event_host_noah")
+    raw = <<~EVENT
+      [event start='2222-02-22 14:22' hosts='#{admin.username},#{first_host.username},#{second_host.username}']
+      [/event]
+    EVENT
+    post = PostCreator.create!(admin, title: "Community meetup", raw:)
+
+    visit(post.topic.url)
+
+    expect(post_event_page).to have_hosts([first_host, second_host], cohosted: true)
+  end
+
+  it "joins the creator and host roles for the same user" do
+    raw = "[event start='2222-02-22 14:22' hosts='#{admin.username}']\n[/event]"
+    post = PostCreator.create!(admin, title: "Community meetup", raw:)
+
+    visit(post.topic.url)
+
+    expect(post_event_page).to have_creator_host(admin)
   end
 
   context "with description" do
@@ -292,8 +315,8 @@ describe "Post event" do
 
       expect(post_event_page).to have_going_status
       expect(post_event_page).to have_selected_status(:going)
-      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
-      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      invitee = DiscourseEvents::Events::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(true)
     end
 
@@ -306,8 +329,8 @@ describe "Post event" do
 
       expect(post_event_page).to have_going_status
       expect(post_event_page).to have_selected_status(:going)
-      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
-      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      invitee = DiscourseEvents::Events::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(false)
     end
 
@@ -393,7 +416,7 @@ describe "Post event" do
         MD
         post = PostCreator.create!(admin, title:, raw:)
 
-        event = DiscoursePostEvent::Event.find_by(post:)
+        event = DiscourseEvents::Events::Event.find_by(post:)
         event.set_next_date
 
         sign_in(viewer)
@@ -478,7 +501,7 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     form.field("eventType").select("private")
-    find(".group-selector").click
+    form.field("rawInvitees").component.find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
     form.field("customFields.custom").fill_in("custom value")
@@ -494,7 +517,12 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")
-    expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
+    expect(
+      form
+        .field("rawInvitees")
+        .component
+        .find(".group-selector .d-multi-select-trigger__selection"),
+    ).to have_text(group.name)
     expect(form.field("customFields.custom")).to have_value("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 ca:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Cerca"
+      categories:
+        label: "Categories"
+      about:
+        label: "Quant a"
+      guidelines:
+        label: "Directrius"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -587,6 +599,7 @@ ca:
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
   admin_site_traffic_explorer:
+    unknown: "Desconegut"
     traffic_types:
       anonymous: "Anònim"
   change_email:
@@ -833,6 +846,11 @@ ca:
         share: "Comparteix"
       types:
         staff: "Equip responsable"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuari"
+        count: "Publicacions"
+        share: "Comparteix"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -980,6 +998,9 @@ ca:
         num_topics: "Temes"
       description: "Usuaris llistats per nombre de clics en els enllaços que han compartit."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_entry_urls:
       labels:
         count: "Visites"
     top_referrers_by_browser_pageviews:
@@ -1392,7 +1413,6 @@ ca:
     topic_view_duration_hours: "Compta una nova vista de tema una vegada per IP/usuari cada N hores"
     user_profile_view_duration_hours: "Compta una nova vista de perfil d'usuari una vegada per IP/usuari cada N hores."
     levenshtein_distance_spammer_emails: "En cercar coincidències de correus brossa, diferència de nombre de caràcters que encara permetrà una coincidència difusa (fuzzy match)."
-    min_ban_entries_for_roll_up: "En clicar el botó Agrupa es crearà una nova entrada de prohibició de subxarxa si hi ha almenys (N) entrades."
     max_age_unmatched_emails: "Suprimeix entrades no coincidents de correus sota supervisió després de (N) dies."
     max_age_unmatched_ips: "Suprimeix entrades no coincidents d'entrades IP sota supervisió després de (N) dies."
     num_flaggers_to_close_topic: "Nombre mínim de banderes úniques necessàries per a aturar automàticament un tema per a una intervenció"
@@ -1548,7 +1568,6 @@ ca:
     errors:
       invalid_email: "Adreça de correu no vàlida."
       invalid_username: "No hi ha cap usuari amb aquest nom."
-      invalid_group: "No hi ha cap grup amb aquest nom."
       invalid_integer_min_max: "El valor ha de ser entre %{min} i %{max}."
       invalid_integer_min: "El valor ha de ser %{min} o més gran."
       invalid_integer_max: "El valor no pot ser més gran de %{max}."
@@ -2815,6 +2834,10 @@ ca:
     user_claimed: "Aquest element ha estat reclamat per un altre usuari."
     missing_version: "Heu de proporcionar un paràmetre de versió"
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
+    reasons:
+      fast_typer_time:
+        one: "%{count} segon"
+        other: "%{count} segons"
     actions:
       agree:
         title: "Sí"

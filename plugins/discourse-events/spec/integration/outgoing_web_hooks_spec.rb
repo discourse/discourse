@@ -5,7 +5,7 @@ RSpec.describe "Outgoing calendar event webhooks" do
   fab!(:web_hook, :outgoing_calendar_event_web_hook)
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 

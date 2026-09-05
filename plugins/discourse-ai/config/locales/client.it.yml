@@ -153,6 +153,12 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      copied: "Copiato"
+      ai_decoded_transcript:
+        tool: "Strumento"
+        type: "Tipo"
+        error: "Errore"
+        response: "Risposta"
       discourse_workflows:
         ai_agent:
           mode: "Modalità"
@@ -202,7 +208,7 @@ it:
         search:
           name: "Cerca"
           description: "Migliora l'esperienza di ricerca rispondendo alle query con risposte generate con l'IA"
-          discoveries: "Scoperte"
+          ask_ai: "Chiedi all'IA"
         embeddings:
           name: "Integrazioni"
           description: "Sono alla base di funzionalità come Argomenti correlati e Ricerca IA generando rappresentazioni semantiche di un testo"
@@ -375,11 +381,10 @@ it:
         retry: "Riprova"
         apply: "Applica"
         all_models: "Tutti i modelli"
+        all_features: "Tutte le funzionalità"
         successful: "Completato"
         failed: "Non riuscito"
         unknown: "Sconosciuto"
-        topic_id: "ID dell'argomento"
-        post_id: "ID del messaggio"
         time: "Ora"
         when: "Quando"
         outcome: "Esito"
@@ -394,6 +399,7 @@ it:
         post_short: "Messaggio %{id}"
         duration: "Durata"
         actions: "Azioni"
+        view_details: "Dettagli"
         periods:
           hour: "Ultima ora"
           day: "Ultime 24 ore"
@@ -629,9 +635,6 @@ it:
           other: "Questo modello è attualmente utilizzato dai seguenti elementi: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
-          anthropic-claude-opus-4-7: "Il modello più intelligente di Anthropic"
-          anthropic-claude-sonnet-4-6: "Equilibrio ottimale tra velocità e costi"
-          anthropic-claude-haiku-4-5: "Veloce e conveniente"
         preseeded_model_description: "Modello open source preconfigurato che utilizza %{model}"
         configured:
           title: "LLM configurati"
@@ -784,13 +787,8 @@ it:
         provider_fields:
           model_name: "Nome del modello"
         semantic_search: "Argomenti (semantici)"
-        semantic_search_results:
-          unavailable: "Risultati IA non disponibili"
         semantic_search_tooltips:
           results_explanation: "Se abilitata, verranno aggiunti ulteriori risultati di ricerca IA di seguito."
-          invalid_sort: "I risultati della ricerca devono essere ordinati in base alla pertinenza per visualizzare i risultati IA"
-        semantic_search_unavailable_tooltip: "I risultati della ricerca devono essere ordinati in base alla pertinenza per visualizzare i risultati IA"
-        ai_generated_result: "Risultato della ricerca trovato utilizzando l'intelligenza artificiale"
         quick_search:
           suffix: "in tutti gli argomenti e i post con IA"
       ai_artifact:
@@ -908,19 +906,28 @@ it:
             expanded: "Espanso"
             expanded_description: "con riepiloghi IA"
       discobot_discoveries:
-        main_title: "Scoperte del discobot"
-        regular_results: "Argomenti"
-        tell_me_more: "Dimmi di più..."
-        continue_convo: "Continua la conversazione..."
+        main_title: "Chiedi all'IA"
         loading_convo: "Caricamento conversazione"
-        collapse: "Comprimi"
-        timed_out: "Il discobot non ha trovato scoperte. Si è verificato un errore."
-        tooltip:
-          header: "Ricerca con IA"
-          content: "Ricerca in linguaggio naturale basata su %{model}"
-          actions:
-            info: "Come funziona?"
-            disable: "Disabilita"
+        legacy:
+          main_title: "Scoperte del discobot"
+          regular_results: "Argomenti"
+          tell_me_more: "Dimmi di più..."
+          continue_convo: "Continua la conversazione..."
+          loading_convo: "Caricamento conversazione"
+          collapse: "Comprimi"
+          timed_out: "Il discobot non ha trovato scoperte. Si è verificato un errore."
+          tooltip:
+            header: "Ricerca con IA"
+            content: "Ricerca in linguaggio naturale basata su %{model}"
+            actions:
+              info: "Come funziona?"
+              disable: "Disabilita"
+        search_type: "IA"
+        search_all_topics: "Tutti gli argomenti"
+        search_messages: "Messaggi"
+        ask_ai: "IA"
+        sources:
+          related_discussions: "Argomenti correlati"
       user_preferences:
         empty: "Al momento non sono disponibili impostazioni rilevanti"
     review:

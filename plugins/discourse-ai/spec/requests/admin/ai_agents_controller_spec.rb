@@ -135,6 +135,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(serializer_agent2["default_llm_id"]).to eq(llm_model.id)
       expect(serializer_agent2).not_to have_key("question_consolidator_llm_id")
       expect(serializer_agent2["user_id"]).to eq(agent2.user_id)
+      expect(serializer_agent2["can_have_bot_user"]).to eq(true)
       expect(serializer_agent2["user"]["id"]).to eq(agent2.user_id)
       expect(serializer_agent2["forced_tool_count"]).to eq(2)
 
@@ -422,6 +423,16 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(response).to be_successful
       expect(response.parsed_body["user"]["id"]).to eq(ai_agent.user_id)
     end
+
+    it "refuses for system agents that are never talked to" do
+      locale_detector =
+        AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::LocaleDetector])
+
+      post "/admin/plugins/discourse-ai/ai-agents/#{locale_detector.id}/create-user.json"
+
+      expect(response.status).to eq(403)
+      expect(locale_detector.reload.user_id).to eq(nil)
+    end
   end
 
   describe "PUT #update" do
@@ -596,6 +607,56 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.rag_chunk_overlap_tokens).to eq(12)
       expect(agent.rag_conversation_chunks).to eq(13)
       expect(agent.rag_llm_model_id).to eq(llm_model.id)
+    end
+
+    it "supports creating, updating, and removing URL-backed RAG sources" do
+      agent = Fabricate(:ai_agent, name: "url_source_bot")
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_document_sources_attributes: [
+                { url: "https://example.com/docs", refresh_interval_hours: 12 },
+              ],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      source = agent.rag_document_sources.find_by!(url: "https://example.com/docs")
+      expect(response.parsed_body.dig("ai_agent", "rag_document_sources", 0)).to include(
+        "id" => source.id,
+        "url" => source.url,
+        "refresh_interval_hours" => 12,
+      )
+
+      source_upload = Fabricate(:upload)
+      source.update_columns(upload_id: source_upload.id)
+      UploadReference.ensure_exist!(target: agent, upload_ids: [source_upload.id])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_uploads: [],
+              rag_document_sources_attributes: [
+                { id: source.id, url: source.url, refresh_interval_hours: 48 },
+              ],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(source.reload.refresh_interval_hours).to eq(48)
+      expect(UploadReference.exists?(target: agent, upload_id: source_upload.id)).to eq(true)
+      expect(response.parsed_body.dig("ai_agent", "rag_uploads")).to eq([])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_document_sources_attributes: [{ id: source.id, _destroy: true }],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(RagDocumentSource.exists?(source.id)).to eq(false)
     end
 
     it "supports updating token budget params" do
@@ -1405,12 +1466,13 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       # trust level 0
       SiteSetting.ai_bot_allowed_groups = "10"
 
+      SiteSetting.ai_default_llm_model = llm.id
       fake_endpoint.fake_content = ["This is a test! Testing!", "An amazing title"]
 
       ai_agent.create_user!
       ai_agent.update!(
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-        default_llm_id: llm.id,
+        default_llm: nil,
         allow_personal_messages: true,
         system_prompt: "you are a helpful bot",
       )

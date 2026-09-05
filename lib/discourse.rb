@@ -352,6 +352,12 @@ module Discourse
     @anonymous_filters ||= %i[latest top categories hot]
   end
 
+  # `anonymous_filters` also holds menu items such as `categories`, which have no
+  # `/l/<filter>` route. Not memoized: plugins push onto both lists at load time.
+  def self.anonymous_list_filters
+    Discourse.filters & Discourse.anonymous_filters
+  end
+
   def self.top_menu_items
     @top_menu_items ||= Discourse.filters + [:categories]
   end
@@ -834,6 +840,11 @@ module Discourse
 
             @mutex.synchronize do
               @dbs.each do |db|
+                if !RailsMultisite::ConnectionManagement.has_db?(db)
+                  @dbs.delete(db)
+                  next
+                end
+
                 RailsMultisite::ConnectionManagement.with_connection(db) do
                   @dbs.delete(db) if !Discourse.redis.expire(key, ttl)
                 end
@@ -981,6 +992,11 @@ module Discourse
         username_lower: SiteSetting.site_contact_username.downcase,
       ) if SiteSetting.site_contact_username.present?
     user ||= system_user || User.admins.real.order(:id).first
+  end
+
+  # A global override bypasses the write-time name-to-id conversion.
+  def self.site_contact_group
+    Group.find_by_id_or_name(SiteSetting.site_contact_group_name)
   end
 
   SYSTEM_USER_ID = -1

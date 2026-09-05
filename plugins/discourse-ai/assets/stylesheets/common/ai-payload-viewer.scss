@@ -23,6 +23,20 @@
       outline: 2px solid var(--tertiary);
       outline-offset: 2px;
     }
+
+    > code {
+      max-height: none;
+      padding: 0;
+      overflow: visible;
+      background: none;
+      color: inherit;
+      font: inherit;
+    }
+  }
+
+  &.--unbounded &__content {
+    max-height: none;
+    overflow: visible;
   }
 
   &__empty {

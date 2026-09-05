@@ -5,6 +5,8 @@ class Report
   # and you want to ensure cache is reset
   SCHEMA_VERSION = 5
 
+  RELATED_ITEMS_LIMIT = 50
+
   FILTERS = %i[
     name
     start_date
@@ -28,7 +30,7 @@ class Report
     storage_stats: :storage_stats,
   }
 
-  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs top_entry_urls]
 
   HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
     consolidated_page_views_browser_detection
@@ -40,12 +42,15 @@ class Report
     admin_logins
     top_uploads
     topic_view_stats
+    top_entry_urls
     top_referrers_by_browser_pageviews
     top_countries_by_browser_pageviews
   ]
+  ADMIN_ONLY_RELATED_ITEMS_REPORTS = %w[new_contributors signups]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
   BROWSER_PAGEVIEW_REPORTS = %w[
     top_countries_by_browser_pageviews
+    top_entry_urls
     top_referrers_by_browser_pageviews
   ]
 
@@ -94,6 +99,8 @@ class Report
     web_hook_events_daily_aggregate
   ]
 
+  INTERNAL_REPORT_TYPES = %w[posters_by_member_type_members]
+
   include Reports::AssociatedAccountsByProvider
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
@@ -122,6 +129,7 @@ class Report
   include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
   include Reports::TopCountriesByBrowserPageviews
+  include Reports::TopEntryUrls
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
   include Reports::TopReferrers
@@ -174,7 +182,10 @@ class Report
                 :default_group_by,
                 :y_axis_title,
                 :current_user,
-                :guardian
+                :guardian,
+                :include_related_items,
+                :related_items,
+                :related_items_totals
 
   def self.default_days
     30
@@ -310,6 +321,8 @@ class Report
       json[:limit] = limit if limit
       json[:default_group_by] = default_group_by if default_group_by
       json[:y_axis_title] = y_axis_title if y_axis_title
+      json[:related_items] = related_items if related_items
+      json[:related_items_totals] = related_items_totals if related_items_totals
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(
@@ -321,15 +334,22 @@ class Report
     end
   end
 
-  def Report.add_report(name, exclude_from_dashboard: false, &block)
+  def Report.add_report(
+    name,
+    exclude_from_dashboard: false,
+    admin_only_related_items: false,
+    &block
+  )
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
     dashboard_excluded_report_types << name.to_s if exclude_from_dashboard
+    registered_admin_only_related_items_report_types << name.to_s if admin_only_related_items
   end
 
   # Only used for testing.
   def Report.remove_report(name)
     singleton_class.instance_eval { remove_method("report_#{name}") }
     dashboard_excluded_report_types.delete(name.to_s)
+    registered_admin_only_related_items_report_types.delete(name.to_s)
   end
 
   # Report types a plugin has marked as not mountable on the customisable
@@ -338,8 +358,17 @@ class Report
     @dashboard_excluded_report_types ||= Set.new
   end
 
+  def Report.admin_only_related_items_report_types
+    ADMIN_ONLY_RELATED_ITEMS_REPORTS.to_set | registered_admin_only_related_items_report_types
+  end
+
+  def Report.registered_admin_only_related_items_report_types
+    @registered_admin_only_related_items_report_types ||= Set.new
+  end
+
   def self._get(type, opts = nil)
     opts ||= {}
+    type = type.to_s
 
     # Load the report
     report = Report.new(type)
@@ -354,6 +383,9 @@ class Report
     report.current_user = opts[:current_user] if opts[:current_user]
     report.current_user ||= report.guardian&.user
     report.guardian ||= report.current_user&.guardian
+    report.include_related_items =
+      opts[:include_related_items] &&
+        (report.guardian&.is_admin? || !admin_only_related_items_report_types.include?(report.type))
     report.labels = Report.default_labels
 
     report.legacy = LEGACY_REPORTS.include?(type)
@@ -363,10 +395,14 @@ class Report
 
   def self.find_cached(type, opts = nil)
     report = _get(type, opts)
+    return if report.include_related_items
+
     Discourse.cache.read(cache_key(report))
   end
 
   def self.cache(report)
+    return if report.include_related_items
+
     duration = report.error == :exception ? 1.minute : 60.minutes
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end

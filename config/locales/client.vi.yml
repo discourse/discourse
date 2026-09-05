@@ -423,6 +423,8 @@ vi:
         theme: "Giao diện"
         fonts: "Phông chữ"
         homepage: "Trang chủ"
+        welcome_banner: "Banner chào mừng"
+        search: "Tìm"
       theme:
         selected: "Đã chọn"
       colors:
@@ -2007,7 +2009,6 @@ vi:
         watch_topic: "Giám sát chủ đề"
         track_topic: "Theo dõi chủ đề"
         do_nothing: "Không làm gì"
-      topics_unread_when_closed: "Xem các chủ đề là chưa đọc nếu chúng bị đóng"
       invited:
         title: "Lời mời"
         pending_tab: "Đang treo"
@@ -2655,6 +2656,11 @@ vi:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Nhập"
+      option: "Tùy chọn"
+      period: "Giai đoạn"
+      tab: "Tab"
+      delete: "Xóa"
+      home: "Trang chủ"
     conditional_loading_section:
       loading: Đang tải…
     category_row:
@@ -2810,7 +2816,6 @@ vi:
       create_whisper: "Thì thầm"
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
-      title: "Hoặc nhấn %{modifier}Enter"
       save_and_close: "Lưu và đóng"
       discard: "Hủy bỏ"
       draft_saved: "Đã lưu bản nháp!"
@@ -3145,10 +3150,10 @@ vi:
         search_field: "Trường tìm kiếm trong tiêu đề trang web"
         search_icon: "Biểu tượng tìm kiếm gần ảnh đại diện hồ sơ"
       type:
-        default: "Chủ đề/Tút"
+        default: "Số lượng bài viết"
         users: "Thành viên"
         categories: "Chuyên mục"
-        categories_and_tags: "Chuyên mục/Thẻ"
+        categories_and_tags: "Chuyên mục & thẻ"
       context:
         user: "Tìm tút của @%{username}"
         category: "Tìm kiếm chuyên mục #%{category}"
@@ -3161,7 +3166,6 @@ vi:
         in: "lọc theo siêu dữ liệu (ví dụ: in: title, in: personal, in: pinned)"
         status: "bộ lọc theo trạng thái chủ đề"
         full_search: "khởi chạy tìm kiếm toàn trang"
-        full_search_key: "%{modifier} + Enter"
         me: "chỉ hiển thị tút của bạn"
       advanced:
         title: Lọc nâng cao
@@ -3833,7 +3837,6 @@ vi:
       reply_as_new_private_message: "Trả lời dưới dạng tin nhắn mới cho cùng người nhận"
       continue_discussion: "Tiếp tục thảo luận từ %{postLink}:"
       follow_quote: "Đến tút trích dẫn"
-      show_full: "Xem bài đăng gốc"
       show_hidden: "Xem nội dung bị bỏ qua."
       deleted_by_author_simple: "(tút bị xóa bởi tác giả)"
       collapse: "Thu nhỏ"
@@ -4573,12 +4576,8 @@ vi:
     invalid_video_url: Video này không thể phát vì URL không hợp lệ hoặc không khả dụng.
     keyboard_shortcuts_help:
       search_placeholder: "Tìm kiếm phím tắt theo mô tả hoặc tổ hợp phím"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} hoặc %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Phím tắt"
       short_title: "Các phím tắt"
       search_ctrl_f_tip: "Để tìm kiếm trên toàn bộ diễn đàn này, nhấn <kbd>/</kbd>"
@@ -5246,6 +5245,11 @@ vi:
         group_traffic: "Băng thông"
         group_members: "Thành viên kênh"
         group_other: "Khác"
+        related_items:
+          users:
+            title: "Thành viên"
+          labels:
+            user: "Người dùng"
       config_sections:
         account:
           title: "Tài khoản"
@@ -5546,7 +5550,6 @@ vi:
           header_description: "Cấu hình các thiết lập tìm kiếm, bao gồm ghi nhật ký và phân tích từ vựng cho tiếng Trung và tiếng Nhật."
         search_everything:
           title: "Tìm kiếm"
-          header_description: "Bạn có thể tìm bất cứ thứ gì trong giao diện quản trị tại đây. Bạn có thể lọc kết quả bên dưới và tùy chọn của bạn sẽ được ghi nhớ. Để mở tìm kiếm này ở bất kỳ đâu trong giao diện quản trị, hãy nhấn %{shortcutHTML}."
         security:
           title: "Bảo mật"
           header_description: "Cấu hình các thiết lập bảo mật, bao gồm xác thực hai yếu tố, quyền quản trị viên và chính sách bảo mật nội dung."
@@ -5777,19 +5780,18 @@ vi:
         title: "Có gì mới?"
         check_for_updates: "Kiểm tra cập nhật"
       site_traffic_explorer:
-        pageviews: "Số lượt xem"
+        metric_information: "Giới thiệu về %{metric}"
+        remove_filter_value: "Xóa %{value}"
+        clear_all: "Xóa hết"
+        apply: "Áp dụng"
         view_more: "Mở rộng"
         cards:
           pages: "Trang"
           visitors: "Khách ghé thăm"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "Địa chỉ IP"
         filters:
+          language: "Ngôn ngữ"
           ip: "Địa chỉ IP"
         metrics:
-          pageviews:
-            label: "Số lượt xem"
           bounce_rate:
             label: "Tỷ lệ thoát (Bounce rate)"
         series:
@@ -5867,6 +5869,8 @@ vi:
             whos_posting:
               staff: "Nhân viên"
               save_error: "Không thể lưu lựa chọn cho lần sau."
+              modal:
+                apply: "Lưu lại"
             trust_level_pipeline:
               trust_levels:
                 "0": "Chủ đề mới"
@@ -5887,6 +5891,11 @@ vi:
             table:
               searches: "Số lần tìm kiếm"
               status: "Trạng thái"
+          system:
+            title: "Hệ thống"
+            status: "Trạng thái"
+            discourse_updated: "Đã cập nhật website"
+            dashboard_updated: "Đã cập nhật trang tổng quan"
         reports_section:
           header_action: "Quản lý"
           no_data: "Không có dữ liệu để hiển thị"
@@ -5944,6 +5953,11 @@ vi:
           average_for_sample: "Trung bình cho mẫu"
           total: "Tổng thời gian"
           no_data: "Không có dữ liệu để hiển thị."
+          posters_by_member_type_members:
+            users_count:
+              other: "%{count} thành viên"
+            posts_count:
+              other: "%{count} tút"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">tìm kiếm logs</a>'
             disabled: 'Báo cáo tìm kiếm thịnh hành bị tắt. Bật <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log truy vấn tìm kiếm</a> số liệu thu thập.'

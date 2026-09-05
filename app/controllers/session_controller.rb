@@ -502,8 +502,13 @@ class SessionController < ApplicationController
     # the behavior for emails we refuse to deliver to.
     return render json: success_json if login_code_honeypot_fails?
 
-    EmailLoginCode::Request.call(service_params) do |result|
+    EmailLoginCode::Request.call(
+      service_params.deep_merge(ip_address: request.remote_ip),
+    ) do |result|
       on_success { render json: success_json }
+      on_failed_policy(:can_register_from_ip) do
+        render json: login_code_registration_ip_limit_error
+      end
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
@@ -923,6 +928,7 @@ class SessionController < ApplicationController
       on_failed_policy(:required_full_name_provided) do
         render json: { error: I18n.t("login.missing_full_name") }
       end
+      on_model_errors(:user) { |user| render json: login_code_account_error(user) }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
@@ -977,7 +983,7 @@ class SessionController < ApplicationController
       render json: login_not_approved
     elsif payload = login_error_check(user)
       render json: payload
-    elsif created_account && !cookies[:sso_payload]
+    elsif created_account
       # Same tail as `login`, except the response tells the client a new
       # account was created so it can show the "account ready" step before
       # following the usual post-login redirect.
@@ -988,10 +994,12 @@ class SessionController < ApplicationController
                success_json.merge(
                  account_created: true,
                  user: serialize_data(user, UserSerializer, root: false),
-                 # The username is only worth prefilling when it was derived
-                 # from the email; otherwise it's a generic fallback and the
-                 # client should make the user pick one.
-                 prefill_username: SiteSetting.use_email_for_username_and_name_suggestions,
+                 # The generic "userN" fallback is a placeholder rather than a
+                 # suggestion, so the client leaves the field empty and makes
+                 # the user pick. Checked against the name actually assigned,
+                 # since generation can fall back for reasons beyond the
+                 # settings (e.g. unusable word lists).
+                 prefill_username: !UserNameSuggester.generic_username?(user.username),
                  # Sites that lock usernames (e.g. username_change_period: 0)
                  # can't offer an inline pick, so the client keeps the generated
                  # name instead of dead-ending on a forbidden change.
@@ -1001,14 +1009,48 @@ class SessionController < ApplicationController
                  # the avatar picker needs the upload permission passed through.
                  can_upload_avatar:
                    user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map),
+                 # Only set when a DiscourseConnect provider handoff is pending.
+                 redirect_url: deferred_sso_provider_url,
                )
     else
       login(user)
     end
   end
 
+  # A pending provider handoff would redirect as soon as the session exists,
+  # skipping the account-ready step, so the URL is handed to the client to
+  # follow once signup is finished (as account activation does). Consumes the
+  # payload so a later login isn't sent through a handoff it didn't start.
+  def deferred_sso_provider_url
+    return if !SiteSetting.enable_discourse_connect_provider
+
+    payload = cookies.delete(:sso_payload)
+    return if payload.blank?
+
+    "#{session_sso_provider_url}?#{payload}"
+  end
+
   def invalid_login_code
     { error: I18n.t("email_login_code.invalid_code") }
+  end
+
+  def login_code_registration_ip_limit_error
+    {
+      error:
+        I18n.t(
+          "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
+        ),
+    }
+  end
+
+  def login_code_account_error(user)
+    ip_error =
+      user.errors.find do |error|
+        error.attribute == :ip_address &&
+          error.type.in?(%i[blocked max_new_accounts_per_registration_ip])
+      end
+
+    ip_error ? { error: ip_error.message } : invalid_login_code
   end
 
   def invalid_credentials

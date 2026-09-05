@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sk:
+  llms_txt:
+    sections:
+      optional: "Voliteľné"
+    links:
+      search:
+        label: "Hľadať"
+      categories:
+        label: "Kategórie"
+      about:
+        label: "O stránke"
+      guidelines:
+        label: "Pokyny"
   dates:
     short_date_no_year: "MMM D"
     short_date: "YYYY MMM D"
@@ -1121,6 +1133,7 @@ sk:
       windows: "Microsoft Windows"
       unknown: "neznámy operačný systém"
   admin_site_traffic_explorer:
+    unknown: "Neznáma"
     traffic_types:
       anonymous: "Anonymný"
   change_email:
@@ -1406,6 +1419,11 @@ sk:
         share: "Zdieľať"
       types:
         staff: "Personál"
+    posters_by_member_type_members:
+      labels:
+        user: "Používateľ"
+        count: "Príspevky"
+        share: "Zdieľať"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1579,6 +1597,9 @@ sk:
         num_topics: "Témy"
       description: "Zoznam používateľov podľa počtu kliknutí na odkazy, ktoré zdieľali."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Návštev"
+    top_entry_urls:
       labels:
         count: "Návštev"
     top_referrers_by_browser_pageviews:
@@ -1952,7 +1973,7 @@ sk:
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
     allow_username_in_share_links: "Povolenie uvádzania používateľských mien v prepojeniach na zdieľanie. Je to užitočné na odmeňovanie odznakov na základe jedinečných návštevníkov."
     site_contact_username: "Platné používateľské meno obsluhy, ktorá bude posielať automatizované správy. Pokiaľ je vynechané, použije sa východzí systémový účet. "
-    site_contact_group_name: "Platný názov skupiny, ktorá bude pozvaná na všetky automaticky odoslané osobné správy."
+    site_contact_group_name: "Skupina, ktorá dostane pozvánku na všetky automaticky odoslané osobné správy."
     send_welcome_message: "Poslať všetkým novým používateľom uvítaciu správu s návodom ako začať. "
     send_tl1_welcome_message: "Odoslanie uvítacej správy novým používateľom úrovne dôveryhodnosti 1."
     send_tl2_promotion_message: "Odoslanie správy o povýšení novým používateľom na úrovni dôveryhodnosti 2."
@@ -2212,7 +2233,6 @@ sk:
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
     levenshtein_distance_spammer_emails: "Počet rozdielnych znakov, ktoré stále umožnia fuzzy zhodu, keď sa hľadájú emaily od spammerov."
     max_new_accounts_per_registration_ip: "Ak z tejto IP adresy už existuje (n) účtov úrovne dôveryhodnosti 0 (a žiadny z nich nie je členom personálu alebo nemá úroveň TL2 alebo vyššiu), prestaňte prijímať nové registrácie z tejto IP adresy. Nastavením na hodnotu 0 obmedzenie vypnete."
-    min_ban_entries_for_roll_up: "Ak existuje minimálne (N) položiek a kliknete na Zrolovať, vytvorí sa nový obmedzujúci záznam podsiete."
     max_age_unmatched_emails: "Zmazať nevyskytujúce sa kontrolované emailové adresy po (N) dňoch."
     max_age_unmatched_ips: "Zmazať nevyskytujúce sa kontrolované IP adresy po (N) dňoch."
     num_flaggers_to_close_topic: "Minimálny počet rôznych oznamovateľov potrebný na automatické pozastavenie témy pre intervenciu."
@@ -2522,7 +2542,6 @@ sk:
       invalid_email: "Nesprávna emailová adresa."
       invalid_username: "S daným používateľským menom neexistuje žiadny používateľ."
       valid_username: "Existuje používateľ s týmto používateľským menom."
-      invalid_group: "Neexistuje žiadna skupina s týmto názvom."
       invalid_integer_min_max: "Hodnota musí byť medzi %{min} a %{max}."
       invalid_integer_min: "Hodnota musí byť %{min} alebo viac."
       invalid_integer_max: "Hodnota nemôže byť viac ako %{max}."
@@ -4884,6 +4903,11 @@ sk:
       group: "Používatelia, ktorí nie sú v špecifikovaných skupinách, musia mať odpovede schválené personálom. Pozrite si %{link}."
       new_topics_unless_trust_level: "Používatelia s nízkou úrovňou dôvery musia mať témy schválené personálom. Pozri %{link}."
       fast_typer: "Nový používateľ napísal svoj prvý príspevok podozrivo rýchlo, podozrenie na správanie bota alebo spamera. Pozri %{link}."
+      fast_typer_time:
+        one: " %{count} sekundu"
+        few: "%{count} sekundy"
+        many: "%{count} sekúnd"
+        other: "%{count} sekúnd"
       auto_silence_regex: "Nový používateľ, ktorého prvý príspevok zodpovedá nastaveniu %{link} ."
       watched_word:
         one: "Tento príspevok obsahoval sledované slovo, označené slovo je: %{words}. Viac informácií nájdete na stránke %{link} ."

@@ -427,7 +427,7 @@ export default class AiBotConversations extends Component {
 
       <div class="ai-bot-conversations__content-wrapper">
         <div class="ai-bot-conversations__title">
-          {{dIcon "discobot"}}
+          {{dIcon "far-discobot"}}
           {{i18n "discourse_ai.ai_bot.conversations.header"}}
         </div>
         <PluginOutlet

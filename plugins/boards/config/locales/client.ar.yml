@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    boards:
+      board:
+        remove_card: "إزالة"
+        new_topic: "موضوع جديد..."
+        title: "العنوان"
+        tags: "الوسوم"
+        assigned_to: "معيَّنة إلى"
+        view_topic: "عرض الموضوع"
+        topic_reply_count:
+          zero: "%{count} من الردود"
+          one: "رد واحد (%{count})"
+          two: "%{count} من الردود"
+          few: "%{count} من الردود"
+          many: "%{count} من الردود"
+          other: "%{count} من الردود"
+        assign: "تعيين"
+        reassign: "إعادة التعيين"
+        unassign: "إلغاء التعيين"
+        unassign_from_topic: "إلغاء تعيين @%{username} من الموضوع"
+        unassign_from_post: "إلغاء تعيين @%{username} من #%{post_number}"
+        edit_assignments: "تعديل المهام المعيَّنة..."
+        created_by: "تم إنشاؤه بواسطة"
+      manage:
+        name: "الاسم"
+        slug: "المسار"
+        constraint_categories: "الفئات"
+        constraint_tags: "الوسوم"
+        advanced_settings: "الإعدادات المتقدمة"
+        columns:
+          remove: "إزالة"
+          column_title: "العنوان"
+          icon: "الأيقونة"
+          color: "اللون"
+          default_sort_priority: "الأولوية"
+          tag: "الوسم"
+          move_to_assigned_unassign: "إلغاء التعيين"
+          move_to_status_open: "فتح"
+          move_to_status_closed: "مغلق"
+          show_advanced: "إظهار الخيارات المتقدمة"
+          hide_advanced: "إخفاء الخيارات المتقدمة"

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sw:
+  llms_txt:
+    sections:
+      optional: "Sio Muhimu"
+    links:
+      search:
+        label: "Tafuta"
+      categories:
+        label: "Kategoria"
+      about:
+        label: "Kuhusu"
+      guidelines:
+        label: "Miongozo"
   dates:
     short_date_no_year: "S MMM"
     short_date: "S MMM, MMMM"
@@ -402,6 +414,7 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   admin_site_traffic_explorer:
+    unknown: "Haijulikani"
     traffic_types:
       anonymous: "Asiyejulikana"
   change_email:
@@ -562,6 +575,11 @@ sw:
         share: "Shirikisha"
       types:
         staff: "Wasaidizi"
+    posters_by_member_type_members:
+      labels:
+        user: "Mtumiaji"
+        count: "Machapisho"
+        share: "Shirikisha"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -679,6 +697,9 @@ sw:
         num_clicks: "Imebonyezwa"
         num_topics: "Mada"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Waliotembelea"
+    top_entry_urls:
       labels:
         count: "Waliotembelea"
     top_referrers_by_browser_pageviews:

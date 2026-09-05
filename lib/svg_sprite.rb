@@ -82,6 +82,7 @@ module SvgSprite
         cubes
         desktop
         diagram-project
+        dice
         discourse-amazon
         discourse-bell-exclamation
         discourse-bell-one
@@ -417,6 +418,7 @@ module SvgSprite
         .new()
         .merge(settings_icons)
         .merge(plugin_icons)
+        .merge(plugin_icon_sources)
         .merge(badge_icons)
         .merge(group_icons)
         .merge(theme_icons(theme_id))
@@ -473,7 +475,12 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.icon_picker_search(keyword, only_available, page:, per_page:, theme_id: nil)
     ids = picker_icon_ids(theme_id, only_available)
-    ids = ids.lazy.select { |id| id.include?(keyword) } if keyword.present?
+
+    if keyword.present?
+      downcased_keyword = keyword.downcase
+      ids = ids.lazy.select { |id| id.downcase.include?(downcased_keyword) }
+    end
+
     ids = ids.drop(page * per_page).first(per_page + 1)
 
     has_more = ids.size > per_page
@@ -529,8 +536,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.settings_icons
     get_set_cache("settings_icons") do
-      # includes svg_icon_subset, icon type settings, and any settings containing
-      # _icon (incl. plugin settings)
+      # includes svg_icon_subset, icon type settings, icon properties of objects
+      # type settings, and any settings containing _icon (incl. plugin settings)
       site_setting_icons = []
 
       SiteSetting.settings_hash.each do |key, value|
@@ -538,6 +545,9 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
         if key.to_s.include?("_icon") || SiteSetting.type_supervisor.get_type(key) == :icon
           site_setting_icons |= value.split("|")
+        elsif SiteSetting.type_supervisor.get_type(key) == :objects && value.present?
+          schema = SiteSetting.type_supervisor.type_hash(key)[:schema]
+          site_setting_icons |= objects_setting_icons(schema, JSON.parse(value)) if schema
         end
       end
 
@@ -547,6 +557,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.plugin_icons
     DiscoursePluginRegistry.svg_icons
+  end
+
+  def self.plugin_icon_sources
+    DiscoursePluginRegistry.svg_icon_sources.flat_map { |source| Array(source.call) }
   end
 
   def self.badge_icons
@@ -571,10 +585,13 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
         type_info = settings["theme_setting_type_info"] || {}
 
         settings.each do |key, value|
-          next unless String === value
-
-          if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
-            theme_icon_settings |= value.split("|")
+          if String === value
+            if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
+              theme_icon_settings |= value.split("|")
+            end
+          elsif type_info.dig(key, :type) == "objects" && value.is_a?(Array)
+            schema = type_info.dig(key, :schema)
+            theme_icon_settings |= objects_setting_icons(schema, value) if schema
           end
         end
       end
@@ -582,6 +599,12 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
 
     theme_icon_settings
+  end
+
+  def self.objects_setting_icons(schema, objects)
+    SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type: "icon").grep(
+      String,
+    )
   end
 
   def self.custom_icons(theme_id)

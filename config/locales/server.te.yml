@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 te:
+  llms_txt:
+    sections:
+      optional: "ఐచ్ఛికం"
+    links:
+      search:
+        label: "వెతుకు"
+      categories:
+        label: "వర్గాలు"
+      about:
+        label: "మా సంఘం గురించి"
+      guidelines:
+        label: "మార్గదర్శకాలు"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -727,6 +739,11 @@ te:
         share: "షేర్ చేయండి"
       types:
         staff: "సిబ్బంది"
+    posters_by_member_type_members:
+      labels:
+        user: "సభ్యుడు"
+        count: "పోస్ట్‌లు"
+        share: "షేర్ చేయండి"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -872,6 +889,9 @@ te:
         num_clicks: "నొక్కులు"
         num_topics: "విషయాలు"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "సందర్శనాలు"
+    top_entry_urls:
       labels:
         count: "సందర్శనాలు"
     top_referrers_by_browser_pageviews:
@@ -1375,7 +1395,6 @@ te:
     user_profile_view_duration_hours: "ప్రతి IP/యూజర్‌కి ప్రతి N గంటలకు ఒకసారి కొత్త వినియోగదారు ప్రొఫైల్ వీక్షణను లెక్కించండి"
     levenshtein_distance_spammer_emails: "స్పామర్ ఇమెయిల్‌లను సరిపోల్చేటప్పుడు, అస్పష్టమైన సరిపోలికను అనుమతించే అక్షరాల సంఖ్య తేడా."
     max_new_accounts_per_registration_ip: "ఈ IP నుండి ఇప్పటికే (n) ట్రస్ట్ లెవల్ 0 ఖాతాలు ఉంటే (మరియు ఎవరూ స్టాఫ్ మెంబర్ లేదా TL2 లేదా అంతకంటే ఎక్కువ వద్ద), ఆ IP నుండి కొత్త సైన్అప్‌లను ఆమోదించడాన్ని ఆపివేయండి. పరిమితిని నిలిపివేయడానికి 0కి సెట్ చేయండి."
-    min_ban_entries_for_roll_up: "రోల్ అప్ బటన్‌ను క్లిక్ చేసినప్పుడు, కనీసం (N) ఎంట్రీలు ఉంటే కొత్త సబ్‌నెట్ బ్యాన్ ఎంట్రీని సృష్టిస్తుంది."
     max_age_unmatched_emails: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన ఇమెయిల్ ఎంట్రీలను తొలగించండి."
     max_age_unmatched_ips: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన IP ఎంట్రీలను తొలగించండి."
     num_flaggers_to_close_topic: "జోక్యం కోసం టాపిక్‌ను ఆటోమేటిక్‌గా పాజ్ చేయడానికి అవసరమైన కనిష్ట సంఖ్యలో ప్రత్యేకమైన ఫ్లాగర్‌లు అవసరం"
@@ -1611,7 +1630,6 @@ te:
       invalid_email: "చెల్లని ఈమెయిలు చిరునామా."
       invalid_username: "ఆ పేరుతో ఏ వాడురకీ లేరు."
       valid_username: "ఆ సభ్యనామంతో ఒక సభ్యుడు ఉన్నారు."
-      invalid_group: "ఆ పేరుతో సమూహం లేదు."
       invalid_integer_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
       invalid_integer_min: "విలువ %{min} లేదా అంతకంటే ఎక్కువ ఉండాలి."
       invalid_integer_max: "విలువ %{max} కంటే ఎక్కువగా ఉండకూడదు."
@@ -2481,6 +2499,9 @@ te:
       medium: "మధ్యస్థం"
       high: "అధిక"
     reasons:
+      fast_typer_time:
+        one: "ఒక సెకను"
+        other: "%{count} సెకన్లు"
       links:
         category: వర్గం సెట్టింగులు
     actions:

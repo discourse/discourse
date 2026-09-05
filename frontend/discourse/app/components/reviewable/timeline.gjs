@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -29,19 +28,6 @@ import { i18n } from "discourse-i18n";
  */
 export default class ReviewableTimeline extends Component {
   @service currentUser;
-
-  /**
-   * Array of notes associated with the reviewable
-   *
-   * @type {Array<ReviewableNote>}
-   */
-  @tracked reviewableNotes = [];
-
-  constructor() {
-    super(...arguments);
-
-    this.reviewableNotes = this.args.reviewable.reviewable_notes || [];
-  }
 
   /**
    * Combines all timeline events from reviewable scores, histories, and the reviewable itself
@@ -157,7 +143,7 @@ export default class ReviewableTimeline extends Component {
     }
 
     // Add notes events
-    this.reviewableNotes.forEach((note) => {
+    this.args.reviewable.reviewable_notes?.forEach((note) => {
       const date = note.created_at;
       events.push({
         type: "note",
@@ -209,8 +195,7 @@ export default class ReviewableTimeline extends Component {
       noteData.user = this.currentUser;
     }
 
-    this.reviewableNotes = [...this.reviewableNotes, noteData];
-    this.args.reviewable.reviewable_notes = this.reviewableNotes;
+    this.args.reviewable.reviewable_notes.push(noteData);
   }
 
   /**
@@ -225,8 +210,8 @@ export default class ReviewableTimeline extends Component {
         type: "DELETE",
       });
 
-      // Remove the note from the local array
-      this.reviewableNotes = this.reviewableNotes.filter(
+      const { reviewable } = this.args;
+      reviewable.reviewable_notes = reviewable.reviewable_notes.filter(
         (note) => note.id !== noteId
       );
     } catch (error) {

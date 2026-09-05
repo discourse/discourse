@@ -28,6 +28,7 @@ zh_CN:
         title: "创建数据资源管理器查询"
         description: "编写自定义 SQL 查询，以查找与您的社区相关的特定内容。"
     explorer:
+      resize_editor: "调整查询编辑器大小"
       default_query: "默认"
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
       queries: "查询"
@@ -49,7 +50,9 @@ zh_CN:
         description_placeholder: "例如，显示不同时间段的注册情况"
         regenerate_placeholder: "例如，更新查询以将结果数限制为 50 条。"
         prompt_label: "提示"
+        workflow_title: "AI查询助手"
         generate: "生成"
+        regenerate: "生成查询"
         generating: "正在使用 AI 生成查询…"
         generation_timeout: "AI 查询生成超时。您可以手动编写 SQL 语句。"
         generation_error: "生成查询时出错。"
@@ -157,6 +160,8 @@ zh_CN:
       sql:
         operation: "操作"
         operation_description: "如何运行查询"
+        operation_queries: "预定义查询"
+        operation_raw: "原始 SQL 查询"
         query_id: "查询"
         query_id_description: "选择一个已保存的查询以运行"
         query_params: "查询参数"

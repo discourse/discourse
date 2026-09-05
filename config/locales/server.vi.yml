@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 vi:
+  llms_txt:
+    sections:
+      optional: "Không bắt buộc"
+    links:
+      search:
+        label: "Tìm"
+      categories:
+        label: "Danh mục"
+      about:
+        label: "Giới thiệu"
+      guidelines:
+        label: "Hướng dẫn"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -620,6 +632,7 @@ vi:
       windows: "Máy tính Windows"
       unknown: "thiết bị không rõ"
   admin_site_traffic_explorer:
+    unknown: "Không biết"
     traffic_types:
       anonymous: "Ẩn danh"
   change_email:
@@ -817,6 +830,11 @@ vi:
         share: "Chia sẻ"
       types:
         staff: "Nhân viên"
+    posters_by_member_type_members:
+      labels:
+        user: "Người dùng"
+        count: "Số lượng bài viết"
+        share: "Chia sẻ"
     trust_level_pipeline:
       description: "Sự chuyển dịch của thành viên giữa các cấp độ tin cậy trong khoảng thời gian đã chọn. Bao gồm số thành viên hiện tại ở từng cấp độ, tỷ lệ so với tổng số thành viên, số lượng thành viên được thăng cấp hoặc hạ cấp và số lượt đăng ký mới."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
@@ -953,6 +971,9 @@ vi:
         num_topics: "Chủ đề"
       description: "Danh sách thành viên theo số lần nhấp vào liên kết họ đã chia sẻ."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Ngày ghé thăm"
+    top_entry_urls:
       labels:
         count: "Ngày ghé thăm"
     top_referrers_by_browser_pageviews:
@@ -1162,6 +1183,7 @@ vi:
     top_menu: "Xác định các mục điều hướng xuất hiện trên trang khám phá và thứ tự hiển thị của chúng."
     share_links: "Xác định các mục nào hiển thị trên hộp thoại chia sẻ, và theo thứ tự nào."
     site_contact_username: "Tên tài khoản quản trị viên hợp lệ để gửi tất cả các thông báo tự động. Nếu để trống, tài khoản mặc định của hệ thống sẽ được sử dụng."
+    site_contact_group_name: "Nhóm người được mời tham gia sẽ tự động nhận được tin nhắn cá nhân."
     send_welcome_message: "Gửi tất cả các thành viên mới một thông điệp chào mừng kèm theo hướng dẫn nhanh."
     suppress_reply_directly_below: "Không hiện bộ đếm trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên dưới bài viết này."
     suppress_reply_directly_above: "Không hiện trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên trên bài viết này."
@@ -1305,7 +1327,6 @@ vi:
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
     levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."
-    min_ban_entries_for_roll_up: "Khi click vào nút cuộn lên, sẽ tạo ra một entry subnet cấm mới nếu có ít nhất (N) entry."
     max_age_unmatched_emails: "Xóa các email hiển thị không khớp sau (N) ngày."
     max_age_unmatched_ips: "Xóa các IP hiển thị không khớp sau (N) ngày."
     num_flaggers_to_close_topic: "Số lượng tối thiểu đánh dấu độc nhất để tự động tạm dừng một chủ đề để can thiệp."
@@ -2782,6 +2803,8 @@ vi:
     reasons:
       post_count: "Một vài tút đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Thành viên mới nhập tút đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
+      fast_typer_time:
+        other: "%{count} giây"
     actions:
       agree:
         title: "Đồng ý"

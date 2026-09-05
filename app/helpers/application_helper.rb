@@ -320,6 +320,7 @@ module ApplicationHelper
   def is_crawler_homepage?
     request.path == "/" && use_crawler_layout?
   end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
@@ -406,25 +407,6 @@ module ApplicationHelper
     result.join("\n")
   end
 
-  private def generate_twitter_card_metadata(result, opts)
-    img_url = opts[:x_summary_large_image].presence || opts[:image]
-
-    # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
-    if img_url.ends_with?(".svg")
-      img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
-    end
-
-    if opts[:x_summary_large_image].present? && img_url.present?
-      result << tag(:meta, name: "twitter:card", content: "summary_large_image")
-      result << tag(:meta, name: "twitter:image", content: img_url)
-    elsif opts[:image].present? && img_url.present?
-      result << tag(:meta, name: "twitter:card", content: "summary")
-      result << tag(:meta, name: "twitter:image", content: img_url)
-    else
-      result << tag(:meta, name: "twitter:card", content: "summary")
-    end
-  end
-
   def render_sitelinks_search_tag
     if current_page?("/") || current_page?(Discourse.base_path)
       json = {
@@ -446,6 +428,7 @@ module ApplicationHelper
     if !SiteSetting.trigger_browser_pageview_events && !SiteSetting.persist_browser_pageview_events
       return ""
     end
+    return "" if Rails.env.development? && ENV["TRACK_REQUESTS"].blank?
 
     tags = +""
     tags << tag.meta(
@@ -576,6 +559,25 @@ module ApplicationHelper
   end
 
   private
+
+  def generate_twitter_card_metadata(result, opts)
+    img_url = opts[:x_summary_large_image].presence || opts[:image]
+
+    # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
+    if img_url.ends_with?(".svg")
+      img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
+    end
+
+    if opts[:x_summary_large_image].present? && img_url.present?
+      result << tag(:meta, name: "twitter:card", content: "summary_large_image")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    elsif opts[:image].present? && img_url.present?
+      result << tag(:meta, name: "twitter:card", content: "summary")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    else
+      result << tag(:meta, name: "twitter:card", content: "summary")
+    end
+  end
 
   def build_splash_screen_image
     @splash_screen_image_svg = nil

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 bg:
+  llms_txt:
+    sections:
+      optional: "По избор"
+    links:
+      search:
+        label: "Търсене"
+      categories:
+        label: "Категории"
+      about:
+        label: "Относно"
+      guidelines:
+        label: "Насоки"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -417,6 +429,7 @@ bg:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Неизвестно"
     traffic_types:
       anonymous: "Анонимен"
   change_email:
@@ -546,6 +559,11 @@ bg:
         share: "Споделяне"
       types:
         staff: "Персонал"
+    posters_by_member_type_members:
+      labels:
+        user: "Потребител"
+        count: "Публикации"
+        share: "Споделяне"
     trust_level_pipeline:
       labels:
         count: "Членове"
@@ -656,6 +674,9 @@ bg:
         num_clicks: "Кликвания"
         num_topics: "Теми"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Посещения "
+    top_entry_urls:
       labels:
         count: "Посещения "
     top_referrers_by_browser_pageviews:
@@ -901,7 +922,6 @@ bg:
     privacy_policy_url: "Ако имате документ \"Декларация за поверителност\", който се хоства някъде другаде и желаете да го използвате, въведете пълния път до URL адреса тук. "
     allowed_spam_host_domains: "Списък с домейните изключени от спам хост теста. Новите потребители никога няма да бъдат ограничавани в създаването на публикации с линкове към тези домейни."
     levenshtein_distance_spammer_emails: "Колко символа разлика в съвпадението може да има, когато се проверява имейла за спам, за да има приблизително съвпадение."
-    min_ban_entries_for_roll_up: "Когато щракнете на бутона Сливане, ще създадете нов бан на подмрежа, ако в същата има повече от (N) записа."
     max_age_unmatched_emails: "Изтриване на несъвпадащите пресяти имейл записи след (N) дни."
     max_age_unmatched_ips: "Изтрий несъчетаните пресяти IP вписвания след (N) дни."
     num_flaggers_to_close_topic: "Минимален брой уникални сигнализации, които се изискват за спиране на темата"
@@ -1412,6 +1432,10 @@ bg:
       low: "Ниска"
       medium: "Среден"
       high: "Висок"
+    reasons:
+      fast_typer_time:
+        one: "%{count} секунда"
+        other: "%{count} секунди "
     actions:
       agree:
         title: "Да"

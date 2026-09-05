@@ -4,7 +4,7 @@ require "swagger_helper"
 RSpec.describe "events" do
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -23,6 +23,15 @@ RSpec.describe "events" do
                   enum: %w[true false],
                 },
                 description: "Include detailed event information (creator, invitees, stats, etc.)"
+
+      parameter name: :include_card,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :string,
+                  enum: %w[true false],
+                },
+                description: "Include card fields without detailed event HTML or statistics"
 
       parameter name: :category_id,
                 in: :query,
@@ -94,6 +103,34 @@ RSpec.describe "events" do
                   maximum: 200,
                 },
                 description: "Maximum number of events to return (default: 200)"
+
+      parameter name: :tags,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :array,
+                  items: {
+                    type: :string,
+                  },
+                },
+                description: "Filter to events whose topic has every specified tag"
+
+      parameter name: :search,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :string,
+                },
+                description: "Search event names, descriptions, and locations"
+
+      parameter name: :status,
+                in: :query,
+                required: false,
+                schema: {
+                  type: :string,
+                  enum: %w[public private standalone],
+                },
+                description: "Filter by event attendance status"
 
       produces "application/json"
 

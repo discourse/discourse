@@ -73,6 +73,33 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
   end
 
   describe "#invoke" do
+    it "excludes non-text completion events from research results" do
+      thinking =
+        DiscourseAi::Completions::Thinking.new(
+          message: "Researching privately",
+          provider_info: {
+            gemini_interactions: {
+              steps: [{ signature: "signed-context" }],
+            },
+          },
+        )
+      researcher =
+        described_class.new(
+          { filter: "topic:#{topic_with_tags.id}", goals: "analyze topic content", dry_run: false },
+          bot_user: bot_user,
+          llm: llm,
+          context: DiscourseAi::Agents::BotContext.new(user: user, post: post),
+        )
+
+      results = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([["Public findings", thinking]]) do
+        researcher.llm = llm_model.to_llm
+        results = researcher.invoke(&progress_blk)
+      end
+
+      expect(results[:results]).to eq(["Public findings"])
+    end
+
     it "can correctly filter to a topic id" do
       researcher =
         described_class.new(

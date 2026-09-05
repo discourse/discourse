@@ -13,6 +13,9 @@ ug:
   js:
     styleguide:
       title: "ئۇسلۇب يېتەكچىسى"
+      example:
+        kind:
+          component: "بۆلەك"
       categories:
         syntax: گرامماتىكىسى
         atoms: ئاتوم
@@ -92,6 +95,25 @@ ug:
           title: "تېخىمۇ كۆپ تېما"
         post_menu:
           title: "يازما تىزىملىكى"
+        roving_focus:
+          toolbar:
+            copy: "كۆچۈر"
+          tags:
+            remove: "%{tag} نى چىقىرىۋەت"
+          adjacent:
+            field: "ئىزدە"
+            open: "ئاچ"
+            recent: "يېقىنقى"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "كۈندىلىك"
+            weekly: "ھەپتىلىك"
+            monthly: "ئايلىق"
+            never: "ھەرگىز"
+          tree:
+            components: "بۆلەك"
+            select: "تاللا"
         modal:
           title: "مودېل كۆزنىكى"
           header: "مودېل كۆزنەك ماۋزۇسى"

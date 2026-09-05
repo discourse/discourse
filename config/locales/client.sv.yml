@@ -332,6 +332,7 @@ sv:
         theme: "Tema"
         fonts: "Typsnitt"
         homepage: "Hemsida"
+        search: "Sök"
       theme:
         selected: "Markerat"
       colors:
@@ -2183,6 +2184,11 @@ sv:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Retur"
+      option: "Alternativ"
+      period: "Period"
+      tab: "Flik"
+      delete: "Radera"
+      home: "Hem"
     conditional_loading_section:
       loading: Laddar…
     category_row:
@@ -2320,7 +2326,6 @@ sv:
       create_whisper: "Viska"
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
-      title: "Eller tryck på %{modifier}Enter"
       discard: "Förkasta"
       users_placeholder: "Lägg till användare eller grupper"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
@@ -2586,10 +2591,9 @@ sv:
       recent: "Senaste sökningar"
       clear_recent: "Rensa senaste sökningar"
       type:
-        default: "Ämnen/inlägg"
+        default: "Inlägg"
         users: "Användare"
         categories: "Kategorier"
-        categories_and_tags: "Kategorier/taggar"
       context:
         user: "Sök inlägg av @%{username}"
         category: "Sök kategorin #%{category}"
@@ -2602,7 +2606,6 @@ sv:
         in: "filter efter metadata (t.ex. in:title, in:personal, in:pinned)"
         status: "filter efter ämnesstatus"
         full_search: "startar helsidesökning"
-        full_search_key: "%{modifier} + Enter"
         me: "visar bara dina inlägg"
       advanced:
         title: Avancerade filter
@@ -3247,7 +3250,6 @@ sv:
       reply_as_new_private_message: "Svara som nytt meddelande till samma mottagare"
       continue_discussion: "Fortsätter diskussionen från %{postLink}:"
       follow_quote: "gå till det citerade inlägget"
-      show_full: "Visa hela inlägget"
       show_hidden: "Visa ignorerat innehåll"
       deleted_by_author_simple: "(inlägg raderat av författaren)"
       collapse: "förminska"
@@ -3856,11 +3858,8 @@ sv:
       image_load_error: '<a href="%url%">Bilden</a> kunde inte laddas.'
     cannot_render_video: Den här videon kan inte renderas eftersom din webbläsare inte stöder denna kodek.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} eller %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tangentbordsgenvägar"
       short_title: "Genvägar"
       description_header: "Beskrivning"
@@ -4414,6 +4413,11 @@ sv:
         group_traffic: "Trafik"
         group_members: "Medlemmar"
         group_other: "Övrigt"
+        related_items:
+          users:
+            title: "Användare"
+          labels:
+            user: "Användare"
       config_sections:
         account:
           title: "Konto"
@@ -4596,17 +4600,12 @@ sv:
       search:
         title: "Sök"
       site_traffic_explorer:
-        pageviews: "Sidvisningar"
-        columns:
-          top_urls: "URL"
-          browsers: "Webbläsare"
-          ip_addresses: "IP-adress"
+        metric_information: "Om %{metric}"
+        apply: "Tillämpa"
         filters:
           browser: "Webbläsare"
+          language: "Språk"
           ip: "IP-adress"
-        metrics:
-          pageviews:
-            label: "Sidvisningar"
         series:
           anonymous_human: "Anonym"
       dashboard:
@@ -4674,6 +4673,8 @@ sv:
               share: "Dela"
             whos_posting:
               staff: "Personal"
+              modal:
+                apply: "Spara"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nya"
@@ -4686,6 +4687,11 @@ sv:
             table:
               searches: "Sökningar"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Discourse uppdaterad"
+            dashboard_updated: "Översiktspanelen uppdaterad"
         reports_section:
           header_action: "Hantera"
           no_data: "Ingen data att visa"
@@ -4725,6 +4731,13 @@ sv:
           average_for_sample: "Genomsnitt för prov"
           total: "All tid totalt"
           no_data: "Ingen data att visa."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} användare"
+              other: "%{count} användare"
+            posts_count:
+              one: "%{count} inlägg"
+              other: "%{count} inlägg"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Sökloggar</a>'
             disabled: 'Trendsökrapporten är inaktiverad. Aktivera <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">sökfrågor för loggar</a> för att samla data.'

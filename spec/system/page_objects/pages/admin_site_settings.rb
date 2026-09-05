@@ -42,13 +42,14 @@ module PageObjects
       end
 
       def select_enum_value(setting_name, value)
-        setting =
-          PageObjects::Components::SelectKit.new(
-            ".row.setting[data-setting='#{setting_name}'] .single-select",
-          )
-        setting.expand
-        setting.select_row_by_value(value)
+        enum_setting(setting_name).select(value)
         self
+      end
+
+      def enum_setting(setting_name)
+        PageObjects::Components::FormKitField.new(
+          find_setting(setting_name).find("[data-name='#{setting_name}']"),
+        )
       end
 
       def has_setting?(setting_name)
@@ -202,6 +203,16 @@ module PageObjects
       def has_hidden_reorder_buttons?(setting_name)
         has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :hidden) &&
           has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :hidden)
+      end
+
+      def category_setting(setting_name)
+        PageObjects::Components::SelectKit.new(
+          "#{setting_row_selector(setting_name)} .category-chooser",
+        )
+      end
+
+      def group_setting(setting_name)
+        PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .combo-box")
       end
 
       def tag_list_setting(setting_name)

@@ -7,6 +7,7 @@ import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
+import getURL from "discourse/lib/get-url";
 import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
@@ -31,7 +32,6 @@ const PERIOD_COPY_KEYS = {
 
 export default class DashboardTraffic extends Component {
   @service currentUser;
-  @service siteSettings;
 
   hiddenLabels = ["page_view_crawler"];
 
@@ -165,12 +165,6 @@ export default class DashboardTraffic extends Component {
     }
 
     return { range: this.args.period };
-  }
-
-  get showTrafficExplorerLink() {
-    return (
-      this.currentUser.admin && this.siteSettings.enable_site_traffic_explorer
-    );
   }
 
   formatHeadlineCount(value) {
@@ -403,7 +397,7 @@ export default class DashboardTraffic extends Component {
               class="db-section__traffic-chart-canvas"
             />
           </div>
-          {{#if this.showTrafficExplorerLink}}
+          {{#if this.currentUser.admin}}
             <LinkTo
               class="db-traffic__see-details"
               @route="adminSiteTraffic"
@@ -434,7 +428,13 @@ export default class DashboardTraffic extends Component {
 
         {{#unless @fetchError}}
           {{#if @traffic}}
-            {{#if (or @traffic.top_countries @traffic.top_referrers)}}
+            {{#if
+              (or
+                @traffic.top_countries
+                @traffic.top_referrers
+                @traffic.top_entry_urls
+              )
+            }}
               <div class="db-section__row">
                 <div class="db-section__row-block">
                   <h3 class="db-section__row-block-title">
@@ -469,8 +469,11 @@ export default class DashboardTraffic extends Component {
                             href={{concat "https://" row.normalized_referrer}}
                             rel="noopener noreferrer nofollow ugc"
                             target="_blank"
+                            title={{row.normalized_referrer}}
                           >
-                            {{row.normalized_referrer}}
+                            <span class="db-traffic__label">
+                              {{row.normalized_referrer}}
+                            </span>
                           </a>
                           <span class="db-traffic__metric">
                             <span class="db-traffic__percent">
@@ -491,6 +494,66 @@ export default class DashboardTraffic extends Component {
                     </p>
                   {{/if}}
                 </div>
+
+                {{#if @traffic.top_entry_urls}}
+                  <div class="db-section__row-block">
+                    <h3 class="db-section__row-block-title">
+                      <LinkTo
+                        @route="adminReports.show"
+                        @model="top_entry_urls"
+                        @query={{hash
+                          start_date=this.reportQuery.start_date
+                          end_date=this.reportQuery.end_date
+                        }}
+                      >
+                        {{i18n
+                          "admin.dashboard.site_traffic.top_entry_urls.title"
+                        }}
+                        <span class="db-link-arrow" aria-hidden="true">
+                          {{dIcon "arrow-right"}}
+                        </span>
+                      </LinkTo>
+                    </h3>
+
+                    {{#if @traffic.top_entry_urls.error}}
+                      <p class="db-traffic__list-error" role="status">
+                        {{i18n
+                          "admin.dashboard.site_traffic.top_entry_urls.error"
+                        }}
+                      </p>
+                    {{else if @traffic.top_entry_urls.rows.length}}
+                      <ul class="db-traffic__list">
+                        {{#each @traffic.top_entry_urls.rows as |row|}}
+                          <li class="db-traffic__list-row">
+                            <a
+                              class="db-traffic__link"
+                              href={{getURL row.entry_url}}
+                              title={{row.entry_url}}
+                            >
+                              <span class="db-traffic__label">
+                                {{row.entry_url}}
+                              </span>
+                            </a>
+                            <span class="db-traffic__metric">
+                              <span class="db-traffic__percent">
+                                {{row.percent}}%
+                              </span>
+                              <span class="db-traffic__count">
+                                ({{this.formatHeadlineCount row.count}})
+                              </span>
+                            </span>
+                          </li>
+                        {{/each}}
+                      </ul>
+                    {{else}}
+                      <p class="db-traffic__list-empty">
+                        {{i18n
+                          "admin.dashboard.site_traffic.top_entry_urls.empty"
+                        }}
+                      </p>
+                    {{/if}}
+                  </div>
+                {{/if}}
 
                 <div class="db-section__row-block">
                   <h3 class="db-section__row-block-title">
@@ -523,11 +586,16 @@ export default class DashboardTraffic extends Component {
                           class="db-traffic__list-row"
                           data-test-country-code={{row.country_code}}
                         >
-                          <span class="db-traffic__name">
+                          <span
+                            class="db-traffic__name"
+                            title={{countryName row.country_code}}
+                          >
                             <span aria-hidden="true">
                               {{countryFlag row.country_code}}
                             </span>
-                            {{countryName row.country_code}}
+                            <span class="db-traffic__label">
+                              {{countryName row.country_code}}
+                            </span>
                           </span>
                           <span class="db-traffic__metric">
                             <span class="db-traffic__percent">
@@ -558,6 +626,14 @@ export default class DashboardTraffic extends Component {
                 </h3>
                 <div class="db-traffic__list-shell"></div>
               </div>
+              {{#if this.currentUser.admin}}
+                <div class="db-section__row-block">
+                  <h3 class="db-section__row-block-title">
+                    {{i18n "admin.dashboard.site_traffic.top_entry_urls.title"}}
+                  </h3>
+                  <div class="db-traffic__list-shell"></div>
+                </div>
+              {{/if}}
               <div class="db-section__row-block">
                 <h3 class="db-section__row-block-title">
                   {{i18n "admin.dashboard.site_traffic.top_countries.title"}}

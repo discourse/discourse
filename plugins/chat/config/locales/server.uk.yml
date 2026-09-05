@@ -283,6 +283,15 @@ uk:
         invalid_params: "Помилка під час надсилання повідомлення в чаті: %{errors}"
         failed: "Помилка надсилання повідомлення в чаті: %{steps}"
         timeout_must_be_positive: "Час очікування у хвилинах повинен бути більшим за 0."
+        invalid_timeout_action: "Недопустима дія після закінчення часу очікування: %{action}."
+        buttons_required: "Потрібна хоча б одна кнопка схвалення чату."
+        too_many_buttons: "Схвалення чату підтримує максимум %{max} кнопок."
+        button_label_required: "Кнопка схвалення чату %{position} потребує мітки."
+        button_label_too_long: "Кнопка схвалення чату %{position} має містити %{max} символів або менше."
+        button_value_required: "Кнопка схвалення чату %{position} потребує значення."
+        button_value_too_long: "Значення кнопки схвалення чату %{position} має бути %{max} символів або менше."
+        button_style_invalid: "Стиль кнопки схвалення чату %{position} має бути одним із таких: %{styles}."
+        button_icon_too_long: "Кнопка схвалення чату %{position} має містити %{max} символів або менше."
   reviewable_score_types:
     needs_review:
       title: "Потребує розгляду"

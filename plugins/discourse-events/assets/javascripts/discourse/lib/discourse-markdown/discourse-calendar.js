@@ -87,7 +87,7 @@ export function setup(helper) {
 
   helper.registerOptions((opts, siteSettings) => {
     opts.features["discourse-calendar-enabled"] =
-      !!siteSettings.calendar_enabled;
+      !!siteSettings.discourse_events_enabled;
   });
 
   helper.registerPlugin((md) => {

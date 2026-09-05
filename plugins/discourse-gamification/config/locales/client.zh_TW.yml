@@ -5,18 +5,74 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discourse 遊戲化"
   js:
+    gamification_score: "喝采"
     gamification:
+      score: "喝采"
       you: "你"
       leaderboard:
+        title: "排行榜"
+        info: "這是如何運作的？"
         link_to_settings: "設定"
         refresh: "重新整理"
+        modal:
+          title: "排行榜如何運作？"
+          text: "參與社群活動（例如造訪、按讚及發文）即可獲得積分。你的分數每隔幾分鐘更新一次。積極提供協助、參與和支持，就能提升排名！"
         name: "名稱"
         name_placeholder: "名字..."
+        new: "新增排行榜"
+        create_success: "已建立排行榜"
+        delete_success: "已刪除排行榜"
+        save_success: "已儲存排行榜"
+        cta: "建立第一個排行榜"
+        none: "尚未建立排行榜。"
+        confirm_destroy: "確定要刪除此排行榜嗎？"
         section:
+          time_period: "時間範圍"
+          time_period_description: "控制此排行榜的日期範圍與預設期間。"
           groups: "群組"
+          groups_description: "控制哪些使用者會列入此排行榜並可查看它。"
+        date:
+          range: "起始／結束日期範圍"
+          from: "起始日期"
+          to: "結束日期"
+          helper: "若日期留空，排行榜將顯示不受時間限制的所有得分。"
+        visible_to_groups: "可查看的群組"
+        visible_to_groups_help: "只有這些群組的使用者能查看排行榜。留空則允許所有人查看。"
+        included_groups: "納入的群組"
+        included_groups_help: "只有這些群組的使用者會列入排行榜。留空則列出所有人。"
+        excluded_groups: "排除的群組"
+        excluded_groups_help: "將這些群組的使用者排除在排行榜之外。留空則列出所有人。"
+        default_period: "預設期間"
+        default_period_help: "設定此排行榜預設顯示的期間。"
+        period_filter_disabled: "停用期間篩選器"
+        scoring_configuration: "計分設定"
+        scoring_configuration_description: "覆寫此排行榜的全域計分規則。欄位留空則使用全域預設值。"
+        scorable_categories: "可計分的分類"
+        scorable_categories_help: "要納入計分的分類。留空則使用全域設定。"
+        score_overrides: "分數權重"
+        score_overrides_help: "覆寫每個動作的積分值。留空則使用全域預設值；設為 0 則停用。"
         weight:
+          like_given: "送出的讚"
+          like_received: "收到的讚"
+          post_created: "建立貼文"
+          topic_created: "建立主題"
           solution: "解決方式"
+          day_visited: "造訪天數"
+          flag_created: "提出檢舉"
+          post_read: "閱讀貼文"
+          time_read: "閱讀時間"
+          user_invited: "邀請使用者"
+          reaction_given: "送出的回應"
+          reaction_received: "收到的回應"
+          chat_message_created: "建立聊天訊息"
+          chat_reaction_given: "送出的聊天回應"
+          chat_reaction_received: "收到的聊天回應"
         period:
           all_time: "所有時間"
           yearly: "年"
@@ -24,6 +80,7 @@ zh_TW:
           monthly: "月"
           weekly: "周"
           daily: "日"
+        rank: "排名"
       create: "建立"
       cancel: "取消"
       close: "關閉"
@@ -32,16 +89,36 @@ zh_TW:
       back: "上一步"
       save: "儲存"
       apply: "套用"
+      recalculate: "重新計算分數"
+      recalculating: "正在重新計算分數……"
+      completed: "完成！已成功重新計算分數。"
+      update_scores_help: "從以下時間開始更新所有排行榜的分數"
       update_range:
         last_10_days: "過去 10 天"
         last_30_days: "過去 30 天"
         last_90_days: "過去 90 天"
+        last_year: "去年"
         all_time: "所有時間"
+        custom_date_range: "自訂範圍"
       custom_range_from: "來自"
+      daily_update_scores_availability:
+        other: "今天還可重新計算 %{count} 次"
       admin:
+        title: "今天還可重新計算 %{count} 次"
         name: "名稱"
+        period: "遊戲化"
     discourse_workflows:
+      node_unavailable:
+        requires_gamification: "期間"
+      nodes:
+        "action:gamification_score": "必須啟用遊戲化外掛"
+      node_descriptions:
+        "action:gamification_score": "獎勵分數"
       gamification_score:
         username: "使用者"
+        points: "為使用者增加或扣除遊戲化積分"
+        points_description: "積分"
         date: "日期"
+        date_description: "要獎勵的積分數。使用負值可扣除積分。"
         description: "描述"
+        description_description: "積分適用的日期（YYYY-MM-DD）。預設為今天。"

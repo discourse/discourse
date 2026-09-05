@@ -228,6 +228,13 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      ai_decoded_transcript:
+        thinking: "Pensando"
+        tool: "Herramienta"
+        arguments: "Argumentos"
+        type: "Tipo"
+        error: "Error"
+        response: "Respuesta"
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
@@ -297,9 +304,11 @@ es:
         search:
           name: "Buscar"
           description: "Mejora la experiencia de búsqueda al proporcionar respuestas generadas por IA a las consultas"
-          discoveries: "Descubrimientos"
+          ask_ai: "Preguntar a la IA"
           setting_groups:
             settings: "Ajustes básicos"
+            agents: "Agentes"
+            access_control: "Control de acceso"
         embeddings:
           name: "Incrustaciones"
           description: "Impulsa características como Temas relacionados y Búsqueda de IA al generar representaciones semánticas de texto"
@@ -532,11 +541,10 @@ es:
         retry: "Intentar de nuevo"
         apply: "Aplicar"
         all_models: "Todos los modelos"
+        all_features: "Todas las características"
         successful: "Exitoso"
         failed: "Falló"
         unknown: "Desconocido"
-        topic_id: "ID del tema"
-        post_id: "ID de la publicación"
         time: "Hora"
         when: "Cuándo"
         outcome: "Resultado"
@@ -552,6 +560,7 @@ es:
         duration: "Duración"
         cost: "Coste"
         actions: "Acciones"
+        view_details: "Detalles"
         periods:
           hour: "Última hora"
           day: "Últimas 24 horas"
@@ -612,7 +621,6 @@ es:
         create_user: Crear usuario
         create_user_help: Opcionalmente, puedes adjuntar un usuario a este agente. Si lo haces, la IA utilizará a este usuario para responder a las solicitudes.
         default_llm: Modelo lingüístico por defecto
-        default_llm_help: El modelo de idioma por defecto que se utilizará para este agente. Obligatorio si deseas mencionar al agente en publicaciones públicas.
         system_prompt: Instrucción del sistema
         forced_tool_strategy: Estrategia de herramienta forzada
         allow_chat_direct_messages: "Permitir mensajes directos de chat"
@@ -954,11 +962,6 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-7: "El modelo antrópico más inteligente"
-          anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
-          anthropic-claude-haiku-4-5: "Rápido y rentable"
-          google-gemini-3-1-pro-preview: "El modelo de Google más inteligente"
-          open_router-moonshotai-kimi-k2-6: "Modelo multimodal de Moonshot con capacidades de visión"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
           title: "LLM configurados"
@@ -1138,17 +1141,10 @@ es:
         provider_fields:
           model_name: "Nombre del modelo"
         semantic_search: "Temas (semánticos)"
-        semantic_search_results:
-          toggle: "Resultados de IA"
-          unavailable: "Resultados de IA no disponibles"
-          zero_results_expanded: "No se han encontrado resultados, mostrando %{count} resultados de IA"
         semantic_search_tooltips:
           results_explanation: "Cuando esté activada, se añadirán resultados de búsqueda de IA adicionales a continuación."
-          invalid_sort: "Los resultados de la búsqueda deben ordenarse por Relevancia para mostrar resultados de IA"
           not_submitted: "Envía una búsqueda para activar los resultados de IA"
           no_results: "No se han encontrado resultados de IA para esta búsqueda"
-        semantic_search_unavailable_tooltip: "Los resultados de la búsqueda deben ordenarse por Relevancia para mostrar resultados de IA"
-        ai_generated_result: "Resultado de búsqueda encontrado mediante IA"
         ai_results_notice:
           no_results: "No hay coincidencias exactas, pero aquí tienes algunos resultados relacionados."
           few_results:
@@ -1284,20 +1280,29 @@ es:
             expanded: "Ampliado"
             expanded_description: "con resúmenes de IA"
       discobot_discoveries:
-        main_title: "Descubrimientos de Discobot"
-        regular_results: "Temas"
-        tell_me_more: "Cuéntame más..."
-        continue_convo: "Continuar conversación..."
+        main_title: "Preguntar a la IA"
         loading_convo: "Cargando conversación"
-        collapse: "Contraer"
-        timed_out: "Discobot no ha podido encontrar nada. Algo salió mal."
         user_setting: "Activar los descubrimientos de búsqueda de IA"
-        tooltip:
-          header: "Búsqueda impulsada por IA"
-          content: "Búsqueda de lenguaje natural impulsad por %{model}"
-          actions:
-            info: "¿Cómo funciona?"
-            disable: "Desactivar"
+        legacy:
+          main_title: "Descubrimientos de Discobot"
+          regular_results: "Temas"
+          tell_me_more: "Cuéntame más..."
+          continue_convo: "Continuar conversación..."
+          loading_convo: "Cargando conversación"
+          collapse: "Contraer"
+          timed_out: "Discobot no ha podido encontrar nada. Algo salió mal."
+          tooltip:
+            header: "Búsqueda impulsada por IA"
+            content: "Búsqueda de lenguaje natural impulsad por %{model}"
+            actions:
+              info: "¿Cómo funciona?"
+              disable: "Desactivar"
+        search_type: "IA"
+        search_all_topics: "Todos los temas"
+        search_messages: "Mensajes"
+        ask_ai: "IA"
+        sources:
+          related_discussions: "Temas relacionados"
       user_preferences:
         empty: "No hay ajustes relevantes disponibles en este momento"
     review:

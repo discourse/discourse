@@ -13,29 +13,30 @@
     "@babel/core": "^7.29.7",
     "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/preset-env": "^7.29.2",
-    "@babel/standalone": "^7.29.7",
-    "@csstools/postcss-light-dark-function": "^3.0.1",
-    "@rollup/browser": "^4.62.0",
+    "@babel/standalone": "^8.0.4",
+    "@csstools/postcss-light-dark-function": "^3.0.3",
+    "@rollup/browser": "^4.63.1",
     "@rollup/plugin-babel": "^7.0.0",
-    "autoprefixer": "^10.5.0",
+    "autoprefixer": "^10.5.4",
     "babel-plugin-ember-template-compilation": "^4.0.0",
     "content-tag": "^4.0.0",
-    "core-js": "^3.49.0",
-    "decorator-transforms": "^2.3.2",
+    "core-js": "^3.50.0",
+    "decorator-transforms": "^2.4.0",
     "discourse": "workspace:0.0.0",
     "ember-cli-htmlbars": "^7.0.1",
     "ember-source": "~6.10.0",
     "ember-this-fallback": "^0.4.0",
     "fastestsmallesttextencoderdecoder": "^1.0.22",
-    "magic-string": "^0.30.21",
+    "magic-string": "^1.2.3",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "postcss": "^8.5.15",
-    "postcss-nesting": "^14.0.0",
-    "rolldown": "1.1.2",
+    "postcss": "^8.5.26",
+    "postcss-nesting": "^14.0.1",
+    "postcss-value-parser": "^4.2.0",
+    "rolldown": "1.2.5",
     "source-map-js": "^1.2.1",
     "strip-test-selectors": "^0.1.0",
-    "terser": "^5.47.1"
+    "terser": "^5.51.2"
   },
   "engines": {
     "node": ">= 20",
@@ -44,6 +45,6 @@
     "pnpm": "^10"
   },
   "devDependencies": {
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.11"
   }
 }

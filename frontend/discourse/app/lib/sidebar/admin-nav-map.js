@@ -251,6 +251,13 @@ export const ADMIN_NAV_MAP = [
   {
     name: "appearance",
     label: "admin.config_sections.appearance.title",
+    headerActions: [
+      {
+        id: "design_wizard",
+        icon: "wand-magic",
+        label: "design_wizard.launch",
+      },
+    ],
     links: [
       {
         name: "admin_logo",

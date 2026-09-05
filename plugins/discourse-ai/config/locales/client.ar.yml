@@ -233,6 +233,14 @@ ar:
               description: "السماح بوضع الوسوم على المنشورات التي ينشئها مستخدم النظام."
     discourse_ai:
       title: "الذكاء الاصطناعي"
+      copied: "تم النسخ"
+      ai_decoded_transcript:
+        thinking: "التفكير"
+        tool: "أداة"
+        arguments: "الوسيطات"
+        type: "النوع"
+        error: "خطأ"
+        response: "الرد"
       post_image_captions:
         edit: "تعديل تعليق الذكاء الاصطناعي على الصورة"
         title: "تعديل تعليق الذكاء الاصطناعي على الصورة"
@@ -336,9 +344,11 @@ ar:
         search:
           name: "البحث"
           description: "يحسّن تجربة البحث من خلال تقديم إجابات مولّدة بواسطة الذكاء الاصطناعي للاستفسارات"
-          discoveries: "الاكتشافات"
+          ask_ai: "اسأل الذكاء الاصطناعي"
           setting_groups:
             settings: "الإعدادات الأساسية"
+            agents: "الوكلاء"
+            access_control: "التحكم في الوصول"
         embeddings:
           name: "التضمينات"
           description: "يدعم ميزات مثل الموضوعات ذات الصلة والبحث بالذكاء الاصطناعي عن طريق إنشاء تمثيلات دلالية للنصوص"
@@ -728,11 +738,10 @@ ar:
         retry: "إعادة المحاولة"
         apply: "تطبيق"
         all_models: "كل النماذج"
+        all_features: "كل الميزات"
         successful: "نجح"
         failed: "فشل"
         unknown: "غير معروف"
-        topic_id: "معرِّف الموضوع"
-        post_id: "معرِّف المنشور"
         time: "الوقت"
         when: "التوقيت"
         outcome: "النتيجة"
@@ -748,8 +757,7 @@ ar:
         duration: "المدة"
         cost: "التكلفة"
         actions: "الإجراءات"
-        filters:
-          period: "الفترة الزمنية"
+        view_details: "التفاصيل"
         periods:
           hour: "آخر ساعة"
           day: "آخر 24 ساعة"
@@ -831,7 +839,6 @@ ar:
         create_user: إنشاء مستخدم
         create_user_help: يمكنك اختياريًا ربط مستخدم بهذا الوكيل. إذا فعلت ذلك، سيعتمد الذكاء الاصطناعي على هذا المستخدم للرد على الطلبات.
         default_llm: نموذج اللغة الافتراضي
-        default_llm_help: نموذج اللغة الافتراضي المُستخدم لهذه الوكيل. يُعدّ هذا الإعداد مطلوبًا إذا كنت ترغب في الإشارة إلى الوكيل في منشورات عامة.
         system_prompt: رسالة مطالبة النظام
         forced_tool_strategy: استراتيجية الأداة الإجبارية
         allow_chat_direct_messages: "السماح بالرسائل المباشرة في الدردشة"
@@ -1219,19 +1226,6 @@ ar:
           other: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزات كما هو متوقَّع. "
         model_description:
           none: "الإعدادات العامة التي تعمل مع معظم نماذج اللغة"
-          anthropic-claude-opus-4-7: "النموذج الأكثر ذكاءً لدى Anthropic"
-          anthropic-claude-sonnet-4-6: "التوازن الأمثل بين السرعة والتكلفة"
-          anthropic-claude-haiku-4-5: "سريع وفعَّال من حيث التكلفة"
-          google-gemini-3-1-pro-preview: "النموذج الأكثر ذكاءً لدى Google"
-          open_ai-gpt-5-6-sol: "نموذج OpenAI الرائد للأعمال المهنية المعقَّدة"
-          open_ai-gpt-5-6-terra: "موازنة الذكاء والتكلفة لمتطلبات العمل الشاقة"
-          open_ai-gpt-5-6-luna: "محسَّن للأعمال ذات الحجم الكبير والحساسة للتكلفة"
-          open_router-moonshotai-kimi-k2-6: "نموذج Moonshot متعدد الوسائط القادر على الرؤية"
-          open_router-deepseek-deepseek-v4-flash: "أحدث نموذج عالي الأداء من DeepSeek مع سياق يصل إلى 1 مليون رمز"
-          open_router-minimax-minimax-m2-7: "نموذج MiniMax مع سياق كبير"
-          open_router-x-ai-grok-4-1-fast: "نموذج xAI السريع متعدد الوسائط مع سياق كبير جدًا"
-          open_router-z-ai-glm-5-1: "نموذج Z-AI الذي يركز على الاستدلال المنطقي"
-          open_router-qwen-qwen3-6-plus: "نموذج Qwen متعدد الوسائط مع سياق بطول 1 مليون رمز"
         preseeded_model_description: "نموذج مفتوح المصدر تم تكوينه مسبقًا باستخدام %{model}"
         configured:
           title: "تم تكوين نماذج اللغة الكبيرة (LLM)"
@@ -1431,17 +1425,10 @@ ar:
         provider_fields:
           model_name: "اسم النموذج"
         semantic_search: "الموضوعات (دلالية)"
-        semantic_search_results:
-          toggle: "نتائج الذكاء الاصطناعي"
-          unavailable: "نتائج الذكاء الاصطناعي غير متوفرة"
-          zero_results_expanded: "لم نعثر على نتائج، لذلك نعرض لك %{count} من نتائج الذكاء الاصطناعي"
         semantic_search_tooltips:
           results_explanation: "عند التفعيل، سيتم إضافة نتائج بحث الذكاء الاصطناعي الإضافية أدناه."
-          invalid_sort: "يجب فرز نتائج البحث حسب الصلة لعرض نتائج الذكاء الاصطناعي"
           not_submitted: "أرسل طلب بحث لتفعيل نتائج الذكاء الاصطناعي"
           no_results: "لم يتم العثور على نتائج للذكاء الاصطناعي لهذا البحث"
-        semantic_search_unavailable_tooltip: "يجب فرز نتائج البحث حسب الصلة لعرض نتائج الذكاء الاصطناعي"
-        ai_generated_result: "تم العثور على نتيجة بحث باستخدام الذكاء الاصطناعي"
         ai_results_notice:
           no_results: "لا توجد نتائج مطابقة تمامًا، ولكن هذه بعض النتائج ذات الصلة."
           few_results:
@@ -1611,20 +1598,30 @@ ar:
             expanded: "موسَّع"
             expanded_description: "مع ملخصات الذكاء الاصطناعي"
       discobot_discoveries:
-        main_title: "استكشافات Discobot"
-        regular_results: "الموضوعات"
-        tell_me_more: "أخبرني المزيد..."
-        continue_convo: "متابعة المحادثة..."
+        main_title: "اسأل الذكاء الاصطناعي"
         loading_convo: "تحميل المحادثة"
-        collapse: "طي"
-        timed_out: "يتعذر على Discobot العثور على أي استكشافات. هناك خطأ ما."
+        create_topic: "إنشاء موضوع"
         user_setting: "فعّل ميزة اكتشاف نتائج بحث مدعومة بالذكاء الاصطناعي"
-        tooltip:
-          header: "البحث المدعوم بالذكاء الاصطناعي"
-          content: "البحث باللغة الطبيعية مدعوم بواسطة %{model}"
-          actions:
-            info: "كيف يعمل؟"
-            disable: "إيقاف"
+        legacy:
+          main_title: "استكشافات Discobot"
+          regular_results: "الموضوعات"
+          tell_me_more: "أخبرني المزيد..."
+          continue_convo: "متابعة المحادثة..."
+          loading_convo: "تحميل المحادثة"
+          collapse: "طي"
+          timed_out: "يتعذر على Discobot العثور على أي استكشافات. هناك خطأ ما."
+          tooltip:
+            header: "البحث المدعوم بالذكاء الاصطناعي"
+            content: "البحث باللغة الطبيعية مدعوم بواسطة %{model}"
+            actions:
+              info: "كيف يعمل؟"
+              disable: "إيقاف"
+        search_type: "الذكاء الاصطناعي"
+        search_all_topics: "كل الموضوعات"
+        search_messages: "الرسائل"
+        ask_ai: "الذكاء الاصطناعي"
+        sources:
+          related_discussions: "الموضوعات ذات الصلة"
       user_preferences:
         empty: "ليست هناك أي إعدادات متاحة ذات صلة في الوقت الحالي"
     review:

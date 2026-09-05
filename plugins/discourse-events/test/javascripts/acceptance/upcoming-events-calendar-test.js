@@ -22,7 +22,7 @@ acceptance("Upcoming Events Calendar", function (needs) {
   });
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     events_calendar_categories: "1",
     calendar_categories: "",

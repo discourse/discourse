@@ -143,6 +143,11 @@ de:
           solved: "sind gelöst"
           unsolved: "sind ungelöst"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Thema"
+            category: "Kategorie"
       web_hooks:
         solved_event:
           group_name: "Gelöstes Ereignis"

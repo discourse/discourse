@@ -57,6 +57,12 @@ function custom_targeting(key_array, value_array) {
 }
 
 const DESKTOP_SETTINGS = {
+  "above-site-header": {
+    code: "dfp_above_site_header_code",
+    sizes: "dfp_above_site_header_ad_sizes",
+    targeting_keys: "dfp_target_above_site_header_key_code",
+    targeting_values: "dfp_target_above_site_header_value_code",
+  },
   "topic-list-top": {
     code: "dfp_topic_list_top_code",
     sizes: "dfp_topic_list_top_ad_sizes",
@@ -84,6 +90,12 @@ const DESKTOP_SETTINGS = {
 };
 
 const MOBILE_SETTINGS = {
+  "above-site-header": {
+    code: "dfp_mobile_above_site_header_code",
+    sizes: "dfp_mobile_above_site_header_ad_sizes",
+    targeting_keys: "dfp_target_above_site_header_key_code",
+    targeting_values: "dfp_target_above_site_header_value_code",
+  },
   "topic-list-top": {
     code: "dfp_mobile_topic_list_top_code",
     sizes: "dfp_mobile_topic_list_top_ad_sizes",

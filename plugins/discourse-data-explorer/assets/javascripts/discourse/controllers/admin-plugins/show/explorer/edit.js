@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
+import { measuredMin } from "discourse/lib/resize-measurements";
 import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
@@ -46,6 +47,16 @@ export default class PluginsExplorerController extends Controller {
   order = null;
   form = null;
   shouldAutoRun = false;
+
+  /**
+   * A weak handle on the panes the live separator resolved, rather than a global
+   * query that would find whichever editor comes first in the document.
+   *
+   * Weak because this controller is an app-lifetime singleton and the separator
+   * can go without telling it, so a strong reference would hold a detached
+   * subtree until something else replaced it.
+   */
+  #resolvedPanes = null;
   _pristine = null;
   _teardownAiGeneration = null;
   _aiGenerationToken = 0;
@@ -131,9 +142,14 @@ export default class PluginsExplorerController extends Controller {
 
   get groupOptions() {
     return this.groups
-      .filter((g) => g.id !== AUTO_GROUPS.everyone.id)
-      .map((g) => {
-        return { id: g.id, name: g.name };
+      .filter(
+        (group) =>
+          group.id !== AUTO_GROUPS.everyone.id &&
+          group.id !== AUTO_GROUPS.anonymous_users.id &&
+          group.id !== AUTO_GROUPS.logged_in_users.id
+      )
+      .map((group) => {
+        return { id: group.id, name: group.name };
       });
   }
 
@@ -167,6 +183,11 @@ export default class PluginsExplorerController extends Controller {
     return items;
   }
 
+  /** The one place the weak handle is dereferenced. */
+  get #panes() {
+    return this.#resolvedPanes?.deref() ?? null;
+  }
+
   initView() {
     const queryId = this.model?.id;
     const stored = queryId ? dataExplorerStore.get(`view_${queryId}`) : null;
@@ -179,6 +200,50 @@ export default class PluginsExplorerController extends Controller {
     } else {
       this.view = defaultView(this.results);
     }
+  }
+
+  /**
+   * The panes the separator resizes, found from the separator's own position.
+   *
+   * @param {HTMLElement} separator - The separator element.
+   * @returns {HTMLElement|null} The panes, or null before they render.
+   */
+  @bind
+  panesFor(separator) {
+    const panes =
+      separator.closest(".query-editor")?.querySelector(".panels-flex") ?? null;
+    this.#resolvedPanes = panes ? new WeakRef(panes) : null;
+    // The element, not the handle. It goes straight to a ResizeObserver.
+    return panes;
+  }
+
+  /**
+   * The largest the panes may be dragged to.
+   *
+   * A screenful, not the space below the header. This page scrolls, so growing
+   * the panes lengthens it rather than pushing anything out of view.
+   *
+   * @returns {number} The maximum height in pixels.
+   */
+  @bind
+  maxPaneHeight() {
+    return Math.max(window.innerHeight, measuredMin(this.#panes, "vertical"));
+  }
+
+  @bind
+  onPaneResize(size) {
+    const panes = this.#panes;
+    if (!panes) {
+      return;
+    }
+
+    panes.style.height = `${size}px`;
+    this.appEvents.trigger("ace:resize");
+  }
+
+  /** Lets go of the panes. Called by the route on exit. */
+  releasePanes() {
+    this.#resolvedPanes = null;
   }
 
   @action
@@ -337,37 +402,6 @@ export default class PluginsExplorerController extends Controller {
       reader.readAsText(file);
     });
   }
-
-  @bind
-  dragMove(e) {
-    if (!e.movementX) {
-      return;
-    }
-
-    const editPane = document.querySelector(".query-editor");
-    const target = editPane.querySelector(".panels-flex");
-
-    // we need to get the initial height / width of edit pane
-    // before we manipulate the size
-    if (!this.initialPaneWidth && !this.originalPaneHeight) {
-      this.originalPaneHeight = target.clientHeight;
-    }
-
-    const newHeight = Math.max(
-      this.originalPaneHeight,
-      target.clientHeight + e.movementY
-    );
-
-    target.style.height = newHeight + "px";
-
-    this.appEvents.trigger("ace:resize");
-  }
-
-  @bind
-  didStartDrag() {}
-
-  @bind
-  didEndDrag() {}
 
   @action
   updateGroupIds(value) {

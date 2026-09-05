@@ -14,312 +14,860 @@ zh_TW:
     admin:
       site_settings:
         chat_separate_sidebar_mode:
-          always: "總是"
+          always: "始終"
+          fullscreen: "當全屏聊天時"
           never: "永不"
       logs:
         staff_actions:
           actions:
-            chat_channel_status_change: "聊天頻道狀態已變更"
+            chat_channel_status_change: "聊天頻道狀態已更改"
             chat_channel_delete: "聊天頻道已刪除"
+            chat_auto_remove_membership: "成員資格已從頻道自動移除"
       api:
         scopes:
           descriptions:
             chat:
-              create_message: "在指定頻道中建立聊天訊息。"
+              create_message: "在指定頻道創建聊天消息。"
+      web_hooks:
+        chat_event:
+          group_name: "聊天事件"
+          chat_message_created: "消息被創建"
+          chat_message_edited: "消息被編輯"
+          chat_message_trashed: "消息被刪除"
+          chat_message_restored: "消息被恢復"
     about:
-      chat_messages_count: "聊天訊息"
+      chat_messages_count: "聊天消息"
       chat_channels_count: "聊天頻道"
       chat_users_count: "聊天使用者"
+      activities:
+        chat_messages:
+          other: "%{formatted_number} 則聊天訊息"
     chat:
       edit_category:
         tab_title: "聊天"
+        channel: "頻道"
         description: "描述"
-        actions: "動作"
-        settings: "設定"
+        actions: "操作"
+        settings: "設置"
+        no_channels: "沒有與此分類關聯的聊天頻道"
+        no_channels_body: "每個分類可以創建多個頻道，這些頻道對相同成員開放，具體取決于分類的安全設置。 <a href='%{chatBrowseUrl}'>創建聊天頻道</a>。"
+        include_subcategories: "包含子分類頻道"
+      text_copied: 文本已復制到剪貼板
+      link_copied: 連結已復制到剪貼板
       back_to_forum: "論壇"
       deleted_chat_username: 已刪除
       dates:
         yesterday: "昨天"
-      all_loaded: "顯示所有訊息"
-      already_enabled: "此主題已啟用聊天功能。請重新整理。"
-      disabled_for_topic: "此主題的聊天功能已停用。"
+      all_loaded: "顯示所有消息"
+      already_enabled: "此主題已啟用聊天。請刷新。"
+      disabled_for_topic: "此主題已禁用聊天。"
       bot: "機器人"
       create: "創建"
       cancel: "取消"
-      cancel_reply: "取消回覆"
+      cancel_reply: "取消回復"
       chat_channels: "頻道"
+      starred: "已加星號"
+      starred_channels: "收藏的頻道"
+      starred_channels_empty: "您未收藏任何頻道。收藏一些頻道，以便在此處快速訪問它們。"
+      pinned_messages:
+        title: "置頂消息"
+        close: "關閉置頂消息"
+        dismiss: "為我隱藏置頂橫幅"
+        show: "顯示置頂橫幅"
+        pinned_by_you: "由您置頂"
+        pinned_by_user: "由 %{username} 置頂"
+        message_unpinned: "已取消釘選訊息"
       pinned_bar:
-        title: "已釘選"
-      pinned: "已釘選"
+        title: "已置頂"
+        jump_to_pinned: "跳轉至置頂消息"
+      no_pinned_messages: "此頻道中沒有置頂消息。"
+      pin_message: "置頂消息"
+      unpin_message: "取消置頂消息"
+      pinned: "已置頂"
       browse_all_channels: "瀏覽所有頻道"
+      see_in: "參見"
+      open_channel_menu: "打開頻道菜單"
       move_to_channel:
-        title: "將訊息移至頻道"
-        confirm_move: "移動訊息"
+        title: "將消息移至頻道"
+        instructions:
+          other: "您正在移動 <strong>%{count}</strong> 則訊息。請選擇目的地頻道。系統會在 <strong>%{channelTitle}</strong> 頻道中建立一則預留位置訊息，指出這些訊息已被移動。請注意，回覆鏈不會保留在新頻道中，而舊頻道中的訊息也不會再顯示為對已移動訊息的回覆。"
+        confirm_move: "移動消息"
+      delete_messages:
+        confirm:
+          other: "您確定要刪除這 %{count} 則訊息嗎？"
       channel_settings:
-        title: "頻道設定"
+        title: "頻道設置"
         edit: "編輯"
-        add: "加入"
+        add: "添加"
+        star_channel: "收藏頻道"
+        unstar_channel: "取消收藏頻道"
         close_channel: "關閉頻道"
-        open_channel: "開放頻道"
-        archive_channel: "封存頻道"
+        open_channel: "打開頻道"
+        open_channel_disabled_archived: "無法重新打開已歸檔的頻道。"
+        open_channel_disabled_read_only: "無法重新打開只讀頻道。"
+        archive_channel: "歸檔頻道"
         delete_channel: "刪除頻道"
         join_channel: "加入頻道"
         leave_channel: "離開頻道"
+        leave_groupchat_info: "離開此群組聊天后，您將無法再訪問它，也不會收到與之相關的通知。要重新加入，需要群組聊天成員再次向您發送邀請。"
+        notification_settings: "通知設置"
         notification_settings_context: "通知"
         join: "加入"
         leave: "離開"
         save_label:
-          mute_channel: "靜音頻道偏好已儲存"
+          mute_channel: "將頻道設為免打擾偏好設置已保存"
+          desktop_notification: "桌面通知偏好設置已保存"
+          mobile_notification: "移動推送通知偏好設置已保存"
       channel_archive:
-        title: "封存頻道"
+        title: "歸檔頻道"
+        instructions: "<p>歸檔頻道會使它進入只讀模式，并將該頻道的所有消息移至一個新的或現有的主題。將無法發送新消息，也不能編輯或刪除現有消息。</p><p>確定要歸檔<strong>%{channelTitle}</strong>頻道嗎？</p>"
+        process_started: "歸檔過程已經開始。此模態框將很快關閉，當歸檔過程完成后，您會收到一條個人消息。"
         retry: "重試"
       channel_open:
-        title: "開放頻道"
+        title: "打開頻道"
+        instructions: "重新打開頻道，所有使用者將能夠發送消息和編輯他們現有的消息。"
       channel_close:
         title: "關閉頻道"
+        instructions: "關閉該頻道會阻止非管理人員使用者發送新消息或編輯現有消息。確定要關閉此頻道嗎？"
       channel_delete:
         title: "刪除頻道"
+        instructions: "<p>刪除 <strong>%{name}</strong> 頻道和聊天歷史記錄。所有消息和相關資料，例如回應和上傳，將被永久刪除。如果您希望保留頻道歷史記錄，并將其停用，您可能需要歸檔頻道。</p> <p>確定要<strong>永久刪除</strong>該頻道嗎？要確認，請在下面的框中輸入頻道的名稱。</p>"
+        confirm: "我明白后果，刪除頻道"
         confirm_channel_name: "輸入頻道名稱"
+        process_started: "刪除頻道的過程已經開始。此模態框將很快關閉，您將無法再查看被刪除的頻道。"
       channels_list_popup:
         browse: "瀏覽頻道"
+        create: "新建頻道"
       close: "關閉"
       remove: "移除"
+      collapse: "收起聊天抽屜"
+      expand: "展開聊天欄"
+      confirm_flag: "確定要檢舉 %{username} 的消息嗎？"
+      deleted:
+        other: "已刪除 %{count} 則訊息。[查看全部]"
+      hidden: "一條消息已被隱藏。[查看]"
       delete: "刪除"
       edited: "已編輯"
-      muted: "靜音"
-      joined: "建立日期"
+      muted: "已設為免打擾"
+      joined: "已加入"
       empty_state:
         direct_message_cta: "開始個人聊天"
-        direct_message: "您還可以與一個或多個使用者開始個人聊天。"
+        direct_message: "您還可以與一位或多位使用者開始個人聊天。"
+        title: "找不到頻道"
+        my_threads: "您還沒有任何消息串。您參與的消息串將在此處顯示。"
       email_frequency:
+        description: "只有在過去 15 分鐘內沒有見到您，我們才會給您發送電子郵件。"
         never: "永不"
+        title: "當我收到聊天私信或群聊時向我發送電子郵件"
+        when_away: "僅在離開時"
       header_indicator_preference:
-        all_new: "所有新訊息"
+        title: "在標題中顯示活動指示器"
+        all_new: "所有新消息"
+        dm_and_mentions: "直接消息、提及和關注的消息串"
+        only_mentions: "僅限提及"
         never: "永不"
+      separate_sidebar_mode:
+        title: "為論壇和聊天顯示單獨的邊欄模式"
       enable: "啟用聊天"
       flag: "檢舉"
+      emoji: "插入表情符號"
+      flagged: "此消息已被檢舉，等待審核"
+      invalid_access: "您無權查看此聊天頻道"
+      invitation_notification: "<span>%{username}</span><span> 邀請您加入一個聊天頻道</span>"
+      in_reply_to: "回復"
       heading: "聊天"
       join: "加入"
-      last_visit: "上次到訪"
+      last_visit: "上次訪問"
+      mention_warning:
+        invitations_sent:
+          other: "邀請已送出"
+        invite: "邀請加入頻道"
+        channel_wide_mentions_disallowed: "@here 和 @all 提及在此頻道中被禁用。"
+        groups:
+          header:
+            some: "某些使用者不會收到通知"
+            all: "任何人都不會收到通知"
+          unreachable_1: "%{group} 不允許提及。"
+          unreachable_2: "@%{group1} 和 @%{group2} 不允許提及。"
+          unreachable_multiple:
+            other: "@%{group} 與另外 %{count} 個群組不允許被提及。"
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {提及 @{group1} 超過 # 位使用者的<a href="{siteSettingUrl}" target="_blank">通知上限</a>。}
+                              other {提及 @{group1} 超過 # 位使用者的<a href="{siteSettingUrl}" target="_blank">通知上限</a>。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {提及 @{group1} 超過 # 位使用者的通知上限。}
+                              other {提及 @{group1} 超過 # 位使用者的通知上限。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {提及 @{group1} 與 @{group2} 超過 # 位使用者的<a href="{siteSettingUrl}" target="_blank">通知上限</a>。}
+                            other {提及 @{group1} 與 @{group2} 超過 # 位使用者的<a href="{siteSettingUrl}" target="_blank">通知上限</a>。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {提及 @{group1} 與 @{group2} 超過 # 位使用者的通知上限。}
+                            other {提及 @{group1} 與 @{group2} 超過 # 位使用者的通知上限。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {提及這 {groupCount} 個群組超過 # 位使用者的<a href="{siteSettingUrl}" target="_blank">通知上限</a>。}
+                            other {提及這 {groupCount} 個群組超過 # 位使用者的<a href="{siteSettingUrl}" target="_blank">通知上限</a>。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {提及這 {groupCount} 個群組超過 # 位使用者的通知上限。}
+                            other {提及這 {groupCount} 個群組超過 # 位使用者的通知上限。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          other: "此訊息超過 %{count} 次提及的通知上限。"
+        too_many_mentions_admin:
+          other: '此訊息超過 %{count} 次提及的<a href="%{siteSettingUrl}" target="_blank">通知上限</a>。'
+      aria_roles:
+        header: "聊天標題"
+        composer: "聊天輸入框"
+        channels_list: "聊天頻道列表"
+      screen_reader:
+        new_message: "%{username}：%{message}"
+        new_messages:
+          other: "%{count} 則新訊息"
+        new_image:
+          other: "%{username} 傳送了 %{count} 張圖片"
+        new_attachment:
+          other: "%{username} 傳送了 %{count} 個附件"
+        new_message_with_image:
+          other: "%{username}：%{message}（包含 %{count} 張圖片）"
+        new_message_with_attachment:
+          other: "%{username}：%{message}（包含 %{count} 個附件）"
+      no_direct_message_channels: "您還沒有加入任何直接消息！"
+      no_direct_message_channels_cta: "開始一個對話"
+      no_public_channels: "您還沒有加入任何頻道！"
       no_public_channels_cta: "瀏覽頻道"
-      remove_upload: "移除檔案"
-      react: "用表情符號反應"
-      reply: "回覆"
+      kicked_from_channel: "您無法再訪問此頻道。"
+      chat_notifications_title: "聊天通知"
+      personalization_title: "個性化"
+      accessibility_title: "無障礙"
+      ignore_channel_wide_mention:
+        title: "忽略頻道范圍內的提及"
+      announce_new_messages:
+        title: "向屏幕閱讀器播報新消息"
+      new_message_sound:
+        title: "當聊天處于前臺時，對新消息播放提示音"
+      show_thread_title_prompts:
+        title: "顯示消息串標題提示"
+        description: "顯示為新消息串設置標題的提示"
+      open: "打開聊天"
+      open_full_page: "打開全屏聊天"
+      close_full_page: "關閉全屏聊天"
+      open_message: "在聊天中打開消息"
+      placeholder_self: "做些記錄"
+      placeholder_channel: "在 %{channelName} 中聊天"
+      placeholder_thread: "在消息串中聊天"
+      placeholder_users: "與 %{commaSeparatedNames} 聊天"
+      placeholder_group: "群聊"
+      placeholder_new_message_disallowed:
+        archived: "頻道已歸檔，您現在無法發送新消息。"
+        closed: "頻道已關閉，您現在無法發送新消息。"
+        read_only: "頻道為只讀，您現在無法發送新消息。"
+      placeholder_silenced: "您目前無法發送消息。"
+      remove_upload: "移除文件"
+      react: "使用表情符號回復"
+      reply: "回復"
+      message_actions: "訊息操作"
+      more_message_actions: "更多訊息操作"
       edit: "編輯"
-      copy_link: "複製連結"
-      rebake_message: "重建 HTML"
-      message_too_long: "訊息過長，不得超過 %{count} 個字元。"
+      copy_link: "復制連結"
+      copy_text: "復制文本"
+      rebake_message: "重新建置 HTML"
+      message_too_long: "消息過長，最多只能包含 %{count} 個字符。"
       retry_staged_message:
-        title: "網路錯誤"
-        action: "再次發送？"
+        title: "網絡錯誤"
+        action: "重新發送？"
       bookmark_message: "書籤"
-      bookmark_message_edit: "編輯書籤"
-      restore: "還原已刪除的訊息"
+      bookmark_message_edit: "編輯書簽"
+      restore: "恢復已刪除的消息"
       save: "保存"
       select: "選擇"
-      scroll_to_bottom: "捲動到底部"
-      scroll_to_new_messages: "查看新訊息"
+      return_to_list: "返回頻道列表"
+      return_to_channel: "返回頻道"
+      return_to_threads_list: "返回消息串列表"
+      unread_threads_count:
+        other: "您有 %{count} 個未讀討論"
+      scroll_to_bottom: "滾動到底部"
+      scroll_to_new_messages: "查看新消息"
+      new_messages:
+        other: "%{count} 則新訊息"
       sound:
         title: "桌面聊天通知聲音"
+        preview: "播放所選音效的預覽"
       sounds:
         none: "無"
+        classic: "經典簡約"
+        soft: "柔和的馬林巴琴音"
+        retro: "復古的 8 位"
+        bubble: "好玩的泡泡"
+        ethereal: "空靈的玻璃"
       title: "聊天"
       title_capitalized: "聊天"
-      upload_to_channel: "上傳至 %{title}"
+      disabled:
+        title: "您已禁用聊天"
+        body: "重新打開它，即可查看頻道和消息。"
+        cta: "我的聊天偏好設置"
+      upload: "附加文件"
+      upload_to_channel: "上傳到 %{title}"
+      upload_to_thread: "上傳到消息串"
+      uploaded_files:
+        other: "%{count} 個檔案"
+      youtube: "YouTube"
+      you_flagged: "您已檢舉此消息"
+      exit: "退出聊天"
       channel_status:
-        read_only_header: "頻道為唯讀"
-        read_only: "唯讀"
-        archived_header: "頻道已封存"
-        archived: "已封存"
-        closed: "不公開"
-        open: "開啟"
+        read_only_header: "頻道為只讀"
+        read_only: "只讀"
+        archived_header: "頻道已被歸檔"
+        archived: "已歸檔"
+        archive_failed: "頻道歸檔失敗。%{completed}/%{total} 條消息已歸檔。<a target=\"_blank\" href=\"%{topic_url}\">目標主題</a>已創建。按重試以嘗試完成歸檔。"
+        archive_failed_no_topic: "頻道歸檔失敗。%{completed}/%{total} 條消息已歸檔。目標主題未創建。按重試以嘗試完成歸檔。"
+        archive_completed: "請參閱<a target=\"_blank\" href=\"%{topic_url}\">歸檔主題</a>"
+        closed_header: "頻道已被關閉"
+        closed: "已關閉"
+        open_header: "頻道處于開放狀態"
+        open: "開放"
       browse:
-        back: "上一步"
+        back: "返回"
         title: 頻道
-        filter_all: 全部
-        filter_open: 開啟
-        filter_closed: 不公開
-        filter_archived: 已封存
-        filter_joined_all: "全部"
-        filter_joined_joined: "建立日期"
+        filter_all: 所有
+        filter_open: 開放
+        filter_closed: 已關閉
+        filter_archived: 已歸檔
+        filter_input_placeholder: 按名稱搜尋頻道
+        filter_joined_all: "所有"
+        filter_joined_joined: "已加入"
+        filter_joined_not_joined: "未加入"
       chat_message_separator:
         today: 今天
         yesterday: 昨天
       search_view:
-        filter_placeholder: 搜尋訊息
+        filter_placeholder: 搜尋消息
+        message_result_label: "來自 %{username} 的聊天消息：%{preview} %{threadInfo}"
+        in_thread: "位于消息串 %{title} 中"
+        sr_instructions: "按 Enter 或空格鍵打開消息。使用 Tab 在結果之間導航。"
+        results_list_label: "聊天消息搜尋結果"
+      members_view:
+        filter_placeholder: 查找成員
+        add_member: 添加成員
+        back_to_settings: "返回設置"
       about_view:
         associated_topic: 連結的主題
-        associated_category: 連結的類別
+        associated_category: 連結的分類
         title: 標題
-        name: 名字
-        description: 簡述
+        name: 名稱
+        description: 描述
       channel_info:
         back_to_all_channels: "所有頻道"
-        back_to_channel: "上一步"
+        back_to_channel: "返回"
         tabs:
           members: 成員
-          settings: 設定
-          search: 搜索
+          settings: 設置
+          search: 搜尋
         remove_member: "移除"
       new_message_modal:
-        title: 傳送訊息
-        add_user_short: <span>新增使用者</span>
-        open_channel: <span>開啟頻道</span>
-        no_items: "沒有項目"
-        filter: "過濾"
+        title: 發送消息
+        add_user_long: <kbd>shift + 點擊</kbd>或 <kbd>shift + enter</kbd><span>添加 @%{username}</span>
+        add_user_short: <span>添加使用者</span>
+        open_channel: <span>打開頻道</span>
+        default_search_placeholder: "#一個頻道、@ 某人或任何內容"
+        default_channel_search_placeholder: "#一個頻道"
+        default_user_search_placeholder: "@ 某人"
+        user_search_placeholder: "…添加更多成員"
+        disabled_user: "已禁用聊天"
+        no_items: "無條目"
+        create_group_placeholder: "群組聊天名稱（可選）"
+        participants_counter: "%{selection_count}/%{max} 參與者"
+        new_group_chat: "新建群組聊天"
+        filter: "篩選"
+        cant_add_more_members: "已達到最大成員數"
+        create_new_group_chat: "創建群組聊天"
+        group_with_too_many_members: "成員過多 (%{membersCount})"
       channel_edit_name_slug_modal:
         title: 編輯頻道
-        name: 變更名稱
+        input_placeholder: 添加名稱
+        slug_description: 在 URL 中使用頻道縮略名而不是頻道名稱
+        name: 頻道名稱
+        slug: 頻道縮略名
+        emoji: 頻道表情符號
+        reset_emoji: 重置表情符號
       channel_edit_description_modal:
         title: 編輯描述
-        input_placeholder: 新增描述
+        input_placeholder: 添加描述
+        description: 告訴人們這個頻道的主題
       direct_message_creator:
-        title: 新訊息
-        prefix: "發至:"
+        add_to_channel: "添加到頻道"
+        title: 新消息
+        prefix: "至："
         no_results: 沒有結果
-        selected_user_title: "取消選取 %{username}"
+        selected_user_title: "取消選擇 %{username}"
+        group_name: "群組聊天名稱（可選）"
+        members_counter:
+          other: "%{count}/%{max} 位成員"
       channel:
+        no_memberships: 此頻道沒有成員
+        no_memberships_found: 找不到成員
         memberships_count:
           other: "%{count} 位成員"
+        empty_state:
+          title: "這是 %{channelName} 的開始"
+          joined_title: "您是 %{channelName} 中的第一個使用者"
+          direct_message_title: "開始與 %{name} 的對話"
+          guest_tip: "您目前以訪客身份閱讀。討論從使用者發帖的那一刻起開始 – 加入我們，成為其中一員吧！"
+          joined_tip: "搶先發帖，開啟討論。"
+          members_here:
+            other: "這裡有 <strong>%{count} 位成員</strong>"
+          no_other_members: "目前尚無其他成員"
         preview_card:
-          log_in: "登入"
+          guest_title: "加入 %{channelName} 開始聊天"
+          guest_body: "閱讀對所有人免費。注冊即可發帖、回應和回復 – 只需大約 30 秒。"
+          join_body: "您可以發帖和回復，這些內容會顯示在您的頻道列表中。"
+          no_access_title: "您無法加入 %{channelName}"
+          no_access_body: "此頻道目前不對新成員開放。"
+          log_in: "登錄"
+          sign_up: "注冊"
       create_channel:
+        threading:
+          label: "啟用消息串"
+        auto_join_users:
+          public_category_warning: "%{category}是公共分類。是否自動將所有最近活躍的使用者添加到此頻道？"
+          warning_1_group:
+            other: "要自動加入來自 %{group} 的 %{count} 位使用者嗎？"
+          warning_2_groups:
+            other: "要自動加入來自 %{group1} 和 %{group2} 的 %{count} 位使用者嗎？"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {要自動加入來自 {groupName} 及其他 {groupCount} 個群組的 {userCount} 位使用者嗎？}
+                        other {要自動加入來自 {groupName} 及其他 {groupCount} 個群組的 {userCount} 位使用者嗎？}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {要自動加入來自 {groupName} 及其他 {groupCount} 個群組的 {userCount} 位使用者嗎？}
+                        other {要自動加入來自 {groupName} 及其他 {groupCount} 個群組的 {userCount} 位使用者嗎？}
+                      }
+                    }
+            }
+        choose_category:
+          label: "選擇一個分類"
+          none: "選擇一個…"
+          default_hint: 訪問<a href=%{link} target="_blank">%{category}安全設置</a>管理訪問權限
+          hint_1_group: '%{group} 中的使用者將根據<a href="%{settingLink}" target="_blank">安全設置</a>訪問此頻道'
+          hint_2_groups: '%{group1} 和 %{group2} 中的使用者將根據<a href="%{settingLink}" target="_blank">安全設置</a>訪問此頻道'
+          hint_multiple_groups:
+            other: '依據<a href="%{settingLink}" target="_blank">安全性設定</a>，%{group} 及其他 %{count} 個群組中的使用者將可存取此頻道'
+        create: "創建頻道"
         description: "描述"
-        name: "變更名稱"
+        name: "頻道名稱"
+        slug: "頻道縮略名"
+        title: "新建頻道"
         type: "類型"
         types:
           category: "分類"
-          topic: "話題"
+          topic: "主題"
+        emoji:
+          label: "頻道表情符號"
+          reset: "重置表情符號"
       reviewable:
-        type: "聊天訊息"
+        type: "聊天消息"
+        message_in_channel: "頻道"
+      reactions:
+        add: "使用 %{emoji} 回應"
+        remove: "移除您的 %{emoji} 回應"
+        counted:
+          other: "%{emoji} 回應，%{count} 人"
+        only_you: "<span>您回應了 </span>:%{emoji}:"
+        you_and_single_user: "<span>您和 %{username} 回應了 </span>:%{emoji}:"
+        you_and_multiple_users: "<span>您、%{commaSeparatedUsernames} 和 %{username} 回應了 </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          other: "<span>您、%{commaSeparatedUsernames} 與其他 %{count} 人使用了 </span>:%{emoji}: 回應"
+        single_user: "<span>%{username} 回應了 </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} 和 %{username} 回應了 </span>:%{emoji}:"
+        users_popup:
+          title:
+            other: "%{count} 個回應"
+        multiple_users_and_more:
+          other: "<span>%{commaSeparatedUsernames} 與其他 %{count} 人使用了 </span>:%{emoji}: 回應"
       composer:
-        italic_text: "斜體字"
-        bold_text: "粗體字"
+        toggle_toolbar: "切換工具欄"
+        italic_text: "強調文字"
+        bold_text: "粗體文字"
+        code_text: "代碼文本"
         send: "傳送"
       quote:
-        default_thread_title: "討論串"
+        original_channel: '最初在<a href="%{channelLink}">%{channel}</a>中發送。'
+        copy_success: "聊天引用已復制到剪貼板"
+        default_thread_title: "消息串"
       notification_levels:
         never: "永不"
+        mention: "僅限提及"
+        always: "所有活動"
       settings:
-        auto_join_users_label: "自動新增使用者"
+        channel_wide_mentions_label: "允許 @all 和 @here 提及"
+        channel_wide_mentions_description: "允許使用者使用 @all 通知#%{channel} 的所有成員，或僅使用 @here 通知當前活躍的成員"
+        channel_threading_label: "消息串"
+        channel_threading_description: "啟用消息串后，對聊天消息的回復將創建一個單獨的對話，該對話將與主頻道并存。"
+        auto_join_users_label: "自動添加使用者"
+        auto_join_users_info: "每小時檢查哪些使用者在過去 3 個月中活躍。如果他們可以訪問%{category}分類，請將其添加到此頻道。"
+        auto_join_users_info_no_category: "每小時檢查哪些使用者在過去 3 個月中活躍。如果他們可以訪問所選分類，請將其添加到此頻道。"
+        auto_join_users_warning: "所有不是此頻道成員且有權訪問“%{category}”分類的使用者都將加入。確定嗎？"
+        notification_level: "發送推送通知"
         follow: "加入"
-        followed: "建立日期"
-        threading_enabled: "啟用"
-        threading_disabled: "停用"
-        muted_on: "開啟"
-        muted_off: "關閉"
+        followed: "已加入"
+        mute: "將頻道設為免打擾"
+        unmute: "取消將頻道設為免打擾"
+        threading_enabled: "已啟用"
+        threading_disabled: "已禁用"
+        muted_on: "開"
+        muted_off: "關"
         notifications: "通知"
         preview: "預覽"
         save: "保存"
-        saved: "已儲存"
+        saved: "已保存"
         unfollow: "離開"
         admin_title: "管理員"
-        settings_title: "設定"
+        settings_title: "設置"
+        info_title: "頻道資訊"
         category_label: "分類"
         history_label: "歷史記錄"
         members_label: "成員"
       admin:
         title: "聊天"
         export_messages:
-          title: "匯出聊天訊息"
-          create_export: "建立匯出"
+          title: "導出聊天消息"
+          description: "這將導出所有頻道的所有消息。"
+          create_export: "創建導出"
+          confirm_export: "這會從所有頻道中導出所有消息，并通過私信將結果發送給您。確定要導出嗎？"
+          export_has_started: "導出已開始。導出完成后，您將收到一條私信。"
       search:
-        short_title: 搜索
+        short_title: 搜尋
+        title: 搜尋聊天
+        aria_label: "切換到聊天搜尋"
+        no_results: "找不到結果"
         sort:
-          relevance: "最相關"
-          latest: "最新版本"
+          relevance: "相關性"
+          latest: "最新"
+      my_threads:
+        title: 我的消息串
+        aria_label: "切換到我的消息串列表"
       direct_messages:
+        title: "直接消息"
+        aria_label: "切換到直接消息"
+        new: "創建個人聊天"
         create: "開始"
-        cannot_create: "抱歉，您無法傳送私訊。"
+        leave: "離開此個人聊天"
+        close: "關閉此個人聊天"
+        cannot_create: "抱歉，您無法發送直接消息。"
       channel_list:
         title: "頻道"
+        aria_label: "切換到頻道列表"
       incoming_webhooks:
-        back: "上一步"
-        description: "簡述"
+        back: "返回"
+        channel_placeholder: "選擇一個頻道"
+        channel: "頻道"
+        confirm_destroy: "確定要刪除此傳入網絡鉤子嗎？此操作無法撤消。"
+        current_emoji: "當前表情符號"
+        description: "描述"
         delete: "刪除"
-        emoji: "Emoji"
-        name: "姓名"
-        name_placeholder: "名字..."
+        emoji: "表情符號"
+        emoji_instructions: "如果表情符號留空，將使用系統頭像。"
+        name: "名稱"
+        name_placeholder: "名稱…"
+        new: "新的傳入網絡鉤子"
+        none: "未創建現有的傳入網絡鉤子。"
+        no_emoji: "未選擇表情符號"
+        post_to: "發布到"
+        reset_emoji: "重置表情符號"
         save: "保存"
         edit: "編輯"
         select_emoji: "選擇表情符號"
         system: "系統"
-        url: "網址"
-        username: "使用者名稱"
+        title: "傳入網絡鉤子"
+        header_description: "外部系統可以使用傳入的網絡鉤子將消息發布到作為機器人使用者的指定聊天頻道"
+        url: "URL"
+        url_instructions: "此 URL 包含一個秘密值 - 請安全保管。"
+        username: "使用者名"
+        username_instructions: "發布到頻道的機器人的使用者名。留空時默認為“系統”。"
+        instructions: "外部系統可以使用傳入網絡鉤子以機器人使用者身份通過 <code>/hooks/:key</code> 端點將消息發布到指定的聊天頻道。有效負荷由單個 <code>text</code> 參數組成，限制為 2000 個字符。<br><br>我們還支持有限 Slack 格式的 <code>text</code> 參數以及基于 <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> 中的格式提取連結和提及，但是必須為此使用 <code>/hooks/:key/slack</code> 端點。"
+        saved: "網絡鉤子更改已保存"
+        created: "網絡鉤子已創建"
       selection:
         cancel: "取消"
-        copy: "複製"
+        quote_selection: "主題中的引用"
+        copy: "復制"
+        delete: "刪除 (%{selectionCount}/%{totalCount})"
+        move_selection_to_channel: "移至頻道"
+        error: "移動聊天消息時出錯"
+        title: "將聊天移動到主題"
         new_topic:
-          title: "移至新話題"
+          title: "移至新主題"
+          instructions:
+            other: "您即將建立新主題，並將所選的 <b>%{count}</b> 則聊天訊息加入其中。"
+          instructions_channel_archive: "您將要創建一個新主題并將頻道消息歸檔到該主題。"
         existing_topic:
-          title: "移至已存在的話題"
+          title: "移至現有主題"
+          instructions:
+            other: "請選擇要將這 <b>%{count}</b> 則聊天訊息移至哪個主題。"
+          instructions_channel_archive: "請選擇您要將頻道消息歸檔到的主題。"
         new_message:
-          title: "移動到新訊息"
+          title: "移至新訊息"
+          instructions:
+            other: "您即將建立新訊息，並將所選的 <b>%{count}</b> 則聊天訊息加入其中。"
+      replying_indicator:
+        single_user: "%{username} 正在輸入"
+        multiple_users: "%{commaSeparatedUsernames} 和 %{lastUsername} 正在輸入"
+        many_users:
+          other: "%{commaSeparatedUsernames} 與其他 %{count} 人正在輸入"
       retention_reminders:
+        chat_settings: "聊天設置"
+        indefinitely_short: "無限期"
+        indefinitely_long: "%{chatSettingsLink}已設置為無限期保留頻道消息。"
         short:
           other: "%{count} 天"
+        long:
+          other: "%{chatSettingsLink} 已設定為保留頻道訊息 %{count} 天。"
+      flags:
+        off_topic: "此消息與頻道標題定義的當前討論無關，可能應當移至其他地方。"
+        inappropriate: "此消息包含理性的人會認為具有攻擊性、辱罵性或違反<a href=\"%{basePath}/guidelines\">我們的社群準則</a>的內容。"
+        illegal: "此貼文需要工作人員注意，因為我認為其中包含非法內容。"
+        spam: "此消息是廣告或破壞行為。它對當前頻道沒有用，也不相關。"
+        notify_user: "我想親自直接與此人談談他們的消息。"
+        notify_moderators: "由于上面未列出的另一個原因，此消息需要管理人員加以注意。"
       flagging:
-        action: "檢舉訊息"
+        action: "檢舉消息"
       emoji_picker:
-        objects: "物品"
+        favorites: "常用"
+        smileys_&_emotion: "笑臉和情感"
+        objects: "物件"
+        people_&_body: "人和身體"
+        travel_&_places: "旅行和地點"
+        animals_&_nature: "動物和自然"
+        food_&_drink: "食品和飲料"
         activities: "活動"
-        flags: "投訴"
-        symbols: "象徵<br>"
+        flags: "檢舉"
+        symbols: "符號"
+        search_placeholder: "按表情符號名稱和別名搜尋…"
         no_results: "沒有結果"
       thread:
         title: "標題"
-        view_thread: 檢視討論串
+        view_thread: 查看消息串
         replies:
-          other: "%{count}個回覆"
-        label: 討論串
-        close: "關閉討論串"
-        settings: "設定"
-        last_reply: "最新回覆"
+          other: "%{count} 則回覆"
+        label: 消息串
+        close: "關閉消息串"
+        original_message:
+          started_by: "發起人"
+        settings: "設置"
+        last_reply: "最后回復"
         notifications:
           regular:
             title: "一般"
+            description: "當有人在此消息串中提及您時獲得通知。"
           tracking:
             title: "跟蹤"
+            description: "當有人在此消息串中提及您時獲得通知，并在消息串列表中查看新回復的數量。"
           watching:
-            title: "關注中"
+            title: "監看"
+            description: "獲得關于此消息串中的所有回復的通知，并在消息串列表中查看新回復的數量。"
         participants_other_count:
           other: "+%{count}"
+      thread_title_toast:
+        title: "設置一個消息串標題"
+        message: "幫助他人發現此對話。"
+        dismiss_action: "不再顯示"
+        primary_action: "設置標題"
+      thread_title_modal:
+        title: "設置消息串標題"
+        input_placeholder: "告訴其他人此對話的主題…"
+        discourse_ai:
+          title: "自動生成消息串標題"
+          description: "查看 %{url} 詳細了解此功能和 Discourse 體驗的其他增強功能。"
       threads:
-        open: "開啟討論串"
+        open: "打開消息串"
+        list: "消息串"
+        none: "您沒有參與此頻道中的任何消息串。"
       draft_channel_screen:
-        header: "新訊息"
+        header: "新消息"
         cancel: "取消"
+      quick_reaction_type:
+        title: "一鍵聊天回應"
+        options:
+          frequent: "最常用的聊天回應"
+          custom: "自訂回應"
     notifications:
+      chat_invitation: "邀請您加入聊天頻道"
+      chat_invitation_html: "<span>%{username}</span><span> 邀請您加入一個聊天頻道</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        other: "%{username} 與其他 %{count} 人"
+      popup:
+        chat_mention:
+          direct: '在“%{channel}”中提及您'
+          direct_html: '<span>%{username}</span> <span>在“%{channel}”中提及您</span>'
+          other_plain: '在“%{channel}”中提及“%{identifier}”'
+          other_html: '<span>%{username}</span> <span>在“%{channel}”中提及“%{identifier}”</span>'
+        direct_message_chat_mention:
+          direct: "在個人聊天中提及您"
+          direct_html: "<span>%{username}</span> <span>在個人聊天中提及您</span>"
+          other_plain: "在個人聊天中提及“%{identifier}”"
+          other_html: "<span>%{username}</span> <span>在個人聊天中提及“%{identifier}”</span>"
+        chat_message: "新的聊天消息"
+        chat_quoted: "%{username} 引用了您的聊天消息"
+      titles:
+        chat_mention: "聊天中提到"
+        chat_invitation: "受邀加入聊天頻道"
+        chat_quoted: "引用聊天資訊"
+        chat_watched_thread: "關注聊天消息串"
+    action_codes:
+      chat:
+        enabled: '%{who} 于 %{when} 啟用了<button class="btn-link open-chat">聊天</button>'
+        disabled: "%{who} 于 %{when} 關閉了聊天"
     discourse_automation:
       scriptables:
         send_chat_message:
+          title: 發送聊天消息
           fields:
+            chat_channel_id:
+              label: 聊天頻道 ID
             message:
               label: 訊息
+            sender:
+              label: 發送人
+              description: 默認為“系統”
     review:
+      transcript:
+        view: "查看以前的消息副本"
       types:
+        chat_reviewable_message:
+          title: "被檢舉的聊天消息"
         reviewable_chat_message:
-          noun: "聊天訊息"
+          title: "被檢舉的聊天消息"
+          noun: "聊天消息"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} 切換頻道"
+          switch__unread_channel_arrows: "%{shortcut} 切換未讀頻道"
+          open_quick_channel_selector: "%{shortcut} 打開快速頻道選擇器"
+          open_insert_link_modal: "%{shortcut} 插入連結（僅輸入框）"
+          composer_bold: "%{shortcut} 粗體（僅輸入框）"
+          composer_italic: "%{shortcut} 斜體（僅輸入框）"
+          composer_code: "%{shortcut} 代碼（僅輸入框）"
+          drawer_toggle: "%{shortcut} 切換聊天抽屜"
+          drawer_close: "%{shortcut} 關閉聊天抽屜"
+          mark_all_channels_read: "%{shortcut} 將所有頻道標記為已讀"
+    topic_statuses:
+      chat:
+        help: "已為此主題啟用聊天"
+    user:
+      allow_private_messages: "允許其他使用者向我發送個人消息和聊天直接消息"
+      muted_users_instructions: "禁止來自這些使用者的所有通知、個人消息和聊天直接消息。"
+      allowed_pm_users_instructions: "僅允許來自這些使用者的個人消息或聊天直接消息。"
+      allow_private_messages_from_specific_users: "只允許特定使用者向我發送個人消息或聊天直接消息"
+      ignored_users_instructions: "禁止來自這些使用者的所有貼文、消息、通知、個人消息和聊天直接消息。"
+    user_menu:
+      no_chat_notifications_title: "您還沒有任何聊天通知"
+      no_chat_notifications_body: >
+        當有人在聊天中傳送私人訊息給您，或 <b>@提及</b>您時，此面板會顯示通知。如果您有一段時間未登入，通知也會寄送至您的電子郵件。<br><br>點選任一聊天頻道頂端的標題，即可設定要在該頻道接收哪些通知。詳情請參閱您的<a href='%{preferencesUrl}'>通知偏好設定</a>。
+      tabs:
+        chat_notifications: "聊天通知"
+        chat_notifications_with_unread:
+          other: "聊天通知 - %{count} 則未讀通知"
     styleguide:
       sections:
         chat:
           title: 聊天
     sidebar:
+      start_new_dm:
+        text: 開始新的 DM
+        title: 創建個人聊天
       panels:
         chat:
           label: "聊天"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "需要啟用聊天插件"
+      nodes:
+        "action:send_chat_message": "發送聊天消息"
+        "action:chat_approval": "聊天審批"
+        "trigger:chat_message_created": "已創建聊天消息"
+      node_descriptions:
+        "action:send_chat_message": "向聊天頻道發送消息"
+        "action:chat_approval": "向聊天頻道發送審批請求并等待回復"
+        "trigger:chat_message_created": "創建新聊天消息時觸發"
+      chat_message_created:
+        channel_id: "頻道"
+        channel_id_description: "留空可觸發所有聊天頻道。"
       send_chat_message:
+        channel_id: "頻道"
         message: "訊息"
       chat_approval:
         message: "訊息"
         buttons: "按鈕"
-        value: "價值"
-        style_default: "預設"
+        buttons_description: "加入 1 至 10 個回應按鈕。"
+        add_button: "加入按鈕"
+        label: "標籤"
+        label_description: "顯示在按鈕上的文字。"
+        label_placeholder: "按鈕標籤"
+        value: "值"
+        value_description: "點選此按鈕時，工作流程傳回的值。"
+        value_placeholder: "傳回值"
+        style: "樣式"
+        style_description: "選擇按鈕樣式，或留空以保留標準聊天按鈕外觀。"
+        style_none: "無樣式"
+        style_default: "默認"
         style_primary: "主要"
+        style_danger: "危險"
         style_success: "成功"
-        icon: "圖示"
+        style_flat: "扁平"
+        style_transparent: "透明"
+        icon: "圖標"
+        icon_description: "選擇要顯示在按鈕標籤前方的圖示。"
+        approve_label: "“批準”按鈕標簽"
+        approve_label_description: "如果留空，則默認為“批準”。"
+        deny_label: "“拒絕”按鈕標簽"
+        deny_label_description: "如果留空，則默認為“拒絕”。"
+        channel_id: "頻道"
+        channel_id_description: "要將審批消息發送到的聊天頻道。"
+        timeout_minutes: "超時（分鐘）"
+        timeout_minutes_description: "留空表示無超時。"
+        timeout_action: "超時操作"
+        timeout_action_description: "審批超時會發生什么？"
+        timeout_action_continue: "繼續工作流程"
+        timeout_action_deny: "恢復為被拒絕"
+        timeout_action_fail: "工作流失敗"

@@ -3,8 +3,6 @@
 RSpec.describe User do
   subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
-  fab!(:group)
-
   it_behaves_like "it has custom fields"
 
   describe "#reload" do
@@ -18,9 +16,9 @@ RSpec.describe User do
   end
 
   it do
-    is_expected.to have_many(:pending_posts).class_name("ReviewableQueuedPost").with_foreign_key(
-      :target_created_by_id,
-    )
+    expect(described_class.allocate).to have_many(:pending_posts).class_name(
+      "ReviewableQueuedPost",
+    ).with_foreign_key(:target_created_by_id)
   end
 
   describe ".in_any_groups?" do
@@ -260,6 +258,8 @@ RSpec.describe User do
       end
 
       describe "when group with a same name already exists" do
+        fab!(:group)
+
         it "should not be valid" do
           new_user = Fabricate.build(:user, username: group.name.upcase)
 
@@ -1970,6 +1970,58 @@ RSpec.describe User do
     end
   end
 
+  describe ":user_updated" do
+    fab!(:avatar, :upload)
+
+    it "reports the avatar when one is picked" do
+      user = Fabricate(:user)
+
+      event =
+        DiscourseEvent
+          .track_events(:user_updated) { user.update!(uploaded_avatar_id: avatar.id) }
+          .first
+
+      expect(event[:params]).to eq([user, %w[uploaded_avatar_id]])
+    end
+  end
+
+  describe "#remove_avatar!" do
+    fab!(:avatar, :upload)
+    fab!(:gravatar, :upload)
+    fab!(:actor, :admin)
+
+    it "drops the stored uploads so the image cannot be re-selected" do
+      user = Fabricate(:user, uploaded_avatar_id: avatar.id)
+      user.user_avatar.update!(custom_upload_id: avatar.id, gravatar_upload_id: gravatar.id)
+
+      user.remove_avatar!(actor)
+
+      expect(user.reload.uploaded_avatar_id).to be_nil
+      expect(user.user_avatar.reload.custom_upload_id).to be_nil
+      expect(user.user_avatar.gravatar_upload_id).to be_nil
+      expect(
+        UserHistory.exists?(action: UserHistory.actions[:removed_avatar], target_user_id: user.id),
+      ).to eq(true)
+    end
+
+    it "does nothing when there is no avatar to remove" do
+      user = Fabricate(:user)
+
+      expect { user.remove_avatar!(actor) }.not_to change {
+        UserHistory.where(action: UserHistory.actions[:removed_avatar]).count
+      }
+    end
+
+    it "works for a user that never had a user_avatar row" do
+      user = Fabricate(:user, uploaded_avatar_id: avatar.id)
+      user.user_avatar&.destroy
+      user.reload
+
+      expect { user.remove_avatar!(actor) }.not_to raise_error
+      expect(user.reload.uploaded_avatar_id).to be_nil
+    end
+  end
+
   describe "#avatar_template" do
     it "uses the small logo if the user is the system user" do
       logo_small_url = Discourse.store.cdn_url(SiteSetting.logo_small.url)
@@ -2024,6 +2076,8 @@ RSpec.describe User do
     end
 
     context "when the user has a group" do
+      fab!(:group)
+
       before do
         group.usernames = user.username
         group.save

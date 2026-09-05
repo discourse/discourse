@@ -121,6 +121,7 @@ ur:
     discourse_workflows:
       nodes:
         "trigger:assigned": "تفویض کردہ"
+        "trigger:unassigned": "غیر اسائین کریں"
       assign_topic:
         resource: "وسائل"
         resources:

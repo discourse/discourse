@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 it:
+  llms_txt:
+    sections:
+      optional: "Facoltativo"
+    links:
+      search:
+        label: "Cerca"
+      categories:
+        label: "Categorie"
+      about:
+        label: "Informazioni su"
+      guidelines:
+        label: "Linee guida"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -968,6 +980,7 @@ it:
       windows: "Microsoft Windows"
       unknown: "sistema operativo sconosciuto"
   admin_site_traffic_explorer:
+    unknown: "Sconosciuto"
     traffic_types:
       anonymous: "Anonimo"
   change_email:
@@ -1253,6 +1266,11 @@ it:
         share: "Condividi"
       types:
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "Utente"
+        count: "Messaggi"
+        share: "Condividi"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1426,6 +1444,9 @@ it:
         num_topics: "Argomenti"
       description: "Utenti elencati per numero di clic sui collegamenti che hanno condiviso."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visite"
+    top_entry_urls:
       labels:
         count: "Visite"
     top_referrers_by_browser_pageviews:
@@ -1798,7 +1819,7 @@ it:
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
     allow_username_in_share_links: "Consenti ai nomi utente di essere inclusi nei link di condivisione. Questo permette di assegnare i distintivi in base ai visitatori unici."
     site_contact_username: "Un utente dello staff valido da cui inviare tutti i messaggi automatici. Se lasciato vuoto verrà usato l'account predefinito di Sistema."
-    site_contact_group_name: "Nome di gruppo valido che riceve inviti per tutti i messaggi personali inviati automaticamente."
+    site_contact_group_name: "Il gruppo che riceve inviti per tutti i messaggi personali inviati automaticamente."
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     send_tl1_welcome_message: "Invia ai nuovi utenti del livello di attendibilità 1 un messaggio di benvenuto."
     send_tl2_promotion_message: "Invia ai nuovi utenti del livello di attendibilità 2 un messaggio sulla promozione."
@@ -2060,7 +2081,6 @@ it:
     user_profile_view_duration_hours: "Conteggia una nuova visita del profilo utente una volta per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
     max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di attendibilità 0 da questo IP (e nessuno è membro dello staff o a livello 2 o superiore), non accettare nuove iscrizioni da questo IP. Impostare a 0 per disabilitare il limite."
-    min_ban_entries_for_roll_up: "Quando si clicca il pulsante Roll up, verrà creato un nuovo elenco di IP interdetti se sono presenti almeno (N) elementi."
     max_age_unmatched_emails: "Elimina le voci di email scansionate senza corrispondenza dopo (N) giorni."
     max_age_unmatched_ips: "Elimina le voci di IP scansionati senza corrispondenza dopo (N) giorni."
     num_flaggers_to_close_topic: "Il numero minimo di segnalatori univoci richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
@@ -2373,7 +2393,6 @@ it:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
       valid_username: "C'è un membro con questo nome utente."
-      invalid_group: "Non esiste un gruppo con quel nome."
       invalid_integer_min_max: "Il valore deve essere tra %{min} e %{max}."
       invalid_integer_min: "Il valore deve essere %{min} o maggiore."
       invalid_integer_max: "Il valore non può essere maggiore di %{max}."
@@ -4514,6 +4533,9 @@ it:
       group: "Gli utenti che non appartengono ai gruppi specificati devono avere risposte approvate dallo staff. Vedi %{link}."
       new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di attendibilità devono essere approvati dallo staff. Vedi %{link}"
       fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo troppo rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
+      fast_typer_time:
+        one: "%{count} secondo"
+        other: "%{count} secondi"
       auto_silence_regex: "Nuovo utente il cui primo messaggio corrisponde all'impostazione %{link} ."
       watched_word:
         one: "Questo messaggio include una parola osservata, la parola segnalata è: %{words}. Controlla le %{link} per maggiori informazioni."

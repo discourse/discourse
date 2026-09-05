@@ -68,6 +68,18 @@ lv:
           title: "Vairāk tēmu"
         post_menu:
           title: "Ziņas izvēlne"
+        roving_focus:
+          toolbar:
+            copy: "Kopēt"
+          adjacent:
+            field: "Meklēt"
+            open: "Atvērt"
+            recent: "Neseni"
+          combobox:
+            daily: "Dienas"
+            weekly: "Nedēļas"
+            monthly: "Mēneša"
+            never: "Nekad"
         modal:
           title: "Modāls"
           header: "Modālais nosaukums"

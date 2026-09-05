@@ -76,6 +76,7 @@ ug:
         researcher_dry_run: "تەتقىقات تەييارلاش"
       tool_help:
         delete_topic: "تېما ئۆچۈرىدۇ"
+        create_category: "يېڭى سەھىپە قۇرىدۇ"
         search_settings: "بېكەت تەڭشىكىنى ئىزدەيدۇ"
       tool_description:
         dall_e: "%{prompt}"
@@ -104,10 +105,13 @@ ug:
       delete_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "تېما تېپىلمىدى."
       edit_category:
+        errors:
+          not_found: "سەھىپە تېپىلمىدى."
+      change_topic_category:
         errors:
           not_found: "تېما تېپىلمىدى."
           category_not_found: "سەھىپە تېپىلمىدى."

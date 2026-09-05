@@ -9,7 +9,7 @@ acceptance("Post event - composer", function (needs) {
   needs.user({ admin: true, can_create_discourse_post_event: true });
   needs.settings({
     discourse_local_dates_enabled: true,
-    discourse_calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     discourse_post_event_allowed_on_groups: "",
     discourse_post_event_allowed_custom_fields: "",
@@ -152,7 +152,7 @@ acceptance("Post event - composer - custom fields", function (needs) {
   needs.user({ admin: true, can_create_discourse_post_event: true });
   needs.settings({
     discourse_local_dates_enabled: true,
-    discourse_calendar_enabled: true,
+    discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     discourse_post_event_allowed_on_groups: "",
     discourse_post_event_allowed_custom_fields: "fancy_field",

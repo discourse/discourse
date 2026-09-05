@@ -20,17 +20,44 @@ const DEFAULT_REMINDER = {
 const EARLY_ACCESS_MINUTES = 30;
 const GRACE_PERIOD_MINUTES = 10;
 
+export function isPastEventTimeframe(allDay, startsAt, endsAt) {
+  if (allDay) {
+    if (!startsAt && !endsAt) {
+      return false;
+    }
+
+    return moment().isAfter(moment(endsAt || startsAt).endOf("day"));
+  }
+
+  if (!endsAt) {
+    return false;
+  }
+
+  return moment().isAfter(moment(endsAt).add(GRACE_PERIOD_MINUTES, "minutes"));
+}
+
 export function isWithinEventTimeframe(allDay, startsAt, endsAt) {
+  if (!startsAt) {
+    return false;
+  }
+
   const now = moment();
 
   if (allDay) {
     const opensAt = moment(startsAt).startOf("day");
-    const closesAt = moment(startsAt).endOf("day");
+    const closesAt = moment(endsAt || startsAt).endOf("day");
 
     return now.isBetween(opensAt, closesAt);
   }
 
   const opensAt = moment(startsAt).subtract(EARLY_ACCESS_MINUTES, "minutes");
+
+  // An event without an end time never closes, which is what the server does
+  // when it issues a signature for one.
+  if (!endsAt) {
+    return now.isAfter(opensAt);
+  }
+
   const closesAt = moment(endsAt).add(GRACE_PERIOD_MINUTES, "minutes");
 
   return now.isBetween(opensAt, closesAt);
@@ -84,6 +111,7 @@ export default class DiscoursePostEventEvent {
   @tracked _sampleInvitees;
   @tracked _stats;
   @tracked _creator;
+  @tracked _hosts;
   @tracked _reminders;
 
   constructor(args = {}) {
@@ -107,6 +135,7 @@ export default class DiscoursePostEventEvent {
     this.showLocalTime = args.show_local_time;
     this.status = args.status;
     this.creator = args.creator;
+    this.hosts = args.hosts || [];
     this.post = args.post;
     this.isClosed = args.is_closed;
     this.isExpired = args.is_expired;
@@ -179,6 +208,16 @@ export default class DiscoursePostEventEvent {
     this._creator = this.#initUserModel(user);
   }
 
+  get hosts() {
+    return this._hosts;
+  }
+
+  set hosts(users = []) {
+    this._hosts = trackedArray(
+      (users ?? []).map((user) => this.#initUserModel(user))
+    );
+  }
+
   get isPublic() {
     return this.status === "public";
   }
@@ -191,16 +230,8 @@ export default class DiscoursePostEventEvent {
     return isWithinEventTimeframe(this.allDay, this.startsAt, this.endsAt);
   }
 
-  // An event without an end time never falls past its timeframe, since
-  // `moment(undefined)` is "now" rather than an invalid date.
   get pastEventTimeframe() {
-    if (!this.endsAt) {
-      return false;
-    }
-
-    return moment().isAfter(
-      moment(this.endsAt).add(GRACE_PERIOD_MINUTES, "minutes")
-    );
+    return isPastEventTimeframe(this.allDay, this.startsAt, this.endsAt);
   }
 
   updateFromEvent(event) {
@@ -219,6 +250,7 @@ export default class DiscoursePostEventEvent {
     this.descriptionHtml = event.descriptionHtml;
     this.status = event.status;
     this.creator = event.creator;
+    this.hosts = event.hosts || [];
     this.isClosed = event.isClosed;
     this.isExpired = event.isExpired;
     this.isStandalone = event.isStandalone;

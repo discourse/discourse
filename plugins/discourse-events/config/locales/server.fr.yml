@@ -24,8 +24,8 @@ fr:
       event_started:
         title: L'événement a commencé
   system_messages:
-    discourse_calendar_holiday_region_invalid: "La région de vacances que vous avez indiquée n'existe pas."
-    discourse_calendar_enable_holiday_failed: "Ce jour férié n'a pas pu être activé, il est déjà activé ou il n'est pas désactivé."
+    discourse_events_holiday_region_invalid: "La région de vacances que vous avez indiquée n'existe pas."
+    discourse_events_enable_holiday_failed: "Ce jour férié n'a pas pu être activé, il est déjà activé ou il n'est pas désactivé."
     discourse_post_event_bulk_invite_succeeded:
       title: "Événement - Invitation groupée réussie"
       subject_template: "Envoi des invitations groupées réussi"
@@ -44,7 +44,7 @@ fr:
   site_settings:
     map_events_to_color: "Assigner une couleur à chaque étiquette ou catégorie."
     map_events_title: "Remplace « Événements » dans le titre de la barre latérale « Événements à venir » par catégorie."
-    discourse_post_event_enabled: "Active les fonctionnalités d'événement. Remarque : il faut également que {{setting:calendar_enabled}} soit activé."
+    discourse_post_event_enabled: "Active les fonctionnalités d'événement. Remarque : il faut également que {{setting:discourse_events_enabled}} soit activé."
     displayed_invitees_limit: "Limite le nombre d'invités affichés sur un événement."
     display_post_event_date_on_topic_title: "Affiche la date de l'événement après le titre du sujet."
     use_local_event_date: "Utiliser la date locale après le titre du sujet au lieu de l'heure relative."
@@ -81,7 +81,7 @@ fr:
     livestream_zoom_sdk_secret: "Secret client du SDK Zoom Meeting."
     livestream_embeddable_chat_allowed_paths: "Chemins autorisés pour l'intégration du chat des diffusions en direct."
     livestream_enable_modal_chat_on_mobile: "Affiche le chat de diffusion en direct dans une fenêtre modale sur mobile."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "Affichage par défaut du calendrier"

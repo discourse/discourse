@@ -24,8 +24,8 @@ ru:
       event_started:
         title: Мероприятие началось
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Указанный вами регион праздничного календаря не существует."
-    discourse_calendar_enable_holiday_failed: "Этот праздник нельзя включить: он уже включён или не был отключен."
+    discourse_events_holiday_region_invalid: "Указанный вами регион праздничного календаря не существует."
+    discourse_events_enable_holiday_failed: "Этот праздник нельзя включить: он уже включён или не был отключен."
     discourse_post_event_bulk_invite_succeeded:
       title: "Событие - Массовое приглашение успешно выполнено"
       subject_template: "Массовое приглашение успешно обработано"
@@ -44,7 +44,7 @@ ru:
   site_settings:
     map_events_to_color: "Назначать цвет каждому тегу или категории."
     map_events_title: "Перезаписывает «События» в заголовке боковой панели «Предстоящие события» для каждой категории."
-    discourse_post_event_enabled: "Включает функции событий. Примечание: также необходимо включить {{setting:calendar_enabled}}."
+    discourse_post_event_enabled: "Включает функции событий. Примечание: также необходимо включить {{setting:discourse_events_enabled}}."
     displayed_invitees_limit: "Ограничивать количество приглашений, отображаемых в мероприятии ."
     display_post_event_date_on_topic_title: "Отображать дату мероприятия после названия темы."
     use_local_event_date: "Использовать локальную дату после заголовка темы вместо прошедшего времени."
@@ -72,7 +72,7 @@ ru:
     calendar_first_day_of_week: "Установите первый день недели для отображения календаря. Возможные варианты: суббота, воскресенье или понедельник."
     enable_events_category_type_setup: "Включает опцию типа категории «События» при настройке создания категории."
     livestream_enable_modal_chat_on_mobile: "Отображение чата прямой трансляции в модальном окне на мобильных устройствах."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "Стандартный вид календаря"

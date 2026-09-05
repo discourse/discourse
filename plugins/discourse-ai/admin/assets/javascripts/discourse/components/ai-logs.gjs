@@ -1,26 +1,43 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import Form from "discourse/components/form";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import UserChooser from "discourse/select-kit/components/user-chooser";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import KeyValueStore from "discourse/lib/key-value-store";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
+import DiscourseURL from "discourse/lib/url";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log-row";
+import { newLogsPollIntervalMs } from "../lib/ai-logs-poll-interval";
+import AiLogFeatureFilter from "./ai-log-feature-filter";
 import AiLogDetailModal from "./modal/ai-log-detail-modal";
 import AiLogRetentionModal from "./modal/ai-log-retention-modal";
 
 const ALL_FILTER_VALUE = "__all__";
-const MAX_SAFE_ID = Number.MAX_SAFE_INTEGER;
+const CUSTOM_DEFAULT_DAYS = 30;
+const MAX_SEARCH_LENGTH = 200;
 const PERIODS = {
   hour: 1,
   day: 24,
@@ -31,6 +48,7 @@ export default class AiLogs extends Component {
   @service currentUser;
   @service modal;
   @service router;
+  @service siteSettings;
   @service toasts;
 
   @tracked logs = [];
@@ -44,25 +62,35 @@ export default class AiLogs extends Component {
   @tracked hasRetries = false;
   @tracked selectedModel;
   @tracked selectedFeature;
-  @tracked selectedUsernames = [];
+  @tracked searchText = "";
   @tracked unattributed = false;
-  @tracked idType = "id";
-  @tracked idValue;
   @tracked startDate;
   @tracked endDate;
+  @tracked newLogsCount = 0;
+  @tracked loadingNewLogs = false;
+  keyValueStore = new KeyValueStore("discourse-ai-logs");
 
-  filterFormApi;
   _requestId = 0;
+  _openRequestId = 0;
   _openLogId;
+  _autocompleteCleanups = [];
+  _pollTimer;
+  _pollInFlight = false;
+  _pollEpoch = 0;
+  _emptyPolls = 0;
+  _sinceId = 0;
 
   constructor() {
     super(...arguments);
     window.addEventListener("popstate", this.syncDetailsFromLocation);
+    document.addEventListener("visibilitychange", this.onVisibilityChange);
     this.logs = this.args.model.logs || [];
     this.meta = this.args.model.meta || {};
+    this.captureNewLogsBaseline();
     this.models = this.args.model.models || [];
     this.features = this.mergedFeatures(this.args.model.features, this.logs);
     this.initializeFilters(this.args.queryParams);
+    this.schedulePoll();
 
     if (this.args.queryParams.details) {
       next(() =>
@@ -74,6 +102,8 @@ export default class AiLogs extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     window.removeEventListener("popstate", this.syncDetailsFromLocation);
+    document.removeEventListener("visibilitychange", this.onVisibilityChange);
+    clearTimeout(this._pollTimer);
     if (this._openLogId) {
       this.modal.close();
     }
@@ -106,33 +136,15 @@ export default class AiLogs extends Component {
       params.has_retries === "true" || params.has_retries === true;
     this.selectedModel = params.model ? String(params.model) : undefined;
     this.selectedFeature = params.feature || undefined;
-    this.selectedUsernames = params.username ? [params.username] : [];
+    this.searchText = params.search || "";
     this.unattributed =
       params.unattributed === "true" || params.unattributed === true;
-    this.idType = params.id_type || "id";
-    this.idValue = params.id_value || undefined;
     this.startDate = params.start_date
       ? moment(params.start_date).toDate()
-      : moment().subtract(24, "hours").toDate();
+      : moment().subtract(CUSTOM_DEFAULT_DAYS, "days").toDate();
     this.endDate = params.end_date
       ? moment(params.end_date).toDate()
       : new Date();
-  }
-
-  @cached
-  get filterFormData() {
-    return {
-      period: this.selectedPeriod,
-      date_range: { from: this.startDate, to: this.endDate },
-      outcome: this.selectedOutcome || ALL_FILTER_VALUE,
-      model: this.selectedModel || ALL_FILTER_VALUE,
-      feature: this.selectedFeature,
-      usernames: this.selectedUsernames,
-      has_retries: this.hasRetries,
-      unattributed: this.unattributed,
-      id_type: this.idType,
-      id_value: this.idValue,
-    };
   }
 
   get periodOptions() {
@@ -146,24 +158,105 @@ export default class AiLogs extends Component {
 
   get outcomeOptions() {
     return [
-      { id: "successful", name: i18n("discourse_ai.logs.successful") },
-      { id: "failed", name: i18n("discourse_ai.logs.failed") },
+      {
+        value: ALL_FILTER_VALUE,
+        label: i18n("discourse_ai.logs.all_outcomes"),
+      },
+      {
+        value: "successful",
+        label: i18n("discourse_ai.logs.successful"),
+      },
+      { value: "failed", label: i18n("discourse_ai.logs.failed") },
     ];
   }
 
-  get idTypeOptions() {
-    return [
-      { id: "id", name: i18n("discourse_ai.logs.log_id") },
-      { id: "topic_id", name: i18n("discourse_ai.logs.topic_id") },
-      { id: "post_id", name: i18n("discourse_ai.logs.post_id") },
-    ];
-  }
-
+  @cached
   get modelOptions() {
-    return this.models.map((model) => ({
-      id: String(model.id),
-      name: model.name,
+    const options = this.models.map((model) => ({
+      value: String(model.id),
+      label: model.name,
     }));
+
+    if (
+      this.selectedModel &&
+      !options.some((option) => option.value === this.selectedModel)
+    ) {
+      options.push({ value: this.selectedModel, label: this.selectedModel });
+    }
+
+    return [
+      { value: ALL_FILTER_VALUE, label: i18n("discourse_ai.logs.all_models") },
+      ...options,
+    ];
+  }
+
+  @cached
+  get featureOptions() {
+    if (this.selectedFeature && !this.features.includes(this.selectedFeature)) {
+      return [...this.features, this.selectedFeature];
+    }
+
+    return this.features;
+  }
+
+  // one model leaves nothing to choose between, but a model carried in on the
+  // URL still needs somewhere to show and be cleared from
+  get showModelFilter() {
+    return this.models.length > 1 || Boolean(this.selectedModel);
+  }
+
+  @cached
+  get dropdownOptions() {
+    const options = { outcome: this.outcomeOptions };
+    if (this.showModelFilter) {
+      options.model = this.modelOptions;
+    }
+
+    return options;
+  }
+
+  @cached
+  get dropdownValues() {
+    const values = { outcome: this.selectedOutcome || ALL_FILTER_VALUE };
+    if (this.showModelFilter) {
+      values.model = this.selectedModel || ALL_FILTER_VALUE;
+    }
+
+    return values;
+  }
+
+  @cached
+  get defaultDropdownValues() {
+    // model stays listed even while hidden: DFilterControls keeps the value it
+    // last tracked, and without a default to match it reads as an active filter
+    return {
+      outcome: ALL_FILTER_VALUE,
+      model: ALL_FILTER_VALUE,
+    };
+  }
+
+  get rememberedDrawerExpanded() {
+    return this.keyValueStore.get("filter_drawer") !== "collapsed";
+  }
+
+  @action
+  persistDrawerState(expanded) {
+    this.keyValueStore.set({
+      key: "filter_drawer",
+      value: expanded ? "expanded" : "collapsed",
+    });
+  }
+
+  get additionalFiltersActive() {
+    return Boolean(
+      this.selectedFeature || this.hasRetries || this.unattributed
+    );
+  }
+
+  get hasActiveDrawerFilters() {
+    return Boolean(
+      this.selectedOutcome || this.selectedModel || this.additionalFiltersActive
+    );
   }
 
   get hasFilters() {
@@ -173,48 +266,23 @@ export default class AiLogs extends Component {
       this.hasRetries ||
       this.selectedModel ||
       this.selectedFeature ||
-      this.selectedUsernames.length ||
-      this.unattributed ||
-      this.idValue
+      this.searchText ||
+      this.unattributed
     );
   }
 
-  get lifecycleSummary() {
-    const detailed = this.meta.retention?.detailed_days ?? 0;
-    const summary = this.meta.retention?.summary_days ?? 0;
-
-    if (detailed === 0 && summary === 0) {
-      return i18n("discourse_ai.logs.retention.lifecycle.complete_forever");
-    }
-    if (detailed === 0) {
-      return i18n("discourse_ai.logs.retention.lifecycle.detail_until_delete", {
-        summary,
-      });
-    }
-    if (summary === 0) {
-      return i18n("discourse_ai.logs.retention.lifecycle.summary_forever", {
-        detailed,
-      });
-    }
-    return i18n("discourse_ai.logs.retention.lifecycle.finite", {
-      detailed,
-      summary,
-    });
-  }
-
   get requestParams() {
+    const search = this.searchText.trim().slice(0, MAX_SEARCH_LENGTH);
     const params = {
       outcome: this.selectedOutcome || undefined,
       has_retries: this.hasRetries || undefined,
       llm_id: this.selectedModel || undefined,
       feature: this.selectedFeature || undefined,
-      username: this.selectedUsernames[0] || undefined,
       unattributed: this.unattributed || undefined,
     };
 
-    if (this.idValue) {
-      params[this.idType] = this.idValue;
-      return params;
+    if (search) {
+      params.search = search;
     }
 
     if (this.selectedPeriod === "custom") {
@@ -247,23 +315,35 @@ export default class AiLogs extends Component {
       has_retries: this.hasRetries ? "true" : null,
       model: this.selectedModel || null,
       feature: this.selectedFeature || null,
-      username: this.selectedUsernames[0] || null,
+      search: this.searchText.trim() || null,
       unattributed: this.unattributed ? "true" : null,
-      id_type: this.idValue ? this.idType : null,
-      id_value: this.idValue || null,
     };
   }
 
   updateUrl(extra = {}) {
-    this.router.transitionTo(this.router.currentRouteName, {
+    return this.router.transitionTo(this.router.currentRouteName, {
       queryParams: { ...this.queryParams, ...extra },
     });
   }
 
+  updateDetailsUrl(logId, { replace = false } = {}) {
+    const url = new URL(window.location.href);
+    if (logId) {
+      url.searchParams.set("details", logId);
+    } else {
+      url.searchParams.delete("details");
+    }
+
+    const path = `${url.pathname}${url.search}${url.hash}`;
+    DiscourseURL[replace ? "replaceState" : "pushState"](path);
+  }
+
   @action
-  async refresh() {
+  async refresh({ focusFilters = false, quiet = false, skipUrl = false } = {}) {
     const requestId = ++this._requestId;
-    this.loading = true;
+    if (!quiet) {
+      this.loading = true;
+    }
     this.loadingMore = false;
     try {
       const result = await ajax("/admin/plugins/discourse-ai/ai-logs.json", {
@@ -279,12 +359,28 @@ export default class AiLogs extends Component {
 
       this.logs = result.logs;
       this.meta = { ...this.meta, ...result.meta };
+      this.captureNewLogsBaseline();
       this.models = result.models || this.models;
       this.features = this.mergedFeatures(
         result.features || this.features,
         result.logs
       );
-      this.updateUrl();
+      // a fresh list supersedes any in-flight new-log poll and clears the banner
+      this._pollEpoch++;
+      this.newLogsCount = 0;
+      this._emptyPolls = 0;
+      if (!skipUrl) {
+        await this.updateUrl();
+        if (focusFilters) {
+          next(() =>
+            document
+              .querySelector(
+                ".ai-logs .d-filter-controls__input, .ai-logs .d-filter-controls__toggle-filters"
+              )
+              ?.focus()
+          );
+        }
+      }
     } catch (error) {
       if (
         requestId === this._requestId &&
@@ -299,7 +395,9 @@ export default class AiLogs extends Component {
         !this.isDestroying &&
         !this.isDestroyed
       ) {
-        this.loading = false;
+        if (!quiet) {
+          this.loading = false;
+        }
       }
     }
   }
@@ -348,162 +446,248 @@ export default class AiLogs extends Component {
     }
   }
 
-  @action
-  registerFilterFormApi(api) {
-    this.filterFormApi = api;
+  get hasNewLogs() {
+    return this.newLogsCount > 0;
+  }
+
+  // an empty filtered list has no newest row to poll against, so fall back to
+  // the table's high-water mark — otherwise every row would count as new
+  captureNewLogsBaseline() {
+    this._sinceId = this.logs[0]?.id || this.meta.max_id || 0;
+  }
+
+  get pollIntervalMs() {
+    return newLogsPollIntervalMs(this._emptyPolls);
+  }
+
+  schedulePoll() {
+    clearTimeout(this._pollTimer);
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this._pollTimer = setTimeout(
+      () => this.pollForNewLogs(),
+      this.pollIntervalMs
+    );
   }
 
   @action
-  applyFilterForm(data) {
-    this.selectedPeriod = data.period || undefined;
-    this.startDate = data.date_range?.from || this.startDate;
-    this.endDate = data.date_range?.to || this.endDate;
-    this.selectedOutcome =
-      data.outcome === ALL_FILTER_VALUE ? undefined : data.outcome;
-    this.selectedModel =
-      data.model === ALL_FILTER_VALUE ? undefined : data.model;
-    this.selectedFeature = data.feature || undefined;
-    this.hasRetries = Boolean(data.has_retries);
-    this.unattributed = Boolean(data.unattributed);
-    this.selectedUsernames = this.unattributed ? [] : data.usernames || [];
-    this.idType = data.id_type || "id";
-    this.idValue = data.id_value || undefined;
-    this.refresh();
+  onVisibilityChange() {
+    if (document.visibilityState === "visible") {
+      // returning to the tab refreshes the banner immediately
+      this.pollForNewLogs();
+    }
+  }
+
+  @action
+  async pollForNewLogs() {
+    clearTimeout(this._pollTimer);
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (
+      this._openLogId ||
+      document.visibilityState === "hidden" ||
+      this.loading ||
+      this.loadingMore ||
+      this._pollInFlight
+    ) {
+      this.schedulePoll();
+      return;
+    }
+
+    const epoch = this._pollEpoch;
+    this._pollInFlight = true;
+    try {
+      const result = await ajax(
+        "/admin/plugins/discourse-ai/ai-logs/new.json",
+        {
+          data: { ...this.requestParams, since_id: this._sinceId },
+        }
+      );
+      if (this.isDestroying || this.isDestroyed || epoch !== this._pollEpoch) {
+        return;
+      }
+      if (result.new_logs_count !== undefined) {
+        this.newLogsCount = result.new_logs_count;
+        // back off while the list is quiet; snap back the moment something
+        // arrives so the next wave is noticed without delay
+        this._emptyPolls = result.new_logs_count > 0 ? 0 : this._emptyPolls + 1;
+      }
+    } catch {
+      // transient failures are expected while offline; the next tick retries
+    } finally {
+      this._pollInFlight = false;
+      this.schedulePoll();
+    }
+  }
+
+  @action
+  async showIncomingLogs(event) {
+    event?.preventDefault();
+    if (this.loadingNewLogs) {
+      return;
+    }
+    this.loadingNewLogs = true;
+    try {
+      await this.refresh({ quiet: true });
+    } finally {
+      this.loadingNewLogs = false;
+    }
   }
 
   @action
   selectPeriod(period) {
     this.selectedPeriod = this.selectedPeriod === period ? undefined : period;
-    this.filterFormApi?.set("period", this.selectedPeriod);
-    if (this.selectedPeriod && this.selectedPeriod !== "custom") {
+    if (this.selectedPeriod) {
       this.endDate = new Date();
-      this.startDate = moment()
-        .subtract(PERIODS[this.selectedPeriod], "hours")
-        .toDate();
-      this.filterFormApi?.set("date_range", {
-        from: this.startDate,
-        to: this.endDate,
-      });
+      this.startDate =
+        this.selectedPeriod === "custom"
+          ? moment().subtract(CUSTOM_DEFAULT_DAYS, "days").toDate()
+          : moment().subtract(PERIODS[this.selectedPeriod], "hours").toDate();
     }
     this.refresh();
   }
 
   @action
   changeDateRange(value) {
-    this.filterFormApi?.set("date_range", value);
     this.startDate = value.from;
     this.endDate = value.to;
   }
 
   @action
-  changeOutcome(value, { set }) {
-    set("outcome", value);
-    this.selectedOutcome =
-      value === ALL_FILTER_VALUE ? undefined : value || undefined;
-    this.refresh();
-  }
+  changeDropdown(key, value) {
+    const selectedValue = value === ALL_FILTER_VALUE ? undefined : value;
 
-  @action
-  changeModel(value, { set }) {
-    set("model", value);
-    this.selectedModel =
-      value === ALL_FILTER_VALUE ? undefined : value || undefined;
-    this.refresh();
-  }
-
-  @action
-  changeUser(usernames) {
-    const selectedUsernames = usernames || [];
-    this.filterFormApi?.set("usernames", selectedUsernames);
-    this.filterFormApi?.set("unattributed", false);
-    this.selectedUsernames = selectedUsernames;
-    this.unattributed = false;
-    this.refresh();
-  }
-
-  @action
-  toggleRetries(value, { set }) {
-    set("has_retries", value);
-    this.hasRetries = Boolean(value);
-    this.refresh();
-  }
-
-  @action
-  toggleUnattributed(value, { set }) {
-    set("unattributed", value);
-    this.unattributed = Boolean(value);
-    if (this.unattributed) {
-      set("usernames", []);
-      this.selectedUsernames = [];
+    if (key === "outcome") {
+      this.selectedOutcome = selectedValue;
+    } else if (key === "model") {
+      this.selectedModel = selectedValue;
     }
+
     this.refresh();
   }
 
   @action
-  setFeature(value, { set }) {
-    set("feature", value);
+  changeFeature(value) {
     this.selectedFeature = value || undefined;
+    this.refresh();
   }
 
   @action
-  setIdValue(value, { set }) {
-    set("id_value", value);
-    this.idValue = value || undefined;
+  onTextFilterChange(event) {
+    // keep the live-search state in sync with the server's 200-char cap so a
+    // long paste surfaces as a truncation instead of a 400 error
+    this.searchText = (event.target.value || "").slice(0, MAX_SEARCH_LENGTH);
+    discourseDebounce(this, this.performLiveSearch, {}, INPUT_DELAY);
   }
 
-  @action
-  changeIdType(value, { set }) {
-    set("id_type", value);
-    this.idType = value;
-    if (this.idValue) {
-      this.refresh();
+  async performLiveSearch() {
+    // Update the URL via replaceState (not a router transition) so typing is
+    // never interrupted by the focus churn a transition causes — a keystroke
+    // landing on <body> in that window would be silently dropped.
+    const url = new URL(window.location.href);
+    const search = this.searchText.trim();
+    if (search) {
+      url.searchParams.set("search", search);
+    } else {
+      url.searchParams.delete("search");
     }
+    // URLSearchParams encodes spaces as "+"; emit %20 to match router URLs
+    url.search = url.search.replace(/\+/g, "%20");
+    DiscourseURL.replaceState(`${url.pathname}${url.search}${url.hash}`);
+    await this.refresh({ quiet: true, skipUrl: true });
+  }
+
+  @action
+  attachUserAutocomplete(element) {
+    if (!this.siteSettings.enable_mentions) {
+      return;
+    }
+
+    const input = element.querySelector(".d-filter-controls__input");
+    if (!input || this._autocompleteCleanups.length) {
+      return;
+    }
+
+    const handler = new TextareaAutocompleteHandler(input);
+    const modifiers = [
+      dAutocomplete.setupAutocomplete(getOwner(this), input, handler, {
+        component: UserAutocompleteResults,
+        key: UserAutocompleteResults.TRIGGER_KEY,
+        autoSelectFirstSuggestion: false,
+        transformComplete: (result) => {
+          validateSearchResult(result);
+          return result.username || result.name;
+        },
+        dataSource: (term) =>
+          term.includes(" ") || term.trim().length < 2
+            ? []
+            : userSearch({ term }),
+        fixedTextareaPosition: true,
+        offset: 2,
+      }),
+    ];
+
+    this._autocompleteCleanups.push(() =>
+      modifiers.forEach((modifier) => modifier.cleanup())
+    );
+  }
+
+  @action
+  teardownUserAutocomplete() {
+    this._autocompleteCleanups.forEach((cleanup) => cleanup());
+    this._autocompleteCleanups = [];
+  }
+
+  @action
+  toggleRetries() {
+    this.hasRetries = !this.hasRetries;
+    this.refresh();
+  }
+
+  @action
+  toggleUnattributed() {
+    this.unattributed = !this.unattributed;
+    this.refresh();
   }
 
   @action
   clearFilters() {
-    const cleared = {
-      period: undefined,
-      date_range: {
-        from: moment().subtract(24, "hours").toDate(),
-        to: new Date(),
-      },
-      outcome: ALL_FILTER_VALUE,
-      model: ALL_FILTER_VALUE,
-      feature: undefined,
-      usernames: [],
-      has_retries: false,
-      unattributed: false,
-      id_type: "id",
-      id_value: undefined,
-    };
-    this.filterFormApi?.setProperties(cleared);
     this.selectedPeriod = undefined;
-    this.startDate = cleared.date_range.from;
-    this.endDate = cleared.date_range.to;
+    this.startDate = moment().subtract(CUSTOM_DEFAULT_DAYS, "days").toDate();
+    this.endDate = new Date();
     this.selectedOutcome = undefined;
-    this.hasRetries = false;
     this.selectedModel = undefined;
     this.selectedFeature = undefined;
-    this.selectedUsernames = [];
+    this.searchText = "";
+    this.hasRetries = false;
     this.unattributed = false;
-    this.idType = "id";
-    this.idValue = undefined;
-    this.refresh();
+    this.refresh({ focusFilters: true });
   }
 
   @action
   openDetails(logId, { updateUrl = true } = {}) {
-    this._openLogId = String(logId);
+    const openLogId = String(logId);
+    const openRequestId = ++this._openRequestId;
+    this._openLogId = openLogId;
     if (updateUrl) {
-      this.updateUrl({ details: this._openLogId });
+      this.updateDetailsUrl(openLogId);
     }
+
     this.modal.show(AiLogDetailModal, {
       model: {
         logId,
         onClose: () => {
-          this._openLogId = undefined;
-          this.updateUrl({ details: null });
+          if (
+            this._openRequestId === openRequestId &&
+            this._openLogId === openLogId
+          ) {
+            this._openLogId = undefined;
+            this.updateDetailsUrl(null, { replace: true });
+          }
         },
       },
     });
@@ -526,7 +710,11 @@ export default class AiLogs extends Component {
   }
 
   <template>
-    <section class="ai-logs admin-detail">
+    <section
+      class="ai-logs admin-detail"
+      {{didInsert this.attachUserAutocomplete}}
+      {{willDestroy this.teardownUserAutocomplete}}
+    >
       <DPageSubheader
         @titleLabel={{i18n "discourse_ai.logs.short_title"}}
         @descriptionLabel={{i18n "discourse_ai.logs.description"}}
@@ -545,250 +733,169 @@ export default class AiLogs extends Component {
         </:actions>
       </DPageSubheader>
 
-      <aside class="ai-logs__retention">
-        <p class="ai-logs__retention-warning">{{i18n
-            "discourse_ai.logs.sensitive_warning"
-          }}</p>
-        <DButton
-          class="btn-transparent ai-logs__retention-action"
-          @action={{this.configureRetention}}
-          @translatedLabel={{this.lifecycleSummary}}
-        />
-      </aside>
-
-      <Form
-        class="ai-logs__filters"
-        @data={{this.filterFormData}}
-        @onRegisterApi={{this.registerFilterFormApi}}
-        @onSubmit={{this.applyFilterForm}}
-        as |form|
+      <div
+        class="ai-logs__filters
+          {{if this.hasActiveDrawerFilters 'ai-logs__filters--drawer-active'}}"
       >
-        <form.Fieldset
-          class="ai-logs__period-field"
-          @name="period-filter"
-          @title={{i18n "discourse_ai.logs.filters.period"}}
+        <DFilterControls
+          @array={{this.logs}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @dropdownValue={{this.dropdownValues}}
+          @defaultDropdownValue={{this.defaultDropdownValues}}
+          @additionalFiltersActive={{this.additionalFiltersActive}}
+          @filterDropdownsExpanded={{this.rememberedDrawerExpanded}}
+          @onFilterDropdownsToggle={{this.persistDrawerState}}
+          @inputPlaceholder={{i18n "discourse_ai.logs.search_placeholder"}}
+          @initialTextFilter={{this.searchText}}
+          @showNoResults={{false}}
+          @loading={{this.loading}}
+          @onDropdownFilterChange={{this.changeDropdown}}
+          @onTextFilterChange={{this.onTextFilterChange}}
+          @onResetFilters={{this.clearFilters}}
         >
-          <div class="ai-logs__periods">
-            {{#each this.periodOptions as |period|}}
-              <DButton
-                class={{if
-                  (eq this.selectedPeriod period.id)
-                  "btn-primary"
-                  "btn-default"
-                }}
-                @action={{fn this.selectPeriod period.id}}
-                @ariaPressed={{eq this.selectedPeriod period.id}}
-                @translatedLabel={{period.name}}
-              />
-            {{/each}}
-          </div>
-        </form.Fieldset>
-
-        {{#if (eq this.selectedPeriod "custom")}}
-          <form.Fieldset
-            class="ai-logs__date-range-field"
-            @name="date-range-filter"
-            @title={{i18n "discourse_ai.logs.filters.date_range"}}
-          >
-            <div class="ai-logs__date-range">
-              <DDateTimeInputRange
-                @from={{this.startDate}}
-                @to={{this.endDate}}
-                @showFromTime={{false}}
-                @showToTime={{false}}
-                @onChange={{this.changeDateRange}}
-              />
-              <form.Submit
-                class="btn-default"
-                @label="discourse_ai.logs.apply"
-              />
+          <:aboveFilters>
+            <div class="ai-logs__periods">
+              {{#each this.periodOptions as |period|}}
+                <DButton
+                  class={{if
+                    (eq this.selectedPeriod period.id)
+                    "btn-primary"
+                    "btn-default"
+                  }}
+                  @action={{fn this.selectPeriod period.id}}
+                  @ariaPressed={{eq this.selectedPeriod period.id}}
+                  @translatedLabel={{period.name}}
+                />
+              {{/each}}
+              {{#if (eq this.selectedPeriod "custom")}}
+                <div class="ai-logs__date-range">
+                  <DDateTimeInputRange
+                    @from={{this.startDate}}
+                    @to={{this.endDate}}
+                    @showFromTime={{false}}
+                    @showToTime={{false}}
+                    @onChange={{this.changeDateRange}}
+                  />
+                  <DButton
+                    class="btn-default"
+                    @action={{this.refresh}}
+                    @label="discourse_ai.logs.apply"
+                  />
+                </div>
+              {{/if}}
             </div>
-          </form.Fieldset>
-        {{/if}}
+          </:aboveFilters>
 
-        <div class="ai-logs__filter-grid">
-          <form.Field
-            class="ai-logs__outcome-filter"
-            @name="outcome"
-            @title={{i18n "discourse_ai.logs.outcome"}}
-            @type="select"
-            @onSet={{this.changeOutcome}}
-            as |field|
-          >
-            <field.Control @includeNone={{false}} as |select|>
-              <select.Option @value={{ALL_FILTER_VALUE}}>{{i18n
-                  "discourse_ai.logs.all_outcomes"
-                }}</select.Option>
-              {{#each this.outcomeOptions as |outcome|}}
-                <select.Option @value={{outcome.id}}>
-                  {{outcome.name}}
-                </select.Option>
-              {{/each}}
-            </field.Control>
-          </form.Field>
-
-          <form.Field
-            class="ai-logs__model-filter"
-            @name="model"
-            @title={{i18n "discourse_ai.logs.model"}}
-            @type="select"
-            @onSet={{this.changeModel}}
-            as |field|
-          >
-            <field.Control @includeNone={{false}} as |select|>
-              <select.Option @value={{ALL_FILTER_VALUE}}>{{i18n
-                  "discourse_ai.logs.all_models"
-                }}</select.Option>
-              {{#each this.modelOptions as |model|}}
-                <select.Option @value={{model.id}}>
-                  {{model.name}}
-                </select.Option>
-              {{/each}}
-            </field.Control>
-          </form.Field>
-
-          <form.Field
-            class="ai-logs__feature-filter"
-            @name="feature"
-            @title={{i18n "discourse_ai.logs.feature"}}
-            @type="input"
-            @onSet={{this.setFeature}}
-            as |field|
-          >
-            <field.Control
-              placeholder={{i18n "discourse_ai.logs.feature_placeholder"}}
-              list="ai-log-features"
-            />
-          </form.Field>
-          <datalist id="ai-log-features">
-            {{#each this.features as |feature|}}
-              <option value={{feature}}></option>
-            {{/each}}
-          </datalist>
-
-          <form.Fieldset
-            class="ai-logs__user-filter"
-            @name="user-filter"
-            @title={{i18n "discourse_ai.logs.user"}}
-          >
-            <UserChooser
-              @value={{this.selectedUsernames}}
-              @onChange={{this.changeUser}}
+          <:additionalFilters>
+            <AiLogFeatureFilter
+              class="ai-logs__feature-filter"
+              @valueProperty={{null}}
+              @nameProperty={{null}}
+              @value={{this.selectedFeature}}
+              @content={{this.featureOptions}}
+              @onChange={{this.changeFeature}}
               @options={{hash
-                maximum=1
-                none="discourse_ai.logs.user_placeholder"
-                filterPlaceholder="discourse_ai.logs.user_placeholder"
-                headerAriaLabel=(i18n "discourse_ai.logs.user_placeholder")
+                translatedNone=(i18n "discourse_ai.logs.all_features")
+                translatedFilterPlaceholder=(i18n
+                  "discourse_ai.logs.feature_placeholder"
+                )
+                headerAriaLabel=(i18n "discourse_ai.logs.feature")
               }}
             />
-          </form.Fieldset>
 
-          <form.Field
-            class="ai-logs__toggle"
-            @name="has_retries"
-            @title={{i18n "discourse_ai.logs.has_retries"}}
-            @type="checkbox"
-            @onSet={{this.toggleRetries}}
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
+            <div class="ai-logs__toggles">
+              <DToggleSwitch
+                @label="discourse_ai.logs.has_retries"
+                @state={{this.hasRetries}}
+                {{on "click" this.toggleRetries}}
+              />
 
-          <form.Field
-            class="ai-logs__toggle"
-            @name="unattributed"
-            @title={{i18n "discourse_ai.logs.unattributed"}}
-            @type="checkbox"
-            @onSet={{this.toggleUnattributed}}
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
-        </div>
-
-        <div class="ai-logs__id-filter">
-          <form.Field
-            @name="id_type"
-            @title={{i18n "discourse_ai.logs.filters.id_type"}}
-            @type="select"
-            @onSet={{this.changeIdType}}
-            as |field|
-          >
-            <field.Control @includeNone={{false}} as |select|>
-              {{#each this.idTypeOptions as |idType|}}
-                <select.Option @value={{idType.id}}>
-                  {{idType.name}}
-                </select.Option>
-              {{/each}}
-            </field.Control>
-          </form.Field>
-
-          <form.Field
-            @name="id_value"
-            @title={{i18n "discourse_ai.logs.filters.id_value"}}
-            @type="input-number"
-            @onSet={{this.setIdValue}}
-            as |field|
-          >
-            <field.Control
-              min="1"
-              max={{MAX_SAFE_ID}}
-              placeholder={{i18n "discourse_ai.logs.id_placeholder"}}
-            />
-          </form.Field>
-
-          <form.Submit
-            class="btn-default ai-logs__find"
-            @label="discourse_ai.logs.find"
-          />
-          {{#if this.hasFilters}}
-            <DButton
-              class="btn-transparent ai-logs__clear"
-              @action={{this.clearFilters}}
-              @label="discourse_ai.logs.clear_filters"
-            />
-          {{/if}}
-        </div>
-      </Form>
+              <DToggleSwitch
+                @label="discourse_ai.logs.unattributed"
+                @state={{this.unattributed}}
+                {{on "click" this.toggleUnattributed}}
+              />
+            </div>
+          </:additionalFilters>
+        </DFilterControls>
+      </div>
 
       <DConditionalLoadingSpinner @condition={{this.loading}}>
-        {{#if this.logs.length}}
-          <DLoadMore
-            @action={{this.loadMore}}
-            @enabled={{this.meta.has_more}}
-            @isLoading={{this.loadingMore}}
-          >
-            <div class="ai-logs__table-wrapper">
-              <table class="d-table ai-logs__table">
+        <div class="ai-logs__table-wrap">
+          {{#if this.hasNewLogs}}
+            <div class="show-more has-topics">
+              <a
+                tabindex="0"
+                href
+                class="alert alert-info clickable
+                  {{if this.loadingNewLogs 'loading'}}"
+                {{on "click" this.showIncomingLogs}}
+              >
+                <DCountI18n
+                  @key="discourse_ai.logs.new_logs_count"
+                  @count={{this.newLogsCount}}
+                />
+                {{#if this.loadingNewLogs}}
+                  {{dLoadingSpinner size="small"}}
+                {{/if}}
+              </a>
+            </div>
+          {{/if}}
+
+          {{#if this.logs.length}}
+            <DLoadMore
+              @action={{this.loadMore}}
+              @enabled={{this.meta.has_more}}
+              @isLoading={{this.loadingMore}}
+            >
+              <table class="d-table">
                 <caption class="sr-only">{{i18n
                     "discourse_ai.logs.table_caption"
                   }}</caption>
                 <thead class="d-table__header">
                   <tr class="d-table__row">
-                    <th class="ai-logs__col-outcome" scope="col"><span
-                        class="sr-only"
-                      >{{i18n "discourse_ai.logs.outcome"}}</span></th>
-                    <th class="ai-logs__col-time" scope="col">{{i18n
-                        "discourse_ai.logs.when"
-                      }}</th>
-                    <th class="ai-logs__col-request" scope="col">{{i18n
-                        "discourse_ai.logs.request"
-                      }}</th>
-                    <th class="ai-logs__col-user" scope="col">{{i18n
-                        "discourse_ai.logs.user"
-                      }}</th>
-                    <th class="ai-logs__col-duration" scope="col">{{i18n
-                        "discourse_ai.logs.duration_tokens"
-                      }}</th>
-                    <th class="ai-logs__col-context" scope="col">{{i18n
-                        "discourse_ai.logs.context"
-                      }}</th>
-                    <th class="ai-logs__col-actions" scope="col"><span
-                        class="sr-only"
-                      >{{i18n "discourse_ai.logs.actions"}}</span></th>
+                    <th
+                      class="d-table__header-cell ai-logs__col-outcome"
+                      scope="col"
+                    ><span class="sr-only">{{i18n
+                          "discourse_ai.logs.outcome"
+                        }}</span></th>
+                    <th
+                      class="d-table__header-cell ai-logs__col-time"
+                      scope="col"
+                    >{{i18n "discourse_ai.logs.when"}}</th>
+                    <th
+                      class="d-table__header-cell ai-logs__col-request"
+                      scope="col"
+                    >{{i18n "discourse_ai.logs.request"}}</th>
+                    <th
+                      class="d-table__header-cell ai-logs__col-user"
+                      scope="col"
+                    >{{i18n "discourse_ai.logs.user"}}</th>
+                    <th
+                      class="d-table__header-cell ai-logs__col-duration"
+                      scope="col"
+                    >
+                      <span class="ai-logs__duration-heading">{{i18n
+                          "discourse_ai.logs.duration"
+                        }}</span>
+                      <span class="ai-logs__tokens-heading">{{i18n
+                          "discourse_ai.logs.tokens_direction"
+                        }}</span>
+                    </th>
+                    <th
+                      class="d-table__header-cell ai-logs__col-context"
+                      scope="col"
+                    >{{i18n "discourse_ai.logs.context"}}</th>
+                    <th
+                      class="d-table__header-cell ai-logs__col-actions"
+                      scope="col"
+                    ><span class="sr-only">{{i18n
+                          "discourse_ai.logs.actions"
+                        }}</span></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="d-table__body">
                   {{#each this.logs as |currentLog|}}
                     <AiLogRow
                       @log={{currentLog}}
@@ -797,24 +904,17 @@ export default class AiLogs extends Component {
                   {{/each}}
                 </tbody>
               </table>
+            </DLoadMore>
+          {{else}}
+            <div class="ai-logs__empty">
+              <p>{{if
+                  this.hasFilters
+                  (i18n "discourse_ai.logs.no_results")
+                  (i18n "discourse_ai.logs.no_logs")
+                }}</p>
             </div>
-          </DLoadMore>
-        {{else}}
-          <div class="ai-logs__empty">
-            <p>{{if
-                this.hasFilters
-                (i18n "discourse_ai.logs.no_results")
-                (i18n "discourse_ai.logs.no_logs")
-              }}</p>
-            {{#if this.hasFilters}}
-              <DButton
-                class="btn-default"
-                @action={{this.clearFilters}}
-                @label="discourse_ai.logs.clear_filters"
-              />
-            {{/if}}
-          </div>
-        {{/if}}
+          {{/if}}
+        </div>
       </DConditionalLoadingSpinner>
     </section>
   </template>

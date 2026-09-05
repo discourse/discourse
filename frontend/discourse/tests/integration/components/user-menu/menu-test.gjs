@@ -108,7 +108,7 @@ module("Integration | Component | UserMenu", function (hooks) {
   test("messages tab isn't shown if current user does not have can_send_private_messages permission", async function (assert) {
     this.currentUser.set("moderator", false);
     this.currentUser.set("admin", false);
-    this.currentUser.set("groups", []);
+    this.currentUser.set("visibleGroups", []);
     this.currentUser.set("can_send_private_messages", false);
 
     await render(<template><Menu /></template>);
@@ -128,7 +128,7 @@ module("Integration | Component | UserMenu", function (hooks) {
   test("messages tab is shown if user has can_send_private_messages permission", async function (assert) {
     this.currentUser.set("moderator", true);
     this.currentUser.set("admin", false);
-    this.currentUser.set("groups", []);
+    this.currentUser.set("visibleGroups", []);
     this.currentUser.set("can_send_private_messages", true);
 
     await render(<template><Menu /></template>);

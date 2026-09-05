@@ -126,6 +126,7 @@ RSpec.describe Groups::Create do
       {
         name: "builders",
         title: "Builders",
+        full_name: "Builders",
         usernames: [member_1.username, member_2.username].join(","),
         owner_usernames: [admin.username].join(","),
       }
@@ -171,6 +172,20 @@ RSpec.describe Groups::Create do
 
       it "logs group history" do
         expect { result }.to change { GroupHistory.count }.by(4)
+      end
+
+      it "logs group creation in staff action log" do
+        result
+        expect(
+          UserHistory.where(action: UserHistory.actions[:create_group]).find_by(
+            acting_user_id: admin.id,
+          ),
+        ).to have_attributes(
+          acting_user_id: admin.id,
+          details: ["name: #{group.name}", "full_name: #{group.full_name}", "id: #{group.id}"].join(
+            ", ",
+          ),
+        )
       end
 
       context "when guardian can associate groups" do

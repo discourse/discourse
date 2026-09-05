@@ -4,6 +4,7 @@ module DiscourseAi
     module ArtifactUpdateStrategies
       class InvalidFormatError < StandardError
       end
+
       class Base
         attr_reader :post,
                     :user,
@@ -56,6 +57,8 @@ module DiscourseAi
             cancel_manager: cancel_manager,
             execution_context:,
           ) do |partial|
+            next if !partial.is_a?(String)
+
             progress.call(partial) if progress
             response << partial
           end

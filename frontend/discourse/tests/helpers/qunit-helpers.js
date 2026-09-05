@@ -16,6 +16,7 @@ import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
+import { resetAdminReportRelatedItemsRenderers } from "discourse/admin/lib/admin-report-related-items";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -40,6 +41,7 @@ import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/us
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { resetDragAdoptionForTesting } from "discourse/lib/-internals/drag-and-drop/native-drag-adoption";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
@@ -96,6 +98,7 @@ import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import { noteKeyboardEvidence } from "discourse/services/capabilities";
 import {
   clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
@@ -112,11 +115,13 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
+import { resetDragAndDropForTesting } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
+import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
-import { setupDSelectAssertions } from "./d-select-assertions";
+import { setupDNativeSelectAssertions } from "./d-native-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
@@ -214,8 +219,10 @@ export function testCleanup(container, app) {
 
   User.resetCurrent();
   resetMobile();
+  noteKeyboardEvidence();
   resetAdditionalReportModes();
   resetAdminDashboardReportRenderers();
+  resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetExtraClasses();
   clearOutletCache();
@@ -290,6 +297,11 @@ export function testCleanup(container, app) {
   _resetOutletLayoutsForTesting();
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
+  resetDragAndDropForTesting();
+  // Run after the drag reset so any active drag releases its own adoption. This
+  // only has to force-release a registration for a drag that never started.
+  resetDragAdoptionForTesting();
+  resetDragSourcesForTesting();
   resetPointerDragForTesting();
   resetElementClassLeasesForTesting();
   clearBacklog();
@@ -496,7 +508,7 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 setupFormKitAssertions();
-setupDSelectAssertions();
+setupDNativeSelectAssertions();
 setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {

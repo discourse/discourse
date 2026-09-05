@@ -13,6 +13,9 @@ fi:
   js:
     styleguide:
       title: "Tyyliopas"
+      example:
+        kind:
+          component: "Komponentti"
       categories:
         syntax: Syntaksi
         atoms: Atomit
@@ -88,6 +91,26 @@ fi:
           title: "Lisää ketjuja"
         post_menu:
           title: "Viestin valikko"
+        roving_focus:
+          toolbar:
+            copy: "Kopioi"
+          tags:
+            support: "Tuki"
+          adjacent:
+            label: "Suodattimet"
+            field: "Hae"
+            open: "Avoinna"
+            recent: "Tuoreimpia"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Päivittäin"
+            weekly: "Viikoittain"
+            monthly: "Kuukausittain"
+            never: "Ei koskaan"
+          tree:
+            components: "Komponentit"
+            select: "Valitse"
         modal:
           title: "Modaali-ikkuna"
           header: "Modaalin otsikko"

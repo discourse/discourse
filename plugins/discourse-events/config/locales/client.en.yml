@@ -1,11 +1,10 @@
 en:
   admin_js:
     admin:
-      calendar: "Events"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "Events"
+          discourse_events: "Events"
       web_hooks:
         calendar_event:
           group_name: "Calendar Event"
@@ -26,7 +25,8 @@ en:
           fields:
             topic_id:
               label: Topic ID
-    discourse_calendar:
+    discourse_events:
+      title: "Events"
       livestream:
         zoom:
           join: "Join Zoom"
@@ -35,16 +35,10 @@ en:
           load_error: "You left the webinar or we are unable to load Zoom in this page."
           too_early: "You can join the webinar closer to the event start time"
           view_topic: "View topic for the event"
-          not_started_retrying:
-            one: "The webinar hasn't started yet. Retrying join in %{count} second..."
-            other: "The webinar hasn't started yet. Retrying join in %{count} seconds..."
-          not_started_trying_again: "Trying to join the webinar again now..."
-          join_audio_hint: "Click %{icon} above to join audio"
         chat:
           rsvp_to_event: "RSVP to the event to start chatting"
           rsvp_to_event_with_link: "RSVP to <a href='%{url}'>the event</a> to start chatting"
           rsvp_body: "Connect with other attendees before, during, and after the event."
-      invite_user_notification: "%{username} invited you to: %{description}"
       preferences:
         all_events: "Discourse Events - All events"
         all_events_description: "All forum events"
@@ -340,9 +334,25 @@ en:
         week: "Week"
         day: "Day"
         year: "Year"
+    # Persisted verbatim in notifications.data.message on existing sites, so this key
+    # cannot move with the rest of the namespace without blanking historic notifications.
+    discourse_calendar:
+      invite_user_notification: "%{username} invited you to: %{description}"
     group_timezones:
       search: "Search..."
       group_availability: "%{group} availability"
+    discourse_workflows:
+      node_unavailable:
+        requires_post_event: "Requires events to be enabled"
+      nodes:
+        "trigger:event_ended": "Event ended"
+        "trigger:event_participation_changed": "Event participation changed"
+      node_descriptions:
+        "trigger:event_ended": "Fires when an event occurrence reaches its end time"
+        "trigger:event_participation_changed": "Fires when a user adds, changes, or withdraws their RSVP"
+      post_event:
+        topic_id: "Topic ID"
+        topic_id_description: "Only trigger for events in this topic. Leave empty to match all events."
     discourse_post_event:
       new_event: "New Event"
       notifications:
@@ -374,6 +384,15 @@ en:
       edit_event: "Edit event"
       export_event: "Export event"
       created_by: "Created by"
+      created_and_hosted_by: "Created and hosted by"
+      hosted_by: "Hosted by"
+      co_hosted_by: "Co-hosted by"
+      other_hosts:
+        one: "and %{count} other"
+        other: "and %{count} others"
+      all_hosts:
+        one: "%{count} host"
+        other: "%{count} hosts"
       bulk_invite: "Bulk Invite"
       close_event: "Close event"
       open_event: "Open event"
@@ -590,6 +609,9 @@ en:
           placeholder: "Optional, defaults to topic title"
         invitees:
           label: "Invited groups"
+        hosts:
+          label: "Hosts"
+          description: "Hosts are shown on the event alongside its creator."
         event_type:
           label: "Attendance type"
           public:

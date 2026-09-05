@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 pt:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Procurar"
+      categories:
+        label: "Categorias"
+      about:
+        label: "Sobre"
+      guidelines:
+        label: "Linhas Diretrizes"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -609,6 +621,7 @@ pt:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Desconhecido"
     traffic_types:
       anonymous: "Anónimo"
   change_email:
@@ -779,6 +792,11 @@ pt:
         share: "Partilhar"
       types:
         staff: "Pessoal"
+    posters_by_member_type_members:
+      labels:
+        user: "Utilizador"
+        count: "Mensagens"
+        share: "Partilhar"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -893,6 +911,9 @@ pt:
         num_clicks: "Cliques"
         num_topics: "Tópicos"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_entry_urls:
       labels:
         count: "Visitas"
     top_referrers_by_browser_pageviews:
@@ -1193,7 +1214,6 @@ pt:
     topic_view_duration_hours: "Contar uma nova visualização do tópico uma vez por IP/Utilizador a cada N horas"
     user_profile_view_duration_hours: "Contar visualização de novo perfil de utilizador uma vez por IP/utilizador a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer a correspondência de e-mails de spam, o número de caracteres de diferença que ainda permitirá uma correspondência difusa."
-    min_ban_entries_for_roll_up: "Ao clicar no botão Agrupar, irá criar uma nova entrada de sub-rede banida se houver pelo menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de email não encontradas após (N) dias."
     max_age_unmatched_ips: "Eliminar entradas IP não encontradas após (N) dias."
     num_flaggers_to_close_topic: "Número mínimo de sinalizações únicas que são necessárias para automaticamente pausar um tópico para intervenção."
@@ -2130,6 +2150,9 @@ pt:
       medium: "Médio"
       high: "Elevado"
     reasons:
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
       agree:

@@ -107,6 +107,9 @@ export default class PollResultsPieComponent extends Component {
     this.canvasElement = element;
   });
 
+  /** @type {import("chart.js").Chart | null} */
+  _chart = null;
+
   get canvasId() {
     return trustHTML(`poll-results-chart-${this.args.id}`);
   }

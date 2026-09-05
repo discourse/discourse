@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 ko:
+  llms_txt:
+    sections:
+      optional: "선택 사항"
+    links:
+      search:
+        label: "검색"
+      categories:
+        label: "카테고리"
+      about:
+        label: "소개"
+      guidelines:
+        label: "가이드라인"
   dates:
     short_date_no_year: "M월 D일"
     short_date: "YYYY-M-D"
@@ -670,6 +682,7 @@ ko:
       windows: "마이크로소프트 윈도우"
       unknown: "알 수 없는 운영체제"
   admin_site_traffic_explorer:
+    unknown: "알수없음"
     traffic_types:
       anonymous: "익명"
   change_email:
@@ -932,6 +945,11 @@ ko:
         share: "공유하기"
       types:
         staff: "스태프"
+    posters_by_member_type_members:
+      labels:
+        user: "사용자"
+        count: "글"
+        share: "공유하기"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1089,6 +1107,9 @@ ko:
         num_topics: "토픽"
       description: "사용자가 공유한 링크의 클릭 수로 사용자를 나열합니다."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "방문"
+    top_entry_urls:
       labels:
         count: "방문"
     top_referrers_by_browser_pageviews:
@@ -1578,7 +1599,6 @@ ko:
     topic_view_duration_hours: "N시간마다 IP/사용자별로 새 주제 조회수를 계산합니다."
     user_profile_view_duration_hours: "N시간마다 IP/사용자별로 신규 사용자 프로필 조회수를 계산합니다."
     levenshtein_distance_spammer_emails: "스팸 발송자 이메일을 일치시킬 때 일부 일치를 허용하는 문자 수 차이입니다."
-    min_ban_entries_for_roll_up: "롤업 버튼을 클릭하면 최소 (N)개 엔트리가 있는 경우 새 서브넷 금지 엔트리가 생성됩니다."
     max_age_unmatched_emails: "(N)일 후 일치하지 않는 스크린된 이메일 엔트리를 삭제합니다."
     max_age_unmatched_ips: "(N)일 후 일치하지 않는 스크린된 IP 엔트리를 삭제합니다."
     num_flaggers_to_close_topic: "중재를 위해 주제를 자동으로 일시 중지하기 위한 최소 고유 신고자 수"
@@ -1770,7 +1790,6 @@ ko:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 아이디의 사용자가 없습니다."
       valid_username: "해당 아이디의 사용자가 있습니다."
-      invalid_group: "이 이름을 가진 그룹이 없습니다."
       invalid_integer_min_max: "값은 %{min} 및 %{max} 사이여야 합니다."
       invalid_integer_min: "값은 %{min} 이상이어야 합니다."
       invalid_integer_max: "값은 %{max} 이하이어야 합니다."
@@ -3604,6 +3623,8 @@ ko:
     conflict: "업데이트 충돌로 인해 그렇게 할 수 없습니다."
     reasons:
       post_count: "모든 사용자의 처음 몇 개의 게시물은 운영진의 승인을 받아야 합니다. 다음을 참조하세요. %{link}"
+      fast_typer_time:
+        other: "%{count}초"
       auto_silence_regex: "첫 게시물이 %{link} 설정과 일치하는 신규 사용자입니다."
       category: "이 카테고리의 게시물은 운영진의 수동 승인이 필요합니다. 다음을 참조하세요. %{link}"
       must_approve_users: "모든 신규 사용자는 운영진의 승인을 받아야 합니다. 다음을 참조하세요. %{link}"

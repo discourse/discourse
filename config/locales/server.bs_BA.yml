@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  llms_txt:
+    sections:
+      optional: "Opcionalno"
+    links:
+      search:
+        label: "Pretraži"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nama"
+      guidelines:
+        label: "Smjernice"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -322,6 +334,7 @@ bs_BA:
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
   admin_site_traffic_explorer:
+    unknown: "Unknown"
     traffic_types:
       anonymous: "Anoniman"
   change_email:
@@ -448,6 +461,11 @@ bs_BA:
         share: "Dijeli"
       types:
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Objave"
+        share: "Dijeli"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -563,6 +581,9 @@ bs_BA:
         num_clicks: "Clicks"
         num_topics: "Teme"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visits"
+    top_entry_urls:
       labels:
         count: "Visits"
     top_referrers_by_browser_pageviews:
@@ -772,7 +793,6 @@ bs_BA:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    min_ban_entries_for_roll_up: "Kada kliknete tipku Roll up, stvorit ćete novi unos za subnet ban ako ima najmanje (N) unosa."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"

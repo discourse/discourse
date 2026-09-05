@@ -5,7 +5,7 @@ describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
 
   before do
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.delete_expired_event_posts_after = 1 # hour
   end
 
@@ -34,19 +34,19 @@ describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
     expect(Post.exists?(post_with_a_date_range.id)).to eq(false)
     expect(Post.exists?(post_in_the_future.id)).to eq(true)
 
-    expect(CalendarEvent.exists?(post: post_with_one_date)).to eq(false)
-    expect(CalendarEvent.exists?(post: post_with_two_dates)).to eq(false)
-    expect(CalendarEvent.exists?(post: post_with_a_date_range)).to eq(false)
-    expect(CalendarEvent.exists?(post: post_in_the_future)).to eq(true)
+    expect(DiscourseEvents::Calendar::Event.exists?(post: post_with_one_date)).to eq(false)
+    expect(DiscourseEvents::Calendar::Event.exists?(post: post_with_two_dates)).to eq(false)
+    expect(DiscourseEvents::Calendar::Event.exists?(post: post_with_a_date_range)).to eq(false)
+    expect(DiscourseEvents::Calendar::Event.exists?(post: post_in_the_future)).to eq(true)
 
     expect(UserHistory.find_by(post_id: post_with_one_date.id).context).to eq(
-      I18n.t("discourse_calendar.event_expired"),
+      I18n.t("discourse_events.event_expired"),
     )
   end
 
   it "does not delete holiday events" do
     matariki =
-      CalendarEvent.create!(
+      DiscourseEvents::Calendar::Event.create!(
         topic: calendar_topic,
         start_date: Date.new(2022, 6, 24),
         region: "nz",
@@ -55,12 +55,16 @@ describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
 
     job.execute(nil)
 
-    expect(CalendarEvent.exists?(matariki.id)).to eq(true)
+    expect(DiscourseEvents::Calendar::Event.exists?(matariki.id)).to eq(true)
   end
 
   it "does not delete event posts outside calendar topics" do
     post = create_post(raw: "Discourse 💬 Launch 🚀 on [date=2013-02-05]")
-    CalendarEvent.create!(topic: post.topic, post: post, start_date: Date.new(2013, 2, 5))
+    DiscourseEvents::Calendar::Event.create!(
+      topic: post.topic,
+      post: post,
+      start_date: Date.new(2013, 2, 5),
+    )
 
     job.execute(nil)
 

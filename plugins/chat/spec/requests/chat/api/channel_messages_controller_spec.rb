@@ -114,6 +114,63 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when user can only see a readonly category channel" do
+      fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+      fab!(:channel) do
+        category =
+          Fabricate(
+            :private_category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        Fabricate(:category_channel, chatable: category)
+      end
+      fab!(:restricted_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          message: "Confidential restricted channel history",
+        )
+      end
+
+      it "does not expose the channel messages" do
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(response.body).not_to include(restricted_message.message)
+      end
+    end
+
+    context "when logged-in user can only read an anonymous-public category channel" do
+      fab!(:channel) do
+        category = Fabricate(:category)
+        category.set_permissions(everyone: :readonly)
+        category.save!
+        Fabricate(:category_channel, chatable: category)
+      end
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+
+      before do
+        SiteSetting.chat_allowed_groups =
+          "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+      end
+
+      it "exposes the same channel messages anonymous users can read" do
+        expect(current_user.guardian.can_join_chat_channel?(channel)).to eq(false)
+        expect(current_user.guardian.can_preview_anonymous_public_chat_channel?(channel)).to eq(
+          true,
+        )
+
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["messages"].map { |message| message["id"] }).to contain_exactly(
+          message.id,
+        )
+      end
+    end
+
     context "when page_size is above limit" do
       fab!(:messages) { Fabricate.times(5, :chat_message, chat_channel: channel) }
 
@@ -272,6 +329,94 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           ],
         )
       end
+    end
+  end
+
+  describe "category posting permissions" do
+    fab!(:posting_group, :group)
+    fab!(:public_category) do
+      Fabricate(:category).tap do |category|
+        category.set_permissions(:everyone => :readonly, posting_group => :full)
+        category.save!
+      end
+    end
+    fab!(:restricted_channel) { Fabricate(:chat_channel, chatable: public_category) }
+
+    before do
+      posting_group.add(current_user)
+      restricted_channel.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "blocks a former posting-group member from creating, editing and restoring" do
+      message_to_edit =
+        Fabricate(
+          :chat_message,
+          chat_channel: restricted_channel,
+          user: current_user,
+          message: "original",
+        )
+      message_to_restore =
+        Fabricate(:chat_message, chat_channel: restricted_channel, user: current_user)
+      message_to_restore.trash!(current_user)
+      posting_group.remove(current_user)
+
+      expect(restricted_channel.membership_for(current_user)).to be_present
+
+      aggregate_failures do
+        expect {
+          post "/chat/#{restricted_channel.id}.json", params: { message: "new message" }
+        }.not_to change { restricted_channel.chat_messages.count }
+        expect(response).to have_http_status(:forbidden)
+
+        put "/chat/api/channels/#{restricted_channel.id}/messages/#{message_to_edit.id}",
+            params: {
+              message: "edited",
+            }
+        expect(response).to have_http_status(:forbidden)
+        expect(message_to_edit.reload.message).to eq("original")
+
+        put "/chat/api/channels/#{restricted_channel.id}/messages/#{message_to_restore.id}/restore"
+        expect(response).to have_http_status(:forbidden)
+        expect(message_to_restore.reload).to be_trashed
+      end
+    end
+
+    it "lets a moderator who can see the channel delete and restore others' messages" do
+      moderator = Fabricate(:moderator)
+      posting_group.add(moderator)
+      restricted_channel.add(moderator)
+      posting_group.remove(moderator)
+      sign_in(moderator)
+
+      others_message = Fabricate(:chat_message, chat_channel: restricted_channel)
+
+      delete "/chat/api/channels/#{restricted_channel.id}/messages/#{others_message.id}"
+      expect(response).to have_http_status(:success)
+      expect(others_message.reload).to be_trashed
+
+      put "/chat/api/channels/#{restricted_channel.id}/messages/#{others_message.id}/restore"
+      expect(response).to have_http_status(:success)
+      expect(others_message.reload).not_to be_trashed
+    end
+
+    it "blocks a moderator who cannot see the channel from deleting or restoring via API" do
+      moderator = Fabricate(:moderator)
+      hidden_category = Fabricate(:category, read_restricted: true)
+      hidden_channel = Fabricate(:chat_channel, chatable: hidden_category)
+      message = Fabricate(:chat_message, chat_channel: hidden_channel)
+      sign_in(moderator)
+
+      expect(moderator.guardian.can_preview_chat_channel?(hidden_channel)).to eq(false)
+      expect(moderator.guardian.can_moderate_chat?(hidden_category)).to eq(true)
+
+      delete "/chat/api/channels/#{hidden_channel.id}/messages/#{message.id}"
+      expect(response).to have_http_status(:forbidden)
+      expect(message.reload).not_to be_trashed
+
+      put "/chat/api/channels/#{hidden_channel.id}/messages/#{message.id}/restore"
+      expect(response).to have_http_status(:forbidden)
+      expect(message.reload).not_to be_trashed
     end
   end
 

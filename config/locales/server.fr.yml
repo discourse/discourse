@@ -5,6 +5,19 @@
 # https://translate.discourse.org/
 
 fr:
+  llms_txt:
+    sections:
+      optional: "Facultatif"
+    links:
+      search:
+        label: "Recherche"
+      categories:
+        label: "Catégories"
+      about:
+        label: "À propos"
+      guidelines:
+        label: "Lignes directrices"
+        note: "Lisez les règles de la communauté"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -1027,6 +1040,7 @@ fr:
       windows: "Microsoft Windows"
       unknown: "système d'exploitation inconnu"
   admin_site_traffic_explorer:
+    unknown: "Inconnu"
     traffic_types:
       logged_in: "Utilisateurs connectés"
       anonymous: "Anonymes"
@@ -1349,6 +1363,11 @@ fr:
         new_members: "Nouveaux membres"
         returning: "Membres existants"
         staff: "Responsables"
+    posters_by_member_type_members:
+      labels:
+        user: "Utilisateur"
+        count: "Publications"
+        share: "Partager"
     trust_level_pipeline:
       title: "Évolution des niveaux de confiance"
       description: "Mouvements des membres entre les différents niveaux de confiance pour la période sélectionnée. Ce tableau comptabilise les membres actuellement à chaque niveau de confiance, leur part du nombre total de membres, le nombre de membres promus ou rétrogradés dans chaque niveau de confiance au cours de la période, ainsi que les nouvelles inscriptions."
@@ -1536,6 +1555,9 @@ fr:
       description: "Pays ayant enregistré le plus grand nombre de pages vues par navigateur sur votre forum au cours de la période sélectionnée."
       labels:
         country_code: "Code du pays"
+        count: "Visites"
+    top_entry_urls:
+      labels:
         count: "Visites"
     top_referrers_by_browser_pageviews:
       title: "Principales sources de trafic"
@@ -1961,7 +1983,6 @@ fr:
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'indexation Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisations est définie."
     slow_down_crawler_user_agents: "Agents utilisateurs des robots d'exploration Web auxquels appliquer la limitation de débit configurée dans le paramètre {{setting:slow_down_crawler_rate}}. Chaque valeur doit comporter au moins 3 caractères."
     slow_down_crawler_rate: "Si {{setting:slow_down_crawler_user_agents}} est renseigné, ce délai s'appliquera à tous les robots d'exploration (nombre de secondes entre les requêtes)."
-    llms_txt: "Téléversez un fichier texte qui sera accessible à l'adresse /llms.txt pour les robots d'exploration des LLM. Consultez <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> pour en savoir plus."
     content_security_policy: "Activer la politique de sécurité du contenu (CSP). La CSP constitue une couche de sécurité supplémentaire qui aide à prévenir certains types d'attaques, notamment les scripts intersites (XSS) et l'injection de données. Elle ne doit être désactivée que temporairement à des fins de débogage ou de test."
     content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_report_uri: "Envoyer les rapports de violation de la CSP à cette URL au moyen de la directive CSP <code>report-uri</code>. Laissez ce champ vide pour désactiver les rapports."
@@ -1980,7 +2001,7 @@ fr:
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
     site_contact_username: "Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé."
-    site_contact_group_name: "Nom valide d'un groupe qui est invité à participer à tous les messages directs envoyés automatiquement."
+    site_contact_group_name: "Le groupe qui est invité reçoit automatiquement des messages directs."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message de bienvenue avec un guide de démarrage rapide."
     send_tl1_welcome_message: "Envoyer à tous les utilisateurs de niveau de confiance 1 un message de bienvenue."
     send_tl2_promotion_message: "Envoyer aux nouveaux utilisateurs de niveau de confiance 2 un message à propos de la promotion."
@@ -2281,7 +2302,6 @@ fr:
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse e-mail sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."
     max_new_accounts_per_registration_ip: "S'il y a déjà (n) comptes avec un niveau de confiance de 0 utilisant cette adresse IP (et si aucun n'est un responsable ni un utilisateur avec un niveau de confiance de 2 ou plus), ne plus accepter de nouvelles inscriptions en provenance de cette adresse IP. Le réglage de cette valeur à 0 désactive cette limite."
-    min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
     max_age_unmatched_emails: "Effacer les adresses e-mail sous surveillance sans correspondance après (N) jours"
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimal de signalements uniques requis pour suspendre automatiquement un sujet pour intervention"
@@ -2706,7 +2726,6 @@ fr:
       invalid_email: "Adresse e-mail invalide."
       invalid_username: "Il n'y a aucun utilisateur ayant ce nom d'utilisateur."
       valid_username: "Ce nom d'utilisateur est déjà pris."
-      invalid_group: "Il n'y a aucun groupe ayant ce nom."
       invalid_svg: "L'image SVG n'est pas valide. Elle doit contenir un élément SVG et ne contenir aucun script ni gestionnaire d'événements."
       invalid_upload: "Le téléversement n'est pas valide ou n'existe pas."
       invalid_topic: "Aucun sujet ne possède cet ID."
@@ -5463,6 +5482,9 @@ fr:
       group: "Les réponses des utilisateurs ne faisant pas partie des groupes spécifiés doivent être approuvées par un responsable. Voir %{link}."
       new_topics_unless_trust_level: "Les sujets créés par des utilisateurs dont le niveau de confiance est faible doivent être approuvés par un responsable. Voir %{link}."
       fast_typer: "Un nouvel utilisateur a écrit sa première publication avec une rapidité suspecte, comportement typique des bots et des spammeurs. Voir %{link}."
+      fast_typer_time:
+        one: "%{count} seconde"
+        other: "%{count} secondes"
       auto_silence_regex: "Nouvel utilisateur dont le premier message contient le motif textuel défini par le paramètre %{link}."
       watched_word:
         one: "Cette publication contient un mot surveillé : %{words}. Consultez le %{link} pour en savoir plus."

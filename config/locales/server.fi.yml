@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 fi:
+  llms_txt:
+    sections:
+      optional: "Valinnainen"
+    links:
+      search:
+        label: "Haku"
+      categories:
+        label: "Kategoriat"
+      about:
+        label: "Tietoja"
+      guidelines:
+        label: "Ohjeet"
   dates:
     short_date_no_year: "D. MMMM[ta]"
     short_date: "D. MMMM[ta] YYYY"
@@ -968,6 +980,7 @@ fi:
       windows: "Microsoft Windows"
       unknown: "tuntematon käyttöjärjestelmä"
   admin_site_traffic_explorer:
+    unknown: "Tuntematon"
     traffic_types:
       anonymous: "Anonyymeja"
   change_email:
@@ -1253,6 +1266,11 @@ fi:
         share: "Jaa"
       types:
         staff: "Henkilökunta"
+    posters_by_member_type_members:
+      labels:
+        user: "Käyttäjä"
+        count: "Viestejä"
+        share: "Jaa"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1426,6 +1444,9 @@ fi:
         num_topics: "Ketjuja"
       description: "Käyttäjät järjestettynä sen mukaan, montako kertaa heidän jakamiaan linkkejä on klikattu."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Vierailuja"
+    top_entry_urls:
       labels:
         count: "Vierailuja"
     top_referrers_by_browser_pageviews:
@@ -1804,7 +1825,7 @@ fi:
     share_links: "Mitkä kohteet näytetään jakamisvalintaikkunassa ja missä järjestyksessä."
     allow_username_in_share_links: "Salli käyttäjätunnusten sisällyttäminen jakolinkkeihin. Tämä on hyödyllistä kunniamerkkien antamiseksi yksilöllisten vierailijoiden perusteella."
     site_contact_username: "Henkilökuntaan kuuluvan käyttäjä, jonka nimissä kaikki automaattiset viestit lähetetään. Jos jätetty tyhjäksi, oletuksena on oletusjärjestelmätili."
-    site_contact_group_name: "Kelvollinen ryhmän nimi, joka saa kutsun kaikkiin automaattisesti lähetettyihin henkilökohtaisiin viesteihin."
+    site_contact_group_name: "Ryhmä, joka saa kutsun kaikkiin automaattisesti lähetettyihin henkilökohtaisiin viesteihin."
     send_welcome_message: "Lähetä kaikille uusille käyttäjille tervetuloviesti, jossa on pika-aloitusopas."
     send_tl1_welcome_message: "Lähetä luottamustason 1 saavuttaville käyttäjille yksityinen tervetuloviesti."
     send_tl2_promotion_message: "Lähetä uusille luottamustason 2 käyttäjille viesti ylennyksestä."
@@ -2066,7 +2087,6 @@ fi:
     user_profile_view_duration_hours: "Laske uusi profiilin katselu kerran per IP/käyttäjä joka N:s tunti"
     levenshtein_distance_spammer_emails: "Verrattaessa sähköpostiosoitteita tunnettuihin roskapostittajiin, näin monen merkin ero saa vielä aikaan sumean osuman."
     max_new_accounts_per_registration_ip: "Jos samasta IP-osoitteesta on jo (n) luottamustason 0 käyttäjätiliä (eikä yhtään henkilökunnan tai vähintään LT2), lakkaa hyväksymästä uusia rekisteröitymisiä tästä IP:stä. Poista raja käytöstä asettamalla arvoksi 0."
-    min_ban_entries_for_roll_up: "Kun Kokoa-painiketta painetaan, luodaan IP-porttikielloista aliverkon kattavia, kieltoja jos kieltoja on asettu vähintään (N) määrä."
     max_age_unmatched_emails: "Poista osumattomat seulotut sähköpostiosoitteet (N) päivän jälkeen."
     max_age_unmatched_ips: "Poista osumattomat seulotut IP-osoitteet (N) päivän jälkeen."
     num_flaggers_to_close_topic: "Kuinka monta eri merkitsijää tarvitaan, jotta ketju voi mennä tauolle puuttumistoimia odottamaan"
@@ -2378,7 +2398,6 @@ fi:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä käyttäjätunnuksella ei löydy käyttäjää."
       valid_username: "Tällä käyttäjätunnuksella löytyy käyttäjä."
-      invalid_group: "Tällä nimellä ei löydy ryhmää."
       invalid_integer_min_max: "Arvon pitää olla välillä %{min}–%{max}."
       invalid_integer_min: "Arvon pitää olla vähintään %{min}."
       invalid_integer_max: "Arvo ei voi olla suurempi kuin %{max}."
@@ -4561,6 +4580,9 @@ fi:
       group: "Vastaukset käyttäjiltä, jotka eivät ole määritetyissä ryhmissä, tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       new_topics_unless_trust_level: "Matalan luottamustason käyttäjien ketjut tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       fast_typer: "Uusi käyttäjä kirjoitti ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Katso %{link}."
+      fast_typer_time:
+        one: "%{count} sekunti"
+        other: "%{count} sekuntia"
       auto_silence_regex: "Uusi käyttäjä, jonka ensimmäinen viesti vastaa %{link}-asetusta."
       watched_word:
         one: "Tässä viestissä oli tarkkailtu sana, liputettu sana on: %{words}. Katso lisätietoja kohdasta %{link}."

@@ -42,6 +42,11 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      copied: "Kopieret"
+      ai_decoded_transcript:
+        type: "Type"
+        error: "Fejl"
+        response: "Svar"
       discourse_workflows:
         ai_agent:
           mode: "Tilstand"
@@ -135,8 +140,6 @@ da:
         successful: "Gennemført"
         failed: "Fejlet"
         unknown: "Ukendt"
-        topic_id: "Emne ID"
-        post_id: "Indlæg ID"
         time: "Tidspunkt"
         when: "Hvorår"
         model: "Model"
@@ -149,6 +152,7 @@ da:
         post_short: "Indlæg %{id}"
         duration: "Varighed"
         actions: "Handlinger"
+        view_details: "Detaljer"
         periods:
           day: "Seneste 24 timer"
           week: "Seneste 7 dage"
@@ -313,8 +317,11 @@ da:
         chat:
           summarize: "Opsummer"
       discobot_discoveries:
-        regular_results: "Emner"
-        collapse: "Fold sammen"
-        tooltip:
-          actions:
-            disable: "Deaktiver"
+        legacy:
+          regular_results: "Emner"
+          collapse: "Fold sammen"
+          tooltip:
+            actions:
+              disable: "Deaktiver"
+        search_all_topics: "Alle emner"
+        search_messages: "Beskeder"

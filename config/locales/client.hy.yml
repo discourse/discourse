@@ -321,6 +321,7 @@ hy:
       sections:
         theme: "Թեմա"
         homepage: "Գլխավոր էջ"
+        search: "Որոնում"
       colors:
         light: "Բաց"
         dark: "Մութ"
@@ -1774,7 +1775,6 @@ hy:
         after_10_minutes: "10 րոպե հետո"
       notification_level_when_replying:
         do_nothing: "Ոչինչ չանել"
-      topics_unread_when_closed: "Դիտարկել թեմաները չկարդացած, երբ դրանք փակ են"
       invited:
         title: "Հրավերներ"
         pending_tab: "Սպասող"
@@ -2218,6 +2218,8 @@ hy:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Մուտք"
+      delete: "Ջնջել"
+      home: "Գլխավոր էջ"
     category_row:
       subcategories: "+ Ենթակատեգորիաներ"
       topic_count:
@@ -2517,10 +2519,9 @@ hy:
       in_this_topic_tooltip: "անցնել բոլոր թեմաների որոնմանը"
       in_messages_tooltip: "անցնել սովորական թեմաների որոնմանը"
       type:
-        default: "Թեմաներ/գրառումներ"
+        default: "Գրառումներ"
         users: "Օգտատերեր"
         categories: "Կատեգորիաներ"
-        categories_and_tags: "Կատեգորիաներ/պիտակներ"
       context:
         user: "Որոնել @%{username}-ի գրառումները"
         category: "Որոնել #%{category} կատեգորիայում"
@@ -3024,7 +3025,6 @@ hy:
       reply_as_new_private_message: "Պատասխանել որպես հաղորդագրություն նույն ստացողներին"
       continue_discussion: "Շարունակելով %{postLink} քննարկումը՝ "
       follow_quote: "գնալ դեպի մեջբերված գրառումը"
-      show_full: "Ցուցադրել Գրառումն Ամբողջությամբ"
       show_hidden: "Դիտել անտեսված բովանդակությունը "
       collapse: "կրճատել"
       expand_collapse: "ընդլայնել/կրճատել"
@@ -3518,11 +3518,8 @@ hy:
       content_load_error: '<a href="%url%"> Բովանդակությունը </a> հնարավոր չէ բեռնել:'
       image_load_error: '<a href="%url%"> Պատկերը </a> հնարավոր չէ բեռնել:'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ","
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} կամ %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Ստեղնաշարի Համադրություններ"
       description_header: "Նկարագրություն"
       key_header: "Բանալի"
@@ -3857,6 +3854,11 @@ hy:
         group_traffic: "Այցելությունները"
         group_members: "Անդամներ"
         group_other: "Այլ"
+        related_items:
+          users:
+            title: "Օգտատերեր"
+          labels:
+            user: "Օգտատեր"
       config_sections:
         account:
           title: "Հաշիվ"
@@ -4014,20 +4016,14 @@ hy:
       search:
         title: "Որոնում"
       site_traffic_explorer:
-        pageviews: "Էջադիտումներ"
+        metric_information: " %{metric}-ի մասին"
+        apply: "Կիրառել"
         view_more: "Դիտել ավելին"
         cards:
           visitors: "Այցելուներ"
-        columns:
-          top_urls: "URL"
-          browsers: "Բրաուզեր"
-          ip_addresses: "IP հասցե"
         filters:
           browser: "Բրաուզեր"
           ip: "IP հասցե"
-        metrics:
-          pageviews:
-            label: "Էջադիտումներ"
         series:
           anonymous_human: "Անանուն"
       dashboard:
@@ -4094,6 +4090,8 @@ hy:
               share: "Կիսվել"
             whos_posting:
               staff: "Անձնակազմ"
+              modal:
+                apply: "Պահպանել"
             trust_level_pipeline:
               trust_levels:
                 "0": "Նոր"
@@ -4106,6 +4104,9 @@ hy:
             table:
               searches: "Որոնումներ"
               status: "Ստատուս"
+          system:
+            title: "Համակարգային"
+            status: "Ստատուս"
         reports_section:
           header_action: "Կառավարել"
           modal:
@@ -4140,6 +4141,13 @@ hy:
           average_for_sample: "Միջին օրինակի համար"
           total: "Ամբողջ ժամանակվա ընդհանուրը"
           no_data: "Ցուցադրման ենթակա տվյալներ չկան:"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} օգտատեր"
+              other: "%{count} օգտատեր"
+            posts_count:
+              one: "%{count} գրառում"
+              other: "%{count} գրառում"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Որոնման գրառումներ</a>'
             disabled: 'Առաջատար որոնման հաշվետվությունն անջատված է: Միացրեք <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">գրառումների որոնման հարցումները</a>՝ տվյալներ հավաքելու համար:'

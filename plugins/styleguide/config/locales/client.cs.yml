@@ -13,6 +13,9 @@ cs:
   js:
     styleguide:
       title: "Průvodce styly"
+      example:
+        kind:
+          component: "Komponenta"
       categories:
         syntax: Syntaxe
         atoms: Atomy
@@ -39,6 +42,8 @@ cs:
           title: "Barvy"
         dialog:
           title: "Dialog"
+        drag_and_drop:
+          locked: "Uzamčeno"
         icons:
           title: "Ikony"
           full_list: "Podívejte se na úplný seznam Font Awesome Icons"
@@ -94,6 +99,28 @@ cs:
           title: "Více témat"
         post_menu:
           title: "Nabídka příspěvku"
+        roving_focus:
+          toolbar:
+            copy: "Kopírovat"
+          tags:
+            remove: "Odstranit %{tag}"
+            design: "Vzhled"
+          adjacent:
+            label: "Filtry"
+            field: "Vyhledávání"
+            placeholder: "Hledat témata"
+            open: "Otevřeno"
+            recent: "Nedávné"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Denně"
+            weekly: "Týdně"
+            monthly: "Měsíčně"
+            never: "Nikdy"
+          tree:
+            components: "Komponenty"
+            select: "Vybrat"
         modal:
           title: "Modální"
           header: "Název dialogu"

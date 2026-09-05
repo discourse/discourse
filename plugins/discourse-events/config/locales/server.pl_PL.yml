@@ -24,8 +24,8 @@ pl_PL:
       event_started:
         title: Wydarzenie rozpoczęte
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Podany przez Ciebie region świąt nie istnieje."
-    discourse_calendar_enable_holiday_failed: "Nie można włączyć tego święta, jest ono już włączone lub nie jest wyłączone."
+    discourse_events_holiday_region_invalid: "Podany przez Ciebie region świąt nie istnieje."
+    discourse_events_enable_holiday_failed: "Nie można włączyć tego święta, jest ono już włączone lub nie jest wyłączone."
     discourse_post_event_bulk_invite_succeeded:
       title: "Zdarzenie — zaproszenie zbiorcze powiodło się"
       subject_template: "Zaproszenie zbiorcze zostało pomyślnie przetworzone"
@@ -44,8 +44,8 @@ pl_PL:
   site_settings:
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
-    calendar_enabled: "Włącz wtyczkę Wydarzenia Discourse. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."
-    discourse_post_event_enabled: "Włącza funkcje zdarzeń. Uwaga: wymagane jest również włączenie opcji {{setting:calendar_enabled}}."
+    discourse_events_enabled: "Włącz wtyczkę Wydarzenia Discourse. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."
+    discourse_post_event_enabled: "Włącza funkcje zdarzeń. Uwaga: wymagane jest również włączenie opcji {{setting:discourse_events_enabled}}."
     displayed_invitees_limit: "Ogranicza liczbę zaproszeń wyświetlanych w wydarzeniu."
     display_post_event_date_on_topic_title: "Wyświetla datę wydarzenia po tytule tematu."
     use_local_event_date: "Użyj daty lokalnej po tytule tematu zamiast czasu względnego."
@@ -82,7 +82,7 @@ pl_PL:
     livestream_zoom_sdk_secret: "Tajny klucz klienta Zoom Meeting SDK."
     livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
     livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "Domyślny widok kalendarza"
@@ -155,6 +155,12 @@ pl_PL:
           acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
           acting_user_not_allowed_to_act_on_this_event: "Obecny użytkownik nie może działać w związku z tym wydarzeniem."
           invalid_allowed_groups: "Nieprawidłowe dozwolone grupy."
+          invalid_hosts: "Do tego wydarzenia nie można dodać jednego lub więcej hostów."
+          too_many_hosts:
+            one: "Wydarzenie jest ograniczone do %{count} hosta."
+            few: "Wydarzenie jest ograniczone do %{count} hostów."
+            many: "Wydarzenie jest ograniczone do %{count} hostów."
+            other: "Wydarzenie jest ograniczone do %{count} hostów."
           acting_user_not_allowed_to_invite_these_groups: "Bieżący użytkownik nie może zapraszać tych grup."
           custom_field_is_invalid: "Pole niestandardowe `%{field}` jest niedozwolone."
           name:

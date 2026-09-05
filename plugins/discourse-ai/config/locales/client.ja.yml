@@ -199,6 +199,12 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      ai_decoded_transcript:
+        thinking: "思考中"
+        tool: "ツール"
+        type: "タイプ"
+        error: "エラー"
+        response: "応答"
       discourse_workflows:
         ai_agent:
           mode: "モード"
@@ -256,9 +262,10 @@ ja:
         search:
           name: "検索"
           description: "クエリに対して AI が生成した回答を提供することで、検索エクスペリエンスを強化します"
-          discoveries: "発見"
+          ask_ai: "AI に尋ねる"
           setting_groups:
             settings: "基本設定"
+            access_control: "アクセス制御"
         embeddings:
           name: "埋め込み"
           description: "テキストのセマンティック表現を生成することで、関連トピックや AI 検索などの機能を強化します"
@@ -478,11 +485,10 @@ ja:
         retry: "やり直す"
         apply: "適用"
         all_models: "すべてのモデル"
+        all_features: "すべての機能"
         successful: "成功"
         failed: "失敗しました"
         unknown: "不明"
-        topic_id: "トピック ID"
-        post_id: "投稿 ID"
         time: "時刻"
         when: "日時"
         outcome: "結果"
@@ -498,6 +504,7 @@ ja:
         duration: "期間"
         cost: "料金"
         actions: "アクション"
+        view_details: "詳細"
         periods:
           day: "過去 24 時間"
           week: "過去 7 日間"
@@ -738,10 +745,6 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-7: "Anthropic の最もインテリジェントなモデル"
-          anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
-          anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
-          google-gemini-3-1-pro-preview: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"
@@ -910,14 +913,8 @@ ja:
         provider_fields:
           model_name: "モデル名"
         semantic_search: "トピック (セマンティック)"
-        semantic_search_results:
-          unavailable: "AI の結果は利用できません"
-          zero_results_expanded: "結果は見つかりませんでした。%{count} 件の AI 結果が表示されています"
         semantic_search_tooltips:
           results_explanation: "有効にすると、追加の AI 検索結果が下に追加されます。"
-          invalid_sort: "AI 結果を表示するには、検索結果を関連性で並べ替える必要があります"
-        semantic_search_unavailable_tooltip: "AI 結果を表示するには、検索結果を関連性で並べ替える必要があります"
-        ai_generated_result: "AI で見つかった検索結果"
         quick_search:
           suffix: "AI によるすべてのトピックと投稿"
       ai_artifact:
@@ -1043,20 +1040,29 @@ ja:
             expanded: "展開"
             expanded_description: "AI 要約を使用"
       discobot_discoveries:
-        main_title: "Discobot の発見"
-        regular_results: "トピック"
-        tell_me_more: "もっと教えて..."
-        continue_convo: "会話を続ける..."
+        main_title: "AI に尋ねる"
         loading_convo: "会話を読み込み中"
-        collapse: "折りたたむ"
-        timed_out: "Discobot は発見を見つけられませんでした。問題が発生しました。"
         user_setting: "発見の AI 検索を有効にする"
-        tooltip:
-          header: "AI 搭載の検索"
-          content: "%{model} による自然言語検索"
-          actions:
-            info: "仕組みは？"
-            disable: "無効化"
+        legacy:
+          main_title: "Discobot の発見"
+          regular_results: "トピック"
+          tell_me_more: "もっと教えて..."
+          continue_convo: "会話を続ける..."
+          loading_convo: "会話を読み込み中"
+          collapse: "折りたたむ"
+          timed_out: "Discobot は発見を見つけられませんでした。問題が発生しました。"
+          tooltip:
+            header: "AI 搭載の検索"
+            content: "%{model} による自然言語検索"
+            actions:
+              info: "仕組みは？"
+              disable: "無効化"
+        search_type: "AI"
+        search_all_topics: "すべてのトピック"
+        search_messages: "メッセージ"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "関連トピック"
       user_preferences:
         empty: "現在、関連する設定はありません"
     review:

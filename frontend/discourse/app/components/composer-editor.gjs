@@ -183,6 +183,28 @@ export default class ComposerEditor extends Component {
     }
   }
 
+  @bind
+  lookupAvatarTemplateByPostNumber(postNumber, topicId) {
+    const topic = this.topic;
+    if (!topic || topicId !== topic.get("id")) {
+      return;
+    }
+
+    const quotedPost = topic
+      .get("postStream.posts")
+      ?.find((p) => p.post_number === postNumber);
+
+    if (!quotedPost) {
+      return;
+    }
+
+    return applyValueTransformer(
+      "composer-editor-quoted-post-avatar-template",
+      quotedPost.get("avatar_template"),
+      { post: quotedPost }
+    );
+  }
+
   @computed
   get markdownOptions() {
     return {
@@ -191,24 +213,15 @@ export default class ComposerEditor extends Component {
       formatUsername,
 
       lookupAvatarByPostNumber: (postNumber, topicId) => {
-        const topic = this.topic;
-        if (!topic) {
-          return;
-        }
+        const avatarTemplate = this.lookupAvatarTemplateByPostNumber(
+          postNumber,
+          topicId
+        );
 
-        const posts = topic.get("postStream.posts");
-        if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.find((p) => p.post_number === postNumber);
-          if (quotedPost) {
-            const avatarTemplate = applyValueTransformer(
-              "composer-editor-quoted-post-avatar-template",
-              quotedPost.get("avatar_template"),
-              { post: quotedPost }
-            );
-            return tinyAvatar(avatarTemplate);
-          }
-        }
+        return avatarTemplate ? tinyAvatar(avatarTemplate) : undefined;
       },
+
+      lookupAvatarTemplateByPostNumber: this.lookupAvatarTemplateByPostNumber,
 
       lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
         const topic = this.topic;
@@ -355,21 +368,23 @@ export default class ComposerEditor extends Component {
     }
 
     let reason;
-    if (this.composer?.model?.replyLength < 1) {
-      reason = i18n("composer.error.post_missing");
-    } else if (this.composer?.model?.missingReplyCharacters > 0) {
-      reason = i18n("composer.error.post_length", {
-        count: this.composer?.model?.minimumPostLength,
-      });
-      const tl = this.get("currentUser.trust_level");
-      if ((tl === 0 || tl === 1) && !this._isNewTopic) {
-        reason +=
-          "<br/>" +
-          i18n("composer.error.try_like", {
-            heart: iconHTML("heart", {
-              label: i18n("likes_lowercase", { count: 1 }),
-            }),
-          });
+    if (this.composer?.model?.missingReplyCharacters > 0) {
+      if (this.composer?.model?.replyLength < 1) {
+        reason = i18n("composer.error.post_missing");
+      } else {
+        reason = i18n("composer.error.post_length", {
+          count: this.composer?.model?.minimumPostLength,
+        });
+        const tl = this.get("currentUser.trust_level");
+        if ((tl === 0 || tl === 1) && !this._isNewTopic) {
+          reason +=
+            "<br/>" +
+            i18n("composer.error.try_like", {
+              heart: iconHTML("heart", {
+                label: i18n("likes_lowercase", { count: 1 }),
+              }),
+            });
+        }
       }
     }
 

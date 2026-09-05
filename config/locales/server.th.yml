@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 th:
+  llms_txt:
+    sections:
+      optional: "ทางเลือก"
+    links:
+      search:
+        label: "ค้นหา"
+      categories:
+        label: "หมวดหมู่"
+      about:
+        label: "เกี่ยวกับ"
+      guidelines:
+        label: "คู่มือ"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -170,6 +182,7 @@ th:
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
   admin_site_traffic_explorer:
+    unknown: "ไม่ทราบ"
     traffic_types:
       anonymous: "ไม่ระบุชื่อ"
   reviewable_score_types:
@@ -240,6 +253,11 @@ th:
         share: "แบ่งปัน"
       types:
         staff: "ทีมงาน"
+    posters_by_member_type_members:
+      labels:
+        user: "ผู้ใช้"
+        count: "โพส"
+        share: "แบ่งปัน"
     trust_level_pipeline:
       labels:
         count: "สมาชิก"
@@ -290,6 +308,9 @@ th:
         user: "ผู้ใช้"
         num_topics: "หัวข้อ"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "เยี่ยมชม"
+    top_entry_urls:
       labels:
         count: "เยี่ยมชม"
     top_referrers_by_browser_pageviews:

@@ -53,6 +53,42 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       );
   });
 
+  test("lists additional event hosts in a menu", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        hosts: [
+          { id: 6, username: "alex" },
+          { id: 7, username: "blake" },
+          { id: 8, username: "casey" },
+          { id: 9, username: "drew" },
+        ],
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-hosts");
+
+    assert
+      .dom(".event-host")
+      .exists({ count: 2 }, "shows the first two hosts initially");
+    assert.dom(".event-hosts__toggle").hasText("and 2 others");
+
+    await click(".event-hosts__toggle");
+
+    assert
+      .dom(".event-host")
+      .exists({ count: 2 }, "keeps the row compact while the menu is open");
+    assert.dom(".event-hosts-menu__title").hasText("4 hosts");
+    assert
+      .dom(".event-hosts-menu__host")
+      .exists({ count: 4 }, "lists every host in the menu");
+    assert
+      .dom(".event-hosts-menu__host[data-user-card='drew']")
+      .hasText("drew");
+  });
+
   test("interpolates the ordinal and weekday into the monthly recurrence label", async function (assert) {
     stubApi.call(this, buildEvent({ recurrence: "every_month" }));
 
@@ -135,6 +171,29 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
     assert
       .dom(".event-recurrence")
       .hasText("Every Thursday", "uses the date's weekday, not the prior day");
+  });
+
+  test("labels a fourth weekday as fourth even when the month has no fifth", async function (assert) {
+    // 2026-02-26 is both the fourth and the final Thursday of February
+    stubApi.call(
+      this,
+      buildEvent({
+        recurrence: "every_month",
+        starts_at: "2026-02-26T14:00:00Z",
+        ends_at: "2026-02-26T15:00:00Z",
+      })
+    );
+
+    const event = { id: 1, startsAt: "2026-02-26T14:00:00Z" };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-recurrence");
+
+    assert
+      .dom(".event-recurrence")
+      .hasText(
+        "The fourth Thursday of every month",
+        "matches the fourth-weekday rule the server generates"
+      );
   });
 
   test("renders location and url side by side when they differ", async function (assert) {

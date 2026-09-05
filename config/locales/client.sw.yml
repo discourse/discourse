@@ -233,6 +233,7 @@ sw:
       sections:
         theme: "Mandhari"
         homepage: "Ukurasa mkuu"
+        search: "Tafuta"
       colors:
         light: "Hafifu"
         dark: "Nyeusi"
@@ -1268,6 +1269,8 @@ sw:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      delete: "Futa"
+      home: "Nyumbani"
     category_row:
       subcategories: "+ Kategoria mtoto"
     select_kit:
@@ -1475,6 +1478,7 @@ sw:
       categories: "Vikundi"
       tags: "Lebo"
       type:
+        default: "Machapisho"
         users: "Watumiaji"
         categories: "Vikundi"
       context:
@@ -1854,7 +1858,6 @@ sw:
       reply_as_new_private_message: "Jibu kama ujumbe mpya kwenda kwa wapokeaji wale wale"
       continue_discussion: "Endelea majadiliano kuanzia %{postLink}:"
       follow_quote: "nenda kwenye chapisho lililotajwa"
-      show_full: "Onyesha Chapisho Lote"
       collapse: "kunja"
       expand_collapse: "panua/kunja"
       locked: "msimamizi amefunga chapisho hili lisifanyiwe uhariri"
@@ -2460,6 +2463,11 @@ sw:
         group_traffic: "Utembeleaji"
         group_members: "Wanachama"
         group_other: "Nyingine"
+        related_items:
+          users:
+            title: "Watumiaji"
+          labels:
+            user: "Mtumiaji"
       config_sections:
         account:
           title: "Akaunti"
@@ -2607,15 +2615,10 @@ sw:
       search:
         title: "Tafuta"
       site_traffic_explorer:
-        pageviews: "Ukurasa Umeonwa Mara"
-        columns:
-          top_urls: "Anwani ya mtandao"
-          ip_addresses: "Anwani ya Mtandao"
+        metric_information: "Kuhusu %{metric}"
+        apply: "Tumia"
         filters:
           ip: "Anwani ya Mtandao"
-        metrics:
-          pageviews:
-            label: "Ukurasa Umeonwa Mara"
         series:
           anonymous_human: "Asiyejulikana"
       dashboard:
@@ -2663,6 +2666,8 @@ sw:
               share: "Shirikisha"
             whos_posting:
               staff: "Wasaidizi"
+              modal:
+                apply: "Hifadhi"
             trust_level_pipeline:
               trust_levels:
                 "0": "Mpya"
@@ -2674,6 +2679,8 @@ sw:
             title: "Tafuta"
             table:
               searches: "Utafiti"
+          system:
+            title: "Mfumo"
         reports_section:
           header_action: "Simamia"
           modal:
@@ -2704,6 +2711,13 @@ sw:
           disabled: "Hii ripoti imezuiwa"
           total: "Jumla ya wakati wote"
           no_data: "Hakuna data za kuoneshwa"
+          posters_by_member_type_members:
+            users_count:
+              one: "Mtumiaji mmoja"
+              other: "%{count} watumiaji"
+            posts_count:
+              one: "%{count} chapisho"
+              other: "%{count} machapisho"
           sort_ascending: "kupanda"
           sort_descending: "kushuka"
           filters:

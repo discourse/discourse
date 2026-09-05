@@ -4,7 +4,7 @@ describe Topic do
   before do
     freeze_time
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -20,7 +20,7 @@ describe Topic do
             raw: "The boat market is quite active lately.",
           )
 
-        expect(DiscoursePostEvent::Event).to_not exist(id: post_with_date.id)
+        expect(DiscourseEvents::Events::Event).to_not exist(id: post_with_date.id)
       end
     end
   end

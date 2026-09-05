@@ -170,7 +170,7 @@ export default class TopicDismissButtons extends Component {
                       @translatedLabel={{i18n
                         "topics.bulk.dismiss_and_stop_tracking"
                       }}
-                      class="btn-secondary dismiss-new-stop-tracking"
+                      class="dismiss-new-stop-tracking"
                     />
                   </dropdown.item>
                 </DDropdownMenu>

@@ -34,8 +34,16 @@ module DiscourseAi
           nil
         end
 
+        def rag_document_sources
+          []
+        end
+
         def force_default_llm
           false
+        end
+
+        def supports_bot_user?
+          agents_supporting_bot_user.any? { |klass| self <= klass }
         end
 
         def allow_chat_channel_mentions
@@ -108,7 +116,9 @@ module DiscourseAi
             Tools::LockPost,
             Tools::DeleteTopic,
             Tools::EditPost,
+            Tools::CreateCategory,
             Tools::EditCategory,
+            Tools::ChangeTopicCategory,
             Tools::SetTopicTimer,
             Tools::SetSlowMode,
             Tools::MovePosts,
@@ -122,6 +132,7 @@ module DiscourseAi
             Tools::ReadSiteSetting,
             Tools::ChangeSiteSetting,
             Tools::RandomPicker,
+            Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
             Tools::GithubDiff,
@@ -141,7 +152,9 @@ module DiscourseAi
 
           if SiteSetting.tagging_enabled
             tools << Tools::ListTags
-            tools << Tools::EditTags
+            tools << Tools::CreateTag
+            tools << Tools::EditTag
+            tools << Tools::ChangeTopicTags
           end
 
           # Image generation tools - use custom UI-configured tools
@@ -211,6 +224,24 @@ module DiscourseAi
             end
         end
 
+        def agents_supporting_bot_user
+          @agents_supporting_bot_user ||= [
+            General,
+            SqlHelper,
+            Artist,
+            SettingsExplorer,
+            Researcher,
+            Creative,
+            DiscourseHelper,
+            GithubHelper,
+            WebArtifactCreator,
+            Designer,
+            ForumResearcher,
+            Discover,
+            DiscourseAdminAssistant,
+          ].freeze
+        end
+
         def builtin_system_agents
           @builtin_system_agents ||= {
             General => -1,
@@ -251,6 +282,8 @@ module DiscourseAi
             EmotionClassifier => -37,
             AdminDashboardHighlights => -38,
             DiscourseAdminAssistant => -39,
+            AskAiQueryRewriter => -40,
+            AskAiSynthesis => -41,
           }.freeze
         end
       end
@@ -503,7 +536,10 @@ module DiscourseAi
           content.filter_map do |part|
             if part.is_a?(Hash) && part.key?(:upload_id)
               upload = uploads_by_id[part[:upload_id].to_i]
-              next part if upload.blank? || !image_upload?(upload)
+              if upload.blank? ||
+                   !DiscourseAi::Completions::UploadEncoder.supported_image_upload?(upload)
+                next part
+              end
               next if seen_upload_ids.include?(upload.id)
 
               delegated_image_handle(upload, context, seen_upload_ids)
@@ -522,7 +558,10 @@ module DiscourseAi
         content.gsub(DELEGATED_IMAGE_PATTERN) do |markdown|
           sha1 = Upload.sha1_from_short_url(Regexp.last_match(1))
           upload = uploads_by_sha1[sha1]
-          next markdown if upload.blank? || !image_upload?(upload)
+          if upload.blank? ||
+               !DiscourseAi::Completions::UploadEncoder.supported_image_upload?(upload)
+            next markdown
+          end
           next "" if seen_upload_ids.include?(upload.id)
 
           delegated_image_handle(upload, context, seen_upload_ids) || "[Image unavailable]"
@@ -539,10 +578,6 @@ module DiscourseAi
 
       def prompt_guardian(context)
         context.image_guardian
-      end
-
-      def image_upload?(upload)
-        DiscourseAi::Completions::UploadEncoder.image_upload?(upload)
       end
 
       def replace_placeholders(content, context)

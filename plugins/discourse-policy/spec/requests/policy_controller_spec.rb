@@ -64,6 +64,46 @@ describe DiscoursePolicy::PolicyController do
     end
   end
 
+  context "when an add-users-to-group assignment is removed" do
+    it "does not grant accepters access to topics restricted to the former group" do
+      group_to_add = Fabricate(:group)
+      group_to_add.add_owner(moderator)
+      private_category = Fabricate(:private_category, group: group_to_add)
+      private_topic = Fabricate(:topic, category: private_category, user: moderator)
+      private_post = Fabricate(:post, topic: private_topic, user: moderator, raw: "Restricted post")
+      policy_post = create_post(raw: <<~MD, user: moderator)
+            [policy group=#{group.name} add-users-to-group=#{group_to_add.name}]
+            I always open **doors**!
+            [/policy]
+          MD
+
+      sign_in(moderator)
+      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
+                [policy group=#{group.name}]
+                I always open **doors**!
+                [/policy]
+              MD
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post"]["raw"]).not_to include("add-users-to-group")
+
+      sign_in(user1)
+      get "/t/#{private_topic.id}.json"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_post.raw)
+
+      put "/policy/accept.json", params: { post_id: policy_post.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+
+      get "/t/#{private_topic.id}.json"
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_post.raw)
+    end
+  end
+
   describe "#accepted" do
     before { sign_in(user1) }
 
@@ -285,6 +325,115 @@ describe DiscoursePolicy::PolicyController do
       expect(response.parsed_body["errors"]).to include(
         I18n.t("discourse_policy.errors.policy_group_inaccessible"),
       )
+    end
+  end
+
+  describe "wiki policy edits" do
+    fab!(:admin)
+    fab!(:editor, :user)
+    fab!(:policy_group, :group)
+    fab!(:policy_creator_group, :group)
+    fab!(:target_group, :group)
+    fab!(:private_category) { Fabricate(:private_category, group: target_group) }
+    fab!(:private_topic) { Fabricate(:topic, category: private_category, user: admin) }
+    fab!(:private_post) do
+      Fabricate(:post, topic: private_topic, user: admin, raw: "Restricted group content")
+    end
+    let(:policy_post) { create_post(user: admin, raw: <<~MD) }
+          [policy group=#{policy_group.name}]
+          Accept this policy
+          [/policy]
+        MD
+    let(:policy_post_with_target_group) { create_post(user: admin, raw: <<~MD) }
+          [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
+          Accept this policy
+          [/policy]
+        MD
+
+    before do
+      policy_group.add(editor)
+      policy_creator_group.add(editor)
+      SiteSetting.policy_enabled = true
+      SiteSetting.create_policy_allowed_groups = "1|2|#{policy_creator_group.id}"
+      editor.change_trust_level!(TrustLevel[1])
+      SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+      policy_post.update!(wiki: true)
+    end
+
+    it "prevents wiki editors from granting themselves access through a policy target group" do
+      sign_in(editor)
+      get "/posts/#{private_post.id}.json"
+      inaccessible_status = response.status
+      inaccessible_body = response.body
+
+      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
+                [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
+                Accept this policy
+                [/policy]
+              MD
+
+      edit_status = response.status
+      edit_errors = response.parsed_body["errors"]
+
+      put "/policy/accept.json", params: { post_id: policy_post.id }
+      accept_status = response.status
+      accept_body = response.body
+
+      get "/posts/#{private_post.id}.json"
+      restricted_status = response.status
+      restricted_body = response.body
+
+      aggregate_failures do
+        expect(inaccessible_status).to eq(403)
+        expect(inaccessible_body).not_to include(private_post.raw)
+        expect(edit_status).to eq(422)
+        expect(edit_errors).to include(I18n.t("discourse_policy.errors.no_policy_permission"))
+        expect(accept_status).to eq(200), accept_body
+        expect(target_group.user_ids).not_to include(editor.id)
+        expect(restricted_status).to eq(403)
+        expect(restricted_body).not_to include(private_post.raw)
+      end
+    end
+
+    it "does not grant wiki editors access through a blockquoted policy" do
+      sign_in(editor)
+      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
+                [quote="someone, post:1, topic:1"]
+                [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
+                Accept this policy
+                [/policy]
+                [/quote]
+              MD
+
+      expect(response.status).to eq(200)
+
+      put "/policy/accept.json", params: { post_id: policy_post.id }
+      accept_status = response.status
+
+      get "/posts/#{private_post.id}.json"
+      restricted_status = response.status
+
+      aggregate_failures do
+        expect(target_group.user_ids).not_to include(editor.id)
+        expect(accept_status).not_to eq(200)
+        expect(restricted_status).to eq(403)
+      end
+    end
+
+    it "allows wiki editors to modify policy text without changing an inaccessible target group" do
+      policy_post_with_target_group.update!(wiki: true)
+      sign_in(editor)
+
+      put "/posts/#{policy_post_with_target_group.id}.json", params: { post: { raw: <<~MD } }
+                [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
+                Updated policy text
+                [/policy]
+              MD
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["post"]["raw"]).to include("Updated policy text")
+      end
     end
   end
 end

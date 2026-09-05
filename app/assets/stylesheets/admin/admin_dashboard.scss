@@ -137,8 +137,33 @@ $db-bar-height: var(--space-2);
   }
 }
 
+.db-bar-track {
+  display: flex;
+  height: $db-bar-height;
+  border-radius: 1em;
+  background: var(--primary-low);
+  overflow: hidden;
+}
+
+.db-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--tertiary);
+  flex: 0 0 auto;
+
+  // a real but tiny segment would otherwise round away to nothing
+  min-width: 2px;
+
+  &.--alt {
+    background: var(--tertiary-medium);
+  }
+}
+
 .db-configure {
   padding: var(--space-4);
+  max-width: 100%;
+  box-sizing: border-box;
 
   &__list {
     @include unstyled-list;
@@ -149,6 +174,10 @@ $db-bar-height: var(--space-2);
     @include viewport.until(sm) {
       gap: var(--space-5);
     }
+  }
+
+  &__section-name {
+    @include ellipsis;
   }
 
   &__row {
@@ -300,7 +329,7 @@ $db-bar-height: var(--space-2);
     display: flex;
     justify-content: flex-end;
     flex-grow: 1;
-    gap: var(--space-10);
+    gap: clamp(var(--space-2), var(--space-8), var(--space-8));
 
     @include viewport.until(sm) {
       border-top: 1px solid var(--primary-low);
@@ -457,6 +486,7 @@ $db-bar-height: var(--space-2);
     &.--grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: 320px;
       gap: var(--space-4);
 
       @include viewport.until(sm) {
@@ -484,6 +514,116 @@ $db-bar-height: var(--space-2);
       &:has(.db-section__row-block) {
         padding-bottom: 0;
       }
+    }
+  }
+}
+
+.db-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.db-system {
+  &__block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    &:first-of-type {
+      border-top-left-radius: var(--d-border-radius-large);
+      border-bottom-left-radius: var(--d-border-radius-large);
+    }
+
+    &:last-of-type {
+      border-top-right-radius: var(--d-border-radius-large);
+      border-bottom-right-radius: var(--d-border-radius-large);
+    }
+  }
+
+  &__value {
+    font-size: var(--font-up-3-rem);
+    font-weight: 500;
+    color: var(--primary);
+  }
+
+  &__label {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+  }
+
+  &__breakdown {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__link {
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+
+    &.--critical {
+      .db-system__label {
+        color: var(--danger);
+      }
+    }
+
+    .--storage & {
+      justify-content: space-between;
+    }
+
+    .--status & {
+      justify-content: flex-end;
+    }
+  }
+
+  &__status-icon {
+    .--ok & {
+      color: var(--success);
+    }
+
+    .--warning &,
+    .--critical & {
+      color: var(--danger);
+    }
+  }
+}
+
+.--system {
+  @include viewport.until(sm) {
+    .db-section__row-block {
+      border-radius: var(--d-border-radius-large);
+      flex-basis: calc(50% - var(--space-1));
+      border: 1px solid var(--content-border-color);
+    }
+  }
+}
+
+.db-bar-track {
+  .--system & {
+    margin-block: var(--space-2);
+  }
+}
+
+.db-bar-fill {
+  &:first-child {
+    .--system & {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  &:nth-child(2) {
+    .--system & {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
   }
 }

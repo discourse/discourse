@@ -77,6 +77,11 @@ it:
           solved: "sono risolti"
           unsolved: "non sono risolti"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Argomento"
+            category: "Categoria"
       web_hooks:
         solved_event:
           group_name: "Evento risolto"

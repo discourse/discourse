@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module DiscoursePostEvent
-  describe EventsController do
+module DiscourseEvents::Events
+  describe DiscourseEvents::EventsController do
     before do
       Jobs.run_immediately!
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       SiteSetting.displayed_invitees_limit = 3
     end
@@ -78,6 +78,88 @@ module DiscoursePostEvent
         expect(description_html).to include("<p>Bring snacks</p>")
       end
 
+      it "returns card fields without cooking event text for every event" do
+        creator = Fabricate(:user)
+        event =
+          Fabricate(
+            :event,
+            user: creator,
+            original_starts_at: 1.day.from_now,
+            description: "Discuss the launch",
+            location: "Room 5",
+            url: "https://example.com/launch",
+          )
+        attendee = Fabricate(:user)
+        event.create_invitees(
+          [{ user_id: attendee.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
+        )
+
+        get "/discourse-post-event/events.json", params: { include_card: "true" }
+
+        expect(response.status).to eq(200)
+        card = response.parsed_body["events"].find { |event_json| event_json["id"] == event.id }
+        expect(card).to include(
+          "creator" => hash_including("username" => creator.username),
+          "description" => "Discuss the launch",
+          "location" => "Room 5",
+          "url" => "https://example.com/launch",
+        )
+        expect(card["sample_invitees"].map { |invitee| invitee.dig("user", "username") }).to eq(
+          [attendee.username],
+        )
+        expect(card).not_to have_key("description_html")
+      end
+
+      it "rejects invalid dates and limits" do
+        [
+          { after: "garbage" },
+          { before: "2025-13-45" },
+          { limit: "abc" },
+          { limit: "0" },
+        ].each do |params|
+          get "/discourse-post-event/events.json", params: params
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      it "accepts now as the lower date bound" do
+        Fabricate(:event, original_starts_at: 1.day.from_now)
+
+        get "/discourse-post-event/events.json", params: { after: "now" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"]).not_to be_empty
+      end
+
+      it "filters by tags, text, and status" do
+        tag = Fabricate(:tag, name: "launch")
+        tagged_event =
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            name: "Launch briefing",
+            location: "Room 5",
+            post: Fabricate(:post, topic: Fabricate(:topic, tags: [tag])),
+          )
+        private_event =
+          Fabricate(
+            :event,
+            original_starts_at: 2.days.from_now,
+            status: DiscourseEvents::Events::Event.statuses[:private],
+            url: "https://example.com/meeting",
+          )
+
+        get "/discourse-post-event/events.json", params: { tags: [tag.name] }
+        expect(response.parsed_body["events"].pluck("id")).to contain_exactly(tagged_event.id)
+
+        get "/discourse-post-event/events.json", params: { search: "briefing" }
+        expect(response.parsed_body["events"].pluck("id")).to contain_exactly(tagged_event.id)
+
+        get "/discourse-post-event/events.json", params: { status: "private" }
+        expect(response.parsed_body["events"].pluck("id")).to contain_exactly(private_event.id)
+      end
+
       it "should return events in ics format" do
         event1 = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event 1")
         event2 = Fabricate(:event, original_starts_at: 2.days.from_now, name: "Test Event 2")
@@ -96,7 +178,7 @@ module DiscoursePostEvent
         body = response.body
         calendar_name =
           I18n.t(
-            "discourse_calendar.calendar_subscriptions.all_events_feed_name",
+            "discourse_events.calendar_subscriptions.all_events_feed_name",
             site_title: SiteSetting.title,
           )
         expect(body).to include("BEGIN:VCALENDAR")
@@ -387,7 +469,7 @@ module DiscoursePostEvent
           expect(response.status).to eq(200)
           calendar_name =
             I18n.t(
-              "discourse_calendar.calendar_subscriptions.my_events_feed_name",
+              "discourse_events.calendar_subscriptions.my_events_feed_name",
               site_title: SiteSetting.title,
             )
           expect(response.body).to include("X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}")
@@ -691,7 +773,7 @@ module DiscoursePostEvent
             Fabricate(
               :event,
               post: private_event_post,
-              status: DiscoursePostEvent::Event.statuses[:private],
+              status: DiscourseEvents::Events::Event.statuses[:private],
               raw_invitees: [restricted_group.name],
             )
           end
@@ -898,7 +980,7 @@ module DiscoursePostEvent
 
   describe "bulk invite respects capacity" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 
@@ -940,7 +1022,7 @@ module DiscoursePostEvent
 
   describe "#show" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 
@@ -1013,7 +1095,7 @@ module DiscoursePostEvent
 
   describe "anonymous access to EventsController" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 

@@ -50,6 +50,41 @@ module("Unit | Utility | to-markdown", function (hooks) {
     assert.true(result.includes("**bold**"), "bold formatting preserved");
   });
 
+  test("only treats bold font weights as strong", async function (assert) {
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 500;">medium</span> text`
+      ),
+      "some medium text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(`some <span style="font-weight: 700;">bold</span> text`),
+      "some **bold** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 1000;">black</span> text`
+      ),
+      "some **black** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 650.5;">variable</span> text`
+      ),
+      "some **variable** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: bold;">bold</span> text`
+      ),
+      "some **bold** text"
+    );
+  });
+
   test("converts a link", async function (assert) {
     let html = `<a href="https://discourse.org">Discourse</a>`;
     let markdown = `[Discourse](https://discourse.org)`;
@@ -163,10 +198,16 @@ module("Unit | Utility | to-markdown", function (hooks) {
 
     html = `<table>
               <tr><th>Heading 1</th><th>Head 2</th></tr>
-              <tr><td><a href="http://example.com"><img src="http://example.com/image.png" alt="Lorem" width="45" height="45"></a></td><td>ipsum</td></tr>
+              <tr><td><a href="http://example.com"><img src="http://example.com/image|large.png" alt="Lorem" width="45" height="45" title="wide|image"></a></td><td>ipsum</td></tr>
+              <tr><td>x | y</td><td><code>a|b</code></td></tr>
+              <tr><td><a class="attachment" href="http://example.com/file|v.pdf">file.pdf</a></td><td><ruby lang="ja|latin">字</ruby></td></tr>
             </table>`;
-    markdown = `| Heading 1 | Head 2 |\n|----|----|\n| [![Lorem|45x45](http://example.com/image.png)](http://example.com) | ipsum |`;
-    assert.strictEqual(await toMarkdown(html), markdown);
+    markdown = `| Heading 1 | Head 2 |\n|----|----|\n| [![Lorem\\|45x45](http://example.com/image\\|large.png "wide\\|image")](http://example.com) | ipsum |\n| x \\| y | \`a\\|b\` |\n| [file.pdf\\|attachment](http://example.com/file\\|v.pdf) | <ruby lang="ja\\|latin">字</ruby> |`;
+    assert.strictEqual(
+      await toMarkdown(html),
+      markdown,
+      "pipes are escaped across table-cell serializer paths"
+    );
   });
 
   test("table with br in header is still a valid table", async function (assert) {

@@ -8,6 +8,9 @@ hr:
   js:
     styleguide:
       title: "Vodič za stil"
+      example:
+        kind:
+          component: "Komponenta"
       categories:
         atoms: Atomi
         molecules: Molekule
@@ -68,6 +71,21 @@ hr:
           title: "Više tema"
         post_menu:
           title: "Izbornik objava"
+        roving_focus:
+          toolbar:
+            copy: "Kopija"
+          adjacent:
+            label: "Filteri"
+            field: "Pretraživanje"
+            open: "Otvori"
+          combobox:
+            daily: "Dnevno"
+            weekly: "Tjedno"
+            monthly: "Mjesečno"
+            never: "nikada"
+          tree:
+            components: "Komponente"
+            select: "Odaberite"
         modal:
           title: "Modalni"
           header: "Modalni naslov"

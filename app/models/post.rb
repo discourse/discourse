@@ -237,7 +237,10 @@ class Post < ActiveRecord::Base
       last_editor_id: last_editor_id,
       type: type,
       version: version,
-    }.merge(opts)
+    }
+
+    message[:username] = user&.username if type == :created
+    message.merge!(opts)
 
     publish_message!("/topic/#{topic_id}", message)
     Topic.publish_stats_to_clients!(topic.id, type) unless skip_topic_stats
@@ -1256,7 +1259,7 @@ class Post < ActiveRecord::Base
   def add_to_quoted_post_numbers(num)
     return if num.blank?
     self.quoted_post_numbers ||= []
-    self.quoted_post_numbers << num
+    quoted_post_numbers << num
   end
 
   def create_reply_relationship_with(post)

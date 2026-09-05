@@ -13,7 +13,7 @@ module DiscourseAi
         ai_agents =
           AiAgent
             .ordered
-            .includes(:user, :uploads, ai_agent_mcp_servers: :ai_mcp_server)
+            .includes(:user, :uploads, :rag_document_sources, ai_agent_mcp_servers: :ai_mcp_server)
             .map { |agent| LocalizedAiAgentSerializer.new(agent, root: false) }
 
         tools =
@@ -87,7 +87,7 @@ module DiscourseAi
           if mcp_server_ids
             sync_mcp_server_assignments(ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
-          RagDocumentFragment.link_target_and_uploads(ai_agent, attached_upload_ids)
+          RagDocumentFragment.link_target_and_uploads(ai_agent, attached_upload_ids(ai_agent))
           log_ai_agent_creation(ai_agent)
 
           render_ai_agent_resource(ai_agent, status: :created)
@@ -99,6 +99,8 @@ module DiscourseAi
       end
 
       def create_user
+        raise Discourse::InvalidAccess if !@ai_agent.supports_bot_user?
+
         user = @ai_agent.create_user!
         render json: BasicUserSerializer.new(user, root: "user")
       end
@@ -114,7 +116,7 @@ module DiscourseAi
           if mcp_server_ids
             sync_mcp_server_assignments(@ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
-          RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids)
+          RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids(@ai_agent))
           log_ai_agent_update(@ai_agent, initial_attributes)
 
           render_ai_agent_resource(@ai_agent)
@@ -230,7 +232,7 @@ module DiscourseAi
 
         return render_json_error(I18n.t("discourse_ai.errors.agent_disabled")) if !agent.enabled
 
-        if agent.default_llm.blank?
+        if agent.default_llm.blank? && SiteSetting.ai_default_llm_model.blank?
           return render_json_error(I18n.t("discourse_ai.errors.no_default_llm"))
         end
 
@@ -444,8 +446,11 @@ module DiscourseAi
         @ai_agent = AiAgent.find(params[:id])
       end
 
-      def attached_upload_ids
-        ai_agent_params[:rag_uploads].to_a.map { |h| h[:id] }
+      def attached_upload_ids(agent)
+        manual_upload_ids = ai_agent_params[:rag_uploads].to_a.map { |upload| upload[:id] }
+        source_upload_ids = agent.rag_document_sources.where.not(upload_id: nil).pluck(:upload_id)
+
+        manual_upload_ids.concat(source_upload_ids).uniq
       end
 
       def ensure_ai_agent_user(agent)
@@ -492,6 +497,7 @@ module DiscourseAi
             allowed_group_ids: [],
             mcp_server_ids: [],
             rag_uploads: [:id],
+            rag_document_sources_attributes: %i[id url refresh_interval_hours _destroy],
           )
 
         if payload[:mcp_server_ids].is_a?(Array)

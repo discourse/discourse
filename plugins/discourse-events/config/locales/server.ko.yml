@@ -13,7 +13,7 @@ ko:
     triggerables:
       event_started:
         title: 이벤트 시작됨
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "일"

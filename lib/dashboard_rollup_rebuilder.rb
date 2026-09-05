@@ -8,6 +8,7 @@
 class DashboardRollupRebuilder
   NAMES = %w[
     browser_pageview_country
+    browser_pageview_entry_url
     browser_pageview_referrer
     browser_pageview_session_engagement
     browser_pageview_crawler
@@ -42,6 +43,10 @@ class DashboardRollupRebuilder
 
   def rebuild_browser_pageview_country
     aggregate_browser_pageviews(BrowserPageviewCountryDailyRollup)
+  end
+
+  def rebuild_browser_pageview_entry_url
+    aggregate_browser_pageviews(BrowserPageviewEntryUrlDailyRollup)
   end
 
   def rebuild_browser_pageview_referrer

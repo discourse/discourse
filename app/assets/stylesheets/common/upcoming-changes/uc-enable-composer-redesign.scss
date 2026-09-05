@@ -343,8 +343,8 @@
 
     &__toolbar {
       overflow: hidden;
-      flex-grow: 1;
       max-width: 100%;
+      width: 100%;
       box-sizing: border-box;
 
       @container (width < 600px) {
@@ -354,7 +354,6 @@
       }
 
       @include viewport.until(sm) {
-        width: 100%;
         padding-inline: var(--space-2);
         border-top: 1px solid var(--primary-low);
       }

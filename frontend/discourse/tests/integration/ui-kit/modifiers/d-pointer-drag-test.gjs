@@ -7,6 +7,7 @@ import {
   triggerEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   stubPointerCapture,
@@ -14,6 +15,8 @@ import {
 } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import dPointerDrag, * as dPointerDragModule from "discourse/ui-kit/modifiers/d-pointer-drag";
+
+const LEGACY_DEPRECATION_ID = "discourse.ui-kit.d-draggable";
 
 function installEventListenerSpy(element) {
   const added = [];
@@ -1608,11 +1611,15 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
     test("a legacy drag keeps the body class after a pointer drag ends", async function (assert) {
       const noop = () => {};
-      await render(
-        <template>
-          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
-          <div class="legacy-target" {{dDraggable didEndDrag=noop}}></div>
-        </template>
+      // The deprecation throws from the constructor, so the modifier would
+      // never reach the listeners these tests need.
+      await withSilencedDeprecationsAsync(LEGACY_DEPRECATION_ID, () =>
+        render(
+          <template>
+            <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+            <div class="legacy-target" {{dDraggable didEndDrag=noop}}></div>
+          </template>
+        )
       );
 
       const pointerTarget = find(".dpd-target");
@@ -1640,11 +1647,15 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
     test("a pointer drag keeps the body class after a legacy drag ends", async function (assert) {
       const noop = () => {};
-      await render(
-        <template>
-          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
-          <div class="legacy-target" {{dDraggable didEndDrag=noop}}></div>
-        </template>
+      // The deprecation throws from the constructor, so the modifier would
+      // never reach the listeners these tests need.
+      await withSilencedDeprecationsAsync(LEGACY_DEPRECATION_ID, () =>
+        render(
+          <template>
+            <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+            <div class="legacy-target" {{dDraggable didEndDrag=noop}}></div>
+          </template>
+        )
       );
 
       const pointerTarget = find(".dpd-target");

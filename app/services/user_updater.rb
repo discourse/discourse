@@ -2,6 +2,7 @@
 
 class UserUpdater
   LEGACY_SHOW_ORIGINAL_CONTENT_ATTR = :show_original_content
+  TIMESTAMP_COLUMNS = %w[created_at updated_at].freeze
 
   CATEGORY_IDS = {
     watched_first_post_category_ids: :watching_first_post,
@@ -60,7 +61,6 @@ class UserUpdater
     sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     watched_precedence_over_muted
-    topics_unread_when_closed
     composition_mode
     send_shortcut
     automatically_translate
@@ -106,18 +106,22 @@ class UserUpdater
       user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     end
 
-    if attributes[:profile_background_upload_url] == "" ||
-         !guardian.can_upload_profile_header?(user)
-      user_profile.profile_background_upload_id = nil
-    elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
-      user_profile.profile_background_upload_id = upload.id
+    if attributes.key?(:profile_background_upload_url)
+      if attributes[:profile_background_upload_url] == "" ||
+           !guardian.can_upload_profile_header?(user)
+        user_profile.profile_background_upload_id = nil
+      elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
+        user_profile.profile_background_upload_id = upload.id
+      end
     end
 
-    if attributes[:card_background_upload_url] == "" ||
-         !guardian.can_upload_user_card_background?(user)
-      user_profile.card_background_upload_id = nil
-    elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
-      user_profile.card_background_upload_id = upload.id
+    if attributes.key?(:card_background_upload_url)
+      if attributes[:card_background_upload_url] == "" ||
+           !guardian.can_upload_user_card_background?(user)
+        user_profile.card_background_upload_id = nil
+      elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
+        user_profile.card_background_upload_id = upload.id
+      end
     end
 
     if attributes[:user_notification_schedule]
@@ -278,7 +282,7 @@ class UserUpdater
           user_notification_schedule.destroy_scheduled_timings
         end
       end
-      DiscourseEvent.trigger(:user_updated, user)
+      DiscourseEvent.trigger(:user_updated, user, changed_columns(user, user_profile))
 
       if attributes[:custom_fields].present? && user.needs_required_fields_check?
         UserHistory.create!(
@@ -289,6 +293,10 @@ class UserUpdater
     end
 
     saved
+  end
+
+  def changed_columns(user, user_profile)
+    (user.saved_changes.keys | user_profile.saved_changes.keys) - TIMESTAMP_COLUMNS
   end
 
   def update_muted_users(usernames)

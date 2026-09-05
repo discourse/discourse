@@ -79,6 +79,7 @@ pl_PL:
         show: "Pokaż przypięty baner"
         pinned_by_you: "Przypięte przez Ciebie"
         pinned_by_user: "Przypięte przez %{username}"
+        message_unpinned: "Wiadomość odpięta"
       pinned_bar:
         title: "Przypięta"
         jump_to_pinned: "Przejdź do przypiętej wiadomości"
@@ -369,6 +370,7 @@ pl_PL:
         other: "%{count} nowych wiadomości"
       sound:
         title: "Dźwięk powiadomienia czatu na pulpicie"
+        preview: "Odtwórz podgląd wybranego dźwięku"
       sounds:
         none: "Brak"
         classic: "Klasyczny i czysty"
@@ -390,6 +392,7 @@ pl_PL:
         few: "%{count} pliki"
         many: "%{count} plików"
         other: "%{count} plików"
+      youtube: "YouTube"
       you_flagged: "Oflagowałeś tę wiadomość"
       exit: "opuść czat"
       channel_status:

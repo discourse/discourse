@@ -13,6 +13,9 @@ ro:
   js:
     styleguide:
       title: "Ghid stilistic"
+      example:
+        kind:
+          component: "Componentă"
       categories:
         syntax: Sintaxă
         atoms: Atomi
@@ -33,6 +36,8 @@ ro:
           title: "Sistem corpuri de literă"
         colors:
           title: "Culori"
+        drag_and_drop:
+          locked: "Blocat"
         icons:
           title: "Pictograme"
           full_list: "Vezi lista completă a pictogramelor din Font Awesome"
@@ -74,6 +79,25 @@ ro:
           title: "Mai multe subiecte"
         post_menu:
           title: "Meniu postare"
+        roving_focus:
+          toolbar:
+            copy: "Copiază"
+          tags:
+            remove: "Înlătură %{tag}"
+          adjacent:
+            label: "Filtre"
+            field: "Căutare"
+            open: "Deschide"
+            recent: "Recente"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Zilnic"
+            weekly: "Săptămânal"
+            monthly: "Lunar"
+            never: "Niciodată"
+          tree:
+            components: "Componente"
         modal:
           title: "Dialog modal"
           header: "Titlu modal"

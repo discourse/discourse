@@ -15,6 +15,7 @@ if defined?(DiscourseWorkflows)
               color: "teal",
             },
             group: "discourse_triggers",
+            event: :chat_message_created,
             available: -> { SiteSetting.chat_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_chat",
             output_contracts: [
@@ -91,7 +92,7 @@ if defined?(DiscourseWorkflows)
             },
           )
 
-          def initialize(message, channel, user)
+          def initialize(message, channel, user, *)
             super(parameters: {})
             @message = message
             @channel = channel
@@ -122,7 +123,7 @@ if defined?(DiscourseWorkflows)
                 id: @message.id,
                 message: @message.message,
                 cooked: @message.cooked,
-                excerpt: @message.excerpt || @message.build_excerpt,
+                excerpt: @message.excerpt_for_display,
                 created_at: @message.created_at.iso8601,
                 thread_id: @message.thread_id,
                 chat_channel_id: @message.chat_channel_id,

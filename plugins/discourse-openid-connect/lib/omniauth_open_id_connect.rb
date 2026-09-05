@@ -12,6 +12,7 @@ module OmniAuth
     class OpenIDConnect < OmniAuth::Strategies::OAuth2
       class NonceVerifyError < StandardError
       end
+
       class SubVerifyError < StandardError
       end
 

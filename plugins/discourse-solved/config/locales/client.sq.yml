@@ -32,6 +32,12 @@ sq:
       confirm_solved_removal_cancel: "Anulo"
       shared_issue:
         label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Topic"
+            category: "Kategori"
     discourse_automation:
       triggerables:
         first_accepted_solution:

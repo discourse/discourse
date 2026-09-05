@@ -7,11 +7,10 @@
 tr_TR:
   admin_js:
     admin:
-      calendar: "Olaylar"
       site_settings:
         categories:
           discourse_post_event: "Discourse Etkinliği"
-          discourse_calendar: "Olaylar"
+          discourse_events: "Olaylar"
       web_hooks:
         calendar_event:
           group_name: "Takvim Etkinliği"
@@ -32,8 +31,8 @@ tr_TR:
           fields:
             topic_id:
               label: Konu kimliği
-    discourse_calendar:
-      invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
+    discourse_events:
+      title: "Olaylar"
       preferences:
         all_events_description: "Tüm forum etkinlikleri"
         my_events_description: "Katılacağınız veya ilgilendiğiniz etkinlikler"
@@ -327,9 +326,14 @@ tr_TR:
         week: "Hafta"
         day: "Gün"
         year: "Yıl"
+    discourse_calendar:
+      invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
     group_timezones:
       search: "Ara..."
       group_availability: "%{group} uygunluğu"
+    discourse_workflows:
+      post_event:
+        topic_id: "Konu kimliği"
     discourse_post_event:
       notifications:
         before_event_reminder: "Bir etkinlik başlamak üzere"
@@ -360,6 +364,9 @@ tr_TR:
       edit_event: "Etkinliği düzenle"
       export_event: "Etkinliği dışa aktar"
       created_by: "Oluşturan:"
+      other_hosts:
+        one: "ve %{count} üye daha"
+        other: "ve %{count} üye daha"
       bulk_invite: "Toplu Davet"
       close_event: "Etkinliği kapat"
       open_event: "Etkinliği aç"
@@ -527,6 +534,8 @@ tr_TR:
           placeholder: "İsteğe bağlı, varsayılan olarak konu başlığı"
         invitees:
           label: "Davet edilen gruplar"
+        hosts:
+          label: "Sunucular"
         event_type:
           public:
             title: "Genel"

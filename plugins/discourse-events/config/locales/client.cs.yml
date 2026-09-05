@@ -7,11 +7,10 @@
 cs:
   admin_js:
     admin:
-      calendar: "Události"
       site_settings:
         categories:
           discourse_post_event: "Událost Discourse"
-          discourse_calendar: "Události"
+          discourse_events: "Události"
   js:
     notifications:
       titles:
@@ -26,8 +25,8 @@ cs:
           fields:
             topic_id:
               label: ID tématu
-    discourse_calendar:
-      invite_user_notification: "%{username} vás zve do kalendáře: %{description}"
+    discourse_events:
+      title: "Události"
       on_holiday: "Na dovolené"
       disable_holiday: "Vypnout"
       enable_holiday: "Zapnout"
@@ -43,7 +42,7 @@ cs:
       local_time: "Místní čas"
       region:
         title: "Region"
-        none: "Žádná"
+        none: "Žádný"
         use_current_region: "Použít současný region"
         select_region: "Vyberte region…"
         names:
@@ -318,9 +317,14 @@ cs:
         week: "Týden"
         day: "Den"
         year: "Rok"
+    discourse_calendar:
+      invite_user_notification: "%{username} vás zve do kalendáře: %{description}"
     group_timezones:
       search: "Hledat…"
       group_availability: "Dostupnost %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID tématu"
     discourse_post_event:
       notifications:
         before_event_reminder: "Brzy začne událost"
@@ -353,6 +357,11 @@ cs:
       edit_event: "Upravit událost"
       export_event: "Exportovat událost"
       created_by: "Vytvořil/a"
+      other_hosts:
+        one: "a %{count} další"
+        few: "a %{count} další"
+        many: "a %{count} dalších"
+        other: "a %{count} dalších"
       bulk_invite: "Hromadné pozvání"
       close_event: "Zavřít událost"
       open_event: "Otevřít událost"
@@ -532,6 +541,8 @@ cs:
           placeholder: "Volitelný, ve výchozím stavu název tématu"
         invitees:
           label: "Pozvané skupiny"
+        hosts:
+          label: "Hostitelé"
         event_type:
           public:
             title: "Veřejná"

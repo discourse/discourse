@@ -13,6 +13,9 @@ tr_TR:
   js:
     styleguide:
       title: "Stil rehberi"
+      example:
+        kind:
+          component: "Bileşen"
       categories:
         syntax: Sözdizimi
         atoms: Atomlar
@@ -39,6 +42,8 @@ tr_TR:
           title: "Renkler"
         dialog:
           title: "Diyalog"
+        drag_and_drop:
+          locked: "Kilitli"
         icons:
           title: "Simgeler"
           full_list: "Font Awesome Simgelerinin tam listesine bakın"
@@ -94,6 +99,29 @@ tr_TR:
           title: "Daha Fazla Konu"
         post_menu:
           title: "Gönderi Menüsü"
+        roving_focus:
+          toolbar:
+            copy: "Kopyala"
+          tags:
+            remove: "%{tag} öğesini kaldır"
+            design: "Tasarım"
+            support: "Destek"
+          adjacent:
+            label: "Filtreler"
+            field: "Ara"
+            placeholder: "Konuları ara"
+            open: "Aç"
+            recent: "Yakın zaman"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Günlük"
+            weekly: "Haftalık"
+            monthly: "Aylık"
+            never: "Asla"
+          tree:
+            components: "Bileşenler"
+            select: "Seç"
         docked_composer:
           title: "Docked Composer"
         modal:

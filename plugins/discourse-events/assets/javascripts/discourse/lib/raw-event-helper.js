@@ -256,6 +256,13 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.allowedGroups = (event.rawInvitees || []).join(",");
   }
 
+  const hosts = (event.hosts || [])
+    .map((host) => (typeof host === "string" ? host : host?.username))
+    .filter(Boolean);
+  if (hosts.length) {
+    params.hosts = hosts.join(",");
+  }
+
   if (event.reminders && event.reminders.length) {
     params.reminders = event.reminders
       .map((r) => {
@@ -386,6 +393,7 @@ export function defaultEventState() {
     allowedGroups: null,
     closed: false,
     customFields: {},
+    hosts: null,
   };
 }
 
@@ -424,6 +432,7 @@ export function parseEventAttrs(
     allowedGroups: attrs.allowedGroups || null,
     closed: attrs.closed === "true",
     customFields,
+    hosts: attrs.hosts || null,
   };
 }
 
@@ -447,6 +456,7 @@ export function stateToEventInput(state) {
     reminders: state.reminders,
     imageUpload: state.image ? { url: state.image } : null,
     customFields: state.customFields,
+    hosts: state.hosts ? state.hosts.split(",") : [],
   };
 }
 

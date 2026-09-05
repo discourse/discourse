@@ -657,6 +657,56 @@ RSpec.describe SessionController do
       expect(response.body).to eq(existing_email_body)
     end
 
+    context "when the signup IP has reached the account limit" do
+      let(:ip_address) { "192.0.2.1" }
+
+      before do
+        Fabricate(:user, ip_address:, trust_level: TrustLevel[0])
+        SiteSetting.max_new_accounts_per_registration_ip = 1
+      end
+
+      it "returns the account limit error without sending a code for any email" do
+        expect_not_enqueued_with(job: :send_email_login_code) do
+          post "/session/login-code.json",
+               params: honeypot_magic(email: user.email, signup: true),
+               env: {
+                 REMOTE_ADDR: ip_address,
+               }
+          existing_email_response = response.parsed_body
+
+          post "/session/login-code.json",
+               params: honeypot_magic(email: "unknown@example.com", signup: true),
+               env: {
+                 REMOTE_ADDR: ip_address,
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(existing_email_response)
+          expect(response.parsed_body["error"]).to eq(
+            I18n.t(
+              "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
+            ),
+          )
+        end
+
+        expect(EmailLoginCode.count).to eq(0)
+      end
+
+      it "continues to send login codes for existing accounts" do
+        expect_enqueued_with(job: :send_email_login_code, args: { to_address: user.email }) do
+          post "/session/login-code.json",
+               params: honeypot_magic(email: user.email, signup: false),
+               env: {
+                 REMOTE_ADDR: ip_address,
+               }
+        end
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(EmailLoginCode.for_email(user.email).count).to eq(1)
+      end
+    end
+
     context "when rate limited" do
       before { RateLimiter.enable }
 
@@ -692,6 +742,19 @@ RSpec.describe SessionController do
     let(:code) { login_code.code }
 
     before { SiteSetting.enable_local_logins_via_code = true }
+
+    def begin_discourse_connect_provider_handoff
+      sso = DiscourseConnectBase.new
+      sso.nonce = "handoffnonce"
+      sso.sso_secret = "topsecret"
+      sso.return_sso_url = "http://ask.example.com/sso"
+
+      SiteSetting.enable_discourse_connect_provider = true
+      SiteSetting.discourse_connect_provider_secrets = "ask.example.com|#{sso.sso_secret}"
+      cookies[:sso_payload] = sso.payload
+
+      sso.payload
+    end
 
     it "returns a 404 when login via code is disabled" do
       SiteSetting.enable_local_logins_via_code = false
@@ -776,6 +839,15 @@ RSpec.describe SessionController do
       expect(EmailLoginCode.active.for_email(user.email)).to be_empty
     end
 
+    it "follows a pending DiscourseConnect provider handoff for an existing user" do
+      begin_discourse_connect_provider_handoff
+
+      post "/session/login-code/verify.json", params: { email: user.email, code: }
+
+      expect(response.status).to eq(302)
+      expect(response.location).to start_with("http://ask.example.com/sso")
+    end
+
     it "does not log in with a code issued for a normalized email alias" do
       SiteSetting.normalize_emails = true
       user.update!(email: "foobar@example.com")
@@ -837,17 +909,95 @@ RSpec.describe SessionController do
         # UserSerializer. (Its value depends on automatic group membership,
         # added on commit, so only assert the flag is present here.)
         expect(body).to have_key("can_upload_avatar")
-        # Off by default, so the client makes the user pick rather than
-        # prefilling a generic username.
-        expect(body["prefill_username"]).to eq(false)
       end
 
-      it "flags the username for prefill when email-based suggestions are on" do
-        SiteSetting.use_email_for_username_and_name_suggestions = true
+      it "defers a pending DiscourseConnect provider handoff to the account-ready step" do
+        payload = begin_discourse_connect_provider_handoff
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        body = response.parsed_body
+        expect(body["account_created"]).to eq(true)
+        expect(body["redirect_url"]).to end_with("/session/sso_provider?#{payload}")
+        # Consumed, so a later login isn't sent through this handoff.
+        expect(cookies[:sso_payload]).to be_blank
+      end
+
+      it "does not derive the username from the email when email-based suggestions are off" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        new_user = User.find_by_email("newuser@example.com")
+        expect(new_user.username).not_to include("newuser")
+        expect(new_user.username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+      end
+
+      it "falls back to the generic username when random usernames are disabled" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        SiteSetting.enable_random_usernames = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to match(/\Auser\d*\z/)
+        # A generic placeholder isn't worth prefilling, so the client makes the
+        # user pick a username instead.
+        expect(response.parsed_body["prefill_username"]).to eq(false)
+      end
+
+      it "flags a randomly generated username for prefill" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
 
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
         expect(response.parsed_body["prefill_username"]).to eq(true)
+      end
+
+      it "does not flag the fallback for prefill when generation is on but yields nothing" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        # Unicode words pass validation while unicode usernames are on, then
+        # stop being usable once the site turns them off.
+        SiteSetting.unicode_usernames = true
+        SiteSetting.random_username_adjectives = "静か"
+        SiteSetting.random_username_nouns = "隼"
+        SiteSetting.unicode_usernames = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to match(/\Auser\d*\z/)
+        expect(response.parsed_body["prefill_username"]).to eq(false)
+      end
+
+      it "derives the username from the email when email-based suggestions are on" do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to eq("newuser")
+      end
+
+      it "appends a numeric suffix when the email-derived name is taken" do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+        Fabricate(:user, username: "newuser")
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to eq("newuser1")
+      end
+
+      context "when the email can't produce a username suggestion" do
+        let(:login_code) { EmailLoginCode.generate!(email: "----@example.com") }
+
+        it "assigns a random username instead of the generic fallback" do
+          SiteSetting.use_email_for_username_and_name_suggestions = true
+
+          post "/session/login-code/verify.json", params: { email: "----@example.com", code: }
+
+          expect(response.parsed_body["account_created"]).to eq(true)
+          expect(User.find_by_email("----@example.com").username).to match(
+            /\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/,
+          )
+        end
       end
 
       it "renders an error when registrations are disabled" do
@@ -858,6 +1008,31 @@ RSpec.describe SessionController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).to eq(I18n.t("login.new_registrations_disabled"))
         expect(session[:current_user_id]).to be_nil
+      end
+
+      it "renders the account limit error when the request IP has created too many accounts" do
+        ip_address = "192.0.2.1"
+        SiteSetting.max_new_accounts_per_registration_ip = 2
+        2.times { Fabricate(:user, ip_address:, trust_level: TrustLevel[0]) }
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+             },
+             env: {
+               REMOTE_ADDR: ip_address,
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(
+          I18n.t(
+            "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
+          ),
+        )
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
       end
 
       context "when required signup fields exist" do

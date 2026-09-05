@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -7,6 +8,7 @@ import DashboardDateRange from "discourse/admin/components/dashboard/date-range"
 import SiteTrafficExplorerBreakdownCard from "discourse/admin/components/site-traffic-explorer-breakdown-card";
 import SiteTrafficExplorerFilterPills from "discourse/admin/components/site-traffic-explorer-filter-pills";
 import SiteTrafficExplorerMetric from "discourse/admin/components/site-traffic-explorer-metric";
+import { formatPageviewCount } from "discourse/admin/lib/format-pageview-count";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -31,12 +33,6 @@ export default class SiteTrafficExplorer extends Component {
 
   get metrics() {
     return [
-      {
-        name: "pageviews",
-        label: i18n("admin.site_traffic_explorer.metrics.pageviews.label"),
-        value: this.summary.pageviews ?? 0,
-        compact: true,
-      },
       {
         name: "distinct_sessions",
         label: i18n(
@@ -69,28 +65,36 @@ export default class SiteTrafficExplorer extends Component {
           "admin.dashboard.site_traffic.kpi.average_session_duration.tooltip"
         ),
         value: formatMinutesSeconds(
-          this.summary.average_session_duration_seconds ?? 0
+          this.summary.average_session_duration_seconds ?? 0,
+          { subsecondPrecision: 2 }
         ),
       },
     ];
   }
 
-  get primaryMetric() {
-    return this.metrics[0];
+  get headlineText() {
+    const count = this.summary.pageviews ?? 0;
+
+    return i18n("admin.site_traffic_explorer.headline", {
+      count,
+      formatted_count: formatPageviewCount(count),
+    });
   }
 
-  get secondaryMetrics() {
-    return this.metrics.slice(1);
-  }
-
+  @cached
   get chartModel() {
     return {
-      start_date: moment(this.args.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.args.endDate).format("YYYY-MM-DD"),
+      start_date:
+        this.args.traffic?.chart_start_date ??
+        moment(this.args.startDate).format("YYYY-MM-DD"),
+      end_date:
+        this.args.traffic?.chart_end_date ??
+        moment(this.args.endDate).format("YYYY-MM-DD"),
       data: this.series,
     };
   }
 
+  @cached
   get chartOptions() {
     return {
       hideYAxisGridLines: true,
@@ -157,6 +161,7 @@ export default class SiteTrafficExplorer extends Component {
   get visitorsTabs() {
     return [
       this.#tab({ dimension: "browsers", filter: "browser" }),
+      this.#tab({ dimension: "languages", filter: "language" }),
       this.#tab({ dimension: "ip_addresses", filter: "ip" }),
     ];
   }
@@ -170,13 +175,8 @@ export default class SiteTrafficExplorer extends Component {
     const availableDate = partial.available_start_date
       ? moment(partial.available_start_date).format("ll")
       : null;
-    if (partial.reason === "retention") {
-      return i18n("admin.site_traffic_explorer.partial.retention", {
-        date: availableDate,
-      });
-    }
 
-    const pageviewLimitStart = moment(partial.pageview_limit_start_at);
+    const pageviewLimitStart = moment.utc(partial.pageview_limit_start_at);
     const pageviewLimitDate = pageviewLimitStart.format("ll");
     const pageviewLimitTime = pageviewLimitStart.format("LT");
 
@@ -186,6 +186,11 @@ export default class SiteTrafficExplorer extends Component {
         limit: this.#number(partial.pageview_limit),
         pageviewLimitDate,
         pageviewLimitTime,
+      });
+    }
+    if (partial.reason === "retention") {
+      return i18n("admin.site_traffic_explorer.partial.retention", {
+        date: availableDate,
       });
     }
     return i18n("admin.site_traffic_explorer.partial.pageview_limit", {
@@ -228,13 +233,12 @@ export default class SiteTrafficExplorer extends Component {
       dimension,
       filter,
       label: i18n(`admin.site_traffic_explorer.dimensions.${dimension}`),
-      columnLabel: i18n(`admin.site_traffic_explorer.columns.${dimension}`),
     };
   }
 
   <template>
     <div
-      class="site-traffic-explorer admin-config-page"
+      class="admin-config-page"
       {{didUpdate this.announceResults @traffic @loading @hasPageviews}}
     >
       <DPageHeader
@@ -264,16 +268,19 @@ export default class SiteTrafficExplorer extends Component {
         </:actions>
       </DPageHeader>
 
-      <div class="admin-container site-traffic-explorer__content">
+      <div class="admin-container site-traffic-explorer">
         <SiteTrafficExplorerFilterPills
           @filters={{@activeFilters}}
-          @removeFilter={{@removeFilter}}
+          @hasPendingFilters={{@hasPendingFilters}}
+          @pendingFilterCount={{@pendingFilterCount}}
+          @removeFilterValue={{@removeFilterValue}}
+          @clearFilter={{@clearFilter}}
+          @clearAllFilters={{@clearAllFilters}}
+          @applyFilters={{@applyFilters}}
         />
 
         {{#if @fetchError}}
-          <div
-            class="db-section__wrapper --column site-traffic-explorer__report"
-          >
+          <div class="db-section__wrapper --column">
             <div class="db-section__traffic-chart site-traffic-explorer__chart">
               <div class="db-section__traffic-chart-message" role="alert">
                 {{this.fetchErrorMessage}}
@@ -331,98 +338,82 @@ export default class SiteTrafficExplorer extends Component {
           {{/if}}
 
           {{#if @traffic}}
-            <div class="site-traffic-explorer__results" hidden={{@loading}}>
-              {{#if @hasPageviews}}
-                <div
-                  class="db-section__wrapper --column site-traffic-explorer__report"
-                >
-                  <section
-                    class="db-section__subheader site-traffic-explorer__metrics"
-                    aria-labelledby="site-traffic-explorer-metrics"
-                  >
-                    <h2 id="site-traffic-explorer-metrics" class="sr-only">
-                      {{i18n "admin.site_traffic_explorer.summary"}}
-                    </h2>
-                    <div class="db-section__subintro">
+
+            {{#if @hasPageviews}}
+              <div class="db-section__wrapper --column" hidden={{@loading}}>
+                <section class="db-section__subheader">
+                  <div class="db-section__subintro">
+                    <h3>{{this.headlineText}}</h3>
+                  </div>
+
+                  <div class="db-section__metrics">
+                    {{#each this.metrics as |metric|}}
                       <SiteTrafficExplorerMetric
-                        @name={{this.primaryMetric.name}}
-                        @label={{this.primaryMetric.label}}
-                        @tooltip={{this.primaryMetric.tooltip}}
-                        @value={{this.primaryMetric.value}}
-                        @compact={{this.primaryMetric.compact}}
-                        @primary={{true}}
+                        @name={{metric.name}}
+                        @label={{metric.label}}
+                        @tooltip={{metric.tooltip}}
+                        @value={{metric.value}}
                       />
-                    </div>
-                    <div class="db-section__metrics">
-                      {{#each this.secondaryMetrics as |metric|}}
-                        <SiteTrafficExplorerMetric
-                          @name={{metric.name}}
-                          @label={{metric.label}}
-                          @tooltip={{metric.tooltip}}
-                          @value={{metric.value}}
-                          @compact={{metric.compact}}
-                        />
-                      {{/each}}
-                    </div>
-                  </section>
+                    {{/each}}
+                  </div>
+                </section>
 
-                  <div
-                    class="db-section__traffic-chart site-traffic-explorer__chart"
-                    aria-label={{i18n
-                      "admin.site_traffic_explorer.traffic_over_time"
+                <div class="db-section__traffic-chart">
+                  <AdminReportStackedChart
+                    @model={{this.chartModel}}
+                    @options={{this.chartOptions}}
+                    class="db-section__traffic-chart-canvas"
+                  />
+                  <div class="sr-only">
+                    {{#each this.series as |series|}}
+                      <span
+                        data-test-traffic-series={{series.key}}
+                      >{{series.total}}</span>
+                    {{/each}}
+                  </div>
+                </div>
+
+                <div class="db-section__row">
+                  <SiteTrafficExplorerBreakdownCard
+                    @name="acquisition"
+                    @title={{i18n
+                      "admin.site_traffic_explorer.cards.acquisition"
                     }}
-                  >
-                    <AdminReportStackedChart
-                      @model={{this.chartModel}}
-                      @options={{this.chartOptions}}
-                      class="db-section__traffic-chart-canvas"
-                    />
-                    <div class="sr-only">
-                      {{#each this.series as |series|}}
-                        <span
-                          data-test-traffic-series={{series.key}}
-                        >{{series.total}}</span>
-                      {{/each}}
-                    </div>
-                  </div>
+                    @tabs={{this.acquisitionTabs}}
+                    @dimensions={{@traffic.dimensions}}
+                    @isFilterSelected={{@isFilterSelected}}
+                    @toggleFilter={{@toggleFilter}}
+                    @applyModalFilters={{@applyModalFilters}}
+                  />
+                  <SiteTrafficExplorerBreakdownCard
+                    @name="pages"
+                    @title={{i18n "admin.site_traffic_explorer.cards.pages"}}
+                    @tabs={{this.pagesTabs}}
+                    @dimensions={{@traffic.dimensions}}
+                    @isFilterSelected={{@isFilterSelected}}
+                    @toggleFilter={{@toggleFilter}}
+                    @applyModalFilters={{@applyModalFilters}}
+                  />
+                  <SiteTrafficExplorerBreakdownCard
+                    @name="visitors"
+                    @title={{i18n "admin.site_traffic_explorer.cards.visitors"}}
+                    @tabs={{this.visitorsTabs}}
+                    @dimensions={{@traffic.dimensions}}
+                    @isFilterSelected={{@isFilterSelected}}
+                    @toggleFilter={{@toggleFilter}}
+                    @applyModalFilters={{@applyModalFilters}}
+                  />
+                </div>
+              </div>
+            {{else}}
+              <div
+                class="site-traffic-explorer__empty"
+                data-test-site-traffic-empty
+              >
+                {{i18n "admin.site_traffic_explorer.empty"}}
+              </div>
+            {{/if}}
 
-                  <div class="db-section__row site-traffic-explorer__cards">
-                    <SiteTrafficExplorerBreakdownCard
-                      @name="acquisition"
-                      @title={{i18n
-                        "admin.site_traffic_explorer.cards.acquisition"
-                      }}
-                      @tabs={{this.acquisitionTabs}}
-                      @dimensions={{@traffic.dimensions}}
-                      @setFilter={{@setFilter}}
-                    />
-                    <SiteTrafficExplorerBreakdownCard
-                      @name="pages"
-                      @title={{i18n "admin.site_traffic_explorer.cards.pages"}}
-                      @tabs={{this.pagesTabs}}
-                      @dimensions={{@traffic.dimensions}}
-                      @setFilter={{@setFilter}}
-                    />
-                    <SiteTrafficExplorerBreakdownCard
-                      @name="visitors"
-                      @title={{i18n
-                        "admin.site_traffic_explorer.cards.visitors"
-                      }}
-                      @tabs={{this.visitorsTabs}}
-                      @dimensions={{@traffic.dimensions}}
-                      @setFilter={{@setFilter}}
-                    />
-                  </div>
-                </div>
-              {{else}}
-                <div
-                  class="site-traffic-explorer__empty"
-                  data-test-site-traffic-empty
-                >
-                  {{i18n "admin.site_traffic_explorer.empty"}}
-                </div>
-              {{/if}}
-            </div>
           {{/if}}
         {{/if}}
       </div>

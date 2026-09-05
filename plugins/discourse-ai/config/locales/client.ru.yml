@@ -223,6 +223,13 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      copied: "Скопировано"
+      ai_decoded_transcript:
+        tool: "Инструмент"
+        arguments: "Аргументы"
+        type: "Тип"
+        error: "Ошибка"
+        response: "Ответ"
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
@@ -297,8 +304,11 @@ ru:
         search:
           name: "Искать"
           description: "Улучшает процесс поиска за счет предоставления AI-ответов на запросы"
+          ask_ai: "Спросить AI"
           setting_groups:
             settings: "Основные настройки"
+            agents: "Агенты"
+            access_control: "Контроль доступа"
         embeddings:
           name: "Встраивания"
           description: "Обеспечивает работу функций, таких как «Связанные темы» и «AI-поиск», создавая семантические представления текста"
@@ -518,11 +528,10 @@ ru:
         retry: "Попробовать снова"
         apply: "Применить"
         all_models: "Все модели"
+        all_features: "Все функции"
         successful: "Выполнена"
         failed: "Не удалась"
         unknown: "Расположение неизвестно"
-        topic_id: "ID темы"
-        post_id: "ID сообщения"
         time: "Время"
         when: "Когда"
         outcome: "Результат"
@@ -537,8 +546,7 @@ ru:
         post_short: "Публикация %{id}"
         duration: "Период"
         actions: "Действия"
-        filters:
-          period: "Временной период"
+        view_details: "Детали"
         periods:
           hour: "Последний %{count} час"
           day: "За последние 24 часа"
@@ -593,7 +601,6 @@ ru:
         create_user: Создать пользователя
         create_user_help: При желании вы можете привязать к этому агенту пользователя. В этом случае ИИ будет использовать этого пользователя для ответа на запросы.
         default_llm: Языковая модель по умолчанию
-        default_llm_help: Языковая модель по умолчанию, используемая для этого агента. Обязательно, если вы хотите упоминать агента в публичных сообщениях.
         system_prompt: Системный запрос
         forced_tool_strategy: Стратегия обязательного применения инструмента
         allow_chat_direct_messages: "Разрешить прямые сообщения в чате"
@@ -823,13 +830,6 @@ ru:
           other: "Эта модель сейчас используется в следующих параметрах: %{settings}. В случае неправильной настройки функции не будут работать должным образом. "
         model_description:
           none: "Общие настройки, подходящие для большинства языковых моделей"
-          anthropic-claude-opus-4-7: "Самая интеллектуальная модель Anthropic"
-          anthropic-claude-sonnet-4-6: "Оптимальный баланс скорости и стоимости"
-          anthropic-claude-haiku-4-5: "Быстрая и экономически эффективная модель"
-          google-gemini-3-1-pro-preview: "Самая интеллектуальная модель Google"
-          open_router-moonshotai-kimi-k2-6: "Мультимодальная модель Moonshot с возможностями компьютерного зрения"
-          open_router-deepseek-deepseek-v4-flash: "Новейшая высокопроизводительная модель DeepSeek с обработкой 1 миллиона контекстных данных."
-          open_router-minimax-minimax-m2-7: "Модель MiniMax с большим контекстом"
         preseeded_model_description: "Предварительно настроенная модель с открытым исходным кодом, использующая %{model}"
         configured:
           title: "Настроенные LLM"
@@ -997,14 +997,8 @@ ru:
         provider_fields:
           model_name: "Название модели"
         semantic_search: "Темы (семантика)"
-        semantic_search_results:
-          toggle: "Результаты ИИ"
-          unavailable: "Результаты AI недоступны"
         semantic_search_tooltips:
           results_explanation: "Если параметр включен, дополнительные результаты AI-поиска будут добавлены ниже."
-          invalid_sort: "Результаты поиска должны быть отсортированы по релевантности для отображения AI-результатов"
-        semantic_search_unavailable_tooltip: "Результаты поиска должны быть отсортированы по релевантности для отображения AI-результатов"
-        ai_generated_result: "Результат поиска найден с помощью AI"
         quick_search:
           suffix: "во всех темах и публикациях с AI"
       ai_artifact:
@@ -1129,19 +1123,29 @@ ru:
             expanded: "Расширенная"
             expanded_description: "со сводками от AI"
       discobot_discoveries:
-        regular_results: "Темы"
-        tell_me_more: "Расскажите мне подробнее..."
-        continue_convo: "Продолжить разговор..."
+        main_title: "Спросить AI"
         loading_convo: "Загрузка разговора"
-        collapse: "Свернуть"
-        timed_out: "Discobot не смог найти поисковых рекомендаций. Что-то пошло не так."
+        create_topic: "Создать тему"
         user_setting: "Включите поисковые результаты с использованием ИИ."
-        tooltip:
-          header: "AI-поиск"
-          content: "Поиск на естественном языке с помощью %{model}"
-          actions:
-            info: "Как это работает?"
-            disable: "Отключить"
+        legacy:
+          regular_results: "Новые темы"
+          tell_me_more: "Расскажите мне подробнее..."
+          continue_convo: "Продолжить разговор..."
+          loading_convo: "Загрузка разговора"
+          collapse: "Свернуть"
+          timed_out: "Discobot не смог найти поисковых рекомендаций. Что-то пошло не так."
+          tooltip:
+            header: "AI-поиск"
+            content: "Поиск на естественном языке с помощью %{model}"
+            actions:
+              info: "Как это работает?"
+              disable: "Отключить"
+        search_type: "AI"
+        search_all_topics: "Все темы"
+        search_messages: "Сообщений"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Связанные темы"
       user_preferences:
         empty: "Сейчас соответствующие настройки отсутствуют"
     review:

@@ -72,6 +72,7 @@ en:
         show: "Show pinned banner"
         pinned_by_you: "Pinned by you"
         pinned_by_user: "Pinned by %{username}"
+        message_unpinned: "Message unpinned"
       pinned_bar:
         title: "Pinned"
         jump_to_pinned: "Jump to pinned message"
@@ -341,6 +342,7 @@ en:
         other: "%{count} new messages"
       sound:
         title: "Desktop chat notification sound"
+        preview: "Play a preview of the selected sound"
       sounds:
         none: "None"
         classic: "Classic and clean"
@@ -360,6 +362,7 @@ en:
       uploaded_files:
         one: "%{count} file"
         other: "%{count} files"
+      youtube: "YouTube"
       you_flagged: "You flagged this message"
       exit: "exit chat"
       channel_status:

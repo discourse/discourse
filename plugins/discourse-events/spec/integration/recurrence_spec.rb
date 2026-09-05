@@ -17,13 +17,13 @@ describe "discourse_post_event_recurrence" do
   before do
     freeze_time(starts_at + 1.minute)
 
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
   it "delete previous notifications before creating a new one for invites" do
     going_user = Fabricate(:user)
-    DiscoursePostEvent::Invitee.create_attendance!(going_user.id, post_event_1.id, :going)
+    DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, post_event_1.id, :going)
 
     post_event_1.update!(original_starts_at: starts_at + 10.minutes)
     post_event_1.set_next_date
@@ -126,8 +126,12 @@ describe "discourse_post_event_recurrence" do
     before { post_event_1.update!(recurrence: "every_week") }
 
     it "clears non-recurring going invitees and keeps recurring ones" do
-      DiscoursePostEvent::Invitee.create_attendance!(going_once_user.id, post_event_1.id, :going)
-      DiscoursePostEvent::Invitee.create_attendance!(
+      DiscourseEvents::Events::Invitee.create_attendance!(
+        going_once_user.id,
+        post_event_1.id,
+        :going,
+      )
+      DiscourseEvents::Events::Invitee.create_attendance!(
         going_recurring_user.id,
         post_event_1.id,
         :going,
@@ -140,7 +144,7 @@ describe "discourse_post_event_recurrence" do
       recurring = post_event_1.invitees.find_by(user_id: going_recurring_user.id)
 
       expect(once.status).to be_nil
-      expect(recurring.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(recurring.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
       expect(recurring.recurring).to eq(true)
     end
   end

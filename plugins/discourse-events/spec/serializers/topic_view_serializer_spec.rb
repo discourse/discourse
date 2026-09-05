@@ -12,13 +12,13 @@ RSpec.describe TopicViewSerializer do
   before do
     freeze_time(Time.utc(2020, 4, 24, 14, 10))
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
   context "without timezone" do
     before do
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
@@ -50,9 +50,51 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
+  context "when the first post is omitted from the stream" do
+    let!(:event) do
+      Fabricate(
+        :event,
+        post: first_post,
+        original_starts_at: 1.hour.from_now,
+        description: "Community meetup",
+      )
+    end
+
+    let(:topic_view) do
+      TopicView
+        .new(topic)
+        .tap { |view| view.instance_variable_set(:@posts, [Fabricate(:post, topic:)]) }
+    end
+
+    let(:json) do
+      JSON.parse(described_class.new(topic_view, scope: Guardian.new, root: false).to_json)
+    end
+
+    it "includes an active event from a visible first post" do
+      expect(json.dig("discourse_post_event_first_post_event", "id")).to eq(event.id)
+      expect(json.dig("discourse_post_event_first_post_event", "description")).to eq(
+        "Community meetup",
+      )
+    end
+
+    it "does not include an event from a hidden first post" do
+      first_post.update_columns(hidden: true)
+
+      expect(json).not_to have_key("discourse_post_event_first_post_event")
+      expect(json.to_json).not_to include(event.description)
+    end
+
+    it "does not include a soft-deleted event" do
+      event.update_columns(deleted_at: Time.current)
+
+      expect(json).not_to have_key("discourse_post_event_first_post_event")
+      expect(json.to_json).not_to include(event.description)
+    end
+  end
+
   context "with timezone and show_local_time true" do
     before do
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
@@ -76,7 +118,7 @@ RSpec.describe TopicViewSerializer do
 
   context "with timezone and show_local_time false" do
     before do
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
@@ -101,7 +143,7 @@ RSpec.describe TopicViewSerializer do
   context "with all-day event" do
     before do
       SiteSetting.display_post_event_date_on_topic_title = true
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: first_post.id,
         original_starts_at: Time.utc(2020, 4, 25),
         original_ends_at: Time.utc(2020, 4, 27),
@@ -118,7 +160,7 @@ RSpec.describe TopicViewSerializer do
 
   context "without all-day event" do
     before do
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
@@ -142,7 +184,7 @@ RSpec.describe TopicViewSerializer do
     end
 
     def create_event
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
@@ -151,7 +193,7 @@ RSpec.describe TopicViewSerializer do
 
     it "returns the status the current user answered with" do
       event = create_event
-      DiscoursePostEvent::Invitee.create_attendance!(viewer.id, event.id, :going)
+      DiscourseEvents::Events::Invitee.create_attendance!(viewer.id, event.id, :going)
 
       expect(parsed_json_for(viewer)["event_watching_invitee_status"]).to eq("going")
     end
@@ -176,7 +218,7 @@ RSpec.describe TopicViewSerializer do
 
     it "is not affected by other users' answers" do
       event = create_event
-      DiscoursePostEvent::Invitee.create_attendance!(Fabricate(:user).id, event.id, :going)
+      DiscourseEvents::Events::Invitee.create_attendance!(Fabricate(:user).id, event.id, :going)
 
       expect(parsed_json_for(viewer)["event_watching_invitee_status"]).to be_nil
     end
@@ -195,12 +237,12 @@ RSpec.describe TopicViewSerializer do
     end
 
     def create_event(livestream:, status: :public, raw_invitees: nil)
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
         location: "https://www.youtube.com/live/abc123",
-        status: DiscoursePostEvent::Event.statuses[status],
+        status: DiscourseEvents::Events::Event.statuses[status],
         raw_invitees:,
         livestream:,
       )

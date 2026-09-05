@@ -39,6 +39,7 @@ cs:
         suspend_user: "Pozastavit uživatele"
         silence_user: "Ztišit uživatele"
         edit_post: "Upravit příspěvek"
+        create_category: "Vytvořit kategorii"
         move_posts: "Přesunout příspěvky"
         search: "Vyhledávání"
         tags: "Seznam značek"
@@ -46,6 +47,7 @@ cs:
         summarize: "Shrnout"
       tool_help:
         delete_topic: "Odstranit téma"
+        create_category: "Vytvořit novou kategorii"
         summary: "Shrnout téma"
       tool_description:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
@@ -58,10 +60,13 @@ cs:
       delete_topic:
         errors:
           not_found: "Téma nenalezeno."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Téma nenalezeno."
       edit_category:
+        errors:
+          not_found: "Kategorie nebyla nalezena."
+      change_topic_category:
         errors:
           not_found: "Téma nenalezeno."
           category_not_found: "Kategorie nebyla nalezena."

@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import {
   buildScope,
+  caretOffsetFromPoint,
   lookupWorkflowMethodDoc,
   resolveVariableId,
   walkScope,
@@ -83,6 +84,19 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.strictEqual(scope.$input.last(), scope.$input.item);
     assert.deepEqual(scope.$input.params, Object.create(null));
     assert.deepEqual(scope.$input.context, Object.create(null));
+  });
+
+  test("builds $helpers.absoluteUrl for converting a relative path", function (assert) {
+    const scope = buildScope({});
+
+    assert.strictEqual(
+      scope.$helpers.absoluteUrl("/t/some-slug/123/4"),
+      `${window.location.origin}/t/some-slug/123/4`
+    );
+    assert.strictEqual(
+      scope.$helpers.absoluteUrl("https://example.com/foo"),
+      "https://example.com/foo"
+    );
   });
 
   test("exposes method docs for workflow-owned scope helpers", function (assert) {
@@ -385,3 +399,79 @@ module("Unit | lib | discourse-workflows | resolveVariableId", function () {
     );
   });
 });
+
+module(
+  "Unit | lib | discourse-workflows | caretOffsetFromPoint",
+  function (hooks) {
+    let descriptor;
+
+    // Defined rather than stubbed: the API is absent on some engines, which is
+    // itself one of the cases under test.
+    function stubCaretPosition(value) {
+      Object.defineProperty(document, "caretPositionFromPoint", {
+        configurable: true,
+        value,
+      });
+    }
+
+    function textarea(value) {
+      const control = document.createElement("textarea");
+      control.value = value;
+      return control;
+    }
+
+    hooks.beforeEach(function () {
+      descriptor = Object.getOwnPropertyDescriptor(
+        document,
+        "caretPositionFromPoint"
+      );
+    });
+
+    hooks.afterEach(function () {
+      if (descriptor) {
+        Object.defineProperty(document, "caretPositionFromPoint", descriptor);
+      } else {
+        delete document.caretPositionFromPoint;
+      }
+    });
+
+    test("uses a caret position that belongs to the control", function (assert) {
+      const control = textarea("abcdef");
+      stubCaretPosition(() => ({ offsetNode: control, offset: 3 }));
+
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), 3);
+    });
+
+    test("keeps a caret position at either edge of the value", function (assert) {
+      const control = textarea("abcdef");
+      stubCaretPosition(() => ({ offsetNode: control, offset: 0 }));
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), 0);
+
+      stubCaretPosition(() => ({ offsetNode: control, offset: 6 }));
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), 6);
+    });
+
+    test("rejects a caret position outside the control", function (assert) {
+      const control = textarea("abcdef");
+      stubCaretPosition(() => ({ offsetNode: document.body, offset: 0 }));
+
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), null);
+    });
+
+    test("rejects an offset past the end of the value", function (assert) {
+      const control = textarea("abcdef");
+      stubCaretPosition(() => ({ offsetNode: control, offset: 9 }));
+
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), null);
+    });
+
+    test("returns null without a caret position API", function (assert) {
+      delete document.caretPositionFromPoint;
+
+      assert.strictEqual(
+        caretOffsetFromPoint(textarea("abcdef"), 10, 20),
+        null
+      );
+    });
+  }
+);

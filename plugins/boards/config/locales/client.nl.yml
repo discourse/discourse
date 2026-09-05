@@ -1,0 +1,43 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    boards:
+      board:
+        remove_card: "Verwijderen"
+        new_topic: "Nieuw topic..."
+        title: "Titel"
+        tags: "Tags"
+        assigned_to: "Toegewezen aan"
+        view_topic: "Topic bekijken"
+        topic_reply_count:
+          one: "%{count} antwoord"
+          other: "%{count} antwoorden"
+        assign: "Toewijzen"
+        unassign: "Toewijzing opheffen"
+        unassign_from_topic: "Toewijzing van @%{username} aan topic opheffen"
+        unassign_from_post: "Toewijzing van @%{username} aan %{post_number} opheffen"
+        edit_assignments: "Toewijzingen bewerken..."
+        created_by: "Gemaakt door"
+      manage:
+        name: "Naam"
+        slug: "Slug"
+        constraint_categories: "Categorieën"
+        constraint_tags: "Tags"
+        advanced_settings: "Geavanceerde instellingen"
+        columns:
+          remove: "Verwijderen"
+          column_title: "Titel"
+          icon: "Pictogram"
+          color: "Kleur"
+          default_sort_priority: "Prioriteit"
+          tag: "Taggen"
+          move_to_assigned_unassign: "Toewijzing opheffen"
+          move_to_status_open: "Open"
+          move_to_status_closed: "Gesloten"
+          show_advanced: "Geavanceerde opties weergeven"
+          hide_advanced: "Geavanceerde opties verbergen"

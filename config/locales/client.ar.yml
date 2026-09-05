@@ -688,6 +688,8 @@ ar:
         theme: "السمة"
         fonts: "الخطوط"
         homepage: "الصفحة الرئيسية"
+        welcome_banner: "بانر الترحيب"
+        search: "البحث"
       theme:
         selected: "محدَّدة"
       colors:
@@ -2700,7 +2702,6 @@ ar:
         watch_topic: "مراقبة الموضوع"
         track_topic: "تتبع الموضوع"
         do_nothing: "عدم اتخاذ أي إجراء"
-      topics_unread_when_closed: "اعتبار الموضوعات غير مقروءة عندما تكون مغلقة"
       invited:
         title: "الدعوات"
         pending_tab: "قيد الانتظار"
@@ -3505,6 +3506,11 @@ ar:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "الخيار"
+      period: "الفترة"
+      tab: "مفتاح Tab"
+      delete: "حذف"
+      home: "الصفحة الرئيسية"
     conditional_loading_section:
       loading: جارٍ التحميل…
     category_row:
@@ -3834,7 +3840,6 @@ ar:
       create_whisper: "همس"
       create_shared_draft: "إنشاء مسودة مشتركة"
       edit_shared_draft: "تعديل المسودة المشتركة"
-      title: "أو اضغط على %{modifier}Enter"
       save_and_close: "حفظ وإغلاق"
       discard: "تجاهل"
       cancel_edit: "ألغِ تعديل"
@@ -4282,10 +4287,10 @@ ar:
         search_field: "حقل البحث في رأس الموقع"
         search_icon: "أيقونة البحث الموجودة بجوار صورة الملف الشخصي"
       type:
-        default: "الموضوعات/المنشورات"
+        default: "المنشورات"
         users: "المستخدمون"
         categories: "الفئات"
-        categories_and_tags: "الفئات/الوسوم"
+        categories_and_tags: "الفئات والوسوم"
       context:
         user: "البحث عن المنشورات باسم المستخدم @%{username}"
         category: "البحث في الفئة #%{category}"
@@ -4298,7 +4303,6 @@ ar:
         in: "يقوم بالتصفية حسب البيانات الوصفية (مثلًا: in:title، in:personal، in:pinned)"
         status: "يقوم بالتصفية حسب حالة الموضوع"
         full_search: "يشغِّل البحث في الصفحة بأكملها"
-        full_search_key: "%{modifier} + Enter"
         me: "يعرض منشوراتك فقط"
       advanced:
         title: عوامل تصفية متقدمة
@@ -4775,7 +4779,6 @@ ar:
           missing_to: "مطلوب تحديد وسم بديل"
       delete_topics:
         name: "حذف"
-        description: "احذف الموضوعات المحدَّدة نهائيًا. لا يمكن التراجع عن هذا الإجراء."
       update_category:
         name: "تحديث الفئة"
         description: "انقل جميع الموضوعات المحدَّدة إلى الفئة التالية:"
@@ -5470,7 +5473,6 @@ ar:
       reply_as_new_private_message: "الرد في رسالة جديدة إلى المستلمين أنفسهم"
       continue_discussion: "متابعة المناقشة من %{postLink}:"
       follow_quote: "انتقل إلى المنشور الذي تم اقتباسه"
-      show_full: "عرض المنشور الكامل"
       show_hidden: "عرض المحتوى الذي تم تجاهله"
       deleted_by_author_simple: "(تم حذف المنشور بواسطة الكاتب)"
       collapse: "طي"
@@ -6467,12 +6469,8 @@ ar:
     invalid_video_url: لا يمكن تشغيل هذا الفيديو لأن عنوان URL غير صالح أو غير متاح.
     keyboard_shortcuts_help:
       search_placeholder: "ابحث عن اختصار باستخدام الوصف أو مجموعة المفاتيح"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} أو %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "اختصارات لوحة المفاتيح"
       short_title: "الاختصارات"
       search_ctrl_f_tip: "يمكنك البحث في جميع محتويات المنتدى بالضغط على <kbd>/</kbd>"
@@ -7381,6 +7379,11 @@ ar:
         legacy_warning: "هذا تقرير قديم، وسيتم إيقافه قريبًا. يرجى الاتصال بالدعم الفني إذا كنت بحاجة إلى مساعدة في إيجاد بديل."
         chart:
           total: "الإجمالي: %{count}"
+        related_items:
+          users:
+            title: "المستخدمون"
+          labels:
+            user: "المستخدم"
       config_sections:
         account:
           title: "الحساب"
@@ -7722,7 +7725,6 @@ ar:
           header_description: "تكوين إعدادات البحث، بما في ذلك التسجيل والترميز للغتَين الصينية واليابانية"
         search_everything:
           title: "البحث"
-          header_description: "اعثر على أي شيء في واجهة المسؤول هنا. يمكنك تصفية النتائج أدناه، وسيتم تذكر تفضيلاتك. لفتح هذا البحث في أي مكان ضمن واجهة المسؤول، اضغط %{shortcutHTML}."
         security:
           title: "الأمان"
           header_description: "تكوين إعدادات الأمان، بما في ذلك المصادقة الثنائية، وامتيازات المشرف، وسياسات أمان المحتوى"
@@ -7970,25 +7972,21 @@ ar:
         title: "ما الجديد؟"
         check_for_updates: "تحقَّق من وجود تحديثات"
       site_traffic_explorer:
-        pageviews: "مرات عرض الصفحة"
+        metric_information: "نبذة عن %{metric}"
+        remove_filter_value: "إزالة %{value}"
+        clear_all: "مسح الكل"
+        apply: "تطبيق"
         view_more: "عرض المزيد"
         cards:
           pages: "صفحتان"
           visitors: "الزوار"
-        columns:
-          referrers: "المُحيل"
-          countries: "البلد"
-          top_urls: "عنوان URL"
-          browsers: "المتصفح"
-          ip_addresses: "عنوان IP"
         filters:
           referrer: "المُحيل"
           country: "البلد"
           browser: "المتصفح"
+          language: "اللغة"
           ip: "عنوان IP"
         metrics:
-          pageviews:
-            label: "مرات عرض الصفحة"
           logged_in_share:
             label: "نسبة المسجَّلين الدخول"
           bounce_rate:
@@ -8117,6 +8115,14 @@ ar:
               staff: "فريق العمل"
               empty: "لا يوجد منشورات خلال الفترة المحدَّدة."
               save_error: "تعذَّر حفظ تحديدك للمرة القادمة."
+              add_group: "إضافة مجموعة"
+              modal:
+                apply: "حفظ"
+                enable: "تفعيل %{title}"
+                disable: "إيقاف %{title}"
+                move_up: "تحريك %{title} لأعلى"
+                move_down: "تحريك %{title} لأسفل"
+                footer_note: "ستنطبق هذه التغييرات على جميع المستخدمين."
             trust_level_pipeline:
               title: "تدرُّج مستويات الثقة"
               trust_levels:
@@ -8205,6 +8211,11 @@ ar:
                 no_match_tooltip: "مصطلحات البحث ذات معدَّل نقر (CTR) 0%."
                 poor_match: "تطابق ضعيف"
                 poor_match_tooltip: "مصطلحات البحث ذات معدَّل نقر (CTR) بين 1-20%."
+          system:
+            title: "النظام"
+            status: "الحالة"
+            discourse_updated: "تحديث Discourse"
+            dashboard_updated: "تم تحديث لوحة المعلومات"
         reports_section:
           header_action: "إدارة"
           description: "قم بتثبيت التقارير القياسية أو استعلامات مستكشف البيانات لتتبُّع ما يهم مجتمعك."
@@ -8381,6 +8392,21 @@ ar:
           average_for_sample: "متوسط العينة"
           total: "إجمالي الوقت الكلي"
           no_data: "لا توجد بيانات لعرضها."
+          posters_by_member_type_members:
+            users_count:
+              zero: "%{count} مستخدمين"
+              one: "مستخدم واحد (%{count})"
+              two: "%{count} مستخدمًا"
+              few: "%{count} مستخدمًا"
+              many: "%{count} مستخدمين"
+              other: "%{count} مستخدمًا"
+            posts_count:
+              zero: "منشوران %{count})"
+              one: "منشور %{count}"
+              two: "منشوران %{count})"
+              few: "منشوران %{count})"
+              many: "منشوران %{count})"
+              other: "منشوران %{count})"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سجلات البحث</a>'
             disabled: 'تقرير عبارات البحث الرائجة متوقف. قم بتفعيل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'

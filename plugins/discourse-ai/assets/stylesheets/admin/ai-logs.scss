@@ -3,31 +3,62 @@
 .ai-logs {
   padding: var(--space-4);
 
-  &__retention {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-    margin-bottom: var(--space-4);
-    padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
-    background: var(--primary-very-low);
-  }
-
-  &__retention-warning {
-    margin: 0;
-    color: var(--primary-high);
+  &__table-wrap {
+    position: relative;
   }
 
   &__filters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
     margin-bottom: var(--space-4);
+
+    // the drawer's contents are hidden while collapsed, so tint the toggle to
+    // signal that filters are still narrowing the list
+    &.ai-logs__filters--drawer-active
+      .d-filter-controls:not(:has(.d-filter-controls__dropdowns))
+      .d-filter-controls__toggle-filters {
+      --d-button-default-icon-color: var(--tertiary);
+      --d-button-default-icon-color--hover: var(--tertiary-hover);
+    }
+
+    // the row mixes selects with switches, so it sizes to its contents rather
+    // than forcing every filter into an equal column
+    .d-filter-controls__dropdowns {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .d-filter-controls__dropdown,
+    .ai-logs__feature-filter {
+      flex: 1 1 12rem;
+    }
   }
 
-  &__periods,
+  &__periods {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+
+    > button:last-of-type {
+      margin-right: auto;
+    }
+  }
+
+  // select-kit bolds its header; the plain selects beside it do not
+  &__feature-filter.select-kit .select-kit-header {
+    font-weight: normal;
+  }
+
+  // the switches read as one control, so they stay together and keep their
+  // own width instead of stretching with the selects
+  &__toggles {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
   &__date-range {
     display: flex;
     flex-wrap: wrap;
@@ -35,64 +66,14 @@
     gap: var(--space-2);
   }
 
-  &__filter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    align-items: end;
-    width: 100%;
-    gap: var(--space-2);
-
-    > * {
-      min-width: 0;
-    }
-
-    .d-select {
-      width: 100%;
-    }
-  }
-
-  &__user-filter .select-kit {
-    width: 100%;
-    max-width: var(--form-kit-medium-input);
-
-    @include viewport.until(sm) {
-      max-width: 100%;
-    }
-  }
-
-  &__toggle {
-    align-self: end;
-    padding-bottom: var(--space-2);
-  }
-
-  &__id-filter {
+  .d-date-time-input-range {
     display: flex;
     flex-wrap: wrap;
-    align-items: end;
     gap: var(--space-2);
 
-    > .form-kit__field {
-      min-width: 10rem;
-    }
-  }
-
-  &__table-wrapper {
-    border-block: 1px solid var(--content-border-color);
-  }
-
-  &__table {
-    width: 100%;
-    table-layout: fixed;
-
-    th,
-    td {
-      vertical-align: middle;
-    }
-
-    th {
-      color: var(--primary-high);
-      font-size: var(--font-down-1);
-      font-weight: 600;
+    .from,
+    .to {
+      margin: 0;
     }
   }
 
@@ -110,31 +91,30 @@
     }
   }
 
-  &__col-time {
-    width: 6rem;
-  }
-
-  td.ai-logs__col-time {
+  .ai-logs__col-time {
     color: var(--primary-high);
     white-space: nowrap;
   }
 
   &__col-outcome {
-    width: 5rem;
     text-align: center;
   }
 
-  &__col-user {
-    width: 10rem;
-  }
-
   &__col-duration {
-    width: 7.5rem;
     text-align: end;
     font-variant-numeric: tabular-nums;
+  }
+
+  td.ai-logs__col-duration {
     white-space: nowrap;
   }
 
+  &__duration-heading {
+    white-space: nowrap;
+  }
+
+  &__duration-heading,
+  &__tokens-heading,
   &__duration-value,
   &__token-summary {
     display: block;
@@ -153,10 +133,6 @@
   &__col-actions {
     width: 3rem;
     text-align: end;
-
-    .btn-flat {
-      color: var(--primary-high);
-    }
   }
 
   &__model,
@@ -170,24 +146,20 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
     gap: var(--space-1);
+
+    @include viewport.from(md) {
+      justify-content: center;
+    }
   }
 
-  &__status-dot {
-    display: inline-block;
-    width: 0.65rem;
-    height: 0.65rem;
-    flex: 0 0 0.65rem;
-    border-radius: 50%;
-    cursor: help;
-
+  &__status-icon {
     &.--success {
-      background: var(--success);
+      color: var(--success);
     }
 
     &.--failed {
-      background: var(--danger);
+      color: var(--danger);
     }
   }
 
@@ -239,39 +211,32 @@
     text-align: center;
   }
 
-  @include viewport.until(xl) {
-    &__col-context {
-      display: none;
-    }
-  }
-
   @include viewport.until(lg) {
     padding: var(--space-2);
 
-    &__col-outcome {
-      width: 4rem;
-    }
-
-    &__col-user {
-      width: 7.5rem;
-    }
-
-    &__col-duration {
-      width: 6.5rem;
-    }
-
-    &__model {
-      display: none;
-    }
-  }
-
-  @include viewport.until(md) {
-    &__table {
+    .d-table {
+      display: block;
       margin-bottom: 0;
+      table-layout: auto;
+
+      .d-table__header,
+      .d-table__body {
+        display: block;
+      }
+
+      .d-table__header {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
     }
 
     &__row {
       display: grid;
+      width: 100%;
       grid-template-columns: auto 1fr auto;
       grid-template-areas:
         "outcome time actions"
@@ -280,48 +245,58 @@
       align-items: center;
       padding-block: var(--space-1);
 
-      > .d-table__cell {
+      .d-table__cell {
         width: auto;
         padding: var(--space-1) var(--space-2);
         border-top: 0;
       }
 
-      > .ai-logs__col-time {
+      .ai-logs__col-time {
         grid-area: time;
       }
 
-      > .ai-logs__col-outcome {
+      .ai-logs__col-outcome {
         grid-area: outcome;
       }
 
-      > .ai-logs__col-request {
+      .ai-logs__col-request {
         grid-area: request;
       }
 
-      > .ai-logs__col-user {
+      .ai-logs__col-user {
         grid-area: user;
         min-width: 0;
+        display: flex;
       }
 
-      > .ai-logs__col-duration {
+      .ai-logs__col-duration {
         grid-area: duration;
         text-align: end;
       }
 
-      > .ai-logs__col-actions {
+      .ai-logs__col-actions {
         position: static;
         grid-area: actions;
+      }
+
+      .ai-logs__col-context {
+        grid-column: 1 / -1;
       }
     }
 
     &__status-cell {
       justify-content: start;
     }
+
+    &__model {
+      display: none;
+    }
   }
 }
 
 .d-modal.ai-log-detail-modal {
   --modal-max-width: min(96vw, 75rem);
+  overflow: hidden;
 }
 
 .ai-log-detail-modal {
@@ -349,11 +324,29 @@
     }
   }
 
-  &__tabs {
+  &__tabs,
+  &__tab-list,
+  &__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1);
+    align-items: center;
+  }
+
+  &__tabs {
     margin-bottom: var(--space-3);
+  }
+
+  &__actions {
+    justify-content: flex-end;
+    max-width: 100%;
+    margin-inline-start: auto;
+
+    .btn {
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
   }
 
   &__attempts {
@@ -362,7 +355,7 @@
   }
 
   &__error {
-    padding: var(--space-6);
+    margin: var(--space-6);
     text-align: center;
   }
 }

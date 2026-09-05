@@ -1432,6 +1432,39 @@ RSpec.describe Email::Receiver do
       expect { process(:mailinglist_reply) }.to change { topic.posts.count }
     end
 
+    it "does not use a mirror destination to reply to a private message" do
+      private_message_author = Fabricate(:user, refresh_auto_groups: true)
+      private_message_recipient = Fabricate(:user, refresh_auto_groups: true)
+      attacker_recipient = Fabricate(:user, email: "attacker-recipient@example.com")
+      private_message =
+        Fabricate(
+          :private_message_topic,
+          user: private_message_author,
+          recipient: private_message_recipient,
+        )
+      private_post = create_post(topic: private_message, user: private_message_author)
+      attacker_email = <<~EMAIL
+        From: attacker@example.com
+        To: list@example.com
+        Cc: #{attacker_recipient.email}
+        Subject: Re: private message
+        In-Reply-To: <discourse/post/#{private_post.id}@#{Email::MessageIdService.host}>
+        References: <discourse/post/#{private_post.id}@#{Email::MessageIdService.host}>
+        Message-ID: <attacker-private-message@example.com>
+        Date: Wed, 11 Mar 2026 10:00:00 +0000
+
+        Attacker-controlled private message content.
+      EMAIL
+
+      expect { Email::Receiver.new(attacker_email).process! }.not_to change {
+        private_message.posts.count
+      }
+      expect(private_message.allowed_users).to contain_exactly(
+        private_message_author,
+        private_message_recipient,
+      )
+    end
+
     it "should skip validations for staged users" do
       Fabricate(:user, email: "alice@foo.com", staged: true)
       expect { process(:mailinglist_short_message) }.to change { Topic.count }

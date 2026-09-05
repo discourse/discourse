@@ -6,21 +6,22 @@
   "devDependencies": {
     "@discourse/lint-configs": "^3.3.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
-    "@fortawesome/fontawesome-free": "7.2.0",
+    "@fortawesome/fontawesome-free": "7.3.1",
     "@glint/ember-tsc": "^1.8.11",
     "@glint/tsserver-plugin": "^2.5.17",
     "@rdil/parallel-prettier": "^3.0.0",
-    "concurrently": "^9.2.1",
+    "concurrently": "^10.0.5",
     "eslint": "10.6.0",
-    "execa": "^9.6.0",
+    "execa": "^10.0.1",
     "jsdoc": "^4.0.5",
-    "lefthook": "^2.1.9",
+    "lefthook": "^2.1.12",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^3.2.0",
     "lint-to-the-future-eslint": "^4.0.0",
     "playwright": "1.59.1",
     "postcss-selector-parser": "^7.1.4",
     "prettier": "3.8.1",
+    "postcss-value-parser": "^4.2.0",
     "stylelint": "17.5.0",
     "typescript": "^5.9.3"
   },
@@ -50,5 +51,5 @@
     "yarn": "please-use-pnpm",
     "pnpm": "^10"
   },
-  "packageManager": "pnpm@10.28.0"
+  "packageManager": "pnpm@10.34.5"
 }

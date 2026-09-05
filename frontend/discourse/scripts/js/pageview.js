@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const trackViewSessionId = document.querySelector(
       "meta[name=discourse-track-view-session-id]"
     )?.content;
+    if (!trackViewSessionId) {
+      return;
+    }
 
     const useBeacon =
       document.querySelector("meta[name=discourse-beacon-pageview-enabled]")
@@ -36,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
         session_id: trackViewSessionId,
         url: window.location.href,
         referrer: document.referrer.length ? document.referrer : null,
+        language: navigator.language,
       };
       fetch(`${root}/srv/pv`, {
         method: "POST",
