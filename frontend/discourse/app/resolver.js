@@ -1,5 +1,6 @@
 import { dasherize, decamelize } from "@ember/string";
 import Resolver from "ember-resolver";
+import { applyDeferredClassModifications } from "discourse/lib/deferred-class-modifications";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { findHelper } from "discourse/lib/helpers";
@@ -371,6 +372,12 @@ export function buildResolver(baseName) {
       for (const [key, value] of Object.entries(modules)) {
         define(key, () => value);
       }
+
+      // Both are memoized, so a lazily-loaded route bundle is invisible to them until rebuilt.
+      expireModuleTrieCache();
+      DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
+
+      applyDeferredClassModifications();
     }
 
     /**
