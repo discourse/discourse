@@ -43,11 +43,12 @@ RSpec.describe "JSON:API queries", type: :request do
   let(:query_parameters) { {} }
   let(:user) { admin }
   let(:parsed_body) { JSON.parse(response.body) }
+  let(:headers) { { "HTTP_API_VERSION" => JsonApiKit::Timeline.current.to_s } }
 
   before do
     SiteSetting.data_explorer_enabled = true
     sign_in(user)
-    get path, params: query_parameters
+    get path, headers:, params: query_parameters
   end
 
   shared_examples "a request only for admins" do

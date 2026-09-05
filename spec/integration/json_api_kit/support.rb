@@ -176,8 +176,9 @@ RSpec.shared_context "with a listing of topics" do
     relationship_object(type, row, name, data:).deep_merge(links: { prev: nil, next: next_page })
   end
 
-  def refusal(title:, detail:, parameter: nil, status: "400", **members)
-    { status:, title:, detail:, source: parameter && { parameter: }, **members }.compact
+  def refusal(title:, detail:, parameter: nil, header: nil, status: "400", **members)
+    source = { parameter:, header: }.compact.presence
+    { status:, title:, detail:, source:, **members }.compact
   end
 
   def not_found = refusal(status: "404", title: "No such record", detail: "No record has this ID.")
