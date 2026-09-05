@@ -55,6 +55,13 @@ RSpec.describe TopicQuery::PrivateMessageLists do
 
       expect(TopicQuery.new(user_4).list_private_messages(user_4).topics).to contain_exactly(pm)
     end
+
+    it "accepts page and per_page as strings" do
+      topics =
+        TopicQuery.new(user_2, page: "0", per_page: "5").list_private_messages(user_2).topics
+
+      expect(topics).to contain_exactly(private_message)
+    end
   end
 
   describe "private_messages_personal_inbox_query modifier" do
