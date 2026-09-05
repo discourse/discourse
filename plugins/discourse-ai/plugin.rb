@@ -116,10 +116,7 @@ after_initialize do
   require_relative "discourse_automation/llm_tagger"
 
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node do
-      require_relative "discourse_workflows/nodes/ai_agent/v1"
-      DiscourseWorkflows::Nodes::AiAgent::V1
-    end
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
   end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
