@@ -71,6 +71,7 @@ class Tag < ActiveRecord::Base
 
   before_save :cook_description
 
+  after_update :enqueue_tag_hashtag_remap, if: :saved_change_to_name?
   after_save :index_search
   after_save :update_synonym_associations
 
@@ -342,6 +343,13 @@ class Tag < ActiveRecord::Base
 
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(name.strip.downcase)
+  end
+
+  def enqueue_tag_hashtag_remap
+    old_ref = name_before_last_save
+    return if old_ref.blank? || old_ref.casecmp?(name)
+
+    HashtagRemapper.enqueue([{ type: TagHashtagDataSource.type, id:, old_ref: }])
   end
 end
 
