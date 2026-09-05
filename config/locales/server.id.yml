@@ -846,7 +846,8 @@ id:
   uploads:
     marked_insecure_from_theme_component_reason: "upload digunakan dalam komponen tema"
   unsubscribe:
-    title: "Berhenti berlangganan"
+    title: "Berhenti berlangganan %{email}"
+    submit_button: "Berhenti berlangganan"
     stop_watching_topic: "Berhenti mengikuti topik ini, %{link}"
     mute_topic: "Nonaktifkan semua notifikasi untuk topik ini, %{link}"
     unwatch_category: "Berhenti mengikuti semua topik di %{category}"

@@ -1164,7 +1164,8 @@ zh_CN:
   uploads:
     marked_insecure_from_theme_component_reason: "在主题组件中使用上传"
   unsubscribe:
-    title: "退订"
+    title: "退订 %{email}"
+    submit_button: "退订"
     stop_watching_topic: "停止关注此话题，%{link}"
     mute_topic: "将此话题的所有通知设为免打扰，%{link}"
     unwatch_category: "停止关注%{category}中的所有话题"

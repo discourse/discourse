@@ -962,7 +962,8 @@ sv:
   uploads:
     marked_insecure_from_theme_component_reason: "uppladdning används för temakomponent"
   unsubscribe:
-    title: "Avprenumerera"
+    title: "Avprenumerera %{email}"
+    submit_button: "Avprenumerera"
     stop_watching_topic: "Sluta bevaka det här ämnet, %{link}"
     mute_topic: "Tysta alla aviseringar för det här ämnet, %{link}"
     unwatch_category: "Sluta bevaka alla ämnen i %{category}"

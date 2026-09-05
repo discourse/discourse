@@ -569,7 +569,8 @@ sl:
   unsubscribed:
     title: "Nastavitve e-pošte spremenjene!"
   unsubscribe:
-    title: "Odjavi"
+    title: "Odjavi %{email}"
+    submit_button: "Odjavi"
     mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
     log_out: "Odjava"
     submit: "Shrani nastavitve"

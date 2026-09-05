@@ -1146,7 +1146,8 @@ hu:
   uploads:
     marked_insecure_from_theme_component_reason: "A feltöltés egy téma összetevőt használ"
   unsubscribe:
-    title: "Leiratkozás"
+    title: "Leiratkozás %{email}"
+    submit_button: "Leiratkozás"
     stop_watching_topic: "Ne figyelje tovább ezt a kategóriát: %{link}"
     mute_topic: "A téma összes értesítésének némítása, %{link}"
     unwatch_category: "Ne figyelje tovább ezt a kategóriát: %{category}"

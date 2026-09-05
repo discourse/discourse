@@ -734,7 +734,8 @@ vi:
   unsubscribed:
     title: "Đã cập nhật tùy chọn email!"
   unsubscribe:
-    title: "Hủy đăng ký"
+    title: "Hủy đăng ký %{email}"
+    submit_button: "Hủy đăng ký"
     stop_watching_topic: "Ngừng giám sát chủ đề này, %{link}"
     unwatch_category: "Ngừng giám sát tất cả chủ đề trong %{category}"
     log_out: "Đăng Xuất"

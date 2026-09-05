@@ -1289,7 +1289,8 @@ cs:
   uploads:
     marked_insecure_from_theme_component_reason: "nahraný soubor použitý v komponentě motivu"
   unsubscribe:
-    title: "Odhlášení"
+    title: "Odhlášení %{email}"
+    submit_button: "Odhlášení"
     stop_watching_topic: "Přestat sledovat toto téma, %{link}"
     mute_topic: "Ztlumit všechna oznámení pro toto téma, %{link}"
     unwatch_category: "Přestat sledovat všechna témata v %{category}"

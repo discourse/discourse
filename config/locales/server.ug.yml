@@ -1127,7 +1127,8 @@ ug:
   uploads:
     marked_insecure_from_theme_component_reason: "تېما بۆلىكىدىكى يۈكلەش ئىشلىتىلگەن"
   unsubscribe:
-    title: "مۇشتەرىلىكنى قالدۇر"
+    title: "مۇشتەرىلىكنى قالدۇر %{email}"
+    submit_button: "مۇشتەرىلىكنى قالدۇر"
     stop_watching_topic: "بۇ تېمىنى كۆزىتىشنى توختات، %{link}"
     mute_topic: "بۇ تېمىنىڭ بارلىق ئۇقتۇرۇشلىرىنى ئۈنسىزلە، %{link}"
     unwatch_category: "%{category} سەھىپىدىكى بارلىق تېمىنى كۆزىتىشنى توختات"

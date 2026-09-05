@@ -1157,7 +1157,8 @@ tr_TR:
   uploads:
     marked_insecure_from_theme_component_reason: "tema bileşeninde kullanılan yükleme"
   unsubscribe:
-    title: "Abonelikten çık"
+    title: "Abonelikten çık %{email}"
+    submit_button: "Abonelikten çık"
     stop_watching_topic: "Bu konuyu izlemeyi bırak, %{link}"
     mute_topic: "Bu konu için tüm bildirimleri sessize al, %{link}"
     unwatch_category: "%{category} kategorisindeki tüm konuları izlemeyi durdur"

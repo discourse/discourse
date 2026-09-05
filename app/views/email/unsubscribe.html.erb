@@ -14,7 +14,7 @@
     <%- end %>
   <%- else %>
     <br/>
-    <h2><%= t 'unsubscribe.title'%> <%= @user.email %></h2>
+    <h2><%= t 'unsubscribe.title', email: @user.email %></h2>
     <br/>
     <%= form_tag(email_perform_unsubscribe_path(key: params[:key])) do %>
       <%if @topic %>
@@ -92,7 +92,7 @@
       <% end %>
 
       <br/>
-      <% text = @type=='digest' ? t('unsubscribe.submit') : t('unsubscribe.title') %>
+      <% text = @type=='digest' ? t('unsubscribe.submit') : t('unsubscribe.submit_button') %>
       <%= submit_tag text, class: 'btn btn-danger' %>
     <%- end %>
 

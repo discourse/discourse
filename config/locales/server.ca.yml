@@ -720,7 +720,8 @@ ca:
     topic_description: "Per a tornar a subscriure-us a %{link}, feu servir el control de notificacions a baix o a la dreta del tema."
     private_topic_description: "Per a tornar a subscriure-us, utilitzeu el control de notificació a baix o la dreta del tema."
   unsubscribe:
-    title: "Cancel·la la subscripció!"
+    title: "Cancel·la la subscripció! %{email}"
+    submit_button: "Cancel·la la subscripció!"
     stop_watching_topic: "Deixa de vigilar el tema, %{link}"
     mute_topic: "Silencia totes les notificacions per a aquest tema, %{link}"
     unwatch_category: "Deixa de vigilar tots els temes en %{category}"

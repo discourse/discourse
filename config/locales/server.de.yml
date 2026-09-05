@@ -1193,7 +1193,8 @@ de:
   uploads:
     marked_insecure_from_theme_component_reason: "in Theme-Komponente verwendeter Upload"
   unsubscribe:
-    title: "Abbestellen"
+    title: "Abbestellen %{email}"
+    submit_button: "Abbestellen"
     stop_watching_topic: "Thema nicht mehr beobachten, %{link}"
     mute_topic: "Alle Benachrichtigungen für dieses Thema stummschalten, %{link}"
     unwatch_category: "Themen in %{category} nicht mehr beobachten"

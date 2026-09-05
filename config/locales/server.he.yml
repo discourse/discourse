@@ -1212,7 +1212,8 @@ he:
   uploads:
     marked_insecure_from_theme_component_reason: "ההעלאה בה נעשה שימוש ברכיב ערכת עיצוב"
   unsubscribe:
-    title: "בטלו את המנוי"
+    title: "בטלו את המנוי %{email}"
+    submit_button: "בטלו את המנוי"
     stop_watching_topic: "הפסיקו לצפות בנושא זה, %{link}"
     mute_topic: "השתיקו את כל ההתראות של נושא זה, %{link}"
     unwatch_category: "הפסיקו לצפות בכל הנושאים בקטגוריה %{category}"

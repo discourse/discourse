@@ -1152,7 +1152,8 @@ es:
   uploads:
     marked_insecure_from_theme_component_reason: "subida usada en componente de tema"
   unsubscribe:
-    title: "Cancelar suscripción"
+    title: "Cancelar suscripción %{email}"
+    submit_button: "Cancelar suscripción"
     stop_watching_topic: "Dejar de vigilar este tema, %{link}"
     mute_topic: "Silenciar todas las notificaciones de este tema, %{link}"
     unwatch_category: "Dejar de vigilar todos los temas de %{category}"

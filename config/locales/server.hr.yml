@@ -835,7 +835,8 @@ hr:
     topic_description: "Za ponovno pretplatu na %{link}, upotrijebite kontrolu obavijesti pri dnu ili desno od teme."
     private_topic_description: "Da biste se ponovno pretplatili, koristite kontrolu obavijesti pri dnu ili desno od teme."
   unsubscribe:
-    title: "Odjava"
+    title: "Odjava %{email}"
+    submit_button: "Odjava"
     stop_watching_topic: "Prestanite pratiti ovu temu, %{link}"
     mute_topic: "Prigušite sve obavijesti za ovu temu, %{link}"
     unwatch_category: "Prestani pratiti sve teme u %{category}"

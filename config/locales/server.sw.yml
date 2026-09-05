@@ -502,7 +502,8 @@ sw:
     topic_description: "Kuendelea kupata taarifa za %{link}, tumia kidhibiti cha taarifa kilichopo chini au kulia kwa mada."
     private_topic_description: "Kuendelea kupata taarifa, tumia kidhibiti cha taarifa kilichopo chini au kulia kwa mada."
   unsubscribe:
-    title: "Jiengua"
+    title: "Jiengua %{email}"
+    submit_button: "Jiengua"
     stop_watching_topic: "Acha kuangalia mada hii, %{link}"
     mute_topic: "Nyamazisha taarifa zote za mada hii, %{link}"
     unwatch_category: "Acha kuangalia mada zote kwenye %{category}"

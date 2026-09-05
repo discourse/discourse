@@ -613,7 +613,8 @@ nb_NO:
     topic_description: "For å melde deg på %{link} igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
     private_topic_description: "For å melde deg på igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
   unsubscribe:
-    title: "Avmeld"
+    title: "Avmeld %{email}"
+    submit_button: "Avmeld"
     stop_watching_topic: "Slutt å følge dette emnet, %{link}"
     mute_topic: "Ignorer alle varslene for dette emnet, %{link}"
     unwatch_category: "Slutt å følge alle emner i %{category}"

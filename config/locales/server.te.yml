@@ -629,7 +629,8 @@ te:
   uploads:
     marked_insecure_from_theme_component_reason: "థీమ్ భాగంలో ఉపయోగించిన అప్లోడ్"
   unsubscribe:
-    title: "చందాను తీసివేయండి"
+    title: "చందాను తీసివేయండి %{email}"
+    submit_button: "చందాను తీసివేయండి"
     stop_watching_topic: "ఈ విషయాన్నీ అనుసరించటం ఆపివేయండి, %{link}"
     unwatch_category: "%{category} లో అన్ని విషయాలను అనుసరించడం ఆపివేయండి"
     mailing_list_mode: "మెయిలింగ్ జాబితా మోడ్ను ఆపివేయండి"
