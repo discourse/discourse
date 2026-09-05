@@ -8,7 +8,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
 import { isNumeric } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import ImageNodeView from "../components/image-node-view";
+import MediaNodeView from "../components/media-node-view";
 import { getChangedRanges } from "../lib/plugin-utils";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
@@ -31,9 +31,8 @@ const UPLOAD_TIMEOUT = 30_000;
 const extension = {
   nodeViews: {
     image: {
-      component: ImageNodeView,
-      shouldRender: ({ node }) =>
-        node.attrs.extras !== "audio" && node.attrs.extras !== "video",
+      component: MediaNodeView,
+      shouldRender: ({ node }) => node.attrs.extras !== "audio",
     },
   },
 
@@ -119,6 +118,18 @@ const extension = {
             };
           },
         },
+        {
+          tag: "div.onebox-placeholder-container[data-orig-src]",
+          getAttrs(dom) {
+            return {
+              src: "/404",
+              alt: dom.dataset.alt || null,
+              originalSrc: dom.dataset.origSrc,
+              title: dom.dataset.title || null,
+              extras: "video",
+            };
+          },
+        },
       ],
       toDOM(node) {
         if (node.attrs.extras === "audio") {
@@ -134,7 +145,9 @@ const extension = {
             "div",
             {
               class: "onebox-placeholder-container",
+              "data-alt": node.attrs.alt,
               "data-orig-src": node.attrs.originalSrc,
+              "data-title": node.attrs.title,
             },
             ["span", { class: "placeholder-icon video" }],
           ];
