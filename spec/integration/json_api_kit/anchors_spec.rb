@@ -15,14 +15,14 @@ RSpec.describe "a listing entered at an anchor" do
   let(:params) do
     {
       sort: {
-        created_at: :asc,
+        createdAt: :asc,
       },
       page: {
         anchor: {
           id: middle.id,
         },
-        before_size: 1,
-        after_size: 1,
+        beforeSize: 1,
+        afterSize: 1,
       },
       fields: {
         topics: [:title],
@@ -49,13 +49,13 @@ RSpec.describe "a listing entered at an anchor" do
   describe "the links either side of the window" do
     let(:query) do
       {
-        "sort" => "created_at",
+        "sort" => "createdAt",
         "page" => {
           "anchor" => {
             "id" => middle.id.to_s,
           },
-          "before_size" => "1",
-          "after_size" => "1",
+          "beforeSize" => "1",
+          "afterSize" => "1",
         },
       }
     end
@@ -76,7 +76,7 @@ RSpec.describe "a listing entered at an anchor" do
     let(:params) do
       {
         sort: {
-          created_at: :asc,
+          createdAt: :asc,
         },
         page: {
           anchor: {
@@ -107,11 +107,11 @@ RSpec.describe "a listing entered at an anchor" do
     let(:params) do
       {
         sort: {
-          created_at: :asc,
+          createdAt: :asc,
         },
         page: {
           anchor: {
-            created_at: Time.utc(2026, 8, 2),
+            createdAt: Time.utc(2026, 8, 2),
           },
           size: 2,
         },
@@ -138,11 +138,11 @@ RSpec.describe "a listing entered at an anchor" do
     let(:params) do
       {
         sort: {
-          created_at: :asc,
+          createdAt: :asc,
         },
         page: {
           anchor: {
-            created_at: Time.utc(2026, 8, 1, 12),
+            createdAt: Time.utc(2026, 8, 1, 12),
           },
           size: 2,
         },
@@ -173,11 +173,11 @@ RSpec.describe "a listing entered at an anchor" do
     let(:params) do
       {
         sort: {
-          last_posted_at: :asc,
+          lastPostedAt: :asc,
         },
         page: {
           anchor: {
-            last_posted_at: Time.utc(2030, 1, 1),
+            lastPostedAt: Time.utc(2030, 1, 1),
           },
           size: 1,
         },
@@ -241,7 +241,7 @@ RSpec.describe "a listing entered at an anchor" do
   context "when the server calculates the anchor" do
     let(:guardian) { Guardian.new(middle.user) }
     let(:params) do
-      { sort: { created_at: :asc }, page: { anchor: :mine, size: 1 }, fields: { topics: [:title] } }
+      { sort: { createdAt: :asc }, page: { anchor: :mine, size: 1 }, fields: { topics: [:title] } }
     end
 
     it "starts at the row it finds for the current user" do
@@ -271,7 +271,7 @@ RSpec.describe "a listing entered at an anchor" do
   end
 
   context "when the anchor is an id no row holds" do
-    let(:params) { { sort: { created_at: :asc }, page: { anchor: { id: -1 } } } }
+    let(:params) { { sort: { createdAt: :asc }, page: { anchor: { id: -1 } } } }
 
     it "renders the error as a document" do
       expect(document).to eq(
@@ -287,14 +287,14 @@ RSpec.describe "a listing entered at an anchor" do
   end
 
   context "when the anchor is on another sort" do
-    let(:params) { { sort: { created_at: :asc }, page: { anchor: { title: middle.title } } } }
+    let(:params) { { sort: { createdAt: :asc }, page: { anchor: { title: middle.title } } } }
 
     it "renders the error as a document" do
       expect(document).to eq(
         errors: [
           refusal(
             title: "Anchor does not match the sort",
-            detail: "The anchor is title, but this request sorts by created_at.",
+            detail: "The anchor is title, but this request sorts by createdAt.",
             parameter: "page[anchor][title]",
           ),
         ],
@@ -307,14 +307,14 @@ RSpec.describe "a listing entered at an anchor" do
       let(:params) do
         {
           sort: {
-            created_at: :asc,
+            createdAt: :asc,
           },
           page: {
             anchor: {
               id: middle.id,
             },
-            before_size: 3_000,
-            after_size: 3_000,
+            beforeSize: 3_000,
+            afterSize: 3_000,
           },
         }
       end
@@ -325,7 +325,7 @@ RSpec.describe "a listing entered at an anchor" do
             refusal(
               title: "Window is too large",
               detail: "A window of 6001 rows exceeds the maximum of 100.",
-              parameter: "page[before_size]",
+              parameter: "page[beforeSize]",
               links: {
                 type: profile_link("max-size-exceeded"),
               },
@@ -342,16 +342,7 @@ RSpec.describe "a listing entered at an anchor" do
 
     context "when the window is empty" do
       let(:params) do
-        {
-          page: {
-            anchor: {
-              id: middle.id,
-            },
-            before_size: 0,
-            after_size: 0,
-            include_anchor: false,
-          },
-        }
+        { page: { anchor: { id: middle.id }, beforeSize: 0, afterSize: 0, includeAnchor: false } }
       end
 
       it "renders the error as a document" do
@@ -360,7 +351,7 @@ RSpec.describe "a listing entered at an anchor" do
             refusal(
               title: "Window is empty",
               detail: "A window must be at least 1 row.",
-              parameter: "page[before_size]",
+              parameter: "page[beforeSize]",
             ),
           ],
         )
@@ -368,15 +359,15 @@ RSpec.describe "a listing entered at an anchor" do
     end
 
     context "when a side of the window is negative" do
-      let(:params) { { page: { anchor: { id: middle.id }, before_size: -1, after_size: 2 } } }
+      let(:params) { { page: { anchor: { id: middle.id }, beforeSize: -1, afterSize: 2 } } }
 
       it "renders the error as a document" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Window size is negative",
-              detail: "page[before_size] must be 0 or greater.",
-              parameter: "page[before_size]",
+              detail: "page[beforeSize] must be 0 or greater.",
+              parameter: "page[beforeSize]",
             ),
           ],
         )
@@ -384,15 +375,15 @@ RSpec.describe "a listing entered at an anchor" do
     end
 
     context "when a side of the window is not an integer" do
-      let(:params) { { page: { anchor: { id: middle.id }, after_size: "two" } } }
+      let(:params) { { page: { anchor: { id: middle.id }, afterSize: "two" } } }
 
       it "renders the error as a document" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Window size is not an integer",
-              detail: "page[after_size] must be an integer.",
-              parameter: "page[after_size]",
+              detail: "page[afterSize] must be an integer.",
+              parameter: "page[afterSize]",
             ),
           ],
         )

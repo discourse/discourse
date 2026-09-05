@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::Collection do
-  subject(:document) { described_class.new(listing, urls:) }
+  subject(:document) { described_class.new(listing, urls:, glossary:) }
+
+  let(:glossary) { JsonApiKit::Glossary.new([JsonApiKit::Glossary::CasingRule]) }
 
   fab!(:first_topic) do
     Fabricate(:topic, title: "Segments of a listing", created_at: Time.utc(2026, 8, 1))
@@ -42,12 +44,14 @@ RSpec.describe JsonApiKit::Document::Collection do
       expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
         first_record,
         urls:,
+        glossary:,
         meta: {
         },
       )
       expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
         second_record,
         urls:,
+        glossary:,
         meta: {
         },
       )
@@ -62,6 +66,7 @@ RSpec.describe JsonApiKit::Document::Collection do
         expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
           first_record,
           urls:,
+          glossary:,
           meta: {
             page: {
               cursor: first_record.cursor.to_s,
@@ -71,6 +76,7 @@ RSpec.describe JsonApiKit::Document::Collection do
         expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
           second_record,
           urls:,
+          glossary:,
           meta: {
             page: {
               cursor: second_record.cursor.to_s,

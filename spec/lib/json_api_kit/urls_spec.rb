@@ -5,12 +5,12 @@ RSpec.describe JsonApiKit::Urls do
 
   let(:base) { "https://example.com/api" }
   let(:current) { "https://example.com/api/topics" }
-  let(:parameters) { { "page" => { "size" => "2" }, "sort" => "created_at" } }
+  let(:parameters) { { "page" => { "size" => "2" }, "sort" => "createdAt" } }
 
   describe "#current" do
     it "returns the URL a caller read with the parameters they sent" do
       expect(urls.current.to_s).to eq(
-        "https://example.com/api/topics?page%5Bsize%5D=2&sort=created_at",
+        "https://example.com/api/topics?page%5Bsize%5D=2&sort=createdAt",
       )
     end
   end

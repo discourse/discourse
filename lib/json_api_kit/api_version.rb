@@ -41,7 +41,9 @@ module JsonApiKit
     class InTheFuture < Refusal
       def title = "#{HEADER} is in the future"
 
-      def detail = "The current version is #{version}."
+      def detail
+        "#{HEADER} must not be later than today in UTC. The current version is #{version}."
+      end
     end
 
     def self.parse(raw)
@@ -57,7 +59,10 @@ module JsonApiKit
       @date = date
     end
 
-    def <=>(other) = date <=> other.date
+    def <=>(other)
+      return unless other.is_a?(self.class)
+      date <=> other.date
+    end
 
     def future? = date.future?
 
