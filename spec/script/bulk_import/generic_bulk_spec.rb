@@ -42,6 +42,134 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "importing notification choices" do
+      fab!(:subscriber, :user)
+      fab!(:category)
+      fab!(:topic) { Fabricate(:topic, user: subscriber, category: category) }
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@users, { 10 => subscriber.id, 11 => subscriber.id })
+          instance.instance_variable_set(:@topics, { 20 => topic.id })
+          instance.instance_variable_set(:@categories, { 30 => category.id, 31 => category.id })
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      before do
+        source_db.execute(
+          "CREATE TABLE topic_users (user_id INTEGER, topic_id INTEGER, notification_level INTEGER)",
+        )
+        source_db.execute(
+          "CREATE TABLE category_users (user_id INTEGER, category_id INTEGER, notification_level INTEGER)",
+        )
+      end
+
+      after { source_db.close }
+
+      it "keeps an explicitly Tracking author Tracking while updating posting history" do
+        Fabricate(:post, topic: topic, user: subscriber, post_number: 1)
+        TopicUser.where(topic: topic).delete_all
+        source_db.execute("INSERT INTO topic_users VALUES (10, 20, 2)")
+
+        importer.import_topic_users
+        importer.update_topic_users
+
+        choice = TopicUser.find_by!(user: subscriber, topic: topic)
+        expect(choice.notification_level).to eq(NotificationLevels.topic_levels[:tracking])
+        expect(choice.notifications_reason_id).to eq(TopicUser.notification_reasons[:user_changed])
+        expect(choice.posted).to eq(true)
+        expect(choice.last_read_post_number).to eq(1)
+      end
+
+      it "uses normal posting defaults when there is no explicit choice" do
+        Fabricate(:post, topic: topic, user: subscriber, post_number: 1)
+        replier = Fabricate(:user)
+        Fabricate(:post, topic: topic, user: replier, post_number: 2)
+        TopicUser.where(topic: topic).delete_all
+
+        importer.import_topic_users
+        importer.update_topic_users
+
+        expect(TopicUser.find_by!(user: subscriber, topic: topic).notification_level).to eq(
+          NotificationLevels.topic_levels[:watching],
+        )
+        expect(TopicUser.find_by!(user: replier, topic: topic).notification_level).to eq(
+          NotificationLevels.topic_levels[:tracking],
+        )
+      end
+
+      it "collapses categories and user aliases after destination IDs resolve using notification precedence" do
+        CategoryUser.where(category: category).delete_all
+        TopicUser.where(topic: topic).delete_all
+        source_db.execute(
+          "INSERT INTO category_users VALUES (10, 30, 4), (11, 31, 3), (10, 31, 0), (999, 30, 3), (10, 999, 3)",
+        )
+        source_db.execute("INSERT INTO topic_users VALUES (10, 20, 2), (11, 20, 3), (10, 20, 0)")
+
+        importer.import_category_users
+        importer.import_topic_users
+
+        expect(CategoryUser.where(category: category).pluck(:user_id, :notification_level)).to eq(
+          [[subscriber.id, NotificationLevels.all[:watching]]],
+        )
+        expect(TopicUser.where(topic: topic).pluck(:user_id, :notification_level)).to eq(
+          [[subscriber.id, NotificationLevels.topic_levels[:watching]]],
+        )
+      end
+
+      it "still applies posting defaults to rows created without a notification reason" do
+        Fabricate(:post, topic: topic, user: subscriber, post_number: 1)
+        TopicUser.where(topic: topic).delete_all
+        TopicUser.create!(
+          user: subscriber,
+          topic: topic,
+          notification_level: NotificationLevels.topic_levels[:regular],
+          bookmarked: true,
+        )
+
+        importer.update_topic_users
+
+        choice = TopicUser.find_by!(user: subscriber, topic: topic)
+        expect(choice.notification_level).to eq(NotificationLevels.topic_levels[:watching])
+        expect(choice.notifications_reason_id).to eq(TopicUser.notification_reasons[:created_topic])
+        expect(choice.bookmarked).to eq(true)
+      end
+
+      it "preserves destination choices through repeat imports and an API delta with no subscription rows" do
+        Fabricate(:post, topic: topic, user: subscriber, post_number: 1)
+        TopicUser.where(topic: topic).delete_all
+        CategoryUser.where(category: category).delete_all
+        source_db.execute("INSERT INTO topic_users VALUES (10, 20, 2)")
+        source_db.execute("INSERT INTO category_users VALUES (10, 30, 4)")
+        importer.import_topic_users
+        importer.import_category_users
+        TopicUser.find_by!(user: subscriber, topic: topic).update!(notification_level: 0)
+        CategoryUser.find_by!(user: subscriber, category: category).update!(notification_level: 1)
+
+        importer.import_topic_users
+        importer.import_category_users
+        importer.update_topic_users
+        source_db.execute("DELETE FROM topic_users")
+        source_db.execute("DELETE FROM category_users")
+        allow(importer).to receive(:delta_import?).and_return(true)
+        importer.import_topic_users
+        importer.import_category_users
+        importer.update_topic_users
+
+        expect(TopicUser.find_by!(user: subscriber, topic: topic).notification_level).to eq(0)
+        expect(
+          CategoryUser.find_by!(user: subscriber, category: category).notification_level,
+        ).to eq(1)
+      end
+    end
+
     describe "#import_user_notes" do
       fab!(:note_owner, :user)
       fab!(:note_author, :user)

@@ -1275,7 +1275,9 @@ class BulkImport::Generic < BulkImport::Base
     category_users = query(<<~SQL)
       SELECT *
         FROM category_users
-       ORDER BY category_id, user_id
+       ORDER BY CASE notification_level WHEN 3 THEN 0 WHEN 4 THEN 1
+                     WHEN 2 THEN 2 WHEN 1 THEN 3 WHEN 0 THEN 4 ELSE 5 END,
+                category_id, user_id
     SQL
 
     existing_category_user_ids = CategoryUser.pluck(:category_id, :user_id).to_set
@@ -1283,7 +1285,8 @@ class BulkImport::Generic < BulkImport::Base
     create_category_users(category_users) do |row|
       category_id = category_id_from_imported_id(row["category_id"])
       user_id = user_id_from_imported_id(row["user_id"])
-      next if existing_category_user_ids.include?([category_id, user_id])
+      next unless category_id && user_id
+      next unless existing_category_user_ids.add?([category_id, user_id])
 
       {
         category_id: category_id,
@@ -2873,7 +2876,8 @@ class BulkImport::Generic < BulkImport::Base
     topic_users = query(<<~SQL)
       SELECT *
         FROM topic_users
-       ORDER BY user_id, topic_id
+       ORDER BY CASE notification_level WHEN 3 THEN 0 WHEN 2 THEN 1 WHEN 1 THEN 2 WHEN 0 THEN 3 ELSE 4 END,
+                user_id, topic_id
     SQL
 
     existing_topic_users = TopicUser.pluck(:topic_id, :user_id).to_set
@@ -2882,7 +2886,7 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
       next unless user_id && topic_id
-      next if existing_topic_users.include?([topic_id, user_id])
+      next unless existing_topic_users.add?([topic_id, user_id])
 
       {
         user_id: user_id,
@@ -2915,6 +2919,9 @@ class BulkImport::Generic < BulkImport::Base
       reason_posted: TopicUser.notification_reasons[:created_post],
     }
 
+    # Like TopicUser.auto_notification, posting history only fills rows without a
+    # notification reason. Imported subscriptions, earlier posting history and user
+    # changes all carry a reason and survive this pass and later imports.
     DB.exec(<<~SQL, params)
       INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, first_visited_at, last_visited_at,
                                notification_level, notifications_changed_at, notifications_reason_id, total_msecs_viewed,
@@ -2937,13 +2944,13 @@ class BulkImport::Generic < BulkImport::Base
                                                         last_read_post_number = GREATEST(topic_users.last_read_post_number, excluded.last_read_post_number),
                                                         first_visited_at = LEAST(topic_users.first_visited_at, excluded.first_visited_at),
                                                         last_visited_at = GREATEST(topic_users.last_visited_at, excluded.last_visited_at),
-                                                        notification_level = GREATEST(topic_users.notification_level, excluded.notification_level),
-                                                        notifications_changed_at = CASE WHEN COALESCE(excluded.notification_level, 0) > COALESCE(topic_users.notification_level, 0)
-                                                                                          THEN COALESCE(excluded.notifications_changed_at, topic_users.notifications_changed_at)
+                                                        notification_level = CASE WHEN topic_users.notifications_reason_id IS NULL
+                                                                                    THEN excluded.notification_level
+                                                                                  ELSE topic_users.notification_level END,
+                                                        notifications_changed_at = CASE WHEN topic_users.notifications_reason_id IS NULL
+                                                                                          THEN excluded.notifications_changed_at
                                                                                         ELSE topic_users.notifications_changed_at END,
-                                                        notifications_reason_id = CASE WHEN COALESCE(excluded.notification_level, 0) > COALESCE(topic_users.notification_level, 0)
-                                                                                         THEN COALESCE(excluded.notifications_reason_id, topic_users.notifications_reason_id)
-                                                                                       ELSE topic_users.notifications_reason_id END,
+                                                        notifications_reason_id = COALESCE(topic_users.notifications_reason_id, excluded.notifications_reason_id),
                                                         total_msecs_viewed = CASE WHEN topic_users.total_msecs_viewed = 0
                                                                                     THEN excluded.total_msecs_viewed
                                                                                   ELSE topic_users.total_msecs_viewed END,
