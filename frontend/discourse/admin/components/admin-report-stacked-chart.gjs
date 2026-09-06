@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
 import Report from "discourse/admin/models/report";
+import { buildLegendIcon, dimColor } from "discourse/lib/chart-legend-icon";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
+import { remToPx } from "discourse/lib/rem-to-px";
 import I18n, { i18n } from "discourse-i18n";
 import Chart from "./chart";
 
@@ -126,6 +128,11 @@ export default class AdminReportStackedChart extends Component {
               const ci = legend.chart;
               const req = chartData[index].req;
 
+              if (chartOptions.onLegendClick) {
+                chartOptions.onLegendClick(req);
+                return;
+              }
+
               if (ci.isDatasetVisible(index)) {
                 ci.hide(index);
                 if (!chartOptions.hiddenLabels.includes(req)) {
@@ -141,22 +148,18 @@ export default class AdminReportStackedChart extends Component {
             },
             labels: {
               usePointStyle: true,
-              pointStyle: "rectRounded",
-              boxWidth: 10,
-              boxHeight: 10,
+              padding: remToPx(1),
+              font: { size: remToPx(0.75) },
               generateLabels: (chart) => {
                 const textColor = getCSSColor("--primary-high");
                 return chart.data.datasets.map((dataset, i) => {
                   const isVisible = chart.isDatasetVisible(i);
                   return {
                     text: dataset.label,
-                    fontColor: textColor,
-                    fillStyle: isVisible ? dataset._baseColor : "transparent",
-                    strokeStyle: dataset._baseColor,
-                    lineWidth: 2,
+                    fontColor: isVisible ? textColor : dimColor(textColor),
                     hidden: false,
                     datasetIndex: i,
-                    pointStyle: "rectRounded",
+                    pointStyle: buildLegendIcon(dataset._baseColor, isVisible),
                   };
                 });
               },
@@ -212,7 +215,10 @@ export default class AdminReportStackedChart extends Component {
               display: !chartOptions.hideYAxisGridLines,
             },
             ticks: {
-              callback: (label) => number(label),
+              callback: (_label, index, ticks) => {
+                const value = ticks[index]?.value;
+                return Number.isInteger(Number(value)) ? number(value) : null;
+              },
               sampleSize: 5,
               maxRotation: 25,
               minRotation: 0,

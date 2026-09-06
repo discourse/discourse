@@ -4,7 +4,10 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import userPresent, {
+  browserAttention,
+  onBrowserAttentionChange as addBrowserAttentionChangeCallback,
   onPresenceChange,
+  removeOnBrowserAttentionChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
 import { maintainScrollPosition } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
@@ -13,6 +16,8 @@ const CHAT_PRESENCE_OPTIONS = {
   userUnseenTime: 1 * 60 * 1000,
   browserHiddenTime: 0,
 };
+
+const LIVE_EDGE_THRESHOLD_PIXELS = 10;
 
 /**
  * Shared state and helpers for chat panes (channel and thread).
@@ -43,6 +48,10 @@ export default class ChatPaneState {
    * @type {boolean}
    */
   @tracked userIsPresent = true;
+  @tracked isDocumentFocused = true;
+  @tracked isDocumentVisible = true;
+  @tracked wasAtLiveEdge = true;
+  @tracked isAtLiveEdge = true;
 
   /**
    * Whether there is pending content below the current scroll position.
@@ -78,10 +87,12 @@ export default class ChatPaneState {
     this.contextKey = options.contextKey;
     this.#onUserPresent = options.onUserPresent ?? null;
     this.userIsPresent = userPresent(CHAT_PRESENCE_OPTIONS);
+    this.#refreshDocumentAttention();
     onPresenceChange({
       callback: this.onPresenceChangeCallback,
       ...CHAT_PRESENCE_OPTIONS,
     });
+    addBrowserAttentionChangeCallback(this.onBrowserAttentionChange);
   }
 
   /**
@@ -89,6 +100,7 @@ export default class ChatPaneState {
    */
   teardown() {
     removeOnPresenceChange(this.onPresenceChangeCallback);
+    removeOnBrowserAttentionChange(this.onBrowserAttentionChange);
     this.clearPendingMessages();
   }
 
@@ -100,6 +112,12 @@ export default class ChatPaneState {
    */
   get hasPendingMessages() {
     return this.chatPanePendingManager.hasPending(this.contextKey);
+  }
+
+  get isActiveReader() {
+    return (
+      this.userIsPresent && this.isDocumentFocused && this.isDocumentVisible
+    );
   }
 
   /**
@@ -143,6 +161,14 @@ export default class ChatPaneState {
     );
   }
 
+  updateLiveEdgeFromScrollState(state) {
+    this.updateLiveEdgeFromDistance(state?.distanceToBottom?.pixels ?? 0);
+  }
+
+  updateLiveEdgeFromDistance(distanceToBottomPixels) {
+    this.isAtLiveEdge = distanceToBottomPixels <= LIVE_EDGE_THRESHOLD_PIXELS;
+  }
+
   /**
    * Updates hasPendingContentBelow based on scroll position and loader state.
    *
@@ -182,6 +208,8 @@ export default class ChatPaneState {
       distanceThresholdPixels,
     } = options;
 
+    this.updateLiveEdgeFromScrollState(state);
+
     this.#updateHasPendingContentBelow({
       scroller,
       fetchedOnce,
@@ -215,6 +243,7 @@ export default class ChatPaneState {
     }
 
     const distanceToBottomPixels = -scroller.scrollTop;
+    this.updateLiveEdgeFromDistance(distanceToBottomPixels);
 
     this.#updateHasPendingContentBelow({
       scroller,
@@ -233,8 +262,31 @@ export default class ChatPaneState {
    */
   @bind
   onPresenceChangeCallback(present) {
+    const wasActiveReader = this.isActiveReader;
     this.userIsPresent = present;
-    if (present) {
+    this.#handleActiveReaderTransition(wasActiveReader);
+  }
+
+  @bind
+  onBrowserAttentionChange(attention = browserAttention()) {
+    const wasActiveReader = this.isActiveReader;
+    this.#refreshDocumentAttention(attention);
+    this.#handleActiveReaderTransition(wasActiveReader);
+  }
+
+  #refreshDocumentAttention(attention = browserAttention()) {
+    this.isDocumentFocused = attention.focused;
+    this.isDocumentVisible = attention.visible;
+  }
+
+  #handleActiveReaderTransition(wasActiveReader) {
+    const isActiveReader = this.isActiveReader;
+
+    if (wasActiveReader && !isActiveReader) {
+      this.wasAtLiveEdge = this.isAtLiveEdge;
+    }
+
+    if (!wasActiveReader && isActiveReader) {
       this.#onUserPresent?.();
     }
   }
@@ -282,6 +334,38 @@ export default class ChatPaneState {
         false
       );
     });
+  }
+
+  shouldAutoScrollIncomingMessage({ isAtLiveEdge, isOwnMessage = false } = {}) {
+    if (!isAtLiveEdge) {
+      return false;
+    }
+
+    if (isOwnMessage) {
+      return true;
+    }
+
+    if (this.isActiveReader) {
+      return true;
+    }
+
+    if (!this.isDocumentVisible) {
+      return false;
+    }
+
+    if (this.isDocumentFocused) {
+      return false;
+    }
+
+    return this.#shouldContinueLiveFollowing();
+  }
+
+  shouldMarkRead() {
+    return this.isActiveReader;
+  }
+
+  #shouldContinueLiveFollowing() {
+    return this.wasAtLiveEdge;
   }
 
   /**

@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -165,7 +166,10 @@ export default class GamificationLeaderboard extends Component {
           class="leaderboard__period-chooser"
         />
         {{#if this.currentUser.staff}}
-          <a href="/admin/plugins/gamification" class="leaderboard__settings">
+          <a
+            href={{getURL "/admin/plugins/gamification"}}
+            class="leaderboard__settings"
+          >
             {{dIcon "gear"}}
             {{unless
               this.site.mobileView

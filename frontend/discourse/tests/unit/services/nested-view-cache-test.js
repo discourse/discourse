@@ -162,7 +162,7 @@ module("Unit | Service | nested-view-cache", function (hooks) {
     assert.false(cache.consumeTraversal());
   });
 
-  test("consumeTraversal follows explicit popped-state outside nested routes", function (assert) {
+  test("consumeTraversal follows explicit popped-state outside nested topic transitions", function (assert) {
     const cache = getService(this);
 
     assert.true(
@@ -177,7 +177,7 @@ module("Unit | Service | nested-view-cache", function (hooks) {
 
     assert.false(
       cache.consumeTraversal({ allowLocalSignal: false, isPoppedState: false }),
-      "does not restore from cache after returning to a non-nested route"
+      "does not restore from cache after returning to a non-nested topic path"
     );
     assert.false(
       cache.consumeTraversal(),
@@ -191,7 +191,7 @@ module("Unit | Service | nested-view-cache", function (hooks) {
 
     assert.true(
       cache.consumeTraversal({ allowLocalSignal: true, isPoppedState: false }),
-      "restores cache for browser traversal within the nested route family"
+      "restores cache for browser traversal within nested topic paths"
     );
   });
 

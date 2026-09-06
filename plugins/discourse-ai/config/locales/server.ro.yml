@@ -29,7 +29,6 @@ ro:
     ai_default_llm_model: "Modelul LLM implicit de utilizat pentru toate funcționalitățile IA"
     ai_embeddings_semantic_search_use_hyde: "Folosește HyDE pentru căutare semantică pe întreaga pagină. Folosește un LLM pentru a crea o postare ipotetică pe baza termenului de căutare al utilizatorului, pentru a ajuta la găsirea potrivirilor."
     ai_translation_enabled: "Activează funcționalitatea de traducere cu IA"
-    ai_translation_max_post_length: "Numărul maxim de caractere care pot fi traduse pentru o postare. Postările mai lungi decât acesta nu vor fi traduse."
   reports:
     overall_sentiment:
       yaxis: "Dată"
@@ -41,10 +40,16 @@ ro:
     spam_detection:
       logging_subject: "Detectare spam"
     ai_bot:
+      read_post:
+        unknown_post: "articol"
       tool_summary:
+        suspend_user: "Suspendă utilizatorul"
+        silence_user: "Redu la tăcere utilizatorul"
         search: "Caută"
         time: "Oră"
         summarize: "Rezumat"
+      tool_help:
+        create_category: "Creează o categorie nouă"
       close_topic:
         errors:
           not_found: "Subiectul nu a fost găsit."
@@ -54,10 +59,10 @@ ro:
       delete_topic:
         errors:
           not_found: "Subiectul nu a fost găsit."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Subiectul nu a fost găsit."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Subiectul nu a fost găsit."
       set_topic_timer:

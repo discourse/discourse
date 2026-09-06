@@ -137,7 +137,7 @@ class EmbedController < ApplicationController
     embed_url = params.require(:embed_url)
     @topic_embed = TopicEmbed.where(embed_url: embed_url).first
 
-    raise Discourse::NotFound if @topic_embed.nil?
+    raise Discourse::NotFound if @topic_embed.nil? || !guardian.can_see?(@topic_embed.topic)
 
     render_serialized(@topic_embed, TopicEmbedSerializer, root: false)
   end

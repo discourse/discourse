@@ -50,6 +50,10 @@ module DiscourseChatIntegration
       end
     end
 
+    def self.display_tag_names(topic)
+      DiscourseTagging.filter_visible(topic.tags, Manager.guardian).map(&:name).join(", ")
+    end
+
     def self.setup(provider_klass, current_user, provider_site_settings)
       if provider_klass.respond_to?(:setup)
         provider_klass.setup(current_user, provider_site_settings)

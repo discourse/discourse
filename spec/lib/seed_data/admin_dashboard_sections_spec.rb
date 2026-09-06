@@ -16,6 +16,7 @@ describe SeedData::AdminDashboardSections do
         ["traffic", 2, true],
         ["engagement", 3, true],
         ["search", 4, true],
+        ["system", 5, true],
       ],
     )
   end

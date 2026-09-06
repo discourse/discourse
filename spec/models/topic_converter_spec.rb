@@ -44,6 +44,52 @@ RSpec.describe TopicConverter do
         expect(topic.category_id).to eq(SiteSetting.uncategorized_category_id)
       end
 
+      it "moves the tags' personal message counts to their topic counts" do
+        SiteSetting.allow_uncategorized_topics = true
+        tag = Fabricate(:tag)
+        first_post.topic.tags << tag
+        expect(tag.reload.pm_topic_count).to eq(1)
+
+        TopicConverter.new(first_post.topic, admin).convert_to_public_topic
+
+        tag.reload
+        expect(tag.pm_topic_count).to eq(0)
+        expect(tag.staff_topic_count).to eq(1)
+        expect(tag.public_topic_count).to eq(1)
+      end
+
+      it "does not change the tags' public topic counts when converting into a read-restricted category" do
+        private_category = Fabricate(:private_category, group: Group[:staff])
+        tag = Fabricate(:tag)
+        first_post.topic.tags << tag
+        expect(tag.reload.pm_topic_count).to eq(1)
+
+        TopicConverter.new(first_post.topic, admin).convert_to_public_topic(private_category.id)
+
+        tag.reload
+        expect(tag.pm_topic_count).to eq(0)
+        expect(tag.staff_topic_count).to eq(1)
+        expect(tag.public_topic_count).to eq(0)
+      end
+
+      it "does not update tag counters when the post revision fails" do
+        tag = Fabricate(:tag)
+        first_post.topic.tags << tag
+        expect(tag.reload.pm_topic_count).to eq(1)
+
+        required_tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag)])
+        category.category_required_tag_groups.create!(tag_group: required_tag_group, min_count: 1)
+        moderator = Fabricate(:moderator)
+
+        TopicConverter.new(first_post.topic, moderator).convert_to_public_topic(category.id)
+
+        expect(first_post.topic.reload.archetype).to eq(Archetype.private_message)
+        tag.reload
+        expect(tag.pm_topic_count).to eq(1)
+        expect(tag.staff_topic_count).to eq(0)
+        expect(tag.public_topic_count).to eq(0)
+      end
+
       context "when uncategorized category is not allowed" do
         before do
           SiteSetting.allow_uncategorized_topics = false
@@ -130,7 +176,7 @@ RSpec.describe TopicConverter do
         ).to be_present
       end
 
-      it "skips small action, revision, and bump when silent" do
+      it "records a revision but skips small action and bump when silent" do
         Jobs.run_immediately!
         first_post
         bumped_at = private_message.reload.bumped_at
@@ -139,8 +185,9 @@ RSpec.describe TopicConverter do
           TopicConverter.new(private_message, admin, silent: true).convert_to_public_topic(
             category.id,
           )
-        end.to not_change { PostRevision.count }
+        end.to change { PostRevision.count }.by(1)
 
+        expect(private_message.first_post.revisions.last.hidden).to eq(true)
         expect(private_message.posts.where(post_type: Post.types[:small_action])).to be_empty
         expect(private_message.reload.bumped_at).to be_within(1.second).of(bumped_at)
       end
@@ -170,16 +217,46 @@ RSpec.describe TopicConverter do
 
     context "with success" do
       it "converts regular topic to private message" do
-        private_message = topic.convert_to_private_message(post.user)
+        private_message = topic.convert_to_private_message(admin)
         expect(private_message).to be_valid
         expect(topic.archetype).to eq("private_message")
         expect(topic.category_id).to eq(nil)
         expect(category.reload.topic_count).to eq(0)
       end
 
+      it "moves the tags' topic counts to their personal message counts" do
+        tag = Fabricate(:tag)
+        topic.tags << tag
+        expect(tag.reload.staff_topic_count).to eq(1)
+
+        topic.convert_to_private_message(admin)
+
+        tag.reload
+        expect(tag.public_topic_count).to eq(0)
+        expect(tag.staff_topic_count).to eq(0)
+        expect(tag.pm_topic_count).to eq(1)
+      end
+
+      it "does not change the tags' public topic counts when converting from a read-restricted category" do
+        private_category = Fabricate(:private_category, group: Group[:staff])
+        restricted_topic = Fabricate(:topic, user: author, category: private_category)
+        Fabricate(:post, topic: restricted_topic, user: author)
+        tag = Fabricate(:tag)
+        restricted_topic.tags << tag
+        expect(tag.reload.staff_topic_count).to eq(1)
+        expect(tag.public_topic_count).to eq(0)
+
+        restricted_topic.convert_to_private_message(admin)
+
+        tag.reload
+        expect(tag.public_topic_count).to eq(0)
+        expect(tag.staff_topic_count).to eq(0)
+        expect(tag.pm_topic_count).to eq(1)
+      end
+
       it "converts unlisted topic to private message" do
         topic.update_status("visible", false, admin)
-        private_message = topic.convert_to_private_message(post.user)
+        private_message = topic.convert_to_private_message(admin)
 
         expect(private_message).to be_valid
         expect(topic.archetype).to eq("private_message")
@@ -270,14 +347,15 @@ RSpec.describe TopicConverter do
         ).to be_present
       end
 
-      it "skips small action, revision, and bump when silent" do
+      it "records a revision but skips small action and bump when silent" do
         Jobs.run_immediately!
         bumped_at = topic.bumped_at
 
         expect do
           TopicConverter.new(topic, admin, silent: true).convert_to_private_message
-        end.to not_change { PostRevision.count }
+        end.to change { PostRevision.count }.by(1)
 
+        expect(topic.first_post.revisions.last.hidden).to eq(true)
         expect(topic.posts.where(post_type: Post.types[:small_action])).to be_empty
         expect(topic.reload.bumped_at).to be_within(1.second).of(bumped_at)
       end

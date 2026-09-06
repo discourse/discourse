@@ -8,9 +8,6 @@ module Migrations
     module Uploads
       module Tasks
         class Base
-          class NotImplementedError < StandardError
-          end
-
           TRANSACTION_SIZE = 1000
           QUEUE_SIZE = 1000
           DEFAULT_THREAD_FACTOR = 1.5

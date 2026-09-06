@@ -13,7 +13,7 @@ class ApiKey < ActiveRecord::Base
   scope :with_key, ->(key) { where(key_hash: ApiKey.hash_key(key)) }
 
   validates :description, length: { maximum: 255 }
-  validate :at_least_one_granular_scope
+  validate :valid_scope_mode_scopes
 
   enum :scope_mode, %i[global read_only granular].freeze
 
@@ -117,13 +117,20 @@ class ApiKey < ActiveRecord::Base
 
   private
 
-  def at_least_one_granular_scope
-    if scope_mode == "granular" && api_key_scopes.empty?
+  def valid_scope_mode_scopes
+    if granular? && api_key_scopes.empty?
       errors.add(
         :api_key_scopes,
         I18n.t("activerecord.errors.models.api_key.base.at_least_one_granular_scope"),
       )
+    elsif read_only? && !valid_read_only_scope?
+      errors.add(:api_key_scopes, I18n.t("activerecord.errors.models.api_key.base.read_only_scope"))
     end
+  end
+
+  def valid_read_only_scope?
+    api_key_scopes.size == 1 && api_key_scopes.first.resource == "global" &&
+      api_key_scopes.first.action == "read"
   end
 end
 

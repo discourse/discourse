@@ -88,3 +88,8 @@ sk:
         title: "Gamifikácia"
         name: "Meno"
         period: "Obdobie"
+    discourse_workflows:
+      gamification_score:
+        username: "Používateľ"
+        date: "Dátum"
+        description: "Popis"

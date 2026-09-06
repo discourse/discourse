@@ -102,7 +102,7 @@ module Migrations
             allowed_set: ARCHETYPES,
             default_value: DEFAULT_ARCHETYPE,
           ) do |_, default_value|
-            puts "   #{row[:id]}: Topic archetype is invalid, defaulting to #{default_value}"
+            notice("#{row[:id]}: Topic archetype is invalid, defaulting to #{default_value}")
           end
           row[:subtype] = ensure_valid_value(
             value: row[:subtype],
@@ -125,13 +125,13 @@ module Migrations
 
           if external_id.length > Topic::EXTERNAL_ID_MAX_LENGTH ||
                !external_id.match?(EXTERNAL_ID_FORMAT)
-            puts "    Invalid format or length for external_id '#{external_id}'"
+            notice("Invalid format or length for external_id '#{external_id}'")
 
             return false
           end
 
           unless @existing_external_ids.add?(external_id.downcase)
-            puts "    Duplicate external_id '#{external_id}'"
+            notice("Duplicate external_id '#{external_id}'")
 
             return false
           end

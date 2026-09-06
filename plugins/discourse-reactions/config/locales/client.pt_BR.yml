@@ -13,14 +13,19 @@ pt_BR:
   js:
     discourse_reactions:
       reactions_title: "Reações"
-      state_panel:
-        more_users: "e mais %{count}..."
       picker:
         react_with: "Reaja a esta postagem com: %{reaction}"
         cant_remove_reaction: "Você não pode mais remover sua reação"
         remove_reaction: "Remova esta %{reaction} reação"
       users_popup:
-        all: "Todos"
+        all: "Todas"
+        title:
+          one: "%{count} Reação"
+          other: "%{count} Reações"
+      counter:
+        aria_label:
+          one: "%{count} reação"
+          other: "%{count} reações"
       main_reaction:
         add: "Curtir esta postagem"
         remove: "Remova essa curtida"

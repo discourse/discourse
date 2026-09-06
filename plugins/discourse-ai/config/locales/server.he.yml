@@ -77,10 +77,8 @@ he:
     ai_helper_allowed_in_pm: "הפעלת מסייע הבינה המלאכותית בכותב ההודעות בהודעות הפרטיות."
     ai_helper_automatic_chat_thread_title_delay: "השהייה בשניות לפני שמסייע הבינה המלאכותית מגדיר את כותרת שרשור הצ׳אט אוטומטית."
     ai_helper_automatic_chat_thread_title: "הגדרת כותרות שרשור הצ׳אט אוטומטית לפי תוכן השרשור."
-    ai_helper_enabled_features: "נא לבחור יכולות להפעלה במסייע הבינה המלאכותית."
     post_ai_helper_allowed_groups: "קבוצות משתמשים שמורשות לגשת ליכולות מסייע בינה מלאכותית בפוסטים"
     ai_embeddings_selected_model: "להשתמש במודל הנבחר ליצירת הטמעות."
-    ai_embeddings_generate_for_pms: "יצירת הטמעות להודעות פרטיות."
     ai_embeddings_semantic_related_topics_enabled: "להשתמש בחיפוש סמנטי לנושאים קשורים."
     ai_embeddings_semantic_related_topics: "מספר הנושאים המרבי להצגה בסעיף הנושאים הקשורים."
     ai_embeddings_backfill_batch_size: "מספר ההטבעות למילוי חוזר כל 15 דקות."
@@ -91,7 +89,6 @@ he:
     ai_summarization_enabled: "הפעלת יכולת הסיכום"
     ai_pm_summarization_allowed_groups: "קבוצות שמורשות ליצור ולצפות בתקצירים בהודעות פרטיות."
     ai_summary_gists_enabled: "יצירת תקצירים של התגובות האחרונות בנושאים אוטומטית"
-    ai_summary_backfill_maximum_topics_per_hour: "מספר תקצירי הנושאים למילוי חוזר בשעה."
     ai_bot_enabled: "הפעלת מודול בוט הבינה המלאכותית."
     ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
@@ -108,11 +105,8 @@ he:
     ai_discord_search_mode: "נא לבחור את מצב החיפוש לחיפוש ב־Discord"
     ai_discord_allowed_guilds: "גילדות (שרתי) Discord בהן מותר לבוט לחפש"
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
-    ai_translation_max_post_length: "מספר התווים המרבי בפוסט לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
-    ai_translation_backfill_max_age_days: "הגיל המרבי של פוסט ונושא לתרגום. פוסטים ונושאים שהם ותיקים יותר ממשך הזמן הזה לא יתורגמו. 0 משבית מילוי לאחור אבל לא משבית תרגום של פוסטים חדשים."
     ai_translation_backfill_hourly_rate: "מספר הפוסטים והנושאים לתרגום לשעה במהלך פעולות מילוי לאחור. יש להגדיר ל־0 כדי להשבית מילוי לאחור של תרגומים אוטומטית לתוכן קיים."
     ai_usage_rollup_after_days: "מספר הימים לשמירת סטטיסטיקות שימוש בבינה מלאכותית לפי בקשה לפני גלגולן לצבירה יומית. הגדרה ל־0 תשבית איסופים."
-    ai_audit_logs_purge_after_days: "מחיקת יומני ביקורת של API של בינה מלאכותית שגילם עולה על מספר הימים הזה. ברירת המחדל היא כ־6 חודשים. הגדרה ל־0 תשמור ללא הגבלת זמן."
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -123,7 +117,6 @@ he:
       description: "הדוח מספק ניתוח רגשות לפוסטים, בקיבוץ לפי קטגוריות, עם דירוג חיובי, שלילי ופושר לכל אחד מהפוסטים והקטגוריות."
     overall_sentiment:
       title: "רגש כללי"
-      description: 'התרשים משווה את מספר הפוסטים שמסווגים כחיוביים או שליליים. אלו מחושבים כאשר ניקוד חיובי או שלילי הוא גדול מסף הניקוד המוגדר. משמעות הדבר היא שפוסטים נייטרליים לא מופיעים. הודעות אישיות מוחרגות גם כן. מסווגות באמצעות „cardiffnlp/twitter-roberta-base-sentiment-latest”'
       xaxis: "חיובי(%)"
       yaxis: "תאריך"
     emotion_admiration:
@@ -252,15 +245,12 @@ he:
         unknown_error: "אירעה שגיאה מפתיעה בעת יצירת תמונות ממוזערות. נא לנסות שוב."
       prompts:
         translate: תרגום ל%{language}
-        generate_titles: הצעת כותרות לנושא
         proofread: הגהת הטקסט
         markdown_table: יצירת טבלה ב־Markdown
         custom_prompt: "בקשה מותאמת אישית"
         explain: "הסבר"
         illustrate_post: "איור פוסט"
         replace_dates: "תאריכים חכמים"
-      image_caption:
-        attribution: "הכותרת נוספה ע״י בינה מלאכותית"
     share_ai:
       read_more: "הצגת התמליל המלא"
       onebox_title: "דיון בינה מלאכותית עם %{llm_name}"
@@ -282,8 +272,9 @@ he:
     ai_bot:
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
+      read_post:
+        unknown_post: "פרסום"
       agents:
-        default_llm_required: "ברירת מחדל של מודל שפה הגדול נחוצה בטרם הפעלת הצ׳אט"
         cannot_have_duplicate_tools: "לא יכולים להיות כלים כפולים"
         github_helper:
           name: "מסייע GitHub"
@@ -434,7 +425,11 @@ he:
         random_picker: "בורר אקראי"
         categories: "הצגת קטגוריות"
         flag_post: "סימון פוסט"
+        suspend_user: "השעיית משתמש"
+        silence_user: "השתקת משתמש"
         edit_post: "עריכת פוסט"
+        edit_tag: "עריכת תגית"
+        create_category: "יצירת קטגוריה"
         search: "חיפוש"
         tags: "הצגת תגיות"
         time: "מועד"
@@ -463,6 +458,7 @@ he:
         random_picker: "נא לבחור מספר אקראי או רכיב אקראי מרשימה"
         categories: "הצגת כל הקטגוריות החשופות לציבור בפורום"
         delete_topic: "מחיקת נושא"
+        create_category: "יצירת קטגוריה חדשה"
         search: "חיפוש בכל הנושאים הציבוריים בפורום"
         tags: "הצגת כל התגיות בפורום"
         time: "איתור זמן באזורי זמן שונים"
@@ -499,49 +495,37 @@ he:
         categories:
           one: "נמצאה קטגוריה"
           two: "נמצאו שתי קטגוריות"
-          many: "נמצאו %{count} קטגוריות"
           other: "נמצאו %{count} קטגוריות"
         tags:
           one: "נמצאה תגית"
           two: "נמצאו שתי תגיות"
-          many: "נמצאו %{count} תגיות"
           other: "נמצאו %{count} תגיות"
         search:
           one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
           two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
           other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         search_meta_discourse:
           one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
           two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
           other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         google:
           one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
           two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
           other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         setting_context: "נקרא הקשר עבור: %{setting_name}"
         schema: "%{tables}"
         researcher_dry_run:
           one: "יעדים מוצעים: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
           two: "יעדים מוצעים: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
-          many: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
           other: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
         researcher:
           one: "במהלך מחקר: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
           two: "במהלך מחקר: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
-          many: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
           other: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
         search_settings:
           one: "נמצאה תוצאה לחיפוש אחר ‚%{query}’"
           two: "נמצאו שתי תוצאות לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
           other: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
-      discoveries:
-        continue_conversation:
-          title: "שיחת גילוי: חיפוש אחר %{query}"
-          raw: "בחיפוש שלי אחר %{query}, הצגת לי את המידע הבא:\n\n%{context}\n\nאפשר להמשיך את השיחה."
       close_topic:
         errors:
           not_found: "הנושא לא נמצא."
@@ -551,10 +535,13 @@ he:
       delete_topic:
         errors:
           not_found: "הנושא לא נמצא."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "הנושא לא נמצא."
       edit_category:
+        errors:
+          not_found: "לא נמצאה קטגוריה."
+      change_topic_category:
         errors:
           not_found: "הנושא לא נמצא."
           category_not_found: "לא נמצאה קטגוריה."
@@ -580,7 +567,6 @@ he:
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."
         two: "יש להגדיר את ההגדרות האלו תחילה: %{settings}."
-        many: "יש להגדיר את ההגדרות האלו תחילה: %{settings}."
         other: "יש להגדיר את ההגדרות האלו תחילה: %{settings}."
       chat:
         no_targets: "לא היו הודעות במהלך התקופה הנבחרת."
@@ -612,12 +598,10 @@ he:
         configuration_hint:
           one: "נא לוודא שההגדרה `%{settings}` הוגדרה."
           two: "נא לוודא שההגדרות האלו הוגדרו: %{settings}"
-          many: "נא לוודא שההגדרות האלו הוגדרו: %{settings}"
           other: "נא לוודא שההגדרות האלו הוגדרו: %{settings}"
       delete_failed:
         one: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמש בו. נא לעדכן את ההגדרות לנסות שוב."
         two: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
-        many: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
         other: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
     agents:
@@ -643,7 +627,7 @@ he:
         all_posts_translated: "כל הפוסטים בנושא הזה כבר מתורגמים."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
-      quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
+      quota_required: "חובה לציין כמות אסימונים מרבית, שימושים או עלות למודל הזה"
       no_query_specified: משתנה השאילתה נחוץ, נא לציין אותו.
       no_user_specified: המשתנים username או user_unique_id נחוצים, נא לציין לפחות אחד מהם.
       user_not_found: המשתמש שצוין לא קיים. נא לבדוק את המשתנה username.
@@ -652,5 +636,4 @@ he:
       custom_tool_exists:
         one: "כבר קיים כלי מותאם בשם %{names}."
         two: "כבר קיימים כלים מותאמים בשמות %{names}."
-        many: "כבר קיימים כלים מותאמים בשמות %{names}."
         other: "כבר קיימים כלים מותאמים בשמות %{names}."

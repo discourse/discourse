@@ -4,6 +4,7 @@ module Migrations
   module Tooling
     module Schema
       Definition = Data.define(:tables, :enums)
+      GenerationResult = Data.define(:resolved, :deleted_files)
       PreflightResult = Data.define(:resolved, :errors)
       TableDefinition =
         Data.define(
@@ -13,7 +14,12 @@ module Migrations
           :primary_key_column_names,
           :constraints,
           :model_mode,
+          :conflict_strategy,
         ) do
+          def initialize(conflict_strategy: :raise, **args)
+            super(conflict_strategy:, **args)
+          end
+
           def sorted_columns
             pk_position = primary_key_column_names.each_with_index.to_h
             columns.sort_by { |c| [c.is_primary_key ? 0 : 1, pk_position.fetch(c.name, 0), c.name] }
@@ -123,9 +129,11 @@ module Migrations
         preflight(database:).errors
       end
 
-      def self.generate(database: :intermediate_db)
+      def self.generate(database: :intermediate_db, output_root: nil)
         ensure_ready!(database:)
-        DSL::Generator.new(self, database:).generate
+        generator = DSL::Generator.new(self, database:, output_root:)
+        resolved = generator.generate
+        GenerationResult.new(resolved:, deleted_files: generator.deleted_files)
       end
 
       def self.diff(database: :intermediate_db)
@@ -150,6 +158,13 @@ module Migrations
         end
 
         DSL::IgnoredFileEditor.new(config_path(database)).add_table(table_name, reason:)
+      end
+
+      # No database existence check here: removing entries of tables that no
+      # longer exist is the main use case.
+      def self.unignore_table(table_name, database: :intermediate_db)
+        ensure_ready!(database:)
+        DSL::IgnoredFileEditor.new(config_path(database)).remove_table(table_name)
       end
 
       # --- Lifecycle Methods ---

@@ -14,7 +14,10 @@ import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
@@ -229,6 +232,19 @@ export default class Composer extends RestModel {
 
   @tracked _archetypesOverride;
 
+  @tracked _user;
+
+  @dependentKeyCompat
+  get user() {
+    return applyValueTransformer("composer-user", this._user, {
+      composer: this,
+    });
+  }
+
+  set user(value) {
+    this._user = value;
+  }
+
   @computed("site.archetypes")
   get archetypes() {
     if (this._archetypesOverride !== undefined) {
@@ -395,7 +411,9 @@ export default class Composer extends RestModel {
 
   @dependentKeyCompat
   get editingPost() {
-    return isEdit(this.get("action"));
+    return applyValueTransformer("composer-editing-post", isEdit(this.action), {
+      composer: this,
+    });
   }
 
   @computed("category.minimumRequiredTags")
@@ -461,7 +479,7 @@ export default class Composer extends RestModel {
   }
 
   get composerVersion() {
-    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+    if (this.currentUser.useRichEditor) {
       return 2;
     }
 
@@ -534,8 +552,13 @@ export default class Composer extends RestModel {
     if (custom) {
       return custom;
     }
-    return this.canEditTopicFeaturedLink
-      ? "composer.title_or_link_placeholder"
+
+    if (this.canEditTopicFeaturedLink) {
+      return "composer.title_or_link_placeholder";
+    }
+
+    return this.siteSettings.enable_composer_redesign
+      ? "composer.title_placeholder_redesign"
       : "composer.title_placeholder";
   }
 
@@ -744,16 +767,22 @@ export default class Composer extends RestModel {
 
   @computed("privateMessage", "topicFirstPost", "topic.pm_with_non_human_user")
   get minimumPostLength() {
+    let length;
+
     if (this.topic?.pm_with_non_human_user) {
-      return 1;
+      length = 1;
     } else if (this.privateMessage) {
-      return this.siteSettings.min_personal_message_post_length;
+      length = this.siteSettings.min_personal_message_post_length;
     } else if (this.topicFirstPost) {
       // first post (topic body)
-      return this.siteSettings.min_first_post_length;
+      length = this.siteSettings.min_first_post_length;
     } else {
-      return this.siteSettings.min_post_length;
+      length = this.siteSettings.min_post_length;
     }
+
+    return applyValueTransformer("composer-minimum-post-length", length, {
+      composer: this,
+    });
   }
 
   @computed("title")
@@ -898,29 +927,35 @@ export default class Composer extends RestModel {
   }
 
   applyTopicTemplate(oldCategoryId, categoryId) {
-    if (this.action !== CREATE_TOPIC) {
-      return;
-    }
+    applyBehaviorTransformer(
+      "composer-apply-topic-template",
+      () => {
+        if (this.action !== CREATE_TOPIC) {
+          return;
+        }
 
-    let reply = this.reply;
+        let reply = this.reply;
 
-    // If the user didn't change the template, clear it
-    if (oldCategoryId) {
-      const oldCat = Category.findById(oldCategoryId);
-      if (oldCat && oldCat.topic_template === reply) {
-        reply = "";
-      }
-    }
+        // If the user didn't change the template, clear it
+        if (oldCategoryId) {
+          const oldCat = Category.findById(oldCategoryId);
+          if (oldCat && oldCat.topic_template === reply) {
+            reply = "";
+          }
+        }
 
-    if (!isEmpty(reply)) {
-      return;
-    }
+        if (!isEmpty(reply)) {
+          return;
+        }
 
-    const category = Category.findById(categoryId);
-    if (category) {
-      this.set("reply", category.topic_template || "");
-      this.set("originalText", category.topic_template || "");
-    }
+        const category = Category.findById(categoryId);
+        if (category) {
+          this.set("reply", category.topic_template || "");
+          this.set("originalText", category.topic_template || "");
+        }
+      },
+      { composer: this, oldCategoryId, categoryId }
+    );
   }
 
   /**
@@ -948,11 +983,18 @@ export default class Composer extends RestModel {
    @param {String} [opts.title]
    **/
   open(opts) {
-    let promise = Promise.resolve();
-
     if (!opts) {
       opts = {};
     }
+
+    return applyBehaviorTransformer("composer-open", () => this._open(opts), {
+      composer: this,
+      opts,
+    });
+  }
+
+  _open(opts) {
+    let promise = Promise.resolve();
 
     this.set("loading", true);
 
@@ -1207,11 +1249,17 @@ export default class Composer extends RestModel {
         const topicProps = this.getProperties(
           Object.keys(_edit_topic_serializer)
         );
-        // frontend should have featuredLink but backend needs featured_link
-        if (topicProps.featuredLink) {
-          topicProps.featured_link = topicProps.featuredLink;
-          delete topicProps.featuredLink;
+        // user clicked "overwrite edits" button
+        if (!this.editConflict) {
+          topicProps.original_title = this.originalTitle;
+          topicProps.original_tags = this.originalTags;
         }
+
+        // frontend should have featuredLink but backend needs featured_link
+        if (topicProps.featuredLink !== topic.featured_link) {
+          topicProps.featured_link = topicProps.featuredLink ?? null;
+        }
+        delete topicProps.featuredLink;
 
         // If we're editing a shared draft, keep the original category
         if (this.action === EDIT_SHARED_DRAFT) {

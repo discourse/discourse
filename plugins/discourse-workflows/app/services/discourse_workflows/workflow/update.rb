@@ -4,42 +4,55 @@ module DiscourseWorkflows
   class Workflow::Update
     include Service::Base
 
-    TIMEZONE_NOT_PROVIDED = Object.new.freeze
-    STATIC_DATA_NOT_PROVIDED = Object.new.freeze
-    ERROR_WORKFLOW_ID_NOT_PROVIDED = Object.new.freeze
+    NOT_PROVIDED = Object.new.freeze
 
     params do
       attribute :workflow_id, :integer
-      attribute :name, :string
-      attribute :error_workflow_id, default: -> { ERROR_WORKFLOW_ID_NOT_PROVIDED }
-      attribute :timezone, default: -> { TIMEZONE_NOT_PROVIDED }
-      attribute :static_data, default: -> { STATIC_DATA_NOT_PROVIDED }
+      attribute :name, default: -> { NOT_PROVIDED }
+      attribute :error_workflow_id, default: -> { NOT_PROVIDED }
+      attribute :timezone, default: -> { NOT_PROVIDED }
+      attribute :static_data, default: -> { NOT_PROVIDED }
+      attribute :tags, default: -> { NOT_PROVIDED }
       attribute :nodes
       attribute :connections
       attribute :autosaved, :boolean, default: false
 
+      before_validation do
+        self.tags = DiscourseWorkflows::WorkflowTag.normalize_all(tags) if tags_provided?
+      end
+
       validates :workflow_id, presence: true
-      validates :name, presence: true, length: { maximum: 100 }
+      validates :name, presence: true, length: { maximum: 100 }, if: :name_provided?
       validate :timezone_is_valid
       validate :static_data_is_valid_map
+      validate :tags_are_valid, if: :tags_provided?
 
       def updatable_attributes
-        attrs = { name: }
+        attrs = {}
+        attrs[:name] = name if name_provided?
         attrs[:error_workflow_id] = error_workflow_id if error_workflow_id_provided?
         attrs[:static_data] = static_data if static_data_provided?
         attrs
       end
 
+      def name_provided?
+        name != NOT_PROVIDED
+      end
+
       def error_workflow_id_provided?
-        error_workflow_id != ERROR_WORKFLOW_ID_NOT_PROVIDED
+        error_workflow_id != NOT_PROVIDED
       end
 
       def timezone_provided?
-        timezone != TIMEZONE_NOT_PROVIDED
+        timezone != NOT_PROVIDED
       end
 
       def static_data_provided?
-        static_data != STATIC_DATA_NOT_PROVIDED
+        static_data != NOT_PROVIDED
+      end
+
+      def tags_provided?
+        tags != NOT_PROVIDED
       end
 
       def graph_data_provided?
@@ -59,6 +72,10 @@ module DiscourseWorkflows
 
         errors.add(:static_data, :invalid)
       end
+
+      def tags_are_valid
+        DiscourseWorkflows::WorkflowTag.validate_names(tags, errors)
+      end
     end
 
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
@@ -70,6 +87,7 @@ module DiscourseWorkflows
       transaction do
         model :workflow, :update_workflow
         model :workflow, :save_workflow
+        only_if(:tags_provided) { step :sync_tags }
         only_if(:graph_data_provided) do
           step :populate_graph
           only_if(:versioned_payload_changed) do
@@ -94,6 +112,14 @@ module DiscourseWorkflows
 
     def graph_data_provided(params:)
       params.graph_data_provided?
+    end
+
+    def tags_provided(params:)
+      params.tags_provided?
+    end
+
+    def sync_tags(workflow:, params:)
+      DiscourseWorkflows::WorkflowTag.sync!(workflow:, names: params.tags)
     end
 
     def versioned_payload_changed(workflow:, previous_versioned_payload:)

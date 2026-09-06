@@ -3,7 +3,11 @@ import BackButton from "discourse/components/back-button";
 import routeAction from "discourse/helpers/route-action";
 
 export default <template>
-  <BackButton @route="adminReports" @label="admin.reports.back" />
+  <BackButton
+    @route={{@controller.backLink.route}}
+    @query={{@controller.backLink.query}}
+    @label={{@controller.backLink.label}}
+  />
   <div class="admin-container admin-config-page__main-area">
     <div class="admin-config-area">
       <AdminReport
@@ -12,6 +16,7 @@ export default <template>
         @reportOptions={{@controller.reportOptions}}
         @showFilteringUI={{true}}
         @showDescriptionInTooltip={{false}}
+        @showRelatedItems={{@controller.currentUser.admin}}
         @onRefresh={{routeAction "onParamsChange"}}
       />
     </div>

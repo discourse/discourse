@@ -20,6 +20,7 @@ describe "Staff writes only mode" do
       login_form.open.fill(username: moderator.username, password:).click_login
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(page).to have_content(I18n.t("js.staff_writes_only_mode.enabled"))
 
       page.visit "/new-topic"
 
@@ -53,7 +54,9 @@ describe "Staff writes only mode" do
 
       expect(page).to have_content(topic.title)
       expect(page).to have_content(post.raw)
-      expect(page).to have_content(I18n.t("js.staff_writes_only_mode.enabled"))
+      expect(page).to have_content(I18n.t("js.staff_writes_only_mode.enabled_anonymous"))
+      expect(page).to have_css(".login-button")
+      expect(page).to have_no_css(".sign-up-button")
     end
   end
 end

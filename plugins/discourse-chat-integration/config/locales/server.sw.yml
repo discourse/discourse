@@ -32,6 +32,8 @@ sw:
     group_message_template: "ujumbe kwenda kwa: @%{name}"
     provider:
       slack:
+        errors:
+          action_prohibited: "Roboti hana ruhusa kuchapisha ndani ya hiyo chaneli"
         status:
           header: |
             *Kanuni cha chaneli*

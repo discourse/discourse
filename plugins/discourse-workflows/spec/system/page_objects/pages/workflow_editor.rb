@@ -4,13 +4,20 @@ module PageObjects
   module Pages
     module DiscourseWorkflows
       class WorkflowEditor < PageObjects::Pages::Base
+        WORKFLOWS_PATH = "/admin/plugins/discourse-workflows/workflows"
+
         def visit_new
-          page.visit("/admin/plugins/discourse-workflows/workflows/new")
+          page.visit("#{WORKFLOWS_PATH}/new")
           self
         end
 
         def visit(workflow_id)
-          page.visit("/admin/plugins/discourse-workflows/workflows/#{workflow_id}")
+          page.visit("#{WORKFLOWS_PATH}/#{workflow_id}")
+          self
+        end
+
+        def visit_node(workflow, node_id)
+          page.visit(node_path(workflow, node_id))
           self
         end
 
@@ -19,12 +26,53 @@ module PageObjects
           self
         end
 
-        def has_node_configurator?
-          page.has_css?(".workflows-configurator-modal")
+        def add_tag(tag)
+          find(".workflows-tags-editor__manage").click
+          tag_selector =
+            PageObjects::Components::SelectKit.new(".workflows-tags-editor .list-setting")
+          tag_selector.expand
+          tag_selector.search(tag)
+          tag_selector.select_row_by_value(tag)
+          find(".workflows-tags-editor__done").click
+          self
+        end
+
+        def has_header_tag?(tag)
+          page.has_css?(".workflows-tags-editor .d-table-badge", text: tag)
+        end
+
+        def rename_configured_node(name)
+          find(".workflows-configurator-modal__name").click
+          find(".workflows-configurator-modal__name-input").fill_in(with: name)
+          find(".workflows-configurator-modal__save-name").click
+          self
+        end
+
+        def has_node_configurator?(name: nil)
+          if name
+            page.has_css?(
+              ".workflows-configurator-modal .workflows-configurator-modal__name",
+              exact_text: name,
+            )
+          else
+            page.has_css?(".workflows-configurator-modal")
+          end
         end
 
         def has_no_node_configurator?
           page.has_no_css?(".workflows-configurator-modal")
+        end
+
+        def has_saved_node_configuration?
+          page.has_css?(".workflows-configurator-modal__save-status--saved")
+        end
+
+        def has_workflow_path?(workflow)
+          page.has_current_path?(workflow_path(workflow))
+        end
+
+        def has_node_path?(workflow, node_id)
+          page.has_current_path?(node_path(workflow, node_id))
         end
 
         def edit_name(name)
@@ -73,7 +121,7 @@ module PageObjects
           "action:topic_tags" => "Topic tags",
           "action:code" => "Code",
           "action:topic" => "Topic",
-          "action:create_post" => "Create post",
+          "action:post" => "Post",
           "action:set_fields" => "Set fields",
           "action:split_out" => "Split Out",
           "action:http_request" => "HTTP Request",
@@ -94,6 +142,7 @@ module PageObjects
             "add" => "Add to group",
             "remove" => "Remove from group",
             "get" => "Get group",
+            "check_membership" => "Check membership",
           },
           "action:data_table" => {
             "insert" => "Insert",
@@ -106,6 +155,12 @@ module PageObjects
             "create" => "Create topic",
             "get" => "Get topic",
             "list" => "List topics",
+          },
+          "action:post" => {
+            "create" => "Create post",
+            "edit" => "Edit post",
+            "get" => "Get post",
+            "list" => "List posts",
           },
         }.freeze
 
@@ -132,6 +187,16 @@ module PageObjects
         def has_condition_port_labels?
           page.has_css?(".workflow-rete-node__port-pill", text: "true", wait: 10) &&
             page.has_css?(".workflow-rete-node__port-pill", text: "false", wait: 10)
+        end
+
+        private
+
+        def workflow_path(workflow)
+          "#{WORKFLOWS_PATH}/#{workflow.id}"
+        end
+
+        def node_path(workflow, node_id)
+          "#{workflow_path(workflow)}/nodes/#{ERB::Util.url_encode(node_id)}"
         end
       end
     end

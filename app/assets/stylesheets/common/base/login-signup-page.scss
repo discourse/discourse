@@ -263,7 +263,8 @@ body.signup-page {
 
     .user-field.text label.control-label,
     .user-field.dropdown label.control-label,
-    .user-field.multiselect label.control-label {
+    .user-field.multiselect label.control-label,
+    .user-field.date label.control-label {
       top: -8px;
       left: calc(1em - 0.25em);
       background-color: var(--secondary);
@@ -307,16 +308,6 @@ body.signup-page {
       }
     }
 
-    .user-field.date {
-      .alt-placeholder {
-        display: none;
-      }
-
-      input:focus + .alt-placeholder {
-        display: block;
-      }
-    }
-
     #email-login-link {
       transition: opacity 0.5s;
 
@@ -327,6 +318,7 @@ body.signup-page {
     }
 
     #email-login-link,
+    #one-time-code-link,
     .login__password-links {
       font-size: var(--font-down-1);
       display: flex;
@@ -395,7 +387,8 @@ body.signup-page {
         }
 
         .user-field.dropdown label.control-label,
-        .user-field.multiselect label.control-label {
+        .user-field.multiselect label.control-label,
+        .user-field.date label.control-label {
           top: -10px;
         }
       }
@@ -615,9 +608,10 @@ body.signup-page {
   }
 }
 
-// Signup and invite page
+// Signup, invite, and code login pages share the user-fields step
 .invite-page,
-.signup-fullpage {
+.signup-fullpage,
+.login-fullpage {
   .password-confirmation {
     display: none;
   }

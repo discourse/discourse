@@ -4,7 +4,9 @@ describe "Gists Toggle Functionality" do
   fab!(:admin)
   fab!(:group)
   fab!(:topic_with_gist, :topic)
-  fab!(:topic_ai_gist) { Fabricate(:topic_ai_gist, target: topic_with_gist) }
+  fab!(:topic_ai_gist) do
+    Fabricate(:topic_ai_gist, target: topic_with_gist, locale: SiteSetting.default_locale)
+  end
 
   before do
     enable_current_plugin
@@ -65,7 +67,9 @@ describe "Gists Toggle Functionality" do
 
   context "when viewing PM topic lists" do
     fab!(:pm_topic) { Fabricate(:private_message_topic, user: admin, recipient: Fabricate(:user)) }
-    fab!(:pm_gist) { Fabricate(:topic_ai_gist, target: pm_topic) }
+    fab!(:pm_gist) do
+      Fabricate(:topic_ai_gist, target: pm_topic, locale: SiteSetting.default_locale)
+    end
 
     it "shows toggle when PMs have gists" do
       visit("/u/#{admin.username}/messages/new")
@@ -115,7 +119,9 @@ describe "Gists Toggle Functionality - Mobile", mobile: true do
   fab!(:admin)
   fab!(:group)
   fab!(:topic_with_gist, :topic)
-  fab!(:topic_ai_gist) { Fabricate(:topic_ai_gist, target: topic_with_gist) }
+  fab!(:topic_ai_gist) do
+    Fabricate(:topic_ai_gist, target: topic_with_gist, locale: SiteSetting.default_locale)
+  end
 
   before do
     enable_current_plugin
@@ -144,7 +150,9 @@ describe "Gists Toggle Functionality - Mobile", mobile: true do
 
   context "when viewing PMs on mobile" do
     fab!(:pm_topic) { Fabricate(:private_message_topic, user: admin, recipient: Fabricate(:user)) }
-    fab!(:pm_gist) { Fabricate(:topic_ai_gist, target: pm_topic) }
+    fab!(:pm_gist) do
+      Fabricate(:topic_ai_gist, target: pm_topic, locale: SiteSetting.default_locale)
+    end
 
     it "renders gist component in mobile PM list" do
       visit("/u/#{admin.username}/messages/new")

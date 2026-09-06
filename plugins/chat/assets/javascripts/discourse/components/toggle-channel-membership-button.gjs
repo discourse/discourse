@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -12,6 +13,8 @@ import { i18n } from "discourse-i18n";
 export default class ToggleChannelMembershipButton extends Component {
   @service chat;
   @service chatApi;
+  @service chatStateManager;
+  @service currentUser;
 
   @tracked isLoading = false;
 
@@ -38,22 +41,35 @@ export default class ToggleChannelMembershipButton extends Component {
     }
 
     if (this.options.labelType === "short") {
-      if (this.args.channel.currentUserMembership.following) {
+      if (this.isFollowing) {
         return i18n("chat.channel_settings.leave");
       } else {
         return i18n("chat.channel_settings.join");
       }
     }
 
-    if (this.args.channel.currentUserMembership.following) {
+    if (this.isFollowing) {
       return i18n("chat.channel_settings.leave_channel");
     } else {
       return i18n("chat.channel_settings.join_channel");
     }
   }
 
+  get isFollowing() {
+    return this.args.channel.currentUserMembership?.following;
+  }
+
   @action
   onJoinChannel() {
+    if (!this.currentUser) {
+      if (this.chatStateManager.isDrawerActive) {
+        this.chatStateManager.didCloseDrawer();
+      }
+
+      this.showLogin();
+      return;
+    }
+
     this.isLoading = true;
 
     return this.chat
@@ -69,6 +85,10 @@ export default class ToggleChannelMembershipButton extends Component {
 
         this.isLoading = false;
       });
+  }
+
+  showLogin() {
+    getOwner(this).lookup("route:application").send("showLogin");
   }
 
   @action
@@ -93,7 +113,7 @@ export default class ToggleChannelMembershipButton extends Component {
   }
 
   <template>
-    {{#if @channel.currentUserMembership.following}}
+    {{#if this.isFollowing}}
       <DButton
         @action={{this.onLeaveChannel}}
         @translatedLabel={{this.label}}

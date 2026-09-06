@@ -72,7 +72,7 @@ export default <template>
                     <LinkTo
                       @route="adminPlugins.show.discourse-gamification-leaderboards.show"
                       @model={{leaderboard}}
-                      class="btn leaderboard-admin__edit btn-text btn-small"
+                      class="btn btn-default leaderboard-admin__edit btn-text btn-small"
                     >{{i18n "gamification.edit"}} </LinkTo>
 
                     <DButton

@@ -86,6 +86,25 @@ RSpec.describe DbHelper do
         expect(sidebar_url1.name).to eq("short-sidebar-url")
         expect(sidebar_url2.name).to eq("another-sidebar-url")
       end
+
+      it "protects each length-constrained column independently on the same row" do
+        value_limit = SidebarUrl.columns_hash["value"].limit
+        # name(80) will fit after remap, value(1000) will overflow.
+        row =
+          SidebarUrl.create!(
+            icon: "link",
+            name: "TOK-name",
+            value: "TOK" + ("x" * (value_limit - 3)),
+          )
+
+        expect {
+          DbHelper.remap("TOK", "TOKENEXPANDED", skip_max_length_violations: true)
+        }.not_to raise_error
+
+        row.reload
+        expect(row.name).to eq("TOKENEXPANDED-name")
+        expect(row.value).to eq("TOK" + ("x" * (value_limit - 3)))
+      end
     end
   end
 
@@ -137,6 +156,24 @@ RSpec.describe DbHelper do
 
         expect(sidebar_url1.name).to eq("short-sidebar-url")
         expect(sidebar_url2.name).to eq("another-sidebar-url")
+      end
+
+      it "protects each length-constrained column independently on the same row" do
+        value_limit = SidebarUrl.columns_hash["value"].limit
+        row =
+          SidebarUrl.create!(
+            icon: "link",
+            name: "TOK-name",
+            value: "TOK" + ("x" * (value_limit - 3)),
+          )
+
+        expect {
+          DbHelper.regexp_replace("TOK", "TOKENEXPANDED", skip_max_length_violations: true)
+        }.not_to raise_error
+
+        row.reload
+        expect(row.name).to eq("TOKENEXPANDED-name")
+        expect(row.value).to eq("TOK" + ("x" * (value_limit - 3)))
       end
     end
   end

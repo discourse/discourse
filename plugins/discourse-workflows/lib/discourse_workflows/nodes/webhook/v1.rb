@@ -11,6 +11,7 @@ module DiscourseWorkflows
             icon: "globe",
             color: "purple",
           },
+          output_contracts: [{ schema: Schema::WEBHOOK_REQUEST_SCHEMA }],
           properties: {
             url_preview: {
               type: :custom,

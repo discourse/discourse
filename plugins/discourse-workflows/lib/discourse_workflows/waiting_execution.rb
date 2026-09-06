@@ -118,19 +118,26 @@ module DiscourseWorkflows
       signed_url(path, signature, absolute: absolute)
     end
 
-    def self.action_token(execution_id:, resume_token:, action:)
+    def self.action_token(execution_id:, resume_token:, action:, target_user_id: nil)
       action = action.to_s
-      "#{execution_id.to_i}:#{action}:#{action_signature(execution_id:, resume_token:, action:)}"
+      signature = action_signature(execution_id:, resume_token:, action:, target_user_id:)
+      "#{execution_id.to_i}:#{target_user_id}:#{action}:#{signature}"
     end
 
     def self.action_token_payload(token)
       return if token.blank?
 
-      execution_id, action, signature = token.to_s.split(":", 3)
+      execution_id, target_user_id, action, signature = token.to_s.split(":", 4)
       return if execution_id.blank? || action.blank? || signature.blank?
       return unless execution_id.match?(/\A\d+\z/)
+      return unless target_user_id.blank? || target_user_id.match?(/\A\d+\z/)
 
-      { "execution_id" => execution_id.to_i, "action" => action, "signature" => signature }
+      {
+        "execution_id" => execution_id.to_i,
+        "target_user_id" => target_user_id.presence&.to_i,
+        "action" => action,
+        "signature" => signature,
+      }
     end
 
     def self.find_by_action_token(token, expected_node_type:)
@@ -174,6 +181,7 @@ module DiscourseWorkflows
           execution_id: execution.id,
           resume_token: execution.resume_token,
           action: payload["action"],
+          target_user_id: payload["target_user_id"],
         )
       return false if signature.bytesize != expected.bytesize
 
@@ -181,11 +189,11 @@ module DiscourseWorkflows
     end
     private_class_method :valid_action_signature?
 
-    def self.action_signature(execution_id:, resume_token:, action:)
+    def self.action_signature(execution_id:, resume_token:, action:, target_user_id: nil)
       OpenSSL::HMAC.hexdigest(
         "SHA256",
         action_token_key,
-        "#{execution_id.to_i}:#{action}:#{resume_token}",
+        "#{execution_id.to_i}:#{target_user_id}:#{action}:#{resume_token}",
       )
     end
     private_class_method :action_signature

@@ -38,6 +38,19 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      copied: "복사되었습니다"
+      ai_decoded_transcript:
+        type: "형식"
+        error: "에러"
+        response: "응답"
+      ai_tool_approval:
+        loading: "로드 중..."
+        tool: "처리"
+        user: "사용자"
+        approve: "승인"
+        reject: "거부"
+        approved: "승인"
+        rejected: "거부됨"
       llm_selector:
         none: "없음"
       features:
@@ -71,6 +84,9 @@ ko:
         inference:
           setting_groups:
             settings: "기본 설정"
+        image_caption:
+          setting_groups:
+            settings: "설정"
         translation:
           setting_groups:
             settings: "기본 설정"
@@ -80,6 +96,22 @@ ko:
         select_option: "옵션 선택..."
       translations:
         title: "번역"
+        category_scope: "카테고리"
+        model_progress:
+          detail:
+            retry: "재시도"
+            columns:
+              pending: "보류 중"
+              total: "합계"
+          targets:
+            post:
+              title: "글"
+            topic:
+              title: "글"
+            category:
+              title: "카테고리"
+            tag:
+              title: "태그"
         stats:
           eta_minutes:
             other: "%{count}분"
@@ -104,6 +136,37 @@ ko:
         periods:
           last_day: "지난 24시간"
           custom: "사용자 지정..."
+      logs:
+        short_title: "로그"
+        apply: "적용"
+        successful: "성공"
+        failed: "실패"
+        unknown: "알수없음"
+        time: "시간"
+        when: "언제"
+        request: "요청"
+        provider: "공급자"
+        user: "사용자"
+        context: "상황"
+        topic: "글"
+        post: "글"
+        post_short: "%{id}번째 글"
+        duration: "기간"
+        actions: "작업"
+        view_details: "세부 정보"
+        periods:
+          day: "지난 24시간"
+          week: "지난 7일"
+          custom: "사용자 정의"
+        detail:
+          request: "요청"
+          response: "응답"
+          context: "상황"
+          network_error: "네트워크 오류"
+        retention:
+          summary_stage: "요약"
+          deleted_stage: "삭제됨"
+          save: "저장"
       ai_agent:
         name: "그룹명"
         edit: "편집"
@@ -115,6 +178,12 @@ ko:
         enabled: "활성화?"
         allowed_groups: "허용 된 그룹"
         delete: "삭제"
+        thinking_effort_options:
+          none: "없음"
+          low: "낮음"
+          medium: "중간"
+          high: "높음"
+          max: "최대"
         response_format:
           open_modal: "편집"
           modal:
@@ -161,6 +230,9 @@ ko:
       llms:
         display_name: "그룹명"
         provider: "공급자"
+        vision_modes:
+          disabled:
+            title: "비활성"
         save: "저장"
         edit: "편집"
         delete: 삭제
@@ -186,8 +258,9 @@ ko:
         tests:
           success: "성공!"
         providers:
-          google: "구글"
           fake: "사용자 정의"
+        provider_fields:
+          region: "지역"
       ai_helper:
         context_menu:
           cancel: "취소"
@@ -201,8 +274,6 @@ ko:
         thumbnail_suggestions:
           select: "선택"
           try_again: "다시 시도"
-        image_caption:
-          save_caption: "저장"
       embeddings:
         save: "저장"
         delete: "삭제"
@@ -216,6 +287,7 @@ ko:
           fake: "사용자 정의"
       ai_bot:
         debug_ai_modal:
+          duration_label: "기간:"
           request: "요청"
           response: "응답"
           next_log: "다음"
@@ -247,8 +319,11 @@ ko:
           since:
             other: "약 %{count}시간"
       discobot_discoveries:
-        regular_results: "글"
-        collapse: "축소"
-        tooltip:
-          actions:
-            disable: "비활성화"
+        legacy:
+          regular_results: "글"
+          collapse: "축소"
+          tooltip:
+            actions:
+              disable: "비활성화"
+        search_all_topics: "모든 글"
+        search_messages: "메시지"

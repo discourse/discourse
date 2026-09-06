@@ -39,18 +39,17 @@ module PageObjects
 
       def click_post_bookmark(post_number)
         find(
-          ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='post-#{post_number}']",
+          ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='post-#{post_number}'] .bookmark-menu__row-btn",
         ).click
       end
 
       def has_post_submenu?
-        has_css?(".topic-bookmark-post-submenu")
+        has_css?(".bookmark-menu__row[data-menu-option-id='jump']") &&
+          has_css?(".bookmark-menu__row[data-menu-option-id='delete']")
       end
 
       def click_post_submenu_option(option_id)
-        find(
-          ".topic-bookmark-post-submenu .bookmark-menu__row[data-menu-option-id='#{option_id}'] .btn",
-        ).click
+        find(".bookmark-menu__row[data-menu-option-id='#{option_id}'] .btn").click
       end
 
       def has_bookmark_topic_option?

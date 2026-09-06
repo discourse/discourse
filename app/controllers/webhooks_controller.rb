@@ -185,6 +185,9 @@ class WebhooksController < ActionController::Base
     raw = request.raw_post
     json = JSON.parse(raw)
 
+    return signature_failure unless Email::Sns.allowed_topic_arn?(json["TopicArn"])
+    return signature_failure unless Email::Sns.authentic?(raw)
+
     case json["Type"]
     when "SubscriptionConfirmation"
       Jobs.enqueue(:confirm_sns_subscription, raw: raw, json: json)

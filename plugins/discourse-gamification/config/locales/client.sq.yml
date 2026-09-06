@@ -34,3 +34,7 @@ sq:
       custom_range_from: "Nga"
       admin:
         name: "Emri"
+    discourse_workflows:
+      gamification_score:
+        username: "User"
+        description: "Përshkrimi"

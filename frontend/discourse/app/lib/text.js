@@ -8,6 +8,8 @@ import { helperContext } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
 
+export { parseBBCodeTag } from "discourse-markdown-it/features/bbcode-block";
+
 async function withEngine(name, ...args) {
   const engine = await waitForPromise(import("discourse/static/markdown-it"));
   return engine[name](...args);

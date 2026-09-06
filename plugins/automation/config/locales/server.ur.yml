@@ -6,6 +6,10 @@
 
 ur:
   discourse_automation:
+    models:
+      automations:
+        validations:
+          script_missing_required_fields: "اسکرپٹ میں ضروری فیلڈز موجود نہیں ہیں: %{fields}"
     triggerables:
       topic:
         title: موضوع

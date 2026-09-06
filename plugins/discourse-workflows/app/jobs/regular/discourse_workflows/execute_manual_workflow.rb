@@ -10,8 +10,9 @@ module Jobs
           )
         return if !execution&.pending?
 
-        if !SiteSetting.discourse_workflows_enabled
+        if !SiteSetting.enable_discourse_workflows
           execution.update!(status: :skipped, finished_at: Time.current)
+          ::DiscourseWorkflows::ExecutionProgressPublisher.publish(execution, refresh: true)
           return
         end
 
@@ -28,6 +29,7 @@ module Jobs
             execution_mode: :manual,
             workflow_snapshot: workflow_snapshot,
             existing_execution: execution,
+            step_node_id: args[:step_node_id],
           )
 
         ::DiscourseWorkflows::Executor.new(
@@ -48,6 +50,7 @@ module Jobs
             error: "Workflow snapshot missing",
             finished_at: Time.current,
           )
+          ::DiscourseWorkflows::ExecutionProgressPublisher.publish(execution, refresh: true)
           return
         end
 

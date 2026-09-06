@@ -12,6 +12,17 @@ sv:
           kpi:
             accepted_solutions:
               label: "Godkända lösningar"
+        sections:
+          support:
+            title: "Stöd"
+            answerers:
+              staff: "Personal"
+              member: "Medlemmar"
+              basic: "Grundläggande"
+            response_time:
+              buckets:
+                lt_1h: "< 1 timme"
+                gt_24h: "> 24 timmar"
   js:
     notifications:
       alt:
@@ -61,6 +72,11 @@ sv:
           solved: "är lösta"
           unsolved: "är olösta"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Ämne"
+            category: "Kategori"
       web_hooks:
         solved_event:
           group_name: "Löst händelse"

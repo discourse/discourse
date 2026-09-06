@@ -13,19 +13,8 @@ ar:
   js:
     discourse_reactions:
       reactions_title: "التفاعلات"
-      state_panel:
-        more_users: "و%{count} أخرى..."
-        show_users: "عرض المزيد من المستخدمين"
-        hide_users: "عرض عدد أقل من المستخدمين"
-        reaction_group:
-          zero: "%{reaction}: %{count} من المستخدمين"
-          one: "%{reaction}: مستخدم واحد (%{count})"
-          two: "%{reaction}: مستخدمان (%{count})"
-          few: "%{reaction}: %{count} مستخدمين"
-          many: "%{reaction}: %{count} مستخدمًا"
-          other: "%{reaction}: %{count} مستخدم"
       reaction:
-        forbidden: "لا يُسمح لك بالتفاعل أو تغيير تفاعلك مع هذا المنشور."
+        forbidden: "غير مسموح لك بالتفاعل أو تغيير تفاعلك مع هذا المنشور."
       picker:
         react_with: "تفاعل مع هذا المنشور باستخدام: %{reaction}"
         cant_remove_reaction: "لم يعد بإمكانك إزالة تفاعلك"

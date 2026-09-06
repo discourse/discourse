@@ -32,6 +32,51 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
     end
   end
 
+  describe "#publish_progress" do
+    it "publishes a compact step update to the admin-secured execution channel" do
+      execution = store.start!
+      step =
+        DiscourseWorkflows::Executor::Step.build(
+          node: OpenStruct.new(id: "1", name: "Node A", type: "action:code", typeVersion: "1.0"),
+          position: 0,
+          input: [{ "json" => { "secret" => "not published" } }],
+        )
+
+      messages =
+        MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
+          store.publish_progress(step: step)
+        end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+      payload = messages.first.data
+      expect(payload).to include(type: "execution_progress", refresh: false)
+      expect(payload[:execution]).to include(id: execution.id, status: "running")
+      expect(payload[:step]).to include(
+        "node_id" => "1",
+        "node_name" => "Node A",
+        "status" => "running",
+      )
+      expect(messages.first.data.to_json).not_to include("not published")
+    end
+    it "publishes terminal state after persistence" do
+      execution = store.start!
+
+      messages =
+        MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
+          store.finish!(steps: [])
+        end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.data).to include(type: "execution_progress", refresh: true)
+      expect(messages.first.data[:execution]).to include(
+        id: execution.id,
+        status: "success",
+        finished_at: be_present,
+      )
+    end
+  end
+
   describe "#save! via finish!" do
     before { store.start! }
 
@@ -73,21 +118,21 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
         ),
       ]
 
-      allow(MessageBus).to receive(:publish)
+      messages =
+        MessageBus.track_publish("/discourse-workflows/workflow/#{workflow.id}") do
+          store.finish!(steps: steps)
+        end
 
-      store.finish!(steps: steps)
-
-      expect(MessageBus).to have_received(:publish) do |channel, payload, opts|
-        expect(channel).to eq("/discourse-workflows/workflow/#{workflow.id}")
-        expect(opts).to eq(group_ids: [Group::AUTO_GROUPS[:admins]])
-        expect(payload[:type]).to eq("execution_completed")
-        published_run = payload.dig(:lastExecutionRunData, "Node A", 0)
-        expect(published_run).to include("node_name" => "Node A")
-        expect(published_run["outputs"]).to include(
-          hash_including("index" => 0, "item_count" => 1),
-          hash_including("index" => 1, "item_count" => 1),
-        )
-      end
+      expect(messages.length).to eq(1)
+      payload = messages.first.data
+      expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+      expect(payload[:type]).to eq("execution_completed")
+      published_run = payload.dig(:lastExecutionRunData, "Node A", 0)
+      expect(published_run).to include("node_name" => "Node A")
+      expect(published_run["outputs"]).to include(
+        hash_including("index" => 0, "item_count" => 1),
+        hash_including("index" => 1, "item_count" => 1),
+      )
 
       run = store.execution.execution_data.run_data.dig("Node A", 0)
       expect(run).to include(
@@ -201,6 +246,37 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
     end
   end
 
+  describe "#pause_waiting_execution!" do
+    let(:node) do
+      OpenStruct.new(id: "wait-1", name: "Wait", type: "action:test", typeVersion: "1.0")
+    end
+
+    before { store.start! }
+
+    it "persists the requested timeout action" do
+      waiting_until = 15.minutes.from_now
+
+      store.pause_waiting_execution!(
+        node: node,
+        waiting_until: waiting_until,
+        timeout_action: "fail",
+      )
+
+      expect(store.execution.reload).to have_attributes(
+        status: "waiting",
+        waiting_node_id: "wait-1",
+        waiting_until: be_within(1.second).of(waiting_until),
+        timeout_action: "fail",
+      )
+    end
+
+    it "keeps timeout action nil when existing callers omit it" do
+      store.pause_waiting_execution!(node: node)
+
+      expect(store.execution.reload.timeout_action).to be_nil
+    end
+  end
+
   describe "wait-state cleanup" do
     let(:waiting_step) do
       DiscourseWorkflows::Executor::Step.build(
@@ -250,22 +326,22 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       let(:options) { DiscourseWorkflows::Executor::ExecutionOptions.new(draft_execution: true) }
 
       it "publishes completion data when the execution fails before node output exists" do
-        allow(MessageBus).to receive(:publish)
+        messages =
+          MessageBus.track_publish("/discourse-workflows/workflow/#{workflow.id}") do
+            store.fail!(error: StandardError.new("boom"), steps: [])
+          end
 
-        store.fail!(error: StandardError.new("boom"), steps: [])
-
-        expect(MessageBus).to have_received(:publish) do |channel, payload, opts|
-          expect(channel).to eq("/discourse-workflows/workflow/#{workflow.id}")
-          expect(opts).to eq(group_ids: [Group::AUTO_GROUPS[:admins]])
-          expect(payload[:type]).to eq("execution_completed")
-          expect(payload[:execution]).to include(
-            id: store.execution.id,
-            workflow_id: workflow.id,
-            trigger_node_id: "node_1",
-            status: "error",
-          )
-          expect(payload[:lastExecutionRunData]).to eq({})
-        end
+        expect(messages.length).to eq(1)
+        payload = messages.first.data.deep_symbolize_keys
+        expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+        expect(payload[:type]).to eq("execution_completed")
+        expect(payload[:execution]).to include(
+          id: store.execution.id,
+          workflow_id: workflow.id,
+          trigger_node_id: "node_1",
+          status: "error",
+        )
+        expect(payload[:lastExecutionRunData]).to eq({})
       end
     end
   end

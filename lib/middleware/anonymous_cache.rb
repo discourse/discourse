@@ -2,12 +2,15 @@
 
 require "mobile_detection"
 require "crawler_detection"
+require "digest"
 require "guardian"
 require "http_language_parser"
 require "http_user_agent_encoder"
 
 module Middleware
   class AnonymousCache
+    CACHEABLE_ENV = "discourse.anonymous_cache.cacheable"
+
     def self.cache_key_segments
       @@cache_key_segments ||= {
         m: "key_is_mobile?",
@@ -18,8 +21,10 @@ module Middleware
         t: "key_cache_theme_ids",
         ca: "key_compress_anon",
         l: "key_locale",
-        lso: "key_show_original_content",
+        lat: "key_automatically_translate",
         cm: "key_forced_color_mode",
+        cs: "key_color_scheme_id",
+        ds: "key_dark_scheme_id",
       }
     end
 
@@ -161,8 +166,13 @@ module Middleware
         @cache_key =
           +"ANON_CACHE_#{is_xhr}_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
 
+        @cache_key << key_embed_referer if @request.path.start_with?("/embed/")
         @cache_key << AnonymousCache.build_cache_key(self)
         @cache_key
+      end
+
+      def key_embed_referer
+        "|er=#{Digest::SHA256.hexdigest(@env["HTTP_REFERER"].to_s)}"
       end
 
       def key_cache_theme_ids
@@ -174,12 +184,24 @@ module Middleware
         %w[light dark].include?(val) ? val : ""
       end
 
+      def key_color_scheme_id
+        valid_color_scheme_cookie_id("color_scheme_id")
+      end
+
+      def key_dark_scheme_id
+        valid_color_scheme_cookie_id("dark_scheme_id")
+      end
+
+      def valid_color_scheme_cookie_id(cookie_name)
+        ColorScheme.valid_id(@request.cookies[cookie_name])
+      end
+
       def key_compress_anon
         GlobalSetting.compress_anon_cache
       end
 
-      def key_show_original_content
-        @request.cookies.key?(ContentLocalization::SHOW_ORIGINAL_COOKIE)
+      def key_automatically_translate
+        ContentLocalization.automatically_translate_anonymously?(@request.cookies)
       end
 
       def theme_ids
@@ -361,6 +383,7 @@ module Middleware
     PAYLOAD_INVALID_REQUEST_METHODS = %w[GET HEAD]
 
     def call(env)
+      env[CACHEABLE_ENV] = false
       return @app.call(env) if defined?(@@disabled) && @@disabled
 
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
@@ -400,8 +423,9 @@ module Middleware
         end
       end
 
+      cacheable = env[CACHEABLE_ENV] = helper.cacheable?
       result =
-        if helper.cacheable?
+        if cacheable
           helper.cached(env) || helper.cache(@app.call(env), env)
         else
           @app.call(env)

@@ -7,8 +7,7 @@ RSpec.describe TopicStatusUpdater do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
 
-  it "avoids notifying on automatically closed topics" do
-    # TODO: TopicStatusUpdater should suppress message bus updates from the users it "pretends to read"
+  it "does not advance read state when a topic is automatically closed" do
     post =
       PostCreator.create(
         user,
@@ -23,16 +22,14 @@ RSpec.describe TopicStatusUpdater do
 
     expect(post.topic.posts.count).to eq(2)
 
+    # The autoclose small_action advances no counter, so the author's read state
+    # stays on the original post.
     tu = TopicUser.find_by(user_id: user.id)
     expect(tu.last_read_post_number).to eq(1)
   end
 
-  it "respects topics_unread_when_closed preference for private messages" do
-    user_wants_unread = Fabricate(:user)
-    user_wants_unread.user_option.update!(topics_unread_when_closed: true)
-
-    user_wants_read = Fabricate(:user)
-    user_wants_read.user_option.update!(topics_unread_when_closed: false)
+  it "does not advance read state when a private message is closed" do
+    recipient = Fabricate(:user)
 
     post =
       PostCreator.create(
@@ -40,27 +37,21 @@ RSpec.describe TopicStatusUpdater do
         raw: "this is a private message",
         title: "private message title",
         archetype: Archetype.private_message,
-        target_usernames: [user_wants_unread.username, user_wants_read.username],
+        target_usernames: [recipient.username],
       )
 
-    TopicUser.update_last_read(user_wants_unread, post.topic.id, 1, 1, 0)
-    TopicUser.update_last_read(user_wants_read, post.topic.id, 1, 1, 0)
-
-    PostTiming.create!(topic: post.topic, post_number: 1, user: user_wants_unread, msecs: 1000)
-    PostTiming.create!(topic: post.topic, post_number: 1, user: user_wants_read, msecs: 1000)
+    TopicUser.update_last_read(recipient, post.topic.id, 1, 1, 0)
+    PostTiming.create!(topic: post.topic, post_number: 1, user: recipient, msecs: 1000)
 
     TopicStatusUpdater.new(post.topic, admin).update!("closed", true)
 
     # Should have 2 posts (original + close action)
     expect(post.topic.posts.count).to eq(2)
 
-    # In PMs, close small_action posts only bump highest_staff_post_number,
-    # so neither user's last_read_post_number advances past the original post.
-    tu_wants_unread = TopicUser.find_by(user: user_wants_unread, topic: post.topic)
-    expect(tu_wants_unread.last_read_post_number).to eq(1)
-
-    tu_wants_read = TopicUser.find_by(user: user_wants_read, topic: post.topic)
-    expect(tu_wants_read.last_read_post_number).to eq(1)
+    # The close small_action advances no counter, so the recipient's read state
+    # stays on the original post.
+    tu = TopicUser.find_by(user: recipient, topic: post.topic)
+    expect(tu.last_read_post_number).to eq(1)
   end
 
   it "adds an autoclosed message" do

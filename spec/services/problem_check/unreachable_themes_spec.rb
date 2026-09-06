@@ -11,7 +11,7 @@ RSpec.describe ProblemCheck::UnreachableThemes do
       )
     end
 
-    before { Fabricate(:theme, id: 50, remote_theme: remote, name: "Test Theme") }
+    let!(:theme) { Fabricate(:theme, id: 50, remote_theme: remote, name: "Test Theme") }
 
     context "when theme is unreachable" do
       let(:last_error) { "Can't reach. Too short." }

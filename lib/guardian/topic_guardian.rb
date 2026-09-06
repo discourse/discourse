@@ -59,6 +59,15 @@ module TopicGuardian
       (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
   end
 
+  def can_set_topic_timer?(topic = nil)
+    return false if anonymous? || is_silenced?
+    return true if @user.is_system_user?
+    return false if topic && !can_see_topic?(topic)
+    return true if is_staff?
+
+    @user.in_any_groups?(SiteSetting.topic_timers_allowed_groups_map)
+  end
+
   def can_move_topic_to_category?(category)
     category =
       (
@@ -139,11 +148,13 @@ module TopicGuardian
     return false if topic.blank?
     return false if !is_staff? && !can_see_topic?(topic, false)
 
-    if is_category_group_moderator?(topic.category) ||
-         user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    if is_category_group_moderator?(topic.category) || can_delete_all_posts_and_topics?
       topic.deleted_at?
     else
-      can_recover_post?(topic.ordered_posts.first)
+      original_post = topic.first_post_with_deleted
+      return false if original_post&.trashed? && !can_see_deleted_post?(original_post)
+
+      can_recover_post?(original_post)
     end
   end
 
@@ -152,7 +163,7 @@ module TopicGuardian
     return false if topic.is_category_topic?
     return false if Discourse.static_doc_topic_ids.include?(topic.id)
     return true if is_category_group_moderator?(topic.category) && can_see_topic?(topic)
-    return true if user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    return true if can_delete_all_posts_and_topics?
 
     is_my_own?(topic) && can_delete_own_topic?(topic)
   end
@@ -200,8 +211,7 @@ module TopicGuardian
   end
 
   def can_see_deleted_topics?(category)
-    is_category_group_moderator?(category) ||
-      user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    is_category_group_moderator?(category) || can_delete_all_posts_and_topics?
   end
 
   # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.
@@ -312,6 +322,9 @@ module TopicGuardian
     if new_archetype == Archetype.banner || topic.archetype == Archetype.banner
       return can_banner_topic?(topic)
     end
+    if new_archetype == Archetype.private_message || topic.private_message?
+      return can_convert_topic?(topic)
+    end
     true
   end
 
@@ -354,12 +367,6 @@ module TopicGuardian
     topic&.slow_mode_seconds.to_i > 0 && @user.human? && !is_staff?
   end
 
-  private
-
-  def can_delete_own_topic?(topic)
-    topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago
-  end
-
   def private_message_topic_scope(scope)
     pm_scope = scope.private_messages_for_user(user)
 
@@ -369,6 +376,12 @@ module TopicGuardian
       SQL
 
     pm_scope
+  end
+
+  private
+
+  def can_delete_own_topic?(topic)
+    topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago
   end
 
   def secured_regular_topic_scope(scope, topic_ids:)

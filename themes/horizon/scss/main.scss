@@ -98,7 +98,7 @@ body:not(.has-full-page-chat, .wizard) {
         > *:not(
             .experimental-screen,
             .activate-account,
-            .discourse-kanban-board-viewer
+            .discourse-boards-board-viewer
           ) {
           box-sizing: border-box;
           max-width: 1000px;
@@ -128,12 +128,6 @@ body.has-admin-changes-banner #main-outlet-wrapper #main-outlet {
 }
 
 aside.onebox {
-  background-color: var(--d-content-background);
-}
-
-.d-editor-preview-wrapper {
-  border-radius: var(--d-border-radius);
-  padding: 1em;
   background-color: var(--d-content-background);
 }
 

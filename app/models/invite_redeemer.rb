@@ -134,7 +134,10 @@ class InviteRedeemer
       user.custom_fields = fields
     end
 
-    user.moderator = true if invite.moderator? && invite.invited_by.staff?
+    if (invite.moderator? && invite.invited_by.staff?) ||
+         InviteRedeemer.admin_invite_grantable?(invite)
+      user.moderator = true
+    end
 
     if password
       user.password = password
@@ -162,6 +165,11 @@ class InviteRedeemer
     end
 
     User.find(user.id)
+  end
+
+  def self.admin_invite_grantable?(invite)
+    invite.admin? && invite.invited_by&.admin? &&
+      UpcomingChanges.enabled_for_user?(:enable_invite_modal_with_roles, invite.invited_by)
   end
 
   private
@@ -238,6 +246,31 @@ class InviteRedeemer
     add_user_to_groups
     send_welcome_message
     notify_invitee
+    grant_moderator_from_invite
+    create_admin_grant_confirmation
+  end
+
+  # Moderator invites grant moderator on redemption. Users created from the
+  # invite already have the flag set in create_user_from_invite; this covers
+  # existing users redeeming the invite.
+  def grant_moderator_from_invite
+    return if !invite.moderator? || !invite.invited_by&.staff?
+
+    invited_user.grant_moderation! if !invited_user.moderator?
+  end
+
+  # Admin invites grant moderator right away; full admin requires the inviter
+  # to confirm via the same email confirmation used when granting admin from
+  # the admin user page.
+  def create_admin_grant_confirmation
+    return if !InviteRedeemer.admin_invite_grantable?(invite)
+
+    invited_user.grant_moderation! if !invited_user.moderator?
+    StaffActionLogger.new(invite.invited_by).log_grant_moderation(invited_user)
+
+    if invite.invited_by.guardian.can_grant_admin?(invited_user)
+      AdminConfirmation.new(invited_user, invite.invited_by).create_confirmation
+    end
   end
 
   def mark_invite_redeemed

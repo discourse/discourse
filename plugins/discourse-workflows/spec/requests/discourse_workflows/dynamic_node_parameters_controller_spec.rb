@@ -8,6 +8,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
   describe "POST /admin/plugins/discourse-workflows/dynamic-node-parameters/options" do
     fab!(:badge) { Fabricate(:badge, name: "Helpful") }
     fab!(:group_1) { Fabricate(:group, name: "alpha") }
+    fab!(:tag_group) { Fabricate(:tag_group, name: "Workflow tags") }
 
     it "returns options for a known load options method" do
       post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
@@ -43,6 +44,30 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include("id" => group_1.id, "name" => group_1.name)
+    end
+
+    it "returns filtered tag groups for the Tag group node" do
+      Fabricate(:tag_group, name: "Unrelated")
+
+      post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
+           params: {
+             nodeTypeAndVersion: {
+               name: "action:tag_group",
+               version: "1.0",
+             },
+             path: "tag_group_id",
+             methodName: "tag_groups",
+             currentNodeParameters: {
+             },
+             filter: "workflow",
+           },
+           as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to contain_exactly(
+        "id" => tag_group.id,
+        "name" => tag_group.name,
+      )
     end
 
     it "returns 404 for an unknown node type" do
@@ -182,10 +207,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
         "user_id" => admin.id,
       )
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
 
     it "uses the requested node version when loading options" do
@@ -238,10 +260,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to contain_exactly("id" => "v2", "name" => "Version 2")
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        [v1, v2].include?(entry[:value])
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(v1, v2)
     end
 
     it "requires exact node versions when loading options" do
@@ -270,10 +289,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
 
       expect(response).to have_http_status(:not_found)
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
 
     it "requires the context-aware option loader" do
@@ -302,10 +318,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
 
       expect(response).to have_http_status(:not_found)
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
   end
 end

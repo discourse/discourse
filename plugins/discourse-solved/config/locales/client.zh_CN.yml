@@ -14,8 +14,84 @@ zh_CN:
         highlights:
           kpi:
             accepted_solutions:
-              label: "已被接受的解决方案"
-              tooltip: "被标记为解决方案的帖子所构成的主题数量。"
+              label: "接受的解决方案"
+              tooltip: "含有被标记为解决方案的帖子的话题数量。"
+        sections:
+          support:
+            title: "支持"
+            fetch_error: "无法加载支持数据。"
+            save_error: "无法保存您的选择以供下次使用。"
+            headline:
+              titles:
+                insufficient_activity: "尚无足够的支持活动"
+                resolution_rate_and_first_reply_time_improved: "在所选时间段内，问题解决率和首次回复时间均有所提高。"
+                resolution_rate_improved: "在所选时间段内，问题解决率有所提高"
+                first_reply_time_decreased: "在所选时间段内，首次回复时间有所缩短。"
+                resolution_rate_and_first_reply_time_declined: "在所选时间段内，问题解决率和首次回复时间均有所下降。"
+                resolution_rate_decreased: "在所选时间段内，解决率有所下降"
+                first_reply_time_increased: "在所选时间段内，首次回复时间有所增加。"
+                support_steady: "在选定的时间段内，参与度保持稳定。"
+              summaries:
+                insufficient_activity: "此期间尚无支持活动。一旦有话题出现，您将看到您的社区是如何处理这些话题的。"
+                more_answers_and_faster_replies: "越来越多的问题得到了解答，而且解答速度也越来越快。"
+                more_answers_but_slower_replies: "问题得到了更多解答，但首次回复时间有所增加。"
+                more_answers_first_reply_time_flat: "越来越多的问题得到了解答，但首次回复时间却保持不变。"
+                faster_replies_but_lower_resolution_rate: "会员得到的回复速度更快了，但问题解决率却下降了。"
+                faster_replies_resolution_rate_steady: "会员得到的回复速度更快了，但问题解决率却停滞不前。"
+                fewer_answers_and_slower_replies: "会员收到的回复越来越少，等待首次回复的时间也越来越长。"
+                fewer_answers_first_reply_time_steady: "会员收到的回复数量减少了，但首次回复时间保持稳定。"
+                slower_replies_resolution_rate_steady: "会员等待首次回复的时间有所延长，但问题解决率保持稳定。"
+                resolution_rate_and_first_reply_time_steady: "问题解决率或首次回复时间均无显著变化。"
+                more_answers: "越来越多的问题得到了解答。"
+                fewer_answers: "会员得到的答复越来越少。"
+                resolution_rate_steady: "解决率未出现明显变化。"
+                faster_replies: "会员可以获得更快的回复。"
+                slower_replies: "会员等待首次回复的时间更长了。"
+                first_reply_time_steady: "首次回复时间没有实质性变化。"
+              cta:
+                unanswered: "查看尚未解答的问题，看看你能解答哪些问题。"
+                in_progress: "查看正在进行中的主题，看看是否有应该标记为答案的回复。"
+                in_progress_and_unanswered: "调查正在进行中和尚未解答的问题，以确保成员能够及时获得回复。"
+            kpi:
+              resolution_rate:
+                label: "解决率"
+                tooltip: "已解决支持话题的百分比。"
+              staff_involvement:
+                label: "管理人员参与"
+                tooltip: "在所有未解决的支持话题中，由管理人员首次回复的百分比。"
+              avg_first_reply:
+                label: "平均首次回复时间"
+                tooltip: "从支持话题发布，到收到第一个回复之间的平均时间。"
+            outcomes:
+              title: "话题成果"
+              resolved:
+                label: "已解决"
+                tooltip: "标记为已解决的话题数量。"
+              in_progress:
+                label: "进行中"
+                tooltip: "至少有一条回复的话题数量。"
+              unanswered:
+                label: "未解答"
+                tooltip: "没有回复的话题数量。"
+            answerers:
+              title: "谁在回答？"
+              empty: "在此期间没有任何回复。"
+              staff: "管理人员"
+              leader: "领袖"
+              regular: "常客"
+              member: "成员"
+              basic: "基本用户"
+            response_time:
+              title: "回复时间分布"
+              buckets:
+                lt_1h: "< 1 小时"
+                "1_4h": "1–4 小时"
+                "4_24h": "4–24小时"
+                gt_24h: "> 24 小时"
+              trend:
+                faster: "快 %{duration}"
+                slower: "慢 %{duration}"
+                tooltip: "平均回复时间趋势。"
   js:
     notifications:
       alt:
@@ -29,7 +105,7 @@ zh_CN:
       allow_accepted_answers: "允许话题所有者和管理人员将回复标记为解决方案"
       solved_topics_auto_close_hours: "当话题被标记为已解决后，在最后回复 (n) 小时后自动关闭话题。"
       notify_on_staff_accept_solved: "当管理人员标记解决方案时通知话题创建者"
-      empty_box_on_unsolved: "在未解决的话题列表旁边显示一个空复选框"
+      empty_box_on_unsolved: "在支持的主题的话题列表中显示未解决的话题状态"
       accept_answer: "如果此回复解决了问题，请选择"
       accepted_description: "这是此话题被接受的解决方案"
       has_no_accepted_answer: "此话题尚无解决方案"
@@ -64,7 +140,9 @@ zh_CN:
         label: "我也是"
         label_with_count: "%{label} (%{count})"
         title: "我也遇到了这个问题。"
-        author_title: "你发起了这个话题。"
+        author_title: "您发起的此话题"
+        closed_title: "此话题已被关闭"
+        archived_title: "此话题已被归档"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"
@@ -88,6 +166,17 @@ zh_CN:
           solved: "已被解决"
           unsolved: "尚未解决"
     admin:
+      reports:
+        related_items:
+          solved_topics:
+            title: "已解决的话题"
+            description: "标记为已解决的主题介于 %{startDate} 和 %{endDate}之间，最新主题排在最前面。"
+          labels:
+            topic: "话题"
+            solved_by: "已解决"
+            category: "类别"
+          table_summary:
+            solved_topics_title: "%{date} 上已解决的话题"
       web_hooks:
         solved_event:
           group_name: "已解决的事件"

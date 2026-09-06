@@ -57,7 +57,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
     end
 
     it "returns 404 when plugin is disabled" do
-      SiteSetting.discourse_workflows_enabled = false
+      SiteSetting.enable_discourse_workflows = false
       post "/workflows/webhooks/my-hook.json"
       expect(response).to have_http_status(:not_found)
     end

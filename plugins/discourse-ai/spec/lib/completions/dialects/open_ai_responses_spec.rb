@@ -66,6 +66,51 @@ RSpec.describe DiscourseAi::Completions::Dialects::OpenAiResponses do
       )
     end
 
+    it "replays Responses API output items for native web search" do
+      output_items = [
+        {
+          id: "ws_1",
+          type: "web_search_call",
+          status: "completed",
+          action: {
+            type: "search",
+            queries: ["Hacker News homepage"],
+            query: "Hacker News homepage",
+          },
+        },
+        {
+          id: "msg_1",
+          type: "message",
+          role: "assistant",
+          content: [
+            {
+              type: "output_text",
+              text: "HN summary",
+              annotations: [
+                { type: "url_citation", url: "https://news.ycombinator.com", title: "Hacker News" },
+              ],
+            },
+          ],
+        },
+      ]
+      prompt = DiscourseAi::Completions::Prompt.new("You are a bot")
+      prompt.push(type: :user, content: "Search")
+      prompt.push(
+        type: :model,
+        content: "HN summary",
+        thinking: "Web search: Hacker News homepage",
+        thinking_provider_info: {
+          open_ai_responses: {
+            output_items: output_items,
+          },
+        },
+      )
+
+      translated = described_class.new(prompt, llm_model).translate
+
+      expect(translated).to include(*output_items)
+    end
+
     it "renders converted document uploads as input_text parts" do
       llm_model.update!(allowed_attachment_types: ["docx"])
       converted_text = "Uploaded document: sample.docx (13 Bytes)\n\nConverted text"

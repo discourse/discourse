@@ -40,6 +40,11 @@ module DiscourseWorkflows
         if (dt_id = parameters["data_table_id"]).present?
           rows << build_row("data_table_id", dt_id, node_id)
         end
+
+        if node_type == DiscourseWorkflows::Nodes::WorkflowCall::V1.identifier &&
+             (workflow_id = parameters["workflow_id"]).present?
+          rows << build_row("workflow_call", workflow_id, node_id)
+        end
       end
 
       if @workflow.error_workflow_id.present?

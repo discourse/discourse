@@ -67,6 +67,8 @@ module Jobs
       entity[:method] = :"#{entity[:name]}_export"
       raise Discourse::InvalidParameters.new(:entity) unless respond_to?(entity[:method])
 
+      Guardian.new(@current_user).ensure_can_export_entity!(@entity, nil, @extra)
+
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
       entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
         "#{@extra[:name].dasherize}-#{@timestamp}"
@@ -195,6 +197,8 @@ module Jobs
       @extra[:filters] = {}
       @extra[:filters][:category] = @extra[:category].to_i if @extra[:category].present?
       @extra[:filters][:group] = @extra[:group].to_i if @extra[:group].present?
+      @extra[:filters][:category_ids] = @extra[:category_ids] if @extra[:category_ids].present?
+      @extra[:filters][:groups] = @extra[:groups] if @extra[:groups].present?
       @extra[:filters][:include_subcategories] = !!ActiveRecord::Type::Boolean.new.cast(
         @extra[:include_subcategories],
       ) if @extra[:include_subcategories].present?

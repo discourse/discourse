@@ -11,6 +11,11 @@ class FeedItemAccessor
     try_attribute_or_self(element(element_name), :content)
   end
 
+  def element_type(element_name)
+    value = element(element_name)
+    value.type if value.respond_to?(:type)
+  end
+
   def link
     if rss_item.respond_to?(:links)
       link = rss_item.links&.find { |l| l.rel == "alternate" && l.type == "text/html" }

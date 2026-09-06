@@ -31,6 +31,7 @@ import MultiSelectHeader from "./multi-select/multi-select-header";
   caretDownIcon: "caretIcon",
   caretUpIcon: "caretIcon",
   useHeaderFilter: false,
+  useHeaderSelectedCount: false,
 })
 @pluginApiIdentifiers(["multi-select"])
 export default class MultiSelect extends SelectKitComponent {
@@ -91,6 +92,11 @@ export default class MultiSelect extends SelectKitComponent {
   }
 
   select(value, item) {
+    if (typeof item?.onSelect === "function") {
+      item.onSelect(this.selectKit, item);
+      return;
+    }
+
     if (this.selectKit.hasSelection && this.selectKit.options.maximum === 1) {
       const newItem = item || this.defaultItem(value, value);
       this.selectKit.change(makeArray(value), makeArray(newItem));
@@ -245,6 +251,7 @@ export default class MultiSelect extends SelectKitComponent {
                     @item={{item}}
                     @selectKit={{this.selectKit}}
                     @mandatoryValues={{@mandatoryValues}}
+                    @mandatoryValueTitle={{@mandatoryValueTitle}}
                   />
                 {{/each}}
               {{/let}}

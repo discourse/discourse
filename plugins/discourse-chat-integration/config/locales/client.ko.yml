@@ -175,3 +175,7 @@ ko:
               label: 채널명
             provider:
               label: 공급자
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "채널"
+        message: "메시지 보내기"

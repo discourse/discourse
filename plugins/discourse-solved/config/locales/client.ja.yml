@@ -15,6 +15,17 @@ ja:
           kpi:
             accepted_solutions:
               label: "受け入れられた解決策"
+        sections:
+          support:
+            title: "支援する"
+            answerers:
+              staff: "スタッフ"
+              member: "メンバー"
+              basic: "ベーシック"
+            response_time:
+              buckets:
+                lt_1h: "< １時間"
+                gt_24h: "> 24 時間"
   js:
     notifications:
       alt:
@@ -65,6 +76,11 @@ ja:
           solved: "解決済み"
           unsolved: "未解決"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "トピック"
+            category: "カテゴリ"
       web_hooks:
         solved_event:
           group_name: "解決済みイベント"

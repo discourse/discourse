@@ -15,10 +15,18 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  availableCategoryType,
+  unavailableBadgeText,
+} from "discourse/lib/category-type-utils";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { runOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
@@ -62,6 +70,7 @@ export default class UpsertCategoryGeneral extends Component {
 
   constructor() {
     super(...arguments);
+
     this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
       ...type,
       preventRemoval: type.id === DISCUSSION_TYPE_ID,
@@ -310,6 +319,14 @@ export default class UpsertCategoryGeneral extends Component {
       : "category.visibility.public";
   }
 
+  get privateVisibilityLocked() {
+    return applyValueTransformer("category-visibility-private-locked", false, {
+      category: this.args.category,
+      form: this.args.form,
+      transientData: this.args.transientData,
+    });
+  }
+
   get showWarning() {
     return this.args.category.isUncategorizedCategory;
   }
@@ -334,6 +351,21 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onChangeVisibility(value) {
+    // Wrapped so consumers can intercept the change; skipping `next` vetoes it.
+    return applyBehaviorTransformer(
+      "category-visibility-change",
+      () => this.#applyVisibilityChange(value),
+      {
+        nextVisibility: value,
+        previousVisibility: this.categoryVisibility,
+        category: this.args.category,
+        form: this.args.form,
+        transientData: this.args.transientData,
+      }
+    );
+  }
+
+  #applyVisibilityChange(value) {
     // Save current permissions before switching to public
     if (value === "public" && this.isPrivateCategory) {
       this.#previousPermissions = (this.permissions || []).map((p) => ({
@@ -589,12 +621,13 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   <template>
-    {{#if this.isEditingExistingCategory}}
+    {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
       <@form.Field
         @name="category_types"
         @title={{i18n "category.category_types"}}
         @format="max"
         @type="custom"
+        @showOptional={{false}}
         as |field|
       >
         <field.Control>
@@ -612,7 +645,7 @@ export default class UpsertCategoryGeneral extends Component {
               <div
                 class={{dConcatClass
                   "category-type-selector__result"
-                  (unless type.available "--unavailable")
+                  (unless (availableCategoryType type) "--unavailable")
                   (concat "--category-type-" type.id)
                 }}
               >
@@ -623,12 +656,14 @@ export default class UpsertCategoryGeneral extends Component {
 
                   {{type.name}}
 
-                  {{#unless type.available}}
+                  {{#unless (availableCategoryType type)}}
                     <span class="category-type-selector__result-badge">
                       <PluginOutlet
                         @name="category-type-selector-result-badge"
                         @outletArgs={{lazyHash type=type}}
-                      />
+                      >
+                        {{unavailableBadgeText type}}
+                      </PluginOutlet>
                     </span>
                   {{/unless}}
                 </div>
@@ -906,8 +941,15 @@ export default class UpsertCategoryGeneral extends Component {
                 {{i18n this.publicVisibilityLabel}}
               </Condition>
             {{/if}}
-            <Condition @name="group_restricted">
-              {{dIcon "check"}}
+            <Condition
+              @name="group_restricted"
+              @locked={{this.privateVisibilityLocked}}
+            >
+              {{#if this.privateVisibilityLocked}}
+                {{dIcon "lock"}}
+              {{else}}
+                {{dIcon "check"}}
+              {{/if}}
               {{i18n "category.visibility.group_restricted"}}
             </Condition>
           </cc.Conditions>

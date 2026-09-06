@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
-RSpec.describe BackupRestore::Creator do
+describe BackupRestore::Creator do
+  describe "#pg_dump_command" do
+    it "excludes disposable nested hot score data" do
+      command = described_class.new(Discourse.system_user.id).send(:pg_dump_command)
+
+      expect(command).to include(
+        "--exclude-table-data=public.nested_hot_post_scores",
+        "--exclude-table-data=public.nested_hot_score_snapshots",
+      )
+    end
+  end
+
   describe "#add_remote_uploads_to_archive" do
     fab!(:user)
 
@@ -111,6 +122,40 @@ RSpec.describe BackupRestore::Creator do
 
       expect(file1_stat.ino).to eq(file2_stat.ino)
       expect(file1_stat.ino).to eq(file3_stat.ino)
+    end
+
+    it "skips duplicate uploads with the same path" do
+      shared_sha1 = SecureRandom.hex(20)
+      shared_url = "//bucket.s3.amazonaws.com/original/2X/3/#{shared_sha1}.png"
+
+      Fabricate(:upload, sha1: SecureRandom.hex(20), original_sha1: shared_sha1, url: shared_url)
+      Fabricate(:upload, sha1: shared_sha1, original_sha1: nil, url: shared_url)
+
+      store = FileStore::S3Store.new
+      download_count = 0
+
+      store.stubs(:get_path_for_upload).returns("original/2X/3/#{shared_sha1}.png")
+      store
+        .stubs(:download_file)
+        .with do |_upload_data, filename|
+          download_count += 1
+          FileUtils.mkdir_p(File.dirname(filename))
+          File.write(filename, "file content")
+          true
+        end
+        .returns(nil)
+
+      FileStore::S3Store.stubs(:new).returns(store)
+      Discourse::Utils.stubs(:execute_command)
+
+      silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
+
+      tmp_dir = creator.instance_variable_get(:@tmp_directory)
+      upload_path =
+        File.join(tmp_dir, Discourse.store.upload_path, "original/2X/3/#{shared_sha1}.png")
+
+      expect(download_count).to eq(1)
+      expect(File.read(upload_path)).to eq("file content")
     end
   end
 

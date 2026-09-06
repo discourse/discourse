@@ -43,7 +43,7 @@ module HasUrl
         result = find_by(sha1: sha1) if sha1&.length == Upload::SHA1_LENGTH
       end
 
-      result || find_by("url LIKE ?", "%#{data[1]}")
+      result || find_by("url LIKE ?", "%#{sanitize_sql_like(data[1])}")
     end
 
     def get_from_urls(upload_urls)

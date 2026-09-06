@@ -404,8 +404,6 @@ ja:
         confirm_payment: 支払いを確認
         success: 戻る
       admin:
-        unconfigured: 'Stripe が正しく構成されていません。詳細は、Discourse メタをご覧ください。'
-        on_meta: メタの Discourse サブスクリプション
         dashboard:
           title: ダッシュボード
           table:

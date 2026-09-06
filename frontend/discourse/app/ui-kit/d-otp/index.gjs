@@ -9,7 +9,6 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
-/** @type {import("./slot.gjs").default} */
 import Slot from "./slot";
 
 const DEFAULT_SLOTS = 6;
@@ -34,7 +33,7 @@ const DEFAULT_SLOTS = 6;
 /** @extends {Component<DOTPSignature>} */
 export default class DOTP extends Component {
   /**
-   * @type {import("discourse/services/capabilities").Capabilities}
+   * @type {import("discourse/services/capabilities").CapabilitiesService}
    */
   // @ts-ignore (incorrect no-initialization error)
   @service capabilities;
@@ -115,7 +114,7 @@ export default class DOTP extends Component {
   }
 
   /**
-   * @param {InputEvent!} event
+   * @param {Event} event
    */
   @action
   onInput(event) {

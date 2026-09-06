@@ -22,6 +22,9 @@ el:
           label: Έκδοση
         renew:
           label: Ανανέωση
+        renew-start:
+          label: Έναρξη ανανέωσης
+          description: Πότε πρέπει να ανανεώνεται η πολιτική
         accept:
           label: Αποδέχομαι
         revoke:

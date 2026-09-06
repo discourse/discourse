@@ -12,6 +12,7 @@ export default class ChatRoutesChannel extends Component {
   @service chat;
   @service chatHistory;
   @service chatTrackingStateManager;
+  @service currentUser;
 
   @tracked isFiltering = false;
 
@@ -19,6 +20,10 @@ export default class ChatRoutesChannel extends Component {
   toggleIsFiltering() {
     this.isFiltering = !this.isFiltering;
     this.chat.activeMessage = null;
+  }
+
+  get canSearchChat() {
+    return this.currentUser && this.siteSettings.chat_search_enabled;
   }
 
   get getChannelsRoute() {
@@ -73,7 +78,7 @@ export default class ChatRoutesChannel extends Component {
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
         <navbar.Actions as |a|>
-          {{#if this.siteSettings.chat_search_enabled}}
+          {{#if this.canSearchChat}}
             <a.Filter
               @channel={{@channel}}
               @isFiltering={{this.isFiltering}}

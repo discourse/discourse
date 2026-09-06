@@ -16,12 +16,17 @@ RSpec.describe TopicViewSerializer do
   end
 
   def create_cached_summary(topic)
-    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic)
+    strategy =
+      DiscourseAi::Summarization::Strategies::TopicSummary.new(
+        topic,
+        locale: DiscourseAi::Summarization.source_locale(topic),
+      )
     content_sha = AiSummary.build_sha(strategy.targets_data.map { |target| target[:id] }.join)
 
     Fabricate(
       :ai_summary,
       target: topic,
+      locale: strategy.locale,
       original_content_sha: content_sha,
       highest_target_number: topic.highest_post_number,
     )

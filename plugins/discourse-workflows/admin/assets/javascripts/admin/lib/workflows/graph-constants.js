@@ -52,6 +52,35 @@ export function normalizeTargetInputIndex(connection) {
   );
 }
 
+export function nextAvailableTargetInputIndex(
+  connections,
+  targetClientId,
+  ignoredConnection = null
+) {
+  const used = new Set();
+
+  for (const connection of connections) {
+    if (
+      connection === ignoredConnection ||
+      (ignoredConnection?.id && connection.id === ignoredConnection.id)
+    ) {
+      continue;
+    }
+
+    if ((connection.targetClientId ?? connection.target) !== targetClientId) {
+      continue;
+    }
+
+    used.add(normalizeTargetInputIndex(connection));
+  }
+
+  let index = 0;
+  while (used.has(index)) {
+    index++;
+  }
+  return index;
+}
+
 export function graphConnectionKey({
   source,
   sourceOutput,
@@ -75,6 +104,7 @@ export function connectionMatchesEndpoint(
     sourceOutputIndex,
     targetClientId,
     targetInput = "main",
+    targetInputIndex = null,
   }
 ) {
   return (
@@ -82,7 +112,8 @@ export function connectionMatchesEndpoint(
     normalizeSourceOutputIndex(connection) ===
       (sourceOutputIndex ?? portIndexFromKey(sourceOutput)) &&
     (connection.targetClientId ?? connection.target) === targetClientId &&
-    normalizeTargetInputIndex(connection) === portIndexFromKey(targetInput)
+    normalizeTargetInputIndex(connection) ===
+      (targetInputIndex ?? portIndexFromKey(targetInput))
   );
 }
 

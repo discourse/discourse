@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ThemesGridCard from "./themes-grid-card";
@@ -61,7 +61,7 @@ export default class ThemesGrid extends Component {
   }
 
   <template>
-    <AdminFilterControls
+    <DFilterControls
       @array={{this.sortedThemes}}
       @minItemsForFilter={{FILTER_MINIMUM}}
       @searchableProps={{this.searchableProps}}
@@ -109,6 +109,6 @@ export default class ThemesGrid extends Component {
           />
         </div>
       </:content>
-    </AdminFilterControls>
+    </DFilterControls>
   </template>
 }

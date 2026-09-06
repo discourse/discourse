@@ -37,6 +37,15 @@ RSpec.describe "AI Bot docked composer" do
 
   fab!(:first_post) { Fabricate(:post, topic: pm, user: user, post_number: 1, raw: "Hello bot") }
   fab!(:bot_post) { Fabricate(:post, topic: pm, user: bot_user, post_number: 2, raw: "Hello user") }
+  fab!(:bot_post_with_new_topic_link) do
+    Fabricate(
+      :post,
+      topic: pm,
+      user: bot_user,
+      post_number: 3,
+      raw: "Need more help? [Click here to ask a question](/new-topic) in the forum.",
+    )
+  end
 
   fab!(:regular_topic) { Fabricate(:topic, user: user) }
   fab!(:regular_post) { Fabricate(:post, topic: regular_topic, user: user, raw: "Regular topic") }
@@ -142,5 +151,20 @@ RSpec.describe "AI Bot docked composer" do
 
     expect(page).to have_no_css(".ai-bot-docked-composer")
     expect(page).to have_css("#topic-footer-buttons .create")
+  end
+
+  it "navigates away to the homepage and opens the new-topic composer when a /new-topic link is clicked" do
+    topic_page.visit_topic(pm)
+    expect(page).to have_css(".ai-bot-docked-composer")
+
+    find(
+      "article[data-post-id='#{bot_post_with_new_topic_link.id}'] .cooked a[href='/new-topic']",
+    ).click
+
+    expect(page).to have_current_path("/latest", ignore_query: true)
+    expect(page).to have_no_css("body.has-ai-bot-docked-composer")
+
+    composer = PageObjects::Components::Composer.new
+    expect(composer).to be_opened
   end
 end

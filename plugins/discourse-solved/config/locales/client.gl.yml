@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 gl:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Equipo"
+              member: "Membros"
+              basic: "Básico"
+            response_time:
+              buckets:
+                lt_1h: "< 1 hora"
   js:
     notifications:
       alt:
@@ -19,6 +31,12 @@ gl:
       confirm_solved_removal_cancel: "Cancelar"
       shared_issue:
         label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tema"
+            category: "Categoría"
     discourse_automation:
       triggerables:
         first_accepted_solution:

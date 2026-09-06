@@ -12,6 +12,16 @@ ko:
           kpi:
             accepted_solutions:
               label: "허용되는 솔루션"
+        sections:
+          support:
+            answerers:
+              staff: "스태프"
+              member: "회원"
+              basic: "초보회원"
+            response_time:
+              buckets:
+                lt_1h: "< 1시간"
+                gt_24h: "> 24시간"
   js:
     notifications:
       alt:
@@ -47,6 +57,11 @@ ko:
         statuses:
           solved: "해결되다"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "글"
+            category: "카테고리"
       web_hooks:
         solved_event:
           group_name: "해결 된 이벤트"

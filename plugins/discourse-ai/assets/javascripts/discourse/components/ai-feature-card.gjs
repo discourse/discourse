@@ -3,6 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import GroupLink from "discourse/components/group-link";
+import { groupPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -162,7 +164,15 @@ export default class AiFeatureCard extends Component {
               {{#if (this.hasGroups @feature)}}
                 <ul class="ai-feature-card__item-groups">
                   {{#each (this.groupList @feature) as |group|}}
-                    <li>{{group.name}}</li>
+                    <li>
+                      <GroupLink
+                        @name={{group.name}}
+                        @href={{groupPath group.name}}
+                        class="mention-group"
+                      >
+                        {{group.name}}
+                      </GroupLink>
+                    </li>
                   {{/each}}
                 </ul>
               {{else}}

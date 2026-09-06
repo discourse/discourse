@@ -86,3 +86,8 @@ fi:
         title: "Pelillistäminen"
         name: "Nimi"
         period: "Jakso"
+    discourse_workflows:
+      gamification_score:
+        username: "Käyttäjä"
+        date: "Päivämäärä"
+        description: "Kuvaus"

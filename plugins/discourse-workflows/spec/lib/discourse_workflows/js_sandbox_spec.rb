@@ -26,10 +26,14 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
 
   describe "memory limit" do
     it "raises when JS allocates too much memory" do
-      expect { sandbox.eval(<<~JS) }.to raise_error(DiscourseWorkflows::JsSandbox::SandboxError)
+      # a generous timeout keeps the memory cap as the only limit that can
+      # fire, even on a slow CI box
+      stub_const(DiscourseWorkflows::JsSandbox, :EVAL_TIMEOUT_MS, 5_000) do
+        expect { sandbox.eval(<<~JS) }.to raise_error(DiscourseWorkflows::JsSandbox::SandboxError)
           var a = [];
-          while(true) { a.push(new Array(10000).fill('x')); }
+          while(true) { a.push(new Array(100000).fill(1.5)); }
         JS
+      end
     end
   end
 
@@ -51,6 +55,18 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
     it "returns the value for normal settings" do
       SiteSetting.title = "Test Forum"
       expect(sandbox.eval("$site_settings.title")).to eq("Test Forum")
+    end
+  end
+
+  describe "$helpers.absoluteUrl" do
+    it "prefixes a root-relative path with the site's base URL" do
+      result = sandbox.eval('$helpers.absoluteUrl("/t/some-slug/123/4")')
+      expect(result).to eq("#{Discourse.base_url}/t/some-slug/123/4")
+    end
+
+    it "returns an already-absolute URL unchanged" do
+      result = sandbox.eval('$helpers.absoluteUrl("https://example.com/foo")')
+      expect(result).to eq("https://example.com/foo")
     end
   end
 

@@ -10,7 +10,7 @@ function stopAndCall(callback, e) {
   callback?.();
 }
 
-<template>
+export default <template>
   <CanvasHoverToolbar
     @hoverQuery=".workflow-connection__hit"
     @visibilityQuery=".workflow-connection__toolbar-fo"

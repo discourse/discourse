@@ -12,6 +12,10 @@ RSpec.describe FeedItemAccessor do
       it { expect(item_accessor.element_content("title")).to eq(atom_feed_item.title.content) }
     end
 
+    describe "#element_type" do
+      it { expect(item_accessor.element_type("content")).to eq("html") }
+    end
+
     describe "#link" do
       it { expect(item_accessor.link).to eq(atom_feed_item.link.href) }
     end
@@ -24,6 +28,10 @@ RSpec.describe FeedItemAccessor do
 
     describe "#element_content" do
       it { expect(item_accessor.element_content("title")).to eq(rss_feed_item.title) }
+    end
+
+    describe "#element_type" do
+      it { expect(item_accessor.element_type("content_encoded")).to be_nil }
     end
 
     describe "#link" do

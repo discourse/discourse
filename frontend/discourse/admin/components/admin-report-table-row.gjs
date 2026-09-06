@@ -13,7 +13,10 @@ export default class AdminReportTableRow extends Component {
         <AdminReportTableCell
           @label={{label}}
           @data={{this.data}}
+          @hasRelatedItems={{@hasRelatedItems}}
           @options={{this.options}}
+          @reportType={{@reportType}}
+          @reportFilters={{@reportFilters}}
         />
       {{/each}}
     </tr>

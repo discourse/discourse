@@ -49,12 +49,35 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe "pending_users_reminder_delay_minutes" do
+    it "defaults to 30 while the update_pending_users_reminder_default change is enabled" do
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(480)
+
+      SiteSetting.update_pending_users_reminder_default = true
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(30)
+
+      SiteSetting.update_pending_users_reminder_default = false
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(480)
+    end
+
+    it "keeps a value an admin has set when the change is enabled" do
+      SiteSetting.pending_users_reminder_delay_minutes = 60
+
+      SiteSetting.update_pending_users_reminder_default = true
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(60)
+    end
+  end
+
   describe "top_menu" do
     describe "validations" do
       it "always demands latest" do
         expect do SiteSetting.top_menu = "categories" end.to raise_error(
           Discourse::InvalidParameters,
         )
+      end
+
+      it "does not allow an empty menu" do
+        expect do SiteSetting.top_menu = "" end.to raise_error(Discourse::InvalidParameters)
       end
 
       it "does not allow random text" do
@@ -73,10 +96,95 @@ RSpec.describe SiteSetting do
     end
 
     describe "homepage" do
-      it "has homepage" do
+      around do |example|
+        registrations = DiscoursePluginRegistry._raw_homepage_options.dup
+        example.run
+        DiscoursePluginRegistry._raw_homepage_options.replace(registrations)
+      end
+
+      it "uses default_homepage when set" do
+        SiteSetting.default_homepage = "bookmarks"
+        expect(SiteSetting.homepage).to eq("bookmarks")
+      end
+
+      it "falls back to the first top_menu item when default_homepage is not set" do
         SiteSetting.top_menu = "bookmarks|latest"
         expect(SiteSetting.homepage).to eq("bookmarks")
       end
+
+      it "falls back to the first top_menu item when the persisted value's filter is no longer registered" do
+        SiteSetting.top_menu = "categories|latest"
+
+        filters = Discourse.filters
+        Discourse.stubs(:filters).returns(filters + [:votes])
+        SiteSetting.default_homepage = "votes"
+        expect(SiteSetting.homepage).to eq("votes")
+
+        Discourse.stubs(:filters).returns(filters)
+        expect(SiteSetting.homepage).to eq("categories")
+      end
+
+      it "falls back when the persisted value is no longer an eligible choice" do
+        SiteSetting.enable_unified_new = false
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "unread"
+        expect(SiteSetting.homepage).to eq("unread")
+
+        # enabling unified-new removes unread from the eligible homepage choices
+        SiteSetting.enable_unified_new = true
+        expect(SiteSetting.homepage).to eq("categories")
+      end
+
+      it "uses a registered plugin homepage and falls back when the plugin is disabled" do
+        plugin = Plugin::Instance.new
+        plugin.stubs(:enabled?).returns(true)
+        plugin.register_homepage(
+          "directory",
+          name: "discourse_directory.navigation.title",
+          path: "/directory",
+          route: "discourse_directory/directory#index",
+          anonymous: true,
+        )
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "directory"
+
+        expect(SiteSetting.homepage).to eq("directory")
+        expect(SiteSetting.anonymous_homepage).to eq("directory")
+
+        plugin.stubs(:enabled?).returns(false)
+        expect(SiteSetting.homepage).to eq("categories")
+        expect(SiteSetting.anonymous_homepage).to eq("categories")
+      end
+
+      it "does not use a private plugin homepage for anonymous visitors" do
+        plugin = Plugin::Instance.new
+        plugin.stubs(:enabled?).returns(true)
+        plugin.register_homepage(
+          "private_page",
+          name: "plugin.private_page",
+          path: "/private-page",
+          route: "plugin/private_page#index",
+        )
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "private_page"
+
+        expect(SiteSetting.homepage).to eq("private_page")
+        expect(SiteSetting.anonymous_homepage).to eq("categories")
+      end
+    end
+  end
+
+  describe "custom_homepage_crawler_route" do
+    it "allows public top menu routes" do
+      SiteSetting.custom_homepage_crawler_route = "categories"
+
+      expect(SiteSetting.custom_homepage_crawler_route).to eq("categories")
+    end
+
+    it "does not allow authenticated-only routes" do
+      expect { SiteSetting.custom_homepage_crawler_route = "bookmarks" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
   end
 

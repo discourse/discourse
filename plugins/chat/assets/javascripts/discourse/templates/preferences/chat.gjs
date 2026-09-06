@@ -2,13 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
-import { translateModKey } from "discourse/lib/utilities";
-import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
@@ -16,21 +13,12 @@ import {
   CHAT_QUICK_REACTION_TYPE_CUSTOM,
   CHAT_QUICK_REACTION_TYPE_FREQUENT,
   CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT,
-  CHAT_SEND_SHORTCUT_ENTER,
-  CHAT_SEND_SHORTCUT_META_ENTER,
   CHAT_SEPARATE_SIDEBAR_MODE_ALWAYS,
   CHAT_SEPARATE_SIDEBAR_MODE_FULLSCREEN,
   CHAT_SEPARATE_SIDEBAR_MODE_NEVER,
-  HEADER_INDICATOR_PREFERENCE_ALL_NEW,
-  HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
-  HEADER_INDICATOR_PREFERENCE_NEVER,
-  HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
 export default class Chat extends Component {
-  @service chatAudioManager;
-
   @tracked saved = false;
 
   get chatQuickReactionTypes() {
@@ -42,42 +30,6 @@ export default class Chat extends Component {
       {
         label: i18n("chat.quick_reaction_type.options.custom"),
         value: CHAT_QUICK_REACTION_TYPE_CUSTOM,
-      },
-    ];
-  }
-
-  get chatSendShortcutOptions() {
-    return [
-      {
-        label: i18n("chat.send_shortcut.enter.label"),
-        value: CHAT_SEND_SHORTCUT_ENTER,
-      },
-      {
-        label: i18n("chat.send_shortcut.meta_enter.label", {
-          meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
-        }),
-        value: CHAT_SEND_SHORTCUT_META_ENTER,
-      },
-    ];
-  }
-
-  get headerIndicatorOptions() {
-    return [
-      {
-        name: i18n("chat.header_indicator_preference.all_new"),
-        value: HEADER_INDICATOR_PREFERENCE_ALL_NEW,
-      },
-      {
-        name: i18n("chat.header_indicator_preference.dm_and_mentions"),
-        value: HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
-      },
-      {
-        name: i18n("chat.header_indicator_preference.only_mentions"),
-        value: HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
-      },
-      {
-        name: i18n("chat.header_indicator_preference.never"),
-        value: HEADER_INDICATOR_PREFERENCE_NEVER,
       },
     ];
   }
@@ -99,12 +51,6 @@ export default class Chat extends Component {
     ];
   }
 
-  get chatSounds() {
-    return Object.keys(CHAT_SOUNDS).map((value) => {
-      return { name: i18n(`chat.sounds.${value}`), value };
-    });
-  }
-
   get formData() {
     const userOption = this.args.model.user_option;
     const emojis = (
@@ -116,13 +62,9 @@ export default class Chat extends Component {
       chat_enabled: userOption.chat_enabled,
       chat_quick_reaction_type: userOption.chat_quick_reaction_type,
       chat_quick_reactions_custom: emojis,
-      only_chat_push_notifications: userOption.only_chat_push_notifications,
-      ignore_channel_wide_mention: userOption.ignore_channel_wide_mention,
-      chat_sound: userOption.chat_sound,
-      chat_header_indicator_preference:
-        userOption.chat_header_indicator_preference,
+      chat_announce_new_messages: userOption.chat_announce_new_messages,
+      chat_new_message_sound: userOption.chat_new_message_sound,
       chat_separate_sidebar_mode: userOption.chat_separate_sidebar_mode,
-      chat_send_shortcut: userOption.chat_send_shortcut,
     };
   }
 
@@ -131,14 +73,6 @@ export default class Chat extends Component {
     let newValue = [...field.value];
     newValue[index] = selectedEmoji;
     field.set(newValue);
-  }
-
-  @action
-  handleChatSoundSet(sound, { set, name }) {
-    if (sound) {
-      this.chatAudioManager?.play(sound);
-    }
-    set(name, sound == null ? null : sound);
   }
 
   @action
@@ -184,74 +118,6 @@ export default class Chat extends Component {
         <field.Control @value={{field.value}} />
       </form.Field>
 
-      <form.Section @title={{i18n "chat.chat_notifications_title"}}>
-        <form.Field
-          @title={{i18n "chat.only_chat_push_notifications.title"}}
-          @name="only_chat_push_notifications"
-          @format="large"
-          @type="checkbox"
-          as |field|
-        >
-          <field.Control @value={{field.value}} />
-        </form.Field>
-        <form.Field
-          @title={{i18n "chat.ignore_channel_wide_mention.title"}}
-          @name="ignore_channel_wide_mention"
-          @format="large"
-          @type="checkbox"
-          as |field|
-        >
-          <field.Control @value={{field.value}} />
-        </form.Field>
-
-        <form.Field
-          @title={{i18n "chat.sound.title"}}
-          @name="chat_sound"
-          @format="large"
-          @onSet={{this.handleChatSoundSet}}
-          @type="select"
-          as |field|
-        >
-          <field.Control @includeNone={{true}} as |select|>
-            {{#each this.chatSounds as |sound|}}
-              <select.Option @value={{sound.value}}>
-                {{sound.name}}
-              </select.Option>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-
-        <form.Field
-          @title={{i18n "chat.header_indicator_preference.title"}}
-          @name="chat_header_indicator_preference"
-          @format="large"
-          @type="select"
-          as |field|
-        >
-          <field.Control @includeNone={{false}} as |select|>
-            {{#each this.headerIndicatorOptions as |option|}}
-              <select.Option @value={{option.value}}>
-                {{option.name}}
-              </select.Option>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-        <form.Field
-          @title={{i18n "chat.separate_sidebar_mode.title"}}
-          @name="chat_separate_sidebar_mode"
-          @format="large"
-          @type="select"
-          as |field|
-        >
-          <field.Control @includeNone={{false}} as |select|>
-            {{#each this.chatSeparateSidebarModeOptions as |option|}}
-              <select.Option @value={{option.value}}>
-                {{option.name}}
-              </select.Option>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-      </form.Section>
       <form.Section @title={{i18n "chat.personalization_title"}}>
         <form.Field
           @title={{i18n "chat.quick_reaction_type.title"}}
@@ -290,19 +156,39 @@ export default class Chat extends Component {
           </form.Field>
         {{/if}}
         <form.Field
-          @title={{i18n "chat.send_shortcut.title"}}
-          @name="chat_send_shortcut"
+          @title={{i18n "chat.separate_sidebar_mode.title"}}
+          @name="chat_separate_sidebar_mode"
           @format="large"
-          @type="radio-group"
+          @type="select"
           as |field|
         >
-          <field.Control as |radioGroup|>
-            {{#each this.chatSendShortcutOptions as |option|}}
-              <radioGroup.Radio @value={{option.value}}>
-                {{option.label}}
-              </radioGroup.Radio>
+          <field.Control @includeNone={{false}} as |select|>
+            {{#each this.chatSeparateSidebarModeOptions as |option|}}
+              <select.Option @value={{option.value}}>
+                {{option.name}}
+              </select.Option>
             {{/each}}
           </field.Control>
+        </form.Field>
+      </form.Section>
+      <form.Section @title={{i18n "chat.accessibility_title"}}>
+        <form.Field
+          @title={{i18n "chat.announce_new_messages.title"}}
+          @name="chat_announce_new_messages"
+          @format="large"
+          @type="checkbox"
+          as |field|
+        >
+          <field.Control @value={{field.value}} />
+        </form.Field>
+        <form.Field
+          @title={{i18n "chat.new_message_sound.title"}}
+          @name="chat_new_message_sound"
+          @format="large"
+          @type="checkbox"
+          as |field|
+        >
+          <field.Control @value={{field.value}} />
         </form.Field>
       </form.Section>
       <div class="save-controls">

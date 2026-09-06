@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sq:
+  llms_txt:
+    sections:
+      optional: "Fakultative"
+    links:
+      search:
+        label: "Kërko"
+      categories:
+        label: "Categories"
+      about:
+        label: "Rreth"
+      guidelines:
+        label: "Udhëzimet"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -100,7 +112,6 @@ sq:
       exclusion: është i rezervuar
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
-      has_already_been_used: "është përdorur më parë"
       inclusion: is not included in the list
       invalid: është i pavlefshëm
       less_than: must be less than %{count}
@@ -195,6 +206,11 @@ sq:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Të gjithë"
+      admins: "Administratorët"
+      moderators: "Moderatorë"
+      staff: "Stafi"
   education:
     until_posts:
       one: "%{count} postim"
@@ -343,6 +359,10 @@ sq:
     title: "Rivendos Fjalëkalimin"
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
+  admin_site_traffic_explorer:
+    unknown: "I panjohur"
+    traffic_types:
+      anonymous: "Anonim"
   change_email:
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase adresa juaj email u ndryshua para pak kohësh?"
@@ -471,10 +491,16 @@ sq:
         share: "Shpërndaje"
       types:
         staff: "Stafi"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Postime"
+        share: "Shpërndaje"
     trust_level_pipeline:
       labels:
         count: "Anëtarë"
         share: "Shpërndaje"
+        signups: "Regjistrimet"
       levels:
         "0": "I Ri"
         "1": "Anëtar i Thjeshtë"
@@ -576,6 +602,9 @@ sq:
         num_clicks: "Clicks"
         num_topics: "Tema"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizita"
+    top_entry_urls:
       labels:
         count: "Vizita"
     top_referrers_by_browser_pageviews:
@@ -706,7 +735,6 @@ sq:
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
@@ -720,7 +748,6 @@ sq:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
-    max_replies_in_first_day: "Numri maksimal i përgjigjeve që një përdorues ka të drejtë të krijojë në periudhën 24-orëshe pas postimit të tij të parë"
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
@@ -814,7 +841,6 @@ sq:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
@@ -1171,9 +1197,6 @@ sq:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     digest:
       new_topics: "Diskutimet e Reja"
       liked_received: "Pëlqime të marra"
@@ -1419,6 +1442,9 @@ sq:
       title: "Konfirmoni emailin tuaj"
     resend_email:
       title: "Dërgo përsëri emailin e aktivizimit"
+  design_wizard:
+    palette_pairs:
+      default: "Paracaktuar"
   wizard:
     step:
       setup:
@@ -1431,6 +1457,8 @@ sq:
               private:
                 label: "Private"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       status_date:
         approved: "aprovuar"
@@ -1446,6 +1474,10 @@ sq:
   staff_action_logs:
     unknown: "i panjohur"
   reviewables:
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekondë"
+        other: "%{count} sekonda"
     actions:
       agree:
         title: "Po"

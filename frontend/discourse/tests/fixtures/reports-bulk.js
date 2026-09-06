@@ -59,7 +59,7 @@ let signups = {
   prev_end_date: "2018-06-17T00:00:00Z",
   prev30Days: null,
   dates_filtering: true,
-  report_key: "reports:signups:start:end:[:prev_period]:4",
+  report_key: `reports:signups:start:end:[:prev_period]:${SCHEMA_VERSION}`,
   available_filters: [
     {
       id: "group",
@@ -78,32 +78,45 @@ let signups = {
   higher_is_better: true,
   modes: ["table", "chart"],
   prev_period: 961,
+  related_items: {
+    users: [
+      {
+        user: {
+          id: 1,
+          username: "dana_whitfield",
+          name: "Dana Whitfield",
+          avatar_template: "/letter_avatar_proxy/v4/letter/d/3be4f0/{size}.png",
+        },
+        timestamp: "2018-06-25T15:30:00Z",
+      },
+    ],
+  },
+  related_items_totals: {
+    users: 3,
+  },
 };
 
 let signups_fixture = JSON.parse(JSON.stringify(signups));
 signups_fixture.type = "signups_exception";
 signups_fixture.error = "exception";
-signups_fixture.report_key =
-  "reports:signups_exception:start:end:[:prev_period]:4";
+signups_fixture.report_key = `reports:signups_exception:start:end:[:prev_period]:${SCHEMA_VERSION}`;
 const signups_exception = signups_fixture;
 
 signups_fixture = JSON.parse(JSON.stringify(signups));
 signups_fixture.type = "signups_timeout";
 signups_fixture.error = "timeout";
-signups_fixture.report_key =
-  "reports:signups_timeout:start:end:[:prev_period]:4";
+signups_fixture.report_key = `reports:signups_timeout:start:end:[:prev_period]:${SCHEMA_VERSION}`;
 const signups_timeout = signups_fixture;
 
 signups_fixture = JSON.parse(JSON.stringify(signups));
 signups_fixture.type = "not_found";
 signups_fixture.error = "not_found";
-signups_fixture.report_key = "reports:not_found:start:end:[:prev_period]:4";
+signups_fixture.report_key = `reports:not_found:start:end:[:prev_period]:${SCHEMA_VERSION}`;
 const signups_not_found = signups_fixture;
 
 signups_fixture = JSON.parse(JSON.stringify(signups));
 signups_fixture.type = "signups_with_groups";
-signups_fixture.report_key =
-  'reports:signups_with_groups:start:end:[:prev_period]:50:{"group":"88"}:4';
+signups_fixture.report_key = `reports:signups_with_groups:start:end:[:prev_period]:50:{"group":"88"}:${SCHEMA_VERSION}`;
 const signups_with_group = signups_fixture;
 
 const startDate = moment()

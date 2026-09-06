@@ -45,7 +45,7 @@ module BackupRestore
       obj = s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
-      obj.upload_file(source_path, content_type: content_type)
+      s3_helper.upload_file(filename, source_path, content_type: content_type)
       reset_cache
     end
 

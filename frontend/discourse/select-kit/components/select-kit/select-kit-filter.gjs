@@ -96,7 +96,11 @@ export default class SelectKitFilter extends Component {
     }
 
     if (event.key === "ArrowUp") {
-      this.selectKit.highlightLast();
+      if (this.selectKit.highlighted) {
+        this.selectKit.highlightPrevious();
+      } else {
+        this.selectKit.highlightLast();
+      }
       event.preventDefault();
       return false;
     }
@@ -105,7 +109,11 @@ export default class SelectKitFilter extends Component {
       if (!this.selectKit.isExpanded) {
         this.selectKit.open(event);
       }
-      this.selectKit.highlightFirst();
+      if (this.selectKit.highlighted) {
+        this.selectKit.highlightNext();
+      } else {
+        this.selectKit.highlightFirst();
+      }
       event.preventDefault();
       return false;
     }
@@ -133,8 +141,8 @@ export default class SelectKitFilter extends Component {
       (!this.selectKit.highlighted || this.selectKit.enterDisabled)
     ) {
       this.element.querySelector("input").focus();
+      event.preventDefault();
       if (this.selectKit.enterDisabled) {
-        event.preventDefault();
         event.stopImmediatePropagation();
       }
       return false;

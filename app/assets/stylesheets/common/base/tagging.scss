@@ -422,12 +422,17 @@ body.tags-intersection {
     gap: 0.5em;
     margin-block: 0.5em 1em;
 
+    .expanding-text-area {
+      width: min(24em, 100%);
+
+      --expanding-text-area-min-height: var(--d-control-height);
+      --expanding-text-area-padding: 0.35em 0.65em;
+    }
+
     textarea {
       box-sizing: border-box;
-      min-height: 2.25em;
-      padding: 0.35em;
       margin: 0;
-      width: min(20em, 100%);
+      width: 100%;
       border-radius: var(--d-input-border-radius);
     }
   }

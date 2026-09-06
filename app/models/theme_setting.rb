@@ -6,7 +6,17 @@ class ThemeSetting < ActiveRecord::Base
   has_many :upload_references, as: :target, dependent: :destroy
 
   TYPES_ENUM =
-    Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6, objects: 7)
+    Enum.new(
+      integer: 0,
+      float: 1,
+      string: 2,
+      bool: 3,
+      list: 4,
+      enum: 5,
+      upload: 6,
+      objects: 7,
+      icon: 8,
+    )
 
   MAXIMUM_JSON_VALUE_SIZE_BYTES = 0.5 * 1024 * 1024 # 0.5 MB
 

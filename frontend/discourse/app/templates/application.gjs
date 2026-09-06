@@ -8,6 +8,7 @@ import ComposerContainer from "discourse/components/composer-container";
 import DDocument from "discourse/components/d-document";
 import DStyles from "discourse/components/d-styles";
 import DVirtualHeight from "discourse/components/d-virtual-height";
+import DesignWizardPanel from "discourse/components/design-wizard-panel";
 import DiscourseRoot from "discourse/components/discourse-root";
 import FooterNav from "discourse/components/footer-nav";
 import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
@@ -23,7 +24,6 @@ import PwaInstallBanner from "discourse/components/pwa-install-banner";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
 import SidebarWrapper from "discourse/components/sidebar-wrapper";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
-import TopicEntrance from "discourse/components/topic-entrance";
 import WelcomeBanner from "discourse/components/welcome-banner";
 import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import DMenus from "discourse/float-kit/components/d-menus";
@@ -175,8 +175,8 @@ export default <template>
     />
 
     <ModalContainer />
+    <DesignWizardPanel />
     <DialogHolder />
-    <TopicEntrance />
     <ComposerContainer />
     <RenderGlimmerContainer />
 

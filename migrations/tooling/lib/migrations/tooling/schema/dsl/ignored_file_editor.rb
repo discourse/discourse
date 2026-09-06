@@ -43,6 +43,21 @@ module Migrations
             format_file!
           end
 
+          def remove_table(table_name)
+            table_name = table_name.to_s
+
+            if !File.exist?(@ignored_path)
+              raise ConfigError, "ignored.rb not found at #{@ignored_path}"
+            end
+
+            content = File.read(@ignored_path)
+            call = find_call_with_table(parsed_declaration(content).block, table_name)
+            raise ConfigError, "Table '#{table_name}' is not ignored" if call.nil?
+
+            File.write(@ignored_path, remove_table_from_call(content, call, table_name))
+            format_file!
+          end
+
           private
 
           def append_to_tables_group(content, tables_group, table_name)
@@ -67,7 +82,43 @@ module Migrations
             content.byteslice(0, end_offset) + entry + content.byteslice(end_offset..)
           end
 
-          def parse_ignored_block(content)
+          def find_call_with_table(block_node, table_name)
+            body = block_node&.body
+            return nil unless body.is_a?(Prism::StatementsNode)
+
+            body.body.find do |statement|
+              statement.is_a?(Prism::CallNode) &&
+                %w[table tables].include?(statement.message.to_s) &&
+                table_names_from(statement).include?(table_name)
+            end
+          end
+
+          def remove_table_from_call(content, call_node, table_name)
+            remaining = table_names_from(call_node) - [table_name]
+            return delete_statement(content, call_node) if remaining.empty?
+
+            replacement = "tables " + remaining.map { |n| ":#{n}" }.join(", ")
+            keyword_source = trailing_keyword_source(call_node, content)
+            replacement += ", #{keyword_source}" if keyword_source
+
+            content.byteslice(0, call_node.location.start_offset) + replacement +
+              content.byteslice(call_node.location.end_offset..)
+          end
+
+          # Removes the statement including the lines it spans.
+          def delete_statement(content, node)
+            bytes = content.b
+            start_offset = node.location.start_offset
+            end_offset = node.location.end_offset
+
+            line_start = start_offset.zero? ? 0 : ((bytes.rindex("\n", start_offset - 1) || -1) + 1)
+            newline_after = bytes.index("\n", end_offset)
+            line_end = newline_after ? newline_after + 1 : bytes.bytesize
+
+            (bytes[0...line_start] + bytes[line_end..]).force_encoding(content.encoding)
+          end
+
+          def parsed_declaration(content)
             result = Prism.parse(content)
             if !result.success?
               details = result.errors.map(&:message).join(", ")
@@ -80,6 +131,11 @@ module Migrations
                     "Could not find `Migrations::Tooling::Schema.ignored do ... end` in #{@ignored_path}"
             end
 
+            declaration
+          end
+
+          def parse_ignored_block(content)
+            declaration = parsed_declaration(content)
             last_tables = find_last_tables_group(declaration.block)
 
             {

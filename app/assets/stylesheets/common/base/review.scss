@@ -196,6 +196,10 @@
     border-bottom: 1px solid var(--content-border-color);
   }
 
+  .reviewable-penalty-icon {
+    color: var(--danger);
+  }
+
   &__meta-content {
     display: grid;
     gap: var(--space-4);
@@ -263,6 +267,11 @@
       background: var(--primary-very-low);
       padding: var(--review-item-padding);
       border-radius: var(--d-border-radius);
+
+      img:not(.avatar, .emoji) {
+        max-width: 100%;
+        height: auto;
+      }
 
       .lightbox-wrapper img {
         display: block;
@@ -488,9 +497,7 @@
 
 .review-resources {
   &__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @include unstyled-list;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -654,6 +661,9 @@
 
   &__textarea-wrapper {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
   textarea {

@@ -30,6 +30,53 @@ RSpec.describe ThemeSettingsManager::Objects do
     expect(theme.reload.settings[:objects_setting].value).to eq(new_value)
   end
 
+  it "removes disallowed group ids before saving groups properties" do
+    theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+      objects_setting:
+        type: objects
+        default: []
+        schema:
+          name: section
+          properties:
+            group_ids:
+              type: groups
+              disallowed_groups: "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:admins]}"
+            links:
+              type: objects
+              schema:
+                name: link
+                properties:
+                  group_ids:
+                    type: groups
+                    disallowed_groups: "#{Group::AUTO_GROUPS[:trust_level_0]}"
+    YAML
+    theme.save!
+
+    theme.settings[:objects_setting].value = [
+      {
+        "group_ids" => [
+          Group::AUTO_GROUPS[:everyone],
+          Group::AUTO_GROUPS[:admins],
+          Group::AUTO_GROUPS[:staff],
+        ],
+        "links" => [
+          {
+            "group_ids" => [Group::AUTO_GROUPS[:trust_level_0], Group::AUTO_GROUPS[:trust_level_1]],
+          },
+        ],
+      },
+    ]
+
+    expect(theme.reload.settings[:objects_setting].value).to eq(
+      [
+        {
+          "group_ids" => [Group::AUTO_GROUPS[:staff]],
+          "links" => [{ "group_ids" => [Group::AUTO_GROUPS[:trust_level_1]] }],
+        },
+      ],
+    )
+  end
+
   it "raises the right error when there are objects which are not valid" do
     new_value = [
       { "name" => "section 3", "links" => [{ "url" => "https://some.url.no.name" }] },

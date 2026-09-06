@@ -139,6 +139,7 @@ RSpec.describe "users" do
 
         before do
           SiteSetting.discourse_connect_url = "http://someurl.com"
+          SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
           user.create_single_sign_on_record(external_id: "1", last_payload: "")
         end

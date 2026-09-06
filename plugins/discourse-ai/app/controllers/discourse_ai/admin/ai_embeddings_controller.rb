@@ -113,8 +113,9 @@ module DiscourseAi
         DiscourseAi::Embeddings::Vector.new(embedding_def).vector_from("this is a test")
 
         render json: { success: true }
-      rescue Net::HTTPBadResponse => e
-        render json: { success: false, error: e.message }
+      rescue DiscourseAi::Inference::EmbeddingInferenceError,
+             DiscourseAi::Embeddings::ProviderPausedError => error
+        render json: { success: false, error: error.message }
       end
 
       private

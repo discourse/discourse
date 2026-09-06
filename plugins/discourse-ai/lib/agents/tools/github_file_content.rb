@@ -74,22 +74,8 @@ module DiscourseAi
             api_url =
               "https://api.github.com/repos/#{owner}/#{repo}/contents/#{file_path}?ref=#{ref}"
 
-            response_code = "-1 unknown"
-            body = nil
-
-            send_http_request(
-              api_url,
-              headers: {
-                "Accept" => "application/vnd.github.v3+json",
-              },
-              authenticate_github: true,
-            ) do |response|
-              response_code = response.code
-              body = read_response_body(response)
-            end
-
-            if response_code == "200"
-              file_data = JSON.parse(body)
+            begin
+              file_data = github_client.get(api_url)
               content = ensure_utf8(Base64.decode64(file_data["content"].to_s))
               snippet =
                 extract_requested_content(
@@ -103,7 +89,7 @@ module DiscourseAi
                 start_line: file_request[:start_line],
                 end_line: file_request[:end_line],
               }
-            else
+            rescue Discourse::GithubApi::Error
               missing_files << file_request[:raw]
             end
           end

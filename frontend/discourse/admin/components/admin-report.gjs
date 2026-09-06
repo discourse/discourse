@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import AdminReportBody from "discourse/admin/components/admin-report-body";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
 import AdminReportInlineTable from "discourse/admin/components/admin-report-inline-table";
-import AdminReportLegacy from "discourse/admin/components/admin-report-legacy";
-import AdminReportNew from "discourse/admin/components/admin-report-new";
 import AdminReportRadar from "discourse/admin/components/admin-report-radar";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import AdminReportStackedLineChart from "discourse/admin/components/admin-report-stacked-line-chart";
@@ -16,8 +16,11 @@ import AdminReportStorageStats from "discourse/admin/components/admin-report-sto
 import AdminReportTable from "discourse/admin/components/admin-report-table";
 import ReportFilterBoolComponent from "discourse/admin/components/report-filters/bool";
 import ReportFilterCategoryComponent from "discourse/admin/components/report-filters/category";
+import ReportFilterCategoryListComponent from "discourse/admin/components/report-filters/category-list";
 import ReportFilterGroupComponent from "discourse/admin/components/report-filters/group";
+import ReportFilterGroupsComponent from "discourse/admin/components/report-filters/groups";
 import ReportFilterListComponent from "discourse/admin/components/report-filters/list";
+import PostersByMemberTypeReport from "discourse/admin/components/reports/posters-by-member-type-report";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
 import Report, {
   DAILY_LIMIT_DAYS,
@@ -31,6 +34,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { makeArray } from "discourse/lib/helpers";
 import ReportLoader from "discourse/lib/reports-loader";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const TABLE_OPTIONS = {
@@ -41,6 +45,18 @@ const TABLE_OPTIONS = {
 };
 
 const CHART_OPTIONS = {};
+
+export function updateReportFilters(filters, id, value) {
+  const customFilters = { ...filters };
+
+  if (value === null || typeof value === "undefined") {
+    delete customFilters[id];
+  } else {
+    customFilters[id] = value;
+  }
+
+  return customFilters;
+}
 
 export default class AdminReport extends Component {
   @service siteSettings;
@@ -148,6 +164,19 @@ export default class AdminReport extends Component {
     return isPresent(this.model?.data);
   }
 
+  get hasRelatedItems() {
+    return (
+      this.args.showRelatedItems &&
+      Object.values(this.model?.related_items || {}).some(
+        (items) => items.length > 0
+      )
+    );
+  }
+
+  get reportFilters() {
+    return this.args.filters?.customFilters;
+  }
+
   get disabledLabel() {
     return this.args.disabledLabel || i18n("admin.dashboard.disabled");
   }
@@ -191,7 +220,7 @@ export default class AdminReport extends Component {
   changeGrouping(grouping) {
     const options = { chartGrouping: grouping };
 
-    if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
+    if (!this.userHasCustomDates) {
       const endDate = moment().endOf("day");
       let startDate;
 
@@ -241,8 +270,12 @@ export default class AdminReport extends Component {
         return ReportFilterBoolComponent;
       case "category":
         return ReportFilterCategoryComponent;
+      case "category_list":
+        return ReportFilterCategoryListComponent;
       case "group":
         return ReportFilterGroupComponent;
+      case "groups":
+        return ReportFilterGroupsComponent;
       case "list":
         return ReportFilterListComponent;
     }
@@ -267,6 +300,8 @@ export default class AdminReport extends Component {
         return AdminReportRadar;
       case REPORT_MODES.storage_stats:
         return AdminReportStorageStats;
+      case "posters_by_member_type":
+        return PostersByMemberTypeReport;
       default:
         if (reportModeComponent(reportMode)) {
           return reportModeComponent(reportMode);
@@ -291,10 +326,13 @@ export default class AdminReport extends Component {
       isTesting() ? "end" : formattedEndDate.replace(/-/g, ""),
       "[:prev_period]",
       this.args.reportOptions?.table?.limit,
-      // Convert all filter values to strings to ensure unique serialization
+      // Convert all filter values to strings to ensure unique serialization.
+      // Arrays (e.g. a category_list filter's selected ids) are mapped
+      // element-wise rather than stringified whole, so the key stays valid
+      // JSON and matches the server's own `MultiJson.dump(report.filters)`.
       this.args.filters?.customFilters
         ? JSON.stringify(this.args.filters?.customFilters, (k, v) =>
-            k ? `${v}` : v
+            Array.isArray(v) ? v.map(String) : k ? `${v}` : v
           )
         : null,
       SCHEMA_VERSION,
@@ -345,15 +383,9 @@ export default class AdminReport extends Component {
 
   @action
   applyFilter(id, value) {
-    let customFilters = this.args.filters?.customFilters || {};
-
-    if (typeof value === "undefined") {
-      delete customFilters[id];
-    } else {
-      customFilters[id] = value;
-    }
-
-    this.refreshReport({ filters: customFilters });
+    this.refreshReport({
+      filters: updateReportFilters(this.args.filters?.customFilters, id, value),
+    });
   }
 
   @action
@@ -470,6 +502,7 @@ export default class AdminReport extends Component {
     this.model = report;
     this.currentMode = currentMode;
     this.options = this._buildOptions(currentMode, report);
+    this.args.onDataLoaded?.(report);
   }
 
   @bind
@@ -522,6 +555,10 @@ export default class AdminReport extends Component {
 
     if (this.args.filters?.customFilters) {
       payload.data.filters = this.args.filters?.customFilters;
+    }
+
+    if (this.args.showRelatedItems) {
+      payload.data.include_related_items = true;
     }
 
     return payload;
@@ -589,10 +626,30 @@ export default class AdminReport extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.reporting_improvements}}
-      <AdminReportNew @report={{this}} @filters={{@filters}} />
+    {{#if @bare}}
+      {{! Renders only the report's visualization (chart/table/etc.) without
+      the surrounding report chrome — used by the dashboard report cards. }}
+      <div
+        class={{dConcatClass "admin-report" "--bare" this.reportClasses}}
+        {{didUpdate
+          this.fetchOrRender
+          @filters.startDate
+          @filters.endDate
+          this.preloadedData
+        }}
+      >
+        {{#if this.hasData}}
+          {{#if this.currentMode}}
+            {{component
+              this.modeComponent
+              model=this.model
+              options=this.options
+            }}
+          {{/if}}
+        {{/if}}
+      </div>
     {{else}}
-      <AdminReportLegacy @report={{this}} @filters={{@filters}} />
+      <AdminReportBody @report={{this}} @filters={{@filters}} />
     {{/if}}
   </template>
 }

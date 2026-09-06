@@ -209,3 +209,7 @@ sv:
               label: Kanalnamn
             provider:
               label: Leverantör
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanal"
+        message: "Meddelande"

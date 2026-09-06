@@ -15,14 +15,22 @@ Discourse is large with long history. Understand context before changes.
 
 ### JavaScript and UI
 - No empty backing classes for template-only components unless requested
-- Use FormKit for forms, see ./docs/developer-guides/docs/03-code-internals/21-form-kit.md (`frontend/discourse/app/form-kit`)
-- Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md
+- Build UI from the ui-kit primitives (`frontend/discourse/app/ui-kit`: `d-*` components, `helpers/`, `modifiers/`) rather than hand-rolling controls, layout, or behaviour; new shared, domain-free primitives go there. See ./docs/developer-guides/docs/03-code-internals/02-ui-kit.md
+- Use the skill at `.skills/discourse-frontend-conventions` when writing or reviewing JS/TS/Glimmer classes and templates (private members, member ordering, comments, invocation ordering)
+- Use FormKit for forms, see ./docs/developer-guides/docs/03-code-internals/22-form-kit.md (`frontend/discourse/app/form-kit`)
+- Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/26-css-guidelines-bem.md
 - Make display strings translatable (use placeholders, not split strings)
 - Use "Sentence case" for strings, not "Proper Case" or "lower case"
+- Plugins/themes can't import npm modules directly; add the dependency to core and expose a `frontend/discourse/app/lib/load-*.js` wrapper that does the `import()` (see `load-morphlex.js`).
+- Use the skill at `.skills/discourse-warpdrive-models` when creating or changing WarpDrive-backed models (`frontend/discourse/app/data`)
 
-### JSDoc
-- Do not add JSDoc to any new code you write.
-- If JSDoc already exists, ensure any changes you make keep it accurate and up to date.
+### Comments & Types
+- Prefer self-documenting code. Comments should only be added when future misunderstanding is likely. They should be terse, and should describe 'why', not 'what'. They should not be used to describe history.
+- In the frontend, typescript is typically used for platform-level code, javascript for business-logic
+- Platform-level frontend code should include accurate types & tsdoc descriptions for public APIs
+- Use the skill at `.skills/discourse-writing-typescript` when authoring .ts/.gts or converting .js/.gjs to TypeScript
+- Simple JSDoc/TSDoc comments can be used in other code for editor intellisense, but this is not essential
+- In core, never name plugin features or specific libraries in comments/docs — describe by mechanism
 
 ## Testing
 - Use the skill at `.skills/discourse-writing-rspec-tests` when writing RSpec tests
@@ -34,13 +42,18 @@ Discourse is large with long history. Understand context before changes.
 bin/qunit --help # detailed help
 bin/qunit path/to/test-file.js  # Run all tests in file
 bin/qunit path/to/tests/directory # Run all tests in directory
+bin/qunit --filter "Some text" # Case-insensitive substring match on "module: test name"
+bin/qunit --filter "/Foo|Bar/i" # Slash-wrapped value is a regex (include the "i" flag); use for alternation
 
 # Linting
 bin/lint --fix path/to/file path/to/another/file
 bin/lint --fix --recent # Lint all recently changed files
 ```
 
-ALWAYS lint any changes you make with `bin/lint --fix`
+Run `bin/lint --fix` once after implementation is complete and before handing
+off completed changes, committing, or pushing. During iterative edits, only run
+lint when it helps diagnose an issue. Prefer passing the specific changed files;
+use `bin/lint --fix --recent` only when appropriate.
 
 ## Site Settings
 - Configured in `config/site_settings.yml` or `config/settings.yml` for plugins
@@ -49,7 +62,7 @@ ALWAYS lint any changes you make with `bin/lint --fix`
 
 ## Services
 - Extract business logic (validation, models, permissions) from controllers
-- docs/developer-guides/docs/03-code-internals/19-service-objects.md
+- docs/developer-guides/docs/03-code-internals/20-service-objects.md
 - Use the skill at .skills/discourse-service-authoring
 - Examples: `app/services` (only classes with `Service::Base`)
 

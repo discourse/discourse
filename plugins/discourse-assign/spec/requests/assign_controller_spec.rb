@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe DiscourseAssign::AssignController do
   before do
     SiteSetting.assign_enabled = true
@@ -49,6 +47,12 @@ RSpec.describe DiscourseAssign::AssignController do
 
   describe "#suggestions" do
     before { sign_in(admin) }
+
+    def assign_user_to_post
+      assignee = Fabricate(:user, groups: [allowed_group])
+      Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
+      assignee
+    end
 
     it "only includes users in allowed groups and not disallowed groups" do
       Assigner.new(post.topic, admin).assign(allowed_user)
@@ -133,12 +137,6 @@ RSpec.describe DiscourseAssign::AssignController do
         scoped_group.name,
       )
     end
-
-    def assign_user_to_post
-      assignee = Fabricate(:user, groups: [allowed_group])
-      Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
-      assignee
-    end
   end
 
   describe "#unassign" do
@@ -198,6 +196,26 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(200)
       expect(allowed_topic.reload.assignment).to be_blank
     end
+
+    it "unassigns a topic with an API key scoped to assign -> assign" do
+      category = Fabricate(:category)
+      topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+      api_key = Fabricate(:api_key, user: admin)
+      Fabricate(:api_key_scope, resource: "assign", action: "assign", api_key_id: api_key.id)
+      Fabricate(:topic_assignment, target: topic, assigned_to: admin, assigned_by_user: admin)
+
+      put "/assign/unassign.json",
+          headers: {
+            "HTTP_API_KEY" => api_key.key,
+            "HTTP_API_USERNAME" => admin.username,
+          },
+          params: {
+            target_id: topic.id,
+            target_type: "Topic",
+          }
+
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#assign" do
@@ -212,7 +230,7 @@ RSpec.describe DiscourseAssign::AssignController do
       restricted_group = Fabricate(:group)
       private_category = Fabricate(:private_category, group: restricted_group)
       private_topic = Fabricate(:topic, category: private_category)
-      add_to_assign_allowed_group(allowed_user)
+      assign_allowed_group.add(allowed_user)
 
       sign_in(allowed_user)
 
@@ -227,7 +245,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "returns 404 when the acting user cannot see the target PM" do
       pm_topic = Fabricate(:private_message_topic)
-      add_to_assign_allowed_group(allowed_user)
+      assign_allowed_group.add(allowed_user)
 
       sign_in(allowed_user)
 
@@ -250,6 +268,55 @@ RSpec.describe DiscourseAssign::AssignController do
 
       expect(response.status).to eq(200)
       expect(post.topic.reload.assignment.assigned_to_id).to eq(allowed_user.id)
+    end
+
+    it "does not assign to a group hidden from the acting user" do
+      hidden_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:staff],
+          assignable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+
+      sign_in(allowed_user)
+
+      get "/g/#{hidden_group.name}.json"
+      expect(response.status).to eq(404)
+
+      put "/assign/assign.json",
+          params: {
+            target_id: post.topic_id,
+            target_type: "Topic",
+            group_name: hidden_group.name,
+          }
+
+      expect(response.status).to eq(403)
+      expect(response.body).not_to include(hidden_group.name)
+      expect(post.topic.reload.assignment).to be_nil
+    end
+
+    it "returns a 400 when neither a username nor a group name is given" do
+      put "/assign/assign.json", params: { target_id: post.topic_id, target_type: "Topic" }
+
+      expect(response.status).to eq(400)
+      expect(post.topic.reload.assignment).to be_nil
+    end
+
+    it "rejects assignment notes longer than the maximum post length" do
+      oversized_note = "a" * (SiteSetting.max_post_length + 1)
+
+      put "/assign/assign.json",
+          params: {
+            target_id: post.topic_id,
+            target_type: "Topic",
+            username: allowed_user.username,
+            note: oversized_note,
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.body).not_to include(oversized_note)
+      expect(post.topic.reload.assignment).to be_nil
+      expect(post.topic.posts.pluck(:raw)).not_to include(oversized_note)
     end
 
     it "assigns topic with note to a user" do
@@ -358,7 +425,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "fails to assign topic to the user if they already reached the max assigns limit" do
       another_user = Fabricate(:user)
-      add_to_assign_allowed_group(another_user)
+      assign_allowed_group.add(another_user)
       another_post = Fabricate(:post)
       max_assigns = 1
       SiteSetting.max_assigned_topics = max_assigns
@@ -384,7 +451,7 @@ RSpec.describe DiscourseAssign::AssignController do
     it "fails with a specific error message if the topic is a PM and the assignee can not see it" do
       pm = Fabricate(:private_message_post, user: admin).topic
       another_user = Fabricate(:user)
-      add_to_assign_allowed_group(another_user)
+      assign_allowed_group.add(another_user)
       put "/assign/assign.json",
           params: {
             target_id: pm.id,
@@ -462,7 +529,7 @@ RSpec.describe DiscourseAssign::AssignController do
     it "fails with a specific error message if the topic is not a PM and the assignee can not see it" do
       topic = Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
       another_user = Fabricate(:user)
-      add_to_assign_allowed_group(another_user)
+      assign_allowed_group.add(another_user)
       put "/assign/assign.json",
           params: {
             target_id: topic.id,
@@ -476,6 +543,26 @@ RSpec.describe DiscourseAssign::AssignController do
           username: another_user.username,
         ),
       )
+    end
+
+    it "assigns a topic with an API key scoped to assign -> assign" do
+      category = Fabricate(:category)
+      topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+      api_key = Fabricate(:api_key, user: admin)
+      Fabricate(:api_key_scope, resource: "assign", action: "assign", api_key_id: api_key.id)
+
+      put "/assign/assign.json",
+          headers: {
+            "HTTP_API_KEY" => api_key.key,
+            "HTTP_API_USERNAME" => admin.username,
+          },
+          params: {
+            target_id: topic.id,
+            target_type: "Topic",
+            username: admin.username,
+          }
+
+      expect(response.status).to eq(200)
     end
   end
 
@@ -564,6 +651,29 @@ RSpec.describe DiscourseAssign::AssignController do
       Fabricate(:post_assignment, assigned_to: allowed_group, assigned_by_user: admin)
     end
 
+    it "does not list members for a group hidden from the user" do
+      hidden_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:staff],
+          members_visibility_level: Group.visibility_levels[:logged_on_users],
+        )
+      hidden_member = Fabricate(:user)
+      hidden_group.add(hidden_member)
+      Fabricate(:topic_assignment, assigned_to: hidden_member, assigned_by_user: admin)
+
+      sign_in(allowed_user)
+
+      get "/g/#{hidden_group.name}.json"
+      expect(response.status).to eq(404)
+
+      get "/assign/members/#{hidden_group.name}.json"
+      expect(response.status).to eq(403)
+      expect(
+        response.parsed_body.fetch("members", []).map { |member| member["username"] },
+      ).not_to include(hidden_member.username)
+    end
+
     describe "members" do
       describe "without filter" do
         it "list members ordered by the number of assignments" do
@@ -590,6 +700,40 @@ RSpec.describe DiscourseAssign::AssignController do
       end
 
       describe "with filter" do
+        it "does not disclose hidden name matches while filtering usernames" do
+          hidden_name_member =
+            Fabricate(
+              :user,
+              username: "opaque-assignee",
+              name: "Confidential Name Token",
+              groups: [allowed_group],
+            )
+          Fabricate(:topic_assignment, assigned_to: hidden_name_member, assigned_by_user: admin)
+          SiteSetting.enable_names = false
+          sign_in(allowed_user)
+
+          get "/assign/members/#{allowed_group.name}.json",
+              params: {
+                filter: hidden_name_member.name,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"].map { |member| member["id"] }).not_to include(
+            hidden_name_member.id,
+          )
+          expect(response.body).not_to include(hidden_name_member.name)
+
+          get "/assign/members/#{allowed_group.name}.json",
+              params: {
+                filter: hidden_name_member.username,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"].map { |member| member["id"] }).to contain_exactly(
+            hidden_name_member.id,
+          )
+        end
+
         it "returns members as according to filter" do
           sign_in(admin)
 

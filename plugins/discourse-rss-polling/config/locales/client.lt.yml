@@ -12,3 +12,13 @@ lt:
         feed_url: Nuoroda
         discourse_category: Kategorija
         discourse_tags: Žymos
+        feeds:
+          edit: Redaguoti
+          delete: Pašalinti
+          save: Saugoti
+        test:
+          title: Peržiūrėti
+          dismiss: Praleisti
+        status:
+          enabled: Galimas
+          disabled: Uždrausta

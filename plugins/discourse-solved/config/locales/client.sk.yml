@@ -15,6 +15,16 @@ sk:
           kpi:
             accepted_solutions:
               label: "Prijaté riešenia"
+        sections:
+          support:
+            answerers:
+              staff: "Personál"
+              member: "Členovia"
+              basic: "Základné"
+            response_time:
+              buckets:
+                lt_1h: "< 1 hodina"
+                gt_24h: "> 24 hodín"
   js:
     notifications:
       alt:
@@ -66,6 +76,11 @@ sk:
           solved: "sú vyriešené"
           unsolved: "sú nevyriešené"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Téma"
+            category: "Kategória"
       web_hooks:
         solved_event:
           group_name: "Vyriešená udalosť"

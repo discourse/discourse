@@ -23,6 +23,10 @@ module DiscourseAi
         prompt_cache.flush!
       end
 
+      def self.prompt_agent_ids
+        agents_prompt_map.keys.compact.uniq
+      end
+
       def initialize(helper_llm: nil, image_caption_llm: nil)
         @helper_llm = helper_llm
         @image_caption_llm = image_caption_llm
@@ -64,6 +68,10 @@ module DiscourseAi
       def custom_locale_instructions(user = nil, force_default_locale)
         locale = SiteSetting.default_locale
         locale = user.effective_locale if !force_default_locale && user
+        locale_instructions(locale)
+      end
+
+      def locale_instructions(locale)
         locale_hash = LocaleSiteSetting.language_names[locale]
 
         if locale != "en" && locale_hash
@@ -126,37 +134,25 @@ module DiscourseAi
           )
         context = attach_user_context(context, user, force_default_locale: force_default_locale)
 
-        bad_json = false
         json_summary_schema_key = bot.agent.response_format&.first.to_h
 
         schema_key = json_summary_schema_key["key"]&.to_sym
         schema_type = json_summary_schema_key["type"]
 
-        if schema_type == "array"
-          helper_response = []
-        else
-          helper_response = +""
-        end
+        structured_output = nil
+        helper_response = +""
 
         buffer_blk =
           Proc.new do |partial, _, type|
             if type == :structured_output && schema_type
-              helper_chunk = partial.read_buffered_property(schema_key)
-              next if helper_chunk.nil? || helper_chunk.empty?
+              structured_output = partial
 
-              if schema_type == "array"
-                if helper_chunk.is_a?(Array)
-                  helper_chunk.each do |item|
-                    helper_response << item if helper_response.exclude?(item)
-                  end
+              if schema_type == "string"
+                partial.read_buffered_property_chunk(schema_key) do |helper_chunk|
+                  helper_response << helper_chunk
+                  block.call(helper_chunk) if block
                 end
-              elsif schema_type == "string"
-                helper_response << helper_chunk
-              else
-                helper_response = helper_chunk
               end
-
-              block.call(helper_chunk) if block && !bad_json
             elsif type.blank?
               # Assume response is a regular completion.
               helper_response << partial
@@ -165,6 +161,16 @@ module DiscourseAi
           end
 
         bot.reply(context, &buffer_blk)
+
+        if schema_type && schema_type != "string"
+          # Non-string properties aren't streamed to callers; a single read at
+          # the end avoids transient placeholders the partial-JSON parser emits
+          # for incomplete elements (e.g. a trailing nil while an array is
+          # mid-stream).
+          helper_response = structured_output&.read_buffered_property(schema_key)
+          helper_response = helper_response.compact if helper_response.is_a?(Array)
+          helper_response = [] if schema_type == "array" && helper_response.nil?
+        end
 
         helper_response
       end
@@ -208,7 +214,6 @@ module DiscourseAi
         client_id: nil,
         custom_prompt: nil
       )
-        streamed_diff = +""
         streamed_result = +""
         start = Time.now
         type = prompt_type(helper_mode)
@@ -221,13 +226,12 @@ module DiscourseAi
           custom_prompt: custom_prompt,
         ) do |partial_response|
           streamed_result << partial_response
-          streamed_diff = parse_diff(input, partial_response) if type == :diff
 
-          # Throttle updates and check for safe stream points
+          # Throttle updates
           if (streamed_result.length > 10 && (Time.now - start > 0.3)) || Rails.env.test?
             sanitized = sanitize_result(streamed_result)
 
-            payload = { result: sanitized, diff: streamed_diff, done: false }
+            payload = { result: sanitized, done: false }
             publish_update(channel, payload, user, client_id: client_id)
             start = Time.now
           end
@@ -246,12 +250,19 @@ module DiscourseAi
         end
       end
 
-      def generate_image_caption(upload, user)
-        bot = build_bot(IMAGE_CAPTION, user)
+      def generate_image_caption(upload, user, locale: nil, post: nil, skip_access_check: false)
+        bot = build_bot(IMAGE_CAPTION, user, skip_access_check: skip_access_check)
         force_default_locale = false
+        custom_instructions =
+          if locale.present?
+            locale_instructions(locale)
+          else
+            custom_locale_instructions(user, force_default_locale)
+          end
 
         context =
           DiscourseAi::Agents::BotContext.new(
+            post: post,
             user: user,
             skip_show_thinking: true,
             feature_name: IMAGE_CAPTION,
@@ -261,7 +272,7 @@ module DiscourseAi
                 content: ["Describe this image in a single sentence.", { upload_id: upload.id }],
               },
             ],
-            custom_instructions: custom_locale_instructions(user, force_default_locale),
+            custom_instructions: custom_instructions,
           )
 
         structured_output = nil
@@ -314,8 +325,13 @@ module DiscourseAi
         AiAgent.find_by(id: agent_id)
       end
 
-      def build_bot(helper_mode, user)
-        ai_agent = ensure_mode_access!(helper_mode, user)
+      def build_bot(helper_mode, user, skip_access_check: false)
+        ai_agent =
+          if skip_access_check
+            ai_agent_for_mode(helper_mode)
+          else
+            ensure_mode_access!(helper_mode, user)
+          end
         return if ai_agent.nil?
 
         agent_klass = ai_agent.class_instance
@@ -348,7 +364,7 @@ module DiscourseAi
         end
       end
 
-      def agents_prompt_map(include_image_caption: false)
+      def self.agents_prompt_map(include_image_caption: false)
         map = {
           SiteSetting.ai_helper_translator_agent.to_i => TRANSLATE,
           SiteSetting.ai_helper_title_suggestions_agent.to_i => GENERATE_TITLES,
@@ -361,11 +377,15 @@ module DiscourseAi
         }
 
         if include_image_caption
-          image_caption_agent = SiteSetting.ai_helper_image_caption_agent.to_i
+          image_caption_agent = SiteSetting.ai_image_caption_agent.to_i
           map[image_caption_agent] = IMAGE_CAPTION if image_caption_agent
         end
 
         map
+      end
+
+      def agents_prompt_map(include_image_caption: false)
+        self.class.agents_prompt_map(include_image_caption:)
       end
 
       def all_prompts
@@ -423,7 +443,7 @@ module DiscourseAi
         when TRANSLATE
           "language"
         when GENERATE_TITLES
-          "heading"
+          "discourse-h1"
         when PROOFREAD
           "spell-check"
         when MARKDOWN_TABLE

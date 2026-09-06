@@ -17,12 +17,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubSearchCode do
       stub_request(
         :get,
         "https://api.github.com/search/code?page=1&per_page=30&q=def%20hello%20repo:discourse/discourse",
-      ).with(
-        headers: {
-          "Accept" => "application/vnd.github.v3.text-match+json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
-        },
-      ).to_return(
+      ).with(headers: { "Accept" => "application/vnd.github.v3.text-match+json" }).to_return(
         status: 200,
         body: {
           total_count: 1,
@@ -44,8 +39,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubSearchCode do
       )
       stub_request(:get, "https://api.github.com/repos/discourse/discourse/git/blobs/abc123").with(
         headers: {
-          "Accept" => "application/vnd.github.v3+json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
         },
       ).to_return(status: 200, body: { content: Base64.encode64(file_body) }.to_json)
 
@@ -195,12 +189,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubSearchCode do
       stub_request(
         :get,
         "https://api.github.com/search/code?page=1&per_page=30&q=A_CONSTANT%20repo:discourse/discourse",
-      ).with(
-        headers: {
-          "Accept" => "application/vnd.github.v3.text-match+json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
-        },
-      ).to_return(
+      ).with(headers: { "Accept" => "application/vnd.github.v3.text-match+json" }).to_return(
         status: 200,
         body: {
           total_count: 1,
@@ -221,8 +210,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubSearchCode do
 
       stub_request(:get, "https://api.github.com/repos/discourse/discourse/git/blobs/def456").with(
         headers: {
-          "Accept" => "application/vnd.github.v3+json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
         },
       ).to_return(status: 404)
 
@@ -252,7 +240,6 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubSearchCode do
       ).with(
         headers: {
           "Accept" => "application/vnd.github.v3.text-match+json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
           "Authorization" => "Bearer ABC",
         },
       ).to_return(status: 200, body: { total_count: 0, items: [] }.to_json)
@@ -271,12 +258,9 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubSearchCode do
       stub_request(
         :get,
         "https://api.github.com/search/code?page=1&per_page=30&q=def%20hello%20repo:discourse/discourse",
-      ).with(
-        headers: {
-          "Accept" => "application/vnd.github.v3.text-match+json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
-        },
-      ).to_return(status: 403)
+      ).with(headers: { "Accept" => "application/vnd.github.v3.text-match+json" }).to_return(
+        status: 403,
+      )
 
       result = tool.invoke
       expect(result[:search_results]).to be_nil

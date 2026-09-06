@@ -109,7 +109,13 @@ class StaticController < ApplicationController
           @topic.title
         end
       @title = "#{title_prefix} - #{SiteSetting.title}"
-      @body = @topic.posts.first.cooked
+      post = @topic.posts.first
+      @body =
+        if ContentLocalization.show_translated_post?(post, guardian)
+          post.get_localization&.cooked || post.cooked
+        else
+          post.cooked
+        end
       @faq_overridden = SiteSetting.faq_url.present?
       @rename_faq_to_guidelines = rename_faq
 
@@ -235,7 +241,12 @@ class StaticController < ApplicationController
 
   def llms_txt
     upload = SiteSetting.llms_txt
-    return head(:not_found) if upload.blank?
+
+    if upload.blank?
+      return head(:not_found) if !UpcomingChanges.enabled?(:enable_generated_llms_txt)
+
+      return render plain: LlmsTxt.generate, content_type: "text/plain; charset=utf-8"
+    end
 
     if Discourse.store.external?
       content =

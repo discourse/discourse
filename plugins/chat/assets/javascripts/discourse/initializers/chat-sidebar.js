@@ -75,7 +75,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
     get classNames() {
       const classes = [];
 
-      if (this.channel.currentUserMembership.muted) {
+      if (this.channel.currentUserMembership?.muted) {
         classes.push("sidebar-section-link--muted");
       }
 
@@ -244,14 +244,15 @@ export default {
   name: "chat-sidebar",
   initialize(container) {
     this.chatService = container.lookup("service:chat");
-
-    if (!this.chatService.userCanChat) {
-      return;
-    }
-
     this.siteSettings = container.lookup("service:site-settings");
     this.currentUser = container.lookup("service:current-user");
-    this.capabilities = container.lookup("service:capabilities");
+
+    const canViewPublicChatAnonymously =
+      this.chatService.anonymousUserCanViewPublicChat;
+
+    if (!this.chatService.userCanChat && !canViewPublicChatAnonymously) {
+      return;
+    }
 
     withPluginApi((api) => {
       const chatStateManager = container.lookup("service:chat-state-manager");
@@ -262,6 +263,7 @@ export default {
             key = CHAT_PANEL;
             switchButtonLabel = i18n("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
+            scrollActiveLinkIntoView = true;
 
             get switchButtonDefaultUrl() {
               return chatStateManager.lastKnownChatURL || "/chat";
@@ -269,7 +271,13 @@ export default {
           }
       );
 
-      initSidebarState(api, api.getCurrentUser());
+      if (canViewPublicChatAnonymously) {
+        api.setCombinedSidebarMode();
+        api.showSidebarSwitchPanelButtons();
+        this.chatService.loadChannels();
+      } else {
+        initSidebarState(api, api.getCurrentUser());
+      }
     });
 
     withPluginApi((api) => {
@@ -278,7 +286,7 @@ export default {
       );
       const chatStateManager = container.lookup("service:chat-state-manager");
 
-      if (this.siteSettings.chat_search_enabled) {
+      if (this.siteSettings.chat_search_enabled && this.currentUser) {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatSearchSectionLink = class extends BaseCustomSidebarSectionLink {
@@ -386,17 +394,12 @@ export default {
           );
 
           const SidebarChatStarredChannelLink = class extends BaseStarredChannelLink {
-            constructor({ menuService, capabilities }) {
+            constructor({ menuService }) {
               super(...arguments);
               this.menuService = menuService;
-              this.capabilities = capabilities;
             }
 
             get hoverValue() {
-              if (this.capabilities.isIpadOS) {
-                return;
-              }
-
               return "ellipsis-vertical";
             }
 
@@ -405,10 +408,6 @@ export default {
             }
 
             get hoverAction() {
-              if (this.capabilities.isIpadOS) {
-                return noop;
-              }
-
               return (event, onMenuClose) => {
                 event.stopPropagation();
                 event.preventDefault();
@@ -442,7 +441,6 @@ export default {
                 "service:chat-channels-manager"
               );
               this.menuService = container.lookup("service:menu");
-              this.capabilities = container.lookup("service:capabilities");
             }
 
             get sectionLinks() {
@@ -455,7 +453,6 @@ export default {
                     siteSettings: this.siteSettings,
                     chatStateManager: this.chatStateManager,
                     menuService: this.menuService,
-                    capabilities: this.capabilities,
                   })
               );
             }
@@ -499,21 +496,25 @@ export default {
               constructor({
                 channel,
                 chatService,
+                currentUser,
                 siteSettings,
                 menuService,
-                capabilities,
               }) {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
+                this.currentUser = currentUser;
                 this.menuService = menuService;
                 this.chatStateManager = chatStateManager;
                 this.siteSettings = siteSettings;
-                this.capabilities = capabilities;
               }
 
               get hoverValue() {
-                return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
+                if (!this.currentUser) {
+                  return;
+                }
+
+                return "ellipsis-vertical";
               }
 
               get name() {
@@ -523,7 +524,7 @@ export default {
               get classNames() {
                 const classes = [];
 
-                if (this.channel.currentUserMembership.muted) {
+                if (this.channel.currentUserMembership?.muted) {
                   classes.push("sidebar-section-link--muted");
                 }
 
@@ -595,7 +596,7 @@ export default {
               }
 
               get hoverAction() {
-                if (this.capabilities.isIpadOS) {
+                if (!this.currentUser) {
                   return noop;
                 }
 
@@ -637,7 +638,6 @@ export default {
                 );
                 this.router = container.lookup("service:router");
                 this.menuService = container.lookup("service:menu");
-                this.capabilities = container.lookup("service:capabilities");
               }
 
               get sectionLinks() {
@@ -647,8 +647,8 @@ export default {
                       channel,
                       chatService: this.chatService,
                       menuService: this.menuService,
+                      currentUser: this.currentUser,
                       siteSettings: this.siteSettings,
-                      capabilities: this.capabilities,
                     })
                 );
               }
@@ -666,6 +666,10 @@ export default {
               }
 
               get actions() {
+                if (!this.currentUser) {
+                  return [];
+                }
+
                 return [
                   {
                     id: "browseChannels",
@@ -722,7 +726,6 @@ export default {
                 currentUser,
                 menuService,
                 siteSettings,
-                capabilities,
               }) {
                 super(...arguments);
                 this.channel = channel;
@@ -731,7 +734,6 @@ export default {
                 this.currentUser = currentUser;
                 this.chatStateManager = chatStateManager;
                 this.menuService = menuService;
-                this.capabilities = capabilities;
 
                 if (this.oneOnOneMessage) {
                   const user = this.channel.chatable.users[0];
@@ -749,7 +751,7 @@ export default {
               }
 
               get hoverValue() {
-                return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
+                return "ellipsis-vertical";
               }
 
               get oneOnOneMessage() {
@@ -782,7 +784,7 @@ export default {
               get classNames() {
                 const classes = [];
 
-                if (this.channel.currentUserMembership.muted) {
+                if (this.channel.currentUserMembership?.muted) {
                   classes.push("sidebar-section-link--muted");
                 }
 
@@ -881,10 +883,6 @@ export default {
               }
 
               get hoverAction() {
-                if (this.capabilities.isIpadOS) {
-                  return noop;
-                }
-
                 return (event, onMenuClose) => {
                   event.stopPropagation();
                   event.preventDefault();
@@ -920,7 +918,6 @@ export default {
                   "service:chat-channels-manager"
                 );
                 this.menuService = container.lookup("service:menu");
-                this.capabilities = container.lookup("service:capabilities");
               }
 
               get hideSectionHeader() {
@@ -944,7 +941,6 @@ export default {
                         currentUser: this.currentUser,
                         menuService: this.menuService,
                         siteSettings: this.siteSettings,
-                        capabilities: this.capabilities,
                       })
                   );
                 } else {

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -32,6 +32,7 @@ export default class ChatMessageActionsMobile extends Component {
     return this.chat.activeMessage.context;
   }
 
+  @cached
   get messageInteractor() {
     return new ChatMessageInteractor(
       getOwner(this),
@@ -130,7 +131,10 @@ export default class ChatMessageActionsMobile extends Component {
           }}
             <div class="main-actions">
               {{#if this.messageInteractor.canReact}}
-                {{#each this.messageInteractor.emojiReactions as |reaction|}}
+                {{#each
+                  this.messageInteractor.emojiReactions key="emoji"
+                  as |reaction|
+                }}
                   <ChatMessageReaction
                     @reaction={{reaction}}
                     @onReaction={{this.react}}

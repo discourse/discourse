@@ -12,3 +12,6 @@ lt:
       and_more_voters: "ir %{count} daugiau..."
       show_voters: "Rodyti, kas balsavo"
       vote_count_thousands: "%{count}k"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Žymos"

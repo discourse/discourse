@@ -146,6 +146,27 @@ RSpec.describe AiMcpServer do
     expect(server.reload.effective_oauth_client_id).to eq("dynamic-client-id")
   end
 
+  it "preserves discovered token endpoint auth methods" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    discovery =
+      DiscourseAi::Mcp::OAuthDiscovery::Result.new(
+        resource: server.url,
+        resource_metadata_url: "#{server.url}/.well-known/oauth-protected-resource",
+        issuer: "https://auth.example.com",
+        authorization_endpoint: "https://auth.example.com/authorize",
+        token_endpoint: "https://auth.example.com/token",
+        revocation_endpoint: nil,
+        registration_endpoint: nil,
+        token_endpoint_auth_methods_supported: %w[client_secret_post],
+      )
+
+    server.store_oauth_discovery!(discovery)
+
+    expect(server.reload.oauth_discovery_result.token_endpoint_auth_methods_supported).to eq(
+      %w[client_secret_post],
+    )
+  end
+
   it "clears dynamically registered client_id when OAuth credentials are cleared" do
     server = Fabricate(:ai_mcp_server, auth_type: "oauth")
     server.store_dynamic_registration!(client_id: "dynamic-client-id")

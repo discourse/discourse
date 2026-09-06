@@ -43,6 +43,20 @@ class MetadataController < ApplicationController
 
   private
 
+  # The accepted file types for the Web Share Target, derived from the
+  # `authorized_extensions` site setting so the share sheet only offers
+  # Discourse for files it can actually accept. Each extension is expressed in
+  # the dotted form the Web Share Target spec expects (e.g. ".jpg"). Falls back
+  # to any file type when the site authorizes all extensions ("*").
+  def share_target_accept
+    extensions =
+      SiteSetting.authorized_extensions.gsub(/[\s.]+/, "").downcase.split("|").reject(&:blank?)
+
+    return ["*/*"] if extensions.include?("*")
+
+    extensions.map { |extension| ".#{extension}" }.presence || ["*/*"]
+  end
+
   def default_manifest
     display = "standalone"
     if request.user_agent
@@ -64,13 +78,14 @@ class MetadataController < ApplicationController
       theme_color: "##{ColorScheme.hex_for_name("header_background", scheme_id)}",
       icons: [],
       share_target: {
-        action: "#{Discourse.base_path}/new-topic",
-        method: "GET",
-        enctype: "application/x-www-form-urlencoded",
+        action: "#{Discourse.base_path}/share-target",
+        method: "POST",
+        enctype: "multipart/form-data",
         params: {
-          text: "body",
           title: "title",
-          url: "title",
+          text: "text",
+          url: "url",
+          files: [{ name: "files", accept: share_target_accept }],
         },
       },
       shortcuts: [

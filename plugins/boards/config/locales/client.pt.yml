@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    boards:
+      board:
+        remove_card: "Remover"
+        new_topic: "Novo tópico..."
+        title: "Título"
+        tags: "Etiquetas"
+        assigned_to: "Atribuído a"
+        topic_reply_count:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        assign: "Atribuir"
+        unassign: "Cancelar atribuição"
+      manage:
+        name: "Nome"
+        slug: "Slug"
+        constraint_categories: "Categorias"
+        constraint_tags: "Etiquetas"
+        columns:
+          remove: "Remover"
+          column_title: "Título"
+          icon: "Ícone"
+          color: "Cor"
+          tag: "Etiqueta"
+          move_to_assigned_unassign: "Cancelar atribuição"
+          move_to_status_open: "Abrir"
+          move_to_status_closed: "Fechado"

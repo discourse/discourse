@@ -47,13 +47,8 @@ module DiscourseAi
       end
 
       def self.list(user, page: 0, per_page: 40)
-        starred = []
-        if SiteSetting.enable_ai_bot_starred_conversations
-          starred = page == 0 ? starred_conversations_for(user).to_a : []
-          unstarred_relation = unstarred_conversations_for(user)
-        else
-          unstarred_relation = conversations_query_for(user)
-        end
+        starred = page == 0 ? starred_conversations_for(user).to_a : []
+        unstarred_relation = unstarred_conversations_for(user)
 
         unstarred_page =
           ConversationPage.paginate(
@@ -64,12 +59,7 @@ module DiscourseAi
 
         all_topics = starred + unstarred_page.records
 
-        starred_lookup =
-          if SiteSetting.enable_ai_bot_starred_conversations
-            starred_at_by_topic_id(user, all_topics)
-          else
-            {}
-          end
+        starred_lookup = starred_at_by_topic_id(user, all_topics)
 
         conversations =
           ConversationPage.new(

@@ -1,18 +1,33 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { tracked } from "@glimmer/tracking";
+import { array, concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import {
+  ExecutionProgressStream,
+  formatDuration,
+  isLive,
+  isPending,
+  isRunning,
+} from "../../../lib/workflows/execution-progress";
 import {
   localeKeyPart,
   propertyOptionLabel,
 } from "../../../lib/workflows/property-engine";
 
 function formatJson(data) {
+  if (Array.isArray(data) && data.length === 0) {
+    return "[]";
+  }
+
   if (!data || Object.keys(data).length === 0) {
     return "{}";
   }
@@ -109,12 +124,12 @@ function itemCount(data) {
     : null;
 }
 
-function formatDuration(startedAt, finishedAt) {
-  if (!startedAt || !finishedAt) {
-    return "—";
-  }
-  const ms = new Date(finishedAt) - new Date(startedAt);
-  return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
+function stepDuration(step, currentTime) {
+  return formatDuration(
+    step.started_at,
+    step.finished_at,
+    step.status === "running" ? currentTime : null
+  );
 }
 
 function formatValue(value) {
@@ -173,6 +188,14 @@ function stepSummary(step) {
   return String(step.error);
 }
 
+function hasNoOutput(step) {
+  return (
+    step.status === "success" &&
+    Array.isArray(step.output) &&
+    step.output.length === 0
+  );
+}
+
 function isFilterStep(step) {
   return step.node_type === "condition:filter";
 }
@@ -186,7 +209,10 @@ function conditionPassed(step) {
 }
 
 export default class ExecutionDetail extends Component {
+  @service messageBus;
   @service workflowsNodeTypes;
+
+  @tracked liveExecution;
 
   operationLabel = (step) => {
     const value = step?.metadata?.operation;
@@ -207,14 +233,187 @@ export default class ExecutionDetail extends Component {
     return propertyOptionLabel(definition, "operation", { value });
   };
 
+  #progress;
+
+  #refreshing = false;
+
+  #refreshRequested = false;
+
+  #refreshToken = 0;
+
+  constructor() {
+    super(...arguments);
+    this.#progress = new ExecutionProgressStream(this.messageBus, {
+      onMessage: (message) => this.#applyProgress(message),
+      onGap: () => this.#resyncExecution(),
+      onRetry: () => this.#refreshExecution(),
+    });
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#refreshToken++;
+    this.#progress.destroy();
+  }
+
+  get currentTime() {
+    return this.#progress.currentTime;
+  }
+
+  get execution() {
+    return this.liveExecution?.id === this.args.execution.id
+      ? this.liveExecution
+      : this.args.execution;
+  }
+
+  set execution(value) {
+    this.liveExecution = value;
+  }
+
+  get isPending() {
+    return isPending(this.execution);
+  }
+
+  get isRunning() {
+    return isRunning(this.execution);
+  }
+
+  get isActive() {
+    return this.isPending || this.isRunning;
+  }
+
+  get isLive() {
+    return isLive(this.execution);
+  }
+
   @action
-  async ensureNodeTypes() {
+  async initialize() {
+    this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
+    this.#syncLiveUpdates();
     await this.workflowsNodeTypes.load();
   }
 
   @action
+  executionChanged() {
+    this.#refreshToken++;
+    this.#refreshing = false;
+    this.#refreshRequested = false;
+    this.#progress.resetRetry();
+    this.liveExecution = null;
+    this.#progress.unsubscribe();
+    this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
+    this.#syncLiveUpdates();
+  }
+
+  #syncLiveUpdates() {
+    if (this.isLive) {
+      this.#progress.subscribe(
+        `/discourse-workflows/execution/${this.execution.id}`
+      );
+    } else {
+      this.#progress.unsubscribe();
+    }
+
+    if (this.isRunning) {
+      this.#progress.startTicker();
+    } else {
+      this.#progress.stopTicker();
+    }
+  }
+
+  #applyProgress(message) {
+    if (
+      message.type !== "execution_progress" ||
+      message.execution?.id !== this.execution.id
+    ) {
+      return;
+    }
+
+    if (this.#refreshing && message.refresh) {
+      this.#refreshRequested = true;
+    }
+
+    const steps = [...(this.execution.steps || [])];
+    if (message.step) {
+      const index = steps.findIndex(
+        (step) => step.position === message.step.position
+      );
+      if (index === -1) {
+        steps.push(message.step);
+      } else {
+        steps[index] = { ...steps[index], ...message.step };
+      }
+    }
+
+    this.execution = {
+      ...this.execution,
+      ...message.execution,
+      steps,
+    };
+
+    if (message.refresh) {
+      this.#refreshExecution();
+    } else {
+      this.#syncLiveUpdates();
+    }
+  }
+
+  #resyncExecution() {
+    this.#progress.unsubscribe();
+    this.#refreshExecution();
+  }
+
+  async #refreshExecution() {
+    if (this.#refreshing) {
+      this.#refreshRequested = true;
+      return;
+    }
+
+    const executionId = this.execution.id;
+    const refreshToken = ++this.#refreshToken;
+    this.#refreshing = true;
+    try {
+      const result = await ajax(
+        `/admin/plugins/discourse-workflows/executions/${executionId}`
+      );
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        refreshToken !== this.#refreshToken ||
+        executionId !== this.execution.id
+      ) {
+        return;
+      }
+
+      this.execution = {
+        ...result.execution,
+        message_bus_last_id: result.meta?.message_bus_last_id ?? 0,
+      };
+      this.#progress.lastMessageId = this.execution.message_bus_last_id;
+      this.#progress.resetRetry();
+      this.#syncLiveUpdates();
+    } catch (error) {
+      if (
+        !this.isDestroying &&
+        !this.isDestroyed &&
+        refreshToken === this.#refreshToken
+      ) {
+        this.#progress.scheduleRetry(error);
+      }
+    } finally {
+      if (refreshToken === this.#refreshToken) {
+        this.#refreshing = false;
+        if (this.#refreshRequested && !this.isDestroying && !this.isDestroyed) {
+          this.#refreshRequested = false;
+          this.#refreshExecution();
+        }
+      }
+    }
+  }
+
+  @action
   exportAsText() {
-    const execution = this.args.execution;
+    const execution = this.execution;
     const lines = [];
 
     lines.push(`Workflow: ${execution.workflow_name ?? "Unknown"}`);
@@ -223,7 +422,11 @@ export default class ExecutionDetail extends Component {
     lines.push(`Started: ${execution.started_at ?? "—"}`);
     lines.push(`Finished: ${execution.finished_at ?? "—"}`);
     lines.push(
-      `Total time: ${formatDuration(execution.started_at, execution.finished_at)}`
+      `Total time: ${formatDuration(
+        execution.started_at,
+        execution.finished_at,
+        this.isRunning ? this.currentTime : null
+      )}`
     );
 
     if (execution.error) {
@@ -295,9 +498,70 @@ export default class ExecutionDetail extends Component {
   }
 
   <template>
-    <div class="workflows-execution-detail" {{didInsert this.ensureNodeTypes}}>
+    <div
+      class="workflows-execution-detail"
+      {{didInsert this.initialize}}
+      {{didUpdate this.executionChanged @execution}}
+    >
+      {{#if this.isActive}}
+        <div class="workflows-execution-detail__progress">
+          {{#if this.isRunning}}
+            {{dLoadingSpinner size="small"}}
+          {{else}}
+            {{dIcon "clock"}}
+          {{/if}}
+          <span class="workflows-execution-detail__progress-label">
+            {{i18n
+              (concat
+                "discourse_workflows.executions.statuses." this.execution.status
+              )
+            }}
+          </span>
+          <span class="workflows-execution-detail__progress-time">
+            {{formatDuration
+              this.execution.started_at
+              this.execution.finished_at
+              this.currentTime
+            }}
+          </span>
+        </div>
+      {{/if}}
+
+      {{#if this.execution.workflow_call_caller}}
+        <div class="workflows-execution-detail__workflow-call --caller">
+          <div class="workflows-execution-detail__workflow-call-main">
+            <span class="workflows-execution-detail__workflow-call-label">
+              {{i18n "discourse_workflows.executions.workflow_call_called_by"}}
+            </span>
+            <span class="workflows-execution-detail__workflow-call-name">
+              {{#if this.execution.workflow_call_caller.workflow_name}}
+                {{this.execution.workflow_call_caller.workflow_name}}
+              {{else}}
+                {{i18n
+                  "discourse_workflows.executions.workflow_call_workflow"
+                  id=this.execution.workflow_call_caller.workflow_id
+                }}
+              {{/if}}
+            </span>
+          </div>
+
+          {{#if this.execution.workflow_call_caller.execution_url}}
+            <DButton
+              @route="adminPlugins.show.discourse-workflows.show.executions.show"
+              @routeModels={{array
+                this.execution.workflow_call_caller.workflow_id
+                this.execution.workflow_call_caller.execution_id
+              }}
+              @icon="up-right-from-square"
+              @label="discourse_workflows.executions.workflow_call_open_parent"
+              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
+            />
+          {{/if}}
+        </div>
+      {{/if}}
+
       <div class="workflows-execution-detail__steps">
-        {{#each @execution.steps as |step|}}
+        {{#each this.execution.steps as |step|}}
           <div
             class="workflows-execution-detail__step --{{step.status}}
               --kind-{{nodeKind step.node_type}}"
@@ -352,7 +616,7 @@ export default class ExecutionDetail extends Component {
                 {{/if}}
               </span>
               <span class="workflows-execution-detail__step-time">
-                {{formatDuration step.started_at step.finished_at}}
+                {{stepDuration step this.currentTime}}
                 {{#if step.metadata.js_elapsed_ms}}
                   <span
                     class="workflows-execution-detail__step-js-time"
@@ -368,6 +632,14 @@ export default class ExecutionDetail extends Component {
             {{/if}}
 
             <div class="workflows-execution-detail__step-body">
+              {{#if (hasNoOutput step)}}
+                <div
+                  class="alert alert-info workflows-execution-detail__no-output"
+                >
+                  {{i18n "discourse_workflows.executions.no_output_data"}}
+                </div>
+              {{/if}}
+
               {{#if step.metadata.conditions}}
                 <div class="workflows-execution-detail__conditions">
                   {{#each step.metadata.conditions as |condition|}}
@@ -417,6 +689,71 @@ export default class ExecutionDetail extends Component {
                 </details>
               {{/if}}
 
+              {{#if step.workflow_call_run}}
+                <div class="workflows-execution-detail__workflow-call">
+                  <div class="workflows-execution-detail__workflow-call-main">
+                    <span
+                      class="workflows-execution-detail__workflow-call-icon"
+                    >
+                      {{dIcon "arrows-turn-to-dots"}}
+                    </span>
+                    <span
+                      class="workflows-execution-detail__workflow-call-content"
+                    >
+                      <span
+                        class="workflows-execution-detail__workflow-call-label"
+                      >
+                        {{i18n "discourse_workflows.executions.workflow_call"}}
+                      </span>
+                      <span
+                        class="workflows-execution-detail__workflow-call-name"
+                      >
+                        {{#if step.workflow_call_run.workflow_name}}
+                          {{step.workflow_call_run.workflow_name}}
+                        {{else}}
+                          {{i18n
+                            "discourse_workflows.executions.workflow_call_workflow"
+                            id=step.workflow_call_run.workflow_id
+                          }}
+                        {{/if}}
+                      </span>
+                    </span>
+                  </div>
+
+                  <span
+                    class="workflows-execution-detail__step-badge --{{step.workflow_call_run.status}}"
+                  >
+                    {{i18n
+                      (concat
+                        "discourse_workflows.executions.statuses."
+                        step.workflow_call_run.status
+                      )
+                    }}
+                  </span>
+
+                  {{#if step.workflow_call_run.execution_url}}
+                    <DButton
+                      @route="adminPlugins.show.discourse-workflows.show.executions.show"
+                      @routeModels={{array
+                        step.workflow_call_run.workflow_id
+                        step.workflow_call_run.execution_id
+                      }}
+                      @icon="up-right-from-square"
+                      @label="discourse_workflows.executions.workflow_call_open"
+                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
+                    />
+                  {{/if}}
+
+                  {{#if step.workflow_call_run.error}}
+                    <div
+                      class="workflows-execution-detail__workflow-call-error"
+                    >
+                      {{step.workflow_call_run.error}}
+                    </div>
+                  {{/if}}
+                </div>
+              {{/if}}
+
               <details class="workflows-execution-detail__step-section">
                 <summary>
                   {{i18n "discourse_workflows.executions.input"}}
@@ -448,7 +785,11 @@ export default class ExecutionDetail extends Component {
         <div class="workflows-execution-detail__footer">
           <div class="workflows-execution-detail__total">
             {{i18n "discourse_workflows.executions.total_time"}}
-            {{formatDuration @execution.started_at @execution.finished_at}}
+            {{formatDuration
+              this.execution.started_at
+              this.execution.finished_at
+              (if this.isRunning this.currentTime)
+            }}
           </div>
           <DButton
             @action={{this.exportAsText}}

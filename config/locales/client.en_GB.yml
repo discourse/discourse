@@ -26,6 +26,9 @@ en_GB:
       tiny:
         date_month: "D MMM"
         date_year: "MMM YYYY"
+    design_wizard:
+      homepage:
+        categories: "Categories"
     review:
       types:
         reviewable_flagged_post:

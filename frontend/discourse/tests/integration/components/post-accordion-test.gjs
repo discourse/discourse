@@ -1,6 +1,7 @@
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import DPostAccordion from "discourse/ui-kit/d-post-accordion";
 
 module("Integration | Component | DPostAccordion", function (hooks) {
@@ -53,6 +54,27 @@ module("Integration | Component | DPostAccordion", function (hooks) {
     assert
       .dom(":nth-child(2 of .d-post-accordion-item) .date-link")
       .hasAttribute("href", posts[1].url);
+  });
+
+  test("date link is announced with an abbreviated date instead of the full date and time", async function (assert) {
+    const clock = fakeTime("2026-07-13T12:00:00", null, true);
+
+    try {
+      const recentPosts = [
+        { ...posts[0], created_at: moment().subtract(2, "days").toISOString() },
+      ];
+
+      await render(
+        <template><DPostAccordion @posts={{recentPosts}} /></template>
+      );
+
+      assert.dom(".date-link").hasAria("label", "2 days ago");
+      assert
+        .dom(".date-link > span[aria-hidden=true] .relative-date")
+        .exists("the relative date and its tooltip are accessibility-hidden");
+    } finally {
+      clock.restore();
+    }
   });
 
   test("yields custom header", async function (assert) {

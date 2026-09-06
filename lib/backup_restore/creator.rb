@@ -184,6 +184,8 @@ module BackupRestore
         "pg_dump", # the pg_dump command
         "--schema=public", # only public schema
         "-T public.pg_*", # exclude tables and views whose name starts with "pg_"
+        "--exclude-table-data=public.nested_hot_post_scores",
+        "--exclude-table-data=public.nested_hot_score_snapshots",
         "--file='#{@dump_filename}'", # output to the dump.sql file
         "--no-owner", # do not output commands to set ownership of objects
         "--no-privileges", # prevent dumping of access privileges
@@ -201,14 +203,11 @@ module BackupRestore
 
       archive_filename = File.join(@archive_directory, @backup_filename)
 
-      Discourse::Utils.execute_command(
-        "mv",
-        @dump_filename,
-        archive_filename,
-        failure_message: "Failed to move database dump file.",
-      )
+      FileUtils.mv(@dump_filename, archive_filename)
 
       remove_tmp_directory
+    rescue SystemCallError => error
+      raise "Failed to move database dump file.\n#{error.message}"
     end
 
     def create_archive
@@ -217,8 +216,10 @@ module BackupRestore
       tar_filename = "#{@archive_basename}.tar"
 
       log "Making sure archive does not already exist..."
-      Discourse::Utils.execute_command("rm", "-f", tar_filename)
-      Discourse::Utils.execute_command("rm", "-f", "#{tar_filename}.gz")
+      [tar_filename, "#{tar_filename}.gz"].each do |filename|
+        File.delete(filename)
+      rescue Errno::ENOENT
+      end
 
       log "Creating empty archive..."
       Discourse::Utils.execute_command(
@@ -398,6 +399,10 @@ module BackupRestore
     end
 
     def create_hardlink(source_filename, upload_data, target_filename)
+      if File.expand_path(source_filename) == File.expand_path(target_filename)
+        return source_filename
+      end
+
       FileUtils.mkdir_p(File.dirname(target_filename))
       FileUtils.ln(source_filename, target_filename)
       increment_and_log_progress(:hardlinked)

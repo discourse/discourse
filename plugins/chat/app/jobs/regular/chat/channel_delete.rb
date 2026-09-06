@@ -49,6 +49,10 @@ module Jobs
             target_type: ::Chat::Message.polymorphic_name,
           ).delete_all
 
+          # these rows keep hotlinked uploads flagged as in use, so leaving
+          # them on trashed messages would pin the uploads forever
+          ::Chat::MessageHotlinkedMedia.where(chat_message_id: message_ids).delete_all
+
           # only the messages and the channel are Trashable, everything else gets
           # permanently destroyed
           chat_messages.update_all(

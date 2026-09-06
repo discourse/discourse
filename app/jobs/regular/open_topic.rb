@@ -5,7 +5,7 @@ module Jobs
     def execute_timer_action(topic_timer, topic)
       user = topic_timer.user
 
-      if !Guardian.new(user).can_open_topic?(topic) || topic.open?
+      if !Guardian.new(user).can_set_topic_timer?(topic) || topic.open?
         topic_timer.destroy!
         topic.reload
 
@@ -31,7 +31,11 @@ module Jobs
 
       topic.inherit_auto_close_from_category(timer_type: :close)
 
-      MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
+      MessageBus.publish(
+        "/topic/#{topic.id}",
+        { reload_topic: true },
+        topic.secure_audience_publish_messages,
+      )
     end
   end
 end

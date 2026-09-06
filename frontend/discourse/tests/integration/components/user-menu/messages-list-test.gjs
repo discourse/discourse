@@ -1,4 +1,4 @@
-import { render, settled } from "@ember/test-helpers";
+import { findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MessagesList from "discourse/components/user-menu/messages-list";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
@@ -6,7 +6,6 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 function getMessage(overrides = {}) {
@@ -101,9 +100,9 @@ module("Integration | Component | UserMenu | MessagesList", function (hooks) {
       return response(copy);
     });
     await render(<template><MessagesList /></template>);
-    const items = queryAll("ul li");
+    const items = findAll("ul li");
 
-    assert.strictEqual(items.length, 3);
+    assert.dom("ul li").exists({ count: 3 });
 
     assert.dom(items[0]).hasClass("notification");
     assert.dom(items[0]).hasClass("unread");
@@ -126,9 +125,9 @@ module("Integration | Component | UserMenu | MessagesList", function (hooks) {
     });
 
     await render(<template><MessagesList /></template>);
-    const items = queryAll("ul li");
+    const items = findAll("ul li");
 
-    assert.strictEqual(items.length, 2);
+    assert.dom("ul li").exists({ count: 2 });
 
     assert.dom(items[0]).hasClass("notification");
     assert.dom(items[0]).hasClass("unread");
@@ -148,9 +147,9 @@ module("Integration | Component | UserMenu | MessagesList", function (hooks) {
     });
 
     await render(<template><MessagesList /></template>);
-    const items = queryAll("ul li");
+    const items = findAll("ul li");
 
-    assert.strictEqual(items.length, 2);
+    assert.dom("ul li").exists({ count: 2 });
 
     assert.dom(items[0]).hasClass("notification");
     assert.dom(items[0]).hasClass("unread");
@@ -207,9 +206,9 @@ module("Integration | Component | UserMenu | MessagesList", function (hooks) {
       return response(copy);
     });
     await render(<template><MessagesList /></template>);
-    const items = queryAll("ul li");
+    const items = findAll("ul li");
 
-    assert.strictEqual(items.length, 6);
+    assert.dom("ul li").exists({ count: 6 });
 
     assert.dom(items[0]).hasText(
       i18n("notifications.group_message_summary", {

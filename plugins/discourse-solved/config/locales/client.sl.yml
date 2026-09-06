@@ -12,6 +12,15 @@ sl:
           kpi:
             accepted_solutions:
               label: "Sprejete rešitve"
+        sections:
+          support:
+            answerers:
+              staff: "Osebje"
+              member: "Člani"
+              basic: "Osnovni uporabnik"
+            response_time:
+              buckets:
+                lt_1h: "< 1 ura"
   js:
     notifications:
       alt:
@@ -63,6 +72,11 @@ sl:
           solved: "so rešene"
           unsolved: "so nerešene"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tema"
+            category: "Kategorija"
       web_hooks:
         solved_event:
           group_name: "Rešen dogodek"

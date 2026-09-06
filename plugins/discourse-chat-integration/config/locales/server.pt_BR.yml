@@ -77,6 +77,9 @@ pt_BR:
       removed: "Removeu %{removed}"
     provider:
       slack:
+        errors:
+          action_prohibited: "Este robô não tem permissão para postar naquele canal"
+          channel_not_found: "O canal especificado não existe no Slack"
         status:
           header: |
             *Regras para este canal*

@@ -86,7 +86,6 @@ module DiscourseAi
           judge_llm.to_llm.generate(
             prompt,
             user: Discourse.system_user,
-            temperature: 0,
             response_format: RESPONSE_FORMAT,
             execution_context:,
           )
@@ -113,7 +112,6 @@ module DiscourseAi
           judge_llm.to_llm.generate(
             prompt,
             user: Discourse.system_user,
-            temperature: 0,
             response_format: COMPARISON_RESPONSE_FORMAT,
             execution_context:,
           )

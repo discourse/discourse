@@ -26,11 +26,11 @@ RSpec.describe Chat::Workflows::Approval::Resume do
 
     before do
       SiteSetting.chat_enabled = true
-      SiteSetting.discourse_workflows_enabled = true
+      SiteSetting.enable_discourse_workflows = true
     end
 
     context "when plugin is disabled" do
-      before { SiteSetting.discourse_workflows_enabled = false }
+      before { SiteSetting.enable_discourse_workflows = false }
 
       it { is_expected.to fail_a_policy(:workflows_enabled) }
     end

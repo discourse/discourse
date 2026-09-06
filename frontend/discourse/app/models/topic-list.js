@@ -8,6 +8,7 @@ import { removeValuesFromArray } from "discourse/lib/array-tools";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -63,7 +64,7 @@ export default class TopicList extends RestModel {
       });
     }
 
-    return result.topic_list[listKey].map((t) => {
+    const topics = result.topic_list[listKey].map((t) => {
       t.posters.forEach((p) => {
         p.user = users[p.user_id];
         p.extraClasses = p.extras;
@@ -82,6 +83,12 @@ export default class TopicList extends RestModel {
       }
 
       return store.createRecord("topic", t);
+    });
+
+    return applyValueTransformer("topic-list-topics-from", topics, {
+      store,
+      result,
+      opts,
     });
   }
 

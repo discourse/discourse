@@ -11,3 +11,13 @@ sw:
         feed_url: Anwani ya mtandao
         discourse_category: Kikundi
         discourse_tags: Lebo
+        feeds:
+          edit: Hariri
+          delete: Futa
+          save: Hifadhi
+        test:
+          title: Kihakiki
+          dismiss: Ondosha...
+        status:
+          enabled: Imeruhusiwa
+          disabled: Imezuiwa

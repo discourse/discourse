@@ -7,6 +7,12 @@ RSpec.describe Migrations::Tooling::Schema::DSL::PluginIntrospector do
 
   after { FileUtils.rm_rf(plugins_path) }
 
+  # `introspect_plugin`/`introspect_plugins` are private; a subclass exposes
+  # them so these specs can drive them directly.
+  let(:introspector_class) do
+    Class.new(described_class) { public :introspect_plugin, :introspect_plugins }
+  end
+
   def create_plugin(name, migrations: {})
     plugin_dir = File.join(plugins_path, name)
     migrate_dir = File.join(plugin_dir, "db", "migrate")
@@ -74,14 +80,14 @@ RSpec.describe Migrations::Tooling::Schema::DSL::PluginIntrospector do
 
   describe "#introspect_plugin" do
     it "drops partial schema data when a plugin migration fails" do
-      introspector = described_class.allocate
+      introspector = introspector_class.allocate
       stderr = StringIO.new
 
       allow(introspector).to receive(:snapshot_schema).and_return({ tables: Set[], columns: {} })
       allow(introspector).to receive(:run_plugin_migrations).and_raise(StandardError, "boom")
       allow(introspector).to receive(:diff_schema)
 
-      result, failed = introspector.send(:introspect_plugin, "chat", ["unused"], stderr)
+      result, failed = introspector.introspect_plugin("chat", ["unused"], stderr)
 
       expect(result).to be_nil
       expect(failed).to be true
@@ -92,7 +98,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::PluginIntrospector do
 
   describe "#introspect_plugins" do
     it "stops after the first failed plugin to avoid partial manifest data" do
-      introspector = described_class.allocate
+      introspector = introspector_class.allocate
       stderr = StringIO.new
       plugins = {
         "alpha" => ["001_alpha.rb"],
@@ -111,7 +117,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::PluginIntrospector do
         stderr,
       ).and_return([nil, true])
 
-      plugin_data, failed_plugins = introspector.send(:introspect_plugins, plugins, stderr)
+      plugin_data, failed_plugins = introspector.introspect_plugins(plugins, stderr)
 
       expect(plugin_data).to eq("alpha" => { "tables" => ["alpha_table"], "columns" => {} })
       expect(failed_plugins).to eq(["broken"])

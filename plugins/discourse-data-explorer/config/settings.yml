@@ -3,7 +3,7 @@ discourse_data_explorer:
     default: false
     client: true
   data_explorer_ai_queries_enabled:
-    default: false
+    default: true
     client: true
     depends_on:
       - discourse_ai_enabled

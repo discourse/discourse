@@ -99,4 +99,12 @@ function position(element) {
   };
 }
 
-export default { offset, position };
+export function visible(element) {
+  return !!(
+    element.offsetWidth ||
+    element.offsetHeight ||
+    element.getClientRects().length
+  );
+}
+
+export default { offset, position, visible };

@@ -102,6 +102,9 @@ RSpec.describe SiteSettings::TypeSupervisor do
       it "'datetime' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:datetime]).to eq(31)
       end
+      it "'date' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:date]).to eq(33)
+      end
     end
   end
 
@@ -178,12 +181,14 @@ RSpec.describe SiteSettings::TypeSupervisor do
       settings.setting(:type_false, false)
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, "string")
+      settings.setting(:type_date, "2024-01-01", type: "date")
       settings.setting(:type_enum_default_string, "2", type: "enum", choices: ["2"])
       settings.setting(:type_enum_class, "en", enum: "TestEnumClass")
       settings.setting(:type_validator, 5, validator: "TestSmallThanTenValidator")
       settings.setting(:type_mock_validate_method, "no_value")
       settings.setting(:type_custom, "custom", type: "list")
       settings.setting(:type_upload, "", type: "upload")
+      settings.setting(:type_group, "", type: "group")
       settings.setting(
         :type_json_schema,
         "[{\"name\":\"Brett\"}]",
@@ -209,6 +214,34 @@ RSpec.describe SiteSettings::TypeSupervisor do
     describe "#to_db_value" do
       let(:true_val) { "t" }
       let(:false_val) { "f" }
+
+      it "converts a group name to its id" do
+        group = Fabricate(:group, name: "Support")
+
+        expect(settings.type_supervisor.to_db_value(:type_group, "Support")).to eq [
+             group.id.to_s,
+             SiteSetting.types[:group],
+           ]
+        expect(settings.type_supervisor.to_db_value(:type_group, "support")).to eq [
+             group.id.to_s,
+             SiteSetting.types[:group],
+           ]
+      end
+
+      it "stores an integer group id as a string" do
+        group = Fabricate(:group)
+
+        expect(settings.type_supervisor.to_db_value(:type_group, group.id)).to eq [
+             group.id.to_s,
+             SiteSetting.types[:group],
+           ]
+      end
+
+      it "rejects a name that matches no group" do
+        expect { settings.type_supervisor.to_db_value(:type_group, "nope") }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
 
       it "gives a second chance to guess even told :null type" do
         expect(settings.type_supervisor.to_db_value(:type_null, 1)).to eq [
@@ -258,6 +291,13 @@ RSpec.describe SiteSettings::TypeSupervisor do
         expect(settings.type_supervisor.to_db_value(:type_string, "a")).to eq [
              "a",
              SiteSetting.types[:string],
+           ]
+      end
+
+      it "returns date values" do
+        expect(settings.type_supervisor.to_db_value(:type_date, "2024-12-29")).to eq [
+             "2024-12-29",
+             SiteSetting.types[:date],
            ]
       end
 
@@ -471,6 +511,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
       settings.setting(:type_true, true)
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, "string")
+      settings.setting(:type_date, "2024-01-01", type: "date")
       settings.setting(:type_url_list, "string", type: "url_list")
       settings.setting(:type_textarea, "string", textarea: true)
       settings.setting(:type_enum_choices, "2", type: "enum", choices: %w[1 2])
@@ -510,6 +551,10 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
     it "returns string type" do
       expect(settings.type_supervisor.type_hash(:type_string)[:type]).to eq "string"
+    end
+
+    it "returns date type" do
+      expect(settings.type_supervisor.type_hash(:type_date)[:type]).to eq "date"
     end
 
     it "returns url_list type" do

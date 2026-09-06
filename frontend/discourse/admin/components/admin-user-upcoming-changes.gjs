@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { UPCOMING_CHANGES_USER_ENABLED_REASONS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import { and, eq } from "discourse/truth-helpers";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DModal from "discourse/ui-kit/d-modal";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
@@ -49,7 +49,7 @@ export default class AdminUserUpcomingChanges extends Component {
           class="admin-user-upcoming-changes-modal__description"
         >{{this.description}}</p>
 
-        <AdminFilterControls
+        <DFilterControls
           @array={{@model.user.upcoming_changes_stats}}
           @searchableProps={{array "humanized_name" "description"}}
           @inputPlaceholder={{i18n
@@ -129,7 +129,7 @@ export default class AdminUserUpcomingChanges extends Component {
               </tbody>
             </table>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </:body>
     </DModal>
   </template>

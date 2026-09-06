@@ -330,6 +330,12 @@ export default class GroupsFormMembershipFields extends Component {
             class="group-form-automatic-membership-automatic"
           />
 
+          <div class="control-instructions">
+            {{i18n
+              "admin.groups.manage.membership.automatic_membership_email_domains_instructions"
+            }}
+          </div>
+
           {{#if this.showAssociatedGroups}}
             <label for="automatic_membership_associated_groups">
               {{i18n

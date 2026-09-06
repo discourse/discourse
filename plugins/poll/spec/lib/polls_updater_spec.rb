@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscoursePoll::PollsUpdater do
-  def update(post, polls)
-    DiscoursePoll::PollsUpdater.update(post, polls)
-  end
-
   let(:user) { Fabricate(:user) }
 
   let(:post) { Fabricate(:post, raw: <<~RAW) }
@@ -42,7 +38,10 @@ RSpec.describe DiscoursePoll::PollsUpdater do
 
   describe "update" do
     it "does nothing when there are no changes" do
-      message = MessageBus.track_publish("/polls/#{post.topic_id}") { update(post, polls) }.first
+      message =
+        MessageBus
+          .track_publish("/polls/#{post.topic_id}") { described_class.update(post, polls) }
+          .first
 
       expect(message).to be(nil)
     end
@@ -65,7 +64,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         DiscoursePoll::Poll.toggle_status(post.user, post.id, "poll", "closed")
 
         freeze_time (SiteSetting.poll_edit_window_mins + 1).minutes.from_now
-        update(post, DiscoursePoll::PollsValidator.new(post).validate_polls)
+        described_class.update(post, DiscoursePoll::PollsValidator.new(post).validate_polls)
 
         expect(post.errors[:base].size).to equal(0)
       end
@@ -73,7 +72,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
 
     describe "deletes polls" do
       it "that were removed" do
-        update(post, {})
+        described_class.update(post, {})
 
         post.reload
 
@@ -88,7 +87,10 @@ RSpec.describe DiscoursePoll::PollsUpdater do
 
         expect(Poll.find_by(post: post)).to_not be
 
-        message = MessageBus.track_publish("/polls/#{post.topic_id}") { update(post, polls) }.first
+        message =
+          MessageBus
+            .track_publish("/polls/#{post.topic_id}") { described_class.update(post, polls) }
+            .first
 
         poll = Poll.find_by(post: post)
 
@@ -147,7 +149,9 @@ RSpec.describe DiscoursePoll::PollsUpdater do
 
           message =
             MessageBus
-              .track_publish("/polls/#{post.topic_id}") { update(post, polls_with_some_attributes) }
+              .track_publish("/polls/#{post.topic_id}") do
+                described_class.update(post, polls_with_some_attributes)
+              end
               .first
 
           poll = Poll.find_by(post: post)
@@ -177,7 +181,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
             message =
               MessageBus
                 .track_publish("/polls/#{post.topic_id}") do
-                  update(post, polls_with_some_attributes)
+                  described_class.update(post, polls_with_some_attributes)
                 end
                 .first
 
@@ -202,7 +206,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
 
             freeze_time (edit_window + 1).minutes.from_now
 
-            update(post, polls_with_some_attributes)
+            described_class.update(post, polls_with_some_attributes)
 
             poll = Poll.find_by(post: post)
 

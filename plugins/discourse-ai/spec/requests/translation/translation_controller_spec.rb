@@ -154,33 +154,58 @@ describe DiscourseAi::Translation::TranslationController do
         expect(response.parsed_body["scheduled_posts"]).to eq(2)
       end
 
-      it "returns error when all posts are already translated" do
-        post1.update!(locale: "en")
-        post2.update!(locale: "en")
-        SiteSetting.content_localization_supported_locales = "en"
-
-        post "/discourse-ai/translate/topics/#{topic.id}"
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(
-          I18n.t("discourse_ai.translation.errors.all_posts_translated"),
-        )
-      end
-
-      it "ignores posts without detected locale" do
+      it "schedules posts without a detected locale when other posts are fully translated" do
         post1.update!(locale: "en")
         post2.update!(locale: nil)
         SiteSetting.content_localization_supported_locales = "en|es"
+        Fabricate(:post_localization, post: post1, locale: "es")
 
         expect_enqueued_with(
           job: Jobs::DetectTranslatePost,
           args: {
-            post_id: post1.id,
+            post_id: post2.id,
             force: true,
           },
         ) { post "/discourse-ai/translate/topics/#{topic.id}" }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["scheduled_posts"]).to eq(1)
+      end
+
+      it "schedules the topic when all posts are translated but the title is not" do
+        topic.update!(locale: "en")
+        post1.update!(locale: "en")
+        post2.update!(locale: "en")
+        SiteSetting.content_localization_supported_locales = "en|es"
+        Fabricate(:post_localization, post: post1, locale: "es")
+        Fabricate(:post_localization, post: post2, locale: "es")
+
+        expect_enqueued_with(
+          job: Jobs::DetectTranslateTopic,
+          args: {
+            topic_id: topic.id,
+            force: true,
+          },
+        ) { post "/discourse-ai/translate/topics/#{topic.id}" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["scheduled_posts"]).to eq(0)
+      end
+
+      it "returns error when all posts are already translated" do
+        topic.update!(locale: "en")
+        post1.update!(locale: "en")
+        post2.update!(locale: "en")
+        SiteSetting.content_localization_supported_locales = "en|es"
+        Fabricate(:topic_localization, topic: topic, locale: "es")
+        Fabricate(:post_localization, post: post1, locale: "es")
+        Fabricate(:post_localization, post: post2, locale: "es")
+
+        post "/discourse-ai/translate/topics/#{topic.id}"
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_ai.translation.errors.all_posts_translated"),
+        )
       end
 
       it "ignores deleted posts" do
@@ -273,7 +298,9 @@ describe DiscourseAi::Translation::TranslationController do
       it "excludes bot posts by default" do
         bot_post = Fabricate(:post, topic: topic, user: Discourse.system_user, locale: "en")
         post1.update!(locale: "en")
+        post2.update!(locale: "en")
         SiteSetting.content_localization_supported_locales = "en|es"
+        Fabricate(:post_localization, post: post2, locale: "es")
 
         expect_enqueued_with(
           job: Jobs::DetectTranslatePost,
@@ -291,7 +318,9 @@ describe DiscourseAi::Translation::TranslationController do
         SiteSetting.ai_translation_include_bot_content = true
         bot_post = Fabricate(:post, topic: topic, user: Discourse.system_user, locale: "en")
         post1.update!(locale: "en")
+        post2.update!(locale: "en")
         SiteSetting.content_localization_supported_locales = "en|es"
+        Fabricate(:post_localization, post: post2, locale: "es")
 
         expect_enqueued_with(
           job: Jobs::DetectTranslatePost,

@@ -12,3 +12,13 @@ da:
         feed_url: URL
         discourse_category: Kategori
         discourse_tags: Tags
+        feeds:
+          edit: Rediger
+          delete: Slet
+          save: Gem
+        test:
+          title: Forhåndsvisning
+          dismiss: Afvis alle
+        status:
+          enabled: Aktiveret
+          disabled: Deaktiveret

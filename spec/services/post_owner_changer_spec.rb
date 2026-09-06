@@ -134,6 +134,39 @@ RSpec.describe PostOwnerChanger do
       expect(p4.reload.user).to eq(user_a)
     end
 
+    it "recovers the first post along with a topic deleted when its author was removed" do
+      topic # memoize before the topic is trashed and scoped out of p1.topic
+      PostDestroyer.new(editor, p1).destroy
+      p1.reload.update_columns(user_id: nil)
+
+      PostOwnerChanger.new(
+        post_ids: [p1.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
+
+      expect(topic.reload.deleted_at).to eq(nil)
+      expect(p1.reload.deleted_at).to eq(nil)
+      expect(p1.user).to eq(user_a)
+    end
+
+    it "leaves an individually deleted first post deleted when the topic is live" do
+      p1.trash!(editor)
+      p1.reload.update_columns(user_id: nil)
+
+      PostOwnerChanger.new(
+        post_ids: [p1.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
+
+      expect(topic.reload.deleted_at).to eq(nil)
+      expect(p1.reload.deleted_at).to be_present
+      expect(p1.user).to eq(user_a)
+    end
+
     it "sets 'posted' for TopicUser to true" do
       PostOwnerChanger.new(
         post_ids: [p1.id],

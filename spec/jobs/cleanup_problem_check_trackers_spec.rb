@@ -28,4 +28,26 @@ RSpec.describe Jobs::CleanupProblemCheckTrackers do
             }.by(-1)
     end
   end
+
+  context "when a tracker belongs to a check that no longer exists" do
+    before do
+      ProblemCheckTracker.create!(identifier: "removed_check")
+      AdminNotice.create!(
+        identifier: "removed_check",
+        subject: :problem,
+        priority: :low,
+        details: {
+          target: ProblemCheck::NO_TARGET,
+        },
+      )
+    end
+
+    it "deletes the orphaned tracker together with any admin notices" do
+      expect { described_class.new.execute([]) }.to change {
+        ProblemCheckTracker.where(identifier: "removed_check").count
+      }.from(1).to(0).and change {
+              AdminNotice.problem.where(identifier: "removed_check").count
+            }.from(1).to(0)
+    end
+  end
 end

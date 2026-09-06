@@ -16,8 +16,6 @@ hu:
     first_reaction:
       name: Első reakció
       description: Reagált a bejegyzésre
-      long_description: |
-        Ezt a jelvényt akkor kapja meg, amikor először reagál egy bejegyzésre. A bejegyzésekre reagálás nagyszerű módja annak, hogy a közösség tagjai tudják, hogy amit közzé tettek, érdekesek, hasznosak, jók vagy szórakoztatók voltak az Ön számára. Ossza meg a reakcióját!
   reports:
     reactions:
       title: "Reakciók"

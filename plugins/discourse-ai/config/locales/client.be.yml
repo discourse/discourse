@@ -34,6 +34,17 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "Тып"
+        error: "памылка"
+      ai_tool_approval:
+        loading: "Загрузка ..."
+        tool: "Дзеянне"
+        user: "Карыстальнік"
+        approve: "Ухваліць"
+        reject: "адхіляць"
+        approved: "Ухвалены"
+        rejected: "Адхіленыя"
       llm_selector:
         none: "Няма"
       features:
@@ -45,9 +56,27 @@ be:
           reset: "скінуць"
         search:
           name: "Пошук"
+        image_caption:
+          setting_groups:
+            settings: "Налады"
         spam:
           name: "Спам"
       translations:
+        category_scope: "катэгорыі"
+        model_progress:
+          detail:
+            columns:
+              pending: "У чаканні"
+              total: "Усяго"
+          targets:
+            post:
+              title: "Допісы"
+            topic:
+              title: "Тэмы"
+            category:
+              title: "Катэгорыі"
+            tag:
+              title: "Тэгі"
         stats:
           eta_minutes:
             one: "%{count} хвіліну"
@@ -80,6 +109,24 @@ be:
         username: "Імя карыстальніка"
         total_requests: "Усяго запытаў"
         total: "Усяго"
+      logs:
+        short_title: "Журналы"
+        apply: "Прымяніць"
+        successful: "Паспяховая"
+        failed: "Няўдалыя"
+        unknown: "Невядома"
+        when: "Калі"
+        request: "Запыт"
+        user: "Карыстальнік"
+        topic: "Тэма"
+        post: "пост"
+        actions: "Дзеянні"
+        view_details: "Падрабязнасці"
+        detail:
+          request: "Запыт"
+        retention:
+          summary_stage: "Зводка"
+          save: "Захаваць"
       ai_agent:
         name: "Назва"
         edit: "Рэдагаваць"
@@ -88,6 +135,8 @@ be:
         user: Карыстальнік
         save: "Захаваць"
         delete: "Выдаліць"
+        thinking_effort_options:
+          none: "Няма"
         response_format:
           open_modal: "Рэдагаваць"
         filters:
@@ -124,6 +173,9 @@ be:
           required: "Абавязкова"
       llms:
         display_name: "Імя"
+        vision_modes:
+          disabled:
+            title: "Адключаныя"
         save: "Захаваць"
         edit: "Рэдагаваць"
         delete: Выдаліць
@@ -135,8 +187,6 @@ be:
           title: "Далей"
         tests:
           success: "Працуе!"
-        providers:
-          google: "Google"
       ai_helper:
         context_menu:
           cancel: "Адмяніць"
@@ -146,8 +196,6 @@ be:
           cancel: "Адмяніць"
         thumbnail_suggestions:
           try_again: "Паспрабаваць яшчэ раз"
-        image_caption:
-          save_caption: "Захаваць"
       embeddings:
         save: "Захаваць"
         delete: "Выдаліць"
@@ -175,7 +223,10 @@ be:
           table:
             total_count: "агульны"
       discobot_discoveries:
-        regular_results: "тэмы"
-        tooltip:
-          actions:
-            disable: "Адключыць"
+        legacy:
+          regular_results: "тэмы"
+          tooltip:
+            actions:
+              disable: "Адключыць"
+        search_all_topics: "Усе тэмы"
+        search_messages: "Паведамленні"

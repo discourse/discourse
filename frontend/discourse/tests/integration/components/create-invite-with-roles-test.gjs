@@ -1,0 +1,510 @@
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { click, render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import CreateInviteWithRoles from "discourse/components/modal/create-invite-with-roles";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import Invite from "discourse/models/invite";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
+import { i18n } from "discourse-i18n";
+
+module("Integration | Component | CreateInviteWithRoles", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("hides the role toggle for users who can't create admin invites", async function (assert) {
+    const model = {};
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    assert
+      .dom("input[name='invite-role']")
+      .doesNotExist("role toggle is not shown");
+    await click(".advanced-mode-btn");
+    assert.true(formKit().hasField("domain"), "defaults to member link mode");
+  });
+
+  test("shows the role toggle when the user can create admin invites", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = {};
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    assert.dom("input[name='invite-role']").exists();
+    assert
+      .dom("input[name='invite-role'][value='member']")
+      .isChecked("defaults to the members tab");
+  });
+
+  test("defaults to the admins tab when the model asks for it", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = { defaultRole: "admin" };
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    assert
+      .dom("input[name='invite-role'][value='admin']")
+      .isChecked("defaults to the admins tab");
+    assert
+      .dom(".form-kit__inline-radio input[value='link']")
+      .isChecked("defaults to link delivery");
+    assert
+      .dom("[data-name='domain']")
+      .doesNotExist("hides the domain field until advanced mode is on");
+
+    await click(".advanced-mode-btn");
+
+    assert
+      .dom("[data-name='domain']")
+      .isVisible("shows the domain field in link mode");
+    assert
+      .dom("[data-name='email']")
+      .isNotVisible("does not show the email field in link mode");
+    assert
+      .dom(".save-invite")
+      .hasText(i18n("user.invited.invite_roles.create_and_copy"));
+
+    await click(".form-kit__inline-radio input[value='email']");
+
+    assert
+      .dom("[data-name='email']")
+      .isVisible("shows the email field in email mode");
+    assert
+      .dom(".save-invite")
+      .hasText(i18n("user.invited.invite_roles.create_and_send"));
+  });
+
+  test("ignores defaultRole for users who can't create admin invites", async function (assert) {
+    const model = { defaultRole: "admin" };
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".advanced-mode-btn");
+    assert.true(formKit().hasField("domain"), "stays in member mode");
+  });
+
+  test("creating an admin invite posts is_admin and shows the summary", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = { defaultRole: "admin", invites: [] };
+
+    let requestBody;
+    pretender.post("/invites", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 42,
+        invite_key: "abc123",
+        link: "http://example.com/invites/abc123",
+        email: "new-admin@example.com",
+        grants_admin: true,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    let savedEventInvite;
+    this.owner
+      .lookup("service:app-events")
+      .on("create-invite:saved", (invite) => (savedEventInvite = invite));
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".form-kit__inline-radio input[value='email']");
+    await formKit().field("email").fillIn("new-admin@example.com");
+    await click(".save-invite");
+
+    assert.strictEqual(requestBody.get("is_admin"), "true");
+    assert.strictEqual(requestBody.get("email"), "new-admin@example.com");
+
+    assert
+      .dom(".create-invite-with-roles-modal__sent-to")
+      .includesText("new-admin@example.com");
+    assert
+      .dom(".create-invite-with-roles-modal__link-share input.invite-link")
+      .hasValue("http://example.com/invites/abc123");
+
+    assert.strictEqual(model.invites.length, 1, "invite added to the list");
+    assert.strictEqual(
+      savedEventInvite?.id,
+      42,
+      "create-invite:saved app event fired"
+    );
+  });
+
+  test("creating a moderator invite posts is_moderator and shows the summary", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = { defaultRole: "admin", invites: [] };
+
+    let requestBody;
+    pretender.post("/invites", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 44,
+        invite_key: "mod123",
+        link: "http://example.com/invites/mod123",
+        email: "new-mod@example.com",
+        grants_moderator: true,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    assert
+      .dom(".create-invite-with-roles-modal__staff-role-description")
+      .hasText(i18n("user.invited.invite_roles.admin_description"));
+
+    await click("input[name='staffRole'][value='moderator']");
+
+    assert
+      .dom(".create-invite-with-roles-modal__staff-role-description")
+      .hasText(
+        i18n("user.invited.invite_roles.moderator_description"),
+        "the description tracks the selected staff role"
+      );
+
+    await click(".form-kit__inline-radio input[value='email']");
+    await formKit().field("email").fillIn("new-mod@example.com");
+    await click(".save-invite");
+
+    assert.strictEqual(requestBody.get("is_moderator"), "true");
+    assert.strictEqual(requestBody.get("is_admin"), null);
+    assert.strictEqual(requestBody.get("email"), "new-mod@example.com");
+
+    assert
+      .dom(".create-invite-with-roles-modal__sent-to")
+      .includesText("new-mod@example.com");
+  });
+
+  test("validates the admin email address", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = { defaultRole: "admin" };
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".form-kit__inline-radio input[value='email']");
+    await formKit().field("email").fillIn("not-an-email");
+    await click(".save-invite");
+
+    assert.dom(".form-kit__errors").exists("shows a validation error");
+  });
+
+  test("creating an admin invite link posts skip_email and is_admin", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = { defaultRole: "admin", invites: [] };
+
+    let requestBody;
+    pretender.post("/invites", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 47,
+        invite_key: "adm456",
+        link: "http://example.com/invites/adm456",
+        grants_admin: true,
+        max_redemptions_allowed: 1,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".advanced-mode-btn");
+    await formKit().field("domain").fillIn("example.com");
+    await click(".save-invite");
+
+    assert.strictEqual(requestBody.get("is_admin"), "true");
+    assert.strictEqual(requestBody.get("skip_email"), "true");
+    assert.strictEqual(requestBody.get("domain"), "example.com");
+    assert.strictEqual(requestBody.get("email"), null);
+
+    assert
+      .dom(".create-invite-with-roles-modal__link-share input.invite-link")
+      .hasValue("http://example.com/invites/adm456");
+  });
+
+  test("creating a member link invite posts skip_email and shows the summary", async function (assert) {
+    const model = { invites: [] };
+
+    let requestBody;
+    pretender.post("/invites", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 43,
+        invite_key: "def456",
+        link: "http://example.com/invites/def456",
+        max_redemptions_allowed: 10,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".save-invite");
+
+    assert.strictEqual(requestBody.get("skip_email"), "true");
+    assert.notStrictEqual(requestBody.get("max_redemptions_allowed"), null);
+    assert.strictEqual(requestBody.get("is_admin"), null);
+
+    assert
+      .dom(".create-invite-with-roles-modal__link-share input.invite-link")
+      .hasValue("http://example.com/invites/def456");
+  });
+
+  test("sends the topic supplied by the model, like when sharing a topic", async function (assert) {
+    const model = {
+      inviteToTopic: true,
+      topics: [{ id: 123, title: "A very interesting discussion" }],
+      topicId: 123,
+      topicTitle: "A very interesting discussion",
+    };
+
+    let requestBody;
+    pretender.post("/invites", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 46,
+        invite_key: "mno345",
+        link: "http://example.com/invites/mno345",
+        max_redemptions_allowed: 10,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".save-invite");
+
+    assert.strictEqual(requestBody.get("topic_id"), "123");
+  });
+
+  test("creating a member email invite shows the invitation sent screen", async function (assert) {
+    const model = { invites: [] };
+
+    pretender.post("/invites", () =>
+      response({
+        id: 44,
+        invite_key: "ghi789",
+        link: "http://example.com/invites/ghi789",
+        email: "someone@example.com",
+        expires_at: "2100-01-01 00:00",
+      })
+    );
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".form-kit__inline-radio input[value='email']");
+    await formKit().field("email").fillIn("someone@example.com");
+    await click(".save-invite");
+
+    assert
+      .dom(".create-invite-with-roles-modal__email-sent")
+      .includesText("someone@example.com");
+    assert
+      .dom(".create-invite-with-roles-modal__link-share")
+      .doesNotExist("no copy link UI for email invites");
+  });
+
+  test("editing an existing admin invite hides the role toggle", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const invite = Invite.create({
+      id: 45,
+      invite_key: "jkl012",
+      link: "http://example.com/invites/jkl012",
+      email: "admin@example.com",
+      grants_admin: true,
+      expires_at: "2100-01-01 00:00",
+    });
+    const model = { editing: true, invite };
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    assert
+      .dom("input[name='invite-role']")
+      .doesNotExist(
+        "the role can't be changed after creation, so it is hidden"
+      );
+    assert
+      .dom(".create-invite-with-roles-modal__staff-role-description")
+      .doesNotExist("the staff role description follows its radios");
+    assert
+      .dom(".save-invite")
+      .hasText(i18n("user.invited.invite_roles.update"));
+  });
+
+  test("plugin outlet can disable the submit button in admin mode", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = { defaultRole: "admin" };
+
+    withPluginApi((api) => {
+      api.renderInOutlet(
+        "create-invite-admin-mode",
+        <template>
+          <button
+            type="button"
+            class="test-disable-submit"
+            {{on "click" (fn @outletArgs.setSubmitDisabled true)}}
+          >disable</button>
+        </template>
+      );
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    assert.dom(".save-invite").isNotDisabled();
+
+    await click(".test-disable-submit");
+
+    assert.dom(".save-invite").isDisabled();
+  });
+
+  test("clearing the domain of an existing link invite", async function (assert) {
+    const model = {
+      editing: true,
+      invite: Invite.create({
+        id: 42,
+        invite_key: "ghi789",
+        link: "http://example.com/invites/ghi789",
+        domain: "google.com",
+        max_redemptions_allowed: 100,
+        expires_at: "2100-01-01 00:00",
+      }),
+    };
+
+    let requestBody;
+    pretender.put("/invites/42", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 42,
+        invite_key: "ghi789",
+        link: "http://example.com/invites/ghi789",
+        domain: null,
+        max_redemptions_allowed: 100,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".advanced-mode-btn");
+    await formKit().field("domain").fillIn("");
+    await click(".save-invite");
+
+    assert.strictEqual(
+      requestBody.get("domain"),
+      "",
+      "sends a blank domain so the server drops the restriction"
+    );
+    assert
+      .dom(".create-invite-with-roles-modal__summary-rows")
+      .doesNotIncludeText("google.com", "the restriction is gone");
+  });
+
+  test("editing a domain-restricted admin invite keeps the domain", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = {
+      editing: true,
+      invite: Invite.create({
+        id: 48,
+        invite_key: "adm789",
+        link: "http://example.com/invites/adm789",
+        domain: "example.com",
+        grants_admin: true,
+        max_redemptions_allowed: 1,
+        expires_at: "2100-01-01 00:00",
+      }),
+    };
+
+    let requestBody;
+    pretender.put("/invites/48", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 48,
+        invite_key: "adm789",
+        link: "http://example.com/invites/adm789",
+        domain: "example.com",
+        grants_admin: true,
+        max_redemptions_allowed: 1,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".advanced-mode-btn");
+
+    assert
+      .form()
+      .field("domain")
+      .hasValue("example.com", "the existing restriction is pre-filled");
+
+    await click(".save-invite");
+
+    assert.strictEqual(
+      requestBody.get("domain"),
+      "example.com",
+      "the restriction survives an update that doesn't touch it"
+    );
+    assert
+      .dom(".create-invite-with-roles-modal__summary-rows")
+      .includesText("example.com", "the summary still shows the restriction");
+  });
+});

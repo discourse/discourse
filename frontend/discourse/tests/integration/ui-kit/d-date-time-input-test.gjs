@@ -42,7 +42,11 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
     await fillIn(".date-picker", "2019-01-02");
     await triggerEvent(".date-picker", "change");
 
-    assert.true(this.date.isSame(moment("2019-01-02 14:45")));
+    assert.strictEqual(
+      this.date.format("YYYY-MM-DD HH:mm"),
+      "2019-01-02 14:45",
+      "it preserves the original time when changing the date"
+    );
   });
 
   test("can hide time", async function (assert) {

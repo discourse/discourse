@@ -27,12 +27,25 @@ module DiscourseAi
         # request_tokens = non-cached input (already excludes cached)
         # cache_write_tokens = newly cached (full cost)
         # cache_read_tokens = served from cache (1/10 cost)
-        add_effective(
-          request:
-            log.request_tokens.to_i + log.cache_write_tokens.to_i +
-              (log.cache_read_tokens.to_i * 0.1).to_i,
-          response: log.response_tokens.to_i,
-        )
+        request =
+          log.request_tokens.to_i + log.cache_write_tokens.to_i +
+            (log.cache_read_tokens.to_i * 0.1).to_i
+        response = log.response_tokens.to_i
+
+        request = estimate_tokens(raw_payload(log, :raw_request_payload)) if request <= 0
+        response = estimate_tokens(raw_payload(log, :raw_response_payload)) if response <= 0
+
+        add_effective(request: request, response: response)
+      end
+
+      def raw_payload(log, name)
+        log.public_send(name) if log.respond_to?(name)
+      end
+
+      def estimate_tokens(payload)
+        return 0 if payload.blank?
+
+        (payload.to_s.bytesize / 3.0).ceil
       end
 
       def add_effective(request:, response:)

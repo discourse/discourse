@@ -1,42 +1,35 @@
 # frozen_string_literal: true
 
 class FinalDestination::HTTP < Net::HTTP
+  # Ruby's Happy Eyeballs implementation will try every IP address at 250ms intervals.
+  # Limit the total to avoid DoS via a high-ip-count DNS response.
+  MAX_ADDRESSES_PER_FAMILY = 5
+
   def connect
     raise ArgumentError.new("address cannot be nil or empty") if @address.blank?
-
-    original_open_timeout = @open_timeout
     return super if @ipaddr
 
-    timeout_at = current_time + @open_timeout
-
-    # This iteration through addresses would normally happen in Socket#tcp
-    # We do it here because we're tightly controlling addresses rather than
-    # handing Socket#tcp a hostname
     ips = FinalDestination::SSRFDetector.lookup_and_filter_ips(@address, timeout: @connect_timeout)
 
-    ips.each_with_index do |ip, index|
-      debug "[FinalDestination] Attempting connection to #{ip}..."
-      self.ipaddr = ip
-
-      remaining_time = timeout_at - current_time
-      if remaining_time <= 0
-        raise Net::OpenTimeout.new("Operation timed out - FinalDestination::HTTP")
-      end
-
-      @open_timeout = remaining_time
+    if proxy?
+      self.ipaddr = ips.first
       return super
-    rescue OpenSSL::SSL::SSLError, SystemCallError, Net::OpenTimeout => e
-      debug "[FinalDestination] Error connecting to #{ip}... #{e.message}"
-      was_last_attempt = index == ips.length - 1
-      raise if was_last_attempt
     end
+
+    @final_destination_token = FinalDestination::Connector.encode(@address, capped_addresses(ips))
+    super
   ensure
-    @open_timeout = original_open_timeout
+    @final_destination_token = nil
+  end
+
+  def conn_address
+    @final_destination_token || super
   end
 
   private
 
-  def current_time
-    Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  def capped_addresses(ips)
+    ipv6, ipv4 = ips.partition { |ip| ip.include?(":") }
+    ipv6.first(MAX_ADDRESSES_PER_FAMILY) + ipv4.first(MAX_ADDRESSES_PER_FAMILY)
   end
 end

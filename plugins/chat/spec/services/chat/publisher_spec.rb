@@ -283,6 +283,41 @@ describe Chat::Publisher do
         ).to eq(false)
       end
 
+      it "allows anonymous clients when anonymous public chat access is enabled" do
+        SiteSetting.chat_allowed_groups =
+          "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            described_class.publish_new!(channel, message_1, staged_id)
+          end
+
+        expect(messages.first.group_ids).to eq(nil)
+        expect(messages.first.user_ids).to eq(nil)
+        expect(
+          MessageBus::Client.new(client_id: "anonymous", message_bus: MessageBus).allowed?(
+            messages.first,
+          ),
+        ).to eq(true)
+      end
+
+      it "does not allow anonymous clients when public channels are disabled" do
+        SiteSetting.chat_allowed_groups =
+          "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        SiteSetting.enable_public_channels = false
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            described_class.publish_new!(channel, message_1, staged_id)
+          end
+
+        expect(
+          MessageBus::Client.new(client_id: "anonymous", message_bus: MessageBus).allowed?(
+            messages.first,
+          ),
+        ).to eq(false)
+      end
+
       it "publishes to trust level 0 when everyone is mapped to logged_in_users" do
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true

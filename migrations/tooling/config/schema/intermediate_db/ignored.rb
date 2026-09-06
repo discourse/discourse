@@ -3,12 +3,13 @@
 Migrations::Tooling::Schema.ignored do
   # Plugins — all their tables and columns on core tables are auto-ignored via manifest
   plugin :automation, "Not migrated yet"
+  plugin :boards, "Not migrated yet"
   plugin :chat, "Not migrated yet"
   plugin :discourse_adplugin, "Not migrated yet"
   plugin :discourse_ai, "Not migrated yet"
   plugin :discourse_assign, "Not migrated yet"
-  plugin :discourse_calendar, "Not migrated yet"
   plugin :discourse_data_explorer, "Not migrated yet"
+  plugin :discourse_events, "Not migrated yet"
   plugin :discourse_gamification, "Not migrated yet"
   plugin :discourse_github, "Not migrated yet"
   plugin :discourse_oauth2_basic, "Not migrated yet"
@@ -150,10 +151,15 @@ Migrations::Tooling::Schema.ignored do
   tables :external_upload_stubs, :optimized_images, :optimized_videos, :upload_references, :uploads
 
   tables :admin_dashboard_reports,
+         :admin_dashboard_sections,
          :browser_pageview_country_daily_rollups,
-         :browser_pageview_referrer_daily_rollups
+         :browser_pageview_entry_url_daily_rollups,
+         :browser_pageview_referrer_daily_rollups,
+         :category_activity_daily_rollups,
+         :user_visit_daily_rollups
 
-  tables :admin_notices,
+  tables :access_control_lists,
+         :admin_notices,
          :api_key_scopes,
          :api_keys,
          :application_requests,
@@ -164,14 +170,18 @@ Migrations::Tooling::Schema.ignored do
          :backup_metadata,
          :badge_types,
          :bookmarks,
+         :browser_pageview_crawler_daily_rollups,
          :browser_pageview_event_scores,
          :browser_pageview_events,
+         :browser_pageview_session_engagement_daily_rollups,
+         :browser_pageview_session_engagements,
          :custom_emojis,
          :developers,
          :directory_columns,
          :directory_items,
          :do_not_disturb_timings,
          :email_change_requests,
+         :email_login_codes,
          :email_logs,
          :email_tokens,
          :embeddable_host_tags,
@@ -184,6 +194,8 @@ Migrations::Tooling::Schema.ignored do
          :invites,
          :javascript_caches,
          :message_bus,
+         :nested_hot_post_scores,
+         :nested_hot_score_snapshots,
          :nested_topics,
          :nested_view_post_stats,
          :notifications,
@@ -203,9 +215,12 @@ Migrations::Tooling::Schema.ignored do
          :search_logs,
          :shelved_notifications,
          :sidebar_section_links,
+         :sidebar_section_localizations,
          :sidebar_sections,
+         :sidebar_url_localizations,
          :sidebar_urls,
          :site_setting_groups,
+         :site_setting_localizations,
          :sitemaps,
          :skipped_email_logs,
          :stylesheet_cache,
@@ -215,6 +230,12 @@ Migrations::Tooling::Schema.ignored do
          :translation_overrides,
          :unsubscribe_keys,
          :upcoming_change_events,
+         :voice_co_presences,
+         :voice_invites,
+         :voice_recordings,
+         :voice_room_memberships,
+         :voice_rooms,
+         :voice_sessions,
          :watched_word_groups,
          :watched_words,
          :web_crawler_requests

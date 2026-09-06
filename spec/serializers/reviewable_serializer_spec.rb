@@ -67,6 +67,17 @@ RSpec.describe ReviewableSerializer do
       json = described_class.new(reviewable_user, scope: Guardian.new(admin), root: nil).as_json
       expect(json[:target_created_by_id]).to eq(reviewable_user.target.id)
     end
+
+    it "includes FlaggedUserSerializer fields when the flagger is also the post author" do
+      post = Fabricate(:post, user: admin)
+      reviewable = PostActionCreator.off_topic(admin, post).reviewable
+
+      json = ReviewableFlaggedPostSerializer.new(reviewable, scope: Guardian.new(admin)).as_json
+      target_user = json["users"].find { |u| u[:id] == admin.id }
+
+      expect(target_user).to be_present
+      expect(target_user).to include(:created_at, :post_count, :trust_level)
+    end
   end
 
   describe "target_deleted_by" do

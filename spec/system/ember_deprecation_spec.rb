@@ -104,4 +104,40 @@ describe "JS Deprecation Handling" do
 
     expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation")
   end
+
+  it "shows warnings for Discourse and Ember deprecations triggered before the handler is set up" do
+    sign_in Fabricate(:admin)
+
+    SiteSetting.warn_critical_js_deprecations = true
+
+    t = Fabricate(:theme, name: "Theme With Early Deprecations")
+    t.set_field(
+      target: :extra_js,
+      type: :js,
+      name: "discourse/api-initializers/trigger-early-deprecations.js",
+      value: <<~JS,
+        import { deprecate } from "@ember/debug";
+        import { apiInitializer } from "discourse/lib/api";
+        import deprecated from "discourse/lib/deprecated";
+
+        // Both fire during boot, before the admin-banner handler exists.
+        deprecated("Fake deprecation message", { id: "fake.deprecation1" });
+        deprecate("Fake ember deprecation message", false, {
+          id: "fake.deprecation2",
+          for: "discourse",
+          since: "3.4.0",
+          until: "3.5.0",
+        });
+
+        export default apiInitializer(() => {});
+      JS
+    )
+    t.save!
+    SiteSetting.default_theme_id = t.id
+
+    visit "/latest"
+
+    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation1")
+    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation2")
+  end
 end

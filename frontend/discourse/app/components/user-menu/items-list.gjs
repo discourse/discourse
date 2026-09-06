@@ -5,8 +5,10 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserMenuItemsListEmptyState from "discourse/components/user-menu/items-list-empty-state";
 import MenuItem from "discourse/components/user-menu/menu-item";
 import lazyHash from "discourse/helpers/lazy-hash";
+import deprecated from "discourse/lib/deprecated";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -35,12 +37,16 @@ export default class UserMenuItemsList extends Component {
   get dismissTitle() {}
 
   get emptyStateComponent() {
-    return "user-menu/items-list-empty-state";
+    return UserMenuItemsListEmptyState;
   }
 
   get resolvedEmptyStateComponent() {
     const component = this.emptyStateComponent;
     if (typeof component === "string") {
+      deprecated(
+        `user-menu emptyStateComponent must be a component class (${this.constructor.name} returned the string ${JSON.stringify(component)})`,
+        { id: "discourse.user-menu.empty-state-component-class" }
+      );
       return getOwner(this).resolveRegistration(`component:${component}`);
     } else {
       return component;

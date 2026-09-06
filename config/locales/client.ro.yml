@@ -7,19 +7,52 @@
 ro:
   js:
     user_api_key:
+      title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"
       deny: "Anulează"
+      logged_in_as: "Autentificat ca"
+      permissions_header: 'Aceasta va permite „%{application_name}” să:'
+      redirect_warning: "Autorizarea vă va redirecționa către"
+      expiry_notice: 'Această cheie pentru „%{application_name}” va expira pe %{expires_at}.'
+      copy_key: "Copiază cheia"
       copied: "Copiat!"
+      otp_description: 'Doriți să permiteți „%{application_name}” să acceseze acest site?'
       no_trust_level: "Ne pare rău, nu ai nivelul de încredere necesar pentru a accesa API utilizator"
       generic_error: "Ne pare rău, nu putem să emitem chei API utilizator: această funcționalitate este probabil dezactivată din administrarea site-ului"
       device:
+        title: "Autorizați o aplicație"
+        enter_code: "Introduceți codul afișat în aplicație."
         code: "Cod"
+        enter_full_code: "Introduceți codul complet pentru a autoriza această aplicație."
         continue: "Continuă"
+        invalid_code: "Ne pare rău, codul este invalid. Verificați codul și încercați din nou."
+        expired_code: "Ne pare rău, codul a expirat sau a fost deja utilizat. Solicitați un cod nou din aplicație și încercați din nou."
+        authorize_title: 'Autorizează „%{application_name}”'
+        expiry_notice: "Expiră: %{expires_at}"
+        no_expiry_warning: "Această cheie nu va expira automat. Autorizați-o doar dacă aveți încredere deplină în aplicație."
+        unregistered_app_warning: "Această aplicație nu este înregistrată sau verificată de acest site. Continuați doar dacă aveți încredere deplină în sursa codului."
+        complete: "Autorizare completă"
+        denied: "Autorizație refuzată"
+        return_to_cli: "Acum puteți reveni la terminal sau la aplicație."
     blocks:
       ghost:
         status: "Stare"
+        conditions: "Condiții"
+        arguments: "Argumente"
+        container_args: "Argumente container"
+        in_location: "în"
         hidden: "ascuns"
+        not_registered: "neînregistrat"
+        no_visible_children: "fără copii vizibili"
         failed: "eșuată"
+      ghost_reasons:
+        optional_missing_hint: "Acest bloc opțional nu este redat deoarece nu este înregistrat."
+        no_visible_children_hint: "Acest bloc container nu este redat deoarece niciunul dintre copiii săi nu este vizibil."
+        condition_failed_hint: "Acest bloc nu este redat deoarece condițiile sale au eșuat."
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Elimină"
     number:
       format:
         separator: "."
@@ -407,6 +440,9 @@ ro:
     age: "Vârsta"
     joined: "Înregistrat"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mod avansat"
+      simple_mode: "Mod simplu"
     show_more: "arată mai mult"
     show_help: "Opțiuni"
     links: "Legături"
@@ -457,6 +493,23 @@ ro:
     admin_onboarding_banner:
       start_posting:
         back: "Înapoi"
+    design_wizard:
+      back: "Înapoi"
+      next: "Următorul"
+      sections:
+        theme: "Temă"
+        fonts: "Fonturi"
+        homepage: "Pagina principală"
+        search: "Caută"
+      colors:
+        light: "Luminos"
+        dark: "Întunecat"
+      fonts:
+        base_font: "Font de bază"
+        heading_font: "Font titlu"
+      homepage:
+        topics: "Discuții"
+        categories: "Categorii"
     about:
       edit: "Editează această pagină"
       simple_title: "Despre"
@@ -676,10 +729,6 @@ ro:
         optional: "opțional"
       claim_help:
         optional: "Poți revendica acest element pentru a împiedica alte persoane să-l revizuiască."
-        required: "Trebuie să revendici elementele înainte de a le putea revizui."
-        claimed_by_you: "Ai revendicat acest element și îl poți revizui."
-        claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
-        automatically_claimed_by: "Acest element este revizuit momentan de <b>%{username}</b>."
       claim:
         title: "Revendică acest subiect"
       unclaim:
@@ -717,6 +766,7 @@ ro:
         email: "Email"
         name: "Nume"
         fields: "Câmpuri"
+        penalty_forever: "Pentru totdeanua"
         reject_reason: "Motiv"
         scrubbed_reason: "Motiv"
         scrubbed_reject_reason: "Motiv respingere utilizator"
@@ -1086,7 +1136,6 @@ ro:
             from_alias: "De la alias"
         membership:
           title: Calitate de membru
-          access: Acces
         categories:
           title: Categorii
           long_title: "Notificări implicite pentru categorii"
@@ -1118,7 +1167,6 @@ ro:
         title: "Permisiuni"
         none: "Nu există categorii asociate acestui grup."
         description: "Membrii acestui grup pot accesa aceste categorii"
-      public_admission: "Permite utilizatorilor să se alăture grupului în mod liber (necesită ca grupul să fie vizibil)"
       public_exit: "Permite utilizatorilor să părăsească grupul în mod liber."
       empty:
         posts: "Nu există postări ale membrilor acestui grup"
@@ -1134,7 +1182,6 @@ ro:
       request: "Cere"
       message: "Mesaj"
       confirm_leave: "Sigur vrei să părăsești acest grup?"
-      allow_membership_requests: "Permite utilizatorilor să trimită cereri de înscriere către proprietarii grupului (necesită ca grupul să fie vizibil public)"
       membership_request_template: "Șablonul personalizat pentru a fi afișat utilizatorilor atunci când trimiți o solicitare de membru"
       membership_request:
         submit: "Trimite cerere"
@@ -1359,6 +1406,9 @@ ro:
       notifications: "Notificări"
       statistics: "Statistici"
       desktop_notifications:
+        push_level:
+          none: "Dezactivate"
+          all: "Activate"
         not_supported: "Acest browser nu suportă notificări. Ne pare rău."
         perm_denied_expl: "Ai blocat notificările. Activează notificările din setările browser-ului."
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
@@ -1399,7 +1449,6 @@ ro:
       external_links_in_new_tab: "Deschide toate legăturile externe într-o filă nouă"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
       enable_smart_lists: "Activează listele inteligente atunci când scrii în compozitor"
-      enable_defer: "Activează marcarea subiectelor ca necitite"
       enable_markdown_monospace_font: "Folosește fontul monospace în modul Markdown al compozitorului"
       experimental_sidebar:
         options: "Opțiuni"
@@ -1664,7 +1713,7 @@ ro:
         default: "(implicit)"
         any: "oricare"
       homepage:
-        default: "(implicit)"
+        default: "Implicit"
       password_confirmation:
         title: "Confirmă parola"
       invite_code:
@@ -1691,6 +1740,8 @@ ro:
         title: "Titlul paginii în fundal afișează numărul de:"
         notifications: "Notificări noi"
         contextual: "Conținut nou al paginii"
+      send_shortcut:
+        enter: "Enter"
       like_notification_frequency:
         title: "Notificare atunci când se primește apreciere"
         always: "Întotdeauna"
@@ -1818,6 +1869,27 @@ ro:
           create_link_and_send_email: "Creează legătură și trimite email"
           invite_saved_without_sending_email: "Invitația a fost salvată. Copiază legătura de mai jos și partajeaz-o pentru a acorda acces instantaneu la acest site."
           invite_saved_with_sending_email: "Emailul de invitație a fost trimis. De asemenea, poți copia legătura de mai jos și o poți partaja pentru a acorda instantaneu acces la acest site."
+        invite_roles:
+          member_title: "Invită membri"
+          member_tab: "Membri"
+          admin_tab: "Echipa"
+          staff_role_admin: "Administrator"
+          staff_role_moderator: "Moderator"
+          admin_email_label: "Adresă email"
+          email_placeholder: "nume@exemplu.comb"
+          invite_by_email: "E-mail"
+          create_and_send: "Trimite"
+          create_and_copy: "Copiază legătură"
+          update: "Actualizează"
+          summary:
+            role_member: "Membru"
+            role_admin: "Administrator"
+            role_moderator: "Moderator"
+            method: "Partajare"
+            method_email: "E-mail"
+            topic: "Subiect"
+            groups: "Grupuri"
+            edit: "Editează"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
@@ -2019,7 +2091,6 @@ ro:
     created: "Creat"
     created_lowercase: "creat"
     trust_level: "Nivel de încredere"
-    search_hint: "nume de utilizator, e-mail sau adresă IP"
     create_account:
       header_title: "Bun venit!"
       disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
@@ -2058,6 +2129,13 @@ ro:
       confirm_title: Continuă la %{site_name}
       logging_in_as: Autentificare ca %{email}
       confirm_button: Finalizează autentificarea
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuă"
+      verify_button: "Continuă"
+      signup_title: "Creează-ți contul"
+      account_ready_continue: "Continuă"
+      username_label: "Nume utilizator"
     login:
       header_title: "Bine ai revenit"
       title: "Autentificare"
@@ -2163,11 +2241,15 @@ ro:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      tab: "Filă"
+      delete: "Șterge"
+      home: "Acasă"
     category_row:
       subcategory_count:
         one: "+%{count} subcategorie"
         few: "+%{count} subcategorii"
         other: "+%{count} de subcategorii"
+      subcategories: "+ Subcategorii"
     timezone_input:
       ambiguous_ist: "IST este ambiguu, te rugăm să selectezi un fus orar specific (de exemplu: Asia/Kolkata)"
     select_kit:
@@ -2194,6 +2276,8 @@ ro:
       default: Emojii personalizate
     filter_input:
       clear: "Elimină filtrul"
+    filter_controls:
+      reset: "Resetare"
     composer:
       emoji: "Emoji :)"
       options: "Opțiuni"
@@ -2250,6 +2334,7 @@ ro:
       draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
       title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
+      title_placeholder_redesign: "Titlu"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -2263,6 +2348,8 @@ ro:
       saved_draft: "Postează schița în curs. Atinge pentru a relua."
       switch_to_markdown: "Comută la editorul standard Markdown (%{keyboardShortcut})"
       switch_to_rich_text: "Comută la noul editor de text îmbogățit (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Comută la editorul standard Markdown"
+      switch_to_rich_text_no_shortcut: "Comută la noul editor de text îmbogățit"
       quote_post_title: "Citează întreaga postare"
       bold_label: "B"
       bold_title: "Aldin"
@@ -2270,7 +2357,6 @@ ro:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "text italic"
-      heading_title: "Titluri"
       heading_level_n: "Titlu %{levelNumber}"
       heading_level_n_title: "Titlu %{levelNumber}"
       heading_level_paragraph: "Paragraf"
@@ -2458,10 +2544,10 @@ ro:
         search_field: "Câmp de căutare în antetul site-ului"
         search_icon: "Pictogramă de căutare lângă avatar profil"
       type:
-        default: "Subiecte/postări"
+        default: "Articole"
         users: "Utilizatori"
         categories: "Categorii"
-        categories_and_tags: "Categorii/etichete"
+        categories_and_tags: "Categorii și etichete"
       context:
         user: "Caută postări după @%{username}"
         category: "Caută în categoria #%{category} "
@@ -2598,6 +2684,7 @@ ro:
       sort:
         label: "Sortează după"
         top: "Top"
+        hot: "Cald"
         new: "Nou"
       load_more_children:
         one: "Încă un răspuns"
@@ -2612,6 +2699,9 @@ ro:
       deleted_post_placeholder: "[șters]"
       ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Fixat"
+    share_target:
+      new_topic: "Subiect nou"
+      new_message: "Mesaj nou"
     topic:
       filter_to:
         one: "O postare în subiect"
@@ -2663,6 +2753,7 @@ ro:
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată legăturile din acest subiect"
+      sr_read: "citire"
       reply_count_link:
         one: "%{count} răspuns, sari la prima postare"
         few: "%{count} răspunsuri, sari la prima postare"
@@ -2946,7 +3037,6 @@ ro:
       reply_as_new_private_message: "Răspunde cu un mesaj nou aceluiași destinatar"
       continue_discussion: "În continuarea discuției de la %{postLink}:"
       follow_quote: "mergi la postarea citată"
-      show_full: "Arată postarea în întregime"
       collapse: "restrânge"
       load_more_replies: "încarcă mai multe răspunsuri"
       sr_load_more_replies: "Încarcă mai multe răspunsuri încorporate"
@@ -2996,8 +3086,9 @@ ro:
           few: "Vezi %{count} locale traduse"
           other: "Vezi %{count} de locale traduse"
         modal:
-          title: "Traduceri pentru postare"
+          title: "Traduceri"
           confirm_delete: "Sigur vrei să ștergi traducerile pentru „%{languageCode}”?"
+          discard_language_change: "Renunță la modificare"
         success: "Traducerile au fost actualizate cu succes"
         edit_warning:
           action_original: "Editează postarea originală"
@@ -3174,7 +3265,6 @@ ro:
       type_settings_schema:
         site_settings: "Setări site"
       unsaved_changes: "Ai modificări nesalvate"
-      slug_placeholder: "(Opțional) cuvinte-punctate pentru url"
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
       validations:
@@ -3491,7 +3581,6 @@ ro:
     invalid_video_url: Acest videoclip nu poate fi redat deoarece adresa URL este nevalidă sau indisponibilă.
     keyboard_shortcuts_help:
       search_placeholder: "Caută o scurtătură după descriere sau combinație de taste"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Scurtături de tastatură"
       search_ctrl_f_tip: "Pentru a căuta pe întregul forum, apasă pe <kbd>/</kbd>"
       description_header: "Descriere"
@@ -3580,7 +3669,6 @@ ro:
       selector_no_tags: "fără etichete"
       selector_remove_filter: "șterge filtru"
       tags: "Etichete"
-      choose_for_topic: "etichete opționale"
       add_synonyms: "Adaugă"
       delete_tag: "Șterge etichetă"
       delete_confirm:
@@ -3703,6 +3791,8 @@ ro:
           save: "Salvează"
           delete: "Șterge"
           delete_public_confirm: "Această secțiune este vizibilă pentru toată lumea, sigur vrei să o ștergi?"
+          localizations:
+            remove_language: "Elimină"
           links:
             add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"
@@ -3881,9 +3971,15 @@ ro:
           never: "niciodată"
       reports:
         sidebar_title: "Rapoarte"
+        all_groups: "Toate grupurile"
         group_traffic: "Trafic"
         group_members: "Membri"
         group_other: "Altele"
+        related_items:
+          users:
+            title: "Utilizatori"
+          labels:
+            user: "Utilizator"
       config_sections:
         account:
           title: "Cont"
@@ -3995,6 +4091,9 @@ ro:
             email: "E-mail"
             manifest_icon:
               help_text: "Dimensiunea recomandată este de 512 x 512 pixeli."
+            og_image_preview:
+              generate: "Generare"
+              topic_id_label: "ID subiect"
         fonts:
           title: "Fonturi"
           header_description: "Configurează fonturile utilizate pe întregul tău site, inclusiv fontul de bază, fontul pentru titlu și dimensiunea implicită a textului"
@@ -4051,7 +4150,6 @@ ro:
           header_description: "Configurează setările de căutare, inclusiv înregistrarea în jurnal și tokenizarea pentru limbile chineză și japoneză"
         search_everything:
           title: "Căutare"
-          header_description: "Găsește orice în interfața de administrare aici. Poți filtra rezultatele mai jos, iar preferințele tale vor fi memorate. Pentru a deschide această căutare oriunde în interfața de administrare, apasă %{shortcutHTML}."
         security:
           title: "Securitate"
           header_description: "Configurează setările de securitate, inclusiv autentificarea cu doi factori, privilegiile de moderator și politicile de securitate a conținutului"
@@ -4112,6 +4210,20 @@ ro:
               title: "Postări și subiecte"
             stats_and_thresholds:
               title: "Statistici și praguri"
+        category_management:
+          tabs:
+            settings: "Setări"
+          types:
+            all:
+              title: "Toate categoriile"
+          table:
+            category: "Categorie"
+            visibility: "Vizibilitate"
+            topics: "Discuții"
+          visibility:
+            public: "Public"
+          visibility_filter:
+            all: "Toate categoriile"
         permalinks:
           title: "Legături permanente"
         user_defaults:
@@ -4213,16 +4325,28 @@ ro:
       new_features:
         title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
+      site_traffic_explorer:
+        metric_information: "Despre %{metric}"
+        remove_filter_value: "Înlătură %{value}"
+        clear_all: "Șterge tot"
+        apply: "Aplică"
+        view_more: "Vezi mai multe"
+        cards:
+          pages: "Pagini"
+          visitors: "Vizitatori"
+        filters:
+          ip: "Adresă IP"
+        series:
+          anonymous_human: "Anonimi"
       dashboard:
         title: "Panou de control"
         version: "Versiune"
         up_to_date: "Ești la zi!"
-        critical_available: "O actualizare importantă este disponibilă."
         updates_available: "Sunt disponibile actualizări."
         no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."
         installed_version: "Instalată"
-        latest_version: "Ultima"
+        github: "GitHub"
         dismiss_notice: "Ignoră"
         new_features:
           title: "Ce este nou?"
@@ -4261,8 +4385,9 @@ ro:
               posts: "Articole"
               share: "Partajează"
             whos_posting:
-              all_categories: "Toate categoriile"
               staff: "Echipa"
+              modal:
+                apply: "Salvează"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nou"
@@ -4275,7 +4400,11 @@ ro:
             table:
               searches: "Căutări"
               status: "Stare"
+          system:
+            title: "Sistem"
+            status: "Stare"
         reports_section:
+          header_action: "Gestionează"
           add: "Adaugă raport"
           remove: "Elimină raportul"
           no_data: "Nu există date de afișat"
@@ -4323,6 +4452,15 @@ ro:
           monthly: Lunar
           weekly: Săptămânal
           groups: "Toate grupurile"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} utilizator"
+              few: "%{count} de utilizatori"
+              other: "%{count} utilizatori"
+            posts_count:
+              one: "o postare"
+              few: "%{count} postări"
+              other: "%{count} de postări"
           sort_button: "Sortează după %{column}"
           sort_ascending: "crescător"
           sort_descending: "descrescător"
@@ -5239,6 +5377,12 @@ ro:
         show_emails: "Arată emailuri"
         hide_emails: "Ascunde emailuri"
         bulk_actions:
+          select_all: "Selectează tot"
+          clear_all: "Șterge tot"
+          suspend:
+            confirmation_modal:
+              close: "Închide"
+              confirm: "Suspendă"
           delete:
             confirmation_modal:
               close: "Închide sondajul"
@@ -5250,6 +5394,8 @@ ro:
           staff: "Membrii echipei"
           suspended: "Suspendați"
           staged: "Pus în scenă"
+        activation_filter:
+          all: "Toți utilizatorii"
         approved: "Aprobați?"
         titles:
           active: "Utilizatori activi"
@@ -5664,10 +5810,15 @@ ro:
         choose_files: "Alege fișiere"
         name: "Nume"
         group: "Grup"
+        all_groups: "Toate grupurile"
         created_by: "Creat de"
         image: "Imagine"
         delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"
         settings: "Setări"
+        export: "Exportă"
+        import: "Importă"
+        import_category:
+          new: "Nou"
       embedding:
         get_started: "Dacă dorești să încorporezi Discourse pe un alt website, începe prin a-i adăuga gazda."
         delete: "Șterge"

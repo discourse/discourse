@@ -32,6 +32,12 @@ class ChatSetupInit {
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     withPluginApi((api) => {
+      api.registerReviewableComponent(
+        "ReviewableChatMessage",
+        async () =>
+          (await import("../components/reviewable/chat-message")).default
+      );
+
       api.addAboutPageActivity("chat_messages", (periods) => {
         const count = periods["7_days"];
         if (count) {
@@ -48,6 +54,15 @@ class ChatSetupInit {
       });
 
       if (!this.chatService.userCanChat) {
+        // include chat elements for anons (except header icon)
+        if (
+          this.chatService.anonymousUserCanViewPublicChat &&
+          !EmbedMode.enabled
+        ) {
+          document.body.classList.add("chat-enabled");
+          api.addCardClickListenerSelector(".chat-drawer-outlet");
+        }
+
         return;
       }
 

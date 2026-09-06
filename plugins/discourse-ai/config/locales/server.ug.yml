@@ -18,6 +18,8 @@ ug:
     spam_detection:
       logging_subject: "ئەخلەت ئۇچۇر بايقاش"
     ai_bot:
+      read_post:
+        unknown_post: "يازما"
       agents:
         titles_generator:
           name: "ماۋزۇ ھاسىللىغۇچ"
@@ -57,6 +59,8 @@ ug:
         github_file_content: "GitHub ھۆججەت مەزمۇنى"
         random_picker: "ئىختىيارىي تاللىغۇچ"
         categories: "سەھىپە تىزىمىنى كۆرسەت"
+        suspend_user: "ئىشلەتكۈچىنى توختات"
+        silence_user: "ئىشلەتكۈچىنى ئۈنسىزلە"
         edit_post: "يازما تەھرىر"
         search: "ئىزدە"
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"
@@ -72,6 +76,7 @@ ug:
         researcher_dry_run: "تەتقىقات تەييارلاش"
       tool_help:
         delete_topic: "تېما ئۆچۈرىدۇ"
+        create_category: "يېڭى سەھىپە قۇرىدۇ"
         search_settings: "بېكەت تەڭشىكىنى ئىزدەيدۇ"
       tool_description:
         dall_e: "%{prompt}"
@@ -85,6 +90,8 @@ ug:
           one: "%{count} بەلگە تېپىلدى"
           other: "%{count} بەلگە تېپىلدى"
         schema: "%{tables}"
+      flag_post:
+        score_reason: "سۈنئىي ئەقىل ماشىنا ئادىمى بۇ يازمىغا بەلگە سالدى."
       close_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
@@ -98,10 +105,13 @@ ug:
       delete_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "تېما تېپىلمىدى."
       edit_category:
+        errors:
+          not_found: "سەھىپە تېپىلمىدى."
+      change_topic_category:
         errors:
           not_found: "تېما تېپىلمىدى."
           category_not_found: "سەھىپە تېپىلمىدى."
@@ -117,6 +127,10 @@ ug:
       assign:
         errors:
           not_found: "تېما تېپىلمىدى."
+      add_reviewable_note:
+        errors:
+          not_allowed: "تەكشۈرۈش ئۆچىرىتىنى زىيارەت قىلىشىڭىزغا يول قويۇلمىغان"
+          not_found: "تەكشۈرۈش ئۆچرىتى تۈرى تېپىلمىدى"
     reviewables:
       ai_tool_action:
         approve:

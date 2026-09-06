@@ -37,9 +37,9 @@ export default class TopicTimerInfo extends Component {
     }
   }
 
-  @computed
+  @computed("currentUser.canSetTopicTimer")
   get canModifyTimer() {
-    return this.currentUser && this.currentUser.get("canManageTopic");
+    return this.currentUser?.get("canSetTopicTimer");
   }
 
   @computed("canModifyTimer", "removeTopicTimer")

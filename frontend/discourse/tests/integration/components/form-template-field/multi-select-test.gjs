@@ -1,9 +1,8 @@
-import { render } from "@ember/test-helpers";
+import { findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MultiSelect from "discourse/components/form-template-field/multi-select";
 import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
@@ -29,7 +28,7 @@ module(
         .dom(".form-template-field__multi-select")
         .exists("a multiselect component exists");
 
-      const dropdown = queryAll(
+      const dropdown = findAll(
         ".form-template-field__multi-select option:not(.form-template-field__multi-select-placeholder)"
       );
       assert.strictEqual(dropdown.length, 3, "it has 3 choices");

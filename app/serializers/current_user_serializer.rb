@@ -24,6 +24,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_upload_avatar,
              :can_edit,
              :can_invite_to_forum,
+             :can_create_admin_invite,
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
@@ -53,6 +54,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :flair_group_id,
              :can_create_topic,
+             :can_set_topic_timer,
              :can_create_category,
              :can_create_group,
              :link_posting_access,
@@ -85,7 +87,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :is_impersonating,
              :impersonation_expires_at,
              :can_change_post_owner,
-             :show_site_owner_onboarding
+             :show_site_owner_onboarding,
+             :can_run_design_wizard
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -145,6 +148,10 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_create_topic?(nil)
   end
 
+  def can_set_topic_timer
+    scope.can_set_topic_timer?
+  end
+
   def can_create_category
     true
   end
@@ -167,6 +174,18 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_messages
     scope.can_send_private_messages?
+  end
+
+  # The wizard only offers the core themes and rewrites the site's design in one
+  # pass, so it stops being useful once a site has been customized past what it
+  # covers.
+  def include_can_run_design_wizard?
+    object.admin? && Theme::CORE_THEMES.value?(SiteSetting.default_theme_id) &&
+      !Theme.where.not(id: Theme::CORE_THEMES.values).exists?
+  end
+
+  def can_run_design_wizard
+    true
   end
 
   def include_show_site_owner_onboarding?
@@ -195,7 +214,7 @@ class CurrentUserSerializer < BasicUserSerializer
     last_visited = object.custom_fields["last_visited_upcoming_changes_at"]
     return false if last_visited.blank? && object.created_at < Discourse.site_creation_date + 1.hour
     cutoff = last_visited.present? ? Time.zone.parse(last_visited) : object.created_at
-    UpcomingChangeEvent.added.where("created_at > ?", cutoff).exists?
+    UpcomingChangeEvent.added.not_backfilled.where("created_at > ?", cutoff).exists?
   end
 
   def can_post_anonymously
@@ -208,7 +227,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_delete_all_posts_and_topics
-    object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    scope.can_delete_all_posts_and_topics?
   end
 
   def can_upload_avatar
@@ -229,6 +248,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_invite_to_forum?
     scope.can_invite_to_forum?
+  end
+
+  def can_create_admin_invite
+    true
+  end
+
+  def include_can_create_admin_invite?
+    scope.can_create_admin_invite?
   end
 
   def no_password

@@ -264,6 +264,32 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "log_update_site_setting_localizations" do
+    it "raises an error when params are invalid" do
+      expect {
+        logger.log_update_site_setting_localizations(locale: nil, setting_names: ["title"])
+      }.to raise_error(Discourse::InvalidParameters)
+      expect {
+        logger.log_update_site_setting_localizations(locale: "ja", setting_names: [])
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a custom staff UserHistory record" do
+      log_record =
+        logger.log_update_site_setting_localizations(
+          locale: "ja",
+          setting_names: %w[title site_description title],
+        )
+
+      aggregate_failures do
+        expect(log_record.action).to eq(UserHistory.actions[:custom_staff])
+        expect(log_record.custom_type).to eq("update_site_setting_localizations")
+        expect(log_record.details).to include("locale: ja")
+        expect(log_record.details).to include("setting_names: site_description|title")
+      end
+    end
+  end
+
   describe "log_theme_change" do
     fab!(:theme)
 

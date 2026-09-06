@@ -59,14 +59,91 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_no_failed_workflow(recovered_workflow)
   end
 
-  context "when closing the node configurator" do
+  context "with workflow tags" do
+    fab!(:ops_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        name: "Ops workflow",
+        created_by: admin,
+        tags: %w[ops],
+      )
+    end
+    fab!(:billing_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        name: "Billing workflow",
+        created_by: admin,
+        tags: %w[billing],
+      )
+    end
+
+    it "filters the list by tag from a row chip and from the tag filter" do
+      workflows_page.visit_index
+
+      expect(workflows_page).to have_workflow_tag(ops_workflow, "ops")
+      expect(workflows_page).to have_workflow_tag(billing_workflow, "billing")
+
+      workflows_page.click_workflow_tag(ops_workflow, "ops")
+      expect(workflows_page).to have_workflow("Ops workflow")
+      expect(workflows_page).to have_no_workflow("Billing workflow")
+      expect(page.current_url).to include("tags=ops")
+
+      workflows_page.reset_filters
+      expect(workflows_page).to have_workflow("Billing workflow")
+
+      workflows_page.filter_by_tag("billing")
+      expect(workflows_page).to have_workflow("Billing workflow")
+      expect(workflows_page).to have_no_workflow("Ops workflow")
+    end
+
+    it "adds a tag from the editor header even when core tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      editor_page.visit(billing_workflow.id)
+      editor_page.add_tag("urgent")
+
+      expect(editor_page).to have_header_tag("urgent")
+      expect(billing_workflow.reload.tags.map(&:name)).to eq(%w[billing urgent])
+
+      workflows_page.visit_index
+      expect(workflows_page).to have_workflow_tag(billing_workflow, "urgent")
+    end
+  end
+
+  context "with a persisted workflow node" do
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
+    fab!(:unavailable_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => "unavailable-1",
+            "type" => "action:disabled_plugin_node",
+            "typeVersion" => "1.0",
+            "name" => "Unavailable node",
+            "position" => {
+              "x" => 100,
+              "y" => 100,
+            },
+            "parameters" => {
+            },
+            "credentials" => {
+            },
+          },
+        ],
+        connections: {
+        },
+      )
+    end
+
+    let(:node_id) { "trigger.1" }
 
     before do
       workflow.update!(
         nodes: [
           {
-            "id" => "trigger-1",
+            "id" => node_id,
             "type" => "trigger:manual",
             "typeVersion" => "1.0",
             "name" => "Manual trigger",
@@ -107,13 +184,45 @@ RSpec.describe "Discourse Workflows" do
         count_workflow_updates do
           editor_page.visit(workflow.id)
           expect(editor_page).to have_node_count(1)
+          expect(editor_page).to have_workflow_path(workflow)
+
           editor_page.double_click_node(0)
           expect(editor_page).to have_node_configurator
+          expect(editor_page).to have_node_path(workflow, node_id)
+
           editor_page.close_node_configurator
           expect(editor_page).to have_no_node_configurator
+          expect(editor_page).to have_workflow_path(workflow)
         end
 
       expect(updates).to eq(0)
+    end
+
+    it "lets an admin reopen the same configured node after a refresh" do
+      editor_page.visit_node(workflow, node_id)
+
+      expect(editor_page).to have_node_path(workflow, node_id)
+      expect(editor_page).to have_node_configurator(name: "Manual trigger")
+
+      editor_page.rename_configured_node("Refreshable manual trigger")
+      expect(editor_page).to have_saved_node_configuration
+
+      page.refresh
+
+      expect(editor_page).to have_node_path(workflow, node_id)
+      expect(editor_page).to have_node_configurator(name: "Refreshable manual trigger")
+    end
+
+    it "returns an admin to the workflow when a linked node is missing or unavailable" do
+      editor_page.visit_node(workflow, "missing-node")
+
+      expect(editor_page).to have_workflow_path(workflow)
+      expect(editor_page).to have_no_node_configurator
+
+      editor_page.visit_node(unavailable_workflow, "unavailable-1")
+
+      expect(editor_page).to have_workflow_path(unavailable_workflow)
+      expect(editor_page).to have_no_node_configurator
     end
   end
 end

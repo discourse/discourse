@@ -1,68 +1,86 @@
 .ai-llm-quotas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
   margin: 1em 0;
 
-  &__table {
-    border-collapse: collapse;
-    margin-bottom: 1em;
+  > .form-kit__collection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
 
-    .form-kit__collection {
-      display: contents;
+  &__item {
+    padding: var(--space-3);
+    border: 1px solid var(--primary-low);
+    background: var(--secondary);
+  }
+
+  &__item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+    margin: 0;
+  }
+
+  &__group-label {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  &__group-name {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__group-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    .d-icon {
+      flex: 0 0 auto;
+      color: var(--primary-medium);
     }
   }
 
-  > .form-kit__container {
-    align-items: stretch;
-  }
+  &__limits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: var(--space-3);
+    align-items: start;
 
-  .form-kit__container-content {
-    width: 100%;
-  }
-
-  &__table-head {
-    background-color: var(--primary-very-low);
-  }
-
-  &__header {
-    text-align: left;
-    padding: 0.5em;
-    font-weight: bold;
-    border-bottom: 2px solid var(--primary-low);
-
-    &--actions {
-      width: 50px;
-    }
-  }
-
-  &__row {
-    border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__cell {
-    vertical-align: middle;
-    padding: var(--space-2);
-    white-space: nowrap;
-    width: 1%;
-
-    .form-kit__container {
-      align-items: stretch;
+    .form-kit__field {
+      min-width: 0;
     }
 
-    &--actions {
-      text-align: center;
+    .form-kit__container-content {
+      width: 100% !important;
+      min-width: 0 !important;
     }
   }
 
   &__input[type="number"] {
-    padding: 0.5em;
+    width: 100%;
     margin-bottom: 0;
   }
 
-  &__delete-btn {
-    padding: 0.3em 0.5em;
+  &__duration {
+    min-width: max-content;
   }
 
-  &__add-btn {
-    padding: 0.3em 0.5em;
+  &__delete-btn {
+    flex: 0 0 auto;
   }
 }
 

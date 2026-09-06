@@ -10,6 +10,20 @@ module Chat
 
     BAKED_VERSION = 2
     EXCERPT_LENGTH = 150
+    SLASH_COMMAND_PATTERNS = {
+      me: {
+        pattern: %r{\A/me[ \t]+([^\r\n]+)\z},
+        formatter: :action,
+      },
+      shrug: {
+        pattern: %r{\A/shrug(?:[ \t]+([^\r\n]+))?\z},
+        text: "¯\\_(ツ)_/¯",
+      },
+      tableflip: {
+        pattern: %r{\A/tableflip(?:[ \t]+([^\r\n]+))?\z},
+        text: "(╯°□°)╯︵ ┻━┻",
+      },
+    }.freeze
 
     attribute :has_oneboxes, default: false
 
@@ -48,6 +62,11 @@ module Chat
              dependent: :destroy,
              foreign_key: :target_id
     has_many :uploads, through: :upload_references, class_name: "::Upload"
+
+    has_many :hotlinked_media,
+             dependent: :destroy,
+             foreign_key: :chat_message_id,
+             class_name: "Chat::MessageHotlinkedMedia"
 
     has_one :chat_webhook_event,
             dependent: :destroy,
@@ -147,26 +166,38 @@ module Chat
       end
     end
 
-    def build_excerpt
+    def build_excerpt(strip_links: true)
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       urls = PrettyText.extract_links(cooked).map(&:url)
       if urls.present?
         regex = %r{^[^:]+://}
         clean_urls = urls.map { |url| url.sub(regex, "") }
         if message.gsub(regex, "").split.sort == clean_urls.sort
-          return PrettyText.excerpt(urls.join(" "), EXCERPT_LENGTH)
+          return(
+            if strip_links
+              PrettyText.excerpt(urls.join(" "), EXCERPT_LENGTH)
+            else
+              PrettyText.excerpt(urls_as_links(urls), EXCERPT_LENGTH, strip_links: false)
+            end
+          )
         end
       end
 
       # upload-only messages are better represented as the filename
-      return uploads.first.original_filename if cooked.blank? && uploads.present?
+      return upload_filename_excerpt if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links: true, keep_mentions: true)
+      PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links:, keep_mentions: true)
+    end
+
+    def excerpt_for_display
+      return upload_filename_excerpt if only_uploads?
+
+      excerpt || build_excerpt
     end
 
     def cooked_for_excerpt
-      (cooked.blank? && uploads.present?) ? "<p>#{uploads.first.original_filename}</p>" : cooked
+      (cooked.blank? && uploads.present?) ? "<p>#{upload_filename_excerpt}</p>" : cooked
     end
 
     def push_notification_excerpt
@@ -191,7 +222,8 @@ module Chat
     def cook
       ensure_last_editor_id
 
-      self.cooked = self.class.cook(message, user_id: last_editor_id)
+      self.cooked =
+        self.class.cook(message, user_id: last_editor_id, author_username: user&.username)
       self.cooked_version = BAKED_VERSION
 
       invalidate_parsed_mentions
@@ -252,6 +284,8 @@ module Chat
 
     def self.cook(message, opts = {})
       bot = opts[:user_id] && opts[:user_id].negative?
+      slash_command = match_slash_command(message, opts[:author_username])
+      message_to_cook = slash_command ? slash_command[:content] : message
 
       features = MARKDOWN_FEATURES.dup
       features << "image-grid" if bot
@@ -268,13 +302,14 @@ module Chat
       # is referencing.
       cooked =
         PrettyText.cook(
-          message,
+          message_to_cook,
           features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
           markdown_it_rules: rules,
           force_quote_link: true,
           user_id: opts[:user_id],
           hashtag_context: "chat-composer",
         )
+      cooked = format_slash_command(cooked, slash_command, opts[:author_username]) if slash_command
 
       result =
         Oneboxer.apply(cooked) do |url|
@@ -289,6 +324,66 @@ module Chat
       cooked = result.to_html if result.changed?
       cooked
     end
+
+    def action?
+      SLASH_COMMAND_PATTERNS.any? do |_, command|
+        command[:formatter] == :action && message&.match?(command[:pattern])
+      end
+    end
+
+    def self.match_slash_command(message, author_username)
+      return if message.blank?
+
+      SLASH_COMMAND_PATTERNS.each do |name, command|
+        next if command[:formatter] == :action && author_username.blank?
+        next if !(match = message.match(command[:pattern]))
+
+        return { name:, content: match[1].to_s, **command }
+      end
+
+      nil
+    end
+    private_class_method :match_slash_command
+
+    def self.format_slash_command(cooked, command, author_username)
+      if command[:formatter] == :action
+        format_action(cooked, author_username)
+      else
+        append_command_text(cooked, command[:text])
+      end
+    end
+    private_class_method :format_slash_command
+
+    def self.format_action(cooked, author_username)
+      fragment = Loofah.html5_fragment(cooked)
+      elements = fragment.children.select(&:element?)
+      return cooked if elements.length != 1 || elements.first.name != "p"
+
+      paragraph = elements.first
+      emphasis = Nokogiri::XML::Node.new("em", fragment.document)
+      emphasis["class"] = "chat-message-action"
+      emphasis.add_child(Nokogiri::XML::Text.new("#{author_username} ", fragment.document))
+      paragraph.children.to_a.each { |child| emphasis.add_child(child) }
+      paragraph.add_child(emphasis)
+
+      fragment.to_html
+    end
+    private_class_method :format_action
+
+    def self.append_command_text(cooked, text)
+      fragment = Loofah.html5_fragment(cooked)
+      elements = fragment.children.select(&:element?)
+      return cooked if elements.length > 1
+      return cooked if elements.one? && elements.first.name != "p"
+
+      paragraph = elements.first || Nokogiri::XML::Node.new("p", fragment.document)
+      fragment.add_child(paragraph) if elements.empty?
+      separator = paragraph.children.empty? ? "" : " "
+      paragraph.add_child(Nokogiri::XML::Text.new("#{separator}#{text}", fragment.document))
+
+      fragment.to_html
+    end
+    private_class_method :append_command_text
 
     def full_url
       "#{Discourse.base_url_no_prefix}#{url}"
@@ -330,6 +425,21 @@ module Chat
     end
 
     private
+
+    def upload_filename_excerpt
+      ERB::Util.html_escape(uploads.first.original_filename.truncate(EXCERPT_LENGTH, omission: ""))
+    end
+
+    def urls_as_links(urls)
+      html =
+        urls.map { |url| "<a href=\"#{CGI.escapeHTML(url)}\">#{CGI.escapeHTML(url)}</a>" }.join(" ")
+      doc = Nokogiri::HTML5.fragment(html)
+      PrettyText.add_rel_attributes_to_user_content(
+        doc,
+        SiteSetting.add_rel_nofollow_to_user_content,
+      )
+      doc.to_html
+    end
 
     def delete_mentions(mention_type, target_ids)
       chat_mentions.where(type: mention_type, target_id: target_ids).destroy_all

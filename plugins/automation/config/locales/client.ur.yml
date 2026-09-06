@@ -224,6 +224,10 @@ ur:
               label: ٹاپک ID
             user:
               label: صارف
+        flag_post_on_words:
+          fields:
+            words:
+              label: دیکھے گئے الفاظ
         close_topic:
           fields:
             topic:

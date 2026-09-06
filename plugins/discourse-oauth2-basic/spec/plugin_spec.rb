@@ -62,6 +62,22 @@ describe OAuth2BasicAuthenticator do
       expect(result.email_valid).to eq(false)
     end
 
+    it "only accepts explicit verified email values" do
+      SiteSetting.oauth2_email_verified = false
+
+      [true, "true", "True", "TRUE"].each do |email_verified|
+        expect(
+          authenticator.primary_email_verified?(auth.deep_merge(info: { email_verified: })),
+        ).to eq(true)
+      end
+
+      [false, nil, "false", "pending", 0, [], {}].each do |email_verified|
+        expect(
+          authenticator.primary_email_verified?(auth.deep_merge(info: { email_verified: })),
+        ).to eq(false)
+      end
+    end
+
     describe "fetch_user_details" do
       before(:each) do
         SiteSetting.oauth2_fetch_user_details = true
@@ -94,6 +110,12 @@ describe OAuth2BasicAuthenticator do
 
         SiteSetting.oauth2_user_json_url_method = "POST"
         stub_request(:post, SiteSetting.oauth2_user_json_url).to_return(fail_response)
+        result = authenticator.after_authenticate(auth)
+        expect(result.failed).to eq(true)
+      end
+
+      it "returns a standardised result if the request times out" do
+        stub_request(:get, SiteSetting.oauth2_user_json_url).to_timeout
         result = authenticator.after_authenticate(auth)
         expect(result.failed).to eq(true)
       end

@@ -20,7 +20,11 @@ module QunitHelper
     preloaded.merge!(site_settings_preload_data)
     return "" if preloaded.empty?
 
-    tag.div("", id: "data-preloaded", data: { preloaded: preloaded.to_json })
+    tag.script(
+      raw(ERB::Util.json_escape(preloaded.to_json)),
+      type: "application/json",
+      id: "data-preloaded",
+    )
   end
 
   private

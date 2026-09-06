@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SidebarSection < ActiveRecord::Base
+  include Localizable
+
   MAX_TITLE_LENGTH = 30
   MAX_USER_CATEGORY_LINKS = 100
 
@@ -15,7 +17,9 @@ class SidebarSection < ActiveRecord::Base
   accepts_nested_attributes_for :sidebar_urls,
                                 allow_destroy: true,
                                 limit: -> { SiteSetting.max_sidebar_section_links }
+  accepts_nested_attributes_for :localizations, allow_destroy: true
 
+  before_validation :set_default_locale
   before_save :set_system_user_for_public_section
 
   validates :title,
@@ -27,8 +31,20 @@ class SidebarSection < ActiveRecord::Base
               maximum: MAX_TITLE_LENGTH,
             }
 
+  validates :locale, presence: true, length: { maximum: 20 }
+  validate :sidebar_urls_count_within_limit, on: :sidebar_section_update
+
   scope :public_sections, -> { where("public") }
+  scope :custom_sections, -> { where(section_type: nil) }
   enum :section_type, { community: 0 }, scopes: false, suffix: true
+
+  def custom_section?
+    section_type.blank?
+  end
+
+  def community_section?
+    section_type == "community"
+  end
 
   def reset_community!
     ActiveRecord::Base.transaction do
@@ -57,10 +73,48 @@ class SidebarSection < ActiveRecord::Base
     end
   end
 
+  # Renumbers the section's links so they read in `ordered_linkable_ids` order.
+  # Links the caller left out are pushed to the end.
+  def apply_links_order!(ordered_linkable_ids)
+    links = sidebar_section_links.reload.to_a
+    return if links.empty?
+
+    rank = ordered_linkable_ids.each_with_index.to_h
+    reordered = links.sort_by { |link| rank.fetch(link.linkable_id, rank.size) }
+
+    rows =
+      reordered.zip(free_positions(links)).map { |link, position| link.attributes.merge(position:) }
+
+    sidebar_section_links.upsert_all(rows, update_only: [:position])
+  end
+
   private
+
+  # Positions no link in the section currently holds, in ascending order.
+  #
+  # `upsert_all` writes every row in one statement, and a unique index covers
+  # (sidebar_section_id, user_id, position). Reusing a position another link
+  # still holds collides before that row is rewritten. Twice the link count
+  # always leaves enough free ones.
+  def free_positions(links)
+    (0..links.size * 2).to_a - links.map(&:position)
+  end
+
+  def sidebar_urls_count_within_limit
+    count = sidebar_urls.reject(&:marked_for_destruction?).size
+    persisted_count = sidebar_urls.count(&:persisted?)
+    limit = SiteSetting.max_sidebar_section_links
+    return if count <= [limit, persisted_count].max
+
+    errors.add(:base, :too_many_sidebar_urls, limit:, count:)
+  end
 
   def set_system_user_for_public_section
     self.user_id = Discourse.system_user.id if public
+  end
+
+  def set_default_locale
+    self.locale = SiteSetting.default_locale.to_s if locale.blank?
   end
 end
 
@@ -69,6 +123,7 @@ end
 # Table name: sidebar_sections
 #
 #  id           :bigint           not null, primary key
+#  locale       :string(20)
 #  public       :boolean          default(FALSE), not null
 #  section_type :integer
 #  title        :string(30)       not null

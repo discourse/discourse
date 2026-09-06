@@ -100,7 +100,7 @@ class RouteMatcher
       # We store the result of `recognize_path` in a custom env key, so that we don't change
       # some Rails behavior by accident.
       request.env[PATH_PARAMETERS] ||= begin
-        Rails.application.routes.recognize_path(request.path_info)
+        Rails.application.routes.recognize_path(request.path_info, method: request.request_method)
       rescue ActionController::RoutingError
         {}
       end

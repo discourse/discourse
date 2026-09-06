@@ -16,7 +16,9 @@ en:
 
     errors:
       invalid_badge_repo: "You must provide a GitHub URL or the repository name in the format github_user/repository_name"
+      invalid_badge_repo_value: "'%{repo}' is not a valid GitHub URL or repository name. Use the format github_user/repository_name."
       invalid_github_linkback_access_token: "You must provide a valid GitHub linkback access token which has access to the badge repositories you have provided."
+      invalid_github_linkback_access_token_for_repo: "The GitHub linkback access token could not access the '%{repo}' repository. Make sure the token is valid and that the repository name is correct and accessible."
 
   github_linkback:
     commit_template: |

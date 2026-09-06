@@ -7,12 +7,12 @@ module DiscourseTopicVoting
         type_id :ideas
 
         class << self
-          def visible?
-            SiteSetting.enable_ideas_category_type_setup
-          end
-
           def enable_plugin
             SiteSetting.topic_voting_enabled = true
+          end
+
+          def plugin_enabled?
+            SiteSetting.topic_voting_enabled
           end
 
           def category_matches?(category)

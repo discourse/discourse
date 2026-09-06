@@ -16,16 +16,16 @@ export default class TopicTitleEditor extends Component {
   }
 
   <template>
+    {{#if @isEditingLocalization}}
+      <div class="editing-localization-indicator">
+        {{dIcon "language"}}
+        {{i18n
+          "topic.localizations.editing_translation"
+          language=this.translationLocaleName
+        }}
+      </div>
+    {{/if}}
     <div class="edit-title__wrapper">
-      {{#if @isEditingLocalization}}
-        <span class="editing-localization-indicator">
-          {{dIcon "language"}}
-          {{i18n
-            "topic.localizations.editing_translation"
-            language=this.translationLocaleName
-          }}
-        </span>
-      {{/if}}
       <PluginOutlet
         @name="edit-topic-title"
         @outletArgs={{lazyHash model=@model buffered=@buffered}}

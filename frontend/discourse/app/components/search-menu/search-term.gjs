@@ -25,6 +25,8 @@ export default class SearchTerm extends Component {
   @tracked lastEnterTimestamp = null;
   @tracked searchCleared = !this.search.activeGlobalSearchTerm;
 
+  enterHandledOnKeydown = false;
+
   get placeholderText() {
     return this.args.placeholder || i18n("search.title");
   }
@@ -53,6 +55,20 @@ export default class SearchTerm extends Component {
       this.args.closeSearchMenu();
       e.preventDefault();
       e.stopPropagation();
+      return;
+    }
+
+    // macOS does not deliver keyup for other keys while command is held, so a
+    // combination that includes it has to be caught on the way down or it never
+    // arrives at all.
+    if (
+      e.key === "Enter" &&
+      (e.ctrlKey || e.metaKey || (this.capabilities.isIpadOS && e.altKey))
+    ) {
+      this.enterHandledOnKeydown = true;
+      this.args.fullSearch();
+      this.args.closeSearchMenu();
+      e.preventDefault();
     }
   }
 
@@ -66,6 +82,11 @@ export default class SearchTerm extends Component {
       return;
     }
 
+    if (e.key === "Enter" && this.enterHandledOnKeydown) {
+      this.enterHandledOnKeydown = false;
+      return;
+    }
+
     this.args.openSearchMenu();
 
     this.search.handleArrowUpOrDown(e);
@@ -75,12 +96,9 @@ export default class SearchTerm extends Component {
         this.lastEnterTimestamp &&
         Date.now() - this.lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
 
-      if (
-        e.ctrlKey ||
-        e.metaKey ||
-        (this.capabilities.isIpadOS && e.altKey) ||
-        (this.args.typeFilter !== DEFAULT_TYPE_FILTER && recentEnterHit)
-      ) {
+      // the modifier combinations are handled on keydown above; this is the
+      // second-enter shortcut, which has none
+      if (this.args.typeFilter !== DEFAULT_TYPE_FILTER && recentEnterHit) {
         this.args.fullSearch();
         this.args.closeSearchMenu();
       } else {

@@ -71,7 +71,10 @@ class Post < ActiveRecord::Base
   has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
-  validates :edit_reason, length: { maximum: 1000 }
+  MAX_EDIT_REASON_LENGTH = 1000
+  validates :edit_reason, length: { maximum: MAX_EDIT_REASON_LENGTH }
+
+  before_save :ensure_edit_reason_length
 
   after_commit :index_search
 
@@ -210,12 +213,7 @@ class Post < ActiveRecord::Base
 
   def limit_posts_per_day
     if user && user.new_user_posting_on_first_day? && post_number && post_number > 1
-      RateLimiter.new(
-        user,
-        "first-day-replies-per-day",
-        SiteSetting.max_replies_in_first_day,
-        1.day.to_i,
-      )
+      RateLimiter.new(user, "first-day-replies-per-day", user.first_day_replies_limit, 1.day.to_i)
     end
   end
 
@@ -239,7 +237,10 @@ class Post < ActiveRecord::Base
       last_editor_id: last_editor_id,
       type: type,
       version: version,
-    }.merge(opts)
+    }
+
+    message[:username] = user&.username if type == :created
+    message.merge!(opts)
 
     publish_message!("/topic/#{topic_id}", message)
     Topic.publish_stats_to_clients!(topic.id, type) unless skip_topic_stats
@@ -580,10 +581,7 @@ class Post < ActiveRecord::Base
     category ||= Category.find_by(topic_id:)
     return unless category
 
-    doc = Nokogiri::HTML5.fragment(cooked)
-    doc.css("img").remove
-
-    if (html = doc.css("p").first&.inner_html&.strip)
+    if (html = Category.first_paragraph_description(cooked))
       new_description = html unless html.starts_with?(Category.post_template[..50])
       return category if category.description == new_description
       category.update_column(:description, new_description)
@@ -1231,6 +1229,13 @@ class Post < ActiveRecord::Base
 
   private
 
+  def ensure_edit_reason_length
+    return if edit_reason.blank? || edit_reason.length <= MAX_EDIT_REASON_LENGTH
+
+    errors.add(:edit_reason, :too_long, count: MAX_EDIT_REASON_LENGTH)
+    throw :abort
+  end
+
   def access_control_post_id_for_upload
     id
   end
@@ -1254,7 +1259,7 @@ class Post < ActiveRecord::Base
   def add_to_quoted_post_numbers(num)
     return if num.blank?
     self.quoted_post_numbers ||= []
-    self.quoted_post_numbers << num
+    quoted_post_numbers << num
   end
 
   def create_reply_relationship_with(post)

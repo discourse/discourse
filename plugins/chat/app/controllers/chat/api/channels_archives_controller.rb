@@ -11,6 +11,8 @@ class Chat::Api::ChannelsArchivesController < Chat::Api::ChannelsController
       return render json: success_json
     end
 
+    raise Discourse::InvalidAccess if !SiteSetting.chat_allow_archiving_channels
+
     new_topic = archive_params[:type] == "new_topic"
     raise Discourse::InvalidParameters if new_topic && archive_params[:title].blank?
     raise Discourse::InvalidParameters if !new_topic && archive_params[:topic_id].blank?

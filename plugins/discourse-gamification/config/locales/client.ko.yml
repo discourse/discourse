@@ -39,3 +39,8 @@ ko:
       custom_range_from: "보내는사람"
       admin:
         name: "그룹명"
+    discourse_workflows:
+      gamification_score:
+        username: "사용자"
+        date: "날짜"
+        description: "내용"

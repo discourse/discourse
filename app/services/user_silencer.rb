@@ -90,10 +90,15 @@ class UserSilencer
         .where(user_id: @user.id, post_number: 1)
         .where("created_at > ?", 24.hours.ago)
         .pluck(:topic_id)
-    Topic.where(id: topic_ids).update_all(visible: false) unless topic_ids.empty?
+    unless topic_ids.empty?
+      Topic.where(id: topic_ids).update_all(visible: false)
+      CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
+    end
   end
 
   def unsilence
+    return false if @user.silenced_till.blank?
+
     @user.silenced_till = nil
     if @user.save
       DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)

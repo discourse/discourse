@@ -13,7 +13,7 @@ export default class FKControlImage extends FKBaseControl {
 
   @action
   removeImage() {
-    this.setImage(undefined);
+    this.setImage(null);
   }
 
   get imageUrl() {

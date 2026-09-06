@@ -14,7 +14,7 @@ const POST_NOTICE_COMPONENTS = {
 
 export default class PostNotice extends Component {
   static shouldRender(post, siteSettings) {
-    if (!post.notice || post.deletedAt) {
+    if (!post.notice?.type || post.deletedAt) {
       return false;
     }
 

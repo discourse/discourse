@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import DBadgeButton from "discourse/ui-kit/d-badge-button";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesList extends Component {
@@ -24,9 +24,10 @@ export default class AdminBadgesList extends Component {
 
   <template>
     <div class="content-list">
-      <AdminFilterControls
+      <DFilterControls
         @array={{@badges}}
         @searchableProps={{this.searchableProps}}
+        @textFilterQueryParam="filter"
         @inputPlaceholder={{i18n "admin.badges.filter_placeholder"}}
         @noResultsMessage={{i18n "admin.badges.no_badges_found"}}
       >
@@ -46,7 +47,7 @@ export default class AdminBadgesList extends Component {
             {{/each}}
           </ul>
         </:content>
-      </AdminFilterControls>
+      </DFilterControls>
     </div>
     {{outlet}}
   </template>

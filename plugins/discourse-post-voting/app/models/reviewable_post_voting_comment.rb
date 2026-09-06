@@ -125,7 +125,9 @@ class ReviewablePostVotingComment < Reviewable
   def disagree(performed_by)
     yield if block_given?
 
-    UserSilencer.unsilence(comment_creator, performed_by) if UserSilencer.was_silenced_for?(post)
+    if UserSilencer.was_silenced_for?(post)
+      UserSilencer.unsilence(comment_creator, performed_by, reviewable_id: id)
+    end
 
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }
@@ -174,6 +176,7 @@ end
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

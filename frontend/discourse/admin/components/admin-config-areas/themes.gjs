@@ -9,10 +9,14 @@ import { THEMES } from "discourse/admin/models/theme";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasThemes extends Component {
+  @service currentUser;
+  @service designWizard;
   @service modal;
   @service router;
   @service toasts;
@@ -69,11 +73,12 @@ export default class AdminConfigAreasThemes extends Component {
       duration: "short",
     });
 
-    this.router.transitionTo(
-      "adminCustomizeThemes.show.index",
-      "themes",
-      theme.id
-    );
+    DiscourseURL.routeTo(`/admin/customize/themes/${theme.id}`);
+  }
+
+  @action
+  launchDesignWizard() {
+    this.designWizard.launch({ returnUrl: this.router.currentURL });
   }
 
   @action
@@ -108,5 +113,19 @@ export default class AdminConfigAreasThemes extends Component {
       </:actions>
     </DPageSubheader>
     <ThemesGrid @themes={{@themes}} @openInstallModal={{this.installModal}} />
+
+    {{#if this.currentUser.can_run_design_wizard}}
+      <div class="admin-config-area-themes__design-wizard">
+        <DButton
+          @label="design_wizard.launch"
+          @icon="wand-magic"
+          @action={{this.launchDesignWizard}}
+          class="btn-default admin-config-area-themes__design-wizard-button"
+        />
+        <span class="admin-config-area-themes__design-wizard-description">
+          {{i18n "design_wizard.launch_description"}}
+        </span>
+      </div>
+    {{/if}}
   </template>
 }

@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -9,6 +10,9 @@ import CategoryTitleLink from "discourse/components/category-title-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
+import categoryListSubcategories, {
+  hasGrandchildren,
+} from "discourse/helpers/category-list-subcategories";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dCategoryLink, {
@@ -19,12 +23,20 @@ import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 
 @tagName("")
 export default class CategoriesBoxes extends Component {
+  @service discovery;
+
   get anyLogos() {
     return this.categories.some((c) => !isEmpty(c.get("uploaded_logo.url")));
   }
 
   get hasSubcategories() {
-    return this.categories.some((c) => !isEmpty(c.get("subcategories")));
+    return this.categories.some(
+      (c) => !isEmpty(categoryListSubcategories(c, { page: this.page }))
+    );
+  }
+
+  get page() {
+    return this.categoryListPage ?? this.discovery.categoryListPage;
   }
 
   categoryName(category) {
@@ -89,61 +101,70 @@ export default class CategoriesBoxes extends Component {
                     />
                   </div>
 
-                  {{#if c.isGrandParent}}
-                    {{#each c.subcategories as |subcategory|}}
-                      <div
-                        data-category-id={{subcategory.id}}
-                        data-notification-level={{subcategory.notificationLevelString}}
-                        style={{borderColor subcategory.color}}
-                        class="subcategory with-subcategories
-                          {{if
-                            subcategory.uploaded_logo.url
-                            'has-logo'
-                            'no-logo'
-                          }}"
-                      >
-                        <div class="subcategory-box-inner">
-                          <CategoryTitleLink
-                            @tagName="h4"
-                            @category={{subcategory}}
-                          />
-                          {{#if subcategory.subcategories}}
-                            <div class="subcategories">
-                              {{#each
-                                subcategory.subcategories
-                                as |subsubcategory|
-                              }}
-                                {{#unless subsubcategory.isMuted}}
-                                  <span class="subcategory">
-                                    <CategoryTitleBefore
-                                      @category={{subsubcategory}}
-                                    />
-                                    {{dCategoryLink
-                                      subsubcategory
-                                      hideParent="true"
-                                    }}
-                                  </span>
-                                {{/unless}}
-                              {{/each}}
-                            </div>
-                          {{/if}}
+                  {{#let
+                    (categoryListSubcategories c page=this.page)
+                    as |subcategories|
+                  }}
+                    {{#if (hasGrandchildren subcategories page=this.page)}}
+                      {{#each subcategories as |subcategory|}}
+                        <div
+                          data-category-id={{subcategory.id}}
+                          data-notification-level={{subcategory.notificationLevelString}}
+                          style={{borderColor subcategory.color}}
+                          class="subcategory with-subcategories
+                            {{if
+                              subcategory.uploaded_logo.url
+                              'has-logo'
+                              'no-logo'
+                            }}"
+                        >
+                          <div class="subcategory-box-inner">
+                            <CategoryTitleLink
+                              @tagName="h4"
+                              @category={{subcategory}}
+                            />
+                            {{#let
+                              (categoryListSubcategories
+                                subcategory page=this.page
+                              )
+                              as |grandchildren|
+                            }}
+                              {{#if grandchildren}}
+                                <div class="subcategories">
+                                  {{#each grandchildren as |subsubcategory|}}
+                                    {{#unless subsubcategory.isMuted}}
+                                      <span class="subcategory">
+                                        <CategoryTitleBefore
+                                          @category={{subsubcategory}}
+                                        />
+                                        {{dCategoryLink
+                                          subsubcategory
+                                          hideParent="true"
+                                        }}
+                                      </span>
+                                    {{/unless}}
+                                  {{/each}}
+                                </div>
+                              {{/if}}
+                            {{/let}}
+                          </div>
                         </div>
-                      </div>
-                    {{/each}}
-                  {{else if c.subcategories}}
-                    <div class="subcategories">
-                      {{#each c.subcategories as |sc|}}
-                        <a class="subcategory" href={{sc.url}}>
-                          {{#if sc.uploaded_logo.url}}
-                            <span class="subcategory-image-placeholder">
-                              <CategoryLogo @category={{sc}} />
-                            </span>
-                          {{/if}}
-                          {{dCategoryLink sc hideParent="true"}}
-                        </a>
                       {{/each}}
-                    </div>
-                  {{/if}}
+                    {{else if subcategories}}
+                      <div class="subcategories">
+                        {{#each subcategories as |sc|}}
+                          <a class="subcategory" href={{sc.url}}>
+                            {{#if sc.uploaded_logo.url}}
+                              <span class="subcategory-image-placeholder">
+                                <CategoryLogo @category={{sc}} />
+                              </span>
+                            {{/if}}
+                            {{dCategoryLink sc hideParent="true"}}
+                          </a>
+                        {{/each}}
+                      </div>
+                    {{/if}}
+                  {{/let}}
                 {{/unless}}
               </div>
 

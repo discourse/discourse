@@ -14,10 +14,16 @@ bg:
         image_generation_custom:
           name: "По избор"
     ai_bot:
+      read_post:
+        unknown_post: "публикация"
       tool_summary:
+        suspend_user: "Спиране на потребителя"
+        silence_user: "Заглушаване на потребителя"
         search: "Търсене"
         time: "Време "
         summarize: "Обобщаване"
+      tool_help:
+        create_category: "Създай нова категория"
       close_topic:
         errors:
           not_found: "Темата не е намерена."
@@ -27,10 +33,10 @@ bg:
       delete_topic:
         errors:
           not_found: "Темата не е намерена."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Темата не е намерена."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Темата не е намерена."
       set_topic_timer:

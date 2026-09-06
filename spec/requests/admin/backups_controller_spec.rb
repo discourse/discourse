@@ -23,7 +23,7 @@ RSpec.describe Admin::BackupsController do
 
   def map_preloaded
     JSON
-      .parse(Nokogiri.HTML5(response.body).at_css("[data-preloaded]")["data-preloaded"])
+      .parse(Nokogiri.HTML5(response.body).at_css("#data-preloaded").text)
       .map { |key, value| [key, JSON.parse(value)] }
       .to_h
   end
@@ -763,6 +763,44 @@ RSpec.describe Admin::BackupsController do
               }
 
           expect(response.status).to eq(400)
+        end
+      end
+
+      describe "when resumableFilename contains path traversal characters" do
+        it "does not reveal the status of a chunk outside its upload directory" do
+          traversed_chunk = backup_path("traversed-backup.tar.gz.part1")
+          File.write(traversed_chunk, "secret")
+          @paths = [traversed_chunk]
+          chunk_directory = backup_path(File.join("tmp", "upload"))
+          FileUtils.mkdir_p(chunk_directory)
+
+          begin
+            get "/admin/backups/upload.json",
+                params: {
+                  resumableIdentifier: "upload",
+                  resumableFilename: "../../traversed-backup.tar.gz",
+                  resumableChunkNumber: "1",
+                  resumableCurrentChunkSize: File.size(traversed_chunk).to_s,
+                }
+
+            expect(response.status).to eq(400)
+            expect(response.parsed_body["errors"]).to contain_exactly(
+              I18n.t("invalid_params", message: "resumableFilename"),
+            )
+
+            get "/admin/backups/upload.json",
+                params: {
+                  resumableIdentifier: "upload",
+                  resumableFilename: "missing-backup.tar.gz",
+                  resumableChunkNumber: "1",
+                  resumableCurrentChunkSize: "6",
+                }
+
+            expect(response.status).to eq(404)
+            expect(response.body).to eq("")
+          ensure
+            FileUtils.rm_rf(chunk_directory)
+          end
         end
       end
     end

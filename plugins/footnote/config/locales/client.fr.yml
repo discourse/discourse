@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Notes de bas de page Discourse"
   js:
     footnote:
+      title: "Notes de bas de page"
       add: "Ajouter une note de bas de page"

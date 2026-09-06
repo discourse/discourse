@@ -9,7 +9,7 @@ export default <template>
     />
     <WorkflowsIndex
       @workflows={{@controller.model.workflows}}
-      @stats={{@controller.model.stats}}
+      @workflowTags={{@controller.model.workflowTags}}
     />
   </div>
 </template>

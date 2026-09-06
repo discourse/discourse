@@ -182,7 +182,7 @@ export default class NavItem extends EmberObject {
 
       const before = item.before;
       if (before) {
-        let i = 0;
+        let i;
         for (i = 0; i < items.length; i++) {
           if (items[i].name === before) {
             break;

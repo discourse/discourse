@@ -46,6 +46,22 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      copied: "كۆچۈرۈلدى"
+      ai_decoded_transcript:
+        arguments: "ئۆزگەرگۈچى"
+        type: "تىپى"
+        error: "خاتالىق"
+        response: "ئىنكاس"
+      discourse_workflows:
+        ai_agent:
+          mode: "ھالەت"
+      ai_tool_approval:
+        tool: "مەشغۇلات"
+        user: "ئىشلەتكۈچى"
+        approve: "تەستىقلا"
+        reject: "رەت قىل"
+        approved: "تەستىقلاندى"
+        rejected: "رەت قىلىندى"
       llm_selector:
         none: "يوق"
       features:
@@ -68,12 +84,32 @@ ug:
         ai_helper:
           setting_groups:
             automation: "ئاپتوماتلاشتۇرۇش"
+        image_caption:
+          setting_groups:
+            settings: "تەڭشەك"
         spam:
           name: "ئەخلەت خەت"
       modals:
         select_option: "تاللانما تاللىنىدۇ..."
       translations:
         title: "تەرجىمە"
+        category_scope: "سەھىپە"
+        model_progress:
+          detail:
+            retry: "قايتا سىنا"
+            columns:
+              locale: "يەرلىك"
+              pending: "كۈتۈۋاتىدۇ"
+              total: "جەمئىي"
+          targets:
+            post:
+              title: "يازما"
+            topic:
+              title: "تېما"
+            category:
+              title: "سەھىپە"
+            tag:
+              title: "بەلگە"
         stats:
           eta_minutes:
             one: "%{count} مىنۇت"
@@ -105,6 +141,37 @@ ug:
         total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
+      logs:
+        short_title: "خاتىرە"
+        apply: "قوللان"
+        successful: "مۇۋەپپەقىيەتلىك"
+        failed: "مەغلۇب بولدى"
+        unknown: "يوچۇن"
+        time: "ۋاقىت"
+        when: "قاچان"
+        outcome: "نەتىجە"
+        feature: "ئىقتىدار"
+        request: "ئىلتىماس"
+        user: "ئىشلەتكۈچى"
+        context: "مەزمۇن"
+        topic: "تېما"
+        post: "يازما"
+        post_short: "%{id} يازما"
+        duration: "داۋاملىشىش ۋاقتى"
+        actions: "مەشغۇلات"
+        view_details: "تەپسىلاتى"
+        periods:
+          hour: "ئاخىرقى %{count} سائەت"
+          week: "ئۆتكەن 7 كۈن"
+          custom: "ئىختىيارى"
+        detail:
+          request: "ئىلتىماس"
+          response: "ئىنكاس"
+          context: "مەزمۇن"
+          network_error: "تور خاتالىقى"
+        retention:
+          summary_stage: "خۇلاسە"
+          save: "ساقلا"
       ai_agent:
         name: "ئىسمى"
         edit: "تەھرىر"
@@ -116,7 +183,14 @@ ug:
         mcp_tools_modal:
           select_all: "ھەممىنى تاللا"
           clear_all: "ھەممىنى تازىلا"
+        duplicate: "كۆپەيت"
+        copy_name: "%{name} نىڭ كۆچۈرۈلمىسى"
         delete: "ئۆچۈر"
+        thinking_effort_options:
+          none: "يوق"
+          low: "تۆۋەن"
+          medium: "ئوتتۇرا"
+          high: "يۇقىرى"
         response_format:
           open_modal: "تەھرىر"
           modal:
@@ -169,6 +243,9 @@ ug:
           required: "زۆرۈر"
       llms:
         display_name: "ئىسمى"
+        vision_modes:
+          disabled:
+            title: "چەكلەندى"
         save: "ساقلا"
         edit: "تەھرىر"
         delete: ئۆچۈر
@@ -192,7 +269,6 @@ ug:
           title: "سىناقنى ئىجرا قىل"
           success: "مۇۋەپپەقىيەتلىك!"
         providers:
-          google: "Google"
           fake: "ئىختىيارى"
       ai_helper:
         context_menu:
@@ -208,8 +284,6 @@ ug:
           select: "تاللا"
           selected: "تاللاندى"
           try_again: "قايتا سىنا"
-        image_caption:
-          save_caption: "ساقلا"
       embeddings:
         save: "ساقلا"
         delete: "ئۆچۈر"
@@ -223,6 +297,7 @@ ug:
           fake: "ئىختىيارى"
       ai_bot:
         debug_ai_modal:
+          duration_label: "داۋاملىشىش ۋاقتى:"
           request: "ئىلتىماس"
           response: "ئىنكاس"
           next_log: "كېيىنكى"
@@ -255,8 +330,11 @@ ug:
             one: "ئاخىرقى %{count} سائەت"
             other: "ئاخىرقى %{count} سائەت"
       discobot_discoveries:
-        regular_results: "تېما"
-        collapse: "يىغ"
-        tooltip:
-          actions:
-            disable: "چەكلە"
+        legacy:
+          regular_results: "تېما"
+          collapse: "يىغ"
+          tooltip:
+            actions:
+              disable: "چەكلە"
+        search_all_topics: "بارلىق تېما"
+        search_messages: "ئۇچۇر"

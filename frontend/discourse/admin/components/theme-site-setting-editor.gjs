@@ -5,6 +5,8 @@ import SiteSettingComponent from "./site-setting";
 export default class ThemeSiteSettingEditor extends SiteSettingComponent {
   @service toasts;
 
+  trackChanges = false;
+
   get staffLogFilter() {
     return {
       subject: `${this.args.model.name}: ${this.setting.setting}`,

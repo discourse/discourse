@@ -8,7 +8,6 @@ sq:
   js:
     styleguide:
       title: "Udhëzues stili"
-      welcome: "Për të filluar, zgjidhni një seksion nga menyja në të majtë."
       categories:
         syntax: Sintaksë
       sections:
@@ -41,6 +40,20 @@ sq:
           title: "Harta e temës"
         more_topics:
           title: "Më shumë tema"
+        roving_focus:
+          toolbar:
+            copy: "Kopjo"
+          adjacent:
+            field: "Kërko"
+            open: "Fillo"
+            recent: "Më të fundit"
+          combobox:
+            daily: "Ditore"
+            weekly: "Javore"
+            monthly: "Mujore"
+            never: "Asnjëherë"
+          tree:
+            select: "Zgjidhni"
         modal:
           title: "Modalitet"
         user_about:

@@ -9,8 +9,8 @@
   }
 
   --d-sidebar-vertical-gap: var(--space-half);
-  --sidebar-section-wrapper-padding: var(--space-6) var(--space-2)
-    var(--space-4);
+  --sidebar-section-wrapper-padding: var(--main-outlet-padding-top)
+    var(--space-2) var(--space-4);
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
@@ -67,6 +67,38 @@
   }
 }
 
+.sidebar-link-drop-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-block: var(--space-1);
+  padding: var(--space-3);
+  color: var(--token-color-text-default);
+  background: var(--token-color-surface-selected);
+  border-radius: var(--d-border-radius);
+  font-weight: var(--token-font-weight-semibold);
+  animation: sidebar-link-drop-target-reveal 0.15s ease-out;
+
+  /* Native drag hit-testing honors this, so while it applies the zone cannot
+     take a drop. */
+
+  &.is-arming {
+    pointer-events: none;
+  }
+
+  &.is-active {
+    outline: 2px solid var(--d-drag-indicator-color);
+    outline-offset: -2px;
+  }
+}
+
+@keyframes sidebar-link-drop-target-reveal {
+  from {
+    opacity: 0;
+  }
+}
+
 .sidebar-row {
   box-sizing: border-box;
   height: var(--d-sidebar-row-height);
@@ -96,6 +128,7 @@
   @include unselectable;
 
   .sidebar-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -225,11 +258,112 @@
     }
   }
 
+  .sidebar-section-form__links-label {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    color: var(--token-color-text-subtle);
+    font-weight: var(--token-font-weight-bold);
+  }
+
+  .sidebar-section-form__source-locale {
+    margin-bottom: 1em;
+
+    label {
+      display: block;
+      font-weight: var(--token-font-weight-bold);
+    }
+
+    .sidebar-section-form__source-locale-select {
+      width: auto;
+      max-width: 100%;
+    }
+  }
+
+  .sidebar-section-form__source-locale-description {
+    margin: 0.25em 0 1.5em;
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+  }
+
+  .sidebar-section-form__manage-translations {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .sidebar-section-form__translations-incomplete {
+    margin-inline-start: 0.5em;
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+  }
+
+  .sidebar-section-translations__back {
+    margin-bottom: 1em;
+    padding-inline-start: 0;
+  }
+
+  .sidebar-section-translations__language {
+    margin-bottom: 1.5em;
+    padding: 0.75em;
+    border: 1px solid var(--token-color-border);
+    border-radius: var(--d-border-radius);
+  }
+
+  .sidebar-section-translations__language-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+    margin-bottom: 0.75em;
+
+    .sidebar-section-translations__language-select {
+      width: auto;
+      max-width: 100%;
+    }
+  }
+
+  .sidebar-section-translations__caption {
+    margin-bottom: 0.25em;
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+    font-weight: var(--token-font-weight-bold);
+  }
+
+  .sidebar-section-translations__row {
+    display: grid;
+    grid-template-columns: minmax(6em, 1fr) 2fr;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+
+    @include viewport.until(sm) {
+      grid-template-columns: 1fr;
+      gap: 0.25em;
+    }
+
+    .sidebar-section-translations__source {
+      overflow-wrap: anywhere;
+      font-weight: var(--token-font-weight-regular);
+    }
+
+    .sidebar-section-translations__value {
+      width: 100%;
+      margin-bottom: 0;
+
+      &.--untranslated {
+        border-style: dashed;
+      }
+    }
+
+    .warning {
+      grid-column: 1 / -1;
+    }
+  }
+
   .row-wrapper {
     display: grid;
     grid-template-columns: 2em 4.5em repeat(2, 1fr) 2em;
     padding: 0.55em 0 0.7em;
-    -webkit-user-drag: none;
     cursor: default;
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
@@ -274,6 +408,11 @@
 
   .always-public-tooltip {
     padding-right: 0.5rem;
+
+    .fk-d-tooltip__trigger-container {
+      align-items: center;
+      gap: var(--space-1);
+    }
   }
 
   .d-modal__footer {
@@ -419,10 +558,7 @@
   }
 
   &__shortcut-hint {
-    min-width: 26px;
-    padding: 0.25em 0.5em;
-    font-size: var(--font-down-3);
-    color: var(--d-sidebar-link-color);
+    margin-right: var(--space-2);
   }
 }
 

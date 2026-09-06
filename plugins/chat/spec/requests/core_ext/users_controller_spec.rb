@@ -64,6 +64,23 @@ describe UsersController do
       SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
     end
 
+    context "when the card owner excludes the current user from their PM allowlist" do
+      fab!(:allowed_user, :user)
+
+      before do
+        user.user_option.update!(enable_allowed_pm_users: true, chat_enabled: true)
+        AllowedPmUser.create!(user: user, allowed_pm_user: allowed_user)
+        sign_in(another_user)
+      end
+
+      it "returns that the current user cannot chat with the card owner" do
+        get "/u/#{user.username}/card.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.dig("user", "can_chat_user")).to eq(false)
+      end
+    end
+
     context "when the card belongs to the current user" do
       before { sign_in(user) }
 

@@ -4,7 +4,12 @@ describe "Admin Dashboard Redesign | Reports section" do
   fab!(:current_user, :admin)
 
   let(:dashboard) { PageObjects::Pages::AdminDashboardReports.new }
-  let(:modal) { PageObjects::Components::ManageReportsModal.new }
+  let(:modal) do
+    PageObjects::Components::ManageableRowListModal.new(
+      ".manage-reports",
+      "admin_js.admin.dashboard.reports_section.modal.counter",
+    )
+  end
 
   before do
     SiteSetting.dashboard_improvements = true

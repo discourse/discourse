@@ -62,16 +62,12 @@ RSpec.describe SystemMessage do
       expect(post.raw).to eq("override body")
     end
 
-    it "should allow site_contact_group_name" do
+    it "invites the site contact group" do
       group = Fabricate(:group)
-      SiteSetting.site_contact_group_name = group.name
+      SiteSetting.site_contact_group_name = group.id.to_s
 
       post = SystemMessage.create(user, :welcome_invite)
       expect(post.topic.allowed_groups).to contain_exactly(group)
-
-      group.update!(name: "anewname")
-      post = SystemMessage.create(user, :welcome_invite)
-      expect(post.topic.allowed_groups).to eq([])
     end
 
     it "sends event with post object" do

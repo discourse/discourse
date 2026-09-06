@@ -1,25 +1,15 @@
-import Component from "@glimmer/component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import SpinnerRegularExample from "../../examples/atoms/spinners/regular";
+import spinnerRegularSource from "../../examples/atoms/spinners/regular?source=template";
+import SpinnerSmallExample from "../../examples/atoms/spinners/small";
+import spinnerSmallSource from "../../examples/atoms/spinners/small?source=template";
 
-export default class Spinners extends Component {
-  get spinnerSmallCode() {
-    return `<div class="spinner small"></div>`;
-  }
+export default <template>
+  <StyleguideExample @title="spinner - small" @code={{spinnerSmallSource}}>
+    <SpinnerSmallExample />
+  </StyleguideExample>
 
-  get spinnerRegularCode() {
-    return `<div class="spinner"></div>`;
-  }
-
-  <template>
-    <StyleguideExample @title="spinner - small" @code={{this.spinnerSmallCode}}>
-      <div class="spinner small"></div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="spinner - regular"
-      @code={{this.spinnerRegularCode}}
-    >
-      <div class="spinner"></div>
-    </StyleguideExample>
-  </template>
-}
+  <StyleguideExample @title="spinner - regular" @code={{spinnerRegularSource}}>
+    <SpinnerRegularExample />
+  </StyleguideExample>
+</template>

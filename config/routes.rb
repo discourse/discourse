@@ -110,6 +110,8 @@ Discourse::Application.routes.draw do
         put "user_count" => "site_settings#user_count"
       end
 
+      post "onboarding/events" => "onboarding_events#create"
+
       get "reports" => "reports#index"
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
@@ -131,6 +133,7 @@ Discourse::Application.routes.draw do
           delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
           get "total-others-with-same-ip" => "users#total_other_accounts_with_same_ip"
           put "approve-bulk" => "users#approve_bulk"
+          put "suspend-bulk" => "users#suspend_bulk"
           delete "destroy-bulk" => "users#destroy_bulk"
         end
         delete "penalty_history", constraints: AdminConstraint.new
@@ -324,7 +327,12 @@ Discourse::Application.routes.draw do
       get "version_check" => "versions#show"
 
       get "dashboard" => "dashboard#index"
+      get "dashboard/site-traffic-explorer" => "dashboard#traffic",
+          :constraints => AdminConstraint.new
       put "dashboard/configuration" => "dashboard#update_configuration",
+          :constraints => AdminConstraint.new
+      put "dashboard/sections/:section_id/settings/:setting_key" =>
+            "dashboard#update_section_settings",
           :constraints => AdminConstraint.new
       get "dashboard/general" => "dashboard#general"
       get "dashboard/moderation" => "dashboard#moderation"
@@ -450,16 +458,22 @@ Discourse::Application.routes.draw do
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
         get "/logo" => "logo#index"
+        get "/logo/og-image-preview" => "logo#og_image_preview"
         get "/fonts" => "fonts#index"
         get "/welcome-banner/themes-with-setting" => "welcome_banner#themes_with_setting"
         get "/welcome-banner" => "welcome_banner#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
+        get "/design-wizard" => "design_wizard#index"
+        put "/design-wizard" => "design_wizard#update"
         get "colors/:id" => "color_palettes#show"
         get "colors" => "color_palettes#index"
         get "upcoming-changes" => "upcoming_changes#index"
         put "upcoming-changes/groups" => "upcoming_changes#update_groups"
         put "upcoming-changes/toggle" => "upcoming_changes#toggle_change"
+        get "category-management/categories" => "category_management#categories"
+        get "category-management" => "site_settings#index"
+        get "category-management/*path" => "site_settings#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -468,7 +482,11 @@ Discourse::Application.routes.draw do
         end
 
         resources :about, constraints: AdminConstraint.new, only: %i[index] do
-          collection { put "/" => "about#update" }
+          collection do
+            put "/" => "about#update"
+            get "localizations" => "about#localizations"
+            put "localizations" => "about#update_localizations"
+          end
         end
 
         resources :customize,
@@ -497,9 +515,16 @@ Discourse::Application.routes.draw do
         get "user_fields/:id" => "user_fields#show"
         get "user_fields/:id/edit" => "user_fields#edit"
 
-        resources :emoji, only: %i[index create destroy], constraints: AdminConstraint.new
+        resources :emoji, only: %i[index create destroy], constraints: AdminConstraint.new do
+          collection do
+            post :export
+            post :import_preview
+            post :import_confirm
+          end
+        end
         get "emoji/new" => "emoji#index"
         get "emoji/settings" => "emoji#index"
+        get "emoji/import" => "emoji#index"
         resources :permalinks, only: %i[index new create show destroy]
       end
 
@@ -574,6 +599,8 @@ Discourse::Application.routes.draw do
     get "session/hp" => "session#get_honeypot_value"
     get "session/email-login/:token" => "session#email_login_info"
     post "session/email-login/:token" => "session#email_login"
+    post "session/login-code" => "session#create_login_code"
+    post "session/login-code/verify" => "session#verify_login_code"
     get "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     post "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     get "session/2fa" => "session#second_factor_auth_show"
@@ -585,6 +612,8 @@ Discourse::Application.routes.draw do
     post "session/passkey/auth" => "session#passkey_login"
     get "session/scopes" => "session#scopes"
     get "composer/mentions" => "composer#mentions"
+    get "gifs/categories" => "gifs#categories"
+    get "gifs/search" => "gifs#search"
     get "composer_messages" => "composer_messages#index"
     get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
@@ -610,6 +639,8 @@ Discourse::Application.routes.draw do
     get "directory-columns" => "directory_columns#index", :format => :json
     get "edit-directory-columns" => "edit_directory_columns#index", :format => :json
     put "edit-directory-columns" => "edit_directory_columns#update", :format => :json
+    get "access-control/grantees/search" => "access_control_lists#search_grantees"
+    post "access-control/evaluate" => "access_control_lists#evaluate"
 
     %w[users u].each_with_index do |root_path, index|
       get "#{root_path}" => "users#index", :constraints => { format: "html" }
@@ -620,6 +651,8 @@ Discourse::Application.routes.draw do
           get "check_email"
         end
       end
+
+      get "#{root_path}/random-username" => "users#generate_random_username"
 
       get "#{root_path}/trusted-session" => "users#trusted_session"
       post "#{root_path}/confirm-session" => "users#confirm_session"
@@ -906,10 +939,6 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       post "#{root_path}/action/send_activation_email" => "users#send_activation_email"
-      get "#{root_path}/:username/summary" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
       get "#{root_path}/:username/activity/topics.rss" => "list#user_topics_feed",
           :format => :rss,
           :constraints => {
@@ -1287,10 +1316,12 @@ Discourse::Application.routes.draw do
     end
 
     get "/post_localizations/:id" => "post_localizations#show"
+    put "/post_localizations/:post_id/locale" => "post_localizations#update_locale"
     post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
     delete "/post_localizations/destroy", to: "post_localizations#destroy"
 
     get "topic_localizations/:topic_id/:locale" => "topic_localizations#show"
+    put "topic_localizations/:topic_id/locale" => "topic_localizations#update_locale"
     post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
     delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 
@@ -1343,6 +1374,7 @@ Discourse::Application.routes.draw do
     get "/c", to: redirect(relative_url_root + "categories")
 
     resources :categories, only: %i[index create update destroy]
+    post "categories/:id/convert_nested_replies" => "categories#convert_nested_replies"
     post "categories/reorder" => "categories#reorder"
     get "categories/types" => "categories#types"
     get "categories/find" => "categories#find"
@@ -1376,7 +1408,7 @@ Discourse::Application.routes.draw do
 
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", :format => :rss
     scope path: "c/*category_slug_path_with_id" do
-      get "/none" => "list#category_none_latest"
+      get "/none" => "list#category_none_default", :as => "category_none_default"
 
       TopTopic.periods.each do |period|
         get "/none/l/top/#{period}", to: redirect("/none/l/top?period=#{period}", status: 301)
@@ -1525,6 +1557,9 @@ Discourse::Application.routes.draw do
 
     get "new-topic" => "new_topic#index"
     get "new-message" => "new_topic#index"
+    # Landing page for the PWA Web Share Target. The service worker intercepts
+    # the incoming multipart POST, stashes the payload, and redirects here.
+    get "share-target" => "new_topic#index"
     get "new-invite" => "new_invite#index"
 
     # Topic routes
@@ -1702,6 +1737,8 @@ Discourse::Application.routes.draw do
 
     scope "/tag/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
       get "/" => "tags#show", :as => "tag_show"
+      get "/edit" => "tags#show"
+      get "/edit/:tab" => "tags#show"
       get "/info" => "tags#info", :as => "tag_info"
       get "/notifications" => "tags#notifications", :as => "tag_notifications"
       put "/notifications" => "tags#update_notifications"
@@ -1859,6 +1896,11 @@ Discourse::Application.routes.draw do
            as: "list_#{filter}"
     end
 
+    DiscoursePluginRegistry._raw_homepage_options.each do |registration|
+      option = registration[:value]
+      get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+    end
+
     get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
 
     # special case for categories
@@ -1936,8 +1978,10 @@ Discourse::Application.routes.draw do
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
 
-    resources :sidebar_sections, only: %i[index create update destroy]
+    resources :sidebar_sections, only: %i[index show create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
+    put "/sidebar_sections/:id/reorder" => "sidebar_sections#reorder"
+    put "/sidebar_sections/:id/move_link" => "sidebar_sections#move_link"
 
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
@@ -1949,6 +1993,7 @@ Discourse::Application.routes.draw do
       # Routes that are only used for testing
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
       get "/test_net_http_headers" => "test_requests#test_net_http_headers"
+      get "/test_postgres_readonly" => "test_requests#test_postgres_readonly"
     end
 
     # This catch-all route should always be last

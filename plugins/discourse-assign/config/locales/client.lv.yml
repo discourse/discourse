@@ -27,4 +27,14 @@ lv:
       post: "Ieraksts"
     discourse_workflows:
       assign_topic:
+        resources:
+          topic: "Tēmas"
+          post: "Ieraksts"
         topic_id: "Tēmas ID"
+        post_id: "Ieraksta ID"
+      check_assignment:
+        target_types:
+          topic: "Tēmas"
+          post: "Ieraksts"
+        topic_id: "Tēmas ID"
+        post_id: "Ieraksta ID"

@@ -58,6 +58,29 @@ RSpec.describe DiscourseWorkflows::NodeData do
       expect(split["credentials"]).to eq({})
     end
 
+    it "keeps stored credentials when the controlling parameter is an expression" do
+      split =
+        described_class.split(
+          node_type: "action:http_request",
+          parameters: {
+            "authentication" => "={{ $json.auth }}",
+          },
+          credentials: {
+            "auth" => {
+              "id" => 12,
+              "credential_type" => "basic_auth",
+            },
+          },
+        )
+
+      expect(split["credentials"]).to eq(
+        "auth" => {
+          "id" => "12",
+          "credential_type" => "basic_auth",
+        },
+      )
+    end
+
     it "removes credentials from node types without credential declarations" do
       split =
         described_class.split(

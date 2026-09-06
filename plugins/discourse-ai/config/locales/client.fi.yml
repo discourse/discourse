@@ -18,7 +18,6 @@ fi:
       dashboard:
         emotion:
           title: "Tunne"
-          description: "Taulukossa luetellaan määritetyllä tunteella luokiteltujen viestien lukumäärä. Luokiteltu mallilla \"SamLowe/roberta-base-go_emotions\"."
         reports:
           filters:
             group_by:
@@ -154,6 +153,23 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      copied: "Kopioitiin"
+      ai_decoded_transcript:
+        tool: "Työkalu"
+        type: "Tyyppi"
+        error: "Virhe"
+        response: "Vastaus"
+      discourse_workflows:
+        ai_agent:
+          mode: "Tila"
+      ai_tool_approval:
+        loading: "Ladataan..."
+        tool: "Toiminto"
+        user: "Käyttäjä"
+        approve: "Hyväksy"
+        reject: "Hylkää"
+        approved: "Hyväksytty"
+        rejected: "Hylätty"
       default_llm:
         title: "Oletusarvoinen LLM-malli"
       llm_selector:
@@ -192,7 +208,7 @@ fi:
         search:
           name: "Hae"
           description: "Parantaa hakukokemusta tarjoamalla tekoälyn luomia vastauksia kyselyihin"
-          discoveries: "Löydöt"
+          ask_ai: "Kysy tekoälyltä"
         embeddings:
           name: "Upotukset"
           description: "Tarjoaa ominaisuuksia, kuten aiheeseen liittyvät ketjut ja tekoälyhaun, luomalla semanttisia kuvauksia tekstistä"
@@ -219,11 +235,13 @@ fi:
           translate: "Käännä"
           markdown_tables: "Luo markdown-taulukko"
           custom_prompt: "Mukautettu kehote"
-          image_caption: "Lisää kuvateksti"
           translator: "Kääntäjä"
           post_illustrator: "Viestin havainnollistaja"
           setting_groups:
             automation: "Automaatio"
+        image_caption:
+          setting_groups:
+            settings: "Asetukset"
         translation:
           name: "Käännös"
           description: "Kääntää sisällön tuetuille kielille"
@@ -248,6 +266,23 @@ fi:
         card: "Kortti"
       translations:
         title: "Käännökset"
+        category_scope: "Kategoriat"
+        model_progress:
+          detail:
+            retry: "Yritä uudelleen"
+            columns:
+              locale: "Kielialue"
+              pending: "Odottaa"
+              total: "Yhteensä"
+          targets:
+            post:
+              title: "Viestit"
+            topic:
+              title: "Aiheet"
+            category:
+              title: "Alueet"
+            tag:
+              title: "Tunnisteet"
         stats:
           eta_minutes:
             one: "%{count} minuutti"
@@ -341,6 +376,46 @@ fi:
           last_week: "Viime viikko"
           last_month: "Viime kuukausi"
           custom: "Mukautettu..."
+      logs:
+        short_title: "Lokit"
+        retry: "Yritä uudelleen"
+        apply: "Käytä"
+        all_models: "Kaikki mallit"
+        all_features: "Kaikki ominaisuudet"
+        successful: "Onnistui"
+        failed: "Epäonnistui"
+        unknown: "Tuntematon"
+        time: "Aika"
+        when: "Ajankohta"
+        outcome: "Tulos"
+        feature: "Ominaisuus"
+        model: "Malli"
+        request: "Pyyntö"
+        provider: "Palveluntarjoaja"
+        user: "Käyttäjä"
+        context: "Konteksti"
+        topic: "Ketju"
+        post: "Viesti"
+        post_short: "Viesti %{id}"
+        duration: "Kesto"
+        actions: "Toiminnot"
+        view_details: "Tiedot"
+        periods:
+          hour: "Viimeinen tunti"
+          day: "Viimeiset 24 tuntia"
+          week: "Viimeiset 7 päivää"
+          custom: "Mukautettu"
+        detail:
+          request: "Pyyntö"
+          response: "Vastaus"
+          context: "Konteksti"
+          copy_request: "Kopioi pyyntö"
+          copy_response: "Kopioi vastaus"
+          network_error: "Verkkovirhe"
+        retention:
+          summary_stage: "Yhteenveto"
+          deleted_stage: "Poistettu"
+          save: "Tallenna"
       ai_agent:
         ai_tools: "Työkalut"
         tool_strategies:
@@ -355,8 +430,6 @@ fi:
         overwrite: "Korvaa"
         description: "Kuvaus"
         no_llm_selected: "Kielimallia ei ole valittu"
-        max_context_posts: "Kontekstiviestien enimmäismäärä"
-        max_context_posts_help: "Kontekstina käytettävien viestien enimmäismäärä, kun tekoäly vastaa käyttäjälle (käytä oletusta jättämällä tyhjäksi)"
         vision_max_pixel_sizes:
           low: Heikko laatu – halvin (256x256)
           medium: Keskilaatuinen (512x512)
@@ -379,11 +452,19 @@ fi:
           clear_all: "Tyhjennä kaikki"
         forced_tools: "Pakotetut työkalut"
         allowed_groups: "Sallitut ryhmät"
+        duplicate: "Monista"
+        copy_name: "Paletin %{name} kopio"
         delete: "Poista"
         temperature: "Lämpötila"
         temperature_help: "LLM:lle käytettävä lämpötila. Lisää luovuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–2,0)"
         top_p: "Top-p"
         top_p_help: "LLM:lle käytettävä top-p, lisää satunnaisuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–1,0)"
+        thinking_effort_options:
+          none: "Ei valittu"
+          low: "Matala"
+          medium: "Keskitaso"
+          high: "Korkea"
+          max: "Enint."
         priority: "Prioriteetti"
         tool_options: "Työkaluasetukset"
         rag_conversation_chunks: "Hakukeskustelulohkot"
@@ -511,6 +592,9 @@ fi:
         max_output_tokens: "Tuotossaneiden enimmäismäärä"
         url: "Mallia isännöivän palvelun URL-osoite"
         api_key: "Mallia isännöivän palvelun API-avain"
+        vision_modes:
+          disabled:
+            title: "Pois käytöstä"
         ai_bot_user: "Tekoälybottikäyttäjä"
         cost_input: "Syötekustannukset"
         cost_cached_input: "Välimuistissa olevan syötteen hinta"
@@ -537,13 +621,11 @@ fi:
             custom: "Mukautettu..."
           hours: "tuntia"
           max_tokens_help: "Saneiden (sanojen ja merkkien) enimmäismäärä, jonka kukin tämän ryhmän käyttäjä voi käyttää määritetyn keston aikana. Saneet ovat yksiköitä, joita tekoälymallit käyttävät tekstin käsittelyyn – noin 1 merkki = 4 merkkiä tai 3/4 sanasta."
-          max_tokens_required: "Täytyy asettaa, jos enimmäiskäyttöä ei ole asetettu"
           max_usages_help: "Enimmäismäärä kertoja, jonka kukin tämän ryhmän käyttäjä voi käyttää tekoälymallia määritetyn ajan kuluessa. Tätä kiintiötä seurataan yksittäistä käyttäjää kohti, eikä sitä jaeta ryhmän kesken."
-          max_usages_required: "Täytyy asettaa, jos enimmäissaneita ei ole asetettu"
         usage:
           ai_bot: "Tekoälybotti"
           ai_helper: "Apuri (%{agent})"
-          ai_helper_image_caption: "Kuvateksti"
+          ai_image_caption: "Kuvateksti"
           ai_summarization: "Tee yhteenveto"
           ai_embeddings_semantic_search: "Tekoälyhaku"
           ai_spam: "Roskaposti"
@@ -553,10 +635,6 @@ fi:
           other: "Tätä mallia käyttää tällä hetkellä seuraavat: %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla. "
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
-          anthropic-claude-opus-4-7: "Anthropicin älykkäin malli"
-          anthropic-claude-sonnet-4-6: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
-          anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
-          open_ai-gpt-5-4-nano: "Nopein ja kustannustehokkain GPT-5-malli"
         preseeded_model_description: "Ennalta määritetty avoimen lähdekoodin malli, joka käyttää mallia %{model}"
         configured:
           title: "Määritetyt LLM:t"
@@ -589,7 +667,6 @@ fi:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -599,7 +676,7 @@ fi:
           fake: "Mukautettu"
         provider_fields:
           access_key_id: "AWS Bedrockin käyttöavaintunnus"
-          region: "AWS Bedrockin alue"
+          region: "Alue"
           organization: "Valinnainen OpenAI:n organisaatiotunnus"
           disable_system_prompt: "Poista järjestelmäviesti käytöstä kehotteissa"
           enable_native_tool: "Ota käyttöön natiivityökalujen tuki"
@@ -620,11 +697,7 @@ fi:
         title: "Ehdota muutoksia tekoälyn avulla"
         description: "Valitse yksi seuraavista vaihtoehdoista, niin tekoäly ehdottaa sinulle uutta versiota tekstistä."
         selection_hint: "Vihje: voit myös valita osan tekstistä ennen apuohjelman avaamista kirjoittaaksesi vain sen uudelleen."
-        suggest: "Ehdota tekoälyllä"
         suggest_errors:
-          too_many_tags:
-            one: "Sinulla voi olla enintään %{count} tunniste"
-            other: "Sinulla voi olla enintään %{count} tunnistetta"
           no_suggestions: "Ei ehdotuksia saatavilla"
         missing_content: "Anna sisältöä ehdotusten luomiseksi."
         context_menu:
@@ -658,11 +731,6 @@ fi:
           select: "Valitse"
           selected: "Valittu"
           try_again: "Yritä uudelleen"
-        image_caption:
-          button_label: "Kuvateksti tekoälyllä"
-          generating: "Luodaan kuvatekstiä..."
-          credits: "Tekoälyn laatima kuvateksti"
-          save_caption: "Tallenna"
         no_content_error: "Lisää ensin sisältöä tehdäksesi tekoälytoimia sille"
       reviewables:
         model_used: "Käytetty malli:"
@@ -719,13 +787,8 @@ fi:
         provider_fields:
           model_name: "Mallin nimi"
         semantic_search: "Ketjut (semanttinen)"
-        semantic_search_results:
-          unavailable: "Tekoälytuloksia ei ole saatavilla"
         semantic_search_tooltips:
           results_explanation: "Kun tämä on käytössä, alle lisätään ylimääräisiä tekoälyhakutuloksia."
-          invalid_sort: "Hakutulokset täytyy olla järjestetty osuvuuden mukaan, jotta tekoälytuloksia voidaan näyttää"
-        semantic_search_unavailable_tooltip: "Hakutulokset täytyy olla järjestetty osuvuuden mukaan, jotta tekoälytuloksia voidaan näyttää"
-        ai_generated_result: "Tekoälyllä löydetty hakutulos"
         quick_search:
           suffix: "kaikissa ketjuissa ja viesteissä tekoälyllä"
       ai_artifact:
@@ -734,7 +797,7 @@ fi:
         click_to_run_label: "Suorita artefakti"
       ai_bot:
         title: "Tekoälybotti"
-        llm: "Malli"
+        llm: "Malli:"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"
         try_again: "Yritä uudelleen"
@@ -751,6 +814,7 @@ fi:
           title: "Näytä tekoälyvuorovaikutus"
           copy_request: "Kopioi pyyntö"
           copy_response: "Kopioi vastaus"
+          duration_label: "Kesto:"
           request: "Pyyntö"
           response: "Vastaus"
           next_log: "Seuraava"
@@ -842,19 +906,28 @@ fi:
             expanded: "Laajennettu"
             expanded_description: "tekoäly-yhteenvedoilla"
       discobot_discoveries:
-        main_title: "Discobot-löydöt"
-        regular_results: "Aiheet"
-        tell_me_more: "Kerro lisää..."
-        continue_convo: "Jatka keskustelua..."
+        main_title: "Kysy tekoälyltä"
         loading_convo: "Ladataan keskustelua"
-        collapse: "Supista"
-        timed_out: "Discobot ei löytänyt löytöjä. Jokin meni vikaan."
-        tooltip:
-          header: "Tekoälyhaku"
-          content: "Luonnollisen kielen haun tarjoaa %{model}"
-          actions:
-            info: "Miten se toimii?"
-            disable: "Poista käytöstä"
+        legacy:
+          main_title: "Discobot-löydöt"
+          regular_results: "Aiheet"
+          tell_me_more: "Kerro lisää..."
+          continue_convo: "Jatka keskustelua..."
+          loading_convo: "Ladataan keskustelua"
+          collapse: "Kutista"
+          timed_out: "Discobot ei löytänyt löytöjä. Jokin meni vikaan."
+          tooltip:
+            header: "Tekoälyhaku"
+            content: "Luonnollisen kielen haun tarjoaa %{model}"
+            actions:
+              info: "Miten se toimii?"
+              disable: "Poista käytöstä"
+        search_type: "Tekoäly"
+        search_all_topics: "Kaikki ketjut"
+        search_messages: "Viestit"
+        ask_ai: "Tekoäly"
+        sources:
+          related_discussions: "Liittyvät ketjut"
       user_preferences:
         empty: "Olennaisia asetuksia ei ole käytettävissä tällä hetkellä"
     review:

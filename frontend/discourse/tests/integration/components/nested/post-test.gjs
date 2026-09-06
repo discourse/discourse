@@ -94,6 +94,25 @@ module("Integration | Component | Nested | Post", function (hooks) {
     sinon.restore();
   });
 
+  test("uses nested replies affordance instead of flat post-menu replies button", async function (assert) {
+    this.post.setProperties({
+      reply_count: 2,
+      direct_reply_count: 2,
+      total_descendant_count: 2,
+    });
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-post__menu .post-action-menu__show-replies")
+      .doesNotExist(
+        "does not render the flat replies button in nested post menus"
+      );
+    assert
+      .dom(".nested-post__expand-replies")
+      .exists("keeps the nested replies expansion button");
+  });
+
   test("leaf posts can be collapsed from the depth line", async function (assert) {
     await renderComponent(this);
 
@@ -142,7 +161,7 @@ module("Integration | Component | Nested | Post", function (hooks) {
     );
   });
 
-  test("mobile collapsed posts keep an avatar in the collapsed bar", async function (assert) {
+  test("mobile collapsed posts keep an avatar in the gutter", async function (assert) {
     const site = getOwner(this).lookup("service:site");
     sinon.stub(site, "mobileView").value(true);
 
@@ -151,8 +170,11 @@ module("Integration | Component | Nested | Post", function (hooks) {
 
     assert.dom(".nested-post__article").doesNotExist("collapses the post body");
     assert
-      .dom(".nested-post__collapsed-avatar .avatar")
-      .exists("renders the post avatar in the mobile collapsed bar");
+      .dom(".nested-post__gutter .topic-avatar")
+      .exists("renders the post avatar area in the mobile gutter");
+    assert
+      .dom(".nested-post__collapsed-avatar")
+      .doesNotExist("does not duplicate the avatar in the collapsed bar");
   });
 
   test("post registration can update post topic", async function (assert) {
@@ -237,7 +259,7 @@ module("Integration | Component | Nested | Post", function (hooks) {
       "hydrates the focused path with the fetched child"
     );
     assert.strictEqual(
-      this.fetchedChildrenCache.get(2).childNodes,
+      this.fetchedChildrenCache.get("1:2").childNodes,
       focusedPath[0].children,
       "stores the fetched children in the shared cache"
     );
@@ -268,6 +290,99 @@ module("Integration | Component | Nested | Post", function (hooks) {
       .dom(".nested-post-children")
       .doesNotExist("does not mount the child loader");
     assert.verifySteps([], "does not request children while rendering");
+  });
+
+  test("renders server-flattened descendants once at the nesting depth cap", async function (assert) {
+    this.siteSettings.nested_replies_cap_nesting_depth = true;
+    this.siteSettings.nested_replies_max_depth = 3;
+    this.depth = 2;
+    this.post.setProperties({
+      direct_reply_count: 2,
+      total_descendant_count: 4,
+    });
+
+    const child = (id, postNumber) => ({
+      post: this.store.createRecord("post", {
+        id,
+        post_number: postNumber,
+        topic: this.topic,
+        user_id: 2,
+        username: `user-${id}`,
+        avatar_template: "/letter_avatar_proxy/v4/letter/u/25/48.png",
+        cooked: `<p>Post ${postNumber}</p>`,
+        created_at: "2026-01-01T00:00:00.000Z",
+        actions_summary: [],
+        direct_reply_count: 0,
+        total_descendant_count: 0,
+      }),
+      children: [],
+    });
+    const grandchild56 = child(56, 56);
+    const grandchild51 = child(51, 51);
+    this.children = [child(48, 48), child(49, 49), grandchild56, grandchild51];
+
+    await renderComponent(this);
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    appEvents.trigger("nested-replies:child-created", {
+      topicId: this.topic.id,
+      parentPostNumber: this.post.post_number,
+      post: grandchild56.post,
+    });
+
+    assert
+      .dom(".nested-post.--depth-3")
+      .exists({ count: 4 }, "renders every descendant at the capped depth");
+    assert
+      .dom('[data-post-id="56"]')
+      .exists({ count: 1 }, "renders a deep descendant exactly once");
+    assert
+      .dom('[data-post-id="51"]')
+      .exists({ count: 1 }, "renders descendants from each branch");
+    assert
+      .dom(".nested-post-children__load-more")
+      .doesNotExist("does not offer a fetch when every descendant is loaded");
+  });
+
+  test("recomputes capped descendant pagination when restoring child cache", async function (assert) {
+    this.siteSettings.nested_replies_cap_nesting_depth = true;
+    this.siteSettings.nested_replies_max_depth = 3;
+    this.depth = 2;
+    this.post.setProperties({
+      direct_reply_count: 2,
+      total_descendant_count: 3,
+    });
+
+    const cachedChild = this.store.createRecord("post", {
+      id: 48,
+      post_number: 48,
+      topic: this.topic,
+      user_id: 2,
+      username: "cached-user",
+      avatar_template: "/letter_avatar_proxy/v4/letter/c/25/48.png",
+      cooked: "<p>Cached post</p>",
+      created_at: "2026-01-01T00:00:00.000Z",
+      actions_summary: [],
+      direct_reply_count: 0,
+      total_descendant_count: 0,
+    });
+    this.fetchedChildrenCache.set("1:2", {
+      childNodes: [{ post: cachedChild, children: [] }],
+      page: 0,
+      hasMore: false,
+      fetchedFromServer: false,
+    });
+    this.expansionState.set(this.post.post_number, {
+      expanded: true,
+      collapsed: false,
+    });
+
+    await renderComponent(this);
+
+    assert.dom('[data-post-id="48"]').exists("restores the cached descendant");
+    assert
+      .dom(".nested-post-children__load-more")
+      .exists("offers the missing descendants despite stale cached hasMore");
   });
 
   test("renders multi-select controls", async function (assert) {

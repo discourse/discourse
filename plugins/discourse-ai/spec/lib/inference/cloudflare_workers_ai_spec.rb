@@ -45,12 +45,15 @@ RSpec.describe DiscourseAi::Inference::CloudflareWorkersAi do
       let(:response_status) { 500 }
       let(:response_body) { "Internal Server Error" }
 
-      it "raises a Net::HTTPBadResponse error" do
+      it "raises a structured provider error without logging the response" do
         allow(Rails.logger).to receive(:warn)
-        expect { cloudflare_workers_ai.perform!(content) }.to raise_error(Net::HTTPBadResponse)
-        expect(Rails.logger).to have_received(:warn).with(
-          "Cloudflare Workers AI Embeddings failed with status: #{response_status} body: #{response_body}",
-        )
+
+        expect { cloudflare_workers_ai.perform!(content) }.to raise_error(
+          DiscourseAi::Inference::EmbeddingInferenceError,
+        ) { |error|
+          expect([error.http_status, error.category]).to eq([500, :provider_unavailable])
+        }
+        expect(Rails.logger).not_to have_received(:warn)
       end
     end
   end

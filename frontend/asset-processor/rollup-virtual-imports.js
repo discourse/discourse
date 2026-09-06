@@ -1,27 +1,37 @@
-import { federatedExportNameFor } from "./federated-modules-helper";
-
-const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
+const SUPPORTED_FILE_EXTENSIONS = [
+  ".js",
+  ".js.es6",
+  ".hbs",
+  ".gjs",
+  ".ts",
+  ".gts",
+];
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
 export default {
-  "virtual:entrypoint": async (
-    moduleFilenames,
-    { themeId },
-    { basePath, context }
-  ) => {
-    let output = `const compatModules = {};`;
+  "virtual:entrypoint": (moduleFilenames, { themeId, pluginName }) => {
+    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
+    const imports = [];
+    const entries = [];
+    const warnings = [];
 
-    const moduleFilenamesSet = new Set(moduleFilenames);
     const exportedModules = new Set();
 
     let i = 1;
     for (const moduleFilename of moduleFilenames) {
+      // Type-only declaration files have no runtime module to export.
+      if (moduleFilename.endsWith(".d.ts")) {
+        continue;
+      }
+
       if (
         !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {
         // Unsupported file type. Log a warning and skip
-        output += `console.warn("[THEME ${themeId}] Unsupported file type: ${moduleFilename}");\n`;
+        warnings.push(
+          `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
+        );
         continue;
       }
 
@@ -59,42 +69,21 @@ export default {
       }
       exportedModules.add(importPath);
 
-      output += `import * as Mod${i} from "./${importPath}";\n`;
-      output += `compatModules["${compatModuleName}"] = Mod${i};\n\n`;
-
-      const resolvedId = await context.resolve(
-        `./${importPath}`,
-        `${basePath}virtual:main`
-      );
-      const loadedModule = await context.load(resolvedId);
-
-      const reexportPairs = loadedModule.exports.map((exportedName) => {
-        return `${exportedName} as ${federatedExportNameFor(compatModuleName, exportedName)}`;
-      });
-
-      const isIndexModule =
-        compatModuleName.endsWith("/index") &&
-        !moduleFilenamesSet.has(moduleFilename.replace("/index", ""));
-
-      if (isIndexModule) {
-        loadedModule.exports.forEach((exportedName) => {
-          const federatedExportName = federatedExportNameFor(
-            compatModuleName.replace(/\/index$/, ""),
-            exportedName
-          );
-          reexportPairs.push(`${exportedName} as ${federatedExportName}`);
-        });
-      }
-
-      output += `export * as ${federatedExportNameFor(compatModuleName, "*")} from "./${importPath}";\n`;
-      output += `export {\n${reexportPairs.join(",\n")}\n} from "./${importPath}";\n`;
+      imports.push(`import * as Mod${i} from "./${importPath}";`);
+      entries.push(`  "${compatModuleName}": Mod${i},`);
 
       i += 1;
     }
 
-    output += "export default compatModules;\n";
-
-    return output;
+    return [
+      ...imports,
+      ...warnings,
+      "const compatModules = {",
+      ...entries,
+      "};",
+      "export default compatModules;",
+      "",
+    ].join("\n");
   },
   "virtual:theme": ({ themeId }) => {
     return cleanMultiline(`
@@ -108,6 +97,49 @@ export default {
     `);
   },
 };
+
+// Virtual modules the loader resolves only as a redirect target. They are kept
+// out of the default export, and given a null-byte id, so that plugin and theme
+// code cannot import them by name.
+export const privateVirtualImports = {
+  "virtual:attributed-plugin-api": (opts) =>
+    attributedEntryFunction({
+      module: "discourse/lib/plugin-api",
+      exportName: "withPluginApi",
+      opts,
+    }),
+  "virtual:attributed-api-initializer": (opts) =>
+    attributedEntryFunction({
+      module: "discourse/lib/api",
+      exportName: "apiInitializer",
+      opts,
+    }),
+};
+
+// Wraps a core API-entry function so calls from this plugin or theme carry its
+// source on `opts`. Plugin and theme imports of `module` resolve here, so the
+// wrapper must export everything they are allowed to import from it.
+function attributedEntryFunction({ module, exportName, opts }) {
+  return cleanMultiline(`
+    import { _INTERNAL_SOURCE_KEY } from "discourse/lib/api";
+    import { ${exportName} as _${exportName} } from "${module}";
+
+    const SOURCE = Object.freeze(${JSON.stringify(customizationSourceFor(opts))});
+
+    export function ${exportName}(...args) {
+      // A leading string is the legacy version argument, which shifts opts along.
+      const optsIndex = typeof args[0] === "string" ? 2 : 1;
+      args[optsIndex] = { ...args[optsIndex], [_INTERNAL_SOURCE_KEY]: SOURCE };
+      return _${exportName}(...args);
+    }
+  `);
+}
+
+function customizationSourceFor({ themeId, pluginName }) {
+  return pluginName
+    ? { type: "plugin", name: pluginName }
+    : { type: "theme", id: themeId };
+}
 
 function cleanMultiline(str) {
   const lines = str.split("\n");

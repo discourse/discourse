@@ -48,6 +48,12 @@ module("Unit | Utility | i18n", function (hooks) {
           days: {
             other: "%{count} jours",
           },
+          empty_default: "",
+        },
+      },
+      es: {
+        js: {
+          empty_fallback: "",
         },
       },
       en: {
@@ -56,6 +62,8 @@ module("Unit | Utility | i18n", function (hooks) {
             world: "Hello World!",
             universe: "",
           },
+          empty_fallback: "English fallback value",
+          empty_default: "English default value",
           topic: {
             reply: {
               help: "begin composing a reply to this topic",
@@ -287,6 +295,46 @@ module("Unit | Utility | i18n", function (hooks) {
       "begin composing a reply to this topic",
       "falls back to English translations"
     );
+  });
+
+  test("empty string translation in the current locale is not treated as missing", function (assert) {
+    I18n.locale = "en";
+    I18n.fallbackLocale = "fr";
+
+    assert.strictEqual(
+      i18n("hello.universe"),
+      "",
+      "returns the empty string instead of falling through to the missing-translation key when a fallback locale is configured but lacks the key"
+    );
+  });
+
+  test("empty string from the fallback locale is preferred over cascading to the default locale", function (assert) {
+    I18n.locale = "fr";
+    I18n.fallbackLocale = "es";
+
+    assert.strictEqual(
+      i18n("empty_fallback"),
+      "",
+      "stops at the empty fallback-locale value instead of cascading to the default locale"
+    );
+  });
+
+  test("empty string from the default locale is preferred over cascading to English", function (assert) {
+    const originalDefaultLocale = I18n.defaultLocale;
+
+    try {
+      I18n.locale = "ja";
+      I18n.fallbackLocale = null;
+      I18n.defaultLocale = "fr";
+
+      assert.strictEqual(
+        i18n("empty_default"),
+        "",
+        "stops at the empty default-locale value instead of cascading to English"
+      );
+    } finally {
+      I18n.defaultLocale = originalDefaultLocale;
+    }
   });
 
   test("Dollar signs are properly escaped", function (assert) {

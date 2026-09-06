@@ -114,6 +114,16 @@ export default class Site extends RestModel {
     return map;
   }
 
+  groupName(groupId) {
+    const group = this.groupsById[groupId];
+    return group ? group.name : null;
+  }
+
+  groupFullName(groupId) {
+    const group = this.groupsById[groupId];
+    return group ? group.full_name : null;
+  }
+
   @dependentKeyCompat
   get desktopView() {
     return !this.mobileView;

@@ -6,7 +6,7 @@ module DiscourseAi
   module Completions
     class XlsToText
       XLS2CSV_TIMEOUT_SECONDS = 5
-      MAX_CONVERSION_OUTPUT_BYTES = 4 * 100_001
+      MAX_CONVERSION_OUTPUT_BYTES = 4 * TextNormalization::MAX_EXTRACTED_TEXT_CHARS
       SAFE_EXEC_ENV = { "PATH" => ENV["PATH"].to_s }.freeze
       XLS2CSV_RLIMITS = {
         cpu_seconds: XLS2CSV_TIMEOUT_SECONDS,
@@ -47,8 +47,11 @@ module DiscourseAi
           end
       end
 
+      CATDOC_CONFIG_PATH = "/etc/catdocrc"
+
       def self.sandbox_read_paths(path)
-        Discourse::SafeExec.default_read_paths + [File.realpath(path)]
+        Discourse::SafeExec.default_read_paths +
+          Discourse::SafeExec.existing_paths([CATDOC_CONFIG_PATH]) + [File.realpath(path)]
       end
     end
   end

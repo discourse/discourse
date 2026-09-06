@@ -8,6 +8,8 @@ const STREAMING_DIFF_TRUNCATE_THRESHOLD = 0.1;
 const STREAMING_DIFF_TRUNCATE_BUFFER = 10;
 const RUSH_MAX_TICKS = 10; // ≤ 10 visual diff refreshes
 const RUSH_TICK_INTERVAL = 100; // 100 ms between them → ≤ 1 s total
+const BACKLOG_DRAIN_TARGET = 500; // aim to catch up with received text within 500 ms
+const DIFF_REFRESH_INTERVAL = 100; // minimum ms between streaming diff recomputes
 
 export default class DiffStreamer {
   @tracked isStreaming = false;
@@ -21,6 +23,7 @@ export default class DiffStreamer {
   typingTimer = null;
   currentWordIndex = 0;
   currentCharIndex = 0;
+  lastDiffRefreshedAt = 0;
   jsDiff = null;
 
   bufferedToken = null;
@@ -142,6 +145,7 @@ export default class DiffStreamer {
     this.words = [];
     this.currentWordIndex = 0;
     this.currentCharIndex = 0;
+    this.lastDiffRefreshedAt = 0;
     this.bufferedToken = null;
 
     this.isStreaming = false;
@@ -203,9 +207,16 @@ export default class DiffStreamer {
       return;
     }
 
-    const limit = this.rushMode ? this.rushBatchSize : 1;
+    const limit = this.rushMode
+      ? this.rushBatchSize
+      : this.#adaptiveBatchSize();
     let emitted = 0;
-    while (emitted < limit && this.currentWordIndex < this.words.length) {
+    // once the limit is reached, keep going to the end of the current word so
+    // diff refreshes always happen on word boundaries
+    while (
+      this.currentWordIndex < this.words.length &&
+      (emitted < limit || this.currentCharIndex !== 0)
+    ) {
       const token = this.words[this.currentWordIndex];
       this.suggestion += token.charAt(this.currentCharIndex);
       this.currentCharIndex++;
@@ -224,7 +235,7 @@ export default class DiffStreamer {
         refresh = true;
       }
     } else {
-      refresh = this.currentCharIndex === 0;
+      refresh = Date.now() - this.lastDiffRefreshedAt >= DIFF_REFRESH_INTERVAL;
     }
 
     if (refresh || this.currentWordIndex >= this.words.length) {
@@ -236,6 +247,7 @@ export default class DiffStreamer {
           : this.jsDiff.diffWordsWithSpace(this.selectedText, this.suggestion),
         !this.rushMode
       );
+      this.lastDiffRefreshedAt = Date.now();
     }
 
     const doneStreaming = this.currentWordIndex >= this.words.length;
@@ -252,6 +264,18 @@ export default class DiffStreamer {
       const delay = this.rushMode ? RUSH_TICK_INTERVAL : this.typingDelay;
       this.typingTimer = later(this, this.#streamNextChar, delay);
     }
+  }
+
+  /**
+   * Computes how many characters to emit this tick so the animation drains
+   * its backlog within BACKLOG_DRAIN_TARGET instead of being capped at one
+   * character per tick regardless of how fast tokens actually arrive.
+   * @returns {number} Characters to emit on the next tick.
+   */
+  #adaptiveBatchSize() {
+    const backlog = this.lastResultText.length - this.suggestion.length;
+    const ticksInTarget = BACKLOG_DRAIN_TARGET / this.typingDelay;
+    return Math.max(1, Math.ceil(backlog / ticksInTarget));
   }
 
   /**

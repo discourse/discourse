@@ -154,7 +154,9 @@ const extension = {
                 // insert invalid mentions as text nodes
                 const textNode = view.state.schema.text(`@${name}`);
                 view.dispatch(
-                  view.state.tr.replaceWith(pos, pos + node.nodeSize, textNode)
+                  view.state.tr
+                    .replaceWith(pos, pos + node.nodeSize, textNode)
+                    .setMeta("addToHistory", false)
                 );
               }
             };

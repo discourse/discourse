@@ -3,35 +3,20 @@
 module Migrations
   module Converters
     module Discourse
-      class UserAssociatedAccounts < Conversion::ProgressStep
-        attr_accessor :source_db
+      class UserAssociatedAccounts < Conversion::Step
+        source { reads_table "user_associated_accounts", where: "user_id > 0" }
 
-        def max_progress
-          @source_db.count <<~SQL
-            SELECT COUNT(*)
-            FROM user_associated_accounts
-            WHERE user_id > 0
-          SQL
-        end
-
-        def items
-          @source_db.query <<~SQL
-            SELECT *
-            FROM user_associated_accounts
-            WHERE user_id > 0
-            ORDER BY id
-          SQL
-        end
-
-        def process_item(item)
-          IntermediateDB::UserAssociatedAccount.create(
-            provider_name: item[:provider_name],
-            user_id: item[:user_id],
-            created_at: item[:created_at],
-            info: item[:info],
-            last_used: item[:last_used],
-            provider_uid: item[:provider_uid],
-          )
+        processor do
+          def process(item)
+            IntermediateDB::UserAssociatedAccount.create(
+              provider_name: item[:provider_name],
+              user_id: item[:user_id],
+              created_at: item[:created_at],
+              info: item[:info],
+              last_used: item[:last_used],
+              provider_uid: item[:provider_uid],
+            )
+          end
         end
       end
     end

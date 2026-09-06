@@ -17,7 +17,7 @@ en:
       name: First Reaction
       description: Reacted to the post
       long_description: |
-        This badge is granted the first time you react to a post. Reacting to the posts is a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun. Share your reaction!
+        This badge is granted the first time you use the emoji reactions picker to react to a post. This is different from a standard Like: it's a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun!”
   reports:
     reactions:
       title: "Reactions"

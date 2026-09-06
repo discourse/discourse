@@ -12,6 +12,12 @@ sw:
           kpi:
             accepted_solutions:
               label: "Majibu yaliyokubaliwa"
+        sections:
+          support:
+            answerers:
+              staff: "Wasaidizi"
+              member: "Wanachama"
+              basic: "Kawaida"
   js:
     notifications:
       alt:
@@ -34,6 +40,12 @@ sw:
     topic_statuses:
       solved:
         help: "Hii mada ina suluhisho"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Mada"
+            category: "Kikundi"
     discourse_automation:
       triggerables:
         first_accepted_solution:

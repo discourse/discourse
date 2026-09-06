@@ -34,6 +34,10 @@ export function isProviderParamHidden(paramMeta, providerParamsData) {
   return false;
 }
 
+export function providerParamLabel(field, paramMeta) {
+  return paramMeta.label || `discourse_ai.llms.provider_fields.${field}`;
+}
+
 // Normalizes raw provider_params metadata (from the server) into a
 // consistent shape for the editor form.
 export function normalizeProviderParams(rawParams) {
@@ -63,6 +67,7 @@ export function normalizeProviderParams(rawParams) {
         default: value.default ?? undefined,
         hidden_if: value.hidden_if ?? undefined,
         depends_on: value.depends_on ?? undefined,
+        label: value.label ?? undefined,
         tooltip: value.tooltip ?? undefined,
         helpText: value.helpText ?? value.help_text ?? undefined,
       };

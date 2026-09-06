@@ -122,14 +122,18 @@ export default class GlobalNotice extends Component {
     if (this.site.get("isStaffWritesOnly")) {
       notices.push(
         Notice.create({
-          text: i18n("staff_writes_only_mode.enabled"),
+          text: this.currentUser
+            ? i18n("staff_writes_only_mode.enabled")
+            : i18n("staff_writes_only_mode.enabled_anonymous"),
           id: "alert-staff-writes-only",
         })
       );
     } else if (this.site.get("isReadOnly")) {
       notices.push(
         Notice.create({
-          text: i18n("read_only_mode.enabled"),
+          text: this.currentUser
+            ? i18n("read_only_mode.enabled")
+            : i18n("read_only_mode.enabled_anonymous"),
           id: "alert-read-only",
         })
       );

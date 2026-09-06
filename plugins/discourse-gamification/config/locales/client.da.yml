@@ -40,3 +40,8 @@ da:
       custom_range_from: "Fra"
       admin:
         name: "Navn"
+    discourse_workflows:
+      gamification_score:
+        username: "Bruger"
+        date: "Dato"
+        description: "Beskrivelse"

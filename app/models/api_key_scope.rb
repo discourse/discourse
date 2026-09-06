@@ -198,6 +198,9 @@ class ApiKeyScope < ActiveRecord::Base
           },
         },
         badges: {
+          list: {
+            actions: %w[badges#index admin/badges#index],
+          },
           create: {
             actions: %w[admin/badges#create],
           },

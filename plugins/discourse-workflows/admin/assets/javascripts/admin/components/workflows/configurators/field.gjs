@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
@@ -10,12 +11,14 @@ import {
   fieldShowDescription,
   fieldShowLabel,
   fieldSupportsExpression,
+  fieldType,
   findNodeType,
   isExpression,
   propertyDescription,
   propertyDynamicValueHint,
   propertyLabel,
   propertyPlaceholder,
+  propertyTooltip,
 } from "../../../lib/workflows/property-engine";
 
 const CRON_FIELD_PATTERN =
@@ -46,9 +49,16 @@ export default class Field extends Component {
   }
 
   get entry() {
-    return (
-      FIELD_CONTROL_REGISTRY[this.control] || FIELD_CONTROL_REGISTRY.default
-    );
+    const entry =
+      FIELD_CONTROL_REGISTRY[this.control] || FIELD_CONTROL_REGISTRY.default;
+
+    return applyValueTransformer("workflow-field-control", entry, {
+      control: this.control,
+      fieldName: this.args.fieldName,
+      node: this.args.node,
+      nodeParameters: this.args.nodeParameters,
+      schema: this.args.schema,
+    });
   }
 
   get renderer() {
@@ -100,6 +110,10 @@ export default class Field extends Component {
     return fieldShowLabel(this.args.schema);
   }
 
+  get showOptional() {
+    return this.args.showOptional ?? true;
+  }
+
   get format() {
     return fieldFormat(this.args.schema);
   }
@@ -113,6 +127,9 @@ export default class Field extends Component {
     const rules = [];
     if (schema.required) {
       rules.push("required");
+    }
+    if (fieldType(schema) === "integer" && !this.supportsExpression) {
+      rules.push("integer");
     }
     if (schema.min != null || schema.max != null) {
       const min = schema.min ?? Number.MIN_SAFE_INTEGER;
@@ -130,11 +147,20 @@ export default class Field extends Component {
     if (!fieldShowDescription(this.args.schema)) {
       return undefined;
     }
+
     const description = propertyDescription(
       this.nodeDefinition,
       this.args.fieldName
     );
     return description ? trustHTML(description) : undefined;
+  }
+
+  get fieldTooltip() {
+    if (!this.showLabel) {
+      return undefined;
+    }
+
+    return propertyTooltip(this.nodeDefinition, this.args.fieldName);
   }
 
   get dynamicValueHint() {
@@ -171,6 +197,7 @@ export default class Field extends Component {
         @nodeTypes={{@nodeTypes}}
         @schema={{@schema}}
         @session={{@session}}
+        @showOptional={{this.showOptional}}
         @dynamicValueHint={{this.dynamicValueHint}}
         @onSet={{@onSet}}
         @onBeforeStartTestSession={{@onBeforeStartTestSession}}
@@ -180,7 +207,9 @@ export default class Field extends Component {
         @name={{@fieldName}}
         @title={{this.fieldTitle}}
         @showTitle={{this.showLabel}}
+        @showOptional={{this.showOptional}}
         @description={{this.fieldDescription}}
+        @tooltip={{this.fieldTooltip}}
         @type={{this.resolvedFieldType}}
         @format={{this.format}}
         @validation={{this.validation}}
@@ -201,6 +230,8 @@ export default class Field extends Component {
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
               @nodes={{@nodes}}
+              @nodeTypes={{@nodeTypes}}
+              @connections={{@connections}}
               @formApi={{@formApi}}
               @session={{@session}}
               @supportsExpression={{this.supportsExpression}}
@@ -221,6 +252,8 @@ export default class Field extends Component {
             @nodeDefinition={{this.nodeDefinition}}
             @nodeParameters={{@nodeParameters}}
             @nodes={{@nodes}}
+            @nodeTypes={{@nodeTypes}}
+            @connections={{@connections}}
             @formApi={{@formApi}}
             @session={{@session}}
             @supportsExpression={{this.supportsExpression}}
@@ -229,6 +262,15 @@ export default class Field extends Component {
             @onBeforeStartTestSession={{@onBeforeStartTestSession}}
           />
         {{/if}}
+        {{#each this.entry.addons as |Addon|}}
+          <Addon
+            @field={{field}}
+            @fieldName={{@fieldName}}
+            @node={{@node}}
+            @nodeParameters={{@nodeParameters}}
+            @schema={{@schema}}
+          />
+        {{/each}}
       </@form.Field>
     {{/if}}
   </template>

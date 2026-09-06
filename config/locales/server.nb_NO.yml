@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  llms_txt:
+    sections:
+      optional: "Valgfritt"
+    links:
+      search:
+        label: "Søk"
+      categories:
+        label: "Kategorier"
+      about:
+        label: "Om"
+      guidelines:
+        label: "Retningslinjer"
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM, YYYY"
@@ -117,7 +129,6 @@ nb_NO:
       exclusion: er reservert
       greater_than: må være større enn %{count}
       greater_than_or_equal_to: må være lik eller større enn %{count}
-      has_already_been_used: "har allerede blitt brukt"
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
       is_invalid: "virker uklart, er det en komplett setning?"
@@ -294,6 +305,11 @@ nb_NO:
       trust_level_2: "tillitsnivå_2"
       trust_level_3: "tillitsnivå_3"
       trust_level_4: "tillitsnivå_4"
+    default_full_names:
+      everyone: "Alle"
+      admins: "Adminer"
+      moderators: "Moderatorer"
+      staff: "Stab"
     request_membership_pm:
       title: "Ønske om medlemskap i gruppen @%{group_name}"
   education:
@@ -504,6 +520,10 @@ nb_NO:
       iphone: "iPhone"
     os:
       android: "Android"
+  admin_site_traffic_explorer:
+    unknown: "Ukjent"
+    traffic_types:
+      anonymous: "Anonym"
   change_email:
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
@@ -694,10 +714,16 @@ nb_NO:
         share: "Del"
       types:
         staff: "Stab"
+    posters_by_member_type_members:
+      labels:
+        user: "Bruker"
+        count: "Innlegg"
+        share: "Del"
     trust_level_pipeline:
       labels:
         count: "Medlemmer"
         share: "Del"
+        signups: "Påmeldinger"
       levels:
         "0": "Ny"
         "1": "Basic"
@@ -817,6 +843,9 @@ nb_NO:
         num_clicks: "Klikk"
         num_topics: "Emner"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøk"
+    top_entry_urls:
       labels:
         count: "Besøk"
     top_referrers_by_browser_pageviews:
@@ -982,7 +1011,6 @@ nb_NO:
     editing_grace_period_max_diff: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 0 og 1)"
     editing_grace_period_max_diff_high_trust: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 2 og opp)"
     staff_edit_locks_post: "Innlegg vil bli sperret for redigering av brukere hvis de har vært redigert av staben "
-    edit_history_visible_to_public: "La alle se tidligere versjoner av et redigert innlegg. Hvis det er slått av, kan kun staben se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
     fixed_category_positions: "Hvis denne er valgt kan du manuelt bestemme rekkefølgen i listen over kategorier. Ellers vil kategoriene sorteres automatisk basert på aktivitet."
     add_rel_nofollow_to_user_content: 'Legg til rel nofollow på alle lenker som publiseres av brukere, bortsett fra interne lenker (inkludert foreldredomener). Hvis du endrer denne, må du rebake alle innlegg med: "rake posts:rebake"'
@@ -1326,6 +1354,9 @@ nb_NO:
       message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
   safe_mode:
     title: "Start sikkerhetsmodus"
+  design_wizard:
+    palette_pairs:
+      default: "Forvalg"
   wizard:
     title: "Discourse-oppsett"
     step:
@@ -1340,6 +1371,8 @@ nb_NO:
               private:
                 label: "Privat"
   onebox:
+    google_meet:
+      meeting_code: "Kode:"
     github:
       closed: "lukket"
       status_date:
@@ -1370,6 +1403,10 @@ nb_NO:
       low: "Lav"
       medium: "Middels"
       high: "Høy"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekund"
+        other: "%{count} sekunder"
     actions:
       agree:
         title: "Ja"

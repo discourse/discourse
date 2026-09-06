@@ -23,7 +23,7 @@ pl_PL:
       name: Pierwsza reakcja
       description: Zareagowano na post
       long_description: |
-        Ta odznaka jest przyznawana za pierwszą reakcję na post. Reagowanie na posty to świetny sposób, aby dać znać innym członkom społeczności, że ich posty były interesujące, przydatne, fajne lub zabawne. Podziel się swoją reakcją!
+        Ta odznaka jest przyznawana za pierwszym razem, gdy użyjesz selektora reakcji emoji, aby zareagować na wpis. To coś innego niż standardowe polubienie: to świetny sposób, aby dać znać innym członkom społeczności, że to, co opublikowali, było interesujące, przydatne, fajne lub zabawne!”
   reports:
     reactions:
       title: "Reakcje"

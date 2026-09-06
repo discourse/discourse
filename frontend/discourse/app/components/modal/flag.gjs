@@ -17,8 +17,6 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
-const NOTIFY_MODERATORS_KEY = "notify_moderators";
-
 export default class Flag extends Component {
   @service adminTools;
   @service currentUser;
@@ -50,20 +48,20 @@ export default class Flag extends Component {
       label: i18n("flagging.take_action"),
       actions: [
         {
-          id: "agree_and_hide",
+          action_name: "agree_and_hide",
           icon: "thumbs-up",
           label: i18n("flagging.take_action_options.default.title"),
           description: i18n("flagging.take_action_options.default.details"),
         },
         {
-          id: "agree_and_suspend",
+          action_name: "agree_and_suspend",
           icon: "ban",
           label: i18n("flagging.take_action_options.suspend.title"),
           description: i18n("flagging.take_action_options.suspend.details"),
           client_action: "suspend",
         },
         {
-          id: "agree_and_silence",
+          action_name: "agree_and_silence",
           icon: "microphone-slash",
           label: i18n("flagging.take_action_options.silence.title"),
           description: i18n("flagging.take_action_options.silence.details"),
@@ -125,10 +123,6 @@ export default class Flag extends Component {
       len >= this.siteSettings.min_personal_message_post_length &&
       len <= MAX_MESSAGE_LENGTH
     );
-  }
-
-  get notifyModeratorsFlag() {
-    return this.flagsAvailable.find((f) => f.id === NOTIFY_MODERATORS_KEY);
   }
 
   get canTakeAction() {
@@ -217,7 +211,6 @@ export default class Flag extends Component {
 
   @action
   flagForReview() {
-    this.selected ||= this.notifyModeratorsFlag;
     this.createFlag({ queue_for_review: true });
     this.args.model.setHidden();
   }
@@ -297,7 +290,7 @@ export default class Flag extends Component {
           <DButton
             class="btn-danger flag-modal__flag-for-review"
             @action={{this.flagForReview}}
-            @disabled={{not this.submitEnabled this.notifyModeratorsFlag}}
+            @disabled={{not this.submitEnabled}}
             @icon="triangle-exclamation"
             @label="flagging.flag_for_review"
           />

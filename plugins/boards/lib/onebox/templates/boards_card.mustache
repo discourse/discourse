@@ -1,0 +1,59 @@
+<aside class="onebox discourse-boards-onebox discourse-boards-card-onebox">
+  <div class="discourse-boards-card__row discourse-boards-card__title-row">
+    <a href="{{card_url}}" class="discourse-boards-card__title">
+      <svg
+        class="fa d-icon d-icon-far-rectangle-list
+ svg-icon svg-string"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use href="#far-rectangle-list
+"></use>
+      </svg>
+      {{card_name}}
+    </a>
+  </div>
+
+  <div class="discourse-boards-card__row">
+    <a href="{{board_url}}" class="discourse-boards-board-pill"><svg
+            class="fa d-icon d-icon-table-columns svg-icon svg-string"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <use href="#table-columns"></use>
+          </svg>{{board_name}}</a>
+              <span class="discourse-boards-column-pill">
+      {{#card_column_icon}}
+        <svg
+          class="fa d-icon d-icon-{{card_column_icon}} svg-icon svg-string"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="#{{card_column_icon}}"></use>
+        </svg>
+      {{/card_column_icon}}
+      {{card_column_title}}
+    </span>
+  </div>
+
+  {{#tags_preview}}
+    <div class="discourse-boards-card__row discourse-boards-card__tags">
+      {{{card_tags}}}
+    </div>
+  {{/tags_preview}}
+
+  {{#has_notes}}
+    <div class="discourse-boards-card__notes">
+      {{{notes}}}
+    </div>
+  {{/has_notes}}
+
+  <div class="discourse-boards-card__row discourse-boards-card__detail-row">
+    <div class="discourse-boards-card__last-post-by">
+      <span
+        class="relative-date"
+        data-time="{{updated_at_ms}}"
+        data-format="tiny"
+        title="{{updated_at_title}}"
+      >{{updated_at_tiny}}</span>
+      ({{updater_username}})
+    </div>
+  </div>
+</aside>

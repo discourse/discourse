@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    boards:
+      board:
+        remove_card: "Eemalda"
+        title: "Pealkiri"
+        tags: "Sildid"
+        assigned_to: "Määratud kasutajale"
+        topic_reply_count:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        assign: "Määra"
+        unassign: "Eemalda määramine"
+      manage:
+        name: "Nimi"
+        constraint_categories: "Liigid"
+        constraint_tags: "Sildid"
+        columns:
+          remove: "Eemalda"
+          column_title: "Pealkiri"
+          icon: "Ikoon"
+          color: "Värv"
+          move_to_assigned_unassign: "Eemalda määramine"
+          move_to_status_open: "Ava"
+          move_to_status_closed: "Suletud"

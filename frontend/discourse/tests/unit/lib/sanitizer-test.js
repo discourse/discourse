@@ -218,6 +218,38 @@ module("Unit | Utility | sanitizer", function (hooks) {
     );
   });
 
+  test("sanitize disallows iframe src with path traversal segments", function (assert) {
+    const engine = build({
+      siteSettings: {
+        allowed_iframes: "https://www.example.com/*/preview/",
+      },
+    });
+    const blocked = (src, description) => {
+      assert.strictEqual(
+        engine.cook(`<iframe src="${src}"></iframe>`),
+        "",
+        description
+      );
+    };
+
+    blocked(
+      "https://www.example.com/wild/preview/%2e%2e",
+      "disallows iframe with trailing URL-encoded path traversal"
+    );
+    blocked(
+      "https://www.example.com/wild/preview/%2e%2e?foo=bar",
+      "disallows iframe with URL-encoded path traversal before query string"
+    );
+    blocked(
+      "https://www.example.com/wild/preview/%2e%2e#fragment",
+      "disallows iframe with URL-encoded path traversal before fragment"
+    );
+    blocked(
+      "https://www.example.com/wild/preview/..\\outside",
+      "disallows iframe with literal backslash path traversal"
+    );
+  });
+
   test("ids on headings", function (assert) {
     const engine = build({ siteSettings: {} });
     assert.strictEqual(
@@ -248,6 +280,32 @@ module("Unit | Utility | sanitizer", function (hooks) {
       engine.sanitize(`<h6 id="heading--discourse">Test Heading</h6>`),
       `<h6 id="heading--discourse">Test Heading</h6>`
     );
+  });
+
+  test("wildcard iframe origins stop at URL authority boundaries", function (assert) {
+    const engine = build({
+      siteSettings: { allowed_iframes: "https://*.example.com/" },
+    });
+    const iframe = (url) => `<iframe src="${url}"></iframe>`;
+
+    assert.strictEqual(
+      engine.sanitize(iframe("https://deep.embed.example.com/player")),
+      iframe("https://deep.embed.example.com/player"),
+      "allows legitimate deep subdomains"
+    );
+
+    [
+      "https://attacker.example/@embed.example.com/player",
+      "https://attacker.example?@embed.example.com/player",
+      "https://attacker.example#@embed.example.com/player",
+      "https://attacker.example\\@embed.example.com/player",
+    ].forEach((url) => {
+      assert.strictEqual(
+        engine.sanitize(iframe(url)),
+        "",
+        `rejects an iframe whose authority ends at ${url.match(/[/?#\\]/)[0]}`
+      );
+    });
   });
 
   test("autoplay videos must be muted", function (assert) {

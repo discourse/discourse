@@ -5,6 +5,7 @@ describe "House ads in nested replies view" do
   fab!(:topic)
   fab!(:op) { Fabricate(:post, topic: topic) }
   fab!(:root_replies) { Fabricate.times(7, :post, topic: topic) }
+  fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
   fab!(:house_ad)
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }

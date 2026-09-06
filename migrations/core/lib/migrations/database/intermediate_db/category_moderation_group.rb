@@ -11,10 +11,11 @@ module Migrations
         SQL = <<~SQL
           INSERT INTO category_moderation_groups (
             category_id,
-            group_id
+            group_id,
+            created_at
           )
           VALUES (
-            ?, ?
+            ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -23,10 +24,16 @@ module Migrations
         #
         # @param category_id   [Integer, String]
         # @param group_id      [Integer, String]
+        # @param created_at    [Time, nil]
         #
         # @return [void]
-        def self.create(category_id:, group_id:)
-          Migrations::Database::IntermediateDB.insert(SQL, category_id, group_id)
+        def self.create(category_id:, group_id:, created_at: nil)
+          Migrations::Database::IntermediateDB.insert(
+            SQL,
+            category_id,
+            group_id,
+            Migrations::Database.format_datetime(created_at),
+          )
         end
       end
     end

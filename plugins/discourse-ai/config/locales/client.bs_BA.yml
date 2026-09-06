@@ -34,6 +34,19 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Greška"
+        response: "Odgovor"
+      ai_tool_approval:
+        loading: "Obrađuje..."
+        tool: "Action"
+        user: "User"
+        approve: "Odobri"
+        reject: "Odbij"
+        approved: "Dozvojeno"
+        rejected: "Odbijeni"
       llm_selector:
         none: "Ništa"
       features:
@@ -52,12 +65,30 @@ bs_BA:
           reset: "Resetovati"
         search:
           name: "Pretraži"
+        image_caption:
+          setting_groups:
+            settings: "Postavke"
         spam:
           name: "Spam"
       modals:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prevodi"
+        category_scope: "Kategorije"
+        model_progress:
+          detail:
+            columns:
+              pending: "Na čekanju."
+              total: "Suma"
+          targets:
+            post:
+              title: "Objave"
+            topic:
+              title: "Topics"
+            category:
+              title: "Kategorije"
+            tag:
+              title: "Oznake"
         stats:
           eta_hours:
             one: "%{count} sat"
@@ -81,6 +112,33 @@ bs_BA:
         summary: "Sažetak"
         username: "Nadimak"
         total: "Suma"
+      logs:
+        short_title: "Logs"
+        apply: "Snimi"
+        successful: "Uspješan"
+        failed: "Neuspješno"
+        unknown: "Unknown"
+        time: "Vrijeme"
+        when: "When"
+        request: "Zatraži"
+        user: "User"
+        context: "Context"
+        topic: "Topic"
+        post: "Objava"
+        post_short: "Post %{id}"
+        duration: "Trajanje"
+        actions: "Akcije"
+        view_details: "Details"
+        periods:
+          custom: "Custom"
+        detail:
+          request: "Zatraži"
+          response: "Odgovor"
+          context: "Context"
+        retention:
+          summary_stage: "Sažetak"
+          deleted_stage: "Isbrisano"
+          save: "Sačuvaj"
       ai_agent:
         name: "Ime"
         edit: "Izmijeni"
@@ -91,6 +149,12 @@ bs_BA:
         enabled: "Omogućen?"
         allowed_groups: "Dozvoljene grupe"
         delete: "Delete"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Nisko"
+          medium: "Srednije"
+          high: "Visoko"
+          max: "Maksimalno"
         response_format:
           open_modal: "Izmijeni"
           modal:
@@ -132,6 +196,9 @@ bs_BA:
           required: "Required"
       llms:
         display_name: "Ime"
+        vision_modes:
+          disabled:
+            title: "Neomogućen"
         save: "Sačuvaj"
         edit: "Izmijeni"
         delete: Delete
@@ -145,7 +212,6 @@ bs_BA:
         tests:
           success: "Uspjeh!"
         providers:
-          google: "Google"
           fake: "Custom"
       ai_helper:
         context_menu:
@@ -158,8 +224,6 @@ bs_BA:
           cancel: "Odustani"
         thumbnail_suggestions:
           try_again: "Pokušaj ponovo"
-        image_caption:
-          save_caption: "Sačuvaj"
       embeddings:
         save: "Sačuvaj"
         delete: "Delete"
@@ -172,6 +236,7 @@ bs_BA:
           fake: "Custom"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Trajanje:"
           request: "Zatraži"
           response: "Odgovor"
           next_log: "Iduće"
@@ -191,8 +256,10 @@ bs_BA:
           table:
             total_count: "Suma"
       discobot_discoveries:
-        regular_results: "Topics"
-        collapse: "Spusti"
-        tooltip:
-          actions:
-            disable: "Onemogući"
+        legacy:
+          regular_results: "Topics"
+          collapse: "Spusti"
+          tooltip:
+            actions:
+              disable: "Onemogući"
+        search_messages: "Poruke"

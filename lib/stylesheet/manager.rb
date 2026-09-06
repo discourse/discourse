@@ -17,6 +17,7 @@ class Stylesheet::Manager
   private_constant :CACHE_PATH
 
   MANIFEST_DIR = "#{Rails.root.join("tmp/cache/assets/#{Rails.env}")}"
+  VARIABLE_RENAMES_PATH = Rails.root.join("app/assets/stylesheets/variable-renames.json")
   THEME_REGEX = /_theme(_rtl)?\z/
   COLOR_SCHEME_STYLESHEET = "color_definitions"
 
@@ -49,7 +50,7 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    targets = %i[common desktop mobile admin wizard]
+    targets = %i[common admin wizard]
     targets += targets.map { |t| :"#{t}_rtl" }
 
     targets +=
@@ -69,9 +70,14 @@ class Stylesheet::Manager
       )
 
     targets.each do |target|
-      $stderr.puts "precompile target: #{target}"
+      builder = Stylesheet::Manager::Builder.new(target: target, manager: nil)
 
-      Stylesheet::Manager::Builder.new(target: target, manager: nil).compile(force: true)
+      if builder.hydrate_from_cache!
+        $stderr.puts "precompile target: #{target} (cached)"
+      else
+        $stderr.puts "precompile target: #{target}"
+        builder.compile
+      end
     end
   end
 
@@ -108,8 +114,13 @@ class Stylesheet::Manager
               Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
 
             next if !scss_checker.has_scss(theme.id)
-            $stderr.puts "precompile target: #{target} #{theme.name}"
-            builder.compile(force: true)
+
+            if builder.hydrate_from_cache!
+              $stderr.puts "precompile target: #{target} #{theme.name} (cached)"
+            else
+              $stderr.puts "precompile target: #{target} #{theme.name}"
+              builder.compile
+            end
             compiled << "#{target}_#{theme.id}"
           end
       end
@@ -118,13 +129,20 @@ class Stylesheet::Manager
       theme_dark_color_scheme = ColorScheme.find_by_id(dark_color_scheme_id)
       theme = manager.get_theme(theme_id)
       [theme_color_scheme, theme_dark_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
-        Stylesheet::Manager::Builder.new(
-          target: COLOR_SCHEME_STYLESHEET,
-          theme: theme,
-          color_scheme: scheme,
-          manager: manager,
-        ).compile(force: true)
+        builder =
+          Stylesheet::Manager::Builder.new(
+            target: COLOR_SCHEME_STYLESHEET,
+            theme: theme,
+            color_scheme: scheme,
+            manager: manager,
+          )
+
+        if builder.hydrate_from_cache!
+          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (cached)"
+        else
+          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
+          builder.compile
+        end
       end
 
       clear_color_scheme_cache!
@@ -172,6 +190,7 @@ class Stylesheet::Manager
       "#{Rails.root.join("app/assets/stylesheets/**/*.*css")}",
       "#{Rails.root.join("app/assets/images/**/*.*")}",
       "#{Rails.root.join("lib/stylesheet/*.rb")}",
+      VARIABLE_RENAMES_PATH.to_s,
     ]
 
     Discourse.plugins.each do |plugin|
@@ -250,11 +269,11 @@ class Stylesheet::Manager
     themes
   end
 
-  def stylesheet_data(target = :desktop)
+  def stylesheet_data(target)
     stylesheet_details(target, "all")
   end
 
-  def stylesheet_preload_tag(target = :desktop, media = "all")
+  def stylesheet_preload_tag(target, media = "all")
     stylesheets = stylesheet_details(target, media)
     stylesheets
       .map do |stylesheet|
@@ -265,7 +284,7 @@ class Stylesheet::Manager
       .html_safe
   end
 
-  def stylesheet_link_tag(target = :desktop, media = "all", preload_callback = nil)
+  def stylesheet_link_tag(target, media = "all", preload_callback = nil)
     stylesheets = stylesheet_details(target, media)
     stylesheets
       .map do |stylesheet|
@@ -281,7 +300,7 @@ class Stylesheet::Manager
       .html_safe
   end
 
-  def stylesheet_details(target = :desktop, media = "all")
+  def stylesheet_details(target, media = "all")
     target = target.to_sym
     current_hostname = Discourse.current_hostname
     relative_url_root = GlobalSetting.relative_url_root

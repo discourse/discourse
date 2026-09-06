@@ -26,6 +26,40 @@ RSpec.describe ThemeStore::GitImporter do
       @ssh_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_ssh_#{hex}"
     end
 
+    it "reports safe reasons for Git command failures" do
+      failures = {
+        "Permission denied (publickey)." => "themes.import_error.git_authentication",
+        "fatal: Remote branch missing not found in upstream origin" =>
+          "themes.import_error.git_branch_not_found",
+        "ERROR: Repository not found." => "themes.import_error.git_repository_not_found",
+      }
+
+      failures.each do |stderr, translation_key|
+        status = stub(exited?: true, exitstatus: 128)
+        error = Discourse::Utils::CommandError.new("Git failed", stderr: stderr, status: status)
+        Discourse::Utils.stubs(:execute_command).raises(error)
+
+        importer = ThemeStore::GitImporter.new(ssh_url, private_key: "private_key")
+
+        expect { importer.import! }.to raise_error(
+          RemoteTheme::ImportError,
+          I18n.t(translation_key),
+        )
+      end
+
+      timeout_status = stub(exited?: true, exitstatus: 124)
+      timeout_error =
+        Discourse::Utils::CommandError.new("Git timed out", stderr: "", status: timeout_status)
+      Discourse::Utils.stubs(:execute_command).raises(timeout_error)
+
+      importer = ThemeStore::GitImporter.new(ssh_url, private_key: "private_key")
+
+      expect { importer.import! }.to raise_error(
+        RemoteTheme::ImportError,
+        I18n.t("themes.import_error.git_timeout"),
+      )
+    end
+
     it "imports ssh urls" do
       Discourse::Utils.expects(:execute_command).with(
         {

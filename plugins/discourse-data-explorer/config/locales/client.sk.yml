@@ -50,6 +50,9 @@ sk:
       run: "Spustiť"
       undo: "Zahodenie zmien"
       delete: "Odstrániť"
+      chart:
+        form:
+          bar: "Lišta"
       others_dirty: "Dotaz obsahuje neuložené zmeny, ktoré sa stratia, ak prejdete preč."
       run_time: "Dotaz bol dokončený za %{value} ms."
       result_count:

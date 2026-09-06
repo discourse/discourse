@@ -3,9 +3,10 @@
 RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
   after { Migrations::Tooling::Schema.reset! }
 
-  def make_table(name, model_mode: nil)
+  def make_table(name, model_mode: nil, conflict_strategy: :raise)
     Migrations::Tooling::Schema::TableDefinition.new(
       name:,
+      conflict_strategy:,
       columns: [
         Migrations::Tooling::Schema::ColumnDefinition.new(
           name: "id",
@@ -158,6 +159,37 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
       end
     end
 
+    it "generates a plain `INSERT` and no conflict strategy for the default `:raise`" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+        stub_validation_and_resolution(resolved_definition)
+
+        described_class.new(Migrations::Tooling::Schema).generate
+
+        model_content = File.read(File.join(paths[:models], "user.rb"))
+        expect(model_content).to include("INSERT INTO users")
+        expect(model_content).not_to include("INSERT OR IGNORE")
+        expect(model_content).not_to include("def self.conflict_strategy")
+      end
+    end
+
+    it "generates `INSERT OR IGNORE` and a conflict strategy for `:ignore`" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+
+        table = make_table("users", conflict_strategy: :ignore)
+        definition = Migrations::Tooling::Schema::Definition.new(tables: [table], enums: [])
+        stub_validation_and_resolution(definition)
+
+        described_class.new(Migrations::Tooling::Schema).generate
+
+        model_content = File.read(File.join(paths[:models], "user.rb"))
+        expect(model_content).to include("INSERT OR IGNORE INTO users")
+        expect(model_content).to include("def self.conflict_strategy")
+        expect(model_content).to include(":ignore")
+      end
+    end
+
     it "does not create a model file for :manual mode even when models directory exists" do
       Dir.mktmpdir do |tmpdir|
         paths = configure_output(tmpdir)
@@ -171,6 +203,41 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         described_class.new(Migrations::Tooling::Schema).generate
 
         expect(File.exist?(File.join(paths[:models], "log_entry.rb"))).to be false
+      end
+    end
+
+    it "deletes generated files that are no longer produced" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+        stub_validation_and_resolution(resolved_definition)
+
+        FileUtils.mkdir_p(paths[:models])
+        stale_path = File.join(paths[:models], "old_model.rb")
+        File.write(stale_path, "# This file is auto-generated from the Models schema.\n")
+
+        generator = described_class.new(Migrations::Tooling::Schema)
+        generator.generate
+
+        expect(File.exist?(stale_path)).to be false
+        expect(generator.deleted_files.size).to eq(1)
+        expect(generator.deleted_files.first).to end_with("old_model.rb")
+      end
+    end
+
+    it "keeps files without the auto-generated header" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+        stub_validation_and_resolution(resolved_definition)
+
+        FileUtils.mkdir_p(paths[:models])
+        manual_path = File.join(paths[:models], "manual_model.rb")
+        File.write(manual_path, "# Hand-written model\n")
+
+        generator = described_class.new(Migrations::Tooling::Schema)
+        generator.generate
+
+        expect(File.exist?(manual_path)).to be true
+        expect(generator.deleted_files).to be_empty
       end
     end
 

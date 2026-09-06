@@ -22,6 +22,7 @@ module DiscourseWorkflows
             icon: "reply",
             color: "purple",
           },
+          output_contracts: [{ mode: :passthrough }],
           properties: {
             response_type: {
               type: :options,

@@ -77,6 +77,11 @@ class SidekiqPauser
 
             @mutex.synchronize do
               @dbs.each do |db|
+                if !RailsMultisite::ConnectionManagement.has_db?(db)
+                  @dbs.delete(db)
+                  next
+                end
+
                 RailsMultisite::ConnectionManagement.with_connection(db) do
                   if !Discourse.redis.expire(PAUSED_KEY, TTL)
                     # if it was unpaused in another process we got to remove the
@@ -135,8 +140,9 @@ class Sidekiq::Pausable
   private
 
   def sidekiq_paused?(msg)
-    if site_id = msg["args"]&.first&.dig("current_site_id")
-      RailsMultisite::ConnectionManagement.with_connection(site_id) { Sidekiq.paused? }
-    end
+    site_id = msg["args"]&.first&.dig("current_site_id")
+    return false if !site_id || !RailsMultisite::ConnectionManagement.has_db?(site_id)
+
+    RailsMultisite::ConnectionManagement.with_connection(site_id) { Sidekiq.paused? }
   end
 end

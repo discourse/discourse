@@ -571,6 +571,15 @@ acceptance(`Topic last visit line`, function (needs) {
       .dom(".topic-post-visited-line.post-10")
       .exists("shows the last visited line on the right post");
 
+    assert
+      .dom(".topic-post-visited-line.post-10 .topic-post-visited-message")
+      .hasAria("level", "2", "the marker is part of heading navigation")
+      .hasAttribute(
+        "role",
+        "heading",
+        "the marker is part of heading navigation"
+      );
+
     await visit("/t/-/9");
 
     assert

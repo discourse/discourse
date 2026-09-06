@@ -1,10 +1,27 @@
 # frozen_string_literal: true
 
+require "strscan"
+
 module DiscourseDataExplorer
   module DataExplorer
+    # the lookbehind skips `::type` casts
+    PARAM_REGEX = /(?<!:):([a-zA-Z_][a-zA-Z0-9_]*)/
+
     # Used for ftype calls, see https://www.rubydoc.info/gems/pg/0.17.1/PG%2FResult:ftype
     # and /usr/include/postgresql/server/catalog/pg_type_d.h
     PG_TYPE_OID_JSON = 114
+    PG_TYPE_OID_JSON_ARRAY = 199
+    PG_TYPE_OID_JSONB = 3802
+    PG_TYPE_OID_JSONB_ARRAY = 3807
+    PG_TYPE_OIDS_JSON = [
+      PG_TYPE_OID_JSON,
+      PG_TYPE_OID_JSON_ARRAY,
+      PG_TYPE_OID_JSONB,
+      PG_TYPE_OID_JSONB_ARRAY,
+    ]
+    PG_TYPE_OID_TEXT = 25
+    PG_TYPE_OID_DATE = 1082
+    PG_TYPE_OID_TIMESTAMP = 1114
 
     # Run a data explorer query on the currently connected database.
     #
@@ -19,6 +36,15 @@ module DiscourseDataExplorer
     #   duration_nanos - the query duration, in nanoseconds
     #   explain - the query
     def self.run_query(query, req_params = {}, opts = {})
+      run_query_with_values(query, query.cast_params(req_params, opts), opts)
+    rescue ValidationError => e
+      { error: e, duration_nanos: 0 }
+    end
+
+    # Execute a query binding an already-resolved hash of parameter values,
+    # skipping the declared-parameter casting `run_query` does. Callers with
+    # undeclared parameters, such as a workflow's raw SQL node, use this directly.
+    def self.run_query_with_values(query, values = {}, opts = {})
       # Safety checks
       # see test 'doesn't allow you to modify the database #2'
       if query.sql =~ /;/
@@ -26,9 +52,11 @@ module DiscourseDataExplorer
         return { error: err, duration_nanos: 0 }
       end
 
-      query_args = {}
+      executable_sql = nil
+      binds = []
       begin
-        query_args = query.cast_params(req_params, opts)
+        executable_sql, binds =
+          rewrite_to_binds(strip_comments(query.sql), values, bind_oid_hints(query))
       rescue ValidationError => e
         return { error: e, duration_nanos: 0 }
       end
@@ -42,7 +70,7 @@ module DiscourseDataExplorer
           # Set a statement timeout so we can't tie up the server
           DB.exec "SET LOCAL statement_timeout = 10000"
 
-          # SQL comments are for the benefits of the slow queries log
+          # Add trusted instrumentation after removing comments from the stored query.
           started_by = opts[:current_user]&.username
           sql = <<~SQL
             /*
@@ -51,30 +79,25 @@ module DiscourseDataExplorer
             #{"* Started by: #{started_by}" if started_by}
             */
             WITH query AS (
-            #{query.sql}
+            #{executable_sql}
             ) SELECT * FROM query
             LIMIT #{opts[:limit] || SiteSetting.data_explorer_query_result_limit}
           SQL
 
           time_start = Time.now
 
-          # Using MiniSql::InlineParamEncoder directly instead of DB.param_encoder because current implementation of
-          # DB.param_encoder is meant for SQL fragments and not an entire SQL string.
-          sql =
-            MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection).encode(
-              sql,
-              query_args,
-            )
-
-          result = ActiveRecord::Base.connection.raw_connection.async_exec(sql)
+          result = ActiveRecord::Base.connection.raw_connection.async_exec_params(sql, binds)
           result.check # make sure it's done
           time_end = Time.now
 
           if opts[:explain]
             explain =
-              DB
-                .query_hash("EXPLAIN #{query.sql}", query_args)
-                .map { |row| row["QUERY PLAN"] }.join "\n"
+              ActiveRecord::Base
+                .connection
+                .raw_connection
+                .async_exec_params("EXPLAIN #{executable_sql}", binds)
+                .map { |row| row["QUERY PLAN"] }
+                .join("\n")
           end
 
           # All done. Issue a rollback anyways, just in case
@@ -91,9 +114,163 @@ module DiscourseDataExplorer
         pg_result: result,
         duration_secs: time_end - time_start,
         explain: explain,
-        params_full: query_args,
+        params_full: values,
       }
     end
+
+    # Walk the SQL once with PostgreSQL's own lexical rules, yielding each span
+    # as [type, text] in order. `type` is one of :code, :string, :identifier,
+    # :dollar_quote, :line_comment, :block_comment. Only :code spans hold syntax
+    # a parameter marker can affect; every literal kind is reported so callers
+    # can leave it alone. Unterminated constructs are yielded whole so that
+    # PostgreSQL reports the syntax error.
+    def self.scan_sql_segments(sql)
+      scanner = StringScanner.new(sql)
+
+      until scanner.eos?
+        start = scanner.pos
+        if scanner.scan(/--[^\n]*/)
+          yield :line_comment, scanner.matched
+        elsif scanner.scan(%r{/\*})
+          depth = 1
+          while depth > 0 && scanner.skip_until(%r{\*/|/\*})
+            depth += scanner.matched == "/*" ? 1 : -1
+          end
+          scanner.terminate if depth > 0
+          yield :block_comment, sql[start...scanner.pos]
+        elsif scanner.match?(/'/)
+          # backslash escapes only apply to E'' strings
+          e_string = sql[0...scanner.pos].match?(/(?<![\w"])[eE]\z/)
+          pattern = e_string ? /'(?:''|[^'\\]|\\.)*'/m : /'(?:''|[^'])*'/
+          yield :string, scanner.scan(pattern) || scan_rest(scanner)
+        elsif scanner.match?(/"/)
+          yield :identifier, scanner.scan(/"(?:""|[^"])*"/) || scan_rest(scanner)
+        elsif scanner.match?(/\$\w*\$/)
+          yield :dollar_quote, scanner.scan(/\$(\w*)\$.*?\$\1\$/m) || scan_rest(scanner)
+        else
+          yield :code, scanner.scan(%r{[^-/'"$]+}) || scanner.getch
+        end
+      end
+    end
+    private_class_method :scan_sql_segments
+
+    # Rewrite each `:name` marker that sits in code position to a positional
+    # `$N` placeholder and collect its value, so PostgreSQL binds the values out
+    # of band instead of us splicing them into the SQL text. Markers inside any
+    # literal are left untouched. A list value expands to a comma-separated run
+    # of placeholders so `IN (:ids)` keeps working, and an empty list becomes
+    # `NULL`. A marker inside a dollar-quoted literal cannot be bound at all, so
+    # it is rejected rather than silently left as literal text.
+    def self.rewrite_to_binds(sql, params, bind_oid_hints = {})
+      return sql, [] if params.blank?
+
+      values = params.transform_keys(&:to_s)
+      binds = []
+      slots = {}
+      result = +""
+
+      scan_sql_segments(sql) do |type, text|
+        case type
+        when :code
+          result << text.gsub(PARAM_REGEX) do |matched|
+            name = $1
+            if values.key?(name)
+              slots[name] ||= placeholders_for(values[name], binds, bind_oid_hints[name])
+            else
+              matched
+            end
+          end
+        when :dollar_quote
+          if text.scan(PARAM_REGEX).any? { |match| values.key?(match.first) }
+            raise ValidationError.new("Parameters cannot be used inside dollar-quoted literals")
+          end
+          result << text
+        else
+          result << text
+        end
+      end
+
+      [result, binds]
+    end
+
+    # Postgres can't infer a type for a parameter used only somewhere like a
+    # bare `:param IS NULL`, so bind these declared types explicitly rather
+    # than leaving them unknown. `time` is left out: its value is formatted as
+    # a full timestamp string, which isn't valid input for a bare `time` column.
+    DECLARED_TYPE_OIDS = {
+      string: PG_TYPE_OID_TEXT,
+      string_list: PG_TYPE_OID_TEXT,
+      date: PG_TYPE_OID_DATE,
+      datetime: PG_TYPE_OID_TIMESTAMP,
+    }.freeze
+
+    def self.bind_oid_hints(query)
+      query
+        .params
+        .each_with_object({}) do |param, hints|
+          oid = DECLARED_TYPE_OIDS[param.type]
+          hints[param.identifier.to_s] = oid if oid
+        end
+    end
+    private_class_method :bind_oid_hints
+
+    def self.placeholders_for(value, binds, oid_hint)
+      if value.is_a?(Array)
+        return "NULL" if value.empty?
+        value
+          .map do |element|
+            binds << bind_for(element, oid_hint)
+            "$#{binds.length}"
+          end
+          .join(", ")
+      else
+        binds << bind_for(value, oid_hint)
+        "$#{binds.length}"
+      end
+    end
+    private_class_method :placeholders_for
+
+    # Mirror how an inlined literal used to be typed: numbers and booleans carry
+    # their PostgreSQL type so results decode back to the same Ruby class, while
+    # everything else binds as an unknown-typed literal that the surrounding
+    # expression coerces and that reads back as text, unless `oid_hint` overrides it.
+    def self.bind_for(value, oid_hint = nil)
+      case value
+      when Integer
+        { value: value.to_s, type: 20 }
+      when Float
+        { value: value.to_s, type: 701 }
+      when true, false
+        { value: value.to_s, type: 16 }
+      when nil
+        { value: nil, type: oid_hint || 0 }
+      when Time
+        { value: value.utc.iso8601, type: oid_hint || 0 }
+      else
+        { value: value.to_s, type: oid_hint || 0 }
+      end
+    end
+    private_class_method :bind_for
+
+    def self.strip_comments(sql)
+      result = +""
+      scan_sql_segments(sql) do |type, text|
+        case type
+        when :line_comment
+          # dropped; its trailing newline is a separate code span
+        when :block_comment
+          result << " "
+        else
+          result << text
+        end
+      end
+      result
+    end
+
+    def self.scan_rest(scanner)
+      scanner.rest.tap { scanner.terminate }
+    end
+    private_class_method :scan_rest
 
     def self.extra_data_pluck_fields
       @extra_data_pluck_fields ||= {
@@ -177,7 +354,8 @@ module DiscourseDataExplorer
           needed_classes[cls] << idx
         elsif col =~ /^\w+_url$/
           col_map[idx] = "url"
-        elsif col =~ /^\w+_payload$/ || col == "payload" || pg_result.ftype(idx) == PG_TYPE_OID_JSON
+        elsif col =~ /^\w+_payload$/ || col == "payload" ||
+              PG_TYPE_OIDS_JSON.include?(pg_result.ftype(idx))
           col_map[idx] = "json"
         end
       end

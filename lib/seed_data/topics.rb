@@ -10,12 +10,11 @@ module SeedData
       @locale = locale
     end
 
-    def create(site_setting_names: nil, include_welcome_topics: true, include_legal_topics: false)
+    def create(site_setting_names: nil, include_welcome_topics: true)
       I18n.with_locale(@locale) do
         topics(
           site_setting_names: site_setting_names,
           include_welcome_topics: include_welcome_topics,
-          include_legal_topics: include_legal_topics || SiteSetting.company_name.present?,
         ).each { |params| create_topic(**params) }
       end
     end
@@ -57,7 +56,6 @@ module SeedData
     def topics(
       site_setting_names: nil,
       include_welcome_topics: true,
-      include_legal_topics: true,
       require_existing_categories: true
     )
       general_category = Category.find_by(id: SiteSetting.general_category_id)
@@ -67,25 +65,6 @@ module SeedData
         feedback_category ? "##{feedback_category.slug}" : "#site-feedback"
 
       topics = []
-
-      # Terms of Service
-      if include_legal_topics
-        topics << {
-          site_setting_name: "tos_topic_id",
-          title: I18n.t("tos_topic.title"),
-          raw:
-            I18n.t(
-              "tos_topic.body",
-              company_name: setting_value("company_name"),
-              base_url: Discourse.base_url,
-              contact_email: setting_value("contact_email"),
-              governing_law: setting_value("governing_law"),
-              city_for_disputes: setting_value("city_for_disputes"),
-            ),
-          category: staff_category,
-          static_first_reply: true,
-        }
-      end
 
       # FAQ/Guidelines
       topics << {
@@ -110,17 +89,6 @@ module SeedData
         category: staff_category,
         static_first_reply: true,
       }
-
-      # Privacy Policy
-      if include_legal_topics
-        topics << {
-          site_setting_name: "privacy_topic_id",
-          title: I18n.t("privacy_topic.title"),
-          raw: I18n.t("privacy_topic.body"),
-          category: staff_category,
-          static_first_reply: true,
-        }
-      end
 
       if include_welcome_topics
         # Welcome Topic
@@ -254,10 +222,6 @@ module SeedData
     def unchanged?(post)
       post.last_editor_id == Discourse::SYSTEM_USER_ID &&
         (!post.deleted_by_id || post.deleted_by_id == Discourse::SYSTEM_USER_ID)
-    end
-
-    def setting_value(site_setting_key)
-      SiteSetting.get(site_setting_key).presence || "<ins>#{site_setting_key}</ins>"
     end
 
     def first_reply(post)

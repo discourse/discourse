@@ -63,6 +63,10 @@ function loadAdsense() {
 }
 
 const DESKTOP_SETTINGS = {
+  "above-site-header": {
+    code: "adsense_above_site_header_code",
+    sizes: "adsense_above_site_header_ad_sizes",
+  },
   "topic-list-top": {
     code: "adsense_topic_list_top_code",
     sizes: "adsense_topic_list_top_ad_sizes",
@@ -82,6 +86,10 @@ const DESKTOP_SETTINGS = {
 };
 
 const MOBILE_SETTINGS = {
+  "above-site-header": {
+    code: "adsense_mobile_above_site_header_code",
+    sizes: "adsense_mobile_above_site_header_ad_size",
+  },
   "topic-list-top": {
     code: "adsense_mobile_topic_list_top_code",
     sizes: "adsense_mobile_topic_list_top_ad_size",

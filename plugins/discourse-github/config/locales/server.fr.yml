@@ -12,6 +12,8 @@ fr:
     github_linkback_access_token: 'Un jeton d''accès valide pour l''utilisateur qui publiera le lien et pour compter les commits/contributions pour accorder des badges. Consultez <a href="https://meta.discourse.org/t/99895">cette page</a> pour savoir comment obtenir un jeton.'
     github_linkback_maximum_links: "Nombre maximal de liens à créer à partir d'un seul message. Lorsqu'un message contient plus de liens, aucun d'entre eux n'est créé."
     github_permalinks_enabled: "Activer les écrasements de permaliens GitHub"
+    github_pr_status_enabled: "Afficher le statut des demandes de tirage GitHub dans les Oneboxes (brouillon, ouverte, approuvée, fusionnée, fermée)"
+    github_webhook_secret: "Jeton secret pour vérifier la signature du webhook GitHub. Configurez cette valeur dans les paramètres de votre webhook GitHub."
     github_permalinks_exclude: "Nom de fichier ou répertoire à exclure des remplacements de permaliens. Indiquez uniquement le nom de fichier ou le chemin d'accès complet : user/repository/optional-directory/filename"
     github_badges_enabled: "Activer les badges GitHub"
     github_badges_repos: "Adresses URL des dépôts GitHub pour rechercher les contributions et les commits"
@@ -19,7 +21,9 @@ fr:
     github_gold_badge_min_commits: "Nombre minimal de commits pour le badge d'or"
     errors:
       invalid_badge_repo: "Vous devez fournir une adresse URL GitHub ou le nom du dépôt au format github_user/repository_name"
+      invalid_badge_repo_value: "« %{repo} » n'est pas une URL GitHub ni un nom de dépôt valide. Utilisez le format github_user/repository_name."
       invalid_github_linkback_access_token: "Vous devez fournir un jeton d'accès de lien GitHub valide qui donne accès aux dépôts de badges que vous avez fournis."
+      invalid_github_linkback_access_token_for_repo: "Le jeton d'accès GitHub utilisé pour les liens retour n'a pas pu accéder au dépôt « %{repo} ». Vérifiez que le jeton est valide et que le nom du dépôt est correct et accessible."
   github_linkback:
     commit_template: |
       Ce commit a été mentionné sur **%{title}**. Il pourrait y avoir des détails pertinents ici :

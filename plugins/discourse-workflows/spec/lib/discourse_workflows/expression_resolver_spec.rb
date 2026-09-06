@@ -62,6 +62,12 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       expect(resolver.resolve("={{ $site_settings.title }}")).to eq("My Forum")
     end
 
+    it "resolves $helpers.absoluteUrl expressions" do
+      expect(resolver.resolve("={{ $helpers.absoluteUrl('/t/some-slug/123/4') }}")).to eq(
+        "#{Discourse.base_url}/t/some-slug/123/4",
+      )
+    end
+
     it "handles mixed literal and expression" do
       expect(resolver.resolve("=topic-{{ $trigger.topic_id }}-closed")).to eq("topic-42-closed")
     end

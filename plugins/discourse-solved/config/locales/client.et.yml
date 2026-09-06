@@ -12,6 +12,15 @@ et:
           kpi:
             accepted_solutions:
               label: "Aktsepteeritud lahendused"
+        sections:
+          support:
+            answerers:
+              staff: "Meeskond"
+              member: "Liikmed"
+              basic: "Tavakasutaja"
+            response_time:
+              buckets:
+                lt_1h: "< 1 tund"
   js:
     notifications:
       alt:
@@ -37,6 +46,12 @@ et:
     topic_statuses:
       solved:
         help: "ellel teemal on lahendus"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Teema"
+            category: "Kategooriad"
     discourse_automation:
       triggerables:
         first_accepted_solution:

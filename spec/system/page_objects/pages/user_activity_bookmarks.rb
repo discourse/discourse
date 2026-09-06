@@ -51,6 +51,10 @@ module PageObjects
         has_no_content?(topic.title)
       end
 
+      def bookmark_list
+        PageObjects::Components::BookmarkList.new
+      end
+
       def submit_button
         page.find(".bookmark-search-form button")
       end

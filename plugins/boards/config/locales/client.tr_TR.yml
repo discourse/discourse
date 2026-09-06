@@ -1,0 +1,43 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  js:
+    boards:
+      board:
+        remove_card: "Kaldır"
+        new_topic: "Yeni konu..."
+        title: "Başlık"
+        tags: "Etiketler"
+        assigned_to: "Şuraya atandı:"
+        view_topic: "Konuyu görüntüle"
+        topic_reply_count:
+          one: "%{count} yanıt"
+          other: "%{count} yanıt"
+        assign: "Ata"
+        unassign: "Atamayı kaldır"
+        unassign_from_topic: "@%{username} adlı kullanıcının konudan atamasını kaldır"
+        unassign_from_post: "#%{post_number} numaralı gönderiden @%{username} atamasını kaldır"
+        edit_assignments: "Atamaları düzenle..."
+        created_by: "Oluşturan:"
+      manage:
+        name: "Ad"
+        slug: "Kısa ad"
+        constraint_categories: "Kategoriler"
+        constraint_tags: "Etiketler"
+        advanced_settings: "Gelişmiş ayarlar"
+        columns:
+          remove: "Kaldır"
+          column_title: "Başlık"
+          icon: "Simge"
+          color: "Renk"
+          default_sort_priority: "Öncelik"
+          tag: "Etiket"
+          move_to_assigned_unassign: "Atamayı kaldır"
+          move_to_status_open: "Aç"
+          move_to_status_closed: "Kapalı"
+          show_advanced: "Gelişmiş seçenekleri göster"
+          hide_advanced: "Gelişmiş seçenekleri gizle"

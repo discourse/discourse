@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  findAll,
   focus,
   triggerEvent,
   triggerKeyEvent,
@@ -12,7 +13,7 @@ import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -182,7 +183,7 @@ acceptance("Search - Anonymous", function (needs) {
       .hasText("important", "first option includes tag");
 
     await fillIn("#icon-search-input", "smth");
-    const secondOption = queryAll(contextSelector)[1];
+    const secondOption = findAll(contextSelector)[1];
 
     assert
       .dom(".search-item-prefix", secondOption)
@@ -202,7 +203,7 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/c/bug");
     await click("#search-button");
     await fillIn("#icon-search-input", "smth");
-    const secondOption = queryAll(contextSelector)[1];
+    const secondOption = findAll(contextSelector)[1];
 
     assert
       .dom(".search-item-prefix", secondOption)
@@ -226,7 +227,7 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
     await fillIn("#icon-search-input", "smth");
-    const secondOption = queryAll(contextSelector)[1];
+    const secondOption = findAll(contextSelector)[1];
 
     assert
       .dom(".search-item-prefix", secondOption)
@@ -314,7 +315,7 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/u/eviltrout");
     await click("#search-button");
     await fillIn("#icon-search-input", "smth");
-    const secondOption = queryAll(contextSelector)[1];
+    const secondOption = findAll(contextSelector)[1];
 
     assert
       .dom(".search-item-prefix", secondOption)
@@ -628,6 +629,23 @@ acceptance("Search - Authenticated", function (needs) {
     assert
       .dom(".search-menu")
       .doesNotExist("search dropdown is collapsed after second Enter hit");
+  });
+
+  // macOS delivers no keyup for other keys while command is held, so this has to
+  // work from keydown alone — keyup is deliberately not fired here
+  test("Cmd+Enter in the search input goes to full page search", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    await triggerKeyEvent("#icon-search-input", "keydown", "Enter", {
+      metaKey: true,
+    });
+
+    assert
+      .dom(".search-container")
+      .exists("the full page search opens without a keyup");
+    assert.dom(".search-menu").doesNotExist("and the dropdown closes");
   });
 
   test("search menu keyboard navigation - while composer is open", async function (assert) {

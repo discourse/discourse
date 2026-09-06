@@ -1,12 +1,22 @@
 const { buildMacros } = require("@embroider/macros/babel");
+const {
+  setConfig: setWarpDriveConfig,
+} = require("@warp-drive/core/build-config");
+const StripTestSelectors = require("strip-test-selectors");
 
 const macros = buildMacros({
   configure(macrosConfig) {
     macrosConfig.setGlobalConfig(__filename, "@embroider/core", {
       active: true,
     });
+    // WarpDrive build config (previously wired via setConfig in ember-cli-build.js).
+    // Feeds into our existing @embroider/macros config rather than a second
+    // instance, which would duplicate the macros babel plugin.
+    setWarpDriveConfig(macrosConfig, { compatWith: "5.9" });
   },
 });
+
+const PRODUCTION = process.env.EMBER_ENV === "production";
 
 module.exports = {
   plugins: [
@@ -19,7 +29,10 @@ module.exports = {
           "ember-cli-htmlbars-inline-precompile",
           "htmlbars-inline-precompile",
         ],
-        transforms: [...macros.templateMacros],
+        transforms: [
+          ...macros.templateMacros,
+          ...(PRODUCTION ? [StripTestSelectors] : []),
+        ],
       },
     ],
     [
@@ -45,13 +58,13 @@ module.exports = {
           {
             source: "@glimmer/env",
             flags: {
-              DEBUG: process.env.EMBER_ENV !== "production",
+              DEBUG: !PRODUCTION,
               CI: !!process.env.CI,
             },
           },
         ],
         debugTools: {
-          isDebug: process.env.EMBER_ENV !== "production",
+          isDebug: !PRODUCTION,
           source: "@ember/debug",
           assertPredicateIndex: 1,
         },
@@ -62,6 +75,18 @@ module.exports = {
       "@ember/debug stripping",
     ],
     ...macros.babelMacros,
+  ],
+
+  overrides: [
+    {
+      test: /\.(gts|ts|mts|cts)$/,
+      plugins: [
+        [
+          require.resolve("@babel/plugin-transform-typescript"),
+          { allowDeclareFields: true },
+        ],
+      ],
+    },
   ],
 
   generatorOpts: {

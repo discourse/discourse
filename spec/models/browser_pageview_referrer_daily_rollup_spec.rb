@@ -16,16 +16,25 @@ RSpec.describe BrowserPageviewReferrerDailyRollup do
       expect(rollups).to contain_exactly(["google.com", 2], ["reddit.com", 1])
     end
 
-    it "splits total count from logged-in count" do
+    it "splits the total count by logged-in and likely crawler traffic" do
       user = Fabricate(:user)
-      Fabricate(:browser_pageview_event, normalized_referrer: "google.com", user_id: user.id)
-      Fabricate(:browser_pageview_event, normalized_referrer: "google.com")
+      Fabricate(:browser_pageview_event, normalized_referrer: "google.com", score: 90)
+      Fabricate(
+        :browser_pageview_event,
+        normalized_referrer: "google.com",
+        score: 90,
+        user_id: user.id,
+      )
+      Fabricate(:browser_pageview_event, normalized_referrer: "google.com", score: 10)
 
       described_class.aggregate(start_date: start_date, end_date: end_date)
 
-      row = described_class.find_by(normalized_referrer: "google.com")
-      expect(row.count).to eq(2)
-      expect(row.logged_in_count).to eq(1)
+      expect(described_class.find_by(normalized_referrer: "google.com")).to have_attributes(
+        count: 3,
+        logged_in_count: 1,
+        likely_crawler_count: 2,
+        likely_crawler_logged_in_count: 1,
+      )
     end
 
     it "stores NULL-referrer rows (direct visits)" do

@@ -86,3 +86,8 @@ hu:
         title: "Gamifikáció"
         name: "Név"
         period: "Időszak"
+    discourse_workflows:
+      gamification_score:
+        username: "Felhasználó"
+        date: "Dátum"
+        description: "Leírás"

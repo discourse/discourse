@@ -41,6 +41,17 @@ export default class extends NotificationTypeBase {
   get linkHref() {
     const data = this.notification.data;
     const names = data.upcoming_change_names || [data.upcoming_change_name];
+    const permanentNames = this.site.permanent_upcoming_change_names || [];
+    const nonPermanent = names.filter((n) => !permanentNames.includes(n));
+
+    // Once a change is permanent it no longer shows on the upcoming changes
+    // page, it's surfaced on the What's New page instead. If every change this
+    // notification references is now permanent, send the admin there and scroll
+    // to the relevant change. Otherwise keep the upcoming changes page, where
+    // the still non-permanent changes are actionable.
+    if (nonPermanent.length === 0 && names.length > 0) {
+      return getURL(`/admin/whats-new?scrollTo=${names[0]}`);
+    }
 
     return getURL(
       `/admin/config/upcoming-changes?changeNamesFilter=${names.join(",")}`

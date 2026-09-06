@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    boards:
+      board:
+        remove_card: "Odstrani"
+        title: "Naziv"
+        tags: "Oznake"
+        topic_reply_count:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
+        created_by: "Ustvaril"
+      manage:
+        name: "Ime"
+        constraint_categories: "Kategorije"
+        constraint_tags: "Oznake"
+        columns:
+          remove: "Odstrani"
+          column_title: "Naziv"
+          icon: "Ikona"
+          color: "Barva"
+          move_to_status_open: "Odpri"
+          move_to_status_closed: "Zaprta"

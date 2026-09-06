@@ -45,6 +45,21 @@ module("Component | <ChatUserAvatar />", function (hooks) {
     assert.dom(containerSelector(this.user, { online: true })).exists();
   });
 
+  test("user has avatar flair", async function (assert) {
+    this.user = new CoreFabricators(getOwner(this)).user();
+    this.user.setProperties({
+      flair_group_id: 42,
+      flair_name: "test_group",
+      flair_url: "bars",
+    });
+
+    await render(<template><ChatUserAvatar @user={{this.user}} /></template>);
+
+    assert
+      .dom(".chat-user-avatar__container .avatar-flair-test_group .d-icon-bars")
+      .exists("the user's flair is shown on the avatar");
+  });
+
   test("@showPresence=false", async function (assert) {
     this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = {

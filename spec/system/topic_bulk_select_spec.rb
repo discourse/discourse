@@ -9,7 +9,6 @@ describe "Topic bulk select" do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_bulk_actions_modal) { PageObjects::Modals::TopicBulkActions.new }
-  let(:topic_view) { PageObjects::Components::TopicView.new }
 
   def open_bulk_actions_modal(topics_to_select = nil, action)
     topic_list_header.click_bulk_select_button
@@ -25,14 +24,16 @@ describe "Topic bulk select" do
     expect(topic_bulk_actions_modal).to be_open
   end
 
-  context "when dismissing unread topics" do
+  context "when dismissing new replies" do
     fab!(:topic) { Fabricate(:topic, user: admin) }
     fab!(:post1) { create_post(user: admin, topic: topic) }
     fab!(:post2) { create_post(topic: topic) }
 
+    before { SiteSetting.enable_unified_new = true }
+
     it "removes the topics from the list" do
       sign_in(admin)
-      visit("/unread")
+      visit("/new?subset=replies")
 
       topic_list_header.click_bulk_select_button
       expect(topic_list).to have_topic_checkbox(topic)
@@ -40,11 +41,9 @@ describe "Topic bulk select" do
       topic_list.click_topic_checkbox(topic)
 
       topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-unread")
+      topic_list_header.click_bulk_button("dismiss-new")
 
-      topic_bulk_actions_modal.click_dismiss_confirm
-
-      expect(page).to have_text(I18n.t("js.topics.none.education.unread"))
+      expect(topic_list).to have_no_topics
     end
 
     it "turns off bulk select after dismissing" do
@@ -53,15 +52,13 @@ describe "Topic bulk select" do
       create_post(topic: other_topic)
 
       sign_in(admin)
-      visit("/unread")
+      visit("/new?subset=replies")
 
       topic_list_header.click_bulk_select_button
       topic_list.click_topic_checkbox(topic)
 
       topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-unread")
-
-      topic_bulk_actions_modal.click_dismiss_confirm
+      topic_list_header.click_bulk_button("dismiss-new")
 
       expect(topic_list).to have_topic(other_topic)
       expect(topic_list).to have_no_topic_checkbox(other_topic)
@@ -73,6 +70,8 @@ describe "Topic bulk select" do
     fab!(:post1) { create_post(user:, topic:) }
 
     let(:topic_list_controls) { PageObjects::Components::TopicListControls.new }
+
+    before { SiteSetting.enable_unified_new = true }
 
     context "with the bulk actions dropdown" do
       it "removes the topics from the list" do
@@ -240,6 +239,75 @@ describe "Topic bulk select" do
         expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag, tag1])
         expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag, tag1])
       end
+
+      it "can remove and replace-away a restricted tag" do
+        restricted_tag_group = Fabricate(:tag_group)
+        restricted_to_remove = Fabricate(:tag)
+        restricted_to_replace = Fabricate(:tag)
+        [restricted_to_remove, restricted_to_replace].each do |t|
+          TagGroupMembership.create!(tag: t, tag_group: restricted_tag_group)
+        end
+        CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
+        category.update!(allow_global_tags: true)
+        topic.update!(tags: [restricted_to_remove, restricted_to_replace])
+
+        modal = open_manage_tags_modal([topic, topic_2])
+
+        modal.remove_tags(restricted_to_remove.name)
+        modal.select_replace_from(restricted_to_replace.name)
+        modal.select_replace_to(tag1.name)
+
+        modal.click_confirm
+
+        expect(topic_list).to have_topic_tags(topic, tags: [tag1])
+      end
+    end
+
+    context "when selecting topics across multiple categories" do
+      fab!(:category_a, :category)
+      fab!(:category_b, :category)
+      fab!(:restricted_tag_group, :tag_group)
+      fab!(:restricted_tag, :tag)
+
+      before do
+        topic.update!(category_id: category_a.id)
+        topic_2.update!(category_id: category_b.id)
+        TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
+      end
+
+      it "lets a restricted tag be added when every selected category allows it" do
+        CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
+        CategoryTagGroup.create!(category: category_b, tag_group: restricted_tag_group)
+
+        modal = open_manage_tags_modal([topic, topic_2])
+        modal.add_tags(restricted_tag.name)
+        modal.click_confirm
+
+        expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag])
+        expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag])
+      end
+
+      it "reports an error for topics whose category forbids the tag" do
+        CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
+
+        modal = open_manage_tags_modal([topic, topic_2])
+        modal.add_tags(restricted_tag.name)
+        modal.click_confirm
+
+        expect(topic_bulk_actions_modal).to have_errors
+        expect(page).to have_css(
+          ".topic-bulk-actions-modal__errors .badge-category",
+          text: category_b.name,
+        )
+        expect(page).to have_css(
+          ".topic-bulk-actions-modal__errors .discourse-tag",
+          text: restricted_tag.name,
+        )
+        expect(page).to have_css("#bulk-topics-close")
+        expect(page).to have_no_css("#bulk-topics-confirm")
+        expect(topic.reload.tags).to include(restricted_tag)
+        expect(topic_2.reload.tags).not_to include(restricted_tag)
+      end
     end
   end
 
@@ -287,7 +355,6 @@ describe "Topic bulk select" do
         topic_list.click_topic_checkbox(topics.third)
         topic_list_header.click_bulk_select_topics_dropdown
         topic_list_header.click_bulk_button("close-topics")
-        topic_bulk_actions_modal.click_notify
         topic_bulk_actions_modal.click_bulk_topics_confirm
         expect(topic_list).to have_closed_status(topics.third)
       end
@@ -296,32 +363,6 @@ describe "Topic bulk select" do
       # unread, so the watching user does not get a new post notification badge.
       visit("/latest")
       expect(topic_list).to have_no_unread_badge(topics.third)
-    end
-
-    it "closes topics silently" do
-      # Watch the topic as a user
-      sign_in(user)
-      topic = topics.first
-      visit("/t/#{topic.slug}/#{topic.id}")
-      expect(topic_view).to have_read_post(topic.posts.first)
-      topic_page.watch_topic
-
-      # Bulk close the topic as an admin
-      using_session(:admin) do
-        sign_in(admin)
-        visit("/latest")
-        topic_list_header.click_bulk_select_button
-        topic_list.click_topic_checkbox(topics.first)
-        topic_list_header.click_bulk_select_topics_dropdown
-        topic_list_header.click_bulk_button("close-topics")
-        topic_bulk_actions_modal.click_bulk_topics_confirm
-        expect(topic_list).to have_closed_status(topics.first)
-      end
-
-      # Check that the user didn't receive a new post notification badge
-      sign_in(user)
-      visit("/latest")
-      expect(topic_list).to have_no_unread_badge(topics.first)
     end
 
     it "closes topics with message" do
@@ -345,6 +386,8 @@ describe "Topic bulk select" do
     end
 
     it "works with keyboard shortcuts" do
+      SiteSetting.enable_unified_new = true
+
       sign_in(admin)
       visit("/latest")
 
@@ -359,14 +402,14 @@ describe "Topic bulk select" do
       send_keys("x") # toggle deselect
       expect(topic_list).to have_no_checkbox_selected_on_row(1)
 
-      # watch topic and add a reply so we have something in /unread
+      # watch topic and add a reply so we have something in /new?subset=replies
       topic = topics.first
       visit("/t/#{topic.slug}/#{topic.id}")
       topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
       Fabricate(:post, topic: topic)
 
-      visit("/unread")
+      visit("/new?subset=replies")
       expect(topic_list).to have_topics
 
       send_keys([:shift, "b"])
@@ -375,9 +418,20 @@ describe "Topic bulk select" do
       send_keys("x")
       send_keys([:shift, "d"])
 
-      click_button("dismiss-read-confirm")
-
       expect(topic_list).to have_no_topics
+    end
+  end
+
+  context "when deleting" do
+    it "removes the deleted topics from the list" do
+      sign_in(admin)
+      visit("/latest")
+
+      open_bulk_actions_modal([topics.first, topics.second], "delete-topics")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+
+      expect(topic_list).to have_no_topic(topics.first)
+      expect(topic_list).to have_no_topic(topics.second)
     end
   end
 
@@ -437,6 +491,43 @@ describe "Topic bulk select" do
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
       visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
       expect(page).to have_content(group_private_message.title)
+    end
+
+    it "removes archived group messages from the current inbox after infinite-scroll pagination" do
+      # Regression test: when the paginated topic list is cached in the
+      # session, refreshing the route after a bulk archive reused the
+      # stale cached list and left archived messages visible until the
+      # user manually reloaded.
+      other_group_messages =
+        Array.new(2) do
+          Fabricate(:group_private_message_topic, user: admin, recipient_group: group)
+        end
+      all_group_messages = [group_private_message, *other_group_messages]
+
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+        sign_in(admin)
+        visit("/u/#{admin.username}/messages/group/#{group.name}")
+
+        expect(topic_list).to have_topics(count: 2)
+        page.execute_script(
+          "document.querySelector('.paginated-topics-list .load-more-sentinel').scrollIntoView()",
+        )
+        expect(topic_list).to have_topics(count: all_group_messages.size)
+
+        topic_list_header.click_bulk_select_button
+        all_group_messages.each { |topic| topic_list.click_topic_checkbox(topic) }
+
+        topic_list_header.click_bulk_select_topics_dropdown
+        topic_list_header.click_bulk_button("archive-messages")
+        expect(topic_bulk_actions_modal).to be_open
+        topic_bulk_actions_modal.click_bulk_topics_confirm
+
+        expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+        all_group_messages.each do |topic|
+          expect(topic_list).to have_no_topic(topic)
+          expect(GroupArchivedMessage.exists?(group_id: group.id, topic_id: topic.id)).to eq(true)
+        end
+      end
     end
 
     it "allows archiving group private messages from the group inbox page" do

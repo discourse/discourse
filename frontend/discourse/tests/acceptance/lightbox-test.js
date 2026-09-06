@@ -11,7 +11,7 @@ acceptance("Lightbox", function (needs) {
     const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
     topicResponse.post_stream.posts[0].cooked += `<div class="lightbox-wrapper">
       <a class="lightbox" href="/images/d-logo-sketch.png" data-download-href="//discourse.local/uploads/default/ad768537789cdf4679a18161ac0b0b6f0f4ccf9e" title="<script>image</script>">
-        <img src="/images/d-logo-sketch-small.png" alt="<script>image</script>" data-base62-sha1="oKwwVE8qLWFBkE5UJeCs2EwxHHg" width="690" height="387" srcset="/images/d-logo-sketch-small.png" data-small-upload="/images/d-logo-sketch-small.png">
+        <img src="/images/d-logo-sketch-small.png" alt="<script>image</script>" aria-description="AI says &lt;strong&gt;this is a logo&lt;/strong&gt;" data-base62-sha1="oKwwVE8qLWFBkE5UJeCs2EwxHHg" width="690" height="387" srcset="/images/d-logo-sketch-small.png" data-small-upload="/images/d-logo-sketch-small.png">
         <div class="meta">
           <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg>
           <span class="filename">image</span><span class="informations">1500×842 234 KB</span>
@@ -38,6 +38,9 @@ acceptance("Lightbox", function (needs) {
     assert
       .dom(".pswp__caption .pswp__caption-details")
       .hasText("1500×842 234 KB");
+    assert
+      .dom(".pswp__caption .pswp__caption-ai-description")
+      .hasText("AI says <strong>this is a logo</strong>");
 
     assert
       .dom(".pswp__button--download-image")
@@ -62,6 +65,9 @@ acceptance("Lightbox", function (needs) {
     assert
       .dom(".pswp__caption .pswp__caption-title")
       .hasHtml(/^&lt;script&gt;image&lt;\/script&gt;/);
+    assert
+      .dom(".pswp__caption .pswp__caption-ai-description")
+      .hasHtml("AI says &lt;strong&gt;this is a logo&lt;/strong&gt;");
   });
 });
 

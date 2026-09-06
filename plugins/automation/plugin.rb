@@ -259,4 +259,12 @@ after_initialize do
   register_user_custom_field_type(DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD, :json)
   register_post_custom_field_type(DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD, :json)
   register_post_custom_field_type("stalled_wiki_triggered_at", :string)
+
+  register_stat("total", stat_type: :automations) { DiscourseAutomation::Statistics.total }
+  register_stat("created", stat_type: :automations) { DiscourseAutomation::Statistics.created }
+  register_stat("edited", stat_type: :automations) { DiscourseAutomation::Statistics.edited }
+  register_stat("executed", stat_type: :automations) { DiscourseAutomation::Statistics.executed }
+  register_stat("executions", stat_type: :automations) do
+    DiscourseAutomation::Statistics.executions
+  end
 end

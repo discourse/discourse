@@ -1,7 +1,10 @@
 /* eslint-disable qunit/no-conditional-assertions */
+import Service from "@ember/service";
 import { fillIn, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
+import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -37,6 +40,10 @@ const EMAIL_LOGS = [
     bounced: true,
   },
 ];
+
+class RouterStub extends Service {
+  currentURL = "/admin/email-logs?user=testuser";
+}
 
 module("Integration | Component | EmailLogsList", function (hooks) {
   setupRenderingTest(hooks);
@@ -203,5 +210,51 @@ module("Integration | Component | EmailLogsList", function (hooks) {
     assert
       .dom(".email-row")
       .exists({ count: 2 }, "shows all emails again after clearing filter");
+  });
+
+  test("seeds filters from the URL and writes changes back", async function (assert) {
+    let lastQuery;
+    pretender.get("/admin/email-logs/sent.json", (request) => {
+      lastQuery = request.queryParams;
+      return response(EMAIL_LOGS);
+    });
+
+    this.owner.unregister("service:router");
+    this.owner.register("service:router", RouterStub);
+    const replaceState = sinon.stub(DiscourseURL, "replaceState");
+
+    await render(
+      <template>
+        <EmailLogsList
+          @status="sent"
+          @headers={{mockHeaders}}
+          @filters={{mockFilters}}
+        >
+          <:default as |emailLog|>
+            <tr class="email-row"><td>{{emailLog.to_address}}</td></tr>
+          </:default>
+        </EmailLogsList>
+      </template>
+    );
+
+    await waitFor(".email-row");
+
+    assert
+      .dom("tr.filters td:nth-child(2) input")
+      .hasValue("testuser", "seeds the user filter from the URL");
+    assert.strictEqual(
+      lastQuery.user,
+      "testuser",
+      "applies the URL filter to the initial request"
+    );
+
+    await fillIn("tr.filters td:nth-child(3) input", "test@example.com");
+
+    assert.true(
+      replaceState.calledWith(
+        "/admin/email-logs?user=testuser&address=test%40example.com"
+      ),
+      "writes all active filters to the URL"
+    );
   });
 });

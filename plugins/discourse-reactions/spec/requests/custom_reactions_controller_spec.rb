@@ -136,7 +136,7 @@ describe DiscourseReactions::CustomReactionsController do
       expect(messages[1].data[:reactions]).to contain_exactly("cry", "angry")
     end
 
-    it "publishes MessageBus messages securely" do
+    it "publishes MessageBus messages to private-message users" do
       sign_in(user_1)
       messages =
         MessageBus.track_publish("/topic/#{private_post.topic.id}/reactions") do
@@ -146,9 +146,30 @@ describe DiscourseReactions::CustomReactionsController do
                 "HTTP_API_USERNAME" => api_key.user.username,
               }
         end
-      user_1_messages = messages.find { |m| m.user_ids.include?(user_1.id) }
+
       expect(messages.count).to eq(1)
-      expect(user_1_messages).to eq(nil)
+      expect(messages.first.user_ids).to include(user_2.id, admin.id)
+      expect(messages.first.group_ids).to be_nil
+      expect(messages.first.user_ids).not_to include(user_1.id)
+    end
+
+    it "does not publish reactions to an empty secure audience" do
+      category = Fabricate(:category, read_restricted: true)
+      topic = Fabricate(:topic, category: category)
+      post = Fabricate(:post, topic: topic)
+
+      messages =
+        MessageBus.track_publish("/topic/#{topic.id}/reactions") do
+          put "/discourse-reactions/posts/#{post.id}/custom-reactions/hugs/toggle.json",
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+        end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["reactions"]).to eq(payload_with_user)
+      expect(messages).to be_empty
     end
 
     it "errors when reaction is invalid" do
@@ -188,6 +209,23 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed[0]["post_id"]).to eq(post_2.id)
       expect(parsed[0]["post"]["user"]["id"]).to eq(user_1.id)
       expect(parsed[0]["reaction"]["id"]).to eq(laughing_reaction.id)
+    end
+
+    it "hides another user's reaction activity when user activity is hidden" do
+      SiteSetting.hide_user_activity_tab = true
+      sign_in(user_1)
+
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+
+      aggregate_failures do
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(
+          reaction_user_1.id.to_s,
+          user_2.id.to_s,
+          post_2.id.to_s,
+          laughing_reaction.reaction_value,
+        )
+      end
     end
 
     it "does not expose post author names when names are disabled" do
@@ -342,6 +380,39 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed[0]["reaction"]["id"]).to eq(open_mouth_reaction.id)
     end
 
+    it "omits reactions for posts in topics the requester can no longer see" do
+      pm_op =
+        Fabricate(
+          :private_message_post,
+          user: user_1,
+          recipient: user_2,
+          raw: "private message OP reaction excerpt",
+        )
+      pm_reply =
+        Fabricate(:post, topic: pm_op.topic, user: user_1, raw: "private message reply excerpt")
+
+      [pm_op, pm_reply].each do |pm_post|
+        pm_reaction = Fabricate(:reaction, post: pm_post, reaction_value: "open_mouth")
+        Fabricate(:reaction_user, reaction: pm_reaction, user: user_2, post: pm_post)
+      end
+
+      pm_op.topic.remove_allowed_user(user_2, user_1)
+
+      sign_in(user_1)
+
+      get "/discourse-reactions/posts/reactions-received.json",
+          params: {
+            username: user_1.username,
+          }
+
+      expect(response.status).to eq(200)
+      post_ids = response.parsed_body.map { |reaction| reaction["post_id"] }
+      expect(post_ids).not_to include(pm_op.id)
+      expect(post_ids).not_to include(pm_reply.id)
+      expect(response.body).not_to include(pm_op.raw)
+      expect(response.body).not_to include(pm_reply.raw)
+    end
+
     it "does not return reactions received by a user when current user is not an admin" do
       sign_in(user_1)
 
@@ -490,8 +561,27 @@ describe DiscourseReactions::CustomReactionsController do
       get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
 
       expect(response.status).to eq(200)
-      usernames = response.parsed_body["users"].map { |u| u["username"] }
-      expect(usernames).to include(user_1.username, user_3.username, user_5.username)
+      users = response.parsed_body["users"]
+      expect(users.map { |user| user["username"] }).to include(
+        user_1.username,
+        user_3.username,
+        user_5.username,
+      )
+      expect(users.find { |user| user["username"] == user_1.username }["name"]).to eq(user_1.name)
+    end
+
+    it "does not expose reactor names to anonymous users when names are disabled" do
+      SiteSetting.enable_names = false
+      user_2.update!(name: "Hidden Reactor Name")
+      user_5.update!(name: "Hidden Liker Name")
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["users"]
+      expect(users.map { |user| user["username"] }).to include(user_2.username, user_5.username)
+      expect(users).to all(exclude("name"))
+      expect(response.body).not_to include(user_2.name, user_5.name)
     end
 
     it "filters by reaction_value" do
@@ -568,6 +658,20 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed["reaction_users"][0]["users"][0]["avatar_template"]).to eq(
         user_5.avatar_template,
       )
+    end
+
+    it "does not expose reactor names to anonymous users when names are disabled" do
+      SiteSetting.enable_names = false
+      user_2.update!(name: "Hidden Reactor Name")
+      user_5.update!(name: "Hidden Liker Name")
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["reaction_users"].flat_map { |reaction| reaction["users"] }
+      expect(users.map { |user| user["username"] }).to include(user_2.username, user_5.username)
+      expect(users).to all(exclude("name"))
+      expect(response.body).not_to include(user_2.name, user_5.name)
     end
 
     it "return reaction_users of reaction when there are parameters" do

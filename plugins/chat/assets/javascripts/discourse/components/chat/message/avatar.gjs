@@ -10,6 +10,7 @@ const Avatar = <template>
         @user={{@message.user}}
         @avatarSize="medium"
         @interactive={{@interactive}}
+        @ariaHidden={{true}}
       />
     {{/if}}
   </div>

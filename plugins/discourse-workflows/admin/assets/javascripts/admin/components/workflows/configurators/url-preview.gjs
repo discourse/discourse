@@ -260,6 +260,7 @@ export default class UrlPreview extends Component {
   <template>
     <ExpressionWrapper
       @field={{@field}}
+      @schema={{@schema}}
       @supportsExpression={{@supportsExpression}}
       @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}

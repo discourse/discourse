@@ -38,7 +38,7 @@ describe ::TopicsController do
     end
 
     it "includes related topics in payload when configured" do
-      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
       category = Fabricate(:category)
       topic.update!(category: category)
 

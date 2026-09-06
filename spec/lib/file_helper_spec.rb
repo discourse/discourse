@@ -150,6 +150,24 @@ RSpec.describe FileHelper do
     end
   end
 
+  describe ".optimize_image!" do
+    it "emits one image-processing measurement" do
+      SiteSetting.instrument_image_processing = true
+      optimized_image = stub
+      described_class.stubs(:image_optim).returns(stub(optimize_image!: optimized_image))
+
+      events =
+        DiscourseEvent.track_events(:image_processing_finished) do
+          expect(described_class.optimize_image!("image.png")).to eq(optimized_image)
+        end
+
+      expect(events.size).to eq(1)
+      payload = events.first[:params].first
+      expect(payload.except(:duration_seconds)).to eq(operation: "image_optim", success: true)
+      expect(payload[:duration_seconds]).to be >= 0
+    end
+  end
+
   describe "inline safety checks" do
     describe ".is_inline_safe?" do
       it "returns true for non-SVG images" do
@@ -226,6 +244,27 @@ RSpec.describe FileHelper do
 
       it "excludes SVG" do
         expect(FileHelper.inline_safe_files).not_to include("svg")
+      end
+
+      it "only contains extensions that map to a non-scriptable content type" do
+        scriptable_content_types = %w[
+          text/html
+          application/xhtml+xml
+          image/svg+xml
+          application/xml
+          text/xml
+        ]
+
+        offenders =
+          FileHelper.inline_safe_files.select do |extension|
+            content_type = MiniMime.lookup_by_filename("file.#{extension}")&.content_type
+            next false if content_type.blank?
+
+            scriptable_content_types.include?(content_type) ||
+              content_type.match?(/(java|ecma)script/)
+          end
+
+        expect(offenders).to be_empty
       end
     end
   end

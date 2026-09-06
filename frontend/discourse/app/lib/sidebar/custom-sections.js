@@ -5,8 +5,9 @@ import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { i18n } from "discourse-i18n";
 import AdminSidebarPanel from "./admin-sidebar";
 
-class MainSidebarPanel {
-  sections = [];
+class MainSidebarPanel extends BaseCustomSidebarPanel {
+  scrollActiveLinkIntoView = true;
+  expandActiveSection = false;
 
   get key() {
     return "main";

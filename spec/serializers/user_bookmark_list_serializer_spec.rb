@@ -14,7 +14,9 @@ RSpec.describe UserBookmarkListSerializer do
     after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
     let(:post_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post)) }
-    let(:topic_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic)) }
+    let(:topic_bookmark) do
+      Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic_with_op))
+    end
     let(:user_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user)) }
 
     def run_serializer

@@ -355,6 +355,7 @@ $hpad: 0.65em;
 }
 
 @mixin dot-separator($size: 0.35em) {
+  display: inline-block;
   width: $size;
   height: $size;
   margin-inline: var(--space-1);
@@ -414,4 +415,10 @@ $hpad: 0.65em;
       }
     }
   }
+}
+
+@mixin unstyled-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }

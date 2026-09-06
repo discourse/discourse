@@ -271,7 +271,6 @@
         "id",
         "automatic",
         "name",
-        "user_count",
         "mentionable_level",
         "messageable_level",
         "visibility_level",

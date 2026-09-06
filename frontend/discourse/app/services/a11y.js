@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedMap } from "@ember/reactive/collections";
-import { cancel } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import Service from "@ember/service";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
@@ -88,18 +88,53 @@ export default class A11y extends Service {
     #timers = trackedMap();
 
     /**
+     * Map of pending repeat-restore timers by type
+     * @type {Map<string, EmberRunTimer>}
+     */
+    #restores = new Map();
+
+    /**
      * Sets an announcement message with auto-clearing
      * @param {'polite'|'assertive'} type - Type of announcement
      * @param {string} message - Message to announce
      * @param {number} clearDelay - Delay in ms before clearing
      */
     setMessage(type, message, clearDelay) {
+      // Two announcements in one tick can queue a restore between this call being scheduled
+      // and it running, so the request-time cancel in `announce` cannot be the only one.
+      this.cancelRestore(type);
+
       if (message === "") {
         this.#messages.delete(type);
         this.#scheduleClear(type, 0);
         return;
       }
 
+      // A live region only speaks when its text changes, so writing the same string back is
+      // a DOM no-op that no screen reader picks up. Blank the region and restore it a render
+      // later to give it a change it can act on.
+      if (this.#messages.get(type) === message) {
+        this.#messages.delete(type);
+        this.#restores.set(
+          type,
+          next(() => {
+            this.#restores.delete(type);
+            this.#write(type, message, clearDelay);
+          })
+        );
+        return;
+      }
+
+      this.#write(type, message, clearDelay);
+    }
+
+    /**
+     * Writes the message into the live region and arms its clear timer
+     * @param {'polite'|'assertive'} type - Type of announcement
+     * @param {string} message - Message to announce
+     * @param {number} clearDelay - Delay in ms before clearing
+     */
+    #write(type, message, clearDelay) {
       this.#messages.set(type, message);
 
       if (clearAnnouncements) {
@@ -117,7 +152,7 @@ export default class A11y extends Service {
     }
 
     /**
-     * Clears all announcement clear timers
+     * Clears all pending announcement timers
      */
     clearTimers() {
       this.#timers.forEach((timer) => {
@@ -126,6 +161,21 @@ export default class A11y extends Service {
         }
       });
       this.#timers.clear();
+
+      this.#restores.forEach((timer) => cancel(timer));
+      this.#restores.clear();
+    }
+
+    /**
+     * Cancels the pending repeat-restore for a type, if there is one
+     * @param {'polite'|'assertive'} type - Type of announcement
+     */
+    cancelRestore(type) {
+      const pendingRestore = this.#restores.get(type);
+      if (pendingRestore) {
+        cancel(pendingRestore);
+        this.#restores.delete(type);
+      }
     }
 
     /**
@@ -194,15 +244,32 @@ export default class A11y extends Service {
       throw new Error("The clearDelay must be a positive number");
     }
 
-    switch (type) {
-      case "assertive":
-      case "polite":
-        this.#state.setMessage(type, message.trim(), clearDelay);
-        break;
-      default:
-        throw new Error(
-          `Invalid announcement type: ${type}. Expected 'polite' or 'assertive'.`
-        );
+    if (type !== "assertive" && type !== "polite") {
+      throw new Error(
+        `Invalid announcement type: ${type}. Expected 'polite' or 'assertive'.`
+      );
     }
+
+    const trimmed = message.trim();
+
+    // Drop a pending repeat-restore as soon as a newer message is requested rather than a
+    // tick later when the write below runs, because the restore is already queued ahead of
+    // that write and would otherwise put the older message back first. Restores are held
+    // outside tracked state, so cancelling one here is safe during render.
+    this.#state.cancelRestore(type);
+
+    // Defer the tracked-state write out of the current render. `announce` is often
+    // called from a render-driven data load (e.g. an async content resolution), and
+    // writing tracked state synchronously during render trips Ember's
+    // backtracking-rerender assertion. `next` runs after the render completes and is
+    // awaited by `settled()`; a live region is polled asynchronously, so the one-tick
+    // delay is imperceptible.
+    next(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      this.#state.setMessage(type, trimmed, clearDelay);
+    });
   }
 }

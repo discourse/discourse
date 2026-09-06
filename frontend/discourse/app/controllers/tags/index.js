@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { optionalRequire } from "discourse/lib/utilities";
 
 export default class TagsIndexController extends Controller {
   @service router;
@@ -55,10 +54,6 @@ export default class TagsIndexController extends Controller {
   @computed("model.extras.tag_groups.length")
   get groupedByTagGroup() {
     return !isEmpty(this.model?.extras?.tag_groups);
-  }
-
-  get TagsAdminDropdownComponent() {
-    return optionalRequire("discourse/admin/components/tags-admin-dropdown");
   }
 
   get canCreateTags() {

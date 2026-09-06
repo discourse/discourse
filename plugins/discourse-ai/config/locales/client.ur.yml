@@ -14,7 +14,7 @@ ur:
               search: "اے آئی تلاش کی اجازت دیتا ہے"
       site_settings:
         categories:
-          discourse_ai: "ڈسکورس اے آئی"
+          discourse_ai: "Discourse AI"
       dashboard:
         emotion:
           title: "جذبات"
@@ -59,6 +59,24 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      copied: "کاپی کر لیا"
+      view_raw: "خام دیکھیں"
+      ai_decoded_transcript:
+        arguments: "دلائل"
+        type: "قِسم"
+        error: "خرابی"
+        response: "جواب"
+      discourse_workflows:
+        ai_agent:
+          mode: "موڈ"
+      ai_tool_approval:
+        loading: "لوڈ ہو رہا ہے..."
+        tool: "عمل"
+        user: "رکن"
+        approve: "منظور"
+        reject: "مسترد کریں"
+        approved: "منظورشدہ"
+        rejected: "مسترد کر دیا"
       llm_selector:
         none: "کوئی نہیں"
       features:
@@ -77,9 +95,14 @@ ur:
           reset: "رِی سَیٹ"
         search:
           name: "تلاش کریں"
+        admin_dashboard:
+          highlights: "نمایاں نکات"
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
+        image_caption:
+          setting_groups:
+            settings: "سیٹِنگ"
         spam:
           name: "سپَیم"
           description: "منتخب کردہ LLM کا استعمال کرتے ہوئے ممکنہ سپیم کی شناخت کرتا ہے اور اسے سائٹ کے نگرانوں کے لیے نشاندہ کرتا ہے تاکہ وہ جائزہ کی قطار میں معائنہ کر سکیں"
@@ -87,6 +110,23 @@ ur:
         select_option: "ایک آپشن منتخب کریں..."
       translations:
         title: "ترجمہ"
+        category_scope: "زمرہ جات"
+        model_progress:
+          detail:
+            retry: "دوبارہ کوشش"
+            columns:
+              locale: "لوکیل"
+              pending: "زیراِلتواء"
+              total: "حاصل جمع"
+          targets:
+            post:
+              title: "دھاگے"
+            topic:
+              title: "موضوعات"
+            category:
+              title: "زمرہ جات"
+            tag:
+              title: "ٹیگز"
         stats:
           eta_minutes:
             one: "%{count} منٹ"
@@ -124,6 +164,37 @@ ur:
           last_week: "گزشتہ ہفتے"
           last_month: "گزشتہ ماہ"
           custom: "ترمیم..."
+      logs:
+        short_title: "لاگز"
+        apply: "لاگو کریں"
+        successful: "کامیابی"
+        failed: "ناکامی"
+        unknown: "نامعلوم"
+        time: "وقت"
+        when: "کب"
+        outcome: "نتیجہ"
+        request: "ریکویسٹ"
+        provider: "پرووَائیڈر"
+        user: "رکن"
+        context: "سیاق و سباق"
+        topic: "ٹاپک"
+        post: "دھاگہ"
+        post_short: "پوسٹ %{id}"
+        duration: "دورانیہ"
+        actions: "عمل"
+        view_details: "تفصیلات"
+        periods:
+          day: "پچھلے 24 گھنٹے"
+          week: "پچھلے 7 دن"
+          custom: "اپنی مرضی کا"
+        detail:
+          request: "ریکویسٹ"
+          response: "جواب"
+          context: "سیاق و سباق"
+        retention:
+          summary_stage: "Summary"
+          deleted_stage: "مٹائیں"
+          save: "محفوظ"
       ai_agent:
         name: "نام"
         edit: "ترمیم کریں"
@@ -136,7 +207,14 @@ ur:
         mcp_tools_modal:
           select_all: "سبھی منتخب کریں"
           clear_all: "سبھی ہٹا دیں"
+        duplicate: "نقل"
         delete: "حذف کریں"
+        thinking_effort_options:
+          none: "کوئی نہیں"
+          low: "کم"
+          medium: "درمیانی"
+          high: "زیادہ"
+          max: "زیادہ سے زیادہ"
         response_format:
           open_modal: "ترمیم کریں"
           modal:
@@ -188,6 +266,9 @@ ur:
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"
+        vision_modes:
+          disabled:
+            title: "غیر فعال"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
         delete: مٹائیں
@@ -210,7 +291,6 @@ ur:
         tests:
           success: "کامیابی!"
         providers:
-          google: "گُوگَل"
           fake: "اپنی مرضی کا"
       related_topics:
         title: "متعلقہ موضوعات"
@@ -225,10 +305,10 @@ ur:
           copy: "کاپی"
           copied: "کاپی کر لیا!"
           cancel: "منسوخ"
+          insert_footnote: "حوالہ درج کریں"
+          footnote_disabled: "خودکار اندراج غیر فعال، کاپی بٹن پر کلک کریں اور اسے اپنے طور پر ترمیم کریں۔"
         thumbnail_suggestions:
           try_again: "دوبارہ کوشش کریں"
-        image_caption:
-          save_caption: "محفوظ کریں"
       embeddings:
         save: "محفوظ کریں"
         delete: "مٹائیں"
@@ -243,6 +323,7 @@ ur:
       ai_bot:
         pm_warning: "AI چیٹ بوٹ پیغامات کو نگرانوں کے ذریعے باقاعدگی سے مانیٹر کیا جاتا ہے۔"
         debug_ai_modal:
+          duration_label: "دورانیہ:"
           request: "ریکویسٹ"
           response: "جواب"
           next_log: "اگلا"
@@ -278,10 +359,17 @@ ur:
           title: "موضوع کا خلاصہ"
           close: "خلاصہ پینل بند کریں"
       discobot_discoveries:
-        regular_results: "موضوعات"
-        collapse: "بند کریں"
-        tooltip:
-          header: "AI سے چلنے والی تلاش"
-          content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
-          actions:
-            disable: "غیر فعال کریں"
+        create_topic: "موضوع بنائیں"
+        legacy:
+          regular_results: "موضوعات"
+          continue_convo: "گفتگو جاری رکھیں..."
+          collapse: "بند کریں"
+          tooltip:
+            header: "AI سے چلنے والی تلاش"
+            content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
+            actions:
+              disable: "غیر فعال کریں"
+        search_all_topics: "تمام موضوعات"
+        search_messages: "پیغامات"
+        sources:
+          related_discussions: "متعلقہ موضوعات"

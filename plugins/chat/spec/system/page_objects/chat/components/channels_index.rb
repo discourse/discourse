@@ -37,6 +37,10 @@ module PageObjects
           has_no_css?(channel_row_selector(channel))
         end
 
+        def has_no_browse_page_button?
+          has_no_css?(".open-browse-page-btn")
+        end
+
         def has_unread_channel?(
           channel,
           count: nil,

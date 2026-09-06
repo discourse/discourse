@@ -36,6 +36,8 @@ pt:
       added: "Adicionado em %{added}"
     provider:
       slack:
+        errors:
+          action_prohibited: "O robô não tem permissão para publicar para esse canal"
         status:
           no_rules: "Não existem regras configuradas para este canal. Execute <code>/discourse help</code> para instruções."
           rule_string: "*%{index})* *%{filter}* publica na *%{category}*"

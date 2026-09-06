@@ -139,7 +139,7 @@ module("Integration | Component | Dashboard | Highlights", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-highlights__error").exists();
+    assert.dom(".db-section__error").exists();
     assert.dom(".db-kpi").doesNotExist();
   });
 });

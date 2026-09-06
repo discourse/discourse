@@ -500,7 +500,9 @@ RSpec.describe CategoryList do
   end
 
   context "with content_localization_enabled enabled" do
-    fab!(:category) { Fabricate(:category, name: "Original Name", description: "Original Desc") }
+    fab!(:category) do
+      Fabricate(:category, name: "Original Name", description: "Original Desc", locale: "en")
+    end
     fab!(:category_localization) { Fabricate(:category_localization, category:, locale: "ja") }
 
     let(:locale) { "ja" }
@@ -514,7 +516,21 @@ RSpec.describe CategoryList do
       cl = CategoryList.new(Guardian.new)
       cat = cl.categories.find { |c| c.id == category.id }
       expect(cat.name).to eq(category_localization.name)
-      expect(cat.description).to eq(category_localization.description)
+      expect(cat.description).to eq(category_localization.description_first_paragraph)
+    end
+
+    it "only uses the first paragraph of a multi-paragraph localized description" do
+      category_localization.update!(description: "最初の段落\n\n二番目の段落")
+      cl = CategoryList.new(Guardian.new)
+      cat = cl.categories.find { |c| c.id == category.id }
+      expect(cat.description).to eq("最初の段落")
+    end
+
+    it "keeps the untranslated description when the localized description has no paragraph" do
+      category_localization.update!(description: "- 一つ\n- 二つ")
+      cl = CategoryList.new(Guardian.new)
+      cat = cl.categories.find { |c| c.id == category.id }
+      expect(cat.description).to eq("Original Desc")
     end
 
     it "falls back to the original name and description if no localization exists" do

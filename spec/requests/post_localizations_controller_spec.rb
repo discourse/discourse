@@ -10,6 +10,7 @@ describe PostLocalizationsController do
 
   before do
     SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "ja"
     SiteSetting.content_localization_allowed_groups = group.id.to_s
     group.add(user)
     sign_in(user)
@@ -128,6 +129,56 @@ describe PostLocalizationsController do
       post "/post_localizations/create_or_update.json", params: { post_id: -1, locale:, raw: }
 
       expect(response.status).to eq(404)
+    end
+  end
+
+  describe "#update_locale" do
+    it "updates the original post locale without changing the topic locale" do
+      post_record.topic.update!(locale: "fr")
+      original_version = post_record.version
+
+      put "/post_localizations/#{post_record.id}/locale.json", params: { locale: "de" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["locale"]).to eq("de")
+      expect(post_record.reload.locale).to eq("de")
+      expect(post_record.version).to eq(original_version)
+      expect(post_record.topic.reload.locale).to eq("fr")
+    end
+
+    it "returns forbidden when the user cannot localize the post" do
+      group.remove(user)
+
+      expect {
+        put "/post_localizations/#{post_record.id}/locale.json", params: { locale: "ja" }
+      }.not_to change { post_record.reload.locale }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects values that are not a single known locale" do
+      post_record.update!(locale: "en")
+
+      %w[not_a_locale en|ja].each do |invalid_locale|
+        expect {
+          put "/post_localizations/#{post_record.id}/locale.json",
+              params: {
+                locale: invalid_locale,
+              }
+        }.not_to change { post_record.reload.locale }
+
+        expect(response.status).to eq(400)
+      end
+    end
+
+    it "allows the original post locale to be cleared" do
+      post_record.update!(locale: "en")
+
+      put "/post_localizations/#{post_record.id}/locale.json", params: { locale: "" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["locale"]).to be_nil
+      expect(post_record.reload.locale).to be_nil
     end
   end
 

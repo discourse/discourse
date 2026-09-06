@@ -115,6 +115,19 @@ class ::Assigner
     end
   end
 
+  def self.failure_message(reason, assign_to)
+    name = assign_to.is_a?(User) ? assign_to.username : assign_to&.name
+
+    I18n.t(
+      "discourse_assign.#{reason}",
+      username: name,
+      group: name,
+      limit: ASSIGNMENTS_PER_TOPIC_LIMIT,
+      max: SiteSetting.max_assigned_topics,
+      note_max: SiteSetting.max_post_length,
+    )
+  end
+
   def self.publish_topic_tracking_state(topic, user_id)
     if topic.private_message?
       MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, user_ids: [user_id])
@@ -210,6 +223,8 @@ class ::Assigner
       end
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
+    when note.present? && note.length > SiteSetting.max_post_length
+      :assignment_note_too_long
     when !allow_self_reassign && already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic, active: true).count >= ASSIGNMENTS_PER_TOPIC_LIMIT &&
@@ -260,17 +275,30 @@ class ::Assigner
     allow_self_reassign: false,
     should_notify: true
   )
+    return { success: false, reason: :no_assignee } if assign_to.blank?
+
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
-    if !@assigned_by&.guardian&.can_assign?(@target)
+    if !guardian.can_assign?(@target)
       return { success: false, reason: :forbidden_assigner_not_allowed }
     end
 
     if topic.private_message? && SiteSetting.invite_on_assign
-      if assigned_to_type == "Group"
-        invite_group(assign_to, should_notify)
-      else
-        invite_user(assign_to)
+      group = assign_to.is_a?(Group)
+
+      begin
+        group ? invite_group(assign_to, should_notify) : invite_user(assign_to)
+      rescue Discourse::InvalidAccess,
+             Topic::NotAllowed,
+             Topic::UserExists,
+             RateLimiter::LimitExceeded
+        reason =
+          if group
+            :forbidden_group_assignee_not_pm_participant
+          else
+            :forbidden_assignee_not_pm_participant
+          end
+        return { success: false, reason: }
       end
     end
 
@@ -323,7 +351,7 @@ class ::Assigner
         status: status,
       )
 
-    first_post.publish_change_to_clients!(:revised, reload_topic: true)
+    first_post&.publish_change_to_clients!(:revised, reload_topic: true)
     queue_notification(assignment) if should_notify
 
     # This assignment should never be notified
@@ -383,6 +411,8 @@ class ::Assigner
       end
       WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
     end
+
+    DiscourseEvent.trigger(:assigned, assignment)
 
     { success: true }
   end
@@ -446,6 +476,8 @@ class ::Assigner
         end
         WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
+
+      DiscourseEvent.trigger(:unassigned, assignment)
 
       if allowed_user_ids.present?
         MessageBus.publish(
@@ -557,7 +589,8 @@ class ::Assigner
   end
 
   def no_assignee_change?(assignee)
-    @target.assignment&.assigned_to_id == assignee.id
+    @target.assignment&.assigned_to_id == assignee.id &&
+      @target.assignment&.assigned_to_type == assignee.class.name
   end
 
   def details_change?(note, status)

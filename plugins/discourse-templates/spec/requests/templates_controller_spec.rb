@@ -92,9 +92,28 @@ describe DiscourseTemplates::TemplatesController do
         expect(response.status).to eq(200)
 
         parsed = response.parsed_body
-        expected_response = serialize_topics([template_item6, template_item7].sort_by(&:title))
+        expected_response =
+          serialize_topics([template_item6, template_item7].sort_by(&:title), user)
 
         expect(parsed["templates"]).to eq(expected_response)
+      end
+
+      it "omits tags hidden by tag group permissions" do
+        SiteSetting.discourse_templates_categories = templates_sub_category_everyone.id.to_s
+        hidden_tag = Fabricate(:tag, topics: [template_item6], name: "staff-only")
+        Fabricate(
+          :tag_group,
+          permissions: {
+            "staff" => TagGroupPermission.permission_types[:full],
+          },
+          tag_names: [hidden_tag.name],
+        )
+
+        get "/discourse_templates"
+
+        expect(response.status).to eq(200)
+        template = response.parsed_body["templates"].find { |item| item["id"] == template_item6.id }
+        expect(template["tags"]).to contain_exactly(everyone_tag.name)
       end
 
       it "should list topics from multiple parent categories" do
@@ -110,6 +129,7 @@ describe DiscourseTemplates::TemplatesController do
         expected_response =
           serialize_topics(
             [template_item6, template_item7, template_item_from_other_parent].sort_by(&:title),
+            user,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -131,6 +151,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item6,
               template_item7,
             ].sort_by(&:title),
+            user,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -181,6 +202,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            moderator,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -211,6 +233,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            user_in_group1,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -232,6 +255,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            user_in_group2,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -267,6 +291,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            admin,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -297,6 +322,7 @@ describe DiscourseTemplates::TemplatesController do
               template_item7,
               template_item_from_other_parent,
             ].sort_by(&:title),
+            admin,
           )
 
         expect(parsed["templates"]).to eq(expected_response)
@@ -369,7 +395,7 @@ describe DiscourseTemplates::TemplatesController do
         expect(response.status).to eq(200)
 
         parsed = response.parsed_body
-        expected_response = serialize_topics([template_item3])
+        expected_response = serialize_topics([template_item3], moderator)
 
         expect(parsed["templates"]).to eq(expected_response)
         expect(parsed["templates"][0]["usages"]).to eq(0)
@@ -383,7 +409,7 @@ describe DiscourseTemplates::TemplatesController do
         parsed = response.parsed_body
 
         template_item3.reload
-        expected_response = serialize_topics([template_item3])
+        expected_response = serialize_topics([template_item3], moderator)
 
         expect(parsed["templates"]).to eq(expected_response)
         expect(parsed["templates"][0]["usages"]).to eq(1)

@@ -8,23 +8,26 @@ RSpec.describe DiscourseRssPolling::RssFeed do
       feed = Fabricate(:rss_feed, user: user)
       expect(feed.user).to eq(user)
     end
+
+    it "falls back to the system user when the author is missing or was deleted" do
+      feed = Fabricate(:rss_feed, user: nil)
+      expect(feed.user).to eq(Discourse.system_user)
+    end
   end
 
-  describe "#author_username" do
-    it "returns the associated user's current username" do
+  describe "#enabled" do
+    it "defaults to true" do
       feed = Fabricate(:rss_feed, user: user)
-      expect(feed.author_username).to eq(user.username)
+      expect(feed.enabled).to eq(true)
     end
+  end
 
-    it "reflects username changes without requiring a feed update" do
-      feed = Fabricate(:rss_feed, user: user)
-      UsernameChanger.change(user, "shiny_new_name")
-      expect(feed.reload.author_username).to eq("shiny_new_name")
-    end
+  describe ".enabled" do
+    it "only returns enabled feeds" do
+      enabled_feed = Fabricate(:rss_feed, user: user)
+      Fabricate(:rss_feed, user: user, enabled: false)
 
-    it "returns nil when no user is associated" do
-      feed = Fabricate(:rss_feed, user: nil)
-      expect(feed.author_username).to be_nil
+      expect(described_class.enabled).to contain_exactly(enabled_feed)
     end
   end
 

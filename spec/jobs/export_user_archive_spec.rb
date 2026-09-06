@@ -36,10 +36,6 @@ RSpec.describe Jobs::ExportUserArchive do
     [data_rows, csv_out]
   end
 
-  def make_component_json
-    JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
-  end
-
   describe "#execute" do
     before do
       _ = post
@@ -257,7 +253,7 @@ RSpec.describe Jobs::ExportUserArchive do
     it "properly includes the profile fields" do
       _serializer = job.preferences_export
       # puts MultiJson.dump(serializer, indent: 4)
-      output = make_component_json
+      output = JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
       payload = output["user"]
 
       expect(payload["website"]).to match("doe.example.com")

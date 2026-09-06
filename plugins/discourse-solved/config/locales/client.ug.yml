@@ -5,6 +5,19 @@
 # https://translate.discourse.org/
 
 ug:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "باشقۇرغۇچى خادىم"
+              member: "ئەزا"
+              basic: "ئاساسىي"
+            response_time:
+              buckets:
+                lt_1h: "< 1 سائەت"
+                gt_24h: "> 24 سائەت"
   js:
     notifications:
       alt:
@@ -22,6 +35,12 @@ ug:
     topic_statuses:
       solved:
         help: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "تېما"
+            category: "سەھىپە"
     discourse_automation:
       triggerables:
         first_accepted_solution:

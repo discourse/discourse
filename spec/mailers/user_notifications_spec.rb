@@ -1000,6 +1000,10 @@ RSpec.describe UserNotifications do
       before do
         SiteSetting.group_in_subject = true
         SiteSetting.simple_email_subject = true
+
+        # Enabling simple_email_subject rewrites email_subject to a template
+        # without %{optional_pm}, which is where the group name is rendered.
+        SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
       end
 
       let(:group) { Fabricate(:group, name: "my_group") }
@@ -1154,7 +1158,7 @@ RSpec.describe UserNotifications do
 
   shared_examples "respect for private_email" do
     context "with private_email" do
-      it "doesn't support reply by email" do
+      it "doesn't include topic title or slug for regular users" do
         SiteSetting.private_email = true
 
         mailer =
@@ -1172,6 +1176,35 @@ RSpec.describe UserNotifications do
         expect(message.html_part.body.to_s).not_to include(topic.slug)
         expect(message.text_part.body.to_s).not_to include(topic.title)
         expect(message.text_part.body.to_s).not_to include(topic.slug)
+      end
+
+      it "still links back to the topic for staged users" do
+        skip_types = %i[linked quoted mentioned group_mentioned]
+        if skip_types.include?(notification_type)
+          skip "Staged users don't receive #{notification_type} emails"
+        end
+
+        invite_types = %i[invited_to_private_message invited_to_topic watching_first_post]
+        if invite_types.include?(notification_type)
+          skip "Invite-type emails use a different template structure"
+        end
+
+        SiteSetting.private_email = true
+        user.update!(staged: true)
+
+        mailer =
+          UserNotifications.public_send(
+            mail_type,
+            user,
+            notification_type: Notification.types[notification.notification_type],
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+        message = mailer.message
+
+        slugless_path = notification.post.topic.slugless_url
+        expect(message.html_part.body.to_s).to include(slugless_path)
+        expect(message.text_part.body.to_s).to include(slugless_path)
       end
     end
   end

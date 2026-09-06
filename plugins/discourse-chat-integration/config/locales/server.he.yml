@@ -79,6 +79,9 @@ he:
       setting_update_failed: "עדכון ההגדרות נכשל: %{errors}"
     provider:
       slack:
+        errors:
+          action_prohibited: "לבוט אין הרשה לפרסם לערוץ הזה"
+          channel_not_found: "הערוץ שצוין לא קיים ב־Slack"
         status:
           header: |
             *כללים לערוץ זה*

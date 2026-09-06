@@ -34,6 +34,19 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      copied: "Copiat"
+      ai_decoded_transcript:
+        type: "Tipus"
+        error: "Error"
+        response: "Reacció"
+      ai_tool_approval:
+        loading: "Carregant..."
+        tool: "Acció"
+        user: "Usuari"
+        approve: "Aprova"
+        reject: "Rebutja"
+        approved: "Aprovat"
+        rejected: "Rebutjat"
       llm_selector:
         none: "Cap"
       features:
@@ -51,12 +64,30 @@ ca:
           reset: "Restableix"
         search:
           name: "Cerca"
+        image_caption:
+          setting_groups:
+            settings: "Configuració"
         spam:
           name: "Brossa"
       modals:
         select_option: "Trieu una opció..."
       translations:
         title: "Traduccions"
+        category_scope: "Categories"
+        model_progress:
+          detail:
+            columns:
+              pending: "Pendents"
+              total: "Total"
+          targets:
+            post:
+              title: "Publicacions"
+            topic:
+              title: "Temes"
+            category:
+              title: "Categories"
+            tag:
+              title: "Etiquetes"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -84,6 +115,36 @@ ca:
         total: "Total"
         periods:
           last_day: "Últimes 24 hores"
+      logs:
+        short_title: "Registres"
+        apply: "Aplica"
+        successful: "Amb èxit"
+        failed: "Fallits"
+        unknown: "Desconegut"
+        time: "Hora"
+        when: "Quan"
+        request: "Sol·licita"
+        provider: "Proveïdor"
+        user: "Usuari"
+        context: "Context"
+        topic: "Tema"
+        post: "Publicació"
+        post_short: "Publicació %{id}"
+        duration: "Duració"
+        actions: "Accions"
+        view_details: "Detalls"
+        periods:
+          day: "Últimes 24 hores"
+          week: "Els darrers 7 dies"
+          custom: "Personalitzat"
+        detail:
+          request: "Sol·licita"
+          response: "Reacció"
+          context: "Context"
+        retention:
+          summary_stage: "Resum"
+          deleted_stage: "Suprimit"
+          save: "Desa"
       ai_agent:
         name: "Nom"
         edit: "Edita"
@@ -94,6 +155,12 @@ ca:
         save: "Desa"
         enabled: "Activat?"
         delete: "Suprimeix"
+        thinking_effort_options:
+          none: "Cap"
+          low: "Baixa"
+          medium: "Mitjana"
+          high: "Alta"
+          max: "Màxim"
         response_format:
           open_modal: "Edita"
           modal:
@@ -140,6 +207,9 @@ ca:
       llms:
         display_name: "Nom"
         provider: "Proveïdor"
+        vision_modes:
+          disabled:
+            title: "Desactivat"
         save: "Desa"
         edit: "Edita"
         delete: Suprimeix
@@ -154,7 +224,6 @@ ca:
         tests:
           success: "Èxit!"
         providers:
-          google: "Google"
           fake: "Personalitzat"
       ai_helper:
         context_menu:
@@ -168,8 +237,6 @@ ca:
           cancel: "Cancel·la"
         thumbnail_suggestions:
           try_again: "Torna-ho a intentar"
-        image_caption:
-          save_caption: "Desa"
       embeddings:
         save: "Desa"
         delete: "Suprimeix"
@@ -183,6 +250,7 @@ ca:
           fake: "Personalitzat"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Duració:"
           request: "Sol·licita"
           response: "Reacció"
           next_log: "Següent"
@@ -205,8 +273,10 @@ ca:
           table:
             total_count: "Total"
       discobot_discoveries:
-        regular_results: "Temes"
-        collapse: "Redueix"
-        tooltip:
-          actions:
-            disable: "Desactiva"
+        legacy:
+          regular_results: "Temes"
+          collapse: "Redueix"
+          tooltip:
+            actions:
+              disable: "Desactiva"
+        search_messages: "Missatges"

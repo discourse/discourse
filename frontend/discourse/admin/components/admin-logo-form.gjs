@@ -51,7 +51,7 @@ export default class AdminLogoForm extends Component {
     if (upload) {
       set(type, getURL(upload.url));
     } else {
-      set(type, undefined);
+      set(type, null);
     }
   }
 

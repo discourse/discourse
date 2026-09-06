@@ -66,8 +66,9 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       Tag.find_by(name: "question")&.update!(public_topic_count: 1)
     end
 
-    it "processes a post and applies appropriate tags" do
+    it "processes a post and applies appropriate tags without bumping the topic" do
       mock_response = { "tags" => ["bug"], "confidence" => 90 }.to_json
+      bumped_at = topic.bumped_at
 
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
@@ -83,6 +84,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       end
 
       expect(topic.reload.tags.map(&:name)).to include("bug")
+      expect(topic.bumped_at).to eq_time(bumped_at)
     end
 
     it "includes document uploads independently from image uploads" do

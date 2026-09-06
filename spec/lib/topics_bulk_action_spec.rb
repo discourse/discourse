@@ -155,24 +155,45 @@ RSpec.describe TopicsBulkAction do
     end
   end
 
+  describe "group message operations" do
+    fab!(:other_user, :user)
+    fab!(:group) { Fabricate(:group).tap { |group| group.add(user) } }
+    fab!(:private_message) { Fabricate(:private_message_topic, user: user, recipient: other_user) }
+
+    %w[archive_messages move_messages_to_inbox].each do |operation|
+      it "rejects #{operation} when the selected group is not a message recipient" do
+        topic_ids =
+          TopicsBulkAction.new(
+            user,
+            [private_message.id],
+            { type: operation },
+            group: group.name,
+          ).perform!
+
+        expect(topic_ids).to be_empty
+      end
+    end
+  end
+
   describe "change_category" do
     fab!(:category)
     fab!(:first_post) { Fabricate(:post, topic: topic) }
 
     describe "silent option" do
       fab!(:admin)
+      fab!(:topic_watcher, :user)
+      fab!(:category_watcher, :user)
 
       before do
         Jobs.run_immediately!
         PostActionNotifier.enable
-        SiteSetting.create_revision_on_bulk_topic_moves = true
         TopicUser.change(
-          Fabricate(:user),
+          topic_watcher,
           topic.id,
           notification_level: TopicUser.notification_levels[:watching],
         )
         CategoryUser.set_notification_level_for_category(
-          Fabricate(:user),
+          category_watcher,
           CategoryUser.notification_levels[:watching_first_post],
           category.id,
         )
@@ -197,50 +218,30 @@ RSpec.describe TopicsBulkAction do
             [topic.id],
             type: "change_category",
             category_id: category.id,
+            silent: false,
           ).perform!
         end.to change { Notification.count }
       end
     end
 
     context "when the user can edit the topic" do
-      context "when create_revision_on_bulk_topic_moves is enabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
+      it "changes category and creates a revision attributed to the acting user" do
+        old_category_id = topic.category_id
 
-        it "changes category and creates revision" do
-          old_category_id = topic.category_id
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_category",
+            category_id: category.id,
+          ).perform!
 
-          topic_ids =
-            TopicsBulkAction.new(
-              topic.user,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-            ).perform!
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.category).to eq(category)
 
-          expect(topic_ids).to eq([topic.id])
-          expect(topic.reload.category).to eq(category)
-
-          revision = topic.first_post.revisions.last
-          expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
-        end
-      end
-
-      context "when create_revision_on_bulk_topic_moves is disabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
-
-        it "changes category without revision" do
-          topic_ids =
-            TopicsBulkAction.new(
-              topic.user,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-            ).perform!
-
-          expect(topic_ids).to eq([topic.id])
-          expect(topic.reload.category).to eq(category)
-          expect(topic.first_post.revisions.last).to be_nil
-        end
+        revision = topic.first_post.revisions.last
+        expect(revision.user_id).to eq(topic.user.id)
+        expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
       end
 
       it "does nothing when category stays the same" do
@@ -271,6 +272,30 @@ RSpec.describe TopicsBulkAction do
 
         expect(topic_ids).to eq([])
         expect(topic.reload.category).to eq(original_category)
+      end
+    end
+
+    context "when the user can't move topics to the destination category" do
+      it "records an error and creates no revision" do
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        original_category = topic.category
+
+        bulk_action =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_category",
+            category_id: restricted_category.id,
+          )
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic.reload.category).to eq(original_category)
+        expect(first_post.reload.version).to eq(1)
+        expect(PostRevision.where(post: first_post)).to be_empty
+        expect(bulk_action.errors).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
+        )
       end
     end
 
@@ -466,17 +491,48 @@ RSpec.describe TopicsBulkAction do
       expect { topic_ids = tba.perform! }.to change { PostTiming.count }.by(-1)
       expect(topic_ids).to contain_exactly(topic.id)
     end
+
+    it "skips topics the user can't see" do
+      pm = Fabricate(:private_message_topic)
+      pm_post = Fabricate(:post, topic: pm)
+      stranger = Fabricate(:user)
+
+      topic_ids = nil
+      expect {
+        topic_ids = TopicsBulkAction.new(stranger, [pm.id], type: "destroy_post_timing").perform!
+      }.not_to change { pm_post.reload.reads }
+
+      expect(topic_ids).to eq([])
+    end
   end
 
   describe "delete" do
     fab!(:topic) { Fabricate(:post).topic }
     fab!(:moderator)
 
-    it "deletes the topic" do
+    it "deletes the topic and returns its id" do
       tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
-      tba.perform!
-      topic.reload
-      expect(topic).to be_trashed
+
+      expect(tba.perform!).to contain_exactly(topic.id)
+      expect(topic.reload).to be_trashed
+    end
+
+    it "skips topics the user can't delete" do
+      tba = TopicsBulkAction.new(user, [topic.id], type: "delete")
+
+      expect(tba.perform!).to be_empty
+      expect(topic.reload).not_to be_trashed
+    end
+
+    it "deletes the topic when its first post was already deleted" do
+      reply = Fabricate(:post, topic: topic)
+      topic.first_post.trash!(moderator)
+
+      tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
+
+      expect(tba.perform!).to contain_exactly(topic.id)
+      expect(topic.reload).to be_trashed
+      expect(reply.reload).not_to be_trashed
     end
   end
 
@@ -583,6 +639,29 @@ RSpec.describe TopicsBulkAction do
 
       expect(topic_ids).to eq([])
       expect(topic.reload.bumped_at).to eq_time(bumped_at)
+    end
+
+    it "skips topics the user can't see" do
+      trust_level_4 = Fabricate(:trust_level_4)
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      pm = Fabricate(:private_message_topic)
+      bumped_at = 1.hour.ago
+      [private_topic, pm].each do |restricted_topic|
+        Fabricate(:post, topic: restricted_topic, created_at: 1.day.ago)
+        restricted_topic.update!(bumped_at: bumped_at)
+      end
+
+      topic_ids =
+        TopicsBulkAction.new(
+          trust_level_4,
+          [private_topic.id, pm.id],
+          type: "reset_bump_dates",
+        ).perform!
+
+      expect(topic_ids).to eq([])
+      expect(private_topic.reload.bumped_at).to eq_time(bumped_at)
+      expect(pm.reload.bumped_at).to eq_time(bumped_at)
     end
   end
 
@@ -738,7 +817,7 @@ RSpec.describe TopicsBulkAction do
       fab!(:tag3, :tag)
 
       it "doesn't change the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids =
           TopicsBulkAction.new(
@@ -750,6 +829,24 @@ RSpec.describe TopicsBulkAction do
 
         expect(topic_ids).to eq([])
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+      end
+    end
+
+    context "when the user can't tag topics" do
+      fab!(:tag3, :tag)
+
+      it "records an error and creates no revision" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:staff]
+
+        bulk_action =
+          TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tag_ids: [tag3.id])
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+        expect(first_post.reload.version).to eq(1)
+        expect(PostRevision.where(post: first_post)).to be_empty
+        expect(bulk_action.errors).to eq(I18n.t("tags.user_not_permitted") => 1)
       end
     end
 
@@ -769,6 +866,7 @@ RSpec.describe TopicsBulkAction do
           [topic.id],
           type: "change_tags",
           tag_ids: [fab_tag3.id],
+          silent: true,
         ).perform!
       end.to not_change { Notification.where(user: topic_watcher).count }
     end
@@ -833,7 +931,7 @@ RSpec.describe TopicsBulkAction do
 
     context "when the user can't edit the topic" do
       it "doesn't change the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids =
           TopicsBulkAction.new(
@@ -863,6 +961,7 @@ RSpec.describe TopicsBulkAction do
           [topic.id],
           type: "append_tags",
           tag_ids: [tag3.id],
+          silent: true,
         ).perform!
       end.to not_change { Notification.where(user: topic_watcher).count }
     end
@@ -893,7 +992,7 @@ RSpec.describe TopicsBulkAction do
 
     context "when the user can't edit the topic" do
       it "doesn't remove the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
 
@@ -912,7 +1011,12 @@ RSpec.describe TopicsBulkAction do
       )
 
       expect do
-        TopicsBulkAction.new(Fabricate(:admin), [topic.id], type: "remove_tags").perform!
+        TopicsBulkAction.new(
+          Fabricate(:admin),
+          [topic.id],
+          type: "remove_tags",
+          silent: true,
+        ).perform!
       end.to not_change { Notification.where(user: topic_watcher).count }
     end
   end
@@ -939,7 +1043,7 @@ RSpec.describe TopicsBulkAction do
       expect(pm.category_id).to eq(category.id)
     end
 
-    it "is silent by default" do
+    it "records a revision but stays silent (no bump, no small action) by default" do
       Jobs.run_immediately!
       bumped_at = pm.bumped_at
 
@@ -950,7 +1054,7 @@ RSpec.describe TopicsBulkAction do
           type: "convert_to_public_topic",
           category_id: category.id,
         ).perform!
-      end.to not_change { PostRevision.count }
+      end.to change { PostRevision.count }.by(1)
 
       expect(pm.reload.bumped_at).to be_within(1.second).of(bumped_at)
       expect(pm.posts.where(post_type: Post.types[:small_action])).to be_empty
@@ -1101,9 +1205,10 @@ RSpec.describe TopicsBulkAction do
       expect(topic_3.reload.tags).to contain_exactly(tag_2)
     end
 
-    it "does not bump, revise, or notify watchers" do
+    it "records a revision without bumping or notifying watchers when silent" do
       topic_watcher = Fabricate(:user)
       Jobs.run_immediately!
+      PostActionNotifier.enable
       TopicUser.change(
         topic_watcher,
         topic_1.id,
@@ -1111,20 +1216,67 @@ RSpec.describe TopicsBulkAction do
       )
       topic_1.update!(bumped_at: 1.week.ago)
 
-      notifications_before = Notification.where(user: topic_watcher).count
       bumped_at_before = topic_1.bumped_at
       version_before = topic_1.first_post.version
 
+      expect do
+        TopicsBulkAction.new(
+          Fabricate(:admin),
+          [topic_1.id],
+          type: "manage_tags",
+          add_tag_ids: [tag_4.id],
+          silent: true,
+        ).perform!
+      end.to not_change { Notification.count }
+
+      expect(topic_1.first_post.reload.version).to eq(version_before + 1)
+      expect(topic_1.reload.bumped_at).to be_within(1.second).of(bumped_at_before)
+    end
+
+    it "records the bulk change as its own revision instead of rewriting an earlier user's revision (meta t/402693)" do
+      earlier_editor = Fabricate(:admin)
+      acting_user = Fabricate(:admin)
+
+      original_tags = [tag_1.name, tag_2.name]
+      after_earlier_edit = [tag_1.name, tag_2.name, tag_3.name]
+      after_bulk_removal = [tag_2.name, tag_3.name]
+
+      PostRevisor.new(topic_1.first_post).revise!(
+        earlier_editor,
+        { tags: after_earlier_edit },
+        force_new_version: true,
+      )
+      earlier_revision = topic_1.first_post.reload.revisions.last
+      expect(earlier_revision.user_id).to eq(earlier_editor.id)
+      earlier_diff = earlier_revision.modifications["tags"]
+
       TopicsBulkAction.new(
-        Fabricate(:admin),
+        acting_user,
         [topic_1.id],
         type: "manage_tags",
-        add_tag_ids: [tag_4.id],
+        remove_tag_ids: [tag_1.id],
       ).perform!
 
-      expect(Notification.where(user: topic_watcher).count).to eq(notifications_before)
-      expect(topic_1.reload.bumped_at).to be_within(1.second).of(bumped_at_before)
-      expect(topic_1.first_post.reload.version).to eq(version_before)
+      post = topic_1.first_post.reload
+
+      expect(post.revisions.count).to eq(2)
+      bulk_revision = post.revisions.last
+      expect(bulk_revision.user_id).to eq(acting_user.id)
+      expect(bulk_revision.modifications["tags"]).to eq(
+        [after_earlier_edit.sort, after_bulk_removal.sort],
+      )
+
+      expect(earlier_revision.reload.modifications["tags"]).to eq(earlier_diff)
+
+      guardian = Guardian.new(acting_user)
+      [
+        [earlier_revision, earlier_editor, original_tags, after_earlier_edit],
+        [bulk_revision, acting_user, after_earlier_edit, after_bulk_removal],
+      ].each do |revision, user, previous_tags, current_tags|
+        json = PostRevisionSerializer.new(revision, scope: guardian, root: false).as_json
+        expect(json[:username]).to eq(user.username_lower)
+        expect(json[:tags_changes]).to eq(previous: previous_tags.sort, current: current_tags.sort)
+      end
     end
 
     it "only updates topics the acting user can edit" do

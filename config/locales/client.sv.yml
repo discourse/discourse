@@ -22,6 +22,10 @@ sv:
         in_location: "i"
         hidden: "dold"
         failed: "misslyckad"
+    access_control:
+      manage:
+        access_permission_editor: "Redigerare"
+        access_permission_remove: "Ta bort"
     number:
       format:
         separator: "."
@@ -273,6 +277,9 @@ sv:
     age: "Ålder"
     joined: "Gick med"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Avancerat läge"
+      simple_mode: "Enkelt läge"
     show_more: "visa mer"
     show_help: "Alternativ"
     links: "Länkar"
@@ -316,10 +323,28 @@ sv:
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Markerat"
       start_posting:
         back: "Tillbaka"
+    design_wizard:
+      back: "Tillbaka"
+      next: "Nästa"
+      sections:
+        theme: "Tema"
+        fonts: "Typsnitt"
+        homepage: "Hemsida"
+        search: "Sök"
+      theme:
+        selected: "Markerat"
+      colors:
+        light: "Ljust"
+        dark: "Mörkt"
+      fonts:
+        heading_font: "Typsnitt för rubrik"
+      homepage:
+        topics: "Ämnen"
+        categories: "Kategorier"
+        styles:
+          boxes: "Boxar"
     about:
       edit: "Redigera denna sida"
       simple_title: "Om"
@@ -511,9 +536,6 @@ sv:
         optional: "valfritt"
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
-        required: "Du måste göra anspråk innan du kan granska dem."
-        claimed_by_you: "Du har gjort anspråk på detta och kan nu granska det."
-        claimed_by_other: "Detta föremål kan enbart granskas av <b>%{username}</b>."
       awaiting_approval: "Inväntar godkännande"
       delete: "Radera"
       settings:
@@ -544,6 +566,7 @@ sv:
         email: "E-post"
         name: "Namn"
         fields: "Fält"
+        penalty_forever: "För alltid"
         reject_reason: "Anledning"
         scrubbed_reason: "Anledning"
         scrub_record:
@@ -848,7 +871,8 @@ sv:
             from_alias_hint: "Alias att använda som från adress när du skickar grupp SMTP e-post. Observera att detta kanske inte stöds av alla e-postleverantörer, vänligen konsultera dokumentationen från din e-postleverantör."
         membership:
           title: Medlemskap
-          access: Tillgång
+          join_method:
+            invite: "Endast med inbjudan"
         categories:
           title: Kategorier
           long_title: "Standardaviseringar för kategori"
@@ -881,7 +905,6 @@ sv:
         title: "Behörigheter"
         none: "Det finns inga kategorier kopplade till denna grupp."
         description: "Medlemmar i denna grupp kan komma åt dessa kategorier"
-      public_admission: "Tillåt användare att fritt gå med i grupp (Kräver offentligt synlig grupp)"
       public_exit: "Tillåt användare att fritt lämna grupp"
       empty:
         requests: "Det finns inga medlemsansökningar för denna grupp"
@@ -892,7 +915,6 @@ sv:
       request: "Förfrågning"
       message: "Nytt meddelande"
       confirm_leave: "Är du säker på att du vill lämna den här gruppen?"
-      allow_membership_requests: "Tillåt användare att sända medlemskapsförfrågan till gruppägare (Kräver offentligt synlig grupp)"
       membership_request_template: "Anpassa mallen som visas när användare skickar en medlemsansökan"
       membership_request:
         submit: "Skicka ansökan"
@@ -1162,6 +1184,9 @@ sv:
       notifications: "Aviseringar"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Inaktiverad"
+          all: "Aktiverad"
         not_supported: "Aviseringar stöds tyvärr inte i den här webbläsaren."
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         each_browser_note: "Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning."
@@ -1568,7 +1593,7 @@ sv:
         default: "(förvalt värde)"
         any: "något"
       homepage:
-        default: "(förvalt värde)"
+        default: "Standard"
       password_confirmation:
         title: "Lösenord igen"
       invite_code:
@@ -1611,6 +1636,9 @@ sv:
         contextual: "Nytt sidinnehåll"
       bookmark_after_notification:
         title: "Efter att en bokmärkespåminnelse har skickats:"
+      send_shortcut:
+        enter: "Retur"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Avisera vid gillning"
         always: "Alltid"
@@ -1733,6 +1761,28 @@ sv:
           send_invite_email_instructions: "Begränsa inbjudan till e-post för att skicka ett inbjudningsmeddelande"
           update_invite: "Uppdatera"
           cancel: "Avbryt"
+        invite_roles:
+          sent_title: "Inbjudan skickad"
+          member_tab: "Medlemmar"
+          admin_tab: "Personal"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
+          email_placeholder: "namn@exempel.com"
+          invite_by_email: "E-postadress"
+          restrict_domain: "Begränsa till domän"
+          domain_placeholder: "example.com"
+          create_and_send: "Skicka"
+          update: "Uppdatera"
+          summary:
+            role_member: "Medlem"
+            role_admin: "Admin"
+            role_moderator: "Moderator"
+            method_email: "E-postadress"
+            uses: "Max antal användningar"
+            expires: "Utgår"
+            topic: "Ämne"
+            groups: "Grupper"
+            edit: "Redigera"
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -1973,7 +2023,6 @@ sv:
     created: "Skapad"
     created_lowercase: "skapad"
     trust_level: "Förtroendenivå"
-    search_hint: "användarnamn, e-post eller IP-adress"
     create_account:
       header_title: "Välkommen!"
       disclaimer: "Genom att registrera dig godkänner du <a href='%{privacy_link}' target='blank'>integritetspolicyn</a> och <a href='%{tos_link}' target='blank'>användarvillkoren</a>."
@@ -2015,6 +2064,13 @@ sv:
       confirm_title: Fortsätt till %{site_name}
       logging_in_as: Loggar in som %{email}
       confirm_button: Avsluta inloggning
+    code_login:
+      email_label: "E-postadress"
+      continue_button: "Fortsätt"
+      verify_button: "Fortsätt"
+      signup_title: "Skapa ditt konto"
+      account_ready_continue: "Fortsätt"
+      username_label: "Användarnamn"
     login:
       header_title: "Välkommen tillbaka"
       title: "Logga in"
@@ -2128,12 +2184,18 @@ sv:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Retur"
+      option: "Alternativ"
+      period: "Period"
+      tab: "Flik"
+      delete: "Radera"
+      home: "Hem"
     conditional_loading_section:
       loading: Laddar…
     category_row:
       subcategory_count:
         one: "+%{count} underkategori"
         other: "+%{count} underkategorier"
+      subcategories: "+ Underkategorier"
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
@@ -2189,6 +2251,8 @@ sv:
       medium_dark_tone: Mellanmörk hudton
       dark_tone: Mörk hudton
       default: Anpassa emojis
+    filter_controls:
+      reset: "Återställ"
     shared_drafts:
       title: "Delade utkast"
       notice: "Detta ämne är endast synligt för de som kan publicera delade utkast."
@@ -2262,10 +2326,10 @@ sv:
       create_whisper: "Viska"
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
-      title: "Eller tryck på %{modifier}Enter"
       discard: "Förkasta"
       users_placeholder: "Lägg till användare eller grupper"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
+      title_placeholder_redesign: "Rubrik"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "Varför redigerar du?"
       topic_featured_link_placeholder: "Ange länken som visas med titeln."
@@ -2423,7 +2487,6 @@ sv:
         other: "%{count} öppna medlemsansökningar för '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
-      votes_released: "%{description} - slutförd"
       new_features: "Nya funktioner tillgängliga!"
       admin_problems: "Nytt råd på din webbplats översiktspanel"
       dismiss_confirmation:
@@ -2528,10 +2591,9 @@ sv:
       recent: "Senaste sökningar"
       clear_recent: "Rensa senaste sökningar"
       type:
-        default: "Ämnen/inlägg"
+        default: "Inlägg"
         users: "Användare"
         categories: "Kategorier"
-        categories_and_tags: "Kategorier/taggar"
       context:
         user: "Sök inlägg av @%{username}"
         category: "Sök kategorin #%{category}"
@@ -2544,7 +2606,6 @@ sv:
         in: "filter efter metadata (t.ex. in:title, in:personal, in:pinned)"
         status: "filter efter ämnesstatus"
         full_search: "startar helsidesökning"
-        full_search_key: "%{modifier} + Enter"
         me: "visar bara dina inlägg"
       advanced:
         title: Avancerade filter
@@ -2761,6 +2822,7 @@ sv:
       sort:
         label: "Sortera efter"
         top: "Topp"
+        hot: "Hett"
         new: "Nya"
       load_more_children:
         one: "Ytterligare %{count} svar"
@@ -2773,6 +2835,8 @@ sv:
       deleted_post_placeholder: "[raderade]"
       ignored_post_placeholder: "[ignorerade]"
       pinned_reply: "Fäst"
+    share_target:
+      new_message: "Nytt meddelande"
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
@@ -2821,40 +2885,8 @@ sv:
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{categoryLink} eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
+      sr_read: "läs"
       participant_groups: "Deltagargrupper"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/unread"># oläst</a>}
-              other {Det finns <a href="{basePath}/unread"># olästa</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { och <a href="{basePath}/new"># nytt</a> ämne kvar,}
-              other { och <a href="{basePath}/new"># nya</a> ämnen kvar,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
-              other {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/new"># nytt</a> ämne kvar,}
-              other {Det finns <a href="{basePath}/new"># nya</a> ämnen kvar,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { eller bläddra i andra ämnen i {categoryLink}}
-          false { eller <a href="{basePath}/latest">visa senaste ämnen</a>}
-          other {}
-        }
       created_at: "Skapad: %{date}"
       bumped_at: "Senaste: %{date}"
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
@@ -3218,7 +3250,6 @@ sv:
       reply_as_new_private_message: "Svara som nytt meddelande till samma mottagare"
       continue_discussion: "Fortsätter diskussionen från %{postLink}:"
       follow_quote: "gå till det citerade inlägget"
-      show_full: "Visa hela inlägget"
       show_hidden: "Visa ignorerat innehåll"
       deleted_by_author_simple: "(inlägg raderat av författaren)"
       collapse: "förminska"
@@ -3271,6 +3302,8 @@ sv:
           actions: "Åtgärder"
           edit: "Redigera"
           delete: "Ta bort"
+        modal:
+          title: "Översättningar"
         post_language_selector:
           none: "Inte inställd"
       errors:
@@ -3456,7 +3489,7 @@ sv:
     category:
       none: "(ingen kategori)"
       all: "Alla kategorier"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Redigera"
       edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
@@ -3487,7 +3520,6 @@ sv:
         tag_group: "Tagg-grupp"
       topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"
       create_long: "Skapa en ny kategori"
-      slug_placeholder: "(Valfritt) streckade ord för url"
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
       validations:
@@ -3826,11 +3858,8 @@ sv:
       image_load_error: '<a href="%url%">Bilden</a> kunde inte laddas.'
     cannot_render_video: Den här videon kan inte renderas eftersom din webbläsare inte stöder denna kodek.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} eller %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tangentbordsgenvägar"
       short_title: "Genvägar"
       description_header: "Beskrivning"
@@ -3937,7 +3966,6 @@ sv:
       selector_no_tags: "inga taggar"
       selector_remove_filter: "ta bort filter"
       tags: "Taggar"
-      choose_for_topic: "alternativa taggar"
       choose_for_topic_required:
         one: "välj minst %{count} tagg…"
         other: "välj minst %{count} taggar…"
@@ -4152,6 +4180,10 @@ sv:
           public: "Synligt för alla"
           always_public: "Innehållet i det här avsnittet är alltid offentligt"
           more_menu: "Menyn Mer"
+          localizations:
+            locale: "Språk"
+            title_label: "Avsnittstitel"
+            remove_language: "Ta bort"
           links:
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"
@@ -4377,9 +4409,15 @@ sv:
       reports:
         title: "Lista över tillgängliga rapporter"
         sidebar_title: "Rapporter"
+        all_groups: "Alla grupper"
         group_traffic: "Trafik"
         group_members: "Medlemmar"
         group_other: "Övrigt"
+        related_items:
+          users:
+            title: "Användare"
+          labels:
+            user: "Användare"
       config_sections:
         account:
           title: "Konto"
@@ -4445,6 +4483,9 @@ sv:
             email: "E-postadress"
             manifest_screenshots:
               description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+            og_image_preview:
+              generate: "Generera"
+              topic_id_label: "Ämnes-ID"
         fonts:
           title: "Typsnitt"
           form:
@@ -4496,6 +4537,21 @@ sv:
               title: "Inställningar"
         badges:
           title: "Utmärkelser"
+        category_management:
+          tabs:
+            settings: "Inställningar"
+          types:
+            all:
+              title: "Alla kategorier"
+          filter_placeholder: "Filterkategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighet"
+            topics: "Ämnen"
+          visibility:
+            public: "Offentligt"
+          visibility_filter:
+            all: "Alla kategorier"
         permalinks:
           title: "Permalänkar"
           header_description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet"
@@ -4543,18 +4599,26 @@ sv:
         default_value: "Standard"
       search:
         title: "Sök"
+      site_traffic_explorer:
+        metric_information: "Om %{metric}"
+        apply: "Tillämpa"
+        filters:
+          browser: "Webbläsare"
+          language: "Språk"
+          ip: "IP-adress"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
         discourse_last_updated: "Discourse uppdaterad:"
         version: "Version"
         up_to_date: "Du är aktuell!"
-        critical_available: "En kritisk uppdatering är tillgänglig."
         updates_available: "Uppdateringar är tillgängliga."
         no_check_performed: "En sökning efter uppdateringar har ej genomförts. Kontrollera att sidekiq körs."
         stale_data: "En sökning efter uppdateringar har inte genomförts på sistone. Kontrollera att sidekiq körs."
         installed_version: "Installerad"
-        latest_version: "Senaste"
+        github: "GitHub"
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Ignorera"
         new_features:
@@ -4608,8 +4672,9 @@ sv:
               posts: "Inlägg"
               share: "Dela"
             whos_posting:
-              all_categories: "Alla kategorier"
               staff: "Personal"
+              modal:
+                apply: "Spara"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nya"
@@ -4622,7 +4687,13 @@ sv:
             table:
               searches: "Sökningar"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Discourse uppdaterad"
+            dashboard_updated: "Översiktspanelen uppdaterad"
         reports_section:
+          header_action: "Hantera"
           no_data: "Ingen data att visa"
           modal:
             enabled_heading: "Aktiverad"
@@ -4660,6 +4731,13 @@ sv:
           average_for_sample: "Genomsnitt för prov"
           total: "All tid totalt"
           no_data: "Ingen data att visa."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} användare"
+              other: "%{count} användare"
+            posts_count:
+              one: "%{count} inlägg"
+              other: "%{count} inlägg"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Sökloggar</a>'
             disabled: 'Trendsökrapporten är inaktiverad. Aktivera <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">sökfrågor för loggar</a> för att samla data.'
@@ -4696,7 +4774,6 @@ sv:
             incoming_email: "Egenvald inkommande e-postadress"
             incoming_email_placeholder: "Ange e-postadress"
             incoming_email_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
-            visibility: Synlighet
             visibility_levels:
               title: "Vem kan se denna grupp?"
               public: "Alla"
@@ -5036,6 +5113,8 @@ sv:
           city_for_disputes: "Domstol vid tvister"
           extra_groups:
             groups: "Grupper"
+          locale_selector:
+            title: "Språk"
           optional: "(valfri)"
           update: "Uppdatera"
           saved: "sparat!"
@@ -5120,6 +5199,8 @@ sv:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"
         legacy: "Äldre"
+      duplicate_topic_titles:
+        allowed: "Tillåten"
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -5315,7 +5396,6 @@ sv:
           finish_install: "Slutför temainstallationen"
           last_attempt: "Installationsprocessen slutfördes inte, det senaste försöket:"
           remote_branch: "Filialnamn (valfritt)"
-          public_key: "Ge följande offentliga nyckel tillträde till lagringsplatsen:"
           install: "Installera"
           installed: "Installerad"
           install_popular: "Populära"
@@ -5825,6 +5905,10 @@ sv:
         active: "Aktiverad"
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Stäng"
+              confirm: "Stäng av användare"
           delete:
             confirmation_modal:
               close: "Stäng"
@@ -5836,6 +5920,9 @@ sv:
           suspended: "Avstängd"
           silenced: "Tystad"
           staged: "Arrangerad"
+        activation_filter:
+          all: "Alla användare"
+          activated: "Aktiverad"
         approved: "Godkänd?"
         titles:
           active: "Aktiva användare"
@@ -6312,10 +6399,15 @@ sv:
         uploading: "Laddar upp…"
         name: "Namn"
         group: "Grupp"
+        all_groups: "Alla grupper"
         image: "Bild"
         alt: "anpassa förhandsgranskning av emoji"
         delete_confirm: "Är du säker på att du vill radera emojin :%{name}:?"
         settings: "Inställningar"
+        export: "Exportera"
+        import: "Importera"
+        import_category:
+          new: "Nya"
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         delete: "Radera"

@@ -4,32 +4,15 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
+import { formatDeltaPercent } from "discourse/admin/lib/dashboard-format";
+import { searchHeadlineKeys } from "discourse/admin/lib/search-headline";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
 
-const COUNT_HEADLINE_KEYS = {
-  last_7_days: "admin.dashboard.sections.search.count_headline.last_7_days",
-  last_30_days: "admin.dashboard.sections.search.count_headline.last_30_days",
-  last_3_months: "admin.dashboard.sections.search.count_headline.last_3_months",
-};
-
 function formatCount(value) {
   return I18n.toNumber(value, { precision: 0 });
-}
-
-function formatDelta(value) {
-  const abs = Math.abs(value);
-
-  if (abs > 0 && abs < 1) {
-    const sign = value > 0 ? "+" : "-";
-    return `${sign}${I18n.toNumber(abs, { precision: 1 })}%`;
-  }
-
-  const rounded = Math.round(value);
-  const sign = rounded > 0 ? "+" : "";
-  return `${sign}${I18n.toNumber(rounded, { precision: 0 })}%`;
 }
 
 function badgeLabel(status) {
@@ -49,27 +32,62 @@ export default class DashboardSearch extends Component {
     return this.args.search?.logging_enabled === false;
   }
 
-  get isNoSignal() {
-    return this.args.search.headline_state === "no_signal";
-  }
+  get headline() {
+    const prefix = "admin.dashboard.sections.search.headline";
+    const totalSearches = this.args.search.kpis.total_searches;
+    const noResultRate = this.args.search.kpis.no_result_rate;
 
-  get headlineTitle() {
-    if (this.isNoSignal) {
-      return i18n("admin.dashboard.sections.search.headline.no_signal_title");
+    if (
+      totalSearches.value === 0 &&
+      totalSearches.previous_value === 0 &&
+      noResultRate.value == null
+    ) {
+      const headlineKeys = searchHeadlineKeys({ noData: true });
+      return {
+        title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+        summary: i18n(`${prefix}.summaries.${headlineKeys.summary}`),
+      };
     }
 
-    const count = this.args.search.kpis.total_searches.value;
-    const key =
-      COUNT_HEADLINE_KEYS[this.args.period] ??
-      "admin.dashboard.sections.search.count_headline.selected_period";
+    const searchesDirection = this.#direction(
+      totalSearches,
+      totalSearches.percent_change
+    );
+    const noResultDirection = this.#direction(
+      noResultRate,
+      noResultRate.point_change
+    );
+    const headlineKeys = searchHeadlineKeys({
+      searches: searchesDirection,
+      noResultRate: noResultDirection,
+    });
+    const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
+    const cta = headlineKeys.cta
+      ? i18n(`${prefix}.cta.${headlineKeys.cta}`)
+      : null;
 
-    return i18n(key, { count, formatted_count: formatCount(count) });
+    return {
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+      summary: cta ? `${summary} ${cta}` : summary,
+    };
   }
 
-  get headlineSummary() {
-    return i18n(
-      `admin.dashboard.sections.search.headline.${this.args.search.headline_state}`
-    );
+  #direction(kpi, change) {
+    if (kpi.value == null) {
+      return "unavailable";
+    }
+
+    if (kpi.previous_value == null || kpi.previous_value === 0) {
+      return kpi.value > 0 ? "up" : "flat";
+    }
+
+    if (change > 0) {
+      return "up";
+    } else if (change < 0) {
+      return "down";
+    }
+
+    return "flat";
   }
 
   get totalSearchesValue() {
@@ -84,7 +102,7 @@ export default class DashboardSearch extends Component {
     }
 
     return {
-      text: formatDelta(change),
+      text: formatDeltaPercent(change),
       className: change > 0 ? "--pos" : "--neg",
     };
   }
@@ -102,7 +120,7 @@ export default class DashboardSearch extends Component {
     }
 
     return {
-      text: formatDelta(change),
+      text: formatDeltaPercent(change),
       className: change > 0 ? "--neg" : "--pos",
     };
   }
@@ -148,8 +166,8 @@ export default class DashboardSearch extends Component {
       {{else if @search}}
         <div class="db-section__subheader">
           <div class="db-section__subintro">
-            <h3>{{this.headlineTitle}}</h3>
-            <p>{{this.headlineSummary}}</p>
+            <h3>{{this.headline.title}}</h3>
+            <p>{{this.headline.summary}}</p>
           </div>
 
           <div class="db-section__metrics">
@@ -234,109 +252,100 @@ export default class DashboardSearch extends Component {
                 </:content>
               </DTooltip>
             </h3>
-            <div class="db-activity">
-              {{#if @search.trending.length}}
-                <div class="db-activity__table-scroll-container">
-                  <table class="db-activity-table">
-                    <thead>
-                      <tr>
-                        <th>{{i18n
-                            "admin.dashboard.sections.search.table.term"
-                          }}</th>
-                        <th class="db-activity-table__col-number">
-                          {{i18n
-                            "admin.dashboard.sections.search.table.searches"
+            {{#if @search.trending.length}}
+              <table class="db-search-table">
+                <thead>
+                  <tr>
+                    <th>{{i18n
+                        "admin.dashboard.sections.search.table.term"
+                      }}</th>
+                    <th class="db-search-table__col-number">
+                      {{i18n "admin.dashboard.sections.search.table.searches"}}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each @search.trending as |row|}}
+                    <tr data-test-search-term-row>
+                      <td>
+                        <LinkTo
+                          @route="adminSearchLogs.term"
+                          @query={{hash
+                            term=row.term
+                            period=this.trendingTermPeriod
+                            searchType=@search.search_type
                           }}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each @search.trending as |row|}}
-                        <tr data-test-search-term-row>
-                          <td>
-                            <LinkTo
-                              @route="adminSearchLogs.term"
-                              @query={{hash
-                                term=row.term
-                                period=this.trendingTermPeriod
-                              }}
-                            >
-                              {{row.term}}
-                            </LinkTo>
-                          </td>
-                          <td class="db-activity-table__cell-number">
-                            {{formatCount row.searches}}
-                          </td>
-                        </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-                </div>
-              {{else}}
-                <p class="db-activity__empty">
-                  {{i18n "admin.dashboard.sections.search.trending.empty"}}
-                </p>
-              {{/if}}
-            </div>
+                          title={{row.term}}
+                        >
+                          {{row.term}}
+                        </LinkTo>
+                      </td>
+                      <td class="db-search-table__cell-number">
+                        {{formatCount row.searches}}
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            {{else}}
+              <p class="db-search-table__empty">
+                {{i18n "admin.dashboard.sections.search.trending.empty"}}
+              </p>
+            {{/if}}
           </div>
 
           <div class="db-section__row-block">
             <h3 class="db-section__row-block-title">
               {{i18n "admin.dashboard.sections.search.content_gaps.title"}}
             </h3>
-            <div class="db-activity">
-              {{#if @search.content_gaps.length}}
-                <div class="db-activity__table-scroll-container">
-                  <table class="db-activity-table">
-                    <thead>
-                      <tr>
-                        <th>{{i18n
-                            "admin.dashboard.sections.search.table.term"
-                          }}</th>
-                        <th>{{i18n
-                            "admin.dashboard.sections.search.table.status"
-                          }}</th>
-                        <th class="db-activity-table__col-number">
-                          {{i18n
-                            "admin.dashboard.sections.search.table.searches"
-                          }}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each @search.content_gaps as |row|}}
-                        <tr data-test-search-term-row>
-                          <td>
-                            <LinkTo
-                              @route="full-page-search"
-                              @query={{hash q=row.term}}
-                            >
-                              {{row.term}}
-                            </LinkTo>
-                          </td>
-                          <td>
-                            <DTooltip
-                              class="db-pill --neg"
-                              @identifier="search-gap-badge-tooltip"
-                            >
-                              <:trigger>{{badgeLabel row.status}}</:trigger>
-                              <:content>{{badgeTooltip row.status}}</:content>
-                            </DTooltip>
-                          </td>
-                          <td class="db-activity-table__cell-number">
-                            {{formatCount row.searches}}
-                          </td>
-                        </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-                </div>
-              {{else}}
-                <p class="db-activity__empty">
-                  {{i18n "admin.dashboard.sections.search.content_gaps.empty"}}
-                </p>
-              {{/if}}
-            </div>
+            {{#if @search.content_gaps.length}}
+              <table class="db-search-table">
+                <thead>
+                  <tr>
+                    <th>{{i18n
+                        "admin.dashboard.sections.search.table.term"
+                      }}</th>
+                    <th class="db-search-table__col-status">{{i18n
+                        "admin.dashboard.sections.search.table.status"
+                      }}</th>
+                    <th class="db-search-table__col-number">
+                      {{i18n "admin.dashboard.sections.search.table.searches"}}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each @search.content_gaps as |row|}}
+                    <tr data-test-search-term-row>
+                      <td>
+                        <LinkTo
+                          @route="full-page-search"
+                          @query={{hash q=row.term}}
+                          title={{row.term}}
+                        >
+                          {{row.term}}
+                        </LinkTo>
+                      </td>
+                      <td>
+                        <DTooltip
+                          class="db-pill --neg"
+                          @identifier="search-gap-badge-tooltip"
+                        >
+                          <:trigger>{{badgeLabel row.status}}</:trigger>
+                          <:content>{{badgeTooltip row.status}}</:content>
+                        </DTooltip>
+                      </td>
+                      <td class="db-search-table__cell-number">
+                        {{formatCount row.searches}}
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            {{else}}
+              <p class="db-search-table__empty">
+                {{i18n "admin.dashboard.sections.search.content_gaps.empty"}}
+              </p>
+            {{/if}}
           </div>
         </div>
       {{/if}}

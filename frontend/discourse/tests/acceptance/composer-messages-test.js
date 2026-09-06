@@ -329,3 +329,39 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
       );
   });
 });
+
+acceptance("Composer - Messages - Similar topics", function (needs) {
+  needs.user();
+  needs.settings({
+    general_category_id: 1,
+    default_composer_category: 1,
+  });
+  needs.site({
+    categories: [{ id: 1, name: "General", slug: "general", permission: 1 }],
+  });
+
+  test("a key release survives a category that carries no form template ids", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    // Asserted, not assumed: the lookup returns early without a topic being
+    // created, and never reaches the guard without a category.
+    const { model } = this.container.lookup("service:composer");
+    assert.true(model.creatingTopic, "a topic is being created");
+    assert.true(!!model.category, "the composer has a category");
+    assert.strictEqual(
+      model.category.form_template_ids,
+      undefined,
+      "whose payload carries no form template ids"
+    );
+
+    // Only a real key release schedules the lookup, so `fillIn` cannot stand in
+    // here. The releases in the modules above go to a private message, which the
+    // lookup declines before reaching this guard.
+    await triggerKeyEvent(".d-editor-input", "keyup", "A");
+
+    assert
+      .dom("#reply-control")
+      .exists("the scheduled lookup runs without throwing");
+  });
+});

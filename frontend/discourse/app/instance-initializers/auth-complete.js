@@ -96,6 +96,20 @@ export default {
             }
 
             next(() => {
+              // A bare email prefill (no external auth provider) feeds the
+              // email+code signup flow when it's enabled
+              if (
+                siteSettings.enable_local_logins_via_code &&
+                options.email &&
+                !options.auth_provider
+              ) {
+                router.transitionTo("signup").then(() => {
+                  owner.lookup("controller:signup").accountEmail =
+                    options.email;
+                });
+                return;
+              }
+
               const site = owner.lookup("service:site");
               const hasRequiredName =
                 !site.full_name_required_for_signup ||

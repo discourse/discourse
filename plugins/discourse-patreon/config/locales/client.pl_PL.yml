@@ -19,6 +19,8 @@ pl_PL:
       title: 'Patreon'
       header:
         rules: 'Filtry'
+      unconfigured: "Platforma Patreon nie jest jeszcze połączona. Szczegóły znajdziesz w dokumentacji Discourse Meta <a href='%{url}' target='_blank'>w</a>."
+      configure_tokens: 'Przejdź do ustawień'
       group: 'Grupa'
       rewards: 'Nagrody'
       filter: 'Filtr'

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager
-  attr_reader :name, :theme, :default
+  attr_reader :name, :theme, :default, :opts
 
   def self.types
     ThemeSetting.types
@@ -36,7 +36,15 @@ class ThemeSettingsManager
   end
 
   def value
-    has_record? ? db_record.value : default
+    configured_value
+  end
+
+  def default_value
+    default
+  end
+
+  def value_for_editing
+    value
   end
 
   def type_name
@@ -53,6 +61,10 @@ class ThemeSettingsManager
 
   def requests_refresh?
     @opts[:refresh]
+  end
+
+  def disallowed_groups
+    @opts[:disallowed_groups]
   end
 
   def value=(new_value)
@@ -101,5 +113,11 @@ class ThemeSettingsManager
   def has_max?
     max = @opts[:max]
     (max.is_a?(::Integer) || max.is_a?(::Float)) && max != ::Float::INFINITY
+  end
+
+  protected
+
+  def configured_value
+    has_record? ? db_record.value : default
   end
 end

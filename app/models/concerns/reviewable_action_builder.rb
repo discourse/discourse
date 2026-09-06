@@ -57,6 +57,23 @@ module ReviewableActionBuilder
       action.confirm_message = "#{prefix}.confirm" if confirm
       action.completed_message = "#{prefix}.complete"
       action.require_reject_reason = require_reject_reason
+      action.penalty_effect = penalty_effect_for(id)
+    end
+  end
+
+  def penalty_effect_for(_action_id)
+    nil
+  end
+
+  def build_penalty_actions(actions, bundle:, silence:, suspend:, user: target_user)
+    return if user.blank? || !guardian.can_suspend?(user)
+
+    if !user.silenced?
+      build_action(actions, silence, icon: "microphone-slash", bundle:, client_action: "silence")
+    end
+
+    if !user.suspended?
+      build_action(actions, suspend, icon: "ban", bundle:, client_action: "suspend")
     end
   end
 
@@ -108,32 +125,6 @@ module ReviewableActionBuilder
   end
 
   private
-
-  # Returns the user associated with the reviewable, if applicable.
-  # For most reviewables, this will be the user who created the reviewable target.
-  #
-  # @return [User] The user associated with the reviewable.
-  def target_user
-    if target_type == "User"
-      try(:target)
-    else
-      try(:target_created_by)
-    end
-  end
-
-  # Returns the post associated with the reviewable, if applicable.
-  # This method assumes that the including class has a `target` that is a Post or
-  # a `target_id` that can be used to look up the Post.
-  #
-  # @return [Post, nil] The post associated with the reviewable, or nil if not found.
-  def target_post
-    @post ||=
-      if defined?(target) && target.is_a?(Post)
-        target
-      elsif defined?(target_id)
-        Post.with_deleted.find_by(id: target_id)
-      end
-  end
 
   # Options for deleting a user, used by perform_delete_user and perform_delete_and_block_user.
   def delete_opts

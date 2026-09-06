@@ -121,3 +121,8 @@ ug:
           fields:
             channel_name:
               label: قانال ئىسمى
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "قانال"
+        configure: "سەپلە"
+        message: "ئۇچۇر"

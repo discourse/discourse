@@ -21,6 +21,7 @@ module TurboTests
           js_deprecations: @rspec_example.metadata[:js_deprecations],
           rerun_file_path: @rspec_example.metadata[:rerun_file_path],
           active_record_debug_logs: @rspec_example.metadata[:active_record_debug_logs],
+          perf: @rspec_example.metadata[:perf],
         },
         location_rerun_argument: @rspec_example.location_rerun_argument,
       }

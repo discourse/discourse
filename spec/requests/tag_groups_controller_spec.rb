@@ -91,6 +91,25 @@ RSpec.describe TagGroupsController do
 
         expect(results).to be_empty
       end
+
+      it "does not return the tags restricted to a category anons can't see" do
+        tag_group = tag_group_with_permission(everyone, readonly)
+        secret_tag = Fabricate(:tag)
+        tag_group.tags << secret_tag
+        CategoryTag.create!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          tag: secret_tag,
+        )
+
+        get "/tag_groups/filter/search.json"
+        expect(response.status).to eq(200)
+
+        results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
+
+        expect(results).to contain_exactly(
+          { name: tag_group.name, tags: [{ id: tag.id, name: tag.name, slug: tag.slug }] },
+        )
+      end
     end
 
     context "for regular users" do

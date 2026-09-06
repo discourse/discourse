@@ -104,7 +104,6 @@
   pre code {
     overflow-wrap: anywhere; // prevent long strings from breaking modal width
     min-width: 0;
-    overflow: auto;
     flex: 0 1 auto;
   }
 
@@ -123,6 +122,14 @@
     .diff-del {
       width: fit-content;
     }
+  }
+
+  .revision__hidden-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 1em 0;
+    color: var(--primary-medium);
   }
 
   &:not(.--mode-inline) {

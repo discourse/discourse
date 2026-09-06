@@ -1,8 +1,8 @@
-import { visit } from "@ember/test-helpers";
+import { findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
   needs.settings({
@@ -14,7 +14,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categorySectionLinks = queryAll(
+    const categorySectionLinks = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
@@ -39,7 +39,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categories = queryAll(
+    const categories = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
@@ -63,7 +63,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categories = queryAll(
+    const categories = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 

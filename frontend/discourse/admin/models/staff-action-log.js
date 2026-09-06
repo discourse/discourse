@@ -1,13 +1,16 @@
 import { computed } from "@ember/object";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
 function format(label, value, escape = true) {
+  const labelBr = value && value.toString().includes("\n") ? "<br/>" : " ";
+  value = value ? value.toString() : "";
   return value
-    ? `<b>${i18n(label)}</b>: ${escape ? escapeExpression(value) : value}`
+    ? `<b>${i18n(label)}:</b>${labelBr} ${escape ? escapeExpression(value.replaceAll("\n", "<br/>")) : value.replaceAll("\n", "<br/>")}`
     : "";
 }
 
@@ -65,7 +68,7 @@ export default class StaffActionLog extends RestModel {
       : null;
 
     const reviewableLink = this.reviewable_id
-      ? `<a href="/review/${this.reviewable_id}">${this.reviewable_id}</a>`
+      ? `<a href="${getURL(`/review/${this.reviewable_id}`)}">${this.reviewable_id}</a>`
       : null;
 
     let lines = [

@@ -23,7 +23,6 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
 
   before do
     enable_current_plugin
-    SiteSetting.enable_ai_bot_starred_conversations = true
     sign_in(current_user)
     [conversation, starred_conversation, other_conversation].each { |topic| mark_ai_bot_pm(topic) }
   end
@@ -77,46 +76,9 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
         be_in([starred_conversation.id, *extra_starred_conversations.map(&:id)]),
       )
     end
-
-    it "returns the legacy response when the upcoming change is disabled" do
-      SiteSetting.enable_ai_bot_starred_conversations = false
-
-      get "/discourse-ai/ai-bot/conversations.json"
-
-      expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json).not_to have_key("starred_conversations")
-      starred_topic = json["conversations"].find { |topic| topic["id"] == starred_conversation.id }
-      expect(starred_topic["ai_conversation_starred"]).to eq(false)
-      expect(json["conversations"].map { |topic| topic["id"] }).to include(starred_conversation.id)
-    end
   end
 
   describe "PUT /discourse-ai/ai-bot/conversations/:topic_id/starred.json" do
-    context "when the upcoming change is disabled" do
-      before { SiteSetting.enable_ai_bot_starred_conversations = false }
-
-      it "returns 404 and does not star the conversation" do
-        put "/discourse-ai/ai-bot/conversations/#{conversation.id}/starred.json",
-            params: {
-              starred: true,
-            }
-
-        expect(response.status).to eq(404)
-        expect(
-          DiscourseAi::AiBot::ConversationStar.exists?(user: current_user, topic: conversation),
-        ).to eq(false)
-      end
-      it "returns 404 even when params are invalid" do
-        put "/discourse-ai/ai-bot/conversations/#{conversation.id}/starred.json",
-            params: {
-              starred: "wat",
-            }
-
-        expect(response.status).to eq(404)
-      end
-    end
-
     it "stars a conversation for the current user" do
       put "/discourse-ai/ai-bot/conversations/#{conversation.id}/starred.json",
           params: {

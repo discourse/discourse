@@ -40,6 +40,10 @@ module PageObjects
         has_css?("a.db-traffic__see-details")
       end
 
+      def has_no_see_details_link?
+        has_no_css?("a.db-traffic__see-details")
+      end
+
       def click_see_details
         find("a.db-traffic__see-details").click
       end
@@ -66,12 +70,25 @@ module PageObjects
         Tooltips.new("site-traffic-logged-in-share-tooltip").present?(text: text)
       end
 
+      def hover_direct_traffic_tooltip
+        find("[data-trigger][data-identifier='site-traffic-direct-traffic-tooltip']").hover
+        self
+      end
+
+      def has_direct_traffic_tooltip?(text)
+        Tooltips.new("site-traffic-direct-traffic-tooltip").present?(text: text)
+      end
+
       def has_no_top_countries_card?
         has_no_top_card?("Top countries")
       end
 
       def has_no_top_referrers_card?
         has_no_top_card?("Top referrers")
+      end
+
+      def has_no_top_entry_urls_card?
+        has_no_top_card?("Top entry URLs")
       end
 
       def has_top_country_rows?(rows)
@@ -81,7 +98,8 @@ module PageObjects
           rows.each_with_index.all? do |row, index|
             nth =
               ".db-traffic__list-row:nth-child(#{index + 1})[data-test-country-code='#{row[:country]}']"
-            has_css?(nth) && has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
+            has_css?("#{nth} .db-traffic__name[title='#{row[:name]}']") &&
+              has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
           end
         end
       end
@@ -92,10 +110,30 @@ module PageObjects
 
           rows.each_with_index.all? do |row, index|
             nth = ".db-traffic__list-row:nth-child(#{index + 1})"
-            next false unless has_css?("#{nth} a.db-traffic__link", text: row[:referrer])
+            unless has_css?(
+                     "#{nth} a.db-traffic__link[title='#{row[:referrer]}']",
+                     text: row[:referrer],
+                   )
+              next false
+            end
             next true unless row.key?(:percent)
 
             has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
+          end
+        end
+      end
+
+      def has_top_entry_url_rows?(rows)
+        within_top_card("Top entry URLs") do
+          next false unless has_css?(".db-traffic__list-row", count: rows.size)
+
+          rows.each_with_index.all? do |row, index|
+            nth = ".db-traffic__list-row:nth-child(#{index + 1})"
+            has_css?(
+              "#{nth} a.db-traffic__link[href='#{row[:path]}'][title='#{row[:path]}']",
+              text: row[:path],
+            ) && has_css?("#{nth} .db-traffic__percent", exact_text: "#{row[:percent]}%") &&
+              has_css?("#{nth} .db-traffic__count", exact_text: "(#{row[:count]})")
           end
         end
       end
@@ -108,12 +146,20 @@ module PageObjects
         has_empty_state_in?("Top referrers", "No referrer data for this period.")
       end
 
+      def has_top_entry_urls_empty_state?
+        has_empty_state_in?("Top entry URLs", "No entry URL data for this period.")
+      end
+
       def click_top_referrers_drilldown
         within_top_card("Top referrers") { find("h3.db-section__row-block-title a").click }
       end
 
       def click_top_countries_drilldown
         within_top_card("Top countries") { find("h3.db-section__row-block-title a").click }
+      end
+
+      def click_top_entry_urls_drilldown
+        within_top_card("Top entry URLs") { find("h3.db-section__row-block-title a").click }
       end
 
       def has_top_referrers_drilldown?
@@ -124,7 +170,44 @@ module PageObjects
         within_top_card("Top countries") { has_css?("h3.db-section__row-block-title a") }
       end
 
+      def has_top_entry_urls_drilldown?
+        within_top_card("Top entry URLs") { has_css?("h3.db-section__row-block-title a") }
+      end
+
+      def has_bounce_rate?(value)
+        has_kpi_value?("bounce_rate", value)
+      end
+
+      def has_no_bounce_rate?
+        has_no_kpi?("bounce_rate")
+      end
+
+      def has_average_session_duration?(value)
+        has_kpi_value?("average_session_duration", value)
+      end
+
+      def has_no_average_session_duration?
+        has_no_kpi?("average_session_duration")
+      end
+
+      def hover_bounce_rate_tooltip
+        find("[data-test-kpi='bounce_rate'] [data-trigger]").hover
+        self
+      end
+
+      def has_session_metric_tooltip?(text)
+        Tooltips.new("site-traffic-bounce-rate-tooltip").present?(text: text)
+      end
+
       private
+
+      def has_kpi_value?(key, value)
+        has_css?("[data-test-kpi='#{key}'] .db-section__metric-number", exact_text: value)
+      end
+
+      def has_no_kpi?(key)
+        has_no_css?("[data-test-kpi='#{key}']")
+      end
 
       def has_no_top_card?(title)
         has_no_css?(".db-section__row-block", text: title)

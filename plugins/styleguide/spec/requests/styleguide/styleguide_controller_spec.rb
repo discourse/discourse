@@ -4,8 +4,11 @@ RSpec.describe Styleguide::StyleguideController do
   before { SiteSetting.styleguide_enabled = true }
 
   describe "#index" do
-    context "when styleguide_allowed_groups is set to everyone" do
-      before { SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+    context "when styleguide_allowed_groups includes anonymous and logged in users" do
+      before do
+        SiteSetting.styleguide_allowed_groups =
+          "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
+      end
 
       it "allows access for anonymous users" do
         get "/styleguide"

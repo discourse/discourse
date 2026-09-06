@@ -216,3 +216,7 @@ ro:
               label: Nume canal
             provider:
               label: Furnizor
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Canal"
+        message: "Mesaj"

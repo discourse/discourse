@@ -1,17 +1,15 @@
 import { fn, hash } from "@ember/helper";
-import { fillIn, render } from "@ember/test-helpers";
+import { fillIn, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import { i18n } from "discourse-i18n";
 
 function getOptions() {
-  return Array.from(
-    queryAll(`.select-kit-collection .select-kit-row`).map(
-      (_, span) => span.dataset.name
-    )
+  return findAll(`.select-kit-collection .select-kit-row`).map(
+    (span) => span.dataset.name
   );
 }
 

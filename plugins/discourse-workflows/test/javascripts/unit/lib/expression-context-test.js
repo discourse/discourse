@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import {
   buildScope,
+  caretOffsetFromPoint,
   lookupWorkflowMethodDoc,
   resolveVariableId,
   walkScope,
@@ -37,12 +38,31 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.strictEqual(scope.$json.post.raw, "");
   });
 
-  test("trigger aliases $json", function (assert) {
+  test("$trigger resolves to the trigger node output, distinct from $json", function (assert) {
     const scope = buildScope({
-      inputFields: [{ key: "title", type: "string" }],
+      inputFields: [{ key: "current", type: "string" }],
+      ancestorNodes: [
+        {
+          node: { name: "Topic Created", type: "trigger:topic_created" },
+          fields: [{ key: "topic_title", type: "string" }],
+        },
+      ],
     });
 
-    assert.strictEqual(scope.trigger, scope.$json);
+    assert.strictEqual(scope.$trigger.topic_title, "");
+    // Distinct from the current input, and the bare `trigger` name is gone.
+    assert.notStrictEqual(scope.$trigger, scope.$json);
+    assert.strictEqual(scope.$json.topic_title, undefined);
+    assert.strictEqual(scope.trigger, undefined);
+  });
+
+  test("$trigger is an empty object when no trigger ancestor is known", function (assert) {
+    const scope = buildScope({
+      inputFields: [{ key: "current", type: "string" }],
+    });
+
+    assert.deepEqual(Object.keys(scope.$trigger), []);
+    assert.strictEqual(scope.trigger, undefined);
   });
 
   test("$input.item.json aliases $json", function (assert) {
@@ -64,6 +84,19 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.strictEqual(scope.$input.last(), scope.$input.item);
     assert.deepEqual(scope.$input.params, Object.create(null));
     assert.deepEqual(scope.$input.context, Object.create(null));
+  });
+
+  test("builds $helpers.absoluteUrl for converting a relative path", function (assert) {
+    const scope = buildScope({});
+
+    assert.strictEqual(
+      scope.$helpers.absoluteUrl("/t/some-slug/123/4"),
+      `${window.location.origin}/t/some-slug/123/4`
+    );
+    assert.strictEqual(
+      scope.$helpers.absoluteUrl("https://example.com/foo"),
+      "https://example.com/foo"
+    );
   });
 
   test("exposes method docs for workflow-owned scope helpers", function (assert) {
@@ -313,6 +346,23 @@ module("Unit | lib | discourse-workflows | walkScope", function () {
     ]);
   });
 
+  test("resolves array subscripts and bracket keys", function (assert) {
+    const scope = {
+      $json: { items: [{ id: 7 }, { id: 9 }], "weird key": "found" },
+    };
+    // Subscript on a nested property (the common array-index case).
+    assert.strictEqual(walkScope(scope, "$json.items[0].id"), 7);
+    assert.strictEqual(walkScope(scope, "$json.items[1].id"), 9);
+    // Bracket key on the root token.
+    assert.strictEqual(walkScope(scope, '$json["weird key"]'), "found");
+    // Known limitation: a bracket key containing a dot is split by the path
+    // parser, so it does not resolve (would need a bracket-aware tokenizer).
+    assert.strictEqual(
+      walkScope({ $json: { "a.b": 1 } }, '$json["a.b"]'),
+      undefined
+    );
+  });
+
   test("resolves boolean values", function (assert) {
     assert.true(walkScope({ $json: { active: true } }, "$json.active"));
   });
@@ -349,3 +399,79 @@ module("Unit | lib | discourse-workflows | resolveVariableId", function () {
     );
   });
 });
+
+module(
+  "Unit | lib | discourse-workflows | caretOffsetFromPoint",
+  function (hooks) {
+    let descriptor;
+
+    // Defined rather than stubbed: the API is absent on some engines, which is
+    // itself one of the cases under test.
+    function stubCaretPosition(value) {
+      Object.defineProperty(document, "caretPositionFromPoint", {
+        configurable: true,
+        value,
+      });
+    }
+
+    function textarea(value) {
+      const control = document.createElement("textarea");
+      control.value = value;
+      return control;
+    }
+
+    hooks.beforeEach(function () {
+      descriptor = Object.getOwnPropertyDescriptor(
+        document,
+        "caretPositionFromPoint"
+      );
+    });
+
+    hooks.afterEach(function () {
+      if (descriptor) {
+        Object.defineProperty(document, "caretPositionFromPoint", descriptor);
+      } else {
+        delete document.caretPositionFromPoint;
+      }
+    });
+
+    test("uses a caret position that belongs to the control", function (assert) {
+      const control = textarea("abcdef");
+      stubCaretPosition(() => ({ offsetNode: control, offset: 3 }));
+
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), 3);
+    });
+
+    test("keeps a caret position at either edge of the value", function (assert) {
+      const control = textarea("abcdef");
+      stubCaretPosition(() => ({ offsetNode: control, offset: 0 }));
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), 0);
+
+      stubCaretPosition(() => ({ offsetNode: control, offset: 6 }));
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), 6);
+    });
+
+    test("rejects a caret position outside the control", function (assert) {
+      const control = textarea("abcdef");
+      stubCaretPosition(() => ({ offsetNode: document.body, offset: 0 }));
+
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), null);
+    });
+
+    test("rejects an offset past the end of the value", function (assert) {
+      const control = textarea("abcdef");
+      stubCaretPosition(() => ({ offsetNode: control, offset: 9 }));
+
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), null);
+    });
+
+    test("returns null without a caret position API", function (assert) {
+      delete document.caretPositionFromPoint;
+
+      assert.strictEqual(
+        caretOffsetFromPoint(textarea("abcdef"), 10, 20),
+        null
+      );
+    });
+  }
+);

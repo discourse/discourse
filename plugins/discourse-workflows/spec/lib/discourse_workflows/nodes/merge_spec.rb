@@ -9,36 +9,27 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
     items.map { |entry| { "json" => entry["json"] } }
   end
 
-  def fields_to_match(*fields)
-    { "values" => fields }
-  end
+  def execute_merge(inputs:, input_groups: {}, configuration: {})
+    indexed_groups = inputs.each_with_index.to_h { |items, index| ["input_#{index + 1}", items] }
 
-  def execute_merge(configuration:, input_1:, input_2:, input_groups: {})
     execute_node_output(
       configuration: configuration,
-      input_items: input_1,
-      input_groups: { "input_1" => input_1, "input_2" => input_2 }.merge(input_groups),
+      input_items: inputs.first,
+      input_groups: indexed_groups.merge(input_groups),
     ).first
   end
 
   it "uses imported input wait semantics" do
-    expect(described_class.input_ports("mode" => "append", "number_inputs" => 3)).to all(
-      include(required: false),
+    expect(described_class.input_ports).to contain_exactly(
+      include(key: "main", required: false, multiple: true),
     )
-    expect(described_class.input_ports("mode" => "combine")).to all(include(required: false))
-    expect(described_class.required_inputs("mode" => "append")).to eq(1)
-    expect(described_class.required_inputs("mode" => "combine")).to eq(1)
-    expect(described_class.required_inputs("mode" => "choose_branch")).to eq([0, 1])
+    expect(described_class.required_inputs).to eq(1)
   end
 
-  it "appends items from both inputs" do
+  it "appends items from internal input groups" do
     output =
       execute_merge(
-        configuration: {
-          "mode" => "append",
-        },
-        input_1: [item("a" => 1)],
-        input_2: [item("b" => 2)],
+        inputs: [[item("a" => 1)], [item("b" => 2)]],
         input_groups: {
           "main" => [item("a" => 1), item("b" => 2)],
         },
@@ -47,35 +38,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
     expect(output).to eq([item("a" => 1), item("b" => 2)])
   end
 
-  it "appends items from indexed append inputs" do
-    output =
-      execute_merge(
-        configuration: {
-          "mode" => "append",
-          "number_inputs" => 3,
-        },
-        input_1: [item("a" => 1)],
-        input_2: [item("b" => 2)],
-        input_groups: {
-          "input_3" => [item("c" => 3)],
-        },
-      )
+  it "appends items from more than two internal input groups" do
+    output = execute_merge(inputs: [[item("a" => 1)], [item("b" => 2)], [item("c" => 3)]])
 
     expect(output).to eq([item("a" => 1), item("b" => 2), item("c" => 3)])
-  end
-
-  it "chooses a specific input branch" do
-    output =
-      execute_merge(
-        configuration: {
-          "mode" => "choose_branch",
-          "use_data_of_input" => "input_2",
-        },
-        input_1: [item("a" => 1)],
-        input_2: [item("b" => 2)],
-      )
-
-    expect(output).to eq([item("b" => 2)])
   end
 
   it "combines items by position" do
@@ -83,137 +49,97 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
       execute_merge(
         configuration: {
           "mode" => "combine",
-          "combine_by" => "position",
+          "resolve_clash" => "prefer_last",
         },
-        input_1: [item("id" => 1, "a" => "A")],
-        input_2: [item("b" => "B")],
+        inputs: [[item("id" => 1, "a" => "A")], [item("b" => "B")]],
       )
 
     expect(json_items(output)).to eq([item("id" => 1, "a" => "A", "b" => "B")])
   end
 
-  it "combines all possible item pairs" do
+  it "pairs items by index and records pairedItem lineage" do
     output =
       execute_merge(
         configuration: {
           "mode" => "combine",
-          "combine_by" => "all",
+          "resolve_clash" => "prefer_last",
         },
-        input_1: [item("a" => 1), item("a" => 2)],
-        input_2: [item("b" => 3), item("b" => 4)],
+        inputs: [[item("a" => 1), item("a" => 2)], [item("b" => 3), item("b" => 4)]],
       )
 
-    expect(json_items(output)).to eq(
-      [
-        item("a" => 1, "b" => 3),
-        item("a" => 1, "b" => 4),
-        item("a" => 2, "b" => 3),
-        item("a" => 2, "b" => 4),
-      ],
-    )
-  end
-
-  it "combines matching items by fields" do
-    output =
-      execute_merge(
-        configuration: {
-          "mode" => "combine",
-          "combine_by" => "matching_fields",
-          "fields_to_match" => fields_to_match({ "field_1" => "id", "field_2" => "topic_id" }),
-        },
-        input_1: [item("id" => 1, "title" => "One"), item("id" => 2, "title" => "Two")],
-        input_2: [item("topic_id" => 1, "tag" => "bug")],
-      )
-
-    expect(json_items(output)).to eq(
-      [item("id" => 1, "title" => "One", "topic_id" => 1, "tag" => "bug")],
-    )
+    expect(json_items(output)).to eq([item("a" => 1, "b" => 3), item("a" => 2, "b" => 4)])
     expect(output.first["pairedItem"]).to eq(
       [{ "input" => 0, "item" => 0 }, { "input" => 1, "item" => 0 }],
     )
   end
 
-  it "keeps everything from the available input when matching fields has an empty input" do
+  it "defaults clash handling to add_suffix (matches n8n position combine)" do
     output =
       execute_merge(
         configuration: {
           "mode" => "combine",
-          "combine_by" => "matching_fields",
-          "fields_to_match" => fields_to_match({ "field_1" => "id", "field_2" => "topic_id" }),
-          "join_mode" => "keep_everything",
         },
-        input_1: [item("id" => 1, "title" => "One")],
-        input_2: [],
+        inputs: [[item("markdown" => "table 1")], [item("markdown" => "table 2")]],
       )
 
-    expect(output).to eq([item("id" => 1, "title" => "One")])
+    expect(json_items(output)).to eq([item("markdown_1" => "table 1", "markdown_2" => "table 2")])
   end
 
-  it "honors the requested non-match input when matching fields has an empty input" do
+  it "combines multiple inputs by position" do
     output =
       execute_merge(
         configuration: {
           "mode" => "combine",
-          "combine_by" => "matching_fields",
-          "fields_to_match" => fields_to_match({ "field_1" => "id", "field_2" => "topic_id" }),
-          "join_mode" => "keep_non_matches",
-          "output_data_from" => "input_2",
         },
-        input_1: [item("id" => 1, "title" => "One")],
-        input_2: [],
+        inputs: [
+          [item("markdown" => "table 1")],
+          [item("markdown" => "table 2")],
+          [item("markdown" => "table 3")],
+        ],
       )
 
-    expect(output).to eq([])
-  end
-
-  it "treats missing match fields as non-matches" do
-    output =
-      execute_merge(
-        configuration: {
-          "mode" => "combine",
-          "combine_by" => "matching_fields",
-          "fields_to_match" => fields_to_match({ "field_1" => "id", "field_2" => "topic_id" }),
-          "join_mode" => "keep_non_matches",
-          "output_data_from" => "input_1",
-        },
-        input_1: [item("id" => 1), item("title" => "Missing id")],
-        input_2: [item("topic_id" => 1)],
-      )
-
-    expect(output).to eq([item("title" => "Missing id")])
-  end
-
-  it "raises node errors when no matching fields are configured" do
-    expect {
-      execute_merge(
-        configuration: {
-          "mode" => "combine",
-          "combine_by" => "matching_fields",
-          "fields_to_match" => fields_to_match,
-        },
-        input_1: [item("id" => 1)],
-        input_2: [item("id" => 1)],
-      )
-    }.to raise_error(
-      DiscourseWorkflows::NodeError,
-      'Missing fields to match: You need to define at least one pair of fields in "Fields to match"',
+    expect(json_items(output)).to eq(
+      [item("markdown_1" => "table 1", "markdown_2" => "table 2", "markdown_3" => "table 3")],
     )
   end
 
-  it "raises node errors when a matching field pair is incomplete" do
-    expect {
+  it "prefers input 1 on a clash when configured" do
+    output =
       execute_merge(
         configuration: {
           "mode" => "combine",
-          "combine_by" => "matching_fields",
-          "fields_to_match" => fields_to_match({ "field_1" => "", "field_2" => "topic_id" }),
+          "resolve_clash" => "prefer_first",
         },
-        input_1: [item("id" => 1)],
-        input_2: [item("topic_id" => 1)],
+        inputs: [[item("value" => "one")], [item("value" => "two")]],
       )
-    }.to raise_error(
-      DiscourseWorkflows::NodeError,
-      "Invalid fields to match: Fields to match pair 1 must define both input fields",
-    )
+
+    expect(json_items(output)).to eq([item("value" => "one")])
+  end
+
+  it "drops unpaired items by default when inputs differ in length" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+          "resolve_clash" => "prefer_last",
+        },
+        inputs: [[item("a" => 1), item("a" => 2)], [item("b" => 3)]],
+      )
+
+    expect(json_items(output)).to eq([item("a" => 1, "b" => 3)])
+  end
+
+  it "keeps unpaired items when include_unpaired is enabled" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+          "resolve_clash" => "prefer_last",
+          "include_unpaired" => true,
+        },
+        inputs: [[item("a" => 1), item("a" => 2)], [item("b" => 3)]],
+      )
+
+    expect(json_items(output)).to eq([item("a" => 1, "b" => 3), item("a" => 2)])
   end
 end

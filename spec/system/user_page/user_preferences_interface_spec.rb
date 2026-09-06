@@ -29,6 +29,22 @@ describe "User preferences | Interface" do
     end
   end
 
+  describe "Send shortcut" do
+    it "changes the send shortcut preference" do
+      user_preferences_page.visit(user)
+      click_link(I18n.t("js.user.preferences_nav.interface"))
+
+      dropdown = PageObjects::Components::SelectKit.new("#user-send-shortcut")
+
+      expect(dropdown).to have_selected_value("enter")
+
+      dropdown.select_row_by_value("meta_enter")
+      click_button(I18n.t("js.save"))
+
+      expect(UserOption.exists?(user_id: user.id, send_shortcut: "meta_enter")).to be_truthy
+    end
+  end
+
   describe "Default Home Page" do
     context "when a user has picked a home page that is no longer available in top_menu" do
       it "shows the selected homepage" do

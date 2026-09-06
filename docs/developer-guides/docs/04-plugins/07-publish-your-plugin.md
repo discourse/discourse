@@ -12,7 +12,7 @@ You've [created your plugin](https://meta.discourse.org/t/beginners-guide-to-cre
 
 ### Documenting your plugin
 
-All plugins require good documentation. Users need to know what the plugin does, how to install it, important settings/configuration changes needed, and how to use it. Plugins should be documented in two different locations: the `README.md` file within your git repo, and a dedicated topic in the #plugin category.
+All plugins require good documentation. Users need to know what the plugin does, how to install it, important settings/configuration changes needed, and how to use it. Plugins should be documented in two different locations: the `README.md` file within your git repo, and a dedicated topic in the #customization:plugin category.
 
 #### GitHub Documentation
 

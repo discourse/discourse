@@ -150,6 +150,55 @@ RSpec.describe TopicGuardian do
       SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new.can_recover_topic?(Topic.with_deleted.last)).to eq(false)
     end
+
+    it "returns false when the user only owns a surviving reply and staff trashed the first post" do
+      trashed_topic = Fabricate(:topic, category: category, user: user)
+      Fabricate(
+        :post,
+        topic: trashed_topic,
+        user: user,
+        post_number: 1,
+        deleted_at: 1.day.ago,
+        deleted_by: admin,
+      )
+      Fabricate(:post, topic: trashed_topic, user: user, post_number: 2, user_deleted: true)
+      trashed_topic.trash!(admin)
+
+      expect(Guardian.new(user).can_recover_topic?(trashed_topic)).to eq(false)
+    end
+
+    it "returns true for the author of a topic they deleted themselves" do
+      own_topic = Fabricate(:topic, category: category, user: user)
+      Fabricate(:post, topic: own_topic, user: user, post_number: 1, user_deleted: true)
+
+      expect(Guardian.new(user).can_recover_topic?(own_topic)).to eq(true)
+    end
+
+    it "returns false for tl4 when someone else trashed the first post of a live topic" do
+      live_topic = Fabricate(:topic, category: category)
+      Fabricate(
+        :post,
+        topic: live_topic,
+        post_number: 1,
+        deleted_at: 1.day.ago,
+        deleted_by: moderator,
+      )
+
+      expect(Guardian.new(tl4_user).can_recover_topic?(live_topic)).to eq(false)
+    end
+
+    it "returns true for tl4 when they trashed the first post of a live topic themselves" do
+      live_topic = Fabricate(:topic, category: category)
+      Fabricate(
+        :post,
+        topic: live_topic,
+        post_number: 1,
+        deleted_at: 1.day.ago,
+        deleted_by: tl4_user,
+      )
+
+      expect(Guardian.new(tl4_user).can_recover_topic?(live_topic)).to eq(true)
+    end
   end
 
   describe "#can_edit_topic?" do
@@ -335,6 +384,25 @@ RSpec.describe TopicGuardian do
 
     it "returns false for regular users" do
       expect(Guardian.new(user).can_create_unlisted_topic?(topic)).to eq(false)
+    end
+  end
+
+  describe "#can_set_topic_timer?" do
+    it "uses topic_timers_allowed_groups and requires topic visibility" do
+      expect(Guardian.new(admin).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(moderator).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl4_user).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl3_user).can_set_topic_timer?(topic)).to eq(false)
+
+      group.add(user)
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+
+      inaccessible_private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      expect(Guardian.new(user.reload).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl4_user).can_set_topic_timer?(topic)).to eq(false)
+      expect(Guardian.new(user).can_set_topic_timer?(inaccessible_private_topic)).to eq(false)
     end
   end
 

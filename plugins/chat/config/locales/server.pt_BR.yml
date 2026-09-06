@@ -10,7 +10,6 @@ pt_BR:
     chat_enabled: "Ativar chat."
     chat_pinned_messages: "Ativar mensagens fixadas nos canais de chat."
     enable_public_channels: "Ative canais públicos baseados em categorias."
-    chat_allowed_groups: "Os(as) usuários(as) desses grupos podem conversar. Observação: usuários(as) e moderadores(as) sempre podem acessar o chat."
     chat_channel_retention_days: "Mensagens de chat em canais regulares serão mantidas por essa quantidade de dias. Defina para '0' para manter mensagens para sempre."
     chat_dm_retention_days: "Mensagens de chat em canais pessoais serão mantidas por essa quantidade de dias. Defina para '0' para manter mensagens para sempre."
     chat_auto_silence_duration: "Número de minutos pelos quais os(as) usuários(as) serão silenciados(as) quando excederem o limite de criação de mensagens de chat. Defina como '0' para desativar o silenciamento automático."

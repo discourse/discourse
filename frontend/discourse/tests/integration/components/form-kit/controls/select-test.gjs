@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
+import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 
 module(
   "Integration | Component | FormKit | Controls | Select",
@@ -39,6 +39,40 @@ module(
       await formKit().submit();
 
       assert.deepEqual(data, { foo: "option-3" });
+    });
+
+    test("selecting none", async function (assert) {
+      let data = { foo: "option-2" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @type="select" @name="foo" @title="Foo" as |field|>
+              <field.Control as |select|>
+                <select.Option @value="option-1">Option 1</select.Option>
+                <select.Option @value="option-2">Option 2</select.Option>
+              </field.Control>
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      await formKit().field("foo").select(NO_VALUE_OPTION);
+
+      assert.form().field("foo").hasValue(NO_VALUE_OPTION);
+
+      await formKit().submit();
+
+      assert.true(
+        Object.hasOwn(data, "foo"),
+        "the key is kept in the submitted data"
+      );
+      assert.strictEqual(
+        data.foo,
+        null,
+        "the value is null, so it survives JSON serialization"
+      );
     });
 
     test("@disabled", async function (assert) {

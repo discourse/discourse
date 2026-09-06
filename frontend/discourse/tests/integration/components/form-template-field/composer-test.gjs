@@ -1,5 +1,12 @@
+import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
-import { render, settled, triggerEvent, waitUntil } from "@ember/test-helpers";
+import {
+  find,
+  render,
+  settled,
+  triggerEvent,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import FormComposer from "discourse/components/form-template-field/composer";
@@ -289,7 +296,7 @@ module(
       await settled();
 
       const expected = "before ![image|10x10, 75%](upload://abc.png) after";
-      assert.dom("input[name='field-1']").hasValue(expected);
+      assert.dom("textarea[name='field-1']").hasValue(expected);
       assert.dom(".d-editor-input").hasValue(expected);
       assert.true(onChange.called, "onChange fires after the replacement");
     });
@@ -323,8 +330,141 @@ module(
 
       const expected =
         "![image|10x10, 75%](upload://abc.png) and ![image|10x10](upload://abc.png)";
-      assert.dom("input[name='field-1']").hasValue(expected);
+      assert.dom("textarea[name='field-1']").hasValue(expected);
       assert.dom(".d-editor-input").hasValue(expected);
+    });
+
+    test("marks the backing textarea as required when the field is required", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @onChange={{noop}}
+            @validations={{hash required=true}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("textarea[name='field-1']")
+        .hasAttribute(
+          "required",
+          { any: true },
+          "the backing textarea is required"
+        );
+    });
+
+    test("does not mark the backing textarea as required when the field is not required", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template><FormComposer @id="field-1" @onChange={{noop}} /></template>
+      );
+
+      assert
+        .dom("textarea[name='field-1']")
+        .doesNotHaveAttribute(
+          "required",
+          "the backing textarea is not required"
+        );
+    });
+
+    test("the backing textarea preserves newlines in the field value", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const multiline = "## Heading\n\nParagraph one.\n\n- item a\n- item b";
+      this.set("initialValue", multiline);
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @value={{this.initialValue}}
+            @onChange={{noop}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("textarea[name='field-1']")
+        .hasValue(
+          multiline,
+          "newlines survive on the stand-in control, so the reply assembled from it stays multi-line"
+        );
+    });
+
+    test("labels the editor with the field label", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @attributes={{hash label="Description"}}
+            @onChange={{noop}}
+          />
+        </template>
+      );
+
+      const label = find(".form-template-field__label");
+      assert
+        .dom(".d-editor-input")
+        .hasAttribute(
+          "aria-labelledby",
+          label.id,
+          "the editor is labelled by the field label"
+        );
+    });
+
+    test("marks the editor required when the field is required", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @validations={{hash required=true}}
+            @onChange={{noop}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".d-editor-input")
+        .hasAttribute(
+          "aria-required",
+          "true",
+          "the editor announces that it is required before submitting"
+        );
+    });
+
+    test("does not mark the editor required when the field is optional", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template><FormComposer @id="field-1" @onChange={{noop}} /></template>
+      );
+
+      assert
+        .dom(".d-editor-input")
+        .doesNotHaveAttribute("aria-required", "the editor is not required");
+    });
+
+    test("does not label the editor when the field has no label", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template><FormComposer @id="field-1" @onChange={{noop}} /></template>
+      );
+
+      assert
+        .dom(".d-editor-input")
+        .doesNotHaveAttribute(
+          "aria-labelledby",
+          "no dangling reference when the template defines no label"
+        );
     });
 
     test("composer:replace-text is a no-op when the field does not contain the markdown", async function (assert) {
@@ -353,7 +493,7 @@ module(
 
       await settled();
 
-      assert.dom("input[name='field-1']").hasValue("no images here");
+      assert.dom("textarea[name='field-1']").hasValue("no images here");
       assert.dom(".d-editor-input").hasValue("no images here");
       assert.false(onChange.called, "onChange does not fire");
     });

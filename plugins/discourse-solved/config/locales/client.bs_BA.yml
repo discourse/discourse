@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Staff"
+              member: "Članovi"
+              basic: "Osnovni"
   js:
     notifications:
       alt:
@@ -36,6 +45,12 @@ bs_BA:
     topic_statuses:
       solved:
         help: "Ova tema ima riješenje"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Topic"
+            category: "Kategorija"
     discourse_automation:
       triggerables:
         first_accepted_solution:

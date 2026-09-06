@@ -60,6 +60,8 @@ gl:
     group_message_template: "mensaxes a: @%{name}"
     provider:
       slack:
+        errors:
+          action_prohibited: "O bot non ten permisos para publicar nesta canle"
         status:
           header: |
             * Regras desta canle *

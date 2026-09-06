@@ -6,6 +6,28 @@ module DiscourseWorkflows
       class V1 < NodeType
         HOUR_OPTIONS = (0..23).to_a.freeze
         WEEKDAY_OPTIONS = [1, 2, 3, 4, 5, 6, 0].freeze
+        OUTPUT_SCHEMA = {
+          "$schema" => Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "timestamp" => {
+              "type" => "string",
+              "format" => "date-time",
+            },
+            **%w[
+              readable_date
+              readable_time
+              day_of_week
+              year
+              month
+              day_of_month
+              hour
+              minute
+              second
+              timezone
+            ].index_with { { "type" => "string" } },
+          },
+        }.freeze
 
         description(
           name: "trigger:schedule",
@@ -14,6 +36,7 @@ module DiscourseWorkflows
             icon: "calendar-days",
             color: "orange",
           },
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
             rule: {
               type: :fixed_collection,

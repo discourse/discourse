@@ -1,3 +1,6 @@
+import { buildBBCodeAttrs, serializeBBCodeAttr } from "discourse/lib/text";
+import { parseBBCodeTag } from "discourse-markdown-it/features/bbcode-block";
+
 /**
  * Parse an attributes string into flat object (matches server behavior)
  * @param {string} attrsString - The attributes string to parse
@@ -8,19 +11,16 @@ export function parseAttributesString(attrsString) {
     return {};
   }
 
-  const attrs = {};
-  const parts = attrsString.trim().split(/\s+/);
+  // Reuse the markdown-it parser so quoting stays in parity with the server
+  const source = `[wrap${attrsString}]`;
+  const parsed = parseBBCodeTag(source, 0, source.length);
 
-  for (const part of parts) {
-    if (part.startsWith("=")) {
-      attrs.wrap = part.slice(1);
-    } else if (part.includes("=")) {
-      const [key, ...valueParts] = part.split("=");
-      attrs[key] = valueParts.join("=");
-    }
+  if (!parsed?.attrs) {
+    return {};
   }
 
-  return attrs;
+  const { _default: wrap, ...rest } = parsed.attrs;
+  return wrap ? { wrap, ...rest } : rest;
 }
 
 /**
@@ -33,28 +33,15 @@ export function serializeAttributes(data) {
     return "";
   }
 
-  let result = "";
+  // An empty name serializes the wrap as the nameless `=value` default
+  const wrapName = data.wrap ? serializeBBCodeAttr(data.wrap, "").trim() : "";
+  const otherAttrs = buildBBCodeAttrs(data, { skipAttrs: ["wrap"] });
 
-  // Handle wrap name first
-  if (data.wrap) {
-    result = `=${data.wrap}`;
+  if (wrapName && otherAttrs) {
+    return `${wrapName} ${otherAttrs}`;
   }
 
-  // Handle other attributes
-  const otherAttrs = Object.entries(data)
-    .filter(([key]) => key !== "wrap")
-    .map(([key, value]) => `${key}=${value}`)
-    .join(" ");
-
-  if (otherAttrs) {
-    if (result) {
-      result += ` ${otherAttrs}`;
-    } else {
-      result = ` ${otherAttrs}`;
-    }
-  }
-
-  return result;
+  return wrapName || (otherAttrs ? ` ${otherAttrs}` : "");
 }
 
 /**

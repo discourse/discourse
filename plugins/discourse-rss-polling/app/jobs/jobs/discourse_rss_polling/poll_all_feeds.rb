@@ -11,7 +11,7 @@ module Jobs
         return unless SiteSetting.rss_polling_enabled
         return unless not_polled_recently?
 
-        ::DiscourseRssPolling::RssFeed.includes(:user).find_each(&:poll)
+        ::DiscourseRssPolling::RssFeed.enabled.includes(:user).find_each(&:poll)
       end
 
       private

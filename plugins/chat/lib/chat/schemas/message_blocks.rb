@@ -2,6 +2,9 @@
 
 module Chat
   module Schemas
+    BUTTON_STYLES = %w[default primary danger success flat transparent].freeze
+    BUTTON_ICON_MAX_LENGTH = 255
+
     Text = {
       type: "object",
       properties: {
@@ -40,7 +43,11 @@ module Chat
         },
         style: {
           type: "string",
-          enum: %w[default primary danger],
+          enum: BUTTON_STYLES,
+        },
+        icon: {
+          type: "string",
+          maxLength: BUTTON_ICON_MAX_LENGTH,
         },
       },
       required: %w[schema_version type text],

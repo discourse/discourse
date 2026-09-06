@@ -71,8 +71,8 @@ class DiscourseIpInfo
 
     dir = "#{Dir.tmpdir}/#{SecureRandom.hex}"
 
-    Discourse::Utils.execute_command("mkdir", "-p", dir)
-    Discourse::Utils.execute_command("cp", gz_file.path, "#{dir}/#{filename}")
+    FileUtils.mkdir_p(dir)
+    FileUtils.cp(gz_file.path, "#{dir}/#{filename}")
     Discourse::Utils.execute_command("tar", "-xzvf", "#{dir}/#{filename}", chdir: dir)
 
     Dir["#{dir}/**/*.mmdb"].each { |f| FileUtils.mv(f, mmdb_path(name)) }

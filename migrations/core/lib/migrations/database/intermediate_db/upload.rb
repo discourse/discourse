@@ -20,6 +20,13 @@ module Migrations
         SQL
         private_constant :SQL
 
+        # Several steps can reference the same file, and rows are identical for a
+        # given `id` (a content hash), so a duplicate `id` is expected: keep the
+        # first, ignore the rest — both here (`SQL` above) and in the shard merge.
+        def self.conflict_strategy
+          :ignore
+        end
+
         def self.create_for_file(
           path:,
           filename: nil,

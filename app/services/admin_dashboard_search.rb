@@ -40,11 +40,11 @@ class AdminDashboardSearch
 
     {
       logging_enabled: true,
-      headline_state: headline_state(current: current, kpis: kpis),
       kpis: kpis,
       trending: trending,
       trending_period: trending_period,
       content_gaps: content_gaps,
+      search_type: search_type,
     }
   end
 
@@ -60,7 +60,7 @@ class AdminDashboardSearch
   end
 
   def total_searches_kpi(current:, prior:)
-    kpi = { value: current[:total] }
+    kpi = { value: current[:total], previous_value: prior[:total] }
 
     if current[:total].positive? && prior[:total].positive?
       change = formatted_change((current[:total] - prior[:total]) * 100.0 / prior[:total])
@@ -71,10 +71,14 @@ class AdminDashboardSearch
   end
 
   def no_result_rate_kpi(current:, prior:)
-    return { value: nil, exceeds_threshold: false } if current[:total].zero?
+    previous_value = no_result_rate(prior).round if prior[:total].positive?
+    if current[:total].zero?
+      return { value: nil, previous_value: previous_value, exceeds_threshold: false }
+    end
 
     kpi = {
       value: no_result_rate(current).round,
+      previous_value: previous_value,
       exceeds_threshold: current[:no_match] * 100 > current[:total] * ALARM_THRESHOLD_PERCENT,
     }
 
@@ -95,26 +99,17 @@ class AdminDashboardSearch
     rounded.zero? ? nil : rounded
   end
 
-  def headline_state(current:, kpis:)
-    return "no_signal" if current[:total].zero?
-    return "content_gaps" if kpis[:no_result_rate][:exceeds_threshold]
-    return "rate_climbing" if kpis[:no_result_rate][:point_change].to_f.positive?
-    return "shrinking" if kpis[:total_searches][:percent_change].to_f.negative?
-
-    "healthy"
-  end
-
   def trending
-    rows = DB.query(<<~SQL, window_start: start_date, window_end: end_date, limit: TOP_TERMS_LIMIT)
-          SELECT lower(term) AS term,
-                 COUNT(*) AS searches,
-                 SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
-          FROM search_logs
-          WHERE created_at >= :window_start AND created_at <= :window_end
-          GROUP BY lower(term)
-          ORDER BY searches DESC, clicks DESC, term ASC
-          LIMIT :limit
+    rows =
+      human_search_logs_in(window_start: start_date, window_end: end_date)
+        .select(<<~SQL)
+          lower(search_logs.term) AS term,
+          COUNT(*) AS searches,
+          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
         SQL
+        .group("lower(search_logs.term)")
+        .order("searches DESC, clicks DESC, term ASC")
+        .limit(TOP_TERMS_LIMIT)
 
     rows.map { |row| { term: row.term, searches: row.searches } }
   end
@@ -129,49 +124,52 @@ class AdminDashboardSearch
 
   def content_gaps
     rows =
-      DB.query(
-        <<~SQL,
-          SELECT lower(term) AS term,
-                 COUNT(*) AS searches,
-                 SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
-          FROM search_logs
-          WHERE created_at >= :window_start AND created_at <= :window_end
-          GROUP BY lower(term)
-          HAVING SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) * 100 <=
-            COUNT(*) * :max_ctr_percent
-          ORDER BY searches DESC, term ASC
-          LIMIT :limit
+      human_search_logs_in(window_start: start_date, window_end: end_date)
+        .select(<<~SQL)
+          lower(search_logs.term) AS term,
+          COUNT(*) AS searches,
+          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
         SQL
-        window_start: start_date,
-        window_end: end_date,
-        max_ctr_percent: POOR_MATCH_MAX_CTR_PERCENT,
-        limit: TOP_TERMS_LIMIT,
-      )
+        .group("lower(search_logs.term)")
+        .having(<<~SQL, POOR_MATCH_MAX_CTR_PERCENT)
+          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) * 100 <=
+            COUNT(*) * ?
+        SQL
+        .order("searches DESC, term ASC")
+        .limit(TOP_TERMS_LIMIT)
 
     rows.map do |row|
       {
         term: row.term,
         searches: row.searches,
-        status: row.clicks.zero? ? "no_match" : "poor_match",
+        status: row.clicks.to_i.zero? ? "no_match" : "poor_match",
       }
     end
   end
 
   def window_stats(window_start:, window_end:)
-    row = DB.query(<<~SQL, window_start: window_start, window_end: window_end).first
-      WITH term_stats AS (
-        SELECT COUNT(*) AS searches,
-               SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
-        FROM search_logs
-        WHERE created_at >= :window_start AND created_at <= :window_end
-        GROUP BY lower(term)
+    term_stats =
+      human_search_logs_in(window_start: window_start, window_end: window_end).select(<<~SQL).group(
+          COUNT(*) AS searches,
+          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
+        SQL
+        "lower(search_logs.term)",
       )
-      SELECT COALESCE(SUM(searches), 0)::bigint AS total,
-             COALESCE(SUM(CASE WHEN clicks = 0 THEN searches ELSE 0 END), 0)::bigint AS no_match
-      FROM term_stats
-    SQL
+
+    row = SearchLog.from("(#{term_stats.to_sql}) term_stats").select(<<~SQL).take
+          COALESCE(SUM(searches), 0)::bigint AS total,
+          COALESCE(SUM(CASE WHEN clicks = 0 THEN searches ELSE 0 END), 0)::bigint AS no_match
+        SQL
 
     { total: row.total, no_match: row.no_match }
+  end
+
+  def human_search_logs_in(window_start:, window_end:)
+    SearchLog.human_only.where(created_at: window_start..window_end)
+  end
+
+  def search_type
+    CrawlerScorer.enabled? ? "human_only" : "non_staff_only"
   end
 
   def parse_date(value)

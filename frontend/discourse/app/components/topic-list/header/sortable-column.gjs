@@ -5,12 +5,14 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SortableColumn extends Component {
   @service router;
+  @service session;
 
   get localizedName() {
     if (this.args.forceName) {
@@ -63,6 +65,7 @@ export default class SortableColumn extends Component {
 
   @action
   afterBulkActionComplete() {
+    resetCachedTopicList(this.session);
     return this.router.refresh();
   }
 

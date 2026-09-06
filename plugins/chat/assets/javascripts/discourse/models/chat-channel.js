@@ -73,6 +73,11 @@ export default class ChatChannel {
   @tracked draft;
   @tracked newestMessage;
   @tracked pinnedMessagesCount;
+  // newest pin id the current user dismissed the bar above (per-device); the
+  // bar reappears once a pin newer than this exists
+  @tracked pinsDismissedAboveId;
+  // pin the user tapped in the bar; overrides scroll anchoring until they scroll
+  @tracked activePinnedMessageId = null;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
@@ -100,6 +105,7 @@ export default class ChatChannel {
     this.currentUserMembership = args.current_user_membership;
     this.lastMessage = args.last_message;
     this.meta = args.meta;
+    this.livestreamTopic = args.livestream_topic;
 
     this.chatable = this.#initChatable(args.chatable ?? []);
     this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
@@ -111,7 +117,7 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCountSinceLastViewed() {
-    if (!this.threadingEnabled) {
+    if (!this.threadingEnabled || !this.currentUserMembership) {
       return 0;
     }
 
@@ -226,7 +232,7 @@ export default class ChatChannel {
   }
 
   get isFollowing() {
-    return this.currentUserMembership.following;
+    return this.currentUserMembership?.following;
   }
 
   get canJoin() {
@@ -289,6 +295,11 @@ export default class ChatChannel {
   }
 
   set currentUserMembership(membership) {
+    if (membership === null) {
+      this._currentUserMembership = null;
+      return;
+    }
+
     if (membership instanceof UserChatChannelMembership) {
       this._currentUserMembership = membership;
     } else {

@@ -36,10 +36,6 @@ tr_TR:
       llm_triage:
         title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
-        flagged_post: |
-          <div>Modelin yanıtı:</div>
-          <p>%{llm_response}</p>
-          <b><a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> kuralı tarafından tetiklendi.</b>
         notify_author_pm:
           subject: "Gönderiniz inceleme için geçici olarak kaldırılmıştır."
           body: |
@@ -93,12 +89,10 @@ tr_TR:
     ai_helper_allowed_in_pm: "Kişisel mesajlarda bestecinin YZ yardımcıyı etkinleştirin."
     ai_helper_automatic_chat_thread_title_delay: "YZ yardımcının sohbet dizisi başlığını otomatik olarak ayarlamasından önceki dakika cinsinden gecikme."
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
-    ai_helper_enabled_features: "YZ yardımcıda etkinleştirilecek özellikleri seçin."
     post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcı özelliklerine erişmesine izin verilen kullanıcı grupları"
     ai_helper_post_illustrator_agent: "AI yardımcısının \"gönderiyi görselleştir\" özelliği için kullanılacak araç. Not: Bu özelliğin çalışması için ayrıca bir görsel oluşturma aracı oluşturmanız gerekir (Yönetici > Eklentiler > Discourse AI > Araçlar)."
     ai_helper_chat_thread_title_agent: "Sohbet başlıklarını oluşturmak için kullanılacak işleyici."
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
-    ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
     ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Aramayı kullanın."
     ai_embeddings_semantic_related_topics: "İlgili konu bölümünde gösterilecek maksimum konu sayısı."
     ai_embeddings_backfill_batch_size: "Her 15 dakikada bir geri doldurulacak gömme sayısı."
@@ -113,7 +107,6 @@ tr_TR:
     ai_summarization_agent: "Özetleme özelliği için kullanılacak aracı"
     ai_pm_summarization_allowed_groups: "Kişisel mesajlarda özet oluşturma ve görüntüleme yetkisi olan gruplar."
     ai_summary_gists_enabled: "Konulardaki son yanıtların kısa özetlerini otomatik olarak oluşturun"
-    ai_summary_backfill_maximum_topics_per_hour: "Saat başına doldurulacak konu özeti sayısı."
     ai_bot_enabled: "YZ Bot modülünü etkinleştirin."
     ai_bot_enabled_llms: "AI bot konuşmaları için seçilebilecek LLM'ler"
     ai_bot_enable_chat_warning: "PM sohbeti başlatıldığında bir uyarı göster. Çeviri dizesini düzenleyerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"
@@ -136,12 +129,9 @@ tr_TR:
     ai_translation_enabled: "AI çeviri özelliğini etkinleştirin"
     ai_translation_personal_messages: "Hangi özel mesajların çevrileceğini belirler. 'none' seçeneği özel mesaj çevirisini devre dışı bırakır. 'group' seçeneği yalnızca grup özel mesajlarını çevirir. 'all' seçeneği tüm özel mesajları çevirir."
     ai_translation_include_bot_content: "Etkinleştirildiğinde, botlar tarafından yazılan içerikler (kullanıcı kimlikleri 0'ın altında) da çeviriye gönderilecektir."
-    ai_translation_max_post_length: "Çevrilecek bir gönderinin maksimum karakter sayısı. Bu uzunluktan daha uzun gönderiler çevrilmeyecektir."
-    ai_translation_backfill_max_age_days: "Çevrilecek gönderi ve konuların maksimum yaşı. Bundan daha eski gönderiler ve konular çevrilmez. 0, geri doldurmayı devre dışı bırakır ancak yeni gönderilerin çevirisini devre dışı bırakmaz."
     ai_translation_backfill_hourly_rate: "Doldurma işlemleri sırasında saat başına çevrilecek gönderi ve konu sayısı. Mevcut içeriklerin çevirilerinin otomatik olarak doldurulmasını devre dışı bırakmak için 0 olarak ayarlayın."
     ai_translation_backfill_parallel_jobs: "Her dolgu döngüsü başına çalıştırılacak paralel gönderi konumlandırma işlerinin sayısı. Daha yüksek değerler iş hacmini artırır ancak daha fazla kaynak tüketir."
     ai_usage_rollup_after_days: "Günlük toplamlara aktarılmadan önce istek başına AI kullanım istatistiklerinin saklanacağı gün sayısı. Toplamları devre dışı bırakmak için 0 olarak ayarlayın."
-    ai_audit_logs_purge_after_days: "Bu kadar gün öncesine ait AI API denetim günlüklerini sil. Varsayılan değer yaklaşık 6 aydır. Süresiz olarak saklamak için 0 olarak ayarlayın."
   reviewables:
     reasons:
       flagged_by_toxicity: YZ eklentisi, toksik olarak sınıflandırdıktan sonra buna bayrak ekledi.
@@ -152,7 +142,6 @@ tr_TR:
       description: "Bu rapor, her gönderi ve kategori için olumlu, olumsuz ve nötr puanlarla kategoriye göre gruplandırılmış gönderiler için duygu analizi sağlar."
     overall_sentiment:
       title: "Genel duyarlılık"
-      description: 'Grafik, olumlu veya olumsuz olarak sınıflandırılan gönderilerin sayısını karşılaştırır. Bunlar, pozitif veya negatif puanlar belirlenen eşik puanından fazla olduğunda hesaplanır. Bu, nötr gönderilerin gösterilmediği anlamına gelir. Kişisel mesajlar da hariç tutulmuştur. "cardiffnlp/twitter-roberta-base-sentiment-latest" ile sınıflandırılır'
       xaxis: "Pozitif(%)"
       yaxis: "Tarih"
     emotion_admiration:
@@ -334,15 +323,12 @@ tr_TR:
         unknown_error: "Küçük resimler oluşturulurken beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
       prompts:
         translate: '%{language} diline çevir'
-        generate_titles: Konu başlıkları öner
         proofread: Yazım hataları düzeltilmiş metin
         markdown_table: Markdown tablosu oluştur
         custom_prompt: "Özel İstem"
         explain: "Açıkla"
         illustrate_post: "Gönderiyi çiz"
         replace_dates: "Akıllı tarihler"
-      image_caption:
-        attribution: "Alt yazı YZ tarafından hazırlandı"
     share_ai:
       read_more: "Tam metni okuyun"
       onebox_title: "%{llm_name} ile YZ Konuşması"
@@ -367,8 +353,11 @@ tr_TR:
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünme"
       tool_pending_approval: "Bu işlemin gerçekleştirilebilmesi için moderatör onayı gereklidir."
+      read_post:
+        unknown_post: "gönderi"
+      chat_tool_approval:
+        unexpected_error: "beklenmedik bir hata oluştu"
       agents:
-        default_llm_required: "Sohbeti etkinleştirmeden önce varsayılan LLM modeli gereklidir"
         cannot_delete_system_agent: "Sistem aracıları silinemez; bunun yerine lütfen devre dışı bırakın"
         cannot_edit_system_agent: "Sistem öğelerinin yalnızca adı değiştirilebilir; araçları veya sistem komut satırını düzenleyemezsiniz; bunun yerine bunları devre dışı bırakıp bir kopyasını oluşturabilirsiniz"
         cannot_have_duplicate_tools: "Eş kopya araçlara sahip olunamaz"
@@ -449,7 +438,6 @@ tr_TR:
           description: "Yardımcının çevirici özelliğini çalıştıran varsayılan aracı"
         image_captioner:
           name: "Görüntü yazıları"
-          description: "Yardımcının resim açıklaması özelliğini destekleyen varsayılan aracı"
         locale_detector:
           name: "Yerel ayar dedektörü"
           description: "Belirli bir metnin (yazılar, başlıklar vb.) yerel ayarlarını algılayarak çeviri özelliğini güçlendirir."
@@ -547,11 +535,14 @@ tr_TR:
         categories: "Kategorileri listele"
         flag_post: "Gönderiye bayrak ekle"
         close_topic: "Konuyu kapat"
+        suspend_user: "Kullanıcıyı askıya al"
+        silence_user: "Kullanıcıyı sustur"
         unlist_topic: "Konuyu listeden kaldır"
         lock_post: "Gönderiyi kilitle"
         delete_topic: "Konuyu sil"
         edit_post: "Yazıyı düzenle"
-        edit_tags: "Etiketleri düzenle"
+        edit_tag: "Etiketi düzenle"
+        create_category: "Kategori oluştur"
         edit_category: "Kategoriyi düzenle"
         set_topic_timer: "Konu zamanlayıcısını ayarla"
         set_slow_mode: "Yavaş modu ayarla"
@@ -596,8 +587,9 @@ tr_TR:
         lock_post: "Bir gönderiyi kilitle veya kilidini aç"
         delete_topic: "Bir konu silin"
         edit_post: "Bir gönderinin içeriğini düzenle"
-        edit_tags: "Bir konudaki etiketleri düzenle"
-        edit_category: "Bir konuyu başka bir kategoriye taşı"
+        change_topic_tags: "Bir konudaki etiketleri düzenle"
+        create_category: "Yeni bir kategori oluştur"
+        change_topic_category: "Bir konuyu başka bir kategoriye taşı"
         set_topic_timer: "Bir konuyu kapatmak, açmak, silmek veya öne çıkarmak için zamanlayıcı ayarla"
         set_slow_mode: "Bir konuda yavaş modu etkinleştirme veya devre dışı bırakma"
         move_posts: "Gönderileri yeni veya mevcut bir konuya taşı"
@@ -641,8 +633,8 @@ tr_TR:
         lock_post: "%{post_id} başlığı kilitleniyor (kilitli: %{locked})"
         delete_topic: "%{topic_id} başlığı siliniyor (silindi: %{deleted})"
         edit_post: "%{post_id} numaralı gönderiyi düzenleme"
-        edit_tags: "%{topic_id} başlığındaki etiketleri düzenleme: %{tags}"
-        edit_category: "%{topic_id} başlığını %{category_id} kategorisine taşıma"
+        change_topic_tags: "%{topic_id} başlığındaki etiketleri düzenleme: %{tags}"
+        change_topic_category: "%{topic_id} başlığını %{category_id} kategorisine taşıma"
         set_topic_timer: "%{topic_id} başlığında %{timer_type} zamanlayıcısını ayarlama (%{duration_hours} saat)"
         set_slow_mode: "%{topic_id} başlığında yavaş mod ayarlama (%{slow_mode_seconds} saniye)"
         move_posts: "%{post_ids} numaralı gönderileri %{topic_id} başlığından taşıma"
@@ -684,10 +676,6 @@ tr_TR:
         search_settings:
           one: "\"%{query}\" için %{count} sonuç bulundu"
           other: "\"%{query}\" için %{count} sonuç bulundu"
-      discoveries:
-        continue_conversation:
-          title: "Keşif konuşması: %{query} için arama yapın"
-          raw: "%{query} aramamda bana şu bilgiyi gösterdiniz:\n\n%{context}\n\nKonuşmaya devam edelim."
       flag_post:
         errors:
           no_context: "İşaretlemek için kullanılabilir gönderi bağlamı yok."
@@ -703,6 +691,12 @@ tr_TR:
           not_allowed: "Bu konuyu kapatamaz veya açamazsınız."
           no_reason: "Bir konuyu kapatmak veya açmak için bir neden belirtilmesi gerekir."
         success: "Konu başarıyla güncellendi."
+      suspend_user:
+        errors:
+          not_found: "Kullanıcı bulunamadı."
+      silence_user:
+        errors:
+          not_found: "Kullanıcı bulunamadı."
       unlist_topic:
         errors:
           not_found: "Konu bulunamadı."
@@ -729,14 +723,23 @@ tr_TR:
           no_reason: "Düzenleme nedeni girilmesi zorunludur."
           revision_failed: "Gönderi revize edilemedi."
         success: "Gönderi başarıyla düzenlendi."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Konu bulunamadı."
           not_allowed: "Bu konudaki etiketleri düzenleyemezsiniz."
           no_reason: "Etiketleri düzenlemek için bir neden belirtmeniz gerekmektedir."
           tagging_disabled: "Bu sitede etiketleme özelliği etkin değildir."
         success: "Etiketler başarıyla güncellendi."
+      create_tag:
+        errors:
+          tagging_disabled: "Bu sitede etiketleme özelliği etkin değildir."
+      edit_tag:
+        errors:
+          tagging_disabled: "Bu sitede etiketleme özelliği etkin değildir."
       edit_category:
+        errors:
+          not_found: "Kategori bulunamadı."
+      change_topic_category:
         errors:
           not_found: "Konu bulunamadı."
           not_allowed: "Bu konuyu taşıyamazsınız."
@@ -808,6 +811,10 @@ tr_TR:
           conflict: "Bu inceleme kuyruğundaki öğe başka biri tarafından güncellendi. Lütfen tekrar deneyin"
           action_failed: "İşlem gerçekleştirilemedi"
         success: "İnceleme kuyruğundaki %{reviewable_id} öğesi üzerinde '%{action}' işlemi başarıyla gerçekleştirildi"
+      add_reviewable_note:
+        errors:
+          not_allowed: "İnceleme kuyruğuna erişiminiz yok"
+          not_found: "İnceleme kuyruğundaki öğe bulunamadı"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"
@@ -819,6 +826,7 @@ tr_TR:
         tool_not_found: "'%{tool_name}' aracı artık kullanılamıyor."
         bot_user_missing: "Bu bot kullanıcısı artık mevcut değil."
         execution_error: "Araç çalıştırılamadı: %{error}"
+        execution_error_unknown: "beklenmedik bir hata oluştu"
     summarization:
       configuration_hint:
         one: "Önce `%{setting}` ayarını yapılandırın"
@@ -891,12 +899,10 @@ tr_TR:
       limit_exceeded_admin: "AI kredi limitinize ulaştınız. Lütfen %{reset_time} sonra tekrar deneyin."
     errors:
       quota_exceeded: "Bu model için kotayı aştınız. Lütfen %{relative_time} içinde tekrar deneyin."
-      quota_required: "Bu model için maksimum token veya kullanımları belirtmelisiniz"
       no_query_specified: Sorgu parametresi gerekli, lütfen belirtin.
       no_user_for_agent: Belirtilen ajanın ilişkili bir kullanıcısı yok.
       no_user_specified: Kullanıcı adı veya user_unique_id parametresi gerekli, lütfen belirtin.
       user_not_found: Belirtilen kullanıcı mevcut değil. Kullanıcı adı parametresini kontrol edin.
-      no_default_llm: Ajanın bir default_llm tanımı olması gerekir.
       user_not_allowed: Kullanıcının konuya katılmasına izin verilmiyor.
       invalid_stream_resume_token: resume_token geçersiz veya süresi dolmuş.
       no_tool_results_specified: Bir akışı yeniden başlatırken tool_results parametresi gereklidir.

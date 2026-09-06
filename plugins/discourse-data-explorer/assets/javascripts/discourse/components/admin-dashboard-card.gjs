@@ -12,6 +12,10 @@ export default class DataExplorerAdminDashboardCard extends Component {
     return this.args.payload?.columns ?? [];
   }
 
+  get columnLabels() {
+    return this.columns.map((col) => col.replaceAll("_", " "));
+  }
+
   get chartability() {
     return chartability(this.args.payload);
   }
@@ -41,7 +45,7 @@ export default class DataExplorerAdminDashboardCard extends Component {
 
   get chartDatasets() {
     return this.chartability.numericIndices.map((colIdx) => ({
-      label: this.columns[colIdx],
+      label: this.columnLabels[colIdx],
       values: this.rows.map((row) => Number(row[colIdx])),
     }));
   }
@@ -60,7 +64,7 @@ export default class DataExplorerAdminDashboardCard extends Component {
           <table class="de-dashboard-card__table">
             <thead>
               <tr>
-                {{#each this.columns as |col|}}
+                {{#each this.columnLabels as |col|}}
                   <th>{{col}}</th>
                 {{/each}}
               </tr>

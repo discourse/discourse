@@ -470,6 +470,9 @@ module Chat
           chat_message_id: chat_message.id,
           pinned_at: pin.created_at.iso8601(3),
           pinned_by_id: pin.pinned_by_id,
+          # authoritative count so clients assign instead of incrementing,
+          # keeping them correct even if events are replayed or double-handled
+          pinned_message_count: chat_channel.pinned_messages.count,
         },
       )
     end
@@ -477,7 +480,12 @@ module Chat
     def self.publish_unpin!(chat_channel, chat_message, unpinned_by)
       publish_to_channel!(
         chat_channel,
-        { type: :unpin, chat_message_id: chat_message.id, unpinned_by_id: unpinned_by.id },
+        {
+          type: :unpin,
+          chat_message_id: chat_message.id,
+          unpinned_by_id: unpinned_by.id,
+          pinned_message_count: chat_channel.pinned_messages.count,
+        },
       )
     end
 
@@ -503,6 +511,8 @@ module Chat
     def self.permissions(channel)
       group_ids = channel.allowed_group_ids.presence
       if group_ids.blank? && channel.category_channel? && !channel.read_restricted?
+        return {} if Chat.anonymous_public_channel_access_allowed?
+
         group_ids = chat_allowed_group_ids
       end
 
@@ -511,8 +521,10 @@ module Chat
 
     def self.chat_allowed_group_ids
       pseudo_everyone_ids = [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]]
+      excluded_group_ids = [Group::AUTO_GROUPS[:anonymous_users]]
       Chat
         .allowed_group_ids
+        .reject { |group_id| excluded_group_ids.include?(group_id) }
         .map do |group_id|
           pseudo_everyone_ids.include?(group_id) ? Group::AUTO_GROUPS[:trust_level_0] : group_id
         end

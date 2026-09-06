@@ -14,6 +14,7 @@ pl_PL:
     openid_connect_rp_initiated_logout: "Przekieruj użytkownika do end_session_endpoint po wylogowaniu. Musi być obsługiwane przez dostawcę tożsamości i uwzględnione w dokumencie odkrycia."
     openid_connect_rp_initiated_logout_redirect: "(opcjonalnie) Parametr post_logout_redirect_uri, który zostanie przekazany do punktu końcowego wylogowania. Jeśli zostanie podany, musi zostać zarejestrowany u dostawcy tożsamości."
     openid_connect_rp_initiated_logout_include_client_id: "(opcjonalnie) Dołącz client_id (ustawienie openid_connect_client_id) jako parametr zapytania do punktu końcowego wylogowania"
+    openid_connect_rp_initiated_logout_include_state: "(opcjonalnie) Dołącz losowo wygenerowany parametr stanu do punktu końcowego wylogowania. Niektórzy dostawcy tożsamości wymagają obecności tego parametru, mimo że Discourse nie weryfikuje go po zwrocie."
     openid_connect_token_scope: "Zakresy wysyłane podczas żądania punktu końcowego tokena. Oficjalna specyfikacja tego nie wymaga."
     openid_connect_error_redirects: "Jeżeli wywołanie zwrotne error_reason zawiera pierwszy parametr, użytkownik zostanie przekierowany do adresu URL podanego w drugim parametrze"
     openid_connect_allow_association_change: "Zezwalaj użytkownikom na odłączanie i ponowne łączenie swoich kont Discourse z dostawcą OpenID Connect"
@@ -25,6 +26,10 @@ pl_PL:
     openid_connect_user_field_mappings: "Mapuj roszczenia OIDC na pola użytkownika Discourse. Każdy wpis łączy nazwę roszczenia OIDC z numerycznym identyfikatorem pola użytkownika Discourse."
     openid_connect_match_by_email: "Użyj adresu e-mail, aby dopasować uwierzytelnienia OpenID Connect do istniejących kont użytkowników Discourse."
     openid_connect_use_pkce: "Włącz Proof Key for Code Exchange (PKCE) w celu uwierzytelniania OpenID Connect."
+    openid_connect_mtls_client_cert: "Certyfikat klienta X.509 do uwierzytelniania klienta mTLS u dostawcy OIDC. Aby włączyć mTLS, należy również ustawić wartość {{setting:openid_connect_mtls_client_key}}."
+    openid_connect_mtls_client_key: "Klucz prywatny X.509 dla certyfikatu klienta mTLS. Aby włączyć mTLS, należy również ustawić wartość {{setting:openid_connect_mtls_client_cert}}."
+    openid_connect_mtls_client_key_passcode: "Hasło do klucza prywatnego mTLS (opcjonalnie)"
   login:
     omniauth_error:
       openid_connect_discovery_error: Nie można pobrać konfiguracji od dostawcy tożsamości. Spróbuj ponownie.
+      openid_connect_mtls_error: Wystąpił problem z konfiguracją certyfikatu klienta mTLS. Skontaktuj się z administratorem.

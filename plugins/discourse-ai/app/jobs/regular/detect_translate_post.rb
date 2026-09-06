@@ -37,7 +37,7 @@ module Jobs
           return
         end
       else
-        return if DiscourseAi::Translation.category_excluded?(topic.category_id)
+        return if !DiscourseAi::Translation.category_allowed?(topic.category)
       end
 
       # the user may fill locale in manually
@@ -73,7 +73,11 @@ module Jobs
         localize(post, locale)
       end
 
-      MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
+      MessageBus.publish(
+        "/topic/#{post.topic_id}",
+        { type: :localized, id: post.id },
+        post.topic.secure_audience_publish_messages,
+      )
     end
 
     private

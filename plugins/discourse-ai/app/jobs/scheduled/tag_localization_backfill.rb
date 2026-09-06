@@ -6,7 +6,7 @@ module Jobs
     cluster_concurrency 1
 
     def execute(args)
-      return if !DiscourseAi::Translation.backfill_enabled?
+      return if !DiscourseAi::Translation.backfill_enabled?(target: Tag)
 
       short_text_llm =
         find_llm_model_for_agent(SiteSetting.ai_translation_short_text_translator_agent)

@@ -1,491 +1,160 @@
-import Component from "@glimmer/component";
-import { fn, get, hash } from "@ember/helper";
-import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
-import PinnedButton from "discourse/components/pinned-button";
-import PinnedOptions from "discourse/components/pinned-options";
-import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
-import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
-import CategoryChooser from "discourse/select-kit/components/category-chooser";
-import ComboBox from "discourse/select-kit/components/combo-box";
-import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
-import FutureDateInputSelector from "discourse/select-kit/components/future-date-input-selector";
-import GroupChooser from "discourse/select-kit/components/group-chooser";
-import ListSetting from "discourse/select-kit/components/list-setting";
-import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import MultiSelect from "discourse/select-kit/components/multi-select";
-import UserNotificationsDropdown from "discourse/select-kit/components/user-notifications-dropdown";
-import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import CategoriesAdminDropdownExample from "../../examples/atoms/dropdowns/categories-admin-dropdown";
+import categoriesAdminDropdownSource from "../../examples/atoms/dropdowns/categories-admin-dropdown?source=file";
+import CategoryChooserExample from "../../examples/atoms/dropdowns/category-chooser";
+import categoryChooserSource from "../../examples/atoms/dropdowns/category-chooser?source=file";
+import CategoryNotificationsTrackingExample from "../../examples/atoms/dropdowns/category-notifications-tracking";
+import categoryNotificationsTrackingSource from "../../examples/atoms/dropdowns/category-notifications-tracking?source=file";
+import ComboBoxExample from "../../examples/atoms/dropdowns/combo-box";
+import comboBoxSource from "../../examples/atoms/dropdowns/combo-box?source=file";
+import ComboBoxClearableExample from "../../examples/atoms/dropdowns/combo-box-clearable";
+import comboBoxClearableSource from "../../examples/atoms/dropdowns/combo-box-clearable?source=file";
+import ComboBoxFilterableExample from "../../examples/atoms/dropdowns/combo-box-filterable";
+import comboBoxFilterableSource from "../../examples/atoms/dropdowns/combo-box-filterable?source=file";
+import ComboBoxNoneExample from "../../examples/atoms/dropdowns/combo-box-none";
+import comboBoxNoneSource from "../../examples/atoms/dropdowns/combo-box-none?source=file";
+import DropdownSelectBoxExample from "../../examples/atoms/dropdowns/dropdown-select-box";
+import dropdownSelectBoxSource from "../../examples/atoms/dropdowns/dropdown-select-box?source=file";
+import FutureDateInputSelectorExample from "../../examples/atoms/dropdowns/future-date-input-selector";
+import futureDateInputSelectorSource from "../../examples/atoms/dropdowns/future-date-input-selector?source=file";
+import GroupChooserExample from "../../examples/atoms/dropdowns/group-chooser";
+import groupChooserSource from "../../examples/atoms/dropdowns/group-chooser?source=file";
+import IconGridPickerExample from "../../examples/atoms/dropdowns/icon-grid-picker";
+import iconGridPickerSource from "../../examples/atoms/dropdowns/icon-grid-picker?source=file";
+import ListSettingExample from "../../examples/atoms/dropdowns/list-setting";
+import listSettingSource from "../../examples/atoms/dropdowns/list-setting?source=file";
+import ListSettingNamePropertyExample from "../../examples/atoms/dropdowns/list-setting-name-property";
+import listSettingNamePropertySource from "../../examples/atoms/dropdowns/list-setting-name-property?source=file";
+import MiniTagChooserExample from "../../examples/atoms/dropdowns/mini-tag-chooser";
+import miniTagChooserSource from "../../examples/atoms/dropdowns/mini-tag-chooser?source=file";
+import MiniTagChooserHeaderFilterExample from "../../examples/atoms/dropdowns/mini-tag-chooser-header-filter";
+import miniTagChooserHeaderFilterSource from "../../examples/atoms/dropdowns/mini-tag-chooser-header-filter?source=file";
+import MultiSelectExample from "../../examples/atoms/dropdowns/multi-select";
+import multiSelectSource from "../../examples/atoms/dropdowns/multi-select?source=file";
+import PinnedButtonExample from "../../examples/atoms/dropdowns/pinned-button";
+import pinnedButtonSource from "../../examples/atoms/dropdowns/pinned-button?source=file";
+import PinnedOptionsExample from "../../examples/atoms/dropdowns/pinned-options";
+import pinnedOptionsSource from "../../examples/atoms/dropdowns/pinned-options?source=file";
+import TopicNotificationsTrackingExample from "../../examples/atoms/dropdowns/topic-notifications-tracking";
+import topicNotificationsTrackingSource from "../../examples/atoms/dropdowns/topic-notifications-tracking?source=file";
+import UserNotificationsDropdownExample from "../../examples/atoms/dropdowns/user-notifications-dropdown";
+import userNotificationsDropdownSource from "../../examples/atoms/dropdowns/user-notifications-dropdown?source=file";
 
-export default class Dropdowns extends Component {
-  get comboBoxCode() {
-    return `
-import { fn } from "@ember/helper";
-import { mut } from "discourse/helpers/mut";
-import ComboBox from "discourse/select-kit/components/combo-box";
+export default <template>
+  <StyleguideExample @title="<ComboBox>" @code={{comboBoxSource}}>
+    <ComboBoxExample />
+  </StyleguideExample>
 
-<template>
-  <ComboBox
-    @content={{@dummy.options}}
-    @value={{value}}
-    @onChange={{fn (mut value)}}
-  />
+  <StyleguideExample
+    @title="filterable <ComboBox>"
+    @code={{comboBoxFilterableSource}}
+  >
+    <ComboBoxFilterableExample @categories={{@dummy.categories}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<ComboBox> with a default state"
+    @code={{comboBoxNoneSource}}
+  >
+    <ComboBoxNoneExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<ComboBox> clearable"
+    @code={{comboBoxClearableSource}}
+  >
+    <ComboBoxClearableExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<TopicNotificationsTracking>"
+    @code={{topicNotificationsTrackingSource}}
+  >
+    <TopicNotificationsTrackingExample />
+  </StyleguideExample>
+
+  <StyleguideExample @title="<CategoryChooser>" @code={{categoryChooserSource}}>
+    <CategoryChooserExample />
+  </StyleguideExample>
+
+  <StyleguideExample @title="<PinnedButton>" @code={{pinnedButtonSource}}>
+    <PinnedButtonExample @topic={{@dummy.pinnedTopic}} />
+  </StyleguideExample>
+
+  <StyleguideExample @title="<PinnedOptions>" @code={{pinnedOptionsSource}}>
+    <PinnedOptionsExample @topic={{@dummy.pinnedTopic}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<CategoriesAdminDropdown>"
+    @code={{categoriesAdminDropdownSource}}
+  >
+    <CategoriesAdminDropdownExample @onChange={{@dummyAction}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<CategoryNotificationsTracking>"
+    @code={{categoryNotificationsTrackingSource}}
+  >
+    <CategoryNotificationsTrackingExample @onChange={{@dummyAction}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<DropdownSelectBox>"
+    @code={{dropdownSelectBoxSource}}
+  >
+    <DropdownSelectBoxExample @onChange={{@dummyAction}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<FutureDateInputSelector>"
+    @code={{futureDateInputSelectorSource}}
+  >
+    <FutureDateInputSelectorExample />
+  </StyleguideExample>
+
+  <StyleguideExample @title="<MultiSelect>" @code={{multiSelectSource}}>
+    <MultiSelectExample @onChange={{@dummyAction}} />
+  </StyleguideExample>
+
+  <StyleguideExample @title="<MiniTagChooser>" @code={{miniTagChooserSource}}>
+    <div class="inline-form">
+      <MiniTagChooserExample />
+    </div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<MiniTagChooser> with useHeaderFilter=true"
+    @code={{miniTagChooserHeaderFilterSource}}
+  >
+    <div class="inline-form">
+      <MiniTagChooserHeaderFilterExample />
+    </div>
+  </StyleguideExample>
+
+  <StyleguideExample @title="admin <GroupChooser>" @code={{groupChooserSource}}>
+    <GroupChooserExample @onChange={{@dummyAction}} />
+  </StyleguideExample>
+
+  <StyleguideExample @title="<ListSetting>" @code={{listSettingSource}}>
+    <ListSettingExample @onChange={{@dummyAction}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<ListSetting> with a name property"
+    @code={{listSettingNamePropertySource}}
+  >
+    <ListSettingNamePropertyExample @onChange={{@dummyAction}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="<UserNotificationsDropdown>"
+    @code={{userNotificationsDropdownSource}}
+  >
+    <UserNotificationsDropdownExample />
+  </StyleguideExample>
+
+  <StyleguideExample @title="<DIconGridPicker>" @code={{iconGridPickerSource}}>
+    <IconGridPickerExample />
+  </StyleguideExample>
 </template>
-    `;
-  }
-
-  get comboBoxFilterableCode() {
-    return `
-import { fn, hash } from "@ember/helper";
-import { mut } from "discourse/helpers/mut";
-import ComboBox from "discourse/select-kit/components/combo-box";
-
-<template>
-  <ComboBox
-    @content={{@dummy.categories}}
-    @value={{value}}
-    @options={{hash filterable=true}}
-    @onChange={{fn (mut value)}}
-  />
-</template>
-    `;
-  }
-
-  get comboBoxDefaultStateCode() {
-    return `
-import { fn, hash } from "@ember/helper";
-import { mut } from "discourse/helpers/mut";
-import ComboBox from "discourse/select-kit/components/combo-box";
-
-<template>
-  <ComboBox
-    @content={{@dummy.options}}
-    @value={{value}}
-    @options={{hash none="category.none"}}
-    @onChange={{fn (mut value)}}
-  />
-</template>
-    `;
-  }
-
-  get comboBoxClearableCode() {
-    return `
-import { fn, hash } from "@ember/helper";
-import { mut } from "discourse/helpers/mut";
-import ComboBox from "discourse/select-kit/components/combo-box";
-
-<template>
-  <ComboBox
-    @content={{@dummy.options}}
-    @clearable={{true}}
-    @value={{value}}
-    @options={{hash none="category.none"}}
-    @onChange={{fn (mut value)}}
-  />
-</template>
-    `;
-  }
-
-  get topicNotificationsTrackingCode() {
-    return `
-import { fn } from "@ember/helper";
-import { mut } from "discourse/helpers/mut";
-import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
-
-<template>
-  <TopicNotificationsTracking
-    @levelId={{value}}
-    @onChange={{fn (mut value)}}
-  />
-</template>
-    `;
-  }
-
-  get categoryChooserCode() {
-    return `
-import { fn } from "@ember/helper";
-import { mut } from "discourse/helpers/mut";
-import CategoryChooser from "discourse/select-kit/components/category-chooser";
-
-<template>
-  <CategoryChooser @value={{value}} @onChange={{fn (mut value)}} />
-</template>
-    `;
-  }
-
-  get pinnedButtonCode() {
-    return `
-import PinnedButton from "discourse/components/pinned-button";
-
-<template>
-  <PinnedButton @topic={{@dummy.pinnedTopic}} @pinned={{true}} />
-</template>
-    `;
-  }
-
-  get pinnedOptionsCode() {
-    return `
-import PinnedOptions from "discourse/components/pinned-options";
-
-<template>
-  <PinnedOptions @topic={{@dummy.pinnedTopic}} />
-</template>
-    `;
-  }
-
-  get categoriesAdminDropdownCode() {
-    return `
-import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
-
-<template>
-  <CategoriesAdminDropdown @onChange={{@dummyAction}} />
-</template>
-    `;
-  }
-
-  get categoryNotificationsTrackingCode() {
-    return `
-import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
-
-<template>
-  <CategoryNotificationsTracking @levelId={{1}} @onChange={{@dummyAction}} />
-</template>
-    `;
-  }
-
-  get dropdownSelectBoxCode() {
-    return `
-import { hash } from "@ember/helper";
-import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
-
-<template>
-  <DropdownSelectBox
-    @content={{@dummy.options}}
-    @onChange={{@dummyAction}}
-    @options={{hash translatedNone="Something"}}
-  />
-</template>
-    `;
-  }
-
-  get futureDateInputSelectorCode() {
-    return `
-import { hash } from "@ember/helper";
-import FutureDateInputSelector from "discourse/select-kit/components/future-date-input-selector";
-
-<template>
-  <FutureDateInputSelector
-    @input={{@dummy.topicTimerUpdateDate}}
-    @includeWeekend={{true}}
-    @includeForever={{true}}
-    @options={{hash none="time_shortcut.select_timeframe"}}
-  />
-</template>
-    `;
-  }
-
-  get multiSelectCode() {
-    return `
-import MultiSelect from "discourse/select-kit/components/multi-select";
-
-<template>
-  <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
-</template>
-    `;
-  }
-
-  get miniTagChooserCode() {
-    return `
-import { hash } from "@ember/helper";
-import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-
-<template>
-  <MiniTagChooser
-    @value={{@dummy.selectedTags}}
-    @options={{hash filterable=true}}
-  />
-</template>
-    `;
-  }
-
-  get miniTagChooserHeaderFilterCode() {
-    return `
-import { hash } from "@ember/helper";
-import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-
-<template>
-  <MiniTagChooser
-    @value={{@dummy.selectedTags}}
-    @options={{hash
-      filterable=true
-      filterPlaceholder="tagging.choose_for_topic"
-      useHeaderFilter=true
-    }}
-  />
-</template>
-    `;
-  }
-
-  get groupChooserCode() {
-    return `
-import GroupChooser from "discourse/select-kit/components/group-chooser";
-
-<template>
-  <GroupChooser
-    @selected={{@dummy.selectedGroups}}
-    @content={{@dummy.groups}}
-    @onChange={{@dummyAction}}
-  />
-</template>
-    `;
-  }
-
-  get listSettingCode() {
-    return `
-import ListSetting from "discourse/select-kit/components/list-setting";
-
-<template>
-  <ListSetting @settingValue={{@dummy.settings}} @onChange={{@dummyAction}} />
-</template>
-    `;
-  }
-
-  get listSettingNamePropertyCode() {
-    return `
-import ListSetting from "discourse/select-kit/components/list-setting";
-
-<template>
-  <ListSetting
-    @settingValue={{@dummy.colors}}
-    @nameProperty="color"
-    @onChange={{@dummyAction}}
-  />
-</template>
-    `;
-  }
-
-  get userNotificationsDropdownCode() {
-    return `
-import UserNotificationsDropdown from "discourse/select-kit/components/user-notifications-dropdown";
-
-<template>
-  <UserNotificationsDropdown @user={{@currentUser}} @value="changeToNormal" />
-</template>
-    `;
-  }
-
-  get iconPickerCode() {
-    return `
-import DIconGridPicker from "discourse/components/d-icon-grid-picker";
-
-<template>
-  <DIconGridPicker />
-</template>
-    `;
-  }
-
-  <template>
-    <StyleguideExample
-      @title="<ComboBox>"
-      @code={{this.comboBoxCode}}
-      @initialValue={{get @dummy "options.0.name"}}
-      as |value|
-    >
-      <ComboBox
-        @content={{@dummy.options}}
-        @value={{value}}
-        @onChange={{fn (mut value)}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="filterable <ComboBox>"
-      @code={{this.comboBoxFilterableCode}}
-      @initialValue={{get @dummy "categories.0.name"}}
-      as |value|
-    >
-      <ComboBox
-        @content={{@dummy.categories}}
-        @value={{value}}
-        @options={{hash filterable=true}}
-        @onChange={{fn (mut value)}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<ComboBox> with a default state"
-      @code={{this.comboBoxDefaultStateCode}}
-      @initialValue={{get @dummy "options.0.name"}}
-      as |value|
-    >
-      <ComboBox
-        @content={{@dummy.options}}
-        @value={{value}}
-        @options={{hash none="category.none"}}
-        @onChange={{fn (mut value)}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<ComboBox> clearable"
-      @code={{this.comboBoxClearableCode}}
-      @initialValue={{get @dummy "options.0.name"}}
-      as |value|
-    >
-      <ComboBox
-        @content={{@dummy.options}}
-        @clearable={{true}}
-        @value={{value}}
-        @options={{hash none="category.none"}}
-        @onChange={{fn (mut value)}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<TopicNotificationsTracking>"
-      @code={{this.topicNotificationsTrackingCode}}
-      @initialValue={{1}}
-      as |value|
-    >
-      <TopicNotificationsTracking
-        @levelId={{value}}
-        @onChange={{fn (mut value)}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<CategoryChooser>"
-      @code={{this.categoryChooserCode}}
-      @initialValue={{get @categories "0" "name"}}
-      as |value|
-    >
-      <CategoryChooser @value={{value}} @onChange={{fn (mut value)}} />
-    </StyleguideExample>
-
-    <StyleguideExample @title="<PinnedButton>" @code={{this.pinnedButtonCode}}>
-      <PinnedButton @topic={{@dummy.pinnedTopic}} @pinned={{true}} />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<PinnedOptions>"
-      @code={{this.pinnedOptionsCode}}
-    >
-      <PinnedOptions @topic={{@dummy.pinnedTopic}} />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<CategoriesAdminDropdown>"
-      @code={{this.categoriesAdminDropdownCode}}
-    >
-      <CategoriesAdminDropdown @onChange={{@dummyAction}} />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<CategoryNotificationsTracking>"
-      @code={{this.categoryNotificationsTrackingCode}}
-    >
-      <CategoryNotificationsTracking
-        @levelId={{1}}
-        @onChange={{@dummyAction}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<DropdownSelectBox>"
-      @code={{this.dropdownSelectBoxCode}}
-    >
-      <DropdownSelectBox
-        @content={{@dummy.options}}
-        @onChange={{@dummyAction}}
-        @options={{hash translatedNone="Something"}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<FutureDateInputSelector>"
-      @code={{this.futureDateInputSelectorCode}}
-    >
-      <FutureDateInputSelector
-        @input={{@dummy.topicTimerUpdateDate}}
-        @includeWeekend={{true}}
-        @includeForever={{true}}
-        @options={{hash none="time_shortcut.select_timeframe"}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample @title="<MultiSelect>" @code={{this.multiSelectCode}}>
-      <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<MiniTagChooser>"
-      @code={{this.miniTagChooserCode}}
-    >
-      <div class="inline-form">
-        <MiniTagChooser
-          @value={{@dummy.selectedTags}}
-          @options={{hash filterable=true}}
-        />
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<MiniTagChooser> with useHeaderFilter=true"
-      @code={{this.miniTagChooserHeaderFilterCode}}
-    >
-      <div class="inline-form">
-        <MiniTagChooser
-          @value={{@dummy.selectedTags}}
-          @options={{hash
-            filterable=true
-            filterPlaceholder="tagging.choose_for_topic"
-            useHeaderFilter=true
-          }}
-        />
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="admin <GroupChooser>"
-      @code={{this.groupChooserCode}}
-    >
-      <GroupChooser
-        @selected={{@dummy.selectedGroups}}
-        @content={{@dummy.groups}}
-        @onChange={{@dummyAction}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample @title="<ListSetting>" @code={{this.listSettingCode}}>
-      <ListSetting
-        @settingValue={{@dummy.settings}}
-        @onChange={{@dummyAction}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<ListSetting>"
-      @code={{this.listSettingNamePropertyCode}}
-    >
-      <ListSetting
-        @settingValue={{@dummy.colors}}
-        @nameProperty="color"
-        @onChange={{@dummyAction}}
-      />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<UserNotificationsDropdown>"
-      @code={{this.userNotificationsDropdownCode}}
-    >
-      <UserNotificationsDropdown
-        @user={{@currentUser}}
-        @value="changeToNormal"
-      />
-    </StyleguideExample>
-
-    <StyleguideExample @title="<DIconGridPicker>" @code={{this.iconPickerCode}}>
-      <DIconGridPicker />
-    </StyleguideExample>
-  </template>
-}

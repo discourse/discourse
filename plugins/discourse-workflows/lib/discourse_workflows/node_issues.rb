@@ -17,7 +17,7 @@ module DiscourseWorkflows
         issues = []
 
         schema.each do |name, field|
-          next unless field_visible?(field, effective)
+          next unless field_definitely_visible?(field, effective)
 
           name_s = name.to_s
           path = path_prefix.empty? ? name_s : "#{path_prefix}.#{name_s}"
@@ -98,46 +98,10 @@ module DiscourseWorkflows
         result
       end
 
-      def field_visible?(field, config)
-        ui = field[:ui] || {}
-        return false if ui[:hidden]
-        display_options = field[:display_options] || {}
-        return false if display_options[:show] && !matches_rules?(display_options[:show], config)
-        return false if display_options[:hide] && matches_rules?(display_options[:hide], config)
-        true
-      end
+      def field_definitely_visible?(field, config)
+        return false if (field[:ui] || {})[:hidden]
 
-      def matches_rules?(rules, config)
-        rules.all? { |field_name, expected| matches_rule?(expected, config[field_name.to_s]) }
-      end
-
-      def matches_rule?(expected, value)
-        return false unless expected.is_a?(Array)
-
-        expected.any? { |condition| matches_condition?(condition, value) }
-      end
-
-      def matches_condition?(condition, value)
-        operator = condition.is_a?(Hash) ? condition[:condition] || condition["condition"] : nil
-        return condition == value if operator.blank?
-
-        if operator.key?(:not) || operator.key?("not")
-          expected = operator.key?(:not) ? operator[:not] : operator["not"]
-          return value != expected
-        end
-
-        if operator.key?(:exists) || operator.key?("exists")
-          exists = operator.key?(:exists) ? operator[:exists] : operator["exists"]
-          return exists ? !empty_value?(value) : empty_value?(value)
-        end
-
-        false
-      end
-
-      def empty_value?(value)
-        return true if value.nil? || value == ""
-        return value.empty? if value.is_a?(Array)
-        false
+        Schema.definitely_visible?(field[:display_options] || {}, config)
       end
 
       def blank_value?(value)

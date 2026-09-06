@@ -3,45 +3,62 @@
 describe "Reviewables" do
   let(:review_page) { PageObjects::Pages::Review.new }
   fab!(:admin)
-  fab!(:theme)
-  fab!(:long_post, :post_with_very_long_raw_content)
   fab!(:post)
   let(:composer) { PageObjects::Components::Composer.new }
   let(:moderator) { Fabricate(:moderator) }
   let(:toasts) { PageObjects::Components::Toasts.new }
+  let(:suspend_user_modal) { PageObjects::Modals::PenalizeUser.new("suspend") }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
 
   describe "when there is a flagged post reviewable with a short post" do
     fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
 
-    it "should not show a button to expand/collapse the post content" do
-      visit("/review")
-      expect(review_page).to have_no_post_body_collapsed
-      expect(review_page).to have_no_post_body_toggle
-    end
-
     describe "reviewable actions" do
-      it "should have agree_and_edit action" do
-        visit("/review")
-        select_kit =
-          PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
-        select_kit.expand
+      let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
 
-        expect(select_kit).to have_option_value("post-agree_and_edit")
+      def open_agree_and_edit
+        PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide").expand
+        find("[data-value='post-agree_and_edit']").click
       end
 
-      it "agree_and_edit should open the composer" do
+      it "agree_and_edit does not touch the flag until the edit is saved" do
         visit("/review")
-        select_kit =
-          PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
-        select_kit.expand
 
-        find("[data-value='post-agree_and_edit']").click
+        open_agree_and_edit
 
-        expect(composer).to be_opened
-        expect(composer.composer_input.value).to eq(post.raw)
+        expect(composer).to have_value(post.raw)
+        expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
+
+        composer.fill_content("The moderator changed their mind about this.")
+        composer.discard
+
+        expect(discard_draft_modal).to be_open
+
+        discard_draft_modal.click_discard
+
+        expect(composer).to be_closed
+        expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
+        expect(short_reviewable.reload).to be_pending
+        expect(post.reload.revisions.count).to eq(0)
+      end
+
+      it "agree_and_edit agrees with the flag once the edit is saved" do
+        visit("/review")
+
+        open_agree_and_edit
+
+        expect(composer).to have_value(post.raw)
+
+        composer.fill_content("This post has been edited by a moderator.")
+        composer.submit
+
+        expect(composer).to be_closed
         expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
+        expect(review_page).to have_reviewable_with_approved_status(short_reviewable)
+        expect(short_reviewable.reload).to be_approved
+        expect(post.reload.raw).to eq("This post has been edited by a moderator.")
       end
 
       it "should open a modal when suspending a user" do
@@ -71,30 +88,41 @@ describe "Reviewables" do
     end
   end
 
-  describe "when there is a queued post reviewable with a short post" do
-    fab!(:short_queued_reviewable, :reviewable_queued_post)
+  describe "when there are several flagged posts in the queue" do
+    fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[3]) }
+    fab!(:spammer_one, :user)
+    fab!(:spammer_two, :user)
 
-    it "should not show a button to expand/collapse the post content" do
+    it "confirms deletion of the author of the reviewable that was acted on" do
+      reviewables = {
+        spammer_one =>
+          PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_one)).reviewable,
+        spammer_two =>
+          PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_two)).reviewable,
+      }
+
       visit("/review")
-      expect(review_page).to have_no_post_body_collapsed
-      expect(review_page).to have_no_post_body_toggle
-    end
 
-    it "should apply correct button classes to actions" do
-      visit("/review")
+      reviewables.each do |spammer, reviewable|
+        review_page.delete_user_from_reviewable(
+          reviewable,
+          "post-delete_user_block",
+          confirm: false,
+        )
 
-      expect(page).to have_css(".approve-post.btn-success")
-      expect(page).to have_css(".reject-post .btn-danger")
+        expect(dialog).to have_content(
+          I18n.t("reviewables.actions.reject_user.block.confirm", username: spammer.username),
+        )
 
-      expect(page).to have_no_css(".approve-post.btn-default")
-      expect(page).to have_no_css(".reject-post .btn-default")
+        dialog.click_no
+        expect(dialog).to be_closed
+      end
     end
   end
 
   describe "when there is a reviewable user" do
     fab!(:user)
     let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
-    let(:scrub_user_modal) { PageObjects::Modals::ScrubRejectedUser.new }
 
     before do
       SiteSetting.must_approve_users = true
@@ -122,32 +150,28 @@ describe "Reviewables" do
       expect(mail.subject).to match(/You've been rejected on Discourse/)
       expect(mail.body.raw_source).to include rejection_reason
     end
+  end
 
-    it "Allows scrubbing user data after rejection" do
-      rejection_reason = "user is spamming"
-      scrubbing_reason = "a spammer who knows how to make GDPR requests"
-      reviewable = ReviewableUser.find_by_target_id(user.id)
+  describe "when there is a suspect user reviewable" do
+    fab!(:suspect_user) { Fabricate(:user, approved: false) }
+    fab!(:suspect_reviewable) { Fabricate(:suspect_user_reviewable, target: suspect_user) }
 
-      review_page.visit_reviewable(reviewable)
-      review_page.select_bundled_action(reviewable, "user-delete_user")
-      rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
-      rejection_reason_modal.delete_user
+    it "allows suspending the user without deleting them" do
+      review_page.visit_reviewable(suspect_reviewable)
+      review_page.select_bundled_action(suspect_reviewable, "user-suspend_user")
 
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
+      suspend_user_modal.suspend("spam profile")
 
-      review_page.click_scrub_user_button
-
-      expect(scrub_user_modal.scrub_button).to be_disabled
-      scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
-      expect(scrub_user_modal.scrub_button).not_to be_disabled
-      scrub_user_modal.scrub_button.click
-
-      expect(review_page).to have_reviewable_with_scrubbed_by(reviewable, admin.username)
-      expect(review_page).to have_reviewable_with_scrubbed_reason(reviewable, scrubbing_reason)
-      expect(review_page).to have_reviewable_with_scrubbed_at(
-        reviewable,
-        reviewable.payload["scrubbed_at"],
-      )
+      expect(suspend_user_modal).to be_closed
+      expect(review_page).to have_reviewable_with_rejected_status(suspect_reviewable)
+      expect(review_page).to have_no_scrub_button(suspect_reviewable)
+      expect(suspect_user.reload).to be_suspended
+      expect(
+        UserHistory.find_by(
+          action: UserHistory.actions[:suspend_user],
+          target_user_id: suspect_user.id,
+        ).reviewable_id,
+      ).to eq(suspect_reviewable.id)
     end
   end
 
@@ -156,7 +180,7 @@ describe "Reviewables" do
     fab!(:contact_user, :user)
 
     before do
-      SiteSetting.site_contact_group_name = contact_group.name
+      SiteSetting.site_contact_group_name = contact_group.id.to_s
       SiteSetting.site_contact_username = contact_user.username
     end
 
@@ -172,11 +196,47 @@ describe "Reviewables" do
 
         review_page.select_bundled_action(queued_post_reviewable, "delete_user")
 
+        expect(dialog).to have_content(
+          "Are you sure you want to delete @#{queued_post_reviewable.target_created_by.username}?",
+        )
+        expect(page).to have_css(".dialog-footer .btn-danger", text: I18n.t("js.delete"))
+        dialog.click_danger
+
         expect(review_page).to have_no_error_dialog_visible
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
         expect(review_page).to have_no_reviewable_action_dropdown
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by).to be_nil
+      end
+
+      it "delete_user can be cancelled from the confirmation dialog" do
+        review_page.visit_reviewable(queued_post_reviewable)
+        review_page.select_bundled_action(queued_post_reviewable, "delete_user")
+
+        dialog.click_no
+
+        expect(dialog).to be_closed
+        expect(review_page).to have_reviewable_with_pending_status(queued_post_reviewable)
+        expect(queued_post_reviewable.reload).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        try_until_success do
+          expect(
+            ReviewableClaimedTopic.where(topic_id: queued_post_reviewable.topic_id),
+          ).to be_empty
+        end
+      end
+
+      it "reject_and_suspend rejects the post and suspends its author" do
+        review_page.visit_reviewable(queued_post_reviewable)
+        review_page.select_bundled_action(queued_post_reviewable, "reject_and_suspend")
+
+        suspend_user_modal.suspend("spam")
+
+        expect(suspend_user_modal).to be_closed
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(queued_post_reviewable.reload).to be_rejected
+        expect(queued_post_reviewable.target_created_by.reload).to be_suspended
       end
 
       it "allows revising and rejecting to send a PM to the user" do
@@ -253,7 +313,7 @@ describe "Reviewables" do
   end
 
   describe "when there is an unknown plugin reviewable" do
-    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
     fab!(:reviewable2, :reviewable)
 
     before do
@@ -313,78 +373,54 @@ describe "Reviewables" do
   describe "XSS prevention in queued post titles via server-side cooking" do
     fab!(:untrusted_user) { Fabricate(:user, trust_level: 0) }
 
-    before do
-      SiteSetting.approve_post_count = 1
-      sign_in(admin)
-    end
-
-    it "prevents stored XSS in topic title when viewing review queue" do
-      xss_payload = '<img src=x onerror="alert(\'XSS\')">'
-      reviewable =
-        ReviewableQueuedPost.needs_review!(
-          target_created_by: untrusted_user,
-          created_by: untrusted_user,
-          payload: {
-            raw: "This is the post body",
-            title: xss_payload,
-          },
-        )
+    it "escapes markup in queued post titles instead of rendering it" do
+      ReviewableQueuedPost.needs_review!(
+        target_created_by: untrusted_user,
+        created_by: untrusted_user,
+        payload: {
+          raw: "This is the post body",
+          title: "<img src=x onerror=\"alert('XSS')\"><script>alert(1)</script> & <b>Bold</b>",
+        },
+      )
 
       visit("/review")
 
-      # The title should be visible as text but not execute
-      expect(page).to have_no_css("img[src='x']")
-      expect(page).to have_no_css("img[onerror]")
+      title_html = page.find(".title-text", match: :first).native.inner_html
 
-      # Verify the XSS payload is escaped in the HTML
-      title_element = page.find(".title-text", match: :first)
-      title_html = title_element.native.inner_html
       expect(title_html).to include("&lt;img")
-      expect(title_html).to include("&gt;")
-      expect(title_html).not_to include("<img src=x onerror")
-    end
-
-    it "prevents stored XSS with script tags in topic title" do
-      xss_payload = '<script>alert("XSS")</script>Malicious Title'
-      reviewable =
-        ReviewableQueuedPost.needs_review!(
-          target_created_by: untrusted_user,
-          created_by: untrusted_user,
-          payload: {
-            raw: "This is the post body",
-            title: xss_payload,
-          },
-        )
-
-      visit("/review")
-
-      expect(page).to have_no_css("script")
-      title_element = page.find(".title-text", match: :first)
-      title_html = title_element.native.inner_html
       expect(title_html).to include("&lt;script&gt;")
-      expect(title_html).not_to include("<script>alert")
-    end
-
-    it "escapes special characters in title" do
-      special_chars_title = "Test & <b>Bold</b> & \"Quotes\" & 'Apostrophes'"
-      reviewable =
-        ReviewableQueuedPost.needs_review!(
-          target_created_by: untrusted_user,
-          created_by: untrusted_user,
-          payload: {
-            raw: "This is the post body",
-            title: special_chars_title,
-          },
-        )
-
-      visit("/review")
-
-      # The <b> tag should not render as bold
-      expect(page).to have_no_css(".title-text b")
-      title_element = page.find(".title-text", match: :first)
-      title_html = title_element.native.inner_html
-      expect(title_html).to include("&amp;")
       expect(title_html).to include("&lt;b&gt;")
+      expect(title_html).to include("&amp;")
+      expect(page).to have_no_css(
+        ".title-text img, .title-text script, .title-text b",
+        visible: :all,
+      )
     end
+  end
+
+  describe "when deleting and blocking a spammer from a hidden flagged post" do
+    let(:acted_reviewable) do
+      flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+      flag.target.update!(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+      )
+      flag
+    end
+
+    include_examples "resolving a spammer's reviewables on user deletion"
+  end
+
+  describe "when deleting a spammer from a queued post" do
+    let(:acted_reviewable) do
+      Fabricate(
+        :reviewable_queued_post,
+        created_by: Discourse.system_user,
+        target_created_by: spammer,
+      )
+    end
+
+    include_examples "resolving a spammer's reviewables on user deletion"
   end
 end

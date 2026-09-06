@@ -195,6 +195,7 @@ export default class EmojiValueList extends Component {
             "admin.site_settings.emoji_list.add_emoji_button.label"
           }}
           @didSelectEmoji={{this.emojiSelected}}
+          @btnClass="btn-default"
         />
       </div>
     </div>

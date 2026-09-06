@@ -50,6 +50,12 @@ module("Unit | Canvas Keyboard", function (hooks) {
     return event;
   }
 
+  function dispatchEvent(type, opts = {}) {
+    const event = new Event(type, { bubbles: true, cancelable: true });
+    (opts.target ?? canvasElement).dispatchEvent(event);
+    return event;
+  }
+
   test("pauses Discourse shortcuts on setup", function (assert) {
     keyboard = setup({});
     assert.deepEqual(service.paused, ["-", "="]);
@@ -91,19 +97,50 @@ module("Unit | Canvas Keyboard", function (hooks) {
     assert.true(redone);
   });
 
-  test("Ctrl+C triggers onCopy", function (assert) {
+  test("Ctrl+C triggers onCopy and prevents native copy", function (assert) {
     let copied = false;
     keyboard = setup({ onCopy: () => (copied = true) });
 
-    press("c", { meta: true });
+    const event = press("c", { meta: true });
     assert.true(copied);
+    assert.true(event.defaultPrevented, "native copy is prevented");
   });
 
-  test("Ctrl+V triggers onPaste", function (assert) {
+  test("Ctrl+X triggers onCut and prevents native cut", function (assert) {
+    let cut = false;
+    keyboard = setup({ onCut: () => (cut = true) });
+
+    const event = press("x", { meta: true });
+    assert.true(cut);
+    assert.true(event.defaultPrevented, "native cut is prevented");
+  });
+
+  test("native copy event triggers onCopy and prevents browser copy", function (assert) {
+    let copied = false;
+    keyboard = setup({ onCopy: () => (copied = true) });
+
+    const event = dispatchEvent("copy");
+
+    assert.true(copied);
+    assert.true(event.defaultPrevented, "native copy is prevented");
+  });
+
+  test("native cut event triggers onCut and prevents browser cut", function (assert) {
+    let cut = false;
+    keyboard = setup({ onCut: () => (cut = true) });
+
+    const event = dispatchEvent("cut");
+
+    assert.true(cut);
+    assert.true(event.defaultPrevented, "native cut is prevented");
+  });
+
+  test("paste event triggers onPaste", function (assert) {
     let pasted = false;
     keyboard = setup({ onPaste: () => (pasted = true) });
 
-    press("v", { meta: true });
+    dispatchEvent("paste");
+
     assert.true(pasted);
   });
 
@@ -173,6 +210,47 @@ module("Unit | Canvas Keyboard", function (hooks) {
     press("Delete", { target: textarea });
 
     assert.false(called);
+  });
+
+  test("ignores keystrokes on select elements", function (assert) {
+    let called = false;
+    keyboard = setup({ onDelete: () => (called = true) });
+
+    const select = document.createElement("select");
+    canvasElement.appendChild(select);
+    press("Delete", { target: select });
+
+    assert.false(called);
+  });
+
+  test("ignores paste events on textarea elements", function (assert) {
+    let called = false;
+    keyboard = setup({ onPaste: () => (called = true) });
+
+    const textarea = document.createElement("textarea");
+    canvasElement.appendChild(textarea);
+    dispatchEvent("paste", { target: textarea });
+
+    assert.false(called);
+  });
+
+  test("ignores copy and cut events on editable elements", function (assert) {
+    let called = false;
+    keyboard = setup({
+      onCopy: () => (called = true),
+      onCut: () => (called = true),
+    });
+
+    const editable = document.createElement("div");
+    editable.contentEditable = "true";
+    canvasElement.appendChild(editable);
+
+    const copyEvent = dispatchEvent("copy", { target: editable });
+    const cutEvent = dispatchEvent("cut", { target: editable });
+
+    assert.false(called);
+    assert.false(copyEvent.defaultPrevented, "native copy is allowed");
+    assert.false(cutEvent.defaultPrevented, "native cut is allowed");
   });
 
   test("missing action callbacks do not throw", function (assert) {

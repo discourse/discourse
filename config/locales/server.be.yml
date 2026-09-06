@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 be:
+  llms_txt:
+    links:
+      search:
+        label: "Пошук"
+      categories:
+        label: "катэгорыі"
+      about:
+        label: "Пра тэму"
+      guidelines:
+        label: "Рэкамендацыі"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D МММ, YYYY"
@@ -109,7 +119,6 @@ be:
       equal_to: павінна быць роўная %{count}
       even: павінна быць нават
       exclusion: зарэзерваваны
-      has_already_been_used: "ўжо выкарыстоўваецца"
       inclusion: не ўваходзіць у спіс
       invalid: ня дзейнічае
       is_invalid: "здаецца незразумелым, ці сапраўды гэта закончаны прапанову?"
@@ -261,6 +270,13 @@ be:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Усе"
+      admins: "Адміністратары"
+      moderators: "Мадэратары"
+      staff: "Персанал"
+      anonymous_users: "Ананімныя карыстальнікі"
+      logged_in_users: "Карыстальнікі ў сістэме"
     request_membership_pm:
       title: "Заяўка на ўступ у @%{group_name}"
   education:
@@ -422,14 +438,13 @@ be:
         other: " %{Count} дзён таму"
   password_reset:
     title: "скінуць пароль"
+  browsers:
+    discoursehub: "DiscourseHub прыкладанне"
+    edge: "Microsoft Эдж"
+    firefox: "Firefox"
+    ie: "Інтэрнэт эксплорер"
+    opera: "Браузер Опера"
   user_auth_tokens:
-    browser:
-      discoursehub: "DiscourseHub прыкладанне"
-      edge: "Microsoft Эдж"
-      firefox: "Firefox"
-      ie: "Інтэрнэт эксплорер"
-      opera: "Браузер Опера"
-      unknown: "невядомы браўзэр"
     device:
       android: "Android прылада"
       ipad: "IPad"
@@ -447,6 +462,10 @@ be:
       macos: "Macos"
       windows: "Microsoft Windows,"
       unknown: "невядомая аперацыйная сістэма"
+  admin_site_traffic_explorer:
+    unknown: "Невядома"
+    traffic_types:
+      anonymous: "ананімны"
   change_email:
     error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
     error_staged: "Падчас змянення адраса электроннай пошты адбылася памылка. Гэты адрас ужо выкарыстоўваецца зарэгістраваным карыстальнікам."
@@ -644,10 +663,16 @@ be:
         share: "Абагуліць"
       types:
         staff: "Персанал"
+    posters_by_member_type_members:
+      labels:
+        user: "Карыстальнік"
+        count: "Допісаў"
+        share: "Абагуліць"
     trust_level_pipeline:
       labels:
         count: "Члены"
         share: "Абагуліць"
+        signups: "Рэгістрацыі"
       levels:
         "0": "Новы"
         "1": "асноўнай"
@@ -782,6 +807,9 @@ be:
         num_topics: "тэмы"
       description: "Карыстальнікі, пералічаныя па колькасці клікаў па спасылках, яны падзяліліся."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "наведванне"
+    top_entry_urls:
       labels:
         count: "наведванне"
     top_referrers_by_browser_pageviews:
@@ -957,7 +985,6 @@ be:
     download_remote_images_threshold: "Мінімальныя дыскавая прастора, неабходнае для загрузкі аддаленых малюнкаў лакальна (у працэнтах)"
     editing_grace_period_max_diff_high_trust: "Максімальную колькасць змяненняў сімвалаў, дазволеных для рэдагавання ільготнага перыяду, калі больш змененым крамы іншага паста перагляду (давер ўзроўню 2 і вышэй)"
     staff_edit_locks_post: "Паведамленні будуць заблакаваныя ад рэдагавання, калі яны рэдагуюцца супрацоўнікамі"
-    edit_history_visible_to_public: "Вырашыць усе, каб убачыць папярэднія версіі рэдагуемага паста. Пры адключэнні толькі могуць праглядаць супрацоўнікі."
     delete_removed_posts_after: "Паведамлення выдаленыя аўтарам будуць аўтаматычна выдаленыя пасля таго, як (п) гадзін. Калі ўсталявана значэнне 0, паведамленні будуць неадкладна выдаленыя."
     responsive_post_image_sizes: "Змена памеру Lightbox малюнка папярэдняга прагляду, каб забяспечыць высокія экраны DPI ў наступных суадносінах пікселяў. Выдаліць усе значэння для адключэння рэагуюць малюнкаў."
     fixed_category_positions: "Калі сцяжок усталяваны, вы зможаце арганізаваць катэгорыі ва ўстаноўленым парадку. Калі сцяжок не ўсталяваны, катэгорыі пералічаны ў парадку змяншэння актыўнасці."
@@ -981,8 +1008,6 @@ be:
     anon_polling_interval: "Як часта павінны ананімныя кліенты апытання ў мілісекундах"
     background_polling_interval: "Як часта павінны кліенты апытання ў мілісекундах (калі акно ў фонавым рэжыме)"
     cooldown_minutes_after_hiding_posts: "Колькасць хвілін, карыстальнік павінен чакаць, перш чым яны змогуць змяніць паведамленне схаванага з дапамогай супольнасці, як маркіроўкі"
-    max_topics_in_first_day: "Максімальную колькасць тым карыстальнік дазволена стварыць у 24-гадзінны перыяд пасля стварэння свайго першага паста"
-    max_replies_in_first_day: "Максімальную колькасць адказаў карыстальніка дазволена стварыць у 24-гадзінны перыяд пасля стварэння свайго першага паста"
     tl2_additional_likes_per_day_multiplier: "Павелічэнне ліміту падобных у дзень для TL2 (сябра) шляхам множання гэтага ліку"
     tl3_additional_likes_per_day_multiplier: "Павелічэнне ліміту падобных у дзень для TL3 (рэгулярнага) шляхам множання гэтага ліку"
     tl4_additional_likes_per_day_multiplier: "Павелічэнне ліміту падобных у дзень для TL4 (лідэра) шляхам множання гэтага ліку"
@@ -1133,7 +1158,6 @@ be:
     topic_view_duration_hours: "Граф новага віду тэмы адзін раз у IP"
     user_profile_view_duration_hours: "Граф новы від профіляў карыстальнікаў адзін раз у IP"
     levenshtein_distance_spammer_emails: "Пры супастаўленні спамерскіх лістоў, колькасць знакаў розніцы, што будзе па-ранейшаму дазваляе невыразны матч."
-    min_ban_entries_for_roll_up: "Пры націску на кнопку Roll Up, створыць новую запіс аб забароне падсеткі, калі ёсць па меншай меры (N) запісаў."
     max_age_unmatched_emails: "Выдаліць няпарнага Экранаваныя запісу па электроннай пошце пасля (N) дзён."
     max_age_unmatched_ips: "Выдаліць няпарнага Экранаваныя запісу IP пасля (N) дзён."
     num_flaggers_to_close_topic: "Мінімальная колькасць унікальных сігнальшчыкам, што патрабуецца, каб аўтаматычна прыпыніць тэму ўмяшання"
@@ -1272,7 +1296,7 @@ be:
     results_page: "Вынікі пошуку для '%{term}'"
   posts_filter:
     description:
-      order_latest: "Апошнія паведамленні"
+      order_latest: "Апошнія допісы"
       order_latest_topic: "Апошнія тэмы"
   discourse_connect:
     login_error: "Памылка ўваходу"
@@ -1828,9 +1852,6 @@ be:
     user_posted_pm_staged:
       title: "Карыстальнік Паведамленне PM Пастановачная"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Аккаунт прыпынены"
       subject_template: "[%{email_prefix}] Ваш рахунак быў заблякаваны"
@@ -2274,6 +2295,9 @@ be:
     title: "Калі ласка, увядзіце бяспечны рэжым"
     enter: "Уваход у бяспечным рэжыме"
     must_select: "Вы павінны выбраць, па меншай меры, адзін параметр, каб увайсці ў бяспечным рэжыме."
+  design_wizard:
+    palette_pairs:
+      default: "Прадвызначаная"
   wizard:
     title: "дыскурс Setup"
     step:
@@ -2317,6 +2341,12 @@ be:
       disabled: "Адключана"
     missing_version: "Вам трэба будзе падаць параметр версіі"
     conflict: "Быў абнаўленне канфлікт перашкаджае вам рабіць гэта."
+    reasons:
+      fast_typer_time:
+        one: "%{count} секунду"
+        few: "%{count}секунд"
+        many: "%{count}секунды"
+        other: "%{count}секунды"
     actions:
       agree:
         title: "ды"
@@ -2355,7 +2385,6 @@ be:
           title: "выдаліць карыстальніка"
         block:
           title: "Выдаліць і Заблакаваць карыстальніка"
-          description: "Карыстальнік будзе выдалены, і мы будзем блакаваць іх IP і адрас электроннай пошты."
       confirm_spam:
         title: "Так"
       not_spam:

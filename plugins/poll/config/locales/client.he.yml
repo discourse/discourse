@@ -17,17 +17,14 @@ he:
       voters:
         one: "מצביע"
         two: "מצביעים"
-        many: "מצביעים"
         other: "מצביעים"
       total_votes:
         one: "מספר הצבעות כולל"
         two: "מספר הצבעות כולל"
-        many: "מספר הצבעות כולל"
         other: "מספר הצבעות"
       votes:
         one: "הצבעה"
         two: "שתי הצבעות"
-        many: "%{count} הצבעות"
         other: "%{count} הצבעות"
       average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
       public:
@@ -49,22 +46,21 @@ he:
           at_least_min_options:
             one: "נא לבחור לפחות ב<strong>אפשרות אחת</strong>."
             two: "נא לבחור לפחות ב־<strong>%{count} אפשרויות</strong>."
-            many: "נא לבחור לפחות ב־<strong>%{count} אפשרויות</strong>."
             other: "נא לבחור לפחות ב־<strong>%{count} אפשרויות</strong>."
           up_to_max_options:
             one: "נא לבחור עד <strong>אפשרות אחת</strong>."
             two: "נא לבחור עד <strong>%{count} אפשרויות</strong>."
-            many: "נא לבחור עד <strong>%{count} אפשרויות</strong>."
             other: "נא לבחור עד <strong>%{count} אפשרויות</strong>."
           x_options:
             one: "נא לבחור ב<strong>אפשרות אחת</strong>."
             two: "נא לבחור ב־<strong>%{count} אפשרויות</strong>."
-            many: "נא לבחור ב־<strong>%{count} אפשרויות</strong>."
             other: "נא לבחור ב־<strong>%{count} אפשרויות</strong>."
           between_min_and_max_options: "נא לבחור בין <strong>%{min} ל־%{max} אפשרויות</strong>."
       cast-votes:
         title: "להצביע"
         label: "להצביע עכשיו!"
+      keep-vote:
+        label: "חזרה"
       show-results:
         title: "הצגת תוצאות הסקר"
         label: "תוצאות"
@@ -114,12 +110,10 @@ he:
         winner:
           one: "הניצחון לטובת %{winner} לאחר סיבוב אחד."
           two: "הניצחון לטובת %{winner} אחרי שני סיבובים."
-          many: "הניצחון לטובת %{winner} אחרי %{count} סיבובים."
           other: "הניצחון לטובת %{winner} אחרי %{count} סיבובים."
         tied:
           one: "שוויון לאחר סיבוב אחד בין המתמודדים:"
           two: "שוויון לאחר שני סיבובים בין המתמודדים:"
-          many: "שוויון לאחר %{count} סיבובים בין המתמודדים הבאים:"
           other: "שוויון לאחר %{count} סיבובים בין המתמודדים הבאים:"
       options:
         label: "אפשרויות"
@@ -175,5 +169,3 @@ he:
           add: הוספת אפשרות
         automatic_close:
           label: לסגור את הסקר אוטומטית
-        show_advanced: "הצגת אפשרויות מתקדמות"
-        hide_advanced: "הסתרת אפשרויות מתקדמות"

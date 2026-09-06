@@ -19,6 +19,7 @@ module("Unit | Controller | nested", function (hooks) {
   hooks.afterEach(function () {
     this.controller.unsubscribe();
     this.controller.topic = null;
+    this.controller.context = null;
     this.controller.contextMode = false;
     this.controller.rootNodes = [];
     this.controller.newRootPostIds = [];
@@ -204,6 +205,25 @@ module("Unit | Controller | nested", function (hooks) {
     );
   });
 
+  test("deleting a regular post does not expose the activity log", function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const post = buildPost(this.store, topic, 2001, 2);
+
+    this.controller.topic = topic;
+    this.controller.postRegistry.set(post.post_number, post);
+
+    this.controller._onMessage(
+      { type: "deleted", id: post.id, user_id: this.currentUser.id },
+      null,
+      123
+    );
+
+    assert.false(
+      Boolean(this.controller.topic.has_activity_log),
+      "keeps the activity link hidden"
+    );
+  });
+
   test("context view ignores queued new root replies", async function (assert) {
     const topic = buildTopic(this.store, 724);
     const contextRoot = buildPost(this.store, topic, 1001, 2);
@@ -230,6 +250,58 @@ module("Unit | Controller | nested", function (hooks) {
       this.controller.rootNodes.map((node) => node.post.id),
       [contextRoot.id],
       "keeps the context branch unchanged"
+    );
+  });
+
+  test("root pagination uses the effective sort", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    let requestedSort;
+
+    pretender.get(`/n/${topic.slug}/${topic.id}.json`, (request) => {
+      requestedSort = request.queryParams.sort;
+      return response({ roots: [], page: 1, has_more_roots: false });
+    });
+
+    this.controller.setProperties({
+      topic,
+      page: 0,
+      hasMoreRoots: true,
+      sort: "hot",
+      effectiveSort: "top",
+    });
+
+    await this.controller.loadMoreRoots();
+
+    assert.strictEqual(
+      requestedSort,
+      "top",
+      "continues the ordering selected by the initial response"
+    );
+    assert.strictEqual(
+      this.controller.sort,
+      "hot",
+      "keeps the requested sort selected"
+    );
+  });
+
+  test("deletePost delegates first post deletion to the topic controller", function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const op = buildPost(this.store, topic, 1001, 1);
+    const topicController = this.owner.lookup("controller:topic");
+    const opts = { force_destroy: true };
+    let destroyArgs;
+
+    topic.destroy = (deletedBy, passedOpts) => {
+      destroyArgs = { deletedBy, passedOpts };
+    };
+    topicController.set("model", topic);
+
+    this.controller.deletePost(op, opts);
+
+    assert.deepEqual(
+      destroyArgs,
+      { deletedBy: this.currentUser, passedOpts: opts },
+      "uses the topic delete path for the OP"
     );
   });
 
@@ -300,6 +372,147 @@ module("Unit | Controller | nested", function (hooks) {
     }
   });
 
+  test("live deep replies target the capped-depth container", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const root = buildPost(this.store, topic, 1001, 45);
+    const secondLevel = buildPost(this.store, topic, 1002, 46);
+    const boundaryParent = buildPost(this.store, topic, 1003, 47);
+    const boundaryChild = buildPost(this.store, topic, 1004, 48);
+    const deepPostId = 2001;
+    let childCreatedEvent;
+
+    secondLevel.set("reply_to_post_number", root.post_number);
+    boundaryParent.set("reply_to_post_number", secondLevel.post_number);
+    boundaryChild.set("reply_to_post_number", boundaryParent.post_number);
+
+    this.owner.lookup(
+      "service:site-settings"
+    ).nested_replies_cap_nesting_depth = true;
+    this.owner.lookup("service:site-settings").nested_replies_max_depth = 3;
+    this.controller.topic = topic;
+    this.controller.subscribe();
+    [root, secondLevel, boundaryParent, boundaryChild].forEach((post) =>
+      this.appEvents.trigger("nested-replies:post-registered", post)
+    );
+    this.appEvents.on("nested-replies:child-created", this, (event) => {
+      childCreatedEvent = event;
+    });
+
+    pretender.get(`/posts/${deepPostId}.json`, () =>
+      response({
+        id: deepPostId,
+        post_number: 56,
+        topic_id: topic.id,
+        user_id: this.currentUser.id,
+        username: this.currentUser.username,
+        avatar_template: this.currentUser.avatar_template,
+        cooked: "<p>Deep reply</p>",
+        created_at: "2026-01-01T00:00:00.000Z",
+        actions_summary: [],
+        direct_reply_count: 0,
+        total_descendant_count: 0,
+        reply_to_post_number: boundaryChild.post_number,
+        children: [],
+      })
+    );
+
+    this.controller._onMessage(
+      { type: "created", id: deepPostId, user_id: this.currentUser.id },
+      null,
+      123
+    );
+    await settled();
+
+    assert.strictEqual(
+      childCreatedEvent?.parentPostNumber,
+      boundaryParent.post_number,
+      "dispatches beneath the parent whose children render at the depth cap"
+    );
+  });
+
+  test("acted event refreshes actionByName so the flag modal stays in sync", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const postId = 3001;
+
+    const post = this.store.createRecord("post", {
+      id: postId,
+      post_number: 2,
+      topic,
+      actions_summary: [
+        { id: 3, can_act: true }, // off_topic
+        { id: 4, can_act: true }, // inappropriate
+        { id: 6, can_act: true }, // notify_user
+        { id: 7, can_act: true }, // notify_moderators
+        { id: 8, can_act: true }, // spam
+      ],
+    });
+    post.topic = topic;
+
+    this.controller.topic = topic;
+    this.controller.subscribe();
+    this.controller.postRegistry.set(post.post_number, post);
+
+    pretender.get(`/posts/${postId}.json`, () =>
+      response({
+        id: postId,
+        post_number: 2,
+        topic_id: topic.id,
+        actions_summary: [{ id: 6, acted: true, count: 1 }],
+      })
+    );
+
+    this.controller._onMessage(
+      { type: "acted", id: postId, updated_at: "2026-01-02T00:00:00.000Z" },
+      null,
+      200
+    );
+    await settled();
+
+    assert.strictEqual(
+      typeof post.actions_summary[0].act,
+      "function",
+      "rebuilds actions_summary as ActionSummary instances so postActionFor().act() works"
+    );
+
+    assert.strictEqual(
+      post.actionByName.spam,
+      undefined,
+      "refreshes actionByName so flagsAvailable no longer offers types the server dropped"
+    );
+    assert.strictEqual(
+      post.actionByName.off_topic,
+      undefined,
+      "clears every trimmed flag type, not just notify_user"
+    );
+    assert.true(
+      post.actionByName.notify_user.acted,
+      "reflects the newly-recorded flag on actionByName"
+    );
+  });
+
+  test("scroll position persistence avoids full cache snapshots", function (assert) {
+    const topic = buildTopic(this.store, 725);
+    const anchor = { postNumber: 2, offsetFromTop: 80, scrollY: 1600 };
+    const cacheKey = this.nestedViewCache.buildKey(topic.id, { sort: "top" });
+
+    this.controller.topic = topic;
+    this.controller.sort = "top";
+    sessionStorage.removeItem(`nested-view-scroll:${cacheKey}`);
+
+    this.controller.saveScrollPosition(anchor);
+
+    assert.strictEqual(
+      this.nestedViewCache.get(cacheKey),
+      null,
+      "does not snapshot the full nested model for scroll-only updates"
+    );
+    assert.deepEqual(
+      JSON.parse(sessionStorage.getItem(`nested-view-scroll:${cacheKey}`)),
+      anchor,
+      "keeps the scroll anchor available for restoration"
+    );
+  });
+
   test("focused post cache entries include the mobile focused path", function (assert) {
     const topic = buildTopic(this.store, 724);
     const focusedPost = buildPost(this.store, topic, 2001, 2);
@@ -307,13 +520,18 @@ module("Unit | Controller | nested", function (hooks) {
 
     this.controller.topic = topic;
     this.controller.sort = "top";
+    this.controller.context = 0;
     this.controller.rootNodes = focusedPath;
 
     this.controller.setFocusedPostNumber(2, focusedPath);
     this.controller.saveToCache({ postNumber: 2, offsetFromTop: 80 });
 
     const cached = this.nestedViewCache.get(
-      this.nestedViewCache.buildKey(topic.id, { sort: "top", post_number: 2 })
+      this.nestedViewCache.buildKey(topic.id, {
+        sort: "top",
+        post_number: 2,
+        context: 0,
+      })
     );
 
     assert.strictEqual(
@@ -340,6 +558,25 @@ module("Unit | Controller | nested", function (hooks) {
       cached.modelData.postNumber,
       2,
       "stores the post URL cache entry under the focused post number"
+    );
+    assert.strictEqual(cached.modelData.context, 0, "preserves context depth");
+  });
+
+  test("cache snapshots preserve the effective sort", function (assert) {
+    const topic = buildTopic(this.store, 726);
+    const cacheKey = this.nestedViewCache.buildKey(topic.id, { sort: "hot" });
+
+    this.controller.setProperties({
+      topic,
+      sort: "hot",
+      effectiveSort: "top",
+    });
+    this.controller.saveToCache();
+
+    assert.strictEqual(
+      this.nestedViewCache.get(cacheKey).modelData.effectiveSort,
+      "top",
+      "restored pagination continues using the original effective sort"
     );
   });
 });

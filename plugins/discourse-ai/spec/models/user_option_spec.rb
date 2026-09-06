@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UserOption do
+describe UserOption do
   fab!(:user)
   fab!(:llm_model)
   fab!(:group)

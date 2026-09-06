@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Campaign Banner" do
+RSpec.describe "Campaign Banner", allow_network: ["js.stripe.com"] do
   fab!(:user)
   fab!(:contributor) { Fabricate(:user, username: "contributor1") }
 

@@ -11,8 +11,14 @@ module DiscourseWorkflows
 
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :workflow
+    model :referencing_workflows, optional: true
+    policy :workflow_not_called_by_other_workflows
+    model :orphan_candidate_tag_ids, optional: true
 
-    transaction { step :delete_workflow }
+    transaction do
+      step :delete_workflow
+      step :prune_orphan_tags
+    end
 
     step :log
     step :expire_workflow_caches
@@ -23,8 +29,34 @@ module DiscourseWorkflows
       DiscourseWorkflows::Workflow.find_by(id: params.workflow_id)
     end
 
+    def fetch_referencing_workflows(workflow:)
+      workflow_ids =
+        DiscourseWorkflows::WorkflowDependency
+          .workflows_referencing("workflow_call", workflow.id)
+          .where.not(workflow_id: workflow.id)
+          .pluck(:workflow_id)
+
+      DiscourseWorkflows::Workflow
+        .where(id: workflow_ids)
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id:, name: } }
+    end
+
+    def workflow_not_called_by_other_workflows(referencing_workflows:)
+      referencing_workflows.blank?
+    end
+
+    def fetch_orphan_candidate_tag_ids(workflow:)
+      workflow.workflow_tag_mappings.pluck(:workflow_tag_id)
+    end
+
     def delete_workflow(workflow:)
       workflow.destroy!
+    end
+
+    def prune_orphan_tags(orphan_candidate_tag_ids:)
+      DiscourseWorkflows::WorkflowTag.prune!(orphan_candidate_tag_ids)
     end
 
     def log(workflow:, guardian:)

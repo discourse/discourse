@@ -30,9 +30,17 @@ class Admin::UsersController < Admin::StaffController
                 ]
 
   def index
-    users = ::AdminUserIndexQuery.new(params, guardian: guardian).find_users
+    query = ::AdminUserIndexQuery.new(params, guardian:)
+    users = query.find_users
 
-    opts = { include_can_be_deleted: true, include_silence_reason: true }
+    opts = {
+      include_can_be_deleted: true,
+      include_can_be_suspended: true,
+      include_silence_reason: true,
+      include_suspend_reason: true,
+      silence_reasons: query.penalty_reasons(users.select(&:silenced?), :silence_user),
+      suspend_reasons: query.penalty_reasons(users.select(&:suspended?), :suspend_user),
+    }
     if params[:show_emails] == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
@@ -429,8 +437,6 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def destroy_bulk
-    # capture service_params outside the hijack block to avoid thread safety
-    # issues
     service_arg = service_params
 
     hijack do
@@ -444,6 +450,28 @@ class Admin::UsersController < Admin::StaffController
 
         on_failed_policy(:can_delete_users) do
           render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]),
+                 status: :forbidden
+        end
+
+        on_model_not_found(:users) { render json: failed_json, status: :not_found }
+      end
+    end
+  end
+
+  def suspend_bulk
+    service_arg = service_params
+
+    hijack do
+      User::BulkSuspend.call(service_arg) do
+        on_success { render json: { suspended: true } }
+
+        on_failed_contract do |contract|
+          render json: failed_json.merge(errors: contract.errors.full_messages),
+                 status: :bad_request
+        end
+
+        on_failed_policy(:can_suspend_users) do
+          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_suspend")]),
                  status: :forbidden
         end
 
@@ -468,25 +496,25 @@ class Admin::UsersController < Admin::StaffController
   def sync_sso
     return render body: nil, status: :not_found unless SiteSetting.enable_discourse_connect
 
-    begin
-      sso = DiscourseConnect.parse("sso=#{params[:sso]}&sig=#{params[:sig]}", server_session:)
-    rescue DiscourseConnect::ParseError
-      return(
-        render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")),
-               status: :unprocessable_entity
+    sso =
+      DiscourseConnect.parse(
+        Rack::Utils.build_query(sso: params[:sso].to_s, sig: params[:sig].to_s),
+        server_session:,
       )
-    end
-
-    begin
-      user = sso.lookup_or_create_user
-      DiscourseEvent.trigger(:sync_sso, user)
-      render_serialized(user, AdminDetailedUserSerializer, root: false)
-    rescue ActiveRecord::RecordInvalid => ex
-      render json: failed_json.merge(message: ex.message), status: :forbidden
-    rescue DiscourseConnect::BlankExternalId => ex
-      render json: failed_json.merge(message: I18n.t("discourse_connect.blank_id_error")),
-             status: :unprocessable_entity
-    end
+    user = sso.lookup_or_create_user
+    DiscourseEvent.trigger(:sync_sso, user)
+    render_serialized(user, AdminDetailedUserSerializer, root: false)
+  rescue DiscourseConnect::ParseError
+    render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")),
+           status: :unprocessable_entity
+  rescue DiscourseConnect::BlankExternalId
+    render json: failed_json.merge(message: I18n.t("discourse_connect.blank_id_error")),
+           status: :unprocessable_entity
+  rescue DiscourseConnect::BannedExternalId
+    render json: failed_json.merge(message: I18n.t("discourse_connect.banned_id_error")),
+           status: :unprocessable_entity
+  rescue ActiveRecord::RecordInvalid => e
+    render json: failed_json.merge(message: e.message), status: :forbidden
   end
 
   def delete_other_accounts_with_same_ip

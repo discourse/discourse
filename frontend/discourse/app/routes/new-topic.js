@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 
@@ -33,8 +33,13 @@ export default class extends DiscourseRoute {
       return;
     }
 
-    // When navigating from another ember route
-    if (transition.from) {
+    // When navigating from another Ember route, open the composer in-place —
+    // unless a docked composer is active, in which case #reply-control is hidden
+    // and aborting the transition corrupts the layout.
+    if (
+      transition.from &&
+      !document.body.classList.contains("has-ai-bot-docked-composer")
+    ) {
       transition.abort();
       this.#openComposer(params);
       return;
@@ -42,7 +47,7 @@ export default class extends DiscourseRoute {
 
     // When landing on the route from a full page load
     this.router
-      .replaceWith(`discovery.${defaultHomepage()}`)
+      .replaceWith(homepageNavigationDestination())
       .followRedirects()
       .then(() => {
         if (this.currentUser.can_create_topic) {

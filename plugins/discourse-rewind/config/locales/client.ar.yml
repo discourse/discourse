@@ -276,7 +276,7 @@ ar:
           contributions_helped_others: "كانت مساهمات %{username} مفيدة"
         time_of_day_activity:
           title: روتين النشاط اليومي
-          play_button: استمع إلى نشاطك على شكل صوت
+          play_button: الاستماع إلى نشاطك على شكل صوت
           play_button_others: "استمع إلى نشاط %{username} على شكل صوت"
           stop_button: إيقاف تشغيل الصوت
         writing_analysis:

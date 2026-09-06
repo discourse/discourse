@@ -47,6 +47,8 @@ ja:
       cast-votes:
         title: "投票する"
         label: "今すぐ投票！"
+      keep-vote:
+        label: "戻る"
       show-results:
         title: "投票結果を表示する"
         label: "結果"
@@ -151,5 +153,3 @@ ja:
           add: オプションを追加
         automatic_close:
           label: 投票を自動的にクローズする
-        show_advanced: "高度なオプションを表示"
-        hide_advanced: "高度なオプションを非表示"

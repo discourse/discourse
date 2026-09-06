@@ -119,6 +119,38 @@ describe DiscourseDataExplorer::QueryController do
       end
     end
 
+    describe "#create" do
+      fab!(:group)
+
+      it "grants the given groups access to the new query" do
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "My query",
+                 description: "A description",
+                 sql: "SELECT 1",
+                 group_ids: [group.id],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([group.id])
+      end
+
+      it "creates a query without groups when none are given" do
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "My query",
+                 sql: "SELECT 1",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([])
+      end
+    end
+
     describe "#update" do
       fab!(:user2, :user)
       fab!(:group2) { Fabricate(:group, users: [user2]) }
@@ -594,7 +626,7 @@ describe DiscourseDataExplorer::QueryController do
 
         cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
         expect(cached).to be_present
-        expect(cached["rows"]).to eq([[23]])
+        expect(cached[:rows]).to eq([[23]])
       end
 
       it "returns cached results in show response" do
@@ -883,6 +915,50 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.body).not_to include(private_topic.title)
       end
 
+      it "prevents nested params from injecting SQL" do
+        victim = Fabricate(:user, email: "victim@example.com")
+        query = make_query(<<~SQL, { name: "Parameterized Query" }, [group.id.to_s])
+            -- [params]
+            -- string :first_value
+            -- string :second
+            SELECT :first_value AS value
+          SQL
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json",
+             params: {
+               params: {
+                 first_value: ":second",
+                 second: "UNION SELECT email FROM user_emails --",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["rows"]).to eq([[":second"]])
+        expect(response.body).not_to include(victim.email)
+      end
+
+      it "prevents params from injecting SQL through parameter declaration comments" do
+        victim = Fabricate(:user, email: "victim@example.com")
+        query = make_query(<<~SQL, { name: "Parameterized Query" }, [group.id.to_s])
+            -- [params]
+            -- string :injection
+            SELECT 'safe' AS value
+          SQL
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json",
+             params: {
+               params: {
+                 injection: "ignored\nSELECT email FROM user_emails UNION ALL --",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["rows"]).to eq([["safe"]])
+        expect(response.body).not_to include(victim.email)
+      end
+
       it "can accept parameters as a hash" do
         query_string = <<~SQL
         -- [params]
@@ -984,6 +1060,47 @@ describe DiscourseDataExplorer::QueryController do
     end
   end
 
+  describe "#group_reports_show SQL visibility" do
+    fab!(:user)
+    fab!(:moderator)
+    fab!(:admin)
+    fab!(:group) { Fabricate(:group, users: [user]) }
+
+    it "omits SQL from group report details for group members" do
+      sign_in(user)
+      query = make_query("SELECT 1977 as leaked_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]).not_to have_key("sql")
+      expect(response.body).not_to include(query.sql)
+    end
+
+    it "omits SQL from group report details for moderators" do
+      group.add(moderator)
+      sign_in(moderator)
+      query = make_query("SELECT 1984 as leaked_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]).not_to have_key("sql")
+      expect(response.body).not_to include(query.sql)
+    end
+
+    it "includes SQL in group report details for admins" do
+      sign_in(admin)
+      query = make_query("SELECT 1978 as admin_visible_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]["sql"]).to eq(query.sql)
+      expect(response.body).to include(query.sql)
+    end
+  end
+
   describe "legacy /admin/plugins/explorer/ routes" do
     fab!(:admin)
 
@@ -1079,8 +1196,6 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#generate_with_ai" do
-      before { SiteSetting.data_explorer_ai_queries_enabled = true }
-
       it "returns 404 when AI queries are disabled" do
         SiteSetting.data_explorer_ai_queries_enabled = false
         post "/admin/plugins/discourse-data-explorer/queries/generate.json",
@@ -1103,7 +1218,7 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(400)
       end
 
-      it "enqueues a generation job and returns generation_id" do
+      it "enqueues a generation job by default and returns generation_id" do
         post "/admin/plugins/discourse-data-explorer/queries/generate.json",
              params: {
                ai_description: "show me users",

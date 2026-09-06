@@ -404,8 +404,6 @@ nl:
         confirm_payment: Betaling bevestigen
         success: Terug
       admin:
-        unconfigured: 'Stripe is niet goed geconfigureerd. Zie Discourse Meta voor informatie.'
-        on_meta: Discourse-abonnementen op Meta
         dashboard:
           title: Dashboard
           table:

@@ -11,3 +11,13 @@ bs_BA:
         feed_url: URL
         discourse_category: Kategorija
         discourse_tags: Oznake
+        feeds:
+          edit: Izmijeni
+          delete: Delete
+          save: Sačuvaj
+        test:
+          title: Pregled
+          dismiss: Odbaci
+        status:
+          enabled: Omogućen
+          disabled: Neomogućen

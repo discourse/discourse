@@ -80,7 +80,7 @@ export default class CategorySelector extends MultiSelectComponent {
       (categories.length === 1 ||
         (categories.length > 0 &&
           categories[0].name.localeCompare(filter) === 0)) &&
-      categories[0].subcategory_count > 0
+      categories[0].has_children
     ) {
       categories.splice(
         1,

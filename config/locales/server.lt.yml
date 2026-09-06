@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 lt:
+  llms_txt:
+    sections:
+      optional: "Pasirinktinai"
+    links:
+      search:
+        label: "Paieška"
+      categories:
+        label: "Kategorijos"
+      about:
+        label: "Apie"
+      guidelines:
+        label: "Instrukcijos"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -136,7 +148,6 @@ lt:
       exclusion: yra rezervuotas
       greater_than: turi būti didesnis nei %{count}
       greater_than_or_equal_to: turi būti didesnis arba lygus %{count}
-      has_already_been_used: "jau yra naudojamas"
       inclusion: yra neitrauktas i sąrasą
       invalid: netinkamas
       is_invalid: "atrodo neaišku, ar tai visas sakinys?"
@@ -359,6 +370,13 @@ lt:
       trust_level_2: "pasitikėjimo_lygis_2"
       trust_level_3: "pasitikėjimo_lygis_3"
       trust_level_4: "pasitikėjimo_lygis_4"
+    default_full_names:
+      everyone: "Visi"
+      admins: "Administratoriai"
+      moderators: "Moderatoriai"
+      staff: "Personalas"
+      anonymous_users: "Anoniminiai vartotojai"
+      logged_in_users: "Prisijungę vartotojai"
     request_membership_pm:
       title: "Narystės prašymas @%{group_name}"
     request_accepted_pm:
@@ -652,16 +670,15 @@ lt:
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
   email_login:
     title: "Prisijungimas e-paštu"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "“DiscourseHub” programa"
+    edge: "„Microsoft Edge“"
+    firefox: "„Firefox“"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "“DiscourseHub” programa"
-      edge: "„Microsoft Edge“"
-      firefox: "„Firefox“"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "nežinoma naršyklė"
     device:
       android: "“Android” įrenginys"
       chromebook: "„Chrome“ OS"
@@ -681,6 +698,10 @@ lt:
       macos: "„MacOS“"
       windows: "Microsoft Windows"
       unknown: "nežinoma operacinė sistema"
+  admin_site_traffic_explorer:
+    unknown: "Nežinoma"
+    traffic_types:
+      anonymous: "Anonimas"
   change_email:
     error: "Keičiant el. pašto adresą įvyko klaida. Galbūt adresas jau naudojamas?"
     doesnt_exist: "Šis el. pašto adresas nėra susietas su jūsų paskyra."
@@ -918,12 +939,18 @@ lt:
         share: "Dalintis"
       types:
         staff: "Personalas"
+    posters_by_member_type_members:
+      labels:
+        user: "Narys"
+        count: "Pranešimai"
+        share: "Dalintis"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "Patikimumo lygis"
         count: "Nariai"
         share: "Dalintis"
+        signups: "Registracijos"
       levels:
         "0": "Naujas"
         "1": "Pagrindinis"
@@ -1068,6 +1095,9 @@ lt:
         num_topics: "Temos"
       description: "Vartotojai išvardyti pagal paspaudimų skaičių nuorodose, kurias jie bendrino."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Apsilankymai"
+    top_entry_urls:
       labels:
         count: "Apsilankymai"
     top_referrers_by_browser_pageviews:
@@ -1245,7 +1275,6 @@ lt:
     editing_grace_period_max_diff_high_trust: "Didžiausias leidžiamas simbolių pakeitimų skaičius per redagavimo atidėjimo laikotarpį, jei pakeitimų daugiau, išsaugokite kitą įrašo versiją (2 pasitikėjimo lygis ir aukštesnis)"
     staff_edit_locks_post: "Pranešimai bus užrakinti nuo redagavimo, jei juos redaguos darbuotojai"
     post_edit_time_limit: "tl0 arba tl1 autorius gali redaguoti savo įrašą (n) minučių po paskelbimo. Nustatykite 0 visam laikui."
-    edit_history_visible_to_public: "Leisti visiems matyti ankstesnes redaguoto įrašo versijas. Kai išjungta, peržiūrėti gali tik darbuotojai."
     delete_removed_posts_after: "Autoriaus pašalintos žinutės bus automatiškai ištrintos po (n) valandų. Jei nustatytas 0, įrašai bus nedelsiant ištrinti."
     fixed_category_positions: "Jei pažymėsite, galėsite suskirstyti kategorijas į nustatytą tvarką. Jei nepažymėta, kategorijos pateikiamos pagal veiklos eilę."
     show_pinned_excerpt_mobile: "Rodyti ištrauką apie prisegtas temas mobiliojo įrenginio rodinyje."
@@ -1259,8 +1288,6 @@ lt:
     hide_post_sensitivity: "Tikimybė, kad pažymėtas įrašas bus paslėptas"
     silence_new_user_sensitivity: "Tikimybė, kad naujas vartotojas bus nutildytas remiantis šlamšto vėliavomis"
     cooldown_minutes_after_hiding_posts: "Minučių skaičius, kiek vartotojas turi laukti, kol galės redaguoti įrašą, paslėptą per bendruomenės žymėjimą"
-    max_topics_in_first_day: "Maksimalus temų skaičius, kurį vartotojas gali sukurti per 24 valandų laikotarpį po pirmojo įrašo sukūrimo"
-    max_replies_in_first_day: "Maksimalus atsakymų, kuriuos vartotojas gali sukurti per 24 valandų laikotarpį po pirmojo įrašo sukūrimo"
     tl2_additional_likes_per_day_multiplier: "Padidinkite tl2 (nario) paspaudimų \"patinka\" limitą per dieną, padaugindami iš šio skaičiaus"
     tl3_additional_likes_per_day_multiplier: "Padidinkite patinkančių paspaudimų limitą per dieną tl3 (įprastai) padaugindami iš šio skaičiaus"
     tl4_additional_likes_per_day_multiplier: "Padidinkite tl4 (lyderio) paspaudimų „patinka“ limitą per dieną, padaugindami iš šio skaičiaus"
@@ -1421,7 +1448,6 @@ lt:
       invalid_email: "Neteisingas el. pašto adresas."
       invalid_username: "Nėra vartotojo su tokiu vartotojo vardu."
       valid_username: "Yra vartotojas su tokiu vartotojo vardu."
-      invalid_group: "Nėra grupės tokiu pavadinimu."
       invalid_integer_min_max: "Vertė turi būti nuo %{min} iki %{max}."
       invalid_integer_min: "Vertė turi būti %{min} arba didesnė."
       invalid_integer_max: "Vertė negali būti didesnė nei %{max}."
@@ -2000,9 +2026,6 @@ lt:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Paskyra sustabdyta"
       subject_template: "[%{email_prefix}] Jūsų paskyra buvo sustabdyta"
@@ -2548,6 +2571,9 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  design_wizard:
+    palette_pairs:
+      default: "Numatytasis"
   wizard:
     title: "Discourse sąranka"
     step:
@@ -2566,6 +2592,8 @@ lt:
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:
+    google_meet:
+      meeting_code: "Kodas:"
     github:
       closed: "uždaryta"
       status_date:
@@ -2607,6 +2635,11 @@ lt:
     reasons:
       post_count: "Pirmąsias kelias kiekvieno vartotojo žinutes turi patvirtinti darbuotojai. Žr. %{link}."
       trust_level: "Vartotojai, kurių patikimumo lygis yra žemas, turi turėti atsakymus, kuriuos patvirtina darbuotojai. Žr. %{link}."
+      fast_typer_time:
+        one: "%{count} sekundė"
+        few: "%{count} sekundės"
+        many: "%{count} sekundžių"
+        other: "%{count} sekundžių"
       suspect_user: "Šis naujas vartotojas įvedė profilio informaciją neskaitydamas jokių temų ar įrašų, o tai rodo, kad jie gali būti šlamšto siuntėjai. Žr. %{link}."
       contains_media: "Šis įrašas apima įterptąją laikmeną. Žr. %{link}."
       queued_by_staff: "Darbuotojas mano, kad šį įrašą reikia peržiūrėti. Iki tol jis bus paslėptas."
@@ -2615,6 +2648,8 @@ lt:
     actions:
       agree:
         title: "Taip"
+      agree_and_keep_deleted:
+        title: "Palikti įrašą ištrintą"
       agree_and_silence:
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:

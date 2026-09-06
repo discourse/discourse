@@ -18,7 +18,6 @@ ja:
       dashboard:
         emotion:
           title: "感情"
-          description: "この表には、特定の感情で分類された投稿の数がリストされます。'SamLowe/roberta-base-go_emotions' モデルで分類されます。"
         reports:
           filters:
             group_by:
@@ -200,6 +199,23 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      ai_decoded_transcript:
+        thinking: "思考中"
+        tool: "ツール"
+        type: "タイプ"
+        error: "エラー"
+        response: "応答"
+      discourse_workflows:
+        ai_agent:
+          mode: "モード"
+      ai_tool_approval:
+        loading: "読み込み中..."
+        tool: "操作"
+        user: "ユーザー"
+        approve: "承認"
+        reject: "却下"
+        approved: "承認済み"
+        rejected: "拒否"
       default_llm:
         title: "デフォルトの LLM モデル"
       llm_selector:
@@ -246,9 +262,10 @@ ja:
         search:
           name: "検索"
           description: "クエリに対して AI が生成した回答を提供することで、検索エクスペリエンスを強化します"
-          discoveries: "発見"
+          ask_ai: "AI に尋ねる"
           setting_groups:
             settings: "基本設定"
+            access_control: "アクセス制御"
         embeddings:
           name: "埋め込み"
           description: "テキストのセマンティック表現を生成することで、関連トピックや AI 検索などの機能を強化します"
@@ -287,13 +304,15 @@ ja:
           translate: "翻訳"
           markdown_tables: "Markdown テーブルの生成"
           custom_prompt: "カスタムプロンプト"
-          image_caption: "画像のキャプション設定"
           translator: "翻訳ツール"
           post_illustrator: "イラスト投稿ツール"
           setting_groups:
             access_permissions: "アクセスと権限"
             enabled_features: "有効な機能"
             automation: "自動化"
+        image_caption:
+          setting_groups:
+            settings: "設定"
         translation:
           name: "翻訳"
           description: "コンテンツをサポートされている言語で翻訳します"
@@ -327,15 +346,28 @@ ja:
         title: "翻訳"
         description: "フォーラムのすべてのコンテンツをユーザーの優先言語に自動的に翻訳します"
         supported_locales: "サポートされている言語"
-        supported_locales_description: "このサイト設定では、訪問者も投稿の翻訳に貢献できます。"
+        category_scope: "カテゴリ"
+        model_progress:
+          detail:
+            retry: "再試行"
+            columns:
+              locale: "ロケール"
+              pending: "保留中"
+              total: "総合"
+          targets:
+            post:
+              title: "投稿"
+            topic:
+              title: "トピック"
+            category:
+              title: "カテゴリ"
+            tag:
+              title: "タグ"
         admin_actions:
-          translation_settings: "翻訳の設定"
-          localization_settings: "ローカリゼーションの設定"
           enable_translations: "自動翻訳を有効にする"
         stats:
           title: "翻訳の統計"
           backfill_disabled: "バックフィルは無効です。新しい投稿のみが翻訳されます。"
-          backfill_message: "%{date} 以降のすべての投稿を翻訳するように<a href='%{settingsUrl}'>バックフィル設定</a>が構成されています。これには %{eta} かかることが予測されます。"
           eta_minutes:
             other: "%{count} 分"
           eta_hours:
@@ -448,6 +480,46 @@ ja:
           last_month: "先月"
           custom: "カスタム..."
         credit_allocations: "クレジットの割り当て"
+      logs:
+        short_title: "ログ"
+        retry: "やり直す"
+        apply: "適用"
+        all_models: "すべてのモデル"
+        all_features: "すべての機能"
+        successful: "成功"
+        failed: "失敗しました"
+        unknown: "不明"
+        time: "時刻"
+        when: "日時"
+        outcome: "結果"
+        feature: "機能"
+        model: "モデル"
+        request: "リクエスト"
+        provider: "プロバイダー"
+        user: "ユーザー"
+        context: "コンテキスト"
+        topic: "トピック"
+        post: "投稿"
+        post_short: "投稿 %{id}"
+        duration: "期間"
+        cost: "料金"
+        actions: "アクション"
+        view_details: "詳細"
+        periods:
+          day: "過去 24 時間"
+          week: "過去 7 日間"
+          custom: "カスタム"
+        detail:
+          request: "リクエスト"
+          response: "応答"
+          context: "コンテキスト"
+          copy_request: "リクエストをコピー"
+          copy_response: "返答をコピー"
+          network_error: "ネットワークエラー"
+        retention:
+          summary_stage: "要約"
+          deleted_stage: "削除済み"
+          save: "保存"
       ai_agent:
         ai_tools: "ツール"
         tool_strategies:
@@ -461,8 +533,6 @@ ja:
         overwrite: "上書き"
         description: "説明"
         no_llm_selected: "言語モデルは選択されていません"
-        max_context_posts: "最大コンテキスト投稿数"
-        max_context_posts_help: "AI がユーザーに返答するときにコンテキストとして使用する投稿の最大数。(デフォルトの場合は空白)"
         vision_max_pixel_sizes:
           low: 低品質 - 最も安い (256x256)
           medium: 中品質 (512x512)
@@ -488,11 +558,19 @@ ja:
           clear_all: "すべてクリア"
         forced_tools: "強制されたツール"
         allowed_groups: "許可されたグループ"
+        duplicate: "複製"
+        copy_name: "%{name} のコピー"
         delete: "削除"
         temperature: "Temperature"
         temperature_help: "LLM に使用する Temperature。値を増やすと創造性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～2.0 の値です)"
         top_p: "Top P"
         top_p_help: "LLM に使用する Top P。値を増やすとランダム性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～1.0 の値です)"
+        thinking_effort_options:
+          none: "なし"
+          low: "低"
+          medium: "普通"
+          high: "高"
+          max: "最大"
         priority: "優先度"
         tool_options: "ツールのオプション"
         rag_conversation_chunks: "会話チャンクを検索"
@@ -619,6 +697,9 @@ ja:
         max_output_tokens: "最大出力トークン"
         url: "モデルをホストするサービスの URL"
         api_key: "モデルをホストするサービスの API キー"
+        vision_modes:
+          disabled:
+            title: "無効"
         ai_bot_user: "AI ボットユーザー"
         cost_input: "入力コスト"
         cost_cached_input: "キャッシュ入力コスト"
@@ -646,9 +727,7 @@ ja:
             custom: "カスタム..."
           hours: "時間"
           max_tokens_help: "このグループの各ユーザーが指定された期間内に使用できるトークン（単語と文字）の最大数。トークンは、AI モデルがテキストを処理するときに使用する単位です。およそ 1 トークン = 4 文字または 1 単語の 3/4 です。"
-          max_tokens_required: "最大使用量が設定されていない場合は設定する必要があります"
           max_usages_help: "このグループの各ユーザーが指定された期間内に AI モデルを使用できる最大回数。この使用量制限はグループ全体で共有されるのではなく、ユーザーごとに追跡されます。"
-          max_usages_required: "最大トークンが設定されていない場合は設定する必要があります"
         credit_allocation:
           credits_remaining: "クレジット残り %{remaining} / %{total} (%{percentage}%)"
           soft_limit_warning: "このモデルの今日の AI クレジット残量は %{percentage}% です"
@@ -657,7 +736,7 @@ ja:
         usage:
           ai_bot: "AI ボット"
           ai_helper: "ヘルパー (%{agent})"
-          ai_helper_image_caption: "画像キャプション"
+          ai_image_caption: "画像キャプション"
           ai_summarization: "要約"
           ai_embeddings_semantic_search: "AI 検索"
           ai_spam: "迷惑"
@@ -666,10 +745,6 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-7: "Anthropic の最もインテリジェントなモデル"
-          anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
-          anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
-          google-gemini-3-1-pro: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"
@@ -705,7 +780,6 @@ ja:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -717,7 +791,7 @@ ja:
         provider_fields:
           access_key_id: "AWS Bedrock アクセスキー ID"
           role_arn: "AWS Bedrock のロール ARN"
-          region: "AWS Bedrock リージョン"
+          region: "地域"
           organization: "オプションの OpenAI 組織 ID"
           disable_system_prompt: "プロンプトでシステムメッセージを無効にする"
           enable_native_tool: "ネイティブツールのサポートを有効にする"
@@ -742,10 +816,7 @@ ja:
         title: "AI を使用して変更を提案"
         description: "以下のいずれかのオプションを選択すると、AI が新しいバージョンのテキストを提案します。"
         selection_hint: "ヒント: ヘルパーを開く前にテキストの一部を選択すると、その部分のみを書き換えることもできます。"
-        suggest: "AI で提案"
         suggest_errors:
-          too_many_tags:
-            other: "最大 %{count} 個のタグのみを使用できます"
           no_suggestions: "提案はありません"
         missing_content: "提案を生成するにはコンテンツを入力してください。"
         context_menu:
@@ -779,11 +850,6 @@ ja:
           select: "選択"
           selected: "選択済み"
           try_again: "やり直す"
-        image_caption:
-          button_label: "AI によるキャプション"
-          generating: "キャプションを生成中..."
-          credits: "AI によるキャプション"
-          save_caption: "保存"
         no_content_error: "先に AI アクションを実行するコンテンツを追加してください"
       errors:
         credit_limit_dialog:
@@ -847,14 +913,8 @@ ja:
         provider_fields:
           model_name: "モデル名"
         semantic_search: "トピック (セマンティック)"
-        semantic_search_results:
-          unavailable: "AI の結果は利用できません"
-          zero_results_expanded: "結果は見つかりませんでした。%{count} 件の AI 結果が表示されています"
         semantic_search_tooltips:
           results_explanation: "有効にすると、追加の AI 検索結果が下に追加されます。"
-          invalid_sort: "AI 結果を表示するには、検索結果を関連性で並べ替える必要があります"
-        semantic_search_unavailable_tooltip: "AI 結果を表示するには、検索結果を関連性で並べ替える必要があります"
-        ai_generated_result: "AI で見つかった検索結果"
         quick_search:
           suffix: "AI によるすべてのトピックと投稿"
       ai_artifact:
@@ -863,7 +923,7 @@ ja:
         click_to_run_label: "アーティファクトを実行"
       ai_bot:
         title: "AI ボット"
-        llm: "モデル"
+        llm: "モデル:"
         pm_warning: "AI チャットボットのメッセージは、モデレーターによって定期的に監視されます。"
         cancel_streaming: "返信を停止する"
         try_again: "やり直す"
@@ -880,6 +940,7 @@ ja:
           title: "AI インタラクションを表示"
           copy_request: "リクエストをコピー"
           copy_response: "返答をコピー"
+          duration_label: "期間:"
           request: "リクエスト"
           response: "応答"
           next_log: "次へ"
@@ -969,12 +1030,8 @@ ja:
           bulk_regen_description: "選択されたトピックに対して再生成する AI 要約の種類を選択します。"
           regenerate_gists_option: "短い要約 (要点)"
           regenerate_summaries_option: "トピックの要約"
-          regenerate_gists_success:
-            other: "%{count} 件の短い要約を再生成しました"
           regenerate_gists_error:
             other: "%{count} 件の短い要約の再生成に失敗しました"
-          regenerate_topic_summary_success:
-            other: "%{count} 件のトピック要約を再生成しました"
           regenerate_topic_summary_error:
             other: "%{count} 件のトピック要約の再生成に失敗しました"
         topic_list_layout:
@@ -983,20 +1040,29 @@ ja:
             expanded: "展開"
             expanded_description: "AI 要約を使用"
       discobot_discoveries:
-        main_title: "Discobot の発見"
-        regular_results: "トピック"
-        tell_me_more: "もっと教えて..."
-        continue_convo: "会話を続ける..."
+        main_title: "AI に尋ねる"
         loading_convo: "会話を読み込み中"
-        collapse: "折りたたむ"
-        timed_out: "Discobot は発見を見つけられませんでした。問題が発生しました。"
         user_setting: "発見の AI 検索を有効にする"
-        tooltip:
-          header: "AI 搭載の検索"
-          content: "%{model} による自然言語検索"
-          actions:
-            info: "仕組みは？"
-            disable: "無効化"
+        legacy:
+          main_title: "Discobot の発見"
+          regular_results: "トピック"
+          tell_me_more: "もっと教えて..."
+          continue_convo: "会話を続ける..."
+          loading_convo: "会話を読み込み中"
+          collapse: "折りたたむ"
+          timed_out: "Discobot は発見を見つけられませんでした。問題が発生しました。"
+          tooltip:
+            header: "AI 搭載の検索"
+            content: "%{model} による自然言語検索"
+            actions:
+              info: "仕組みは？"
+              disable: "無効化"
+        search_type: "AI"
+        search_all_topics: "すべてのトピック"
+        search_messages: "メッセージ"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "関連トピック"
       user_preferences:
         empty: "現在、関連する設定はありません"
     review:

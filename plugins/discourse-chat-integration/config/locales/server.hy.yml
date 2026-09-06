@@ -53,6 +53,8 @@ hy:
       added: "Ավելացվել է %{added}"
     provider:
       slack:
+        errors:
+          action_prohibited: "Բոտ այդ ալիքում գրառում կատարելու թույլտվություն չունի"
         status:
           header: |
             *Կանոններ այս ալիքի համար*

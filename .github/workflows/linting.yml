@@ -25,7 +25,7 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -44,6 +44,8 @@ jobs:
           bundle config --local deployment true
           bundle config --local without development
           bundle config --local lockfile_checksums true
+          # Drop the prebuilt bundler so `bundle install` re-fetches it, caching the .gem its checksum line needs
+          rm -rf vendor/bundle/ruby/*/gems/bundler-* vendor/bundle/ruby/*/specifications/bundler-*
           bundle install --jobs 4
           bundle clean
 
@@ -57,41 +59,48 @@ jobs:
           bundle lock --add-checksums
           bundle lock --normalize-platforms
           if [[ $(git status -s Gemfile.lock) ]]; then
-            echo "Gemfile.lock is not up to date. Please run 'bundle lock --add-checksums' and 'bundle lock --normalize-platforms'." && false
+            echo "Gemfile.lock is not up to date. To resolve, run:"
+            echo "  bundle lock --add-checksums && bundle lock --normalize-platforms"
+            echo
+            echo "Or manually apply the diff printed below:"
+            echo "---------------------------------------------"
+            git -c color.ui=always diff Gemfile.lock
+            exit 1
           fi
 
-      - name: Rubocop
-        if: ${{ !cancelled() }}
-        run: bundle exec rubocop
+      - parallel:
+          - name: Rubocop
+            if: ${{ !cancelled() }}
+            run: bundle exec rubocop
 
-      - name: syntax_tree
-        if: ${{ !cancelled() }}
-        run: |
-          set -E
-          bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake') $(git ls-files '*.thor')
+          - name: syntax_tree
+            if: ${{ !cancelled() }}
+            run: |
+              set -E
+              bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake') $(git ls-files '*.thor')
 
-      - name: ESLint
-        if: ${{ !cancelled() }}
-        run: pnpm lint:js
+          - name: ESLint
+            if: ${{ !cancelled() }}
+            run: pnpm lint:js
 
-      - name: Types
-        if: ${{ !cancelled() }}
-        run: pnpm lint:types
+          - name: Types
+            if: ${{ !cancelled() }}
+            run: pnpm lint:types
 
-      - name: Prettier
-        if: ${{ !cancelled() }}
-        run: |
-          pnpm prettier -v
-          pnpm lint:prettier
+          - name: Prettier
+            if: ${{ !cancelled() }}
+            run: |
+              pnpm prettier -v
+              pnpm lint:prettier
 
-      - name: Stylelint
-        if: ${{ !cancelled() }}
-        run: pnpm lint:css
+          - name: Stylelint
+            if: ${{ !cancelled() }}
+            run: pnpm lint:css
 
-      - name: English locale lint (core)
-        if: ${{ !cancelled() }}
-        run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
+          - name: English locale lint (core)
+            if: ${{ !cancelled() }}
+            run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
 
-      - name: English locale lint (core plugins)
-        if: ${{ !cancelled() }}
-        run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
+          - name: English locale lint (core plugins)
+            if: ${{ !cancelled() }}
+            run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"

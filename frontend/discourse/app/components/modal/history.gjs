@@ -117,6 +117,14 @@ export default class History extends Component {
     return this.postRevision?.body_changes?.[this.viewMode];
   }
 
+  get diffHidden() {
+    return (
+      !this.postRevision?.body_changes &&
+      !this.postRevision?.diff_error &&
+      (this.postRevision?.previous_hidden || this.postRevision?.current_hidden)
+    );
+  }
+
   @action
   async calculateBodyDiff(_, [bodyDiff]) {
     let html = bodyDiff;
@@ -196,7 +204,7 @@ export default class History extends Component {
 
       const postStream = this.args.model.post?.topic?.postStream;
       if (postStream) {
-        postStream.triggerChangedPost(postId, this.args.model);
+        void postStream.refreshPost(postId).catch(() => {});
       }
     } finally {
       this.loading = false;
@@ -261,6 +269,10 @@ export default class History extends Component {
   }
 
   get hiddenClasses() {
+    if (this.diffHidden) {
+      return null;
+    }
+
     if (this.viewMode === "inline") {
       return this.postRevision?.previous_hidden ||
         this.postRevision?.current_hidden
@@ -408,6 +420,7 @@ export default class History extends Component {
             <Revisions
               @model={{this.postRevision}}
               @hiddenClasses={{this.hiddenClasses}}
+              @diffHidden={{this.diffHidden}}
               @mobileView={{this.site.mobileView}}
               @userChanges={{this.user_changes}}
               @previousCategory={{this.previousCategory}}

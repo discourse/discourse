@@ -52,28 +52,10 @@
 
   &__member {
     padding: 0 0.25rem;
-    border-radius: var(--border-radius);
-    background: var(--primary-very-low);
-    gap: 0.25rem;
+    gap: var(--space-1);
 
     @media (prefers-reduced-motion: no-preference) {
       animation: popIn 0.1s ease-out;
-    }
-
-    &:hover {
-      .discourse-no-touch & {
-        background: var(--primary-very-low);
-        color: var(--primary);
-        border-color: var(--tertiary);
-
-        .d-icon-xmark {
-          color: var(--primary);
-        }
-      }
-    }
-
-    .d-icon-xmark {
-      margin-left: 0.25rem;
     }
   }
 
@@ -85,7 +67,6 @@
   &__add-members-header {
     display: flex;
     flex-grow: 1;
-    gap: 0.5rem;
 
     &-container {
       display: flex;
@@ -138,13 +119,16 @@
     display: flex;
     align-items: center;
     flex-grow: 1;
-    padding: 0.5rem;
-    background: var(--primary-low);
+    padding: 0 0.5rem;
     flex-wrap: wrap;
     gap: 0.5rem;
-    border-radius: var(--border-radius);
-    min-height: 50px;
+    border: var(--d-input-border);
     box-sizing: border-box;
+    border-radius: var(--d-input-border-radius);
+
+    &:focus-within {
+      @include default-focus;
+    }
 
     .d-icon-magnifying-glass {
       color: var(--primary-high);
@@ -290,8 +274,9 @@
     border: 1px solid var(--primary-400);
     width: 100%;
     box-sizing: border-box;
-    height: 42px;
+    height: var(--d-control-height);
     padding: 0 0.5rem;
+    border-radius: var(--d-input-border-radius);
 
     &:focus,
     &:focus-within {

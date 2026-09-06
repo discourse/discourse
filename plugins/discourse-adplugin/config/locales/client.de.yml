@@ -74,3 +74,6 @@ de:
           topic_list_between:
             title: "Zwischen Themen"
             description: "Anzeigen, die zwischen den Themen gezeigt werden, nach jeweils N Themen."
+          nested_roots_between:
+            title: "Zwischen verschachtelten Stammantworten"
+            description: "Anzeigen sollen in der Ansicht mit verschachtelten Antworten zwischen den Stammantworten eingeblendet werden, nach jeweils N Stammantworten."

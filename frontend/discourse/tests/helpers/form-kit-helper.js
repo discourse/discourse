@@ -80,6 +80,7 @@ class Field {
     switch (this.controlType) {
       case "input":
       case "input-text":
+      case "input-email":
       case "input-number":
       case "password":
       case "checkbox":
@@ -106,6 +107,7 @@ class Field {
       // String-based controls fall through to return raw value
       case "input":
       case "input-text":
+      case "input-email":
       case "password":
       case "code":
       case "textarea":

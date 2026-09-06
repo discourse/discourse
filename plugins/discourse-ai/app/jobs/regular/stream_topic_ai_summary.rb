@@ -8,10 +8,10 @@ module Jobs
       return unless topic = Topic.find_by(id: args[:topic_id])
       return unless user = User.find_by(id: args[:user_id])
 
-      strategy = DiscourseAi::Summarization.topic_summary(topic)
-      return if strategy.nil?
+      summarizer = DiscourseAi::Summarization.topic_summary(topic, locale: args[:locale])
+      return if summarizer.nil?
 
-      summarization_service = DiscourseAi::TopicSummarization.new(strategy, user)
+      summarization_service = DiscourseAi::TopicSummarization.new(summarizer, user)
       cached_summary = summarization_service.cached_summary
 
       guardian = Guardian.new(user)
@@ -20,13 +20,17 @@ module Jobs
       return unless guardian.can_see?(topic)
 
       skip_age_check = !!args[:skip_age_check]
+      force_regenerate = !!args[:force_regenerate]
 
       streamed_summary = +""
       start = Time.now
 
       begin
         summary =
-          summarization_service.summarize(skip_age_check: skip_age_check) do |partial_summary|
+          summarization_service.summarize(
+            skip_age_check: skip_age_check,
+            force_regenerate: force_regenerate,
+          ) do |partial_summary|
             streamed_summary << partial_summary
 
             # Throttle updates.

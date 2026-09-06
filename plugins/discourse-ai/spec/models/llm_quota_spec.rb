@@ -49,6 +49,23 @@ RSpec.describe LlmQuota do
       )
     end
 
+    it "raises error when usage exceeds cost limit" do
+      quota =
+        Fabricate(
+          :llm_quota,
+          group: group,
+          llm_model: llm_model,
+          max_tokens: nil,
+          max_usages: nil,
+          max_cost: 0.01,
+        )
+      _usage = Fabricate(:llm_quota_usage, user: user, llm_quota: quota, cost_used: 0.02)
+
+      expect { described_class.check_quotas!(llm_model, user) }.to raise_error(
+        LlmQuotaUsage::QuotaExceededError,
+      )
+    end
+
     it "checks all quotas from user's groups" do
       group2 = Fabricate(:group)
       group2.add(user)
@@ -56,11 +73,11 @@ RSpec.describe LlmQuota do
       quota1 = Fabricate(:llm_quota, group: group, llm_model: llm_model, max_tokens: 1000)
       quota2 = Fabricate(:llm_quota, group: group2, llm_model: llm_model, max_tokens: 500)
 
-      described_class.log_usage(llm_model, user, 900, 0) # Should create usages for both quotas
+      described_class.log_usage(llm_model, user, request_tokens: 900, response_tokens: 0) # Should create usages for both quotas
 
       expect { described_class.check_quotas!(llm_model, user) }.not_to raise_error
 
-      described_class.log_usage(llm_model, user, 101, 0) # This should push quota2 over its limit
+      described_class.log_usage(llm_model, user, request_tokens: 101, response_tokens: 0) # This should push quota2 over its limit
 
       expect { described_class.check_quotas!(llm_model, user) }.to raise_error(
         LlmQuotaUsage::QuotaExceededError,
@@ -74,24 +91,41 @@ RSpec.describe LlmQuota do
 
   describe ".log_usage" do
     it "does nothing when user is nil" do
-      expect { described_class.log_usage(llm_model, nil, 100, 50) }.not_to change(
-        LlmQuotaUsage,
-        :count,
-      )
+      expect {
+        described_class.log_usage(llm_model, nil, request_tokens: 100, response_tokens: 50)
+      }.not_to change(LlmQuotaUsage, :count)
     end
 
     it "creates usage records when none exist" do
       _quota = Fabricate(:llm_quota, group: group, llm_model: llm_model)
 
-      expect { described_class.log_usage(llm_model, user, 100, 50) }.to change(
-        LlmQuotaUsage,
-        :count,
-      ).by(1)
+      expect {
+        described_class.log_usage(llm_model, user, request_tokens: 100, response_tokens: 50)
+      }.to change(LlmQuotaUsage, :count).by(1)
 
       usage = LlmQuotaUsage.last
       expect(usage.input_tokens_used).to eq(100)
       expect(usage.output_tokens_used).to eq(50)
       expect(usage.usages).to eq(1)
+    end
+
+    it "records cache tokens and estimated cost" do
+      llm_model.update!(cache_write_cost: 5.0)
+      _quota = Fabricate(:llm_quota, group: group, llm_model: llm_model)
+
+      described_class.log_usage(
+        llm_model,
+        user,
+        request_tokens: 100,
+        response_tokens: 50,
+        cache_read_tokens: 200,
+        cache_write_tokens: 300,
+      )
+
+      usage = LlmQuotaUsage.last
+      expect(usage.cache_read_tokens_used).to eq(200)
+      expect(usage.cache_write_tokens_used).to eq(300)
+      expect(usage.cost_used).to eq(BigDecimal("0.005"))
     end
 
     it "updates existing usage records" do
@@ -106,7 +140,7 @@ RSpec.describe LlmQuota do
           usages: 1,
         )
 
-      described_class.log_usage(llm_model, user, 50, 25)
+      described_class.log_usage(llm_model, user, request_tokens: 50, response_tokens: 25)
 
       usage.reload
       expect(usage.input_tokens_used).to eq(150)
@@ -121,10 +155,9 @@ RSpec.describe LlmQuota do
       _quota1 = Fabricate(:llm_quota, group: group, llm_model: llm_model)
       _quota2 = Fabricate(:llm_quota, group: group2, llm_model: llm_model)
 
-      expect { described_class.log_usage(llm_model, user, 100, 50) }.to change(
-        LlmQuotaUsage,
-        :count,
-      ).by(2)
+      expect {
+        described_class.log_usage(llm_model, user, request_tokens: 100, response_tokens: 50)
+      }.to change(LlmQuotaUsage, :count).by(2)
 
       expect(LlmQuotaUsage.where(user: user).count).to eq(2)
     end

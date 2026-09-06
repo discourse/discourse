@@ -4,7 +4,8 @@ class DiscourseVersionCheck
   include ActiveModel::Model
 
   attr_accessor :latest_version,
-                :critical_updates,
+                :latest_pretty_version,
+                :latest_sha,
                 :installed_version,
                 :installed_sha,
                 :installed_describe,

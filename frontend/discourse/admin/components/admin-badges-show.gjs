@@ -334,7 +334,7 @@ export default class AdminBadgesShow extends Component {
                   @type="icon"
                   as |field|
                 >
-                  <field.Control />
+                  <field.Control @onlyAvailable={{false}} />
                 </form.Field>
               </Content>
               <Content @name="upload-image">

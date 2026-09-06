@@ -18,6 +18,8 @@ th:
       cast-votes:
         title: "โหวต"
         label: "โหวตเดี๋ยวนี้"
+      keep-vote:
+        label: "กลับ"
       show-results:
         title: "แสดงผลโหวต"
       hide-results:

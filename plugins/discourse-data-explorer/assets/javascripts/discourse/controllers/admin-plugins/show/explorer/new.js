@@ -4,9 +4,18 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
 import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+import {
+  dataExplorerStore,
+  rememberedMode,
+  rememberMode,
+} from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+
+const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class AdminPluginsExplorerNew extends Controller {
   @service store;
@@ -22,20 +31,32 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedSql = "";
   @tracked generatedName = "";
   @tracked generatedDescription = "";
-  @tracked mode = "ai";
+  @tracked mode = rememberedMode() ?? "ai";
   @tracked schema = null;
+  @tracked groups = null;
+  @tracked aiGroupIds = [];
+  @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
   @tracked manualSql = "SELECT 1";
   @tracked previewLoading = false;
   @tracked previewResults = null;
   @tracked showPreview = false;
   @tracked view = "sql";
 
-  manualFormData = { name: "", description: "" };
+  manualFormData = { name: "", description: "", groupIds: [] };
   _teardownAiGeneration = null;
 
   get previewDisabled() {
     return (
       this.aiGenerating || this.previewLoading || !this.generatedSql.trim()
+    );
+  }
+
+  get groupOptions() {
+    return (this.groups ?? []).filter(
+      (group) =>
+        group.id !== AUTO_GROUPS.everyone.id &&
+        group.id !== AUTO_GROUPS.anonymous_users.id &&
+        group.id !== AUTO_GROUPS.logged_in_users.id
     );
   }
 
@@ -77,7 +98,7 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   get aiQueriesEnabled() {
-    return this.siteSettings.data_explorer_ai_queries_enabled;
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
   @action
@@ -91,6 +112,7 @@ export default class AdminPluginsExplorerNew extends Controller {
   @action
   setMode(value) {
     this.mode = value;
+    rememberMode(value);
   }
 
   @action
@@ -99,7 +121,18 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async create({ name, description }) {
+  updateHideSchema(value) {
+    this.hideSchema = value;
+    dataExplorerStore.set({ key: HIDE_SCHEMA_KEY, value: value.toString() });
+  }
+
+  @action
+  updateAiGroupIds(value) {
+    this.aiGroupIds = value;
+  }
+
+  @action
+  async create({ name, description, groupIds }) {
     try {
       this.loading = true;
       const result = await this.store
@@ -107,6 +140,7 @@ export default class AdminPluginsExplorerNew extends Controller {
           name: name.trim(),
           description: description?.trim(),
           sql: this.manualSql,
+          group_ids: groupIds,
         })
         .save();
       this.toasts.success({
@@ -226,17 +260,15 @@ export default class AdminPluginsExplorerNew extends Controller {
           name: this.generatedName,
           description: this.generatedDescription,
           sql: this.generatedSql,
+          group_ids: this.aiGroupIds,
         })
         .save();
       this.toasts.success({
         data: { message: i18n("explorer.query_created") },
       });
-      // Run the query straight away — there's nothing new to do on the edit
-      // page first, so save and show the results in one step.
       this.router.transitionTo(
         "adminPlugins.show.explorer.edit",
-        result.target.id,
-        { queryParams: { run: true } }
+        result.target.id
       );
     } catch (error) {
       popupAjaxError(error);
@@ -278,11 +310,14 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedSql = "";
     this.generatedName = "";
     this.generatedDescription = "";
-    this.mode = "ai";
+    this.mode = rememberedMode() ?? "ai";
     this.schema = null;
+    this.groups = null;
+    this.aiGroupIds = [];
+    this.hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
     this.manualSql = "SELECT 1";
     this.loading = false;
-    this.manualFormData = { name: "", description: "" };
+    this.manualFormData = { name: "", description: "", groupIds: [] };
     this.previewLoading = false;
     this.previewResults = null;
     this.showPreview = false;

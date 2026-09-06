@@ -16,8 +16,6 @@ cs:
     first_reaction:
       name: První reakce
       description: Reagoval/a na příspěvek
-      long_description: |
-        Tento odznak je udělen při první reakci na příspěvek. Reakce na příspěvky je skvělý způsob, jak dát svým kolegům vědět, že to, co zveřejnili, bylo zajímavé, užitečné, skvělé nebo zábavné. Podělte se o svou reakci!
   reports:
     reactions:
       title: "Reakce"

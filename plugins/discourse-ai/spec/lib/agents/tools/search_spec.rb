@@ -88,6 +88,43 @@ RSpec.describe DiscourseAi::Agents::Tools::Search do
       expect(results[:rows].length).to eq(1)
     end
 
+    it "applies configured attribution search safeguards" do
+      post = Fabricate(:post, topic: topic_with_tags, raw: "pistachio in the park")
+      search =
+        described_class.new(
+          { search_query: "pistachio park", user: Fabricate(:user).username },
+          agent_options: {
+            "ignore_user_filter" => true,
+            "absolute_urls" => true,
+          },
+          bot_user: bot_user,
+          llm: llm,
+        )
+
+      results = search.invoke(&progress_blk)
+
+      expect(results[:rows].map { |row| row[1] }).to include("#{Discourse.base_url}#{post.url}")
+      expect(results[:args]).not_to have_key(:user)
+    end
+
+    it "returns correct absolute URLs in subfolder installations" do
+      Discourse.stubs(:base_path).returns("/subfolder")
+      post = Fabricate(:post, topic: topic_with_tags, raw: "subfolder attribution evidence")
+      search =
+        described_class.new(
+          { search_query: "subfolder attribution evidence" },
+          agent_options: {
+            "absolute_urls" => true,
+          },
+          bot_user: bot_user,
+          llm: llm,
+        )
+
+      results = search.invoke(&progress_blk)
+
+      expect(results[:rows].first[1]).to eq("#{Discourse.base_url_no_prefix}/subfolder#{post.url}")
+    end
+
     it "strips max_posts when it is 0" do
       post1 = Fabricate(:post, topic: topic_with_tags)
       search =

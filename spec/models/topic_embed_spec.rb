@@ -111,9 +111,9 @@ RSpec.describe TopicEmbed do
 
         # It caches the embed content
         expect(post.topic.topic_embed.embed_content_cache).to eq(contents)
+        expect(post.topic.topic_embed.content_truncated).to eq(false)
 
         # It converts relative URLs to absolute when expanded
-        stub_request(:get, url).to_return(status: 200, body: contents)
         expect(TopicEmbed.expanded_for(post)).to have_tag(
           "img",
           with: {
@@ -151,6 +151,12 @@ RSpec.describe TopicEmbed do
           topic_embed.reload.embed_content_cache
         }
         expect(topic_embed.embed_content_cache).to eq("new contents")
+      end
+
+      it "updates an explicitly selected cook method on reimport" do
+        TopicEmbed.import(user, url, title, contents, cook_method: Post.cook_methods[:regular])
+
+        expect(post.reload.cook_method).to eq(Post.cook_methods[:regular])
       end
 
       it "Should leave uppercase Feed Entry URL untouched in content" do
@@ -477,6 +483,7 @@ RSpec.describe TopicEmbed do
         post = TopicEmbed.import(user, url, title, long_content)
 
         expect(post.raw).not_to include(long_content)
+        expect(post.topic.topic_embed.content_truncated).to eq(true)
       end
 
       it "keeps everything in the imported post when truncation is disabled" do
@@ -484,6 +491,7 @@ RSpec.describe TopicEmbed do
         post = TopicEmbed.import(user, url, title, long_content)
 
         expect(post.raw).to include(long_content)
+        expect(post.topic.topic_embed.content_truncated).to eq(false)
       end
 
       it "looks at first div when there is no paragraph" do
@@ -493,6 +501,63 @@ RSpec.describe TopicEmbed do
         post = TopicEmbed.import(user, url, title, no_para)
 
         expect(post.raw).to include("testing it")
+      end
+
+      it "keeps the complete markup when truncation would only remove a wrapper" do
+        wrapped_content = "<div><p>#{"Complete paragraph. " * 30}</p></div>"
+        SiteSetting.embed_truncate = true
+
+        post = TopicEmbed.import(user, url, title, wrapped_content)
+
+        expect(post.raw).to include(wrapped_content)
+        expect(post.topic.topic_embed.content_truncated).to eq(false)
+      end
+
+      it "keeps image-only content" do
+        SiteSetting.embed_truncate = true
+        post = TopicEmbed.import(user, url, title, "<img src='/comic.png' alt='comic'>")
+
+        expect(post.raw).to have_tag(
+          "img",
+          with: {
+            src: "http://eviltrout.com/comic.png",
+            alt: "comic",
+          },
+        )
+        expect(post.topic.topic_embed.content_truncated).to eq(false)
+      end
+
+      it "truncates independently of the cook method" do
+        SiteSetting.embed_truncate = true
+        post =
+          TopicEmbed.import(
+            user,
+            url,
+            title,
+            "**Meetup overview**\n\nTalk details",
+            cook_method: Post.cook_methods[:regular],
+            truncate: true,
+          )
+
+        expect(post.raw).not_to include("Talk details")
+        expect(post.cooked).to have_tag("strong", text: "Meetup overview")
+        expect(post.topic.topic_embed.content_truncated).to eq(true)
+      end
+
+      it "refreshes expanded content when the excerpt is unchanged" do
+        SiteSetting.embed_truncate = true
+        first_paragraph = "<p>#{"Same introduction. " * 10}</p>"
+        original_contents = "#{first_paragraph}<p>Original ending.</p>"
+        updated_contents = "#{first_paragraph}<p>Updated ending.</p>"
+
+        post = TopicEmbed.import(user, url, title, original_contents)
+        expect(TopicEmbed.expanded_for(post)).to include("Original ending.")
+
+        TopicEmbed.import(user, url, title, updated_contents)
+
+        expect(post.reload.raw).not_to include("Updated ending.")
+        expect(post.topic.topic_embed.reload.embed_content_cache).to eq(updated_contents)
+        expect(TopicEmbed.expanded_for(post)).to include("Updated ending.")
       end
     end
   end
@@ -832,6 +897,15 @@ RSpec.describe TopicEmbed do
         "\n<hr>\n<small>This is a companion discussion topic for the original entry at <a href='http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E'>http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E</a></small>\n"
       expect(html).to eq(expected_html)
     end
+
+    it "escapes the URL in the raw HTML footer" do
+      url = "http://eviltrout.com/'onmouseover='window.topicEmbedXssExecuted=true"
+      link = Nokogiri::HTML5.fragment(TopicEmbed.imported_from_html(url)).at_css("a")
+
+      expect(link["href"]).to eq(url)
+      expect(link["onmouseover"]).to be_nil
+      expect(link.text).to eq(url)
+    end
   end
 
   describe ".expanded_for" do
@@ -844,19 +918,67 @@ RSpec.describe TopicEmbed do
     fab!(:tag)
 
     it "returns embed content" do
-      stub_request(:get, url).to_return(status: 200, body: contents)
+      stub_request(:get, url).to_return(status: 200, body: "<p>remote content</p>")
       post = TopicEmbed.import(user, url, title, contents)
-      expect(TopicEmbed.expanded_for(post)).to include(contents)
+      expanded = TopicEmbed.expanded_for(post)
+
+      expect(expanded).to include(contents)
+      expect(expanded).not_to include("remote content")
+      expect(WebMock).not_to have_requested(:get, url)
     end
 
-    it "updates the embed content cache" do
-      stub_request(:get, url)
-        .to_return(status: 200, body: contents)
-        .then
-        .to_return(status: 200, body: "contents changed")
+    it "falls back to the remote page for a legacy embed without cached content" do
+      remote_contents =
+        "<html><body><article><p>Content from the remote page.</p></article></body></html>"
+      stub_request(:get, url).to_return(status: 200, body: remote_contents)
       post = TopicEmbed.import(user, url, title, contents)
-      TopicEmbed.expanded_for(post)
-      expect(post.topic.topic_embed.reload.embed_content_cache).to include("contents changed")
+      post.topic.topic_embed.update!(embed_content_cache: nil, content_truncated: nil)
+
+      expect(TopicEmbed.expanded_for(post)).to include("Content from the remote page.")
+      expect(post.topic.topic_embed.reload.embed_content_cache).to include(
+        "Content from the remote page.",
+      )
+    end
+
+    it "does not fetch the remote page for an imported item with missing cached content" do
+      stub_request(:get, url).to_return(status: 200, body: "<p>remote content</p>")
+      post = TopicEmbed.import(user, url, title, contents)
+      post.topic.topic_embed.update!(embed_content_cache: nil, content_truncated: true)
+
+      expect { TopicEmbed.expanded_for(post) }.to raise_error(Discourse::NotFound)
+      expect(WebMock).not_to have_requested(:get, url)
+    end
+
+    it "cooks cached Markdown using the post cook method" do
+      post =
+        TopicEmbed.import(
+          user,
+          url,
+          title,
+          "**Meetup overview**\n\nTalk details",
+          cook_method: Post.cook_methods[:regular],
+          truncate: true,
+        )
+
+      expanded = TopicEmbed.expanded_for(post)
+
+      expect(expanded).to have_tag("strong", text: "Meetup overview")
+      expect(expanded).to include("Talk details")
+    end
+
+    it "sanitizes cached raw HTML" do
+      post =
+        TopicEmbed.import(
+          user,
+          url,
+          title,
+          "<p>Safe content</p><script>window.evil = true</script>",
+        )
+
+      expanded = TopicEmbed.expanded_for(post)
+
+      expect(expanded).to include("Safe content")
+      expect(expanded).not_to have_tag("script")
     end
   end
 end

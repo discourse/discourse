@@ -75,6 +75,8 @@ it:
       removed: "Rimosso %{removed}"
     provider:
       slack:
+        errors:
+          action_prohibited: "Il bot non ha il permesso di pubblicare su quel canale"
         status:
           header: |
             *Regole per questo canale*

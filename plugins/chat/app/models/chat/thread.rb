@@ -109,7 +109,7 @@ module Chat
     end
 
     def excerpt
-      original_message.excerpt
+      original_message.excerpt_for_display
     end
 
     def update_last_message_id!

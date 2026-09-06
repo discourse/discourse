@@ -63,6 +63,15 @@
     }
   }
 
+  // keep the enlarged hit area from overlapping the adjacent metadata,
+  // a stray tap there shouldn't close the channel
+  @media (hover: none) {
+    .chat-channel-leave-btn::after {
+      inset-inline-start: 0;
+      width: 100%;
+    }
+  }
+
   &.starred-channels {
     padding-top: var(--space-2);
   }
@@ -75,6 +84,7 @@
   justify-content: space-between;
   font-family: var(--heading-font-family);
   color: var(--primary);
+  border-bottom: 1px solid var(--content-border-color);
 
   .channel-title {
     line-height: var(--line-height-medium);

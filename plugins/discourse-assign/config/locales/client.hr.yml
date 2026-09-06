@@ -46,4 +46,15 @@ hr:
       post: "Objava"
     discourse_workflows:
       assign_topic:
+        resource: "Resurs"
+        resources:
+          topic: "Tema"
+          post: "Objava"
         topic_id: "ID teme"
+        post_id: "ID objave"
+      check_assignment:
+        target_types:
+          topic: "Tema"
+          post: "Objava"
+        topic_id: "ID teme"
+        post_id: "ID objave"

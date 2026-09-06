@@ -7,6 +7,8 @@ module Migrations
     module CLI
       module SchemaCommands
         class DiffCommand < BaseCommand
+          include DiffOutput
+
           self.description = "Show differences between configuration and database"
 
           options do
@@ -20,79 +22,7 @@ module Migrations
 
             database = selected_database
             result = schema.diff(database:)
-            display_diff(result, verbose: @options[:verbose])
-          end
-
-          private
-
-          def display_diff(result, verbose: false)
-            sections = []
-
-            if result.unconfigured_tables.any?
-              lines = ["Unconfigured tables (add to tables/ or ignored.rb):".bold]
-              result.unconfigured_tables.each do |t|
-                plugin_info = t.plugin ? " [#{t.plugin}]" : ""
-                lines << "  + #{t.name}#{plugin_info}".green
-              end
-              sections << lines.join("\n")
-            end
-
-            if result.missing_tables.any?
-              lines = ["Missing tables (configured but not in database):".bold]
-              result.missing_tables.each { |t| lines << "  - #{t.name}".red }
-              sections << lines.join("\n")
-            end
-
-            if result.stale_ignored_tables.any?
-              lines = ["Stale ignored tables (no longer in database):".bold]
-              result.stale_ignored_tables.each { |t| lines << "  ~ #{t.name}".yellow }
-              sections << lines.join("\n")
-            end
-
-            table_diffs = filter_table_diffs(result.table_diffs, verbose:)
-
-            if table_diffs.any?
-              lines = ["Column differences:".bold]
-              table_diffs.each do |table_diff|
-                lines << "  #{table_diff.table_name}:".bold
-
-                table_diff.unconfigured_columns.each do |c|
-                  plugin_info = c.plugin ? " [#{c.plugin}]" : ""
-                  lines << "    + #{c.name}#{plugin_info}".green
-                end
-
-                table_diff.missing_columns.each { |c| lines << "    - #{c.name}".red }
-                table_diff.stale_ignored_columns.each do |c|
-                  lines << "    ~ #{c.name} (ignored but gone)".yellow
-                end
-
-                if verbose
-                  table_diff.auto_ignored_columns.each do |c|
-                    lines << "      #{c.name} [#{c.plugin}] (auto-ignored from plugin)".cyan
-                  end
-                end
-              end
-              sections << lines.join("\n")
-            end
-
-            if sections.any?
-              puts sections.join("\n\n")
-              puts
-              puts "Suggested actions:".bold
-              puts "  disco schema add <table>"
-              puts "  disco schema ignore <table> [--reason \"...\"]"
-            else
-              puts "✓ No differences found".green
-            end
-          end
-
-          def filter_table_diffs(table_diffs, verbose:)
-            return table_diffs if verbose
-
-            table_diffs.select do |td|
-              td.unconfigured_columns.any? || td.missing_columns.any? ||
-                td.stale_ignored_columns.any?
-            end
+            display_diff(result, database:, verbose: @options[:verbose])
           end
         end
       end

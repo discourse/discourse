@@ -1,0 +1,47 @@
+.post-event-bulk-invite {
+  .bulk-event-help {
+    margin: 0 0 1em 0;
+  }
+
+  .bulk-invite-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.25em 0;
+
+    .form-kit__field {
+      margin-bottom: 0;
+    }
+
+    .bulk-invite-identifier-field {
+      flex: 1 1 auto;
+
+      .bulk-invite-identifier {
+        width: 100%;
+        margin: 0;
+      }
+    }
+
+    .remove-bulk-invite {
+      margin-left: auto;
+    }
+  }
+
+  .bulk-invites {
+    margin-bottom: 2em;
+
+    .add-bulk-invite {
+      margin-left: auto;
+    }
+  }
+
+  .csv-bulk-invites {
+    .bulk-invite-actions {
+      display: flex;
+
+      > :last-child {
+        margin-left: 0.5em;
+      }
+    }
+  }
+}

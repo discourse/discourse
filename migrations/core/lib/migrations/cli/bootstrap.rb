@@ -18,8 +18,20 @@ module Migrations
 
         top.call
       rescue Samovar::Error => e
+        # The top-level command has no `--help` option, so a help request
+        # surfaces as an unparsable token.
+        help_request = e.is_a?(Samovar::InvalidInputError) && %w[--help -h].include?(e.token)
+
+        if !help_request
+          # e.g. `Could not parse token "validat"` — without it, an
+          # unrecognized command or argument prints bare usage with no
+          # explanation of what was wrong.
+          puts e.message.red
+          puts
+        end
+
         e.command.print_usage
-        exit(1)
+        exit(help_request ? 0 : 1)
       end
 
       # Samovar expects `--opt value`; the previous Thor-based CLI also accepted

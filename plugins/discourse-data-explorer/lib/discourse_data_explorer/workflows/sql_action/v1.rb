@@ -191,23 +191,13 @@ module DiscourseDataExplorer
           req_params = {}
           exec_ctx
             .get_node_parameter("params.values", 0, default: [])
-            .each do |param|
-              req_params[param["name"].to_sym] = param["value"] if param["name"].present?
-            end
-
-          if req_params.present?
-            sql =
-              MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection).encode(
-                sql,
-                req_params,
-              )
-          end
+            .each { |param| req_params[param["name"]] = param["value"] if param["name"].present? }
 
           query = DiscourseDataExplorer::Query.new(name: "workflow", sql: sql)
           result =
-            DiscourseDataExplorer::DataExplorer.run_query(
+            DiscourseDataExplorer::DataExplorer.run_query_with_values(
               query,
-              {},
+              req_params,
               { limit: SiteSetting.data_explorer_query_result_limit },
             )
 

@@ -82,6 +82,10 @@ export default class EmbedModeComposer extends Component {
     if (!EmbedMode.enabled || this.currentUser) {
       return false;
     }
+    // The empty-state footer already renders its own login CTA
+    if (!this.args.topic?.replyCount) {
+      return false;
+    }
     return this.embedAuthFlow.isActive;
   }
 

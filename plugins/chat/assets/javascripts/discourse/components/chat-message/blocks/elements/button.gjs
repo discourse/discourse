@@ -22,6 +22,7 @@ export default class Button extends Component {
   <template>
     <DButton
       @isLoading={{this.interacting}}
+      @icon={{@definition.icon}}
       @translatedLabel={{dReplaceEmoji @definition.text.text}}
       @action={{this.createInteraction}}
       id={{@definition.action_id}}

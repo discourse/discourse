@@ -1,4 +1,5 @@
 import { module, test } from "qunit";
+import { i18n } from "discourse-i18n";
 import {
   buildWorkflowExportPayload,
   parseWorkflowImport,
@@ -134,6 +135,36 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
     assert.strictEqual(result.nodes[0].notes, "Imported note");
     assert.false(result.nodes[0].notesInFlow);
     assert.true(result.nodes[0].alwaysOutputData);
+  });
+
+  test("parseWorkflowImport falls back to the type label when a node has no usable name", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          { type: "action:http_request", typeVersion: "1.0", parameters: {} },
+          {
+            type: "action:http_request",
+            typeVersion: "1.0",
+            name: "   ",
+            parameters: {},
+          },
+          {
+            type: "action:http_request",
+            typeVersion: "1.0",
+            name: { not: "a string" },
+            parameters: {},
+          },
+        ],
+        connections: {},
+      })
+    );
+
+    const expected = i18n("discourse_workflows.nodes.action:http_request");
+    assert.deepEqual(
+      result.nodes.map((node) => node.name),
+      [expected, expected, expected],
+      "a missing, blank, or non-string name never reaches the server"
+    );
   });
 
   test("parseWorkflowImport preserves imported static data", function (assert) {

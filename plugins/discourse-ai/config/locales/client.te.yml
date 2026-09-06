@@ -36,6 +36,18 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "రకం"
+        error: "లోపం"
+        response: "ప్రతిస్పందన"
+      ai_tool_approval:
+        loading: "లోడవుతోంది..."
+        tool: "చర్య"
+        user: "సభ్యుడు"
+        approve: "ఆమోదించండి"
+        reject: "తిరస్కరించు"
+        approved: "ఆమోదించబడింది"
+        rejected: "తిరస్కరించబడినవి"
       llm_selector:
         none: "ఏదీ లేదు"
       features:
@@ -52,10 +64,28 @@ te:
           reset: "రీసెట్ చేయండి"
         search:
           name: "శోధించండి"
+        image_caption:
+          setting_groups:
+            settings: "అమరికలు"
         spam:
           name: "స్పామ్"
       translations:
         title: "అనువాదాలు"
+        category_scope: "వర్గాలు"
+        model_progress:
+          detail:
+            columns:
+              pending: "పెండింగు"
+              total: "మొత్తం"
+          targets:
+            post:
+              title: "పోస్ట్‌లు"
+            topic:
+              title: "విషయాలు"
+            category:
+              title: "వర్గాలు"
+            tag:
+              title: "ట్యాగులు"
         stats:
           eta_minutes:
             one: "ఒక నిమిషం"
@@ -80,6 +110,31 @@ te:
         username: "సభ్యనామం"
         total_requests: "మొత్తం అభ్యర్థనలు"
         total: "మొత్తం"
+      logs:
+        short_title: "లాగులు"
+        apply: "దరఖాస్తు చేసుకోండి"
+        successful: "విజయవంతమైంది"
+        failed: "విఫలం"
+        time: "కాలం"
+        when: "ఎప్పుడు"
+        request: "అభ్యర్థన"
+        user: "సభ్యుడు"
+        context: "సందర్భం"
+        topic: "విషయం"
+        post: "పోస్ట్"
+        post_short: "పోస్ట్ %{id}"
+        duration: "వ్యవధి"
+        actions: "చర్యలు"
+        view_details: "వివరాలు"
+        periods:
+          custom: "అనురూప"
+        detail:
+          request: "అభ్యర్థన"
+          response: "ప్రతిస్పందన"
+          context: "సందర్భం"
+        retention:
+          summary_stage: "సారాంశం"
+          save: "సేవ్ చేయండి"
       ai_agent:
         name: "పేరు"
         edit: "సవరించండి"
@@ -88,7 +143,13 @@ te:
         user: సభ్యుడు
         save: "సేవ్ చేయండి"
         enabled: "ప్రారంభించబడిందా?"
+        duplicate: "నకిలీ చేయండి"
         delete: "తొలగించండి"
+        thinking_effort_options:
+          none: "ఏదీ లేదు"
+          low: "తక్కువ"
+          medium: "మధ్యస్థం"
+          high: "అధిక"
         response_format:
           open_modal: "సవరించండి"
           modal:
@@ -131,6 +192,9 @@ te:
           required: "అవసరం"
       llms:
         display_name: "పేరు"
+        vision_modes:
+          disabled:
+            title: "నిలిపివేయబడింది"
         save: "సేవ్ చేయండి"
         edit: "సవరించండి"
         delete: తొలగించండి
@@ -149,7 +213,6 @@ te:
         next:
           title: "తదుపరి"
         providers:
-          google: "గూగుల్"
           fake: "అనుకూల"
       ai_helper:
         context_menu:
@@ -165,8 +228,6 @@ te:
           select: "ఎంచుకోండి"
           selected: "ఎంపిక చేయబడినవి"
           try_again: "మళ్ళీ ప్రయత్నించండి"
-        image_caption:
-          save_caption: "సేవ్ చేయండి"
       embeddings:
         save: "సేవ్ చేయండి"
         delete: "తొలగించండి"
@@ -177,6 +238,7 @@ te:
           fake: "అనుకూల"
       ai_bot:
         debug_ai_modal:
+          duration_label: "వ్యవధి:"
           request: "అభ్యర్థన"
           response: "ప్రతిస్పందన"
           next_log: "తదుపరి"
@@ -198,8 +260,11 @@ te:
           table:
             total_count: "మొత్తం"
       discobot_discoveries:
-        regular_results: "విషయాలు"
-        collapse: "కుదించండి"
-        tooltip:
-          actions:
-            disable: "నిలిపివేయండి"
+        legacy:
+          regular_results: "విషయాలు"
+          collapse: "కుదించండి"
+          tooltip:
+            actions:
+              disable: "నిలిపివేయండి"
+        search_all_topics: "అన్ని విషయాలు"
+        search_messages: "సందేశాలు"

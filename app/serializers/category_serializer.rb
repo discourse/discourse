@@ -20,6 +20,8 @@ class CategorySerializer < SiteCategorySerializer
   attributes :locale,
              :read_restricted,
              :available_groups,
+             :allowed_tags,
+             :allowed_tag_groups,
              :auto_close_hours,
              :auto_close_based_on_last_post,
              :group_permissions,
@@ -180,6 +182,24 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def available_category_types
-    Categories::TypeRegistry.list(only_visible: true)
+    Categories::TypeRegistry.list(only_visible: true, guardian: scope)
+  end
+
+  def include_allowed_tags?
+    can_edit_tags?
+  end
+
+  def allowed_tags
+    object.tags.map { |tag| { id: tag.id, name: tag.name, slug: tag.slug } }
+  end
+
+  def include_allowed_tag_groups?
+    SiteSetting.tagging_enabled
+  end
+
+  def allowed_tag_groups
+    return object.tag_groups.map(&:name) if can_edit_tags?
+
+    TagGroup.visible(scope || Guardian.new).where(id: object.tag_groups.map(&:id)).pluck(:name)
   end
 end

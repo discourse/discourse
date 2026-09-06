@@ -20,14 +20,13 @@ Fabricator(:user, class_name: :user) do
 
   after_create do |user, transients|
     if transients[:refresh_auto_groups] || transients[:trust_level]
-      Group.user_trust_level_change!(user.id, user.trust_level)
+      Group.refresh_automatic_groups_for_user!(user)
     end
     SearchIndexer.disable if transients[:search_index]
 
     # TODO (martin) It would be good to remove this at some point once specs are updated
     # to use the rich editor by default. Otherwise, if this is not done, there are tons
-    # of specs failing when setting SiteSetting.rich_editor default to true and SiteSetting.default_composition_mode
-    # default to rich
+    # of specs failing when setting SiteSetting.default_composition_mode default to rich
     user.user_option.update!(composition_mode: transients[:composition_mode])
 
     if transients[:seen_before]
@@ -76,11 +75,7 @@ Fabricator(:moderator, from: :user) do
   username { sequence(:username) { |i| "moderator#{i}" } }
   email { sequence(:email) { |i| "moderator#{i}@discourse.org" } }
   moderator true
-
-  after_create do |user|
-    user.group_users << Fabricate(:group_user, user: user, group: Group[:moderators])
-    user.group_users << Fabricate(:group_user, user: user, group: Group[:staff])
-  end
+  refresh_auto_groups true
 end
 
 Fabricator(:admin, from: :user) do
@@ -89,11 +84,7 @@ Fabricator(:admin, from: :user) do
   email { sequence(:email) { |i| "anne#{i}@discourse.org" } }
   admin true
   trust_level TrustLevel[4]
-
-  after_create do |user|
-    user.group_users << Fabricate(:group_user, user: user, group: Group[:admins])
-    user.group_users << Fabricate(:group_user, user: user, group: Group[:staff])
-  end
+  refresh_auto_groups true
 end
 
 Fabricator(:newuser, from: :user) do

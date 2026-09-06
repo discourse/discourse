@@ -44,7 +44,7 @@ require "pry-rails" if Rails.env.development?
 
 require "discourse_fonts"
 
-require_relative "../lib/ember_cli"
+require_relative "../lib/ember_assets"
 
 if defined?(Bundler)
   bundler_groups = [:default]
@@ -55,6 +55,17 @@ if defined?(Bundler)
 
   Bundler.require(*bundler_groups)
 end
+
+if Rails.env.production?
+  require "json_schemer"
+  require "omniauth-facebook"
+  require "omniauth-github"
+  require "omniauth-google-oauth2"
+  require "omniauth-twitter"
+  require "rqrcode"
+end
+
+require "discourse_dev_assets" if Rails.env.development?
 
 require_relative "../lib/require_dependency_backward_compatibility"
 
@@ -112,6 +123,10 @@ module Discourse
     config.autoload_paths << "#{root}/lib/guardian"
     config.autoload_paths << "#{root}/lib/i18n"
     config.autoload_paths << "#{root}/lib/validators"
+
+    # `lib` directories under a service namespace hold supporting classes
+    # (value objects, caches, etc.) without adding a `Lib` constant.
+    Rails.autoloaders.main.collapse("#{root}/app/services/*/lib")
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.

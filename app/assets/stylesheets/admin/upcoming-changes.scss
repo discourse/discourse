@@ -26,18 +26,16 @@
     margin-top: var(--space-2);
   }
 
+  &__depends-on-notice {
+    font-size: var(--font-down-1);
+    color: var(--danger);
+    margin-top: var(--space-2);
+  }
+
   &__opt-in-groups-label {
     display: block;
     font-size: var(--font-down-1);
     color: var(--primary-medium);
-  }
-
-  &__badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    align-items: center;
-    min-height: var(--space-8);
   }
 
   &__image-preview.lightbox[href] {
@@ -54,35 +52,6 @@
   }
 
   &__badge {
-    display: flex;
-    font-size: var(--font-down-2);
-    border-radius: var(--d-button-border-radius);
-    color: var(--primary-very-high);
-    background: var(--tertiary-very-low);
-    letter-spacing: 0.25px;
-
-    span {
-      display: flex;
-      align-items: center;
-      gap: 0 var(--space-1);
-    }
-
-    &-content {
-      padding: var(--space-half) var(--space-2);
-    }
-
-    svg {
-      font-size: var(--font-down-2);
-      color: var(--primary-high);
-    }
-
-    &-info {
-      border-left: 1px solid var(--secondary);
-      border-radius: 0 var(--d-button-border-radius)
-        var(--d-button-border-radius) 0;
-      padding: var(--space-half) var(--space-1);
-    }
-
     &:focus-visible,
     &:hover {
       .upcoming-change__badge-info {

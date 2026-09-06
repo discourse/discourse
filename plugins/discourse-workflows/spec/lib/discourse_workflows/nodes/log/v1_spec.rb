@@ -6,7 +6,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
   end
 
   describe "#execute" do
-    it "returns no output items" do
+    it "passes input items through" do
       items = [{ "json" => { "name" => "Alice" } }, { "json" => { "count" => 42 } }]
       result =
         execute_node_output(
@@ -15,7 +15,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
           },
           input_items: items,
         )
-      expect(result.first).to eq([])
+      expect(result.first).to eq(items)
     end
 
     it "records structured key/value logs" do
@@ -52,7 +52,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
             "value" => "Bob",
           )
         end
-      expect(result.first).to eq([])
+      expect(result.first).to eq(items)
     end
 
     it "handles empty entries gracefully" do
@@ -61,7 +61,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
         execute_node_output(configuration: { "entries" => entries }, input_items: items) do |ctx|
           expect(ctx.log.entries).to be_empty
         end
-      expect(result.first).to eq([])
+      expect(result.first).to eq(items)
     end
 
     it "handles missing entries key" do
@@ -70,7 +70,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
         execute_node_output(configuration: {}, input_items: items) do |ctx|
           expect(ctx.log.entries).to be_empty
         end
-      expect(result.first).to eq([])
+      expect(result.first).to eq(items)
     end
 
     it "defaults to runOnceForEachItem, resolving expressions per item" do

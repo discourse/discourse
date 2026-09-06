@@ -185,3 +185,8 @@ el:
               label: URL
             channel:
               label: Κανάλι
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Κανάλι"
+        configure: "Διαμόρφωση"
+        message: "Μήνυμα"

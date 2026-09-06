@@ -250,8 +250,10 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def add_report(name, exclude_from_dashboard: false, &block)
-    reloadable_patch { |plugin| Report.add_report(name, exclude_from_dashboard:, &block) }
+  def add_report(name, exclude_from_dashboard: false, admin_only_related_items: false, &block)
+    reloadable_patch do |plugin|
+      Report.add_report(name, exclude_from_dashboard:, admin_only_related_items:, &block)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -425,6 +427,15 @@ class Plugin::Instance
 
   def register_problem_check(klass)
     DiscoursePluginRegistry.register_problem_check(klass, self)
+  end
+
+  def register_upcoming_change_conditional_display(setting_name, &block)
+    raise ArgumentError, "block is required" if block.blank?
+
+    DiscoursePluginRegistry.register_upcoming_change_conditional_display_callback(
+      { setting_name: setting_name.to_sym, callback: block },
+      self,
+    )
   end
 
   def custom_avatar_column(column)
@@ -753,6 +764,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_svg_icon(icon)
   end
 
+  # Registers a block returning icon names to include in the SVG sprite. Use this
+  # instead of `register_svg_icon` when the names are only known at runtime, such
+  # as when they are chosen by admins and stored in the database. The block is
+  # called while the sprite is built, so it must not run at boot, and its result
+  # is scoped to the current site.
+  #
+  # Call `SvgSprite.expire_cache` when the underlying data changes.
+  def register_svg_icon_source(&block)
+    DiscoursePluginRegistry.register_svg_icon_source(block, self)
+  end
+
   def extend_content_security_policy(extension)
     csp_extensions << extension
   end
@@ -794,10 +816,12 @@ class Plugin::Instance
         Any hbs files under `assets/javascripts` will be automatically compiled and included."
       ERROR
 
-    raise <<~ERROR if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6")
+    if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6", ".ts", ".gts")
+      raise <<~ERROR
         [#{name}] Javascript files under `assets/javascripts` are automatically included in JS bundles.
         Manual register_asset calls should be removed. (attempted to add #{file})
       ERROR
+    end
 
     if opts && opts == :vendored_core_pretty_text
       full_path = DiscoursePluginRegistry.core_asset_for_name(file)
@@ -877,7 +901,7 @@ class Plugin::Instance
     if Dir.exist?(public_data)
       target = Rails.root.to_s + "/public/plugins/"
 
-      Discourse::Utils.execute_command("mkdir", "-p", target)
+      FileUtils.mkdir_p(target)
       target << name.gsub(/\s/, "_")
 
       Discourse::Utils.atomic_ln_s(public_data, target)
@@ -998,8 +1022,25 @@ class Plugin::Instance
   # Receives an array with two elements:
   # 1. A symbol that represents the name of the value to filter.
   # 2. A Proc that takes the existing ActiveRecord::Relation and the value received from the front-end.
-  def add_custom_reviewable_filter(filter)
+  #
+  # type_filter accepts an id and filter value for the Type control. reason_filters accepts an
+  # array or callable returning ids, names, and filter values for the Reason control.
+  def add_custom_reviewable_filter(filter, type_filter: nil, reason_filters: nil)
     reloadable_patch { Reviewable.add_custom_filter(filter) }
+
+    if type_filter
+      DiscoursePluginRegistry.register_reviewable_filter_type_option(
+        type_filter.merge(filter: filter.first),
+        self,
+      )
+    end
+
+    if reason_filters
+      DiscoursePluginRegistry.register_reviewable_filter_reason_registration(
+        { filter: filter.first, options: reason_filters },
+        self,
+      )
+    end
   end
 
   # Register a new API key scope.
@@ -1067,13 +1108,63 @@ class Plugin::Instance
   # Example:
   #   register_calendar_subscription_feed(
   #     name: "all_events",
-  #     scope: "discourse-calendar:events_calendar",
-  #     description_key: "discourse_calendar.preferences.all_events_description",
+  #     scope: "my-plugin:events_calendar",
+  #     description_key: "my_plugin.preferences.all_events_description",
   #     url: ->(base_url, user, key) { "#{base_url}/events.ics?user_api_key=#{key}" }
   #   )
   def register_calendar_subscription_feed(name:, scope:, description_key:, url:)
     DiscoursePluginRegistry.register_calendar_subscription_feed(
       { name: name, scope: scope, description_key: description_key, url: url },
+      self,
+    )
+  end
+
+  # Registers a plugin page as an option for the default_homepage site setting.
+  # The route is also mounted at `/` when the option is selected, while `path`
+  # remains the page's canonical URL for direct navigation.
+  #
+  # @param id [String, Symbol] stable identifier stored in the site setting
+  # @param name [String] client-side translation key used in the admin setting
+  # @param path [String] application path for the homepage
+  # @param route [String] Rails controller action, in `controller#action` form
+  # @param anonymous [Boolean] whether logged-out visitors may use this homepage
+  # @param server_side [Boolean] whether navigation requires a full page request
+  def register_homepage(id, name:, path:, route:, anonymous: false, server_side: false)
+    id = id.to_s
+
+    if !id.match?(/\A[a-z0-9][a-z0-9_-]*\z/)
+      raise ArgumentError,
+            "homepage id must contain only lowercase letters, numbers, underscores, and hyphens"
+    end
+    raise ArgumentError, "homepage name must be present" if name.blank?
+    raise ArgumentError, "homepage path must start with /" if !path.to_s.start_with?("/")
+    if !route.to_s.match?(/\A[^#]+#[^#]+\z/)
+      raise ArgumentError, "homepage route must use controller#action format"
+    end
+    if ![true, false].include?(anonymous)
+      raise ArgumentError, "homepage anonymous must be true or false"
+    end
+    if ![true, false].include?(server_side)
+      raise ArgumentError, "homepage server_side must be true or false"
+    end
+
+    registered_ids =
+      DiscoursePluginRegistry._raw_homepage_options.map { |entry| entry[:value][:id] }
+    core_homepage_ids =
+      Discourse.filters.map(&:to_s) + %w[categories custom blank finish_installation]
+    if core_homepage_ids.include?(id) || registered_ids.include?(id)
+      raise ArgumentError, "homepage id '#{id}' is already registered"
+    end
+
+    DiscoursePluginRegistry.register_homepage_option(
+      {
+        id: id,
+        name: name,
+        path: path.to_s,
+        route: route.to_s,
+        anonymous: anonymous,
+        server_side: server_side,
+      },
       self,
     )
   end
@@ -1227,7 +1318,11 @@ class Plugin::Instance
   # }
   def register_stat(name, expose_via_api: false, stat_type: nil, &block)
     # We do not want to register and display the same group multiple times.
-    return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
+    if DiscoursePluginRegistry.stats.any? { |stat|
+         stat.name == name && stat.stat_type == stat_type
+       }
+      return
+    end
 
     stat = Stat.new(name, expose_via_api: expose_via_api, stat_type: stat_type, &block)
     DiscoursePluginRegistry.register_stat(stat, self)
@@ -1246,6 +1341,38 @@ class Plugin::Instance
   def register_admin_dashboard_highlight_kpi(type:, report:, enabled: nil)
     DiscoursePluginRegistry.register_admin_dashboard_highlight_kpi(
       { type: type, report: report, enabled: enabled },
+      self,
+    )
+  end
+
+  # Registers a whole section in the redesigned admin dashboard (gated by the
+  # dashboard_improvements upcoming change). The matching client-side section
+  # component must be registered via the JS `api.registerAdminDashboardSection`.
+  #
+  # @param id [String] unique section id. Matched against the persisted
+  #   configuration and the client-side component registry.
+  # @param enabled [Proc] optional gate evaluated when assembling the dashboard.
+  #   Return false to omit the section (and hide it from the configure menu)
+  #   without disabling the plugin entirely — e.g. only when relevant data
+  #   exists.
+  # @param settings [Hash<String, Class>] optional map of setting key to a
+  #   class responding to `.permit` (a strong-params shape) and `.validate`
+  #   (raises `Discourse::InvalidParameters` or returns the sanitized value to
+  #   persist). Lets the section's own filter selections be saved via
+  #   `PUT /admin/dashboard/sections/:id/settings/:key`, the same mechanism
+  #   core sections use. A setting inherits the section's own `enabled` gate
+  #   rather than declaring its own.
+  # @yield [start_date:, end_date:, current_user:] block returning the section's
+  #   data hash, run inside the dashboard's parallel section loader.
+  def register_admin_dashboard_section(id:, enabled: nil, settings: nil, &loader)
+    settings&.each_value do |setting|
+      if !setting.respond_to?(:permit) || !setting.respond_to?(:validate)
+        raise ArgumentError, "#{setting} must respond to .permit and .validate"
+      end
+    end
+
+    DiscoursePluginRegistry.register_admin_dashboard_section(
+      { id: id.to_s, enabled: enabled, settings: settings&.transform_keys(&:to_s), loader: loader },
       self,
     )
   end
@@ -1459,13 +1586,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_search_handler(handler, self)
   end
 
-  # This is an experimental API and may be changed or removed in the future without deprecation.
-  #
   # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
   # first rate limiter in the stack that is active is used. By default the rate limiters stack contains the following
   # rate limiters:
   #
   #   `RequestTracker::RateLimiters::User` - Rate limits authenticated requests based on the user's id
+  #   `RequestTracker::RateLimiters::HealthCheck` - Rate limits health check requests per IP and backend hostname
   #   `RequestTracker::RateLimiters::IP` - Rate limits requests based on the IP address
   #
   # @param identifier [Symbol] A unique identifier for the rate limiter.

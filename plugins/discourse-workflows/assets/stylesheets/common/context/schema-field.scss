@@ -1,7 +1,5 @@
 .workflows-schema-field-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @include unstyled-list;
 
   &.is-nested {
     padding-left: var(--space-9);

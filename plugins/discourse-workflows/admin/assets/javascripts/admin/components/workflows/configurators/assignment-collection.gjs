@@ -5,10 +5,49 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import {
   findNodeType,
+  isExpression,
   propertyDescription,
   propertyLabel,
 } from "../../../lib/workflows/property-engine";
 import Field from "./field";
+
+const ASSIGNMENT_TYPE_LABEL_KEY_PREFIX =
+  "discourse_workflows.property_engine.assignment_types";
+
+const DEFAULT_ASSIGNMENT_TYPES = [
+  "string",
+  "number",
+  "boolean",
+  "array",
+  "object",
+];
+
+// Expressions are type-agnostic; plain values only survive a type change when
+// they still make sense for the new type.
+function valueForType(value, type) {
+  if (isExpression(value)) {
+    return value;
+  }
+
+  if (type === "boolean") {
+    return value === true;
+  }
+
+  if (typeof value === "boolean") {
+    return "";
+  }
+
+  return value;
+}
+
+function normalizeAssignmentType(type) {
+  const option = typeof type === "object" ? { ...type } : { value: type };
+
+  return {
+    label_key: `${ASSIGNMENT_TYPE_LABEL_KEY_PREFIX}.${option.value}`,
+    ...option,
+  };
+}
 
 export default class AssignmentCollection extends Component {
   get assignmentsPath() {
@@ -34,15 +73,9 @@ export default class AssignmentCollection extends Component {
     return this.args.schema.type_options || {};
   }
 
-  get assignment_types() {
-    return (
-      this.type_options.assignment_types || [
-        "string",
-        "number",
-        "boolean",
-        "array",
-        "object",
-      ]
+  get assignmentTypes() {
+    return (this.type_options.assignment_types || DEFAULT_ASSIGNMENT_TYPES).map(
+      normalizeAssignmentType
     );
   }
 
@@ -59,7 +92,7 @@ export default class AssignmentCollection extends Component {
       type: "options",
       required: true,
       default: "string",
-      options: this.assignment_types,
+      options: this.assignmentTypes,
       no_data_expression: true,
     };
   }
@@ -90,12 +123,24 @@ export default class AssignmentCollection extends Component {
   }
 
   @action
+  handleTypeChange(index, type, { set, name }) {
+    set(name, type);
+
+    if (!this.args.formApi) {
+      return;
+    }
+
+    const valuePath = `${this.assignmentsPath}.${index}.value`;
+    set(valuePath, valueForType(this.args.formApi.get(valuePath), type));
+  }
+
+  @action
   valueSchema(item) {
     switch (item?.type) {
       case "number":
         return { type: "number" };
       case "boolean":
-        return { type: "boolean" };
+        return { type: "boolean", ui: { expression: true } };
       case "array":
       case "object":
         return {
@@ -121,13 +166,19 @@ export default class AssignmentCollection extends Component {
         as |collection index item|
       >
         <div class="workflows-property-engine__collection-row">
-          <div class="workflows-property-engine__collection-delete">
-            <DButton
-              @action={{fn this.removeAssignment collection.remove index}}
-              @icon="trash-can"
-              class="btn-transparent btn-small btn-danger"
-            />
-          </div>
+          <DButton
+            @action={{fn this.removeAssignment collection.remove index}}
+            @icon="xmark"
+            class="workflows-property-engine__collection-delete"
+            @translatedAriaLabel={{i18n
+              "discourse_workflows.property_engine.remove_assignment"
+              name=item.name
+            }}
+            @translatedTitle={{i18n
+              "discourse_workflows.property_engine.remove_assignment"
+              name=item.name
+            }}
+          />
 
           <collection.Object
             class="workflows-property-engine__collection-fields"
@@ -161,6 +212,7 @@ export default class AssignmentCollection extends Component {
               @label={{i18n
                 "discourse_workflows.property_engine.assignment_type"
               }}
+              @onSet={{fn this.handleTypeChange index}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
@@ -174,6 +226,7 @@ export default class AssignmentCollection extends Component {
             <Field
               @form={{object}}
               @formApi={{@formApi}}
+              @configuration={{item}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName="value"

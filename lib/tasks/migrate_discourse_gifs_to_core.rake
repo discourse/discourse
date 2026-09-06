@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
-require "discourse_gifs"
-
 module DiscourseGifsMigration
+  COMPONENT_NAME = "discourse-gifs"
+
+  REPO_URLS = %w[
+    https://github.com/discourse/discourse-gifs
+    https://github.com/xfalcox/discourse-gifs
+  ].freeze
+
+  REMOTE_URLS = REPO_URLS.flat_map { |url| [url, "#{url}.git"] }.freeze
+
   # Klipy expects locale in xx_YY form (ISO 639-1 language + ISO 3166-1 alpha-2
   # country). Giphy stores a bare language code, so each of its locale choices is
   # translated to a representative xx_YY. Where a language spans several countries
@@ -174,9 +181,7 @@ module DiscourseGifsMigration
       migrate_component(theme, enable_gifs: enable_gifs)
     end
 
-    unless migrated_any
-      puts "\nNo #{DiscourseGifs::COMPONENT_NAME} theme component found. Nothing to migrate."
-    end
+    puts "\nNo #{COMPONENT_NAME} theme component found. Nothing to migrate." unless migrated_any
   end
 
   def each_target_db
@@ -198,19 +203,13 @@ module DiscourseGifsMigration
 
   def find_component_in_db(db)
     puts "Accessing database: #{db_label(db)} (#{RailsMultisite::ConnectionManagement.current_hostname})"
-    puts "Searching for #{DiscourseGifs::COMPONENT_NAME} theme component..."
+    puts "Searching for #{COMPONENT_NAME} theme component..."
 
     themes =
-      RemoteTheme
-        .where(remote_url: DiscourseGifs::REMOTE_URLS)
-        .includes(theme: :theme_settings)
-        .map(&:theme)
+      RemoteTheme.where(remote_url: REMOTE_URLS).includes(theme: :theme_settings).map(&:theme)
 
     if themes.length > 1
-      status(
-        "Multiple (#{themes.length}) #{DiscourseGifs::COMPONENT_NAME} components found:",
-        :yellow,
-      )
+      status("Multiple (#{themes.length}) #{COMPONENT_NAME} components found:", :yellow)
       themes.each { |t| item("#{t.name} (ID: #{t.id})") }
       status("Install a single instance before running this task.", :yellow)
       return nil
@@ -252,7 +251,7 @@ module DiscourseGifsMigration
             target[:name],
             new_value,
             Discourse.system_user,
-            "Migrated from #{DiscourseGifs::COMPONENT_NAME} theme component",
+            "Migrated from #{COMPONENT_NAME} theme component",
           )
         next unless changed
 
@@ -273,9 +272,9 @@ module DiscourseGifsMigration
           :enable_gifs,
           true,
           Discourse.system_user,
-          "Migrated from #{DiscourseGifs::COMPONENT_NAME} theme component",
+          "Migrated from #{COMPONENT_NAME} theme component",
         )
-        success("enable_gifs: true (auto-enabled per task argument)")
+        success("enable_gifs: true (auto-enabled after migration)")
         migrated += 1
       rescue StandardError => e
         errors << e
@@ -304,7 +303,7 @@ module DiscourseGifsMigration
       (hosts + missing).join("|"),
       Discourse.system_user,
       "Added Klipy media hosts so gifs stay blocked after migrating from " \
-        "#{DiscourseGifs::COMPONENT_NAME} theme component",
+        "#{COMPONENT_NAME} theme component",
     )
     success(
       "disabled_image_download_domains += #{missing.join(", ")} " \
@@ -338,10 +337,10 @@ module DiscourseGifsMigration
   end
 end
 
-desc "Migrate #{DiscourseGifs::COMPONENT_NAME} theme component settings to core site settings. " \
-       "Set ENABLE_GIFS=1 to also flip enable_gifs to true after migration."
+desc "Migrate discourse-gifs theme component settings to core site settings. " \
+       "enable_gifs is flipped to true after migration by default; set ENABLE_GIFS=0 to skip that."
 task "themes:discourse_gifs:migrate" => :environment do
-  enable_gifs = %w[true yes 1].include?(ENV["ENABLE_GIFS"].to_s.strip.downcase)
+  enable_gifs = !%w[false no 0].include?(ENV["ENABLE_GIFS"].to_s.strip.downcase)
 
   DiscourseGifsMigration.migrate_all(enable_gifs: enable_gifs)
 end

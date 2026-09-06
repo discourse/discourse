@@ -106,6 +106,16 @@ describe "Admin Customize Themes" do
 
       expect(find(".ace_content")).to have_content("console.log('second test')")
     end
+
+    it "shows the description of the field the admin switches to" do
+      theme_page.visit_editor(theme)
+
+      expect(theme_page).to have_editor_field_description("scss")
+
+      theme_page.click_editor_field("head_tag")
+
+      expect(theme_page).to have_editor_field_description("head_tag")
+    end
   end
 
   it "cannot edit js, upload files or delete system themes" do
@@ -332,6 +342,38 @@ describe "Admin Customize Themes" do
     it "does not show the change source button for local themes" do
       theme_page.visit(theme)
       expect(page).to have_no_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
+    end
+  end
+
+  describe "editing an icon type theme setting" do
+    let(:icon_picker) do
+      PageObjects::Components::DIconGridPicker.new(".setting[data-setting='icon_setting']")
+    end
+
+    before do
+      SiteSetting.svg_icon_subset = "gamepad"
+
+      theme.set_field(
+        target: :settings,
+        name: "yaml",
+        value: "icon_setting:\n  type: icon\n  default: heart\n",
+      )
+      theme.save!
+    end
+
+    it "allows admin to pick an icon from the dropdown and save it" do
+      theme_page.visit(theme)
+
+      expect(icon_picker).to have_selected_icon("heart")
+
+      icon_picker.expand
+      icon_picker.filter("gamepad")
+      icon_picker.select_icon("gamepad")
+
+      find(".setting[data-setting='icon_setting'] .setting-controls__ok").click
+
+      expect(page).to have_no_css(".setting[data-setting='icon_setting'] .setting-controls__ok")
+      expect(theme.reload.settings[:icon_setting].value).to eq("gamepad")
     end
   end
 

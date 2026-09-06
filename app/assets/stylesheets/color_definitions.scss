@@ -153,6 +153,7 @@
   --shadow-header: 0 0 0 1px var(--content-border-color);
   --shadow-footer-nav: 0 0 2px 0 rgba(0, 0, 0, #{$shadow-opacity-footer-nav});
   --shadow-focus-danger: 0 0 6px 0 var(--danger);
+  --shadow-docked-composer: 0 4px 30px rgb(0, 0, 0, 0.15);
   --float-kit-arrow-stroke-color: var(--primary-low);
   --float-kit-arrow-fill-color: var(--secondary);
   --topic-timeline-border-color: #{$tertiary-low-or-tertiary-high};

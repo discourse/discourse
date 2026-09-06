@@ -26,9 +26,8 @@ RSpec.describe Chat::PinnedMessage do
       Fabricate(:chat_pinned_message, chat_message: other_message, chat_channel: other_channel)
     end
 
-    it "returns pins for the specified channel ordered by created_at desc" do
+    it "returns pins for the specified channel" do
       pins = described_class.for_channel(channel)
-      expect(pins.count).to eq(2)
       expect(pins.map(&:chat_message_id)).to contain_exactly(message_1.id, message_2.id)
     end
   end

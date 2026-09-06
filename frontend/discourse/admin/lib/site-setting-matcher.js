@@ -3,10 +3,28 @@
 // appears as a contiguous block in the stripped name (see isFuzzyNameMatch).
 const MIN_FUZZY_NAME_MATCH_STRENGTH = -2;
 
+const OR_FILTER_PREFIX = "any:";
+
 export default class SiteSettingMatcher {
   constructor(filter, siteSetting) {
     this.filter = filter;
     this.siteSetting = siteSetting;
+
+    // `any:one|two` matches settings hitting any of the pipe-separated terms
+    // — the syntax machine-generated "related settings" links use. Without
+    // the prefix, pipes are literal characters, so admins can still search
+    // pipe-delimited list values (e.g. `jpg|png`) exactly.
+    const orTerms = filter.startsWith(OR_FILTER_PREFIX)
+      ? filter
+          .slice(OR_FILTER_PREFIX.length)
+          .split("|")
+          .map((f) => f.trim())
+          .filter(Boolean)
+      : [];
+    this.isOrMode = orTerms.length > 0;
+    this.terms = this.isOrMode ? orTerms : [filter];
+    this.spacedTerms = this.terms.map((term) => term.replace(/_/g, " "));
+
     this.strippedQuery = filter.replace(/[^a-z0-9]/gi, "");
     this.fuzzyRegex = new RegExp(this.strippedQuery.split("").join(".*"), "i");
     this.fuzzyRegexGaps = new RegExp(
@@ -18,34 +36,38 @@ export default class SiteSettingMatcher {
 
   get isNameMatch() {
     const name = this.siteSetting.setting.toLowerCase();
+    const spacedName = name.replace(/_/g, " ");
 
-    return (
-      name.includes(this.filter) ||
-      name.replace(/_/g, " ").includes(this.filter)
+    return this.terms.some(
+      (term) => name.includes(term) || spacedName.includes(term)
     );
   }
 
   get isKeywordMatch() {
-    return (this.siteSetting.keywords || []).some((keyword) =>
-      keyword
-        .replace(/_/g, " ")
-        .toLowerCase()
-        .includes(this.filter.replace(/_/g, " "))
-    );
+    return (this.siteSetting.keywords || []).some((keyword) => {
+      const spacedKeyword = keyword.replace(/_/g, " ").toLowerCase();
+
+      return this.spacedTerms.some((term) => spacedKeyword.includes(term));
+    });
   }
 
   get isDescriptionMatch() {
-    return this.siteSetting.description.toLowerCase().includes(this.filter);
+    const desc = this.siteSetting.description.toLowerCase();
+
+    return this.terms.some((term) => desc.includes(term));
   }
 
   get isValueMatch() {
-    return (this.siteSetting.value || "")
-      .toString()
-      .toLowerCase()
-      .includes(this.filter);
+    const value = (this.siteSetting.value || "").toString().toLowerCase();
+
+    return this.terms.some((term) => value.includes(term));
   }
 
   get isFuzzyNameMatch() {
+    if (this.isOrMode) {
+      return false;
+    }
+
     const name = this.siteSetting.setting.toLowerCase();
 
     if (this.strippedQuery.length < 3) {

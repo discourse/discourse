@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 hy:
+  llms_txt:
+    sections:
+      optional: "Ընտրովի"
+    links:
+      search:
+        label: "Որոնում"
+      categories:
+        label: "Կատեգորիաներ"
+      about:
+        label: "Մասին"
+      guidelines:
+        label: "Ուղեցույց"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -124,7 +136,6 @@ hy:
       exclusion: զբաղեցված է
       greater_than: պետք է լինի %{count} -ից մեծ
       greater_than_or_equal_to: պետք է լինի մեծ կամ հավասար %{count} -ի
-      has_already_been_used: "արդեն իսկ օգտագործված է"
       inclusion: ներառված չէ ցանկում
       invalid: անվավեր է
       is_invalid: "անհասկանալի է թվում, արդյո՞ք այն ամբողջական նախադասություն է:"
@@ -317,6 +328,12 @@ hy:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Բոլորը"
+      moderators: "Մոդերատորներ"
+      staff: "Անձնակազմ"
+      anonymous_users: "Անանուն օգտատերեր"
+      logged_in_users: "Մուտքագրված օգտատերեր"
     request_membership_pm:
       title: "@%{group_name}-ի անդամակցության հարցում"
   education:
@@ -527,15 +544,14 @@ hy:
     success_unapproved: "Դուք հաջողությամբ փոփոխել եք Ձեր գաղտնաբառը:"
   email_login:
     title: "Էլ. հասցեով մուտք"
+  browsers:
+    chrome: "Google Chrome"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "անհայտ բրաուզեր"
     device:
       android: "Android Սարքավորում"
       ipad: "iPad"
@@ -553,6 +569,10 @@ hy:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "անհայտ օպերացիոն համակարգ"
+  admin_site_traffic_explorer:
+    unknown: "Անհայտ"
+    traffic_types:
+      anonymous: "Անանուն"
   change_email:
     error: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Միգուցե հասցեն արդեն օգտագործվո՞ւմ է:"
     error_staged: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Հասցեն արդեն օգտագործվում է աստիճանավորված օգտատիրոջ կողմից:"
@@ -774,11 +794,17 @@ hy:
         share: "Կիսվել"
       types:
         staff: "Անձնակազմ"
+    posters_by_member_type_members:
+      labels:
+        user: "Օգտատեր"
+        count: "Գրառումներ"
+        share: "Կիսվել"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         count: "Անդամներ"
         share: "Կիսվել"
+        signups: "Գրանցումներ"
       levels:
         "0": "Նոր"
         "1": "Հիմնական"
@@ -921,6 +947,9 @@ hy:
         num_topics: "Թեմաներ"
       description: "Օգտատերեր՝ ցուցակավորված ըստ այն հղումների սեղմումների, որոնցով կիսվել են:"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Այցելություններ"
+    top_entry_urls:
       labels:
         count: "Այցելություններ"
     top_referrers_by_browser_pageviews:
@@ -1122,7 +1151,6 @@ hy:
     editing_grace_period_max_diff: "Խմբագրման արտոնյալ ժամկետում թույլատրված սիմվոլների փոփոխությունների առավելագույն քանակը, եթե փոփոխությունները ավելի շատ են, պահեստավորեք գրառման մեկ այլ խմբագրություն (վստահության 0 և 1-ին մակարդակ)"
     editing_grace_period_max_diff_high_trust: "Խմբագրման արտոնյալ ժամկետում թույլատրված սիմվոլների փոփոխությունների առավելագույն քանակը, եթե փոփոխությունները ավելի շատ են, պահեստավորեք գրառման մեկ այլ խմբագրություն (վստահության 2-րդ և ավելի մակարդակ)"
     staff_edit_locks_post: "Գրառումների խմբագրումը կարգելափակվի, եթե դրանք խմբագրված են անձնակազմի անդամների կողմից"
-    edit_history_visible_to_public: "Թույլատրել բոլորին դիտել խմբագրված գրառման նախորդ տարբերակները: Անջատված լինելու դեպքում միայն անձնակազմի անդամները կարող են դիտել:"
     delete_removed_posts_after: "Հեղինակի կողմից հեռացված գրառումները ավտոմատ կերպով կհեռացվեն (n) ժամ անց: Եթե սահմանված է 0, գրառումները կհեռացվեն անմիջապես:"
     responsive_post_image_sizes: "Փոփոխեք նախադիտման նկարների չափերը՝ հետևյալ պիքսելների հարաբերակցությամբ բարձր DPI -ով էկրանները թույլատրելու համար:"
     fixed_category_positions: "Եթե նշված է, Դուք կարող եք դասավորել կատեգորիաները որոշակի կարգով: Եթե նշված չէ, կատեգորիաները դասավորվում են ըստ ակտիվության կարգի:"
@@ -1146,8 +1174,6 @@ hy:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Րոպեների քանակը, որ օգտատերը պետք է սպասի՝ մինչ համայնքի դրոշակավորման միջոցով թաքցված գրառման խմբագրել կարողանալը"
-    max_topics_in_first_day: "Թեմաների առավելագույն քանակը, որը օգտատերը կարող է ստեղծել իր առաջին գրառումի ստեղծումից հետո 24 ժամվա ընթացքում"
-    max_replies_in_first_day: "Պատասխանների առավելագույն քանակը, որ օգտատիրոջը թույլատրվում է ստեղծել իր առաջին գրառումը ստեղծելուց հետո 24 ժամվա ընթացքում:"
     tl2_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ2-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
     tl3_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ3-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
     tl4_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ4-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
@@ -1314,7 +1340,6 @@ hy:
     topic_view_duration_hours: "Հաշվարկել թեմայի նոր դիտում՝ ըստ յուրաքանչյուր IP-ի/Օգտատիրոջ յուրաքանչյուր N ժամը մեկ"
     user_profile_view_duration_hours: "Հաշվարկել օգտատիրոջ պրոֆիլի նոր դիտում՝ ըստ յուրաքանչյուր IP-ի/Օգտատիրոջ յուրաքանչյուր N ժամը մեկ"
     levenshtein_distance_spammer_emails: "Սպամմերի էլ. նամակների համապատասխանեցման ժամանակ սիմվոլների տարբերության քանակը, որը դեռևս թույլ կտա անորոշ համընկնում:"
-    min_ban_entries_for_roll_up: "Խմբավորել կոճակը սեղմելիս կստեղծվի նոր սուբնեթի արգելքի մուտք, եթե կա առնվազն (N) մուտք:"
     max_age_unmatched_emails: "Ջնջել չհամընկած ցուցադրված էլ. մուտքերը (N) օր հետո:"
     max_age_unmatched_ips: "Ջնջել չհամընկնող ցուադրված IP մուտքերը (N) օր անց:"
     num_flaggers_to_close_topic: "Չկրկնվող դրոշակավորողների նվազագույն քանակը, որը պահանջվում է միջամտության համար թեմայի ավտոմատ դադարեցման համար:"
@@ -1446,7 +1471,6 @@ hy:
     errors:
       invalid_email: "Անվավեր էլ. հասցե:"
       invalid_username: "Այդ օգտանվամբ օգտատեր չկա:"
-      invalid_group: "Այդպիսի անունով խումբ չկա:"
       invalid_integer_min_max: "Արժեքը պետք է լինի %{min} -ի և %{max} -ի միջև:"
       invalid_integer_min: "Արժեքը պետք է լինի %{min} կամ ավելի:"
       invalid_integer_max: "Արժեքը չի կարող լինել %{max} -ից բարձր:"
@@ -2297,9 +2321,6 @@ hy:
     user_posted_pm_staged:
       title: "Անձնական Նամակ Հրապարակած Օգտատերը Աստիճանավորված է"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Հաշիվը Սառեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը սառեցվել է"
@@ -2756,6 +2777,9 @@ hy:
     title: "Մուտք գործել անվտանգ ռեժիմ"
     enter: "Մուտք գործել Ապահով Ռեժիմ"
     must_select: "Դուք պետք է ընտրեք առնվազն մեկ տարբերակ՝ անվտանգ ռեժիմ մուտք գործելու համար:"
+  design_wizard:
+    palette_pairs:
+      default: "Լռելյայն"
   wizard:
     title: "Discourse Տեղադրում"
     step:
@@ -2772,6 +2796,8 @@ hy:
   search_logs:
     graph_title: "Որոնումների Քանակ"
   onebox:
+    google_meet:
+      meeting_code: "Կոդ:"
     github:
       closed: "փակված"
       status_date:
@@ -2807,6 +2833,10 @@ hy:
       low: "Բարձր"
       medium: "Միջին"
       high: "Ցածր"
+    reasons:
+      fast_typer_time:
+        one: "%{count} վայրկյան"
+        other: "%{count} վայրկյան"
     actions:
       agree:
         title: "Այո"

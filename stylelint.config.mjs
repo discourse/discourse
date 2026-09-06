@@ -1,11 +1,20 @@
 import noCoreVariables from "./stylelint-rules/no-core-variables.mjs";
+import noRenamedVariables from "./stylelint-rules/no-renamed-variables.mjs";
 import requireDesignTokens from "./stylelint-rules/require-design-tokens.mjs";
+import ucClassesInWhere from "./stylelint-rules/uc-classes-in-where.mjs";
 
 export default {
   extends: ["@discourse/lint-configs/stylelint"],
-  plugins: [noCoreVariables, requireDesignTokens],
+  plugins: [
+    noCoreVariables,
+    noRenamedVariables,
+    requireDesignTokens,
+    ucClassesInWhere,
+  ],
   rules: {
     "media-feature-range-notation": "context",
+    "discourse/no-renamed-variables": true,
+    "discourse/uc-classes-in-where": true,
   },
   overrides: [
     {

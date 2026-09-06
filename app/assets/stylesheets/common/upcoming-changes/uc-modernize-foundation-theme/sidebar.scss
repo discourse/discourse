@@ -1,0 +1,11 @@
+:where(.uc-modernize-foundation-theme) {
+  --d-sidebar-active-background: var(--token-color-surface-hovered);
+  --d-sidebar-active-color: var(--token-color-text-default);
+  --d-sidebar-link-color: var(--token-color-text-subtle);
+  --d-sidebar-link-icon-color: var(--token-color-text-subtle);
+  --d-sidebar-active-font-weight: 600;
+
+  .sidebar-more-section-content .sidebar-row {
+    padding-block: 0;
+  }
+}

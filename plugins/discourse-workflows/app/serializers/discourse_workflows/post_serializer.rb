@@ -7,6 +7,7 @@ module DiscourseWorkflows
                :topic_title,
                :topic_slug,
                :post_number,
+               :post_type,
                :reply_to_post_number,
                :post_url,
                :username,
@@ -20,6 +21,7 @@ module DiscourseWorkflows
                :category_id,
                :category_name,
                :tags,
+               :upload_ids,
                :raw,
                :cooked
 
@@ -38,7 +40,9 @@ module DiscourseWorkflows
     end
 
     def post_url
-      object.url
+      return "/404" if topic.blank?
+
+      ::Post.url(topic.slug, topic.id, object.post_number)
     end
 
     def username
@@ -71,6 +75,10 @@ module DiscourseWorkflows
       topic.tags.visible(scope).pluck(:name)
     end
 
+    def upload_ids
+      object.upload_ids
+    end
+
     def include_raw?
       @include_raw
     end
@@ -82,7 +90,10 @@ module DiscourseWorkflows
     private
 
     def topic
-      @topic ||= object.topic
+      return @topic if defined?(@topic)
+
+      @topic =
+        object.topic || (::Topic.with_deleted.find_by(id: object.topic_id) if scope.is_staff?)
     end
   end
 end

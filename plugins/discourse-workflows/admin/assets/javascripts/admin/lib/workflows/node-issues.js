@@ -1,6 +1,6 @@
 import {
+  fieldDefinitelyVisible,
   fieldType,
-  fieldVisible,
   fixedCollectionGroups,
   fixedCollectionRows,
   normalizePropertyOptions,
@@ -44,7 +44,7 @@ function walk(schema, config, pathPrefix, issues) {
   const effective = applyDefaults(schema, config);
 
   for (const [name, field] of Object.entries(schema)) {
-    if (!fieldVisible(field, effective)) {
+    if (!fieldDefinitelyVisible(field, effective)) {
       continue;
     }
 

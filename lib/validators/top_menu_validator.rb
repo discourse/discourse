@@ -6,21 +6,31 @@ class TopMenuValidator
   end
 
   def valid_value?(val)
-    return true if val.blank?
+    @error_message = "site_settings.errors.invalid_string"
+
+    if val.blank?
+      @error_message = "site_settings.errors.must_include_latest"
+      return false
+    end
+
     val_choices = val.split("|").map(&:strip).compact
+
+    if val_choices.include?("unread") && UpcomingChanges.enabled?(:enable_unified_new)
+      @error_message = "site_settings.errors.top_menu_unread_not_allowed_with_unified_new"
+      return false
+    end
 
     return false if !val_choices.all? { |choice| TopMenu.choices.include?(choice) }
 
-    return false if !val_choices.include?("latest")
-
-    val_choices.each do |choice|
-      return false if choice == "unread" && UpcomingChanges.enabled?(:enable_unified_new)
+    if !val_choices.include?("latest")
+      @error_message = "site_settings.errors.must_include_latest"
+      return false
     end
 
     true
   end
 
   def error_message
-    I18n.t("site_settings.errors.top_menu_unread_not_allowed_with_unified_new")
+    I18n.t(@error_message)
   end
 end

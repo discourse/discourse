@@ -3,8 +3,8 @@
 Companion to the accessibility rules in `SKILL.md`. The short, point-of-use rules stay inline
 there — semantic/landmark markup, icon labels, focus (`:focus-visible`), motion
 (`prefers-reduced-motion`), and "don't rely on color alone." This file holds the deeper
-mechanics: screen-reader-only text, announcing dynamic changes via live regions, and the
-contrast / forced-colors detail.
+mechanics: screen-reader-only text, accessible names (`aria-label` vs `title`), announcing dynamic
+changes via live regions, and the contrast / forced-colors detail.
 
 ## Screen-reader-only text — `.sr-only`
 
@@ -24,6 +24,60 @@ to hide-visually-but-keep-for-AT.
   <span class="sr-only">{{i18n "post.controls.delete"}}</span>
 </button>
 ```
+
+## Accessible names — `aria-label` vs `title`
+
+Every interactive control needs an **accessible name**. A control with visible text already has
+one. An icon-only control (see the `.sr-only` example above) does not, so you supply it — but
+`aria-label` and `title` are not interchangeable.
+
+The accessible-name priority a screen reader uses, simplified: visible label / `.sr-only` text →
+`aria-label` → `title`. Prefer the earliest that fits.
+
+**`aria-label`** — the right tool for naming an icon-only control. It is invisible and *replaces*
+any visible content for assistive tech, so:
+
+- Use it only when there is **no** visible text label (otherwise the visible text already names
+  the control and a second name is redundant or conflicting).
+- The value must be **translated** — pass an i18n string, never a hardcoded English literal.
+- It works only on elements with a role (interactive elements, or something given `role="…"`). On
+  a bare `<div>`/`<span>`/`<p>` it is ignored. Put it on the `<button>`/`<a>`, not a wrapper.
+- If a visible label *also* exists, keep the `aria-label` starting with that visible text —
+  voice-control users speak what they see ("click reply"), and a divergent `aria-label` breaks
+  that match.
+
+**`title`** — renders the native browser tooltip on hover, and only contributes to the accessible
+name as a **last-resort fallback**. It is an unreliable name source: it doesn't show on keyboard
+focus, doesn't appear on touch devices, has poor discoverability, and some screen readers skip it.
+So use `title` for a *supplementary* hint (a hover tooltip on top of a name the control already
+has), not as the primary accessible name, and never to hide essential information.
+
+In Discourse, prefer `<DButton>`, which wires both attributes for you:
+
+```hbs
+{{! icon-only — @title gives a hover tooltip AND the accessible-name fallback }}
+<DButton @icon="trash-can" @title="post.controls.delete" @action={{this.delete}} />
+
+{{! when the tooltip and the screen-reader name should differ, set both }}
+<DButton @icon="bookmark" @title="bookmarks.tooltip" @ariaLabel="bookmarks.label" />
+```
+
+- `@title` / `@ariaLabel` take **i18n keys** (translated for you); `@translatedTitle` /
+  `@translatedAriaLabel` take **already-translated** strings.
+- A `<DButton>` with a visible `@label` doesn't need either for naming — add `@title` only for a
+  supplementary tooltip.
+
+On raw markup, label the interactive element directly with a translated string:
+
+```hbs
+<button type="button" aria-label={{i18n "post.controls.delete"}}>
+  {{dIcon "trash-can"}}
+</button>
+```
+
+(`dIcon` already renders the glyph `aria-hidden`, so the name belongs on the control.) For an
+icon-only control you can equally use the visible-to-AT `.sr-only` span shown above — pick one
+naming mechanism, not both.
 
 ## Announcing dynamic content — live regions
 

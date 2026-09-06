@@ -102,4 +102,60 @@ module("Integration | Component | Header | Icons", function (hooks) {
         "it does display when the site is in mobile view even if search_experience setting is search_field"
       );
   });
+
+  test("the language switcher needs user locales to be allowed", async function (assert) {
+    const noop = () => {};
+    this.siteSettings.content_localization_enabled = true;
+    this.siteSettings.content_localization_supported_locales = "en|fr";
+    this.siteSettings.content_localization_language_switcher = "all";
+    this.siteSettings.allow_user_locale = false;
+
+    await render(
+      <template>
+        <Icons
+          @sidebarEnabled={{true}}
+          @toggleSearchMenu={{noop}}
+          @toggleNavigationMenu={{noop}}
+          @toggleUserMenu={{noop}}
+          @searchButtonId={{SEARCH_BUTTON_ID}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".language-switcher-trigger")
+      .doesNotExist(
+        "switching language would have no effect, so the switcher is hidden"
+      );
+  });
+
+  test("every header icon is a list item", async function (assert) {
+    const noop = () => {};
+    this.siteSettings.content_localization_enabled = true;
+    this.siteSettings.content_localization_supported_locales = "en|fr";
+    this.siteSettings.content_localization_language_switcher = "all";
+
+    await render(
+      <template>
+        <Icons
+          @sidebarEnabled={{true}}
+          @toggleSearchMenu={{noop}}
+          @toggleNavigationMenu={{noop}}
+          @toggleUserMenu={{noop}}
+          @searchButtonId={{SEARCH_BUTTON_ID}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".language-switcher-trigger")
+      .exists("the language switcher renders");
+
+    const children = [...document.querySelectorAll("ul.d-header-icons > *")];
+
+    assert.true(
+      children.every((el) => el.tagName === "LI"),
+      "all direct children of the header icons list are list items"
+    );
+  });
 });

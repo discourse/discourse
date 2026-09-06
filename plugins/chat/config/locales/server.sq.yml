@@ -9,7 +9,6 @@ sq:
     chat_separate_sidebar_mode: "Shfaq mënyra të veçanta të shiritit anësor për forumin dhe bisedën."
     chat_enabled: "Aktivizo bisedën."
     enable_public_channels: "Aktivizo kanalet publike duke u bazuar në kategori."
-    chat_allowed_groups: "Përdoruesit në këto grupe mund të bisedojnë. Vini re se administratorët dhe moderatorët mund të kenë gjithmonë akses në bisedë."
     chat_channel_retention_days: "Mesazhet e bisedës në kanalet e rregullta do të mbahen për kaq shumë ditë. Cakto në '0' për të ruajtur mesazhet përgjithmonë."
     chat_dm_retention_days: "Mesazhet e bisedës në kanalet personale të bisedës do të ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
     chat_auto_silence_duration: "Numri i minutave për të cilat përdoruesi do të ndërpritet kur tejkalon kufirin e normës së krijimit të mesazheve të bisedës. Kliko tek '0' për të çaktivizuar ndërprerjen automatike."

@@ -76,6 +76,14 @@ RSpec.describe Discourse do
       expect(Discourse.find_compatible_resource("")).to be_nil
     end
 
+    it "returns nil when blank" do
+      expect(Discourse.find_compatible_resource("   \n  \n")).to be_nil
+    end
+
+    it "returns nil when the file contains only comments" do
+      expect(Discourse.find_compatible_resource("# just a comment\n# another line\n")).to be_nil
+    end
+
     it "raises an error on invalid input" do
       expect { Discourse.find_compatible_resource("1.0.0.beta1 12f82d5") }.to raise_error(
         Discourse::InvalidVersionListError,
@@ -172,10 +180,13 @@ RSpec.describe Discourse do
 
       after { FileUtils.remove_entry(git_directory) }
 
-      it "returns the branch commit and ignores .discourse-compatibility" do
-        compat_branch_sha = `cd #{git_directory} && git rev-parse #{compat_branch_name}`.strip
+      it "returns the d-compat branch ref and ignores .discourse-compatibility" do
+        resource = Discourse.find_compatible_git_resource(git_directory)
 
-        expect(Discourse.find_compatible_git_resource(git_directory)).to eq(compat_branch_sha)
+        expect(resource).to eq("origin/#{compat_branch_name}")
+        expect(`cd #{git_directory} && git rev-parse #{resource}`.strip).to eq(
+          `cd #{git_directory} && git rev-parse #{compat_branch_name}`.strip,
+        )
       end
     end
 
@@ -207,6 +218,23 @@ RSpec.describe Discourse do
           capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
 
         expect(output).to include("Invalid version list")
+      end
+    end
+
+    context "with an empty .discourse-compatibility file" do
+      let!(:git_directory) do
+        path = setup_git_repo(".discourse-compatibility" => "# only a comment\n")
+        setup_remote_upstream(path)
+        path
+      end
+
+      after { FileUtils.remove_entry(git_directory) }
+
+      it "returns nil without logging an error" do
+        output =
+          capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
+
+        expect(output).to be_blank
       end
     end
 

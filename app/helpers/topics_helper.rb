@@ -22,16 +22,18 @@ module TopicsHelper
   end
 
   def localize_topic_view_content(topic_view)
-    return if cookies.key?(ContentLocalization::SHOW_ORIGINAL_COOKIE)
-    return if current_user&.user_option&.show_original_content
-
     # locale param is appropriately set in the application controller
     # depending on site settings and presence of user
     locale = I18n.locale
 
-    LocalizationAttributesReplacer.replace_topic_attributes(topic_view.topic, locale)
+    if ContentLocalization.show_translated_topic?(topic_view.topic, guardian)
+      LocalizationAttributesReplacer.replace_topic_attributes(topic_view.topic, locale)
+    end
+
     topic_view.posts.each do |post|
-      LocalizationAttributesReplacer.replace_post_attributes(post, locale)
+      if ContentLocalization.show_translated_post?(post, guardian)
+        LocalizationAttributesReplacer.replace_post_attributes(post, locale)
+      end
     end
   end
 end

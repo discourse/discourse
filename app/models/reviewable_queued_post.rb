@@ -4,7 +4,12 @@ class ReviewableQueuedPost < Reviewable
   include ReviewableActionBuilder
 
   def self.action_aliases
-    { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
+    {
+      discard_post: :reject_post,
+      reject_and_silence: :reject_post,
+      reject_and_suspend: :reject_post,
+      delete_user_block: :delete_and_block_user,
+    }
   end
 
   after_create do
@@ -48,7 +53,16 @@ class ReviewableQueuedPost < Reviewable
         )
 
       build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
-      build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+      if target_created_by.present?
+        build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+      end
+
+      build_penalty_actions(
+        actions,
+        bundle: reject_bundle,
+        silence: :reject_and_silence,
+        suspend: :reject_and_suspend,
+      )
 
       delete_user_actions(actions, reject_bundle) if guardian.can_delete_user?(target_created_by)
     end
@@ -262,6 +276,7 @@ end
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

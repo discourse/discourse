@@ -16,8 +16,6 @@ ro:
     first_reaction:
       name: Prima reacție
       description: A reacționat la postare
-      long_description: |
-        Această insignă este acordată prima dată când reacționezi la o postare. Reacționarea la postări este o modalitate excelentă de a-i face pe colegii tăi să știe că ceea ce au publicat a fost interesant, util, cool sau distractiv. Împărtășește-ți reacția!
   reports:
     reactions:
       title: "Reacții"

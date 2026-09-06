@@ -36,8 +36,17 @@ describe DiscourseDataExplorer::QueryResultCache do
       expect(described_class.read(query.id, params_hash)).to be_nil
     end
 
+    it "returns nil when the cached result exceeds the maximum age" do
+      now = Time.now
+      freeze_time(now)
+      described_class.write(query.id, params_hash, result_json)
+
+      freeze_time(now + 1.hour + 1.second)
+      expect(described_class.read(query.id, params_hash, max_age: 1.hour)).to be_nil
+    end
+
     it "skips write when result exceeds max size" do
-      large_result = result_json.merge("rows" => [["x" * 200_000]])
+      large_result = result_json.merge("rows" => [["x" * (described_class::MAX_CACHE_SIZE + 1)]])
 
       expect(described_class.write(query.id, params_hash, large_result)).to eq(false)
       expect(described_class.read(query.id, params_hash)).to be_nil
@@ -66,6 +75,25 @@ describe DiscourseDataExplorer::QueryResultCache do
       expect(Discourse.redis.zcard(described_class.cache_index_key(query.id))).to eq(
         described_class::MAX_CACHE_ENTRIES,
       )
+    end
+
+    it "caches new entries after old index members expire" do
+      index_key = described_class.cache_index_key(query.id)
+      stale_score = Time.now.to_f - described_class::CACHE_TTL - 1
+      stale_keys =
+        described_class::MAX_CACHE_ENTRIES.times.map do |i|
+          params = { "value" => i.to_s }
+          described_class.write(query.id, params, result_json)
+          described_class.cache_key(query.id, params)
+        end
+
+      Discourse.redis.del(*stale_keys)
+      stale_keys.each { |stale_key| Discourse.redis.zadd(index_key, stale_score, stale_key) }
+
+      fresh_params = { "value" => "fresh" }
+
+      expect(described_class.write(query.id, fresh_params, result_json)).to eq(true)
+      expect(described_class.read(query.id, fresh_params)).to be_present
     end
   end
 

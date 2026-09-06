@@ -25,7 +25,7 @@ RSpec.describe "Nested view resuming a draft from the user activity page" do
     drafts_page.visit(user)
     page.find(".resume-draft").click
 
-    expect(page).to have_current_path(%r{/n/})
+    expect(page).to have_current_path(%r{/t/})
     expect(nested_view).to have_nested_view
     expect(composer).to be_opened
     expect(composer).to have_content("Resumed nested draft body")

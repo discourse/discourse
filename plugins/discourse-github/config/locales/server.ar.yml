@@ -21,7 +21,9 @@ ar:
     github_gold_badge_min_commits: "أقل عدد من الإرسالات للحصول على الشارة الذهبية"
     errors:
       invalid_badge_repo: "يجب عليك إدخال عنوان URL على GitHub أو اسم المستودع بالتنسيق github_user/repository_name"
+      invalid_badge_repo_value: "'%{repo}' ليس عنوان URL على GitHub أو اسم مستودع صالحًا. استخدام التنسيق github_user/repository_name."
       invalid_github_linkback_access_token: "يجب عليك إدخال رمز وصول صالح إلى رابط GitHub والذي يمكنه الوصول إلى مستودعات الشارة التي أدخلتها."
+      invalid_github_linkback_access_token_for_repo: "تعذَّر على رمز وصول الارتباط العكسي لـ GitHub الوصول إلى مستودع '%{repo}'. تأكَّد من صحة الرمز وأن اسم المستودع صحيح ويمكن الوصول إليه."
   github_linkback:
     commit_template: |
       تم ذكر هذا الإرسال في **%{title}**. قد تكون هناك تفاصيل ذات صلة هناك:
@@ -57,7 +59,7 @@ ar:
         وإعادة تفعيل خيار "github_badges_enabled".
       invalid_octokit_credentials_pm_title: "الإجراء المطلوب للمكوِّن الإضافي discourse-github"
       invalid_octokit_credentials_pm: |
-        بيانات اعتماد GitHub التي أدخلتها للمكوِّن الإضافي discourse-github غير صالحة. تم تعطيل إعداد الموقع "تفعيل شارات github"، ولن تُحدَّث بيانات العمليات (commits) حتى يتم حل المشكلة.
+        بيانات اعتماد GitHub التي أدخلتها للمكوِّن الإضافي discourse-github غير صالحة. تم إيقاف إعداد الموقع "تفعيل شارات github"، ولن تُحدَّث بيانات العمليات (commits) حتى يتم حل المشكلة.
 
         تحقَّق من إعداد الموقع "رمز الوصول إلى رابط github الخلفي" للتأكُّد من صحة الرمز المميَّز وأن لديه الإذن للوصول إلى جميع المستودعات عبر
         <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">إعدادات الموقع لـ discourse-github</a>.

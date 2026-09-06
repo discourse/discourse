@@ -159,6 +159,27 @@ module("Unit | Service | chat-state-manager", function (hooks) {
     sinon.assert.calledTwice(stub);
   });
 
+  test("isDrawerCollapsed", function (assert) {
+    assert.false(
+      this.subject.isDrawerCollapsed,
+      "is false when the drawer is not active"
+    );
+
+    this.subject.didCollapseDrawer();
+
+    assert.true(
+      this.subject.isDrawerCollapsed,
+      "is true when the drawer is active and not expanded"
+    );
+
+    this.subject.didExpandDrawer();
+
+    assert.false(
+      this.subject.isDrawerCollapsed,
+      "is false when the drawer is expanded"
+    );
+  });
+
   test("callbacks", function (assert) {
     this.state = null;
     addChatDrawerStateCallback((state) => {

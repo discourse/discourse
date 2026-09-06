@@ -7,7 +7,7 @@ import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibi
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_VISIBILITY_LEVELS } from "discourse/lib/constants";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -85,7 +85,7 @@ export default class GroupManageSaveButton extends Component {
       await group.save(opts);
 
       if (lostAccess) {
-        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        this.router.transitionTo(homepageNavigationDestination());
         return;
       }
 

@@ -12,9 +12,6 @@ gl:
     topic_voting:
       vote_title: "Votar"
       vote_title_plural: "Votos"
-      anonymous_button:
-        one: "Voto"
-        other: "Votos"
       remove_vote: "Eliminar voto"
       and_more_voters: "e %{count} máis..."
       show_voters: "Amosar quen votou"
@@ -22,3 +19,6 @@ gl:
     filters:
       votes:
         title: "Votos"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Etiquetas"

@@ -32,6 +32,8 @@ sl:
       cast-votes:
         title: "Oddajte svoj glas"
         label: "Glasuj!"
+      keep-vote:
+        label: "Nazaj"
       show-results:
         title: "Prikaži rezultate ankete"
         label: "Rezultati"
@@ -91,4 +93,3 @@ sl:
           label: Pokaži glasovalce
         automatic_close:
           label: Samodejno zapri anketo
-        show_advanced: "Pokaži dodatne možnosti"

@@ -16,8 +16,6 @@ pt_BR:
     first_reaction:
       name: Primeira Reação
       description: Reagiu à postagem
-      long_description: |
-        Este emblema é concedido na primeira vez que você reage a uma postagem. Reagir às postagens é uma ótima maneira de informar aos outros membros da comunidade que o conteúdo da sua postagem foi interessante, útil, legal ou divertido. Compartilhe sua reação!
   reports:
     reactions:
       title: "Reações"

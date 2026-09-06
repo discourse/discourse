@@ -8,12 +8,9 @@ import { i18n } from "discourse-i18n";
 export default class PostMenuRepliesButton extends Component {
   static extraControls = true;
 
-  static shouldRender(args, _context, owner) {
-    if (owner) {
-      const router = owner.lookup("service:router");
-      if (router?.currentRouteName?.startsWith("nested")) {
-        return false;
-      }
+  static shouldRender(args) {
+    if (args.state.nestedReplyView) {
+      return false;
     }
 
     const replyCount = args.post.reply_count;

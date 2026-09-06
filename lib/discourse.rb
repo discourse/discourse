@@ -114,8 +114,18 @@ module Discourse
         next if File.symlink?(destination) && File.readlink(destination) == source
 
         temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
-        execute_command("ln", "-s", source, temp_destination)
-        File.rename(temp_destination, destination)
+        File.symlink(source, temp_destination)
+
+        begin
+          File.rename(temp_destination, destination)
+        rescue Errno::EXDEV
+          # Rails.root/tmp and the destination can live on different filesystems
+          # (e.g. containerized setups where tmp is a separate mount). rename(2)
+          # cannot cross filesystem boundaries, so fall back to a non-atomic
+          # replace. The flock above already serializes writers.
+          File.delete(destination) if File.symlink?(destination)
+          FileUtils.mv(temp_destination, destination)
+        end
       end
 
       nil
@@ -154,6 +164,7 @@ module Discourse
         failure_message: "",
         success_status_codes: [0],
         chdir: ".",
+        unsetenv_others: false,
         unsafe_shell: false
       )
         env = nil
@@ -173,7 +184,10 @@ module Discourse
 
         args = command
         args = [env] + command if env
-        stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
+
+        spawn_options = { chdir: chdir }
+        spawn_options[:unsetenv_others] = true if unsetenv_others
+        stdout, stderr, status = Open3.capture3(*args, **spawn_options)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
           message = [command.join(" "), failure_message, stderr].filter(&:present?).join("\n")
@@ -251,6 +265,18 @@ module Discourse
   class InvalidParameters < StandardError
   end
 
+  # Same as InvalidParameters, but carries an HTML-rendered variant of the
+  # message for surfaces that can render it (e.g. the admin settings UI).
+  # The plain #message stays free of markup so generic rescuers can display it.
+  class InvalidHTMLParameters < InvalidParameters
+    attr_reader :html_message
+
+    def initialize(message = nil, html_message: nil)
+      super(message)
+      @html_message = html_message || message
+    end
+  end
+
   # When they don't have permission to do something
   class InvalidAccess < StandardError
     attr_reader :obj
@@ -324,6 +350,12 @@ module Discourse
 
   def self.anonymous_filters
     @anonymous_filters ||= %i[latest top categories hot]
+  end
+
+  # `anonymous_filters` also holds menu items such as `categories`, which have no
+  # `/l/<filter>` route. Not memoized: plugins push onto both lists at load time.
+  def self.anonymous_list_filters
+    Discourse.filters & Discourse.anonymous_filters
   end
 
   def self.top_menu_items
@@ -474,6 +506,8 @@ module Discourse
             plugin: plugin,
             type_module: true,
             importmap_name: "discourse/plugins/#{plugin.name}",
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
           }
         end
       end
@@ -494,6 +528,8 @@ module Discourse
             imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
             plugin: plugin,
             type_module: true,
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
           }
         end
       end
@@ -506,6 +542,8 @@ module Discourse
             imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
             plugin: plugin,
             type_module: true,
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "test"),
           }
         end
       end
@@ -681,6 +719,10 @@ module Discourse
     "#{Discourse.base_path}/srv/pv"
   end
 
+  def self.engagement_tracking_path
+    "#{Discourse.base_path}/srv/se"
+  end
+
   class << self
     alias_method :base_url_no_path, :base_url_no_prefix
   end
@@ -798,6 +840,11 @@ module Discourse
 
             @mutex.synchronize do
               @dbs.each do |db|
+                if !RailsMultisite::ConnectionManagement.has_db?(db)
+                  @dbs.delete(db)
+                  next
+                end
+
                 RailsMultisite::ConnectionManagement.with_connection(db) do
                   @dbs.delete(db) if !Discourse.redis.expire(key, ttl)
                 end
@@ -945,6 +992,11 @@ module Discourse
         username_lower: SiteSetting.site_contact_username.downcase,
       ) if SiteSetting.site_contact_username.present?
     user ||= system_user || User.admins.real.order(:id).first
+  end
+
+  # A global override bypasses the write-time name-to-id conversion.
+  def self.site_contact_group
+    Group.find_by_id_or_name(SiteSetting.site_contact_group_name)
   end
 
   SYSTEM_USER_ID = -1
@@ -1269,9 +1321,12 @@ module Discourse
         require "actionview_precompiler"
         ActionviewPrecompiler.precompile
       end,
-      Thread.new { LetterAvatar.image_magick_version },
+      Thread.new do
+        LetterAvatar.image_magick_version
+        LetterAvatar.cleanup_old
+      end,
       Thread.new { SvgSprite.core_svgs },
-      Thread.new { EmberCli.script_chunks(exception: false) },
+      Thread.new { EmberAssets.script_chunks(exception: false) },
       Thread.new do
         if GlobalSetting.mini_racer_single_threaded
           PrettyText.cook("warm up **pretty text**")
@@ -1314,10 +1369,24 @@ module Discourse
 
   def self.anonymous_locale(request)
     locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
-    locale ||= request.cookies["locale"] if SiteSetting.set_locale_from_cookie
+    locale ||= locale_from_cookie(request)
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
     HttpLanguageParser.parse(locale)
+  end
+
+  def self.locale_from_cookie(request)
+    cookie = request.cookies["locale"]
+    return if cookie.blank?
+    return cookie if SiteSetting.set_locale_from_cookie
+
+    # The language switcher writes this cookie, so reading it back needs no separate opt-in.
+    # Restricted to the configured locales so anonymous cache variance stays bounded by the
+    # site's own locale list rather than every available locale.
+    if ContentLocalization.language_switcher_enabled? &&
+         SiteSetting.content_localization_locales.include?(cookie)
+      cookie
+    end
   end
 
   # For test environment only

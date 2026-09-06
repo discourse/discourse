@@ -4,16 +4,16 @@ module Migrations
   module Tooling
     module CLI
       class SchemaCommand < Migrations::CLI::Command
-        self.description = "Manage the IntermediateDB schema"
+        self.description = "Manage database schemas"
 
         nested :command,
                {
                  "generate" => SchemaCommands::GenerateCommand,
-                 "validate" => SchemaCommands::ValidateCommand,
                  "list" => SchemaCommands::ListCommand,
                  "diff" => SchemaCommands::DiffCommand,
                  "add" => SchemaCommands::AddCommand,
                  "ignore" => SchemaCommands::IgnoreCommand,
+                 "unignore" => SchemaCommands::UnignoreCommand,
                  "refresh-plugins" => SchemaCommands::RefreshPluginsCommand,
                }
 

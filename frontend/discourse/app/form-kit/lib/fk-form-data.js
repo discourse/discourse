@@ -48,7 +48,9 @@ export default class FKFormData {
       this.draftData = produce(data, () => {});
     } catch (e) {
       if (e.message.includes("[Immer]")) {
-        throw new Error("[FormKit]: the @data property expects a POJO.");
+        throw new Error("[FormKit]: the @data property expects a POJO.", {
+          cause: e,
+        });
       }
     }
   }

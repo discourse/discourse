@@ -11,7 +11,6 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 export default class AdminPostMenu extends Component {
   @service currentUser;
   @service siteSettings;
-  @service router;
   @service adminPostMenuButtons;
 
   get reviewUrl() {
@@ -34,7 +33,8 @@ export default class AdminPostMenu extends Component {
     if (!this.siteSettings.nested_replies_enabled) {
       return null;
     }
-    if (!this.router.currentRouteName?.startsWith("nested")) {
+    const topicController = getOwner(this).lookup("controller:topic");
+    if (!topicController?.shouldRenderNestedView) {
       return null;
     }
 

@@ -52,7 +52,9 @@ module Migrations
               allowed_set: PERMISSION_TYPES,
               default_value: DEFAULT_PERMISSION_TYPE,
             ) do |value, _default_value|
-              puts "    Tag group #{tag_group_id}, Group #{group_id}: Invalid permission_type '#{value}'"
+              notice(
+                "Tag group #{tag_group_id}, Group #{group_id}: Invalid permission_type '#{value}'",
+              )
             end
 
           unless @existing_tag_group_permissions.add?(tag_group_id, group_id, permission_type)

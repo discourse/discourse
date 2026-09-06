@@ -32,6 +32,23 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
   end
 
   describe "after_create stats increment" do
+    it "maintains stats during preparation while nested replies are disabled" do
+      SiteSetting.nested_replies_enabled = false
+      SiteSetting.nested_replies_stats_maintenance_enabled = true
+
+      parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent.post_number)
+
+      expect(NestedViewPostStat.find_by(post_id: op.id)).to have_attributes(
+        direct_reply_count: 1,
+        total_descendant_count: 2,
+      )
+      expect(NestedViewPostStat.find_by(post_id: parent.id)).to have_attributes(
+        direct_reply_count: 1,
+        total_descendant_count: 1,
+      )
+    end
+
     it "uses constant queries regardless of chain depth" do
       chain_3 = create_reply_chain(depth: 3)
       queries_3 =
@@ -243,6 +260,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "returns the correct ancestor chain" do
+      SiteSetting.nested_replies_max_depth = 5
       chain = create_reply_chain(depth: 5)
       sign_in(admin)
 
@@ -282,6 +300,78 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       deleted_ancestor =
         json["ancestor_chain"].find { |a| a["post_number"] == chain[1].post_number }
       expect(deleted_ancestor["deleted_post_placeholder"]).to eq(true)
+    end
+  end
+
+  describe "capped boundary preload" do
+    it "uses one flat-descendant query regardless of the number of boundary parents" do
+      SiteSetting.nested_replies_cap_nesting_depth = true
+      SiteSetting.nested_replies_max_depth = 2
+
+      topics =
+        [1, 5].map do |branch_count|
+          nested_topic = Fabricate(:topic, user: user)
+          Fabricate(:post, topic: nested_topic, user: user, post_number: 1)
+          Fabricate(:nested_topic, topic: nested_topic)
+
+          branch_count.times do
+            root = Fabricate(:post, topic: nested_topic, user: user, reply_to_post_number: 1)
+            boundary_parent =
+              Fabricate(
+                :post,
+                topic: nested_topic,
+                user: user,
+                reply_to_post_number: root.post_number,
+              )
+            Fabricate(
+              :post,
+              topic: nested_topic,
+              user: user,
+              reply_to_post_number: boundary_parent.post_number,
+            )
+          end
+
+          nested_topic
+        end
+      sign_in(user)
+
+      flat_query_counts =
+        topics.map do |nested_topic|
+          queries =
+            track_sql_queries { get "/n/#{nested_topic.slug}/#{nested_topic.id}.json?sort=old" }
+          queries.count { |query| query.include?("PARTITION BY descendants.root_post_number") }
+        end
+
+      expect(flat_query_counts).to eq([1, 1])
+    end
+  end
+
+  describe "hot sorting" do
+    def build_hot_topic(root_count)
+      hot_topic = Fabricate(:topic, user: user)
+      Fabricate(:post, topic: hot_topic, user: user, post_number: 1)
+      Fabricate(:nested_topic, topic: hot_topic)
+      root_count.times { Fabricate(:post, topic: hot_topic, user: user) }
+      hot_topic.update_columns(posts_count: root_count + 1, last_posted_at: Time.current)
+      NestedReplies::HotScoreCalculator.recalculate_topic(hot_topic.id)
+      hot_topic
+    end
+
+    it "uses a constant number of cache queries as the root count grows" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      small_topic = build_hot_topic(5)
+      large_topic = build_hot_topic(50)
+      sign_in(user)
+
+      small_queries =
+        track_sql_queries { get "/n/#{small_topic.slug}/#{small_topic.id}.json?sort=hot" }
+      large_queries =
+        track_sql_queries { get "/n/#{large_topic.slug}/#{large_topic.id}.json?sort=hot" }
+      cache_query = /nested_hot_(post_scores|score_snapshots)/
+      small_cache_query_count = small_queries.grep(cache_query).size
+
+      expect(small_cache_query_count).to be_positive
+      expect(large_queries.grep(cache_query).size).to eq(small_cache_query_count)
     end
   end
 

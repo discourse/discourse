@@ -16,7 +16,7 @@ RSpec.describe "Managing LLM configurations" do
   it "correctly sets defaults" do
     visit "/admin/plugins/discourse-ai/ai-llms"
 
-    find("[data-llm-id='anthropic-claude-opus-4-7'] button").click()
+    find("[data-llm-id='anthropic-claude-opus-5'] button").click()
 
     secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
     secret_selector.expand
@@ -32,9 +32,9 @@ RSpec.describe "Managing LLM configurations" do
     expect(llm.api_key).to eq("abcd")
 
     preset = DiscourseAi::Completions::Llm.presets.find { |p| p[:id] == "anthropic" }
-    model_preset = preset[:models].find { |m| m[:name] == "claude-opus-4-7" }
+    model_preset = preset[:models].find { |m| m[:name] == "claude-opus-5" }
 
-    expect(llm.name).to eq("claude-opus-4-7")
+    expect(llm.name).to eq("claude-opus-5")
     expect(llm.url).to eq(preset[:endpoint])
     expect(llm.tokenizer).to eq(preset[:tokenizer].to_s)
     expect(llm.max_prompt_tokens.to_i).to eq(model_preset[:tokens])
@@ -66,7 +66,7 @@ RSpec.describe "Managing LLM configurations" do
     form.field("provider").select("vllm")
     form.field("tokenizer").select("DiscourseAi::Tokenizer::Llama3Tokenizer")
     form.field("max_output_tokens").fill_in(2000)
-    form.field("vision_enabled").toggle
+    form.field("vision_mode").select("native")
     form.submit
 
     expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-llms/\d+/edit})
@@ -98,6 +98,35 @@ RSpec.describe "Managing LLM configurations" do
     expect(llm.ai_secret_id).to eq(ai_secret.id)
 
     expect(LlmModel.count).to eq(llm_count + 1)
+  end
+
+  it "links usage labels to their configuration pages" do
+    SiteSetting.discourse_automation_enabled = true
+    llm_model = Fabricate(:llm_model)
+    SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
+    automation = Fabricate(:automation, script: "llm_report", name: "LLM report", enabled: true)
+    automation.fields.create!(
+      component: "text",
+      name: "model",
+      metadata: {
+        value: llm_model.id,
+      },
+      target: "script",
+    )
+
+    visit "/admin/plugins/discourse-ai/ai-llms"
+
+    within("[data-llm-id='#{llm_model.name}'] .ai-llm-list-editor__usages") do
+      expect(page).to have_link(
+        I18n.t("js.discourse_ai.llms.usage.ai_bot"),
+        href:
+          "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::BOT_ID}/edit",
+      )
+      expect(page).to have_link(
+        I18n.t("js.discourse_ai.llms.usage.automation", agent: automation.name),
+        href: "/admin/plugins/automation/automation/#{automation.id}",
+      )
+    end
   end
 
   context "when changing the provider" do
@@ -150,21 +179,15 @@ RSpec.describe "Managing LLM configurations" do
     it "prefills the quotas form" do
       visit "/admin/plugins/discourse-ai/ai-llms/#{llm_model_1.id}/edit"
 
-      expect(page).to have_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: group_1.name,
-      )
+      expect(page).to have_selector(".ai-llm-quotas__item", text: group_1.name)
     end
 
     it "can remove a quota" do
       visit "/admin/plugins/discourse-ai/ai-llms/#{llm_model_1.id}/edit"
 
-      find(".ai-llm-quotas__delete-btn:nth-child(1)").click
+      find(".ai-llm-quotas__delete-btn").click
 
-      expect(page).to have_no_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: group_1.name,
-      )
+      expect(page).to have_no_selector(".ai-llm-quotas__item", text: group_1.name)
     end
 
     it "can add a quota" do
@@ -177,10 +200,7 @@ RSpec.describe "Managing LLM configurations" do
       form.field("max_tokens").fill_in(2000)
       form.submit
 
-      expect(page).to have_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: Group.find(1).name,
-      )
+      expect(page).to have_selector(".ai-llm-quotas__item", text: Group.find(1).name)
     end
   end
 

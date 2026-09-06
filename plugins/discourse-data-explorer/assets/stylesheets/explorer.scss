@@ -115,6 +115,25 @@ table.group-reports {
     }
   }
 
+  /* The floor a resize may not cross, read from here by the separator. Declared
+     rather than measured once, so it follows the layout rather than whichever
+     state the editor opened in. Carried by a class, so panes without a separator
+     keep their own sizing. */
+
+  .query-editor__panes {
+    min-height: 400px;
+
+    @include viewport.until(sm) {
+      min-height: 548px;
+    }
+  }
+
+  &.no-schema .query-editor__panes {
+    @include viewport.until(sm) {
+      min-height: 300px;
+    }
+  }
+
   .editor-panel {
     flex: 1 0 50%;
 
@@ -145,6 +164,7 @@ table.group-reports {
     --width: 345px;
     flex-shrink: 0;
     flex-grow: 0;
+    position: relative;
     width: var(--width);
 
     @include viewport.until(sm) {
@@ -201,6 +221,10 @@ table.group-reports {
             box-shadow: none;
           }
         }
+      }
+
+      .schema__toggle {
+        flex: 0 0 auto;
       }
 
       .schema-table-name {
@@ -292,12 +316,26 @@ table.group-reports {
     }
   }
 
+  &.no-schema {
+    .editor-panel {
+      flex-basis: 100%;
+    }
+
+    .right-panel {
+      width: 0;
+    }
+
+    .schema__toggle.--expand {
+      position: absolute;
+      inset-block-start: var(--space-2);
+      inset-inline-start: -2.75em;
+      z-index: 1;
+    }
+  }
+
   .grippie {
-    cursor: nwse-resize;
     padding-bottom: var(--space-2);
     user-select: none;
-    color: var(--primary);
-    text-align: right;
   }
 }
 
@@ -465,22 +503,10 @@ table.group-reports {
     background-color: var(--danger-low);
   }
 
-  .invalid .ac-wrap {
-    background-color: var(--danger-low);
-  }
-
   .param {
     display: flex;
     align-items: center;
     flex: 0;
-
-    .ac-wrap {
-      display: inline-block;
-
-      input {
-        width: 100px !important; // override an inline style
-      }
-    }
 
     input,
     .select-kit {
@@ -517,30 +543,71 @@ table.group-reports {
 .query-ai-prompt {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: var(--space-1);
   margin: 1em 0;
 
   &__label {
-    font-weight: 700;
+    margin: 0;
+    color: var(--primary);
+    font-size: var(--font-down-1-rem);
+    font-weight: 600;
+    line-height: var(--line-height-medium);
   }
 
   &__input {
     width: 100%;
+    height: auto;
     min-height: 4em;
   }
 
   &__actions {
     display: flex;
     align-items: center;
-    gap: 0.75em;
+    margin-block-start: var(--space-1);
+  }
+}
+
+.data-explorer-workflow-ai-query {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-self: stretch;
+  min-width: 0;
+  margin-block: var(--space-3) 0;
+  padding: var(--space-3);
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-inline-start: 3px solid var(--tertiary);
+  border-radius: var(--d-border-radius);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
   }
 
-  &__generating {
+  &__icon {
     display: inline-flex;
     align-items: center;
-    gap: 0.35em;
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 2rem;
+    height: 2rem;
+    color: var(--tertiary);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-pill);
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--primary);
+    font-size: var(--font-up-1);
+    line-height: var(--line-height-medium);
+  }
+
+  &__prompt {
+    margin: 0;
   }
 }
 
@@ -662,6 +729,10 @@ table.group-reports {
     min-height: 60px;
   }
 
+  .query-group-select {
+    width: 100%;
+  }
+
   .query-new__actions {
     display: flex;
     gap: 0.5em;
@@ -760,6 +831,11 @@ table.group-reports {
     min-width: 0;
     margin-bottom: 1rem;
     animation: fadein 2s;
+
+    .query-results-chart__form {
+      max-width: 100%;
+      margin-bottom: 0.75rem;
+    }
 
     canvas {
       height: clamp(200px, 50vh, 350px) !important;
@@ -951,12 +1027,6 @@ table.group-reports {
 
   .query-row:hover {
     background-color: inherit;
-  }
-
-  tr a {
-    color: inherit;
-    cursor: pointer;
-    display: inline-block;
   }
 
   .no-search-results {

@@ -14,14 +14,9 @@ export default class ChatChannelPane extends Service {
     return this.chat.activeChannel;
   }
 
-  get selectedMessageIds() {
-    return this.channel.messagesManager.selectedMessages.map((item) => item.id);
-  }
-
   @action
   cancelSelecting() {
     this.selectingMessages = false;
-    this.channel.messagesManager.clearSelectedMessages();
   }
 
   @action

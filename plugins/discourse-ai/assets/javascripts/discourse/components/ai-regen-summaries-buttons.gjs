@@ -40,10 +40,7 @@ export default class AiRegenSummariesButtons extends Component {
       this.toasts.success({
         data: {
           message: i18n(
-            "discourse_ai.summarization.topic.regenerate_gists_success",
-            {
-              count: this.count,
-            }
+            "discourse_ai.summarization.topic.regenerate_gists_started"
           ),
         },
       });
@@ -78,8 +75,7 @@ export default class AiRegenSummariesButtons extends Component {
       this.toasts.success({
         data: {
           message: i18n(
-            "discourse_ai.summarization.topic.regenerate_topic_summary_success",
-            { count: this.count }
+            "discourse_ai.summarization.topic.regenerate_topic_summaries_started"
           ),
         },
       });

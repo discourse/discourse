@@ -39,11 +39,6 @@ module PageObjects
       end
 
       def open_composer_actions
-        find(".composer-action-title .btn").click
-        self
-      end
-
-      def open_composer_actions_new
         find(".composer-actions-trigger").click
         self
       end
@@ -66,6 +61,22 @@ module PageObjects
         self
       end
 
+      def height
+        find(@composer_id).native.bounding_box["height"].round
+      end
+
+      def drag_resize_by(pixels)
+        drag_with_pointer(from: "#{@composer_id} .grippie", by: { y: -pixels })
+        self
+      end
+
+      # The composer's height is driven by this variable, so matching it is how the
+      # resize is observed. Named for what it reads rather than for the height, which
+      # would suggest measuring the box.
+      def has_applied_height?(height)
+        has_css?("html[style*='--composer-height: #{height}px']", visible: :all)
+      end
+
       def fill_title(title)
         find("#{@composer_id} #reply-title").fill_in(with: title)
         self
@@ -73,6 +84,51 @@ module PageObjects
 
       def has_input_title?(value)
         has_field?("reply-title", with: value)
+      end
+
+      # Methods for when the enable_composer_redesign upcoming change is enabled.
+
+      def has_footer_toolbar?
+        page.has_css?("#{@composer_id} .composer-footer__toolbar .d-editor-button-bar")
+      end
+
+      def has_title_below_category_row?
+        page.has_css?("#{@composer_id} .title-and-category ~ .title-input")
+      end
+
+      def has_pm_recipients_in_category_row?
+        page.has_css?("#{@composer_id} .title-and-category .user-selector")
+      end
+
+      def has_toggle_toolbar_button?
+        page.has_css?("#{@composer_id} .toggle-toolbar")
+      end
+
+      # Methods for when the enable_composer_redesign upcoming change is disabled.
+
+      def has_no_footer_toolbar?
+        page.has_no_css?("#{@composer_id} .composer-footer")
+      end
+
+      def has_inline_toolbar?
+        page.has_css?("#{@composer_id} .d-editor-textarea-wrapper .d-editor-button-bar")
+      end
+
+      def has_title_in_category_row?
+        page.has_css?("#{@composer_id} .title-and-category .title-input")
+      end
+
+      def toggle_toolbar
+        find("#{@composer_id} .toggle-toolbar").click
+        self
+      end
+
+      def has_visible_toolbar?
+        page.has_css?("#{@composer_id} .d-editor-button-bar")
+      end
+
+      def has_no_visible_toolbar?
+        page.has_no_css?("#{@composer_id} .d-editor-button-bar")
       end
 
       def fill_content(content)
@@ -352,6 +408,18 @@ module PageObjects
       def select_range_rich_editor(start_index, length)
         focus
         select_text_range(RICH_EDITOR, start_index, length)
+      end
+
+      def select_code_block
+        select_all_content("#{RICH_EDITOR} pre code")
+      end
+
+      def has_nested_list_item?(text)
+        has_css?("#{RICH_EDITOR} li > ul > li", text:, exact_text: true)
+      end
+
+      def has_top_level_list_item?(text)
+        has_css?("#{RICH_EDITOR} > ul > li", text:, exact_text: true)
       end
 
       def submit

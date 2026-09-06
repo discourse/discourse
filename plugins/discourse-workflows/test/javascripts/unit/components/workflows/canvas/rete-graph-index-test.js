@@ -87,6 +87,14 @@ module("Unit | Utility | workflows rete graph index", function () {
       targetInput: "main",
       targetInputIndex: 0,
     };
+    const storedSecondMergeInputConnection = {
+      sourceClientId: "action-1",
+      sourceOutput: "main",
+      sourceOutputIndex: 0,
+      targetClientId: "merge-1",
+      targetInput: "main",
+      targetInputIndex: 1,
+    };
 
     assert.true(
       connectionMatchesEndpoint(storedTrueBranchConnection, {
@@ -110,6 +118,15 @@ module("Unit | Utility | workflows rete graph index", function () {
         sourceOutput: "true",
         targetClientId: "action-2",
         targetInput: "main",
+      })
+    );
+    assert.true(
+      connectionMatchesEndpoint(storedSecondMergeInputConnection, {
+        sourceClientId: "action-1",
+        sourceOutput: "main",
+        targetClientId: "merge-1",
+        targetInput: "main",
+        targetInputIndex: 1,
       })
     );
   });

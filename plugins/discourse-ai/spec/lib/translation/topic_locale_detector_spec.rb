@@ -34,6 +34,18 @@ describe DiscourseAi::Translation::TopicLocaleDetector do
       ).to("zh_CN")
     end
 
+    it "updates the topic locale when the streamed detector response has a trailing backslash" do
+      assign_fake_provider_to(:ai_default_llm_model)
+      SiteSetting.ai_translation_enabled = true
+      bot = instance_double(DiscourseAi::Agents::Bot)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+      allow(bot).to receive(:reply) { |_, &blk| blk.call("nl\\") }
+
+      expect { described_class.detect_locale(topic) }.to change { topic.reload.locale }.from(
+        nil,
+      ).to("nl")
+    end
+
     it "bypasses validations when updating locale" do
       topic.update_column(:title, "A")
       SiteSetting.min_topic_title_length = 15

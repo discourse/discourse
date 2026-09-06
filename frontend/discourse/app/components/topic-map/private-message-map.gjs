@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { groupPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -71,7 +72,7 @@ class PmMapUserGroup extends Component {
   }
 
   <template>
-    <div class="user group" data-id={{@model.id}}>
+    <div class="user group btn-default" data-id={{@model.id}}>
       <a href={{this.groupUrl}} class="group-link">
         {{dIcon "users"}}
         <span class="group-name">{{@model.name}}</span>
@@ -94,7 +95,7 @@ class PmRemoveGroupLink extends Component {
 
   <template>
     <DButton
-      class="remove-invited btn-small"
+      class="btn-transparent remove-invited btn-small"
       @action={{this.removeGroup}}
       @icon="xmark"
     />
@@ -115,22 +116,20 @@ class PmMapUser extends Component {
   }
 
   <template>
-    <div class="user" data-id={{@model.id}}>
-      <a class="user-link" href={{@model.path}}>
-        <a
-          class="trigger-user-card"
-          data-user-card={{@model.username}}
-          title={{@model.username}}
-          aria-hidden="true"
-        >
-          {{dBoundAvatarTemplate
-            @model.avatar_template
-            "tiny"
-            (hash title=this.avatarTitle)
-          }}
-        </a>
+    <div class="user btn-default" data-id={{@model.id}}>
+      <DUserLink
+        class="user-link trigger-user-card"
+        @username={{@model.username}}
+        @href={{@model.path}}
+        title={{@model.username}}
+      >
+        {{dBoundAvatarTemplate
+          @model.avatar_template
+          "tiny"
+          (hash title=this.avatarTitle)
+        }}
         <span class="username">{{@model.username}}</span>
-      </a>
+      </DUserLink>
 
       {{#if this.canRemoveLink}}
         <PmRemoveLink
@@ -151,7 +150,7 @@ class PmRemoveLink extends Component {
 
   <template>
     <DButton
-      class="remove-invited btn-small"
+      class="btn-transparent remove-invited btn-small"
       @action={{this.removeUser}}
       @icon="xmark"
     />

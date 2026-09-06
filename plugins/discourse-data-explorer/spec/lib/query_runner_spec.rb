@@ -41,7 +41,7 @@ describe DiscourseDataExplorer::QueryRunner do
 
       cached = described_class.cached_result(query, nil)
       expect(cached).to be_present
-      expect(cached["success"]).to eq(true)
+      expect(cached[:success]).to eq(true)
     end
 
     it "does not cache when explain is true" do
@@ -73,8 +73,8 @@ describe DiscourseDataExplorer::QueryRunner do
       described_class.run(query, nil, current_user: admin)
       cached = described_class.cached_result(query, nil)
 
-      expect(cached["cached_at"]).to be_present
-      expect(cached["rows"]).to be_present
+      expect(cached[:cached_at]).to be_present
+      expect(cached[:rows]).to be_present
     end
 
     it "returns nil for queries with internal params" do

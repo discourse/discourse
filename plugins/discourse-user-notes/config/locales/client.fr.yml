@@ -8,4 +8,11 @@ fr:
   js:
     user_notes:
       title: "Notes d'utilisateur"
+      attach: "Ajouter une note sur l'utilisateur"
+      attach_note_description: "Ajouter une note sur cet utilisateur, visible uniquement par les responsables"
+      remove: "Supprimer la note sur l'utilisateur"
+      show: "Notes sur l'utilisateur (%{count})"
       delete_confirm: "Voulez-vous vraiment supprimer cette note d'utilisateur ?"
+      show_post: "Afficher la publication"
+      show_flag: "Afficher le signalement"
+      copy_reviewable_note: "Copier cette note dans « Note sur l'utilisateur » sur le profil de %{username} ?"

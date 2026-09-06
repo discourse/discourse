@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    boards:
+      board:
+        remove_card: "Ukloni"
+        title: "Naslov"
+        tags: "Tagovi"
+        topic_reply_count:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+      manage:
+        name: "Ime foruma"
+        constraint_categories: "Kategorije"
+        constraint_tags: "Tagovi"
+        columns:
+          remove: "Ukloni"
+          column_title: "Naslov"
+          icon: "Ikona"
+          color: "Boja"
+          move_to_status_open: "Otvori"

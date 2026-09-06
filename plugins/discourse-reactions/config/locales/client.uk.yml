@@ -13,15 +13,6 @@ uk:
   js:
     discourse_reactions:
       reactions_title: "Реакції"
-      state_panel:
-        more_users: "і більше %{count}..."
-        show_users: "Показати більше користувачів"
-        hide_users: "Показати менше користувачів"
-        reaction_group:
-          one: "%{reaction}: %{count} користувач"
-          few: "%{reaction}: %{count} користувачі"
-          many: "%{reaction}: %{count} користувачів"
-          other: "%{reaction}: %{count} користувачів"
       reaction:
         forbidden: "Ви не маєте права реагувати або змінювати свою реакцію на цей пост."
       picker:

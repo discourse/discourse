@@ -21,7 +21,14 @@ RSpec.describe FastImage do
     stub_ip_lookup("example.com", %W[52.125.123.12])
 
     success = Class.new(StandardError)
-    TCPSocket.stubs(:open).with { |addr| "52.125.123.12" == addr }.once.raises(success)
+    TCPSocket
+      .stubs(:open)
+      .with do |addr|
+        FinalDestination::Connector.token?(addr) &&
+          FinalDestination::Connector.addresses(addr) == %w[52.125.123.12]
+      end
+      .once
+      .raises(success)
 
     expect { described_class.type("http://example.com") }.to raise_error(success)
   end

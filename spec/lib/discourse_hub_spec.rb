@@ -3,7 +3,7 @@
 RSpec.describe DiscourseHub do
   describe ".discourse_version_check" do
     it "should return just return the json that the hub returns" do
-      hub_response = { "success" => "OK", "latest_version" => "0.8.1", "critical_updates" => false }
+      hub_response = { "success" => "OK", "latest_version" => "0.8.1" }
 
       stub_request(
         :get,

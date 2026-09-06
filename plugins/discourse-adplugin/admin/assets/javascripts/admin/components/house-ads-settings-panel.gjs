@@ -5,6 +5,12 @@ const HouseAdsSettingsPanel = <template>
   <section class="house-ads-settings" ...attributes>
     <form class="form-horizontal">
       <HouseAdsListSetting
+        @name="above_site_header"
+        @value={{@adSettings.above_site_header}}
+        @allAds={{@houseAds}}
+        @adSettings={{@adSettings}}
+      />
+      <HouseAdsListSetting
         @name="topic_list_top"
         @value={{@adSettings.topic_list_top}}
         @allAds={{@houseAds}}

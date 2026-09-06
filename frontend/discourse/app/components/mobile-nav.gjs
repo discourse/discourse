@@ -1,100 +1,100 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { classNames, tagName } from "@ember-decorators/component";
-import { on as onEvent } from "@ember-decorators/object";
-import $ from "jquery";
+import { modifier as modifierFn } from "ember-modifier";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 
-@tagName("ul")
-@classNames("mobile-nav")
 export default class MobileNav extends Component {
   @service router;
+  @service site;
 
-  selectedHtml = null;
+  @tracked selectedHtml = null;
+  @tracked expanded = false;
 
-  @onEvent("init")
-  _init() {
-    if (this.site.desktopView) {
-      let classes = this.desktopClass;
-      if (classes) {
-        classes = classes.split(" ");
-        this.set("classNames", classes);
+  // Mirror the active item's markup into the collapsed label, keeping it in
+  // sync as the `.active` class moves between links or items are loaded.
+  trackSelectedHtml = modifierFn((element) => {
+    let current;
+
+    const update = () => {
+      const html = element.querySelector(".active")?.innerHTML;
+      if (html && html !== current) {
+        current = html;
+        this.selectedHtml = html;
       }
+    };
+
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(element, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  });
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeDidChange", this, this.collapse);
+    registerDestructor(this, () => {
+      this.router.off("routeDidChange", this, this.collapse);
+    });
+  }
+
+  get rootClass() {
+    if (this.site.mobileView) {
+      return "mobile-nav";
     }
-  }
-
-  currentRouteChanged() {
-    this.set("expanded", false);
-    next(() => this._updateSelectedHtml());
-  }
-
-  _updateSelectedHtml() {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    const active = this.element.querySelector(".active");
-    if (active && active.innerHTML) {
-      this.set("selectedHtml", active.innerHTML);
-    }
-  }
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    this._updateSelectedHtml();
-    this.router.on("routeDidChange", this, this.currentRouteChanged);
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.router.off("routeDidChange", this, this.currentRouteChanged);
+    return this.args.desktopClass || "mobile-nav";
   }
 
   @action
   toggleExpanded(event) {
     event?.preventDefault();
-    this.toggleProperty("expanded");
+    this.expanded = !this.expanded;
+  }
 
-    next(() => {
-      if (this.expanded) {
-        $(window)
-          .off("click.mobile-nav")
-          .on("click.mobile-nav", (e) => {
-            if (!this.element || this.isDestroying || this.isDestroyed) {
-              return;
-            }
-
-            const expander = this.element.querySelector(".expander");
-            if (expander && e.target !== expander) {
-              this.set("expanded", false);
-              $(window).off("click.mobile-nav");
-            }
-          });
-      }
-    });
+  @action
+  collapse() {
+    if (this.expanded) {
+      this.expanded = false;
+    }
   }
 
   <template>
-    {{#if this.site.mobileView}}
-      {{#if this.selectedHtml}}
-        <li>
-          <a href {{on "click" this.toggleExpanded}} class="expander">
-            <span class="selection">{{trustHTML this.selectedHtml}}</span>
-            {{dIcon "angle-down"}}
-          </a>
-        </li>
-      {{/if}}
-      <ul class="drop {{if this.expanded 'expanded'}}">
+    <ul
+      class={{this.rootClass}}
+      {{dCloseOnClickOutside this.collapse}}
+      ...attributes
+    >
+      {{#if this.site.mobileView}}
+        {{#if this.selectedHtml}}
+          <li>
+            <a href {{on "click" this.toggleExpanded}} class="expander">
+              <span class="selection">{{trustHTML this.selectedHtml}}</span>
+              {{dIcon "angle-down"}}
+            </a>
+          </li>
+        {{/if}}
+        <ul
+          class="drop {{if this.expanded 'expanded'}}"
+          {{this.trackSelectedHtml}}
+        >
+          {{yield}}
+        </ul>
+      {{else}}
         {{yield}}
-      </ul>
-    {{else}}
-      {{yield}}
-    {{/if}}
+      {{/if}}
+    </ul>
   </template>
 }

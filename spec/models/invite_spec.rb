@@ -253,6 +253,138 @@ RSpec.describe Invite do
         end
       end
     end
+
+    context "with admin invites" do
+      fab!(:admin)
+
+      it "creates a single-use email invite" do
+        invite = Invite.generate(admin, email: "test@example.com", admin: true)
+
+        expect(invite.admin).to eq(true)
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "creates a single-use invite link when a shareable link is chosen" do
+        invite = Invite.generate(admin, admin: true)
+
+        expect(invite.admin).to eq(true)
+        expect(invite.is_invite_link?).to eq(true)
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "can be combined with a domain restriction when created as a link" do
+        invite = Invite.generate(admin, domain: "example.com", admin: true)
+
+        expect(invite.admin).to eq(true)
+        expect(invite.domain).to eq("example.com")
+      end
+
+      it "requires the inviter to be an admin" do
+        expect { Invite.generate(user, email: "test@example.com", admin: true) }.to raise_error(
+          ActiveRecord::RecordInvalid,
+          /#{I18n.t("invite.admin_invite_requires_admin_inviter")}/,
+        )
+      end
+
+      it "requires the inviter to still be an admin when the email is removed" do
+        invite = Invite.generate(admin, email: "test@example.com", admin: true)
+        admin.update!(admin: false)
+
+        invite.email = nil
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.admin_invite_requires_admin_inviter"),
+        )
+      end
+
+      it "requires the inviter to still be an admin when the domain restriction is removed" do
+        invite = Invite.generate(admin, domain: "example.com", admin: true)
+        admin.update!(admin: false)
+
+        invite.domain = nil
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.admin_invite_requires_admin_inviter"),
+        )
+      end
+
+      it "requires the inviter to still be an admin when the domain restriction is changed" do
+        invite = Invite.generate(admin, domain: "example.com", admin: true)
+        admin.update!(admin: false)
+
+        invite.domain = "other-example.com"
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.admin_invite_requires_admin_inviter"),
+        )
+      end
+
+      it "requires the inviter to still be staff when a moderator invite's domain restriction is removed" do
+        invite = Invite.generate(admin, domain: "example.com", moderator: true)
+        admin.update!(admin: false)
+
+        invite.domain = nil
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.moderator_invite_requires_staff_inviter"),
+        )
+      end
+
+      it "must be single-use" do
+        invite = Invite.generate(admin, admin: true)
+
+        invite.max_redemptions_allowed = 2
+        expect(invite).not_to be_valid
+        expect(invite.errors[:max_redemptions_allowed]).to include(
+          I18n.t("invite.max_redemptions_allowed_one_staff"),
+        )
+      end
+
+      it "triggers an event when created" do
+        events =
+          DiscourseEvent.track_events(:admin_invite_created) do
+            Invite.generate(admin, email: "test@example.com", admin: true)
+          end
+
+        expect(events.first[:params].first.email).to eq("test@example.com")
+      end
+
+      it "clears the admin flag when the invite is reused without it" do
+        invite = Invite.generate(admin, email: "test@example.com", admin: true)
+        reused = Invite.generate(admin, email: "test@example.com")
+
+        expect(reused.id).to eq(invite.id)
+        expect(reused.admin).to eq(false)
+      end
+
+      it "keeps the admin flag when the invite is reused with it" do
+        invite = Invite.generate(admin, email: "test@example.com", admin: true)
+        reused = Invite.generate(admin, email: "test@example.com", admin: true)
+
+        expect(reused.id).to eq(invite.id)
+        expect(reused.admin).to eq(true)
+      end
+
+      it "clears topic and group associations when a member invite is reused as an admin invite" do
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+        invite =
+          Invite.generate(
+            admin,
+            email: "test@example.com",
+            topic_id: topic.id,
+            group_ids: [group.id],
+          )
+        expect(invite.topics).to contain_exactly(topic)
+        expect(invite.groups).to contain_exactly(group)
+
+        reused = Invite.generate(admin, email: "test@example.com", admin: true)
+
+        expect(reused.id).to eq(invite.id)
+        expect(reused.topics).to be_empty
+        expect(reused.groups).to be_empty
+      end
+    end
   end
 
   describe "#redeem" do
@@ -319,7 +451,9 @@ RSpec.describe Invite do
       end
 
       it "will not give the user a moderator flag if the inviter is not staff" do
-        invite.update!(moderator: true)
+        # update_columns skips the ensure_valid_moderator_invite validation so we
+        # can exercise the redeemer's own inviter check in isolation
+        invite.update_columns(moderator: true)
 
         user = invite.redeem
         expect(user).not_to be_moderator

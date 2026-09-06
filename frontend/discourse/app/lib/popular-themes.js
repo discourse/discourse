@@ -60,13 +60,6 @@ export const POPULAR_THEMES = [
     component: true,
   },
   {
-    name: "Discourse GIFS",
-    value: "https://github.com/discourse/discourse-gifs",
-    description: "Adds a button to easily search and insert GIFs in posts.",
-    meta_url: "https://meta.discourse.org/t/discourse-gifs/158738",
-    component: true,
-  },
-  {
     name: "Category Banners",
     value: "https://github.com/discourse/discourse-category-banners",
     preview:
@@ -82,14 +75,6 @@ export const POPULAR_THEMES = [
     preview: "https://discourse.theme-creator.io/theme/Discourse/tag-banners",
     description: "Show banners on tag pages using your existing tag details.",
     meta_url: "https://meta.discourse.org/t/tag-banners/124240",
-    component: true,
-  },
-  {
-    name: "Kanban Board",
-    value: "https://github.com/discourse/discourse-kanban-theme",
-    preview: "https://discourse.theme-creator.io/theme/Discourse/kanban-board",
-    description: "Display and organize topics using a Kanban board interface.",
-    meta_url: "https://meta.discourse.org/t/kanban-board/118164",
     component: true,
   },
   {

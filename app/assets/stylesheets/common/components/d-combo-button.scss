@@ -20,6 +20,21 @@
         font-size: var(--font-down-1);
       }
     }
+
+    // A filled variant reads the gutter above as a slot between two solid fills.
+    // A bordered one has no fill to separate, so the same gutter leaves the top
+    // and bottom border unpainted across it; those halves overlap onto one shared
+    // line instead. :where() adds no specificity, so theme overrides still win.
+    .d-combo-button-button:where(.btn-default) {
+      border-right: var(--d-button-default-border);
+    }
+
+    // Both facing edges stay painted and overlap exactly, so they coincide into a
+    // single 1px divider instead of stacking into a 2px double line.
+    .d-combo-button-menu:where(.btn-default) {
+      border-left: var(--d-button-default-border);
+      margin-left: -1px;
+    }
   }
 
   @include viewport.until(sm) {

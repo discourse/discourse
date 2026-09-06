@@ -53,6 +53,48 @@ class Site
     UserField.includes(:user_field_options).order(:position).all
   end
 
+  def access_control
+    self.class.access_control
+  end
+
+  def self.access_control_target_classes
+    (
+      AclTarget.target_classes +
+        DiscoursePluginRegistry.acl_target_classes.filter_map do |target_class|
+          if target_class.is_a?(String)
+            target_class = target_class.safe_constantize
+            if target_class.nil?
+              Rails.logger.warn(
+                "[ACL] Unknown target class in plugin registry for site (#{target_class}) maybe the plugin is gone, the class has been renamed, or the class does not include AclTarget",
+              )
+            end
+            target_class
+          else
+            target_class
+          end
+        end
+    ).compact.uniq
+  end
+
+  def self.access_control
+    {
+      mandatory_acl:
+        access_control_target_classes.each_with_object({}) do |target_class, mandatory_acl|
+          next if !target_class.respond_to?(:has_mandatory_acl?)
+          next if !target_class.has_mandatory_acl?
+
+          mandatory_acl[target_class.acl_target_key] = target_class.mandatory_acl
+        end,
+      banned_acl:
+        access_control_target_classes.each_with_object({}) do |target_class, banned_acl|
+          next if !target_class.respond_to?(:has_banned_acl?)
+          next if !target_class.has_banned_acl?
+
+          banned_acl[target_class.acl_target_key] = target_class.banned_acl
+        end,
+    }
+  end
+
   def self.categories_cache_key
     "site_categories_#{I18n.locale}_#{Discourse.git_version}"
   end
@@ -79,10 +121,8 @@ class Site
                   :uploaded_logo_dark,
                   :uploaded_background,
                   :uploaded_background_dark,
-                  :tags,
-                  :tag_groups,
+                  :category_required_tag_groups,
                   :form_templates,
-                  category_required_tag_groups: :tag_group,
                 )
                 .joins("LEFT JOIN topics t on t.id = categories.topic_id")
                 .select("categories.*, t.slug topic_slug")
@@ -115,15 +155,14 @@ class Site
       end
     end
 
+    can_lazy_load_categories = @guardian.can_lazy_load_categories?
+
     @categories ||=
       begin
         categories = []
 
         self.class.all_categories_cache.each do |category|
-          if (
-               !@guardian.can_lazy_load_categories? ||
-                 preloaded_category_ids.include?(category[:id])
-             ) &&
+          if (!can_lazy_load_categories || preloaded_category_ids.include?(category[:id])) &&
                @guardian.can_see_serialized_category?(
                  category_id: category[:id],
                  read_restricted: category[:read_restricted],
@@ -180,7 +219,7 @@ class Site
         @guardian.user,
         "groups.name ASC",
         include_everyone: !SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
-        include_pseudogroups: SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
+        include_pseudogroups: true,
       ).includes(:flair_upload)
     query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
 
@@ -190,7 +229,7 @@ class Site
   def anonymous_sidebar_sections
     SidebarSection
       .public_sections
-      .includes(:sidebar_urls)
+      .includes(:localizations, sidebar_urls: :localizations)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 
@@ -208,6 +247,7 @@ class Site
         {
           periods: TopTopic.periods.map(&:to_s),
           filters: Discourse.filters.map(&:to_s),
+          anonymous_list_filters: Discourse.anonymous_list_filters.map(&:to_s),
           user_fields:
             UserField
               .includes(:user_field_options)

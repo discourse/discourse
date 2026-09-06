@@ -63,6 +63,8 @@ sk:
       cast-votes:
         title: "Hlasovať"
         label: "Hlasuj teraz!"
+      keep-vote:
+        label: "Späť"
       show-results:
         title: "Zobraziť výsledky hlasovania"
         label: "Výsledky"
@@ -170,5 +172,3 @@ sk:
           add: Pridať možnosť
         automatic_close:
           label: Automaticky zatvoriť hlasovanie
-        show_advanced: "Zobraziť rozšírené možnosti"
-        hide_advanced: "Skryť rozšírené možnosti"

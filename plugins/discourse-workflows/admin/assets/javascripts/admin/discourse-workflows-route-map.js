@@ -5,10 +5,12 @@ export default {
     this.route("discourse-workflows", { path: "workflows" }, function () {
       this.route("new");
       this.route("show", { path: "/:id" }, function () {
+        this.route("node", { path: "/nodes/:node_id" });
         this.route("executions", function () {
           this.route("show", { path: "/:execution_id" });
         });
         this.route("settings");
+        this.route("versions");
       });
     });
     this.route("discourse-workflows-templates", { path: "templates" });

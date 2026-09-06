@@ -5,13 +5,17 @@ DiscourseAi::Engine.routes.draw do
     get "status" => "ai_credits#status"
   end
 
+  scope path: "/post-image-captions", defaults: { format: :json } do
+    get ":post_id" => "post_image_captions#index"
+    put ":post_id/:base62_sha1" => "post_image_captions#update"
+  end
+
   scope module: :ai_helper, path: "/ai-helper", defaults: { format: :json } do
     post "suggest" => "assistant#suggest"
     post "suggest_title" => "assistant#suggest_title"
     post "suggest_category" => "assistant#suggest_category"
     post "suggest_tags" => "assistant#suggest_tags"
     post "stream_suggestion" => "assistant#stream_suggestion"
-    post "caption_image" => "assistant#caption_image"
   end
 
   scope module: :embeddings, path: "/embeddings", defaults: { format: :json } do
@@ -33,6 +37,8 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :discover, path: "/discoveries", defaults: { format: :json } do
     post "reply" => "discoveries#reply"
+    get "recent" => "discoveries#recent"
+    delete "recent" => "discoveries#clear_recent"
     post "continue-convo" => "discoveries#continue_convo"
   end
 
@@ -46,6 +52,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :ai_bot, path: "/ai-bot/conversations" do
     get "/" => "conversations#index"
+    post "/" => "conversations#create"
     put "/:topic_id/starred" => "conversations#update_starred"
   end
 
@@ -148,6 +155,10 @@ Discourse::Application.routes.draw do
 
     get "/ai-usage", to: "discourse_ai/admin/ai_usage#show"
     get "/ai-usage-report", to: "discourse_ai/admin/ai_usage#report"
+    get "/ai-logs", to: "discourse_ai/admin/ai_logs#index"
+    get "/ai-logs/new", to: "discourse_ai/admin/ai_logs#new_logs"
+    put "/ai-logs/retention", to: "discourse_ai/admin/ai_logs#update_retention"
+    get "/ai-logs/:id", to: "discourse_ai/admin/ai_logs#show", constraints: { id: /\d+/ }
     get "/ai-spam", to: "discourse_ai/admin/ai_spam#show"
     put "/ai-spam", to: "discourse_ai/admin/ai_spam#update"
     post "/ai-spam/test", to: "discourse_ai/admin/ai_spam#test"
@@ -155,6 +166,8 @@ Discourse::Application.routes.draw do
 
     get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
     get "/ai-translations/progress", to: "discourse_ai/admin/ai_translations#progress"
+    get "/ai-translations/progress/:target_type",
+        to: "discourse_ai/admin/ai_translations#progress_detail"
     post "/ai-theme-translations", to: "discourse_ai/admin/ai_theme_translations#create"
 
     resources :ai_llms,

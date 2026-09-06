@@ -122,6 +122,24 @@ RSpec.describe DiscourseAi::Completions::Report do
       expect(report.total_cache_write_spending).to eq(0.01875)
     end
 
+    it "uses stored estimated cost when present" do
+      AiApiRequestStat.create!(
+        provider_id: AiApiAuditLog::Provider::Anthropic,
+        user_id: user.id,
+        llm_id: claude_model.id,
+        language_model: "claude-3-opus",
+        request_tokens: 1000,
+        response_tokens: 500,
+        estimated_cost: 1.23,
+        created_at: 1.day.ago,
+      )
+
+      report = described_class.new(start_date: 2.days.ago, end_date: Time.current)
+
+      expect(report.total_spending).to eq(1.23)
+      expect(report.model_breakdown.first.total_spending).to eq(BigDecimal("1.23"))
+    end
+
     it "handles logs without cache tokens" do
       AiApiRequestStat.create!(
         provider_id: AiApiAuditLog::Provider::Anthropic,

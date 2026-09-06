@@ -140,6 +140,17 @@ export default class ReviewIndexController extends Controller {
   }
 
   @action
+  updateStatuses(updates) {
+    this.reviewables.content.forEach((reviewable) => {
+      const update = updates[reviewable.id];
+
+      if (update) {
+        reviewable.setProperties(update);
+      }
+    });
+  }
+
+  @action
   resetTopic() {
     this.set("topic_id", null);
     this.refreshModel();

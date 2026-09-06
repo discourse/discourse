@@ -36,6 +36,35 @@ RSpec.describe Admin::BadgesController do
 
       include_examples "badges inaccessible"
     end
+
+    context "with an API key scoped to badges -> list" do
+      it "allows an admin's key to list badges" do
+        api_key = Fabricate(:api_key, user: admin)
+        Fabricate(:api_key_scope, resource: "badges", action: "list", api_key_id: api_key.id)
+
+        get "/admin/badges.json",
+            headers: {
+              "HTTP_API_KEY" => api_key.key,
+              "HTTP_API_USERNAME" => admin.username,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["badges"]).to be_present
+      end
+
+      it "denies a non-admin's key, since the admin route stays admin-only" do
+        api_key = Fabricate(:api_key, user: user)
+        Fabricate(:api_key_scope, resource: "badges", action: "list", api_key_id: api_key.id)
+
+        get "/admin/badges.json",
+            headers: {
+              "HTTP_API_KEY" => api_key.key,
+              "HTTP_API_USERNAME" => user.username,
+            }
+
+        expect(response.status).to eq(404)
+      end
+    end
   end
 
   describe "#preview" do
@@ -243,6 +272,32 @@ RSpec.describe Admin::BadgesController do
   describe "#destroy" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
+      it "prevents deletion of system badges" do
+        system_badge = Badge.find(Badge::Regular)
+        expect(system_badge.system?).to eq(true)
+
+        user_badge = BadgeGranter.grant(system_badge, user)
+        user.update!(title: system_badge.name)
+        user.user_profile.update!(granted_title_badge_id: system_badge.id)
+
+        delete "/admin/badges/#{system_badge.id}.json"
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("badges.errors.cant_delete_system_badge"),
+        )
+        expect(Badge.where(id: system_badge.id)).to exist
+        expect(UserBadge.where(id: user_badge.id)).to exist
+        expect(user.reload.title).to eq(system_badge.name)
+        expect(user.user_profile.reload.granted_title_badge_id).to eq(system_badge.id)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:delete_badge],
+          ).exists?,
+        ).to eq(false)
+      end
 
       it "deletes the badge" do
         delete "/admin/badges/#{badge.id}.json"

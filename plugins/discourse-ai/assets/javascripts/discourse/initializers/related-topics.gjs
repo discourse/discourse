@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -42,39 +41,33 @@ export default {
         condition: ({ topic }) => topic.relatedTopics?.length,
       });
 
-      api.modifyClass(
-        "model:topic",
-        (Superclass) =>
-          class extends Superclass {
-            @tracked _relatedTopicsRecords = null;
+      api.addModelField("topic", "_relatedTopicsRecords", {
+        defaultValue: null,
+      });
 
-            // Only updates if we have data - preserves cache when scrolling.
-            set related_topics(value) {
-              if (value?.length) {
-                this._relatedTopicsRecords = value.map((topic) =>
-                  this.store.createRecord("topic", topic)
-                );
-              }
-            }
+      // Only updates if we have data - preserves cache when scrolling.
+      api.addModelSetter("topic", "related_topics", function (value) {
+        if (value?.length) {
+          this._relatedTopicsRecords = value.map((topic) =>
+            this.store.createRecord("topic", topic)
+          );
+        }
+      });
 
-            get relatedTopics() {
-              return this._relatedTopicsRecords;
-            }
+      api.addModelGetter("topic", "relatedTopics", function () {
+        return this._relatedTopicsRecords;
+      });
+
+      api.registerBehaviorTransformer(
+        "post-stream-suggested-topics",
+        ({ context, next }) => {
+          next();
+
+          if (context.result.related_topics) {
+            context.postStream.topic.related_topics =
+              context.result.related_topics;
           }
-      );
-
-      api.modifyClass(
-        "model:post-stream",
-        (Superclass) =>
-          class extends Superclass {
-            _setSuggestedTopics(result) {
-              super._setSuggestedTopics(...arguments);
-
-              if (result.related_topics) {
-                this.topic.related_topics = result.related_topics;
-              }
-            }
-          }
+        }
       );
     });
   },

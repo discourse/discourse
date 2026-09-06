@@ -5,12 +5,30 @@
 # https://translate.discourse.org/
 
 be:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Персанал"
+              member: "Члены"
+              basic: "асноўнай"
+            response_time:
+              buckets:
+                gt_24h: "> 24 гадзіны"
   js:
     solved:
       topic_status_filter:
         all: "усе"
       move_post_cancel: "Скасаваць"
       confirm_solved_removal_cancel: "Скасаваць"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Тэма"
+            category: "Катэгорыя"
     discourse_automation:
       triggerables:
         first_accepted_solution:

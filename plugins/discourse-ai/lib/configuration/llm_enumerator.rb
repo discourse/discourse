@@ -9,7 +9,9 @@ module DiscourseAi
         rval = Hash.new { |h, k| h[k] = [] }
 
         if SiteSetting.ai_bot_enabled
-          LlmModel.enabled_chat_bot_ids.each { |llm_id| rval[llm_id] << { type: :ai_bot } }
+          LlmModel.enabled_chat_bot_ids.each do |llm_id|
+            rval[llm_id] << { type: :ai_bot, id: DiscourseAi::Configuration::Module::BOT_ID }
+          end
         end
 
         # this is unconditional, so it is clear that we always signal configuration
@@ -43,37 +45,53 @@ module DiscourseAi
             next if agent.blank? || agent.default_llm_id.blank?
 
             model_id = agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
-            rval[model_id] << { type: :ai_helper, name: helper_type }
+            rval[model_id] << {
+              type: :ai_helper,
+              name: helper_type,
+              id: DiscourseAi::Configuration::Module::AI_HELPER_ID,
+            }
           end
         end
 
-        if SiteSetting.ai_helper_enabled_features.split("|").include?("image_caption")
-          image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent)
-          model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+        if SiteSetting.ai_post_image_captions_enabled
+          image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_image_caption_agent)
 
-          rval[model_id] << { type: :ai_helper_image_caption }
+          if image_caption_agent.present?
+            model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+
+            rval[model_id] << {
+              type: :ai_image_caption,
+              id: DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
+            }
+          end
         end
 
         if SiteSetting.ai_summarization_enabled
           summarization_agent = AiAgent.find_by(id: SiteSetting.ai_summarization_agent)
           model_id = summarization_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
-          rval[model_id] << { type: :ai_summarization }
+          rval[model_id] << {
+            type: :ai_summarization,
+            id: DiscourseAi::Configuration::Module::SUMMARIZATION_ID,
+          }
         end
 
         if SiteSetting.ai_embeddings_semantic_search_enabled
           search_agent = AiAgent.find_by(id: SiteSetting.ai_embeddings_semantic_search_hyde_agent)
           model_id = search_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
-          rval[model_id] << { type: :ai_embeddings_semantic_search }
+          rval[model_id] << {
+            type: :ai_embeddings_semantic_search,
+            id: DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
+          }
         end
 
         if SiteSetting.ai_spam_detection_enabled && AiModerationSetting.spam.present?
           model_id = AiModerationSetting.spam[:llm_model_id]
-          rval[model_id] << { type: :ai_spam }
+          rval[model_id] << { type: :ai_spam, id: DiscourseAi::Configuration::Module::SPAM_ID }
         end
 
-        if defined?(DiscourseAutomation::Automation)
+        if defined?(DiscourseAutomation::Automation) && SiteSetting.discourse_automation_enabled
           DiscourseAutomation::Automation
             .joins(:fields)
             .where(script: %w[llm_report llm_triage])
@@ -88,21 +106,41 @@ module DiscourseAi
             end
         end
 
+        LlmModel
+          .where.not(vision_llm_model_id: nil)
+          .pluck(:vision_llm_model_id, :display_name, :id)
+          .each do |llm_id, name, id|
+            rval[llm_id] << { type: :vision_delegate, name: name, id: id }
+          end
+
         rval
       end
 
-      def self.valid_value?(val)
+      def self.valid_value?(_val)
         true
       end
 
-      # returns an array of hashes (id: , name:, vision_enabled:)
+      # returns an array of hashes (id: , name:, vision_enabled:, supported_native_tools:)
       def self.values_for_serialization
         return [] unless table_exists?
 
-        DB.query_hash(<<~SQL).map(&:symbolize_keys)
-          SELECT id, display_name AS name, vision_enabled
-          FROM llm_models
-        SQL
+        llm_models = LlmModel.includes(:vision_llm_model).index_by(&:id)
+
+        DB
+          .query_hash(<<~SQL)
+            SELECT id, display_name AS name, vision_enabled
+            FROM llm_models
+          SQL
+          .map do |row|
+            row = row.symbolize_keys
+            llm_model = llm_models[row[:id]]
+            row[:vision_mode] = llm_model.vision_mode
+            row[:agent_image_capable] = llm_model.agent_image_capable?
+            row[:supported_native_tools] = DiscourseAi::Completions::NativeTools.supported_ids_for(
+              llm_model,
+            )
+            row
+          end
       end
 
       def self.values

@@ -58,7 +58,7 @@ function predictTodaysViews(data) {
   const startOfDay = getStartOfDayUTC();
   const currentTimeUTC = Date.now() + now.getTimezoneOffset() * 60 * 1000;
   const elapsedTime = (currentTimeUTC - startOfDay) / oneDay; // amount of day passed
-  let adjustedPrediction = lastMovingAvg;
+  let adjustedPrediction;
 
   if (currentViews >= lastMovingAvg) {
     // If higher than the average prediction, extrapolate

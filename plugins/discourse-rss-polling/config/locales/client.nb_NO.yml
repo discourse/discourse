@@ -12,3 +12,13 @@ nb_NO:
         feed_url: URL
         discourse_category: Kategori
         discourse_tags: Stikkord
+        feeds:
+          edit: Rediger
+          delete: Slett
+          save: Lagre
+        test:
+          title: Forhåndsvis
+          dismiss: Avslå
+        status:
+          enabled: Aktivert
+          disabled: Deaktivert

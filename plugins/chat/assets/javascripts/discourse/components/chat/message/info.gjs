@@ -77,6 +77,10 @@ export default class ChatMessageInfo extends Component {
     return !!this.#user?.get("status");
   }
 
+  get interactive() {
+    return this.args.interactive !== false;
+  }
+
   get #user() {
     return this.args.message?.user;
   }
@@ -124,16 +128,26 @@ export default class ChatMessageInfo extends Component {
             {{i18n "chat.bot"}}
           </span>
         {{else}}
+          {{! The name carries the click target rather than the wrapper: a status message
+          brings its own tooltip trigger, which cannot sit inside a button. }}
           <span
-            role="button"
             class={{dConcatClass
               "chat-message-info__username"
               this.usernameClasses
-              "clickable"
+              (if this.interactive "clickable")
             }}
-            data-user-card={{@message.user.username}}
           >
-            <span class="chat-message-info__username__name">{{this.name}}</span>
+            {{#if this.interactive}}
+              <button
+                type="button"
+                class="chat-message-info__username__name"
+                data-user-card={{@message.user.username}}
+              >{{this.name}}</button>
+            {{else}}
+              <span
+                class="chat-message-info__username__name"
+              >{{this.name}}</span>
+            {{/if}}
             {{#if this.showStatus}}
               <span class="chat-message-info__status">
                 <DUserStatusMessage @status={{@message.user.status}} />
@@ -190,6 +204,20 @@ export default class ChatMessageInfo extends Component {
             <ChannelTitle @channel={{@message.channel}} />
           </LinkTo>
         {{/if}}
+      </div>
+    {{else if
+      (and this.interactive @message.user.username (not @message.isAction))
+    }}
+      {{! A message chained to the one above shows no author, but it still has one. Keeping
+      the name rendered keeps the transcript attributable when it is being read rather than
+      seen, and gives the message a control the keyboard can reach. An action message is
+      excluded: it names its author in its own text. }}
+      <div class="chat-message-info -author-only sr-only">
+        <button
+          type="button"
+          class="chat-message-info__username__name"
+          data-user-card={{@message.user.username}}
+        >{{this.name}}</button>
       </div>
     {{/if}}
   </template>

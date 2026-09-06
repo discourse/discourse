@@ -188,8 +188,6 @@ sv:
         confirm_payment: Bekräfta betalning
         success: Gå tillbaka
       admin:
-        unconfigured: 'Stripe är inte korrekt konfigurerat. Se Discourse Meta för information.'
-        on_meta: Discourse-prenumerationer i Meta
         dashboard:
           title: Översiktspanel
           table:

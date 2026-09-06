@@ -18,6 +18,7 @@ describe "Creating Invites" do
   end
 
   before do
+    SiteSetting.enable_invite_modal_with_roles = false
     SiteSetting.invite_allowed_groups = "#{group.id}"
     SiteSetting.invite_link_max_redemptions_limit_users = 7
     SiteSetting.invite_link_max_redemptions_limit = 63

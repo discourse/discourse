@@ -37,6 +37,17 @@ export default class List extends Component {
     return this.args.itemComponent ?? Item;
   }
 
+  get collectionItemsMaybeFiltered() {
+    const collection = this.args.collection;
+    const filterFn = this.args.filterFn;
+
+    if (filterFn) {
+      return filterFn(collection.items);
+    } else {
+      return collection.items;
+    }
+  }
+
   @action
   loadCollection() {
     discourseDebounce(this, this.debouncedLoadCollection, INPUT_DELAY);
@@ -53,7 +64,7 @@ export default class List extends Component {
         {{this.fill}}
         ...attributes
       >
-        {{#each @collection.items as |item|}}
+        {{#each this.collectionItemsMaybeFiltered as |item|}}
           {{yield (hash Item=(component this.itemComponent item=item))}}
         {{else}}
           {{#if @collection.fetchedOnce}}

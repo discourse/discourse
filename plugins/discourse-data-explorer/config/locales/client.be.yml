@@ -24,6 +24,6 @@ be:
       reports: "Справаздачы"
     discourse_workflows:
       sql:
-        param_value: "значэнне"
+        param_value: "Значэнне"
         output:
-          results: "вынікі"
+          results: "Вынікі"

@@ -29,6 +29,11 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
       first_post.excerpt(nil, keep_onebox_body: true, keep_quotes: true)
   end
 
+  def include_text?
+    first_post = object.first_post
+    first_post.present? && guardian.can_see_post?(first_post)
+  end
+
   def upvoteCount
     object.first_post.like_count
   end
@@ -57,5 +62,9 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
 
   def suggested_answers
     options[:suggested_answers]
+  end
+
+  def guardian
+    scope || Guardian.new
   end
 end

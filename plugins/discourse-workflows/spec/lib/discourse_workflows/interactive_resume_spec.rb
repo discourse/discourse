@@ -75,6 +75,26 @@ RSpec.describe DiscourseWorkflows::InteractiveResume do
         ),
       ).to be_nil
     end
+
+    it "returns nil when the bound target user id in the token is altered" do
+      bound_action_id =
+        DiscourseWorkflows::InteractiveResume.action_id(
+          execution_id: execution.id,
+          resume_token: execution.resume_token,
+          action: "resume",
+          target_user_id: user.id,
+        )
+      _execution_id, _target_user_id, action, signature = bound_action_id.split(":", 4)
+      tampered = [execution.id, user.id + 1, action, signature].join(":")
+
+      expect(
+        described_class.from_action_id(
+          tampered,
+          expected_node_type: "flow:wait",
+          allowed_actions: %w[resume],
+        ),
+      ).to be_nil
+    end
   end
 
   describe DiscourseWorkflows::InteractiveResume::Request do

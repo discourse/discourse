@@ -55,8 +55,6 @@ export const GROUP_VISIBILITY_LEVELS = {
   owners: 4,
 };
 
-export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10;
-
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;
 
 export const TOPIC_VISIBILITY_REASONS = {
@@ -92,6 +90,9 @@ export const POSTING_REVIEW_GROUP_BASED_MODES = [
 ];
 
 export const USER_OPTION_COMPOSITION_MODES = { markdown: 0, rich: 1 };
+
+export const SEND_SHORTCUT_ENTER = "enter";
+export const SEND_SHORTCUT_META_ENTER = "meta_enter";
 
 export const UPCOMING_CHANGES_USER_ENABLED_REASONS = {
   enabled_for_everyone: "enabled_for_everyone",

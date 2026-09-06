@@ -1,4 +1,4 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { TOP_SITE_CATEGORIES_TO_SHOW } from "discourse/components/sidebar/common/categories-section";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -9,10 +9,8 @@ import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance(
@@ -152,15 +150,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       .dom(".sidebar-section[data-section-name='categories']")
       .exists("categories section is shown");
 
-    const categorySectionLinks = queryAll(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id]"
-    );
-
-    assert.strictEqual(
-      categorySectionLinks.length,
-      TOP_SITE_CATEGORIES_TO_SHOW,
-      "the right number of category section links are shown"
-    );
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id]"
+      )
+      .exists(
+        { count: TOP_SITE_CATEGORIES_TO_SHOW },
+        "the right number of category section links are shown"
+      );
 
     const topCategories = Site.current().categoriesByCount.splice(
       0,
@@ -245,11 +242,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categorySectionLinks = queryAll(
+    const categorySectionLinks = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
-    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+    const categoryNames = categorySectionLinks.map((categorySectionLink) =>
       categorySectionLink.textContent.trim()
     );
 
@@ -317,11 +314,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categorySectionLinks = queryAll(
+    const categorySectionLinks = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
-    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+    const categoryNames = categorySectionLinks.map((categorySectionLink) =>
       categorySectionLink.textContent.trim()
     );
 
@@ -389,11 +386,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categorySectionLinks = queryAll(
+    const categorySectionLinks = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
-    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+    const categoryNames = categorySectionLinks.map((categorySectionLink) =>
       categorySectionLink.textContent.trim()
     );
 
@@ -638,10 +635,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       );
   });
 
-  test("category section link has the right title", async function (assert) {
+  test("category section link does not have a title", async function (assert) {
     const categories = Site.current().categories;
-
-    // Category with link HTML tag in description
     const category = categories.find((c) => c.id === 28);
 
     updateCurrentUser({
@@ -652,10 +647,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert
       .dom(`.sidebar-section-link-wrapper[data-category-id="${category.id}"] a`)
-      .hasAttribute(
+      .doesNotHaveAttribute(
         "title",
-        category.descriptionText,
-        "category description without HTML entity is used as the link's title"
+        "does not expose the category description as a tooltip"
       );
   });
 
@@ -1028,18 +1022,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    const headerDropdown = selectKit(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
-    );
+    const headerDropdown =
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown";
 
-    assert.true(headerDropdown.exists());
+    assert.dom(headerDropdown).exists();
 
-    await headerDropdown.expand();
+    await click(headerDropdown);
 
-    assert.true(headerDropdown.rowByValue("new-category").exists());
-    assert.true(headerDropdown.rowByValue("edit-categories").exists());
+    assert.dom("[data-menu-option-id='new-category']").exists();
+    assert.dom("[data-menu-option-id='edit-categories']").exists();
 
-    await headerDropdown.selectRowByValue("new-category");
+    await click("[data-menu-option-id='new-category']");
 
     assert.true(currentURL().startsWith("/new-category"));
   });
@@ -1387,12 +1380,10 @@ acceptance(
         .dom(".sidebar-hamburger-dropdown")
         .exists("hamburger sidebar is open");
 
-      const headerDropdown = selectKit(
+      await click(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
       );
-
-      await headerDropdown.expand();
-      await headerDropdown.selectRowByValue("new-category");
+      await click("[data-menu-option-id='new-category']");
 
       assert
         .dom(".sidebar-hamburger-dropdown")
@@ -1408,12 +1399,10 @@ acceptance(
         .dom(".sidebar-hamburger-dropdown")
         .exists("hamburger sidebar is open");
 
-      const headerDropdown = selectKit(
+      await click(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
       );
-
-      await headerDropdown.expand();
-      await headerDropdown.selectRowByValue("edit-categories");
+      await click("[data-menu-option-id='edit-categories']");
 
       assert
         .dom(".sidebar-hamburger-dropdown")
@@ -1435,18 +1424,13 @@ acceptance(
       await visit("/");
       await click("#toggle-hamburger-menu");
 
-      const headerDropdown = selectKit(
+      await click(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
       );
 
-      await headerDropdown.expand();
-
-      assert.true(
-        headerDropdown
-          .rowByValue("edit-categories")
-          .label()
-          .includes("Edit nav categories")
-      );
+      assert
+        .dom("[data-menu-option-id='edit-categories']")
+        .includesText("Edit nav categories");
     });
   }
 );

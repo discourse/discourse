@@ -33,10 +33,29 @@ RSpec.describe MetadataController do
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
-      expect(manifest["share_target"]).to be_present
-      expect(manifest["share_target"]["params"]["title"]).to eq("title")
-      expect(manifest["share_target"]["params"]["text"]).to eq("body")
-      expect(manifest["share_target"]["params"]["url"]).to eq("title")
+      share_target = manifest["share_target"]
+      expect(share_target).to be_present
+      expect(share_target["action"]).to end_with("/share-target")
+      expect(share_target["method"]).to eq("POST")
+      expect(share_target["enctype"]).to eq("multipart/form-data")
+      expect(share_target["params"]["title"]).to eq("title")
+      expect(share_target["params"]["text"]).to eq("text")
+      expect(share_target["params"]["url"]).to eq("url")
+      expect(share_target["params"]["files"].first["name"]).to eq("files")
+    end
+
+    it "derives the share target accepted files from authorized_extensions" do
+      SiteSetting.authorized_extensions = "png|pdf"
+      get "/manifest.webmanifest"
+      accept = JSON.parse(response.body)["share_target"]["params"]["files"].first["accept"]
+      expect(accept).to contain_exactly(".png", ".pdf")
+    end
+
+    it "accepts any file type when all extensions are authorized" do
+      SiteSetting.authorized_extensions = "*"
+      get "/manifest.webmanifest"
+      accept = JSON.parse(response.body)["share_target"]["params"]["files"].first["accept"]
+      expect(accept).to eq(["*/*"])
     end
 
     it "can guess mime types" do

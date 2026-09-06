@@ -4,8 +4,6 @@ module DiscourseWorkflows
   module Nodes
     module PostCreated
       class V1 < NodeType
-        TOPIC_TYPE_OPTIONS = %w[all topics personal_messages].freeze
-
         description(
           name: "trigger:post_created",
           version: "1.0",
@@ -14,14 +12,19 @@ module DiscourseWorkflows
             color: "indigo",
           },
           group: "discourse_triggers",
-          events: [:post_created],
-          properties: {
-            topic_type: {
-              type: :options,
-              required: true,
-              default: "topics",
-              options: TOPIC_TYPE_OPTIONS,
+          event: :post_created,
+          output_contracts: [
+            {
+              schema:
+                Schema.merge(
+                  Schema::POST_SCHEMA,
+                  Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::USER_SCHEMA,
+                ),
             },
+          ],
+          properties: {
+            **TOPIC_TYPE_FILTER_PROPERTIES,
             group_inbox_id: {
               type: :integer,
               required: false,
@@ -43,33 +46,8 @@ module DiscourseWorkflows
                 none: "discourse_workflows.post_created.group_inbox_id_placeholder",
               },
             },
-            category_id: {
-              type: :integer,
-              required: false,
-              ui: {
-                control: :category,
-              },
-            },
-            include_subcategories: {
-              type: :boolean,
-              required: false,
-              default: true,
-              ui: {
-                control: :checkbox,
-              },
-              display_options: {
-                show: {
-                  category_id: [{ condition: { exists: true } }],
-                },
-              },
-            },
-            tag_names: {
-              type: :string,
-              required: false,
-              ui: {
-                control: :tags,
-              },
-            },
+            **CATEGORY_FILTER_PROPERTIES,
+            **TAG_FILTER_PROPERTIES,
           },
         )
 
@@ -96,7 +74,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { post: post_data(@post), topic: topic_data(@post.topic) }
+          { post: post_data(@post), topic: topic_data(@post.topic), user: user_data(@post.user) }
         end
 
         def matches?(trigger_ctx)
@@ -104,10 +82,10 @@ module DiscourseWorkflows
 
           matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type", "topics")) &&
             matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id")) &&
-            matches_category?(
-              topic,
-              trigger_ctx.get_node_parameter("category_id"),
-              trigger_ctx.get_node_parameter("include_subcategories", true),
+            matches_category_ids?(
+              topic.category_id,
+              category_ids_parameter(trigger_ctx),
+              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
             ) &&
             matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
         end
@@ -118,45 +96,8 @@ module DiscourseWorkflows
           serialize_post(post)
         end
 
-        def topic_data(topic)
-          serialize_record(topic, TopicListItemSerializer)
-        end
-
-        def matches_topic_type?(topic, topic_type)
-          case topic_type.presence || "topics"
-          when "all"
-            true
-          when "topics"
-            !topic.private_message?
-          when "personal_messages"
-            topic.private_message?
-          else
-            false
-          end
-        end
-
-        def matches_group_inbox?(topic, group_id)
-          return true if group_id.blank?
-          return false if !topic.private_message?
-
-          topic.allowed_groups.exists?(id: group_id.to_i)
-        end
-
-        def matches_category?(topic, category_id, include_subcategories)
-          return true if category_id.blank?
-
-          category_id = category_id.to_i
-          return topic.category_id == category_id if include_subcategories == false
-
-          ::Category.subcategory_ids(category_id).include?(topic.category_id)
-        end
-
-        def matches_tags?(topic, tag_names)
-          tag_names.empty? || (topic_tag_names(topic) & tag_names).any?
-        end
-
-        def topic_tag_names(topic)
-          @topic_tag_names ||= topic.tags.pluck(:name)
+        def user_data(user)
+          serialize_user(user)
         end
       end
     end

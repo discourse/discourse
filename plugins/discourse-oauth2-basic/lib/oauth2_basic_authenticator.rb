@@ -30,6 +30,11 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
                             authorize_url: SiteSetting.oauth2_authorize_url,
                             token_url: SiteSetting.oauth2_token_url,
                             token_method: SiteSetting.oauth2_token_url_method.downcase.to_sym,
+                            connection_opts: {
+                              request: {
+                                timeout: request_timeout_seconds,
+                              },
+                            },
                           }
                           opts[:authorize_options] = SiteSetting
                             .oauth2_authorize_options
@@ -190,16 +195,31 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     user_json_method = SiteSetting.oauth2_user_json_url_method.downcase.to_sym
 
     bearer_token = "Bearer #{token}"
-    connection = Faraday.new { |f| f.adapter FinalDestination::FaradayAdapter }
+    connection =
+      Faraday.new(request: { timeout: request_timeout_seconds }) do |f|
+        f.adapter FinalDestination::FaradayAdapter
+      end
     headers = { "Authorization" => bearer_token, "Accept" => "application/json" }
-    user_json_response = connection.run_request(user_json_method, user_json_url, nil, headers)
 
     log <<-LOG
       user_json request: #{user_json_method} #{user_json_url}
 
       request headers: #{headers}
+    LOG
 
-      response status: #{user_json_response.status}
+    begin
+      user_json_response = connection.run_request(user_json_method, user_json_url, nil, headers)
+    rescue Faraday::Error => e
+      failure_detail =
+        e.is_a?(Faraday::TimeoutError) ? "timed out after #{request_timeout_seconds}s" : "failed"
+      Rails.logger.warn(
+        "OAuth2 Basic: user_json request to #{user_json_url} #{failure_detail}: #{e.class} #{e.message}",
+      )
+      return nil
+    end
+
+    log <<-LOG
+      user_json response: #{user_json_response.status}
 
       response body:
       #{user_json_response.body}
@@ -235,10 +255,9 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
 
   def primary_email_verified?(auth)
     return true if SiteSetting.oauth2_email_verified
-    verified = auth["info"]["email_verified"]
-    verified = true if verified == "true"
-    verified = false if verified == "false"
-    verified
+
+    email_verified = auth["info"]["email_verified"]
+    email_verified == true || (email_verified.is_a?(String) && email_verified.downcase == "true")
   end
 
   def always_update_user_email?
@@ -307,5 +326,9 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
 
   def enabled?
     SiteSetting.oauth2_enabled
+  end
+
+  def request_timeout_seconds
+    GlobalSetting.oauth2_request_timeout_seconds
   end
 end

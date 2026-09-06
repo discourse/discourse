@@ -16,7 +16,7 @@ export default class DockedComposerSection extends Component {
   @tracked resizable = true;
   @tracked disabled = false;
   @tracked placeholder = i18n("composer.reply_placeholder");
-  submitTitle = "composer.title";
+  submitTitle = "composer.reply";
 
   @action
   toggleResizable() {

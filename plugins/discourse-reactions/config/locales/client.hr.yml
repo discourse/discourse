@@ -7,8 +7,6 @@
 hr:
   js:
     discourse_reactions:
-      state_panel:
-        more_users: "i %{count} više..."
       users_popup:
         all: "Sve"
       main_reaction:

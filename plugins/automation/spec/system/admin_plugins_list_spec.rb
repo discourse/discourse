@@ -47,8 +47,10 @@ describe "Admin Plugins List" do
     expect(SiteSetting.discourse_automation_enabled).to eq(true)
   end
 
-  it "shows a navigation tab for each plugin that needs it" do
+  it "links a plugin with a config page to its config page" do
     admin_plugins_list_page.visit
-    expect(admin_plugins_list_page).to have_plugin_tab("automation")
+    admin_plugins_list_page.click_plugin_name("automation")
+
+    expect(page).to have_css(".admin-plugin-config-page .d-page-header__title", text: "Automation")
   end
 end

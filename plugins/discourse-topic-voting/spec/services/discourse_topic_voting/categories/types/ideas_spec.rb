@@ -5,18 +5,6 @@ RSpec.describe DiscourseTopicVoting::Categories::Types::Ideas do
 
   before { SiteSetting.topic_voting_enabled = true }
 
-  describe ".visible?" do
-    it "returns true when enable_ideas_category_type_setup is true" do
-      SiteSetting.enable_ideas_category_type_setup = true
-      expect(described_class.visible?).to eq(true)
-    end
-
-    it "returns false when enable_ideas_category_type_setup is false" do
-      SiteSetting.enable_ideas_category_type_setup = false
-      expect(described_class.visible?).to eq(false)
-    end
-  end
-
   describe ".enable_plugin" do
     it "enables the topic_voting_enabled site setting" do
       SiteSetting.topic_voting_enabled = false

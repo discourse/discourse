@@ -1,12 +1,14 @@
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import SvgEnvelopeZero from "discourse/components/svg/envelope-zero";
 import DMenu from "discourse/float-kit/components/d-menu";
 import bodyClass from "discourse/helpers/body-class";
 import rawDate from "discourse/helpers/raw-date";
+import { groupPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -219,6 +221,15 @@ export default <template>
                   <tr class="d-table__row">
                     <td class="d-table__cell --overview invite-type">
                       <div class="invite-shortkey">
+                        {{#if invite.link}}
+                          <input
+                            type="text"
+                            id={{concat "invite-link-" invite.id}}
+                            class="invite-link-target"
+                            value={{invite.link}}
+                            disabled={{true}}
+                          />
+                        {{/if}}
                         {{#if invite.email}}
                           {{dIcon "envelope"}}
                           {{invite.email}}
@@ -248,7 +259,7 @@ export default <template>
                           {{#each invite.groups as |g|}}
                             <span class="invite-extra">
                               <a
-                                href="/g/{{g.name}}"
+                                href={{groupPath g.name}}
                                 class="invite-extra-item-link"
                               >{{dIcon "users"}}
                                 {{g.name}}
@@ -324,6 +335,24 @@ export default <template>
                                     }}
                                   />
                                 </dropdown.item>
+                                {{#if invite.link}}
+                                  <dropdown.item>
+                                    <DCopyButton
+                                      @selector={{concat
+                                        "#invite-link-"
+                                        invite.id
+                                      }}
+                                      @icon="copy"
+                                      @copyClass="btn-transparent"
+                                      @translatedLabel={{i18n
+                                        "user.invited.invite.copy_link"
+                                      }}
+                                      @translatedLabelAfterCopy={{i18n
+                                        "user.invited.invite.link_copied"
+                                      }}
+                                    />
+                                  </dropdown.item>
+                                {{/if}}
                               </DDropdownMenu>
                             </:content>
                           </DMenu>

@@ -11,6 +11,30 @@ RSpec.describe ReviewableClaimedTopic, type: :model do
     expect(ct.save).to eq(false)
   end
 
+  describe "#log_topic_history" do
+    fab!(:topic)
+    fab!(:moderator)
+    fab!(:pending_reviewable) { Fabricate(:reviewable_flagged_post, topic:) }
+    fab!(:resolved_reviewable) { Fabricate(:reviewable_flagged_post, topic:, status: :approved) }
+
+    it "logs on every pending reviewable of the topic, never on resolved ones" do
+      claim = Fabricate(:reviewable_claimed_topic, topic:, user: moderator)
+
+      claim.log_topic_history(:claimed, moderator)
+
+      expect(pending_reviewable.history.claimed.size).to eq(1)
+      expect(resolved_reviewable.history.claimed).to be_empty
+    end
+
+    it "logs nothing for an automatic claim, which is a transient lock" do
+      claim = Fabricate(:reviewable_claimed_topic, topic:, user: moderator, automatic: true)
+
+      claim.log_topic_history(:claimed, moderator)
+
+      expect(pending_reviewable.history.claimed).to be_empty
+    end
+  end
+
   describe "#claimed_hash" do
     it "returns the all the claimed topics when reviewable claiming is enabled" do
       SiteSetting.reviewable_claiming = "optional"
@@ -26,8 +50,7 @@ RSpec.describe ReviewableClaimedTopic, type: :model do
       )
 
       result = ReviewableClaimedTopic.claimed_hash([topic1.id, topic2.id])
-      expect(result[topic1.id].topic_id).to eq(topic1.id)
-      expect(result[topic2.id].topic_id).to eq(topic2.id)
+      expect(result.keys).to contain_exactly(topic1.id, topic2.id)
     end
 
     it "only returns the automatic claimed topics when reviewable claiming is disabled" do
@@ -44,7 +67,7 @@ RSpec.describe ReviewableClaimedTopic, type: :model do
       )
 
       result = ReviewableClaimedTopic.claimed_hash([topic1.id, topic2.id])
-      expect(result[topic2.id].topic_id).to eq(topic2.id)
+      expect(result.keys).to contain_exactly(topic2.id)
     end
   end
 end

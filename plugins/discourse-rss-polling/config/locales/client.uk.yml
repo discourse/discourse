@@ -14,14 +14,96 @@ uk:
     rss_polling:
       title: Опитування RSS
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: створити RSS-канал
+            update_rss_polling_feed: оновити RSS-канал
+            destroy_rss_polling_feed: видалити RSS-канал
+            enable_rss_polling_feed: увімкнути RSS-канал
+            disable_rss_polling_feed: вимкнути стрічку RSS
+            poll_rss_polling_feed: опитування RSS-каналу зараз
       rss_polling:
-        feed: Налаштування стрічки
-        discourse: Налаштування дискурсу
+        feed_settings: Налаштування стрічки
+        discourse_settings: Налаштування дискурсу
         author: Автор
         feed_url: Посилання
+        feed_url_must_be_http: Введіть дійсну URL-адресу каналу, що починається з http:// або https://.
         discourse_category: Категорія
         discourse_tags: Теґи
+        required_tags_hint: "Для цієї категорії потрібен один із цих тегів — додайте його, інакше імпортовані теми будуть відхилені:"
+        required_tag_error: 'Додайте щонайменше %{count} тег(ів) з групи "%{tag_group}", інакше імпортовані теми будуть відхилені.'
         feed_category_filter: Фільтр категорії
-        documentation: Документація щодо конфігурації RSS-опитування
-        destroy_feed:
-          confirm: "Ви впевнені, що хочете видалити цю стрічку?"
+        feed_category_filter_description: Імпортуйте лише елементи, категорія каналу яких містить цей текст (без урахування регістру). Залиште поле порожнім, щоб імпортувати все.
+        showing: "Показано перші %{count} з %{total} елементів."
+        feeds:
+          title: Канали
+          nav_description: Керуйте RSS/Atom-каналами, які імпортовані в Discourse.
+          description: Налаштуйте RSS/Atom-канали, які опитуються та імпортуються як теми.
+          add: Додати стрічку
+          add_header: Додати стрічку
+          edit_header: Редагувати стрічку
+          empty: Ви ще не налаштували жодної стрічки.
+          edit: Редагувати
+          delete: Видалити
+          enable: Увімкнути стрічку
+          disable: Вимкнути стрічку
+          back: Назад до стрічок
+          save: Зберегти
+          confirm_delete: "Ви впевнені, що хочете видалити цю стрічку?"
+          delete_success: Канал видалено
+          save_success: Канал збережено
+          enable_success: Канал увімкнено
+          disable_success: Канал вимкнуто
+        test:
+          button: Тестовий канал
+          title: Попередній перегляд
+          empty: Цей канал не містить жодних записів.
+          dismiss: Відкласти
+          would_import: Імпортування
+          summary:
+            would_import: "%{count} буде імпортовано"
+            already_imported: "%{count} вже імпортовано"
+            skipped: "%{count} пропустить"
+          already_imported: "Вже імпортовано — опитування оновить <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>наявну тему</a>."
+          already_imported_plain: "Вже імпортовано — опитування оновить наявну тему."
+          skip_reasons:
+            missing_content: Пропущено — елемент не має вмісту.
+            missing_title: Пропущені — елемент не має назви.
+            invalid_url: Пропущено — елемент не має дійсного посилання для імпорту.
+            category_filter_mismatch: "Пропущено — категорії елементів: %{categories}"
+            category_filter_mismatch_none: Пропущено — елемент не має категорій.
+          errors:
+            fetch_failed: Не вдалося завантажити канал. Перевырте чи URL-адреса правильна та доступна.
+            parse_failed: Відповідь не схожа на дійсний RSS-канал або канал Atom.
+            invalid_feed: Не вдалося прочитати канал, оскільки він має неправильний формат.
+            blank_feed_url: Введіть URL-адресу каналу для тестування.
+            category_deleted: Категорія, до якої імпортується цей канал, більше не існує. Відредагуйте канал і виберіть нову категорію.
+            unknown: Не вдалося прочитати цей канал. Можливо, він тимчасово недоступний або повертає несподіваний вміст. Проведіть тестування каналу, щоб виявити причину, або перегляньте журнали для отримання детальної інформації.
+        status:
+          enabled: Включено
+          disabled: Вимкнено
+          disabled_note: Опитування не відбудеться за розкладом
+        history:
+          recent: Нещодавні опитування
+          show_older: "Показати %{count} старіші"
+          poll_now: Опитування зараз
+          poll_now_dirty: Збережіть зміни перед опитуванням.
+          poll_now_disabled: Увімкніть канал перед початком опитування.
+          poll_confirm: Опитування зараз завантажить цей канал та імпортує або оновить теми. Продовжити?
+          poll_started: Опитування розпочалося — дані опитування з’являться тут незабаром.
+          empty: Цей канал ще не оновлювався.
+          no_items: У цьому опитуванні не було оброблено жодного запиту.
+          no_changes: Немає змін
+          imported_count: "%{count} імпортовано"
+          updated_count: "%{count} оновлено"
+          skipped_count: "%{count} пропущено"
+          failed_count: "%{count} не вдалося"
+          imported: "Імпортовано як нову <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>тему</a>."
+          imported_plain: "Імпортовано як нову тему."
+          updated: "Оновлено <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>існуючу тему</a>."
+          updated_plain: "Оновлено існуючу тему."
+          failed: Не вдалося імпортувати.
+          failed_reasons:
+            import_rejected: "Не вдалося імпортувати — елемент не має дійсного посилання для імпорту."
+            import_error: "Не вдалося імпортувати: %{error}"

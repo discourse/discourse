@@ -69,6 +69,8 @@ describe Middleware::CrawlerHooks do
   end
 
   before do
+    SiteSetting.allow_user_locale = true
+    SiteSetting.set_locale_from_param = true
     SiteSetting.content_localization_enabled = false
     SiteSetting.content_localization_crawler_param = false
   end
@@ -250,6 +252,28 @@ describe Middleware::CrawlerHooks do
             :path => "https://discourse.site",
             :params => {
               "locale" => "fr",
+            },
+            "HTTP_USER_AGENT" => crawler_user_agent,
+            "X-Discourse-Crawler-View" => true,
+          ),
+        )
+
+      expect(status).to eq(200)
+      expect(headers["Content-Type"]).to include("text/html")
+      expect(response).to eq(html_response)
+    end
+
+    it "does not modify HTML responses when locale params are disabled" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+      SiteSetting.set_locale_from_param = false
+
+      status, headers, response =
+        middleware.call(
+          env(
+            :path => "https://discourse.site",
+            :params => {
+              Discourse::LOCALE_PARAM => "fr",
             },
             "HTTP_USER_AGENT" => crawler_user_agent,
             "X-Discourse-Crawler-View" => true,

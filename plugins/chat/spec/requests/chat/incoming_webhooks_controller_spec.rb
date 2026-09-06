@@ -31,12 +31,15 @@ RSpec.describe Chat::IncomingWebhooksController do
       expect(response.status).to eq(400)
     end
 
-    it "errors when the body is over chat_maximum_message_length characters" do
-      post "/chat/hooks/#{webhook.key}.json",
-           params: {
-             text: "$" * (SiteSetting.chat_maximum_message_length + 1),
-           }
-      expect(response.status).to eq(422)
+    it "rejects an over-length body" do
+      post "/chat/hooks/#{webhook.key}.json", params: { text: "a" * 25_000 }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to eq(
+        [
+          "You supplied invalid parameters to the request: [\"Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)\"]",
+        ],
+      )
     end
 
     it "creates a new chat message" do

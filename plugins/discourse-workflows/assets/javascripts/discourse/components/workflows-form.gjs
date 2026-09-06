@@ -1,22 +1,45 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import { ajax } from "discourse/lib/ajax";
 import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
-import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
-function isFormKitType(field, type) {
-  return field.type === type;
-}
+const FIELD_TYPE_TO_SETTING_TYPE = {
+  checkbox: "bool",
+  select: "enum",
+  "input-number": "integer",
+  "input-email": "email",
+  "input-date": "date",
+};
 
-function fieldOptions(field) {
-  return field.options || [];
+function fieldDefinition(field) {
+  const definition = {
+    key: field.name,
+    label: field.title,
+    description: field.description,
+    type: FIELD_TYPE_TO_SETTING_TYPE[field.type] ?? field.type,
+    format: "full",
+    required: (field.validation || "").includes("required"),
+    placeholder: field.placeholder,
+  };
+
+  if (field.options) {
+    definition.valid_values = field.options.map(({ value, label }) => ({
+      value,
+      name: label,
+    }));
+  }
+
+  return definition;
 }
 
 const STRUCTURED_ERROR_TRANSLATIONS = {
@@ -82,19 +105,21 @@ export default class WorkflowsForm extends Component {
 
   @cached
   get fields() {
-    return (this.formSchema.fields || []).map((field, index) => {
+    return (this.formSchema.fields || []).map((field) => {
       if (field.type === "html") {
-        return {
-          ...field,
-          html: trustHTML(field.html || ""),
-          autofocus: index === 0,
-        };
+        return { ...field, html: trustHTML(field.html || "") };
       }
 
-      return {
-        ...field,
-        autofocus: index === 0,
-      };
+      return { ...field, definition: fieldDefinition(field) };
+    });
+  }
+
+  @action
+  focusFirstField(formElement) {
+    schedule("afterRender", () => {
+      formElement
+        .querySelector("input:not([type='hidden']), textarea, select")
+        ?.focus({ preventScroll: true });
     });
   }
 
@@ -260,96 +285,23 @@ export default class WorkflowsForm extends Component {
           {{/if}}
         </div>
 
-        <Form @data={{this.formData}} @onSubmit={{this.handleSubmit}} as |form|>
+        <Form
+          @data={{this.formData}}
+          @onSubmit={{this.handleSubmit}}
+          {{didInsert this.focusFirstField}}
+          as |form|
+        >
           {{#each this.fields as |field|}}
-            {{#if (isFormKitType field "html")}}
+            {{#if (eq field.type "html")}}
               <DDecoratedHtml
                 @html={{field.html}}
                 @className="workflows-form__html"
               />
-            {{else if (isFormKitType field "checkbox")}}
-              <form.Field
-                @type="checkbox"
-                @name={{field.name}}
-                @title={{field.title}}
-                @description={{field.description}}
-                @format="full"
-                as |f|
-              >
-                <f.Control {{(if field.autofocus (modifier dAutoFocus))}} />
-              </form.Field>
-            {{else if (isFormKitType field "textarea")}}
-              <form.Field
-                @type="textarea"
-                @name={{field.name}}
-                @title={{field.title}}
-                @description={{field.description}}
-                @format="full"
-                @validation={{field.validation}}
-                @placeholder={{field.placeholder}}
-                as |f|
-              >
-                <f.Control
-                  placeholder={{field.placeholder}}
-                  {{(if field.autofocus (modifier dAutoFocus))}}
-                />
-              </form.Field>
-            {{else if (isFormKitType field "select")}}
-              <form.Field
-                @type="select"
-                @name={{field.name}}
-                @title={{field.title}}
-                @description={{field.description}}
-                @format="full"
-                @validation={{field.validation}}
-                as |f|
-              >
-                <f.Control
-                  {{(if field.autofocus (modifier dAutoFocus))}}
-                  as |c|
-                >
-                  {{#each (fieldOptions field) as |opt|}}
-                    <c.Option @value={{opt.value}}>{{opt.label}}</c.Option>
-                  {{/each}}
-                </f.Control>
-              </form.Field>
-            {{else if (isFormKitType field "radio-group")}}
-              <form.Field
-                @type="radio-group"
-                @name={{field.name}}
-                @title={{field.title}}
-                @description={{field.description}}
-                @format="full"
-                @validation={{field.validation}}
-                as |f|
-              >
-                <f.Control
-                  {{(if field.autofocus (modifier dAutoFocus))}}
-                  as |RadioGroup|
-                >
-                  {{#each (fieldOptions field) as |opt|}}
-                    <RadioGroup.Radio
-                      @value={{opt.value}}
-                    >{{opt.label}}</RadioGroup.Radio>
-                  {{/each}}
-                </f.Control>
-              </form.Field>
             {{else}}
-              <form.Field
-                @type={{field.type}}
-                @name={{field.name}}
-                @title={{field.title}}
-                @description={{field.description}}
-                @format="full"
-                @validation={{field.validation}}
-                @placeholder={{field.placeholder}}
-                as |f|
-              >
-                <f.Control
-                  placeholder={{field.placeholder}}
-                  {{(if field.autofocus (modifier dAutoFocus))}}
-                />
-              </form.Field>
+              <SettingDefinitionField
+                @definition={{field.definition}}
+                @form={{form}}
+              />
             {{/if}}
           {{/each}}
 

@@ -146,4 +146,38 @@ describe DiscourseSolved::GuardianExtensions do
       expect(guardian.can_unaccept_answer?(restricted_topic, restricted_post)).to eq(false)
     end
   end
+
+  describe "shared issues" do
+    fab!(:support_category) do
+      Fabricate(:category_with_definition).tap do |c|
+        c.upsert_custom_fields(DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true")
+      end
+    end
+    fab!(:support_topic) { Fabricate(:topic_with_op, category: support_category, user: other_user) }
+
+    before do
+      SiteSetting.enable_solved_shared_issues = true
+      DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+    end
+
+    describe ".can_create_shared_issue?" do
+      it "returns true for a regular topic in a support category" do
+        expect(guardian.can_create_shared_issue?(support_topic)).to eq(true)
+      end
+
+      it "returns false for the category definition topic" do
+        expect(guardian.can_create_shared_issue?(support_category.topic)).to eq(false)
+      end
+    end
+
+    describe ".shared_issue_visible?" do
+      it "returns true for a regular topic in a support category" do
+        expect(guardian.shared_issue_visible?(support_topic)).to eq(true)
+      end
+
+      it "returns false for the category definition topic" do
+        expect(guardian.shared_issue_visible?(support_category.topic)).to eq(false)
+      end
+    end
+  end
 end

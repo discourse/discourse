@@ -32,7 +32,11 @@ module Jobs
           topic_localization.update_excerpt(cooked:) if topic_localization
         end
 
-        MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
+        MessageBus.publish(
+          "/topic/#{post.topic_id}",
+          { type: :localized, id: post.id },
+          post.topic.secure_audience_publish_messages,
+        )
       end
     end
   end

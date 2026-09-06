@@ -5,6 +5,19 @@
 # https://translate.discourse.org/
 
 bg:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Персонал"
+              member: "Членове"
+              basic: "Основно "
+            response_time:
+              buckets:
+                lt_1h: "< 1 час"
+                gt_24h: "> 24 часа"
   js:
     notifications:
       alt:
@@ -20,6 +33,12 @@ bg:
       confirm_solved_removal_cancel: "Отмени"
       shared_issue:
         label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Тема"
+            category: "Категория"
     discourse_automation:
       triggerables:
         first_accepted_solution:

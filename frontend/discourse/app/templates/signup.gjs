@@ -1,9 +1,11 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
+import CodeLoginForm from "discourse/components/code-login-form";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";
 import LoginButtons from "discourse/components/login-buttons";
+import NoLoginMethods from "discourse/components/no-login-methods";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SignupPageCta from "discourse/components/signup-page-cta";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
@@ -48,18 +50,46 @@ export default <template>
           @controller.authOptions.auth_provider
         }}
       >
-        {{#unless @controller.skipConfirmation}}
-          <SignupProgressBar @step={{@controller.progressBarStep}} />
-          <WelcomeHeader
-            id="create-account-title"
-            @header={{i18n "create_account.header_title"}}
-          >
+        {{#if @controller.hasNoLoginOptions}}
+          <NoLoginMethods />
+        {{else if (not @controller.skipConfirmation)}}
+          {{! Code signup renders its own heading inside CodeLoginForm. }}
+          {{#unless @controller.showCodeSignupForm}}
+            <SignupProgressBar @step={{@controller.progressBarStep}} />
             <PluginOutlet
-              @name="create-account-header-bottom"
-              @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
-            />
-          </WelcomeHeader>
-        {{/unless}}
+              @name="signup-heading"
+              @outletArgs={{lazyHash
+                step="form"
+                context="signup"
+                title=(i18n "create_account.header_title")
+              }}
+            >
+              <WelcomeHeader
+                id="create-account-title"
+                @header={{i18n "create_account.header_title"}}
+              >
+                <PluginOutlet
+                  @name="create-account-header-bottom"
+                  @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
+                />
+              </WelcomeHeader>
+            </PluginOutlet>
+          {{/unless}}
+        {{/if}}
+        {{#if @controller.showCodeSignupForm}}
+          <CodeLoginForm
+            @context="signup"
+            @initialEmail={{@controller.accountEmail}}
+            @onStepChange={{@controller.updateCodeSignupStep}}
+          />
+          {{#if
+            (and @controller.codeSignupOnEmailStep @controller.disclaimerHtml)
+          }}
+            <div class="signup-page-cta__disclaimer">
+              {{trustHTML @controller.disclaimerHtml}}
+            </div>
+          {{/if}}
+        {{/if}}
         {{#if @controller.showCreateForm}}
           <form id="login-form">
             {{#if @controller.associateHtml}}

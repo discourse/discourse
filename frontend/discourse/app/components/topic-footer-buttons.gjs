@@ -47,15 +47,6 @@ export default class TopicFooterButtons extends Component {
     set(this, "topic.details.can_invite_to", value);
   }
 
-  @computed("currentUser.user_option.enable_defer")
-  get canDefer() {
-    return this.currentUser?.user_option?.enable_defer;
-  }
-
-  set canDefer(value) {
-    set(this, "currentUser.user_option.enable_defer", value);
-  }
-
   @computed("topic.archived", "topic.closed", "topic.deleted")
   get inviteDisabled() {
     return this.topic?.archived || this.topic?.closed || this.topic?.deleted;
@@ -136,10 +127,6 @@ export default class TopicFooterButtons extends Component {
   @computed("showCreate", "topic.details.can_create_post")
   get showCreateButton() {
     return this.showCreate !== false && this.topic?.details?.can_create_post;
-  }
-
-  get renderPluginOutlets() {
-    return this.showPluginOutlets !== false;
   }
 
   <template>
@@ -251,7 +238,6 @@ export default class TopicFooterButtons extends Component {
                           @disabled={{button.disabled}}
                           id={{concat "topic-footer-button-" button.id}}
                           class={{dConcatClass
-                            "btn-default"
                             "topic-footer-button"
                             button.classNames
                           }}
@@ -278,13 +264,11 @@ export default class TopicFooterButtons extends Component {
           {{/if}}
         </div>
 
-        {{#if this.renderPluginOutlets}}
-          <PluginOutlet
-            @name="topic-footer-main-buttons-before-create"
-            @outletArgs={{lazyHash topic=this.topic}}
-            @connectorTagName="span"
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="topic-footer-main-buttons-before-create"
+          @outletArgs={{lazyHash topic=this.topic}}
+          @connectorTagName="span"
+        />
 
         {{#if this.showCreateButton}}
           <DButton
@@ -296,13 +280,11 @@ export default class TopicFooterButtons extends Component {
           />
         {{/if}}
 
-        {{#if this.renderPluginOutlets}}
-          <PluginOutlet
-            @name="after-topic-footer-main-buttons"
-            @outletArgs={{lazyHash topic=this.topic}}
-            @connectorTagName="span"
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="after-topic-footer-main-buttons"
+          @outletArgs={{lazyHash topic=this.topic}}
+          @connectorTagName="span"
+        />
       </div>
 
       {{#if this.site.desktopView}}
@@ -333,13 +315,11 @@ export default class TopicFooterButtons extends Component {
         {{/if}}
       {{/if}}
 
-      {{#if this.renderPluginOutlets}}
-        <PluginOutlet
-          @name="after-topic-footer-buttons"
-          @outletArgs={{lazyHash topic=this.topic}}
-          @connectorTagName="span"
-        />
-      {{/if}}
+      <PluginOutlet
+        @name="after-topic-footer-buttons"
+        @outletArgs={{lazyHash topic=this.topic}}
+        @connectorTagName="span"
+      />
     </div>
   </template>
 }

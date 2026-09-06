@@ -15,6 +15,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "all_items",
           },
+          output_contracts: [{ mode: :passthrough }],
           properties: {
             max_items: {
               type: :integer,

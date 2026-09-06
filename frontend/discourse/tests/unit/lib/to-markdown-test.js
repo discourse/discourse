@@ -50,6 +50,41 @@ module("Unit | Utility | to-markdown", function (hooks) {
     assert.true(result.includes("**bold**"), "bold formatting preserved");
   });
 
+  test("only treats bold font weights as strong", async function (assert) {
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 500;">medium</span> text`
+      ),
+      "some medium text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(`some <span style="font-weight: 700;">bold</span> text`),
+      "some **bold** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 1000;">black</span> text`
+      ),
+      "some **black** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: 650.5;">variable</span> text`
+      ),
+      "some **variable** text"
+    );
+
+    assert.strictEqual(
+      await toMarkdown(
+        `some <span style="font-weight: bold;">bold</span> text`
+      ),
+      "some **bold** text"
+    );
+  });
+
   test("converts a link", async function (assert) {
     let html = `<a href="https://discourse.org">Discourse</a>`;
     let markdown = `[Discourse](https://discourse.org)`;
@@ -163,10 +198,16 @@ module("Unit | Utility | to-markdown", function (hooks) {
 
     html = `<table>
               <tr><th>Heading 1</th><th>Head 2</th></tr>
-              <tr><td><a href="http://example.com"><img src="http://example.com/image.png" alt="Lorem" width="45" height="45"></a></td><td>ipsum</td></tr>
+              <tr><td><a href="http://example.com"><img src="http://example.com/image|large.png" alt="Lorem" width="45" height="45" title="wide|image"></a></td><td>ipsum</td></tr>
+              <tr><td>x | y</td><td><code>a|b</code></td></tr>
+              <tr><td><a class="attachment" href="http://example.com/file|v.pdf">file.pdf</a></td><td><ruby lang="ja|latin">字</ruby></td></tr>
             </table>`;
-    markdown = `| Heading 1 | Head 2 |\n|----|----|\n| [![Lorem|45x45](http://example.com/image.png)](http://example.com) | ipsum |`;
-    assert.strictEqual(await toMarkdown(html), markdown);
+    markdown = `| Heading 1 | Head 2 |\n|----|----|\n| [![Lorem\\|45x45](http://example.com/image\\|large.png "wide\\|image")](http://example.com) | ipsum |\n| x \\| y | \`a\\|b\` |\n| [file.pdf\\|attachment](http://example.com/file\\|v.pdf) | <ruby lang="ja\\|latin">字</ruby> |`;
+    assert.strictEqual(
+      await toMarkdown(html),
+      markdown,
+      "pipes are escaped across table-cell serializer paths"
+    );
   });
 
   test("table with br in header is still a valid table", async function (assert) {
@@ -415,6 +456,99 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
+  test("converts quote style from word", async function (assert) {
+    const html = `Intro<!--StartFragment-->
+    <p class=MsoQuote style='margin-left:.5in'>First quoted line</p>
+    <p class=MsoQuote style='margin-left:.5in'>Second quoted line</p>
+    <!--EndFragment-->Outro`;
+    const markdown = `Intro\n\n> First quoted line\n>\n> Second quoted line\n\nOutro`;
+    assert.strictEqual(await toMarkdown(html), markdown);
+  });
+
+  test("strips word comments and tracked deletions", async function (assert) {
+    const html = `<!--StartFragment-->
+    <p class=MsoNormal>Identify significant accounts<a class=msocomanchor
+      href="#_msocom_1" style='mso-comment-reference:SK_1;mso-comment-date:1'><span
+      class=MsoCommentReference>[J1]</span></a> and relevant assertions.</p>
+    <p class=MsoNormal>This involves <del>old removed phrase </del>using risk procedures.</p>
+    <div style='mso-element:comment-list'><div style='mso-element:comment'>
+      <p class=MsoCommentText><a name="_msocom_1"></a>Consider removing.</p>
+    </div></div>
+    <!--EndFragment-->`;
+
+    const markdown = await toMarkdown(html);
+
+    assert.true(markdown.includes("Identify significant accounts and"));
+    assert.true(markdown.includes("This involves using risk procedures."));
+    assert.false(markdown.includes("[J1]"));
+    assert.false(markdown.includes("Consider removing."));
+    assert.false(markdown.includes("old removed phrase"));
+  });
+
+  test("drops the lang spans a publishing tool wraps each sentence in", async function (assert) {
+    const html = `<p><span class="sentence" lang="en">So I have heard.</span> <span class="sentence" lang="en">At one time.</span></p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "So I have heard. At one time.",
+      "removes generated lang spans"
+    );
+  });
+
+  test("keeps the space a dropped lang span held at its edge", async function (assert) {
+    const html = `<p><span class="sentence" lang="en">So I have heard. </span><span class="sentence" lang="en">At one time.</span></p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "So I have heard. At one time.",
+      "sentences stay separated"
+    );
+  });
+
+  test("drops an authored lang span too, arriving as HTML (accepted)", async function (assert) {
+    const html = `<p>He said <span lang="ja">日本語</span> loudly.</p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "He said 日本語 loudly.",
+      "only markdown carries lang into the composer"
+    );
+  });
+
+  test("keeps the markup a dropped lang span wrapped", async function (assert) {
+    const html = `<p><span lang="en">A <b>bold</b> <mark>marked</mark> <ruby lang="ja">漢<rt>かん</rt></ruby> line.</span></p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      'A **bold** <mark>marked</mark> <ruby lang="ja">漢<rt>かん</rt></ruby> line.',
+      "preserves nested markup"
+    );
+  });
+
+  test("drops the document-language spans Word for the web stamps on runs", async function (assert) {
+    const html = `<div class="OutlineElement"><p class="Paragraph">
+      <span class="TextRun" lang="EN-GB"><span class="NormalTextRun" lang="EN-GB">Note:</span></span>
+      <span class="TextRun" lang="EN-GB"><span class="NormalTextRun" lang="EN-GB"> materiality</span></span>
+    </p></div>`;
+
+    const markdown = await toMarkdown(html);
+
+    assert.strictEqual(markdown, "Note: materiality");
+    assert.false(markdown.includes("<span"));
+    assert.false(markdown.includes("lang="));
+  });
+
+  test("cleans a real Word for the web run (lang on TextRun, EOP marker)", async function (assert) {
+    // Trimmed from a real Word for the web clipboard.
+    const html = `<span data-contrast="auto" xml:lang="PT-BR" lang="PT-BR" class="TextRun SCXW1 BCX0"><span class="NormalTextRun SCXW1 BCX0">This</span><span class="NormalTextRun SCXW1 BCX0"><span> </span></span><span class="NormalTextRun SCXW1 BCX0">is something</span></span><span class="EOP SCXW1 BCX0" data-ccp-props="{}"> </span>`;
+
+    const markdown = await toMarkdown(html);
+
+    assert.strictEqual(markdown, "This is something");
+    assert.false(markdown.includes("<span"));
+    assert.false(markdown.includes("lang="));
+  });
+
   test("keeps mention/hash class", async function (assert) {
     const html = `
       <p>User mention: <a class="mention" href="/u/discourse">@discourse</a></p>
@@ -487,6 +621,14 @@ helloWorld();</code>consectetur.`;
     const markdown = `:custom_emoji:`;
 
     assert.strictEqual(await toMarkdown(html), markdown);
+  });
+
+  test("restores clipboard non-breaking spaces around inline nodes", async function (assert) {
+    // The copied nbsp beside the emoji must become a regular space or it won't
+    // cook; an author-typed nbsp (in "to keep") is left alone.
+    const html = `<span style="color: rgb(0,0,0)">use the<span>&nbsp;</span></span><img class="emoji" title=":heart:" alt=":heart:" /><span style="color: rgb(0,0,0)"><span>&nbsp;</span>to&nbsp;keep</span>`;
+
+    assert.strictEqual(await toMarkdown(html), `use the :heart: to\u00a0keep`);
   });
 
   test("converts image lightboxes to markdown", async function (assert) {

@@ -23,6 +23,7 @@ RSpec.describe Jobs::RollupAiApiRequestStats do
         response_tokens: 50,
         cache_read_tokens: 10,
         cache_write_tokens: 5,
+        estimated_cost: 0.10,
         created_at: old_time,
       )
     end
@@ -45,6 +46,7 @@ RSpec.describe Jobs::RollupAiApiRequestStats do
     expect(rolled_up.response_tokens).to eq(100)
     expect(rolled_up.cache_read_tokens).to eq(20)
     expect(rolled_up.cache_write_tokens).to eq(10)
+    expect(rolled_up.estimated_cost).to eq(BigDecimal("0.2"))
     expect(rolled_up.usage_count).to eq(2)
     expect(rolled_up.created_at).to eq_time(old_time.beginning_of_day)
 

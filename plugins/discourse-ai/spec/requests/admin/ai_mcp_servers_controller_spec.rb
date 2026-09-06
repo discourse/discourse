@@ -334,6 +334,20 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
         I18n.t("discourse_ai.mcp_servers.errors.oauth_callback_failed", message: "invalid state"),
       )
     end
+
+    context "when Discourse is installed in a subfolder" do
+      before { set_subfolder "/forum" }
+
+      it "prefixes the tools-page fallback redirect with the subfolder" do
+        DiscourseAi::Mcp::OAuthFlow.expects(:complete!).raises(
+          DiscourseAi::Mcp::OAuthFlow::OAuthError.new("invalid state"),
+        )
+
+        get "/admin/plugins/discourse-ai/ai-mcp-servers/oauth/callback", params: { state: "bad" }
+
+        expect(response).to redirect_to("/forum/admin/plugins/discourse-ai/ai-tools")
+      end
+    end
   end
 
   describe "DELETE #oauth_disconnect" do

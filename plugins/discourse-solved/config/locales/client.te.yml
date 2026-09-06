@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 te:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "సిబ్బంది"
+              member: "సభ్యులు"
+              basic: "ప్రాథమిక"
+            response_time:
+              buckets:
+                lt_1h: "< 1 గంట"
   js:
     notifications:
       alt:
@@ -19,6 +31,12 @@ te:
       confirm_solved_removal_cancel: "రద్దుచేయండి"
       shared_issue:
         label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "విషయం"
+            category: "వర్గం"
     discourse_automation:
       triggerables:
         first_accepted_solution:

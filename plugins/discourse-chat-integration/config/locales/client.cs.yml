@@ -109,3 +109,7 @@ cs:
           fields:
             channel_name:
               label: Název kanálu
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanál"
+        message: "Odeslat"

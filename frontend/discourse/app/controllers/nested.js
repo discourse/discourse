@@ -34,6 +34,7 @@ export default class NestedController extends Controller {
   @service nestedViewCache;
   @service router;
   @service site;
+  @service siteSettings;
 
   @tracked topic;
   @tracked opPost;
@@ -42,8 +43,10 @@ export default class NestedController extends Controller {
   @tracked hasMoreRoots = false;
   @tracked loadingMore = false;
   @tracked sort;
+  @tracked effectiveSort;
   @tracked messageBusLastId;
   @tracked postNumber;
+  @tracked context = null;
   @tracked contextMode = false;
   @tracked contextChain = null;
   @tracked initialFocusedPath = [];
@@ -60,7 +63,6 @@ export default class NestedController extends Controller {
   // state. If we ever want to scope it to entry-only, clear after the
   // initial render in the route.
   @tracked collapseReplies = false;
-  queryParams = ["sort", "context", { collapseReplies: "collapse_replies" }];
 
   // Externalized expansion state: postNumber → { expanded, collapsed }
   // Components read on construction, write on toggle.
@@ -80,6 +82,7 @@ export default class NestedController extends Controller {
   // Populated by NestedPost components via appEvents so that readPosts
   // can find posts at any depth, not just those in the preloaded tree.
   postRegistry = new Map();
+  #latestScrollAnchor = null;
   #postEventsSubscribed = false;
   #messageBusChannel = null;
   #pendingPostIds = new Set();
@@ -254,8 +257,12 @@ export default class NestedController extends Controller {
     this.loadingMore = true;
     try {
       const nextPage = this.page + 1;
+      const query = new URLSearchParams({
+        page: nextPage,
+        sort: this.effectiveSort || this.sort || "top",
+      });
       const data = await ajax(
-        `/n/${this.topic.slug}/${this.topic.id}.json?page=${nextPage}&sort=${this.sort}`
+        `/n/${this.topic.slug}/${this.topic.id}.json?${query}`
       );
 
       const newNodes = (data.roots || []).map((root) =>
@@ -310,10 +317,16 @@ export default class NestedController extends Controller {
 
   @action
   viewFullThread() {
+    this.saveToCache();
     this.nestedViewCache.useNextTransition();
-    this.router.transitionTo("nested", this.topic.slug, this.topic.id, {
-      queryParams: { sort: this.sort, context: null },
-    });
+    this.router.transitionTo(
+      "topic.fromParams",
+      this.topic.slug,
+      this.topic.id,
+      {
+        queryParams: { sort: this.sort, context: null },
+      }
+    );
   }
 
   @action
@@ -325,7 +338,7 @@ export default class NestedController extends Controller {
 
   @action
   saveScrollPosition(scrollAnchor) {
-    this.saveToCache(scrollAnchor);
+    this.saveScrollAnchor(scrollAnchor);
   }
 
   @action
@@ -333,16 +346,19 @@ export default class NestedController extends Controller {
     this.scrollAnchor = null;
   }
 
-  saveToCache(scrollAnchor) {
-    if (!this.topic) {
+  saveScrollAnchor(scrollAnchor) {
+    if (!this.topic || !scrollAnchor) {
       return;
     }
 
-    const cacheKey = this.nestedViewCache.buildKey(this.topic.id, {
-      sort: this.sort,
-      post_number: this.postNumber,
-      context: this.contextNoAncestors ? 0 : undefined,
-    });
+    this.#latestScrollAnchor = scrollAnchor;
+    this.#saveScrollAnchorToSession(this.#cacheKey(), scrollAnchor);
+  }
+
+  saveToCache(scrollAnchor = this.#latestScrollAnchor) {
+    if (!this.topic) {
+      return;
+    }
 
     const modelData = {
       topic: this.topic,
@@ -351,9 +367,11 @@ export default class NestedController extends Controller {
       page: this.page,
       hasMoreRoots: this.hasMoreRoots,
       sort: this.sort,
+      effectiveSort: this.effectiveSort,
       messageBusLastId: this.messageBusLastId,
       pinnedPostIds: this.pinnedPostIds,
       postNumber: this.postNumber,
+      context: this.context,
       contextMode: this.contextMode,
       contextChain: this.contextChain,
       initialFocusedPath: this.initialFocusedPath,
@@ -364,6 +382,8 @@ export default class NestedController extends Controller {
       newRootPostIds: this.newRootPostIds,
     };
 
+    const cacheKey = this.#cacheKey();
+
     this.nestedViewCache.save(cacheKey, {
       formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
       modelData: snapshotNestedModelData(modelData),
@@ -373,13 +393,38 @@ export default class NestedController extends Controller {
       ),
       scrollAnchor,
     });
+
+    if (scrollAnchor) {
+      this.#saveScrollAnchorToSession(cacheKey, scrollAnchor);
+    }
+  }
+
+  #cacheKey() {
+    return this.nestedViewCache.buildKey(this.topic.id, {
+      sort: this.sort,
+      post_number: this.postNumber,
+      context: this.context ?? undefined,
+    });
+  }
+
+  #saveScrollAnchorToSession(cacheKey, scrollAnchor) {
+    try {
+      sessionStorage.setItem(
+        `nested-view-scroll:${cacheKey}`,
+        JSON.stringify(scrollAnchor)
+      );
+    } catch {
+      // Ignore storage failures; in-memory scroll restoration still works.
+    }
   }
 
   @action
   viewParentContext() {
+    this.saveToCache();
+
     if (this.ancestorsTruncated && this.topAncestorPostNumber) {
       this.router.transitionTo(
-        "nestedPost",
+        "topic.fromParamsNear",
         this.topic.slug,
         this.topic.id,
         this.topAncestorPostNumber,
@@ -387,7 +432,7 @@ export default class NestedController extends Controller {
       );
     } else {
       this.router.transitionTo(
-        "nestedPost",
+        "topic.fromParamsNear",
         this.topic.slug,
         this.topic.id,
         this.targetPostNumber,
@@ -428,7 +473,11 @@ export default class NestedController extends Controller {
   }
 
   @action
-  deletePost(post) {
+  deletePost(post, opts) {
+    if (post.post_number === 1) {
+      return this.#topicController.deletePost(post, opts);
+    }
+
     if (!post.can_delete) {
       return;
     }
@@ -581,7 +630,7 @@ export default class NestedController extends Controller {
   @action
   showActivityLog() {
     this.modal.show(NestedActivityLog, {
-      model: { topic: this.topic },
+      model: { topic: this.topic, editPost: this.editPost },
     });
   }
 
@@ -738,7 +787,15 @@ export default class NestedController extends Controller {
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      if (this.topic?.id !== topicId) {
+      if (
+        this.topic?.id !== topicId ||
+        !this.#postBelongsToTopic(postData, topicId)
+      ) {
+        return;
+      }
+
+      if (this.#isActivityLogPost(postData)) {
+        this.#notifyActivityChanged(data);
         return;
       }
 
@@ -765,7 +822,7 @@ export default class NestedController extends Controller {
         this.appEvents.trigger("nested-replies:child-created", {
           topicId,
           post: node.post,
-          parentPostNumber: replyTo,
+          parentPostNumber: this.#visibleParentPostNumber(postData),
           isOwnPost: data.user_id === this.currentUser?.id,
         });
       }
@@ -780,14 +837,62 @@ export default class NestedController extends Controller {
   // small_action posts (close/open/etc.) belong in the activity log, not the tree;
   // whispers with an action_code (e.g. assigns) are likewise activity-log-only.
   #isVisibleInTree(postData) {
+    return !this.#isActivityLogPost(postData);
+  }
+
+  #isActivityLogPost(postData) {
     const postTypes = this.site.post_types;
     if (postData.post_type === postTypes.small_action) {
-      return false;
+      return true;
     }
     if (postData.post_type === postTypes.whisper && postData.action_code) {
-      return false;
+      return true;
     }
-    return true;
+    return false;
+  }
+
+  #notifyActivityChanged(data) {
+    const topicId = this.topic?.id;
+    if (topicId) {
+      this.topic = this.store.createRecord("topic", {
+        id: topicId,
+        has_activity_log: true,
+      });
+    }
+    this.appEvents.trigger("nested-replies:activity-changed", {
+      topicId,
+      postId: data.id,
+      type: data.type,
+    });
+  }
+
+  #visibleParentPostNumber(postData) {
+    const replyTo = postData.reply_to_post_number;
+    if (!this.siteSettings.nested_replies_cap_nesting_depth) {
+      return replyTo;
+    }
+
+    const ancestors = [];
+    let postNumber = replyTo;
+
+    while (postNumber && postNumber !== 1) {
+      ancestors.unshift(postNumber);
+      const post = this.postRegistry.get(postNumber);
+      if (!post) {
+        return replyTo;
+      }
+      postNumber = post.reply_to_post_number;
+    }
+
+    const maxDepth = this.siteSettings.nested_replies_max_depth;
+    return ancestors.length > maxDepth ? ancestors[maxDepth - 1] : replyTo;
+  }
+
+  #postBelongsToTopic(postData, topicId = this.topic?.id) {
+    return (
+      postData?.topic_id != null &&
+      String(postData.topic_id) === String(topicId)
+    );
   }
 
   #isPostKnown(postId) {
@@ -807,6 +912,9 @@ export default class NestedController extends Controller {
 
   async #handlePostChanged(data) {
     if (data.type === "deleted") {
+      if (this.topic?.has_activity_log) {
+        this.#notifyActivityChanged(data);
+      }
       this.#markPostDeletedLocally(data.id);
       return;
     }
@@ -814,7 +922,15 @@ export default class NestedController extends Controller {
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      if (this.topic?.id !== topicId) {
+      if (
+        this.topic?.id !== topicId ||
+        !this.#postBelongsToTopic(postData, topicId)
+      ) {
+        return;
+      }
+
+      if (this.#isActivityLogPost(postData)) {
+        this.#notifyActivityChanged(data);
         return;
       }
 
@@ -822,7 +938,13 @@ export default class NestedController extends Controller {
         (p) => p.id === data.id
       );
       if (existing) {
-        existing.setProperties(postData);
+        // Route through the store so Post.munge runs — it rebuilds
+        // actions_summary as ActionSummary instances and repopulates
+        // actionByName. Without this, flagsAvailable (reads actionByName)
+        // and postActionFor (reads actions_summary) drift apart after an
+        // "acted" event, which crashes the flag modal on the next submit.
+        const updated = this.store.createRecord("post", postData);
+        existing.updateFromPost(updated);
         if (!postData.deleted_at) {
           existing.set("deleted_post_placeholder", false);
         }
@@ -866,7 +988,10 @@ export default class NestedController extends Controller {
 
     const newNodes = [];
     for (const result of results) {
-      if (result.status === "fulfilled") {
+      if (
+        result.status === "fulfilled" &&
+        this.#postBelongsToTopic(result.value, topicId)
+      ) {
         newNodes.push(this.#processNode({ ...result.value, children: [] }));
       }
     }

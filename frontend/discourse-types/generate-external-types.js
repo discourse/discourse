@@ -28,6 +28,7 @@ const packageNames = [
   "ember-modifier",
   "ember-qunit",
   "ember-source",
+  "ember-truth-helpers",
   "pretender",
 ];
 
@@ -102,6 +103,11 @@ const packageNames = [
       }
     } else {
       function transformPath(relativePath) {
+        // Declarations emitted by newer TypeScript keep explicit extensions on
+        // their relative imports (e.g. `../utils/foo.ts`), while the keys in
+        // `exportedDtsPaths` are extensionless. Strip any `.ts`/`.mts`/`.cts`
+        // (or `.d.ts`) suffix so both forms line up for the lookup below.
+        relativePath = relativePath.replace(/\.(d\.)?[cm]?ts$/, "");
         const modulePrefix = exportedDtsPaths.get(relativePath);
         if (modulePrefix) {
           let modulePath = relativePath;

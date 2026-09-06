@@ -10,9 +10,15 @@ pl_PL:
       site_settings:
         categories:
           poll: "Ankieta Discourse"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "Głosowanie zakończone"
+            poll_opened: "Głosowanie rozpoczęte"
   js:
     poll:
       title: "Ankieta"
+      closed_by: "Zamknięto przez %{username}"
       dynamic:
         enabled_hint: "Można dodawać i usuwać opcje."
       voters:
@@ -63,9 +69,20 @@ pl_PL:
             many: "Wybierz <strong>%{count} opcji</strong>."
             other: "Wybierz <strong>%{count} opcji</strong>."
           between_min_and_max_options: "Wybierz pomiędzy <strong>%{min} a %{max} opcjami</strong>."
+      vote_recorded: "Twój głos został zarejestrowany."
+      voted_choices:
+        title: "Głosowałeś na:"
       cast-votes:
         title: "Oddaj głos"
         label: "Oddaj głos!"
+        update_title: "Zaktualizuj swój głos"
+        update_label: "Zaktualizuj głos"
+      amend-vote:
+        title: "Zmień swój głos"
+        label: "Zmień głos"
+      keep-vote:
+        title: "Wstecz bez zmiany swojego głosu"
+        label: "Wstecz"
       show-results:
         title: "Wyświetl wyniki ankiety"
         label: "Wyniki"
@@ -176,5 +193,3 @@ pl_PL:
           add: Dodaj opcję
         automatic_close:
           label: Automatycznie zamknij ankietę
-        show_advanced: "Pokaż opcje zaawansowane"
-        hide_advanced: "Ukryj opcje zaawansowane"

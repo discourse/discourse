@@ -87,6 +87,20 @@ function nestedResponse({ id, slug, title, marker, suggestedTopic }) {
   };
 }
 
+function topicViewResponse(id, slug, title) {
+  const topic = topicAttrs(id, slug, title);
+  const opPost = postAttrs(topic, 1, id * 10 + 1, `${title} op`);
+
+  return {
+    ...topic,
+    post_stream: {
+      posts: [opPost],
+      stream: [opPost.id],
+    },
+    timeline_lookup: [[1, 0]],
+  };
+}
+
 acceptance("Horizon | Nested suggested topic navigation", function (needs) {
   needs.user();
   needs.settings({
@@ -104,6 +118,18 @@ acceptance("Horizon | Nested suggested topic navigation", function (needs) {
       101,
       "first-nested-topic",
       "First nested topic"
+    );
+
+    server.get("/t/101.json", () =>
+      helper.response(
+        topicViewResponse(101, "first-nested-topic", "First nested topic")
+      )
+    );
+
+    server.get("/t/102.json", () =>
+      helper.response(
+        topicViewResponse(102, "second-nested-topic", "Second nested topic")
+      )
     );
 
     server.get("/n/first-nested-topic/101.json", () =>
@@ -132,7 +158,7 @@ acceptance("Horizon | Nested suggested topic navigation", function (needs) {
   });
 
   test("row-clicking a suggested nested topic replaces the old root branch", async function (assert) {
-    await visit("/n/first-nested-topic/101");
+    await visit("/t/first-nested-topic/101");
 
     assert
       .dom(".nested-view__roots")
@@ -146,7 +172,7 @@ acceptance("Horizon | Nested suggested topic navigation", function (needs) {
 
     await click("#suggested-topics .topic-list-item");
 
-    assert.strictEqual(currentURL(), "/n/second-nested-topic/102?sort=old");
+    assert.strictEqual(currentURL(), "/t/second-nested-topic/102?sort=old");
     assert
       .dom(".nested-view__roots")
       .includesText("SECOND_TOPIC_UNIQUE first branch");

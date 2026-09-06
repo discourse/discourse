@@ -1,6 +1,7 @@
 import { isTesting } from "discourse/lib/environment";
 
 const callbacks = [];
+const browserAttentionCallbacks = [];
 
 const DEFAULT_USER_UNSEEN_MS = 60000;
 const DEFAULT_BROWSER_HIDDEN_MS = 0;
@@ -67,6 +68,37 @@ export function removeOnPresenceChange(callback) {
   if (i > -1) {
     callbacks.splice(i, 1);
   }
+}
+
+export function browserAttention() {
+  return {
+    focused: document.hasFocus?.() ?? true,
+    visible: (document.visibilityState ?? "visible") === "visible",
+  };
+}
+
+export function onBrowserAttentionChange(callback) {
+  browserAttentionCallbacks.push(callback);
+}
+
+export function removeOnBrowserAttentionChange(callback) {
+  const i = browserAttentionCallbacks.indexOf(callback);
+  if (i > -1) {
+    browserAttentionCallbacks.splice(i, 1);
+  }
+}
+
+export function processBrowserAttentionChange() {
+  const attention = browserAttention();
+
+  browserAttentionCallbacks.forEach((callback) => {
+    try {
+      callback(attention);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("Error in browser attention change callback:", e);
+    }
+  });
 }
 
 function processChanges() {
@@ -139,17 +171,30 @@ export function setTestPresence(value) {
 
 export function clearPresenceCallbacks() {
   callbacks.length = 0;
+  browserAttentionCallbacks.length = 0;
 }
 
 if (!isTesting()) {
+  const onWindowFocus = () => {
+    seenUser();
+    processBrowserAttentionChange();
+  };
+  const onVisibilityChange = () => {
+    visibilityChanged();
+    processBrowserAttentionChange();
+  };
+
   // Some of these events occur very frequently. Therefore seenUser() is as fast as possible.
   document.addEventListener("touchmove", seenUser, { passive: true });
   document.addEventListener("click", seenUser, { passive: true });
   document.addEventListener("keydown", seenUser, { passive: true });
   window.addEventListener("scroll", seenUser, { passive: true });
-  window.addEventListener("focus", seenUser, { passive: true });
+  window.addEventListener("focus", onWindowFocus, { passive: true });
+  window.addEventListener("blur", processBrowserAttentionChange, {
+    passive: true,
+  });
 
-  document.addEventListener("visibilitychange", visibilityChanged, {
+  document.addEventListener("visibilitychange", onVisibilityChange, {
     passive: true,
   });
 

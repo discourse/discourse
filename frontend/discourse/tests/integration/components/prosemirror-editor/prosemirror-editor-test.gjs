@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
+import { cacheShortUploadUrl, resetCache } from "pretty-text/upload-short-url";
 import { module, test } from "qunit";
 import {
   clearRichEditorExtensions,
@@ -6,6 +7,9 @@ import {
 } from "discourse/lib/composer/rich-editor-extensions";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirror-editor";
+import grid from "discourse/static/prosemirror/extensions/grid";
+import image from "discourse/static/prosemirror/extensions/image";
+import uploadPlaceholder from "discourse/static/prosemirror/extensions/upload-placeholder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
@@ -13,7 +17,10 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(() => clearRichEditorExtensions());
-  hooks.afterEach(() => resetRichEditorExtensions());
+  hooks.afterEach(() => {
+    resetCache();
+    resetRichEditorExtensions();
+  });
 
   test("renders the editor", async function (assert) {
     await render(<template><ProsemirrorEditor /></template>);
@@ -42,6 +49,81 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
       .exists("it renders the strong markdown as HTML");
   });
 
+  test("auto-grids image filenames using generic placeholders", async function (assert) {
+    withPluginApi((api) => {
+      api.registerRichEditorExtension(grid);
+      api.registerRichEditorExtension(image);
+      api.registerRichEditorExtension(uploadPlaceholder);
+    });
+
+    let textManipulation;
+    const handleSetup = (value) => {
+      textManipulation = value;
+    };
+
+    await render(
+      <template><ProsemirrorEditor @onSetup={{handleSetup}} /></template>
+    );
+
+    const files = [1, 2, 3].map((number) => ({
+      id: `image-${number}`,
+      name: `IMG_${number}.HEIC`,
+      data: new File(["image"], `IMG_${number}.HEIC`),
+    }));
+
+    files.forEach((file) => {
+      textManipulation.placeholder.insert(file);
+    });
+    textManipulation.autoGridImages(files.map((file) => file.name));
+    await settled();
+
+    assert
+      .dom(".composer-image-grid")
+      .exists({ count: 1 }, "generic placeholders are wrapped immediately");
+    assert
+      .dom(".composer-image-grid .upload-placeholder.--file")
+      .exists(
+        { count: 3 },
+        "all pending images use generic placeholders inside the grid"
+      );
+
+    const shortUrls = files.map((file, index) => {
+      const shortUrl = `upload://heic-grid-${index}.jpeg`;
+      const resolvedUrl = `/images/heic-grid-${index}.jpeg`;
+      cacheShortUploadUrl(shortUrl, { url: resolvedUrl });
+      textManipulation.placeholder.success(
+        file,
+        `![IMG_${index + 1}](${shortUrl})`
+      );
+      return shortUrl;
+    });
+
+    let replacementImage;
+    textManipulation.view.state.doc.descendants((node) => {
+      if (
+        node.type.name === "image" &&
+        node.attrs.originalSrc === shortUrls[0]
+      ) {
+        replacementImage = node;
+        return false;
+      }
+    });
+    assert.strictEqual(
+      replacementImage?.attrs.src,
+      "/images/heic-grid-0.jpeg",
+      "the final image URL is resolved in the upload-success transaction"
+    );
+
+    await settled();
+
+    assert
+      .dom(".composer-image-grid")
+      .exists({ count: 1 }, "the completed images preserve the grid");
+    assert
+      .dom(".composer-image-grid .composer-image-node")
+      .exists({ count: 3 }, "all completed images are in the grid");
+  });
+
   test("renders the editor with minimum extensions", async function (assert) {
     const minimumExtensions = [
       { nodeSpec: { doc: { content: "inline*" }, text: { group: "inline" } } },
@@ -60,8 +142,6 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
   });
 
   test("supports registered nodeSpec/parser/serializer", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     withPluginApi((api) => {
       // Multiple parsers can be registered for the same node type
       api.registerRichEditorExtension({
@@ -114,8 +194,6 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
   });
 
   test("supports registered markSpec/parser/serializer", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     withPluginApi((api) => {
       api.registerRichEditorExtension({
         // just for testing purpose - our actual hashtag is a node, not a mark
@@ -151,8 +229,6 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
   });
 
   test("supports registered nodeViews", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const state = {};
 
     withPluginApi((api) => {
@@ -181,8 +257,6 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
   });
 
   test("supports registered plugins with array, object or function", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const state = {};
 
     withPluginApi((api) => {

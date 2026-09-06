@@ -5,6 +5,7 @@ module("Unit | Model | ai-agent", function () {
   test("toPOJO", function (assert) {
     const properties = {
       mcp_server_tool_names: { 9: ["search_issues"] },
+      subagent_ids: [3, 4],
       tools: [
         ["ToolName", { option1: "value1", option2: "value2" }, false],
         "ToolName2",
@@ -20,6 +21,7 @@ module("Unit | Model | ai-agent", function () {
     assert.deepEqual(aiAgentPOJO.mcp_server_tool_names, {
       9: ["search_issues"],
     });
+    assert.deepEqual(aiAgentPOJO.subagent_ids, [3, 4]);
   });
 
   test("fromPOJO", function (assert) {
@@ -39,7 +41,6 @@ module("Unit | Model | ai-agent", function () {
       force_default_llm: false,
       user: null,
       user_id: null,
-      max_context_posts: 5,
       vision_enabled: true,
       vision_max_pixels: 100,
       rag_uploads: [],
@@ -55,6 +56,7 @@ module("Unit | Model | ai-agent", function () {
       allow_chat_direct_messages: true,
       mcp_server_ids: [3],
       mcp_server_tool_names: { 3: ["search_issues"] },
+      subagent_ids: [5],
     };
     const updatedValue = "updated";
 
@@ -73,5 +75,6 @@ module("Unit | Model | ai-agent", function () {
     assert.deepEqual(updatedAgent.mcp_server_tool_names, {
       3: ["search_issues"],
     });
+    assert.deepEqual(updatedAgent.subagent_ids, [5]);
   });
 });

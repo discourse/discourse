@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-<template>
+export default <template>
   <li
     role="link"
     class="schema-setting-editor__tree-node --child"

@@ -23,9 +23,6 @@ RSpec.describe "AI Bot conversation sidebar share" do
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
-    # Starring is intentionally disabled to prove the conversation menu still
-    # appears (and exposes Share) purely on the strength of sharing access.
-    SiteSetting.enable_ai_bot_starred_conversations = false
     SiteSetting.ai_bot_public_sharing_allowed_groups = "1" # admins
     SiteSetting.navigation_menu = "sidebar"
     toggle_enabled_bots(bots: [gpt_4])
@@ -39,13 +36,13 @@ RSpec.describe "AI Bot conversation sidebar share" do
     sign_in(admin)
   end
 
-  it "shows Share in the conversation menu when starring is disabled" do
+  it "shows Share in the conversation menu" do
     page.visit(Topic.relative_url(pm.id, pm.slug))
 
     ai_pm_homepage.open_conversation_menu(pm)
 
     expect(ai_pm_homepage).to have_share_conversation_menu_item
-    expect(ai_pm_homepage).to have_no_star_conversation_menu_item
+    expect(ai_pm_homepage).to have_star_conversation_menu_item
   end
 
   it "opens the share modal from the conversation menu" do

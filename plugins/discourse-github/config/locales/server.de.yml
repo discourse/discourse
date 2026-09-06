@@ -21,7 +21,9 @@ de:
     github_gold_badge_min_commits: "Mindestanzahl an Commits für das Goldabzeichen"
     errors:
       invalid_badge_repo: "Du musst eine GitHub-URL oder den Repository-Namen im Format github_user/repository_name angeben"
+      invalid_badge_repo_value: "„%{repo}“ ist keine gültige GitHub-URL oder kein gültiger Repository-Name. Verwende das Format „github_user/repository_name“."
       invalid_github_linkback_access_token: "Du musst ein gültiges GitHub-Linkback-Access-Token angeben, das Zugriff auf die von dir angegebenen Abzeichen-Repositories hat."
+      invalid_github_linkback_access_token_for_repo: "Das GitHub-Linkback-Zugriffstoken konnte nicht auf das Repository „%{repo}“ zugreifen. Stelle sicher, dass das Token gültig ist und dass der Repository-Name korrekt und erreichbar ist."
   github_linkback:
     commit_template: |
       Dieser Commit wurde auf **%{title}** erwähnt. Vielleicht gibt es dort relevante Details:

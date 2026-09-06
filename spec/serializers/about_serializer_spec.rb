@@ -3,6 +3,59 @@
 RSpec.describe AboutSerializer do
   fab!(:user)
 
+  describe "localized site settings" do
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.title = "English title"
+      SiteSetting.site_description = "English description"
+      SiteSetting.extended_site_description = "English **extended** description"
+      SiteSetting.extended_site_description_cooked =
+        PrettyText.markdown(SiteSetting.extended_site_description)
+
+      SiteSettingLocalization.create!(setting_name: "title", locale: "ja", value: "日本語タイトル")
+      SiteSettingLocalization.create!(
+        setting_name: "site_description",
+        locale: "ja",
+        value: "日本語の説明",
+      )
+      SiteSettingLocalization.create!(
+        setting_name: "extended_site_description",
+        locale: "ja",
+        value: "日本語の **詳細** 説明",
+      )
+    end
+
+    it "serializes localized about content" do
+      json =
+        AboutSerializer.new(
+          About.new(user, locale: "ja"),
+          scope: Guardian.new(user),
+          root: nil,
+        ).as_json
+
+      aggregate_failures do
+        expect(json[:title]).to eq("日本語タイトル")
+        expect(json[:description]).to eq("日本語の説明")
+        expect(json[:extended_site_description]).to include("<strong>詳細</strong>")
+      end
+    end
+
+    it "serializes original about content when requested" do
+      json =
+        AboutSerializer.new(
+          About.new(user, locale: "ja", show_original: true),
+          scope: Guardian.new(user),
+          root: nil,
+        ).as_json
+
+      aggregate_failures do
+        expect(json[:title]).to eq("English title")
+        expect(json[:description]).to eq("English description")
+        expect(json[:extended_site_description]).to include("<strong>extended</strong>")
+      end
+    end
+  end
+
   context "when login_required is enabled" do
     before do
       SiteSetting.login_required = true

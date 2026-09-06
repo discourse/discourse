@@ -586,14 +586,14 @@ RSpec.describe Email::Sender do
       )
     end
 
-    it "changes the hashtags to the slug with a # symbol beforehand rather than the full name of the resource" do
+    it "changes hashtags to their slug with a # symbol rather than the full resource name" do
       category = Fabricate(:category, slug: "dev")
       reply.update!(raw: reply.raw + "\n wow this is #dev")
       reply.rebake!
       Email::Sender.new(message, :valid_type).send
       expected = <<~HTML
-      <a class="hashtag-cooked" href=\"#{Discourse.base_url}#{category.url}\" data-type=\"category\" data-slug=\"dev\" data-id=\"#{category.id}\" data-style-type=\"square\" style=\"text-decoration:none;font-weight:bold;color:#006699\"><span>#dev</span>
-      HTML
+          <a class="hashtag-cooked" href="#{Discourse.base_url}#{category.url}" data-type="category" data-slug="dev" data-id="#{category.id}" data-style-type="square" style="text-decoration:none;font-weight:bold;color:#006699">#dev</a>
+        HTML
       expect(message.html_part.body.to_s).to include(expected.chomp)
     end
 

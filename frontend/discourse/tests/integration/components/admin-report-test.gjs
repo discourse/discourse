@@ -1,20 +1,27 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import AdminReport from "discourse/admin/components/admin-report";
+import AdminReport, {
+  updateReportFilters,
+} from "discourse/admin/components/admin-report";
+import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
+import reportsBulkFixtures from "discourse/tests/fixtures/reports-bulk";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Integration | Component | AdminReport", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("clearing a group filter removes it", function (assert) {
+    assert.deepEqual(
+      updateReportFilters({ group: 88 }, "group", null),
+      {},
+      "omits the group filter"
+    );
+  });
+
   test("default", async function (assert) {
     await render(
-      <template>
-        <AdminReport
-          @dataSourceName="signups"
-          @showDescriptionInTooltip={{false}}
-        />
-      </template>
+      <template><AdminReport @dataSourceName="signups" /></template>
     );
 
     assert.dom(".admin-report.signups").exists();
@@ -22,11 +29,13 @@ module("Integration | Component | AdminReport", function (hooks) {
     assert
       .dom(".d-page-subheader .d-page-subheader__title")
       .hasText("Signups", "has a title");
+
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert
-      .dom(".d-page-subheader .d-page-subheader__description")
-      .hasText(
+      .dom(".fk-d-tooltip__content")
+      .includesText(
         "New account registrations for this period",
-        "has a description"
+        "shows the description in a tooltip"
       );
 
     assert
@@ -52,6 +61,23 @@ module("Integration | Component | AdminReport", function (hooks) {
     assert
       .dom(".admin-report-table tbody tr:nth-child(1) td:nth-child(2)")
       .hasText("7", "can sort rows");
+  });
+
+  test("onDataLoaded", async function (assert) {
+    let loadedReport;
+    const onDataLoaded = (report) => (loadedReport = report);
+
+    await render(
+      <template>
+        <AdminReport @dataSourceName="signups" @onDataLoaded={{onDataLoaded}} />
+      </template>
+    );
+
+    assert.strictEqual(
+      loadedReport?.type,
+      "signups",
+      "calls onDataLoaded with the fetched report once it's loaded"
+    );
   });
 
   test("options", async function (assert) {
@@ -80,6 +106,45 @@ module("Integration | Component | AdminReport", function (hooks) {
   });
 
   test("switch modes", async function (assert) {
+    let requestParams;
+
+    pretender.get("/admin/reports/bulk", (request) => {
+      requestParams = request.queryParams;
+      return response(reportsBulkFixtures["/admin/reports/bulk"]);
+    });
+
+    await render(
+      <template>
+        <AdminReport
+          @dataSourceName="signups"
+          @showFilteringUI={{true}}
+          @showRelatedItems={{true}}
+        />
+      </template>
+    );
+
+    await click(".mode-btn.chart");
+
+    assert.dom(".admin-report-table").doesNotExist("removes the table");
+    assert.dom(".admin-report-chart").exists("shows the chart");
+    assert.dom(".admin-report-related-items").exists("shows the related users");
+    assert
+      .dom(".admin-report-related-items__user-link")
+      .hasAttribute("href", "/u/dana_whitfield", "links to the user profile");
+    assert
+      .dom(".admin-report-related-items__limit")
+      .hasText(
+        "Showing the newest 1 of 3.",
+        "discloses that the list is limited"
+      );
+    assert.strictEqual(
+      requestParams["reports[signups][include_related_items]"],
+      "true",
+      "requests the related-item payload"
+    );
+  });
+
+  test("does not render related items unless requested", async function (assert) {
     await render(
       <template>
         <AdminReport @dataSourceName="signups" @showFilteringUI={{true}} />
@@ -88,8 +153,28 @@ module("Integration | Component | AdminReport", function (hooks) {
 
     await click(".mode-btn.chart");
 
-    assert.dom(".admin-report-table").doesNotExist("removes the table");
-    assert.dom(".admin-report-chart").exists("shows the chart");
+    assert
+      .dom(".admin-report-related-items")
+      .doesNotExist("keeps dashboard-style reports compact");
+  });
+
+  test("keeps table values plain when a renderer omits its optional summary component", async function (assert) {
+    registerAdminReportRelatedItemsRenderer("signups", {
+      relatedItemsComponent: Object,
+    });
+
+    await render(
+      <template>
+        <AdminReport @dataSourceName="signups" @showRelatedItems={{true}} />
+      </template>
+    );
+
+    assert
+      .dom(".admin-report-table-summary")
+      .doesNotExist("does not use the core user-summary fallback");
+    assert
+      .dom(".admin-report-table tbody tr:first-child td:nth-child(2)")
+      .hasText("12", "retains the report value");
   });
 
   test("timeout", async function (assert) {
@@ -154,11 +239,7 @@ module("Integration | Component | AdminReport", function (hooks) {
     assert.dom(".alert-error.not-found").exists("displays a not found error");
   });
 
-  module("grouping date range updates", function (nestedHooks) {
-    nestedHooks.beforeEach(function () {
-      this.siteSettings.reporting_improvements = true;
-    });
-
+  module("grouping date range updates", function () {
     test("changing grouping to weekly updates date range to 3 months", async function (assert) {
       const refreshArgs = [];
       const refreshCallback = (options) => {

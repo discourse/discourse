@@ -1,14 +1,14 @@
 .d-multi-select-trigger {
   @include form-item-sizing;
   display: inline-flex;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-input-border-radius);
   cursor: pointer;
   align-items: center;
   gap: 0.25em;
   line-height: normal;
   box-sizing: border-box;
   width: 200px;
-  border: 1px solid var(--primary-low-mid);
+  border: var(--d-input-border);
   justify-content: space-between;
 
   &.-expanded {

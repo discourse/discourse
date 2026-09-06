@@ -16,33 +16,34 @@ class UserVisit < ActiveRecord::Base
 
   def self.count_by_active_users(start_date, end_date)
     sql = <<~SQL
-      WITH visits_in_mau_range AS (
-        SELECT user_id, visited_at AS d
-        FROM user_visits
-        WHERE visited_at >= :start_date::DATE - 29
-          AND visited_at <= :end_date::DATE
-      ),
-      visit_island_starts AS (
-        SELECT user_id, d,
-          CASE
-            WHEN lag(d) OVER (PARTITION BY user_id ORDER BY d) >= d - 30 THEN 0
-            ELSE 1
-          END AS new_island
-        FROM visits_in_mau_range
-      ),
-      visit_islands AS (
-        SELECT user_id, d, sum(new_island) OVER (PARTITION BY user_id ORDER BY d) AS grp
-        FROM visit_island_starts
-      ),
-      active_ranges AS (
-        SELECT min(d) AS start_d, max(d) + 29 AS end_d
-        FROM visit_islands
-        GROUP BY user_id, grp
+      WITH island_boundaries AS (
+        -- A user's visit days merge into an "active island" when gaps are
+        -- 30 days or less; the user counts toward MAU from each island's
+        -- start until 29 days after its end. A row is an island start when
+        -- the previous visit is too far back, an island end when the next
+        -- visit is too far ahead.
+        SELECT d, prev_d, next_d
+        FROM (
+          SELECT
+            visited_at AS d,
+            lag(visited_at) OVER w AS prev_d,
+            lead(visited_at) OVER w AS next_d
+          FROM user_visits
+          WHERE visited_at >= :start_date::DATE - 29
+            AND visited_at <= :end_date::DATE
+          WINDOW w AS (PARTITION BY user_id ORDER BY visited_at)
+        ) visits
+        WHERE prev_d IS NULL OR prev_d < d - 30
+          OR next_d IS NULL OR next_d > d + 30
       ),
       active_range_events AS (
-        SELECT start_d AS day, 1 AS delta FROM active_ranges
+        SELECT d AS day, 1 AS delta
+        FROM island_boundaries
+        WHERE prev_d IS NULL OR prev_d < d - 30
         UNION ALL
-        SELECT end_d + 1 AS day, -1 AS delta FROM active_ranges
+        SELECT d + 30 AS day, -1 AS delta
+        FROM island_boundaries
+        WHERE next_d IS NULL OR next_d > d + 30
       ),
       daily_active_deltas AS (
         SELECT day, sum(delta) AS delta

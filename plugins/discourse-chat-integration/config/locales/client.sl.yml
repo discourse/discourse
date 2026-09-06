@@ -86,3 +86,6 @@ sl:
               label: Opozorilo
             url:
               label: URL
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "Opozorilo"

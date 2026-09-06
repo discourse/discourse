@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Custom properties for the grid layout, set on the DMenu/modal container.
 // The DMenu identifier generates `.fk-d-menu.d-icon-grid-picker-content`
 // which doesn't follow the BEM `__` pattern, so it stays outside the block.
@@ -17,8 +19,8 @@
     color: var(--icon-color, currentColor);
   }
 
-  &.--has-label .d-icon-grid-picker-trigger {
-    gap: var(--space-2);
+  .d-icon-grid-picker-trigger {
+    gap: var(--space-1);
   }
 
   /* Split-button layout: DMenu trigger + clear button side by side */
@@ -103,6 +105,10 @@
     max-height: 300px;
     scrollbar-width: thin;
     box-sizing: border-box;
+  }
+
+  &__sentinel {
+    grid-column: 1 / -1;
   }
 
   // Favorites row inherits parent columns via subgrid
@@ -210,10 +216,17 @@
     color: var(--primary-medium);
     grid-column: 1 / -1;
   }
+
+  &__loading-more {
+    display: flex;
+    justify-content: center;
+    padding: 0.5em;
+    grid-column: 1 / -1;
+  }
 }
 
 // Mobile overrides
-@media screen and (width <= 767px) {
+@include viewport.until(md) {
   .fk-d-menu-modal.d-icon-grid-picker-content {
     .d-modal__body {
       padding: 0;

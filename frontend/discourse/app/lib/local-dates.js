@@ -1,14 +1,13 @@
-import { optionalRequire } from "./utilities";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 
 export function applyLocalDates(dates, siteSettings, timezone) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
   }
 
-  const _applyLocalDates = optionalRequire(
-    "discourse/plugins/discourse-local-dates/initializers/discourse-local-dates",
-    "applyLocalDates"
-  );
-
-  _applyLocalDates(dates, siteSettings, timezone);
+  applyBehaviorTransformer("apply-local-dates", () => {}, {
+    dates,
+    siteSettings,
+    timezone,
+  });
 }

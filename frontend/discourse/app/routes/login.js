@@ -1,13 +1,13 @@
 import { service } from "@ember/service";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseURL from "discourse/lib/url";
 import {
   isValidDestinationUrl,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
-import { i18n } from "discourse-i18n";
 
 export default class extends DiscourseRoute {
   @service capabilities;
@@ -29,11 +29,19 @@ export default class extends DiscourseRoute {
     const { referrer } = document;
     const { isOnlyOneExternalLoginMethod, singleExternalLogin } = this.login;
     const redirect = auth_immediately || login_required || !from || wantsTo;
+    const homepage = login_required
+      ? "discovery.login-required"
+      : homepageNavigationDestination();
 
     // Regular users can't log in but staff can when the site is read-only
     if (isReadOnly && !isStaffWritesOnly) {
-      transition.abort();
-      dialog.alert(i18n("read_only_mode.login_disabled"));
+      if (from) {
+        transition.abort();
+      } else {
+        router.replaceWith(homepage).followRedirects();
+      }
+
+      dialog.alert(this.login.readOnlyLoginMessage);
       return;
     }
 

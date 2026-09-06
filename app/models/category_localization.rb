@@ -11,6 +11,33 @@ class CategoryLocalization < ActiveRecord::Base
 
   after_commit :invalidate_site_cache
 
+  def description_first_paragraph
+    return if description.blank?
+
+    @@first_paragraph_cache ||= LruRedux::ThreadSafeCache.new(1000)
+    @@first_paragraph_cache.getset(description) do
+      Category.first_paragraph_description(PrettyText.cook(description))
+    end
+  end
+
+  def description_text
+    first_paragraph = description_first_paragraph
+    return if first_paragraph.blank?
+
+    @@description_text_cache ||= LruRedux::ThreadSafeCache.new(1000)
+    @@description_text_cache.getset(description) do
+      ERB::Util.html_escape(Nokogiri::HTML5.fragment(first_paragraph).text.strip).html_safe
+    end
+  end
+
+  def description_excerpt
+    first_paragraph = description_first_paragraph
+    return if first_paragraph.blank?
+
+    @@description_excerpt_cache ||= LruRedux::ThreadSafeCache.new(1000)
+    @@description_excerpt_cache.getset(description) { PrettyText.excerpt(first_paragraph, 300) }
+  end
+
   def invalidate_site_cache
     I18n.with_locale(locale) { Site.clear_cache }
   end

@@ -125,19 +125,94 @@ self.addEventListener('pushsubscriptionchange', function(event) {
   );
 });
 
+// Web Share Target (Level 2). The manifest registers a multipart/form-data
+// POST share target at SHARE_TARGET_PATH. Browsers can't hand a multipart body
+// to a single-page app directly, so we intercept the POST here, stash the
+// shared title/text/url/files in the Cache API, and redirect to the same path
+// as a GET navigation. The Ember `share-target` route then reads the payload
+// back out of the cache and opens the "what do you want to do?" modal.
+var SHARE_TARGET_PATH = '<%= Discourse.base_path %>/share-target';
+var SHARE_TARGET_CACHE = 'discourse-share-target';
+var SHARE_TARGET_KEY_PREFIX = '/__discourse_share_target__/';
+
+function stashSharedContent(request) {
+  return request.formData().then(function (formData) {
+    return caches.open(SHARE_TARGET_CACHE).then(function (cache) {
+      var files = formData.getAll('files').filter(function (file) {
+        return file && typeof file !== 'string';
+      });
+
+      var fileMeta = [];
+      var puts = files.map(function (file, index) {
+        var key = SHARE_TARGET_KEY_PREFIX + 'file-' + index;
+        fileMeta.push({ key: key, name: file.name, type: file.type });
+        return cache.put(
+          new Request(key),
+          new Response(file, {
+            headers: {
+              'content-type': file.type || 'application/octet-stream',
+              'x-share-filename': encodeURIComponent(file.name || ('shared-file-' + index)),
+            },
+          })
+        );
+      });
+
+      var meta = {
+        title: formData.get('title') || '',
+        text: formData.get('text') || '',
+        url: formData.get('url') || '',
+        files: fileMeta,
+      };
+
+      puts.push(
+        cache.put(
+          new Request(SHARE_TARGET_KEY_PREFIX + 'meta'),
+          new Response(JSON.stringify(meta), {
+            headers: { 'content-type': 'application/json' },
+          })
+        )
+      );
+
+      return Promise.all(puts);
+    });
+  });
+}
+
+self.addEventListener('fetch', function (event) {
+  var url = new URL(event.request.url);
+
+  if (event.request.method === 'POST' && url.pathname === SHARE_TARGET_PATH) {
+    event.respondWith(
+      stashSharedContent(event.request)
+        .catch(function (err) {
+          console.error('Failed to stash shared content', err);
+        })
+        .then(function () {
+          // 303 forces the follow-up navigation to be a GET.
+          return Response.redirect(SHARE_TARGET_PATH, 303);
+        })
+    );
+  }
+});
+
 self.addEventListener('message', function(event) {
-  if (event.data?.action !== "primaryTab") {
+  if (event.data?.action !== "primaryTab" || !event.source) {
     return;
   }
 
   event.waitUntil(
-    self.clients.matchAll().then(function(clients) {
-      const activeClient = clients.find(client => client.focused) || clients.find(client => client.visibilityState === "visible");
+    // includeUncontrolled so first-visit and hard-reloaded tabs take part in
+    // the election instead of silently failing open client-side
+    self.clients.matchAll({ includeUncontrolled: true }).then(function(clients) {
+      const activeClient =
+        clients.find(client => client.focused) ||
+        clients.find(client => client.visibilityState === "visible");
 
-      clients.forEach(function(client) {
-        client.postMessage({
-          primaryTab: client.id === activeClient?.id
-        });
+      // when every tab is hidden (user is in another app or on another site),
+      // the requester acts as primary — unlike an elected hidden tab it is
+      // provably running, and simultaneous self-elections are deduped
+      event.source.postMessage({
+        primaryTab: activeClient ? event.source.id === activeClient.id : true
       });
     })
   );

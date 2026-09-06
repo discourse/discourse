@@ -279,6 +279,19 @@ RSpec.describe NewPostManager do
         end
       end
 
+      it "links the silence staff action log entry to the queued post" do
+        manager = build_manager_with("this is new post content")
+
+        result = NewPostManager.default_handler(manager)
+
+        history =
+          UserHistory.where(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: user.id,
+          ).last
+        expect(history.reviewable_id).to eq(result.reviewable.id)
+      end
+
       it "runs the watched words check before checking if the user is a fast typer" do
         Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
         manager = build_manager_with("this is darn new post content")
@@ -295,6 +308,7 @@ RSpec.describe NewPostManager do
     end
 
     context "with media" do
+      let(:empty_image_sizes) { {} }
       let(:manager_opts) do
         {
           raw: "this is new post content",
@@ -319,6 +333,53 @@ RSpec.describe NewPostManager do
 
         expect(result.action).to eq(:enqueued)
         expect(result.reason).to eq(:contains_media)
+      end
+
+      it "queues an image for review when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        manager =
+          NewPostManager.new(
+            user,
+            manager_opts.merge(
+              raw: "![image](upload://abcdefghijklmnopqrstuvwx.jpeg)",
+              image_sizes: empty_image_sizes,
+            ),
+          )
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it "queues embedded video for review when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        manager =
+          NewPostManager.new(
+            user,
+            manager_opts.merge(
+              raw:
+                '<video controls><source src="https://example.com/video.mp4" type="video/mp4"></video>',
+              image_sizes: empty_image_sizes,
+            ),
+          )
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it "does not queue plain text or emoji when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        results =
+          ["plain text without media", "content with an emoji :mask:"].map do |raw|
+            manager =
+              NewPostManager.new(user, manager_opts.merge(raw: raw, image_sizes: empty_image_sizes))
+            NewPostManager.default_handler(manager)
+          end
+
+        expect(results).to eq([nil, nil])
       end
 
       it "does not enqueue the post if the poster is a trusted user" do

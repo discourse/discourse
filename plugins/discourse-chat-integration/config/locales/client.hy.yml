@@ -181,3 +181,7 @@ hy:
           fields:
             provider:
               label: Մատակարար
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Ալիք"
+        message: "Ուղարկել"

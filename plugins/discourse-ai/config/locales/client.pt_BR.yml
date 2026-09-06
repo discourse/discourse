@@ -19,7 +19,6 @@ pt_BR:
       dashboard:
         emotion:
           title: "Gesto"
-          description: "Esta tabela exibe uma contagem de postagens classificadas com um determinado gesto, com o modelo \"SamLowe/roberta-base-go_emotions\""
         reports:
           filters:
             group_by:
@@ -204,6 +203,25 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      copied: "Copiou"
+      ai_decoded_transcript:
+        thinking: "Pensando"
+        tool: "Ferramenta"
+        arguments: "Argumentos"
+        type: "Tipo"
+        error: "Erro"
+        response: "Resposta"
+      discourse_workflows:
+        ai_agent:
+          mode: "Modo"
+      ai_tool_approval:
+        loading: "Carregando..."
+        tool: "Ação"
+        user: "Usuário(a)"
+        approve: "Aprovar"
+        reject: "Rejeitar"
+        approved: "Aprovado (approved)"
+        rejected: "Recusados(as)"
       default_llm:
         title: "Modelo de LLM padrão"
       llm_selector:
@@ -248,14 +266,15 @@ pt_BR:
           gists: "Resumos breves da lista de tópicos"
           setting_groups:
             settings: "Configurações básicas"
-            gists: "Gists"
+            gists: "Resumos"
             backfill: "Backfill"
         search:
           name: "Pesquisar"
           description: "Melhore a experiência de pesquisa ao fornecer respostas geradas por IA para as consultas"
-          discoveries: "Descobertas"
+          ask_ai: "Perguntar à IA"
           setting_groups:
             settings: "Configurações básicas"
+            access_control: "Controle de acesso"
         embeddings:
           name: "Incorporações"
           description: "Alimenta recursos, como tópicos relacionados e pesquisa com IA, ao gerar representações semânticas do texto"
@@ -294,7 +313,6 @@ pt_BR:
           translate: "Traduzir"
           markdown_tables: "Gerar tabela de Markdown"
           custom_prompt: "Prompt personalizado"
-          image_caption: "Legendas em imagens"
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
           chat_thread_titles: "Títulos de threads de chat"
@@ -302,6 +320,9 @@ pt_BR:
             access_permissions: "Acessos e permissões"
             enabled_features: "Recursos habilitados"
             automation: "Automação"
+        image_caption:
+          setting_groups:
+            settings: "Definições"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
@@ -336,15 +357,28 @@ pt_BR:
         title: "Traduções"
         description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
         supported_locales: "Idiomas suportados"
-        supported_locales_description: "Esta configuração do site também permite que os visitantes contribuam com traduções das postagens."
+        category_scope: "Categorias"
+        model_progress:
+          detail:
+            retry: "Tentar novamente"
+            columns:
+              locale: "Idioma"
+              pending: "Pendentes"
+              total: "Total"
+          targets:
+            post:
+              title: "Postagens"
+            topic:
+              title: "Tópicos"
+            category:
+              title: "Categorias"
+            tag:
+              title: "Tags"
         admin_actions:
-          translation_settings: "Configurações de tradução"
-          localization_settings: "Configurações de localização"
           enable_translations: "Ativar traduções automáticas"
         stats:
           title: "Estatísticas de tradução"
           backfill_disabled: "O backfilling está desativado; apenas novas postagens serão traduzidas."
-          backfill_message: "<a href='%{settingsUrl}'>As configurações de backfill</a> estão configuradas para traduzir todas as postagens após %{date} — estima-se que isso leve %{eta}."
           eta_minutes:
             one: "%{count} minuto"
             other: "%{count} minutos"
@@ -461,6 +495,47 @@ pt_BR:
           last_month: "Mês passado"
           custom: "Personalizado..."
         credit_allocations: "Alocações de crédito"
+      logs:
+        short_title: "Registros"
+        retry: "Tentar novamente"
+        apply: "Aplicar"
+        all_models: "Todos os modelos"
+        all_features: "Todos os recursos"
+        successful: "Realizado(a)"
+        failed: "Falha"
+        unknown: "Desconhecido"
+        time: "Hora"
+        when: "Quando"
+        outcome: "Resultado"
+        feature: "Recurso"
+        model: "Modelo"
+        request: "Solicitação"
+        provider: "Provedor"
+        user: "Usuário(a)"
+        context: "Contexto"
+        topic: "Tópico"
+        post: "Postar"
+        post_short: "Postagem %{id}"
+        duration: "Duração"
+        cost: "Custo"
+        actions: "Ações"
+        view_details: "Detalhes"
+        periods:
+          hour: "Última hora"
+          day: "Últimas 24 horas"
+          week: "Últimos sete dias"
+          custom: "Personalizadas"
+        detail:
+          request: "Solicitação"
+          response: "Resposta"
+          context: "Contexto"
+          copy_request: "Copiar solicitação"
+          copy_response: "Copiar resposta"
+          network_error: "Erro de rede"
+        retention:
+          summary_stage: "Resumo"
+          deleted_stage: "Excluído"
+          save: "Salvar"
       ai_agent:
         ai_tools: "Ferramentas"
         tool_strategies:
@@ -475,8 +550,6 @@ pt_BR:
         overwrite: "Sobrescrever"
         description: "Descrição"
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
-        max_context_posts: "Máximo de postagens de contexto"
-        max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
         vision_max_pixel_sizes:
           low: Baixa qualidade - menor custo (256x256)
           medium: Qualidade média (512x512)
@@ -502,11 +575,19 @@ pt_BR:
           clear_all: "Limpar tudo"
         forced_tools: "Ferramentas forçadas"
         allowed_groups: "Grupos permitidos"
+        duplicate: "Duplicado(a)"
+        copy_name: "Copiar de %{name}"
         delete: "Excluir"
         temperature: "Temperatura"
         temperature_help: "A Temperatura a ser usada para o LLM. Aumente para incrementar a criatividade (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0,0 e 2,0)"
         top_p: "P Máximo"
         top_p_help: "O P Máximo a ser usado para o LLM, aumente para incrementar o fator aleatório (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0.0 e 1.0)"
+        thinking_effort_options:
+          none: "Nenhum"
+          low: "Baixo(a)"
+          medium: "Médio(a)"
+          high: "Alto(a)"
+          max: "Máx"
         priority: "Prioridade"
         tool_options: "Opções de ferramenta"
         rag_conversation_chunks: "Pesquisar pedaços de conversa"
@@ -653,6 +734,9 @@ pt_BR:
         max_output_tokens: "Máximo de tokens de saída"
         url: "URL do serviço da hospedagem do modelo"
         api_key: "Chave de API do serviço da hospedagem do modelo"
+        vision_modes:
+          disabled:
+            title: "Desativados"
         ai_bot_user: "Usuário(a) de bot de IA"
         cost_input: "Custo de entrada"
         cost_cached_input: "Custo de entrada em cache"
@@ -680,9 +764,7 @@ pt_BR:
             custom: "Personalizado..."
           hours: "horas"
           max_tokens_help: "Quantidade máxima de tokens (palavras e caracteres) que podem ser usados por cada usuário(a) neste grupo durante o período especificado. Tokens são unidades usadas para modelos de IA processarem texto: 1 token equivale a aproximadamente 4 caracteres ou 3/4 de uma palavra."
-          max_tokens_required: "Deve ser definida se o máximo de usos não estiver definido"
           max_usages_help: "A quantidade máxima de vezes que cada usuário(a) neste grupo pode usar o modelo de IA durante o período especificado. Essa cota é rastreada para cada usuário(a) individual e não é compartilhada no grupo."
-          max_usages_required: "Deve ser definido se o máximo de tokens não estiver definido"
         credit_allocation:
           credits_remaining: "%{remaining} de %{total} créditos restantes (%{percentage}%)"
           soft_limit_warning: "Este modelo tem %{percentage}% de créditos de IA restantes hoje"
@@ -691,7 +773,7 @@ pt_BR:
         usage:
           ai_bot: "Bot de IA"
           ai_helper: "Ajudante (%{agent})"
-          ai_helper_image_caption: "Legenda em imagem"
+          ai_image_caption: "Legenda em imagem"
           ai_summarization: "Resumir"
           ai_embeddings_semantic_search: "Pesquisa com IA"
           ai_spam: "Spam"
@@ -701,14 +783,6 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-7: "Modelo mais inteligente da Anthropic"
-          anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
-          anthropic-claude-haiku-4-5: "Rápido e econômico"
-          google-gemini-3-1-pro: "O modelo mais inteligente do Google"
-          google-gemini-3-flash: "Modelo rápido e econômico com raciocínio multimodal"
-          open_ai-gpt-5-4: "O modelo principal da OpenAI, muito adequado para a resolução de problemas em diversas áreas."
-          open_ai-gpt-5-4-nano: "O modelo do GPT-5 mais rápido e econômico"
-          open_router-moonshotai-kimi-k2-6: "Modelo multimodal da Moonshot com recursos de visão"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
           title: "LLMs configurados"
@@ -744,7 +818,6 @@ pt_BR:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -756,7 +829,7 @@ pt_BR:
         provider_fields:
           access_key_id: "ID da chave de acesso do AWS Bedrock"
           role_arn: "AWS Bedrock Role ARN"
-          region: "Região do AWS Bedrock"
+          region: "Região"
           organization: "ID da organização opcional da OpenAI"
           disable_system_prompt: "Desativar mensagens de sistema nos prompts"
           enable_native_tool: "Ativar suporte para ferramenta nativa"
@@ -783,11 +856,7 @@ pt_BR:
         title: "Sugerir alterações com IA"
         description: "Escolha uma das opções abaixo, e a IA vai sugerir uma nova versão do texto."
         selection_hint: "Dica: antes de abrir o ajudante, você pode selecionar uma parte do texto para reescrever apenas ela."
-        suggest: "Sugestão com IA"
         suggest_errors:
-          too_many_tags:
-            one: "Você pode ter até %{count} etiqueta"
-            other: "Você pode ter até %{count} etiquetas"
           no_suggestions: "Sem sugestões disponíveis"
         missing_content: "Insira conteúdo para gerar sugestões."
         context_menu:
@@ -821,11 +890,6 @@ pt_BR:
           select: "Selecionar"
           selected: "Selecionado(a)"
           try_again: "Tentar novamente"
-        image_caption:
-          button_label: "Legenda com IA"
-          generating: "Gerando legenda..."
-          credits: "Legendado por IA"
-          save_caption: "Salvar"
         no_content_error: "Primeiro adicione conteúdo para realizar ações de IA nele"
       errors:
         credit_limit_dialog:
@@ -889,17 +953,10 @@ pt_BR:
         provider_fields:
           model_name: "Nome do modelo"
         semantic_search: "Tópicos (semântica)"
-        semantic_search_results:
-          toggle: "Resultados de IA"
-          unavailable: "Resultados de IA indisponíveis"
-          zero_results_expanded: "Nenhum resultado encontrado; exibindo %{count} resultados de IA"
         semantic_search_tooltips:
           results_explanation: "Ao ativar esta opção, os resultados de pesquisa com IA são adicionados abaixo."
-          invalid_sort: "Os resultados das pesquisas devem ser classificados por ordem de relevância para exibir resultados com IA"
           not_submitted: "Envie uma pesquisa para ativar os resultados da IA."
           no_results: "Nenhum resultado de IA foi encontrado para esta pesquisa."
-        semantic_search_unavailable_tooltip: "Os resultados das pesquisas devem ser classificados por ordem de relevância para exibir resultados com IA"
-        ai_generated_result: "Resultado de pesquisa encontrado usando IA"
         quick_search:
           suffix: "em todos os tópicos e postagens com IA"
       ai_artifact:
@@ -908,7 +965,7 @@ pt_BR:
         click_to_run_label: "Rodar artefato"
       ai_bot:
         title: "Bot de IA"
-        llm: "Modelo"
+        llm: "Modelo:"
         pm_warning: "Todas as mensagens do chatbot de IA são monitoradas regularmente por moderadores(as)."
         cancel_streaming: "Parar resposta"
         try_again: "Tentar novamente"
@@ -925,6 +982,7 @@ pt_BR:
           title: "Visualizar interação com IA"
           copy_request: "Copiar solicitação"
           copy_response: "Copiar resposta"
+          duration_label: "Duração:"
           request: "Solicitação"
           response: "Resposta"
           next_log: "Próximo"
@@ -1016,15 +1074,9 @@ pt_BR:
           bulk_regen_description: "Escolha o tipo de resumo de IA a ser regerado para os tópicos selecionados."
           regenerate_gists_option: "Resumos breves (gists)"
           regenerate_summaries_option: "Resumos de tópicos"
-          regenerate_gists_success:
-            one: "Resumo curto regerado com sucesso"
-            other: "%{count} resumos curtos regerados com sucesso"
           regenerate_gists_error:
             one: "Não foi possível regerar resumos curtos"
             other: "Não foi possível regerar %{count} resumos curtos"
-          regenerate_topic_summary_success:
-            one: "Resumo do tópico regerado com sucesso"
-            other: "%{count} resumos de tópicos regerados com sucesso"
           regenerate_topic_summary_error:
             one: "Não foi possível regerar o resumo do tópico"
             other: "Não foi possível regerar %{count} resumos de tópico"
@@ -1034,20 +1086,29 @@ pt_BR:
             expanded: "Expandido(a)"
             expanded_description: "com resumos de IA"
       discobot_discoveries:
-        main_title: "Descobertas do Discobot"
-        regular_results: "Tópicos"
-        tell_me_more: "Conte mais..."
-        continue_convo: "Continuar conversa"
+        main_title: "Perguntar à IA"
         loading_convo: "Carregando conversa"
-        collapse: "Recolher"
-        timed_out: "O discobot não conseguiu encontrar mais nenhuma descoberta. Algo deu errado."
         user_setting: "Ativar descobertas de pesquisa com IA"
-        tooltip:
-          header: "Pesquisa alimentada por IA"
-          content: "Pequisa em linguagem natural desenvolvida pelo %{model}"
-          actions:
-            info: "Como funciona?"
-            disable: "Desativar"
+        legacy:
+          main_title: "Descobertas do Discobot"
+          regular_results: "Tópicos"
+          tell_me_more: "Conte mais..."
+          continue_convo: "Continuar conversa"
+          loading_convo: "Carregando conversa"
+          collapse: "Recolher"
+          timed_out: "O discobot não conseguiu encontrar mais nenhuma descoberta. Algo deu errado."
+          tooltip:
+            header: "Pesquisa alimentada por IA"
+            content: "Pequisa em linguagem natural desenvolvida pelo %{model}"
+            actions:
+              info: "Como funciona?"
+              disable: "Desativar"
+        search_type: "IA"
+        search_all_topics: "Todos os tópicos"
+        search_messages: "Mensagens"
+        ask_ai: "IA"
+        sources:
+          related_discussions: "Tópicos relacionados"
       user_preferences:
         empty: "Não há configurações relevantes disponíveis no momento"
     review:

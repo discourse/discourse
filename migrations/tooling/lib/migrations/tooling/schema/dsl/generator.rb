@@ -10,10 +10,21 @@ module Migrations
           CUSTOM_CODE_START = "# -- custom code --"
           CUSTOM_CODE_END = "# -- end custom code --"
 
-          def initialize(schema_module, database: :intermediate_db)
+          # Files deleted by the last `generate` run, relative to the output
+          # root.
+          attr_reader :deleted_files
+
+          # `output_root` overrides where the generated files are written
+          # (defaults to the repository root). Custom code of extended models
+          # is always read from the committed files, so generating into a
+          # temporary directory produces the same output as generating
+          # in place.
+          def initialize(schema_module, database: :intermediate_db, output_root: nil)
             @schema = schema_module
             @database = database
             @output_config = schema_module.config.output_config
+            @output_root = output_root || Migrations.root_path
+            @deleted_files = []
           end
 
           def generate
@@ -23,6 +34,7 @@ module Migrations
             generate_sql(resolved)
             generate_enums(resolved)
             generate_models(resolved)
+            delete_stale_files(resolved)
             format_ruby_files!
             resolved
           end
@@ -81,12 +93,35 @@ module Migrations
               when :manual
                 next
               when :extended
-                custom_code = extract_custom_code(path)
+                custom_code =
+                  extract_custom_code(
+                    File.join(source_path(@output_config.models_directory), filename),
+                  )
                 File.open(path, "w") { |f| writer.output_table(table, f, custom_code:) }
               else
                 File.open(path, "w") { |f| writer.output_table(table, f) }
               end
             end
+          end
+
+          # Deletes previously generated files that generation no longer
+          # produces, e.g. the model of a table that was removed from the
+          # config. Only files carrying the auto-generated header are
+          # touched; hand-written (manual) models don't have it.
+          def delete_stale_files(resolved)
+            expected = GeneratedFiles.expected_paths(resolved, @output_config, @output_root)
+
+            GeneratedFiles
+              .stale_paths(@output_config, @output_root, expected)
+              .each do |path|
+                File.delete(path)
+                @deleted_files << display_path(path)
+              end
+          end
+
+          def display_path(path)
+            relative = Pathname.new(path).relative_path_from(@output_root).to_s
+            relative.start_with?("..") ? path : relative
           end
 
           def extract_custom_code(path)
@@ -130,7 +165,13 @@ module Migrations
             # formatting is best-effort; generation still succeeds
           end
 
+          # Where generated files are written.
           def expand_path(relative_path)
+            File.expand_path(relative_path, @output_root)
+          end
+
+          # Where the committed files live.
+          def source_path(relative_path)
             File.expand_path(relative_path, Migrations.root_path)
           end
 
@@ -139,7 +180,7 @@ module Migrations
               begin
                 db_label = Helpers.db_label(@output_config.models_namespace)
                 <<~HEADER
-                  This file is auto-generated from the #{db_label} schema. To make changes,
+                  #{GeneratedFiles::MARKER} #{db_label} schema. To make changes,
                   update the configuration files in "migrations/tooling/config/schema/" and then run
                   `migrations/bin/disco schema generate` to regenerate this file.
                 HEADER

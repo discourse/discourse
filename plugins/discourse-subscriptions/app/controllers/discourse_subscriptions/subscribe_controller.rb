@@ -14,7 +14,11 @@ module DiscourseSubscriptions
       products = []
 
       if product_ids.present? && is_stripe_configured?
-        response = ::Stripe::Product.list({ ids: product_ids, active: true }, stripe_request_opts)
+        response =
+          ::Stripe::Product.list(
+            { ids: product_ids, active: true, limit: 100 },
+            stripe_request_opts,
+          )
 
         products = response[:data].map { |p| serialize_product(p) }
       end
@@ -26,6 +30,9 @@ module DiscourseSubscriptions
 
     def contributors
       return unless SiteSetting.discourse_subscriptions_campaign_show_contributors
+
+      guardian.ensure_public_can_see_profiles!
+
       contributor_ids = Set.new
 
       campaign_product = SiteSetting.discourse_subscriptions_campaign_product
@@ -35,7 +42,8 @@ module DiscourseSubscriptions
         contributor_ids.merge(Customer.last(5).pluck(:user_id))
       end
 
-      contributors = ::User.where(id: contributor_ids)
+      contributors =
+        ::User.where(id: contributor_ids).filter { |user| guardian.can_see_profile?(user) }
 
       render_serialized(contributors, UserSerializer)
     end

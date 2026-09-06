@@ -101,6 +101,21 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
       expect(tables).to contain_exactly([data_table.id.to_s, "a1"])
     end
 
+    it "extracts workflow_call dependencies" do
+      target = Fabricate(:discourse_workflows_workflow, created_by: admin)
+      graph =
+        build_workflow_graph do |g|
+          g.node "a1", "action:workflow_call", configuration: { "workflow_id" => target.id }
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
+
+      index(workflow)
+
+      workflow_calls =
+        dependency_rows(workflow).of_type("workflow_call").pluck(:dependency_key, :node_id)
+      expect(workflow_calls).to contain_exactly([target.id.to_s, "a1"])
+    end
+
     it "extracts error_workflow dependencies" do
       error_wf = Fabricate(:discourse_workflows_workflow, created_by: admin)
       graph = build_workflow_graph { |g| g.node "t1", "trigger:schedule" }

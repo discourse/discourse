@@ -6,7 +6,7 @@ const TRAFFIC_LIST_ROWS = Array.from({ length: 5 });
 const METRICS = Array.from({ length: 3 });
 const ENGAGEMENT_ACTIVITY_ROWS = Array.from({ length: 4 });
 
-<template>
+export default <template>
   <div
     class="db-skeleton --animation"
     role="status"

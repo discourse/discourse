@@ -1,12 +1,14 @@
-/* eslint-disable ember/no-jquery */
-import $ from "jquery";
+import { cancel } from "@ember/runloop";
 import * as AvatarUtils from "discourse/lib/avatar-utils";
+import { caretCoordinates } from "discourse/lib/caret-position";
 import deprecated from "discourse/lib/deprecated";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
 import { processSelectionFragment } from "discourse/lib/selection/preserve-list-structure";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
+import Site from "discourse/models/site";
 import { capabilities } from "discourse/services/capabilities";
 import { i18n } from "discourse-i18n";
 
@@ -278,11 +280,21 @@ export function setCaretPosition(ctrl, pos) {
   }
 }
 
+export function siteDefaultHomepage(siteSettings) {
+  const configured = siteSettings.default_homepage;
+
+  const choices = Site.current()?.homepage_choices;
+  if (configured && (!choices || choices.includes(configured))) {
+    return configured;
+  }
+
+  return siteSettings.top_menu.split("|")[0].split(",")[0];
+}
+
 export function initializeDefaultHomepage(siteSettings) {
   const sel = document.querySelector("meta[name='discourse_current_homepage']");
   const homepage =
-    sel?.getAttribute("content") ||
-    siteSettings.top_menu.split("|")[0].split(",")[0];
+    sel?.getAttribute("content") || siteDefaultHomepage(siteSettings);
   setDefaultHomepage(homepage);
 }
 
@@ -522,7 +534,22 @@ export async function inCodeBlock(text, pos) {
   return CODE_TOKEN_TYPES.includes(type);
 }
 
+/**
+ * Replaces modifier names in a shortcut string with their platform spelling.
+ *
+ * @deprecated To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`),
+ * which carries the accessible markup too. For the string alone use
+ * `formatShortcut` from `discourse/lib/shortcut-format`.
+ */
 export function translateModKey(string, separator = " ") {
+  deprecated(
+    "`translateModKey()` is deprecated. To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`), which carries the accessible markup too; for the string alone use `formatShortcut()` from `discourse/lib/shortcut-format`.",
+    {
+      since: "2026.9.0",
+      id: "discourse.translate-mod-key",
+    }
+  );
+
   const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
@@ -672,8 +699,7 @@ export function mergeSortedLists(list1, list2, comparator) {
 }
 
 export function getCaretPosition(element, options) {
-  const jqueryElement = $(element);
-  const position = jqueryElement.caretPosition(options);
+  const position = caretCoordinates(element, options);
 
   // Get the position of the textarea on the page
   const textareaRect = element.getBoundingClientRect();
@@ -699,11 +725,15 @@ export function getCaretPosition(element, options) {
  * @return {String} Markdown table
  */
 export function arrayToTable(array, cols, colPrefix = "col", alignments) {
+  const escapeCell = (value) =>
+    String(value ?? "")
+      .replace(/\r?\n|\r/g, " ")
+      .replaceAll("|", "\\|");
+
   let table = "";
 
-  // Generate table headers
   table += "|";
-  table += cols.join(" | ");
+  table += cols.map(escapeCell).join(" | ");
   table += "|\n|";
 
   const alignMap = {
@@ -724,11 +754,7 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
 
     table +=
       cols
-        .map(function (_key, index) {
-          return String(item[`${colPrefix}${index}`] || "")
-            .replace(/\r?\n|\r/g, " ")
-            .replaceAll("|", "\\|");
-        })
+        .map((_key, index) => escapeCell(item[`${colPrefix}${index}`]))
         .join(" | ") + "|\n";
   });
 
@@ -819,18 +845,35 @@ export function getElement(node) {
 }
 
 export function isPrimaryTab() {
-  return new Promise((resolve) => {
-    if (capabilities.supportsServiceWorker) {
-      navigator.serviceWorker.addEventListener("message", (event) => {
-        resolve(event.data.primaryTab);
-      });
+  if (!capabilities.supportsServiceWorker) {
+    return Promise.resolve(true);
+  }
 
-      navigator.serviceWorker.ready.then((registration) => {
-        registration.active.postMessage({ action: "primaryTab" });
-      });
-    } else {
-      resolve(true);
-    }
+  return new Promise((resolve) => {
+    let timer;
+
+    const finish = (isPrimary) => {
+      cancel(timer);
+      navigator.serviceWorker.removeEventListener("message", onMessage);
+      resolve(isPrimary);
+    };
+
+    const onMessage = (event) => {
+      // the service worker also posts unrelated messages on this channel
+      if (typeof event.data?.primaryTab === "boolean") {
+        finish(event.data.primaryTab);
+      }
+    };
+
+    navigator.serviceWorker.addEventListener("message", onMessage);
+
+    // if the service worker never answers (no active registration), assume
+    // primary rather than hanging forever and silently dropping the action
+    timer = discourseLater(() => finish(true), 1000);
+
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.active?.postMessage({ action: "primaryTab" });
+    });
   });
 }
 

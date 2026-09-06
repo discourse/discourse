@@ -250,7 +250,7 @@ RSpec.describe PostRevisionSerializer do
       expect(json).not_to have_key(:reply_to_post_number_changes)
     end
 
-    it "does not leak author info for a target the viewer cannot see" do
+    it "omits target info for a reply target the viewer cannot see" do
       SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
       whisper =
         Fabricate(
@@ -278,9 +278,10 @@ RSpec.describe PostRevisionSerializer do
           root: false,
         ).as_json
 
-      expect(json[:reply_to_post_number_changes][:current][:post_number]).to eq(whisper.post_number)
-      expect(json[:reply_to_post_number_changes][:current]).not_to have_key(:username)
-      expect(json[:reply_to_post_number_changes][:current]).not_to have_key(:avatar_template)
+      expect(json[:reply_to_post_number_changes][:previous][:post_number]).to eq(
+        other_parent.post_number,
+      )
+      expect(json[:reply_to_post_number_changes][:current]).to be_nil
     end
   end
 end

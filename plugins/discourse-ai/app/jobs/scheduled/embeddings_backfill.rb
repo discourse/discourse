@@ -33,21 +33,27 @@ module Jobs
       topic_work_list << backfill_vector if backfill_vector
 
       topic_work_list.each do |vector|
+        next if DiscourseAi::Embeddings::ProviderHealth.paused?(vector.vdef)
+
         rebaked = 0
         table_name = DiscourseAi::Embeddings::Schema::TOPICS_TABLE
         vector_def = vector.vdef
+
+        archetypes = [Archetype.default]
+        archetypes << Archetype.private_message if SiteSetting.ai_embeddings_generate_for_pms
 
         topics =
           Topic
             .joins(
               "LEFT JOIN #{table_name} ON #{table_name}.topic_id = topics.id AND #{table_name}.model_id = #{vector_def.id}",
             )
-            .where(archetype: Archetype.default)
+            .where(archetype: archetypes)
             .where(deleted_at: nil)
             .order("topics.bumped_at DESC")
 
         rebaked += populate_topic_embeddings(vector, topics.limit(limit - rebaked))
 
+        next if DiscourseAi::Embeddings::ProviderHealth.paused?(vector.vdef)
         next if rebaked >= limit
 
         # Then, we'll try to backfill embeddings for topics that have outdated
@@ -60,6 +66,7 @@ module Jobs
 
         rebaked += populate_topic_embeddings(vector, relation, force: true)
 
+        next if DiscourseAi::Embeddings::ProviderHealth.paused?(vector.vdef)
         next if rebaked >= limit
 
         # Finally, we'll try to backfill embeddings for topics that have outdated
@@ -72,6 +79,7 @@ module Jobs
 
         populate_topic_embeddings(vector, relation, force: true)
 
+        next if DiscourseAi::Embeddings::ProviderHealth.paused?(vector.vdef)
         next unless SiteSetting.ai_embeddings_per_post_enabled
 
         # Now for posts
@@ -85,6 +93,7 @@ module Jobs
             )
             .where(deleted_at: nil)
             .where(post_type: Post.types[:regular])
+        posts = posts.public_posts if !SiteSetting.ai_embeddings_generate_for_pms
 
         # First, we'll try to backfill embeddings for posts that have none
         posts

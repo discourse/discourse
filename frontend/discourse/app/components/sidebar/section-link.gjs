@@ -10,7 +10,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { and, eq, not, or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SectionLinkPrefix from "./section-link-prefix";
@@ -40,7 +40,9 @@ export function isHex(input) {
  * @param {Object} @suffixArgs - Arguments to pass to the suffix component
  */
 export default class SectionLink extends Component {
+  @service capabilities;
   @service currentUser;
+  @service router;
 
   @tracked hovering = false;
   @tracked hoverActionActive = false;
@@ -130,6 +132,23 @@ export default class SectionLink extends Component {
     return [];
   }
 
+  get resolvedCurrentWhen() {
+    if (this.args.exactUrlMatch) {
+      return false;
+    }
+
+    const currentWhen = this.args.currentWhen;
+
+    // Ember 7's <LinkTo> ignores @models for a string @current-when; resolve the route list against this link's models ourselves.
+    if (typeof currentWhen === "string") {
+      return currentWhen
+        .split(" ")
+        .some((route) => this.router.isActive(route, ...this.models));
+    }
+
+    return currentWhen;
+  }
+
   get prefixColor() {
     const hexCode = isHex(this.args.prefixColor);
 
@@ -140,9 +159,19 @@ export default class SectionLink extends Component {
     }
   }
 
+  get shouldRenderHoverAction() {
+    if (!this.args.hoverValue) {
+      return false;
+    }
+
+    // on narrow touch layouts the affordance exists elsewhere; rendering
+    // the button would only clutter the panel
+    return !this.capabilities.touch || this.capabilities.viewport.sm;
+  }
+
   @action
   hoveringSectionLink() {
-    if (this.hoverActionActive) {
+    if (this.capabilities.touch || this.hoverActionActive) {
       return;
     }
     this.hovering = true;
@@ -150,7 +179,7 @@ export default class SectionLink extends Component {
 
   @action
   stopHoveringSectionLink() {
-    if (this.hoverActionActive) {
+    if (this.capabilities.touch || this.hoverActionActive) {
       return;
     }
     this.hovering = false;
@@ -172,14 +201,13 @@ export default class SectionLink extends Component {
     }
 
     schedule("afterRender", () => {
-      const rect = element.getBoundingClientRect();
-      const alreadyVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
-      if (alreadyVisible) {
+      if (isFullyScrolledIntoView(element)) {
         return;
       }
 
       element.scrollIntoView({
-        block: "center",
+        block: "nearest",
+        inline: "nearest",
       });
     });
   }
@@ -200,6 +228,7 @@ export default class SectionLink extends Component {
             href={{@href}}
             rel="noopener noreferrer"
             target={{this.target}}
+            draggable={{if @suppressNativeDrag false}}
             title={{@title}}
             data-link-name={{@linkName}}
             class={{this.linkClass}}
@@ -247,12 +276,13 @@ export default class SectionLink extends Component {
             {{/if}}
 
             {{! eslint-disable ember/template-no-nested-interactive }}
-            {{#if @hoverValue}}
+            {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
                   {{on "click" this.runHoverAction}}
                   type="button"
                   title={{@hoverTitle}}
+                  aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
                 >
                   {{#if (eq @hoverType "icon")}}
@@ -267,7 +297,8 @@ export default class SectionLink extends Component {
             @route={{@route}}
             @query={{or @query (hash)}}
             @models={{this.models}}
-            @current-when={{and (not @exactUrlMatch) @currentWhen}}
+            @current-when={{this.resolvedCurrentWhen}}
+            draggable={{if @suppressNativeDrag false}}
             title={{@title}}
             data-link-name={{@linkName}}
             class={{this.linkClass}}
@@ -314,12 +345,13 @@ export default class SectionLink extends Component {
               </span>
             {{/if}}
 
-            {{#if @hoverValue}}
+            {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
                   {{on "click" this.runHoverAction}}
                   type="button"
                   title={{@hoverTitle}}
+                  aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
                 >
                   {{#if (eq @hoverType "icon")}}
@@ -333,4 +365,34 @@ export default class SectionLink extends Component {
       </li>
     {{/if}}
   </template>
+}
+
+function isFullyScrolledIntoView(element) {
+  const rect = element.getBoundingClientRect();
+  let node = element.parentElement;
+  let scrolled = false;
+
+  while (node && node !== document.body) {
+    const { overflowY } = getComputedStyle(node);
+
+    if (
+      (overflowY === "auto" || overflowY === "scroll") &&
+      node.scrollHeight > node.clientHeight
+    ) {
+      scrolled = true;
+      const bounds = node.getBoundingClientRect();
+
+      if (rect.top < bounds.top || rect.bottom > bounds.bottom) {
+        return false;
+      }
+    }
+
+    node = node.parentElement;
+  }
+
+  if (scrolled) {
+    return true;
+  }
+
+  return rect.top >= 0 && rect.bottom <= window.innerHeight;
 }

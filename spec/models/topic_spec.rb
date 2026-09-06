@@ -405,11 +405,10 @@ RSpec.describe Topic do
       Fabricate.build(:topic, title: topic.title, category: category2)
     end
 
-    context "when duplicates aren't allowed" do
-      before do
-        SiteSetting.allow_duplicate_topic_titles = false
-        SiteSetting.allow_duplicate_topic_titles_category = false
-      end
+    context "when duplicate_topic_titles is disallowed" do
+      fab!(:admin)
+
+      before { SiteSetting.duplicate_topic_titles = "disallowed" }
 
       it "won't allow another topic to be created with the same name" do
         expect(new_topic).not_to be_valid
@@ -433,24 +432,94 @@ RSpec.describe Topic do
         new_topic.archetype = Archetype.private_message
         expect(new_topic).to be_valid
       end
+
+      it "includes a link to the topic already using the title in the error" do
+        expect(new_topic).not_to be_valid
+        expect(new_topic.errors[:base]).to include(
+          I18n.t("errors.messages.topic_title_already_used", url: topic.url),
+        )
+      end
+
+      context "when the duplicate is in a read-restricted category" do
+        fab!(:group)
+        fab!(:secure_category) { Fabricate(:private_category, group: group) }
+        fab!(:secure_topic) { Fabricate(:topic, category: secure_category) }
+
+        it "allows the title when the author can't see the duplicate" do
+          attempt = Fabricate.build(:topic, title: secure_topic.title, category: category1)
+          expect(attempt).to be_valid
+        end
+
+        it "won't allow the title when the author is a member of the restricted group" do
+          group_member = Fabricate(:user)
+          group.add(group_member)
+          attempt =
+            Fabricate.build(
+              :topic,
+              title: secure_topic.title,
+              category: category1,
+              user: group_member,
+            )
+          expect(attempt).not_to be_valid
+        end
+
+        it "won't allow the title when the author is an admin" do
+          attempt =
+            Fabricate.build(:topic, title: secure_topic.title, category: category1, user: admin)
+          expect(attempt).not_to be_valid
+        end
+
+        it "won't allow a topic to be moved into the restricted category holding the duplicate" do
+          public_topic = Fabricate(:topic, title: secure_topic.title, category: category1)
+          public_topic.category_id = secure_category.id
+          expect(public_topic).not_to be_valid
+        end
+
+        it "won't allow the title when the acting user can see the duplicate but the author can't" do
+          topic.acting_user = admin
+          topic.title = secure_topic.title
+          expect(topic).not_to be_valid
+        end
+
+        it "allows the title when the acting user can't see the duplicate but the author can" do
+          staff_topic = Fabricate(:topic, category: category1, user: admin)
+          staff_topic.acting_user = Fabricate(:user)
+          staff_topic.title = secure_topic.title
+          expect(staff_topic).to be_valid
+        end
+      end
+
+      context "when the duplicate is unlisted" do
+        fab!(:unlisted_topic) { Fabricate(:topic, category: category2, visible: false) }
+
+        it "allows the title when the author can't see unlisted topics" do
+          attempt = Fabricate.build(:topic, title: unlisted_topic.title, category: category1)
+          expect(attempt).to be_valid
+        end
+
+        it "won't allow the title when the author can see unlisted topics" do
+          attempt =
+            Fabricate.build(:topic, title: unlisted_topic.title, category: category1, user: admin)
+          expect(attempt).not_to be_valid
+        end
+
+        it "won't allow the title in the same category even when the author can't see unlisted topics" do
+          attempt = Fabricate.build(:topic, title: unlisted_topic.title, category: category2)
+          expect(attempt).not_to be_valid
+        end
+      end
     end
 
-    context "when duplicates are allowed" do
-      before do
-        SiteSetting.allow_duplicate_topic_titles = true
-        SiteSetting.allow_duplicate_topic_titles_category = false
-      end
+    context "when duplicate_topic_titles is allowed" do
+      before { SiteSetting.duplicate_topic_titles = "allowed" }
 
       it "will allow another topic to be created with the same name" do
         expect(new_topic).to be_valid
       end
     end
 
-    context "when duplicates are allowed if the category is different" do
-      before do
-        SiteSetting.allow_duplicate_topic_titles = false
-        SiteSetting.allow_duplicate_topic_titles_category = true
-      end
+    context "when duplicate_topic_titles is allowed_across_categories" do
+      before { SiteSetting.duplicate_topic_titles = "allowed_across_categories" }
 
       it "will allow another topic to be created with the same name but different category" do
         expect(new_topic_different_cat).to be_valid
@@ -458,17 +527,6 @@ RSpec.describe Topic do
 
       it "won't allow another topic to be created with the same name in same category" do
         expect(new_topic).not_to be_valid
-      end
-
-      it "other errors will not be cleared" do
-        SiteSetting.min_topic_title_length = 5
-        topic.update!(title: "more than 5 characters but less than 134")
-        SiteSetting.min_topic_title_length = 134
-        new_topic_different_cat.title = "more than 5 characters but less than 134"
-        expect(new_topic_different_cat).not_to be_valid
-        expect(new_topic_different_cat.errors[:title]).to include(
-          I18n.t("errors.messages.too_short", count: 134),
-        )
       end
     end
   end
@@ -553,6 +611,14 @@ RSpec.describe Topic do
     it "expands inline emojis if inline emoji setting enabled" do
       SiteSetting.enable_inline_emoji_translation = true
       expect(topic_inline_emoji.fancy_title).to eq("Hello:blush:World")
+    end
+  end
+
+  describe "#markdown_link_title" do
+    it "escapes markdown metacharacters that can break a link title" do
+      topic = Fabricate.build(:topic, title: "Party](https://evil.example) \\ oops")
+
+      expect(topic.markdown_link_title).to eq("Party\\]\\(https://evil.example\\) \\\\ oops")
     end
   end
 
@@ -2375,9 +2441,10 @@ RSpec.describe Topic do
     end
 
     it "sets topic status update user to topic creator if it is a TL4 user" do
-      tl4_topic = Fabricate.build(:topic, user: Fabricate.build(:trust_level_4, id: 998))
+      topic_creator = Fabricate(:trust_level_4)
+      tl4_topic = Fabricate.build(:topic, user: topic_creator)
       tl4_topic.set_or_create_timer(TopicTimer.types[:close], 3)
-      expect(tl4_topic.topic_timers.first.user_id).to eq(998)
+      expect(tl4_topic.topic_timers.first.user).to eq(topic_creator)
     end
 
     it "removes close topic status update if arg is nil" do
@@ -2813,6 +2880,63 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#regenerate_og_image" do
+    fab!(:topic)
+
+    before { SiteSetting.generate_topic_og_image = true }
+
+    it "clears generated OG images when the topic becomes ineligible" do
+      old_upload = Fabricate(:upload)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      topic.update_column(:og_image_upload_id, old_upload.id)
+      UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: topic)
+
+      topic.update!(category: private_category)
+
+      expect(topic.reload.og_image_upload_id).to be_nil
+      expect(UploadReference.exists?(upload_id: old_upload.id, target: topic)).to eq(false)
+    end
+
+    it "enqueues regeneration after each ten replies" do
+      topic.update_columns(og_image_upload_id: Fabricate(:upload).id, posts_count: 10)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.not_to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }
+
+      topic.update_column(:posts_count, 20)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+    end
+
+    it "enqueues regeneration after each ten likes" do
+      post = Fabricate(:post, topic: topic)
+      topic.update_columns(og_image_upload_id: Fabricate(:upload).id, like_count: 9)
+
+      post.update_column(:like_count, 10)
+
+      expect { topic.update_action_counts }.to change { Jobs::GenerateTopicOgImage.jobs.size }.by(1)
+
+      post.update_column(:like_count, 11)
+
+      expect { topic.reload.update_action_counts }.not_to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }
+
+      post.update_column(:like_count, 20)
+
+      expect { topic.reload.update_action_counts }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+    end
+  end
+
   describe "trash!" do
     fab!(:topic)
 
@@ -2922,17 +3046,20 @@ RSpec.describe Topic do
     before do
       SiteSetting.max_topics_in_first_day = 1
       SiteSetting.max_replies_in_first_day = 1
+      SiteSetting.tl1_max_topics_in_first_day = 2
+      SiteSetting.tl1_max_replies_in_first_day = 2
       SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
       RateLimiter.stubs(:rate_limit_create_topic).returns(100)
       RateLimiter.enable
     end
 
-    it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
+    it "limits TL0 users to max_topics_in_first_day and max_replies_in_first_day" do
       start = Time.now.tomorrow.beginning_of_day
 
       freeze_time(start)
 
-      user = Fabricate(:user, refresh_auto_groups: true)
+      user =
+        Fabricate(:user, created_at: start, trust_level: TrustLevel[0], refresh_auto_groups: true)
       topic_id = create_post(user: user).topic_id
 
       freeze_time(start + 10.minutes)
@@ -2947,26 +3074,52 @@ RSpec.describe Topic do
       )
     end
 
-    it "starts counting when they make their first post/topic" do
+    it "limits TL1 users to TL1 first day limits" do
       start = Time.now.tomorrow.beginning_of_day
 
       freeze_time(start)
 
-      user = Fabricate(:user, refresh_auto_groups: true)
+      user =
+        Fabricate(:user, created_at: start, trust_level: TrustLevel[1], refresh_auto_groups: true)
+      topic_id = create_post(user: user).topic_id
+
+      freeze_time(start + 10.minutes)
+      create_post(user: user)
+
+      freeze_time(start + 20.minutes)
+      expect { create_post(user: user) }.to raise_error(RateLimiter::LimitExceeded)
+
+      freeze_time(start + 30.minutes)
+      create_post(user: user, topic_id: topic_id)
+
+      freeze_time(start + 40.minutes)
+      create_post(user: user, topic_id: topic_id)
+
+      freeze_time(start + 50.minutes)
+      expect { create_post(user: user, topic_id: topic_id) }.to raise_error(
+        RateLimiter::LimitExceeded,
+      )
+    end
+
+    it "starts counting when the account is created" do
+      start = Time.now.tomorrow.beginning_of_day
+
+      freeze_time(start)
+
+      user =
+        Fabricate(:user, created_at: start, trust_level: TrustLevel[0], refresh_auto_groups: true)
 
       freeze_time(start + 25.hours)
       topic_id = create_post(user: user).topic_id
 
       freeze_time(start + 26.hours)
-      expect { create_post(user: user) }.to raise_error(RateLimiter::LimitExceeded)
+      create_post(user: user)
 
       freeze_time(start + 27.hours)
       create_post(user: user, topic_id: topic_id)
 
       freeze_time(start + 28.hours)
-      expect { create_post(user: user, topic_id: topic_id) }.to raise_error(
-        RateLimiter::LimitExceeded,
-      )
+      create_post(user: user, topic_id: topic_id)
     end
   end
 
@@ -3044,31 +3197,32 @@ RSpec.describe Topic do
   end
 
   describe "expandable_first_post?" do
-    let(:topic) { Fabricate.build(:topic) }
-
-    it "is false if embeddable_host is blank" do
-      expect(topic.expandable_first_post?).to eq(false)
+    it "is false without a topic embed" do
+      expect(Fabricate.build(:topic).expandable_first_post?).to eq(false)
     end
 
-    describe "with an embeddable host" do
-      before do
-        Fabricate(:embeddable_host)
-        SiteSetting.embed_truncate = true
-        topic.stubs(:has_topic_embed?).returns(true)
-      end
+    it "uses the recorded truncation state when available" do
+      post = Fabricate(:post)
+      embed = Fabricate(:topic_embed, post:, content_truncated: true)
+      SiteSetting.embed_truncate = false
 
-      it "is true with the correct settings and topic_embed" do
-        expect(topic.expandable_first_post?).to eq(true)
-      end
-      it "is false if embed_truncate? is false" do
-        SiteSetting.embed_truncate = false
-        expect(topic.expandable_first_post?).to eq(false)
-      end
+      expect(post.topic.expandable_first_post?).to eq(true)
 
-      it "is false if has_topic_embed? is false" do
-        topic.stubs(:has_topic_embed?).returns(false)
-        expect(topic.expandable_first_post?).to eq(false)
-      end
+      embed.update!(content_truncated: false)
+      SiteSetting.embed_truncate = true
+
+      expect(post.topic.expandable_first_post?).to eq(false)
+    end
+
+    it "uses the site setting for legacy embeds with unknown truncation state" do
+      post = Fabricate(:post)
+      Fabricate(:topic_embed, post:, content_truncated: nil)
+
+      SiteSetting.embed_truncate = true
+      expect(post.topic.expandable_first_post?).to eq(true)
+
+      SiteSetting.embed_truncate = false
+      expect(post.topic.expandable_first_post?).to eq(false)
     end
   end
 
@@ -3166,6 +3320,27 @@ RSpec.describe Topic do
 
       expect(topic.save).to be_truthy
       expect(topic.featured_link).to eq("https://github.com/discourse/discourse")
+    end
+
+    it "normalizes unsafe characters in the featured link before saving" do
+      topic.featured_link = 'https://example.com/?"onclick="alert(1)"'
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq("https://example.com/?%22onclick=%22alert(1)%22")
+    end
+
+    it "preserves an already percent-encoded featured link without double-encoding" do
+      topic.featured_link = "https://en.wikipedia.org/wiki/C%2B%2B?q=a%20b"
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq("https://en.wikipedia.org/wiki/C%2B%2B?q=a%20b")
+    end
+
+    it "rejects a featured link that cannot be normalized instead of storing it raw" do
+      topic.featured_link = 'https://evil.com/?"onclick="alert(1)"&pad=' + ("a" * 2000)
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:featured_link]).to be_present
     end
 
     context "when category restricts present" do
@@ -3440,6 +3615,47 @@ RSpec.describe Topic do
         }.by(1)
       end
     end
+
+    it "removes notifications when the removed user loses access" do
+      notification =
+        Fabricate(
+          :notification,
+          user: user1,
+          topic: private_topic,
+          notification_type: Notification.types[:private_message],
+          read: false,
+        )
+
+      user1.expects(:publish_notifications_state).once
+
+      expect { private_topic.remove_allowed_user(admin, user1) }.to change {
+        Notification.exists?(notification.id)
+      }.from(true).to(false)
+
+      expect(Guardian.new(user1).can_see?(private_topic)).to eq(false)
+    end
+
+    it "preserves notifications when the removed user still has group access" do
+      group.add(user1)
+      Fabricate(:topic_allowed_group, topic: private_topic, group: group)
+
+      notification =
+        Fabricate(
+          :notification,
+          user: user1,
+          topic: private_topic,
+          notification_type: Notification.types[:private_message],
+          read: false,
+        )
+
+      user1.expects(:publish_notifications_state).never
+
+      expect { private_topic.remove_allowed_user(admin, user1) }.not_to change {
+        Notification.exists?(notification.id)
+      }
+
+      expect(Guardian.new(user1).can_see?(private_topic)).to eq(true)
+    end
   end
 
   describe "#remove_allowed_group" do
@@ -3471,6 +3687,23 @@ RSpec.describe Topic do
       small_action = private_topic.posts.where(action_code: "removed_group").last
       expect(small_action).to be_present
       expect(small_action.user).to eq(moderator)
+    end
+
+    it "enqueues an inaccessible-notifications cleanup for the topic" do
+      private_topic =
+        Fabricate(
+          :private_message_topic,
+          user: admin,
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: admin)],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: pm_group)],
+        )
+
+      expect_enqueued_with(
+        job: :delete_inaccessible_notifications,
+        args: {
+          topic_id: private_topic.id,
+        },
+      ) { private_topic.remove_allowed_group(admin, pm_group.name) }
     end
   end
 
@@ -3642,6 +3875,28 @@ RSpec.describe Topic do
 
       topic.update(category: category)
       expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
+
+  describe ".clear_page_not_found_topics_cache!" do
+    it "clears every locale without traversing a large Redis keyspace" do
+      cache_keys =
+        I18n.available_locales.map do |locale|
+          Discourse.cache.normalize_key("page_not_found_topics:#{locale}")
+        end
+      post_keys = 10_000.times.map { |index| Discourse.cache.normalize_key("post:#{index}") }
+
+      Discourse.cache.redis.pipelined do |pipeline|
+        cache_keys.each { |key| pipeline.set(key, "cached topic suggestions") }
+        post_keys.each { |key| pipeline.set(key, "post") }
+      end
+      allow(Discourse.cache.redis).to receive(:scan_each).and_raise(Timeout::Error)
+
+      expect { described_class.clear_page_not_found_topics_cache! }.not_to raise_error
+      expect(Discourse.cache.redis.mget(*cache_keys)).to all be_nil
+      expect(Discourse.cache.redis.mget(*post_keys)).to all eq("post")
+    ensure
+      Discourse.cache.redis.del(*post_keys) if post_keys
     end
   end
 

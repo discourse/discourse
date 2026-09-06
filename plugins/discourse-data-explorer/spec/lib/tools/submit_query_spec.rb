@@ -13,6 +13,13 @@ describe DiscourseDataExplorer::Tools::SubmitQuery do
     SiteSetting.ai_bot_enabled = true
   end
 
+  it "describes SQL as the exact validated query" do
+    sql_param = described_class.signature[:parameters].find { |param| param[:name] == "sql" }
+
+    expect(sql_param[:description]).to include("exact SQL from the final successful run_sql call")
+    expect(sql_param[:description]).to include("including -- [params] comments")
+  end
+
   it "stores the generated query on the bot context and stops the tool chain" do
     context.feature_context[described_class::VALIDATED_SQL_KEY] = "SELECT id AS user_id FROM users"
 

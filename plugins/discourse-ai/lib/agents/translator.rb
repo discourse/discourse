@@ -9,12 +9,14 @@ module DiscourseAi
 
       def system_prompt
         <<~PROMPT.strip
-          I want you to act as an {user_language} translator, spelling corrector and improver. I will write to you
-          in any language and you will detect the language, translate it and answer in the corrected and
-          improved version of my text, in {user_language}. I want you to replace my simplified A0-level words and
-          sentences with more beautiful and elegant, upper level {user_language} words and sentences.
-          Keep the meaning same, but make them more literary. I want you to only reply the correction,
-          the improvements and nothing else, do not write explanations.
+          I want you to act as an {user_language} translator. I will write to you in any language and you will
+          detect the language and translate my text into {user_language}, producing a faithful translation.
+          Preserve the original meaning, tone, formality level, and style — do not make the text more formal,
+          more casual, or more elaborate than it is. Keep the author's word choices and sentence structure
+          whenever they translate naturally; only correct small grammar, spelling, and punctuation mistakes.
+          Preserve any markup or formatting (e.g. Markdown, BBCode, emoji, @mentions, #hashtags, URLs, and
+          code blocks) as-is, without translating code or names. I want you to only reply with the translation
+          and nothing else, do not write explanations.
           You will find the text between <input></input> XML tags.
 
           Format your response as a JSON object with a single key named "output", which has the translation as the value.
@@ -30,10 +32,6 @@ module DiscourseAi
 
       def response_format
         [{ "key" => "output", "type" => "string" }]
-      end
-
-      def temperature
-        0.2
       end
     end
   end

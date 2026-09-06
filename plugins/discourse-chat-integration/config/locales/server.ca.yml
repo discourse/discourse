@@ -52,6 +52,8 @@ ca:
     group_message_template: "missatges a: @%{name}"
     provider:
       slack:
+        errors:
+          action_prohibited: "El bot no té permís per a publicar en aquest canal"
         status:
           header: |
             *Regles per a aquest canal*

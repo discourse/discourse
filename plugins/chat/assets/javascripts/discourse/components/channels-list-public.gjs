@@ -19,6 +19,7 @@ export default class ChannelsListPublic extends Component {
   @service chatTrackingStateManager;
   @service site;
   @service router;
+  @service currentUser;
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
@@ -30,6 +31,10 @@ export default class ChannelsListPublic extends Component {
 
   get shouldShowMyThreads() {
     return this.chatChannelsManager.shouldShowMyThreads;
+  }
+
+  get canBrowseChannels() {
+    return !!this.currentUser;
   }
 
   get channelList() {
@@ -84,13 +89,15 @@ export default class ChannelsListPublic extends Component {
 
         <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
 
-        <LinkTo
-          @route="chat.browse"
-          class="btn no-text btn-flat open-browse-page-btn title-action"
-          title={{i18n "chat.channels_list_popup.browse"}}
-        >
-          {{dIcon "pencil"}}
-        </LinkTo>
+        {{#if this.canBrowseChannels}}
+          <LinkTo
+            @route="chat.browse"
+            class="btn no-text btn-flat open-browse-page-btn title-action"
+            title={{i18n "chat.channels_list_popup.browse"}}
+          >
+            {{dIcon "pencil"}}
+          </LinkTo>
+        {{/if}}
       </div>
     {{/if}}
 
@@ -108,10 +115,13 @@ export default class ChannelsListPublic extends Component {
           @svgContent={{ChatZero}}
           @title={{i18n "chat.no_public_channels"}}
           @ctaLabel={{if
-            this.chatChannelsManager.displayPublicChannels
+            (and
+              this.canBrowseChannels
+              this.chatChannelsManager.displayPublicChannels
+            )
             (i18n "chat.no_public_channels_cta")
           }}
-          @ctaAction={{this.openBrowseChannels}}
+          @ctaAction={{if this.canBrowseChannels this.openBrowseChannels}}
         />
       {{else}}
         {{#each this.channelList as |channel|}}

@@ -60,6 +60,11 @@ export default {
           route: "adminPlugins.show.discourse-ai-translations",
           description: "discourse_ai.translations.description",
         },
+        {
+          label: "discourse_ai.logs.short_title",
+          route: "adminPlugins.show.discourse-ai-logs",
+          description: "discourse_ai.logs.description",
+        },
       ]);
     });
   },

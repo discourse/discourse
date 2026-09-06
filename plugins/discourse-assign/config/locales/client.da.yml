@@ -93,8 +93,22 @@ da:
       topic: "Emne"
       post: "Indlæg"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Tildelt"
+        "trigger:unassigned": "Ikke tildelt"
       assign_topic:
+        resource: "Ressource"
+        resources:
+          topic: "Emne"
+          post: "Indlæg"
         operations:
           assign: "Tildel"
           unassign: "Fjern tildeling"
         topic_id: "Emne ID"
+        post_id: "Indlæg ID"
+      check_assignment:
+        target_types:
+          topic: "Emne"
+          post: "Indlæg"
+        topic_id: "Emne ID"
+        post_id: "Indlæg ID"

@@ -9,32 +9,18 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   before_action :ensure_logged_in, except: %i[reactions_users_list post_reactions_users]
 
   def toggle
-    post = fetch_post_from_params
-    reaction = params[:reaction]
-
-    return render_json_error(post) unless DiscourseReactions::Reaction.valid?(reaction)
-
-    begin
-      manager =
-        DiscourseReactions::ReactionManager.new(
-          reaction_value: params[:reaction],
-          user: current_user,
-          post: post,
-        )
-      manager.toggle!
-    rescue ActiveRecord::RecordNotUnique
-      # If the user already performed this action, it's probably due to a different browser tab
-      # or non-debounced clicking. We can ignore.
+    DiscourseReactions::PostReaction::Toggle.call(
+      service_params.deep_merge(params: { post_id: params[:post_id], reaction: params[:reaction] }),
+    ) do |result|
+      on_success do |post:|
+        render_json_dump(PostSerializer.new(post, scope: guardian, root: false).as_json)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:can_see_post) { raise Discourse::InvalidAccess }
+      on_failed_policy(:reaction_is_valid) { |_policy, post:| render_json_error(post) }
+      on_exceptions(Discourse::InvalidAccess) { |exception| raise exception }
+      on_failure { render_json_error(result) }
     end
-
-    post.publish_change_to_clients!(:acted)
-    publish_change_to_clients!(
-      post,
-      reaction: manager.reaction_value,
-      previous_reaction: manager.previous_reaction_value,
-    )
-
-    render_json_dump(post_serializer(post).as_json)
   end
 
   def reactions_given
@@ -45,6 +31,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts),
       )
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
+    raise Discourse::NotFound unless guardian.can_see_user_actions?(user)
 
     reaction_users =
       DiscourseReactions::ReactionUser
@@ -88,7 +75,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     raise Discourse::InvalidAccess unless guardian.can_see_notifications?(user)
 
     posts = Post.joins(:topic).where(user_id: user.id)
-    posts = guardian.filter_allowed_categories(posts)
+    posts = visible_posts_for_reactions_received(posts)
     post_ids = posts.select(:id)
 
     reaction_users =
@@ -179,13 +166,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
     users =
       rows.map do |row|
-        {
+        format_user(
+          row,
           id: row.id,
-          username: row.username,
-          name: row.name,
           avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
           reaction: row.reaction,
-        }
+        )
       end
 
     render_json_dump(users: users, total_rows: total)
@@ -287,6 +273,22 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   private
 
+  def visible_posts_for_reactions_received(posts)
+    visible_topic_ids = guardian.can_see_topic_ids(topic_ids: posts.distinct.pluck(:topic_id))
+
+    posts =
+      posts.where(topic_id: visible_topic_ids, post_type: Topic.visible_post_types(current_user))
+
+    guardian.filter_hidden_posts(posts)
+  end
+
+  def format_user(user, avatar_template:, **extra_attributes)
+    attributes = { username: user.username }
+    attributes[:name] = user.name if SiteSetting.enable_names?
+    attributes[:avatar_template] = avatar_template
+    attributes.merge!(extra_attributes)
+  end
+
   def get_users(reaction)
     DiscourseReactions::PostReactionsQuery
       .apply_ignored_users_filter(
@@ -298,13 +300,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       .order("discourse_reactions_reaction_users.created_at desc")
       .limit(MAX_USERS_COUNT + 1)
       .map do |reaction_user|
-        {
-          username: reaction_user.user.username,
-          name: reaction_user.user.name,
+        format_user(
+          reaction_user.user,
           avatar_template: reaction_user.user.avatar_template,
           can_undo: reaction_user.can_undo?,
           created_at: reaction_user.created_at.to_s,
-        }
+        )
       end
   end
 
@@ -335,21 +336,16 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   end
 
   def format_like_user(like)
-    {
-      username: like.user.username,
-      name: like.user.name,
+    format_user(
+      like.user,
       avatar_template: like.user.avatar_template,
       can_undo: guardian.can_delete_post_action?(like),
       created_at: like.created_at.to_s,
-    }
+    )
   end
 
   def format_likes_users(likes)
     likes.includes([:user]).limit(MAX_USERS_COUNT + 1).map { |like| format_like_user(like) }
-  end
-
-  def post_serializer(post)
-    PostSerializer.new(post, scope: guardian, root: false)
   end
 
   def fetch_post_from_params
@@ -357,16 +353,6 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     post = Post.find(post_id)
     guardian.ensure_can_see!(post)
     post
-  end
-
-  def publish_change_to_clients!(post, reaction: nil, previous_reaction: nil)
-    message = { post_id: post.id, reactions: [reaction, previous_reaction].compact.uniq }
-
-    opts = {}
-    secure_audience = post.topic.secure_audience_publish_messages
-    opts = secure_audience if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
-
-    MessageBus.publish("/topic/#{post.topic.id}/reactions", message, opts)
   end
 
   def secure_reaction_users!(reaction_users)

@@ -18,17 +18,16 @@ cs:
     ai_helper:
       prompts:
         translate: Přeložit do %{language}
-        generate_titles: Navrhnout názvy témat
         proofread: Korektura textu
         markdown_table: Generovat Markdown tabulku
         custom_prompt: "Vlastní pokyn"
         explain: "Vysvětlit"
         illustrate_post: "Ilustrovat příspěvek"
         replace_dates: "Chytré datumy"
-      image_caption:
-        attribution: "Popisek od AI"
     ai_bot:
       default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
+      read_post:
+        unknown_post: "příspěvek"
       agents:
         custom_prompt:
           name: "Vlastní pokyn"
@@ -37,7 +36,10 @@ cs:
       topic_not_found: "Souhrn není k dispozici, téma nebylo nalezeno!"
       summarizing: "Vytvářím souhrn tématu"
       tool_summary:
+        suspend_user: "Pozastavit uživatele"
+        silence_user: "Ztišit uživatele"
         edit_post: "Upravit příspěvek"
+        create_category: "Vytvořit kategorii"
         move_posts: "Přesunout příspěvky"
         search: "Vyhledávání"
         tags: "Seznam značek"
@@ -45,6 +47,7 @@ cs:
         summarize: "Shrnout"
       tool_help:
         delete_topic: "Odstranit téma"
+        create_category: "Vytvořit novou kategorii"
         summary: "Shrnout téma"
       tool_description:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
@@ -57,10 +60,13 @@ cs:
       delete_topic:
         errors:
           not_found: "Téma nenalezeno."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Téma nenalezeno."
       edit_category:
+        errors:
+          not_found: "Kategorie nebyla nalezena."
+      change_topic_category:
         errors:
           not_found: "Téma nenalezeno."
           category_not_found: "Kategorie nebyla nalezena."

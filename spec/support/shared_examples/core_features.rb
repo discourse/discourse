@@ -7,6 +7,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
   fab!(:active_user) { Fabricate(:active_user, password: "secure_password") }
 
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
 
   if skip_examples.exclude?(:login)
     describe "Login" do
@@ -113,8 +114,8 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       it "likes a post" do
         click_on(topics.first.title)
-        find(".toggle-like").click
-        expect(page).to have_css(".post-action-menu__like-count", text: "1")
+        topic_page.click_like_reaction_for(topics.first.posts.first)
+        expect(topic_page).to have_like_count_for(topics.first.posts.first, 1)
       end
     end
   end

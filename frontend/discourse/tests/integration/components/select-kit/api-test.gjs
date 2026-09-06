@@ -129,6 +129,42 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     assert.dom("#test").hasText("foo");
   });
 
+  test("an item with onSelect acts as an action row instead of being selected", async function (assert) {
+    setDefaultState(this, "foo", { content: DEFAULT_CONTENT });
+
+    let actioned = false;
+    withPluginApi((api) => {
+      api.modifySelectKit("combo-box").prependContent(() => {
+        return {
+          id: "action",
+          name: "Do something",
+          onSelect: () => {
+            actioned = true;
+          },
+        };
+      });
+    });
+
+    await render(
+      <template>
+        <ComboBox
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+        />
+      </template>
+    );
+    await this.comboBox.expand();
+    await this.comboBox.selectRowByValue("action");
+
+    assert.true(actioned, "the row's onSelect callback runs");
+    assert.strictEqual(this.value, "foo", "the selected value is unchanged");
+    assert.true(this.comboBox.isExpanded(), "the dropdown stays open");
+    assert
+      .dom(".select-kit-row[data-value='action']")
+      .hasAttribute("role", "menuitem");
+  });
+
   test("modifySelectKit(identifier).replaceContent", async function (assert) {
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 

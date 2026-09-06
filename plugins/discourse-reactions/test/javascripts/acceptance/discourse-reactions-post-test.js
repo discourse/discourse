@@ -11,7 +11,6 @@ acceptance("Post", function (needs) {
     discourse_reactions_enabled_reactions: "otter|open_mouth",
     discourse_reactions_reaction_for_like: "heart",
     discourse_reactions_like_icon: "heart",
-    enable_new_post_reactions_menu: true,
   });
 
   needs.pretender((server, helper) => {
@@ -62,6 +61,18 @@ acceptance("Post", function (needs) {
       );
   });
 
+  test("Reaction emoji shows its name in the title on hover", async function (assert) {
+    await visit("/t/topic_with_reactions_and_likes/374");
+
+    assert
+      .dom("#post_1 .discourse-reactions-list-emoji img[alt='laughing']")
+      .hasAttribute(
+        "title",
+        "laughing",
+        "sets the emoji name as the title attribute"
+      );
+  });
+
   test("Current user has no reaction on post and can toggle", async function (assert) {
     await visit("/t/topic_with_reactions_and_likes/374");
 
@@ -103,7 +114,6 @@ acceptance("Post - hidden reactions", function (needs) {
     discourse_reactions_enabled_reactions: "otter|open_mouth",
     discourse_reactions_reaction_for_like: "heart",
     discourse_reactions_like_icon: "heart",
-    enable_new_post_reactions_menu: true,
   });
 
   needs.pretender((server, helper) => {
@@ -144,7 +154,6 @@ acceptance("Post - hidden reactions with hidden-post access", function (needs) {
     discourse_reactions_enabled_reactions: "otter|open_mouth",
     discourse_reactions_reaction_for_like: "heart",
     discourse_reactions_like_icon: "heart",
-    enable_new_post_reactions_menu: true,
   });
 
   needs.pretender((server, helper) => {

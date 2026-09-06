@@ -51,6 +51,8 @@ it:
       cast-votes:
         title: "Vota"
         label: "Vota ora!"
+      keep-vote:
+        label: "Indietro"
       show-results:
         title: "Visualizza i risultati del sondaggio"
         label: "Risultati"
@@ -155,5 +157,3 @@ it:
           add: Aggiungi opzione
         automatic_close:
           label: Chiudi sondaggio automaticamente
-        show_advanced: "Mostra Opzioni Avanzate"
-        hide_advanced: "Nascondi Opzioni Avanzate"

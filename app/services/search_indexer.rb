@@ -196,8 +196,19 @@ class SearchIndexer
     category_name:,
     topic_tags:,
     cooked:,
-    private_message:
+    private_message:,
+    locale: SiteSetting.default_locale
   )
+    post_text = HtmlScrubber.scrub(cooked)
+    post_text =
+      DiscoursePluginRegistry.apply_modifier(
+        :post_search_index_text,
+        post_text,
+        post_id,
+        cooked,
+        locale,
+      )
+
     update_index(
       table: "post",
       id: post_id,
@@ -208,7 +219,7 @@ class SearchIndexer
       # the original string. Since there is no way to estimate the length of
       # the expected tsvector, we limit the input to ~50% of the maximum
       # length of a tsvector (1_048_576 bytes).
-      d_weight: HtmlScrubber.scrub(cooked)[0..600_000],
+      d_weight: post_text[0..600_000],
     ) { |params| params["private_message"] = private_message }
   end
 
@@ -310,6 +321,7 @@ class SearchIndexer
           topic_tags: tag_names,
           cooked: obj.cooked,
           private_message: topic.private_message?,
+          locale: obj.locale.presence || SiteSetting.default_locale,
         )
 
         SearchIndexer.update_topics_index(topic.id, topic.title, obj.cooked) if obj.is_first_post?
@@ -335,6 +347,7 @@ class SearchIndexer
             topic_tags: tag_names,
             cooked: post.cooked,
             private_message: obj.private_message?,
+            locale: post.locale.presence || SiteSetting.default_locale,
           )
 
           SearchIndexer.update_topics_index(obj.id, obj.title, post.cooked)

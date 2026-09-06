@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def self.vision_enabled
+        true
+      end
+
       def system_prompt
         <<~PROMPT.strip
           You are a bot specializing in image captioning.

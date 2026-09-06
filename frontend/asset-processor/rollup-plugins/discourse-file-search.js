@@ -1,14 +1,16 @@
 export default function discourseFileSearch() {
   return {
     name: "discourse-file-search",
-    async resolveId(source, context) {
+    async resolveId(source, context, options) {
       if (source.match(/\.\w+$/)) {
         // Already has an extension
         return null;
       }
 
-      for (const ext of ["", ".js", ".gjs", ".hbs"]) {
-        const resolved = await this.resolve(`${source}${ext}`, context);
+      for (const ext of ["", ".js", ".gjs", ".ts", ".gts", ".hbs"]) {
+        const resolved = await this.resolve(`${source}${ext}`, context, {
+          attributes: options.attributes,
+        });
 
         if (resolved) {
           return resolved;
@@ -19,6 +21,7 @@ export default function discourseFileSearch() {
       if (!source.match(/\.\w+$/) && !source.endsWith("/index")) {
         const resolved = await this.resolve(`${source}/index`, context, {
           skipSelf: false, // We want extensionsearch on the `/index` lookup as well
+          attributes: options.attributes,
         });
         if (resolved) {
           return resolved;

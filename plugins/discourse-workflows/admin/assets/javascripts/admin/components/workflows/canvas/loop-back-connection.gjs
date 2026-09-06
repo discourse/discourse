@@ -12,7 +12,7 @@ function handleAdd(callback, loopNodeClientId, e) {
   callback?.(loopNodeClientId);
 }
 
-<template>
+export default <template>
   <svg class="workflow-loop-back" style={{SVG_STYLE}}>
     <path
       class="workflow-loop-back__path"

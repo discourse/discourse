@@ -29,6 +29,9 @@ fa_IR:
       save: "ذخیر تغییرات"
       run: "اجرا"
       delete: "حذف"
+      chart:
+        form:
+          bar: "بار"
       result_count:
         one: "%{count} نتیجه."
         other: "%{count} نتیجه."

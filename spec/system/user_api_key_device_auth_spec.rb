@@ -23,7 +23,7 @@ RSpec.describe "User API key device auth" do
 
   after { clear_user_api_key_device_auth_redis! }
 
-  it "allows a user to authorize a device request", time: Time.zone.parse("2026-05-20 12:00:00") do
+  it "allows a user to authorize a device request" do
     device_request = create_user_api_key_device_auth_request!(params: request_params)
     sign_in(user)
 
@@ -43,8 +43,7 @@ RSpec.describe "User API key device auth" do
     expect(device_auth_page).to have_completion_message
   end
 
-  it "allows a user to authorize a device request by manually entering the code",
-     time: Time.zone.parse("2026-05-20 12:00:00") do
+  it "allows a user to authorize a device request by manually entering the code" do
     device_request = create_user_api_key_device_auth_request!(params: request_params)
     sign_in(user)
 

@@ -94,7 +94,7 @@ RSpec.describe UserSummary do
   describe "#bookmark_count" do
     fab!(:user)
     fab!(:post_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:post)) }
-    fab!(:topic_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:topic)) }
+    fab!(:topic_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:topic_with_op)) }
 
     let(:summary) { UserSummary.new(user, Guardian.new(user)) }
 

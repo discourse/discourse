@@ -15,13 +15,18 @@ es:
       title: Encuesta RSS
     admin:
       rss_polling:
-        feed: Ajustes del feed
-        discourse: Ajustes de Discourse
         author: Autor
         feed_url: URL
         discourse_category: Categoría
         discourse_tags: Etiquetas
-        feed_category_filter: Filtro de categoría
-        documentation: Documentación de configuración de encuesta RSS
-        destroy_feed:
-          confirm: "¿Seguro que quieres eliminar este feed?"
+        feeds:
+          edit: Editar
+          delete: Eliminar
+          save: Guardar
+          confirm_delete: "¿Seguro que quieres eliminar este feed?"
+        test:
+          title: Vista previa
+          dismiss: Descartar
+        status:
+          enabled: Activado
+          disabled: Desactivado

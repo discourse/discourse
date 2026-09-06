@@ -103,6 +103,61 @@ RSpec.describe Reviewable, type: :model do
       r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
       expect(r1.pending?).to eq(true)
     end
+
+    it "will not resurrect an approved queued reviewable when reusing a flagged reviewable for the same target" do
+      r0 = Fabricate(:reviewable_queued_post)
+      r0.perform(admin, :approve_post)
+      expect(r0.reload.status).to eq("approved")
+
+      r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+      expect(r1.pending?).to eq(true)
+
+      ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+
+      expect(r1.reload.pending?).to eq(true)
+      expect(r0.reload.status).to eq("approved")
+    end
+  end
+
+  describe ".viewable_by" do
+    fab!(:admin)
+    fab!(:pm_author, :user)
+    fab!(:pm_recipient, :user)
+    fab!(:outsider_moderator, :moderator)
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_author, recipient: pm_recipient) }
+    fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_author) }
+    fab!(:reviewable) do
+      ReviewablePost.needs_review!(
+        target: pm_post,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+      )
+    end
+
+    it "excludes private-message reviewables from moderators outside the conversation" do
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: reviewable.id)
+    end
+
+    it "includes private-message reviewables for admins" do
+      expect(described_class.viewable_by(admin)).to exist(id: reviewable.id)
+    end
+
+    it "includes private-message reviewables for participating moderators" do
+      participant_moderator = Fabricate(:moderator)
+      participant_topic =
+        Fabricate(:private_message_topic, user: pm_author, recipient: participant_moderator)
+      participant_post = Fabricate(:post, topic: participant_topic, user: pm_author)
+      participant_reviewable =
+        ReviewablePost.needs_review!(
+          target: participant_post,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+
+      expect(described_class.viewable_by(participant_moderator)).to exist(
+        id: participant_reviewable.id,
+      )
+    end
   end
 
   describe ".list_for" do
@@ -349,6 +404,35 @@ RSpec.describe Reviewable, type: :model do
       expect(Reviewable.source_for(ReviewableQueuedPost)).to eq("core")
       expect(Reviewable.source_for(ReviewableUser)).to eq("core")
       expect(Reviewable.source_for("NonExistentType")).to eq("unknown")
+    end
+  end
+
+  describe "loading a reviewable whose type is no longer defined" do
+    fab!(:admin)
+    fab!(:reviewable, :reviewable_flagged_post)
+
+    before { reviewable.update_columns(type: "ReviewableDoesntExist", type_source: "some-plugin") }
+
+    it "loads it as an unknown type instead of raising" do
+      unknown = Reviewable.find(reviewable.id)
+
+      expect(unknown).to be_a(Reviewable::UnknownType)
+      expect(unknown.type).to eq("ReviewableDoesntExist")
+      expect(unknown.actions_for(admin.guardian).to_a).to be_empty
+    end
+
+    it "keeps the type and source when transitioned" do
+      unknown = Reviewable.find(reviewable.id)
+
+      expect(unknown.transition_to(:ignored, admin)).to eq(true)
+
+      expect(Reviewable.where(id: reviewable.id).pick(:type, :type_source)).to eq(
+        %w[ReviewableDoesntExist some-plugin],
+      )
+    end
+
+    it "is excluded from the review queue" do
+      expect(Reviewable.list_for(admin)).to be_empty
     end
   end
 
@@ -728,9 +812,10 @@ RSpec.describe Reviewable, type: :model do
     after { Reviewable.clear_custom_filters! }
 
     it "correctly add a new filter" do
-      Reviewable.add_custom_filter([:assigned_to, Proc.new { |results, value| results }])
+      custom_filter = [:assigned_to, Proc.new { |results, value| results }]
+      Reviewable.add_custom_filter(custom_filter)
 
-      expect(Reviewable.custom_filters.size).to eq(1)
+      expect(Reviewable.custom_filters).to include(custom_filter)
     end
 
     it "applies the custom filter" do
@@ -745,6 +830,65 @@ RSpec.describe Reviewable, type: :model do
 
       expect(results.size).to eq(1)
       expect(results.first).to eq first_reviewable
+    end
+
+    it "exposes a custom filter through the Type and Reason filters" do
+      admin = Fabricate(:admin)
+      type_reviewable = Fabricate(:reviewable)
+      reason_reviewable = Fabricate(:reviewable)
+
+      Reviewable.add_custom_filter(
+        [:source, Proc.new { |results, value| results.where(id: value) }],
+        type_filter: {
+          id: "custom_source",
+          value: type_reviewable.id,
+        },
+        reason_filters: -> do
+          [{ id: "custom_source:reason", name: "Custom reason", value: reason_reviewable.id }]
+        end,
+      )
+
+      expect(Reviewable.valid_type?("custom_source")).to eq(false)
+      expect(Reviewable.valid_filter_type?("custom_source")).to eq(true)
+      expect(Reviewable.custom_filter_type_options).to include(
+        { id: "custom_source", value: type_reviewable.id, filter: :source },
+      )
+      expect(Reviewable.custom_reason_filter_options).to include(
+        {
+          id: "custom_source:reason",
+          name: "Custom reason",
+          value: reason_reviewable.id,
+          filter: :source,
+        },
+      )
+      expect(Reviewable.list_for(admin, type: "custom_source")).to contain_exactly(type_reviewable)
+      expect(Reviewable.list_for(admin, score_type: "custom_source:reason")).to contain_exactly(
+        reason_reviewable,
+      )
+    end
+
+    it "composes multiple custom filters" do
+      admin = Fabricate(:admin)
+      first_reviewable = Fabricate(:reviewable)
+      second_reviewable = Fabricate(:reviewable)
+
+      Reviewable.add_custom_filter(
+        [:first_id, Proc.new { |results, value| results.where(id: value) }],
+      )
+      Reviewable.add_custom_filter(
+        [:second_id, Proc.new { |results, value| results.where(id: value) }],
+      )
+
+      results =
+        Reviewable.list_for(
+          admin,
+          additional_filters: {
+            first_id: first_reviewable.id,
+            second_id: second_reviewable.id,
+          },
+        )
+
+      expect(results).to be_empty
     end
 
     context "when listing for a moderator with a custom filter that joins tables with same named columns" do
@@ -789,12 +933,14 @@ RSpec.describe Reviewable, type: :model do
 
     it "gets the bundles and actions for a reviewable" do
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.map(&:id)).to eq(["approve_post", "#{reviewable.id}-reject-post"])
-      expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
-        ["approve_post"],
+      expect(actions.bundles.map(&:id)).to eq(
+        ["#{reviewable.id}-approve_post", "#{reviewable.id}-reject-post"],
       )
       expect(
-        actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }.actions.map(&:id),
+        actions.bundles.find { |b| b.bundle_id == "approve_post" }.actions.map(&:action_name),
+      ).to eq(["approve_post"])
+      expect(
+        actions.bundles.find { |b| b.bundle_id == "reject-post" }.actions.map(&:action_name),
       ).to eq(%w[reject_post revise_and_reject_post])
     end
 

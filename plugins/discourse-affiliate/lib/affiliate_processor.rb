@@ -57,6 +57,10 @@ class AffiliateProcessor
     @rules = rules
   end
 
+  def self.apply_to_doc(doc)
+    doc.css("a[href]").each { |a| a["href"] = apply(a["href"]) }
+  end
+
   def self.apply(url)
     uri = URI.parse(url)
 

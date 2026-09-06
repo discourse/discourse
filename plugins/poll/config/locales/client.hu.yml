@@ -53,6 +53,8 @@ hu:
       cast-votes:
         title: "Szavazat leadása"
         label: "Szavazzon most!"
+      keep-vote:
+        label: "Vissza"
       show-results:
         title: "Eredmények megjelenítése"
         label: "Eredmények"
@@ -159,5 +161,3 @@ hu:
           add: Lehetőség hozzáadása
         automatic_close:
           label: Szavazás automatikus lezárása
-        show_advanced: "Speciális beállítások megjelenítése"
-        hide_advanced: "Speciális beállítások elrejtése"

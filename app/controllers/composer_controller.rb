@@ -46,9 +46,10 @@ class ComposerController < ApplicationController
         .values
         .each_with_object({}) do |group, hash|
           name = group.name.downcase
-          serialized_group = { user_count: group.user_count }
+          members_visible = members_visible_group_ids.include?(group.id)
+          serialized_group = members_visible ? { user_count: group.user_count } : {}
 
-          if group_reasons[name] == :not_allowed && members_visible_group_ids.include?(group.id) &&
+          if group_reasons[name] == :not_allowed && members_visible &&
                (@topic&.private_message? || @allowed_names.present?)
             notified_count = already_notified_member_count(group)
 

@@ -51,7 +51,6 @@ module CategoryBadge
         end
       end || "--style-square"
     class_names = "badge-category #{style_class} #{data[:parent_category] ? "--has-parent" : ""}"
-    description = category.description_text ? "title='#{category.description_text}'" : ""
 
     badge_styles = {
       "--category-badge-color": "##{category.color}",
@@ -65,7 +64,7 @@ module CategoryBadge
     result << "<span data-category-id='#{category.id}'"
     result << " style='#{map_styles_to_string(badge_styles)}'"
     result << " data-parent-category-id='#{data[:parent_category].id}'" if data[:parent_category]
-    result << " data-drop-close='true' class='#{class_names}' #{description}>"
+    result << " data-drop-close='true' class='#{class_names}'>"
 
     if category.style_type == "icon" && category.icon.present?
       result << SvgSprite.raw_svg(category.icon)

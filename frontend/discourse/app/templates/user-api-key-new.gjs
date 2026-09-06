@@ -1,6 +1,7 @@
 import { on } from "@ember/modifier";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -115,7 +116,11 @@ export default <template>
               type="submit"
               class="btn-primary"
             />
-            <DButton @href="/" @label="user_api_key.deny" class="btn-default" />
+            <DButton
+              @href={{getURL "/"}}
+              @label="user_api_key.deny"
+              class="btn-default"
+            />
           </div>
         </form>
       {{/if}}

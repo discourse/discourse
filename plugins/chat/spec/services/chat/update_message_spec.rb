@@ -82,13 +82,13 @@ RSpec.describe Chat::UpdateMessage do
       expect(chat_message.reload.message).to eq(og_message)
     end
 
-    it "errors when length is greater than `chat_maximum_message_length`" do
+    it "rejects an over-length edit at the contract" do
       SiteSetting.chat_maximum_message_length = 100
       og_message = "This won't be changed!"
       chat_message = create_chat_message(user1, og_message, public_chat_channel)
       new_message = "2 long" * 100
 
-      expect do
+      result =
         described_class.call(
           guardian: guardian,
           params: {
@@ -97,14 +97,9 @@ RSpec.describe Chat::UpdateMessage do
             message: new_message,
           },
         )
-      end.to raise_error(ActiveRecord::RecordInvalid).with_message(
-        "Validation failed: " +
-          I18n.t(
-            "chat.errors.message_too_long",
-            { count: SiteSetting.chat_maximum_message_length },
-          ),
-      )
 
+      expect(result).to fail_a_contract
+      expect(result.params.errors.of_kind?(:message, :too_long)).to eq(true)
       expect(chat_message.reload.message).to eq(og_message)
     end
 
@@ -1055,12 +1050,6 @@ RSpec.describe Chat::UpdateMessage do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when user can't modify a channel message" do
-      before { channel_1.update!(status: :read_only) }
-
-      it { is_expected.to fail_a_policy(:can_modify_channel_message) }
-    end
-
     context "when user is not member of the channel" do
       fab!(:channel_2, :chat_channel)
       fab!(:other_message) { Fabricate(:chat_message, chat_channel: channel_2) }
@@ -1075,6 +1064,24 @@ RSpec.describe Chat::UpdateMessage do
       end
 
       it { is_expected.to fail_to_find_a_model(:membership) }
+    end
+
+    context "when user can't edit the message" do
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+      it { is_expected.to fail_a_policy(:can_edit_message) }
+
+      context "when the channel is also closed" do
+        before { channel_1.update!(status: :closed) }
+
+        it { is_expected.to fail_a_policy(:can_edit_message) }
+      end
+    end
+
+    context "when the channel doesn't allow modifying messages" do
+      before { channel_1.update!(status: :read_only) }
+
+      it { is_expected.to fail_a_policy(:channel_allows_message_modification) }
     end
 
     context "when edit grace period" do

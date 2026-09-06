@@ -6,6 +6,7 @@ import "./loader-shims";
 import "./ui-kit-shims";
 import "./module-shims";
 import "./discourse-common-loader-shims";
+import "@warp-drive/ember/install";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 import { registerSettings } from "discourse/lib/theme-settings-store";
@@ -22,7 +23,10 @@ import { importSync } from "@embroider/macros";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { populatePreloadStore } from "discourse/lib/preload-store";
+import {
+  populatePreloadStore,
+  readPreloadedData,
+} from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
 
 populatePreloadStore();
@@ -49,7 +53,10 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  lookup(moduleName) {
+  lookup(moduleName, optional = false) {
+    if (optional && !require.has(moduleName)) {
+      return {};
+    }
     return require(moduleName);
   },
 };
@@ -69,7 +76,7 @@ async function loadThemeFromModulePreload(link) {
     );
 
     if (DEBUG && (isRailsTesting() || isTesting())) {
-      throw new Error(error);
+      throw new Error(error, { cause: error });
     }
 
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
@@ -84,27 +91,26 @@ async function loadPluginFromModulePreload(link) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(
-      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
-      String(error)
-    );
-
     if (DEBUG) {
       if (isRailsTesting() || isTesting()) {
-        throw new Error(error);
+        throw new Error(error, { cause: error });
       }
 
       let { addError } = importSync("discourse/static/development-error");
       addError(error, link.dataset.pluginName, link.href);
     }
+
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      String(error)
+    );
   }
 }
 
 function registerPreloadedThemeSettings() {
   try {
-    const element = document.getElementById("data-preloaded");
-    const preloaded = JSON.parse(element.dataset.preloaded);
+    const preloaded = readPreloadedData();
     const activatedThemes = JSON.parse(preloaded.activatedThemes);
     for (const [themeId, info] of Object.entries(activatedThemes)) {
       registerSettings(parseInt(themeId, 10), info.settings);
@@ -133,7 +139,11 @@ export async function loadThemesAndPlugins() {
 export async function loadAdmin() {
   defineModules(
     "discourse/admin",
-    (await import("discourse/admin/compat-modules")).default
+    (
+      await import(
+        /* dynamicChunkName: "admin" */ "discourse/admin/compat-modules"
+      )
+    ).default
   );
 }
 

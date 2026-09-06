@@ -15,6 +15,7 @@ export default class Icon extends Component {
       @disabled={{@disabled}}
       @showCaret={{true}}
       @showSelectedName={{true}}
+      @onlyAvailable={{false}}
     />
   </template>
 }

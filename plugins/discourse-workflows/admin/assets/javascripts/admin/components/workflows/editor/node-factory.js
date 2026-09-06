@@ -1,5 +1,6 @@
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import { STICKY_NOTE_NAME } from "../../../models/sticky-note";
 import WorkflowNode from "../../../models/workflow-node";
 
 const NODE_DEFAULTS = {
@@ -14,17 +15,24 @@ const NODE_DEFAULTS = {
   }),
 };
 
-export function generateNodeName(identifier, existingNodes) {
-  const baseName = i18n(`discourse_workflows.nodes.${identifier}`);
-
-  const existingNames = new Set(existingNodes.map((n) => n.name));
+export function uniqueNodeName(baseName, takenNames) {
   let name = baseName;
   let counter = 1;
-  while (existingNames.has(name)) {
+  while (takenNames.has(name)) {
     name = `${baseName} ${counter}`;
     counter++;
   }
   return name;
+}
+
+export function defaultNodeName(identifier) {
+  return i18n(`discourse_workflows.nodes.${identifier}`);
+}
+
+// sticky notes serialize under a fixed name and the server rejects executable
+// nodes colliding with it, so it stays reserved even while a workflow has none
+export function takenNodeNames(existingNodes) {
+  return new Set([STICKY_NOTE_NAME, ...existingNodes.map((n) => n.name)]);
 }
 
 export function createNode(
@@ -42,7 +50,10 @@ export function createNode(
   return WorkflowNode.create({
     type: identifier,
     typeVersion: typeVersion || "1.0",
-    name: generateNodeName(identifier, existingNodes),
+    name: uniqueNodeName(
+      defaultNodeName(identifier),
+      takenNodeNames(existingNodes)
+    ),
     configuration: {
       ...(defaultsFn ? defaultsFn() : {}),
       ...(configOverrides || {}),

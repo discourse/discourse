@@ -1,8 +1,14 @@
 /* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action, computed, set } from "@ember/object";
+import EmberObject, {
+  action,
+  computed,
+  getProperties,
+  set,
+} from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
@@ -32,6 +38,7 @@ import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
 import { deepMerge } from "discourse/lib/object";
+import { consumeOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
@@ -58,6 +65,17 @@ let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
 const MIN_BOTTOM_MAP_WORD_COUNT = 200;
+const TOPIC_QUERY_PARAMS = [
+  "filter",
+  "username_filters",
+  "replies_to_post_number",
+  "sort",
+  "context",
+  { collapseReplies: "collapse_replies" },
+];
+const TOPIC_PAGE_QUERY_PARAM_PROPERTIES = TOPIC_QUERY_PARAMS.map((param) =>
+  typeof param === "string" ? param : Object.keys(param)[0]
+);
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
@@ -97,12 +115,7 @@ export default class TopicController extends Controller {
   @autoTrackedArray bookmarks = [];
   @autoTrackedArray selectedPostIds = [];
 
-  queryParams = [
-    "filter",
-    "username_filters",
-    "replies_to_post_number",
-    "flat",
-  ];
+  queryParams = TOPIC_QUERY_PARAMS;
 
   editingTopic = false;
   enteredAt = null;
@@ -112,7 +125,9 @@ export default class TopicController extends Controller {
   username_filters = null;
   replies_to_post_number = null;
   filter = null;
-  flat = null;
+  sort = null;
+  context = null;
+  collapseReplies = false;
   quoteState = new QuoteState();
   currentPostId = null;
   userLastReadPostNumber = null;
@@ -136,6 +151,27 @@ export default class TopicController extends Controller {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("post:show-revision", this, "_showRevision");
+  }
+
+  get nestedController() {
+    return getOwner(this).lookup("controller:nested");
+  }
+
+  @computed(
+    "filter",
+    "username_filters",
+    "replies_to_post_number",
+    "sort",
+    "context",
+    "collapseReplies"
+  )
+  get topicPageQueryParams() {
+    return getProperties(this, TOPIC_PAGE_QUERY_PARAM_PROPERTIES);
+  }
+
+  @computed("model.is_nested_view")
+  get shouldRenderNestedView() {
+    return this.model?.is_nested_view;
   }
 
   @computed("model.isPrivateMessage")
@@ -2020,6 +2056,11 @@ export default class TopicController extends Controller {
       return;
     }
 
+    if (this.shouldRenderNestedView) {
+      this.#onNestedTopicMessage(data);
+      return;
+    }
+
     const postStream = this.get("model.postStream");
     const currentPostNumber = topic.get("currentPost");
     const opts =
@@ -2039,9 +2080,11 @@ export default class TopicController extends Controller {
 
     switch (data.type) {
       case "acted":
-        postStream.triggerChangedPost(data.id, data.updated_at, {
-          preserveCooked: true,
-        });
+        void postStream
+          .triggerChangedPost(data.id, data.updated_at, {
+            preserveCooked: true,
+          })
+          .catch(() => {});
         break;
       case "read": {
         postStream.triggerReadPost(data.id, data.readers_count);
@@ -2059,7 +2102,11 @@ export default class TopicController extends Controller {
       }
       case "revised":
       case "rebaked": {
-        postStream.triggerChangedPost(data.id, data.updated_at);
+        if (!consumeOptimisticPostUpdate(data.preserve_cooked_token)) {
+          void postStream
+            .triggerChangedPost(data.id, data.updated_at)
+            .catch(() => {});
+        }
         break;
       }
       case "deleted": {
@@ -2071,10 +2118,16 @@ export default class TopicController extends Controller {
         break;
       }
       case "recovered": {
-        postStream.triggerRecoveredPost(data.id);
+        void postStream.triggerRecoveredPost(data.id).catch(() => {});
         break;
       }
       case "created": {
+        // The topic view filters out ignored users server-side, do the same
+        // for live updates so the stream stays consistent with a reload
+        if (this.currentUser?.ignored_users?.includes(data.username)) {
+          break;
+        }
+
         this._newPostsInStream.push(data.id);
 
         this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
@@ -2138,11 +2191,72 @@ export default class TopicController extends Controller {
     }
   }
 
+  #onNestedTopicMessage(data) {
+    const topic = this.model;
+
+    if (data.reload_topic) {
+      topic
+        .reload()
+        .then(() => this.appEvents.trigger("header:update-topic", topic));
+      return;
+    }
+
+    switch (data.type) {
+      case "created":
+      case "revised":
+      case "rebaked":
+      case "deleted":
+      case "destroyed":
+      case "recovered":
+      case "acted":
+      case "read":
+      case "liked":
+      case "unliked":
+        // The nested controller owns rendered-post updates for these messages.
+        break;
+      case "move_to_inbox":
+        topic.set("message_archived", false);
+        break;
+      case "archived":
+        topic.set("message_archived", true);
+        break;
+      case "stats":
+        ["last_posted_at", "like_count", "posts_count"].forEach((property) => {
+          const value = data[property];
+          if (typeof value !== "undefined") {
+            topic.set(property, value);
+          }
+        });
+
+        if (data["last_poster"]) {
+          topic.details.set("last_poster", data["last_poster"]);
+        }
+        break;
+      case "remove_allowed_user":
+        this.router.transitionTo("userPrivateMessages", this.currentUser);
+        break;
+      default: {
+        let callback = customPostMessageCallbacks[data.type];
+        if (callback) {
+          callback(this, data);
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn("unknown topic bus message type", data);
+        }
+      }
+    }
+  }
+
   reply() {
     this.replyToPost();
   }
 
   readPosts(topicId, postNumbers) {
+    if (this.shouldRenderNestedView) {
+      this.nestedController.readPosts(topicId, postNumbers);
+      return;
+    }
+
     const topic = this.model;
     const postStream = topic.get("postStream");
 

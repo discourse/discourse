@@ -199,7 +199,7 @@ module Migrations
               SiteSetting.get(existing_id)
             rescue StandardError => e
               # TODO(selase): Adopt importer framework warning implementation once available
-              puts "    #{e.message}"
+              notice(e.message)
               nil
             end
           else

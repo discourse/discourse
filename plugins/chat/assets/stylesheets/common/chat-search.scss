@@ -1,6 +1,9 @@
 .c-routes.--search .c-search {
-  padding-block: 1.25rem;
-  margin-inline: 1rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-block: var(--space-5);
+  margin-inline: var(--space-4);
 }
 
 .c-routes.--search .c-search,

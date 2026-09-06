@@ -17,6 +17,10 @@ module PageObjects
         has_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
       end
 
+      def has_default_report?
+        has_card?(default_report_identifier)
+      end
+
       def has_no_card?(identifier)
         has_no_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
       end
@@ -43,6 +47,13 @@ module PageObjects
         )
       end
 
+      def open_default_report
+        within(
+          "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{default_report_identifier}']",
+        ) { find(".db-report__name").click }
+        self
+      end
+
       def open_manage_reports_via_tile
         find("#{SECTION_SELECTOR} .db-report__add-report").click
         self
@@ -54,7 +65,10 @@ module PageObjects
       end
 
       def manage_reports_modal
-        PageObjects::Components::ManageReportsModal.new
+        PageObjects::Components::ManageableRowListModal.new(
+          ".manage-reports",
+          "admin_js.admin.dashboard.reports_section.modal.counter",
+        )
       end
 
       def has_label_for?(identifier, label)
@@ -74,6 +88,12 @@ module PageObjects
         has_css?(
           "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__empty",
         )
+      end
+
+      private
+
+      def default_report_identifier
+        "#{::AdminDashboard::Reports::CoreReportProvider::SOURCE_NAME}:#{SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first}"
       end
     end
   end

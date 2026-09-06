@@ -86,7 +86,9 @@ export default class ChatModalArchiveChannel extends Component {
     if (this.newTopic) {
       data.title = this.topicTitle;
       data.category_id = this.categoryId;
-      data.tags = this.tags;
+      data.tags = (this.tags ?? []).map((tag) =>
+        typeof tag === "string" ? tag : tag.name
+      );
     }
     if (this.existingTopic) {
       data.topic_id = this.selectedTopicId;

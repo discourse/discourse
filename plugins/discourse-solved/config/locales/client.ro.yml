@@ -12,6 +12,16 @@ ro:
           kpi:
             accepted_solutions:
               label: "Soluții acceptate"
+        sections:
+          support:
+            answerers:
+              staff: "Echipa"
+              member: "Membri"
+              basic: "De bază"
+            response_time:
+              buckets:
+                lt_1h: "< o oră"
+                gt_24h: "> 24 ore"
   js:
     notifications:
       alt:
@@ -52,6 +62,11 @@ ro:
           solved: "sunt rezolvate"
           unsolved: "sunt nerezolvate"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Subiect"
+            category: "Categorie"
       web_hooks:
         solved_event:
           group_name: "Eveniment rezolvat"

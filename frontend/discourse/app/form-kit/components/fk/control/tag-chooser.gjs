@@ -27,6 +27,7 @@ export default class FKControlTagChooser extends FKBaseControl {
         filterPlaceholder=@placeholder
         maximum=@maximum
         mobilePlacement=@mobilePlacement
+        prioritizeRecentTags=@prioritizeRecentTags
       }}
       class="form-kit__control-tag-chooser"
     />

@@ -17,6 +17,25 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [
+            {
+              schema: {
+                "$schema" => Schema::DRAFT_URI,
+                "type" => "object",
+                "properties" => {
+                  "topic_id" => {
+                    "type" => "integer",
+                  },
+                  "tag_names" => {
+                    "type" => "array",
+                    "items" => {
+                      "type" => "string",
+                    },
+                  },
+                },
+              },
+            },
+          ],
           properties: {
             operation: {
               type: :options,
@@ -43,7 +62,7 @@ module DiscourseWorkflows
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
             },
           },
@@ -75,6 +94,7 @@ module DiscourseWorkflows
           if names.empty?
             raise_node_error!(I18n.t("discourse_workflows.errors.topic_tags.no_tag_names"))
           end
+          ensure_can_tag_personal_message!(topic, actor)
 
           case config["operation"]
           when "remove"
@@ -86,6 +106,19 @@ module DiscourseWorkflows
             tag_topic!(topic, guardian, names, append: true)
             { tag_names: names, topic_id: topic.id }
           end
+        end
+
+        def ensure_can_tag_personal_message!(topic, actor)
+          guardian = actor.guardian
+          return if !topic.private_message? || guardian.can_tag_pms?
+          return if !SiteSetting.tagging_enabled || !guardian.authenticated?
+
+          raise_node_error!(
+            I18n.t(
+              "discourse_workflows.errors.topic_tags.personal_message_not_allowed",
+              username: actor.username,
+            ),
+          )
         end
 
         def tag_topic!(topic, guardian, tag_names, append: false)

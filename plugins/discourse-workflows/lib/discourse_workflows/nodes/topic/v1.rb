@@ -4,10 +4,23 @@ module DiscourseWorkflows
   module Nodes
     module Topic
       class V1 < NodeType
-        OPERATIONS = %w[create get list close set_custom_fields].freeze
+        OPERATIONS = %w[create get list close archive bump set_custom_fields].freeze
         MAX_LIMIT = 100
         DEFAULT_LIMIT = 30
         CUSTOM_FIELD_OPTIONS_LIMIT = 100
+
+        TOPIC_POST_SCHEMA =
+          Schema.entity(
+            "post",
+            Schema::POST_PROPERTIES.except(
+              "category_name",
+              "excerpt",
+              "like_count",
+              "tags",
+              "upload_ids",
+            ).merge("category_slug" => { "type" => "string" }),
+            "WebHookPostSerializer payload",
+          )
 
         description(
           name: "action:topic",
@@ -20,6 +33,9 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [
+            { schema: Schema.merge(Schema::TOPIC_LIST_ITEM_SCHEMA, TOPIC_POST_SCHEMA) },
+          ],
           properties: {
             operation: {
               type: :options,
@@ -32,7 +48,21 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: %w[get close set_custom_fields],
+                  operation: %w[get close archive bump set_custom_fields],
+                },
+              },
+            },
+            silent: {
+              type: :boolean,
+              required: false,
+              default: false,
+              ui: {
+                control: :boolean,
+                expression: true,
+              },
+              display_options: {
+                show: {
+                  operation: ["bump"],
                 },
               },
             },
@@ -167,7 +197,7 @@ module DiscourseWorkflows
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
             },
           },
@@ -201,6 +231,7 @@ module DiscourseWorkflows
                 "operation" =>
                   exec_ctx.get_node_parameter("operation", item_index, default: "create"),
                 "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
+                "silent" => exec_ctx.get_node_parameter("silent", item_index, default: false),
                 "title" => exec_ctx.get_node_parameter("title", item_index),
                 "raw" => exec_ctx.get_node_parameter("raw", item_index),
                 "category_id" => exec_ctx.get_node_parameter("category_id", item_index),
@@ -232,12 +263,16 @@ module DiscourseWorkflows
             list_topics(exec_ctx, config, item_index).map { |data| wrap(data) }
           when "close"
             wrap(close_topic(exec_ctx, config, item_index))
+          when "archive"
+            wrap(archive_topic(exec_ctx, config, item_index))
+          when "bump"
+            wrap(bump_topic(exec_ctx, config, item_index))
           when "set_custom_fields"
             wrap(set_custom_fields(exec_ctx, config, item_index))
           else
             raise_node_error!(
               I18n.t(
-                "discourse_workflows.errors.topic.unknown_operation",
+                "discourse_workflows.errors.unknown_operation",
                 operation: config["operation"],
               ),
             )
@@ -274,6 +309,7 @@ module DiscourseWorkflows
 
           {
             topic: exec_ctx.serialize_topic(topic, guardian: guardian),
+            post: post_data(post),
             post_id: post.id,
             post_number: post.post_number,
           }
@@ -293,6 +329,7 @@ module DiscourseWorkflows
                 guardian: actor.guardian,
                 custom_field_names: custom_field_names,
               ),
+            post: post_data(topic.first_post),
           }
         end
 
@@ -301,7 +338,11 @@ module DiscourseWorkflows
           offset = [Integer(config["offset"] || 0), 0].max
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           topic_query =
-            TopicQuery.new(actor, q: config["query"], per_page: [limit + offset, MAX_LIMIT].min)
+            TopicQuery.new(
+              actor.guardian.user,
+              q: config["query"],
+              per_page: [limit + offset, MAX_LIMIT].min,
+            )
           topic_list = topic_query.list_filter
 
           topics = topic_list.topics.slice(offset, limit) || []
@@ -321,6 +362,7 @@ module DiscourseWorkflows
                   guardian: actor.guardian,
                   custom_field_names: custom_field_names,
                 ),
+              post: post_data(topic.first_post),
             }
           end
         end
@@ -332,7 +374,52 @@ module DiscourseWorkflows
 
           topic.update_status("closed", true, actor)
 
-          { topic: exec_ctx.serialize_topic(topic.reload, guardian: actor.guardian) }
+          topic.reload
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: actor.guardian),
+            post: post_data(topic.first_post),
+          }
+        end
+
+        def archive_topic(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          guardian.ensure_can_archive_topic!(topic)
+
+          topic.update_status("archived", true, actor)
+
+          topic.reload
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
+            post: post_data(topic.first_post),
+          }
+        end
+
+        def bump_topic(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          guardian.ensure_can_see!(topic)
+          guardian.ensure_can_update_bumped_at!
+
+          if config["silent"].present?
+            topic.update_column(:bumped_at, Time.zone.now)
+          elsif topic.add_small_action(
+                actor,
+                "autobumped",
+                nil,
+                bump: true,
+                skip_guardian: true,
+              ).blank?
+            raise_node_error!(I18n.t("discourse_workflows.errors.topic.bump_failed"))
+          end
+
+          topic.reload
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
+            post: post_data(topic.first_post),
+          }
         end
 
         def set_custom_fields(exec_ctx, config, item_index)
@@ -364,6 +451,12 @@ module DiscourseWorkflows
 
             fields[key] = entry["value"]
           end
+        end
+
+        def post_data(post)
+          return if post.blank?
+
+          serialize_record(post, WebHookPostSerializer)
         end
       end
     end

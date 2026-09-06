@@ -9,7 +9,6 @@ cs:
     chat_separate_sidebar_mode: "Zobrazit samostatné režimy postranního panelu pro fórum a chat."
     chat_enabled: "Povolit chat."
     enable_public_channels: "Povolit veřejné kanály založené na kategoriích."
-    chat_allowed_groups: "Uživatelé v těchto skupinách mohou chatovat. Upozorňujeme, že správci a moderátoři mají k chatu vždy přístup."
     chat_channel_retention_days: "Zprávy chatu v běžných kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
     chat_dm_retention_days: "Zprávy chatu v soukromých kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
     chat_auto_silence_duration: "Počet minut, po které budou uživatelé ztišeni, pokud překročí limit rychlosti vytváření zpráv chatu. Nastavením na hodnotu \"0\" automatické ztišování vypnete."

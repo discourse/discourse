@@ -47,6 +47,14 @@ module PageObjects
         find_item(@setting_name).has_no_css?(".upcoming-change__status-notice")
       end
 
+      def has_depends_on_notice?(text)
+        find_item(@setting_name).has_css?(".upcoming-change__depends-on-notice", text: text)
+      end
+
+      def has_no_depends_on_notice?
+        find_item(@setting_name).has_no_css?(".upcoming-change__depends-on-notice")
+      end
+
       def select_enabled_for(option)
         enabled_for_dropdown.select(option)
       end
@@ -68,7 +76,7 @@ module PageObjects
       end
 
       def enabled_for_dropdown
-        PageObjects::Components::DSelect.new(
+        PageObjects::Components::DNativeSelect.new(
           "#{change_item_selector(@setting_name)} .upcoming-change__enabled-for",
         )
       end

@@ -8,6 +8,9 @@ let _moreLanguages = [];
 let _plugins = [];
 let hljsLoadPromise;
 
+// bounds language detection cost, which scales with content length
+const AUTO_DETECT_SAMPLE_LENGTH = 2000;
+
 export default async function highlightSyntax(elem, siteSettings, session) {
   if (!elem) {
     return;
@@ -28,11 +31,6 @@ export default async function highlightSyntax(elem, siteSettings, session) {
   const hljs = await ensureHighlightJs(path);
 
   codeblocks.forEach((e) => {
-    // Large code blocks can cause crashes or slowdowns
-    if (e.innerHTML.length > 30000) {
-      return;
-    }
-
     let lang;
     for (const className of e.classList) {
       const m = className.match(/^lang(?:uage)?-(.+)$/);
@@ -42,14 +40,33 @@ export default async function highlightSyntax(elem, siteSettings, session) {
       }
     }
 
-    if (lang === "auto" && e.innerHTML.length > 1000) {
+    const autodetect = lang === "auto";
+    if (autodetect) {
+      // not a real hljs language — remove even from blocks skipped below
+      e.classList.remove("lang-auto");
+    }
+
+    // Large code blocks can cause crashes or slowdowns
+    if (e.innerHTML.length > 30000) {
       return;
     }
 
-    const canHighlight = lang && (lang === "auto" || hljs.getLanguage(lang));
+    if (autodetect) {
+      const text = e.textContent;
+      const { language } = hljs.highlightAuto(
+        text.trimStart().slice(0, AUTO_DETECT_SAMPLE_LENGTH)
+      );
 
-    if (canHighlight) {
-      e.classList.remove("lang-auto"); // This isn't a real hljs language. HLJS will warn if it's present, so we remove it.
+      if (language) {
+        // highlightElement will use this grammar instead of re-detecting
+        e.classList.add(`language-${language}`);
+      } else if (text.length > AUTO_DETECT_SAMPLE_LENGTH) {
+        // too large for a full re-scan; smaller blocks fall through
+        return;
+      }
+
+      hljs.highlightElement(e);
+    } else if (lang && hljs.getLanguage(lang)) {
       hljs.highlightElement(e);
     } else {
       // To make debugging easier, add a data attribute to indicate we skipped it
@@ -74,7 +91,7 @@ export async function ensureHighlightJs(langFile) {
 
 async function loadHighlightJs(langFile) {
   const [hljsModule, languageInitializer] = await Promise.all([
-    import("highlight.js/lib/core"),
+    import(/* dynamicChunkName: "highlightjs" */ "highlight.js/lib/core"),
     loadLanguageInitializer(langFile),
   ]);
 
@@ -91,9 +108,15 @@ async function loadLanguageInitializer(langFile) {
   if (DEBUG && isTesting()) {
     // Rails server is not available. Load up three languages direct from node_modules
     const [javascript, sql, ruby] = await Promise.all([
-      import("highlight.js/lib/languages/javascript"),
-      import("highlight.js/lib/languages/sql"),
-      import("highlight.js/lib/languages/ruby"),
+      import(
+        /* dynamicChunkName: "highlightjs-javascript" */ "highlight.js/lib/languages/javascript"
+      ),
+      import(
+        /* dynamicChunkName: "highlightjs-sql" */ "highlight.js/lib/languages/sql"
+      ),
+      import(
+        /* dynamicChunkName: "highlightjs-ruby" */ "highlight.js/lib/languages/ruby"
+      ),
     ]);
 
     return (hljs) => {

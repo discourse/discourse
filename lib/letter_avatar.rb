@@ -31,6 +31,7 @@ class LetterAvatar
       "tmp/letter_avatars/#{version}"
     end
 
+    # Run `script/letter_avatar_pixel_diff` to inspect rendering changes.
     def generate(username, size, opts = nil)
       DistributedMutex.synchronize("letter_avatar_#{version}_#{username}") do
         identity = (opts && opts[:identity]) || LetterAvatar::Identity.from_username(username)
@@ -96,7 +97,11 @@ class LetterAvatar
         #{filename}
       ]
 
-      Discourse::Utils.execute_command("magick", *instructions)
+      ImageMagick.magick(
+        *instructions,
+        operation: :letter_avatar_render,
+        write: [File.dirname(filename)],
+      )
 
       ## do not optimize image, it will end up larger than original
       filename
@@ -109,13 +114,13 @@ class LetterAvatar
 
     def image_magick_version
       @image_magick_version ||=
-        begin
-          Thread.new do
-            sleep 2
-            cleanup_old
-          end
-          Digest::MD5.hexdigest(`magick --version` << `magick -list font`)
-        end
+        Digest::MD5.hexdigest(
+          ImageMagick.magick("--version", operation: :letter_avatar_version) << ImageMagick.magick(
+            "-list",
+            "font",
+            operation: :letter_avatar_font_list,
+          ),
+        )
     end
 
     def cleanup_old

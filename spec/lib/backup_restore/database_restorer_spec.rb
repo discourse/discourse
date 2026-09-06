@@ -147,6 +147,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
 
         expect(log).to include("CREATE TABLE public.foo")
         expect(log).not_to be_blank
+        expect(log).not_to include("SET transaction_timeout")
         expect(log).not_to include("CREATE EXTENSION")
         expect(log).not_to include("COMMENT ON EXTENSION")
         expect(log).not_to include(

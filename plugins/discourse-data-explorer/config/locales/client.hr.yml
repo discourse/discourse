@@ -26,6 +26,10 @@ hr:
           no: "Ne"
       save: "Zabilježi promjene"
       delete: "Izbriši"
+      chart:
+        form:
+          label: "Vrsta grafikona"
+          bar: "Trakasti (Bar)"
       result_count:
         one: "%{count} rezultat."
         few: "%{count} rezultata."

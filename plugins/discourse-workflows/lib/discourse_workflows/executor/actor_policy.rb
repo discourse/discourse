@@ -8,6 +8,7 @@ module DiscourseWorkflows
       end
 
       def ensure_allowed!(actor, field:, item_index:, source:, purpose:)
+        return true if actor.is_a?(DiscourseWorkflows::AnonymousActor)
         raise Discourse::InvalidAccess if actor.blank?
         raise Discourse::InvalidAccess if actor.staged?
         raise Discourse::InvalidAccess if actor.silenced?

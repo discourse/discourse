@@ -1,0 +1,7 @@
+interface:
+  display_name: "Discourse Admin UI"
+  short_description: "Build consistent Discourse admin screens"
+  default_prompt: "Use $discourse-admin-ui to build a consistent Discourse admin interface."
+
+policy:
+  allow_implicit_invocation: true

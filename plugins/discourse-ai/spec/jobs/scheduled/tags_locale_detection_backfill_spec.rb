@@ -10,7 +10,6 @@ describe Jobs::TagsLocaleDetectionBackfill do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
-    SiteSetting.ai_translation_backfill_max_age_days = 30
     SiteSetting.content_localization_supported_locales = "en"
   end
 

@@ -26,8 +26,8 @@ class ReviewableSerializer < ApplicationSerializer
 
   attribute :status_for_database, key: :status
 
-  has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
   has_one :target_created_by, root: "users"
+  has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
   has_one :target_deleted_by, serializer: BasicUserSerializer, root: "users"
   has_one :topic, serializer: ListableTopicSerializer
   has_many :editable_fields, serializer: ReviewableEditableFieldSerializer, embed: :objects
@@ -35,6 +35,7 @@ class ReviewableSerializer < ApplicationSerializer
   has_many :bundled_actions, serializer: ReviewableBundledActionSerializer
   has_many :reviewable_notes, serializer: ReviewableNoteSerializer
   has_many :reviewable_histories, serializer: ReviewableHistorySerializer
+  has_many :author_penalties, serializer: ReviewableAuthorPenaltySerializer, embed: :objects
   has_one :claimed_by, serializer: ReviewableClaimedTopicSerializer
 
   # Used to keep track of our payload attributes

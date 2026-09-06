@@ -182,6 +182,7 @@ RSpec.describe "DiscoursePoll endpoints" do
     fab!(:user2, :user)
     fab!(:user3, :user)
     fab!(:user4, :user)
+    fab!(:admin)
 
     fab!(:post) { Fabricate(:post, raw: <<~SQL) }
       [poll type=multiple public=true min=1 max=2]
@@ -195,6 +196,34 @@ RSpec.describe "DiscoursePoll endpoints" do
       - Red
       - Blue
       - Yellow
+      [/poll]
+      SQL
+
+    fab!(:post_with_staff_only_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll public=true results=staff_only]
+      - A
+      - B
+      [/poll]
+      SQL
+
+    fab!(:post_with_on_close_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll public=true results=on_close]
+      - A
+      - B
+      [/poll]
+      SQL
+
+    fab!(:post_with_on_vote_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll public=true results=on_vote]
+      - A
+      - B
+      [/poll]
+      SQL
+
+    fab!(:post_with_secret_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll public=false results=always]
+      - A
+      - B
       [/poll]
       SQL
 
@@ -344,6 +373,85 @@ RSpec.describe "DiscoursePoll endpoints" do
 
       expect(response.status).to eq(400)
       expect(response.body).to include("user_field_name")
+    end
+
+    it "only returns grouped tallies to users who can see poll results" do
+      SiteSetting.poll_groupable_user_fields = "something"
+
+      [
+        post_with_staff_only_poll,
+        post_with_on_close_poll,
+        post_with_on_vote_poll,
+        post_with_secret_poll,
+      ].each do |poll_post|
+        DiscoursePoll::Poll.vote(user2, poll_post.id, DiscoursePoll::DEFAULT_POLL_NAME, [option_a])
+      end
+
+      [
+        post_with_staff_only_poll,
+        post_with_on_close_poll,
+        post_with_on_vote_poll,
+      ].each do |poll_post|
+        get "/polls/grouped_poll_results.json",
+            params: {
+              post_id: poll_post.id,
+              poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+              user_field_name: "something",
+            }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
+        expect(response.parsed_body).not_to have_key("grouped_results")
+      end
+
+      sign_in(admin)
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_staff_only_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body).to have_key("grouped_results")
+
+      sign_in(user1)
+      post_with_on_close_poll.polls.first.update!(status: :closed)
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_on_close_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body).to have_key("grouped_results")
+
+      DiscoursePoll::Poll.vote(
+        user1,
+        post_with_on_vote_poll.id,
+        DiscoursePoll::DEFAULT_POLL_NAME,
+        [option_b],
+      )
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_on_vote_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body).to have_key("grouped_results")
+
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_secret_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body).to have_key("grouped_results")
     end
 
     context "when topic is in a private category" do

@@ -32,6 +32,10 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
             "User %{user} commented on %{topic} at %{time}",
           mixed_placeholders:
             "Welcome %{username}! You have %{count} messages.",
+          pluralized_placeholders: {
+            one: "%{username} sent %{count} message.",
+            other: "%{username} sent %{count} messages.",
+          },
           repeated_placeholders: "Welcome %{username}! Hello %{username}!",
           user: {
             profile_possessive: "Profil de %{username}",
@@ -148,6 +152,25 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
     );
 
     assert.dom().hasText("Welcome alice ! You have 5 messages.");
+    assert.dom("a[data-user-card='alice']").exists();
+  });
+
+  test("renders a pluralized translation with a component placeholder", async function (assert) {
+    await render(
+      <template>
+        <DInterpolatedTranslation
+          @key="pluralized_placeholders"
+          @options={{hash count=5}}
+          as |Placeholder|
+        >
+          <Placeholder @name="username">
+            <DUserLink @username="alice">alice</DUserLink>
+          </Placeholder>
+        </DInterpolatedTranslation>
+      </template>
+    );
+
+    assert.dom().hasText("alice sent 5 messages.");
     assert.dom("a[data-user-card='alice']").exists();
   });
 

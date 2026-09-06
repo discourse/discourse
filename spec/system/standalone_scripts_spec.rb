@@ -111,6 +111,27 @@ describe "Standalone scripts" do
 
       try_until_success { expect(pageview_requests).not_to be_empty }
     end
+
+    it "does not send tracking requests when request tracking is disabled in development" do
+      original_track_requests = ENV.delete("TRACK_REQUESTS")
+      Rails.env.stubs(:development?).returns(true)
+      tracking_requests = []
+      page.driver.with_playwright_page do |pw_page|
+        pw_page.on(
+          "request",
+          lambda do |request|
+            tracking_requests << request.url if request.url.match?(%r{/(pageview|srv/pv)$})
+          end,
+        )
+      end
+
+      visit("/safe-mode")
+
+      page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(100) }
+      expect(tracking_requests).to eq([])
+    ensure
+      ENV["TRACK_REQUESTS"] = original_track_requests if original_track_requests
+    end
   end
 
   describe "publish.js" do

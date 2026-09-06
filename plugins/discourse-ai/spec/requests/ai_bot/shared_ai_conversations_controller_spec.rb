@@ -12,6 +12,7 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:attacker) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic)
   fab!(:pm, :private_message_topic)
   fab!(:user_pm) { Fabricate(:private_message_topic, recipient: user) }
@@ -281,6 +282,45 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
           expect(shared_conversation.target.posts.second.reload.cooked).not_to eq(post_2_cooked)
           expect(shared_conversation.target.posts.second.reload.cooked).to include("secure-uploads")
         end
+
+        it "marks uploads back as secure when unsharing after the source topic was trashed" do
+          shared_conversation.target.trash!
+
+          delete "#{path}/#{shared_conversation.share_key}.json"
+          expect(response).to have_http_status(:success)
+          expect(upload_1.reload.secure).to eq(true)
+          expect(upload_2.reload.secure).to eq(true)
+        end
+      end
+
+      context "when ai artifacts are in lax mode" do
+        before { SiteSetting.ai_artifact_security = "lax" }
+
+        it "marks artifacts private when unsharing after the source topic was trashed" do
+          first_post = user_pm_share.posts.first
+          artifact =
+            AiArtifact.create!(
+              user: bot_user,
+              post: first_post,
+              name: "test",
+              html: "<div>test</div>",
+            )
+
+          first_post.update!(raw: <<~RAW)
+              This is a post with an artifact
+
+              <div class="ai-artifact" data-ai-artifact-id="#{artifact.id}"></div>
+            RAW
+
+          conversation = SharedAiConversation.share_conversation(user, user_pm_share)
+          expect(artifact.reload.public?).to eq(true)
+
+          user_pm_share.trash!
+
+          delete "#{path}/#{conversation.share_key}.json"
+          expect(response).to have_http_status(:success)
+          expect(artifact.reload.public?).to eq(false)
+        end
       end
     end
 
@@ -394,6 +434,21 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
     end
   end
 
+  describe "GET /onebox" do
+    it "does not expose a trashed conversation through a local onebox preview" do
+      source_post = user_pm_share.posts.last
+      source_post.update!(raw: "private transcript excerpt")
+      conversation = SharedAiConversation.share_conversation(user, user_pm_share)
+      user_pm_share.trash!
+
+      sign_in(attacker)
+      get "/onebox.json", params: { url: conversation.url }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).not_to include(source_post.raw)
+    end
+  end
+
   describe "GET show" do
     it "redirects to home page if site require login" do
       SiteSetting.login_required = true
@@ -413,6 +468,22 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
       get "#{path}/#{shared_conversation.share_key}.json"
       expect(response.parsed_body["llm_name"]).to eq("Claude-2")
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "returns not found when the source topic has been trashed" do
+      share_key = shared_conversation.share_key
+      user_pm_share.trash!
+
+      get "#{path}/#{share_key}.json"
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns not found when a shared source post has been trashed" do
+      share_key = shared_conversation.share_key
+      user_pm_share.posts.last.trash!
+
+      get "#{path}/#{share_key}.json"
+      expect(response).to have_http_status(:not_found)
     end
 
     it "returns an error if the shared conversation is not found" do

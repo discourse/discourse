@@ -12,7 +12,7 @@ module Chat
     end
 
     def excerpt
-      object.excerpt || object.build_excerpt
+      object.excerpt_for_display
     end
   end
 end

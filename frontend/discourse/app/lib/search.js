@@ -20,7 +20,7 @@ import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 const translateResultsCallbacks = [];
-const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
+export const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
 
 const logSearchLinkClickedCallbacks = [];
 
@@ -189,7 +189,14 @@ export function searchForTerm(term, opts) {
     };
   }
 
-  let ajaxPromise = ajax("/search/query", { data });
+  const sessionId = document.querySelector(
+    "meta[name=discourse-track-view-session-id]"
+  )?.content;
+  const headers = sessionId
+    ? { "Discourse-Pageview-Session-Id": sessionId }
+    : {};
+
+  let ajaxPromise = ajax("/search/query", { data, headers });
   const promise = ajaxPromise.then((res) => translateResults(res, opts));
   promise.abort = ajaxPromise.abort;
   return promise;
@@ -308,6 +315,16 @@ export function updateRecentSearches(currentUser, term) {
 
   recentSearches.unshift(term);
   currentUser.set("recent_searches", recentSearches);
+
+  // kept in step so a just-run search orders against other histories by time
+  const detailed = (currentUser.recent_searches_detailed || []).filter(
+    (entry) => entry.term !== term
+  );
+  detailed.unshift({ term, at: new Date().toISOString() });
+  currentUser.set(
+    "recent_searches_detailed",
+    detailed.slice(0, MAX_RECENT_SEARCHES)
+  );
 }
 
 export function logSearchLinkClick(params) {

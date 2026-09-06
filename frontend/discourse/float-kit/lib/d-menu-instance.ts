@@ -1,0 +1,214 @@
+import { tracked } from "@glimmer/tracking";
+import { isDestroying } from "@ember/destroyable";
+import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
+import Owner, { getOwner, setOwner } from "@ember/owner";
+import { cancel } from "@ember/runloop";
+import { service } from "@ember/service";
+import {
+  type FloatCloseOptions,
+  type FloatKitTrigger,
+  MENU,
+  type MenuOptions,
+} from "discourse/float-kit/lib/constants";
+import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
+import type MenuService from "discourse/float-kit/services/menu";
+import { animateClosing } from "discourse/lib/animation-utils";
+
+/**
+ * The concrete float instance backing a menu. It holds the menu's options,
+ * open/close state, and portal outlet, and implements the trigger and lifecycle
+ * hooks that `FloatKitInstance` orchestrates. A menu refocuses its trigger when
+ * it closes.
+ */
+export default class DMenuInstance extends FloatKitInstance {
+  @service declare menu: MenuService;
+
+  /** Whether the menu is currently open. */
+  @tracked expanded = false;
+
+  /**
+   * Whether the trigger is disabled. While true, a trigger event (click/focus/hover/hold) does
+   * not open the menu — the single reactive veto for every listener the base wires once at
+   * registration. `<DMenu>` keeps this in sync with its `@disabled` argument; it does not touch
+   * focusability or the trigger's own ARIA, which stay the caller's concern.
+   */
+  @tracked disabled = false;
+
+  /**
+   * Whether the menu's trigger is managed outside the `<DMenu />` component. It
+   * is set when the menu is created through the `menu` service, where the
+   * trigger and content live in separate parts of the DOM and are rendered by
+   * `DHeadlessMenu` rather than by `DMenu`.
+   */
+  @tracked detachedTrigger = false;
+
+  /**
+   * The merged menu options: the defaults from `MENU.options` with the caller's
+   * overrides applied in the constructor.
+   */
+  @tracked options: MenuOptions;
+  @tracked portalOutletOverrideElement?: HTMLElement | null;
+
+  @tracked _trigger: FloatKitTrigger;
+
+  constructor(owner: Owner, options: Partial<MenuOptions> = {}) {
+    super();
+
+    setOwner(this, owner);
+
+    const merged = { ...MENU.options, ...options };
+
+    // `trapTab` defaults to true and the two are alternatives, so inline ordering has to switch
+    // it off itself or every caller would carry a second flag. An explicit `trapTab: true` is
+    // left alone for `DFloatBody` to assert on rather than resolved silently here.
+    if (options.inlineTabOrder && options.trapTab === undefined) {
+      merged.trapTab = false;
+    }
+
+    this.options = merged;
+    this.portalOutletOverrideElement = options.portalOutletElement;
+  }
+
+  get portalOutletElement() {
+    return (
+      this.portalOutletOverrideElement ||
+      document.getElementById("d-menu-portals")
+    );
+  }
+
+  get trigger() {
+    return this._trigger;
+  }
+
+  set trigger(element: FloatKitTrigger) {
+    this._trigger = element;
+    this.id =
+      (element instanceof HTMLElement && element.id) || guidFor(element);
+    this.setupListeners();
+  }
+
+  get shouldTrapPointerDown() {
+    return this.expanded;
+  }
+
+  /**
+   * Whether focus currently sits inside the menu's content. Read before the content is torn
+   * down, because a menu that owns focus has to hand it back on close — otherwise closing
+   * strands focus on a removed element and the browser drops it to the body.
+   */
+  get #ownsFocus(): boolean {
+    return !!this.content?.contains(document.activeElement);
+  }
+
+  @action
+  async close(options: FloatCloseOptions = {}) {
+    this.resetHoverCloseState();
+    this.openedByDelayedHover = false;
+
+    if (isDestroying(getOwner(this)!)) {
+      return;
+    }
+
+    const ownedFocus = this.#ownsFocus;
+
+    await animateClosing(this.content);
+
+    await this.menu.close(this);
+
+    // A caller that closes without asking for the trigger to be refocused (a click outside,
+    // say) still must not lose focus altogether. Recheck rather than trusting `ownedFocus`:
+    // closing is animated, so by now the click may have deliberately focused something else,
+    // and only focus left with no owner is ours to restore.
+    if (
+      (options.focusTrigger ?? true) ||
+      (ownedFocus && this.#focusIsUnowned)
+    ) {
+      this.triggerElement?.focus();
+    }
+
+    await super.close(options);
+  }
+
+  get #focusIsUnowned(): boolean {
+    const { activeElement } = document;
+    return !activeElement || activeElement === document.body;
+  }
+
+  @action
+  async show() {
+    await super.show();
+    await this.menu.show(this);
+  }
+
+  @action
+  async onPointerMove(event: PointerEvent) {
+    if (this.expanded && this.triggerElement?.contains(event.target as Node)) {
+      return;
+    }
+
+    await this.onTrigger(event);
+  }
+
+  @action
+  async onClick(event: MouseEvent) {
+    cancel(this.delayedHoverTimeout);
+
+    if (this.openedByDelayedHover) {
+      this.openedByDelayedHover = false;
+      return;
+    }
+
+    if (this.expanded && this.untriggers.includes("click")) {
+      return await this.onUntrigger(event);
+    }
+
+    await this.onTrigger(event);
+  }
+
+  @action
+  async onPointerLeave(event: PointerEvent) {
+    if (!this.untriggers.includes("hover")) {
+      return;
+    }
+    if (this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+      return;
+    }
+    await this.onUntrigger(event);
+  }
+
+  @action
+  async onTrigger(event: Event) {
+    // Consume the trigger event even when disabled, so a disabled trigger inside a clickable
+    // ancestor doesn't fall through and activate it — an enabled trigger would have consumed it.
+    event.stopPropagation();
+
+    if (this.disabled) {
+      this.openedByDelayedHover = false;
+      return;
+    }
+
+    await this.options.beforeTrigger?.(this);
+
+    if (this.disabled) {
+      this.openedByDelayedHover = false;
+      return;
+    }
+
+    await this.show();
+  }
+
+  @action
+  async onUntrigger(event: Event) {
+    event.stopPropagation();
+
+    await this.close();
+  }
+
+  @action
+  destroy() {
+    this.close();
+    this.tearDownListeners();
+  }
+}

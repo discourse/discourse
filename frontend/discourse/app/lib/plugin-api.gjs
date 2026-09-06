@@ -1,6 +1,8 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
+import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
+import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -58,8 +60,13 @@ import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
+import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  _INTERNAL_SOURCE_KEY,
+  CORE_SOURCE,
+} from "discourse/lib/customization-source";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -73,6 +80,15 @@ import {
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
 import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
+import {
+  defineModelAccessor,
+  defineModelMethod,
+  defineModelResettableField,
+  registerModelCallback,
+  registerModelField,
+  registerModelSaveProperty,
+  stampModelClass,
+} from "discourse/lib/model-extensions";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
@@ -86,6 +102,7 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { reportClientError } from "discourse/lib/report-client-error";
 import {
   addLogSearchLinkClickedCallbacks,
   addSearchResultsCallback,
@@ -128,7 +145,6 @@ import {
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
-import { registerComposerAction } from "discourse/select-kit/components/composer-actions";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -181,11 +197,7 @@ function wrapWithErrorHandler(func, messageKey) {
     try {
       return func.call(this, ...arguments);
     } catch (error) {
-      document.dispatchEvent(
-        new CustomEvent("discourse-error", {
-          detail: { messageKey, error },
-        })
-      );
+      reportClientError(error, messageKey);
       if (isTesting()) {
         throw error;
       }
@@ -198,8 +210,16 @@ function wrapWithErrorHandler(func, messageKey) {
  * @typedef {_PluginApi} PluginApi
  */
 class _PluginApi {
-  constructor(container) {
+  #source;
+
+  constructor(container, source = CORE_SOURCE) {
     this.container = container;
+    this.#source = source;
+  }
+
+  /** The plugin, theme, or core code this api was handed to. */
+  get source() {
+    return this.#source;
   }
 
   /**
@@ -273,9 +293,11 @@ class _PluginApi {
    *   }
    * });
    * ```
+   *
+   * Deprecated for `model:` types — use the `addModel*` APIs instead.
    **/
   modifyClass(resolverName, changes, opts) {
-    this.#deprecateModifyClass(resolverName);
+    this.#deprecateModifyClass(resolverName, "modifyClass");
 
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
@@ -312,8 +334,12 @@ class _PluginApi {
    *   superFinder() { return []; }
    * });
    * ```
+   *
+   * Deprecated for `model:` types — use the `addModel*` APIs instead.
    **/
   modifyClassStatic(resolverName, changes, opts) {
+    this.#deprecateModifyClass(resolverName, "modifyClassStatic");
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -747,6 +773,212 @@ class _PluginApi {
    */
   addTrackedTopicProperties(...names) {
     names.forEach((name) => _addTrackedTopicProperty(name));
+  }
+
+  // Resolves the `model:<name>` class; `stamp` marks it so instances can
+  // resolve their model name at construction.
+  _resolveModelClass(modelName, { stamp = false } = {}) {
+    const klass = this._resolveClass(`model:${modelName}`);
+    if (!klass) {
+      return;
+    }
+    if (stamp) {
+      stampModelClass(klass.class, modelName);
+    }
+    return klass.class;
+  }
+
+  /**
+   * Adds a tracked data field to a store model, so a property your plugin adds
+   * (e.g. one included in the server payload) is reactive in the UI.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the field to add.
+   * @param {Object} [options]
+   * @param {(*|Function)} [options.defaultValue] - Value when the server omits
+   *   the field (default `undefined`). A function runs per instance at
+   *   construction — before the payload (server wins) and too early for create
+   *   args — for per-record mutable defaults, e.g. `() => ({})`.
+   * @param {("array"|"object"|"set")} [options.type] - Store the field as a
+   *   reactive collection, created fresh per instance so it is never shared.
+   * @param {boolean} [options.resettable] - Requires a function `defaultValue`;
+   *   resets to it when the derived value changes, and a manual assignment
+   *   sticks until then.
+   *
+   * @example
+   * api.addModelField("bookmark", "is_pinned", { defaultValue: false });
+   * api.addModelField("post", "comments", { type: "array" });
+   * api.addModelField("post", "polls_votes", { type: "object" });
+   * api.addModelField("post", "meta", { defaultValue: () => ({}) });
+   * api.addModelField("composer", "createAsPostVoting", {
+   *   resettable: true,
+   *   defaultValue() {
+   *     return !!this.category?.create_as_post_voting_default;
+   *   },
+   * });
+   */
+  addModelField(modelName, name, options = {}) {
+    const klass = this._resolveModelClass(modelName, { stamp: true });
+    if (!klass) {
+      return;
+    }
+
+    if (options.resettable) {
+      if (typeof options.defaultValue !== "function") {
+        throw new Error(
+          "addModelField: `resettable` requires `defaultValue` to be a function (the initializer to reset to)."
+        );
+      }
+      defineModelResettableField(klass, name, options.defaultValue);
+    } else {
+      registerModelField(modelName, name, options);
+    }
+  }
+
+  /**
+   * Adds an accessor (getter and/or setter) to a store model.
+   *
+   * Defined on the prototype (works in templates and with autotracking). For a
+   * single side, prefer `addModelGetter` / `addModelSetter`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the property to add.
+   * @param {Object} accessor
+   * @param {Function} [accessor.get] - Getter, called with the instance as `this`.
+   * @param {Function} [accessor.set] - Setter, called with the new value.
+   *
+   * @example
+   * api.addModelAccessor("post", "polls", {
+   *   get() {
+   *     return this._polls;
+   *   },
+   *   set(value) {
+   *     this._polls = value;
+   *   },
+   * });
+   */
+  addModelAccessor(modelName, name, accessor) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelAccessor(klass, name, accessor);
+    }
+  }
+
+  /**
+   * Adds a getter (computed/derived property) to a store model. Shorthand for
+   * `addModelAccessor` with only a getter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the getter to add.
+   * @param {Function} getter - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelGetter("bookmark", "isPinned", function () {
+   *   return this.is_pinned;
+   * });
+   */
+  addModelGetter(modelName, name, getter) {
+    this.addModelAccessor(modelName, name, { get: getter });
+  }
+
+  /**
+   * Adds a setter to a store model. Shorthand for `addModelAccessor` with only a
+   * setter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "topic".
+   * @param {string} name - The name of the setter to add.
+   * @param {Function} setter - Called with the new value; the instance is `this`.
+   *
+   * @example
+   * api.addModelSetter("topic", "related_topics", function (value) {
+   *   this._relatedTopicsRecords = value;
+   * });
+   */
+  addModelSetter(modelName, name, setter) {
+    this.addModelAccessor(modelName, name, { set: setter });
+  }
+
+  /**
+   * Adds an instance method to a store model.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the method to add.
+   * @param {Function} fn - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelMethod("bookmark", "togglePin", function () {
+   *   this.is_pinned = !this.is_pinned;
+   * });
+   */
+  addModelMethod(modelName, name, fn) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelMethod(klass, name, fn);
+    }
+  }
+
+  /**
+   * Registers a property to include in a model's save payload.
+   *
+   * For persisting a field your plugin adds (see `addModelField`). By default
+   * `instance[name]` is sent; pass `valueFn` (bound to the instance) to send a
+   * computed value, e.g. to nest data under `custom_fields`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "group".
+   * @param {string} name - The name of the property to include when saving.
+   * @param {Function} [valueFn] - Returns the value to send; called with the
+   *   model instance as `this`.
+   *
+   * @example
+   * api.addModelSaveProperty("group", "assignable_level");
+   * api.addModelSaveProperty("group", "custom_fields", function () {
+   *   return { my_field: this.my_field };
+   * });
+   */
+  addModelSaveProperty(modelName, name, valueFn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelSaveProperty(modelName, name, valueFn);
+    }
+  }
+
+  /**
+   * Registers a callback to run on a model's lifecycle.
+   *
+   * Runs with the model instance as `this`, replacing `modifyClass` overrides
+   * of `init`/`save`. `init` fires per instance after create args are applied.
+   * Create/update events fire on the standard store save path (and for `Group`,
+   * which also fires destroy); other models with a custom `save()` (e.g.
+   * `Category`) don't. `after*` callbacks returning a promise are awaited.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {("init"|"beforeCreate"|"afterCreate"|"beforeUpdate"|"afterUpdate"|"beforeDestroy"|"afterDestroy"|"beforeSave"|"afterSave")} event -
+   *   The lifecycle event. "beforeSave"/"afterSave" fire for both create and update.
+   * @param {Function} fn - Called with nothing (init/destroy), the request props
+   *   (before create/update), or the server result (after*).
+   *
+   * @example
+   * api.addModelCallback("bookmark", "afterSave", function (result) {
+   *   // ...
+   * });
+   */
+  addModelCallback(modelName, event, fn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelCallback(modelName, event, fn);
+    }
   }
 
   /**
@@ -2243,6 +2475,43 @@ class _PluginApi {
   }
 
   /**
+   * Registers the component used to render a reviewable type in the review queue.
+   *
+   * The loader returns the component class, or a promise resolving to it — in
+   * which case the module is only loaded when a reviewable of that type is
+   * rendered.
+   *
+   * @param {String} reviewableType - The reviewable type class name (e.g. "ReviewableChatMessage")
+   * @param {Function} loader - A function returning the component class, or a promise
+   *   resolving to it
+   *
+   * @example
+   * ```
+   * api.registerReviewableComponent("ReviewableChatMessage", () => ReviewableChatMessage);
+   * ```
+   *
+   * @example
+   * ```
+   * api.registerReviewableComponent(
+   *   "ReviewableChatMessage",
+   *   async () => (await import("../components/reviewable/chat-message")).default
+   * );
+   * ```
+   **/
+  registerReviewableComponent(reviewableType, loader) {
+    if (typeof loader !== "function") {
+      throw new Error(
+        `registerReviewableComponent("${reviewableType}", ...) requires a function as second argument.`
+      );
+    }
+
+    this.registerValueTransformer(
+      "reviewable-component",
+      ({ value, context }) => (context.type === reviewableType ? loader : value)
+    );
+  }
+
+  /**
    * Register custom status names for a reviewable type, used in the
    * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
    *
@@ -2996,6 +3265,43 @@ class _PluginApi {
   }
 
   /**
+   * Registers a component to render a whole section in the redesigned admin
+   * dashboard (gated by the `dashboard_improvements` upcoming change). Pair it
+   * with the server-side `register_admin_dashboard_section`: the `id` here must
+   * match the one registered there, and the loader block registered there
+   * produces the `@data` this component receives.
+   *
+   * The component is rendered once for each visible section with a matching id.
+   * The render site also stamps a `--<id>` class and a `data-section-id="<id>"`
+   * attribute on it, so forward `...attributes` onto your root element (wrapping
+   * the shared `<DashboardSection>` component does this for you).
+   *
+   * The component receives these args:
+   * - `@data` {Object} — the section payload: the hash returned by the
+   *   server-side loader block passed to `register_admin_dashboard_section`.
+   * - `@startDate` {Date} — start of the selected dashboard period.
+   * - `@endDate` {Date} — end of the selected dashboard period.
+   * - `@fetchError` {boolean} — true when the dashboard sections request failed.
+   * - `@period` {string} — the selected period preset (e.g. "monthly"), or
+   *   "custom" for a custom range.
+   * - `@loading` {boolean} — true while the dashboard is (re)loading sections.
+   *   Provided for convenience; a section that refetches on its own (as Solved's
+   *   "support" section does) may track its own loading state instead.
+   *
+   * ```
+   * import MySection from "discourse/plugins/my-plugin/admin/components/dashboard/my-section";
+   *
+   * api.registerAdminDashboardSection("my_section", MySection);
+   * ```
+   *
+   * @param {string} id - The section id, matching the server-side registration.
+   * @param {Component} componentClass - A Glimmer component for the section.
+   */
+  registerAdminDashboardSection(id, componentClass) {
+    registerAdminDashboardSection(id, componentClass);
+  }
+
+  /**
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
@@ -3078,9 +3384,16 @@ class _PluginApi {
    * @param {string} translationKey
    * @param {string} searchTypeId
    * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   * @param {Object} [options]
+   * @param {string} [options.after] - Id of the search type this one should follow; appended last when omitted or unknown.
    */
-  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
-    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc, options) {
+    registerFullPageSearchType(
+      translationKey,
+      searchTypeId,
+      searchFunc,
+      options
+    );
   }
 
   /**
@@ -3353,6 +3666,22 @@ class _PluginApi {
   }
 
   /**
+   * Registers components that render related items for an admin report.
+   *
+   * @param {String} reportType - The report's identifier
+   * @param {Object} renderer - The related-item renderer configuration
+   * @param {Class} [renderer.relatedItemsComponent] - Component for the report detail view
+   * @param {Object} [renderer.tableSummary] - Configuration for table cell summaries
+   * @param {Class} renderer.tableSummary.itemComponent - Component for each summary item
+   * @param {String} renderer.tableSummary.itemsKey - Related-items response key
+   * @param {String} [renderer.tableSummary.listClass] - Class for the summary list
+   * @param {String} renderer.tableSummary.titleKey - Summary title translation key
+   */
+  registerAdminReportRelatedItemsRenderer(reportType, renderer) {
+    registerAdminReportRelatedItemsRenderer(reportType, renderer);
+  }
+
+  /**
    * Registers an extension for the rich editor
    *
    * EXPERIMENTAL: This API will change without warning
@@ -3439,7 +3768,7 @@ class _PluginApi {
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
-   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} blocks - Array of layout entries
+   * @param {Array<import("discourse/blocks/types").LayoutEntry>} blocks - Array of layout entries
    *
    * @example
    * ```javascript
@@ -3508,7 +3837,7 @@ class _PluginApi {
    * @experimental This API is under active development and may change or be removed
    * in future releases without prior notice. Use with caution in production environments.
    *
-   * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string for lazy loading.
+   * @param {string | import("discourse/lib/blocks/-internals/types").BlockClass} blockOrName - Block class or name string for lazy loading.
    * @param {Function} [factory] - Factory function returning Promise<BlockClass> (required when first arg is name).
    *
    * @example Direct class registration
@@ -3530,10 +3859,10 @@ class _PluginApi {
           `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
-      _registerBlockFactory(blockOrName, factory);
+      _registerBlockFactory(blockOrName, factory, this.source);
     } else {
       // Direct class: registerBlock(BlockClass)
-      _registerBlock(blockOrName);
+      _registerBlock(blockOrName, this.source);
     }
   }
 
@@ -3567,7 +3896,7 @@ class _PluginApi {
    * ```
    */
   registerBlockOutlet(outletName, options) {
-    _registerOutlet(outletName, options);
+    _registerOutlet(outletName, options, this.source);
   }
 
   /**
@@ -3615,38 +3944,22 @@ class _PluginApi {
    * ```
    */
   registerBlockConditionType(ConditionClass) {
-    _registerConditionType(ConditionClass);
+    _registerConditionType(ConditionClass, this.source);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  #deprecateModifyClass(className) {
-    // display notification messages for deprecated classes
-    // e.g:
-    //
-    // if (DEPRECATED_CLASSES.includes(className)) {
-    //   deprecated(
-    //     `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
-    //     DEPRECATION_OPTIONS
-    //   );
-    // }
+  #deprecateModifyClass(resolverName, apiName) {
+    if (!resolverName.startsWith("model:")) {
+      return;
+    }
+
+    deprecated(
+      `Using api.${apiName} on \`${resolverName}\` is deprecated. Use the \`addModelField\`, \`addModelAccessor\`/\`addModelGetter\`/\`addModelSetter\`, \`addModelMethod\`, \`addModelSaveProperty\` and \`addModelCallback\` APIs instead.`,
+      {
+        id: "discourse.modify-class-model",
+        since: "2026.8",
+      }
+    );
   }
-}
-
-function getPluginApi() {
-  const owner = getOwnerWithFallback(this);
-  let pluginApi = owner.lookup("plugin-api:main");
-
-  if (!pluginApi) {
-    pluginApi = new _PluginApi(owner);
-    owner.registry.register("plugin-api:main", pluginApi, {
-      instantiate: false,
-    });
-  } else {
-    // If we are re-using an instance, make sure the container is correct
-    pluginApi.container = owner;
-  }
-
-  return pluginApi;
 }
 
 /**
@@ -3664,5 +3977,10 @@ export function withPluginApi(apiCodeCallback, opts) {
 
   opts = opts || {};
 
-  return apiCodeCallback(getPluginApi(), opts);
+  const api = new _PluginApi(
+    getOwnerWithFallback(this),
+    opts[_INTERNAL_SOURCE_KEY]
+  );
+
+  return apiCodeCallback(api, opts);
 }

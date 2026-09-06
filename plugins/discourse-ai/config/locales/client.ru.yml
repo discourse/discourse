@@ -21,7 +21,6 @@ ru:
       dashboard:
         emotion:
           title: "Эмоция"
-          description: "В таблице указано количество публикаций, классифицированных по определенной эмоции. Классификация выполнена с помощью модели 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
             group_by:
@@ -224,10 +223,27 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      copied: "Скопировано"
+      ai_decoded_transcript:
+        tool: "Инструмент"
+        arguments: "Аргументы"
+        type: "Тип"
+        error: "Ошибка"
+        response: "Ответ"
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
+          mode: "Режим"
           select_agent: "Выберите агента..."
+      ai_tool_approval:
+        loading: "Загрузка…"
+        agent: "Агент"
+        tool: "Действие"
+        user: "Пользователь"
+        approve: "Одобрить"
+        reject: "Отклонить"
+        approved: "Одобренные"
+        rejected: "Отклонено"
       default_llm:
         title: "Модель LLM по умолчанию"
         description: "Модель LLM по умолчанию для всех ИИ функций. Используется, если в настройке функции или персоны не указана конкретная модель LLM. При отсутствии модели по умолчанию используется последняя добавленная LLM."
@@ -254,7 +270,7 @@ ru:
         no_llm: "LLM не выбрана"
         no_agent: "Не установлено"
         no_groups: "Отсутствует"
-        edit: "настроек"
+        edit: "Настроек"
         expand_list:
           one: "(еще %{count})"
           few: "(еще %{count})"
@@ -288,8 +304,11 @@ ru:
         search:
           name: "Искать"
           description: "Улучшает процесс поиска за счет предоставления AI-ответов на запросы"
+          ask_ai: "Спросить AI"
           setting_groups:
             settings: "Основные настройки"
+            agents: "Агенты"
+            access_control: "Контроль доступа"
         embeddings:
           name: "Встраивания"
           description: "Обеспечивает работу функций, таких как «Связанные темы» и «AI-поиск», создавая семантические представления текста"
@@ -330,7 +349,6 @@ ru:
           translate: "Переводить"
           markdown_tables: "Сгенерировать таблицу в формате Markdown"
           custom_prompt: "Пользовательский запрос"
-          image_caption: "Создание подписей к изображениям"
           translator: "Переводчик"
           post_illustrator: "AI-иллюстратор публикаций"
           chat_thread_titles: "Заголовки тем чата"
@@ -339,6 +357,9 @@ ru:
             enabled_features: "Включенные функции"
             automation: "Автоматизация"
             agents: "Агенты"
+        image_caption:
+          setting_groups:
+            settings: "Настроек"
         translation:
           name: "Перевод"
           description: "Переводит контент на поддерживаемые языки"
@@ -370,14 +391,28 @@ ru:
         title: "Переводы"
         description: "Автоматически переводить весь контент вашего форума на предпочитаемый пользователем язык"
         supported_locales: "Поддерживаемые языки"
-        supported_locales_description: "Эта настройка сайта также позволяет посетителям добавлять переводы к сообщениям."
+        category_scope: "Категории"
+        cached_results_notice: "Отображение кэшированных результатов из %{relative_time}."
+        model_progress:
+          detail:
+            retry: "Повторить"
+            columns:
+              locale: "Локаль"
+              pending: "Ожидают одобрения"
+              total: "Всего"
+          targets:
+            post:
+              title: "Количество сообщений"
+            topic:
+              title: "Темы"
+            category:
+              title: "Категории"
+            tag:
+              title: "Теги"
         admin_actions:
-          translation_settings: "Настройки перевода"
-          localization_settings: "Настройки перевода"
           enable_translations: "Включить автоматический перевод"
         stats:
           title: "Статистика переводов"
-          backfill_message: "<a href='%{settingsUrl}'>Настройки заполнения</a> настроены таким образом, чтобы переводить все сообщения после %{date} — по оценкам, это займет %{eta}."
           eta_minutes:
             one: "%{count} минута"
             few: "%{count} минуты"
@@ -488,6 +523,46 @@ ru:
           last_week: "На прошлой неделе"
           last_month: "В прошлом месяце"
           custom: "Другое…"
+      logs:
+        short_title: "Журналы"
+        retry: "Попробовать снова"
+        apply: "Применить"
+        all_models: "Все модели"
+        all_features: "Все функции"
+        successful: "Выполнена"
+        failed: "Не удалась"
+        unknown: "Расположение неизвестно"
+        time: "Время"
+        when: "Когда"
+        outcome: "Результат"
+        feature: "Функция"
+        model: "Модель"
+        request: "Запрос"
+        provider: "Поставщик"
+        user: "Пользователь"
+        context: "Контекст"
+        topic: "Тема"
+        post: "Публикация"
+        post_short: "Публикация %{id}"
+        duration: "Период"
+        actions: "Действия"
+        view_details: "Детали"
+        periods:
+          hour: "Последний %{count} час"
+          day: "За последние 24 часа"
+          week: "За последние 7 дней"
+          custom: "Другое"
+        detail:
+          request: "Запрос"
+          response: "Ответ"
+          context: "Контекст"
+          copy_request: "Копировать запрос"
+          copy_response: "Копировать ответ"
+          network_error: "Ошибка сети"
+        retention:
+          summary_stage: "Сводка"
+          deleted_stage: "Удалённые"
+          save: "Сохранить"
       ai_agent:
         ai_tools: "Инструменты"
         mcp_servers: "Серверы MCP"
@@ -511,19 +586,8 @@ ru:
         description: "Описание"
         no_llm_selected: "Языковая модель не выбрана"
         use_parent_llm: "Используйте языковую модель агента."
-        max_context_posts: "Максимум публикаций для учета в контексте"
-        max_context_posts_help: "Максимальное количество публикаций, которое будет использоваться в качестве контекста для AI при ответе пользователю. (Пусто по умолчанию)"
-        execution_mode: "Режим выполнения"
-        execution_mode_help: "Управляет тем, как агент обрабатывает выполнение инструментов и контекст разговора. По умолчанию используются фиксированные ограничения на количество ходов/инструментов. Agentic использует бюджет токенов с автоматическим сжатием контекста для более длительных и эффективных сеансов использования инструментов."
-        execution_mode_options:
-          default: "По умолчанию (фиксированные ограничения)"
-          agentic: "Агентский (бюджет токенов)"
-        max_turn_tokens: "Максимальное количество токенов"
-        max_turn_tokens_help: "Максимальное общее количество токенов (входные + выходные), потребляемых во всех вызовах LLM во время одного ответа бота. Если задано, заменяет фиксированные ограничения на завершение/инструменты бюджетом токенов, что позволяет использовать более гибкое поведение бота. Оставьте поле пустым для ограничений по умолчанию."
-        compression_threshold: "Порог сжатия"
         compression_threshold_help: "Процент использования контекста (20–99), при котором включается автоматическое сжатие. Более низкие значения запускают сжатие раньше, сохраняя больший запас по времени."
         vision_enabled: Включить загрузку изображений
-        vision_enabled_help: Если эта функция включена, данный агент может добавлять изображения из сообщений и чатов, если выбранная модель поддерживает ввод изображений.
         vision_max_pixels: Максимальный размер изображения
         vision_max_pixel_sizes:
           low: Низкое качество — самое дешевое (256×256)
@@ -537,7 +601,6 @@ ru:
         create_user: Создать пользователя
         create_user_help: При желании вы можете привязать к этому агенту пользователя. В этом случае ИИ будет использовать этого пользователя для ответа на запросы.
         default_llm: Языковая модель по умолчанию
-        default_llm_help: Языковая модель по умолчанию, используемая для этого агента. Обязательно, если вы хотите упоминать агента в публичных сообщениях.
         system_prompt: Системный запрос
         forced_tool_strategy: Стратегия обязательного применения инструмента
         allow_chat_direct_messages: "Разрешить прямые сообщения в чате"
@@ -564,6 +627,8 @@ ru:
           clear_all: "Сбросить все"
         forced_tools: "Обязательные инструменты"
         allowed_groups: "Разрешенные группы"
+        duplicate: "Дублировать"
+        copy_name: "Копия «%{name}»"
         title: "Агенты"
         short_title: "Агенты"
         delete: "Удалить"
@@ -571,6 +636,12 @@ ru:
         temperature_help: "Температура — параметр для LLM, его увеличение приводит к повышению креативности (оставьте пустым, чтобы использовать настройки модели по умолчанию, стандартные значения от 0.0 до 2.0)"
         top_p: "Top P"
         top_p_help: "Top P — параметр для LLM, его увеличение приводит к увеличению случайности (оставьте пустым, чтобы использовать настройки модели по умолчанию, стандартные значения от 0.0 до 1.0)"
+        thinking_effort_options:
+          none: "Нет"
+          low: "Низкая"
+          medium: "Средняя"
+          high: "Высокая"
+          max: "Макс."
         priority: "Приоритет"
         tool_options: "Параметры инструмента"
         rag_conversation_chunks: "Фрагменты разговора для поиска"
@@ -706,6 +777,9 @@ ru:
         url: "URL-адрес сервиса, где размещена модель"
         api_key: "API-ключ сервиса, где размещена модель"
         vision_enabled: "Поддерживает ввод изображений."
+        vision_modes:
+          disabled:
+            title: "Отключен"
         allowed_attachment_types: "Разрешено прикреплять документы."
         attachment_types_placeholder: "Выберите или введите расширения файлов (например, pdf, txt, csv, docx, xlsx)."
         ai_bot_user: "Пользователь AI-бота"
@@ -735,9 +809,7 @@ ru:
             custom: "Другое…"
           hours: "ч."
           max_tokens_help: "Максимальное количество токенов (слов и символов), которые каждый пользователь в этой группе может использовать в течение указанного периода. Токены — это единицы, используемые AI-моделями для обработки текста. 1 токен равен примерно 4 символам или 3/4 слова."
-          max_tokens_required: "Необходимо указать, если не установлено максимальное число использований"
           max_usages_help: "Максимальное количество раз, которое каждый пользователь в этой группе может использовать AI-модель в течение указанного периода. Эта квота отслеживается для каждого пользователя, а не распределяется по всей группе."
-          max_usages_required: "Необходимо указать, если не установлено максимальное число токенов"
         credit_allocation:
           credits_remaining: "%{remaining} из %{total} оставшихся кредитов (%{percentage}%)"
           soft_limit_warning: "У этой модели осталось %{percentage}% кредитов ИИ на сегодняшний день"
@@ -746,7 +818,7 @@ ru:
         usage:
           ai_bot: "AI-бот"
           ai_helper: "Помощник (%{agent})"
-          ai_helper_image_caption: "Подпись к изображению"
+          ai_image_caption: "Подпись к изображению"
           ai_summarization: "Сводка"
           ai_embeddings_semantic_search: "AI-поиск"
           ai_spam: "Спам"
@@ -758,17 +830,6 @@ ru:
           other: "Эта модель сейчас используется в следующих параметрах: %{settings}. В случае неправильной настройки функции не будут работать должным образом. "
         model_description:
           none: "Общие настройки, подходящие для большинства языковых моделей"
-          anthropic-claude-opus-4-7: "Самая интеллектуальная модель Anthropic"
-          anthropic-claude-sonnet-4-6: "Оптимальный баланс скорости и стоимости"
-          anthropic-claude-haiku-4-5: "Быстрая и экономически эффективная модель"
-          google-gemini-3-1-pro: "Самая интеллектуальная модель Google"
-          google-gemini-3-flash: "Быстрое и экономичное решение с использованием мультимодального подхода."
-          open_ai-gpt-5-5: "Самая мощная модель OpenAI с расширенным контекстом"
-          open_ai-gpt-5-4: "Флагманская модель OpenAI, отлично подходящая для решения задач в различных областях."
-          open_ai-gpt-5-4-nano: "Самая быстрая и экономичная модель GPT-5"
-          open_router-moonshotai-kimi-k2-6: "Мультимодальная модель Moonshot с возможностями компьютерного зрения"
-          open_router-deepseek-deepseek-v4-flash: "Новейшая высокопроизводительная модель DeepSeek с обработкой 1 миллиона контекстных данных."
-          open_router-minimax-minimax-m2-7: "Модель MiniMax с большим контекстом"
         preseeded_model_description: "Предварительно настроенная модель с открытым исходным кодом, использующая %{model}"
         configured:
           title: "Настроенные LLM"
@@ -804,7 +865,6 @@ ru:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -814,7 +874,7 @@ ru:
           fake: "Другое"
         provider_fields:
           access_key_id: "Идентификатор ключа доступа к AWS Bedrock"
-          region: "Регион AWS Bedrock"
+          region: "Регион"
           organization: "Необязательный идентификатор организации OpenAI"
           disable_system_prompt: "Отключить системное сообщение в запросах"
           enable_native_tool: "Включить поддержку встроенных инструментов"
@@ -840,13 +900,7 @@ ru:
         title: "Предложить изменения с помощью AI"
         description: "Выберите один из вариантов ниже, и AI предложит новую версию текста."
         selection_hint: "Подсказка: чтобы переписать часть текста, выделите нужный фрагмент до запуска помощника."
-        suggest: "Подсказки от AI"
         suggest_errors:
-          too_many_tags:
-            one: "Максимальное количество тегов — %{count}."
-            few: "Максимальное количество тегов — %{count}."
-            many: "Максимальное количество тегов — %{count}."
-            other: "Максимальное количество тегов — %{count}."
           no_suggestions: "Нет рекомендаций"
         missing_content: "Введите контент для генерации подсказок."
         context_menu:
@@ -880,11 +934,6 @@ ru:
           select: "Выбрать"
           selected: "Выбрано"
           try_again: "Попробовать снова"
-        image_caption:
-          button_label: "Подпись к изображению от AI"
-          generating: "Создание подписи..."
-          credits: "Подпись к изображению от AI"
-          save_caption: "Сохранить"
         no_content_error: "Сначала добавьте контент, чтобы выполнить действия с ним с помощью AI"
       errors:
         credit_limit_dialog:
@@ -948,14 +997,8 @@ ru:
         provider_fields:
           model_name: "Название модели"
         semantic_search: "Темы (семантика)"
-        semantic_search_results:
-          toggle: "Результаты ИИ"
-          unavailable: "Результаты AI недоступны"
         semantic_search_tooltips:
           results_explanation: "Если параметр включен, дополнительные результаты AI-поиска будут добавлены ниже."
-          invalid_sort: "Результаты поиска должны быть отсортированы по релевантности для отображения AI-результатов"
-        semantic_search_unavailable_tooltip: "Результаты поиска должны быть отсортированы по релевантности для отображения AI-результатов"
-        ai_generated_result: "Результат поиска найден с помощью AI"
         quick_search:
           suffix: "во всех темах и публикациях с AI"
       ai_artifact:
@@ -964,8 +1007,8 @@ ru:
         click_to_run_label: "Запустить артефакт"
       ai_bot:
         title: "AI-бот"
-        agent: "Агент"
-        llm: "Модель"
+        agent: "Агент:"
+        llm: "Модель:"
         pm_warning: "Сообщения чат-бота с AI регулярно отслеживаются модераторами."
         cancel_streaming: "Прекратить отвечать"
         try_again: "Попробовать снова"
@@ -982,6 +1025,7 @@ ru:
           title: "Просмотр взаимодействий с AI"
           copy_request: "Копировать запрос"
           copy_response: "Копировать ответ"
+          duration_label: "Интервал:"
           request: "Запрос"
           response: "Ответ"
           next_log: "Далее"
@@ -1079,19 +1123,29 @@ ru:
             expanded: "Расширенная"
             expanded_description: "со сводками от AI"
       discobot_discoveries:
-        regular_results: "Темы"
-        tell_me_more: "Расскажите мне подробнее..."
-        continue_convo: "Продолжить разговор..."
+        main_title: "Спросить AI"
         loading_convo: "Загрузка разговора"
-        collapse: "Свернуть"
-        timed_out: "Discobot не смог найти поисковых рекомендаций. Что-то пошло не так."
+        create_topic: "Создать тему"
         user_setting: "Включите поисковые результаты с использованием ИИ."
-        tooltip:
-          header: "AI-поиск"
-          content: "Поиск на естественном языке с помощью %{model}"
-          actions:
-            info: "Как это работает?"
-            disable: "Отключить"
+        legacy:
+          regular_results: "Новые темы"
+          tell_me_more: "Расскажите мне подробнее..."
+          continue_convo: "Продолжить разговор..."
+          loading_convo: "Загрузка разговора"
+          collapse: "Свернуть"
+          timed_out: "Discobot не смог найти поисковых рекомендаций. Что-то пошло не так."
+          tooltip:
+            header: "AI-поиск"
+            content: "Поиск на естественном языке с помощью %{model}"
+            actions:
+              info: "Как это работает?"
+              disable: "Отключить"
+        search_type: "AI"
+        search_all_topics: "Все темы"
+        search_messages: "Сообщений"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Связанные темы"
       user_preferences:
         empty: "Сейчас соответствующие настройки отсутствуют"
     review:

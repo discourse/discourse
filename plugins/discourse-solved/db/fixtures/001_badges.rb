@@ -23,7 +23,7 @@ Badge.seed(:name) do |badge|
   badge.query = first_solution_query
   badge.listable = true
   badge.target_posts = true
-  badge.default_enabled = false
+  badge.default_enabled = true
   badge.trigger = Badge::Trigger::PostRevision
   badge.auto_revoke = true
   badge.show_posts = true
@@ -58,7 +58,7 @@ end
     badge.listable = true
     badge.default_allow_title = true
     badge.target_posts = false
-    badge.default_enabled = false
+    badge.default_enabled = true
     badge.trigger = Badge::Trigger::PostRevision
     badge.auto_revoke = true
     badge.show_posts = false

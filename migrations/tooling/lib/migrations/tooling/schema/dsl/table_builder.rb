@@ -24,6 +24,7 @@ module Migrations
             :ignore_plugin_columns,
             :ignore_plugin_names,
             :model_mode,
+            :conflict_strategy,
           ) do
             def column_options_for(col)
               column_options[col.to_s]
@@ -43,6 +44,7 @@ module Migrations
           end
 
         VALID_MODEL_MODES = %i[extended manual].freeze
+        VALID_CONFLICT_STRATEGIES = %i[raise ignore].freeze
 
         class TableBuilder
           def initialize(name)
@@ -60,6 +62,7 @@ module Migrations
             @ignore_plugin_columns = false
             @ignore_plugin_names = nil
             @model_mode = nil
+            @conflict_strategy = :raise
           end
 
           def copy_structure_from(table)
@@ -148,6 +151,18 @@ module Migrations
             @model_mode = mode
           end
 
+          # How the model's inserts and the shard merge handle a duplicate row.
+          # `:raise` (the default) uses a plain `INSERT`; `:ignore` uses `INSERT OR
+          # IGNORE`, keeping the first row and dropping later duplicates.
+          def conflict_strategy(strategy)
+            strategy = strategy.to_sym
+            if VALID_CONFLICT_STRATEGIES.exclude?(strategy)
+              raise ConfigError,
+                    "Invalid conflict strategy :#{strategy} for table :#{@name}. Valid: #{VALID_CONFLICT_STRATEGIES.join(", ")}"
+            end
+            @conflict_strategy = strategy
+          end
+
           def build
             if @source_table_name && @included_columns.nil? && !@include_all &&
                  @ignored_columns.empty?
@@ -186,6 +201,7 @@ module Migrations
               ignore_plugin_columns: @ignore_plugin_columns,
               ignore_plugin_names: @ignore_plugin_names&.freeze,
               model_mode: @model_mode,
+              conflict_strategy: @conflict_strategy,
             )
           end
 

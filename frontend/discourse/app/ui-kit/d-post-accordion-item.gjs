@@ -2,9 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
+import { relativeAge } from "discourse/lib/formatter";
 import DiscourseURL from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
@@ -15,6 +17,8 @@ import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
 export default class DPostAccordionItem extends Component {
+  @service a11y;
+
   @tracked measured = false;
   @tracked isOverflowing = false;
 
@@ -28,6 +32,15 @@ export default class DPostAccordionItem extends Component {
 
   get hasContent() {
     return !!this.post?.cooked;
+  }
+
+  get srDate() {
+    if (this.a11y.autoUpdatingRelativeDateRef && this.post.created_at) {
+      return relativeAge(new Date(this.post.created_at), {
+        format: "medium-with-ago",
+        wrapInSpan: false,
+      });
+    }
   }
 
   get userDisplayName() {
@@ -108,8 +121,11 @@ export default class DPostAccordionItem extends Component {
                 href={{this.post.url}}
                 class="date-link"
                 title={{i18n "post.sr_date"}}
+                aria-label={{this.srDate}}
               >
-                <DRelativeDate @date={{this.post.created_at}} />
+                <span aria-hidden="true">
+                  <DRelativeDate @date={{this.post.created_at}} />
+                </span>
               </a>
             {{/if}}
           </div>

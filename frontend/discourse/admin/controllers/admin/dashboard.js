@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import {
@@ -17,23 +17,21 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 const PROBLEMS_CHECK_MINUTES = 1;
 
 export default class AdminDashboardController extends Controller {
-  @service router;
   @service siteSettings;
+  @service exception;
   @service loadingSlider;
-  @controller("exception") exceptionController;
 
   @tracked loadingProblems = false;
   @tracked problemsFetchedAt;
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
-  @tracked version = null;
   @tracked loadedSections = null;
   @tracked loadingSections = false;
   @tracked sectionsFetchError = false;
   @autoTrackedArray problems;
 
-  queryParams = ["range", "start_date", "end_date", "version"];
+  queryParams = ["range", "start_date", "end_date"];
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -53,23 +51,24 @@ export default class AdminDashboardController extends Controller {
   }
 
   get startDate() {
-    if (this.safePeriod === PERIOD_CUSTOM && this.start_date) {
-      const parsed = moment(this.start_date, "YYYY-MM-DD", true);
-      if (parsed.isValid()) {
-        return parsed.startOf("day").toDate();
-      }
-    }
-    return calculatePresetStartDate(this.safePeriod);
+    return (
+      this.#customDate(this.start_date, "startOf") ??
+      calculatePresetStartDate(this.safePeriod)
+    );
   }
 
   get endDate() {
-    if (this.safePeriod === PERIOD_CUSTOM && this.end_date) {
-      const parsed = moment(this.end_date, "YYYY-MM-DD", true);
-      if (parsed.isValid()) {
-        return parsed.endOf("day").toDate();
-      }
+    return (
+      this.#customDate(this.end_date, "endOf") ?? moment().endOf("day").toDate()
+    );
+  }
+
+  #customDate(value, edge) {
+    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+      return null;
     }
-    return moment().endOf("day").toDate();
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
   @action
@@ -165,11 +164,7 @@ export default class AdminDashboardController extends Controller {
     }
 
     try {
-      const model = await AdminDashboard.fetch({
-        startDate,
-        endDate,
-        version: this.version,
-      });
+      const model = await AdminDashboard.fetch({ startDate, endDate });
 
       if (id !== this._sectionsLoadId) {
         return;
@@ -182,6 +177,7 @@ export default class AdminDashboardController extends Controller {
         sections: model.sections,
         configuration: model.configuration,
       };
+      this.problems = model.problems;
     } catch {
       if (id !== this._sectionsLoadId) {
         return;
@@ -200,9 +196,6 @@ export default class AdminDashboardController extends Controller {
   }
 
   get showRedesign() {
-    if (this.version === "alt") {
-      return !this.siteSettings.dashboard_improvements;
-    }
     return this.siteSettings.dashboard_improvements;
   }
 
@@ -260,21 +253,20 @@ export default class AdminDashboardController extends Controller {
     ) {
       this.set("isLoading", true);
 
-      AdminDashboard.fetch({ version: this.version })
+      AdminDashboard.fetch()
         .then((model) => {
           let properties = {
             dashboardFetchedAt: new Date(),
           };
 
           if (versionChecks) {
-            properties.versionCheck = VersionCheck.create(model.version_check);
+            properties.versionCheck = new VersionCheck(model.version_check);
           }
 
           this.setProperties(properties);
         })
         .catch((e) => {
-          this.exceptionController.set("thrown", e.jqXHR);
-          this.router.replaceWith("exception");
+          this.exception.show(e.jqXHR);
         })
         .finally(() => {
           this.set("isLoading", false);
@@ -304,5 +296,27 @@ export default class AdminDashboardController extends Controller {
   @action
   refreshProblems() {
     this._loadProblems();
+  }
+
+  @action
+  async refreshSiteAdvice() {
+    try {
+      const model = await AdminDashboard.fetchProblems();
+      this.problems = model.problems;
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async ignoreProblem(problem) {
+    try {
+      await ajax(`/admin/admin_notices/${problem.id}`, { type: "DELETE" });
+      this.problems = this.problems.filter(
+        (candidate) => candidate.id !== problem.id
+      );
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 }

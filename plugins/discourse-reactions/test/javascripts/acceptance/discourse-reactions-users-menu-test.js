@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
@@ -18,7 +18,6 @@ const SETTINGS = {
   discourse_reactions_enabled_reactions: "laughing|open_mouth",
   discourse_reactions_reaction_for_like: "heart",
   discourse_reactions_like_icon: "heart",
-  enable_new_post_reactions_menu: true,
 };
 
 acceptance(
@@ -69,7 +68,7 @@ acceptance(
         undefined,
         "first fetch has no reaction_value"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 5 });
+      assert.dom(".users-popup__item").exists({ count: 5 });
 
       await click('[data-reaction-filter="heart"]');
       assert.strictEqual(
@@ -77,7 +76,7 @@ acceptance(
         1,
         "does not refetch when filtering by heart"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 3 });
+      assert.dom(".users-popup__item").exists({ count: 3 });
 
       await click('[data-reaction-filter="laughing"]');
       assert.strictEqual(
@@ -85,7 +84,7 @@ acceptance(
         1,
         "does not refetch when filtering by laughing"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 2 });
+      assert.dom(".users-popup__item").exists({ count: 2 });
 
       await click('[data-reaction-filter="all"]');
       assert.strictEqual(
@@ -93,7 +92,66 @@ acceptance(
         1,
         "does not refetch when returning to all"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 5 });
+      assert.dom(".users-popup__item").exists({ count: 5 });
+    });
+
+    test("moves focus into the users menu and back out again", async function (assert) {
+      await visit("/t/topic_with_reactions_and_likes/374");
+
+      assert
+        .dom("#post_1 .discourse-reactions-counter")
+        .hasAria("expanded", "false", "the counter starts collapsed");
+
+      await click("#post_1 .discourse-reactions-counter");
+
+      assert
+        .dom("#post_1 .discourse-reactions-counter")
+        .hasAria("expanded", "true", "the counter reports the menu is open");
+      assert.true(
+        document.querySelector(".users-popup").contains(document.activeElement),
+        "focus moves into the menu"
+      );
+
+      await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+      assert.dom(".users-popup").doesNotExist("escape closes the menu");
+      assert
+        .dom("#post_1 .discourse-reactions-counter")
+        .isFocused("focus returns to the counter");
+    });
+
+    test("closes the users menu when navigating away", async function (assert) {
+      await visit("/t/topic_with_reactions_and_likes/374");
+      await click("#post_1 .discourse-reactions-counter");
+
+      assert.dom(".users-popup").exists("the reactions menu is open");
+
+      await visit("/");
+
+      assert
+        .dom(".users-popup")
+        .doesNotExist("the reactions menu closes when navigating away");
+    });
+
+    test("emoji filters and list reactions show the emoji name in the title", async function (assert) {
+      await visit("/t/topic_with_reactions_and_likes/374");
+      await click("#post_1 .discourse-reactions-counter");
+
+      assert
+        .dom('[data-reaction-filter="laughing"] img.emoji')
+        .hasAttribute(
+          "title",
+          "laughing",
+          "the emoji filter shows the emoji name as its title"
+        );
+
+      assert
+        .dom(".users-popup__item .users-popup__reaction[alt='laughing']")
+        .hasAttribute(
+          "title",
+          "laughing",
+          "a reaction in the user list shows the emoji name as its title"
+        );
     });
   }
 );

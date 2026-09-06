@@ -84,7 +84,7 @@ export default class DurationSelector extends Component {
   }
 
   <template>
-    <div class="duration-selector">
+    <div class="duration-selector" ...attributes>
       <ComboBox
         @content={{this.presetOptions}}
         @value={{this.selectedPresetId}}

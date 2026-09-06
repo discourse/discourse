@@ -13,6 +13,29 @@ RSpec.describe Chat::Api::ChannelsController do
 
         expect(response.status).to eq(403)
       end
+
+      context "when anonymous users can view public chat channels" do
+        before do
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns an error" do
+          Fabricate(:category_channel)
+
+          get "/chat/api/channels"
+
+          expect(response.status).to eq(403)
+        end
+
+        it "does not return private category channels" do
+          Fabricate(:private_category_channel)
+
+          get "/chat/api/channels"
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context "as disallowed user" do
@@ -368,6 +391,32 @@ RSpec.describe Chat::Api::ChannelsController do
       end
     end
 
+    context "when public channels are disabled" do
+      before { SiteSetting.enable_public_channels = false }
+
+      it "returns an actionable error message" do
+        expect { post "/chat/api/channels", params: }.to not_change { Chat::Channel.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("chat.errors.public_channels_disabled"),
+        )
+      end
+
+      context "when the user is not staff" do
+        fab!(:user)
+
+        before { sign_in(user) }
+
+        it "returns a generic permission error" do
+          post "/chat/api/channels", params: params
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+      end
+    end
+
     it "creates a channel using the user-provided slug" do
       new_params = params.dup
       new_params[:channel][:slug] = "wow-so-cool"
@@ -507,6 +556,30 @@ RSpec.describe Chat::Api::ChannelsController do
       end
     end
 
+    context "when user provides an emoji that is too long" do
+      fab!(:user, :admin)
+      fab!(:channel, :category_channel)
+
+      before { sign_in(user) }
+
+      it "rejects the update" do
+        long_emoji = "a" * 2800
+        expected_error = "Emoji #{I18n.t("errors.messages.too_long", count: 100)}"
+
+        put "/chat/api/channels/#{channel.id}",
+            params: {
+              channel: {
+                emoji: long_emoji,
+              },
+            },
+            as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(expected_error)
+        expect(channel.reload.emoji).to be_nil
+      end
+    end
+
     context "when user provided an empty name" do
       fab!(:user, :admin)
       fab!(:channel) do
@@ -561,6 +634,66 @@ RSpec.describe Chat::Api::ChannelsController do
         put "/chat/api/channels/#{channel.id}", params: { channel: { slug: " " } }
 
         expect(channel.reload.slug).to eq("something-else")
+      end
+    end
+
+    context "when user is a direct message channel participant" do
+      fab!(:attacker, :user)
+      fab!(:attacker_recipient, :user)
+      fab!(:channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [attacker, attacker_recipient],
+          threading_enabled: false,
+        )
+      end
+      fab!(:victim, :user)
+      fab!(:victim_recipient, :user)
+      fab!(:victim_channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [victim, victim_recipient],
+          threading_enabled: true,
+        )
+      end
+      fab!(:victim_thread) do
+        Fabricate(:chat_thread, channel: victim_channel, original_message_user: victim_recipient)
+      end
+      fab!(:victim_reply) do
+        Fabricate(
+          :chat_message,
+          thread: victim_thread,
+          chat_channel: victim_channel,
+          user: victim_recipient,
+        )
+      end
+
+      before do
+        Jobs.run_immediately!
+        victim_thread.add(victim)
+        victim_thread.update!(last_message: victim_reply)
+        sign_in(attacker)
+      end
+
+      it "preserves unread threads in inaccessible direct messages" do
+        expect(victim_channel.chatable.user_can_access?(attacker)).to be(false)
+        expect(
+          Chat::ThreadUnreadsQuery
+            .call(channel_ids: [victim_channel.id], user_id: victim.id)
+            .first
+            .unread_count,
+        ).to eq(1)
+
+        put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("channel", "threading_enabled")).to be(true)
+        expect(
+          Chat::ThreadUnreadsQuery
+            .call(channel_ids: [victim_channel.id], user_id: victim.id)
+            .first
+            .unread_count,
+        ).to eq(1)
       end
     end
 

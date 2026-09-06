@@ -160,6 +160,7 @@ describe "Admin Color Palette Config Area Page" do
   end
 
   it "applies the changes live when editing the currently active palette" do
+    color_scheme.update!(user_selectable: true)
     admin.user_option.update!(color_scheme_id: color_scheme.id)
     config_area.visit(color_scheme.id)
     config_area.color_palette_editor.input_for_color("secondary").fill_in(with: "#aa339f")

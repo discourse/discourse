@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sw:
+  llms_txt:
+    sections:
+      optional: "Sio Muhimu"
+    links:
+      search:
+        label: "Tafuta"
+      categories:
+        label: "Kategoria"
+      about:
+        label: "Kuhusu"
+      guidelines:
+        label: "Miongozo"
   dates:
     short_date_no_year: "S MMM"
     short_date: "S MMM, MMMM"
@@ -105,7 +117,6 @@ sw:
       exclusion: imehifadhiwa
       greater_than: izidi %{count}
       greater_than_or_equal_to: izidi au iwe sawa na %{count}
-      has_already_been_used: "imeshatumika"
       inclusion: haijaorodheshwa
       invalid: ni batili
       is_invalid: "haieleweki vizuri, je hii sentensi iko kamili?"
@@ -229,6 +240,11 @@ sw:
       trust_level_2: "kiwango_cha_uaminifu_2"
       trust_level_3: "kiwango_cha_uaminifu_3"
       trust_level_4: "kiwango_cha_uaminifu_4"
+    default_full_names:
+      everyone: "Kila Mtu"
+      admins: "Viongozi"
+      moderators: "Wasimamizi"
+      staff: "Wasaidizi"
     request_membership_pm:
       title: "Ombi la Uanachama wa @%{group_name}"
   education:
@@ -397,6 +413,10 @@ sw:
     success_unapproved: "Umebadilisha nywila yako kwa mafanikio."
   email_login:
     title: "Ingia kupitia barua pepe"
+  admin_site_traffic_explorer:
+    unknown: "Haijulikani"
+    traffic_types:
+      anonymous: "Asiyejulikana"
   change_email:
     error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
@@ -555,6 +575,11 @@ sw:
         share: "Shirikisha"
       types:
         staff: "Wasaidizi"
+    posters_by_member_type_members:
+      labels:
+        user: "Mtumiaji"
+        count: "Machapisho"
+        share: "Shirikisha"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -672,6 +697,9 @@ sw:
         num_clicks: "Imebonyezwa"
         num_topics: "Mada"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Waliotembelea"
+    top_entry_urls:
       labels:
         count: "Waliotembelea"
     top_referrers_by_browser_pageviews:
@@ -815,7 +843,6 @@ sw:
     educate_until_posts: "Mtumiaji akianza kuandika machapisho mapya (n), onyesha paneli ya ufundishaji kwenye sehemu ya kuandika maneno."
     editing_grace_period: "Kwa sekundi (n) baada ya kuchapisha, uhariri hautatengeneza nakala mpya kwenye historia ya chapisho."
     staff_edit_locks_post: "Machapisho hayataweza kufanyiwa uhariri kama yakihaririwa na wafanyakazi"
-    edit_history_visible_to_public: "Ruhusu kila mtu aone matoleo ya kabla ya chapisho lililofanyiwa uhariri. Ikisitishwa, wasaidizi tu wataweza kuona."
     delete_removed_posts_after: "Machapisho yaliyofutwa na mwandishi yataondolewa baada ya masaa (n). Kama ikiwaset kwenye 0, machapisho yataondolewa hapo hapo."
     add_rel_nofollow_to_user_content: 'Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: "rake machapishi:rebake"'
     allowed_inline_onebox_domains: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
@@ -1603,9 +1630,6 @@ sw:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Akaunti Imesimamishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
@@ -1979,6 +2003,9 @@ sw:
       message: "<p>Tumekutumia tena barua ya uanzishaji<b>%{email}</b>"
   safe_mode:
     enter: "Ingia Hali-tumizi iliyo salama"
+  design_wizard:
+    palette_pairs:
+      default: "Halisi"
   wizard:
     title: "Mpangilio wa Discourse"
     step:
@@ -1994,6 +2021,8 @@ sw:
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       closed: "imefungwa"
       status_date:

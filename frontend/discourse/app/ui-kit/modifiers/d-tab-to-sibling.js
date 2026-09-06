@@ -54,7 +54,7 @@ export default class DTabToSiblingModifier extends Modifier {
       return;
     }
 
-    let targetSibling = null;
+    let targetSibling;
     if (event.shiftKey) {
       targetSibling = this.findFocusableSibling(this.element, "previous");
     } else {

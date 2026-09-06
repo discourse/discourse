@@ -28,7 +28,6 @@ html.discourse-no-touch {
     }
   }
 
-  .btn-flat.delete.d-hover,
   .btn-flat.delete:hover {
     background: var(--danger);
   }
@@ -43,12 +42,6 @@ html {
   .nav-pills > li > a:not(.active):hover {
     background: var(--tertiary-low);
     color: var(--primary);
-  }
-
-  // Composer
-  #reply-control .reply-to .reply-details .d-icon {
-    opacity: 1;
-    color: var(--primary-low-mid);
   }
 
   .d-editor-button-bar {
@@ -323,7 +316,7 @@ html {
 }
 
 // Modernize Foundation Theme specific WCAG overrides
-html.discourse-no-touch .uc-modernize-foundation-theme {
+html.discourse-no-touch :where(.uc-modernize-foundation-theme) {
   .btn-default {
     .d-icon {
       color: var(--d-button-default-icon-color);
@@ -348,7 +341,7 @@ html.discourse-no-touch .uc-modernize-foundation-theme {
   }
 }
 
-html .uc-modernize-foundation-theme {
+html :where(.uc-modernize-foundation-theme) {
   // Header icons with modernize theme colors
   .d-header-icons .d-icon,
   .header-sidebar-toggle button .d-icon {

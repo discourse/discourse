@@ -9,9 +9,15 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       expect(schema).to have_key(:item_prefix)
     end
 
-    it "declares $site_settings, $vars, $current_user, $execution as environment symbols" do
+    it "declares $helpers, $site_settings, $vars, $current_user, $execution as environment symbols" do
       symbols = described_class.environment_symbols.keys
-      expect(symbols).to contain_exactly("$site_settings", "$vars", "$current_user", "$execution")
+      expect(symbols).to contain_exactly(
+        "$helpers",
+        "$site_settings",
+        "$vars",
+        "$current_user",
+        "$execution",
+      )
     end
 
     it "declares $current_user fields matching JsSandbox#build_current_user" do
@@ -25,6 +31,7 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
         "id",
         "workflow_id",
         "workflow_name",
+        "called_by",
         "resume_url",
         "resumeFormUrl",
       )
@@ -44,6 +51,15 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       expect(field[:display_options]).to eq(
         show: {
           node_present: [{ type: "action:form", parameters: { page_type: "page" } }],
+        },
+      )
+    end
+
+    it "marks called_by as conditionally visible for workflow call triggers" do
+      field = described_class.environment_symbols.dig("$execution", :fields, "called_by")
+      expect(field[:display_options]).to eq(
+        show: {
+          node_present: [{ type: "trigger:workflow_call" }],
         },
       )
     end
@@ -71,7 +87,7 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       sandbox = DiscourseWorkflows::JsSandbox.new(context, user: user)
 
       # $execution is injected by ExpressionResolver, not JsSandbox directly
-      sandbox_symbols = %w[$site_settings $vars $current_user]
+      sandbox_symbols = %w[$site_settings $vars $current_user $helpers]
       sandbox_symbols.each do |symbol|
         result = sandbox.eval("typeof #{symbol}")
         expect(result).not_to eq("undefined"),
@@ -145,6 +161,21 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
     ensure
       resolver&.dispose
       sandbox&.dispose
+    end
+
+    it "omits $execution.called_by for normal executions" do
+      execution =
+        Fabricate(:discourse_workflows_execution, status: :running, started_at: Time.current)
+      context =
+        DiscourseWorkflows::Executor::ExecutionContext.new(
+          workflow: execution.workflow,
+          trigger_data: {
+          },
+          user: user,
+          execution: execution,
+        )
+
+      expect(context.resolver_context["__execution"]).not_to have_key("called_by")
     end
 
     it "ExpressionResolver exposes current-input helpers" do

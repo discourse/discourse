@@ -2,4 +2,22 @@
   .transcript {
     margin: 0 0 1em 0;
   }
+
+  .chat-uploads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-top: 0.5em;
+
+    img,
+    video {
+      object-fit: contain;
+      max-height: 150px;
+      max-width: 100%;
+    }
+
+    .chat-img-upload {
+      cursor: pointer;
+    }
+  }
 }

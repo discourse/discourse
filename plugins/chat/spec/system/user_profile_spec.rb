@@ -21,16 +21,12 @@ RSpec.describe "User profile" do
     end
   end
 
-  def visit_user_profile
-    visit("/u/" + user.username + "/summary")
-  end
-
   context "when user" do
     context "with chat disabled" do
       before do
         SiteSetting.chat_enabled = false
         sign_in(current_user)
-        visit_user_profile
+        visit("/u/#{user.username}/summary")
       end
 
       include_examples "not showing chat button"
@@ -39,7 +35,7 @@ RSpec.describe "User profile" do
     context "with chat enabled" do
       before do
         sign_in(current_user)
-        visit_user_profile
+        visit("/u/#{user.username}/summary")
       end
 
       include_examples "showing chat button"
@@ -47,7 +43,7 @@ RSpec.describe "User profile" do
   end
 
   context "when anonymous" do
-    before { visit_user_profile }
+    before { visit("/u/#{user.username}/summary") }
 
     include_examples "not showing chat button"
   end

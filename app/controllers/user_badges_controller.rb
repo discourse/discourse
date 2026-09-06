@@ -23,8 +23,11 @@ class UserBadgesController < ApplicationController
     grant_count = nil
 
     if params[:username]
-      user_id = User.where(username_lower: params[:username].downcase).pick(:id)
-      user_badges = user_badges.where(user_id: user_id) if user_id
+      user = fetch_user_from_params(include_inactive: true)
+      raise Discourse::NotFound unless guardian.can_see_profile?(user)
+
+      user_id = user.id
+      user_badges = user_badges.where(user_id: user_id)
       grant_count = badge.user_badges.where(user_id: user_id).count
     end
 

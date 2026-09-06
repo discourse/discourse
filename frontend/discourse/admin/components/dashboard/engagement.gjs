@@ -5,7 +5,7 @@ import WhosPosting from "discourse/admin/components/dashboard/engagement/whos-po
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   <DashboardSection
     @title={{i18n "admin.dashboard.sections.engagement.title"}}
     @startDate={{@startDate}}
@@ -17,12 +17,8 @@ import { i18n } from "discourse-i18n";
         {{i18n "admin.dashboard.sections.engagement.fetch_error"}}
       </div>
     {{else}}
-      {{#if @engagement.headline}}
-        <EngagementHeadline
-          @headline={{@engagement.headline}}
-          @kpis={{@engagement.kpis}}
-          @period={{@period}}
-        />
+      {{#if @engagement}}
+        <EngagementHeadline @kpis={{@engagement.kpis}} />
       {{/if}}
 
       <div class="db-section__row-group">

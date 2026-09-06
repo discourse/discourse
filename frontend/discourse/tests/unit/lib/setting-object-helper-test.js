@@ -28,6 +28,20 @@ module("Unit | Lib | setting-object-helper", function (hooks) {
     assert.strictEqual(helper.computedNameProperty, "name");
   });
 
+  test("object with a blank first value", function (assert) {
+    const settingObj = EmberObject.create({
+      valid_values: [
+        { value: "", name: "bar" },
+        { value: "foo", name: "baz" },
+      ],
+    });
+
+    const helper = new SettingObjectHelper(settingObj);
+
+    assert.strictEqual(helper.computedValueProperty, "value");
+    assert.strictEqual(helper.computedNameProperty, "name");
+  });
+
   test("no values", function (assert) {
     const settingObj = EmberObject.create({
       valid_values: [],

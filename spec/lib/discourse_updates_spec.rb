@@ -16,10 +16,9 @@ RSpec.describe DiscourseUpdates do
     end
   end
 
-  def stub_data(latest, missing, critical, updated_at)
+  def stub_data(latest, missing, updated_at)
     DiscourseUpdates.latest_version = latest
     DiscourseUpdates.missing_versions_count = missing
-    DiscourseUpdates.critical_updates_available = critical
     DiscourseUpdates.updated_at = updated_at
   end
 
@@ -47,12 +46,11 @@ RSpec.describe DiscourseUpdates do
     context "when a good version check request happened recently" do
       context "when server is up-to-date" do
         let(:time) { 12.hours.ago }
-        before { stub_data(Discourse::VERSION::STRING, 0, false, time) }
+        before { stub_data(Discourse::VERSION::STRING, 0, time) }
 
         it "returns all the version fields" do
           expect(version.latest_version).to eq(Discourse::VERSION::STRING)
           expect(version.missing_versions_count).to eq(0)
-          expect(version.critical_updates).to eq(false)
           expect(version.installed_version).to eq(Discourse::VERSION::STRING)
           expect(version.stale_data).to eq(false)
         end
@@ -64,12 +62,11 @@ RSpec.describe DiscourseUpdates do
 
       context "when server is not up-to-date" do
         let(:time) { 12.hours.ago }
-        before { stub_data("0.9.0", 2, false, time) }
+        before { stub_data("0.9.0", 2, time) }
 
         it "returns all the version fields" do
           expect(version.latest_version).to eq("0.9.0")
           expect(version.missing_versions_count).to eq(2)
-          expect(version.critical_updates).to eq(false)
           expect(version.installed_version).to eq(Discourse::VERSION::STRING)
         end
 
@@ -80,7 +77,7 @@ RSpec.describe DiscourseUpdates do
     end
 
     context "when a version check has never been performed" do
-      before { stub_data(nil, nil, false, nil) }
+      before { stub_data(nil, nil, nil) }
 
       it "returns the installed version" do
         expect(version.installed_version).to eq(Discourse::VERSION::STRING)
@@ -94,7 +91,6 @@ RSpec.describe DiscourseUpdates do
       it "does not return latest version info" do
         expect(version.latest_version).to eq(nil)
         expect(version.missing_versions_count).to eq(nil)
-        expect(version.critical_updates).to eq(nil)
       end
 
       it "queues a version check" do
@@ -120,12 +116,12 @@ RSpec.describe DiscourseUpdates do
       end
 
       context "when installed is latest" do
-        before { stub_data(Discourse::VERSION::STRING, 1, false, 8.hours.ago) }
+        before { stub_data(Discourse::VERSION::STRING, 1, 8.hours.ago) }
         include_examples "queue version check and report that version is ok"
       end
 
       context "when installed does not match latest version, but missing_versions_count is 0" do
-        before { stub_data("0.10.10.123", 0, false, 8.hours.ago) }
+        before { stub_data("0.10.10.123", 0, 8.hours.ago) }
         include_examples "queue version check and report that version is ok"
       end
     end
@@ -149,12 +145,12 @@ RSpec.describe DiscourseUpdates do
     end
 
     context "when missing_versions_count is 0" do
-      before { stub_data("0.9.7", 0, false, 8.hours.ago) }
+      before { stub_data("0.9.7", 0, 8.hours.ago) }
       include_examples "when last_installed_version is old"
     end
 
     context "when missing_versions_count is not 0" do
-      before { stub_data("0.9.7", 1, false, 8.hours.ago) }
+      before { stub_data("0.9.7", 1, 8.hours.ago) }
       include_examples "when last_installed_version is old"
     end
   end
@@ -191,7 +187,7 @@ RSpec.describe DiscourseUpdates do
 
       Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
       Discourse.redis.del "new_features_last_seen_user_#{admin2.id}"
-      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
     end
 
     after { DiscourseUpdates.clean_state }
@@ -383,6 +379,8 @@ RSpec.describe DiscourseUpdates do
             height: 66,
           },
         )
+
+        DiscourseUpdates.refresh_latest_new_feature_created_at!
       end
 
       it "marks the injected item as seen" do
@@ -404,44 +402,57 @@ RSpec.describe DiscourseUpdates do
       ]
     end
 
-    before do
-      stub_permanent_upcoming_changes!([])
-      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
-    end
+    before { stub_permanent_upcoming_changes!([]) }
 
     after { DiscourseUpdates.clean_state }
 
-    it "returns the max created_at from merged features" do
-      result = DiscourseUpdates.latest_new_feature_created_at
-      expect(result).to be_within(1.second).of(newest_date)
+    it "returns the timestamp derived when the feed was stored" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
+
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_within(1.second).of(newest_date)
     end
 
-    it "caches the result in Redis on subsequent calls" do
-      DiscourseUpdates.latest_new_feature_created_at
+    it "never derives the timestamp itself" do
+      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+      GitUtils.expects(:has_commit?).never
+      DiscourseUpdates.expects(:merge_new_features_with_upcoming_changes).never
 
-      Discourse.redis.set("new_features", MultiJson.dump([]))
-      result = DiscourseUpdates.latest_new_feature_created_at
-      expect(result).to be_within(1.second).of(newest_date)
-    end
-
-    it "returns nil when no features exist" do
-      Discourse.redis.set("new_features", MultiJson.dump([]))
       expect(DiscourseUpdates.latest_new_feature_created_at).to be_nil
     end
 
-    it "is invalidated by update_new_features" do
-      DiscourseUpdates.latest_new_feature_created_at
+    it "returns the cached value even when the stored feed is unreadable" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
+
+      Discourse.redis.set("new_features", "invalid json")
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_within(1.second).of(newest_date)
+    end
+
+    it "returns nil when no features exist" do
+      DiscourseUpdates.update_new_features(MultiJson.dump([]))
+
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_nil
+    end
+
+    it "is refreshed by update_new_features" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
 
       new_date = 1.minute.ago
       new_features = [{ "emoji" => "🤾", "title" => "Brand New", "created_at" => new_date }]
       DiscourseUpdates.update_new_features(MultiJson.dump(new_features))
 
-      result = DiscourseUpdates.latest_new_feature_created_at
-      expect(result).to be_within(1.second).of(new_date)
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_within(1.second).of(new_date)
+    end
+
+    it "is cleared when the refreshed feed has no features left" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_present
+
+      DiscourseUpdates.update_new_features(MultiJson.dump([]))
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
     end
 
     it "is invalidated by clean_state" do
-      DiscourseUpdates.latest_new_feature_created_at
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
       expect(Discourse.redis.get("latest_new_feature_created_at")).to be_present
 
       DiscourseUpdates.clean_state
@@ -449,7 +460,7 @@ RSpec.describe DiscourseUpdates do
     end
   end
 
-  describe "has_unseen_features? caching" do
+  describe "has_unseen_features?" do
     fab!(:admin)
     let!(:feature_date) { 5.minutes.ago }
     let!(:sample_features) do
@@ -458,23 +469,39 @@ RSpec.describe DiscourseUpdates do
 
     before do
       stub_permanent_upcoming_changes!([])
-      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+      DiscourseUpdates.clean_state
     end
 
     after { DiscourseUpdates.clean_state }
 
-    it "uses the cached timestamp instead of recomputing on repeated calls" do
-      DiscourseUpdates.latest_new_feature_created_at
+    it "uses the cached timestamp instead of recomputing" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
 
       Discourse.redis.set("new_features", "invalid json")
       expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
     end
 
     it "returns false when the latest feature timestamp equals last_seen" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
+
       freeze_time do
         Discourse.redis.set("new_features_last_seen_user_#{admin.id}", feature_date.iso8601)
         expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
       end
+    end
+
+    it "queues a refresh, instead of deriving inline, when the timestamp is missing" do
+      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+      GitUtils.expects(:has_commit?).never
+
+      expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
+      expect(Jobs::RefreshLatestNewFeature.jobs.size).to eq(1)
+    end
+
+    it "only queues one refresh per throttle window" do
+      3.times { DiscourseUpdates.has_unseen_features?(admin.id) }
+
+      expect(Jobs::RefreshLatestNewFeature.jobs.size).to eq(1)
     end
   end
 
@@ -647,6 +674,29 @@ RSpec.describe DiscourseUpdates do
       time = Time.zone.parse("2022-12-13T21:33:59Z")
       DiscourseUpdates.bump_last_viewed_feature_date(user.id, time)
       expect(DiscourseUpdates.get_last_viewed_feature_date(user.id)).to eq(time)
+    end
+  end
+
+  describe "commits ahead" do
+    before { DiscourseUpdates.last_installed_version = Discourse::VERSION::STRING }
+
+    it "rewrites the git describe suffix into a ' +N' installed_describe" do
+      Discourse.stubs(:full_version).returns("v#{Discourse::VERSION::STRING}-444-gabc1234")
+      expect(version.installed_describe).to eq("v#{Discourse::VERSION::STRING} +444")
+    end
+
+    it "leaves installed_describe without a suffix when the build sits on a tag" do
+      Discourse.stubs(:full_version).returns("v#{Discourse::VERSION::STRING}")
+      expect(version.installed_describe).to eq("v#{Discourse::VERSION::STRING}")
+    end
+
+    it "exposes the latest pretty version and sha from the version check" do
+      stub_data(Discourse::VERSION::STRING, 0, 12.hours.ago)
+      DiscourseUpdates.latest_pretty_version = "#{Discourse::VERSION::STRING} +444"
+      DiscourseUpdates.latest_sha = "abc1234def5678"
+
+      expect(version.latest_pretty_version).to eq("#{Discourse::VERSION::STRING} +444")
+      expect(version.latest_sha).to eq("abc1234def5678")
     end
   end
 end

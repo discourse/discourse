@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { Promise } from "rsvp";
 import MenuPanel from "discourse/components/menu-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -25,8 +26,10 @@ import {
   searchTermScopesToPMs,
   updateRecentSearches,
 } from "discourse/lib/search";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
+import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
@@ -53,8 +56,7 @@ export default class SearchMenu extends Component {
   @tracked menuPanelOpen = false;
 
   searchInputId = this.args.searchInputId ?? "search-term";
-  searchInputPlaceholder = this.args.searchInputPlaceholder || "search.title";
-
+  closeWhenHidden = modifier((_element, [hidden]) => hidden && this.close());
   _debouncer = null;
   _activeSearch = null;
 
@@ -64,6 +66,14 @@ export default class SearchMenu extends Component {
       document.removeEventListener("touchend", this.onDocumentPress);
     }
     super.willDestroy(...arguments);
+  }
+
+  get searchInputPlaceholder() {
+    return applyValueTransformer(
+      "search-menu-input-placeholder",
+      this.args.searchInputPlaceholder || "search.title",
+      { location: this.args.location }
+    );
   }
 
   @bind
@@ -87,6 +97,16 @@ export default class SearchMenu extends Component {
     }
   }
 
+  get searchInputWrapperClasses() {
+    const extra = applyValueTransformer(
+      "search-menu-input-wrapper-classes",
+      [],
+      { location: this.args.location }
+    );
+
+    return ["search-input-wrapper", ...extra].join(" ");
+  }
+
   get classNames() {
     const classes = ["search-menu-container"];
 
@@ -99,6 +119,22 @@ export default class SearchMenu extends Component {
     }
 
     return classes.join(" ");
+  }
+
+  // The chip both shows and clears topic scoping; a consumer that offers scope
+  // as a choice of its own says so there instead.
+  // The shortcut into advanced search; a consumer that offers it somewhere of
+  // its own can drop it from the input.
+  get showAdvancedButton() {
+    return applyValueTransformer("search-menu-advanced-button-enabled", true, {
+      location: this.args.location,
+    });
+  }
+
+  get showSearchContext() {
+    return applyValueTransformer("search-menu-search-context-enabled", true, {
+      location: this.args.location,
+    });
   }
 
   get includesTopics() {
@@ -153,6 +189,10 @@ export default class SearchMenu extends Component {
 
   @action
   open() {
+    if (this.args.hideResults) {
+      return;
+    }
+
     if (!this.menuPanelOpen) {
       this.appEvents.trigger("search-menu:search_menu_opened");
     }
@@ -177,6 +217,11 @@ export default class SearchMenu extends Component {
     if (opts?.expanded) {
       params.set("expanded", "true");
     }
+
+    params = applyValueTransformer("search-menu-full-search-params", params, {
+      location: this.args.location,
+    });
+
     if (params.toString() !== "") {
       url = `${url}?${params}`;
     }
@@ -194,7 +239,7 @@ export default class SearchMenu extends Component {
   }
 
   get displayMenuPanelResults() {
-    if (this.args.inlineResults) {
+    if (this.args.inlineResults || this.args.hideResults) {
       return false;
     }
 
@@ -407,16 +452,17 @@ export default class SearchMenu extends Component {
     <div
       class={{this.classNames}}
       {{didInsert this.setupEventListeners}}
+      {{this.closeWhenHidden @hideResults}}
       {{on "keydown" this.onKeydown}}
     >
-      <div class="search-input-wrapper">
+      <div class={{this.searchInputWrapperClasses}}>
         <div
           class={{dConcatClass
             "search-input"
             (concat "search-input--" @location)
           }}
         >
-          {{#if this.search.inTopicContext}}
+          {{#if (and this.search.inTopicContext this.showSearchContext)}}
             <DButton
               @icon="xmark"
               @label="search.in_this_topic"
@@ -424,7 +470,7 @@ export default class SearchMenu extends Component {
               @action={{this.clearTopicContext}}
               class="btn-default btn-small search-context"
             />
-          {{else if this.inPMInboxContext}}
+          {{else if (and this.inPMInboxContext this.showSearchContext)}}
             <DButton
               @icon="xmark"
               @label="search.in_messages"
@@ -440,6 +486,7 @@ export default class SearchMenu extends Component {
           />
 
           <SearchTerm
+            @location={{@location}}
             @searchTermChanged={{this.searchTermChanged}}
             @typeFilter={{this.typeFilter}}
             @updateTypeFilter={{this.updateTypeFilter}}
@@ -464,7 +511,11 @@ export default class SearchMenu extends Component {
               {{#if this.search.activeGlobalSearchTerm}}
                 <ClearButton @clearSearch={{this.clearSearch}} />
               {{/if}}
-              <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
+              {{#if this.showAdvancedButton}}
+                <AdvancedButton
+                  @openAdvancedSearch={{this.openAdvancedSearch}}
+                />
+              {{/if}}
             </div>
           {{/if}}
         </div>
@@ -472,6 +523,7 @@ export default class SearchMenu extends Component {
 
       {{#if @inlineResults}}
         <Results
+          @location={{@location}}
           @searchInputId={{this.searchInputId}}
           @loading={{this.loading}}
           @invalidTerm={{this.invalidTerm}}
@@ -479,16 +531,20 @@ export default class SearchMenu extends Component {
           @suggestionResults={{this.suggestionResults}}
           @searchTopics={{this.includesTopics}}
           @inPMInboxContext={{this.inPMInboxContext}}
+          @clearPMInboxContext={{this.clearPMInboxContext}}
           @isPMOnly={{this.isPMOnly}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
           @closeSearchMenu={{this.close}}
           @searchTermChanged={{this.searchTermChanged}}
+          @clearTopicContext={{this.clearTopicContext}}
+          @openAdvancedSearch={{this.openAdvancedSearch}}
           @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
         <MenuPanel class="search-menu-panel">
           <Results
+            @location={{@location}}
             @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}
             @invalidTerm={{this.invalidTerm}}
@@ -496,11 +552,14 @@ export default class SearchMenu extends Component {
             @suggestionResults={{this.suggestionResults}}
             @searchTopics={{this.includesTopics}}
             @inPMInboxContext={{this.inPMInboxContext}}
+            @clearPMInboxContext={{this.clearPMInboxContext}}
             @isPMOnly={{this.isPMOnly}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
             @closeSearchMenu={{this.close}}
             @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+            @openAdvancedSearch={{this.openAdvancedSearch}}
             @clearSearch={{this.clearSearch}}
           />
         </MenuPanel>

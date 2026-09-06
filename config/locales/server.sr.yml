@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sr:
+  llms_txt:
+    sections:
+      optional: "Opciono"
+    links:
+      search:
+        label: "Pretraži"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nama"
+      guidelines:
+        label: "Smernice"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -143,6 +155,11 @@ sr:
       moderators: "moderatori"
       staff: "osoblje"
       logged_in_users: "prijavljeni_korisnici"
+    default_full_names:
+      everyone: "Svi"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Osoblje"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
       anonymous_users: "Automatska pseudogrupa koja predstavlja neautentifikovane posetioce"
@@ -263,6 +280,11 @@ sr:
         other: "pre %{count} mesec dana"
   password_reset:
     title: "Resetujte Šifru"
+  admin_site_traffic_explorer:
+    unknown: "Nepoznato"
+    traffic_types:
+      logged_in: "Prijavljen"
+      anonymous: "Anonimno"
   change_email:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
   activation:
@@ -337,16 +359,19 @@ sr:
         new_members: "Novi članovi"
         returning: "Vraćajući"
         staff: "Osoblje"
+    posters_by_member_type_members:
+      labels:
+        user: "Korisnik"
+        count: "Poruka"
+        share: "Podeli"
     trust_level_pipeline:
       title: "Pipeline nivoa poverenja"
-      description: "Kretanje članova između nivoa poverenja za izabrani period. Broji trenutne članove na svakom nivou poverenja, njihov udeo u ukupnom članstvu i broj članova koji su tokom perioda prešli u ili iz svakog nivoa poverenja."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "Nivo poverenja"
         count: "Članovi"
         share: "Podeli"
-        moves_in: "Ulazi"
-        moves_out: "Izlazi"
+        signups: "Registracija"
       levels:
         "0": "Novo"
         "1": "Osnovno"
@@ -400,6 +425,9 @@ sr:
       description: "Zemlje koje u odabranom periodu generišu najviše pregleda stranica vašeg foruma."
       labels:
         country_code: "Kod zemlje"
+        count: "Poseta"
+    top_entry_urls:
+      labels:
         count: "Poseta"
     top_referrers_by_browser_pageviews:
       title: "Najveći upućivači"
@@ -471,7 +499,6 @@ sr:
     min_personal_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     email_subject: "Prilagodljiv format teme za standardne e-mailove. Pogledajte <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Prilagođavanje specifičnih sistemskih e-mail šablona na Meta-i</a>."
-    max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
     use_admin_ip_allowlist: "Administratori mogu da se prijave samo ako se nalaze na IP adresi definisanoj u <a href='%{base_path}/admin/logs/screened_ip_addresses'>listi proverenih IP adresa</a>."
     send_welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike."
@@ -666,6 +693,9 @@ sr:
     groups:
       errors:
         empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
+  design_wizard:
+    palette_pairs:
+      default: "Подразумевано"
   wizard:
     step:
       setup:
@@ -727,6 +757,9 @@ sr:
         delete:
           title: "Obriši Korisnika"
           complete: "Korisnik izbrisan."
+        block:
+          title: "Obriši i blokiraj korisnika"
+          description: "Obrišite korisnika i blokirajte njihovu email i IP adresu"
       confirm_spam:
         title: "Da"
       not_spam:

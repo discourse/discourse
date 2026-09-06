@@ -32,4 +32,14 @@ bs_BA:
       post: "Objava"
     discourse_workflows:
       assign_topic:
+        resources:
+          topic: "Topic"
+          post: "Objava"
         topic_id: "ID teme"
+        post_id: "ID objave"
+      check_assignment:
+        target_types:
+          topic: "Topic"
+          post: "Objava"
+        topic_id: "ID teme"
+        post_id: "ID objave"

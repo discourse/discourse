@@ -8,6 +8,7 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { applyLocalDates } from "discourse/lib/local-dates";
@@ -40,6 +41,8 @@ export default class LocalDatesCreate extends Component {
   timezone = null;
   fromSelected = null;
   toSelected = null;
+  countdown = null;
+  displayedTimezone = null;
 
   init() {
     super.init(...arguments);
@@ -54,6 +57,25 @@ export default class LocalDatesCreate extends Component {
       timezone: this.currentUserTimezone,
       date: moment().format(this.dateFormat),
     });
+
+    const { initialValues } = this.model;
+
+    if (initialValues) {
+      this.setProperties(initialValues);
+      // open the advanced pane when the date carries an option only editable there
+      this.set(
+        "advancedMode",
+        !!(
+          initialValues.format ||
+          initialValues.recurring ||
+          initialValues.timezones?.length
+        )
+      );
+    }
+  }
+
+  get isEditing() {
+    return !!this.model.initialValues;
   }
 
   @computed("date")
@@ -196,13 +218,23 @@ export default class LocalDatesCreate extends Component {
     });
   }
 
-  @computed("recurring", "timezones", "timezone", "format")
+  @computed(
+    "recurring",
+    "timezones",
+    "timezone",
+    "format",
+    "countdown",
+    "displayedTimezone"
+  )
   get options() {
     return EmberObject.create({
       recurring: this.recurring,
       timezones: this.timezones,
       timezone: this.timezone,
       format: this.format,
+      // no UI of their own: carried through so editing a date keeps them
+      countdown: this.countdown,
+      displayedTimezone: this.displayedTimezone,
     });
   }
 
@@ -289,13 +321,6 @@ export default class LocalDatesCreate extends Component {
 
   _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
     return generateDateMarkup(fromDateTime, options, isRange, toDateTime);
-  }
-
-  @computed("advancedMode")
-  get toggleModeBtnLabel() {
-    return this.advancedMode
-      ? "discourse_local_dates.create.form.simple_mode"
-      : "discourse_local_dates.create.form.advanced_mode";
   }
 
   @computed("computedConfig.{from,to,options}", "options", "isValid", "isRange")
@@ -416,7 +441,11 @@ export default class LocalDatesCreate extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_local_dates.title"}}
+      @title={{if
+        this.isEditing
+        (i18n "discourse_local_dates.edit")
+        (i18n "discourse_local_dates.title")
+      }}
       @closeModal={{@closeModal}}
       class="discourse-local-dates-create-modal --large"
     >
@@ -602,7 +631,11 @@ export default class LocalDatesCreate extends Component {
         {{#if this.isValid}}
           <DButton
             @action={{this.save}}
-            @label="discourse_local_dates.create.form.insert"
+            @label={{if
+              this.isEditing
+              "discourse_local_dates.create.form.save"
+              "discourse_local_dates.create.form.insert"
+            }}
             class="btn-primary"
           />
         {{/if}}
@@ -613,11 +646,9 @@ export default class LocalDatesCreate extends Component {
           class="btn-flat"
         />
 
-        <DButton
-          @action={{this.toggleAdvancedMode}}
-          @icon="gear"
-          @label={{this.toggleModeBtnLabel}}
-          class="btn-default advanced-mode-btn"
+        <AdvancedModeToggle
+          @active={{this.advancedMode}}
+          @onToggle={{this.toggleAdvancedMode}}
         />
       </:footer>
     </DModal>

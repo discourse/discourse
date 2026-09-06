@@ -30,6 +30,9 @@ cs:
       save: "Uložit změny"
       undo: "Zahodit změny"
       delete: "Smazat"
+      chart:
+        form:
+          bar: "Sloupcový"
       result_count:
         one: "%{count} výsledek."
         few: "%{count} výsledky."

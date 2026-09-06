@@ -4,6 +4,23 @@ RSpec.describe PrettyText::Helpers do
   describe ".lookup_upload_urls" do
     let(:upload) { Fabricate(:upload) }
 
+    it "resolves thumbnails by their exact video SHA1" do
+      thumbnail = Fabricate(:upload, original_filename: "#{upload.sha1}.png")
+      short_url = Upload.base62_sha1(upload.sha1)
+
+      result = PrettyText::Helpers.lookup_upload_urls([short_url])
+
+      expect(result[short_url][:url]).to eq(thumbnail.url)
+    end
+
+    it "resolves legacy non-ASCII video thumbnails" do
+      thumbnail = Fabricate(:upload, original_filename: "動画.png")
+
+      result = PrettyText::Helpers.lookup_upload_urls(["動画"])
+
+      expect(result["動画"][:url]).to eq(thumbnail.url)
+    end
+
     it "should return cdn url if available" do
       short_url = upload.short_url
       result = PrettyText::Helpers.lookup_upload_urls([short_url])

@@ -34,6 +34,17 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      copied: "คัดลอกแล้ว"
+      ai_decoded_transcript:
+        type: "ชนิด"
+        error: "ผิดพลาด"
+      ai_tool_approval:
+        loading: "กำลังโหลด..."
+        user: "ผู้ใช้"
+        approve: "อนุมัติ"
+        reject: "ละทิ้ง"
+        approved: "อนุมัติ"
+        rejected: "ถูกปฏิเสธ"
       llm_selector:
         none: "ไม่มี"
       features:
@@ -47,11 +58,29 @@ th:
           all: "ทั้งหมด"
         search:
           name: "ค้นหา"
+        image_caption:
+          setting_groups:
+            settings: "การตั้งค่า"
         spam:
           name: "ขยะ"
       modals:
         select_option: "เลือกตัวเลือก..."
       translations:
+        category_scope: "หมวดหมู่"
+        model_progress:
+          detail:
+            columns:
+              pending: "กำลังรอ"
+              total: "ทั้งหมด"
+          targets:
+            post:
+              title: "โพส"
+            topic:
+              title: "หัวข้อ"
+            category:
+              title: "หมวดหมู่"
+            tag:
+              title: "ป้าย"
         stats:
           eta_hours:
             other: "%{count} ชั่วโมง"
@@ -72,6 +101,30 @@ th:
         total: "ทั้งหมด"
         periods:
           last_day: "24 ชั่วโมงที่ผ่านมา"
+      logs:
+        apply: "นำไปใช้"
+        successful: "สำเร็จ"
+        failed: "ล้มเหลว"
+        unknown: "ไม่ทราบ"
+        time: "เวลา"
+        when: "เมื่อ"
+        request: "ร้องขอ"
+        user: "ผู้ใช้"
+        topic: "หัวข้อ"
+        post: "โพส"
+        post_short: "โพสต์ %{id}"
+        duration: "ช่วงเวลา"
+        actions: "การกระทำ"
+        view_details: "รายละเอียด"
+        periods:
+          day: "24 ชั่วโมงที่ผ่านมา"
+          week: "7 วันที่ผ่านมา"
+        detail:
+          request: "ร้องขอ"
+        retention:
+          summary_stage: "สรุป"
+          deleted_stage: "ลบ"
+          save: "บันทึก"
       ai_agent:
         name: "ชื่อ"
         edit: "แก้ไข"
@@ -81,6 +134,11 @@ th:
         save: "บันทึก"
         enabled: "เปิดใช้"
         delete: "ลบ"
+        thinking_effort_options:
+          none: "ไม่มี"
+          low: "ต่ำ"
+          medium: "ปานกลาง"
+          high: "สูง"
         response_format:
           open_modal: "แก้ไข"
       rag:
@@ -116,6 +174,9 @@ th:
           required: "ต้องการ"
       llms:
         display_name: "ชื่อ"
+        vision_modes:
+          disabled:
+            title: "ปิดใช้งานแล้ว"
         save: "บันทึก"
         edit: "แก้ไข"
         delete: ลบ
@@ -128,8 +189,6 @@ th:
           title: "ต่อไป"
         tests:
           success: "สำเร็จ!"
-        providers:
-          google: "กูเกิล"
       ai_helper:
         context_menu:
           cancel: "ยกเลิก"
@@ -140,8 +199,6 @@ th:
           cancel: "ยกเลิก"
         thumbnail_suggestions:
           try_again: "ลองอีกครั้ง"
-        image_caption:
-          save_caption: "บันทึก"
       embeddings:
         save: "บันทึก"
         delete: "ลบ"
@@ -153,6 +210,7 @@ th:
           google: "กูเกิล"
       ai_bot:
         debug_ai_modal:
+          duration_label: "ช่วงเวลา:"
           request: "ร้องขอ"
           next_log: "ต่อไป"
           previous_log: "ก่อนหน้า"
@@ -173,8 +231,10 @@ th:
           table:
             total_count: "ทั้งหมด"
       discobot_discoveries:
-        regular_results: "หัวข้อ"
-        collapse: "ย่อ"
-        tooltip:
-          actions:
-            disable: "ปิดใช้งาน"
+        legacy:
+          regular_results: "หัวข้อ"
+          collapse: "ย่อ"
+          tooltip:
+            actions:
+              disable: "ปิดใช้งาน"
+        search_messages: "ข้อความ"

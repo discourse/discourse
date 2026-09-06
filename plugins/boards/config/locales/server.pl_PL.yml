@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    boards_manage_board_allowed_groups: "Grupy mogące tworzyć i konfigurować tablice."
+  access_control_list:
+    errors:
+      "Boards::Board_user_will_lose_permission": "Jeśli wprowadzisz tę zmianę, utracisz uprawnienia do zarządzania tą tablicą. Kontynuować?"
+      "Boards::Board_user_will_lose_permission_on_create": "Jeśli utworzysz tę tablicę z tymi uprawnieniami, nie będziesz mógł nią zarządzać. Kontynuować?"
+  boards:
+    errors:
+      board_not_found: "Nie znaleziono tablicy"
+      board_read_forbidden: "Nie masz uprawnień do przeglądania tej tablicy"
+      board_write_forbidden: "Nie masz uprawnień do modyfikowania tej tablicy"
+      board_manage_forbidden: "Nie masz uprawnień do zarządzania tą tablicą"
+      column_not_found: "Kolumna nie została znaleziona"
+      column_move_out_of_bounds: "Kolumny nie można przesunąć dalej w tym kierunku"
+      card_not_found: "Karta nie została znaleziona"
+      invalid_card_type: "Nieprawidłowy typ karty"
+      unknown_group_ids: "Nieznane identyfikatory grup: %{group_ids}"
+      unknown_category_ids: "Nieznane identyfikatory kategorii: %{category_ids}"
+      unknown_tag_ids: "Nieznane identyfikatory tagów: %{tag_ids}"
+      topic_covered_by_filter: "Jest to jedyna karta na forum odpowiadająca temu tematowi. Zgadza się ona z filtrami forum, więc nie można jej usunąć."
+      category_definition_topic: "Tematów definiujących kategorie nie można dodawać do tablicy."
+      topic_already_in_column: "Ten temat ma już kartę w tej kolumnie."
+      invalid_assignee: "Nie można znaleźć użytkownika lub grupy o nazwie „%{name}”."
+      topic_does_not_match_constraints: "Ten temat nie jest zgodny z ograniczeniami kategorii i tagów forum."
+      unknown_tag_name: "Nieznana nazwa tagu: '%{tag_name}'"
+      unknown_tag_names: "Nieznane nazwy tagów: %{tag_names}"
+      cannot_assign: "Nie masz uprawnień do przypisania."
+      assignment_carry_over_failed: "Nie udało się przenieść zadania karty do tematu."
+      cannot_use_same_tag_multiple_times: "Nie można używać tego samego znacznika (%{tag_name}) wielokrotnie w odniesieniu do kolumn na tej samej tablicy."
+      cannot_reorder_recency_column: "Nie można zmienić kolejności kart w kolumnach posortowanych według aktualności."
+      invalid_column_sort: "Nieprawidłowe sortowanie kolumn: %{sort}"
+    onebox:
+      inline_to_card: "Karta '%{card_name}' na tablicy '%{board_name}'"
+      inline_to_board: "Tablica '%{board_name}'"
+      created_by: "Utworzono przez %{username}"
+      column_count:
+        one: "%{count} kolumna"
+        few: "%{count} kolumny"
+        many: "%{count} kolumn"
+        other: "%{count} kolumn"
+      board: "Tablica"
+      card: "Karta tablicy"
+      updated_by: "Zaktualizowano przez %{username}"

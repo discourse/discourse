@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
-  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({ "$json" => {} }) }
-  after { sandbox.dispose }
+  subject(:result) { described_class.new(parameters: configuration).execute(execution_context) }
 
-  def build_exec_ctx(configuration, resume_token: nil)
+  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({ "$json" => {} }) }
+  let(:execution_context) do
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: [{ "json" => {} }],
       parameters: configuration,
@@ -12,35 +12,39 @@ RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
       node_context: {
       },
       resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }, sandbox: sandbox),
-      resume_token: resume_token,
+      resume_token: "tok-xyz",
     )
   end
 
+  after { sandbox.dispose }
+
   describe "#execute" do
-    it "returns input items for non-completion forms" do
-      config = {
-        "form_title" => "Approval",
-        "form_description" => "Please approve",
-        "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
-      }
-      exec_ctx = build_exec_ctx(config, resume_token: "tok-xyz")
+    context "with a non-completion form" do
+      let(:configuration) do
+        {
+          "form_title" => "Approval",
+          "form_description" => "Please approve",
+          "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
+        }
+      end
 
-      result = described_class.new(parameters: config).execute(exec_ctx)
-
-      expect(result).to eq([exec_ctx.input_items])
+      it "returns input items" do
+        expect(result).to eq([execution_context.input_items])
+      end
     end
 
-    it "passes completion forms through without reaching into flow context" do
-      config = {
-        "page_type" => "completion",
-        "on_submission" => "completion_screen",
-        "completion_title" => "Done",
-      }
-      exec_ctx = build_exec_ctx(config, resume_token: "tok-xyz")
+    context "with a completion form" do
+      let(:configuration) do
+        {
+          "page_type" => "completion",
+          "on_submission" => "completion_screen",
+          "completion_title" => "Done",
+        }
+      end
 
-      result = described_class.new(parameters: config).execute(exec_ctx)
-
-      expect(result).to eq([exec_ctx.input_items])
+      it "passes through without reaching into flow context" do
+        expect(result).to eq([execution_context.input_items])
+      end
     end
   end
 end

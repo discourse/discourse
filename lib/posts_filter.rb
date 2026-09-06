@@ -30,8 +30,20 @@ class PostsFilter
   private_constant :TOKENIZER_PATTERN
 
   ORDER_VALUES = %w[latest oldest latest_topic oldest_topic likes].freeze
-  POST_TYPE_VALUES = %w[first reply].freeze
-  STATUS_VALUES = %w[open closed archived noreplies single_user].freeze
+  POST_TYPE_VALUES = %w[regular all first reply moderator_action small_action whisper].freeze
+  STORED_POST_TYPE_VALUES = %w[regular moderator_action small_action whisper].freeze
+  POST_TYPE_SCOPE_VALUES = (STORED_POST_TYPE_VALUES + %w[all]).freeze
+  STATUS_VALUES = %w[
+    open
+    closed
+    archived
+    listed
+    unlisted
+    deleted
+    public
+    noreplies
+    single_user
+  ].freeze
   CUSTOM_FILTER_PREFIXES = [nil, ""].freeze
   private_constant :CUSTOM_FILTER_PREFIXES
 
@@ -191,6 +203,7 @@ class PostsFilter
         alias: "topics:",
         description: I18n.t("posts_filter.description.topic"),
         type: "number",
+        prefixes: [{ name: "-", description: I18n.t("posts_filter.description.exclude_topic") }],
       },
       { name: "after:", description: I18n.t("posts_filter.description.after"), type: "date" },
       { name: "before:", description: I18n.t("posts_filter.description.before"), type: "date" },
@@ -282,11 +295,21 @@ class PostsFilter
   end
 
   def secure_base_relation
+    include_deleted_topics = include_deleted_topics?
+
+    base_scope = @base_scope
+    base_scope = base_scope.with_deleted if include_deleted_topics
+
+    topic_scope = Topic.secured(@guardian)
+    topic_scope = topic_scope.with_deleted if include_deleted_topics
+
+    # Use a raw topic join because the association join applies Topic's deleted_at
+    # default scope in the ON clause, which would hide status:deleted matches.
     relation =
-      @base_scope
+      base_scope
         .secured(@guardian)
-        .joins(:topic)
-        .merge(Topic.secured(@guardian))
+        .joins("INNER JOIN topics ON topics.id = posts.topic_id")
+        .merge(topic_scope)
         .where("topics.archetype = ?", Archetype.default)
 
     relation = @guardian.filter_hidden_posts(relation)
@@ -304,23 +327,52 @@ class PostsFilter
     @guardian.anonymous? || !@guardian.can_see_unlisted_topics?
   end
 
+  def include_deleted_topics?
+    return false if !@guardian.can_see_deleted_topics?(nil)
+
+    parsed_filters = @filters + @or_groups.flatten
+    parsed_filters.any? { |filter| deleted_status_filter?(filter) }
+  end
+
+  def deleted_status_filter?(filter)
+    filter[:key] == "status" && filter[:value].casecmp?("deleted")
+  end
+
   def filtered_relation(base_relation)
     if @or_groups.any?
       or_relations =
         @or_groups.map do |or_group|
-          or_group.reduce(base_relation) do |relation, parsed_filter|
-            apply_filter(relation, parsed_filter)
-          end
+          or_group.reduce(
+            relation_for_filter_group(base_relation, or_group),
+          ) { |relation, parsed_filter| apply_filter(relation, parsed_filter) }
         end
 
       union_sql =
         or_relations.map { |relation| relation.reselect("posts.id").to_sql }.join(" UNION ")
       base_relation.where("posts.id IN (#{union_sql})")
     else
-      @filters.reduce(base_relation) do |relation, parsed_filter|
-        apply_filter(relation, parsed_filter)
-      end
+      @filters.reduce(
+        relation_for_filter_group(base_relation, @filters),
+      ) { |relation, parsed_filter| apply_filter(relation, parsed_filter) }
     end
+  end
+
+  def relation_for_filter_group(base_relation, filters)
+    relation = base_relation
+
+    if include_deleted_topics? && filters.none? { |filter| deleted_status_filter?(filter) }
+      relation = relation.where(posts: { deleted_at: nil }, topics: { deleted_at: nil })
+    end
+
+    if filters.none? { |filter| post_type_scope_filter?(filter) }
+      relation = relation.where(posts: { post_type: Post.types[:regular] })
+    end
+
+    relation
+  end
+
+  def post_type_scope_filter?(filter)
+    filter[:key] == "post_type" && POST_TYPE_SCOPE_VALUES.include?(filter[:value].downcase)
   end
 
   def order_relation(relation)
@@ -399,8 +451,10 @@ class PostsFilter
     when "category", "tag"
       true
     when "before", "after", "topic_before", "topic_after", "keywords", "topic_keywords",
-         "usernames", "groups", "topics"
+         "usernames", "groups"
       !parsed_filter[:exclude] && parsed_filter[:prefix].exclude?("=")
+    when "topics"
+      parsed_filter[:prefix].exclude?("=")
     when "status"
       !parsed_filter[:exclude] && STATUS_VALUES.include?(value.downcase)
     when "post_type"
@@ -447,7 +501,7 @@ class PostsFilter
       set_order!(order_value(parsed_filter[:value]))
       relation
     when "topics"
-      filter_topics(relation, parsed_filter[:value])
+      filter_topics(relation, parsed_filter)
     when "post_type"
       filter_post_type(relation, parsed_filter[:value])
     else
@@ -463,6 +517,18 @@ class PostsFilter
       relation.where("topics.closed = true")
     when "archived"
       relation.where("topics.archived = true")
+    when "listed"
+      relation.where("topics.visible = true")
+    when "unlisted"
+      relation.where("topics.visible = false")
+    when "deleted"
+      return relation.where("1 = 0") if !@guardian.can_see_deleted_topics?(nil)
+
+      relation.where.not(topics: { deleted_at: nil })
+    when "public"
+      relation.joins("LEFT JOIN categories ON categories.id = topics.category_id").where(
+        "topics.category_id IS NULL OR NOT categories.read_restricted",
+      )
     when "noreplies"
       relation.where("topics.posts_count = 1")
     when "single_user"
@@ -580,21 +646,29 @@ class PostsFilter
     )
   end
 
-  def filter_topics(relation, topics_param)
-    topic_ids = split_values(topics_param).map(&:to_i).reject(&:zero?)
-    return relation.where("1 = 0") if topic_ids.empty?
+  def filter_topics(relation, parsed_filter)
+    topic_ids = split_values(parsed_filter[:value]).map(&:to_i).reject(&:zero?)
+    return parsed_filter[:exclude] ? relation : relation.where("1 = 0") if topic_ids.empty?
 
-    relation.where("posts.topic_id IN (?)", topic_ids)
+    if parsed_filter[:exclude]
+      relation.where.not(topic_id: topic_ids)
+    else
+      relation.where("posts.topic_id IN (?)", topic_ids)
+    end
   end
 
   def filter_post_type(relation, post_type)
-    case post_type.downcase
+    post_type_value = post_type.downcase
+
+    case post_type_value
     when "first"
       relation.where("posts.post_number = 1")
     when "reply"
       relation.where("posts.post_number > 1")
-    else
+    when "all"
       relation
+    else
+      relation.where(posts: { post_type: Post.types[post_type_value.to_sym] })
     end
   end
 

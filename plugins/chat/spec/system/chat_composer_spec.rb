@@ -126,7 +126,7 @@ RSpec.describe "Chat composer" do
     end
 
     context "when user preference is set to send on enter" do
-      before { current_user.user_option.update!(chat_send_shortcut: 0) }
+      before { current_user.user_option.update!(send_shortcut: "enter") }
 
       context "when pressing enter" do
         it "sends the message" do
@@ -163,7 +163,7 @@ RSpec.describe "Chat composer" do
     end
 
     context "when user preference is set to send on meta + enter" do
-      before { current_user.user_option.update!(chat_send_shortcut: 1) }
+      before { current_user.user_option.update!(send_shortcut: "meta_enter") }
 
       context "when pressing enter" do
         it "adds a linebreak" do

@@ -13,6 +13,36 @@ RSpec.describe UserActionsController do
       end
     end
 
+    context "when requesting more actions than the maximum page size" do
+      fab!(:user)
+
+      let(:params) { { username: user.username, filter: UserAction::REPLY, limit: 200 } }
+
+      before do
+        topic = Fabricate(:topic, user: user)
+
+        101.times do
+          post = Fabricate(:post, topic: topic, user: user)
+          UserAction.create!(
+            action_type: UserAction::REPLY,
+            user: user,
+            acting_user: user,
+            target_topic: topic,
+            target_post: post,
+          )
+        end
+
+        user.user_stat.update!(post_count: 101)
+      end
+
+      it "returns no more than 100 actions" do
+        user_actions
+
+        expect(response).to have_http_status :ok
+        expect(response.parsed_body["user_actions"].length).to eq(100)
+      end
+    end
+
     context "when 'username' is specified" do
       let(:username) { post.user.username }
       let(:params) { { username: username } }
@@ -31,8 +61,17 @@ RSpec.describe UserActionsController do
         expect(actions.first).not_to include "email"
       end
 
+      it "does not disclose activity when public profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+
+        user_actions
+
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(post.raw)
+      end
+
       it "returns categories when lazy load categories is enabled" do
-        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
         user_actions
         expect(response.status).to eq(200)
         category_ids = response.parsed_body["categories"].map { |category| category["id"] }
@@ -352,6 +391,85 @@ RSpec.describe UserActionsController do
       get "/user_actions/#{was_liked_action.id}.json"
 
       expect(response).to have_http_status :not_found
+    end
+  end
+
+  describe "content localization" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:viewer) { Fabricate(:user, locale: "ja") }
+    fab!(:staff_viewer) { Fabricate(:moderator, locale: "ja") }
+
+    let!(:topic_post) do
+      UserActionManager.enable
+      create_post(
+        user: author,
+        title: "Original english title",
+        raw: "Original topic body",
+        locale: "en",
+      )
+    end
+    let(:topic) { topic_post.topic }
+    let!(:reply) do
+      create_post(user: author, topic: topic, raw: "Original reply body", locale: "en")
+    end
+
+    let(:new_topic_action) do
+      response.parsed_body["user_actions"].find { |a| a["action_type"] == UserAction::NEW_TOPIC }
+    end
+    let(:reply_action) do
+      response.parsed_body["user_actions"].find { |a| a["action_type"] == UserAction::REPLY }
+    end
+
+    before do
+      SiteSetting.content_localization_enabled = true
+
+      Fabricate(:topic_localization, topic: topic, locale: "ja", title: "翻訳されたタイトル")
+      Fabricate(:post_localization, post: topic_post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+      Fabricate(:post_localization, post: reply, locale: "ja", cooked: "<p>翻訳された返信</p>")
+
+      sign_in(viewer)
+    end
+
+    it "returns the translated title and excerpt" do
+      get "/user_actions.json", params: { username: author.username }
+
+      expect(response).to have_http_status :ok
+      expect(new_topic_action["title"]).to eq("翻訳されたタイトル")
+      expect(new_topic_action["excerpt"]).to eq("翻訳された本文")
+      expect(reply_action["excerpt"]).to eq("翻訳された返信")
+      expect(new_topic_action["slug"]).to eq(topic.slug)
+    end
+
+    it "returns the original content without preloading when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      queries =
+        track_sql_queries { get "/user_actions.json", params: { username: author.username } }
+
+      expect(new_topic_action["title"]).to eq("Original english title")
+      expect(queries.grep(/FROM "?(topic|post)_localizations"?/)).to be_empty
+    end
+
+    it "returns the translated excerpt of a deleted post to staff" do
+      reply.trash!(staff_viewer)
+      sign_in(staff_viewer)
+
+      get "/user_actions.json", params: { username: author.username }
+
+      expect(reply_action["excerpt"]).to eq("翻訳された返信")
+    end
+
+    it "returns the translated title and excerpt for a single action" do
+      user_action =
+        UserAction.find_by!(
+          user_id: author.id,
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: topic.id,
+        )
+
+      get "/user_actions/#{user_action.id}.json"
+
+      expect(response.parsed_body["user_action"]["excerpt"]).to eq("翻訳された本文")
     end
   end
 end

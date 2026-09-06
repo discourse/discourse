@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
+import { penaltyEffectDescription } from "discourse/lib/reviewable-penalty";
 import { isRTL } from "discourse/lib/text-direction";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
@@ -13,6 +14,26 @@ export default class ReviewableBundledAction extends Component {
 
   get multiple() {
     return this.args.bundle.actions.length > 1;
+  }
+
+  get bundleActions() {
+    return this.args.bundle.actions.map((bundledAction) => {
+      const effect = penaltyEffectDescription(
+        bundledAction,
+        this.args.authorPenalties
+      );
+
+      if (!effect) {
+        return bundledAction;
+      }
+
+      return {
+        ...bundledAction,
+        description: [bundledAction.description, effect]
+          .filter(Boolean)
+          .join(" "),
+      };
+    });
   }
 
   get first() {
@@ -26,24 +47,12 @@ export default class ReviewableBundledAction extends Component {
     return `${vertical}-${horizontal}`;
   }
 
-  get buttonClass() {
-    const buttonIdentifier = dasherize(
-      this.first.button_class || this.first.id
-    );
-
-    if (buttonIdentifier === "reject-post") {
-      return "btn-danger";
-    } else if (buttonIdentifier === "approve-post") {
-      return "btn-success";
-    } else {
-      return "btn-default";
-    }
-  }
-
   @action
-  perform(id) {
-    if (id) {
-      const _action = this.args.bundle.actions.find((a) => a.id === id);
+  perform(actionName) {
+    if (actionName) {
+      const _action = this.args.bundle.actions.find(
+        (a) => a.action_name === actionName
+      );
       this.args.performAction(_action);
     } else {
       this.args.performAction(this.first);
@@ -54,20 +63,19 @@ export default class ReviewableBundledAction extends Component {
     {{#if this.multiple}}
       <DropdownSelectBox
         @nameProperty="label"
-        @content={{@bundle.actions}}
+        @valueProperty="action_name"
+        @content={{this.bundleActions}}
         @onChange={{this.perform}}
         @options={{hash
           showCaret=true
           disabled=@reviewableUpdating
           placement=this.placement
           translatedNone=@bundle.label
-          customStyle=true
-          btnCustomClasses=this.buttonClass
         }}
         class={{dConcatClass
           "reviewable-action-dropdown"
           "btn-icon-text"
-          (dasherize this.first.id)
+          (dasherize this.first.action_name)
           this.first.button_class
         }}
       />
@@ -77,10 +85,10 @@ export default class ReviewableBundledAction extends Component {
         @translatedLabel={{this.first.label}}
         @disabled={{@reviewableUpdating}}
         class={{dConcatClass
+          "btn-default"
           "reviewable-action"
-          (dasherize this.first.id)
+          (dasherize this.first.action_name)
           this.first.button_class
-          this.buttonClass
         }}
       />
     {{/if}}

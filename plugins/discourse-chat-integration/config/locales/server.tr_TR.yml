@@ -84,6 +84,10 @@ tr_TR:
       setting_update_failed: "Ayarlar güncellenemedi: %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "Verilen kimlik doğrulama belirteci geçersiz."
+          action_prohibited: "Botun bu kanala gönderi yapma izni yok"
+          channel_not_found: "Belirtilen kanal Slack'te mevcut değil"
         status:
           header: |
             *Bu kanal için kurallar*

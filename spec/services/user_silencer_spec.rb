@@ -32,6 +32,14 @@ RSpec.describe UserSilencer do
       expect(count).to eq(1)
     end
 
+    it "removes featured rows for hidden topics" do
+      CategoryFeaturedTopic.create!(category: post.topic.category, topic: post.topic)
+
+      expect { UserSilencer.silence(user, admin) }.to change {
+        CategoryFeaturedTopic.exists?(topic_id: post.topic_id)
+      }.from(true).to(false)
+    end
+
     it "skips sending the email for the silence PM via post alert" do
       NotificationEmailer.enable
       Jobs.run_immediately!
@@ -133,6 +141,28 @@ RSpec.describe UserSilencer do
         ).count
 
       expect(count).to eq(1)
+    end
+
+    it "does nothing when the user is not silenced" do
+      expect(UserSilencer.unsilence(user, admin)).to eq(false)
+
+      expect(user.topics_allowed.count).to eq(0)
+      expect(UserHistory.where(action: UserHistory.actions[:unsilence_user]).count).to eq(0)
+    end
+
+    it "is idempotent when called twice" do
+      user.update!(silenced_till: 1.year.from_now)
+
+      UserSilencer.unsilence(user, admin)
+      UserSilencer.unsilence(user, admin)
+
+      expect(UserHistory.where(action: UserHistory.actions[:unsilence_user]).count).to eq(1)
+      expect(
+        user
+          .topics_allowed
+          .where(title: I18n.t("system_messages.unsilenced.subject_template"))
+          .count,
+      ).to eq(1)
     end
   end
 end

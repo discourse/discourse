@@ -36,3 +36,7 @@ sr:
         all_time: "Oduvek"
       admin:
         name: "Ime foruma"
+    discourse_workflows:
+      gamification_score:
+        username: "Korisnik"
+        description: "Opis"

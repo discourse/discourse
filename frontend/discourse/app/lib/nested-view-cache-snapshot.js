@@ -1,6 +1,6 @@
 import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
 
-export const NESTED_VIEW_CACHE_FORMAT_VERSION = 2;
+export const NESTED_VIEW_CACHE_FORMAT_VERSION = 3;
 
 const EXCLUDED_RECORD_KEYS = new Set([
   "__munge",
@@ -24,9 +24,11 @@ export function snapshotNestedModelData(modelData) {
     page: modelData.page,
     hasMoreRoots: modelData.hasMoreRoots,
     sort: modelData.sort,
+    effectiveSort: modelData.effectiveSort || modelData.sort,
     messageBusLastId: modelData.messageBusLastId,
     pinnedPostIds: snapshotValue(modelData.pinnedPostIds),
     postNumber: modelData.postNumber,
+    context: modelData.context,
     contextMode: modelData.contextMode,
     contextChain: snapshotNode(modelData.contextChain),
     initialFocusedPath: snapshotNodes(modelData.initialFocusedPath),
@@ -58,9 +60,11 @@ export function hydrateNestedModelData(store, snapshot) {
     page: snapshot.page,
     hasMoreRoots: snapshot.hasMoreRoots,
     sort: snapshot.sort,
+    effectiveSort: snapshot.effectiveSort || snapshot.sort,
     messageBusLastId: snapshot.messageBusLastId,
     pinnedPostIds: snapshotValue(snapshot.pinnedPostIds) || [],
     postNumber: snapshot.postNumber,
+    context: snapshot.context ?? null,
     contextMode: snapshot.contextMode,
     contextChain: hydrateNode(store, topic, snapshot.contextChain),
     initialFocusedPath: hydrateNodes(store, topic, snapshot.initialFocusedPath),

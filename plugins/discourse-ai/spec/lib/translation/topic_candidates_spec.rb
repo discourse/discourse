@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Translation::TopicCandidates do
-  before { SiteSetting.ai_translation_excluded_categories = "" }
+  before do
+    SiteSetting.ai_translation_backfill_start_date = 1.day.ago.utc.to_date.iso8601
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
+  end
 
   describe ".get" do
     it "does not return bot topics" do
@@ -22,29 +26,30 @@ describe DiscourseAi::Translation::TopicCandidates do
       end
     end
 
-    it "does not return topics older than ai_translation_backfill_max_age_days" do
-      topic =
-        Fabricate(
-          :topic,
-          created_at: SiteSetting.ai_translation_backfill_max_age_days.days.ago - 1.day,
-        )
+    it "returns topics created on or after the backfill start date" do
+      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
+      start_date = DiscourseAi::Translation.backfill_start_at
+      older_topic = Fabricate(:topic, created_at: start_date - 1.second)
+      topic_at_start_date = Fabricate(:topic, created_at: start_date)
+      newer_topic = Fabricate(:topic, created_at: start_date + 1.second)
 
-      expect(DiscourseAi::Translation::TopicCandidates.get).not_to include(topic)
+      topics = described_class.get
+      expect(topics).not_to include(older_topic)
+      expect(topics).to include(topic_at_start_date, newer_topic)
     end
 
-    it "returns banner topics even when older than max_age_days" do
+    it "returns banner topics even when older than the backfill start date" do
+      start_date = 30.days.ago
+      SiteSetting.ai_translation_backfill_start_date = start_date.utc.to_date.iso8601
       banner_topic =
-        Fabricate(
-          :topic,
-          archetype: Archetype.banner,
-          created_at: SiteSetting.ai_translation_backfill_max_age_days.days.ago - 30.days,
-        )
+        Fabricate(:topic, archetype: Archetype.banner, created_at: start_date - 30.days)
 
       expect(DiscourseAi::Translation::TopicCandidates.get).to include(banner_topic)
     end
 
-    it "returns banner topics even when all categories are excluded" do
-      SiteSetting.ai_translation_excluded_categories = Category.pluck(:id).join("|")
+    it "returns banner topics even when no regular categories are included" do
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = ""
       SiteSetting.ai_translation_personal_messages = "none"
 
       banner_topic = Fabricate(:topic, archetype: Archetype.banner)
@@ -80,16 +85,30 @@ describe DiscourseAi::Translation::TopicCandidates do
         expect(DiscourseAi::Translation::TopicCandidates.get).to include(private_topic)
       end
 
-      it "does not include excluded categories" do
-        SiteSetting.ai_translation_excluded_categories = non_target_category.id.to_s
+      it "includes only topics from public categories when configured" do
+        private_category = Fabricate(:private_category, group:)
+        private_topic = Fabricate(:topic, category: private_category)
+        SiteSetting.ai_translation_category_scope = "public"
 
         topics = DiscourseAi::Translation::TopicCandidates.get
         expect(topics).to include(target_topic)
+        expect(topics).not_to include(private_topic)
+      end
+
+      it "includes topics from selected categories and subcategories" do
+        subcategory = Fabricate(:category, parent_category: target_category)
+        subcategory_topic = Fabricate(:topic, category: subcategory)
+        SiteSetting.ai_translation_category_scope = "include"
+        SiteSetting.ai_translation_categories = target_category.id.to_s
+
+        topics = DiscourseAi::Translation::TopicCandidates.get
+        expect(topics).to include(target_topic, subcategory_topic)
         expect(topics).not_to include(non_target_topic)
       end
 
-      it "returns no regular topics when all categories are excluded" do
-        SiteSetting.ai_translation_excluded_categories = Category.pluck(:id).join("|")
+      it "returns no regular topics when no categories are included" do
+        SiteSetting.ai_translation_category_scope = "include"
+        SiteSetting.ai_translation_categories = ""
         SiteSetting.ai_translation_personal_messages = "none"
 
         topics = DiscourseAi::Translation::TopicCandidates.get
@@ -100,7 +119,8 @@ describe DiscourseAi::Translation::TopicCandidates do
       end
 
       it "excludes all PMs when pm_translation_scope is none" do
-        SiteSetting.ai_translation_excluded_categories = non_target_category.id.to_s
+        SiteSetting.ai_translation_category_scope = "exclude"
+        SiteSetting.ai_translation_categories = non_target_category.id.to_s
         SiteSetting.ai_translation_personal_messages = "none"
 
         topics = DiscourseAi::Translation::TopicCandidates.get
@@ -110,7 +130,8 @@ describe DiscourseAi::Translation::TopicCandidates do
       end
 
       it "includes group PMs but not personal PMs when pm_translation_scope is group" do
-        SiteSetting.ai_translation_excluded_categories = non_target_category.id.to_s
+        SiteSetting.ai_translation_category_scope = "exclude"
+        SiteSetting.ai_translation_categories = non_target_category.id.to_s
         SiteSetting.ai_translation_personal_messages = "group"
 
         topics = DiscourseAi::Translation::TopicCandidates.get
@@ -120,7 +141,8 @@ describe DiscourseAi::Translation::TopicCandidates do
       end
 
       it "includes all PMs when pm_translation_scope is all" do
-        SiteSetting.ai_translation_excluded_categories = non_target_category.id.to_s
+        SiteSetting.ai_translation_category_scope = "exclude"
+        SiteSetting.ai_translation_categories = non_target_category.id.to_s
         SiteSetting.ai_translation_personal_messages = "all"
 
         topics = DiscourseAi::Translation::TopicCandidates.get
@@ -135,9 +157,10 @@ describe DiscourseAi::Translation::TopicCandidates do
     fab!(:target_category, :category)
 
     before do
-      SiteSetting.ai_translation_backfill_max_age_days = 100
+      SiteSetting.ai_translation_backfill_start_date = 100.days.ago.utc.to_date.iso8601
       SiteSetting.content_localization_supported_locales = "en|ja|de"
-      SiteSetting.ai_translation_excluded_categories = ""
+      SiteSetting.ai_translation_category_scope = "all"
+      SiteSetting.ai_translation_categories = ""
       SiteSetting.ai_translation_personal_messages = "none"
     end
 
@@ -205,7 +228,10 @@ describe DiscourseAi::Translation::TopicCandidates do
   end
 
   describe ".calculate_completion_per_locale" do
-    before { SiteSetting.ai_translation_excluded_categories = "" }
+    before do
+      SiteSetting.ai_translation_category_scope = "all"
+      SiteSetting.ai_translation_categories = ""
+    end
 
     context "when (scenario A) 'done' determined by topic's locale" do
       it "returns total = done if all topics are in the locale" do
@@ -291,10 +317,67 @@ describe DiscourseAi::Translation::TopicCandidates do
     end
 
     it "returns nil - nil for done and total when no topics are present" do
-      SiteSetting.ai_translation_backfill_max_age_days = 0
+      SiteSetting.ai_translation_backfill_start_date = ""
 
       completion = DiscourseAi::Translation::TopicCandidates.calculate_completion_per_locale("es")
       expect(completion).to eq({ done: 0, total: 0 })
+    end
+  end
+
+  describe ".progress_summary" do
+    fab!(:target_category, :category)
+
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
+      SiteSetting.ai_translation_category_scope = "include_strict"
+      SiteSetting.ai_translation_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
+
+    it "counts eligible, fully translated, and undetected topics" do
+      fully_translated_topic = Fabricate(:topic, category: target_category, locale: "en_US")
+      Fabricate(:topic_localization, topic: fully_translated_topic, locale: "fr")
+      Fabricate(:topic, category: target_category, locale: "en_US")
+      Fabricate(:topic, category: target_category, locale: nil)
+
+      expect(described_class.progress_summary).to eq(
+        {
+          target_type: "topic",
+          total_count: 3,
+          translated_count: 1,
+          needs_language_detection_count: 1,
+        },
+      )
+    end
+  end
+
+  describe ".progress_details" do
+    fab!(:target_category, :category)
+
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
+      SiteSetting.ai_translation_category_scope = "include_strict"
+      SiteSetting.ai_translation_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
+
+    it "returns translated, pending, and eligible counts per configured locale" do
+      translated_topic = Fabricate(:topic, category: target_category, locale: "EN-US")
+      Fabricate(:topic_localization, topic: translated_topic, locale: "FR-fr")
+      Fabricate(:topic, category: target_category, locale: "en-US")
+      Fabricate(:topic, category: target_category, locale: nil)
+
+      expect(described_class.progress_details).to eq(
+        {
+          target_type: "topic",
+          locales: [
+            { locale: "en_GB", translated_count: 0, pending_count: 1, eligible_count: 1 },
+            { locale: "fr", translated_count: 1, pending_count: 2, eligible_count: 3 },
+          ],
+        },
+      )
     end
   end
 end

@@ -7,7 +7,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
   describe ".load_options_context" do
     fab!(:badge_2) { Fabricate(:badge, name: "A badge") }
 
-    def load_options(filter: nil)
+    subject(:options) do
       context =
         DiscourseWorkflows::LoadOptionsContext.new(
           method_name: "badges",
@@ -18,8 +18,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
       described_class.load_options_context(context)
     end
 
+    let(:filter) { nil }
+
     it "returns enabled badges for the chooser" do
-      expect(load_options).to include(
+      expect(options).to include(
         { id: badge_2.id, name: badge_2.name },
         { id: badge.id, name: badge.name },
       )
@@ -27,13 +29,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
 
     it "excludes disabled badges" do
       disabled_badge = Fabricate(:badge, name: "Disabled Badge", enabled: false)
-      expect(load_options).not_to include({ id: disabled_badge.id, name: disabled_badge.name })
+      expect(options).not_to include({ id: disabled_badge.id, name: disabled_badge.name })
     end
 
-    it "filters badges by the filter term" do
-      expect(load_options(filter: "A badge")).to contain_exactly(
-        { id: badge_2.id, name: badge_2.name },
-      )
+    context "with a filter term" do
+      let(:filter) { "A badge" }
+
+      it "filters badges" do
+        expect(options).to contain_exactly({ id: badge_2.id, name: badge_2.name })
+      end
     end
   end
 
@@ -43,7 +47,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
     let(:item) { { "json" => {} } }
 
     context "with grant operation" do
-      it "grants the badge to the user" do
+      it "grants the badge to the user", :aggregate_failures do
         config = {
           "operation" => "grant",
           "username" => user.username,
@@ -57,6 +61,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
         expect(result["badge_id"]).to eq(badge.id)
         expect(result["badge_name"]).to eq(badge.name)
         expect(UserBadge.exists?(user: user, badge: badge)).to be(true)
+        expect(result).to match_node_output_schema(described_class)
       end
 
       it "does not duplicate a non-multiple-grant badge" do
@@ -71,6 +76,19 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
         expect { execute_node(configuration: config, item: item) }.not_to change {
           UserBadge.where(user: user, badge: badge).count
         }
+      end
+
+      it "raises when granting as the anonymous actor" do
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+          "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+        }
+
+        expect { execute_node(configuration: config, item: item) }.to raise_error(
+          Discourse::InvalidAccess,
+        ).and not_change { UserBadge.count }
       end
     end
 

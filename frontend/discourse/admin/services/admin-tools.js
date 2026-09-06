@@ -30,6 +30,70 @@ export default class AdminToolsService extends Service {
     return AdminUser.find(id).then((user) => user.destroy(formData));
   }
 
+  get deleteUserOptions() {
+    return [
+      {
+        id: "delete_dont_block",
+        label: i18n("admin.user.delete_dont_block"),
+        description: i18n("admin.user.delete_dont_block_description"),
+        icon: "trash-can",
+      },
+      {
+        id: "delete_and_block_email",
+        label: i18n("admin.user.delete_and_block_email"),
+        description: i18n("admin.user.delete_and_block_email_description"),
+        icon: "envelope",
+        blockFlags: { block_email: true },
+      },
+      {
+        id: "delete_and_block",
+        label: i18n("admin.user.delete_and_block"),
+        description: i18n("admin.user.delete_and_block_description"),
+        icon: "ban",
+        blockFlags: { block_email: true, block_urls: true, block_ip: true },
+      },
+    ];
+  }
+
+  showDeleteUserModal(
+    userId,
+    optionId,
+    { deletePosts = false, onDeleted } = {}
+  ) {
+    const option = this.deleteUserOptions.find((o) => o.id === optionId);
+    const blockFlags = option?.blockFlags ?? {};
+    const block = Object.keys(blockFlags).length > 0;
+
+    this.dialog.deleteConfirm({
+      title: i18n("admin.user.delete_confirm_title"),
+      message: i18n("admin.user.delete_confirm"),
+      class: `delete-user-modal ${
+        block ? "delete-and-block" : "delete-dont-block"
+      }`,
+      confirmButtonLabel: `admin.user.${optionId}`,
+      confirmButtonIcon: block ? "triangle-exclamation" : "trash-can",
+      didConfirm: async () => {
+        this.dialog.notice(i18n("admin.user.deleting_user"));
+
+        const formData = { context: document.location.pathname, ...blockFlags };
+        if (deletePosts) {
+          formData.delete_posts = true;
+        }
+
+        try {
+          const data = await this.deleteUser(userId, formData);
+          if (data?.deleted) {
+            onDeleted?.();
+          } else {
+            this.dialog.alert(i18n("admin.user.delete_failed"));
+          }
+        } catch {
+          this.dialog.alert(i18n("admin.user.delete_failed"));
+        }
+      },
+    });
+  }
+
   spammerDetails(adminUser) {
     return {
       deleteUser: () => this._deleteSpammer(adminUser),

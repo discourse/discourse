@@ -29,6 +29,9 @@ vi:
       save: "Lưu thay đổi"
       undo: "Hủy bỏ các thay đổi"
       delete: "Xóa"
+      chart:
+        form:
+          bar: "Cột"
       result_count:
         other: "%{count} kết quả."
       query_groups: "Nhóm"

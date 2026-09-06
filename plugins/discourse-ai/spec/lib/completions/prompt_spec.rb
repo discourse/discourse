@@ -74,6 +74,22 @@ RSpec.describe DiscourseAi::Completions::Prompt do
       expect(encoded[2]).to eq("this was an image")
     end
 
+    it "filters pre-encoded uploads by the allowed kinds" do
+      encoded_image = { kind: :image, mime_type: "image/png", base64: "aW1hZ2U=" }
+      encoded_document = { kind: :document, mime_type: "application/pdf", base64: "ZG9jdW1lbnQ=" }
+      content = ["uploads", { encoded_upload: encoded_image }, { encoded_upload: encoded_document }]
+
+      expect(
+        prompt.content_with_encoded_uploads(content, allow_images: false, allow_documents: true),
+      ).to eq(["uploads", nil, encoded_document])
+    end
+
+    it "rejects malformed pre-encoded uploads" do
+      expect do
+        prompt.push(type: :user, content: [{ encoded_upload: { kind: :image } }])
+      end.to raise_error(ArgumentError, /Array message content/)
+    end
+
     it "only encodes documents when explicitly allowed" do
       prompt.push(type: :user, content: ["this is a pdf", { upload_id: pdf_upload.id }])
 
@@ -183,6 +199,67 @@ RSpec.describe DiscourseAi::Completions::Prompt do
       model_messages = prompt.messages.select { |m| m[:type] == :model }
       expect(model_messages.length).to eq(1)
       expect(model_messages.first[:content]).to eq("Hello World")
+    end
+
+    it "attaches trailing thinking to the previous response" do
+      prompt.push(type: :user, content: user_msg, id: username)
+
+      thinking =
+        DiscourseAi::Completions::Thinking.new(
+          message: nil,
+          partial: false,
+          provider_info: {
+            gemini: {
+              thought_signature_parts: [{ text: "", thoughtSignature: "sig-123" }],
+            },
+          },
+        )
+
+      prompt.push_model_response(["Hello", thinking])
+
+      expect(prompt.messages.last).to include(type: :model, content: "Hello")
+      expect(prompt.messages.last[:thinking_provider_info]).to include(
+        gemini: include(thought_signature_parts: [{ text: "", thoughtSignature: "sig-123" }]),
+      )
+    end
+
+    it "merges consecutive thinking before attaching it to the response" do
+      prompt.push(type: :user, content: user_msg, id: username)
+
+      prompt.push_model_response(
+        [
+          DiscourseAi::Completions::Thinking.new(
+            message: "first",
+            provider_info: {
+              gemini: {
+                thought_signature_parts: [{ text: "", thoughtSignature: "sig-1" }],
+              },
+            },
+          ),
+          DiscourseAi::Completions::Thinking.new(
+            message: "second",
+            provider_info: {
+              gemini: {
+                grounding_metadata: {
+                  webSearchQueries: ["query"],
+                },
+              },
+            },
+          ),
+          "Hello",
+        ],
+      )
+
+      expect(prompt.messages.last[:thinking]).to eq("first\n\nsecond")
+      expect(prompt.messages.last[:thinking_provider_info]).to include(
+        gemini:
+          include(
+            thought_signature_parts: [{ text: "", thoughtSignature: "sig-1" }],
+            grounding_metadata: {
+              webSearchQueries: ["query"],
+            },
+          ),
+      )
     end
 
     it "attaches thinking metadata to the tool call message" do

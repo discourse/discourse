@@ -81,17 +81,47 @@ module DiscourseChatIntegration
         do_api_request("sendMessage", message)
       end
 
-      def self.do_api_request(method_name, message, access_token: nil)
-        http = FinalDestination::HTTP.new("api.telegram.org", 443)
-        http.use_ssl = true
+      def self.parse_base_url(value)
+        uri = URI(value)
 
+        if uri.is_a?(URI::HTTPS) && uri.host.present? && uri.userinfo.blank? && uri.query.blank? &&
+             uri.fragment.blank?
+          uri
+        end
+      rescue URI::Error, TypeError
+        nil
+      end
+
+      def self.do_api_request(method_name, message, access_token: nil)
         token = access_token.presence || SiteSetting.chat_integration_telegram_access_token
 
-        uri = URI("https://api.telegram.org/bot#{token}/#{method_name}")
+        uri = parse_base_url(SiteSetting.chat_integration_telegram_api_base_url)
+
+        if uri.nil?
+          raise DiscourseChatIntegration::ProviderError.new(
+                  info: {
+                    error_key: "chat_integration.provider.telegram.errors.invalid_api_base_url",
+                  },
+                )
+        end
+
+        uri.path = File.join(uri.path, "bot#{token}", method_name)
+
+        http = FinalDestination::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
 
         req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
         req.body = message.to_json
-        response = http.request(req)
+
+        begin
+          response = http.request(req)
+        rescue FinalDestination::SSRFDetector::DisallowedIpError
+          raise DiscourseChatIntegration::ProviderError.new(
+                  info: {
+                    error_key: "chat_integration.provider.telegram.errors.api_base_url_blocked",
+                  },
+                )
+        end
 
         JSON.parse(response.body)
       end

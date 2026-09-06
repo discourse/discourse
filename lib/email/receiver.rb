@@ -76,6 +76,9 @@ module Email
     class EmailNotAllowed < ProcessingError
     end
 
+    class EmailAliasNotAllowed < ProcessingError
+    end
+
     class OldDestinationError < ProcessingError
     end
 
@@ -147,8 +150,17 @@ module Email
     end
 
     def is_blocked?
-      return false if SiteSetting.ignore_by_title.blank?
-      Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
+      if SiteSetting.ignore_by_title.present?
+        escaped_regex =
+          SiteSetting.ignore_by_title.split("|").map { |s| Regexp.escape(s) }.join("|")
+        return true if Regexp.new(escaped_regex, Regexp::IGNORECASE) =~ @mail.subject
+      end
+      if SiteSetting.ignore_by_title_regex.present?
+        if Regexp.new(SiteSetting.ignore_by_title_regex, Regexp::IGNORECASE) =~ @mail.subject
+          return true
+        end
+      end
+      false
     end
 
     def create_incoming_email
@@ -212,7 +224,7 @@ module Email
         # the email is a reply to *something*
         if category = post.topic&.category
           # it's a topic in a category
-          if category.mailinglist_mirror?
+          if sent_to_mailinglist_mirror?(category)
             # replies to categories that are mailing mirrors should work,
             # even if reply_by_email is not otherwise enabled
           elsif !SiteSetting.reply_by_email_enabled
@@ -545,10 +557,8 @@ module Email
     def extract_from_word(doc)
       # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
       # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
-      elided =
-        doc.css(
-          ".WordSection1 > :not(p):not(ul):first-of-type, .WordSection1 > :not(p):not(ul):first-of-type ~ *",
-        ).remove
+      signature_start = ".WordSection1 > :not(p):not(ul):not(ol):first-of-type"
+      elided = doc.css("#{signature_start}, #{signature_start} ~ *").remove
       to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
     end
 
@@ -794,6 +804,10 @@ module Email
 
         if user.nil? && SiteSetting.enable_staged_users
           raise EmailNotAllowed unless EmailValidator.allowed?(email)
+          # Staging would be rejected by the normalized uniqueness rule, which is a
+          # deliberate block rather than an unexpected failure. Callers that tolerate
+          # a failed create keep getting nil, so only the sender aborts the email.
+          raise EmailAliasNotAllowed if raise_on_failed_create && normalized_email_taken?(email)
 
           username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
           begin
@@ -821,6 +835,10 @@ module Email
       find_or_create_user(email, display_name, raise_on_failed_create: true)
     end
 
+    def normalized_email_taken?(email)
+      SiteSetting.normalize_emails? && UserEmail.find_by_normalized(email).present?
+    end
+
     def all_destinations
       @all_destinations ||= [
         @mail.destinations,
@@ -834,15 +852,11 @@ module Email
         all_destinations.map { |d| Email::Receiver.check_address(d, is_bounce?) }.reject(&:blank?)
     end
 
-    def sent_to_mailinglist_mirror?
-      @sent_to_mailinglist_mirror ||=
-        begin
-          destinations.each do |destination|
-            return true if destination.is_a?(Category) && destination.mailinglist_mirror?
-          end
-
-          false
-        end
+    def sent_to_mailinglist_mirror?(category = nil)
+      destinations.any? do |destination|
+        destination.is_a?(Category) && destination.mailinglist_mirror? &&
+          (category.nil? || destination == category)
+      end
     end
 
     def self.check_address(address, include_verp = false)
@@ -1245,7 +1259,13 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
 
-      Email::MessageIdService.find_post_from_message_ids(message_ids)
+      post = Email::MessageIdService.find_post_from_message_ids(message_ids)
+      if !force && SiteSetting.find_related_post_with_key &&
+           !(post&.topic&.category && sent_to_mailinglist_mirror?(post.topic.category))
+        return
+      end
+
+      post
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)
@@ -1491,7 +1511,10 @@ module Email
 
       add_elided_to_raw!(options)
 
-      if sent_to_mailinglist_mirror?
+      topic_category = options[:topic]&.category
+      topic_category ||= Category.find_by(id: options[:category]) if options[:category]
+
+      if topic_category && sent_to_mailinglist_mirror?(topic_category)
         options[:skip_validations] = true
         options[:skip_guardian] = true
       else

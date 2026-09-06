@@ -1,22 +1,29 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import moment from "moment";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { number } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
-import CategorySelector from "discourse/select-kit/components/category-selector";
+import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
+const MAX_CATEGORIES = 10;
+
 export default class ActivityByCategory extends Component {
+  @service currentUser;
+  @service toasts;
+
   @tracked selectedCategories = [];
   @tracked overrideActivity = null;
   @tracked loading = false;
@@ -26,8 +33,12 @@ export default class ActivityByCategory extends Component {
   constructor() {
     super(...arguments);
 
-    this.selectedCategories = (this.args.activity?.rows ?? [])
-      .map((row) => Category.findById(row.category_id))
+    const ids =
+      this.args.activity?.category_ids ??
+      (this.args.activity?.rows ?? []).map((row) => row.category_id);
+
+    this.selectedCategories = ids
+      .map((id) => Category.findById(id))
       .filter(Boolean);
   }
 
@@ -37,16 +48,27 @@ export default class ActivityByCategory extends Component {
 
   get rows() {
     const rows = this.activity?.rows ?? [];
-    const decorated = rows.map((row) => ({
-      ...row,
-      category: Category.findById(row.category_id),
-      topicsFormatted: I18n.toNumber(row.topics, { precision: 0 }),
-      postsFormatted: I18n.toNumber(row.posts, { precision: 0 }),
-      pageViewsFormatted: number(row.page_views),
-      changeClass:
-        row.share_change > 0 ? "--pos" : row.share_change < 0 ? "--neg" : "",
-      swatchStyle: trustHTML(`background-color: #${this.#safeHex(row.color)}`),
-    }));
+    const decorated = rows.map((row) => {
+      const category = Category.findById(row.category_id);
+      const categorySlug = category
+        ? Category.slugFor(category, ":")
+        : row.slug;
+
+      return {
+        ...row,
+        category,
+        topicsFormatted: I18n.toNumber(row.topics, { precision: 0 }),
+        postsFormatted: I18n.toNumber(row.posts, { precision: 0 }),
+        pageViewsFormatted: number(row.page_views),
+        topicsQuery: this.#topicQuery(categorySlug, "created"),
+        postsQuery: this.#topicQuery(categorySlug, "activity"),
+        changeClass:
+          row.share_change > 0 ? "--pos" : row.share_change < 0 ? "--neg" : "",
+        swatchStyle: trustHTML(
+          `background-color: #${this.#safeHex(row.color)}`
+        ),
+      };
+    });
 
     const direction = this.sortDir === "asc" ? 1 : -1;
     return decorated.sort((a, b) => {
@@ -64,10 +86,57 @@ export default class ActivityByCategory extends Component {
     return /^[0-9a-fA-F]{6}$/.test(color) ? color : "cccccc";
   }
 
+  #topicQuery(categorySlug, dateFilter) {
+    const terms = [];
+
+    if (this.args.startDate) {
+      terms.push(
+        `${dateFilter}-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
+      );
+    }
+    if (this.args.endDate) {
+      terms.push(
+        `${dateFilter}-before:${moment(this.args.endDate)
+          .add(1, "day")
+          .format("YYYY-MM-DD")}`
+      );
+    }
+    terms.push(`=category:${categorySlug}`);
+
+    return { q: terms.join(" ") };
+  }
+
   @action
   onCategoriesChange(categories) {
     this.selectedCategories = categories;
     this.refetch();
+    this.#persistSelection();
+  }
+
+  #persistSelection() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax(
+      "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+      {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+          category_ids: this.selectedCategories.map((c) => c.id),
+        }),
+      }
+    ).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n(
+            "admin.dashboard.sections.engagement.activity_by_category.save_error"
+          ),
+        },
+      });
+    });
   }
 
   @action
@@ -133,9 +202,10 @@ export default class ActivityByCategory extends Component {
           }}
         </LinkTo>
 
-        <CategorySelector
+        <MultipleCategoriesSelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onCategoriesChange}}
+          @options={{hash maximum=MAX_CATEGORIES}}
         />
       </div>
 
@@ -276,12 +346,19 @@ export default class ActivityByCategory extends Component {
                       {{row.name}}
                     {{/if}}
                   </td>
-                  <td
-                    class="db-activity-table__cell-number"
-                  >{{row.topicsFormatted}}</td>
-                  <td
-                    class="db-activity-table__cell-number"
-                  >{{row.postsFormatted}}</td>
+                  <td class="db-activity-table__cell-number">
+                    <LinkTo
+                      @route="discovery.filter"
+                      @query={{row.topicsQuery}}
+                    >
+                      {{row.topicsFormatted}}
+                    </LinkTo>
+                  </td>
+                  <td class="db-activity-table__cell-number">
+                    <LinkTo @route="discovery.filter" @query={{row.postsQuery}}>
+                      {{row.postsFormatted}}
+                    </LinkTo>
+                  </td>
                   <td
                     class="db-activity-table__cell-number"
                   >{{row.pageViewsFormatted}}</td>

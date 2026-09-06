@@ -58,7 +58,7 @@ export default class RequestGroupMembershipForm extends Component {
 
           <DExpandingTextArea
             {{on "input" (withEventValue (fn (mut this.reason)))}}
-            value={{this.reason}}
+            @value={{this.reason}}
             maxlength="5000"
           />
         </div>

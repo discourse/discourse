@@ -80,6 +80,10 @@ es:
       removed: "Eliminado %{removed}"
     provider:
       slack:
+        errors:
+          auth_error: "El token de autenticación proporcionado no es válido"
+          action_prohibited: "Este bot no tiene permiso para publicar en ese canal."
+          channel_not_found: "El canal especificado no existe en Slack"
         status:
           header: |
             *Reglas para este canal*

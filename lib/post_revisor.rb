@@ -109,6 +109,10 @@ class PostRevisor
     @@tracked_topic_fields
   end
 
+  def self.valid_post_type?(post_type)
+    [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]].include?(post_type)
+  end
+
   def self.track_topic_field(field, &block)
     tracked_topic_fields[field] = block
 
@@ -180,12 +184,12 @@ class PostRevisor
   track_topic_field(:tags) { |tc, tags| tc.apply_tag_changes(tags) }
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
-    if !SiteSetting.topic_featured_link_enabled ||
-         !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
+    if featured_link.blank?
+      track_and_revise topic_changes, :featured_link, nil
+    elsif !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
       topic_changes.check_result(false)
     else
-      topic_changes.record_change("featured_link", topic_changes.topic.featured_link, featured_link)
-      topic_changes.topic.featured_link = featured_link
+      track_and_revise topic_changes, :featured_link, featured_link
     end
   end
 
@@ -275,6 +279,9 @@ class PostRevisor
   # @option opts [Boolean] :skip_revision Do not create a new PostRevision record
   # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
   # @option opts [Boolean] :silent Don't send notifications to user
+  # @option opts [Boolean] :hidden Force the created revision to be hidden from non-staff users
+  # @option opts [String] :expected_raw Reject the revision if the post changed before persistence
+  # @option opts [String] :preserve_cooked_token Identifies a client that already rendered the change
   # @return [Boolean] Returns true if the revision was successful, false otherwise
   def revise!(editor, fields, opts = {})
     @editor = editor
@@ -287,6 +294,10 @@ class PostRevisor
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
+    if @fields.has_key?(:post_type)
+      @fields[:post_type] = @fields[:post_type].to_i
+      return false unless validate_post_type
+    end
     if @fields.has_key?(:tags) && PostRevisor.tag_change_noop?(@topic, @fields[:tags])
       @fields.delete(:tags)
     end
@@ -345,9 +356,22 @@ class PostRevisor
     @silent = @opts[:silent] if @opts.has_key?(:silent)
     @topic_changes.silent = @silent
 
+    @previous_last_editor_id = @post.last_editor_id
+
     old_raw = @post.raw
 
+    @should_bump_topic = false
+
     Post.transaction do
+      if (expected_raw = @opts[:expected_raw])
+        locked_raw = Post.where(id: @post.id).lock("FOR UPDATE").pick(:raw)
+        if locked_raw != expected_raw
+          @post.errors.add(:base, :edit_conflict, message: I18n.t("edit_conflict"))
+          @post_successfully_saved = false
+          raise ActiveRecord::Rollback
+        end
+      end
+
       revise_post
 
       yield if block_given?
@@ -359,12 +383,17 @@ class PostRevisor
       # false positive.
       plugin_callbacks
 
+      @should_bump_topic = @version_changed && successfully_saved_post_and_topic && should_bump?
       revise_topic
       advance_draft_sequence if !opts[:keep_existing_draft]
+
+      raise ActiveRecord::Rollback if !successfully_saved_post_and_topic
     end
 
     # bail out if the post or topic failed to save
     return false if !successfully_saved_post_and_topic
+
+    bump_topic if @should_bump_topic
 
     # Lock the post by default if the appropriate setting is true
     if SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
@@ -443,9 +472,10 @@ class PostRevisor
     # topic-only changes (without post content changes) should always create a new version
     # since the grace period concept doesn't apply to metadata changes like tags
     if topic_changed? && !post_changed?
-      # Allow hidden tag-only changes to update a previous hidden revision
-      # so that reverting hidden tag changes collapses the revisions
-      if only_hidden_tags_changed? &&
+      # Allow the same user to collapse a hidden tag-only change into their
+      # previous hidden revision (e.g. reverting); a different user's change must
+      # still create its own revision so authorship is not folded into theirs.
+      if only_hidden_tags_changed? && !edited_by_another_user? &&
            PostRevision.where(post_id: @post.id, number: @post.version).pick(:hidden)
         return false
       end
@@ -536,14 +566,13 @@ class PostRevisor
     @version_changed = true
     @post.version += 1
 
-    @hidden_revision = only_hidden_tags_changed?
+    @hidden_revision = @opts[:hidden] == true || only_hidden_tags_changed?
     @post.public_version += 1 unless @hidden_revision
 
     @post.last_version_at = @revised_at
 
     revise
-    perform_edit
-    bump_topic
+    perform_edit if successfully_saved_post_and_topic
   end
 
   def revise
@@ -591,6 +620,7 @@ class PostRevisor
     previous_reply_to_post_number = @post.reply_to_post_number_was
 
     @post_successfully_saved = @post.save(validate: @validate_post)
+    @post_changes = @post.previous_changes.slice(*POST_TRACKED_FIELDS) if @post_successfully_saved
     @post.link_post_uploads
 
     if @post_successfully_saved
@@ -689,10 +719,14 @@ class PostRevisor
   def create_revision
     modifications = post_changes.merge(topic_diff)
 
-    modifications["raw"][0] = cached_original_raw || modifications["raw"][0] if modifications["raw"]
+    if use_cached_original_for_created_revision?
+      if modifications["raw"]
+        modifications["raw"][0] = cached_original_raw || modifications["raw"][0]
+      end
 
-    if modifications["cooked"]
-      modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
+      if modifications["cooked"]
+        modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
+      end
     end
 
     @post_revision =
@@ -705,6 +739,11 @@ class PostRevisor
       )
     @post_revision.silent = @silent
     @post_revision.save!
+  end
+
+  def use_cached_original_for_created_revision?
+    @previous_last_editor_id == @editor.id &&
+      !PostRevision.exists?(post_id: @post.id, number: @post.version - 1)
   end
 
   def update_revision
@@ -740,7 +779,7 @@ class PostRevisor
   end
 
   def post_changes
-    @post.previous_changes.slice(*POST_TRACKED_FIELDS)
+    @post_changes || @post.previous_changes.slice(*POST_TRACKED_FIELDS)
   end
 
   def topic_diff
@@ -757,7 +796,6 @@ class PostRevisor
   end
 
   def bump_topic
-    return if !should_bump?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_unmuted(@topic)
@@ -809,7 +847,6 @@ class PostRevisor
 
     update_topic_excerpt
     update_category_description
-    update_topic_locale
   end
 
   def update_topic_excerpt
@@ -824,10 +861,6 @@ class PostRevisor
     else
       @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
-  end
-
-  def update_topic_locale
-    @topic.update(locale: @fields[:locale]) if @fields.has_key?(:locale)
   end
 
   def advance_draft_sequence
@@ -854,6 +887,10 @@ class PostRevisor
       end
 
     DiscourseEvent.trigger(:before_post_publish_changes, post_changes, @topic_changes, options)
+
+    if (token = @opts[:preserve_cooked_token])
+      options[:preserve_cooked_token] = token
+    end
 
     @post.publish_change_to_clients!(:revised, options)
   end
@@ -894,6 +931,13 @@ class PostRevisor
   end
 
   private
+
+  def validate_post_type
+    return true if self.class.valid_post_type?(@fields[:post_type])
+
+    @post.errors.add(:post_type, :invalid)
+    false
+  end
 
   def resolve_reply_to_change
     new_post_number = @fields[:reply_to_post_number]

@@ -113,6 +113,8 @@ export function buildCompletions(cmParams, { scope, ancestorNodes, sections }) {
   const globalOptions = globalCompletions.map((g) =>
     withMethodApply({ ...g, section: sections.globals }, cmAutocomplete)
   );
+  const methodOption = (m) =>
+    withMethodApply({ ...m, section: sections.methods }, cmAutocomplete);
 
   const completer = (context) => {
     if (!isInsideExpression(context)) {
@@ -130,23 +132,9 @@ export function buildCompletions(cmParams, { scope, ancestorNodes, sections }) {
 
         const options = [];
 
-        const statics = globalStaticMethods[ctx.object];
-        if (statics) {
-          for (const m of statics) {
-            options.push(
-              withMethodApply(
-                { ...m, section: sections.methods },
-                cmAutocomplete
-              )
-            );
-          }
-        }
-
-        const methods = methodsForType(target);
-        for (const m of methods) {
-          options.push(
-            withMethodApply({ ...m, section: sections.methods }, cmAutocomplete)
-          );
+        const statics = globalStaticMethods[ctx.object] || [];
+        for (const m of [...statics, ...methodsForType(target)]) {
+          options.push(methodOption(m));
         }
 
         if (typeof target === "object" && target !== null) {
@@ -155,16 +143,12 @@ export function buildCompletions(cmParams, { scope, ancestorNodes, sections }) {
             if (typeof value === "function") {
               const methodDoc = lookupWorkflowMethodDoc(ctx.object, name);
               options.push(
-                withMethodApply(
-                  {
-                    label: name,
-                    type: "method",
-                    detail: methodDoc?.detail || "()",
-                    info: methodDoc?.info,
-                    section: sections.methods,
-                  },
-                  cmAutocomplete
-                )
+                methodOption({
+                  label: name,
+                  type: "method",
+                  detail: methodDoc?.detail || "()",
+                  info: methodDoc?.info,
+                })
               );
               continue;
             }
@@ -217,7 +201,7 @@ export function buildCompletions(cmParams, { scope, ancestorNodes, sections }) {
             .filter((k) => typeof target[k] !== "function")
             .map((name) => ({
               label: name,
-              apply: `'${name.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}']`,
+              apply: `'${escapeQuotedString(name, "'")}']`,
               type: "property",
               section: sections.properties,
             })),

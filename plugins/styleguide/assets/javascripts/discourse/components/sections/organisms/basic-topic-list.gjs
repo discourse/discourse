@@ -1,25 +1,9 @@
-import Component from "@glimmer/component";
-import BasicTopicList from "discourse/components/basic-topic-list";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import BasicTopicListExample from "../../examples/organisms/basic-topic-list";
+import basicTopicListSource from "../../examples/organisms/basic-topic-list?source=file";
 
-export default class BasicTopicListOrganism extends Component {
-  get basicTopicListCode() {
-    return `
-import BasicTopicList from "discourse/components/basic-topic-list";
-
-<template>
-  <BasicTopicList @topics={{@dummy.topics}} />
+export default <template>
+  <StyleguideExample @title="<BasicTopicList>" @code={{basicTopicListSource}}>
+    <BasicTopicListExample @topics={{@dummy.topics}} />
+  </StyleguideExample>
 </template>
-    `;
-  }
-
-  <template>
-    <StyleguideExample
-      @title="<BasicTopicList>"
-      class="half-size"
-      @code={{this.basicTopicListCode}}
-    >
-      <BasicTopicList @topics={{@dummy.topics}} />
-    </StyleguideExample>
-  </template>
-}

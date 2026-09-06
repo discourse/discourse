@@ -13,7 +13,8 @@ module Jobs
           json = DiscourseHub.discourse_version_check
           DiscourseUpdates.last_installed_version = Discourse::VERSION::STRING
           DiscourseUpdates.latest_version = json["latestVersion"]
-          DiscourseUpdates.critical_updates_available = json["criticalUpdates"]
+          DiscourseUpdates.latest_pretty_version = json["latestPrettyVersion"]
+          DiscourseUpdates.latest_sha = json["latestSha"]
           DiscourseUpdates.missing_versions_count = json["missingVersionsCount"]
           DiscourseUpdates.updated_at = Time.zone.now
           DiscourseUpdates.missing_versions = json["versions"]

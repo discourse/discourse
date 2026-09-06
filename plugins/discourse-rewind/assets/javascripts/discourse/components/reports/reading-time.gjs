@@ -13,7 +13,6 @@ export default class ReadingTime extends Component {
 
     if (leftOverMinutes >= 35) {
       totalHours += 1;
-      leftOverMinutes = 0;
       return `${totalHours}h`;
     } else {
       return `${totalHours}h ${leftOverMinutes}m`;

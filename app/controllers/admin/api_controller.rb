@@ -72,7 +72,10 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def create
-    api_key = ApiKey.new(update_params)
+    api_key_params = update_params
+    validate_read_only_scopes!
+
+    api_key = ApiKey.new(api_key_params)
     ApiKey.transaction do
       api_key.created_by = current_user
       api_key.api_key_scopes = build_scopes
@@ -110,6 +113,12 @@ class Admin::ApiController < Admin::AdminController
   end
 
   private
+
+  def validate_read_only_scopes!
+    return if params.dig(:key, :scope_mode) != "read_only"
+
+    raise Discourse::InvalidParameters if params.dig(:key, :scopes).blank?
+  end
 
   def build_scopes
     params.require(:key)[:scopes].to_a.map do |scope_params|

@@ -11,7 +11,7 @@ describe Jobs::LocalizePosts do
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = "en|ja|de"
     SiteSetting.ai_translation_backfill_hourly_rate = 100
-    SiteSetting.ai_translation_backfill_max_age_days = 100
+    SiteSetting.ai_translation_backfill_start_date = 100.days.ago.utc.to_date.iso8601
   end
 
   it "does nothing when translator is disabled" do

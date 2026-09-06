@@ -12,12 +12,9 @@ module DiscourseWorkflows
 
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
-    lock(:workflow_id) do
-      model :workflow
-      model :active_version
-      step :restore_published_version
-    end
-
+    model :workflow
+    model :active_version
+    step :restore_published_version
     step :expire_workflow_caches
 
     private

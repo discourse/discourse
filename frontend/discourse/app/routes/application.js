@@ -20,6 +20,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service composer;
   @service currentUser;
   @service dialog;
+  @service exception;
   @service documentTitle;
   @service embedAuthFlow;
   @service historyStore;
@@ -130,7 +131,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   error(err, transition) {
     const xhrOrErr = err.jqXHR ? err.jqXHR : err;
-    const exceptionController = this.controllerFor("exception");
     let shouldBubble = false;
 
     const themeOrPluginSource = identifySource(err);
@@ -154,11 +154,6 @@ export default class ApplicationRoute extends DiscourseRoute {
       }
     }
 
-    exceptionController.setProperties({
-      lastTransition: transition,
-      thrown: xhrOrErr,
-    });
-
     if (transition.intent.url) {
       if (transition.method === "replace") {
         DiscourseURL.replaceState(transition.intent.url);
@@ -167,7 +162,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       }
     }
 
-    this.intermediateTransitionTo("exception");
+    this.exception.show(xhrOrErr, transition);
     return shouldBubble;
   }
 

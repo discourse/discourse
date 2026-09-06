@@ -39,13 +39,34 @@ def valid_upcoming_change_impact_roles
   %w[staff admins moderators all_members developers]
 end
 
+# Derived from the file path rather than Discourse.plugins_by_name, so the checks
+# hold regardless of which plugins happen to be loaded in the current test run.
+def upcoming_change_owning_plugin_dir(setting)
+  setting[:file][%r{plugins/([^/]+)/}, 1]
+end
+
+def upcoming_change_plugin_enabled_site_setting(plugin_dir)
+  plugin_rb = Rails.root.join("plugins", plugin_dir, "plugin.rb")
+  return nil unless File.exist?(plugin_rb)
+  File.read(plugin_rb)[/enabled_site_setting\s+:(\w+)/, 1]&.to_sym
+end
+
 RSpec.describe "upcoming change metadata integrity checks" do
   each_upcoming_change_setting do |setting|
     label = upcoming_change_setting_label(setting)
 
     it "#{label} is valid" do
       metadata = setting[:upcoming_change]
-      allowed_keys = %i[status impact learn_more_url allow_enabled_for body_class]
+      allowed_keys = %i[
+        status
+        impact
+        learn_more_url
+        allow_enabled_for
+        body_class
+        permanent_warning
+        hide_settings
+        requires_plugin_enabled
+      ]
       required_keys = %i[status impact]
       unsupported_keys = metadata.keys - allowed_keys
       missing_keys = required_keys - metadata.keys
@@ -56,6 +77,14 @@ RSpec.describe "upcoming change metadata integrity checks" do
       learn_more_url = metadata[:learn_more_url]
       allow_enabled_for = metadata[:allow_enabled_for]
       body_class = metadata[:body_class]
+      permanent_warning = metadata[:permanent_warning]
+      hide_settings = metadata[:hide_settings]
+      requires_plugin_enabled = metadata[:requires_plugin_enabled]
+      setting_name_sym = setting[:setting_name].to_sym
+      owning_plugin_dir = upcoming_change_owning_plugin_dir(setting)
+      is_own_enabled_site_setting =
+        owning_plugin_dir.present? &&
+          upcoming_change_plugin_enabled_site_setting(owning_plugin_dir) == setting_name_sym
 
       aggregate_failures do
         expect(setting[:options][:hidden]).to eq(true), "#{label} must set `hidden: true`"
@@ -114,6 +143,39 @@ RSpec.describe "upcoming change metadata integrity checks" do
         unless body_class.nil?
           expect([true, false]).to include(body_class),
           "#{label} `upcoming_change.body_class` must be a boolean"
+        end
+
+        unless permanent_warning.nil?
+          expect([true, false]).to include(permanent_warning),
+          "#{label} `upcoming_change.permanent_warning` must be a boolean"
+        end
+
+        unless requires_plugin_enabled.nil?
+          expect([true, false]).to include(requires_plugin_enabled),
+          "#{label} `upcoming_change.requires_plugin_enabled` must be a boolean"
+
+          expect(owning_plugin_dir).to be_present,
+          "#{label} sets `upcoming_change.requires_plugin_enabled` but is not owned by a plugin"
+        end
+
+        # Plugin-owned changes are gated on their plugin by default. A change that
+        # is its plugin's own `enabled_site_setting` must opt out with
+        # `requires_plugin_enabled: false`, otherwise the default gate would gate the
+        # change on itself and it could never be reached (enabling it is how admins
+        # turn the plugin on in the first place).
+        if is_own_enabled_site_setting
+          expect(requires_plugin_enabled).to eq(false),
+          "#{label} is its plugin's own `enabled_site_setting` and must set `upcoming_change.requires_plugin_enabled: false`, otherwise the change gates itself"
+        end
+
+        if hide_settings.present?
+          expect(hide_settings).to be_an(Array),
+          "#{label} `upcoming_change.hide_settings` must be an array"
+
+          unknown_settings =
+            Array(hide_settings).map(&:to_s).reject { |s| SiteSetting.respond_to?(s) }
+          expect(unknown_settings).to be_empty,
+          "#{label} `upcoming_change.hide_settings` references unknown site settings: #{unknown_settings.join(", ")}"
         end
       end
     end

@@ -12,6 +12,16 @@ fa_IR:
           kpi:
             accepted_solutions:
               label: "راه حل مورد قبول"
+        sections:
+          support:
+            answerers:
+              staff: "همکاران"
+              member: "اعضاء"
+              basic: "پایه‌ای"
+            response_time:
+              buckets:
+                lt_1h: "< ۱ ساعت"
+                gt_24h: "> ۲۴ ساعت"
   js:
     notifications:
       alt:
@@ -52,6 +62,11 @@ fa_IR:
         statuses:
           solved: "حل شده‌اند"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "موضوع"
+            category: "دسته‌بندی"
       web_hooks:
         solved_event:
           group_name: "رویداد حل شده"

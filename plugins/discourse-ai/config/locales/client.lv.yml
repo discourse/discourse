@@ -34,6 +34,19 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      copied: "Nokopēts"
+      ai_decoded_transcript:
+        type: "Tips"
+        error: "Kļūda..."
+        response: "Atbilde"
+      ai_tool_approval:
+        loading: "Ielādē..."
+        tool: "Darbība"
+        user: "Lietotājs"
+        approve: "Apstiprināt"
+        reject: "Noraidīt"
+        approved: "Apstiprināt"
+        rejected: "Noraidīts"
       llm_selector:
         none: "Nav"
       features:
@@ -52,11 +65,29 @@ lv:
           reset: "Atlikt"
         search:
           name: "Meklēt"
+        image_caption:
+          setting_groups:
+            settings: "Iestatījumi"
         spam:
           name: "Spams"
       modals:
         select_option: "Izvēlieties opciju..."
       translations:
+        category_scope: "Sadaļas"
+        model_progress:
+          detail:
+            columns:
+              pending: "Gaida apstiprinājumu"
+              total: "Kopā"
+          targets:
+            post:
+              title: "Ieraksti"
+            topic:
+              title: "Tēmas"
+            category:
+              title: "Sadaļas"
+            tag:
+              title: "Birkas"
         stats:
           eta_hours:
             zero: "%{count} stundas"
@@ -83,6 +114,34 @@ lv:
         total: "Kopā"
         periods:
           last_day: "Pēdējās 24 stundas"
+      logs:
+        short_title: "Žurnāls"
+        apply: "Pielietot"
+        successful: "Veiksmīgs"
+        failed: "Neizdevies"
+        unknown: "Nezināms"
+        time: "Laiks"
+        when: "Kad"
+        request: "Pieprasījums"
+        user: "Lietotājs"
+        context: "Konteksts"
+        topic: "Tēmas"
+        post: "Ieraksts"
+        post_short: "Ieraksts %{id}"
+        duration: "Ilgums"
+        actions: "Darbības"
+        view_details: "Detaļas"
+        periods:
+          day: "Pēdējās 24 stundas"
+          week: "Pēdējās 7 dienas"
+        detail:
+          request: "Pieprasījums"
+          response: "Atbilde"
+          context: "Konteksts"
+        retention:
+          summary_stage: "Kopsavilkums"
+          deleted_stage: "Dzēsts"
+          save: "Saglabāt"
       ai_agent:
         name: "Vārds"
         edit: "Labot"
@@ -93,6 +152,11 @@ lv:
         save: "Saglabāt"
         enabled: "Ieslēgts?"
         delete: "Dzēst"
+        thinking_effort_options:
+          none: "Nav"
+          low: "Zems"
+          medium: "Vidējs"
+          high: "Augsta"
         response_format:
           open_modal: "Labot"
         filters:
@@ -132,6 +196,9 @@ lv:
           required: "Nepieciešams"
       llms:
         display_name: "Vārds"
+        vision_modes:
+          disabled:
+            title: "Atslēgt"
         save: "Saglabāt"
         edit: "Labot"
         delete: Dzēst
@@ -146,8 +213,6 @@ lv:
           title: "Nākamais"
         tests:
           success: "Veiksmīgi!"
-        providers:
-          google: "Google"
       ai_helper:
         context_menu:
           cancel: "Atcelt"
@@ -159,8 +224,6 @@ lv:
           cancel: "Atcelt"
         thumbnail_suggestions:
           try_again: "Mēģināt vēlreiz"
-        image_caption:
-          save_caption: "Saglabāt"
       embeddings:
         save: "Saglabāt"
         delete: "Dzēst"
@@ -172,6 +235,7 @@ lv:
           google: "Google"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Ilgums:"
           request: "Pieprasījums"
           response: "Atbilde"
           next_log: "Nākamais"
@@ -193,8 +257,10 @@ lv:
           table:
             total_count: "Kopā"
       discobot_discoveries:
-        regular_results: "Tēmas"
-        collapse: "Sakļaut"
-        tooltip:
-          actions:
-            disable: "Atslēgt"
+        legacy:
+          regular_results: "Tēmas"
+          collapse: "Sakļaut"
+          tooltip:
+            actions:
+              disable: "Atslēgt"
+        search_messages: "Ziņās"

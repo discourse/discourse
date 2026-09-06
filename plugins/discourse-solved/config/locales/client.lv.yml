@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 lv:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Personāls"
+              member: "Dalībnieki"
   js:
     notifications:
       alt:
@@ -18,6 +26,12 @@ lv:
       confirm_solved_removal_cancel: "Atcelt"
       shared_issue:
         label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tēmas"
+            category: "Sadaļa"
     discourse_automation:
       triggerables:
         first_accepted_solution:

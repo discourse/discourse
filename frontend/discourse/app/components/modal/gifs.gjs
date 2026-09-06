@@ -7,24 +7,27 @@ import { service } from "@ember/service";
 import GifsResultList from "discourse/components/gifs/result-list";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
+import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
-const KLIPY_SEARCH_URL = "https://api.klipy.com/v2/search";
-const KLIPY_CATEGORIES_URL = "https://api.klipy.com/v2/categories";
-const PAGE_SIZE = 24;
+const GIFS_SEARCH_URL = "/gifs/search.json";
+const GIFS_CATEGORIES_URL = "/gifs/categories.json";
 const MIN_QUERY_LENGTH = 3;
 
 export default class GifsModal extends Component {
   @service appEvents;
   @service dialog;
+  @service interfaceColor;
   @service siteSettings;
 
   @tracked categories = [];
   @tracked loading = false;
   @tracked loadingCategories = false;
+  @tracked searchPending = false;
   @tracked offset = 0;
   @tracked query = "";
   @tracked hasMore = true;
@@ -37,6 +40,16 @@ export default class GifsModal extends Component {
 
   get showingCategories() {
     return this.query.length < MIN_QUERY_LENGTH && this.categories.length > 0;
+  }
+
+  get darkMediaQuery() {
+    if (this.interfaceColor.darkModeForced) {
+      return "all";
+    } else if (this.interfaceColor.lightModeForced) {
+      return "none";
+    } else {
+      return "(prefers-color-scheme: dark)";
+    }
   }
 
   @action
@@ -63,6 +76,7 @@ export default class GifsModal extends Component {
   @action
   refresh(event) {
     this.query = event.target.value;
+    this.searchPending = this.query.length >= MIN_QUERY_LENGTH;
     discourseDebounce(this, this.search, 700);
   }
 
@@ -73,24 +87,10 @@ export default class GifsModal extends Component {
   }
 
   async fetchCategories() {
-    if (this.siteSettings.klipy_api_key === "") {
-      return;
-    }
-
     this.loadingCategories = true;
 
     try {
-      const params = {
-        key: this.siteSettings.klipy_api_key,
-        country: this.siteSettings.klipy_country,
-        locale: this.siteSettings.klipy_locale,
-        type: "featured",
-        contentfilter: this.siteSettings.klipy_content_filter,
-      };
-
-      const response = await fetch(
-        `${KLIPY_CATEGORIES_URL}?${new URLSearchParams(params)}`
-      );
+      const response = await fetch(getURL(GIFS_CATEGORIES_URL));
 
       if (this.isDestroying || this.isDestroyed) {
         return;
@@ -140,6 +140,8 @@ export default class GifsModal extends Component {
   }
 
   async search(clearResults = true, skipLengthCheck = false) {
+    this.searchPending = false;
+
     if (clearResults) {
       this.currentGifs = [];
       this.offset = 0;
@@ -165,10 +167,6 @@ export default class GifsModal extends Component {
     this.loading = true;
 
     try {
-      if (this.siteSettings.klipy_api_key === "") {
-        throw new Error(i18n("gifs.bad_api_key"));
-      }
-
       const response = await fetch(this.getEndpoint(this.query, this.offset));
 
       if (this.isDestroying || this.isDestroyed) {
@@ -235,7 +233,7 @@ export default class GifsModal extends Component {
       return i18n("gifs.bad_api_key");
     }
 
-    return `Klipy status ${response.status}: ${this.redactApiKey(message)}`;
+    return `Klipy status ${response.status}: ${message}`;
   }
 
   extractErrorMessage(parsed) {
@@ -256,26 +254,12 @@ export default class GifsModal extends Component {
     );
   }
 
-  redactApiKey(message) {
-    const apiKey = this.siteSettings.klipy_api_key;
-    if (!apiKey || typeof message !== "string") {
-      return message;
-    }
-    return message.replaceAll(apiKey, "[redacted]");
-  }
-
   getEndpoint(query, offset) {
     const params = {
-      key: this.siteSettings.klipy_api_key,
       q: query,
-      country: this.siteSettings.klipy_country,
-      locale: this.siteSettings.klipy_locale,
-      contentfilter: this.siteSettings.klipy_content_filter,
-      media_filter: this.siteSettings.klipy_file_detail,
-      limit: PAGE_SIZE,
       pos: offset,
     };
-    return `${KLIPY_SEARCH_URL}?${new URLSearchParams(params)}`;
+    return getURL(`${GIFS_SEARCH_URL}?${new URLSearchParams(params)}`);
   }
 
   <template>
@@ -292,11 +276,14 @@ export default class GifsModal extends Component {
             @type="text"
             @value={{this.query}}
             name="query"
+            placeholder={{i18n "gifs.placeholder"}}
             autofocus
           />
 
           {{#if this.loading}}
-            {{dLoadingSpinner size="small"}}
+            <div class="gifs-modal__input-spinner">
+              {{dLoadingSpinner size="small"}}
+            </div>
           {{/if}}
         </div>
 
@@ -325,14 +312,28 @@ export default class GifsModal extends Component {
               />
             </div>
           </div>
-        {{else if this.loadingCategories}}
-          <div class="gifs-modal__loading-categories">
+        {{else if (or this.loading this.searchPending this.loadingCategories)}}
+          <div class="gifs-modal__loading">
             {{dLoadingSpinner size="medium"}}
           </div>
         {{else}}
           <div class="gifs-modal__no-results">{{i18n "gifs.no_results"}}</div>
         {{/if}}
       </:body>
+
+      <:footer>
+        <picture>
+          <source
+            srcset={{getURL "/images/klipy-logo-dark.png"}}
+            media={{this.darkMediaQuery}}
+          />
+          <img
+            class="gifs-modal__branding"
+            src={{getURL "/images/klipy-logo.png"}}
+            alt={{i18n "gifs.powered_by"}}
+          />
+        </picture>
+      </:footer>
     </DModal>
   </template>
 }

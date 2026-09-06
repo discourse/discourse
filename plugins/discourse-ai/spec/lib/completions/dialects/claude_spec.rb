@@ -7,6 +7,16 @@ RSpec.describe DiscourseAi::Completions::Dialects::Claude do
 
   before { enable_current_plugin }
 
+  describe "#max_prompt_tokens" do
+    it "reserves configured output tokens" do
+      llm_model.update!(max_prompt_tokens: 100_000)
+      prompt = DiscourseAi::Completions::Prompt.new("You are a helpful bot", messages: [])
+      dialect = opus_dialect_klass.new(prompt, llm_model, opts: { reserved_output_tokens: 32_000 })
+
+      expect(dialect.max_prompt_tokens).to eq(68_000)
+    end
+  end
+
   describe "#translate" do
     it "can insert OKs to make stuff interleve properly" do
       messages = [
@@ -166,6 +176,91 @@ RSpec.describe DiscourseAi::Completions::Dialects::Claude do
         [{ type: "text", text: "Read this: " }, { type: "text", text: converted_text }],
       )
       expect(content).not_to include(hash_including(type: "document"))
+    end
+  end
+
+  describe "#translate with server tools" do
+    it "replays Anthropic server tool content blocks" do
+      content_blocks = [
+        { type: "text", text: "I'll search." },
+        {
+          type: "server_tool_use",
+          id: "srvtoolu_1",
+          name: "web_search",
+          input: {
+            query: "HackerOne AI news",
+          },
+        },
+        {
+          type: "web_search_tool_result",
+          tool_use_id: "srvtoolu_1",
+          content: [
+            {
+              type: "web_search_result",
+              url: "https://example.com",
+              title: "Example",
+              encrypted_content: "encrypted",
+            },
+          ],
+        },
+        { type: "text", text: "Result summary" },
+      ]
+
+      prompt = DiscourseAi::Completions::Prompt.new("You are a bot")
+      prompt.push(type: :user, content: "Search")
+      prompt.push(
+        type: :model,
+        content: "I'll search.Result summary",
+        thinking: "Web search: HackerOne AI news",
+        thinking_provider_info: {
+          anthropic: {
+            content_blocks: content_blocks,
+          },
+        },
+      )
+
+      translated = described_class.new(prompt, llm_model).translate
+      model_message = translated.messages.find { |message| message[:role] == "assistant" }
+
+      expect(model_message[:content]).to eq(content_blocks)
+    end
+
+    it "preserves signed thinking when replaying server tools" do
+      content_blocks = [
+        { type: "text", text: "I'll search." },
+        {
+          type: "server_tool_use",
+          id: "srvtoolu_1",
+          name: "web_search",
+          input: {
+            query: "HackerOne AI news",
+          },
+        },
+      ]
+
+      prompt = DiscourseAi::Completions::Prompt.new("You are a bot")
+      prompt.push(type: :user, content: "Search")
+      prompt.push(
+        type: :model,
+        content: "I'll search.",
+        thinking: "Need current data",
+        thinking_provider_info: {
+          anthropic: {
+            signature: "sig-123",
+            content_blocks: content_blocks,
+          },
+        },
+      )
+
+      translated = described_class.new(prompt, llm_model).translate
+      model_message = translated.messages.find { |message| message[:role] == "assistant" }
+
+      expect(model_message[:content]).to eq(
+        [
+          { type: "thinking", thinking: "Need current data", signature: "sig-123" },
+          *content_blocks,
+        ],
+      )
     end
   end
 end

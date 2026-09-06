@@ -8,7 +8,7 @@ import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-use
 const Member = <template>
   <DButton
     class={{dConcatClass
-      "chat-message-creator__member btn-default"
+      "chat-message-creator__member btn-default btn-small"
       (if @highlighted "-highlighted")
     }}
     @action={{fn @onSelect @member}}

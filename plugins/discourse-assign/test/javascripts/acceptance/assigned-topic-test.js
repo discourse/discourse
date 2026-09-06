@@ -265,6 +265,7 @@ acceptance("Reassign topic conditionals", function (needs) {
 
 acceptance("Assignee name XSS escaping", function (needs) {
   const XSS_PAYLOAD = '<img src="xss-test">';
+  const SMALL_ACTION_XSS_PAYLOAD = '"><img src=x>';
 
   needs.user();
   needs.settings({
@@ -300,7 +301,7 @@ acceptance("Assignee name XSS escaping", function (needs) {
         topic_id: topic.id,
         topic_slug: topic.slug,
         action_code: "assigned",
-        action_code_who: XSS_PAYLOAD,
+        action_code_who: SMALL_ACTION_XSS_PAYLOAD,
       };
       topic.post_stream.posts.push(smallActionPost);
       topic.post_stream.stream.push(999);
@@ -369,13 +370,21 @@ acceptance("Assignee name XSS escaping", function (needs) {
       .includesText(XSS_PAYLOAD, "renders payload as escaped text in tag");
   });
 
-  test("escapes HTML in small action description", async function (assert) {
+  test("encodes user assignee names in small action mention hrefs", async function (assert) {
     updateCurrentUser({ can_assign: true });
     await visit("/t/assignment-topic/44");
 
     assert
-      .dom(".small-action .small-action-desc img[src='xss-test']")
-      .doesNotExist("does not render injected img in small action");
+      .dom(".small-action .small-action-desc img[src='x']")
+      .doesNotExist("does not render an injected image in the small action");
+    assert
+      .dom(".small-action .small-action-desc a.mention")
+      .hasAttribute(
+        "href",
+        `/u/${encodeURIComponent(SMALL_ACTION_XSS_PAYLOAD)}`,
+        "keeps the payload in one encoded href attribute"
+      )
+      .hasText(`@${SMALL_ACTION_XSS_PAYLOAD}`);
   });
 
   test("escapes HTML in topic-level unassign menu", async function (assert) {

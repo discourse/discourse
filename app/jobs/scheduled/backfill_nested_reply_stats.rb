@@ -6,62 +6,73 @@ module Jobs
 
     cluster_concurrency 1
 
-    def execute(_ = nil)
+    def execute(args = {})
       return unless SiteSetting.nested_replies_enabled
 
-      topic_ids =
-        DB.query_single(<<~SQL, batch_size: SiteSetting.nested_replies_backfill_batch_size)
-          SELECT t.id FROM topics t
-          INNER JOIN nested_topics nt ON nt.topic_id = t.id
-          LEFT JOIN nested_view_post_stats s ON s.post_id = (
-            SELECT p.id FROM posts p
-            WHERE p.topic_id = t.id AND p.post_number = 1
-            LIMIT 1
-          )
-          WHERE t.deleted_at IS NULL
-            AND t.archetype = 'regular'
-            AND s.post_id IS NULL
-          ORDER BY t.id DESC
-          LIMIT :batch_size
-        SQL
-
+      args ||= {}
+      topic_ids = topic_ids_missing_stats(category_id: args[:category_id])
       return if topic_ids.empty?
 
-      topic_ids.each do |topic_id|
-        backfill_topic(topic_id)
-        ensure_op_stat_row(topic_id)
-      end
+      topic_ids.each { |topic_id| self.class.backfill_topic(topic_id) }
     end
 
     private
 
-    # Guarantees the OP has a stats row so the selector (which keys on
-    # s.post_id IS NULL for post_number = 1) will not re-pick this topic
-    # on the next run when it has no qualifying replies. When a reply later
-    # arrives, nested_replies_increment_stats upserts into the same row.
-    def ensure_op_stat_row(topic_id)
-      DB.exec(<<~SQL, topic_id: topic_id)
-        INSERT INTO nested_view_post_stats
-          (post_id, direct_reply_count, whisper_direct_reply_count,
-           total_descendant_count, whisper_total_descendant_count,
-           created_at, updated_at)
-        SELECT p.id, 0, 0, 0, 0, NOW(), NOW()
-        FROM posts p
-        WHERE p.topic_id = :topic_id AND p.post_number = 1
-        ON CONFLICT (post_id) DO NOTHING
-      SQL
+    def topic_ids_missing_stats(category_id: nil)
+      category_id = category_id.to_i
+      category_filter = category_id.positive? ? "AND t.category_id = :category_id" : ""
+
+      DB.query_single(
+        <<~SQL,
+          SELECT t.id
+          FROM topics t
+          LEFT JOIN nested_topics nt ON nt.topic_id = t.id
+          INNER JOIN posts op ON op.topic_id = t.id AND op.post_number = 1
+          LEFT JOIN nested_view_post_stats s ON s.post_id = op.id
+          WHERE t.deleted_at IS NULL
+            AND t.archetype = :archetype
+            AND (:nested_replies_default OR nt.topic_id IS NOT NULL)
+            #{category_filter}
+            AND (
+              s.post_id IS NULL
+              OR EXISTS (
+                SELECT 1
+                FROM posts child
+                INNER JOIN posts parent
+                  ON parent.topic_id = child.topic_id
+                 AND parent.post_number = child.reply_to_post_number
+                LEFT JOIN nested_view_post_stats parent_stats
+                  ON parent_stats.post_id = parent.id
+                WHERE child.topic_id = t.id
+                  AND child.reply_to_post_number IS NOT NULL
+                  AND child.post_number > 1
+                  AND parent_stats.post_id IS NULL
+              )
+            )
+          ORDER BY t.id DESC
+          LIMIT :batch_size
+        SQL
+        archetype: Archetype.default,
+        batch_size: SiteSetting.nested_replies_backfill_batch_size,
+        category_id: category_id,
+        nested_replies_default: SiteSetting.nested_replies_default,
+      )
     end
 
-    def backfill_topic(topic_id)
+    def self.backfill_topic(topic_id)
       DB.exec(<<~SQL, topic_id: topic_id, whisper_type: Post.types[:whisper])
         WITH RECURSIVE
-        direct_counts AS (
-          SELECT reply_to_post_number AS parent_number, post_type,
-                 COUNT(*) AS cnt
+        edges AS (
+          SELECT post_number, reply_to_post_number, post_type
           FROM posts
           WHERE topic_id = :topic_id
             AND reply_to_post_number IS NOT NULL
             AND post_number > 1
+        ),
+        direct_counts AS (
+          SELECT reply_to_post_number AS parent_number, post_type,
+                 COUNT(*) AS cnt
+          FROM edges
           GROUP BY reply_to_post_number, post_type
         ),
         direct_agg AS (
@@ -70,13 +81,6 @@ module Jobs
                  SUM(CASE WHEN post_type = :whisper_type THEN cnt ELSE 0 END) AS whisper_direct_reply_count
           FROM direct_counts
           GROUP BY parent_number
-        ),
-        edges AS (
-          SELECT id, post_number, reply_to_post_number, post_type
-          FROM posts
-          WHERE topic_id = :topic_id
-            AND reply_to_post_number IS NOT NULL
-            AND post_number > 1
         ),
         ancestor_walk AS (
           SELECT e.reply_to_post_number AS ancestor_number,
@@ -110,7 +114,7 @@ module Jobs
           LEFT JOIN direct_agg d ON d.parent_number = p.post_number
           LEFT JOIN descendant_agg t ON t.ancestor_number = p.post_number
           WHERE p.topic_id = :topic_id
-            AND (d.parent_number IS NOT NULL OR t.ancestor_number IS NOT NULL)
+            AND (p.post_number = 1 OR d.parent_number IS NOT NULL OR t.ancestor_number IS NOT NULL)
         )
         INSERT INTO nested_view_post_stats
           (post_id, direct_reply_count, whisper_direct_reply_count,

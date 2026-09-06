@@ -13,6 +13,7 @@ module PageObjects
       end
 
       def select_icon(icon_id)
+        filter(icon_id)
         find("[data-icon-id='#{icon_id}']").click
       end
 

@@ -1,24 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::OdsToText do
-  def with_ods(entries)
-    tempfile = Tempfile.new(%w[spreadsheet .ods])
-    path = tempfile.path
-    tempfile.close
-    FileUtils.rm_f(path)
-
-    ::Zip::File.open(path, create: true) do |zip_file|
-      entries.each do |name, content|
-        zip_file.get_output_stream(name) { |stream| stream.write(content) }
-      end
-    end
-
-    yield path
-  ensure
-    tempfile&.close
-    FileUtils.rm_f(path) if path
-  end
-
   def ods_content(body)
     <<~XML
       <?xml version="1.0" encoding="UTF-8"?>
@@ -36,7 +18,7 @@ RSpec.describe DiscourseAi::Completions::OdsToText do
   end
 
   it "extracts cells from each named sheet" do
-    with_ods("content.xml" => ods_content(<<~XML)) do |path|
+    with_zipped_document("ods", "content.xml" => ods_content(<<~XML)) do |path|
           <table:table table:name="Summary">
             <table:table-row>
               <table:table-cell office:value-type="string"><text:p>Name</text:p></table:table-cell>
@@ -60,7 +42,7 @@ RSpec.describe DiscourseAi::Completions::OdsToText do
   end
 
   it "uses Sheet1, Sheet2 ... when no name is set" do
-    with_ods("content.xml" => ods_content(<<~XML)) do |path|
+    with_zipped_document("ods", "content.xml" => ods_content(<<~XML)) do |path|
           <table:table>
             <table:table-row>
               <table:table-cell office:value-type="string"><text:p>only</text:p></table:table-cell>
@@ -72,7 +54,7 @@ RSpec.describe DiscourseAi::Completions::OdsToText do
   end
 
   it "renders typed values when no inline paragraph is present" do
-    with_ods("content.xml" => ods_content(<<~XML)) do |path|
+    with_zipped_document("ods", "content.xml" => ods_content(<<~XML)) do |path|
           <table:table table:name="Types">
             <table:table-row>
               <table:table-cell office:value-type="boolean" office:boolean-value="true"/>
@@ -86,7 +68,7 @@ RSpec.describe DiscourseAi::Completions::OdsToText do
   end
 
   it "expands a non-empty number-columns-repeated up to MAX_COLUMNS" do
-    with_ods("content.xml" => ods_content(<<~XML)) do |path|
+    with_zipped_document("ods", "content.xml" => ods_content(<<~XML)) do |path|
           <table:table table:name="Repeats">
             <table:table-row>
               <table:table-cell office:value-type="string" table:number-columns-repeated="3">
@@ -101,7 +83,7 @@ RSpec.describe DiscourseAi::Completions::OdsToText do
   end
 
   it "ignores covered (merge-continuation) cells and trims trailing empties" do
-    with_ods("content.xml" => ods_content(<<~XML)) do |path|
+    with_zipped_document("ods", "content.xml" => ods_content(<<~XML)) do |path|
           <table:table table:name="Merge">
             <table:table-row>
               <table:table-cell office:value-type="string"><text:p>head</text:p></table:table-cell>
@@ -115,7 +97,7 @@ RSpec.describe DiscourseAi::Completions::OdsToText do
   end
 
   it "returns blank text when content.xml is missing" do
-    with_ods("META-INF/manifest.xml" => "<manifest/>") do |path|
+    with_zipped_document("ods", "META-INF/manifest.xml" => "<manifest/>") do |path|
       expect(described_class.convert(path)).to eq("")
     end
   end

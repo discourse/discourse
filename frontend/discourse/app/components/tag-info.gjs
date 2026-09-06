@@ -48,9 +48,9 @@ const TagInfo = <template>
         <div class="tag-name-wrapper">
           {{dDiscourseTag @tagInfo}}
         </div>
-        {{#if @tagInfo.description}}
+        {{#if @tagInfo.description_cooked}}
           <div class="tag-description-wrapper">
-            <span>{{trustHTML @tagInfo.description}}</span>
+            <div class="cooked">{{trustHTML @tagInfo.description_cooked}}</div>
           </div>
         {{/if}}
       </div>

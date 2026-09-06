@@ -5,9 +5,24 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_math: "Discourse Math"
   js:
     discourse_math:
+      edit_math: "Modifier l'expression mathématique"
       edit_modal:
+        title: "Modifier l'expression mathématique"
+        label: "Expression mathématique"
         apply: "Appliquer"
+      composer:
+        insert_math: "Insérer une expression mathématique"
       insert_modal:
+        title_inline: "Insérer une expression mathématique en ligne"
+        title_block: "Insérer un bloc d'expression mathématique"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
         insert: "Insérer"
+        block_mode: "Mode bloc (équation affichée)"

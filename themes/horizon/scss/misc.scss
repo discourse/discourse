@@ -23,8 +23,8 @@
   background-color: transparent;
 }
 
-.admin-report .main .report-alert.no-data,
-.admin-report .main .report-alert.rate-limited {
+.admin-report .chart__body .report-alert.no-data,
+.admin-report .chart__body .report-alert.rate-limited {
   background-color: var(--d-content-background);
 }
 
@@ -59,10 +59,6 @@ input[type="color"]:focus,
 .select-kit.multi-select .multi-select-header:focus {
   border-color: var(--accent-color);
   outline: 2px solid var(--accent-color);
-}
-
-#reply-control {
-  background-color: var(--background-color);
 }
 
 @include viewport.until(sm) {

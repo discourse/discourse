@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import {
   DEFAULT_USER_PREFERENCES,
@@ -8,6 +9,7 @@ import {
 import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -125,7 +127,11 @@ export default class SiteSetting extends EmberObject {
 
   @computed("settingObjectHelper.allowsNone")
   get allowsNone() {
-    return this.settingObjectHelper?.allowsNone;
+    return applyValueTransformer(
+      "site-setting-allows-none",
+      this.settingObjectHelper?.allowsNone,
+      { siteSetting: this }
+    );
   }
 
   set allowsNone(value) {
@@ -151,6 +157,53 @@ export default class SiteSetting extends EmberObject {
       subject: this.setting,
       action_name: "change_site_setting",
     };
+  }
+
+  get settingSubtype() {
+    if (this.list_type) {
+      return;
+    }
+
+    if (this.textarea) {
+      return "textarea";
+    }
+
+    if (this.secret) {
+      return "password";
+    }
+  }
+
+  get definition() {
+    return {
+      key: this.setting,
+      label: this.humanized_name || this.setting,
+      description: trustHTML(this.description),
+      type: this.type,
+      list_type: this.list_type,
+      subtype: this.settingSubtype,
+      min: this.min,
+      max: this.max,
+      choices: this.choices,
+      valid_values: this.validValues,
+      allows_none: !!this.allowsNone,
+      allow_any: this.allow_any,
+      mandatory_values: this.mandatory_values,
+      disallowed_groups: this.disallowed_groups,
+      currentSavedValue: this.value,
+    };
+  }
+
+  get pendingValue() {
+    return this.buffered.get("value");
+  }
+
+  commit() {
+    this.validationMessage = null;
+    this.buffered.applyChanges();
+  }
+
+  rollback() {
+    this.buffered.discardChanges();
   }
 
   get requiresConfirmation() {

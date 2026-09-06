@@ -99,7 +99,6 @@ pt:
         confirm_payment: Confirmar pagamento
         success: Anterior
       admin:
-        unconfigured: 'O Stripe não está correctamente configurado. Por favor, veja o Discourse Meta para obter informações.'
         dashboard:
           title: Painel
           table:

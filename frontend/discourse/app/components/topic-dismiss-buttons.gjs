@@ -5,7 +5,6 @@ import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class TopicDismissButtons extends Component {
@@ -144,42 +143,38 @@ export default class TopicDismissButtons extends Component {
         {{~#if @showResetNew~}}
           {{#if @showNewDismissCombo}}
             <DComboButton
-              class={{dConcatClass
-                "topic-dismiss-buttons__combo"
-                (if this.showDismissNewMenu "--has-menu")
-              }}
+              @hasMenu={{this.showDismissNewMenu}}
+              @btnTypeClass="btn-default dismiss-read"
+              class="topic-dismiss-buttons__combo"
               as |combo|
             >
               <combo.Button
                 @action={{this.dismissNew}}
                 @translatedLabel={{this.dismissNewLabel}}
                 id="dismiss-new-{{@position}}"
-                class="btn-default dismiss-read topic-dismiss-buttons__button"
+                class="topic-dismiss-buttons__button"
               />
 
-              {{#if this.showDismissNewMenu}}
-                <combo.Menu
-                  @identifier="dismiss-new-menu"
-                  @onRegisterApi={{this.registerDMenu}}
-                  @modalForMobile={{true}}
-                  @placement="bottom-end"
-                  aria-label={{i18n "topics.bulk.dismiss_new_menu"}}
-                  id="dismiss-new-menu-{{@position}}"
-                  class="btn-default dismiss-read topic-dismiss-buttons__menu"
-                >
-                  <DDropdownMenu as |dropdown|>
-                    <dropdown.item class="topic-dismiss-buttons__menu-item">
-                      <DButton
-                        @action={{this.dismissNewAndStopTracking}}
-                        @translatedLabel={{i18n
-                          "topics.bulk.dismiss_and_stop_tracking"
-                        }}
-                        class="btn-secondary dismiss-new-stop-tracking"
-                      />
-                    </dropdown.item>
-                  </DDropdownMenu>
-                </combo.Menu>
-              {{/if}}
+              <combo.Menu
+                @identifier="dismiss-new-menu"
+                @onRegisterApi={{this.registerDMenu}}
+                @modalForMobile={{true}}
+                aria-label={{i18n "topics.bulk.dismiss_new_menu"}}
+                id="dismiss-new-menu-{{@position}}"
+                class="topic-dismiss-buttons__menu"
+              >
+                <DDropdownMenu as |dropdown|>
+                  <dropdown.item class="topic-dismiss-buttons__menu-item">
+                    <DButton
+                      @action={{this.dismissNewAndStopTracking}}
+                      @translatedLabel={{i18n
+                        "topics.bulk.dismiss_and_stop_tracking"
+                      }}
+                      class="dismiss-new-stop-tracking"
+                    />
+                  </dropdown.item>
+                </DDropdownMenu>
+              </combo.Menu>
             </DComboButton>
           {{else}}
             <DButton

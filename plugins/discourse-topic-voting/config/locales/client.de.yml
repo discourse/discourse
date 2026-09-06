@@ -15,29 +15,18 @@ de:
       sort_options:
         votes: "Stimmen"
     topic_voting:
-      category_type_ideas:
-        title: "Ideen"
       notification_label:
         vote_released: "Stimme zurückgegeben"
-      title: "Themenabstimmung"
-      reached_limit: "Du hast keine Stimmen mehr. Entferne eine bestehende Stimme!"
-      list_votes: "Deine Stimmen auflisten"
-      votes_nav_help: "Themen mit den meisten Stimmen aller Zeiten"
       hot_nav_help: "Die aktuellsten Themen, einschließlich derer, bei denen kürzlich abgestimmt wurde"
       voted: "Du hast für dieses Thema gestimmt"
-      allow_topic_voting: "Benutzern erlauben, für Themen in dieser Kategorie zu stimmen"
       vote_title: "Abstimmen"
       vote_title_plural: "Stimmen"
       voting_closed_description: "Die Abstimmung für dieses Thema ist geschlossen"
       see_votes: "Du hast noch %{count}/%{max} Stimmen übrig"
-      locked: "Gesperrt"
       locked_description: "Erhöhe deine Vertrauensstufe, um abzustimmen"
       votes:
         one: "%{count} Stimme"
         other: "%{count} Stimmen"
-      anonymous_button:
-        one: "Stimme"
-        other: "Stimmen"
       remove_vote: "Stimme entfernen"
       watch_topic: "Mich über neue Beiträge benachrichtigen"
       no_votes_yet: "Bisher hat noch niemand dafür gestimmt"
@@ -55,13 +44,20 @@ de:
         help: "Themen, über die du abgestimmt hast"
     search:
       most_votes: "Meiste Stimmen"
-      advanced:
-        vote:
-          count:
-            label: "Mindeststimmzahl"
     admin:
       web_hooks:
         voting_event:
           group_name: "Themenabstimmungsereignis"
           topic_upvote: "Wenn ein Benutzer über ein Thema abstimmt"
           topic_unvote: "Wenn ein Benutzer seine Stimme für ein Thema zurücknimmt"
+    discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "Erfordert die Aktivierung von Themenabstimmungen."
+      nodes:
+        "trigger:topic_received_vote": "Thema hat eine Stimme erhalten"
+      node_descriptions:
+        "trigger:topic_received_vote": "Wird ausgelöst, wenn ein Benutzer in einem Thema abstimmt"
+      topic_received_vote:
+        category_ids_description: "Nur für Themen in diesen Kategorien auslösen. Leer lassen, um alle Kategorien abzudecken."
+        tag_names: "Schlagwörter"
+        tag_names_description: "Nur für Themen auslösen, die mindestens eines dieser Schlagwörter haben"

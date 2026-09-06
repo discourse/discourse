@@ -19,6 +19,9 @@ export default class LazyIframe extends Component {
     switch (this.args.providerName) {
       case "youtube":
         let url = `https://www.youtube.com/embed/${this.args.videoId}?autoplay=1&rel=0`;
+        if (this.args.listId) {
+          url += `&list=${encodeURIComponent(this.args.listId)}`;
+        }
         if (this.args.startTime) {
           url += `&start=${convertToSeconds(this.args.startTime)}`;
         }

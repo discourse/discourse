@@ -19,15 +19,19 @@ export default class SidebarNewTopicButton extends Component {
   @service router;
   @service header;
   @service appEvents;
+  @service sidebarState;
   @controller application;
 
   @tracked category;
   @tracked tag;
 
+  // Keyed on the panel that owns the sidebar rather than on the path: every takeover displaces
+  // the forum navigation this button is part of, and most have no distinguishing URL prefix.
+  // `isForcingSidebar` is not equivalent, since a panel can take over without setting it.
   get shouldRender() {
     return (
       this.currentUser &&
-      !this.router.currentURL.startsWith("/admin") &&
+      this.sidebarState.showMainPanel &&
       this.application.sidebarEnabled
     );
   }

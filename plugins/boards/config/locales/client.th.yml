@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    boards:
+      board:
+        remove_card: "ลบ"
+        title: "ชื่อเรื่อง"
+        tags: "ป้าย"
+        topic_reply_count:
+          other: "%{count} ตอบ"
+        created_by: "สร้างโดย"
+      manage:
+        name: "ชื่อ"
+        constraint_categories: "หมวดหมู่"
+        constraint_tags: "ป้าย"
+        columns:
+          remove: "ลบ"
+          column_title: "ชื่อเรื่อง"
+          icon: "ไอคอน"
+          color: "สี"
+          move_to_status_open: "เปิด"
+          move_to_status_closed: "ปิด"

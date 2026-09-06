@@ -19,8 +19,10 @@ fr:
     chat_integration_slack_transcript_quote: Envelopper la transcription de Slack dans [quote] étiquettes ?
     errors:
       chat_integration_slack_api_configs_are_empty: "Vous devez saisir soit une URL de webhook sortant, soit un jeton d'accès"
+      chat_integration_telegram_api_base_url_invalid: "L'URL de base de l'API Telegram doit être une URL HTTPS valide, sans identifiants, chaîne de requête ni fragment."
     chat_integration_telegram_enabled: "Activer le fournisseur d'intégration de chat Telegram"
     chat_integration_telegram_access_token: "Le jeton d'accès de votre bot fourni par le botfather Telegram"
+    chat_integration_telegram_api_base_url: "URL de base utilisée pour les requêtes à l'API Telegram Bot. Modifiez-la uniquement lorsque les requêtes transitent par un proxy HTTPS de confiance. Les hôtes des réseaux privés doivent également être ajoutés au paramètre de site des hôtes internes autorisés."
     chat_integration_telegram_excerpt_length: "Longueur des extraits de messages Telegram"
     chat_integration_telegram_enable_slash_commands: "Autoriser la gestion des abonnements Telegram à l'aide de « commandes slash »"
     chat_integration_discord_enabled: "Activer le fournisseur d'intégration de chat Discord"
@@ -49,6 +51,8 @@ fr:
     chat_integration_gitter_enabled: "Activer le fournisseur d'intégration de chat Gitter"
     chat_integration_groupme_enabled: "Activer le fournisseur d'intégration de chat GroupMe"
     chat_integration_groupme_excerpt_length: "Longueur des extraits de message GroupMe"
+    chat_integration_groupme_bot_ids: "*requis* Identifiants de bot, séparés par « ; » s'il y en a plusieurs"
+    chat_integration_groupme_instance_names: "*requis* Nom du chat GroupMe, séparé par « ; » s'il y en a plusieurs (dans le même ordre que les identifiants de bot)"
     chat_integration_teams_enabled: "Activer le fournisseur d'intégration de chat Microsoft Teams"
     chat_integration_teams_excerpt_length: "Longueur des extraits de messages Microsoft Teams"
     chat_integration_powerautomate_enabled: "Activer le fournisseur d'intégration Microsoft Power Automate"
@@ -57,12 +61,23 @@ fr:
     chat_integration_webex_excerpt_length: "Longueur des extraits de messages Webex Teams"
     chat_integration_google_enabled: "Activer le fournisseur d'intégration de chat Google Chat"
     chat_integration_google_excerpt_length: "Longueur des extraits de messages Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "Certains canaux d'intégration de chat comportent des erreurs. Consultez <a href='%{base_path}/admin/plugins/discourse-chat-integration'>la section d'intégration du chat</a> pour en savoir plus."
   discourse_automation:
     scriptables:
       send_slack_message:
         title: Envoyer un message Slack
       send_chat_integration_message:
         title: Envoyer un message d'intégration de discussion
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Canal introuvable : %{channel_id}"
+        provider_disabled: "Le fournisseur d'intégration de chat est désactivé ou absent : %{provider}"
+        provider_failed: "Le fournisseur %{provider} n'a pas pu envoyer le message."
+        provider_failed_with_details: "Le fournisseur %{provider} n'a pas pu envoyer le message : %{details}"
+        message_required: "Un message est requis."
   chat_integration:
     all_categories: "(toutes les catégories)"
     deleted_category: "(catégorie supprimée)"
@@ -73,8 +88,16 @@ fr:
       added_and_removed: "Ajout de %{added} et suppression de %{removed}"
       added: "Ajout de %{added}"
       removed: "Suppression de %{removed}"
+    errors:
+      provider_already_enabled: "Le fournisseur « %{name} » est déjà activé."
+      provider_not_found: "Fournisseur « %{name} » introuvable"
+      setting_update_failed: "Échec de la mise à jour des paramètres : %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "Le jeton d'authentification fourni n'est pas valide."
+          action_prohibited: "Ce bot n'a pas l'autorisation de publier dans ce canal"
+          channel_not_found: "Le canal indiqué n'existe pas sur Slack."
         status:
           header: |
             *Règles pour ce canal*
@@ -86,8 +109,10 @@ fr:
         create:
           created: "Règle créée avec succès"
           updated: "Règle mise à jour avec succès"
+          error: "Nous sommes désolés, une erreur s'est produite lors de la création de cette règle."
         delete:
           success: "Règle supprimée avec succès"
+          error: "Nous sommes désolés, une erreur s'est produite lors de la suppression de cette règle. Exécutez `/discourse status` pour afficher la liste des règles."
         not_found:
           tag: "L'étiquette *%{name}* est introuvable."
           category: "La catégorie *%{name}* est introuvable. Catégories disponibles : *%{list}*"
@@ -149,8 +174,10 @@ fr:
         create:
           created: "Règle créée avec succès"
           updated: "Règle mise à jour avec succès"
+          error: "Nous sommes désolés, une erreur s'est produite lors de la création de cette règle."
         delete:
           success: "Règle supprimée avec succès"
+          error: "Nous sommes désolés, une erreur s'est produite lors de la suppression de cette règle. Exécutez <code>/status</code> pour afficher la liste des règles."
         not_found:
           tag: "L'étiquette <b>%{name}</b> est introuvable."
           category: "La catégorie <b>%{name}</b> est introuvable. Catégories disponibles : <b>%{list}</b>"
@@ -181,8 +208,10 @@ fr:
         create:
           created: "Règle créée avec succès"
           updated: "Règle mise à jour avec succès"
+          error: "Nous sommes désolés, une erreur s'est produite lors de la création de cette règle."
         delete:
           success: "Règle supprimée avec succès"
+          error: "Nous sommes désolés, une erreur s'est produite lors de la suppression de cette règle. Exécutez `/discourse status` pour afficher la liste des règles."
         not_found:
           tag: "L'étiquette *%{name}* est introuvable."
           category: "La catégorie *%{name}* est introuvable. Catégories disponibles : *%{list}*"

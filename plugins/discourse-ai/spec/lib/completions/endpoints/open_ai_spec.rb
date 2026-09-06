@@ -211,6 +211,50 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
 
   before { enable_current_plugin }
 
+  describe "DNS SRV endpoints" do
+    let(:domain) { "_openai._tcp.example.com" }
+    let(:resolved_url) { "https://llm.example.com:8443" }
+    let(:response_body) { { choices: [{ message: { content: "hello" } }] }.to_json }
+
+    before do
+      resource = Resolv::DNS::Resource::IN::SRV.new(1, 1, 8443, "llm.example.com")
+      Resolv::DNS
+        .any_instance
+        .stubs(:getresources)
+        .with(domain, Resolv::DNS::Resource::IN::SRV)
+        .returns([resource])
+      Discourse.cache.delete("dns_srv_lookup:#{domain}")
+    end
+
+    it "uses the configured path" do
+      model.update!(url: "srv://#{domain}/custom/chat/completions")
+      request =
+        stub_request(:post, "#{resolved_url}/custom/chat/completions").to_return(
+          status: 200,
+          body: response_body,
+        )
+
+      DiscourseAi::Completions::Llm.proxy(model).generate("test", user: user)
+
+      expect(request).to have_been_requested
+    end
+
+    it "uses the fallback path when no path is configured" do
+      request =
+        stub_request(:post, "#{resolved_url}/v1/chat/completions").to_return(
+          status: 200,
+          body: response_body,
+        )
+
+      ["srv://#{domain}", "srv://#{domain}/"].each do |url|
+        model.update!(url: url)
+        DiscourseAi::Completions::Llm.proxy(model).generate("test", user: user)
+      end
+
+      expect(request).to have_been_requested.twice
+    end
+  end
+
   describe "max tokens for reasoning models" do
     it "uses max_completion_tokens for reasoning models" do
       model.update!(name: "o3-mini", max_output_tokens: 999)
@@ -1007,6 +1051,27 @@ TEXT
           end
         end
 
+        it "uses proper token accounting with top-level cache usage" do
+          response = <<~TEXT.strip
+            data: {"id":"chatcmpl-cached","object":"chat.completion.chunk","created":1715644203,"model":"gpt-4o-2024-05-13","choices":[],"usage":{"prompt_tokens":25,"completion_tokens":10,"total_tokens":35,"prompt_cache_hit_tokens":5,"prompt_cache_miss_tokens":20}}|
+            data: [DONE]
+          TEXT
+
+          chunks = response.split("|")
+          open_ai_mock.with_chunk_array_support do
+            open_ai_mock.stub_raw(chunks)
+
+            dialect = compliance.dialect(prompt: compliance.generic_prompt)
+            endpoint.perform_completion!(dialect, user) { |partial| }
+
+            log = AiApiAuditLog.order("id desc").first
+
+            expect(log.request_tokens).to eq(20)
+            expect(log.cache_read_tokens).to eq(5)
+            expect(log.response_tokens).to eq(10)
+          end
+        end
+
         it "properly handles multiple params in partial tool calls" do
           # this is not working and it is driving me nuts so I will use a sledghammer
           # text = plugin_file_from_fixtures("openai_artifact_call.txt", "bot")
@@ -1024,7 +1089,7 @@ TEXT
             end
           end
 
-          expect(partials.compact.length).to eq(128)
+          expect(partials.compact.length).to eq(134)
 
           params =
             partials
@@ -1163,6 +1228,21 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("xhigh")
     end
 
+    it "collapses minimal to low since some models reject it outright" do
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "minimal" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+    end
+
     it "strips temperature and top_p when reasoning_effort is set" do
       model.update!(provider_params: { reasoning_effort: "low" })
 
@@ -1180,6 +1260,121 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("low")
       expect(parsed_body).not_to have_key(:temperature)
       expect(parsed_body).not_to have_key(:top_p)
+    end
+
+    it "uses per-call thinking effort and maps max to xhigh for allowlisted models" do
+      model.update!(name: "gpt-5.5-2026-04-24", provider_params: { reasoning_effort: "low" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "max", temperature: 0.7 })
+
+      expect(parsed_body[:reasoning_effort]).to eq("xhigh")
+      expect(parsed_body).not_to have_key(:temperature)
+    end
+
+    it "uses native max effort for GPT-5.6" do
+      model.update!(name: "gpt-5.6-sol")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "max" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("max")
+    end
+
+    it "uses native max effort for future OpenAI models by default" do
+      model.update!(name: "gpt-5.7")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "max" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("max")
+    end
+
+    it "passes max through for Azure deployments with opaque names" do
+      azure_url = "https://test.openai.azure.com/openai/v1/chat/completions"
+      model.update!(
+        provider: "azure",
+        name: "production-deployment",
+        url: azure_url,
+        provider_params: {
+          reasoning_effort: "max",
+        },
+      )
+
+      parsed_body = nil
+      stub_request(:post, azure_url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning_effort]).to eq("max")
+    end
+
+    it "reserves OpenAI recommended output room for reasoning when no token cap is configured" do
+      prepared_params = endpoint.prepare_model_params(thinking_effort: "high")
+
+      expect(prepared_params[:reserved_output_tokens]).to eq(25_000)
+    end
+
+    it "uses the model output limit as the reasoning output reservation when configured" do
+      model.update!(max_output_tokens: 12_000)
+
+      prepared_params = endpoint.prepare_model_params(thinking_effort: "high")
+
+      expect(prepared_params[:reserved_output_tokens]).to eq(12_000)
+    end
+
+    it "does not reserve output room when reasoning is explicitly disabled" do
+      prepared_params = endpoint.prepare_model_params(thinking_effort: "none")
+
+      expect(prepared_params).not_to have_key(:reserved_output_tokens)
+    end
+
+    it "treats standard reasoning mode as a no-op for Chat Completions" do
+      model.update!(provider_params: { reasoning_mode: "standard" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body).not_to have_key(:reasoning)
+      expect(parsed_body).not_to have_key(:reasoning_effort)
     end
 
     it "omits reasoning parameters when not configured" do

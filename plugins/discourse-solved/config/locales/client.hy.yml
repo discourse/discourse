@@ -12,6 +12,16 @@ hy:
           kpi:
             accepted_solutions:
               label: "Ընդունված լուծումներ"
+        sections:
+          support:
+            answerers:
+              staff: "Անձնակազմ"
+              member: "Անդամներ"
+              basic: "Հիմնական"
+            response_time:
+              buckets:
+                lt_1h: "< 1 ժամով"
+                gt_24h: "> Վերջին 24 ժամվա"
   js:
     notifications:
       alt:
@@ -42,6 +52,12 @@ hy:
     topic_statuses:
       solved:
         help: "Այս թեման ունի լուծում:"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Թեմա"
+            category: "Կատեգորիա"
     discourse_automation:
       triggerables:
         first_accepted_solution:

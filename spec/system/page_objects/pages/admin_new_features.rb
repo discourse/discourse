@@ -15,9 +15,7 @@ module PageObjects
       end
 
       def within_new_feature_item(title, &block)
-        within find(
-                 ".admin-new-feature-item[data-new-feature-identifier='#{title.parameterize}']",
-               ) do
+        within find(".admin-new-feature-item##{title.parameterize.downcase}") do
           block.call
         end
       end

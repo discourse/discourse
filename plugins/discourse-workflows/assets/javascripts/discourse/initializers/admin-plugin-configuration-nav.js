@@ -17,7 +17,7 @@ export default {
           label: "discourse_workflows.title",
           route: "adminPlugins.show.discourse-workflows.index",
           currentWhen:
-            "adminPlugins.show.discourse-workflows.index adminPlugins.show.discourse-workflows.new adminPlugins.show.discourse-workflows.show.index adminPlugins.show.discourse-workflows.show.executions.index adminPlugins.show.discourse-workflows.show.executions.show adminPlugins.show.discourse-workflows.show.settings",
+            "adminPlugins.show.discourse-workflows.index adminPlugins.show.discourse-workflows.new adminPlugins.show.discourse-workflows.show.index adminPlugins.show.discourse-workflows.show.node adminPlugins.show.discourse-workflows.show.executions.index adminPlugins.show.discourse-workflows.show.executions.show adminPlugins.show.discourse-workflows.show.settings",
         },
         {
           label: "discourse_workflows.variables.title",

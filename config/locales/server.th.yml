@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 th:
+  llms_txt:
+    sections:
+      optional: "ทางเลือก"
+    links:
+      search:
+        label: "ค้นหา"
+      categories:
+        label: "หมวดหมู่"
+      about:
+        label: "เกี่ยวกับ"
+      guidelines:
+        label: "คู่มือ"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -67,7 +79,6 @@ th:
   errors: &errors
     messages:
       exclusion: ถูกจองแล้ว
-      has_already_been_used: "ได้ถูกใช้แล้ว"
       invalid: ไม่ถูกต้อง
   not_in_group:
     join_group: "เข้าร่วมกลุ่ม"
@@ -102,6 +113,11 @@ th:
       everyone: "ทุกคน"
       admins: "ผู้ดูแลระบบ"
       moderators: "ผู้ดูแล"
+      staff: "ทีมงาน"
+    default_full_names:
+      everyone: "ทุกคน"
+      admins: "แอดมิน"
+      moderators: "ผู้ดูแลระบบ"
       staff: "ทีมงาน"
   education:
     until_posts:
@@ -165,6 +181,10 @@ th:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
+  admin_site_traffic_explorer:
+    unknown: "ไม่ทราบ"
+    traffic_types:
+      anonymous: "ไม่ระบุชื่อ"
   reviewable_score_types:
     needs_approval:
       title: "ต้องการอนุมัติ"
@@ -233,6 +253,11 @@ th:
         share: "แบ่งปัน"
       types:
         staff: "ทีมงาน"
+    posters_by_member_type_members:
+      labels:
+        user: "ผู้ใช้"
+        count: "โพส"
+        share: "แบ่งปัน"
     trust_level_pipeline:
       labels:
         count: "สมาชิก"
@@ -283,6 +308,9 @@ th:
         user: "ผู้ใช้"
         num_topics: "หัวข้อ"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "เยี่ยมชม"
+    top_entry_urls:
       labels:
         count: "เยี่ยมชม"
     top_referrers_by_browser_pageviews:
@@ -485,10 +513,6 @@ th:
         %{context}
 
         %{respond_instructions}
-    user_posted_pm_staged:
-      text_body_template: |2
-
-        %{message}
     digest:
       liked_received: "ได้รับการชอบ"
       new_users: "ผู้ใช้งานใหม่"
@@ -533,6 +557,9 @@ th:
       button: "ลงทะเบียน"
     resend_email:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
+  design_wizard:
+    palette_pairs:
+      default: "ค่าเริ่มต้น"
   wizard:
     step:
       setup:

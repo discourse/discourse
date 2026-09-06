@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    boards:
+      board:
+        remove_card: "پاک کردن"
+        title: "عنوان"
+        tags: "برچسب‌ها"
+        topic_reply_count:
+          one: "%{count} پاسخ"
+          other: "%{count} پاسخ"
+        created_by: "ایجاد شده توسط"
+      manage:
+        name: "نام"
+        slug: "نشانک (slug)"
+        constraint_categories: "دسته‌بندی‌ها"
+        constraint_tags: "برچسب‌ها"
+        columns:
+          remove: "پاک کردن"
+          column_title: "عنوان"
+          icon: "آیکن"
+          color: "رنگ"
+          tag: "برچسب"
+          move_to_status_open: "باز"
+          move_to_status_closed: "بسته شده"

@@ -74,7 +74,7 @@ module BackupRestore
     def download_archive_to_tmp_directory
       log "Downloading archive from URL to tmp directory..."
       tmpfile = self.class.download(@url)
-      Discourse::Utils.execute_command("mv", tmpfile.path, @archive_path)
+      FileUtils.mv(tmpfile.path, @archive_path)
     ensure
       tmpfile&.unlink
     end

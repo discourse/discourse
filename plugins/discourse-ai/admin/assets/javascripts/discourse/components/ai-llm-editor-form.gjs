@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn, get } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
@@ -12,15 +12,18 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { groupPath } from "discourse/lib/url";
 import { eq, gt, not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
+import AiLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-llm-selector";
 import {
   isProviderParamHidden,
   normalizeProviderParams,
+  providerParamLabel,
 } from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiSecretSelector from "./ai-secret-selector";
@@ -68,6 +71,8 @@ export default class AiLlmEditorForm extends Component {
         output_cost: modelInfo.output_cost,
         cached_input_cost: modelInfo.cached_input_cost,
         vision_enabled: modelInfo.vision_enabled || false,
+        vision_mode: modelInfo.vision_enabled ? "native" : "disabled",
+        vision_llm_model_id: null,
         cache_write_cost: modelInfo.cache_write_cost,
         allowed_attachment_types: [],
       };
@@ -85,6 +90,9 @@ export default class AiLlmEditorForm extends Component {
       name: model.name,
       provider: model.provider,
       vision_enabled: model.vision_enabled,
+      vision_mode:
+        model.vision_mode ?? (model.vision_enabled ? "native" : "disabled"),
+      vision_llm_model_id: model.vision_llm_model_id,
       input_cost: model.input_cost,
       output_cost: model.output_cost,
       cached_input_cost: model.cached_input_cost,
@@ -100,6 +108,23 @@ export default class AiLlmEditorForm extends Component {
 
   get availableSecrets() {
     return this.args.llms.resultSetMeta?.ai_secrets || [];
+  }
+
+  get nativeVisionModels() {
+    return this.args.llms.content
+      .filter(
+        (llm) =>
+          llm.id !== this.args.model.id &&
+          llm.vision_enabled &&
+          (llm.vision_mode ?? "native") === "native"
+      )
+      .map((llm) => ({
+        id: llm.id,
+        name: `${llm.display_name} — ${i18n(
+          `discourse_ai.llms.providers.${llm.provider}`
+        )}`,
+      }))
+      .sort((first, second) => first.name.localeCompare(second.name));
   }
 
   get selectedProviders() {
@@ -179,10 +204,6 @@ export default class AiLlmEditorForm extends Component {
     });
   }
 
-  get showAddQuotaButton() {
-    return !this.args.model.isNew;
-  }
-
   computeProviderParams(provider, currentParams = {}) {
     const params = this.args.llms.resultSetMeta.provider_params[provider] ?? {};
     return Object.fromEntries(
@@ -195,7 +216,9 @@ export default class AiLlmEditorForm extends Component {
 
   @action
   canEditURL(provider) {
-    return provider !== "aws_bedrock";
+    const capabilities =
+      this.args.llms.resultSetMeta.provider_capabilities?.[provider];
+    return capabilities?.requires_configured_url ?? true;
   }
 
   @action
@@ -276,6 +299,14 @@ export default class AiLlmEditorForm extends Component {
       later(() => {
         this.testRunning = false;
       }, 1000);
+    }
+  }
+
+  @action
+  setVisionMode(mode, { set }) {
+    set("vision_mode", mode);
+    if (mode !== "delegated") {
+      set("vision_llm_model_id", null);
     }
   }
 
@@ -411,9 +442,7 @@ export default class AiLlmEditorForm extends Component {
               }}
                 <object.Field
                   @name={{name}}
-                  @title={{i18n
-                    (concat "discourse_ai.llms.provider_fields." name)
-                  }}
+                  @title={{i18n (providerParamLabel name params)}}
                   @tooltip={{if params.tooltip (i18n params.tooltip)}}
                   @helpText={{if params.helpText (i18n params.helpText)}}
                   @showTitle={{not (eq params.type "checkbox")}}
@@ -537,16 +566,53 @@ export default class AiLlmEditorForm extends Component {
         </form.Field>
 
         <form.Field
-          @name="vision_enabled"
-          @title={{i18n "discourse_ai.llms.vision_enabled"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.vision_enabled"}}
-          @showTitle={{false}}
+          @name="vision_mode"
+          @title={{i18n "discourse_ai.llms.vision_mode"}}
+          @tooltip={{i18n "discourse_ai.llms.vision_mode_help"}}
+          @validation="required"
+          @onSet={{this.setVisionMode}}
           @format="large"
-          @type="checkbox"
+          @type="select"
           as |field|
         >
-          <field.Control />
+          <field.Control as |select|>
+            <select.Option @value="disabled">
+              {{i18n "discourse_ai.llms.vision_modes.disabled.title"}}
+            </select.Option>
+            <select.Option @value="delegated">
+              {{i18n "discourse_ai.llms.vision_modes.delegated.title"}}
+            </select.Option>
+            <select.Option @value="native">
+              {{i18n "discourse_ai.llms.vision_modes.native.title"}}
+            </select.Option>
+          </field.Control>
         </form.Field>
+
+        {{#if (eq data.vision_mode "delegated")}}
+          <form.Field
+            @name="vision_llm_model_id"
+            @title={{i18n "discourse_ai.llms.vision_model"}}
+            @tooltip={{i18n "discourse_ai.llms.vision_model_help"}}
+            @validation="required"
+            @format="large"
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <AiLlmSelector
+                @value={{field.value}}
+                @llms={{this.nativeVisionModels}}
+                @onChange={{field.set}}
+                class="ai-llm-editor__vision-model-selector"
+              />
+            </field.Control>
+          </form.Field>
+          {{#unless this.nativeVisionModels.length}}
+            <form.Alert @icon="triangle-exclamation">
+              {{i18n "discourse_ai.llms.no_native_vision_models"}}
+            </form.Alert>
+          {{/unless}}
+        {{/if}}
 
         <form.Field
           @name="allowed_attachment_types"
@@ -581,92 +647,96 @@ export default class AiLlmEditorForm extends Component {
       {{/unless}}
 
       {{#if (gt data.llm_quotas.length 0)}}
-        <form.Container @title={{i18n "discourse_ai.llms.quotas.title"}}>
-          <table class="ai-llm-quotas__table">
-            <thead class="ai-llm-quotas__table-head">
-              <tr class="ai-llm-quotas__header-row">
-                <th class="ai-llm-quotas__header">{{i18n
-                    "discourse_ai.llms.quotas.group"
-                  }}</th>
-                <th class="ai-llm-quotas__header">{{i18n
-                    "discourse_ai.llms.quotas.max_tokens"
-                  }}</th>
-                <th class="ai-llm-quotas__header">{{i18n
-                    "discourse_ai.llms.quotas.max_usages"
-                  }}</th>
-                <th class="ai-llm-quotas__header">{{i18n
-                    "discourse_ai.llms.quotas.duration"
-                  }}</th>
-                <th
-                  class="ai-llm-quotas__header ai-llm-quotas__header--actions"
-                ></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="ai-llm-quotas__table-body">
-              <form.Collection
-                @name="llm_quotas"
-                as |collection index collectionData|
-              >
-                <tr class="ai-llm-quotas__row">
-                  <td
-                    class="ai-llm-quotas__cell"
-                  >{{collectionData.group_name}}</td>
-                  <td class="ai-llm-quotas__cell">
-                    <collection.Field
-                      @name="max_tokens"
-                      @title="max_tokens"
-                      @showTitle={{false}}
-                      @type="input-number"
-                      as |field|
-                    >
-                      <field.Control
-                        class="ai-llm-quotas__input ai-llm-quotas__input--tokens"
-                        min="1"
-                      />
-                    </collection.Field>
-                  </td>
-                  <td class="ai-llm-quotas__cell">
-                    <collection.Field
-                      @name="max_usages"
-                      @title="max_usages"
-                      @showTitle={{false}}
-                      @type="input-number"
-                      as |field|
-                    >
-                      <field.Control
-                        class="ai-llm-quotas__input ai-llm-quotas__input--usages"
-                        min="1"
-                      />
-                    </collection.Field>
-                  </td>
-                  <td class="ai-llm-quotas__cell">
-                    <collection.Field
-                      @name="duration_seconds"
-                      @title="duration_seconds"
-                      @showTitle={{false}}
-                      @type="custom"
-                      as |field|
-                    >
-                      <field.Control>
-                        <DurationSelector
-                          @value={{collectionData.duration_seconds}}
-                          @onChange={{field.set}}
-                        />
-                      </field.Control>
-                    </collection.Field>
-                  </td>
-                  <td>
-                    <form.Button
-                      @icon="trash-can"
-                      @action={{fn collection.remove index}}
-                      class="btn-danger ai-llm-quotas__delete-btn"
+        <form.Container
+          @title={{i18n "discourse_ai.llms.quotas.title"}}
+          @format="full"
+        >
+          <div class="ai-llm-quotas">
+            <form.Collection
+              @name="llm_quotas"
+              as |collection index collectionData|
+            >
+              <div class="ai-llm-quotas__item">
+                <div class="ai-llm-quotas__item-header">
+                  <dl class="ai-llm-quotas__group">
+                    <dt class="ai-llm-quotas__group-label">{{i18n
+                        "discourse_ai.llms.quotas.group"
+                      }}</dt>
+                    <dd class="ai-llm-quotas__group-name">
+                      <a
+                        href={{groupPath collectionData.group_name}}
+                        class="ai-llm-quotas__group-link"
+                      >
+                        {{dIcon "users"}}
+                        <span>{{collectionData.group_name}}</span>
+                      </a>
+                    </dd>
+                  </dl>
+
+                  <form.Button
+                    @icon="trash-can"
+                    @action={{fn collection.remove index}}
+                    class="btn-danger ai-llm-quotas__delete-btn"
+                  />
+                </div>
+
+                <div class="ai-llm-quotas__limits">
+                  <collection.Field
+                    @name="max_tokens"
+                    @title={{i18n "discourse_ai.llms.quotas.max_tokens"}}
+                    @type="input-number"
+                    as |field|
+                  >
+                    <field.Control
+                      class="ai-llm-quotas__input ai-llm-quotas__input--tokens"
+                      min="1"
                     />
-                  </td>
-                </tr>
-              </form.Collection>
-            </tbody>
-          </table>
+                  </collection.Field>
+
+                  <collection.Field
+                    @name="max_usages"
+                    @title={{i18n "discourse_ai.llms.quotas.max_usages"}}
+                    @type="input-number"
+                    as |field|
+                  >
+                    <field.Control
+                      class="ai-llm-quotas__input ai-llm-quotas__input--usages"
+                      min="1"
+                    />
+                  </collection.Field>
+
+                  <collection.Field
+                    @name="max_cost"
+                    @title={{i18n "discourse_ai.llms.quotas.max_cost"}}
+                    @type="input-number"
+                    as |field|
+                  >
+                    <field.Control
+                      class="ai-llm-quotas__input ai-llm-quotas__input--cost"
+                      min="0.01"
+                      step="0.01"
+                    />
+                  </collection.Field>
+
+                  <collection.Field
+                    @name="duration_seconds"
+                    @title={{i18n "discourse_ai.llms.quotas.duration"}}
+                    @validation="required"
+                    @type="custom"
+                    as |field|
+                  >
+                    <field.Control>
+                      <DurationSelector
+                        @value={{collectionData.duration_seconds}}
+                        @onChange={{field.set}}
+                        class="ai-llm-quotas__duration"
+                      />
+                    </field.Control>
+                  </collection.Field>
+                </div>
+              </div>
+            </form.Collection>
+          </div>
         </form.Container>
 
         <form.Button

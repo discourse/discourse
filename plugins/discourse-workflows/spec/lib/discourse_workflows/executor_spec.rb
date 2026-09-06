@@ -36,6 +36,22 @@ RSpec.describe DiscourseWorkflows::Executor do
         expect(topic.reload.tags).to include(tag)
       end
 
+      it "publishes step and terminal progress" do
+        messages =
+          MessageBus.track_publish { described_class.new(workflow, "trigger-1", trigger_data).run }
+        progress_messages =
+          messages.select do |message|
+            message.channel.start_with?("/discourse-workflows/execution/")
+          end
+
+        expect(progress_messages.map { |message| message.data.dig(:step, "status") }.compact).to eq(
+          %w[success running success],
+        )
+        expect(progress_messages.last.data).to include(type: "execution_progress", refresh: true)
+        expect(progress_messages.last.data[:execution]).to include(status: "success")
+        expect(progress_messages.map(&:group_ids).uniq).to eq([[Group::AUTO_GROUPS[:admins]]])
+      end
+
       it "creates an execution record" do
         expect { described_class.new(workflow, "trigger-1", trigger_data).run }.to change {
           DiscourseWorkflows::Execution.count
@@ -381,7 +397,6 @@ RSpec.describe DiscourseWorkflows::Executor do
           g.node "log-1",
                  "action:log",
                  configuration: {
-                   "alwaysOutputData" => true,
                    "entries" => {
                      "values" => [{ "key" => "topic", "value" => "={{ $json.topic_id }}" }],
                    },
@@ -401,7 +416,7 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(logs.first).to include("key" => "topic", "value" => topic.id.to_s)
     end
 
-    it "does not route downstream when log returns no output" do
+    it "routes downstream with log input items" do
       graph =
         build_workflow_graph do |g|
           g.node "trigger-1", "trigger:topic_closed"
@@ -412,8 +427,16 @@ RSpec.describe DiscourseWorkflows::Executor do
                      "values" => [{ "key" => "topic", "value" => "={{ $json.topic_id }}" }],
                    },
                  }
-          g.node "code-1", "action:code", configuration: { "code" => "return $input.all();" }
-          g.chain "trigger-1", "log-1", "code-1"
+          g.node "set-fields-1",
+                 "action:set_fields",
+                 configuration: {
+                   "assignments" => {
+                     "assignments" => [
+                       { "name" => "logged", "value" => "true", "type" => "boolean" },
+                     ],
+                   },
+                 }
+          g.chain "trigger-1", "log-1", "set-fields-1"
         end
       workflow =
         Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
@@ -423,19 +446,23 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       expect(execution.status).to eq("success")
 
+      expected_item = { "json" => trigger_data.stringify_keys, "pairedItem" => { "item" => 0 } }
       log_step = execution.execution_data.find_step(node_id: "log-1")
-      expect(log_step["output"]).to eq([])
+      expect(log_step["output"]).to eq([expected_item])
       expect(log_step.dig("metadata", "logs").first).to include(
         "key" => "topic",
         "value" => topic.id.to_s,
       )
 
-      expect(execution.execution_data.find_step(node_id: "code-1")).to be_nil
+      set_fields_step = execution.execution_data.find_step(node_id: "set-fields-1")
+      expect(set_fields_step["output"]).to eq(
+        [expected_item.deep_merge("json" => { "logged" => true })],
+      )
 
       run_data = execution.execution_data.run_data
-      expect(run_data.dig("Log-1", 0, "outputs", 0, "item_count")).to eq(0)
-      expect(run_data.dig("Log-1", 0, "outputs", 0, "items")).to eq([])
-      expect(run_data["Code-1"]).to be_nil
+      expect(run_data.dig("Log-1", 0, "outputs", 0, "item_count")).to eq(1)
+      expect(run_data.dig("Log-1", 0, "outputs", 0, "items")).to eq([expected_item])
+      expect(run_data.dig(set_fields_step["node_name"], 0, "inputs", 0, "item_count")).to eq(1)
     end
 
     it "fails the step when expression errors are logged" do
@@ -666,7 +693,7 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       let(:plugin) do
         p = Plugin::Instance.new
-        p.enabled_site_setting(:discourse_workflows_enabled)
+        p.enabled_site_setting(:enable_discourse_workflows)
         p
       end
 
@@ -675,12 +702,7 @@ RSpec.describe DiscourseWorkflows::Executor do
         DiscourseWorkflows::Registry.reset_indexes!
       end
 
-      after do
-        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |h|
-          h[:value] == unavailable_node_class
-        end
-        DiscourseWorkflows::Registry.reset_indexes!
-      end
+      after { unregister_workflow_nodes(unavailable_node_class) }
 
       it "passes data through and records a skipped step" do
         graph =
@@ -755,12 +777,7 @@ RSpec.describe DiscourseWorkflows::Executor do
         DiscourseWorkflows::Registry.reset_indexes!
       end
 
-      after do
-        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-          [v1_node_class, v2_node_class].include?(entry[:value])
-        end
-        DiscourseWorkflows::Registry.reset_indexes!
-      end
+      after { unregister_workflow_nodes(v1_node_class, v2_node_class) }
 
       it "dispatches execution to the saved node type version" do
         graph =
@@ -843,15 +860,12 @@ RSpec.describe DiscourseWorkflows::Executor do
       end
 
       after do
-        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-          [
-            raw_array_node_class,
-            named_outputs_node_class,
-            malformed_array_node_class,
-            oversized_output_node_class,
-          ].include?(entry[:value])
-        end
-        DiscourseWorkflows::Registry.reset_indexes!
+        unregister_workflow_nodes(
+          raw_array_node_class,
+          named_outputs_node_class,
+          malformed_array_node_class,
+          oversized_output_node_class,
+        )
       end
 
       it "accepts positional output arrays" do

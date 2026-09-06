@@ -6,14 +6,6 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
     SiteSetting.discourse_subscriptions_secret_key = "secret-key"
   end
 
-  def create_price(id, product)
-    price = { id: id, product: product }
-    def price.id
-      self[:id]
-    end
-    price
-  end
-
   it "is a subclass of ApplicationController" do
     expect(DiscourseSubscriptions::User::SubscriptionsController < ::ApplicationController).to eq(
       true,
@@ -43,11 +35,11 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
     let(:customer) do
       Fabricate(:customer, user_id: user.id, customer_id: "cus_23456", product_id: "prod_123")
     end
-
-    before do
-      sign_in(user)
+    let!(:subscription) do
       Fabricate(:subscription, customer_id: customer.id, external_id: "sub_10z")
     end
+
+    before { sign_in(user) }
 
     describe "index" do
       plans_json =
@@ -97,11 +89,25 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
         # Build the first page of 100 prices that do NOT include the desired price.
         prices_page_1 =
           (1..100).map do |i|
-            create_price("price_#{i}", { id: "prod_dummy", name: "Dummy Product #{i}" })
+            ::Stripe::Price.construct_from(
+              id: "price_#{i}",
+              product: {
+                id: "prod_dummy",
+                name: "Dummy Product #{i}",
+              },
+            )
           end
 
         # Second page containing the desired price.
-        prices_page_2 = [create_price("price_200", { id: "prod_200", name: "Matching Product" })]
+        prices_page_2 = [
+          ::Stripe::Price.construct_from(
+            id: "price_200",
+            product: {
+              id: "prod_200",
+              name: "Matching Product",
+            },
+          ),
+        ]
 
         ::Stripe::Price
           .expects(:list)

@@ -18,6 +18,8 @@ function renderComponent(context) {
         @editPost={{noop}}
         @showHistory={{noop}}
         @replyToPost={{noop}}
+        @deletePost={{context.deletePost}}
+        @recoverPost={{context.recoverPost}}
         @changeNotice={{noop}}
         @changePostOwner={{noop}}
         @grantBadge={{noop}}
@@ -29,6 +31,7 @@ function renderComponent(context) {
         @togglePostType={{noop}}
         @toggleWiki={{noop}}
         @unhidePost={{noop}}
+        @showPostMenu={{context.showPostMenu}}
         @registerPost={{registerPost}}
         @multiSelect={{context.multiSelect}}
         @togglePostSelection={{context.togglePostSelection}}
@@ -44,6 +47,10 @@ module("Integration | Component | Nested | Op", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    this.siteSettings.post_menu =
+      "read|like|copyLink|share|flag|edit|bookmark|delete|admin|reply";
+    this.siteSettings.post_menu_hidden_items = "";
+
     this.store = getOwner(this).lookup("service:store");
     this.topic = this.store.createRecord("topic", {
       id: 1,
@@ -56,6 +63,9 @@ module("Integration | Component | Nested | Op", function (hooks) {
       is_nested_view: true,
     });
     this.multiSelect = false;
+    this.showPostMenu = false;
+    this.deletePost = noop;
+    this.recoverPost = noop;
     this.togglePostSelection = noop;
     this.selectReplies = noop;
     this.selectBelow = noop;
@@ -71,6 +81,66 @@ module("Integration | Component | Nested | Op", function (hooks) {
       created_at: "2026-01-01T00:00:00.000Z",
       actions_summary: [],
     });
+  });
+
+  test("does not render the flat replies button in the nested OP menu", async function (assert) {
+    this.showPostMenu = true;
+    this.post.set("reply_count", 3);
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-view__op-menu .post-action-menu__show-replies")
+      .doesNotExist("nested OP menu suppresses the flat replies button");
+  });
+
+  test("renders an enabled delete-topic button for the OP", async function (assert) {
+    this.showPostMenu = true;
+    this.topic.details = { can_delete: true };
+    this.deletePost = (post) => {
+      assert.strictEqual(post, this.post, "passes the OP to the delete action");
+      assert.step("delete action");
+    };
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-view__op-menu .post-action-menu__delete")
+      .isNotDisabled("the OP delete-topic button is actionable");
+
+    await click(".nested-view__op-menu .post-action-menu__delete");
+
+    assert.verifySteps(["delete action"], "invokes the delete action");
+  });
+
+  test("renders a deleted OP with an enabled recover-topic button", async function (assert) {
+    this.showPostMenu = true;
+    this.topic.setProperties({
+      deleted_at: "2026-01-01T00:00:00.000Z",
+      details: { can_recover: true },
+    });
+    this.recoverPost = (post) => {
+      assert.strictEqual(
+        post,
+        this.post,
+        "passes the OP to the recover action"
+      );
+      assert.step("recover action");
+    };
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-view__op-article")
+      .hasClass("is-deleted", "marks the deleted OP for nested view styling")
+      .hasClass("deleted", "reuses the flat deleted post style hooks");
+    assert
+      .dom(".nested-view__op-menu .post-action-menu__recover")
+      .isNotDisabled("the OP recover-topic button is actionable");
+
+    await click(".nested-view__op-menu .post-action-menu__recover");
+
+    assert.verifySteps(["recover action"], "invokes the recover action");
   });
 
   test("renders multi-select controls for the OP", async function (assert) {

@@ -137,7 +137,10 @@ export default class PollButtonsDropdownComponent extends Component {
           </:trigger>
           <:content>
             <DDropdownMenu as |dropdown|>
-              {{#each this.getDropdownContent as |content|}}
+              {{#each this.getDropdownContent as |content index|}}
+                {{#if index}}
+                  <dropdown.divider />
+                {{/if}}
                 <dropdown.item>
                   <DButton
                     class="widget-button {{content.className}}"
@@ -146,7 +149,6 @@ export default class PollButtonsDropdownComponent extends Component {
                     @action={{fn this.dropDownClick content.action}}
                   />
                 </dropdown.item>
-                <dropdown.divider />
               {{/each}}
             </DDropdownMenu>
           </:content>

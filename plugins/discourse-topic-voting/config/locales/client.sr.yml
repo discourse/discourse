@@ -9,3 +9,6 @@ sr:
     topic_voting:
       show_voters: "Prikaži ko je glasao"
       vote_count_thousands: "%{count} hiljada."
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Tagovi"

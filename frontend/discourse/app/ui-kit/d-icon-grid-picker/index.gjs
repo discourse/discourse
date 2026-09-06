@@ -3,12 +3,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-/** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
-/** @type {import("discourse/ui-kit/d-button.gjs").default} */
 import DButton from "discourse/ui-kit/d-button";
-/** @type {import("discourse/ui-kit/d-icon-grid-picker/content.gjs").default} */
 import DIconGridPickerContent from "discourse/ui-kit/d-icon-grid-picker/content";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -21,7 +18,7 @@ import { i18n } from "discourse-i18n";
  * @property {object} Args
  *
  * @property {string} Args.value - The currently selected icon ID.
- * @property {Function} Args.onChange - Called with the selected icon ID when an icon is picked.
+ * @property {(iconId: string | null) => void} Args.onChange - Called with the selected icon ID when an icon is picked, or `null` when the selection is cleared.
  * @property {string[]} [Args.favorites] - Icon IDs to display in a pinned favorites row above the grid.
  * @property {boolean} [Args.showSelectedName] - When true, the selected icon's name is shown
  *   alongside the icon in both the trigger button and the favorites chip. Adds a
@@ -33,8 +30,9 @@ import { i18n } from "discourse-i18n";
  * @property {boolean} [Args.showCaret] - When true, shows a chevron icon in the trigger
  *   that flips between angle-down and angle-up based on the menu's expanded state.
  * @property {boolean} [Args.disabled] - When true, disables the trigger button and clear button.
- * @property {boolean} [Args.onlyAvailable] - When true, only shows icons available in the
- *   current SVG sprite set. Defaults to true.
+ * @property {boolean} [Args.onlyAvailable] - When true, only offers icons available in the
+ *   current SVG sprite set. Defaults to true. Pass false only where saving the value adds
+ *   it to the sprite, otherwise the picked icon is blank once the page reloads.
  * @property {string} [Args.iconColor] - CSS color value applied to icons in both the trigger
  *   and the picker grid via the `--icon-color` custom property.
  * @property {string} [Args.selectedTitle] - Translation key for the trigger button title when an
@@ -44,8 +42,8 @@ import { i18n } from "discourse-i18n";
  *   Defaults to "d_icon_grid_picker.clear".
  * @property {boolean} [Args.modalForMobile] - Whether to show as a modal on mobile. Defaults to true.
  * @property {boolean} [Args.inline] - When true, renders the menu inline instead of floating.
- * @property {Function} [Args.onShow] - Called when the picker menu is opened.
- * @property {Function} [Args.onClose] - Called when the picker menu is closed.
+ * @property {import("discourse/float-kit/lib/constants").FloatCallback} [Args.onShow] - Called when the picker menu is opened.
+ * @property {import("discourse/float-kit/lib/constants").FloatCallback} [Args.onClose] - Called when the picker menu is closed.
  */
 
 /**
@@ -126,14 +124,6 @@ export default class DIconGridPicker extends Component {
   }
 
   /**
-   * Forwards to the external `@onShow` callback if provided.
-   */
-  @action
-  onShow() {
-    this.args.onShow?.();
-  }
-
-  /**
    * Handles icon selection by invoking the `@onChange` callback and closing
    * the menu/modal.
    *
@@ -173,14 +163,14 @@ export default class DIconGridPicker extends Component {
         @modalForMobile={{this.modalForMobile}}
         @maxWidth={{490}}
         @autofocus={{true}}
-        @onShow={{this.onShow}}
+        @onShow={{@onShow}}
         @onRegisterApi={{this.onRegisterMenu}}
         @onClose={{@onClose}}
         @inline={{@inline}}
       >
         <:trigger>
           {{#if @value}}
-            {{dIcon @value}}
+            {{dIcon @value ignoreMissing=true}}
           {{/if}}
 
           {{#if this.triggerLabel}}

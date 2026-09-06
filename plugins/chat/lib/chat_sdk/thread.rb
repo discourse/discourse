@@ -97,9 +97,6 @@ module ChatSDK
 
     def update(guardian:, **params)
       Chat::UpdateThread.call(guardian:, params:) do
-        on_model_not_found(:channel) do
-          raise "Couldn’t find channel with id: `#{params[:channel_id]}`"
-        end
         on_model_not_found(:thread) do
           raise "Couldn’t find thread with id: `#{params[:thread_id]}`"
         end

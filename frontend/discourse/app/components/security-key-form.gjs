@@ -6,6 +6,22 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class SecurityKeyForm extends Component {
+  get showSecurityKeyButton() {
+    // when the granular args aren't passed, keep the legacy single-button
+    // rendering driven by `@action`
+    return this.args.securityKeysEnabled ?? true;
+  }
+
+  get securityKeyAction() {
+    return this.args.securityKeyAction ?? this.args.action;
+  }
+
+  get securityKeyLabel() {
+    return this.args.passkeysEnabled
+      ? "login.use_security_key"
+      : "login.security_key_authenticate";
+  }
+
   @action
   useAnotherMethod(event) {
     event.preventDefault();
@@ -21,13 +37,24 @@ export default class SecurityKeyForm extends Component {
 
   <template>
     <div id="security-key">
-      <DButton
-        @action={{@action}}
-        @icon="key"
-        @label="login.security_key_authenticate"
-        id="security-key-authenticate-button"
-        class="btn-large btn-primary"
-      />
+      {{#if @passkeysEnabled}}
+        <DButton
+          @action={{@passkeyAction}}
+          @icon="user"
+          @label="login.use_passkey"
+          id="passkey-authenticate-button"
+          class="btn-large btn-primary"
+        />
+      {{/if}}
+      {{#if this.showSecurityKeyButton}}
+        <DButton
+          @action={{this.securityKeyAction}}
+          @icon="key"
+          @label={{this.securityKeyLabel}}
+          id="security-key-authenticate-button"
+          class="btn-large {{if @passkeysEnabled 'btn-default' 'btn-primary'}}"
+        />
+      {{/if}}
       <p>
         {{#if @otherMethodAllowed}}
           <a

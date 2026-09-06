@@ -217,6 +217,25 @@ RSpec.describe PostActionCreator do
       )
     end
 
+    it "does not auto-hide a post when the same TL2 user repeatedly retracts and recreates a flag" do
+      Reviewable.set_priorities(high: 12.5)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:medium]
+      attacker = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+
+      2.times do
+        expect(PostActionCreator.inappropriate(attacker, post)).to be_success
+        expect(PostActionDestroyer.destroy(attacker, post, :inappropriate)).to be_success
+      end
+
+      result = PostActionCreator.inappropriate(attacker, post)
+      reviewable = result.reviewable.reload
+
+      expect(result).to be_success
+      expect(post.reload).not_to be_hidden
+      expect(reviewable.score).to eq(ReviewableScore.user_flag_score(attacker))
+      expect(reviewable.reviewable_scores.pending.count).to eq(1)
+    end
+
     describe "Auto hide spam flagged posts" do
       before do
         user.trust_level = TrustLevel[3]

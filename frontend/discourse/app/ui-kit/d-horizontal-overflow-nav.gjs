@@ -27,7 +27,7 @@ export default class DHorizontalOverflowNav extends Component {
 
   @bind
   scrollToActive(element) {
-    const activeElement = element.querySelector("a.active");
+    const activeElement = element.querySelector("a.active, button.active");
 
     activeElement?.scrollIntoView({
       block: "nearest",

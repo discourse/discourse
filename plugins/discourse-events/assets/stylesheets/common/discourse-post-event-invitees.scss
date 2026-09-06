@@ -1,0 +1,56 @@
+.post-event-invitees-modal {
+  .loading-container {
+    height: 40vh;
+    overflow-y: auto;
+
+    .no-users {
+      margin-top: var(--space-4);
+      text-align: center;
+      font-size: var(--font-up-1);
+    }
+  }
+
+  .invitees-type-filter {
+    margin: 0 0 -1px 0;
+  }
+
+  .filter {
+    width: calc(100% - 2em);
+    margin-bottom: 1em;
+  }
+
+  .invitees,
+  .possible-invitees {
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+
+    .invitee {
+      list-style: none;
+      display: flex;
+      flex: 1;
+      padding: 0.5em;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--primary-low);
+
+      &:last-child {
+        border: none;
+      }
+
+      .user {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+
+        .username {
+          margin-left: 0.5em;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          color: var(--primary-high-or-secondary-low);
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

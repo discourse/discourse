@@ -7,7 +7,7 @@ module Jobs
     cluster_concurrency 1
 
     def execute(args)
-      return if !DiscourseAi::Translation.backfill_enabled?
+      return if !DiscourseAi::Translation.backfill_enabled?(target: Category)
 
       llm_model = find_llm_model
       return if llm_model.blank?
@@ -19,9 +19,7 @@ module Jobs
         return
       end
 
-      categories = Category.where(locale: nil)
-      excluded_category_ids = DiscourseAi::Translation.excluded_category_ids
-      categories = categories.where.not(id: excluded_category_ids) if excluded_category_ids.present?
+      categories = DiscourseAi::Translation::CategoryCandidates.get.where(locale: nil)
 
       limit = SiteSetting.ai_translation_backfill_hourly_rate
       categories = categories.limit(limit)

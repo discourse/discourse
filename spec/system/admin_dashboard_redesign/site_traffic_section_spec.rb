@@ -2,6 +2,7 @@
 
 describe "Admin Dashboard Redesign | Site Traffic section" do
   fab!(:current_user, :admin)
+  fab!(:moderator)
 
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
 
@@ -136,8 +137,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     expect(traffic).to have_chart
   end
 
-  it "takes staff to the full site traffic report scoped to the same period when they click See details",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "takes an admin to the traffic explorer with the selected period when they click See details" do
     Fabricate(:logged_in_browser_application_request, date: "2026-05-05", count: 10)
 
     dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
@@ -149,13 +149,31 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     traffic.click_see_details
 
     expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+    )
+  end
+
+  it "keeps the aggregate traffic report available to moderators" do
+    sign_in(moderator)
+
+    dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+    dashboard.site_traffic.click_see_details
+
+    expect(page).to have_current_path(
       "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",
     )
   end
 
-  context "with top countries and top referrers cards" do
+  context "with top countries, top referrers, and top entry URLs cards" do
+    let(:browser_pageview_source) { BrowserPageviewEvent::SOURCE_BEACON }
+
     before do
       SiteSetting.persist_browser_pageview_events = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :manual_opt_in,
+        created_at: Time.zone.local(2026, 4, 30, 9),
+      )
       Discourse.stubs(:current_hostname).returns("test.localhost")
       Discourse.cache.clear
     end
@@ -168,6 +186,8 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_no_top_countries_card
       expect(traffic).to have_no_top_referrers_card
+      expect(traffic).to have_no_top_entry_urls_card
+      expect(traffic).to have_no_metric("Direct traffic")
     end
 
     it "shows ranked top countries and top referrers when events exist in the period",
@@ -178,6 +198,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
           country_code: "US",
           normalized_referrer: "news.ycombinator.com/item?id=42",
           created_at: "2026-05-12",
+          source: browser_pageview_source,
         )
       end
       Fabricate(
@@ -185,12 +206,14 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         country_code: "GB",
         normalized_referrer: "reddit.com/r/discourse",
         created_at: "2026-05-12",
+        source: browser_pageview_source,
       )
       Fabricate(
         :browser_pageview_event,
         country_code: "DE",
         normalized_referrer: nil,
         created_at: "2026-05-12",
+        source: browser_pageview_source,
       )
       # Internal-referrer and direct (no-referrer) pageviews must not dilute the
       # top referrers percent denominator (it counts external referrer traffic only).
@@ -200,6 +223,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
           country_code: "DE",
           normalized_referrer: "test.localhost/t/topic/1",
           created_at: "2026-05-12",
+          source: browser_pageview_source,
         )
       end
 
@@ -217,9 +241,9 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_top_country_rows(
         [
-          { country: "DE", percent: 70 },
-          { country: "US", percent: 20 },
-          { country: "GB", percent: 10 },
+          { country: "DE", name: "Germany", percent: 70 },
+          { country: "US", name: "United States", percent: 20 },
+          { country: "GB", name: "United Kingdom", percent: 10 },
         ],
       )
       expect(traffic).to have_top_referrer_rows(
@@ -228,17 +252,58 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
           { referrer: "reddit.com/r/discourse", percent: 33 },
         ],
       )
+
+      expect(traffic).to have_metric("Direct traffic", "10%")
+
+      traffic.hover_direct_traffic_tooltip
+      expect(traffic).to have_direct_traffic_tooltip(
+        "The share of pageviews that came directly to your community, such as by typing your URL or using a browser bookmark.",
+      )
     end
 
-    it "shows an empty state in both cards but keeps the headers as drill-down links when no events qualify",
+    it "lets admins identify the URLs that started the most browser entries in the selected period",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      dashboard.visit
+      {
+        "/t/viral-topic/1" => 5,
+        "/associate/secret-token" => 4,
+        "/categories" => 3,
+        "/email/unsubscribe/secret-key" => 2,
+        "/faq" => 1,
+      }.each do |entry_url, count|
+        Fabricate(:browser_pageview_entry_url_daily_rollup, date: "2026-05-12", entry_url:, count:)
+      end
+
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-12", end_date: "2026-05-12")
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_top_entry_url_rows(
+        [
+          { path: "/t/viral-topic/1", percent: 33, count: 5 },
+          { path: "/associate/secret-token", percent: 27, count: 4 },
+          { path: "/categories", percent: 20, count: 3 },
+          { path: "/email/unsubscribe/secret-key", percent: 13, count: 2 },
+          { path: "/faq", percent: 7, count: 1 },
+        ],
+      )
+
+      traffic.click_top_entry_urls_drilldown
+      expect(page).to have_current_path(
+        "/admin/reports/top_entry_urls?end_date=2026-05-12&start_date=2026-05-12",
+      )
+    end
+
+    it "shows empty states but keeps the report headers as drill-down links when no events qualify",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-02", end_date: "2026-05-14")
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_countries_empty_state
       expect(traffic).to have_top_referrers_empty_state
+      expect(traffic).to have_top_entry_urls_empty_state
       expect(traffic).to have_top_referrers_drilldown
       expect(traffic).to have_top_countries_drilldown
+      expect(traffic).to have_top_entry_urls_drilldown
+      expect(traffic).to have_no_metric("Direct traffic")
     end
 
     it "drills into the full top referrers report scoped to the dashboard period",
@@ -247,6 +312,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         :browser_pageview_event,
         normalized_referrer: "news.ycombinator.com/item?id=42",
         created_at: "2026-05-12",
+        source: browser_pageview_source,
       )
       BrowserPageviewReferrerDailyRollup.aggregate(
         start_date: "2026-05-01".to_date,
@@ -263,7 +329,12 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
     it "drills into the full top countries report scoped to the dashboard period",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      Fabricate(:browser_pageview_event, country_code: "US", created_at: "2026-05-12")
+      Fabricate(
+        :browser_pageview_event,
+        country_code: "US",
+        created_at: "2026-05-12",
+        source: browser_pageview_source,
+      )
       BrowserPageviewCountryDailyRollup.aggregate(
         start_date: "2026-05-01".to_date,
         end_date: "2026-05-14".to_date,
@@ -275,6 +346,69 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       expect(page).to have_current_path(
         "/admin/reports/top_countries_by_browser_pageviews?end_date=2026-05-12&start_date=2026-05-01",
       )
+    end
+  end
+
+  context "with bounce rate and average session duration metrics" do
+    before { SiteSetting.persist_browser_pageview_events = true }
+
+    it "shows staff the bounce rate and average session duration for the period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(
+        :browser_pageview_session_engagement_daily_rollup,
+        date: Date.new(2026, 5, 12),
+        logged_in: false,
+        sessions: 8,
+        bounced: 3,
+        engaged_seconds_total: 480,
+      )
+      Fabricate(
+        :browser_pageview_session_engagement_daily_rollup,
+        date: Date.new(2026, 5, 12),
+        logged_in: true,
+        sessions: 12,
+        bounced: 2,
+        engaged_seconds_total: 720,
+      )
+
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_bounce_rate("25%")
+      expect(traffic).to have_average_session_duration("1m 0s")
+    end
+
+    it "shows staff a placeholder and tooltip when no visits fall in the period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_bounce_rate("—")
+      expect(traffic).to have_average_session_duration("—")
+
+      traffic.hover_bounce_rate_tooltip
+      expect(traffic).to have_session_metric_tooltip(
+        "Shown once visits are recorded for this period.",
+      )
+    end
+
+    it "does not show the metric tiles when persist_browser_pageview_events is off",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      SiteSetting.persist_browser_pageview_events = false
+      Fabricate(
+        :browser_pageview_session_engagement_daily_rollup,
+        date: Date.new(2026, 5, 12),
+        logged_in: false,
+        sessions: 8,
+        bounced: 3,
+        engaged_seconds_total: 480,
+      )
+
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_no_bounce_rate
+      expect(traffic).to have_no_average_session_duration
     end
   end
 end

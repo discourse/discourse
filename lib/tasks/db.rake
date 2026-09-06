@@ -129,7 +129,11 @@ class SeedHelper
 end
 
 def execute_db_migration
-  ActiveRecord::Tasks::DatabaseTasks.migrate
+  if ENV["SKIP_STRUCTURE_SQL"] == "1"
+    ActiveRecord::Tasks::DatabaseTasks.migrate(skip_initialize: true)
+  else
+    ActiveRecord::Tasks::DatabaseTasks.migrate
+  end
 
   if ENV["SKIP_SEED_FU"] != "1"
     Rake::Task["db:seed"].reenable
@@ -146,6 +150,7 @@ task "multisite:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       assets:precompile:pretty_text
        db:migrate
      ] do |_, args|
   DistributedMutex.synchronize(
@@ -230,6 +235,7 @@ task "db:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       assets:precompile:pretty_text
      ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",
@@ -270,7 +276,7 @@ task "db:seed" => "environment" do
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
   rescue => error
     raise if ENV["RAISE_SEED_ERRORS"] == "1"
-    error.backtrace.each { |l| puts l }
+    puts error.full_message(highlight: false, order: :top)
   end
 end
 

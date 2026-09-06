@@ -23,14 +23,14 @@ module Chat
         private
 
         def workflows_enabled
-          SiteSetting.discourse_workflows_enabled
+          SiteSetting.enable_discourse_workflows
         end
 
         def fetch_resume_request(params:)
           ::DiscourseWorkflows::InteractiveResume.from_action_id(
             params.action_id,
             expected_node_type: "action:chat_approval",
-            allowed_actions: %w[approve deny],
+            allowed_actions: ::DiscourseWorkflows::Nodes::ChatApproval::V1::ACTION_IDS,
           )
         end
 

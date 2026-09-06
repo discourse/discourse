@@ -34,7 +34,7 @@ describe "#destroy" do
 end
 ```
 
-The `#` prefix follows the instance-method convention from the [RSpec style guide](rspec-style-guide.md). Each action's describe block is the home for all scenarios that hit that action — signed-in vs anonymous, permission variations, parameter variations, etc.
+The `#` prefix identifies an instance method. Each action's describe block is the home for all scenarios that hit that action — signed-in vs anonymous, permission variations, parameter variations, etc.
 
 Reserve bare descriptive strings (`describe "extensibility event"`) for cross-cutting concerns that don't map to a single action.
 

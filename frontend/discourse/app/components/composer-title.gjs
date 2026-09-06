@@ -137,50 +137,52 @@ export default class ComposerTitle extends Component {
       return;
     }
 
-    if (this.isAbsoluteUrl && this.bodyIsDefault()) {
-      // only feature links to external sites
-      if (
-        this.get("composer.title").match(
-          new RegExp("^https?:\\/\\/" + window.location.hostname, "i")
-        )
-      ) {
-        return;
-      }
+    if (!this.isAbsoluteUrl) {
+      return;
+    }
 
-      // Try to onebox. If success, update post body and title.
-      this.set("composer.loading", true);
+    // only feature links to external sites
+    if (
+      this.get("composer.title").match(
+        new RegExp("^https?:\\/\\/" + window.location.hostname, "i")
+      )
+    ) {
+      return;
+    }
 
-      const link = document.createElement("a");
-      link.href = this.get("composer.title");
+    // Try to onebox. If success, update post body and title.
+    this.set("composer.loading", true);
 
-      const loadOnebox = load({
-        elem: link,
-        refresh: false,
-        ajax,
-        synchronous: true,
-        categoryId: this.get("composer.category.id"),
-        topicId: this.get("composer.topic.id"),
-      });
+    const link = document.createElement("a");
+    link.href = this.get("composer.title");
 
-      if (loadOnebox && loadOnebox.then) {
-        loadOnebox
-          .then(() => {
-            const v = lookupCache(this.get("composer.title"));
-            this._updatePost(v ? v : link);
-          })
-          .finally(() => {
-            this.set("composer.loading", false);
-            schedule("afterRender", () => {
-              putCursorAtEnd(this.element.querySelector("input"));
-            });
+    const loadOnebox = load({
+      elem: link,
+      refresh: false,
+      ajax,
+      synchronous: true,
+      categoryId: this.get("composer.category.id"),
+      topicId: this.get("composer.topic.id"),
+    });
+
+    if (loadOnebox && loadOnebox.then) {
+      loadOnebox
+        .then(() => {
+          const v = lookupCache(this.get("composer.title"));
+          this._updatePost(v ? v : link);
+        })
+        .finally(() => {
+          this.set("composer.loading", false);
+          schedule("afterRender", () => {
+            putCursorAtEnd(this.element.querySelector("input"));
           });
-      } else {
-        this._updatePost(loadOnebox);
-        this.set("composer.loading", false);
-        schedule("afterRender", () => {
-          putCursorAtEnd(this.element.querySelector("input"));
         });
-      }
+    } else {
+      this._updatePost(loadOnebox);
+      this.set("composer.loading", false);
+      schedule("afterRender", () => {
+        putCursorAtEnd(this.element.querySelector("input"));
+      });
     }
   }
 

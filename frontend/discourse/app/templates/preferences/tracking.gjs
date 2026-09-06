@@ -69,11 +69,6 @@ export default <template>
           customAttrNames=@controller.customAttrNames
         }}
       />
-
-      <PreferenceCheckbox
-        @labelKey="user.topics_unread_when_closed"
-        @checked={{@controller.model.user_option.topics_unread_when_closed}}
-      />
     </div>
   </div>
 

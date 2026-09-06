@@ -6,8 +6,8 @@ RSpec.describe DiscourseConnect do
 
   before do
     SiteSetting.discourse_connect_url = discourse_connect_url
-    SiteSetting.enable_discourse_connect = true
     SiteSetting.discourse_connect_secret = discourse_connect_secret
+    SiteSetting.enable_discourse_connect = true
     SiteSetting.reserved_usernames = ""
     Jobs.run_immediately!
   end

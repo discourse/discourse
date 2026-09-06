@@ -1,14 +1,27 @@
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
+import { isActiveLink } from "discourse/lib/sidebar/active-link";
 import { i18n } from "discourse-i18n";
 import SectionLink from "../section-link";
 
-const SidebarCommonAllTagsSectionLink = <template>
-  <SectionLink
-    @linkName="all-tags"
-    @content={{i18n "sidebar.all_tags"}}
-    @route="tags"
-    @prefixType="icon"
-    @prefixValue="list"
-  />
-</template>;
+export default class SidebarCommonAllTagsSectionLink extends Component {
+  @service router;
 
-export default SidebarCommonAllTagsSectionLink;
+  get scrollIntoView() {
+    return (
+      this.args.scrollActiveLinkIntoView &&
+      isActiveLink({ route: "tags" }, this.router)
+    );
+  }
+
+  <template>
+    <SectionLink
+      @linkName="all-tags"
+      @content={{i18n "sidebar.all_tags"}}
+      @route="tags"
+      @prefixType="icon"
+      @prefixValue="list"
+      @scrollIntoView={{this.scrollIntoView}}
+    />
+  </template>
+}

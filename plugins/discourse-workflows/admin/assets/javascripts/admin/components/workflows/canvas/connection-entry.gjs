@@ -7,7 +7,7 @@ const SVG_STYLE = trustHTML(
   "overflow:visible;position:absolute;pointer-events:none;width:9999px;height:9999px"
 );
 
-<template>
+export default <template>
   <svg
     class={{dConcatClass "workflow-connection" (if @entry.isPseudo "--pseudo")}}
     style={{SVG_STYLE}}

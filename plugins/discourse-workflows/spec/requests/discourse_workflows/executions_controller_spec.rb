@@ -104,6 +104,21 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(json["executions"].length).to eq(1)
       expect(json["executions"][0]["id"]).to eq(execution_1.id)
     end
+
+    it "returns load more meta when more executions exist" do
+      Fabricate(:discourse_workflows_execution, workflow: workflow)
+      execution_2 = Fabricate(:discourse_workflows_execution, workflow: workflow)
+
+      get "/admin/plugins/discourse-workflows/executions.json", params: { limit: 1 }
+
+      json = response.parsed_body
+      expect(json["executions"].map { |execution| execution["id"] }).to eq([execution_2.id])
+      expect(json["meta"]).to include(
+        "load_more_executions" =>
+          "/admin/plugins/discourse-workflows/executions.json?cursor=#{execution_2.id}&limit=1",
+        "message_bus_last_id" => be_a(Integer),
+      )
+    end
   end
 
   describe "GET /admin/plugins/discourse-workflows/workflows/:workflow_id/executions" do
@@ -161,7 +176,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
   describe "GET /admin/plugins/discourse-workflows/executions/:id" do
     fab!(:execution) { Fabricate(:discourse_workflows_completed_execution, workflow: workflow) }
 
-    before { Fabricate(:discourse_workflows_execution_data_with_steps, execution: execution) }
+    let!(:execution_data) { Fabricate(:discourse_workflows_execution_data_with_steps, execution:) }
 
     it "returns the execution with steps" do
       get "/admin/plugins/discourse-workflows/executions/#{execution.id}.json"
@@ -171,6 +186,51 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(json["execution"]["id"]).to eq(execution.id)
       expect(json["execution"]["workflow_name"]).to eq(workflow.name)
       expect(json["execution"]["steps"].length).to eq(1)
+      expect(json.dig("meta", "message_bus_last_id")).to be_a(Integer)
+    end
+
+    it "returns caller workflow data for child executions" do
+      target_workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+      child_execution =
+        Fabricate(:discourse_workflows_completed_execution, workflow: target_workflow)
+      Fabricate(:discourse_workflows_execution_data_with_steps, execution: child_execution)
+
+      execution.execution_data.update!(
+        workflow_data: {
+          "name" => "Parent workflow",
+          "nodes" => [
+            { "id" => "call-1", "name" => "Call child workflow", "type" => "action:workflow_call" },
+          ],
+          "connections" => {
+          },
+        },
+      )
+      DiscourseWorkflows::WorkflowCallRun.create!(
+        parent_execution: execution,
+        parent_node_id: "call-1",
+        parent_resume_token: SecureRandom.hex(16),
+        target_workflow: target_workflow,
+        target_workflow_version_id: target_workflow.version_id,
+        child_execution: child_execution,
+        user: admin,
+        trigger_data: {
+        },
+        status: :success,
+      )
+
+      get "/admin/plugins/discourse-workflows/executions/#{child_execution.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.dig("execution", "workflow_call_caller")).to include(
+        "workflow_id" => workflow.id,
+        "workflow_name" => "Parent workflow",
+        "execution_id" => execution.id,
+        "execution_url" =>
+          DiscourseWorkflows::Execution.admin_execution_url(workflow.id, execution.id),
+        "node_id" => "call-1",
+        "node_name" => "Call child workflow",
+        "node_type" => "action:workflow_call",
+      )
     end
 
     it "returns the stored snapshot workflow name" do

@@ -40,6 +40,8 @@ sv:
       cast-votes:
         title: "Lägg dina röster"
         label: "Rösta nu!"
+      keep-vote:
+        label: "Tillbaka"
       show-results:
         title: "Visa omröstningsresultatet"
         label: "Resultat"
@@ -119,5 +121,3 @@ sv:
           add: Lägg till alternativ
         automatic_close:
           label: Stäng omröstning automatiskt
-        show_advanced: "Visa avancerade alternativ"
-        hide_advanced: "Dölj avancerade alternativ"

@@ -10,6 +10,7 @@ describe TopicLocalizationsController do
 
   before do
     SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "ja"
     SiteSetting.content_localization_allowed_groups = group.id.to_s
     group.add(user)
     sign_in(user)
@@ -94,6 +95,41 @@ describe TopicLocalizationsController do
              }
       }.not_to change { TopicLocalization.count }
       expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#update_locale" do
+    it "updates the original topic title locale without changing the first post locale" do
+      first_post = Fabricate(:post, topic:, locale: "fr")
+
+      put "/topic_localizations/#{topic.id}/locale.json", params: { locale: "de" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["locale"]).to eq("de")
+      expect(topic.reload.locale).to eq("de")
+      expect(first_post.reload.locale).to eq("fr")
+    end
+
+    it "returns forbidden when the user cannot localize the topic" do
+      group.remove(user)
+
+      expect {
+        put "/topic_localizations/#{topic.id}/locale.json", params: { locale: "ja" }
+      }.not_to change { topic.reload.locale }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects values that are not a single known locale" do
+      topic.update!(locale: "en")
+
+      %w[not_a_locale en|ja].each do |invalid_locale|
+        expect {
+          put "/topic_localizations/#{topic.id}/locale.json", params: { locale: invalid_locale }
+        }.not_to change { topic.reload.locale }
+
+        expect(response.status).to eq(400)
+      end
     end
   end
 

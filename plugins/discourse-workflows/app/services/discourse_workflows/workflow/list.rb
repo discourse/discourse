@@ -22,6 +22,7 @@ module DiscourseWorkflows
       attribute :filter, :string
       attribute :trigger_type, :string
       attribute :exclude_id, :integer
+      attribute :tags, :string
 
       after_validation do
         self.limit =
@@ -29,6 +30,15 @@ module DiscourseWorkflows
             1,
             DiscourseWorkflows::Pagination::MAX_LIMIT,
           )
+        self.tags =
+          DiscourseWorkflows::WorkflowTag
+            .normalize_all(tags.to_s.split(","))
+            .first(DiscourseWorkflows::WorkflowTag::MAX_TAGS_PER_WORKFLOW)
+            .join(",")
+      end
+
+      def tag_names
+        tags.to_s.split(",")
       end
     end
 
@@ -46,8 +56,9 @@ module DiscourseWorkflows
             name: params.filter,
             trigger_type: params.trigger_type,
             exclude_id: params.exclude_id,
+            tags: params.tag_names,
           )
-          .includes(:created_by, :updated_by, :error_workflow)
+          .includes(:created_by, :updated_by, :error_workflow, :tags)
           .joins(LATEST_EXECUTION_JOIN)
           .select(
             "discourse_workflows_workflows.*",
@@ -77,6 +88,7 @@ module DiscourseWorkflows
         name: params.filter,
         trigger_type: params.trigger_type,
         exclude_id: params.exclude_id,
+        tags: params.tag_names,
       ).count
     end
 
@@ -89,6 +101,7 @@ module DiscourseWorkflows
         filter: params.filter.presence,
         trigger_type: params.trigger_type.presence,
         exclude_id: params.exclude_id,
+        tags: params.tags.presence,
       }.compact
 
       "/admin/plugins/discourse-workflows/workflows.json?#{query.to_query}"

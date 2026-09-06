@@ -24,6 +24,7 @@ RSpec.describe "Nested view copy link" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(user)
     cdp.allow_clipboard
   end
@@ -33,7 +34,7 @@ RSpec.describe "Nested view copy link" do
       nested_view.visit_nested(topic)
       nested_view.click_copy_link_on_op
 
-      expected = "#{Discourse.base_url}/n/#{topic.slug}/#{topic.id}/#{op.post_number}"
+      expected = "#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}/#{op.post_number}"
       cdp.clipboard_has_text?(expected)
     end
   end
@@ -43,7 +44,7 @@ RSpec.describe "Nested view copy link" do
       nested_view.visit_nested(topic)
       nested_view.click_copy_link_on_post(root_reply)
 
-      expected = "#{Discourse.base_url}/n/#{topic.slug}/#{topic.id}/#{root_reply.post_number}"
+      expected = "#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}/#{root_reply.post_number}"
       cdp.clipboard_has_text?(expected)
     end
   end
@@ -53,7 +54,7 @@ RSpec.describe "Nested view copy link" do
       nested_view.visit_nested_context(topic, post_number: child_reply.post_number, context: 0)
       nested_view.click_copy_link_on_post(child_reply)
 
-      expected = "#{Discourse.base_url}/n/#{topic.slug}/#{topic.id}/#{child_reply.post_number}"
+      expected = "#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}/#{child_reply.post_number}"
       cdp.clipboard_has_text?(expected)
     end
   end

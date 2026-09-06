@@ -130,6 +130,10 @@ module SiteSettingExtension
     @themeable ||= {}
   end
 
+  def localizable_settings
+    @localizable_settings ||= {}
+  end
+
   def areas
     @areas ||= {}
   end
@@ -150,6 +154,14 @@ module SiteSettingExtension
     @requires_confirmation_settings ||= {}
   end
 
+  def dependency_values
+    @dependency_values ||= {}
+  end
+
+  def dependent_setting_display
+    @dependent_setting_display ||= {}
+  end
+
   # Valid upcoming change metadata looks like this
   # in site_settings.yml:
   #
@@ -167,6 +179,21 @@ module SiteSettingExtension
   #       Omit to allow all options (the default permissive behavior).
   #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
   #       useful for scoping style changes related to the change.
+  #     permanent_warning: (optional) boolean, defaults to true. When the change reaches
+  #       `stable` status, admins are warned in the UI that it will become permanent and
+  #       they will no longer be able to opt out. Set to false for changes where that
+  #       warning does not apply, e.g. changes that only alter a site setting default.
+  #     hide_settings: (optional) array of other site setting names to hide from
+  #       admins while this change is enabled (manual opt-in or auto-promotion).
+  #       Use for legacy settings that stop making sense once the change is in
+  #       effect. Hiding is computed per request so it is multisite-safe and
+  #       tracks both opt-in paths live. See UpcomingChanges.settings_hidden_while_enabled.
+  #     requires_plugin_enabled: (optional) boolean, defaults to true for plugin-owned
+  #       changes. By default a plugin-owned change is hidden from admins and does not
+  #       take effect while the owning plugin is disabled, since it gates a feature
+  #       inside the plugin. Set it to false to opt out -- for changes that exist to get
+  #       the plugin adopted (e.g. a category type that enables the plugin when chosen),
+  #       which must stay usable while the plugin is disabled.
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end
@@ -241,10 +268,10 @@ module SiteSettingExtension
     @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end
 
-  def deprecated_setting_alias(setting_name)
+  def deprecated_setting_aliases(setting_name)
     SiteSettings::DeprecatedSettings::SETTINGS
-      .find { |setting| setting.second.to_s == setting_name.to_s }
-      &.first
+      .select { |setting| setting.second.to_s == setting_name.to_s }
+      .map(&:first)
   end
 
   def theme_site_settings_json(theme_id)
@@ -278,18 +305,19 @@ module SiteSettingExtension
   end
 
   def client_settings_json
-    key = SiteSettingExtension.client_settings_cache_key
-    json = Discourse.cache.fetch(key, expires_in: 30.minutes) { client_settings_json_uncached }
-    Rails.logger.error("Nil client_settings_json from the cache for '#{key}'") if json.nil?
-    json || ""
+    client_settings_jsons[provider.current_site] ||= client_settings_json_uncached
   rescue => e
     Rails.logger.error("Error while retrieving client_settings_json: #{e.message}")
     ""
   end
 
-  def client_settings_json_uncached(return_defaults: false)
-    uncached_json =
-      @client_settings.filter_map do |name|
+  def client_settings_hash
+    client_settings_hashes[provider.current_site] ||= client_settings_hash_uncached
+  end
+
+  def client_settings_hash_uncached(return_defaults: false)
+    client_settings
+      .filter_map do |name|
         # Themeable site settings require a theme ID, which we do not always
         # have when loading client site settings. They are excluded here,
         # to get them use theme_site_settings_json(:theme_id)
@@ -318,7 +346,11 @@ module SiteSettingExtension
 
         [name, value]
       end
-    MultiJson.dump(Hash[uncached_json])
+      .to_h
+  end
+
+  def client_settings_json_uncached(return_defaults: false)
+    MultiJson.dump(client_settings_hash_uncached(return_defaults:))
   rescue => err
     # If something goes wrong here we really need to be aware of it in tests.
     raise err if Rails.env.test?
@@ -510,6 +542,10 @@ module SiteSettingExtension
             opts_data[:depends_on] = depends_on
             opts_data[:depends_on_humanized_names] = depends_on.map { |dep| humanized_names(dep) }
             opts_data[:depends_behavior] = type_supervisor.dependencies.behaviors[s]
+            opts_data[:depends_on_values] = dependency_values[s] if dependency_values[s]
+            if display = dependent_setting_display[s]
+              opts_data[:dependent_setting_display] = display
+            end
           end
 
           if upcoming_change_default_override_metadata
@@ -544,13 +580,6 @@ module SiteSettingExtension
       .compact
   end
 
-  def self.client_settings_cache_key
-    # NOTE: we use the git version in the key to ensure
-    # that we don't end up caching the incorrect version
-    # in cases where we are cycling unicorns
-    "client_settings_json_#{Discourse.git_version}"
-  end
-
   def self.theme_site_settings_cache_key(theme_id)
     theme_id = "notheme" if theme_id.blank?
 
@@ -563,7 +592,7 @@ module SiteSettingExtension
   # Merges the provider values of site settings (whether it be from the DB or wherever)
   # and theme site settings with the default values of those settings, also taking into
   # account shadowed site settings and upcoming change behaviour.
-  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true)
+  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true, clear_caches: true)
     mutex.synchronize do
       ensure_listen_for_changes
 
@@ -623,6 +652,8 @@ module SiteSettingExtension
         modified.clear
         modified.merge!(new_modified)
         uploads.clear
+        client_settings_hashes.delete(provider.current_site)
+        client_settings_jsons.delete(provider.current_site)
 
         upcoming_change_default_overrides.each do |setting_name, override|
           if UpcomingChanges.enabled?(override[:upcoming_change])
@@ -638,10 +669,12 @@ module SiteSettingExtension
 
       refresh_theme_site_settings! if refresh_theme_site_settings
 
-      clear_cache!(
-        expire_theme_site_setting_cache:
-          ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
-      )
+      if clear_caches
+        clear_cache!(
+          expire_theme_site_setting_cache:
+            ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
+        )
+      end
     end
   end
 
@@ -705,6 +738,7 @@ module SiteSettingExtension
   def after_fork
     @process_id = nil
     ensure_listen_for_changes
+    RailsMultisite::ConnectionManagement.safe_each_connection { refresh!(clear_caches: false) }
   end
 
   def raise_invalid_setting_access(setting_name)
@@ -1007,7 +1041,8 @@ module SiteSettingExtension
   protected
 
   def clear_cache!(expire_theme_site_setting_cache: false)
-    Discourse.cache.delete(SiteSettingExtension.client_settings_cache_key)
+    client_settings_hashes.delete(provider.current_site)
+    client_settings_jsons.delete(provider.current_site)
     Theme.expire_site_setting_cache! if expire_theme_site_setting_cache
     Site.clear_anon_cache!
   end
@@ -1099,6 +1134,12 @@ module SiteSettingExtension
         end
       end
     else
+      enum_wrapper =
+        if type_supervisor.get_type(name) == :enum
+          klass = type_supervisor.get_enum_class(name)
+          klass if klass.respond_to?(:wrap)
+        end
+
       define_singleton_method clean_name do |scoped_to = nil|
         if themeable[clean_name]
           if scoped_to.nil? || !scoped_to.key?(:theme_id) || scoped_to[:theme_id].nil?
@@ -1111,7 +1152,8 @@ module SiteSettingExtension
           # then we will just fall back further down bellow to the current site setting value.
           settings_overridden_for_theme = theme_site_settings[scoped_to[:theme_id]]
           if settings_overridden_for_theme && settings_overridden_for_theme.key?(clean_name)
-            return settings_overridden_for_theme[clean_name]
+            value = settings_overridden_for_theme[clean_name]
+            return enum_wrapper ? enum_wrapper.wrap(value.to_s) : value
           end
         end
 
@@ -1136,6 +1178,8 @@ module SiteSettingExtension
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
 
+        return enum_wrapper.wrap(value.to_s) if enum_wrapper
+
         value
       end
     end
@@ -1158,8 +1202,8 @@ module SiteSettingExtension
     elsif setting_type == :group_list
       define_singleton_method("#{clean_name}_map") do
         ids = public_send(clean_name).to_s.split("|").map(&:to_i)
-        if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
-             ids.include?(Group::AUTO_GROUPS[:everyone])
+        if ids.include?(Group::AUTO_GROUPS[:everyone]) &&
+             SiteSetting.granular_anonymous_and_logged_in_groups_permissions
           ids =
             ids
               .map do |id|
@@ -1183,10 +1227,10 @@ module SiteSettingExtension
 
     # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
-    if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
+    if %i[list emoji_list tag_list host_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
-      if %w[simple compact].include?(list_type) || list_type.nil?
+      if %w[simple compact locale].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
           public_send(clean_name, scoped_to).to_s.split("|")
         end
@@ -1238,17 +1282,15 @@ module SiteSettingExtension
   #   }
   def fetch_setting_hash_from_provider
     Hash[
-      *(
-        provider
-          .all
-          .map do |setting|
-            [
-              setting.name.to_sym,
-              type_supervisor.to_rb_value(setting.name, setting.value, setting.data_type),
-            ]
-          end
-          .flatten
-      )
+      *provider
+        .all
+        .map do |setting|
+          [
+            setting.name.to_sym,
+            type_supervisor.to_rb_value(setting.name, setting.value, setting.data_type),
+          ]
+        end
+        .flatten
     ]
   end
 
@@ -1300,18 +1342,36 @@ module SiteSettingExtension
         end
       )
 
+      if opts[:depends_on_values]
+        dependency_values[name] = opts[:depends_on_values]
+          .transform_keys(&:to_sym)
+          .transform_values { |values| Array(values).map(&:to_s) }
+      else
+        dependency_values.delete(name)
+      end
+
+      if opts[:dependent_setting_display]
+        dependent_setting_display[name] = opts[:dependent_setting_display].to_s
+      else
+        dependent_setting_display.delete(name)
+      end
+
       if opts[:upcoming_change]
         upcoming_change_metadata[name] ||= {}
         impact_type, impact_role = opts[:upcoming_change][:impact].split(",")
         allow_enabled_for = opts[:upcoming_change][:allow_enabled_for]
         allow_enabled_for = Array(allow_enabled_for).map(&:to_sym) if allow_enabled_for
+        hide_settings = opts[:upcoming_change][:hide_settings]
+        hide_settings = Array(hide_settings).map(&:to_sym) if hide_settings
         upcoming_change_metadata[name].merge!(
-          **opts[:upcoming_change].except(:impact, :allow_enabled_for),
+          **opts[:upcoming_change].except(:impact, :allow_enabled_for, :hide_settings),
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
           allow_enabled_for: allow_enabled_for,
           body_class: opts[:upcoming_change][:body_class],
+          permanent_warning: opts[:upcoming_change][:permanent_warning] != false,
+          hide_settings: hide_settings,
         )
       end
 
@@ -1326,6 +1386,19 @@ module SiteSettingExtension
       categories[name] = opts[:category] || :uncategorized
 
       themeable[name] = opts[:themeable] ? true : false
+
+      localizable_setting_name = name.to_s
+      if opts[:localizable]
+        localizable_settings[localizable_setting_name] = (
+          if opts[:localizable].is_a?(Hash)
+            opts[:localizable].symbolize_keys
+          else
+            {}
+          end
+        )
+      else
+        localizable_settings.delete(localizable_setting_name)
+      end
 
       if opts[:area]
         split_areas = opts[:area].split("|")
@@ -1381,6 +1454,14 @@ module SiteSettingExtension
   def uploads
     @uploads ||= {}
     @uploads[provider.current_site] ||= {}
+  end
+
+  def client_settings_hashes
+    @client_settings_hashes ||= {}
+  end
+
+  def client_settings_jsons
+    @client_settings_jsons ||= {}
   end
 
   def clear_uploads_cache(name)

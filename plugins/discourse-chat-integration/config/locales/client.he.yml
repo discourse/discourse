@@ -244,3 +244,8 @@ he:
               description: "אפשר למצוא את שם הערוץ בהגדרות שילוב הצ׳אט"
             provider:
               label: ספק
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "ערוץ"
+        configure: "הגדרה"
+        message: "הודעה"

@@ -14,6 +14,8 @@ register_svg_icon "square-check"
 register_svg_icon "far-square"
 
 register_asset "stylesheets/solutions.scss"
+register_asset "stylesheets/admin/dashboard-support.scss", :admin
+register_asset "stylesheets/admin/report-related-items.scss", :admin
 
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
@@ -22,6 +24,7 @@ module ::DiscourseSolved
   EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD = "empty_box_on_unsolved"
   SHARED_ISSUES_ENABLED_CUSTOM_FIELD = "enable_shared_issues"
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
+  MAX_ACCEPTED_SOLUTIONS_CATEGORY_IDS = 50
 
   def self.accept_answer!(post, acting_user, topic: nil)
     DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, guardian: acting_user.guardian)
@@ -156,7 +159,7 @@ after_initialize do
     result[:html] if result.success?
   end
 
-  Report.add_report("accepted_solutions") do |report|
+  Report.add_report("accepted_solutions", admin_only_related_items: true) do |report|
     report.data = []
 
     accepted_solutions =
@@ -164,32 +167,41 @@ after_initialize do
         .joins(:topic)
         .where.not(topics: { archetype: Archetype.private_message })
 
-    category_id, include_subcategories = report.add_category_filter
-    if category_id
-      if include_subcategories
-        accepted_solutions =
-          accepted_solutions.where(
-            "topics.category_id IN (?)",
-            Category.subcategory_ids(category_id),
-          )
-      else
-        accepted_solutions = accepted_solutions.where("topics.category_id = ?", category_id)
+    raw_ids = report.filters[:category_ids]
+    filter_requested = raw_ids.present?
+    requested_ids =
+      if filter_requested
+        parsed_ids = Array(raw_ids.is_a?(String) ? raw_ids.split(",") : raw_ids).map(&:to_i)
+        Category
+          .in_order_of(:id, parsed_ids)
+          .limit(DiscourseSolved::MAX_ACCEPTED_SOLUTIONS_CATEGORY_IDS)
+          .pluck(:id)
       end
-    end
+    report.add_filter("category_ids", type: "category_list", default: requested_ids)
 
-    accepted_solutions
-      .where("discourse_solved_solved_topics.created_at >= ?", report.start_date)
-      .where("discourse_solved_solved_topics.created_at <= ?", report.end_date)
+    accepted_solutions =
+      accepted_solutions.where("topics.category_id" => requested_ids) if filter_requested
+
+    current_accepted_solutions =
+      accepted_solutions.where(
+        "discourse_solved_solved_topics.created_at >= ?",
+        report.start_date,
+      ).where("discourse_solved_solved_topics.created_at <= ?", report.end_date)
+
+    current_accepted_solutions
       .group("DATE(discourse_solved_solved_topics.created_at)")
       .order("DATE(discourse_solved_solved_topics.created_at)")
       .count
       .each { |date, count| report.data << { x: date, y: count } }
-    report.total = accepted_solutions.count
-    report.prev30Days =
-      accepted_solutions
-        .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
-        .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
-        .count
+    report.total = accepted_solutions.count if report.facets.include?(:total)
+
+    if report.facets.include?(:prev30Days)
+      report.prev30Days =
+        accepted_solutions
+          .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
+          .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
+          .count
+    end
 
     if report.facets.include?(:prev_period)
       report.prev_period =
@@ -198,6 +210,58 @@ after_initialize do
           .where("discourse_solved_solved_topics.created_at < ?", report.prev_end_date)
           .count
     end
+
+    next if !report.include_related_items
+
+    guardian = report.guardian
+    solved_topics = current_accepted_solutions.merge(Topic.listable_topics.secured(guardian))
+    if !guardian.can_see_shared_draft?
+      solved_topics = solved_topics.where.not(topic_id: SharedDraft.select(:topic_id))
+    end
+
+    report.related_items_totals = { solved_topics: solved_topics.count }
+
+    solved_topics =
+      solved_topics
+        .includes({ topic: :category }, answer_posts: :user)
+        .order(created_at: :desc)
+        .limit(report.limit || Report::RELATED_ITEMS_LIMIT)
+        .to_a
+
+    report.related_items = {
+      solved_topics:
+        solved_topics.map do |solved_topic|
+          topic = solved_topic.topic
+          category = topic.category
+          solved_by_users =
+            solved_topic
+              .answer_posts
+              .sort_by { |answer_post| [answer_post.created_at, answer_post.id] }
+              .filter_map(&:user)
+              .uniq(&:id)
+              .map do |user|
+                BasicUserSerializer.new(user, scope: report.guardian, root: false).as_json
+              end
+
+          {
+            topic: {
+              title: topic.title,
+              url: topic.relative_url,
+            },
+            solved_by_users:,
+            category:
+              if category
+                {
+                  id: category.id,
+                  name: category.name,
+                  slug: category.slug,
+                  color: category.color,
+                  textColor: category.text_color,
+                }
+              end,
+          }
+        end,
+    }
   end
 
   register_admin_dashboard_highlight_kpi(
@@ -223,6 +287,25 @@ after_initialize do
         end
     end,
   )
+
+  register_admin_dashboard_section(
+    id: "support",
+    enabled: -> { DiscourseSolved::AdminDashboardSupport.available? },
+    settings: {
+      "categories" => DiscourseSolved::AdminDashboardSupportCategoriesSetting,
+    },
+  ) do |start_date:, end_date:, current_user:|
+    DiscourseSolved::AdminDashboardSupport.build(
+      start_date: start_date,
+      end_date: end_date,
+      current_user: current_user,
+      category_ids:
+        AdminDashboardSectionConfiguration.settings_for("support").dig(
+          "categories",
+          "category_ids",
+        ),
+    )
+  end
 
   register_modifier(:search_rank_sort_priorities) do |priorities, _search|
     if SiteSetting.prioritize_solved_topics_in_search
@@ -272,6 +355,18 @@ after_initialize do
   end
   add_to_serializer(:topic_view, :shared_issue_visible) do
     scope.shared_issue_visible?(object.topic)
+  end
+
+  on(:upcoming_change_enabled) do |setting_name|
+    if setting_name == :enable_solved_badges
+      DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: true)
+    end
+  end
+
+  on(:upcoming_change_disabled) do |setting_name|
+    if setting_name == :enable_solved_badges
+      DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: false)
+    end
   end
 
   on(:post_destroyed) do |post|

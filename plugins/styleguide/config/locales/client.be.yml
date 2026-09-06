@@ -24,6 +24,19 @@ be:
           title: "Паведамленне"
         more_topics:
           title: "Больш тэмаў"
+        roving_focus:
+          toolbar:
+            copy: "Капіраваць"
+          adjacent:
+            field: "Пошук"
+            recent: "Надаўнія"
+          combobox:
+            daily: "Штодня"
+            weekly: "Штотыдзень"
+            monthly: "Штомесяц"
+            never: "Ніколі"
+          tree:
+            select: "Выбраць"
         tooltips:
           description: "Апісанне"
           header: "Header"

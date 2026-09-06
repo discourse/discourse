@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  js:
+    boards:
+      board:
+        remove_card: "הסרה"
+        new_topic: "נושא חדש..."
+        title: "כותרת"
+        tags: "תגיות"
+        assigned_to: "הוקצה לטובת"
+        topic_reply_count:
+          one: "תגובה"
+          two: "שתי תגובות"
+          other: "שתי תגובות"
+        assign: "הקצאה"
+        reassign: "הקצאה מחדש"
+        unassign: "ביטול הקצאה"
+        unassign_from_topic: "ביטול הקצאת ‎@%{username} מנושא"
+        unassign_from_post: "ביטול הקצאת ‎@%{username} ממס׳ %{post_number}"
+        edit_assignments: "עריכת הקצאות…"
+        created_by: "נוצר על ידי"
+      manage:
+        name: "שם"
+        slug: "מזהה ייצוגי"
+        constraint_categories: "קטגוריות"
+        constraint_tags: "תגיות"
+        advanced_settings: "הגדרות מתקדמות"
+        columns:
+          remove: "הסרה"
+          column_title: "כותרת"
+          icon: "סמל"
+          color: "צבע"
+          default_sort_priority: "עדיפות"
+          tag: "תגית"
+          move_to_assigned_unassign: "ביטול הקצאה"
+          move_to_status_open: "פתוח"
+          move_to_status_closed: "סגור"

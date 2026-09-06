@@ -8,7 +8,9 @@ nb_NO:
   js:
     styleguide:
       title: "Styleguide"
-      welcome: "For å komme i gang, velg en seksjon fra menyen til venstre."
+      example:
+        kind:
+          component: "Komponent"
       categories:
         atoms: Atomer
         molecules: Molekyler
@@ -69,6 +71,22 @@ nb_NO:
           title: "Flere emner"
         post_menu:
           title: "Innlegg meny"
+        roving_focus:
+          toolbar:
+            copy: "Kopier"
+          adjacent:
+            label: "Filter"
+            field: "Søk"
+            open: "Åpne"
+            recent: "Nylig"
+          combobox:
+            daily: "Daglig"
+            weekly: "Ukentlig"
+            monthly: "Månedlig"
+            never: "Aldri"
+          tree:
+            components: "Komponenter"
+            select: "Velg"
         modal:
           title: "Modell"
           header: "Modell tittel"

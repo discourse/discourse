@@ -51,6 +51,23 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      copied: "Copiat"
+      ai_decoded_transcript:
+        arguments: "Argumente"
+        type: "Tip"
+        error: "Eroare"
+        response: "Răspuns"
+      discourse_workflows:
+        ai_agent:
+          mode: "Mod"
+      ai_tool_approval:
+        loading: "Se încarcă..."
+        tool: "Acțiune"
+        user: "Utilizator"
+        approve: "Aprobare"
+        reject: "Respingere"
+        approved: "Aprobat"
+        rejected: "Respins"
       default_llm:
         title: "Model LLM implicit"
       llm_selector:
@@ -72,6 +89,9 @@ ro:
           reset: "Resetare"
         search:
           name: "Caută"
+        image_caption:
+          setting_groups:
+            settings: "Setări"
         translation:
           schedule_untranslated: "Programează traduceri"
           schedule_topic_success:
@@ -87,10 +107,23 @@ ro:
         title: "Traduceri"
         description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
         supported_locales: "Limbi acceptate"
-        supported_locales_description: "Această setare a site-ului permite vizitatorilor să contribuie și la traducerea postărilor."
+        category_scope: "Categorii"
+        model_progress:
+          detail:
+            columns:
+              locale: "Locală"
+              pending: "În așteptare"
+              total: "Total"
+          targets:
+            post:
+              title: "Articole"
+            topic:
+              title: "Subiecte"
+            category:
+              title: "Categorii"
+            tag:
+              title: "Etichete"
         admin_actions:
-          translation_settings: "Setări traducere"
-          localization_settings: "Setări localizare"
           enable_translations: "Activează traducerile automate"
         stats:
           title: "Statistici traducere"
@@ -130,6 +163,37 @@ ro:
         periods:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
+      logs:
+        short_title: "Rapoarte"
+        retry: "Încearcă din nou"
+        apply: "Aplică"
+        successful: "Cu succes"
+        failed: "Eșuată"
+        unknown: "Necunoscută"
+        time: "Oră"
+        when: "Când"
+        request: "Cere"
+        provider: "Furnizor"
+        user: "Utilizator"
+        context: "Context"
+        topic: "Subiect"
+        post: "Articol"
+        post_short: "Postarea %{id}"
+        duration: "Durată"
+        actions: "Acțiuni"
+        view_details: "Detalii"
+        periods:
+          day: "Ultimele 24 de ore"
+          week: "Ultimele 7 zile"
+          custom: "Personalizat"
+        detail:
+          request: "Cere"
+          response: "Răspuns"
+          context: "Context"
+        retention:
+          summary_stage: "Rezumat"
+          deleted_stage: "Șters"
+          save: "Salvează"
       ai_agent:
         name: "Nume"
         edit: "Editează"
@@ -142,7 +206,14 @@ ro:
         mcp_tools_modal:
           select_all: "Selectează tot"
           clear_all: "Șterge tot"
+        duplicate: "Fă duplicat"
         delete: "Șterge"
+        thinking_effort_options:
+          none: "Nimic"
+          low: "Scăzut"
+          medium: "Medie"
+          high: "Ridicată"
+          max: "Maxim"
         response_format:
           open_modal: "Editează"
         filters:
@@ -188,6 +259,9 @@ ro:
       llms:
         display_name: "Nume"
         provider: "Furnizor"
+        vision_modes:
+          disabled:
+            title: "Dezactivate"
         save: "Salvează"
         edit: "Editează"
         delete: Șterge
@@ -207,9 +281,6 @@ ro:
           ai_helper: "Ajutor (%{agent})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "Cel mai inteligent model de la Anthropic"
-          open_ai-gpt-5-4-nano: "Cel mai rapid și mai rentabil model GPT-5"
         next:
           title: "Următorul"
         tests:
@@ -217,7 +288,6 @@ ro:
           success: "Succes!"
           invalid_config: "Remediază mai întâi următoarele erori în configurație:"
         providers:
-          google: "Google"
           fake: "Personalizat"
         provider_fields:
           role_arn: "Rol ARN AWS Bedrock"
@@ -233,8 +303,6 @@ ro:
           cancel: "Anulează"
         thumbnail_suggestions:
           try_again: "Încearcă din nou"
-        image_caption:
-          save_caption: "Salvează"
       embeddings:
         save: "Salvează"
         delete: "Șterge"
@@ -251,6 +319,7 @@ ro:
         try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
         debug_ai_modal:
+          duration_label: "Durată:"
           request: "Cere"
           response: "Răspuns"
           next_log: "Următorul"
@@ -278,9 +347,11 @@ ro:
           description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
           summarize: "Rezumat"
       discobot_discoveries:
-        regular_results: "Discuții"
-        collapse: "Colaps"
         user_setting: "Activează descoperirile de căutare IA"
-        tooltip:
-          actions:
-            disable: "Dezactivează"
+        legacy:
+          regular_results: "Discuții"
+          collapse: "Colaps"
+          tooltip:
+            actions:
+              disable: "Dezactivează"
+        search_messages: "Mesaje"

@@ -21,7 +21,7 @@ zh_CN:
       dashboard:
         emotion:
           title: "情绪"
-          description: "该表列出了按确定的情绪分类的帖子数量。使用 'SamLowe/roberta-base-go_emotions' 模型进行分类。"
+          description: "该表格列出了按特定情绪分类的帖子数量。根据所选情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"
         reports:
           filters:
             group_by:
@@ -50,13 +50,19 @@ zh_CN:
             delete_ai_secret: "删除 AI 秘密"
             update_ai_spam_settings: "更新 AI 垃圾信息设置"
   js:
+    admin:
+      site_settings:
+        ai_ask_ai_summary_detail:
+          quiet: "安静（一句话，无标题）"
+          balanced: "平衡（一段简短的文字）"
+          detailed: "详细说明（两到三段简短文字）"
     discourse_workflows:
       node_unavailable:
         requires_ai: "需要启用 AI 插件"
       nodes:
         "action:ai_agent": "AI 智能体"
       node_descriptions:
-        "action:ai_agent": "运行人工智能代理来处理数据或生成内容"
+        "action:ai_agent": "运行 AI 智能体来处理数据或生成内容"
     discourse_automation:
       scriptables:
         llm_report:
@@ -86,8 +92,8 @@ zh_CN:
               label: "样本大小"
               description: "要为报告抽样的帖子数"
             tokens_per_post:
-              label: "每个帖子的词元数"
-              description: "每个帖子要使用的 LLM 词元数"
+              label: "每个帖子的 token 数"
+              description: "每个帖子要使用的 LLM token 数"
             model:
               label: "模型"
               description: "用于生成报告的 LLM"
@@ -149,11 +155,11 @@ zh_CN:
               label: "智能体"
               description: "用于分类的智能体，请确保它回复一个您可用于触发操作的字词"
             max_post_tokens:
-              label: "帖子最大词元数"
-              description: "使用 LLM 分类扫描的最大词元数"
+              label: "帖子最大 token 数"
+              description: "使用 LLM 分类扫描的最大 token 数"
             stop_sequences:
               label: "停止序列"
-              description: "指示模型在达到其中一个值时停止生成词元"
+              description: "指示模型在达到其中一个值时停止生成 token "
             search_for_text:
               label: "搜索文本"
               description: "如果 LLM 回复中出现以下文本，则应用这些操作"
@@ -197,8 +203,8 @@ zh_CN:
               label: "回复智能体"
               description: "用于回复的 AI 智能体（必须具有默认的 LLM），将优先于预设回复"
             max_output_tokens:
-              label: "最大输出词元数"
-              description: "指定后，设置模型可以生成的词元数上限。遵守 LLM 的输出词元数上限"
+              label: "最大输出 token 数"
+              description: "指定后，设置模型可以生成的 token 数上限。遵守 LLM 的输出 token 数上限"
         llm_tagger:
           tag_mode:
             manual: "使用特定标签列表（配置如下）"
@@ -220,8 +226,8 @@ zh_CN:
               label: "每个帖子的最大标签数"
               description: "单个帖子可以应用的标签数量上限"
             max_post_tokens:
-              label: "帖子最大词元数"
-              description: "要分析的帖子内容中的最大词元数"
+              label: "帖子最大 token 数"
+              description: "要分析的帖子内容中的最大 token 数"
             allow_restricted_tags:
               label: "允许限制标签"
               description: "允许 AI 建议并应用权限或公开范围受限的标签。"
@@ -233,13 +239,57 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      copied: "已复制"
+      view_raw: "查看原始数据"
+      view_decoded: "查看解码结果"
+      ai_decoded_transcript:
+        thinking: "正在思考"
+        tool_calls: "工具调用"
+        tool_results: "工具结果"
+        tool: "工具"
+        arguments: "参数"
+        tool_result: "工具结果"
+        call_id: "来电显示"
+        type: "类型"
+        error: "错误"
+        response: "回答"
+      post_image_captions:
+        edit: "编辑 AI 图片说明"
+        title: "编辑 AI 图片说明"
+        description: "说明"
+        save: "保存说明"
+        saved: "AI 图片说明已保存"
       discourse_workflows:
         ai_agent:
           agent_id: "智能体"
-          prompt: "Prompt"
-          select_agent: "选择智能体..."
+          forced_llm_notice_description: "此智能体被锁定为其配置的默认 LLM。该工作流无法覆盖此设置。"
+          llm_model_id: "LLM 模型"
+          llm_model_default: "使用智能体默认值"
+          llm_model_default_with_name: "使用智能体默认值 (%{value})"
+          mode: "模式"
+          mode_description: "选择智能体会为每个输入条目运行一次，还是为所有输入条目统一运行一次。每一次运行都会向 LLM 发出单独的请求。"
+          mode_run_once_for_each_item: "为每个条目运行一次"
+          mode_run_once_for_all_items: "为所有条目统一运行一次"
+          prompt: "提示"
+          runner_username: "运行身份："
+          runner_username_tooltip: "其权限用于控制上传内容可见性和 AI 智能体工具的用户。使用 system 实现符合工作流的自动化操作。"
+          upload_ids: "上传 ID"
+          upload_ids_tooltip: "用于附加到提示中的可选上传 ID。当智能体启用视觉功能时，将包含图片上传；当所选 LLM 支持相应文件类型时，将包含文档上传。"
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          select_agent: "选择智能体…"
       bot_chats:
         tab_label: "机器人聊天"
+      ai_tool_approval:
+        loading: "正在加载…"
+        load_error: "无法加载此待处理操作。"
+        agent: "智能体"
+        tool: "操作"
+        user: "用户"
+        approve: "批准"
+        reject: "拒绝"
+        approved: "已批准"
+        rejected: "已拒绝"
+        awaiting_staff: "等待管理人员审批"
       default_llm:
         title: "默认 LLM 模型"
         description: "所有 AI 智能体使用的默认 LLM 模型。如果功能配置或智能体中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
@@ -294,9 +344,12 @@ zh_CN:
         search:
           name: "搜索"
           description: "通过提供 AI 生成的查询回答来增强搜索体验"
-          discoveries: "发现"
+          discoveries: "发现（已弃用）"
+          ask_ai: "询问 AI"
           setting_groups:
             settings: "基本设置"
+            agents: "智能体"
+            access_control: "访问控制"
         embeddings:
           name: "嵌入向量"
           description: "通过生成文本的语义表示来支持“相关话题”和“AI 搜索”等功能"
@@ -306,6 +359,9 @@ zh_CN:
             related_topics: "相关话题"
             semantic_search: "语义搜索"
         admin_dashboard:
+          name: "管理员信息中心"
+          description: "帮助社区管理者发现有意义的变化，并确定下一步的工作方向"
+          highlights: "亮点"
           setting_groups:
             settings: "基本设置"
         discord:
@@ -338,7 +394,6 @@ zh_CN:
           translate: "翻译"
           markdown_tables: "生成 Markdown 表"
           custom_prompt: "自定义提示"
-          image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建工具"
           chat_thread_titles: "聊天消息串标题"
@@ -347,6 +402,12 @@ zh_CN:
             enabled_features: "启用的功能"
             automation: "自动化"
             agents: "智能体"
+        image_caption:
+          name: "图片说明"
+          description: "为帖子图片生成 AI 说明，将其提供给读者和辅助阅读技术。"
+          post_image_captions: "帖子图片说明"
+          setting_groups:
+            settings: "设置"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -355,6 +416,7 @@ zh_CN:
           topic_title_translator: "话题标题翻译器"
           short_text_translator: "短文本翻译器"
           schedule_untranslated: "安排翻译"
+          schedule_topic_only_success: "已安排该主题的翻译。"
           schedule_topic_success:
             other: "已安排翻译 %{count} 个未翻译的帖子。"
           schedule_topic_error: "无法安排翻译。请重试。"
@@ -381,17 +443,81 @@ zh_CN:
         title: "翻译"
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
-        supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
-        excluded_categories: "排除类别"
-        excluded_categories_description: "这些类别中的内容将不会被翻译。留空则可翻译所有类别的内容，包括私有类别。"
+        max_locales_reached: "您最多只能选择 %{max} 种语言。"
+        locale_count: "%{count}/%{max} 已选择"
+        category_scope: "类别"
+        category_scope_description: "选择自动翻译应用于所有类别、公开类别还是所选类别中的内容。"
+        cached_results_notice: "正在显示自 %{relative_time} 起的缓存结果。"
+        model_progress:
+          loading: "正在加载翻译进度"
+          overview_label: "按内容类型划分的翻译进度"
+          detail:
+            loading: "正在加载%{target}详细信息…"
+            load_error: "%{target}详细信息无法加载。"
+            retry: "重试"
+            empty: "没有可用的语言进度。"
+            progress_label: "已将 %{translated} 个条目（共 %{total} 个）翻译为%{language}"
+            columns:
+              locale: "语言区域"
+              translated: "已翻译"
+              pending: "待处理"
+              eligible: "符合条件"
+              total: "总计"
+              progress: "进度"
+            eligible_help: "排除已使用此语言的内容。"
+            pending_help: "包含仍需进行语言检测的内容。"
+          targets:
+            post:
+              title: "帖子"
+              eligible_total:
+                other: "%{count} 个符合条件的帖子需要翻译。"
+              translated:
+                other: "%{count} 个帖子已翻译完毕。"
+              needs_language_detection:
+                other: "%{count} 个帖子仍需进行语言检测。"
+              all_translated:
+                other: "所有 %{count} 个符合条件的帖子已翻译完毕。"
+            topic:
+              title: "话题"
+              eligible_total:
+                other: "%{count} 个符合条件的话题需要翻译。"
+              translated:
+                other: "%{count} 个话题已翻译完毕。"
+              needs_language_detection:
+                other: "%{count} 个话题仍需进行语言检测。"
+              all_translated:
+                other: "所有 %{count} 个符合条件的话题已翻译完毕。"
+            category:
+              title: "类别"
+              eligible_total:
+                other: "%{count} 个符合条件的类别需要翻译。"
+              translated:
+                other: "%{count} 个类别已翻译完毕。"
+              needs_language_detection:
+                other: "%{count} 个类别仍需进行语言检测。"
+              all_translated:
+                other: "所有 %{count} 个符合条件的类别已翻译完毕。"
+            tag:
+              title: "标签"
+              total:
+                other: "%{count} 个符合条件的标签需要翻译。"
+              translated:
+                other: "%{count} 个标签已翻译完毕。"
+              needs_language_detection:
+                other: "%{count} 个标签仍需进行语言检测。"
+              all_translated:
+                other: "所有 %{count} 个标签已翻译完毕。"
         admin_actions:
-          translation_settings: "翻译设置"
-          localization_settings: "本地化设置"
+          translation_settings: "AI 设置"
+          localization_settings: "应用语言设置"
           enable_translations: "启用自动翻译"
+          enable_translations_disabled: "您必须添加受支持的语言才能启用翻译功能。"
+          show_language_switcher: "在标题栏显示语言切换器。"
+          show_language_switcher_description: "让每个人都能选择一种语言，并用这种语言查看您的网站。"
         stats:
           title: "翻译统计"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
-          backfill_message: "<a href='%{settingsUrl}'>回填设置</a>配置为翻译 %{date} 后的所有帖子 – 预计需要 %{eta}。"
+          backfill_message: "<a href='%{settingsUrl}'>回填设置</a>配置为翻译 %{date} 之后的所有帖子。"
           eta_minutes:
             other: "%{count} 分钟"
           eta_hours:
@@ -432,6 +558,7 @@ zh_CN:
         spam_detected: "检测到垃圾信息"
         custom_instructions_placeholder: "针对特定站点的指令，帮助 AI 更准确地识别垃圾信息"
         enable: "启用"
+        enabled_locked_tip: "此网站无法禁用 AI 垃圾内容检测。"
         spam_tip: "AI 垃圾信息检测功能会扫描所有新用户在公开话题中发布的前 3 个帖子。如果这些帖子可能是垃圾信息，它会标记这些帖子以供审核并屏蔽这些用户。"
         settings_saved: "设置已保存"
         spam_description: "使用所选 LLM 识别潜在垃圾信息，并进行标记，使其进入审核队列，以便站点版主可以进行检查"
@@ -463,8 +590,8 @@ zh_CN:
       usage:
         short_title: "使用量"
         summary: "摘要"
-        total_tokens: "词元总数"
-        tokens_over_time: "一段时间内的词元数"
+        total_tokens: "token 总数"
+        tokens_over_time: "一段时间内的 token 数"
         features_breakdown: "按功能的使用量"
         feature: "功能"
         usage_count: "使用次数"
@@ -476,13 +603,13 @@ zh_CN:
         all_models: "所有模型"
         username: "用户名"
         total_requests: "请求总数"
-        request_tokens: "请求词元"
-        response_tokens: "回答词元"
-        net_request_tokens: "网络请求词元"
-        cache_read_tokens: "缓存读取词元数"
-        cache_write_tokens: "缓存写入词元数"
-        cached_tokens: "缓存的词元"
-        cached_request_tokens: "缓存的请求词元"
+        request_tokens: "请求 token"
+        response_tokens: "回答 token"
+        net_request_tokens: "网络请求 token"
+        cache_read_tokens: "缓存读取 token 数"
+        cache_write_tokens: "缓存写入 token 数"
+        cached_tokens: "缓存的 token"
+        cached_request_tokens: "缓存的请求 token"
         total_spending: "预估费用"
         no_users: "找不到用户使用数据"
         no_models: "找不到模型使用数据"
@@ -492,25 +619,132 @@ zh_CN:
         included_models: "包含使用量"
         billed_models: "计费用量"
         cost: "成本"
-        subheader_description: "词元是 LLM 用来理解和生成文本的基本单位，使用数据可能会影响成本"
+        subheader_description: "token 是 LLM 用来理解和生成文本的基本单位，使用数据可能会影响成本"
         stat_tooltips:
           total_requests: "通过 Discourse 向 LLM 提出的所有请求"
-          total_tokens: "提示 LLM 时使用的所有词元"
-          request_tokens: "LLM 试图理解您所说的话时使用的词元"
-          response_tokens: "LLM 回答您的提示时使用的词元"
-          cache_read_tokens: "从缓存中复用的先前处理过的请求词元，LLM 会重复使用这些词元优化性能和成本"
-          cache_write_tokens: "写入缓存，以便将来重复使用的请求词元数"
-          cached_tokens: "先前处理过的请求词元，LLM 会重复使用这些词元优化性能和成本"
-          total_spending: "根据添加到 LLM 配置设置中的指定成本指标，LLM 使用的所有词元的累计成本"
+          total_tokens: "提示 LLM 时使用的所有 token"
+          request_tokens: "LLM 试图理解您所说的话时使用的 token"
+          response_tokens: "LLM 回答您的提示时使用的 token"
+          cache_read_tokens: "从缓存中复用的先前处理过的请求 token，LLM 会重复使用这些 token 优化性能和成本"
+          cache_write_tokens: "写入缓存，以便将来重复使用的请求 token 数"
+          cached_tokens: "先前处理过的请求 token，LLM 会重复使用这些 token 优化性能和成本"
+          total_spending: "根据添加到 LLM 配置设置中的指定成本指标，LLM 使用的所有 token 的累计成本"
         periods:
           last_day: "过去 24 小时"
           last_week: "过去一周"
           last_month: "过去一个月"
           custom: "自定义…"
         credit_allocations: "点数分配"
+      logs:
+        short_title: "日志"
+        description: "检查发送给人工智能模型的各个请求及其响应"
+        refresh: "刷新日志"
+        retry: "重试"
+        apply: "应用"
+        clear_filters: "清除所有筛选条件"
+        all_outcomes: "所有结果"
+        all_models: "所有模型"
+        all_features: "所有功能"
+        successful: "成功"
+        failed: "失败"
+        unknown: "未知"
+        has_retries: "有重试次数"
+        retried: "重试"
+        unattributed: "未注明出处"
+        search_placeholder: "按用户名或 ID 搜索（例如 @user1 topic:123 log:45）"
+        feature_placeholder: "功能名称"
+        time: "时间"
+        when: "时间"
+        outcome: "成果"
+        feature: "功能"
+        model: "模型"
+        request: "请求"
+        provider: "提供商"
+        user: "用户"
+        tokens: "Token"
+        tokens_pair: "%{request} → %{response}"
+        tokens_aria: "%{request} 输入标记和 %{response} 输出标记"
+        tokens_unavailable: "令牌数量不可用"
+        cache_read_tokens: "缓存读取"
+        cache_write_tokens: "缓存写入"
+        context: "上下文"
+        topic: "话题"
+        topic_short: "主题 %{id}"
+        post: "帖子"
+        post_short: "帖子 %{id}"
+        duration: "持续时间"
+        tokens_direction: "令牌（输入→输出）"
+        first_token: "第一个令牌"
+        cost: "成本"
+        actions: "操作"
+        table_caption: "人工智能向语言模型发送的请求及其结果"
+        view_details: "详细信息"
+        no_results: "没有人工智能日志符合这些筛选条件。"
+        no_logs: "未发现保留的AI日志。"
+        new_logs_count:
+          other: "查看 %{count} 新日志"
+        periods:
+          hour: "最后一小时"
+          day: "过去 24 小时"
+          week: "过去 7 天"
+          custom: "自定义"
+        detail:
+          title: "AI日志 #%{id}"
+          request: "请求"
+          response: "回答"
+          context: "上下文"
+          attempts: "尝试"
+          tabs_label: "AI日志有效载荷部分"
+          copy_request: "复制请求"
+          copy_response: "复制回答"
+          copy_raw_response: "复制原始响应"
+          copy_context: "复制上下文"
+          payload_unavailable: "有效载荷不可用"
+          payload_truncated: "此有效载荷过大，无法完整显示，已被截断。"
+          load_error: "找不到此日志。它可能已被保留策略删除。"
+          generic_load_error: "此日志加载失败，请重试。"
+          network_error: "网络错误"
+          outcome_with_status: "%{outcome} (%{status})"
+          duration_seconds: "%{seconds} s"
+          attempt: "状态 %{status}，延迟 %{delay} 毫秒"
+        retention:
+          configure: "配置保留"
+          title: "日志保留"
+          lifecycle_label: "日志首先以完整有效载荷的形式保留，然后以摘要的形式保留，最后删除。"
+          detailed_stage: "满载荷"
+          summary_stage: "摘要"
+          deleted_stage: "已删除"
+          hint: "天数从请求日期开始计算。0 表示没有单独的限制。"
+          detailed_title: "满载荷（天）"
+          detailed_help: "原始请求和响应。0 会保留它们，直到摘要被删除。"
+          summary_title: "摘要（天数）"
+          summary_help: "审核元数据。0 会永久保留。"
+          invalid_order: "摘要的保存时间至少要与有效载荷的保存时间一样长。"
+          valid_range: "请输入 0 到 %{max} 之间的整数。"
+          destructive_warning: "缩短数据保留期限会在下次清理时永久删除数据，此操作无法撤销。"
+          meta: "使用 %{size} · 清理工作每日运行 · 使用数据不受影响"
+          save: "保存"
+          saved: "保留策略已保存。清理工作将在 24 小时内完成。"
+          lifecycle:
+            complete_forever: "日志永久保存"
+            detail_until_delete: "完整日志保留 %{summary} 天后删除"
+            summary_forever: "有效载荷保留 %{detailed} 天，摘要永久保留"
+            finite: "有效载荷保留 %{detailed} 天，摘要保留 %{summary} 天，然后删除"
       ai_agent:
         ai_tools: "工具"
+        native_tools_help: "启用“始终使用默认语言模型”且所选默认语言模型支持提供商原生工具时，这些工具（例如网络搜索或页面获取）将显示。"
         mcp_servers: "MCP 服务器"
+        subagents: "子代理"
+        subagents_help: "允许此代理将任务委派给选定的代理。仅当至少有一个选定的代理可用时，才会添加生成工具。"
+        subagents_summary:
+          other: "此代理可以委托给 %{count} 代理。"
+        subagent_disabled: "%{name} （已禁用）"
+        subagent_tool_name: "子代理授权（上限）"
+        invalid_subagent_ids: "子代理 ID 必须是一个整数列表。"
+        too_many_subagents: "一个代理人最多可以拥有 %{max} 个子代理人"
+        subagent_self: "一个代理不能将自身选为子代理"
+        subagents_not_found: "所选子代理 ID 不存在： %{ids}"
+        subagent_tool_collision: "拥有子代理的代理无法配置名为 spawn_agent 的工具。"
         mcp_server_tools_help: "所选 MCP 服务器默认会公开所有工具。您可以针对每个智能体筛选工具，以减少 token 使用量并专注于特定工具。"
         mcp_server_tool_count:
           other: "%{count} 个工具"
@@ -531,24 +765,18 @@ zh_CN:
         export: "导出"
         import: "导入"
         import_error_conflict: "导入 %{name} 时检测到冲突，您是否要更新现有智能体？"
+        import_error_missing_subagents: "导入此代理之前，必须存在以下子代理： %{names}。"
         overwrite: "覆盖"
         description: "描述"
         no_llm_selected: "未选择语言模型"
         use_parent_llm: "使用智能体的语言模型"
-        max_context_posts: "最大上下文帖子数"
-        max_context_posts_help: "AI 在回复用户时用作上下文的最大帖子数。（默认为空）"
-        execution_mode: "执行模式"
-        execution_mode_help: "控制智能体如何管理工具执行和对话上下文。默认设置使用固定的回合/工具限制。Agentic 使用 token 预算和自动上下文压缩，以实现更长时间、更强大的工具使用会话。"
-        execution_mode_options:
-          default: "默认值（固定限值）"
-          agentic: "Agentic（Token 预算）"
         max_turn_tokens: "最大回合 Token"
-        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数（输入 + 输出）。设置后，将固定的补全/工具限值替换为 token 预算，从而实现更智能的行为。留空则使用默认限值。"
+        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大 token 总量（输入 + 输出）。留空则默认为模型上下文窗口的一半。"
         compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
-        vision_enabled: 包含图片上传功能
-        vision_enabled_help: 如果启用，当所选模型支持图像输入时，此代理可以包含帖子和聊天中的图像。
-        vision_max_pixels: 最大图像尺寸
+        vision_enabled: 包含图片上传
+        vision_enabled_help: 如果启用，当所选模型使用原生图像输入或将图像处理委托给另一个模型时，此代理可以包含帖子和聊天中的图像。
+        vision_max_pixels: 最大图片尺寸
         vision_max_pixel_sizes:
           low: 低品质 - 最便宜 (256x256)
           medium: 中等品质 (512x512)
@@ -561,7 +789,7 @@ zh_CN:
         create_user: 创建用户
         create_user_help: 您可以选择为此智能体附加一个用户。如果这样做，AI 将使用此用户来回复请求。
         default_llm: 默认语言模型
-        default_llm_help: 用于此智能体的默认语言模型。如果您希望在公开帖子中提及该智能体，则为必选项。
+        default_llm_help: 此代理使用的默认语言模型。如果留空，则使用站点默认语言模型。
         system_prompt: 系统提示
         forced_tool_strategy: 强制工具策略
         allow_chat_direct_messages: "允许聊天直接消息"
@@ -608,6 +836,10 @@ zh_CN:
         allowed_groups: "允许的群组"
         confirm_delete: "确定要删除此智能体吗？"
         new: "新建智能体"
+        new_group: "新建或复制智能体"
+        duplicate: "复制"
+        duplicate_search: "复制智能体"
+        copy_name: "%{name} 的副本"
         no_agents: "您尚未创建任何智能体。"
         manage_agents: "管理智能体"
         title: "智能体"
@@ -617,6 +849,17 @@ zh_CN:
         temperature_help: "用于 LLM 的 Temperature。增大该值可以提升创造力（留空将使用模型默认值，通常为 0.0 到 2.0 之间的值）"
         top_p: "Top P"
         top_p_help: "用于 LLM 的 Top P，增大该值可以提升随机性（留空将使用模型默认值，通常为 0.0 到 1.0 之间的值）"
+        thinking_effort: "思考强度"
+        thinking_effort_help: "推理模型在回答问题前应该思考多少。较高的值可能有助于解决复杂任务，但会增加延迟和成本。不支持的提供商会忽略此设置。"
+        thinking_effort_options:
+          default: "模型默认值"
+          none: "无"
+          minimal: "最低"
+          low: "低"
+          medium: "中"
+          high: "高"
+          xhigh: "极高"
+          max: "最高"
         priority: "优先级"
         priority_help: "优先级较高的智能体会显示在智能体列表的顶部。如果有多个智能体的优先级相同，则会按字母顺序排列。"
         tool_options: "工具选项"
@@ -653,11 +896,28 @@ zh_CN:
         llms_list: "LLM："
       rag:
         title: "RAG"
+        sources:
+          title: "URL来源"
+          description: "定期获取并索引为代理知识的网页。"
+          urls: "网址"
+          urls_description: "每行输入一个网址。"
+          refresh_interval_hours: "每隔（小时）刷新一次"
+          add: "添加 URL 源"
+          edit: "编辑 URL 来源"
+          save: "保存 URL 源"
+          modal_title: "配置 URL 源"
+          empty: "未配置URL源。"
+          summary:
+            other: "%{count} URL 来源"
+          more:
+            other: "还有 %{count} 更多网址"
+          too_many: "输入的网址数量不得超过 %{count} 个。"
+          invalid_url: "无效网址： %{url}"
         options:
-          rag_chunk_tokens: "上传分块词元"
-          rag_chunk_tokens_help: "RAG 模型中为每个分块使用的词元数。增大词元数会增加 AI 可以使用的上下文数量。（更改词元数将为所有上传内容重新编制索引）"
-          rag_chunk_overlap_tokens: "上传分块重叠词元"
-          rag_chunk_overlap_tokens_help: "RAG 模型中分块之间重叠的词元数。（更改词元数将为所有上传内容重新编制索引）"
+          rag_chunk_tokens: "上传分块 token"
+          rag_chunk_tokens_help: "RAG 模型中为每个分块使用的 token 数。增大 token 数会增加 AI 可以使用的上下文数量。（更改 token 数将为所有上传内容重新编制索引）"
+          rag_chunk_overlap_tokens: "上传分块重叠 token"
+          rag_chunk_overlap_tokens_help: "RAG 模型中分块之间重叠的 token 数。（更改 token 数将为所有上传内容重新编制索引）"
           rag_llm_model: "建立语言模型索引"
           rag_llm_model_help: "PDF 和图片索引期间用于 OCR 的语言模型"
           show_indexing_options: "显示上传选项"
@@ -835,12 +1095,24 @@ zh_CN:
         provider: "提供商"
         tokenizer: "分词器"
         max_prompt_tokens: "上下文窗口"
-        max_output_tokens: "最大输出词元数"
+        max_output_tokens: "最大输出 token 数"
         url: "托管模型的服务的 URL"
         api_key: "托管模型的服务的 API 密钥"
-        vision_enabled: "支持图像输入"
+        vision_enabled: "支持图片输入"
+        vision_mode: "图像处理"
+        vision_mode_help: "禁用此选项将阻止图像处理。使用其他模型会添加一个由原生视觉模型支持的图像查看工具。原生图像输入会将图像直接发送到此模型。"
+        vision_modes:
+          disabled:
+            title: "已禁用"
+          delegated:
+            title: "使用其他模型"
+          native:
+            title: "原生图像输入"
+        vision_model: "视觉模型"
+        vision_model_help: "委托会增加模型请求次数、延迟和成本。仅支持原生图像输入的模型。"
+        no_native_vision_models: "在使用其他视觉模型之前，请先配置一个具有原生图像输入的模型。"
         allowed_attachment_types: "允许的文档附件"
-        attachment_types_placeholder: "选择或输入文件扩展名（例如，pdf、txt、csv、docx、xlsx）"
+        attachment_types_placeholder: "选择或输入扩展名（例如，pdf、txt、csv、docx、xlsx）"
         ai_bot_user: "AI 机器人用户"
         cost_input: "输入成本"
         cost_cached_input: "缓存输入成本"
@@ -856,8 +1128,9 @@ zh_CN:
           title: "使用配额"
           add_title: "创建新配额"
           group: "群组"
-          max_tokens: "最大词元数"
+          max_tokens: "最大 token 数"
           max_usages: "最大使用次数"
+          max_cost: "最大成本"
           duration: "持续时间"
           confirm_delete: "确定要删除此配额吗？"
           add: "添加配额"
@@ -868,10 +1141,12 @@ zh_CN:
             week: "7 天"
             custom: "自定义…"
           hours: "小时"
-          max_tokens_help: "此群组中每个用户在指定时长内可以使用的最大词元（单词和字符）数。词元是 AI 模型处理文本时使用的单位，1 个词元约等于 4 个字符或 3/4 个单词。"
-          max_tokens_required: "如果未设置最大使用量，则必须设置"
+          max_tokens_help: "此群组中每个用户在指定时长内可以使用的最大 token（单词和字符）数。token 是 AI 模型处理文本时使用的单位，1 个 token 约等于 4 个字符或 3/4 个单词。"
+          max_tokens_required: "如果未设置最大使用次数和最大成本，则必须设置"
           max_usages_help: "此群组中每个用户在指定时长内可以使用 AI 模型的最大次数。此配额按个别用户进行跟踪，不在整个群组中共享。"
-          max_usages_required: "如果未设置最大词元数，则必须设置"
+          max_usages_required: "如果未设置最大 token 数和最大成本，则必须设置"
+          max_cost_help: "此群组中每个用户在指定期间内使用此 AI 模型可能产生的最高预计费用。该费用基于为模型配置的输入、输出、缓存输入及缓存写入价格计算得出。"
+          max_cost_required: "如果未设置最大 token 数和最大使用次数，则必须设置"
         credit_allocation:
           credits_remaining: "剩余 %{remaining}/%{total} 点数 (%{percentage}%)"
           soft_limit_warning: "此模型今天剩余 %{percentage}% 的 AI 点数"
@@ -880,30 +1155,34 @@ zh_CN:
         usage:
           ai_bot: "AI 机器人"
           ai_helper: "助手 (%{agent})"
-          ai_helper_image_caption: "图片标题"
+          ai_image_caption: "图片说明"
           ai_agent: "智能体（%{agent}）"
           ai_summarization: "总结"
           ai_embeddings_semantic_search: "AI 搜索"
           ai_spam: "垃圾信息"
           automation: "自动化 (%{agent})"
+          vision_delegate: "模型视觉（%{agent}）"
         in_use_warning:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:
           none: "适用于大多数语言模型的常规设置"
-          anthropic-claude-opus-4-7: "Anthropic 最智能的模型"
-          anthropic-claude-sonnet-4-6: "速度与成本的最佳平衡"
-          anthropic-claude-haiku-4-5: "快速、经济高效"
-          google-gemini-3-1-pro: "Google 最智能的模型"
-          google-gemini-3-flash: "快速且经济实惠，并具备多模态推理能力"
-          open_ai-gpt-5-5: "OpenAI 功能最强大的模型，具备扩展上下文信息"
-          open_ai-gpt-5-4: "OpenAI 的旗舰模型，非常适合跨领域解决问题"
-          open_ai-gpt-5-4-nano: "最快、最具成本效益的 GPT-5 模型"
-          open_router-moonshotai-kimi-k2-6: "Moonshot 具有视觉能力的多模态模型"
-          open_router-deepseek-deepseek-v4-flash: "DeepSeek 最新高性能模型，具备 100 万上下文信息"
-          open_router-minimax-minimax-m2-7: "MiniMax 的大上下文模型"
-          open_router-x-ai-grok-4-1-fast: "xAI 的快速多模态模型具有非常大的上下文信息"
-          open_router-z-ai-glm-5-1: "Z-AI的推理模型"
-          open_router-qwen-qwen3-6-plus: "Qwen 的多模态模型及其 1M 上下文"
+          anthropic-claude-fable-5-1: "Anthropic 针对要求严苛的推理和长期运行的智能体提出的最大能力模型"
+          anthropic-claude-opus-5: "Anthropic 的旗舰产品，专注于复杂智能体编码、深度推理和企业级工作。"
+          anthropic-claude-sonnet-5: "编码、代理和日常知识工作中速度和智能的最佳平衡"
+          anthropic-claude-haiku-4-5-20251001: "适用于高容量和对延迟敏感型工作负载的快速、经济型模型"
+          google-gemini-3-1-pro-preview: "谷歌的Pro模型用于高级推理、复杂问题解决和智能体编码"
+          google-gemini-3-8-flash: "谷歌最智能的 Flash 模型，适用于长期软件工程和自主代理"
+          google_vertex_ai-google-gemini-3-8-flash: "Gemini 3.8 Flash 通过 Vertex AI 实现多模态、智能体和企业级工作负载"
+          open_ai-gpt-5-6-sol: "OpenAI 的旗舰级 GPT-5.6 模型适用于复杂的专业、编码和智能体工作"
+          open_ai-gpt-5-6-terra: "平衡型 GPT-5.6 模型，以更低成本实现强大的智能"
+          open_ai-gpt-5-6-luna: "快速、经济的 GPT-5.6 模型，适用于大批量、定义明确的任务。"
+          open_router-z-ai-glm-5-3-flash: "用于编码和长时间运行代理的快速、低成本多模态推理模型"
+          open_router-deepseek-deepseek-v4-flash-vision-exp: "用于经济编码、推理和图像理解的实验性多模态 DeepSeek 模型"
+          open_router-tencent-hy4-preview: "预览用于编码代理、复杂工具使用和持续多步骤工作的推理模型"
+          open_router-xiaomi-mimo-v2-5: "低成本的全模态模型，用于代理以及图像、音频和视频理解"
+          open_router-moonshotai-kimi-k3: "面向复杂编码、存储库导航和长时间运行代理的前沿多模态模型"
+          open_router-minimax-minimax-m3: "用于持续编码、工具使用和多步骤代理的长上下文多模态模型"
+          open_router-x-ai-grok-4-6: "面向编码、工具使用和长上下文工作负载的前沿多模态推理模型"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
           title: "配置的 LLM"
@@ -922,20 +1201,20 @@ zh_CN:
           success: "成功！"
           invalid_config: "首先修复配置中的以下错误："
           failure: "尝试联系模型时返回此错误：%{error}"
-          failure_non_streaming: "非流式请求失败： %{error}"
-          failure_streaming: "流式请求失败： %{error}"
+          failure_non_streaming: "非流式传输请求失败：%{error}"
+          failure_streaming: "流式传输请求失败：%{error}"
         hints:
-          max_prompt_tokens: "模型在单个请求中可以处理的最大词元数"
-          max_output_tokens: "模型在单个请求中可以生成的最大词元数"
+          max_prompt_tokens: "模型在单个请求中可以处理的最大 token 数"
+          max_output_tokens: "模型在单个请求中可以生成的最大 token 数"
           display_name: "用于在您的站点界面上引用此模型的名称。"
           name: "我们将其包含在 API 调用中以指定我们将使用哪个模型"
-          vision_enabled: "该模型/提供商是否能够接收和理解图像。"
+          vision_enabled: "此模型/提供商是否能够接收和理解图片。"
           allowed_attachment_types: "选择可以转换或转发的文档附件类型。留空则禁止文档附件。图片单独控制。"
-          cost_input: "此模型每 100 万个词元的输入成本"
-          cost_cached_input: "此模型每 100 万个词元的缓存输入成本（从提示缓存读取时）"
-          cost_cache_write: "此模型每 100 万个词元的缓存写入成本（从提示缓存写入时）"
-          cost_output: "此模型每 100 万个词元的输出成本"
-          cost_measure: "$/100 万个词元"
+          cost_input: "此模型每 100 万个 token 的输入成本"
+          cost_cached_input: "此模型每 100 万个 token 的缓存输入成本（从提示缓存读取时）"
+          cost_cache_write: "此模型每 100 万个 token 的缓存写入成本（从提示缓存写入时）"
+          cost_output: "此模型每 100 万个 token 的输出成本"
+          cost_measure: "$/100 万个 token"
         providers:
           aws_bedrock: "AWS Bedrock"
           aws_bedrock_converse: "AWS Bedrock（Converse API）"
@@ -944,7 +1223,9 @@ zh_CN:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
+          google: "Google Gemini（旧版 API）"
+          gemini_interactions: "Google Gemini"
+          google_vertex_ai: "Google Vertex AI"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -957,7 +1238,8 @@ zh_CN:
           access_key_id: "AWS Bedrock 访问密钥 ID"
           role_arn: "AWS Bedrock 角色 ARN"
           inference_profile_arn: "AWS Bedrock 应用程序推理配置文件 ARN"
-          region: "AWS Bedrock 区域"
+          region: "区域"
+          project_id: "GCP 项目 ID"
           organization: "可选 OpenAI 组织 ID"
           disable_system_prompt: "在提示中禁用系统消息"
           enable_native_tool: "启用原生工具支持"
@@ -967,13 +1249,18 @@ zh_CN:
           provider_quantizations: "提供商量化顺序（逗号分隔列表，例如：fp16,fp8）"
           disable_streaming: "禁用流式补全（将流式请求转换为非流式请求）"
           reasoning_effort: "推理工作（仅适用于推理模型）"
+          reasoning_mode: "推理模式"
           service_tier: "服务层级（灵活层级 = 成本更低/延迟更高，优先层级 = 处理速度更快）"
+          reasoning_parser: "vLLM 推理解析器"
+          thinking_override: "思考覆盖"
+          thinking_token_budget: "思考 token 预算"
           enable_reasoning: "启用推理（仅适用于推理模型）"
           adaptive_thinking: "启用自适应思考（推荐用于 Claude 4.6 模型）"
           enable_thinking: "启用思考（Gemini 2.5模型 - 使用 token 预算）"
           thinking_level: "思考级别（Gemini 3 模型 - 控制推理深度）"
-          thinking_tokens: "用于思考的词元数量"
-          reasoning_tokens: "用于推理的词元数量"
+          gemini_interactions_thinking_level: "思维水平"
+          thinking_tokens: "用于思考的 token 数量"
+          reasoning_tokens: "用于推理的 token 数量"
           disable_temperature: "禁用温度（某些思考模型不支持温度）"
           disable_top_p: "禁用 Top P（某些思考模型不支持 Top P）"
           prompt_caching: "提示缓存模式"
@@ -981,6 +1268,13 @@ zh_CN:
           prompt_caching_tool_results: "工具结果 - 存在工具结果时进行缓存（推荐）"
           prompt_caching_always: "始终 - 始终使用提示缓存"
           effort: "作用等级"
+        provider_field_hints:
+          reasoning_mode: "标准模式使用提供商的默认设置。专业模式需要 Responses API 以及所选模型的支持，且会增加延迟和 token 用量。"
+          azure_reasoning_effort: "可用的思考强度取决于 Azure 中部署的模型。Azure 会拒绝不支持的值。"
+          reasoning_parser: "必须与 vLLM 服务器的 --reasoning-parser 设置相匹配。Discourse 无法针对每个请求切换解析器，它会利用此设置来构建请求选项。"
+          thinking_override: "可以选择强制支持的 vLLM 聊天模板为每个请求启用或禁用“思考”功能。对于不受支持的解析器，则保持服务器默认值。"
+          reasoning_effort: "向支持 vLLM 的 reasoning_effort 请求选项的解析器发送该选项。"
+          thinking_token_budget: "可选的推理 token 数量上限。需要一个 vLLM 推理解析器，当推理工作量为“无”时，将忽略该值。"
       related_topics:
         title: "相关话题"
         pill: "相关"
@@ -988,10 +1282,10 @@ zh_CN:
         title: "使用 AI 提出更改建议"
         description: "选择以下选项之一，AI 将向您推荐新版本的文本。"
         selection_hint: "提示：您也可以在打开助手之前选择文本的一部分来仅重写该文本。"
-        suggest: "通过 AI 提出建议"
+        suggest: "显示 AI 建议"
+        choose: "帮我选一个"
+        suggestions: "建议"
         suggest_errors:
-          too_many_tags:
-            other: "您最多只能有 %{count} 个标签"
           no_suggestions: "没有可用建议"
         missing_content: "请输入一些内容以生成建议。"
         context_menu:
@@ -1025,11 +1319,6 @@ zh_CN:
           select: "选择"
           selected: "已选择"
           try_again: "重试"
-        image_caption:
-          button_label: "使用 AI 生成标题"
-          generating: "正在生成标题…"
-          credits: "由 AI 生成标题"
-          save_caption: "保存"
         no_content_error: "先添加内容，然后对其执行 AI 操作"
       errors:
         credit_limit_dialog:
@@ -1070,7 +1359,7 @@ zh_CN:
           matryoshka_dimensions: "定义用于分层或多层数据表示的嵌套嵌入向量的大小，类似于套娃相互嵌套的方式。"
           embed_prompt: "生成论坛内容嵌入向量时的任务指令前缀。仅适用于需要前缀的嵌入向量模型，例如 nomic-embed 或 stella。大多数模型不需要。"
           search_prompt: "生成搜索查询嵌入向量时的任务指令前缀。仅适用于需要前缀的嵌入向量模型，例如 nomic-embed 或 stella。大多数模型不需要。"
-          sequence_length: "创建嵌入向量或处理查询时一次可以处理的最大词元数。"
+          sequence_length: "创建嵌入向量或处理查询时一次可以处理的最大 token 数。"
           distance_function: "确定如何计算嵌入向量之间的相似度，可以使用余弦距离（测量向量的夹角）或负内积（测量向量值的重叠）。"
         display_name: "名称"
         provider: "提供商"
@@ -1097,15 +1386,15 @@ zh_CN:
           model_name: "模型名称"
         semantic_search: "话题（语义）"
         semantic_search_results:
-          toggle: "AI 结果"
-          unavailable: "AI 结果不可用"
-          zero_results_expanded: "找不到任何结果，正在显示 %{count} 个 AI 结果"
+          toggle: "相关结果"
+          unavailable: "相关结果不可用"
+          zero_results_expanded: "未找到任何结果，显示 %{count} 个相关结果"
         semantic_search_tooltips:
           results_explanation: "启用后，将在下方添加更多 AI 搜索结果。"
-          invalid_sort: "搜索结果必须按相关性排序才能显示 AI 结果"
+          invalid_sort: "搜索结果必须按相关性排序才能显示相关结果"
           not_submitted: "提交搜索以启用 AI 结果"
           no_results: "此搜索未找到 AI 结果"
-        semantic_search_unavailable_tooltip: "搜索结果必须按相关性排序才能显示 AI 结果"
+        semantic_search_unavailable_tooltip: "搜索结果必须按相关性排序才能显示相关结果"
         ai_generated_result: "使用 AI 找到的搜索结果"
         ai_results_notice:
           no_results: "没有完全匹配的结果，但有一些相关结果。"
@@ -1119,8 +1408,8 @@ zh_CN:
         click_to_run_label: "运行工件"
       ai_bot:
         title: "AI 机器人"
-        agent: "智能体"
-        llm: "模型"
+        agent: "智能体："
+        llm: "模型："
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
         try_again: "重试"
@@ -1137,10 +1426,15 @@ zh_CN:
           title: "查看 AI 互动"
           copy_request: "复制请求"
           copy_response: "复制回答"
+          payload_unavailable: "有效载荷不可用"
           this_turn: "此回合："
           whole_conversation: "对话："
           tokens_summary: "%{request_tokens} 输入 → %{response_tokens} 输出"
-          cache_both: "（缓存读取 %{read} ，%{write} 写入）"
+          duration_label: "持续时间："
+          duration: "%{duration_seconds} 秒（第一个标记： %{first_token_seconds} 秒）"
+          duration_without_first_token: "%{duration_seconds} 秒（第一个标记：—）"
+          duration_unavailable: "—（第一个标记：—）"
+          cache_both: "（缓存读取 %{read} ，%{write} 缓存写入）"
           cache_read_only: "（缓存 %{read} 读取）"
           cache_write_only: "（缓存 %{write} 写入）"
           request: "请求"
@@ -1190,17 +1484,17 @@ zh_CN:
           min_input_length_message:
             other: "消息必须为 %{count} 个字符或更长"
           messages_sidebar_title: "对话"
-          starred: "收藏"
-          star_conversation: "标记对话"
-          unstar_conversation: "取消标记对话"
+          starred: "已加星标"
+          star_conversation: "为对话加星标"
+          unstar_conversation: "为对话移除星标"
           open_conversation_menu: "打开对话菜单"
           today: "今天"
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"
           upload_files: "上传文件"
           uploads_in_progress: "上传过程中无法提交"
-          show_toolbar: "显示工具栏"
-          hide_toolbar: "隐藏工具栏"
+          show_toolbar: "显示格式工具栏"
+          hide_toolbar: "隐藏格式工具栏"
           scroll_to_bottom: "滚动到底部"
           streaming_below: "下方新增内容"
           editing_post: "正在编辑帖子"
@@ -1238,12 +1532,10 @@ zh_CN:
           bulk_regen_description: "选择要为所选话题重新生成的 AI 摘要类型。"
           regenerate_gists_option: "简短摘要（要点）"
           regenerate_summaries_option: "话题摘要"
-          regenerate_gists_success:
-            other: "%{count} 条简短摘要已成功重新生成"
+          regenerate_gists_started: "正在重新生成简短摘要…"
           regenerate_gists_error:
             other: "无法重新生成 %{count} 条简短摘要"
-          regenerate_topic_summary_success:
-            other: "%{count} 个话题摘要已成功重新生成"
+          regenerate_topic_summaries_started: "正在重新生成话题摘要…"
           regenerate_topic_summary_error:
             other: "未能重新生成 %{count} 个话题摘要"
         topic_list_layout:
@@ -1252,20 +1544,52 @@ zh_CN:
             expanded: "展开"
             expanded_description: "带 AI 摘要"
       discobot_discoveries:
-        main_title: "Discobot 发现"
-        regular_results: "话题"
-        tell_me_more: "详细说明…"
-        continue_convo: "继续对话…"
+        main_title: "询问 AI"
         loading_convo: "正在加载对话"
-        collapse: "收起"
-        timed_out: "Discobot 找不到任何发现。出错了。"
+        follow_up:
+          label: "询问后续情况"
+          placeholder: "询问后续情况"
+          submit: "提问"
+        timed_out: "“Ask AI”搜索耗时过长。请重试或使用搜索功能。"
+        request_failed: "Ask AI 无法启动此搜索。请重试或使用搜索功能。"
+        no_answer: "AI 找不到明确的答案。向社区提问。"
+        create_topic: "创建话题"
+        answer_ready: "已准备好接收 AI 提问并给出答复。"
         user_setting: "启用 AI 搜索发现"
-        tooltip:
-          header: "AI 支持的搜索"
-          content: "自然语言搜索由 %{model} 提供支持"
-          actions:
-            info: "它是如何运作的？"
-            disable: "禁用"
+        legacy:
+          main_title: "Discobot 发现"
+          regular_results: "话题"
+          tell_me_more: "详细说明…"
+          continue_convo: "继续对话…"
+          loading_convo: "正在加载对话"
+          collapse: "收起"
+          timed_out: "Discobot 找不到任何发现。出错了。"
+          tooltip:
+            header: "AI 支持的搜索"
+            content: "自然语言搜索由 %{model} 提供支持"
+            actions:
+              info: "它是如何运作的？"
+              disable: "禁用"
+        search_placeholder: "搜索或提问 AI"
+        search_type: "AI"
+        ask_button: "提问"
+        tip_ask: "问 AI 而不是搜索"
+        tip_search: "搜索而不是问 AI"
+        make_default: "将 AI 设置为我的默认搜索选项"
+        dismiss_default_preference: "隐藏此设置"
+        default_preference_dismissed: "此设置也可在您的用户偏好设置中找到。"
+        shortcut_hint: "或 %{shortcut}"
+        advanced_with_shortcut: "打开高级搜索（%{shortcut}）"
+        search_all_topics: "所有话题"
+        search_this_topic: "话题"
+        search_in_context: "在 %{name}"
+        search_group_messages: "%{group} 中的消息"
+        search_user_posts: "来自 %{username} 的帖子"
+        search_messages: "消息"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "相关话题"
+          show_all_matching: "显示所有匹配主题"
       user_preferences:
         empty: "目前没有相关设置"
     review:
@@ -1275,6 +1599,8 @@ zh_CN:
         rejected_tool_action:
           title: "已拒绝工具"
       types:
+        discourse_ai_triage:
+          title: "AI 分类"
         reviewable_ai_post:
           title: "AI 标记的帖子"
         reviewable_ai_chat_message:

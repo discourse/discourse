@@ -7,6 +7,9 @@
 bs_BA:
   js:
     styleguide:
+      example:
+        kind:
+          component: "Komponenta"
       sections:
         colors:
           title: "Colors"
@@ -22,6 +25,20 @@ bs_BA:
           title: "Objava"
         more_topics:
           title: "Još tema"
+        roving_focus:
+          toolbar:
+            copy: "Copy"
+          adjacent:
+            field: "Pretraži"
+            open: "Otvori"
+            recent: "Nove"
+          combobox:
+            daily: "Dnevno"
+            weekly: "Sedmično"
+            monthly: "Mesečno"
+            never: "Nikad"
+          tree:
+            components: "Komponenti"
         tooltips:
           description: "Opis"
           header: "Header"

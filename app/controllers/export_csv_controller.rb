@@ -4,6 +4,8 @@ class ExportCsvController < ApplicationController
   requires_login
   skip_before_action :preload_json, :check_xhr, only: [:show]
 
+  MAX_ARG_VALUE_LENGTH = 300
+
   def export_entity
     entity = export_params[:entity]
     entity_id = params.dig(:args, :export_user_id)&.to_i if entity == "user_archive"
@@ -11,30 +13,34 @@ class ExportCsvController < ApplicationController
     raise Discourse::InvalidParameters.new(:entity) unless entity.is_a?(String) && entity.size < 100
 
     (export_params[:args] || {}).each do |key, value|
-      unless value.is_a?(String) && value.size < 100
+      unless value.is_a?(String) && value.size < MAX_ARG_VALUE_LENGTH
         raise Discourse::InvalidParameters.new("args.#{key}")
       end
     end
 
     if entity == "user_archive"
+      archive_user_id = entity_id || current_user.id
       requesting_user_id = current_user.id if entity_id
 
       # Rate limit user archive exports to 1 per day
-      unless current_user.admin ||
-               UserExport.where(
-                 user_id: entity_id || current_user.id,
-                 created_at: Time.zone.now.all_day,
-               ).count == 0
+      reservation_key = reserve_user_archive_export!(archive_user_id)
+
+      unless current_user.admin || reservation_key
         render_json_error I18n.t("csv_export.rate_limit_error")
         return
       end
 
-      Jobs.enqueue(
-        :export_user_archive,
-        user_id: entity_id || current_user.id,
-        requesting_user_id:,
-        args: export_params[:args],
-      )
+      begin
+        Jobs.enqueue(
+          :export_user_archive,
+          user_id: archive_user_id,
+          requesting_user_id:,
+          args: export_params[:args],
+        )
+      rescue StandardError
+        Discourse.redis.del(reservation_key) if reservation_key
+        raise
+      end
     else
       Jobs.enqueue(
         :export_csv_file,
@@ -64,11 +70,32 @@ class ExportCsvController < ApplicationController
 
   private
 
+  def reserve_user_archive_export!(user_id)
+    return nil if UserExport.exists?(user_id: user_id, created_at: Time.zone.now.all_day)
+
+    key = user_archive_export_rate_limit_key(user_id)
+    return nil unless Discourse.redis.set(key, "1", nx: true, ex: seconds_until_tomorrow)
+
+    key
+  end
+
+  def user_archive_export_rate_limit_key(user_id)
+    "user_archive_export_rate_limit:#{user_id}:#{Time.zone.today}"
+  end
+
+  def seconds_until_tomorrow
+    now = Time.zone.now
+    [(now.end_of_day - now).ceil, 1].max
+  end
+
   def export_params
     @_export_params ||=
       begin
         params.require(:entity)
-        params.permit(:entity, args: [*Report::FILTERS, *UserHistory.staff_filters]).to_h
+        params.permit(
+          :entity,
+          args: [*Report::FILTERS, *UserHistory.staff_filters, :category_ids, :groups],
+        ).to_h
       end
   end
 end

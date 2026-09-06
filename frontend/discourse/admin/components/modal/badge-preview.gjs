@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
+import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import DModal from "discourse/ui-kit/d-modal";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -13,7 +14,7 @@ export default class BadgePreview extends Component {
 
       if (grant.post_id) {
         i18nKey += "_post";
-        i18nParams.link = `<a href="/p/${grant.post_id}" data-auto-route="true">
+        i18nParams.link = `<a href="${getURL(`/p/${grant.post_id}`)}" data-auto-route="true">
           ${escapeExpression(grant.title)}
         </a>`;
       }

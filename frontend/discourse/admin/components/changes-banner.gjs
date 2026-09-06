@@ -45,7 +45,7 @@ export default class ChangesBanner extends Component {
         }}</span>
       <div class="controls">
         <DButton
-          class="btn-default btn-secondary btn-small"
+          class="btn-default btn-small"
           @action={{@discard}}
           @disabled={{this.isSaving}}
           @translatedLabel={{@discardLabel}}

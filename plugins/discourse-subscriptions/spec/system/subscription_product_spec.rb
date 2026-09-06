@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Subscription products" do
+describe "Subscription products", allow_network: ["js.stripe.com"] do
   fab!(:admin)
   fab!(:product) { Fabricate(:product, external_id: "prod_OiK") }
   let(:dialog) { PageObjects::Components::Dialog.new }

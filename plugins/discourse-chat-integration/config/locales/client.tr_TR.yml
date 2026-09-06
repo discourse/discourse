@@ -273,3 +273,8 @@ tr_TR:
               description: "Kanal adını Chat Integration ayarlarında bulabilirsiniz"
             provider:
               label: Sağlayıcı
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanal"
+        configure: "Yapılandır"
+        message: "Mesaj"

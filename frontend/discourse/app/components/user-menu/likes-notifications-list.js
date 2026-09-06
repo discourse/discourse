@@ -1,3 +1,4 @@
+import UserMenuLikesListEmptyState from "discourse/components/user-menu/likes-list-empty-state";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 
 export default class UserMenuLikesNotificationsList extends UserMenuNotificationsList {
@@ -10,6 +11,6 @@ export default class UserMenuLikesNotificationsList extends UserMenuNotification
   }
 
   get emptyStateComponent() {
-    return "user-menu/likes-list-empty-state";
+    return UserMenuLikesListEmptyState;
   }
 }

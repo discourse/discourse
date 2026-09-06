@@ -75,6 +75,7 @@ module DiscourseDev
           url: "https://forum.example.com/t/sample-topic/#{rand(1000)}",
           ip_address: "192.0.2.#{rand(1..254)}",
           user_agent: "Mozilla/5.0 (X11; Linux x86_64) Chrome/123",
+          browser: ::BrowserPageviewEvent.browsers.fetch("chrome"),
           session_id: SecureRandom.hex(16),
           country_code: country_pool.sample,
           normalized_referrer: normalized,

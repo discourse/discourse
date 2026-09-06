@@ -34,5 +34,17 @@ be:
       topic: "Тэма"
       post: "пост"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Прызначаны"
       assign_topic:
-        topic_id: "Номер тэмы"
+        resources:
+          topic: "Тэма"
+          post: "пост"
+        topic_id: "Ідэнтыфікатар тэмы"
+        post_id: "Ідэнтыфікатар допісу"
+      check_assignment:
+        target_types:
+          topic: "Тэма"
+          post: "пост"
+        topic_id: "Ідэнтыфікатар тэмы"
+        post_id: "Ідэнтыфікатар допісу"

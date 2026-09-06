@@ -39,6 +39,18 @@ module PageObjects
         body.has_css?(".-tag-revisions")
       end
 
+      def has_hidden_diff_notice?
+        body.has_css?(".revision__hidden-notice", text: I18n.t("js.post.revisions.diff_hidden"))
+      end
+
+      def has_no_hidden_diff_notice?
+        body.has_no_css?(".revision__hidden-notice")
+      end
+
+      def has_body_diff?(text)
+        body.has_css?(".body-diff", text: text)
+      end
+
       def previous_tags
         body.find(".-tag-revisions .tag-revision__wrapper:first-child")
       end

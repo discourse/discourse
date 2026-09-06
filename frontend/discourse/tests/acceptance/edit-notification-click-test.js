@@ -1,8 +1,8 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const revisionResponse = {
   created_at: "2021-07-30T11:19:59.549Z",
@@ -53,7 +53,7 @@ acceptance(
       await visit("/");
       await click(".header-dropdown-toggle.current-user button");
       await click(".notification.edited a");
-      const [v1, v2] = queryAll(".history-modal .revision-content");
+      const [v1, v2] = findAll(".history-modal .revision-content");
 
       assert
         .dom(v1)

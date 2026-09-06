@@ -11,15 +11,16 @@ RSpec.describe DiscourseAi::Admin::AdminDashboardHighlightsController do
       before do
         assign_fake_provider_to(:ai_default_llm_model)
         SiteSetting.ai_admin_dashboard_enabled = true
-        AiAgent.find_by(id: -38) ||
-          Fabricate(
-            :ai_agent,
-            id: -38,
-            name: "Admin Dashboard Highlights #{SecureRandom.hex(4)}",
-            allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
-            enabled: true,
-            system: true,
-          )
+        agent =
+          AiAgent.find_by(id: -38) ||
+            Fabricate(
+              :ai_agent,
+              id: -38,
+              name: "Admin Dashboard Highlights #{SecureRandom.hex(4)}",
+              allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+              system: true,
+            )
+        agent.update!(enabled: true)
         allow(DiscourseAi::AdminDashboard::HighlightGenerator).to receive(:generate).and_return(
           "Your community is thriving.",
         )

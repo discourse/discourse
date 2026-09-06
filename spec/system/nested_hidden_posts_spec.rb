@@ -21,6 +21,7 @@ RSpec.describe "Nested view hidden posts" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(admin)
   end
 

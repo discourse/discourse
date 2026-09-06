@@ -2,9 +2,6 @@
 
 <%= discourse_stylesheet_link_tag(:common, supports_rtl: true) %>
 
-<%= discourse_stylesheet_link_tag(:mobile, supports_rtl: true, media: "(width < 40rem)") %>
-<%= discourse_stylesheet_link_tag(:desktop, supports_rtl: true, media: "(width >= 40rem)") %>
-
 <%- if staff? %>
   <%= discourse_stylesheet_link_tag(:admin, supports_rtl: true) %>
 <%- end %>

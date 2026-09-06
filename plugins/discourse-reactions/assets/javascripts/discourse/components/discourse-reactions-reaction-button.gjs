@@ -71,7 +71,6 @@ export default class ReactionsReactionButton extends Component {
       return;
     }
 
-    this.args.cancelExpand();
     this.args.scheduleCollapse("collapseReactionsPicker");
   }
 

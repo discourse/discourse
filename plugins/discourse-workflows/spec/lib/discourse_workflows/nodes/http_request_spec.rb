@@ -179,7 +179,53 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "HTTP GET https://api.example.com/fail?token=[FILTERED] failed with status 404",
+        "HTTP GET https://api.example.com/fail?token=[FILTERED] failed with status 404: Not Found",
+      )
+    end
+
+    it "includes the response body in the error message" do
+      stub_request(:post, "https://api.example.com/categories").to_return(
+        status: 422,
+        body: { errors: ["Group PrivateGroup has no access to the parent category"] }.to_json,
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      config = {
+        "method" => "POST",
+        "url" => "https://api.example.com/categories",
+        "body_json" => "{}",
+      }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /failed with status 422: \{"errors":\["Group PrivateGroup has no access/,
+      )
+    end
+
+    it "truncates long response bodies in the error message" do
+      body = "x" * (DiscourseWorkflows::Executor::HttpClient::ERROR_BODY_MAX_BYTES * 2)
+      stub_request(:get, "https://api.example.com/fail").to_return(status: 500, body:)
+
+      config = { "method" => "GET", "url" => "https://api.example.com/fail" }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+      ) do |error|
+        expect(error.message).to end_with("…")
+        expect(error.message.bytesize).to be < body.bytesize
+      end
+    end
+
+    it "omits the description when the failed response has no body" do
+      stub_request(:get, "https://api.example.com/empty").to_return(status: 503, body: "")
+
+      config = { "method" => "GET", "url" => "https://api.example.com/empty" }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        "HTTP GET https://api.example.com/empty failed with status 503",
       )
     end
 
@@ -451,6 +497,157 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
 
         result = execute_node(configuration: config, item: item)
         expect(result).to eq("ok" => true)
+      end
+
+      it "logs the Authorization header with its value masked" do
+        stub_request(:get, "https://api.example.com/data").to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "bearer_token",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "bearer_token",
+            },
+          },
+        }
+        messages = nil
+
+        execute_node_output(configuration: config, item: item) do |exec_ctx|
+          messages = exec_ctx.log.entries.map { |entry| entry["message"] }
+        end
+
+        expect(messages).to include("Authorization: [FILTERED]")
+        expect(messages).not_to include(a_string_including("my-secret-token"))
+      end
+    end
+
+    context "with header_auth authentication" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "header_auth",
+          data: {
+            "name" => "X-API-Key",
+            "value" => "my-secret-key",
+          },
+        )
+      end
+
+      it "injects the custom header" do
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "X-API-Key" => "my-secret-key",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "header_auth",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "header_auth",
+            },
+          },
+        }
+
+        result = execute_node(configuration: config, item: item)
+        expect(result).to eq("ok" => true)
+      end
+
+      it "masks the custom auth header value in logs regardless of its name" do
+        credential.update!(data: { "name" => "X-My-Api-Key", "value" => "my-secret-key" })
+
+        stub_request(:get, "https://api.example.com/data").to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "header_auth",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "header_auth",
+            },
+          },
+        }
+        messages = nil
+
+        execute_node_output(configuration: config, item: item) do |exec_ctx|
+          messages = exec_ctx.log.entries.map { |entry| entry["message"] }
+        end
+
+        expect(messages).to include("X-My-Api-Key: [FILTERED]")
+        expect(messages).not_to include(a_string_including("my-secret-key"))
+      end
+
+      it "resolves credential expressions against each input item" do
+        credential.update!(data: { "name" => "X-API-Key", "value" => "={{ $json.api_key }}" })
+
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "X-API-Key" => "key-alice",
+          },
+        ).to_return(
+          status: 200,
+          body: { user: "alice" }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "X-API-Key" => "key-bob",
+          },
+        ).to_return(
+          status: 200,
+          body: { user: "bob" }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "header_auth",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "header_auth",
+            },
+          },
+        }
+        input_items = [
+          { "json" => { "api_key" => "key-alice" } },
+          { "json" => { "api_key" => "key-bob" } },
+        ]
+
+        result = execute_node_output(configuration: config, input_items: input_items).first
+
+        expect(result.map { |output_item| output_item["json"]["user"] }).to eq(%w[alice bob])
       end
     end
 

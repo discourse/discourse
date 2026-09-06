@@ -12,3 +12,13 @@ ur:
         feed_url: URL
         discourse_category: زُمرَہ
         discourse_tags: ٹیگز
+        feeds:
+          edit: ترمیم کریں
+          delete: مٹائیں
+          save: محفوظ
+        test:
+          title: جھلک دیکھیں
+          dismiss: بر خاست کریں
+        status:
+          enabled: فعال شدہ
+          disabled: غیر فعال

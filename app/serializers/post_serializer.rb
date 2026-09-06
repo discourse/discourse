@@ -93,6 +93,7 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_count,
              :reviewable_score_pending_count,
              :user_suspended,
+             :user_locale,
              :user_status,
              :mentioned_users,
              :post_url,
@@ -145,11 +146,18 @@ class PostSerializer < BasicPostSerializer
   end
 
   def topic_title
-    topic&.title
+    ContentLocalization.translated_topic_title(topic, scope) || topic&.title
   end
 
   def topic_html_title
-    topic&.fancy_title
+    ContentLocalization.translated_topic_fancy_title(topic, scope) || topic&.fancy_title
+  end
+
+  def excerpt
+    translated_cooked = ContentLocalization.translated_post_cooked(object, scope)
+    return object.excerpt if !translated_cooked
+
+    Post.excerpt(translated_cooked, nil, post: object)
   end
 
   def posts_count
@@ -284,7 +292,7 @@ class PostSerializer < BasicPostSerializer
 
   def include_localized_oneboxes?
     SiteSetting.content_localization_enabled && @topic_view.present? &&
-      !ContentLocalization.show_original?(scope) &&
+      ContentLocalization.automatically_translate?(scope) &&
       @topic_view.localized_oneboxes[object.id].present?
   end
 
@@ -313,12 +321,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reply_to_user
-    {
-      id: object.reply_to_user.id,
-      username: object.reply_to_user.username,
-      name: object.reply_to_user.name,
-      avatar_template: object.reply_to_user.avatar_template,
-    }
+    BasicUserSerializer.new(object.reply_to_user, root: false).as_json
   end
 
   def deleted_by
@@ -430,6 +433,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_link_counts?
+    return false if object.hidden? && !scope.can_see_hidden_post?(object)
     return true if @single_post_link_counts.present?
 
     @topic_view.present? && @topic_view.link_counts.present? &&
@@ -658,6 +662,14 @@ class PostSerializer < BasicPostSerializer
     object.user&.suspended?
   end
 
+  def user_locale
+    object.user&.locale
+  end
+
+  def include_user_locale?
+    SiteSetting.allow_user_locale && scope.is_admin? && user_locale.present?
+  end
+
   def include_user_status?
     SiteSetting.enable_user_status && object.user&.has_status? &&
       scope&.can_see_user_status?(object.user)
@@ -742,7 +754,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable
-    @reviewable ||= Reviewable.where(target: object).includes(:reviewable_scores).first
+    @reviewable ||=
+      Reviewable
+        .where(target: object, type: Reviewable.sti_names)
+        .includes(:reviewable_scores)
+        .first
   end
 
   def reviewable_scores

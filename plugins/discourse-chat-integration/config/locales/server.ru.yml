@@ -84,6 +84,10 @@ ru:
       setting_update_failed: "Не удалось обновить настройки: %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "Предоставленный токен аутентификации недействителен."
+          action_prohibited: "Бот не имеет разрешения на публикацию в этот канал"
+          channel_not_found: "Указанный канал не существует в Slack."
         status:
           header: |
             *Правила для этого канала*

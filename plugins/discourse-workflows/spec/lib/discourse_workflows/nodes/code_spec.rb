@@ -85,6 +85,16 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
       expect(result.first["json"]["name"]).to eq("Alice")
     end
 
+    it "exposes $helpers.absoluteUrl for converting a relative path" do
+      result =
+        execute_code(
+          "return { url: $helpers.absoluteUrl($json.path) };",
+          items: [{ "json" => { "path" => "/t/some-slug/123/4" } }],
+        )
+
+      expect(result.first["json"]["url"]).to eq("#{Discourse.base_url}/t/some-slug/123/4")
+    end
+
     it "captures console.log output" do
       log = execute_code_with_log('console.log("debug message"); return {};')
 

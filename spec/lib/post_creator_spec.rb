@@ -205,9 +205,9 @@ RSpec.describe PostCreator do
         Jobs.run_immediately!
         UserActionManager.enable
 
-        admin = Fabricate(:user)
+        admin = Fabricate(:user, refresh_auto_groups: true)
         admin.grant_admin!
-        other_admin = Fabricate(:user)
+        other_admin = Fabricate(:user, refresh_auto_groups: true)
         other_admin.grant_admin!
 
         cat = Fabricate(:category)
@@ -1174,6 +1174,17 @@ RSpec.describe PostCreator do
       PostCreator.create!(admin2, raw: "I am also an admin, and a mod", topic_id: post.topic_id)
 
       expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
+
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      PostCreator.create!(
+        tl0_user,
+        raw: "Automated support reply",
+        topic_id: post.topic_id,
+        guardian: Discourse.system_user.guardian,
+        skip_staff_author_pm_membership_sync: true,
+      )
+
+      expect(post.topic.topic_allowed_users.where(user_id: tl0_user.id).count).to eq(0)
     end
 
     it "does not add whisperers to allowed users of the topic" do
@@ -1838,6 +1849,43 @@ RSpec.describe PostCreator do
       expect {
         PostCreator.create!(user, raw: "hello world", topic_id: topic.id, skip_validations: true)
       }.to change { user2.notifications.count }.by(1)
+    end
+  end
+
+  describe "skip_rate_limits" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true, trust_level: TrustLevel[4]) }
+    fab!(:topic)
+
+    before do
+      RateLimiter.enable
+      SiteSetting.rate_limit_create_post = 5
+    end
+
+    it "rate limits a non-staff author by default" do
+      PostCreator.create!(author, topic_id: topic.id, raw: "the first post from this author")
+
+      expect {
+        PostCreator.create!(author, topic_id: topic.id, raw: "a second post moments later")
+      }.to raise_error(RateLimiter::LimitExceeded)
+    end
+
+    it "does not rate limit when skip_rate_limits is set" do
+      PostCreator.create!(author, topic_id: topic.id, raw: "the first post from this author")
+
+      expect {
+        PostCreator.create!(
+          author,
+          topic_id: topic.id,
+          raw: "a second post moments later",
+          skip_rate_limits: true,
+        )
+      }.not_to raise_error
+    end
+
+    it "still validates content when only rate limits are skipped" do
+      expect {
+        PostCreator.create!(author, topic_id: topic.id, raw: "", skip_rate_limits: true)
+      }.to raise_error(ActiveRecord::RecordNotSaved)
     end
   end
 

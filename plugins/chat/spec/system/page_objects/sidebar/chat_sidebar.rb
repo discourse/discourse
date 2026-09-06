@@ -81,8 +81,12 @@ module PageObjects
         self
       end
 
+      def has_channel?(channel)
+        has_css?(".sidebar-section-link.channel-#{channel.id}")
+      end
+
       def has_no_channel?(channel)
-        has_no_css?(".sidebar-row.channel-#{channel.id}")
+        has_no_css?(".sidebar-section-link.channel-#{channel.id}")
       end
 
       def has_user_threads_section?

@@ -45,11 +45,30 @@ RSpec.describe Chat::ListChannelPins do
       it { is_expected.to fail_a_policy(:can_view_channel) }
     end
 
+    context "when anonymous public channel access is allowed" do
+      let(:guardian) { Guardian.new(nil) }
+
+      before do
+        SiteSetting.chat_allowed_groups =
+          "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "returns pinned messages" do
+        expect(result[:pins]).to contain_exactly(pin_1, pin_2)
+      end
+    end
+
     context "when all conditions are met" do
       it { is_expected.to run_successfully }
 
       it "returns pinned messages" do
         expect(result[:pins]).to contain_exactly(pin_1, pin_2)
+      end
+
+      it "orders pins by timeline (oldest message first)" do
+        expect(result[:pins].map(&:chat_message_id)).to eq([message_1.id, message_2.id])
       end
 
       it "returns membership" do

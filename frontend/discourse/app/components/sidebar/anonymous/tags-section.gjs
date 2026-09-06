@@ -1,15 +1,23 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllTagsSectionLink from "../common/all-tags-section-link";
 import Section from "../section";
 import SectionLink from "../section-link";
 
 export default class SidebarAnonymousTagsSection extends Component {
+  @service router;
   @service topicTrackingState;
   @service site;
+
+  @cached
+  get activeLink() {
+    return findActiveLink(this.sectionLinks, this.router);
+  }
 
   get displaySection() {
     return (
@@ -37,10 +45,16 @@ export default class SidebarAnonymousTagsSection extends Component {
         @sectionName="tags"
         @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
         @collapsable={{@collapsable}}
+        @activeLink={{this.activeLink}}
+        @expandWhenActive={{@expandActiveSection}}
       >
 
         {{#each this.sectionLinks as |sectionLink|}}
           <SectionLink
+            @scrollIntoView={{and
+              @scrollActiveLinkIntoView
+              (eq sectionLink.name this.activeLink.name)
+            }}
             @route={{sectionLink.route}}
             @content={{sectionLink.text}}
             @title={{sectionLink.title}}
@@ -53,7 +67,9 @@ export default class SidebarAnonymousTagsSection extends Component {
           />
         {{/each}}
 
-        <AllTagsSectionLink />
+        <AllTagsSectionLink
+          @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+        />
       </Section>
     {{/if}}
   </template>

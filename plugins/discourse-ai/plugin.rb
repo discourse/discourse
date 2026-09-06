@@ -11,6 +11,8 @@ require "tokenizers"
 require "tiktoken_ruby"
 require "discourse_ai/tokenizers"
 require "ed25519"
+require "smarter_json"
+require "json_completer"
 
 enabled_site_setting :discourse_ai_enabled
 
@@ -18,8 +20,11 @@ register_asset "stylesheets/common/streaming.scss"
 register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
+register_asset "stylesheets/common/ai-payload-viewer.scss"
+register_asset "stylesheets/common/ai-decoded-transcript.scss"
 
 register_asset "stylesheets/admin/ai-features-editor.scss", :admin
+register_asset "stylesheets/admin/ai-logs.scss", :admin
 
 register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 
@@ -58,6 +63,7 @@ register_asset "stylesheets/modules/llms/common/ai-credit-bar.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-tools.scss"
 
 register_asset "stylesheets/modules/ai-bot/common/ai-artifact.scss"
+register_asset "stylesheets/modules/ai-bot/common/ai-tool-approval.scss"
 
 module ::DiscourseAi
   PLUGIN_NAME = "discourse-ai"
@@ -84,6 +90,13 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  register_modifier(:site_setting_result) do |setting_result|
+    if setting_result[:setting] == :ai_discover_enabled && !SiteSetting.ai_discover_enabled
+      setting_result[:disabled] = true
+    end
+    setting_result
+  end
+
   if defined?(Rack::MiniProfiler)
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end
@@ -122,20 +135,45 @@ after_initialize do
     DiscourseAi::AiModeration::EntryPoint.new,
     DiscourseAi::Translation::EntryPoint.new,
     DiscourseAi::Discover::EntryPoint.new,
+    DiscourseAi::Discoveries::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
-  #register_problem_check ProblemCheck::AiCreditSoftLimit
-  #register_problem_check ProblemCheck::AiCreditHardLimit
+  register_problem_check ProblemCheck::AiLlmVisionDelegation
+  register_problem_check ProblemCheck::AiImageCaptionAgent
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
   register_reviewable_type ReviewableAiToolAction
+  add_permitted_reviewable_param :reviewable_ai_tool_action, :post_id
 
   on(:reviewable_transitioned_to) do |new_status, reviewable|
     ModelAccuracy.adjust_model_accuracy(new_status, reviewable)
     if DiscourseAi::AiModeration::SpamScanner.enabled?
       DiscourseAi::AiModeration::SpamMetric.update(new_status, reviewable)
+    end
+  end
+
+  on(:user_destroyed) do |user|
+    DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
+    DiscourseAi::Discoveries.clear_recent_asks(user_id: user.id)
+    AiAgent.detach_user!(user.id)
+  end
+
+  register_user_destroyer_on_content_deletion_callback(
+    Proc.new { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user_content(user) },
+  )
+
+  on(:post_destroyed) do |post|
+    if !Post.with_deleted.exists?(post.id)
+      DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id)
+      DiscourseAi::PostImageCaptions.delete_for_post(post.id)
+    end
+  end
+
+  on(:topic_destroyed) do |topic|
+    if !Topic.with_deleted.exists?(topic.id)
+      DiscourseAi::AiApiAuditLogCleaner.delete_for_topic(topic.id)
     end
   end
 
@@ -163,6 +201,26 @@ after_initialize do
       # even though this can be shortened this is the clearest way to express it
       nil
     end
+  end
+
+  on(:post_process_cooked) do |doc, post|
+    DiscourseAi::PostImageCaptions.process_cooked(
+      doc,
+      post,
+      locale: DiscourseAi::PostImageCaptions.original_locale(post),
+    )
+  end
+
+  on(:post_process_localized_cooked) do |doc, post, post_localization|
+    DiscourseAi::PostImageCaptions.process_cooked(doc, post, locale: post_localization.locale)
+  end
+
+  register_modifier(:post_search_index_text) do |text, post_id, cooked, locale|
+    DiscourseAi::PostImageCaptions.append_to_search_text(text, post_id, cooked, locale: locale)
+  end
+
+  on(:reduce_cooked) do |doc, _post|
+    DiscourseAi::PostImageCaptions.remove_existing_caption_metadata(doc)
   end
 
   add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
@@ -196,10 +254,58 @@ after_initialize do
     face-meh
     face-angry
     circle-info
+    discourse-ai
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 
   add_model_callback(DiscourseAutomation::Automation, :after_save) do
     DiscourseAi::Configuration::Feature.feature_cache.flush!
   end
+
+  add_model_callback(AiAgent, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
+  end
+
+  add_model_callback(LlmModel, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
+  end
+
+  add_custom_reviewable_filter(
+    [
+      :ai_triage_automation_id,
+      Proc.new do |results, value|
+        context = "#{DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}%"
+        if value != :all
+          automation_id = value.is_a?(Integer) ? value : value.to_s[/\A\d+\z/]&.to_i
+          next results if !automation_id || automation_id <= 0
+
+          context = DiscourseAi::Automation.triage_automation_score_context(automation_id)
+        end
+
+        results.where(<<~SQL, context:)
+            EXISTS (
+              SELECT 1
+              FROM reviewable_scores
+              WHERE reviewable_scores.reviewable_id = reviewables.id
+              AND reviewable_scores.context LIKE :context
+            )
+          SQL
+      end,
+    ],
+    type_filter: {
+      id: "discourse_ai:triage",
+      value: :all,
+    },
+    reason_filters: -> do
+      DiscourseAutomation::Automation
+        .where(script: %w[llm_triage llm_agent_triage])
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id: "ai_triage_automation:#{id}", name:, value: id } }
+    end,
+  )
 end

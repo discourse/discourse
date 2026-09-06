@@ -17,6 +17,8 @@ et:
       cast-votes:
         title: "Anna oma hääl"
         label: "Hääleta nüüd!"
+      keep-vote:
+        label: "Tagasi"
       show-results:
         title: "Kuva hääletuse tulemused"
       hide-results:

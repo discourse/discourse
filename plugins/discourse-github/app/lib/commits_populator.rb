@@ -10,8 +10,8 @@ module DiscourseGithubPlugin
     ROLES = { committer: 0, contributor: 1 }
 
     class PaginatedCommits
-      def initialize(octokit, repo, cursor: nil, page_size: 100)
-        @client = octokit
+      def initialize(client, repo, cursor: nil, page_size: 100)
+        @client = client
         @repo = repo
         @cursor = cursor
         @page_size = page_size
@@ -30,16 +30,20 @@ module DiscourseGithubPlugin
       end
 
       def commits
-        @data.repository.defaultBranchRef.target.history.nodes
+        history["nodes"]
       end
 
       def next_cursor
-        info = @data.repository.defaultBranchRef.target.history.pageInfo
-        return unless info.hasNextPage
-        info.endCursor
+        info = history["pageInfo"]
+        return unless info["hasNextPage"]
+        info["endCursor"]
       end
 
       private
+
+      def history
+        @data.dig("repository", "defaultBranchRef", "target", "history")
+      end
 
       def fetch_commits
         owner, name = @repo.name.split("/", 2)
@@ -82,22 +86,23 @@ module DiscourseGithubPlugin
             }
           }
         QUERY
-        response = @client.post("/graphql", { query: query }.to_json)
-        raise GraphQLError, response.errors.inspect if response.errors
-        raise GraphQLError, response.message if !response.data
-        @data = response.data
+        response = @client.post("/graphql", { query: query })
+        raise GraphQLError, "Empty GraphQL response" if response.nil?
+        raise GraphQLError, response["errors"].inspect if response["errors"]
+        raise GraphQLError, response.inspect if !response["data"]
+        @data = response["data"]
       end
     end
 
     def initialize(repo)
       @repo = repo
-      @client =
-        Octokit::Client.new(access_token: SiteSetting.github_linkback_access_token, per_page: 100)
+      @client = Discourse::GithubApi.for(token: SiteSetting.github_linkback_access_token)
     end
 
     def populate!
       return unless SiteSetting.github_badges_enabled?
-      return if @client.branches(@repo.name).empty?
+      return if @client.backing_off?
+      return if @client.get("/repos/#{@repo.name}/branches").blank?
 
       if @repo.commits.size == 0
         build_history!
@@ -130,56 +135,41 @@ module DiscourseGithubPlugin
           Discourse.redis.del(front_commit_redis_key)
         end
       end
-    rescue Octokit::Error => err
-      case err
-      when Octokit::NotFound
-        disable_github_badges_and_inform_admin(
-          title: I18n.t("github_commits_populator.errors.repository_not_found_pm_title"),
-          raw:
-            I18n.t(
-              "github_commits_populator.errors.repository_not_found_pm",
-              repo_name: @repo.name,
-              base_path: Discourse.base_path,
-            ),
-        )
-        Rails.logger.warn(
-          "Disabled github_badges_enabled site setting due to repository Not Found error ",
-        )
-      when Octokit::Unauthorized
-        disable_github_badges_and_inform_admin(
-          title: I18n.t("github_commits_populator.errors.invalid_octokit_credentials_pm_title"),
-          raw:
-            I18n.t(
-              "github_commits_populator.errors.invalid_octokit_credentials_pm",
-              base_path: Discourse.base_path,
-            ),
-        )
-        Rails.logger.warn(
-          "Disabled github_badges_enabled site setting due to invalid GitHub authentication credentials via github_linkback_access_token.",
-        )
-      else
-        Rails.logger.warn("#{err.class}: #{err.message}")
-      end
-    rescue Octokit::InvalidRepository => err
+    rescue Discourse::GithubApi::NotFound
       disable_github_badges_and_inform_admin(
-        title: I18n.t("github_commits_populator.errors.repository_identifier_invalid_pm_title"),
+        title: I18n.t("github_commits_populator.errors.repository_not_found_pm_title"),
         raw:
           I18n.t(
-            "github_commits_populator.errors.repository_identifier_invalid_pm",
+            "github_commits_populator.errors.repository_not_found_pm",
             repo_name: @repo.name,
             base_path: Discourse.base_path,
           ),
       )
       Rails.logger.warn(
-        "Disabled github_badges_enabled site setting due to invalid repository identifier",
+        "Disabled github_badges_enabled site setting due to repository Not Found error ",
       )
+    rescue Discourse::GithubApi::Unauthorized
+      disable_github_badges_and_inform_admin(
+        title: I18n.t("github_commits_populator.errors.invalid_octokit_credentials_pm_title"),
+        raw:
+          I18n.t(
+            "github_commits_populator.errors.invalid_octokit_credentials_pm",
+            base_path: Discourse.base_path,
+          ),
+      )
+      Rails.logger.warn(
+        "Disabled github_badges_enabled site setting due to invalid GitHub authentication credentials via github_linkback_access_token.",
+      )
+    rescue Discourse::GithubApi::Error => err
+      Rails.logger.warn("#{err.class}: #{err.message}")
     end
 
     private
 
     def is_contribution?(commit)
-      pr = commit.associatedPullRequests.nodes.first
-      pr && pr.author && pr.mergedBy && pr.author.login != pr.mergedBy.login
+      pr = commit.dig("associatedPullRequests", "nodes")&.first
+      pr && pr["author"] && pr["mergedBy"] &&
+        pr.dig("author", "login") != pr.dig("mergedBy", "login")
     end
 
     def fetch_new_commits!(stop_at)
@@ -191,7 +181,7 @@ module DiscourseGithubPlugin
         stop_at.present? ? [] : @repo.commits.order("committed_at DESC").first(100).pluck(:sha)
       while !done
         batch.each do |c|
-          if c.oid == stop_at || recent_commits.include?(c.oid)
+          if c["oid"] == stop_at || recent_commits.include?(c["oid"])
             done = true
             break
           end
@@ -204,25 +194,32 @@ module DiscourseGithubPlugin
       end
       return if commits.size == 0
       existing_shas = @repo.commits.pluck(:sha)
-      commits.reject! { |c| existing_shas.include?(c.oid) }
+      commits.reject! { |c| existing_shas.include?(c["oid"]) }
       batch_to_db(commits)
-      set_front_commit(commits.first.oid)
+      set_front_commit(commits.first["oid"])
     end
 
     # detect if a force push happened and commit is lost
     def removed?(sha)
-      commit = @client.commit(@repo.name, sha)
-      return true if commit.commit.nil?
+      commit = @client.get("/repos/#{@repo.name}/commits/#{sha}")
+      return false if commit.nil?
+      return true if commit["commit"].nil?
       found =
-        @client.commits(@repo.name, until: commit.commit.committer.date, page: 1, per_page: 1).first
-      commit.sha != found.sha
+        @client.get(
+          "/repos/#{@repo.name}/commits",
+          until: commit.dig("commit", "committer", "date"),
+          page: 1,
+          per_page: 1,
+        ).first
+      return false if found.nil?
+      commit["sha"] != found["sha"]
     end
 
     def build_history!(cursor: nil)
       paginator = PaginatedCommits.new(@client, @repo, cursor: cursor, page_size: 100)
       batch = paginator.commits
       return if batch.empty?
-      set_front_commit(batch.first.oid) if cursor.blank?
+      set_front_commit(batch.first["oid"]) if cursor.blank?
 
       while batch.size > 0
         batch_to_db(batch)
@@ -251,11 +248,11 @@ module DiscourseGithubPlugin
 
     def commit_to_hash(commit)
       {
-        sha: commit.oid,
-        email: commit.author.email,
+        sha: commit["oid"],
+        email: commit.dig("author", "email"),
         repo_id: @repo.id,
-        committed_at: commit.committedDate,
-        merge_commit: commit.message.match?(MERGE_COMMIT_REGEX),
+        committed_at: commit["committedDate"],
+        merge_commit: commit["message"].match?(MERGE_COMMIT_REGEX),
         role_id: is_contribution?(commit) ? ROLES[:contributor] : ROLES[:committer],
       }
     end
