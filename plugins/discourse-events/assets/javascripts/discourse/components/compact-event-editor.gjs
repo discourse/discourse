@@ -474,6 +474,18 @@ export default class CompactEventEditor extends Component {
   }
 
   @action
+  focusEndDateInput(event) {
+    if (!this.endsAt && this.startsAt) {
+      const oldConfig = this.#configSnapshot();
+      this.endsAt = this.startsAt.clone().add(1, "day");
+      this.#reconcileReminders(oldConfig, this.#configSnapshot());
+      this.#emitChange();
+    }
+
+    this.focusDateInput(event);
+  }
+
+  @action
   handleTextInputFocus(event) {
     if (this.capabilities.isIOS) {
       setTimeout(() => {
@@ -781,10 +793,11 @@ export default class CompactEventEditor extends Component {
             <div class="composer-event__date-wrapper">
               <input
                 class="composer-event__date-input"
+                min={{this.formattedStartDate}}
                 type="date"
                 value={{this.formattedEndDate}}
                 {{on "change" this.onEndDateChange}}
-                {{on "focus" this.focusDateInput}}
+                {{on "focus" this.focusEndDateInput}}
               />
               <span
                 class={{dConcatClass
