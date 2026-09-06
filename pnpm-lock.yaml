@@ -202,8 +202,8 @@ importers:
   frontend/discourse:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
         specifier: ^3.1.0
         version: 3.1.0
@@ -1019,8 +1019,8 @@ packages:
   '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.1.0':
     resolution: {integrity: sha512-YfxLci5SA2MwdJKIVpnEZfbiOGWQIQnD1NvUgqFq96v33PGVWQy13k07KxeSkR/M8E6VBiYRoglelyCdRmyyBQ==}
 
-  '@atlaskit/pragmatic-drag-and-drop@3.0.0':
-    resolution: {integrity: sha512-EEKBELv757wrvhMHBAoFcXjfzGZ4Y2FJ2xnSsWovsOKywkN1Q4IWRH52hQpPmJnATLcmO9viVhoXWSXFBLKSLQ==}
+  '@atlaskit/pragmatic-drag-and-drop@3.1.0':
+    resolution: {integrity: sha512-VU+2Oh6OgvC6D1xiX3lfm1gZJsaSPD+ZKjAHodOQ9IO6RfOvAyReLlK5ut9gIUpPmbD8d09wlCs7y4A6/I8c5Q==}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -8501,10 +8501,10 @@ snapshots:
 
   '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.1.0':
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop': 3.0.0
+      '@atlaskit/pragmatic-drag-and-drop': 3.1.0
       '@babel/runtime': 7.29.7
 
-  '@atlaskit/pragmatic-drag-and-drop@3.0.0':
+  '@atlaskit/pragmatic-drag-and-drop@3.1.0':
     dependencies:
       '@babel/runtime': 7.29.7
       bind-event-listener: 3.0.0
