@@ -789,7 +789,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
-    yard (0.9.44)
+    yard (0.9.45)
     zeitwerk (2.8.3)
     zendesk_api (3.1.2)
       base64
@@ -1329,7 +1329,7 @@ CHECKSUMS
   wisper (2.0.1) sha256=ce17bc5c3a166f241a2e6613848b025c8146fce2defba505920c1d1f3f88fae6
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yaml-lint (0.1.2) sha256=e3960b171766ae187338a169815e99fe10fcb0d9c22b1c539e8d57e114324c8a
-  yard (0.9.44) sha256=eb087e9b631ccd887b049f303d489963945452d5e2a7eb49a5a74a7cf6887f28
+  yard (0.9.45) sha256=52e211493f7cb8a3ebf7e104a25a1e73937a3103092545d34cb88fafebb3dc51
   zeitwerk (2.8.3) sha256=2c85125a8467ce069e20123d1e709a08955c9d29c118c25b46b7b7fafdbb92e5
   zendesk_api (3.1.2) sha256=3f726c133af8ed3518a9e7cfa9015a368617bd210754ed9173d984f12ddcec15
 
