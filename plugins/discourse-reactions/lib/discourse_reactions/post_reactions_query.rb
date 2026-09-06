@@ -46,8 +46,13 @@ module DiscourseReactions
           SQL
         elsif main_reaction_filter?
           DB.query(<<~SQL, **bindings)
-            #{plain_likes_select_sql}
-            ORDER BY post_actions.created_at ASC
+            SELECT * FROM (
+              #{reactions_select_sql}
+              AND dr.reaction_value = :main_reaction
+              UNION ALL
+              #{plain_likes_select_sql}
+            ) combined
+            ORDER BY created_at ASC
             LIMIT :limit OFFSET :offset
           SQL
         else
@@ -76,7 +81,15 @@ module DiscourseReactions
             user_column: "discourse_reactions_reaction_users.user_id",
           ).count
         elsif main_reaction_filter?
-          plain_likes_scope.count
+          filter_ignored_users(
+            ReactionUser.joins(:reaction).where(
+              post_id: post.id,
+              discourse_reactions_reactions: {
+                reaction_value: main_reaction,
+              },
+            ),
+            user_column: "discourse_reactions_reaction_users.user_id",
+          ).count + plain_likes_scope.count
         else
           filter_ignored_users(
             ReactionUser.where(post_id: post.id),
