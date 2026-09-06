@@ -15,7 +15,46 @@ import {
 } from "discourse/data/warp-rest-model";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import Badge from "discourse/models/badge";
+
+// The inlined `topic` attribute is plain sideloaded JSON (see UserBadgeSchema),
+// so it lacks the two computed getters the unmigrated Topic record used to
+// provide and templates read (e.g. `badges/show`). Re-add them, mirroring the
+// Topic model. Copies are memoized against the raw object so repeated reads —
+// and user badges sharing a sideloaded topic — see the same reference.
+const decoratedTopics = new WeakMap();
+
+function withTopicComputedGetters(raw) {
+  const existing = decoratedTopics.get(raw);
+  if (existing) {
+    return existing;
+  }
+
+  const topic = {
+    ...raw,
+    get url() {
+      let slug = this.slug || "";
+      if (slug.trim().length === 0) {
+        slug = "topic";
+      }
+      return `${getURL("/t/")}${slug}/${this.id}`;
+    },
+    get fancyTitle() {
+      const siteSettings = getOwnerWithFallback().lookup(
+        "service:site-settings"
+      );
+      return fancyTitle(
+        this.fancy_title,
+        siteSettings?.support_mixed_text_direction
+      );
+    },
+  };
+  decoratedTopics.set(raw, topic);
+  return topic;
+}
 
 export default class UserBadge extends RestCompatModel {
   static type = "user-badge";
@@ -52,6 +91,21 @@ export default class UserBadge extends RestCompatModel {
       this.#badge = resource ? new Badge(resource) : undefined;
     }
     return this.#badge;
+  }
+
+  #topic;
+  #topicResource;
+
+  get topic() {
+    const raw = this.__resource?.topic;
+    if (!raw) {
+      return raw;
+    }
+    if (raw !== this.#topicResource) {
+      this.#topicResource = raw;
+      this.#topic = withTopicComputedGetters(raw);
+    }
+    return this.#topic;
   }
 
   // Getter: null → undefined (test contract).
