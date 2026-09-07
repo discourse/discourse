@@ -1,6 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import badgesFixtures from "discourse/tests/fixtures/badges-fixture";
 import userBadgesFixtures from "discourse/tests/fixtures/user-badges";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -104,5 +105,52 @@ acceptance("Badges - favorites", function (needs) {
         "the count stays reactive across consecutive toggles"
       );
     assert.dom(secondButton).isEnabled("the favorite slot is available again");
+  });
+});
+
+acceptance("Badges - granting post link", function (needs) {
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    server.get("/user_badges.json", () => {
+      const payload = cloneJSON(badgesFixtures["/user_badges.json"]);
+      payload.topics = [
+        {
+          id: 280,
+          title: "A granting topic",
+          fancy_title: "A granting topic",
+          slug: "a-granting-topic",
+          posts_count: 3,
+        },
+      ];
+      payload.user_badges = [
+        {
+          ...payload.user_badges[0],
+          post_number: 2,
+          topic_id: 280,
+        },
+        // Granted on a post whose topic the viewer can't see, so the sideload
+        // omits it — `topic` is absent even though the link's gate passes.
+        {
+          ...payload.user_badges[1],
+          post_number: 5,
+          topic_id: 999,
+        },
+      ];
+      return helper.response(payload);
+    });
+  });
+
+  test("links to the post that granted the badge", async function (assert) {
+    await visit("/badges/9/autobiographer");
+
+    assert
+      .dom(".badges-granted a.post-link")
+      .hasAttribute(
+        "href",
+        "/t/a-granting-topic/280/2",
+        "links to the granting post"
+      )
+      .hasText("A granting topic", "shows the topic title");
   });
 });

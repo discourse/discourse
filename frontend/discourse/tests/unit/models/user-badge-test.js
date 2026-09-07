@@ -42,6 +42,31 @@ module("Unit | Model | user-badge", function (hooks) {
     );
   });
 
+  test("wraps sideloaded topic and user in their model classes", function (assert) {
+    const payload = cloneJSON(badgeFixtures["/user_badges"]);
+    payload.user_badge.user_id = 13470;
+    payload.user_badge.topic_id = 280;
+    payload.topics = [
+      { id: 280, title: "A granting topic", slug: "a-granting-topic" },
+    ];
+
+    const userBadge = UserBadge.createFromJson(payload);
+
+    assert.strictEqual(
+      userBadge.topic.url,
+      "/t/a-granting-topic/280",
+      "topic exposes `Topic` getters"
+    );
+    assert.strictEqual(
+      userBadge.user.path,
+      "/u/anne3",
+      "user exposes `User` getters"
+    );
+
+    const topic = userBadge.topic;
+    assert.strictEqual(userBadge.topic, topic, "reuses the same wrapper");
+  });
+
   test("findByUsername", async function (assert) {
     const badges = await UserBadge.findByUsername("anne3");
     assert.true(Array.isArray(badges), "returns an array");
