@@ -691,6 +691,8 @@ class UsersController < ApplicationController
   end
 
   def create
+    raise Discourse::InvalidAccess if current_user && !is_api?
+
     params.require(:email)
     params.require(:username)
     params.require(:invite_code) if SiteSetting.require_invite_code
