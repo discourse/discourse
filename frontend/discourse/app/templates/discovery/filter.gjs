@@ -7,6 +7,7 @@ export default <template>
     <:navigation>
       <FilterNavigation
         @queryString={{@controller.q}}
+        @subset={{@controller.subset}}
         @updateTopicsListQueryParams={{@controller.updateTopicsListQueryParams}}
         @canBulkSelect={{@controller.canBulkSelect}}
         @bulkSelectHelper={{@controller.bulkSelectHelper}}

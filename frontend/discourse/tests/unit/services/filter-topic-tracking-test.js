@@ -24,11 +24,11 @@ module("Unit | Service | filter-topic-tracking", function (hooks) {
   });
 
   test("counts response membership and reacts to reading", function (assert) {
-    this.counts.update("status:open in:new-topics", [1, 2]);
+    this.counts.update("status:open", [1, 2]);
     assert.strictEqual(
       this.counts.query,
       "status:open",
-      "stores the base query"
+      "stores the submitted query"
     );
     assert.strictEqual(
       this.counts.newTopicsCount,

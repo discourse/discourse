@@ -14,9 +14,7 @@ export default class NewListHeaderControls extends Component {
   }
 
   get allActive() {
-    return (
-      !this.topicsActive && !this.repliesActive && this.args.current !== "mixed"
-    );
+    return !this.topicsActive && !this.repliesActive;
   }
 
   get repliesButtonLabel() {

@@ -10,12 +10,13 @@ export default class DiscoveryFilterRoute extends DiscourseRoute {
 
   queryParams = {
     q: { refreshModel: true },
+    subset: { refreshModel: true },
   };
 
   async model(data) {
     const list = await this.store.findFiltered("topicList", {
       filter: "filter",
-      params: { q: data.q },
+      params: { q: data.q, subset: data.subset },
     });
 
     this.topicTrackingState.sync(list, "filter", { q: data.q });

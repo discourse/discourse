@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import { parseFilterNewQuery } from "discourse/lib/filter-new-query";
 
 export default class FilterTopicTracking extends Service {
   @service topicTrackingState;
@@ -27,7 +26,7 @@ export default class FilterTopicTracking extends Service {
   }
 
   update(query, topicIds) {
-    this.query = parseFilterNewQuery(query).baseQuery;
+    this.query = query;
     this.matches = topicIds ? new Set(topicIds) : undefined;
   }
 

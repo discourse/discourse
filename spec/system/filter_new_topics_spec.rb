@@ -49,24 +49,24 @@ RSpec.describe "Filter new topics" do
     screenshot_marker(label: "filter-unified-new-after")
 
     navigation.select_subset("topics")
-    expect(query_filter).to have_input_text("#{query} in:new-topics")
+    expect(query_filter).to have_input_text(query)
     expect(topic_list).to have_topic(new_topic)
     expect(topic_list).to have_no_topic(unread_topic)
 
     navigation.select_subset("replies")
-    expect(query_filter).to have_input_text("#{query} in:new-replies")
+    expect(query_filter).to have_input_text(query)
     expect(topic_list).to have_topic(unread_topic)
     expect(topic_list).to have_no_topic(new_topic)
 
     page.go_back
-    expect(query_filter).to have_input_text("#{query} in:new-topics")
+    expect(query_filter).to have_input_text(query)
     expect(topic_list).to have_topic(new_topic)
     expect(topic_list).to have_no_topic(unread_topic)
 
     page.go_forward
-    expect(query_filter).to have_input_text("#{query} in:new-replies")
+    expect(query_filter).to have_input_text(query)
     page.refresh
-    expect(query_filter).to have_input_text("#{query} in:new-replies")
+    expect(query_filter).to have_input_text(query)
     expect(topic_list).to have_topic(unread_topic)
     expect(topic_list).to have_no_topic(new_topic)
 

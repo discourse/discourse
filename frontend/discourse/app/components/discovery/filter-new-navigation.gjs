@@ -4,25 +4,15 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
-import {
-  filterNewQuery,
-  parseFilterNewQuery,
-} from "discourse/lib/filter-new-query";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import { i18n } from "discourse-i18n";
 
 export default class FilterNewNavigation extends Component {
   @service filterTopicTracking;
-
-  get allQuery() {
-    return filterNewQuery(this.args.query);
-  }
+  @service router;
 
   get counts() {
-    if (
-      parseFilterNewQuery(this.args.query).baseQuery ===
-      this.filterTopicTracking.query
-    ) {
+    if (this.args.query === this.filterTopicTracking.query) {
       return this.filterTopicTracking;
     }
   }
@@ -34,17 +24,17 @@ export default class FilterNewNavigation extends Component {
       : i18n("filters.new.title");
   }
 
-  get newQuery() {
-    return filterNewQuery(this.args.query, "all");
-  }
-
   get selection() {
-    return parseFilterNewQuery(this.args.query).selection;
+    return { new: "all", "new-topics": "topics", "new-replies": "replies" }[
+      this.args.subset
+    ];
   }
 
   @action
   changeSubset(subset) {
-    this.args.updateQuery(filterNewQuery(this.args.query, subset || "all"));
+    this.router.transitionTo("discovery.filter", {
+      queryParams: { subset: subset ? `new-${subset}` : "new" },
+    });
   }
 
   <template>
@@ -54,7 +44,7 @@ export default class FilterNewNavigation extends Component {
           <LinkTo
             data-filter-view="all"
             @current-when={{if this.selection false true}}
-            @query={{hash q=this.allQuery}}
+            @query={{hash subset=null}}
             @route="discovery.filter"
           >{{i18n "filters.new.all"}}</LinkTo>
         </li>
@@ -62,7 +52,7 @@ export default class FilterNewNavigation extends Component {
           <LinkTo
             data-filter-view="new"
             @current-when={{if this.selection true false}}
-            @query={{hash q=this.newQuery}}
+            @query={{hash subset="new"}}
             @route="discovery.filter"
           >{{this.newLabel}}</LinkTo>
         </li>

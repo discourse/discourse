@@ -60,8 +60,13 @@ acceptance("Filter unified New", function (needs) {
 
     await click('[data-filter-view="new"]');
     assert.strictEqual(
+      new URL(currentURL(), "https://example.com").searchParams.get("subset"),
+      "new",
+      "New uses its own parameter"
+    );
+    assert.strictEqual(
       new URL(currentURL(), "https://example.com").searchParams.get("q"),
-      "category:bug status:open in:new",
+      "category:bug status:open",
       "New preserves the base query"
     );
     assert
@@ -76,23 +81,45 @@ acceptance("Filter unified New", function (needs) {
 
     await click(".topics-replies-toggle.--replies");
     assert.strictEqual(
+      new URL(currentURL(), "https://example.com").searchParams.get("subset"),
+      "new-replies",
+      "Replies updates the subset"
+    );
+    assert.strictEqual(
       new URL(currentURL(), "https://example.com").searchParams.get("q"),
-      "category:bug status:open in:new-replies",
-      "Replies replaces the selector"
+      "category:bug status:open",
+      "Replies preserves the query"
     );
     assert
       .dom(".topics-replies-toggle.--replies")
       .hasClass("active", "Replies is selected even for an empty list");
     await click('[data-filter-view="all"]');
+    assert.false(
+      new URL(currentURL(), "https://example.com").searchParams.has("subset"),
+      "All removes the subset"
+    );
     assert.strictEqual(
       new URL(currentURL(), "https://example.com").searchParams.get("q"),
       "category:bug status:open",
-      "All removes only the selector"
+      "All preserves the query"
+    );
+  });
+
+  test("treats manually entered New conditions as query text", async function (assert) {
+    await visit("/filter?q=in%3Anew-replies");
+    assert
+      .dom('[data-filter-view="all"]')
+      .hasClass("active", "query text does not select a tab");
+    await click('[data-filter-view="new"]');
+    assert.strictEqual(
+      new URL(currentURL(), "https://example.com").searchParams.get("q"),
+      "in:new-replies",
+      "tabs preserve manually entered conditions"
     );
   });
 
   test("recognizes a direct subset URL", async function (assert) {
-    await visit("/filter?q=status%3Aopen%20in%3Anew-topics");
+    await visit("/filter?q=status%3Aopen&subset=new-topics");
     assert.dom('[data-filter-view="new"]').hasClass("active", "New is active");
     assert
       .dom(".topics-replies-toggle.--topics")

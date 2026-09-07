@@ -305,7 +305,11 @@ class TopicQuery
   end
 
   def list_filter
-    results, topics_filter = filter_results
+    query = @options[:q]
+    if @user&.unified_new_enabled? && %w[new new-topics new-replies].include?(@options[:subset])
+      query = "#{query} in:#{@options[:subset]}"
+    end
+    results, topics_filter = filter_results(query)
     results = apply_ordering(results) if results.order_values.empty?
 
     list =
@@ -324,7 +328,7 @@ class TopicQuery
         if candidate_ids.empty?
           []
         else
-          matches, = filter_results(ignore_new: true)
+          matches, = filter_results
           matches.where(id: candidate_ids).except(:limit, :offset, :order).distinct.pluck(:id)
         end
     end
@@ -1331,16 +1335,15 @@ class TopicQuery
 
   private
 
-  def filter_results(ignore_new: false)
+  def filter_results(query = @options[:q])
     topics_filter =
       TopicsFilter.new(
         guardian: @guardian,
         scope: latest_results(include_muted: false, skip_ordering: true),
         loaded_topic_users_reference: @guardian.authenticated?,
-        ignore_new: ignore_new,
       )
 
-    results = topics_filter.filter_from_query_string(@options[:q])
+    results = topics_filter.filter_from_query_string(query)
 
     if !topics_filter.topic_notification_levels.include?(NotificationLevels.all[:muted])
       results = remove_muted_topics(results, @user)

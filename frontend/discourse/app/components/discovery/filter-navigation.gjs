@@ -54,10 +54,7 @@ export default class DiscoveryFilterNavigation extends Component {
         <PluginOutlet @name="after-filter-navigation-menu" />
       </div>
       {{#if this.currentUser.unified_new_enabled}}
-        <FilterNewNavigation
-          @query={{@queryString}}
-          @updateQuery={{@updateTopicsListQueryParams}}
-        />
+        <FilterNewNavigation @query={{@queryString}} @subset={{@subset}} />
       {{/if}}
     </section>
   </template>

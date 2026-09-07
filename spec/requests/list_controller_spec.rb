@@ -41,7 +41,7 @@ RSpec.describe ListController do
       Fabricate(:topic)
 
       %w[new new-topics new-replies].each do |subset|
-        get "/filter.json", params: { q: "category:#{category.slug} status:open in:#{subset}" }
+        get "/filter.json", params: { q: "category:#{category.slug} status:open", subset: subset }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["topic_list"]["filter_new_topic_ids"]).to contain_exactly(
@@ -52,6 +52,50 @@ RSpec.describe ListController do
       expect(response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] }).to eq(
         [unread.id],
       )
+    end
+
+    it "preserves the original query and subset in pagination links" do
+      sign_in(user)
+      category = Fabricate(:category)
+      Fabricate.times(31, :topic, category: category)
+      query = "category:#{category.slug}"
+
+      get "/filter.json", params: { q: query, subset: "new-topics" }
+
+      params =
+        Rack::Utils.parse_query(
+          URI.parse(response.parsed_body["topic_list"]["more_topics_url"]).query,
+        )
+      expect(params).to include("q" => query, "subset" => "new-topics", "page" => "1")
+    end
+
+    it "keeps manually entered New conditions in the membership query" do
+      sign_in(user)
+      unread = Fabricate(:topic, highest_post_number: 2)
+      Fabricate(
+        :topic_user,
+        user: user,
+        topic: unread,
+        last_read_post_number: 1,
+        notification_level: 2,
+      )
+      Fabricate(:topic)
+
+      get "/filter.json", params: { q: "in:new-replies", subset: "new-topics" }
+
+      expect(response.parsed_body["topic_list"]["topics"]).to be_empty
+      expect(response.parsed_body["topic_list"]["filter_new_topic_ids"]).to eq([unread.id])
+    end
+
+    it "ignores unknown subsets and disables subset filtering with unified New" do
+      sign_in(user)
+      %w[unsupported new-replies].each do |subset|
+        SiteSetting.enable_unified_new = subset == "unsupported"
+        get "/filter.json", params: { q: "topic:#{topic.id}", subset: subset }
+        expect(response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] }).to eq(
+          [topic.id],
+        )
+      end
     end
 
     it "applies permissions, muting and custom plugin filters" do
