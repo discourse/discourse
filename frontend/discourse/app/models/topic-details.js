@@ -95,14 +95,12 @@ export default class TopicDetails extends RestCompatModel {
       return;
     }
     const wrapped = { ...details };
-    // Invitations append recipients in place.
+    // Inviting a user appends here in place; inviting a group reloads the
+    // topic instead, so `allowed_groups` needs no equivalent.
     if (details.allowed_users) {
       wrapped.allowed_users = trackedArray(
         details.allowed_users.map((u) => User.create(u))
       );
-    }
-    if (details.allowed_groups) {
-      wrapped.allowed_groups = trackedArray(details.allowed_groups);
     }
     if (details.participants) {
       const topic = this.topic;
@@ -130,8 +128,8 @@ export default class TopicDetails extends RestCompatModel {
     await store.request(
       removeAllowedTopicGroup(this.#effectiveTopicId(), group.name)
     );
-    this.allowed_groups = trackedArray(
-      this.allowed_groups.filter((g) => g.name !== group.name)
+    this.allowed_groups = this.allowed_groups.filter(
+      (g) => g.name !== group.name
     );
   }
 

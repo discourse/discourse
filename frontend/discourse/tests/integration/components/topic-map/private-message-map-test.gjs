@@ -1,4 +1,4 @@
-import { click, render, settled } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PrivateMessageMap from "discourse/components/topic-map/private-message-map";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -9,13 +9,16 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("group recipients remain reactive after hydration and removal", async function (assert) {
+    test("removing a group recipient updates the map without reloading", async function (assert) {
       const topic = this.owner
         .lookup("service:store")
         .createRecord("topic", { id: 123 });
       const details = topic.details;
       details.updateFromJson({
-        allowed_groups: [{ id: 41, name: "first-group" }],
+        allowed_groups: [
+          { id: 41, name: "first-group" },
+          { id: 42, name: "second-group" },
+        ],
         allowed_users: [],
         can_remove_allowed_users: true,
       });
@@ -33,16 +36,7 @@ module(
         </template>
       );
 
-      assert
-        .dom('.group[data-id="41"]')
-        .exists("the initial group is rendered");
-
-      details.allowed_groups.push({ id: 42, name: "second-group" });
-      await settled();
-
-      assert
-        .dom('.group[data-id="42"]')
-        .exists("mutating the hydrated group list updates the map");
+      assert.dom(".group").exists({ count: 2 }, "both groups are rendered");
 
       await click('.group[data-id="41"] .remove-invited');
 
@@ -50,13 +44,6 @@ module(
         .dom('.group[data-id="41"]')
         .doesNotExist("the removed group disappears immediately");
       assert.dom('.group[data-id="42"]').exists("other groups are retained");
-
-      details.allowed_groups.push({ id: 43, name: "third-group" });
-      await settled();
-
-      assert
-        .dom('.group[data-id="43"]')
-        .exists("the group list still tracks mutations after removal");
     });
   }
 );
