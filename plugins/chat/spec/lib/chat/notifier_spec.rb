@@ -454,8 +454,8 @@ describe Chat::Notifier do
 
         unreachable_msg = messages.first
 
-        expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-        expect(unreachable_msg[:data][:text_content]).to eq(
+        expect(unreachable_msg.data[:type].to_sym).to eq(:notice)
+        expect(unreachable_msg.data[:text_content]).to eq(
           I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
         )
       end
@@ -474,8 +474,8 @@ describe Chat::Notifier do
 
         unreachable_msg = messages.first
 
-        expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-        expect(unreachable_msg[:data][:text_content]).to eq(
+        expect(unreachable_msg.data[:type].to_sym).to eq(:notice)
+        expect(unreachable_msg.data[:text_content]).to eq(
           I18n.t(
             "chat.mention_warning.cannot_see",
             first_identifier: user_3.username,
@@ -516,8 +516,8 @@ describe Chat::Notifier do
 
           unreachable_msg = messages.first
 
-          expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-          expect(unreachable_msg[:data][:text_content]).to eq(
+          expect(unreachable_msg.data[:type].to_sym).to eq(:notice)
+          expect(unreachable_msg.data[:text_content]).to eq(
             I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
           )
         end
@@ -541,8 +541,8 @@ describe Chat::Notifier do
 
           unreachable_msg = messages.first
 
-          expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-          expect(unreachable_msg[:data][:text_content]).to eq(
+          expect(unreachable_msg.data[:type].to_sym).to eq(:notice)
+          expect(unreachable_msg.data[:text_content]).to eq(
             I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
           )
         end
@@ -566,10 +566,10 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
-        expect(not_participating_msg[:data][:text_content]).to be_nil
-        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
-        expect(not_participating_msg[:data][:data]).to eq(
+        expect(not_participating_msg.data[:type].to_sym).to eq(:notice)
+        expect(not_participating_msg.data[:text_content]).to be_nil
+        expect(not_participating_msg.data[:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg.data[:data]).to eq(
           user_ids: [user_3.id],
           text:
             I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
@@ -623,10 +623,10 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
-        expect(not_participating_msg[:data][:text_content]).to be_nil
-        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
-        expect(not_participating_msg[:data][:data]).to eq(
+        expect(not_participating_msg.data[:type].to_sym).to eq(:notice)
+        expect(not_participating_msg.data[:text_content]).to be_nil
+        expect(not_participating_msg.data[:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg.data[:data]).to eq(
           user_ids: [user_3.id],
           text:
             I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
@@ -652,10 +652,10 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
-        expect(not_participating_msg[:data][:text_content]).to be_nil
-        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
-        expect(not_participating_msg[:data][:data]).to eq(
+        expect(not_participating_msg.data[:type].to_sym).to eq(:notice)
+        expect(not_participating_msg.data[:text_content]).to be_nil
+        expect(not_participating_msg.data[:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg.data[:data]).to eq(
           user_ids: [user_3.id],
           text:
             I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
@@ -727,8 +727,8 @@ describe Chat::Notifier do
 
         too_many_members_msg = messages.first
 
-        expect(too_many_members_msg[:data][:type].to_sym).to eq(:notice)
-        expect(too_many_members_msg[:data][:text_content]).to eq(
+        expect(too_many_members_msg.data[:type].to_sym).to eq(:notice)
+        expect(too_many_members_msg.data[:text_content]).to eq(
           I18n.t("chat.mention_warning.too_many_members", first_identifier: group.name),
         )
       end
@@ -746,8 +746,8 @@ describe Chat::Notifier do
 
         mentions_disabled_msg = messages.first
 
-        expect(mentions_disabled_msg[:data][:type].to_sym).to eq(:notice)
-        expect(mentions_disabled_msg[:data][:text_content]).to eq(
+        expect(mentions_disabled_msg.data[:type].to_sym).to eq(:notice)
+        expect(mentions_disabled_msg.data[:text_content]).to eq(
           I18n.t("chat.mention_warning.group_mentions_disabled", first_identifier: group.name),
         )
       end
@@ -767,8 +767,8 @@ describe Chat::Notifier do
 
         mentions_disabled_msg = messages.first
 
-        expect(mentions_disabled_msg[:data][:type].to_sym).to eq(:notice)
-        expect(mentions_disabled_msg[:data][:text_content]).to eq(
+        expect(mentions_disabled_msg.data[:type].to_sym).to eq(:notice)
+        expect(mentions_disabled_msg.data[:text_content]).to eq(
           I18n.t(
             "chat.mention_warning.group_mentions_disabled",
             first_identifier: group.name,

@@ -558,8 +558,8 @@ RSpec.describe Admin::SiteSettingsController do
                   }
             end
 
-          expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
-          expect(messages[0][:data][:status]).to eq("enqueued")
+          expect(messages[0].data[:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+          expect(messages[0].data[:status]).to eq("enqueued")
         end
       end
 
@@ -627,8 +627,8 @@ RSpec.describe Admin::SiteSettingsController do
                     update_existing_user: true,
                   }
             end
-          expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
-          expect(messages[0][:data][:status]).to eq("enqueued")
+          expect(messages[0].data[:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+          expect(messages[0].data[:status]).to eq("enqueued")
         end
       end
 
