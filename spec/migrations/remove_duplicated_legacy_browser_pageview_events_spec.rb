@@ -1,27 +1,16 @@
 # frozen_string_literal: true
 
 require Rails.root.join(
-          "db/post_migrate/20260831011842_remove_duplicated_legacy_browser_pageview_events.rb",
+          "db/migrate/20260831011842_remove_duplicated_legacy_browser_pageview_events.rb",
         )
 
 RSpec.describe RemoveDuplicatedLegacyBrowserPageviewEvents do
   before do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
-    ActiveRecord::Base.connection.add_column(
-      :browser_pageview_events,
-      :source,
-      :integer,
-      limit: 2,
-      default: 1,
-      null: false,
-    )
   end
 
-  after do
-    ActiveRecord::Base.connection.remove_column(:browser_pageview_events, :source)
-    ActiveRecord::Migration.verbose = @original_verbose
-  end
+  after { ActiveRecord::Migration.verbose = @original_verbose }
 
   it "removes duplicated legacy events after batches without matches" do
     standalone_legacy = Fabricate(:browser_pageview_event, session_id: "legacy-session")
@@ -34,8 +23,8 @@ RSpec.describe RemoveDuplicatedLegacyBrowserPageviewEvents do
     standalone_legacy_score = BrowserPageviewEventScore.create!(event_id: standalone_legacy.id)
     beacon_score = BrowserPageviewEventScore.create!(event_id: beacon.id)
     DB.exec(
-      "UPDATE browser_pageview_events SET source = 2 WHERE id IN (:ids)",
-      ids: [beacon.id, standalone_beacon.id],
+      "UPDATE browser_pageview_events SET source = 1 WHERE id IN (:ids)",
+      ids: [standalone_legacy.id, another_standalone_legacy.id, duplicated_legacy.id],
     )
 
     stub_const(described_class, "BATCH_SIZE", 2) { described_class.new.up }

@@ -63,7 +63,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
         queued_attributes = []
 
         entries.each do |entry|
-          queued_attributes << attributes_from_payload(deserialize_payload(entry))
+          payload = deserialize_payload(entry)
+          # Old processes can leave piggyback events in Redis during deployment.
+          queued_attributes << (payload[:source] == 1 ? nil : attributes_from_payload(payload))
           processed += 1
         rescue => e
           Rails.logger.error("Discarding queued BrowserPageviewEvent: #{e.message}")
@@ -272,6 +274,7 @@ end
 #
 # Indexes
 #
+#  idx_bpe_beacon_created_at_id                 (created_at,id) WHERE (source = 2)
 #  idx_bpe_browser_backfill                     (created_at,id) WHERE (browser IS NULL)
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_id                        (created_at,id)

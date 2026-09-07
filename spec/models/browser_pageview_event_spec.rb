@@ -82,6 +82,21 @@ RSpec.describe BrowserPageviewEvent do
       expect(described_class.queued_count).to eq(0)
     end
 
+    it "discards queued piggyback events while preserving old and new beacon payloads" do
+      [1, 2].each do |source|
+        Discourse.redis.rpush(
+          described_class::REDIS_QUEUE_KEY,
+          JSON.generate(payload.merge(source: source, url: "/source-#{source}")),
+        )
+      end
+      queue_payload(payload)
+
+      expect(described_class.flush_queued!).to eq(3)
+
+      expect(described_class.pluck(:url)).to contain_exactly("/source-2", payload[:url])
+      expect(described_class.queued_count).to eq(0)
+    end
+
     it "keeps queued payloads while PostgreSQL is readonly" do
       Discourse.stubs(:pg_readonly_mode?).returns(true)
       described_class.enqueue_for_later(payload)
