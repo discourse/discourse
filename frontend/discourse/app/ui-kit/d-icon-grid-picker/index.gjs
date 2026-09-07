@@ -14,7 +14,7 @@ import { i18n } from "discourse-i18n";
 /**
  * @typedef DIconGridPickerSignature
  *
- * @property {HTMLInputElement} Element
+ * @property {HTMLDivElement} Element
  * @property {object} Args
  *
  * @property {string} Args.value - The currently selected icon ID.

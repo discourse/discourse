@@ -24,7 +24,7 @@ interface GroupArgs {
 }
 
 interface ButtonSignature {
-  Element: HTMLButtonElement;
+  Element: HTMLButtonElement | HTMLAnchorElement;
   Args: DButtonSignature["Args"] & GroupArgs;
   Blocks: { default: [] };
 }
