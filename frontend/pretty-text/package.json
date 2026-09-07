@@ -15,7 +15,7 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
-    "ember-source": "~7.0.0"
+    "ember-source": "~7.2.0"
   },
   "engines": {
     "node": ">= 20",
