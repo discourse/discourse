@@ -2152,6 +2152,7 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
+    source smallint DEFAULT 2 NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
     browser smallint,
@@ -18970,6 +18971,13 @@ CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browse
 
 
 --
+-- Name: idx_bpe_beacon_created_at_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (source = 2);
+
+
+--
 -- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25079,7 +25087,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260902075239'),
 ('20260901020329'),
 ('20260831162602'),
-('20260831011904'),
 ('20260831011842'),
 ('20260831011840'),
 ('20260831011839'),
