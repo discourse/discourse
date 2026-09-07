@@ -67,6 +67,26 @@ module("Unit | Model | user-badge", function (hooks) {
     assert.strictEqual(userBadge.topic, topic, "reuses the same wrapper");
   });
 
+  test("keeps sideloads that a later payload doesn't carry", function (assert) {
+    const withTopic = cloneJSON(badgeFixtures["/user_badges"]);
+    withTopic.user_badge.topic_id = 280;
+    withTopic.topics = [
+      { id: 280, title: "A granting topic", slug: "a-granting-topic" },
+    ];
+    UserBadge.createFromJson(withTopic);
+
+    // `/user-badges/:username` sends `topic_id` but no `topics` sideload.
+    const withoutTopic = cloneJSON(badgeFixtures["/user_badges"]);
+    withoutTopic.user_badge.topic_id = 280;
+    const userBadge = UserBadge.createFromJson(withoutTopic);
+
+    assert.strictEqual(
+      userBadge.topic.url,
+      "/t/a-granting-topic/280",
+      "the topic from the earlier payload survives"
+    );
+  });
+
   test("findByUsername", async function (assert) {
     const badges = await UserBadge.findByUsername("anne3");
     assert.true(Array.isArray(badges), "returns an array");
