@@ -1053,6 +1053,7 @@ ur:
         count: "دھاگے"
         share: "اشتراک"
       types:
+        new_members: "نئے اراکین"
         returning: "دوبارہ جڑنے والے"
         staff: "عملہ"
     trust_level_pipeline:
@@ -1107,6 +1108,7 @@ ur:
         page_view_other: "دیگر ٹریفک"
       yaxis: "دن"
     dau_by_mau:
+      title: "DAU / MAU"
       xaxis: "دن"
       yaxis: "DAU/MAU"
     daily_engaged_users:
