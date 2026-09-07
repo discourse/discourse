@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import {
   removeAllowedTopicGroup,
   removeAllowedTopicUser,
@@ -94,8 +95,14 @@ export default class TopicDetails extends RestCompatModel {
       return;
     }
     const wrapped = { ...details };
+    // Invitations append recipients in place.
     if (details.allowed_users) {
-      wrapped.allowed_users = details.allowed_users.map((u) => User.create(u));
+      wrapped.allowed_users = trackedArray(
+        details.allowed_users.map((u) => User.create(u))
+      );
+    }
+    if (details.allowed_groups) {
+      wrapped.allowed_groups = trackedArray(details.allowed_groups);
     }
     if (details.participants) {
       const topic = this.topic;
@@ -123,8 +130,8 @@ export default class TopicDetails extends RestCompatModel {
     await store.request(
       removeAllowedTopicGroup(this.#effectiveTopicId(), group.name)
     );
-    this.allowed_groups = this.allowed_groups.filter(
-      (g) => g.name !== group.name
+    this.allowed_groups = trackedArray(
+      this.allowed_groups.filter((g) => g.name !== group.name)
     );
   }
 
@@ -134,8 +141,8 @@ export default class TopicDetails extends RestCompatModel {
     await store.request(
       removeAllowedTopicUser(this.#effectiveTopicId(), username)
     );
-    this.allowed_users = this.allowed_users.filter(
-      (u) => u.username !== username
+    this.allowed_users = trackedArray(
+      this.allowed_users.filter((u) => u.username !== username)
     );
   }
 }
