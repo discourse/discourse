@@ -707,6 +707,113 @@ RSpec.describe PostAlerter do
       expect(PostAlerter.new.extract_linked_users(post1).length).to eq(0)
     end
 
+    it "records the linked topic on the notification" do
+      linking_post
+
+      notification = user.notifications.find_by(notification_type: Notification.types[:linked])
+      data = notification.data_hash
+
+      expect(data[:linked_topics].map { |t| t[:topic_id] }).to eq([post1.topic_id])
+      expect(data[:linked_topics].first[:title]).to eq(post1.topic.title)
+      expect(data[:linked_topics_count]).to eq(1)
+    end
+
+    it "records every linked topic when one post links several of them" do
+      # A post linking three of someone's topics still produces a single
+      # notification, so that notification has to name all three rather than
+      # an arbitrary one.
+      other1 = create_post(user: user, raw: "another topic of mine")
+      other2 = create_post(user: user, raw: "a third topic of mine")
+
+      create_post(
+        raw:
+          "see #{Discourse.base_url}#{post1.url} " \
+            "and #{Discourse.base_url}#{other1.url} " \
+            "and #{Discourse.base_url}#{other2.url}",
+      )
+
+      notifications = user.notifications.where(notification_type: Notification.types[:linked])
+      expect(notifications.count).to eq(1)
+
+      data = notifications.first.data_hash
+      expect(data[:linked_topics].map { |t| t[:topic_id] }).to contain_exactly(
+        post1.topic_id,
+        other1.topic_id,
+        other2.topic_id,
+      )
+      expect(data[:linked_topics_count]).to eq(3)
+    end
+
+    it "caps the named topics but keeps the full count" do
+      posts =
+        (1..PostAlerter::MAX_LINKED_TOPICS_IN_NOTIFICATION + 2).map do |i|
+          create_post(user: user, raw: "a topic of mine number #{i}")
+        end
+
+      # Kept on one line so the links stay inline: a post that is nothing but
+      # bare URLs gets oneboxed, and rendering those previews reaches for
+      # avatar images that WebMock blocks.
+      create_post(raw: "see " + posts.map { |p| "#{Discourse.base_url}#{p.url}" }.join(" and "))
+
+      data =
+        user.notifications.where(notification_type: Notification.types[:linked]).first.data_hash
+
+      expect(data[:linked_topics].size).to eq(PostAlerter::MAX_LINKED_TOPICS_IN_NOTIFICATION)
+      expect(data[:linked_topics_count]).to eq(posts.size)
+    end
+
+    it "gives each recipient only their own linked topics" do
+      other_user_post = create_post
+
+      create_post(
+        raw:
+          "see #{Discourse.base_url}#{post1.url}\n" \
+            "and #{Discourse.base_url}#{other_user_post.url}",
+      )
+
+      mine =
+        user.notifications.where(notification_type: Notification.types[:linked]).first.data_hash
+      theirs =
+        other_user_post
+          .user
+          .notifications
+          .where(notification_type: Notification.types[:linked])
+          .first
+          .data_hash
+
+      expect(mine[:linked_topics].map { |t| t[:topic_id] }).to eq([post1.topic_id])
+      expect(theirs[:linked_topics].map { |t| t[:topic_id] }).to eq([other_user_post.topic_id])
+    end
+
+    it "does not name a linked topic the recipient cannot see" do
+      # Moving a post leaves a moderator post linking the destination topic,
+      # which may be in a category the post's author has no access to. The
+      # title is stored on the notification and sent to the client, so it must
+      # not name that topic - they are still notified, just without it named.
+      # The recipient authored the post in the restricted topic - that is what
+      # a moved post looks like - so the link resolves to them and would be
+      # named on their notification without the visibility check.
+      restricted_category = Fabricate(:private_category, group: Group[:staff])
+      restricted_topic =
+        Fabricate(:topic, category: restricted_category, title: "Secret destination")
+      restricted_post = Fabricate(:post, topic: restricted_topic, user: user)
+
+      expect(user.guardian.can_see?(restricted_topic)).to eq(false)
+
+      create_post(
+        raw:
+          "see #{Discourse.base_url}#{post1.url} " \
+            "and #{Discourse.base_url}#{restricted_post.url}",
+      )
+
+      notification = user.notifications.find_by(notification_type: Notification.types[:linked])
+      expect(notification).to be_present
+
+      titles = notification.data_hash[:linked_topics].map { |t| t[:title] }
+      expect(titles).to eq([post1.topic.title])
+      expect(notification.data).not_to include("Secret destination")
+    end
+
     it "triggers :before_create_notifications_for_users" do
       events = DiscourseEvent.track_events { linking_post }
       expect(events).to include(

@@ -9,6 +9,7 @@ import GroupMessageSummary from "discourse/lib/notification-types/group-message-
 import InviteeAccepted from "discourse/lib/notification-types/invitee-accepted";
 import Liked from "discourse/lib/notification-types/liked";
 import LikedConsolidated from "discourse/lib/notification-types/liked-consolidated";
+import Linked from "discourse/lib/notification-types/linked";
 import LinkedConsolidated from "discourse/lib/notification-types/linked-consolidated";
 import MembershipRequestAccepted from "discourse/lib/notification-types/membership-request-accepted";
 import MembershipRequestConsolidated from "discourse/lib/notification-types/membership-request-consolidated";
@@ -29,6 +30,7 @@ const CLASS_FOR_TYPE = {
   invitee_accepted: InviteeAccepted,
   liked: Liked,
   liked_consolidated: LikedConsolidated,
+  linked: Linked,
   linked_consolidated: LinkedConsolidated,
   membership_request_accepted: MembershipRequestAccepted,
   membership_request_consolidated: MembershipRequestConsolidated,
