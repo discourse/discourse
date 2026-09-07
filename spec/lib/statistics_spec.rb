@@ -212,6 +212,23 @@ RSpec.describe Statistics do
 
     after { ApplicationRequest.disable }
 
+    it "uses beacon pageviews for visitor estimates while preserving earlier history" do
+      ApplicationRequest.create!(
+        date: date.to_date,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+      ApplicationRequest.create!(
+        date: date.to_date,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 2,
+      )
+
+      freeze_time(date) do
+        expect(described_class.visitors).to eq(last_day: 5, "7_days": 8, "30_days": 11)
+      end
+    end
+
     it "estimates the number of visitors for each of the previous 1 day, 7 days and 30 days periods" do
       freeze_time(date) do
         visitors = described_class.visitors
@@ -283,6 +300,23 @@ RSpec.describe Statistics do
     end
 
     after { ApplicationRequest.disable }
+
+    it "uses beacon pageviews for EU visitor estimates while preserving earlier history" do
+      ApplicationRequest.create!(
+        date: date.to_date,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+      ApplicationRequest.create!(
+        date: date.to_date,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 2,
+      )
+
+      freeze_time(date) do
+        expect(described_class.eu_visitors).to eq(last_day: 5, "7_days": 4, "30_days": 6)
+      end
+    end
 
     it "estimates the number of EU visitors for each of the previous 1 day, 7 days and 30 days periods" do
       freeze_time(date) do

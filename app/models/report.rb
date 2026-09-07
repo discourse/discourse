@@ -495,12 +495,7 @@ class Report
   # too. This is to reflect what is shown in the "Site traffic" report
   # by default.
   def self.page_view_requests
-    ApplicationRequest.where(
-      req_type: [
-        ApplicationRequest.req_types[:page_view_anon_browser],
-        ApplicationRequest.req_types[:page_view_logged_in_browser],
-      ].flatten,
-    )
+    ApplicationRequest.browser_pageviews
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)
