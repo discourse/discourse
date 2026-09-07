@@ -63,10 +63,6 @@ const aliases = [
     find: "ember-exam/test-support/load",
     replacement: "ember-exam/addon-test-support/load",
   },
-  {
-    find: "@ember/render-modifiers",
-    replacement: "@ember/render-modifiers/addon",
-  },
 ];
 
 export function buildConfig({ devMode } = {}) {
