@@ -799,6 +799,11 @@ task "import:rebake_uncooked_posts_with_tag", [:tag_name] => :environment do |_t
   import_rebake_posts(posts)
 end
 
+desc "Backfill participation-based badges"
+task "import:grant_participation_badges" => :environment do
+  Import::ParticipationBadges.grant_all
+end
+
 def import_rebake_posts(posts)
   Jobs.run_immediately!
   OptimizedImage.lock_per_machine = false

@@ -1493,6 +1493,62 @@ if generic_import_dependencies_available
         source_db&.close
       end
     end
+
+    describe "#raw_with_placeholders_interpolated" do
+      it "still interpolates token-bearing mention/quote placeholders as before" do
+        importer = described_class.allocate
+        importer.instance_variable_set(:@user_ids_by_username_lower, { "alice" => 5 })
+        importer.instance_variable_set(:@mapped_usernames, {})
+        importer.instance_variable_set(:@post_number_by_post_id, { 1202 => 3 })
+        importer.instance_variable_set(:@topic_id_by_post_id, { 1202 => 22 })
+        def importer.username_from_id(_id) = "alice"
+        def importer.user_full_name_from_id(id) = id == 5 ? "Alice" : nil
+        def importer.user_id_from_imported_id(id) = id == 20 ? 5 : nil
+        def importer.topic_id_from_imported_post_id(id) = id == 202 ? 22 : nil
+        def importer.post_number_from_imported_id(id) = id == 202 ? 3 : nil
+
+        row = {
+          "id" => 101,
+          "placeholders" => {
+            "mentions" => [{ "type" => "user", "id" => 20, "placeholder" => "[@mention|abc]" }],
+            "quotes" => [{ "post_id" => 202, "user_id" => 20, "placeholder" => "[quote|xyz]" }],
+          }.to_json,
+        }
+
+        result =
+          importer.raw_with_placeholders_interpolated("see [@mention|abc] and [quote|xyz]", row)
+        expect(result).to include("@alice")
+        expect(result).to include('quote="Alice')
+        expect(result).not_to include("[@mention|abc]")
+        expect(result).not_to include("[quote|xyz]")
+      end
+    end
+
+    describe "#import_badge_groupings" do
+      it "maps any blank badge_group (nil, '', whitespace-only) to the default Other grouping so COPY cannot abort" do
+        # badges.badge_grouping_id is NOT NULL and BADGE_COLUMNS always supplies it
+        # during COPY; a blank/whitespace group name must resolve to
+        # BadgeGrouping::Other (5) rather than leaving a nil grouping id, or the
+        # whole COPY batch would fail.
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE badges (id INTEGER PRIMARY KEY, badge_group TEXT)")
+        source_db.execute(
+          "INSERT INTO badges (id, badge_group) VALUES (1, 'Core'), (2, NULL), (3, ''), (4, '   ')",
+        )
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+
+        importer.import_badge_groupings
+        mapping = importer.instance_variable_get(:@badge_group_mapping)
+
+        expect(mapping[nil]).to eq(BadgeGrouping::Other)
+        expect(mapping[""]).to eq(BadgeGrouping::Other)
+        expect(mapping["   "]).to eq(BadgeGrouping::Other)
+        expect(mapping["Core"]).to eq(BadgeGrouping.find_by!(name: "Core").id)
+      ensure
+        source_db&.close
+      end
+    end
   end
 
   RSpec.describe BulkImport::Base do
