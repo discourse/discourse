@@ -39,7 +39,7 @@ export default class VoiceRoomForm extends Component {
   }
 
   get showVideoToggle() {
-    return this.siteSettings.voice_video_enabled;
+    return this.site.voice_video_available;
   }
 
   get showLivekitToggle() {

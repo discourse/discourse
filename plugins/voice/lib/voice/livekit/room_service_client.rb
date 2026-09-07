@@ -20,7 +20,8 @@ module Voice
         # grants — sending only `canPublish` would silently revoke
         # `canSubscribe` and deafen the participant.
         def update_participant(room, user)
-          can_publish = user.guardian.can_speak_in_voice_room?(room)
+          guardian = user.guardian
+          can_publish = guardian.can_speak_in_voice_room?(room)
           call(
             room,
             "UpdateParticipant",
@@ -30,7 +31,8 @@ module Voice
                 canSubscribe: true,
                 canPublish: can_publish,
                 canPublishData: false,
-                canPublishSources: Livekit.publish_sources(room, can_publish).map(&:upcase),
+                canPublishSources:
+                  Livekit.publish_sources(room, can_publish, guardian).map(&:upcase),
                 hidden: false,
                 recorder: false,
               },

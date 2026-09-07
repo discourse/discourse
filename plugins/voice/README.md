@@ -34,7 +34,8 @@ The plugin seeds a default "Watercooler" room on first enable.
 | `voice_create_room_allowed_groups` | Groups that can create new rooms (default: admins, moderators, TL2).                 |
 | `voice_max_rooms_per_user`         | Max rooms per creator (default 5).                                                   |
 | `voice_participant_ttl_seconds`    | Redis presence TTL in seconds (default 30). Client heartbeat refreshes every 10s.    |
-| `voice_video_enabled`              | Allow camera video and screen sharing (default off). Rooms can opt out individually. |
+| `voice_video_allowed_groups`       | Groups that can share their camera. Empty turns cameras off site-wide.               |
+| `voice_screen_share_allowed_groups` | Groups that can share their screen. Empty turns screen sharing off site-wide.       |
 | `voice_video_max_publishers`       | Max simultaneous video/screen publishers per room (default 8).                       |
 | `voice_video_background_blur_enabled` | Allow users to blur their camera background (default on; requires video).        |
 | `voice_stun_servers`               | STUN server addresses (pipe-separated).                                              |
@@ -45,7 +46,7 @@ The plugin seeds a default "Watercooler" room on first enable.
 
 ## Video
 
-When `voice_video_enabled` is on (and the room's own video toggle is too), the room view at `/voice/r/<slug>` shows a video grid alongside the usual controls. Audio joins stay sidebar-first and unchanged; video lives on the page.
+When a user's groups allow camera or screen sharing (and the room's own video toggle is on), the room view at `/voice/r/<slug>` shows a video grid alongside the usual controls. Audio joins stay sidebar-first and unchanged; video lives on the page.
 
 - Still pure mesh: a video m-line is pre-negotiated on every peer connection, so toggling the camera or a screen share is a `replaceTrack` with no renegotiation.
 - Senders attach video only toward participants currently on the room page (`watching_video` presence flag) — every skipped peer saves a full encoder session.

@@ -23,6 +23,7 @@ module Voice
                :visit_count,
                :video_enabled,
                :video_allowed,
+               :screen_share_allowed,
                :chat_channel_id,
                :chat_idle_minutes,
                :chat_available,
@@ -72,12 +73,18 @@ module Voice
       MessageBus.last_id(Voice.room_channel(object.id))
     end
 
+    # Each entry carries the sender's own publish entitlements: mesh peers
+    # exchange media directly, so a receiver decides whether to play a video
+    # or screen-audio track from this, not from its own rights.
     def active_participants
+      entitlements = Voice::MediaEntitlements.for_users(object, tracked_participants)
+
       tracked_participants.map do |user|
         BasicUserSerializer
           .new(user, scope: scope, root: false)
           .as_json
           .merge(participant_metadata[user.id] || {})
+          .merge(entitlements[user.id] || Voice::MediaEntitlements::NONE)
       end
     end
 
@@ -110,8 +117,25 @@ module Voice
       scope.user.present? && @options[:include_visit_count]
     end
 
+    # Per-user publish rights, so they are omitted from the anonymously-scoped
+    # directory broadcasts (the client keeps the ones it already knows) and the
+    # room's own video_enabled remains the field a broadcast revokes through.
+    # The stage role is left out and applied by the client, which follows
+    # promotions live.
     def video_allowed
-      object.video_allowed?
+      scope.eligible_to_publish_video_in_voice_room?(object)
+    end
+
+    def include_video_allowed?
+      scope.user.present?
+    end
+
+    def screen_share_allowed
+      scope.eligible_to_screen_share_in_voice_room?(object)
+    end
+
+    def include_screen_share_allowed?
+      scope.user.present?
     end
 
     def chat_available

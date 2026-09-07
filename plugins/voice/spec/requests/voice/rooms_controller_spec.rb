@@ -969,7 +969,6 @@ RSpec.describe Voice::RoomsController do
 
   describe "#state" do
     before do
-      SiteSetting.voice_video_enabled = true
       @participant_session_id = establish_presence!(room, user)
       sign_in(user)
     end
@@ -1040,8 +1039,8 @@ RSpec.describe Voice::RoomsController do
       expect(metadata[:is_transcribing]).to eq(false)
     end
 
-    it "rejects video when the site setting is disabled" do
-      SiteSetting.voice_video_enabled = false
+    it "rejects video when no group is allowed to share a camera" do
+      SiteSetting.voice_video_allowed_groups = ""
 
       post "/voice/rooms/#{room.id}/state.json",
            params: {
@@ -1050,6 +1049,31 @@ RSpec.describe Voice::RoomsController do
            }
 
       expect(response.status).to eq(403)
+    end
+
+    it "rejects screen sharing when no group is allowed to share a screen" do
+      SiteSetting.voice_screen_share_allowed_groups = ""
+
+      post "/voice/rooms/#{room.id}/state.json",
+           params: {
+             screen: true,
+             participant_session_id: @participant_session_id,
+           }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "allows a camera when only screen sharing is disallowed" do
+      SiteSetting.voice_screen_share_allowed_groups = ""
+
+      post "/voice/rooms/#{room.id}/state.json",
+           params: {
+             video: true,
+             participant_session_id: @participant_session_id,
+           }
+
+      expect(response.status).to eq(204)
+      expect(Voice::ParticipantTracker.get_metadata(room.id, user.id)[:is_video_on]).to eq(true)
     end
 
     it "rejects video when the room has video disabled" do

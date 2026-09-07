@@ -55,7 +55,15 @@ class VoiceWebrtcStub extends Service {
     return true;
   }
 
-  canPublishVideo() {
+  screenShareAllowedIn() {
+    return true;
+  }
+
+  canPublishCamera() {
+    return true;
+  }
+
+  canPublishScreen() {
     return true;
   }
 

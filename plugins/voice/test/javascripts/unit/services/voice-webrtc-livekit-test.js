@@ -491,7 +491,6 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
     this.keyValueStore.remove(this.cameraPreferenceKey);
     this.siteSettings = this.owner.lookup("service:site-settings");
     this.siteSettings.voice_auto_status_enabled = true;
-    this.siteSettings.voice_video_enabled = true;
     this.siteSettings.voice_video_max_publishers = 4;
     localStorage.removeItem("voice:noise-suppression");
     localStorage.removeItem("voice:noise-suppression-mode");
@@ -508,6 +507,8 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       name: "Voice",
       room_type: "open",
       video_enabled: true,
+      video_allowed: true,
+      screen_share_allowed: true,
       membership: { role_name: "participant" },
       active_participants: [
         { id: this.currentUser.id, role: "participant" },

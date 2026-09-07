@@ -156,6 +156,14 @@ after_initialize do
     SiteSetting.voice_livekit_room_policy == "per_room" && Voice::Livekit.configured?
   end
 
+  # Gates the room-form media checkbox: with neither capability granted to any
+  # group, a room-level media toggle would decide nothing. The per-user rights
+  # themselves ride on each room's serialization instead.
+  add_to_serializer(:site, :voice_video_available) do
+    SiteSetting.voice_video_allowed_groups.present? ||
+      SiteSetting.voice_screen_share_allowed_groups.present?
+  end
+
   Voice::DefaultRoomSeeder.ensure! if SiteSetting.voice_enabled?
 
   # This can't live in the on(:site_setting_changed) handler below: plugin
