@@ -1,3 +1,4 @@
+import type { BlockImageValue } from "discourse/blocks/image-value";
 import type { ArgSchema } from "discourse/blocks/types";
 
 /** An image argument and its current editor state. */
@@ -16,24 +17,7 @@ export type ImageArgEntry = {
 };
 
 /** The persisted shape of an image argument. */
-export type ImageArgValue = Record<string, unknown> & {
-  /** Persisted image source kind. */
-  source?: "upload" | "url";
-  /** Server upload identifier used to retain uploaded files. */
-  upload_id?: string;
-  /** Display height in pixels. */
-  height?: number;
-  /** Intrinsic image height in pixels. */
-  naturalHeight?: number;
-  /** Intrinsic image width in pixels. */
-  naturalWidth?: number;
-  /** Display width in pixels. */
-  width?: number;
-  /** The image URL. */
-  url?: string;
-  /** Optional dark-scheme image variant. */
-  dark?: ImageArgValue;
-};
+export type ImageArgValue = BlockImageValue;
 
 /**
  * Checks whether a runtime argument value can be read as an image value.

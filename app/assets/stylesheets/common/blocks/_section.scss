@@ -1,4 +1,5 @@
 .d-block-section {
+  box-sizing: border-box;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -66,57 +67,6 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-}
-
-.d-block-section__backdrop {
-  overflow: hidden;
-
-  picture,
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  img {
-    object-fit: cover;
-  }
-}
-
-.d-block-section.--position-top-left .d-block-section__backdrop img {
-  object-position: left top;
-}
-
-.d-block-section.--position-top .d-block-section__backdrop img {
-  object-position: center top;
-}
-
-.d-block-section.--position-top-right .d-block-section__backdrop img {
-  object-position: right top;
-}
-
-.d-block-section.--position-left .d-block-section__backdrop img {
-  object-position: left center;
-}
-
-.d-block-section.--position-center .d-block-section__backdrop img {
-  object-position: center;
-}
-
-.d-block-section.--position-right .d-block-section__backdrop img {
-  object-position: right center;
-}
-
-.d-block-section.--position-bottom-left .d-block-section__backdrop img {
-  object-position: left bottom;
-}
-
-.d-block-section.--position-bottom .d-block-section__backdrop img {
-  object-position: center bottom;
-}
-
-.d-block-section.--position-bottom-right .d-block-section__backdrop img {
-  object-position: right bottom;
 }
 
 .d-block-section__scrim {

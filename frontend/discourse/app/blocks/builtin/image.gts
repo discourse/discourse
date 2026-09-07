@@ -1,58 +1,20 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import BlockImage from "discourse/blocks/block-image";
+import type { BlockImageValue } from "discourse/blocks/image-value";
 import { URL_PATTERN } from "discourse/lib/blocks";
-import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
-
-/**
- * An image argument value: a resolved upload with intrinsic dimensions and an
- * optional dark-scheme variant of the same shape.
- */
-interface BlockImageValue {
-  url?: string;
-  width?: number;
-  height?: number;
-  dark?: BlockImageValue;
-}
 
 interface ImageSignature {
   Args: {
+    /** Image sources, composition, and optional frame size. */
     image?: BlockImageValue;
+    /** Alternative text describing the image. */
     alt?: string;
+    /** Destination when the image is activated. */
     link?: string;
+    /** Visible caption outside the image's clipping frame. */
     caption?: string;
-  };
-}
-
-/**
- * Returns the dark variant rebound to the LIGHT variant's intrinsic
- * dimensions, so `DLightDarkImg`'s `<picture>` element always renders
- * at the light frame size — even when the site's default colour
- * scheme is dark (in which case `DLightDarkImg.defaultImg` would
- * otherwise pick dark and stamp dark's own dims onto the `<img>`).
- *
- * Combined with `object-fit: cover` on the rendered image, this means
- * the dark variant is clipped to the light frame when their intrinsic
- * aspect ratios diverge — which is exactly what a dark-variant
- * ratio-mismatch check predicts.
- *
- * Returns `undefined` when no dark variant is set so the helper's
- * `isDarkImageAvailable` falls through to the light-only render path.
- *
- * @param image - The image argument value, whose `dark` variant is rebound.
- * @returns The dark variant carrying the light frame's dimensions, or
- *   `undefined` when there is no dark variant.
- */
-function darkVariantWithLightFrame(
-  image?: BlockImageValue | null
-): { url?: string; width?: number; height?: number } | undefined {
-  if (!image?.dark?.url) {
-    return undefined;
-  }
-  return {
-    url: image.dark.url,
-    width: image.width,
-    height: image.height,
   };
 }
 
@@ -68,6 +30,7 @@ function darkVariantWithLightFrame(
       required: true,
       allowDark: true,
       allowResize: true,
+      allowComposition: true,
       aspectRatio: "auto",
       defaultFit: "cover",
       ui: {
@@ -106,42 +69,34 @@ export default class Image extends Component<ImageSignature> {
         <figure class="d-block-image">
           {{#if @link}}
             <a href={{@link}} data-block-arg="link">
-              <DLightDarkImg
+              <BlockImage
                 data-block-arg="image"
                 data-drop-fills-block
-                @lightImg={{@image}}
-                @darkImg={{darkVariantWithLightFrame @image}}
-                alt={{@alt}}
+                @image={{@image}}
+                @alt={{@alt}}
               />
             </a>
           {{else}}
-            <DLightDarkImg
+            <BlockImage
               data-block-arg="image"
               data-drop-fills-block
-              @lightImg={{@image}}
-              @darkImg={{darkVariantWithLightFrame @image}}
-              alt={{@alt}}
+              @image={{@image}}
+              @alt={{@alt}}
             />
           {{/if}}
           <figcaption class="d-block-image__caption">{{@caption}}</figcaption>
         </figure>
       {{else if @link}}
         <a href={{@link}} class="d-block-image" data-block-arg="link">
-          <DLightDarkImg
-            data-block-arg="image"
-            @lightImg={{@image}}
-            @darkImg={{darkVariantWithLightFrame @image}}
-            alt={{@alt}}
-          />
+          <BlockImage data-block-arg="image" @image={{@image}} @alt={{@alt}} />
         </a>
       {{else}}
-        <DLightDarkImg
+        <BlockImage
           class="d-block-image"
           data-block-arg="image"
           data-drop-fills-block
-          @lightImg={{@image}}
-          @darkImg={{darkVariantWithLightFrame @image}}
-          alt={{@alt}}
+          @image={{@image}}
+          @alt={{@alt}}
         />
       {{/if}}
     {{else}}

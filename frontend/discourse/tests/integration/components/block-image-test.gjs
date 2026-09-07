@@ -46,7 +46,7 @@ module("Integration | Blocks | image", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    assert.dom("img.d-block-image").exists();
+    assert.dom(".d-block-image-frame img").exists();
     assert.dom("picture").doesNotExist("no <picture> when there's no dark img");
   });
 

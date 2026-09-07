@@ -22,6 +22,7 @@ import {
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import type WireframeDraftsService from "./wireframe-drafts";
 import type WireframeEditModeService from "./wireframe-edit-mode";
+import type WireframeImageCompositionService from "./wireframe-image-composition";
 import type WireframeInplaceTextService from "./wireframe-inplace-text";
 import type WireframeInspectorArgsService from "./wireframe-inspector-args";
 import WireframeLayoutQueryService, {
@@ -119,6 +120,9 @@ type AjaxError = {
 export default class WireframeStagingService extends Service {
   /** Presents conflict and stale-draft decisions to the editor. */
   @service declare modal: ModalService;
+
+  @service declare wireframeImageComposition: WireframeImageCompositionService;
+
   /** Flushes pending inspector edits before staging operations. */
   @service declare wireframeInspectorArgs: WireframeInspectorArgsService;
   /** Reads and writes the current user's persisted drafts. */
@@ -380,6 +384,9 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async publishEditedOutlets(): Promise<string | null> {
+    if (this.wireframeImageComposition.target) {
+      return i18n("wireframe.inspector.image.finish_adjustment");
+    }
     const result = await this.wireframeLiveLayout.publish(
       this.wireframePublishTarget.activeThemeId
     );
@@ -396,6 +403,9 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async publishOutlet(outletName: string): Promise<string | null> {
+    if (this.wireframeImageComposition.target) {
+      return i18n("wireframe.inspector.image.finish_adjustment");
+    }
     const result = await this.wireframeLiveLayout.publishOutlet(
       outletName,
       this.wireframePublishTarget.activeThemeId
@@ -416,6 +426,9 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async saveAllEditedDrafts(): Promise<string | null> {
+    if (this.wireframeImageComposition.target) {
+      return i18n("wireframe.inspector.image.finish_adjustment");
+    }
     const errors: string[] = [];
     const outlets = new Set([
       ...this.wireframeMutationEngine.editedOutletNames(),
@@ -447,6 +460,9 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async saveDraftOutlet(outletName: string): Promise<void> {
+    if (this.wireframeImageComposition.target) {
+      throw new Error(i18n("wireframe.inspector.image.finish_adjustment"));
+    }
     const themeId = this.wireframePublishTarget.activeThemeId;
     if (themeId == null) {
       throw new Error(i18n("generic_error"));

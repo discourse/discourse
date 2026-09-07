@@ -91,6 +91,19 @@ export default class WireframeRail extends Service {
   /** Whether the right inspector rail is collapsed. */
   @tracked declare rightCollapsed: boolean;
 
+  @tracked inspectorTab = "args";
+
+  /** Field to focus after the inspector has rendered. */
+  @tracked
+  inspectorField: {
+    /** Block whose argument should be revealed. */
+    blockKey: string;
+    /** Argument field to focus. */
+    argName: string;
+    /** Source controls to reveal for image arguments; defaults to light. */
+    imageVariant?: "light" | "dark";
+  } | null = null;
+
   /**
    * Whether `tab` is the active panel, regardless of collapse — drives the body
    * switch (which panel component to render once the wide panel is open).
@@ -212,6 +225,13 @@ export default class WireframeRail extends Service {
   @action
   toggleRightCollapsed(): void {
     this.#setRightCollapsed(!this.rightCollapsed);
+  }
+
+  /** Opens Args, optionally revealing a specific field on the selected block. */
+  showInspector(field: WireframeRail["inspectorField"] = null): void {
+    this.inspectorTab = "args";
+    this.inspectorField = field;
+    this.#setRightCollapsed(false);
   }
 
   /**

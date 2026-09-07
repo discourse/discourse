@@ -1,9 +1,20 @@
 import { type default as Owner, getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
+import {
+  type BlockImageSource,
+  replaceImageSource,
+} from "discourse/blocks/image-value";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import { imageArgEntries } from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
+import {
+  imageArgEntries,
+  isImageArgValue,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
 import type WireframeDragOverlayService from "./wireframe-drag-overlay";
 import type WireframeEditModeService from "./wireframe-edit-mode";
+import WireframeImageCompositionService, {
+  ImageEditTarget,
+} from "./wireframe-image-composition";
+import type WireframeLayoutQueryService from "./wireframe-layout-query";
 import type WireframeMutationEngineService from "./wireframe-mutation-engine";
 import type WireframeSelectionService from "./wireframe-selection";
 
@@ -23,7 +34,7 @@ type ImageUploadResult = {
 /** Successful image payload emitted by the core Uppy upload wrapper. */
 export type ImageUploadPayload = {
   /** Numeric upload identifier returned by the server. */
-  id: string;
+  id: number;
   /** Canonical URL of the uploaded image. */
   url: string;
   /** Uploaded image width in pixels, when known. */
@@ -51,6 +62,9 @@ export type ImageUploadPayload = {
  * fires mid-teardown can't resolve a dependency on a dead owner.
  */
 export default class WireframeImageUploadService extends Service {
+  @service declare wireframeImageComposition: WireframeImageCompositionService;
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   /** Owns the visual drop claim cleared after external file drops. */
   @service declare wireframeDragOverlay: WireframeDragOverlayService;
 
@@ -62,6 +76,8 @@ export default class WireframeImageUploadService extends Service {
 
   /** Gates document-level drag and paste handlers to active edit sessions. */
   @service declare wireframeEditMode: WireframeEditModeService;
+
+  #replacements = new Map<string, object>();
 
   /**
    * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
@@ -96,6 +112,14 @@ export default class WireframeImageUploadService extends Service {
    */
   constructor(owner: Owner) {
     super(owner);
+    this.wireframeSelection.registerBeforeChange(({ nextKey, prevKey }) => {
+      if (nextKey !== prevKey) {
+        this.#replacements.clear();
+      }
+    });
+    this.wireframeMutationEngine.registerBeforeHistoryChange(() =>
+      this.#replacements.clear()
+    );
     this.#installFileDragGuard();
     this.#installImagePasteListener();
   }
@@ -133,11 +157,14 @@ export default class WireframeImageUploadService extends Service {
     {
       blockKey,
       argName,
+      variant = "light",
     }: {
       /** Composite key of the block receiving the image. */
       blockKey: string;
       /** Name of the image argument receiving the upload. */
       argName: string;
+      /** Source variant captured when this upload starts. */
+      variant?: "light" | "dark";
     }
   ): Promise<ImageUploadResult | null> {
     if (!file || !blockKey || !argName) {
@@ -145,6 +172,10 @@ export default class WireframeImageUploadService extends Service {
     }
     const owner = getOwner(this);
     const uploadId = `wireframe-image-${argName}-${Date.now()}`;
+    const completeReplacement = this.beginReplacement(
+      { blockKey, argName },
+      variant
+    );
     return new Promise((resolve) => {
       let settled = false;
       const finish = (result: ImageUploadResult | null) => {
@@ -174,7 +205,7 @@ export default class WireframeImageUploadService extends Service {
           // UploadReference for this image when the layout saves; without it
           // the upload would be considered orphan and garbage-collected by
           // Jobs::CleanUpUploads after the 48h grace period.
-          this.setImageArg(blockKey, argName, {
+          completeReplacement({
             source: "upload",
             upload_id: result.id,
             url: result.url,
@@ -284,7 +315,72 @@ export default class WireframeImageUploadService extends Service {
    * @param value - Image value written to the block argument.
    */
   setImageArg(blockKey: string, argName: string, value: unknown): void {
+    if (this.wireframeImageComposition.matches({ blockKey, argName })) {
+      this.wireframeImageComposition.cancel();
+    }
+    this.#replacements.delete(JSON.stringify([blockKey, argName, "light"]));
+    this.#replacements.delete(JSON.stringify([blockKey, argName, "dark"]));
     this.wireframeMutationEngine.setArg(blockKey, argName, value);
+  }
+
+  /** Captures the destination and rejects superseded or deleted-target completions. */
+  beginReplacement(
+    target: ImageEditTarget,
+    variant: "light" | "dark" = "light"
+  ): (source: BlockImageSource) => boolean {
+    const key = JSON.stringify([target.blockKey, target.argName, variant]);
+    const token = {};
+    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
+      target.blockKey
+    )?.entry;
+    this.#replacements.set(key, token);
+    if (this.wireframeImageComposition.matches(target)) {
+      this.wireframeImageComposition.cancel();
+    }
+    return (source) => {
+      if (
+        this.isDestroying ||
+        this.#replacements.get(key) !== token ||
+        !entry ||
+        this.wireframeLayoutQuery.findEntryAndOutletSync(target.blockKey)
+          ?.entry !== entry
+      ) {
+        return false;
+      }
+      this.#replacements.delete(key);
+      this.replaceSource(target, source, variant);
+      return true;
+    };
+  }
+
+  replaceSource(
+    target: ImageEditTarget,
+    source: BlockImageSource,
+    variant: "light" | "dark" = "light"
+  ): void {
+    this.#replacements.delete(
+      JSON.stringify([target.blockKey, target.argName, variant])
+    );
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
+      target.blockKey
+    );
+    if (!located) {
+      return;
+    }
+    const current = located.entry.args?.[target.argName];
+    const value = isImageArgValue(current) ? current : undefined;
+    if (variant === "dark" && !value?.url) {
+      return;
+    }
+    if (this.wireframeImageComposition.matches(target)) {
+      this.wireframeImageComposition.cancel();
+    }
+    this.wireframeMutationEngine.recordArgEdit({
+      ...located,
+      argName: target.argName,
+      prevValue: current,
+      nextValue: replaceImageSource(value, source, variant),
+    });
   }
 
   /**
@@ -303,6 +399,7 @@ export default class WireframeImageUploadService extends Service {
    * enter / exit so a stale drop can't be consumed by a later session.
    */
   clearPending(): void {
+    this.#replacements.clear();
     this.#pendingDropFiles.clear();
   }
 

@@ -97,14 +97,12 @@ interface BlockToolbarSignature {
     chromeEl?: HTMLElement;
     /** Whether the represented block is selected. */
     isSelected?: boolean;
-    /** Whether an image can be added to the represented block. */
-    canFillImage?: boolean;
     /** Whether the represented image can be reset. */
     canResetImage?: boolean;
-    /** Adds an image to the represented block. */
-    onFillImage?: () => void;
     /** Resets the represented image. */
     onResetImage?: () => void;
+    /** Opens quick actions for the block's image. */
+    onEditImage?: () => void;
   };
   /** Root toolbar element. */
   Element: HTMLDivElement;
@@ -502,15 +500,16 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
       });
     }
 
-    if (this.args.canFillImage) {
+    if (this.args.onEditImage) {
       items.push({
-        id: "image-fill",
+        id: "image-edit",
         group: "image",
-        icon: "expand",
-        title: "wireframe.canvas.toolbar.image_fill",
-        action: this.args.onFillImage,
+        icon: "image",
+        title: "wireframe.canvas.toolbar.image_edit",
+        action: this.args.onEditImage,
       });
     }
+
     if (this.args.canResetImage) {
       items.push({
         id: "image-reset",
@@ -886,6 +885,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
                   (if item.active "--active")
                   (if item.danger "wireframe-block-toolbar__btn--danger")
                 }}
+                data-toolbar-action={{item.id}}
                 @icon={{item.icon}}
                 @title={{item.title}}
                 @ariaLabel={{item.title}}

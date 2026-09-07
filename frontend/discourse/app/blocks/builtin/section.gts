@@ -1,41 +1,23 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import BlockImage from "discourse/blocks/block-image";
+import type { BlockImageValue } from "discourse/blocks/image-value";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
-import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
 
 const SURFACES = ["transparent", "default", "subtle", "accent"];
-const BACKGROUND_POSITIONS = [
-  "top-left",
-  "top",
-  "top-right",
-  "left",
-  "center",
-  "right",
-  "bottom-left",
-  "bottom",
-  "bottom-right",
-];
 const SCRIMS = ["none", "subtle", "medium", "strong"];
 const PADDINGS = ["none", "small", "medium", "large"];
 const CONTENT_WIDTHS = ["full", "wide", "narrow"];
 const MIN_HEIGHTS = ["content", "small", "medium", "large", "viewport"];
 const VERTICAL_ALIGNS = ["start", "center", "end"];
 
-interface BlockImageValue {
-  url?: string;
-  width?: number;
-  height?: number;
-  dark?: BlockImageValue;
-}
-
 interface SectionSignature {
   Args: {
     children?: ChildBlockResult[];
     surface?: string;
     backgroundImage?: BlockImageValue;
-    backgroundPosition?: string;
     scrim?: string;
     padding?: string;
     contentWidth?: string;
@@ -73,32 +55,12 @@ interface SectionSignature {
       type: "image",
       allowDark: true,
       allowResize: false,
+      allowComposition: true,
       aspectRatio: "auto",
       defaultFit: "cover",
       ui: {
         group: i18n("blocks.builtin.section.groups.background"),
         label: i18n("blocks.builtin.section.background_image"),
-      },
-    },
-    backgroundPosition: {
-      type: "string",
-      default: "center",
-      enum: BACKGROUND_POSITIONS,
-      ui: {
-        control: "select",
-        group: i18n("blocks.builtin.section.groups.background"),
-        label: i18n("blocks.builtin.section.background_position"),
-        optionLabels: {
-          "top-left": i18n("blocks.builtin.section.options.top_left"),
-          top: i18n("blocks.builtin.section.options.top"),
-          "top-right": i18n("blocks.builtin.section.options.top_right"),
-          left: i18n("blocks.builtin.section.options.left"),
-          center: i18n("blocks.builtin.section.options.center"),
-          right: i18n("blocks.builtin.section.options.right"),
-          "bottom-left": i18n("blocks.builtin.section.options.bottom_left"),
-          bottom: i18n("blocks.builtin.section.options.bottom"),
-          "bottom-right": i18n("blocks.builtin.section.options.bottom_right"),
-        },
       },
     },
     scrim: {
@@ -210,11 +172,6 @@ export default class Section extends Component<SectionSignature> {
 
   get className(): string {
     const surface = validChoice(this.args.surface, SURFACES, "transparent");
-    const position = validChoice(
-      this.args.backgroundPosition,
-      BACKGROUND_POSITIONS,
-      "center"
-    );
     const padding = validChoice(this.args.padding, PADDINGS, "medium");
     const width = validChoice(this.args.contentWidth, CONTENT_WIDTHS, "full");
     const height = validChoice(this.args.minHeight, MIN_HEIGHTS, "content");
@@ -227,7 +184,6 @@ export default class Section extends Component<SectionSignature> {
     return [
       "d-block-section",
       `--surface-${surface}`,
-      `--position-${position}`,
       `--scrim-${this.scrim}`,
       `--padding-${padding}`,
       `--width-${width}`,
@@ -244,11 +200,7 @@ export default class Section extends Component<SectionSignature> {
         data-drop-passive
       >
         {{#if @backgroundImage.url}}
-          <DLightDarkImg
-            @lightImg={{@backgroundImage}}
-            @darkImg={{@backgroundImage.dark}}
-            alt=""
-          />
+          <BlockImage @image={{@backgroundImage}} @fill={{true}} />
         {{/if}}
       </div>
 

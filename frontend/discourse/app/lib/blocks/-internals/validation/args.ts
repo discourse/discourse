@@ -7,6 +7,7 @@
  * - block-args.ts - block-specific validation
  * - condition-args.ts - condition-specific validation
  */
+import { invalidImageCompositionField } from "discourse/blocks/image-value";
 import type { ArgSchema, ArgType } from "discourse/blocks/types";
 import {
   BlockError,
@@ -171,6 +172,7 @@ export const VALID_ARG_SCHEMA_PROPERTIES: readonly string[] = Object.freeze([
   "instanceOfName",
   "allowDark",
   "allowResize",
+  "allowComposition",
   "aspectRatio",
   "defaultFit",
 ]);
@@ -285,6 +287,12 @@ export const SCHEMA_PROPERTY_RULES: Readonly<
     typeErrorSuffix: "image",
   },
   allowResize: {
+    allowedTypes: ["image"],
+    valueCheck: (v) => typeof v === "boolean",
+    valueError: "Must be a boolean.",
+    typeErrorSuffix: "image",
+  },
+  allowComposition: {
     allowedTypes: ["image"],
     valueCheck: (v) => typeof v === "boolean",
     valueError: "Must be a boolean.",
@@ -1355,6 +1363,22 @@ export function validateArgValue(
       if (imageError) {
         return imageError;
       }
+      const invalidField = invalidImageCompositionField(
+        value as Record<string, unknown>
+      );
+      if (invalidField) {
+        return argValidationError(
+          argName,
+          `has invalid image composition "${invalidField}".`,
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.TYPE_MISMATCH,
+              field: `${argName}.${invalidField}`,
+            },
+          }
+        );
+      }
       // Dark variant is structurally identical to the light value; if present,
       // re-use the same validator scoped under "<argName>.dark".
       const imageValue = value as { dark?: unknown } | null | undefined;
@@ -1486,7 +1510,7 @@ function validateImageVariant(value, argName, options) {
     );
   }
 
-  for (const dim of ["width", "height", "naturalWidth", "naturalHeight"]) {
+  for (const dim of ["width", "height"]) {
     if (value[dim] !== undefined) {
       if (
         typeof value[dim] !== "number" ||

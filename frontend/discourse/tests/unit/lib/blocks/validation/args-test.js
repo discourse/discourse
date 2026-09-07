@@ -2355,6 +2355,45 @@ module("Unit | Lib | blocks/validation/args", function () {
       assert.true(result?.message.includes('invalid "source" "external"'));
     });
 
+    test("shared image validates composition bounds and independent frame dimensions", function (assert) {
+      const image = {
+        url: "/image.png",
+        width: 1600,
+        height: 900,
+        frame: { width: 320, height: 240 },
+        fit: "contain",
+        position: { x: 0, y: 100 },
+        zoom: 250,
+      };
+      assert.strictEqual(
+        validateArgValue(image, { type: "image" }, "image", "test-block"),
+        null,
+        "valid composition and independent frame are accepted"
+      );
+      for (const invalid of [
+        { fit: "stretch" },
+        { zoom: 99 },
+        { zoom: 251 },
+        { zoom: NaN },
+        { position: { x: -1, y: 50 } },
+        { position: { x: 50, y: Infinity } },
+        { position: { x: 50 } },
+        { frame: { width: 0, height: 100 } },
+        { frame: { width: 320, height: "240" } },
+      ]) {
+        assert.notStrictEqual(
+          validateArgValue(
+            { ...image, ...invalid },
+            { type: "image" },
+            "image",
+            "test-block"
+          ),
+          null,
+          `rejects invalid composition ${JSON.stringify(invalid)}`
+        );
+      }
+    });
+
     test("validates image type - rejects non-positive width/height", function (assert) {
       assert.true(
         validateArgValue(

@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { type TrustedHTML, trustHTML } from "@ember/template";
 import { type ComponentLike } from "@glint/template";
@@ -31,6 +32,7 @@ import EditorEmptyDropPlaceholder from "discourse/plugins/discourse-wireframe/di
 import GridOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/grid-overlay";
 import ImageArgOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-arg-overlay";
 import ImageEditMenu from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-edit-menu";
+import ImageReposition from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-reposition";
 import ImageResizeOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-resize-overlay";
 import InplaceLinkPopover from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-link-popover";
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
@@ -82,6 +84,7 @@ import type WireframeDropAuthorityService from "discourse/plugins/discourse-wire
 import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
 import type WireframeForceExpandService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-force-expand";
 import type WireframeGridPlacementService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-grid-placement";
+import type WireframeImageCompositionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-composition";
 import type WireframeImageUploadService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-upload";
 import type WireframeInplaceIconService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-icon";
 import type WireframeInplaceLinkService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-link";
@@ -259,8 +262,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
   @service declare wireframeForceExpand: WireframeForceExpandService;
   @service declare wireframeGridPlacement: WireframeGridPlacementService;
-  @service declare wireframeInplaceIcon: WireframeInplaceIconService;
+  @service declare wireframeImageComposition: WireframeImageCompositionService;
   @service declare wireframeImageUpload: WireframeImageUploadService;
+  @service declare wireframeInplaceIcon: WireframeInplaceIconService;
   @service declare wireframeInplaceText: WireframeInplaceTextService;
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
   @service declare wireframeInplaceLink: WireframeInplaceLinkService;
@@ -370,7 +374,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     // carries `data-block-arg` for its own click / drop dispatch).
     const escaped = CSS.escape(arg.name);
     return this.chromeEl.querySelector<HTMLElement>(
-      `img[data-block-arg="${escaped}"], picture[data-block-arg="${escaped}"]`
+      `.d-block-image-frame[data-block-arg="${escaped}"], img[data-block-arg="${escaped}"], picture[data-block-arg="${escaped}"]`
     );
   };
 
@@ -406,8 +410,15 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    */
   #gridResize: GridResizeSession | null = null;
 
+  @tracked _imageArgName: string | null = null;
+
   /** Tears down FloatKit instances owned by this chrome. */
   willDestroy(...args: Parameters<Component["willDestroy"]>): void {
+    if (
+      this.wireframeImageComposition.target?.blockKey === this.args.blockKey
+    ) {
+      this.wireframeImageComposition.cancel();
+    }
     super.willDestroy(...args);
     for (const instance of this.#urlTooltips) {
       instance.destroy?.();
@@ -937,12 +948,14 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     );
   }
 
-  /**
-   * `true` when the block declares at least one image arg that opts
-   * into drag-resize (`allowResize: true`) AND the block isn't sitting
-   * in a grid cell (where the grid handle owns sizing already).
-   *
-   */
+  get editableImageArg() {
+    return (
+      this.imageArgEntries.find(
+        (entry) => entry.name === this._imageArgName && !entry.isEmpty
+      ) ?? this.imageArgEntries.find((entry) => !entry.isEmpty)
+    );
+  }
+
   get showsImageResizeHandle() {
     if (this.isGridCell || !this.isSelected) {
       return false;
@@ -971,7 +984,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   /**
    * Aspect ratio (width / height) to lock the resize drag to. Prefers
    * the schema's explicit `aspectRatio` when set to a number; falls
-   * back to the light variant's intrinsic ratio; otherwise `null`
+   * back to the authored frame or source ratio; otherwise `null`
    * (free drag).
    *
    */
@@ -983,8 +996,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       if (typeof def.aspectRatio === "number" && def.aspectRatio > 0) {
         return def.aspectRatio;
       }
-      if (value?.width && value?.height) {
-        return value.width / value.height;
+      const frame = value?.frame ?? value;
+      if (frame?.width && frame?.height) {
+        return frame.width / frame.height;
       }
     }
     return null;
@@ -1002,38 +1016,32 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     );
   }
 
-  /**
-   * `true` when the resizable image arg's current display dims
-   * diverge from its natural dims — used to enable the toolbar
-   * "Reset to natural" button.
-   *
-   */
-  get imageIsResized() {
-    const v = this.resizableImageArg?.value;
-    if (!v?.naturalWidth || !v?.naturalHeight || !v?.width || !v?.height) {
-      return false;
-    }
-    return v.width !== v.naturalWidth || v.height !== v.naturalHeight;
+  get repositionTarget() {
+    const session = this.wireframeImageComposition;
+    return session.repositioning &&
+      session.target?.blockKey === this.args.blockKey
+      ? session.target
+      : null;
   }
 
-  /**
-   * `true` when the resizable image arg is smaller than its
-   * containing chrome — i.e. there's room to "Fill block". When the
-   * image already fills the block (or exceeds it), the button is
-   * uninformative and should be hidden.
-   *
-   */
-  get imageCanFillBlock() {
-    const arg = this.resizableImageArg;
-    if (!arg?.value?.width || !arg?.value?.height || !this.chromeEl) {
-      return false;
-    }
+  get repositionFrame() {
+    const name = this.repositionTarget?.argName;
+    const marker =
+      name &&
+      this.chromeEl?.querySelector<HTMLElement>(
+        `[data-block-arg="${CSS.escape(name)}"]`
+      );
+    return marker instanceof HTMLElement &&
+      marker.matches(".d-block-image-frame")
+      ? marker
+      : marker instanceof HTMLElement
+        ? marker.querySelector<HTMLElement>(".d-block-image-frame")
+        : null;
+  }
 
-    void this.wireframeLayoutSignal.version;
-    const rect = this.chromeEl.getBoundingClientRect();
-    return (
-      rect.width > arg.value.width + 1 || rect.height > arg.value.height + 1
-    );
+  get imageIsResized() {
+    const v = this.resizableImageArg?.value;
+    return !this.isGridCell && Boolean(v?.frame);
   }
 
   /**
@@ -1293,6 +1301,34 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * @param dims - Proposed image dimensions for the live preview.
    */
   @action
+  editImage(): void {
+    const entry = this.editableImageArg;
+    if (!entry) {
+      return;
+    }
+    if (!this.isSelected) {
+      this.#selectThisBlock();
+    }
+    schedule("afterRender", () => {
+      if (this.isDestroying || !this.isSelected) {
+        return;
+      }
+      const button = this.chromeEl?.querySelector<HTMLElement>(
+        '[data-toolbar-action="image-edit"]'
+      );
+      const trigger =
+        button && getComputedStyle(button).visibility !== "hidden"
+          ? button
+          : this.chromeEl?.querySelector<HTMLElement>(
+              ".wireframe-block-toolbar__more"
+            );
+      if (trigger) {
+        this.#openImageEditMenu(trigger, entry.name);
+      }
+    });
+  }
+
+  @action
   previewImageResize({ width, height }: ImageDimensions): void {
     const marker = this.getImageMarkerEl();
     if (!marker) {
@@ -1330,20 +1366,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     if (!arg) {
       return;
     }
-    // Preserve `naturalWidth` / `naturalHeight` (set at upload /
-    // probe time) so the inspector can offer "Reset to natural" and
-    // we can show the resized info bar. Resize only changes the
-    // DISPLAY dimensions (`width` / `height`), not the intrinsic
-    // ones.
-    const naturalWidth = arg.value?.naturalWidth ?? arg.value?.width;
-    const naturalHeight = arg.value?.naturalHeight ?? arg.value?.height;
-    const nextValue = {
-      ...(arg.value ?? {}),
-      width,
-      height,
-      naturalWidth,
-      naturalHeight,
-    };
+    const nextValue = { ...arg.value, frame: { width, height } };
     this.wireframeImageUpload.setImageArg(
       this.args.blockKey,
       arg.name,
@@ -1359,60 +1382,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   @action
   resetImageToNaturalSize(): void {
     const arg = this.resizableImageArg;
-    if (!arg?.value?.naturalWidth || !arg?.value?.naturalHeight) {
+    if (!arg?.value) {
       return;
     }
-    this.wireframeImageUpload.setImageArg(this.args.blockKey, arg.name, {
-      ...arg.value,
-      width: arg.value.naturalWidth,
-      height: arg.value.naturalHeight,
-    });
-  }
-
-  /**
-   * Resizes the image arg to fit inside its containing chrome with
-   * the aspect ratio preserved (object-fit: contain semantics). One
-   * dimension matches the chrome; the other has margin. Natural
-   * dimensions are preserved so a subsequent "Reset to natural"
-   * still works.
-   */
-  @action
-  fillImageToBlock(): void {
-    const arg = this.resizableImageArg;
-    if (!arg?.value || !this.chromeEl) {
-      return;
-    }
-    const rect = this.chromeEl.getBoundingClientRect();
-    if (rect.width <= 0 || rect.height <= 0) {
-      return;
-    }
-    const naturalWidth = arg.value.naturalWidth ?? arg.value.width;
-    const naturalHeight = arg.value.naturalHeight ?? arg.value.height;
-    if (!naturalWidth || !naturalHeight) {
-      return;
-    }
-    const imageAspect = naturalWidth / naturalHeight;
-    const blockAspect = rect.width / rect.height;
-    let width;
-    let height;
-    if (imageAspect > blockAspect) {
-      // Image is wider than the block: width maxes out, height
-      // shrinks to maintain aspect.
-      width = rect.width;
-      height = rect.width / imageAspect;
-    } else {
-      // Image is taller (or equal): height maxes out, width
-      // shrinks.
-      height = rect.height;
-      width = rect.height * imageAspect;
-    }
-    this.wireframeImageUpload.setImageArg(this.args.blockKey, arg.name, {
-      ...arg.value,
-      width: Math.round(width),
-      height: Math.round(height),
-      naturalWidth,
-      naturalHeight,
-    });
+    const next = { ...arg.value };
+    delete next.frame;
+    this.wireframeImageUpload.setImageArg(this.args.blockKey, arg.name, next);
   }
 
   /**
@@ -1732,15 +1707,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     const argName = argEl?.dataset?.blockArg;
     const kind = argName ? kindForArg(this.metadata, argName) : null;
 
-    // Image args don't have an internal selection model the way text
-    // does, so a single click on the rendered image opens the replace
-    // / remove menu directly. Selecting the block is a side effect so
-    // the inspector tracks the change.
     if (argEl && argName && kind === "image") {
+      this._imageArgName = argName;
+      this.wireframeImageUpload.markImageArgTouched(argName);
       if (this.wireframeSelection.selectedBlockKey !== this.args.blockKey) {
         this.#selectThisBlock();
       }
-      this.#openImageEditMenu(argEl, argName);
       return;
     }
 
@@ -2047,44 +2019,30 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     }
   }
 
-  /**
-   * Opens the FloatKit menu that hosts Replace / Remove actions for a
-   * clicked image marker. The menu is mounted as a sibling of the
-   * marker (FloatKit handles positioning) and tracks the marker as its
-   * anchor; FloatKit re-positions on scroll / resize.
-   *
-   * Marks this arg as the most recently-touched image arg on the
-   * service so a subsequent paste still routes here. Closing the menu
-   * is handled by FloatKit's outside-click / Escape contract; the menu
-   * component also calls back `data.close()` after Replace / Remove
-   * commits.
-   *
-   * @param argEl - The clicked `[data-block-arg]` element.
-   * @param argName - The image arg name on this block.
-   */
-  async #openImageEditMenu(argEl: HTMLElement, argName: string): Promise<void> {
+  async #openImageEditMenu(
+    trigger: HTMLElement,
+    argName: string
+  ): Promise<void> {
     this.wireframeImageUpload.markImageArgTouched(argName);
     const menuState: ImageMenuState = {};
     const data = {
       blockKey: this.args.blockKey,
       argName,
-      close: () => menuState.instance?.close(),
+      schema: this.imageArgEntries.find((entry) => entry.name === argName)?.def,
+      close: async () => {
+        await menuState.instance?.close();
+      },
     };
-    menuState.instance = await this.menu.show(argEl, {
+    menuState.instance = await this.menu.show(trigger, {
       identifier: "wireframe-image-edit-menu",
       component: ImageEditMenu,
-      placement: "bottom",
-      fallbackPlacements: ["top", "right", "left"],
-      maxWidth: 240,
+      placement: "bottom-start",
+      fallbackPlacements: ["top-start", "bottom-end", "top-end"],
+      maxWidth: 280,
       data,
     });
   }
 
-  /**
-   * Selects the wrapped block via the editor service. Extracted from
-   * the per-kind dispatch in `onClick` so the image-arg single-click
-   * path can re-use it without duplicating the data payload.
-   */
   #selectThisBlock(): void {
     this.wireframeSelection.selectBlock({
       key: this.args.blockKey,
@@ -2209,10 +2167,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
               @showOutletStatus={{this.showOutletStatus}}
               @chromeEl={{this.optionalChromeEl}}
               @isSelected={{this.isSelected}}
-              @canFillImage={{this.imageCanFillBlock}}
               @canResetImage={{this.imageIsResized}}
-              @onFillImage={{this.fillImageToBlock}}
               @onResetImage={{this.resetImageToNaturalSize}}
+              @onEditImage={{if this.editableImageArg this.editImage}}
             />
           {{/unless}}
 
@@ -2280,6 +2237,16 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             `image-arg-overlay.gts`): an in-place "add image" affordance
             when empty, an invisible drop-to-replace target when filled.
             Keyed on emptiness so a fill / clear remounts the overlay. }}
+          {{#if this.repositionTarget}}
+            {{#if this.repositionFrame}}
+              <ImageReposition
+                @target={{this.repositionTarget}}
+                @frame={{this.repositionFrame}}
+                @chrome={{this.chromeEl}}
+              />
+            {{/if}}
+          {{/if}}
+
           {{#each this.imageArgEntries key="key" as |imageArg|}}
             <ImageArgOverlay
               @blockKey={{@blockKey}}

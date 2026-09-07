@@ -13,6 +13,7 @@ import type WireframeDragOverlayService from "./wireframe-drag-overlay";
 import type WireframeDragSessionService from "./wireframe-drag-session";
 import type WireframeEditModeService from "./wireframe-edit-mode";
 import type WireframeForceExpandService from "./wireframe-force-expand";
+import type WireframeImageCompositionService from "./wireframe-image-composition";
 import type WireframeImageUploadService from "./wireframe-image-upload";
 import type WireframeInspectorArgsService from "./wireframe-inspector-args";
 import type WireframePublishTargetService from "./wireframe-publish-target";
@@ -49,8 +50,12 @@ export default class WireframeWorkspaceService extends Service {
   @service declare wireframeDragSession: WireframeDragSessionService;
   /** Owns layout blocks temporarily expanded for editing. */
   @service declare wireframeForceExpand: WireframeForceExpandService;
+
+  @service declare wireframeImageComposition: WireframeImageCompositionService;
+
   /** Clears pending image uploads around workspace transitions. */
   @service declare wireframeImageUpload: WireframeImageUploadService;
+
   /** Owns the currently selected block. */
   @service declare wireframeSelection: WireframeSelectionService;
   /** Controls whether the editor session is active and allowed. */
@@ -138,6 +143,7 @@ export default class WireframeWorkspaceService extends Service {
   /** Closes the editing session and resets every session-scoped peer service. */
   @action
   exit(): void {
+    this.wireframeImageComposition.cancel();
     // Tear down the staging session: flush the engine, drop every session-draft
     // layer, and clear the draft baseline / review-drawer state. Runs before the
     // peer resets below so the drafts are gone before the selection that pointed

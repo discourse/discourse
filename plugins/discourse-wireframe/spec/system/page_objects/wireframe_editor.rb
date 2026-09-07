@@ -52,6 +52,36 @@ module PageObjects
         find("#{PALETTE_ENTRY_SELECTOR}[data-block-name='#{block_name}']")
       end
 
+      def drag_across_palette_heading
+        header = find(".wireframe-palette__section-header", match: :first)
+        bounds = header.evaluate_script("this.getBoundingClientRect().toJSON()")
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.mouse.move(bounds["x"] + 2, bounds["y"] + bounds["height"] / 2)
+          pw_page.mouse.down
+          pw_page.mouse.move(bounds["x"] + 65, bounds["y"] + bounds["height"] / 2, steps: 10)
+          pw_page.mouse.up
+        end
+      end
+
+      def has_no_palette_text_selection?
+        has_css?(".wireframe-palette") do |palette|
+          palette.evaluate_script("window.getSelection().toString().length === 0")
+        end
+      end
+
+      def select_palette_search_text(text)
+        input = find(".wireframe-palette__search")
+        input.set(text)
+        input.send_keys(:home, %i[shift end])
+      end
+
+      def has_selected_palette_search_text?(text)
+        has_css?(".wireframe-palette__search") do |input|
+          input.evaluate_script("this.value.substring(this.selectionStart, this.selectionEnd)") ==
+            text
+        end
+      end
+
       def has_layout_palette_variants?
         has_css?(
           "#{LAYOUT_PALETTE_ENTRY_SELECTOR}[data-palette-id='layout:stack']",

@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import WireframeDragOverlayService, {
   type SlotPreview,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-overlay";
@@ -51,8 +53,11 @@ export default class DropPreview extends Component {
   <template>
     {{#if this.preview}}
       <div
-        class="wireframe-drop-preview wireframe-drop-preview--{{this.preview.previewKind}}
-          wireframe-drop-preview--{{this.preview.validity}}"
+        class={{dConcatClass
+          "wireframe-drop-preview"
+          (concat "wireframe-drop-preview--" this.preview.previewKind)
+          (concat "wireframe-drop-preview--" this.preview.validity)
+        }}
         style={{this.style}}
         aria-hidden="true"
       >

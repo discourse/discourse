@@ -136,6 +136,8 @@ export default class WireframeMutationEngineService extends Service {
   /** Mutations available to reapply after an undo. */
   #redoStack = trackedArray<UndoBatch>();
 
+  #beforeHistoryChange: (() => void)[] = [];
+
   /**
    * For each entry we've ever mutated, the `entry.args` snapshot taken
    * before the first mutation. Reset / exit walk this map and write those
@@ -514,6 +516,11 @@ export default class WireframeMutationEngineService extends Service {
     }
   }
 
+  /** Lets transient editors discard previews before undo or redo writes committed history. */
+  registerBeforeHistoryChange(callback: () => void): void {
+    this.#beforeHistoryChange.push(callback);
+  }
+
   /**
    * Reverts the most recent mutation. For `args` batches, writes the
    * captured `prev` values back into `entry.args`. For `structural`
@@ -523,6 +530,7 @@ export default class WireframeMutationEngineService extends Service {
    * @returns Whether a mutation was undone.
    */
   async undo(): Promise<boolean> {
+    this.#beforeHistoryChange.forEach((callback) => callback());
     if (!this.canUndo) {
       return false;
     }
@@ -552,6 +560,7 @@ export default class WireframeMutationEngineService extends Service {
    * @returns Whether a mutation was redone.
    */
   async redo(): Promise<boolean> {
+    this.#beforeHistoryChange.forEach((callback) => callback());
     if (!this.canRedo) {
       return false;
     }

@@ -1,5 +1,5 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
-import { get } from "@ember/helper";
+import { array, get } from "@ember/helper";
 import type { ComponentLike } from "@glint/template";
 import { and, eq, not, or } from "discourse/truth-helpers";
 import InspectorCategoryField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-category-field";
@@ -125,6 +125,8 @@ interface InspectorFieldSignature {
   Args: {
     /** FormKit form component surface. */
     form: InspectorFormContext;
+    /** Stable identity for asynchronous image edits. */
+    blockKey?: string | null;
     /** Inspector field descriptor derived from the argument schema. */
     field: InspectorFieldDescriptor;
     /** Current form values keyed by argument name. */
@@ -308,10 +310,13 @@ const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
           reads/writes the field value directly via the yielded
           form field. }}
         <formField.Control>
-          <InspectorImageField
-            @custom={{formField}}
-            @schema={{@field.schema}}
-          />
+          {{#each (array @blockKey) key="@identity" as |blockKey|}}
+            <InspectorImageField
+              @blockKey={{blockKey}}
+              @custom={{formField}}
+              @schema={{@field.schema}}
+            />
+          {{/each}}
         </formField.Control>
       {{else if (eq @field.control "repeatable")}}
         {{! An array of structured items. The bespoke control reads/writes the

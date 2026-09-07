@@ -578,13 +578,14 @@ export default class WireframeBlockMutationsService extends Service {
         if (!result.changed) {
           return false;
         }
-        if (this.wireframeSelection.selectedBlockKey === blockKey) {
-          this.wireframeSelection.selectBlock(null);
-        }
+        // Selection hooks must see the layout after removal.
         this.wireframeMutationEngine.publishStructuralChange(
           located.outletName,
           result.layout
         );
+        if (this.wireframeSelection.selectedBlockKey === blockKey) {
+          this.wireframeSelection.selectBlock(null);
+        }
         return true;
       }
     );

@@ -222,6 +222,9 @@ export interface ArgSchema {
   /** For an image argument: whether the image may be resized. */
   allowResize?: boolean;
 
+  /** For an image argument: whether fit, position, and zoom may be edited. */
+  allowComposition?: boolean;
+
   /** For an image argument: the aspect ratio to constrain the image to. */
   aspectRatio?: string | number;
 

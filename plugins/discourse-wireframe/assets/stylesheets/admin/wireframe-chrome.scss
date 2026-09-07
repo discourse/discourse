@@ -165,6 +165,7 @@ body.wireframe-active {
         .wireframe-block-chrome__overlap-badge,
         .wireframe-empty-drop-placeholder,
         .wireframe-image-arg-overlay,
+        .wireframe-image-reposition,
         .wireframe-image-resize-overlay
       ) {
       pointer-events: none;
@@ -391,6 +392,43 @@ body.wireframe-active {
 
       > .wireframe-block-chrome__content {
         flex: 1 1 auto;
+
+        > [data-block-name="image"] {
+          width: 100%;
+          height: 100%;
+
+          > .d-block-image,
+          > .d-block-image-frame {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: auto;
+          }
+
+          > a.d-block-image > .d-block-image-frame {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: auto;
+          }
+
+          > figure.d-block-image {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+
+            > a,
+            > .d-block-image-frame {
+              flex: 1;
+              min-height: 0;
+              width: 100%;
+            }
+
+            .d-block-image-frame {
+              width: 100%;
+              height: 100%;
+              aspect-ratio: auto;
+            }
+          }
+        }
       }
     }
   }
@@ -1400,11 +1438,13 @@ body.wireframe-active {
 }
 
 .wireframe-palette {
+  user-select: none;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 
   &__search {
+    user-select: text;
     width: 100%;
     margin: 0;
   }
@@ -2533,40 +2573,6 @@ body.wireframe-active
   }
 }
 
-/* FloatKit menu hosting Replace / Remove for a clicked image marker.
-   Mounts in `#d-menu-portals` at the body level (outside any wireframe
-   shell wrapper), so the selector is flat — scoping under
-   `body.wireframe-active` is unnecessary and would in fact prevent the
-   styling from applying when the menu's portal sits as a sibling of
-   the shell rather than a descendant. The `data-identifier` is the
-   `identifier` passed to `menu.show()`; FloatKit's `DHeadlessMenu`
-   doesn't apply an identifier-derived class on its own. */
-
-[data-identifier="wireframe-image-edit-menu"] {
-  .wireframe-image-edit-menu {
-    list-style: none;
-    margin: 0;
-    padding: 0.25rem 0;
-    display: flex;
-    flex-direction: column;
-    min-width: 12rem;
-  }
-
-  .wireframe-image-edit-menu__item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    width: 100%;
-    justify-content: flex-start;
-    font-size: var(--font-down-1);
-
-    &--danger {
-      color: var(--danger);
-    }
-  }
-}
-
 .wireframe-outline-row-actions {
   .wireframe-outline__row-action--danger {
     color: var(--danger);
@@ -2575,6 +2581,7 @@ body.wireframe-active
 
 [data-identifier="wireframe-block-picker"] {
   .wireframe-block-picker {
+    user-select: none;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
@@ -2583,6 +2590,7 @@ body.wireframe-active
   }
 
   .wireframe-block-picker__search {
+    user-select: text;
     width: 100%;
     margin: 0;
   }
@@ -2993,52 +3001,52 @@ body.wireframe-active .wireframe-block-chrome.--media-background {
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
     pointer-events: auto;
 
-    &--nw {
+    &.--nw {
       top: -8px;
       left: -8px;
       cursor: nwse-resize;
     }
 
-    &--ne {
+    &.--ne {
       top: -8px;
       right: -8px;
       cursor: nesw-resize;
     }
 
-    &--sw {
+    &.--sw {
       bottom: -8px;
       left: -8px;
       cursor: nesw-resize;
     }
 
-    &--se {
+    &.--se {
       bottom: -8px;
       right: -8px;
       cursor: nwse-resize;
     }
 
-    &--n {
+    &.--n {
       top: -8px;
       left: 50%;
       transform: translateX(-50%);
       cursor: ns-resize;
     }
 
-    &--s {
+    &.--s {
       bottom: -8px;
       left: 50%;
       transform: translateX(-50%);
       cursor: ns-resize;
     }
 
-    &--e {
+    &.--e {
       top: 50%;
       right: -8px;
       transform: translateY(-50%);
       cursor: ew-resize;
     }
 
-    &--w {
+    &.--w {
       top: 50%;
       left: -8px;
       transform: translateY(-50%);
@@ -5366,7 +5374,145 @@ body.wireframe-active--dim-non-editable
   opacity: 0.75;
 }
 
+.wireframe-image-reposition {
+  position: absolute;
+  z-index: z("dropdown");
+  pointer-events: auto;
+
+  &__surface {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 2px solid var(--tertiary);
+    background: transparent;
+    cursor: move;
+  }
+
+  &__actions {
+    position: absolute;
+    inset-block-start: var(--space-2);
+    inset-inline-end: var(--space-2);
+    display: flex;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    background: var(--secondary);
+    border-radius: var(--d-border-radius);
+  }
+}
+
+.wireframe-image-composition {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  min-width: 0;
+  margin-block-start: var(--space-4);
+  padding: 0;
+  border: 0;
+
+  &.--compact {
+    margin: 0;
+    gap: var(--space-1);
+
+    .wireframe-image-composition__fit {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-2) var(--d-sidebar-row-horizontal-padding);
+    }
+  }
+
+  &__zoom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 5em;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+
+    > span {
+      grid-column: 1 / -1;
+    }
+
+    input[type="range"] {
+      min-width: 0;
+    }
+
+    input[type="number"] {
+      width: 5em;
+      margin: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+}
+
+.wireframe-image-editor-menu {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  max-width: min(22rem, calc(100vw - 2rem));
+  max-height: 75vh;
+  overflow-y: auto;
+  color: var(--primary);
+  background: var(--secondary);
+  font-size: var(--font-down-1);
+
+  &__action {
+    @include menu-item;
+  }
+
+  &__error {
+    color: var(--danger);
+    margin: var(--space-2) var(--d-sidebar-row-horizontal-padding);
+  }
+
+  &__hint {
+    margin: 0;
+    padding: 0 var(--d-sidebar-row-horizontal-padding) var(--space-2);
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  &__separator {
+    height: 0;
+    margin: var(--space-1) 0;
+    border-block-start: 1px solid var(--primary-low);
+  }
+}
+
 .wireframe-image-field {
+  min-width: 0;
+
+  &__grid-help {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  &__frame {
+    border: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    input {
+      width: 6em;
+      margin: 0;
+    }
+  }
   display: flex;
   flex-direction: column;
   gap: 0.75rem;

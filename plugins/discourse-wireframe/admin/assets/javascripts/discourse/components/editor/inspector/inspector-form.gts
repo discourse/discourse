@@ -380,6 +380,7 @@ export default class InspectorForm extends Component {
                 <div class="wireframe-inspector-form__advanced-body">
                   {{#each (this.visibleFields group.fields) as |field|}}
                     <InspectorField
+                      @blockKey={{this.wireframeSelection.selectedBlockKey}}
                       @form={{form}}
                       @field={{field}}
                       @values={{this.values}}
@@ -394,6 +395,7 @@ export default class InspectorForm extends Component {
               <form.Section @title={{group.group}}>
                 {{#each (this.visibleFields group.fields) as |field|}}
                   <InspectorField
+                    @blockKey={{this.wireframeSelection.selectedBlockKey}}
                     @form={{form}}
                     @field={{field}}
                     @values={{this.values}}

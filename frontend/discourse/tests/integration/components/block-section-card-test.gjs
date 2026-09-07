@@ -1,10 +1,12 @@
-import { render } from "@ember/test-helpers";
+import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import BlockImage from "discourse/blocks/block-image";
 import BlockOutlet, {
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
 import Card from "discourse/blocks/builtin/card";
 import Heading from "discourse/blocks/builtin/heading";
+import Image from "discourse/blocks/builtin/image";
 import Layout from "discourse/blocks/builtin/layout";
 import Section from "discourse/blocks/builtin/section";
 import {
@@ -22,6 +24,118 @@ module("Integration | Blocks | section and card", function (hooks) {
     _resetOutletLayoutsForTesting();
   });
 
+  test("shared image composition applies fit, position, and zoom to section backgrounds", async function (assert) {
+    const image = {
+      url: "/images/featured-light.png",
+      width: 1600,
+      height: 900,
+      fit: "contain",
+      position: { x: 20, y: 80 },
+      zoom: 175,
+    };
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Section,
+          args: { backgroundImage: image, minHeight: "medium" },
+          children: [{ block: Heading, args: { text: "Community" } }],
+        },
+      ])
+    );
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+    const section = find(".d-block-section");
+    const background = section.querySelector("img");
+    assert.strictEqual(getComputedStyle(background).objectFit, "contain");
+    assert.strictEqual(getComputedStyle(background).objectPosition, "20% 80%");
+    assert.strictEqual(
+      getComputedStyle(background).transform,
+      "matrix(1.75, 0, 0, 1.75, 0, 0)"
+    );
+    assert.closeTo(
+      section
+        .querySelector("[data-block-arg='backgroundImage']")
+        .getBoundingClientRect().height,
+      section.getBoundingClientRect().height,
+      1
+    );
+  });
+
+  test("shared image frame separates source dimensions and preserves alt text and caption", async function (assert) {
+    const image = {
+      url: "/images/featured-light.png",
+      width: 1600,
+      height: 900,
+      frame: { width: 320, height: 240 },
+      position: { x: 0, y: 100 },
+      zoom: 150,
+    };
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Image,
+          args: {
+            image,
+            alt: "Community building",
+            caption: "Our community",
+            link: "/about",
+          },
+        },
+      ])
+    );
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+    assert.dom("img").hasAttribute("alt", "Community building");
+    assert.dom("figcaption").hasText("Our community");
+    const frame = find("[data-block-arg='image']");
+    assert.strictEqual(frame.offsetWidth, 320, "uses the authored frame width");
+    assert.strictEqual(
+      frame.offsetHeight,
+      240,
+      "uses the authored frame height"
+    );
+    assert.strictEqual(
+      getComputedStyle(frame.querySelector("img")).objectPosition,
+      "0% 100%"
+    );
+    assert.dom("[data-block-arg='image'] figcaption").doesNotExist();
+    assert.strictEqual(
+      image.width,
+      1600,
+      "rendering preserves source resolution"
+    );
+  });
+
+  test("shared image uses a grid-owned frame without erasing authored dimensions", async function (assert) {
+    const image = {
+      url: "/images/featured-light.png",
+      width: 1600,
+      height: 900,
+      frame: { width: 120, height: 80 },
+      zoom: 150,
+    };
+    await render(
+      <template>
+        <div class="d-block-layout__cell" style="width: 400px; height: 300px;">
+          <BlockImage @image={{image}} />
+        </div>
+      </template>
+    );
+    assert.strictEqual(
+      find(".d-block-image-frame").offsetWidth,
+      400,
+      "the grid owns frame width"
+    );
+    assert.strictEqual(
+      find(".d-block-image-frame").offsetHeight,
+      300,
+      "the grid owns frame height"
+    );
+    assert.deepEqual(
+      image.frame,
+      { width: 120, height: 80 },
+      "the explicit frame is retained for use outside a grid"
+    );
+  });
+
   test("section renders a semantic surface with a persistent background marker", async function (assert) {
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
@@ -33,13 +147,13 @@ module("Integration | Blocks | section and card", function (hooks) {
               url: "/images/featured-light.png",
               width: 1600,
               height: 900,
+              position: { x: 100, y: 0 },
               dark: {
                 url: "/images/featured-dark.png",
                 width: 1600,
                 height: 900,
               },
             },
-            backgroundPosition: "top-right",
             contentWidth: "wide",
             minHeight: "medium",
             padding: "large",
@@ -58,7 +172,6 @@ module("Integration | Blocks | section and card", function (hooks) {
       .dom(".d-block-section")
       .hasAttribute("aria-label", "Featured discussions")
       .hasClass("--surface-subtle")
-      .hasClass("--position-top-right")
       .hasClass("--scrim-strong")
       .hasClass("--padding-large")
       .hasClass("--width-wide")
@@ -78,12 +191,10 @@ module("Integration | Blocks | section and card", function (hooks) {
       .hasAttribute("src", /featured-light\.png/)
       .hasAttribute("alt", "");
 
-    const sectionRect = document
-      .querySelector(".d-block-section")
-      .getBoundingClientRect();
-    const backdropRect = document
-      .querySelector(".d-block-section__backdrop")
-      .getBoundingClientRect();
+    const sectionRect = find(".d-block-section").getBoundingClientRect();
+    const backdropRect = find(
+      ".d-block-section__backdrop"
+    ).getBoundingClientRect();
 
     assert.closeTo(
       backdropRect.width,
@@ -150,12 +261,12 @@ module("Integration | Blocks | section and card", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    const contentWidth = document
-      .querySelector(".d-block-section__content")
-      .getBoundingClientRect().width;
-    const layoutWidth = document
-      .querySelector(".d-block-section__content .d-block-layout")
-      .getBoundingClientRect().width;
+    const contentWidth = find(
+      ".d-block-section__content"
+    ).getBoundingClientRect().width;
+    const layoutWidth = find(
+      ".d-block-section__content .d-block-layout"
+    ).getBoundingClientRect().width;
 
     assert.closeTo(
       layoutWidth,

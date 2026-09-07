@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import type { ArgSchema } from "discourse/blocks/types";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import {
   formatDimension,
   type ParsedDimension,
@@ -265,8 +266,10 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
 
   <template>
     <div
-      class="wireframe-dimension-field
-        {{if this.showSlider 'wireframe-dimension-field--with-slider'}}"
+      class={{dConcatClass
+        "wireframe-dimension-field"
+        (if this.showSlider "wireframe-dimension-field--with-slider")
+      }}
     >
       {{#if this.showSlider}}
         <input

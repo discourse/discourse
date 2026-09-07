@@ -21,6 +21,9 @@ describe "Wireframe editor drag and drop" do
   let(:editor) { PageObjects::Pages::WireframeEditor.new }
 
   before do
+    SiteSetting.external_system_avatars_enabled = true
+    SiteSetting.external_system_avatars_url =
+      "/images/discourse-logo-sketch.png?v={username}&s={size}"
     SiteSetting.wireframe_enabled = true
 
     theme_dir = File.expand_path("../fixtures/themes/wireframe-grid-test-theme", __dir__)
@@ -50,6 +53,15 @@ describe "Wireframe editor drag and drop" do
     expect(editor).to have_layout_palette_variants
 
     screenshot_marker(label: "wireframe-layout-palette-variants", only: :desktop)
+  end
+
+  it "keeps palette text from being selected while allowing search text selection" do
+    visit("/latest")
+    editor.enter
+    editor.drag_across_palette_heading
+    expect(editor).to have_no_palette_text_selection
+    editor.select_palette_search_text("heading")
+    expect(editor).to have_selected_palette_search_text("heading")
   end
 
   it "shows the selected layout's palette name throughout the editor" do

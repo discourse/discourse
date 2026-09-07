@@ -1,78 +1,87 @@
 .d-block-image {
   display: block;
+  min-width: 0;
   max-width: 100%;
-  height: auto;
   margin: 0;
 
-  img,
-  picture {
-    display: block;
-    max-width: 100%;
-    height: auto;
-  }
-
   &__caption {
-    margin-top: 0.5rem;
+    margin-block-start: var(--space-2);
     color: var(--primary-medium);
     font-size: var(--font-down-1);
     text-align: center;
   }
-
-  /* Empty-state anchor. With no image the block paints nothing on the
-     reader page, so this marker stays collapsed there; edit tooling
-     reveals it (with height) so its "add image" target has a block to
-     fill. */
 
   &--empty {
     display: none;
   }
 }
 
-/* The dark variant is rendered at the LIGHT variant's intrinsic
-   dimensions (see `darkVariantWithLightFrame` in the image block) so
-   both variants share one frame.
+.d-block-image-frame {
+  position: relative;
+  width: var(--block-image-width, 100%);
+  max-width: 100%;
+  min-width: 0;
+  aspect-ratio: var(--block-image-ratio, auto);
+  overflow: hidden;
 
-   The img tag has `width` / `height` attributes from the light variant
-   (DCdnImg passes them through), but the catch-all `height: auto` rule
-   above clears the height attribute and lets the browser compute height
-   from the LOADED image's natural ratio — which would be the DARK
-   variant's ratio in dark mode, so the box stretches to dark's aspect
-   and no clipping happens.
+  &.--fill {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
 
-   Anchoring the box to the light variant's aspect via the
-   `--aspect-ratio` custom property (set inline by `DCdnImg`) makes
-   `height: auto` resolve to "light's frame height" instead of "dark's
-   natural height", so the dark image is clipped to the light frame via
-   `object-fit: cover`.
+  > picture {
+    display: contents;
+  }
 
-   Targeted via `[data-block-arg="image"]` because the `.d-block-image`
-   class can land on the figure / anchor wrapper OR on the img itself
-   (per `DLightDarkImg`'s `...attributes` forwarding) — the data
-   attribute is the one reliable selector that always reaches the
-   rendered image element. */
+  &__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: var(--block-image-fit, cover);
+    object-position: var(--block-image-position, 50% 50%);
+    transform: scale(var(--block-image-zoom, 1));
+    transform-origin: var(--block-image-position, 50% 50%);
+  }
+}
 
 img[data-block-arg="image"] {
   aspect-ratio: var(--aspect-ratio, auto);
   object-fit: cover;
 }
 
-/* Inside a grid cell the cell owns the image's size. Fill the stretched wrapper
-   and crop (object-fit: cover) instead of sitting at the intrinsic aspect ratio,
-   so "Align (vertical): stretch" fills the cell. With start / center / end the
-   cell shrink-wraps the wrapper, so `height: 100%` resolves to the natural height
-   and the image keeps its ratio. Scoped to grid cells (`.d-block-layout__cell`)
-   so stacked / row layouts keep natural image sizing.
-
-   A captioned image is a `figure` wrapper, left at auto height so the caption
-   still has room; the wrapper rules below deliberately skip the figure, and
-   `picture { height: 100% }` stays a no-op there because the figure never
-   becomes definite-height. */
-
-.d-block-layout__cell {
-  a.d-block-image,
-  picture {
-    display: block;
+.d-block-layout__cell,
+.d-block-layout__cell > [data-block-name="image"] {
+  > .d-block-image,
+  > .d-block-image-frame {
+    width: 100%;
     height: 100%;
+    aspect-ratio: auto;
+  }
+
+  > a.d-block-image > .d-block-image-frame {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  > figure.d-block-image {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    > a,
+    > .d-block-image-frame {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+    }
+
+    .d-block-image-frame {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+    }
   }
 
   img[data-block-arg="image"] {

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -25,6 +24,7 @@ import { layoutPaletteDisplayName } from "discourse/plugins/discourse-wireframe/
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
 import type WireframeConditionsPanelService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-conditions-panel";
 import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
+import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 // TODO(devxp-typescript-pending): drop this cast once FormKit's `fk/alert` is
@@ -58,10 +58,10 @@ export default class InspectorPanel extends Component {
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
   @service declare wireframeConditionsPanel: WireframeConditionsPanelService;
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+  @service declare wireframeRail: WireframeRailService;
   @service declare wireframeSelection: WireframeSelectionService;
 
   isTabActive = (tab: string) => this.currentTab === tab;
-  @tracked _activeTab = "args";
 
   /**
    * The effective active tab. The outlet root has no Conditions tab (a page
@@ -74,10 +74,10 @@ export default class InspectorPanel extends Component {
     if (this.isPart) {
       return "args";
     }
-    if (this.isOutletRoot && this._activeTab === "conditions") {
+    if (this.isOutletRoot && this.wireframeRail.inspectorTab === "conditions") {
       return "args";
     }
-    return this._activeTab;
+    return this.wireframeRail.inspectorTab;
   }
 
   /**
@@ -309,7 +309,8 @@ export default class InspectorPanel extends Component {
 
   @action
   setTab(tab: string) {
-    this._activeTab = tab;
+    this.wireframeRail.inspectorTab = tab;
+    this.wireframeRail.inspectorField = null;
   }
 
   @action

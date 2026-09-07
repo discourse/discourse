@@ -4,22 +4,31 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { type ComponentLike } from "@glint/template";
+import type { BlockImageSource } from "discourse/blocks/image-value";
 import type { ArgSchema } from "discourse/blocks/types";
 import UppyImageUploaderUntyped from "discourse/components/uppy-image-uploader";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ImageCompositionControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-composition-controls";
 import {
   type ImageArgValue,
   isImageArgValue,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
+import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import WireframeImageUploadService, {
   type ImageUploadPayload,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-upload";
 import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
+import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 const URL_PROBE_TIMEOUT_MS = 4000;
@@ -62,6 +71,8 @@ const UppyImageUploader = UppyImageUploaderUntyped as unknown as ComponentLike<{
     ) => void;
     /** Handles deletion of the uploaded image. */
     onUploadDeleted: () => void;
+    /** Captures a replacement operation before the upload starts. */
+    onUploadStart: () => void;
     /** Core upload type. */
     type: string;
   };
@@ -74,36 +85,16 @@ interface InspectorImageFieldSignature {
   Args: {
     /** FormKit field data identifying the image argument. */
     custom: ImageFieldData;
+    /** Explicit block identity; the inspector adapter supplies it. */
+    blockKey?: string;
+    /** Closes a floating editor when adjustment moves to the canvas. */
+    onReposition?: () => void;
     /** Canonical image argument schema. */
     schema?: ArgSchema;
   };
 }
 
-/**
- * Custom FormKit control for `type: "image"` args.
- *
- * Bypasses FormKit's draft entirely: reads the current value live from
- * `entry.args` via the wireframe service, and writes via
- * `wireframeImageUpload.setImageArg`. That keeps the inspector and the canvas
- * perfectly in
- * sync — paste / drop / click-to-pick mutations made on the canvas
- * show up immediately, and inspector edits land in the canvas with
- * the same code path as those external sources.
- *
- * Inline UX:
- *   - Upload | URL tabs at the top of the field.
- *   - Upload tab mounts `UppyImageUploader` directly so we can wrap
- *     the upload payload into our shape (`{source,url,width,height}`).
- *   - URL tab is a single text input; commit fires on blur. We probe
- *     the URL with `new Image()` to read intrinsic dimensions; a soft
- *     warning surfaces if the load fails or times out (the URL is
- *     still saved — the renderer just paints without intrinsic dims).
- *   - When `argDef.allowDark`, a collapsible "Dark variant" section
- *     repeats the same tabs for the dark sub-value.
- *   - A non-blocking ratio-mismatch warning shows when both variants
- *     carry intrinsic dimensions and their aspect ratios diverge
- *     beyond a small epsilon.
- */
+/** Reads live image values so canvas and inspector share one mutation/history path. */
 export default class InspectorImageField extends Component<InspectorImageFieldSignature> {
   /** Uploads and writes image argument values. */
   @service declare wireframeImageUpload: WireframeImageUploadService;
@@ -113,6 +104,8 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
 
   /** Invalidates live reads after layout changes. */
   @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
+
+  @service declare wireframeRail: WireframeRailService;
 
   /** Provides the selected block key. */
   @service declare wireframeSelection: WireframeSelectionService;
@@ -140,13 +133,12 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
   @tracked lightWarning: string | null = null;
   @tracked darkWarning: string | null = null;
 
-  /**
-   * In-flight URL probes (one per variant). Used internally to discard
-   * stale probe resolutions when the user retypes — not touched from
-   * the template.
-   */
+  /** Captured at mount so pending uploads cannot follow later selections. */
+  #targetKey: string | null = null;
   #lightProbeToken = 0;
   #darkProbeToken = 0;
+  #lightReplacement: ((source: BlockImageSource) => void) | null = null;
+  #darkReplacement: ((source: BlockImageSource) => void) | null = null;
 
   /**
    * Creates the image editor and seeds its variant tabs and URL drafts.
@@ -156,6 +148,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
    */
   constructor(owner: Owner, args: InspectorImageFieldSignature["Args"]) {
     super(owner, args);
+    this.#targetKey = args.blockKey ?? this.wireframeSelection.selectedBlockKey;
     const value = this.liveValue;
     this.lightTab = value?.source ?? "upload";
     this.lightUrlDraft = value?.source === "url" ? (value.url ?? "") : "";
@@ -166,15 +159,13 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
     }
   }
 
-  /* Live read from entry.args */
+  get target() {
+    return { blockKey: this.blockKey ?? "", argName: this.argName };
+  }
 
-  /**
-   * Selected block's key — the inspector only renders against the
-   * current selection, so we always write to whatever's selected at
-   * commit time.
-   */
+  /** Captured when mounted so asynchronous results cannot follow the selection. */
   get blockKey(): string | null {
-    return this.wireframeSelection.selectedBlockKey;
+    return this.#targetKey;
   }
 
   /**
@@ -226,23 +217,38 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
     return this.args.schema?.allowDark === true;
   }
 
+  get allowFrameResize(): boolean {
+    return this.args.schema?.allowResize === true && !this.gridOwnsSize;
+  }
+
+  get gridOwnsSize(): boolean {
+    void this.wireframeLayoutSignal.version;
+    const entry =
+      this.blockKey &&
+      this.wireframeLayoutQuery.findEntryAndOutletSync(this.blockKey)?.entry;
+    return (
+      this.args.schema?.allowResize === true &&
+      this.wireframeLayoutQuery.isGridCellEntry(entry || null)
+    );
+  }
+
+  get frameSize() {
+    return this.liveValue?.frame ?? this.liveValue;
+  }
+
   /**
    * Returns the formatted warning when the dark variant's intrinsic
    * dimensions diverge from light beyond `ASPECT_RATIO_EPSILON`. The
-   * renderer pins dark to light's frame via object-fit, so dark IS
-   * actually clipped in this case — the warning is accurate.
+   * renderer keeps the light frame when switching to the dark source.
    */
   @cached
   get ratioMismatchWarning(): string | null {
     const light = this.lightVariant;
     const dark = this.darkVariant;
-    // Compare INTRINSIC (natural) ratios — the display width / height
-    // get overridden when the user resizes via canvas drag handles,
-    // so they no longer represent the source image's aspect.
-    const lightW = light?.naturalWidth ?? light?.width;
-    const lightH = light?.naturalHeight ?? light?.height;
-    const darkW = dark?.naturalWidth ?? dark?.width;
-    const darkH = dark?.naturalHeight ?? dark?.height;
+    const lightW = light?.width;
+    const lightH = light?.height;
+    const darkW = dark?.width;
+    const darkH = dark?.height;
     if (!lightW || !lightH || !darkW || !darkH) {
       return null;
     }
@@ -259,49 +265,111 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
     });
   }
 
-  /* Write helpers (go through the wireframe service, not FormKit) */
-
-  /**
-   * Returns `true` when the light variant's display dims differ from
-   * its natural ones — indicating the image has been resized.
-   *
-   * @returns Whether the light variant has resized display dimensions.
-   */
   get lightIsResized(): boolean {
     const v = this.lightVariant;
-    if (!v?.naturalWidth || !v?.naturalHeight || !v?.width || !v?.height) {
-      return false;
+    return this.allowFrameResize && Boolean(v?.frame);
+  }
+
+  @action
+  editGrid(): void {
+    const parent =
+      this.blockKey && this.wireframeLayoutQuery.findEntryParent(this.blockKey);
+    const key = parent && entryKey(parent);
+    if (key) {
+      this.wireframeSelection.selectBlock({ key });
+      this.wireframeRail.showInspector();
     }
-    return v.width !== v.naturalWidth || v.height !== v.naturalHeight;
+  }
+
+  @action
+  focusRequestedField(element: HTMLElement): void {
+    const field = this.wireframeRail.inspectorField;
+    if (
+      !field ||
+      field.blockKey !== this.blockKey ||
+      field.argName !== this.args.custom.name
+    ) {
+      return;
+    }
+    schedule("afterRender", () => {
+      if (this.isDestroyed || this.wireframeRail.inspectorField !== field) {
+        return;
+      }
+      const dark =
+        field.imageVariant === "dark"
+          ? element.querySelector<HTMLDetailsElement>(
+              ".wireframe-image-field__dark"
+            )
+          : null;
+      if (dark) {
+        dark.open = true;
+      }
+      const target = dark ?? element;
+      target.scrollIntoView({ block: "nearest" });
+      target
+        .querySelector<HTMLElement>("button, input:not([type=file])")
+        ?.focus();
+      this.wireframeRail.inspectorField = null;
+    });
+  }
+
+  @action
+  onLightUploadStart(): void {
+    this.#lightProbeToken++;
+    this.#lightReplacement = this.wireframeImageUpload.beginReplacement(
+      this.target
+    );
+  }
+
+  @action
+  onDarkUploadStart(): void {
+    this.#darkProbeToken++;
+    this.#darkReplacement = this.wireframeImageUpload.beginReplacement(
+      this.target,
+      "dark"
+    );
   }
 
   @action
   onLightUploadDone(upload: ImageUploadPayload): void {
+    if (this.isDestroying) {
+      return;
+    }
+    this.#lightProbeToken++;
     this.lightTab = "upload";
     this.lightWarning = null;
-    this.#commitLight(this.#uploadToVariant(upload));
+    this.#lightReplacement?.(this.#uploadToVariant(upload));
+    this.#lightReplacement = null;
   }
 
   @action
   onLightUploadDeleted(): void {
+    this.#lightProbeToken++;
+    this.#darkProbeToken++;
+    this.lightUrlDraft = "";
     this.lightWarning = null;
     this.#commitLight(null);
   }
 
   @action
   onDarkUploadDone(upload: ImageUploadPayload): void {
+    if (this.isDestroying) {
+      return;
+    }
+    this.#darkProbeToken++;
     this.darkTab = "upload";
     this.darkWarning = null;
-    this.#commitDark(this.#uploadToVariant(upload));
+    this.#darkReplacement?.(this.#uploadToVariant(upload));
+    this.#darkReplacement = null;
   }
 
   @action
   onDarkUploadDeleted(): void {
+    this.#darkProbeToken++;
+    this.darkUrlDraft = "";
     this.darkWarning = null;
     this.#commitDark(null);
   }
-
-  /* URL handlers (template-bound, so unprefixed) */
 
   @action
   setLightTab(tab: ImageEditorTab): void {
@@ -319,6 +387,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       return;
     }
     this.lightUrlDraft = event.currentTarget.value;
+    this.#lightProbeToken++;
   }
 
   @action
@@ -327,6 +396,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       return;
     }
     this.darkUrlDraft = event.currentTarget.value;
+    this.#darkProbeToken++;
   }
 
   @action
@@ -339,20 +409,19 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       return;
     }
     const token = ++this.#lightProbeToken;
+    const complete = this.wireframeImageUpload.beginReplacement(this.target);
     probeUrl(url).then(({ width, height, failed }) => {
-      if (token !== this.#lightProbeToken) {
+      if (this.isDestroying || token !== this.#lightProbeToken) {
         return;
       }
       this.lightWarning = failed
         ? "wireframe.inspector.image.url_probe_failed"
         : null;
-      this.#commitLight({
+      complete({
         source: "url",
         url,
         width,
         height,
-        naturalWidth: width,
-        naturalHeight: height,
       });
     });
   }
@@ -367,40 +436,77 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       return;
     }
     const token = ++this.#darkProbeToken;
+    const complete = this.wireframeImageUpload.beginReplacement(
+      this.target,
+      "dark"
+    );
     probeUrl(url).then(({ width, height, failed }) => {
-      if (token !== this.#darkProbeToken) {
+      if (this.isDestroying || token !== this.#darkProbeToken) {
         return;
       }
       this.darkWarning = failed
         ? "wireframe.inspector.image.url_probe_failed"
         : null;
-      this.#commitDark({
+      complete({
         source: "url",
         url,
         width,
         height,
-        naturalWidth: width,
-        naturalHeight: height,
       });
     });
   }
 
-  /**
-   * Resets the light variant's display dimensions back to its
-   * intrinsic / natural size. Wired to the "Reset to natural" link
-   * shown when the user has resized via canvas drag handles.
-   */
+  @action
+  resizeFrame(axis: "width" | "height", event: Event): void {
+    const input = event.currentTarget;
+    const value = this.liveValue;
+    const frame = this.frameSize;
+    if (
+      !(input instanceof HTMLInputElement) ||
+      !value ||
+      !this.blockKey ||
+      !frame?.width ||
+      !frame?.height
+    ) {
+      return;
+    }
+    const size = input.valueAsNumber;
+    if (!Number.isFinite(size) || size <= 0) {
+      input.value = String(frame[axis]);
+      return;
+    }
+    if (size !== frame[axis]) {
+      this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, {
+        ...value,
+        frame: { width: frame.width, height: frame.height, [axis]: size },
+      });
+    }
+  }
+
+  @action
+  frameKeyDown(axis: "width" | "height", event: KeyboardEvent): void {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.resizeFrame(axis, event);
+    } else if (
+      event.key === "Escape" &&
+      event.currentTarget instanceof HTMLInputElement
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.currentTarget.value = String(this.frameSize?.[axis] ?? "");
+    }
+  }
+
   @action
   resetLightSize(): void {
     const v = this.lightVariant;
-    if (!v?.naturalWidth || !v?.naturalHeight) {
+    if (!v || !this.blockKey) {
       return;
     }
-    this.#commitLight({
-      ...v,
-      width: v.naturalWidth,
-      height: v.naturalHeight,
-    });
+    const next = { ...v };
+    delete next.frame;
+    this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, next);
   }
 
   #commitLight(next: ImageArgValue | null): void {
@@ -411,12 +517,10 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, null);
       return;
     }
-    const merged = { ...next };
-    const existingDark = this.darkVariant;
-    if (existingDark) {
-      merged.dark = existingDark;
-    }
-    this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, merged);
+    this.wireframeImageUpload.replaceSource(
+      { blockKey: this.blockKey, argName: this.argName },
+      next
+    );
   }
 
   #commitDark(next: ImageArgValue | null): void {
@@ -437,41 +541,33 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
   }
 
   #uploadToVariant(upload: ImageUploadPayload): ImageArgValue {
-    // `upload_id` is what lets server-side cleanup create an
-    // UploadReference for this image; without it the upload is
-    // treated as orphaned and gets deleted by Jobs::CleanUpUploads
-    // after the 48h grace period.
-    //
-    // `width` / `height` are the DISPLAY dimensions (what the
-    // renderer paints at); `naturalWidth` / `naturalHeight` are the
-    // intrinsic dimensions captured at upload time. They diverge
-    // when the user resizes via the canvas drag handles — the
-    // inspector compares them to surface a "resized" info badge +
-    // a "Reset to natural" affordance.
     return {
       source: "upload",
       upload_id: upload.id,
       url: upload.url,
       width: upload.width,
       height: upload.height,
-      naturalWidth: upload.width,
-      naturalHeight: upload.height,
     };
   }
 
-  /* Upload handlers (template-bound, so unprefixed) */
-
   <template>
-    <div class="wireframe-image-field">
+    <div
+      class="wireframe-image-field"
+      data-block-key={{this.blockKey}}
+      data-image-arg={{@custom.name}}
+      {{didInsert this.focusRequestedField}}
+      {{didUpdate this.focusRequestedField this.wireframeRail.inspectorField}}
+    >
       <div class="wireframe-image-field__variant">
         <div class="wireframe-image-field__tabs" role="tablist">
           <button
             type="button"
-            class="wireframe-image-field__tab
-              {{if
-                (eq this.lightTab 'upload')
-                'wireframe-image-field__tab--active'
-              }}"
+            class={{dConcatClass
+              "wireframe-image-field__tab"
+              (if
+                (eq this.lightTab "upload") "wireframe-image-field__tab--active"
+              )
+            }}
             role="tab"
             aria-selected={{eq this.lightTab "upload"}}
             {{on "click" (fn this.setLightTab "upload")}}
@@ -480,11 +576,10 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
           </button>
           <button
             type="button"
-            class="wireframe-image-field__tab
-              {{if
-                (eq this.lightTab 'url')
-                'wireframe-image-field__tab--active'
-              }}"
+            class={{dConcatClass
+              "wireframe-image-field__tab"
+              (if (eq this.lightTab "url") "wireframe-image-field__tab--active")
+            }}
             role="tab"
             aria-selected={{eq this.lightTab "url"}}
             {{on "click" (fn this.setLightTab "url")}}
@@ -495,22 +590,35 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
 
         {{#if (eq this.lightTab "upload")}}
           <UppyImageUploader
+            class="wireframe-image-field__uploader no-repeat contain-image"
             @id="{{@custom.id}}-{{@custom.name}}-light"
             @imageUrl={{this.lightVariant.url}}
             @onUploadDone={{this.onLightUploadDone}}
+            @onUploadStart={{this.onLightUploadStart}}
             @onUploadDeleted={{this.onLightUploadDeleted}}
             @type="composer"
-            class="wireframe-image-field__uploader no-repeat contain-image"
           />
         {{else}}
           <input
             type="url"
+            aria-label={{i18n "wireframe.inspector.image.tab_url"}}
             class="wireframe-image-field__url-input"
             placeholder={{i18n "wireframe.inspector.image.url_placeholder"}}
             value={{this.lightUrlDraft}}
             {{on "input" this.onLightUrlDraftInput}}
             {{on "blur" this.commitLightUrl}}
           />
+        {{/if}}
+
+        {{#if this.lightVariant.url}}
+          {{#if (eq this.lightTab "url")}}
+            <DButton
+              class="btn-transparent --danger"
+              @icon="trash-can"
+              @label="wireframe.inspector.image.remove"
+              @action={{this.onLightUploadDeleted}}
+            />
+          {{/if}}
         {{/if}}
 
         {{#if this.lightWarning}}
@@ -521,19 +629,15 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
         {{/if}}
 
         {{#if this.lightIsResized}}
-          {{! Informational note (not a warning) when the user has
-            resized via canvas drag handles. Shows the current
-            display dims vs the natural dims and offers a one-click
-            reset. }}
           <div class="wireframe-image-field__info" role="status">
             {{dIcon "info-circle"}}
             <span>
               {{i18n
                 "wireframe.inspector.image.resized_info"
-                width=this.lightVariant.width
-                height=this.lightVariant.height
-                natural_width=this.lightVariant.naturalWidth
-                natural_height=this.lightVariant.naturalHeight
+                width=this.lightVariant.frame.width
+                height=this.lightVariant.frame.height
+                natural_width=this.lightVariant.width
+                natural_height=this.lightVariant.height
               }}
             </span>
             <button
@@ -546,6 +650,51 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
           </div>
         {{/if}}
       </div>
+
+      {{#if @schema.allowComposition}}
+        {{#if this.lightVariant.url}}
+          <ImageCompositionControls
+            @target={{this.target}}
+            @value={{this.liveValue}}
+            @onReposition={{@onReposition}}
+          />
+        {{/if}}
+      {{/if}}
+
+      {{#if this.gridOwnsSize}}
+        <fieldset class="wireframe-image-field__frame">
+          <legend>{{i18n "wireframe.inspector.image.frame_size"}}</legend>
+          <span>{{i18n "wireframe.inspector.image.grid_size"}}</span>
+          <span class="wireframe-image-field__grid-help">{{i18n
+              "wireframe.inspector.image.grid_size_help"
+            }}</span>
+          <DButton
+            class="btn-default"
+            @action={{this.editGrid}}
+            @label="wireframe.inspector.image.edit_grid"
+          />
+        </fieldset>
+      {{else if this.allowFrameResize}}
+        {{#if this.lightVariant.url}}
+          <fieldset class="wireframe-image-field__frame">
+            <legend>{{i18n "wireframe.inspector.image.frame_size"}}</legend>
+            <label>{{i18n "wireframe.inspector.image.frame_width"}}<input
+                type="number"
+                min="1"
+                value={{this.frameSize.width}}
+                {{on "blur" (fn this.resizeFrame "width")}}
+                {{on "keydown" (fn this.frameKeyDown "width")}}
+              /></label>
+            <label>{{i18n "wireframe.inspector.image.frame_height"}}<input
+                type="number"
+                min="1"
+                value={{this.frameSize.height}}
+                {{on "blur" (fn this.resizeFrame "height")}}
+                {{on "keydown" (fn this.frameKeyDown "height")}}
+              /></label>
+          </fieldset>
+        {{/if}}
+      {{/if}}
 
       {{#if this.allowDark}}
         <details
@@ -561,11 +710,13 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
             <div class="wireframe-image-field__tabs" role="tablist">
               <button
                 type="button"
-                class="wireframe-image-field__tab
-                  {{if
-                    (eq this.darkTab 'upload')
-                    'wireframe-image-field__tab--active'
-                  }}"
+                class={{dConcatClass
+                  "wireframe-image-field__tab"
+                  (if
+                    (eq this.darkTab "upload")
+                    "wireframe-image-field__tab--active"
+                  )
+                }}
                 role="tab"
                 aria-selected={{eq this.darkTab "upload"}}
                 {{on "click" (fn this.setDarkTab "upload")}}
@@ -574,11 +725,12 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
               </button>
               <button
                 type="button"
-                class="wireframe-image-field__tab
-                  {{if
-                    (eq this.darkTab 'url')
-                    'wireframe-image-field__tab--active'
-                  }}"
+                class={{dConcatClass
+                  "wireframe-image-field__tab"
+                  (if
+                    (eq this.darkTab "url") "wireframe-image-field__tab--active"
+                  )
+                }}
                 role="tab"
                 aria-selected={{eq this.darkTab "url"}}
                 {{on "click" (fn this.setDarkTab "url")}}
@@ -589,22 +741,35 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
 
             {{#if (eq this.darkTab "upload")}}
               <UppyImageUploader
+                class="wireframe-image-field__uploader no-repeat contain-image"
                 @id="{{@custom.id}}-{{@custom.name}}-dark"
                 @imageUrl={{this.darkVariant.url}}
                 @onUploadDone={{this.onDarkUploadDone}}
+                @onUploadStart={{this.onDarkUploadStart}}
                 @onUploadDeleted={{this.onDarkUploadDeleted}}
                 @type="composer"
-                class="wireframe-image-field__uploader no-repeat contain-image"
               />
             {{else}}
               <input
                 type="url"
+                aria-label={{i18n "wireframe.inspector.image.tab_url"}}
                 class="wireframe-image-field__url-input"
                 placeholder={{i18n "wireframe.inspector.image.url_placeholder"}}
                 value={{this.darkUrlDraft}}
                 {{on "input" this.onDarkUrlDraftInput}}
                 {{on "blur" this.commitDarkUrl}}
               />
+            {{/if}}
+
+            {{#if this.darkVariant.url}}
+              {{#if (eq this.darkTab "url")}}
+                <DButton
+                  class="btn-transparent --danger"
+                  @icon="trash-can"
+                  @label="wireframe.inspector.image.remove"
+                  @action={{this.onDarkUploadDeleted}}
+                />
+              {{/if}}
             {{/if}}
 
             {{#if this.darkWarning}}

@@ -5,6 +5,7 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
@@ -134,11 +135,10 @@ export default class ImageVariantDropPopover extends Component<ImageVariantDropP
 
   <template>
     <div
-      class="wireframe-image-variant-drop-popover
-        {{if
-          this.isDragOver
-          'wireframe-image-variant-drop-popover--drag-over'
-        }}"
+      class={{dConcatClass
+        "wireframe-image-variant-drop-popover"
+        (if this.isDragOver "wireframe-image-variant-drop-popover--drag-over")
+      }}
       {{didInsert this.setup}}
       {{willDestroy this.teardown}}
       {{dDragAndDropExternalTarget

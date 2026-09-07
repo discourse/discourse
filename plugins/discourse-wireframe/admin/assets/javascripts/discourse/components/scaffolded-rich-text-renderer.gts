@@ -1,6 +1,7 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import type { MinimalRichTextRendererSignature } from "discourse/lib/blocks/-internals/minimal-rich-text-renderer";
 import eq from "discourse/truth-helpers/helpers/eq";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import MarkedText from "discourse/ui-kit/marked-text";
 
 /**
@@ -57,7 +58,7 @@ interface ScaffoldedRichTextRendererSignature {
 const ScaffoldedRichTextRenderer: TemplateOnlyComponent<ScaffoldedRichTextRendererSignature> =
   <template>
     <span
-      class="wf-rich-text {{if @isEmpty '--empty'}}"
+      class={{dConcatClass "wf-rich-text" (if @isEmpty "--empty")}}
       data-block-arg={{@arg}}
       data-block-arg-schema={{@schema}}
       data-wf-rich-text-arg={{@arg}}

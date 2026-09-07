@@ -1,5 +1,10 @@
 en:
   js:
+    position_picker:
+      label: "Position"
+      horizontal: "X (%)"
+      vertical: "Y (%)"
+      preset: "Position: %{x}% from left, %{y}% from top"
     ace_editor:
       resize: "Resize code editor"
     user_api_key:

@@ -12,6 +12,7 @@ import type { ArgSchema } from "discourse/blocks/types";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
@@ -156,6 +157,8 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
    * affordance on the empty card, so a failed drop / pick isn't silent.
    */
   @tracked uploadFailed = false;
+
+  #completeReplacement: ((source: ImageArgValue) => boolean) | null = null;
 
   /**
    * Release callback for this overlay's current image-arg claim, or `null`.
@@ -670,7 +673,13 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
     if (!uppy) {
       return;
     }
-    uppy.on("upload", () => (this.uploadFailed = false));
+    uppy.on("file-added", () => {
+      this.uploadFailed = false;
+      this.#completeReplacement = this.wireframeImageUpload.beginReplacement({
+        blockKey: this.args.blockKey,
+        argName: this.args.argName,
+      });
+    });
     uppy.on("upload-error", () => (this.uploadFailed = true));
   }
 
@@ -682,16 +691,13 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
    */
   #applyUpload(upload: ImageUploadPayload): void {
     this.uploadFailed = false;
-    const current = this.#liveValue();
-    const variant = this.#variantFromUpload(upload);
-    const existingDark = current?.dark;
-    const next = existingDark ? { ...variant, dark: existingDark } : variant;
-    this.wireframeImageUpload.setImageArg(
-      this.args.blockKey,
-      this.args.argName,
-      next
-    );
-    this.#selectOwningBlock();
+    if (
+      !this.isDestroying &&
+      this.#completeReplacement?.(this.#variantFromUpload(upload))
+    ) {
+      this.#selectOwningBlock();
+    }
+    this.#completeReplacement = null;
   }
 
   /**
@@ -745,8 +751,6 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
       url: upload.url,
       width: upload.width,
       height: upload.height,
-      naturalWidth: upload.width,
-      naturalHeight: upload.height,
     };
   }
 
@@ -856,14 +860,19 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
 
   <template>
     <div
-      class="wireframe-image-arg-overlay
-        {{if @isEmpty 'wireframe-image-arg-overlay--empty'}}
-        {{unless @isEmpty 'wireframe-image-arg-overlay--filled'}}
-        {{if this.markerPassive 'wireframe-image-arg-overlay--passive'}}
-        {{if this.isCompact 'wireframe-image-arg-overlay--compact'}}
-        {{if this.isDragOver 'wireframe-image-arg-overlay--drag-over'}}
-        {{if this.uploading 'wireframe-image-arg-overlay--uploading'}}
-        {{if this.showUploadError 'wireframe-image-arg-overlay--error'}}"
+      class={{dConcatClass
+        "wireframe-image-arg-overlay"
+        (if
+          @isEmpty
+          "wireframe-image-arg-overlay--empty"
+          "wireframe-image-arg-overlay--filled"
+        )
+        (if this.markerPassive "wireframe-image-arg-overlay--passive")
+        (if this.isCompact "wireframe-image-arg-overlay--compact")
+        (if this.isDragOver "wireframe-image-arg-overlay--drag-over")
+        (if this.uploading "wireframe-image-arg-overlay--uploading")
+        (if this.showUploadError "wireframe-image-arg-overlay--error")
+      }}
       data-block-arg={{@argName}}
       role={{if this.isInteractiveEmpty "button"}}
       tabindex={{if this.isInteractiveEmpty "0"}}
