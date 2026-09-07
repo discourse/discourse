@@ -7,6 +7,7 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "dependencies": {
+    "core-js": "^3.50.0",
     "discourse": "workspace:0.0.0",
     "discourse-markdown-it": "workspace:*",
     "markdown-it": "^15.0.1",

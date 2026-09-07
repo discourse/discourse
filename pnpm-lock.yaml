@@ -725,6 +725,9 @@ importers:
 
   frontend/pretty-text-processor:
     dependencies:
+      core-js:
+        specifier: ^3.50.0
+        version: 3.50.0
       discourse:
         specifier: workspace:0.0.0
         version: link:../discourse
