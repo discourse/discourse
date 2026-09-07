@@ -207,6 +207,16 @@ RSpec.describe AdminDashboardSiteTraffic do
       )
     end
 
+    it "includes the first day of traffic on beacon-only sites" do
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 15)
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-01", count: 25)
+
+      response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+      expect(traffic_series_data(response, :logged_in)).to eq([traffic_point("2026-05-01", 15)])
+      expect(traffic_series_data(response, :anonymous)).to eq([traffic_point("2026-05-01", 25)])
+    end
+
     it "keeps using legacy counters when beacon data exists" do
       SiteSetting.use_legacy_pageviews = true
 

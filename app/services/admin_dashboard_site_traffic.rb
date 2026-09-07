@@ -311,13 +311,7 @@ class AdminDashboardSiteTraffic
     return if SiteSetting.use_legacy_pageviews
     return @beacon_cutover_date if defined?(@beacon_cutover_date)
 
-    first_beacon_date =
-      ApplicationRequest
-        .where(req_type: beacon_request_types.values)
-        .where("count > 0")
-        .minimum(:date)
-
-    @beacon_cutover_date = first_beacon_date&.next_day
+    @beacon_cutover_date = ApplicationRequest.browser_pageview_beacon_cutover_date
   end
 
   def traffic_rows(range_start_date, range_end_date)

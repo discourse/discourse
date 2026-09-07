@@ -17,15 +17,21 @@ RSpec.describe ApplicationRequest do
   end
 
   describe ".browser_pageviews" do
-    it "preserves history and selects only beacons from the first beacon date onward" do
+    it "preserves the first partial beacon day and switches both cohorts the following day" do
       today = Date.current
       history =
         described_class.create!(date: today - 2, req_type: :page_view_anon_browser, count: 4)
       described_class.create!(date: today - 2, req_type: :page_view_anon_browser_beacon, count: 0)
-      described_class.create!(date: today - 1, req_type: :page_view_anon_browser, count: 10)
-      described_class.create!(date: today - 1, req_type: :page_view_logged_in_browser, count: 5)
+      first_day =
+        described_class.create!(date: today - 1, req_type: :page_view_anon_browser, count: 1000)
+      described_class.create!(date: today - 1, req_type: :page_view_anon_browser_beacon, count: 50)
+      described_class.create!(
+        date: today - 1,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 5,
+      )
       beacon =
-        described_class.create!(date: today - 1, req_type: :page_view_anon_browser_beacon, count: 8)
+        described_class.create!(date: today, req_type: :page_view_anon_browser_beacon, count: 8)
       described_class.create!(date: today, req_type: :page_view_anon_browser, count: 3)
       described_class.create!(
         date: today,
@@ -33,7 +39,16 @@ RSpec.describe ApplicationRequest do
         count: 2,
       )
 
-      expect(described_class.browser_pageviews).to contain_exactly(history, beacon)
+      expect(described_class.browser_pageviews).to contain_exactly(history, first_day, beacon)
+    end
+
+    it "includes the first beacon day when piggyback counters are absent or zero" do
+      today = Date.current
+      described_class.create!(date: today, req_type: :page_view_anon_browser, count: 0)
+      beacon =
+        described_class.create!(date: today, req_type: :page_view_anon_browser_beacon, count: 8)
+
+      expect(described_class.browser_pageviews).to contain_exactly(beacon)
     end
 
     it "uses piggyback history when no beacons have been recorded" do

@@ -31,7 +31,7 @@ class ApplicationRequest < ActiveRecord::Base
   def self.browser_pageviews
     legacy_types = %i[page_view_anon_browser page_view_logged_in_browser]
     beacon_types = %i[page_view_anon_browser_beacon page_view_logged_in_browser_beacon]
-    cutover_date = where(req_type: beacon_types).where("count > 0").minimum(:date)
+    cutover_date = browser_pageview_beacon_cutover_date
 
     return where(req_type: legacy_types) if cutover_date.nil?
 
@@ -39,6 +39,25 @@ class ApplicationRequest < ActiveRecord::Base
     where(req_type: legacy_types).where("date < ?", cutover_date).or(
       where(req_type: beacon_types).where("date >= ?", cutover_date),
     )
+  end
+
+  def self.browser_pageview_beacon_cutover_date
+    first_beacon_date =
+      where(req_type: %i[page_view_anon_browser_beacon page_view_logged_in_browser_beacon]).where(
+        "count > 0",
+      ).minimum(:date)
+    return if first_beacon_date.nil?
+
+    # The first beacon day may be partial. Prefer existing piggyback traffic for that
+    # whole day, but retain the first day on sites that only recorded beacons.
+    if where(
+         date: first_beacon_date,
+         req_type: %i[page_view_anon_browser page_view_logged_in_browser],
+       ).where("count > 0").exists?
+      first_beacon_date.next_day
+    else
+      first_beacon_date
+    end
   end
 
   def self.browser_pageview_count_for_period(type, since)

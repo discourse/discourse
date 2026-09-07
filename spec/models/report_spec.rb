@@ -420,8 +420,8 @@ RSpec.describe Report do
         count: 8,
       )
 
-      expect(report.data).to eq([{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }])
-      expect(report.total).to eq(12)
+      expect(report.data).to eq([{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 3 }])
+      expect(report.total).to eq(7)
     end
 
     context "with no data" do
@@ -1851,10 +1851,10 @@ RSpec.describe Report do
       series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
 
       expect(series["page_view_anon_browser"]).to eq(
-        [{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }],
+        [{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 3 }],
       )
       expect(series["page_view_logged_in_browser"]).to eq(
-        [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 0 }],
+        [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 6 }],
       )
       expect(series["page_view_other"]).to eq(
         [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 0 }],
