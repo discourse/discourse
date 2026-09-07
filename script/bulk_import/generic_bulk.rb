@@ -496,6 +496,16 @@ class BulkImport::Generic < BulkImport::Base
     puts "running 'import:ensure_consistency' rake task."
     Rake::Task["import:ensure_consistency"].invoke
 
+    # badge grants are queued per post in the live posting flow, which never
+    # runs for bulk-imported posts, so badges derived from the rebuilt
+    # user_actions, quoted_posts and topic_links need an explicit backfill
+    Badge
+      .where(id: [Badge::FirstMention, Badge::FirstQuote, Badge::FirstLink])
+      .find_each do |badge|
+        puts "", "Backfilling '#{badge.name}' badge..."
+        BadgeGranter.backfill(badge)
+      end
+
     # Force refresh directory items to sync user stats
     # This is needed even when enable_user_directory is false
     puts "", "Refreshing directory items and syncing user stats..."
