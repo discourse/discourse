@@ -158,6 +158,19 @@ CREATE FUNCTION discourse_functions.raise_topic_timers_topic_id_readonly() RETUR
 $$;
 
 
+--
+-- Name: skip_piggyback_browser_pageview_events(); Type: FUNCTION; Schema: discourse_functions; Owner: -
+--
+
+CREATE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  RETURN NULL;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -24827,6 +24840,13 @@ CREATE TRIGGER category_settings_require_topic_approval_readonly BEFORE INSERT O
 --
 
 CREATE TRIGGER discourse_rss_polling_rss_feeds_author_readonly BEFORE INSERT OR UPDATE OF author ON public.discourse_rss_polling_rss_feeds FOR EACH ROW WHEN ((new.author IS NOT NULL)) EXECUTE FUNCTION discourse_functions.raise_discourse_rss_polling_rss_feeds_author_readonly();
+
+
+--
+-- Name: browser_pageview_events skip_piggyback_browser_pageview_events; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER skip_piggyback_browser_pageview_events BEFORE INSERT OR UPDATE OF source ON public.browser_pageview_events FOR EACH ROW WHEN ((new.source = 1)) EXECUTE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events();
 
 
 --
