@@ -9,21 +9,13 @@ import { CHAT_CHANNEL_LIST_SORTS } from "discourse/plugins/chat/discourse/lib/ch
 
 export default class ChatChannelListSortMenu extends Component {
   @service chatChannelListPreferences;
-  @service menu;
 
   @action
-  async selectSort(sort, event) {
-    const trigger = this.menu.getByIdentifier(
-      "chat-channel-list-options-menu"
-    )?.triggerElement;
-    await Promise.all([
-      this.menu.close("chat-channel-list-sort-menu"),
-      this.menu.close("chat-channel-list-options-menu"),
-    ]);
-    if (!this.menu.shouldRenderInModal(true) && event?.detail === 0) {
-      trigger?.focus();
-    }
-    await this.chatChannelListPreferences.setSort(sort);
+  async selectSort(sort) {
+    const preferences = this.chatChannelListPreferences;
+    await this.args.closeSubmenu?.();
+    await this.args.closeParent?.();
+    await preferences.setSort(sort);
   }
 
   <template>
@@ -31,6 +23,7 @@ export default class ChatChannelListSortMenu extends Component {
       aria-label={{i18n "chat.channel_list.sort.title"}}
       class="chat-channel-list-sort-menu"
       role="group"
+      ...attributes
       as |dropdown|
     >
       <dropdown.subheader role="presentation">

@@ -12,21 +12,15 @@ import {
 
 export default class ChatChannelListFilterMenu extends Component {
   @service chatChannelListPreferences;
-  @service menu;
 
   @action
-  async selectFilter(filter, event) {
-    const trigger = this.menu.getByIdentifier(
-      "chat-channel-list-options-menu"
-    )?.triggerElement;
-    await Promise.all([
-      this.menu.close("chat-channel-list-filter-menu"),
-      this.menu.close("chat-channel-list-options-menu"),
-    ]);
-    if (!this.menu.shouldRenderInModal(true) && event?.detail === 0) {
-      trigger?.focus();
-    }
-    await this.chatChannelListPreferences.setFilter(filter);
+  async selectFilter(filter) {
+    const preferences = this.chatChannelListPreferences;
+    const { closeParent, closeSubmenu } = this.args;
+
+    await closeSubmenu?.();
+    await closeParent?.();
+    await preferences.setFilter(filter);
   }
 
   <template>
@@ -34,6 +28,7 @@ export default class ChatChannelListFilterMenu extends Component {
       aria-label={{i18n "chat.channel_list.filter.title"}}
       class="chat-channel-list-filter-menu"
       role="group"
+      ...attributes
       as |dropdown|
     >
       <dropdown.subheader role="presentation">

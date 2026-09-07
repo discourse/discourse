@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   CHAT_CHANNEL_LIST_FILTERS,
@@ -27,7 +30,6 @@ const SORT_LABEL_KEYS = {
 
 export default class ChatChannelListOptionsMenu extends Component {
   @service chatChannelListPreferences;
-  @service menu;
   @service router;
 
   get currentFilterLabel() {
@@ -50,60 +52,18 @@ export default class ChatChannelListOptionsMenu extends Component {
     });
   }
 
-  get isFilterMenuExpanded() {
-    return Boolean(
-      this.menu.getByIdentifier("chat-channel-list-filter-menu")?.expanded
-    );
-  }
-
-  get isSortMenuExpanded() {
-    return Boolean(
-      this.menu.getByIdentifier("chat-channel-list-sort-menu")?.expanded
-    );
-  }
-
   @action
   async browseChannels() {
-    await Promise.all([
-      this.menu.close("chat-channel-list-options-menu"),
-      this.menu.close("chat-channel-list-filter-menu"),
-      this.menu.close("chat-channel-list-sort-menu"),
-    ]);
-    await this.router.transitionTo("chat.browse.open");
-  }
-
-  @action
-  openFilterMenu(_actionParam, event) {
-    this.#openSubmenu(event, {
-      component: ChatChannelListFilterMenu,
-      identifier: "chat-channel-list-filter-menu",
-    });
-  }
-
-  @action
-  openSortMenu(_actionParam, event) {
-    this.#openSubmenu(event, {
-      component: ChatChannelListSortMenu,
-      identifier: "chat-channel-list-sort-menu",
-    });
-  }
-
-  #openSubmenu(event, { component, identifier }) {
-    this.menu.show(event.currentTarget || event.target, {
-      component,
-      contentRole: "menu",
-      groupIdentifier: "chat-channel-list-options-submenu",
-      identifier,
-      modalForMobile: true,
-      offset: { mainAxis: 10, crossAxis: -5 },
-      placement: "right-start",
-    });
+    const router = this.router;
+    await this.args.close?.();
+    await router.transitionTo("chat.browse.open");
   }
 
   <template>
     <DDropdownMenu
       class="chat-channel-list-options-menu"
       role="none"
+      ...attributes
       as |dropdown|
     >
       <dropdown.item role="none">
@@ -122,17 +82,29 @@ export default class ChatChannelListOptionsMenu extends Component {
       </dropdown.subheader>
 
       <dropdown.item role="none">
-        <DButton
-          aria-expanded={{if this.isFilterMenuExpanded "true" "false"}}
+        <DMenu
           aria-haspopup="menu"
           data-menu-option-id="filterChannels"
           role="menuitem"
-          @action={{this.openFilterMenu}}
-          @forwardEvent={{true}}
-          @suffixIcon="angle-right"
-          @translatedAriaLabel={{this.currentFilterAriaLabel}}
-          @translatedLabel={{this.currentFilterLabel}}
-        />
+          @ariaLabel={{this.currentFilterAriaLabel}}
+          @contentRole="menu"
+          @groupIdentifier="chat-channel-list-options-submenu"
+          @identifier="chat-channel-list-filter-menu"
+          @label={{this.currentFilterLabel}}
+          @modalForMobile={{true}}
+          @offset={{hash mainAxis=10 crossAxis=-5}}
+          @placement="right-start"
+        >
+          <:trigger>
+            <span class="d-button__suffix-icon">{{dIcon "angle-right"}}</span>
+          </:trigger>
+          <:content as |submenu|>
+            <ChatChannelListFilterMenu
+              @closeParent={{@close}}
+              @closeSubmenu={{submenu.close}}
+            />
+          </:content>
+        </DMenu>
       </dropdown.item>
 
       <dropdown.subheader role="presentation">
@@ -140,17 +112,29 @@ export default class ChatChannelListOptionsMenu extends Component {
       </dropdown.subheader>
 
       <dropdown.item role="none">
-        <DButton
-          aria-expanded={{if this.isSortMenuExpanded "true" "false"}}
+        <DMenu
           aria-haspopup="menu"
           data-menu-option-id="sortChannels"
           role="menuitem"
-          @action={{this.openSortMenu}}
-          @forwardEvent={{true}}
-          @suffixIcon="angle-right"
-          @translatedAriaLabel={{this.currentSortAriaLabel}}
-          @translatedLabel={{this.currentSortLabel}}
-        />
+          @ariaLabel={{this.currentSortAriaLabel}}
+          @contentRole="menu"
+          @groupIdentifier="chat-channel-list-options-submenu"
+          @identifier="chat-channel-list-sort-menu"
+          @label={{this.currentSortLabel}}
+          @modalForMobile={{true}}
+          @offset={{hash mainAxis=10 crossAxis=-5}}
+          @placement="right-start"
+        >
+          <:trigger>
+            <span class="d-button__suffix-icon">{{dIcon "angle-right"}}</span>
+          </:trigger>
+          <:content as |submenu|>
+            <ChatChannelListSortMenu
+              @closeParent={{@close}}
+              @closeSubmenu={{submenu.close}}
+            />
+          </:content>
+        </DMenu>
       </dropdown.item>
     </DDropdownMenu>
   </template>
