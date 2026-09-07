@@ -11,7 +11,13 @@ describe "Viewing sidebar" do
     before { sign_in(user) }
 
     describe "when using the header dropdown navigation menu" do
-      before { SiteSetting.navigation_menu = "header dropdown" }
+      fab!(:navigation_menu) do
+        Fabricate(
+          :theme_site_setting_with_service,
+          name: "navigation_menu",
+          value: "header dropdown",
+        )
+      end
 
       it "should display the sidebar when `navigation_menu` query param is 'sidebar' and maintain header dropdown" do
         visit("/latest?navigation_menu=sidebar")
@@ -22,7 +28,9 @@ describe "Viewing sidebar" do
     end
 
     describe "when using the sidebar navigation menu" do
-      before { SiteSetting.navigation_menu = "sidebar" }
+      fab!(:navigation_menu) do
+        Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+      end
 
       it "should display the sidebar dropdown menu when `navigation_menu` query param is 'header_dropdown'" do
         visit("/latest?navigation_menu=header_dropdown")

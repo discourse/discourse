@@ -58,7 +58,7 @@ RSpec.describe "Glimmer Header" do
   end
 
   it "doesn't show pending reviewables count for non-legacy navigation menu" do
-    SiteSetting.navigation_menu = "sidebar"
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
     current_user.update!(admin: true)
     Fabricate(:reviewable)
 
@@ -85,7 +85,7 @@ RSpec.describe "Glimmer Header" do
   end
 
   it "automatically focuses the first link in the hamburger panel" do
-    SiteSetting.navigation_menu = "header dropdown"
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "header dropdown")
 
     visit "/"
 

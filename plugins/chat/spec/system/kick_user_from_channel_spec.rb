@@ -10,8 +10,11 @@ describe "Kick user from chat channel" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
-    SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap
     sign_in(current_user)
     channel_1.add(current_user)

@@ -8,7 +8,6 @@ describe "Configure subscriptions plugin", allow_network: ["js.stripe.com"] do
 
   before do
     SiteSetting.discourse_subscriptions_enabled = true
-    SiteSetting.navigation_menu = "sidebar"
     sign_in(admin)
   end
 

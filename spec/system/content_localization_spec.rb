@@ -84,7 +84,6 @@ describe "Content Localization" do
       Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略")
       Fabricate(:topic_tag, topic:, tag:)
       SiteSetting.tagging_enabled = true
-      SiteSetting.navigation_menu = "sidebar"
       SiteSetting.default_navigation_menu_tags = tag.name
       SiteSetting.set_locale_from_cookie = true
       SiteSetting.content_localization_language_switcher = "all"
@@ -245,7 +244,6 @@ describe "Content Localization" do
         Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略")
         Fabricate(:topic_tag, topic:, tag:)
         SiteSetting.tagging_enabled = true
-        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.default_navigation_menu_tags = tag.name
 
         visit("/t/#{topic.id}?tl=ja")
@@ -675,9 +673,12 @@ describe "Content Localization" do
       fab!(:tag_localization) { Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略") }
       fab!(:topic_tag) { Fabricate(:topic_tag, topic:, tag:) }
 
+      fab!(:navigation_menu) do
+        Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+      end
+
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.default_navigation_menu_tags = tag.name
         SiteSetting.set_locale_from_cookie = true
         SiteSetting.content_localization_language_switcher = "all"

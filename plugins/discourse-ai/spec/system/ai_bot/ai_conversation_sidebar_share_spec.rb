@@ -20,11 +20,14 @@ RSpec.describe "AI Bot conversation sidebar share" do
 
   let(:ai_pm_homepage) { PageObjects::Components::AiPmHomepage.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
     SiteSetting.ai_bot_public_sharing_allowed_groups = "1" # admins
-    SiteSetting.navigation_menu = "sidebar"
     toggle_enabled_bots(bots: [gpt_4])
     Group.refresh_automatic_groups!
 

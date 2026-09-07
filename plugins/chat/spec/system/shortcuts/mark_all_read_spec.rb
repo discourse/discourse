@@ -10,8 +10,11 @@ RSpec.describe "Shortcuts | mark all read" do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer) { PageObjects::Pages::ChatDrawer.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
-    SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap(user_1, [channel_1, channel_2, channel_3])
     sign_in(user_1)
     Fabricate(:chat_message, chat_channel: channel_1, use_service: true)

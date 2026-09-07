@@ -3653,6 +3653,7 @@ navigation:
     type: enum
     enum: "NavigationMenuSiteSetting"
     area: "navigation"
+    themeable: true
   default_navigation_menu_categories:
     type: category_list
     default: ""

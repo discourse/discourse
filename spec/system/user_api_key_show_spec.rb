@@ -8,9 +8,12 @@ RSpec.describe "User API Key Show Page" do
 
   let(:public_key) { OpenSSL::PKey::RSA.new(2048).public_key.to_pem }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-    SiteSetting.navigation_menu = "sidebar"
     SiteSetting.enable_powered_by_discourse = true
   end
 
