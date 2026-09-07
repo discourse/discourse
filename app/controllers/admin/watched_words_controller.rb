@@ -26,6 +26,7 @@ class Admin::WatchedWordsController < Admin::StaffController
 
     if watched_word_group.valid?
       StaffActionLogger.new(current_user).log_watched_words_creation(watched_word_group)
+      Jobs::RebakePostsForWatchedWords.enqueue_for(watched_word_group.watched_words)
       render_json_dump WatchedWordListSerializer.new(
                          watched_word_group.watched_words,
                          scope: guardian,
@@ -50,6 +51,7 @@ class Admin::WatchedWordsController < Admin::StaffController
       StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
     end
 
+    Jobs::RebakePostsForWatchedWords.enqueue_for(watched_word)
     render json: success_json
   end
 
@@ -63,6 +65,7 @@ class Admin::WatchedWordsController < Admin::StaffController
     Scheduler::Defer.later("Upload watched words") do
       begin
         words_updated = 0
+        watched_words_to_rebake = []
 
         CSV.parse(content) do |row|
           if row[0].present? && (!has_replacement || row[1].present?)
@@ -75,11 +78,13 @@ class Admin::WatchedWordsController < Admin::StaffController
               )
             if watched_word.valid?
               words_updated += 1
+              watched_words_to_rebake << watched_word
               StaffActionLogger.new(current_user).log_watched_words_creation(watched_word)
             end
           end
         end
 
+        Jobs::RebakePostsForWatchedWords.enqueue_for(watched_words_to_rebake)
         data = { result: "ok", words_updated: words_updated }
       rescue => e
         data = failed_json.merge(errors: [e.message], words_updated: words_updated)
@@ -115,12 +120,12 @@ class Admin::WatchedWordsController < Admin::StaffController
     action = WatchedWord.actions[name]
     raise Discourse::NotFound if !action
 
-    WatchedWord
-      .where(action: action)
-      .find_each do |watched_word|
-        watched_word.destroy!
-        StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
-      end
+    watched_words = WatchedWord.where(action: action).to_a
+    watched_words.each do |watched_word|
+      watched_word.destroy!
+      StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
+    end
+    Jobs::RebakePostsForWatchedWords.enqueue_for(watched_words)
     WordWatcher.clear_cache!
     render json: success_json
   end
