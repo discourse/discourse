@@ -155,7 +155,7 @@ export default class GoogleAdsense extends AdComponent {
 
     await loadAdsense();
 
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       // Component removed from DOM before script loaded
       return;
     }

@@ -664,7 +664,7 @@ export default class VoiceCallWidget extends Component {
     }
 
     next(this, () => {
-      if (this.isDestroying || this.isDestroyed || this.room?.id !== roomId) {
+      if (this.isDestroying || this.room?.id !== roomId) {
         return;
       }
 

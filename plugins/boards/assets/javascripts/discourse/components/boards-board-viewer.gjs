@@ -165,7 +165,7 @@ export default class BoardsBoardViewer extends Component {
 
     if (this.args.initialCardId) {
       schedule("afterRender", () => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         const card = this.#findCard(this.args.initialCardId);
@@ -179,7 +179,7 @@ export default class BoardsBoardViewer extends Component {
 
     if (this.args.highlightCardId) {
       schedule("afterRender", () => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         this.#focusHighlightCard(this.args.highlightCardId);
@@ -188,7 +188,7 @@ export default class BoardsBoardViewer extends Component {
 
     if (this.args.openBoardSettings && this.canManage) {
       schedule("afterRender", () => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         this.#openBoardSettingsModal({ updateUrl: false });
@@ -1128,7 +1128,7 @@ export default class BoardsBoardViewer extends Component {
         },
       })
       .then((result) => {
-        if (!this.isDestroying && !this.isDestroyed) {
+        if (!this.isDestroying) {
           DiscourseURL.replaceState(boardUrl);
 
           if (result?.reloadAfterSave) {
@@ -1287,7 +1287,7 @@ export default class BoardsBoardViewer extends Component {
     // flush, before the highlight class renders, and waitForAnimationEnd
     // would then see no animation and fall back to resolving immediately.
     next(this, async () => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -1304,11 +1304,7 @@ export default class BoardsBoardViewer extends Component {
 
       await waitForAnimationEnd(cardElement);
 
-      if (
-        !this.isDestroying &&
-        !this.isDestroyed &&
-        this.linkHighlightCardId === cardId
-      ) {
+      if (!this.isDestroying && this.linkHighlightCardId === cardId) {
         this.linkHighlightCardId = null;
       }
     });
@@ -1337,7 +1333,7 @@ export default class BoardsBoardViewer extends Component {
       : { card, canWrite: this.canWrite, onUpdateCard: this.onUpdateCard };
 
     this.modal.show(ModalComponent, { model }).finally(() => {
-      if (!navigatedAway && !this.isDestroying && !this.isDestroyed) {
+      if (!navigatedAway && !this.isDestroying) {
         DiscourseURL.replaceState(boardUrl);
       }
     });
@@ -1348,7 +1344,7 @@ export default class BoardsBoardViewer extends Component {
     this.dropHighlightCardId = null;
 
     schedule("afterRender", () => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

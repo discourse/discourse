@@ -34,7 +34,7 @@ export default class ShareReport extends Component {
 
   @action
   registerListeners(element) {
-    if (!element || this.isDestroying || this.isDestroyed) {
+    if (!element || this.isDestroying) {
       return;
     }
 

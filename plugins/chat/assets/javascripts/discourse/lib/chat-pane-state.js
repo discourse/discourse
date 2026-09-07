@@ -325,7 +325,7 @@ export default class ChatPaneState {
 
     schedule("afterRender", () => {
       const owner = getOwner(this);
-      if (owner.isDestroying || owner.isDestroyed) {
+      if (owner.isDestroying) {
         return;
       }
 

@@ -81,7 +81,7 @@ export default class DataExplorerWorkflowAiQuery extends Component {
         }
       );
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -102,7 +102,7 @@ export default class DataExplorerWorkflowAiQuery extends Component {
         },
       });
     } catch (error) {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

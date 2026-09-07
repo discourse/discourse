@@ -125,14 +125,14 @@ export default class VoiceVoiceSettingsModal extends Component {
         audio: audioConstraints(this.voiceWebrtc.inputDeviceId),
       });
     } catch {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.micError = true;
         this.level = 0;
       }
       return;
     }
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       stream.getTracks().forEach((track) => track.stop());
       return;
     }
@@ -165,7 +165,7 @@ export default class VoiceVoiceSettingsModal extends Component {
 
   async refreshDevices() {
     const { inputs, outputs } = await enumerateAudioDevices();
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -271,7 +271,7 @@ export default class VoiceVoiceSettingsModal extends Component {
         element.pause();
         element.srcObject = null;
         context.close().catch(() => {});
-        if (!this.isDestroying && !this.isDestroyed) {
+        if (!this.isDestroying) {
           this.testingOutput = false;
         }
       }, 700);

@@ -79,7 +79,7 @@ export default class ToggleChannelMembershipButton extends Component {
       })
       .catch(popupAjaxError)
       .finally(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
