@@ -212,7 +212,7 @@ RSpec.describe Statistics do
 
     after { ApplicationRequest.disable }
 
-    it "uses beacon pageviews for visitor estimates while preserving earlier history" do
+    it "preserves piggyback visitor estimates on the first partial beacon day" do
       ApplicationRequest.create!(
         date: date.to_date,
         req_type: :page_view_anon_browser_beacon,
@@ -225,7 +225,7 @@ RSpec.describe Statistics do
       )
 
       freeze_time(date) do
-        expect(described_class.visitors).to eq(last_day: 5, "7_days": 8, "30_days": 11)
+        expect(described_class.visitors).to eq(last_day: 3, "7_days": 6, "30_days": 9)
       end
     end
 
@@ -301,7 +301,7 @@ RSpec.describe Statistics do
 
     after { ApplicationRequest.disable }
 
-    it "uses beacon pageviews for EU visitor estimates while preserving earlier history" do
+    it "preserves piggyback EU visitor estimates on the first partial beacon day" do
       ApplicationRequest.create!(
         date: date.to_date,
         req_type: :page_view_anon_browser_beacon,
@@ -314,7 +314,7 @@ RSpec.describe Statistics do
       )
 
       freeze_time(date) do
-        expect(described_class.eu_visitors).to eq(last_day: 5, "7_days": 4, "30_days": 6)
+        expect(described_class.eu_visitors).to eq(last_day: 3, "7_days": 3, "30_days": 5)
       end
     end
 
