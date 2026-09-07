@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import { trackedObject } from "@ember/reactive/collections";
+import { trackedObject, trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -32,6 +32,7 @@ export default class ChatChannelsManager extends Service {
   @service siteSettings;
 
   @tracked userHasThreads = false;
+  #pendingStarredUpdates = trackedSet();
   @tracked _cached = trackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
@@ -129,6 +130,41 @@ export default class ChatChannelsManager extends Service {
       });
     } else {
       return model;
+    }
+  }
+
+  isUpdatingStarred(channel) {
+    return this.#pendingStarredUpdates.has(channel.currentUserMembership);
+  }
+
+  async toggleStarred(channel, { beforeUpdate, onUpdate } = {}) {
+    const membership = channel.currentUserMembership;
+
+    if (!membership || this.#pendingStarredUpdates.has(membership)) {
+      return;
+    }
+
+    this.#pendingStarredUpdates.add(membership);
+    const previousValue = membership.starred;
+    let updated = false;
+
+    try {
+      await beforeUpdate?.();
+      membership.starred = !previousValue;
+      updated = true;
+      onUpdate?.();
+
+      await this.chatApi.updateCurrentUserChannelMembership(channel.id, {
+        starred: membership.starred,
+      });
+    } catch (error) {
+      if (updated) {
+        membership.starred = previousValue;
+        onUpdate?.();
+      }
+      popupAjaxError(error);
+    } finally {
+      this.#pendingStarredUpdates.delete(membership);
     }
   }
 

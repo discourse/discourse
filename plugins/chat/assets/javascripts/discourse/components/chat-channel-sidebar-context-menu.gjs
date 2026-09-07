@@ -1,14 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { trackedSet } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
-
-const pendingStarredUpdates = trackedSet();
 
 function restoreSidebarScrollPosition(sidebar, scrollTop) {
   if (!sidebar || scrollTop === undefined) {
@@ -42,7 +39,7 @@ export default class ChatChannelSidebarContextMenu extends Component {
   }
 
   get isTogglingStarred() {
-    return pendingStarredUpdates.has(this.currentUserMembership);
+    return this.chatChannelsManager.isUpdatingStarred(this.channel);
   }
 
   get starIcon() {
@@ -64,15 +61,6 @@ export default class ChatChannelSidebarContextMenu extends Component {
   @action
   async toggleStarred() {
     const channel = this.channel;
-    const membership = this.currentUserMembership;
-
-    if (!membership || pendingStarredUpdates.has(membership)) {
-      return;
-    }
-
-    pendingStarredUpdates.add(membership);
-    const previousValue = membership.starred;
-    const newValue = !previousValue;
     const menuIdentifier = channel.isDirectMessageChannel
       ? "chat-direct-message-channel-menu"
       : "chat-channel-menu";
@@ -80,24 +68,12 @@ export default class ChatChannelSidebarContextMenu extends Component {
       .getByIdentifier(menuIdentifier)
       ?.triggerElement?.closest(".sidebar-sections");
     const sidebarScrollTop = sidebar?.scrollTop;
-    const chatApi = this.chatApi;
     const menu = this.menu;
 
-    await menu.close(menuIdentifier);
-    membership.starred = newValue;
-    restoreSidebarScrollPosition(sidebar, sidebarScrollTop);
-
-    try {
-      await chatApi.updateCurrentUserChannelMembership(channel.id, {
-        starred: newValue,
-      });
-    } catch (err) {
-      membership.starred = previousValue;
-      restoreSidebarScrollPosition(sidebar, sidebarScrollTop);
-      popupAjaxError(err);
-    } finally {
-      pendingStarredUpdates.delete(membership);
-    }
+    await this.chatChannelsManager.toggleStarred(channel, {
+      beforeUpdate: () => menu.close(menuIdentifier),
+      onUpdate: () => restoreSidebarScrollPosition(sidebar, sidebarScrollTop),
+    });
   }
 
   @action
