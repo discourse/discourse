@@ -231,11 +231,7 @@ class _PluginApi {
   }
 
   _lookupContainer(path) {
-    if (
-      !this.container ||
-      this.container.isDestroying ||
-      this.container.isDestroyed
-    ) {
+    if (!this.container || this.container.isDestroying) {
       return;
     }
 

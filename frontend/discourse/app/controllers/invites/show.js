@@ -31,7 +31,7 @@ export default class InvitesShowController extends Controller {
     getAuthOptionsUsername: () => this.authOptions?.username,
     getForceValidationReason: () => this.forceValidationReason,
     siteSettings: this.siteSettings,
-    isInvalid: () => this.isDestroying || this.isDestroyed,
+    isInvalid: () => this.isDestroying,
     updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
     updateUsernames: (username) => {
       this.accountUsername = username;

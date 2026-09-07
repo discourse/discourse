@@ -56,7 +56,7 @@ export default class DMultiSelect extends Component {
 
   @cached
   get data() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

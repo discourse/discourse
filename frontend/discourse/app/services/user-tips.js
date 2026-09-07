@@ -15,7 +15,7 @@ export default class UserTips extends Service {
   #shouldRenderSet = trackedSet();
 
   #updateRenderedId() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

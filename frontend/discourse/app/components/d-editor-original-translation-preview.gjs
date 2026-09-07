@@ -32,7 +32,7 @@ class DecoratedPreviewCookText extends Component {
     const rawText = this.args.rawText;
     const cooked = await waitForPromise(cook(rawText, { previewing: true }));
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

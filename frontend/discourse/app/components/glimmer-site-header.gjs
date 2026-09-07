@@ -101,7 +101,7 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   recalculateHeaderOffset() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

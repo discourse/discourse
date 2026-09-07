@@ -93,7 +93,7 @@ export default class PostTextSelection extends Component {
 
     const { markdown } = await quoteState.markdown();
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -107,7 +107,7 @@ export default class PostTextSelection extends Component {
     } else {
       const result = await ajax(`/posts/${post.id}`);
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -132,7 +132,7 @@ export default class PostTextSelection extends Component {
         .querySelector("#reply-control")
         ?.addEventListener("transitionend", () => {
           const textarea = document.querySelector(".d-editor-input");
-          if (!textarea || this.isDestroyed || this.isDestroying) {
+          if (!textarea || this.isDestroying) {
             return;
           }
 
