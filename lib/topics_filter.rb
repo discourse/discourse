@@ -3,7 +3,13 @@
 class TopicsFilter
   attr_reader :topic_ids, :topic_notification_levels
 
-  def initialize(guardian:, scope: Topic.all, loaded_topic_users_reference: false)
+  def initialize(
+    guardian:,
+    scope: Topic.all,
+    loaded_topic_users_reference: false,
+    ignore_new: false
+  )
+    @ignore_new = ignore_new
     @loaded_topic_users_reference = loaded_topic_users_reference
     @guardian = guardian || Guardian.new
     @scope = scope
@@ -836,6 +842,8 @@ class TopicsFilter
 
     # handle edge case of comma-separated values
     values.map! { |value| value.split(",") }.flatten!
+
+    values -= %w[new new-topics new-replies] if @ignore_new
 
     if values.delete("pinned")
       @scope =

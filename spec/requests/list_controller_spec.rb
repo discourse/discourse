@@ -11,6 +11,94 @@ RSpec.describe ListController do
     SiteSetting.top_menu = "latest|new|categories"
   end
 
+  describe "#filter unified New membership" do
+    before { SiteSetting.enable_unified_new = true }
+
+    it "omits membership for anonymous and disabled users" do
+      get "/filter.json", params: { q: "" }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]).not_to have_key("filter_new_topic_ids")
+
+      sign_in(user)
+      SiteSetting.enable_unified_new = false
+      get "/filter.json", params: { q: "" }
+      expect(response.parsed_body["topic_list"]).not_to have_key("filter_new_topic_ids")
+    end
+
+    it "includes both subsets across pages while applying the full filter" do
+      sign_in(user)
+      category = Fabricate(:category)
+      matches = Fabricate.times(31, :topic, category: category)
+      unread = Fabricate(:topic, category: category, highest_post_number: 2)
+      Fabricate(
+        :topic_user,
+        user: user,
+        topic: unread,
+        last_read_post_number: 1,
+        notification_level: 2,
+      )
+      Fabricate(:topic, category: category, closed: true)
+      Fabricate(:topic)
+
+      %w[new new-topics new-replies].each do |subset|
+        get "/filter.json", params: { q: "category:#{category.slug} status:open in:#{subset}" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["filter_new_topic_ids"]).to contain_exactly(
+          *matches.map(&:id),
+          unread.id,
+        )
+      end
+      expect(response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] }).to eq(
+        [unread.id],
+      )
+    end
+
+    it "applies permissions, muting and custom plugin filters" do
+      sign_in(user)
+      allowed = Fabricate(:topic)
+      private_topic = Fabricate(:topic, category: Fabricate(:private_category, group: group))
+      muted = Fabricate(:topic)
+      TopicUser.change(user.id, muted.id, notification_level: TopicUser.notification_levels[:muted])
+      deleted = Fabricate(:topic, deleted_at: Time.zone.now)
+      unlisted = Fabricate(:topic, visible: false)
+      Plugin::Instance
+        .new
+        .add_filter_custom_filter("selected") do |scope, values, _guardian|
+          scope.where(id: values.map(&:to_i))
+        end
+      ids = [allowed.id, private_topic.id, muted.id, deleted.id, unlisted.id]
+
+      get "/filter.json", params: { q: "selected:#{ids.join(",")}" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["filter_new_topic_ids"]).to eq([allowed.id])
+    ensure
+      DiscoursePluginRegistry.reset_register!(:custom_filter_mappings)
+    end
+
+    it "respects the user's upcoming change group membership" do
+      Fabricate(:site_setting_group, name: :enable_unified_new, group_ids: group.id.to_s)
+      sign_in(user)
+
+      get "/filter.json", params: { q: "" }
+      expect(response.parsed_body["topic_list"]).not_to have_key("filter_new_topic_ids")
+
+      group.add(user)
+      get "/filter.json", params: { q: "" }
+      expect(response.parsed_body["topic_list"]).to have_key("filter_new_topic_ids")
+    end
+
+    it "returns an empty array when no tracked topics match" do
+      sign_in(user)
+
+      get "/filter.json", params: { q: "topic:0 in:new-replies" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["filter_new_topic_ids"]).to eq([])
+    end
+  end
+
   describe "#index" do
     it "does not expose the Klipy API key in anonymous preloaded site settings" do
       SiteSetting.klipy_api_key = "super-secret-klipy-key"

@@ -87,3 +87,12 @@
     }
   }
 }
+
+.filter-new-navigation {
+  flex-basis: 100%;
+  min-width: 0;
+
+  &__tabs {
+    margin-bottom: 0;
+  }
+}
