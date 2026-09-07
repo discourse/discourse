@@ -622,16 +622,19 @@ module PrettyText
                                url,
                                width: img["width"],
                                height: img["height"],
+                               base62_sha1: img["data-base62-sha1"],
                              )
           a.remove
         else
-          width = non_image_media ? nil : a.at_css("img").attr("width")
-          height = non_image_media ? nil : a.at_css("img").attr("height")
+          img = non_image_media ? nil : a.at_css("img")
+          width = img&.attr("width")
+          height = img&.attr("height")
           target.add_next_sibling secure_uploads_placeholder(
                                     doc,
                                     a["href"],
                                     width: width,
                                     height: height,
+                                    base62_sha1: img&.[]("data-base62-sha1"),
                                   )
           target.remove
         end
@@ -678,17 +681,26 @@ module PrettyText
                                  onebox_type: onebox_type,
                                  width: width,
                                  height: height,
+                                 base62_sha1: img["data-base62-sha1"],
                                )
           img.remove
         end
       end
   end
 
-  def self.secure_uploads_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
+  def self.secure_uploads_placeholder(
+    doc,
+    url,
+    onebox_type: false,
+    width: nil,
+    height: nil,
+    base62_sha1: nil
+  )
     notice = doc.document.create_element("div")
     notice["class"] = "secure-upload-notice"
     notice["data-stripped-secure-upload"] = url.to_s
     notice["data-onebox-type"] = onebox_type.to_s if onebox_type
+    notice["data-base62-sha1"] = base62_sha1 if base62_sha1
 
     width = numeric_dimension(width)
     height = numeric_dimension(height)
