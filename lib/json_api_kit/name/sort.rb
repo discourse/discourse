@@ -2,11 +2,6 @@
 
 module JsonApiKit
   module Name
-    Sort =
-      Data.define(:value, :type) do
-        include Name
-
-        def kind = :sort
-      end
+    Sort = Data.define(:value, :type) { include Name }
   end
 end

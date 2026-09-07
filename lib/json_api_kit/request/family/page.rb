@@ -16,7 +16,20 @@ module JsonApiKit
 
         private
 
-        def anchor(value, path) = names(value, path) { Name::Anchor.new(value: it, type:) }
+        def anchor(value, path)
+          return names(value, path) { anchor_name(it) } unless value.is_a?(Hash)
+          declared_anchor(value, path)
+        end
+
+        def declared_anchor(value, path)
+          glossary.declared_attributes(value.transform_keys { anchor_name(it) }).transform_keys(
+            &:value
+          )
+        rescue Glossary::NotAMemberName => error
+          raise error.at(ParameterName.new(*path, error.raw.value).to_s)
+        end
+
+        def anchor_name(value) = Name::Anchor.new(value:, type:)
       end
     end
   end

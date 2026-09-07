@@ -1,59 +1,76 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::VersionChange::Rename do
-  subject(:rename) do
-    described_class.new(kind: :field, type: "topics", from: "posted_at", to: "created_at")
-  end
+  subject(:rename) { described_class.new(from: old_name, to: new_name, up:, down:) }
 
+  let(:up) { JsonApiKit::VersionChange::Declarations::NO_CONVERSION }
+  let(:down) { JsonApiKit::VersionChange::Declarations::NO_CONVERSION }
   let(:old_name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "topics") }
   let(:new_name) { JsonApiKit::Name::Field.new(value: "created_at", type: "topics") }
 
   describe "#current" do
-    it "returns the new name for the old one" do
-      expect(rename.current(old_name)).to eq(new_name)
+    it "returns the new name" do
+      expect(rename.current).to eq(new_name)
+    end
+  end
+
+  describe "#current_pairs" do
+    subject(:current_pairs) { rename.current_pairs(value) }
+
+    let(:value) { "2026/08/01" }
+
+    it "returns one pair, the new name with the value" do
+      expect(current_pairs).to eq([[new_name, "2026/08/01"]])
     end
 
-    context "when the name is of another kind" do
-      let(:old_name) { JsonApiKit::Name::Sort.new(value: "posted_at", type: "topics") }
+    context "when the rename converts the value" do
+      let(:down) { ->(date) { date.to_s.tr("-", "/") } }
+      let(:up) { ->(date) { date.to_s.tr("/", "-") } }
 
-      it "returns the name" do
-        expect(rename.current(old_name)).to eq(old_name)
+      it "returns the new name with the converted value" do
+        expect(current_pairs).to eq([[new_name, "2026-08-01"]])
       end
-    end
 
-    context "when the name is of another type" do
-      let(:old_name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "users") }
+      context "when the value is null" do
+        let(:value) { nil }
 
-      it "returns the name" do
-        expect(rename.current(old_name)).to eq(old_name)
+        it "gives the converter the null value" do
+          expect(current_pairs).to eq([[new_name, ""]])
+        end
       end
     end
   end
 
   describe "#previous" do
-    it "returns the old name for the new one" do
-      expect(rename.previous(new_name)).to eq(old_name)
-    end
-
-    context "when the name is of another kind" do
-      let(:new_name) { JsonApiKit::Name::Sort.new(value: "created_at", type: "topics") }
-
-      it "returns the name" do
-        expect(rename.previous(new_name)).to eq(new_name)
-      end
-    end
-
-    context "when the name is of another type" do
-      let(:new_name) { JsonApiKit::Name::Field.new(value: "created_at", type: "users") }
-
-      it "returns the name" do
-        expect(rename.previous(new_name)).to eq(new_name)
-      end
+    it "returns the old name" do
+      expect(rename.previous).to eq(old_name)
     end
   end
 
-  describe "#introduces?" do
-    it { expect(rename).to be_introduces(new_name) }
-    it { expect(rename).not_to be_introduces(old_name) }
+  describe "#previous_pairs" do
+    subject(:previous_pairs) { rename.previous_pairs(value) }
+
+    let(:value) { "2026-08-01" }
+
+    it "returns one pair, the old name with the value" do
+      expect(previous_pairs).to eq([[old_name, "2026-08-01"]])
+    end
+
+    context "when the rename converts the value" do
+      let(:down) { ->(date) { date.to_s.tr("-", "/") } }
+      let(:up) { ->(date) { date.tr("/", "-") } }
+
+      it "returns the old name with the converted value" do
+        expect(previous_pairs).to eq([[old_name, "2026/08/01"]])
+      end
+
+      context "when the value is null" do
+        let(:value) { nil }
+
+        it "gives the converter the null value" do
+          expect(previous_pairs).to eq([[old_name, ""]])
+        end
+      end
+    end
   end
 end

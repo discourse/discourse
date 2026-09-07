@@ -40,6 +40,11 @@ module JsonApiKit
       @member_names = {}
     end
 
+    def declared_attributes(attributes)
+      attributes.each_key { declared_name(it) }
+      rules.reduce(attributes) { |result, rule| rule.declared_attributes(result) }
+    end
+
     def declared_name(name)
       declared_names[name] ||= rules.reduce(name) { |result, rule| rule.declared_name(result) }
     rescue Correction => correction
@@ -50,6 +55,10 @@ module JsonApiKit
       member_names[name] ||= rules
         .reverse_each
         .reduce(name) { |result, rule| rule.member_name(result) }
+    end
+
+    def member_attributes(attributes)
+      rules.reverse_each.reduce(attributes) { |result, rule| rule.member_attributes(result) }
     end
 
     private

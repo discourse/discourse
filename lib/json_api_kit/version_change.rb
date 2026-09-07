@@ -4,6 +4,7 @@ module JsonApiKit
   class VersionChange
     CHANGES_DIRECTORY = Rails.root.join("config/api_changes")
     DATE_PREFIX = /\A\d{4}-\d{2}-\d{2}_/
+    PASS_THROUGH = ->(_index, name) { PassThrough.new(name) }
 
     class << self
       def all = @all ||= read(CHANGES_DIRECTORY)
@@ -52,6 +53,8 @@ module JsonApiKit
 
     def initialize(source)
       @source = source
+      @upward = index_by(&:from)
+      @downward = index_by(&:to)
     end
 
     def verify!
@@ -61,20 +64,32 @@ module JsonApiKit
         raise ArgumentError, "#{source} is dated on or before the first release."
       end
       raise ArgumentError, "#{source} has no description." if description.blank?
+      duplicate_name(:from).try { raise ArgumentError, "#{source} renames #{it} twice." }
+      duplicate_name(:to).try { raise ArgumentError, "#{source} renames two names to #{it}." }
       return if File.basename(source).start_with?(version.to_s)
       raise ArgumentError, "The file name must start with the version #{version}: #{source}."
     end
 
-    def current(name)
-      transformations.reduce(name) { |result, transformation| transformation.current(result) }
+    def current(name) = upward[name].current
+
+    def current_attributes(attributes)
+      attributes.flat_map { |name, value| upward[name].current_pairs(value) }.to_h
     end
 
-    def previous(name)
-      transformations
-        .reverse_each
-        .reduce(name) { |result, transformation| transformation.previous(result) }
+    def previous(name) = downward[name].previous
+
+    def previous_attributes(attributes)
+      attributes.flat_map { |name, value| downward[name].previous_pairs(value) }.to_h
     end
 
-    def introduces?(name) = transformations.any? { it.introduces?(name) }
+    private
+
+    attr_reader :upward, :downward
+
+    def index_by(&) = transformations.index_by(&).tap { it.default_proc = PASS_THROUGH }
+
+    def duplicate_name(field)
+      transformations.map(&field).tally.detect { |_name, count| count > 1 }&.first
+    end
   end
 end

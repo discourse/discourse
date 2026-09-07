@@ -6,6 +6,10 @@ module JsonApiKitSpec
       def declared_name(name) = name.convert { "#{it}<#{mark}" }
 
       def member_name(name) = name.convert { "#{it}>#{mark}" }
+
+      def declared_attributes(attributes) = attributes.transform_keys { declared_name(it) }
+
+      def member_attributes(attributes) = attributes.transform_keys { member_name(it) }
     end
 
   class GlossaryChange < JsonApiKit::VersionChange
@@ -14,6 +18,18 @@ module JsonApiKitSpec
 
     resource :topics do
       renamed_attribute from: :posted_at, to: :created_at
+    end
+  end
+
+  class GlossaryShapeChange < JsonApiKit::VersionChange
+    version "2026-09-15"
+    description "The `words` attribute of the topics resource becomes `title`, a string."
+
+    resource :topics do
+      renamed_attribute from: :words,
+                        to: :title,
+                        down: ->(title) { title.to_s.split(" ") },
+                        up: ->(words) { words.to_a.join(" ") }
     end
   end
 
@@ -64,6 +80,60 @@ RSpec.describe JsonApiKit::Glossary do
     it "builds the version rule for the version" do
       resource
       expect(described_class::VersionRule).to have_received(:new).with(version)
+    end
+  end
+
+  describe "#declared_attributes" do
+    subject(:declared_attributes) { glossary.declared_attributes(attributes) }
+
+    let(:attributes) { { name => "Anchors and pages" } }
+
+    it "returns the attributes with their declared names" do
+      expect(declared_attributes).to eq(name.with(value: "created_at") => "Anchors and pages")
+    end
+
+    context "when a name is not a member name" do
+      let(:value) { "created_at" }
+
+      it "raises with the member name to use" do
+        expect { declared_attributes }.to raise_error(/Use createdAt, not created_at\./)
+      end
+    end
+
+    context "with a version rule" do
+      subject(:glossary) { described_class.resource(version) }
+
+      let(:attributes) { { name => %w[Anchors and pages] } }
+      let(:value) { "words" }
+
+      before do
+        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+          [JsonApiKitSpec::GlossaryShapeChange.new(__FILE__)],
+        )
+      end
+
+      it "returns the attributes with the current names and shapes" do
+        expect(declared_attributes).to eq(name.with(value: "title") => "Anchors and pages")
+      end
+
+      context "when a name belongs to a later version" do
+        let(:value) { "title" }
+
+        it "raises with the name of this version" do
+          expect { declared_attributes }.to raise_error(/Use words, not title\./)
+        end
+      end
+    end
+
+    context "with several rules" do
+      subject(:glossary) { described_class.new([mark_a, mark_b]) }
+
+      let(:mark_a) { JsonApiKitSpec::MarkingRule.new("a") }
+      let(:mark_b) { JsonApiKitSpec::MarkingRule.new("b") }
+
+      it "applies them in order" do
+        expect(declared_attributes).to eq(name.with(value: "createdAt<a<b") => "Anchors and pages")
+      end
     end
   end
 
@@ -150,7 +220,7 @@ RSpec.describe JsonApiKit::Glossary do
           )
         end
 
-        it "suggests the name of this version, converted once" do
+        it "suggests the name of this version, on the wire" do
           expect { declared_name }.to raise_error(/Use postedAt, not createdAt\./)
         end
       end
@@ -164,6 +234,41 @@ RSpec.describe JsonApiKit::Glossary do
 
       it "applies them in order" do
         expect(declared_name).to eq(name.with(value: "createdAt<a<b"))
+      end
+    end
+  end
+
+  describe "#member_attributes" do
+    subject(:member_attributes) { glossary.member_attributes(name => "Anchors and pages") }
+
+    let(:value) { "title" }
+
+    it "returns the attributes with their member names" do
+      expect(member_attributes).to eq(name => "Anchors and pages")
+    end
+
+    context "with a version rule" do
+      subject(:glossary) { described_class.resource(version) }
+
+      before do
+        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+          [JsonApiKitSpec::GlossaryShapeChange.new(__FILE__)],
+        )
+      end
+
+      it "returns the attributes with the names and the values of this version, on the wire" do
+        expect(member_attributes).to eq(name.with(value: "words") => %w[Anchors and pages])
+      end
+    end
+
+    context "with several rules" do
+      subject(:glossary) { described_class.new([mark_a, mark_b]) }
+
+      let(:mark_a) { JsonApiKitSpec::MarkingRule.new("a") }
+      let(:mark_b) { JsonApiKitSpec::MarkingRule.new("b") }
+
+      it "applies them in reverse order" do
+        expect(member_attributes).to eq(name.with(value: "title>b>a") => "Anchors and pages")
       end
     end
   end

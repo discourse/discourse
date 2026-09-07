@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "a name" do |kind|
-  describe "#kind" do
-    it "returns #{kind.inspect}" do
-      expect(name.kind).to eq(kind)
-    end
-  end
-
+RSpec.shared_examples "a name" do
   describe "#convert" do
     it "returns the name with the converted value" do
       expect(name.convert(&:upcase)).to eq(name.with(value: name.value.upcase))
