@@ -1,3 +1,4 @@
+import { dependentKeyCompat } from "@ember/object/compat";
 import {
   findUserBadgesByBadgeId,
   findUserBadgesByUsername,
@@ -55,11 +56,15 @@ export default class UserBadge extends RestCompatModel {
 
   // Consumers read class getters off these (`badge.url`, `topic.fancyTitle`,
   // `user.statusManager`), which the cached plain objects lack. Copy before
-  // wrapping — `RestModel.create` stamps `__munge` onto its argument.
+  // wrapping — `RestModel.create` stamps `__munge` onto its argument — and
+  // apply `@dependentKeyCompat` by hand, since `defineFieldForwarders` skips
+  // names already on the prototype.
+  @dependentKeyCompat
   get badge() {
     return this.#wrap("badge", (raw) => new Badge(raw));
   }
 
+  @dependentKeyCompat
   get topic() {
     return this.#wrap("topic", (raw) => Topic.create({ ...raw }));
   }
@@ -68,6 +73,7 @@ export default class UserBadge extends RestCompatModel {
     shadow(this, "topic", value);
   }
 
+  @dependentKeyCompat
   get user() {
     return this.#wrap("user", (raw) => User.create({ ...raw }));
   }
@@ -77,6 +83,7 @@ export default class UserBadge extends RestCompatModel {
   }
 
   // Getter: null → undefined (test contract).
+  @dependentKeyCompat
   get granted_by() {
     return this.__resource?.granted_by ?? undefined;
   }

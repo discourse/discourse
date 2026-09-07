@@ -129,8 +129,8 @@ acceptance("Badges - granting post link", function (needs) {
           post_number: 2,
           topic_id: 280,
         },
-        // Granted on a post whose topic the viewer can't see, so the sideload
-        // omits it — `topic` is absent even though the link's gate passes.
+        // Topic the viewer can't see, so the sideload omits it: reading an
+        // absent sideload used to throw.
         {
           ...payload.user_badges[1],
           post_number: 5,
