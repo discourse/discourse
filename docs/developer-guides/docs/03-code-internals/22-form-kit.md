@@ -868,6 +868,63 @@ Renders text after the input
 </Form>
 ```
 
+### Named `before` and `after` blocks
+
+Use named blocks for richer addons, such as a unit selector or an action button.
+Text-only addons can continue using `@before` and `@after`.
+
+Each side accepts **either** its argument **or** its named block. Passing both for
+the same side raises a DEBUG assertion, including when the argument is an empty
+string or `null`. An `undefined` argument is treated as absent. The two sides are
+independent: `@before` with `<:after>`, or `<:before>` with `@after`, is valid.
+Conflicts are checked again when arguments change.
+
+```gjs
+import { fn, hash } from "@ember/helper";
+import Form from "discourse/components/form";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
+import { i18n } from "discourse-i18n";
+
+<template>
+  <Form @data={{hash length=100 unit="px"}} as |form data|>
+    <form.Field
+      @name="length"
+      @title={{i18n "length"}}
+      @type="input-number"
+      as |field|
+    >
+      <field.Control>
+        <:after>
+          <DNativeSelect
+            aria-label={{i18n "length_unit"}}
+            disabled={{field.disabled}}
+            @includeNone={{false}}
+            @value={{data.unit}}
+            @onChange={{fn form.set "unit"}}
+            as |select|
+          >
+            <select.Option @value="px">px</select.Option>
+            <select.Option @value="%">%</select.Option>
+            <select.Option @value="rem">rem</select.Option>
+          </DNativeSelect>
+        </:after>
+      </field.Control>
+    </form.Field>
+  </Form>
+</template>
+```
+
+Supply the translation keys used by your form. Interactive addon content owns its
+accessible label, value, event handler, and disabled binding; the input does not
+automatically disable arbitrary block contents. Buttons should be non-submitting
+unless submission is intentional. Direct `DNativeSelect` and `DButton` children
+join the input's height and corners without an additional text-addon border or
+padding. Other block content owns its internal presentation.
+
+The addon API does not parse units or change input event timing. Numeric inputs
+still update the field on each input event; consumers needing draft/commit
+boundaries must handle those in their form state.
+
 ## Menu
 
 Renders a `<DMenu />` trigger with yielded menu content.
