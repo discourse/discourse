@@ -1,26 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
-
-function restoreSidebarScrollPosition(sidebar, scrollTop) {
-  if (!sidebar || scrollTop === undefined) {
-    return;
-  }
-
-  // A moved active link schedules its own scroll after insertion.
-  schedule("afterRender", () => {
-    schedule("afterRender", () => {
-      if (sidebar.isConnected) {
-        sidebar.scrollTop = scrollTop;
-      }
-    });
-  });
-}
 
 export default class ChatChannelSidebarContextMenu extends Component {
   @service chatApi;
@@ -64,15 +48,10 @@ export default class ChatChannelSidebarContextMenu extends Component {
     const menuIdentifier = channel.isDirectMessageChannel
       ? "chat-direct-message-channel-menu"
       : "chat-channel-menu";
-    const sidebar = this.menu
-      .getByIdentifier(menuIdentifier)
-      ?.triggerElement?.closest(".sidebar-sections");
-    const sidebarScrollTop = sidebar?.scrollTop;
     const menu = this.menu;
 
     await this.chatChannelsManager.toggleStarred(channel, {
       beforeUpdate: () => menu.close(menuIdentifier),
-      onUpdate: () => restoreSidebarScrollPosition(sidebar, sidebarScrollTop),
     });
   }
 

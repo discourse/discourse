@@ -137,7 +137,7 @@ export default class ChatChannelsManager extends Service {
     return this.#pendingStarredUpdates.has(channel.currentUserMembership);
   }
 
-  async toggleStarred(channel, { beforeUpdate, onUpdate } = {}) {
+  async toggleStarred(channel, { beforeUpdate } = {}) {
     const membership = channel.currentUserMembership;
 
     if (!membership || this.#pendingStarredUpdates.has(membership)) {
@@ -152,7 +152,6 @@ export default class ChatChannelsManager extends Service {
       await beforeUpdate?.();
       membership.starred = !previousValue;
       updated = true;
-      onUpdate?.();
 
       await this.chatApi.updateCurrentUserChannelMembership(channel.id, {
         starred: membership.starred,
@@ -160,7 +159,6 @@ export default class ChatChannelsManager extends Service {
     } catch (error) {
       if (updated) {
         membership.starred = previousValue;
-        onUpdate?.();
       }
       popupAjaxError(error);
     } finally {
