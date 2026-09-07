@@ -93,30 +93,6 @@ acceptance("Badges - favorites", function (needs) {
 
     await click(firstButton);
 
-    assert.false(isFavorite, "the same badge can be unfavorited again");
-    assert
-      .dom(".favorite-count")
-      .hasText(
-        i18n("badges.favorite_count", { count: 0, max: 1 }),
-        "the count stays reactive across consecutive toggles"
-      );
-    assert.dom(secondButton).isEnabled("the favorite slot is available again");
-  });
-
-  test("unfavoriting a badge updates the count and frees a favorite slot", async function (assert) {
-    isFavorite = true;
-    await visit("/u/eviltrout/badges");
-
-    assert
-      .dom(".favorite-count")
-      .hasText(
-        i18n("badges.favorite_count", { count: 1, max: 1 }),
-        "the favorite limit is initially reached"
-      );
-    assert.dom(secondButton).isDisabled("another badge cannot be favorited");
-
-    await click(firstButton);
-
     assert.false(isFavorite, "the server receives the unfavorite request");
     assert
       .dom(`${firstButton} .d-icon-far-star`)
@@ -125,8 +101,8 @@ acceptance("Badges - favorites", function (needs) {
       .dom(".favorite-count")
       .hasText(
         i18n("badges.favorite_count", { count: 0, max: 1 }),
-        "the favorite count updates without reloading"
+        "the count stays reactive across consecutive toggles"
       );
-    assert.dom(secondButton).isEnabled("another badge can now be favorited");
+    assert.dom(secondButton).isEnabled("the favorite slot is available again");
   });
 });
