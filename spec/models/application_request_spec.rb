@@ -16,6 +16,34 @@ RSpec.describe ApplicationRequest do
     ApplicationRequest.increment!(key)
   end
 
+  describe ".browser_pageviews" do
+    it "preserves history and selects only beacons from the first beacon date onward" do
+      today = Date.current
+      history =
+        described_class.create!(date: today - 2, req_type: :page_view_anon_browser, count: 4)
+      described_class.create!(date: today - 2, req_type: :page_view_anon_browser_beacon, count: 0)
+      described_class.create!(date: today - 1, req_type: :page_view_anon_browser, count: 10)
+      described_class.create!(date: today - 1, req_type: :page_view_logged_in_browser, count: 5)
+      beacon =
+        described_class.create!(date: today - 1, req_type: :page_view_anon_browser_beacon, count: 8)
+      described_class.create!(date: today, req_type: :page_view_anon_browser, count: 3)
+      described_class.create!(
+        date: today,
+        req_type: :page_view_anon_browser_mobile_beacon,
+        count: 2,
+      )
+
+      expect(described_class.browser_pageviews).to contain_exactly(history, beacon)
+    end
+
+    it "uses piggyback history when no beacons have been recorded" do
+      history =
+        described_class.create!(date: Date.current, req_type: :page_view_anon_browser, count: 4)
+
+      expect(described_class.browser_pageviews).to contain_exactly(history)
+    end
+  end
+
   it "can log app requests" do
     freeze_time
     d1 = Time.now.utc.to_date

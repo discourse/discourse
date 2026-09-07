@@ -406,6 +406,24 @@ RSpec.describe Report do
 
     let(:report) { Report.find("page_view_total_reqs") }
 
+    it "combines historical piggyback totals with beacon totals without counting overlap" do
+      SiteSetting.use_legacy_pageviews = false
+      ApplicationRequest.create!(
+        date: Date.current - 2,
+        req_type: :page_view_anon_browser,
+        count: 4,
+      )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+
+      expect(report.data).to eq([{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }])
+      expect(report.total).to eq(12)
+    end
+
     context "with no data" do
       it "returns no page-view requests" do
         expect(report.data).to be_empty
@@ -1790,6 +1808,58 @@ RSpec.describe Report do
     end
 
     let(:reports) { Report.find("site_traffic") }
+
+    it "reports initial beacon pageviews even without piggyback history" do
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 2,
+      )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon, count: 9)
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_logged_in, count: 3)
+
+      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
+
+      expect(series["page_view_anon_browser"]).to eq([{ x: Date.current, y: 8 }])
+      expect(series["page_view_logged_in_browser"]).to eq([{ x: Date.current, y: 2 }])
+      expect(series["page_view_other"]).to eq([{ x: Date.current, y: 2 }])
+    end
+
+    it "uses historical piggyback counts before switching both browser series to beacons" do
+      ApplicationRequest.create!(
+        date: Date.current - 2,
+        req_type: :page_view_anon_browser,
+        count: 4,
+      )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_logged_in_browser,
+        count: 6,
+      )
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+
+      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
+
+      expect(series["page_view_anon_browser"]).to eq(
+        [{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }],
+      )
+      expect(series["page_view_logged_in_browser"]).to eq(
+        [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 0 }],
+      )
+      expect(series["page_view_other"]).to eq(
+        [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 0 }],
+      )
+    end
 
     context "with no data" do
       it "returns empty site-traffic series" do
