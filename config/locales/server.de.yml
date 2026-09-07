@@ -5699,8 +5699,6 @@ de:
         complete: "Beitrag ausgeblendet, Benutzer wurde benachrichtigt."
       agree_and_edit:
         title: "Beitrag bearbeiten"
-        description: "Stimme der Meldung zu und öffne ein Editorfenster, um den Beitrag zu bearbeiten."
-        complete: "Meldung bestätigt, du kannst den Beitrag jetzt bearbeiten."
       delete:
         title: "Löschen"
         complete: "Beitrag gelöscht."
@@ -5809,30 +5807,6 @@ de:
       approve_and_unhide:
         title: "Ja"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
-      post_actions:
-        bundle_title: "Was willst du mit dem Beitrag machen?"
-      delete_post:
-        title: "Beitrag löschen"
-        description: "Diesen Beitrag löschen"
-        complete: "Beitrag gelöscht"
-      hide_post:
-        title: "Beitrag ausblenden"
-        description: "Diesen Beitrag vor der Öffentlichkeit verbergen"
-        complete: "Beitrag ausgeblendet"
-      unhide_post:
-        title: "Beitrag sichtbar machen"
-        description: "Diesen Beitrag für alle Benutzer sichtbar machen"
-        complete: "Beitrag sichtbar gemacht"
-      restore_post:
-        title: "Beitrag wiederherstellen"
-        description: "Diesen gelöschten Beitrag wiederherstellen"
-        complete: "Beitrag wiederhergestellt"
-      edit_post:
-        title: "Beitrag bearbeiten"
-        description: "Den Inhalt dieses Beitrags bearbeiten"
-        complete: "Beitrag bearbeitet"
-      user_actions:
-        bundle_title: "Was willst du mit dem Benutzer machen?"
       silence_user:
         title: "Benutzer stummschalten"
         complete: "Benutzer stummgeschaltet"

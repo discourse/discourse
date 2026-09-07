@@ -156,6 +156,8 @@ zh_CN:
         ignore:
           title: "忽略举报"
           description: "将其从队列中移除，不采取任何措施。"
+        unsilence_user:
+          complete: "作者不再禁言。"
       direct_messages:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"

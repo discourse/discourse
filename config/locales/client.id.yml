@@ -610,6 +610,9 @@ id:
       user_label: "Pengguna"
       timeline:
         target_deleted: "Pos dihapus"
+      author_penalty:
+        toast:
+          undo: "Batalkan perintah"
       notes:
         delete: "Hapus"
       topic_label: "Topik"
@@ -1087,7 +1090,6 @@ id:
       admin: "%{user} adalah admin"
       moderator_tooltip: "Pengguna ini adalah moderator"
       admin_tooltip: "Pengguna ini adalah admin"
-      silenced_tooltip: "Pengguna ini dibungkam"
       suspended_notice: "Pengguna ini ditangguhkan sampai %{date}"
       suspended_permanently: "Pengguna ini dicekal"
       suspended_reason: "Alasan:"

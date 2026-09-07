@@ -922,6 +922,9 @@ sk:
         note_added: "Poznámka moderátora"
         note_added_by: "Moderátorská poznámka od %{username} - %{relativeDate}"
         no_events: "Žiadne udalosti na časovej osi na zobrazenie"
+      author_penalty:
+        toast:
+          undo: "Späť"
       notes:
         add_note_button: "Pridať poznámku"
         placeholder: "Tu napíšte svoju poznámku..."
@@ -1569,7 +1572,6 @@ sk:
       admin: "%{user} je administrátor"
       moderator_tooltip: "Tento používateľ je moderátor"
       admin_tooltip: "Tento používateľ je administrátor"
-      silenced_tooltip: "Tento používateľ je umlčaný"
       suspended_notice: "Tento používateľ je suspendovaný do %{date}"
       suspended_permanently: "Tento používateľ je suspendovaný"
       suspended_reason: "Dôvod:"

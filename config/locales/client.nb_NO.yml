@@ -704,6 +704,9 @@ nb_NO:
       user_label: "Bruker"
       timeline:
         target_deleted: "Post slettet"
+      author_penalty:
+        toast:
+          undo: "Angre"
       notes:
         delete: "Slett"
       topic_label: "Emne"
@@ -1284,7 +1287,6 @@ nb_NO:
       admin: "%{user} er en admin"
       moderator_tooltip: "Denne brukeren er en moderator"
       admin_tooltip: "Denne brukeren er en administrator"
-      silenced_tooltip: "Denne brukeren er dempet"
       suspended_notice: "Denne brukeren er utestengt til %{date}."
       suspended_permanently: "Denne brukeren er utestengt."
       suspended_reason: "Begrunnelse: "

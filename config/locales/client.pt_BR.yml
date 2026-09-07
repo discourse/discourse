@@ -1037,6 +1037,9 @@ pt_BR:
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
         no_events: "Não há eventos da linha do tempo para exibir"
+      author_penalty:
+        toast:
+          undo: "Desfazer"
       notes:
         add_note_description: "Adicione uma observação para fornecer contexto a outros moderadores."
         add_note_button: "Adicionar observação"
@@ -1689,7 +1692,6 @@ pt_BR:
       admin: "%{user} é administrador(a)"
       moderator_tooltip: "Este(a) usuário(a) é moderador(a)"
       admin_tooltip: "Este(a) usuário(a) é administrador(a)"
-      silenced_tooltip: "Este(a) usuário(a) está silenciado(a)"
       suspended_notice: "Este(a) usuário(a) está suspenso(a) até %{date}."
       suspended_permanently: "Este(a) usuário(a) está suspenso(a)."
       suspended_reason: "Motivo: "

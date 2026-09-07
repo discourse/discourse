@@ -1184,8 +1184,6 @@ et:
         title: "Jah"
       approve_and_unhide:
         title: "Jah"
-      delete_post:
-        complete: "Postitus kustutatud"
       delete_user:
         complete: "Kasutaja kustutatud"
   fallback_username: "kasutaja"

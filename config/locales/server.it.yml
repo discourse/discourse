@@ -4583,9 +4583,6 @@ it:
         title: "Nascondi messaggio"
         description: "Accetta la segnalazione, nascondi il messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
         complete: "Messaggio nascosto, l'utente è stato avvisato."
-      agree_and_edit:
-        description: "Accetta segnalazione e apri la finestra di modifica per emendare il messaggio."
-        complete: "Segnalazione riconosciuta, ora puoi modificare il messaggio."
       delete:
         title: "Elimina"
         complete: "Messaggio eliminato."
@@ -4676,14 +4673,6 @@ it:
       approve_and_unhide:
         title: "Sì"
         complete: "Messaggio approvato e reso visibile"
-      delete_post:
-        title: "Elimina messaggio"
-        complete: "Messaggio eliminato"
-      hide_post:
-        title: "Nascondi messaggio"
-      restore_post:
-        title: "Ripristina messaggio"
-        complete: "Messaggio ripristinato"
       silence_user:
         title: "Silenzia utente"
         complete: "Utente silenziato"

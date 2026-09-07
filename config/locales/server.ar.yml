@@ -6193,8 +6193,6 @@ ar:
         complete: "تم إخفاء المنشور، وتم إشعار المستخدم."
       agree_and_edit:
         title: "تعديل المنشور"
-        description: "الموافقة مع البلاغ وفتح نافذة أداة الإنشاء لتعديل المنشور‎."
-        complete: "تم التعرف على البلاغ، يمكنك الآن تعديل المنشور."
       delete:
         title: "حذف"
         complete: "تم حذف المنشور."
@@ -6302,30 +6300,6 @@ ar:
       approve_and_unhide:
         title: "نعم"
         complete: "تمت الموافقة على المنشور وإظهاره"
-      post_actions:
-        bundle_title: "ماذا تريد أن تفعل بالمنشور؟"
-      delete_post:
-        title: "حذف المنشور"
-        description: "حذف هذا المنشور"
-        complete: "تم حذف المنشور"
-      hide_post:
-        title: "إخفاء المنشور"
-        description: "إخفاء هذا المنشور عن العامة"
-        complete: "تم إخفاء المنشور"
-      unhide_post:
-        title: "إظهار المنشور"
-        description: "اجعل هذا المنشور مرئيًا لجميع المستخدمين"
-        complete: "تم إظهار المنشور"
-      restore_post:
-        title: "استعادة المنشور"
-        description: "استعادة هذا المنشور المحذوف"
-        complete: "تمت استعادة المنشور"
-      edit_post:
-        title: "تعديل المنشور"
-        description: "تعديل محتوى هذا المنشور"
-        complete: "تم تعديل المنشور"
-      user_actions:
-        bundle_title: "ماذا تريد أن تفعل بهذا المستخدم؟"
       silence_user:
         title: "كتم المستخدم"
         complete: "تم كتم صوت المستخدم"

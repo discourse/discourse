@@ -1082,7 +1082,18 @@ zh_CN:
         view_conversation: "查看私信"
         note_added: "版主注释"
         note_added_by: "%{username} 的版主注释 · %{relativeDate}"
+        author_silenced_by: "作者已被 %{username} · %{relativeDate} 禁言"
+        author_silenced_automatically: "作者已自动禁言 · %{relativeDate}"
         no_events: "没有可显示的时间线事件"
+      author_penalty:
+        effect:
+          retains_silence: "作者保持禁言。"
+          retains_silence_and_suspension: "作者保持禁言和暂停。"
+          lifts_silence: "作者已取消禁言。"
+        toast:
+          still_silenced: "%{username} 仍然处于禁言状态。"
+          undo: "撤消"
+          undone: "%{username} 不再处于禁言状态。"
       notes:
         add_note_description: "添加注释以向其他版主提供背景信息。"
         add_note_button: "添加注释"
@@ -1727,7 +1738,6 @@ zh_CN:
       admin: "%{user} 是管理员"
       moderator_tooltip: "此用户是版主"
       admin_tooltip: "此用户是管理员"
-      silenced_tooltip: "此用户已被禁言"
       suspended_notice: "此用户已被封禁至 %{date}。"
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："

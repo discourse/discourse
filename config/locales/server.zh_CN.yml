@@ -1796,6 +1796,7 @@ zh_CN:
     min_personal_message_title_length: "消息允许的最小标题长度（以字符为单位）"
     max_emojis_in_title: "话题标题中允许的最大表情符号数。如果将值设置为零，则会阻止在话题标题中使用任何表情符号。"
     min_search_term_length: "最小有效搜索词长度（以字符为单位）"
+    allow_anonymous_search: "允许匿名访客使用 /search 命令。禁用后，匿名访客将无法访问 /search 命令，并且使用 /search 命令的界面控件将被隐藏。"
     search_tokenize_chinese: "即使在非中文网站上也强制搜索将中文词例化"
     search_tokenize_japanese: "即使在非日语网站上也强制搜索将日语词例化"
     search_prefer_recent_posts: "如果搜索大型论坛的速度很慢，此选项会首先尝试索引最近的帖子"
@@ -5408,8 +5409,6 @@ zh_CN:
         complete: "帖子已隐藏，用户已被通知。"
       agree_and_edit:
         title: "编辑帖子"
-        description: "同意举报并打开编辑器窗口以编辑帖子。"
-        complete: "举报已确认，您现在可以编辑该帖子。"
       delete:
         title: "删除"
         complete: "帖子已被删除。"
@@ -5459,6 +5458,8 @@ zh_CN:
         title: "解除用户禁言并忽略"
         description: "解除对用户的禁言，并从队列中移除该举报，但不恢复已删除的帖子。"
         complete: "用户已被解除禁言，举报已被忽略。"
+      unsilence_user:
+        complete: "作者不再禁言。"
       approve:
         title: "是"
         complete: "帖子已被批准。"
@@ -5527,30 +5528,6 @@ zh_CN:
       approve_and_unhide:
         title: "是"
         complete: "帖子已获批准并取消隐藏"
-      post_actions:
-        bundle_title: "您想如何处理该帖子？"
-      delete_post:
-        title: "删除帖子"
-        description: "删除此帖子"
-        complete: "帖子已删除"
-      hide_post:
-        title: "隐藏帖子"
-        description: "隐藏此帖子，不让公众查看"
-        complete: "帖子已隐藏"
-      unhide_post:
-        title: "取消隐藏帖子"
-        description: "将此帖子设为对所有用户可见"
-        complete: "帖子已取消隐藏"
-      restore_post:
-        title: "恢复帖子"
-        description: "恢复已删除的帖子"
-        complete: "帖子已恢复"
-      edit_post:
-        title: "编辑帖子"
-        description: "编辑此帖子内容"
-        complete: "帖子已编辑"
-      user_actions:
-        bundle_title: "您想如何处理该用户？"
       silence_user:
         title: "将用户禁言"
         description: "禁止用户发帖或发送消息"

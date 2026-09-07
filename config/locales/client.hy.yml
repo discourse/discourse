@@ -728,6 +728,9 @@ hy:
       user_label: "Օգտատեր"
       timeline:
         target_deleted: "Գրառումը ջնջված է"
+      author_penalty:
+        toast:
+          undo: "Ետարկել"
       notes:
         delete: "Ջնջել"
       topic_label: "Թեմա"
@@ -1291,7 +1294,6 @@ hy:
       admin: "%{user}-ը ադմին է"
       moderator_tooltip: "Այս օգտատերը մոդերատոր է"
       admin_tooltip: "Այս օգտատերն ադմին է"
-      silenced_tooltip: "Այս օգտատերը լռեցված է"
       suspended_notice: "Այս օգտատերը սառեցված է մինչև %{date}:"
       suspended_permanently: "Այս օգտատերը սառեցված է"
       suspended_reason: "Պատճառը՝ "

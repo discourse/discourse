@@ -1028,6 +1028,9 @@ ug:
         note_added: "رىياسەتچى ئىزاھاتى"
         note_added_by: "%{username} · %{relativeDate} رىياسەتچى ئىزاھاتى"
         no_events: "كۆرسىتىدىغان ۋاقىت سىزىقى پائالىيىتى يوق"
+      author_penalty:
+        toast:
+          undo: "يېنىۋال"
       notes:
         add_note_description: "باشقا رىياسەتچىگە مەزمۇن تەمىنلەش ئۈچۈن خاتىرە قوشىدۇ."
         add_note_button: "ئىزاھات قوش"
@@ -1670,7 +1673,6 @@ ug:
       admin: "%{user} باشقۇرغۇچى"
       moderator_tooltip: "بۇ ئىشلەتكۈچى رىياسەتچى"
       admin_tooltip: "بۇ ئىشلەتكۈچى باشقۇرغۇچى"
-      silenced_tooltip: "بۇ ئىشلەتكۈچىنىڭ ئۈنى ئۆچۈرۈلگەن"
       suspended_notice: "بۇ ئىشلەتكۈچى %{date} غىچە ۋاقىتلىق چەكلەنگەن."
       suspended_permanently: "بۇ ئىشلەتكۈچى ۋاقىتلىق چەكلەنگەن."
       suspended_reason: "سەۋەبى: "
