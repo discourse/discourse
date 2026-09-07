@@ -175,6 +175,17 @@ pl_PL:
           solved: "są rozwiązane"
           unsolved: "są nierozwiązane"
     admin:
+      reports:
+        related_items:
+          solved_topics:
+            title: "Rozwiązane tematy"
+            description: "Tematy oznaczone jako rozwiązane między %{startDate} a %{endDate}, najnowsze na górze."
+          labels:
+            topic: "Temat"
+            solved_by: "Rozwiązano przez"
+            category: "Kategoria"
+          table_summary:
+            solved_topics_title: "Rozwiązane tematy dnia %{date}"
       web_hooks:
         solved_event:
           group_name: "Zdarzenie rozwiązania"

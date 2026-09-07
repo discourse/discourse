@@ -10,6 +10,7 @@ class AssetProcessor
       dependency_globs: %w[
         node_modules/.pnpm/lock.yaml
         frontend/asset-processor/**/*.{js,mjs}
+        app/assets/stylesheets/variable-renames.json
         frontend/discourse/lib/babel-transform-module-renames.js
         frontend/discourse/lib/discourse-source-imports.mjs
         frontend/discourse/config/targets.js

@@ -76,9 +76,11 @@ reviewed:
     - pitchfork # Ruby or GPLv2/GPLv3
     - r2 # Apache-2.0 (Twitter)
     - raindrops # LGPL-2.1+
+    - rbs # BSD-2-Clause or Ruby
     - rubyzip # Ruby
     - securerandom # Ruby
     - sidekiq # LGPL (Sidekiq)
+    - snaky_hash # MIT
     - tilt # MIT
     - ttfunk # Ruby or GPLv2/GPLv3
     - unf # BSD-2-Clause

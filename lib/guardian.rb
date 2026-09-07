@@ -103,7 +103,10 @@ class Guardian
 
     def in_any_groups?(group_ids)
       if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
-        return group_ids.include?(Group::AUTO_GROUPS[:everyone])
+        return(
+          group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+            group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
+        )
       end
 
       group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])

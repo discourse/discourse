@@ -122,8 +122,6 @@ gl:
         successful: "Feito"
         failed: "Fallou"
         unknown: "Descoñecido"
-        topic_id: "ID do tema"
-        post_id: "ID da publicación"
         time: "Hora"
         when: "Cando"
         request: "Petición"
@@ -135,8 +133,7 @@ gl:
         post_short: "Publicación %{id}"
         duration: "Duración"
         actions: "Accións"
-        filters:
-          title: "Filtros"
+        view_details: "Detalles"
         periods:
           custom: "Personalizado"
         detail:
@@ -280,8 +277,10 @@ gl:
           table:
             total_count: "Total"
       discobot_discoveries:
-        regular_results: "Temas"
-        collapse: "Pregar"
-        tooltip:
-          actions:
-            disable: "Desactivar"
+        legacy:
+          regular_results: "Temas"
+          collapse: "Pregar"
+          tooltip:
+            actions:
+              disable: "Desactivar"
+        search_messages: "Mensaxes"

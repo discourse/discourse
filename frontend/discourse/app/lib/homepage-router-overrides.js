@@ -1,4 +1,5 @@
 import { defaultHomepage } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
 
 /**
  * We want / to display one of our discovery routes/controllers, but we don't
@@ -28,13 +29,55 @@ export const homepageRewriteParam = "_discourse_homepage_rewrite";
  * We watch for this, and then perform the rewrite in the router.
  */
 export function homepageDestination() {
-  return `/${defaultHomepage()}?${homepageRewriteParam}=1`;
+  if (serverSideHomepage()) {
+    return "/";
+  }
+
+  return `${homepagePath()}?${homepageRewriteParam}=1`;
+}
+
+export function homepageNavigationDestination() {
+  const option = registeredHomepageOption();
+
+  if (!option) {
+    return `discovery.${defaultHomepage()}`;
+  }
+
+  return option.server_side ? "/" : option.path;
+}
+
+export function homepagePreviewDestination() {
+  const option = registeredHomepageOption();
+
+  if (!option) {
+    return `discovery.${defaultHomepage()}`;
+  }
+
+  return option.server_side ? "discovery.latest" : option.path;
+}
+
+export function homepagePath() {
+  const homepage = defaultHomepage();
+  const option = registeredHomepageOption();
+
+  return option?.path || `/${homepage}`;
+}
+
+export function serverSideHomepage() {
+  return registeredHomepageOption()?.server_side === true;
+}
+
+function registeredHomepageOption() {
+  const homepage = defaultHomepage();
+
+  return Site.current()?.homepage_options?.find(({ id }) => id === homepage);
 }
 
 function rewriteIfNeeded(url, transition) {
   const intentUrl = transition?.intent?.url;
   if (
-    intentUrl?.startsWith(homepageDestination()) ||
+    (homepageDestination() !== "/" &&
+      intentUrl?.startsWith(homepageDestination())) ||
     intentUrl?.startsWith("/login-required") ||
     (transition?.intent.name === `discovery.${defaultHomepage()}` &&
       transition?.intent.queryParams[homepageRewriteParam])

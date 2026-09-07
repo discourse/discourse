@@ -303,6 +303,49 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
   end
 
+  describe "capped boundary preload" do
+    it "uses one flat-descendant query regardless of the number of boundary parents" do
+      SiteSetting.nested_replies_cap_nesting_depth = true
+      SiteSetting.nested_replies_max_depth = 2
+
+      topics =
+        [1, 5].map do |branch_count|
+          nested_topic = Fabricate(:topic, user: user)
+          Fabricate(:post, topic: nested_topic, user: user, post_number: 1)
+          Fabricate(:nested_topic, topic: nested_topic)
+
+          branch_count.times do
+            root = Fabricate(:post, topic: nested_topic, user: user, reply_to_post_number: 1)
+            boundary_parent =
+              Fabricate(
+                :post,
+                topic: nested_topic,
+                user: user,
+                reply_to_post_number: root.post_number,
+              )
+            Fabricate(
+              :post,
+              topic: nested_topic,
+              user: user,
+              reply_to_post_number: boundary_parent.post_number,
+            )
+          end
+
+          nested_topic
+        end
+      sign_in(user)
+
+      flat_query_counts =
+        topics.map do |nested_topic|
+          queries =
+            track_sql_queries { get "/n/#{nested_topic.slug}/#{nested_topic.id}.json?sort=old" }
+          queries.count { |query| query.include?("PARTITION BY descendants.root_post_number") }
+        end
+
+      expect(flat_query_counts).to eq([1, 1])
+    end
+  end
+
   describe "hot sorting" do
     def build_hot_topic(root_count)
       hot_topic = Fabricate(:topic, user: user)

@@ -5,43 +5,201 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse Data Explorer"
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "資料瀏覽器"
+          description: "由 AI 驅動的資料瀏覽器查詢產生功能"
+          query_generation: "查詢產生"
+    errors:
+      explorer:
+        no_semicolons: "移除查詢中的分號。"
+        dirty: "執行查詢前必須先儲存。"
     data_explorer:
       admin_dashboard_card:
         no_results: "沒有結果"
+      manage_reports_hint:
+        title: "建立資料瀏覽器查詢"
+        description: "撰寫自訂 SQL 查詢，以找出社群中的特定資訊。"
     explorer:
+      resize_editor: "調整查詢編輯器大小"
       default_query: "預設"
+      default_query_notice: "這是預設查詢，無法編輯 SQL。若要編輯 SQL，請建立新查詢。"
+      queries: "查詢"
+      query_created: "查詢已建立！"
+      mode:
+        label: "查詢編寫模式"
+        manual: "撰寫 SQL"
+        ai: "使用 AI 產生"
       or: "或"
-      create: "創建"
+      admins_only: "資料瀏覽器僅供管理員使用。"
+      allow_groups: "允許群組存取此查詢"
+      title: "資料瀏覽器"
+      create: "建立"
+      create_placeholder: "查詢名稱……"
+      description_placeholder: "在此輸入描述"
       ai:
+        description_title: "使用 AI 產生"
+        description_hint: "請以一般文字描述你的需求。我們會為你產生 SQL、名稱和描述。"
+        description_placeholder: "例如：顯示一段時間內的註冊人數"
+        regenerate_placeholder: "例如：將查詢更新為最多傳回 50 筆結果"
+        prompt_label: "提示詞"
+        workflow_title: "AI 查詢助理"
         generate: "產生"
-        optional: "可選"
+        regenerate: "產生查詢"
+        generating: "正在使用 AI 產生查詢……"
+        generation_timeout: "AI 查詢產生逾時。你可以手動撰寫 SQL。"
+        generation_error: "產生查詢時發生錯誤。"
+        save_query: "儲存查詢"
+        write_manually: "手動撰寫 SQL"
+        sql_label: "SQL"
+        optional: "選填"
       import:
         label: "匯入"
+        unparseable_json: "無法解析 JSON 檔案。"
+        wrong_json: "JSON 檔案格式錯誤。JSON 檔案應包含一個「query」物件，且至少應有一個「sql」屬性。"
       help:
-        label: "幫助"
+        label: "說明"
+        modal_title: "資料瀏覽器說明"
+        auto_resolution: "<h2>自動解析實體</h2> <p>當查詢傳回實體 ID 時，資料瀏覽器可能會在查詢結果中自動將其替換為實體名稱和其他實用資訊。可自動解析的欄位包括 <i><b>user_id</b></i>、<i><b>group_id</b></i>、<i><b>topic_id</b></i>、<i><b>category_id</b></i> 和 <i><b>badge_id</b></i>。若要試用，請執行以下查詢：</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>建立自訂參數</h2> <p>若要為查詢建立自訂參數，請在查詢最上方加入以下內容，並依照此格式：</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>注意：第一行 [params] 為必填，前面必須加上兩個連字號；每個要宣告的自訂參數也必須如此。</i></p>"
+        default_values: "<h3>預設值</h3> <p>你可以宣告有或沒有預設值的參數。預設值會顯示在查詢編輯器下方的文字欄位中，你可以依需要進行編輯。未宣告預設值的參數仍會產生文字欄位，但欄位會是空白並以紅色標示。</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>資料類型</h3> <p>以下是常用的資料類型：</p> <ul> <li><b>integer</b>－帶正負號的四位元組整數</li> <li><b>text</b>－長度可變的字串</li> <li><b>boolean</b>－真／假</li> <li><b>date</b>－日曆日期（年、月、日）</li> <li><b>current_user_id</b>－執行查詢的使用者 ID（自動注入，適用於群組報表）</li> </ul> <p>如需資料類型的詳細資訊，請造訪<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>此網站</a>。</p>"
       schema:
-        filter: "搜尋..."
+        title: "資料庫結構"
+        filter: "搜尋……"
+        search_tables: "搜尋資料表"
+        hide: "隱藏結構"
+        show: "顯示結構"
+        sensitive: "此欄內容可能包含特別敏感或私密的資訊。使用此欄內容時請務必謹慎。"
       types:
         bool:
           yes: "是"
           no: "否"
+          null_: "空值"
+      view_json: "檢視 JSON"
+      save: "儲存變更"
+      saverun: "儲存變更並執行"
+      run: "執行"
+      undo: "捨棄變更"
       delete: "刪除"
+      recover: "復原已刪除的查詢"
+      sql_label: "SQL"
+      run_with_explain: "使用查詢計畫執行"
+      run_options: "更多執行選項"
+      view:
+        label: "結果檢視方式"
       chart:
         form:
+          label: "圖表類型"
+          line: "折線圖"
           bar: "長條圖"
+          stacked: "堆疊圖"
+          dual_axis: "雙軸圖"
+        tooltip:
+          total: "總計：%{count}"
+      chart_empty:
+        no_rows: "沒有可繪製成圖表的資料列。"
+        no_numeric: "此查詢沒有可繪製成圖表的數值欄。"
+        no_numeric_with_columns: "此查詢沒有可繪製成圖表的數值欄（已忽略：%{columns}）。"
+        view_as_table: "以表格檢視"
+      chart_footnote:
+        ignored: "未繪製的欄：%{columns}"
+      export_as:
+        label: "匯出為……"
+        results_json: "結果（JSON）"
+        results_csv: "結果（CSV）"
+        query_json: "查詢定義（JSON）"
+      others_dirty: "某個查詢有未儲存的變更；若離開此頁，這些變更將會遺失。"
+      run_time: "查詢已在 %{value} 毫秒內完成。"
+      cached_result_notice: "顯示 %{relative_time} 的快取結果。"
       result_count:
-        other: "%{count} 個結果."
+        other: "%{count} 筆結果。"
+      max_result_count:
+        other: "顯示前 %{count} 筆結果。"
+      query_name: "查詢"
       query_groups: "群組"
+      link: "連結："
+      report_name: "報表"
       query_description: "描述"
-      query_user: "創建者"
-      reset_params: "重置"
-      search_placeholder: "搜尋..."
+      query_time: "上次執行"
+      query_user: "建立者"
+      column: "第 %{number} 欄"
+      save_params: "設為預設值"
+      reset_params: "重設"
+      search_placeholder: "搜尋……"
+      no_search_results: "抱歉，找不到符合你輸入文字的結果。"
+      form:
+        errors:
+          invalid: "無效"
+          no_such_category: "找不到此分類"
+          no_such_group: "找不到此群組"
+          invalid_date: "%{date} 是無效的日期"
+          invalid_time: "%{time} 是無效的時間"
     group:
-      reports: "報告"
+      reports: "報表"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "執行資料瀏覽器查詢。可指定查詢 ID，將 API 金鑰限制為只能執行一組查詢。"
     discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "必須啟用資料瀏覽器外掛程式"
+      nodes:
+        "action:sql": "資料瀏覽器"
+      node_descriptions:
+        "action:sql": "對資料庫執行唯讀 SQL 查詢"
       sql:
-        param_value: "價值"
+        operation: "操作"
+        operation_description: "查詢的執行方式"
+        operation_queries: "預先定義的查詢"
+        operation_raw: "原始 SQL 查詢"
+        query_id: "查詢"
+        query_id_description: "選擇要執行的已儲存查詢"
+        query_params: "查詢參數"
+        query_params_description: "填寫所選查詢的參數"
+        query: "SQL 查詢"
+        params: "查詢參數"
+        params_description: "參數可在 SQL 查詢中以 :my_param 的形式使用。"
+        add_param: "新增參數"
+        param_name: "參數"
+        param_value: "值"
         output:
           results: "結果"
           no_results: "沒有結果"
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: 傳送給使用者、群組或電子郵件地址
+            query_id:
+              label: 資料瀏覽器查詢
+            query_params:
+              label: 資料瀏覽器查詢參數
+            skip_empty:
+              label: 若沒有結果，則略過傳送私人訊息
+            attach_csv:
+              label: 將 CSV 檔案附加至私人訊息
+            users_from_group:
+              label: 分別傳送私人訊息給每位群組成員
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: 要發佈查詢結果的主題
+            query_id:
+              label: 資料瀏覽器查詢
+            query_params:
+              label: 資料瀏覽器查詢參數
+            skip_empty:
+              label: 若沒有結果，則略過發佈
+            attach_csv:
+              label: 將 CSV 檔案附加至貼文

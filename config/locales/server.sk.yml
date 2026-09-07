@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sk:
+  llms_txt:
+    sections:
+      optional: "Voliteľné"
+    links:
+      search:
+        label: "Hľadať"
+      categories:
+        label: "Kategórie"
+      about:
+        label: "O stránke"
+      guidelines:
+        label: "Pokyny"
   dates:
     short_date_no_year: "MMM D"
     short_date: "YYYY MMM D"
@@ -1121,6 +1133,7 @@ sk:
       windows: "Microsoft Windows"
       unknown: "neznámy operačný systém"
   admin_site_traffic_explorer:
+    unknown: "Neznáma"
     traffic_types:
       anonymous: "Anonymný"
   change_email:
@@ -1406,6 +1419,11 @@ sk:
         share: "Zdieľať"
       types:
         staff: "Personál"
+    posters_by_member_type_members:
+      labels:
+        user: "Používateľ"
+        count: "Príspevky"
+        share: "Zdieľať"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1955,7 +1973,7 @@ sk:
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
     allow_username_in_share_links: "Povolenie uvádzania používateľských mien v prepojeniach na zdieľanie. Je to užitočné na odmeňovanie odznakov na základe jedinečných návštevníkov."
     site_contact_username: "Platné používateľské meno obsluhy, ktorá bude posielať automatizované správy. Pokiaľ je vynechané, použije sa východzí systémový účet. "
-    site_contact_group_name: "Platný názov skupiny, ktorá bude pozvaná na všetky automaticky odoslané osobné správy."
+    site_contact_group_name: "Skupina, ktorá dostane pozvánku na všetky automaticky odoslané osobné správy."
     send_welcome_message: "Poslať všetkým novým používateľom uvítaciu správu s návodom ako začať. "
     send_tl1_welcome_message: "Odoslanie uvítacej správy novým používateľom úrovne dôveryhodnosti 1."
     send_tl2_promotion_message: "Odoslanie správy o povýšení novým používateľom na úrovni dôveryhodnosti 2."
@@ -2524,7 +2542,6 @@ sk:
       invalid_email: "Nesprávna emailová adresa."
       invalid_username: "S daným používateľským menom neexistuje žiadny používateľ."
       valid_username: "Existuje používateľ s týmto používateľským menom."
-      invalid_group: "Neexistuje žiadna skupina s týmto názvom."
       invalid_integer_min_max: "Hodnota musí byť medzi %{min} a %{max}."
       invalid_integer_min: "Hodnota musí byť %{min} alebo viac."
       invalid_integer_max: "Hodnota nemôže byť viac ako %{max}."

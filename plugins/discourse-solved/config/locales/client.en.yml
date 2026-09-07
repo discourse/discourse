@@ -169,6 +169,17 @@ en:
           unsolved: "are unsolved"
 
     admin:
+      reports:
+        related_items:
+          solved_topics:
+            title: "Solved topics"
+            description: "Topics marked as solved between %{startDate} and %{endDate}, newest first."
+          labels:
+            topic: "Topic"
+            solved_by: "Solved by"
+            category: "Category"
+          table_summary:
+            solved_topics_title: "Solved topics on %{date}"
       web_hooks:
         solved_event:
           group_name: "Solved Event"

@@ -56,6 +56,24 @@ RSpec.describe ThemeSettingsSerializer do
     end
   end
 
+  describe "#value" do
+    it "serializes the unaliased group list value for editing" do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        groups_setting:
+          type: list
+          list_type: group
+          default: "0|1"
+      YAML
+      theme.save!
+      theme.settings[:groups_setting].value = "0|2"
+
+      payload = ThemeSettingsSerializer.new(theme.reload.settings[:groups_setting]).as_json
+
+      expect(payload[:theme_settings][:value]).to eq("0|2")
+    end
+  end
+
   describe "#valid_values" do
     fab!(:theme_with_enum, :theme)
 

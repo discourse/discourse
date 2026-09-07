@@ -11,12 +11,12 @@ module PageObjects
       end
 
       def toggle_enabled
-        select = page.find("#{FEATURES_PAGE} .ai-features__controls .d-select")
+        select = page.find("#{FEATURES_PAGE} .ai-features__controls .d-native-select")
         select.find("option[value='enabled']").select_option
       end
 
       def toggle_not_enabled
-        select = page.find("#{FEATURES_PAGE} .ai-features__controls .d-select")
+        select = page.find("#{FEATURES_PAGE} .ai-features__controls .d-native-select")
         select.find("option[value='not enabled']").select_option
       end
 
@@ -29,6 +29,17 @@ module PageObjects
           "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__agent-link",
           text: name,
         )
+      end
+
+      def has_feature?(feature_name, name)
+        page.has_css?(
+          "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__feature-name",
+          text: name,
+        )
+      end
+
+      def has_no_feature?(feature_name)
+        page.has_no_css?("#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}']")
       end
 
       def has_feature_groups?(feature_name, groups)

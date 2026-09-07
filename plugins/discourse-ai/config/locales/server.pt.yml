@@ -35,6 +35,8 @@ pt:
         search: "Pesquisar"
         time: "Hora"
         summarize: "Resumir"
+      tool_help:
+        create_category: "Criar uma nova categoria"
       close_topic:
         errors:
           not_found: "Tópico não encontrado."
@@ -44,10 +46,10 @@ pt:
       delete_topic:
         errors:
           not_found: "Tópico não encontrado."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tópico não encontrado."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Tópico não encontrado."
       set_topic_timer:

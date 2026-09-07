@@ -326,6 +326,7 @@ ca:
       sections:
         theme: "Aparença"
         homepage: "Pàgina principal"
+        search: "Cerca"
       colors:
         light: "Clar"
         dark: "Fosc"
@@ -1686,6 +1687,8 @@ ca:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Retorn"
+      delete: "Suprimeix"
+      home: "Pàgina principal"
     category_row:
       subcategories: "+ Subcategories"
     select_kit:
@@ -1945,6 +1948,7 @@ ca:
       categories: "Categories"
       tags: "Etiquetes"
       type:
+        default: "Publicacions"
         users: "Usuaris"
         categories: "Categories"
       context:
@@ -2387,7 +2391,6 @@ ca:
       reply_as_new_private_message: "Respon amb un missatge nou als mateixos destinataris."
       continue_discussion: "Continuant la discussió de %{postLink}:"
       follow_quote: "vés a la publicació citada"
-      show_full: "Mostra la publicació sencera"
       show_hidden: "Mira el contingut ignorat"
       collapse: "redueix"
       expand_collapse: "expandeix/contrau"
@@ -2843,11 +2846,8 @@ ca:
       content_load_error: 'No s''ha pogut carregar <a href="%url%">el contingut</a>. '
       image_load_error: 'No s''ha pogut carregar la <a href="%url%">imatge</a>.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Dreceres de teclat"
       description_header: "Descripció"
       key_header: "Clau"
@@ -3137,6 +3137,11 @@ ca:
         group_traffic: "Tràfic"
         group_members: "Membres"
         group_other: "Altres"
+        related_items:
+          users:
+            title: "Usuaris"
+          labels:
+            user: "Usuari"
       config_sections:
         account:
           title: "Compte"
@@ -3375,6 +3380,8 @@ ca:
               share: "Comparteix"
             whos_posting:
               staff: "Equip responsable"
+              modal:
+                apply: "Desa"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nou"
@@ -3387,6 +3394,10 @@ ca:
             table:
               searches: "Cerques"
               status: "Estat"
+          system:
+            title: "Sistema"
+            status: "Estat"
+            dashboard_updated: "Tauler de control actualitzat"
         reports_section:
           header_action: "Gestiona"
           modal:
@@ -3423,6 +3434,13 @@ ca:
           average_for_sample: "Mitjana per mostra"
           total: "Total de tots els temps"
           no_data: "No hi ha dades per a mostrar"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuari"
+              other: "%{count} usuaris"
+            posts_count:
+              one: "%{count} publicació"
+              other: "%{count} publicacions"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca de registres (logs)</a>'
             disabled: 'El report de cerca de tendències està desactivat. Habiliteu <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">les consultes de cerca de registres</a> per a recopilar dades.'

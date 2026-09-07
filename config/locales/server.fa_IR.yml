@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  llms_txt:
+    sections:
+      optional: "اختیاری"
+    links:
+      search:
+        label: "جستجو"
+      categories:
+        label: "دسته‌بندی‌ها"
+      about:
+        label: "درباره"
+      guidelines:
+        label: "راهنماها"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -899,6 +911,7 @@ fa_IR:
       windows: "مایکروسافت ویندوز"
       unknown: "سیستم‌عامل ناشناخته"
   admin_site_traffic_explorer:
+    unknown: "ناشناس"
     traffic_types:
       anonymous: "ناشناس"
   change_email:
@@ -1148,6 +1161,11 @@ fa_IR:
         share: "اشتراک‌گذاری"
       types:
         staff: "همکاران"
+    posters_by_member_type_members:
+      labels:
+        user: "کاربر"
+        count: "فرسته‌ها"
+        share: "اشتراک‌گذاری"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

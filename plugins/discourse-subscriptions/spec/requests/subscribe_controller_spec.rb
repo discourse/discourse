@@ -76,7 +76,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
       it "gets products" do
         ::Stripe::Product
           .expects(:list)
-          .with({ ids: product_ids, active: true }, DiscourseSubscriptions::Stripe.request_opts)
+          .with(
+            { ids: product_ids, active: true, limit: 100 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(data: [product])
 
         get "/s.json"
@@ -102,7 +105,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         ::Stripe::Product
           .expects(:list)
-          .with({ ids: product_ids, active: true }, DiscourseSubscriptions::Stripe.request_opts)
+          .with(
+            { ids: product_ids, active: true, limit: 100 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(data: [product])
 
         get "/s.json"
@@ -114,7 +120,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
         DiscourseSubscriptions::Customer.delete_all
         ::Stripe::Product
           .expects(:list)
-          .with({ ids: product_ids, active: true }, DiscourseSubscriptions::Stripe.request_opts)
+          .with(
+            { ids: product_ids, active: true, limit: 100 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(data: [product])
 
         get "/s.json"

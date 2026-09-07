@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 lv:
+  llms_txt:
+    sections:
+      optional: "Pēc izvēles"
+    links:
+      search:
+        label: "Meklēt"
+      categories:
+        label: "Sadaļas"
+      about:
+        label: "Par"
+      guidelines:
+        label: "Vadlīnijas"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -211,6 +223,7 @@ lv:
   password_reset:
     title: "Atjaunot paroli"
   admin_site_traffic_explorer:
+    unknown: "Nezināms"
     traffic_types:
       anonymous: "Anonīmi"
   reviewable_score_types:
@@ -291,6 +304,11 @@ lv:
         share: "Dalīties"
       types:
         staff: "Personāls"
+    posters_by_member_type_members:
+      labels:
+        user: "Lietotājs"
+        count: "Ieraksti"
+        share: "Dalīties"
     trust_level_pipeline:
       labels:
         count: "Dalībnieki"

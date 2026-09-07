@@ -1,7 +1,7 @@
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import ForgotPassword from "discourse/components/modal/forgot-password";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ForgotPasswordRoute extends DiscourseRoute {
@@ -12,7 +12,7 @@ export default class ForgotPasswordRoute extends DiscourseRoute {
     const { loginRequired } = this.controllerFor("application");
 
     await this.router.replaceWith(
-      loginRequired ? "login" : `discovery.${defaultHomepage()}`
+      loginRequired ? "login" : homepageNavigationDestination()
     );
     next(() => this.modal.show(ForgotPassword));
   }

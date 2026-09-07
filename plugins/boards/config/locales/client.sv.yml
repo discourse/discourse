@@ -1,0 +1,35 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    boards:
+      board:
+        remove_card: "Ta bort"
+        title: "Rubrik"
+        tags: "Taggar"
+        assigned_to: "Tilldelat till"
+        topic_reply_count:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        assign: "Tilldela"
+        reassign: "Tilldela om"
+        unassign: "Otilldela"
+        created_by: "Skapat av"
+      manage:
+        name: "Namn"
+        slug: "Slug"
+        constraint_categories: "Kategorier"
+        constraint_tags: "Taggar"
+        columns:
+          remove: "Ta bort"
+          column_title: "Rubrik"
+          icon: "Ikon"
+          color: "Färg"
+          tag: "Tagg"
+          move_to_assigned_unassign: "Otilldela"
+          move_to_status_open: "Öppen"
+          move_to_status_closed: "Stängda"

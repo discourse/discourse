@@ -21,6 +21,8 @@ et:
       tool_summary:
         search: "Otsi"
         time: "Aeg"
+      tool_help:
+        create_category: "Loo uus kategooria"
       close_topic:
         errors:
           not_found: "Teemat ei leitud."
@@ -30,10 +32,13 @@ et:
       delete_topic:
         errors:
           not_found: "Teemat ei leitud."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Teemat ei leitud."
       edit_category:
+        errors:
+          not_found: "Kategooriat ei leitud."
+      change_topic_category:
         errors:
           not_found: "Teemat ei leitud."
           category_not_found: "Kategooriat ei leitud."

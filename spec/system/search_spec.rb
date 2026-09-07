@@ -47,7 +47,7 @@ describe "Search" do
       search_page.click_search_button
 
       expect(search_page).to have_search_result
-      expect(search_page).to have_no_heading_text("Search")
+      expect(search_page).to have_result_count
 
       click_logo
       expect(page).to have_current_path("/")
@@ -63,7 +63,7 @@ describe "Search" do
       search_page.click_search_icon
 
       expect(search_page).to have_no_search_result
-      expect(search_page).to have_heading_text("Search")
+      expect(search_page).to have_no_result_count
     end
 
     it "navigates search results using J/K keys" do

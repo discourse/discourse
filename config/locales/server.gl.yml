@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 gl:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Buscar"
+      categories:
+        label: "Categorías"
+      about:
+        label: "Verbo de"
+      guidelines:
+        label: "Directrices"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -665,6 +677,7 @@ gl:
       windows: "Microsoft Windows"
       unknown: "sistema operativo descoñecido"
   admin_site_traffic_explorer:
+    unknown: "Descoñecido"
     traffic_types:
       anonymous: "Anónimo"
   change_email:
@@ -918,6 +931,11 @@ gl:
         share: "Compartir"
       types:
         staff: "Equipo"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuario"
+        count: "Publicacións"
+        share: "Compartir"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1725,7 +1743,6 @@ gl:
     errors:
       invalid_email: "Enderezo electrónico non válido."
       invalid_username: "Non hai un usuario con este nome."
-      invalid_group: "Non hai un grupo con este nome."
       invalid_integer_min_max: "O valor debe ser entre %{min} e %{max}."
       invalid_integer_min: "O valor debe ser %{min} ou maior."
       invalid_integer_max: "O valor non pode ser maior que %{max}."

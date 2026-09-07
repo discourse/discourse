@@ -556,6 +556,8 @@ de:
         theme: "Theme"
         fonts: "Schriftarten"
         homepage: "Homepage"
+        welcome_banner: "Willkommensbanner"
+        search: "Suche"
       theme:
         selected: "Ausgewählt"
       colors:
@@ -2279,7 +2281,6 @@ de:
         watch_topic: "Thema beobachten"
         track_topic: "Thema verfolgen"
         do_nothing: "Nichts tun"
-      topics_unread_when_closed: "Themen als ungelesen betrachten, wenn sie geschlossen sind"
       invited:
         title: "Einladungen"
         pending_tab: "Ausstehend"
@@ -2982,6 +2983,11 @@ de:
       ctrl: "Strg"
       alt: "Alt"
       enter: "Enter"
+      option: "Option"
+      period: "Zeitraum"
+      tab: "Tab"
+      delete: "Löschen"
+      home: "Startseite"
     conditional_loading_section:
       loading: Wird geladen …
     category_row:
@@ -3251,7 +3257,6 @@ de:
       create_whisper: "Flüstern"
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
-      title: "Oder drücke %{modifier}Eingabetaste"
       save_and_close: "Speichern und schließen"
       discard: "Verwerfen"
       cancel_edit: "Bearbeiten abbrechen"
@@ -3278,6 +3283,8 @@ de:
       resize: "Editorgröße anpassen"
       switch_to_markdown: "Zum Standard-Markdown-Editor wechseln (%{keyboardShortcut})"
       switch_to_rich_text: "Zum Rich-Text-Editor wechseln (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Zum Standard Markdown-Editor wechseln"
+      switch_to_rich_text_no_shortcut: "Wechsel zum neuen Rich-Text-Editor"
       quote_post_title: "Ganzen Beitrag zitieren"
       bold_label: "F"
       bold_title: "Fett gedruckt"
@@ -3631,10 +3638,10 @@ de:
         search_field: "Suchfeld in der Kopfzeile der Website"
         search_icon: "Suchsymbol neben dem Profilavatar"
       type:
-        default: "Themen/Beiträge"
+        default: "Beiträge"
         users: "Benutzer"
         categories: "Kategorien"
-        categories_and_tags: "Kategorien/Schlagwörter"
+        categories_and_tags: "Kategorien & Schlagwörter"
       context:
         user: "Beiträge von @%{username} durchsuchen"
         category: "Kategorie #%{category} durchsuchen"
@@ -3647,7 +3654,6 @@ de:
         in: "filtern nach Metadaten (z. B. in:title, in:personal, in:pinned)"
         status: "filtern nach Themenstatus"
         full_search: "startet die Ganzseitensuche"
-        full_search_key: "%{modifier} + Eingabetaste"
         me: "zeigt nur deine Beiträge"
       advanced:
         title: Erweiterte Filter
@@ -4554,7 +4560,6 @@ de:
       reply_as_new_private_message: "Antworte als neue Nachricht an die gleichen Empfänger"
       continue_discussion: "Fortsetzung der Diskussion von %{postLink}:"
       follow_quote: "springe zum zitierten Beitrag"
-      show_full: "Zeige ganzen Beitrag"
       show_hidden: "Ignorierte Inhalte anzeigen."
       deleted_by_author_simple: "(Beitrag vom Verfasser gelöscht)"
       collapse: "zuklappen"
@@ -5396,12 +5401,8 @@ de:
     invalid_video_url: Dieses Video kann nicht abgespielt werden, da die URL ungültig oder nicht verfügbar ist.
     keyboard_shortcuts_help:
       search_placeholder: "Suche nach einem Tastenkürzel anhand der Beschreibung oder Tastenkombination"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} oder %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Tastenkombinationen"
       short_title: "Tastenkombinationen"
       search_ctrl_f_tip: "Um das gesamte Forum zu durchsuchen, drücke <kbd>/</kbd>"
@@ -6190,6 +6191,11 @@ de:
         legacy_warning: "Dies ist ein älterer Bericht. Er wird demnächst nicht mehr verfügbar sein. Wenn du Hilfe bei der Suche nach einem Ersatz benötigst, wenden dich bitte an den Support."
         chart:
           total: "Gesamt: %{count}"
+        related_items:
+          users:
+            title: "Benutzer"
+          labels:
+            user: "Nutzer"
       config_sections:
         account:
           title: "Konto"
@@ -6523,7 +6529,7 @@ de:
           header_description: "Konfiguriere Sucheinstellungen einschließlich Protokollierung und Tokenisierung für chinesische und japanische Sprachen"
         search_everything:
           title: "Suche"
-          header_description: "Finde hier alles in der Administratoroberfläche. Du kannst die Ergebnisse unten filtern und deine Einstellungen werden gespeichert. Um diese Suche von überall in der Administratoroberfläche zu öffnen, drücke %{shortcutHTML}."
+          header_description: "Hier findest du alles in der Administratoroberfläche. Du kannst die Ergebnisse unten filtern, und deine Einstellungen werden gespeichert."
         security:
           title: "Sicherheit"
           header_description: "Konfiguriere die Sicherheitseinstellungen, einschließlich Zwei-Faktor-Authentifizierung, Moderatorenrechte und Sicherheitsrichtlinien für Inhalte"
@@ -6779,6 +6785,7 @@ de:
           referrer: "Referrer"
           country: "Land"
           browser: "Browser"
+          language: "Sprache"
           ip: "IP-Adresse"
         metrics:
           logged_in_share:
@@ -6893,6 +6900,14 @@ de:
               staff: "Team"
               empty: "Keine Beiträge im ausgewählten Zeitraum."
               save_error: "Deine Auswahl konnte nicht für das nächste Mal gespeichert werden."
+              add_group: "Gruppe hinzufügen"
+              modal:
+                apply: "Speichern"
+                enable: "%{title} aktivieren"
+                disable: "%{title} deaktivieren"
+                move_up: "%{title} nach oben verschieben"
+                move_down: "%{title} nach unten verschieben"
+                footer_note: "Diese Änderungen gelten für alle Benutzer."
             trust_level_pipeline:
               title: "Verlauf der Vertrauensstufen"
               trust_levels:
@@ -6960,6 +6975,11 @@ de:
                 no_match_tooltip: "Suchbegriffe mit einer Klickrate (CTR) von 0 %."
                 poor_match: "Schlechte Treffer"
                 poor_match_tooltip: "Suchbegriffe mit einer Klickrate (CTR) zwischen 1 und 20 %."
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Discourse aktualisiert"
+            dashboard_updated: "Dashboard aktualisiert"
         reports_section:
           header_action: "Verwalten"
           description: "Hefte Standardberichte oder Daten-Explorer-Abfragen an, um zu verfolgen, was für deine Community wichtig ist."
@@ -7104,6 +7124,14 @@ de:
           average_for_sample: "Durchschnitt für Auswahl"
           total: "Gesamt (vollständiger Zeitraum)"
           no_data: "Keine Daten anzuzeigen."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} Benutzer"
+              other: "%{count} Benutzer"
+            posts_count:
+              one: "%{count} Beitrag"
+              other: "%{count} Beiträge"
+            deselect: "%{name} abwählen"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokolle</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'

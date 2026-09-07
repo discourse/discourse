@@ -13,7 +13,10 @@ export default class SettingFieldGroup extends Component {
 
     return (this.site.groups || [])
       .filter((group) => !disallowed.includes(group.id.toString()))
-      .map((group) => ({ name: group.name, id: group.id.toString() }));
+      .map((g) => {
+        const name = g.name === "everyone" ? "everyone (legacy)" : g.name;
+        return { name, id: g.id.toString() };
+      });
   }
 
   get groupId() {

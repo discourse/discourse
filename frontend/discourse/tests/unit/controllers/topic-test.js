@@ -6,6 +6,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { forceMobile } from "discourse/lib/mobile";
+import { registerOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { Placeholder } from "discourse/models/post-stream";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -21,6 +22,37 @@ module("Unit | Controller | topic", function (hooks) {
 
   hooks.beforeEach(function () {
     this.store = getOwner(this).lookup("service:store");
+  });
+
+  test("revised messages skip only the originating optimistic refresh", function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = this.store.createRecord("topic", { id: 1 });
+    controller.setProperties({ model });
+    const triggerChangedPost = sinon
+      .stub(model.postStream, "triggerChangedPost")
+      .resolves();
+    registerOptimisticPostUpdate("originating-mutation");
+
+    controller.onMessage({
+      id: 1,
+      preserve_cooked_token: "originating-mutation",
+      type: "revised",
+      updated_at: "2026-08-31T00:00:00.000Z",
+    });
+    assert.false(
+      triggerChangedPost.called,
+      "the originating event preserves the optimistic DOM"
+    );
+
+    controller.onMessage({
+      id: 1,
+      type: "revised",
+      updated_at: "2026-08-31T00:00:01.000Z",
+    });
+    assert.true(
+      triggerChangedPost.calledOnceWith(1, "2026-08-31T00:00:01.000Z"),
+      "another event refreshes the post"
+    );
   });
 
   test("editTopic", function (assert) {

@@ -12,7 +12,7 @@ module DiscourseWorkflows
             color: "orange",
           },
           group: "discourse_triggers",
-          events: [:reviewable_created],
+          event: :reviewable_created,
           output_contracts: [{ schema: Schema::REVIEWABLE_EVENT_SCHEMA }],
           properties: -> do
             {

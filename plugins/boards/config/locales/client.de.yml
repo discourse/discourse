@@ -1,0 +1,45 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    boards:
+      board:
+        remove_card: "Entfernen"
+        new_topic: "Neues Thema..."
+        title: "Titel"
+        tags: "Schlagwörter"
+        assigned_to: "Zugeordnet zu"
+        view_topic: "Thema ansehen"
+        topic_reply_count:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
+        assign: "Zuordnen"
+        reassign: "Neu zuordnen"
+        unassign: "Zuordnung aufheben"
+        unassign_from_topic: "Zuordnung von @%{username} zu Thema aufheben"
+        unassign_from_post: "Zuordnung von @%{username} zu #%{post_number} aufheben"
+        edit_assignments: "Zuordnungen bearbeiten …"
+        created_by: "Erstellt von"
+      manage:
+        name: "Name"
+        slug: "Sprechender Name für URL"
+        constraint_categories: "Kategorien"
+        constraint_tags: "Schlagwörter"
+        advanced_settings: "Erweiterte Einstellungen"
+        card_style_simple: "Einfach"
+        columns:
+          remove: "Entfernen"
+          column_title: "Titel"
+          icon: "Symbol"
+          color: "Farbe"
+          default_sort_priority: "Priorität"
+          tag: "Schlagwort"
+          move_to_assigned_unassign: "Zuordnung aufheben"
+          move_to_status_open: "Offen"
+          move_to_status_closed: "Geschlossen"
+          show_advanced: "Erweiterte Optionen anzeigen"
+          hide_advanced: "Erweiterte Optionen ausblenden"

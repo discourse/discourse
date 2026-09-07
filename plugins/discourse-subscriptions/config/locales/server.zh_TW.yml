@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  discourse_subscriptions:
+    customer_not_found: 找不到客戶
+    subscription_not_found: 找不到訂閱
+    card:
+      declined: 信用卡遭拒
+      invalid: 信用卡無效

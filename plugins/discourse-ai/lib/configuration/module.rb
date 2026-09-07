@@ -63,8 +63,8 @@ module DiscourseAi
             new(
               SEARCH_ID,
               SEARCH,
-              enabled_by_setting: "ai_discover_enabled",
               features: DiscourseAi::Configuration::Feature.search_features,
+              extra_check: -> { SiteSetting.ai_discover_enabled || SiteSetting.ai_ask_ai_enabled },
             ),
             new(
               DISCORD_ID,

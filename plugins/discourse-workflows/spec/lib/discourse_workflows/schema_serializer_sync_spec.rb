@@ -32,7 +32,6 @@ RSpec.describe DiscourseWorkflows::Schema do
       unpinned
       unseen
       views
-      visible
     ]
   end
 
@@ -79,6 +78,7 @@ RSpec.describe DiscourseWorkflows::Schema do
     expect_ledger(
       described_class::TOPIC_PROPERTIES,
       serialized_keys(DiscourseWorkflows::TopicSerializer, post.topic),
+      unemitted: %w[visibility_reason_id],
       undeclared: topic_undeclared,
     )
   end
@@ -87,7 +87,7 @@ RSpec.describe DiscourseWorkflows::Schema do
     expect_ledger(
       described_class::TOPIC_PROPERTIES,
       serialized_keys(DiscourseWorkflows::TopicListItemSerializer, post.topic),
-      unemitted: %w[first_post_id],
+      unemitted: %w[first_post_id visibility_reason_id],
       undeclared: topic_undeclared,
     )
   end

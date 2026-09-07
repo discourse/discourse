@@ -241,6 +241,27 @@ RSpec.describe Admin::ReportsController do
         expect(response.parsed_body["reports"][3]).to include("error" => "not_found", "data" => nil)
       end
 
+      it "returns aggregates but not related items for identity-level reports" do
+        get "/admin/reports/bulk.json",
+            params: {
+              reports: {
+                signups: {
+                  include_related_items: false,
+                },
+                new_contributors: {
+                  include_related_items: true,
+                },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reports"][0]["type"]).to eq("signups")
+        expect(response.parsed_body["reports"][1]["type"]).to eq("new_contributors")
+        expect(
+          response.parsed_body["reports"].filter_map { |report| report["related_items"] },
+        ).to be_empty
+      end
+
       it "redacts suspicious login IP addresses when IP viewing is disabled" do
         SiteSetting.moderators_view_ips = false
         DiscourseIpInfo.stubs(:get).returns(location: "Earth")
@@ -394,6 +415,19 @@ RSpec.describe Admin::ReportsController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["report"]["total"]).to eq(1)
           end
+
+          it "only includes related items when requested" do
+            Fabricate(:user, created_at: 1.hour.ago)
+
+            get "/admin/reports/signups.json", params: { cache: true }
+            expect(response.parsed_body["report"]).not_to have_key("related_items")
+
+            get "/admin/reports/signups.json", params: { cache: true, include_related_items: true }
+            expect(response.parsed_body["report"]["related_items"]["users"]).to be_present
+
+            get "/admin/reports/signups.json", params: { cache: true }
+            expect(response.parsed_body["report"]).not_to have_key("related_items")
+          end
         end
 
         context "when limit param is invalid" do
@@ -481,6 +515,18 @@ RSpec.describe Admin::ReportsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["report"]["total"]).to eq(1)
+      end
+
+      it "returns report aggregates without identity-level data" do
+        get "/admin/reports/signups.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["report"]["type"]).to eq("signups")
+
+        get "/admin/reports/signups.json", params: { include_related_items: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["report"]).not_to have_key("related_items")
       end
 
       context "when moderators cannot view IPs" do

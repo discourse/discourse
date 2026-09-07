@@ -46,6 +46,12 @@ en:
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
+    admin:
+      site_settings:
+        ai_ask_ai_summary_detail:
+          quiet: "Quiet (one sentence, no heading)"
+          balanced: "Balanced (one short paragraph)"
+          detailed: "Detailed (two or three short paragraphs)"
     discourse_workflows:
       node_unavailable:
         requires_ai: "Requires the AI plugin to be enabled"
@@ -347,9 +353,12 @@ en:
         search:
           name: "Search"
           description: "Enhances search experience by providing AI-generated answers to queries"
-          discoveries: "Discoveries"
+          discoveries: "Discover (deprecated)"
+          ask_ai: "Ask AI"
           setting_groups:
             settings: "Basic Settings"
+            agents: "Agents"
+            access_control: "Access Control"
         embeddings:
           name: "Embeddings"
           description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
@@ -1228,20 +1237,23 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-7: "Anthropic's most intelligent model"
-          anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
-          anthropic-claude-haiku-4-5: "Fast and cost-effective"
-          google-gemini-3-1-pro-preview: "Google's most intelligent model"
-          google-gemini-3-6-flash: "Fast, frontier-level intelligence for agentic workloads"
-          open_ai-gpt-5-6-sol: "OpenAI's frontier model for complex professional work"
-          open_ai-gpt-5-6-terra: "Balances intelligence and cost for demanding workloads"
-          open_ai-gpt-5-6-luna: "Optimized for cost-sensitive, high-volume workloads"
-          open_router-moonshotai-kimi-k2-6: "Moonshot's multimodal model with vision capabilities"
-          open_router-deepseek-deepseek-v4-flash: "DeepSeek's latest high-performance model with 1M context"
-          open_router-minimax-minimax-m2-7: "MiniMax's model with large context"
-          open_router-x-ai-grok-4-1-fast: "xAI's fast multimodal model with very large context"
-          open_router-z-ai-glm-5-1: "Z-AI's reasoning-focused model"
-          open_router-qwen-qwen3-6-plus: "Qwen's multimodal model with 1M context"
+          anthropic-claude-fable-5-1: "Anthropic's maximum-capability model for demanding reasoning and long-running agents"
+          anthropic-claude-opus-5: "Anthropic's flagship for complex agentic coding, deep reasoning, and enterprise work"
+          anthropic-claude-sonnet-5: "Best balance of speed and intelligence for coding, agents, and everyday knowledge work"
+          anthropic-claude-haiku-4-5-20251001: "Fast, economical model for high-volume and latency-sensitive workloads"
+          google-gemini-3-1-pro-preview: "Google's Pro model for advanced reasoning, complex problem-solving, and agentic coding"
+          google-gemini-3-8-flash: "Google's most intelligent Flash model for long-horizon software engineering and autonomous agents"
+          google_vertex_ai-google-gemini-3-8-flash: "Gemini 3.8 Flash through Vertex AI for multimodal, agentic, and enterprise workloads"
+          open_ai-gpt-5-6-sol: "OpenAI's flagship GPT-5.6 model for complex professional, coding, and agentic work"
+          open_ai-gpt-5-6-terra: "Balanced GPT-5.6 model for strong intelligence at lower cost"
+          open_ai-gpt-5-6-luna: "Fast, economical GPT-5.6 model for high-volume and well-defined tasks"
+          open_router-z-ai-glm-5-3-flash: "Fast, inexpensive multimodal reasoning model for coding and long-running agents"
+          open_router-deepseek-deepseek-v4-flash-vision-exp: "Experimental multimodal DeepSeek model for economical coding, reasoning, and image understanding"
+          open_router-tencent-hy4-preview: "Preview reasoning model for coding agents, complex tool use, and sustained multi-step work"
+          open_router-xiaomi-mimo-v2-5: "Low-cost omnimodal model for agents and image, audio, and video understanding"
+          open_router-moonshotai-kimi-k3: "Frontier multimodal model for complex coding, repository navigation, and long-running agents"
+          open_router-minimax-minimax-m3: "Long-context multimodal model for sustained coding, tool use, and multi-step agents"
+          open_router-x-ai-grok-4-6: "Frontier multimodal reasoning model for coding, tool use, and long-context workloads"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -1457,16 +1469,16 @@ en:
 
         semantic_search: "Topics (Semantic)"
         semantic_search_results:
-          toggle: "AI results"
-          unavailable: "AI results unavailable"
-          zero_results_expanded: "Zero results found, showing %{count} AI results"
+          toggle: "Related results"
+          unavailable: "Related results unavailable"
+          zero_results_expanded: "Zero results found, showing %{count} related results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
-          invalid_sort: "Search results must be sorted by Relevance to display AI results"
+          invalid_sort: "Search results must be sorted by relevance to display related results"
           not_submitted: "Submit a search to enable AI results"
           no_results: "No AI results found for this search"
-        semantic_search_unavailable_tooltip: "Search results must be sorted by Relevance to display AI results"
-        ai_generated_result: "Search result found using AI"
+        semantic_search_unavailable_tooltip: "Search results must be sorted by relevance to display related results"
+        ai_generated_result: "Related search result found using AI"
         ai_results_notice:
           no_results: "No exact matches, but here are some related results."
           few_results:
@@ -1630,21 +1642,52 @@ en:
             expanded_description: "with AI summaries"
 
       discobot_discoveries:
-        main_title: "Discobot discoveries"
-        regular_results: "Topics"
-        tell_me_more: "Tell me more..."
-        continue_convo: "Continue conversation..."
+        main_title: "Ask AI"
         loading_convo: "Loading conversation"
-        collapse: "Collapse"
-        timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+        follow_up:
+          label: "Ask a follow-up"
+          placeholder: "Ask a follow-up"
+          submit: "Ask"
+        timed_out: "Ask AI took too long to complete this search. Try again or use Search."
+        request_failed: "Ask AI could not start this search. Try again or use Search."
+        no_answer: "AI couldn’t find a clear answer. Ask the community."
+        create_topic: "Create topic"
+        answer_ready: "Ask AI answer ready."
         user_setting: "Enable AI search discoveries"
-        tooltip:
-          header: "AI powered search"
-          content: "Natural language search powered by %{model}"
-          actions:
-            info: "How does it work?"
-            disable: "Disable"
-
+        legacy:
+          main_title: "Discobot discoveries"
+          regular_results: "Topics"
+          tell_me_more: "Tell me more..."
+          continue_convo: "Continue conversation..."
+          loading_convo: "Loading conversation"
+          collapse: "Collapse"
+          timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+          tooltip:
+            header: "AI powered search"
+            content: "Natural language search powered by %{model}"
+            actions:
+              info: "How does it work?"
+              disable: "Disable"
+        search_placeholder: "Search or Ask AI"
+        search_type: "AI"
+        ask_button: "Ask"
+        tip_ask: "asks AI instead of searching"
+        tip_search: "searches instead of asking AI"
+        make_default: "Make AI my default search option"
+        dismiss_default_preference: "Hide this setting"
+        default_preference_dismissed: "This setting is also available in your user preferences"
+        shortcut_hint: "or %{shortcut}"
+        advanced_with_shortcut: "Open advanced search (%{shortcut})"
+        search_all_topics: "All topics"
+        search_this_topic: "This topic"
+        search_in_context: "In %{name}"
+        search_group_messages: "Messages in %{group}"
+        search_user_posts: "Posts by %{username}"
+        search_messages: "Messages"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Related topics"
+          show_all_matching: "Show all matching topics"
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:

@@ -52,7 +52,7 @@ class DraftSerializer < ApplicationSerializer
   end
 
   def title
-    object.topic&.title
+    ContentLocalization.translated_topic_title(object.topic, scope) || object.topic&.title
   end
 
   def slug

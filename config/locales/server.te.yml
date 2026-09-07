@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 te:
+  llms_txt:
+    sections:
+      optional: "ఐచ్ఛికం"
+    links:
+      search:
+        label: "వెతుకు"
+      categories:
+        label: "వర్గాలు"
+      about:
+        label: "మా సంఘం గురించి"
+      guidelines:
+        label: "మార్గదర్శకాలు"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -727,6 +739,11 @@ te:
         share: "షేర్ చేయండి"
       types:
         staff: "సిబ్బంది"
+    posters_by_member_type_members:
+      labels:
+        user: "సభ్యుడు"
+        count: "పోస్ట్‌లు"
+        share: "షేర్ చేయండి"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1613,7 +1630,6 @@ te:
       invalid_email: "చెల్లని ఈమెయిలు చిరునామా."
       invalid_username: "ఆ పేరుతో ఏ వాడురకీ లేరు."
       valid_username: "ఆ సభ్యనామంతో ఒక సభ్యుడు ఉన్నారు."
-      invalid_group: "ఆ పేరుతో సమూహం లేదు."
       invalid_integer_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
       invalid_integer_min: "విలువ %{min} లేదా అంతకంటే ఎక్కువ ఉండాలి."
       invalid_integer_max: "విలువ %{max} కంటే ఎక్కువగా ఉండకూడదు."

@@ -106,10 +106,19 @@ module NestedReplies
       scope
     end
 
-    def batch_preload_tree(starting_posts, sort, max_depth:)
+    def batch_preload_tree(starting_posts, sort, max_depth:, starting_depth: 0)
       sort = effective_sort(sort)
-      return batch_preload_hot_tree(starting_posts, max_depth: max_depth) if sort == "hot"
+      tree_data =
+        if sort == "hot"
+          batch_preload_hot_tree(starting_posts, max_depth: max_depth)
+        else
+          batch_preload_sorted_tree(starting_posts, sort, max_depth: max_depth)
+        end
 
+      flatten_capped_boundary(tree_data, starting_posts, sort, starting_depth: starting_depth)
+    end
+
+    def batch_preload_sorted_tree(starting_posts, sort, max_depth:)
       all_posts = starting_posts.dup
       children_map = {}
 
@@ -424,51 +433,143 @@ module NestedReplies
 
     def flat_descendants_scope(parent_post_number, sort:, offset: 0, limit: CHILDREN_PER_PAGE)
       sort = effective_sort(sort)
-      post_types = visible_post_types
-      order_expr = NestedReplies::Sort.sql_order_expression(sort, posts_table: "p")
-      hot_join = sort == "hot" ? NestedReplies::Sort.hot_score_join_sql(posts_table: "p") : ""
-
       descendant_post_numbers =
-        DB.query_single(
-          <<~SQL,
-          WITH RECURSIVE descendants AS (
-            SELECT post_number, 1 AS depth
-            FROM posts
-            WHERE topic_id = :topic_id
-              AND reply_to_post_number = :parent_number
-              AND post_number > 1
-            UNION ALL
-            SELECT p.post_number, d.depth + 1
-            FROM posts p
-            JOIN descendants d ON p.reply_to_post_number = d.post_number
-            WHERE p.topic_id = :topic_id
-              AND p.post_number > 1
-              AND d.depth < :max_cte_depth
-          )
-          SELECT d.post_number
-          FROM descendants d
-          JOIN posts p ON p.post_number = d.post_number AND p.topic_id = :topic_id
-          #{hot_join}
-          WHERE p.post_type IN (:post_types)
-          ORDER BY #{order_expr}
-          OFFSET :offset
-          LIMIT :limit
-        SQL
-          topic_id: topic.id,
-          parent_number: parent_post_number,
-          post_types: post_types,
+        flat_descendant_post_numbers_by_parent(
+          [parent_post_number],
+          sort: sort,
           offset: offset,
           limit: limit,
-          max_cte_depth: 500,
-        )
+        ).fetch(parent_post_number, [])
 
       scope =
         topic.posts.with_deleted.where(post_number: descendant_post_numbers).where(post_number: 2..)
       NestedReplies::Sort.apply(scope, sort)
     end
 
+    def flat_descendant_post_numbers_by_parent(parent_post_numbers, sort:, offset: 0, limit:)
+      return {} if parent_post_numbers.empty?
+
+      sort = effective_sort(sort)
+      order_expr = NestedReplies::Sort.sql_order_expression(sort, posts_table: "posts")
+      hot_join = sort == "hot" ? NestedReplies::Sort.hot_score_join_sql : ""
+
+      rows =
+        DB.query(
+          <<~SQL,
+            WITH RECURSIVE descendants AS (
+              SELECT parents.post_number AS root_post_number,
+                     children.post_number,
+                     1 AS depth
+              FROM posts parents
+              JOIN posts children
+                ON children.topic_id = parents.topic_id
+               AND children.reply_to_post_number = parents.post_number
+              WHERE parents.topic_id = :topic_id
+                AND parents.post_number IN (:parent_post_numbers)
+                AND children.post_number > 1
+
+              UNION ALL
+
+              SELECT descendants.root_post_number,
+                     children.post_number,
+                     descendants.depth + 1
+              FROM descendants
+              JOIN posts children
+                ON children.topic_id = :topic_id
+               AND children.reply_to_post_number = descendants.post_number
+              WHERE children.post_number > 1
+                AND descendants.depth < :max_cte_depth
+            ), ranked AS (
+              SELECT descendants.root_post_number,
+                     posts.post_number,
+                     ROW_NUMBER() OVER (
+                       PARTITION BY descendants.root_post_number
+                       ORDER BY #{order_expr}
+                     ) AS row_number
+              FROM descendants
+              JOIN posts
+                ON posts.topic_id = :topic_id
+               AND posts.post_number = descendants.post_number
+              #{hot_join}
+              WHERE posts.post_type IN (:post_types)
+            )
+            SELECT root_post_number, post_number
+            FROM ranked
+            WHERE row_number > :offset
+              AND row_number <= :offset + :limit
+            ORDER BY root_post_number, row_number
+          SQL
+          topic_id: topic.id,
+          parent_post_numbers: parent_post_numbers,
+          post_types: visible_post_types,
+          offset: offset,
+          limit: limit,
+          max_cte_depth: 500,
+        )
+
+      rows
+        .group_by(&:root_post_number)
+        .transform_values { |parent_rows| parent_rows.map(&:post_number) }
+    end
+
     def configured_max_depth
       SiteSetting.nested_replies_max_depth
+    end
+
+    def flatten_capped_boundary(tree_data, starting_posts, sort, starting_depth:)
+      return tree_data unless SiteSetting.nested_replies_cap_nesting_depth
+
+      boundary_depth = configured_max_depth - starting_depth - 1
+      return tree_data if boundary_depth.negative?
+
+      boundary_parents = starting_posts
+      boundary_depth.times do
+        boundary_parents =
+          boundary_parents.flat_map { |post| tree_data[:children_map].fetch(post.post_number, []) }
+        return tree_data if boundary_parents.empty?
+      end
+      # Non-destructive: at boundary_depth 0 this is still the caller's own array.
+      boundary_parents =
+        boundary_parents.select { |post| tree_data[:children_map].key?(post.post_number) }
+      return tree_data if boundary_parents.empty?
+
+      descendant_numbers_by_parent =
+        flat_descendant_post_numbers_by_parent(
+          boundary_parents.map(&:post_number),
+          sort: sort,
+          limit: PRELOAD_CHILDREN_PER_PARENT,
+        )
+      descendant_numbers = descendant_numbers_by_parent.values.flatten
+      descendants_by_number =
+        load_posts_for_tree(
+          topic.posts.with_deleted.where(post_number: descendant_numbers),
+        ).index_by(&:post_number)
+
+      boundary_parents.each do |parent|
+        tree_data[:children_map][parent.post_number] = descendant_numbers_by_parent
+          .fetch(parent.post_number, [])
+          .filter_map { |post_number| descendants_by_number[post_number] }
+      end
+
+      tree_data[:all_posts] = reachable_tree_posts(starting_posts, tree_data[:children_map])
+      tree_data
+    end
+
+    def reachable_tree_posts(starting_posts, children_map)
+      posts = []
+      # A reply_to_post_number cycle would otherwise make this walk unbounded.
+      seen = Set.new
+      pending = starting_posts.dup
+
+      until pending.empty?
+        post = pending.shift
+        next unless seen.add?(post.post_number)
+
+        posts << post
+        pending.concat(children_map.fetch(post.post_number, []))
+      end
+
+      posts.uniq(&:id)
     end
 
     def direct_reply_counts(post_numbers)

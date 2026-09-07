@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    enable_login_with_amazon: "啟用「使用 Amazon 登入」驗證，需要 {{setting:login_with_amazon_client_id}} 和 {{setting:login_with_amazon_client_secret}}。"
+    login_with_amazon_client_id: "使用 Amazon 登入的用戶端 ID"
+    login_with_amazon_client_secret: "使用 Amazon 登入的用戶端密鑰"
+    login_with_amazon_scope: "使用 Amazon 登入的 OAuth2 範圍（以空格分隔）"
+    login_with_amazon_overrides_email: "覆寫 Discourse 使用者帳號的電子郵件地址。"
+    login_with_amazon_user_can_connect: "允許現有使用者在偏好設定中連結其 Amazon 帳號。"
+    login_with_amazon_user_can_revoke: "允許使用者在偏好設定中撤銷其已連結的 Amazon 帳號。"
+    errors:
+      login_with_amazon_client_id_is_blank: "啟用此設定前，你必須先設定「使用 Amazon 登入的用戶端 ID」。"
+      login_with_amazon_client_secret_is_blank: "啟用此設定前，你必須先設定「使用 Amazon 登入的用戶端密鑰」。"

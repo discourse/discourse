@@ -50,6 +50,48 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
+  context "when the first post is omitted from the stream" do
+    let!(:event) do
+      Fabricate(
+        :event,
+        post: first_post,
+        original_starts_at: 1.hour.from_now,
+        description: "Community meetup",
+      )
+    end
+
+    let(:topic_view) do
+      TopicView
+        .new(topic)
+        .tap { |view| view.instance_variable_set(:@posts, [Fabricate(:post, topic:)]) }
+    end
+
+    let(:json) do
+      JSON.parse(described_class.new(topic_view, scope: Guardian.new, root: false).to_json)
+    end
+
+    it "includes an active event from a visible first post" do
+      expect(json.dig("discourse_post_event_first_post_event", "id")).to eq(event.id)
+      expect(json.dig("discourse_post_event_first_post_event", "description")).to eq(
+        "Community meetup",
+      )
+    end
+
+    it "does not include an event from a hidden first post" do
+      first_post.update_columns(hidden: true)
+
+      expect(json).not_to have_key("discourse_post_event_first_post_event")
+      expect(json.to_json).not_to include(event.description)
+    end
+
+    it "does not include a soft-deleted event" do
+      event.update_columns(deleted_at: Time.current)
+
+      expect(json).not_to have_key("discourse_post_event_first_post_event")
+      expect(json.to_json).not_to include(event.description)
+    end
+  end
+
   context "with timezone and show_local_time true" do
     before do
       DiscourseEvents::Events::Event.create!(

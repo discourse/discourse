@@ -45,6 +45,7 @@ fr:
         flagged_post: |
           %{score_reason}
           %{response}
+        flagged_post_response: "Réponse du modèle : %{llm_response}"
         notify_author_pm:
           subject: "Votre publication a été temporairement retirée pour vérification"
           body: |
@@ -114,7 +115,6 @@ fr:
     ai_helper_post_illustrator_agent: "Agent à utiliser pour la fonctionnalité « Illustrer la publication » de l'assistant IA. Remarque : vous devez également créer un outil de génération d'images (Administration > Extensions > Discourse AI > Outils) pour que cette fonctionnalité fonctionne."
     ai_helper_chat_thread_title_agent: "Agent à utiliser pour générer les titres des fils de chat."
     ai_embeddings_selected_model: "Utilisez le modèle sélectionné pour générer des intégrations."
-    ai_embeddings_generate_for_pms: "Générez des intégrations pour les messages privés."
     ai_embeddings_semantic_related_topics_enabled: "Utilisez la recherche sémantique pour les sujets connexes."
     ai_embeddings_semantic_related_topics: "Nombre maximal de sujets à afficher dans la section des sujets connexes."
     ai_embeddings_backfill_batch_size: "Nombre d'intégrations à remplir toutes les 15 minutes."
@@ -414,7 +414,6 @@ fr:
         failed: "Impossible d'exécuter l'action : %{error}"
         unexpected_error: "une erreur inattendue s'est produite"
       agents:
-        default_llm_required: "Le modèle LLM par défaut est requis avant d'activer la messagerie instantanée"
         cannot_delete_system_agent: "Les agents système ne peuvent pas être supprimés. Désactivez-les à la place."
         cannot_edit_system_agent: "Les agents système peuvent uniquement être renommés. Vous ne pouvez pas modifier leurs outils ni leur instruction système. Désactivez-les et créez-en une copie à la place."
         cannot_have_duplicate_tools: "Impossible d'avoir des outils en double"
@@ -620,7 +619,8 @@ fr:
         lock_post: "Verrouiller la publication"
         delete_topic: "Supprimer le sujet"
         edit_post: "Modifier la publication"
-        edit_tags: "Modifier les étiquettes"
+        edit_tag: "Modifier l'étiquette"
+        create_category: "Créer une catégorie"
         edit_category: "Modifier la catégorie"
         set_topic_timer: "Définir le minuteur du sujet"
         set_slow_mode: "Définir le mode lent"
@@ -671,8 +671,9 @@ fr:
         lock_post: "Verrouiller ou déverrouiller une publication"
         delete_topic: "Supprimer un sujet"
         edit_post: "Modifier le contenu d'une publication"
-        edit_tags: "Modifier les étiquettes d'un sujet"
-        edit_category: "Déplacer un sujet vers une autre catégorie"
+        change_topic_tags: "Modifier les étiquettes d'un sujet"
+        create_category: "Créer une nouvelle catégorie"
+        change_topic_category: "Déplacer un sujet vers une autre catégorie"
         set_topic_timer: "Définir un minuteur sur un sujet pour le fermer, l'ouvrir, le supprimer ou le remonter"
         set_slow_mode: "Activer ou désactiver le mode lent sur un sujet"
         move_posts: "Déplacer des publications vers un sujet nouveau ou existant"
@@ -722,8 +723,8 @@ fr:
         lock_post: "Verrouillage de la publication %{post_id} (verrouillée : %{locked})"
         delete_topic: "Suppression du sujet %{topic_id} (supprimé : %{deleted})"
         edit_post: "Modification de la publication %{post_id}"
-        edit_tags: "Modification des étiquettes du sujet %{topic_id} : %{tags}"
-        edit_category: "Déplacement du sujet %{topic_id} vers la catégorie %{category_id}"
+        change_topic_tags: "Modification des étiquettes du sujet %{topic_id} : %{tags}"
+        change_topic_category: "Déplacement du sujet %{topic_id} vers la catégorie %{category_id}"
         set_topic_timer: "Définition du minuteur %{timer_type} sur le sujet %{topic_id} (%{duration_hours} h)"
         set_slow_mode: "Définition du mode lent sur le sujet %{topic_id} (%{slow_mode_seconds} s)"
         move_posts: "Déplacement des publications %{post_ids} depuis le sujet %{topic_id}"
@@ -769,10 +770,6 @@ fr:
           other: "%{count} résultats trouvés pour « %{query} »"
         read_site_setting: "Lecture du paramètre du site « %{setting_name} »"
         change_site_setting: "Modification du paramètre du site %{setting_name} avec la valeur « %{value} »"
-      discoveries:
-        continue_conversation:
-          title: "Conversation de découverte : recherchez %{query}"
-          raw: "Lors de ma recherche pour %{query}, vous m'avez montré les informations suivantes :\n\n%{context}\n\nPoursuivons la conversation."
       flag_post:
         errors:
           no_context: "Aucun contexte de publication disponible pour le signalement."
@@ -831,14 +828,23 @@ fr:
           no_reason: "Un motif de modification est requis."
           revision_failed: "Échec de la révision de la publication."
         success: "Publication modifiée."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Sujet introuvable."
           not_allowed: "Vous n'avez pas l'autorisation de modifier les étiquettes de ce sujet."
           no_reason: "Un motif est requis pour modifier les étiquettes."
           tagging_disabled: "L'étiquetage n'est pas activé sur ce site."
         success: "Étiquettes mises à jour."
+      create_tag:
+        errors:
+          tagging_disabled: "L'étiquetage n'est pas activé sur ce site."
+      edit_tag:
+        errors:
+          tagging_disabled: "L'étiquetage n'est pas activé sur ce site."
       edit_category:
+        errors:
+          not_found: "Catégorie introuvable."
+      change_topic_category:
         errors:
           not_found: "Sujet introuvable."
           not_allowed: "Vous n'avez pas l'autorisation de déplacer ce sujet."
@@ -1038,7 +1044,6 @@ fr:
       no_user_specified: Le nom d'utilisateur ou le paramètre user_unique_id est obligatoire. Veuillez le préciser.
       user_not_found: L'utilisateur spécifié n'existe pas. Vérifiez le paramètre du nom d'utilisateur.
       agent_disabled: "L'agent spécifié est désactivé. Vérifiez les paramètres agent_name ou agent_id (anciennement : persona_name ou persona_id)."
-      no_default_llm: L'agent doit avoir un default_llm défini.
       user_not_allowed: L'utilisateur n'est pas autorisé à participer au sujet.
       invalid_stream_resume_token: Le resume_token n'est pas valide ou a expiré.
       no_tool_results_specified: Le paramètre tool_results est requis lors de la reprise d'un flux.

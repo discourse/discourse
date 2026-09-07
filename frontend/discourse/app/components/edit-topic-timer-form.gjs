@@ -22,8 +22,8 @@ import {
 } from "discourse/lib/time-shortcut";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
-import DSelect from "discourse/ui-kit/d-select";
 import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -235,7 +235,7 @@ export default class EditTopicTimerForm extends Component {
   <template>
     <form>
       <div class="control-group">
-        <DSelect
+        <DNativeSelect
           @value={{this.statusType}}
           class="timer-type"
           @onChange={{@onChangeStatusType}}
@@ -244,7 +244,7 @@ export default class EditTopicTimerForm extends Component {
           {{#each @timerTypes as |timer|}}
             <select.Option @value={{timer.id}}>{{timer.name}}</select.Option>
           {{/each}}
-        </DSelect>
+        </DNativeSelect>
       </div>
 
       {{#if this.publishToCategory}}

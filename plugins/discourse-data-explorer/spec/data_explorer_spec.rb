@@ -27,6 +27,52 @@ describe DiscourseDataExplorer::DataExplorer do
     end
   end
 
+  describe ".rewrite_to_binds" do
+    it "rewrites a code-position parameter to a positional placeholder" do
+      sql, binds = described_class.rewrite_to_binds("SELECT :id", { "id" => 7 })
+
+      expect(sql).to eq("SELECT $1")
+      expect(binds).to eq([{ value: "7", type: 20 }])
+    end
+
+    it "reuses one placeholder and one bind for a repeated parameter" do
+      sql, binds = described_class.rewrite_to_binds("SELECT :id, :id", { "id" => 7 })
+
+      expect(sql).to eq("SELECT $1, $1")
+      expect(binds.size).to eq(1)
+    end
+
+    it "expands a list parameter into a run of placeholders" do
+      sql, binds = described_class.rewrite_to_binds("WHERE id IN (:ids)", { "ids" => [1, 2, 3] })
+
+      expect(sql).to eq("WHERE id IN ($1, $2, $3)")
+      expect(binds.map { |bind| bind[:value] }).to eq(%w[1 2 3])
+    end
+
+    it "leaves a marker inside a string literal untouched" do
+      sql, binds = described_class.rewrite_to_binds("SELECT ':id'", { "id" => 7 })
+
+      expect(sql).to eq("SELECT ':id'")
+      expect(binds).to be_empty
+    end
+
+    it "ignores dollar-quote syntax that appears inside a string literal" do
+      sql, binds = described_class.rewrite_to_binds("SELECT '$sql$:id$sql$'", { "id" => 7 })
+
+      expect(sql).to eq("SELECT '$sql$:id$sql$'")
+      expect(binds).to be_empty
+    end
+
+    it "rejects a parameter inside a dollar-quoted literal" do
+      expect {
+        described_class.rewrite_to_binds("SELECT $sql$:id$sql$", { "id" => 7 })
+      }.to raise_error(
+        DiscourseDataExplorer::ValidationError,
+        "Parameters cannot be used inside dollar-quoted literals",
+      )
+    end
+  end
+
   describe ".run_query" do
     fab!(:topic)
 
@@ -82,6 +128,64 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:error]).to eq(nil)
       expect(result[:pg_result].to_a.size).to eq(1)
       expect(result[:pg_result][0]["id"]).to eq(topic2.id)
+    end
+
+    it "runs a list parameter through an IN clause" do
+      topic2 = Fabricate(:topic)
+      topic3 = Fabricate(:topic)
+
+      query = DiscourseDataExplorer::Query.create!(name: "list query", sql: <<~SQL)
+            -- [params]
+            -- int_list :ids
+            SELECT id FROM topics WHERE id IN (:ids) ORDER BY id
+          SQL
+
+      result = described_class.run_query(query, { "ids" => "#{topic.id},#{topic3.id}" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to eq([topic.id, topic3.id].sort)
+    end
+
+    it "runs a query that checks a declared string parameter against IS NULL, with no cast needed" do
+      query = DiscourseDataExplorer::Query.create!(name: "is null query", sql: <<~SQL)
+            -- [params]
+            -- string :site = hosted
+            SELECT (:site) IS NULL AS is_null
+          SQL
+
+      result = described_class.run_query(query, { "site" => "hosted" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["is_null"]).to eq(false)
+    end
+
+    it "still compares a declared date parameter against a timestamp column with no cast" do
+      query = DiscourseDataExplorer::Query.create!(name: "date compare query", sql: <<~SQL)
+            -- [params]
+            -- date :start_date
+            SELECT id FROM topics WHERE created_at >= :start_date ORDER BY id
+          SQL
+
+      result = described_class.run_query(query, { "start_date" => "2020-01-01" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to include(topic.id)
+    end
+
+    it "rejects, without executing, a parameter inside a dollar-quoted literal" do
+      query = DiscourseDataExplorer::Query.create!(name: "dollar query", sql: <<~SQL)
+            -- [params]
+            -- string :value
+            SELECT $sql$:value$sql$ AS value
+          SQL
+
+      result = described_class.run_query(query, { "value" => "harmless$sql$) SELECT 1 --" })
+
+      expect(result[:error]).to be_a(DiscourseDataExplorer::ValidationError)
+      expect(result[:error].message).to eq(
+        "Parameters cannot be used inside dollar-quoted literals",
+      )
+      expect(result[:pg_result]).to eq(nil)
     end
 
     it "adds query instrumentation after removing stored comments" do

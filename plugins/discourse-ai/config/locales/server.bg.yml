@@ -22,6 +22,8 @@ bg:
         search: "Търсене"
         time: "Време "
         summarize: "Обобщаване"
+      tool_help:
+        create_category: "Създай нова категория"
       close_topic:
         errors:
           not_found: "Темата не е намерена."
@@ -31,10 +33,10 @@ bg:
       delete_topic:
         errors:
           not_found: "Темата не е намерена."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Темата не е намерена."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Темата не е намерена."
       set_topic_timer:

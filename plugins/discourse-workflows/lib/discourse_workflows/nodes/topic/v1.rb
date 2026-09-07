@@ -272,7 +272,7 @@ module DiscourseWorkflows
           else
             raise_node_error!(
               I18n.t(
-                "discourse_workflows.errors.topic.unknown_operation",
+                "discourse_workflows.errors.unknown_operation",
                 operation: config["operation"],
               ),
             )

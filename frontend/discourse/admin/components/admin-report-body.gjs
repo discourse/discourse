@@ -1,6 +1,7 @@
 import { concat, fn } from "@ember/helper";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import AdminReport from "discourse/admin/components/admin-report";
+import AdminReportRelatedItems from "discourse/admin/components/admin-report-related-items";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { and } from "discourse/truth-helpers";
@@ -171,7 +172,10 @@ export default <template>
                   {{component
                     @report.modeComponent
                     model=@report.model
+                    hasRelatedItems=@report.hasRelatedItems
                     options=@report.options
+                    reportType=@report.model.type
+                    reportFilters=@report.reportFilters
                   }}
 
                   {{#if @report.model.relatedReport}}
@@ -247,6 +251,15 @@ export default <template>
             </div>
           {{/if}}
         </div>
+        {{#if (and @report.isChartMode @report.hasRelatedItems)}}
+          <AdminReportRelatedItems
+            @relatedItems={{@report.model.related_items}}
+            @relatedItemsTotals={{@report.model.related_items_totals}}
+            @startDate={{@report.startDate}}
+            @endDate={{@report.endDate}}
+            @type={{@report.model.type}}
+          />
+        {{/if}}
       </DConditionalLoadingSection>
     {{/unless}}
   </div>

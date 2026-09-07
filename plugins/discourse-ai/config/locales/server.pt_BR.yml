@@ -88,7 +88,6 @@ pt_BR:
     ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do bate-papo com base no conteúdo delas."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
-    ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
     ai_embeddings_semantic_related_topics_enabled: "Use Pesquisa semântica para tópicos relacionados."
     ai_embeddings_semantic_related_topics: "Número máximo de tópicos na seção do tópico relacionado."
     ai_embeddings_backfill_batch_size: "O número de incorporações para provisionamento a cada 15 minutos."
@@ -318,7 +317,6 @@ pt_BR:
       chat_tool_approval:
         unexpected_error: "ocorreu um erro inesperado."
       agents:
-        default_llm_required: "É preciso de um modelo de LLM padrão para ativar o bate-papo"
         cannot_have_duplicate_tools: "Não pode haver ferramentas duplicadas"
         github_helper:
           name: "Ajudante do GitHub"
@@ -480,6 +478,8 @@ pt_BR:
         suspend_user: "Suspender usuário(a)"
         silence_user: "Silenciar usuário(a)"
         edit_post: "Editar postagem"
+        edit_tag: "Editar tag"
+        create_category: "Criar categoria"
         move_posts: "Mover postagens"
         search: "Pesquisar"
         tags: "Listar etiquetas"
@@ -511,6 +511,7 @@ pt_BR:
         categories: "Listar todas as categorias visíveis publicamente no fórum"
         flag_post: "Denunciar a postagem atual para análise pela equipe"
         delete_topic: "Exclua um tópico"
+        create_category: "Criar uma nova categoria"
         search: "Pesquisar todos os tópicos públicos no fórum"
         tags: "Listar todas as etiquetas no fórum"
         time: "Achar horário em vários fusos horários"
@@ -571,10 +572,6 @@ pt_BR:
         search_settings:
           one: "%{count} resultado encontrado para \"%{query}\""
           other: "%{count} resultados encontrados para \"%{query}\""
-      discoveries:
-        continue_conversation:
-          title: "Conversa do Discovery: pesquisar %{query}"
-          raw: "Durante a minha pesquisa por %{query}, você me mostrou as seguintes informações:\n\n%{context}\n\nVamos continuar a conversa."
       flag_post:
         errors:
           no_context: "Não há contexto de postagem disponível para denunciar."
@@ -593,10 +590,13 @@ pt_BR:
       delete_topic:
         errors:
           not_found: "Tópico não encontrado."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tópico não encontrado."
       edit_category:
+        errors:
+          not_found: "Categoria não encontrada."
+      change_topic_category:
         errors:
           not_found: "Tópico não encontrado."
           category_not_found: "Categoria não encontrada."

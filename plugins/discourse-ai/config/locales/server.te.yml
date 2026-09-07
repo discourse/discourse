@@ -23,6 +23,8 @@ te:
         silence_user: "సభ్యుని నిశ్శబ్దం చేయండి"
         search: "శోధించండి"
         time: "కాలం"
+      tool_help:
+        create_category: "కొత్త వర్గాన్ని సృష్టించండి"
     reviewables:
       ai_tool_action:
         approve:

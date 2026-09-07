@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sl:
+  llms_txt:
+    sections:
+      optional: "Neobvezno"
+    links:
+      search:
+        label: "Išči"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nas"
+      guidelines:
+        label: "Navodila"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -480,6 +492,7 @@ sl:
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   admin_site_traffic_explorer:
+    unknown: "Neznano"
     traffic_types:
       anonymous: "Anonimni"
   change_email:
@@ -627,6 +640,11 @@ sl:
         share: "Deli"
       types:
         staff: "Osebje"
+    posters_by_member_type_members:
+      labels:
+        user: "Uporabnik"
+        count: "Prispevki"
+        share: "Deli"
     trust_level_pipeline:
       labels:
         count: "Člani"

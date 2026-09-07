@@ -322,6 +322,7 @@ th:
       next: "ต่อไป"
       sections:
         theme: "ธีม"
+        search: "ค้นหา"
       theme:
         selected: "เลือก"
       homepage:
@@ -1446,6 +1447,8 @@ th:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "เอ็นเทอร์"
+      delete: "ลบ"
+      home: "หน้าแรก"
     category_row:
       subcategories: "+ หมวดหมู่ย่อย"
       topic_count:
@@ -1678,6 +1681,7 @@ th:
       categories: "หมวดหมู่"
       tags: "แท็ก"
       type:
+        default: "โพส"
         users: "ผู้ใช้"
         categories: "หมวดหมู่"
       context:
@@ -2076,7 +2080,6 @@ th:
       reply_as_new_topic: "ตอบด้วยหัวข้อที่ลิงค์ไว้"
       reply_as_new_private_message: "ตอบกลับด้วยข้อความใหม่ไปยังผู้รับคนเดียวกัน"
       follow_quote: "ไปยังโพสต์ที่ถูกกล่าวถึง"
-      show_full: "แสดงโพสต์ทั้งหมด"
       collapse: "ย่อ"
       expand_collapse: "ขยาย/ย่อ"
       locked: "ทีมงานได้ปิดโพสต์นี้จากการแก้ไข"
@@ -2418,11 +2421,8 @@ th:
       download: "ดาวน์โหลด"
       close: "ปิด (Esc)"
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ","
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1}หรือ%{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1}%{shortcut2}"
       title: "ปุ่มลัดของคีย์บอร์ด"
       description_header: "รายละเอียด"
       search_aliases:
@@ -2670,6 +2670,11 @@ th:
         group_traffic: "การจราจร"
         group_members: "สมาชิก"
         group_other: "อื่นๆ"
+        related_items:
+          users:
+            title: "ผู้ใช้"
+          labels:
+            user: "ผู้ใช้"
       config_sections:
         account:
           title: "บัญชี"
@@ -2840,6 +2845,8 @@ th:
               share: "แบ่งปัน"
             whos_posting:
               staff: "ทีมงาน"
+              modal:
+                apply: "บันทึก"
             trust_level_pipeline:
               trust_levels:
                 "0": "ใหม่"
@@ -2850,6 +2857,9 @@ th:
             table:
               searches: "ค้นหา"
               status: "สถานะ"
+          system:
+            title: "ระบบ"
+            status: "สถานะ"
         reports_section:
           header_action: "จัดการ"
           modal:
@@ -2878,6 +2888,11 @@ th:
           dates: "วัน (UTC)"
           groups: "กลุ่มทั้งหมด"
           no_data: "ไม่มีข้อมูลที่จะแสดง"
+          posters_by_member_type_members:
+            users_count:
+              other: "%{count} ผู้ใช้"
+            posts_count:
+              other: "%{count} โพส"
           filters:
             group:
               label: กลุ่ม

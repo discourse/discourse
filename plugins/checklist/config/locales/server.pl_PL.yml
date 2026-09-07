@@ -7,3 +7,7 @@
 pl_PL:
   site_settings:
     checklist_enabled: "Włączyć wtyczkę checklist?"
+  checklist:
+    checkboxes_changed: "Ten wpis uległ zmianie od momentu załadowania. Odśwież i spróbuj ponownie."
+    checkbox_locked: "Tego elementu listy kontrolnej nie można zmienić."
+    revision_failed: "Nie udało się zaktualizować pola wyboru."

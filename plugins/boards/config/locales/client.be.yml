@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    boards:
+      board:
+        remove_card: "Выдаліць"
+        title: "Загаловак"
+        tags: "Цэтлікі"
+      manage:
+        name: "Імя"
+        constraint_categories: "катэгорыі"
+        constraint_tags: "Цэтлікі"
+        columns:
+          remove: "Выдаліць"
+          column_title: "Загаловак"
+          icon: "Значок"
+          color: "Колер"
+          move_to_status_closed: "Закрыта"

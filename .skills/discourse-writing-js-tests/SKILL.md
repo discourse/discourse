@@ -204,7 +204,7 @@ Beyond [qunit-dom](https://github.com/mainmatter/qunit-dom/blob/master/API.md)'s
 - `assert.present(value, msg)` / `assert.blank(value, msg)` — Ember `isEmpty` checks.
 - `assert.containsInstance(collection, klass, msg)`.
 - Domain assertions registered at import time: `assert.form()` (FormKit, see
-  `form-kit-assertions.js`), `assert.dselect()` (`d-select-assertions.js`),
+  `form-kit-assertions.js`), `assert.dnativeselect()` (`d-native-select-assertions.js`),
   `assert.notificationsTracking()` (`notifications-tracking-assertions.js`).
 
 ## Running tests

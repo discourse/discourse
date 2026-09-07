@@ -17,6 +17,8 @@ sq:
         search: "Kërko"
         time: "Koha"
         summarize: "Përmblidhni"
+      tool_help:
+        create_category: "Krijo një kategori të re"
       close_topic:
         errors:
           not_found: "Tema nuk u gjet."
@@ -26,10 +28,10 @@ sq:
       delete_topic:
         errors:
           not_found: "Tema nuk u gjet."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tema nuk u gjet."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Tema nuk u gjet."
       set_topic_timer:

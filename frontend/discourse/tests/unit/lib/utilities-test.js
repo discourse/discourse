@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import {
   arrayToTable,
   caretRowCol,
@@ -22,6 +23,7 @@ import {
   setDefaultHomepage,
   slugify,
   toAsciiPrintable,
+  translateModKey,
   unicodeSlugify,
 } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
@@ -31,6 +33,10 @@ import {
   mdTableSpecialChars,
 } from "discourse/tests/fixtures/md-table";
 import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 
 module("Unit | Utilities", function (hooks) {
   setupTest(hooks);
@@ -687,6 +693,47 @@ Random extras
       ignoreUploads.match(findTableRegex()).length,
       1,
       "finds on table, ignoring upload markup"
+    );
+  });
+});
+
+module("Unit | Utilities | translateModKey", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    disableRaiseOnDeprecation();
+    this.warnStub = sinon.stub(console, "warn");
+  });
+
+  hooks.afterEach(function () {
+    this.warnStub.restore();
+    enableRaiseOnDeprecation();
+  });
+
+  test("warns that it is deprecated", function (assert) {
+    translateModKey("Shift+Ctrl+A");
+
+    assert.strictEqual(this.warnStub.callCount, 1, "warns once per call");
+    const warning = this.warnStub.firstCall.args[0];
+    assert.true(
+      warning.includes("DShortcut"),
+      "points at the component that draws a shortcut"
+    );
+    assert.true(
+      warning.includes("formatShortcut"),
+      "and at the helper, for a caller that only wants the string"
+    );
+  });
+
+  test("still translates while deprecated", function (assert) {
+    const translated = withSilencedDeprecations(
+      "discourse.translate-mod-key",
+      () => translateModKey("Shift+Alt+A")
+    );
+
+    assert.true(
+      translated.includes("⇧"),
+      "keeps replacing modifier names with their platform spelling"
     );
   });
 });

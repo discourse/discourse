@@ -1910,6 +1910,7 @@ class BulkImport::Generic < BulkImport::Base
       slug
       user_id
       category_id
+      views
       closed
       archived
       pinned_at
@@ -1945,6 +1946,7 @@ class BulkImport::Generic < BulkImport::Base
         if row["category_id"].present?
           update[:category_id] = category_id_from_imported_id(row["category_id"])
         end
+        update[:views] = row["views"] if source_columns.include?("views") && !row["views"].nil?
         %i[archived pinned_globally].each do |column|
           if source_columns.include?(column.to_s)
             update[column] = to_nullable_boolean(row[column.to_s])

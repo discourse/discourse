@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 da:
+  llms_txt:
+    sections:
+      optional: "Valgfri"
+    links:
+      search:
+        label: "Søg"
+      categories:
+        label: "Kategorier"
+      about:
+        label: "Om"
+      guidelines:
+        label: "Retningslinjer"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -708,6 +720,7 @@ da:
       windows: "Microsoft Windows"
       unknown: "ukendt operativsystem"
   admin_site_traffic_explorer:
+    unknown: "Ukendt"
     traffic_types:
       anonymous: "Anonym"
   change_email:
@@ -969,6 +982,11 @@ da:
         share: "Del"
       types:
         staff: "Personale"
+    posters_by_member_type_members:
+      labels:
+        user: "Bruger"
+        count: "Indlæg"
+        share: "Del"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1602,7 +1620,6 @@ da:
     errors:
       invalid_email: "Ugyldig e-mail-adresse"
       invalid_username: "Der er ingen bruger med det brugernavn."
-      invalid_group: "Der er ingen gruppe med dette navn."
       invalid_integer_min_max: "Værdien skal være mellem %{min} og %{max}."
       invalid_integer_min: "Værdien skal være %{min} eller større."
       invalid_integer_max: "Værdien kan ikke være højere end %{max}."

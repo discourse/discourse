@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sq:
+  llms_txt:
+    sections:
+      optional: "Fakultative"
+    links:
+      search:
+        label: "Kërko"
+      categories:
+        label: "Categories"
+      about:
+        label: "Rreth"
+      guidelines:
+        label: "Udhëzimet"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -348,6 +360,7 @@ sq:
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
   admin_site_traffic_explorer:
+    unknown: "I panjohur"
     traffic_types:
       anonymous: "Anonim"
   change_email:
@@ -478,6 +491,11 @@ sq:
         share: "Shpërndaje"
       types:
         staff: "Stafi"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Postime"
+        share: "Shpërndaje"
     trust_level_pipeline:
       labels:
         count: "Anëtarë"

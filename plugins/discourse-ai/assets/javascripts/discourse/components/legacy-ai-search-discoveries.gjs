@@ -1,0 +1,261 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DiscourseURL from "discourse/lib/url";
+import Topic from "discourse/models/topic";
+import DButton from "discourse/ui-kit/d-button";
+import DCookText from "discourse/ui-kit/d-cook-text";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
+import AiBlinkingAnimation from "./ai-blinking-animation";
+import AiIndicatorWave from "./ai-indicator-wave";
+
+export default class LegacyAiSearchDiscoveries extends Component {
+  @service search;
+  @service messageBus;
+  @service("legacy-discobot-discoveries") legacyDiscoveries;
+  @service appEvents;
+  @service currentUser;
+  @service siteSettings;
+  @service composer;
+
+  @tracked loadingConversationTopic = false;
+  @tracked fullDiscoveryToggled = false;
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on(
+      "full-page-search:trigger-search",
+      this,
+      this.triggerDiscovery
+    );
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off(
+      "full-page-search:trigger-search",
+      this,
+      this.triggerDiscovery
+    );
+  }
+
+  @bind
+  _updateDiscovery(update) {
+    if (this.query === update.query && !update.request_id) {
+      this.legacyDiscoveries.onDiscoveryUpdate(update);
+    }
+  }
+
+  @bind
+  unsubscribe() {
+    this.messageBus.unsubscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
+  }
+
+  @bind
+  subscribe() {
+    this.messageBus.subscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
+  }
+
+  get discoveryPreviewLength() {
+    return this.args.discoveryPreviewLength || 150;
+  }
+
+  get query() {
+    return this.args?.searchTerm || this.search.activeGlobalSearchTerm;
+  }
+
+  get toggleLabel() {
+    if (this.fullDiscoveryToggled) {
+      return "discourse_ai.discobot_discoveries.legacy.collapse";
+    } else {
+      return "discourse_ai.discobot_discoveries.legacy.tell_me_more";
+    }
+  }
+
+  get toggleIcon() {
+    if (this.fullDiscoveryToggled) {
+      return "chevron-up";
+    } else {
+      return "";
+    }
+  }
+
+  get canShowExpandtoggle() {
+    return (
+      !this.legacyDiscoveries.loadingDiscoveries &&
+      this.legacyDiscoveries.streamedText.length > this.discoveryPreviewLength
+    );
+  }
+
+  get renderPreviewOnly() {
+    return !this.fullDiscoveryToggled && this.canShowExpandtoggle;
+  }
+
+  get canContinueConversation() {
+    const agents = this.currentUser?.ai_enabled_agents;
+    if (!agents) {
+      return false;
+    }
+
+    if (this.legacyDiscoveries.discoveryTimedOut) {
+      return false;
+    }
+
+    const discoverAgent = agents.find(
+      (agent) => agent.id === parseInt(this.siteSettings?.ai_discover_agent, 10)
+    );
+    const discoverAgentHasBot = discoverAgent?.username;
+
+    return (
+      this.legacyDiscoveries.discovery?.length > 0 &&
+      !this.legacyDiscoveries.isStreaming &&
+      discoverAgentHasBot
+    );
+  }
+
+  get continueConvoBtnLabel() {
+    if (this.loadingConversationTopic) {
+      return "discourse_ai.discobot_discoveries.legacy.loading_convo";
+    }
+
+    return "discourse_ai.discobot_discoveries.legacy.continue_convo";
+  }
+
+  @action
+  async triggerDiscovery() {
+    this.legacyDiscoveries.triggerDiscovery(this.query);
+  }
+
+  @action
+  toggleDiscovery() {
+    this.fullDiscoveryToggled = !this.fullDiscoveryToggled;
+  }
+
+  @action
+  handleDiscoveryClick(event) {
+    const target = event.target;
+    const link = target.closest("a");
+
+    if (!link) {
+      return;
+    }
+
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    DiscourseURL.routeTo(link.href);
+
+    if (this.args.closeSearchMenu) {
+      this.args.closeSearchMenu();
+    }
+  }
+
+  @action
+  async continueConversation() {
+    const data = {
+      query: this.query,
+      context: this.legacyDiscoveries.discovery,
+    };
+    try {
+      this.loadingConversationTopic = true;
+      const continueRequest = await ajax(
+        `/discourse-ai/discoveries/continue-convo`,
+        {
+          type: "POST",
+          data,
+        }
+      );
+      const topicJSON = await Topic.find(continueRequest.topic_id, {});
+      const topic = Topic.create(topicJSON);
+
+      DiscourseURL.routeTo(`/t/${continueRequest.topic_id}`, {
+        afterRouteComplete: () => {
+          if (this.args.closeSearchMenu) {
+            this.args.closeSearchMenu();
+          }
+
+          this.composer.focusComposer({
+            topic,
+          });
+        },
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingConversationTopic = false;
+    }
+  }
+
+  <template>
+    <div
+      class="ai-search-discoveries"
+      {{didInsert this.subscribe this.query}}
+      {{didUpdate this.subscribe this.query}}
+      {{didInsert this.triggerDiscovery this.query}}
+      {{willDestroy this.unsubscribe}}
+    >
+      <div class="ai-search-discoveries__completion">
+        {{#if this.legacyDiscoveries.loadingDiscoveries}}
+          <AiBlinkingAnimation />
+        {{else if this.legacyDiscoveries.discoveryTimedOut}}
+          {{i18n "discourse_ai.discobot_discoveries.legacy.timed_out"}}
+        {{else}}
+          {{! eslint-disable ember/template-no-invalid-interactive }}
+          <article
+            class={{dConcatClass
+              "ai-search-discoveries__discovery"
+              (if this.renderPreviewOnly "preview")
+              (if this.legacyDiscoveries.isStreaming "streaming")
+              "streamable-content"
+            }}
+            {{on "click" this.handleDiscoveryClick}}
+          >
+            <DCookText
+              @rawText={{this.legacyDiscoveries.streamedText}}
+              class="cooked"
+            />
+          </article>
+
+          {{#if this.canShowExpandtoggle}}
+            <DButton
+              class="btn-flat btn-text ai-search-discoveries__toggle"
+              @label={{this.toggleLabel}}
+              @icon={{this.toggleIcon}}
+              @action={{this.toggleDiscovery}}
+            />
+          {{/if}}
+        {{/if}}
+      </div>
+
+      {{#if this.canContinueConversation}}
+        <div class="ai-search-discoveries__continue-conversation">
+          <DButton
+            @action={{this.continueConversation}}
+            @label={{this.continueConvoBtnLabel}}
+            class="btn-default btn-small"
+          >
+            <AiIndicatorWave @loading={{this.loadingConversationTopic}} />
+          </DButton>
+        </div>
+      {{/if}}
+    </div>
+  </template>
+}

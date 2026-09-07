@@ -70,8 +70,8 @@ export default class FormTemplateFieldWrapper extends Component {
     try {
       const promise = import("js-yaml");
       waitForPromise(promise);
-      const Yaml = (await promise).default;
-      this.parsedTemplate = Yaml.load(templateContent);
+      const { load } = await promise;
+      this.parsedTemplate = load(templateContent);
       this.args.onSelectFormTemplate?.(this.parsedTemplate);
     } catch (e) {
       this.error = e;

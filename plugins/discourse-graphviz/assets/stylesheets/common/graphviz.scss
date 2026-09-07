@@ -11,6 +11,13 @@ div.graphviz.is-loading,
   }
 }
 
+// The block frames the diagram as the cooked wrapper does, so both faces fit
+// that frame and scroll whatever does not fit inside it.
+.composer-graphviz-node {
+  --composer-preview-node-source-max-height: 100%;
+  aspect-ratio: 16 / 9;
+}
+
 // Hide the raw DOT source until the client replaces the placeholder.
 div.graphviz.is-loading {
   font-size: 0;

@@ -112,31 +112,12 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
-      require_relative "lib/discourse_workflows/nodes/chat_channel_selection"
-      require_relative "lib/discourse_workflows/nodes/send_chat_message/v1"
-      require_relative "lib/discourse_workflows/nodes/chat_approval/v1"
-      require_relative "lib/discourse_workflows/nodes/chat_approval/v2"
-
       [
         DiscourseWorkflows::Nodes::SendChatMessage::V1,
         DiscourseWorkflows::Nodes::ChatApproval::V1,
         DiscourseWorkflows::Nodes::ChatApproval::V2,
-      ]
-    end
-
-    require_relative "lib/discourse_workflows/nodes/chat_message_created/v1"
-    DiscoursePluginRegistry.register_discourse_workflows_node(
-      DiscourseWorkflows::Nodes::ChatMessageCreated::V1,
-      self,
-    )
-
-    on(:chat_message_created) do |message, channel, user|
-      DiscourseWorkflows::EventListener.handle(
         DiscourseWorkflows::Nodes::ChatMessageCreated::V1,
-        message,
-        channel,
-        user,
-      )
+      ]
     end
 
     on(:chat_message_interaction) do |interaction|
@@ -178,6 +159,7 @@ after_initialize do
     Category.prepend Chat::CategoryExtension
     Reviewable.prepend Chat::ReviewableExtension
     Bookmark.prepend Chat::BookmarkExtension
+    Upload.prepend Chat::UploadExtension
     User.prepend Chat::UserExtension
     Group.prepend Chat::GroupExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
@@ -203,7 +185,7 @@ after_initialize do
         "data LIKE ? OR data LIKE ?",
         "%#{upload.sha1}%",
         "%#{upload.base62_sha1}%",
-      ).exists?
+      ).exists? || Chat::MessageHotlinkedMedia.where(upload_id: upload.id).exists?
   end
 
   add_to_serializer(:user_card, :can_chat_user) do

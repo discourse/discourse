@@ -79,6 +79,7 @@ pl_PL:
         show: "Pokaż przypięty baner"
         pinned_by_you: "Przypięte przez Ciebie"
         pinned_by_user: "Przypięte przez %{username}"
+        message_unpinned: "Wiadomość odpięta"
       pinned_bar:
         title: "Przypięta"
         jump_to_pinned: "Przejdź do przypiętej wiadomości"

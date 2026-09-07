@@ -15,6 +15,7 @@ register_svg_icon "far-square"
 
 register_asset "stylesheets/solutions.scss"
 register_asset "stylesheets/admin/dashboard-support.scss", :admin
+register_asset "stylesheets/admin/report-related-items.scss", :admin
 
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
@@ -158,7 +159,7 @@ after_initialize do
     result[:html] if result.success?
   end
 
-  Report.add_report("accepted_solutions") do |report|
+  Report.add_report("accepted_solutions", admin_only_related_items: true) do |report|
     report.data = []
 
     accepted_solutions =
@@ -181,19 +182,26 @@ after_initialize do
     accepted_solutions =
       accepted_solutions.where("topics.category_id" => requested_ids) if filter_requested
 
-    accepted_solutions
-      .where("discourse_solved_solved_topics.created_at >= ?", report.start_date)
-      .where("discourse_solved_solved_topics.created_at <= ?", report.end_date)
+    current_accepted_solutions =
+      accepted_solutions.where(
+        "discourse_solved_solved_topics.created_at >= ?",
+        report.start_date,
+      ).where("discourse_solved_solved_topics.created_at <= ?", report.end_date)
+
+    current_accepted_solutions
       .group("DATE(discourse_solved_solved_topics.created_at)")
       .order("DATE(discourse_solved_solved_topics.created_at)")
       .count
       .each { |date, count| report.data << { x: date, y: count } }
-    report.total = accepted_solutions.count
-    report.prev30Days =
-      accepted_solutions
-        .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
-        .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
-        .count
+    report.total = accepted_solutions.count if report.facets.include?(:total)
+
+    if report.facets.include?(:prev30Days)
+      report.prev30Days =
+        accepted_solutions
+          .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
+          .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
+          .count
+    end
 
     if report.facets.include?(:prev_period)
       report.prev_period =
@@ -202,6 +210,58 @@ after_initialize do
           .where("discourse_solved_solved_topics.created_at < ?", report.prev_end_date)
           .count
     end
+
+    next if !report.include_related_items
+
+    guardian = report.guardian
+    solved_topics = current_accepted_solutions.merge(Topic.listable_topics.secured(guardian))
+    if !guardian.can_see_shared_draft?
+      solved_topics = solved_topics.where.not(topic_id: SharedDraft.select(:topic_id))
+    end
+
+    report.related_items_totals = { solved_topics: solved_topics.count }
+
+    solved_topics =
+      solved_topics
+        .includes({ topic: :category }, answer_posts: :user)
+        .order(created_at: :desc)
+        .limit(report.limit || Report::RELATED_ITEMS_LIMIT)
+        .to_a
+
+    report.related_items = {
+      solved_topics:
+        solved_topics.map do |solved_topic|
+          topic = solved_topic.topic
+          category = topic.category
+          solved_by_users =
+            solved_topic
+              .answer_posts
+              .sort_by { |answer_post| [answer_post.created_at, answer_post.id] }
+              .filter_map(&:user)
+              .uniq(&:id)
+              .map do |user|
+                BasicUserSerializer.new(user, scope: report.guardian, root: false).as_json
+              end
+
+          {
+            topic: {
+              title: topic.title,
+              url: topic.relative_url,
+            },
+            solved_by_users:,
+            category:
+              if category
+                {
+                  id: category.id,
+                  name: category.name,
+                  slug: category.slug,
+                  color: category.color,
+                  textColor: category.text_color,
+                }
+              end,
+          }
+        end,
+    }
   end
 
   register_admin_dashboard_highlight_kpi(

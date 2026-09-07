@@ -7,6 +7,7 @@
 sw:
   site_settings:
     dfp_through_trust_level: "Onyesha matangazo yako kulingana na uaminifu. Watumiaji ambao wanaaminika kiasii cha juu hawatayaona matangazo."
+    dfp_target_above_site_header_key_code: "Input custom targeting keys - inventory Level"
     dfp_topic_list_top_code: "Andika kodi ya kitengo cha tangazo litakalo onyeshwa juu ya orodha ya mada. Hii kodi lazima iwe fupi (kiwango cha juu ni herufi 100) iliyopewa kitengo cha tangazo kipindi ilivyotengenezwa, isiwe kodi ya JavaScript."
     dfp_topic_list_top_ad_sizes: "Chagua ukubwa wa tangazo juu ya orodha ya mada"
     dfp_mobile_topic_list_top_ad_sizes: "Chagua kipimo cha tangazo kwa ajili ya kitengo cha tangazo, juu ya orodha, ya mada kwenye vifaa vya kiganjani."
@@ -22,6 +23,8 @@ sw:
     dfp_mobile_post_bottom_ad_sizes: "Chagua kiwango cha tangazo litakaloonyeshwa katikati ya machapisho kwa mtu anaetumia simu."
     dfp_target_post_bottom_key_code: "Input custom targeting keys - inventory Level"
     adsense_through_trust_level: "Onyesha matangazo yako kulingana na uaminifu. Watumiaji ambao wanaaminika kiasii cha juu hawatayaona matangazo."
+    adsense_above_site_header_ad_sizes: "Chagua ukubwa wa tangazo"
+    adsense_mobile_above_site_header_ad_size: "Chagua ukubwa wa tangazo"
     adsense_topic_list_top_code: "Andika kodi ya kitengo cha tangazo kuonyesha matangazo juu ya sehemu ya orodha ya mada. Namba hii itakabidhiwa kwenye kitengo cha matangazo, sio kodi ya JavaScript."
     adsense_mobile_topic_list_top_code: "Andika kodi ya kitengo cha tangazo kuonyesha matangazo kwenye vifaa vya kiganjani juu ya sehemu ya orodha ya mada. Namba hii itakabidhiwa kwenye kitengo cha matangazo, sio kodi ya JavaScript."
     adsense_topic_list_top_ad_sizes: "Chagua ukubwa wa tangazo"
@@ -40,6 +43,10 @@ sw:
     adsense_mobile_post_bottom_ad_size: "Chagua ukubwa wa tangazo"
     adsense_nth_post_code: "Onyesha tangazo kila baada ya machapisho N, ambapo N ni kiasi."
     amazon_through_trust_level: "Onyesha matangazo yako kulingana na uaminifu. Watumiaji ambao wanaaminika kiasii cha juu hawatayaona matangazo."
+    amazon_above_site_header_ad_width_code: "Andika upana wa tangazo"
+    amazon_above_site_header_ad_height_code: "Andika urefu wa tangazo"
+    amazon_mobile_above_site_header_ad_width_code: "Andika upana wa tangazo (kifaa cha kiganjani)"
+    amazon_mobile_above_site_header_ad_height_code: "Andika urefu wa tangazo lako (simu ya kiganjani)"
     amazon_topic_list_top_src_code: "Andika kodi kuonyesha orodha ya mada eneo la juu"
     amazon_topic_list_top_ad_width_code: "Andika upana wa tangazo"
     amazon_topic_list_top_ad_height_code: "Andika urefu wa tangazo"

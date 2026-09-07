@@ -277,7 +277,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".admin-topic-timer-update button");
 
     assert
-      .dselect(".timer-type")
+      .dnativeselect(".timer-type")
       .hasNoOption(
         "publish_to_category",
         "publish to category is not shown for a public topic"
@@ -291,7 +291,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    assert.dselect(".timer-type").hasNoOption("delete");
+    assert.dnativeselect(".timer-type").hasNoOption("delete");
   });
 
   test("Category Moderator can auto-delete replies", async function (assert) {
@@ -301,7 +301,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    assert.dselect(".timer-type").hasOption({
+    assert.dnativeselect(".timer-type").hasOption({
       value: "delete_replies",
       label: i18n("topic.auto_delete_replies.title"),
     });
@@ -314,7 +314,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    assert.dselect(".timer-type").hasNoOption("delete_replies");
+    assert.dnativeselect(".timer-type").hasNoOption("delete_replies");
   });
 
   test("Category Moderator can auto-delete", async function (assert) {
@@ -325,7 +325,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".admin-topic-timer-update button");
 
     assert
-      .dselect(".timer-type")
+      .dnativeselect(".timer-type")
       .hasOption({ value: "delete", label: i18n("topic.auto_delete.title") });
   });
 

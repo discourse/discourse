@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 pt:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Procurar"
+      categories:
+        label: "Categorias"
+      about:
+        label: "Sobre"
+      guidelines:
+        label: "Linhas Diretrizes"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -609,6 +621,7 @@ pt:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Desconhecido"
     traffic_types:
       anonymous: "Anónimo"
   change_email:
@@ -779,6 +792,11 @@ pt:
         share: "Partilhar"
       types:
         staff: "Pessoal"
+    posters_by_member_type_members:
+      labels:
+        user: "Utilizador"
+        count: "Mensagens"
+        share: "Partilhar"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

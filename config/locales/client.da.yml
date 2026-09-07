@@ -435,6 +435,7 @@ da:
         theme: "Tema"
         fonts: "Skrifttyper"
         homepage: "Hjemmeside"
+        search: "Søg"
       theme:
         selected: "Valgt"
       colors:
@@ -1824,7 +1825,6 @@ da:
         label: "Når du laver indlæg"
         track_topic: "Spor emne"
         do_nothing: "Gøre ingenting"
-      topics_unread_when_closed: "Betragt emner som ulæste, når de er lukket"
       invited:
         title: "Invitationer"
         pending_tab: "Afventende"
@@ -2332,6 +2332,10 @@ da:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Mulighed"
+      tab: "Fane"
+      delete: "Slet"
+      home: "Hjem"
     conditional_loading_section:
       loading: Indlæser…
     category_row:
@@ -2455,7 +2459,6 @@ da:
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
-      title: "Eller tryk på %{modifier}Enter"
       save_and_close: "Gem og luk"
       discard: "Kassér"
       draft_saved: "Kladde gemt!"
@@ -2721,10 +2724,9 @@ da:
       recent: "Seneste søgninger"
       clear_recent: "Ryd seneste søgninger"
       type:
-        default: "Emner/indlæg"
+        default: "Indlæg"
         users: "Brugere"
         categories: "Kategorier"
-        categories_and_tags: "Kategorier/tags"
       context:
         user: "Søg i indlæg fra @%{username}"
         category: "Søg i #%{category} kategorien"
@@ -2736,7 +2738,6 @@ da:
         in: "filtrerer efter metadata (f.eks. in:title, in:personal, in:pinned)"
         status: "filtrerer efter emnestatus"
         full_search: "starter fuldsidesøgning"
-        full_search_key: "%{modifier} + Enter"
         me: "viser kun dine indlæg"
       advanced:
         title: Avancerede filtre
@@ -3310,7 +3311,6 @@ da:
       reply_as_new_private_message: "Svar med ny besked til de samme modtagere"
       continue_discussion: "Fortsætter debatten fra %{postLink}:"
       follow_quote: "gå til det citerede indlæg"
-      show_full: "Vis hele emnet"
       show_hidden: "Vis ignoreret indhold."
       deleted_by_author_simple: "(indlæg slettet af forfatteren)"
       collapse: "fold sammen"
@@ -3890,11 +3890,8 @@ da:
       image_load_error: '<a href="%url%">Billedet</a> kunne ikke indlæses.'
     cannot_render_video: Denne video kan ikke afspilles, fordi din browser ikke understøtter codec.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} eller %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tastaturgenveje"
       short_title: "Genveje"
       description_header: "Beskrivelse"
@@ -4395,6 +4392,11 @@ da:
         group_traffic: "Trafik"
         group_members: "Brugere"
         group_other: "Andre"
+        related_items:
+          users:
+            title: "Brugere"
+          labels:
+            user: "Bruger"
       config_sections:
         account:
           title: "Konto"
@@ -4649,6 +4651,7 @@ da:
           visitors: "Besøgende"
         filters:
           browser: "Browser"
+          language: "Sprog"
           ip: "IP-adresse"
         series:
           anonymous_human: "Anonym"
@@ -4721,6 +4724,8 @@ da:
               share: "Del"
             whos_posting:
               staff: "Personale"
+              modal:
+                apply: "Gem"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nye"
@@ -4733,6 +4738,11 @@ da:
             table:
               searches: "søgninger"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Discourse opdateret"
+            dashboard_updated: "instrumentbræt opdateret"
         reports_section:
           header_action: "Administrér"
           no_data: "Ingen data at vise"
@@ -4773,6 +4783,13 @@ da:
           average_for_sample: "Gennemsnit for prøve"
           total: "Total tid"
           no_data: "Ingen data at vise."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} bruger"
+              other: "%{count} brugere"
+            posts_count:
+              one: "%{count} indlæg"
+              other: "%{count} indlæg"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Søgninger</a>'
             disabled: 'Rapport over søge tendenser er deaktiveret. Aktivér <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log søgeforespørgelser for</a> at indsamle data.'

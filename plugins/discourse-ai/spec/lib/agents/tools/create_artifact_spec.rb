@@ -11,6 +11,44 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateArtifact do
   end
 
   describe "#process" do
+    it "ignores non-text completion events while generating artifact code" do
+      artifact_source = <<~TXT.strip
+        [HTML]
+        <div>Generated</div>
+        [/HTML]
+      TXT
+      thinking =
+        DiscourseAi::Completions::Thinking.new(
+          message: nil,
+          provider_info: {
+            gemini_interactions: {
+              steps: [{ signature: "signed-context" }],
+            },
+          },
+        )
+      tool = nil
+      result = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([[artifact_source, thinking]]) do
+        tool =
+          described_class.new(
+            { html_body: "hello" },
+            bot_user: Fabricate(:user),
+            llm: llm,
+            context: DiscourseAi::Agents::BotContext.new(post: post),
+          )
+        tool.parameters = { name: "generated", specification: "generate an artifact" }
+
+        result = tool.invoke {}
+      end
+
+      expect(result[:status]).to eq("success")
+      expect(AiArtifact.order(:id).last.html).to eq("<div>Generated</div>")
+      expect(tool.custom_raw).not_to include(
+        thinking.provider_info_for(:gemini_interactions)[:steps].first[:signature],
+      )
+    end
+
     it "correctly adds details block on final invoke" do
       responses = [<<~TXT.strip]
           [HTML]

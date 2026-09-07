@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 es:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Buscar"
+      categories:
+        label: "Categorías"
+      about:
+        label: "Acerca de"
+      guidelines:
+        label: "Directrices"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -987,6 +999,7 @@ es:
       windows: "Microsoft Windows"
       unknown: "sistema operativo desconocido"
   admin_site_traffic_explorer:
+    unknown: "Desconocido"
     traffic_types:
       anonymous: "Anónimas"
   change_email:
@@ -1285,6 +1298,11 @@ es:
         share: "Compartir"
       types:
         staff: "Personal"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuario"
+        count: "Publicaciones"
+        share: "Compartir"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1844,7 +1862,6 @@ es:
     allowed_iframes: "Una lista de prefijos de URL de iframe src que Discourse puede permitir de forma segura en las publicaciones. * se puede usar para que coincida con cualquier número de caracteres que no sean /."
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
-    llms_txt: "Sube un archivo de texto para que se publique en /llms.txt para los rastreadores de LLM. Consulta <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> para obtener más información."
     content_security_policy_report_only: "Activar la política de seguridad de contenido de solo denuncias (CSP)"
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
     content_security_policy_script_src: "Fuentes de scripts adicionales permitidas. El host actual y la CDN se incluyen por defecto. Ver <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar los ataques XSS con la Política de Seguridad de Contenidos.</a> (CSP). Otras fuentes de host se ignoran, ya que está activada la dinámica estricta."
@@ -1857,7 +1874,7 @@ es:
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
     allow_username_in_share_links: "Permitir que los nombres de usuario se incluyan en los enlaces compartidos. Esto es útil para premiar medallas basadas en visitantes únicos."
     site_contact_username: "Nombre de usuario de miembro del equipo desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
-    site_contact_group_name: "Un nombre válido de un grupo al que se invita a todos los mensajes personales enviados automáticamente."
+    site_contact_group_name: "El grupo al que se invita a todos los mensajes personales enviados automáticamente."
     send_welcome_message: "Enviar a todos los usuarios nuevos un mensaje de bienvenida con una guía rápida de inicio."
     send_tl1_welcome_message: "Enviar a los nuevos usuarios con nivel de confianza 1 un mensaje de bienvenida."
     send_tl2_promotion_message: "Enviar un mensaje a los nuevos usuarios de nivel de confianza 2 cuando suban de nivel."
@@ -2470,7 +2487,6 @@ es:
       invalid_email: "Dirección de correo electrónico no válida."
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
       valid_username: "Ya hay otro usuario con ese nombre de usuario."
-      invalid_group: "No existe ningún grupo con ese nombre."
       invalid_svg: "La imagen SVG no es válida. Debe contener un elemento SVG y ningún script ni controlador de eventos."
       invalid_upload: "La subida no es válida o no existe."
       invalid_topic: "No existe ningún tema con ese ID."

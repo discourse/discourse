@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  js:
+    user_notes:
+      title: "使用者備註"
+      attach: "新增使用者備註"
+      attach_note_description: "新增僅供工作人員查看的此使用者備註"
+      remove: "移除使用者備註"
+      show: "使用者備註（%{count}）"
+      delete_confirm: "您確定要刪除該使用者備註嗎？"
+      show_post: "顯示貼文"
+      show_flag: "顯示檢舉"
+      copy_reviewable_note: "要將備註複製到 %{username} 個人檔案的「使用者備註」嗎？"

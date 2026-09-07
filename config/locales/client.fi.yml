@@ -440,6 +440,7 @@ fi:
         theme: "Värimaailma"
         fonts: "Fontit"
         homepage: "Aloitussivu"
+        search: "Haku"
       theme:
         selected: "Valittu"
       colors:
@@ -2024,7 +2025,6 @@ fi:
         watch_topic: "Tarkkaile ketjua"
         track_topic: "Seuraa ketjua"
         do_nothing: "Älä tee mitään"
-      topics_unread_when_closed: "Pidä aiheita lukemattomina, kun ne suljetaan"
       invited:
         title: "Kutsut"
         pending_tab: "Odottavat"
@@ -2663,6 +2663,11 @@ fi:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Vaihtoehto"
+      period: "Jakso"
+      tab: "Sarkain"
+      delete: "Poista"
+      home: "Aloitus"
     conditional_loading_section:
       loading: Ladataan…
     category_row:
@@ -2818,7 +2823,6 @@ fi:
       create_whisper: "Kuiskaa"
       create_shared_draft: "Luo jaettu luonnos"
       edit_shared_draft: "Muokkaa jaettua luonnosta"
-      title: "Tai paina %{modifier}Enter"
       discard: "Hylkää"
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
@@ -3131,10 +3135,10 @@ fi:
         search_field: "Hakukenttä sivuston ylätunnisteessa"
         search_icon: "Hakukuvake profiilin avatarin lähellä"
       type:
-        default: "Ketjut/viestit"
+        default: "Viestejä"
         users: "Käyttäjiä"
         categories: "Alueet"
-        categories_and_tags: "Alueet/tunnisteet"
+        categories_and_tags: "Kategoriat ja tunnisteet"
       context:
         user: "Hae käyttäjän @%{username} viestejä"
         category: "Hae alueelta #%{category}"
@@ -3147,7 +3151,6 @@ fi:
         in: "suodatus metatietojen mukaan (esim. in:title, in:personal, in:pinned)"
         status: "suodatus ketjun tilan mukaan"
         full_search: "käynnistää koko sivun haun"
-        full_search_key: "%{modifier} + Enter"
         me: "näyttää vain sinun viestisi"
       advanced:
         title: Tarkemmat suodattimet
@@ -3829,7 +3832,6 @@ fi:
       reply_as_new_private_message: "Vastaa samoille vastaanottajille uudessa viestissä"
       continue_discussion: "Jatkoa ketjulle %{postLink}:"
       follow_quote: "siirry lainattuun viestiin"
-      show_full: "Näytä koko viesti"
       show_hidden: "Katso sivuutettu sisältö."
       deleted_by_author_simple: "(kirjoittajan poistama viesti)"
       collapse: "kutista"
@@ -4541,12 +4543,8 @@ fi:
     invalid_video_url: Tätä videota ei voi toistaa, koska URL on virheellinen tai ei käytettävissä.
     keyboard_shortcuts_help:
       search_placeholder: "Hae pikanäppäintä kuvauksella tai näppäinyhdistelmällä"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} tai %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Pikanäppäimet"
       short_title: "Pikavalinnat"
       search_ctrl_f_tip: "Jos haluat tehdä haun koko foorumilla, paina <kbd>/</kbd>"
@@ -5213,6 +5211,11 @@ fi:
         group_traffic: "Liikenne"
         group_members: "Jäsenet"
         group_other: "Muut"
+        related_items:
+          users:
+            title: "Käyttäjiä"
+          labels:
+            user: "Käyttäjä"
       config_sections:
         account:
           title: "Tili"
@@ -5419,7 +5422,6 @@ fi:
           header_description: "Määritä kiinan ja japanin kielten hakuasetukset, mukaan lukien lokikirjaus ja tokenointi"
         search_everything:
           title: "Hae"
-          header_description: "Täältä voit etsiä mitä vain ylläpidon käyttöliittymästä. Voit suodattaa tulokset alla, ja asetuksesi muistetaan. Avataksesi tämän haun missä tahansa hallintaliittymässä paina %{shortcutHTML}."
         security:
           title: "Tietoturva"
           header_description: "Määritä suojausasetukset, mukaan lukien kaksivaiheinen tunnistus, valvojan oikeudet ja sisällön suojauskäytännöt"
@@ -5649,6 +5651,7 @@ fi:
         filters:
           country: "Maa"
           browser: "Selain"
+          language: "Kieli"
           ip: "IP-osoite"
         series:
           anonymous_human: "Anonyymeja"
@@ -5723,6 +5726,8 @@ fi:
               share: "Jaa"
             whos_posting:
               staff: "Henkilökunta"
+              modal:
+                apply: "Tallenna"
             trust_level_pipeline:
               trust_levels:
                 "0": "Uudet"
@@ -5735,6 +5740,11 @@ fi:
             table:
               searches: "Hakuja"
               status: "Tila"
+          system:
+            title: "Järjestelmä"
+            status: "Tila"
+            discourse_updated: "Discourse päivitetty"
+            dashboard_updated: "Hallintapaneeli päivitetty"
         reports_section:
           header_action: "Hallitse"
           modal:
@@ -5786,6 +5796,14 @@ fi:
           average_for_sample: "Näytteen keskiarvo"
           total: "Kaikki yhteensä"
           no_data: "Ei näytettäviä tietoja"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} käyttäjä"
+              other: "%{count} käyttäjää"
+            posts_count:
+              one: "ensimmäisen %{count} viestin"
+              other: "ensimmäisen %{count} viestin"
+            deselect: "Poista käyttäjän %{name} valinta"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Hakulokit</a>'
             disabled: 'Suosittujen hakujen raportti ei ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kirjaa hakukyselyitä</a>.'

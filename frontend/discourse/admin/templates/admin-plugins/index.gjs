@@ -32,6 +32,12 @@ export default <template>
       </:breadcrumbs>
     </DPageHeader>
 
+    <PluginOutlet
+      @name="admin-above-plugins-index"
+      @connectorTagName="div"
+      @outletArgs={{lazyHash model=@controller.model}}
+    />
+
     {{#if @controller.model.length}}
       <DFilterControls
         @array={{@controller.model}}

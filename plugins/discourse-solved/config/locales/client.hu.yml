@@ -87,6 +87,11 @@ hu:
           solved: "megoldva"
           unsolved: "megoldatlan"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Téma"
+            category: "Kategória"
       web_hooks:
         solved_event:
           group_name: "Megoldott esemény"

@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 be:
+  llms_txt:
+    links:
+      search:
+        label: "Пошук"
+      categories:
+        label: "катэгорыі"
+      about:
+        label: "Пра тэму"
+      guidelines:
+        label: "Рэкамендацыі"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D МММ, YYYY"
@@ -453,6 +463,7 @@ be:
       windows: "Microsoft Windows,"
       unknown: "невядомая аперацыйная сістэма"
   admin_site_traffic_explorer:
+    unknown: "Невядома"
     traffic_types:
       anonymous: "ананімны"
   change_email:
@@ -652,6 +663,11 @@ be:
         share: "Абагуліць"
       types:
         staff: "Персанал"
+    posters_by_member_type_members:
+      labels:
+        user: "Карыстальнік"
+        count: "Допісаў"
+        share: "Абагуліць"
     trust_level_pipeline:
       labels:
         count: "Члены"

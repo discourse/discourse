@@ -33,6 +33,16 @@ module DiscourseAi
               "ai_discover_agent",
               DiscourseAi::Configuration::Module::SEARCH_ID,
               DiscourseAi::Configuration::Module::SEARCH,
+              enabled_by_setting: "ai_discover_enabled",
+              visible_if: -> { SiteSetting.ai_discover_enabled },
+            ),
+            new(
+              "ask_ai",
+              "ai_ask_ai_agent",
+              DiscourseAi::Configuration::Module::SEARCH_ID,
+              DiscourseAi::Configuration::Module::SEARCH,
+              enabled_by_setting: "ai_ask_ai_enabled",
+              agent_ids_lookup: -> { lookup_ask_ai_agent_ids },
             ),
           ]
         end
@@ -200,6 +210,14 @@ module DiscourseAi
               "allow_chat_channel_mentions OR allow_chat_direct_messages OR allow_topic_mentions OR allow_personal_messages",
             )
             .pluck(:id)
+        end
+
+        def lookup_ask_ai_agent_ids
+          [
+            SiteSetting.ai_ask_ai_agent,
+            SiteSetting.ai_ask_ai_query_rewriter_agent,
+            SiteSetting.ai_ask_ai_follow_up_agent,
+          ].map(&:to_i).reject(&:zero?).uniq
         end
 
         def lookup_bot_llms
@@ -371,7 +389,8 @@ module DiscourseAi
         enabled_by_setting: "",
         agent_ids_lookup: nil,
         llm_models_lookup: nil,
-        require_enabled_agent: false
+        require_enabled_agent: false,
+        visible_if: nil
       )
         @name = name
         @agent_setting = agent_setting
@@ -381,6 +400,7 @@ module DiscourseAi
         @agent_ids_lookup = agent_ids_lookup
         @llm_models_lookup = llm_models_lookup
         @require_enabled_agent = require_enabled_agent
+        @visible_if = visible_if
       end
 
       def llm_models
@@ -420,6 +440,10 @@ module DiscourseAi
       end
 
       attr_reader :name, :agent_setting, :module_id, :module_name
+
+      def visible?
+        @visible_if.blank? || @visible_if.call
+      end
 
       def enabled?
         return agent_enabled? if @enabled_by_setting.blank?

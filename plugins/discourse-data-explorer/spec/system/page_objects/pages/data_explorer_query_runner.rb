@@ -107,6 +107,19 @@ module PageObjects
         self
       end
 
+      def select_new_query_groups(*group_names)
+        select_kit = PageObjects::Components::SelectKit.new(".query-new .query-group-select")
+        select_kit.expand
+        group_names.each { |name| select_kit.select_row_by_name(name) }
+        self
+      end
+
+      def has_query_groups?(*group_names)
+        PageObjects::Components::SelectKit.new(
+          ".query-edit .groups .select-kit",
+        ).has_selected_names?(*group_names)
+      end
+
       def submit_new_query
         page.find(".query-new .btn-primary").click
         self

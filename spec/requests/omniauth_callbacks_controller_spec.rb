@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "discourse_connect_base"
+require "oauth"
+require "omniauth-google-oauth2"
 
 RSpec.describe Users::OmniauthCallbacksController do
   fab!(:user)

@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    boards:
+      board:
+        remove_card: "Hapus"
+        title: "Judul"
+        tags: "Label"
+        topic_reply_count:
+          other: "%{count} balasan"
+      manage:
+        name: "Nama"
+        constraint_categories: "Kategori"
+        constraint_tags: "Label"
+        columns:
+          remove: "Hapus"
+          column_title: "Judul"
+          move_to_status_open: "Buka"
+          move_to_status_closed: "Tertutup"

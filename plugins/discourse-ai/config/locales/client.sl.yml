@@ -133,8 +133,6 @@ sl:
         successful: "Uspešno"
         failed: "Spodletelo"
         unknown: "Neznano"
-        topic_id: "ID teme"
-        post_id: "ID prispevka"
         time: "Čas"
         when: "Kdaj"
         request: "Zahteva"
@@ -145,8 +143,7 @@ sl:
         post_short: "Prispevek %{id}"
         duration: "Trajanje"
         actions: "Akcije"
-        filters:
-          title: "Filtri"
+        view_details: "Podrobnosti"
         periods:
           day: "Zadnjih 24 ur"
           week: "Zadnjih 7 dni"
@@ -287,8 +284,10 @@ sl:
           table:
             total_count: "Skupaj"
       discobot_discoveries:
-        regular_results: "Tem"
-        collapse: "Skrči"
-        tooltip:
-          actions:
-            disable: "Onemogoči"
+        legacy:
+          regular_results: "Tem"
+          collapse: "Skrči"
+          tooltip:
+            actions:
+              disable: "Onemogoči"
+        search_messages: "Zasebna sporočila"

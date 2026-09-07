@@ -254,8 +254,6 @@ export default {
       return;
     }
 
-    this.capabilities = container.lookup("service:capabilities");
-
     withPluginApi((api) => {
       const chatStateManager = container.lookup("service:chat-state-manager");
 
@@ -396,17 +394,12 @@ export default {
           );
 
           const SidebarChatStarredChannelLink = class extends BaseStarredChannelLink {
-            constructor({ menuService, capabilities }) {
+            constructor({ menuService }) {
               super(...arguments);
               this.menuService = menuService;
-              this.capabilities = capabilities;
             }
 
             get hoverValue() {
-              if (this.capabilities.isIpadOS) {
-                return;
-              }
-
               return "ellipsis-vertical";
             }
 
@@ -415,10 +408,6 @@ export default {
             }
 
             get hoverAction() {
-              if (this.capabilities.isIpadOS) {
-                return noop;
-              }
-
               return (event, onMenuClose) => {
                 event.stopPropagation();
                 event.preventDefault();
@@ -452,7 +441,6 @@ export default {
                 "service:chat-channels-manager"
               );
               this.menuService = container.lookup("service:menu");
-              this.capabilities = container.lookup("service:capabilities");
             }
 
             get sectionLinks() {
@@ -465,7 +453,6 @@ export default {
                     siteSettings: this.siteSettings,
                     chatStateManager: this.chatStateManager,
                     menuService: this.menuService,
-                    capabilities: this.capabilities,
                   })
               );
             }
@@ -512,7 +499,6 @@ export default {
                 currentUser,
                 siteSettings,
                 menuService,
-                capabilities,
               }) {
                 super(...arguments);
                 this.channel = channel;
@@ -521,7 +507,6 @@ export default {
                 this.menuService = menuService;
                 this.chatStateManager = chatStateManager;
                 this.siteSettings = siteSettings;
-                this.capabilities = capabilities;
               }
 
               get hoverValue() {
@@ -529,7 +514,7 @@ export default {
                   return;
                 }
 
-                return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
+                return "ellipsis-vertical";
               }
 
               get name() {
@@ -611,7 +596,7 @@ export default {
               }
 
               get hoverAction() {
-                if (!this.currentUser || this.capabilities.isIpadOS) {
+                if (!this.currentUser) {
                   return noop;
                 }
 
@@ -653,7 +638,6 @@ export default {
                 );
                 this.router = container.lookup("service:router");
                 this.menuService = container.lookup("service:menu");
-                this.capabilities = container.lookup("service:capabilities");
               }
 
               get sectionLinks() {
@@ -665,7 +649,6 @@ export default {
                       menuService: this.menuService,
                       currentUser: this.currentUser,
                       siteSettings: this.siteSettings,
-                      capabilities: this.capabilities,
                     })
                 );
               }
@@ -743,7 +726,6 @@ export default {
                 currentUser,
                 menuService,
                 siteSettings,
-                capabilities,
               }) {
                 super(...arguments);
                 this.channel = channel;
@@ -752,7 +734,6 @@ export default {
                 this.currentUser = currentUser;
                 this.chatStateManager = chatStateManager;
                 this.menuService = menuService;
-                this.capabilities = capabilities;
 
                 if (this.oneOnOneMessage) {
                   const user = this.channel.chatable.users[0];
@@ -770,7 +751,7 @@ export default {
               }
 
               get hoverValue() {
-                return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
+                return "ellipsis-vertical";
               }
 
               get oneOnOneMessage() {
@@ -902,10 +883,6 @@ export default {
               }
 
               get hoverAction() {
-                if (this.capabilities.isIpadOS) {
-                  return noop;
-                }
-
                 return (event, onMenuClose) => {
                   event.stopPropagation();
                   event.preventDefault();
@@ -941,7 +918,6 @@ export default {
                   "service:chat-channels-manager"
                 );
                 this.menuService = container.lookup("service:menu");
-                this.capabilities = container.lookup("service:capabilities");
               }
 
               get hideSectionHeader() {
@@ -965,7 +941,6 @@ export default {
                         currentUser: this.currentUser,
                         menuService: this.menuService,
                         siteSettings: this.siteSettings,
-                        capabilities: this.capabilities,
                       })
                   );
                 } else {

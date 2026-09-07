@@ -623,7 +623,7 @@ module DiscourseAi
         references_by_sha1.filter_map do |sha1, short_url|
           upload = uploads_by_sha1[sha1]
           next if upload.blank?
-          next if !DiscourseAi::Completions::UploadEncoder.image_upload?(upload)
+          next if !DiscourseAi::Completions::UploadEncoder.supported_image_upload?(upload)
           next if !guardian.can_see_upload?(upload)
           if system_secure_upload_ids && upload.secure? &&
                !system_secure_upload_ids.include?(upload.id)
@@ -954,6 +954,8 @@ module DiscourseAi
 
               if format["type"] == "array"
                 type_desc[:items] = { type: format["array_type"] || "string" }
+                max_items = format["max_items"]
+                type_desc[:maxItems] = max_items if max_items.is_a?(Integer) && max_items >= 0
               end
 
               memo[format["key"].to_sym] = type_desc

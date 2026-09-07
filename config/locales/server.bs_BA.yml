@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  llms_txt:
+    sections:
+      optional: "Opcionalno"
+    links:
+      search:
+        label: "Pretraži"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nama"
+      guidelines:
+        label: "Smjernice"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -322,6 +334,7 @@ bs_BA:
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
   admin_site_traffic_explorer:
+    unknown: "Unknown"
     traffic_types:
       anonymous: "Anoniman"
   change_email:
@@ -448,6 +461,11 @@ bs_BA:
         share: "Dijeli"
       types:
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Objave"
+        share: "Dijeli"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

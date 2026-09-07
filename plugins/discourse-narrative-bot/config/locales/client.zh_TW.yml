@@ -10,3 +10,8 @@ zh_TW:
       welcome_post_type:
         new_user_track: "為所有的新使用者啟動使用者教學。"
         welcome_message: "寄送包含快速入門指引的歡迎訊息給所有新使用者。"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

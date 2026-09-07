@@ -7,6 +7,36 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   fab!(:bot_user, :user)
   fab!(:other_user, :user)
 
+  describe ".filtered_upload_ids_for_prompt" do
+    def filter(upload_ids, guardian)
+      described_class.filtered_upload_ids_for_prompt(
+        upload_ids,
+        include_image_uploads: true,
+        include_document_uploads: false,
+        guardian: guardian,
+      )
+    end
+
+    it "does not load an access control post per secure upload" do
+      post = Fabricate(:post)
+      uploads =
+        3.times.map { Fabricate(:image_upload, secure: true, access_control_post_id: post.id) }
+
+      queries = track_sql_queries { filter(uploads.map(&:id), Guardian.new(Discourse.system_user)) }
+
+      expect(queries.count { |sql| sql.include?(%{FROM "posts"}) }).to eq(1)
+    end
+
+    it "still hides an upload whose access control post was deleted" do
+      post = Fabricate(:private_message_post)
+      upload = Fabricate(:image_upload)
+      upload.update!(access_control_post_id: post.id, secure: true)
+      post.trash!
+
+      expect(filter([upload.id], Fabricate(:user).guardian)).to be_nil
+    end
+  end
+
   fab!(:image_upload1) do
     Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
   end

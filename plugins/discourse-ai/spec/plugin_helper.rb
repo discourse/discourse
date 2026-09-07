@@ -18,6 +18,11 @@ module DiscourseAi::ChatBotHelper
       SiteSetting.public_send("#{setting_name}=", p.id)
     end
   end
+
+  def enable_legacy_discover
+    SiteSetting.provider.save(:ai_discover_enabled, "t", SiteSetting.types[:bool])
+    SiteSetting.refresh!
+  end
 end
 
 RSpec.configure do |config|

@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    boards:
+      board:
+        remove_card: "Eltávolítás"
+        new_topic: "Új téma..."
+        title: "Cím"
+        tags: "Címkék"
+        assigned_to: "Hozzárendelve"
+        view_topic: "Téma megtekintése"
+        topic_reply_count:
+          one: "%{count} válasz"
+          other: "%{count} válasz"
+        assign: "Kiosztás"
+        reassign: "Átadás"
+        unassign: "Elvétel"
+        created_by: "Létrehozta:"
+      manage:
+        name: "Név"
+        slug: "URL slug"
+        constraint_categories: "Kategóriák"
+        constraint_tags: "Címkék"
+        advanced_settings: "Speciális beállítások"
+        columns:
+          remove: "Eltávolítás"
+          column_title: "Cím"
+          icon: "Ikon"
+          color: "Szín"
+          tag: "Címke"
+          move_to_assigned_unassign: "Elvétel"
+          move_to_status_open: "Nyitott"
+          move_to_status_closed: "Lezárva"

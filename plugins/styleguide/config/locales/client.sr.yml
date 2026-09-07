@@ -68,6 +68,19 @@ sr:
           title: "Više tema"
         post_menu:
           title: "Meni za post"
+        roving_focus:
+          toolbar:
+            copy: "Kopija"
+          adjacent:
+            field: "Pretraži"
+            open: "Otvori"
+          combobox:
+            daily: "Top dnevne"
+            weekly: "Top nedeljne"
+            monthly: "Top mesečne"
+            never: "Nikad"
+          tree:
+            select: "Odaberite"
         modal:
           title: "Модал"
           header: "Naslov modala"

@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    boards:
+      board:
+        remove_card: "Hiq"
+        title: "Titulli"
+        tags: "Etiketat"
+        topic_reply_count:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
+      manage:
+        name: "Emri"
+        constraint_categories: "Categories"
+        constraint_tags: "Etiketat"
+        columns:
+          remove: "Hiq"
+          column_title: "Titulli"
+          icon: "Ikonë"
+          color: "Ngjyra"
+          move_to_status_open: "Fillo"
+          move_to_status_closed: "Mbyllur"

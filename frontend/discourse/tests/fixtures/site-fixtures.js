@@ -63,6 +63,7 @@ const siteFixtures = {
         "hot",
         "unread"
       ],
+      homepage_options: [],
       periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
         "latest",

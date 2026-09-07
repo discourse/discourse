@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    boards:
+      board:
+        remove_card: "Elimină"
+        new_topic: "Subiect nou..."
+        title: "Titlu"
+        tags: "Etichete"
+        assigned_to: "Atribuit la"
+        topic_reply_count:
+          one: "%{count} răspuns"
+          few: "%{count} de răspunsuri"
+          other: "%{count} răspunsuri"
+        created_by: "Creat de"
+      manage:
+        name: "Nume"
+        constraint_categories: "Categorii"
+        constraint_tags: "Etichete"
+        columns:
+          remove: "Elimină"
+          column_title: "Titlu"
+          icon: "Icon"
+          color: "Culoare"
+          tag: "Etichetă"
+          move_to_status_open: "Deschide"
+          move_to_status_closed: "Închis"

@@ -79,6 +79,25 @@ ro:
           title: "Mai multe subiecte"
         post_menu:
           title: "Meniu postare"
+        roving_focus:
+          toolbar:
+            copy: "Copiază"
+          tags:
+            remove: "Înlătură %{tag}"
+          adjacent:
+            label: "Filtre"
+            field: "Căutare"
+            open: "Deschide"
+            recent: "Recente"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Zilnic"
+            weekly: "Săptămânal"
+            monthly: "Lunar"
+            never: "Niciodată"
+          tree:
+            components: "Componente"
         modal:
           title: "Dialog modal"
           header: "Titlu modal"

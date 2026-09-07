@@ -37,6 +37,7 @@ export default <template>
                           <SettingDefinitionField
                             @definition={{setting.definition}}
                             @form={{form}}
+                            @disabled={{setting.disabled}}
                           />
                         {{/if}}
                       {{/let}}
@@ -48,6 +49,7 @@ export default <template>
                   <SettingDefinitionField
                     @definition={{setting.definition}}
                     @form={{form}}
+                    @disabled={{setting.disabled}}
                   />
                 {{/each}}
               {{/if}}

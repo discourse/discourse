@@ -51,8 +51,6 @@ id:
       default_pm_prefix: "[PM bot AI tanpa judul]"
       read_post:
         unknown_post: "post"
-      agents:
-        default_llm_required: "Model LLM default diperlukan sebelum mengaktifkan Obrolan"
       tool_options:
         search:
           search_private:
@@ -80,10 +78,13 @@ id:
       delete_topic:
         errors:
           not_found: "Tidak ada topik."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tidak ada topik."
       edit_category:
+        errors:
+          not_found: "Kategori tidak ditemukan."
+      change_topic_category:
         errors:
           not_found: "Tidak ada topik."
           category_not_found: "Kategori tidak ditemukan."

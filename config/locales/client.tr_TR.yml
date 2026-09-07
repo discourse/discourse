@@ -524,6 +524,8 @@ tr_TR:
         theme: "Tema"
         fonts: "Yazı Tipleri"
         homepage: "Ana Sayfa"
+        welcome_banner: "Hoş geldiniz afişi"
+        search: "Ara"
       theme:
         selected: "Seçili"
       colors:
@@ -2223,7 +2225,6 @@ tr_TR:
         watch_topic: "Konuyu izle"
         track_topic: "Konuyu takip et"
         do_nothing: "Hiçbir şey yapma"
-      topics_unread_when_closed: "Konular kapatıldığında okunmamış olarak kabul edin"
       invited:
         title: "Davetler"
         pending_tab: "Bekleyen"
@@ -2877,6 +2878,11 @@ tr_TR:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Seçenek"
+      period: "Dönem"
+      tab: "Sekme"
+      delete: "Sil"
+      home: "Ana Sayfa"
     conditional_loading_section:
       loading: Yükleniyor…
     category_row:
@@ -3069,7 +3075,6 @@ tr_TR:
       create_whisper: "Fısıltı"
       create_shared_draft: "Paylaşılmış Taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
-      title: "Veya %{modifier}Enter tuşuna basın"
       save_and_close: "Kaydet ve kapat"
       discard: "Kapat"
       cancel_edit: "Düzenlemeyi iptal et"
@@ -3432,10 +3437,10 @@ tr_TR:
         search_field: "Site başlığındaki arama alanı"
         search_icon: "Profil avatarının yakınındaki Ara simgesi"
       type:
-        default: "Konular/gönderiler"
+        default: "Gönderi"
         users: "Kullanıcılar"
         categories: "Kategoriler"
-        categories_and_tags: "Kategoriler/etiketler"
+        categories_and_tags: "Kategoriler ve etiketler"
       context:
         user: "@%{username} adlı kullanıcının gönderilerinde ara"
         category: "#%{category} kategorisinde ara"
@@ -3448,7 +3453,6 @@ tr_TR:
         in: "meta verilere göre filtreler (ör. in:title, in:personal, in:pinned)"
         status: "konu durumuna göre filtreler"
         full_search: "tam sayfa aramayı başlatır"
-        full_search_key: "%{modifier} + Enter"
         me: "sadece sizin gönderilerinizi gösterir"
       advanced:
         title: Gelişmiş filtreler
@@ -4274,7 +4278,6 @@ tr_TR:
       reply_as_new_private_message: "Aynı alıcılara yeni mesaj olarak yanıt ver"
       continue_discussion: "%{postLink} gönderisinden tartışılmaya devam ediliyor:"
       follow_quote: "alıntılanan gönderiye git"
-      show_full: "Gönderinin Tamamını Göster"
       show_hidden: "Yok sayılan içeriği görüntüleyin."
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
@@ -5085,12 +5088,8 @@ tr_TR:
     invalid_video_url: URL geçersiz veya kullanılamadığı için bu video oynatılamıyor.
     keyboard_shortcuts_help:
       search_placeholder: "Açıklamaya veya tuş kombinasyonuna göre kısayol arayın"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} veya %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Klavye Kısayolları"
       short_title: "Kısayollar"
       search_ctrl_f_tip: "Bu forumun tamamında arama yapmak için <kbd>/</kbd>tuşlarına basın"
@@ -5804,6 +5803,11 @@ tr_TR:
         group_moderation_and_security: "Moderasyon ve Güvenlik"
         group_other: "Diğer"
         legacy_warning: "Bu eski bir rapordur. Yakında kullanımdan kaldırılacaktır. Yenisini bulmak için yardıma ihtiyacınız varsa destek ekibiyle iletişime geçin."
+        related_items:
+          users:
+            title: "Kullanıcılar"
+          labels:
+            user: "Kullanıcı"
       config_sections:
         account:
           title: "Hesap"
@@ -6119,7 +6123,6 @@ tr_TR:
           header_description: "Çince ve Japonca dilleri için günlük kaydı ve tokenizasyon dâhil arama ayarlarını yapılandırma"
         search_everything:
           title: "Ara"
-          header_description: "Yönetici arayüzünde her şeyi burada bulabilirsiniz. Aşağıdaki sonuçları filtreleyebilirsiniz ve tercihleriniz hatırlanır. Bu aramayı yönetici arayüzünde herhangi bir yerde açmak için %{shortcutHTML} seçeneğine basın."
         security:
           title: "Güvenlik"
           header_description: "İki adımlı kimlik doğrulama, moderatör ayrıcalıkları ve içerik güvenliği ilkeleri dâhil olmak üzere güvenlik ayarlarını yapılandırma"
@@ -6364,6 +6367,7 @@ tr_TR:
         filters:
           country: "Ülke"
           browser: "Tarayıcı"
+          language: "Dil"
           ip: "IP adresi"
         series:
           anonymous_human: "Anonim"
@@ -6442,6 +6446,8 @@ tr_TR:
               share: "Paylaş"
             whos_posting:
               staff: "Personel"
+              modal:
+                apply: "Kaydet"
             trust_level_pipeline:
               trust_levels:
                 "0": "Yeni"
@@ -6454,6 +6460,11 @@ tr_TR:
             table:
               searches: "Aramalar"
               status: "Durum"
+          system:
+            title: "Sistem"
+            status: "Durum"
+            discourse_updated: "Discourse güncellendi"
+            dashboard_updated: "Pano güncellendi"
         reports_section:
           header_action: "Yönet"
           no_data: "Gösterilecek veri yok"
@@ -6508,6 +6519,14 @@ tr_TR:
           average_for_sample: "Örnek için ortalama"
           total: "Tüm zamanlar toplamı"
           no_data: "Gösterilecek veri yok."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} kullanıcı"
+              other: "%{count} kullanıcı"
+            posts_count:
+              one: "%{count} gönderi"
+              other: "%{count} gönderi"
+            deselect: "%{name} seçimini kaldır"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama günlükleri</a>'
             disabled: 'Trend olan arama raporu devre dışı bırakıldı. Veri toplamak için <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">günlük arama sorgularını</a> etkinleştirin.'

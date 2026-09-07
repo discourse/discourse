@@ -21,6 +21,8 @@ ca:
       tool_summary:
         search: "Cerca"
         time: "Hora"
+      tool_help:
+        create_category: "Crea una categoria nova"
       close_topic:
         errors:
           not_found: "Tema no trobat."
@@ -30,10 +32,13 @@ ca:
       delete_topic:
         errors:
           not_found: "Tema no trobat."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tema no trobat."
       edit_category:
+        errors:
+          not_found: "Categoria no trobada."
+      change_topic_category:
         errors:
           not_found: "Tema no trobat."
           category_not_found: "Categoria no trobada."

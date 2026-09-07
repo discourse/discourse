@@ -119,6 +119,38 @@ describe DiscourseDataExplorer::QueryController do
       end
     end
 
+    describe "#create" do
+      fab!(:group)
+
+      it "grants the given groups access to the new query" do
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "My query",
+                 description: "A description",
+                 sql: "SELECT 1",
+                 group_ids: [group.id],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([group.id])
+      end
+
+      it "creates a query without groups when none are given" do
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "My query",
+                 sql: "SELECT 1",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([])
+      end
+    end
+
     describe "#update" do
       fab!(:user2, :user)
       fab!(:group2) { Fabricate(:group, users: [user2]) }

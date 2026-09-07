@@ -13,6 +13,7 @@ class SiteSerializer < ApplicationSerializer
     :filters,
     :anonymous_list_filters,
     :homepage_choices,
+    :homepage_options,
     :periods,
     :top_menu_items,
     :anonymous_top_menu_items,
@@ -230,7 +231,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def homepage_choices
-    TopMenu.homepage_choices
+    HomepageSiteSetting.choices
+  end
+
+  def homepage_options
+    DiscoursePluginRegistry.homepage_options.map { |option| option.slice(:id, :path, :server_side) }
   end
 
   def periods

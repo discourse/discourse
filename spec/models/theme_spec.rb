@@ -329,6 +329,24 @@ RSpec.describe Theme do
       expect(theme.reload.cached_settings).to include(name: "bill")
     end
 
+    it "updates cached group list aliases when granular group permissions change" do
+      theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+        allowed_groups:
+          type: list
+          list_type: group
+          default: "0|1"
+      YAML
+      theme.save!
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      expect(theme.cached_settings[:allowed_groups]).to eq("0|1")
+      expect(theme.cached_default_settings[:allowed_groups]).to eq("0|1")
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+      expect(theme.cached_settings[:allowed_groups]).to eq("5|1")
+      expect(theme.cached_default_settings[:allowed_groups]).to eq("5|1")
+    end
+
     it "records the plugins a theme statically imports from" do
       theme.set_field(target: :extra_js, name: "discourse/initializers/my-init.js", value: <<~JS)
           import Thing from "discourse/plugins/some-plugin/lib/thing";

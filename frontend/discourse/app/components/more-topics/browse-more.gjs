@@ -68,6 +68,8 @@ export default class BrowseMore extends Component {
   }
 
   get topicBrowseMoreMessage() {
+    this.topicTrackingState.get("messageCount");
+
     let category = this.args.topic.get("category");
 
     if (category && category.id === this.site.uncategorized_category_id) {

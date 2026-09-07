@@ -442,6 +442,7 @@ pt:
       sections:
         theme: "Tema"
         homepage: "Página de início"
+        search: "Procurar"
       colors:
         light: "Claro"
         dark: "Escuro"
@@ -2024,7 +2025,6 @@ pt:
         watch_topic: "Ver tópico"
         track_topic: "Acompanhar o tópico"
         do_nothing: "Não faça nada"
-      topics_unread_when_closed: "Considera os tópicos não lidos quando são fechados"
       invited:
         title: "Convites"
         pending_tab: "Pendente"
@@ -2669,6 +2669,8 @@ pt:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Entrar"
+      delete: "Eliminar"
+      home: "Início"
     conditional_loading_section:
       loading: A carregar...
     category_row:
@@ -2797,7 +2799,6 @@ pt:
       create_whisper: "Sussurro"
       create_shared_draft: "Criar Rascunho Partilhado"
       edit_shared_draft: "Editrar Rascunho Partilhado"
-      title: "Ou pressione %{modifier}Enter"
       save_and_close: "Guardar e fechar"
       discard: "Descartar"
       draft_saved: "Rascunho guardado!"
@@ -3102,10 +3103,9 @@ pt:
         search_field: "Campo de procura no cabeçalho do site"
         search_icon: "Ícone de procura no avatar do novo perfil"
       type:
-        default: "Tópicos/posts"
+        default: "Mensagens"
         users: "Utilizadores"
         categories: "Categorias"
-        categories_and_tags: "Categorias/tags"
       context:
         user: "Procurar publicações por @%{username}"
         category: "Pesquise na categoria #%{category}"
@@ -3118,7 +3118,6 @@ pt:
         in: "filtra por metadados (por exemplo, em:título, em:pessoal, em:afixado)"
         status: "filtra por estado do tópico"
         full_search: "inicia a procura da página completa"
-        full_search_key: "%{modifier} + Enter"
         me: "apenas mostra as suas publicações"
       advanced:
         title: Filtros avançados
@@ -3693,7 +3692,6 @@ pt:
       reply_as_new_private_message: "Responda como uma nova mensagem aos mesmos destinatários"
       continue_discussion: "Continuar a discussão de %{postLink}:"
       follow_quote: "ir para a publicação citada"
-      show_full: "Mostrar Mensagem Completa"
       show_hidden: "Veja o conteúdo ignorado."
       deleted_by_author_simple: "(postagem excluída pelo autor)"
       collapse: "colapsar"
@@ -4248,8 +4246,6 @@ pt:
       image_load_error: '<a href="%url%">A imagem</a> não pôde ser carregada.'
     cannot_render_video: Este vídeo não pode ser renderizado porque seu navegador não suporta o codec.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atalhos de Teclado"
       description_header: "Descrição"
       key_header: "Chave"
@@ -4599,6 +4595,11 @@ pt:
         group_traffic: "Tráfego"
         group_members: "Membros"
         group_other: "Outro"
+        related_items:
+          users:
+            title: "Utilizadores"
+          labels:
+            user: "Utilizador"
       config_sections:
         account:
           title: "Conta"
@@ -4897,6 +4898,8 @@ pt:
               share: "Partilhar"
             whos_posting:
               staff: "Pessoal"
+              modal:
+                apply: "Guardar"
             trust_level_pipeline:
               trust_levels:
                 "0": "Novo"
@@ -4909,6 +4912,11 @@ pt:
             table:
               searches: "Pesquisas"
               status: "Estado"
+          system:
+            title: "Sistema"
+            status: "Estado"
+            discourse_updated: "Discourse atualizado"
+            dashboard_updated: "Painel atualizado"
         reports_section:
           header_action: "Gerir"
           no_data: "Sem dados para exibir"
@@ -4946,6 +4954,13 @@ pt:
           average_for_sample: "Média para amostra"
           total: "Total de todos os tempos"
           no_data: "Sem dados para exibir."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuário"
+              other: "%{count} usuários"
+            posts_count:
+              one: "%{count} mensagem"
+              other: "%{count} mensagens"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Pesquisar logs</a>'
           sort_button: "Organizado por %{column}"

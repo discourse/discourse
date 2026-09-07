@@ -46,7 +46,6 @@ he:
       solution_summary:
         one: "פתרון"
         two: "פתרונות"
-        many: "פתרונות"
         other: "פתרונות"
       accepted_answer_post_number: "פוסט %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
@@ -79,6 +78,11 @@ he:
           solved: "נפתרו"
           unsolved: "לא נפתרו"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "נושא"
+            category: "קטגוריה"
       web_hooks:
         solved_event:
           group_name: "אירוע שנפתר"

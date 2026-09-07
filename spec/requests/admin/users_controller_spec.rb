@@ -20,6 +20,21 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body).to be_present
       end
 
+      it "loads second-factor status in batches" do
+        Fabricate(:user_second_factor_totp, user: user)
+        Fabricate(:user_security_key, user: coding_horror)
+        Fabricate(:passkey_with_random_credential, user: moderator)
+
+        queries = track_sql_queries { get "/admin/users/list/active.json" }
+
+        users_by_id = response.parsed_body.index_by { |serialized_user| serialized_user["id"] }
+        expect(users_by_id[user.id]["second_factor_enabled"]).to eq(true)
+        expect(users_by_id[coding_horror.id]["second_factor_enabled"]).to eq(true)
+        expect(users_by_id[moderator.id]).not_to have_key("second_factor_enabled")
+        expect(queries.count { |query| query.include?('FROM "user_second_factors"') }).to eq(1)
+        expect(queries.count { |query| query.include?('FROM "user_security_keys"') }).to eq(1)
+      end
+
       it "returns silence reason when user is silenced" do
         silencer =
           UserSilencer.new(

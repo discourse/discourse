@@ -83,44 +83,49 @@ export default class Search extends Service {
         return;
       }
 
-      let links = document.querySelectorAll(".search-menu .results a");
-      let results = document.querySelectorAll(
-        ".search-menu .results .search-link"
+      const focusableItems = document.querySelectorAll(
+        ".search-menu .results a, .search-menu .results [data-search-menu-navigation-item]"
+      );
+      const navigationItems = document.querySelectorAll(
+        ".search-menu .results .search-link, .search-menu .results [data-search-menu-navigation-item]"
       );
 
-      if (!results.length) {
+      if (!navigationItems.length) {
         return;
       }
 
-      let prevResult;
-      let result;
+      let previousNavigationItem;
+      let navigationItem;
 
-      links.forEach((item) => {
-        if (item.classList.contains("search-link")) {
-          prevResult = item;
+      focusableItems.forEach((item) => {
+        if (
+          item.classList.contains("search-link") ||
+          item.hasAttribute("data-search-menu-navigation-item")
+        ) {
+          previousNavigationItem = item;
         }
 
         if (item === focused) {
-          result = prevResult;
+          navigationItem = previousNavigationItem;
         }
       });
 
       let index = -1;
-      if (result) {
-        index = Array.prototype.indexOf.call(results, result);
+      if (navigationItem) {
+        index = Array.prototype.indexOf.call(navigationItems, navigationItem);
       }
 
       if (index === -1 && e.key === "ArrowDown") {
-        // change focus from the search input to the first result item
-        const firstResult = results[0] || links[0];
+        // change focus from the search input to the first navigation item
+        const firstResult = navigationItems[0] || focusableItems[0];
         firstResult.focus();
       } else if (index === 0 && e.key === "ArrowUp") {
         this.focusSearchInput();
       } else if (index > -1) {
-        // change focus to the next result item if present
+        // change focus to the next navigation item if present
         index += e.key === "ArrowDown" ? 1 : -1;
-        if (index >= 0 && index < results.length) {
-          results[index].focus();
+        if (index >= 0 && index < navigationItems.length) {
+          navigationItems[index].focus();
         }
       }
 

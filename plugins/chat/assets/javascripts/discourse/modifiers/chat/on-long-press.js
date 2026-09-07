@@ -11,7 +11,6 @@ function cancelEvent(event) {
 
 export default class ChatOnLongPress extends Modifier {
   @service capabilities;
-  @service site;
 
   constructor(owner, args) {
     super(owner, args);
@@ -19,10 +18,16 @@ export default class ChatOnLongPress extends Modifier {
   }
 
   get enabled() {
-    return this.capabilities.touch && this.site.mobileView;
+    return this.enabledByCaller && this.capabilities.touch;
   }
 
-  modify(element, [onLongPressStart, onLongPressEnd, onLongPressCancel]) {
+  modify(
+    element,
+    [onLongPressStart, onLongPressEnd, onLongPressCancel],
+    { enabled = true }
+  ) {
+    this.enabledByCaller = enabled;
+
     if (!this.enabled) {
       return;
     }

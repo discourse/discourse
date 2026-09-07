@@ -17,7 +17,7 @@ import DiscourseURL, {
 import { and, eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
-import DSelect from "discourse/ui-kit/d-select";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const ResetButton = <template>
@@ -524,7 +524,7 @@ export default class DFilterControls extends Component {
           <div class="d-filter-controls__dropdowns">
             {{#if this.hasMultipleDropdowns}}
               {{#each-in this.dropdownOptions as |key options|}}
-                <DSelect
+                <DNativeSelect
                   @value={{get this.dropdownFilters key}}
                   @includeNone={{false}}
                   @onChange={{fn this.onDropdownFilterChange key}}
@@ -547,10 +547,10 @@ export default class DFilterControls extends Component {
                       {{option.label}}
                     </select.Option>
                   {{/each}}
-                </DSelect>
+                </DNativeSelect>
               {{/each-in}}
             {{else}}
-              <DSelect
+              <DNativeSelect
                 @value={{this.dropdownFilter}}
                 @includeNone={{false}}
                 @onChange={{this.onDropdownFilterChange}}
@@ -569,7 +569,7 @@ export default class DFilterControls extends Component {
                     {{option.label}}
                   </select.Option>
                 {{/each}}
-              </DSelect>
+              </DNativeSelect>
             {{/if}}
 
             {{yield to="additionalFilters"}}

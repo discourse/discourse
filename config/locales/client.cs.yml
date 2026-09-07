@@ -524,6 +524,8 @@ cs:
         theme: "Téma"
         fonts: "Písma"
         homepage: "Domovská stránka"
+        welcome_banner: "Uvítací banner"
+        search: "Vyhledat"
       theme:
         selected: "Zaškrtnuté"
       colors:
@@ -2318,7 +2320,6 @@ cs:
         watch_topic: "Hlídat téma"
         track_topic: "Sledovat téma"
         do_nothing: "Nic nedělat"
-      topics_unread_when_closed: "Po uzavření považovat témata za nepřečtená"
       invited:
         title: "Pozvánky"
         pending_tab: "Čeká na schválení"
@@ -3027,6 +3028,11 @@ cs:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Možnost"
+      period: "Období"
+      tab: "Tab"
+      delete: "Smazat"
+      home: "Domů"
     conditional_loading_section:
       loading: Načítání…
     category_row:
@@ -3221,7 +3227,6 @@ cs:
       create_whisper: "Šeptat"
       create_shared_draft: "Vytvořit sdílený koncept"
       edit_shared_draft: "Upravit sdílený koncept"
-      title: "Nebo stiskněte %{modifier}Enter"
       save_and_close: "Uložit a zavřít"
       discard: "Zrušit"
       draft_saved: "Koncept uložen!"
@@ -3246,6 +3251,8 @@ cs:
       hide_preview: "skrýt náhled"
       switch_to_markdown: "Přepnout na standardní Markdown editor (%{keyboardShortcut})"
       switch_to_rich_text: "Přepnout na nový textový editor (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Přepnout na standardní Markdown editor"
+      switch_to_rich_text_no_shortcut: "Přepnout na nový textový editor"
       quote_post_title: "Citovat celý příspěvek"
       bold_label: "B"
       bold_title: "Tučně"
@@ -3601,10 +3608,10 @@ cs:
         search_field: "Vyhledávací pole v záhlaví webu"
         search_icon: "Ikona vyhledávání poblíž avataru profilu"
       type:
-        default: "Témata/příspěvky"
+        default: "Příspěvky"
         users: "Uživatelé"
         categories: "Kategorie"
-        categories_and_tags: "Kategorie/štítky"
+        categories_and_tags: "Kategorie a štítky"
       context:
         user: "Vyhledat příspěvky od @%{username}"
         category: "Hledat v kategorii #%{category}"
@@ -3617,7 +3624,6 @@ cs:
         in: "filtry podle metadat (např. in:title, in:personal, in:pinned)"
         status: "filtry podle stavu tématu"
         full_search: "spustí vyhledávání na celé stránce"
-        full_search_key: "%{modifier} + Enter"
         me: "zobrazí pouze vaše příspěvky"
       advanced:
         title: Pokročilé filtry
@@ -4418,7 +4424,6 @@ cs:
       reply_as_new_private_message: "Odpověď poslat jako zprávu stejným příjemcům."
       continue_discussion: "Pokračování diskuze z %{postLink}:"
       follow_quote: "přejít na citovaný příspěvek"
-      show_full: "Zobrazit celý příspěvek"
       show_hidden: "Zobrazit ignorovaný obsah."
       deleted_by_author_simple: "(příspěvek smazán autorem)"
       collapse: "sbalit"
@@ -5282,12 +5287,8 @@ cs:
     invalid_video_url: Toto video nelze přehrát, protože adresa URL je neplatná nebo nedostupná.
     keyboard_shortcuts_help:
       search_placeholder: "Hledat zkratku podle popisu nebo kombinace kláves"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} nebo %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Klávesové zkratky"
       short_title: "Zkratky"
       search_ctrl_f_tip: "Pro vyhledávání v celém fóru stiskněte <kbd>/</kbd>"
@@ -6031,6 +6032,11 @@ cs:
         group_traffic: "Provoz"
         group_members: "Členové"
         group_other: "Ostatní"
+        related_items:
+          users:
+            title: "Uživatelé"
+          labels:
+            user: "Uživatel"
       config_sections:
         account:
           title: "Účet"
@@ -6334,7 +6340,6 @@ cs:
           header_description: "Nakonfigurujte nastavení vyhledávání včetně protokolování a tokenizace pro čínštinu a japonštinu"
         search_everything:
           title: "Vyhledávání"
-          header_description: "Zde najdete cokoli v administrátorském rozhraní. Níže uvedené výsledky můžete filtrovat a vaše preference budou uloženy. Chcete-li toto vyhledávání otevřít kdekoli v administrátorském rozhraní, stiskněte %{shortcutHTML}."
         security:
           title: "Zabezpečení"
           header_description: "Nakonfigurujte nastavení zabezpečení, včetně dvoufaktorového ověřování, oprávnění moderátorů a zásad zabezpečení obsahu"
@@ -6568,6 +6573,7 @@ cs:
           visitors: "Návštěvníci"
         filters:
           browser: "Prohlížeč"
+          language: "Jazyk"
           ip: "IP adresa"
         series:
           anonymous_human: "Anonymní"
@@ -6645,6 +6651,8 @@ cs:
               share: "Sdílet"
             whos_posting:
               staff: "Redakce"
+              modal:
+                apply: "Uložit"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nový"
@@ -6657,6 +6665,11 @@ cs:
             table:
               searches: "Hledání"
               status: "Stav"
+          system:
+            title: "Systémové soukromé zprávy"
+            status: "Stav"
+            discourse_updated: "Discourse aktualizován"
+            dashboard_updated: "Nástěnka aktualizována"
         reports_section:
           header_action: "Spravovat"
           no_data: "Žádná data k zobrazení"
@@ -6714,6 +6727,18 @@ cs:
           average_for_sample: "Průměr za vzorek"
           total: "Celkem za celé období"
           no_data: "Žádná data k zobrazení."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} uživatel"
+              few: "%{count} uživatelů"
+              many: "%{count} uživatelů"
+              other: "%{count} uživatelů"
+            posts_count:
+              one: "%{count} příspěvek"
+              few: "%{count} příspěvků"
+              many: "%{count} příspěvky"
+              other: "%{count} příspěvky"
+            deselect: "Zrušit výběr %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Protokol vyhledávání</a>'
             disabled: 'Přehled trendů vyhledávání je zakázán. Pro shromažďování dat povolte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dotazy na protokol</a>.'

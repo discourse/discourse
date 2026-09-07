@@ -35,6 +35,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/navigation-bar", title: "Navigation Bar" },
       { href: "/molecules/navigation-stacked", title: "Navigation Stacked" },
       { href: "/molecules/post-menu", title: "Post Menu" },
+      { href: "/molecules/roving-focus", title: "Roving focus" },
       { href: "/molecules/signup-cta", title: "Signup CTA" },
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
@@ -44,6 +45,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
       { href: "/molecules/topic-timer-info", title: "Topic Timers" },
+      { href: "/molecules/virtual-list", title: "Virtual list" },
     ],
     "organisms" => [
       { href: "/organisms/post", title: "Post" },
@@ -207,6 +209,19 @@ RSpec.describe "Styleguide Smoke Test" do
           expect(styleguide).to have_heading(item[:title])
         end
       end
+    end
+  end
+
+  context "when the styleguide is enabled for everyone" do
+    before do
+      Capybara.reset_sessions!
+      SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+    end
+
+    it "renders a page using HighlightedCode for anonymous users" do
+      visit "/styleguide/atoms/font-scale"
+      expect(styleguide).to have_heading("Font System")
+      expect(page).to have_css("code.hljs")
     end
   end
 

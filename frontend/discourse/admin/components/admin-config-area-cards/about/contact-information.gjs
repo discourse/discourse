@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -14,11 +14,6 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
   @service site;
   @service toasts;
 
-  @tracked
-  contactGroupId = this.site.groups.find(
-    (group) => group.name === this.data.contactGroupName
-  )?.id;
-
   @cached
   get data() {
     return {
@@ -28,7 +23,10 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       ),
       contactEmail: this.args.contactInformation.contactEmail.value,
       contactURL: this.args.contactInformation.contactURL.value,
-      contactGroupName: this.args.contactInformation.contactGroupName.value,
+      contactGroupName:
+        this.site.groupsById[
+          this.args.contactInformation.contactGroupName.value
+        ]?.id ?? null,
       contactUsername:
         this.args.contactInformation.contactUsername.value || null,
     };
@@ -41,8 +39,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
 
   @action
   setContactGroup(groupIds, { set }) {
-    this.contactGroupId = groupIds[0];
-    set("contactGroupName", this.site.groupsById[groupIds[0]]?.name);
+    set("contactGroupName", groupIds[0] ?? null);
   }
 
   @action
@@ -184,7 +181,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
           <field.Control>
             <GroupChooser
               @content={{this.site.groups}}
-              @value={{this.contactGroupId}}
+              @value={{field.value}}
               @options={{hash maximum=1}}
               @onChange={{field.set}}
             />

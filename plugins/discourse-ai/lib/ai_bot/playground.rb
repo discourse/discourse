@@ -895,7 +895,7 @@ module DiscourseAi
       def can_attach?(post)
         return false if bot.bot_user.nil?
         return false if post.topic.private_message? && post.post_type != Post.types[:regular]
-        return false if (SiteSetting.ai_bot_allowed_groups_map & post.user.group_ids).blank?
+        return false if !post.user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
         return false if post.custom_fields[BYPASS_AI_REPLY_CUSTOM_FIELD].present?
 
         true

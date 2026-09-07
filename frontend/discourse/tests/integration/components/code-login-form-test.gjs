@@ -1,6 +1,7 @@
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CodeLoginForm from "discourse/components/code-login-form";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
@@ -62,6 +63,56 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__resend").exists();
   });
 
+  test("signup requests declare their intent", async function (assert) {
+    let signup;
+    pretender.get("/session/hp.json", () =>
+      response({ value: "hp-value", challenge: "abc", expires_in: 300 })
+    );
+    pretender.post("/session/login-code", (request) => {
+      signup = new URLSearchParams(request.requestBody).get("signup");
+      return response({ success: "OK" });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+
+    assert.strictEqual(signup, "true", "the request identifies signup intent");
+    assert
+      .dom(".code-login-form__code-step")
+      .exists("the form advances after the request succeeds");
+  });
+
+  test("shows a request error without advancing to the code step", async function (assert) {
+    const error =
+      "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member.";
+    pretender.get("/session/hp.json", () =>
+      response({ value: "hp-value", challenge: "abc", expires_in: 300 })
+    );
+    pretender.post("/session/login-code", () => response({ error }));
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+
+    assert
+      .dom(".code-login-form__email-step")
+      .exists("the email step remains visible");
+    assert
+      .dom(".code-login-form__error")
+      .hasText(error, "the account limit error is shown inline");
+    assert
+      .dom(".code-login-form__code-step")
+      .doesNotExist("the code step is not rendered");
+    assert.dom(".d-otp-input").doesNotExist("the code input is not rendered");
+  });
+
   test("keeps a hidden email field for password managers after the email step", async function (assert) {
     stubCodeRequest();
 
@@ -108,6 +159,76 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
     assert.dom(".code-login-form__second-factor-step").exists();
     assert.dom("#second-factor").exists();
+  });
+
+  test("sends prefilled user fields with the code, skipping the extra step", async function (assert) {
+    stubCodeRequest();
+    this.owner
+      .lookup("service:site")
+      .set("user_fields", [
+        { id: 7, position: 1, required: true, show_on_signup: true },
+      ]);
+    withPluginApi((api) =>
+      api.registerValueTransformer("code-login-user-field-values", () => ({
+        7: "true",
+      }))
+    );
+
+    let verifyParams;
+    pretender.post("/session/login-code/verify", (request) => {
+      verifyParams = new URLSearchParams(request.requestBody);
+
+      return response({
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: true,
+        prefill_username: true,
+      });
+    });
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert.strictEqual(
+      verifyParams.get("user_fields[7]"),
+      "true",
+      "the prefilled answer rides along with the code"
+    );
+    assert
+      .dom(".code-login-form__user-fields-step")
+      .doesNotExist("the fields are already answered, so the step is skipped");
+  });
+
+  test("withholds prefilled user fields while a required one is unanswered", async function (assert) {
+    stubCodeRequest();
+    this.owner.lookup("service:site").set("user_fields", [
+      { id: 7, position: 1, required: true, show_on_signup: true },
+      { id: 8, position: 2, required: true, show_on_signup: true },
+    ]);
+    withPluginApi((api) =>
+      api.registerValueTransformer("code-login-user-field-values", () => ({
+        7: "true",
+      }))
+    );
+
+    let verifyParams;
+    pretender.post("/session/login-code/verify", (request) => {
+      verifyParams = new URLSearchParams(request.requestBody);
+
+      return response({ user_fields_required: true });
+    });
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert.strictEqual(
+      verifyParams.get("user_fields[7]"),
+      null,
+      "a partial set is not sent, which the server would read as complete"
+    );
+    assert
+      .dom(".code-login-form__user-fields-step")
+      .exists("the remaining field is still collected");
   });
 
   test("collects a required full name before completing signup", async function (assert) {

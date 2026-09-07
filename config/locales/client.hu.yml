@@ -508,6 +508,8 @@ hu:
         theme: "Téma"
         fonts: "Betűkészletek"
         homepage: "Főoldal"
+        welcome_banner: "Üdvözlő banner"
+        search: "Keresés"
       theme:
         selected: "Kiválasztott"
       colors:
@@ -2181,7 +2183,6 @@ hu:
         watch_topic: "Téma figyelése"
         track_topic: "Téma követése"
         do_nothing: "Ne tegyen semmit"
-      topics_unread_when_closed: "Tekintse a témákat olvasatlannak, amikor bezárják"
       invited:
         title: "Meghívók"
         pending_tab: "Várakozik"
@@ -2835,6 +2836,10 @@ hu:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      period: "Időszak"
+      tab: "Lap"
+      delete: "Törlés"
+      home: "Kezdőlap"
     conditional_loading_section:
       loading: Betöltés…
     category_row:
@@ -3003,7 +3008,6 @@ hu:
       create_whisper: "Suttogás"
       create_shared_draft: "Megosztott vázlat létrehozása"
       edit_shared_draft: "Megosztott vázlat szerkesztése"
-      title: "Vagy nyomjon %{modifier}Entert"
       save_and_close: "Mentés és bezárás"
       discard: "Elvetés"
       draft_saved: "Vázlat mentve!"
@@ -3028,6 +3032,8 @@ hu:
       hide_preview: "előnézet elrejtése"
       switch_to_markdown: "Váltás a szabványos Markdown szerkesztőre (%{keyboardShortcut})"
       switch_to_rich_text: "Új szövegszerkesztőre váltás (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Váltson a szabványos Markdown szerkesztőre"
+      switch_to_rich_text_no_shortcut: "Váltson új rich text szerkesztőre"
       quote_post_title: "Teljes bejegyzés idézése"
       bold_label: "B"
       bold_title: "Félkövér"
@@ -3360,10 +3366,10 @@ hu:
         search_field: "Keresőmező a webhely fejlécében"
         search_icon: "Keresés ikon a profilkép közelében"
       type:
-        default: "Témák/bejegyzések"
+        default: "Bejegyzések"
         users: "Felhasználók"
         categories: "Kategóriák"
-        categories_and_tags: "Kategóriák/címkék"
+        categories_and_tags: "Kategóriák és címkék"
       context:
         user: "Keresés @%{username} bejegyzései között"
         category: "Keresés a(z) #%{category} kategóriában"
@@ -3376,7 +3382,6 @@ hu:
         in: "szűrés metaadat szerint (pl.: in:title, in:personal, in:pinned)"
         status: "szűrés a téma állapota szerint"
         full_search: "teljes oldalas keresés indítása"
-        full_search_key: "%{modifier} + Enter"
         me: "csak a saját hozzászólásokat jeleníti meg"
       advanced:
         title: Speciális szűrők
@@ -4101,7 +4106,6 @@ hu:
       reply_as_new_private_message: "Válasz új üzenetként ugyanazoknak a címzetteknek"
       continue_discussion: "A beszélgetés folytatása a(z) %{postLink} oldalról:"
       follow_quote: "ugrás az idézett bejegyzéshez"
-      show_full: "Teljes bejegyzés megtekintése"
       show_hidden: "Letiltott tartalom megtekintése"
       deleted_by_author_simple: "(szerző által törölve)"
       collapse: "összecsukás"
@@ -4890,12 +4894,8 @@ hu:
     invalid_video_url: Ez a videó nem játszható le, mert a webcím érvénytelen vagy nem érhető el.
     keyboard_shortcuts_help:
       search_placeholder: "Gyorsbillentyű keresése leírás vagy billentyűkombináció alapján"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} vagy %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Billentyűkombinációk"
       short_title: "Rövidítések"
       search_ctrl_f_tip: "A teljes fórumon való kereséshez nyomja meg a <kbd>/</kbd> gombot"
@@ -5607,6 +5607,11 @@ hu:
         group_content: "Tartalom és egészség"
         group_other: "Egyéb"
         legacy_warning: "Ez egy korábbi jelentés. Hamarosan megszűnik. Ha segítségre van szüksége a helyettesítő megtalálásához, vegye fel a kapcsolatot az ügyfélszolgálattal."
+        related_items:
+          users:
+            title: "Felhasználók"
+          labels:
+            user: "Felhasználó"
       config_sections:
         account:
           title: "Fiók"
@@ -5912,7 +5917,6 @@ hu:
           header_description: "Konfigurálja a keresési beállításokat, beleértve a naplózást és a tokenizálást kínai és japán nyelvekhez"
         search_everything:
           title: "Keresés"
-          header_description: "Itt megtalálhat mindent az adminisztrációs felületen. Az alábbiakban szűrheti az találatokat, és a rendszer emlékezni fog a beállításaira. Hogy bárhol megnyissa ezt a keresést az adminisztrációs felületen, nyomja meg a %{shortcutHTML} gombot."
         security:
           title: "Biztonság"
           header_description: "Konfigurálja a biztonsági beállításokat, beleértve a kétfaktoros hitelesítést, a moderátorjogokat és a tartalombiztonsági házirendeket"
@@ -6149,6 +6153,7 @@ hu:
         filters:
           country: "Ország"
           browser: "Böngésző"
+          language: "Nyelv"
           ip: "ip cím"
         series:
           anonymous_human: "Névtelen"
@@ -6225,6 +6230,8 @@ hu:
               share: "Megosztás"
             whos_posting:
               staff: "Stáb"
+              modal:
+                apply: "Mentés"
             trust_level_pipeline:
               trust_levels:
                 "0": "Új"
@@ -6237,6 +6244,11 @@ hu:
             table:
               searches: "Keresések"
               status: "Állapot"
+          system:
+            title: "Rendszer"
+            status: "Állapot"
+            discourse_updated: "Discourse frissítve"
+            dashboard_updated: "Az irányítópult frissítve"
         reports_section:
           header_action: "Kezelés"
           no_data: "Nincs megjeleníthető adat"
@@ -6288,6 +6300,14 @@ hu:
           average_for_sample: "A minta átlaga"
           total: "Mindenkori összes"
           no_data: "Nincs megjeleníthető adat."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} felhasználó"
+              other: "%{count} felhasználó"
+            posts_count:
+              one: "%{count} bejegyzés"
+              other: "%{count} bejegyzés"
+            deselect: "%{name} kijelölésének megszüntetése"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Keresési napló</a>'
             disabled: 'A trendkeresési jelentés le van tiltva. Engedélyezze a <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">naplózott keresési lekérdezéseket</a> az adatgyűjtéshez.'

@@ -204,7 +204,7 @@ export default class History extends Component {
 
       const postStream = this.args.model.post?.topic?.postStream;
       if (postStream) {
-        postStream.triggerChangedPost(postId, this.args.model);
+        void postStream.refreshPost(postId).catch(() => {});
       }
     } finally {
       this.loading = false;

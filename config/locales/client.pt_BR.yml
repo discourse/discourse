@@ -523,6 +523,8 @@ pt_BR:
         theme: "Tema"
         fonts: "Fontes"
         homepage: "Página Inicial"
+        welcome_banner: "Banner de boas-vindas"
+        search: "Pesquisar"
       theme:
         selected: "Selecionado(a)"
       colors:
@@ -2221,7 +2223,6 @@ pt_BR:
         watch_topic: "Acompanhar tópico"
         track_topic: "Monitorar tópico"
         do_nothing: "Não fazer nada"
-      topics_unread_when_closed: "Considerar tópicos não lidos ao serem fechados"
       invited:
         title: "Convites"
         pending_tab: "Pendentes"
@@ -2894,6 +2895,11 @@ pt_BR:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Opção"
+      period: "Período"
+      tab: "Tab"
+      delete: "Excluir"
+      home: "Início"
     conditional_loading_section:
       loading: Carregando…
     category_row:
@@ -3076,7 +3082,6 @@ pt_BR:
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
-      title: "Ou aperte %{modifier}Enter"
       save_and_close: "Salvar e fechar"
       discard: "Descartar"
       cancel_edit: "Cancelar edição"
@@ -3428,10 +3433,10 @@ pt_BR:
         search_field: "Campo de pesquisa no cabeçalho do site"
         search_icon: "Ícone de pesquisa próximo ao avatar do perfil"
       type:
-        default: "Tópicos/postagens"
+        default: "Postagens"
         users: "Usuários(as)"
         categories: "Categorias"
-        categories_and_tags: "Categorias/etiquetas"
+        categories_and_tags: "Etiquetas e categorias"
       context:
         user: "Pesquisar postagens de @%{username}"
         category: "Pesquisar a categoria #%{category}"
@@ -3444,7 +3449,6 @@ pt_BR:
         in: "filtros por metadados (por exemplo: in:title, in:personal, in:pinned)"
         status: "filtros por status de tópico"
         full_search: "inicia pesquisa de pa'gina inteira"
-        full_search_key: "%{modifier} + Enter"
         me: "mostrar apenas suas publicações"
       advanced:
         title: Filtros avançados
@@ -4179,7 +4183,6 @@ pt_BR:
       reply_as_new_private_message: "Responder como nova mensagem aos mesmos destinatários"
       continue_discussion: "Continuando a discussão de %{postLink}:"
       follow_quote: "ir para a resposta citada"
-      show_full: "Exibir postagem completa"
       show_hidden: "Ver o conteúdo ignorado."
       deleted_by_author_simple: "(postagem excluída pelo(a) autor(a))"
       collapse: "recolher"
@@ -4963,12 +4966,8 @@ pt_BR:
     invalid_video_url: Este vídeo não pode ser reproduzido porque a URL é inválida ou está indisponível.
     keyboard_shortcuts_help:
       search_placeholder: "Pesquisar atalho por combinação de chaves ou descrição"
-      shortcut_key_delimiter_comma: ","
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ou %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Atalhos do teclado"
       short_title: "Atalhos"
       search_ctrl_f_tip: "Para pesquisar em todo o fórum, pressione <kbd>/</kbd>"
@@ -5682,6 +5681,11 @@ pt_BR:
         group_moderation_and_security: "Moderação & Segurança"
         group_other: "Outras"
         legacy_warning: "Este é um relatório legado. Ele será desativado em breve. Se precisar de ajuda para encontrar o substituto, entre em contato com o suporte."
+        related_items:
+          users:
+            title: "Usuários(as)"
+          labels:
+            user: "Usuário(a)"
       config_sections:
         account:
           title: "Conta"
@@ -5987,7 +5991,7 @@ pt_BR:
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
         search_everything:
           title: "Pesquisar"
-          header_description: "Use isto para encontrar o que você quiser na interface da administração. Você pode filtrar os resultados abaixo e as suas preferências serão lembradas. Para abrir esta pesquisa na interface da administração, pressione %{shortcutHTML}."
+          header_description: "Encontre qualquer coisa na interface de administração aqui. Você pode filtrar os resultados abaixo, e suas preferências serão lembradas."
         security:
           title: "Segurança"
           header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
@@ -6227,6 +6231,7 @@ pt_BR:
         filters:
           country: "País"
           browser: "Navegador"
+          language: "Idioma"
           ip: "Endereço IP"
         series:
           anonymous_human: "Anônimo(a)"
@@ -6303,6 +6308,9 @@ pt_BR:
               share: "Compartilhar"
             whos_posting:
               staff: "Equipe"
+              add_group: "Adicionar grupo"
+              modal:
+                apply: "Salvar"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nova"
@@ -6322,6 +6330,11 @@ pt_BR:
             table:
               searches: "Pesquisas"
               status: "Status"
+          system:
+            title: "Sistema"
+            status: "Status"
+            discourse_updated: "Discourse atualizado"
+            dashboard_updated: "Painel de controle atualizado"
         reports_section:
           header_action: "Gerenciar"
           no_data: "Nenhum dado para exibir"
@@ -6375,6 +6388,14 @@ pt_BR:
           average_for_sample: "Média para amostra"
           total: "Todo o tempo total"
           no_data: "Nenhum dado para exibir."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuário(a)"
+              other: "%{count} usuários"
+            posts_count:
+              one: "%{count} postagem"
+              other: "%{count} postagens"
+            deselect: "Desmarcar %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de pesquisa</a>'
             disabled: 'O relatório de pesquisa de conteúdo em alta está desativado. Ative as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de pesquisa de registro</a> para coletar dados.'

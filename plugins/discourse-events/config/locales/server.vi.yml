@@ -13,13 +13,17 @@ vi:
     currently_away:
       labels:
         username: Tên tài khoản
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Ngày"
         week: "Tuần"
         month: "Tháng"
         year: "Năm"
+    invite_user_notification: "%{username} đã mời bạn tham gia: %{description}"
+    livestream:
+      zoom:
+        frame_title: "Zoom webinar"
   discourse_post_event:
     errors:
       bulk_invite:

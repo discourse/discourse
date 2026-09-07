@@ -9,7 +9,7 @@ nb_NO:
     currently_away:
       labels:
         username: Brukernavn
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Dag"

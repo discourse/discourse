@@ -66,7 +66,7 @@ class AdminUserIndexQuery
       order << "users.username"
     end
 
-    query = klass.includes(:totps).order(order.reject(&:blank?).join(","))
+    query = klass.includes(:security_keys, :totps).order(order.reject(&:blank?).join(","))
 
     query = query.includes(:user_stat) unless params[:stats].present? && params[:stats] == false
 

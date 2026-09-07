@@ -41,6 +41,12 @@ id:
     topic_statuses:
       solved:
         help: "Topik ini memiliki solusi"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Topik"
+            category: "Kategori"
     discourse_automation:
       triggerables:
         first_accepted_solution:

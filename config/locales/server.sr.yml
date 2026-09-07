@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sr:
+  llms_txt:
+    sections:
+      optional: "Opciono"
+    links:
+      search:
+        label: "Pretraži"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nama"
+      guidelines:
+        label: "Smernice"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -269,6 +281,7 @@ sr:
   password_reset:
     title: "Resetujte Šifru"
   admin_site_traffic_explorer:
+    unknown: "Nepoznato"
     traffic_types:
       logged_in: "Prijavljen"
       anonymous: "Anonimno"
@@ -346,6 +359,11 @@ sr:
         new_members: "Novi članovi"
         returning: "Vraćajući"
         staff: "Osoblje"
+    posters_by_member_type_members:
+      labels:
+        user: "Korisnik"
+        count: "Poruka"
+        share: "Podeli"
     trust_level_pipeline:
       title: "Pipeline nivoa poverenja"
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"

@@ -172,13 +172,6 @@ describe DiscourseReactions::CustomReactionsController do
       expect(messages).to be_empty
     end
 
-    it "does not publish MessageBus messages when the post topic is unavailable" do
-      post_1.stubs(:topic).returns(nil)
-      MessageBus.expects(:publish).never
-
-      described_class.new.send(:publish_change_to_clients!, post_1, reaction: "cry")
-    end
-
     it "errors when reaction is invalid" do
       sign_in(user_1)
       expect do

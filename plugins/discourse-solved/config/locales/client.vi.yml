@@ -72,6 +72,11 @@ vi:
           solved: "Đã có giải pháp"
           unsolved: "Chưa có giải pháp"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Chủ đề"
+            category: "Danh mục"
       web_hooks:
         solved_event:
           group_name: "Solved Event"

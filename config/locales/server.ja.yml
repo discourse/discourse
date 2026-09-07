@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 ja:
+  llms_txt:
+    sections:
+      optional: "オプション"
+    links:
+      search:
+        label: "検索"
+      categories:
+        label: "カテゴリ"
+      about:
+        label: "情報"
+      guidelines:
+        label: "ガイドライン"
   dates:
     short_date_no_year: "MMM D 日"
     short_date: "YYYY 年 MMM D 日"
@@ -898,6 +910,7 @@ ja:
       windows: "Microsoft Windows"
       unknown: "不明なオペレーティングシステム"
   admin_site_traffic_explorer:
+    unknown: "不明"
     traffic_types:
       anonymous: "匿名ユーザー"
   change_email:
@@ -1189,6 +1202,11 @@ ja:
         share: "共有"
       types:
         staff: "スタッフ"
+    posters_by_member_type_members:
+      labels:
+        user: "ユーザー"
+        count: "投稿"
+        share: "共有"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1743,7 +1761,6 @@ ja:
     allowed_iframes: "Discourse が投稿で安全に許可できる iframe src URL プレフィックスのリスト。* 「/」以外の任意の数の文字と一致させるために使用できます。"
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
-    llms_txt: "LLM クローラー向けに /llms.txt に配信するテキストファイルをアップロードする。詳細は <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> をご覧ください。"
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) を有効にする"
     content_security_policy_frame_ancestors: "CSP を介してこのサイトを iframe に埋め込むことのできるユーザーを制限する。許可されるホストを <a href='%{base_path}/admin/customize/embedding'>埋め込み</a>で制御します。"
     content_security_policy_script_src: "追加のホワイトリストにあるスクリプトソース。現在のホストと CDN はデフォルトで含まれています。<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>コンテンツセキュリティポリシー (CSP) で XSS 攻撃を緩和する</a> をご覧ください。その他のホストソースは strict-dynamic が有効であるため無視されます。"
@@ -1756,7 +1773,7 @@ ja:
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
     allow_username_in_share_links: "ユーザー名を共有リンクに含めることを許可します。これは、ユニークビジター数に応じてバッジを与えるのに役立ちます。"
     site_contact_username: "自動送信メールの from に使用される有効なスタッフのユーザー名。空欄の場合デフォルトのシステムアカウントが使用されます。"
-    site_contact_group_name: "自動的に送信されるすべての個人メッセージに招待される有効なグループ名。"
+    site_contact_group_name: "自動的に送信されるすべての個人メッセージに招待されるグループ。"
     send_welcome_message: "すべての新規ユーザーにクイックスタートガイド付きのようこそメッセージを送信する。"
     send_tl1_welcome_message: "新しい信頼レベル 1 のユーザーにようこそメッセージを送信します。"
     send_tl2_promotion_message: "新しい信頼レベル 2 ユーザーに昇格に関するメッセージを送信します。"
@@ -2350,7 +2367,6 @@ ja:
       invalid_email: "無効なメールアドレスです。"
       invalid_username: "そのユーザー名のユーザは存在しません。"
       valid_username: "そのユーザー名のユーザーが存在します。"
-      invalid_group: "その名前のグループは存在しません。"
       invalid_topic: "その ID のトピックは存在しません。"
       invalid_integer_min_max: "値は %{min} から %{max} の間である必要があります。"
       invalid_integer_min: "値は %{min} 以上である必要があります。"

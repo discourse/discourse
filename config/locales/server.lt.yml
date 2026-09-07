@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 lt:
+  llms_txt:
+    sections:
+      optional: "Pasirinktinai"
+    links:
+      search:
+        label: "Paieška"
+      categories:
+        label: "Kategorijos"
+      about:
+        label: "Apie"
+      guidelines:
+        label: "Instrukcijos"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -687,6 +699,7 @@ lt:
       windows: "Microsoft Windows"
       unknown: "nežinoma operacinė sistema"
   admin_site_traffic_explorer:
+    unknown: "Nežinoma"
     traffic_types:
       anonymous: "Anonimas"
   change_email:
@@ -926,6 +939,11 @@ lt:
         share: "Dalintis"
       types:
         staff: "Personalas"
+    posters_by_member_type_members:
+      labels:
+        user: "Narys"
+        count: "Pranešimai"
+        share: "Dalintis"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1430,7 +1448,6 @@ lt:
       invalid_email: "Neteisingas el. pašto adresas."
       invalid_username: "Nėra vartotojo su tokiu vartotojo vardu."
       valid_username: "Yra vartotojas su tokiu vartotojo vardu."
-      invalid_group: "Nėra grupės tokiu pavadinimu."
       invalid_integer_min_max: "Vertė turi būti nuo %{min} iki %{max}."
       invalid_integer_min: "Vertė turi būti %{min} arba didesnė."
       invalid_integer_max: "Vertė negali būti didesnė nei %{max}."

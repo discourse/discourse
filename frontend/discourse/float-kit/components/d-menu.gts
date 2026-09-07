@@ -9,6 +9,7 @@ import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import {
   type FloatCallback,
+  type FloatCloseOptions,
   MENU,
   type MenuOptions,
 } from "discourse/float-kit/lib/constants";
@@ -22,7 +23,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 /** The object yielded to each of the menu's blocks and passed to a rendered component. */
 export interface DMenuComponentArgs<Data = unknown> {
   /** Closes the menu. */
-  close: FloatCallback;
+  close: (options?: FloatCloseOptions) => Promise<void>;
 
   /** Opens the menu. */
   show: FloatCallback;
@@ -55,7 +56,12 @@ type DMenuOptionArgs<Data> = Partial<
   data?: Data;
 
   /** A component rendered as the content; it receives the `@data` and `@close` arguments. */
-  component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
+  component?: ComponentLike<{
+    Args: {
+      data?: Data;
+      close?: (options?: FloatCloseOptions) => Promise<void>;
+    };
+  }>;
 
   /** Called with the menu instance when it is created, so callers can control it programmatically. */
   onRegisterApi?: (instance: DMenuInstance) => void;

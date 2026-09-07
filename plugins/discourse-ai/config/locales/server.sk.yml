@@ -61,7 +61,6 @@ sk:
     ai_helper_automatic_chat_thread_title: "Automatické nastavenie názvov chatových vlákien na základe obsahu vlákna."
     post_ai_helper_allowed_groups: "Skupiny používateľov majú povolený prístup k funkciám AI Helper v príspevkoch"
     ai_embeddings_selected_model: "Použitie vybraného modelu na generovanie vložených súborov."
-    ai_embeddings_generate_for_pms: "Generovanie vložených osobných správ."
     ai_embeddings_semantic_related_topics_enabled: "Použite sémantické vyhľadávanie pre súvisiace témy."
     ai_embeddings_semantic_related_topics: "Maximálny počet tém, ktoré sa majú zobraziť v sekcii súvisiacich tém."
     ai_embeddings_backfill_batch_size: "Počet vnorení na zasypanie každých 15 minút."
@@ -247,7 +246,6 @@ sk:
       read_post:
         unknown_post: "príspevok"
       agents:
-        default_llm_required: "Predvolený model LLM sa vyžaduje pred povolením funkcie Chat"
         cannot_have_duplicate_tools: "Nemôže mať duplicitné nástroje"
         github_helper:
           name: "Pomocník GitHub"
@@ -426,6 +424,7 @@ sk:
         random_picker: "Výber náhodného čísla alebo náhodného prvku zoznamu"
         categories: "Zoznam všetkých verejne viditeľných kategórií na fóre"
         delete_topic: "Odstránenie témy"
+        create_category: "Vytvoriť novú kategóriu"
         search: "Vyhľadávanie vo všetkých verejných témach na fóre"
         tags: "Zoznam všetkých značiek na fóre"
         time: "Zisťovanie času v rôznych časových pásmach"
@@ -501,10 +500,6 @@ sk:
           few: "Nájdených %{count} výsledkov pre '%{query}'"
           many: "Nájdených %{count} výsledkov pre '%{query}'"
           other: "Nájdené %{count} výsledky pre '%{query}'"
-      discoveries:
-        continue_conversation:
-          title: "Konverzácia o objavovaní: Hľadať %{query}"
-          raw: "Pri hľadaní na stránke %{query}ste mi ukázali tieto informácie:\n\n%{context}\n\nPokračujme v konverzácii."
       close_topic:
         errors:
           not_found: "Téma sa nenašla."
@@ -514,10 +509,13 @@ sk:
       delete_topic:
         errors:
           not_found: "Téma sa nenašla."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Téma sa nenašla."
       edit_category:
+        errors:
+          not_found: "Kategória sa nenašla."
+      change_topic_category:
         errors:
           not_found: "Téma sa nenašla."
           category_not_found: "Kategória sa nenašla."

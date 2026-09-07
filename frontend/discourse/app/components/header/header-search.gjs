@@ -3,6 +3,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
@@ -14,6 +15,7 @@ export default class HeaderSearch extends Component {
 
   advancedSearchButtonHref = "/search?expanded=true";
 
+  // The icon is a shortcut to advanced search; a consumer that has made the
   handleKeyboardShortcut = modifier(() => {
     const cb = (appEvent) => {
       if (appEvent.type === "search") {
@@ -24,6 +26,13 @@ export default class HeaderSearch extends Component {
     this.appEvents.on("header:keyboard-trigger", cb);
     return () => this.appEvents.off("header:keyboard-trigger", cb);
   });
+
+  // input mean more than searching can drop it.
+  get showAdvancedSearchIcon() {
+    return applyValueTransformer("search-advanced-icon-enabled", true, {
+      location: "header",
+    });
+  }
 
   get shouldDisplay() {
     return (
@@ -43,13 +52,15 @@ export default class HeaderSearch extends Component {
           <div class="search-banner">
             <div class="search-banner-inner wrap">
               <div class="search-menu">
-                <DButton
-                  @icon="magnifying-glass"
-                  @translatedLabel={{@buttonText}}
-                  @title="search.open_advanced"
-                  class={{dConcatClass "btn search-icon" @buttonClass}}
-                  @href={{this.advancedSearchButtonHref}}
-                />
+                {{#if this.showAdvancedSearchIcon}}
+                  <DButton
+                    @icon="magnifying-glass"
+                    @translatedLabel={{@buttonText}}
+                    @title="search.open_advanced"
+                    class={{dConcatClass "btn search-icon" @buttonClass}}
+                    @href={{this.advancedSearchButtonHref}}
+                  />
+                {{/if}}
 
                 <SearchMenu
                   @location="header"

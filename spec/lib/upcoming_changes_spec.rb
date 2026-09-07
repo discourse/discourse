@@ -800,6 +800,8 @@ RSpec.describe UpcomingChanges do
     let(:hidden_setting_names) { %i[allow_uncategorized_topics suppress_uncategorized_badge] }
 
     before do
+      SiteSetting.remove_and_replace_uncategorized = false
+
       mock_upcoming_change_metadata(
         {
           enable_upload_debug_mode: {

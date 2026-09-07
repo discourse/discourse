@@ -17,6 +17,7 @@ class Stylesheet::Manager
   private_constant :CACHE_PATH
 
   MANIFEST_DIR = "#{Rails.root.join("tmp/cache/assets/#{Rails.env}")}"
+  VARIABLE_RENAMES_PATH = Rails.root.join("app/assets/stylesheets/variable-renames.json")
   THEME_REGEX = /_theme(_rtl)?\z/
   COLOR_SCHEME_STYLESHEET = "color_definitions"
 
@@ -189,6 +190,7 @@ class Stylesheet::Manager
       "#{Rails.root.join("app/assets/stylesheets/**/*.*css")}",
       "#{Rails.root.join("app/assets/images/**/*.*")}",
       "#{Rails.root.join("lib/stylesheet/*.rb")}",
+      VARIABLE_RENAMES_PATH.to_s,
     ]
 
     Discourse.plugins.each do |plugin|

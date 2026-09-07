@@ -372,6 +372,8 @@ sr:
       title: "Prilagodite svoj sajt"
       back: "Nazad"
       next: "Dalje"
+      sections:
+        search: "Pretraži"
       homepage:
         topics: "Teme"
         categories: "Kategorije"
@@ -1800,6 +1802,8 @@ sr:
       optional_at_signup: "Opciono"
     shortcut_modifier_key:
       alt: "Alt"
+      delete: "Obriši"
+      home: "Home"
     category_row:
       subcategories: "+ Podkategorije"
     select_kit:
@@ -1943,6 +1947,7 @@ sr:
       tags: "Tagovi"
       in: "u"
       type:
+        default: "Poruka"
         users: "Korisnici"
         categories: "Kategorije"
       context:
@@ -2250,7 +2255,6 @@ sr:
       reply_as_new_topic: "Odgovori u linkovanoj Temi"
       continue_discussion: "Nastavak diskusije iz %{postLink}:"
       follow_quote: "idi na citiranu poruku"
-      show_full: "Prikaži Celu Poruku"
       collapse: "spusti"
       sr_collapse_replies: "Spusti ugrađene odgovore"
       expand_collapse: "proširi/skupi"
@@ -2822,6 +2826,11 @@ sr:
         group_other: "Ostalo"
         chart:
           total: "Ukupno: %{count}"
+        related_items:
+          users:
+            title: "Korisnici"
+          labels:
+            user: "Korisnik"
       config_sections:
         community:
           title: "Zajednica"
@@ -3016,6 +3025,10 @@ sr:
               returning: "Vraćajući"
               staff: "Osoblje"
               empty: "Nema objava u izabranom periodu."
+              modal:
+                apply: "Sačuvaj"
+                move_up: "Pomeri %{title} gore"
+                move_down: "Pomeri %{title} dole"
             trust_level_pipeline:
               title: "Pipeline nivoa poverenja"
               trust_levels:
@@ -3047,6 +3060,9 @@ sr:
             title: "Pretraži"
             table:
               status: "Status"
+          system:
+            title: "Sistem"
+            status: "Status"
         reports_section:
           header_action: "Uredi"
           modal:
@@ -3138,6 +3154,15 @@ sr:
           monthly: Top mesečne
           weekly: Top nedeljne
           groups: "Sve grupe"
+          posters_by_member_type_members:
+            users_count:
+              one: "{count} korisnik"
+              few: "%{count} korisnika"
+              other: "%{count} korisnika"
+            posts_count:
+              one: "%{count} poruka"
+              few: "%{count} poruka"
+              other: "%{count} poruka"
           sort_button: "Sortiraj po %{column}"
           filters:
             group:

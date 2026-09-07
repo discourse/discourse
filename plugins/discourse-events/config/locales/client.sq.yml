@@ -12,7 +12,7 @@ sq:
           fields:
             topic_id:
               label: ID e temës
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "Çaktivizoni"
       enable_holiday: "Aktivizo"
       region:
@@ -23,6 +23,9 @@ sq:
         week: "Këtë javë"
         day: "Day"
         year: "Këtë vit"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID e temës"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -30,6 +33,9 @@ sq:
         show_more: "Shfaq më shumë"
         show_less: "Shfaq më pak"
       show_all: "Shfaqni të gjitha"
+      other_hosts:
+        one: "dhe %{count} të tjera"
+        other: "dhe %{count} të tjerë"
       bulk_invite: "Ftesë me shumicë"
       bulk_invite_modal:
         confirm: "konfirmoni"

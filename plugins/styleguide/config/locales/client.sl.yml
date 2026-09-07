@@ -22,6 +22,19 @@ sl:
           title: "Prispevek"
         more_topics:
           title: "Več tem"
+        roving_focus:
+          toolbar:
+            copy: "Kopiraj"
+          adjacent:
+            label: "Filtri"
+            field: "Išči"
+            open: "Odpri"
+            recent: "Nedavno"
+          combobox:
+            daily: "Dnevno"
+            weekly: "Tedensko"
+            monthly: "Mesečno"
+            never: "Nikoli"
         tooltips:
           description: "Opis"
           header: "Glava"

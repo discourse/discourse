@@ -517,7 +517,7 @@ module DiscourseAi
 
           ext = File.extname(encoded[:filename].to_s).delete_prefix(".")
           allowed_types.include?(
-            DiscourseAi::Completions::UploadEncoder.attachment_type_for(ext, encoded[:mime_type]),
+            DiscourseAi::Completions::DocumentEncoder.attachment_type_for(ext, encoded[:mime_type]),
           )
         end
       end

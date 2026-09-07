@@ -6,17 +6,98 @@
 
 zh_TW:
   accepted_answer: "接受的答案"
+  category_types:
+    support:
+      name: "支援"
+      title: "支援"
+      description: "成員可在此提問，並將回覆標示為解答。"
   discourse_solved:
     category_type:
       allow_accepted_answers:
         label: "允許主題擁有者與管理員標示回覆為解決方式"
+      solved_topics_auto_close_hours:
+        label: "自動關閉已解決主題（小時）"
+        description: "標示為已解決後，經過此小時數自動關閉主題。設為 0 可停用。"
+      notify_on_staff_accept_solved:
+        label: "工作人員標示解答時通知主題建立者"
+      empty_box_on_unsolved:
+        label: "在支援的佈景主題中，於主題列表顯示未解決的主題狀態"
+      solved_topics_auto_close_duration:
+        label: "自動關閉已解決主題"
+        description: "自最後一次回覆後經過此時長自動關閉已解決主題。設為 0 可停用。"
+      enable_shared_issues:
+        label: "啟用共同問題"
+        description: "在此分類的未解決主題新增按鈕，讓成員表示自己也遇到相同問題，並選擇接收解答通知。"
+      shared_issue_label:
+        label: "共同問題標籤"
+        description: "顯示於共同問題按鈕上的標籤。"
   site_settings:
     solved_enabled: "啟用已解決的插件，允許用戶為主題選擇解決方案"
+    solved_allow_multiple_solutions: "允許每個主題接受多個解答"
+    allow_solved_on_all_topics: "允許使用者在所有主題選取解答（取消勾選時，可依分類或標籤啟用解答）"
+    allow_solved_in_groups: "允許這些群組在群組訊息中標示解答。"
+    accept_all_solutions_trust_level: "在任何主題接受解答所需的最低信任等級（即使不是原始發文者）"
+    accept_all_solutions_allowed_groups: "允許在任何主題接受解答的群組（即使不是原始發文者）。管理員與板主一律允許。"
+    empty_box_on_unsolved: "在未解決主題旁顯示空白方塊"
+    solved_quote_length: "在第一篇貼文下方顯示解答時，要引用的字元數"
+    solved_topics_auto_close_hours: "主題標示為已解決後，在最後一次回覆後（n）小時自動關閉。設為 0 可停用自動關閉。"
+    show_filter_by_solved_status: "顯示下拉選單，依解決狀態篩選主題列表。"
+    notify_on_staff_accept_solved: "工作人員將貼文標示為解答時通知主題建立者。"
+    disable_solved_education_message: "停用已解決主題的教育訊息。"
+    accept_solutions_topic_author: "允許主題作者接受解答。"
+    solved_add_schema_markup: "將 QAPage schema 標記加入 HTML。"
+    enable_solved_tags: "可讓使用者選取解答的標籤。"
+    prioritize_solved_topics_in_search: "在搜尋結果中優先顯示已解決主題。"
+    enable_support_category_type_setup: "在分類建立設定中啟用「支援」分類類型選項。"
+    enable_solved_shared_issues: "在支援分類的未解決主題新增「我也是」按鈕，讓成員表示自己也遇到相同問題，並選擇接收主題解答通知。"
+    enable_solved_badges: "啟用 Solved 徽章，當成員為其他人的問題提供解答時授予。"
+    show_who_marked_solved: "顯示誰將主題標示為已解決。會在主題第一篇貼文與解答貼文的工具提示中顯示。"
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
     accepted_solutions:
       title: "接受的解決方案"
+      description: "在日期範圍內每天有多少主題接受了解答，可選擇依分類篩選，並提供 30 天比較總數。"
       xaxis: "天"
       yaxis: "總計"
+  solved:
+    no_solutions:
+      self: "您尚未有被接受的解答。"
+      others: "沒有被接受的解答。"
+    filter:
+      description:
+        solved: "篩選已解決的主題"
+        unsolved: "篩選尚未解決的主題"
   badges:
     solved_1:
       name: "已解決!"
+      description: "有回覆被標示為解答"
+      long_description: "此徽章會在您的回覆被標示為主題解答時授予。:white_check_mark: 做得好。:+1:"
+    solved_2:
+      name: "輔導顧問"
+      description: "有 10 則回覆被標示為解答"
+      long_description: "此徽章會在您的 10 則回覆被標示為主題解答時授予。:white_check_mark: 您是其他社群成員真正的助力。"
+    solved_3:
+      name: "萬事通"
+      description: "有 50 則回覆被標示為解答"
+      long_description: "此徽章會在您的 50 則回覆被標示為主題解答時授予。:white_check_mark: 您真的很懂行。:clap:"
+    solved_4:
+      name: "解答權威"
+      description: "有 150 則回覆被標示為解答"
+      long_description: "此徽章會在您的 150 則回覆被標示為主題解答時授予。:white_check_mark: 表現優異。:slightly_smiling_face: 您正式成為解答權威。:brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: 第一個被接受的解答
+        doc: 當使用者首次有解答被接受時觸發。
+  education:
+    topic_is_solved: |
+      ### 此主題已解決
+
+      僅在下列情況於此回覆：
+
+      - 您有補充資訊
+
+      - 此解答對您無效
+
+      若您有無關的問題，請改為[建立新主題](%{base_url}/new-topic)。

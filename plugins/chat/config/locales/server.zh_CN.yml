@@ -244,6 +244,15 @@ zh_CN:
         invalid_params: "聊天消息发送失败： %{errors}"
         failed: "聊天消息发送失败： %{steps}"
         timeout_must_be_positive: "超时时长必须大于 0 分钟。"
+        invalid_timeout_action: "无效的超时操作： %{action}。"
+        buttons_required: "至少需要一个聊天批准按钮。"
+        too_many_buttons: "聊天批准最多支持 %{max} 按钮。"
+        button_label_required: "聊天批准按钮 %{position} 需要标签。"
+        button_label_too_long: "聊天批准按钮 %{position} 标签必须小于等于 %{max} 个字符。"
+        button_value_required: "聊天批准按钮 %{position} 需要一个值。"
+        button_value_too_long: "聊天批准按钮 %{position} 的值必须小于等于 %{max} 个字符。"
+        button_style_invalid: "聊天批准按钮 %{position} 样式必须是以下之一： %{styles}。"
+        button_icon_too_long: "聊天批准按钮 %{position} 图标必须小于等于 %{max} 个字符。"
   reviewable_score_types:
     needs_review:
       title: "需要审核"

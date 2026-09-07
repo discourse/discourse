@@ -40,7 +40,9 @@ export default class GroupList extends Component {
     return choiceIds
       .map((id) => {
         const group = groupsById[id];
-        return group ? { name: group.name, id } : null;
+        const name =
+          group.name === "everyone" ? "everyone (legacy)" : group.name;
+        return group ? { name, id } : null;
       })
       .filter(Boolean);
   }

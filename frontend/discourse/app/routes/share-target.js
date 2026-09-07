@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import ShareTargetModal from "discourse/components/modal/share-target";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class extends DiscourseRoute {
@@ -31,7 +31,7 @@ export default class extends DiscourseRoute {
 
     // The share-target route has no UI of its own — send the user to the
     // homepage; the modal (if any) opens once that page has rendered.
-    this.router.replaceWith(`discovery.${defaultHomepage()}`);
+    this.router.replaceWith(homepageNavigationDestination());
   }
 
   #hasContent({ title, text, url, files }) {

@@ -159,13 +159,25 @@ if generic_import_dependencies_available
     end
 
     describe "#update_delta_topics" do
-      it "treats closed as close-only while retaining other delta updates" do
+      it "replaces non-NULL views, including zero, while treating closed as close-only" do
         source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
-        source_db.execute("CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER)")
-        source_db.execute("INSERT INTO topics (id, closed) VALUES (10, 0), (20, 1)")
+        source_db.execute(
+          "CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER, views INTEGER)",
+        )
+        source_db.execute(
+          "INSERT INTO topics (id, closed, views) VALUES " \
+            "(10, 0, 1223), (20, 1, 0), (30, NULL, NULL)",
+        )
         importer = described_class.allocate
         importer.instance_variable_set(:@source_db, source_db)
-        importer.instance_variable_set(:@delta_update_mappings, topics: { 10 => 100, 20 => 200 })
+        importer.instance_variable_set(
+          :@delta_update_mappings,
+          topics: {
+            10 => 100,
+            20 => 200,
+            30 => 300,
+          },
+        )
 
         allow(importer).to receive(:update_records).and_return(updated_keys: [])
 
@@ -174,7 +186,33 @@ if generic_import_dependencies_available
         expect(importer).to have_received(:update_records) do |updates, name, columns|
           expect(name).to eq("topic")
           expect(columns).to include(:closed)
-          expect(updates).to contain_exactly({ id: 100 }, { id: 200, closed: true })
+          expect(columns).to include(:views)
+          expect(updates).to contain_exactly(
+            { id: 100, views: 1_223 },
+            { id: 200, closed: true, views: 0 },
+            { id: 300 },
+          )
+        end
+      ensure
+        source_db&.close
+      end
+
+      it "skips views when the intermediate database predates the column" do
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER)")
+        source_db.execute("INSERT INTO topics (id, closed) VALUES (10, 1)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(:@delta_update_mappings, topics: { 10 => 100 })
+
+        allow(importer).to receive(:update_records).and_return(updated_keys: [])
+
+        importer.update_delta_topics
+
+        expect(importer).to have_received(:update_records) do |updates, name, columns|
+          expect(name).to eq("topic")
+          expect(columns).to include(:views)
+          expect(updates).to contain_exactly({ id: 100, closed: true })
         end
       ensure
         source_db&.close

@@ -155,7 +155,7 @@
         "suggested_edit_accepted": {
           "type": "integer"
         },
-        "resenha_invitation": {
+        "voice_invitation": {
           "type": "integer"
         }
       },
@@ -339,6 +339,28 @@
     "homepage_choices": {
       "type": "array",
       "items": {}
+    },
+    "homepage_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "server_side": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "server_side"
+        ]
+      }
     },
     "periods": {
       "type": "array",
@@ -1038,6 +1060,7 @@
     "filters",
     "anonymous_list_filters",
     "homepage_choices",
+    "homepage_options",
     "periods",
     "top_menu_items",
     "anonymous_top_menu_items",

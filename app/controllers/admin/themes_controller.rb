@@ -128,21 +128,6 @@ class Admin::ThemesController < Admin::AdminController
     render_json_error err.message
   end
 
-  def create_remote_theme_placeholder(remote, branch:, private_key:)
-    Theme.transaction do
-      remote_theme =
-        RemoteTheme.create!(remote_url: remote, branch: branch, private_key: private_key)
-
-      Theme.create!(
-        user_id: theme_user&.id || -1,
-        name: remote.gsub(/\.git\z/, "").split("/").last,
-        remote_theme: remote_theme,
-      )
-    end
-  end
-
-  private :create_remote_theme_placeholder
-
   def index
     @themes = Theme.strict_loading.include_relations.order(:name)
 
@@ -436,6 +421,19 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   private
+
+  def create_remote_theme_placeholder(remote, branch:, private_key:)
+    Theme.transaction do
+      remote_theme =
+        RemoteTheme.create!(remote_url: remote, branch: branch, private_key: private_key)
+
+      Theme.create!(
+        user_id: theme_user&.id || -1,
+        name: remote.gsub(/\.git\z/, "").split("/").last,
+        remote_theme: remote_theme,
+      )
+    end
+  end
 
   def ban_in_allowlist_mode!
     raise Discourse::InvalidAccess if !Theme.allowed_remote_theme_ids.nil?

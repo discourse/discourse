@@ -127,7 +127,7 @@ pl_PL:
     ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
-    ai_embeddings_generate_for_pms: "Generuj osadzenia dla prywatnych wiadomości."
+    ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych. Jest to również wymagane do uzyskania wyników semantycznych wiadomości osobistych w Zapytaj AI."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
     ai_embeddings_semantic_related_topics: "Maksymalna liczba tematów do wyświetlenia w sekcji powiązanych tematów."
     ai_embeddings_backfill_batch_size: "Liczba osadzań do uzupełnienia co 15 minut."
@@ -160,6 +160,13 @@ pl_PL:
     ai_bot_enable_docked_composer: "Włącz dokowany kompozytor w stylu czatu dla konwersacji botów AI zamiast standardowego kompozytora pływającego."
     ai_discover_enabled: "Włącz funkcję wyszukiwania odkrywczego"
     ai_discover_agent: "Agent do wykorzystania w funkcji wyszukiwania odkrywczego"
+    ai_ask_ai_enabled: "Włącz funkcję Zapytaj AI w wyszukiwaniu"
+    ai_ask_ai_summary_detail: "Wybierz, ile szczegółów chcesz uwzględnić w podsumowaniach Zapytaj AI."
+    ai_ask_ai_related_count: "Ustaw maksymalną liczbę powiązanych dyskusji, które Zapytaj AI wybierze i wyświetli przy każdej odpowiedzi."
+    ai_ask_ai_agent: "Agent wybierający źródła i piszący odpowiedzi Zapytaj AI."
+    ai_ask_ai_query_rewriter_agent: "Agent używany do przygotowywania oddzielnych zapytań dotyczących słów kluczowych i semantyki dla Zapytaj AI. Jeśli ten agent lub jego model są niedostępne, Zapytaj AI wyszukuje według oryginalnego zapytania użytkownika."
+    ai_ask_ai_follow_up_agent: "Agent używany, gdy użytkownik chce śledzić wynik Zapytaj AI. Wybrany agent musi być włączony, zezwalać na wiadomości prywatne i być dostępny dla użytkownika."
+    ai_ask_ai_allowed_groups: "Grupy mogą korzystać z Zapytaj AI i funkcji przekazywania kolejnych wiadomości. Uprawnienia agenta Zapytaj AI, agenta przekazującego kolejne wiadomości oraz standardowe tematy, kategorie i widoczność wiadomości osobistych nadal obowiązują. Semantyczne wyszukiwanie wiadomości osobistych wymaga wartości {{setting:ai_embeddings_generate_for_pms}}. Treści widoczne dla uprawnionego użytkownika, w tym tematy zastrzeżone i wiadomości osobiste, mogą być wysyłane do skonfigurowanego dostawcy LLM."
     ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX dla Google Custom Search API"
     ai_discord_search_enabled: "Włącza funkcję wyszukiwania w serwisie Discord"
@@ -395,6 +402,15 @@ pl_PL:
         agent_vision_disabled: "Agent podpisów do obrazów AI musi mieć włączoną funkcję przesyłania obrazów."
         llm_missing: "Agent podpisów obrazów AI musi używać LLM."
         llm_vision_disabled: "Agent podpisujący obrazy za pomocą sztucznej inteligencji musi używać LLM z obsługą obrazu."
+    ask_ai:
+      configuration:
+        agent_missing: "Wybierz istniejącego agenta, aby wykonać dalsze czynności w ramach usługi Zapytaj AI."
+        agent_disabled: "Agent Zapytaj AI musi być włączony."
+        personal_messages_disabled: "Agent Zapytaj AI musi zezwalać na wysyłanie wiadomości osobistych."
+        allowed_groups_missing: "Agent Zapytaj AI musi zezwolić na co najmniej jedną grupę."
+    discover:
+      configuration:
+        cannot_enable: "Funkcja odkrywania jest przestarzała i nie można jej włączyć po jej wyłączeniu. Zamiast niej włącz funkcję Zapytaj AI."
     post_image_captions:
       errors:
         description_blank: "Podpis nie może być pusty."
@@ -462,7 +478,7 @@ pl_PL:
         failed: "Nie udało się wykonać tej czynności: %{error}"
         unexpected_error: "wystąpił nieoczekiwany błąd"
       agents:
-        default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
+        forced_default_llm_required: "Wybierz domyślny model języka, zanim zaczniesz wymagać od agenta, aby zawsze go używał."
         bot_user_unsupported: "Ten agent jest używany wewnętrznie przez funkcję i nie może mieć użytkownika bota"
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
         cannot_edit_system_agent: "Można zmienić tylko nazwy agentów systemowych, nie można edytować narzędzi ani komunikatów systemowych, zamiast tego należy je wyłączyć i utworzyć kopię"
@@ -583,6 +599,12 @@ pl_PL:
         discover:
           name: "Odkrywaj"
           description: "Domyślny agent używany w funkcji odkrywania (bezpłatne wyszukiwanie)"
+        ask_ai_synthesis:
+          name: "Synteza Zapytaj AI"
+          description: "Wybiera źródła i przygotowuje odpowiedź wyświetlaną przez Zapytaj AI"
+        ask_ai_query_rewriter:
+          name: "Zapytaj przepisującego Zapytaj AI"
+          description: "Przygotowuje zapytania dotyczące słów kluczowych i semantyki dla Zapytaj AI"
         chat_thread_titler:
           name: "Tytułowanie wątku czatu"
           description: "Domyślny agent obsługujący automatyczne generowanie tytułów wątków czatu"
@@ -699,8 +721,12 @@ pl_PL:
         lock_post: "Zablokuj wpis"
         delete_topic: "Usuń temat"
         edit_post: "Edytuj wpis"
-        edit_tags: "Edytuj tagi"
+        change_topic_tags: "Edytuj tagi tematu"
+        create_tag: "Utwórz tag"
+        edit_tag: "Edytuj tag"
+        create_category: "Utwórz kategorię"
         edit_category: "Edytuj kategorię"
+        change_topic_category: "Zmień kategorię tematu"
         set_topic_timer: "Ustaw minutnik tematu"
         set_slow_mode: "Ustaw tryb powolny"
         move_posts: "Przenieś wpisy"
@@ -753,8 +779,12 @@ pl_PL:
         lock_post: "Zablokuj lub odblokuj wpis"
         delete_topic: "Usuń temat"
         edit_post: "Edytuj zawartość wpisu"
-        edit_tags: "Edytuj tagi w temacie"
-        edit_category: "Przenieś temat do innej kategorii"
+        change_topic_tags: "Edytuj tagi w temacie"
+        create_tag: "Utwórz nowy tag"
+        edit_tag: "Zmień nazwę tagu lub zmień jego opis"
+        create_category: "Utwórz nową kategorię"
+        edit_category: "Edytuj nazwę, opis lub kolory istniejącej kategorii"
+        change_topic_category: "Przenieś temat do innej kategorii"
         set_topic_timer: "Ustaw minutnik dla tematu, aby go zamknąć, otworzyć, usunąć lub przesunąć"
         set_slow_mode: "Włączanie lub wyłączanie trybu powolnego w temacie"
         move_posts: "Przenieś wpisy do nowego lub istniejącego tematu"
@@ -808,8 +838,12 @@ pl_PL:
         lock_post: "Blokowanie wpisu %{post_id} (zablokowano: %{locked})"
         delete_topic: "Usuwanie tematu %{topic_id} (usunięto: %{deleted})"
         edit_post: "Edycja wpisu %{post_id}"
-        edit_tags: "Edycja tagów w temacie %{topic_id}: %{tags}"
-        edit_category: "Przeniesienie tematu %{topic_id} do kategorii %{category_id}"
+        change_topic_tags: "Edycja tagów w temacie %{topic_id}: %{tags}"
+        create_tag: "Tworzenie tagu „%{name}”"
+        edit_tag: "Edycja tagu '%{name}' (%{fields})"
+        create_category: "Tworzenie kategorii '%{name}'"
+        edit_category: "Edycja kategorii %{category_id} (%{fields})"
+        change_topic_category: "Przeniesienie tematu %{topic_id} do kategorii %{category_id}"
         set_topic_timer: "Ustawienie minutnika %{timer_type} w temacie %{topic_id} (%{duration_hours}h)"
         set_slow_mode: "Ustawianie trybu powolnego w temacie %{topic_id} (%{slow_mode_seconds}s)"
         move_posts: "Przenoszenie wpisów %{post_ids} z tematu %{topic_id}"
@@ -878,9 +912,20 @@ pl_PL:
         read_site_setting: "Ustawienia witryny do odczytania %{setting_name}"
         change_site_setting: "Zmiana ustawień witryny %{setting_name} na '%{value}'"
       discoveries:
+        errors:
+          invalid_query: "Wprowadź zapytanie wyszukiwania składające się z 1 do %{max} znaków."
+          invalid_request_id: "Identyfikator żądania ujawnienia jest nieprawidłowy."
+          request_conflict: "Ten identyfikator żądania odkrycia jest już używany w innym zapytaniu."
+          processing_failed: "Funkcja Zapytaj AI nie mogła dokończyć tego wyszukiwania."
+          temporarily_unavailable: "Funkcja Zapytaj AI jest teraz zajęta. Spróbuj ponownie za chwilę."
+          credits_unavailable: "Funkcja Ask AI będzie niedostępna do momentu zresetowania kredytów AI."
+          follow_up_failed: "Nie udało się utworzyć dalszej konwersacji."
+          invalid_follow_up: "Wprowadź pytanie dodatkowe, zawierające nie więcej niż %{max} znaków."
+          result_expired: "To odkrycie nie jest już dostępne. Wyszukaj ponownie, aby zadać pytanie uzupełniające."
         continue_conversation:
-          title: "Rozmowa odkrywcza: Wyszukaj %{query}"
-          raw: "Podczas moich poszukiwań %{query} pokazałeś mi następujące informacje:\n\n%{context}\n\nKontynuujmy rozmowę."
+          title: "Rozmowa Zapytaj AI: wyszukaj %{query}"
+          sources: "Wybrane dyskusje:\n%{sources}"
+          source: "- [%{title}](%{url})"
       flag_post:
         errors:
           no_context: "Brak kontekstu wpisu dostępnego do oflagowania."
@@ -939,14 +984,45 @@ pl_PL:
           no_reason: "Wymagane jest podanie powodu edycji."
           revision_failed: "Nie udało się poprawić wpisu."
         success: "Wpis edytowany pomyślnie."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Temat nie został znaleziony."
           not_allowed: "Nie masz uprawnień do edytowania tagów w tym temacie."
           no_reason: "Aby edytować tagi, trzeba podać powód."
           tagging_disabled: "Tagowanie nie jest włączone na tej stronie."
         success: "Tagi zaktualizowano pomyślnie."
+      create_tag:
+        errors:
+          tagging_disabled: "Tagowanie nie jest włączone na tej stronie."
+          no_name: "Aby utworzyć tag, wymagana jest nazwa."
+          already_exists: "Tag o nazwie „%{name}” już istnieje."
+          not_allowed: "Nie masz uprawnień do tworzenia tagów."
+          no_reason: "Aby utworzyć tag, trzeba podać powód."
+        success: "Tag „%{name}” został pomyślnie utworzony."
+      edit_tag:
+        errors:
+          tagging_disabled: "Tagowanie nie jest włączone na tej stronie."
+          not_found: "Tag nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do edycji tego tagu."
+          nothing_to_edit: "Należy podać nową nazwę lub opis."
+          invalid_new_name: "„%{name}” nie jest prawidłową nazwą tagu."
+          no_reason: "Aby edytować tag, trzeba podać powód."
+        success: "Tag '%{name}' został pomyślnie zaktualizowany."
+      create_category:
+        errors:
+          no_name: "Aby utworzyć kategorię, wymagana jest nazwa."
+          not_allowed: "Nie masz uprawnień do tworzenia kategorii."
+          parent_not_found: "Nie znaleziono kategorii nadrzędnej."
+          no_reason: "Aby utworzyć kategorię, trzeba podać powód."
+        success: "Kategoria „%{name}” została pomyślnie utworzona."
       edit_category:
+        errors:
+          not_found: "Nie odnaleziono kategorii."
+          not_allowed: "Nie masz uprawnień do edycji tej kategorii."
+          nothing_to_edit: "Należy podać co najmniej jedną z następujących wartości: nazwa, opis, kolor lub kolor tekstu."
+          no_reason: "Aby edytować kategorię, trzeba podać powód."
+        success: "Kategoria „%{name}” została pomyślnie zaktualizowana."
+      change_topic_category:
         errors:
           not_found: "Temat nie został znaleziony."
           not_allowed: "Nie masz uprawnień do przeniesienia tego tematu."
@@ -1160,7 +1236,7 @@ pl_PL:
       no_user_specified: Wymagana jest nazwa użytkownika lub parametr user_unique_id, proszę go podać.
       user_not_found: Podany użytkownik nie istnieje. Sprawdź parametr nazwy użytkownika.
       agent_disabled: "Określony agent jest wyłączony. Sprawdź parametry agent_name lub agent_id (starsze: persona_name lub persona_id)."
-      no_default_llm: Agent musi mieć zdefiniowany parametr default_llm.
+      no_default_llm: Brak domyślnego modelu językowego. Skonfiguruj model dla agenta lub witryny.
       user_not_allowed: Użytkownik nie ma prawa brać udziału w dyskusji na ten temat.
       invalid_stream_resume_token: Token resume_token jest nieprawidłowy lub wygasł.
       no_tool_results_specified: Parametr tool_results jest wymagany przy wznawianiu strumienia.

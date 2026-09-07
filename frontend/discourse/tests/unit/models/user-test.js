@@ -237,7 +237,7 @@ module("Unit | Model | user", function (hooks) {
       allowed_users: [user],
       allowed_groups: [group1, group2],
     };
-    user.groups = [group2];
+    user.visibleGroups = [group2];
 
     assert.strictEqual(
       user.pmPath(topic),
