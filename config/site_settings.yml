@@ -4888,7 +4888,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "other,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/409316"
       allow_enabled_for:
