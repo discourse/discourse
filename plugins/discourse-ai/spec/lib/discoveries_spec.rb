@@ -218,5 +218,25 @@ describe DiscourseAi::Discoveries do
         "url" => post.full_url,
       )
     end
+
+    it "returns a personal-message result only to a participant" do
+      personal_message = Fabricate(:private_message_post, recipient: user)
+      request_id = SecureRandom.uuid
+      described_class.store_result(
+        user_id: user.id,
+        request_id:,
+        query: "private plans",
+        answer: "A private answer.",
+        sources: [{ "post_id" => personal_message.id, "topic_id" => personal_message.topic_id }],
+        agent_id: ai_agent.id,
+      )
+
+      expect(described_class.cached_result_for(user:, request_id:)).to include(
+        "answer" => "A private answer.",
+      )
+
+      personal_message.topic.topic_allowed_users.find_by(user: user).destroy!
+      expect(described_class.cached_result_for(user:, request_id:)).to be_nil
+    end
   end
 end

@@ -5789,6 +5789,7 @@ vi:
           pages: "Trang"
           visitors: "Khách ghé thăm"
         filters:
+          language: "Ngôn ngữ"
           ip: "Địa chỉ IP"
         metrics:
           bounce_rate:

@@ -521,6 +521,7 @@ nb_NO:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Ukjent"
     traffic_types:
       anonymous: "Anonym"
   change_email:

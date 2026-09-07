@@ -1,6 +1,7 @@
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CodeLoginForm from "discourse/components/code-login-form";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
@@ -158,6 +159,76 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
     assert.dom(".code-login-form__second-factor-step").exists();
     assert.dom("#second-factor").exists();
+  });
+
+  test("sends prefilled user fields with the code, skipping the extra step", async function (assert) {
+    stubCodeRequest();
+    this.owner
+      .lookup("service:site")
+      .set("user_fields", [
+        { id: 7, position: 1, required: true, show_on_signup: true },
+      ]);
+    withPluginApi((api) =>
+      api.registerValueTransformer("code-login-user-field-values", () => ({
+        7: "true",
+      }))
+    );
+
+    let verifyParams;
+    pretender.post("/session/login-code/verify", (request) => {
+      verifyParams = new URLSearchParams(request.requestBody);
+
+      return response({
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: true,
+        prefill_username: true,
+      });
+    });
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert.strictEqual(
+      verifyParams.get("user_fields[7]"),
+      "true",
+      "the prefilled answer rides along with the code"
+    );
+    assert
+      .dom(".code-login-form__user-fields-step")
+      .doesNotExist("the fields are already answered, so the step is skipped");
+  });
+
+  test("withholds prefilled user fields while a required one is unanswered", async function (assert) {
+    stubCodeRequest();
+    this.owner.lookup("service:site").set("user_fields", [
+      { id: 7, position: 1, required: true, show_on_signup: true },
+      { id: 8, position: 2, required: true, show_on_signup: true },
+    ]);
+    withPluginApi((api) =>
+      api.registerValueTransformer("code-login-user-field-values", () => ({
+        7: "true",
+      }))
+    );
+
+    let verifyParams;
+    pretender.post("/session/login-code/verify", (request) => {
+      verifyParams = new URLSearchParams(request.requestBody);
+
+      return response({ user_fields_required: true });
+    });
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert.strictEqual(
+      verifyParams.get("user_fields[7]"),
+      null,
+      "a partial set is not sent, which the server would read as complete"
+    );
+    assert
+      .dom(".code-login-form__user-fields-step")
+      .exists("the remaining field is still collected");
   });
 
   test("collects a required full name before completing signup", async function (assert) {

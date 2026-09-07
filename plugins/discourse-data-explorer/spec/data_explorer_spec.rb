@@ -146,6 +146,32 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result].to_a.map { |row| row["id"] }).to eq([topic.id, topic3.id].sort)
     end
 
+    it "runs a query that checks a declared string parameter against IS NULL, with no cast needed" do
+      query = DiscourseDataExplorer::Query.create!(name: "is null query", sql: <<~SQL)
+            -- [params]
+            -- string :site = hosted
+            SELECT (:site) IS NULL AS is_null
+          SQL
+
+      result = described_class.run_query(query, { "site" => "hosted" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["is_null"]).to eq(false)
+    end
+
+    it "still compares a declared date parameter against a timestamp column with no cast" do
+      query = DiscourseDataExplorer::Query.create!(name: "date compare query", sql: <<~SQL)
+            -- [params]
+            -- date :start_date
+            SELECT id FROM topics WHERE created_at >= :start_date ORDER BY id
+          SQL
+
+      result = described_class.run_query(query, { "start_date" => "2020-01-01" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to include(topic.id)
+    end
+
     it "rejects, without executing, a parameter inside a dollar-quoted literal" do
       query = DiscourseDataExplorer::Query.create!(name: "dollar query", sql: <<~SQL)
             -- [params]

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
@@ -356,24 +357,30 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   <template>
     {{#if this.query}}
-      <div class="ai-discoveries-search-options">
+      {{! eslint-disable ember/template-no-invalid-interactive }}
+      <div
+        class="ai-discoveries-search-options"
+        {{on "keydown" this.search.handleArrowUpOrDown}}
+      >
         {{#each this.options key="kind" as |option|}}
           <DButton
             class="btn-default btn-small ai-discoveries-search-options__option --{{option.kind}}
               {{if option.active 'is-active'}}"
+            data-search-menu-navigation-item
+            @action={{option.action}}
             @icon={{option.icon}}
             @label={{option.label}}
             @translatedLabel={{option.translatedLabel}}
             @translatedTitle={{option.title}}
-            @action={{option.action}}
           />
         {{/each}}
         <DButton
           class="btn-default btn-small ai-discoveries-search-options__option --advanced"
+          data-search-menu-navigation-item
+          @action={{@openAdvancedSearch}}
+          @ariaLabel="search.open_advanced"
           @icon="sliders"
           @translatedTitle={{this.advancedTitle}}
-          @ariaLabel="search.open_advanced"
-          @action={{@openAdvancedSearch}}
         />
       </div>
     {{/if}}

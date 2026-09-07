@@ -25,6 +25,9 @@ th:
         year: "ปี"
     group_timezones:
       search: "ค้นหา..."
+    discourse_workflows:
+      post_event:
+        topic_id: "หมายเลขกระทู้"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username}%{description}"

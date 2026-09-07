@@ -813,6 +813,7 @@ sv:
       windows: "Microsoft Windows"
       unknown: "okänt operativsystem"
   admin_site_traffic_explorer:
+    unknown: "Okänd"
     traffic_types:
       anonymous: "Anonym"
   change_email:
@@ -2047,7 +2048,6 @@ sv:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
       valid_username: "Det finns redan en användare med det användarnamnet."
-      invalid_group: "Det finns ingen grupp med det namnet."
       invalid_integer_min_max: "Värdet måste vara mellan %{min} och %{max}."
       invalid_integer_min: "Värdet måste vara %{min} eller större."
       invalid_integer_max: "Värdet får inte vara större än %{max}."

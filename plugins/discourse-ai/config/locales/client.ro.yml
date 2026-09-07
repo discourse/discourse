@@ -281,8 +281,6 @@ ro:
           ai_helper: "Ajutor (%{agent})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "Cel mai inteligent model de la Anthropic"
         next:
           title: "Următorul"
         tests:

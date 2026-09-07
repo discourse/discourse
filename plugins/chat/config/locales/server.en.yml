@@ -154,6 +154,10 @@ en:
         ignore:
           title: "Ignore flag"
           description: "Remove it from the queue without taking action."
+        unsilence_user:
+          title: "Unsilence author"
+          description: "Lift the silence on the author. This flag stays in the queue."
+          complete: "Author unsilenced."
       direct_messages:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"

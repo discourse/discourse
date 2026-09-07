@@ -61,8 +61,11 @@ import {
 import TranscriptionCoordinator from "../../lib/voice/transcription-coordinator";
 import { applyVoiceQuality } from "../../lib/voice/video-quality";
 
+const CAMERA_ENABLED_KEY_PREFIX = "voice-camera-enabled";
+
 export default class VoiceWebrtcService extends Service {
   @service currentUser;
+  @service keyValueStore;
   @service messageBus;
   @service modal;
   @service siteSettings;
@@ -111,6 +114,8 @@ export default class VoiceWebrtcService extends Service {
   #roomHandlerCallbacks = new Map();
   #deferredTeardownTimers = new Set();
   #pendingPlaybackElements = new WeakSet();
+  #cameraRestorePromise = null;
+  #queuedCameraRestoreRoomId = null;
 
   #signaling;
   #peerManager;
@@ -286,6 +291,11 @@ export default class VoiceWebrtcService extends Service {
           this.currentUser?.id,
           state
         ),
+      onScreenShareEnded: () => {
+        if (this.watchingRoomId) {
+          this.#restorePreferredCamera(this.watchingRoomId);
+        }
+      },
       showError: (messageKey) =>
         this.toasts.error({
           duration: 5000,
@@ -419,6 +429,9 @@ export default class VoiceWebrtcService extends Service {
     this.#livekit.destroy();
     this.#signaling.destroy();
 
+    this.watchingRoomId = null;
+    this.#cameraRestorePromise = null;
+    this.#queuedCameraRestoreRoomId = null;
     this.#localVideo.destroy();
     this.#localAudio.stop();
     this.#transcription.destroy();
@@ -632,6 +645,86 @@ export default class VoiceWebrtcService extends Service {
 
   #isMeshRoom(roomId) {
     return (this.#roomTransports.get(roomId) ?? "mesh") === "mesh";
+  }
+
+  #cameraEnabledKey(userId) {
+    return `${CAMERA_ENABLED_KEY_PREFIX}-${userId}`;
+  }
+
+  #cameraPreferred(userId = this.currentUser?.id) {
+    if (!userId) {
+      return false;
+    }
+
+    try {
+      return this.keyValueStore.get(this.#cameraEnabledKey(userId)) === "true";
+    } catch {
+      return false;
+    }
+  }
+
+  #setCameraPreferred(enabled, userId = this.currentUser?.id) {
+    if (!userId) {
+      return;
+    }
+
+    try {
+      if (enabled) {
+        this.keyValueStore.set({
+          key: this.#cameraEnabledKey(userId),
+          value: "true",
+        });
+      } else {
+        this.keyValueStore.remove(this.#cameraEnabledKey(userId));
+      }
+    } catch {
+      // A storage failure must not interfere with the camera control.
+    }
+  }
+
+  #restorePreferredCamera(roomId) {
+    const userId = this.currentUser?.id;
+    if (
+      this.#cameraRestorePromise ||
+      !this.#activeRoomIds.has(roomId) ||
+      this.watchingRoomId !== roomId ||
+      this.localVideoKind ||
+      !this.#cameraPreferred(userId) ||
+      !this.canPublishVideo(roomId)
+    ) {
+      return;
+    }
+
+    const restorePromise = this.#localVideo
+      .start("camera", {
+        silent: true,
+        shouldContinue: () =>
+          this.currentUser?.id === userId &&
+          this.#activeRoomIds.has(roomId) &&
+          this.watchingRoomId === roomId &&
+          (!this.localVideoKind || this.localVideoKind === "camera") &&
+          this.#cameraPreferred(userId) &&
+          this.canPublishVideo(roomId),
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.warn("[voice] failed to restore preferred camera state", error);
+      });
+    this.#cameraRestorePromise = restorePromise;
+
+    restorePromise.finally(() => {
+      if (this.#cameraRestorePromise === restorePromise) {
+        this.#cameraRestorePromise = null;
+      }
+
+      const queuedRoomId = this.#queuedCameraRestoreRoomId;
+      this.#queuedCameraRestoreRoomId = null;
+      if (queuedRoomId && this.watchingRoomId === queuedRoomId) {
+        this.#restorePreferredCamera(queuedRoomId);
+      } else if (this.watchingRoomId && this.watchingRoomId !== roomId) {
+        this.#restorePreferredCamera(this.watchingRoomId);
+      }
+    });
   }
 
   isLivekitRoom(roomId) {
@@ -1224,12 +1317,41 @@ export default class VoiceWebrtcService extends Service {
     return this.#localVideo.inputDeviceId;
   }
 
-  toggleCamera() {
-    return this.#localVideo.toggleCamera();
+  async toggleCamera() {
+    const userId = this.currentUser?.id;
+    if (!this.localVideoKind && this.#cameraRestorePromise) {
+      this.#setCameraPreferred(false, userId);
+      this.#queuedCameraRestoreRoomId = null;
+      await this.#cameraRestorePromise;
+      if (this.localVideoKind === "camera") {
+        await this.#localVideo.stop();
+      }
+      return;
+    }
+
+    const cameraWasActive = this.localVideoKind === "camera";
+    if (cameraWasActive) {
+      this.#setCameraPreferred(false, userId);
+    }
+
+    const result = await this.#localVideo.toggleCamera();
+
+    if (!cameraWasActive && this.localVideoKind === "camera") {
+      this.#setCameraPreferred(true, userId);
+    }
+
+    return result;
   }
 
-  toggleScreenShare() {
-    return this.#localVideo.toggleScreenShare();
+  async toggleScreenShare() {
+    const screenWasActive = this.localVideoKind === "screen";
+    const result = await this.#localVideo.toggleScreenShare();
+
+    if (screenWasActive && !this.localVideoKind && this.watchingRoomId) {
+      this.#restorePreferredCamera(this.watchingRoomId);
+    }
+
+    return result;
   }
 
   toggleVideoBlur() {
@@ -1303,6 +1425,15 @@ export default class VoiceWebrtcService extends Service {
     // watching state additionally gates the actual video subscriptions.
     if (!this.#isMeshRoom(roomId)) {
       this.#livekit.sessionFor(roomId)?.setVideoSubscriptionsEnabled(watching);
+    }
+
+    if (watching) {
+      if (this.#cameraRestorePromise) {
+        this.#queuedCameraRestoreRoomId = roomId;
+      }
+      this.#restorePreferredCamera(roomId);
+    } else if (this.#queuedCameraRestoreRoomId === roomId) {
+      this.#queuedCameraRestoreRoomId = null;
     }
   }
 

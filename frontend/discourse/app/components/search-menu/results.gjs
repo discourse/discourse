@@ -91,7 +91,7 @@ export default class Results extends Component {
           }}
         />
         {{#unless this.inTopicContext}}
-          {{#if @suggestionKeyword}}
+          {{#if (and @suggestionKeyword this.showIndexedResults)}}
             <Assistant
               @suggestionKeyword={{@suggestionKeyword}}
               @results={{@suggestionResults}}

@@ -4399,6 +4399,7 @@ lt:
           visitors: "Lankytojai"
         filters:
           browser: "Naršyklė"
+          language: "Kalba"
           ip: "IP adresas"
         series:
           anonymous_human: "Anonimas"

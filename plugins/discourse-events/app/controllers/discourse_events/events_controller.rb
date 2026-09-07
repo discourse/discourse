@@ -26,8 +26,10 @@ module DiscourseEvents
         format.ics do
           @calendar_name = calendar_name_for_ics
 
-          after_time = filtered_events_params[:after]&.to_datetime || Time.current
-          before_time = filtered_events_params[:before]&.to_datetime || 1.year.from_now
+          after_time =
+            Events::Finder.time_param(filtered_events_params[:after], :after) || Time.current
+          before_time =
+            Events::Finder.time_param(filtered_events_params[:before], :before) || 1.year.from_now
 
           @ics_events =
             @events.flat_map do |event|
@@ -53,24 +55,33 @@ module DiscourseEvents
         end
 
         format.json do
-          # The detailed serializer is currently not used anywhere in the frontend, but available via API
           serializer =
             (
               if params[:include_details] == "true"
                 Events::EventSerializer
+              elsif params[:include_card] == "true"
+                Events::EventCardSerializer
               else
                 Events::BasicEventSerializer
               end
             )
+
+          sample_invitees_by_event =
+            Events::EventCardSerializer.sample_invitees_by_event(@events) if serializer ==
+            Events::EventCardSerializer
+
+          after_time =
+            Events::Finder.time_param(filtered_events_params[:after], :after) || Time.current
+          before_time = Events::Finder.time_param(filtered_events_params[:before], :before)
 
           serialized_events =
             @events.map do |event|
               expanded =
                 DiscourseEvents::Events::Action::ExpandOccurrences.call(
                   event: event,
-                  after: filtered_events_params[:after]&.to_datetime || Time.current,
-                  before: filtered_events_params[:before]&.to_datetime,
-                  limit: filtered_events_params[:limit]&.to_i || 50,
+                  after: after_time,
+                  before: before_time,
+                  limit: event_limit,
                   current_occurrence_only: current_occurrence_only_event_ids.include?(event.id),
                 )
 
@@ -88,6 +99,7 @@ module DiscourseEvents
                 root: false,
                 occurrences: formatted_occurrences,
                 include_occurrences: true,
+                sample_invitees_by_event:,
               ).as_json
             end
 
@@ -185,7 +197,15 @@ module DiscourseEvents
         :before,
         :after,
         :order,
+        :tags,
+        :search,
+        :status,
+        tags: [],
       )
+    end
+
+    def event_limit
+      Events::Finder.limit_param(filtered_events_params[:limit]) || 50
     end
 
     def current_occurrence_only_event_ids

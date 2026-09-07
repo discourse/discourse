@@ -17,7 +17,10 @@ import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import NavItem from "discourse/models/nav-item";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
 import TagCategoryAdminDropdown from "discourse/select-kit/components/tag-category-admin-dropdown";
@@ -272,7 +275,11 @@ export default class DNavigation extends Component {
 
   @action
   clickCreateTopicButton() {
-    this.createTopic();
+    applyBehaviorTransformer(
+      "create-topic-button-click",
+      () => this.createTopic(),
+      { category: this.category, tag: this.tag }
+    );
   }
 
   @action

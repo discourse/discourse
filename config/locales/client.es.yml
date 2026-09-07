@@ -6273,6 +6273,7 @@ es:
         filters:
           country: "País"
           browser: "Navegador"
+          language: "Idioma"
           ip: "Dirección IP"
         series:
           anonymous_human: "Anónimas"

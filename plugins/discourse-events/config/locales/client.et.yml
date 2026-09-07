@@ -26,6 +26,9 @@ et:
         year: "Aasta"
     group_timezones:
       search: "Otsi..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Teema ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

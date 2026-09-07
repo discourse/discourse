@@ -82,7 +82,6 @@ ru:
     ai_helper_automatic_chat_thread_title: "Автоматически устанавливать заголовки тем чата в зависимости от содержимого темы."
     post_ai_helper_allowed_groups: "Группы пользователей, которым разрешен доступ к функциям AI-помощника в публикациях"
     ai_embeddings_selected_model: "Использовать выбранную модель для создания встраиваний."
-    ai_embeddings_generate_for_pms: "Генерировать векторные представления для личных сообщений."
     ai_embeddings_semantic_related_topics_enabled: "Использовать семантический поиск для связанных тем."
     ai_embeddings_semantic_related_topics: "Максимальное количество тем для показа в разделе связанных тем."
     ai_embeddings_backfill_batch_size: "Количество векторных представлений для обратного заполнения каждые 15 минут."

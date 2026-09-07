@@ -6458,6 +6458,7 @@ he:
           referrer: "מקור ההפניה"
           country: "ארץ"
           browser: "דפדפן"
+          language: "שפה"
           ip: "כתובת IP"
         series:
           anonymous_human: "אלמוני"

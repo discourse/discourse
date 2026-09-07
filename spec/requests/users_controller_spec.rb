@@ -4734,6 +4734,22 @@ RSpec.describe UsersController do
       user_deferred.user_stat.update!(post_count: 1)
     end
 
+    it "caches separately per automatic translation preference" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.set_locale_from_accept_language_header = true
+      topic = Fabricate(:topic, user: user, locale: "en")
+      Fabricate(:post, topic: topic, user: user)
+      Fabricate(:topic_localization, topic: topic, locale: "ja", fancy_title: "翻訳された題名")
+
+      cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "false"
+      get "/u/#{user.username_lower}/summary.json", headers: { "HTTP_ACCEPT_LANGUAGE" => "ja" }
+      expect(response.parsed_body["topics"].first["fancy_title"]).to eq(topic.fancy_title)
+
+      cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "true"
+      get "/u/#{user.username_lower}/summary.json", headers: { "HTTP_ACCEPT_LANGUAGE" => "ja" }
+      expect(response.parsed_body["topics"].first["fancy_title"]).to eq("翻訳された題名")
+    end
+
     it "generates summary info" do
       create_post(user: user)
 

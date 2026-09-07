@@ -128,6 +128,7 @@ class SchemaSettingsObjectValidator
       @errors.map(&:error_message)
     end
   end
+
   class SchemaSettingsObjectError
     def initialize(error, i18n_opts = {})
       @error = error

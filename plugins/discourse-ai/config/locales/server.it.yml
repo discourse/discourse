@@ -62,7 +62,6 @@ it:
     ai_helper_automatic_chat_thread_title: "Imposta automaticamente i titoli dei thread della chat in base ai contenuti del thread."
     post_ai_helper_allowed_groups: "Gruppi di utenti autorizzati ad accedere alle funzionalità dell'assistente IA nei post"
     ai_embeddings_selected_model: "Usa il modello selezionato per generare le integrazioni."
-    ai_embeddings_generate_for_pms: "Genera integrazioni per messaggi personali."
     ai_embeddings_semantic_related_topics_enabled: "Usa la ricerca semantica per argomenti correlati."
     ai_embeddings_semantic_related_topics: "Numero massimo di argomenti da mostrare nella sezione degli argomenti correlati."
     ai_embeddings_backfill_batch_size: "Numero di embedding da riempire ogni 15 minuti."

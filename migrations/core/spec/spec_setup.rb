@@ -50,6 +50,7 @@ module MigrationsSpecSetup
   # `disco` binary does before loading the Rails environment.
   def self.boot_rails(spec_dir)
     rails_root = File.expand_path("../../..", spec_dir)
+    RSpec.configuration.files_to_run
     Dir.chdir(rails_root) { require File.join(rails_root, "spec", "rails_helper") }
   end
 

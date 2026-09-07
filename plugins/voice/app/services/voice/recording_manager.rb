@@ -36,7 +36,10 @@ module Voice
       # Public shape shared by the serializer, the broadcasts, and the
       # start endpoint's response.
       def status(room_id)
-        info = Voice::ParticipantTracker.recording(room_id)
+        status_from_info(Voice::ParticipantTracker.recording(room_id))
+      end
+
+      def status_from_info(info)
         return nil if info.nil?
 
         {

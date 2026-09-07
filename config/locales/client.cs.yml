@@ -6573,6 +6573,7 @@ cs:
           visitors: "Návštěvníci"
         filters:
           browser: "Prohlížeč"
+          language: "Jazyk"
           ip: "IP adresa"
         series:
           anonymous_human: "Anonymní"

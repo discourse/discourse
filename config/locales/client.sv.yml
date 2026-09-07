@@ -4604,6 +4604,7 @@ sv:
         apply: "Tillämpa"
         filters:
           browser: "Webbläsare"
+          language: "Språk"
           ip: "IP-adress"
         series:
           anonymous_human: "Anonym"

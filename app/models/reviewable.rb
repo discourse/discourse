@@ -342,6 +342,17 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  def self.preload_author_penalties(reviewables)
+    histories = reviewables.flat_map(&:author_penalties).filter_map(&:history)
+    return if histories.empty?
+
+    ActiveRecord::Associations::Preloader.new(records: histories, associations: :acting_user).call
+  end
+
+  def author_penalties
+    @author_penalties ||= AuthorPenalty.all_for(target_created_by, target_post:, reviewable_id: id)
+  end
+
   def actions_for(guardian, args = nil)
     args ||= {}
     built_actions =
@@ -960,6 +971,12 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  def target_post
+    return if target_type != "Post"
+
+    @post ||= target || Post.with_deleted.find_by(id: target_id)
+  end
 
   def delete_user_action?(action_id)
     resolved_action = (aliases[action_id] || action_id).to_sym

@@ -1852,6 +1852,43 @@ RSpec.describe PostCreator do
     end
   end
 
+  describe "skip_rate_limits" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true, trust_level: TrustLevel[4]) }
+    fab!(:topic)
+
+    before do
+      RateLimiter.enable
+      SiteSetting.rate_limit_create_post = 5
+    end
+
+    it "rate limits a non-staff author by default" do
+      PostCreator.create!(author, topic_id: topic.id, raw: "the first post from this author")
+
+      expect {
+        PostCreator.create!(author, topic_id: topic.id, raw: "a second post moments later")
+      }.to raise_error(RateLimiter::LimitExceeded)
+    end
+
+    it "does not rate limit when skip_rate_limits is set" do
+      PostCreator.create!(author, topic_id: topic.id, raw: "the first post from this author")
+
+      expect {
+        PostCreator.create!(
+          author,
+          topic_id: topic.id,
+          raw: "a second post moments later",
+          skip_rate_limits: true,
+        )
+      }.not_to raise_error
+    end
+
+    it "still validates content when only rate limits are skipped" do
+      expect {
+        PostCreator.create!(author, topic_id: topic.id, raw: "", skip_rate_limits: true)
+      }.to raise_error(ActiveRecord::RecordNotSaved)
+    end
+  end
+
   describe "private message to a user that has disabled private messages" do
     fab!(:another_user) { Fabricate(:user, username: "HelloWorld") }
 

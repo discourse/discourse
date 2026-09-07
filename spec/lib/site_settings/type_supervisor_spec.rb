@@ -188,6 +188,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
       settings.setting(:type_mock_validate_method, "no_value")
       settings.setting(:type_custom, "custom", type: "list")
       settings.setting(:type_upload, "", type: "upload")
+      settings.setting(:type_group, "", type: "group")
       settings.setting(
         :type_json_schema,
         "[{\"name\":\"Brett\"}]",
@@ -213,6 +214,34 @@ RSpec.describe SiteSettings::TypeSupervisor do
     describe "#to_db_value" do
       let(:true_val) { "t" }
       let(:false_val) { "f" }
+
+      it "converts a group name to its id" do
+        group = Fabricate(:group, name: "Support")
+
+        expect(settings.type_supervisor.to_db_value(:type_group, "Support")).to eq [
+             group.id.to_s,
+             SiteSetting.types[:group],
+           ]
+        expect(settings.type_supervisor.to_db_value(:type_group, "support")).to eq [
+             group.id.to_s,
+             SiteSetting.types[:group],
+           ]
+      end
+
+      it "stores an integer group id as a string" do
+        group = Fabricate(:group)
+
+        expect(settings.type_supervisor.to_db_value(:type_group, group.id)).to eq [
+             group.id.to_s,
+             SiteSetting.types[:group],
+           ]
+      end
+
+      it "rejects a name that matches no group" do
+        expect { settings.type_supervisor.to_db_value(:type_group, "nope") }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
 
       it "gives a second chance to guess even told :null type" do
         expect(settings.type_supervisor.to_db_value(:type_null, 1)).to eq [

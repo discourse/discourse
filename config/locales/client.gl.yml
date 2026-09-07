@@ -3641,6 +3641,7 @@ gl:
         apply: "Aplicar"
         filters:
           browser: "Navegador"
+          language: "Idioma"
           ip: "Enderezo IP"
         series:
           anonymous_human: "Anónimo"

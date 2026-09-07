@@ -44,6 +44,29 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "creates as an author who just posted, without tripping their rate limit" do
+      author = Fabricate(:user, refresh_auto_groups: true, trust_level: TrustLevel[4])
+      topic = Fabricate(:post, user: user, raw: "First post", post_number: 1).topic
+
+      RateLimiter.enable
+      SiteSetting.rate_limit_create_post = 5
+      PostCreator.create!(author, topic_id: topic.id, raw: "The author's own post")
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => topic.id.to_s,
+            "raw" => "Mirrored moments later",
+            "author_username" => author.username,
+          },
+          item: item,
+        )
+      end.to change { topic.posts.count }.by(1)
+
+      expect(topic.posts.order(:id).last.user_id).to eq(author.id)
+    end
+
     it "raises when creating a post as the anonymous actor" do
       first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
       topic = first_post.topic
@@ -349,6 +372,95 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "deletes a post as the configured actor" do
+      post = Fabricate(:post, user: user, raw: "Original post")
+      topic_title = post.topic.title
+      result = nil
+
+      expect do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "delete",
+              "post_id" => post.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+      end.to change { post.reload.deleted_at }.from(nil)
+
+      expect(post.deleted_by_id).to eq(admin.id)
+      expect(result["post"]).to include(
+        "id" => post.id,
+        "topic_id" => post.topic_id,
+        "topic_title" => topic_title,
+      )
+    end
+
+    it "really deletes even when the actor is the post author" do
+      post = Fabricate(:post, user: user, raw: "Original post")
+      reply = Fabricate(:post, topic: post.topic, user: user)
+
+      execute_node(
+        configuration: {
+          "operation" => "delete",
+          "post_id" => reply.id.to_s,
+          "actor_username" => user.username,
+        },
+        item: item,
+      )
+
+      expect(reply.reload.deleted_at).to be_present
+    end
+
+    it "recovers a deleted post as the configured actor" do
+      post = Fabricate(:post, user: user, raw: "Original post")
+      PostDestroyer.new(admin, post).destroy
+      result = nil
+
+      expect do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "recover",
+              "post_id" => post.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+      end.to change { post.reload.deleted_at }.to(nil)
+
+      expect(result["post"]).to include("id" => post.id, "raw" => "Original post")
+    end
+
+    it "raises when the actor may not delete or recover the post", :aggregate_failures do
+      post = Fabricate(:post, user: admin, raw: "Original post")
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "delete",
+            "post_id" => post.id.to_s,
+            "actor_username" => other_user.username,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      PostDestroyer.new(admin, post).destroy
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "recover",
+            "post_id" => post.id.to_s,
+            "actor_username" => other_user.username,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
     it "edits a post for the configured editor" do
       post = Fabricate(:post, user: user, raw: "Original post", post_number: 1)
       result = nil
@@ -395,6 +507,24 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       end.to raise_error(Discourse::InvalidAccess)
 
       expect(hidden_post.reload.raw).not_to eq("Hidden edit")
+    end
+
+    it "records a separate revision for each edit" do
+      post = Fabricate(:post, user: user, raw: "Original post")
+
+      expect do
+        2.times do
+          execute_node(
+            configuration: {
+              "operation" => "edit",
+              "post_id" => post.id.to_s,
+              "raw" => "Workflow edit #{SecureRandom.hex(4)}",
+              "editor_username" => admin.username,
+            },
+            item: item,
+          )
+        end
+      end.to change { post.reload.version }.by(2)
     end
 
     it "gets a visible post with selected body fields" do

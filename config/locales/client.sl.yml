@@ -3941,6 +3941,8 @@ sl:
       site_traffic_explorer:
         metric_information: "O %{metric}"
         apply: "Uporabi"
+        filters:
+          language: "Jezik"
         series:
           anonymous_human: "Anonimni"
       dashboard:

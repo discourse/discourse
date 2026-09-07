@@ -336,6 +336,20 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
 
     before { Jobs.run_immediately! }
 
+    it "notifies moderators when the site asks to be notified about auto silences" do
+      SiteSetting.notify_mods_when_user_silenced = true
+
+      allow(GroupMessage).to receive(:create)
+
+      described_class.new_post(post)
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) { post.rebake! }
+
+      expect(GroupMessage).to have_received(:create).at_least(:once)
+      expect(post.user.reload).to be_silenced
+    end
+
     it "can correctly run tests" do
       prompts = nil
       result =
@@ -411,6 +425,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
 
       expect(log.reviewable).to be_present
       expect(log.reviewable.created_by_id).to eq(described_class.flagging_user.id)
+
+      expect(history.post_id).to eq(post.id)
+      expect(history.reviewable_id).to eq(log.reviewable.id)
 
       log.reviewable.perform(moderator, :disagree_and_restore)
 

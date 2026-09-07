@@ -26,6 +26,9 @@ gl:
         year: "Ano"
     group_timezones:
       search: "Buscar..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID do tema"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

@@ -8,11 +8,13 @@ module DiscourseWorkflows
 
     class << self
       def nodes(include_disabled_plugins: false)
-        if include_disabled_plugins
-          DiscoursePluginRegistry._raw_discourse_workflows_nodes.map { |entry| entry[:value] }.uniq
-        else
-          DiscoursePluginRegistry.discourse_workflows_nodes
-        end
+        references =
+          if include_disabled_plugins
+            DiscoursePluginRegistry._raw_discourse_workflows_nodes.map { |entry| entry[:value] }
+          else
+            DiscoursePluginRegistry.discourse_workflows_nodes
+          end
+        references.map { |reference| resolve_class(reference) }.uniq
       end
 
       def triggers
@@ -32,11 +34,13 @@ module DiscourseWorkflows
       end
 
       def credential_types
-        DiscoursePluginRegistry.discourse_workflows_credential_types
+        DiscoursePluginRegistry.discourse_workflows_credential_types.map do |reference|
+          resolve_class(reference)
+        end
       end
 
       def find_credential_type(identifier)
-        credential_type_index[identifier]
+        resolve_class(credential_type_index[identifier])
       end
 
       def find_node_type(identifier, version: nil, include_disabled_plugins: false)
@@ -57,6 +61,10 @@ module DiscourseWorkflows
       end
 
       private
+
+      def resolve_class(reference)
+        reference.is_a?(String) ? reference.constantize : reference
+      end
 
       def node_type_index(include_disabled_plugins: false)
         nodes(include_disabled_plugins: include_disabled_plugins).each_with_object({}) do |klass, h|
@@ -79,7 +87,8 @@ module DiscourseWorkflows
       end
 
       def credential_type_index
-        @credential_type_index ||= credential_types.index_by(&:identifier)
+        @credential_type_index ||=
+          credential_types.to_h { |klass| [klass.identifier, klass.name || klass] }
       end
     end
   end

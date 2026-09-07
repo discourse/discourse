@@ -840,6 +840,11 @@ module Discourse
 
             @mutex.synchronize do
               @dbs.each do |db|
+                if !RailsMultisite::ConnectionManagement.has_db?(db)
+                  @dbs.delete(db)
+                  next
+                end
+
                 RailsMultisite::ConnectionManagement.with_connection(db) do
                   @dbs.delete(db) if !Discourse.redis.expire(key, ttl)
                 end
@@ -987,6 +992,11 @@ module Discourse
         username_lower: SiteSetting.site_contact_username.downcase,
       ) if SiteSetting.site_contact_username.present?
     user ||= system_user || User.admins.real.order(:id).first
+  end
+
+  # A global override bypasses the write-time name-to-id conversion.
+  def self.site_contact_group
+    Group.find_by_id_or_name(SiteSetting.site_contact_group_name)
   end
 
   SYSTEM_USER_ID = -1

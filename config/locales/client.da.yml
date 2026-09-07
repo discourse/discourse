@@ -4651,6 +4651,7 @@ da:
           visitors: "Besøgende"
         filters:
           browser: "Browser"
+          language: "Sprog"
           ip: "IP-adresse"
         series:
           anonymous_human: "Anonym"

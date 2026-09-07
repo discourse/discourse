@@ -183,6 +183,8 @@ en:
         execution_failed: "Called workflow finished with status '%{status}'."
         execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
+    post:
+      destroy_context: "Deleted by a workflow"
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
     user:

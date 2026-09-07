@@ -6018,10 +6018,23 @@ zh_CN:
         chart:
           total: "总计：%{count}"
         related_items:
+          showing: "显示 %{total} 中最新的 %{shown}."
           users:
             title: "用户"
+            signups:
+              description: "在 %{startDate} 和 %{endDate} 之间创建的新帐户，最新优先。"
+            new_contributors:
+              description: "在 %{startDate} 和 %{endDate} 之间发表第一篇帖子的用户，最新优先。"
           labels:
             user: "用户"
+            created_at: "创建时间"
+            first_post: "第一个帖子创建于"
+          table_summary:
+            trigger: "%{count}，显示 %{date} 的摘要"
+            users_title: "用户在 %{date}"
+            loading: "正在加载摘要…"
+            empty: "没有可用的细节。"
+            error: "无法加载摘要。"
       config_sections:
         account:
           title: "帐户"
@@ -6620,6 +6633,8 @@ zh_CN:
             other: "筛选出 %{count} 网络"
           browser:
             other: "筛选出 %{count} 浏览器"
+          language:
+            other: "筛选出 %{count} 种语言"
           ip:
             other: "筛选出 %{count} IP 地址"
         remove_filter_value: "移除 %{value}"
@@ -6643,6 +6658,7 @@ zh_CN:
           top_urls: "热门网址"
           entry_urls: "入口网址"
           browsers: "浏览器"
+          languages: "语言"
           ip_addresses: "IP 地址"
         filters:
           traffic_type: "流量类型"
@@ -6652,6 +6668,7 @@ zh_CN:
           country: "国家/地区"
           network: "网络"
           browser: "浏览器"
+          language: "语言"
           ip: "IP 地址"
         headline:
           other: "%{formatted_count} 页面浏览量"
@@ -8521,6 +8538,7 @@ zh_CN:
             admin_onboarding_step_completed: "完成管理员入门步骤"
             admin_onboarding_completed: "完成管理员入门"
             admin_onboarding_dismissed: "忽略管理员入门"
+            create_group: "创建群组"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

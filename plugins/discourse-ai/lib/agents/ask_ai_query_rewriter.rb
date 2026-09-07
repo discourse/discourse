@@ -26,6 +26,7 @@ module DiscourseAi
           - Preserve the user's intent, product names, numbers, quoted text, and explicit Discourse search filters.
           - If the query is not in the forum's default locale, translate it to that locale for the keyword search.
           - Use native Discourse search operators when they express the request exactly. For example, use order:likes for the most-liked topics, l for the latest results, and @username to restrict results to an author.
+          - Use in:messages when the user asks to search their personal messages. Keep the essential subject terms before the operator, and combine it with other exact operators such as order:views when requested.
           - Do not add a text term when an operator-only query expresses the complete request.
 
           semantic_query is a natural-language description of the information that would answer the user.
@@ -33,6 +34,7 @@ module DiscourseAi
           - Use the forum's default locale so it matches the forum's content.
           - Keep it to one sentence and under twenty words.
           - Return an empty string when the keyword query relies on native search operators for filtering, ordering, or live forum state. Semantic search cannot preserve those constraints.
+          - in:messages alone is an exception: describe the requested personal-message content without the operator. Ask AI applies the personal-message scope separately.
 
           The two queries must not broaden, narrow, or reinterpret the user's request.
         PROMPT
@@ -58,11 +60,11 @@ module DiscourseAi
           ],
           [
             {
-              query: "What are the 3 most popular topics on the forum?",
+              query: "What are the most popular topics since January 1, 2026?",
               forum_default_locale: "en",
             }.to_json,
             {
-              keyword_query: "order:likes",
+              keyword_query: "after:2026-01-01 order:likes",
               semantic_query: "",
               original_query_locale: "en",
             }.to_json,
@@ -72,6 +74,14 @@ module DiscourseAi
             {
               keyword_query: "@nat l logs",
               semantic_query: "",
+              original_query_locale: "en",
+            }.to_json,
+          ],
+          [
+            { query: "Which of my PMs discuss anime?", forum_default_locale: "en" }.to_json,
+            {
+              keyword_query: "anime in:messages",
+              semantic_query: "private conversations about anime",
               original_query_locale: "en",
             }.to_json,
           ],

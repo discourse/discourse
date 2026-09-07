@@ -1062,6 +1062,7 @@ he:
       windows: "Windows מבית Microsoft"
       unknown: "מערכת הפעלה בלתי מוכרת"
   admin_site_traffic_explorer:
+    unknown: "לא ידוע"
     traffic_types:
       anonymous: "אלמוני"
   change_email:
@@ -1932,7 +1933,7 @@ he:
     share_links: "החליטו אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     allow_username_in_share_links: "לאפשר לכלול שמות משתמש בקישורי שיתוף. שימושי להענקת עיטורים לפי מבקרים מסוימים."
     site_contact_username: "שם משתמש תקין של חבר סגל ממנו יישלחו כל ההודעות האוטומטיות. במקרה של העדר בחירה, ייעשה שימוש בחשבון בררת המחדל של המערכת."
-    site_contact_group_name: "שם תקף של קבוצה שתוזמן לכל ההודעות הפרטיות שנשלחות."
+    site_contact_group_name: "הקבוצה שתוזמן לכל ההודעות הפרטיות שנשלחות אוטומטית."
     send_welcome_message: "לשלוח לכל המשתמשים החדשים הודעת „ברוך בואך” עם הדרכה ראשונית כיצד להתחיל."
     send_tl1_welcome_message: "שליחת הודעת קבלת פנים למשתמשים חדשים בדרגת אמון 1."
     send_tl2_promotion_message: "לשלוח למשתמשים חדשים בדרגת אמון 2 הודעה על קידום."
@@ -2519,7 +2520,6 @@ he:
       invalid_email: "כתובת דוא״ל שגויה."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
       valid_username: "יש משתמש עם שם משתמש כזה."
-      invalid_group: "אין קבוצה בשם הזה."
       invalid_topic: "אין נושא עם המזהה הזה."
       invalid_integer_min_max: "הערך חייב להיות בין %{min} ל-%{max}."
       invalid_integer_min: "הערך חייב להיות %{min} ומעלה."

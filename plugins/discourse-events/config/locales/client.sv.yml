@@ -307,6 +307,9 @@ sv:
     group_timezones:
       search: "Sök..."
       group_availability: "%{group}-tillgänglighet"
+    discourse_workflows:
+      post_event:
+        topic_id: "Ämnes-ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

@@ -228,6 +228,9 @@ el:
     group_timezones:
       search: "Αναζήτηση..."
       group_availability: "Διαθεσιμότητα %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Θέματος"
     discourse_post_event:
       new_event: "Νέα εκδήλωση"
       notifications:
@@ -259,6 +262,9 @@ el:
       edit_event: "Επεξεργασία εκδήλωσης"
       export_event: "Εξαγωγή εκδήλωσης"
       created_by: "Δημιουργήθηκε από"
+      other_hosts:
+        one: "και %{count} ακόμα"
+        other: "και %{count} ακόμα"
       bulk_invite: "Μαζική πρόσκληση"
       close_event: "Κλείσιμο εκδήλωσης"
       open_event: "Άνοιγμα εκδήλωσης"

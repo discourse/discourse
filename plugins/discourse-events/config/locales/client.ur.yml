@@ -99,6 +99,9 @@ ur:
     group_timezones:
       search: "تلاش کریں..."
       group_availability: "%{group} دستیابی"
+    discourse_workflows:
+      post_event:
+        topic_id: "ٹاپک ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -190,6 +193,8 @@ ur:
           add: "URL شامل کریں"
         description:
           label: "تفصیل"
+        hosts:
+          label: "ہوسٹس"
         event_type:
           public:
             title: "عوامی"

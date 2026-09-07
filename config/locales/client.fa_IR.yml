@@ -5150,6 +5150,7 @@ fa_IR:
         filters:
           country: "کشور"
           browser: "مرورگر"
+          language: "زبان"
           ip: "نشانی IP"
         series:
           anonymous_human: "ناشناس"

@@ -5,6 +5,7 @@ module Helpers
 
   class NotAThemeError < StandardError
   end
+
   class NotAComponentThemeError < StandardError
   end
 

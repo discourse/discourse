@@ -62,7 +62,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.system = true
 end
 
@@ -86,9 +86,10 @@ end
       GROUP BY user_id
       HAVING SUM(#{duration_sql}) >= #{threshold}
     SQL
+    b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = false
+    b.default_enabled = true
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -106,7 +107,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.system = true
 end
 
@@ -122,9 +123,10 @@ end
     b.target_posts = false
     b.show_posts = false
     b.query = co_presence_distinct_partners.call(count)
+    b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = false
+    b.default_enabled = true
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -145,9 +147,10 @@ end
     b.target_posts = false
     b.show_posts = false
     b.query = co_presence_with_one_partner.call(threshold)
+    b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = false
+    b.default_enabled = true
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -168,14 +171,16 @@ end
     b.target_posts = false
     b.show_posts = false
     b.query = <<~SQL
-      SELECT user_id, current_timestamp granted_at
-      FROM voice_sessions
-      GROUP BY user_id
-      HAVING COUNT(DISTINCT room_id) >= #{count}
+      SELECT s.user_id, current_timestamp granted_at
+      FROM voice_sessions s
+      JOIN voice_rooms r ON r.id = s.room_id AND NOT r.ephemeral
+      GROUP BY s.user_id
+      HAVING COUNT(DISTINCT s.room_id) >= #{count}
     SQL
+    b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = false
+    b.default_enabled = true
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -196,9 +201,10 @@ end
     b.target_posts = false
     b.show_posts = false
     b.query = loyalty_query.call(days)
+    b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = false
+    b.default_enabled = true
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -216,7 +222,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.system = true
 end
 
@@ -234,13 +240,15 @@ end
     b.query = <<~SQL
       SELECT r.creator_id user_id, current_timestamp granted_at
       FROM voice_rooms r
-      JOIN voice_sessions s ON s.room_id = r.id
+      JOIN voice_sessions s ON s.room_id = r.id AND s.user_id <> r.creator_id
+      WHERE NOT r.ephemeral
       GROUP BY r.creator_id
-      HAVING COUNT(s.id) >= #{count}
+      HAVING COUNT(DISTINCT s.user_id) >= #{count}
     SQL
+    b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = false
+    b.default_enabled = true
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -258,7 +266,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.system = true
 end
 
@@ -280,9 +288,10 @@ end
       GROUP BY invited_by_id
       HAVING COUNT(DISTINCT user_id) >= #{count}
     SQL
+    b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = false
+    b.default_enabled = true
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -300,7 +309,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.system = true
 end
 
@@ -314,7 +323,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.system = true
 end
 
@@ -328,7 +337,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.system = true
 end
 
@@ -346,9 +355,10 @@ Badge.seed(:name) do |b|
     GROUP BY user_id
     HAVING SUM(#{duration_sql}) >= #{5.hours.to_i}
   SQL
+  b.auto_revoke = false
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.system = true
 end
 
@@ -362,7 +372,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = false
+  b.default_enabled = true
   b.default_allow_title = true
   b.system = true
 end

@@ -91,6 +91,19 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
 
         expect(comment_poster.reload.silenced?).to eq(false)
       end
+
+      it "attributes the unsilence to the reviewable" do
+        reviewable.perform(moderator, :disagree)
+
+        history =
+          UserHistory.find_by(
+            action: UserHistory.actions[:unsilence_user],
+            target_user_id: comment_poster.id,
+          )
+
+        expect(history.acting_user_id).to eq(moderator.id)
+        expect(history.reviewable_id).to eq(reviewable.id)
+      end
     end
 
     context "when the user was silenced for a different reason" do

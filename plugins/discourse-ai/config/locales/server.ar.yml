@@ -119,7 +119,6 @@ ar:
     ai_helper_post_illustrator_agent: "الوكيل المراد استخدامه لميزة توضيح المنشور الخاصة بمساعد الذكاء الاصطناعي. ملاحظة: يجب عليك أيضًا إنشاء أداة لإنشاء الصور (المسؤول > المكوّنات الإضافية > Discourse AI > الأدوات) لكي تعمل هذه الميزة."
     ai_helper_chat_thread_title_agent: "الوكيل الذي سيتم استخدامه لإنشاء عناوين سلاسل المحادثات."
     ai_embeddings_selected_model: "استخدم النموذج المُحدَّد لتوليد التضمينات."
-    ai_embeddings_generate_for_pms: "إنشاء تضمينات للرسائل الشخصية."
     ai_embeddings_semantic_related_topics_enabled: "استخدام البحث الدلالي للموضوعات ذات الصلة."
     ai_embeddings_semantic_related_topics: "أقصى عدد من الموضوعات لعرضها في قسم الموضوع ذي الصلة."
     ai_embeddings_backfill_batch_size: "عدد التضمينات المراد ملئها رجعيًا كل 15 دقيقة."

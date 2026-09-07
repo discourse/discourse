@@ -93,7 +93,6 @@ tr_TR:
     ai_helper_post_illustrator_agent: "AI yardımcısının \"gönderiyi görselleştir\" özelliği için kullanılacak araç. Not: Bu özelliğin çalışması için ayrıca bir görsel oluşturma aracı oluşturmanız gerekir (Yönetici > Eklentiler > Discourse AI > Araçlar)."
     ai_helper_chat_thread_title_agent: "Sohbet başlıklarını oluşturmak için kullanılacak işleyici."
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
-    ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
     ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Aramayı kullanın."
     ai_embeddings_semantic_related_topics: "İlgili konu bölümünde gösterilecek maksimum konu sayısı."
     ai_embeddings_backfill_batch_size: "Her 15 dakikada bir geri doldurulacak gömme sayısı."

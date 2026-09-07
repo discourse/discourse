@@ -6047,6 +6047,7 @@ ug:
           visitors: "زىيارەتچى"
         filters:
           browser: "توركۆرگۈ"
+          language: "تىل"
           ip: "IP ئادرېس"
         series:
           anonymous_human: "نامسىز"

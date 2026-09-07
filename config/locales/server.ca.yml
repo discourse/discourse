@@ -599,6 +599,7 @@ ca:
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
   admin_site_traffic_explorer:
+    unknown: "Desconegut"
     traffic_types:
       anonymous: "Anònim"
   change_email:
@@ -1567,7 +1568,6 @@ ca:
     errors:
       invalid_email: "Adreça de correu no vàlida."
       invalid_username: "No hi ha cap usuari amb aquest nom."
-      invalid_group: "No hi ha cap grup amb aquest nom."
       invalid_integer_min_max: "El valor ha de ser entre %{min} i %{max}."
       invalid_integer_min: "El valor ha de ser %{min} o més gran."
       invalid_integer_max: "El valor no pot ser més gran de %{max}."

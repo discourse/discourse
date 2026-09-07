@@ -980,6 +980,7 @@ fi:
       windows: "Microsoft Windows"
       unknown: "tuntematon käyttöjärjestelmä"
   admin_site_traffic_explorer:
+    unknown: "Tuntematon"
     traffic_types:
       anonymous: "Anonyymeja"
   change_email:
@@ -1824,7 +1825,7 @@ fi:
     share_links: "Mitkä kohteet näytetään jakamisvalintaikkunassa ja missä järjestyksessä."
     allow_username_in_share_links: "Salli käyttäjätunnusten sisällyttäminen jakolinkkeihin. Tämä on hyödyllistä kunniamerkkien antamiseksi yksilöllisten vierailijoiden perusteella."
     site_contact_username: "Henkilökuntaan kuuluvan käyttäjä, jonka nimissä kaikki automaattiset viestit lähetetään. Jos jätetty tyhjäksi, oletuksena on oletusjärjestelmätili."
-    site_contact_group_name: "Kelvollinen ryhmän nimi, joka saa kutsun kaikkiin automaattisesti lähetettyihin henkilökohtaisiin viesteihin."
+    site_contact_group_name: "Ryhmä, joka saa kutsun kaikkiin automaattisesti lähetettyihin henkilökohtaisiin viesteihin."
     send_welcome_message: "Lähetä kaikille uusille käyttäjille tervetuloviesti, jossa on pika-aloitusopas."
     send_tl1_welcome_message: "Lähetä luottamustason 1 saavuttaville käyttäjille yksityinen tervetuloviesti."
     send_tl2_promotion_message: "Lähetä uusille luottamustason 2 käyttäjille viesti ylennyksestä."
@@ -2397,7 +2398,6 @@ fi:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä käyttäjätunnuksella ei löydy käyttäjää."
       valid_username: "Tällä käyttäjätunnuksella löytyy käyttäjä."
-      invalid_group: "Tällä nimellä ei löydy ryhmää."
       invalid_integer_min_max: "Arvon pitää olla välillä %{min}–%{max}."
       invalid_integer_min: "Arvon pitää olla vähintään %{min}."
       invalid_integer_max: "Arvo ei voi olla suurempi kuin %{max}."

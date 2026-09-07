@@ -23,6 +23,9 @@ sr:
         week: "Nedelja"
         day: "Dan"
         year: "Godina"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Teme"
     discourse_post_event:
       event_description:
         show_more: "Pokaži više"

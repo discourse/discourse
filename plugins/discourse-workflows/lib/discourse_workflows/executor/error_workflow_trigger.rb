@@ -47,6 +47,7 @@ module DiscourseWorkflows
 
       def build_error_data(error)
         {
+          "trigger" => failed_run_trigger_data,
           "workflow" => {
             "id" => @workflow.id.to_s,
             "name" => @workflow.name,
@@ -60,6 +61,13 @@ module DiscourseWorkflows
             "mode" => compatible_execution_mode,
           },
         }
+      end
+
+      # chained error workflows would otherwise nest the payload on every hop
+      def failed_run_trigger_data
+        return if @execution_mode == :error_mode
+
+        @execution&.trigger_data
       end
 
       def execution_url

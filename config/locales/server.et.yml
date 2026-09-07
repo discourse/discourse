@@ -453,6 +453,7 @@ et:
       windows: "Microsoft Windows"
       unknown: "tundmatu operatsioonisüsteem"
   admin_site_traffic_explorer:
+    unknown: "Teadmata"
     traffic_types:
       anonymous: "Anonüümne"
   change_email:

@@ -6,6 +6,7 @@ import "./loader-shims";
 import "./ui-kit-shims";
 import "./module-shims";
 import "./discourse-common-loader-shims";
+import "@warp-drive/ember/install";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 import { registerSettings } from "discourse/lib/theme-settings-store";

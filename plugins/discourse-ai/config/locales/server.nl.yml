@@ -93,7 +93,6 @@ nl:
     ai_helper_post_illustrator_agent: "De te gebruiken agent voor de berichtillustratiefunctie van de opstellings-AI-helper. Opmerking: je moet ook een hulpmiddel tool voor het genereren van afbeeldingen maken (Beheerde > Plug-ins > Discourse AI > Tools) om deze functie te laten werken."
     ai_helper_chat_thread_title_agent: "De te gebruiken agent voor het genereren van chatthreadtitels."
     ai_embeddings_selected_model: "Gebruik het geselecteerde model voor het genereren van insluitingen."
-    ai_embeddings_generate_for_pms: "Genereer insluitingen voor persoonlijke berichten."
     ai_embeddings_semantic_related_topics_enabled: "Gebruik semantisch zoeken voor gerelateerde topics."
     ai_embeddings_semantic_related_topics: "Maximaal aantal topics om weer te geven in de sectie met gerelateerde topics."
     ai_embeddings_backfill_batch_size: "Aantal insluitingen dat elke 15 minuten moet worden aangevuld."

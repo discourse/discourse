@@ -981,6 +981,7 @@ zh_TW:
       unknown: "未知操作系統"
   admin_site_traffic_explorer:
     direct_or_unknown: "直接／未知"
+    unknown: "未知"
     traffic_types:
       logged_in: "已登入"
       anonymous: "匿名"
@@ -1950,7 +1951,7 @@ zh_TW:
     share_links: "確定分享對話框中顯示的條目以及顯示順序。"
     allow_username_in_share_links: "允許分享連結包含使用者名稱。這有助於依不重複訪客獎勵徽章。"
     site_contact_username: "用于發送所有自動消息的有效管理人員使用者名。如果留空，將使用默認系統帳號。"
-    site_contact_group_name: "會受邀加入所有自動傳送之私人訊息的有效群組名稱。"
+    site_contact_group_name: "受邀接收所有自動發送的私人訊息的群組。"
     send_welcome_message: "向所有新使用者發送帶有快速入門指南的歡迎消息。"
     send_tl1_welcome_message: "向新的信任級別 1 使用者發送歡迎消息。"
     send_tl2_promotion_message: "向新晉升信任等級 2 的使用者傳送晉升訊息。"
@@ -2687,7 +2688,6 @@ zh_TW:
       invalid_email: "無效的電子郵件地址。"
       invalid_username: "沒有使用該使用者名的使用者。"
       valid_username: "已有使用此使用者名稱的使用者。"
-      invalid_group: "沒有使用該名稱的群組。"
       invalid_svg: "SVG 圖片無效。必須包含 SVG 元素，且不得包含指令碼或事件處理常式。"
       invalid_upload: "上傳項目無效或不存在。"
       invalid_topic: "沒有使用該 ID 的主題。"

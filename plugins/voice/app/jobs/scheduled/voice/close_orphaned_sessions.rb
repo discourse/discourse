@@ -25,8 +25,7 @@ module Jobs
           ::Voice::ParticipantTracker.remove(session.room_id, session.user_id)
 
           user = User.find_by(id: session.user_id)
-          room = ::Voice::Room.find_by(id: session.room_id)
-          ::Voice::BadgeGranterHooks.on_leave(user, session, room: room) if user && room
+          ::Voice::BadgeGranterHooks.on_leave(user, session) if user
         end
       end
     end

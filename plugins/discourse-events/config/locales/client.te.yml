@@ -24,6 +24,9 @@ te:
         week: "వారం"
         day: "రోజు"
         year: "సంవత్సరం"
+    discourse_workflows:
+      post_event:
+        topic_id: "విషయపు ఐడీ"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

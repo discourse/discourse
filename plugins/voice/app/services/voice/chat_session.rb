@@ -45,6 +45,51 @@ module Voice
         guardian.can_chat? && guardian.can_join_chat_channel?(channel)
       end
 
+      def available_for_rooms(rooms, guardian)
+        availability = rooms.to_h { |room| [room.id, false] }
+        return availability unless chat_available?
+        return availability if guardian.anonymous? || !guardian.can_chat?
+
+        channel_ids = rooms.filter_map(&:chat_channel_id).uniq
+        return availability if channel_ids.empty?
+
+        channels = ::Chat::Channel.includes(:chatable).where(id: channel_ids).index_by(&:id)
+        direct_messages =
+          channels.values.filter_map do |channel|
+            channel.chatable if channel.direct_message_channel?
+          end
+        if direct_messages.present?
+          ActiveRecord::Associations::Preloader.new(
+            records: direct_messages,
+            associations: :users,
+          ).call
+        end
+
+        category_ids =
+          channels.values.filter_map { |channel| channel.chatable_id if channel.category_channel? }
+        post_allowed_category_ids =
+          if !guardian.is_anonymous? && category_ids.present?
+            Category.post_create_allowed(guardian).where(id: category_ids).pluck(:id)
+          end
+
+        rooms.each do |room|
+          channel = channels[room.chat_channel_id]
+          room.preload_chat_channel(channel)
+          next unless channel
+
+          availability[room.id] = if post_allowed_category_ids
+            guardian.can_join_chat_channel?(
+              channel,
+              post_allowed_category_ids: post_allowed_category_ids,
+            )
+          else
+            guardian.can_join_chat_channel?(channel)
+          end
+        end
+
+        availability
+      end
+
       # A snapshot of the room's live chat session for the client: the linked
       # channel and the active thread (if any). Never creates anything.
       def state(room)

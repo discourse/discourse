@@ -6231,6 +6231,7 @@ pt_BR:
         filters:
           country: "País"
           browser: "Navegador"
+          language: "Idioma"
           ip: "Endereço IP"
         series:
           anonymous_human: "Anônimo(a)"

@@ -999,6 +999,7 @@ es:
       windows: "Microsoft Windows"
       unknown: "sistema operativo desconocido"
   admin_site_traffic_explorer:
+    unknown: "Desconocido"
     traffic_types:
       anonymous: "Anónimas"
   change_email:
@@ -1873,7 +1874,7 @@ es:
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
     allow_username_in_share_links: "Permitir que los nombres de usuario se incluyan en los enlaces compartidos. Esto es útil para premiar medallas basadas en visitantes únicos."
     site_contact_username: "Nombre de usuario de miembro del equipo desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
-    site_contact_group_name: "Un nombre válido de un grupo al que se invita a todos los mensajes personales enviados automáticamente."
+    site_contact_group_name: "El grupo al que se invita a todos los mensajes personales enviados automáticamente."
     send_welcome_message: "Enviar a todos los usuarios nuevos un mensaje de bienvenida con una guía rápida de inicio."
     send_tl1_welcome_message: "Enviar a los nuevos usuarios con nivel de confianza 1 un mensaje de bienvenida."
     send_tl2_promotion_message: "Enviar un mensaje a los nuevos usuarios de nivel de confianza 2 cuando suban de nivel."
@@ -2486,7 +2487,6 @@ es:
       invalid_email: "Dirección de correo electrónico no válida."
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
       valid_username: "Ya hay otro usuario con ese nombre de usuario."
-      invalid_group: "No existe ningún grupo con ese nombre."
       invalid_svg: "La imagen SVG no es válida. Debe contener un elemento SVG y ningún script ni controlador de eventos."
       invalid_upload: "La subida no es válida o no existe."
       invalid_topic: "No existe ningún tema con ese ID."

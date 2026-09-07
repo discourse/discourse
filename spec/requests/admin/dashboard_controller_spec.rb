@@ -36,7 +36,7 @@ RSpec.describe Admin::DashboardController do
       },
     ]
 
-    Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+    DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
   end
 
   describe "#index" do
@@ -1255,6 +1255,7 @@ RSpec.describe Admin::DashboardController do
     let(:fake_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "fake_source"
+
         def self.fetch_many(identifiers, guardian:, filters: {})
           identifiers.each_with_object({}) do |id, h|
             h[id.to_s] = { id: id.to_s, filters: filters }
@@ -1266,6 +1267,7 @@ RSpec.describe Admin::DashboardController do
     let(:raising_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "raising_source"
+
         def self.fetch_many(identifiers, guardian:, filters: {})
           identifiers.each_with_object({}) do |id, h|
             raise "boom" if id == "broken"
@@ -1571,6 +1573,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
+              "languages" => [{ "value" => "", "label" => "Unknown", "pageviews" => 3 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
                 { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
@@ -1775,6 +1778,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
+              "languages" => [{ "value" => "", "label" => "Unknown", "pageviews" => 2 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
                 { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
@@ -1871,6 +1875,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
               ],
               "browsers" => [{ "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 }],
+              "languages" => [{ "value" => "", "label" => "Unknown", "pageviews" => 2 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
               ],
@@ -1996,6 +2001,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
+              "languages" => [{ "value" => "", "label" => "Unknown", "pageviews" => 2 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
                 { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
@@ -2325,6 +2331,7 @@ RSpec.describe Admin::DashboardController do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "fake_source"
         def self.label = "Fake"
+
         def self.accessible_ids(identifiers, guardian:)
           identifiers.map(&:to_s).reject { |id| id == "forbidden" }.to_set
         end

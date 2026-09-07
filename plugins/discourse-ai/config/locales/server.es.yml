@@ -93,7 +93,6 @@ es:
     ai_helper_post_illustrator_agent: "El agente que se utilizará para la característica de ilustrar publicación del ayudante de IA. Nota: También debes crear una herramienta de generación de imágenes (Administración > Plugins > Discourse AI > Herramientas) para que esta característica funcione."
     ai_helper_chat_thread_title_agent: "El agente que se utilizará para generar los títulos de los hilos de chat."
     ai_embeddings_selected_model: "Utiliza el modelo seleccionado para generar incrustaciones."
-    ai_embeddings_generate_for_pms: "Generar incrustaciones para mensajes personales."
     ai_embeddings_semantic_related_topics_enabled: "Utilizar la Búsqueda semántica para temas relacionados."
     ai_embeddings_semantic_related_topics: "Número máximo de temas que se mostrarán en la sección de temas relacionados."
     ai_embeddings_backfill_batch_size: "Número de incrustaciones a rellenar cada 15 minutos."

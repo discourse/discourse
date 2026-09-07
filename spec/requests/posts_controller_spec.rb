@@ -4296,6 +4296,18 @@ RSpec.describe PostsController do
   end
 
   describe "#latest" do
+    it "returns the translated excerpt" do
+      viewer = Fabricate(:user, locale: "ja")
+      SiteSetting.content_localization_enabled = true
+      post = Fabricate(:post, raw: "Original post body", locale: "en")
+      Fabricate(:post_localization, post: post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+
+      sign_in(viewer)
+      get "/posts.json"
+
+      expect(response.parsed_body["latest_posts"].first["excerpt"]).to eq("翻訳された本文")
+    end
+
     context "with private posts" do
       describe "when not logged in" do
         it "should return the right response" do

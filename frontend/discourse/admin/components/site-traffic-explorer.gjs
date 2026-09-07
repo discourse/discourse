@@ -161,6 +161,7 @@ export default class SiteTrafficExplorer extends Component {
   get visitorsTabs() {
     return [
       this.#tab({ dimension: "browsers", filter: "browser" }),
+      this.#tab({ dimension: "languages", filter: "language" }),
       this.#tab({ dimension: "ip_addresses", filter: "ip" }),
     ];
   }

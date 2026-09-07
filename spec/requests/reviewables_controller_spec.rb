@@ -50,6 +50,27 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"]).to eq([])
       end
 
+      it "loads the acting user behind every author penalty in one query" do
+        silencers =
+          3.times.map do
+            author = Fabricate(:user, refresh_auto_groups: true)
+            flagged_post = Fabricate(:post, user: author)
+            silencer = Fabricate(:moderator)
+            UserSilencer.silence(author, silencer, post_id: flagged_post.id)
+            PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), flagged_post)
+            silencer
+          end
+
+        queries = track_sql_queries { get "/review.json" }
+
+        loaded_one_by_one =
+          silencers.select do |silencer|
+            queries.any? { |sql| sql.include?(%Q("users"."id" = #{silencer.id} LIMIT 1)) }
+          end
+
+        expect(loaded_one_by_one).to eq([])
+      end
+
       it "returns JSON with reviewable content" do
         reviewable = Fabricate(:reviewable_flagged_post)
 

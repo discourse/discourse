@@ -1004,6 +1004,7 @@ nl:
       windows: "Microsoft Windows"
       unknown: "onbekend besturingssysteem"
   admin_site_traffic_explorer:
+    unknown: "Onbekend"
     traffic_types:
       anonymous: "Anoniem"
   change_email:
@@ -1880,7 +1881,7 @@ nl:
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
     allow_username_in_share_links: "Sta toe dat gebruikersnamen worden opgenomen in gedeelde links. Dit is handig om badges toe te kennen op basis van unieke bezoekers."
     site_contact_username: "Een geldige gebruikersnaam van een medewerker waarvandaan alle automatische berichten worden verzonden. Wanneer leeg gelaten, wordt de standaardaccount van het systeem gebruikt."
-    site_contact_group_name: "Een geldige naam van een groep die wordt uitgenodigd voor alle automatisch gestuurde persoonlijke berichten."
+    site_contact_group_name: "De groep die wordt uitgenodigd voor alle automatisch gestuurde persoonlijke berichten."
     send_welcome_message: "Alle nieuwe gebruikers een welkomstbericht met een snelstartgids sturen."
     send_tl1_welcome_message: "Nieuwe gebruikers met vertrouwensniveau 1 een welkomstbericht sturen."
     send_tl2_promotion_message: "Nieuwe gebruikers met vertrouwensniveau 2 een bericht over promotie sturen."
@@ -2502,7 +2503,6 @@ nl:
       invalid_email: "Ongeldig e-mailadres."
       invalid_username: "Er is geen gebruiker met die gebruikersnaam."
       valid_username: "Er is een gebruiker met die gebruikersnaam."
-      invalid_group: "Er is geen groep met die naam."
       invalid_svg: "De SVG-afbeelding is ongeldig. Het moet een SVG-element bevatten en geen scripts of gebeurtenis-handlers."
       invalid_upload: "De upload is ongeldig of bestaat niet."
       invalid_topic: "Er is geen topic met die ID."

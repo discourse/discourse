@@ -65,5 +65,14 @@ RSpec.describe Sidekiq::Pausable, type: :multisite do
         expect(called2).to eq(true)
       end
     end
+
+    it "runs a job for a site this process does not know about" do
+      Sidekiq.pause!
+
+      called = false
+      call_middleware("unknown-site") { called = true }
+
+      expect(called).to eq(true)
+    end
   end
 end

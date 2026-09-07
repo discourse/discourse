@@ -4546,6 +4546,7 @@ te:
         apply: "దరఖాస్తు చేసుకోండి"
         filters:
           browser: "బ్రౌజర్"
+          language: "భాష"
           ip: "ఐపీ చిరునామా"
         series:
           anonymous_human: "అనామక"

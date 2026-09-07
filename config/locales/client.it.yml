@@ -5648,6 +5648,7 @@ it:
         filters:
           country: "Paese"
           browser: "Browser"
+          language: "Lingua"
           ip: "Indirizzo IP"
         series:
           anonymous_human: "Anonimo"

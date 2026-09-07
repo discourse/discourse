@@ -910,6 +910,7 @@ ja:
       windows: "Microsoft Windows"
       unknown: "不明なオペレーティングシステム"
   admin_site_traffic_explorer:
+    unknown: "不明"
     traffic_types:
       anonymous: "匿名ユーザー"
   change_email:
@@ -1772,7 +1773,7 @@ ja:
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
     allow_username_in_share_links: "ユーザー名を共有リンクに含めることを許可します。これは、ユニークビジター数に応じてバッジを与えるのに役立ちます。"
     site_contact_username: "自動送信メールの from に使用される有効なスタッフのユーザー名。空欄の場合デフォルトのシステムアカウントが使用されます。"
-    site_contact_group_name: "自動的に送信されるすべての個人メッセージに招待される有効なグループ名。"
+    site_contact_group_name: "自動的に送信されるすべての個人メッセージに招待されるグループ。"
     send_welcome_message: "すべての新規ユーザーにクイックスタートガイド付きのようこそメッセージを送信する。"
     send_tl1_welcome_message: "新しい信頼レベル 1 のユーザーにようこそメッセージを送信します。"
     send_tl2_promotion_message: "新しい信頼レベル 2 ユーザーに昇格に関するメッセージを送信します。"
@@ -2366,7 +2367,6 @@ ja:
       invalid_email: "無効なメールアドレスです。"
       invalid_username: "そのユーザー名のユーザは存在しません。"
       valid_username: "そのユーザー名のユーザーが存在します。"
-      invalid_group: "その名前のグループは存在しません。"
       invalid_topic: "その ID のトピックは存在しません。"
       invalid_integer_min_max: "値は %{min} から %{max} の間である必要があります。"
       invalid_integer_min: "値は %{min} 以上である必要があります。"

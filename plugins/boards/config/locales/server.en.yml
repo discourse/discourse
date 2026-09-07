@@ -1,6 +1,6 @@
 en:
   site_settings:
-    boards_enabled: "Organize topics, and lightweight standalone “floater” cards, into configurable, drag-and-drop kanban-style boards, all with a purpose-built management UI and per-board access control"
+    boards_enabled: "Organize topics, and lightweight standalone “floater” cards, into configurable, drag-and-drop kanban-style boards and columns, all with a purpose built management UI and per-board access control"
     boards_manage_board_allowed_groups: "Groups allowed to create and configure boards."
   access_control_list:
     errors:

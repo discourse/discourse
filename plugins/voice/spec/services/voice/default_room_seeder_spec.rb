@@ -36,12 +36,16 @@ RSpec.describe Voice::DefaultRoomSeeder do
     expect { described_class.ensure! }.to change { Voice::Room.persistent.count }.by(1)
   end
 
-  it "does nothing if rooms already exist" do
+  it "does nothing if rooms already exist without checking pending migrations" do
     SiteSetting.voice_enabled = true
     wipe_rooms!
     Fabricate(:voice_room, name: "Existing", creator: Fabricate(:admin))
 
-    expect { described_class.ensure! }.not_to change { Voice::Room.count }
+    described_class.ensure!
+    queries = track_sql_queries { described_class.ensure! }
+
+    expect(Voice::Room.count).to eq(1)
+    expect(queries.grep(/pg_class|schema_migrations/)).to be_empty
   end
 
   def wipe_rooms!

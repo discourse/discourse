@@ -1463,7 +1463,6 @@ class BulkImport::Base
     user[:staged] = false if user[:staged].nil?
     user[:admin] ||= false
     user[:moderator] ||= false
-    user[:last_emailed_at] ||= NOW
     user[:created_at] ||= NOW
     user[:updated_at] ||= user[:created_at]
 
@@ -1472,7 +1471,6 @@ class BulkImport::Base
       user[:approved_at] ||= user[:created_at]
       user[:approved_by_id] ||= Discourse::SYSTEM_USER_ID
     end
-    user[:suspended_at] ||= user[:suspended_at]
     user[:suspended_till] ||= user[:suspended_till] ||
       (200.years.from_now if user[:suspended_at].present?)
 

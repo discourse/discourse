@@ -429,6 +429,7 @@ bg:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Неизвестно"
     traffic_types:
       anonymous: "Анонимен"
   change_email:

@@ -966,11 +966,6 @@ tr_TR:
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-7: "Antropic'in en akıllı modeli"
-          anthropic-claude-sonnet-4-6: "Hız ve maliyetin optimum dengesi"
-          anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
-          google-gemini-3-1-pro-preview: "Google'ın en akıllı modeli"
-          open_router-moonshotai-kimi-k2-6: "Moonshot'ın vizyon yeteneklerine sahip multimodal modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
           title: "Yapılandırılmış LLM'ler"

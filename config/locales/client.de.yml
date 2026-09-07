@@ -6785,6 +6785,7 @@ de:
           referrer: "Referrer"
           country: "Land"
           browser: "Browser"
+          language: "Sprache"
           ip: "IP-Adresse"
         metrics:
           logged_in_share:

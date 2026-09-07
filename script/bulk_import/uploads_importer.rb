@@ -27,6 +27,7 @@ module BulkImport
   class UploadsImporter
     class DownloadFailedError < StandardError
     end
+
     class UploadSizeExceededError < DownloadFailedError
     end
 
@@ -777,6 +778,7 @@ module BulkImport
           def self.current_db_override=(value)
             @current_db_override = value
           end
+
           def self.current_db
             @current_db_override
           end

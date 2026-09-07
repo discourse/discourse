@@ -830,13 +830,6 @@ ru:
           other: "Эта модель сейчас используется в следующих параметрах: %{settings}. В случае неправильной настройки функции не будут работать должным образом. "
         model_description:
           none: "Общие настройки, подходящие для большинства языковых моделей"
-          anthropic-claude-opus-4-7: "Самая интеллектуальная модель Anthropic"
-          anthropic-claude-sonnet-4-6: "Оптимальный баланс скорости и стоимости"
-          anthropic-claude-haiku-4-5: "Быстрая и экономически эффективная модель"
-          google-gemini-3-1-pro-preview: "Самая интеллектуальная модель Google"
-          open_router-moonshotai-kimi-k2-6: "Мультимодальная модель Moonshot с возможностями компьютерного зрения"
-          open_router-deepseek-deepseek-v4-flash: "Новейшая высокопроизводительная модель DeepSeek с обработкой 1 миллиона контекстных данных."
-          open_router-minimax-minimax-m2-7: "Модель MiniMax с большим контекстом"
         preseeded_model_description: "Предварительно настроенная модель с открытым исходным кодом, использующая %{model}"
         configured:
           title: "Настроенные LLM"
