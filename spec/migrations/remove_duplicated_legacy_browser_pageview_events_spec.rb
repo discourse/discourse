@@ -8,9 +8,17 @@ RSpec.describe RemoveDuplicatedLegacyBrowserPageviewEvents do
   before do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    DB.exec(
+      "ALTER TABLE browser_pageview_events DISABLE TRIGGER skip_piggyback_browser_pageview_events",
+    )
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
+  after do
+    DB.exec(
+      "ALTER TABLE browser_pageview_events ENABLE TRIGGER skip_piggyback_browser_pageview_events",
+    )
+    ActiveRecord::Migration.verbose = @original_verbose
+  end
 
   it "removes duplicated legacy events after batches without matches" do
     standalone_legacy = Fabricate(:browser_pageview_event, session_id: "legacy-session")
@@ -25,6 +33,9 @@ RSpec.describe RemoveDuplicatedLegacyBrowserPageviewEvents do
     DB.exec(
       "UPDATE browser_pageview_events SET source = 1 WHERE id IN (:ids)",
       ids: [standalone_legacy.id, another_standalone_legacy.id, duplicated_legacy.id],
+    )
+    DB.exec(
+      "ALTER TABLE browser_pageview_events ENABLE TRIGGER skip_piggyback_browser_pageview_events",
     )
 
     stub_const(described_class, "BATCH_SIZE", 2) { described_class.new.up }
