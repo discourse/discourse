@@ -1,8 +1,18 @@
 import { getOwner } from "@ember/owner";
-import { click, find, render, settled } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  focus,
+  render,
+  settled,
+  triggerEvent,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import ModalContainer from "discourse/components/modal-container";
 import DMenus from "discourse/float-kit/components/d-menus";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatChannelListFilterMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-filter-menu";
 import ChatChannelListOptionsMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-options-menu";
@@ -158,13 +168,14 @@ module(
         .doesNotExist("the submenu closes while the save is pending");
       assert
         .dom(".menu-trigger")
-        .isNotFocused("a pointer selection does not leave the cog visible");
+        .isFocused("the menu restores focus to its trigger after selection");
 
       resolveSave(true);
       await settled();
     });
 
-    test("does not focus the background trigger for a mobile modal", async function (assert) {
+    test("closes mobile modals and restores focus after selection", async function (assert) {
+      forceMobile();
       const preferences = getOwner(this).lookup(
         "service:chat-channel-list-preferences"
       );
@@ -174,22 +185,86 @@ module(
         <template>
           <button class="menu-trigger" type="button">Open</button>
           <DMenus />
+          <ModalContainer />
         </template>
       );
       const menu = getOwner(this).lookup("service:menu");
-      sinon.stub(menu, "shouldRenderInModal").returns(true);
+      await menu.show(find(".menu-trigger"), {
+        component: ChatChannelListOptionsMenu,
+        contentRole: "menu",
+        identifier: "chat-channel-list-options-menu",
+        modalForMobile: true,
+      });
+      await click('[data-menu-option-id="filterChannels"]');
+
+      assert
+        .dom(
+          '.fk-d-menu-modal[data-identifier="chat-channel-list-filter-menu"]'
+        )
+        .exists("the submenu renders as a mobile modal");
+      await click(".chat-channel-list-filter-menu__mentions");
+      assert.dom(".fk-d-menu-modal").doesNotExist("both modal menus close");
+
+      assert
+        .dom(".menu-trigger")
+        .isFocused("focus returns to the trigger after the modals close");
+    });
+
+    test("Escape and keyboard selection close the menu tree", async function (assert) {
+      const preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
+      await render(
+        <template>
+          <button class="menu-trigger" type="button">Open</button>
+          <DMenus />
+        </template>
+      );
+      const menu = getOwner(this).lookup("service:menu");
       await menu.show(find(".menu-trigger"), {
         component: ChatChannelListOptionsMenu,
         contentRole: "menu",
         identifier: "chat-channel-list-options-menu",
       });
       await click('[data-menu-option-id="filterChannels"]');
-
-      await click(".chat-channel-list-filter-menu__mentions");
+      await focus(".chat-channel-list-filter-menu__mentions");
+      await triggerKeyEvent(document.activeElement, "keydown", "Escape");
 
       assert
+        .dom(".chat-channel-list-filter-menu")
+        .doesNotExist("Escape dismisses the submenu");
+      assert
+        .dom(".chat-channel-list-options-menu")
+        .doesNotExist("Escape dismisses the parent menu too");
+      assert
         .dom(".menu-trigger")
-        .isNotFocused("focus is not moved behind the mobile modal");
+        .isFocused("focus returns to the outer trigger");
+
+      await menu.show(find(".menu-trigger"), {
+        component: ChatChannelListOptionsMenu,
+        contentRole: "menu",
+        identifier: "chat-channel-list-options-menu",
+      });
+      await focus('[data-menu-option-id="filterChannels"]');
+      // Key events from test helpers do not synthesize the native button click.
+      await triggerEvent(document.activeElement, "click", { detail: 0 });
+      await focus(".chat-channel-list-filter-menu__mentions");
+      await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+      assert.true(
+        setFilter.calledWith("mentions"),
+        "keyboard selection saves the filter"
+      );
+      assert
+        .dom(".chat-channel-list-options-menu")
+        .doesNotExist("selection closes the parent");
+      assert
+        .dom(".chat-channel-list-filter-menu")
+        .doesNotExist("selection closes the submenu");
+      assert
+        .dom(".menu-trigger")
+        .isFocused("focus returns to the sidebar trigger");
     });
 
     test("closes the submenu before browsing channels", async function (assert) {

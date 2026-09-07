@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   CHAT_CHANNEL_LIST_FILTERS,
   CHAT_CHANNEL_LIST_SORTS,
@@ -15,6 +16,134 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
   hooks.beforeEach(function () {
     this.subject = getOwner(this).lookup("service:chat-channels-manager");
     this.fabricators = new ChatFabricators(getOwner(this));
+  });
+
+  module("#toggleStarred", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.channel = this.fabricators.channel();
+      this.channel.currentUserMembership = UserChatChannelMembership.create({
+        following: true,
+        starred: false,
+      });
+    });
+
+    test("guards pending changes and persists the optimistic value", async function (assert) {
+      const channel = this.channel;
+      const membership = channel.currentUserMembership;
+      const requests = [];
+      pretender.put(
+        `/chat/api/channels/${channel.id}/memberships/me`,
+        (request) => {
+          requests.push(
+            new URLSearchParams(request.requestBody).get("starred")
+          );
+          return response(200, {});
+        }
+      );
+      let finishClosing;
+      const closing = new Promise((resolve) => {
+        finishClosing = resolve;
+      });
+
+      const update = this.subject.toggleStarred(channel, {
+        beforeUpdate: () => closing,
+      });
+
+      assert.true(
+        this.subject.isUpdatingStarred(channel),
+        "closing the menu is guarded"
+      );
+      assert.false(
+        membership.starred,
+        "the row stays in place until the menu closes"
+      );
+      await this.subject.toggleStarred(channel);
+      assert.strictEqual(
+        requests.length,
+        0,
+        "a second caller cannot start another update"
+      );
+
+      finishClosing();
+      await closing;
+      assert.true(
+        membership.starred,
+        "the membership updates before the request completes"
+      );
+      await update;
+
+      assert.deepEqual(requests, ["true"], "one starred update is persisted");
+      assert.false(
+        this.subject.isUpdatingStarred(channel),
+        "the guard clears after saving"
+      );
+
+      await this.subject.toggleStarred(channel);
+      assert.false(
+        membership.starred,
+        "the channel can subsequently be unstarred"
+      );
+      assert.deepEqual(
+        requests,
+        ["true", "false"],
+        "the second change is persisted"
+      );
+    });
+
+    test("rolls back failed saves and permits retrying", async function (assert) {
+      const channel = this.channel;
+      pretender.put(`/chat/api/channels/${channel.id}/memberships/me`, () =>
+        response(422, { errors: ["Unable to star channel"] })
+      );
+
+      await this.subject.toggleStarred(channel);
+
+      assert.false(
+        channel.currentUserMembership.starred,
+        "the previous membership is restored"
+      );
+      assert.false(
+        this.subject.isUpdatingStarred(channel),
+        "the failed request releases the guard"
+      );
+
+      pretender.put(`/chat/api/channels/${channel.id}/memberships/me`, () =>
+        response(200, {})
+      );
+      await this.subject.toggleStarred(channel);
+      assert.true(channel.currentUserMembership.starred, "retrying succeeds");
+    });
+
+    test("releases the guard when closing the menu fails", async function (assert) {
+      const channel = this.channel;
+      let requests = 0;
+      pretender.put(`/chat/api/channels/${channel.id}/memberships/me`, () => {
+        requests++;
+        return response(200, {});
+      });
+
+      await this.subject.toggleStarred(channel, {
+        beforeUpdate: () =>
+          Promise.reject({ errors: ["Unable to close menu"] }),
+      });
+
+      assert.false(
+        channel.currentUserMembership.starred,
+        "the membership was not changed"
+      );
+      assert.strictEqual(requests, 0, "no request was sent");
+      assert.false(
+        this.subject.isUpdatingStarred(channel),
+        "the close failure releases the guard"
+      );
+
+      await this.subject.toggleStarred(channel);
+      assert.true(
+        channel.currentUserMembership.starred,
+        "a later attempt succeeds"
+      );
+      assert.strictEqual(requests, 1, "the later attempt is persisted");
+    });
   });
 
   module("#sortChannelsByActivity with starred channels", function () {

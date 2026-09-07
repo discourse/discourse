@@ -142,7 +142,7 @@ export default class SidebarSection extends Component {
       this.sidebarState.collapseSection(this.args.sectionName);
     } else {
       this.sidebarState.resetLinkReveal(
-        event.currentTarget.closest(".sidebar-sections")
+        event.target.closest(".sidebar-sections")
       );
       this.sidebarState.expandSection(this.args.sectionName);
     }
