@@ -71,7 +71,7 @@ export default class ChatChannelListFilterMenu extends Component {
             "true"
             "false"
           }}
-          class="chat-channel-list-filter-menu__active"
+          class="chat-channel-list-filter-menu__active -with-description"
           data-menu-option-id="active"
           role="menuitemradio"
           @action={{this.selectFilter}}

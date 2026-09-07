@@ -89,7 +89,7 @@ export default class ChatChannelListSortMenu extends Component {
             "true"
             "false"
           }}
-          class="chat-channel-list-sort-menu__priority"
+          class="chat-channel-list-sort-menu__priority -with-description"
           data-menu-option-id="priority"
           role="menuitemradio"
           @action={{this.selectSort}}

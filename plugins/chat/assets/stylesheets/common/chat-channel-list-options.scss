@@ -7,12 +7,20 @@
 .chat-channel-list-filter-menu,
 .chat-channel-list-sort-menu {
   .dropdown-menu__item > .btn {
+    height: auto;
+    min-height: var(--d-sidebar-row-height);
+
     > .d-icon {
       visibility: hidden;
     }
 
     &[aria-checked="true"] > .d-icon {
       visibility: visible;
+    }
+
+    &.-with-description {
+      padding-top: var(--space-2);
+      padding-bottom: var(--space-2);
     }
   }
 
@@ -25,6 +33,7 @@
   &__label-description {
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
+    padding-right: var(--space-2);
   }
 }
 
