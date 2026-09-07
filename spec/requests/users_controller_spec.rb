@@ -833,6 +833,33 @@ RSpec.describe UsersController do
       post "/u.json", params: post_user_params.merge(extra_params)
     end
 
+    it "rejects signup from a logged-in browser session" do
+      sign_in(user1)
+
+      expect { post_user }.not_to change { User.count }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects signup from an admin browser session" do
+      sign_in(admin)
+
+      expect { post_user }.not_to change { User.count }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "allows signup with an API key" do
+      api_key = Fabricate(:api_key, user: user1)
+
+      expect do
+        post "/u.json", params: post_user_params, headers: { HTTP_API_KEY: api_key.key }
+      end.to change { User.count }.by(1)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+    end
+
     context "when email params is missing" do
       it "should raise the right error" do
         post "/u.json",
@@ -1742,9 +1769,9 @@ RSpec.describe UsersController do
         let(:update_user_url) { "/u/#{user1.username}.json" }
         let(:field_id) { user_field.id.to_s }
 
-        before { sign_in(user1) }
-
         context "with multple select fields" do
+          before { sign_in(user1) }
+
           let(:valid_options) { %w[Axe Sword] }
 
           fab!(:user_field) do
@@ -1830,6 +1857,8 @@ RSpec.describe UsersController do
         end
 
         context "with dropdown fields" do
+          before { sign_in(user1) }
+
           let(:valid_options) { ["Black Mesa", "Fox Hound"] }
 
           fab!(:user_field) do
@@ -5019,8 +5048,8 @@ RSpec.describe UsersController do
       end
 
       it "raises an error when logged in" do
-        sign_in(moderator)
         post_user
+        sign_in(moderator)
 
         put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
 

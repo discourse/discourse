@@ -32,12 +32,18 @@ export const ALL_PAGES_EXCLUDED_ROUTES = [
 
 export default class WelcomeBanner extends Component {
   @service router;
+  @service site;
   @service siteSettings;
   @service currentUser;
   @service appEvents;
   @service search;
 
   checkViewport = modifier((element) => {
+    if (!this.site.can_search) {
+      this.search.welcomeBannerSearchInViewport = false;
+      return;
+    }
+
     const searchMenu =
       element.querySelector(".welcome-banner__search-menu") ?? element;
 
@@ -107,6 +113,10 @@ export default class WelcomeBanner extends Component {
   });
 
   handleKeyboardShortcut = modifier(() => {
+    if (!this.site.can_search) {
+      return;
+    }
+
     const cb = (appEvent) => {
       if (
         appEvent.type === "search" &&
@@ -281,22 +291,24 @@ export default class WelcomeBanner extends Component {
             {{/if}}
           </div>
           <PluginOutlet @name="welcome-banner-below-headline" />
-          <div class="search-menu welcome-banner__search-menu">
-            {{#if this.showAdvancedSearchIcon}}
-              <DButton
-                @icon="magnifying-glass"
-                @title="search.open_advanced"
-                @href={{getURL "/search?expanded=true"}}
-                class="search-icon"
+          {{#if this.site.can_search}}
+            <div class="search-menu welcome-banner__search-menu">
+              {{#if this.showAdvancedSearchIcon}}
+                <DButton
+                  class="search-icon"
+                  @href={{getURL "/search?expanded=true"}}
+                  @icon="magnifying-glass"
+                  @title="search.open_advanced"
+                />
+              {{/if}}
+              <SearchMenu
+                @hideResults={{not this.search.welcomeBannerSearchInViewport}}
+                @location="welcome-banner"
+                @searchInputId="welcome-banner-search-input"
+                @searchInputPlaceholder="welcome_banner.search_placeholder"
               />
-            {{/if}}
-            <SearchMenu
-              @location="welcome-banner"
-              @searchInputId="welcome-banner-search-input"
-              @searchInputPlaceholder="welcome_banner.search_placeholder"
-              @hideResults={{not this.search.welcomeBannerSearchInViewport}}
-            />
-          </div>
+            </div>
+          {{/if}}
           <PluginOutlet @name="welcome-banner-below-input" />
         </div>
       </div>

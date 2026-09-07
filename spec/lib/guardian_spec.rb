@@ -55,6 +55,24 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_search?" do
+    it "allows anonymous and logged-in users by default" do
+      expect(Guardian.new.can_search?).to eq(true)
+      expect(Guardian.new(user).can_search?).to eq(true)
+    end
+
+    it "only blocks anonymous users when anonymous search is disabled" do
+      SiteSetting.allow_anonymous_search = false
+
+      [false, true].each do |granular_permissions|
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
+
+        expect(Guardian.new.can_search?).to eq(false)
+        expect(Guardian.new(user).can_search?).to eq(true)
+      end
+    end
+  end
+
   describe "acl permissions" do
     fab!(:acl_user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:acl_group) { Fabricate(:group).tap { |group| group.add(acl_user) } }

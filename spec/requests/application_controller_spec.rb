@@ -42,6 +42,19 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "search metadata" do
+    it "only advertises OpenSearch to users who can search" do
+      SiteSetting.allow_anonymous_search = false
+
+      get "/latest"
+      expect(response.body).not_to have_tag("link[rel='search']")
+
+      sign_in(user)
+      get "/latest"
+      expect(response.body).to have_tag("link[rel='search']")
+    end
+  end
+
   context "for cache control headers" do
     it "sets the `no-cache, no-store` cache control response header when no error is raised" do
       get "/latest"
@@ -536,6 +549,15 @@ RSpec.describe ApplicationController do
         get "/t/nope-nope/99999999"
         expect(response.status).to eq(404)
         expect(response.body).to_not include("google.com/search")
+      end
+
+      it "does not include search when anonymous search is disabled" do
+        SiteSetting.allow_anonymous_search = false
+
+        get "/t/nope-nope/99999999"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(I18n.t("page_not_found.search_title"))
       end
 
       it "should allow anchor tags in title" do

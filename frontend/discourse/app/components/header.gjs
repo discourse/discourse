@@ -145,7 +145,7 @@ export default class GlimmerHeader extends Component {
 
   @action
   toggleSearchMenu(_, value) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (!this.site.can_search || this.isDestroying || this.isDestroyed) {
       return;
     }
 

@@ -259,6 +259,25 @@ RSpec.describe SearchController do
   end
 
   describe "#query" do
+    context "when anonymous search is disabled" do
+      before { SiteSetting.allow_anonymous_search = false }
+
+      it "requires an anonymous user to log in" do
+        get "/search/query.json", params: { term: "wookie" }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+      end
+
+      it "allows a logged-in user" do
+        sign_in(user)
+
+        get "/search/query.json", params: { term: "wookie" }
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search/query.json", params: { term: "wookie" }
@@ -403,6 +422,26 @@ RSpec.describe SearchController do
   end
 
   describe "#show" do
+    context "when an anonymous user cannot search" do
+      before { SiteSetting.allow_anonymous_search = false }
+
+      it "redirects an HTML request to login and preserves the destination" do
+        get "/search", params: { q: "猫" }
+
+        expect(response).to redirect_to("/login")
+        expect(URI.parse(response.cookies["destination_url"]).request_uri).to eq(
+          "/search?q=%E7%8C%AB",
+        )
+      end
+
+      it "rejects a JSON request" do
+        get "/search.json", params: { q: "wookie" }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+      end
+    end
+
     it "doesn't raise an error when search term not specified" do
       get "/search"
       expect(response.status).to eq(200)

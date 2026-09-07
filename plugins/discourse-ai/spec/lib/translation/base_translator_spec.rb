@@ -14,6 +14,7 @@ describe DiscourseAi::Translation::BaseTranslator do
   describe ".translate" do
     let(:text) { "cats are great" }
     let(:target_locale) { "de" }
+    let(:content_description) { "A tag about cats" }
     let(:llm_response) { "hur dur hur dur!" }
     fab!(:post)
     fab!(:topic) { post.topic }
@@ -35,9 +36,19 @@ describe DiscourseAi::Translation::BaseTranslator do
 
     it "creates BotContext with the correct parameters and calls bot.reply with model max_output_tokens" do
       post_translator =
-        DiscourseAi::Translation::PostRawTranslator.new(text:, target_locale:, post:, topic:)
+        DiscourseAi::Translation::PostRawTranslator.new(
+          text:,
+          target_locale:,
+          content_description:,
+          post:,
+          topic:,
+        )
 
-      expected_content = { content: text, target_locale: target_locale }.to_json
+      expected_content = {
+        content: text,
+        target_locale: target_locale,
+        content_description:,
+      }.to_json
 
       bot_context = instance_double(DiscourseAi::Agents::BotContext)
       allow(DiscourseAi::Agents::BotContext).to receive(:new).and_return(bot_context)

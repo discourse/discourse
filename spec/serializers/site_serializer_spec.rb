@@ -60,6 +60,21 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "#can_search" do
+    it "exposes whether the current user can search" do
+      SiteSetting.allow_anonymous_search = false
+
+      anonymous_payload =
+        described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      user_guardian = Guardian.new(Fabricate(:user))
+      user_payload =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+
+      expect(anonymous_payload[:can_search]).to eq(false)
+      expect(user_payload[:can_search]).to eq(true)
+    end
+  end
+
   describe "#user_tips" do
     it "is included if enable_user_tips" do
       SiteSetting.enable_user_tips = true

@@ -665,6 +665,16 @@ RSpec.describe StaticController do
       expect(response.body).to eq(anonymous_body)
     end
 
+    it "omits the public search link when anonymous users cannot search" do
+      SiteSetting.allow_anonymous_search = false
+
+      get "/llms.txt"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("#{Discourse.base_path}/search")
+      expect(response.body).to include("#{Discourse.base_path}/latest")
+    end
+
     context "with local store" do
       before { SiteSetting.authorized_extensions = "txt" }
 

@@ -3806,6 +3806,9 @@ search:
       zh_TW: 1
       ko: 1
       ja: 1
+  allow_anonymous_search:
+    default: true
+    refresh: true
   search_tokenize_chinese:
     default: false
     validator: "SearchTokenizeChineseValidator"
