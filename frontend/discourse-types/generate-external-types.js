@@ -32,6 +32,17 @@ const packageNames = [
   "pretender",
 ];
 
+// A module whose default export is a namespace hides that namespace's types
+// from consumers' declaration emit, which then expands them structurally
+// without bound. Exporting the namespace by name gives the types a path.
+function exportDefaultNamespaces(dts) {
+  return dts.replace(/^(\t) namespace (\w+) \{$/gm, (line, indent, name) =>
+    new RegExp(`^\\texport default ${name};$`, "m").test(dts)
+      ? `${indent}export namespace ${name} {`
+      : line
+  );
+}
+
 (async function () {
   try {
     rmSync("./external-types", { recursive: true });
@@ -101,6 +112,11 @@ const packageNames = [
 
         cpSync(path, `${targetPackagePath}/${relativePath}`);
       }
+
+      writeFileSync(
+        `${targetPackagePath}/types/index.d.ts`,
+        'export * from "./stable/index";\n'
+      );
     } else {
       function transformPath(relativePath) {
         // Declarations emitted by newer TypeScript keep explicit extensions on
@@ -132,9 +148,10 @@ const packageNames = [
         }
       }
 
+      const out = `${targetPackagePath}/index.d.ts`;
       await generateDtsBundle({
         project: resolve(packagePath) + "/",
-        out: `${targetPackagePath}/index.d.ts`,
+        out,
         resolveModuleId({ currentModuleId }) {
           return transformPath(currentModuleId);
         },
@@ -148,6 +165,7 @@ const packageNames = [
           }
         },
       });
+      writeFileSync(out, exportDefaultNamespaces(readFileSync(out, "utf-8")));
     }
   }
 })().then(() => {

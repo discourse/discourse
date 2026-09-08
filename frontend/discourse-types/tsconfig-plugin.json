@@ -34,5 +34,11 @@
       "rsvp",
       "sinon"
     ]
-  }
+  },
+  "contentMappers": [
+    {
+      "package": "ember-content-mapper",
+      "extensions": [".gts", ".gjs"]
+    }
+  ]
 }
