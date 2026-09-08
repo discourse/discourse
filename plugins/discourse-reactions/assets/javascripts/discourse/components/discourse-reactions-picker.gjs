@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
 
 export default class DiscourseReactionsPicker extends Component {
   @service capabilities;
@@ -186,7 +186,7 @@ export default class DiscourseReactionsPicker extends Component {
               }}
               @translatedTitle={{reaction.title}}
             >
-              {{dEmoji reaction.id}}
+              {{discourseReactionsEmoji reaction.id}}
             </DButton>
           {{/each}}
           {{#if this.siteSettings.discourse_reactions_allow_any_emoji}}

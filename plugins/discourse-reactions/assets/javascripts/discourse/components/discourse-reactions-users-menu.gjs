@@ -7,9 +7,9 @@ import { service } from "@ember/service";
 import UsersPopup from "discourse/components/user/users-popup";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
 export default class DiscourseReactionsUsersMenu extends Component {
@@ -150,7 +150,7 @@ export default class DiscourseReactionsUsersMenu extends Component {
                 type="button"
                 {{on "click" (fn this.selectFilter reaction.id)}}
               >
-                {{dEmoji reaction.id}}
+                {{discourseReactionsEmoji reaction.id}}
                 <span>{{reaction.count}}</span>
               </button>
             {{/each}}
@@ -160,7 +160,10 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
       <:reaction as |user|>
         {{#if user.reaction}}
-          {{dEmoji user.reaction class="users-popup__reaction"}}
+          {{discourseReactionsEmoji
+            user.reaction
+            class="users-popup__reaction"
+          }}
         {{else}}
           {{dIcon "d-liked" class="users-popup__reaction"}}
         {{/if}}

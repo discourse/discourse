@@ -1,17 +1,18 @@
 import Component from "@glimmer/component";
-import { emojiUrlFor } from "discourse/lib/text";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
 
 export default class DiscourseReactionsReactionEmoji extends Component {
-  get emojiUrl() {
-    const reactionValue = this.args.reaction.reaction?.reaction_value;
-    return reactionValue ? emojiUrlFor(reactionValue) : null;
+  get reactionValue() {
+    return this.args.reaction.reaction?.reaction_value;
   }
 
   <template>
     {{#if @reaction.reaction.reaction_users_count}}
       <div class="discourse-reactions-my-reaction">
-        <img class="reaction-emoji" src={{this.emojiUrl}} />
+        {{#if this.reactionValue}}
+          {{discourseReactionsEmoji this.reactionValue class="reaction-emoji"}}
+        {{/if}}
         <a
           class="avatar-link"
           data-user-card={{@reaction.user.username}}
