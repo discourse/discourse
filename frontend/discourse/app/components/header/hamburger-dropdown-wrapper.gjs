@@ -107,6 +107,7 @@ export default class HamburgerDropdownWrapper extends Component {
     >
       <SidebarHamburgerDropdown
         @forceMainSidebarPanel={{this.forceMainSidebarPanel}}
+        @showCreateAccount={{@showCreateAccount}}
         @toggleNavigationMenu={{this.toggleNavigation}}
       />
     </div>

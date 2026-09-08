@@ -282,6 +282,7 @@ export default class GlimmerHeader extends Component {
             />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper
+              @showCreateAccount={{@showCreateAccount}}
               @toggleNavigationMenu={{this.toggleNavigationMenu}}
               @sidebarEnabled={{@sidebarEnabled}}
               {{this.handleFocus}}
