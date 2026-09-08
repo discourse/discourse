@@ -1,8 +1,15 @@
+import {
+  isRateLimitError,
+  MAX_RATE_LIMIT_RETRY_SECONDS,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { humanizeList } from "discourse/lib/text";
 import { capabilities } from "discourse/services/capabilities";
 import I18n, { i18n } from "discourse-i18n";
+
+const RATE_LIMIT_RETRIES = 1;
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -317,7 +324,26 @@ export function getUploadMarkdown(upload) {
   }
 }
 
+export function displayUploadErrors(errors, siteSettings) {
+  if (errors.length === 0) {
+    return;
+  }
+
+  if (errors.length === 1) {
+    displayErrorForUpload(errors[0].data, siteSettings, errors[0].fileName);
+    return;
+  }
+
+  displayErrorForBulkUpload(errors);
+}
+
 export function displayErrorForBulkUpload(errors) {
+  const rateLimited = errors.find(({ data }) => isRateLimitError(data));
+  if (rateLimited) {
+    displayRateLimitError(rateLimited.data);
+    return;
+  }
+
   const fileNames = humanizeList(errors.map((item) => item.fileName));
 
   dialog.alert(i18n("post.errors.upload", { file_name: fileNames }));
@@ -330,6 +356,11 @@ export function displayErrorForUpload(data, siteSettings, fileName) {
       { id: "discourse.uploads.display-error-for-upload" }
     );
     fileName = data.files[0].name;
+  }
+
+  if (isRateLimitError(data)) {
+    displayRateLimitError(data);
+    return;
   }
 
   if (data.jqXHR) {
@@ -402,6 +433,52 @@ function displayErrorByResponseStatus(status, body, fileName, siteSettings) {
   }
 
   return;
+}
+
+function displayRateLimitError(error) {
+  dialog.alert(
+    i18n("too_many_requests", { count: rateLimitWaitSeconds(error) })
+  );
+}
+
+function isRetryableRateLimit(error) {
+  return (
+    isRateLimitError(error) &&
+    rateLimitWaitSeconds(error) <= MAX_RATE_LIMIT_RETRY_SECONDS
+  );
+}
+
+function waitOutRateLimit(error) {
+  return new Promise((resolve) =>
+    setTimeout(resolve, rateLimitWaitSeconds(error) * 1000)
+  );
+}
+
+export const rateLimitRetryOptions = {
+  retries: RATE_LIMIT_RETRIES,
+
+  shouldRetry: isRetryableRateLimit,
+
+  async onAfterResponse(xhr, retryCount) {
+    if (retryCount >= RATE_LIMIT_RETRIES || !isRetryableRateLimit(xhr)) {
+      return;
+    }
+
+    await waitOutRateLimit(xhr);
+  },
+};
+
+export async function withRateLimitRetry(request) {
+  try {
+    return await request();
+  } catch (error) {
+    if (!isRetryableRateLimit(error)) {
+      throw error;
+    }
+
+    await waitOutRateLimit(error);
+    return request();
+  }
 }
 
 export function bindFileInputChangeListener(element, fileCallbackFn) {

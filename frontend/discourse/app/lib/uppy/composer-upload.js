@@ -13,10 +13,10 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import {
   bindFileInputChangeListener,
-  displayErrorForBulkUpload,
-  displayErrorForUpload,
+  displayUploadErrors,
   getUploadMarkdown,
   isImage,
+  rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
@@ -388,7 +388,10 @@ export default class UppyComposerUpload {
                 `${this.composerEventPrefix}:all-uploads-complete`
               );
 
-              this.#displayBufferedErrors();
+              displayUploadErrors(
+                this.#bufferedUploadErrors,
+                this.siteSettings
+              );
               this.#reset();
             }
           }
@@ -432,20 +435,6 @@ export default class UppyComposerUpload {
     this.#inProgressUploads = this.#inProgressUploads.filter(
       (upl) => upl.id !== fileId
     );
-  }
-
-  #displayBufferedErrors() {
-    if (this.#bufferedUploadErrors.length === 0) {
-      return;
-    } else if (this.#bufferedUploadErrors.length === 1) {
-      displayErrorForUpload(
-        this.#bufferedUploadErrors[0].data,
-        this.siteSettings,
-        this.#bufferedUploadErrors[0].fileName
-      );
-    } else {
-      displayErrorForBulkUpload(this.#bufferedUploadErrors);
-    }
   }
 
   #bufferUploadError(data, fileName) {
@@ -506,7 +495,7 @@ export default class UppyComposerUpload {
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
-      shouldRetry: () => false,
+      ...rateLimitRetryOptions,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
@@ -584,7 +573,7 @@ export default class UppyComposerUpload {
       this.appEvents.trigger(`${this.composerEventPrefix}:upload-error`, file);
     }
     if (this.#inProgressUploads.length === 0) {
-      this.#displayBufferedErrors();
+      displayUploadErrors(this.#bufferedUploadErrors, this.siteSettings);
       this.#reset();
     }
   }
