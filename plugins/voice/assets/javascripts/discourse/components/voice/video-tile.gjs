@@ -9,6 +9,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import virtualElementFromPoint from "discourse/lib/virtual-element-from-point";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -21,7 +22,6 @@ import {
   DEFAULT_TILE_ASPECT,
   trackVideoAspect,
 } from "../../lib/voice/video-grid-layout";
-import virtualElementFromEvent from "../../lib/voice/virtual-element-from-event";
 import VoiceParticipantSidebarContextMenu from "../voice-participant-sidebar-context-menu";
 
 export default class VoiceVideoTile extends Component {
@@ -82,7 +82,10 @@ export default class VoiceVideoTile extends Component {
 
     event.preventDefault();
     event.stopPropagation();
-    this.#showParticipantMenu(virtualElementFromEvent(event), "bottom-start");
+    this.#showParticipantMenu(
+      virtualElementFromPoint(event.clientX, event.clientY),
+      "bottom-start"
+    );
   }
 
   @action
