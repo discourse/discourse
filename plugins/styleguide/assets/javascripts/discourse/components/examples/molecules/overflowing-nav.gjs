@@ -19,7 +19,7 @@ export default <template>
     <DHorizontalOverflowNav @ariaLabel="Overflowing sections">
       {{#each SECTIONS as |section index|}}
         <li>
-          <a href="#" class={{if (eq index 6) "active"}}>{{section}}</a>
+          <a class={{if (eq index 6) "active"}} href="#">{{section}}</a>
         </li>
       {{/each}}
     </DHorizontalOverflowNav>

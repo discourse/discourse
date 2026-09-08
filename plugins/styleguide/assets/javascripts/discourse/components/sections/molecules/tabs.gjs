@@ -10,9 +10,9 @@ import tabsVerticalSource from "../../examples/molecules/tabs/vertical?source=fi
 
 export default <template>
   <StyleguideExample
-    @title="<DTabs> — controlled selection"
     @code={{tabsBasicSource}}
     @description="Each tab declares its strip button and its panel content together, and the widget derives the tablist, the roving tab stop, and the ARIA pairing from that. Selection is controlled: the widget reports the tab the user picks and nothing moves until the owner feeds the id back."
+    @title="<DTabs> — controlled selection"
   >
     <:tryThis>
       Move through the strip with the arrow keys, which wrap at either end. The
@@ -26,9 +26,9 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DTabs> — a header block with extra chrome"
     @code={{tabsHeaderSource}}
     @description="A header block replaces the default strip row. The consumer lays out its own row and places the yielded Tablist part wherever it wants; the tab buttons still render inside it and the keyboard surface travels with it."
+    @title="<DTabs> — a header block with extra chrome"
   >
     <:tryThis>
       Press Tab from the strip: focus lands on the refresh button, which sits on
@@ -41,9 +41,9 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DTabs> — an overflowing strip"
     @code={{tabsOverflowSource}}
     @description="A strip wider than its container scrolls sideways rather than wrapping, with the scrollbar hidden. The edge with more tabs fades out under a chevron: a click scrolls one viewport and holding it keeps scrolling. Whenever the selection changes, the widget scrolls the strip just far enough to bring the selected tab fully into view, and it never scrolls the page to do so."
+    @title="<DTabs> — an overflowing strip"
   >
     <:tryThis>
       Click or hold a chevron, swipe or Shift-scroll the strip, or walk to the
@@ -56,9 +56,9 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DTabs> — vertical orientation"
     @code={{tabsVerticalSource}}
     @description="The orientation argument flips the arrow-key axis and announces it on the tablist. Placing the strip beside the panel is the consumer's layout; the widget stacks the strip and wraps long labels itself."
+    @title="<DTabs> — vertical orientation"
   >
     <:tryThis>
       Up and Down move between tabs. Left and Right do nothing. Home and End

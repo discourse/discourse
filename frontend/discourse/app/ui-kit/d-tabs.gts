@@ -568,12 +568,12 @@ export default class DTabs extends Component<DTabsSignature> {
       {{/if}}
 
       <div
+        aria-label={{this.panelAriaLabel}}
+        aria-labelledby={{this.activeTabDomId}}
         class="d-tabs__panel"
         id={{this.panelDomId}}
         role={{if this.hasTabs "tabpanel"}}
         tabindex={{if this.hasTabs "0"}}
-        aria-labelledby={{this.activeTabDomId}}
-        aria-label={{this.panelAriaLabel}}
         {{this.registerPanel}}
         {{this.panelEffects @active}}
       ></div>

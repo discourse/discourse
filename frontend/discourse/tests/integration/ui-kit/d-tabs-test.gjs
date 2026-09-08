@@ -1126,10 +1126,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
         >
           {{! eslint-disable ember/template-no-unsupported-role-attributes }}
           <tabs.Tab
-            id={{suppliedId}}
-            role="link"
             aria-selected="false"
             data-consumer-marker={{id}}
+            id={{suppliedId}}
+            role="link"
             @id={{id}}
             @label="Safe tab"
           >

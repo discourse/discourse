@@ -49,7 +49,7 @@ export default class TabsBasicExample extends Component {
               the text.</p>
           </:default>
         </tabs.Tab>
-        <tabs.Tab @id="admin" @label="Admin" @disabled={{true}}>
+        <tabs.Tab @disabled={{true}} @id="admin" @label="Admin">
           <p>This content never shows: a disabled tab is focusable but inert.</p>
         </tabs.Tab>
       </DTabs>

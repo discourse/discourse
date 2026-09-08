@@ -50,13 +50,13 @@ export default class Tab extends Component<DTabsTabSignature> {
     <button
       class="d-tabs__tab"
       ...attributes
-      type="button"
-      id={{this.domId}}
-      role="tab"
-      data-d-tab={{@id}}
-      aria-selected={{booleanString this.isActive omitFalse=false}}
       aria-controls={{@tabs.panelDomId}}
       aria-disabled={{if @disabled "true"}}
+      aria-selected={{booleanString this.isActive omitFalse=false}}
+      data-d-tab={{@id}}
+      id={{this.domId}}
+      role="tab"
+      type="button"
       {{on "click" this.click}}
       {{@tabs.registerTab @id}}
     >
@@ -65,7 +65,7 @@ export default class Tab extends Component<DTabsTabSignature> {
     </button>
 
     {{#if this.isActive}}
-      <DConditionalInElement @element={{@tabs.panelElement}} @append={{true}}>
+      <DConditionalInElement @append={{true}} @element={{@tabs.panelElement}}>
         {{yield}}
       </DConditionalInElement>
     {{/if}}
