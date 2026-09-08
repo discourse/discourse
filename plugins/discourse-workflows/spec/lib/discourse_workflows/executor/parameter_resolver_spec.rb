@@ -50,6 +50,100 @@ RSpec.describe DiscourseWorkflows::Executor::ParameterResolver do
     end
   end
 
+  context "with access control input groups" do
+    fab!(:group)
+    let(:schema) do
+      {
+        acl: {
+          type: :object,
+          ui: {
+            control: :access_control,
+            expression: false,
+          },
+          control_options: {
+            groups_from_input: true,
+            permissions: %w[view edit manage],
+          },
+        },
+      }
+    end
+    let(:entries) do
+      [
+        {
+          "type" => "group",
+          "id" => group.id,
+          "permission" => "view",
+          "name" => "={{ $json.name }}",
+        },
+      ]
+    end
+    let(:parameters) do
+      {
+        "acl" => {
+          "entries" => entries,
+          "group_ids" => "={{ $json.groups }}",
+          "permission" => "edit",
+        },
+      }
+    end
+    let(:items) { [{ "json" => { "groups" => [group.id, group.id] } }] }
+
+    it "keeps fixed entries literal and gives them precedence over input groups" do
+      expect(resolver.resolve("acl")).to eq(entries)
+    end
+
+    it "continues accepting saved fixed-only arrays" do
+      parameters["acl"] = entries
+      expect(resolver.resolve("acl")).to eq(entries)
+    end
+
+    it "rejects results that are not arrays of integer IDs" do
+      [nil, false, group.id, group.id.to_s, [group.id.to_s], [-1], [1.5], [{}]].each do |invalid|
+        items.first["json"]["groups"] = invalid
+        expect { resolver.resolve("acl") }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          I18n.t("discourse_workflows.errors.access_control.invalid_groups"),
+        )
+      end
+    end
+
+    it "rejects IDs for deleted groups" do
+      deleted_group = Fabricate(:group)
+      deleted_group.destroy!
+      parameters["acl"]["group_ids"] = [deleted_group.id]
+      expect { resolver.resolve("acl") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.access_control.missing_groups"),
+      )
+    end
+
+    it "keeps the permission literal and rejects unsupported values" do
+      parameters["acl"]["permission"] = "={{ 'manage' }}"
+      expect { resolver.resolve("acl") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.access_control.invalid_permission"),
+      )
+    end
+
+    it "enforces required permissions after resolving an empty input" do
+      schema[:acl][:control_options].merge!(required_permissions: ["edit"])
+      parameters["acl"]["entries"] = []
+      parameters["acl"]["group_ids"] = []
+      expect { resolver.resolve("acl") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t(
+          "discourse_workflows.errors.access_control.required_permission",
+          permissions: "edit",
+        ),
+      )
+    end
+
+    it "accepts blank input without adding groups" do
+      parameters["acl"]["group_ids"] = ""
+      expect(resolver.resolve("acl")).to eq(entries)
+    end
+  end
+
   context "with condition-builder parameters" do
     let(:parameters) do
       {

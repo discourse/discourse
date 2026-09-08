@@ -48,15 +48,18 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     expect(DiscourseWorkflows::PropertySchemaValidator.validate_node(described_class)).to be_empty
     expect(described_class.property_schema[:acl]).to include(
       required: true,
-      no_data_expression: true,
+      type: :object,
       ui: {
         control: :access_control,
+        expression: false,
       },
       control_options: {
         acl_target_type: "Boards::Board",
         acl_target_key: Boards::Board.acl_target_key,
         acl_target_name: "boards.manage.board",
         required_permissions: ["manage"],
+        groups_from_input: true,
+        permissions: %w[view edit manage],
       },
     )
     expect(described_class).to be_available
@@ -128,6 +131,56 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     expect(outputs.pluck("slug")).to eq(%w[first-board second-board])
     expect(outputs.pluck("board_id").uniq.size).to eq(2)
     outputs.each { |output| expect(output).to match_node_output_schema(described_class) }
+  end
+
+  it "resolves group access separately for each item and preserves fixed permissions" do
+    other_group = Fabricate(:group)
+    config =
+      configuration.merge(
+        "name" => "={{ $json.name }}",
+        "acl" => {
+          "entries" => configuration["acl"],
+          "group_ids" => "={{ $json.group_ids }}",
+          "permission" => "edit",
+        },
+      )
+    items = [
+      {
+        "json" => {
+          "name" => "First",
+          "group_ids" => [group.id, other_group.id, other_group.id],
+        },
+      },
+      { "json" => { "name" => "Second", "group_ids" => [] } },
+    ]
+
+    boards = execute_node(config, items:).map { |output| Boards::Board.find(output["board_id"]) }
+
+    expect(boards.first.permission_acl.permission_group_ids("edit")).to eq([other_group.id])
+    expect(boards.first.permission_acl.permission_group_ids("manage")).to contain_exactly(
+      group.id,
+      Group::AUTO_GROUPS[:admins],
+    )
+    expect(boards.last.permission_acl.permission_group_ids("edit")).to be_empty
+  end
+
+  it "rolls back creation when input groups receive a banned permission" do
+    config =
+      configuration.merge(
+        "acl" => {
+          "entries" => configuration["acl"],
+          "group_ids" => "={{ $json.group_ids }}",
+          "permission" => "manage",
+        },
+      )
+    items = [{ "json" => { "group_ids" => [Group::AUTO_GROUPS[:anonymous_users]] } }]
+
+    expect do
+      expect { execute_node(config, items:) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.create_board.acl_failed"),
+      )
+    end.not_to change { Boards::Board.count }
   end
 
   it "rejects unauthorized execution users without creating a board" do

@@ -465,3 +465,30 @@
     }
   }
 }
+
+.workflows-access-control {
+  &__input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  &__groups {
+    flex: 1 1 16em;
+    min-width: 0;
+
+    input {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  &__permission {
+    flex: 0 1 10em;
+
+    select {
+      width: 100%;
+    }
+  }
+}

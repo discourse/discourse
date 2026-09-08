@@ -74,6 +74,8 @@ module DiscourseWorkflows
       acl_target_key
       acl_target_name
       required_permissions
+      groups_from_input
+      permissions
       action_icon
       action_label
       action_route

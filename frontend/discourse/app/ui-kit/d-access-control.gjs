@@ -38,7 +38,7 @@ const REMOVE_ACTION = {
   ),
 };
 
-function defaultPermissions() {
+export function defaultPermissions() {
   return [
     {
       id: READ_ONLY_PERMISSION,

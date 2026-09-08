@@ -263,6 +263,16 @@ export default class ExpressionInput extends Component {
   }
 
   @action
+  labelEditor(view) {
+    if (this.args.inputId) {
+      view.contentDOM.id = this.args.inputId;
+    }
+    if (this.args.inputLabel) {
+      view.contentDOM.setAttribute("aria-label", this.args.inputLabel);
+    }
+  }
+
+  @action
   registerWrapper(element) {
     this.wrapperElement = element;
   }
@@ -270,6 +280,7 @@ export default class ExpressionInput extends Component {
   <template>
     <div {{didInsert this.registerWrapper}}>
       <VariableInput
+        @onSetup={{this.labelEditor}}
         @value={{this.displayValue}}
         @onChange={{this.handleChange}}
         @extensions={{this.buildExtensions}}

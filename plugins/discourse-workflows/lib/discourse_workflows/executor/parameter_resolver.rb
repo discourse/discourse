@@ -77,6 +77,10 @@ module DiscourseWorkflows
 
       def resolve_parameter_value(value, schema = nil)
         return value if no_data_expression?(schema)
+        if schema_value(schema_value(schema, :ui), :control).to_s == "access_control" &&
+             schema_value(schema_value(schema, :control_options), :groups_from_input)
+          return AccessControlParameter.new(schema: schema, resolver: @resolver).resolve(value)
+        end
         return resolve_fixed_collection_value(value, schema) if fixed_collection_schema?(schema)
         return resolve_collection_value(value, schema) if collection_schema?(schema)
 

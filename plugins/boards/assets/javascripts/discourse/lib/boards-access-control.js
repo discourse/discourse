@@ -1,4 +1,5 @@
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import { i18n } from "discourse-i18n";
 
 export function buildDefaultBoardAcl(site, siteSettings) {
   const managerGroupIds = siteSettings.groupSettingArray(
@@ -28,4 +29,27 @@ export function buildDefaultBoardAcl(site, siteSettings) {
   }
 
   return defaultAcl;
+}
+
+export function boardPermissionOptions(options) {
+  const viewOption = options.find((option) => option.id === "view");
+  viewOption.description = i18n(
+    "boards.manage.board_access_permission_viewer_description"
+  );
+
+  const editOption = options.find((option) => option.id === "edit");
+  editOption.description = i18n(
+    "boards.manage.board_access_permission_editor_description"
+  );
+
+  options.push({
+    id: "manage",
+    level: 3,
+    name: i18n("boards.manage.board_access_permission_manager"),
+    description: i18n(
+      "boards.manage.board_access_permission_manager_description"
+    ),
+  });
+
+  return options;
 }

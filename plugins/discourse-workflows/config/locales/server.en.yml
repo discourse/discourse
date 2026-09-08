@@ -40,6 +40,12 @@ en:
         tool_finished: "Finished %{tool}"
         summarizing: "Preparing workflow authoring response"
     errors:
+      access_control:
+        invalid_entries: "Access must contain a list of users or groups with valid permissions."
+        invalid_groups: "Groups from input must resolve to an array of valid group IDs."
+        missing_groups: "Groups from input contains groups that no longer exist."
+        invalid_permission: "Choose a valid permission for groups from input."
+        required_permission: "Access must include at least one %{permissions} permission."
       too_many_tags: "A workflow can have at most %{max} tags."
       tag_too_long: "Tags can have at most %{max} characters."
       tag_contains_comma: "Tags cannot contain commas."

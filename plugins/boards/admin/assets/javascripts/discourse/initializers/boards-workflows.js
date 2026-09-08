@@ -1,7 +1,10 @@
 import curryComponent from "ember-curry-component";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import BoardsAccessControlField from "discourse/plugins/boards/discourse/components/boards-access-control-field";
-import { buildDefaultBoardAcl } from "discourse/plugins/boards/discourse/lib/boards-access-control";
+import {
+  boardPermissionOptions,
+  buildDefaultBoardAcl,
+} from "discourse/plugins/boards/discourse/lib/boards-access-control";
 
 export default {
   name: "boards-workflows",
@@ -14,7 +17,10 @@ export default {
       return;
     }
 
-    const fieldArgs = { fieldComponent: BoardsAccessControlField };
+    const fieldArgs = {
+      fieldComponent: BoardsAccessControlField,
+      transformPermissionOptions: boardPermissionOptions,
+    };
 
     withPluginApi((api) => {
       api.registerValueTransformer("workflow-node-defaults", ({ value }) => ({

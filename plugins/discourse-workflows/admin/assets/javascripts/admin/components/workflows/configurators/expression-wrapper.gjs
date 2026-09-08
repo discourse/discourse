@@ -270,6 +270,8 @@ export default class ExpressionWrapper extends Component {
     >
       {{#if this.expressionMode}}
         <ExpressionInput
+          @inputId={{@inputId}}
+          @inputLabel={{@inputLabel}}
           @field={{@field}}
           @placeholder={{@placeholder}}
           @session={{@session}}

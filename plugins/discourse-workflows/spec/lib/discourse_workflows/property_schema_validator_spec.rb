@@ -103,17 +103,19 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
     it "accepts an access control with target metadata and required permissions" do
       schema = {
         permissions: {
-          type: :array,
+          type: :object,
           required: true,
-          no_data_expression: true,
           ui: {
             control: :access_control,
+            expression: false,
           },
           control_options: {
             acl_target_type: "Example::Target",
             acl_target_key: "example_target",
             acl_target_name: "example.target",
             required_permissions: ["manage"],
+            groups_from_input: true,
+            permissions: %w[view edit manage],
           },
         },
       }
