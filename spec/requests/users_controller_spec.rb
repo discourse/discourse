@@ -4965,9 +4965,7 @@ RSpec.describe UsersController do
       end
 
       it "can be updated" do
-        SiteSetting.must_approve_users = true
         user = post_user
-        user.update!(approved: true, approved_by: admin, approved_at: 1.day.ago)
         token = user.email_tokens.first
 
         put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
@@ -4981,7 +4979,17 @@ RSpec.describe UsersController do
         ).to be_present
 
         expect(EmailToken.find_by(id: token.id)).to eq(nil)
-        expect(user).to be_approved
+      end
+
+      it "preserves approval when correcting an unconfirmed email" do
+        SiteSetting.must_approve_users = true
+        user = post_user
+        user.update!(approved: true, approved_by: admin, approved_at: 1.day.ago)
+
+        put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
+
+        expect(response.status).to eq(200)
+        expect(user.reload).to be_approved
       end
 
       it "tells the user to slow down after many requests" do
