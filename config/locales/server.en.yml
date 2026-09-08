@@ -6039,6 +6039,9 @@ en:
       one: "You can apply up to %{count} tag to a topic."
       other: "You can apply up to %{count} tags to a topic."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    upload_too_many_rows:
+      one: "Too many rows in the CSV file. Please upload no more than %{count} row at a time."
+      other: "Too many rows in the CSV file. Please upload no more than %{count} rows at a time."
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
       invalid_name: "Invalid tag name."
