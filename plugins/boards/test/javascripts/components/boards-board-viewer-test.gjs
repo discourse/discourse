@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
@@ -91,6 +97,7 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     this.dragDataTransfer = null;
     this.dragCard = async (cardId) => {
       this.dragDataTransfer = new DataTransfer();
+      this.dragSource = find(cardSelector(cardId));
       await startDrag(cardSelector(cardId), {
         dataTransfer: this.dragDataTransfer,
       });
@@ -98,13 +105,15 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
 
     this.dropOnColumn = async (columnId, { clientY } = {}) => {
       const target = columnSelector(columnId);
-      const coordinates = clientY === undefined ? {} : { clientY };
+      const coordinates = centerOf(target);
+      if (clientY !== undefined) {
+        coordinates.clientY = clientY;
+      }
       const dataTransfer = this.dragDataTransfer;
-
       await dragOver(target, { dataTransfer, coordinates });
-      await dragEvent(target, "drop", {
+      await dragEvent(target, "drop", { dataTransfer, ...coordinates });
+      await dragEvent(this.dragSource, "dragend", {
         dataTransfer,
-        ...centerOf(target),
         ...coordinates,
       });
       await settled();
