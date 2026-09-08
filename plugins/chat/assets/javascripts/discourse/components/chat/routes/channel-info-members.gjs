@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -152,7 +153,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
 
   async debouncedLoad() {
     this.loadingSlider.transitionStarted();
-    await this.members.load({ limit: 20 });
+    await this.members.load({ limit: 20 }).catch(popupAjaxError);
     this.loadingSlider.transitionEnded();
   }
 

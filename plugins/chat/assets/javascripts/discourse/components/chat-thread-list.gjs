@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { eq } from "discourse/truth-helpers";
@@ -145,7 +146,7 @@ export default class ChatThreadList extends Component {
 
   @bind
   loadThreads() {
-    this.threadsCollection.load({ limit: 10 });
+    this.threadsCollection.load({ limit: 10 }).catch(popupAjaxError);
   }
 
   @bind

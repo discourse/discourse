@@ -53,3 +53,6 @@ export const CHAT_SEPARATE_SIDEBAR_MODE_NEVER = "never";
 export const MATCH_QUALITY_EXACT = 1;
 export const MATCH_QUALITY_PREFIX = 2;
 export const MATCH_QUALITY_PARTIAL = 3;
+export const NETWORK_ERROR = "network_error";
+export const RATE_LIMIT_ERROR = "rate_limit_error";
+export const RATE_LIMIT_COOLDOWN_ERROR = "rate_limit_cooldown_error";
