@@ -22,25 +22,49 @@
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
     "./tests/*": {
-      "types": "./declarations/tests/*.d.ts"
+      "types": [
+        "./declarations/tests/*.d.ts",
+        "./declarations/tests/*.d.gjs.ts",
+        "./declarations/tests/*.d.gts.ts"
+      ]
     },
     "./admin/*": {
-      "types": "./declarations/admin/*.d.ts"
+      "types": [
+        "./declarations/admin/*.d.ts",
+        "./declarations/admin/*.d.gjs.ts",
+        "./declarations/admin/*.d.gts.ts"
+      ]
     },
     "./dialog-holder/*": {
-      "types": "./declarations/dialog-holder/*.d.ts"
+      "types": [
+        "./declarations/dialog-holder/*.d.ts",
+        "./declarations/dialog-holder/*.d.gjs.ts",
+        "./declarations/dialog-holder/*.d.gts.ts"
+      ]
     },
     "./float-kit/*": {
-      "types": "./declarations/float-kit/*.d.ts"
+      "types": [
+        "./declarations/float-kit/*.d.ts",
+        "./declarations/float-kit/*.d.gjs.ts",
+        "./declarations/float-kit/*.d.gts.ts"
+      ]
     },
     "./select-kit/*": {
-      "types": "./declarations/select-kit/*.d.ts"
+      "types": [
+        "./declarations/select-kit/*.d.ts",
+        "./declarations/select-kit/*.d.gjs.ts",
+        "./declarations/select-kit/*.d.gts.ts"
+      ]
     },
     "./truth-helpers": {
       "types": "./declarations/truth-helpers/index.d.ts"
     },
     "./truth-helpers/*": {
-      "types": "./declarations/truth-helpers/*.d.ts"
+      "types": [
+        "./declarations/truth-helpers/*.d.ts",
+        "./declarations/truth-helpers/*.d.gjs.ts",
+        "./declarations/truth-helpers/*.d.gts.ts"
+      ]
     },
     "./blocks": {
       "types": "./declarations/app/blocks/index.d.ts"
@@ -52,7 +76,11 @@
       "types": "./declarations/app/lib/blocks/index.d.ts"
     },
     "./*": {
-      "types": "./declarations/app/*.d.ts"
+      "types": [
+        "./declarations/app/*.d.ts",
+        "./declarations/app/*.d.gjs.ts",
+        "./declarations/app/*.d.gts.ts"
+      ]
     }
   },
   "devDependencies": {
