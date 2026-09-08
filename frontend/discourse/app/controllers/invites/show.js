@@ -214,11 +214,6 @@ export default class InvitesShowController extends Controller {
     return this.successMessage ? "activate" : "signup";
   }
 
-  @action
-  updateCodeInviteStep(step) {
-    this.codeInviteStep = step;
-  }
-
   @computed(
     "emailValidation.failed",
     "usernameValidation.failed",
@@ -388,6 +383,11 @@ export default class InvitesShowController extends Controller {
       associate_link: this.authOptions?.associate_url,
       provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
     });
+  }
+
+  @action
+  updateCodeInviteStep(step) {
+    this.codeInviteStep = step;
   }
 
   @action
