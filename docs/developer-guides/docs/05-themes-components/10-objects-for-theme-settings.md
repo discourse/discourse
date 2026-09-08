@@ -161,6 +161,35 @@ links:
 - `min`: Minimum number of records for the property. Value of the keyword has to be an integer.
 - `max`: Maximum number of records for the property. Value of the keyword has to be an integer.
 
+#### Constraints for `groups` types
+
+A `type: groups` property can declare which groups must always be present and which may never be
+selected:
+
+```yaml
+sections:
+  type: objects
+  default: []
+  schema:
+    name: section
+    properties:
+      group_ids:
+        type: groups
+        constraints:
+          mandatory: [admins]
+          disallowed: [anonymous_users]
+```
+
+Group references may be automatic group names or numeric ids; the stored value is always numeric
+ids. The `everyone` pseudogroup is being retired and has no name here.
+
+Mandatory ids are merged in first and disallowed ids are stripped, both when the setting is saved
+and when it is read. Use `validations: { min: 1 }` to require a non-empty selection; the
+`at_least_one` rule available to plain group lists is not accepted here.
+
+The older `disallowed_groups: "0|1"` key on a property is still accepted as an alias of
+`disallowed`, but cannot be combined with a `constraints` block.
+
 #### Resolving group membership
 
 Object settings can resolve `type: groups` properties to a boolean for the current user. This is useful when theme code only needs to know whether the current user is in one of the configured groups, because `currentUser.groups` only includes groups that are visible to the user.

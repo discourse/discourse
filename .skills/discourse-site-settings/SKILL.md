@@ -52,10 +52,9 @@ remove settings, use `discourse-migration`.
   seeded upload from `db/fixtures/010_uploads.rb`.
 - `min`, `max`, `regex`, and `validator`: enforce value constraints server-side; descriptions and
   frontend affordances are not enough.
-- `mandatory_values`: pipe-separated values that must always remain in the setting. Common for
-  `group_list` settings that must always include admins/moderators.
-- `disallowed_groups`: pipe-separated group ids hidden from group selectors and stripped from API
-  updates. This only applies to `group_list` settings.
+- `mandatory_values`: pipe-separated values that must always remain in the setting. For a
+  `group_list`, use `constraints` instead.
+- `constraints`: the validity rules of a `group_list`. See "Group list constraints" below.
 - `requires_confirmation`: use for risky changes that need an admin confirmation dialog. Valid
   values are `simple`, `simple_on_enable`, and `simple_on_disable`; add matching client i18n under
   `admin.site_settings.requires_confirmation_messages.<setting_name>` when the default copy is not
@@ -79,14 +78,46 @@ Start with the simplest type that matches the admin's mental model:
 - `enum`: one value from a fixed set; use `enum: "ClassName"` for reusable translated enums.
 - `list`: multiple values from choices; use `list_type: compact` for selector-style UI and
   `list_type: simple` for reorderable item lists.
-- `group` / `group_list`: one or many groups; use `mandatory_values` and `disallowed_groups` where
-  relevant.
+- `group` / `group_list`: one or many groups; declare validity rules with `constraints`.
 - `category` / `category_list`: one or many categories through the category picker.
 - `tag_list`, `emoji_list`, `tag_group_list`, `host_list`, `email`, `username`, `color`, `icon`,
   `upload`, `uploaded_image_list`, and `file_size_restriction`: use when the name describes the
   data shape directly.
 - `json_schema` / `objects`: structured settings. Prefer these only when a scalar/list setting is
   not enough, and keep tests around schema validation and serialization.
+
+### Group List Constraints
+
+A `group_list` declares its validity rules in one `constraints` block:
+
+```yaml
+hidden_post_visible_groups:
+  type: group_list
+  default: "admins|moderators|trust_level_4"
+  constraints:
+    at_least_one: true                # or { message: "some.i18n.key" }
+    mandatory: [admins, moderators]
+    disallowed: [anonymous_users]
+```
+
+- Group references, in the rules and in `default`, may be an automatic group name (`admins`, 
+  `moderators`, `staff`, `anonymous_users`, `logged_in_users`, `trust_level_0` ..  `trust_level_4`) 
+  or a numeric id. Names are yaml sugar; the stored value is always numeric ids.
+- Saving normalizes rather than rejects: mandatory ids are merged in first, disallowed ids are
+  stripped, and the same projection is applied on read so a row stored before a rule existed can
+  never expose a disallowed group. Only `at_least_one` and a group id that does not exist raise.
+- `default` must already satisfy the rules it declares, mandatory ids first.
+- The `everyone` pseudogroup is being retired and deliberately has no name here. Target
+  `logged_in_users` and `anonymous_users` explicitly. Its id, `0`, still resolves, so a rule that
+  has to keep stripping it can spell it out.
+- A setting may still declare its own `validator`; the constraints run first.
+- Theme settings (`type: list` with `list_type: group`, and `groups` properties inside an `objects`
+  schema) accept the same block, except `at_least_one`, which a schema expresses as
+  `validations: { min: 1 }`.
+- `mandatory_values`, `disallowed_groups` and `validator: "AtLeastOneGroupValidator"` remain valid
+  aliases on a `group_list`, but cannot be combined with a `constraints` block. Core and the
+  styleguide plugin are held to the declarative form by
+  `spec/integrity/group_list_constraints_spec.rb`.
 
 ### Category Lists
 

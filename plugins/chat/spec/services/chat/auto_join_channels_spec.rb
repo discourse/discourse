@@ -88,7 +88,7 @@ RSpec.describe Chat::AutoJoinChannels do
           SiteSetting.chat_allowed_groups = [
             Group::AUTO_GROUPS[:everyone],
             Group::AUTO_GROUPS[:trust_level_3],
-          ].join(",")
+          ].join("|")
 
           Fabricate(:user, trust_level:, last_seen_at:)
 

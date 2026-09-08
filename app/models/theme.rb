@@ -855,7 +855,13 @@ class Theme < ActiveRecord::Base
   def build_theme_setting_type_info_hash
     settings.each_with_object({}) do |(name, setting), hash|
       hash[name] = { type: setting.type_name.to_s }.merge(
-        setting.opts.compact.except(:description, :max, :min),
+        setting.opts.compact.except(
+          :description,
+          :max,
+          :min,
+          :constraints,
+          :object_group_list_constraints,
+        ),
       )
     end
   end

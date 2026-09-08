@@ -103,6 +103,48 @@ module("Integration | Component | group-list site-setting", function (hooks) {
     assert.dom(".selected-content button").hasClass("disabled");
   });
 
+  test("mandatory and disallowed groups declared with constraints", async function (assert) {
+    this.site.groups = [
+      { id: 1, name: "Donuts" },
+      { id: 2, name: "Cheese cake" },
+      { id: 4, name: "anonymous_users" },
+    ];
+
+    // A `constraints:` block serializes to the same pipe strings as the legacy
+    // keys, so the client contract is unchanged.
+    this.set(
+      "setting",
+      SiteSetting.create({
+        category: "foo",
+        default: "1",
+        description: "Choose groups",
+        placeholder: null,
+        preview: null,
+        secret: false,
+        setting: "foo_bar",
+        type: "group_list",
+        mandatory_values: "1",
+        disallowed_groups: "4",
+        value: "1",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
+    );
+
+    const subject = selectKit(".list-setting");
+    await subject.expand();
+
+    assert
+      .dom(".selected-content button")
+      .hasClass("disabled", "the mandatory group cannot be removed");
+    assert.false(
+      subject.rowByValue("4").exists(),
+      "the disallowed group is not offered"
+    );
+  });
+
   test("swaps everyone for logged_in_users when granular permissions are enabled", async function (assert) {
     this.siteSettings.granular_anonymous_and_logged_in_groups_permissions = true;
 

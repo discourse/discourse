@@ -246,6 +246,54 @@ html {
 }
 ```
 
+### Group list constraints
+
+A group-backed list setting (`type: list` with `list_type: group`) can declare its validity rules in
+one `constraints` block:
+
+```yaml
+staff_only_feature_groups:
+  type: list
+  list_type: group
+  default: "admins|moderators"
+  constraints:
+    at_least_one: true
+    mandatory: [admins]
+    disallowed: [anonymous_users]
+```
+
+Every group reference, in the rules and in `default`, may be an automatic group name (`admins`,
+`moderators`, `staff`, `anonymous_users`, `logged_in_users`, `trust_level_0` through
+`trust_level_4`) or a numeric id. Names are a convenience in yaml only; the stored value is always
+numeric ids. The `everyone` pseudogroup is being retired and has no name here; target
+`logged_in_users` and `anonymous_users` explicitly instead.
+
+Saving normalizes the value rather than rejecting it: mandatory ids are merged in first and
+disallowed ids are stripped. The same projection is applied when the setting is read, so a value
+stored before a rule was added can never surface a disallowed group. Only `at_least_one` and a group
+id that does not exist produce an error. The `default` must already satisfy the rules it declares.
+
+The same block works on a `groups` property inside an `objects` schema, except for `at_least_one`,
+which a schema expresses as `validations: { min: 1 }`:
+
+```yaml
+sections:
+  type: objects
+  default: []
+  schema:
+    name: section
+    properties:
+      group_ids:
+        type: groups
+        constraints:
+          disallowed: [anonymous_users]
+        validations:
+          min: 1
+```
+
+The older `disallowed_groups: "0|1"` key is still accepted as an alias of `disallowed`, but it
+cannot be combined with a `constraints` block.
+
 ### Resolving group membership
 
 Theme components sometimes need to show or hide a feature based on whether the current user is in a configured group. Avoid checking `currentUser.groups` for this because it only includes groups that are visible to the user, and it can miss hidden groups.
