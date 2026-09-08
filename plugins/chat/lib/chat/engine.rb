@@ -23,30 +23,32 @@ module Chat
     end
   end
 
-  def self.allowed_group_ids
-    SiteSetting.chat_allowed_groups_map
-  end
+  class << self
+    def allowed_group_ids
+      SiteSetting.chat_allowed_groups_map
+    end
 
-  def self.anonymous_public_channel_access_allowed?
-    SiteSetting.enable_public_channels &&
-      allowed_group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
-  end
+    def anonymous_public_channel_access_allowed?
+      SiteSetting.enable_public_channels &&
+        allowed_group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
+    end
 
-  def self.message_onebox_template
-    return File.read(MESSAGE_ONEBOX_TEMPLATE_PATH) if Rails.env.development?
+    def message_onebox_template
+      return File.read(MESSAGE_ONEBOX_TEMPLATE_PATH) if Rails.env.development?
 
-    @message_onebox_template ||= File.read(MESSAGE_ONEBOX_TEMPLATE_PATH)
-  end
+      @message_onebox_template ||= File.read(MESSAGE_ONEBOX_TEMPLATE_PATH)
+    end
 
-  def self.channel_onebox_template
-    return File.read(CHANNEL_ONEBOX_TEMPLATE_PATH) if Rails.env.development?
+    def channel_onebox_template
+      return File.read(CHANNEL_ONEBOX_TEMPLATE_PATH) if Rails.env.development?
 
-    @channel_onebox_template ||= File.read(CHANNEL_ONEBOX_TEMPLATE_PATH)
-  end
+      @channel_onebox_template ||= File.read(CHANNEL_ONEBOX_TEMPLATE_PATH)
+    end
 
-  def self.thread_onebox_template
-    return File.read(THREAD_ONEBOX_TEMPLATE_PATH) if Rails.env.development?
+    def thread_onebox_template
+      return File.read(THREAD_ONEBOX_TEMPLATE_PATH) if Rails.env.development?
 
-    @thread_onebox_template ||= File.read(THREAD_ONEBOX_TEMPLATE_PATH)
+      @thread_onebox_template ||= File.read(THREAD_ONEBOX_TEMPLATE_PATH)
+    end
   end
 end

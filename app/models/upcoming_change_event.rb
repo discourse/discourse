@@ -21,11 +21,13 @@ class UpcomingChangeEvent < ActiveRecord::Base
   default_scope { order(:created_at) }
   scope :not_backfilled, -> { where("event_data->>'backfilled' IS DISTINCT FROM 'true'") }
 
-  def self.change_names_with_event(event_type)
-    UpcomingChangeEvent
-      .where(upcoming_change_name: SiteSetting.upcoming_change_site_settings, event_type:)
-      .pluck(:upcoming_change_name)
-      .map(&:to_sym)
+  class << self
+    def change_names_with_event(event_type)
+      UpcomingChangeEvent
+        .where(upcoming_change_name: SiteSetting.upcoming_change_site_settings, event_type:)
+        .pluck(:upcoming_change_name)
+        .map(&:to_sym)
+    end
   end
 end
 

@@ -7,8 +7,10 @@ RSpec.describe AclTarget do
 
       self.table_name = "posts"
 
-      def self.name
-        "AclTargetSpecTarget"
+      class << self
+        def name
+          "AclTargetSpecTarget"
+        end
       end
     end
   end

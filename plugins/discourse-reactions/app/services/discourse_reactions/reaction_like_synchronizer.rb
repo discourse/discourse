@@ -2,8 +2,10 @@
 
 module DiscourseReactions
   class ReactionLikeSynchronizer
-    def self.sync!
-      new.sync!
+    class << self
+      def sync!
+        new.sync!
+      end
     end
 
     def initialize

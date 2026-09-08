@@ -25,58 +25,63 @@ module Chat
       end
     end
 
-    def self.create_archive_process(chat_channel:, acting_user:, topic_params:)
-      return if Chat::ChannelArchive.exists?(chat_channel: chat_channel)
+    class << self
+      def create_archive_process(chat_channel:, acting_user:, topic_params:)
+        return if Chat::ChannelArchive.exists?(chat_channel: chat_channel)
 
-      # Only need to validate topic params for a new topic, not an existing one.
-      if topic_params[:topic_id].blank?
-        valid, errors =
-          Chat::ChannelArchiveService.validate_topic_params(Guardian.new(acting_user), topic_params)
+        # Only need to validate topic params for a new topic, not an existing one.
+        if topic_params[:topic_id].blank?
+          valid, errors =
+            Chat::ChannelArchiveService.validate_topic_params(
+              Guardian.new(acting_user),
+              topic_params,
+            )
 
-        raise ArchiveValidationError.new(errors: errors) if !valid
+          raise ArchiveValidationError.new(errors: errors) if !valid
+        end
+
+        Chat::ChannelArchive.transaction do
+          chat_channel.read_only!(acting_user)
+
+          archive =
+            Chat::ChannelArchive.create!(
+              chat_channel: chat_channel,
+              archived_by: acting_user,
+              total_messages: chat_channel.chat_messages.count,
+              destination_topic_id: topic_params[:topic_id],
+              destination_topic_title: topic_params[:topic_title],
+              destination_category_id: topic_params[:category_id],
+              destination_tags: topic_params[:tags],
+            )
+          Jobs.enqueue(Jobs::Chat::ChannelArchive, chat_channel_archive_id: archive.id)
+
+          archive
+        end
       end
 
-      Chat::ChannelArchive.transaction do
-        chat_channel.read_only!(acting_user)
-
-        archive =
-          Chat::ChannelArchive.create!(
-            chat_channel: chat_channel,
-            archived_by: acting_user,
-            total_messages: chat_channel.chat_messages.count,
-            destination_topic_id: topic_params[:topic_id],
-            destination_topic_title: topic_params[:topic_title],
-            destination_category_id: topic_params[:category_id],
-            destination_tags: topic_params[:tags],
-          )
-        Jobs.enqueue(Jobs::Chat::ChannelArchive, chat_channel_archive_id: archive.id)
-
-        archive
-      end
-    end
-
-    def self.retry_archive_process(chat_channel:)
-      return if !chat_channel.chat_channel_archive&.failed?
-      Jobs.enqueue(
-        Jobs::Chat::ChannelArchive,
-        chat_channel_archive_id: chat_channel.chat_channel_archive.id,
-      )
-      chat_channel.chat_channel_archive
-    end
-
-    def self.validate_topic_params(guardian, topic_params)
-      topic_creator =
-        TopicCreator.new(
-          Discourse.system_user,
-          guardian,
-          {
-            title: topic_params[:topic_title],
-            category: topic_params[:category_id],
-            tags: topic_params[:tags],
-            import_mode: true,
-          },
+      def retry_archive_process(chat_channel:)
+        return if !chat_channel.chat_channel_archive&.failed?
+        Jobs.enqueue(
+          Jobs::Chat::ChannelArchive,
+          chat_channel_archive_id: chat_channel.chat_channel_archive.id,
         )
-      [topic_creator.valid?, topic_creator.errors.full_messages]
+        chat_channel.chat_channel_archive
+      end
+
+      def validate_topic_params(guardian, topic_params)
+        topic_creator =
+          TopicCreator.new(
+            Discourse.system_user,
+            guardian,
+            {
+              title: topic_params[:topic_title],
+              category: topic_params[:category_id],
+              tags: topic_params[:tags],
+              import_mode: true,
+            },
+          )
+        [topic_creator.valid?, topic_creator.errors.full_messages]
+      end
     end
 
     attr_reader :chat_channel_archive, :chat_channel, :chat_channel_title

@@ -7,6 +7,11 @@ module BackupRestore
   class Creator
     attr_reader :success, :store
 
+    # Lightweight immutable value object to avoid holding full ActiveRecord objects in memory
+    # Includes extension and original_filename for FileStore::BaseStore#get_path_for_upload
+    # fallback path when URL doesn't match UPLOAD_PATH_REGEX
+    UploadData = Data.define(:id, :url, :sha1, :extension, :original_filename)
+
     def initialize(user_id, opts = {})
       @user_id = user_id
       @client_id = opts[:client_id]
@@ -298,11 +303,6 @@ module BackupRestore
         log "No local uploads found. Skipping archiving of local uploads..."
       end
     end
-
-    # Lightweight immutable value object to avoid holding full ActiveRecord objects in memory
-    # Includes extension and original_filename for FileStore::BaseStore#get_path_for_upload
-    # fallback path when URL doesn't match UPLOAD_PATH_REGEX
-    UploadData = Data.define(:id, :url, :sha1, :extension, :original_filename)
 
     def add_remote_uploads_to_archive(tar_filename)
       if !SiteSetting.include_s3_uploads_in_backups

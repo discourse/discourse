@@ -34,30 +34,32 @@ class AiApiAuditLog < ActiveRecord::Base
     BedrockConverse = 11
   end
 
-  def self.token_and_spending_stats(scope)
-    spending_expr = LlmModel.estimated_or_calculated_spending_sql(table_name)
-    request_tokens,
-    response_tokens,
-    cache_read_tokens,
-    cache_write_tokens,
-    spending,
-    spending_count =
-      scope.joins("LEFT JOIN llm_models ON llm_models.id = #{table_name}.llm_id").pick(
-        Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.request_tokens, 0)), 0)"),
-        Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.response_tokens, 0)), 0)"),
-        Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.cache_read_tokens, 0)), 0)"),
-        Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.cache_write_tokens, 0)), 0)"),
-        Arel.sql("SUM(#{spending_expr})"),
-        Arel.sql("COUNT(#{spending_expr})"),
-      )
+  class << self
+    def token_and_spending_stats(scope)
+      spending_expr = LlmModel.estimated_or_calculated_spending_sql(table_name)
+      request_tokens,
+      response_tokens,
+      cache_read_tokens,
+      cache_write_tokens,
+      spending,
+      spending_count =
+        scope.joins("LEFT JOIN llm_models ON llm_models.id = #{table_name}.llm_id").pick(
+          Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.request_tokens, 0)), 0)"),
+          Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.response_tokens, 0)), 0)"),
+          Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.cache_read_tokens, 0)), 0)"),
+          Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.cache_write_tokens, 0)), 0)"),
+          Arel.sql("SUM(#{spending_expr})"),
+          Arel.sql("COUNT(#{spending_expr})"),
+        )
 
-    {
-      request_tokens: request_tokens.to_i,
-      response_tokens: response_tokens.to_i,
-      cache_read_tokens: cache_read_tokens.to_i,
-      cache_write_tokens: cache_write_tokens.to_i,
-      spending: spending_count.to_i.positive? ? spending.to_f.round(6) : nil,
-    }
+      {
+        request_tokens: request_tokens.to_i,
+        response_tokens: response_tokens.to_i,
+        cache_read_tokens: cache_read_tokens.to_i,
+        cache_write_tokens: cache_write_tokens.to_i,
+        spending: spending_count.to_i.positive? ? spending.to_f.round(6) : nil,
+      }
+    end
   end
 
   def next_log_id

@@ -66,26 +66,30 @@ module UpcomingChanges
     end
 
     class MetadataLoader
-      def self.from_content(content)
-        return {} if content.blank?
+      class << self
+        def from_content(content)
+          return {} if content.blank?
 
-        Tempfile.create(%w[upcoming-change-settings .yml]) do |file|
-          file.write(content)
-          file.close
+          Tempfile.create(%w[upcoming-change-settings .yml]) do |file|
+            file.write(content)
+            file.close
 
-          from_file(file.path, strict: false)
+            from_file(file.path, strict: false)
+          end
         end
-      end
 
-      def self.from_file(path, strict:)
-        site_settings = Class.new { extend SiteSettingExtension }
-        site_settings.load_settings(path)
-        site_settings.upcoming_change_metadata
-      rescue => error
-        raise if strict
+        def from_file(path, strict:)
+          site_settings = Class.new { extend SiteSettingExtension }
+          site_settings.load_settings(path)
+          site_settings.upcoming_change_metadata
+        rescue => error
+          raise if strict
 
-        Rails.logger.warn("Failed to parse historical site settings from #{path}: #{error.message}")
-        {}
+          Rails.logger.warn(
+            "Failed to parse historical site settings from #{path}: #{error.message}",
+          )
+          {}
+        end
       end
     end
 
@@ -241,19 +245,20 @@ module UpcomingChanges
       BRANCH_PREFIX = "dev/upcoming-change-status-bump"
       LABEL = "upcoming-change"
 
-      def self.add_to(record, stale_after_days:)
-        return record if !record[:eligible]
+      class << self
+        def add_to(record, stale_after_days:)
+          return record if !record[:eligible]
 
-        record.merge(
-          branch: "#{BRANCH_PREFIX}/#{record[:name]}",
-          title: "FEATURE: Bump #{record[:name]} upcoming change to #{record[:next_status]}",
-          pr_label: LABEL,
-          pr_body: body_for(record, stale_after_days:),
-        )
-      end
+          record.merge(
+            branch: "#{BRANCH_PREFIX}/#{record[:name]}",
+            title: "FEATURE: Bump #{record[:name]} upcoming change to #{record[:next_status]}",
+            pr_label: LABEL,
+            pr_body: body_for(record, stale_after_days:),
+          )
+        end
 
-      def self.body_for(record, stale_after_days:)
-        <<~MD.chomp
+        def body_for(record, stale_after_days:)
+          <<~MD.chomp
           <!-- upcoming-change-status-pr:#{record[:name]} -->
 
           This automated PR moves `#{record[:name]}` from `#{record[:current_status]}` to `#{record[:next_status]}` after #{stale_after_days}+ days without a status change.
@@ -264,24 +269,25 @@ module UpcomingChanges
           - Original author: #{original_author(record)}
           - Original PR: #{original_pr(record)}
         MD
-      end
+        end
 
-      def self.commit_link(commit_sha)
-        return "N/A" if commit_sha.blank?
+        def commit_link(commit_sha)
+          return "N/A" if commit_sha.blank?
 
-        "[`#{commit_sha}`](https://github.com/discourse/discourse/commit/#{commit_sha})"
-      end
+          "[`#{commit_sha}`](https://github.com/discourse/discourse/commit/#{commit_sha})"
+        end
 
-      def self.original_author(record)
-        return "N/A" if record[:original_author_name].blank?
+        def original_author(record)
+          return "N/A" if record[:original_author_name].blank?
 
-        "#{record[:original_author_name]} (<#{record[:original_author_email]}>)"
-      end
+          "#{record[:original_author_name]} (<#{record[:original_author_email]}>)"
+        end
 
-      def self.original_pr(record)
-        return "N/A" if record[:original_pr_number].blank?
+        def original_pr(record)
+          return "N/A" if record[:original_pr_number].blank?
 
-        "##{record[:original_pr_number]}"
+          "##{record[:original_pr_number]}"
+        end
       end
     end
 
@@ -461,51 +467,53 @@ module UpcomingChanges
     end
 
     class CLI
-      def self.run(args)
-        options = {
-          repo_path: Rails.root.to_s,
-          settings_paths: nil,
-          stale_after_days: 14,
-          history_since: DEFAULT_HISTORY_SINCE,
-          pretty: false,
-        }
+      class << self
+        def run(args)
+          options = {
+            repo_path: Rails.root.to_s,
+            settings_paths: nil,
+            stale_after_days: 14,
+            history_since: DEFAULT_HISTORY_SINCE,
+            pretty: false,
+          }
 
-        parser =
-          OptionParser.new do |opts|
-            opts.banner =
-              "Usage: bin/rails runner script/upcoming_changes_status_report -- [options]"
+          parser =
+            OptionParser.new do |opts|
+              opts.banner =
+                "Usage: bin/rails runner script/upcoming_changes_status_report -- [options]"
 
-            opts.on(
-              "--apply NAME",
-              "Apply the next status for one eligible upcoming change",
-            ) { |name| options[:apply] = name }
+              opts.on(
+                "--apply NAME",
+                "Apply the next status for one eligible upcoming change",
+              ) { |name| options[:apply] = name }
 
-            opts.on("--repo PATH", "Git repository path") { |path| options[:repo_path] = path }
-            opts.on(
-              "--settings-path PATH",
-              "Only inspect one settings YAML path; defaults to core and plugin settings",
-            ) { |path| options[:settings_paths] = [path] }
-            opts.on("--stale-after-days DAYS", Integer, "Minimum unchanged age") do |days|
-              options[:stale_after_days] = days
+              opts.on("--repo PATH", "Git repository path") { |path| options[:repo_path] = path }
+              opts.on(
+                "--settings-path PATH",
+                "Only inspect one settings YAML path; defaults to core and plugin settings",
+              ) { |path| options[:settings_paths] = [path] }
+              opts.on("--stale-after-days DAYS", Integer, "Minimum unchanged age") do |days|
+                options[:stale_after_days] = days
+              end
+              opts.on(
+                "--history-since VALUE",
+                "How far back to scan git history (any git --since value); defaults to '#{DEFAULT_HISTORY_SINCE}'",
+              ) { |value| options[:history_since] = value }
+              opts.on("--pretty", "Pretty-print JSON output") { options[:pretty] = true }
             end
-            opts.on(
-              "--history-since VALUE",
-              "How far back to scan git history (any git --since value); defaults to '#{DEFAULT_HISTORY_SINCE}'",
-            ) { |value| options[:history_since] = value }
-            opts.on("--pretty", "Pretty-print JSON output") { options[:pretty] = true }
-          end
 
-        parser.parse!(args)
+          parser.parse!(args)
 
-        status_report =
-          StatusReport.new(
-            repo_path: options[:repo_path],
-            settings_paths: options[:settings_paths],
-            stale_after_days: options[:stale_after_days],
-            history_since: options[:history_since],
-          )
-        output = options[:apply] ? status_report.apply(options[:apply]) : status_report.report
-        puts(options[:pretty] ? JSON.pretty_generate(output) : JSON.generate(output))
+          status_report =
+            StatusReport.new(
+              repo_path: options[:repo_path],
+              settings_paths: options[:settings_paths],
+              stale_after_days: options[:stale_after_days],
+              history_since: options[:history_since],
+            )
+          output = options[:apply] ? status_report.apply(options[:apply]) : status_report.report
+          puts(options[:pretty] ? JSON.pretty_generate(output) : JSON.generate(output))
+        end
       end
     end
   end

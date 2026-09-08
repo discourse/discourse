@@ -2,8 +2,10 @@
 
 module SeedData
   class Categories
-    def self.with_default_locale
-      SeedData::Categories.new(SiteSetting.default_locale)
+    class << self
+      def with_default_locale
+        SeedData::Categories.new(SiteSetting.default_locale)
+      end
     end
 
     def initialize(locale)

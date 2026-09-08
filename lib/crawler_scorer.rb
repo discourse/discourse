@@ -44,68 +44,6 @@ class CrawlerScorer
   MISSING_ENGAGEMENT_HIGH_SCORE = 40
   ENGAGEMENT_LOOKBACK = 6.hours
 
-  def self.enabled?
-    UpcomingChanges.enabled?(:improved_crawler_detection)
-  end
-
-  def self.likely_crawler_condition(table: nil)
-    prefix = table ? "#{table}." : ""
-    "#{prefix}score > #{BOT_SCORE_THRESHOLD}"
-  end
-
-  def self.score!(window_start:, window_end:)
-    crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
-    crawler_detection_datacenter_asns =
-      SiteSetting.crawler_detection_datacenter_asns_map.map(&:to_i)
-
-    ActiveRecord::Base.transaction do
-      DB.exec(
-        SQL,
-        window_start: window_start,
-        window_end: window_end,
-        ua_regex: SiteSetting.crawler_automation_user_agents,
-        crawler_asns: crawler_asns,
-        crawler_detection_datacenter_asns: crawler_detection_datacenter_asns,
-        hostname: Discourse.current_hostname,
-        automation_ua_score: AUTOMATION_UA_SCORE,
-        known_asn_score: KNOWN_ASN_SCORE,
-        datacenter_asn_score: DATACENTER_ASN_SCORE,
-        single_request_no_referrer_score: SINGLE_REQUEST_NO_REFERRER_SCORE,
-        single_request_locale_param_bonus: SINGLE_REQUEST_LOCALE_PARAM_BONUS,
-        stale_browser_score: STALE_BROWSER_SCORE,
-        stale_chromium_major_version_cutoff:
-          SiteSetting.crawler_stale_chromium_major_version_cutoff,
-        velocity_low: VELOCITY_LOW,
-        velocity_medium: VELOCITY_MEDIUM,
-        velocity_high: VELOCITY_HIGH,
-        velocity_low_score: VELOCITY_LOW_SCORE,
-        velocity_medium_score: VELOCITY_MEDIUM_SCORE,
-        velocity_high_score: VELOCITY_HIGH_SCORE,
-        churn_low_min_sessions: CHURN_LOW_MIN_SESSIONS,
-        churn_high_min_sessions: CHURN_HIGH_MIN_SESSIONS,
-        churn_max_avg_events: CHURN_MAX_AVG_EVENTS,
-        churn_low_score: CHURN_LOW_SCORE,
-        churn_high_score: CHURN_HIGH_SCORE,
-        rapid_nav_min_gaps: RAPID_NAV_MIN_GAPS,
-        rapid_nav_max_median_seconds: RAPID_NAV_MAX_MEDIAN_SECONDS,
-        rapid_nav_score: RAPID_NAV_SCORE,
-        ip_rotation_min_ips: IP_ROTATION_MIN_IPS,
-        ip_rotation_max_seconds_per_change: IP_ROTATION_MAX_SECONDS_PER_CHANGE,
-        ip_rotation_score: IP_ROTATION_SCORE,
-        referrer_min_events: REFERRER_MIN_EVENTS,
-        referrer_low_ratio: REFERRER_LOW_RATIO,
-        referrer_high_ratio: REFERRER_HIGH_RATIO,
-        referrer_low_score: REFERRER_LOW_SCORE,
-        referrer_high_score: REFERRER_HIGH_SCORE,
-        engagement_lookback_start: window_end - ENGAGEMENT_LOOKBACK,
-        missing_engagement_low_ratio: MISSING_ENGAGEMENT_LOW_RATIO,
-        missing_engagement_high_ratio: MISSING_ENGAGEMENT_HIGH_RATIO,
-        missing_engagement_low_score: MISSING_ENGAGEMENT_LOW_SCORE,
-        missing_engagement_high_score: MISSING_ENGAGEMENT_HIGH_SCORE,
-      )
-    end
-  end
-
   SQL = <<~SQL
     WITH events AS (
       SELECT
@@ -375,4 +313,68 @@ class CrawlerScorer
         referrer_score      = EXCLUDED.referrer_score,
         engagement_score    = EXCLUDED.engagement_score;
   SQL
+
+  class << self
+    def enabled?
+      UpcomingChanges.enabled?(:improved_crawler_detection)
+    end
+
+    def likely_crawler_condition(table: nil)
+      prefix = table ? "#{table}." : ""
+      "#{prefix}score > #{BOT_SCORE_THRESHOLD}"
+    end
+
+    def score!(window_start:, window_end:)
+      crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
+      crawler_detection_datacenter_asns =
+        SiteSetting.crawler_detection_datacenter_asns_map.map(&:to_i)
+
+      ActiveRecord::Base.transaction do
+        DB.exec(
+          SQL,
+          window_start: window_start,
+          window_end: window_end,
+          ua_regex: SiteSetting.crawler_automation_user_agents,
+          crawler_asns: crawler_asns,
+          crawler_detection_datacenter_asns: crawler_detection_datacenter_asns,
+          hostname: Discourse.current_hostname,
+          automation_ua_score: AUTOMATION_UA_SCORE,
+          known_asn_score: KNOWN_ASN_SCORE,
+          datacenter_asn_score: DATACENTER_ASN_SCORE,
+          single_request_no_referrer_score: SINGLE_REQUEST_NO_REFERRER_SCORE,
+          single_request_locale_param_bonus: SINGLE_REQUEST_LOCALE_PARAM_BONUS,
+          stale_browser_score: STALE_BROWSER_SCORE,
+          stale_chromium_major_version_cutoff:
+            SiteSetting.crawler_stale_chromium_major_version_cutoff,
+          velocity_low: VELOCITY_LOW,
+          velocity_medium: VELOCITY_MEDIUM,
+          velocity_high: VELOCITY_HIGH,
+          velocity_low_score: VELOCITY_LOW_SCORE,
+          velocity_medium_score: VELOCITY_MEDIUM_SCORE,
+          velocity_high_score: VELOCITY_HIGH_SCORE,
+          churn_low_min_sessions: CHURN_LOW_MIN_SESSIONS,
+          churn_high_min_sessions: CHURN_HIGH_MIN_SESSIONS,
+          churn_max_avg_events: CHURN_MAX_AVG_EVENTS,
+          churn_low_score: CHURN_LOW_SCORE,
+          churn_high_score: CHURN_HIGH_SCORE,
+          rapid_nav_min_gaps: RAPID_NAV_MIN_GAPS,
+          rapid_nav_max_median_seconds: RAPID_NAV_MAX_MEDIAN_SECONDS,
+          rapid_nav_score: RAPID_NAV_SCORE,
+          ip_rotation_min_ips: IP_ROTATION_MIN_IPS,
+          ip_rotation_max_seconds_per_change: IP_ROTATION_MAX_SECONDS_PER_CHANGE,
+          ip_rotation_score: IP_ROTATION_SCORE,
+          referrer_min_events: REFERRER_MIN_EVENTS,
+          referrer_low_ratio: REFERRER_LOW_RATIO,
+          referrer_high_ratio: REFERRER_HIGH_RATIO,
+          referrer_low_score: REFERRER_LOW_SCORE,
+          referrer_high_score: REFERRER_HIGH_SCORE,
+          engagement_lookback_start: window_end - ENGAGEMENT_LOOKBACK,
+          missing_engagement_low_ratio: MISSING_ENGAGEMENT_LOW_RATIO,
+          missing_engagement_high_ratio: MISSING_ENGAGEMENT_HIGH_RATIO,
+          missing_engagement_low_score: MISSING_ENGAGEMENT_LOW_SCORE,
+          missing_engagement_high_score: MISSING_ENGAGEMENT_HIGH_SCORE,
+        )
+      end
+    end
+  end
 end

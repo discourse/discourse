@@ -5,13 +5,15 @@ module PostsHelper
 
   CACHE_URL_DURATION = 12.hours.to_i
 
-  def self.clear_canonical_cache!(post)
-    key = canonical_redis_key(post)
-    Discourse.redis.del(key)
-  end
+  class << self
+    def clear_canonical_cache!(post)
+      key = canonical_redis_key(post)
+      Discourse.redis.del(key)
+    end
 
-  def self.canonical_redis_key(post)
-    "post_canonical_url_#{post.id}"
+    def canonical_redis_key(post)
+      "post_canonical_url_#{post.id}"
+    end
   end
 
   def cached_post_url(post, use_canonical:)

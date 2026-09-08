@@ -3,14 +3,6 @@
 module DiscourseAi
   module Inference
     class HuggingFaceTextEmbeddings
-      def initialize(endpoint, key, referer = Discourse.base_url)
-        @endpoint = endpoint
-        @key = key
-        @referer = referer
-      end
-
-      attr_reader :endpoint, :key, :referer
-
       class << self
         def reranker_configured?
           SiteSetting.ai_hugging_face_tei_reranker_endpoint.present? ||
@@ -46,6 +38,14 @@ module DiscourseAi
           JSON.parse(response.body, symbolize_names: true)
         end
       end
+
+      def initialize(endpoint, key, referer = Discourse.base_url)
+        @endpoint = endpoint
+        @key = key
+        @referer = referer
+      end
+
+      attr_reader :endpoint, :key, :referer
 
       def classify_by_sentiment!(content)
         response = do_request!(content)

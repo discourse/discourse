@@ -21,6 +21,21 @@ module DiscourseAutomation
       def plugin_triggerables
         @@plugin_triggerables
       end
+
+      def add(identifier, &block)
+        @all_scriptables = nil
+        define_method("__scriptable_#{identifier}", &block)
+      end
+
+      def remove(identifier)
+        @all_scriptables = nil
+        undef_method("__scriptable_#{identifier}")
+      end
+
+      def all
+        @all_scriptables ||=
+          DiscourseAutomation::Scriptable.instance_methods(false).grep(/^__scriptable_/)
+      end
     end
 
     def initialize(name, automation = nil)
@@ -167,225 +182,219 @@ module DiscourseAutomation
     end
 
     module Utils
-      def self.fetch_report(name, args = {})
-        report = Report.find(name, args)
+      class << self
+        def fetch_report(name, args = {})
+          report = Report.find(name, args)
 
-        return if !report
+          return if !report
 
-        return if !report.modes.include?(:table)
+          return if !report.modes.include?(:table)
 
-        ordered_columns = report.labels.map { |l| l[:property] }
+          ordered_columns = report.labels.map { |l| l[:property] }
 
-        table = +"\n"
-        table << "|" + report.labels.map { |l| l[:title] }.join("|") + "|\n"
-        table << "|" + report.labels.count.times.map { "-" }.join("|") + "|\n"
-        if report.data.count > 0
-          report.data.each do |data|
-            table << "|#{ordered_columns.map { |col| data[col] }.join("|")}|\n"
+          table = +"\n"
+          table << "|" + report.labels.map { |l| l[:title] }.join("|") + "|\n"
+          table << "|" + report.labels.count.times.map { "-" }.join("|") + "|\n"
+          if report.data.count > 0
+            report.data.each do |data|
+              table << "|#{ordered_columns.map { |col| data[col] }.join("|")}|\n"
+            end
+          else
+            table << "|" + report.labels.count.times.map { " " }.join("|") + "|\n"
           end
-        else
-          table << "|" + report.labels.count.times.map { " " }.join("|") + "|\n"
+          table
         end
-        table
-      end
 
-      def self.apply_placeholders(input, map = {})
-        input = input.dup
-        map[:site_title] = SiteSetting.title
+        def apply_placeholders(input, map = {})
+          input = input.dup
+          map[:site_title] = SiteSetting.title
 
-        input = apply_report_placeholder(input)
+          input = apply_report_placeholder(input)
 
-        map.each { |key, value| input = input.gsub("%%#{key.upcase}%%", value.to_s) }
+          map.each { |key, value| input = input.gsub("%%#{key.upcase}%%", value.to_s) }
 
-        input = Mustache.render(input, map).to_s
+          input = Mustache.render(input, map).to_s
+        end
+
+        public
+
+        def apply_report_placeholder(input = "")
+          input.gsub(REPORT_REGEX) do |pattern|
+            match = pattern.match(REPORT_REGEX)
+            if match
+              params = match[1].match(/^(.*?)(?:\s(.*))?$/)
+
+              args = { filters: {} }
+              if params[2]
+                params[2]
+                  .split(" ")
+                  .each do |param|
+                    key, value = param.split("=")
+                    if %w[start_date end_date].include?(key)
+                      args[key.to_sym] = begin
+                        Date.parse(value)
+                      rescue StandardError
+                        nil
+                      end
+                    else
+                      args[:filters][key.to_sym] = value
+                    end
+                  end
+              end
+
+              fetch_report(params[1].downcase, args) || ""
+            end
+          end
+        end
+
+        def build_quote(post)
+          return "" if post.nil? || post.raw.nil?
+
+          full_name = post.user.name
+          name =
+            if SiteSetting.display_name_on_posts && !SiteSetting.prioritize_username_in_ux
+              full_name || post.username
+            else
+              post.username
+            end
+
+          params = [name, "post:#{post.post_number}", "topic:#{post.topic_id}"]
+
+          if SiteSetting.display_name_on_posts && !SiteSetting.prioritize_username_in_ux &&
+               full_name
+            params.push("username:#{post.username}")
+          end
+
+          "[quote=#{params.join(", ")}]\n#{post.raw.strip}\n[/quote]\n\n"
+        end
+
+        def send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil)
+          pm = pm.symbolize_keys
+
+          sender_user =
+            if sender.is_a?(Integer)
+              User.find_by(id: sender)
+            else
+              User.find_by(username: sender)
+            end
+
+          if !sender_user
+            DiscourseAutomation::Logger.warn(
+              "Did not send PM #{pm[:title]} - sender does not exist: `#{sender}`",
+            )
+            return
+          end
+
+          if delay && delay.to_i > 0 && automation_id
+            if pm[:target_user_ids].present?
+              target_user_ids = Array.wrap(pm[:target_user_ids])
+              if !User.where(id: target_user_ids).exists?
+                DiscourseAutomation::Logger.warn(
+                  "Did not create pending PM #{pm[:title]} - no valid targets exist",
+                )
+                return
+              end
+            else
+              target_usernames = Array.wrap(pm[:target_usernames])
+              target_user_ids = User.where(username: target_usernames).pluck(:id)
+              if target_user_ids.empty?
+                DiscourseAutomation::Logger.warn(
+                  "Did not create pending PM #{pm[:title]} - no valid targets exist",
+                )
+                return
+              end
+            end
+
+            pm.delete(:target_usernames)
+            pm[:execute_at] = delay.to_i.minutes.from_now
+            pm[:sender_id] = sender_user.id
+            pm[:target_user_ids] = target_user_ids
+            pm[:automation_id] = automation_id
+            DiscourseAutomation::PendingPm.create!(pm)
+          else
+            if pm[:target_user_ids].present?
+              pm[:target_user_ids] = Array.wrap(pm[:target_user_ids])
+              pm.delete(:target_usernames)
+            else
+              pm[:target_usernames] = Array.wrap(pm[:target_usernames])
+            end
+            pm[:target_group_names] = Array.wrap(pm[:target_group_names])
+            pm[:target_emails] = Array.wrap(pm[:target_emails])
+
+            if pm[:target_user_ids].blank? && pm[:target_usernames].blank? &&
+                 pm[:target_group_names].empty? && pm[:target_emails].empty?
+              return
+            end
+
+            non_existing_targets = []
+
+            if pm[:target_user_ids].present?
+              existing_ids = User.where(id: pm[:target_user_ids]).pluck(:id)
+              if existing_ids.length != pm[:target_user_ids].length
+                non_existing_targets << "#{pm[:target_user_ids].length - existing_ids.length} user(s) by ID"
+                pm[:target_user_ids] = existing_ids
+              end
+            end
+
+            if pm[:target_usernames].present?
+              existing_target_usernames =
+                User.where(username: pm[:target_usernames]).pluck(:username)
+              if existing_target_usernames.length != pm[:target_usernames].length
+                non_existing_targets += pm[:target_usernames] - existing_target_usernames
+                pm[:target_usernames] = existing_target_usernames
+              end
+            end
+
+            if pm[:target_group_names].present?
+              existing_target_groups = Group.where(name: pm[:target_group_names]).pluck(:name)
+              if existing_target_groups.length != pm[:target_group_names].length
+                non_existing_targets += pm[:target_group_names] - existing_target_groups
+                pm[:target_group_names] = existing_target_groups
+              end
+            end
+
+            if pm[:target_emails].present?
+              valid_emails = pm[:target_emails].select { |email| Email.is_valid?(email) }
+              if valid_emails.length != pm[:target_emails].length
+                non_existing_targets += pm[:target_emails] - valid_emails
+                pm[:target_emails] = valid_emails
+              end
+            end
+
+            pm = pm.merge(archetype: Archetype.private_message)
+            pm[:target_usernames] = pm[:target_usernames].join(",") if pm[
+              :target_usernames
+            ].present?
+            pm[:target_group_names] = pm[:target_group_names].join(",")
+            pm[:target_emails] = pm[:target_emails].join(",")
+
+            if pm[:target_user_ids].blank? && pm[:target_usernames].blank? &&
+                 pm[:target_group_names].blank? && pm[:target_emails].blank?
+              DiscourseAutomation::Logger.warn(
+                "Did not send PM #{pm[:title]} - no valid targets exist",
+              )
+              return
+            elsif non_existing_targets.any?
+              DiscourseAutomation::Logger.warn(
+                "Did not send PM #{pm[:title]} to all users - some do not exist: `#{non_existing_targets.join(",")}`",
+              )
+            end
+
+            pm[:acting_user] = Discourse.system_user
+            creator = PostCreator.new(sender_user, pm)
+            post = creator.create
+            if post.blank? || creator.errors.present?
+              error_message = creator.errors.full_messages.join(", ")
+              DiscourseAutomation::Logger.error(
+                "Failed to send PM '#{pm[:title]}' - #{error_message}",
+              )
+              raise ActiveRecord::RecordNotSaved.new(error_message)
+            end
+          end
+        end
       end
 
       REPORT_REGEX = /%%REPORT=(.*?)%%/
-      def self.apply_report_placeholder(input = "")
-        input.gsub(REPORT_REGEX) do |pattern|
-          match = pattern.match(REPORT_REGEX)
-          if match
-            params = match[1].match(/^(.*?)(?:\s(.*))?$/)
-
-            args = { filters: {} }
-            if params[2]
-              params[2]
-                .split(" ")
-                .each do |param|
-                  key, value = param.split("=")
-                  if %w[start_date end_date].include?(key)
-                    args[key.to_sym] = begin
-                      Date.parse(value)
-                    rescue StandardError
-                      nil
-                    end
-                  else
-                    args[:filters][key.to_sym] = value
-                  end
-                end
-            end
-
-            fetch_report(params[1].downcase, args) || ""
-          end
-        end
-      end
-
-      def self.build_quote(post)
-        return "" if post.nil? || post.raw.nil?
-
-        full_name = post.user.name
-        name =
-          if SiteSetting.display_name_on_posts && !SiteSetting.prioritize_username_in_ux
-            full_name || post.username
-          else
-            post.username
-          end
-
-        params = [name, "post:#{post.post_number}", "topic:#{post.topic_id}"]
-
-        if SiteSetting.display_name_on_posts && !SiteSetting.prioritize_username_in_ux && full_name
-          params.push("username:#{post.username}")
-        end
-
-        "[quote=#{params.join(", ")}]\n#{post.raw.strip}\n[/quote]\n\n"
-      end
-
-      def self.send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil)
-        pm = pm.symbolize_keys
-
-        sender_user =
-          if sender.is_a?(Integer)
-            User.find_by(id: sender)
-          else
-            User.find_by(username: sender)
-          end
-
-        if !sender_user
-          DiscourseAutomation::Logger.warn(
-            "Did not send PM #{pm[:title]} - sender does not exist: `#{sender}`",
-          )
-          return
-        end
-
-        if delay && delay.to_i > 0 && automation_id
-          if pm[:target_user_ids].present?
-            target_user_ids = Array.wrap(pm[:target_user_ids])
-            if !User.where(id: target_user_ids).exists?
-              DiscourseAutomation::Logger.warn(
-                "Did not create pending PM #{pm[:title]} - no valid targets exist",
-              )
-              return
-            end
-          else
-            target_usernames = Array.wrap(pm[:target_usernames])
-            target_user_ids = User.where(username: target_usernames).pluck(:id)
-            if target_user_ids.empty?
-              DiscourseAutomation::Logger.warn(
-                "Did not create pending PM #{pm[:title]} - no valid targets exist",
-              )
-              return
-            end
-          end
-
-          pm.delete(:target_usernames)
-          pm[:execute_at] = delay.to_i.minutes.from_now
-          pm[:sender_id] = sender_user.id
-          pm[:target_user_ids] = target_user_ids
-          pm[:automation_id] = automation_id
-          DiscourseAutomation::PendingPm.create!(pm)
-        else
-          if pm[:target_user_ids].present?
-            pm[:target_user_ids] = Array.wrap(pm[:target_user_ids])
-            pm.delete(:target_usernames)
-          else
-            pm[:target_usernames] = Array.wrap(pm[:target_usernames])
-          end
-          pm[:target_group_names] = Array.wrap(pm[:target_group_names])
-          pm[:target_emails] = Array.wrap(pm[:target_emails])
-
-          if pm[:target_user_ids].blank? && pm[:target_usernames].blank? &&
-               pm[:target_group_names].empty? && pm[:target_emails].empty?
-            return
-          end
-
-          non_existing_targets = []
-
-          if pm[:target_user_ids].present?
-            existing_ids = User.where(id: pm[:target_user_ids]).pluck(:id)
-            if existing_ids.length != pm[:target_user_ids].length
-              non_existing_targets << "#{pm[:target_user_ids].length - existing_ids.length} user(s) by ID"
-              pm[:target_user_ids] = existing_ids
-            end
-          end
-
-          if pm[:target_usernames].present?
-            existing_target_usernames = User.where(username: pm[:target_usernames]).pluck(:username)
-            if existing_target_usernames.length != pm[:target_usernames].length
-              non_existing_targets += pm[:target_usernames] - existing_target_usernames
-              pm[:target_usernames] = existing_target_usernames
-            end
-          end
-
-          if pm[:target_group_names].present?
-            existing_target_groups = Group.where(name: pm[:target_group_names]).pluck(:name)
-            if existing_target_groups.length != pm[:target_group_names].length
-              non_existing_targets += pm[:target_group_names] - existing_target_groups
-              pm[:target_group_names] = existing_target_groups
-            end
-          end
-
-          if pm[:target_emails].present?
-            valid_emails = pm[:target_emails].select { |email| Email.is_valid?(email) }
-            if valid_emails.length != pm[:target_emails].length
-              non_existing_targets += pm[:target_emails] - valid_emails
-              pm[:target_emails] = valid_emails
-            end
-          end
-
-          pm = pm.merge(archetype: Archetype.private_message)
-          pm[:target_usernames] = pm[:target_usernames].join(",") if pm[:target_usernames].present?
-          pm[:target_group_names] = pm[:target_group_names].join(",")
-          pm[:target_emails] = pm[:target_emails].join(",")
-
-          if pm[:target_user_ids].blank? && pm[:target_usernames].blank? &&
-               pm[:target_group_names].blank? && pm[:target_emails].blank?
-            DiscourseAutomation::Logger.warn(
-              "Did not send PM #{pm[:title]} - no valid targets exist",
-            )
-            return
-          elsif non_existing_targets.any?
-            DiscourseAutomation::Logger.warn(
-              "Did not send PM #{pm[:title]} to all users - some do not exist: `#{non_existing_targets.join(",")}`",
-            )
-          end
-
-          pm[:acting_user] = Discourse.system_user
-          creator = PostCreator.new(sender_user, pm)
-          post = creator.create
-          if post.blank? || creator.errors.present?
-            error_message = creator.errors.full_messages.join(", ")
-            DiscourseAutomation::Logger.error(
-              "Failed to send PM '#{pm[:title]}' - #{error_message}",
-            )
-            raise ActiveRecord::RecordNotSaved.new(error_message)
-          end
-        end
-      end
-    end
-
-    def self.add(identifier, &block)
-      @all_scriptables = nil
-      define_method("__scriptable_#{identifier}", &block)
-    end
-
-    def self.remove(identifier)
-      @all_scriptables = nil
-      undef_method("__scriptable_#{identifier}")
-    end
-
-    def self.all
-      @all_scriptables ||=
-        DiscourseAutomation::Scriptable.instance_methods(false).grep(/^__scriptable_/)
     end
   end
 end

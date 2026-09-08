@@ -13,8 +13,10 @@ module DiscourseEvents
     # keyed by topic id so the client can match each `aside.quote[data-topic]`
     # onebox to its event (mirrors how core's localized_oneboxes are matched).
     class OneboxData
-      def self.build(posts:, guardian:)
-        new(posts:, guardian:).build
+      class << self
+        def build(posts:, guardian:)
+          new(posts:, guardian:).build
+        end
       end
 
       def initialize(posts:, guardian:)

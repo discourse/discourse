@@ -91,24 +91,26 @@ module DiscourseWorkflows
 
     ITEM_PREFIX = "$json"
 
-    def self.environment_symbols
-      ENVIRONMENT_SYMBOLS
-    end
+    class << self
+      def environment_symbols
+        ENVIRONMENT_SYMBOLS
+      end
 
-    def self.node_reference_shape
-      NODE_REFERENCE_SHAPE
-    end
+      def node_reference_shape
+        NODE_REFERENCE_SHAPE
+      end
 
-    def self.item_prefix
-      ITEM_PREFIX
-    end
+      def item_prefix
+        ITEM_PREFIX
+      end
 
-    def self.to_hash
-      {
-        environment: ENVIRONMENT_SYMBOLS,
-        node_reference_shape: NODE_REFERENCE_SHAPE,
-        item_prefix: ITEM_PREFIX,
-      }
+      def to_hash
+        {
+          environment: ENVIRONMENT_SYMBOLS,
+          node_reference_shape: NODE_REFERENCE_SHAPE,
+          item_prefix: ITEM_PREFIX,
+        }
+      end
     end
   end
 end

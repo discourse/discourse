@@ -9,30 +9,23 @@ module FileStore
     MISSING_UPLOADS_RAKE_TASK_NAME = "posts:missing_uploads"
     UPLOAD_CONCURRENCY = 20
 
-    def initialize(s3_options:, dry_run: false, migrate_to_multisite: false)
-      @s3_bucket = s3_options[:bucket]
-      @s3_client_options = s3_options[:client_options]
-      @dry_run = dry_run
-      @migrate_to_multisite = migrate_to_multisite
-      @current_db = RailsMultisite::ConnectionManagement.current_db
-    end
+    class << self
+      def s3_options_from_site_settings
+        {
+          client_options: S3Helper.s3_options(SiteSetting),
+          bucket: SiteSetting.Upload.s3_upload_bucket,
+        }
+      end
 
-    def self.s3_options_from_site_settings
-      {
-        client_options: S3Helper.s3_options(SiteSetting),
-        bucket: SiteSetting.Upload.s3_upload_bucket,
-      }
-    end
-
-    def self.s3_options_from_env
-      if ENV["DISCOURSE_S3_BUCKET"].blank? || ENV["DISCOURSE_S3_REGION"].blank? ||
-           !(
-             (
-               ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
-                 ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
-             ) || ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
-           )
-        raise ToS3MigrationError.new(<<~TEXT)
+      def s3_options_from_env
+        if ENV["DISCOURSE_S3_BUCKET"].blank? || ENV["DISCOURSE_S3_REGION"].blank? ||
+             !(
+               (
+                 ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+                   ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+               ) || ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
+             )
+          raise ToS3MigrationError.new(<<~TEXT)
           Please provide the following environment variables:
             - DISCOURSE_S3_BUCKET
             - DISCOURSE_S3_REGION
@@ -42,17 +35,26 @@ module FileStore
             or
             - DISCOURSE_S3_USE_IAM_PROFILE
         TEXT
+        end
+
+        opts = { region: ENV["DISCOURSE_S3_REGION"] }
+        opts[:endpoint] = ENV["DISCOURSE_S3_ENDPOINT"] if ENV["DISCOURSE_S3_ENDPOINT"].present?
+
+        if ENV["DISCOURSE_S3_USE_IAM_PROFILE"].blank?
+          opts[:access_key_id] = ENV["DISCOURSE_S3_ACCESS_KEY_ID"]
+          opts[:secret_access_key] = ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
+        end
+
+        { client_options: opts, bucket: ENV["DISCOURSE_S3_BUCKET"] }
       end
+    end
 
-      opts = { region: ENV["DISCOURSE_S3_REGION"] }
-      opts[:endpoint] = ENV["DISCOURSE_S3_ENDPOINT"] if ENV["DISCOURSE_S3_ENDPOINT"].present?
-
-      if ENV["DISCOURSE_S3_USE_IAM_PROFILE"].blank?
-        opts[:access_key_id] = ENV["DISCOURSE_S3_ACCESS_KEY_ID"]
-        opts[:secret_access_key] = ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
-      end
-
-      { client_options: opts, bucket: ENV["DISCOURSE_S3_BUCKET"] }
+    def initialize(s3_options:, dry_run: false, migrate_to_multisite: false)
+      @s3_bucket = s3_options[:bucket]
+      @s3_client_options = s3_options[:client_options]
+      @dry_run = dry_run
+      @migrate_to_multisite = migrate_to_multisite
+      @current_db = RailsMultisite::ConnectionManagement.current_db
     end
 
     def migrate

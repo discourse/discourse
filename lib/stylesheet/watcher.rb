@@ -7,33 +7,35 @@ module Stylesheet
     CORE_TARGETS = %w[admin publish wizard wcag]
     SPECIAL_CORE_TARGETS = %w[color_definitions]
 
-    def self.watch(paths = nil)
-      watcher = new(paths)
-      watcher.start
-      watcher
+    class << self
+      def watch(paths = nil)
+        watcher = new(paths)
+        watcher.start
+        watcher
+      end
+
+      def default_paths
+        return @default_paths if @default_paths
+
+        @default_paths = ["app/assets/stylesheets"]
+        Discourse.plugins.each do |plugin|
+          if plugin.path.to_s.include?(Rails.root.to_s)
+            path = File.dirname(plugin.path).sub(Rails.root.to_s, "").sub(%r{\A/}, "")
+            path << "/assets/stylesheets"
+            @default_paths << path if File.exist?(path)
+          else
+            # if plugin doesn’t seem to be in our app, consider it as outside of the app
+            # and ignore it
+            warn("[stylesheet watcher] Ignoring outside of rails root plugin: #{plugin.path}")
+          end
+        end
+        @default_paths
+      end
     end
 
     def initialize(paths)
       @paths = paths || Watcher.default_paths
       @queue = Queue.new
-    end
-
-    def self.default_paths
-      return @default_paths if @default_paths
-
-      @default_paths = ["app/assets/stylesheets"]
-      Discourse.plugins.each do |plugin|
-        if plugin.path.to_s.include?(Rails.root.to_s)
-          path = File.dirname(plugin.path).sub(Rails.root.to_s, "").sub(%r{\A/}, "")
-          path << "/assets/stylesheets"
-          @default_paths << path if File.exist?(path)
-        else
-          # if plugin doesn’t seem to be in our app, consider it as outside of the app
-          # and ignore it
-          warn("[stylesheet watcher] Ignoring outside of rails root plugin: #{plugin.path}")
-        end
-      end
-      @default_paths
     end
 
     def start

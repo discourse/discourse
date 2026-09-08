@@ -5,16 +5,18 @@ module Chat
   # per reaction (a user who reacted with several emojis appears once per emoji).
   # Used by the reactions users popup to lazily page through reactors.
   class MessageReactionUsersQuery
-    def self.call(message:, emoji: nil, limit: 30, offset: 0, current_user_id: nil)
-      query =
-        new(
-          message: message,
-          emoji: emoji,
-          limit: limit,
-          offset: offset,
-          current_user_id: current_user_id,
-        )
-      [query.rows, query.total]
+    class << self
+      def call(message:, emoji: nil, limit: 30, offset: 0, current_user_id: nil)
+        query =
+          new(
+            message: message,
+            emoji: emoji,
+            limit: limit,
+            offset: offset,
+            current_user_id: current_user_id,
+          )
+        [query.rows, query.total]
+      end
     end
 
     def initialize(message:, emoji: nil, limit: 30, offset: 0, current_user_id: nil)

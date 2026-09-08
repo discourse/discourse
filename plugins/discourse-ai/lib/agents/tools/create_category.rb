@@ -4,59 +4,61 @@ module DiscourseAi
   module Agents
     module Tools
       class CreateCategory < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Creates a new category. Create parent categories before their subcategories, and use list_categories to find parent category IDs.",
-            parameters: [
-              {
-                name: "name",
-                description: "The display name for the new category",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "description",
-                description: "A description for the new category",
-                type: "string",
-              },
-              {
-                name: "parent_category_id",
-                description: "The ID of the parent category, when creating a subcategory",
-                type: "integer",
-              },
-              {
-                name: "color",
-                description:
-                  "The background color, as a 6 digit hex code (e.g. 0088CC). Defaults to the site default when omitted.",
-                type: "string",
-              },
-              {
-                name: "text_color",
-                description: "The text color, as a 6 digit hex code (e.g. FFFFFF)",
-                type: "string",
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the category is being created",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Creates a new category. Create parent categories before their subcategories, and use list_categories to find parent category IDs.",
+              parameters: [
+                {
+                  name: "name",
+                  description: "The display name for the new category",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "description",
+                  description: "A description for the new category",
+                  type: "string",
+                },
+                {
+                  name: "parent_category_id",
+                  description: "The ID of the parent category, when creating a subcategory",
+                  type: "integer",
+                },
+                {
+                  name: "color",
+                  description:
+                    "The background color, as a 6 digit hex code (e.g. 0088CC). Defaults to the site default when omitted.",
+                  type: "string",
+                },
+                {
+                  name: "text_color",
+                  description: "The text color, as a 6 digit hex code (e.g. FFFFFF)",
+                  type: "string",
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the category is being created",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "create_category"
-        end
+          def name
+            "create_category"
+          end
 
-        def self.requires_approval?
-          true
-        end
+          def requires_approval?
+            true
+          end
 
-        def self.attribute_to_approver?
-          true
+          def attribute_to_approver?
+            true
+          end
         end
 
         def invoke

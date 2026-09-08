@@ -20,12 +20,57 @@ class TopicUser < ActiveRecord::Base
 
   scope :watching, lambda { |topic_id| level(topic_id, :watching) }
 
-  def topic_bookmarks
-    Bookmark.where(topic: topic, user: user)
-  end
-
   # Class methods
   class << self
+    # Update the last read and the last seen post count, but only if it doesn't exist.
+    # This would be a lot easier if psql supported some kind of upsert
+    UPDATE_TOPIC_USER_SQL = <<~SQL
+      UPDATE topic_users
+      SET
+        last_read_post_number =
+          LEAST(
+            CASE WHEN :whisperer
+              THEN highest_staff_post_number
+              ELSE highest_post_number END
+            ,
+            GREATEST(:post_number, tu.last_read_post_number)
+          ),
+        total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
+        notification_level =
+           case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
+              coalesce(uo.auto_track_topics_after_msecs,:threshold) and
+              coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0
+              and t.archetype = 'regular' then
+                :tracking
+           else
+              tu.notification_level
+           end
+    FROM topic_users tu
+    join topics t on t.id = tu.topic_id
+    join users u on u.id = :user_id
+    join user_options uo on uo.user_id = :user_id
+    WHERE
+         tu.topic_id = topic_users.topic_id AND
+         tu.user_id = topic_users.user_id AND
+         tu.topic_id = :topic_id AND
+         tu.user_id = :user_id
+    RETURNING
+      topic_users.notification_level,
+      tu.notification_level old_level,
+      tu.last_read_post_number,
+      t.archetype
+    SQL
+
+    INSERT_TOPIC_USER_SQL =
+      "INSERT INTO topic_users (user_id, topic_id, last_read_post_number, last_visited_at, first_visited_at, notification_level)
+                  SELECT :user_id, :topic_id, :post_number, :now, :now, :new_status
+                  FROM topics AS ft
+                  JOIN users u on u.id = :user_id
+                  WHERE ft.id = :topic_id
+                    AND NOT EXISTS(SELECT 1
+                                   FROM topic_users AS ftu
+                                   WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)"
+
     # Enums
     def notification_levels
       NotificationLevels.topic_levels
@@ -275,55 +320,6 @@ class TopicUser < ActiveRecord::Base
       end
     end
 
-    # Update the last read and the last seen post count, but only if it doesn't exist.
-    # This would be a lot easier if psql supported some kind of upsert
-    UPDATE_TOPIC_USER_SQL = <<~SQL
-      UPDATE topic_users
-      SET
-        last_read_post_number =
-          LEAST(
-            CASE WHEN :whisperer
-              THEN highest_staff_post_number
-              ELSE highest_post_number END
-            ,
-            GREATEST(:post_number, tu.last_read_post_number)
-          ),
-        total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
-        notification_level =
-           case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
-              coalesce(uo.auto_track_topics_after_msecs,:threshold) and
-              coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0
-              and t.archetype = 'regular' then
-                :tracking
-           else
-              tu.notification_level
-           end
-    FROM topic_users tu
-    join topics t on t.id = tu.topic_id
-    join users u on u.id = :user_id
-    join user_options uo on uo.user_id = :user_id
-    WHERE
-         tu.topic_id = topic_users.topic_id AND
-         tu.user_id = topic_users.user_id AND
-         tu.topic_id = :topic_id AND
-         tu.user_id = :user_id
-    RETURNING
-      topic_users.notification_level,
-      tu.notification_level old_level,
-      tu.last_read_post_number,
-      t.archetype
-    SQL
-
-    INSERT_TOPIC_USER_SQL =
-      "INSERT INTO topic_users (user_id, topic_id, last_read_post_number, last_visited_at, first_visited_at, notification_level)
-                  SELECT :user_id, :topic_id, :post_number, :now, :now, :new_status
-                  FROM topics AS ft
-                  JOIN users u on u.id = :user_id
-                  WHERE ft.id = :topic_id
-                    AND NOT EXISTS(SELECT 1
-                                   FROM topic_users AS ftu
-                                   WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)"
-
     def update_last_read(user, topic_id, post_number, new_posts_read, msecs, opts = {})
       return if post_number.blank?
       msecs = 0 if msecs.to_i < 0
@@ -412,30 +408,29 @@ class TopicUser < ActiveRecord::Base
 
       klass.publish_read(topic_id, post_number, user, notification_level)
     end
-  end
 
-  # Update the cached topic_user.liked column based on data
-  # from the post_actions table. This is useful when posts
-  # have moved around, or to ensure integrity of the data.
-  #
-  # By default this will update data for all topics and all users.
-  # The parameters can be used to shrink the scope, and make it faster.
-  # user_id, post_id and topic_id can optionally be arrays of ids.
-  #
-  # Providing post_id will automatically scope to the relevant user_id and topic_id.
-  # A provided `topic_id` value will always take precedence, which is
-  # useful when a post has been moved between topics.
-  def self.update_post_action_cache(
-    user_id: nil,
-    post_id: nil,
-    topic_id: nil,
-    post_action_type: :like
-  )
-    raise ArgumentError, "post_action_type must equal :like" if post_action_type != :like
-    raise ArgumentError, "post_id and user_id cannot be supplied together" if user_id && post_id
-    action_type_name = "liked"
+    # The remaining class methods are public API after the private publishing helper.
+    # rubocop:disable Layout/ClassStructure
 
-    builder = DB.build <<~SQL
+    public
+
+    # Update the cached topic_user.liked column based on data
+    # from the post_actions table. This is useful when posts
+    # have moved around, or to ensure integrity of the data.
+    #
+    # By default this will update data for all topics and all users.
+    # The parameters can be used to shrink the scope, and make it faster.
+    # user_id, post_id and topic_id can optionally be arrays of ids.
+    #
+    # Providing post_id will automatically scope to the relevant user_id and topic_id.
+    # A provided `topic_id` value will always take precedence, which is
+    # useful when a post has been moved between topics.
+    def update_post_action_cache(user_id: nil, post_id: nil, topic_id: nil, post_action_type: :like)
+      raise ArgumentError, "post_action_type must equal :like" if post_action_type != :like
+      raise ArgumentError, "post_id and user_id cannot be supplied together" if user_id && post_id
+      action_type_name = "liked"
+
+      builder = DB.build <<~SQL
       UPDATE topic_users tu
       SET #{action_type_name} = x.state
       FROM (
@@ -458,32 +453,32 @@ class TopicUser < ActiveRecord::Base
       WHERE x.topic_id = tu.topic_id AND x.user_id = tu.user_id AND x.state != tu.#{action_type_name}
     SQL
 
-    builder.where("tu2.user_id IN (:user_id)", user_id: user_id) if user_id
+      builder.where("tu2.user_id IN (:user_id)", user_id: user_id) if user_id
 
-    builder.where("tu2.topic_id IN (:topic_id)", topic_id: topic_id) if topic_id
+      builder.where("tu2.topic_id IN (:topic_id)", topic_id: topic_id) if topic_id
 
-    if post_id
-      if !topic_id
-        builder.where(
-          "tu2.topic_id IN (SELECT topic_id FROM posts WHERE id IN (:post_id))",
-          post_id: post_id,
-        )
-      end
-      builder.where(<<~SQL, post_id: post_id)
+      if post_id
+        if !topic_id
+          builder.where(
+            "tu2.topic_id IN (SELECT topic_id FROM posts WHERE id IN (:post_id))",
+            post_id: post_id,
+          )
+        end
+        builder.where(<<~SQL, post_id: post_id)
         tu2.user_id IN (
           SELECT user_id FROM post_actions
           WHERE post_id IN (:post_id)
           AND post_action_type_id = :action_type_id
         )
       SQL
+      end
+
+      builder.exec(action_type_id: PostActionType.types[post_action_type])
     end
 
-    builder.exec(action_type_id: PostActionType.types[post_action_type])
-  end
-
-  # cap number of unread topics at count, bumping up last_read if needed
-  def self.cap_unread!(user_id, count)
-    sql = <<SQL
+    # cap number of unread topics at count, bumping up last_read if needed
+    def cap_unread!(user_id, count)
+      sql = <<SQL
     UPDATE topic_users tu
     SET last_read_post_number = max_number
     FROM (
@@ -499,20 +494,20 @@ class TopicUser < ActiveRecord::Base
           )
 SQL
 
-    DB.exec(sql, user_id: user_id, count: count)
-  end
+      DB.exec(sql, user_id: user_id, count: count)
+    end
 
-  def self.ensure_consistency!(topic_id = nil)
-    update_post_action_cache(topic_id:)
-    update_last_read_post_number(topic_id:)
-  end
+    def ensure_consistency!(topic_id = nil)
+      update_post_action_cache(topic_id:)
+      update_last_read_post_number(topic_id:)
+    end
 
-  def self.update_last_read_post_number(topic_id: nil)
-    # TODO this needs some reworking, when we mark stuff skipped
-    # we up these numbers so they are not in-sync
-    # the simple fix is to add a column here, but table is already quite big
-    # long term we want to split up topic_users and allow for this better
-    builder = DB.build <<~SQL
+    def update_last_read_post_number(topic_id: nil)
+      # TODO this needs some reworking, when we mark stuff skipped
+      # we up these numbers so they are not in-sync
+      # the simple fix is to add a column here, but table is already quite big
+      # long term we want to split up topic_users and allow for this better
+      builder = DB.build <<~SQL
       UPDATE topic_users t
         SET
           last_read_post_number = LEAST(GREATEST(last_read, last_read_post_number), max_post_number)
@@ -528,7 +523,7 @@ SQL
       /*where*/
     SQL
 
-    builder.where <<~SQL
+      builder.where <<~SQL
       X.topic_id = t.topic_id AND
       X.user_id = t.user_id AND
       (
@@ -536,9 +531,15 @@ SQL
       )
     SQL
 
-    builder.where("t.topic_id = :topic_id", topic_id: topic_id) if topic_id
+      builder.where("t.topic_id = :topic_id", topic_id: topic_id) if topic_id
 
-    builder.exec
+      builder.exec
+    end
+    # rubocop:enable Layout/ClassStructure
+  end
+
+  def topic_bookmarks
+    Bookmark.where(topic: topic, user: user)
   end
 end
 

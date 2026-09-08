@@ -10,16 +10,18 @@ module Onebox
       matches_domain("commons.wikimedia.org")
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/wiki/File:.+})
-      end
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/wiki/File:.+})
+        end
 
-      def self.priority
-        # Wikimedia links end in an image extension.
-        # E.g. https://commons.wikimedia.org/wiki/File:Stones_members_montage2.jpg
-        # This engine should have priority over the generic ImageOnebox.
+        def priority
+          # Wikimedia links end in an image extension.
+          # E.g. https://commons.wikimedia.org/wiki/File:Stones_members_montage2.jpg
+          # This engine should have priority over the generic ImageOnebox.
 
-        1
+          1
+        end
       end
 
       def url

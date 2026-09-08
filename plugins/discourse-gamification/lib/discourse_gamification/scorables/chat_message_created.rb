@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 module DiscourseGamification
   class ChatMessageCreated < Scorable
-    def self.enabled?(leaderboard: nil)
-      SiteSetting.chat_enabled && super
-    end
+    class << self
+      def enabled?(leaderboard: nil)
+        SiteSetting.chat_enabled && super
+      end
 
-    def self.query(leaderboard: nil)
-      <<~SQL
+      def query(leaderboard: nil)
+        <<~SQL
         SELECT
           m.user_id,
           date_trunc('day', m.created_at) AS date,
@@ -28,6 +29,7 @@ module DiscourseGamification
         GROUP BY
           m.user_id, date_trunc('day', m.created_at)
       SQL
+      end
     end
   end
 end

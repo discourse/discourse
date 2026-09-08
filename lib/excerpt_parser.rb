@@ -8,6 +8,27 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   CUSTOM_EXCERPT_REGEX = /<\s*(span|div)[^>]*class\s*=\s*['"]excerpt['"][^>]*>/
   IMAGE_MODES = [%i[strip_images strip], %i[markdown_images markdown], %i[keep_images keep]].freeze
 
+  class << self
+    def get_excerpt(html, length, options = {})
+      return "" if html.blank?
+
+      length = html.length if html.include?("excerpt") && CUSTOM_EXCERPT_REGEX === html
+      me = new(length, options)
+      parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8)
+      catch(:done) { parser.parse(html) }
+      excerpt = me.excerpt.strip
+      excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source] ||
+        options[:keep_onebox_body]
+      excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
+      excerpt
+    end
+
+    def to_plain_text(excerpt)
+      @html_entities ||= HTMLEntities.new
+      @html_entities.decode(excerpt.to_s.gsub(/<[^>]*>/, "")).presence
+    end
+  end
+
   def initialize(length, options = nil)
     @length = length
     @excerpt = +""
@@ -30,25 +51,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   def normalize_image_mode(options)
     IMAGE_MODES.each { |key, mode| return mode if options[key] }
-  end
-
-  def self.get_excerpt(html, length, options = {})
-    return "" if html.blank?
-
-    length = html.length if html.include?("excerpt") && CUSTOM_EXCERPT_REGEX === html
-    me = new(length, options)
-    parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8)
-    catch(:done) { parser.parse(html) }
-    excerpt = me.excerpt.strip
-    excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source] ||
-      options[:keep_onebox_body]
-    excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
-    excerpt
-  end
-
-  def self.to_plain_text(excerpt)
-    @html_entities ||= HTMLEntities.new
-    @html_entities.decode(excerpt.to_s.gsub(/<[^>]*>/, "")).presence
   end
 
   def escape_attribute(v)

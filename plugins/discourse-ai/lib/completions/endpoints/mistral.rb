@@ -4,8 +4,10 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Mistral < OpenAi
-        def self.can_contact?(llm_model)
-          llm_model.provider == "mistral"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "mistral"
+          end
         end
 
         def provider_id

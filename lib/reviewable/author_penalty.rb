@@ -8,34 +8,36 @@ class Reviewable < ActiveRecord::Base
 
     attr_reader :user, :kind, :history, :expires_at
 
-    def self.all_for(user, target_post: nil, reviewable_id: nil)
-      return [] if user.blank?
+    class << self
+      def all_for(user, target_post: nil, reviewable_id: nil)
+        return [] if user.blank?
 
-      penalties = []
+        penalties = []
 
-      if user.silenced?
-        penalties << new(
-          user: user,
-          kind: :silence,
-          history: user.silenced_record,
-          expires_at: user.silenced_till,
-          target_post: target_post,
-          reviewable_id: reviewable_id,
-        )
+        if user.silenced?
+          penalties << new(
+            user: user,
+            kind: :silence,
+            history: user.silenced_record,
+            expires_at: user.silenced_till,
+            target_post: target_post,
+            reviewable_id: reviewable_id,
+          )
+        end
+
+        if user.suspended?
+          penalties << new(
+            user: user,
+            kind: :suspension,
+            history: user.suspend_record,
+            expires_at: user.suspended_till,
+            target_post: target_post,
+            reviewable_id: reviewable_id,
+          )
+        end
+
+        penalties
       end
-
-      if user.suspended?
-        penalties << new(
-          user: user,
-          kind: :suspension,
-          history: user.suspend_record,
-          expires_at: user.suspended_till,
-          target_post: target_post,
-          reviewable_id: reviewable_id,
-        )
-      end
-
-      penalties
     end
 
     def initialize(user:, kind:, history:, expires_at:, target_post:, reviewable_id:)

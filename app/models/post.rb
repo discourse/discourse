@@ -72,6 +72,7 @@ class Post < ActiveRecord::Base
 
   validates_with PostValidator, unless: :skip_validation
   MAX_EDIT_REASON_LENGTH = 1000
+
   validates :edit_reason, length: { maximum: MAX_EDIT_REASON_LENGTH }
 
   before_save :ensure_edit_reason_length
@@ -165,38 +166,300 @@ class Post < ActiveRecord::Base
 
   delegate :username, to: :user
 
-  def self.hidden_reasons
-    @hidden_reasons ||=
-      Enum.new(
-        flag_threshold_reached: 1,
-        flag_threshold_reached_again: 2,
-        new_user_spam_threshold_reached: 3,
-        flagged_by_tl3_user: 4,
-        email_spam_header_found: 5,
-        flagged_by_tl4_user: 6,
-        email_authentication_result_header: 7,
-        imported_as_unlisted: 8,
+  MAX_REPLY_LEVEL = 1000
+
+  class << self
+    def hidden_reasons
+      @hidden_reasons ||=
+        Enum.new(
+          flag_threshold_reached: 1,
+          flag_threshold_reached_again: 2,
+          new_user_spam_threshold_reached: 3,
+          flagged_by_tl3_user: 4,
+          email_spam_header_found: 5,
+          flagged_by_tl4_user: 6,
+          email_authentication_result_header: 7,
+          imported_as_unlisted: 8,
+        )
+    end
+
+    def types
+      @types ||= Enum.new(regular: 1, moderator_action: 2, small_action: 3, whisper: 4)
+    end
+
+    def cook_methods
+      @cook_methods ||= Enum.new(regular: 1, raw_html: 2, email: 3)
+    end
+
+    def notices
+      @notices ||=
+        Enum.new(custom: "custom", new_user: "new_user", returning_user: "returning_user")
+    end
+
+    def find_by_detail(key, value)
+      includes(:post_details).find_by(post_details: { key: key, value: value })
+    end
+
+    def find_by_number(topic_id, post_number)
+      find_by(topic_id: topic_id, post_number: post_number)
+    end
+
+    def allowed_image_classes
+      @allowed_image_classes ||= %w[avatar favicon thumbnail emoji ytp-thumbnail-image]
+    end
+
+    def regular_order
+      order(:sort_order, :post_number)
+    end
+
+    def reverse_order
+      order("sort_order desc, post_number desc")
+    end
+
+    def summary(topic_id)
+      topic_id = topic_id.to_i
+
+      # percent rank has tons of ties
+      where(topic_id: topic_id).where(
+        [
+          "posts.id = ANY(
+          (
+            SELECT posts.id
+            FROM posts
+            WHERE posts.topic_id = #{topic_id.to_i}
+            AND posts.post_number = 1
+          ) UNION
+          (
+            SELECT p1.id
+            FROM posts p1
+            WHERE p1.percent_rank <= ?
+            AND p1.topic_id = #{topic_id.to_i}
+            ORDER BY p1.percent_rank
+            LIMIT ?
+          )
+        )",
+          SiteSetting.summary_percent_filter.to_f / 100.0,
+          SiteSetting.summary_max_results,
+        ],
       )
-  end
+    end
 
-  def self.types
-    @types ||= Enum.new(regular: 1, moderator_action: 2, small_action: 3, whisper: 4)
-  end
+    def excerpt(cooked, maxlength = nil, options = {})
+      maxlength ||= SiteSetting.post_excerpt_maxlength
+      PrettyText.excerpt(cooked, maxlength, options)
+    end
 
-  def self.cook_methods
-    @cook_methods ||= Enum.new(regular: 1, raw_html: 2, email: 3)
-  end
+    def url(slug, topic_id, post_number, opts = nil)
+      opts ||= {}
 
-  def self.notices
-    @notices ||= Enum.new(custom: "custom", new_user: "new_user", returning_user: "returning_user")
-  end
+      result = +"/t/"
+      result << "#{slug}/" if !opts[:without_slug]
 
-  def self.find_by_detail(key, value)
-    includes(:post_details).find_by(post_details: { key: key, value: value })
-  end
+      if post_number == 1 && opts[:share_url]
+        "#{result}#{topic_id}"
+      else
+        "#{result}#{topic_id}/#{post_number}"
+      end
+    end
 
-  def self.find_by_number(topic_id, post_number)
-    find_by(topic_id: topic_id, post_number: post_number)
+    def urls(post_ids)
+      ids = post_ids.map { |u| u }
+      if ids.length > 0
+        urls = {}
+        Topic
+          .joins(:posts)
+          .where("posts.id" => ids)
+          .select(
+            ["posts.id as post_id", "post_number", "topics.slug", "topics.title", "topics.id"],
+          )
+          .each { |t| urls[t.post_id.to_i] = url(t.slug, t.id, t.post_number) }
+        urls
+      else
+        {}
+      end
+    end
+
+    def rebake_old(limit, priority: :normal, rate_limiter: true)
+      limiter =
+        RateLimiter.new(
+          nil,
+          "global_periodical_rebake_limit",
+          GlobalSetting.max_old_rebakes_per_15_minutes,
+          900,
+          global: true,
+        )
+
+      problems = []
+      Post
+        .where("baked_version IS NULL OR baked_version < ?", BAKED_VERSION)
+        .order("id desc")
+        .limit(limit)
+        .pluck(:id)
+        .each do |id|
+          break if !limiter.can_perform?
+
+          post = Post.find(id)
+          post.rebake!(priority: priority)
+
+          begin
+            limiter.performed! if rate_limiter
+          rescue RateLimiter::LimitExceeded
+            break
+          end
+        rescue => e
+          problems << { post: post, ex: e }
+
+          attempts = post.custom_fields["rebake_attempts"].to_i
+
+          if attempts > 3
+            post.update_columns(baked_version: BAKED_VERSION)
+            Discourse.warn_exception(
+              e,
+              message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
+            )
+          else
+            post.custom_fields["rebake_attempts"] = attempts + 1
+            post.save_custom_fields
+          end
+        end
+      problems
+    end
+
+    def estimate_posts_per_day
+      val = Discourse.redis.get("estimated_posts_per_day")
+      return val.to_i if val
+
+      posts_per_day =
+        Topic.listable_topics.secured.joins(:posts).merge(Post.created_since(30.days.ago)).count /
+          30
+      Discourse.redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
+      posts_per_day
+    end
+
+    def public_posts_count_per_day(
+      start_date,
+      end_date,
+      category_id = nil,
+      include_subcategories = false,
+      group_ids = nil
+    )
+      result =
+        public_posts.where(
+          "posts.created_at >= ? AND posts.created_at <= ?",
+          start_date,
+          end_date,
+        ).where(post_type: Post.types[:regular])
+
+      if category_id
+        if include_subcategories
+          result = result.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
+        else
+          result = result.where("topics.category_id IN (?)", category_id)
+        end
+      end
+      if group_ids
+        result =
+          result
+            .joins("INNER JOIN users ON users.id = posts.user_id")
+            .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+            .where("group_users.group_id IN (?)", group_ids)
+      end
+
+      result.group("date(posts.created_at)").order("date(posts.created_at)").count
+    end
+
+    def private_messages_count_per_day(start_date, end_date, topic_subtype)
+      private_posts
+        .with_topic_subtype(topic_subtype)
+        .where("posts.created_at >= ? AND posts.created_at <= ?", start_date, end_date)
+        .group("date(posts.created_at)")
+        .order("date(posts.created_at)")
+        .count
+    end
+
+    def rebake_all_quoted_posts(user_id)
+      return if user_id.blank?
+
+      DB.exec(<<~SQL, user_id)
+      WITH user_quoted_posts AS (
+        SELECT post_id
+          FROM quoted_posts
+         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = ?)
+      )
+      UPDATE posts
+         SET baked_version = NULL
+       WHERE baked_version IS NOT NULL
+         AND id IN (SELECT post_id FROM user_quoted_posts)
+    SQL
+    end
+
+    def find_missing_uploads(include_local_upload: true)
+      missing_uploads = []
+      missing_post_uploads = {}
+      count = 0
+
+      DistributedMutex.synchronize("find_missing_uploads", validity: 30.minutes) do
+        PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
+
+        query =
+          Post
+            .have_uploads
+            .joins(:topic)
+            .joins(
+              "LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = '#{Post::MISSING_UPLOADS_IGNORED}'",
+            )
+            .where("post_custom_fields.id IS NULL")
+            .select(:id, :cooked)
+
+        query.find_in_batches do |posts|
+          ids = posts.pluck(:id)
+          sha1s =
+            Upload
+              .joins(:upload_references)
+              .where(upload_references: { target_type: "Post" })
+              .where("upload_references.target_id BETWEEN ? AND ?", ids.min, ids.max)
+              .pluck(:sha1)
+
+          posts.each do |post|
+            post.each_upload_url do |src, path, sha1|
+              next if sha1.present? && sha1s.include?(sha1)
+
+              missing_post_uploads[post.id] ||= []
+
+              if missing_uploads.include?(src)
+                missing_post_uploads[post.id] << src
+                next
+              end
+
+              upload_id = nil
+              upload_id = Upload.where(sha1: sha1).pick(:id) if sha1.present?
+              upload_id ||= yield(post, src, path, sha1)
+
+              if upload_id.blank?
+                missing_uploads << src
+                missing_post_uploads[post.id] << src
+              end
+            end
+          end
+        end
+
+        missing_post_uploads =
+          missing_post_uploads.reject do |post_id, uploads|
+            if uploads.present?
+              PostCustomField.create!(
+                post_id: post_id,
+                name: Post::MISSING_UPLOADS,
+                value: uploads.to_json,
+              )
+              count += uploads.count
+            end
+
+            uploads.empty?
+          end
+      end
+
+      { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
+    end
   end
 
   def whisper?
@@ -293,10 +556,6 @@ class Post < ActiveRecord::Base
   def raw_hash
     return if raw.blank?
     Digest::SHA1.hexdigest(raw)
-  end
-
-  def self.allowed_image_classes
-    @allowed_image_classes ||= %w[avatar favicon thumbnail emoji ytp-thumbnail-image]
   end
 
   def post_analyzer
@@ -439,42 +698,6 @@ class Post < ActiveRecord::Base
     topic&.archetype
   end
 
-  def self.regular_order
-    order(:sort_order, :post_number)
-  end
-
-  def self.reverse_order
-    order("sort_order desc, post_number desc")
-  end
-
-  def self.summary(topic_id)
-    topic_id = topic_id.to_i
-
-    # percent rank has tons of ties
-    where(topic_id: topic_id).where(
-      [
-        "posts.id = ANY(
-          (
-            SELECT posts.id
-            FROM posts
-            WHERE posts.topic_id = #{topic_id.to_i}
-            AND posts.post_number = 1
-          ) UNION
-          (
-            SELECT p1.id
-            FROM posts p1
-            WHERE p1.percent_rank <= ?
-            AND p1.topic_id = #{topic_id.to_i}
-            ORDER BY p1.percent_rank
-            LIMIT ?
-          )
-        )",
-        SiteSetting.summary_percent_filter.to_f / 100.0,
-        SiteSetting.summary_max_results,
-      ],
-    )
-  end
-
   def delete_post_notices
     custom_fields.delete(Post::NOTICE)
     save_custom_fields
@@ -537,11 +760,6 @@ class Post < ActiveRecord::Base
       post_number: target_post_number,
       user_id: user_id,
     ).try(:user)
-  end
-
-  def self.excerpt(cooked, maxlength = nil, options = {})
-    maxlength ||= SiteSetting.post_excerpt_maxlength
-    PrettyText.excerpt(cooked, maxlength, options)
   end
 
   # Strip out most of the markup
@@ -781,82 +999,8 @@ class Post < ActiveRecord::Base
     "#{Discourse.base_url}/email/unsubscribe/#{key_value}"
   end
 
-  def self.url(slug, topic_id, post_number, opts = nil)
-    opts ||= {}
-
-    result = +"/t/"
-    result << "#{slug}/" if !opts[:without_slug]
-
-    if post_number == 1 && opts[:share_url]
-      "#{result}#{topic_id}"
-    else
-      "#{result}#{topic_id}/#{post_number}"
-    end
-  end
-
-  def self.urls(post_ids)
-    ids = post_ids.map { |u| u }
-    if ids.length > 0
-      urls = {}
-      Topic
-        .joins(:posts)
-        .where("posts.id" => ids)
-        .select(["posts.id as post_id", "post_number", "topics.slug", "topics.title", "topics.id"])
-        .each { |t| urls[t.post_id.to_i] = url(t.slug, t.id, t.post_number) }
-      urls
-    else
-      {}
-    end
-  end
-
   def revise(updated_by, changes = {}, opts = {})
     PostRevisor.new(self).revise!(updated_by, changes, opts)
-  end
-
-  def self.rebake_old(limit, priority: :normal, rate_limiter: true)
-    limiter =
-      RateLimiter.new(
-        nil,
-        "global_periodical_rebake_limit",
-        GlobalSetting.max_old_rebakes_per_15_minutes,
-        900,
-        global: true,
-      )
-
-    problems = []
-    Post
-      .where("baked_version IS NULL OR baked_version < ?", BAKED_VERSION)
-      .order("id desc")
-      .limit(limit)
-      .pluck(:id)
-      .each do |id|
-        break if !limiter.can_perform?
-
-        post = Post.find(id)
-        post.rebake!(priority: priority)
-
-        begin
-          limiter.performed! if rate_limiter
-        rescue RateLimiter::LimitExceeded
-          break
-        end
-      rescue => e
-        problems << { post: post, ex: e }
-
-        attempts = post.custom_fields["rebake_attempts"].to_i
-
-        if attempts > 3
-          post.update_columns(baked_version: BAKED_VERSION)
-          Discourse.warn_exception(
-            e,
-            message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
-          )
-        else
-          post.custom_fields["rebake_attempts"] = attempts + 1
-          post.save_custom_fields
-        end
-      end
-    problems
   end
 
   def rebake!(
@@ -922,16 +1066,6 @@ class Post < ActiveRecord::Base
   end
 
   before_create { PostCreator.before_create_tasks(self) }
-
-  def self.estimate_posts_per_day
-    val = Discourse.redis.get("estimated_posts_per_day")
-    return val.to_i if val
-
-    posts_per_day =
-      Topic.listable_topics.secured.joins(:posts).merge(Post.created_since(30.days.ago)).count / 30
-    Discourse.redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
-    posts_per_day
-  end
 
   before_save do
     self.last_editor_id ||= user_id
@@ -1005,49 +1139,6 @@ class Post < ActiveRecord::Base
     DiscourseEvent.trigger(:after_trigger_post_process, self)
   end
 
-  def self.public_posts_count_per_day(
-    start_date,
-    end_date,
-    category_id = nil,
-    include_subcategories = false,
-    group_ids = nil
-  )
-    result =
-      public_posts.where(
-        "posts.created_at >= ? AND posts.created_at <= ?",
-        start_date,
-        end_date,
-      ).where(post_type: Post.types[:regular])
-
-    if category_id
-      if include_subcategories
-        result = result.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
-      else
-        result = result.where("topics.category_id IN (?)", category_id)
-      end
-    end
-    if group_ids
-      result =
-        result
-          .joins("INNER JOIN users ON users.id = posts.user_id")
-          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
-          .where("group_users.group_id IN (?)", group_ids)
-    end
-
-    result.group("date(posts.created_at)").order("date(posts.created_at)").count
-  end
-
-  def self.private_messages_count_per_day(start_date, end_date, topic_subtype)
-    private_posts
-      .with_topic_subtype(topic_subtype)
-      .where("posts.created_at >= ? AND posts.created_at <= ?", start_date, end_date)
-      .group("date(posts.created_at)")
-      .order("date(posts.created_at)")
-      .count
-  end
-
-  MAX_REPLY_LEVEL = 1000
-
   def reply_ids(guardian = nil, only_replies_to_single_post: true)
     builder = DB.build(<<~SQL)
       WITH RECURSIVE breadcrumb(id, level) AS (
@@ -1100,22 +1191,6 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def self.rebake_all_quoted_posts(user_id)
-    return if user_id.blank?
-
-    DB.exec(<<~SQL, user_id)
-      WITH user_quoted_posts AS (
-        SELECT post_id
-          FROM quoted_posts
-         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = ?)
-      )
-      UPDATE posts
-         SET baked_version = NULL
-       WHERE baked_version IS NOT NULL
-         AND id IN (SELECT post_id FROM user_quoted_posts)
-    SQL
-  end
-
   def seen?(user)
     PostTiming.where(topic_id: topic_id, post_number: post_number, user_id: user.id).exists?
   end
@@ -1134,74 +1209,6 @@ class Post < ActiveRecord::Base
     if Discourse.store.external?
       uploads.each { |upload| upload.update_secure_status(source: source) }
     end
-  end
-
-  def self.find_missing_uploads(include_local_upload: true)
-    missing_uploads = []
-    missing_post_uploads = {}
-    count = 0
-
-    DistributedMutex.synchronize("find_missing_uploads", validity: 30.minutes) do
-      PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
-
-      query =
-        Post
-          .have_uploads
-          .joins(:topic)
-          .joins(
-            "LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = '#{Post::MISSING_UPLOADS_IGNORED}'",
-          )
-          .where("post_custom_fields.id IS NULL")
-          .select(:id, :cooked)
-
-      query.find_in_batches do |posts|
-        ids = posts.pluck(:id)
-        sha1s =
-          Upload
-            .joins(:upload_references)
-            .where(upload_references: { target_type: "Post" })
-            .where("upload_references.target_id BETWEEN ? AND ?", ids.min, ids.max)
-            .pluck(:sha1)
-
-        posts.each do |post|
-          post.each_upload_url do |src, path, sha1|
-            next if sha1.present? && sha1s.include?(sha1)
-
-            missing_post_uploads[post.id] ||= []
-
-            if missing_uploads.include?(src)
-              missing_post_uploads[post.id] << src
-              next
-            end
-
-            upload_id = nil
-            upload_id = Upload.where(sha1: sha1).pick(:id) if sha1.present?
-            upload_id ||= yield(post, src, path, sha1)
-
-            if upload_id.blank?
-              missing_uploads << src
-              missing_post_uploads[post.id] << src
-            end
-          end
-        end
-      end
-
-      missing_post_uploads =
-        missing_post_uploads.reject do |post_id, uploads|
-          if uploads.present?
-            PostCustomField.create!(
-              post_id: post_id,
-              name: Post::MISSING_UPLOADS,
-              value: uploads.to_json,
-            )
-            count += uploads.count
-          end
-
-          uploads.empty?
-        end
-    end
-
-    { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
   def owned_uploads_via_access_control

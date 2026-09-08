@@ -10,8 +10,10 @@
 #
 
 class HtmlPrettify < String
-  def self.render(html)
-    new(html).to_html
+  class << self
+    def render(html)
+      new(html).to_html
+    end
   end
 
   # Create a new RubyPants instance with the text in +string+.

@@ -14,10 +14,12 @@ class HotlinkedMediaDownloader
   class UploadCreateError < StandardError
   end
 
-  # Downloads +src+ and creates an Upload owned by +user_id+.
-  # Returns the persisted Upload or raises one of the typed errors above.
-  def self.download(src, user_id, tmp_file_name:)
-    new(tmp_file_name).download(src, user_id)
+  class << self
+    # Downloads +src+ and creates an Upload owned by +user_id+.
+    # Returns the persisted Upload or raises one of the typed errors above.
+    def download(src, user_id, tmp_file_name:)
+      new(tmp_file_name).download(src, user_id)
+    end
   end
 
   def initialize(tmp_file_name)

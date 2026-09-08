@@ -66,8 +66,29 @@ module DiscourseEvents
       validate :url_is_a_uri, if: :url_changed?
       validate :hosts_are_valid
 
-      def self.attributes_protected_by_default
-        super - %w[id]
+      SUGGESTED_USERS_LIMIT = 10
+
+      class << self
+        def attributes_protected_by_default
+          super - %w[id]
+        end
+
+        def statuses
+          @statuses ||= Enum.new(standalone: 0, public: 1, private: 2)
+        end
+
+        def handle_post_event_webhooks(post, event_before)
+          had_event_before = event_before.present?
+
+          if post.event && had_event_before
+            WebHook.enqueue_calendar_event_hooks(:calendar_event_updated, post.event)
+          elsif post.event && !had_event_before
+            WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+          elsif !post.event && had_event_before
+            payload = WebHook.build_calendar_event_payload(event_before)
+            WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
+          end
+        end
       end
 
       # Hosts are set as a list of user ids so that `update_with_params!` can
@@ -381,10 +402,6 @@ module DiscourseEvents
         going_count >= max_attendees
       end
 
-      def self.statuses
-        @statuses ||= Enum.new(standalone: 0, public: 1, private: 2)
-      end
-
       def public?
         status == Event.statuses[:public]
       end
@@ -500,19 +517,6 @@ module DiscourseEvents
         end
       end
 
-      def self.handle_post_event_webhooks(post, event_before)
-        had_event_before = event_before.present?
-
-        if post.event && had_event_before
-          WebHook.enqueue_calendar_event_hooks(:calendar_event_updated, post.event)
-        elsif post.event && !had_event_before
-          WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
-        elsif !post.event && had_event_before
-          payload = WebHook.build_calendar_event_payload(event_before)
-          WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
-        end
-      end
-
       def missing_users(excluded_ids = invitees.select(:user_id))
         users = User.real.activated.not_silenced.not_suspended.not_staged
 
@@ -530,8 +534,6 @@ module DiscourseEvents
           users.where.not(id: excluded_ids)
         end
       end
-
-      SUGGESTED_USERS_LIMIT = 10
 
       # Users that could be invited to this event, ranked by how closely their
       # username matches +filter+ (exact match first). Already-invited users are

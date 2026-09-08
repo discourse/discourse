@@ -18,22 +18,26 @@
 # every subsequent page visit in the example renders with the correct theme.
 #
 module ThemeScreenshotMarker
-  def self.included(base)
-    base.before do
-      next unless ENV["TAKE_SCREENSHOTS"] == "1"
+  class << self
+    def included(base)
+      base.before do
+        next unless ENV["TAKE_SCREENSHOTS"] == "1"
 
-      SiteSetting.global_notice = ""
+        SiteSetting.global_notice = ""
 
-      if (theme_id = ENV["SCREENSHOTS_THEME_ID"].presence&.to_i) && theme_id != 0
-        SiteSetting.default_theme_id = theme_id
-      end
+        if (theme_id = ENV["SCREENSHOTS_THEME_ID"].presence&.to_i) && theme_id != 0
+          SiteSetting.default_theme_id = theme_id
+        end
 
-      if (mode = ENV["SCREENSHOTS_MODE"].presence)
-        page.driver.with_playwright_page { |pw_page| pw_page.emulate_media(colorScheme: mode) }
-      end
+        if (mode = ENV["SCREENSHOTS_MODE"].presence)
+          page.driver.with_playwright_page { |pw_page| pw_page.emulate_media(colorScheme: mode) }
+        end
 
-      page.driver.with_playwright_page do |pw_page|
-        pw_page.add_style_tag(content: "#global-notice-theme-preview { display: none !important; }")
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.add_style_tag(
+            content: "#global-notice-theme-preview { display: none !important; }",
+          )
+        end
       end
     end
   end

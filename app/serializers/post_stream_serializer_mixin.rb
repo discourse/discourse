@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 module PostStreamSerializerMixin
-  def self.included(klass)
-    klass.attributes :post_stream
-    klass.attributes :timeline_lookup
-    klass.attributes :user_badges
+  class << self
+    def included(klass)
+      klass.attributes :post_stream
+      klass.attributes :timeline_lookup
+      klass.attributes :user_badges
+    end
   end
 
   def include_stream?

@@ -23,10 +23,12 @@ class Cache
 
   attr_reader :namespace
 
-  # we don't need this feature, 1 day expiry is enough
-  # it makes lookups a tad cheaper
-  def self.supports_cache_versioning?
-    false
+  class << self
+    # we don't need this feature, 1 day expiry is enough
+    # it makes lookups a tad cheaper
+    def supports_cache_versioning?
+      false
+    end
   end
 
   def initialize(namespace: "_CACHE")

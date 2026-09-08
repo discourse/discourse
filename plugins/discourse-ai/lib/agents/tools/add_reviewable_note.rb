@@ -4,34 +4,36 @@ module DiscourseAi
   module Agents
     module Tools
       class AddReviewableNote < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Adds a note to a review queue item without changing its status. Use this to record an assessment or judgment about a reviewable so human moderators can see it. Use list_reviewables first to find items and their existing notes.",
-            parameters: [
-              {
-                name: "reviewable_id",
-                description: "The ID of the reviewable item to add a note to",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "note",
-                description: "The note content to add to the reviewable item",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Adds a note to a review queue item without changing its status. Use this to record an assessment or judgment about a reviewable so human moderators can see it. Use list_reviewables first to find items and their existing notes.",
+              parameters: [
+                {
+                  name: "reviewable_id",
+                  description: "The ID of the reviewable item to add a note to",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "note",
+                  description: "The note content to add to the reviewable item",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "add_reviewable_note"
-        end
+          def name
+            "add_reviewable_note"
+          end
 
-        def self.requires_approval?
-          false
+          def requires_approval?
+            false
+          end
         end
 
         def invoke

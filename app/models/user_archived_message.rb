@@ -4,34 +4,36 @@ class UserArchivedMessage < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
-  def self.move_to_inbox!(user_id, topic)
-    topic_id = topic.id
+  class << self
+    def move_to_inbox!(user_id, topic)
+      topic_id = topic.id
 
-    if TopicUser.where(
-         user_id: user_id,
-         topic_id: topic_id,
-         notification_level: TopicUser.notification_levels[:muted],
-       ).exists?
-      return
+      if TopicUser.where(
+           user_id: user_id,
+           topic_id: topic_id,
+           notification_level: TopicUser.notification_levels[:muted],
+         ).exists?
+        return
+      end
+
+      UserArchivedMessage.where(user_id: user_id, topic_id: topic_id).destroy_all
+      trigger(:move_to_inbox, user_id, topic_id)
+      MessageBus.publish("/topic/#{topic_id}", { type: "move_to_inbox" }, user_ids: [user_id])
     end
 
-    UserArchivedMessage.where(user_id: user_id, topic_id: topic_id).destroy_all
-    trigger(:move_to_inbox, user_id, topic_id)
-    MessageBus.publish("/topic/#{topic_id}", { type: "move_to_inbox" }, user_ids: [user_id])
-  end
+    def archive!(user_id, topic)
+      topic_id = topic.id
+      UserArchivedMessage.where(user_id: user_id, topic_id: topic_id).destroy_all
+      UserArchivedMessage.create!(user_id: user_id, topic_id: topic_id)
+      trigger(:archive_message, user_id, topic_id)
+      MessageBus.publish("/topic/#{topic_id}", { type: "archived" }, user_ids: [user_id])
+    end
 
-  def self.archive!(user_id, topic)
-    topic_id = topic.id
-    UserArchivedMessage.where(user_id: user_id, topic_id: topic_id).destroy_all
-    UserArchivedMessage.create!(user_id: user_id, topic_id: topic_id)
-    trigger(:archive_message, user_id, topic_id)
-    MessageBus.publish("/topic/#{topic_id}", { type: "archived" }, user_ids: [user_id])
-  end
-
-  def self.trigger(event, user_id, topic_id)
-    user = User.find_by(id: user_id)
-    topic = Topic.find_by(id: topic_id)
-    DiscourseEvent.trigger(event, user: user, topic: topic) if user && topic
+    def trigger(event, user_id, topic_id)
+      user = User.find_by(id: user_id)
+      topic = Topic.find_by(id: topic_id)
+      DiscourseEvent.trigger(event, user: user, topic: topic) if user && topic
+    end
   end
 end
 

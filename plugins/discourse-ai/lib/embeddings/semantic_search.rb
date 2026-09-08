@@ -3,15 +3,31 @@
 module DiscourseAi
   module Embeddings
     class SemanticSearch
-      def self.clear_cache_for(query)
-        digest = OpenSSL::Digest::SHA1.hexdigest(query)
+      # this ensures the candidate topics are over selected
+      # that way we have a much better chance of finding topics
+      # if the user filtered the results or index is a bit out of date
+      OVER_SELECTION_FACTOR = 4
 
-        hyde_model_id = find_ai_hyde_model_id
-        hyde_key = "semantic-search-#{digest}-#{hyde_model_id}"
+      class << self
+        def clear_cache_for(query)
+          digest = OpenSSL::Digest::SHA1.hexdigest(query)
 
-        Discourse.cache.delete(hyde_key)
-        Discourse.cache.delete("#{hyde_key}-#{SiteSetting.ai_embeddings_selected_model}")
-        Discourse.cache.delete("-#{SiteSetting.ai_embeddings_selected_model}")
+          hyde_model_id = find_ai_hyde_model_id
+          hyde_key = "semantic-search-#{digest}-#{hyde_model_id}"
+
+          Discourse.cache.delete(hyde_key)
+          Discourse.cache.delete("#{hyde_key}-#{SiteSetting.ai_embeddings_selected_model}")
+          Discourse.cache.delete("-#{SiteSetting.ai_embeddings_selected_model}")
+        end
+
+        def find_ai_hyde_model_id
+          agent_llm_id =
+            AiAgent.find_by(
+              id: SiteSetting.ai_embeddings_semantic_search_hyde_agent,
+            )&.default_llm_id
+
+          agent_llm_id.presence || SiteSetting.ai_default_llm_model.to_i || LlmModel.last&.id
+        end
       end
 
       def initialize(guardian)
@@ -57,11 +73,6 @@ module DiscourseAi
           .cache
           .fetch(embedding_key, expires_in: 1.week) { vector.vector_from(search_term, asymmetric) }
       end
-
-      # this ensures the candidate topics are over selected
-      # that way we have a much better chance of finding topics
-      # if the user filtered the results or index is a bit out of date
-      OVER_SELECTION_FACTOR = 4
 
       def search_for_topics(query, page = 1, hyde: true, private_messages: false)
         max_results_per_page = 100
@@ -205,13 +216,6 @@ module DiscourseAi
         model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
         model_id.present? ? LlmModel.find_by(id: model_id) : LlmModel.last
-      end
-
-      def self.find_ai_hyde_model_id
-        agent_llm_id =
-          AiAgent.find_by(id: SiteSetting.ai_embeddings_semantic_search_hyde_agent)&.default_llm_id
-
-        agent_llm_id.presence || SiteSetting.ai_default_llm_model.to_i || LlmModel.last&.id
       end
 
       private

@@ -4,15 +4,16 @@ class CategoryTagStat < ActiveRecord::Base
   belongs_to :category
   belongs_to :tag
 
-  def self.topic_moved(topic, from_category_id, to_category_id)
-    if from_category_id
-      where(tag_id: topic.tags.map(&:id), category_id: from_category_id).where(
-        "topic_count > 0",
-      ).update_all("topic_count = topic_count - 1")
-    end
+  class << self
+    def topic_moved(topic, from_category_id, to_category_id)
+      if from_category_id
+        where(tag_id: topic.tags.map(&:id), category_id: from_category_id).where(
+          "topic_count > 0",
+        ).update_all("topic_count = topic_count - 1")
+      end
 
-    if to_category_id
-      sql = <<~SQL
+      if to_category_id
+        sql = <<~SQL
         UPDATE #{table_name}
            SET topic_count = topic_count + 1
          WHERE tag_id in (:tag_ids)
@@ -20,31 +21,31 @@ class CategoryTagStat < ActiveRecord::Base
      RETURNING tag_id
       SQL
 
-      tag_ids = topic.tags.map(&:id)
-      updated_tag_ids = DB.query_single(sql, tag_ids: tag_ids, category_id: to_category_id)
+        tag_ids = topic.tags.map(&:id)
+        updated_tag_ids = DB.query_single(sql, tag_ids: tag_ids, category_id: to_category_id)
 
-      (tag_ids - updated_tag_ids).each do |tag_id|
-        CategoryTagStat.create!(tag_id: tag_id, category_id: to_category_id, topic_count: 1)
+        (tag_ids - updated_tag_ids).each do |tag_id|
+          CategoryTagStat.create!(tag_id: tag_id, category_id: to_category_id, topic_count: 1)
+        end
       end
     end
-  end
 
-  def self.topic_deleted(topic)
-    topic_moved(topic, topic.category_id, nil)
-  end
+    def topic_deleted(topic)
+      topic_moved(topic, topic.category_id, nil)
+    end
 
-  def self.topic_recovered(topic)
-    topic_moved(topic, nil, topic.category_id)
-  end
+    def topic_recovered(topic)
+      topic_moved(topic, nil, topic.category_id)
+    end
 
-  def self.ensure_consistency!
-    update_topic_counts
-  end
+    def ensure_consistency!
+      update_topic_counts
+    end
 
-  # Recalculate all topic counts if they got out of sync
-  def self.update_topic_counts
-    # Add new records or update existing records
-    DB.exec <<~SQL
+    # Recalculate all topic counts if they got out of sync
+    def update_topic_counts
+      # Add new records or update existing records
+      DB.exec <<~SQL
       WITH stats AS (
         SELECT topics.category_id as category_id,
                tags.id AS tag_id,
@@ -62,8 +63,8 @@ class CategoryTagStat < ActiveRecord::Base
       UPDATE SET topic_count = EXCLUDED.topic_count
     SQL
 
-    # Delete old records
-    DB.exec <<~SQL
+      # Delete old records
+      DB.exec <<~SQL
       DELETE FROM category_tag_stats
       WHERE (category_id, tag_id) NOT IN (
         SELECT topics.category_id as category_id,
@@ -76,6 +77,7 @@ class CategoryTagStat < ActiveRecord::Base
         GROUP BY topics.category_id, tags.id
       )
     SQL
+    end
   end
 end
 

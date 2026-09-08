@@ -8,47 +8,49 @@ module Chat
 
     validates :url, presence: true, length: { maximum: 500 }
 
-    def self.extract_from(message)
-      return if message.blank? || message.deleted_at.present?
+    class << self
+      def extract_from(message)
+        return if message.blank? || message.deleted_at.present?
 
-      current_urls = []
+        current_urls = []
 
-      PrettyText
-        .extract_links(message.cooked)
-        .map { |link| UrlHelper.relaxed_parse(link.url) }
-        .compact
-        .reject { |uri| uri.scheme == "mailto" }
-        .uniq
-        .each do |parsed|
-          url = parsed.to_s[0...500]
-          next if parsed.host.blank? || parsed.host.length > 100
+        PrettyText
+          .extract_links(message.cooked)
+          .map { |link| UrlHelper.relaxed_parse(link.url) }
+          .compact
+          .reject { |uri| uri.scheme == "mailto" }
+          .uniq
+          .each do |parsed|
+            url = parsed.to_s[0...500]
+            next if parsed.host.blank? || parsed.host.length > 100
 
-          current_urls << url
-          upsert_link(message, url)
-        end
+            current_urls << url
+            upsert_link(message, url)
+          end
 
-      cleanup_entries(message, current_urls)
-    end
+        cleanup_entries(message, current_urls)
+      end
 
-    def self.upsert_link(message, url)
-      sql = <<~SQL
+      def upsert_link(message, url)
+        sql = <<~SQL
         INSERT INTO chat_message_links (chat_message_id, url, created_at, updated_at)
         VALUES (:chat_message_id, :url, :now, :now)
         ON CONFLICT (chat_message_id, url) DO NOTHING
       SQL
 
-      DB.exec(sql, chat_message_id: message.id, url: url, now: Time.current)
-    end
+        DB.exec(sql, chat_message_id: message.id, url: url, now: Time.current)
+      end
 
-    def self.cleanup_entries(message, current_urls)
-      if current_urls.present?
-        where(
-          "chat_message_id = :id AND url NOT IN (:urls)",
-          id: message.id,
-          urls: current_urls,
-        ).delete_all
-      else
-        where(chat_message_id: message.id).delete_all
+      def cleanup_entries(message, current_urls)
+        if current_urls.present?
+          where(
+            "chat_message_id = :id AND url NOT IN (:urls)",
+            id: message.id,
+            urls: current_urls,
+          ).delete_all
+        else
+          where(chat_message_id: message.id).delete_all
+        end
       end
     end
   end

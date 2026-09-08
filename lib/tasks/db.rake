@@ -16,22 +16,24 @@ module MultisiteTestHelpers
   MULTISITE_CONFIG_PATH = "spec/fixtures/multisite/two_dbs.yml"
   MULTISITE_TEST_SITE = "second"
 
-  def self.load_multisite?
-    Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
-  end
+  class << self
+    def load_multisite?
+      Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+    end
 
-  def self.create_multisite?
-    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] &&
-      !ENV["SKIP_MULTISITE"] && !ENV["SKIP_TEST_DATABASE"]
-  end
+    def create_multisite?
+      (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] &&
+        !ENV["SKIP_MULTISITE"] && !ENV["SKIP_TEST_DATABASE"]
+    end
 
-  # Routes ActiveRecord at the multisite test DB via RailsMultisite for the
-  # duration of the block, then restores the prior connection.
-  def self.with_multisite_test_connection(&block)
-    RailsMultisite::ConnectionManagement.config_filename = MULTISITE_CONFIG_PATH
-    RailsMultisite::ConnectionManagement.with_connection(MULTISITE_TEST_SITE, &block)
-  ensure
-    RailsMultisite::ConnectionManagement.clear_settings!
+    # Routes ActiveRecord at the multisite test DB via RailsMultisite for the
+    # duration of the block, then restores the prior connection.
+    def with_multisite_test_connection(&block)
+      RailsMultisite::ConnectionManagement.config_filename = MULTISITE_CONFIG_PATH
+      RailsMultisite::ConnectionManagement.with_connection(MULTISITE_TEST_SITE, &block)
+    ensure
+      RailsMultisite::ConnectionManagement.clear_settings!
+    end
   end
 end
 
@@ -114,16 +116,18 @@ end
 Rake::Task["multisite:migrate"].clear
 
 class SeedHelper
-  def self.paths
-    DiscoursePluginRegistry.seed_paths
-  end
+  class << self
+    def paths
+      DiscoursePluginRegistry.seed_paths
+    end
 
-  def self.filter
-    # Allows a plugin to exclude any specified seed data files from running
-    if DiscoursePluginRegistry.seedfu_filter.any?
-      /\A(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*\z/
-    else
-      nil
+    def filter
+      # Allows a plugin to exclude any specified seed data files from running
+      if DiscoursePluginRegistry.seedfu_filter.any?
+        /\A(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*\z/
+      else
+        nil
+      end
     end
   end
 end

@@ -13,8 +13,10 @@ module DiscourseAi
           "short_text_translator" => DiscourseAi::Agents::ShortTextTranslator,
         }.freeze
 
-        def self.can_handle?(feature_name)
-          feature_name&.start_with?("translation:")
+        class << self
+          def can_handle?(feature_name)
+            feature_name&.start_with?("translation:")
+          end
         end
 
         def initialize(feature_name, agent_prompt_override = nil)

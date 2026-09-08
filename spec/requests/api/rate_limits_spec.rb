@@ -3,16 +3,18 @@
 class MockRateLimiter
   LimitExceeded = RateLimiter::LimitExceeded
 
-  def self.disable
-  end
+  class << self
+    def disable
+    end
 
-  def self.enable
-  end
+    def enable
+    end
 
-  def self.performed!(*args, **kwargs)
-  end
+    def performed!(*args, **kwargs)
+    end
 
-  def self.rollback!(*args, **kwargs)
+    def rollback!(*args, **kwargs)
+    end
   end
 
   def initialize(*args, **kwargs)

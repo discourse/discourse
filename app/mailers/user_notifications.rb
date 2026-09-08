@@ -9,6 +9,91 @@ class UserNotifications < ActionMailer::Base
 
   include Email::BuildEmailHelper
 
+  class << self
+    def get_context_posts(post, topic_user, user)
+      if (user.user_option.email_previous_replies == UserOption.previous_replies_type[:never]) ||
+           SiteSetting.private_email?
+        return []
+      end
+
+      allowed_post_types = [Post.types[:regular]]
+      allowed_post_types << Post.types[:whisper] if topic_user.try(:user).try(:staff?)
+
+      context_posts =
+        Post
+          .where(topic_id: post.topic_id)
+          .where("post_number < ?", post.post_number)
+          .where(user_deleted: false)
+          .where(hidden: false)
+          .where(post_type: allowed_post_types)
+          .order("created_at desc")
+          .limit(SiteSetting.email_posts_context)
+
+      if topic_user && topic_user.last_emailed_post_number &&
+           user.user_option.email_previous_replies ==
+             UserOption.previous_replies_type[:unless_emailed]
+        context_posts = context_posts.where("post_number > ?", topic_user.last_emailed_post_number)
+      end
+
+      context_posts
+    end
+
+    def participants(post, recipient_user, reveal_staged_email: false)
+      list = []
+
+      allowed_groups = post.topic.allowed_groups.order("user_count DESC")
+
+      allowed_groups.each do |g|
+        list.push("[#{g.name_full_preferred} (#{g.user_count})](#{g.full_url})")
+        break if list.size >= SiteSetting.max_participant_names
+      end
+
+      recent_posts_query =
+        post
+          .topic
+          .posts
+          .select("user_id, MAX(post_number) AS post_number")
+          .where(post_type: Post.types[:regular], post_number: ..post.post_number)
+          .where.not(user_id: recipient_user.id)
+          .group(:user_id)
+          .order("post_number DESC")
+          .limit(SiteSetting.max_participant_names)
+          .to_sql
+
+      allowed_users =
+        post
+          .topic
+          .allowed_users
+          .joins("LEFT JOIN (#{recent_posts_query}) pu ON topic_allowed_users.user_id = pu.user_id")
+          .order("post_number DESC NULLS LAST", :id)
+          .where.not(id: recipient_user.id)
+          .human_users
+
+      allowed_users.each do |u|
+        break if list.size >= SiteSetting.max_participant_names
+
+        if reveal_staged_email && u.staged?
+          list.push("#{u.email}")
+        else
+          list.push("[#{u.display_name}](#{u.full_url})")
+        end
+      end
+
+      participants = list.join(I18n.t("word_connector.comma"))
+      others_count = allowed_groups.size + allowed_users.size - list.size
+
+      if others_count > 0
+        I18n.t(
+          "user_notifications.more_pm_participants",
+          participants: participants,
+          count: others_count,
+        )
+      else
+        participants
+      end
+    end
+  end
+
   def signup(user, opts = {})
     build_user_email_token_by_template("user_notifications.signup", user, opts[:email_token])
   end
@@ -500,34 +585,6 @@ class UserNotifications < ActionMailer::Base
     result
   end
 
-  def self.get_context_posts(post, topic_user, user)
-    if (user.user_option.email_previous_replies == UserOption.previous_replies_type[:never]) ||
-         SiteSetting.private_email?
-      return []
-    end
-
-    allowed_post_types = [Post.types[:regular]]
-    allowed_post_types << Post.types[:whisper] if topic_user.try(:user).try(:staff?)
-
-    context_posts =
-      Post
-        .where(topic_id: post.topic_id)
-        .where("post_number < ?", post.post_number)
-        .where(user_deleted: false)
-        .where(hidden: false)
-        .where(post_type: allowed_post_types)
-        .order("created_at desc")
-        .limit(SiteSetting.email_posts_context)
-
-    if topic_user && topic_user.last_emailed_post_number &&
-         user.user_option.email_previous_replies ==
-           UserOption.previous_replies_type[:unless_emailed]
-      context_posts = context_posts.where("post_number > ?", topic_user.last_emailed_post_number)
-    end
-
-    context_posts
-  end
-
   def notification_email(user, opts)
     notification_type = opts[:notification_type]
     notification_data = opts[:notification_data_hash]
@@ -812,61 +869,6 @@ class UserNotifications < ActionMailer::Base
     TopicUser.change(user.id, post.topic_id, last_emailed_post_number: post.post_number)
 
     build_email(user.email, email_opts)
-  end
-
-  def self.participants(post, recipient_user, reveal_staged_email: false)
-    list = []
-
-    allowed_groups = post.topic.allowed_groups.order("user_count DESC")
-
-    allowed_groups.each do |g|
-      list.push("[#{g.name_full_preferred} (#{g.user_count})](#{g.full_url})")
-      break if list.size >= SiteSetting.max_participant_names
-    end
-
-    recent_posts_query =
-      post
-        .topic
-        .posts
-        .select("user_id, MAX(post_number) AS post_number")
-        .where(post_type: Post.types[:regular], post_number: ..post.post_number)
-        .where.not(user_id: recipient_user.id)
-        .group(:user_id)
-        .order("post_number DESC")
-        .limit(SiteSetting.max_participant_names)
-        .to_sql
-
-    allowed_users =
-      post
-        .topic
-        .allowed_users
-        .joins("LEFT JOIN (#{recent_posts_query}) pu ON topic_allowed_users.user_id = pu.user_id")
-        .order("post_number DESC NULLS LAST", :id)
-        .where.not(id: recipient_user.id)
-        .human_users
-
-    allowed_users.each do |u|
-      break if list.size >= SiteSetting.max_participant_names
-
-      if reveal_staged_email && u.staged?
-        list.push("#{u.email}")
-      else
-        list.push("[#{u.display_name}](#{u.full_url})")
-      end
-    end
-
-    participants = list.join(I18n.t("word_connector.comma"))
-    others_count = allowed_groups.size + allowed_users.size - list.size
-
-    if others_count > 0
-      I18n.t(
-        "user_notifications.more_pm_participants",
-        participants: participants,
-        count: others_count,
-      )
-    else
-      participants
-    end
   end
 
   private

@@ -1,21 +1,22 @@
 # frozen_string_literal: true
 
 class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
-  def self.aggregate(start_date:, end_date:)
-    start_date = [start_date.to_date, BrowserPageviewEvent.retention_cutoff.to_date].max
-    start_date = rebuildable_start_date(start_date)
-    end_date = end_date.to_date
-    return if start_date > end_date
+  class << self
+    def aggregate(start_date:, end_date:)
+      start_date = [start_date.to_date, BrowserPageviewEvent.retention_cutoff.to_date].max
+      start_date = rebuildable_start_date(start_date)
+      end_date = end_date.to_date
+      return if start_date > end_date
 
-    exclusive_end_date = end_date + 1
-    source_condition =
-      BrowserPageviewEvent.rollup_source_condition(
-        table: "events",
-        start_date:,
-        end_date: exclusive_end_date,
-      )
-    transaction do
-      DB.exec(<<~SQL, start_date:, end_date: exclusive_end_date)
+      exclusive_end_date = end_date + 1
+      source_condition =
+        BrowserPageviewEvent.rollup_source_condition(
+          table: "events",
+          start_date:,
+          end_date: exclusive_end_date,
+        )
+      transaction do
+        DB.exec(<<~SQL, start_date:, end_date: exclusive_end_date)
         DELETE FROM browser_pageview_entry_url_daily_rollups rollup
         WHERE rollup.date >= :start_date
           AND rollup.date < :end_date
@@ -28,7 +29,7 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
           )
       SQL
 
-      DB.exec(<<~SQL, start_date:, end_date: exclusive_end_date, site_hostnames:)
+        DB.exec(<<~SQL, start_date:, end_date: exclusive_end_date, site_hostnames:)
           INSERT INTO browser_pageview_entry_url_daily_rollups (
             date,
             entry_url,
@@ -64,34 +65,37 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
             )
           GROUP BY events.created_at::date, events.normalized_url
         SQL
+      end
+    end
+
+    def recompute(dates)
+      Array(dates).map(&:to_date).uniq.each { |date| aggregate(start_date: date, end_date: date) }
+    end
+
+    def site_hostnames
+      hostnames =
+        RailsMultisite::ConnectionManagement.current_db_hostnames + [Discourse.current_hostname]
+      hostnames
+        .filter_map { |hostname| BrowserPageviewEventUrlNormalizer.normalize_host(hostname) }
+        .uniq
+    end
+
+    private
+
+    def rebuildable_start_date(start_date)
+      earliest_source_date =
+        BrowserPageviewEvent
+          .where("created_at >= ?", BrowserPageviewEvent.retention_cutoff)
+          .where(BrowserPageviewEvent.rollup_source_condition)
+          .minimum(:created_at)
+          &.to_date
+      return start_date if earliest_source_date.nil? || start_date > earliest_source_date
+
+      has_older_rollups = where("date < ?", earliest_source_date).exists?
+      has_older_rollups ? earliest_source_date + 1 : start_date
     end
   end
 
-  def self.recompute(dates)
-    Array(dates).map(&:to_date).uniq.each { |date| aggregate(start_date: date, end_date: date) }
-  end
-
-  def self.rebuildable_start_date(start_date)
-    earliest_source_date =
-      BrowserPageviewEvent
-        .where("created_at >= ?", BrowserPageviewEvent.retention_cutoff)
-        .where(BrowserPageviewEvent.rollup_source_condition)
-        .minimum(:created_at)
-        &.to_date
-    return start_date if earliest_source_date.nil? || start_date > earliest_source_date
-
-    has_older_rollups = where("date < ?", earliest_source_date).exists?
-    has_older_rollups ? earliest_source_date + 1 : start_date
-  end
-  private_class_method :rebuildable_start_date
-
-  def self.site_hostnames
-    hostnames =
-      RailsMultisite::ConnectionManagement.current_db_hostnames + [Discourse.current_hostname]
-    hostnames
-      .filter_map { |hostname| BrowserPageviewEventUrlNormalizer.normalize_host(hostname) }
-      .uniq
-  end
   private_class_method :site_hostnames
 end
 

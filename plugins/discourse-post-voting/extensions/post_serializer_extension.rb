@@ -2,14 +2,16 @@
 
 module PostVoting
   module PostSerializerExtension
-    def self.included(base)
-      base.attributes(
-        :post_voting_vote_count,
-        :post_voting_user_voted_direction,
-        :post_voting_has_votes,
-        :comments,
-        :comments_count,
-      )
+    class << self
+      def included(base)
+        base.attributes(
+          :post_voting_vote_count,
+          :post_voting_user_voted_direction,
+          :post_voting_has_votes,
+          :comments,
+          :comments_count,
+        )
+      end
     end
 
     def post_voting_vote_count

@@ -32,6 +32,9 @@ class PostsController < ApplicationController
 
   MARKDOWN_TOPIC_PAGE_SIZE = 100
 
+  MAX_POST_REPLIES = 20
+  DELETED_POSTS_MAX_LIMIT = 100
+
   def markdown_id
     markdown Post.find_by(id: params[:id].to_i)
   end
@@ -459,8 +462,6 @@ class PostsController < ApplicationController
     render_json_error(e.message)
   end
 
-  MAX_POST_REPLIES = 20
-
   def replies
     params.permit(:after)
 
@@ -765,8 +766,6 @@ class PostsController < ApplicationController
 
     render body: nil
   end
-
-  DELETED_POSTS_MAX_LIMIT = 100
 
   def deleted_posts
     params.permit(:offset, :limit)

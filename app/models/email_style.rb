@@ -3,6 +3,17 @@
 class EmailStyle
   include ActiveModel::Serialization
 
+  class << self
+    def default_template
+      @_default_template ||=
+        File.read(Rails.root.join("app/views/email/default_template.html").to_s)
+    end
+
+    def default_css
+      ""
+    end
+  end
+
   def id
     "email-style"
   end
@@ -25,13 +36,5 @@ class EmailStyle
 
   def default_css
     self.class.default_css
-  end
-
-  def self.default_template
-    @_default_template ||= File.read(Rails.root.join("app/views/email/default_template.html").to_s)
-  end
-
-  def self.default_css
-    ""
   end
 end

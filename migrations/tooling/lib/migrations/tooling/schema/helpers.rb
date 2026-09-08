@@ -171,49 +171,51 @@ module Migrations
         ].freeze
         private_constant :SQLITE_KEYWORDS
 
-        def self.escape_identifier(identifier)
-          if SQLITE_KEYWORDS.include?(identifier)
-            %Q("#{identifier}")
-          else
-            identifier
+        class << self
+          def escape_identifier(identifier)
+            if SQLITE_KEYWORDS.include?(identifier)
+              %Q("#{identifier}")
+            else
+              identifier
+            end
           end
-        end
 
-        def self.to_singular_classname(snake_case_string)
-          snake_case_string.downcase.singularize.camelize
-        end
+          def to_singular_classname(snake_case_string)
+            snake_case_string.downcase.singularize.camelize
+          end
 
-        def self.to_const_name(name)
-          name.parameterize.underscore.upcase
-        end
+          def to_const_name(name)
+            name.parameterize.underscore.upcase
+          end
 
-        def self.db_label(namespace)
-          namespace.split("::").last
-        end
+          def db_label(namespace)
+            namespace.split("::").last
+          end
 
-        def self.format_ruby_file(path)
-          system(
-            "bundle",
-            "exec",
-            "stree",
-            "write",
-            path,
-            exception: true,
-            out: File::NULL,
-            err: File::NULL,
-          )
-        rescue StandardError
-          raise "Failed to run `bundle exec stree write '#{path}'`"
-        end
+          def format_ruby_file(path)
+            system(
+              "bundle",
+              "exec",
+              "stree",
+              "write",
+              path,
+              exception: true,
+              out: File::NULL,
+              err: File::NULL,
+            )
+          rescue StandardError
+            raise "Failed to run `bundle exec stree write '#{path}'`"
+          end
 
-        def self.format_ruby_files(directory)
-          format_ruby_file(File.join(directory, "*.rb"))
-        end
+          def format_ruby_files(directory)
+            format_ruby_file(File.join(directory, "*.rb"))
+          end
 
-        # Plugin directory names use hyphens (discourse-ai), but Ruby symbols
-        # use underscores (discourse_ai). Normalize for manifest lookups.
-        def self.normalize_plugin_name(name)
-          name.to_s.tr("_", "-")
+          # Plugin directory names use hyphens (discourse-ai), but Ruby symbols
+          # use underscores (discourse_ai). Normalize for manifest lookups.
+          def normalize_plugin_name(name)
+            name.to_s.tr("_", "-")
+          end
         end
       end
     end

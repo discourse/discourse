@@ -23,206 +23,205 @@ class Stylesheet::Manager
 
   @@lock = Mutex.new
 
-  def self.cache
-    @cache ||= DistributedCache.new("discourse_stylesheet")
-  end
-
-  def self.clear_theme_cache!
-    cache.clear_regex(/theme/)
-  end
-
-  def self.clear_color_scheme_cache!
-    cache.clear_regex(/color_definitions/)
-  end
-
-  def self.clear_core_cache!(targets)
-    cache.clear_regex(/#{targets.join("|")}/)
-  end
-
-  def self.clear_plugin_cache!(plugin)
-    cache.clear_regex(/#{plugin}/)
-  end
-
-  def self.color_scheme_cache_key(color_scheme, theme_id = nil)
-    color_scheme_name = Slug.for(color_scheme.read_attribute(:name)) + color_scheme&.id.to_s
-    theme_string = theme_id ? "_theme#{theme_id}" : ""
-    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}_#{GlobalSetting.relative_url_root}"
-  end
-
-  def self.precompile_css
-    targets = %i[common admin wizard]
-    targets += targets.map { |t| :"#{t}_rtl" }
-
-    targets +=
-      Discourse.find_plugin_css_assets(
-        include_disabled: true,
-        mobile_view: true,
-        desktop_view: true,
-        include_admin: true,
-      )
-    targets +=
-      Discourse.find_plugin_css_assets(
-        include_disabled: true,
-        mobile_view: true,
-        desktop_view: true,
-        include_admin: true,
-        rtl: true,
-      )
-
-    targets.each do |target|
-      builder = Stylesheet::Manager::Builder.new(target: target, manager: nil)
-
-      if builder.hydrate_from_cache!
-        $stderr.puts "precompile target: #{target} (cached)"
-      else
-        $stderr.puts "precompile target: #{target}"
-        builder.compile
-      end
+  class << self
+    def cache
+      @cache ||= DistributedCache.new("discourse_stylesheet")
     end
-  end
 
-  def self.precompile_theme_css
-    themes =
-      Theme.where("user_selectable OR id = ?", SiteSetting.default_theme_id).pluck(
-        :id,
-        :color_scheme_id,
-        :dark_color_scheme_id,
-      )
+    def clear_theme_cache!
+      cache.clear_regex(/theme/)
+    end
 
-    color_schemes = ColorScheme.where(user_selectable: true).to_a
-    color_schemes << ColorScheme.base
-    color_schemes = color_schemes.compact.uniq
+    def clear_color_scheme_cache!
+      cache.clear_regex(/color_definitions/)
+    end
 
-    targets = %i[common_theme desktop_theme mobile_theme]
-    targets += targets.map { |t| :"#{t}_rtl" }
-    compiled = Set.new
+    def clear_core_cache!(targets)
+      cache.clear_regex(/#{targets.join("|")}/)
+    end
 
-    themes.each do |theme_id, light_color_scheme_id, dark_color_scheme_id|
-      manager = new(theme_id: theme_id)
+    def clear_plugin_cache!(plugin)
+      cache.clear_regex(/#{plugin}/)
+    end
+
+    def color_scheme_cache_key(color_scheme, theme_id = nil)
+      color_scheme_name = Slug.for(color_scheme.read_attribute(:name)) + color_scheme&.id.to_s
+      theme_string = theme_id ? "_theme#{theme_id}" : ""
+      "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}_#{GlobalSetting.relative_url_root}"
+    end
+
+    def precompile_css
+      targets = %i[common admin wizard]
+      targets += targets.map { |t| :"#{t}_rtl" }
+
+      targets +=
+        Discourse.find_plugin_css_assets(
+          include_disabled: true,
+          mobile_view: true,
+          desktop_view: true,
+          include_admin: true,
+        )
+      targets +=
+        Discourse.find_plugin_css_assets(
+          include_disabled: true,
+          mobile_view: true,
+          desktop_view: true,
+          include_admin: true,
+          rtl: true,
+        )
 
       targets.each do |target|
-        next if theme_id == -1
-
-        scss_checker = ScssChecker.new(target.to_s.delete_suffix("_rtl"), manager.theme_ids)
-
-        manager
-          .load_themes(manager.theme_ids)
-          .each do |theme|
-            next if compiled.include?("#{target}_#{theme.id}")
-
-            builder =
-              Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
-
-            next if !scss_checker.has_scss(theme.id)
-
-            if builder.hydrate_from_cache!
-              $stderr.puts "precompile target: #{target} #{theme.name} (cached)"
-            else
-              $stderr.puts "precompile target: #{target} #{theme.name}"
-              builder.compile
-            end
-            compiled << "#{target}_#{theme.id}"
-          end
-      end
-
-      theme_color_scheme = ColorScheme.find_by_id(light_color_scheme_id)
-      theme_dark_color_scheme = ColorScheme.find_by_id(dark_color_scheme_id)
-      theme = manager.get_theme(theme_id)
-      [theme_color_scheme, theme_dark_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        builder =
-          Stylesheet::Manager::Builder.new(
-            target: COLOR_SCHEME_STYLESHEET,
-            theme: theme,
-            color_scheme: scheme,
-            manager: manager,
-          )
+        builder = Stylesheet::Manager::Builder.new(target: target, manager: nil)
 
         if builder.hydrate_from_cache!
-          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (cached)"
+          $stderr.puts "precompile target: #{target} (cached)"
         else
-          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
+          $stderr.puts "precompile target: #{target}"
           builder.compile
         end
       end
-
-      clear_color_scheme_cache!
     end
 
-    nil
-  end
+    def precompile_theme_css
+      themes =
+        Theme.where("user_selectable OR id = ?", SiteSetting.default_theme_id).pluck(
+          :id,
+          :color_scheme_id,
+          :dark_color_scheme_id,
+        )
 
-  def self.fs_asset_cachebuster
-    if use_file_hash_for_cachebuster?
-      @cachebuster ||=
-        if File.exist?(manifest_full_path)
-          File.readlines(manifest_full_path, "r")[0]
-        else
-          cachebuster = "#{BASE_CACHE_KEY}:#{fs_assets_hash}"
-          FileUtils.mkdir_p(MANIFEST_DIR)
-          File.open(manifest_full_path, "w") { |f| f.print(cachebuster) }
-          cachebuster
+      color_schemes = ColorScheme.where(user_selectable: true).to_a
+      color_schemes << ColorScheme.base
+      color_schemes = color_schemes.compact.uniq
+
+      targets = %i[common_theme desktop_theme mobile_theme]
+      targets += targets.map { |t| :"#{t}_rtl" }
+      compiled = Set.new
+
+      themes.each do |theme_id, light_color_scheme_id, dark_color_scheme_id|
+        manager = new(theme_id: theme_id)
+
+        targets.each do |target|
+          next if theme_id == -1
+
+          scss_checker = ScssChecker.new(target.to_s.delete_suffix("_rtl"), manager.theme_ids)
+
+          manager
+            .load_themes(manager.theme_ids)
+            .each do |theme|
+              next if compiled.include?("#{target}_#{theme.id}")
+
+              builder =
+                Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
+
+              next if !scss_checker.has_scss(theme.id)
+
+              if builder.hydrate_from_cache!
+                $stderr.puts "precompile target: #{target} #{theme.name} (cached)"
+              else
+                $stderr.puts "precompile target: #{target} #{theme.name}"
+                builder.compile
+              end
+              compiled << "#{target}_#{theme.id}"
+            end
         end
-    else
-      "#{BASE_CACHE_KEY}:#{max_file_mtime}"
-    end
-  end
 
-  def self.recalculate_fs_asset_cachebuster!
-    File.delete(manifest_full_path) if File.exist?(manifest_full_path)
-    @cachebuster = nil
-    fs_asset_cachebuster
-  end
+        theme_color_scheme = ColorScheme.find_by_id(light_color_scheme_id)
+        theme_dark_color_scheme = ColorScheme.find_by_id(dark_color_scheme_id)
+        theme = manager.get_theme(theme_id)
+        [theme_color_scheme, theme_dark_color_scheme, *color_schemes].compact.uniq.each do |scheme|
+          builder =
+            Stylesheet::Manager::Builder.new(
+              target: COLOR_SCHEME_STYLESHEET,
+              theme: theme,
+              color_scheme: scheme,
+              manager: manager,
+            )
 
-  def self.manifest_full_path
-    path = "#{MANIFEST_DIR}/stylesheet-manifest"
-    return path if !Rails.env.test?
-    "#{path}-test_#{Discourse.test_env_number}"
-  end
-  private_class_method :manifest_full_path
+          if builder.hydrate_from_cache!
+            $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (cached)"
+          else
+            $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
+            builder.compile
+          end
+        end
 
-  def self.use_file_hash_for_cachebuster?
-    Rails.env.production? || Rails.env.test?
-  end
-  private_class_method :use_file_hash_for_cachebuster?
+        clear_color_scheme_cache!
+      end
 
-  def self.list_files
-    globs = [
-      "#{Rails.root.join("app/assets/stylesheets/**/*.*css")}",
-      "#{Rails.root.join("app/assets/images/**/*.*")}",
-      "#{Rails.root.join("lib/stylesheet/*.rb")}",
-      VARIABLE_RENAMES_PATH.to_s,
-    ]
-
-    Discourse.plugins.each do |plugin|
-      path = File.dirname(plugin.path)
-      globs << "#{path}/plugin.rb"
-      globs << "#{path}/assets/stylesheets/**/*.*css"
+      nil
     end
 
-    globs.flat_map { |g| Dir.glob(g) }.compact
-  end
-  private_class_method :list_files
+    def fs_asset_cachebuster
+      if use_file_hash_for_cachebuster?
+        @cachebuster ||=
+          if File.exist?(manifest_full_path)
+            File.readlines(manifest_full_path, "r")[0]
+          else
+            cachebuster = "#{BASE_CACHE_KEY}:#{fs_assets_hash}"
+            FileUtils.mkdir_p(MANIFEST_DIR)
+            File.open(manifest_full_path, "w") { |f| f.print(cachebuster) }
+            cachebuster
+          end
+      else
+        "#{BASE_CACHE_KEY}:#{max_file_mtime}"
+      end
+    end
 
-  def self.max_file_mtime
-    list_files.map { |x| File.mtime(x) }.compact.max.to_i
-  end
-  private_class_method :max_file_mtime
+    def recalculate_fs_asset_cachebuster!
+      File.delete(manifest_full_path) if File.exist?(manifest_full_path)
+      @cachebuster = nil
+      fs_asset_cachebuster
+    end
 
-  def self.fs_assets_hash
-    hashes = list_files.sort.map { |x| Digest::SHA1.hexdigest("#{x}: #{File.read(x)}") }
-    Digest::SHA1.hexdigest(hashes.join("|"))
-  end
-  private_class_method :fs_assets_hash
+    def cache_fullpath
+      path = "#{Rails.root.join("#{CACHE_PATH}")}"
+      return path if !Rails.env.test?
+      File.join(path, "test_#{Discourse.test_env_number}")
+    end
 
-  def self.cache_fullpath
-    path = "#{Rails.root.join("#{CACHE_PATH}")}"
-    return path if !Rails.env.test?
-    File.join(path, "test_#{Discourse.test_env_number}")
-  end
+    if Rails.env.test?
+      def rm_cache_folder
+        FileUtils.rm_rf(cache_fullpath)
+      end
+    end
 
-  if Rails.env.test?
-    def self.rm_cache_folder
-      FileUtils.rm_rf(cache_fullpath)
+    private
+
+    def manifest_full_path
+      path = "#{MANIFEST_DIR}/stylesheet-manifest"
+      return path if !Rails.env.test?
+      "#{path}-test_#{Discourse.test_env_number}"
+    end
+
+    def use_file_hash_for_cachebuster?
+      Rails.env.production? || Rails.env.test?
+    end
+
+    def list_files
+      globs = [
+        "#{Rails.root.join("app/assets/stylesheets/**/*.*css")}",
+        "#{Rails.root.join("app/assets/images/**/*.*")}",
+        "#{Rails.root.join("lib/stylesheet/*.rb")}",
+        VARIABLE_RENAMES_PATH.to_s,
+      ]
+
+      Discourse.plugins.each do |plugin|
+        path = File.dirname(plugin.path)
+        globs << "#{path}/plugin.rb"
+        globs << "#{path}/assets/stylesheets/**/*.*css"
+      end
+
+      globs.flat_map { |g| Dir.glob(g) }.compact
+    end
+
+    def max_file_mtime
+      list_files.map { |x| File.mtime(x) }.compact.max.to_i
+    end
+
+    def fs_assets_hash
+      hashes = list_files.sort.map { |x| Digest::SHA1.hexdigest("#{x}: #{File.read(x)}") }
+      Digest::SHA1.hexdigest(hashes.join("|"))
     end
   end
 

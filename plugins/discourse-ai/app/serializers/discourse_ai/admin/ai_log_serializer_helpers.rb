@@ -17,8 +17,10 @@ module DiscourseAi
         AiApiAuditLog::Provider::BedrockConverse => "Amazon Bedrock",
       }.freeze
 
-      def self.provider_name(provider_id)
-        PROVIDER_NAMES[provider_id]
+      class << self
+        def provider_name(provider_id)
+          PROVIDER_NAMES[provider_id]
+        end
       end
     end
   end

@@ -2,12 +2,14 @@
 
 module JsonApiKit
   class Sideloads
-    def self.for(relationships, paths:, rows:, request:, schema:)
-      new(
-        relationships.map do
-          Sideload.new(it, paths: paths.next_for(it.name), rows:, request:, schema:)
-        end,
-      )
+    class << self
+      def for(relationships, paths:, rows:, request:, schema:)
+        new(
+          relationships.map do
+            Sideload.new(it, paths: paths.next_for(it.name), rows:, request:, schema:)
+          end,
+        )
+      end
     end
 
     def initialize(sideloads)

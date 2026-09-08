@@ -10,12 +10,14 @@ module Onebox
       matches_domain("threads.net", "www.threads.net")
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/t/[\d\w_-]+/?})
-      end
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/t/[\d\w_-]+/?})
+        end
 
-      def self.priority
-        1
+        def priority
+          1
+        end
       end
 
       private

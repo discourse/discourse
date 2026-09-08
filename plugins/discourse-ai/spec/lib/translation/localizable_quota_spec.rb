@@ -5,8 +5,10 @@ describe DiscourseAi::Translation::LocalizableQuota do
     Class.new do
       include DiscourseAi::Translation::LocalizableQuota
 
-      def self.model_name
-        "post"
+      class << self
+        def model_name
+          "post"
+        end
       end
     end
   end

@@ -2,8 +2,10 @@
 
 module DiscourseDataExplorer
   class AiQueryParams
-    def self.sample_for(query, current_user:)
-      new(query, current_user: current_user).sample
+    class << self
+      def sample_for(query, current_user:)
+        new(query, current_user: current_user).sample
+      end
     end
 
     def initialize(query, current_user:)

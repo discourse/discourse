@@ -2,8 +2,10 @@
 
 module Voice
   class DirectoryBroadcaster
-    def self.broadcast(action:, room:)
-      new(room, action).broadcast
+    class << self
+      def broadcast(action:, room:)
+        new(room, action).broadcast
+      end
     end
 
     # Targets are captured eagerly so a broadcaster built before a destructive

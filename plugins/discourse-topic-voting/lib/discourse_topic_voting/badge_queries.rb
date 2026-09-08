@@ -2,8 +2,9 @@
 
 module DiscourseTopicVoting
   module BadgeQueries
-    def self.for_threshold(count)
-      <<~SQL
+    class << self
+      def for_threshold(count)
+        <<~SQL
         SELECT post_id, user_id, granted_at
         FROM (
           SELECT
@@ -19,6 +20,7 @@ module DiscourseTopicVoting
         ) q
         WHERE rn = #{count}
       SQL
+      end
     end
   end
 end

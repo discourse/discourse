@@ -31,38 +31,40 @@ module MessageBusTestSync
 
   @pending = nil
 
-  def self.start
-    MUTEX.synchronize { @pending = {} }
-  end
-
-  def self.stop
-    MUTEX.synchronize { @pending = nil }
-  end
-
-  def self.pending?
-    @pending&.any?
-  end
-
-  def self.record(channel, id)
-    return if id.nil? || @pending.nil?
-    MUTEX.synchronize do
-      next if @pending.nil?
-      @pending[channel] = id if id > (@pending[channel] || -1)
+  class << self
+    def start
+      MUTEX.synchronize { @pending = {} }
     end
-  end
 
-  # Waits until each recorded id is observed in the browser, or
-  # `timeout` elapses. Channels with no `last_id` are skipped.
-  def self.flush!(session, timeout:)
-    snapshot =
+    def stop
+      MUTEX.synchronize { @pending = nil }
+    end
+
+    def pending?
+      @pending&.any?
+    end
+
+    def record(channel, id)
+      return if id.nil? || @pending.nil?
       MUTEX.synchronize do
-        return if @pending.nil? || @pending.empty?
-        taken = @pending
-        @pending = {}
-        taken
+        next if @pending.nil?
+        @pending[channel] = id if id > (@pending[channel] || -1)
       end
+    end
 
-    session.evaluate_async_script(CATCH_UP_SCRIPT, snapshot, (timeout * 1000).to_i)
+    # Waits until each recorded id is observed in the browser, or
+    # `timeout` elapses. Channels with no `last_id` are skipped.
+    def flush!(session, timeout:)
+      snapshot =
+        MUTEX.synchronize do
+          return if @pending.nil? || @pending.empty?
+          taken = @pending
+          @pending = {}
+          taken
+        end
+
+      session.evaluate_async_script(CATCH_UP_SCRIPT, snapshot, (timeout * 1000).to_i)
+    end
   end
 
   module PublishHook

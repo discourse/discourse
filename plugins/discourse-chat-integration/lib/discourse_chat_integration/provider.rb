@@ -11,54 +11,76 @@ module DiscourseChatIntegration
   end
 
   module Provider
-    def self.providers
-      constants.select { |constant| constant.to_s =~ /Provider$/ }.map(&method(:const_get))
-    end
-
-    def self.enabled_providers
-      providers.select { |provider| is_enabled(provider) }
-    end
-
-    def self.disabled_providers
-      providers
-        .reject { |provider| is_enabled(provider) }
-        .sort_by do |provider|
-          score = defined?(provider::POPULARITY_SCORE) ? provider::POPULARITY_SCORE : 0
-          [-score, provider::PROVIDER_NAME]
-        end
-    end
-
-    def self.provider_names
-      providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
-    end
-
-    def self.enabled_provider_names
-      enabled_providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
-    end
-
-    def self.get_by_name(name)
-      providers.find { |provider_klass| provider_klass::PROVIDER_NAME == name }
-    end
-
-    def self.is_enabled(provider)
-      provider = get_by_name(provider) if provider.is_a?(String)
-
-      if defined?(provider::PROVIDER_ENABLED_SETTING)
-        SiteSetting.public_send(provider::PROVIDER_ENABLED_SETTING)
-      else
-        false
+    class << self
+      def providers
+        constants.select { |constant| constant.to_s =~ /Provider$/ }.map(&method(:const_get))
       end
-    end
 
-    def self.display_tag_names(topic)
-      DiscourseTagging.filter_visible(topic.tags, Manager.guardian).map(&:name).join(", ")
-    end
+      def enabled_providers
+        providers.select { |provider| is_enabled(provider) }
+      end
 
-    def self.setup(provider_klass, current_user, provider_site_settings)
-      if provider_klass.respond_to?(:setup)
-        provider_klass.setup(current_user, provider_site_settings)
-      else
-        SiteSetting.set_and_log(provider_klass::PROVIDER_ENABLED_SETTING, true, current_user)
+      def disabled_providers
+        providers
+          .reject { |provider| is_enabled(provider) }
+          .sort_by do |provider|
+            score = defined?(provider::POPULARITY_SCORE) ? provider::POPULARITY_SCORE : 0
+            [-score, provider::PROVIDER_NAME]
+          end
+      end
+
+      def provider_names
+        providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
+      end
+
+      def enabled_provider_names
+        enabled_providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
+      end
+
+      def get_by_name(name)
+        providers.find { |provider_klass| provider_klass::PROVIDER_NAME == name }
+      end
+
+      def is_enabled(provider)
+        provider = get_by_name(provider) if provider.is_a?(String)
+
+        if defined?(provider::PROVIDER_ENABLED_SETTING)
+          SiteSetting.public_send(provider::PROVIDER_ENABLED_SETTING)
+        else
+          false
+        end
+      end
+
+      def display_tag_names(topic)
+        DiscourseTagging.filter_visible(topic.tags, Manager.guardian).map(&:name).join(", ")
+      end
+
+      def setup(provider_klass, current_user, provider_site_settings)
+        if provider_klass.respond_to?(:setup)
+          provider_klass.setup(current_user, provider_site_settings)
+        else
+          SiteSetting.set_and_log(provider_klass::PROVIDER_ENABLED_SETTING, true, current_user)
+        end
+      end
+
+      public
+
+      def mount_engines
+        engines = []
+        DiscourseChatIntegration::Provider.providers.each do |provider|
+          engine =
+            provider
+              .constants
+              .select { |constant| constant.to_s =~ /Engine$/ && (constant.to_s != "HookEngine") }
+              .map(&provider.method(:const_get))
+              .first
+
+          engines.push(engine: engine, name: provider::PROVIDER_NAME) if engine
+        end
+
+        DiscourseChatIntegration::Provider::HookEngine.routes.draw do
+          engines.each { |engine| mount engine[:engine], at: engine[:name] }
+        end
       end
     end
 
@@ -77,9 +99,11 @@ module DiscourseChatIntegration
         rescue_discourse_actions(:not_found, 404)
       end
 
-      def self.requires_provider(provider_name)
-        before_action do
-          raise ProviderDisabled.new if Provider.enabled_provider_names.exclude?(provider_name)
+      class << self
+        def requires_provider(provider_name)
+          before_action do
+            raise ProviderDisabled.new if Provider.enabled_provider_names.exclude?(provider_name)
+          end
         end
       end
 
@@ -89,23 +113,6 @@ module DiscourseChatIntegration
     end
 
     # Automatically mount each provider's engine inside the HookEngine
-    def self.mount_engines
-      engines = []
-      DiscourseChatIntegration::Provider.providers.each do |provider|
-        engine =
-          provider
-            .constants
-            .select { |constant| constant.to_s =~ /Engine$/ && (constant.to_s != "HookEngine") }
-            .map(&provider.method(:const_get))
-            .first
-
-        engines.push(engine: engine, name: provider::PROVIDER_NAME) if engine
-      end
-
-      DiscourseChatIntegration::Provider::HookEngine.routes.draw do
-        engines.each { |engine| mount engine[:engine], at: engine[:name] }
-      end
-    end
   end
 end
 

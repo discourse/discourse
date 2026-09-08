@@ -2,12 +2,14 @@
 
 module PostVoting
   module PostExtension
-    def self.included(base)
-      base.ignored_columns = %w[vote_count]
+    class << self
+      def included(base)
+        base.ignored_columns = %w[vote_count]
 
-      base.has_many :post_voting_votes, as: :votable, dependent: :delete_all
-      base.has_many :post_voting_comments, dependent: :destroy
-      base.validate :ensure_only_replies
+        base.has_many :post_voting_votes, as: :votable, dependent: :delete_all
+        base.has_many :post_voting_comments, dependent: :destroy
+        base.validate :ensure_only_replies
+      end
     end
 
     def is_post_voting_topic?

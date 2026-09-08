@@ -2,7 +2,11 @@
 
 RSpec.describe AdminDashboard::Reports::Registry do
   let(:fake_provider) do
-    Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "fake_source" }
+    Class.new(AdminDashboard::Reports::SourceProvider) do
+      class << self
+        def source_name = "fake_source"
+      end
+    end
   end
 
   let(:plugin) { Plugin::Instance.new }

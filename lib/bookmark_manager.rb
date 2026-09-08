@@ -3,13 +3,19 @@
 class BookmarkManager
   include HasErrors
 
+  class << self
+    def bookmark_metadata(bookmark, user)
+      bookmark.registered_bookmarkable.bookmark_metadata(bookmark, user)
+    end
+
+    def send_reminder_notification(id)
+      BookmarkReminderNotificationHandler.new(Bookmark.find_by(id: id)).send_notification
+    end
+  end
+
   def initialize(user)
     @user = user
     @guardian = Guardian.new(user)
-  end
-
-  def self.bookmark_metadata(bookmark, user)
-    bookmark.registered_bookmarkable.bookmark_metadata(bookmark, user)
   end
 
   ##
@@ -89,10 +95,6 @@ class BookmarkManager
 
       update_topic_user_bookmarked(topic, opts)
     end
-  end
-
-  def self.send_reminder_notification(id)
-    BookmarkReminderNotificationHandler.new(Bookmark.find_by(id: id)).send_notification
   end
 
   def update(bookmark_id:, name:, reminder_at:, options: {})

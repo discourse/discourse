@@ -67,33 +67,36 @@ module DiscourseWorkflows
           i18n_scope: "workflow_call",
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "callable_workflows"
-            callable_workflow_options(context)
+        class << self
+          def load_options_context(context)
+            case context.method_name
+            when "callable_workflows"
+              callable_workflow_options(context)
+            end
+          end
+
+          def callable_workflow_options(context)
+            scope =
+              DiscourseWorkflows::Workflow
+                .published
+                .joins(:workflow_dependencies)
+                .where(
+                  discourse_workflows_workflow_dependencies: {
+                    dependency_type: "node_type",
+                    dependency_key: DiscourseWorkflows::Nodes::WorkflowCallTrigger::V1.identifier,
+                  },
+                )
+                .where(
+                  "discourse_workflows_workflows.active_version_id = " \
+                    "discourse_workflows_workflow_dependencies.workflow_version_id",
+                )
+            scope = scope.where.not(id: context.workflow_id) if context.workflow_id.present?
+            scope = scope.filter_by_name(context.filter) if context.filter.present?
+
+            scope.distinct.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } }
           end
         end
 
-        def self.callable_workflow_options(context)
-          scope =
-            DiscourseWorkflows::Workflow
-              .published
-              .joins(:workflow_dependencies)
-              .where(
-                discourse_workflows_workflow_dependencies: {
-                  dependency_type: "node_type",
-                  dependency_key: DiscourseWorkflows::Nodes::WorkflowCallTrigger::V1.identifier,
-                },
-              )
-              .where(
-                "discourse_workflows_workflows.active_version_id = " \
-                  "discourse_workflows_workflow_dependencies.workflow_version_id",
-              )
-          scope = scope.where.not(id: context.workflow_id) if context.workflow_id.present?
-          scope = scope.filter_by_name(context.filter) if context.filter.present?
-
-          scope.distinct.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } }
-        end
         private_class_method :callable_workflow_options
 
         def execute(exec_ctx)

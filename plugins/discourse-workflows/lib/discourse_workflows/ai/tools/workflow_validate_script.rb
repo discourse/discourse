@@ -12,26 +12,28 @@ module DiscourseWorkflows
         MAX_SAMPLE_ITEMS = 20
         MAX_CODE_BYTES = 20_000
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Validates JavaScript generated for a Discourse workflow Code node against syntax, mode restrictions, and return shape.",
-            parameters: [
-              { name: "mode", description: "Code node mode", type: "string", required: true },
-              { name: "code", description: "JavaScript source", type: "string", required: true },
-              {
-                name: "sample_input_items",
-                description: "Optional sample input items to execute the script against",
-                type: "array",
-                required: false,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Validates JavaScript generated for a Discourse workflow Code node against syntax, mode restrictions, and return shape.",
+              parameters: [
+                { name: "mode", description: "Code node mode", type: "string", required: true },
+                { name: "code", description: "JavaScript source", type: "string", required: true },
+                {
+                  name: "sample_input_items",
+                  description: "Optional sample input items to execute the script against",
+                  type: "array",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "workflow_validate_script"
+          def name
+            "workflow_validate_script"
+          end
         end
 
         def invoke

@@ -26,24 +26,26 @@ module Onebox
 
   @@options = DEFAULTS
 
-  def self.preview(url, options = Onebox.options)
-    Preview.new(url, options)
-  end
+  class << self
+    def preview(url, options = Onebox.options)
+      Preview.new(url, options)
+    end
 
-  def self.check(url, options = Onebox.options)
-    StatusCheck.new(url, options)
-  end
+    def check(url, options = Onebox.options)
+      StatusCheck.new(url, options)
+    end
 
-  def self.options
-    OpenStruct.new(@@options)
-  end
+    def options
+      OpenStruct.new(@@options)
+    end
 
-  def self.has_matcher?(url)
-    !!Matcher.new(url).oneboxed
-  end
+    def has_matcher?(url)
+      !!Matcher.new(url).oneboxed
+    end
 
-  def self.options=(options)
-    @@options = DEFAULTS.merge(options)
+    def options=(options)
+      @@options = DEFAULTS.merge(options)
+    end
   end
 end
 

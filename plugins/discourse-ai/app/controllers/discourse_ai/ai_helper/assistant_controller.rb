@@ -13,6 +13,8 @@ module DiscourseAi
 
       RATE_LIMITS = { "default" => { amount: 6, interval: 3.minutes } }.freeze
 
+      CHANNEL_ID_KEY = "discourse_ai_helper_next_channel_id"
+
       def suggest
         input = get_text_param!
         force_default_locale = params[:force_default_locale] || false
@@ -227,8 +229,6 @@ module DiscourseAi
       end
 
       private
-
-      CHANNEL_ID_KEY = "discourse_ai_helper_next_channel_id"
 
       def next_channel_id
         Discourse

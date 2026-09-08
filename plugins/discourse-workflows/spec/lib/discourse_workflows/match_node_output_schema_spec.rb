@@ -3,30 +3,32 @@
 RSpec.describe RSpec::Matchers, "#match_node_output_schema" do
   let(:node_class) do
     Class.new do
-      def self.name
-        "OutputSchemaTestNode"
-      end
+      class << self
+        def name
+          "OutputSchemaTestNode"
+        end
 
-      def self.output_schemas(_configuration = {}, input_schemas: [])
-        [
-          {
-            "type" => "object",
-            "properties" => {
-              "profile" => {
-                "type" => "object",
-                "properties" => {
-                  "name" => {
-                    "type" => "string",
+        def output_schemas(_configuration = {}, input_schemas: [])
+          [
+            {
+              "type" => "object",
+              "properties" => {
+                "profile" => {
+                  "type" => "object",
+                  "properties" => {
+                    "name" => {
+                      "type" => "string",
+                    },
                   },
+                  "required" => ["name"],
+                  "additionalProperties" => false,
                 },
-                "required" => ["name"],
-                "additionalProperties" => false,
               },
+              "required" => ["profile"],
+              "additionalProperties" => false,
             },
-            "required" => ["profile"],
-            "additionalProperties" => false,
-          },
-        ]
+          ]
+        end
       end
     end
   end
@@ -54,12 +56,14 @@ RSpec.describe RSpec::Matchers, "#match_node_output_schema" do
   it "rejects nodes that resolve an empty output schema" do
     empty_schema_node =
       Class.new do
-        def self.name
-          "EmptyOutputSchemaTestNode"
-        end
+        class << self
+          def name
+            "EmptyOutputSchemaTestNode"
+          end
 
-        def self.output_schemas(_configuration = {}, input_schemas: [])
-          [{}]
+          def output_schemas(_configuration = {}, input_schemas: [])
+            [{}]
+          end
         end
       end
     output = {}
@@ -73,22 +77,24 @@ RSpec.describe RSpec::Matchers, "#match_node_output_schema" do
   it "forwards the configuration and input schema when resolving the output schema" do
     contextual_node =
       Class.new do
-        def self.output_schemas(configuration = {}, input_schemas: [])
-          property = configuration.fetch("property")
-          property_type = input_schemas.fetch(0).fetch("type")
+        class << self
+          def output_schemas(configuration = {}, input_schemas: [])
+            property = configuration.fetch("property")
+            property_type = input_schemas.fetch(0).fetch("type")
 
-          [
-            {
-              "type" => "object",
-              "properties" => {
-                property => {
-                  "type" => property_type,
+            [
+              {
+                "type" => "object",
+                "properties" => {
+                  property => {
+                    "type" => property_type,
+                  },
                 },
+                "required" => [property],
+                "additionalProperties" => false,
               },
-              "required" => [property],
-              "additionalProperties" => false,
-            },
-          ]
+            ]
+          end
         end
       end
     configuration = { "property" => "count" }

@@ -9,13 +9,26 @@ module SiteSettingExtension
 
   delegate :description, :keywords, :placeholder, :humanized_name, to: SiteSettings::LabelFormatter
 
-  # support default_locale being set via global settings
-  # this also adds support for testing the extension and global settings
-  # for site locale
-  def self.extended(klass)
-    if GlobalSetting.respond_to?(:default_locale) && GlobalSetting.default_locale.present?
-      # protected
-      klass.send :setup_shadowed_methods, :default_locale, GlobalSetting.default_locale
+  class << self
+    # support default_locale being set via global settings
+    # this also adds support for testing the extension and global settings
+    # for site locale
+    def extended(klass)
+      if GlobalSetting.respond_to?(:default_locale) && GlobalSetting.default_locale.present?
+        # protected
+        klass.send :setup_shadowed_methods, :default_locale, GlobalSetting.default_locale
+      end
+    end
+
+    public
+
+    def theme_site_settings_cache_key(theme_id)
+      theme_id = "notheme" if theme_id.blank?
+
+      # NOTE: we use the git version in the key to ensure
+      # that we don't end up caching the incorrect version
+      # in cases where we are cycling unicorns
+      "theme_site_settings_json_#{theme_id}__#{Discourse.git_version}"
     end
   end
 
@@ -578,15 +591,6 @@ module SiteSettingExtension
       end
       .unshift(include_locale_setting && !only_overridden ? locale_setting_hash : nil)
       .compact
-  end
-
-  def self.theme_site_settings_cache_key(theme_id)
-    theme_id = "notheme" if theme_id.blank?
-
-    # NOTE: we use the git version in the key to ensure
-    # that we don't end up caching the incorrect version
-    # in cases where we are cycling unicorns
-    "theme_site_settings_json_#{theme_id}__#{Discourse.git_version}"
   end
 
   # Merges the provider values of site settings (whether it be from the DB or wherever)

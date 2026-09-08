@@ -4,20 +4,21 @@ class TopicGroup < ActiveRecord::Base
   belongs_to :group
   belongs_to :topic
 
-  def self.update_last_read(user, topic_id, post_number)
-    updated_groups = update_read_count(user, topic_id, post_number)
-    create_topic_group(user, topic_id, post_number, updated_groups.map(&:group_id))
-    TopicTrackingState.publish_read_indicator_on_read(topic_id, post_number, user.id)
-  end
+  class << self
+    def update_last_read(user, topic_id, post_number)
+      updated_groups = update_read_count(user, topic_id, post_number)
+      create_topic_group(user, topic_id, post_number, updated_groups.map(&:group_id))
+      TopicTrackingState.publish_read_indicator_on_read(topic_id, post_number, user.id)
+    end
 
-  def self.new_message_update(user, topic_id, post_number)
-    updated_groups = update_read_count(user, topic_id, post_number)
-    create_topic_group(user, topic_id, post_number, updated_groups.map(&:group_id))
-    TopicTrackingState.publish_read_indicator_on_write(topic_id, post_number, user.id)
-  end
+    def new_message_update(user, topic_id, post_number)
+      updated_groups = update_read_count(user, topic_id, post_number)
+      create_topic_group(user, topic_id, post_number, updated_groups.map(&:group_id))
+      TopicTrackingState.publish_read_indicator_on_write(topic_id, post_number, user.id)
+    end
 
-  def self.update_read_count(user, topic_id, post_number)
-    update_query = <<~SQL
+    def update_read_count(user, topic_id, post_number)
+      update_query = <<~SQL
       UPDATE topic_groups tg
       SET
         last_read_post_number = GREATEST(:post_number, tg.last_read_post_number),
@@ -31,17 +32,17 @@ class TopicGroup < ActiveRecord::Base
         tg.group_id
     SQL
 
-    DB.query(
-      update_query,
-      user_id: user.id,
-      topic_id: topic_id,
-      post_number: post_number,
-      now: DateTime.now,
-    )
-  end
+      DB.query(
+        update_query,
+        user_id: user.id,
+        topic_id: topic_id,
+        post_number: post_number,
+        now: DateTime.now,
+      )
+    end
 
-  def self.create_topic_group(user, topic_id, post_number, updated_group_ids)
-    query = <<~SQL
+    def create_topic_group(user, topic_id, post_number, updated_group_ids)
+      query = <<~SQL
       INSERT INTO topic_groups (topic_id, group_id, last_read_post_number, created_at, updated_at)
       SELECT tag.topic_id, tag.group_id, :post_number, :now, :now
         FROM topic_allowed_groups tag
@@ -50,21 +51,22 @@ class TopicGroup < ActiveRecord::Base
         AND tag.topic_id = :topic_id
     SQL
 
-    query += "AND NOT(tag.group_id IN (:already_updated_groups))" if updated_group_ids.present?
+      query += "AND NOT(tag.group_id IN (:already_updated_groups))" if updated_group_ids.present?
 
-    query += <<~SQL
+      query += <<~SQL
       ON CONFLICT(topic_id, group_id)
       DO UPDATE SET last_read_post_number = :post_number, created_at = :now, updated_at = :now
     SQL
 
-    DB.exec(
-      query,
-      user_id: user.id,
-      topic_id: topic_id,
-      post_number: post_number,
-      now: DateTime.now,
-      already_updated_groups: updated_group_ids,
-    )
+      DB.exec(
+        query,
+        user_id: user.id,
+        topic_id: topic_id,
+        post_number: post_number,
+        now: DateTime.now,
+        already_updated_groups: updated_group_ids,
+      )
+    end
   end
 end
 

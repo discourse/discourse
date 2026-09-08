@@ -34,64 +34,67 @@ module ::DiscourseAutomation
   RECURSION_DEPTH_KEY = :discourse_automation_recursion_depth
   SUPPRESSED_TRIGGERS_KEY = :discourse_automation_suppressed_triggers
 
-  def self.set_active_automation(_id)
-    deprecated_active_automation_api
-  end
+  class << self
+    def set_active_automation(_id)
+      deprecated_active_automation_api
+    end
 
-  def self.get_active_automation
-    deprecated_active_automation_api
-  end
+    def get_active_automation
+      deprecated_active_automation_api
+    end
 
-  def self.suppress_triggers
-    raise StandardError, "Expecting a block" if !block_given?
+    def suppress_triggers
+      raise StandardError, "Expecting a block" if !block_given?
 
-    Thread.current[SUPPRESSED_TRIGGERS_KEY] = suppressed_triggers_count + 1
-    begin
-      yield
-    ensure
-      decrement_suppressed_triggers_count
+      Thread.current[SUPPRESSED_TRIGGERS_KEY] = suppressed_triggers_count + 1
+      begin
+        yield
+      ensure
+        decrement_suppressed_triggers_count
+      end
+    end
+
+    def triggers_suppressed?
+      suppressed_triggers_count.positive?
+    end
+
+    def recursion_depth
+      Thread.current[RECURSION_DEPTH_KEY] || 0
+    end
+
+    def max_recursion_depth
+      SiteSetting.discourse_automation_max_recursion_depth
+    end
+
+    def increment_recursion_depth
+      Thread.current[RECURSION_DEPTH_KEY] = recursion_depth + 1
+    end
+
+    def decrement_recursion_depth
+      new_depth = recursion_depth - 1
+      Thread.current[RECURSION_DEPTH_KEY] = new_depth.positive? ? new_depth : nil
+    end
+
+    def suppressed_triggers_count
+      Thread.current[SUPPRESSED_TRIGGERS_KEY] || 0
+    end
+
+    def decrement_suppressed_triggers_count
+      new_count = suppressed_triggers_count - 1
+      Thread.current[SUPPRESSED_TRIGGERS_KEY] = new_count.positive? ? new_count : nil
+    end
+
+    def deprecated_active_automation_api
+      Discourse.deprecate(
+        "DiscourseAutomation.set_active_automation/get_active_automation are deprecated. " \
+          "Use DiscourseAutomation.suppress_triggers instead.",
+        since: "2026.6.0-latest",
+        drop_from: "2026.8.0-latest",
+        raise_error: true,
+      )
     end
   end
 
-  def self.triggers_suppressed?
-    suppressed_triggers_count.positive?
-  end
-
-  def self.recursion_depth
-    Thread.current[RECURSION_DEPTH_KEY] || 0
-  end
-
-  def self.max_recursion_depth
-    SiteSetting.discourse_automation_max_recursion_depth
-  end
-
-  def self.increment_recursion_depth
-    Thread.current[RECURSION_DEPTH_KEY] = recursion_depth + 1
-  end
-
-  def self.decrement_recursion_depth
-    new_depth = recursion_depth - 1
-    Thread.current[RECURSION_DEPTH_KEY] = new_depth.positive? ? new_depth : nil
-  end
-
-  def self.suppressed_triggers_count
-    Thread.current[SUPPRESSED_TRIGGERS_KEY] || 0
-  end
-
-  def self.decrement_suppressed_triggers_count
-    new_count = suppressed_triggers_count - 1
-    Thread.current[SUPPRESSED_TRIGGERS_KEY] = new_count.positive? ? new_count : nil
-  end
-
-  def self.deprecated_active_automation_api
-    Discourse.deprecate(
-      "DiscourseAutomation.set_active_automation/get_active_automation are deprecated. " \
-        "Use DiscourseAutomation.suppress_triggers instead.",
-      since: "2026.6.0-latest",
-      drop_from: "2026.8.0-latest",
-      raise_error: true,
-    )
-  end
   private_class_method :suppressed_triggers_count,
                        :decrement_suppressed_triggers_count,
                        :deprecated_active_automation_api

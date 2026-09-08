@@ -4,6 +4,12 @@ require "base64"
 
 class Admin::ThemesController < Admin::AdminController
   MAX_REMOTE_LENGTH = 10_000
+  THEME_CONTENT_TYPES = %w[
+    application/gzip
+    application/x-gzip
+    application/x-zip-compressed
+    application/zip
+  ]
 
   skip_before_action :check_xhr, only: %i[show preview export]
   before_action :ensure_admin
@@ -40,13 +46,6 @@ class Admin::ThemesController < Admin::AdminController
     Discourse.redis.setex("ssh_key_#{k.ssh_public_key}", 1.hour, k.private_key)
     render json: { public_key: k.ssh_public_key }
   end
-
-  THEME_CONTENT_TYPES = %w[
-    application/gzip
-    application/x-gzip
-    application/x-zip-compressed
-    application/zip
-  ]
 
   def import
     @theme = nil

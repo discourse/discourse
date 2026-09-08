@@ -11,77 +11,6 @@ module DiscourseAutomation
 
     around_save :on_update_callback
 
-    def on_update_callback
-      automation.fields.reload
-
-      previous_fields = automation.serialized_fields
-
-      automation.reset!
-
-      yield
-
-      automation.fields.reload
-
-      automation&.triggerable&.on_update&.call(
-        automation,
-        automation.serialized_fields,
-        previous_fields,
-      )
-    end
-
-    validate :required_field
-    def required_field
-      if template && template[:required] && metadata && metadata["value"].blank?
-        raise_required_field(name, target, targetable)
-      end
-    end
-
-    validate :validator
-    def validator
-      if template && template[:validator]
-        error = template[:validator].call(metadata["value"])
-        errors.add(:base, error) if error
-      end
-    end
-
-    def targetable
-      target == "trigger" ? automation.triggerable : automation.scriptable
-    end
-
-    def template
-      targetable&.fields&.find do |tf|
-        targetable.id == target && tf[:name].to_s == name && tf[:component].to_s == component
-      end
-    end
-
-    validate :metadata_schema
-    def metadata_schema
-      if !targetable.components.include?(component.to_sym)
-        errors.add(
-          :base,
-          I18n.t(
-            "discourse_automation.models.fields.invalid_field",
-            component: component,
-            target: target,
-            target_name: targetable.name,
-          ),
-        )
-      else
-        schema = SCHEMAS[component]
-        if !schema ||
-             !JSONSchemer.schema({ "type" => "object", "properties" => schema }).valid?(metadata)
-          errors.add(
-            :base,
-            I18n.t(
-              "discourse_automation.models.fields.invalid_metadata",
-              component: component,
-              field: name,
-            ),
-          )
-        end
-      end
-    end
-
     SCHEMAS = {
       "key-value" => {
         "type" => "array",
@@ -243,6 +172,77 @@ module DiscourseAutomation
         },
       },
     }
+
+    def on_update_callback
+      automation.fields.reload
+
+      previous_fields = automation.serialized_fields
+
+      automation.reset!
+
+      yield
+
+      automation.fields.reload
+
+      automation&.triggerable&.on_update&.call(
+        automation,
+        automation.serialized_fields,
+        previous_fields,
+      )
+    end
+
+    validate :required_field
+    def required_field
+      if template && template[:required] && metadata && metadata["value"].blank?
+        raise_required_field(name, target, targetable)
+      end
+    end
+
+    validate :validator
+    def validator
+      if template && template[:validator]
+        error = template[:validator].call(metadata["value"])
+        errors.add(:base, error) if error
+      end
+    end
+
+    def targetable
+      target == "trigger" ? automation.triggerable : automation.scriptable
+    end
+
+    def template
+      targetable&.fields&.find do |tf|
+        targetable.id == target && tf[:name].to_s == name && tf[:component].to_s == component
+      end
+    end
+
+    validate :metadata_schema
+    def metadata_schema
+      if !targetable.components.include?(component.to_sym)
+        errors.add(
+          :base,
+          I18n.t(
+            "discourse_automation.models.fields.invalid_field",
+            component: component,
+            target: target,
+            target_name: targetable.name,
+          ),
+        )
+      else
+        schema = SCHEMAS[component]
+        if !schema ||
+             !JSONSchemer.schema({ "type" => "object", "properties" => schema }).valid?(metadata)
+          errors.add(
+            :base,
+            I18n.t(
+              "discourse_automation.models.fields.invalid_metadata",
+              component: component,
+              field: name,
+            ),
+          )
+        end
+      end
+    end
 
     private
 

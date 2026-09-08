@@ -11,8 +11,10 @@ module DiscourseAi
       SPECIAL_CHARACTERS = /["\\\x00-\x1F]/
       private_constant :SPECIAL_CHARACTERS
 
-      def self.escape(json)
-        new.escape(json)
+      class << self
+        def escape(json)
+          new.escape(json)
+        end
       end
 
       def initialize

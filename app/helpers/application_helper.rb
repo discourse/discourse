@@ -9,8 +9,10 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
-  def self.extra_body_classes
-    @extra_body_classes ||= Set.new
+  class << self
+    def extra_body_classes
+      @extra_body_classes ||= Set.new
+    end
   end
 
   # This generated equivalent of Ember's config/environment.js is used

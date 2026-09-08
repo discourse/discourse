@@ -2,8 +2,10 @@
 
 module DiscourseSolved
   module TopicAnswerMixin
-    def self.included(klass)
-      klass.attributes :has_accepted_answer, :can_have_answer
+    class << self
+      def included(klass)
+        klass.attributes :has_accepted_answer, :can_have_answer
+      end
     end
 
     def has_accepted_answer

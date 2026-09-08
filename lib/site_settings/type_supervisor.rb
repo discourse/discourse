@@ -40,64 +40,66 @@ class SiteSettings::TypeSupervisor
     user_option: "user_option",
   }.freeze
 
-  def self.types
-    @types ||=
-      Enum.new(
-        string: 1,
-        time: 2,
-        integer: 3,
-        float: 4,
-        bool: 5,
-        null: 6,
-        enum: 7,
-        list: 8,
-        url_list: 9,
-        host_list: 10,
-        category_list: 11,
-        value_list: 12,
-        regex: 13,
-        email: 14,
-        username: 15,
-        category: 16,
-        uploaded_image_list: 17,
-        upload: 18,
-        group: 19,
-        group_list: 20,
-        tag_list: 21,
-        color: 22,
-        simple_list: 23,
-        emoji_list: 24,
-        html_deprecated: 25,
-        tag_group_list: 26,
-        file_size_restriction: 27,
-        objects: 28,
-        locale_enum: 29,
-        topic: 30,
-        datetime: 31,
-        icon: 32,
-        date: 33,
-      )
-  end
-
-  def self.parse_value_type(val)
-    case val
-    when NilClass
-      types[:null]
-    when String
-      types[:string]
-    when Integer
-      types[:integer]
-    when Float
-      types[:float]
-    when TrueClass, FalseClass
-      types[:bool]
-    else
-      raise ArgumentError.new("Invalid value type for site setting: #{val.class}")
+  class << self
+    def types
+      @types ||=
+        Enum.new(
+          string: 1,
+          time: 2,
+          integer: 3,
+          float: 4,
+          bool: 5,
+          null: 6,
+          enum: 7,
+          list: 8,
+          url_list: 9,
+          host_list: 10,
+          category_list: 11,
+          value_list: 12,
+          regex: 13,
+          email: 14,
+          username: 15,
+          category: 16,
+          uploaded_image_list: 17,
+          upload: 18,
+          group: 19,
+          group_list: 20,
+          tag_list: 21,
+          color: 22,
+          simple_list: 23,
+          emoji_list: 24,
+          html_deprecated: 25,
+          tag_group_list: 26,
+          file_size_restriction: 27,
+          objects: 28,
+          locale_enum: 29,
+          topic: 30,
+          datetime: 31,
+          icon: 32,
+          date: 33,
+        )
     end
-  end
 
-  def self.supported_types
-    SUPPORTED_TYPES
+    def parse_value_type(val)
+      case val
+      when NilClass
+        types[:null]
+      when String
+        types[:string]
+      when Integer
+        types[:integer]
+      when Float
+        types[:float]
+      when TrueClass, FalseClass
+        types[:bool]
+      else
+        raise ArgumentError.new("Invalid value type for site setting: #{val.class}")
+      end
+    end
+
+    def supported_types
+      SUPPORTED_TYPES
+    end
   end
 
   def initialize(defaults_provider)

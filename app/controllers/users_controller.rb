@@ -119,6 +119,11 @@ class UsersController < ApplicationController
 
   MAX_RECENT_SEARCHES = 5
 
+  SEARCH_USERS_LIMIT = 50
+  AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar]
+  BOOKMARKS_LIMIT = 20
+  USER_MENU_LIST_LIMIT = 20
+
   def index
   end
 
@@ -1283,8 +1288,6 @@ class UsersController < ApplicationController
     end
   end
 
-  SEARCH_USERS_LIMIT = 50
-
   def search_users
     # the search can specify the parameter term or usernames, term will perform the classic user search algorithm while
     # usernames will perform an exact search on the usernames passed as parameter
@@ -1371,8 +1374,6 @@ class UsersController < ApplicationController
 
     render json: to_render
   end
-
-  AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar]
 
   def pick_avatar
     user = fetch_user_from_params
@@ -1961,8 +1962,6 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  BOOKMARKS_LIMIT = 20
-
   def bookmarks
     user = fetch_user_from_params
     guardian.ensure_can_see_bookmarks!(user)
@@ -2016,7 +2015,6 @@ class UsersController < ApplicationController
     end
   end
 
-  USER_MENU_LIST_LIMIT = 20
   def user_menu_bookmarks
     if !current_user.username_equals_to?(params[:username])
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")

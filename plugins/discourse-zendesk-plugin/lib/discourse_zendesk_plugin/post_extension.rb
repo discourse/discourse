@@ -2,8 +2,10 @@
 
 module DiscourseZendeskPlugin
   module PostExtension
-    def self.prepended(base)
-      base.after_commit :generate_zendesk_ticket, on: [:create]
+    class << self
+      def prepended(base)
+        base.after_commit :generate_zendesk_ticket, on: [:create]
+      end
     end
 
     private

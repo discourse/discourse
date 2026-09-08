@@ -20,13 +20,15 @@ module Migrations
         value.to_s.split(",").map { |name| name.strip.demodulize.underscore }
       end
 
-      def self.requires_rails!
-        @requires_rails = true
-      end
+      class << self
+        def requires_rails!
+          @requires_rails = true
+        end
 
-      def self.requires_rails?
-        return true if @requires_rails == true
-        superclass.respond_to?(:requires_rails?) && superclass.requires_rails?
+        def requires_rails?
+          return true if @requires_rails == true
+          superclass.respond_to?(:requires_rails?) && superclass.requires_rails?
+        end
       end
 
       # Samovar parses each declaration once, front-to-back, and only matches

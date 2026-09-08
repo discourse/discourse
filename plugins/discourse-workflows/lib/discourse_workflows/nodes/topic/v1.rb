@@ -203,24 +203,26 @@ module DiscourseWorkflows
           },
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "topic_custom_fields"
-            custom_field_scope = ::TopicCustomField.where.not(name: [nil, ""])
-            if context.filter.present?
-              custom_field_scope =
-                custom_field_scope.where(
-                  "name ILIKE ?",
-                  "%#{ActiveRecord::Base.sanitize_sql_like(context.filter)}%",
-                )
-            end
+        class << self
+          def load_options_context(context)
+            case context.method_name
+            when "topic_custom_fields"
+              custom_field_scope = ::TopicCustomField.where.not(name: [nil, ""])
+              if context.filter.present?
+                custom_field_scope =
+                  custom_field_scope.where(
+                    "name ILIKE ?",
+                    "%#{ActiveRecord::Base.sanitize_sql_like(context.filter)}%",
+                  )
+              end
 
-            custom_field_scope
-              .distinct
-              .order(:name)
-              .limit(CUSTOM_FIELD_OPTIONS_LIMIT)
-              .pluck(:name)
-              .map { |name| { id: name, name: name } }
+              custom_field_scope
+                .distinct
+                .order(:name)
+                .limit(CUSTOM_FIELD_OPTIONS_LIMIT)
+                .pluck(:name)
+                .map { |name| { id: name, name: name } }
+            end
           end
         end
 

@@ -5,20 +5,22 @@ class AssociatedGroup < ActiveRecord::Base
   has_many :group_associated_groups, dependent: :destroy
   has_many :groups, through: :group_associated_groups
 
+  class << self
+    def has_provider?
+      Discourse.enabled_authenticators.any? { |a| a.provides_groups? }
+    end
+
+    def cleanup!
+      AssociatedGroup
+        .left_joins(:group_associated_groups, :user_associated_groups)
+        .where("group_associated_groups.id IS NULL AND user_associated_groups.id IS NULL")
+        .where("last_used < ?", 1.week.ago)
+        .delete_all
+    end
+  end
+
   def label
     "#{provider_name}:#{name}"
-  end
-
-  def self.has_provider?
-    Discourse.enabled_authenticators.any? { |a| a.provides_groups? }
-  end
-
-  def self.cleanup!
-    AssociatedGroup
-      .left_joins(:group_associated_groups, :user_associated_groups)
-      .where("group_associated_groups.id IS NULL AND user_associated_groups.id IS NULL")
-      .where("last_used < ?", 1.week.ago)
-      .delete_all
   end
 end
 

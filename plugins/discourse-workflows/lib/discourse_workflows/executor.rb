@@ -19,6 +19,55 @@ module DiscourseWorkflows
 
     delegate :execution, to: :@store
 
+    class << self
+      def resume(execution, response_items, user: nil, webhook_context: nil)
+        build_resume_executor(execution, user: user, webhook_context: webhook_context).resume_from(
+          execution,
+          response_items,
+        )
+      end
+
+      def resume_with_error(execution, error, user: nil)
+        build_resume_executor(execution, user: user).resume_from_error(execution, error)
+      end
+
+      def build_resume_executor(execution, user:, webhook_context: nil)
+        workflow_call_caller = WorkflowCallContinuation.caller_metadata_for(execution)
+        options =
+          ExecutionOptions.new(
+            user: user,
+            execution_mode: execution.execution_mode.to_sym,
+            workflow_snapshot: build_resume_snapshot!(execution),
+            webhook_context: webhook_context,
+            workflow_call_stack: WorkflowCallContinuation.workflow_call_stack_for(execution),
+            workflow_call_child: workflow_call_caller.present?,
+            workflow_call_caller: workflow_call_caller,
+          )
+        new(execution.workflow, execution.trigger_node_id, execution.trigger_data, options)
+      end
+
+      def build_resume_snapshot!(execution)
+        unless execution.running?
+          raise ArgumentError,
+                "Cannot resume execution #{execution.id} with status '#{execution.status}' " \
+                  "(callers must claim via Execution.claim_for_resume first)"
+        end
+
+        snapshot =
+          if execution.execution_data&.workflow_data.present?
+            WorkflowSnapshot.new(execution.execution_data.workflow_data)
+          else
+            WorkflowSnapshot.from_workflow(execution.workflow, published: true)
+          end
+
+        unless snapshot.find_node(execution.trigger_node_id)
+          raise "Trigger node #{execution.trigger_node_id} not found in workflow #{execution.workflow.id}"
+        end
+
+        snapshot
+      end
+    end
+
     def initialize(workflow, trigger_node_id, trigger_data, options = ExecutionOptions.new)
       @workflow = workflow
       @trigger_node_id = trigger_node_id.to_s
@@ -70,53 +119,8 @@ module DiscourseWorkflows
       @workflow_call_stack = normalized_workflow_call_stack
     end
 
-    def self.resume(execution, response_items, user: nil, webhook_context: nil)
-      build_resume_executor(execution, user: user, webhook_context: webhook_context).resume_from(
-        execution,
-        response_items,
-      )
-    end
-
-    def self.resume_with_error(execution, error, user: nil)
-      build_resume_executor(execution, user: user).resume_from_error(execution, error)
-    end
-
-    def self.build_resume_executor(execution, user:, webhook_context: nil)
-      workflow_call_caller = WorkflowCallContinuation.caller_metadata_for(execution)
-      options =
-        ExecutionOptions.new(
-          user: user,
-          execution_mode: execution.execution_mode.to_sym,
-          workflow_snapshot: build_resume_snapshot!(execution),
-          webhook_context: webhook_context,
-          workflow_call_stack: WorkflowCallContinuation.workflow_call_stack_for(execution),
-          workflow_call_child: workflow_call_caller.present?,
-          workflow_call_caller: workflow_call_caller,
-        )
-      new(execution.workflow, execution.trigger_node_id, execution.trigger_data, options)
-    end
     private_class_method :build_resume_executor
 
-    def self.build_resume_snapshot!(execution)
-      unless execution.running?
-        raise ArgumentError,
-              "Cannot resume execution #{execution.id} with status '#{execution.status}' " \
-                "(callers must claim via Execution.claim_for_resume first)"
-      end
-
-      snapshot =
-        if execution.execution_data&.workflow_data.present?
-          WorkflowSnapshot.new(execution.execution_data.workflow_data)
-        else
-          WorkflowSnapshot.from_workflow(execution.workflow, published: true)
-        end
-
-      unless snapshot.find_node(execution.trigger_node_id)
-        raise "Trigger node #{execution.trigger_node_id} not found in workflow #{execution.workflow.id}"
-      end
-
-      snapshot
-    end
     private_class_method :build_resume_snapshot!
 
     def run

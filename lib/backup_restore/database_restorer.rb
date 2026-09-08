@@ -10,6 +10,51 @@ module BackupRestore
     BACKUP_SCHEMA = "backup"
     DROP_BACKUP_SCHEMA_AFTER_DAYS = 7
 
+    class << self
+      def drop_backup_schema
+        ActiveRecord::Base.connection.drop_schema(BACKUP_SCHEMA) if backup_schema_dropable?
+      end
+
+      def all_migration_files
+        Dir[Rails.root.join(Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
+          Dir[Rails.root.join("db/migrate/*.rb")] +
+          Dir[
+            Rails.root.join("plugins/**", Migration::SafeMigrate.post_migration_path, "**/*.rb")
+          ] + Dir[Rails.root.join("plugins/**/db/migrate/*.rb")]
+      end
+
+      def psql_command
+        db_conf = BackupRestore.database_configuration
+
+        password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
+        host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
+        port_argument = "--port=#{db_conf.port}" if db_conf.port.present?
+        username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
+
+        [
+          password_argument, # pass the password to psql (if any)
+          "psql", # the psql command
+          "--dbname='#{db_conf.database}'", # connect to database *dbname*
+          "--single-transaction", # all or nothing (also runs COPY commands faster)
+          "--variable=ON_ERROR_STOP=1", # stop on first error
+          host_argument, # the hostname to connect to (if any)
+          port_argument, # the port to connect to (if any)
+          username_argument, # the username to connect as (if any)
+        ].compact.join(" ")
+      end
+
+      def backup_schema_dropable?
+        return false unless ActiveRecord::Base.connection.schema_exists?(BACKUP_SCHEMA)
+
+        if last_restore_date = BackupMetadata.last_restore_date
+          return last_restore_date + DROP_BACKUP_SCHEMA_AFTER_DAYS.days < Time.zone.now
+        end
+
+        BackupMetadata.update_last_restore_date
+        false
+      end
+    end
+
     def initialize(logger, current_db)
       @logger = logger
       @db_was_changed = false
@@ -44,17 +89,6 @@ module BackupRestore
 
     def clean_up
       drop_created_discourse_functions
-    end
-
-    def self.drop_backup_schema
-      ActiveRecord::Base.connection.drop_schema(BACKUP_SCHEMA) if backup_schema_dropable?
-    end
-
-    def self.all_migration_files
-      Dir[Rails.root.join(Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
-        Dir[Rails.root.join("db/migrate/*.rb")] +
-        Dir[Rails.root.join("plugins/**", Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
-        Dir[Rails.root.join("plugins/**/db/migrate/*.rb")]
     end
 
     protected
@@ -136,26 +170,6 @@ module BackupRestore
           printf '%s\\n' "\\\\unrestrict #{nonce}"
         ) | #{self.class.psql_command} 2>&1
       CMD
-    end
-
-    def self.psql_command
-      db_conf = BackupRestore.database_configuration
-
-      password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
-      host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
-      port_argument = "--port=#{db_conf.port}" if db_conf.port.present?
-      username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
-
-      [
-        password_argument, # pass the password to psql (if any)
-        "psql", # the psql command
-        "--dbname='#{db_conf.database}'", # connect to database *dbname*
-        "--single-transaction", # all or nothing (also runs COPY commands faster)
-        "--variable=ON_ERROR_STOP=1", # stop on first error
-        host_argument, # the hostname to connect to (if any)
-        port_argument, # the port to connect to (if any)
-        username_argument, # the username to connect as (if any)
-      ].compact.join(" ")
     end
 
     def pause_before_migration
@@ -246,16 +260,6 @@ module BackupRestore
       log "Something went wrong while dropping functions from the discourse_functions schema", ex
     end
 
-    def self.backup_schema_dropable?
-      return false unless ActiveRecord::Base.connection.schema_exists?(BACKUP_SCHEMA)
-
-      if last_restore_date = BackupMetadata.last_restore_date
-        return last_restore_date + DROP_BACKUP_SCHEMA_AFTER_DAYS.days < Time.zone.now
-      end
-
-      BackupMetadata.update_last_restore_date
-      false
-    end
     private_class_method :backup_schema_dropable?
   end
 end

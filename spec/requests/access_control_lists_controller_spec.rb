@@ -8,12 +8,14 @@ RSpec.describe AccessControlListsController do
 
     self.table_name = "posts"
 
-    def self.acl_target_key
-      "evaluate_modification_request_test_target"
-    end
+    class << self
+      def acl_target_key
+        "evaluate_modification_request_test_target"
+      end
 
-    def self.loss_warning_permissions
-      ["manage"]
+      def loss_warning_permissions
+        ["manage"]
+      end
     end
   end
 

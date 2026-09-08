@@ -6,23 +6,25 @@
 class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
   attr_accessor :current_site
 
+  class << self
+    # We nuke the DB storage provider from site settings, so we yank out the
+    # existing (seeded) settings and pretend they're defaults, then swap in this
+    # in-memory provider.
+    def install!
+      SiteSetting.current.each do |k, v|
+        # skip setting defaults for settings that are in unloaded plugins
+        SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
+      end
+
+      # Gravatar downloads hit the network, so force the default off.
+      SiteSetting.defaults.set_regardless_of_locale(:automatically_download_gravatars, false)
+
+      SiteSetting.provider = new
+    end
+  end
+
   def initialize
     super
     self.current_site = "test"
-  end
-
-  # We nuke the DB storage provider from site settings, so we yank out the
-  # existing (seeded) settings and pretend they're defaults, then swap in this
-  # in-memory provider.
-  def self.install!
-    SiteSetting.current.each do |k, v|
-      # skip setting defaults for settings that are in unloaded plugins
-      SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
-    end
-
-    # Gravatar downloads hit the network, so force the default off.
-    SiteSetting.defaults.set_regardless_of_locale(:automatically_download_gravatars, false)
-
-    SiteSetting.provider = new
   end
 end

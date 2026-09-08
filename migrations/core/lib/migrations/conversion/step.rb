@@ -54,15 +54,6 @@ module Migrations
 
       attr_reader :source
 
-      def initialize(args = {})
-        @args = args
-        @source = self.class.source_class.new(args)
-      end
-
-      def create_processor
-        self.class.processor_class.new(@args)
-      end
-
       class << self
         def title(
           value = (
@@ -129,6 +120,15 @@ module Migrations
           klass.class_eval(&block) if block
           klass
         end
+      end
+
+      def initialize(args = {})
+        @args = args
+        @source = self.class.source_class.new(args)
+      end
+
+      def create_processor
+        self.class.processor_class.new(@args)
       end
     end
   end

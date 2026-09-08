@@ -13,6 +13,17 @@ class User < ActiveRecord::Base
   STAFF_REASON_SANITIZER = Rails::Html::SafeListSanitizer.new
   STAFF_REASON_ALLOWED_TAGS = %w[a br].freeze
   STAFF_REASON_ALLOWED_ATTRIBUTES = %w[href rel target].freeze
+  RECENT_TIME_READ_THRESHOLD = 60.days
+
+  USERNAME_EXISTS_SQL = <<~SQL
+    (SELECT users.id AS id, true as is_user FROM users
+    WHERE users.username_lower = :username)
+
+    UNION ALL
+
+    (SELECT groups.id, false as is_user FROM groups
+    WHERE lower(groups.name) = :username)
+  SQL
 
   deprecate_column :flag_level, drop_from: "3.2"
 
@@ -196,6 +207,384 @@ class User < ActiveRecord::Base
 
   after_destroy :clear_acls
 
+  MAX_STAFF_DELETE_POST_COUNT = 5
+  EMAIL = /([^@]+)@([^\.]+)/
+  FROM_STAGED = "from_staged"
+  MAX_UNREAD_BACKLOG = 400
+  # PERF: This safeguard is in place to avoid situations where
+  # a user with enormous amounts of unread data can issue extremely
+  # expensive queries
+  MAX_UNREAD_NOTIFICATIONS = 99
+  USER_FIELD_PREFIX = "user_field_"
+
+  class << self
+    def user_tips
+      @user_tips ||=
+        Enum.new(
+          first_notification: 1,
+          topic_timeline: 2,
+          post_menu: 3,
+          topic_notification_levels: 4,
+          suggested_topics: 5,
+        )
+    end
+
+    def max_password_length
+      UserPassword::MAX_PASSWORD_LENGTH
+    end
+
+    def username_length
+      SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
+    end
+
+    def normalize_username(username)
+      username.to_s.unicode_normalize.downcase if username.present?
+    end
+
+    def username_available?(username, email = nil, allow_reserved_username: false)
+      lower = normalize_username(username)
+      return false if !allow_reserved_username && reserved_username?(lower)
+      return true if !username_exists?(lower)
+
+      # staged users can use the same username since they will take over the account
+      email.present? &&
+        User.joins(:user_emails).exists?(
+          staged: true,
+          username_lower: lower,
+          user_emails: {
+            primary: true,
+            email: email,
+          },
+        )
+    end
+
+    def reserved_username?(username)
+      username = normalize_username(username)
+
+      return true if SiteSetting.here_mention == username
+
+      SiteSetting.reserved_usernames_map.any? do |reserved|
+        username.match?(/\A#{Regexp.escape(reserved.unicode_normalize).gsub('\*', ".*")}\z/)
+      end
+    end
+
+    def editable_user_custom_fields(by_staff: false)
+      fields = []
+      fields.push(*DiscoursePluginRegistry.self_editable_user_custom_fields)
+      fields.push(*DiscoursePluginRegistry.staff_editable_user_custom_fields) if by_staff
+
+      fields.uniq
+    end
+
+    def allowed_user_custom_fields(guardian)
+      fields = []
+
+      fields.push(*DiscoursePluginRegistry.public_user_custom_fields)
+
+      if SiteSetting.public_user_custom_fields.present?
+        fields.push(*SiteSetting.public_user_custom_fields.split("|"))
+      end
+
+      if guardian.is_staff?
+        if SiteSetting.staff_user_custom_fields.present?
+          fields.push(*SiteSetting.staff_user_custom_fields.split("|"))
+        end
+
+        fields.push(*DiscoursePluginRegistry.staff_user_custom_fields)
+      end
+
+      fields.uniq
+    end
+
+    def human_user_id?(user_id)
+      user_id > 0
+    end
+
+    def new_from_params(params)
+      user = User.new
+      user.name = params[:name]
+      user.email = params[:email]
+      user.password = params[:password]
+      user.username = params[:username]
+      user
+    end
+
+    def suggest_name(string)
+      return "" if string.blank?
+      (string[/\A[^@]+/].presence || string[/[^@]+\z/]).tr(".", " ").titleize
+    end
+
+    def find_by_username_or_email(username_or_email)
+      if username_or_email.include?("@")
+        find_by_email(username_or_email)
+      else
+        find_by_username(username_or_email)
+      end
+    end
+
+    def find_by_email(email, primary: false)
+      if primary
+        with_primary_email(Email.downcase(email)).first
+      else
+        with_email(Email.downcase(email)).first
+      end
+    end
+
+    def find_by_username(username)
+      find_by(username_lower: normalize_username(username))
+    end
+
+    def email_hash(email)
+      Digest::MD5.hexdigest(email.strip.downcase)
+    end
+
+    def max_unread_notifications
+      @max_unread_notifications ||= MAX_UNREAD_NOTIFICATIONS
+    end
+
+    def max_unread_notifications=(val)
+      @max_unread_notifications = val
+    end
+
+    def update_ip_address!(user_id, new_ip:, old_ip:)
+      can_update_ip_address =
+        DiscoursePluginRegistry.apply_modifier(:user_can_update_ip_address, user_id: user_id)
+      return if !can_update_ip_address
+
+      unless old_ip == new_ip || new_ip.blank?
+        DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip)
+        UPDATE users
+        SET ip_address = :ip_address
+        WHERE id = :user_id
+      SQL
+
+        if SiteSetting.keep_old_ip_address_count > 0
+          DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip, current_timestamp: Time.zone.now)
+        INSERT INTO user_ip_address_histories (user_id, ip_address, created_at, updated_at)
+        VALUES (:user_id, :ip_address, :current_timestamp, :current_timestamp)
+        ON CONFLICT (user_id, ip_address)
+        DO
+          UPDATE SET updated_at = :current_timestamp
+        SQL
+
+          DB.exec(<<~SQL, user_id: user_id, offset: SiteSetting.keep_old_ip_address_count)
+        DELETE FROM user_ip_address_histories
+        WHERE id IN (
+          SELECT
+            id
+          FROM user_ip_address_histories
+          WHERE user_id = :user_id
+          ORDER BY updated_at DESC
+          OFFSET :offset
+        )
+        SQL
+        end
+      end
+    end
+
+    def last_seen_redis_key(user_id, now)
+      now_date = now.to_date
+      "user:#{user_id}:#{now_date}"
+    end
+
+    def should_update_last_seen?(user_id, now = Time.zone.now)
+      return true if SiteSetting.active_user_rate_limit_secs <= 0
+
+      Discourse.redis.set(
+        last_seen_redis_key(user_id, now),
+        "1",
+        nx: true,
+        ex: SiteSetting.active_user_rate_limit_secs,
+      )
+    end
+
+    def gravatar_template(email)
+      "//#{SiteSetting.gravatar_base_url}/avatar/#{email_hash(email)}.png?s={size}&r=pg&d=identicon"
+    end
+
+    def username_hash(username)
+      username
+        .each_char
+        .reduce(0) do |result, char|
+          [((result << 5) - result) + char.ord].pack("L").unpack("l").first
+        end
+        .abs
+    end
+
+    def default_template(username)
+      if SiteSetting.default_avatars.present?
+        urls = SiteSetting.default_avatars.split("\n")
+        return urls[username_hash(username) % urls.size] if urls.present?
+      end
+
+      system_avatar_template(username)
+    end
+
+    def avatar_template(username, uploaded_avatar_id)
+      username ||= ""
+      return default_template(username) if !uploaded_avatar_id
+      hostname = RailsMultisite::ConnectionManagement.current_hostname
+      UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
+    end
+
+    def system_avatar_template(username)
+      normalized_username = normalize_username(username)
+
+      # TODO it may be worth caching this in a distributed cache, should be benched
+      if SiteSetting.external_system_avatars_url.present?
+        url = SiteSetting.external_system_avatars_url.dup
+        url = +"#{Discourse.base_path}#{url}" unless url =~ %r{\Ahttps?://}
+        url.gsub! "{color}", letter_avatar_color(normalized_username)
+        url.gsub! "{username}", UrlHelper.encode_component(username)
+        url.gsub! "{first_letter}",
+                  UrlHelper.encode_component(normalized_username.grapheme_clusters.first)
+        url.gsub! "{hostname}", Discourse.current_hostname
+        url
+      else
+        "#{Discourse.base_path}/letter_avatar/#{normalized_username}/{size}/#{LetterAvatar.version}.png"
+      end
+    end
+
+    def letter_avatar_color(username)
+      username ||= ""
+      if SiteSetting.restrict_letter_avatar_colors.present?
+        hex_length = 6
+        colors = SiteSetting.restrict_letter_avatar_colors
+        length = colors.count("|") + 1
+        num = color_index(username, length)
+        index = (num * hex_length) + num
+        colors[index, hex_length]
+      else
+        color = LetterAvatar::COLORS[color_index(username, LetterAvatar::COLORS.length)]
+        color.map { |c| c.to_s(16).rjust(2, "0") }.join
+      end
+    end
+
+    def color_index(username, length)
+      Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
+    end
+
+    def format_penalty_reason(details)
+      return if details.blank?
+      sanitize_staff_reason(details).split("<br>").first
+    end
+
+    def sanitize_staff_reason(text)
+      STAFF_REASON_SANITIZER.sanitize(
+        PrettyText.cleanup(text.gsub("\n", "<br>")),
+        tags: STAFF_REASON_ALLOWED_TAGS,
+        attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
+      )
+    end
+
+    def count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
+      result = self
+
+      if start_date && end_date
+        result = result.group("date(users.created_at)")
+        result =
+          result.where("users.created_at >= ? AND users.created_at <= ?", start_date, end_date)
+        result = result.order("date(users.created_at)")
+      end
+
+      if group_id
+        result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
+        result = result.where("group_users.group_id = ?", group_id)
+      end
+
+      result.count
+    end
+
+    def count_by_first_post(start_date = nil, end_date = nil)
+      result = joins("INNER JOIN user_stats AS us ON us.user_id = users.id")
+
+      if start_date && end_date
+        result = result.group("date(us.first_post_created_at)")
+        result =
+          result.where(
+            "us.first_post_created_at > ? AND us.first_post_created_at < ?",
+            start_date,
+            end_date,
+          )
+        result = result.order("date(us.first_post_created_at)")
+      end
+
+      result.count
+    end
+
+    def preload_recent_time_read(users)
+      times =
+        UserVisit
+          .where(user_id: users.map(&:id))
+          .where("visited_at >= ?", RECENT_TIME_READ_THRESHOLD.ago)
+          .group(:user_id)
+          .sum(:time_read)
+      users.each { |u| u.preload_recent_time_read(times[u.id] || 0) }
+    end
+
+    def username_exists?(username)
+      username = normalize_username(username)
+      DB.exec(User::USERNAME_EXISTS_SQL, username: username) > 0
+    end
+
+    def purge_unactivated
+      return [] if SiteSetting.purge_unactivated_users_grace_period_days <= 0
+
+      destroyer = UserDestroyer.new(Discourse.system_user)
+
+      User
+        .joins(
+          "LEFT JOIN user_histories ON user_histories.target_user_id = users.id AND action = #{UserHistory.actions[:deactivate_user]} AND acting_user_id IS NOT NULL",
+        )
+        .where(active: false)
+        .where(
+          "users.created_at < ?",
+          SiteSetting.purge_unactivated_users_grace_period_days.days.ago,
+        )
+        .where("NOT admin AND NOT moderator")
+        .where(
+          "NOT EXISTS
+              (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id LIMIT 1)
+            ",
+        )
+        .where(
+          "NOT EXISTS
+              (SELECT 1 FROM posts p WHERE p.user_id = users.id LIMIT 1)
+            ",
+        )
+        .where("user_histories.id IS NULL")
+        .limit(200)
+        .find_each do |user|
+          destroyer.destroy(user, context: I18n.t(:purge_reason))
+        rescue Discourse::InvalidAccess
+          # keep going
+        end
+    end
+
+    def first_login_admin_id
+      User
+        .where(admin: true)
+        .human_users
+        .joins(:user_auth_tokens)
+        .order("user_auth_tokens.created_at")
+        .pick(:id)
+    end
+
+    def ensure_consistency!
+      DB.exec <<~SQL
+      UPDATE users
+      SET uploaded_avatar_id = NULL
+      WHERE uploaded_avatar_id IN (
+        SELECT u1.uploaded_avatar_id FROM users u1
+        LEFT JOIN uploads up
+          ON u1.uploaded_avatar_id = up.id
+        WHERE u1.uploaded_avatar_id IS NOT NULL AND
+          up.id IS NULL
+      )
+    SQL
+    end
+  end
+
   def clear_acls
     Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
   end
@@ -375,19 +764,6 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
-  MAX_STAFF_DELETE_POST_COUNT = 5
-
-  def self.user_tips
-    @user_tips ||=
-      Enum.new(
-        first_notification: 1,
-        topic_timeline: 2,
-        post_menu: 3,
-        topic_notification_levels: 4,
-        suggested_topics: 5,
-      )
-  end
-
   def should_skip_user_fields_validation?
     custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
   end
@@ -414,77 +790,6 @@ class User < ActiveRecord::Base
     )
   end
 
-  def self.max_password_length
-    UserPassword::MAX_PASSWORD_LENGTH
-  end
-
-  def self.username_length
-    SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
-  end
-
-  def self.normalize_username(username)
-    username.to_s.unicode_normalize.downcase if username.present?
-  end
-
-  def self.username_available?(username, email = nil, allow_reserved_username: false)
-    lower = normalize_username(username)
-    return false if !allow_reserved_username && reserved_username?(lower)
-    return true if !username_exists?(lower)
-
-    # staged users can use the same username since they will take over the account
-    email.present? &&
-      User.joins(:user_emails).exists?(
-        staged: true,
-        username_lower: lower,
-        user_emails: {
-          primary: true,
-          email: email,
-        },
-      )
-  end
-
-  def self.reserved_username?(username)
-    username = normalize_username(username)
-
-    return true if SiteSetting.here_mention == username
-
-    SiteSetting.reserved_usernames_map.any? do |reserved|
-      username.match?(/\A#{Regexp.escape(reserved.unicode_normalize).gsub('\*', ".*")}\z/)
-    end
-  end
-
-  def self.editable_user_custom_fields(by_staff: false)
-    fields = []
-    fields.push(*DiscoursePluginRegistry.self_editable_user_custom_fields)
-    fields.push(*DiscoursePluginRegistry.staff_editable_user_custom_fields) if by_staff
-
-    fields.uniq
-  end
-
-  def self.allowed_user_custom_fields(guardian)
-    fields = []
-
-    fields.push(*DiscoursePluginRegistry.public_user_custom_fields)
-
-    if SiteSetting.public_user_custom_fields.present?
-      fields.push(*SiteSetting.public_user_custom_fields.split("|"))
-    end
-
-    if guardian.is_staff?
-      if SiteSetting.staff_user_custom_fields.present?
-        fields.push(*SiteSetting.staff_user_custom_fields.split("|"))
-      end
-
-      fields.push(*DiscoursePluginRegistry.staff_user_custom_fields)
-    end
-
-    fields.uniq
-  end
-
-  def self.human_user_id?(user_id)
-    user_id > 0
-  end
-
   def human?
     User.human_user_id?(id)
   end
@@ -505,18 +810,6 @@ class User < ActiveRecord::Base
     bookmarks.where(bookmarkable_type: type)
   end
 
-  EMAIL = /([^@]+)@([^\.]+)/
-  FROM_STAGED = "from_staged"
-
-  def self.new_from_params(params)
-    user = User.new
-    user.name = params[:name]
-    user.email = params[:email]
-    user.password = params[:password]
-    user.username = params[:username]
-    user
-  end
-
   def unstage!
     if staged
       ActiveRecord::Base.transaction do
@@ -528,31 +821,6 @@ class User < ActiveRecord::Base
 
       DiscourseEvent.trigger(:user_unstaged, self)
     end
-  end
-
-  def self.suggest_name(string)
-    return "" if string.blank?
-    (string[/\A[^@]+/].presence || string[/[^@]+\z/]).tr(".", " ").titleize
-  end
-
-  def self.find_by_username_or_email(username_or_email)
-    if username_or_email.include?("@")
-      find_by_email(username_or_email)
-    else
-      find_by_username(username_or_email)
-    end
-  end
-
-  def self.find_by_email(email, primary: false)
-    if primary
-      with_primary_email(Email.downcase(email)).first
-    else
-      with_email(Email.downcase(email)).first
-    end
-  end
-
-  def self.find_by_username(username)
-    find_by(username_lower: normalize_username(username))
   end
 
   def in_any_groups?(group_ids)
@@ -666,10 +934,6 @@ class User < ActiveRecord::Base
     !skip_email_validation && !staged?
   end
 
-  def self.email_hash(email)
-    Digest::MD5.hexdigest(email.strip.downcase)
-  end
-
   def email_hash
     User.email_hash(email)
   end
@@ -729,7 +993,6 @@ class User < ActiveRecord::Base
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
   end
 
-  MAX_UNREAD_BACKLOG = 400
   def grouped_unread_notifications
     results = DB.query(<<~SQL, user_id: id, limit: MAX_UNREAD_BACKLOG)
       SELECT X.notification_type AS type, COUNT(*) FROM (
@@ -766,19 +1029,6 @@ class User < ActiveRecord::Base
       AND NOT read
       AND notification_type = :private_message
     SQL
-  end
-
-  # PERF: This safeguard is in place to avoid situations where
-  # a user with enormous amounts of unread data can issue extremely
-  # expensive queries
-  MAX_UNREAD_NOTIFICATIONS = 99
-
-  def self.max_unread_notifications
-    @max_unread_notifications ||= MAX_UNREAD_NOTIFICATIONS
-  end
-
-  def self.max_unread_notifications=(val)
-    @max_unread_notifications = val
   end
 
   def unread_notifications
@@ -1133,49 +1383,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.update_ip_address!(user_id, new_ip:, old_ip:)
-    can_update_ip_address =
-      DiscoursePluginRegistry.apply_modifier(:user_can_update_ip_address, user_id: user_id)
-    return if !can_update_ip_address
-
-    unless old_ip == new_ip || new_ip.blank?
-      DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip)
-        UPDATE users
-        SET ip_address = :ip_address
-        WHERE id = :user_id
-      SQL
-
-      if SiteSetting.keep_old_ip_address_count > 0
-        DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip, current_timestamp: Time.zone.now)
-        INSERT INTO user_ip_address_histories (user_id, ip_address, created_at, updated_at)
-        VALUES (:user_id, :ip_address, :current_timestamp, :current_timestamp)
-        ON CONFLICT (user_id, ip_address)
-        DO
-          UPDATE SET updated_at = :current_timestamp
-        SQL
-
-        DB.exec(<<~SQL, user_id: user_id, offset: SiteSetting.keep_old_ip_address_count)
-        DELETE FROM user_ip_address_histories
-        WHERE id IN (
-          SELECT
-            id
-          FROM user_ip_address_histories
-          WHERE user_id = :user_id
-          ORDER BY updated_at DESC
-          OFFSET :offset
-        )
-        SQL
-      end
-    end
-  end
-
   def update_ip_address!(new_ip_address)
     User.update_ip_address!(id, new_ip: new_ip_address, old_ip: ip_address)
-  end
-
-  def self.last_seen_redis_key(user_id, now)
-    now_date = now.to_date
-    "user:#{user_id}:#{now_date}"
   end
 
   def last_seen_redis_key(now)
@@ -1184,17 +1393,6 @@ class User < ActiveRecord::Base
 
   def clear_last_seen_cache!(now = Time.zone.now)
     Discourse.redis.del(last_seen_redis_key(now))
-  end
-
-  def self.should_update_last_seen?(user_id, now = Time.zone.now)
-    return true if SiteSetting.active_user_rate_limit_secs <= 0
-
-    Discourse.redis.set(
-      last_seen_redis_key(user_id, now),
-      "1",
-      nx: true,
-      ex: SiteSetting.active_user_rate_limit_secs,
-    )
   end
 
   def update_last_seen!(now = Time.zone.now, force: false)
@@ -1211,10 +1409,6 @@ class User < ActiveRecord::Base
     DiscourseEvent.trigger(:user_seen, self, previous_seen_at)
   end
 
-  def self.gravatar_template(email)
-    "//#{SiteSetting.gravatar_base_url}/avatar/#{email_hash(email)}.png?s={size}&r=pg&d=identicon"
-  end
-
   # Don't pass this up to the client - it's meant for server side use
   # This is used in
   #   - self oneboxes in open graph data
@@ -1225,68 +1419,6 @@ class User < ActiveRecord::Base
 
   def avatar_template_url
     UrlHelper.schemaless UrlHelper.absolute avatar_template
-  end
-
-  def self.username_hash(username)
-    username
-      .each_char
-      .reduce(0) do |result, char|
-        [((result << 5) - result) + char.ord].pack("L").unpack("l").first
-      end
-      .abs
-  end
-
-  def self.default_template(username)
-    if SiteSetting.default_avatars.present?
-      urls = SiteSetting.default_avatars.split("\n")
-      return urls[username_hash(username) % urls.size] if urls.present?
-    end
-
-    system_avatar_template(username)
-  end
-
-  def self.avatar_template(username, uploaded_avatar_id)
-    username ||= ""
-    return default_template(username) if !uploaded_avatar_id
-    hostname = RailsMultisite::ConnectionManagement.current_hostname
-    UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
-  end
-
-  def self.system_avatar_template(username)
-    normalized_username = normalize_username(username)
-
-    # TODO it may be worth caching this in a distributed cache, should be benched
-    if SiteSetting.external_system_avatars_url.present?
-      url = SiteSetting.external_system_avatars_url.dup
-      url = +"#{Discourse.base_path}#{url}" unless url =~ %r{\Ahttps?://}
-      url.gsub! "{color}", letter_avatar_color(normalized_username)
-      url.gsub! "{username}", UrlHelper.encode_component(username)
-      url.gsub! "{first_letter}",
-                UrlHelper.encode_component(normalized_username.grapheme_clusters.first)
-      url.gsub! "{hostname}", Discourse.current_hostname
-      url
-    else
-      "#{Discourse.base_path}/letter_avatar/#{normalized_username}/{size}/#{LetterAvatar.version}.png"
-    end
-  end
-
-  def self.letter_avatar_color(username)
-    username ||= ""
-    if SiteSetting.restrict_letter_avatar_colors.present?
-      hex_length = 6
-      colors = SiteSetting.restrict_letter_avatar_colors
-      length = colors.count("|") + 1
-      num = color_index(username, length)
-      index = (num * hex_length) + num
-      colors[index, hex_length]
-    else
-      color = LetterAvatar::COLORS[color_index(username, LetterAvatar::COLORS.length)]
-      color.map { |c| c.to_s(16).rjust(2, "0") }.join
-    end
-  end
-
-  def self.color_index(username, length)
-    Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
   end
 
   def is_system_user?
@@ -1403,19 +1535,6 @@ class User < ActiveRecord::Base
 
   def silenced?
     !!(silenced_till && silenced_till > Time.zone.now)
-  end
-
-  def self.format_penalty_reason(details)
-    return if details.blank?
-    sanitize_staff_reason(details).split("<br>").first
-  end
-
-  def self.sanitize_staff_reason(text)
-    STAFF_REASON_SANITIZER.sanitize(
-      PrettyText.cleanup(text.gsub("\n", "<br>")),
-      tags: STAFF_REASON_ALLOWED_TAGS,
-      attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
-    )
   end
 
   def silenced_record
@@ -1545,40 +1664,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
-    result = self
-
-    if start_date && end_date
-      result = result.group("date(users.created_at)")
-      result = result.where("users.created_at >= ? AND users.created_at <= ?", start_date, end_date)
-      result = result.order("date(users.created_at)")
-    end
-
-    if group_id
-      result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
-      result = result.where("group_users.group_id = ?", group_id)
-    end
-
-    result.count
-  end
-
-  def self.count_by_first_post(start_date = nil, end_date = nil)
-    result = joins("INNER JOIN user_stats AS us ON us.user_id = users.id")
-
-    if start_date && end_date
-      result = result.group("date(us.first_post_created_at)")
-      result =
-        result.where(
-          "us.first_post_created_at > ? AND us.first_post_created_at < ?",
-          start_date,
-          end_date,
-        )
-      result = result.order("date(us.first_post_created_at)")
-    end
-
-    result.count
-  end
-
   def secure_category_ids
     cats =
       if admin? && !SiteSetting.suppress_secured_categories_from_admin
@@ -1676,8 +1761,6 @@ class User < ActiveRecord::Base
 
     result
   end
-
-  USER_FIELD_PREFIX = "user_field_"
 
   def user_fields(field_ids = nil)
     fields =
@@ -1858,18 +1941,6 @@ class User < ActiveRecord::Base
     email_change_requests
       .where.not(change_state: EmailChangeRequest.states[:complete])
       .pluck(:new_email)
-  end
-
-  RECENT_TIME_READ_THRESHOLD = 60.days
-
-  def self.preload_recent_time_read(users)
-    times =
-      UserVisit
-        .where(user_id: users.map(&:id))
-        .where("visited_at >= ?", RECENT_TIME_READ_THRESHOLD.ago)
-        .group(:user_id)
-        .sum(:time_read)
-    users.each { |u| u.preload_recent_time_read(times[u.id] || 0) }
   end
 
   def preload_recent_time_read(time)
@@ -2131,21 +2202,6 @@ class User < ActiveRecord::Base
     self.username_lower = username.downcase
   end
 
-  USERNAME_EXISTS_SQL = <<~SQL
-    (SELECT users.id AS id, true as is_user FROM users
-    WHERE users.username_lower = :username)
-
-    UNION ALL
-
-    (SELECT groups.id, false as is_user FROM groups
-    WHERE lower(groups.name) = :username)
-  SQL
-
-  def self.username_exists?(username)
-    username = normalize_username(username)
-    DB.exec(User::USERNAME_EXISTS_SQL, username: username) > 0
-  end
-
   def username_validator
     username_format_validator ||
       begin
@@ -2235,52 +2291,12 @@ class User < ActiveRecord::Base
     TagUser.insert_all(values) if values.present?
   end
 
-  def self.purge_unactivated
-    return [] if SiteSetting.purge_unactivated_users_grace_period_days <= 0
-
-    destroyer = UserDestroyer.new(Discourse.system_user)
-
-    User
-      .joins(
-        "LEFT JOIN user_histories ON user_histories.target_user_id = users.id AND action = #{UserHistory.actions[:deactivate_user]} AND acting_user_id IS NOT NULL",
-      )
-      .where(active: false)
-      .where("users.created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
-      .where("NOT admin AND NOT moderator")
-      .where(
-        "NOT EXISTS
-              (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id LIMIT 1)
-            ",
-      )
-      .where(
-        "NOT EXISTS
-              (SELECT 1 FROM posts p WHERE p.user_id = users.id LIMIT 1)
-            ",
-      )
-      .where("user_histories.id IS NULL")
-      .limit(200)
-      .find_each do |user|
-        destroyer.destroy(user, context: I18n.t(:purge_reason))
-      rescue Discourse::InvalidAccess
-        # keep going
-      end
-  end
-
   def match_primary_group_changes
     return unless primary_group_id_changed?
 
     self.title = primary_group&.title if Group.exists?(id: primary_group_id_was, title: title)
 
     self.flair_group_id = primary_group&.id if flair_group_id == primary_group_id_was
-  end
-
-  def self.first_login_admin_id
-    User
-      .where(admin: true)
-      .human_users
-      .joins(:user_auth_tokens)
-      .order("user_auth_tokens.created_at")
-      .pick(:id)
   end
 
   private
@@ -2409,20 +2425,6 @@ class User < ActiveRecord::Base
          username == SiteSetting.site_contact_username && !staff?
       SiteSetting.set_and_log(:site_contact_username, SiteSetting.defaults[:site_contact_username])
     end
-  end
-
-  def self.ensure_consistency!
-    DB.exec <<~SQL
-      UPDATE users
-      SET uploaded_avatar_id = NULL
-      WHERE uploaded_avatar_id IN (
-        SELECT u1.uploaded_avatar_id FROM users u1
-        LEFT JOIN uploads up
-          ON u1.uploaded_avatar_id = up.id
-        WHERE u1.uploaded_avatar_id IS NOT NULL AND
-          up.id IS NULL
-      )
-    SQL
   end
 
   def validate_status!(status)

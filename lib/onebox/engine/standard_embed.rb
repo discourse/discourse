@@ -9,20 +9,22 @@ require "onebox/json_ld"
 module Onebox
   module Engine
     module StandardEmbed
-      def self.oembed_providers
-        @@oembed_providers ||= {}
-      end
+      class << self
+        def oembed_providers
+          @@oembed_providers ||= {}
+        end
 
-      def self.add_oembed_provider(regexp, endpoint)
-        oembed_providers[regexp] = endpoint
-      end
+        def add_oembed_provider(regexp, endpoint)
+          oembed_providers[regexp] = endpoint
+        end
 
-      def self.opengraph_providers
-        @@opengraph_providers ||= []
-      end
+        def opengraph_providers
+          @@opengraph_providers ||= []
+        end
 
-      def self.add_opengraph_provider(regexp)
-        opengraph_providers << regexp
+        def add_opengraph_provider(regexp)
+          opengraph_providers << regexp
+        end
       end
 
       # Some oembed providers (like meetup.com) don't provide links to themselves

@@ -2,16 +2,18 @@
 
 module Migration
   module Helpers
-    def self.site_created_at
-      Discourse.site_creation_date
-    end
+    class << self
+      def site_created_at
+        Discourse.site_creation_date
+      end
 
-    def self.existing_site?
-      site_created_at < 1.hour.ago
-    end
+      def existing_site?
+        site_created_at < 1.hour.ago
+      end
 
-    def self.new_site?
-      !existing_site?
+      def new_site?
+        !existing_site?
+      end
     end
   end
 end

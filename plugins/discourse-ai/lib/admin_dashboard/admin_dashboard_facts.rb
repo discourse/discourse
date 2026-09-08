@@ -33,8 +33,10 @@ module DiscourseAi
         accepted_solutions: "questions resolved (accepted solutions)",
       }.freeze
 
-      def self.compute(start_date:, end_date:)
-        new(start_date: start_date, end_date: end_date).compute
+      class << self
+        def compute(start_date:, end_date:)
+          new(start_date: start_date, end_date: end_date).compute
+        end
       end
 
       def initialize(start_date:, end_date:)

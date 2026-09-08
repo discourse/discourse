@@ -23,26 +23,28 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `tags` record in the IntermediateDB.
-        #
-        # @param original_id   [Integer, String]
-        # @param created_at    [Time, nil]
-        # @param description   [String, nil]
-        # @param locale        [String, nil]
-        # @param name          [String]
-        # @param slug          [String]
-        #
-        # @return [void]
-        def self.create(original_id:, created_at: nil, description: nil, locale: nil, name:, slug:)
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            original_id,
-            Migrations::Database.format_datetime(created_at),
-            description,
-            locale,
-            name,
-            slug,
-          )
+        class << self
+          # Creates a new `tags` record in the IntermediateDB.
+          #
+          # @param original_id   [Integer, String]
+          # @param created_at    [Time, nil]
+          # @param description   [String, nil]
+          # @param locale        [String, nil]
+          # @param name          [String]
+          # @param slug          [String]
+          #
+          # @return [void]
+          def create(original_id:, created_at: nil, description: nil, locale: nil, name:, slug:)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              original_id,
+              Migrations::Database.format_datetime(created_at),
+              description,
+              locale,
+              name,
+              slug,
+            )
+          end
         end
       end
     end

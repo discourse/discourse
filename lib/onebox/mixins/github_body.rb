@@ -3,9 +3,11 @@
 module Onebox
   module Mixins
     module GithubBody
-      def self.included(klass)
-        klass.include(Onebox::Engine)
-        klass.include(InstanceMethods)
+      class << self
+        def included(klass)
+          klass.include(Onebox::Engine)
+          klass.include(InstanceMethods)
+        end
       end
 
       module InstanceMethods

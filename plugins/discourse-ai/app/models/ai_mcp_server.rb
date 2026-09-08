@@ -60,6 +60,62 @@ class AiMcpServer < ActiveRecord::Base
   after_commit :clear_oauth_credentials_if_configuration_changed
   after_destroy_commit :clear_oauth_tokens
 
+  class << self
+    def public_https_url?(raw_url)
+      uri = parse_public_uri(raw_url)
+      return false if uri.nil?
+
+      validate_hostname_public!(uri.hostname)
+      true
+    rescue FinalDestination::SSRFError, SocketError, URI::InvalidURIError
+      false
+    end
+
+    def parse_public_uri(raw_url)
+      uri = URI.parse(raw_url.to_s.strip)
+      return nil if uri.scheme != "https"
+      return nil if uri.host.blank?
+      return nil if uri.user.present? || uri.password.present?
+
+      uri
+    rescue URI::InvalidURIError
+      nil
+    end
+
+    def validate_hostname_public!(hostname)
+      normalized = hostname.to_s.downcase
+      raise FinalDestination::SSRFError, "hostname missing" if normalized.blank?
+      raise FinalDestination::SSRFError, "localhost is not allowed" if normalized == "localhost"
+
+      ip = IPAddr.new(normalized)
+      if !FinalDestination::SSRFDetector.ip_allowed?(ip)
+        raise FinalDestination::SSRFError, "private IP is not allowed"
+      end
+    rescue IPAddr::InvalidAddressError
+      FinalDestination::SSRFDetector.lookup_and_filter_ips(normalized)
+    end
+
+    def parameters_for_serialization(schema)
+      properties = schema&.dig(:properties) || schema&.dig("properties")
+      required_names = Array(schema&.dig(:required) || schema&.dig("required")).map(&:to_s)
+      return [] if !properties.is_a?(Hash)
+
+      properties.map do |name, definition|
+        definition = definition.is_a?(Hash) ? definition : {}
+        items = definition[:items] || definition["items"]
+
+        {
+          name: name.to_s,
+          type: definition[:type] || definition["type"] || "object",
+          description: definition[:description] || definition["description"],
+          required: required_names.include?(name.to_s),
+          enum: definition[:enum] || definition["enum"],
+          item_type: items.is_a?(Hash) ? (items[:type] || items["type"]) : nil,
+        }.compact
+      end
+    end
+  end
+
   def auth_header_value
     if oauth?
       token = oauth_token_store.access_token
@@ -278,60 +334,6 @@ class AiMcpServer < ActiveRecord::Base
 
   def oauth_token_store
     @oauth_token_store ||= DiscourseAi::Mcp::OAuthTokenStore.new(self)
-  end
-
-  def self.public_https_url?(raw_url)
-    uri = parse_public_uri(raw_url)
-    return false if uri.nil?
-
-    validate_hostname_public!(uri.hostname)
-    true
-  rescue FinalDestination::SSRFError, SocketError, URI::InvalidURIError
-    false
-  end
-
-  def self.parse_public_uri(raw_url)
-    uri = URI.parse(raw_url.to_s.strip)
-    return nil if uri.scheme != "https"
-    return nil if uri.host.blank?
-    return nil if uri.user.present? || uri.password.present?
-
-    uri
-  rescue URI::InvalidURIError
-    nil
-  end
-
-  def self.validate_hostname_public!(hostname)
-    normalized = hostname.to_s.downcase
-    raise FinalDestination::SSRFError, "hostname missing" if normalized.blank?
-    raise FinalDestination::SSRFError, "localhost is not allowed" if normalized == "localhost"
-
-    ip = IPAddr.new(normalized)
-    if !FinalDestination::SSRFDetector.ip_allowed?(ip)
-      raise FinalDestination::SSRFError, "private IP is not allowed"
-    end
-  rescue IPAddr::InvalidAddressError
-    FinalDestination::SSRFDetector.lookup_and_filter_ips(normalized)
-  end
-
-  def self.parameters_for_serialization(schema)
-    properties = schema&.dig(:properties) || schema&.dig("properties")
-    required_names = Array(schema&.dig(:required) || schema&.dig("required")).map(&:to_s)
-    return [] if !properties.is_a?(Hash)
-
-    properties.map do |name, definition|
-      definition = definition.is_a?(Hash) ? definition : {}
-      items = definition[:items] || definition["items"]
-
-      {
-        name: name.to_s,
-        type: definition[:type] || definition["type"] || "object",
-        description: definition[:description] || definition["description"],
-        required: required_names.include?(name.to_s),
-        enum: definition[:enum] || definition["enum"],
-        item_type: items.is_a?(Hash) ? (items[:type] || items["type"]) : nil,
-      }.compact
-    end
   end
 
   private

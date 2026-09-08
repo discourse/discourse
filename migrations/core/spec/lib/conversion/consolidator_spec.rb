@@ -59,8 +59,10 @@ RSpec.describe Migrations::Conversion::Consolidator do
     # a real one — so the merge clause is derived from the models, not hard-coded.
     fake_model =
       Module.new do
-        def self.conflict_strategy
-          :ignore
+        class << self
+          def conflict_strategy
+            :ignore
+          end
         end
       end
     stub_const("Migrations::Database::IntermediateDB::FakeThing", fake_model)

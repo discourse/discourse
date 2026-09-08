@@ -8,26 +8,28 @@ module DbStructure
   # PG 17+ pg_dump changes output format. Pin to 15/16 for now:
   PG_DUMP_VERSIONS = (15..16)
 
-  def self.temp_db_env
-    bundled = `script/list_bundled_plugins`.split.map { |p| File.basename(p) }.join(",")
-    {
-      "RAILS_ENV" => "test",
-      "LOAD_PLUGINS" => bundled,
-      "SKIP_SEED_FU" => "1",
-      "SKIP_OPTIMIZE_ICONS" => "1",
-    }
-  end
+  class << self
+    def temp_db_env
+      bundled = `script/list_bundled_plugins`.split.map { |p| File.basename(p) }.join(",")
+      {
+        "RAILS_ENV" => "test",
+        "LOAD_PLUGINS" => bundled,
+        "SKIP_SEED_FU" => "1",
+        "SKIP_OPTIMIZE_ICONS" => "1",
+      }
+    end
 
-  def self.with_temp_db
-    require "temporary_db"
+    def with_temp_db
+      require "temporary_db"
 
-    db = TemporaryDb.new(versions: PG_DUMP_VERSIONS, port: ENV["TEMPORARY_DB_PORT"]&.to_i)
-    db.start
-    begin
-      db.with_env { yield }
-    ensure
-      db.stop
-      db.remove
+      db = TemporaryDb.new(versions: PG_DUMP_VERSIONS, port: ENV["TEMPORARY_DB_PORT"]&.to_i)
+      db.start
+      begin
+        db.with_env { yield }
+      ensure
+        db.stop
+        db.remove
+      end
     end
   end
 end

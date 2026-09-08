@@ -18,24 +18,26 @@ module DiscourseSolved
       { key: "gt_24h", max: nil },
     ].freeze
 
-    def self.available?
-      return false if !SiteSetting.solved_enabled
-      return true if SiteSetting.allow_solved_on_all_topics
+    class << self
+      def available?
+        return false if !SiteSetting.solved_enabled
+        return true if SiteSetting.allow_solved_on_all_topics
 
-      Discourse
-        .cache
-        .fetch(AVAILABILITY_CACHE_KEY, expires_in: 5.minutes) do
-          DiscourseSolved::Categories::Types::Support.find_matches.exists?
-        end
-    end
+        Discourse
+          .cache
+          .fetch(AVAILABILITY_CACHE_KEY, expires_in: 5.minutes) do
+            DiscourseSolved::Categories::Types::Support.find_matches.exists?
+          end
+      end
 
-    def self.build(start_date:, end_date:, current_user: nil, category_ids: nil)
-      new(
-        start_date: start_date,
-        end_date: end_date,
-        current_user: current_user,
-        category_ids: category_ids,
-      ).build
+      def build(start_date:, end_date:, current_user: nil, category_ids: nil)
+        new(
+          start_date: start_date,
+          end_date: end_date,
+          current_user: current_user,
+          category_ids: category_ids,
+        ).build
+      end
     end
 
     def initialize(start_date:, end_date:, current_user: nil, category_ids: nil)

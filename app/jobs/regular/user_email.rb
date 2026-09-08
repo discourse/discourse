@@ -5,6 +5,8 @@ module Jobs
   class UserEmail < ::Jobs::Base
     include Skippable
 
+    NOTIFICATIONS_SENT_BY_MAILING_LIST = Set.new %w[posted replied mentioned group_mentioned quoted]
+
     sidekiq_options queue: "low"
 
     sidekiq_retry_in do |count, exception|
@@ -93,8 +95,6 @@ module Jobs
     def set_skip_context(type, user_id, to_address, post_id)
       @skip_context = { type: type, user_id: user_id, to_address: to_address, post_id: post_id }
     end
-
-    NOTIFICATIONS_SENT_BY_MAILING_LIST = Set.new %w[posted replied mentioned group_mentioned quoted]
 
     def message_for_email(user, post, type, notification, args = nil)
       args ||= {}

@@ -32,6 +32,46 @@ module DiscourseAutomation
     attr_accessor :running_in_background
     attr_accessor :perform_required_fields_validation
 
+    MAX_NAME_LENGTH = 100
+
+    class << self
+      def deserialize_context(context)
+        new_context = ActiveSupport::HashWithIndifferentAccess.new
+
+        context.each do |key, value|
+          if key.start_with?("_serialized_")
+            new_key = key[12..-1]
+            found = nil
+            if value["class"] == "Symbol"
+              found = value["value"].to_sym
+            else
+              found = value["class"].constantize.find_by(id: value["id"])
+            end
+            new_context[new_key] = found
+          else
+            new_context[key] = value
+          end
+        end
+        new_context
+      end
+
+      def serialize_context(context)
+        new_context = {}
+        context.each do |k, v|
+          if v.is_a?(Symbol)
+            new_context["_serialized_#{k}"] = { "class" => "Symbol", "value" => v.to_s }
+          elsif v.is_a?(ActiveRecord::Base)
+            new_context["_serialized_#{k}"] = { "class" => v.class.name, "id" => v.id }
+          elsif v.is_a?(Date) || v.is_a?(Time)
+            new_context[k] = v.iso8601
+          else
+            new_context[k] = v
+          end
+        end
+        new_context
+      end
+    end
+
     def trigger=(new_trigger)
       @triggerable = nil
       super
@@ -46,7 +86,6 @@ module DiscourseAutomation
       @running_in_background = true
     end
 
-    MAX_NAME_LENGTH = 100
     validates :name, length: { maximum: MAX_NAME_LENGTH }
 
     def add_id_to_custom_field(target, custom_field_key)
@@ -101,42 +140,6 @@ module DiscourseAutomation
       field = fields.find_or_initialize_by(name: name, component: component, target: target)
       field.update!(metadata: metadata)
       field
-    end
-
-    def self.deserialize_context(context)
-      new_context = ActiveSupport::HashWithIndifferentAccess.new
-
-      context.each do |key, value|
-        if key.start_with?("_serialized_")
-          new_key = key[12..-1]
-          found = nil
-          if value["class"] == "Symbol"
-            found = value["value"].to_sym
-          else
-            found = value["class"].constantize.find_by(id: value["id"])
-          end
-          new_context[new_key] = found
-        else
-          new_context[key] = value
-        end
-      end
-      new_context
-    end
-
-    def self.serialize_context(context)
-      new_context = {}
-      context.each do |k, v|
-        if v.is_a?(Symbol)
-          new_context["_serialized_#{k}"] = { "class" => "Symbol", "value" => v.to_s }
-        elsif v.is_a?(ActiveRecord::Base)
-          new_context["_serialized_#{k}"] = { "class" => v.class.name, "id" => v.id }
-        elsif v.is_a?(Date) || v.is_a?(Time)
-          new_context[k] = v.iso8601
-        else
-          new_context[k] = v
-        end
-      end
-      new_context
     end
 
     def trigger_in_background!(context = {})

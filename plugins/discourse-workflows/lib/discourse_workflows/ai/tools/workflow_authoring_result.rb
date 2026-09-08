@@ -10,110 +10,112 @@ module DiscourseWorkflows
         MISSING_PROPOSAL_OPERATIONS_MESSAGE =
           "Proposed patch results must include proposal.operations"
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Return the final workflow authoring result to Discourse and stop the authoring turn. Use this instead of writing a JSON final answer.",
-            json_schema: {
-              type: "object",
-              additionalProperties: false,
-              required: %w[status message],
-              properties: {
-                status: {
-                  type: "string",
-                  enum: STATUSES,
-                  description:
-                    "Final result status: needs_clarification, proposed_patch, explanation, or error.",
-                },
-                message: {
-                  type: "string",
-                  description: "Short user-facing summary of the result.",
-                },
-                questions: {
-                  type: "array",
-                  description: "Clarification questions when status is needs_clarification.",
-                  items: {
-                    type: "object",
-                    additionalProperties: true,
-                    properties: {
-                      id: {
-                        type: "string",
-                      },
-                      question: {
-                        type: "string",
-                      },
-                      multi_select: {
-                        type: "boolean",
-                      },
-                      custom_allowed: {
-                        type: "boolean",
-                      },
-                      options: {
-                        type: "array",
-                        items: {
-                          type: "object",
-                          additionalProperties: true,
-                          properties: {
-                            label: {
-                              type: "string",
-                            },
-                            description: {
-                              type: "string",
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Return the final workflow authoring result to Discourse and stop the authoring turn. Use this instead of writing a JSON final answer.",
+              json_schema: {
+                type: "object",
+                additionalProperties: false,
+                required: %w[status message],
+                properties: {
+                  status: {
+                    type: "string",
+                    enum: STATUSES,
+                    description:
+                      "Final result status: needs_clarification, proposed_patch, explanation, or error.",
+                  },
+                  message: {
+                    type: "string",
+                    description: "Short user-facing summary of the result.",
+                  },
+                  questions: {
+                    type: "array",
+                    description: "Clarification questions when status is needs_clarification.",
+                    items: {
+                      type: "object",
+                      additionalProperties: true,
+                      properties: {
+                        id: {
+                          type: "string",
+                        },
+                        question: {
+                          type: "string",
+                        },
+                        multi_select: {
+                          type: "boolean",
+                        },
+                        custom_allowed: {
+                          type: "boolean",
+                        },
+                        options: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            additionalProperties: true,
+                            properties: {
+                              label: {
+                                type: "string",
+                              },
+                              description: {
+                                type: "string",
+                              },
                             },
                           },
                         },
                       },
                     },
                   },
-                },
-                proposal: {
-                  type: "object",
-                  description:
-                    "Workflow patch proposal when status is proposed_patch. Include title, summary, assumptions, risks, risk_level, and operations.",
-                  additionalProperties: true,
-                  properties: {
-                    title: {
-                      type: "string",
-                    },
-                    workflow_name: {
-                      type: "string",
-                    },
-                    summary: {
-                      type: "string",
-                    },
-                    assumptions: {
-                      type: "array",
-                      items: {
+                  proposal: {
+                    type: "object",
+                    description:
+                      "Workflow patch proposal when status is proposed_patch. Include title, summary, assumptions, risks, risk_level, and operations.",
+                    additionalProperties: true,
+                    properties: {
+                      title: {
                         type: "string",
                       },
-                    },
-                    risks: {
-                      type: "array",
-                      items: {
+                      workflow_name: {
                         type: "string",
                       },
-                    },
-                    risk_level: {
-                      type: "string",
-                      enum: RISK_LEVELS,
-                    },
-                    operations: {
-                      type: "array",
-                      items: {
-                        type: "object",
-                        additionalProperties: true,
+                      summary: {
+                        type: "string",
+                      },
+                      assumptions: {
+                        type: "array",
+                        items: {
+                          type: "string",
+                        },
+                      },
+                      risks: {
+                        type: "array",
+                        items: {
+                          type: "string",
+                        },
+                      },
+                      risk_level: {
+                        type: "string",
+                        enum: RISK_LEVELS,
+                      },
+                      operations: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          additionalProperties: true,
+                        },
                       },
                     },
                   },
                 },
               },
-            },
-          }
-        end
+            }
+          end
 
-        def self.name
-          "workflow_authoring_result"
+          def name
+            "workflow_authoring_result"
+          end
         end
 
         def invoke

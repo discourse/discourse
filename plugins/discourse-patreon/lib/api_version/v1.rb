@@ -5,164 +5,166 @@ module Patreon
     module V1
       BASE_URL = "https://api.patreon.com"
 
-      def self.campaign_data_url
-        "/oauth2/api/current_user/campaigns?include=rewards,creator,goals,pledges&page[count]=100"
-      end
-
-      def self.api_base_url
-        BASE_URL
-      end
-
-      def self.token_base_url
-        BASE_URL
-      end
-
-      def self.token_path
-        "/oauth2/token"
-      end
-
-      def self.oauth_token_url
-        "#{BASE_URL}/oauth2/token"
-      end
-
-      def self.oauth_authorize_params
-        { response_type: "code" }
-      end
-
-      def self.oauth_identity_url
-        "#{BASE_URL}/oauth2/api/current_user"
-      end
-
-      def self.parse_campaigns(response)
-        rewards = {}
-        campaign_rewards = []
-        pledge_uris = []
-
-        response["data"].each do |campaign|
-          uri = campaign["relationships"]["pledges"]["links"]["first"]
-          pledge_uris << uri.sub("page%5Bcount%5D=20", "page%5Bcount%5D=100")
-
-          campaign["relationships"]["rewards"]["data"].each do |entry|
-            campaign_rewards << entry["id"]
-          end
+      class << self
+        def campaign_data_url
+          "/oauth2/api/current_user/campaigns?include=rewards,creator,goals,pledges&page[count]=100"
         end
 
-        response["included"].each do |entry|
-          id = entry["id"]
-          if entry["type"] == "reward" && campaign_rewards.include?(id)
-            rewards[id] = entry["attributes"]
-            rewards[id]["id"] = id
-          end
+        def api_base_url
+          BASE_URL
         end
 
-        { rewards: rewards, pledge_uris: pledge_uris }
-      end
-
-      def self.pull_pledges!(campaign_data)
-        uris = campaign_data[:pledge_uris].dup
-
-        if uris.blank?
-          Patreon::Pledge.save!([], false, adapter: self)
-          return
+        def token_base_url
+          BASE_URL
         end
 
-        is_first_page = true
-
-        uris.each do |uri|
-          pledge_data = Patreon::Api.get(uri)
-
-          if pledge_data["links"] && pledge_data["links"]["next"]
-            next_page_uri = pledge_data["links"]["next"]
-            uris << next_page_uri if next_page_uri.present?
-          end
-
-          if pledge_data.present?
-            Patreon::Pledge.save!([pledge_data], !is_first_page, adapter: self)
-            is_first_page = false
-          end
+        def token_path
+          "/oauth2/token"
         end
-      end
 
-      def self.extract(pledge_data)
-        pledges, declines, reward_users, users = {}, {}, {}, {}
+        def oauth_token_url
+          "#{BASE_URL}/oauth2/token"
+        end
 
-        if pledge_data && pledge_data["data"].present?
-          pledge_data["data"] = [pledge_data["data"]] unless pledge_data["data"].kind_of?(Array)
+        def oauth_authorize_params
+          { response_type: "code" }
+        end
 
-          pledge_data["data"].each do |entry|
-            if entry["type"] == "pledge"
-              patron_id = entry.dig("relationships", "patron", "data", "id")
-              next if patron_id.nil?
+        def oauth_identity_url
+          "#{BASE_URL}/oauth2/api/current_user"
+        end
 
-              attrs = entry["attributes"]
+        def parse_campaigns(response)
+          rewards = {}
+          campaign_rewards = []
+          pledge_uris = []
 
-              unless entry["relationships"]["reward"]["data"].nil?
-                (reward_users[entry["relationships"]["reward"]["data"]["id"]] ||= []) << patron_id
-              end
-              pledges[patron_id] = attrs["amount_cents"]
-              declines[patron_id] = attrs["declined_since"] if attrs["declined_since"].present?
-            elsif entry["type"] == "member"
-              patron_id = entry.dig("relationships", "user", "data", "id")
-              next if patron_id.nil?
+          response["data"].each do |campaign|
+            uri = campaign["relationships"]["pledges"]["links"]["first"]
+            pledge_uris << uri.sub("page%5Bcount%5D=20", "page%5Bcount%5D=100")
 
-              attrs = entry["attributes"]
-
-              currently_entitled_tiers = entry["relationships"]["currently_entitled_tiers"] || {}
-              (currently_entitled_tiers["data"] || []).each do |tier|
-                (reward_users[tier["id"]] ||= []) << patron_id
-              end
-              pledges[patron_id] = attrs["pledge_amount_cents"]
-              declines[patron_id] = attrs["last_charge_date"] if attrs["last_charge_status"] ==
-                "Declined"
+            campaign["relationships"]["rewards"]["data"].each do |entry|
+              campaign_rewards << entry["id"]
             end
           end
 
-          pledge_data["included"]&.each do |entry|
-            if entry["type"] == "user" && entry["attributes"]["email"].present?
-              users[entry["id"]] = entry["attributes"]["email"].downcase
+          response["included"].each do |entry|
+            id = entry["id"]
+            if entry["type"] == "reward" && campaign_rewards.include?(id)
+              rewards[id] = entry["attributes"]
+              rewards[id]["id"] = id
+            end
+          end
+
+          { rewards: rewards, pledge_uris: pledge_uris }
+        end
+
+        def pull_pledges!(campaign_data)
+          uris = campaign_data[:pledge_uris].dup
+
+          if uris.blank?
+            Patreon::Pledge.save!([], false, adapter: self)
+            return
+          end
+
+          is_first_page = true
+
+          uris.each do |uri|
+            pledge_data = Patreon::Api.get(uri)
+
+            if pledge_data["links"] && pledge_data["links"]["next"]
+              next_page_uri = pledge_data["links"]["next"]
+              uris << next_page_uri if next_page_uri.present?
+            end
+
+            if pledge_data.present?
+              Patreon::Pledge.save!([pledge_data], !is_first_page, adapter: self)
+              is_first_page = false
             end
           end
         end
 
-        [pledges, declines, reward_users, users]
-      end
+        def extract(pledge_data)
+          pledges, declines, reward_users, users = {}, {}, {}, {}
 
-      def self.delete_pledge_data(entry, reward_users)
-        rel = entry["relationships"]
+          if pledge_data && pledge_data["data"].present?
+            pledge_data["data"] = [pledge_data["data"]] unless pledge_data["data"].kind_of?(Array)
 
-        if entry["type"] == "pledge"
-          patron_id = rel.dig("patron", "data", "id")
-          return if patron_id.nil?
+            pledge_data["data"].each do |entry|
+              if entry["type"] == "pledge"
+                patron_id = entry.dig("relationships", "patron", "data", "id")
+                next if patron_id.nil?
 
-          reward_id = rel.dig("reward", "data", "id")
-          reward_users[reward_id].reject! { |i| i == patron_id } if reward_id.present?
-        elsif entry["type"] == "member"
-          patron_id = rel.dig("user", "data", "id")
-          return if patron_id.nil?
+                attrs = entry["attributes"]
 
-          (rel.dig("currently_entitled_tiers", "data") || []).each do |tier|
-            (reward_users[tier["id"]] || []).reject! { |i| i == patron_id }
+                unless entry["relationships"]["reward"]["data"].nil?
+                  (reward_users[entry["relationships"]["reward"]["data"]["id"]] ||= []) << patron_id
+                end
+                pledges[patron_id] = attrs["amount_cents"]
+                declines[patron_id] = attrs["declined_since"] if attrs["declined_since"].present?
+              elsif entry["type"] == "member"
+                patron_id = entry.dig("relationships", "user", "data", "id")
+                next if patron_id.nil?
+
+                attrs = entry["attributes"]
+
+                currently_entitled_tiers = entry["relationships"]["currently_entitled_tiers"] || {}
+                (currently_entitled_tiers["data"] || []).each do |tier|
+                  (reward_users[tier["id"]] ||= []) << patron_id
+                end
+                pledges[patron_id] = attrs["pledge_amount_cents"]
+                declines[patron_id] = attrs["last_charge_date"] if attrs["last_charge_status"] ==
+                  "Declined"
+              end
+            end
+
+            pledge_data["included"]&.each do |entry|
+              if entry["type"] == "user" && entry["attributes"]["email"].present?
+                users[entry["id"]] = entry["attributes"]["email"].downcase
+              end
+            end
           end
+
+          [pledges, declines, reward_users, users]
         end
 
-        patron_id
-      end
+        def delete_pledge_data(entry, reward_users)
+          rel = entry["relationships"]
 
-      def self.get_patreon_id(data)
-        entry = data["data"]
-        key = entry["type"] == "member" ? "user" : "patron"
-        entry.dig("relationships", key, "data", "id")
-      end
+          if entry["type"] == "pledge"
+            patron_id = rel.dig("patron", "data", "id")
+            return if patron_id.nil?
 
-      def self.webhook_triggers
-        %w[
-          pledges:create
-          pledges:update
-          pledges:delete
-          members:pledge:create
-          members:pledge:update
-          members:pledge:delete
-        ]
+            reward_id = rel.dig("reward", "data", "id")
+            reward_users[reward_id].reject! { |i| i == patron_id } if reward_id.present?
+          elsif entry["type"] == "member"
+            patron_id = rel.dig("user", "data", "id")
+            return if patron_id.nil?
+
+            (rel.dig("currently_entitled_tiers", "data") || []).each do |tier|
+              (reward_users[tier["id"]] || []).reject! { |i| i == patron_id }
+            end
+          end
+
+          patron_id
+        end
+
+        def get_patreon_id(data)
+          entry = data["data"]
+          key = entry["type"] == "member" ? "user" : "patron"
+          entry.dig("relationships", key, "data", "id")
+        end
+
+        def webhook_triggers
+          %w[
+            pledges:create
+            pledges:update
+            pledges:delete
+            members:pledge:create
+            members:pledge:update
+            members:pledge:delete
+          ]
+        end
       end
     end
   end

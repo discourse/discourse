@@ -1,25 +1,27 @@
 # frozen_string_literal: true
 
 class IncomingDomain < ActiveRecord::Base
-  def self.add!(uri)
-    name = uri.host
-    return if name.blank?
+  class << self
+    def add!(uri)
+      name = uri.host
+      return if name.blank?
 
-    https = uri.scheme == "https"
-    port = uri.port
+      https = uri.scheme == "https"
+      port = uri.port
 
-    current = find_by(name: name, https: https, port: port)
-    return current if current
+      current = find_by(name: name, https: https, port: port)
+      return current if current
 
-    # concurrency ...
+      # concurrency ...
 
-    begin
-      current = create!(name: name, https: https, port: port)
-    rescue ActiveRecord::RecordNotUnique
-      # duplicate key is just ignored
+      begin
+        current = create!(name: name, https: https, port: port)
+      rescue ActiveRecord::RecordNotUnique
+        # duplicate key is just ignored
+      end
+
+      current || find_by(name: name, https: https, port: port)
     end
-
-    current || find_by(name: name, https: https, port: port)
   end
 
   def to_url

@@ -3,11 +3,13 @@
 module Onebox
   module Mixins
     module TwitchOnebox
-      def self.included(klass)
-        klass.include(Onebox::Engine)
-        klass.matches_regexp(klass.twitch_regexp)
-        klass.requires_iframe_origins "https://player.twitch.tv"
-        klass.include(InstanceMethods)
+      class << self
+        def included(klass)
+          klass.include(Onebox::Engine)
+          klass.matches_regexp(klass.twitch_regexp)
+          klass.requires_iframe_origins "https://player.twitch.tv"
+          klass.include(InstanceMethods)
+        end
       end
 
       module InstanceMethods

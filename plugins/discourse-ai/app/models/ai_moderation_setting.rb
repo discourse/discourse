@@ -8,8 +8,10 @@ class AiModerationSetting < ActiveRecord::Base
   validates :setting_type, presence: true
   validates :setting_type, uniqueness: true
 
-  def self.spam
-    find_by(setting_type: :spam)
+  class << self
+    def spam
+      find_by(setting_type: :spam)
+    end
   end
 
   def custom_instructions

@@ -5,6 +5,20 @@ class ReviewableClaimedTopic < ActiveRecord::Base
   belongs_to :user
   validates :topic, uniqueness: true
 
+  class << self
+    def claimed_hash(topic_ids)
+      result = {}
+      if SiteSetting.reviewable_claiming == "disabled"
+        ReviewableClaimedTopic
+          .where(topic_id: topic_ids, automatic: true)
+          .each { |rct| result[rct.topic_id] = rct }
+      else
+        ReviewableClaimedTopic.where(topic_id: topic_ids).each { |rct| result[rct.topic_id] = rct }
+      end
+      result
+    end
+  end
+
   def log_topic_history(type, performed_by)
     return if automatic?
 
@@ -12,18 +26,6 @@ class ReviewableClaimedTopic < ActiveRecord::Base
       .pending
       .where(topic_id:)
       .find_each { |reviewable| reviewable.log_history(type, performed_by) }
-  end
-
-  def self.claimed_hash(topic_ids)
-    result = {}
-    if SiteSetting.reviewable_claiming == "disabled"
-      ReviewableClaimedTopic
-        .where(topic_id: topic_ids, automatic: true)
-        .each { |rct| result[rct.topic_id] = rct }
-    else
-      ReviewableClaimedTopic.where(topic_id: topic_ids).each { |rct| result[rct.topic_id] = rct }
-    end
-    result
   end
 end
 

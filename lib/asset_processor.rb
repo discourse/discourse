@@ -28,13 +28,14 @@ class AssetProcessor
   class TimeoutError < StandardError
   end
 
-  def self.booted?
-    !!@ctx
-  end
+  class << self
+    def booted?
+      !!@ctx
+    end
 
-  def self.append_es6_deprecation(content, file_path)
-    pseudo_random_identifier = "deprecated_gjYVqPLMxe" # Just needs to be unique enough to avoid collisions with real code
-    <<~JS
+    def append_es6_deprecation(content, file_path)
+      pseudo_random_identifier = "deprecated_gjYVqPLMxe" # Just needs to be unique enough to avoid collisions with real code
+      <<~JS
       #{content}
       import #{pseudo_random_identifier} from "discourse/lib/deprecated";
       #{pseudo_random_identifier}(
@@ -45,115 +46,116 @@ class AssetProcessor
         }
       );
     JS
-  end
+    end
 
-  def self.transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
-    processor = new(skip_module: skip_module?(data))
-    processor.perform(data, root_path, logical_path, theme_id: theme_id, extension: extension)
-  end
+    def transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
+      processor = new(skip_module: skip_module?(data))
+      processor.perform(data, root_path, logical_path, theme_id: theme_id, extension: extension)
+    end
 
-  def self.skip_module?(data)
-    !!(data.present? && data =~ %r{^// discourse-skip-module$})
-  end
+    def skip_module?(data)
+      !!(data.present? && data =~ %r{^// discourse-skip-module$})
+    end
 
-  def self.mutex
-    @mutex
-  end
+    def mutex
+      @mutex
+    end
 
-  def self.load_or_build_processor_source
-    BUNDLE.load_or_build
-  end
+    def load_or_build_processor_source
+      BUNDLE.load_or_build
+    end
 
-  def self.timeout
-    @timeout ||= 15_000
-  end
+    def timeout
+      @timeout ||= 15_000
+    end
 
-  def self.timeout=(value)
-    @timeout = value
-    reset_context
-  end
+    def timeout=(value)
+      @timeout = value
+      reset_context
+    end
 
-  def self.create_new_context
-    # timeout any eval that takes longer than 15 seconds
-    ctx = MiniRacer::Context.new(timeout: timeout, ensure_gc_after_idle: 2000)
+    def create_new_context
+      # timeout any eval that takes longer than 15 seconds
+      ctx = MiniRacer::Context.new(timeout: timeout, ensure_gc_after_idle: 2000)
 
-    # General shims
-    ctx.attach(
-      "rails.logger.info",
-      proc do |err|
-        Rails.logger.info(err.to_s)
-        nil
-      end,
-    )
-    ctx.attach(
-      "rails.logger.warn",
-      proc do |err|
-        Rails.logger.warn(err.to_s)
-        nil
-      end,
-    )
-    ctx.attach(
-      "rails.logger.error",
-      proc do |err|
-        Rails.logger.error(err.to_s)
-        nil
-      end,
-    )
+      # General shims
+      ctx.attach(
+        "rails.logger.info",
+        proc do |err|
+          Rails.logger.info(err.to_s)
+          nil
+        end,
+      )
+      ctx.attach(
+        "rails.logger.warn",
+        proc do |err|
+          Rails.logger.warn(err.to_s)
+          nil
+        end,
+      )
+      ctx.attach(
+        "rails.logger.error",
+        proc do |err|
+          Rails.logger.error(err.to_s)
+          nil
+        end,
+      )
 
-    source = load_or_build_processor_source
+      source = load_or_build_processor_source
 
-    ctx.eval(source, filename: "asset-processor.js")
-    ctx.low_memory_notification # GC to free up memory used during init
+      ctx.eval(source, filename: "asset-processor.js")
+      ctx.low_memory_notification # GC to free up memory used during init
 
-    ctx
-  end
+      ctx
+    end
 
-  def self.reset_context
-    @ctx&.dispose
-    @ctx = nil
-  end
+    def reset_context
+      @ctx&.dispose
+      @ctx = nil
+    end
 
-  def self.v8
-    return @ctx if @ctx
-
-    # ensure we only init one of these
-    @ctx_init.synchronize do
+    def v8
       return @ctx if @ctx
-      @ctx = create_new_context
+
+      # ensure we only init one of these
+      @ctx_init.synchronize do
+        return @ctx if @ctx
+        @ctx = create_new_context
+      end
+
+      @ctx
     end
 
-    @ctx
-  end
-
-  # Call a method in the global scope of the v8 context. Promise results are
-  # awaited and returned as values.
-  def self.v8_call(*args)
-    mutex.synchronize do
-      result = v8.call_await(*args)
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
-      result
-    end
-  rescue MiniRacer::ScriptTerminatedError => e
-    timeout_error = TimeoutError.new("Script terminated: timeout after #{timeout / 1000}s")
-    timeout_error.set_backtrace(e.backtrace)
-    raise timeout_error
-  rescue MiniRacer::RuntimeError => e
-    message = e.message
-    begin
-      # Workaround for https://github.com/rubyjs/mini_racer/issues/262
-      possible_encoded_message = message.delete_prefix("Error: ")
-      decoded = JSON.parse("{\"value\": #{possible_encoded_message}}")["value"]
-      message = "Error: #{decoded}"
-    rescue JSON::ParserError
+    # Call a method in the global scope of the v8 context. Promise results are
+    # awaited and returned as values.
+    def v8_call(*args)
+      mutex.synchronize do
+        result = v8.call_await(*args)
+        v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+        result
+      end
+    rescue MiniRacer::ScriptTerminatedError => e
+      timeout_error = TimeoutError.new("Script terminated: timeout after #{timeout / 1000}s")
+      timeout_error.set_backtrace(e.backtrace)
+      raise timeout_error
+    rescue MiniRacer::RuntimeError => e
       message = e.message
+      begin
+        # Workaround for https://github.com/rubyjs/mini_racer/issues/262
+        possible_encoded_message = message.delete_prefix("Error: ")
+        decoded = JSON.parse("{\"value\": #{possible_encoded_message}}")["value"]
+        message = "Error: #{decoded}"
+      rescue JSON::ParserError
+        message = e.message
+      end
+      transpile_error = TranspileError.new(message)
+      transpile_error.set_backtrace(e.backtrace)
+      raise transpile_error
     end
-    transpile_error = TranspileError.new(message)
-    transpile_error.set_backtrace(e.backtrace)
-    raise transpile_error
-  end
 
-  def self.ember_version
-    v8_call("emberVersion")
+    def ember_version
+      v8_call("emberVersion")
+    end
   end
 
   def initialize(skip_module: false)

@@ -121,20 +121,22 @@ class Service::Runner
   # @!visibility private
   attr_reader :service, :object, :dependencies
 
+  class << self
+    # @param service [Class] a class including {Service::Base}
+    # @param dependencies [Hash] dependencies to be provided to the service
+    # @param block [Proc] a block containing the steps to match on
+    # @return [void]
+    def call(service, dependencies = {}, &block)
+      new(service, block.binding.eval("self"), dependencies).call(&block)
+    end
+  end
+
   # @!visibility private
   def initialize(service, object, dependencies)
     @service = service
     @object = object
     @dependencies = dependencies
     @actions = {}
-  end
-
-  # @param service [Class] a class including {Service::Base}
-  # @param dependencies [Hash] dependencies to be provided to the service
-  # @param block [Proc] a block containing the steps to match on
-  # @return [void]
-  def self.call(service, dependencies = {}, &block)
-    new(service, block.binding.eval("self"), dependencies).call(&block)
   end
 
   # @!visibility private

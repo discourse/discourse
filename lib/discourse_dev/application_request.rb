@@ -14,6 +14,12 @@ module DiscourseDev
     SPIKE_MIN = 2.0
     SPIKE_RANGE = 2.0
 
+    class << self
+      def populate!
+        new.populate!
+      end
+    end
+
     def initialize
       settings = DiscourseDev.config.application_request
       @baseline = settings[:logged_in_browser_pageviews_per_day]
@@ -31,10 +37,6 @@ module DiscourseDev
       puts "Seeding #{rows.size} application_requests rows from #{@start_date} to #{@end_date}"
       bulk_upsert(rows)
       rows.size
-    end
-
-    def self.populate!
-      new.populate!
     end
 
     private

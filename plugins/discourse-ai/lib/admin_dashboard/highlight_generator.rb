@@ -15,8 +15,10 @@ module DiscourseAi
         support: "Support health",
       }.freeze
 
-      def self.generate(start_date:, end_date:, period: nil)
-        new(start_date: start_date, end_date: end_date, period: period).generate
+      class << self
+        def generate(start_date:, end_date:, period: nil)
+          new(start_date: start_date, end_date: end_date, period: period).generate
+        end
       end
 
       def initialize(start_date:, end_date:, period: nil)

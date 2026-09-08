@@ -1,21 +1,23 @@
 # frozen_string_literal: true
 
 class HandleChunkUpload
+  class << self
+    def check_chunk(chunk, params)
+      HandleChunkUpload.new(chunk, params).check_chunk
+    end
+
+    def upload_chunk(chunk, params)
+      HandleChunkUpload.new(chunk, params).upload_chunk
+    end
+
+    def merge_chunks(chunk, params)
+      HandleChunkUpload.new(chunk, params).merge_chunks
+    end
+  end
+
   def initialize(chunk, params = {})
     @chunk = chunk
     @params = params
-  end
-
-  def self.check_chunk(chunk, params)
-    HandleChunkUpload.new(chunk, params).check_chunk
-  end
-
-  def self.upload_chunk(chunk, params)
-    HandleChunkUpload.new(chunk, params).upload_chunk
-  end
-
-  def self.merge_chunks(chunk, params)
-    HandleChunkUpload.new(chunk, params).merge_chunks
   end
 
   def check_chunk

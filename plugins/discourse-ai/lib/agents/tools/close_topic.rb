@@ -4,45 +4,47 @@ module DiscourseAi
   module Agents
     module Tools
       class CloseTopic < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Closes or opens a topic based on the closed parameter.",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The ID of the topic",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "closed",
-                description: "true to close the topic, false to open it",
-                type: "boolean",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the topic is being closed or opened",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "public_reason",
-                description:
-                  "Whether the reason should be posted as a small action post visible to topic participants",
-                type: "boolean",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Closes or opens a topic based on the closed parameter.",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The ID of the topic",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "closed",
+                  description: "true to close the topic, false to open it",
+                  type: "boolean",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the topic is being closed or opened",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "public_reason",
+                  description:
+                    "Whether the reason should be posted as a small action post visible to topic participants",
+                  type: "boolean",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "close_topic"
-        end
+          def name
+            "close_topic"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

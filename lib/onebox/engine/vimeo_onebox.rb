@@ -10,12 +10,14 @@ module Onebox
       requires_iframe_origins "https://player.vimeo.com"
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/\d+(/\w+)?/?$})
-      end
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/\d+(/\w+)?/?$})
+        end
 
-      def self.embed_url(video_id)
-        "https://player.vimeo.com/video/#{video_id}"
+        def embed_url(video_id)
+          "https://player.vimeo.com/video/#{video_id}"
+        end
       end
 
       def placeholder_html

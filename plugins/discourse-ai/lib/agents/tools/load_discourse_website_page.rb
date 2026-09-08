@@ -6,25 +6,27 @@ module DiscourseAi
       class LoadDiscourseWebsitePage < Tool
         PAGES = { "pricing" => "https://www.discourse.org/pricing.md" }.freeze
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Loads a named page from the official Discourse website. Use only when one of the available pages is relevant to the question, and not for the current site's configuration or content.",
-            parameters: [
-              {
-                name: "page_name",
-                description: "Name of the Discourse website page to load",
-                type: "string",
-                enum: PAGES.keys,
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Loads a named page from the official Discourse website. Use only when one of the available pages is relevant to the question, and not for the current site's configuration or content.",
+              parameters: [
+                {
+                  name: "page_name",
+                  description: "Name of the Discourse website page to load",
+                  type: "string",
+                  enum: DiscourseAi::Agents::Tools::LoadDiscourseWebsitePage::PAGES.keys,
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "load_discourse_website_page"
+          def name
+            "load_discourse_website_page"
+          end
         end
 
         def invoke

@@ -28,12 +28,14 @@ module Discourse
     class RateLimited < Error
     end
 
-    def self.for(token:)
-      (@clients ||= {})[token.to_s] ||= new(token)
-    end
+    class << self
+      def for(token:)
+        (@clients ||= {})[token.to_s] ||= new(token)
+      end
 
-    def self.reset_clients!
-      @clients = {}
+      def reset_clients!
+        @clients = {}
+      end
     end
 
     def initialize(token)

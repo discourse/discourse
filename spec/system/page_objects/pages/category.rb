@@ -3,6 +3,9 @@
 module PageObjects
   module Pages
     class Category < PageObjects::Pages::Base
+      D_EDITOR_SELECTOR = ".d-editor"
+      CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR = ".category-navigation .nav-item_new"
+
       def visit(category)
         page.visit("/c/#{category.id}")
         self
@@ -89,8 +92,6 @@ module PageObjects
         find(".d-toggle-switch .toggle-template-type", visible: false)["aria-checked"] == "true"
       end
 
-      D_EDITOR_SELECTOR = ".d-editor"
-
       def has_d_editor?
         page.has_selector?(D_EDITOR_SELECTOR)
       end
@@ -136,8 +137,6 @@ module PageObjects
       def category_box(category)
         find(".category-boxes .category-box[data-category-id='#{category.id}']")
       end
-
-      CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR = ".category-navigation .nav-item_new"
 
       def has_no_new_topics?
         page.has_no_css?(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR)

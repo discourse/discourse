@@ -2,8 +2,10 @@
 
 module DiscourseTopicVoting
   class TopicMerger
-    def self.merge(source_topic, target_topic)
-      new(source_topic, target_topic).merge
+    class << self
+      def merge(source_topic, target_topic)
+        new(source_topic, target_topic).merge
+      end
     end
 
     def initialize(source_topic, target_topic)

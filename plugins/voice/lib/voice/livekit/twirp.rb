@@ -16,44 +16,46 @@ module Voice
 
       Response = Struct.new(:status, :body)
 
-      def self.post(service:, method:, body:, grants:, timeout:)
-        uri = URI.parse("#{api_base_url}/twirp/livekit.#{service}/#{method}")
+      class << self
+        def post(service:, method:, body:, grants:, timeout:)
+          uri = URI.parse("#{api_base_url}/twirp/livekit.#{service}/#{method}")
 
-        response =
-          FinalDestination::HTTP.start(
-            uri.host,
-            uri.port,
-            use_ssl: uri.scheme == "https",
-            open_timeout: timeout,
-            read_timeout: timeout,
-            write_timeout: timeout,
-          ) do |http|
-            http.post(
-              uri.request_uri,
-              body.to_json,
-              {
-                "Content-Type" => "application/json",
-                "Authorization" => "Bearer #{admin_token(grants)}",
-              },
-            )
-          end
+          response =
+            FinalDestination::HTTP.start(
+              uri.host,
+              uri.port,
+              use_ssl: uri.scheme == "https",
+              open_timeout: timeout,
+              read_timeout: timeout,
+              write_timeout: timeout,
+            ) do |http|
+              http.post(
+                uri.request_uri,
+                body.to_json,
+                {
+                  "Content-Type" => "application/json",
+                  "Authorization" => "Bearer #{admin_token(grants)}",
+                },
+              )
+            end
 
-        Response.new(response.code.to_i, response.body)
-      end
+          Response.new(response.code.to_i, response.body)
+        end
 
-      # The Twirp services listen over HTTP(S) on the same host that serves
-      # the SFU's WebSocket signaling.
-      def self.api_base_url
-        SiteSetting.voice_livekit_url.sub(/\Awss:/, "https:").sub(/\Aws:/, "http:")
-      end
+        # The Twirp services listen over HTTP(S) on the same host that serves
+        # the SFU's WebSocket signaling.
+        def api_base_url
+          SiteSetting.voice_livekit_url.sub(/\Awss:/, "https:").sub(/\Aws:/, "http:")
+        end
 
-      def self.admin_token(grants)
-        payload = {
-          iss: SiteSetting.voice_livekit_api_key,
-          exp: TOKEN_TTL.from_now.to_i,
-          video: grants,
-        }
-        JWT.encode(payload, SiteSetting.voice_livekit_api_secret, "HS256")
+        def admin_token(grants)
+          payload = {
+            iss: SiteSetting.voice_livekit_api_key,
+            exp: TOKEN_TTL.from_now.to_i,
+            video: grants,
+          }
+          JWT.encode(payload, SiteSetting.voice_livekit_api_secret, "HS256")
+        end
       end
     end
   end

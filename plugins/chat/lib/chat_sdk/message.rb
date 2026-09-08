@@ -2,74 +2,76 @@
 
 module ChatSDK
   class Message
-    # Creates a new message in a chat channel.
-    #
-    # @param raw [String] The content of the message.
-    # @param channel_id [Integer] The ID of the chat channel.
-    # @param guardian [Guardian] The user's guardian object, for policy enforcement.
-    # @param in_reply_to_id [Integer, nil] The ID of the message this is in reply to (optional).
-    # @param thread_id [Integer, nil] The ID of the thread this message belongs to (optional).
-    # @param upload_ids [Array<Integer>, nil] The IDs of any uploads associated with the message (optional).
-    # @param streaming [Boolean] Whether the message is part of a streaming operation (default: false).
-    # @param enforce_membership [Boolean] Allows to ensure the guardian will be allowed in the channel (default: false).
-    # @yield [helper, message] Offers a block with a helper and the message for streaming operations.
-    # @yieldparam helper [Helper] The helper object for streaming operations.
-    # @yieldparam message [Message] The newly created message object.
-    # @return [Chat::Message] The created message object.
-    #
-    # @example Creating a simple message
-    #   ChatSDK::Message.create(raw: "Hello, world!", channel_id: 1, guardian: Guardian.new)
-    #
-    # @example Creating a message with a block for streaming
-    #   ChatSDK::Message.create_with_stream(raw: "Streaming message", channel_id: 1, guardian: Guardian.new) do |helper, message|
-    #     helper.stream(raw: "Continuation of the message")
-    #   end
-    def self.create(...)
-      new.create(...)
-    end
+    class << self
+      # Creates a new message in a chat channel.
+      #
+      # @param raw [String] The content of the message.
+      # @param channel_id [Integer] The ID of the chat channel.
+      # @param guardian [Guardian] The user's guardian object, for policy enforcement.
+      # @param in_reply_to_id [Integer, nil] The ID of the message this is in reply to (optional).
+      # @param thread_id [Integer, nil] The ID of the thread this message belongs to (optional).
+      # @param upload_ids [Array<Integer>, nil] The IDs of any uploads associated with the message (optional).
+      # @param streaming [Boolean] Whether the message is part of a streaming operation (default: false).
+      # @param enforce_membership [Boolean] Allows to ensure the guardian will be allowed in the channel (default: false).
+      # @yield [helper, message] Offers a block with a helper and the message for streaming operations.
+      # @yieldparam helper [Helper] The helper object for streaming operations.
+      # @yieldparam message [Message] The newly created message object.
+      # @return [Chat::Message] The created message object.
+      #
+      # @example Creating a simple message
+      #   ChatSDK::Message.create(raw: "Hello, world!", channel_id: 1, guardian: Guardian.new)
+      #
+      # @example Creating a message with a block for streaming
+      #   ChatSDK::Message.create_with_stream(raw: "Streaming message", channel_id: 1, guardian: Guardian.new) do |helper, message|
+      #     helper.stream(raw: "Continuation of the message")
+      #   end
+      def create(...)
+        new.create(...)
+      end
 
-    # Creates a new message with streaming enabled by default.
-    #
-    # This method is a convenience wrapper around `create` with `streaming: true` set by default.
-    # It supports all the same parameters and block usage as `create`.
-    #
-    # @see #create
-    def self.create_with_stream(**params, &block)
-      create(**params, streaming: true, strip_whitespaces: false, &block)
-    end
+      # Creates a new message with streaming enabled by default.
+      #
+      # This method is a convenience wrapper around `create` with `streaming: true` set by default.
+      # It supports all the same parameters and block usage as `create`.
+      #
+      # @see #create
+      def create_with_stream(**params, &block)
+        create(**params, streaming: true, strip_whitespaces: false, &block)
+      end
 
-    # Streams to a specific chat message.
-    #
-    # @param raw [String] text to append to the existing message.
-    # @param message_id [Integer] the ID of the message to stream.
-    # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
-    # @return [Chat::Message] The message object.
-    # @example Streaming a message
-    #   ChatSDK::Message.stream(message_id: 42, guardian: guardian, raw: "text")
-    def self.stream(...)
-      new.stream(...)
-    end
+      # Streams to a specific chat message.
+      #
+      # @param raw [String] text to append to the existing message.
+      # @param message_id [Integer] the ID of the message to stream.
+      # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
+      # @return [Chat::Message] The message object.
+      # @example Streaming a message
+      #   ChatSDK::Message.stream(message_id: 42, guardian: guardian, raw: "text")
+      def stream(...)
+        new.stream(...)
+      end
 
-    # Starts streaming for a specific chat message.
-    #
-    # @param message_id [Integer] the ID of the message for which streaming should be stopped.
-    # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
-    # @return [Chat::Message] The message object.
-    # @example Starting the streaming of a message
-    #   ChatSDK::Message.start_stream(message_id: 42, guardian: guardian)
-    def self.start_stream(...)
-      new.start_stream(...)
-    end
+      # Starts streaming for a specific chat message.
+      #
+      # @param message_id [Integer] the ID of the message for which streaming should be stopped.
+      # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
+      # @return [Chat::Message] The message object.
+      # @example Starting the streaming of a message
+      #   ChatSDK::Message.start_stream(message_id: 42, guardian: guardian)
+      def start_stream(...)
+        new.start_stream(...)
+      end
 
-    # Stops streaming for a specific chat message.
-    #
-    # @param message_id [Integer] the ID of the message for which streaming should be stopped.
-    # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
-    # @return [Chat::Message] The message object.
-    # @example Stopping the streaming of a message
-    #   ChatSDK::Message.stop_stream(message_id: 42, guardian: guardian)
-    def self.stop_stream(...)
-      new.stop_stream(...)
+      # Stops streaming for a specific chat message.
+      #
+      # @param message_id [Integer] the ID of the message for which streaming should be stopped.
+      # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
+      # @return [Chat::Message] The message object.
+      # @example Stopping the streaming of a message
+      #   ChatSDK::Message.stop_stream(message_id: 42, guardian: guardian)
+      def stop_stream(...)
+        new.stop_stream(...)
+      end
     end
 
     def start_stream(message_id:, guardian:)

@@ -10,8 +10,10 @@ class ThemeSettingsGroupResolver
   #   input: { allowed_groups: "1|2" }
   #   output: { user_in_allowed_groups: true }
   class ListSetting
-    def self.applies?(setting_info)
-      setting_info[:type] == "list" && setting_info[:resolve_group_membership]
+    class << self
+      def applies?(setting_info)
+        setting_info[:type] == "list" && setting_info[:resolve_group_membership]
+      end
     end
 
     def initialize(setting_name:, setting_info:, guardian:)

@@ -14,11 +14,13 @@ module DiscourseAi
                     :native_tools,
                     :upload_skips
 
-      def self.text_only(message)
-        if message[:content].is_a?(Array)
-          message[:content].map { |element| element if element.is_a?(String) }.compact.join
-        else
-          message[:content]
+      class << self
+        def text_only(message)
+          if message[:content].is_a?(Array)
+            message[:content].map { |element| element if element.is_a?(String) }.compact.join
+          else
+            message[:content]
+          end
         end
       end
 

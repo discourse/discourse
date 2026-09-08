@@ -1,69 +1,73 @@
 # frozen_string_literal: true
 
 class LocaleSiteSetting < EnumSiteSetting
-  def self.translate_names?
-    true
-  end
+  FALLBACKS = { en_GB: :en }
 
-  def self.valid_value?(val)
-    val.split("|").all? { |v| supported_locales.include?(v) }
-  end
+  class << self
+    def translate_names?
+      true
+    end
 
-  def self.values
-    supported_locales.map do |locale|
-      lang = language_names[locale] || language_names[locale.split("_").first]
-      native_name = lang&.dig("nativeName")
-      { native_name:, value: locale, name: "languages.#{locale}.name" }
+    def valid_value?(val)
+      val.split("|").all? { |v| supported_locales.include?(v) }
+    end
+
+    def values
+      supported_locales.map do |locale|
+        lang = language_names[locale] || language_names[locale.split("_").first]
+        native_name = lang&.dig("nativeName")
+        { native_name:, value: locale, name: "languages.#{locale}.name" }
+      end
+    end
+
+    public
+
+    def language_names
+      return @language_names if @language_names
+
+      @lock.synchronize do
+        @language_names ||=
+          begin
+            names = YAML.safe_load(File.read(Rails.root.join("config/locales/names.yml").to_s))
+
+            DiscoursePluginRegistry.locales.each do |locale, options|
+              if !names.key?(locale) && options[:name] && options[:nativeName]
+                names[locale] = { "name" => options[:name], "nativeName" => options[:nativeName] }
+              end
+            end
+
+            names
+          end
+      end
+    end
+
+    def supported_locales
+      @lock.synchronize do
+        @supported_locales ||=
+          begin
+            locales =
+              Dir
+                .glob(Rails.root.join("config/locales/client.*.yml").to_s)
+                .map { |x| x.split(".")[-2] }
+
+            locales += DiscoursePluginRegistry.locales.keys
+            locales.uniq.sort
+          end
+      end
+    end
+
+    def reset!
+      @lock.synchronize { @values = @language_names = @supported_locales = nil }
+    end
+
+    def fallback_locale(locale)
+      fallback_locale = FALLBACKS[locale.to_sym]
+      return fallback_locale if fallback_locale
+
+      plugin_locale = DiscoursePluginRegistry.locales[locale.to_s]
+      plugin_locale ? plugin_locale[:fallbackLocale]&.to_sym : nil
     end
   end
 
   @lock = Mutex.new
-
-  def self.language_names
-    return @language_names if @language_names
-
-    @lock.synchronize do
-      @language_names ||=
-        begin
-          names = YAML.safe_load(File.read(Rails.root.join("config/locales/names.yml").to_s))
-
-          DiscoursePluginRegistry.locales.each do |locale, options|
-            if !names.key?(locale) && options[:name] && options[:nativeName]
-              names[locale] = { "name" => options[:name], "nativeName" => options[:nativeName] }
-            end
-          end
-
-          names
-        end
-    end
-  end
-
-  def self.supported_locales
-    @lock.synchronize do
-      @supported_locales ||=
-        begin
-          locales =
-            Dir
-              .glob(Rails.root.join("config/locales/client.*.yml").to_s)
-              .map { |x| x.split(".")[-2] }
-
-          locales += DiscoursePluginRegistry.locales.keys
-          locales.uniq.sort
-        end
-    end
-  end
-
-  def self.reset!
-    @lock.synchronize { @values = @language_names = @supported_locales = nil }
-  end
-
-  FALLBACKS = { en_GB: :en }
-
-  def self.fallback_locale(locale)
-    fallback_locale = FALLBACKS[locale.to_sym]
-    return fallback_locale if fallback_locale
-
-    plugin_locale = DiscoursePluginRegistry.locales[locale.to_s]
-    plugin_locale ? plugin_locale[:fallbackLocale]&.to_sym : nil
-  end
 end

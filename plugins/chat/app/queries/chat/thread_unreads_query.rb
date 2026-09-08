@@ -22,38 +22,39 @@ module Chat
     # because the LIMIT is applied after the thread_ids filter.
     MAX_THREADS = 500
 
-    ##
-    # @param channel_ids [Array<Integer>] (Optional) The IDs of the channels to count threads for.
-    #  If only this is provided, all threads across the channels provided will be counted.
-    # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count. If this
-    #  is used in tandem with channel_ids, it will just further filter the results of
-    #  the thread counts from those channels.
-    # @param user_id [Integer] The ID of the user to count for.
-    # @param include_missing_memberships [Boolean] Whether to include threads
-    #   that the user is not a member of. These counts will always be 0.
-    # @param include_read [Boolean] Whether to include threads that the user
-    #   is a member of where they have read all the messages. This overrides
-    #   include_missing_memberships.
-    def self.call(
-      channel_ids: nil,
-      thread_ids: nil,
-      user_id:,
-      include_missing_memberships: false,
-      include_read: true
-    )
-      return [] if channel_ids.blank? && thread_ids.blank?
+    class << self
+      ##
+      # @param channel_ids [Array<Integer>] (Optional) The IDs of the channels to count threads for.
+      #  If only this is provided, all threads across the channels provided will be counted.
+      # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count. If this
+      #  is used in tandem with channel_ids, it will just further filter the results of
+      #  the thread counts from those channels.
+      # @param user_id [Integer] The ID of the user to count for.
+      # @param include_missing_memberships [Boolean] Whether to include threads
+      #   that the user is not a member of. These counts will always be 0.
+      # @param include_read [Boolean] Whether to include threads that the user
+      #   is a member of where they have read all the messages. This overrides
+      #   include_missing_memberships.
+      def call(
+        channel_ids: nil,
+        thread_ids: nil,
+        user_id:,
+        include_missing_memberships: false,
+        include_read: true
+      )
+        return [] if channel_ids.blank? && thread_ids.blank?
 
-      # The CTE picks the candidate thread set up front — at most MAX_THREADS,
-      # ordered by recency — and resolves the static per-thread filters
-      # (muted channel, threading_enabled, force) into columns. The two
-      # LATERAL aggregates then run once per candidate, instead of three
-      # correlated subqueries running per row of every membership the user has.
-      #
-      # The user_chat_channel_memberships join is INNER on purpose: a thread
-      # membership can outlive channel access (group removal, leave, etc.),
-      # and we must not surface unread/mention metadata for a channel the
-      # user can no longer access.
-      sql = <<~SQL
+        # The CTE picks the candidate thread set up front — at most MAX_THREADS,
+        # ordered by recency — and resolves the static per-thread filters
+        # (muted channel, threading_enabled, force) into columns. The two
+        # LATERAL aggregates then run once per candidate, instead of three
+        # correlated subqueries running per row of every membership the user has.
+        #
+        # The user_chat_channel_memberships join is INNER on purpose: a thread
+        # membership can outlive channel access (group removal, leave, etc.),
+        # and we must not surface unread/mention metadata for a channel the
+        # user can no longer access.
+        sql = <<~SQL
         WITH limited_memberships AS (
           SELECT
             memberships.thread_id,
@@ -115,14 +116,14 @@ module Chat
         ) mention_calc ON true
       SQL
 
-      sql = <<~SQL if !include_read
+        sql = <<~SQL if !include_read
           SELECT * FROM (
             #{sql}
           ) AS thread_tracking
           WHERE (unread_count > 0 OR mention_count > 0 OR watched_threads_unread_count > 0)
         SQL
 
-      sql += <<~SQL if include_missing_memberships && include_read
+        sql += <<~SQL if include_missing_memberships && include_read
         UNION ALL
         SELECT 0 AS unread_count, 0 AS mention_count, 0 AS watched_threads_unread_count, chat_threads.channel_id, chat_threads.id AS thread_id
         FROM chat_channels
@@ -136,16 +137,17 @@ module Chat
         LIMIT :limit
       SQL
 
-      DB.query(
-        sql,
-        channel_ids: channel_ids,
-        thread_ids: thread_ids,
-        user_id: user_id,
-        limit: MAX_THREADS,
-        tracking_level: ::Chat::UserChatThreadMembership.notification_levels[:tracking],
-        watching_level: ::Chat::UserChatThreadMembership.notification_levels[:watching],
-        notification_type_mention: ::Notification.types[:chat_mention],
-      )
+        DB.query(
+          sql,
+          channel_ids: channel_ids,
+          thread_ids: thread_ids,
+          user_id: user_id,
+          limit: MAX_THREADS,
+          tracking_level: ::Chat::UserChatThreadMembership.notification_levels[:tracking],
+          watching_level: ::Chat::UserChatThreadMembership.notification_levels[:watching],
+          notification_type_mention: ::Notification.types[:chat_mention],
+        )
+      end
     end
   end
 end

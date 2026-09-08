@@ -5,8 +5,10 @@ class TagGroupPermission < ActiveRecord::Base
   belongs_to :tag_group
   belongs_to :group
 
-  def self.permission_types
-    @permission_types ||= Enum.new(full: 1, readonly: 3)
+  class << self
+    def permission_types
+      @permission_types ||= Enum.new(full: 1, readonly: 3)
+    end
   end
 end
 

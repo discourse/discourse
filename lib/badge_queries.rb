@@ -157,8 +157,9 @@ module BadgeQueries
     GROUP BY acting_user_id
   SQL
 
-  def self.invite_badge(count, trust_level)
-    <<~SQL
+  class << self
+    def invite_badge(count, trust_level)
+      <<~SQL
       SELECT u.id user_id, current_timestamp granted_at
       FROM users u
       WHERE u.id IN (
@@ -176,32 +177,32 @@ module BadgeQueries
       ) AND u.active AND u.silenced_till IS NULL AND u.id > 0 AND
       (:backfill OR u.id IN (:user_ids) )
     SQL
-  end
+    end
 
-  def self.like_badge(count, is_topic)
-    # we can do better with dates, but its hard work figuring this out historically
-    <<~SQL
+    def like_badge(count, is_topic)
+      # we can do better with dates, but its hard work figuring this out historically
+      <<~SQL
       SELECT p.user_id, p.id post_id, current_timestamp granted_at
       FROM badge_posts p
       WHERE #{is_topic ? "p.post_number = 1" : "p.post_number > 1"} AND p.like_count >= #{count.to_i} AND
         (:backfill OR p.id IN (:post_ids) )
     SQL
-  end
+    end
 
-  def self.trust_level(level)
-    # we can do better with dates, but its hard work figuring this out historically
-    <<~SQL
+    def trust_level(level)
+      # we can do better with dates, but its hard work figuring this out historically
+      <<~SQL
       SELECT u.id user_id, current_timestamp granted_at FROM users u
       WHERE trust_level >= #{level.to_i} AND (
         :backfill OR u.id IN (:user_ids)
       )
     SQL
-  end
+    end
 
-  def self.sharing_badge(count)
-    # Not that DISTINCT(i.ip_address, i.current_user_id) works because there is an underlying assumption that
-    # `IncomingLink#ip_address` is not set when `IncomingLink#current_user_id` is set.
-    <<~SQL
+    def sharing_badge(count)
+      # Not that DISTINCT(i.ip_address, i.current_user_id) works because there is an underlying assumption that
+      # `IncomingLink#ip_address` is not set when `IncomingLink#current_user_id` is set.
+      <<~SQL
       SELECT i.user_id, i.post_id, CURRENT_TIMESTAMP granted_at
       FROM incoming_links i
       JOIN badge_posts p on p.id = i.post_id
@@ -209,10 +210,10 @@ module BadgeQueries
       GROUP BY i.user_id,i.post_id
       HAVING COUNT(DISTINCT(i.ip_address, i.current_user_id)) >= #{count}
     SQL
-  end
+    end
 
-  def self.linking_badge(count)
-    <<~SQL
+    def linking_badge(count)
+      <<~SQL
       SELECT tl.user_id, post_id, current_timestamp granted_at
         FROM topic_links tl
         JOIN badge_posts p ON p.id = post_id
@@ -220,10 +221,10 @@ module BadgeQueries
          AND tl.clicks >= #{count}
       GROUP BY tl.user_id, tl.post_id
     SQL
-  end
+    end
 
-  def self.liked_posts(post_count, like_count)
-    <<~SQL
+    def liked_posts(post_count, like_count)
+      <<~SQL
       SELECT p.user_id, current_timestamp AS granted_at
       FROM posts AS p
       WHERE p.like_count >= #{like_count}
@@ -231,10 +232,10 @@ module BadgeQueries
       GROUP BY p.user_id
       HAVING count(*) > #{post_count}
     SQL
-  end
+    end
 
-  def self.like_rate_limit(count)
-    <<~SQL
+    def like_rate_limit(count)
+      <<~SQL
       SELECT gdl.user_id, current_timestamp AS granted_at
       FROM given_daily_likes AS gdl
       WHERE gdl.limit_reached
@@ -242,10 +243,10 @@ module BadgeQueries
       GROUP BY gdl.user_id
       HAVING COUNT(*) >= #{count}
     SQL
-  end
+    end
 
-  def self.liked_back(likes_received, likes_given)
-    <<~SQL
+    def liked_back(likes_received, likes_given)
+      <<~SQL
       SELECT us.user_id, current_timestamp AS granted_at
       FROM user_stats AS us
       INNER JOIN posts AS p ON p.user_id = us.user_id
@@ -255,10 +256,10 @@ module BadgeQueries
       GROUP BY us.user_id, us.likes_given
       HAVING COUNT(*) > #{likes_received}
     SQL
-  end
+    end
 
-  def self.consecutive_visits(days)
-    <<~SQL
+    def consecutive_visits(days)
+      <<~SQL
       WITH consecutive_visits AS (
         SELECT user_id
              , visited_at
@@ -277,13 +278,13 @@ module BadgeQueries
         FROM visits
        WHERE "rank" = 1
     SQL
-  end
+    end
 
-  def self.anniversaries(start_date, end_date)
-    start_date = start_date.iso8601(6)
-    end_date = end_date.iso8601(6)
+    def anniversaries(start_date, end_date)
+      start_date = start_date.iso8601(6)
+      end_date = end_date.iso8601(6)
 
-    <<~SQL
+      <<~SQL
       SELECT u.id
         FROM users AS u
         JOIN posts AS p ON p.user_id = u.id
@@ -305,5 +306,6 @@ module BadgeQueries
        GROUP BY u.id
       HAVING COUNT(p.id) > 0
     SQL
+    end
   end
 end

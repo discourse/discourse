@@ -73,30 +73,32 @@ module DiscourseWorkflows
           },
         )
 
-        def self.user_channel(user_id)
-          "#{USER_CHANNEL_PREFIX}/#{user_id}"
-        end
+        class << self
+          def user_channel(user_id)
+            "#{USER_CHANNEL_PREFIX}/#{user_id}"
+          end
 
-        def self.publish_close(user_id, modal_id)
-          MessageBus.publish(
-            user_channel(user_id),
-            { type: "close_modal", modal_id: modal_id },
-            user_ids: [user_id],
-          )
-        end
+          def publish_close(user_id, modal_id)
+            MessageBus.publish(
+              user_channel(user_id),
+              { type: "close_modal", modal_id: modal_id },
+              user_ids: [user_id],
+            )
+          end
 
-        def self.button_rows(parameters)
-          DiscourseWorkflows::CollectionParameters.rows_from_value(
-            DiscourseWorkflows::CollectionParameters.fetch_value(parameters, :buttons),
-          )
-        end
+          def button_rows(parameters)
+            DiscourseWorkflows::CollectionParameters.rows_from_value(
+              DiscourseWorkflows::CollectionParameters.fetch_value(parameters, :buttons),
+            )
+          end
 
-        def self.button_values(parameters)
-          button_rows(parameters).filter_map { |row| row["value"].to_s.presence }
-        end
+          def button_values(parameters)
+            button_rows(parameters).filter_map { |row| row["value"].to_s.presence }
+          end
 
-        def self.response_items(action:)
-          [{ "json" => { "button" => action.to_s }, "pairedItem" => { "item" => 0 } }]
+          def response_items(action:)
+            [{ "json" => { "button" => action.to_s }, "pairedItem" => { "item" => 0 } }]
+          end
         end
 
         def execute(exec_ctx)

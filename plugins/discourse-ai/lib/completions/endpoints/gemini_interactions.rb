@@ -7,8 +7,10 @@ module DiscourseAi
         MINIMAL_HIGH_THINKING_LEVEL_BY_EFFORT =
           THINKING_LEVEL_BY_EFFORT.merge("low" => "minimal", "medium" => "high").freeze
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "gemini_interactions"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "gemini_interactions"
+          end
         end
 
         def default_options

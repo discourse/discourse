@@ -9,6 +9,25 @@ module FileStore
     OPTIMIZED_IMAGE_PATH_REGEX = %r{/(optimized/\d+X/.*)}
     TEMPORARY_UPLOAD_PREFIX = "temp/"
 
+    CACHE_DIR =
+      if Rails.env.test?
+        "#{Rails.root.join("tmp/download_cache_test_#{Discourse.test_env_number}/")}"
+      else
+        "#{Rails.root.join("tmp/download_cache/")}"
+      end
+    CACHE_MAXIMUM_SIZE = 500
+    CACHE_EVICT_COUNT = 100
+
+    class << self
+      def temporary_upload_path(file_name, folder_prefix: "")
+        # We don't want to use the original file name as it can contain special
+        # characters, which can interfere with external providers operations and
+        # introduce other unexpected behaviour.
+        file_name_random = "#{SecureRandom.hex}#{File.extname(file_name)}"
+        File.join(TEMPORARY_UPLOAD_PREFIX, folder_prefix, SecureRandom.hex, file_name_random)
+      end
+    end
+
     def store_upload(file, upload, content_type = nil)
       upload.url = nil
       path = get_path_for_upload(upload)
@@ -41,14 +60,6 @@ module FileStore
       path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
       return path if !Rails.env.test?
       File.join(path, "test_#{Discourse.test_env_number}")
-    end
-
-    def self.temporary_upload_path(file_name, folder_prefix: "")
-      # We don't want to use the original file name as it can contain special
-      # characters, which can interfere with external providers operations and
-      # introduce other unexpected behaviour.
-      file_name_random = "#{SecureRandom.hex}#{File.extname(file_name)}"
-      File.join(TEMPORARY_UPLOAD_PREFIX, folder_prefix, SecureRandom.hex, file_name_random)
     end
 
     def has_been_uploaded?(url)
@@ -152,15 +163,6 @@ module FileStore
         "_#{version}_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
       get_path_for("optimized", upload.id, upload.sha1, extension)
     end
-
-    CACHE_DIR =
-      if Rails.env.test?
-        "#{Rails.root.join("tmp/download_cache_test_#{Discourse.test_env_number}/")}"
-      else
-        "#{Rails.root.join("tmp/download_cache/")}"
-      end
-    CACHE_MAXIMUM_SIZE = 500
-    CACHE_EVICT_COUNT = 100
 
     def get_cache_path_for(filename)
       "#{CACHE_DIR}#{filename}"

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager::Bool < ThemeSettingsManager
-  def self.cast(value)
-    [true, "true"].include?(value)
+  class << self
+    def cast(value)
+      [true, "true"].include?(value)
+    end
   end
 
   def value

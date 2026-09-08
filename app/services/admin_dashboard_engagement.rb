@@ -11,8 +11,10 @@ class AdminDashboardEngagement
     new_signups: "signups",
   }.freeze
 
-  def self.build(start_date:, end_date:, current_user: nil)
-    new(start_date: start_date, end_date: end_date, current_user: current_user).build
+  class << self
+    def build(start_date:, end_date:, current_user: nil)
+      new(start_date: start_date, end_date: end_date, current_user: current_user).build
+    end
   end
 
   def initialize(start_date:, end_date:, current_user: nil)

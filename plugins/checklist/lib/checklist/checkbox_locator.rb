@@ -6,12 +6,14 @@ module Checklist
     Target = Data.define(:index, :source)
     SOURCE_PATTERN = /\A(\d+):(\d+)\z/
 
-    def self.call(post:, index:, source: nil)
-      call_many(post:, targets: [Target.new(index:, source:)]).first
-    end
+    class << self
+      def call(post:, index:, source: nil)
+        call_many(post:, targets: [Target.new(index:, source:)]).first
+      end
 
-    def self.call_many(post:, targets:)
-      new(post).call_many(targets)
+      def call_many(post:, targets:)
+        new(post).call_many(targets)
+      end
     end
 
     def initialize(post)

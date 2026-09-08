@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module UserPrimaryGroupMixin
-  def self.included(klass)
-    klass.include UserFlairMixin
-    klass.attributes :primary_group_name, :admin, :moderator, :trust_level
+  class << self
+    def included(klass)
+      klass.include UserFlairMixin
+      klass.attributes :primary_group_name, :admin, :moderator, :trust_level
+    end
   end
 
   def primary_group_name

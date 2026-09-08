@@ -15,39 +15,41 @@ module DiscourseWorkflows
     scope :dynamic, -> { where.not(webhook_id: nil) }
     scope :static, -> { where(webhook_id: nil) }
 
-    def self.normalize_method(value)
-      value.to_s.upcase
-    end
-
-    def self.normalize_path(value)
-      value.to_s.delete_prefix("/")
-    end
-
-    def self.segments_for(path)
-      normalize_path(path).split("/").reject(&:empty?)
-    end
-
-    def self.dynamic_path?(path)
-      segments_for(path).any? { |segment| segment.match?(DYNAMIC_SEGMENT_PATTERN) }
-    end
-
-    def self.path_length_for(path)
-      segments_for(path).size
-    end
-
-    def self.match_dynamic_path(template:, segments:)
-      template_segments = segments_for(template)
-      return nil unless template_segments.size == segments.size
-
-      params = {}
-      template_segments.zip(segments) do |template_segment, segment|
-        if (match = template_segment.match(DYNAMIC_SEGMENT_PATTERN))
-          params[match[1]] = segment
-        elsif template_segment != segment
-          return nil
-        end
+    class << self
+      def normalize_method(value)
+        value.to_s.upcase
       end
-      params
+
+      def normalize_path(value)
+        value.to_s.delete_prefix("/")
+      end
+
+      def segments_for(path)
+        normalize_path(path).split("/").reject(&:empty?)
+      end
+
+      def dynamic_path?(path)
+        segments_for(path).any? { |segment| segment.match?(DYNAMIC_SEGMENT_PATTERN) }
+      end
+
+      def path_length_for(path)
+        segments_for(path).size
+      end
+
+      def match_dynamic_path(template:, segments:)
+        template_segments = segments_for(template)
+        return nil unless template_segments.size == segments.size
+
+        params = {}
+        template_segments.zip(segments) do |template_segment, segment|
+          if (match = template_segment.match(DYNAMIC_SEGMENT_PATTERN))
+            params[match[1]] = segment
+          elsif template_segment != segment
+            return nil
+          end
+        end
+        params
+      end
     end
 
     def dynamic?

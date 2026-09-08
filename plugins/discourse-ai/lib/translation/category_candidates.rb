@@ -3,11 +3,12 @@
 module DiscourseAi
   module Translation
     class CategoryCandidates < BaseCandidates
-      def self.progress_summary
-        supported_locales = SiteSetting.content_localization_supported_locales.split("|")
-        eligible_categories_sql = get.select(:id, :locale).to_sql
+      class << self
+        def progress_summary
+          supported_locales = SiteSetting.content_localization_supported_locales.split("|")
+          eligible_categories_sql = get.select(:id, :locale).to_sql
 
-        sql = <<~SQL
+          sql = <<~SQL
           WITH #{DiscourseAi::Translation.supported_locale_bases_cte},
           eligible_categories AS (
             SELECT id,
@@ -43,22 +44,22 @@ module DiscourseAi
           LEFT JOIN localization_coverage lc ON lc.category_id = ec.id
         SQL
 
-        result = DB.query(sql, supported_locales:).first
+          result = DB.query(sql, supported_locales:).first
 
-        {
-          target_type: "category",
-          total_count: result.total_count,
-          translated_count: result.translated_count,
-          needs_language_detection_count: result.needs_language_detection_count,
-        }
-      end
+          {
+            target_type: "category",
+            total_count: result.total_count,
+            translated_count: result.translated_count,
+            needs_language_detection_count: result.needs_language_detection_count,
+          }
+        end
 
-      def self.progress_details
-        eligible_categories_sql = get.select("categories.id, categories.locale").to_sql
-        supported_locales =
-          ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
+        def progress_details
+          eligible_categories_sql = get.select("categories.id, categories.locale").to_sql
+          supported_locales =
+            ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
 
-        sql = <<~SQL
+          sql = <<~SQL
           WITH supported AS MATERIALIZED (
             SELECT DISTINCT ON (
                      split_part(lower(replace(locale, '-', '_')), '_', 1)
@@ -127,47 +128,45 @@ module DiscourseAi
           ORDER BY supported.locale
         SQL
 
-        {
-          target_type: "category",
-          locales:
-            DB
-              .query(sql)
-              .map do |row|
-                {
-                  locale: row.locale,
-                  translated_count: row.translated_count,
-                  pending_count: row.pending_count,
-                  eligible_count: row.eligible_count,
-                }
-              end,
-        }
-      end
-
-      private
-
-      # all categories that are eligible for translation based on site settings,
-      # including those without locale detected yet.
-      def self.get
-        categories = Category.all
-        case SiteSetting.ai_translation_category_scope
-        when "public"
-          categories.where(read_restricted: false)
-        when "include"
-          categories.where(id: DiscourseAi::Translation.category_ids_with_subcategories)
-        when "include_strict"
-          categories.where(id: DiscourseAi::Translation.category_ids)
-        when "exclude"
-          categories.where.not(id: DiscourseAi::Translation.category_ids_with_subcategories)
-        when "exclude_strict"
-          categories.where.not(id: DiscourseAi::Translation.category_ids)
-        else
-          categories
+          {
+            target_type: "category",
+            locales:
+              DB
+                .query(sql)
+                .map do |row|
+                  {
+                    locale: row.locale,
+                    translated_count: row.translated_count,
+                    pending_count: row.pending_count,
+                    eligible_count: row.eligible_count,
+                  }
+                end,
+          }
         end
-      end
 
-      def self.calculate_completion_per_locale(locale)
-        base_locale = "#{locale.split("_").first}%"
-        sql = <<~SQL
+        public
+
+        def get
+          categories = Category.all
+          case SiteSetting.ai_translation_category_scope
+          when "public"
+            categories.where(read_restricted: false)
+          when "include"
+            categories.where(id: DiscourseAi::Translation.category_ids_with_subcategories)
+          when "include_strict"
+            categories.where(id: DiscourseAi::Translation.category_ids)
+          when "exclude"
+            categories.where.not(id: DiscourseAi::Translation.category_ids_with_subcategories)
+          when "exclude_strict"
+            categories.where.not(id: DiscourseAi::Translation.category_ids)
+          else
+            categories
+          end
+        end
+
+        def calculate_completion_per_locale(locale)
+          base_locale = "#{locale.split("_").first}%"
+          sql = <<~SQL
           WITH eligible_categories AS (
             #{get.where.not(categories: { locale: nil }).to_sql}
           ),
@@ -184,9 +183,15 @@ module DiscourseAi
           FROM total_count t, done_count d
         SQL
 
-        done, total = DB.query_single(sql, base_locale:)
-        { done:, total: }
+          done, total = DB.query_single(sql, base_locale:)
+          { done:, total: }
+        end
       end
+
+      private
+
+      # all categories that are eligible for translation based on site settings,
+      # including those without locale detected yet.
     end
   end
 end

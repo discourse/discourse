@@ -17,38 +17,40 @@ module DiscourseReactions
             joins(:reaction_users).where(discourse_reactions_reaction_users: { user_id: user.id })
           end
 
-    def self.valid_reactions
-      Set[
-        DiscourseReactions::Reaction.main_reaction_id,
-        *SiteSetting.discourse_reactions_enabled_reactions.to_s.split("|")
-      ]
-    end
-
-    def self.valid?(reaction_value)
-      return false if reaction_value.blank?
-
-      if SiteSetting.discourse_reactions_allow_any_emoji
-        Emoji.exists?(reaction_value)
-      else
-        valid_reactions.include?(reaction_value)
+    class << self
+      def valid_reactions
+        Set[
+          DiscourseReactions::Reaction.main_reaction_id,
+          *SiteSetting.discourse_reactions_enabled_reactions.to_s.split("|")
+        ]
       end
-    end
 
-    def self.main_reaction_id
-      SiteSetting.discourse_reactions_reaction_for_like.gsub("-", "")
-    end
+      def valid?(reaction_value)
+        return false if reaction_value.blank?
 
-    def self.reactions_excluded_from_like
-      SiteSetting.discourse_reactions_excluded_from_like.to_s.split("|")
-    end
+        if SiteSetting.discourse_reactions_allow_any_emoji
+          Emoji.exists?(reaction_value)
+        else
+          valid_reactions.include?(reaction_value)
+        end
+      end
 
-    def self.reactions_counting_as_like
-      Set[
-        *(
-          valid_reactions.to_a - reactions_excluded_from_like -
-            [DiscourseReactions::Reaction.main_reaction_id]
-        ).flatten
-      ]
+      def main_reaction_id
+        SiteSetting.discourse_reactions_reaction_for_like.gsub("-", "")
+      end
+
+      def reactions_excluded_from_like
+        SiteSetting.discourse_reactions_excluded_from_like.to_s.split("|")
+      end
+
+      def reactions_counting_as_like
+        Set[
+          *(
+            valid_reactions.to_a - reactions_excluded_from_like -
+              [DiscourseReactions::Reaction.main_reaction_id]
+          ).flatten
+        ]
+      end
     end
   end
 end

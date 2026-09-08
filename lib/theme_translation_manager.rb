@@ -4,17 +4,19 @@ class ThemeTranslationManager
   include ActiveModel::Serialization
   attr_reader :key, :default, :theme
 
-  def self.list_from_hash(locale:, hash:, theme:, parent_keys: [])
-    hash
-      .map do |key, value|
-        this_key_array = parent_keys + [key]
-        if value.is_a?(Hash)
-          list_from_hash(locale: locale, hash: value, theme: theme, parent_keys: this_key_array)
-        else
-          new(locale: locale, theme: theme, key: this_key_array.join("."), default: value)
+  class << self
+    def list_from_hash(locale:, hash:, theme:, parent_keys: [])
+      hash
+        .map do |key, value|
+          this_key_array = parent_keys + [key]
+          if value.is_a?(Hash)
+            list_from_hash(locale: locale, hash: value, theme: theme, parent_keys: this_key_array)
+          else
+            new(locale: locale, theme: theme, key: this_key_array.join("."), default: value)
+          end
         end
-      end
-      .flatten
+        .flatten
+    end
   end
 
   def initialize(locale:, key:, default:, theme:)

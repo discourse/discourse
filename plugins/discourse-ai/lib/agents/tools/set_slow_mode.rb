@@ -4,46 +4,48 @@ module DiscourseAi
   module Agents
     module Tools
       class SetSlowMode < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Enables or disables slow mode on a topic. Slow mode limits how frequently users can post.",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The ID of the topic",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "slow_mode_seconds",
-                description: "Number of seconds between posts. Set to 0 to disable slow mode.",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "duration_hours",
-                description:
-                  "Number of hours until slow mode automatically expires. Omit for no expiration.",
-                type: "integer",
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why slow mode is being set",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Enables or disables slow mode on a topic. Slow mode limits how frequently users can post.",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The ID of the topic",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "slow_mode_seconds",
+                  description: "Number of seconds between posts. Set to 0 to disable slow mode.",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "duration_hours",
+                  description:
+                    "Number of hours until slow mode automatically expires. Omit for no expiration.",
+                  type: "integer",
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why slow mode is being set",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "set_slow_mode"
-        end
+          def name
+            "set_slow_mode"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

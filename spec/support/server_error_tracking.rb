@@ -3,52 +3,54 @@
 # Captures server-side exceptions from specs and surfaces them in failure output.
 
 class RspecErrorTracker
-  def self.exceptions
-    @exceptions ||= []
-  end
-
-  def self.clear_exceptions
-    @exceptions&.clear
-  end
-
-  def self.report_exception(path, exception)
-    exceptions << [path, exception]
-  end
-
-  # Appends a formatted dump of the captured exceptions to `lines`. Gem/framework
-  # backtrace frames are collapsed unless DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1.
-  def self.append_failure_dump(lines)
-    lines << "\n"
-    lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
-    lines << "\n"
-
-    exceptions.each do |(path, ex)|
-      lines << "\n"
-      lines << "Error encountered while processing #{path}.\n"
-      lines << "  #{ex.class}: #{ex.message}\n"
-      framework_lines_excluded = 0
-
-      ex.backtrace.each do |line|
-        # This behaviour is enabled by default, to include gems in
-        # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
-        if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
-          if line.match?(%r{/gems/})
-            framework_lines_excluded += 1
-            next
-          else
-            if framework_lines_excluded.positive?
-              lines << "    ...(#{framework_lines_excluded} framework line(s) excluded)\n"
-              framework_lines_excluded = 0
-            end
-          end
-        end
-        lines << "    #{line}\n"
-      end
+  class << self
+    def exceptions
+      @exceptions ||= []
     end
 
-    lines << "\n"
-    lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
-    lines << "\n"
+    def clear_exceptions
+      @exceptions&.clear
+    end
+
+    def report_exception(path, exception)
+      exceptions << [path, exception]
+    end
+
+    # Appends a formatted dump of the captured exceptions to `lines`. Gem/framework
+    # backtrace frames are collapsed unless DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1.
+    def append_failure_dump(lines)
+      lines << "\n"
+      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
+
+      exceptions.each do |(path, ex)|
+        lines << "\n"
+        lines << "Error encountered while processing #{path}.\n"
+        lines << "  #{ex.class}: #{ex.message}\n"
+        framework_lines_excluded = 0
+
+        ex.backtrace.each do |line|
+          # This behaviour is enabled by default, to include gems in
+          # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
+          if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
+            if line.match?(%r{/gems/})
+              framework_lines_excluded += 1
+              next
+            else
+              if framework_lines_excluded.positive?
+                lines << "    ...(#{framework_lines_excluded} framework line(s) excluded)\n"
+                framework_lines_excluded = 0
+              end
+            end
+          end
+          lines << "    #{line}\n"
+        end
+      end
+
+      lines << "\n"
+      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
+    end
   end
 
   def initialize(app, config = {})

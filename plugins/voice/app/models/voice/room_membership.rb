@@ -16,6 +16,14 @@ module Voice
       "speaker" => ROLE_SPEAKER,
     }.freeze
 
+    class << self
+      def role_value(key)
+        return ROLE_PARTICIPANT if key.blank?
+
+        ROLES[key.to_s] || ROLE_PARTICIPANT
+      end
+    end
+
     scope :moderator, -> { where(role: ROLE_MODERATOR) }
     scope :speaker, -> { where(role: ROLE_SPEAKER) }
 
@@ -37,12 +45,6 @@ module Voice
 
     def role_name
       ROLES.key(role) || "participant"
-    end
-
-    def self.role_value(key)
-      return ROLE_PARTICIPANT if key.blank?
-
-      ROLES[key.to_s] || ROLE_PARTICIPANT
     end
 
     validates :room_id, presence: true

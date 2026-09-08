@@ -45,39 +45,59 @@ class UserOption < ActiveRecord::Base
   enum :push_notification_level, { none: 0, all: 1, chat_only: 2 }, prefix: true, scopes: false
   enum :send_shortcut, { enter: 0, meta_enter: 1 }, prefix: true, scopes: false
 
-  def self.ensure_consistency!
-    sql = <<~SQL
+  class << self
+    def ensure_consistency!
+      sql = <<~SQL
       SELECT u.id FROM users u
       LEFT JOIN user_options o ON o.user_id = u.id
       WHERE o.user_id IS NULL
     SQL
 
-    DB.query_single(sql).each { |id| UserOption.create(user_id: id) }
-  end
+      DB.query_single(sql).each { |id| UserOption.create(user_id: id) }
+    end
 
-  def self.previous_replies_type
-    @previous_replies_type ||= Enum.new(always: 0, unless_emailed: 1, never: 2)
-  end
+    def previous_replies_type
+      @previous_replies_type ||= Enum.new(always: 0, unless_emailed: 1, never: 2)
+    end
 
-  def self.like_notification_frequency_type
-    @like_notification_frequency_type ||=
-      Enum.new(always: 0, first_time_and_daily: 1, first_time: 2, never: 3)
-  end
+    def like_notification_frequency_type
+      @like_notification_frequency_type ||=
+        Enum.new(always: 0, first_time_and_daily: 1, first_time: 2, never: 3)
+    end
 
-  def self.text_sizes
-    @text_sizes ||= Enum.new(smallest: 4, smaller: 3, normal: 0, larger: 1, largest: 2)
-  end
+    def text_sizes
+      @text_sizes ||= Enum.new(smallest: 4, smaller: 3, normal: 0, larger: 1, largest: 2)
+    end
 
-  def self.title_count_modes
-    @title_count_modes ||= Enum.new(notifications: 0, contextual: 1)
-  end
+    def title_count_modes
+      @title_count_modes ||= Enum.new(notifications: 0, contextual: 1)
+    end
 
-  def self.email_level_types
-    @email_level_type ||= Enum.new(always: 0, only_when_away: 1, never: 2)
-  end
+    def email_level_types
+      @email_level_type ||= Enum.new(always: 0, only_when_away: 1, never: 2)
+    end
 
-  def self.composition_mode_types
-    @composition_mode_types ||= Enum.new(markdown: 0, rich: 1)
+    def composition_mode_types
+      @composition_mode_types ||= Enum.new(markdown: 0, rich: 1)
+    end
+
+    public
+
+    def user_tzinfo(user_id)
+      timezone = UserOption.where(user_id: user_id).pluck(:timezone).first || "UTC"
+
+      tzinfo = nil
+      begin
+        tzinfo = ActiveSupport::TimeZone.find_tzinfo(timezone)
+      rescue TZInfo::InvalidTimezoneIdentifier
+        Rails.logger.warn(
+          "#{User.find_by(id: user_id)&.username} has the timezone #{timezone} set, we do not know how to parse it in Rails, fallback to UTC",
+        )
+        tzinfo = ActiveSupport::TimeZone.find_tzinfo("UTC")
+      end
+
+      tzinfo
+    end
   end
 
   validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }
@@ -237,22 +257,6 @@ class UserOption < ActiveRecord::Base
 
   def likes_notifications_disabled?
     like_notification_frequency == UserOption.like_notification_frequency_type[:never]
-  end
-
-  def self.user_tzinfo(user_id)
-    timezone = UserOption.where(user_id: user_id).pluck(:timezone).first || "UTC"
-
-    tzinfo = nil
-    begin
-      tzinfo = ActiveSupport::TimeZone.find_tzinfo(timezone)
-    rescue TZInfo::InvalidTimezoneIdentifier
-      Rails.logger.warn(
-        "#{User.find_by(id: user_id)&.username} has the timezone #{timezone} set, we do not know how to parse it in Rails, fallback to UTC",
-      )
-      tzinfo = ActiveSupport::TimeZone.find_tzinfo("UTC")
-    end
-
-    tzinfo
   end
 
   private

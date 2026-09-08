@@ -6,7 +6,9 @@ RSpec.describe Service::ContractBase, type: :model do
   describe "Nested attributes" do
     let(:contract_class) do
       Class.new(described_class) do
-        def self.name = "TestContract"
+        class << self
+          def name = "TestContract"
+        end
 
         attribute :channel_id, :integer
 
@@ -137,7 +139,9 @@ RSpec.describe Service::ContractBase, type: :model do
     context "with multiple levels of nesting" do
       let(:contract_class) do
         Class.new(described_class) do
-          def self.name = "TestContract"
+          class << self
+            def name = "TestContract"
+          end
 
           attribute :data do
             attribute :nested do

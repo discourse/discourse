@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 module EmailLogsMixin
-  def self.included(klass)
-    klass.attributes :id,
-                     :to_address,
-                     :email_type,
-                     :user_id,
-                     :created_at,
-                     :post_url,
-                     :post_description
+  class << self
+    def included(klass)
+      klass.attributes :id,
+                       :to_address,
+                       :email_type,
+                       :user_id,
+                       :created_at,
+                       :post_url,
+                       :post_description
 
-    klass.has_one :user, serializer: BasicUserSerializer, embed: :objects
+      klass.has_one :user, serializer: BasicUserSerializer, embed: :objects
+    end
   end
 
   def post_url

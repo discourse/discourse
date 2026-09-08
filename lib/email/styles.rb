@@ -19,15 +19,17 @@ module Email
 
     delegate :css, to: :fragment
 
+    class << self
+      def register_plugin_style(&block)
+        @@plugin_callbacks.push(block)
+      end
+    end
+
     def initialize(html, opts = nil)
       @html = html
       @opts = opts || {}
       @fragment = Nokogiri::HTML5.parse(@html)
       @custom_styles = nil
-    end
-
-    def self.register_plugin_style(&block)
-      @@plugin_callbacks.push(block)
     end
 
     def add_styles(node, new_styles)

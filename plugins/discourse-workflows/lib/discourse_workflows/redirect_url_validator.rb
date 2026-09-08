@@ -2,8 +2,10 @@
 
 module DiscourseWorkflows
   class RedirectUrlValidator
-    def self.valid?(url, allowed_domains)
-      new(url, allowed_domains).valid?
+    class << self
+      def valid?(url, allowed_domains)
+        new(url, allowed_domains).valid?
+      end
     end
 
     def initialize(url, allowed_domains)

@@ -8,15 +8,16 @@ require_relative "discourse_assign/assignment_permissions"
 class ::Assigner
   ASSIGNMENTS_PER_TOPIC_LIMIT = 5
 
-  def self.backfill_auto_assign
-    staff_mention =
-      User
-        .assign_allowed
-        .pluck("username")
-        .map { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
-        .join(" OR ")
+  class << self
+    def backfill_auto_assign
+      staff_mention =
+        User
+          .assign_allowed
+          .pluck("username")
+          .map { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
+          .join(" OR ")
 
-    sql = <<~SQL
+      sql = <<~SQL
       SELECT p.topic_id, MAX(post_number) post_number
         FROM posts p
         JOIN topics t ON t.id = p.topic_id
@@ -29,108 +30,113 @@ class ::Assigner
        GROUP BY p.topic_id
     SQL
 
-    puts
-    assigned = 0
+      puts
+      assigned = 0
 
-    ActiveRecord::Base
-      .connection
-      .raw_connection
-      .exec(sql)
-      .to_a
-      .each do |row|
-        post = Post.find_by(post_number: row["post_number"].to_i, topic_id: row["topic_id"].to_i)
-        assigned += 1 if post && auto_assign(post)
-        putc "."
-      end
+      ActiveRecord::Base
+        .connection
+        .raw_connection
+        .exec(sql)
+        .to_a
+        .each do |row|
+          post = Post.find_by(post_number: row["post_number"].to_i, topic_id: row["topic_id"].to_i)
+          assigned += 1 if post && auto_assign(post)
+          putc "."
+        end
 
-    puts
-    puts "#{assigned} topics where automatically assigned to staff members"
-  end
+      puts
+      puts "#{assigned} topics where automatically assigned to staff members"
+    end
 
-  def self.assigned_self?(text)
-    return false if text.blank? || SiteSetting.assign_self_regex.blank?
-    regex =
-      begin
-        Regexp.new(SiteSetting.assign_self_regex)
-      rescue StandardError
-        nil
-      end
-    !!(regex && text[regex])
-  end
+    def assigned_self?(text)
+      return false if text.blank? || SiteSetting.assign_self_regex.blank?
+      regex =
+        begin
+          Regexp.new(SiteSetting.assign_self_regex)
+        rescue StandardError
+          nil
+        end
+      !!(regex && text[regex])
+    end
 
-  def self.assigned_other?(text)
-    return false if text.blank? || SiteSetting.assign_other_regex.blank?
-    regex =
-      begin
-        Regexp.new(SiteSetting.assign_other_regex)
-      rescue StandardError
-        nil
-      end
-    !!(regex && text[regex])
-  end
+    def assigned_other?(text)
+      return false if text.blank? || SiteSetting.assign_other_regex.blank?
+      regex =
+        begin
+          Regexp.new(SiteSetting.assign_other_regex)
+        rescue StandardError
+          nil
+        end
+      !!(regex && text[regex])
+    end
 
-  def self.auto_assign(post, force: false)
-    return unless SiteSetting.assigns_by_staff_mention
+    def auto_assign(post, force: false)
+      return unless SiteSetting.assigns_by_staff_mention
 
-    if post.user && post.topic && post.user.can_assign?(post.topic)
-      return if post.topic.assignment.present? && !force
+      if post.user && post.topic && post.user.can_assign?(post.topic)
+        return if post.topic.assignment.present? && !force
 
-      # remove quotes, oneboxes and code blocks
-      doc = Nokogiri::HTML5.fragment(post.cooked)
-      doc.css(".quote, .onebox, pre, code").remove
-      text = doc.text.strip
+        # remove quotes, oneboxes and code blocks
+        doc = Nokogiri::HTML5.fragment(post.cooked)
+        doc.css(".quote, .onebox, pre, code").remove
+        text = doc.text.strip
 
-      assign_other = assigned_other?(text) && mentioned_staff(post)
-      assign_self = assigned_self?(text) && post.user
-      return unless assign_other || assign_self
+        assign_other = assigned_other?(text) && mentioned_staff(post)
+        assign_self = assigned_self?(text) && post.user
+        return unless assign_other || assign_self
 
-      if is_last_staff_post?(post)
-        assigner = new(post.topic, post.user)
-        if assign_other
-          assigner.assign(assign_other, skip_small_action_post: true)
-        elsif assign_self
-          assigner.assign(assign_self, skip_small_action_post: true)
+        if is_last_staff_post?(post)
+          assigner = new(post.topic, post.user)
+          if assign_other
+            assigner.assign(assign_other, skip_small_action_post: true)
+          elsif assign_self
+            assigner.assign(assign_self, skip_small_action_post: true)
+          end
         end
       end
     end
-  end
 
-  def self.is_last_staff_post?(post)
-    allowed_user_ids =
-      DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic)
-    return false if allowed_user_ids.empty?
+    def is_last_staff_post?(post)
+      allowed_user_ids =
+        DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic)
+      return false if allowed_user_ids.empty?
 
-    Post.where(topic_id: post.topic_id, user_id: allowed_user_ids).maximum(:post_number) ==
-      post.post_number
-  end
-
-  def self.mentioned_staff(post)
-    mentions = post.raw_mentions
-    if mentions.present?
-      User
-        .human_users
-        .where(id: DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic))
-        .where(username_lower: mentions.map(&:downcase))
-        .first
+      Post.where(topic_id: post.topic_id, user_id: allowed_user_ids).maximum(:post_number) ==
+        post.post_number
     end
-  end
 
-  def self.failure_message(reason, assign_to)
-    name = assign_to.is_a?(User) ? assign_to.username : assign_to&.name
+    def mentioned_staff(post)
+      mentions = post.raw_mentions
+      if mentions.present?
+        User
+          .human_users
+          .where(id: DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic))
+          .where(username_lower: mentions.map(&:downcase))
+          .first
+      end
+    end
 
-    I18n.t(
-      "discourse_assign.#{reason}",
-      username: name,
-      group: name,
-      limit: ASSIGNMENTS_PER_TOPIC_LIMIT,
-      max: SiteSetting.max_assigned_topics,
-      note_max: SiteSetting.max_post_length,
-    )
-  end
+    def failure_message(reason, assign_to)
+      name = assign_to.is_a?(User) ? assign_to.username : assign_to&.name
 
-  def self.publish_topic_tracking_state(topic, user_id)
-    if topic.private_message?
-      MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, user_ids: [user_id])
+      I18n.t(
+        "discourse_assign.#{reason}",
+        username: name,
+        group: name,
+        limit: ASSIGNMENTS_PER_TOPIC_LIMIT,
+        max: SiteSetting.max_assigned_topics,
+        note_max: SiteSetting.max_post_length,
+      )
+    end
+
+    def publish_topic_tracking_state(topic, user_id)
+      if topic.private_message?
+        MessageBus.publish(
+          "/private-messages/assigned",
+          { topic_id: topic.id },
+          user_ids: [user_id],
+        )
+      end
     end
   end
 

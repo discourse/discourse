@@ -5,14 +5,16 @@ class ThemeJavascriptCompiler
   end
 
   @@terser_disabled = false
-  def self.disable_terser!
-    raise "Tests only" if !Rails.env.test?
-    @@terser_disabled = true
-  end
+  class << self
+    def disable_terser!
+      raise "Tests only" if !Rails.env.test?
+      @@terser_disabled = true
+    end
 
-  def self.enable_terser!
-    raise "Tests only" if !Rails.env.test?
-    @@terser_disabled = false
+    def enable_terser!
+      raise "Tests only" if !Rails.env.test?
+      @@terser_disabled = false
+    end
   end
 
   def initialize(theme_id, theme_name, minify: true)

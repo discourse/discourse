@@ -4,8 +4,10 @@ module DiscourseWorkflows
   module Ai
     module Tools
       class Base < DiscourseAi::Agents::Tools::Tool
-        def self.custom?
-          true
+        class << self
+          def custom?
+            true
+          end
         end
 
         private

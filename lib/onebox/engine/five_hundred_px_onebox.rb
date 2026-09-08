@@ -9,8 +9,10 @@ module Onebox
       matches_domain("500px.com")
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/photo/\d+/})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/photo/\d+/})
+        end
       end
 
       def to_html

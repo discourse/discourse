@@ -8,19 +8,21 @@ require "tmpdir"
 class NginxTestProxy
   attr_reader :port
 
-  def self.available?
-    executable.present?
-  end
+  class << self
+    def available?
+      executable.present?
+    end
 
-  def self.executable
-    override = ENV["NGINX_BIN"]
-    return override if override.present? && File.executable?(override)
+    def executable
+      override = ENV["NGINX_BIN"]
+      return override if override.present? && File.executable?(override)
 
-    ENV
-      .fetch("PATH", "")
-      .split(File::PATH_SEPARATOR)
-      .map { |path| File.join(path, "nginx") }
-      .find { |path| File.file?(path) && File.executable?(path) }
+      ENV
+        .fetch("PATH", "")
+        .split(File::PATH_SEPARATOR)
+        .map { |path| File.join(path, "nginx") }
+        .find { |path| File.file?(path) && File.executable?(path) }
+    end
   end
 
   def initialize(upstream_port:)

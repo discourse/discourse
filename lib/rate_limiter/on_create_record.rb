@@ -22,8 +22,10 @@ class RateLimiter
       @rate_limiter = RateLimiter.new(user, limit_key, 1, max_setting)
     end
 
-    def self.included(base)
-      base.extend(ClassMethods)
+    class << self
+      def included(base)
+        base.extend(ClassMethods)
+      end
     end
 
     # For the lifetime of this instance, don't enforce rate limits.

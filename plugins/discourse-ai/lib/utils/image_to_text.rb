@@ -50,23 +50,25 @@ class DiscourseAi::Utils::ImageToText
     end
   end
 
-  def self.as_fake_file(uploads:, llm_model:, user:, execution_context: nil)
-    # given our implementation for extracting text expect a file, return a simple object that can simulate read(size)
-    # and stream content
-    Reader.new(uploads: uploads, llm_model: llm_model, user: user, execution_context:)
-  end
+  class << self
+    def as_fake_file(uploads:, llm_model:, user:, execution_context: nil)
+      # given our implementation for extracting text expect a file, return a simple object that can simulate read(size)
+      # and stream content
+      Reader.new(uploads: uploads, llm_model: llm_model, user: user, execution_context:)
+    end
 
-  def self.tesseract_installed?
-    if defined?(@tesseract_installed)
-      @tesseract_installed
-    else
-      @tesseract_installed =
-        begin
-          Discourse::Utils.execute_command("which", "tesseract")
-          true
-        rescue Discourse::Utils::CommandError
-          false
-        end
+    def tesseract_installed?
+      if defined?(@tesseract_installed)
+        @tesseract_installed
+      else
+        @tesseract_installed =
+          begin
+            Discourse::Utils.execute_command("which", "tesseract")
+            true
+          rescue Discourse::Utils::CommandError
+            false
+          end
+      end
     end
   end
 

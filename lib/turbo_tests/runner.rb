@@ -2,42 +2,44 @@
 
 module TurboTests
   class Runner
-    def self.run(opts = {})
-      files = opts[:files]
-      formatters = opts[:formatters]
-      seed = opts[:seed]
-      start_time = opts.fetch(:start_time) { Time.now }
-      verbose = opts.fetch(:verbose, false)
-      fail_fast = opts.fetch(:fail_fast, nil)
-      use_runtime_info = opts.fetch(:use_runtime_info, false)
-      retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
+    class << self
+      def run(opts = {})
+        files = opts[:files]
+        formatters = opts[:formatters]
+        seed = opts[:seed]
+        start_time = opts.fetch(:start_time) { Time.now }
+        verbose = opts.fetch(:verbose, false)
+        fail_fast = opts.fetch(:fail_fast, nil)
+        use_runtime_info = opts.fetch(:use_runtime_info, false)
+        retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
 
-      reporter =
-        Reporter.from_config(
-          formatters,
-          start_time,
-          max_timings_count: opts[:profile_print_slowest_examples_count],
-        )
+        reporter =
+          Reporter.from_config(
+            formatters,
+            start_time,
+            max_timings_count: opts[:profile_print_slowest_examples_count],
+          )
 
-      if ENV["GITHUB_ACTIONS"]
-        RSpec.configure do |config|
-          # Enable color output in GitHub Actions
-          # This eventually will be `config.color_mode = :on` in RSpec 4?
-          config.tty = true
-          config.color = true
+        if ENV["GITHUB_ACTIONS"]
+          RSpec.configure do |config|
+            # Enable color output in GitHub Actions
+            # This eventually will be `config.color_mode = :on` in RSpec 4?
+            config.tty = true
+            config.color = true
+          end
         end
-      end
 
-      new(
-        reporter: reporter,
-        files: files,
-        verbose: verbose,
-        fail_fast: fail_fast,
-        use_runtime_info: use_runtime_info,
-        seed: seed,
-        profile: opts[:profile],
-        retry_and_log_flaky_tests: retry_and_log_flaky_tests,
-      ).run
+        new(
+          reporter: reporter,
+          files: files,
+          verbose: verbose,
+          fail_fast: fail_fast,
+          use_runtime_info: use_runtime_info,
+          seed: seed,
+          profile: opts[:profile],
+          retry_and_log_flaky_tests: retry_and_log_flaky_tests,
+        ).run
+      end
     end
 
     def initialize(opts)

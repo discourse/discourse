@@ -12,22 +12,24 @@ RSpec.shared_context "with dummy provider" do
       @@sent_messages = []
       @@raise_exception = nil
 
-      def self.trigger_notification(post, channel, rule)
-        raise @@raise_exception if @@raise_exception
+      class << self
+        def trigger_notification(post, channel, rule)
+          raise @@raise_exception if @@raise_exception
 
-        @@sent_messages.push(post: post.id, channel: channel)
-      end
+          @@sent_messages.push(post: post.id, channel: channel)
+        end
 
-      def self.sent_messages
-        @@sent_messages
-      end
+        def sent_messages
+          @@sent_messages
+        end
 
-      def self.sent_to_channel_ids
-        @@sent_messages.map { |x| x[:channel].id }
-      end
+        def sent_to_channel_ids
+          @@sent_messages.map { |x| x[:channel].id }
+        end
 
-      def self.set_raise_exception(bool)
-        @@raise_exception = bool
+        def set_raise_exception(bool)
+          @@raise_exception = bool
+        end
       end
     end
   end
@@ -49,19 +51,21 @@ RSpec.shared_context "with validated dummy provider" do
 
       @@sent_messages = []
 
-      def self.trigger_notification(post, channel, rule)
-        @@sent_messages.push(post: post.id, channel: channel)
-      end
+      class << self
+        def trigger_notification(post, channel, rule)
+          @@sent_messages.push(post: post.id, channel: channel)
+        end
 
-      def self.sent_messages
-        @@sent_messages
-      end
+        def sent_messages
+          @@sent_messages
+        end
 
-      def self.get_channel_by_name(name)
-        DiscourseChatIntegration::Channel
-          .with_provider(PROVIDER_NAME)
-          .with_data_value(CHANNEL_IDENTIFIER_KEY, name)
-          .first
+        def get_channel_by_name(name)
+          DiscourseChatIntegration::Channel
+            .with_provider(PROVIDER_NAME)
+            .with_data_value(CHANNEL_IDENTIFIER_KEY, name)
+            .first
+        end
       end
     end
   end

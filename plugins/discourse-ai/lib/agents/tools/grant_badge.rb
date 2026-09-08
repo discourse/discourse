@@ -4,39 +4,41 @@ module DiscourseAi
   module Agents
     module Tools
       class GrantBadge < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Grants a badge to a user.",
-            parameters: [
-              {
-                name: "username",
-                description: "The username of the user to grant the badge to",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "badge_name",
-                description: "The name of the badge to grant",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the badge is being granted",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Grants a badge to a user.",
+              parameters: [
+                {
+                  name: "username",
+                  description: "The username of the user to grant the badge to",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "badge_name",
+                  description: "The name of the badge to grant",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the badge is being granted",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "grant_badge"
-        end
+          def name
+            "grant_badge"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

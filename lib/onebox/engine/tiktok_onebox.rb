@@ -10,12 +10,14 @@ module Onebox
       requires_iframe_origins "https://www.tiktok.com"
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^(/@.+/video/\d+|/v/\d+)(/\w+)?/?$})
-      end
+      class << self
+        def matches_path(path)
+          path.match?(%r{^(/@.+/video/\d+|/v/\d+)(/\w+)?/?$})
+        end
 
-      def self.embed_url(video_id)
-        "https://www.tiktok.com/embed/v2/#{video_id}"
+        def embed_url(video_id)
+          "https://www.tiktok.com/embed/v2/#{video_id}"
+        end
       end
 
       def placeholder_html

@@ -7,24 +7,26 @@ module DiscourseAi
         INCLUDE_DESCRIPTIONS_MAX_LENGTH = 10
         MAX_RESULTS = 200
 
-        def self.signature
-          {
-            name: name,
-            description: "Will search through site settings and return top 20 results",
-            parameters: [
-              {
-                name: "query",
-                description:
-                  "comma delimited list of settings to search for (e.g. 'setting_1,setting_2')",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Will search through site settings and return top 20 results",
+              parameters: [
+                {
+                  name: "query",
+                  description:
+                    "comma delimited list of settings to search for (e.g. 'setting_1,setting_2')",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "search_settings"
+          def name
+            "search_settings"
+          end
         end
 
         def query

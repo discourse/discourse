@@ -11,9 +11,11 @@ module Migrations
   # step A wrote -- not thematic grouping. Inventing dependencies needlessly
   # constrains scheduling.
   module StepDependencies
-    def self.extended(base)
-      base.define_singleton_method(:dependency_base_class) { base }
-      base.private_class_method(:dependency_base_class)
+    class << self
+      def extended(base)
+        base.define_singleton_method(:dependency_base_class) { base }
+        base.private_class_method(:dependency_base_class)
+      end
     end
 
     def depends_on(*step_names)

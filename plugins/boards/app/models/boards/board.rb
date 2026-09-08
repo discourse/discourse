@@ -35,23 +35,54 @@ module Boards
 
     before_validation :normalize_slug
 
-    def self.mandatory_acl
-      [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
-    end
+    class << self
+      def mandatory_acl
+        [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+      end
 
-    def self.banned_acl
-      [
-        { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "manage" },
-        { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
-        # Essentially a legacy group ID, don't want anyone to use it.
-        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "manage" },
-        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "edit" },
-        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "view" },
-      ]
-    end
+      def banned_acl
+        [
+          { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "manage" },
+          { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
+          # Essentially a legacy group ID, don't want anyone to use it.
+          { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "manage" },
+          { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "edit" },
+          { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "view" },
+        ]
+      end
 
-    def self.loss_warning_permissions
-      ["manage"]
+      def loss_warning_permissions
+        ["manage"]
+      end
+
+      def preload_tags(boards)
+        preload_array_association(boards, :tag_ids, :@tags, Tag)
+      end
+
+      def preload_categories(boards)
+        preload_array_association(boards, :category_ids, :@categories, Category)
+      end
+
+      private
+
+      def preload_array_association(records, ids_attr, ivar, klass)
+        records = Array(records)
+        return records if records.empty?
+
+        all_ids = records.flat_map(&ids_attr).uniq
+        records_by_id = all_ids.empty? ? {} : klass.where(id: all_ids).index_by(&:id)
+
+        records.each do |record|
+          sorted =
+            record
+              .public_send(ids_attr)
+              .filter_map { |id| records_by_id[id] }
+              .sort_by { |r| r.name.to_s }
+          record.instance_variable_set(ivar, sorted)
+        end
+
+        records
+      end
     end
 
     def url
@@ -94,34 +125,6 @@ module Boards
     def categories
       @categories ||= Category.where(id: category_ids).order(:name).to_a
     end
-
-    def self.preload_tags(boards)
-      preload_array_association(boards, :tag_ids, :@tags, Tag)
-    end
-
-    def self.preload_categories(boards)
-      preload_array_association(boards, :category_ids, :@categories, Category)
-    end
-
-    def self.preload_array_association(records, ids_attr, ivar, klass)
-      records = Array(records)
-      return records if records.empty?
-
-      all_ids = records.flat_map(&ids_attr).uniq
-      records_by_id = all_ids.empty? ? {} : klass.where(id: all_ids).index_by(&:id)
-
-      records.each do |record|
-        sorted =
-          record
-            .public_send(ids_attr)
-            .filter_map { |id| records_by_id[id] }
-            .sort_by { |r| r.name.to_s }
-        record.instance_variable_set(ivar, sorted)
-      end
-
-      records
-    end
-    private_class_method :preload_array_association
 
     def tag_names=(names)
       names = Array(names).select(&:present?)

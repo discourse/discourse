@@ -7,35 +7,37 @@ module DiscourseEvents
 
       has_one :image_upload, embed: :object, serializer: UploadSerializer
 
-      def self.sample_invitees_by_event(events)
-        event_ids = events.map(&:id)
-        return {} if event_ids.empty?
+      class << self
+        def sample_invitees_by_event(events)
+          event_ids = events.map(&:id)
+          return {} if event_ids.empty?
 
-        limit = SiteSetting.displayed_invitees_limit
-        ranked_invitees =
+          limit = SiteSetting.displayed_invitees_limit
+          ranked_invitees =
+            Invitee
+              .unscoped
+              .joins(:user)
+              .merge(User.not_suspended)
+              .merge(User.not_silenced)
+              .merge(User.not_staged)
+              .where.not(users: { id: nil })
+              .where(post_id: event_ids)
+              .select(
+                "discourse_post_event_invitees.*, " \
+                  "ROW_NUMBER() OVER (" \
+                  "PARTITION BY discourse_post_event_invitees.post_id " \
+                  "ORDER BY discourse_post_event_invitees.status, " \
+                  "discourse_post_event_invitees.created_at, " \
+                  "discourse_post_event_invitees.user_id" \
+                  ") AS rank",
+              )
+
           Invitee
-            .unscoped
-            .joins(:user)
-            .merge(User.not_suspended)
-            .merge(User.not_silenced)
-            .merge(User.not_staged)
-            .where.not(users: { id: nil })
-            .where(post_id: event_ids)
-            .select(
-              "discourse_post_event_invitees.*, " \
-                "ROW_NUMBER() OVER (" \
-                "PARTITION BY discourse_post_event_invitees.post_id " \
-                "ORDER BY discourse_post_event_invitees.status, " \
-                "discourse_post_event_invitees.created_at, " \
-                "discourse_post_event_invitees.user_id" \
-                ") AS rank",
-            )
-
-        Invitee
-          .from("(#{ranked_invitees.to_sql}) discourse_post_event_invitees")
-          .where("rank <= ?", limit)
-          .preload(:user)
-          .group_by(&:post_id)
+            .from("(#{ranked_invitees.to_sql}) discourse_post_event_invitees")
+            .where("rank <= ?", limit)
+            .preload(:user)
+            .group_by(&:post_id)
+        end
       end
 
       def creator

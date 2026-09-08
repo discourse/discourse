@@ -2,8 +2,9 @@
 
 module DiscourseGamification
   class PostRead < Scorable
-    def self.query(leaderboard: nil)
-      <<~SQL
+    class << self
+      def query(leaderboard: nil)
+        <<~SQL
         SELECT
           uv.user_id AS user_id,
           date_trunc('day', uv.visited_at) AS date,
@@ -16,6 +17,7 @@ module DiscourseGamification
         GROUP BY
           1, 2
       SQL
+      end
     end
   end
 end

@@ -4,6 +4,32 @@ require_dependency "feed_item_accessor"
 
 module DiscourseRssPolling
   class FeedItem
+    CONTENT_ELEMENT_TAG_NAMES = %i[content_encoded content description summary]
+    MINIMUM_TEXT_LENGTH_TO_TRUNCATE = 500
+    MARKDOWN_COMPATIBLE_TAG_NAMES = %w[
+      a
+      abbr
+      b
+      br
+      code
+      del
+      em
+      i
+      img
+      ins
+      kbd
+      mark
+      q
+      s
+      small
+      span
+      strong
+      sub
+      sup
+      time
+      u
+    ]
+
     def initialize(rss_item, accessor = ::FeedItemAccessor)
       @accessor = accessor.new(rss_item)
     end
@@ -105,32 +131,6 @@ module DiscourseRssPolling
     end
 
     private
-
-    CONTENT_ELEMENT_TAG_NAMES = %i[content_encoded content description summary]
-    MINIMUM_TEXT_LENGTH_TO_TRUNCATE = 500
-    MARKDOWN_COMPATIBLE_TAG_NAMES = %w[
-      a
-      abbr
-      b
-      br
-      code
-      del
-      em
-      i
-      img
-      ins
-      kbd
-      mark
-      q
-      s
-      small
-      span
-      strong
-      sub
-      sup
-      time
-      u
-    ]
 
     def content_element_name
       return @content_element_name if defined?(@content_element_name)

@@ -4,13 +4,15 @@ module Email
   class Processor
     attr_reader :receiver
 
+    class << self
+      def process!(mail, opts = {})
+        Email::Processor.new(mail, opts).process!
+      end
+    end
+
     def initialize(mail, opts = {})
       @mail = mail
       @opts = opts
-    end
-
-    def self.process!(mail, opts = {})
-      Email::Processor.new(mail, opts).process!
     end
 
     def process!

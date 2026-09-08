@@ -13,6 +13,36 @@ module DiscourseNarrativeBot
 
     RESET_TRIGGER_EXACT_MATCH_LENGTH = 200
 
+    class << self
+      def reset_trigger
+        I18n.t(i18n_key("reset_trigger"))
+      end
+
+      def skip_trigger
+        I18n.t(i18n_key("skip_trigger"))
+      end
+
+      def help_trigger
+        I18n.t(i18n_key("help_trigger"))
+      end
+
+      def quote_trigger
+        I18n.t("discourse_narrative_bot.quote.trigger")
+      end
+
+      def dice_trigger
+        I18n.t("discourse_narrative_bot.dice.trigger")
+      end
+
+      def magic_8_ball_trigger
+        I18n.t("discourse_narrative_bot.magic_8_ball.trigger")
+      end
+
+      def i18n_key(key)
+        "discourse_narrative_bot.track_selector.#{key}"
+      end
+    end
+
     def initialize(input, user, post_id:, topic_id: nil)
       @input = input
       @user = user
@@ -62,30 +92,6 @@ module DiscourseNarrativeBot
         klass = (data[:track] || NewUserNarrative.to_s).constantize
         klass.new.input(@input, @user, post: @post, topic_id: @topic_id)
       end
-    end
-
-    def self.reset_trigger
-      I18n.t(i18n_key("reset_trigger"))
-    end
-
-    def self.skip_trigger
-      I18n.t(i18n_key("skip_trigger"))
-    end
-
-    def self.help_trigger
-      I18n.t(i18n_key("help_trigger"))
-    end
-
-    def self.quote_trigger
-      I18n.t("discourse_narrative_bot.quote.trigger")
-    end
-
-    def self.dice_trigger
-      I18n.t("discourse_narrative_bot.dice.trigger")
-    end
-
-    def self.magic_8_ball_trigger
-      I18n.t("discourse_narrative_bot.magic_8_ball.trigger")
     end
 
     private
@@ -216,10 +222,6 @@ module DiscourseNarrativeBot
       end
 
       Discourse.redis.incr(key)
-    end
-
-    def self.i18n_key(key)
-      "discourse_narrative_bot.track_selector.#{key}"
     end
 
     def skip_track?

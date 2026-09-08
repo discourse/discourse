@@ -3,12 +3,14 @@
 module DiscourseAi
   module Agents
     class ImageCaptioner < Agent
-      def self.default_enabled
-        false
-      end
+      class << self
+        def default_enabled
+          false
+        end
 
-      def self.vision_enabled
-        true
+        def vision_enabled
+          true
+        end
       end
 
       def system_prompt

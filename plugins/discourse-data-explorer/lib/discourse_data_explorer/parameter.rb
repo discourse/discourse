@@ -4,6 +4,85 @@ module DiscourseDataExplorer
   class Parameter
     attr_accessor :identifier, :type, :default, :nullable
 
+    class << self
+      def types
+        @types ||=
+          Enum.new(
+            # Normal types
+            :int,
+            :bigint,
+            :boolean,
+            :string,
+            :date,
+            :time,
+            :datetime,
+            :double,
+            # Selection help
+            :user_id,
+            :post_id,
+            :topic_id,
+            :category_id,
+            :group_id,
+            :badge_id,
+            # Arrays
+            :int_list,
+            :string_list,
+            :user_list,
+            :group_list,
+            # System-injected (value set by server, not user input)
+            :current_user_id,
+          )
+      end
+
+      def internal_types
+        @internal_types ||= %i[current_user_id]
+      end
+
+      def type_aliases
+        @type_aliases ||= { integer: :int, text: :string, timestamp: :datetime }
+      end
+
+      def create_from_sql(sql, opts = {})
+        in_params = false
+        ret_params = []
+        sql.lines.find do |line|
+          line.chomp!
+
+          if in_params
+            # -- (ident) :(ident) (= (ident))?
+
+            if line =~ /^\s*--\s*([a-zA-Z_ ]+)\s*:([a-z_]+)\s*(?:=\s+(.*)\s*)?$/
+              type = $1
+              ident = $2
+              default = $3
+              nullable = false
+              if type =~ /^(null)?(.*?)(null)?$/i
+                nullable = true if $1 || $3
+                type = $2
+              end
+              type = type.strip
+
+              begin
+                ret_params << Parameter.new(ident, type, default, nullable, validate: opts[:strict])
+              rescue StandardError
+                raise if opts[:strict]
+              end
+
+              false
+            elsif line =~ /^\s+$/
+              false
+            else
+              true
+            end
+          else
+            in_params = true if line =~ /^\s*--\s*\[params\]\s*$/
+            false
+          end
+        end
+        ret_params
+      end
+    end
+
     def initialize(identifier, type, default, nullable, validate: true)
       unless identifier
         raise ValidationError.new("Parameter declaration error - identifier is missing")
@@ -43,85 +122,8 @@ module DiscourseDataExplorer
       }
     end
 
-    def self.types
-      @types ||=
-        Enum.new(
-          # Normal types
-          :int,
-          :bigint,
-          :boolean,
-          :string,
-          :date,
-          :time,
-          :datetime,
-          :double,
-          # Selection help
-          :user_id,
-          :post_id,
-          :topic_id,
-          :category_id,
-          :group_id,
-          :badge_id,
-          # Arrays
-          :int_list,
-          :string_list,
-          :user_list,
-          :group_list,
-          # System-injected (value set by server, not user input)
-          :current_user_id,
-        )
-    end
-
-    def self.internal_types
-      @internal_types ||= %i[current_user_id]
-    end
-
     def internal?
       self.class.internal_types.include?(@type)
-    end
-
-    def self.type_aliases
-      @type_aliases ||= { integer: :int, text: :string, timestamp: :datetime }
-    end
-
-    def self.create_from_sql(sql, opts = {})
-      in_params = false
-      ret_params = []
-      sql.lines.find do |line|
-        line.chomp!
-
-        if in_params
-          # -- (ident) :(ident) (= (ident))?
-
-          if line =~ /^\s*--\s*([a-zA-Z_ ]+)\s*:([a-z_]+)\s*(?:=\s+(.*)\s*)?$/
-            type = $1
-            ident = $2
-            default = $3
-            nullable = false
-            if type =~ /^(null)?(.*?)(null)?$/i
-              nullable = true if $1 || $3
-              type = $2
-            end
-            type = type.strip
-
-            begin
-              ret_params << Parameter.new(ident, type, default, nullable, validate: opts[:strict])
-            rescue StandardError
-              raise if opts[:strict]
-            end
-
-            false
-          elsif line =~ /^\s+$/
-            false
-          else
-            true
-          end
-        else
-          in_params = true if line =~ /^\s*--\s*\[params\]\s*$/
-          false
-        end
-      end
-      ret_params
     end
 
     def cast_to_ruby(string, opts = {})

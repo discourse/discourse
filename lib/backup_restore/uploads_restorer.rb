@@ -8,17 +8,19 @@ module BackupRestore
 
     S3_ENDPOINT_REGEX = /\.s3(?:\.dualstack\.[a-z0-9\-]+?|[.\-][a-z0-9\-]+?)?\.amazonaws\.com/
 
-    def self.s3_regex_string(s3_base_url)
-      clean_url = s3_base_url.sub(S3_ENDPOINT_REGEX, ".s3.amazonaws.com")
+    class << self
+      def s3_regex_string(s3_base_url)
+        clean_url = s3_base_url.sub(S3_ENDPOINT_REGEX, ".s3.amazonaws.com")
 
-      regex_string =
-        clean_url
-          .split(".s3.amazonaws.com")
-          .map { |s| Regexp.escape(s) }
-          .insert(1, S3_ENDPOINT_REGEX.source)
-          .join("")
+        regex_string =
+          clean_url
+            .split(".s3.amazonaws.com")
+            .map { |s| Regexp.escape(s) }
+            .insert(1, S3_ENDPOINT_REGEX.source)
+            .join("")
 
-      [regex_string, clean_url]
+        [regex_string, clean_url]
+      end
     end
 
     def initialize(logger)

@@ -3,60 +3,61 @@
 module DiscourseReactions
   # TODO (martin) Remove this once we have rolled out reactions like sync more widely.
   class MigrationReport
-    def self.run(previous_report_data: {}, print_report: true)
-      report_data = {
-        topic_user_liked: TopicUser.where(liked: true).count,
-        user_actions_liked: UserAction.where(action_type: UserAction::LIKE).count,
-        user_actions_was_liked: UserAction.where(action_type: UserAction::WAS_LIKED).count,
-        post_action_likes:
-          PostAction.where(post_action_type_id: PostActionType::LIKE_POST_ACTION_ID).count,
-        post_like_count_total: Post.sum(:like_count),
-        topic_like_count_total: Topic.sum(:like_count),
-        user_stat_likes_given_total: UserStat.sum(:likes_given),
-        user_stat_likes_received_total: UserStat.sum(:likes_received),
-        given_daily_like_total: GivenDailyLike.sum(:likes_given),
-        badge_count: UserBadge.count,
-        reactions_total: DiscourseReactions::ReactionUser.count,
-      }
+    class << self
+      def run(previous_report_data: {}, print_report: true)
+        report_data = {
+          topic_user_liked: TopicUser.where(liked: true).count,
+          user_actions_liked: UserAction.where(action_type: UserAction::LIKE).count,
+          user_actions_was_liked: UserAction.where(action_type: UserAction::WAS_LIKED).count,
+          post_action_likes:
+            PostAction.where(post_action_type_id: PostActionType::LIKE_POST_ACTION_ID).count,
+          post_like_count_total: Post.sum(:like_count),
+          topic_like_count_total: Topic.sum(:like_count),
+          user_stat_likes_given_total: UserStat.sum(:likes_given),
+          user_stat_likes_received_total: UserStat.sum(:likes_received),
+          given_daily_like_total: GivenDailyLike.sum(:likes_given),
+          badge_count: UserBadge.count,
+          reactions_total: DiscourseReactions::ReactionUser.count,
+        }
 
-      puts humanized_report_data(report_data, previous_report_data) if print_report
+        puts humanized_report_data(report_data, previous_report_data) if print_report
 
-      report_data
-    end
-
-    def self.generate_diff(report_data, previous_report_data)
-      report_data_diff_indicators = {}
-
-      previous_report_data.each do |key, value|
-        diff_indicator =
-          if report_data[key] < value
-            " (-#{value - report_data[key]})"
-          elsif report_data[key] > value
-            " (+#{report_data[key] - value})"
-          else
-            " (no change)"
-          end
-
-        report_data_diff_indicators[key] = diff_indicator
+        report_data
       end
 
-      report_data_diff_indicators
-    end
+      def generate_diff(report_data, previous_report_data)
+        report_data_diff_indicators = {}
 
-    def self.humanized_report_data(report_data, previous_report_data = {})
-      report_data_diff_indicators = generate_diff(report_data, previous_report_data)
+        previous_report_data.each do |key, value|
+          diff_indicator =
+            if report_data[key] < value
+              " (-#{value - report_data[key]})"
+            elsif report_data[key] > value
+              " (+#{report_data[key] - value})"
+            else
+              " (no change)"
+            end
 
-      report_data_reactions_breakdown = {}
-      SiteSetting
-        .discourse_reactions_enabled_reactions
-        .split("|")
-        .each do |reaction|
-          report_data_reactions_breakdown[reaction] = DiscourseReactions::Reaction.where(
-            reaction_value: reaction,
-          ).sum(:reaction_users_count)
+          report_data_diff_indicators[key] = diff_indicator
         end
 
-      <<~REPORT
+        report_data_diff_indicators
+      end
+
+      def humanized_report_data(report_data, previous_report_data = {})
+        report_data_diff_indicators = generate_diff(report_data, previous_report_data)
+
+        report_data_reactions_breakdown = {}
+        SiteSetting
+          .discourse_reactions_enabled_reactions
+          .split("|")
+          .each do |reaction|
+            report_data_reactions_breakdown[reaction] = DiscourseReactions::Reaction.where(
+              reaction_value: reaction,
+            ).sum(:reaction_users_count)
+          end
+
+        <<~REPORT
       Reaction migration report:
       ------------------------------------------------------------
 
@@ -77,12 +78,13 @@ module DiscourseReactions
       Given daily like total:  #{report_data[:given_daily_like_total]}#{report_data_diff_indicators[:given_daily_like_total]}
       Reactions:               #{report_data[:reactions_total]}#{report_data_diff_indicators[:reactions_total]}
       #{
-        report_data_reactions_breakdown
-          .map { |reaction, count| " -> #{reaction}: #{count}" }
-          .join("\n")
-      }
+          report_data_reactions_breakdown
+            .map { |reaction, count| " -> #{reaction}: #{count}" }
+            .join("\n")
+        }
 
       REPORT
+      end
     end
   end
 end

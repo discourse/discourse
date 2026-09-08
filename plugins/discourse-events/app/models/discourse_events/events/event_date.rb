@@ -17,12 +17,14 @@ module DiscourseEvents
 
       scope :current_first, -> { order(Arel.sql(current_ordering_sql)) }
 
-      def self.current_ordering_sql
-        <<~SQL.squish
+      class << self
+        def current_ordering_sql
+          <<~SQL.squish
         finished_at IS NOT NULL,
         CASE WHEN finished_at IS NULL THEN starts_at ELSE updated_at END DESC,
         id DESC
       SQL
+        end
       end
 
       after_commit :upsert_topic_custom_field, on: %i[create update]

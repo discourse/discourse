@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class ScoreCalculator
-  def self.default_score_weights
-    { reply_count: 5, like_score: 15, incoming_link_count: 5, bookmark_count: 2, reads: 0.2 }
+  class << self
+    def default_score_weights
+      { reply_count: 5, like_score: 15, incoming_link_count: 5, bookmark_count: 2, reads: 0.2 }
+    end
   end
 
   def initialize(weightings = nil)

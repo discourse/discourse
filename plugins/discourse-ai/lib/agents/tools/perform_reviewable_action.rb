@@ -4,41 +4,43 @@ module DiscourseAi
   module Agents
     module Tools
       class PerformReviewableAction < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Performs an action on a review queue item. Use list_reviewables first to discover available actions for each item. Common actions include: agree_and_keep, agree_and_hide, disagree, ignore_and_do_nothing, delete_and_agree, approve_post, reject_post, approve_user, delete_user.",
-            parameters: [
-              {
-                name: "reviewable_id",
-                description: "The ID of the reviewable item to act on",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "action_id",
-                description:
-                  "The action to perform (e.g. agree_and_keep, agree_and_hide, disagree, ignore_and_do_nothing, delete_and_agree, approve_post, reject_post, approve_user, delete_user)",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why this action is being taken",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Performs an action on a review queue item. Use list_reviewables first to discover available actions for each item. Common actions include: agree_and_keep, agree_and_hide, disagree, ignore_and_do_nothing, delete_and_agree, approve_post, reject_post, approve_user, delete_user.",
+              parameters: [
+                {
+                  name: "reviewable_id",
+                  description: "The ID of the reviewable item to act on",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "action_id",
+                  description:
+                    "The action to perform (e.g. agree_and_keep, agree_and_hide, disagree, ignore_and_do_nothing, delete_and_agree, approve_post, reject_post, approve_user, delete_user)",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why this action is being taken",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "perform_reviewable_action"
-        end
+          def name
+            "perform_reviewable_action"
+          end
 
-        def self.requires_approval?
-          false
+          def requires_approval?
+            false
+          end
         end
 
         def invoke

@@ -29,24 +29,51 @@ module DiscourseEvents
       after_destroy :reset_topic_tracking!
       after_commit :sync_chat_channel_members
 
-      def self.statuses
-        @statuses ||= Enum.new(going: 0, interested: 1, not_going: 2)
-      end
-
-      def self.create_attendance!(user_id, post_id, status, recurring: false)
-        status = status.to_sym
-        event = Event.find(post_id)
-
-        if status == :going && event.at_capacity?
-          raise Discourse::InvalidParameters.new(:max_attendees)
+      class << self
+        def statuses
+          @statuses ||= Enum.new(going: 0, interested: 1, not_going: 2)
         end
 
-        invitee = create!(post_id:, user_id:, status: statuses[status], recurring:)
-        invitee.publish_attendance_change!
-        invitee
-      rescue ActiveRecord::RecordNotUnique
-        # multiple attendances may be created concurrently — return the winning row
-        find_by(post_id:, user_id:)
+        def create_attendance!(user_id, post_id, status, recurring: false)
+          status = status.to_sym
+          event = Event.find(post_id)
+
+          if status == :going && event.at_capacity?
+            raise Discourse::InvalidParameters.new(:max_attendees)
+          end
+
+          invitee = create!(post_id:, user_id:, status: statuses[status], recurring:)
+          invitee.publish_attendance_change!
+          invitee
+        rescue ActiveRecord::RecordNotUnique
+          # multiple attendances may be created concurrently — return the winning row
+          find_by(post_id:, user_id:)
+        end
+
+        def extract_uniq_usernames(groups)
+          User.real.where(
+            id: GroupUser.where(group_id: Group.where(name: groups).select(:id)).select(:user_id),
+          )
+        end
+
+        def reset_topic_tracking!(user_ids:, topic_id:)
+          user_ids = Array(user_ids)
+          return if user_ids.empty? || topic_id.nil?
+
+          TopicUser
+            .where(topic_id:, user_id: user_ids)
+            .where(
+              notification_level: [
+                TopicUser.notification_levels[:watching],
+                TopicUser.notification_levels[:tracking],
+              ],
+            )
+            .update_all(
+              notification_level: TopicUser.notification_levels[:regular],
+              notifications_reason_id: TopicUser.notification_reasons[:user_changed],
+              notifications_changed_at: Time.zone.now,
+            )
+        end
       end
 
       def update_attendance!(status, recurring: false)
@@ -73,31 +100,6 @@ module DiscourseEvents
 
       def publish_attendance_removed!
         DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, self)
-      end
-
-      def self.extract_uniq_usernames(groups)
-        User.real.where(
-          id: GroupUser.where(group_id: Group.where(name: groups).select(:id)).select(:user_id),
-        )
-      end
-
-      def self.reset_topic_tracking!(user_ids:, topic_id:)
-        user_ids = Array(user_ids)
-        return if user_ids.empty? || topic_id.nil?
-
-        TopicUser
-          .where(topic_id:, user_id: user_ids)
-          .where(
-            notification_level: [
-              TopicUser.notification_levels[:watching],
-              TopicUser.notification_levels[:tracking],
-            ],
-          )
-          .update_all(
-            notification_level: TopicUser.notification_levels[:regular],
-            notifications_reason_id: TopicUser.notification_reasons[:user_changed],
-            notifications_changed_at: Time.zone.now,
-          )
       end
 
       def sync_chat_channel_members

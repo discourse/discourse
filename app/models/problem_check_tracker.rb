@@ -12,8 +12,10 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   before_destroy :silence_the_alarm
 
-  def self.[](identifier, target = ProblemCheck::NO_TARGET)
-    find_or_create_by(identifier:, target:)
+  class << self
+    def [](identifier, target = ProblemCheck::NO_TARGET)
+      find_or_create_by(identifier:, target:)
+    end
   end
 
   def ready_to_run?

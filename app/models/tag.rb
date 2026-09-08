@@ -78,12 +78,13 @@ class Tag < ActiveRecord::Base
   after_commit :trigger_tag_updated_event, on: :update
   after_commit :trigger_tag_destroyed_event, on: :destroy
 
-  def self.ensure_consistency!
-    update_topic_counts
-  end
+  class << self
+    def ensure_consistency!
+      update_topic_counts
+    end
 
-  def self.update_topic_counts
-    DB.exec <<~SQL
+    def update_topic_counts
+      DB.exec <<~SQL
       UPDATE tags t
          SET staff_topic_count = x.topic_count
         FROM (
@@ -99,7 +100,7 @@ class Tag < ActiveRecord::Base
          AND x.topic_count <> t.staff_topic_count
     SQL
 
-    DB.exec <<~SQL
+      DB.exec <<~SQL
       UPDATE tags t
       SET public_topic_count = x.topic_count
       FROM (
@@ -123,7 +124,7 @@ class Tag < ActiveRecord::Base
       AND x.topic_count <> t.public_topic_count;
     SQL
 
-    DB.exec <<~SQL
+      DB.exec <<~SQL
       UPDATE tags t
          SET pm_topic_count = x.pm_topic_count
         FROM (
@@ -138,27 +139,27 @@ class Tag < ActiveRecord::Base
        WHERE x.tag_id = t.id
          AND x.pm_topic_count <> t.pm_topic_count
     SQL
-  end
-
-  def self.find_by_name(name)
-    find_by("lower(name) = ?", name.downcase)
-  end
-
-  def self.top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
-    # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
-    # than the limit. Frontend is responsible to enforce limit.
-    limit = limit_arg || (SiteSetting.max_tags_in_filter_list + 1)
-    scope_category_ids = guardian.allowed_category_ids
-    scope_category_ids &= ([category.id] + category.subcategories.pluck(:id)) if category
-
-    return [] if scope_category_ids.empty?
-
-    filter_sql = +" AND tags.target_tag_id IS NULL"
-    if !guardian.is_admin?
-      filter_sql << " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
     end
 
-    tag_data = DB.query <<~SQL
+    def find_by_name(name)
+      find_by("lower(name) = ?", name.downcase)
+    end
+
+    def top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
+      # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
+      # than the limit. Frontend is responsible to enforce limit.
+      limit = limit_arg || (SiteSetting.max_tags_in_filter_list + 1)
+      scope_category_ids = guardian.allowed_category_ids
+      scope_category_ids &= ([category.id] + category.subcategories.pluck(:id)) if category
+
+      return [] if scope_category_ids.empty?
+
+      filter_sql = +" AND tags.target_tag_id IS NULL"
+      if !guardian.is_admin?
+        filter_sql << " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
+      end
+
+      tag_data = DB.query <<~SQL
       SELECT tags.id as tag_id, tags.name as tag_name, tags.slug as tag_slug, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
@@ -169,48 +170,48 @@ class Tag < ActiveRecord::Base
       LIMIT #{limit}
     SQL
 
-    return [] if tag_data.empty?
+      return [] if tag_data.empty?
 
-    unless SiteSetting.content_localization_enabled
-      return(
-        tag_data.map do |row|
-          slug = row.tag_slug.presence || "#{row.tag_id}-tag"
-          { id: row.tag_id, name: row.tag_name, slug: }
-        end
-      )
+      unless SiteSetting.content_localization_enabled
+        return(
+          tag_data.map do |row|
+            slug = row.tag_slug.presence || "#{row.tag_id}-tag"
+            { id: row.tag_id, name: row.tag_name, slug: }
+          end
+        )
+      end
+
+      tags_by_id = Tag.where(id: tag_data.map(&:tag_id)).includes(:localizations).index_by(&:id)
+      tag_data.filter_map do |row|
+        tag = tags_by_id[row.tag_id]
+        next unless tag
+
+        name = tag.get_localization&.name || tag.name
+        slug = row.tag_slug.presence || "#{row.tag_id}-tag"
+        { id: tag.id, name:, slug: }
+      end
     end
 
-    tags_by_id = Tag.where(id: tag_data.map(&:tag_id)).includes(:localizations).index_by(&:id)
-    tag_data.filter_map do |row|
-      tag = tags_by_id[row.tag_id]
-      next unless tag
-
-      name = tag.get_localization&.name || tag.name
-      slug = row.tag_slug.presence || "#{row.tag_id}-tag"
-      { id: tag.id, name:, slug: }
+    def topic_count_column(guardian)
+      if guardian&.is_staff? || SiteSetting.include_secure_categories_in_tag_counts
+        "staff_topic_count"
+      else
+        "public_topic_count"
+      end
     end
-  end
 
-  def self.topic_count_column(guardian)
-    if guardian&.is_staff? || SiteSetting.include_secure_categories_in_tag_counts
-      "staff_topic_count"
-    else
-      "public_topic_count"
+    def with_localizations(tags)
+      return tags unless SiteSetting.content_localization_enabled && tags.present?
+      tag_ids = tags.map(&:id)
+      tags_by_id = where(id: tag_ids).includes(:localizations).index_by(&:id)
+      tag_ids.filter_map { |id| tags_by_id[id] }
     end
-  end
 
-  def self.with_localizations(tags)
-    return tags unless SiteSetting.content_localization_enabled && tags.present?
-    tag_ids = tags.map(&:id)
-    tags_by_id = where(id: tag_ids).includes(:localizations).index_by(&:id)
-    tag_ids.filter_map { |id| tags_by_id[id] }
-  end
+    def pm_tags(limit: 1000, guardian: nil, allowed_user: nil)
+      return [] if allowed_user.blank? || !(guardian || Guardian.new).can_tag_pms?
+      user_id = allowed_user.id
 
-  def self.pm_tags(limit: 1000, guardian: nil, allowed_user: nil)
-    return [] if allowed_user.blank? || !(guardian || Guardian.new).can_tag_pms?
-    user_id = allowed_user.id
-
-    DB.query_hash(<<~SQL).map!(&:symbolize_keys!)
+      DB.query_hash(<<~SQL).map!(&:symbolize_keys!)
       SELECT tags.id as id, tags.name as name, COUNT(topics.id) AS count
         FROM tags
         JOIN topic_tags ON tags.id = topic_tags.tag_id
@@ -231,28 +232,29 @@ class Tag < ActiveRecord::Base
        ORDER BY count DESC
        LIMIT #{limit.to_i}
     SQL
-  end
+    end
 
-  def self.recently_used_by(user, limit: 10)
-    return [] if user.blank?
+    def recently_used_by(user, limit: 10)
+      return [] if user.blank?
 
-    recent_topic_ids =
-      Topic
-        .where(user:, archetype: Archetype.default)
-        .order(created_at: :desc, id: :desc)
-        .limit(limit)
-        .select(:id)
+      recent_topic_ids =
+        Topic
+          .where(user:, archetype: Archetype.default)
+          .order(created_at: :desc, id: :desc)
+          .limit(limit)
+          .select(:id)
 
-    TopicTag
-      .joins(:topic)
-      .where(topic_id: recent_topic_ids)
-      .group(:tag_id)
-      .order(Arel.sql("MAX(topics.created_at) DESC, MAX(topics.id) DESC"))
-      .pluck(:tag_id)
-  end
+      TopicTag
+        .joins(:topic)
+        .where(topic_id: recent_topic_ids)
+        .group(:tag_id)
+        .order(Arel.sql("MAX(topics.created_at) DESC, MAX(topics.id) DESC"))
+        .pluck(:tag_id)
+    end
 
-  def self.include_tags?
-    SiteSetting.tagging_enabled
+    def include_tags?
+      SiteSetting.tagging_enabled
+    end
   end
 
   def url

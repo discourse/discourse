@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 class BookmarksBulkAction
+  class << self
+    def operations
+      @operations ||= %w[clear_reminder delete]
+    end
+  end
+
   def initialize(user, bookmark_ids, operation, options = {})
     @user = user
     @bookmark_ids = bookmark_ids
     @operation = operation
     @changed_ids = []
     @options = options
-  end
-
-  def self.operations
-    @operations ||= %w[clear_reminder delete]
   end
 
   def perform!

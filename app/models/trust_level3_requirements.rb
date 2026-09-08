@@ -25,6 +25,36 @@ class TrustLevel3Requirements
 
   LOW_WATER_MARK = 0.9
   FORGIVENESS_PERIOD = 6.months
+  CACHE_DURATION = 1.day.seconds - 60
+  NUM_TOPICS_KEY = "tl3_num_topics"
+  NUM_POSTS_KEY = "tl3_num_posts"
+
+  class << self
+    def clear_cache
+      Discourse.redis.del NUM_TOPICS_KEY
+      Discourse.redis.del NUM_POSTS_KEY
+    end
+
+    def num_topics_in_time_period
+      Discourse.redis.get(NUM_TOPICS_KEY) ||
+        begin
+          count =
+            Topic.listable_topics.visible.created_since(SiteSetting.tl3_time_period.days.ago).count
+          Discourse.redis.setex NUM_TOPICS_KEY, CACHE_DURATION, count
+          count
+        end
+    end
+
+    def num_posts_in_time_period
+      Discourse.redis.get(NUM_POSTS_KEY) ||
+        begin
+          count =
+            Post.public_posts.visible.created_since(SiteSetting.tl3_time_period.days.ago).count
+          Discourse.redis.setex NUM_POSTS_KEY, CACHE_DURATION, count
+          count
+        end
+    end
+  end
 
   def initialize(user)
     @user = user
@@ -256,34 +286,6 @@ class TrustLevel3Requirements
 
   def min_likes_received_users
     (min_likes_received.to_f / 4.0).ceil
-  end
-
-  def self.clear_cache
-    Discourse.redis.del NUM_TOPICS_KEY
-    Discourse.redis.del NUM_POSTS_KEY
-  end
-
-  CACHE_DURATION = 1.day.seconds - 60
-  NUM_TOPICS_KEY = "tl3_num_topics"
-  NUM_POSTS_KEY = "tl3_num_posts"
-
-  def self.num_topics_in_time_period
-    Discourse.redis.get(NUM_TOPICS_KEY) ||
-      begin
-        count =
-          Topic.listable_topics.visible.created_since(SiteSetting.tl3_time_period.days.ago).count
-        Discourse.redis.setex NUM_TOPICS_KEY, CACHE_DURATION, count
-        count
-      end
-  end
-
-  def self.num_posts_in_time_period
-    Discourse.redis.get(NUM_POSTS_KEY) ||
-      begin
-        count = Post.public_posts.visible.created_since(SiteSetting.tl3_time_period.days.ago).count
-        Discourse.redis.setex NUM_POSTS_KEY, CACHE_DURATION, count
-        count
-      end
   end
 
   def flagged_post_ids

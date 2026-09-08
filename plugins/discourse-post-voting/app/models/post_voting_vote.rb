@@ -14,17 +14,19 @@ class PostVotingVote < ActiveRecord::Base
   validate :ensure_valid_post, if: -> { votable_type == "Post" }
   validate :ensure_valid_comment, if: -> { votable_type == "PostVotingComment" }
 
-  def self.directions
-    @directions ||= { up: "up", down: "down" }
-  end
+  class << self
+    def directions
+      @directions ||= { up: "up", down: "down" }
+    end
 
-  def self.reverse_direction(direction)
-    if direction == directions[:up]
-      directions[:down]
-    elsif direction == directions[:down]
-      directions[:up]
-    else
-      raise "Invalid direction: #{direction}"
+    def reverse_direction(direction)
+      if direction == directions[:up]
+        directions[:down]
+      elsif direction == directions[:down]
+        directions[:up]
+      else
+        raise "Invalid direction: #{direction}"
+      end
     end
   end
 

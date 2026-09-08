@@ -26,6 +26,7 @@ class StaticController < ApplicationController
     },
   }
   CUSTOM_PAGES = {} # Add via `#add_topic_static_page` in plugin API
+  FAVICON = -"favicon"
 
   def extract_redirect_param
     return "/" if params[:redirect].blank?
@@ -179,8 +180,6 @@ class StaticController < ApplicationController
     destination = path(destination) if destination == "/"
     redirect_to(destination, allow_other_host:)
   end
-
-  FAVICON = -"favicon"
 
   # We need to be able to draw our favicon on a canvas, this happens when you enable the feature
   # that draws the notification count on top of favicon (per user default off)
