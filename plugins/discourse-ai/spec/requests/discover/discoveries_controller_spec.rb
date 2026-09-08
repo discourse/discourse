@@ -34,6 +34,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
         post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?", request_id: }
 
         expect(response.status).to eq(403)
+        expect(AskAiLog.count).to eq(0)
       end
     end
 
@@ -64,10 +65,28 @@ describe DiscourseAi::Discover::DiscoveriesController do
         end
       end
 
+      it "logs each accepted ask once without consolidating repeated questions" do
+        query = "How do I search for 猫?"
+        params = { query:, request_id: }
+
+        expect {
+          2.times { post "/discourse-ai/discoveries/reply", params: }
+          post "/discourse-ai/discoveries/reply", params: { query:, request_id: SecureRandom.uuid }
+        }.to change(AskAiLog, :count).by(2)
+
+        logs = AskAiLog.order(:id).last(2)
+        expect(logs).to all(have_attributes(user_id: user.id, query:, ask_outcome: nil))
+        expect(logs.map(&:asked_at)).to all(be_present)
+        expect(
+          Jobs::StreamDiscoverReply.jobs.last(2).map { |job| job["args"].first["ask_ai_log_id"] },
+        ).to eq(logs.map(&:id))
+      end
+
       it "returns a 400 if the query is missing" do
         post "/discourse-ai/discoveries/reply", params: { request_id: }
 
         expect(response.status).to eq(400)
+        expect(AskAiLog.count).to eq(0)
       end
 
       it "returns a 400 if the request ID is invalid" do
@@ -77,6 +96,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
                request_id: "not-a-uuid",
              }
         expect(response.status).to eq(400)
+        expect(AskAiLog.count).to eq(0)
       end
 
       it "does not enqueue the same request twice" do

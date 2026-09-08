@@ -56,6 +56,23 @@ describe DiscourseAi::Discoveries do
     end
   end
 
+  describe ".enqueue_reply" do
+    it "records a failed ask if the job cannot be queued" do
+      allow(Jobs).to receive(:enqueue).and_raise(StandardError, "queue unavailable")
+
+      expect {
+        described_class.enqueue_reply(user:, request_id: SecureRandom.uuid, query: "猫")
+      }.to raise_error(StandardError, "queue unavailable")
+
+      expect(AskAiLog.last).to have_attributes(
+        user_id: user.id,
+        query: "猫",
+        ask_outcome: "failed",
+        failure_stage: nil,
+      )
+    end
+  end
+
   describe ".result_settings" do
     it "returns the configured Ask AI presentation settings" do
       SiteSetting.ai_ask_ai_summary_detail = "detailed"
