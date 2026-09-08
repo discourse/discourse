@@ -60,6 +60,7 @@ import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
+import { registerCodemirrorLanguage } from "discourse/lib/codemirror-languages";
 import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
@@ -3365,6 +3366,25 @@ class _PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * Registers a language shortcut for code editors, so a field can ask for it
+   * by name through the `language` argument.
+   *
+   * The loader is called the first time something asks for the language, and
+   * its module's default export receives the CodeMirror modules and returns
+   * the extensions to apply.
+   *
+   * ```
+   * api.registerCodemirrorLanguage("toml", () => import("../lib/toml-language"));
+   * ```
+   *
+   * @param {string} name - The name a field refers to the language by.
+   * @param {Function} loader - Returns a promise for the module.
+   */
+  registerCodemirrorLanguage(name, loader) {
+    registerCodemirrorLanguage(name, loader);
   }
 
   /**

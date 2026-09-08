@@ -1,3 +1,4 @@
+import { warn } from "@ember/debug";
 import { waitForPromise } from "@ember/test-waiters";
 
 /**
@@ -31,6 +32,15 @@ const registered = new Map();
  *   resolves to a module whose default export builds the extensions
  */
 export function registerCodemirrorLanguage(name, loader) {
+  // Taking a name that already resolves is allowed — a plugin may have a
+  // better grammar for it — but it is worth saying so, since two plugins
+  // claiming one name would otherwise silently come down to load order.
+  if (registered.has(name) || BUILT_IN[name]) {
+    warn(`The CodeMirror language "${name}" was already registered.`, {
+      id: "discourse.codemirror-language-override",
+    });
+  }
+
   registered.set(name, loader);
 }
 
@@ -44,6 +54,9 @@ export function registerCodemirrorLanguage(name, loader) {
 export async function loadCodemirrorLanguage(name) {
   const loader = registered.get(name) || BUILT_IN[name];
   if (!loader) {
+    warn(`Unknown CodeMirror language "${name}".`, {
+      id: "discourse.codemirror-language-missing",
+    });
     return null;
   }
 
