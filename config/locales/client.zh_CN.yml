@@ -1084,10 +1084,13 @@ zh_CN:
         note_added_by: "%{username} 的版主注释 · %{relativeDate}"
         author_silenced_by: "作者已被 %{username} · %{relativeDate} 禁言"
         author_silenced_automatically: "作者已自动禁言 · %{relativeDate}"
+        author_suspended_by: "作者已被 %{username} · %{relativeDate} 停用"
+        author_suspended_automatically: "作者已被自动停用 · %{relativeDate}"
         no_events: "没有可显示的时间线事件"
       author_penalty:
         effect:
           retains_silence: "作者保持禁言。"
+          retains_suspension: "作者仍处于停用状态。"
           retains_silence_and_suspension: "作者保持禁言和暂停。"
           lifts_silence: "作者已取消禁言。"
         toast:

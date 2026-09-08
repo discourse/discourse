@@ -5409,6 +5409,8 @@ zh_CN:
         complete: "帖子已隐藏，用户已被通知。"
       agree_and_edit:
         title: "编辑帖子"
+        description: "保存编辑后，请确认同意标记。"
+        complete: "帖子已编辑，标记已确认。"
       delete:
         title: "删除"
         complete: "帖子已被删除。"
@@ -5459,6 +5461,8 @@ zh_CN:
         description: "解除对用户的禁言，并从队列中移除该举报，但不恢复已删除的帖子。"
         complete: "用户已被解除禁言，举报已被忽略。"
       unsilence_user:
+        title: "取消禁言作者"
+        description: "解除对作者的禁言。此标志保留在队列中。"
         complete: "作者不再禁言。"
       approve:
         title: "是"
