@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import AdminDashboardTabController from "discourse/admin/controllers/admin-dashboard-tab";
 
 export default class AdminDashboardSentiment extends AdminDashboardTabController {
+  /** @returns {AdminDashboardTabController["filters"]} */
   @computed("startDate", "endDate")
   get filters() {
     return { startDate: this.startDate, endDate: this.endDate };
