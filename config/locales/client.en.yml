@@ -339,7 +339,6 @@ en:
       zh_CN:
         name: Chinese Simplified
     share:
-      topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} by @%{username}"
       close: "close"
       twitter: "Share on X"
@@ -552,9 +551,6 @@ en:
     max_of_count:
       one: "max of %{count}"
       other: "max of %{count}"
-    character_count:
-      one: "%{count} character"
-      other: "%{count} characters"
     period_chooser:
       aria_label: "Filter by period"
 
