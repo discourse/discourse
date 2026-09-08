@@ -1,6 +1,7 @@
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CodeLoginForm from "discourse/components/code-login-form";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
@@ -60,6 +61,41 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .includesText("user@example.com");
     assert.dom(".d-otp-input").exists();
     assert.dom(".code-login-form__resend").exists();
+  });
+
+  test("runs create-account behavior transformers before verifying a signup code", async function (assert) {
+    stubCodeRequest();
+
+    let transformed = false;
+    let verificationRequests = 0;
+    withPluginApi((api) =>
+      api.registerBehaviorTransformer("create-account", async ({ next }) => {
+        transformed = true;
+        return next();
+      })
+    );
+    pretender.post("/session/login-code/verify", () => {
+      verificationRequests++;
+      return response({ error: i18n("email_login_code.invalid_code") });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "000000");
+
+    assert.true(
+      transformed,
+      "the signup verification passes through the transformer"
+    );
+    assert.strictEqual(
+      verificationRequests,
+      1,
+      "the transformer continues to code verification"
+    );
   });
 
   test("keeps a hidden email field for password managers after the email step", async function (assert) {
