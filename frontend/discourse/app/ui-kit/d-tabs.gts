@@ -35,7 +35,7 @@ const NEVER_RENDERED = Symbol("never rendered");
  * each tab with its label and panel content and supplies the selection.
  *
  * Selection is controlled: `@active` in, `@onActivate` out, and nothing
- * moves until the owner feeds the id back. The component never invents a
+ * moves until the owner feeds the key back. The component never invents a
  * fallback, because which tab deserves one is the owner's policy.
  * Activation is manual: arrow keys move focus only, and a tab is selected
  * by click, Enter, or Space.
@@ -53,10 +53,10 @@ const NEVER_RENDERED = Symbol("never rendered");
  *
  * ```gjs
  * <DTabs @active={{this.section}} @onActivate={{this.setSection}} @label={{i18n "user.sections"}} as |tabs|>
- *   <tabs.Tab @id="account" @label={{i18n "user.account"}}>
+ *   <tabs.Tab @key="account" @label={{i18n "user.account"}}>
  *     <AccountSettings />
  *   </tabs.Tab>
- *   <tabs.Tab @id="security" @label={{i18n "user.security"}}>
+ *   <tabs.Tab @key="security" @label={{i18n "user.security"}}>
  *     <SecuritySettings />
  *   </tabs.Tab>
  * </DTabs>
@@ -91,14 +91,14 @@ export default class DTabs extends Component<DTabsSignature> {
    * button's teardown can land after its successor registered and must not
    * evict it.
    */
-  registerTab = modifier((element: Element, [id]: [string]) => {
+  registerTab = modifier((element: Element, [key]: [string]) => {
     if (DEBUG) {
       // A duplicate and a branch replacement not yet torn down look alike
       // here. The post-render scan decides.
-      const existing = this.#tabs.get(id);
+      const existing = this.#tabs.get(key);
       if (existing !== undefined && existing !== element) {
         this.#pendingDuplicateChecks.push({
-          id,
+          key,
           first: existing,
           second: element,
         });
@@ -106,24 +106,24 @@ export default class DTabs extends Component<DTabsSignature> {
       this.#queueStrayContentScan();
     }
 
-    this.#tabs.set(id, element);
-    this.#tabIds.set(element, id);
+    this.#tabs.set(key, element);
+    this.#tabKeys.set(element, key);
     // Only the selected tab's own arrival can leave it out of view. Revealing
     // on any registration would drag the strip back while the reader is
     // reading somewhere else in it.
-    if (id === this.args.active) {
+    if (key === this.args.active) {
       this.#queueReveal();
     }
     this.#deferTrackedWrite(() => {
-      if (this.#tabs.get(id) === element) {
+      if (this.#tabs.get(key) === element) {
         this._tabsVersion++;
       }
     });
 
     return () => {
-      if (this.#tabs.get(id) === element) {
-        this.#tabs.delete(id);
-        // A live @id change tears down and reinstalls inside the tracked
+      if (this.#tabs.get(key) === element) {
+        this.#tabs.delete(key);
+        // A live @key change tears down and reinstalls inside the tracked
         // update frame, so the bump is deferred like the install's.
         this.#deferTrackedWrite(() => this._tabsVersion++);
       }
@@ -247,15 +247,15 @@ export default class DTabs extends Component<DTabsSignature> {
   #tabs = new Map<string, Element>();
 
   /**
-   * The id each tab element registered under. Read back rather than the
-   * `data-d-tab` attribute, which is the same id stringified: a consumer
+   * The key each tab element registered under. Read back rather than the
+   * `data-d-tab` attribute, which is the same key stringified: a consumer
    * whose ids are not strings would otherwise be handed a different value
    * by the keyboard than by a click.
    */
-  #tabIds = new WeakMap<Element, string>();
+  #tabKeys = new WeakMap<Element, string>();
 
   /**
-   * Opaque DOM-id suffixes per tab id. Consumer ids cannot go into DOM ids:
+   * Opaque DOM-id suffixes per tab key. Consumer keys cannot go into DOM ids:
    * `aria-labelledby` splits on whitespace, so "account settings" would
    * point at two missing elements.
    */
@@ -289,9 +289,9 @@ export default class DTabs extends Component<DTabsSignature> {
   #guardTripped = false;
   #revealQueued = false;
 
-  /** Same-id registrations awaiting the post-render duplicate verdict. */
+  /** Same-key registrations awaiting the post-render duplicate verdict. */
   #pendingDuplicateChecks: Array<{
-    id: string;
+    key: string;
     first: Element;
     second: Element;
   }> = [];
@@ -322,25 +322,25 @@ export default class DTabs extends Component<DTabsSignature> {
       get tabsVersion() {
         return self._tabsVersion;
       },
-      tabDomIdFor: (id: string) => this.#tabDomIdFor(id),
-      activate: (id: string) => this.args.onActivate(id),
+      tabDomIdFor: (key: string) => this.#tabDomIdFor(key),
+      activate: (key: string) => this.args.onActivate(key),
       activateFromElement: (item: HTMLElement) => {
-        const id = this.#tabIds.get(item);
-        if (id !== undefined) {
-          this.args.onActivate(id);
+        const key = this.#tabKeys.get(item);
+        if (key !== undefined) {
+          this.args.onActivate(key);
         }
       },
       registerTab: this.registerTab,
       registerTablist: this.registerTablist,
       checkTabLabel: (
-        id: string,
+        key: string,
         label: string | undefined,
         hasBlock: boolean
       ) => {
         if (DEBUG && (label !== undefined) === hasBlock) {
           this.#guardTripped = true;
           assert(
-            `d-tabs: tab "${id}" needs either @label or a <:label> block, and not both`,
+            `d-tabs: tab "${key}" needs either @label or a <:label> block, and not both`,
             false
           );
         }
@@ -441,11 +441,11 @@ export default class DTabs extends Component<DTabsSignature> {
     };
   }
 
-  #tabDomIdFor(id: string) {
-    let suffix = this.#domIdSuffixes.get(id);
+  #tabDomIdFor(key: string) {
+    let suffix = this.#domIdSuffixes.get(key);
     if (suffix === undefined) {
       suffix = this.#nextDomIdSuffix++;
-      this.#domIdSuffixes.set(id, suffix);
+      this.#domIdSuffixes.set(key, suffix);
     }
 
     return `d-tabs-${this.#uid}-tab-${suffix}`;
@@ -530,9 +530,9 @@ export default class DTabs extends Component<DTabsSignature> {
     // By now a branch replacement's predecessor has detached, while a
     // genuine duplicate keeps both claimants attached.
     const pending = this.#pendingDuplicateChecks.splice(0);
-    for (const { id, first, second } of pending) {
+    for (const { key, first, second } of pending) {
       assert(
-        `d-tabs: duplicate tab id "${id}" — tab ids must be unique within a group`,
+        `d-tabs: duplicate tab key "${key}" — tab keys must be unique within a group`,
         !(first.isConnected && second.isConnected)
       );
     }
@@ -540,14 +540,14 @@ export default class DTabs extends Component<DTabsSignature> {
     for (const node of tablist.childNodes) {
       // An unregistered role="tab" element is as stray as a div. It would
       // join the keyboard cursor without joining the group. Identity, not the
-      // data attribute: the attribute is the id stringified, so a non-string
-      // id would fail the lookup and report a stray tab that is not one.
-      const registeredId = node instanceof Element && this.#tabIds.get(node);
+      // data attribute: the attribute is the key stringified, so a non-string
+      // key would fail the lookup and report a stray tab that is not one.
+      const registeredKey = node instanceof Element && this.#tabKeys.get(node);
       const isStrayElement =
         node instanceof Element &&
         (node.getAttribute("role") !== "tab" ||
-          registeredId === undefined ||
-          this.#tabs.get(registeredId) !== node);
+          registeredKey === undefined ||
+          this.#tabs.get(registeredKey) !== node);
       const isStrayText =
         node.nodeType === Node.TEXT_NODE &&
         (node.textContent ?? "").trim() !== "";

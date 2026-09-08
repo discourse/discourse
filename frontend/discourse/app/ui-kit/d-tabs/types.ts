@@ -10,7 +10,7 @@ export type DTabsOrientation = "horizontal" | "vertical";
  * never see it because the curried parts erase the `tabs` argument.
  */
 export interface DTabsEngine {
-  /** The controlled active tab id. */
+  /** The controlled active tab key. */
   readonly active: string | undefined;
 
   /** The tablist's accessible name. */
@@ -31,19 +31,19 @@ export interface DTabsEngine {
   /** Reactivity key that changes whenever the registered tab set does. */
   readonly tabsVersion: number;
 
-  /** Derives the DOM id a tab with the given id renders under. */
-  tabDomIdFor(id: string): string;
+  /** Derives the DOM id a tab with the given key renders under. */
+  tabDomIdFor(key: string): string;
 
   /** Requests activation of the given tab through the consumer's callback. */
-  activate(id: string): void;
+  activate(key: string): void;
 
-  /** Bridges the roving-focus engine's element reports back to tab ids. */
+  /** Bridges the roving-focus engine's element reports back to tab keys. */
   activateFromElement(item: HTMLElement): void;
 
   /** Element modifier a tab button applies to join the registry. */
   registerTab: ModifierLike<{
     Element: HTMLElement;
-    Args: { Positional: [id: string] };
+    Args: { Positional: [key: string] };
   }>;
 
   /** Element modifier the tablist part applies to become the portal target. */
@@ -53,7 +53,11 @@ export interface DTabsEngine {
   }>;
 
   /** Asserts in DEBUG that exactly one of `@label` and the `<:label>` block was given. */
-  checkTabLabel(id: string, label: string | undefined, hasBlock: boolean): void;
+  checkTabLabel(
+    key: string,
+    label: string | undefined,
+    hasBlock: boolean
+  ): void;
 }
 
 /**
@@ -92,8 +96,8 @@ export interface DTabsSignature {
   Element: HTMLDivElement;
   Args: {
     /**
-     * The id of the selected tab. Controlled only: the component holds no
-     * selection state and never picks a fallback. `undefined`, or an id no
+     * The key of the selected tab. Controlled only: the component holds no
+     * selection state and never picks a fallback. `undefined`, or a key no
      * declared tab carries, selects nothing and leaves the panel empty. The
      * argument is required, so a typed consumer with nothing selected
      * passes `undefined` explicitly.
@@ -101,11 +105,11 @@ export interface DTabsSignature {
     active: string | undefined;
 
     /**
-     * Called with the id of the tab the user activates. Activation is
+     * Called with the key of the tab the user activates. Activation is
      * manual: arrow keys only move focus, and a tab is selected by click,
      * Enter, or Space.
      */
-    onActivate: (id: string) => void;
+    onActivate: (key: string) => void;
 
     /**
      * The tablist's accessible name, already translated. Required: an
@@ -146,8 +150,11 @@ export interface DTabsTabSignature {
     /** The engine of the owning group, curried by the core. */
     tabs: DTabsEngine;
 
-    /** Stable identity for selection and DOM ids. Unique within the group. */
-    id: string;
+    /**
+     * Stable identity for selection, unique within this group. Not a DOM id:
+     * the widget mints its own, so two groups may reuse the same key.
+     */
+    key: string;
 
     /**
      * The button's text. Exactly one of this and the `<:label>` block must

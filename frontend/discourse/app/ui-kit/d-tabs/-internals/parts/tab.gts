@@ -14,11 +14,11 @@ import type { DTabsTabSignature } from "discourse/ui-kit/d-tabs/types";
  */
 export default class Tab extends Component<DTabsTabSignature> {
   get domId() {
-    return this.args.tabs.tabDomIdFor(this.args.id);
+    return this.args.tabs.tabDomIdFor(this.args.key);
   }
 
   get isActive() {
-    return this.args.id === this.args.tabs.active;
+    return this.args.key === this.args.tabs.active;
   }
 
   /**
@@ -32,7 +32,7 @@ export default class Tab extends Component<DTabsTabSignature> {
       return;
     }
 
-    this.args.tabs.activate(this.args.id);
+    this.args.tabs.activate(this.args.key);
   }
 
   /**
@@ -41,11 +41,11 @@ export default class Tab extends Component<DTabsTabSignature> {
    */
   @action
   checkLabel(hasLabelBlock: boolean) {
-    this.args.tabs.checkTabLabel(this.args.id, this.args.label, hasLabelBlock);
+    this.args.tabs.checkTabLabel(this.args.key, this.args.label, hasLabelBlock);
   }
 
   <template>
-    {{! Splattributes come first so the attributes below win. A consumer id
+    {{! Splattributes come first so the attributes below win. A consumer key
         or role would sever the ARIA pairing. }}
     <button
       class="d-tabs__tab"
@@ -53,12 +53,12 @@ export default class Tab extends Component<DTabsTabSignature> {
       aria-controls={{@tabs.panelDomId}}
       aria-disabled={{if @disabled "true"}}
       aria-selected={{booleanString this.isActive omitFalse=false}}
-      data-d-tab={{@id}}
+      data-d-tab={{@key}}
       id={{this.domId}}
       role="tab"
       type="button"
       {{on "click" this.click}}
-      {{@tabs.registerTab @id}}
+      {{@tabs.registerTab @key}}
     >
       {{this.checkLabel (has-block "label")}}
       {{#if (has-block "label")}}{{yield to="label"}}{{else}}{{@label}}{{/if}}

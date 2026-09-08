@@ -20,19 +20,19 @@ export default class TabsVerticalExample extends Component {
         @orientation="vertical"
         as |tabs|
       >
-        <tabs.Tab @id="account" @label="Account">
+        <tabs.Tab @key="account" @label="Account">
           <p>Up and Down move along the strip. Left and Right do nothing here,
             because a tablist has one axis.</p>
         </tabs.Tab>
-        <tabs.Tab @id="notifications" @label="Notifications">
+        <tabs.Tab @key="notifications" @label="Notifications">
           <p>The tablist announces its vertical orientation, which assistive
             technology otherwise assumes horizontal.</p>
         </tabs.Tab>
-        <tabs.Tab @id="interface" @label="Interface">
+        <tabs.Tab @key="interface" @label="Interface">
           <p>Placing the strip beside the panel is the consumer's layout; the
             widget stacks the strip and wraps long labels itself.</p>
         </tabs.Tab>
-        <tabs.Tab @id="security" @label="Security">
+        <tabs.Tab @key="security" @label="Security">
           <p>Home and End jump to the first and last tab on either axis.</p>
         </tabs.Tab>
       </DTabs>

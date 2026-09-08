@@ -36,10 +36,11 @@ not; removing it trips the backtracking assertion.
 *after* its successor has already registered. Every `register*` teardown checks
 that the entry still points at its own element before clearing it.
 
-**Ids round-trip by element identity, not by attribute.** `data-d-tab` is the id
-stringified. Reading it back would hand a consumer with non-string ids a
+**Keys round-trip by element identity, not by attribute.** `data-d-tab` is the
+key stringified. Reading it back would hand a consumer with non-string keys a
 different value from the keyboard than from a click, so the registry is consulted
-by element instead.
+by element instead. The keys a consumer supplies never become DOM ids either:
+the widget mints its own, which is why two groups may reuse the same key.
 
 **The panel is mounted once and never replaced.** Content is portalled into it in
 append mode, which never clears the target, so there is no swap race. Activation

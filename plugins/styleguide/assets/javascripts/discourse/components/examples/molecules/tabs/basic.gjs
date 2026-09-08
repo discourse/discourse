@@ -34,22 +34,22 @@ export default class TabsBasicExample extends Component {
         @onActivate={{this.activate}}
         as |tabs|
       >
-        <tabs.Tab @id="overview" @label="Overview">
+        <tabs.Tab @key="overview" @label="Overview">
           <p>The panel keeps one element for the whole group. Switching tabs
             swaps its content in place, so its id and role never change hands.</p>
         </tabs.Tab>
-        <tabs.Tab @id="activity" @label="Activity">
+        <tabs.Tab @key="activity" @label="Activity">
           <p>Nothing here moved until the owner fed the id back through the
             active argument. The widget holds no selection of its own.</p>
         </tabs.Tab>
-        <tabs.Tab @id="badges">
+        <tabs.Tab @key="badges">
           <:label>{{dIcon "certificate"}} Badges</:label>
           <:default>
             <p>A label block accepts arbitrary content, such as an icon beside
               the text.</p>
           </:default>
         </tabs.Tab>
-        <tabs.Tab @disabled={{true}} @id="admin" @label="Admin">
+        <tabs.Tab @disabled={{true}} @key="admin" @label="Admin">
           <p>This content never shows: a disabled tab is focusable but inert.</p>
         </tabs.Tab>
       </DTabs>

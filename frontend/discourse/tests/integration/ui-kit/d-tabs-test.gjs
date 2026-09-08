@@ -98,13 +98,13 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label={{get labels "0"}}>
+          <tabs.Tab @key={{get ids "0"}} @label={{get labels "0"}}>
             <p data-panel-content={{get ids "0"}}>{{get contents "0"}}</p>
           </tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label={{get labels "1"}}>
+          <tabs.Tab @key={{get ids "1"}} @label={{get labels "1"}}>
             <p data-panel-content={{get ids "1"}}>{{get contents "1"}}</p>
           </tabs.Tab>
-          <tabs.Tab @id={{get ids "2"}} @label={{get labels "2"}}>
+          <tabs.Tab @key={{get ids "2"}} @label={{get labels "2"}}>
             <p data-panel-content={{get ids "2"}}>{{get contents "2"}}</p>
           </tabs.Tab>
         </DTabs>
@@ -179,19 +179,19 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           <tabs.Tab
-            @id={{get staticTabs "0.id"}}
+            @key={{get staticTabs "0.id"}}
             @label={{get staticTabs "0.label"}}
           >
             {{get staticTabs "0.label"}}
           </tabs.Tab>
           {{#each state.items key="id" as |item|}}
             <tabs.Tab
-              @id={{item.id}}
+              @key={{item.id}}
               @label={{item.label}}
             >{{item.label}}</tabs.Tab>
           {{/each}}
           <tabs.Tab
-            @id={{get staticTabs "1.id"}}
+            @key={{get staticTabs "1.id"}}
             @label={{get staticTabs "1.label"}}
           >
             {{get staticTabs "1.label"}}
@@ -263,12 +263,12 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label={{get labels "0"}}>First panel</tabs.Tab>
+          <tabs.Tab @key={{get ids "0"}} @label={{get labels "0"}}>First panel</tabs.Tab>
           {{#if state.showExtra}}
-            <tabs.Tab @id={{get ids "1"}} @label={{get labels "1"}}>Conditional
+            <tabs.Tab @key={{get ids "1"}} @label={{get labels "1"}}>Conditional
               panel</tabs.Tab>
           {{/if}}
-          <tabs.Tab @id={{get ids "2"}} @label={{get labels "2"}}>Last panel</tabs.Tab>
+          <tabs.Tab @key={{get ids "2"}} @label={{get labels "2"}}>Last panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -319,10 +319,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Alpha"><span
+          <tabs.Tab @key={{get ids "0"}} @label="Alpha"><span
               data-panel={{get ids "0"}}
             >Alpha panel</span></tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label="Beta"><span
+          <tabs.Tab @key={{get ids "1"}} @label="Beta"><span
               data-panel={{get ids "1"}}
             >Beta panel</span></tabs.Tab>
         </DTabs>
@@ -399,7 +399,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
         >
           <tabs.Tab
             data-consumer-tab={{id}}
-            @id={{id}}
+            @key={{id}}
             @label="Synthetic"
             {{on "click" consumerClick}}
           >
@@ -444,10 +444,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Enabled">Enabled panel</tabs.Tab>
+          <tabs.Tab @key={{get ids "0"}} @label="Enabled">Enabled panel</tabs.Tab>
           <tabs.Tab
             @disabled={{true}}
-            @id={{get ids "1"}}
+            @key={{get ids "1"}}
             @label="Disabled"
           >Disabled panel</tabs.Tab>
         </DTabs>
@@ -500,7 +500,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           {{#each ids as |id|}}
-            <tabs.Tab @id={{id}} @label={{id}}>{{id}}</tabs.Tab>
+            <tabs.Tab @key={{id}} @label={{id}}>{{id}}</tabs.Tab>
           {{/each}}
         </DTabs>
       </template>
@@ -563,7 +563,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{state.id}} @label="Mutable">Panel</tabs.Tab>
+          <tabs.Tab @key={{state.id}} @label="Mutable">Panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -606,10 +606,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Known A"><span
+          <tabs.Tab @key={{get ids "0"}} @label="Known A"><span
               data-active-content
             >Known A panel</span></tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label="Known B"><span
+          <tabs.Tab @key={{get ids "1"}} @label="Known B"><span
               data-active-content
             >Known B panel</span></tabs.Tab>
         </DTabs>
@@ -699,8 +699,8 @@ module("Integration | ui-kit | DTabs", function (hooks) {
             </div>
           </:header>
           <:default as |tabs|>
-            <tabs.Tab @id={{get ids "0"}} @label="Details">Details panel</tabs.Tab>
-            <tabs.Tab @id={{get ids "1"}} @label="History">History panel</tabs.Tab>
+            <tabs.Tab @key={{get ids "0"}} @label="Details">Details panel</tabs.Tab>
+            <tabs.Tab @key={{get ids "1"}} @label="History">History panel</tabs.Tab>
           </:default>
         </DTabs>
       </template>
@@ -756,10 +756,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Editable"><input
+          <tabs.Tab @key={{get ids "0"}} @label="Editable"><input
               data-panel-input
             /></tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label="Replacement"><p>Replacement
+          <tabs.Tab @key={{get ids "1"}} @label="Replacement"><p>Replacement
               panel</p></tabs.Tab>
         </DTabs>
       </template>
@@ -825,11 +825,11 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Editable">
+          <tabs.Tab @key={{get ids "0"}} @label="Editable">
             {{#if state.showInput}}<input data-panel-input />{{/if}}
           </tabs.Tab>
           <tabs.Tab
-            @id={{get ids "1"}}
+            @key={{get ids "1"}}
             @label="Replacement"
           >Replacement</tabs.Tab>
         </DTabs>
@@ -869,10 +869,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Long A"><div
+          <tabs.Tab @key={{get ids "0"}} @label="Long A"><div
               style="height: 200px;"
             >Long A panel</div></tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label="Long B"><div
+          <tabs.Tab @key={{get ids "1"}} @label="Long B"><div
               style="height: 200px;"
             >Long B panel</div></tabs.Tab>
         </DTabs>
@@ -915,10 +915,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Wide A"><div
+          <tabs.Tab @key={{get ids "0"}} @label="Wide A"><div
               style="width: 500px"
             >Wide A panel</div></tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label="Wide B"><div
+          <tabs.Tab @key={{get ids "1"}} @label="Wide B"><div
               style="width: 500px"
             >Wide B panel</div></tabs.Tab>
         </DTabs>
@@ -958,7 +958,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           {{#each ids as |id|}}<tabs.Tab
-              @id={{id}}
+              @key={{id}}
               @label={{id}}
             >{{id}}</tabs.Tab>{{/each}}
         </DTabs>
@@ -1002,9 +1002,9 @@ module("Integration | ui-kit | DTabs", function (hooks) {
         >
           <:header as |header|><header.Tablist style="width: 120px" /></:header>
           <:default as |tabs|>
-            <tabs.Tab @id={{get ids "0"}} @label="Short">Short</tabs.Tab>
+            <tabs.Tab @key={{get ids "0"}} @label="Short">Short</tabs.Tab>
             <tabs.Tab
-              @id={{get ids "1"}}
+              @key={{get ids "1"}}
               @label="A deliberately long tab label that must wrap"
             >Long panel</tabs.Tab>
           </:default>
@@ -1039,9 +1039,9 @@ module("Integration | ui-kit | DTabs", function (hooks) {
         >
           <:header as |header|><header.Tablist style="width: 120px" /></:header>
           <:default as |tabs|>
-            <tabs.Tab @id={{get ids "0"}} @label="Short">Short</tabs.Tab>
+            <tabs.Tab @key={{get ids "0"}} @label="Short">Short</tabs.Tab>
             <tabs.Tab
-              @id={{get ids "1"}}
+              @key={{get ids "1"}}
               @label="unbrokenidentifierthatiswiderthanthestrip_2026"
             >Unbroken panel</tabs.Tab>
           </:default>
@@ -1078,12 +1078,12 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}}>
+          <tabs.Tab @key={{get ids "0"}}>
             <:label><span data-rich-label><strong>Rich</strong>
                 label</span></:label>
             <:default>Rich panel</:default>
           </tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label="Plain">Plain panel</tabs.Tab>
+          <tabs.Tab @key={{get ids "1"}} @label="Plain">Plain panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -1130,7 +1130,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
             data-consumer-marker={{id}}
             id={{suppliedId}}
             role="link"
-            @id={{id}}
+            @key={{id}}
             @label="Safe tab"
           >
             Safe panel
@@ -1209,7 +1209,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           {{#each state.items key="id" as |item|}}
             <tabs.Tab
               data-tab-id={{item.id}}
-              @id={{item.id}}
+              @key={{item.id}}
               @label={{item.label}}
             >
               <span data-panel-id={{item.id}}>{{item.label}} panel</span>
@@ -1274,7 +1274,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           {{#each ids as |id|}}<tabs.Tab
-              @id={{id}}
+              @key={{id}}
               @label={{id}}
             >{{id}}</tabs.Tab>{{/each}}
         </DTabs>
@@ -1322,7 +1322,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           {{#each ids as |id|}}<tabs.Tab
-              @id={{id}}
+              @key={{id}}
               @label={{id}}
             >{{id}}</tabs.Tab>{{/each}}
         </DTabs>
@@ -1371,7 +1371,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           {{#each ids as |id|}}<tabs.Tab
-              @id={{id}}
+              @key={{id}}
               @label={{id}}
             >{{id}}</tabs.Tab>{{/each}}
         </DTabs>
@@ -1426,7 +1426,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           {{#each ids as |id|}}<tabs.Tab
-              @id={{id}}
+              @key={{id}}
               @label={{id}}
             >{{id}}</tabs.Tab>{{/each}}
         </DTabs>
@@ -1463,8 +1463,8 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Selected">Selected panel</tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label="Focused">Focused panel</tabs.Tab>
+          <tabs.Tab @key={{get ids "0"}} @label="Selected">Selected panel</tabs.Tab>
+          <tabs.Tab @key={{get ids "1"}} @label="Focused">Focused panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -1531,7 +1531,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           {{#each ids as |id|}}<tabs.Tab
-              @id={{id}}
+              @key={{id}}
               @label={{id}}
             >{{id}}</tabs.Tab>{{/each}}
         </DTabs>
@@ -1567,34 +1567,34 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     );
   });
 
-  test("rejects duplicate tab ids", async function (assert) {
-    const duplicateId = "duplicate";
+  test("rejects duplicate tab keys", async function (assert) {
+    const duplicateKey = "duplicate";
     const onActivate = sinon.spy();
     let errors = 0;
     setupOnerror((error) => {
       errors++;
       assert.true(
-        guardMessageMatches(error, [/duplicate.*id|id.*unique/i]),
-        "the assertion identifies duplicate ids"
+        guardMessageMatches(error, [/duplicate.*key|key.*unique/i]),
+        "the assertion identifies duplicate keys"
       );
     });
 
     await render(
       <template>
         <DTabs
-          @active={{duplicateId}}
+          @active={{duplicateKey}}
           @label="Duplicate ids"
           @onActivate={{onActivate}}
           as |tabs|
         >
-          {{! eslint-disable ember/template-no-duplicate-id }}
-          <tabs.Tab @id={{duplicateId}} @label="First">First</tabs.Tab>
-          <tabs.Tab @id={{duplicateId}} @label="Second">Second</tabs.Tab>
-          {{! eslint-enable ember/template-no-duplicate-id }}
+
+          <tabs.Tab @key={{duplicateKey}} @label="First">First</tabs.Tab>
+          <tabs.Tab @key={{duplicateKey}} @label="Second">Second</tabs.Tab>
+
         </DTabs>
       </template>
     );
-    assert.strictEqual(errors, 1, "duplicate ids raise exactly one assertion");
+    assert.strictEqual(errors, 1, "duplicate keys raise exactly one assertion");
     resetOnerror();
   });
 
@@ -1617,7 +1617,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id="both" @label="Argument label">
+          <tabs.Tab @key="both" @label="Argument label">
             <:label><span>Block label</span></:label>
             <:default>Panel</:default>
           </tabs.Tab>
@@ -1653,7 +1653,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id="unlabelled">Panel</tabs.Tab>
+          <tabs.Tab @key="unlabelled">Panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -1679,7 +1679,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     await render(
       <template>
         <DTabs @active="tab" @onActivate={{onActivate}} as |tabs|>
-          <tabs.Tab @id="tab" @label="Tab">Panel</tabs.Tab>
+          <tabs.Tab @key="tab" @label="Tab">Panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -1707,7 +1707,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     await render(
       <template>
         <DTabs @active="tab" @label="Missing callback" as |tabs|>
-          <tabs.Tab @id="tab" @label="Tab">Panel</tabs.Tab>
+          <tabs.Tab @key="tab" @label="Tab">Panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -1741,7 +1741,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
         >
           <:header><div>Header without placement</div></:header>
           <:default as |tabs|><tabs.Tab
-              @id="tab"
+              @key="tab"
               @label="Tab"
             >Panel</tabs.Tab></:default>
         </DTabs>
@@ -1777,7 +1777,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id="tab" @label="Tab">Panel</tabs.Tab>
+          <tabs.Tab @key="tab" @label="Tab">Panel</tabs.Tab>
           <div data-non-tab>Not a tab declaration</div>
         </DTabs>
       </template>
@@ -1816,7 +1816,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id="valid" @label="Valid">Panel</tabs.Tab>
+          <tabs.Tab @key="valid" @label="Valid">Panel</tabs.Tab>
           {{! eslint-disable ember/template-require-context-role }}
           {{#if state.show}}<button
               role="tab"
@@ -1848,10 +1848,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @id={{get ids "0"}} @label="Editable">
+          <tabs.Tab @key={{get ids "0"}} @label="Editable">
             {{#unless state.showExtra}}<input data-panel-input />{{/unless}}
           </tabs.Tab>
-          <tabs.Tab @id={{get ids "1"}} @label="Replacement">Replacement panel</tabs.Tab>
+          <tabs.Tab @key={{get ids "1"}} @label="Replacement">Replacement panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -1877,7 +1877,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       .isFocused("a later content swap preserves focus released outside");
   });
 
-  test("tab ids with whitespace and punctuation keep valid ARIA references", async function (assert) {
+  test("tab keys with whitespace and punctuation keep valid ARIA references", async function (assert) {
     const ids = ["account settings", "a:b.c"];
     const state = new TabsState(ids[0]);
     const onActivate = sinon.spy();
@@ -1886,12 +1886,12 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       <template>
         <DTabs
           @active={{state.active}}
-          @label="Unrestricted tab ids"
+          @label="Unrestricted tab keys"
           @onActivate={{onActivate}}
           as |tabs|
         >
           {{#each ids as |id|}}
-            <tabs.Tab @id={{id}} @label={{id}}>{{id}}</tabs.Tab>
+            <tabs.Tab @key={{id}} @label={{id}}>{{id}}</tabs.Tab>
           {{/each}}
         </DTabs>
       </template>
@@ -1951,9 +1951,9 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           as |tabs|
         >
           {{#if state.flip}}
-            <tabs.Tab @id="same" @label="One">1</tabs.Tab>
+            <tabs.Tab @key="same" @label="One">1</tabs.Tab>
           {{else}}
-            <tabs.Tab @id="same" @label="Two">2</tabs.Tab>
+            <tabs.Tab @key="same" @label="Two">2</tabs.Tab>
           {{/if}}
         </DTabs>
       </template>
@@ -1988,7 +1988,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
             as |tabs|
           >
             {{#each ids as |id|}}
-              <tabs.Tab @id={{id}} @label="Section {{id}}">Panel
+              <tabs.Tab @key={{id}} @label="Section {{id}}">Panel
                 {{id}}</tabs.Tab>
             {{/each}}
           </DTabs>
@@ -2048,7 +2048,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
             {{#each ids as |id|}}
               <tabs.Tab
                 style="flex: 0 0 80px"
-                @id={{id}}
+                @key={{id}}
                 @label={{id}}
               >Panel</tabs.Tab>
             {{/each}}
@@ -2096,7 +2096,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
             as |tabs|
           >
             {{#each ids as |id|}}
-              <tabs.Tab @id={{id}} @label="Section {{id}}">Panel
+              <tabs.Tab @key={{id}} @label="Section {{id}}">Panel
                 {{id}}</tabs.Tab>
             {{/each}}
           </DTabs>
@@ -2144,7 +2144,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
             as |tabs|
           >
             {{#each ids as |id|}}
-              <tabs.Tab style="flex: 0 0 80px" @id={{id}} @label={{id}}>Panel
+              <tabs.Tab style="flex: 0 0 80px" @key={{id}} @label={{id}}>Panel
                 {{id}}</tabs.Tab>
             {{/each}}
           </DTabs>
@@ -2196,7 +2196,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
             as |tabs|
           >
             {{#each ids as |id|}}
-              <tabs.Tab style="flex: 0 0 80px" @id={{id}} @label={{id}}>Panel
+              <tabs.Tab style="flex: 0 0 80px" @key={{id}} @label={{id}}>Panel
                 {{id}}</tabs.Tab>
             {{/each}}
           </DTabs>
@@ -2235,7 +2235,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           </:header>
           <:default as |tabs|>
             {{#each ids as |id|}}
-              <tabs.Tab style="flex: 0 0 50px" @id={{id}} @label={{id}}>Panel
+              <tabs.Tab style="flex: 0 0 50px" @key={{id}} @label={{id}}>Panel
                 {{id}}</tabs.Tab>
             {{/each}}
           </:default>
@@ -2274,7 +2274,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
               as |tabs|
             >
               {{#each ids as |id|}}
-                <tabs.Tab style="flex: 0 0 80px" @id={{id}} @label={{id}}>Panel
+                <tabs.Tab style="flex: 0 0 80px" @key={{id}} @label={{id}}>Panel
                   {{id}}</tabs.Tab>
               {{/each}}
             </DTabs>
@@ -2334,7 +2334,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           </:header>
           <:default as |tabs|>
             {{#each ids as |id|}}
-              <tabs.Tab @id={{id}} @label={{longLabel}}>Panel {{id}}</tabs.Tab>
+              <tabs.Tab @key={{id}} @label={{longLabel}}>Panel {{id}}</tabs.Tab>
             {{/each}}
           </:default>
         </DTabs>
@@ -2372,7 +2372,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          {{#each ids as |id|}}<tabs.Tab @id={{id}} @label={{id}}>Panel
+          {{#each ids as |id|}}<tabs.Tab @key={{id}} @label={{id}}>Panel
               {{id}}</tabs.Tab>{{/each}}
         </DTabs>
       </template>
@@ -2416,7 +2416,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
             as |tabs|
           >
             {{#each state.items key="id" as |id|}}
-              <tabs.Tab style="flex: 0 0 80px" @id={{id}} @label={{id}}>Panel
+              <tabs.Tab style="flex: 0 0 80px" @key={{id}} @label={{id}}>Panel
                 {{id}}</tabs.Tab>
             {{/each}}
           </DTabs>
