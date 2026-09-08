@@ -112,6 +112,27 @@ module DiscourseAi
         }
       end
 
+      def enqueue_reply(user:, request_id:, query:)
+        return if bind_request(user_id: user.id, request_id:, query:) != :created
+
+        asked_at = Time.current
+        ask_log = AskAiLog.create!(user:, query:, asked_at:)
+        settings = result_settings
+        Jobs.enqueue(
+          :stream_discover_reply,
+          user_id: user.id,
+          query:,
+          request_id:,
+          ask_ai_log_id: ask_log.id,
+          queued_at: asked_at.to_f,
+          summary_detail: settings[:summary_detail].to_s,
+          related_count: settings[:related_count],
+        )
+      rescue StandardError
+        ask_log&.update!(ask_outcome: :failed)
+        raise
+      end
+
       def bind_request(user_id:, request_id:, query:)
         normalized_query = query.to_s.unicode_normalize(:nfc).squish
         result =

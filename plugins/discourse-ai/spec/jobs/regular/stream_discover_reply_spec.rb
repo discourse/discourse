@@ -544,4 +544,228 @@ describe Jobs::StreamDiscoverReply do
     expect(synthesis).not_to have_received(:call)
     expect(messages.map { |message| message[:phase] }).to eq(%w[searching])
   end
+
+  describe "Ask logging" do
+    fab!(:ask_log) do
+      AskAiLog.create!(user:, query: "how do I create a plugin", asked_at: Time.current)
+    end
+    let(:args) { { user_id: user.id, query:, request_id:, ask_ai_log_id: ask_log.id } }
+
+    it "records the rewrite, candidates, final answer, and time to the first answer" do
+      freeze_time
+      ask_log.update!(asked_at: 2.seconds.ago)
+      answer = "Start with a plugin."
+      allow(synthesis).to receive(:call) do |**_, &stream|
+        stream.call(answerable: true, source_refs: %w[source_1], title: "Plugins", answer:)
+        freeze_time 1.second.from_now
+        stream.call(
+          answerable: true,
+          source_refs: %w[source_1],
+          title: "Plugins",
+          answer: "#{answer} Next step.",
+        )
+        DiscourseAi::Discoveries::Synthesis::Result.new(
+          answerable: true,
+          source_refs: %w[source_1],
+          title: "Plugins",
+          answer: "#{answer} Next step.",
+          follow_up: "How do I install it?",
+        )
+      end
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "answered",
+        keyword_query: query,
+        semantic_query: query,
+        query_locale: user.effective_locale,
+        candidate_post_ids: [source_post.id],
+        source_post_ids: [source_post.id],
+        answer_title: "Plugins",
+        answer: "#{answer} Next step.",
+        suggested_follow_up: "How do I install it?",
+        time_to_first_answer_ms: 2000,
+        failure_stage: nil,
+      )
+    end
+
+    it "records an empty retrieval without inventing an answer latency" do
+      allow(retrieval).to receive(:call).and_return(
+        DiscourseAi::Discoveries::Retrieval::Result.new(candidates: []),
+      )
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "no_answer",
+        candidate_post_ids: [],
+        source_post_ids: [],
+        answer: nil,
+        time_to_first_answer_ms: nil,
+      )
+    end
+
+    it "records a synthesis failure and retains the retrieval context" do
+      allow(synthesis).to receive(:call).and_raise(StandardError, "provider failed")
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "failed",
+        failure_stage: "synthesis",
+        keyword_query: query,
+        candidate_post_ids: [source_post.id],
+        time_to_first_answer_ms: nil,
+      )
+    end
+
+    it "records a recovered rewrite failure alongside the final answer" do
+      allow(query_rewriter).to receive(:call).and_return(
+        DiscourseAi::Discoveries::QueryRewriter::Result.new(
+          keyword_query: query,
+          semantic_query: query,
+          original_query_locale: "en",
+          failed: true,
+        ),
+      )
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "answered",
+        failure_stage: "rewrite",
+        keyword_query: query,
+      )
+    end
+
+    it "records a request superseded before processing as cancelled" do
+      DiscourseAi::Discoveries.bind_request(
+        user_id: user.id,
+        request_id: SecureRandom.uuid,
+        query: "new question",
+      )
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "cancelled",
+        time_to_first_answer_ms: nil,
+      )
+    end
+
+    it "records queue expiry as failed without assigning an LLM failure stage" do
+      job.execute(args.merge(queued_at: 3.seconds.ago.to_f))
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "failed",
+        failure_stage: nil,
+        time_to_first_answer_ms: nil,
+      )
+    end
+
+    it "retains all synthesis candidates separately from final sources" do
+      other_post = Fabricate(:post)
+      candidates = [
+        candidate,
+        candidate.merge(
+          "post_id" => other_post.id,
+          "topic_id" => other_post.topic_id,
+          "source_ref" => "source_2",
+        ),
+      ]
+      allow(retrieval).to receive(:call).and_return(
+        DiscourseAi::Discoveries::Retrieval::Result.new(candidates:),
+      )
+      allow(retrieval).to receive(:validated_sources).and_return([candidate])
+      allow(synthesis).to receive(:call) do |**_, &stream|
+        stream.call(answerable: true, source_refs: %w[source_1], answer: "Answer")
+        DiscourseAi::Discoveries::Synthesis::Result.new(
+          answerable: true,
+          source_refs: %w[source_1],
+          answer: "Answer",
+        )
+      end
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        candidate_post_ids: [source_post.id, other_post.id],
+        source_post_ids: [source_post.id],
+      )
+    end
+
+    it "records retrieval errors before any answer is available" do
+      allow(retrieval).to receive(:call).and_raise(StandardError)
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "failed",
+        failure_stage: "retrieval",
+        time_to_first_answer_ms: nil,
+      )
+    end
+
+    it "keeps first-answer timing when synthesis subsequently fails" do
+      freeze_time
+      ask_log.update!(asked_at: 1.second.ago)
+      allow(synthesis).to receive(:call) do |**_, &stream|
+        stream.call(answerable: true, source_refs: %w[source_1], answer: "A partial answer")
+        raise StandardError
+      end
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "failed",
+        failure_stage: "synthesis",
+        time_to_first_answer_ms: 1000,
+        answer: nil,
+        source_post_ids: [],
+      )
+    end
+
+    it "does not save rejected references as final sources" do
+      allow(retrieval).to receive(:validated_sources).and_return([])
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "no_answer",
+        source_post_ids: [],
+        answer: nil,
+        time_to_first_answer_ms: nil,
+      )
+    end
+
+    it "records a deadline expiry as failed rather than cancelled" do
+      expired = false
+      allow(Process).to receive(:clock_gettime).and_wrap_original do |original, *arguments|
+        value = original.call(*arguments)
+        expired && arguments == [Process::CLOCK_MONOTONIC] ? value + 30 : value
+      end
+      allow(retrieval).to receive(:call) do
+        expired = true
+        retrieval_result
+      end
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "failed",
+        failure_stage: "retrieval",
+        time_to_first_answer_ms: nil,
+      )
+    end
+
+    it "preserves a completed log when the job is delivered again" do
+      job.execute(args)
+      original = ask_log.reload.attributes
+
+      job.execute(args)
+
+      expect(ask_log.reload.attributes).to eq(original)
+    end
+  end
 end
