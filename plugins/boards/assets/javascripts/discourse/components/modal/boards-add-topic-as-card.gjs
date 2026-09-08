@@ -184,33 +184,33 @@ export default class BoardsAddTopicAsCard extends Component {
   <template>
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <DModal
-      {{on "keydown" this.keyDown}}
-      {{on "mousedown" this.mouseDown}}
+      class="discourse-boards-add-topic-as-card-modal"
+      @bodyClass="insert-link"
       @closeModal={{@closeModal}}
       @title={{i18n "boards.board.add_topic_as_card"}}
-      @bodyClass="insert-link"
-      class="discourse-boards-add-topic-as-card-modal"
+      {{on "keydown" this.keyDown}}
+      {{on "mousedown" this.mouseDown}}
     >
       <:body>
         <div class="inputs">
           <Form
             @data={{this.data}}
-            @onSubmit={{this.onFormSubmit}}
             @onRegisterApi={{this.registerApi}}
+            @onSubmit={{this.onFormSubmit}}
             as |form|
           >
             <form.Field
-              @name="topicSearch"
-              @type="input"
-              @title={{i18n "boards.board.topic_search_placeholder"}}
               @format="full"
+              @name="topicSearch"
               @onSet={{this.search}}
+              @title={{i18n "boards.board.topic_search_placeholder"}}
+              @type="input"
               as |field|
             >
               <field.Control
-                placeholder={{i18n "boards.board.topic_search_placeholder"}}
-                class="topic-search-input"
                 autofocus="autofocus"
+                class="topic-search-input"
+                placeholder={{i18n "boards.board.topic_search_placeholder"}}
               />
             </form.Field>
 
@@ -222,13 +222,13 @@ export default class BoardsAddTopicAsCard extends Component {
               <div class="internal-link-results">
                 {{#each this.searchResults as |result|}}
                   <a
-                    {{on "click" this.topicClick}}
-                    href={{result.url}}
-                    data-topic-id={{result.id}}
-                    data-title={{result.fancy_title}}
                     class="search-link"
+                    data-title={{result.fancy_title}}
+                    data-topic-id={{result.id}}
+                    href={{result.url}}
+                    {{on "click" this.topicClick}}
                   >
-                    <TopicStatus @topic={{result}} @disableActions={{true}} />
+                    <TopicStatus @disableActions={{true}} @topic={{result}} />
                     {{dReplaceEmoji result.title}}
                     <div class="search-category">
                       {{#if result.category.parentCategory}}
@@ -247,15 +247,15 @@ export default class BoardsAddTopicAsCard extends Component {
 
       <:footer>
         <DButton
+          class="btn-primary"
+          type="submit"
           @action={{this.formApi.submit}}
           @label="boards.board.add_topic_as_card"
-          type="submit"
-          class="btn-primary"
         />
         <DButton
+          class="btn-transparent"
           @action={{@closeModal}}
           @label="cancel"
-          class="btn-transparent"
         />
       </:footer>
     </DModal>

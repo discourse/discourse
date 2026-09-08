@@ -65,15 +65,15 @@ export default class SchemaSettingNumberField extends Component {
 
   <template>
     <Input
-      @value={{this.value}}
-      {{on "input" this.onInput}}
-      @type="number"
       inputmode={{this.inputmode}}
-      pattern={{this.pattern}}
-      step={{this.step}}
       max={{this.max}}
       min={{this.min}}
+      pattern={{this.pattern}}
       required={{this.required}}
+      step={{this.step}}
+      @type="number"
+      @value={{this.value}}
+      {{on "input" this.onInput}}
     />
 
     <div class="schema-field__input-supporting-text">

@@ -56,11 +56,11 @@ const TopicCreator = <template>
 
 const HighContextCard = <template>
   <HighContextTopicCard
-    @topic={{@topic}}
-    @hideCategory={{@hideCategory}}
     @bulkSelectEnabled={{@bulkSelectEnabled}}
+    @hideCategory={{@hideCategory}}
     @isSelected={{@isSelected}}
     @onBulkSelectToggle={{@onBulkSelectToggle}}
+    @topic={{@topic}}
   />
 </template>;
 

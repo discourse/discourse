@@ -222,8 +222,8 @@ export default class PostMetaDataPosterName extends Component {
               <span class={{dConcatClass "user-title" this.titleClassNames}}>
                 {{#if (and this.user.primary_group_name @post.title_is_group)}}
                   <GroupLink
-                    @name={{this.user.primary_group_name}}
                     @href={{this.primaryGroupHref}}
+                    @name={{this.user.primary_group_name}}
                   >
                     {{this.userTitle}}
                   </GroupLink>
@@ -245,8 +245,8 @@ export default class PostMetaDataPosterName extends Component {
                   <span class={{concat "user-badge-button-" badge.slug}}>
                     <UserBadge
                       @badge={{this.withBadgeDescription badge}}
-                      @user={{this.user}}
                       @showName={{false}}
+                      @user={{this.user}}
                     />
                   </span>
                 {{/each}}

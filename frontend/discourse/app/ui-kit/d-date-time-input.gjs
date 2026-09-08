@@ -83,9 +83,9 @@ export default class DDateTimeInput extends Component {
       {{#unless this.timeFirst}}
         <DDateInput
           @date={{this.date}}
+          @onChange={{this.onChangeDate}}
           @placeholder={{this.placeholder}}
           @relativeDate={{this.relativeDate}}
-          @onChange={{this.onChangeDate}}
           @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
         />
       {{/unless}}
@@ -93,26 +93,26 @@ export default class DDateTimeInput extends Component {
       {{#if this.showTime}}
         <DTimeInput
           @date={{this.date}}
-          @relativeDate={{this.relativeDate}}
           @onChange={{this.onChangeTime}}
+          @relativeDate={{this.relativeDate}}
         />
       {{/if}}
 
       {{#if this.timeFirst}}
         <DDateInput
           @date={{this.date}}
+          @onChange={{this.onChangeDate}}
           @placeholder={{this.placeholder}}
           @relativeDate={{this.relativeDate}}
-          @onChange={{this.onChangeDate}}
           @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
         />
       {{/if}}
 
       {{#if this.clearable}}
         <DButton
-          @icon="xmark"
-          @action={{this.onClear}}
           class="btn-default clear-date-time"
+          @action={{this.onClear}}
+          @icon="xmark"
         />
       {{/if}}
     </div>

@@ -219,7 +219,6 @@ export default class DTimeInput extends Component {
   <template>
     <div class="d-time-input" ...attributes>
       <ComboBox
-        @value={{this.time}}
         @content={{this.timeOptions}}
         @onChange={{this.onChangeTime}}
         @options={{hash
@@ -229,6 +228,7 @@ export default class DTimeInput extends Component {
           autoInsertNoneItem=false
           translatedFilterPlaceholder="--:--"
         }}
+        @value={{this.time}}
       />
     </div>
   </template>

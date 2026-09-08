@@ -224,36 +224,36 @@ export default class DOTP extends Component {
       <div class="d-otp-group">
         {{#each this.otp as |char index|}}
           <Slot
-            @index={{index}}
             @char={{char}}
+            @index={{index}}
             @isFocused={{this.isFocusedSlot index}}
           />
           {{#if (this.showSeparator index)}}
-            <span class="d-otp-separator" aria-hidden="true">-</span>
+            <span aria-hidden="true" class="d-otp-separator">-</span>
           {{/if}}
         {{/each}}
       </div>
 
       <div class="d-otp-input-wrapper">
         <input
-          {{preventScrollOnFocus}}
-          inputmode={{this.inputMode}}
-          autocomplete={{this.autocomplete}}
-          spellcheck="false"
-          autocorrect="off"
+          aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
           autocapitalize="off"
-          data-slot="input-otp"
+          autocomplete={{this.autocomplete}}
+          autocorrect="off"
           class="d-otp-input"
+          data-slot="input-otp"
+          inputmode={{this.inputMode}}
           maxlength={{this.maxLength}}
+          spellcheck="false"
+          ...attributes
+          {{preventScrollOnFocus}}
           {{on "input" this.onInput}}
           {{on "select" this.onSelect}}
           {{on "keydown" this.onKeyDown}}
           {{on "focus" this.onFocus}}
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
-          aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
           {{didInsert this.focusInput}}
-          ...attributes
         />
       </div>
     </div>

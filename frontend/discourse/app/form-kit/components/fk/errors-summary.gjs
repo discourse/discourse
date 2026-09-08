@@ -40,7 +40,7 @@ export default class FKErrorsSummary extends Component {
 
   <template>
     {{#if this.hasErrors}}
-      <div class="form-kit__errors-summary" aria-live="assertive" ...attributes>
+      <div aria-live="assertive" class="form-kit__errors-summary" ...attributes>
         <h2 class="form-kit__errors-summary-title">
           {{dIcon "triangle-exclamation"}}
           {{i18n "form_kit.errors_summary_title" count=this.errorCount}}
@@ -50,8 +50,8 @@ export default class FKErrorsSummary extends Component {
           {{#each-in @errors as |name error|}}
             <li>
               <a
-                rel="noopener noreferrer"
                 href="#control-{{this.normalizeName name}}"
+                rel="noopener noreferrer"
                 {{on "click" this.focusField}}
               >{{error.title}}</a>:
               {{this.concatErrors error.messages}}

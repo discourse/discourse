@@ -497,8 +497,8 @@ export default class InvitePanel extends Component {
         {{#if this.inviteModel.finished}}
           {{#if this.inviteModel.inviteLink}}
             <GeneratedInviteLink
-              @link={{this.inviteModel.inviteLink}}
               @email={{this.invitee}}
+              @link={{this.inviteModel.inviteLink}}
             />
           {{/if}}
         {{else}}
@@ -507,7 +507,7 @@ export default class InvitePanel extends Component {
             <div class="invite-user-input-wrapper">
               {{#if this.allowExistingMembers}}
                 <EmailGroupUserChooser
-                  @value={{this.invitee}}
+                  class="invite-user-input"
                   @onChange={{this.updateInvitee}}
                   @options={{hash
                     maximum=1
@@ -517,20 +517,20 @@ export default class InvitePanel extends Component {
                     filterPlaceholder=this.placeholderKey
                     fullWidthWrap=true
                   }}
-                  class="invite-user-input"
+                  @value={{this.invitee}}
                 />
               {{else}}
                 <DTextField
-                  @value={{this.invitee}}
-                  @placeholderKey="topic.invite_reply.email_placeholder"
                   class="email-or-username-input"
+                  @placeholderKey="topic.invite_reply.email_placeholder"
+                  @value={{this.invitee}}
                 />
               {{/if}}
               {{#if this.capabilities.hasContactPicker}}
                 <DButton
-                  @icon="address-book"
-                  @action={{this.searchContact}}
                   class="btn-primary open-contact-picker"
+                  @action={{this.searchContact}}
+                  @icon="address-book"
                 />
               {{/if}}
             </div>
@@ -543,9 +543,9 @@ export default class InvitePanel extends Component {
               </label>
               <GroupChooser
                 @content={{this.allGroups}}
-                @value={{this.groupIds}}
                 @labelProperty="name"
                 @onChange={{fn (mut this.groupIds)}}
+                @value={{this.groupIds}}
               />
             </div>
           {{/if}}
@@ -554,15 +554,15 @@ export default class InvitePanel extends Component {
             <div class="show-custom-message-control">
               <label class="instructions">
                 <DiscourseLinkedText
+                  class="optional"
                   @action={{this.showCustomMessageBox}}
                   @text="invite.custom_message"
-                  class="optional"
                 />
               </label>
               {{#if this.hasCustomMessage}}
                 <Textarea
-                  @value={{this.customMessage}}
                   placeholder={{this.customMessagePlaceholder}}
+                  @value={{this.customMessage}}
                 />
               {{/if}}
             </div>
@@ -578,22 +578,22 @@ export default class InvitePanel extends Component {
 
       <div class="footer">
         {{#if this.inviteModel.finished}}
-          <DButton @action={{@closeModal}} @label="close" class="btn-primary" />
+          <DButton class="btn-primary" @action={{@closeModal}} @label="close" />
         {{else}}
           <DButton
-            @icon={{this.inviteIcon}}
+            class="btn-primary send-invite"
             @action={{this.createInvite}}
             @disabled={{this.disabled}}
+            @icon={{this.inviteIcon}}
             @label={{this.buttonTitle}}
-            class="btn-primary send-invite"
           />
           {{#if this.showCopyInviteButton}}
             <DButton
-              @icon="link"
+              class="btn-primary generate-invite-link"
               @action={{this.generateInviteLink}}
               @disabled={{this.disabledCopyLink}}
+              @icon="link"
               @label="user.invited.generate_link"
-              class="btn-primary generate-invite-link"
             />
           {{/if}}
         {{/if}}

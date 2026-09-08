@@ -27,7 +27,7 @@ module(
     test("slug placeholder is set to the slugified board name", async function (assert) {
       await render(
         <template>
-          <BoardsBoardSettings @model={{this.model}} @inline={{true}} />
+          <BoardsBoardSettings @inline={{true}} @model={{this.model}} />
         </template>
       );
 
@@ -69,9 +69,9 @@ module(
       await render(
         <template>
           <BoardsBoardSettings
-            @model={{this.model}}
             @closeModal={{this.closeModal}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );
@@ -89,7 +89,7 @@ module(
     test("default ACL is created using manage board allowed groups and logged in users", async function (assert) {
       await render(
         <template>
-          <BoardsBoardSettings @model={{this.model}} @inline={{true}} />
+          <BoardsBoardSettings @inline={{true}} @model={{this.model}} />
         </template>
       );
 
@@ -104,7 +104,7 @@ module(
       this.siteSettings.boards_manage_board_allowed_groups = "1|2|5";
       await render(
         <template>
-          <BoardsBoardSettings @model={{this.model}} @inline={{true}} />
+          <BoardsBoardSettings @inline={{true}} @model={{this.model}} />
         </template>
       );
 

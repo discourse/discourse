@@ -69,11 +69,11 @@ export default class ChatRoutesChannel extends Component {
       <Navbar as |navbar|>
         {{#if this.site.mobileView}}
           <navbar.BackButton
-            @route={{this.getChannelsRoute}}
-            @urgentCount={{this.otherChannelsUrgentCount}}
-            @unreadCount={{this.otherChannelsUnreadCount}}
-            @mentionCount={{this.otherChannelsMentionCount}}
             @hasUnreadThreads={{this.otherChannelsHasUnreadThreads}}
+            @mentionCount={{this.otherChannelsMentionCount}}
+            @route={{this.getChannelsRoute}}
+            @unreadCount={{this.otherChannelsUnreadCount}}
+            @urgentCount={{this.otherChannelsUrgentCount}}
           />
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
@@ -93,10 +93,10 @@ export default class ChatRoutesChannel extends Component {
       </Navbar>
 
       <FullPageChat
-        @isFiltering={{this.isFiltering}}
         @channel={{@channel}}
-        @targetMessageId={{@targetMessageId}}
+        @isFiltering={{this.isFiltering}}
         @onToggleFilter={{this.toggleIsFiltering}}
+        @targetMessageId={{@targetMessageId}}
       />
     </div>
 

@@ -110,12 +110,12 @@ export default class DDatePicker extends Component {
 
   <template>
     <Input
-      @type={{this.inputType}}
+      autocomplete="off"
       class="date-picker"
       placeholder={{this.placeholder}}
-      @value={{this.value}}
-      autocomplete="off"
       ...attributes
+      @type={{this.inputType}}
+      @value={{this.value}}
     />
   </template>
 }

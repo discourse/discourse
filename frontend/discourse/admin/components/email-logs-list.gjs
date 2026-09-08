@@ -207,8 +207,8 @@ export default class EmailLogsList extends Component {
               {{#each @filters as |filter|}}
                 <td>
                   <DTextField
-                    @value={{get this.filterValues filter.property}}
                     @placeholderKey={{filter.placeholder}}
+                    @value={{get this.filterValues filter.property}}
                     {{on "input" (fn this.updateFilter filter.name)}}
                   />
                 </td>

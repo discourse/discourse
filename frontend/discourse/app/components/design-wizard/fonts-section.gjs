@@ -46,10 +46,10 @@ export default class DesignWizardFontsSection extends Component {
         {{i18n "design_wizard.fonts.base_font"}}
       </span>
       <DMenu
-        @identifier="design-wizard-base-font"
-        @triggerClass="design-wizard__font-select"
         @contentClass="design-wizard__font-select-content"
+        @identifier="design-wizard-base-font"
         @modalForMobile={{true}}
+        @triggerClass="design-wizard__font-select"
         @triggerComponent={{component
           FontTrigger
           label=this.baseFontLabel
@@ -61,6 +61,9 @@ export default class DesignWizardFontsSection extends Component {
             {{#each ALL_FONTS as |font|}}
               <dropdown.item>
                 <DButton
+                  class="btn-flat
+                    {{fontClass font.key}}
+                    {{if (eq font.key @bodyFont) '-selected'}}"
                   @action={{fn
                     this.selectFont
                     @onSelectBodyFont
@@ -68,9 +71,6 @@ export default class DesignWizardFontsSection extends Component {
                     dMenu
                   }}
                   @translatedLabel={{font.name}}
-                  class="btn-flat
-                    {{fontClass font.key}}
-                    {{if (eq font.key @bodyFont) '-selected'}}"
                 />
               </dropdown.item>
             {{/each}}
@@ -84,10 +84,10 @@ export default class DesignWizardFontsSection extends Component {
         {{i18n "design_wizard.fonts.heading_font"}}
       </span>
       <DMenu
-        @identifier="design-wizard-heading-font"
-        @triggerClass="design-wizard__font-select"
         @contentClass="design-wizard__font-select-content"
+        @identifier="design-wizard-heading-font"
         @modalForMobile={{true}}
+        @triggerClass="design-wizard__font-select"
         @triggerComponent={{component
           FontTrigger
           label=this.headingFontLabel
@@ -99,6 +99,9 @@ export default class DesignWizardFontsSection extends Component {
             {{#each ALL_FONTS as |font|}}
               <dropdown.item>
                 <DButton
+                  class="btn-flat
+                    {{fontClass font.key}}
+                    {{if (eq font.key @headingFont) '-selected'}}"
                   @action={{fn
                     this.selectFont
                     @onSelectHeadingFont
@@ -106,9 +109,6 @@ export default class DesignWizardFontsSection extends Component {
                     dMenu
                   }}
                   @translatedLabel={{font.name}}
-                  class="btn-flat
-                    {{fontClass font.key}}
-                    {{if (eq font.key @headingFont) '-selected'}}"
                 />
               </dropdown.item>
             {{/each}}

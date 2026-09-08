@@ -132,57 +132,57 @@ export default class VoiceRoomForm extends Component {
     <div class="voice-room-form {{if this.isAdminContext 'admin-detail'}}">
       {{#if this.isAdminContext}}
         <BackButton
+          class="voice-admin-back"
           @label="voice.admin.back"
           @route="adminPlugins.show.voice-rooms.index"
-          class="voice-admin-back"
         />
       {{/if}}
 
       <Form
+        class="voice-room-form__form"
         @data={{this.formData}}
         @onSubmit={{this.handleSubmit}}
-        class="voice-room-form__form"
         as |form data|
       >
         <form.Field
-          @type="input"
-          @name="name"
-          @title={{i18n "voice.admin.room.name"}}
           @format="full"
-          @validation="required|length:1,80"
+          @name="name"
           @placeholder={{i18n "voice.admin.room.name_placeholder"}}
+          @title={{i18n "voice.admin.room.name"}}
+          @type="input"
+          @validation="required|length:1,80"
           as |field|
         >
           <field.Control />
         </form.Field>
 
         <form.Field
-          @type="input"
-          @name="slug"
-          @title={{i18n "voice.admin.room.slug"}}
           @description={{i18n "voice.admin.room.slug_help"}}
           @format="full"
+          @name="slug"
           @placeholder={{i18n "voice.admin.room.slug_placeholder"}}
+          @title={{i18n "voice.admin.room.slug"}}
+          @type="input"
           as |field|
         >
           <field.Control />
         </form.Field>
 
         <form.Field
-          @type="textarea"
+          @format="full"
           @name="description"
           @title={{i18n "voice.admin.room.description"}}
-          @format="full"
+          @type="textarea"
           as |field|
         >
           <field.Control />
         </form.Field>
 
         <form.Field
-          @type="radio-group"
+          @format="full"
           @name="room_type"
           @title={{i18n "voice.admin.room.room_type"}}
-          @format="full"
+          @type="radio-group"
           as |field|
         >
           <field.Control as |radioGroup|>
@@ -203,36 +203,36 @@ export default class VoiceRoomForm extends Component {
         {{/if}}
 
         <form.Field
-          @type="toggle"
-          @name="public"
-          @title={{i18n "voice.admin.room.public"}}
           @description={{i18n "voice.admin.room.public_help"}}
           @format="full"
+          @name="public"
+          @title={{i18n "voice.admin.room.public"}}
+          @type="toggle"
           as |field|
         >
           <field.Control />
           {{#if @onManageMembers}}
             <DButton
+              class="btn-link voice-room-form__manage-members
+                {{if data.public '--hidden'}}"
               @action={{@onManageMembers}}
               @icon="users"
               @label="voice.admin.room.manage_members"
-              class="btn-link voice-room-form__manage-members
-                {{if data.public '--hidden'}}"
             />
           {{/if}}
         </form.Field>
 
         {{#if this.showVideoToggle}}
           <form.Field
-            @type="toggle"
-            @name="video_enabled"
-            @title={{i18n "voice.admin.room.video_enabled"}}
             @description={{if
               (this.isStageType data.room_type)
               (i18n "voice.admin.room.video_enabled_stage_help")
               (i18n "voice.admin.room.video_enabled_help")
             }}
             @format="full"
+            @name="video_enabled"
+            @title={{i18n "voice.admin.room.video_enabled"}}
+            @type="toggle"
             as |field|
           >
             <field.Control />
@@ -241,11 +241,11 @@ export default class VoiceRoomForm extends Component {
 
         {{#if this.showLivekitToggle}}
           <form.Field
-            @type="toggle"
-            @name="livekit_enabled"
-            @title={{i18n "voice.admin.room.livekit_enabled"}}
             @description={{i18n "voice.admin.room.livekit_enabled_help"}}
             @format="full"
+            @name="livekit_enabled"
+            @title={{i18n "voice.admin.room.livekit_enabled"}}
+            @type="toggle"
             as |field|
           >
             <field.Control />
@@ -253,10 +253,10 @@ export default class VoiceRoomForm extends Component {
         {{/if}}
 
         <form.Field
-          @type="input-number"
+          @description={{i18n "voice.admin.room.max_participants_help"}}
           @name="max_participants"
           @title={{i18n "voice.admin.room.max_participants"}}
-          @description={{i18n "voice.admin.room.max_participants_help"}}
+          @type="input-number"
           @validation={{this.maxParticipantsValidation}}
           as |field|
         >
@@ -267,11 +267,11 @@ export default class VoiceRoomForm extends Component {
           <summary>{{i18n "voice.admin.room.quality_section"}}</summary>
 
           <form.Field
-            @type="select"
-            @name="max_quality_profile"
-            @title={{i18n "voice.admin.room.max_quality_profile"}}
             @description={{i18n "voice.admin.room.max_quality_profile_help"}}
             @format="full"
+            @name="max_quality_profile"
+            @title={{i18n "voice.admin.room.max_quality_profile"}}
+            @type="select"
             as |field|
           >
             <field.Control @includeNone={{false}} as |select|>
@@ -290,11 +290,11 @@ export default class VoiceRoomForm extends Component {
             {{didInsert this.loadChatChannels}}
           >
             <form.Field
-              @type="select"
-              @name="chat_channel_id"
-              @title={{i18n "voice.admin.room.chat_channel"}}
               @description={{i18n "voice.admin.room.chat_channel_help"}}
               @format="full"
+              @name="chat_channel_id"
+              @title={{i18n "voice.admin.room.chat_channel"}}
+              @type="select"
               as |field|
             >
               <field.Control as |select|>
@@ -314,10 +314,10 @@ export default class VoiceRoomForm extends Component {
 
             {{#if data.chat_channel_id}}
               <form.Field
-                @type="input-number"
+                @description={{i18n "voice.admin.room.chat_idle_minutes_help"}}
                 @name="chat_idle_minutes"
                 @title={{i18n "voice.admin.room.chat_idle_minutes"}}
-                @description={{i18n "voice.admin.room.chat_idle_minutes_help"}}
+                @type="input-number"
                 @validation="integer|number:2,1440"
                 as |field|
               >
@@ -332,9 +332,9 @@ export default class VoiceRoomForm extends Component {
         {{/if}}
 
         <form.Submit
-          @label={{this.submitLabel}}
-          @disabled={{this.isSaving}}
           class="voice-room-form__submit"
+          @disabled={{this.isSaving}}
+          @label={{this.submitLabel}}
         />
       </Form>
     </div>

@@ -11,11 +11,11 @@ export default class DiscourseReactionsReactionEmoji extends Component {
   <template>
     {{#if @reaction.reaction.reaction_users_count}}
       <div class="discourse-reactions-my-reaction">
-        <img src={{this.emojiUrl}} class="reaction-emoji" />
+        <img class="reaction-emoji" src={{this.emojiUrl}} />
         <a
-          href={{@reaction.user.userUrl}}
-          data-user-card={{@reaction.user.username}}
           class="avatar-link"
+          data-user-card={{@reaction.user.username}}
+          href={{@reaction.user.userUrl}}
         >
           {{dAvatar
             @reaction.user

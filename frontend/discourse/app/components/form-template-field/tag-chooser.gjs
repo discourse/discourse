@@ -139,8 +139,8 @@ export default class TagChooserField extends Component {
 
   <template>
     <div
-      data-field-type="multi-select"
       class="control-group form-template-field"
+      data-field-type="multi-select"
       {{didInsert this.syncWithComposerTags}}
       {{! not ideal but we would need a lot of re-architecturing to make the form dynamic }}
       {{didUpdate this.syncWithComposerTags this.composer.model.tags}}
@@ -161,24 +161,24 @@ export default class TagChooserField extends Component {
       {{/if}}
 
       <select
+        class="form-template-field__multi-select"
+        multiple={{@attributes.multiple}}
         name={{@id}}
         required={{if @validations.required "required" ""}}
-        multiple={{@attributes.multiple}}
-        class="form-template-field__multi-select"
         {{on "input" this.handleInput}}
       >
         {{#if @attributes.none_label}}
           <option
             class="form-template-field__multi-select-placeholder"
-            value=""
             disabled={{not this.selectedTags.length}}
             selected={{if this.selectedTags.length "" "selected"}}
+            value=""
           >{{@attributes.none_label}}</option>
         {{/if}}
         {{#each this.formattedChoices as |choice|}}
           <option
-            value={{choice.display}}
             selected={{this.isSelected choice.id}}
+            value={{choice.display}}
           >{{choice.display}}</option>
         {{/each}}
       </select>

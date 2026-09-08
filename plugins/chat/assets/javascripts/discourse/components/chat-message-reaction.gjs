@@ -222,33 +222,33 @@ export default class ChatMessageReaction extends Component {
   <template>
     {{#if (and @reaction this.emojiUrl)}}
       <button
-        {{on "click" this.handleClick passive=true}}
-        {{this.registerTooltip}}
-        {{this.registerReactionsUsersPopup}}
-        type="button"
-        title={{this.emojiString}}
+        aria-describedby={{if this.description this.descriptionId}}
         aria-label={{this.ariaLabel}}
         aria-pressed={{if
           this.isCountedReaction
           (if @reaction.reacted "true" "false")
         }}
-        data-emoji-name={{@reaction.emoji}}
-        {{! `interactive` is opt-out, as it is on the message itself: only an explicit
-        false makes a reaction display-only. }}
-        tabindex={{if (eq @interactive false) "-1" "0"}}
-        aria-describedby={{if this.description this.descriptionId}}
         class={{dConcatClass
           "chat-message-reaction"
           (if @reaction.reacted "reacted")
         }}
+        data-emoji-name={{@reaction.emoji}}
+        {{! `interactive` is opt-out, as it is on the message itself: only an explicit
+        false makes a reaction display-only. }}
+        tabindex={{if (eq @interactive false) "-1" "0"}}
+        title={{this.emojiString}}
+        type="button"
+        {{on "click" this.handleClick passive=true}}
+        {{this.registerTooltip}}
+        {{this.registerReactionsUsersPopup}}
       >
         <img
-          loading="lazy"
-          class="emoji"
-          width="20"
-          height="20"
           alt={{this.emojiString}}
+          class="emoji"
+          height="20"
+          loading="lazy"
           src={{this.emojiUrl}}
+          width="20"
         />
 
         {{#if (and this.showCount @reaction.count)}}
@@ -258,8 +258,8 @@ export default class ChatMessageReaction extends Component {
 
       {{#if this.description}}
         <span
-          id={{this.descriptionId}}
           class="sr-only"
+          id={{this.descriptionId}}
         >{{this.description}}</span>
       {{/if}}
     {{/if}}

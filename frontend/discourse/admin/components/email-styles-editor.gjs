@@ -69,19 +69,19 @@ export default class EmailStylesEditor extends Component {
     <div ...attributes>
       <AceEditor
         @content={{this.editorContents}}
-        @onChange={{fn (mut this.editorContents)}}
-        @mode={{this.currentEditorMode}}
         @editorId={{this.editorId}}
+        @mode={{this.currentEditorMode}}
+        @onChange={{fn (mut this.editorContents)}}
         @save={{@save}}
       />
 
       <div class="admin-footer">
         <div class="buttons">
           <DButton
+            class="btn-default"
             @action={{this.reset}}
             @disabled={{this.resetDisabled}}
             @label="admin.customize.email_style.reset"
-            class="btn-default"
           />
         </div>
       </div>

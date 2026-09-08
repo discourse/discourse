@@ -282,9 +282,9 @@ export default class AiFullPageSearch extends Component {
   <template>
     {{bodyClass (if this.searching "ai-semantic-search-loading")}}
     <div
-      {{didUpdate this.sortChanged @sortOrder}}
       class="semantic-search__container search-results"
       role="region"
+      {{didUpdate this.sortChanged @sortOrder}}
     >
       <div class="semantic-search__results">
         {{#if this.tooltipIdentifier}}
@@ -297,9 +297,9 @@ export default class AiFullPageSearch extends Component {
                 }}
               >
                 <DToggleSwitch
+                  class="semantic-search__results-toggle"
                   disabled={{this.disableToggleSwitch}}
                   @state={{this.showingAiResults}}
-                  class="semantic-search__results-toggle"
                   {{on "click" this.toggleAiResults}}
                 />
                 <div class="semantic-search__searching-text">
@@ -324,9 +324,9 @@ export default class AiFullPageSearch extends Component {
             class={{dConcatClass "semantic-search__searching" this.searchClass}}
           >
             <DToggleSwitch
+              class="semantic-search__results-toggle"
               disabled={{this.disableToggleSwitch}}
               @state={{this.showingAiResults}}
-              class="semantic-search__results-toggle"
               {{on "click" this.toggleAiResults}}
             />
             <div class="semantic-search__searching-text">

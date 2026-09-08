@@ -44,8 +44,8 @@ export default class DiscoveryFilterNavigation extends Component {
         {{/if}}
 
         <FilterNavigationMenu
-          @onChange={{this.updateQueryString}}
           @initialInputValue={{this.filterQueryString}}
+          @onChange={{this.updateQueryString}}
           @tips={{@tips}}
         />
 

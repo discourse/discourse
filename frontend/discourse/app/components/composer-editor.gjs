@@ -956,11 +956,11 @@ export default class ComposerEditor extends Component {
 
           {{#if (gt this.composer.formTemplateIds.length 1)}}
             <FormTemplateChooser
+              class="composer-select-form-template"
               @filteredIds={{this.composer.formTemplateIds}}
-              @value={{this.selectedFormTemplateId}}
               @onChange={{this.updateSelectedFormTemplateId}}
               @options={{hash maximum=1}}
-              class="composer-select-form-template"
+              @value={{this.selectedFormTemplateId}}
             />
           {{/if}}
           <form
@@ -970,18 +970,18 @@ export default class ComposerEditor extends Component {
             <Wrapper
               @id={{this.selectedFormTemplateId}}
               @initialValues={{this.composer.formTemplateInitialValues}}
-              @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
               @onChange={{this.updateFormPreview}}
+              @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
               @uppyComposerUpload={{this.uppyComposerUpload}}
             />
           </form>
         </div>
         {{#if this.siteSettings.show_preview_for_form_templates}}
           <DEditorPreview
-            @preview={{this.preview}}
             @forcePreview={{this.forcePreview}}
             @onPreviewUpdated={{this.previewUpdated}}
             @outletArgs={{this.outletArgs}}
+            @preview={{this.preview}}
             {{didInsert this._composerEditorInitPreview}}
             {{willDestroy this._composerEditorDestroyPreview}}
           />
@@ -989,8 +989,8 @@ export default class ComposerEditor extends Component {
       </div>
     {{else if this.showTranslationEditor}}
       <PostTranslationEditor
-        @setupEditor={{this.setupEditor}}
         @extraButtons={{this.extraButtons}}
+        @setupEditor={{this.setupEditor}}
         @showLink={{this.showLink}}
         @uppyComposerUpload={{this.uppyComposerUpload}}
         {{didInsert this._composerEditorInitPreview}}
@@ -998,33 +998,33 @@ export default class ComposerEditor extends Component {
       />
     {{else}}
       <DEditor
-        @value={{this.composer.model.reply}}
+        @categoryId={{this.composer.model.category.id}}
         @change={{this.replyChanged}}
-        @placeholder={{this.replyPlaceholder}}
-        @previewUpdated={{this.previewUpdated}}
-        @markdownOptions={{this.markdownOptions}}
-        @extraButtons={{this.extraButtons}}
-        @processPreview={{this.composer.isPreviewVisible}}
-        @validation={{this.validation}}
-        @loading={{this.composer.loading}}
-        @forcePreview={{this.forcePreview}}
-        @forceEditorMode={{this.forceEditorMode}}
-        @showLink={{this.showLink}}
         @composerEvents={{true}}
-        @onPopupMenuAction={{this.composer.onPopupMenuAction}}
-        @popupMenuOptions={{this.composer.popupMenuOptions}}
         @disabled={{this.composer.disableTextarea}}
+        @disableSubmit={{this.composer.disableSubmit}}
+        @extraButtons={{this.extraButtons}}
+        @forceEditorMode={{this.forceEditorMode}}
+        @forcePreview={{this.forcePreview}}
+        @loading={{this.composer.loading}}
+        @markdownOptions={{this.markdownOptions}}
+        @onPopupMenuAction={{this.composer.onPopupMenuAction}}
+        @onSetup={{this.setupEditor}}
         @outletArgs={{lazyHash
           composer=this.composer.model
           editorType="composer"
         }}
-        @topicId={{this.composer.model.topic.id}}
-        @categoryId={{this.composer.model.category.id}}
-        @replyingToUserId={{this.composer.replyingToUserId}}
-        @onSetup={{this.setupEditor}}
-        @disableSubmit={{this.composer.disableSubmit}}
-        @toolbarPortalTarget={{this.toolbarPortalTarget}}
+        @placeholder={{this.replyPlaceholder}}
+        @popupMenuOptions={{this.composer.popupMenuOptions}}
+        @previewUpdated={{this.previewUpdated}}
+        @processPreview={{this.composer.isPreviewVisible}}
         @renderYieldAboveContainer={{this.composerRedesign}}
+        @replyingToUserId={{this.composer.replyingToUserId}}
+        @showLink={{this.showLink}}
+        @toolbarPortalTarget={{this.toolbarPortalTarget}}
+        @topicId={{this.composer.model.topic.id}}
+        @validation={{this.validation}}
+        @value={{this.composer.model.reply}}
         {{didInsert this._composerEditorInitEditor}}
         {{willDestroy this._composerEditorDestroyEditor}}
         {{didInsert this._composerEditorInitPreview}}
@@ -1036,9 +1036,9 @@ export default class ComposerEditor extends Component {
 
     {{#if this.composer.allowUpload}}
       <DPickFilesButton
-        @fileInputId={{this.fileUploadElementId}}
-        @allowMultiple={{true}}
         name="file-uploader"
+        @allowMultiple={{true}}
+        @fileInputId={{this.fileUploadElementId}}
       />
     {{/if}}
   </template>

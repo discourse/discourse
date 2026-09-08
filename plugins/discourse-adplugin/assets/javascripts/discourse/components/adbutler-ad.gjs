@@ -157,7 +157,7 @@ export default class AdbutlerAd extends AdComponent {
 
   <template>
     {{#if this.showAd}}
-      <div id={{this.divId}} class={{this.className}}></div>
+      <div class={{this.className}} id={{this.divId}}></div>
     {{/if}}
   </template>
 }

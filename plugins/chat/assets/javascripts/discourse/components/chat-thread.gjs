@@ -596,11 +596,11 @@ export default class ChatThread extends Component {
         <ChatMessagesContainer @didResizePane={{this.didResizePane}}>
           {{#each this.messagesManager.messages key="id" as |message|}}
             <Message
-              @message={{message}}
-              @disableMouseEvents={{this.isScrolling}}
-              @resendStagedMessage={{this.resendStagedMessage}}
-              @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="thread"
+              @disableMouseEvents={{this.isScrolling}}
+              @fetchMessagesByDate={{this.fetchMessagesByDate}}
+              @message={{message}}
+              @resendStagedMessage={{this.resendStagedMessage}}
             />
           {{/each}}
 
@@ -615,15 +615,15 @@ export default class ChatThread extends Component {
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow
-        @onScrollToBottom={{this.scrollToLatestMessage}}
         @isVisible={{this.paneState.hasPendingContentBelow}}
+        @onScrollToBottom={{this.scrollToLatestMessage}}
       />
 
       {{#if this.chatThreadPane.selectingMessages}}
         <ChatSelectionManager
           @channel={{@thread.channel}}
-          @pane={{this.chatThreadPane}}
           @messagesManager={{this.messagesManager}}
+          @pane={{this.chatThreadPane}}
         />
       {{else}}
         {{#if this.showChannelPreview}}
@@ -631,10 +631,10 @@ export default class ChatThread extends Component {
         {{else}}
           <ChatComposerThread
             @channel={{@channel}}
-            @thread={{@thread}}
             @onSendMessage={{this.onSendMessage}}
-            @uploadDropZone={{this.uploadDropZone}}
             @scroller={{this.scroller}}
+            @thread={{@thread}}
+            @uploadDropZone={{this.uploadDropZone}}
           />
         {{/if}}
       {{/if}}

@@ -234,27 +234,27 @@ export default class DMultiSelect extends Component {
 
   <template>
     <DMenu
-      @identifier="d-multi-select"
-      @triggerComponent={{dElement "div"}}
-      @triggerClass={{dConcatClass (if this.hasSelection "--has-selection")}}
-      @visibilityOptimizer={{@visibilityOptimizer}}
-      @placement={{@placement}}
+      ...attributes
       @allowedPlacements={{@allowedPlacements}}
-      @offset={{@offset}}
+      @identifier="d-multi-select"
       @matchTriggerMinWidth={{@matchTriggerMinWidth}}
       @matchTriggerWidth={{@matchTriggerWidth}}
+      @offset={{@offset}}
       @onRegisterApi={{@onRegisterDMenuApi}}
-      ...attributes
+      @placement={{@placement}}
+      @triggerClass={{dConcatClass (if this.hasSelection "--has-selection")}}
+      @triggerComponent={{dElement "div"}}
+      @visibilityOptimizer={{@visibilityOptimizer}}
     >
       <:trigger>
         {{#if @selection}}
           <div class="d-multi-select-trigger__selection">
             {{#each @selection as |item|}}
               <button
-                type="button"
                 class="d-multi-select-trigger__selected-item"
-                {{on "click" (fn this.remove item)}}
                 title={{this.getDisplayText item}}
+                type="button"
+                {{on "click" (fn this.remove item)}}
               >
                 <span class="d-multi-select-trigger__selection-label">{{yield
                     item
@@ -275,9 +275,9 @@ export default class DMultiSelect extends Component {
         {{/if}}
 
         <DButton
-          @icon="angle-down"
           class="d-multi-select-trigger__expand-btn btn-transparent"
           @action={{@componentArgs.show}}
+          @icon="angle-down"
         />
       </:trigger>
       <:content>
@@ -288,14 +288,14 @@ export default class DMultiSelect extends Component {
           <menu.item class="d-multi-select__search-container">
             {{dIcon "magnifying-glass"}}
             <DTextField
-              class="d-multi-select__search-input"
               autocomplete="off"
+              class="d-multi-select__search-input"
               @placeholder={{i18n "multi_select.search"}}
               @type="search"
+              @value={{readonly this.searchTerm}}
               {{on "input" this.search}}
               {{on "keydown" this.handleKeydown}}
               {{didInsert this.focus}}
-              @value={{readonly this.searchTerm}}
             />
           </menu.item>
 

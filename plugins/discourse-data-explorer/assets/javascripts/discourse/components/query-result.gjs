@@ -419,21 +419,21 @@ export default class QueryResult extends Component {
             <div class="result-actions">
               {{#if this.hasResults}}
                 <DSegmentedControl
-                  @name="query-result-view"
-                  @value={{this.view}}
+                  class="query-results-modes"
                   @items={{this.viewItems}}
+                  @name="query-result-view"
                   @onSelect={{this.setView}}
                   @translatedLabel={{i18n "explorer.view.label"}}
-                  class="query-results-modes"
+                  @value={{this.view}}
                 />
               {{/if}}
 
               {{#if this.showDownloads}}
                 <QueryResultDownloadButtons
-                  @query={{@query}}
                   @content={{@content}}
                   @group={{@group}}
                   @includeQueryExport={{@includeQueryExport}}
+                  @query={{@query}}
                 />
               {{/if}}
             </div>
@@ -467,21 +467,21 @@ export default class QueryResult extends Component {
         {{#if this.chartVisible}}
           <div class="query-results-chart">
             <DSegmentedControl
-              @name="query-result-chart-form"
-              @value={{this.chartForm}}
-              @items={{this.chartFormItems}}
-              @onSelect={{this.setChartForm}}
-              @translatedLabel={{i18n "explorer.chart.form.label"}}
-              @size="small"
               class="query-results-chart__form"
+              @items={{this.chartFormItems}}
+              @name="query-result-chart-form"
+              @onSelect={{this.setChartForm}}
+              @size="small"
+              @translatedLabel={{i18n "explorer.chart.form.label"}}
+              @value={{this.chartForm}}
             />
 
             <DataExplorerChart
-              @labels={{this.chartLabels}}
-              @datasets={{this.chartDatasets}}
               @chartType={{this.chartType}}
-              @stacked={{this.isStacked}}
+              @datasets={{this.chartDatasets}}
               @dualAxis={{this.usesDualAxis}}
+              @labels={{this.chartLabels}}
+              @stacked={{this.isStacked}}
             />
             {{#if this.ignoredColumnNames.length}}
               <p class="query-results-chart__footnote">
@@ -496,9 +496,9 @@ export default class QueryResult extends Component {
 
         {{#if this.showChartEmptyState}}
           <QueryChartEmptyState
-            @reason={{this.chartability.reason}}
             @ignoredColumns={{this.chartability.ignoredColumns}}
             @onViewAsTable={{this.viewTable}}
+            @reason={{this.chartability.reason}}
           />
         {{/if}}
 
@@ -519,22 +519,22 @@ export default class QueryResult extends Component {
               <tbody>
                 {{#each this.rows as |row|}}
                   <QueryRowContent
-                    @row={{row}}
                     @columnComponents={{this.columnComponents}}
-                    @lookupUser={{this.lookupUser}}
                     @lookupBadge={{this.lookupBadge}}
-                    @lookupPost={{this.lookupPost}}
-                    @lookupTopic={{this.lookupTopic}}
-                    @lookupTagGroup={{this.lookupTagGroup}}
-                    @lookupGroup={{this.lookupGroup}}
                     @lookupCategory={{this.lookupCategory}}
-                    @transformedPostTable={{this.transformedPostTable}}
-                    @transformedBadgeTable={{this.transformedBadgeTable}}
-                    @transformedUserTable={{this.transformedUserTable}}
-                    @transformedTagGroupTable={{this.transformedTagGroupTable}}
-                    @transformedGroupTable={{this.transformedGroupTable}}
-                    @transformedTopicTable={{this.transformedTopicTable}}
+                    @lookupGroup={{this.lookupGroup}}
+                    @lookupPost={{this.lookupPost}}
+                    @lookupTagGroup={{this.lookupTagGroup}}
+                    @lookupTopic={{this.lookupTopic}}
+                    @lookupUser={{this.lookupUser}}
+                    @row={{row}}
                     @site={{this.site}}
+                    @transformedBadgeTable={{this.transformedBadgeTable}}
+                    @transformedGroupTable={{this.transformedGroupTable}}
+                    @transformedPostTable={{this.transformedPostTable}}
+                    @transformedTagGroupTable={{this.transformedTagGroupTable}}
+                    @transformedTopicTable={{this.transformedTopicTable}}
+                    @transformedUserTable={{this.transformedUserTable}}
                   />
                 {{/each}}
               </tbody>
@@ -542,10 +542,10 @@ export default class QueryResult extends Component {
           </div>
           {{#if this.showExpandButton}}
             <DButton
+              class="btn-flat query-results-expand-btn"
               @action={{this.expandTable}}
               @icon="chevron-down"
               @translatedTitle={{i18n "show_more"}}
-              class="btn-flat query-results-expand-btn"
             />
           {{/if}}
         {{/if}}

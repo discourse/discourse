@@ -15,20 +15,20 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
             <form.InputGroup as |inputGroup|>
               <inputGroup.Field
-                @type="input"
-                @title="Foo"
                 @name="foo"
+                @title="Foo"
+                @type="input"
                 as |field|
               >
                 <field.Control />
               </inputGroup.Field>
               <inputGroup.Field
-                @type="input"
-                @title="Bar"
                 @name="bar"
+                @title="Bar"
+                @type="input"
                 as |field|
               >
                 <field.Control />

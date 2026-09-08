@@ -354,8 +354,8 @@ export default class AiPostHelperMenu extends Component {
       <div class="ai-post-helper">
         {{#if (eq this.menuState this.MENU_STATES.options)}}
           <AiHelperOptionsList
-            @options={{this.helperOptions}}
             @customPromptValue={{this.customPromptValue}}
+            @options={{this.helperOptions}}
             @performAction={{this.performAiSuggestion}}
             @shortcutVisible={{false}}
           />
@@ -376,32 +376,32 @@ export default class AiPostHelperMenu extends Component {
                 dir="auto"
               >
                 <DCookText
-                  @rawText={{this.smoothStreamer.renderedText}}
                   class="cooked"
+                  @rawText={{this.smoothStreamer.renderedText}}
                 />
               </div>
               <div class="ai-post-helper__suggestion__buttons">
                 <DButton
+                  class="btn-flat ai-post-helper__suggestion__cancel"
+                  @action={{this.cancelAiAction}}
                   @icon="xmark"
                   @label="discourse_ai.ai_helper.post_options_menu.cancel"
-                  @action={{this.cancelAiAction}}
-                  class="btn-flat ai-post-helper__suggestion__cancel"
                 />
                 <DButton
-                  @icon={{this.copyButtonIcon}}
-                  @label={{this.copyButtonLabel}}
+                  class="btn-flat ai-post-helper__suggestion__copy"
                   @action={{this.copySuggestion}}
                   @disabled={{this.streaming}}
-                  class="btn-flat ai-post-helper__suggestion__copy"
+                  @icon={{this.copyButtonIcon}}
+                  @label={{this.copyButtonLabel}}
                 />
                 {{#if this.allowInsertFootnote}}
                   <DButton
-                    @icon="asterisk"
-                    @label="discourse_ai.ai_helper.post_options_menu.insert_footnote"
-                    @action={{this.insertFootnote}}
-                    @isLoading={{this.isSavingFootnote}}
-                    @disabled={{this.footnoteDisabled}}
                     class="btn-flat ai-post-helper__suggestion__insert-footnote"
+                    @action={{this.insertFootnote}}
+                    @disabled={{this.footnoteDisabled}}
+                    @icon="asterisk"
+                    @isLoading={{this.isSavingFootnote}}
+                    @label="discourse_ai.ai_helper.post_options_menu.insert_footnote"
                     {{this.showFootnoteTooltip}}
                   />
                 {{/if}}
@@ -417,10 +417,10 @@ export default class AiPostHelperMenu extends Component {
     {{#if this.showFastEdit}}
       <div class="ai-post-helper__fast-edit">
         <FastEdit
+          @close={{this.closeFastEdit}}
           @initialValue={{@data.quoteState.buffer}}
           @newValue={{this.suggestion}}
           @post={{@data.post}}
-          @close={{this.closeFastEdit}}
         />
       </div>
     {{/if}}

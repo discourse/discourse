@@ -106,35 +106,35 @@ export default class FooterNav extends Component {
     <div class={{dConcatClass "footer-nav" (if this.isVisible "visible")}}>
       <div class="footer-nav-widget">
         <DButton
-          @action={{this.goBack}}
-          @icon="chevron-left"
           class="btn-flat btn-large"
+          @action={{this.goBack}}
           @disabled={{not this.canGoBack}}
-          @title="footer_nav.back"
           @forwardEvent={{true}}
+          @icon="chevron-left"
+          @title="footer_nav.back"
         />
 
         <DButton
-          @action={{this.goForward}}
-          @icon="chevron-right"
           class="btn-flat btn-large"
+          @action={{this.goForward}}
           @disabled={{not this.canGoForward}}
-          @title="footer_nav.forward"
           @forwardEvent={{true}}
+          @icon="chevron-right"
+          @title="footer_nav.forward"
         />
 
         {{#if this.capabilities.isAppWebview}}
           <DButton
+            class="btn-flat btn-large"
             @action={{this.share}}
             @icon="link"
-            class="btn-flat btn-large"
             @title="footer_nav.share"
           />
 
           <DButton
+            class="btn-flat btn-large"
             @action={{this.dismiss}}
             @icon="chevron-down"
-            class="btn-flat btn-large"
             @title="footer_nav.dismiss"
           />
         {{/if}}

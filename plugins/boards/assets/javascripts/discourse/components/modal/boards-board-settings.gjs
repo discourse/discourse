@@ -319,35 +319,35 @@ export default class BoardsBoardSettings extends Component {
 
   <template>
     <DModal
+      class="discourse-boards-board-settings-modal"
       @closeModal={{@closeModal}}
       @hideHeader={{true}}
       @inline={{@inline}}
-      class="discourse-boards-board-settings-modal"
     >
       <:body>
         <Form
           @data={{this.formData}}
-          @onSubmit={{this.save}}
           @onRegisterApi={{this.onRegisterApi}}
+          @onSubmit={{this.save}}
           as |form data|
         >
           <BoardsEditableTitle
             @form={{form}}
             @name="name"
-            @title={{i18n "boards.manage.name"}}
-            @placeholder={{i18n "boards.manage.name_placeholder"}}
             @onClose={{@closeModal}}
+            @placeholder={{i18n "boards.manage.name_placeholder"}}
             @showClose={{true}}
+            @title={{i18n "boards.manage.name"}}
           />
           <div class="discourse-boards-board-settings-modal__wrapper">
 
             <form.Section>
               <form.Field
-                @name="slug"
-                @title={{i18n "boards.manage.slug"}}
                 @format="max"
-                @type="input"
+                @name="slug"
                 @placeholder={{this.slugPlaceholder}}
+                @title={{i18n "boards.manage.slug"}}
+                @type="input"
                 as |field|
               >
                 <field.Control />
@@ -356,25 +356,25 @@ export default class BoardsBoardSettings extends Component {
 
             <form.Section>
               <DAccessControlField
-                @form={{form}}
-                @title={{i18n "boards.manage.board_access"}}
                 @aclTarget={{this.aclTarget}}
                 @description={{i18n "boards.manage.board_access_description"}}
-                @transformPermissionOptions={{this.transformPermissionOptions}}
-                @onChange={{this.aclChanged}}
-                @onAccessLossConfirmed={{this.accessLossConfirmed}}
+                @form={{form}}
                 @mustHavePermissions={{array "manage"}}
+                @onAccessLossConfirmed={{this.accessLossConfirmed}}
+                @onChange={{this.aclChanged}}
+                @title={{i18n "boards.manage.board_access"}}
+                @transformPermissionOptions={{this.transformPermissionOptions}}
               />
             </form.Section>
 
             <form.Section>
               <form.Field
-                @name="constraint_type"
-                @title={{i18n "boards.manage.constrain_board_by"}}
                 @description={{i18n "boards.manage.constraint_help"}}
                 @format="max"
-                @type="select"
+                @name="constraint_type"
                 @onSet={{this.onConstraintTypeChange}}
+                @title={{i18n "boards.manage.constrain_board_by"}}
+                @type="select"
                 as |field|
               >
                 <field.Control as |select|>
@@ -393,9 +393,9 @@ export default class BoardsBoardSettings extends Component {
                 )
               }}
                 <form.Field
+                  @format="max"
                   @name="category_ids"
                   @title={{i18n "boards.manage.board_categories_constraint"}}
-                  @format="max"
                   @type="custom"
                   as |field|
                 >
@@ -415,17 +415,17 @@ export default class BoardsBoardSettings extends Component {
                 )
               }}
                 <form.Field
-                  @name="tag_names"
-                  @title={{i18n "boards.manage.board_tags_constraint"}}
                   @format="max"
-                  @type="tag-chooser"
+                  @name="tag_names"
                   @onSet={{this.onTagsChange}}
+                  @title={{i18n "boards.manage.board_tags_constraint"}}
+                  @type="tag-chooser"
                   as |field|
                 >
                   <field.Control
-                    @showAllTags={{true}}
-                    @excludeSynonyms={{true}}
                     @allowCreate={{true}}
+                    @excludeSynonyms={{true}}
+                    @showAllTags={{true}}
                   />
                 </form.Field>
               {{/if}}
@@ -438,10 +438,10 @@ export default class BoardsBoardSettings extends Component {
             </form.Section>
             <form.Section>
               <form.Field
-                @name="card_style"
-                @title={{i18n "boards.manage.card_style"}}
                 @description={{i18n "boards.manage.card_style_description"}}
                 @format="max"
+                @name="card_style"
+                @title={{i18n "boards.manage.card_style"}}
                 @type="select"
                 as |field|
               >
@@ -502,6 +502,7 @@ export default class BoardsBoardSettings extends Component {
             {{/unless}}
 
             <DButton
+              class="btn-default show-advanced"
               @action={{this.toggleAdvanced}}
               @icon="gear"
               @title={{if
@@ -509,7 +510,6 @@ export default class BoardsBoardSettings extends Component {
                 "boards.manage.columns.hide_advanced"
                 "boards.manage.columns.show_advanced"
               }}
-              class="btn-default show-advanced"
             />
           </form.Actions>
         </Form>

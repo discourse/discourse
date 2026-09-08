@@ -651,10 +651,10 @@ export default class DVirtualList<T> extends Component<
         semantic element owns them. This element takes a role only to carry its own
         name. Size this viewport from CSS. }}
     <div
-      class={{dConcatClass "d-virtual-list" @viewportClass}}
-      role={{this.viewportRole}}
       aria-label={{if @viewportLabel @viewportLabel}}
       aria-labelledby={{if @viewportLabelledBy @viewportLabelledBy}}
+      class={{dConcatClass "d-virtual-list" @viewportClass}}
+      role={{this.viewportRole}}
       tabindex={{this.viewportTabIndex}}
       {{dVirtualizer
         items=@items
@@ -695,10 +695,10 @@ export default class DVirtualList<T> extends Component<
                     runtime on the roles that define them, and omitted otherwise. }}
                 {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
                 <div
+                  aria-posinset={{row.posinset}}
+                  aria-setsize={{row.setSize}}
                   class="d-virtual-list__item"
                   role={{@itemRole}}
-                  aria-setsize={{row.setSize}}
-                  aria-posinset={{row.posinset}}
                   {{row.place row.start row.index}}
                   {{row.measure}}
                 >

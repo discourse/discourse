@@ -145,8 +145,8 @@ export default class UserNotificationSchedule extends Component {
           "user.notification_schedule.title"
         }}</label>
       <PreferenceCheckbox
-        @labelKey="user.notification_schedule.label"
         @checked={{this.model.user_notification_schedule.enabled}}
+        @labelKey="user.notification_schedule.label"
       />
 
       {{#if this.model.user_notification_schedule.enabled}}
@@ -157,12 +157,12 @@ export default class UserNotificationSchedule extends Component {
             {{#each this.days as |day|}}
               <UserNotificationScheduleDay
                 @day={{day.day}}
-                @startTimeOptions={{day.startTimeOptions}}
-                @startTimeValue={{day.startTimeValue}}
-                @onChangeStartTime={{day.onChangeStartTime}}
                 @endTimeOptions={{day.endTimeOptions}}
                 @endTimeValue={{day.endTimeValue}}
                 @onChangeEndTime={{day.onChangeEndTime}}
+                @onChangeStartTime={{day.onChangeStartTime}}
+                @startTimeOptions={{day.startTimeOptions}}
+                @startTimeValue={{day.startTimeValue}}
               />
             {{/each}}
           </tbody>

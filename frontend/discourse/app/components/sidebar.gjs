@@ -107,6 +107,9 @@ export default class Sidebar extends Component {
         navigating to the dropped URL. No callbacks, so nothing can mistake it
         for handling the drop. }}
     <nav
+      aria-label={{i18n "sidebar.title"}}
+      class="sidebar-container"
+      id="d-sidebar"
       {{dDragAndDropExternalTarget
         accepts=WEB_LINK_KINDS
         canDrop=this.canDropLink
@@ -121,9 +124,6 @@ export default class Sidebar extends Component {
         dropEffect="none"
         indicator=false
       }}
-      id="d-sidebar"
-      class="sidebar-container"
-      aria-label={{i18n "sidebar.title"}}
     >
       {{#if this.showSwitchPanelButtonsOnTop}}
         <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
@@ -133,15 +133,15 @@ export default class Sidebar extends Component {
 
       {{#if this.sidebarState.showMainPanel}}
         <Sections
-          @currentUser={{this.currentUser}}
           @collapsableSections={{true}}
+          @currentUser={{this.currentUser}}
           @enableLinkDrop={{true}}
           @panel={{this.sidebarState.currentPanel}}
         />
       {{else}}
         <ApiPanels
-          @currentUser={{this.currentUser}}
           @collapsableSections={{true}}
+          @currentUser={{this.currentUser}}
         />
       {{/if}}
 

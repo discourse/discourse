@@ -72,10 +72,10 @@ export default class ChatComposerUpload extends Component {
         </span>
 
         <DButton
+          class="btn-flat chat-composer-upload__remove-btn"
           @action={{@onCancel}}
           @icon="xmark"
           @title="chat.remove_upload"
-          class="btn-flat chat-composer-upload__remove-btn"
         />
       </div>
     {{/if}}

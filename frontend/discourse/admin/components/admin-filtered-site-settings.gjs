@@ -68,8 +68,8 @@ export default class AdminFilteredSiteSettings extends Component {
   <template>
     <PluginOutlet @name="admin-config-area-filtered-site-settings">
       <AdminSiteSettingsFilterControls
-        @onChangeFilter={{this.filterChanged}}
         @initialFilter={{@initialFilter}}
+        @onChangeFilter={{this.filterChanged}}
       />
 
       <DConditionalLoadingSpinner @condition={{this.loading}}>

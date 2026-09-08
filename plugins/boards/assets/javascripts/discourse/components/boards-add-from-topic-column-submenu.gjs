@@ -165,11 +165,11 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
         {{#each this.availableColumns as |column|}}
           <dropdown.item>
             <DButton
+              class="btn-transparent discourse-boards-add-from-topic-column-menu__column"
+              style={{this.columnStyle column}}
               @action={{fn this.addToColumn column}}
               @icon={{column.icon}}
               @translatedLabel={{column.fancyTitle}}
-              style={{this.columnStyle column}}
-              class="btn-transparent discourse-boards-add-from-topic-column-menu__column"
             />
           </dropdown.item>
         {{/each}}
@@ -181,12 +181,12 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
         {{#each this.alreadyAddedColumns as |column|}}
           <dropdown.item>
             <DButton
+              class="btn-transparent discourse-boards-add-from-topic-column-menu__column"
+              style={{this.columnStyle column}}
               @action={{fn this.removeFromColumn column}}
               @icon={{column.icon}}
-              @translatedLabel={{column.fancyTitle}}
               @suffixIcon="xmark"
-              style={{this.columnStyle column}}
-              class="btn-transparent discourse-boards-add-from-topic-column-menu__column"
+              @translatedLabel={{column.fancyTitle}}
             />
           </dropdown.item>
         {{/each}}

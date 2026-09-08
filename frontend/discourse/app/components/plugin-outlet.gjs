@@ -631,9 +631,9 @@ export default class PluginOutlet extends Component {
     {{~#if (this.connectorsExist hasBlock=(has-block))~}}
       {{~#if (has-block)~}}
         <PluginOutlet
-          @name={{concat @name "__before"}}
           @aliases={{this.aliasesForBefore}}
           @connectorTagName={{this.connectorTagNameForBefore}}
+          @name={{concat @name "__before"}}
           @outletArgs={{this.outletArgsWithDeprecations}}
         />
       {{~/if~}}
@@ -656,13 +656,13 @@ export default class PluginOutlet extends Component {
           >{{yield}}</c.templateOnly>
         {{~else~}}
           <PluginConnector
-            @connector={{c}}
+            class={{c.classicClassNames}}
             @args={{this.outletArgs}}
+            @connector={{c}}
             @deprecatedArgs={{@deprecatedArgs}}
+            @layout={{c.template}}
             @outletArgs={{this.outletArgsWithDeprecations}}
             @tagName={{or @connectorTagName ""}}
-            @layout={{c.template}}
-            class={{c.classicClassNames}}
           >{{yield}}</PluginConnector>
         {{~/if~}}
       {{~else~}}
@@ -671,9 +671,9 @@ export default class PluginOutlet extends Component {
 
       {{~#if (has-block)~}}
         <PluginOutlet
-          @name={{concat @name "__after"}}
           @aliases={{this.aliasesForAfter}}
           @connectorTagName={{this.connectorTagNameForAfter}}
+          @name={{concat @name "__after"}}
           @outletArgs={{this.outletArgsWithDeprecations}}
         />
       {{~/if~}}

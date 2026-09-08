@@ -920,8 +920,8 @@ export default class PollComponent extends Component {
   <template>
     <div class="poll">
       <div
-        {{didUpdate this.updatedVoters this.poll.preloaded_voters}}
         class="poll-container"
+        {{didUpdate this.updatedVoters this.poll.preloaded_voters}}
       >
         {{this.titleHTML}}
         {{#if this.notInVotingGroup}}
@@ -936,54 +936,54 @@ export default class PollComponent extends Component {
                 <PollResultsPie @id={{this.id}} @options={{this.options}} />
               {{else}}
                 <PollResultsTabs
+                  @fetchVoters={{this.fetchVoters}}
+                  @isPublic={{this.poll.public}}
+                  @isRankedChoice={{this.isRankedChoice}}
                   @options={{this.options}}
                   @pollName={{this.poll.name}}
                   @pollType={{this.poll.type}}
-                  @isRankedChoice={{this.isRankedChoice}}
-                  @isPublic={{this.poll.public}}
                   @postId={{this.post.id}}
+                  @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
+                  @showTally={{this.showTally}}
                   @vote={{this.vote}}
                   @voters={{this.preloadedVoters}}
                   @votersCount={{this.poll.voters}}
-                  @fetchVoters={{this.fetchVoters}}
-                  @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
-                  @showTally={{this.showTally}}
                 />
               {{/if}}
             {{/if}}
           </div>
         {{else if this.showVotedChoices}}
           <PollVotedChoices
+            @isRankedChoice={{this.isRankedChoice}}
             @options={{this.options}}
             @votes={{this.votedChoices}}
-            @isRankedChoice={{this.isRankedChoice}}
           />
         {{else}}
           <PollOptions
             @isCheckbox={{this.isCheckbox}}
             @isRankedChoice={{this.isRankedChoice}}
             @options={{this.options}}
-            @votes={{this.vote}}
             @sendOptionSelect={{this.toggleOption}}
+            @votes={{this.vote}}
           />
         {{/if}}
       </div>
       <PollInfo
-        @options={{this.options}}
-        @min={{this.min}}
-        @max={{this.max}}
-        @isMultiple={{this.isMultiple}}
-        @closesAt={{this.closesAt}}
         @closed={{this.closed}}
         @closedBy={{this.poll.closed_by}}
-        @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
-        @results={{this.poll.results}}
-        @showResults={{this.showResults}}
-        @showingVotedChoices={{this.showVotedChoices}}
-        @postUserId={{this.poll.post.user_id}}
-        @isPublic={{this.poll.public}}
-        @isDynamic={{if @isDynamic true this.poll.dynamic}}
+        @closesAt={{this.closesAt}}
         @hasVoted={{this.hasVoted}}
+        @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
+        @isDynamic={{if @isDynamic true this.poll.dynamic}}
+        @isMultiple={{this.isMultiple}}
+        @isPublic={{this.poll.public}}
+        @max={{this.max}}
+        @min={{this.min}}
+        @options={{this.options}}
+        @postUserId={{this.poll.post.user_id}}
+        @results={{this.poll.results}}
+        @showingVotedChoices={{this.showVotedChoices}}
+        @showResults={{this.showResults}}
         @voters={{this.voters}}
       />
       <div class="poll-buttons" {{didInsert this.registerPollButtons}}>
@@ -1001,8 +1001,8 @@ export default class PollComponent extends Component {
         {{#if this.showCastVotesButton}}
           <button
             class={{this.castVotesButtonClass}}
-            title={{this.castVotesButtonTitle}}
             disabled={{this.castVotesDisabled}}
+            title={{this.castVotesButtonTitle}}
             {{on "click" this.castVotes}}
           >
             {{dIcon this.castVotesButtonIcon}}
@@ -1061,16 +1061,16 @@ export default class PollComponent extends Component {
         {{/if}}
 
         <PollButtonsDropdown
+          @availableDisplayMode={{this.availableDisplayMode}}
           @closed={{this.closed}}
-          @voters={{this.voters}}
-          @isStaff={{this.isStaff}}
-          @isMe={{this.isMe}}
-          @isRankedChoice={{this.isRankedChoice}}
-          @topicArchived={{this.topicArchived}}
+          @dropDownClick={{this.dropDownClick}}
           @groupableUserFields={{this.groupableUserFields}}
           @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
-          @dropDownClick={{this.dropDownClick}}
-          @availableDisplayMode={{this.availableDisplayMode}}
+          @isMe={{this.isMe}}
+          @isRankedChoice={{this.isRankedChoice}}
+          @isStaff={{this.isStaff}}
+          @topicArchived={{this.topicArchived}}
+          @voters={{this.voters}}
         />
       </div>
     </div>

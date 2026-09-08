@@ -95,8 +95,8 @@ export default class RssPollingFeedHistory extends Component {
 
   <template>
     <AdminConfigAreaCard
-      @heading="admin.rss_polling.history.recent"
       class="rss-polling-feed-history"
+      @heading="admin.rss_polling.history.recent"
     >
       <:content>
         {{#if this.attempts.length}}
@@ -109,16 +109,16 @@ export default class RssPollingFeedHistory extends Component {
                 >
                   <td class="d-table__cell --overview">
                     <DButton
+                      class="btn-flat rss-polling-feed-history__summary"
                       @action={{fn this.toggle attempt.id}}
+                      @ariaExpanded={{eq this.openId attempt.id}}
+                      @ariaLabel={{attempt.summary}}
                       @icon={{if
                         (eq this.openId attempt.id)
                         "angle-down"
                         "angle-right"
                       }}
-                      @ariaExpanded={{eq this.openId attempt.id}}
-                      @ariaLabel={{attempt.summary}}
                       @translatedLabel={{attempt.summary}}
-                      class="btn-flat rss-polling-feed-history__summary"
                     >
                       <span class="rss-polling-feed-history__date">
                         {{dFormatDate attempt.createdAt}}
@@ -160,9 +160,9 @@ export default class RssPollingFeedHistory extends Component {
 
           {{#if this.hasMore}}
             <DButton
+              class="btn-flat rss-polling-feed-history__more"
               @action={{this.showOlder}}
               @translatedLabel={{this.showOlderLabel}}
-              class="btn-flat rss-polling-feed-history__more"
             />
           {{/if}}
         {{else}}

@@ -70,10 +70,10 @@ export default class BadgeTitle extends Component {
         <div class="control-group">
           <div class="controls">
             <ComboBox
-              @value={{this._selectedUserBadgeId}}
-              @nameProperty="badge.name"
               @content={{this.selectableUserBadges}}
+              @nameProperty="badge.name"
               @onChange={{fn (mut this._selectedUserBadgeId)}}
+              @value={{this._selectedUserBadgeId}}
             />
           </div>
         </div>
@@ -81,20 +81,20 @@ export default class BadgeTitle extends Component {
         <div class="control-group">
           <div class="controls">
             <DButton
+              class="btn-primary"
               @action={{this.saveBadgeTitle}}
               @disabled={{this._isSaving}}
               @label={{if this._isSaving "saving" "save"}}
-              class="btn-primary"
             />
             {{#if this.closeAction}}
               <DButton
+                class="btn-default close-btn"
                 @action={{this.closeAction}}
                 @label="close"
-                class="btn-default close-btn"
               />
             {{/if}}
             {{#if this._isSaved}}
-              <span role="status" class="badge-title__saved">{{i18n
+              <span class="badge-title__saved" role="status">{{i18n
                   "saved"
                 }}</span>
             {{/if}}

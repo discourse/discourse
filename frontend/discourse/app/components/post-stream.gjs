@@ -316,9 +316,9 @@ export default class PostStream extends Component {
             {{#let (get this.gapsBefore post.id) as |gap|}}
               {{#if gap}}
                 <PostGap
-                  @post={{post}}
-                  @gap={{gap}}
                   @fillGap={{fn @fillGapBefore (hash post=post gap=gap)}}
+                  @gap={{gap}}
+                  @post={{post}}
                 />
               {{/if}}
             {{/let}}
@@ -340,23 +340,20 @@ export default class PostStream extends Component {
             }}
               {{! eslint-disable ember/template-no-duplicate-id }}
               <PostComponent
-                id={{postId}}
                 class={{dConcatClass
                   (if cloakingData.active "post-stream--cloaked")
                   (if keyboardSelected "selected")
                 }}
+                id={{postId}}
                 style={{cloakingData.style}}
-                @cloaked={{cloakingData.active}}
-                @elementId={{postId}}
-                @post={{post}}
-                @prevPost={{previousPost}}
-                @nextPost={{nextPost}}
-                @canCreatePost={{@canCreatePost}}
                 @cancelFilter={{fn @cancelFilter post}}
+                @canCreatePost={{@canCreatePost}}
                 @changeNotice={{fn @changeNotice post}}
                 @changePostOwner={{fn @changePostOwner post}}
+                @cloaked={{cloakingData.active}}
                 @deletePost={{fn @deletePost post}}
                 @editPost={{fn @editPost post}}
+                @elementId={{postId}}
                 @expandHidden={{fn @expandHidden post}}
                 @filteringRepliesToPostNumber={{@filteringRepliesToPostNumber}}
                 @grantBadge={{fn @grantBadge post}}
@@ -364,15 +361,18 @@ export default class PostStream extends Component {
                 @keyboardSelected={{keyboardSelected}}
                 @lockPost={{fn @lockPost post}}
                 @multiSelect={{@multiSelect}}
+                @nextPost={{nextPost}}
                 @permanentlyDeletePost={{fn @permanentlyDeletePost post}}
+                @post={{post}}
+                @prevPost={{previousPost}}
                 @rebakePost={{fn @rebakePost post}}
                 @recoverPost={{fn @recoverPost post}}
                 @removeAllowedGroup={{@removeAllowedGroup}}
                 @removeAllowedUser={{@removeAllowedUser}}
                 @replyToPost={{fn @replyToPost post}}
                 @selectBelow={{fn @selectBelow post}}
-                @selectReplies={{fn @selectReplies post}}
                 @selected={{if @multiSelect (@postSelected post)}}
+                @selectReplies={{fn @selectReplies post}}
                 @showFlags={{fn @showFlags post}}
                 @showHistory={{fn @showHistory post}}
                 @showInvite={{fn @showInvite post}}
@@ -396,9 +396,9 @@ export default class PostStream extends Component {
             {{#let (get this.gapsAfter post.id) as |gap|}}
               {{#if gap}}
                 <PostGap
-                  @post={{post}}
-                  @gap={{gap}}
                   @fillGap={{fn @fillGapAfter (hash post=post gap=gap)}}
+                  @gap={{gap}}
+                  @post={{post}}
                 />
               {{/if}}
             {{/let}}
@@ -437,10 +437,10 @@ export default class PostStream extends Component {
 
       {{#if this.shouldShowFilteredNotice}}
         <PostFilteredNotice
-          @posts={{this.posts}}
           @cancelFilter={{@cancelFilter}}
-          @streamFilters={{@streamFilters}}
           @filteredPostsCount={{@filteredPostsCount}}
+          @posts={{this.posts}}
+          @streamFilters={{@streamFilters}}
         />
       {{/if}}
     </div>

@@ -127,7 +127,6 @@ export default class ArgsTable extends Component {
       <div class="outlet-args-table">
         {{#each this.entries as |entry|}}
           <button
-            type="button"
             class={{dConcatClass
               "outlet-args-table__row"
               (if entry.isDeprecated "--deprecated")
@@ -137,6 +136,7 @@ export default class ArgsTable extends Component {
               entry.deprecationInfo.message
               "Save to global variable"
             }}
+            type="button"
             {{on "click" (fn this.logValue entry)}}
           >
             <span class="outlet-args-table__key">

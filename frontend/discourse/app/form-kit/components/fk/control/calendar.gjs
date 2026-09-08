@@ -72,41 +72,41 @@ export default class FKControlCalendar extends FKBaseControl {
   <template>
     {{#if this.expandedDatePicker}}
       <DDatePicker
-        @value={{readonly @field.value}}
-        @onSelect={{this.setDate}}
-        @containerId={{this.containerId}}
-        @minDate={{this.minDate}}
-        @maxDate={{this.maxDate}}
+        aria-describedby={{@field.describedBy}}
+        aria-invalid={{if @field.error "true"}}
+        class="form-kit__control-calendar"
         id={{@field.id}}
         name={{@field.name}}
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{@field.describedBy}}
-        class="form-kit__control-calendar"
+        @containerId={{this.containerId}}
+        @maxDate={{this.maxDate}}
+        @minDate={{this.minDate}}
+        @onSelect={{this.setDate}}
+        @value={{readonly @field.value}}
       />
-      <div id={{this.containerId}} class="date-picker-container"></div>
+      <div class="date-picker-container" id={{this.containerId}}></div>
     {{else}}
       <input
-        min={{this.formatForInput this.minDate}}
-        max={{this.formatForInput this.maxDate}}
-        disabled={{@field.disabled}}
+        aria-describedby={{@field.describedBy}}
         class="form-kit__control-input form-kit__control-date"
+        disabled={{@field.disabled}}
+        id={{@field.id}}
+        max={{this.formatForInput this.maxDate}}
+        min={{this.formatForInput this.minDate}}
+        name={{@field.name}}
         type="date"
         value={{this.date}}
-        id={{@field.id}}
-        name={{@field.name}}
-        aria-describedby={{@field.describedBy}}
         {{on "change" (withEventValue this.setDate)}}
       />
     {{/if}}
 
     {{#if this.includeTime}}
       <input
+        class="form-kit__control-input form-kit__control-time"
         disabled={{@field.disabled}}
+        step="900"
         type="time"
         value={{this.time}}
         {{on "input" (withEventValue this.setTime)}}
-        class="form-kit__control-input form-kit__control-time"
-        step="900"
       />
     {{/if}}
   </template>

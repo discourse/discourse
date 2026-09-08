@@ -82,15 +82,15 @@ export default class DCopyButton extends Component {
 
   <template>
     <DButton
-      @icon={{this.copyIcon}}
-      @action={{this.copy}}
       class="copy-button {{this.copyClass}}"
+      @action={{this.copy}}
       @ariaLabel={{@ariaLabel}}
+      @icon={{this.copyIcon}}
       @translatedLabel={{this.copyTranslatedLabel}}
     />
     <span
-      class="sr-only"
       aria-live="polite"
+      class="sr-only"
       {{this.watchExternalCopy @isCopied}}
     >{{this.announcement}}</span>
   </template>

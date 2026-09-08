@@ -111,16 +111,16 @@ export default class SelectedName extends Component {
   <template>
     {{#if this.selectKit.options.showFullTitle}}
       <div
+        class="select-kit-selected-name selected-name choice"
+        data-name={{this.name}}
+        data-value={{this.value}}
         lang={{this.lang}}
         title={{this.title}}
-        data-value={{this.value}}
-        data-name={{this.name}}
-        class="select-kit-selected-name selected-name choice"
       >
         {{#if this.selectKit.options.formName}}
           <input
-            type="hidden"
             name={{this.selectKit.options.formName}}
+            type="hidden"
             value={{this.value}}
           />
         {{/if}}
@@ -135,18 +135,18 @@ export default class SelectedName extends Component {
 
         {{#if this.shouldDisplayClearableButton}}
           <DButton
-            @icon="xmark"
+            class="btn-clear"
             @action={{fn this.selectKit.deselect this.item}}
             @ariaLabel="clear_input"
-            class="btn-clear"
+            @icon="xmark"
           />
         {{/if}}
       </div>
     {{else}}
       {{#if this.item.icon}}
         <div
-          lang={{this.lang}}
           class="select-kit-selected-name selected-name choice"
+          lang={{this.lang}}
         >
           {{dIcon this.item.icon}}
         </div>

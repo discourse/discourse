@@ -44,10 +44,10 @@ export default class AdminSiteSettingsChangesBanner extends Component {
     {{#if (gt this.dirtyCount 0)}}
       <ChangesBanner
         @bannerLabel={{this.bannerLabel}}
-        @saveLabel={{this.saveLabel}}
+        @discard={{this.discard}}
         @discardLabel={{this.discardLabel}}
         @save={{this.save}}
-        @discard={{this.discard}}
+        @saveLabel={{this.saveLabel}}
       />
     {{/if}}
   </template>

@@ -106,12 +106,12 @@ export default class AiDefaultLlmSelector extends Component {
 
       <div class="ai-configure-default-llm__setting">
         <ComboBox
-          @value={{this.selectedValue}}
           @content={{this.content}}
-          @onChange={{this.onChange}}
-          @valueProperty="id"
           @nameProperty="name"
+          @onChange={{this.onChange}}
           @options={{hash disabled=this.isSaving}}
+          @value={{this.selectedValue}}
+          @valueProperty="id"
         />
         <DConditionalLoadingSpinner
           @condition={{this.isSaving}}

@@ -623,23 +623,23 @@ export default class UpsertCategoryGeneral extends Component {
   <template>
     {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
       <@form.Field
-        @name="category_types"
-        @title={{i18n "category.category_types"}}
         @format="max"
-        @type="custom"
+        @name="category_types"
         @showOptional={{false}}
+        @title={{i18n "category.category_types"}}
+        @type="custom"
         as |field|
       >
         <field.Control>
           <DMultiSelect
-            id={{field.id}}
-            @loadFn={{this.loadTypes}}
-            @onChange={{fn this.onChangeCategoryTypes field}}
-            @selection={{this.mapCategoryTypeIdsToTypes field.value}}
-            @onRegisterDMenuApi={{this.onRegisterTypeSelectorDMenuApi}}
-            @contentClass="category-type-selector__content"
-            @noResultsLabel={{i18n "category.category_types_no_results"}}
             class="category-type-selector"
+            id={{field.id}}
+            @contentClass="category-type-selector__content"
+            @loadFn={{this.loadTypes}}
+            @noResultsLabel={{i18n "category.category_types_no_results"}}
+            @onChange={{fn this.onChangeCategoryTypes field}}
+            @onRegisterDMenuApi={{this.onRegisterTypeSelectorDMenuApi}}
+            @selection={{this.mapCategoryTypeIdsToTypes field.value}}
           >
             <:result as |type|>
               <div
@@ -688,7 +688,7 @@ export default class UpsertCategoryGeneral extends Component {
       }}
     >
       {{#if this.showWarning}}
-        <@form.Alert @type="warning" @icon="triangle-exclamation">
+        <@form.Alert @icon="triangle-exclamation" @type="warning">
           {{trustHTML
             (i18n
               "category.uncategorized_general_warning"
@@ -701,45 +701,45 @@ export default class UpsertCategoryGeneral extends Component {
 
       {{#unless @category.isUncategorizedCategory}}
         <@form.Field
+          @format="max"
           @name="name"
           @title={{i18n "category.name"}}
-          @format="max"
-          @validation="required"
           @type="input"
+          @validation="required"
           as |field|
         >
           <field.Control
-            placeholder={{i18n "category.name_placeholder"}}
-            @maxlength="50"
             class="category-name"
             data-1p-ignore
+            placeholder={{i18n "category.name_placeholder"}}
+            @maxlength="50"
           />
         </@form.Field>
       {{/unless}}
 
       <@form.Field
-        @name="color"
-        @title={{i18n "category.background_color"}}
         @format="max"
-        @validation="required"
-        @validate={{this.validateColor}}
+        @name="color"
         @onSet={{this.onBackgroundColorSet}}
+        @title={{i18n "category.background_color"}}
         @type="color"
+        @validate={{this.validateColor}}
+        @validation="required"
         as |field|
       >
         <field.Control
-          @colors={{this.backgroundColors}}
-          @usedColors={{this.usedBackgroundColors}}
           @collapseSwatches={{true}}
           @collapseSwatchesLabel={{i18n "category.color_palette"}}
+          @colors={{this.backgroundColors}}
           @fallbackValue={{@category.color}}
+          @usedColors={{this.usedBackgroundColors}}
         />
       </@form.Field>
 
       <@form.Field
+        @format="max"
         @name="style_type"
         @title={{i18n "category.style"}}
-        @format="max"
         @type="custom"
         as |styleField|
       >
@@ -764,21 +764,21 @@ export default class UpsertCategoryGeneral extends Component {
             <cc.Contents as |Content|>
               <Content @name="icon">
                 <@form.Field
-                  @name="icon"
-                  @title={{i18n "category.icon"}}
-                  @showTitle={{false}}
                   @format="max"
-                  @validate={{this.validateIcon}}
+                  @name="icon"
+                  @showTitle={{false}}
+                  @title={{i18n "category.icon"}}
                   @type="custom"
+                  @validate={{this.validateIcon}}
                   as |field|
                 >
                   <field.Control>
                     <DIconGridPicker
-                      @value={{field.value}}
+                      @iconColor={{concat "#" @transientData.color}}
                       @onChange={{field.set}}
                       @showCaret={{true}}
                       @showSelectedName={{true}}
-                      @iconColor={{concat "#" @transientData.color}}
+                      @value={{field.value}}
                     />
                   </field.Control>
                 </@form.Field>
@@ -786,27 +786,27 @@ export default class UpsertCategoryGeneral extends Component {
 
               <Content @name="emoji">
                 <@form.Field
-                  @name="emoji"
-                  @title={{i18n "category.emoji"}}
-                  @showTitle={{false}}
                   @format="max"
-                  @validate={{this.validateEmoji}}
+                  @name="emoji"
+                  @showTitle={{false}}
+                  @title={{i18n "category.emoji"}}
                   @type="custom"
+                  @validate={{this.validateEmoji}}
                   as |field|
                 >
                   <field.Control>
                     <EmojiPicker
-                      @emoji={{field.value}}
-                      @didSelectEmoji={{field.set}}
-                      @modalForMobile={{false}}
                       @btnClass="btn-default btn-emoji"
+                      @didSelectEmoji={{field.set}}
+                      @emoji={{field.value}}
                       @icon={{null}}
-                      @showCaret={{true}}
-                      @showSelectedName={{true}}
                       @label={{unless
                         field.value
                         (i18n "category.select_emoji")
                       }}
+                      @modalForMobile={{false}}
+                      @showCaret={{true}}
+                      @showSelectedName={{true}}
                     />
                   </field.Control>
                 </@form.Field>
@@ -832,8 +832,8 @@ export default class UpsertCategoryGeneral extends Component {
           {{willDestroy this.unregisterDescriptionListener}}
         >
           <@form.Container
-            @title={{i18n "category.description"}}
             class="edit-category-description-container --full"
+            @title={{i18n "category.description"}}
           >
             <div
               class={{dConcatClass
@@ -848,35 +848,35 @@ export default class UpsertCategoryGeneral extends Component {
               }}
             >
               <DDecoratedHtml
-                @html={{this.categoryDescription}}
                 @className="readonly-field"
+                @html={{this.categoryDescription}}
               />
             </div>
 
             <div class="description-actions">
               {{#if @category.topic_url}}
                 <@form.Button
+                  class="btn-default btn-small edit-category-description"
                   @action={{this.editCategoryDescription}}
                   @icon="pencil"
-                  @label="edit"
                   @isLoading={{this.loadingDescription}}
-                  class="btn-default btn-small edit-category-description"
+                  @label="edit"
                 />
               {{/if}}
               {{#if this.descriptionOverflows}}
                 <@form.Button
+                  class="btn-flat btn-small toggle-description"
                   @action={{this.toggleDescriptionExpanded}}
-                  @label={{if
-                    this.descriptionExpanded
-                    "category.description_collapse"
-                    "category.description_expand"
-                  }}
                   @icon={{if
                     this.descriptionExpanded
                     "chevron-up"
                     "chevron-down"
                   }}
-                  class="btn-flat btn-small toggle-description"
+                  @label={{if
+                    this.descriptionExpanded
+                    "category.description_collapse"
+                    "category.description_expand"
+                  }}
                 />
               {{/if}}
             </div>
@@ -886,16 +886,15 @@ export default class UpsertCategoryGeneral extends Component {
 
       {{#unless @category.isUncategorizedCategory}}
         <@form.Field
-          @name="parent_category_id"
-          @title={{i18n "category.subcategory_of"}}
           @format="max"
+          @name="parent_category_id"
           @onSet={{this.onParentCategorySet}}
+          @title={{i18n "category.subcategory_of"}}
           @type="custom"
           as |field|
         >
           <field.Control>
             <CategoryChooser
-              @value={{@transientData.parent_category_id}}
               @onChange={{field.set}}
               @options={{hash
                 allowSubCategories=this.allowSubCategoriesAsParent
@@ -908,15 +907,16 @@ export default class UpsertCategoryGeneral extends Component {
                 caretDownIcon="chevron-down"
                 displayCategoryDescription=false
               }}
+              @value={{@transientData.parent_category_id}}
             />
           </field.Control>
         </@form.Field>
       {{/unless}}
 
       <@form.Container
-        @title={{i18n "category.visibility.title"}}
         class="--radio-cards"
         @format="max"
+        @title={{i18n "category.visibility.title"}}
       >
         <@form.ConditionalContent
           @activeName={{this.categoryVisibility}}
@@ -929,7 +929,7 @@ export default class UpsertCategoryGeneral extends Component {
                 @content={{i18n "category.subcategory_permissions_warning"}}
               >
                 <:trigger>
-                  <Condition @name="public" @disabled={{true}}>
+                  <Condition @disabled={{true}} @name="public">
                     {{dIcon "ban"}}
                     {{i18n this.publicVisibilityLabel}}
                   </Condition>
@@ -942,8 +942,8 @@ export default class UpsertCategoryGeneral extends Component {
               </Condition>
             {{/if}}
             <Condition
-              @name="group_restricted"
               @locked={{this.privateVisibilityLocked}}
+              @name="group_restricted"
             >
               {{#if this.privateVisibilityLocked}}
                 {{dIcon "lock"}}
@@ -957,14 +957,14 @@ export default class UpsertCategoryGeneral extends Component {
           <cc.Contents as |Content|>
             <Content @name="group_restricted">
               <@form.Container
-                @title={{i18n "category.visibility.which_groups_can_access"}}
                 @format="max"
+                @title={{i18n "category.visibility.which_groups_can_access"}}
               >
                 <GroupChooser
                   @content={{this.availableAccessGroups}}
-                  @value={{this.accessGroups}}
                   @onChange={{this.onChangeAccessGroups}}
                   @options={{hash disabled=this.isParentRestricted}}
+                  @value={{this.accessGroups}}
                 />
                 {{! eslint-disable ember/template-no-invalid-interactive }}
                 <span

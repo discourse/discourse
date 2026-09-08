@@ -21,15 +21,15 @@ export default class TopicMapLink extends Component {
 
   <template>
     <a
-      class={{this.linkClasses}}
-      href={{@url}}
-      title={{@url}}
-      data-user-id={{@userId}}
-      data-ignore-post-id="true"
-      target="_blank"
-      rel="nofollow ugc noopener noreferrer"
-      data-clicks={{@clickCount}}
       aria-label={{i18n "topic_map.clicks" count=@clickCount}}
+      class={{this.linkClasses}}
+      data-clicks={{@clickCount}}
+      data-ignore-post-id="true"
+      data-user-id={{@userId}}
+      href={{@url}}
+      rel="nofollow ugc noopener noreferrer"
+      target="_blank"
+      title={{@url}}
     >
       <span class="content">
         {{#if @title}}

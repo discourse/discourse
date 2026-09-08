@@ -51,7 +51,6 @@ export default class ComposerUserSelector extends Component {
   <template>
     <EmailGroupUserChooser
       @id="private-message-users"
-      @value={{this.splitRecipients}}
       @onChange={{this.updateRecipients}}
       @options={{hash
         topicId=this.topicId
@@ -60,6 +59,7 @@ export default class ComposerUserSelector extends Component {
         allowEmails=this.currentUser.can_send_private_email_messages
         autoWrap=true
       }}
+      @value={{this.splitRecipients}}
     />
   </template>
 }

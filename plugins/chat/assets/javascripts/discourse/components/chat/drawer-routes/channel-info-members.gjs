@@ -22,9 +22,9 @@ export default class ChatDrawerRoutesMembers extends Component {
       {{#if @model.channel}}
         <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
           <navbar.BackButton
-            @title={{this.backButton.title}}
             @route={{this.backButton.route}}
             @routeModels={{this.backButton.models}}
+            @title={{this.backButton.title}}
           />
           <navbar.ChannelTitle @channel={{@model.channel}} />
           <navbar.Actions as |a|>

@@ -52,16 +52,16 @@ export default class MoreLink extends Component {
       <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
         {{#if this.moreUrl}}
           <a
+            class="filter search-link"
             href={{this.moreUrl}}
             {{on "click" this.transitionToMoreUrl}}
-            class="filter search-link"
           >
             {{i18n "more"}}...
           </a>
         {{else if this.topicResults.more}}
           <a
-            {{on "click" (fn this.moreOfType this.topicResults.type)}}
             class="filter search-link"
+            {{on "click" (fn this.moreOfType this.topicResults.type)}}
           >
             {{i18n "more"}}...
           </a>

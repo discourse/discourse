@@ -116,9 +116,9 @@ export default class UserAutocompleteResults extends Component {
             {{dScrollIntoView (this.shouldScroll index)}}
           >
             <a
+              class={{this.getItemLinkClasses result index}}
               href
               title={{this.getTitle result}}
-              class={{this.getItemLinkClasses result index}}
               {{on "click" (fn this.handleResultClick result index)}}
             >
               {{#if result.isUser}}

@@ -92,9 +92,9 @@ export default class ShareTargetModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "share_target.title"}}
-      @closeModal={{@closeModal}}
       class="share-target-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "share_target.title"}}
     >
       <:body>
         <p class="share-target-modal__intro">{{i18n
@@ -110,9 +110,9 @@ export default class ShareTargetModal extends Component {
             {{#each this.previews as |preview|}}
               {{#if preview.isImage}}
                 <img
+                  alt={{preview.name}}
                   class="share-target-modal__thumbnail"
                   src={{preview.url}}
-                  alt={{preview.name}}
                 />
               {{else}}
                 <span
@@ -126,22 +126,22 @@ export default class ShareTargetModal extends Component {
 
       <:footer>
         <DButton
-          @action={{this.createTopic}}
-          @label="share_target.new_topic"
-          @icon="far-pen-to-square"
           class="btn-primary share-target-modal__new-topic"
+          @action={{this.createTopic}}
+          @icon="far-pen-to-square"
+          @label="share_target.new_topic"
         />
         <DButton
-          @action={{this.createMessage}}
-          @label="share_target.new_message"
-          @icon="envelope"
           class="share-target-modal__new-message"
+          @action={{this.createMessage}}
+          @icon="envelope"
+          @label="share_target.new_message"
         />
         <DButton
-          @action={{this.addToReply}}
-          @label="share_target.add_to_reply"
-          @icon="reply"
           class="share-target-modal__add-to-reply"
+          @action={{this.addToReply}}
+          @icon="reply"
+          @label="share_target.add_to_reply"
         />
       </:footer>
     </DModal>

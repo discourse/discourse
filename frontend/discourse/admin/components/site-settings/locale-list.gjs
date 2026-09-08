@@ -31,13 +31,13 @@ export default class LocaleList extends Component {
 
   <template>
     <ListSetting
-      @value={{this.settingValue}}
-      @settingName={{@setting.setting}}
       @choices={{this.choices}}
       @nameProperty="name"
-      @valueProperty="value"
       @onChange={{this.onChangeListSetting}}
       @options={{hash allowAny=@allowAny}}
+      @settingName={{@setting.setting}}
+      @value={{this.settingValue}}
+      @valueProperty="value"
     />
   </template>
 }

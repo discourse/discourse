@@ -807,26 +807,26 @@ export default class ChatChannel extends Component {
         (if this.messagesLoader.fetchedOnce "--loaded")
         (if this.isEmpty "is-empty")
       }}
+      data-id={{@channel.id}}
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}
       {{didUpdate this.loadMessages @targetMessageId}}
-      data-id={{@channel.id}}
     >
       <ChatChannelStatus @channel={{@channel}} />
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
       <ChatChannelFilter
-        @isFiltering={{@isFiltering}}
-        @onToggleFilter={{@onToggleFilter}}
         @channel={{@channel}}
+        @isFiltering={{@isFiltering}}
         @onLoadTargetMessageId={{this.onLoadTargetMessageId}}
+        @onToggleFilter={{@onToggleFilter}}
       />
 
       <ChatPinnedMessageBar
         @channel={{@channel}}
+        @hiddenMessageIds={{this.hiddenMessageIds}}
         @onJumpToMessage={{this.jumpToPinnedMessage}}
         @viewportBottomMessageId={{this.lastVisibleMessageId}}
-        @hiddenMessageIds={{this.hiddenMessageIds}}
       />
 
       <ChatMessagesScroller
@@ -837,11 +837,11 @@ export default class ChatChannel extends Component {
         <ChatMessagesContainer @didResizePane={{this.didResizePane}}>
           {{#each this.messagesManager.messages key="id" as |message|}}
             <Message
-              @message={{message}}
-              @disableMouseEvents={{this.isScrolling}}
-              @resendStagedMessage={{this.resendStagedMessage}}
-              @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="channel"
+              @disableMouseEvents={{this.isScrolling}}
+              @fetchMessagesByDate={{this.fetchMessagesByDate}}
+              @message={{message}}
+              @resendStagedMessage={{this.resendStagedMessage}}
             />
           {{else}}
             {{#if this.messagesLoader.fetchedOnce}}
@@ -865,20 +865,20 @@ export default class ChatChannel extends Component {
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow
-        @onScrollToBottom={{this.scrollToLatestMessage}}
-        @isVisible={{this.paneState.hasPendingContentBelow}}
         @channel={{@channel}}
+        @isVisible={{this.paneState.hasPendingContentBelow}}
+        @onScrollToBottom={{this.scrollToLatestMessage}}
       />
 
       {{#if this.pane.selectingMessages}}
         <ChatSelectionManager
+          @channel={{@channel}}
           @enableMove={{and
             (not @channel.isDirectMessageChannel)
             @channel.canModerate
           }}
-          @channel={{@channel}}
-          @pane={{this.pane}}
           @messagesManager={{this.messagesManager}}
+          @pane={{this.pane}}
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
@@ -886,9 +886,9 @@ export default class ChatChannel extends Component {
         {{else}}
           <ChatComposerChannel
             @channel={{@channel}}
-            @uploadDropZone={{this.uploadDropZone}}
             @onSendMessage={{this.onSendMessage}}
             @scroller={{this.scroller}}
+            @uploadDropZone={{this.uploadDropZone}}
           />
         {{/if}}
       {{/if}}

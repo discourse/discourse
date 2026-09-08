@@ -186,13 +186,13 @@ export default class DDateInput extends Component {
 
   <template>
     <Input
-      @type={{this.inputType}}
       class="date-picker"
-      placeholder={{this.placeholder}}
-      @value={{readonly this.value}}
       id={{this.inputId}}
-      {{on "input" this.onChangeDate}}
+      placeholder={{this.placeholder}}
       ...attributes
+      @type={{this.inputType}}
+      @value={{readonly this.value}}
+      {{on "input" this.onChangeDate}}
     />
 
     {{#unless this.useGlobalPickerContainer}}

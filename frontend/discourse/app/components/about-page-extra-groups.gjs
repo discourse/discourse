@@ -124,8 +124,8 @@ export default class AboutPageExtraGroups extends Component {
             <p>{{trustHTML group.bio_cooked}}</p>
           {{/if}}
           <AboutPageUsers
-            @users={{group.members}}
             @truncateAt={{this.showInitialMembers}}
+            @users={{group.members}}
           />
         </section>
       {{/each}}

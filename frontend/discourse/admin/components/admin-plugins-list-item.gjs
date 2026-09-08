@@ -94,11 +94,11 @@ export default class AdminPluginsListItem extends Component {
 
   <template>
     <tr
-      data-plugin-name={{@plugin.name}}
       class={{concat
         "d-table__row admin-plugins-list__row"
         (if this.isAdminSearchFiltered "-admin-search-filtered")
       }}
+      data-plugin-name={{@plugin.name}}
     >
       <td class="d-table__cell --overview admin-plugins-list__name-details">
         <div class="admin-plugins-list__name-with-badges">
@@ -124,8 +124,8 @@ export default class AdminPluginsListItem extends Component {
           </div>
 
           <PluginOutlet
-            @name="admin-plugin-list-name-badge-after"
             @connectorTagName="span"
+            @name="admin-plugin-list-name-badge-after"
             @outletArgs={{lazyHash plugin=@plugin}}
           />
         </div>
@@ -136,10 +136,10 @@ export default class AdminPluginsListItem extends Component {
           {{@plugin.about}}
           {{#if @plugin.linkUrl}}
             <a
+              class="admin-plugins-list__about-link"
               href={{@plugin.linkUrl}}
               rel="noopener noreferrer"
               target="_blank"
-              class="admin-plugins-list__about-link"
             >
               {{dIcon "up-right-from-square"}}
               {{i18n "admin.plugins.learn_more"}}
@@ -181,7 +181,7 @@ export default class AdminPluginsListItem extends Component {
               {{on "click" (fn this.togglePluginEnabled @plugin)}}
             />
           {{else}}
-            <DToggleSwitch @state={{@plugin.enabled}} disabled={{true}} />
+            <DToggleSwitch disabled={{true}} @state={{@plugin.enabled}} />
           {{/if}}
         </PluginOutlet>
       </td>
@@ -194,23 +194,23 @@ export default class AdminPluginsListItem extends Component {
             {{#if @plugin.useNewShowRoute}}
               <LinkTo
                 class="btn btn-default btn-text btn-small"
-                @route="adminPlugins.show"
-                @model={{@plugin}}
-                @disabled={{this.disablePluginSettingsButton}}
-                title={{this.settingsButtonTitle}}
                 data-plugin-setting-button={{@plugin.name}}
+                title={{this.settingsButtonTitle}}
+                @disabled={{this.disablePluginSettingsButton}}
+                @model={{@plugin}}
+                @route="adminPlugins.show"
               >
                 {{i18n "admin.plugins.change_settings_short"}}
               </LinkTo>
             {{else}}
               <LinkTo
                 class="btn btn-default btn-text btn-small"
-                @route="adminSiteSettingsCategory"
+                data-plugin-setting-button={{@plugin.name}}
+                title={{this.settingsButtonTitle}}
+                @disabled={{this.disablePluginSettingsButton}}
                 @model={{@plugin.settingCategoryName}}
                 @query={{hash filter=(concat "plugin:" @plugin.name)}}
-                @disabled={{this.disablePluginSettingsButton}}
-                title={{this.settingsButtonTitle}}
-                data-plugin-setting-button={{@plugin.name}}
+                @route="adminSiteSettingsCategory"
               >
                 {{i18n "admin.plugins.change_settings_short"}}
               </LinkTo>

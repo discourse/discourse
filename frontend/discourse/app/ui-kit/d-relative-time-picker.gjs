@@ -188,21 +188,21 @@ export default class DRelativeTimePicker extends Component {
   <template>
     <div class="relative-time-picker" ...attributes>
       <input
+        class="relative-time-duration"
+        id={{@id}}
+        min={{if (eq this.interval "mins") 1 0.5}}
+        step={{if (eq this.interval "mins") 1 0.5}}
+        type="number"
+        value={{this.inputValue}}
         {{didInsert this.initValues}}
         {{didUpdate this.initValues @durationMinutes @durationHours}}
         {{on "change" this.onChangeDuration}}
-        type="number"
-        min={{if (eq this.interval "mins") 1 0.5}}
-        step={{if (eq this.interval "mins") 1 0.5}}
-        value={{this.inputValue}}
-        id={{@id}}
-        class="relative-time-duration"
       />
       <ComboBox
-        @content={{this.intervals}}
-        @value={{this.interval}}
-        @onChange={{this.onChangeInterval}}
         class="relative-time-intervals"
+        @content={{this.intervals}}
+        @onChange={{this.onChangeInterval}}
+        @value={{this.interval}}
       />
     </div>
   </template>

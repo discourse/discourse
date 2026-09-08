@@ -221,8 +221,8 @@ export default class DiscoursePostEventDates extends Component {
 
   <template>
     <section
-      data-event-id={{@event.id}}
       class="event__section event-dates"
+      data-event-id={{@event.id}}
       {{didInsert this.computeDates}}
     >
       {{dIcon "clock"}}

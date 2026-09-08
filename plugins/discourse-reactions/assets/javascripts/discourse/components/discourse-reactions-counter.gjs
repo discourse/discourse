@@ -88,19 +88,19 @@ export default class DiscourseReactionsCounter extends Component {
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     {{#if @post.reaction_users_count}}
       <button
+        aria-expanded={{if this.expanded "true" "false"}}
+        aria-haspopup="dialog"
+        aria-label={{this.counterAriaLabel}}
+        class={{this.classes}}
         id={{this.elementId}}
         type="button"
-        class={{this.classes}}
-        aria-label={{this.counterAriaLabel}}
-        aria-haspopup="dialog"
-        aria-expanded={{if this.expanded "true" "false"}}
         {{on "mousedown" this.mouseDown}}
         {{on "mouseup" this.mouseUp}}
         {{on "click" this.click}}
       >
         <DiscourseReactionsList @post={{@post}} />
 
-        <span class="reactions-counter" aria-hidden="true">
+        <span aria-hidden="true" class="reactions-counter">
           {{@post.reaction_users_count}}
         </span>
       </button>

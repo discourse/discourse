@@ -270,11 +270,11 @@ export default class ExpressionInput extends Component {
   <template>
     <div {{didInsert this.registerWrapper}}>
       <VariableInput
-        @value={{this.displayValue}}
-        @onChange={{this.handleChange}}
         @extensions={{this.buildExtensions}}
+        @onChange={{this.handleChange}}
         @onFocusIn={{this.handleFocusIn}}
         @onFocusOut={{this.handleFocusOut}}
+        @value={{this.displayValue}}
       />
     </div>
     <ExpressionPreview

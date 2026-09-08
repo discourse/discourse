@@ -53,8 +53,6 @@ class IconButton extends Component {
 
   <template>
     <button
-      type="button"
-      role="option"
       aria-label={{@icon.id}}
       aria-selected={{if @selected "true" "false"}}
       class={{dConcatClass
@@ -62,6 +60,8 @@ class IconButton extends Component {
         (if @selected "--selected")
       }}
       data-icon-id={{@icon.id}}
+      role="option"
+      type="button"
       {{on "click" (fn @onSelect @icon)}}
     >
       {{this.symbol}}
@@ -488,37 +488,35 @@ export default class DIconGridPickerContent extends Component {
     >
       <div class="d-icon-grid-picker__filter-container">
         <DFilterInput
-          aria-label={{i18n "d_icon_grid_picker.search_label"}}
           aria-controls="d-icon-grid-picker-listbox"
+          aria-label={{i18n "d_icon_grid_picker.search_label"}}
           placeholder={{i18n "d_icon_grid_picker.search_placeholder"}}
-          @value={{this.filter}}
-          @filterAction={{withEventValue this.setFilter}}
-          @onClearInput={{fn this.setFilter ""}}
-          @icons={{hash left="magnifying-glass"}}
           @containerClass="d-icon-grid-picker__filter"
+          @filterAction={{withEventValue this.setFilter}}
+          @icons={{hash left="magnifying-glass"}}
+          @onClearInput={{fn this.setFilter ""}}
+          @value={{this.filter}}
         />
       </div>
 
       <div
+        aria-label={{i18n "d_icon_grid_picker.select_icon"}}
         class="d-icon-grid-picker__grid-wrapper"
         id="d-icon-grid-picker-listbox"
+        role="listbox"
         {{this.registerGridWrapper}}
         {{this.iconTooltips}}
-        role="listbox"
-        aria-label={{i18n "d_icon_grid_picker.select_icon"}}
       >
         {{#if this.hasFavorites}}
           <div
+            aria-label={{i18n "d_icon_grid_picker.favorites"}}
             class="d-icon-grid-picker__favorites"
             role="group"
-            aria-label={{i18n "d_icon_grid_picker.favorites"}}
           >
             {{#each this.displayFavorites as |favIcon|}}
               {{! eslint-disable ember/template-require-context-role }}
               {{#if (eq favIcon @value)}}
                 <button
-                  type="button"
-                  role="option"
                   aria-label={{favIcon}}
                   aria-selected="true"
                   class={{dConcatClass
@@ -526,6 +524,8 @@ export default class DIconGridPickerContent extends Component {
                     (if @showSelectedName "d-icon-grid-picker__selected-chip")
                   }}
                   data-icon-id={{favIcon}}
+                  role="option"
+                  type="button"
                   {{this.snapToGrid}}
                   {{on "click" (fn this.selectIcon (hash id=favIcon))}}
                 >
@@ -561,8 +561,8 @@ export default class DIconGridPickerContent extends Component {
               {{#each this.icons as |item|}}
                 <IconButton
                   @icon={{item}}
-                  @selected={{eq item.id @value}}
                   @onSelect={{this.selectIcon}}
+                  @selected={{eq item.id @value}}
                 />
               {{/each}}
             </:content>
@@ -582,15 +582,15 @@ export default class DIconGridPickerContent extends Component {
 
         {{#if this.hasMore}}
           <DLoadMore
+            class="d-icon-grid-picker__sentinel"
             @action={{this.loadMore}}
             @isLoading={{this.loadingMore}}
             @root={{this.gridWrapper}}
-            class="d-icon-grid-picker__sentinel"
           />
         {{/if}}
       </div>
 
-      <div class="sr-only" aria-live="polite" role="status">
+      <div aria-live="polite" class="sr-only" role="status">
         {{this.resultAnnouncement}}
       </div>
     </div>

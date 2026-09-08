@@ -39,9 +39,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -57,9 +57,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -82,9 +82,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -108,9 +108,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -143,9 +143,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -190,9 +190,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -217,9 +217,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{items}}
             @canEdit={{true}}
+            @initialItems={{items}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -250,9 +250,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{items}}
             @canEdit={{true}}
+            @initialItems={{items}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -270,9 +270,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{false}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>

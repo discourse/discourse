@@ -42,10 +42,10 @@ export default class PostVotingCommentComposer extends Component {
     <div class="post-voting-comments__composer">
       <textarea
         class="post-voting-comments__composer-textarea"
+        maxlength={{this.siteSettings.post_voting_comment_max_raw_length}}
         value={{this.value}}
         {{on "input" this.onInput}}
         {{on "keydown" @onKeyDown}}
-        maxlength={{this.siteSettings.post_voting_comment_max_raw_length}}
       ></textarea>
 
       {{#if this.value.length}}

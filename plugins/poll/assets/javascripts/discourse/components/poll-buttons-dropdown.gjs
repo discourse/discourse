@@ -144,9 +144,9 @@ export default class PollButtonsDropdownComponent extends Component {
                 <dropdown.item>
                   <DButton
                     class="widget-button {{content.className}}"
+                    @action={{fn this.dropDownClick content.action}}
                     @icon={{content.icon}}
                     @label={{content.label}}
-                    @action={{fn this.dropDownClick content.action}}
                   />
                 </dropdown.item>
               {{/each}}
@@ -156,12 +156,12 @@ export default class PollButtonsDropdownComponent extends Component {
       {{else if this.showDropdownAsButton}}
         <DButton
           class="widget-button {{get this.getDropdownContent '0.className'}}"
-          @icon={{get this.getDropdownContent "0.icon"}}
-          @label={{get this.getDropdownContent "0.label"}}
           @action={{fn
             this.dropDownClick
             (get this.getDropdownContent "0.action")
           }}
+          @icon={{get this.getDropdownContent "0.icon"}}
+          @label={{get this.getDropdownContent "0.label"}}
         />
       {{/if}}
     </div>

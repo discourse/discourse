@@ -51,10 +51,10 @@ export default class Topic extends Component {
 
   <template>
     <TopicChooser
-      @value={{@value}}
       @content={{this.selectedTopicContent}}
       @onChange={{this.onChangeTopicSetting}}
       @options={{hash castInteger=true}}
+      @value={{@value}}
     />
   </template>
 }

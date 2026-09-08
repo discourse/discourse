@@ -17,13 +17,13 @@ import UploadField from "./upload";
 
 const FormTemplateField = <template>
   <@component
-    @id={{@content.id}}
     @attributes={{@content.attributes}}
     @choices={{@content.choices}}
-    @validations={{@content.validations}}
-    @value={{@initialValue}}
+    @id={{@content.id}}
     @onChange={{@onChange}}
     @uppyComposerUpload={{@uppyComposerUpload}}
+    @validations={{@content.validations}}
+    @value={{@initialValue}}
   />
 </template>;
 

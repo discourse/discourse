@@ -168,15 +168,15 @@ export default class GroupCardContents extends CardContentsBase {
           <div class="card-row first-row">
             <div class="group-card-avatar">
               <a
-                {{on "click" this.handleShowGroup}}
-                href={{this.groupPath}}
                 class="card-huge-avatar"
+                href={{this.groupPath}}
+                {{on "click" this.handleShowGroup}}
               >
                 <DAvatarFlair
-                  @flairName={{this.group.name}}
-                  @flairUrl={{this.group.flair_url}}
                   @flairBgColor={{this.group.flair_bg_color}}
                   @flairColor={{this.group.flair_color}}
+                  @flairName={{this.group.name}}
+                  @flairUrl={{this.group.flair_url}}
                 />
               </a>
             </div>
@@ -184,9 +184,9 @@ export default class GroupCardContents extends CardContentsBase {
               <span>
                 <div class="names__primary {{this.group.name}}">
                   <a
-                    {{on "click" this.handleShowGroup}}
-                    href={{this.groupPath}}
                     class="group-page-link"
+                    href={{this.groupPath}}
+                    {{on "click" this.handleShowGroup}}
                   >{{this.group.name}}</a>
                 </div>
                 {{#if this.group.full_name}}
@@ -210,10 +210,10 @@ export default class GroupCardContents extends CardContentsBase {
               {{#if this.group.messageable}}
                 <li>
                   <DButton
+                    class="btn-primary group-message-button inline"
                     @action={{this.messageGroup}}
                     @icon="envelope"
                     @label="groups.message"
-                    class="btn-primary group-message-button inline"
                   />
                 </li>
               {{/if}}
@@ -233,16 +233,16 @@ export default class GroupCardContents extends CardContentsBase {
               <div class="members metadata">
                 {{#each this.highlightedMembers as |user|}}
                   <a
-                    {{on "click" this.close}}
-                    href={{user.path}}
                     class="card-tiny-avatar"
+                    href={{user.path}}
+                    {{on "click" this.close}}
                   >{{dBoundAvatar user "tiny"}}</a>
                 {{/each}}
                 {{#if this.showMoreMembers}}
                   <a
-                    {{on "click" this.handleShowGroup}}
-                    href={{this.groupPath}}
                     class="more-members-link"
+                    href={{this.groupPath}}
+                    {{on "click" this.handleShowGroup}}
                   >
                     <span class="more-members-count">+{{this.moreMembersCount}}
                       {{i18n "more"}}</span>

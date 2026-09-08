@@ -19,10 +19,10 @@ export default class FKControlMenuItem extends Component {
   <template>
     <@item class="form-kit__control-menu-item" data-value={{@value}}>
       <DButton
-        @action={{this.handleInput}}
         class="btn-flat"
-        @icon={{@icon}}
         ...attributes
+        @action={{this.handleInput}}
+        @icon={{@icon}}
       >
         {{yield}}
       </DButton>

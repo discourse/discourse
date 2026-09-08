@@ -35,10 +35,10 @@ export class DNativeSelectOption extends Component {
         "d-native-select__option --selected"
         "d-native-select__option"
       }}
-      value={{this.value}}
       selected={{this.isSelected}}
-      {{claimSelectedAfterRender this.isSelected}}
+      value={{this.value}}
       ...attributes
+      {{claimSelectedAfterRender this.isSelected}}
     >
       {{yield}}
     </option>
@@ -83,8 +83,8 @@ export default class DNativeSelect extends Component {
     >
       {{#if this.includeNone}}
         <DNativeSelectOption
-          @value={{NO_VALUE_OPTION}}
           @selected={{this.htmlSelectValue}}
+          @value={{NO_VALUE_OPTION}}
         >
           {{#if @nonePlaceholder}}
             {{@nonePlaceholder}}

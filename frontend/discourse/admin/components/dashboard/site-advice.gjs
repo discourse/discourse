@@ -58,8 +58,8 @@ export default class DashboardSiteAdvice extends Component {
             class="btn-transparent btn-small"
             data-test-site-advice-refresh="true"
             @action={{this.refresh}}
-            @isLoading={{this.refreshing}}
             @icon="arrows-rotate"
+            @isLoading={{this.refreshing}}
             @label="admin.dashboard.refresh_problems"
           />
         </div>

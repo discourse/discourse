@@ -105,16 +105,16 @@ export default class CellEditor extends Component {
     >
       {{#if (eq this.columnType "boolean")}}
         <input
-          type="checkbox"
           checked={{@value}}
           class="workflows-data-table-viewer__checkbox"
+          type="checkbox"
           {{on "change" this.toggleBoolean}}
         />
       {{else if this.isEditing}}
         <input
+          class="workflows-data-table-viewer__cell-input"
           type={{this.inputType}}
           value={{this.editValue}}
-          class="workflows-data-table-viewer__cell-input"
           {{autofocus}}
           {{on "blur" this.save}}
           {{on "keydown" this.handleKeydown}}
@@ -123,11 +123,11 @@ export default class CellEditor extends Component {
       {{else}}
 
         <button
-          type="button"
           class={{dConcatClass
             "workflows-data-table-viewer__cell-value"
             (if this.isPlaceholder "is-null")
           }}
+          type="button"
           {{on "click" this.startEditing}}
         >{{this.displayValue}}</button>
       {{/if}}

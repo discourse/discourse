@@ -37,10 +37,10 @@ export default class DialogHolder extends Component {
   <template>
     {{#if this.dialog.show}}
       <div
-        aria-labelledby={{this.dialog.titleElementId}}
-        id="dialog-holder"
         aria-hidden="true"
+        aria-labelledby={{this.dialog.titleElementId}}
         class="dialog-container {{this.dialog.class}}"
+        id="dialog-holder"
         {{this.setupDialog}}
       >
         <div class="dialog-overlay" data-a11y-dialog-hide></div>
@@ -51,10 +51,10 @@ export default class DialogHolder extends Component {
               <div class="dialog-header">
                 <h3 id={{this.dialog.titleElementId}}>{{this.dialog.title}}</h3>
                 <DButton
-                  @action={{this.dialog.cancel}}
-                  @title="modal.close"
-                  @icon="xmark"
                   class="btn-flat dialog-close close"
+                  @action={{this.dialog.cancel}}
+                  @icon="xmark"
+                  @title="modal.close"
                 />
               </div>
             {{/if}}
@@ -75,24 +75,24 @@ export default class DialogHolder extends Component {
               <div class="dialog-footer">
                 {{#each this.dialog.buttons as |button|}}
                   <DButton
-                    @action={{fn this.handleButtonAction button}}
-                    @translatedLabel={{button.label}}
-                    @icon={{button.icon}}
                     class={{button.class}}
+                    @action={{fn this.handleButtonAction button}}
+                    @icon={{button.icon}}
+                    @translatedLabel={{button.label}}
                   />
                 {{else}}
                   <DButton
+                    class={{this.dialog.confirmButtonClass}}
                     @action={{this.dialog.didConfirmWrapped}}
+                    @disabled={{this.dialog.confirmButtonDisabled}}
                     @icon={{this.dialog.confirmButtonIcon}}
                     @label={{this.dialog.confirmButtonLabel}}
-                    @disabled={{this.dialog.confirmButtonDisabled}}
-                    class={{this.dialog.confirmButtonClass}}
                   />
                   {{#if this.dialog.shouldDisplayCancel}}
                     <DButton
+                      class={{this.dialog.cancelButtonClass}}
                       @action={{this.dialog.cancel}}
                       @label={{this.dialog.cancelButtonLabel}}
-                      class={{this.dialog.cancelButtonClass}}
                     />
                   {{/if}}
                 {{/each}}

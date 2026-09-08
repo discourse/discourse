@@ -120,12 +120,12 @@ export default class TopicNotificationsButton extends Component {
     <div class="topic-notifications-button" ...attributes>
       <this.conditionalWrapper>
         <TopicNotificationsTracking
+          @contentClass={{@contentClass}}
           @levelId={{this.notificationLevel}}
           @onChange={{this.changeTopicNotificationLevel}}
-          @showFullTitle={{@expanded}}
           @showCaret={{@expanded}}
+          @showFullTitle={{@expanded}}
           @topic={{@topic}}
-          @contentClass={{@contentClass}}
         />
 
         {{#if @expanded}}

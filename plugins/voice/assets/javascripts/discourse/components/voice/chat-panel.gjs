@@ -255,8 +255,8 @@ export default class VoiceChatPanel extends Component {
 
   <template>
     <section
-      class="voice-chat"
       aria-label={{i18n "voice.chat.title"}}
+      class="voice-chat"
       {{didInsert this.loadSession}}
     >
       <header class="voice-chat__header">
@@ -265,10 +265,10 @@ export default class VoiceChatPanel extends Component {
         </h2>
         {{#if this.canOpenInChat}}
           <button
-            type="button"
+            aria-label={{i18n "voice.chat.open_in_chat"}}
             class="btn btn-transparent btn-icon no-text voice-chat__open-in-chat"
             title={{i18n "voice.chat.open_in_chat"}}
-            aria-label={{i18n "voice.chat.open_in_chat"}}
+            type="button"
             {{on "click" this.openInChat}}
           >
             {{dIcon "up-right-from-square"}}
@@ -276,10 +276,10 @@ export default class VoiceChatPanel extends Component {
         {{/if}}
         {{#if @onClose}}
           <button
-            type="button"
+            aria-label={{i18n "voice.chat.close"}}
             class="btn btn-icon no-text voice-chat__close"
             title={{i18n "voice.chat.close"}}
-            aria-label={{i18n "voice.chat.close"}}
+            type="button"
             {{on "click" @onClose}}
           >
             {{dIcon "xmark"}}
@@ -322,25 +322,25 @@ export default class VoiceChatPanel extends Component {
           <footer class="voice-chat__composer">
             <div class="voice-chat__composer-inner">
               <EmojiPicker
+                @btnClass="btn-transparent voice-chat__emoji"
                 @context="voice-chat"
                 @didSelectEmoji={{this.insertEmoji}}
-                @btnClass="btn-transparent voice-chat__emoji"
               />
               <textarea
-                class="voice-chat__input"
-                rows="1"
-                placeholder={{i18n "voice.chat.composer_placeholder"}}
                 aria-label={{i18n "voice.chat.composer_placeholder"}}
+                class="voice-chat__input"
+                placeholder={{i18n "voice.chat.composer_placeholder"}}
+                rows="1"
                 {{didInsert this.registerTextarea}}
                 {{on "input" this.updateDraft}}
                 {{on "keydown" this.onKeydown}}
               ></textarea>
               <button
-                type="button"
-                class="btn btn-transparent btn-icon no-text voice-chat__send"
-                title={{i18n "voice.chat.send"}}
                 aria-label={{i18n "voice.chat.send"}}
+                class="btn btn-transparent btn-icon no-text voice-chat__send"
                 disabled={{this.sendDisabled}}
+                title={{i18n "voice.chat.send"}}
+                type="button"
                 {{on "click" this.sendFirstMessage}}
               >
                 {{dIcon "paper-plane"}}

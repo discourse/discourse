@@ -214,10 +214,10 @@ export default class VoiceLivekitStatus extends Component {
           <h3>{{i18n "voice.admin.dashboard.livekit.title"}}</h3>
           <DButton
             class="btn-default btn-small voice-livekit-status__refresh"
-            @icon="arrows-rotate"
-            @label="voice.admin.dashboard.livekit.refresh"
             @action={{this.refresh}}
             @disabled={{this.loading}}
+            @icon="arrows-rotate"
+            @label="voice.admin.dashboard.livekit.refresh"
           />
         </div>
 

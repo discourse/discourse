@@ -96,8 +96,8 @@ export default class NoAnswer extends Component {
       {{/if}}
       {{#if this.show}}
         <TopicNavigationPopup
-          @popupId="solved-notice"
           @dismissDuration={{this.oneWeek}}
+          @popupId="solved-notice"
         >
           <h2>{{i18n "solved.no_answer.title"}}</h2>
           <p>{{i18n "solved.no_answer.description"}}</p>

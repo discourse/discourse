@@ -562,22 +562,22 @@ export default class AiTranslations extends Component {
   <template>
     <div class="ai-translations admin-detail">
       <DPageSubheader
-        @titleLabel={{i18n "discourse_ai.translations.title"}}
         @descriptionLabel={{i18n "discourse_ai.translations.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/-/370969"
+        @titleLabel={{i18n "discourse_ai.translations.title"}}
       >
         <:actions as |actions|>
           <actions.Default
+            class="ai-translation-settings-button"
             @label="discourse_ai.translations.admin_actions.translation_settings"
             @route="adminPlugins.show.discourse-ai-features.edit"
             @routeModels={{@model.translation_id}}
-            class="ai-translation-settings-button"
           />
           <actions.Default
+            class="ai-localization-settings-button"
             @label="discourse_ai.translations.admin_actions.localization_settings"
             @route="adminSiteSettingsCategory"
             @routeModels="content_localization"
-            class="ai-localization-settings-button"
           />
         </:actions>
       </DPageSubheader>
@@ -608,8 +608,8 @@ export default class AiTranslations extends Component {
                     }}
                   </p>
                   <PluginOutlet
-                    @name="ai-translations-locale-info"
                     @connectorTagName="div"
+                    @name="ai-translations-locale-info"
                     @outletArgs={{lazyHash
                       localesCount=this.selectedLocales.length
                       maxLocales=this.siteSettings.content_localization_max_locales
@@ -619,36 +619,36 @@ export default class AiTranslations extends Component {
               {{/if}}
               <div class="ai-translations__locale-input-row">
                 <MultiSelect
-                  @value={{this.selectedLocales}}
                   @content={{this.availableLocales}}
                   @nameProperty="name"
-                  @valueProperty="value"
                   @onChange={{this.updateSelectedLocales}}
                   @options={{hash allowAny=false}}
+                  @value={{this.selectedLocales}}
+                  @valueProperty="value"
                 />
                 {{#if this.localesChanged}}
                   <div class="setting-controls">
                     <DButton
+                      class="ok setting-controls__ok"
                       @action={{this.saveLocales}}
+                      @ariaLabel="save"
                       @icon="check"
                       @isLoading={{this.isSavingLocales}}
-                      @ariaLabel="save"
-                      class="ok setting-controls__ok"
                     />
                     <DButton
+                      class="cancel setting-controls__cancel"
                       @action={{this.cancelLocales}}
+                      @ariaLabel="cancel"
                       @icon="xmark"
                       @isLoading={{this.isSavingLocales}}
-                      @ariaLabel="cancel"
-                      class="cancel setting-controls__cancel"
                     />
                   </div>
                 {{else if this.selectedLocales.length}}
                   <DButton
+                    class="btn-default undo setting-controls__undo"
                     @action={{this.resetLocales}}
                     @icon="arrow-rotate-left"
                     @label="admin.settings.reset"
-                    class="btn-default undo setting-controls__undo"
                   />
                 {{/if}}
               </div>
@@ -665,36 +665,36 @@ export default class AiTranslations extends Component {
               <div class="ai-translations__category-input-row">
                 <div class="ai-translations__category-scope-row">
                   <ComboBox
-                    @value={{this.categoryScope}}
                     @content={{this.categoryScopeOptions}}
-                    @onChange={{this.updateCategoryScope}}
-                    @valueProperty="value"
                     @nameProperty="name"
+                    @onChange={{this.updateCategoryScope}}
+                    @value={{this.categoryScope}}
+                    @valueProperty="value"
                   />
                   {{#unless this.showCategorySelector}}
                     {{#if this.categoriesChanged}}
                       <div class="setting-controls">
                         <DButton
+                          class="ok setting-controls__ok"
                           @action={{this.saveCategories}}
+                          @ariaLabel="save"
                           @icon="check"
                           @isLoading={{this.isSavingCategories}}
-                          @ariaLabel="save"
-                          class="ok setting-controls__ok"
                         />
                         <DButton
+                          class="cancel setting-controls__cancel"
                           @action={{this.cancelCategories}}
+                          @ariaLabel="cancel"
                           @icon="xmark"
                           @isLoading={{this.isSavingCategories}}
-                          @ariaLabel="cancel"
-                          class="cancel setting-controls__cancel"
                         />
                       </div>
                     {{else if this.categories.length}}
                       <DButton
+                        class="btn-default undo setting-controls__undo"
                         @action={{this.resetCategories}}
                         @icon="arrow-rotate-left"
                         @label="admin.settings.reset"
-                        class="btn-default undo setting-controls__undo"
                       />
                     {{/if}}
                   {{/unless}}
@@ -708,26 +708,26 @@ export default class AiTranslations extends Component {
                     {{#if this.categoriesChanged}}
                       <div class="setting-controls">
                         <DButton
+                          class="ok setting-controls__ok"
                           @action={{this.saveCategories}}
+                          @ariaLabel="save"
                           @icon="check"
                           @isLoading={{this.isSavingCategories}}
-                          @ariaLabel="save"
-                          class="ok setting-controls__ok"
                         />
                         <DButton
+                          class="cancel setting-controls__cancel"
                           @action={{this.cancelCategories}}
+                          @ariaLabel="cancel"
                           @icon="xmark"
                           @isLoading={{this.isSavingCategories}}
-                          @ariaLabel="cancel"
-                          class="cancel setting-controls__cancel"
                         />
                       </div>
                     {{else if this.categories.length}}
                       <DButton
+                        class="btn-default undo setting-controls__undo"
                         @action={{this.resetCategories}}
                         @icon="arrow-rotate-left"
                         @label="admin.settings.reset"
-                        class="btn-default undo setting-controls__undo"
                       />
                     {{/if}}
                   </div>
@@ -739,9 +739,9 @@ export default class AiTranslations extends Component {
         <div class="setting ai-translations__language-switcher">
           <label class="checkbox-label">
             <input
-              type="checkbox"
               checked={{this.languageSwitcherRequested}}
               disabled={{not this.hasSavedLocales}}
+              type="checkbox"
               {{on "input" this.toggleLanguageSwitcher}}
             />
             <span>{{i18n
@@ -755,23 +755,23 @@ export default class AiTranslations extends Component {
         <div class="setting ai-translations__toggle-container">
           {{#if this.toggleDisabledReason}}
             <DTooltip
-              @content={{this.toggleDisabledReason}}
               class="ai-translations__toggle-disabled-tooltip"
+              @content={{this.toggleDisabledReason}}
             >
               <:trigger>
                 <DToggleSwitch
-                  @state={{this.translationEnabled}}
-                  @label="discourse_ai.translations.admin_actions.enable_translations"
                   disabled={{this.isToggleDisabled}}
+                  @label="discourse_ai.translations.admin_actions.enable_translations"
+                  @state={{this.translationEnabled}}
                   {{on "click" this.toggleTranslationEnabled}}
                 />
               </:trigger>
             </DTooltip>
           {{else}}
             <DToggleSwitch
-              @state={{this.translationEnabled}}
-              @label="discourse_ai.translations.admin_actions.enable_translations"
               disabled={{this.isToggleDisabled}}
+              @label="discourse_ai.translations.admin_actions.enable_translations"
+              @state={{this.translationEnabled}}
               {{on "click" this.toggleTranslationEnabled}}
             />
           {{/if}}
@@ -783,8 +783,8 @@ export default class AiTranslations extends Component {
           <DAsyncContent
             @asyncData={{this.loadProgress}}
             @context={{this.overviewGeneration}}
-            @retainWhileReloading={{true}}
             @errorMode="popup"
+            @retainWhileReloading={{true}}
           >
             <:loading>
               <AiTranslationModelProgressOverviewSkeleton />
@@ -817,16 +817,16 @@ export default class AiTranslations extends Component {
               </div>
 
               <div
-                class="ai-translations__overview-grid"
                 aria-label={{i18n
                   "discourse_ai.translations.model_progress.overview_label"
                 }}
+                class="ai-translations__overview-grid"
               >
                 {{#each progress.targets as |target|}}
                   <AiTranslationModelProgressOverviewCard
-                    @target={{target}}
                     @expanded={{eq this.expandedTargetType target.target_type}}
                     @onToggle={{this.toggleTarget}}
+                    @target={{target}}
                   />
                 {{/each}}
               </div>
@@ -863,10 +863,10 @@ export default class AiTranslations extends Component {
                         }}
                       </span>
                       <DButton
+                        class="btn-default"
                         @action={{this.retryTargetDetails}}
                         @icon="rotate"
                         @label="discourse_ai.translations.model_progress.detail.retry"
-                        class="btn-default"
                       />
                     </div>
                   {{/if}}

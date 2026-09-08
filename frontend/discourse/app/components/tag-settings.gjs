@@ -241,19 +241,19 @@ export default class TagSettings extends Component {
         @hideTabs={{true}}
       >
         <:breadcrumbs>
-          <DBreadcrumbsItem @path="/tags" @label={{i18n "tagging.tags"}} />
+          <DBreadcrumbsItem @label={{i18n "tagging.tags"}} @path="/tags" />
           <DBreadcrumbsItem
-            @path="/tag/{{@tag.slug}}/{{@tag.id}}"
             @label={{@tag.name}}
+            @path="/tag/{{@tag.slug}}/{{@tag.id}}"
           />
           <DBreadcrumbsItem
-            @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/general"
             @label={{i18n "edit"}}
+            @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/general"
           />
           {{#if this.showLocalizationsTab}}
             <DBreadcrumbsItem
-              @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/{{@selectedTab}}"
               @label={{i18n (concat "tagging.settings." @selectedTab)}}
+              @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/{{@selectedTab}}"
             />
           {{/if}}
         </:breadcrumbs>
@@ -263,9 +263,9 @@ export default class TagSettings extends Component {
             }}</span>
           <span class="tag-settings-title__dropdown">
             <TagDropdown
+              aria-label={{i18n "tagging.settings.select_tag"}}
               @tags={{this.tags}}
               @value={{@tag.name}}
-              aria-label={{i18n "tagging.settings.select_tag"}}
             />
           </span>
         </:title>
@@ -285,24 +285,24 @@ export default class TagSettings extends Component {
           <DHorizontalOverflowNav class="d-nav-submenu__tabs">
             <li>
               <LinkTo
-                @route="tag.edit.tab"
                 @models={{array
                   @parentParams.tag_slug
                   @parentParams.tag_id
                   "general"
                 }}
+                @route="tag.edit.tab"
               >
                 {{i18n "tagging.settings.general"}}
               </LinkTo>
             </li>
             <li>
               <LinkTo
-                @route="tag.edit.tab"
                 @models={{array
                   @parentParams.tag_slug
                   @parentParams.tag_id
                   "localizations"
                 }}
+                @route="tag.edit.tab"
               >
                 {{i18n "tagging.settings.localizations"}}
               </LinkTo>
@@ -312,33 +312,33 @@ export default class TagSettings extends Component {
       {{/if}}
 
       <Form
-        @data={{this.formData}}
-        @onSubmit={{this.save}}
-        @onRegisterApi={{this.registerForm}}
         class="tag-settings__form"
+        @data={{this.formData}}
+        @onRegisterApi={{this.registerForm}}
+        @onSubmit={{this.save}}
         as |form transientData|
       >
         {{#if (eq @selectedTab "general")}}
           <form.Field
-            @name="name"
-            @type="input"
-            @title={{i18n "tagging.settings.name"}}
             @format="large"
+            @name="name"
+            @title={{i18n "tagging.settings.name"}}
+            @type="input"
             @validation="required"
             as |field|
           >
             <field.Control
+              class="tag-name-input"
               placeholder={{i18n "tagging.settings.name_placeholder"}}
               @maxlength={{this.siteSettings.max_tag_length}}
-              class="tag-name-input"
             />
           </form.Field>
 
           <form.Field
-            @name="slug"
-            @type="input"
-            @title={{i18n "tagging.settings.slug"}}
             @format="large"
+            @name="slug"
+            @title={{i18n "tagging.settings.slug"}}
+            @type="input"
             @validate={{this.validateSlug}}
             as |field|
           >
@@ -348,10 +348,10 @@ export default class TagSettings extends Component {
           </form.Field>
 
           <form.Field
-            @name="description"
-            @type="composer"
-            @title={{i18n "tagging.description"}}
             @format="large"
+            @name="description"
+            @title={{i18n "tagging.description"}}
+            @type="composer"
             @validation="length:0,1000"
             as |field|
           >
@@ -359,19 +359,18 @@ export default class TagSettings extends Component {
           </form.Field>
 
           <form.Field
-            @name="synonyms"
-            @type="custom"
-            @title={{i18n "tagging.synonyms"}}
             @description={{i18n
               "tagging.settings.synonyms_subtitle"
               name=@tag.name
             }}
             @format="large"
+            @name="synonyms"
+            @title={{i18n "tagging.synonyms"}}
+            @type="custom"
             as |field|
           >
             <field.Control>
               <MiniTagChooser
-                @value={{transientData.synonyms}}
                 @onChange={{this.handleSynonymChange}}
                 @options={{hash
                   everyTag=true
@@ -380,19 +379,20 @@ export default class TagSettings extends Component {
                   filterPlaceholder="tagging.settings.add_synonym_placeholder"
                   maximum=200
                 }}
+                @value={{transientData.synonyms}}
               />
             </field.Control>
           </form.Field>
         {{else if (eq @selectedTab "localizations")}}
           <TagSettingsLocalizations
+            @form={{form}}
             @localizations={{transientData.localizations}}
             @tagId={{@tag.id}}
-            @form={{form}}
           />
         {{/if}}
 
         <form.Actions>
-          <form.Submit @label="tagging.settings.save" id="save-tag" />
+          <form.Submit id="save-tag" @label="tagging.settings.save" />
         </form.Actions>
       </Form>
     </div>

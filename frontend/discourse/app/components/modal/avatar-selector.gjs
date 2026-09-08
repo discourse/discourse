@@ -187,18 +187,18 @@ export default class AvatarSelectorModal extends Component {
 
   <template>
     <DModal
+      class="avatar-selector-modal"
       @bodyClass="avatar-selector"
       @closeModal={{@closeModal}}
       @title={{i18n "user.change_avatar.title"}}
-      class="avatar-selector-modal"
     >
       <:body>
         {{#if this.showSelectableAvatars}}
           <div class="selectable-avatars">
             {{#each this.selectableAvatars as |avatar|}}
               <a
-                href
                 class="selectable-avatar"
+                href
                 {{on "click" (fn this.selectAvatar avatar)}}
               >
                 {{dBoundAvatarTemplate avatar "huge"}}
@@ -215,9 +215,9 @@ export default class AvatarSelectorModal extends Component {
               <DRadioButton
                 @id="logo-small"
                 @name="logo"
-                @value="logo"
-                @selection={{this.selected}}
                 @onChange={{this.onSelectedChanged}}
+                @selection={{this.selected}}
+                @value="logo"
               />
               <label class="radio" for="logo-small">
                 {{dBoundAvatarTemplate
@@ -232,9 +232,9 @@ export default class AvatarSelectorModal extends Component {
             <DRadioButton
               @id="system-avatar"
               @name="avatar"
-              @value="system"
-              @selection={{this.selected}}
               @onChange={{this.onSelectedChanged}}
+              @selection={{this.selected}}
+              @value="system"
             />
             <label class="radio" for="system-avatar">
               {{dBoundAvatarTemplate this.user.system_avatar_template "large"}}
@@ -246,9 +246,9 @@ export default class AvatarSelectorModal extends Component {
               <DRadioButton
                 @id="gravatar"
                 @name="avatar"
-                @value="gravatar"
-                @selection={{this.selected}}
                 @onChange={{this.onSelectedChanged}}
+                @selection={{this.selected}}
+                @value="gravatar"
               />
               <label class="radio" for="gravatar">
                 {{dBoundAvatarTemplate
@@ -269,14 +269,14 @@ export default class AvatarSelectorModal extends Component {
               </label>
 
               <DButton
+                class="btn-default avatar-selector-refresh-gravatar"
                 @action={{this.refreshGravatar}}
+                @disabled={{this.gravatarRefreshDisabled}}
+                @icon="arrows-rotate"
                 @translatedTitle={{i18n
                   "user.change_avatar.refresh_gravatar_title"
                   gravatarName=this.siteSettings.gravatar_name
                 }}
-                @disabled={{this.gravatarRefreshDisabled}}
-                @icon="arrows-rotate"
-                class="btn-default avatar-selector-refresh-gravatar"
               />
 
               {{#if this.gravatarFailed}}
@@ -294,9 +294,9 @@ export default class AvatarSelectorModal extends Component {
               <DRadioButton
                 @id="uploaded-avatar"
                 @name="avatar"
-                @value="custom"
-                @selection={{this.selected}}
                 @onChange={{this.onSelectedChanged}}
+                @selection={{this.selected}}
+                @value="custom"
               />
               <label class="radio" for="uploaded-avatar">
                 {{#if this.user.custom_avatar_template}}
@@ -310,12 +310,12 @@ export default class AvatarSelectorModal extends Component {
                 {{/if}}
               </label>
               <AvatarUploader
-                @user_id={{this.user.id}}
-                @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
-                @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
-                @id="avatar-uploader"
-                @done={{this.uploadComplete}}
                 class="avatar-uploader"
+                @done={{this.uploadComplete}}
+                @id="avatar-uploader"
+                @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
+                @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
+                @user_id={{this.user.id}}
               />
             </div>
           {{/if}}
@@ -325,10 +325,10 @@ export default class AvatarSelectorModal extends Component {
       <:footer>
         {{#if this.showCustomAvatarSelector}}
           <DButton
+            class="btn-primary"
             @action={{this.saveAvatarSelection}}
             @disabled={{this.submitDisabled}}
             @label="save"
-            class="btn-primary"
           />
           <DModalCancel @close={{@closeModal}} />
         {{/if}}

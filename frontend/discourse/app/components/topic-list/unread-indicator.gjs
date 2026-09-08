@@ -29,8 +29,8 @@ export default class UnreadIndicator extends Component {
   <template>
     {{~#if @topic.unread_by_group_member~}}
       &nbsp;<span
-        title={{i18n "topic.unread_indicator"}}
         class="badge badge-notification unread-indicator"
+        title={{i18n "topic.unread_indicator"}}
       >
         {{~dIcon "asterisk" label=(i18n "topic.unread_indicator")~}}
       </span>

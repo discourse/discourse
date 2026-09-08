@@ -243,24 +243,24 @@ export default class AiSpam extends Component {
           {{/each}}
         </div>
         <DPageSubheader
-          @titleLabel={{i18n "discourse_ai.spam.title"}}
           @descriptionLabel={{i18n "discourse_ai.spam.spam_description"}}
+          @titleLabel={{i18n "discourse_ai.spam.title"}}
         />
         <div class="control-group ai-spam__enabled">
           <DToggleSwitch
             class="ai-spam__toggle"
-            @state={{this.isEnabled}}
-            @label="discourse_ai.spam.enable"
             disabled={{this.toggleDisabled}}
+            @label="discourse_ai.spam.enable"
+            @state={{this.isEnabled}}
             {{on "click" this.toggleEnabled}}
           />
           <DTooltip
-            @icon="circle-question"
             @content={{if
               this.toggleDisabled
               (i18n "discourse_ai.spam.enabled_locked_tip")
               (i18n "discourse_ai.spam.spam_tip")
             }}
+            @icon="circle-question"
           />
         </div>
 
@@ -270,10 +270,10 @@ export default class AiSpam extends Component {
             }}</label>
           {{#if this.availableLLMs.length}}
             <ComboBox
-              @value={{this.selectedLLM}}
+              class="ai-spam__llm-selector"
               @content={{this.availableLLMs}}
               @onChange={{this.updateLLM}}
-              class="ai-spam__llm-selector"
+              @value={{this.selectedLLM}}
             />
           {{else}}
             <span class="ai-spam__llm-placeholder">
@@ -289,10 +289,10 @@ export default class AiSpam extends Component {
               "discourse_ai.spam.select_agent"
             }}</label>
           <ComboBox
-            @value={{this.selectedAgentId}}
+            class="ai-spam__agent-selector"
             @content={{this.availableAgents}}
             @onChange={{this.updateAgent}}
-            class="ai-spam__agent-selector"
+            @value={{this.selectedAgentId}}
           />
         </div>
 
@@ -300,8 +300,8 @@ export default class AiSpam extends Component {
           <label class="ai-spam__instructions-label">
             {{i18n "discourse_ai.spam.custom_instructions"}}
             <DTooltip
-              @icon="circle-question"
               @content={{i18n "discourse_ai.spam.custom_instructions_help"}}
+              @icon="circle-question"
             />
           </label>
           <textarea
@@ -312,30 +312,30 @@ export default class AiSpam extends Component {
             {{on "input" (withEventValue (fn (mut this.customInstructions)))}}
           >{{this.customInstructions}}</textarea>
           <DButton
+            class="ai-spam__instructions-save btn-primary"
             @action={{this.save}}
             @label="discourse_ai.spam.save_button"
-            class="ai-spam__instructions-save btn-primary"
           />
           <DButton
+            class="btn-default"
             @action={{this.showTestModal}}
             @label="discourse_ai.spam.test_button"
-            class="btn-default"
           />
         </div>
       </section>
 
       <AdminConfigAreaCard
-        @heading="discourse_ai.spam.last_seven_days"
         class="ai-spam__stats"
+        @heading="discourse_ai.spam.last_seven_days"
       >
         <:content>
           <DStatTiles as |tiles|>
             {{#each this.metrics as |metric|}}
               <tiles.Tile
                 @label={{metric.label}}
+                @tooltip={{metric.tooltip}}
                 @url={{metric.href}}
                 @value={{metric.value}}
-                @tooltip={{metric.tooltip}}
               />
             {{/each}}
           </DStatTiles>

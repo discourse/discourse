@@ -56,7 +56,7 @@ module("Integration | Component | FloatKit | dContextMenu", function (hooks) {
         <input class="probe-checkbox" type="checkbox" />
         <div class="probe-editable" contenteditable="true"></div>
         <select class="probe-select"><option>a</option></select>
-        <button type="button" class="probe-button">b</button>
+        <button class="probe-button" type="button">b</button>
       </template>
     );
 
@@ -282,7 +282,7 @@ module("Integration | Component | FloatKit | dContextMenu", function (hooks) {
           tabindex="0"
           {{dContextMenu component=Actions focusTarget=elsewhere}}
         >other</div>
-        <button type="button" class="ctx-elsewhere">elsewhere</button>
+        <button class="ctx-elsewhere" type="button">elsewhere</button>
         <DMenus />
       </template>
     );

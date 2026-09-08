@@ -257,13 +257,13 @@ export default class AiAgentLlmSelector extends Component {
           {{/if}}
           <DropdownSelectBox
             class="agent-llm-selector__agent-dropdown"
-            @value={{this.value}}
             @content={{this.botOptions}}
             @options={{hash
               icon=(if @showLabels "angle-down" "robot")
               filterable=this.filterable
               customStyle=true
             }}
+            @value={{this.value}}
           />
         </div>
       {{/if}}
@@ -274,12 +274,12 @@ export default class AiAgentLlmSelector extends Component {
           {{/if}}
           <DropdownSelectBox
             class="agent-llm-selector__llm-dropdown"
-            @value={{this.currentLlm}}
             @content={{this.llmOptions}}
             @options={{hash
               icon=(if @showLabels "angle-down" "globe")
               customStyle=true
             }}
+            @value={{this.currentLlm}}
           />
         </div>
       {{/if}}

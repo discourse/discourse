@@ -358,25 +358,25 @@ export default class SchemaSettingNewEditor extends Component {
       <div class="schema-setting-editor__wrapper">
         <div class="schema-setting-editor__navigation">
           <Tree
-            @data={{this.activeData}}
-            @schema={{this.activeSchema}}
-            @onChildClick={{this.onChildClick}}
-            @clickBack={{this.clickBack}}
-            @backButtonText={{this.backButtonText}}
             @activeIndex={{this.activeIndex}}
-            @updateIndex={{this.updateIndex}}
-            @addItem={{this.addItem}}
             @addChildItem={{this.addChildItem}}
+            @addItem={{this.addItem}}
+            @backButtonText={{this.backButtonText}}
+            @clickBack={{this.clickBack}}
+            @data={{this.activeData}}
             @generateSchemaTitle={{this.generateSchemaTitle}}
+            @onChildClick={{this.onChildClick}}
             @registerInputFieldObserver={{this.registerInputFieldObserver}}
+            @schema={{this.activeSchema}}
+            @updateIndex={{this.updateIndex}}
           />
 
           <div class="schema-setting-editor__footer">
             <DButton
-              @disabled={{this.saveButtonDisabled}}
-              @action={{this.saveChanges}}
-              @label="save"
               class="btn-primary"
+              @action={{this.saveChanges}}
+              @disabled={{this.saveButtonDisabled}}
+              @label="save"
             />
           </div>
         </div>
@@ -384,37 +384,37 @@ export default class SchemaSettingNewEditor extends Component {
         <div class="schema-setting-editor__fields">
           {{#each this.fields as |field|}}
             <FieldInput
-              @name={{field.name}}
-              @value={{field.value}}
-              @spec={{field.spec}}
-              @onValueChange={{fn this.inputFieldChanged field}}
               @description={{field.description}}
               @label={{field.label}}
+              @name={{field.name}}
+              @onValueChange={{fn this.inputFieldChanged field}}
               @setting={{@setting}}
+              @spec={{field.spec}}
+              @value={{field.value}}
             />
           {{/each}}
 
           <div class="schema-setting-editor__field-actions">
             <DButton
-              @action={{this.moveUp}}
-              @icon="chevron-up"
-              @disabled={{not this.canMoveUp}}
-              @ariaLabel={{i18n "admin.customize.schema.move_up"}}
               class="btn-default schema-setting-editor__move-up-btn"
+              @action={{this.moveUp}}
+              @ariaLabel={{i18n "admin.customize.schema.move_up"}}
+              @disabled={{not this.canMoveUp}}
+              @icon="chevron-up"
             />
             <DButton
-              @action={{this.moveDown}}
-              @icon="chevron-down"
-              @disabled={{not this.canMoveDown}}
-              @ariaLabel={{i18n "admin.customize.schema.move_down"}}
               class="btn-default schema-setting-editor__move-down-btn"
+              @action={{this.moveDown}}
+              @ariaLabel={{i18n "admin.customize.schema.move_down"}}
+              @disabled={{not this.canMoveDown}}
+              @icon="chevron-down"
             />
 
             {{#if (gt this.fields.length 0)}}
               <DButton
+                class="btn-danger schema-setting-editor__remove-btn"
                 @action={{this.removeItem}}
                 @icon="trash-can"
-                class="btn-danger schema-setting-editor__remove-btn"
               />
             {{/if}}
           </div>

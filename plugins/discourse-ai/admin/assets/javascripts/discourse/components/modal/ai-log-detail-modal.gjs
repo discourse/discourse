@@ -244,8 +244,8 @@ export default class AiLogDetailModal extends Component {
   <template>
     <DModal
       class="ai-log-detail-modal"
-      @title={{i18n "discourse_ai.logs.detail.title" id=@model.logId}}
       @closeModal={{this.close}}
+      @title={{i18n "discourse_ai.logs.detail.title" id=@model.logId}}
     >
       <:body>
         {{#if this.loading}}
@@ -323,8 +323,8 @@ export default class AiLogDetailModal extends Component {
 
           <div class="ai-log-detail-modal__tabs">
             <nav
-              class="ai-log-detail-modal__tab-list"
               aria-label={{i18n "discourse_ai.logs.detail.tabs_label"}}
+              class="ai-log-detail-modal__tab-list"
             >
               {{#each this.tabs as |tab|}}
                 <DButton
@@ -349,10 +349,10 @@ export default class AiLogDetailModal extends Component {
                   />
                 {{/if}}
                 <DCopyButton
-                  @value={{this.copyPayload}}
                   @copyClass="btn-default ai-log-detail-modal__copy"
                   @translatedLabel={{this.activeCopyLabel}}
                   @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}
+                  @value={{this.copyPayload}}
                 />
               </div>
             {{/if}}
@@ -367,23 +367,23 @@ export default class AiLogDetailModal extends Component {
             (or (eq this.activeTab "request") (eq this.activeTab "response"))
           }}
             <AiPayloadViewer
-              @payload={{this.activePayload}}
-              @unbounded={{true}}
-              @truncated={{this.activePayloadTruncated}}
               @emptyMessage={{i18n
                 "discourse_ai.logs.detail.payload_unavailable"
               }}
+              @payload={{this.activePayload}}
+              @truncated={{this.activePayloadTruncated}}
               @truncatedMessage={{i18n
                 "discourse_ai.logs.detail.payload_truncated"
               }}
+              @unbounded={{true}}
             />
           {{else if (eq this.activeTab "context")}}
             <AiPayloadViewer
-              @payload={{this.contextPayload}}
-              @unbounded={{true}}
               @emptyMessage={{i18n
                 "discourse_ai.logs.detail.payload_unavailable"
               }}
+              @payload={{this.contextPayload}}
+              @unbounded={{true}}
             />
           {{else}}
             <ol class="ai-log-detail-modal__attempts">

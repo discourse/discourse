@@ -455,7 +455,7 @@ export default class UserCardContents extends CardContentsBase {
                 handleShowUser=this.handleShowUser
               }}
             >
-              <div class="user-card-avatar" aria-hidden="true">
+              <div aria-hidden="true" class="user-card-avatar">
                 {{#if this.contentHidden}}
                   <span class="card-huge-avatar">{{dBoundAvatar
                       this.user
@@ -463,8 +463,8 @@ export default class UserCardContents extends CardContentsBase {
                     }}</span>
                 {{else}}
                   <a
-                    href={{this.avatarUrl}}
                     class="card-huge-avatar"
+                    href={{this.avatarUrl}}
                     tabindex="-1"
                   >
                     {{dBoundAvatar this.user "huge"}}
@@ -482,8 +482,8 @@ export default class UserCardContents extends CardContentsBase {
 
                 <div>
                   <PluginOutlet
-                    @name="user-card-avatar-flair"
                     @connectorTagName="div"
+                    @name="user-card-avatar-flair"
                     @outletArgs={{lazyHash user=this.user}}
                   />
                 </div>
@@ -505,13 +505,13 @@ export default class UserCardContents extends CardContentsBase {
                     </span>
                   {{else}}
                     <a
-                      {{on "click" this.handleShowUser}}
-                      href={{this.user.path}}
-                      class="user-profile-link"
                       aria-label={{i18n
                         "user.profile_link"
                         username=this.user.username
                       }}
+                      class="user-profile-link"
+                      href={{this.user.path}}
+                      {{on "click" this.handleShowUser}}
                     >
                       <span class="name-username-wrapper">
                         {{if
@@ -525,8 +525,8 @@ export default class UserCardContents extends CardContentsBase {
                   {{/if}}
                 </div>
                 <PluginOutlet
-                  @name="user-card-after-username"
                   @connectorTagName="div"
+                  @name="user-card-after-username"
                   @outletArgs={{lazyHash
                     user=this.user
                     showUser=this.handleShowUser
@@ -562,8 +562,8 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 <div>
                   <PluginOutlet
-                    @name="user-card-post-names"
                     @connectorTagName="div"
+                    @name="user-card-post-names"
                     @outletArgs={{lazyHash user=this.user}}
                   />
                 </div>
@@ -573,25 +573,25 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.can_send_private_message_to_user}}
                 <li class="compose-pm">
                   <DButton
+                    class="btn-primary"
                     @action={{fn this.composePM this.user this.post}}
                     @icon="envelope"
                     @label="user.private_message"
-                    class="btn-primary"
                   />
                 </li>
               {{/if}}
               <PluginOutlet
-                @name="user-card-below-message-button"
                 @connectorTagName="li"
+                @name="user-card-below-message-button"
                 @outletArgs={{lazyHash user=this.user close=this.close}}
               />
               {{#if this.showFilter}}
                 <li>
                   <DButton
+                    class="btn-default"
                     @action={{fn this.handleFilterPosts this.user}}
                     @icon="filter"
                     @translatedLabel={{this.filterPostsLabel}}
-                    class="btn-default"
                   />
                 </li>
               {{/if}}
@@ -607,22 +607,22 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.showDelete}}
                 <li>
                   <DButton
+                    class="btn-danger"
                     @action={{fn this.deleteUser this.user}}
                     @icon="triangle-exclamation"
                     @label="admin.user.delete"
-                    class="btn-danger"
                   />
                 </li>
               {{/if}}
               <PluginOutlet
-                @name="user-card-additional-buttons"
                 @connectorTagName="li"
+                @name="user-card-additional-buttons"
                 @outletArgs={{lazyHash user=this.user close=this.close}}
               />
             </ul>
             <PluginOutlet
-              @name="user-card-additional-controls"
               @connectorTagName="div"
+              @name="user-card-additional-controls"
               @outletArgs={{lazyHash
                 user=this.user
                 close=this.close
@@ -708,11 +708,11 @@ export default class UserCardContents extends CardContentsBase {
               <div class="featured-topic">
                 <span class="desc">{{i18n "user.featured_topic"}}</span>
                 <LinkTo
-                  @route="topic"
                   @models={{array
                     this.user.featured_topic.slug
                     this.user.featured_topic.id
                   }}
+                  @route="topic"
                 >{{dReplaceEmoji
                     (trustHTML this.user.featured_topic.fancy_title)
                   }}</LinkTo>
@@ -758,8 +758,8 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 <span>
                   <PluginOutlet
-                    @name="user-card-location-and-website"
                     @connectorTagName="div"
+                    @name="user-card-location-and-website"
                     @outletArgs={{lazyHash user=this.user}}
                   />
                 </span>
@@ -805,24 +805,24 @@ export default class UserCardContents extends CardContentsBase {
                       {{this.user.email}}
                     {{else}}
                       <DButton
+                        class="btn-primary"
                         @action={{fn this.checkEmail this.user}}
                         @icon="envelope"
                         @label="admin.users.check_email.text"
-                        class="btn-primary"
                       />
                     {{/if}}
                   </div>
                 {{/if}}
                 <PluginOutlet
-                  @name="user-card-metadata"
                   @connectorTagName="div"
+                  @name="user-card-metadata"
                   @outletArgs={{lazyHash user=this.user}}
                 />
               </div>
             {{/unless}}
             <PluginOutlet
-              @name="user-card-after-metadata"
               @connectorTagName="div"
+              @name="user-card-after-metadata"
               @outletArgs={{lazyHash user=this.user}}
             />
           </div>
@@ -842,8 +842,8 @@ export default class UserCardContents extends CardContentsBase {
                           <span class="user-field-value-list-item">
                             {{#if uf.field.searchable}}
                               <LinkTo
-                                @route="users"
                                 @query={{hash name=v}}
+                                @route="users"
                                 {{on "click" (fn this.refreshRoute v)}}
                               >{{v}}</LinkTo>
                             {{else}}
@@ -862,8 +862,8 @@ export default class UserCardContents extends CardContentsBase {
           {{/if}}
 
           <PluginOutlet
-            @name="user-card-before-badges"
             @connectorTagName="div"
+            @name="user-card-before-badges"
             @outletArgs={{lazyHash user=this.user}}
           />
 
@@ -880,7 +880,7 @@ export default class UserCardContents extends CardContentsBase {
                     {{/each}}
                     {{#if this.showMoreBadges}}
                       <span class="more-user-badges">
-                        <LinkTo @route="user.badges" @model={{this.user}}>
+                        <LinkTo @model={{this.user}} @route="user.badges">
                           {{i18n
                             "badges.more_badges"
                             count=this.moreBadgesCount

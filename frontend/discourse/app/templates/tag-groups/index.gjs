@@ -16,7 +16,7 @@ export default <template>
     </section>
     <section>
       {{#unless @controller.model.content}}
-        <LinkTo @route="tagGroups.new" class="btn btn-primary">
+        <LinkTo class="btn btn-primary" @route="tagGroups.new">
           {{dIcon "plus"}}
           {{i18n "tagging.groups.new"}}
         </LinkTo>

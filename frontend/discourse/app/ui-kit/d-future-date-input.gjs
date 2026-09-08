@@ -154,12 +154,12 @@ export default class DFutureDateInput extends Component {
               }}{{/if}}{{this.displayLabel}}
           </label>
           <FutureDateInputSelector
-            @value={{readonly this.selection}}
-            @content={{this.shortcuts}}
             @clearable={{this.clearable}}
-            @onChangeInput={{this.onChangeInput}}
+            @content={{this.shortcuts}}
             @onChange={{fn (mut this.selection)}}
+            @onChangeInput={{this.onChangeInput}}
             @options={{hash none="time_shortcut.select_timeframe"}}
+            @value={{readonly this.selection}}
           />
         </div>
       {{/unless}}
@@ -168,20 +168,20 @@ export default class DFutureDateInput extends Component {
         <div class="control-group future-date-input-date-picker">
           {{dIcon "calendar-days"}}
           <DatePickerFuture
-            @value={{this._date}}
             @defaultDate={{this._date}}
             @onSelect={{this.onChangeDate}}
+            @value={{this._date}}
           />
         </div>
 
         <div class="control-group future-date-input-time-picker">
           {{dIcon "far-clock"}}
           <Input
+            class="time-input"
+            disabled={{this.timeInputDisabled}}
             placeholder="--:--"
             @type="time"
-            class="time-input"
             @value={{this._time}}
-            disabled={{this.timeInputDisabled}}
             {{on "input" (withEventValue this.onChangeTime)}}
           />
         </div>

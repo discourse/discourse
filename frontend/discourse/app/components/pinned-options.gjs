@@ -112,16 +112,17 @@ export default class PinnedOptions extends Component {
 
   <template>
     <DMenu
+      ...attributes
+      @autofocus={{false}}
+      @contentClass={{@contentClass}}
       @identifier="pinned-options"
       @modalForMobile={{true}}
+      @onRegisterApi={{this.registerDmenuApi}}
       @triggerClass={{dConcatClass
         "btn-default"
         "pinned-options-trigger-btn"
         @triggerClass
       }}
-      @contentClass={{@contentClass}}
-      @onRegisterApi={{this.registerDmenuApi}}
-      @autofocus={{false}}
       @triggerComponent={{component
         PinnedOptionsTrigger
         showFullTitle=@showFullTitle
@@ -129,7 +130,6 @@ export default class PinnedOptions extends Component {
         value=@value
         topic=@topic
       }}
-      ...attributes
     >
       <:content>
         <DDropdownMenu as |dropdown|>
@@ -140,8 +140,8 @@ export default class PinnedOptions extends Component {
                   "pinned-options-btn"
                   (this.isSelectedClass option.id)
                 }}
-                @action={{fn this.setPinnedState option.id}}
                 data-pinned-state={{option.id}}
+                @action={{fn this.setPinnedState option.id}}
               >
                 <div class="pinned-options-btn__icons">
                   {{dIcon option.icon}}

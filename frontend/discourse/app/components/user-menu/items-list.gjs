@@ -122,7 +122,7 @@ export default class UserMenuItemsList extends Component {
     {{else if this.items.length}}
       <ul aria-labelledby={{@ariaLabelledby}} class={{@class}}>
         {{#each this.items as |item|}}
-          <MenuItem @item={{item}} @closeUserMenu={{@closeUserMenu}} />
+          <MenuItem @closeUserMenu={{@closeUserMenu}} @item={{item}} />
         {{/each}}
       </ul>
       <div class="panel-body-bottom">
@@ -138,9 +138,9 @@ export default class UserMenuItemsList extends Component {
         {{/if}}
         {{#if this.showDismiss}}
           <button
-            type="button"
             class="btn btn-default notifications-dismiss btn-icon-text"
             title={{this.dismissTitle}}
+            type="button"
             {{on "click" this.dismissButtonClick}}
           >
             {{dIcon "check"}}

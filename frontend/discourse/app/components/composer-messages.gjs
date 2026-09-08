@@ -396,8 +396,8 @@ export default class ComposerMessages extends Component {
     >
       {{#each this.messages as |message|}}
         <ComposerMessage
-          @message={{message}}
           @closeMessage={{this.closeMessage}}
+          @message={{message}}
           @shareModal={{fn (mut this.showShareModal) true}}
           @switchPM={{this.switchPM}}
         />

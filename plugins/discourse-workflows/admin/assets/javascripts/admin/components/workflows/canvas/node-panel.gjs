@@ -11,9 +11,9 @@ import { nodeTypePresenter } from "../../../lib/workflows/node-types";
 
 const NodeTypeItem = <template>
   <button
-    type="button"
     class="workflows-node-panel__item"
     style={{@presenter.style}}
+    type="button"
     {{on "click" @onClick}}
   >
     <span class="workflows-node-panel__item-icon">
@@ -39,9 +39,9 @@ const NodeTypeItem = <template>
 
 const OperationItem = <template>
   <button
-    type="button"
     class="workflows-node-panel__item"
     style={{@presenter.style}}
+    type="button"
     {{on "click" @onClick}}
   >
     <span class="workflows-node-panel__item-icon">
@@ -216,9 +216,9 @@ export default class NodePanel extends Component {
       <div class="workflows-node-panel__header">
         {{#if this.showOperations}}
           <DButton
+            class="btn-transparent btn-small workflows-node-panel__back"
             @action={{this.backFromOperations}}
             @icon="chevron-left"
-            class="btn-transparent btn-small workflows-node-panel__back"
           />
           <span
             class="workflows-node-panel__item-icon"
@@ -231,9 +231,9 @@ export default class NodePanel extends Component {
           </span>
         {{else if this.showCategoryNodes}}
           <DButton
+            class="btn-transparent btn-small workflows-node-panel__back"
             @action={{this.backToCategories}}
             @icon="chevron-left"
-            class="btn-transparent btn-small workflows-node-panel__back"
           />
           <span class="workflows-node-panel__title">
             {{this.selectedCategory.label}}
@@ -244,19 +244,19 @@ export default class NodePanel extends Component {
           </span>
         {{/if}}
         <DButton
+          class="btn-transparent btn-small workflows-node-panel__close"
           @action={{@onClose}}
           @icon="xmark"
-          class="btn-transparent btn-small workflows-node-panel__close"
         />
       </div>
 
       <div class="workflows-node-panel__search">
         {{dIcon "magnifying-glass"}}
         <input
-          type="text"
-          placeholder={{i18n "discourse_workflows.add_node.search"}}
-          value={{@searchTerm}}
           class="workflows-node-panel__search-input"
+          placeholder={{i18n "discourse_workflows.add_node.search"}}
+          type="text"
+          value={{@searchTerm}}
           {{dAutoFocus}}
           {{on "input" this.handleSearchInput}}
           {{on "keydown" this.handleSearchKeyDown}}
@@ -267,8 +267,8 @@ export default class NodePanel extends Component {
         {{#if this.showCategories}}
           {{#each this.categories as |category|}}
             <button
-              type="button"
               class="workflows-node-panel__category"
+              type="button"
               {{on "click" (fn this.selectCategory category)}}
             >
               <span class="workflows-node-panel__category-icon">
@@ -285,27 +285,27 @@ export default class NodePanel extends Component {
         {{else if this.showCategoryNodes}}
           {{#each this.categoryNodeTypes as |nodeType|}}
             <NodeTypeItem
-              @presenter={{nodeTypePresenter nodeType}}
               @onClick={{fn this.handleNodeItemClick nodeType}}
+              @presenter={{nodeTypePresenter nodeType}}
             />
           {{/each}}
         {{else if this.showOperations}}
           {{#each this.selectedOperationPresenter.operations as |operation|}}
             <OperationItem
-              @presenter={{this.selectedOperationPresenter}}
-              @operation={{operation.value}}
               @onClick={{fn
                 this.selectOperation
                 this.selectedOperationNodeType
                 operation.value
               }}
+              @operation={{operation.value}}
+              @presenter={{this.selectedOperationPresenter}}
             />
           {{/each}}
         {{else if this.showSearchResults}}
           {{#each this.availableNodeTypes as |nodeType|}}
             <NodeTypeItem
-              @presenter={{nodeTypePresenter nodeType}}
               @onClick={{fn this.handleNodeItemClick nodeType}}
+              @presenter={{nodeTypePresenter nodeType}}
             />
           {{/each}}
         {{/if}}

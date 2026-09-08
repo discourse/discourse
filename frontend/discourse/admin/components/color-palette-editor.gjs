@@ -162,10 +162,10 @@ const Picker = class extends Component {
       <input
         class="color-palette-editor__input"
         data-position={{@position}}
-        type="color"
-        value={{this.activeValue}}
         disabled={{or @system @disabled}}
         title={{this.disabledEditForSystemDescription}}
+        type="color"
+        value={{this.activeValue}}
         {{on "input" this.onInput}}
         {{on "change" this.onChange}}
       />
@@ -174,10 +174,10 @@ const Picker = class extends Component {
         <input
           class="color-palette-editor__text-input"
           data-position={{@position}}
-          type="text"
-          maxlength="6"
           disabled={{or @system @disabled}}
+          maxlength="6"
           title={{this.disabledEditForSystemDescription}}
+          type="text"
           value={{this.displayedColor}}
           {{on "keypress" this.onTextKeypress}}
           {{on "change" this.onTextChange}}
@@ -206,8 +206,8 @@ export default class ColorPaletteEditor extends Component {
       <div class="color-palette-editor__colors-list">
         {{#each @colors as |color index|}}
           <div
-            data-color-name={{color.name}}
             class="color-palette-editor__colors-item"
+            data-color-name={{color.name}}
           >
             <div class="color-palette-editor__color-info">
               <div
@@ -228,12 +228,12 @@ export default class ColorPaletteEditor extends Component {
             <div class="color-palette-editor__color-controls">
               <Picker
                 @color={{color}}
-                @position={{index}}
-                @totalColors={{@colors.length}}
+                @disabled={{@disabled}}
                 @editorElement={{this.editorElement}}
                 @onChange={{fn @onColorChange color}}
+                @position={{index}}
                 @system={{@system}}
-                @disabled={{@disabled}}
+                @totalColors={{@colors.length}}
               />
               {{#unless @disabled}}
                 <DButton
@@ -242,8 +242,8 @@ export default class ColorPaletteEditor extends Component {
                     "color-palette-editor__revert"
                     (unless (isColorOverriden color) "--hidden")
                   }}
-                  @icon="arrow-rotate-left"
                   @action={{fn this.revert color}}
+                  @icon="arrow-rotate-left"
                 />
               {{/unless}}
             </div>

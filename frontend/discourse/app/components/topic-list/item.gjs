@@ -283,12 +283,6 @@ export default class Item extends Component {
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <tr
-      {{this.highlightIfNeeded}}
-      {{on "keydown" this.keyDown}}
-      {{on "click" this.click}}
-      {{on "auxclick" this.click}}
-      data-topic-id={{@topic.id}}
-      role={{this.role}}
       aria-level={{this.ariaLevel}}
       class={{dConcatClass
         "topic-list-item"
@@ -308,7 +302,13 @@ export default class Item extends Component {
         this.tagClassNames
         this.additionalClasses
       }}
+      data-topic-id={{@topic.id}}
+      role={{this.role}}
       style={{this.style}}
+      {{this.highlightIfNeeded}}
+      {{on "keydown" this.keyDown}}
+      {{on "click" this.click}}
+      {{on "auxclick" this.click}}
     >
       <PluginOutlet
         @name="above-topic-list-item"
@@ -339,9 +339,9 @@ export default class Item extends Component {
             <div class="pull-left">
               {{#if @bulkSelectEnabled}}
                 <BulkSelectCheckbox
-                  @topic={{@topic}}
                   @isSelected={{this.isSelected}}
                   @onToggle={{this.onBulkSelectToggle}}
+                  @topic={{@topic}}
                 />
               {{else}}
                 <PluginOutlet
@@ -377,13 +377,13 @@ export default class Item extends Component {
                   @outletArgs={{lazyHash topic=@topic}}
                 />
                 {{~! no whitespace ~}}
-                <TopicStatus @topic={{@topic}} @context="topic-list" />
+                <TopicStatus @context="topic-list" @topic={{@topic}} />
                 {{~! no whitespace ~}}
                 <TopicLink
+                  class="raw-link raw-topic-link"
+                  @topic={{@topic}}
                   {{on "focus" this.onTitleFocus}}
                   {{on "blur" this.onTitleBlur}}
-                  @topic={{@topic}}
-                  class="raw-link raw-topic-link"
                 />
                 {{~#if @topic.featured_link~}}
                   &nbsp;
@@ -421,8 +421,8 @@ export default class Item extends Component {
 
               <div class="pull-right">
                 <PostCountOrBadges
-                  @topic={{@topic}}
                   @postBadgesEnabled={{@showTopicPostBadges}}
+                  @topic={{@topic}}
                 />
               </div>
 
@@ -449,7 +449,7 @@ export default class Item extends Component {
                     @name="topic-list-item-mobile-bumped-at"
                     @outletArgs={{lazyHash topic=@topic}}
                   >
-                    <span title={{@topic.bumpedAtTitle}} class="age activity">
+                    <span class="age activity" title={{@topic.bumpedAtTitle}}>
                       <a href={{@topic.lastPostUrl}}>{{dFormatDate
                           @topic.bumpedAt
                           format="tiny"
@@ -464,14 +464,14 @@ export default class Item extends Component {
         {{else}}
           {{#each @columns as |entry|}}
             <entry.value.item
-              @topic={{@topic}}
               @bulkSelectEnabled={{@bulkSelectEnabled}}
-              @onBulkSelectToggle={{this.onBulkSelectToggle}}
-              @isSelected={{this.isSelected}}
-              @showTopicPostBadges={{@showTopicPostBadges}}
-              @hideCategory={{@hideCategory}}
-              @tagsForUser={{@tagsForUser}}
               @expandPinned={{this.expandPinned}}
+              @hideCategory={{@hideCategory}}
+              @isSelected={{this.isSelected}}
+              @onBulkSelectToggle={{this.onBulkSelectToggle}}
+              @showTopicPostBadges={{@showTopicPostBadges}}
+              @tagsForUser={{@tagsForUser}}
+              @topic={{@topic}}
             />
           {{/each}}
         {{/if}}

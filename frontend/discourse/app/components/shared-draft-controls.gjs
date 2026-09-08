@@ -60,18 +60,18 @@ export default class SharedDraftControls extends Component {
         <div class="publish-field">
           <label>{{i18n "shared_drafts.destination_category"}}</label>
           <CategoryChooser
-            @value={{this.topic.destination_category_id}}
             @onChange={{this.updateDestinationCategory}}
+            @value={{this.topic.destination_category_id}}
           />
         </div>
 
         <div class="publish-field">
           {{#if this.validCategory}}
             <DButton
-              @action={{this.publish}}
-              @label="shared_drafts.publish"
-              @icon="far-clipboard"
               class="btn-primary publish-shared-draft"
+              @action={{this.publish}}
+              @icon="far-clipboard"
+              @label="shared_drafts.publish"
             />
           {{/if}}
         </div>

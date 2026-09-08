@@ -48,16 +48,16 @@ export default class EmojiPicker extends Component {
 
   <template>
     <DMenu
-      @triggerClass={{dConcatClass @btnClass (if this.hasLabel "--has-label")}}
-      @onRegisterApi={{this.onRegisterMenu}}
-      @identifier="emoji-picker"
-      @groupIdentifier="emoji-picker"
-      @modalForMobile={{this.modalForMobile}}
-      @maxWidth={{405}}
-      @onShow={{@onShow}}
-      @onClose={{@onClose}}
-      @inline={{@inline}}
       @disabled={{@disabled}}
+      @groupIdentifier="emoji-picker"
+      @identifier="emoji-picker"
+      @inline={{@inline}}
+      @maxWidth={{405}}
+      @modalForMobile={{this.modalForMobile}}
+      @onClose={{@onClose}}
+      @onRegisterApi={{this.onRegisterMenu}}
+      @onShow={{@onShow}}
+      @triggerClass={{dConcatClass @btnClass (if this.hasLabel "--has-label")}}
     >
       <:trigger>
         {{#if @emoji}}
@@ -80,8 +80,8 @@ export default class EmojiPicker extends Component {
       <:content>
         <EmojiPickerContent
           @close={{this.menu.close}}
-          @didSelectEmoji={{@didSelectEmoji}}
           @context={{this.context}}
+          @didSelectEmoji={{@didSelectEmoji}}
         />
       </:content>
     </DMenu>

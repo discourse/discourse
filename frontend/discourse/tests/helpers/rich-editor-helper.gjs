@@ -15,10 +15,10 @@ export async function setupRichEditor(assert, markdown, opts = {}) {
   await render(
     <template>
       <DEditor
-        @value={{self.value}}
-        @processPreview={{false}}
-        @onSetup={{handleSetup}}
         @markdownOptions={{markdownOptions}}
+        @onSetup={{handleSetup}}
+        @processPreview={{false}}
+        @value={{self.value}}
       />
     </template>
   );

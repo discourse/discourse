@@ -294,8 +294,8 @@ export default class WorkflowsForm extends Component {
           {{#each this.fields as |field|}}
             {{#if (eq field.type "html")}}
               <DDecoratedHtml
-                @html={{field.html}}
                 @className="workflows-form__html"
+                @html={{field.html}}
               />
             {{else}}
               <SettingDefinitionField
@@ -318,20 +318,20 @@ export default class WorkflowsForm extends Component {
               <p>{{i18n "discourse_workflows.form.redirecting"}}</p>
             {{else if (eq this.completionData.on_submission "show_text")}}
               <DDecoratedHtml
-                @html={{this.completionHtml.completion_text}}
                 @className="workflows-form__completion-text"
+                @html={{this.completionHtml.completion_text}}
               />
             {{else}}
               {{#if this.completionData.completion_title}}
                 <DDecoratedHtml
-                  @html={{this.completionHtml.completion_title}}
                   @className="workflows-form__completion-title"
+                  @html={{this.completionHtml.completion_title}}
                 />
               {{/if}}
               {{#if this.completionData.completion_message}}
                 <DDecoratedHtml
-                  @html={{this.completionHtml.completion_message}}
                   @className="workflows-form__completion-message"
+                  @html={{this.completionHtml.completion_message}}
                 />
               {{else}}
                 <p>{{i18n "discourse_workflows.form.thank_you"}}</p>

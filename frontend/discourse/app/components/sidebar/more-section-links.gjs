@@ -90,19 +90,19 @@ export default class SidebarMoreSectionLinks extends Component {
   <template>
     {{#if (and this.hoistActiveLink this.activeSectionLink)}}
       <MoreSectionLink
-        @sectionLink={{this.activeSectionLink}}
         @scrollIntoView={{@scrollActiveLinkIntoView}}
+        @sectionLink={{this.activeSectionLink}}
       />
     {{/if}}
 
     <li class="sidebar-section-link-wrapper">
       <DMenu
-        @triggerClass="sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
-        @modalForMobile={{true}}
         @autofocus={{true}}
-        @placement="bottom"
-        @inline={{true}}
         @identifier={{if @identifier @identifier "sidebar-more-section"}}
+        @inline={{true}}
+        @modalForMobile={{true}}
+        @placement="bottom"
+        @triggerClass="sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
         @triggerComponent={{this.triggerComponent}}
       >
 
@@ -110,8 +110,8 @@ export default class SidebarMoreSectionLinks extends Component {
           <DDropdownMenu as |dropdown|>
             {{#each this.sectionLinks as |sectionLink|}}
               <MoreSectionLink
-                @sectionLink={{sectionLink}}
                 class="dropdown-menu__item"
+                @sectionLink={{sectionLink}}
                 {{on "click" (fn this.closeMenu menu)}}
               />
             {{/each}}
@@ -123,8 +123,8 @@ export default class SidebarMoreSectionLinks extends Component {
                 <SectionLinkButton
                   @action={{@moreButtonAction}}
                   @icon={{@moreButtonIcon}}
-                  @text={{@moreButtonText}}
                   @name="customize"
+                  @text={{@moreButtonText}}
                   @toggleNavigationMenu={{@toggleNavigationMenu}}
                 />
               </dropdown.item>

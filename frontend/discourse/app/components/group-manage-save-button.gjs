@@ -121,10 +121,10 @@ export default class GroupManageSaveButton extends Component {
 
       <div class="control-group buttons group-manage-save-button">
         <DButton
+          class="btn-primary group-manage-save"
           @action={{this.save}}
           @disabled={{or this.disabled this.saving}}
           @translatedLabel={{this.savingText}}
-          class="btn-primary group-manage-save"
         />
         {{#if this.saved}}
           <span>{{i18n "saved"}}</span>

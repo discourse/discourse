@@ -48,11 +48,11 @@ export default class SchemaSettingTypeString extends Component {
   <template>
     <Input
       class="--string"
+      maxLength={{this.maxLength}}
+      minLength={{this.minLength}}
+      required={{this.required}}
       @value={{this.value}}
       {{on "input" this.onInput}}
-      required={{this.required}}
-      minLength={{this.minLength}}
-      maxLength={{this.maxLength}}
     />
 
     <div class="schema-field__input-supporting-text">

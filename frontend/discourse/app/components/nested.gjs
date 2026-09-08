@@ -822,9 +822,9 @@ export default class Nested extends Component {
 
   <template>
     <div
-      id="topic"
       class={{this.viewClass}}
       data-topic-id={{@topic.id}}
+      id="topic"
       {{didInsert this.scheduleTargetScroll}}
       {{didInsert this.restoreStoredScrollAnchor}}
       {{didUpdate this.scheduleTargetScroll @targetPostNumber @rootNodes}}
@@ -840,22 +840,22 @@ export default class Nested extends Component {
       }}
     >
       <NestedHeader
-        @topic={{@topic}}
-        @editingTopic={{@editingTopic}}
         @buffered={{@buffered}}
-        @showCategoryChooser={{@showCategoryChooser}}
-        @canEditTags={{@canEditTags}}
-        @minimumRequiredTags={{@minimumRequiredTags}}
-        @finishedEditingTopic={{@finishedEditingTopic}}
         @cancelEditingTopic={{@cancelEditingTopic}}
+        @canEditTags={{@canEditTags}}
+        @editingTopic={{@editingTopic}}
+        @finishedEditingTopic={{@finishedEditingTopic}}
+        @minimumRequiredTags={{@minimumRequiredTags}}
+        @showCategoryChooser={{@showCategoryChooser}}
+        @startEditingTopic={{@startEditingTopic}}
+        @topic={{@topic}}
         @topicCategoryChanged={{@topicCategoryChanged}}
         @topicTagsChanged={{@topicTagsChanged}}
-        @startEditingTopic={{@startEditingTopic}}
       />
 
       <PluginOutlet
-        @name="topic-above-post-stream"
         @connectorTagName="div"
+        @name="topic-above-post-stream"
         @outletArgs={{lazyHash model=@topic}}
       />
 
@@ -866,8 +866,8 @@ export default class Nested extends Component {
           {{didUpdate this.scrollMobileFocusIntoContext this.focusedPath}}
         >
           <button
-            type="button"
             class="nested-view__mobile-focus-back"
+            type="button"
             {{on "click" this.clearFocus}}
           >
             {{dIcon "chevron-left"}}
@@ -876,24 +876,24 @@ export default class Nested extends Component {
 
           {{#if this.ancestorPath.length}}
             <nav
-              class="nested-view__mobile-ancestors"
               aria-label={{i18n "nested_replies.focused_path"}}
+              class="nested-view__mobile-ancestors"
             >
               {{#each this.ancestorPath as |ancestorNode index|}}
                 <button
-                  type="button"
-                  class="nested-view__mobile-ancestor"
-                  data-test-nested-mobile-ancestor={{ancestorNode.post.post_number}}
                   aria-label={{i18n
                     "nested_replies.return_to_branch"
                     username=ancestorNode.post.username
                   }}
+                  class="nested-view__mobile-ancestor"
+                  data-test-nested-mobile-ancestor={{ancestorNode.post.post_number}}
+                  type="button"
                   {{on "click" (fn this.returnToAncestor index)}}
                 >
                   {{dIcon "chevron-left"}}
                   <span
-                    class="nested-view__mobile-ancestor-avatar"
                     aria-hidden="true"
+                    class="nested-view__mobile-ancestor-avatar"
                   >
                     {{! PostAvatar renders a user link; keep this avatar non-interactive inside the ancestor button. }}
                     {{dAvatar
@@ -918,77 +918,77 @@ export default class Nested extends Component {
           {{#each this.focusedNodes key="post.id" as |focusedNode|}}
             <div class="nested-view__mobile-focused-branch">
               <NestedPost
-                @post={{focusedNode.post}}
-                @children={{focusedNode.children}}
-                @topic={{@topic}}
-                @depth={{0}}
-                @path={{this.ancestorPath}}
-                @sort={{@effectiveSort}}
-                @replyToPost={{@replyToPost}}
-                @editPost={{@editPost}}
-                @deletePost={{@deletePost}}
-                @recoverPost={{@recoverPost}}
-                @showFlags={{@showFlags}}
-                @showHistory={{@showHistory}}
+                @captureScrollAnchor={{this.captureScrollAnchor}}
                 @changeNotice={{@changeNotice}}
                 @changePostOwner={{@changePostOwner}}
-                @grantBadge={{@grantBadge}}
-                @lockPost={{@lockPost}}
-                @unlockPost={{@unlockPost}}
-                @permanentlyDeletePost={{@permanentlyDeletePost}}
-                @rebakePost={{@rebakePost}}
-                @showPagePublish={{@showPagePublish}}
-                @togglePostType={{@togglePostType}}
-                @toggleWiki={{@toggleWiki}}
-                @unhidePost={{@unhidePost}}
-                @expansionState={{@expansionState}}
-                @fetchedChildrenCache={{@fetchedChildrenCache}}
-                @scrollAnchor={{this.focusedPostScrollAnchor}}
-                @registerPost={{this.viewportTracker.registerPost}}
-                @getCloakingData={{this.viewportTracker.getCloakingData}}
+                @children={{focusedNode.children}}
                 @cloakAbove={{this.cloakAbove}}
                 @cloakBelow={{this.cloakBelow}}
                 @collapseFromDepth={{this.collapseFromDepth}}
+                @deletePost={{@deletePost}}
+                @depth={{0}}
+                @editPost={{@editPost}}
+                @expansionState={{@expansionState}}
+                @fetchedChildrenCache={{@fetchedChildrenCache}}
                 @focusPost={{this.focusPath}}
-                @captureScrollAnchor={{this.captureScrollAnchor}}
                 @forceExpanded={{true}}
+                @getCloakingData={{this.viewportTracker.getCloakingData}}
+                @grantBadge={{@grantBadge}}
+                @lockPost={{@lockPost}}
                 @multiSelect={{@multiSelect}}
-                @togglePostSelection={{@togglePostSelection}}
-                @selectReplies={{@selectReplies}}
-                @selectBelow={{@selectBelow}}
+                @path={{this.ancestorPath}}
+                @permanentlyDeletePost={{@permanentlyDeletePost}}
+                @post={{focusedNode.post}}
                 @postSelected={{@postSelected}}
+                @rebakePost={{@rebakePost}}
+                @recoverPost={{@recoverPost}}
+                @registerPost={{this.viewportTracker.registerPost}}
+                @replyToPost={{@replyToPost}}
+                @scrollAnchor={{this.focusedPostScrollAnchor}}
+                @selectBelow={{@selectBelow}}
+                @selectReplies={{@selectReplies}}
+                @showFlags={{@showFlags}}
+                @showHistory={{@showHistory}}
+                @showPagePublish={{@showPagePublish}}
+                @sort={{@effectiveSort}}
+                @togglePostSelection={{@togglePostSelection}}
+                @togglePostType={{@togglePostType}}
+                @toggleWiki={{@toggleWiki}}
+                @topic={{@topic}}
+                @unhidePost={{@unhidePost}}
+                @unlockPost={{@unlockPost}}
               />
             </div>
           {{/each}}
         </div>
       {{else}}
         <NestedOp
-          @post={{@opPost}}
-          @topic={{@topic}}
-          @editPost={{@editPost}}
-          @showHistory={{@showHistory}}
-          @replyToPost={{@replyToPost}}
           @changeNotice={{@changeNotice}}
           @changePostOwner={{@changePostOwner}}
           @deletePost={{@deletePost}}
+          @editPost={{@editPost}}
           @grantBadge={{@grantBadge}}
           @lockPost={{@lockPost}}
-          @recoverPost={{@recoverPost}}
-          @showFlags={{@showFlags}}
-          @unlockPost={{@unlockPost}}
+          @multiSelect={{@multiSelect}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}
+          @post={{@opPost}}
+          @postSelected={{@postSelected}}
           @rebakePost={{@rebakePost}}
+          @recoverPost={{@recoverPost}}
+          @registerPost={{this.viewportTracker.registerPost}}
+          @replyToPost={{@replyToPost}}
+          @selectBelow={{@selectBelow}}
+          @selectReplies={{@selectReplies}}
+          @showFlags={{@showFlags}}
+          @showHistory={{@showHistory}}
           @showPagePublish={{@showPagePublish}}
+          @showPostMenu={{true}}
+          @togglePostSelection={{@togglePostSelection}}
           @togglePostType={{@togglePostType}}
           @toggleWiki={{@toggleWiki}}
+          @topic={{@topic}}
           @unhidePost={{@unhidePost}}
-          @showPostMenu={{true}}
-          @registerPost={{this.viewportTracker.registerPost}}
-          @multiSelect={{@multiSelect}}
-          @togglePostSelection={{@togglePostSelection}}
-          @selectReplies={{@selectReplies}}
-          @selectBelow={{@selectBelow}}
-          @postSelected={{@postSelected}}
+          @unlockPost={{@unlockPost}}
         />
 
         {{#if this.currentUser}}
@@ -1058,45 +1058,45 @@ export default class Nested extends Component {
         <div class="nested-view__roots">
           {{#each @rootNodes key="_renderKey" as |node index|}}
             <NestedPost
-              @post={{node.post}}
-              @children={{node.children}}
-              @topic={{@topic}}
-              @depth={{0}}
-              @path={{this.emptyPath}}
-              @sort={{@effectiveSort}}
-              @isPinned={{includes @pinnedPostIds node.post.id}}
-              @replyToPost={{@replyToPost}}
-              @editPost={{@editPost}}
-              @deletePost={{@deletePost}}
-              @recoverPost={{@recoverPost}}
-              @showFlags={{@showFlags}}
-              @showHistory={{@showHistory}}
+              @captureScrollAnchor={{this.captureScrollAnchor}}
               @changeNotice={{@changeNotice}}
               @changePostOwner={{@changePostOwner}}
-              @grantBadge={{@grantBadge}}
-              @lockPost={{@lockPost}}
-              @unlockPost={{@unlockPost}}
-              @permanentlyDeletePost={{@permanentlyDeletePost}}
-              @rebakePost={{@rebakePost}}
-              @showPagePublish={{@showPagePublish}}
-              @togglePostType={{@togglePostType}}
-              @toggleWiki={{@toggleWiki}}
-              @unhidePost={{@unhidePost}}
-              @expansionState={{@expansionState}}
-              @fetchedChildrenCache={{@fetchedChildrenCache}}
-              @scrollAnchor={{this.rootPostScrollAnchor}}
-              @registerPost={{this.viewportTracker.registerPost}}
-              @getCloakingData={{this.viewportTracker.getCloakingData}}
+              @children={{node.children}}
               @cloakAbove={{this.cloakAbove}}
               @cloakBelow={{this.cloakBelow}}
               @collapseFromDepth={{this.collapseFromDepth}}
+              @deletePost={{@deletePost}}
+              @depth={{0}}
+              @editPost={{@editPost}}
+              @expansionState={{@expansionState}}
+              @fetchedChildrenCache={{@fetchedChildrenCache}}
               @focusPost={{this.focusPath}}
-              @captureScrollAnchor={{this.captureScrollAnchor}}
+              @getCloakingData={{this.viewportTracker.getCloakingData}}
+              @grantBadge={{@grantBadge}}
+              @isPinned={{includes @pinnedPostIds node.post.id}}
+              @lockPost={{@lockPost}}
               @multiSelect={{@multiSelect}}
-              @togglePostSelection={{@togglePostSelection}}
-              @selectReplies={{@selectReplies}}
-              @selectBelow={{@selectBelow}}
+              @path={{this.emptyPath}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
+              @post={{node.post}}
               @postSelected={{@postSelected}}
+              @rebakePost={{@rebakePost}}
+              @recoverPost={{@recoverPost}}
+              @registerPost={{this.viewportTracker.registerPost}}
+              @replyToPost={{@replyToPost}}
+              @scrollAnchor={{this.rootPostScrollAnchor}}
+              @selectBelow={{@selectBelow}}
+              @selectReplies={{@selectReplies}}
+              @showFlags={{@showFlags}}
+              @showHistory={{@showHistory}}
+              @showPagePublish={{@showPagePublish}}
+              @sort={{@effectiveSort}}
+              @togglePostSelection={{@togglePostSelection}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @topic={{@topic}}
+              @unhidePost={{@unhidePost}}
+              @unlockPost={{@unlockPost}}
             />
             <PluginOutlet
               @name="nested-roots-between"
@@ -1119,43 +1119,43 @@ export default class Nested extends Component {
       {{/if}}
 
       <PluginOutlet
-        @name="topic-above-footer-buttons"
         @connectorTagName="div"
+        @name="topic-above-footer-buttons"
         @outletArgs={{lazyHash model=@topic}}
       />
 
       <PluginOutlet
-        @name="topic-area-bottom"
         @connectorTagName="div"
+        @name="topic-area-bottom"
         @outletArgs={{lazyHash model=@topic}}
       />
 
       {{#unless this.isMobileFocused}}
         <NestedFloatingActions
-          @topic={{@topic}}
           @replyAction={{fn @replyToPost @opPost 0}}
+          @topic={{@topic}}
         />
       {{/unless}}
 
       {{#if (and (not this.isMobileFocused) (not @hasMoreRoots))}}
         <PluginOutlet
-          @name="topic-above-suggested"
           @connectorTagName="div"
+          @name="topic-above-suggested"
           @outletArgs={{lazyHash model=@topic}}
         />
 
         <MoreTopics @topic={{@topic}} />
 
         <PluginOutlet
-          @name="topic-below-suggested"
           @connectorTagName="div"
+          @name="topic-below-suggested"
           @outletArgs={{lazyHash model=@topic}}
         />
       {{/if}}
 
       <PluginOutlet
-        @name="topic-navigation-bottom"
         @connectorTagName="div"
+        @name="topic-navigation-bottom"
         @outletArgs={{lazyHash model=@topic}}
       />
 

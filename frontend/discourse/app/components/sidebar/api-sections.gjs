@@ -46,10 +46,10 @@ export default class SidebarApiSections extends Component {
 
     {{#each this.filteredSections key="name" as |section|}}
       <ApiSection
-        @section={{section}}
         @collapsable={{@collapsable}}
         @expandWhenActive={{@expandActiveSection}}
         @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+        @section={{section}}
       />
     {{/each}}
   </template>

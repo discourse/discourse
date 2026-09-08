@@ -649,7 +649,7 @@ export default class AdminReport extends Component {
         {{/if}}
       </div>
     {{else}}
-      <AdminReportBody @report={{this}} @filters={{@filters}} />
+      <AdminReportBody @filters={{@filters}} @report={{this}} />
     {{/if}}
   </template>
 }

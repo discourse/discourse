@@ -10,22 +10,22 @@ export default class DateTimeField extends BaseField {
   <template>
     <section class="field date-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <div class="controls-row">
             <Input
+              disabled={{@field.isDisabled}}
               @type="datetime-local"
               @value={{readonly this.localTime}}
-              disabled={{@field.isDisabled}}
               {{on "input" this.convertToUniversalTime}}
             />
 
             {{#if @field.metadata.value}}
               <DButton
-                @icon="trash-can"
                 @action={{this.reset}}
                 @disabled={{@field.isDisabled}}
+                @icon="trash-can"
               />
             {{/if}}
           </div>

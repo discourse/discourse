@@ -17,8 +17,8 @@ const SKELETON_ROWS = Array.from({ length: 3 });
 
 const BoardSkeleton = <template>
   <div
-    class="discourse-boards-add-from-topic-menu__skeleton"
     aria-hidden="true"
+    class="discourse-boards-add-from-topic-menu__skeleton"
   >
     <div class="discourse-boards-add-from-topic-menu__skeleton-label"></div>
     <div class="discourse-boards-add-from-topic-menu__skeleton-icon"></div>
@@ -112,12 +112,12 @@ export default class BoardsAddFromTopicMenu extends Component {
                 }}
               >
                 <DButton
-                  @actionParam={{board}}
+                  class="btn-transparent discourse-boards-add-from-topic-menu__board"
                   @action={{this.openBoardSubmenu}}
+                  @actionParam={{board}}
                   @forwardEvent={{true}}
                   @suffixIcon="angle-right"
                   @translatedLabel={{board.fancyTitle}}
-                  class="btn-transparent discourse-boards-add-from-topic-menu__board"
                 />
               </dropdown.item>
             {{/each}}
@@ -136,12 +136,12 @@ export default class BoardsAddFromTopicMenu extends Component {
                 }}
               >
                 <DButton
-                  @actionParam={{board}}
+                  class="btn-transparent discourse-boards-add-from-topic-menu__board"
                   @action={{this.openBoardSubmenu}}
+                  @actionParam={{board}}
                   @forwardEvent={{true}}
                   @suffixIcon="angle-right"
                   @translatedLabel={{board.fancyTitle}}
-                  class="btn-transparent discourse-boards-add-from-topic-menu__board"
                 />
               </dropdown.item>
             {{/each}}

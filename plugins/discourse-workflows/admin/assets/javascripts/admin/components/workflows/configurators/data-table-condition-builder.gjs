@@ -176,54 +176,54 @@ export default class DataTableConditionBuilder extends Component {
   <template>
     {{#if this.dataTable}}
       <Collection
-        @form={{@form}}
-        @formApi={{@formApi}}
-        @fieldName={{@fieldName}}
-        @label={{@label}}
         @addLabel={{i18n "discourse_workflows.if.add_condition"}}
         @emptyItem={{this.emptyItem}}
-        @onAdd={{this.onItemAdded}}
-        @onRemove={{this.onItemRemoved}}
-        @session={{@session}}
         @emptyStateDescription={{i18n
           "discourse_workflows.if.no_conditions_body"
         }}
+        @fieldName={{@fieldName}}
+        @form={{@form}}
+        @formApi={{@formApi}}
+        @label={{@label}}
+        @onAdd={{this.onItemAdded}}
+        @onRemove={{this.onItemRemoved}}
+        @session={{@session}}
         as |ctx|
       >
         <Field
-          @form={{ctx.object}}
-          @formApi={{@formApi}}
           @configuration={{ctx.item}}
           @fieldName="columnName"
-          @schema={{this.columnSchema}}
+          @form={{ctx.object}}
+          @formApi={{@formApi}}
           @label={{i18n "discourse_workflows.if.column"}}
-          @session={{@session}}
           @onSet={{fn this.handleColumnChange ctx.index}}
+          @schema={{this.columnSchema}}
+          @session={{@session}}
         />
 
         {{#let (get this.schemas ctx.index) as |schemas|}}
           {{#if schemas}}
             <ctx.object.Object @name="operator" as |operator|>
               <Field
-                @form={{operator}}
-                @formApi={{@formApi}}
                 @configuration={{ctx.item.operator}}
                 @fieldName="operation"
-                @schema={{schemas.conditionSchema}}
+                @form={{operator}}
+                @formApi={{@formApi}}
                 @label={{i18n "discourse_workflows.if.operator"}}
-                @session={{@session}}
                 @onSet={{fn this.handleConditionChange ctx.index}}
+                @schema={{schemas.conditionSchema}}
+                @session={{@session}}
               />
             </ctx.object.Object>
 
             {{#unless schemas.singleValue}}
               <Field
-                @form={{ctx.object}}
-                @formApi={{@formApi}}
                 @configuration={{ctx.item}}
                 @fieldName="value"
-                @schema={{VALUE_SCHEMA}}
+                @form={{ctx.object}}
+                @formApi={{@formApi}}
                 @label={{i18n "discourse_workflows.if.value"}}
+                @schema={{VALUE_SCHEMA}}
                 @session={{@session}}
               />
             {{/unless}}

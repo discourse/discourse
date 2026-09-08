@@ -1387,7 +1387,7 @@ export default class BoardsBoardViewer extends Component {
     >
       <div class="discourse-boards-board-viewer__header">
         <div class="discourse-boards-board-viewer__title-wrapper">
-          <BackButton @route="boards" @label="boards.board.all_boards" />
+          <BackButton @label="boards.board.all_boards" @route="boards" />
           <h2
             class="discourse-boards-board-viewer__title"
           >{{this.board.fancyTitle}}</h2>
@@ -1418,8 +1418,8 @@ export default class BoardsBoardViewer extends Component {
 
         <div class="discourse-boards-board-viewer__controls">
           <DMenu
-            @identifier="boards-board-controls"
             @icon="ellipsis"
+            @identifier="boards-board-controls"
             @title="boards.board.controls"
             @triggerClass="btn-flat"
           >
@@ -1428,26 +1428,26 @@ export default class BoardsBoardViewer extends Component {
                 {{#if this.canManage}}
                   <dropdown.item data-identifier="add-column">
                     <DButton
+                      class="btn-transparent"
                       @action={{fn this.openAddColumnModal args.close}}
                       @icon="plus"
                       @label="boards.board.add_column"
-                      class="btn-transparent"
                     />
                   </dropdown.item>
                   <dropdown.item data-identifier="board-settings">
                     <DButton
+                      class="btn-transparent"
                       @action={{fn this.openBoardSettings args.close}}
                       @icon="gear"
                       @label="boards.board.board_settings"
-                      class="btn-transparent"
                     />
                   </dropdown.item>
                   <dropdown.item data-identifier="delete-board">
                     <DButton
+                      class="btn-transparent btn-danger"
                       @action={{fn this.deleteBoard args.close}}
                       @icon="trash-can"
                       @label="boards.board.delete_board"
-                      class="btn-transparent btn-danger"
                     />
                   </dropdown.item>
                 {{/if}}
@@ -1456,17 +1456,17 @@ export default class BoardsBoardViewer extends Component {
           </DMenu>
           {{#if this.fullscreen}}
             <DButton
+              class="btn-flat discourse-boards-board-viewer__exit-fullscreen"
               @action={{this.exitFullscreen}}
               @icon="discourse-compress"
               @title="boards.board.exit_fullscreen"
-              class="btn-flat discourse-boards-board-viewer__exit-fullscreen"
             />
           {{else}}
             <DButton
+              class="btn-flat"
               @action={{this.toggleFullscreen}}
               @icon="discourse-expand"
               @title="boards.board.fullscreen"
-              class="btn-flat"
             />
           {{/if}}
         </div>
@@ -1482,35 +1482,35 @@ export default class BoardsBoardViewer extends Component {
         >
           {{#each this.columns key="id" as |column|}}
             <BoardsColumn
-              @column={{column}}
-              @board={{this.board}}
-              @canWrite={{this.canWrite}}
-              @canManage={{this.canManage}}
+              @allColumns={{this.columns}}
               @allSameCategory={{this.allSameCategory}}
-              @dropHighlightCardId={{this.dropHighlightCardId}}
-              @linkHighlightCardId={{this.linkHighlightCardId}}
-              @linkedCardId={{this.linkedCardId}}
+              @board={{this.board}}
+              @canManage={{this.canManage}}
+              @canWrite={{this.canWrite}}
+              @column={{column}}
               @dragData={{this.dragData}}
-              @onDragStart={{this.onDragStart}}
-              @onDragEnd={{this.onDragEnd}}
-              @onDrop={{this.onDrop}}
+              @dropHighlightCardId={{this.dropHighlightCardId}}
+              @linkedCardId={{this.linkedCardId}}
+              @linkHighlightCardId={{this.linkHighlightCardId}}
               @onAddCard={{this.onAddCard}}
-              @onUpdateCard={{this.onUpdateCard}}
+              @onClearColumn={{this.clearColumn}}
               @onDeleteCard={{this.onDeleteCard}}
-              @onPromoteToTopic={{this.onPromoteToTopic}}
-              @onRefreshBoard={{this.refreshBoard}}
+              @onDeleteColumn={{this.deleteColumn}}
+              @onDragEnd={{this.onDragEnd}}
+              @onDragStart={{this.onDragStart}}
+              @onDrop={{this.onDrop}}
               @onEditColumn={{this.openEditColumnModal}}
               @onMoveColumn={{this.moveColumn}}
-              @onDeleteColumn={{this.deleteColumn}}
-              @onClearColumn={{this.clearColumn}}
-              @allColumns={{this.columns}}
+              @onPromoteToTopic={{this.onPromoteToTopic}}
+              @onRefreshBoard={{this.refreshBoard}}
+              @onUpdateCard={{this.onUpdateCard}}
             />
           {{/each}}
           {{#if this.canManage}}
             <button
-              type="button"
               class="discourse-boards-board-container__add-column"
               title={{i18n "boards.board.add_column"}}
+              type="button"
               {{on "click" this.openAddColumnModal}}
               {{matchLastColumnHeight}}
             >
@@ -1526,10 +1526,10 @@ export default class BoardsBoardViewer extends Component {
             <p>{{i18n "boards.board.empty_board_cta"}}</p>
             {{#if this.canManage}}
               <DButton
+                class="btn-primary"
                 @action={{this.openAddColumnModal}}
                 @icon="plus"
                 @label="boards.board.add_column"
-                class="btn-primary"
               />
             {{/if}}
           </div>

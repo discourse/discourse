@@ -650,17 +650,17 @@ export default class ImageNodeView extends Component {
 
   <template>
     <img
-      src={{@node.attrs.src}}
       alt={{@node.attrs.alt}}
+      data-orig-src={{@node.attrs.originalSrc}}
+      data-placeholder={{@node.attrs.placeholder}}
+      data-scale={{@node.attrs.scale}}
+      data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
+      height={{@node.attrs.height}}
+      role="button"
+      src={{@node.attrs.src}}
+      style={{this.imageStyle}}
       title={{@node.attrs.title}}
       width={{@node.attrs.width}}
-      height={{@node.attrs.height}}
-      data-orig-src={{@node.attrs.originalSrc}}
-      data-scale={{@node.attrs.scale}}
-      data-placeholder={{@node.attrs.placeholder}}
-      data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
-      style={{this.imageStyle}}
-      role="button"
       {{didInsert this.setupImage}}
       {{on "load" this.updateImageLoaded}}
       {{! eslint-disable ember/template-no-pointer-down-event-binding }}
@@ -673,10 +673,10 @@ export default class ImageNodeView extends Component {
           class="upload-placeholder__progress"
         >{{this.uploadProgress}}%</span>
         <button
-          class="upload-placeholder__cancel btn-transparent no-text"
-          title={{i18n "cancel"}}
           aria-label={{i18n "cancel"}}
+          class="upload-placeholder__cancel btn-transparent no-text"
           contenteditable="false"
+          title={{i18n "cancel"}}
           {{on "click" this.cancelUpload}}
         >{{icon "xmark"}}</button>
       </span>

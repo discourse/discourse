@@ -68,10 +68,10 @@ export default class WorkflowsUserModal extends Component {
 
   <template>
     <DModal
-      @title={{@model.title}}
-      @closeModal={{@closeModal}}
-      @beforeClose={{this.propagateDismissal}}
       class="workflows-user-modal"
+      @beforeClose={{this.propagateDismissal}}
+      @closeModal={{@closeModal}}
+      @title={{@model.title}}
     >
       <:body>
         {{#if @model.body}}
@@ -82,9 +82,9 @@ export default class WorkflowsUserModal extends Component {
         {{#each this.buttons as |button|}}
           <DButton
             class={{button.styleClass}}
-            @translatedLabel={{button.label}}
             @action={{fn this.respond button}}
             @disabled={{this.submitting}}
+            @translatedLabel={{button.label}}
           />
         {{/each}}
       </:footer>

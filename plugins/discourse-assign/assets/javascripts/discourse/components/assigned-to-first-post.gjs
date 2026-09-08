@@ -124,7 +124,7 @@ export default class AssignedToFirstPost extends Component {
             as |indirectAssignment|
           }}
             <span class="assignee">
-              <a href={{indirectAssignment.url}} class="assigned-indirectly">
+              <a class="assigned-indirectly" href={{indirectAssignment.url}}>
                 {{i18n
                   "discourse_assign.assign_post_to_multiple"
                   post_number=indirectAssignment.postNumber

@@ -15,9 +15,9 @@ const Member = <template>
   >
     {{#if (eq @member.type "user")}}
       <ChatUserAvatar
-        @user={{@member.model}}
         @interactive={{false}}
         @showPresence={{false}}
+        @user={{@member.model}}
       />
       <span class="chat-message-creator__member-username">
         {{@member.model.username}}

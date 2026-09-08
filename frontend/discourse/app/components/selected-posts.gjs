@@ -13,8 +13,8 @@ export default class SelectedPosts extends Component {
     <div ...attributes>
       <p>
         <DCountI18n
-          @key="topic.multi_select.description"
           @count={{this.selectedPostsCount}}
+          @key="topic.multi_select.description"
         />
       </p>
 
@@ -36,37 +36,37 @@ export default class SelectedPosts extends Component {
 
       {{#if this.canDeleteSelected}}
         <DButton
+          class="btn-danger"
           @action={{this.deleteSelected}}
           @icon="trash-can"
           @label="topic.multi_select.delete"
-          class="btn-danger"
         />
       {{/if}}
 
       {{#if this.canMergeTopic}}
         <DButton
+          class="btn-primary move-to-topic"
           @action={{routeAction "moveToTopic"}}
           @icon="right-from-bracket"
           @label="topic.move_to.action"
-          class="btn-primary move-to-topic"
         />
       {{/if}}
 
       {{#if this.canChangeOwner}}
         <DButton
+          class="btn-primary"
           @action={{routeAction "changeOwner"}}
           @icon="user"
           @label="topic.change_owner.action"
-          class="btn-primary"
         />
       {{/if}}
 
       {{#if this.canMergePosts}}
         <DButton
+          class="btn-primary"
           @action={{this.mergePosts}}
           @icon="up-down"
           @label="topic.merge_posts.action"
-          class="btn-primary"
         />
       {{/if}}
 

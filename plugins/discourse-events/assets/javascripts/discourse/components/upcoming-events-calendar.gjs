@@ -188,16 +188,16 @@ export default class UpcomingEventsCalendar extends Component {
   <template>
     <div id="upcoming-events-calendar">
       <FullCalendar
-        @initialDate={{@initialDate}}
-        @onDatesChange={{this.onDatesChange}}
-        @onDateClick={{if this.canCreateEvent this.onDateClick}}
-        @onLoadEvents={{this.loadEvents}}
-        @initialView={{@initialView}}
-        @customButtons={{this.customButtons}}
-        @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
-        @rightHeaderToolbar={{this.rightHeaderToolbar}}
+        @customButtons={{this.customButtons}}
+        @initialDate={{@initialDate}}
+        @initialView={{@initialView}}
+        @leftHeaderToolbar={{this.leftHeaderToolbar}}
+        @onDateClick={{if this.canCreateEvent this.onDateClick}}
+        @onDatesChange={{this.onDatesChange}}
+        @onLoadEvents={{this.loadEvents}}
         @refreshKey={{this.refreshKey}}
+        @rightHeaderToolbar={{this.rightHeaderToolbar}}
       />
     </div>
   </template>

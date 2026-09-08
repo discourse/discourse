@@ -115,18 +115,18 @@ export default class CategoryTopicTemplateEditor extends Component {
         {{i18n "category.topic_title_placeholder"}}
       </label>
       <DTextField
-        @value={{this.topicTitlePlaceholder}}
         @id="category-topic-title-placeholder"
-        @placeholderKey="category.topic_title_placeholder_placeholder"
         @onChange={{this.handleTopicTitlePlaceholderChange}}
+        @placeholderKey="category.topic_title_placeholder_placeholder"
+        @value={{this.topicTitlePlaceholder}}
       />
     </div>
     {{#if this.siteSettings.enable_form_templates}}
       <div class="control-group">
         <DToggleSwitch
           class="toggle-template-type"
-          @state={{this.showFormTemplate}}
           @label={{this.templateTypeToggleLabel}}
+          @state={{this.showFormTemplate}}
           {{on "click" this.toggleTemplateType}}
         />
       </div>
@@ -134,9 +134,9 @@ export default class CategoryTopicTemplateEditor extends Component {
       {{#if this.showFormTemplate}}
         <div class="control-group">
           <FormTemplateChooser
-            @value={{@category.form_template_ids}}
-            @onChange={{this.handleFormTemplateChange}}
             class="select-category-template"
+            @onChange={{this.handleFormTemplateChange}}
+            @value={{@category.form_template_ids}}
           />
 
           <p class="select-category-template__info desc">
@@ -151,16 +151,16 @@ export default class CategoryTopicTemplateEditor extends Component {
         </div>
       {{else}}
         <DEditor
-          @value={{this.topicTemplate}}
-          @showLink={{this.showInsertLinkButton}}
           @change={{this.handleTopicTemplateChange}}
+          @showLink={{this.showInsertLinkButton}}
+          @value={{this.topicTemplate}}
         />
       {{/if}}
     {{else}}
       <DEditor
-        @value={{this.topicTemplate}}
-        @showLink={{this.showInsertLinkButton}}
         @change={{this.handleTopicTemplateChange}}
+        @showLink={{this.showInsertLinkButton}}
+        @value={{this.topicTemplate}}
       />
     {{/if}}
   </template>

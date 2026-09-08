@@ -295,7 +295,7 @@ export default class InputContext extends Component {
           {{#if section.fields.length}}
             <ul class="workflows-schema-field-list">
               {{#each section.fields as |field|}}
-                <SchemaField @field={{field}} @draggable={{true}} />
+                <SchemaField @draggable={{true}} @field={{field}} />
               {{/each}}
             </ul>
           {{else}}
@@ -314,7 +314,7 @@ export default class InputContext extends Component {
 
         <ul class="workflows-schema-field-list">
           {{#each this.environmentFields as |field|}}
-            <SchemaField @field={{field}} @draggable={{true}} />
+            <SchemaField @draggable={{true}} @field={{field}} />
           {{/each}}
         </ul>
       </div>
@@ -335,7 +335,7 @@ export default class InputContext extends Component {
 
           <ul class="workflows-schema-field-list">
             {{#each ancestor.fields as |field|}}
-              <SchemaField @field={{field}} @draggable={{true}} />
+              <SchemaField @draggable={{true}} @field={{field}} />
             {{/each}}
           </ul>
         </div>

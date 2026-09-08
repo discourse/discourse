@@ -83,12 +83,12 @@ export default class DPostAccordion extends Component {
             {{#each this.posts as |post|}}
               <DPostAccordionItem
                 @decoratorState={{@decoratorState}}
-                @post={{post}}
-                @isExpanded={{this.itemIsExpanded post.id}}
-                @onToggleExpanded={{fn this.toggleItemExpanded post.id}}
-                @linesDisplayed={{@linesDisplayed}}
-                @hasItemMetadataBlock={{has-block "itemMetadata"}}
                 @hasBeforeItemContentBlock={{has-block "beforeItemContent"}}
+                @hasItemMetadataBlock={{has-block "itemMetadata"}}
+                @isExpanded={{this.itemIsExpanded post.id}}
+                @linesDisplayed={{@linesDisplayed}}
+                @onToggleExpanded={{fn this.toggleItemExpanded post.id}}
+                @post={{post}}
               >
 
                 <:itemMetadata>

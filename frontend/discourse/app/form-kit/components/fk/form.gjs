@@ -358,8 +358,8 @@ class FKForm extends Component {
 
   <template>
     <form
-      novalidate
       class="form-kit"
+      novalidate
       ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
@@ -412,16 +412,16 @@ class FKForm extends Component {
 const Form = <template>
   {{#each (array @data) as |data|}}
     <FKForm
-      @data={{data}}
+      ...attributes
       @commitOnSubmit={{@commitOnSubmit}}
-      @onSubmit={{@onSubmit}}
-      @validate={{@validate}}
-      @validateOn={{@validateOn}}
+      @data={{data}}
+      @onDirtyCheck={{@onDirtyCheck}}
       @onRegisterApi={{@onRegisterApi}}
       @onReset={{@onReset}}
       @onSet={{@onSet}}
-      @onDirtyCheck={{@onDirtyCheck}}
-      ...attributes
+      @onSubmit={{@onSubmit}}
+      @validate={{@validate}}
+      @validateOn={{@validateOn}}
       as |components draftData|
     >
       {{yield components draftData}}

@@ -48,8 +48,8 @@ export default class ChatDrawerRoutesChannel extends Component {
             {{#if this.canSearchChat}}
               <a.Filter
                 @channel={{@model.channel}}
-                @onToggleFilter={{this.toggleIsFiltering}}
                 @isFiltering={{this.isFiltering}}
+                @onToggleFilter={{this.toggleIsFiltering}}
               />
             {{/if}}
 
@@ -65,11 +65,11 @@ export default class ChatDrawerRoutesChannel extends Component {
           <div class="chat-drawer-content">
             {{#each (array @model.channel) as |channel|}}
               <ChatChannel
-                @targetMessageId={{readonly @params.messageId}}
                 @channel={{channel}}
+                @disableKeystrokeCapture={{true}}
                 @isFiltering={{this.isFiltering}}
                 @onToggleFilter={{this.toggleIsFiltering}}
-                @disableKeystrokeCapture={{true}}
+                @targetMessageId={{readonly @params.messageId}}
               />
             {{/each}}
           </div>

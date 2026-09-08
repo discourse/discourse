@@ -475,20 +475,20 @@ export default class GoogleDfpAd extends AdComponent {
           <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2
             >{{i18n "adplugin.advertisement_label"}}</h2></div>
           <div
+            align="center"
+            class="dfp-ad-unit"
             id={{this.divId}}
             style={{this.adWrapperStyle}}
-            class="dfp-ad-unit"
-            align="center"
           ></div>
         {{else}}
           <div class="google-dfp-ad-label"><h2>{{i18n
                 "adplugin.advertisement_label"
               }}</h2></div>
           <div
+            align="center"
+            class="dfp-ad-unit"
             id={{this.divId}}
             style={{this.adWrapperStyle}}
-            class="dfp-ad-unit"
-            align="center"
           ></div>
         {{/if}}
       {{/if}}

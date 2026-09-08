@@ -152,16 +152,16 @@ export default class ChatComposerUploads extends Component {
         <div class="chat-composer-uploads-container">
           {{#each this.uploads as |upload|}}
             <ChatComposerUpload
-              @upload={{upload}}
               @isDone={{true}}
               @onCancel={{fn this.removeUpload upload}}
+              @upload={{upload}}
             />
           {{/each}}
 
           {{#each this.inProgressUploads as |upload|}}
             <ChatComposerUpload
-              @upload={{upload}}
               @onCancel={{fn this.cancelUploading upload}}
+              @upload={{upload}}
             />
           {{/each}}
         </div>
@@ -169,8 +169,8 @@ export default class ChatComposerUploads extends Component {
 
       <DPickFilesButton
         @allowMultiple={{true}}
-        @fileInputId={{this.fileUploadElementId}}
         @fileInputClass="hidden-upload-field"
+        @fileInputId={{this.fileUploadElementId}}
         @registerFileInput={{this.uppyUpload.setup}}
       />
     </div>

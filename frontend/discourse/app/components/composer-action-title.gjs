@@ -48,22 +48,22 @@ export default class ComposerActionTitle extends Component {
 
   <template>
     <div class="composer-action-title" ...attributes>
-      <span class="action-title" role="heading" aria-level="1">
+      <span aria-level="1" class="action-title" role="heading">
         <ComposerActions
-          @composerModel={{this.model}}
-          @replyOptions={{this.model.replyOptions}}
           @action={{this.model.action}}
-          @topic={{this.model.topic}}
+          @composerModel={{this.model}}
           @post={{this.model.post}}
+          @replyOptions={{this.model.replyOptions}}
+          @topic={{this.model.topic}}
         />
 
         {{#if this.replyTargetSegment}}
           {{#if this.canEditReplyTo}}
             <DButton
+              class="composer-edit-reply-to btn-default"
               @action={{this.openChangeReplyToModal}}
               @title="composer.change_reply_to.open"
               @translatedLabel={{this.replyTargetSegment}}
-              class="composer-edit-reply-to btn-default"
             />
           {{else}}
             {{this.replyTargetSegment}}

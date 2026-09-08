@@ -322,10 +322,10 @@ export default class SupportSection extends Component {
 
   <template>
     <DashboardSection
-      @title={{i18n "admin.dashboard.sections.support.title"}}
-      @startDate={{@startDate}}
-      @endDate={{@endDate}}
       ...attributes
+      @endDate={{@endDate}}
+      @startDate={{@startDate}}
+      @title={{i18n "admin.dashboard.sections.support.title"}}
       {{didUpdate this.onPeriodChange @startDate @endDate}}
     >
       {{#if @fetchError}}
@@ -347,9 +347,9 @@ export default class SupportSection extends Component {
                 </div>
                 <div class="db-section__metric-label">
                   <LinkTo
-                    @route="adminReports.show"
                     @model={{this.resolutionRate.reportType}}
                     @query={{this.resolutionRate.reportQuery}}
+                    @route="adminReports.show"
                   >
                     {{i18n
                       "admin.dashboard.sections.support.kpi.resolution_rate.label"
@@ -357,10 +357,10 @@ export default class SupportSection extends Component {
                   </LinkTo>
                   <DTooltip
                     class="db-section__info"
-                    @icon="far-circle-question"
                     @content={{i18n
                       "admin.dashboard.sections.support.kpi.resolution_rate.tooltip"
                     }}
+                    @icon="far-circle-question"
                   />
                 </div>
                 <DeltaPill @delta={{this.resolutionRate}} />
@@ -376,10 +376,10 @@ export default class SupportSection extends Component {
                   }}
                   <DTooltip
                     class="db-section__info"
-                    @icon="far-circle-question"
                     @content={{i18n
                       "admin.dashboard.sections.support.kpi.staff_involvement.tooltip"
                     }}
+                    @icon="far-circle-question"
                   />
                 </div>
                 <DeltaPill @delta={{this.staffInvolvement}} />
@@ -395,10 +395,10 @@ export default class SupportSection extends Component {
                   }}
                   <DTooltip
                     class="db-section__info"
-                    @icon="far-circle-question"
                     @content={{i18n
                       "admin.dashboard.sections.support.kpi.avg_first_reply.tooltip"
                     }}
+                    @icon="far-circle-question"
                   />
                 </div>
                 <DeltaPill @delta={{this.avgFirstReply}} />
@@ -410,8 +410,8 @@ export default class SupportSection extends Component {
         {{#if this.showFilter}}
           <div class="db-support__filter">
             <MultipleCategoriesSelector
-              @categories={{this.selectedCategories}}
               @blockedCategories={{this.blockedCategories}}
+              @categories={{this.selectedCategories}}
               @onChange={{this.onCategoriesChange}}
               @onClose={{this.onClose}}
               @options={{hash maximum=MAX_CATEGORIES none="category.all"}}

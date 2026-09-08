@@ -95,9 +95,9 @@ export default class ChatMessageSeparator extends Component {
           "chat-message-separator-date"
           (if this.isNewestMessage "with-last-visit")
         }}
+        data-id={{@message.id}}
         role="button"
         {{on "click" this.onDateClick passive=true}}
-        data-id={{@message.id}}
       >
         <div class="chat-message-separator__text-container" {{this.track}}>
           <span class="chat-message-separator__text">

@@ -154,12 +154,12 @@ export default class CategoryCalendar extends Component {
   <template>
     {{#if this.shouldRender}}
       <FullCalendar
-        @onLoadEvents={{this.loadEvents}}
-        @onDateClick={{if this.canCreateEvent this.onDateClick}}
         @height="650px"
         @initialView={{this.categorySetting.defaultView}}
-        @weekends={{this.renderWeekends}}
+        @onDateClick={{if this.canCreateEvent this.onDateClick}}
+        @onLoadEvents={{this.loadEvents}}
         @refreshKey={{this.refreshKey}}
+        @weekends={{this.renderWeekends}}
       />
     {{/if}}
   </template>

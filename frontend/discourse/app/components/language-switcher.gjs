@@ -115,10 +115,10 @@ export default class LanguageSwitcher extends Component {
 
   <template>
     <DMenu
-      @identifier="language-switcher"
-      @title={{i18n "language_switcher.title"}}
       class="btn-flat"
+      @identifier="language-switcher"
       @onRegisterApi={{this.onRegisterApi}}
+      @title={{i18n "language_switcher.title"}}
     >
       <:trigger>
         <span class="language-switcher__locale">
@@ -134,8 +134,8 @@ export default class LanguageSwitcher extends Component {
               data-menu-option-id={{option.value}}
             >
               <DButton
-                @translatedLabel={{option.name}}
                 @action={{fn this.changeLocale option.value}}
+                @translatedLabel={{option.name}}
               />
             </dropdown.item>
           {{/each}}

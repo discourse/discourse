@@ -82,24 +82,24 @@ export default class EmbeddableHost extends Component {
         <div class="d-table__cell-actions">
           <DButton
             class="btn-default btn-small admin-embeddable-host-item__edit"
+            @label="admin.embedding.edit"
             @route="adminEmbedding.edit"
             @routeModels={{this.host}}
-            @label="admin.embedding.edit"
           />
           <DMenu
-            @identifier="embedding-host-menu"
-            @title={{i18n "admin.embedding.more_options.title"}}
             @icon="ellipsis-vertical"
+            @identifier="embedding-host-menu"
             @onRegisterApi={{this.onRegisterApi}}
+            @title={{i18n "admin.embedding.more_options.title"}}
           >
             <:content>
               <DDropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
-                    @action={{this.delete}}
-                    @label="admin.embedding.delete"
-                    @icon="trash-can"
                     class="btn-transparent --danger admin-embeddable-host-item__delete"
+                    @action={{this.delete}}
+                    @icon="trash-can"
+                    @label="admin.embedding.delete"
                   />
                 </dropdown.item>
               </DDropdownMenu>
