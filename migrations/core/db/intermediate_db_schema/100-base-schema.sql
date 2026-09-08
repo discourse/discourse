@@ -420,7 +420,7 @@ CREATE TABLE topics
 
 CREATE INDEX idx_topics_archetype ON topics (archetype);
 
-CREATE TABLE uploads
+CREATE TABLE upload_sources
 (
     id          TEXT         NOT NULL PRIMARY KEY,
     data        BLOB,
