@@ -59,13 +59,26 @@ class Admin::WatchedWordsController < Admin::StaffController
     has_replacement = WatchedWord.has_replacement?(action_key)
 
     content = File.read(file.tempfile, encoding: "bom|utf-8")
+    max_words = WatchedWord::MAX_WORDS_PER_ACTION
+
+    rows =
+      begin
+        CSV.new(content).lazy.select { |row| row[0].present? }.first(max_words + 1)
+      rescue CSV::MalformedCSVError => e
+        return render_json_error(e.message, status: :unprocessable_entity)
+      end
+
+    if rows.size > max_words
+      error = I18n.t("watched_words.upload_too_many_csv_entries", count: max_words)
+      return render_json_error(error, status: :unprocessable_entity)
+    end
 
     Scheduler::Defer.later("Upload watched words") do
       begin
         words_updated = 0
 
-        CSV.parse(content) do |row|
-          if row[0].present? && (!has_replacement || row[1].present?)
+        rows.each do |row|
+          if !has_replacement || row[1].present?
             watched_word =
               WatchedWord.create_or_update_word(
                 word: row[0],
