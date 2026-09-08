@@ -24,7 +24,7 @@ RSpec.describe Jobs::CreateUserReviewable do
     expect(reviewable.reviewable_scores.size).to eq(1)
   end
 
-  it "refreshes the payload when reopening a reviewable" do
+  it "shows staff the current email when a user returns to the review queue" do
     SiteSetting.must_approve_users = true
     described_class.new.execute(user_id: user.id)
     reviewable = Reviewable.find_by(target: user)
