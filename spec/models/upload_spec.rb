@@ -1015,12 +1015,12 @@ RSpec.describe Upload do
       expect(ico_image.dominant_color).to eq("")
     end
 
-    it "retries the dominant color after image processing fails" do
+    it "stores an empty dominant color after image processing fails" do
       global_setting :enable_vips_image_processing, true
       DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error).then.returns("FFFFFF")
 
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq(nil)
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
     end
 
     it "can be backfilled" do

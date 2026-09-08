@@ -429,13 +429,11 @@ class Upload < ActiveRecord::Base
 
             color
           end
-        rescue DiscourseVips::InvalidImage, Discourse::Utils::CommandError
+        rescue DiscourseVips::Error, Discourse::Utils::CommandError
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation
           ""
-        rescue DiscourseVips::Error
-          nil
         end
     end
 
