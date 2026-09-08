@@ -88,7 +88,6 @@ module DiscourseVips
           server.fileno => server,
           owner_reader.fileno => owner_reader,
           :in => File::NULL,
-          :out => File::NULL,
           :close_others => true,
           :pgroup => true,
           :unsetenv_others => true,
