@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { render, settled, waitFor } from "@ember/test-helpers";
+import { render, settled, waitFor, waitUntil } from "@ember/test-helpers";
+import { startCompletion } from "@codemirror/autocomplete";
 import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
 import { capabilities } from "discourse/services/capabilities";
@@ -143,6 +144,41 @@ module("Integration | Component | code-editor", function (hooks) {
 
     assert.strictEqual(saved, 1, "save fires on its shortcut");
     assert.strictEqual(submitted, 1, "submit fires on its shortcut");
+  });
+
+  test("surfaces the completions a language contributes", async function (assert) {
+    let view;
+    const onSetup = (editorView) => (view = editorView);
+    const languageOptions = {
+      schema: { badges: ["allow_title", "grant_count"] },
+    };
+
+    await render(
+      <template>
+        <CodeEditor
+          @language="sql"
+          @languageOptions={{languageOptions}}
+          @value="SELECT badges."
+          @onSetup={{onSetup}}
+        />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+
+    view.dispatch({ selection: { anchor: view.state.doc.length } });
+    startCompletion(view);
+    await waitUntil(() =>
+      document.querySelector(".cm-tooltip-autocomplete li")
+    );
+
+    const labels = [
+      ...document.querySelectorAll(".cm-tooltip-autocomplete li"),
+    ].map((li) => li.textContent.trim());
+
+    assert.true(
+      labels.includes("allow_title"),
+      "a column from the configured schema is offered"
+    );
   });
 
   test("resizable adds a drag handle", async function (assert) {

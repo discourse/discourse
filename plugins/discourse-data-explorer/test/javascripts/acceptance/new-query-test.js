@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { fillInCodeEditor } from "discourse/tests/helpers/code-editor-helper";
 import {
   acceptance,
   publishToMessageBus,
@@ -120,7 +121,7 @@ acceptance("New Query", function (needs) {
       .dom(".query-new__manual-form .right-panel .schema")
       .exists("schema sidebar renders");
     assert
-      .dom(".query-new__manual-form .editor-panel .ace-wrapper")
+      .dom(".query-new__manual-form .editor-panel .code-editor")
       .exists("SQL editor renders alongside the schema sidebar");
 
     await click(".query-new__manual-form .schema__toggle.--collapse");
@@ -174,9 +175,10 @@ acceptance("New Query", function (needs) {
   test("group access survives creating a query with no SQL", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/new");
 
-    document
-      .querySelector(".query-new__manual-form .editor-panel .ace_editor")
-      .env.editor.setValue("", 1);
+    await fillInCodeEditor(
+      ".query-new__manual-form .editor-panel .code-editor",
+      ""
+    );
 
     const groups = selectKit(
       ".query-new__manual-form [data-name='groupIds'] .query-group-select"
@@ -381,7 +383,7 @@ acceptance("New Query - AI", function (needs) {
     await click(".query-results-modes input[value='sql']");
 
     assert
-      .dom(".query-new__sql-editor .ace-wrapper")
+      .dom(".query-new__sql-editor .code-editor")
       .exists("the SQL is available behind its own tab");
   });
 

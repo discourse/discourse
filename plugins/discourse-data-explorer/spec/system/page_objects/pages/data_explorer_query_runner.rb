@@ -100,10 +100,14 @@ module PageObjects
       end
 
       def fill_new_query_sql(text)
-        page.execute_script(
-          "document.querySelector('.query-new .editor-panel .ace_editor').env.editor.setValue(arguments[0], 1);",
-          text,
-        )
+        page.execute_script(<<~JS, text)
+          const view = document
+            .querySelector(".query-new .editor-panel .codemirror-editor")
+            .codemirrorView;
+          view.dispatch({
+            changes: { from: 0, to: view.state.doc.length, insert: arguments[0] },
+          });
+        JS
         self
       end
 

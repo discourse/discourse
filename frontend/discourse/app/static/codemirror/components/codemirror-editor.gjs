@@ -4,7 +4,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { closeCompletion, completionStatus } from "@codemirror/autocomplete";
+import {
+  autocompletion,
+  closeCompletion,
+  completionKeymap,
+  completionStatus,
+} from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { Compartment, EditorState } from "@codemirror/state";
 import {
@@ -175,11 +180,23 @@ export default class CodemirrorEditor extends Component {
       return;
     }
 
+    // Options are read as the language resolves rather than watched, so a
+    // caller passing them inline doesn't reconfigure on every render.
     // A shortcut brings the shared palette with it; consumers that build their
     // own extensions style them however they like.
     this.view.dispatch({
       effects: this.#language.reconfigure(
-        support ? [support(buildCmParams()), defaultHighlighting()] : []
+        support
+          ? [
+              support(buildCmParams(), this.args.languageOptions),
+              defaultHighlighting(),
+              // A language contributes completions through its own source, so
+              // the UI has to be switched on for them to surface. Consumers
+              // building their own extensions bring their own.
+              autocompletion(),
+              keymap.of(completionKeymap),
+            ]
+          : []
       ),
     });
   }

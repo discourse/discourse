@@ -15,6 +15,7 @@ import { i18n } from "discourse-i18n";
  * text editor.
  *
  * @param {string} [language] a name from `discourse/lib/codemirror-languages`
+ * @param {object} [languageOptions] configuration for that language, read when it resolves
  * @param {Function} [extensions] receives the CodeMirror modules, returns extensions
  * @param {string} [value]
  * @param {Function} [onChange] called with the document on every edit
@@ -71,6 +72,7 @@ export default class CodeEditor extends Component {
             @value={{@value}}
             @change={{@onChange}}
             @language={{@language}}
+            @languageOptions={{@languageOptions}}
             @extensions={{@extensions}}
             @readOnly={{@disabled}}
             @placeholder={{@placeholder}}
