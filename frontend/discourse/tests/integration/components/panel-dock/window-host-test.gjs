@@ -9,6 +9,7 @@ import {
   WINDOW_HOST_REGISTRATION,
   windowHostFor,
 } from "discourse/ui-kit/panel-dock/-internals/window-host";
+import { shellKey } from "discourse/ui-kit/panel-dock/-internals/window-shell";
 import { skeletonKey } from "discourse/ui-kit/panel-dock/-internals/window-skeleton";
 
 const STRINGS = Object.freeze({
@@ -24,6 +25,19 @@ const NOTE_SELECTOR = "main.d-panel-dock-window__reconnecting";
 function acquired(outcome, assert) {
   assert.strictEqual(outcome.status, "acquired", "the lease is acquired");
   return outcome.handle;
+}
+
+function connecting(outcome, assert) {
+  assert.strictEqual(outcome.status, "connecting", "the window is on its way");
+  return outcome.connection;
+}
+
+/** Records what a connection reported, so a test can assert on the transition. */
+function watch(connection) {
+  const events = { ready: [], failed: [] };
+  connection.onReady((handle) => events.ready.push(handle));
+  connection.onFailed((reason) => events.failed.push(reason));
+  return events;
 }
 
 async function flushResize(host, name) {
@@ -937,5 +951,492 @@ module("Integration | Component | panel dock window host", function (hooks) {
       "the owner returns one shared host"
     );
     acquired(firstLookup.open("registered-host", STRINGS), assert);
+  });
+
+  /*
+   * ---------------------------------------------------------------------------
+   * Everything below covers the asynchronous open, where the window is a page
+   * served at /panel-window/:key rather than a document the opener writes. None
+   * of it can run until `IframeWindowHost` grows the controls specified here.
+   * The double owns the clock and the poll queue; no test below waits on wall
+   * time, and none of them may be made to pass with a timer.
+   *
+   * scheduleProbe(key, run) — an override of the seam `PanelWindowHostBase` uses
+   *   to schedule its readiness probes, which in the browser is a 250ms timer.
+   *   Queues `run` against `key`, returns a canceller, and never touches a real
+   *   timer.
+   *
+   * tick(key) — runs exactly one queued probe, the way one turn of the budget
+   *   would. Throws when nothing is queued, so a test cannot pass by ticking a
+   *   connection that has already stopped probing.
+   *
+   * expireConnection(key) — ticks until the connection reports a failure, at
+   *   most 200 times. Throws if it resolved instead, or never failed.
+   *
+   * finishLoad(key) — the served shell arrives. Replaces the window's document
+   *   with the markup the route serves: `<html data-d-panel-dock="<key>">` around
+   *   a `.d-panel-dock-window` holding `.d-panel-dock-window__mount`, the hidden
+   *   `.d-panel-dock-window__reconnecting` note with its `[role="status"]`
+   *   sentence, and the float outlets. It must also drop every listener
+   *   registered on that window beforehand, because a navigation replaces the
+   *   global they were registered on. The window object itself stays the same,
+   *   as a real named window does.
+   *
+   * loadForeignPage(key) — the window finishes loading something that is not the
+   *   shell: a login redirect, a 404. Readable, arrived, and carrying no marker.
+   *   Whatever the host tells "still loading" from "arrived" on, this must read
+   *   as arrived; a window that has merely not loaded yet must not.
+   *
+   * makeDocumentUnreachable(key) — reading the window's `document` throws, the
+   *   way a cross-origin navigation makes it.
+   *
+   * announceReady(key, { source }) — dispatches on `openerEvents` the `message`
+   *   the served shell posts once it has rendered. `source` defaults to that
+   *   window; passing another forges the one thing the host has to check.
+   *
+   * resolveWindow(key, resolution) — the new signature. Records every resolution
+   *   in `resolutions`, in order. `{ intent: "adopt" }` returns the named window
+   *   untouched and navigates nothing; `{ intent: "open", url, geometry }`
+   *   creates a window whose document has not loaded yet.
+   *
+   * Three existing behaviours have to follow: `#remember` must follow a
+   * `connecting` outcome through `onReady`, so the handle it delivers is still
+   * counted by `disposeCount`, still honours `makeMountUnavailable`, and is
+   * still released by `teardown`; `teardown` must cancel connections that never
+   * resolved; and `seedPreparedWindow` must write the served shell markup rather
+   * than the skeleton the opener used to write.
+   * ---------------------------------------------------------------------------
+   */
+
+  test("window host connecting refuses a blocked open without taking a lease", function (assert) {
+    const host = hostFor(this);
+    const key = "connecting-blocked";
+    host.armNextResolveRefusal();
+
+    assert.deepEqual(
+      host.open(key, STRINGS),
+      { status: "unavailable" },
+      "a refused window is unavailable rather than connecting"
+    );
+    assert.strictEqual(
+      host.listenerCount("pagehide"),
+      0,
+      "a refusal leaves no opener listener behind"
+    );
+
+    const retry = connecting(host.open(key, STRINGS), assert);
+    assert.strictEqual(
+      host.resolveCount,
+      2,
+      "the refusal left the key free to ask for again"
+    );
+    retry.cancel();
+  });
+
+  test("window host connecting holds its key from the moment it is asked for", function (assert) {
+    const host = hostFor(this);
+    const contender = hostFor(this);
+    const key = "connecting-second-open";
+    const first = connecting(host.open(key, STRINGS), assert);
+
+    assert.deepEqual(
+      contender.open(key, STRINGS),
+      { status: "already-leased" },
+      "a window still loading is as leased as one that arrived"
+    );
+    assert.strictEqual(
+      contender.resolveCount,
+      0,
+      "the competing request changes no browser state"
+    );
+
+    first.cancel();
+    assert.strictEqual(
+      contender.open(key, STRINGS).status,
+      "connecting",
+      "cancelling the first releases the key"
+    );
+  });
+
+  test("window host connecting spends one tick at a time until the budget runs out", function (assert) {
+    const host = hostFor(this);
+    const contender = hostFor(this);
+    const key = "connecting-timeout";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+
+    for (let index = 0; index < 59; index++) {
+      host.tick(key);
+    }
+
+    assert.deepEqual(events.failed, [], "59 ticks leave the connection alive");
+    assert.strictEqual(
+      host.closeCount(key),
+      0,
+      "a window that has not finished loading is not abandoned"
+    );
+
+    host.tick(key);
+
+    assert.deepEqual(events.failed, ["timeout"], "the sixtieth tick ends it");
+    assert.deepEqual(events.ready, [], "a timed-out connection never resolves");
+    assert.strictEqual(
+      host.closeCount(key),
+      1,
+      "the window nothing arrived in is closed once"
+    );
+    assert.strictEqual(
+      host.listenerCount("pagehide"),
+      0,
+      "the host stops listening to the opener"
+    );
+    assert.strictEqual(
+      contender.open(key, STRINGS).status,
+      "connecting",
+      "the lease is free again"
+    );
+  });
+
+  test("window host connecting fails as foreign when the window loads another page", function (assert) {
+    for (const arrival of ["loadForeignPage", "makeDocumentUnreachable"]) {
+      const host = hostFor(this);
+      const contender = hostFor(this);
+      const key = `connecting-foreign-${arrival}`;
+      const events = watch(connecting(host.open(key, STRINGS), assert));
+
+      host[arrival](key);
+      host.tick(key);
+
+      assert.deepEqual(
+        events.failed,
+        ["foreign"],
+        `${arrival} is recognized as somebody else's page`
+      );
+      assert.deepEqual(events.ready, [], `${arrival} resolves nothing`);
+      assert.strictEqual(
+        host.closeCount(key),
+        1,
+        `${arrival} leaves no window standing`
+      );
+      assert.strictEqual(
+        contender.open(key, STRINGS).status,
+        "connecting",
+        `${arrival} frees the lease`
+      );
+    }
+  });
+
+  test("window host connecting fails as closed when the reader closes the pending window", function (assert) {
+    const host = hostFor(this);
+    const contender = hostFor(this);
+    const key = "connecting-reader-close";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+
+    host.closeAsReader(key);
+    host.tick(key);
+
+    assert.deepEqual(events.failed, ["closed"], "the reader had the last word");
+    assert.deepEqual(events.ready, [], "a closed window resolves nothing");
+    assert.strictEqual(
+      host.closeCount(key),
+      0,
+      "a window the reader already closed is not closed again"
+    );
+    assert.strictEqual(
+      contender.open(key, STRINGS).status,
+      "connecting",
+      "the lease is free again"
+    );
+  });
+
+  test("window host connecting takes the shell message as a hint, not as the answer", function (assert) {
+    const host = hostFor(this);
+    const key = "connecting-message-hint";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+
+    host.announceReady(key);
+    assert.deepEqual(
+      events.ready,
+      [],
+      "a message that arrives before the document is the shell proves nothing"
+    );
+
+    host.finishLoad(key);
+    host.announceReady(key);
+
+    assert.strictEqual(
+      events.ready.length,
+      1,
+      "the message resolves the loaded shell without spending a tick"
+    );
+    assert.strictEqual(
+      shellKey(events.ready[0].mount.ownerDocument),
+      key,
+      "what was adopted is the shell the route served"
+    );
+
+    host.announceReady(key);
+    assert.strictEqual(
+      events.ready.length,
+      1,
+      "a repeated message cannot resolve the same connection twice"
+    );
+  });
+
+  test("window host connecting spends no budget on shell messages", function (assert) {
+    const host = hostFor(this);
+    const key = "connecting-message-budget";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+
+    for (let index = 0; index < 20; index++) {
+      host.announceReady(key);
+    }
+    for (let index = 0; index < 59; index++) {
+      host.tick(key);
+    }
+
+    assert.deepEqual(
+      events.failed,
+      [],
+      "messages the probe could not confirm cost the connection nothing"
+    );
+
+    host.tick(key);
+    assert.deepEqual(
+      events.failed,
+      ["timeout"],
+      "the budget is still exactly sixty ticks long"
+    );
+  });
+
+  test("window host connecting ignores a ready message from another window", function (assert) {
+    const host = hostFor(this);
+    const key = "connecting-message-source";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+    const bystander = host.seedBlankWindow("connecting-message-bystander");
+    host.finishLoad(key);
+
+    host.announceReady(key, { source: bystander });
+    assert.deepEqual(
+      events.ready,
+      [],
+      "a message from a window we did not open is not ours to act on"
+    );
+
+    host.tick(key);
+    assert.strictEqual(
+      events.ready.length,
+      1,
+      "the probe still finds the shell the forged message spoke for"
+    );
+  });
+
+  test("window host connecting resolves an open by url and an adopt by name alone", function (assert) {
+    const host = hostFor(this);
+    const openKey = "connecting-open-intent";
+    const adoptKey = "connecting-adopt-intent";
+    const geometry = { width: 731, height: 487, left: 113, top: 79 };
+    host.seedPreparedWindow(adoptKey, adoptKey);
+
+    const connection = connecting(
+      host.open(openKey, STRINGS, geometry),
+      assert
+    );
+    const handle = acquired(host.adopt(adoptKey, STRINGS), assert);
+
+    assert.strictEqual(
+      handle.mount.ownerDocument.defaultView,
+      host.windowFor(adoptKey),
+      "adoption is still answered synchronously, out of the window itself"
+    );
+    assert.deepEqual(
+      host.resolutions[1],
+      { intent: "adopt" },
+      "an adoption carries nothing that could navigate the window it takes over"
+    );
+    assert.strictEqual(host.resolutions[0].intent, "open", "an open navigates");
+    assert.true(
+      host.resolutions[0].url.endsWith(`/panel-window/${openKey}`),
+      "an open is sent to the route serving this context"
+    );
+    assert.deepEqual(
+      host.resolutions[0].geometry,
+      geometry,
+      "the remembered rectangle still reaches the browser"
+    );
+    connection.cancel();
+  });
+
+  test("window host connecting focuses the window on its way and keeps one lease generation", function (assert) {
+    const host = hostFor(this);
+    const key = "connecting-focus";
+    const connection = connecting(host.open(key, STRINGS), assert);
+    const events = watch(connection);
+
+    connection.focus();
+    connection.focus();
+    assert.strictEqual(
+      host.focusCount,
+      2,
+      "each request reaches the window that is still loading"
+    );
+
+    host.finishLoad(key);
+    host.tick(key);
+
+    assert.strictEqual(events.ready.length, 1, "the connection resolves");
+    assert.strictEqual(
+      events.ready[0].generation,
+      connection.generation,
+      "the handle continues the lease the connection took, rather than a new one"
+    );
+
+    events.ready[0].dispose();
+    const replacement = connecting(host.open(key, STRINGS), assert);
+    assert.true(
+      replacement.generation > connection.generation,
+      "a later connection never reuses a generation"
+    );
+  });
+
+  test("window host connecting arms the window's own events only once its shell has loaded", async function (assert) {
+    const host = hostFor(this);
+    const key = "connecting-listen-after-load";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+
+    host.finishLoad(key);
+    host.tick(key);
+
+    assert.strictEqual(events.ready.length, 1, "the connection resolves");
+    const handle = events.ready[0];
+    let pagehideCalls = 0;
+    let resizeCalls = 0;
+    handle.onPagehide(() => pagehideCalls++);
+    handle.onResize(() => resizeCalls++);
+
+    host.resizeReader(key, host.measurementFor(key));
+    host.navigateReader(key);
+    await flushResize(host, key);
+
+    assert.strictEqual(
+      pagehideCalls,
+      1,
+      "the load that replaced the window's global did not take the pagehide listener with it"
+    );
+    assert.strictEqual(resizeCalls, 1, "nor the resize listener");
+  });
+
+  test("window host connecting cancel closes the window and stops probing", function (assert) {
+    const host = hostFor(this);
+    const contender = hostFor(this);
+    const key = "connecting-cancel";
+    const connection = connecting(host.open(key, STRINGS), assert);
+    const events = watch(connection);
+
+    connection.cancel();
+    connection.cancel();
+
+    assert.strictEqual(
+      host.closeCount(key),
+      1,
+      "the abandoned window is closed exactly once"
+    );
+    assert.deepEqual(
+      events.ready,
+      [],
+      "a cancelled connection resolves nothing"
+    );
+    assert.strictEqual(
+      host.listenerCount("pagehide"),
+      0,
+      "the host stops listening to the opener"
+    );
+    assert.throws(
+      () => host.tick(key),
+      "a cancelled connection has nothing left to probe"
+    );
+    assert.strictEqual(
+      contender.open(key, STRINGS).status,
+      "connecting",
+      "the lease is free again"
+    );
+  });
+
+  test("window host connecting closes a window the opener unloads for good before it arrives", function (assert) {
+    const host = hostFor(this);
+    const contender = hostFor(this);
+    const key = "connecting-opener-unload";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+
+    host.fireOpenerPagehide(false);
+
+    // Nothing has recorded this window yet, so leaving it standing would strand
+    // it: no page that follows has any reason to adopt it.
+    assert.strictEqual(
+      host.closeCount(key),
+      1,
+      "a window nothing knows about is closed rather than handed on"
+    );
+    assert.deepEqual(events.ready, [], "the connection never resolves");
+    assert.strictEqual(
+      contender.open(key, STRINGS).status,
+      "connecting",
+      "the lease is free again"
+    );
+  });
+
+  test("window host connecting survives an opener bfcache round trip", function (assert) {
+    const host = hostFor(this);
+    const key = "connecting-bfcache";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+
+    host.fireOpenerPagehide(true);
+    assert.strictEqual(
+      host.closeCount(key),
+      0,
+      "a suspended opener keeps the window it is waiting for"
+    );
+    assert.deepEqual(events.failed, [], "being cached is not a failure");
+
+    host.fireOpenerPageshow(true);
+    host.finishLoad(key);
+    host.tick(key);
+
+    assert.strictEqual(
+      events.ready.length,
+      1,
+      "the connection still completes once the opener comes back"
+    );
+  });
+
+  test("window host connecting is released when its owner destroys the host", function (assert) {
+    const host = hostFor(this);
+    const contender = hostFor(this);
+    const key = "connecting-host-destroy";
+    const events = watch(connecting(host.open(key, STRINGS), assert));
+
+    // The name the container calls, which is not the one the rest of the
+    // codebase reads as "let go of your resources".
+    host.destroy();
+
+    assert.strictEqual(
+      host.closeCount(key),
+      1,
+      "the pending window goes with the host"
+    );
+    assert.deepEqual(
+      events.ready,
+      [],
+      "nothing is delivered to a caller that no longer exists"
+    );
+    assert.strictEqual(
+      host.listenerCount("pagehide"),
+      0,
+      "the opener listener is detached"
+    );
+    assert.strictEqual(
+      contender.open(key, STRINGS).status,
+      "connecting",
+      "the lease is free again"
+    );
   });
 });

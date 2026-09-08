@@ -30,6 +30,13 @@ async function flushWindowResize(host, key) {
   await settled();
 }
 
+/** Delivers the served shell, which is what lets a pending window be taken. */
+async function loadWindow(host, key) {
+  host.finishLoad(key);
+  host.tick(key);
+  await settled();
+}
+
 function addedDockLayer(records) {
   return records.some((record) =>
     [...record.addedNodes].some(
@@ -1057,5 +1064,501 @@ module("Integration | Component | panel dock window mode", function (hooks) {
     assert
       .dom(popupPanel(this.host, "unclamped-window"))
       .doesNotHaveAttribute("style");
+  });
+
+  // A context has to survive three places at once: a storage key, a browser
+  // window name, and a URL segment. Only the last is restrictive, so a context
+  // that cannot be one loses the window and keeps everything else.
+  test("a context that cannot name a window is not offered one", async function (assert) {
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @storageKey="Not/A Segment"
+          @windowable={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-panel-dock__dock-button")
+      .exists({ count: 3 }, "the three edges are still offered");
+    assert
+      .dom(WINDOW_BUTTON)
+      .doesNotExist("the window choice is withheld rather than failing on use");
+  });
+
+  test("a context that cannot name a window still remembers where it was docked", async function (assert) {
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @storageKey="Not/A Segment"
+          @windowable={{true}}
+        />
+      </template>
+    );
+
+    await click(".d-panel-dock__dock-button.--start");
+
+    // Silently dropping a reader's remembered layout because a new feature
+    // tightened an unrelated rule would be a worse bug than the one the rule
+    // prevents. Validation gates the window, never the store.
+    assert.strictEqual(
+      store().getObject("Not/A Segment")?.side,
+      "start",
+      "the docked layout is still stored under the untouched key"
+    );
+  });
+
+  test("a stored window placement is not adopted for a context that cannot name a window", async function (assert) {
+    store().setObject({
+      key: "Not/A Segment",
+      value: { mode: "window", side: "end", width: 320, height: 240 },
+    });
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @storageKey="Not/A Segment"
+          @windowable={{true}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(
+      this.host.adoptCount,
+      0,
+      "no window is asked for on behalf of a key that cannot name one"
+    );
+    assert
+      .dom(".d-panel-dock.--dock-end")
+      .exists("the panel falls back docked");
+  });
+
+  /*
+   * The window is now a page the browser loads, so undocking is asynchronous and
+   * the panel stays where it is until the shell arrives. These lean on the same
+   * `IframeWindowHost` controls specified at the head of the new tests in
+   * `window-host-test.gjs`: `finishLoad`, `tick`, `expireConnection`, and a
+   * `teardown` that cancels connections which never resolved.
+   */
+
+  test("window mode connecting keeps the panel docked until its window has loaded", async function (assert) {
+    const key = "connecting-until-loaded";
+    const original = { mode: "docked", side: "start", width: 400, height: 300 };
+    const modes = [];
+    const onModeChange = (mode) => modes.push(mode);
+    store().setObject({ key, value: original });
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @onModeChange={{onModeChange}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        >
+          <:body>Oracle body</:body>
+        </PanelDockChassis>
+      </template>
+    );
+    await click(WINDOW_BUTTON);
+
+    assert
+      .dom(".d-panel-dock.--dock-start")
+      .exists("the panel stays where it is while the window loads");
+    assert.deepEqual(modes, [], "a window on its way is not a placement");
+    assert.deepEqual(
+      store().getObject(key),
+      original,
+      "nothing is written before the window renders"
+    );
+
+    await loadWindow(this.host, key);
+
+    assert
+      .dom(popupPanel(this.host, key))
+      .includesText("Oracle body", "the loaded window receives the panel");
+    assert
+      .dom(".d-panel-dock-layer")
+      .doesNotExist("the opener keeps no docked copy");
+    assert.deepEqual(modes, ["window"], "the arrival is reported once");
+    assert.strictEqual(store().getObject(key).mode, "window");
+  });
+
+  test("window mode connecting is abandoned when the panel closes", async function (assert) {
+    const key = "connecting-panel-closed";
+    const original = { mode: "docked", side: "start", width: 400, height: 300 };
+    const state = new (class {
+      @tracked isOpen = true;
+    })();
+    const modes = [];
+    const onModeChange = (mode) => modes.push(mode);
+    store().setObject({ key, value: original });
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{state.isOpen}}
+          @onModeChange={{onModeChange}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+    await click(WINDOW_BUTTON);
+
+    state.isOpen = false;
+    await settled();
+
+    assert.strictEqual(
+      this.host.closeCount(key),
+      1,
+      "a window with nothing left to render into it is closed"
+    );
+    assert.deepEqual(modes, [], "an abandoned move is never reported");
+    assert.deepEqual(store().getObject(key), original, "storage is untouched");
+
+    state.isOpen = true;
+    await settled();
+
+    assert
+      .dom(".d-panel-dock.--dock-start")
+      .exists("the panel comes back where it was");
+    assert.strictEqual(
+      this.host.openCount,
+      1,
+      "reopening does not resume the abandoned window"
+    );
+  });
+
+  test("window mode connecting is abandoned when the panel is destroyed", async function (assert) {
+    const key = "connecting-panel-destroyed";
+    const original = { mode: "docked", side: "start", width: 400, height: 300 };
+    const modes = [];
+    const onModeChange = (mode) => modes.push(mode);
+    store().setObject({ key, value: original });
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @onModeChange={{onModeChange}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+    await click(WINDOW_BUTTON);
+
+    await clearRender();
+
+    assert.strictEqual(
+      this.host.closeCount(key),
+      1,
+      "the window outlives nothing"
+    );
+    assert.deepEqual(modes, [], "destruction reports no placement");
+    assert.deepEqual(store().getObject(key), original, "storage is untouched");
+  });
+
+  test("window mode connecting ignores a second click on the window button", async function (assert) {
+    const key = "connecting-second-click";
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+
+    await click(WINDOW_BUTTON);
+    await click(WINDOW_BUTTON);
+
+    assert.strictEqual(
+      this.host.openCount,
+      1,
+      "the second click does not ask for a second window"
+    );
+    assert.strictEqual(
+      this.host.focusCount,
+      1,
+      "it raises the window already on its way instead"
+    );
+    assert.false(
+      warn.called,
+      "asking twice for one's own window is not a collision"
+    );
+
+    await loadWindow(this.host, key);
+
+    assert
+      .dom(popupPanel(this.host, key))
+      .exists("one window still arrives for the two clicks");
+  });
+
+  test("window mode connecting is abandoned by picking a dock side", async function (assert) {
+    const key = "connecting-side-picked";
+    const modes = [];
+    const sides = [];
+    const onDock = (side) => sides.push(side);
+    const onModeChange = (mode) => modes.push(mode);
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @onDock={{onDock}}
+          @onModeChange={{onModeChange}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+    await click(WINDOW_BUTTON);
+
+    await click(".d-panel-dock__dock-button.--bottom");
+
+    assert.strictEqual(
+      this.host.closeCount(key),
+      1,
+      "the window nobody is moving into any more is closed"
+    );
+    assert
+      .dom(".d-panel-dock.--dock-bottom")
+      .exists("the chosen side is applied");
+    assert.deepEqual(sides, ["bottom"], "the side callback still fires");
+    assert.deepEqual(modes, [], "a move that never happened is never reported");
+    assert.strictEqual(store().getObject(key).mode, "docked");
+    assert.throws(
+      () => this.host.tick(key),
+      "an abandoned connection has nothing left to probe"
+    );
+  });
+
+  test("window mode connecting is abandoned when windowable turns off", async function (assert) {
+    const key = "connecting-windowable-off";
+    const original = { mode: "docked", side: "start", width: 400, height: 300 };
+    const state = new (class {
+      @tracked windowable = true;
+    })();
+    const modes = [];
+    const onModeChange = (mode) => modes.push(mode);
+    store().setObject({ key, value: original });
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @onModeChange={{onModeChange}}
+          @storageKey={{key}}
+          @windowable={{state.windowable}}
+        />
+      </template>
+    );
+    await click(WINDOW_BUTTON);
+
+    // The guard that watches this lives on the window branch, which a panel
+    // still waiting for its window has not rendered.
+    state.windowable = false;
+    await settled();
+
+    assert.strictEqual(
+      this.host.closeCount(key),
+      1,
+      "a panel that lost the permission does not keep the window it asked for"
+    );
+    assert
+      .dom(".d-panel-dock.--dock-start")
+      .exists("the panel is left where it was");
+    assert.dom(WINDOW_BUTTON).doesNotExist("window mode is no longer offered");
+    assert.deepEqual(modes, [], "the move is never reported");
+    assert.deepEqual(store().getObject(key), original, "storage is untouched");
+  });
+
+  test("window mode connecting refuses a second panel sharing one context key", async function (assert) {
+    const key = "connecting-shared-key";
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        >
+          <:body>First panel</:body>
+        </PanelDockChassis>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        >
+          <:body>Second panel</:body>
+        </PanelDockChassis>
+      </template>
+    );
+
+    await click(document.querySelectorAll(WINDOW_BUTTON)[0]);
+    await click(document.querySelectorAll(WINDOW_BUTTON)[1]);
+
+    assert.strictEqual(this.host.openCount, 2, "each panel asked once");
+    assert.strictEqual(
+      this.host.resolveCount,
+      1,
+      "only one window is asked of the browser"
+    );
+    assert.true(warn.calledOnce, "the second panel warns about the collision");
+
+    await loadWindow(this.host, key);
+
+    assert
+      .dom(popupPanel(this.host, key))
+      .includesText("First panel", "the holder still completes its move");
+    assert
+      .dom(".d-panel-dock-layer")
+      .exists({ count: 1 }, "the refused panel is still docked in the opener");
+  });
+
+  test("window mode connecting is not abandoned by a stale window branch cleanup", async function (assert) {
+    const key = "connecting-stale-cleanup";
+    const state = new (class {
+      @tracked isOpen = true;
+    })();
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{state.isOpen}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+    await click(WINDOW_BUTTON);
+    await loadWindow(this.host, key);
+    assert
+      .dom(popupPanel(this.host, key))
+      .exists("the panel starts out in its window");
+
+    // The branch cleanup defers its return a whole turn, and the deferred body
+    // knows only the mount count. Nothing below yields, so that turn cannot run
+    // until the panel has legitimately returned and asked for a second window —
+    // one that has mounted no branch, so the count the stale cleanup captured
+    // still matches it.
+    run(() => (state.isOpen = false));
+    run(() => this.host.closeAsReader(key));
+    run(() => (state.isOpen = true));
+    document.querySelector(WINDOW_BUTTON).click();
+    await settled();
+
+    assert.strictEqual(this.host.openCount, 2, "a second window was asked for");
+    assert.strictEqual(
+      this.host.closeCount(key),
+      0,
+      "the stale cleanup does not close the window it never saw"
+    );
+
+    await loadWindow(this.host, key);
+
+    assert
+      .dom(popupPanel(this.host, key))
+      .exists("the replacement still lands in its window");
+    assert.strictEqual(store().getObject(key).mode, "window");
+  });
+
+  test("window mode connecting completes into a window a permanent unload then closes", async function (assert) {
+    const key = "connecting-unload-before-commit";
+    const original = { mode: "docked", side: "start", width: 400, height: 300 };
+    const modes = [];
+    const onModeChange = (mode) => modes.push(mode);
+    store().setObject({ key, value: original });
+    this.host.makeMountUnavailable(key);
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @onModeChange={{onModeChange}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+    await click(WINDOW_BUTTON);
+
+    // One turn: the window arrives, the branch cannot acknowledge it, and the
+    // page goes away for good before anything has recorded the placement.
+    run(() => {
+      this.host.finishLoad(key);
+      this.host.tick(key);
+      this.host.fireOpenerPagehide(false);
+    });
+    await settled();
+
+    assert.strictEqual(
+      this.host.closeCount(key),
+      1,
+      "a window storage never learned about is closed rather than handed on"
+    );
+    assert.deepEqual(
+      store().getObject(key),
+      original,
+      "the placement was never recorded"
+    );
+    assert.deepEqual(modes, [], "and never reported");
+  });
+
+  test("window mode connecting that never loads leaves the panel docked", async function (assert) {
+    const key = "connecting-never-loads";
+    const original = { mode: "docked", side: "end", width: 400, height: 300 };
+    const modes = [];
+    const onModeChange = (mode) => modes.push(mode);
+    store().setObject({ key, value: original });
+
+    await render(
+      <template>
+        <PanelDockChassis
+          @dockable={{true}}
+          @isOpen={{true}}
+          @onModeChange={{onModeChange}}
+          @storageKey={{key}}
+          @windowable={{true}}
+        />
+      </template>
+    );
+    await click(WINDOW_BUTTON);
+
+    this.host.expireConnection(key);
+    await settled();
+
+    assert.dom(".d-panel-dock.--dock-end").exists("the panel never left");
+    assert.strictEqual(
+      this.host.closeCount(key),
+      1,
+      "the window that never arrived is closed"
+    );
+    assert.deepEqual(modes, [], "a move that never happened is never reported");
+    assert.deepEqual(store().getObject(key), original, "storage is untouched");
+    assert.dom(WINDOW_BUTTON).exists("the panel can be asked again");
   });
 });

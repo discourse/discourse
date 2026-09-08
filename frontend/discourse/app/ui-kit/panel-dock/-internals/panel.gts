@@ -21,6 +21,7 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { validContextKey } from "discourse/ui-kit/panel-dock/-internals/context-key";
 import DockPicker from "discourse/ui-kit/panel-dock/-internals/parts/dock-picker";
 import PanelDockInterior, {
   type PanelDockControls,
@@ -315,8 +316,13 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    */
   #storageKey?: string;
 
-  /** The key the window is leased under, which outlives an unnamed panel. */
-  #windowKey!: string;
+  /**
+   * The key the window is leased under, which outlives an unnamed panel.
+   *
+   * `null` when the panel's context cannot also be a URL segment, which is the
+   * only thing that withholds window mode from an otherwise eligible panel.
+   */
+  #windowKey: string | null = null;
   @tracked _side: DockSide;
   @tracked _width: number;
   @tracked _height: number;
@@ -336,7 +342,11 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
     super(owner, args);
 
     this.#storageKey = args.storageKey;
-    this.#windowKey = this.#storageKey ?? guidFor(this);
+    // Validated for the window only. A context that cannot be a URL segment
+    // still stores its docked layout under itself, exactly as before: dropping
+    // a remembered layout because an unrelated rule tightened would be worse
+    // than the mismatch the rule prevents.
+    this.#windowKey = validContextKey(this.#storageKey ?? guidFor(this));
 
     // Read once at construction rather than in getters. The stored layout is
     // only a starting point, and re-reading it on every render would undo a
@@ -477,7 +487,8 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
         // Reading the argument here is what rebuilds the picker when a panel
         // becomes windowable; the two above stay stable so the pressed state
         // re-renders without the picker being replaced.
-        onSelectWindow: this.args.windowable ? this.undock : undefined,
+        onSelectWindow:
+          this.args.windowable && this.#windowKey ? this.undock : undefined,
       },
       getOwner(this)!
     );
@@ -543,6 +554,10 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
   undock() {
     if (this.isWindowed) {
       this._handle?.focus();
+      return;
+    }
+
+    if (!this.#windowKey) {
       return;
     }
 
@@ -624,7 +639,12 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    * held by another panel is that panel's to record, not this one's.
    */
   #adoptStoredWindow() {
-    if (!this.#adoptionPending || !this.args.windowable || !this.args.isOpen) {
+    if (
+      !this.#adoptionPending ||
+      !this.#windowKey ||
+      !this.args.windowable ||
+      !this.args.isOpen
+    ) {
       return;
     }
 
