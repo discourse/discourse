@@ -132,7 +132,7 @@ class ListController < ApplicationController
   def filter
     topic_query_opts = { no_definitions: !SiteSetting.show_category_definitions_in_topic_lists }
 
-    %i[page q].each do |key|
+    %i[page q subset].each do |key|
       if params.key?(key.to_s)
         value = params[key]
         raise Discourse::InvalidParameters.new(key) if !TopicQuery.validate?(key, value)

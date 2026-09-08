@@ -47,6 +47,7 @@ class TopicList
     :category,
     :publish_read_state,
     :filter_option_info,
+    :filter_new_topic_ids,
   )
 
   def initialize(filter, current_user, topics, opts = nil)
