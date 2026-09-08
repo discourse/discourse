@@ -1,31 +1,27 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-@tagName("")
 export default class Collapser extends Component {
-  collapsed = false;
-  header = null;
-  onToggle = null;
+  @tracked collapsed = false;
 
   @action
   open() {
-    this.set("collapsed", false);
-    this.onToggle?.(false);
+    this.collapsed = false;
+    this.args.onToggle?.(false);
   }
 
   @action
   close() {
-    this.set("collapsed", true);
-    this.onToggle?.(true);
+    this.collapsed = true;
+    this.args.onToggle?.(true);
   }
 
   <template>
     <div class="chat-message-collapser-header">
-      {{this.header}}
+      {{@header}}
 
       {{#if this.collapsed}}
         <DButton
