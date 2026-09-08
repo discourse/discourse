@@ -144,7 +144,14 @@ module PageObjects
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)
         when "code"
-          component.find(".ace_text-input", visible: :all).fill_in(with: value)
+          # The editor paints a contenteditable rather than an input, so the
+          # document is set through it rather than typed into a field.
+          page.execute_script(<<~JS, component.find(".codemirror-editor"), value)
+            const view = arguments[0].codemirrorView;
+            view.dispatch({
+              changes: { from: 0, to: view.state.doc.length, insert: arguments[1] },
+            });
+          JS
         else
           raise "Unsupported control type: #{control_type}"
         end

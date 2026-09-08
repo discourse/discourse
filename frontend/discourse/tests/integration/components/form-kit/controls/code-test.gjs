@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -49,9 +49,11 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
   });
 
   test("@lang", async function (assert) {
+    const sqlData = { foo: "SELECT 1" };
+
     await render(
       <template>
-        <Form as |form|>
+        <Form @data={{sqlData}} as |form|>
           <form.Field @name="foo" @title="Foo" @type="code" as |field|>
             <field.Control @lang="sql" />
           </form.Field>
@@ -59,12 +61,15 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
       </template>
     );
 
-    assert.strictEqual(
-      document
-        .querySelector(".form-kit__control-code")
-        .aceEditor.getSession()
-        .getMode().$id,
-      "ace/mode/sql"
+    await waitFor(".form-kit__control-code .cm-content span[class]");
+
+    assert.true(
+      [
+        ...document.querySelectorAll(
+          ".form-kit__control-code .cm-content span"
+        ),
+      ].some((span) => span.textContent.trim() === "SELECT"),
+      "the language shortcut highlights the document"
     );
   });
 
@@ -85,6 +90,8 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
       </template>
     );
 
-    assert.dom(".ace_text-input").hasAttribute("readonly");
+    await waitFor(".cm-content");
+
+    assert.dom(".cm-content").hasAttribute("contenteditable", "false");
   });
 });

@@ -120,6 +120,10 @@ export default class CodemirrorEditor extends Component {
 
     this.#lastValue = initialValue;
 
+    // A handle for callers that only have the element: page objects driving
+    // the document, and anything else outside the component tree.
+    container.codemirrorView = this.view;
+
     this.updateLanguage();
     this.args.onSetup?.(this.view);
   }
