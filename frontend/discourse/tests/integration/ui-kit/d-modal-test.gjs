@@ -33,6 +33,53 @@ module("Integration | ui-kit | DModal", function (hooks) {
     assert.dom(".d-modal .d-modal__subtitle-text").hasText("Modal Subtitle");
   });
 
+  test("modal-name-oracle: title references respect header visibility", async function (assert) {
+    await render(
+      <template>
+        <DModal
+          @hideHeader={{true}}
+          @inline={{true}}
+          @title="admin.search.modal_title"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-modal[role='dialog']")
+      .exists("the hidden-header dialog renders");
+    assert.dom(".d-modal__header").doesNotExist("the header is not rendered");
+    assert
+      .dom(".d-modal[role='dialog']")
+      .doesNotHaveAttribute(
+        "aria-labelledby",
+        "a hidden-header dialog does not reference an unrendered title"
+      );
+
+    await render(
+      <template>
+        <DModal @hideHeader={{false}} @inline={{true}} @title="Modal Title" />
+      </template>
+    );
+
+    assert
+      .dom(".d-modal[role='dialog']")
+      .hasAttribute(
+        "aria-labelledby",
+        "discourse-modal-title",
+        "a visible-header dialog retains its title reference"
+      );
+    assert
+      .dom(".d-modal__header .d-modal__title-text")
+      .hasText("Modal Title", "the visible header renders the title");
+    assert.strictEqual(
+      document.getElementById(
+        find(".d-modal[role='dialog']").getAttribute("aria-labelledby")
+      ),
+      find(".d-modal__header .d-modal__title-text"),
+      "the visible-header dialog's label reference resolves to its rendered title"
+    );
+  });
+
   test("named blocks", async function (assert) {
     await render(
       <template>

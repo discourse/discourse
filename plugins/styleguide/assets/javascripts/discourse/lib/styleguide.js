@@ -14,6 +14,7 @@ import breadCrumbs from "../components/sections/molecules/bread-crumbs";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
 import comboButton from "../components/sections/molecules/combo-button";
+import contextMenu from "../components/sections/molecules/context-menu";
 import dialog from "../components/sections/molecules/dialog";
 import dragAndDrop from "../components/sections/molecules/drag-and-drop";
 import emptyState from "../components/sections/molecules/empty-state";
@@ -90,6 +91,7 @@ const SECTIONS = [
   { component: rovingFocus, category: "molecules", id: "roving-focus" },
   { component: tooltips, category: "molecules", id: "tooltips" },
   { component: menus, category: "molecules", id: "menus" },
+  { component: contextMenu, category: "molecules", id: "context-menu" },
   { component: multiselect, category: "molecules", id: "multi-select" },
   { component: toasts, category: "molecules", id: "toasts" },
   { component: dialog, category: "molecules", id: "dialog" },

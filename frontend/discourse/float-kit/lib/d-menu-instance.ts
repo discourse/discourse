@@ -124,10 +124,26 @@ export default class DMenuInstance extends FloatKitInstance {
       (options.focusTrigger ?? true) ||
       (ownedFocus && this.#focusIsUnowned)
     ) {
-      this.triggerElement?.focus();
+      this.#focusReturnTarget?.focus();
     }
 
     await super.close(options);
+  }
+
+  /**
+   * Where focus goes once the menu has closed. `focusTarget` is resolved here rather than when
+   * the menu opened, so an action that replaces or removes the element it named still returns
+   * focus to whatever now stands in its place. The trigger element is the fallback, and is
+   * `null` for a menu anchored to a virtual reference — which is exactly the case `focusTarget`
+   * exists to serve.
+   */
+  get #focusReturnTarget(): HTMLElement | null {
+    const { focusTarget } = this.options;
+
+    // An absent thunk means "no opinion", so the trigger is the fallback. A thunk that returns
+    // `null` is an opinion — the caller looked and decided nothing should take focus — so it is
+    // honoured rather than falling through to the trigger.
+    return focusTarget ? focusTarget() : this.triggerElement;
   }
 
   get #focusIsUnowned(): boolean {

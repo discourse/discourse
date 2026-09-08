@@ -143,6 +143,7 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
   <template>
     <div class="block-debug-ghost" data-block-name={{@blockName}}>
       <DTooltip
+        @hoverGracePeriod={{150}}
         @identifier="block-debug-ghost"
         @interactive={{true}}
         @placement="bottom-start"
@@ -151,7 +152,7 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
           mobile=(array "click")
           desktop=(array "hover" "click")
         }}
-        @untriggers={{hash mobile=(array "click") desktop=(array "mouseleave")}}
+        @untriggers={{hash mobile=(array "click") desktop=(array "hover")}}
       >
         <:trigger>
           <span class="block-debug-ghost__badge">
