@@ -1,13 +1,26 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { type TrustedHTML, trustHTML } from "@ember/template";
+import type { ComponentLike } from "@glint/template";
+import FKControlInputUntyped from "discourse/form-kit/components/fk/control/input";
+import noop from "discourse/helpers/noop";
 import dPointerDrag, {
   type DPointerDragInfo,
 } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
+
+/** TODO(devxp-typescript-pending): remove when the input exports a signature. */
+const FKControlInput = FKControlInputUntyped as unknown as ComponentLike<{
+  Args: {
+    type: "number";
+    after: string;
+    field: { hasExplicitType: boolean; value: number; set: () => void };
+  };
+  Element: HTMLInputElement;
+}>;
 
 export interface PercentagePosition {
   /** Physical horizontal position, from the left edge (0) to the right (100). */
@@ -16,7 +29,7 @@ export interface PercentagePosition {
   y: number;
 }
 
-interface DPositionPickerSignature {
+interface ImagePositionPickerSignature {
   Args: {
     /** Current percentage position. */
     value: PercentagePosition;
@@ -30,13 +43,13 @@ interface DPositionPickerSignature {
   Element: HTMLDivElement;
 }
 
-export default class DPositionPicker extends Component<DPositionPickerSignature> {
-  @tracked draft: PercentagePosition | null = null;
+export default class ImagePositionPicker extends Component<ImagePositionPickerSignature> {
   #bounds: DOMRect | null = null;
   #pressedPreset: PercentagePosition | null = null;
+  @tracked _draft: PercentagePosition | null = null;
 
   get position(): PercentagePosition {
-    return this.draft ?? this.args.value;
+    return this._draft ?? this.args.value;
   }
 
   get presets() {
@@ -44,7 +57,7 @@ export default class DPositionPicker extends Component<DPositionPickerSignature>
       [0, 50, 100].map((x) => ({
         x,
         y,
-        label: i18n("position_picker.preset", { x, y }),
+        label: i18n("wireframe.position_picker.preset", { x, y }),
         selected: this.position.x === x && this.position.y === y,
       }))
     );
@@ -58,15 +71,15 @@ export default class DPositionPicker extends Component<DPositionPickerSignature>
 
   @action
   cancel(): void {
-    this.draft = null;
+    this._draft = null;
     this.args.onCancel();
   }
 
   @action
   commit(): void {
-    if (this.draft) {
-      this.args.onChange(this.draft);
-      this.draft = null;
+    if (this._draft) {
+      this.args.onChange(this._draft);
+      this._draft = null;
     }
   }
 
@@ -153,21 +166,66 @@ export default class DPositionPicker extends Component<DPositionPickerSignature>
       return;
     }
     this.args.onChange({ x: position.x, y: position.y });
-    this.draft = null;
+    this._draft = null;
   }
 
   #preview(position: PercentagePosition): void {
-    this.draft = position;
+    this._draft = position;
     this.args.onPreview(position);
   }
 
   <template>
-    <div class="d-position-picker" ...attributes>
+    <div class="wireframe-image-position-picker" ...attributes>
+      <div class="wireframe-image-position-picker__coordinates">
+        {{! Native events retain the preview and commit boundaries. }}
+        <label>
+          <span class="wireframe-image-position-picker__axis">{{i18n
+              "wireframe.position_picker.horizontal_short"
+            }}</span>
+          <FKControlInput
+            aria-label={{i18n "wireframe.position_picker.horizontal"}}
+            min="0"
+            max="100"
+            step="1"
+            @after="%"
+            @field={{hash
+              hasExplicitType=true
+              value=this.position.x
+              set=(noop)
+            }}
+            @type="number"
+            {{on "input" (fn this.input "x")}}
+            {{on "blur" this.commit}}
+            {{on "keydown" this.keyDown}}
+          />
+        </label>
+        <label>
+          <span class="wireframe-image-position-picker__axis">{{i18n
+              "wireframe.position_picker.vertical_short"
+            }}</span>
+          <FKControlInput
+            aria-label={{i18n "wireframe.position_picker.vertical"}}
+            min="0"
+            max="100"
+            step="1"
+            @after="%"
+            @field={{hash
+              hasExplicitType=true
+              value=this.position.y
+              set=(noop)
+            }}
+            @type="number"
+            {{on "input" (fn this.input "y")}}
+            {{on "blur" this.commit}}
+            {{on "keydown" this.keyDown}}
+          />
+        </label>
+      </div>
       <div
-        class="d-position-picker__pad"
+        class="wireframe-image-position-picker__pad"
         tabindex="-1"
         role="group"
-        aria-label={{i18n "position_picker.label"}}
+        aria-label={{i18n "wireframe.position_picker.label"}}
         {{dPointerDrag
           onDragStart=this.dragStart
           onDrag=this.drag
@@ -178,37 +236,18 @@ export default class DPositionPicker extends Component<DPositionPickerSignature>
         {{#each this.presets as |preset|}}
           <button
             type="button"
-            class="d-position-picker__preset"
+            class="wireframe-image-position-picker__preset"
             data-x={{preset.x}}
             data-y={{preset.y}}
             aria-label={{preset.label}}
             aria-pressed={{preset.selected}}
             {{on "click" (fn this.select preset)}}
-          ><span></span></button>
+          ></button>
         {{/each}}
-        <span class="d-position-picker__thumb" style={{this.thumbStyle}}></span>
-      </div>
-      <div class="d-position-picker__coordinates">
-        <label>{{i18n "position_picker.horizontal"}}<input
-            type="number"
-            min="0"
-            max="100"
-            step="1"
-            value={{this.position.x}}
-            {{on "input" (fn this.input "x")}}
-            {{on "blur" this.commit}}
-            {{on "keydown" this.keyDown}}
-          /></label>
-        <label>{{i18n "position_picker.vertical"}}<input
-            type="number"
-            min="0"
-            max="100"
-            step="1"
-            value={{this.position.y}}
-            {{on "input" (fn this.input "y")}}
-            {{on "blur" this.commit}}
-            {{on "keydown" this.keyDown}}
-          /></label>
+        <span
+          class="wireframe-image-position-picker__thumb"
+          style={{this.thumbStyle}}
+        ></span>
       </div>
     </div>
   </template>

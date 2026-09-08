@@ -1,10 +1,5 @@
 en:
   js:
-    position_picker:
-      label: "Position"
-      horizontal: "X (%)"
-      vertical: "Y (%)"
-      preset: "Position: %{x}% from left, %{y}% from top"
     ace_editor:
       resize: "Resize code editor"
     user_api_key:
@@ -116,6 +111,7 @@ en:
           size: "Size (rem)"
         image:
           image_label: "Image"
+          content_group: "Content"
           alt_label: "Alt text"
           alt_help: "Describe the image for screen readers."
           link_label: "Link URL"

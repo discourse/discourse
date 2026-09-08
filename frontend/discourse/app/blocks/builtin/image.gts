@@ -42,6 +42,7 @@ interface ImageSignature {
       default: "",
       ui: {
         label: i18n("blocks.builtin.image.alt_label"),
+        group: i18n("blocks.builtin.image.content_group"),
         helpText: i18n("blocks.builtin.image.alt_help"),
       },
     },
@@ -51,6 +52,7 @@ interface ImageSignature {
       ui: {
         control: "url",
         label: i18n("blocks.builtin.image.link_label"),
+        group: i18n("blocks.builtin.image.content_group"),
       },
     },
     caption: {
@@ -58,6 +60,7 @@ interface ImageSignature {
       default: "",
       ui: {
         label: i18n("blocks.builtin.image.caption_label"),
+        group: i18n("blocks.builtin.image.content_group"),
       },
     },
   },

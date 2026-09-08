@@ -1,6 +1,8 @@
+import ButtonLink from "discourse/blocks/builtin/button-link";
 import Heading from "discourse/blocks/builtin/heading";
 import Image from "discourse/blocks/builtin/image";
 import Layout from "discourse/blocks/builtin/layout";
+import Paragraph from "discourse/blocks/builtin/paragraph";
 import Section from "discourse/blocks/builtin/section";
 import { apiInitializer } from "discourse/lib/api";
 
@@ -16,5 +18,7 @@ export default apiInitializer((api) => {
       ] },
     ] },
     { block: Image, args: { image: { ...image, frame: { width: 400, height: 240 } }, alt: "Discourse community", caption: "A shared image frame" } },
+    { block: Paragraph, args: { text: "Discover stories from our community." } },
+    { block: ButtonLink, args: { label: "Explore the community", href: "/latest", variant: "primary" } },
   ]);
 });

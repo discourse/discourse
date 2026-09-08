@@ -1,23 +1,40 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import type { ComponentLike } from "@glint/template";
 import {
   type BlockImageValue,
   imageComposition,
 } from "discourse/blocks/image-value";
+import FKControlInputUntyped from "discourse/form-kit/components/fk/control/input";
+import noop from "discourse/helpers/noop";
 import DButton from "discourse/ui-kit/d-button";
-import DPositionPicker, {
-  type PercentagePosition,
-} from "discourse/ui-kit/d-position-picker";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import ImagePositionPicker, {
+  type PercentagePosition,
+} from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-position-picker";
 import InspectorSegmentedField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-segmented-field";
 import WireframeImageCompositionService, {
   ImageEditTarget,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-composition";
+
+/** TODO(devxp-typescript-pending): remove when the input exports a signature. */
+const FKControlInput = FKControlInputUntyped as unknown as ComponentLike<{
+  Args: {
+    type: "number";
+    after: string;
+    field: {
+      hasExplicitType: boolean;
+      value: string | number;
+      set: () => void;
+    };
+  };
+  Element: HTMLInputElement;
+}>;
 
 interface ImageCompositionControlsSignature {
   Args: {
@@ -139,13 +156,25 @@ export default class ImageCompositionControls extends Component<ImageComposition
         (if @compact "--compact")
       }}
     >
-      <legend class={{if @compact "sr-only"}}>
-        {{i18n "wireframe.inspector.image.composition"}}
+      <legend
+        class={{dConcatClass
+          "wireframe-image-composition__heading"
+          (if @compact "sr-only")
+        }}
+      >
+        <span class="wireframe-image-composition__heading-content">
+          <span>{{i18n "wireframe.inspector.image.composition"}}</span>
+          {{#unless @compact}}
+            <DButton
+              class="btn-transparent btn-small"
+              @label="wireframe.inspector.image.reset_composition"
+              @action={{this.reset}}
+            />
+          {{/unless}}
+        </span>
       </legend>
       <div class="wireframe-image-composition__fit">
-        {{#if @compact}}
-          <span>{{i18n "wireframe.inspector.image.fit"}}</span>
-        {{/if}}
+        <span>{{i18n "wireframe.inspector.image.fit"}}</span>
         <InspectorSegmentedField
           @value={{this.composition.fit}}
           @items={{this.fitOptions}}
@@ -153,14 +182,30 @@ export default class ImageCompositionControls extends Component<ImageComposition
         />
       </div>
       {{#unless @compact}}
-        <DPositionPicker
-          @value={{this.composition.position}}
-          @onPreview={{this.previewPosition}}
-          @onChange={{this.changePosition}}
-          @onCancel={{this.cancel}}
-        />
+        <div class="wireframe-image-composition__position">
+          <span>{{i18n "wireframe.position_picker.label"}}</span>
+          <ImagePositionPicker
+            @onCancel={{this.cancel}}
+            @onChange={{this.changePosition}}
+            @onPreview={{this.previewPosition}}
+            @value={{this.composition.position}}
+          />
+        </div>
         <div class="wireframe-image-composition__zoom">
-          <span>{{i18n "wireframe.inspector.image.zoom"}}</span>
+          <span>{{i18n "wireframe.inspector.image.zoom_short"}}</span>
+          {{! Native events retain raw drafts and the preview/commit boundaries. }}
+          <FKControlInput
+            aria-label={{i18n "wireframe.inspector.image.zoom"}}
+            min="100"
+            max="250"
+            step="1"
+            @after="%"
+            @field={{hash hasExplicitType=true value=this.zoomValue set=(noop)}}
+            @type="number"
+            {{on "input" (fn this.zoom false)}}
+            {{on "blur" (fn this.zoom true)}}
+            {{on "keydown" this.keyDown}}
+          />
           <input
             type="range"
             aria-label={{i18n "wireframe.inspector.image.zoom"}}
@@ -170,17 +215,6 @@ export default class ImageCompositionControls extends Component<ImageComposition
             value={{this.composition.zoom}}
             {{on "input" (fn this.zoom false)}}
             {{on "change" (fn this.zoom true)}}
-            {{on "keydown" this.keyDown}}
-          />
-          <input
-            type="number"
-            aria-label={{i18n "wireframe.inspector.image.zoom"}}
-            min="100"
-            max="250"
-            step="1"
-            value={{this.zoomValue}}
-            {{on "input" (fn this.zoom false)}}
-            {{on "blur" (fn this.zoom true)}}
             {{on "keydown" this.keyDown}}
           />
         </div>
@@ -199,13 +233,6 @@ export default class ImageCompositionControls extends Component<ImageComposition
           }}
           @action={{this.reposition}}
         />
-        {{#unless @compact}}
-          <DButton
-            class="btn-transparent"
-            @label="wireframe.inspector.image.reset_composition"
-            @action={{this.reset}}
-          />
-        {{/unless}}
       </div>
     </fieldset>
   </template>

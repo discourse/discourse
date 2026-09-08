@@ -151,7 +151,12 @@ export default class InspectorForm extends Component {
 
   @cached
   get fieldGroups() {
-    return groupFields(schemaToFields(this.schema));
+    return groupFields(schemaToFields(this.schema)).map((group) => ({
+      ...group,
+      title: group.fields.some((field) => field.schema.ui?.group)
+        ? group.group
+        : undefined,
+    }));
   }
 
   /**
@@ -392,7 +397,7 @@ export default class InspectorForm extends Component {
                 </div>
               </details>
             {{else}}
-              <form.Section @title={{group.group}}>
+              <form.Section @title={{group.title}}>
                 {{#each (this.visibleFields group.fields) as |field|}}
                   <InspectorField
                     @blockKey={{this.wireframeSelection.selectedBlockKey}}

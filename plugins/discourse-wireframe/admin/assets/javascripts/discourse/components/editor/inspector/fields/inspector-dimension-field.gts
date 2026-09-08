@@ -1,11 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
+import type { ComponentLike } from "@glint/template";
 import type { ArgSchema } from "discourse/blocks/types";
-import { eq } from "discourse/truth-helpers";
+import FKControlInputUntyped from "discourse/form-kit/components/fk/control/input";
+import noop from "discourse/helpers/noop";
+import DNativeSelectUntyped from "discourse/ui-kit/d-native-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
 import {
   formatDimension,
   type ParsedDimension,
@@ -17,10 +22,47 @@ type DimensionFieldData = {
   value: unknown;
   /** Writes a replacement FormKit field value. */
   set: (value: unknown) => void;
+  id?: string;
+  name?: string;
+  disabled?: boolean;
+  error?: unknown;
+  describedBy?: string;
+  placeholder?: string;
 };
 
 // TODO(devxp-typescript-pending): replace `DimensionFieldData` once FormKit
 // exports the type of the field data yielded by a custom control.
+
+/** TODO(devxp-typescript-pending): remove when the input exports a signature. */
+const FKControlInput = FKControlInputUntyped as unknown as ComponentLike<{
+  Args: {
+    type: "number";
+    after?: string;
+    field: DimensionFieldData & { hasExplicitType: boolean };
+  };
+  Blocks: { after: [] };
+  Element: HTMLInputElement;
+}>;
+
+/** TODO(devxp-typescript-pending): remove when the select exports a signature. */
+const DNativeSelect = DNativeSelectUntyped as unknown as ComponentLike<{
+  Args: {
+    value: string;
+    includeNone: boolean;
+    onChange: (unit: string | null) => void;
+  };
+  Blocks: {
+    default: [
+      {
+        Option: ComponentLike<{
+          Args: { value: string };
+          Blocks: { default: [] };
+        }>;
+      },
+    ];
+  };
+  Element: HTMLSelectElement;
+}>;
 
 interface InspectorDimensionFieldSignature {
   /** Dimension value and control configuration. */
@@ -211,19 +253,14 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
   /**
    * Re-serializes the current number under a selected unit.
    *
-   * @param event - Unit-select change event.
+   * @param unit - Selected CSS unit.
    */
   @action
-  setUnit(
-    event: Event & {
-      /** Unit select that emitted the event. */
-      currentTarget: Element;
-    }
-  ): void {
-    if (!(event.currentTarget instanceof HTMLSelectElement)) {
+  setUnit(unit: string | null): void {
+    if (!unit) {
       return;
     }
-    this.selectedUnit = event.currentTarget.value;
+    this.selectedUnit = unit;
     // Reserialize the existing number under the new unit; nothing to write yet
     // when the field is empty.
     if (this.numberValue != null) {
@@ -279,40 +316,66 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
           max={{this.max}}
           step={{this.step}}
           value={{this.numberValue}}
+          disabled={{@custom.disabled}}
           {{on "input" this.setSlider}}
         />
       {{/if}}
 
       <div class="wireframe-dimension-field__entry">
-        {{! Commit on `change` (blur / Enter), not `input`: the value reads back
-          live, so committing every keystroke would fight the caret mid-type.
-          The slider above stays live on `input` for drag feedback. }}
-        <input
-          type="number"
-          class="wireframe-dimension-field__number"
-          min={{this.min}}
-          max={{this.max}}
-          step={{this.step}}
-          value={{this.numberValue}}
-          {{on "change" this.setNumber}}
-        />
-
-        {{#if this.isUnitless}}
-          <span class="wireframe-dimension-field__suffix">
-            {{this.defaultUnit}}
-          </span>
-        {{else}}
-          <select
-            class="wireframe-dimension-field__unit"
-            {{on "change" this.setUnit}}
-          >
-            {{#each this.units as |unit|}}
-              <option value={{unit}} selected={{eq unit this.displayUnit}}>
-                {{unit}}
-              </option>
-            {{/each}}
-          </select>
-        {{/if}}
+        {{! Only the native change event commits a typed dimension. }}
+        {{#let
+          (hash
+            hasExplicitType=true
+            value=this.numberValue
+            set=(noop)
+            id=@custom.id
+            name=@custom.name
+            disabled=@custom.disabled
+            error=@custom.error
+            describedBy=@custom.describedBy
+            placeholder=@custom.placeholder
+          )
+          as |field|
+        }}
+          {{#if this.isUnitless}}
+            <FKControlInput
+              class="wireframe-dimension-field__number"
+              min={{this.min}}
+              max={{this.max}}
+              step={{this.step}}
+              @after={{this.defaultUnit}}
+              @field={{field}}
+              @type="number"
+              {{on "change" this.setNumber}}
+            />
+          {{else}}
+            <FKControlInput
+              class="wireframe-dimension-field__number"
+              min={{this.min}}
+              max={{this.max}}
+              step={{this.step}}
+              @field={{field}}
+              @type="number"
+              {{on "change" this.setNumber}}
+            >
+              <:after>
+                <DNativeSelect
+                  class="wireframe-dimension-field__unit"
+                  disabled={{@custom.disabled}}
+                  aria-label={{i18n "wireframe.inspector.dimension_unit"}}
+                  @includeNone={{false}}
+                  @onChange={{this.setUnit}}
+                  @value={{this.displayUnit}}
+                  as |select|
+                >
+                  {{#each this.units as |unit|}}
+                    <select.Option @value={{unit}}>{{unit}}</select.Option>
+                  {{/each}}
+                </DNativeSelect>
+              </:after>
+            </FKControlInput>
+          {{/if}}
+        {{/let}}
       </div>
     </div>
   </template>

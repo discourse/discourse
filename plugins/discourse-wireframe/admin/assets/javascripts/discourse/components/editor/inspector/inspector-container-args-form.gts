@@ -151,8 +151,9 @@ export default class InspectorContainerArgsForm extends Component {
   <template>
     {{#each this.visibleNamespaces as |section|}}
       <Form
-        @data={{section.values}}
         class="wireframe-inspector-form wireframe-inspector-container-args-form"
+        data-container-namespace={{section.namespace}}
+        @data={{section.values}}
         as |form|
       >
         <form.Section @title={{section.label}}>

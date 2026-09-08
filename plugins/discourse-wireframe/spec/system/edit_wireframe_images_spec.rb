@@ -8,6 +8,7 @@ describe "Edit wireframe images" do
   let(:editor) { PageObjects::Pages::WireframeEditor.new }
   let(:image_editor) { PageObjects::Components::WireframeImageEditor.new }
   let(:cdp) { PageObjects::CDP.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before do
     SiteSetting.wireframe_enabled = true
@@ -31,6 +32,7 @@ describe "Edit wireframe images" do
     expect(frame_width).to eq(cell_width)
     image_editor.select_section
     expect(image_editor).to have_composition_controls
+    expect(image_editor).to have_aligned_unit_controls
     image_editor.set_position(x: 25, y: 75)
     expect(image_editor).to have_position(x: 25, y: 75)
     screenshot_marker(label: "wireframe-image-controls", only: :desktop)
@@ -160,10 +162,211 @@ describe "Edit wireframe images" do
     image_editor.select_grid_image
     grid_key = image_editor.owning_grid_key
     expect(image_editor).to have_grid_sizing_notice
+    expect(image_editor).to have_compact_source_rows
+    expect(image_editor).to have_aligned_unit_controls
+    expect(image_editor).to have_clear_section_hierarchy
     expect(image_editor).to have_no_independent_frame_controls
     screenshot_marker(label: "wireframe-image-grid-sizing", only: :desktop)
     image_editor.edit_grid
     expect(image_editor).to have_selected_grid(grid_key)
+    screenshot_marker(label: "wireframe-image-owning-grid", only: :desktop)
+  end
+
+  it "lets an author replace and remove image sources from compact inspector choosers" do
+    visit("/latest")
+    editor.enter
+    image_editor.select_grid_image
+    image_editor.open_source
+    expect(image_editor).to have_compact_source_chooser
+    screenshot_marker(label: "wireframe-image-source-chooser", only: :desktop)
+
+    image_editor.upload_default_source(file_from_fixtures("logo.png", "images").path)
+    expect(image_editor).to have_uploaded_grid_image
+    expect(image_editor).to have_compact_source_chooser
+    image_editor.open_source(variant: :dark)
+    screenshot_marker(label: "wireframe-image-dark-source-chooser", only: :desktop)
+    image_editor.remove_dark_source
+    expect(image_editor).to have_no_dark_grid_image
+    expect(image_editor).to have_uploaded_grid_image
+    image_editor.remove_default_source
+    expect(image_editor).to have_empty_image_chooser
+    screenshot_marker(label: "wireframe-image-empty-source", only: :desktop)
+  end
+
+  it "lets an author move between consistent block inspectors" do
+    image_editor.use_tall_viewport
+    visit("/latest")
+    editor.enter
+    image_editor.select_grid_image
+    expect(image_editor).to have_clear_section_hierarchy
+    screenshot_marker(label: "wireframe-inspector-feedback-image", only: :desktop)
+    image_editor.show_placement_fields
+    screenshot_marker(label: "wireframe-inspector-feedback-placement", only: :desktop)
+    image_editor.select_heading
+    expect(image_editor).to have_inspector_field("Level")
+    screenshot_marker(label: "wireframe-inspector-feedback-heading", only: :desktop)
+    image_editor.select_paragraph
+    expect(image_editor).to have_inspector_field("Text")
+    screenshot_marker(label: "wireframe-inspector-feedback-paragraph", only: :desktop)
+    image_editor.select_button
+    expect(image_editor).to have_inspector_field("Style")
+    screenshot_marker(label: "wireframe-inspector-feedback-button", only: :desktop)
+    image_editor.select_grid_image
+    image_editor.open_source
+    image_editor.remove_default_source
+    expect(image_editor).to have_empty_image_chooser
+    screenshot_marker(label: "wireframe-inspector-feedback-empty", only: :desktop)
+  end
+
+  it "replaces both image variants by dropping onto closed source rows" do
+    visit("/latest")
+    editor.enter
+    image_editor.select_grid_image
+    image_editor.use_inspector_width(240)
+    cdp.with_paused_request(%r{/uploads\.json}) do |request|
+      image_editor.drop_source(file_from_fixtures("logo.png", "images").path)
+      request.wait
+      expect(image_editor).to have_closed_source_progress
+      screenshot_marker(label: "wireframe-inspector-closeout-uploading", only: :desktop)
+      request.resume
+    end
+    expect(image_editor).to have_uploaded_grid_image
+    expect(image_editor).to have_no_source_progress
+    image_editor.drop_source(file_from_fixtures("logo.png", "images").path, variant: :dark)
+    expect(image_editor).to have_uploaded_closed_sources
+    image_editor.with_failed_upload do
+      image_editor.drop_source(file_from_fixtures("logo.png", "images").path)
+      expect(dialog).to be_open
+      dialog.click_ok
+      expect(image_editor).to have_closed_source_error
+      expect(image_editor).to have_contained_inspector_content
+      screenshot_marker(label: "wireframe-inspector-closeout-error", only: :desktop)
+    end
+    image_editor.open_source
+    image_editor.remove_default_source
+    expect(image_editor).to have_empty_image_chooser
+    expect(image_editor).to have_contained_inspector_content
+    screenshot_marker(label: "wireframe-inspector-closeout-empty", only: :desktop)
+  end
+
+  it "keeps image dimensions and controls readable on an Arabic page" do
+    SiteSetting.default_locale = "ar"
+    image_editor.use_tall_viewport
+    visit("/latest")
+    editor.enter
+    image_editor.select_grid_image
+    image_editor.stretch_grid_image
+    image_editor.use_inspector_width(240)
+    expect(image_editor).to have_rtl_page
+    expect(image_editor).to have_position_marker(x: 50, y: 50)
+    image_editor.set_position(x: 25, y: 75)
+    expect(image_editor).to have_position_marker(x: 25, y: 75)
+    image_editor.choose_top_left_position
+    expect(image_editor).to have_top_left_position
+    expect(image_editor).to have_ordered_source_dimensions
+    expect(image_editor).to have_contained_inspector_content
+    expect(image_editor).to have_paired_grid_coordinates
+    expect(image_editor).to have_aligned_inspector_selections
+    screenshot_marker(label: "wireframe-inspector-closeout-arabic", only: :desktop)
+  end
+
+  it "keeps longer translated image controls inside the minimum inspector" do
+    SiteSetting.default_locale = "de"
+    {
+      "tab_args" => "Blockeinstellungen",
+      "tab_conditions" => "Anzeigebedingungen",
+      "image.fit" => "Einpassen",
+      "image.fill" => "Ausfüllen",
+      "image.zoom_short" => "Vergrößerung",
+      "image.reposition" => "Bild auf der Arbeitsfläche positionieren",
+    }.each do |key, value|
+      TranslationOverride.upsert!("de", "js.wireframe.inspector.#{key}", value)
+    end
+    image_editor.use_tall_viewport
+    visit("/latest")
+    editor.enter
+    image_editor.select_grid_image
+    image_editor.use_inspector_width(240)
+    expect(image_editor).to have_inspector_translation("Blockeinstellungen")
+    expect(image_editor).to have_contained_inspector_content
+    screenshot_marker(label: "wireframe-inspector-closeout-long-labels", only: :desktop)
+  end
+
+  it "keeps the zoom track on the same subdued surface as the position pad" do
+    visit("/latest")
+    editor.enter
+    image_editor.select_grid_image
+    image_editor.use_inspector_width(240)
+    expect(image_editor).to have_themed_zoom_track
+    image_editor.change_zoom_with_keyboard(:end)
+    expect(image_editor).to have_image_zoom(250)
+    image_editor.change_zoom_with_keyboard(:home)
+    expect(image_editor).to have_image_zoom(100)
+    screenshot_marker(label: "wireframe-inspector-closeout-slider", only: :desktop)
+  end
+
+  it "keeps the minimum inspector usable with zoom-equivalent viewport scaling" do
+    image_editor.use_tall_viewport
+    visit("/latest")
+    editor.enter
+    image_editor.select_grid_image
+    image_editor.use_inspector_width(240)
+    [1.25, 2].each do |scale|
+      image_editor.with_zoomed_viewport(scale) do
+        expect(image_editor).to have_zoomed_viewport(scale)
+        expect(image_editor).to have_contained_inspector_content
+        expect(image_editor).to have_aligned_unit_controls(compact: true)
+        expect(image_editor).to have_grouped_composition_controls(
+          compact: true,
+          full_width_actions: true,
+        )
+        screenshot_marker(
+          label: "wireframe-inspector-closeout-zoom-#{scale}",
+          only: :desktop,
+          preserve_viewport: true,
+        )
+        expect(image_editor).to have_zoomed_viewport(scale)
+      end
+    end
+  end
+
+  it "keeps composition controls grouped across inspector widths in either direction" do
+    image_editor.use_tall_viewport
+    visit("/latest")
+    editor.enter
+    image_editor.select_grid_image
+    image_editor.stretch_grid_image
+    image_editor.set_position(x: 100, y: 100)
+    [240, 260, 320, 480].each do |width|
+      image_editor.use_inspector_width(width)
+      screenshot_marker(label: "wireframe-composition-layout-#{width}", only: :desktop)
+      expect(image_editor).to have_aligned_unit_controls(compact: width == 240)
+      expect(image_editor).to have_grouped_composition_controls(
+        compact: width == 240,
+        full_width_actions: width <= 260,
+      )
+      expect(image_editor).to have_contained_inspector_actions
+      expect(image_editor).to have_paired_grid_coordinates
+      expect(image_editor).to have_readable_coordinate_controls
+      expect(image_editor).to have_aligned_inspector_selections
+    end
+    image_editor.use_rtl_inspector
+    [240, 260, 480].each do |width|
+      image_editor.use_inspector_width(width)
+      expect(image_editor).to have_aligned_unit_controls(compact: width == 240)
+      expect(image_editor).to have_grouped_composition_controls(
+        compact: width == 240,
+        full_width_actions: width <= 260,
+      )
+      expect(image_editor).to have_contained_inspector_actions
+      expect(image_editor).to have_paired_grid_coordinates
+      expect(image_editor).to have_readable_coordinate_controls
+      expect(image_editor).to have_aligned_inspector_selections
+    end
+    screenshot_marker(label: "wireframe-composition-layout-rtl", only: :desktop)
+    image_editor.use_inspector_width(240)
+    image_editor.show_placement_fields
+    screenshot_marker(label: "wireframe-composition-layout-placement", only: :desktop)
   end
 
   it "identifies the visible source when an image has both color variants" do

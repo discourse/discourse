@@ -29,8 +29,6 @@ import MenuExample from "../../examples/atoms/forms/menu";
 import menuSource from "../../examples/atoms/forms/menu?source=file";
 import MultilineExample from "../../examples/atoms/forms/multiline";
 import multilineSource from "../../examples/atoms/forms/multiline?source=file";
-import PositionPickerExample from "../../examples/atoms/forms/position-picker";
-import positionPickerSource from "../../examples/atoms/forms/position-picker?source=file";
 import QuestionExample from "../../examples/atoms/forms/question";
 import questionSource from "../../examples/atoms/forms/question?source=file";
 import RadioGroupExample from "../../examples/atoms/forms/radio-group";
@@ -51,9 +49,6 @@ import ValidationExample from "../../examples/atoms/forms/validation";
 import validationSource from "../../examples/atoms/forms/validation?source=file";
 
 export default <template>
-  <StyleguideExample @title="<DPositionPicker>" @code={{positionPickerSource}}>
-    <PositionPickerExample />
-  </StyleguideExample>
   <h2>Controls</h2>
 
   <StyleguideExample @title="Input" @code={{inputSource}}>

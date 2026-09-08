@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
@@ -12,10 +12,16 @@ import { type ComponentLike } from "@glint/template";
 import type { BlockImageSource } from "discourse/blocks/image-value";
 import type { ArgSchema } from "discourse/blocks/types";
 import UppyImageUploaderUntyped from "discourse/components/uppy-image-uploader";
-import { eq } from "discourse/truth-helpers";
+import FKControlInputUntyped from "discourse/form-kit/components/fk/control/input";
+import noop from "discourse/helpers/noop";
+import type A11yService from "discourse/services/a11y";
+import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropExternalTarget, {
+  type ExternalDropTargetEvent,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
 import ImageCompositionControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-composition-controls";
 import {
@@ -36,11 +42,23 @@ const ASPECT_RATIO_EPSILON = 0.02;
 
 type ImageEditorTab = "upload" | "url";
 
+/** TODO(typescript-pending): remove when FormKit input exports a signature. */
+const FKControlInput = FKControlInputUntyped as unknown as ComponentLike<{
+  Args: {
+    type: "number";
+    after: string;
+    field: { hasExplicitType: boolean; value?: number; set: () => void };
+  };
+  Element: HTMLInputElement;
+}>;
+
 type ImageFieldData = {
   /** FormKit field identifier used by the uploader. */
   id?: string;
   /** FormKit field name identifying the block argument. */
   name: string;
+  /** Whether the owning field is locked. */
+  disabled?: boolean;
 };
 
 // TODO(devxp-typescript-pending): replace `ImageFieldData` once FormKit
@@ -62,8 +80,6 @@ const UppyImageUploader = UppyImageUploaderUntyped as unknown as ComponentLike<{
   Args: {
     /** Unique uploader identifier. */
     id: string;
-    /** Current image URL. */
-    imageUrl?: string;
     /** Handles a completed image upload. */
     onUploadDone: (
       /** Successful upload payload. */
@@ -92,6 +108,130 @@ interface InspectorImageFieldSignature {
     /** Canonical image argument schema. */
     schema?: ArgSchema;
   };
+}
+
+interface ImageSourceSignature {
+  Args: {
+    /** Source displayed in the summary. */
+    value: BlockImageSource | null;
+    /** Translated source name. */
+    label: string;
+    /** Stable upload destination, including its variant. */
+    target: { blockKey: string; argName: string; variant: "light" | "dark" };
+    /** Shows the initial default chooser directly, without a disclosure. */
+    empty?: boolean;
+    /** Prevents drops into locked fields. */
+    disabled?: boolean;
+  };
+  Blocks: {
+    /** Source chooser rendered inside the disclosure, or directly when empty. */
+    default: [];
+  };
+  Element: HTMLElement;
+}
+
+class ImageSource extends Component<ImageSourceSignature> {
+  @service declare a11y: A11yService;
+  @service declare wireframeImageUpload: WireframeImageUploadService;
+
+  @tracked uploadFailed = false;
+  @tracked uploading = false;
+  @tracked uploadProgress: number | undefined;
+
+  @action
+  canDrop(): boolean {
+    return !this.args.disabled && !this.uploading;
+  }
+
+  @action
+  async dropFile({ source }: ExternalDropTargetEvent): Promise<void> {
+    const file = source.getFiles()[0];
+    if (!file || !this.canDrop()) {
+      return;
+    }
+    this.uploading = true;
+    this.uploadFailed = false;
+    this.uploadProgress = undefined;
+    this.a11y.announce(i18n("upload_selector.uploading"));
+    try {
+      const result = await this.wireframeImageUpload.uploadImageForArg(file, {
+        ...this.args.target,
+        onProgress: this.updateUploadProgress,
+      });
+      if (!this.isDestroying) {
+        this.uploadFailed = !result;
+      }
+    } catch {
+      if (!this.isDestroying) {
+        this.uploadFailed = true;
+      }
+    } finally {
+      if (!this.isDestroying) {
+        this.uploading = false;
+        if (this.uploadFailed) {
+          this.a11y.announce(i18n("wireframe.inspector.image.change_failed"));
+        }
+      }
+    }
+  }
+
+  @action
+  updateUploadProgress(progress: number): void {
+    if (!this.isDestroying && this.uploading) {
+      this.uploadProgress = progress;
+    }
+  }
+
+  <template>
+    {{#if @empty}}
+      <div class="wireframe-image-field__empty" ...attributes>
+        {{yield}}
+      </div>
+    {{else}}
+      <details ...attributes>
+        <summary
+          class="wireframe-image-field__source"
+          aria-busy={{if this.uploading "true"}}
+          {{dDragAndDropExternalTarget
+            accepts="files"
+            canDrop=this.canDrop
+            onDrop=this.dropFile
+          }}
+        >
+          {{#if @value.url}}
+            <img src={{@value.url}} alt="" />
+          {{else}}
+            <span class="wireframe-image-field__placeholder">{{dIcon
+                "plus"
+              }}</span>
+          {{/if}}
+          <span class="wireframe-image-field__source-label">
+            {{@label}}
+            {{#if this.uploading}}
+              <small class="wireframe-image-field__upload-status">
+                {{i18n "upload_selector.uploading"}}
+                <progress
+                  aria-label={{i18n "upload_selector.uploading"}}
+                  max="100"
+                  value={{this.uploadProgress}}
+                />
+              </small>
+            {{else if this.uploadFailed}}
+              <span class="wireframe-image-field__warning">{{i18n
+                  "wireframe.inspector.image.change_failed"
+                }}</span>
+            {{else if @value.width}}
+              <small><bdi dir="ltr">{{@value.width}}
+                  ×
+                  {{@value.height}}</bdi></small>
+            {{/if}}
+          </span>
+          {{dIcon "chevron-down"}}
+        </summary>
+        {{yield}}
+      </details>
+    {{/if}}
+  </template>
 }
 
 /** Reads live image values so canvas and inspector share one mutation/history path. */
@@ -212,9 +352,10 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
     return this.darkVariant !== null;
   }
 
-  /** Whether the schema permits a dark image variant. */
   get allowDark(): boolean {
-    return this.args.schema?.allowDark === true;
+    return (
+      this.args.schema?.allowDark === true && Boolean(this.lightVariant?.url)
+    );
   }
 
   get allowFrameResize(): boolean {
@@ -307,7 +448,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       const target = dark ?? element;
       target.scrollIntoView({ block: "nearest" });
       target
-        .querySelector<HTMLElement>("button, input:not([type=file])")
+        .querySelector<HTMLElement>("summary, button, input:not([type=file])")
         ?.focus();
       this.wireframeRail.inspectorField = null;
     });
@@ -558,98 +699,201 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       {{didInsert this.focusRequestedField}}
       {{didUpdate this.focusRequestedField this.wireframeRail.inspectorField}}
     >
-      <div class="wireframe-image-field__variant">
-        <div class="wireframe-image-field__tabs" role="tablist">
-          <button
-            type="button"
-            class={{dConcatClass
-              "wireframe-image-field__tab"
-              (if
-                (eq this.lightTab "upload") "wireframe-image-field__tab--active"
-              )
-            }}
-            role="tab"
-            aria-selected={{eq this.lightTab "upload"}}
-            {{on "click" (fn this.setLightTab "upload")}}
-          >
-            {{i18n "wireframe.inspector.image.tab_upload"}}
-          </button>
-          <button
-            type="button"
-            class={{dConcatClass
-              "wireframe-image-field__tab"
-              (if (eq this.lightTab "url") "wireframe-image-field__tab--active")
-            }}
-            role="tab"
-            aria-selected={{eq this.lightTab "url"}}
-            {{on "click" (fn this.setLightTab "url")}}
-          >
-            {{i18n "wireframe.inspector.image.tab_url"}}
-          </button>
-        </div>
+      <ImageSource
+        class="wireframe-image-field__variant"
+        @disabled={{@custom.disabled}}
+        @empty={{unless this.lightVariant.url true}}
+        @label={{i18n "wireframe.inspector.image.default_label"}}
+        @target={{hash
+          blockKey=this.target.blockKey
+          argName=this.target.argName
+          variant="light"
+        }}
+        @value={{this.lightVariant}}
+      >
+        <div class="wireframe-image-field__source-editor">
+          <div class="wireframe-image-field__tabs" role="tablist">
+            <button
+              type="button"
+              class={{dConcatClass
+                "wireframe-image-field__tab"
+                (if
+                  (eq this.lightTab "upload")
+                  "wireframe-image-field__tab--active"
+                )
+              }}
+              role="tab"
+              aria-selected={{eq this.lightTab "upload"}}
+              {{on "click" (fn this.setLightTab "upload")}}
+            >
+              {{i18n "wireframe.inspector.image.tab_upload"}}
+            </button>
+            <button
+              type="button"
+              class={{dConcatClass
+                "wireframe-image-field__tab"
+                (if
+                  (eq this.lightTab "url") "wireframe-image-field__tab--active"
+                )
+              }}
+              role="tab"
+              aria-selected={{eq this.lightTab "url"}}
+              {{on "click" (fn this.setLightTab "url")}}
+            >
+              {{i18n "wireframe.inspector.image.tab_url"}}
+            </button>
+          </div>
 
-        {{#if (eq this.lightTab "upload")}}
-          <UppyImageUploader
-            class="wireframe-image-field__uploader no-repeat contain-image"
-            @id="{{@custom.id}}-{{@custom.name}}-light"
-            @imageUrl={{this.lightVariant.url}}
-            @onUploadDone={{this.onLightUploadDone}}
-            @onUploadStart={{this.onLightUploadStart}}
-            @onUploadDeleted={{this.onLightUploadDeleted}}
-            @type="composer"
-          />
-        {{else}}
-          <input
-            type="url"
-            aria-label={{i18n "wireframe.inspector.image.tab_url"}}
-            class="wireframe-image-field__url-input"
-            placeholder={{i18n "wireframe.inspector.image.url_placeholder"}}
-            value={{this.lightUrlDraft}}
-            {{on "input" this.onLightUrlDraftInput}}
-            {{on "blur" this.commitLightUrl}}
-          />
-        {{/if}}
+          {{#if (eq this.lightTab "upload")}}
+            <UppyImageUploader
+              class="wireframe-image-field__uploader"
+              @id="{{@custom.id}}-{{@custom.name}}-light"
+              @onUploadDone={{this.onLightUploadDone}}
+              @onUploadStart={{this.onLightUploadStart}}
+              @onUploadDeleted={{this.onLightUploadDeleted}}
+              @type="composer"
+            />
+          {{else}}
+            <input
+              type="url"
+              aria-label={{i18n "wireframe.inspector.image.tab_url"}}
+              class="wireframe-image-field__url-input"
+              placeholder={{i18n "wireframe.inspector.image.url_placeholder"}}
+              value={{this.lightUrlDraft}}
+              {{on "input" this.onLightUrlDraftInput}}
+              {{on "blur" this.commitLightUrl}}
+            />
+          {{/if}}
 
-        {{#if this.lightVariant.url}}
-          {{#if (eq this.lightTab "url")}}
+          {{#if this.lightVariant.url}}
             <DButton
-              class="btn-transparent --danger"
+              class="wireframe-image-field__remove btn-transparent btn-small --danger"
               @icon="trash-can"
               @label="wireframe.inspector.image.remove"
               @action={{this.onLightUploadDeleted}}
             />
           {{/if}}
-        {{/if}}
 
-        {{#if this.lightWarning}}
-          <div class="wireframe-image-field__warning" role="status">
-            {{dIcon "circle-exclamation"}}
-            <span>{{i18n this.lightWarning}}</span>
-          </div>
-        {{/if}}
+          {{#if this.lightWarning}}
+            <div class="wireframe-image-field__warning" role="status">
+              {{dIcon "circle-exclamation"}}
+              <span>{{i18n this.lightWarning}}</span>
+            </div>
+          {{/if}}
 
-        {{#if this.lightIsResized}}
-          <div class="wireframe-image-field__info" role="status">
-            {{dIcon "info-circle"}}
-            <span>
-              {{i18n
-                "wireframe.inspector.image.resized_info"
-                width=this.lightVariant.frame.width
-                height=this.lightVariant.frame.height
-                natural_width=this.lightVariant.width
-                natural_height=this.lightVariant.height
-              }}
-            </span>
-            <button
-              type="button"
-              class="btn btn-flat btn-small wireframe-image-field__info-action"
-              {{on "click" this.resetLightSize}}
-            >
-              {{i18n "wireframe.inspector.image.reset_to_natural"}}
-            </button>
+        </div>
+      </ImageSource>
+
+      {{#if this.allowDark}}
+        <ImageSource
+          class="wireframe-image-field__dark"
+          @disabled={{@custom.disabled}}
+          @label={{i18n
+            (if
+              this.darkVariant.url
+              "wireframe.inspector.image.dark_label"
+              "wireframe.inspector.image.add_dark"
+            )
+          }}
+          @target={{hash
+            blockKey=this.target.blockKey
+            argName=this.target.argName
+            variant="dark"
+          }}
+          @value={{this.darkVariant}}
+        >
+          <div class="wireframe-image-field__source-editor">
+            <p class="wireframe-image-field__dark-help">
+              {{i18n "wireframe.inspector.image.dark_help"}}
+            </p>
+
+            {{#if this.lightVariant.url}}
+              <div class="wireframe-image-field__tabs" role="tablist">
+                <button
+                  type="button"
+                  class={{dConcatClass
+                    "wireframe-image-field__tab"
+                    (if
+                      (eq this.darkTab "upload")
+                      "wireframe-image-field__tab--active"
+                    )
+                  }}
+                  role="tab"
+                  aria-selected={{eq this.darkTab "upload"}}
+                  {{on "click" (fn this.setDarkTab "upload")}}
+                >
+                  {{i18n "wireframe.inspector.image.tab_upload"}}
+                </button>
+                <button
+                  type="button"
+                  class={{dConcatClass
+                    "wireframe-image-field__tab"
+                    (if
+                      (eq this.darkTab "url")
+                      "wireframe-image-field__tab--active"
+                    )
+                  }}
+                  role="tab"
+                  aria-selected={{eq this.darkTab "url"}}
+                  {{on "click" (fn this.setDarkTab "url")}}
+                >
+                  {{i18n "wireframe.inspector.image.tab_url"}}
+                </button>
+              </div>
+
+              {{#if (eq this.darkTab "upload")}}
+                <UppyImageUploader
+                  class="wireframe-image-field__uploader"
+                  @id="{{@custom.id}}-{{@custom.name}}-dark"
+                  @onUploadDone={{this.onDarkUploadDone}}
+                  @onUploadStart={{this.onDarkUploadStart}}
+                  @onUploadDeleted={{this.onDarkUploadDeleted}}
+                  @type="composer"
+                />
+              {{else}}
+                <input
+                  type="url"
+                  aria-label={{i18n "wireframe.inspector.image.tab_url"}}
+                  class="wireframe-image-field__url-input"
+                  placeholder={{i18n
+                    "wireframe.inspector.image.url_placeholder"
+                  }}
+                  value={{this.darkUrlDraft}}
+                  {{on "input" this.onDarkUrlDraftInput}}
+                  {{on "blur" this.commitDarkUrl}}
+                />
+              {{/if}}
+
+              {{#if this.darkVariant.url}}
+                <DButton
+                  class="wireframe-image-field__remove btn-transparent btn-small --danger"
+                  @icon="trash-can"
+                  @label="wireframe.inspector.image.remove"
+                  @action={{this.onDarkUploadDeleted}}
+                />
+              {{/if}}
+
+              {{#if this.darkWarning}}
+                <div class="wireframe-image-field__warning" role="status">
+                  {{dIcon "circle-exclamation"}}
+                  <span>{{i18n this.darkWarning}}</span>
+                </div>
+              {{/if}}
+
+              {{#if this.ratioMismatchWarning}}
+                <div class="wireframe-image-field__warning" role="status">
+                  {{dIcon "circle-exclamation"}}
+                  <span>{{this.ratioMismatchWarning}}</span>
+                </div>
+              {{/if}}
+            {{else}}
+              <p class="wireframe-image-field__dark-disabled">
+                {{i18n "wireframe.inspector.image.dark_requires_light"}}
+              </p>
+            {{/if}}
           </div>
-        {{/if}}
-      </div>
+        </ImageSource>
+      {{/if}}
 
       {{#if @schema.allowComposition}}
         {{#if this.lightVariant.url}}
@@ -661,137 +905,64 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
         {{/if}}
       {{/if}}
 
-      {{#if this.gridOwnsSize}}
+      {{#if (and this.lightVariant.url this.gridOwnsSize)}}
         <fieldset class="wireframe-image-field__frame">
           <legend>{{i18n "wireframe.inspector.image.frame_size"}}</legend>
-          <span>{{i18n "wireframe.inspector.image.grid_size"}}</span>
-          <span class="wireframe-image-field__grid-help">{{i18n
-              "wireframe.inspector.image.grid_size_help"
-            }}</span>
-          <DButton
-            class="btn-default"
-            @action={{this.editGrid}}
-            @label="wireframe.inspector.image.edit_grid"
-          />
+          <div class="wireframe-image-field__grid">
+            <span>{{i18n "wireframe.inspector.image.grid_size"}}</span>
+            <DButton
+              class="btn-transparent btn-small"
+              @title="wireframe.inspector.image.grid_size_help"
+              @action={{this.editGrid}}
+              @label="wireframe.inspector.image.edit_grid"
+            />
+          </div>
         </fieldset>
       {{else if this.allowFrameResize}}
         {{#if this.lightVariant.url}}
           <fieldset class="wireframe-image-field__frame">
             <legend>{{i18n "wireframe.inspector.image.frame_size"}}</legend>
-            <label>{{i18n "wireframe.inspector.image.frame_width"}}<input
-                type="number"
+            <label>{{i18n
+                "wireframe.inspector.image.frame_width_short"
+              }}<FKControlInput
+                aria-label={{i18n "wireframe.inspector.image.frame_width"}}
                 min="1"
-                value={{this.frameSize.width}}
+                @type="number"
+                @after="px"
+                @field={{hash
+                  hasExplicitType=true
+                  value=this.frameSize.width
+                  set=(noop)
+                }}
                 {{on "blur" (fn this.resizeFrame "width")}}
                 {{on "keydown" (fn this.frameKeyDown "width")}}
               /></label>
-            <label>{{i18n "wireframe.inspector.image.frame_height"}}<input
-                type="number"
+            <label>{{i18n
+                "wireframe.inspector.image.frame_height_short"
+              }}<FKControlInput
+                aria-label={{i18n "wireframe.inspector.image.frame_height"}}
                 min="1"
-                value={{this.frameSize.height}}
+                @type="number"
+                @after="px"
+                @field={{hash
+                  hasExplicitType=true
+                  value=this.frameSize.height
+                  set=(noop)
+                }}
                 {{on "blur" (fn this.resizeFrame "height")}}
                 {{on "keydown" (fn this.frameKeyDown "height")}}
               /></label>
+            {{#if this.lightIsResized}}
+              <DButton
+                class="btn-transparent btn-small"
+                @action={{this.resetLightSize}}
+                @label="wireframe.inspector.image.reset_to_natural"
+              />
+            {{/if}}
           </fieldset>
         {{/if}}
       {{/if}}
 
-      {{#if this.allowDark}}
-        <details
-          class="wireframe-image-field__dark"
-          open={{this.hasDarkVariant}}
-        >
-          <summary>{{i18n "wireframe.inspector.image.dark_label"}}</summary>
-          <p class="wireframe-image-field__dark-help">
-            {{i18n "wireframe.inspector.image.dark_help"}}
-          </p>
-
-          {{#if this.lightVariant.url}}
-            <div class="wireframe-image-field__tabs" role="tablist">
-              <button
-                type="button"
-                class={{dConcatClass
-                  "wireframe-image-field__tab"
-                  (if
-                    (eq this.darkTab "upload")
-                    "wireframe-image-field__tab--active"
-                  )
-                }}
-                role="tab"
-                aria-selected={{eq this.darkTab "upload"}}
-                {{on "click" (fn this.setDarkTab "upload")}}
-              >
-                {{i18n "wireframe.inspector.image.tab_upload"}}
-              </button>
-              <button
-                type="button"
-                class={{dConcatClass
-                  "wireframe-image-field__tab"
-                  (if
-                    (eq this.darkTab "url") "wireframe-image-field__tab--active"
-                  )
-                }}
-                role="tab"
-                aria-selected={{eq this.darkTab "url"}}
-                {{on "click" (fn this.setDarkTab "url")}}
-              >
-                {{i18n "wireframe.inspector.image.tab_url"}}
-              </button>
-            </div>
-
-            {{#if (eq this.darkTab "upload")}}
-              <UppyImageUploader
-                class="wireframe-image-field__uploader no-repeat contain-image"
-                @id="{{@custom.id}}-{{@custom.name}}-dark"
-                @imageUrl={{this.darkVariant.url}}
-                @onUploadDone={{this.onDarkUploadDone}}
-                @onUploadStart={{this.onDarkUploadStart}}
-                @onUploadDeleted={{this.onDarkUploadDeleted}}
-                @type="composer"
-              />
-            {{else}}
-              <input
-                type="url"
-                aria-label={{i18n "wireframe.inspector.image.tab_url"}}
-                class="wireframe-image-field__url-input"
-                placeholder={{i18n "wireframe.inspector.image.url_placeholder"}}
-                value={{this.darkUrlDraft}}
-                {{on "input" this.onDarkUrlDraftInput}}
-                {{on "blur" this.commitDarkUrl}}
-              />
-            {{/if}}
-
-            {{#if this.darkVariant.url}}
-              {{#if (eq this.darkTab "url")}}
-                <DButton
-                  class="btn-transparent --danger"
-                  @icon="trash-can"
-                  @label="wireframe.inspector.image.remove"
-                  @action={{this.onDarkUploadDeleted}}
-                />
-              {{/if}}
-            {{/if}}
-
-            {{#if this.darkWarning}}
-              <div class="wireframe-image-field__warning" role="status">
-                {{dIcon "circle-exclamation"}}
-                <span>{{i18n this.darkWarning}}</span>
-              </div>
-            {{/if}}
-
-            {{#if this.ratioMismatchWarning}}
-              <div class="wireframe-image-field__warning" role="status">
-                {{dIcon "circle-exclamation"}}
-                <span>{{this.ratioMismatchWarning}}</span>
-              </div>
-            {{/if}}
-          {{else}}
-            <p class="wireframe-image-field__dark-disabled">
-              {{i18n "wireframe.inspector.image.dark_requires_light"}}
-            </p>
-          {{/if}}
-        </details>
-      {{/if}}
     </div>
   </template>
 }

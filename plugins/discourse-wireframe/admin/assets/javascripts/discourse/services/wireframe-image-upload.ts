@@ -158,6 +158,7 @@ export default class WireframeImageUploadService extends Service {
       blockKey,
       argName,
       variant = "light",
+      onProgress,
     }: {
       /** Composite key of the block receiving the image. */
       blockKey: string;
@@ -165,6 +166,8 @@ export default class WireframeImageUploadService extends Service {
       argName: string;
       /** Source variant captured when this upload starts. */
       variant?: "light" | "dark";
+      /** Upload percentage from 0 to 100. */
+      onProgress?: (progress: number) => void;
     }
   ): Promise<ImageUploadResult | null> {
     if (!file || !blockKey || !argName) {
@@ -221,6 +224,11 @@ export default class WireframeImageUploadService extends Service {
       });
 
       upload.setup(document.createElement("input"));
+      upload.uppyWrapper?.uppyInstance?.on("progress", (progress: number) => {
+        if (!settled) {
+          onProgress?.(progress);
+        }
+      });
       upload.uppyWrapper?.uppyInstance?.on("upload-error", () => finish(null));
       upload.addFiles(file);
     });

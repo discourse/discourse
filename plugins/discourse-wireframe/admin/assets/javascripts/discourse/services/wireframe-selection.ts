@@ -833,6 +833,7 @@ export default class WireframeSelectionService extends Service {
       target.closest(".wireframe-block-chrome") ||
       target.closest(".wireframe-shell") ||
       target.closest(".wireframe-conditions-floating-panel") ||
+      target.closest(".dialog-container") ||
       target.closest(".fk-d-menu") ||
       target.closest(".fk-d-menu-modal") ||
       target.closest(".fk-d-tooltip__content")

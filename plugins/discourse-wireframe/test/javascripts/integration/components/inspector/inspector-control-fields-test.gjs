@@ -3,10 +3,11 @@ import Service from "@ember/service";
 import { fillIn, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { imageComposition } from "discourse/blocks/image-value";
+import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
-import DPositionPicker from "discourse/ui-kit/d-position-picker";
 import ImageCompositionControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-composition-controls";
+import ImagePositionPicker from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-position-picker";
 import InspectorDimensionField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-dimension-field";
 import InspectorStepperField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-stepper-field";
 
@@ -14,6 +15,32 @@ module(
   "Integration | discourse-wireframe | shared image zoom",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("unit controls show percentage addons for image coordinates and zoom", async function (assert) {
+      class Composition extends Service {
+        matches() {
+          return false;
+        }
+      }
+      this.owner.register("service:wireframe-image-composition", Composition);
+      const target = { blockKey: "image:units", argName: "image" };
+      const value = { url: "/image.png", zoom: 150 };
+      await render(
+        <template>
+          <div style="width: 300px;">
+            <ImageCompositionControls @target={{target}} @value={{value}} />
+          </div>
+        </template>
+      );
+      assert
+        .dom(".form-kit__after-input")
+        .exists({ count: 3 }, "each percentage uses a FormKit suffix");
+      assert.dom("input[aria-label='X (%)']").exists();
+      assert.dom("input[aria-label='Y (%)']").exists();
+      assert
+        .dom(".wireframe-image-composition__zoom input[type='number']")
+        .hasAttribute("aria-label", "Zoom (%)");
+    });
 
     test("preserves incomplete numeric input and restores a cleared input on blur", async function (assert) {
       class Composition extends Service {
@@ -75,7 +102,7 @@ module(
       const value = { x: 50, y: 50 };
       await render(
         <template>
-          <DPositionPicker
+          <ImagePositionPicker
             @value={{value}}
             @onPreview={{preview}}
             @onChange={{commit}}
@@ -83,11 +110,11 @@ module(
           />
         </template>
       );
-      const pad = find(".d-position-picker__pad");
+      const pad = find(".wireframe-image-position-picker__pad");
       const bounds = pad.getBoundingClientRect();
-      stubPointerCapture(".d-position-picker__pad");
+      stubPointerCapture(".wireframe-image-position-picker__pad");
       await triggerEvent(
-        ".d-position-picker__preset:nth-child(5)",
+        ".wireframe-image-position-picker__preset:nth-child(5)",
         "pointerdown",
         {
           button: 0,
@@ -112,9 +139,13 @@ module(
         clientX: bounds.left + bounds.width / 4,
         clientY: bounds.top + bounds.height * 0.75,
       });
-      await triggerEvent(".d-position-picker__preset:nth-child(5)", "click", {
-        detail: 1,
-      });
+      await triggerEvent(
+        ".wireframe-image-position-picker__preset:nth-child(5)",
+        "click",
+        {
+          detail: 1,
+        }
+      );
       assert.deepEqual(
         commits,
         [{ x: 25, y: 75 }],
@@ -130,7 +161,7 @@ module(
       const value = { x: 50, y: 50 };
       await render(
         <template>
-          <DPositionPicker
+          <ImagePositionPicker
             @value={{value}}
             @onPreview={{preview}}
             @onChange={{commit}}
@@ -142,9 +173,13 @@ module(
       assert.strictEqual(commits.length, 0, "typing remains a draft");
       await triggerEvent("input[type='number']", "blur");
       assert.deepEqual(commits, [{ x: 30, y: 50 }], "blur commits once");
-      await triggerEvent(".d-position-picker__preset:nth-child(9)", "click", {
-        detail: 0,
-      });
+      await triggerEvent(
+        ".wireframe-image-position-picker__preset:nth-child(9)",
+        "click",
+        {
+          detail: 0,
+        }
+      );
       assert.deepEqual(
         commits.at(-1),
         { x: 100, y: 100 },
@@ -179,7 +214,7 @@ module(
       );
 
       assert
-        .dom(".wireframe-dimension-field__suffix")
+        .dom(".wireframe-dimension-field .form-kit__after-input")
         .hasText("rem", "shows the unit as a static suffix");
       assert
         .dom(".wireframe-dimension-field__slider")
@@ -189,10 +224,13 @@ module(
         .doesNotExist("no unit selector in unitless mode");
       assert.dom(".wireframe-dimension-field__number").hasValue("1");
 
-      await fillIn(".wireframe-dimension-field__number", "2");
-      await triggerEvent(".wireframe-dimension-field__number", "change");
+      const input = find(".wireframe-dimension-field__number");
+      input.value = "2";
+      await triggerEvent(input, "input");
+      assert.deepEqual(captured, [], "typing does not commit the dimension");
+      await triggerEvent(input, "change");
 
-      assert.strictEqual(captured.at(-1), 2, "commits the typed value");
+      assert.deepEqual(captured, [2], "commits the typed value once");
       assert.strictEqual(
         typeof captured.at(-1),
         "number",
@@ -239,6 +277,9 @@ module(
 
       assert.dom(".wireframe-dimension-field__number").hasValue("16");
       assert.dom("select.wireframe-dimension-field__unit").hasValue("px");
+      assert
+        .dom(".form-kit__after-input select")
+        .exists("unit selector uses the shared addon container");
 
       await fillIn("select.wireframe-dimension-field__unit", "rem");
       assert.strictEqual(
@@ -254,6 +295,48 @@ module(
         "20rem",
         "the numeric edit keeps the selected unit"
       );
+    });
+
+    test("unit controls retain the FormKit host and disabled field bindings", async function (assert) {
+      const units = ["px", "rem"];
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @type="custom"
+              @name="size"
+              @title="Size"
+              @disabled={{true}}
+              as |field|
+            >
+              <field.Control>
+                <InspectorDimensionField
+                  @custom={{field}}
+                  @units={{units}}
+                  @slider={{true}}
+                  @min={{0}}
+                  @max={{100}}
+                />
+              </field.Control>
+            </form.Field>
+          </Form>
+        </template>
+      );
+      assert.dom("form").exists({ count: 1 }, "does not nest another form");
+      assert
+        .dom("input[type='number']")
+        .isDisabled("numeric input respects disabled state");
+      assert.dom("select").isDisabled("unit selector respects disabled state");
+      assert
+        .dom("input[type='range']")
+        .isDisabled("slider respects disabled state");
+      assert
+        .dom("input[type='number']")
+        .hasAttribute(
+          "id",
+          find("label").htmlFor,
+          "field label targets the numeric control"
+        );
     });
   }
 );

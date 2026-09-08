@@ -1,6 +1,13 @@
 en:
   js:
     wireframe:
+      position_picker:
+        label: "Position"
+        horizontal: "X (%)"
+        vertical: "Y (%)"
+        horizontal_short: "X"
+        vertical_short: "Y"
+        preset: "Position: %{x}% from left, %{y}% from top"
       pill:
         enter: "Edit page"
         enter_with_count:
@@ -109,6 +116,7 @@ en:
         browse_all: "Browse all"
         no_results: "No blocks match your search."
       inspector:
+        dimension_unit: "Dimension unit"
         empty: "Select a block to inspect."
         controls:
           decrement: "Decrease"
@@ -130,9 +138,9 @@ en:
         section_metadata: "Metadata"
         section_args: "Arguments"
         section_conditions: "Conditions"
-        tab_args: "Args"
+        tab_args: "Settings"
         tab_conditions: "Conditions"
-        tab_raw: "Raw JSON"
+        tab_raw: "JSON"
         metadata:
           section_title: "Metadata"
           id_label: "Block ID"
@@ -254,6 +262,7 @@ en:
             align_self: "Align self"
             flex_grow: "Grow"
         image:
+          default_label: "Default image"
           change: "Change image"
           change_light: "Change light image"
           change_dark: "Change dark image"
@@ -270,10 +279,13 @@ en:
           frame_size: "Frame size"
           frame_width: "Width (px)"
           frame_height: "Height (px)"
+          frame_width_short: "Width"
+          frame_height_short: "Height"
           composition: "Composition"
           fill: "Fill"
           fit: "Fit"
           zoom: "Zoom (%)"
+          zoom_short: "Zoom"
           reposition: "Reposition on canvas"
           reposition_help: "Drag the image to reposition it"
           reset_composition: "Reset"
