@@ -212,6 +212,7 @@ RSpec.describe "Managing Posts solved status" do
 
         describe "when allow solved on all topics is enabled" do
           before { SiteSetting.allow_solved_on_all_topics = true }
+
           it "only returns posts where the post is not solved" do
             result = Search.execute("status:unsolved")
             expect(result.posts.pluck(:id)).to match_array(
@@ -478,6 +479,7 @@ RSpec.describe "Managing Posts solved status" do
 
     describe "with multiple solutions enabled" do
       let(:p2) { Fabricate(:post, topic: topic) }
+
       before { SiteSetting.solved_allow_multiple_solutions = true }
 
       it "can mark multiple posts as accepted, only creating one timer" do
@@ -644,6 +646,7 @@ RSpec.describe "Managing Posts solved status" do
 
     describe "with multiple solutions enabled" do
       let(:p2) { Fabricate(:post, topic: topic) }
+
       before { SiteSetting.solved_allow_multiple_solutions = true }
 
       describe "when solved_topics_auto_close_hours is enabled" do
@@ -713,6 +716,7 @@ RSpec.describe "Managing Posts solved status" do
 
   context "with discourse-assign installed", if: defined?(DiscourseAssign) do
     let(:admin) { Fabricate(:admin) }
+
     fab!(:group)
     before do
       SiteSetting.solved_enabled = true
@@ -977,6 +981,7 @@ RSpec.describe "Managing Posts solved status" do
 
     describe "with multiple solutions enabled" do
       before { SiteSetting.solved_allow_multiple_solutions = true }
+
       it "lists all solutions in topic" do
         t1 = Fabricate(:topic_with_op)
 

@@ -410,16 +410,19 @@ RSpec.describe CookedPostProcessor do
 
         context "with invalid width" do
           let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 0, "height" => 222 } } }
+
           include_examples "leave dimensions alone"
         end
 
         context "with invalid height" do
           let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 0 } } }
+
           include_examples "leave dimensions alone"
         end
 
         context "with invalid width & height" do
           let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 0, "height" => 0 } } }
+
           include_examples "leave dimensions alone"
         end
       end

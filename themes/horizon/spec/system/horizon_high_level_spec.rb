@@ -20,6 +20,7 @@ describe "Horizon theme | High level" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:palette_selector) { PageObjects::Components::UserColorPaletteSelector.new }
+
   fab!(:incorrect_scheme) do
     Fabricate(:color_scheme, name: "Incorrect Scheme", user_selectable: true)
   end

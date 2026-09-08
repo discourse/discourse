@@ -121,6 +121,7 @@ RSpec.describe Post do
 
     context "with a post with links" do
       let(:post) { Fabricate(:post_with_external_links) }
+
       before do
         post.trash!
         post.reload
@@ -185,6 +186,7 @@ RSpec.describe Post do
 
       context "if the topic category is read_restricted" do
         let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
         before { topic.change_category_to_id(category.id) }
 
         it "returns true" do
@@ -1010,6 +1012,7 @@ RSpec.describe Post do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
+
     fab!(:p4) { Fabricate(:post, percent_rank: 0.99) }
 
     it "returns the OP and posts above the threshold in summary mode" do
@@ -2019,6 +2022,7 @@ RSpec.describe Post do
 
         context "for custom emoji" do
           before { CustomEmoji.create(name: "meme", upload: image_upload) }
+
           it "never sets an access control post because they should not be secure" do
             post.link_post_uploads
             expect(image_upload.reload.access_control_post_id).to eq(nil)

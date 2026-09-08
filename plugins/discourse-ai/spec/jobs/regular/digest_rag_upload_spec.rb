@@ -99,6 +99,7 @@ describe Jobs::DigestRagUpload do
         expect(parsed).to eq(parsed_document_with_metadata.read.delete_suffix("\n"))
       end
     end
+
     context "when processing an upload for the first time" do
       before { File.expects(:open).returns(document_file) }
 

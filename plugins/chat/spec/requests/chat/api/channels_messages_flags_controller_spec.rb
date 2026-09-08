@@ -53,6 +53,7 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
         expect(response.status).to eq(404)
       end
     end
+
     context "when channel is not found" do
       it "returns a 404" do
         post "/chat/api/channels/-999/messages/#{message_1.id}/flags", params: params

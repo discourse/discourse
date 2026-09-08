@@ -320,6 +320,7 @@ RSpec.describe SiteSettingExtension do
       settings.setting(:image_list_test, "", type: :uploaded_image_list)
       settings.refresh!
     end
+
     it "correctly nukes overrides" do
       settings.test_override = "bla"
       settings.remove_override!(:test_override)

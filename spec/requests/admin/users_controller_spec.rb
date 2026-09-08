@@ -2899,6 +2899,7 @@ RSpec.describe Admin::UsersController do
 
           expect(response.status).to eq(200)
         end
+
         it "should succeed with totp" do
           user.security_keys.destroy_all
 
@@ -3076,6 +3077,7 @@ RSpec.describe Admin::UsersController do
   describe "#delete_posts_decider" do
     shared_examples "delete_posts_decider accessible" do |acting_user_role|
       let(:acting_user) { send(acting_user_role) }
+
       context "when user exists" do
         fab!(:target_user, :user)
 
@@ -3135,11 +3137,13 @@ RSpec.describe Admin::UsersController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
       include_examples "delete_posts_decider accessible", :admin
     end
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
+
       include_examples "delete_posts_decider accessible", :moderator
 
       context "when target user is another moderator" do

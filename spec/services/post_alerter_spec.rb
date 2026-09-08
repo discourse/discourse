@@ -757,6 +757,7 @@ RSpec.describe PostAlerter do
     let(:post) do
       create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic)
     end
+
     fab!(:other_post) { Fabricate(:post, topic: topic) }
 
     before { Jobs.run_immediately! }
@@ -813,6 +814,7 @@ RSpec.describe PostAlerter do
       Fabricate(:group, name: "group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
     end
     let(:post) { create_post_with_alerts(raw: "Hello @group how are you?") }
+
     before { group.add(evil_trout) }
 
     it "notifies users correctly" do
@@ -980,6 +982,7 @@ RSpec.describe PostAlerter do
         %i[watching tracking regular].each do |notification_level|
           context "when notification level is '#{notification_level}'" do
             before { set_topic_notification_level(alice, pm_topic, notification_level) }
+
             let(:expected_notification) do
               notification_level == :watching ? :private_message : :mentioned
             end

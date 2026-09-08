@@ -151,6 +151,7 @@ RSpec.describe Admin::FormTemplatesController do
 
     context "when logged in as a non-admin user" do
       before { sign_in(user) }
+
       it "prevents deletion with a 404 response" do
         expect do
           delete "/admin/customize/form-templates/#{form_template.id}.json"

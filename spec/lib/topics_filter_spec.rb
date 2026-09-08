@@ -7,6 +7,7 @@ RSpec.describe TopicsFilter do
 
   describe "#option_info" do
     let(:options) { TopicsFilter.option_info(Guardian.new) }
+
     it "should return a correct hash with name and description keys for all" do
       expect(options).to be_an(Array)
       expect(options).to all(be_a(Hash))
@@ -344,6 +345,7 @@ RSpec.describe TopicsFilter do
         ).to start_with(t1.id, t2.id)
       end
     end
+
     describe "when filtering with multiple filters" do
       fab!(:tag) { Fabricate(:tag, name: "tag1") }
       fab!(:tag2) { Fabricate(:tag, name: "tag2") }
@@ -411,6 +413,7 @@ RSpec.describe TopicsFilter do
             )
           end
         end
+
         before { user_for_new_filters.user_option.update!(new_topic_duration_minutes: 1.day.ago) }
 
         it "in:new-topics returns only new topics" do
@@ -1654,6 +1657,7 @@ RSpec.describe TopicsFilter do
 
       describe "when query string is `tags:tag_name`" do
         before { tag.update!(name: "tag_with_underscore") }
+
         it "should return topics even when tag contains underscore" do
           expect(
             TopicsFilter

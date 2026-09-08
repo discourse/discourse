@@ -180,6 +180,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
 
     context "with some rules" do
       let(:group) { Fabricate(:group) }
+
       before do
         DiscourseChatIntegration::Rule.create!(
           channel: chan1,

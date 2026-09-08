@@ -394,6 +394,7 @@ describe PostRevisor do
       describe "with PMs" do
         fab!(:pm, :private_message_topic)
         let(:first_post) { create_post(user: admin, topic: pm, allow_uncategorized_topics: false) }
+
         fab!(:category) { Fabricate(:category, topic_count: 1) }
         it "Does not create a category change small_action post when converting to a topic" do
           expect do
@@ -1779,6 +1780,7 @@ describe PostRevisor do
 
       context "with secure uploads uploads" do
         let!(:image5) { Fabricate(:secure_upload) }
+
         before do
           Jobs.run_immediately!
           setup_s3

@@ -762,8 +762,10 @@ RSpec.describe InlineUploads do
         expect(raw).to eq("look at this:\n![logo](#{image_upload.short_url})")
       end
     end
+
     context "when raw has an image URL with a square bracket in filename" do
       let!(:image_upload) { Fabricate(:image_upload, original_filename: "image]1.jpg") }
+
       it "does not make broken markdown" do
         origin = "http://foo.bar/#{image_upload.original_filename}"
         raw =

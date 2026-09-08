@@ -43,6 +43,7 @@ RSpec.describe Oneboxer do
 
   describe "#invalidate" do
     let(:url) { "http://test.com" }
+
     it "clears the cached preview for the onebox URL and the failed URL cache" do
       Discourse.cache.write(Oneboxer.onebox_cache_key(url), "test")
       Discourse.cache.write(Oneboxer.onebox_failed_cache_key(url), true)

@@ -23,6 +23,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
       context "when channel is not found" do
         before { channel_1.destroy! }
+
         it "returns a 404" do
           delete "/chat/api/channels/-999/memberships/me/follows"
 

@@ -1324,6 +1324,7 @@ RSpec.describe UserNotifications do
   describe "user mentioned email" do
     include_examples "notification email building" do
       let(:notification_type) { :mentioned }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1347,6 +1348,7 @@ RSpec.describe UserNotifications do
   describe "user replied" do
     include_examples "notification email building" do
       let(:notification_type) { :replied }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1356,6 +1358,7 @@ RSpec.describe UserNotifications do
   describe "user quoted" do
     include_examples "notification email building" do
       let(:notification_type) { :quoted }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1365,6 +1368,7 @@ RSpec.describe UserNotifications do
   describe "user posted" do
     include_examples "notification email building" do
       let(:notification_type) { :posted }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1465,6 +1469,7 @@ RSpec.describe UserNotifications do
   describe "watching first post" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
+
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
@@ -1570,6 +1575,7 @@ RSpec.describe UserNotifications do
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
+
           it "sets the locale" do
             expects_build_with(has_entry(:locale, "fr"))
           end
@@ -1593,6 +1599,7 @@ RSpec.describe UserNotifications do
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
+
           it "sets the locale" do
             expects_build_with(has_entry(:locale, "en"))
           end

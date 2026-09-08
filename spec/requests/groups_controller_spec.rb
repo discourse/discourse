@@ -6,6 +6,7 @@ RSpec.describe GroupsController do
   fab!(:other_user, :user)
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
+
   fab!(:admin)
   fab!(:moderator)
 
@@ -3388,6 +3389,7 @@ RSpec.describe GroupsController do
             "Invalid credentials",
           )
         end
+
         it "uses the friendly error message functionality to return the message to the user" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
           expect(response.status).to eq(422)
@@ -3477,6 +3479,7 @@ RSpec.describe GroupsController do
 
       context "when the protocol is not accepted" do
         let(:protocol) { "sigma" }
+
         it "raises an invalid params error" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
           expect(response.status).to eq(400)
@@ -3486,6 +3489,7 @@ RSpec.describe GroupsController do
 
       context "when user is a regular user without staff access" do
         before { sign_in(user) }
+
         it "errors if the user does not have access to the group" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
 

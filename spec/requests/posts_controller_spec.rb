@@ -1312,6 +1312,7 @@ RSpec.describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: post.topic)) }
+
       it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
         expect(response.parsed_body["topic_bookmarked"]).to eq(true)
@@ -3548,6 +3549,7 @@ RSpec.describe PostsController do
 
     context "with a tagged topic" do
       let(:tag) { Fabricate(:tag) }
+
       it "works" do
         SiteSetting.tagging_enabled = true
 

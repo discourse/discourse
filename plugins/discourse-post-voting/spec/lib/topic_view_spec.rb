@@ -207,6 +207,7 @@ describe TopicView do
         [answer_minus_2_votes.id, answer_minus_1_vote.id, answer_0_votes.id],
       )
     end
+
     describe "#next_page" do
       it "returns the next page properly when the highest id post is not the last" do
         expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(2)

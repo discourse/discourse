@@ -200,6 +200,7 @@ RSpec.describe Email::Receiver do
 
     context "with reply_by_email configured" do
       before { configure_reply_by_email }
+
       it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
         expect { process(:cc) }.to change(Topic, :count)
 
@@ -583,6 +584,7 @@ RSpec.describe Email::Receiver do
         process(:email_to_group_email_username_1)
         Topic.last
       end
+
       fab!(:user_in_group) do
         u = Fabricate(:user)
         Fabricate(:group_user, user: u, group: group)
@@ -2003,6 +2005,7 @@ RSpec.describe Email::Receiver do
           Email::Receiver::ReplyNotAllowedError,
         )
       end
+
       it "works" do
         expect { process(:reply_user_matching) }.to change { topic.posts.count }
       end

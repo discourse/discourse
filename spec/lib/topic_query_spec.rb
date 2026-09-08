@@ -1150,6 +1150,7 @@ RSpec.describe TopicQuery do
   describe "categorized" do
     fab!(:category, :category_with_definition)
     let(:topic_category) { category.topic }
+
     fab!(:topic_no_cat, :topic)
     fab!(:topic_in_cat1) do
       Fabricate(:topic, category: category, bumped_at: 10.minutes.ago, created_at: 10.minutes.ago)

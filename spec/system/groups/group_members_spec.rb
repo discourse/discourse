@@ -2,6 +2,7 @@
 
 describe "Group members" do
   let(:group_page) { PageObjects::Pages::Group.new }
+
   fab!(:admin)
   fab!(:group)
 

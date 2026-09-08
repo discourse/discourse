@@ -14,6 +14,7 @@ RSpec.describe TopicEmbed do
     let(:contents) do
       "<p>hello world new post <a href='/hello'>hello</a> <img src='images/wat.jpg'></p>"
     end
+
     fab!(:embeddable_host)
     fab!(:category)
     fab!(:tag)
@@ -913,6 +914,7 @@ RSpec.describe TopicEmbed do
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) { "<p>hello world new post :D</p>" }
+
     fab!(:embeddable_host)
     fab!(:category)
     fab!(:tag)

@@ -128,6 +128,7 @@ RSpec.describe StaticController do
           expect(response.status).to eq(404)
         end
       end
+
       it "rejects fallback paths that traverse outside the fallback directory" do
         Dir.mktmpdir do |tmpdir|
           fallback_dir = File.join(tmpdir, "fallback_assets")
@@ -511,6 +512,7 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/page/login/1")
       end
     end
+
     context "when the redirect path is invalid" do
       it "redirects to the root URL" do
         post "/login.json", params: { redirect: "test" }

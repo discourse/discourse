@@ -148,6 +148,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
     let(:query) { "What is Discourse?" }
     let(:context) { "Discourse is an open-source discussion platform." }
     let(:request_id) { SecureRandom.uuid }
+
     fab!(:source_post, :post)
 
     context "when the user is allowed to discover" do

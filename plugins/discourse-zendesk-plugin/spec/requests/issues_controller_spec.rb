@@ -64,6 +64,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
         },
       )
     end
+
     it "does not create a zendesk ticket for a topic the moderator cannot see" do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)

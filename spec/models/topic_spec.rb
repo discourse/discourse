@@ -2,6 +2,7 @@
 
 RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:whisperers_group, :group)
@@ -1739,6 +1740,7 @@ RSpec.describe Topic do
 
     context "when closed" do
       let(:status) { "closed" }
+
       it_behaves_like "a status that closes a topic"
 
       it "should archive group message" do
@@ -1760,6 +1762,7 @@ RSpec.describe Topic do
 
     context "when autoclosed" do
       let(:status) { "autoclosed" }
+
       it_behaves_like "a status that closes a topic"
 
       context "when topic was set to close when it was created" do
@@ -2229,6 +2232,7 @@ RSpec.describe Topic do
 
         describe "tracking state notifications" do
           before { SiteSetting.experimental_topic_category_change_notification = true }
+
           it "publishes category change when moving to a restricted category" do
             restricted_category =
               Fabricate(:category_with_definition, read_restricted: true, user: user)
@@ -3306,6 +3310,7 @@ RSpec.describe Topic do
 
   describe "featured link" do
     before { SiteSetting.topic_featured_link_enabled = true }
+
     fab!(:topic)
 
     it "can validate featured link" do

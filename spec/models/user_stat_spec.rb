@@ -218,6 +218,7 @@ RSpec.describe UserStat do
   describe ".update_distinct_badge_count" do
     fab!(:user)
     let(:stat) { user.user_stat }
+
     fab!(:badge1, :badge)
     fab!(:badge2, :badge)
 

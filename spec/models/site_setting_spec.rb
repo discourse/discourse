@@ -406,6 +406,7 @@ RSpec.describe SiteSetting do
 
   describe "creating upload references for type objects settings with upload fields" do
     let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
+
     fab!(:upload)
     fab!(:upload2, :upload)
 

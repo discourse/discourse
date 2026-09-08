@@ -41,6 +41,7 @@ RSpec.describe JsonError do
 
   describe "an activerecord object with errors" do
     let(:invalid_user) { User.new }
+
     it "returns the errors correctly" do
       expect(invalid_user).not_to be_valid
       result = creator.create_errors_json(invalid_user)

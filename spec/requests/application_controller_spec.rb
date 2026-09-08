@@ -260,6 +260,7 @@ RSpec.describe ApplicationController do
 
   describe "#redirect_to_second_factor_if_required" do
     let(:admin) { Fabricate(:admin) }
+
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     before do
@@ -722,6 +723,7 @@ RSpec.describe ApplicationController do
     let!(:theme) { Fabricate(:theme, user_selectable: true) }
     let!(:theme2) { Fabricate(:theme, user_selectable: true) }
     let!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
+
     fab!(:user)
     fab!(:admin)
 
@@ -1883,6 +1885,7 @@ RSpec.describe ApplicationController do
   describe "#banner_json" do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
+
     fab!(:banner_topic)
     fab!(:p1) { Fabricate(:post, topic: banner_topic, raw: "A banner topic") }
 
@@ -1892,6 +1895,7 @@ RSpec.describe ApplicationController do
 
     context "with login_required" do
       before { SiteSetting.login_required = true }
+
       it "does not include banner info for anonymous users" do
         get "/login"
 
@@ -1914,6 +1918,7 @@ RSpec.describe ApplicationController do
 
     context "with login not required" do
       before { SiteSetting.login_required = false }
+
       it "does include banner info for anonymous users" do
         get "/login"
 

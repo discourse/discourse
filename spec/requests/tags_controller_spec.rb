@@ -216,6 +216,7 @@ RSpec.describe TagsController do
 
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
+
       include_examples "retrieves the right tags"
 
       it "does not list tags of a visible group when they are restricted to a category the user can't see" do
@@ -317,6 +318,7 @@ RSpec.describe TagsController do
 
     context "with tags_listed_by_group disabled" do
       before { SiteSetting.tags_listed_by_group = false }
+
       include_examples "retrieves the right tags"
 
       it "hides tags only used in personal messages from category tag lists for regular users" do
@@ -2367,6 +2369,7 @@ RSpec.describe TagsController do
 
       describe "with `SiteSetting.force_lowercase_tags = false" do
         before { SiteSetting.force_lowercase_tags = false }
+
         it "does not fail if tags already exist" do
           Fabricate(:tag, name: "tag1")
           Fabricate(:tag, name: "CAPITALTAG2")

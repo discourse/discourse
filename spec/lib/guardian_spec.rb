@@ -261,6 +261,7 @@ RSpec.describe Guardian do
 
     context "when personal_message_enabled_groups does not contain the user" do
       let(:group) { Fabricate(:group) }
+
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
       it "returns false if user is not staff member" do
@@ -410,6 +411,7 @@ RSpec.describe Guardian do
 
     context "when personal_message_enabled_groups does contain the user" do
       let(:group) { Fabricate(:group) }
+
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
       it "returns true" do
@@ -422,6 +424,7 @@ RSpec.describe Guardian do
 
     context "when personal_message_enabled_groups does not contain the user" do
       let(:group) { Fabricate(:group) }
+
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
       it "returns false if user is not staff member" do
@@ -488,6 +491,7 @@ RSpec.describe Guardian do
       global_setting :allow_impersonation, false
       expect(Guardian.new(admin).can_impersonate?(moderator)).to be_falsey
     end
+
     it "allows impersonation correctly" do
       expect(Guardian.new(admin).can_impersonate?(nil)).to be_falsey
       expect(Guardian.new.can_impersonate?(user)).to be_falsey
@@ -1269,6 +1273,7 @@ RSpec.describe Guardian do
       context "with first post of a static page doc" do
         let!(:tos_topic) { Fabricate(:topic, user: Discourse.system_user) }
         let!(:tos_first_post) { Fabricate(:post, topic: tos_topic, user: tos_topic.user) }
+
         before { SiteSetting.tos_topic_id = tos_topic.id }
 
         it "restricts static doc posts" do
@@ -2405,6 +2410,7 @@ RSpec.describe Guardian do
 
       context "with posts" do
         before { target_user.stubs(:post_count).returns(1) }
+
         include_examples "staff can always change usernames"
         it "is false for the user to change their own username" do
           expect(Guardian.new(target_user).can_edit_username?(target_user)).to be_falsey
@@ -2738,6 +2744,7 @@ RSpec.describe Guardian do
 
     context "when ignorer is staff" do
       let(:guardian) { Guardian.new(admin) }
+
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
@@ -2745,6 +2752,7 @@ RSpec.describe Guardian do
 
     context "when ignorer is not in required trust level group" do
       let(:guardian) { Guardian.new(trust_level_0) }
+
       it "does not allow ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)
       end
@@ -2752,6 +2760,7 @@ RSpec.describe Guardian do
 
     context "when ignorer is in the required trust level group" do
       let(:guardian) { Guardian.new(trust_level_1) }
+
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
@@ -2759,6 +2768,7 @@ RSpec.describe Guardian do
 
     context "when ignorer is in a higher than required trust level group" do
       let(:guardian) { Guardian.new(trust_level_3) }
+
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
@@ -2790,6 +2800,7 @@ RSpec.describe Guardian do
 
     context "when muter's trust level is below tl1" do
       let(:guardian) { Guardian.new(trust_level_0) }
+
       fab!(:trust_level_0)
 
       it "does not allow muting user" do
@@ -2914,6 +2925,7 @@ RSpec.describe Guardian do
 
     context "when post is older than post_edit_time_limit" do
       let(:old_post) { Fabricate(:post, user: trust_level_2, created_at: 6.minutes.ago) }
+
       before do
         SiteSetting.self_wiki_allowed_groups = "1|2|12"
         SiteSetting.tl2_post_edit_time_limit = 5
@@ -3242,6 +3254,7 @@ RSpec.describe Guardian do
 
   describe "topic featured link category restriction" do
     before { SiteSetting.topic_featured_link_enabled = true }
+
     let(:guardian) { Guardian.new(user) }
     let(:uncategorized) { Category.find(SiteSetting.uncategorized_category_id) }
 

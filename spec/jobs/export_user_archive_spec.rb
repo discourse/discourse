@@ -285,6 +285,7 @@ RSpec.describe Jobs::ExportUserArchive do
 
     context "with auth token logs" do
       let(:component) { "auth_token_logs" }
+
       it "includes details such as the path" do
         data, _csv_out = make_component_csv
         expect(data.length).to eq(1)

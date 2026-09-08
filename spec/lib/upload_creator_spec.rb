@@ -755,6 +755,7 @@ RSpec.describe UploadCreator do
 
         context "if type of upload is in the composer" do
           let(:opts) { { type: "composer" } }
+
           it "sets the upload to secure and sets the original_sha1 column, because we don't know the context of the composer" do
             expect(result.secure).to eq(true)
             expect(result.original_sha1).not_to eq(nil)
@@ -763,6 +764,7 @@ RSpec.describe UploadCreator do
 
         context "if the upload is for a PM" do
           let(:opts) { { for_private_message: true } }
+
           it "sets the upload to secure and sets the original_sha1" do
             expect(result.secure).to eq(true)
             expect(result.original_sha1).not_to eq(nil)
@@ -771,6 +773,7 @@ RSpec.describe UploadCreator do
 
         context "if the upload is for a group message" do
           let(:opts) { { for_group_message: true } }
+
           it "sets the upload to secure and sets the original_sha1" do
             expect(result.secure).to eq(true)
             expect(result.original_sha1).not_to eq(nil)
@@ -779,6 +782,7 @@ RSpec.describe UploadCreator do
 
         context "if SiteSetting.login_required" do
           before { SiteSetting.login_required = true }
+
           it "sets the upload to secure and sets the original_sha1" do
             expect(result.secure).to eq(true)
             expect(result.original_sha1).not_to eq(nil)

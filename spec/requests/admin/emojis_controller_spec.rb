@@ -305,11 +305,13 @@ RSpec.describe Admin::EmojiController do
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
+
       include_examples "export not allowed"
     end
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
+
       include_examples "export not allowed"
     end
   end
@@ -446,11 +448,13 @@ RSpec.describe Admin::EmojiController do
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
+
       include_examples "import preview not allowed"
     end
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
+
       include_examples "import preview not allowed"
     end
   end
@@ -602,11 +606,13 @@ RSpec.describe Admin::EmojiController do
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
+
       include_examples "import confirm not allowed"
     end
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
+
       include_examples "import confirm not allowed"
     end
   end

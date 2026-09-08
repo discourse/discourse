@@ -16,6 +16,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     )
   end
   let(:upload_path) { Discourse.store.upload_path }
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   before do

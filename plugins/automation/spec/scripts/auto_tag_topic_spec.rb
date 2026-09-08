@@ -94,6 +94,7 @@ describe "AutoTagTopic" do
             target: "script",
           )
         end
+
         it "works" do
           automation.trigger!("topic" => topic, "status" => :automatically)
 
@@ -106,6 +107,7 @@ describe "AutoTagTopic" do
           expect(topic.reload.tags.pluck(:name)).to be_empty
         end
       end
+
       context "when closed_manually is set" do
         before do
           automation.upsert_field!("tags", "tags", { value: %w[tag1 tag2] })

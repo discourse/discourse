@@ -673,12 +673,14 @@ RSpec.describe UserGuardian do
 
     context "for moderators" do
       let(:guardian) { Guardian.new(moderator) }
+
       include_examples "can_delete_user examples"
       include_examples "can_delete_user staff examples"
     end
 
     context "for admins" do
       let(:guardian) { Guardian.new(admin) }
+
       include_examples "can_delete_user examples"
       include_examples "can_delete_user staff examples"
     end
@@ -694,6 +696,7 @@ RSpec.describe UserGuardian do
 
     context "for moderators" do
       let(:guardian) { Guardian.new(moderator) }
+
       include_examples "can_merge_user examples"
 
       it "isn't allowed if current_user is not an admin" do
@@ -703,6 +706,7 @@ RSpec.describe UserGuardian do
 
     context "for admins" do
       let(:guardian) { Guardian.new(admin) }
+
       include_examples "can_merge_user examples"
     end
   end

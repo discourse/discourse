@@ -4,6 +4,7 @@ describe "User AI preferences" do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:llm_model)
   let(:user_preferences_ai_page) { PageObjects::Pages::UserPreferencesAi.new }
+
   fab!(:discovery_agent) { Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:admins]]) }
 
   before do

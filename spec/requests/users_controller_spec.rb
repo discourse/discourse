@@ -162,6 +162,7 @@ RSpec.describe UsersController do
           expect(response.parsed_body["redirect_to"]).to eq(destination_url)
         end
       end
+
       context "when destination URL doesn't have a query" do
         it "should redirect to the URL" do
           destination_url = "http://thisisasite.com/somepath"
@@ -1029,6 +1030,7 @@ RSpec.describe UsersController do
         end
 
         after { DiscoursePluginRegistry.reset! }
+
         it "creates User record" do
           params = {
             username: "foobar",
@@ -1596,6 +1598,7 @@ RSpec.describe UsersController do
 
     context "when honeypot value is wrong" do
       before { UsersController.any_instance.stubs(:honeypot_value).returns("abc") }
+
       let(:create_params) do
         {
           name: @user.name,
@@ -1605,11 +1608,13 @@ RSpec.describe UsersController do
           password_confirmation: "wrong",
         }
       end
+
       include_examples "honeypot fails"
     end
 
     context "when challenge answer is wrong" do
       before { UsersController.any_instance.stubs(:challenge_value).returns("abc") }
+
       let(:create_params) do
         {
           name: @user.name,
@@ -1619,6 +1624,7 @@ RSpec.describe UsersController do
           challenge: "abc",
         }
       end
+
       include_examples "honeypot fails"
     end
 
@@ -1658,6 +1664,7 @@ RSpec.describe UsersController do
       let(:create_params) do
         { name: @user.name, username: @user.username, password: "", email: @user.email }
       end
+
       include_examples "failed signup"
     end
 
@@ -1670,6 +1677,7 @@ RSpec.describe UsersController do
           email: @user.email,
         }
       end
+
       include_examples "failed signup"
     end
 
@@ -1688,6 +1696,7 @@ RSpec.describe UsersController do
 
     context "when password param is missing" do
       let(:create_params) { { name: @user.name, username: @user.username, email: @user.email } }
+
       include_examples "failed signup"
     end
 
@@ -1695,7 +1704,9 @@ RSpec.describe UsersController do
       let(:create_params) do
         { name: @user.name, username: "Reserved", email: @user.email, password: "strongpassword" }
       end
+
       before { SiteSetting.reserved_usernames = "a|reserved|b" }
+
       include_examples "failed signup"
     end
 
@@ -1708,6 +1719,7 @@ RSpec.describe UsersController do
           password: "strongpassword",
         }
       end
+
       include_examples "failed signup"
     end
 
@@ -1762,6 +1774,7 @@ RSpec.describe UsersController do
         let(:create_params) do
           { name: @user.name, password: "watwatwat", username: @user.username, email: @user.email }
         end
+
         include_examples "failed signup"
       end
 
@@ -2049,6 +2062,7 @@ RSpec.describe UsersController do
     context "while logged in" do
       let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
+
       fab!(:user) { Fabricate(:user, username: "OrigUsername", refresh_auto_groups: true) }
 
       before do
@@ -2251,11 +2265,13 @@ RSpec.describe UsersController do
 
     context "when username is available" do
       before { get "/u/check_username.json", params: { username: "BruceWayne" } }
+
       include_examples "when username is available"
     end
 
     context "when username is unavailable" do
       before { get "/u/check_username.json", params: { username: user1.username } }
+
       include_examples "when username is unavailable"
     end
 
@@ -2264,6 +2280,7 @@ RSpec.describe UsersController do
 
       context "when checking a reserved username" do
         before { get "/u/check_username.json", params: { username: "reserved" } }
+
         include_examples "when username is unavailable"
       end
 
@@ -2273,11 +2290,13 @@ RSpec.describe UsersController do
         context "when user already exists" do
           fab!(:user) { Fabricate(:user, username: "reserved") }
           before { get "/u/check_username.json", params: { username: "reserved" } }
+
           include_examples "when username is unavailable"
         end
 
         context "when user does not exist" do
           before { get "/u/check_username.json", params: { username: "reserved" } }
+
           include_examples "when username is available"
         end
       end
@@ -2293,6 +2312,7 @@ RSpec.describe UsersController do
 
     context "when has invalid characters" do
       before { get "/u/check_username.json", params: { username: "bad username" } }
+
       include_examples "checking an invalid username"
 
       it "should return the invalid characters message" do
@@ -2308,6 +2328,7 @@ RSpec.describe UsersController do
               username: SecureRandom.alphanumeric(SiteSetting.max_username_length.to_i + 1),
             }
       end
+
       include_examples "checking an invalid username"
 
       it 'should return the "too long" message' do
@@ -2326,6 +2347,7 @@ RSpec.describe UsersController do
 
           get "/u/check_username.json", params: { username: "HanSolo" }
         end
+
         include_examples "when username is available"
       end
 
@@ -2337,6 +2359,7 @@ RSpec.describe UsersController do
 
           get "/u/check_username.json", params: { username: "HanSolo" }
         end
+
         include_examples "when username is unavailable"
       end
 
@@ -2347,6 +2370,7 @@ RSpec.describe UsersController do
 
           get "/u/check_username.json", params: { username: "HanSolo", for_user_id: user.id }
         end
+
         include_examples "when username is available"
       end
     end
@@ -3806,6 +3830,7 @@ RSpec.describe UsersController do
 
       context "without an existing email_token" do
         let(:user) { post_user }
+
         before do
           user.email_tokens.each { |t| t.destroy }
           user.reload
@@ -4570,6 +4595,7 @@ RSpec.describe UsersController do
 
   describe "#update_primary_email" do
     let(:user_email) { user1.primary_email }
+
     fab!(:other_email) { Fabricate(:secondary_email, user: user1) }
 
     it "requires login" do
@@ -6576,6 +6602,7 @@ RSpec.describe UsersController do
                second_factor_token: "123456",
              }
       end
+
       it "shows a helpful error message to the user" do
         expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
       end
@@ -6586,6 +6613,7 @@ RSpec.describe UsersController do
         create_totp
         post "/users/enable_second_factor_totp.json", params: { second_factor_token: "123456" }
       end
+
       it "shows a helpful error message to the user" do
         expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_second_factor_name"))
       end
@@ -6596,6 +6624,7 @@ RSpec.describe UsersController do
         create_totp
         post "/users/enable_second_factor_totp.json", params: { name: "test" }
       end
+
       it "shows a helpful error message to the user" do
         expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_second_factor_code"))
       end
@@ -6670,6 +6699,7 @@ RSpec.describe UsersController do
 
         context "when token is valid" do
           before { stub_server_session_confirmed }
+
           it "should allow second factor for the user to be renamed" do
             put "/users/second_factor.json",
                 params: {
@@ -6715,6 +6745,7 @@ RSpec.describe UsersController do
               .stubs(:server_session)
               .returns("confirmed-session-#{user1.id}" => "true")
           end
+
           it "should allow second factor backup for the user to be disabled" do
             put "/users/second_factor.json",
                 params: {
@@ -7054,6 +7085,7 @@ RSpec.describe UsersController do
 
   describe "#delete_passkey" do
     before { SiteSetting.enable_passkeys = true }
+
     fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
 
     it "fails if user does not have a confirmed session" do

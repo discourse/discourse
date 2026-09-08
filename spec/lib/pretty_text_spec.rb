@@ -327,6 +327,7 @@ RSpec.describe PrettyText do
       let(:default_avatar) do
         "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png"
       end
+
       fab!(:group)
       fab!(:user) { Fabricate(:user, primary_group: group) }
 
@@ -2216,6 +2217,7 @@ HTML
 
     context "with watched words as regular expressions" do
       before { SiteSetting.watched_words_regular_expressions = true }
+
       it "supports words as regular expressions" do
         %w[xyz* plee+ase].each do |word|
           Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: word)

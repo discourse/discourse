@@ -948,11 +948,13 @@ RSpec.describe TopicView do
     context "with uncategorized topic" do
       context "when topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
+
         it { is_expected.to eq(topic.title) }
       end
 
       context "when topic_page_title_includes_category is true" do
         before { SiteSetting.topic_page_title_includes_category = true }
+
         it { is_expected.to eq(topic.title) }
 
         context "with tagged topic" do
@@ -1024,11 +1026,13 @@ RSpec.describe TopicView do
 
       context "when topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
+
         it { is_expected.to eq(topic.title) }
       end
 
       context "when topic_page_title_includes_category is true" do
         before { SiteSetting.topic_page_title_includes_category = true }
+
         it { is_expected.to start_with(topic.title) }
         it { is_expected.to end_with(category.name) }
 

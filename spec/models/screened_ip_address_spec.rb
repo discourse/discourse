@@ -154,6 +154,7 @@ RSpec.describe ScreenedIpAddress do
       context "when using exact match" do
         fab!(:existing, :screened_ip_address)
         let(:ip_address_arg) { existing.ip_address }
+
         include_examples "exact match of ip address"
       end
 
@@ -162,11 +163,13 @@ RSpec.describe ScreenedIpAddress do
 
         context "with exact address" do
           let(:ip_address_arg) { "99.232.23.124" }
+
           include_examples "exact match of ip address"
         end
 
         context "with address in same subnet" do
           let(:ip_address_arg) { "99.232.23.135" }
+
           include_examples "exact match of ip address"
         end
       end

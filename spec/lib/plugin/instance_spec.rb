@@ -947,6 +947,7 @@ TEXT
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
+
     fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }

@@ -2,6 +2,7 @@
 
 RSpec.describe TopicLink do
   let(:test_uri) { URI.parse(Discourse.base_url) }
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user, title: "unique topic name") }
   fab!(:post)

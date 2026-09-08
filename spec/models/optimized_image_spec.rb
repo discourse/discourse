@@ -4,6 +4,7 @@ require "chunky_png"
 
 RSpec.describe OptimizedImage do
   let(:upload) { build(:upload) }
+
   before { upload.id = 42 }
 
   describe ".crop" do
@@ -303,6 +304,7 @@ RSpec.describe OptimizedImage do
 
     context "when using an internal store" do
       let(:store) { FakeInternalStore.new }
+
       before { Discourse.stubs(:store).returns(store) }
 
       context "when an error happened while generating the thumbnail" do

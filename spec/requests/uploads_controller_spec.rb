@@ -751,6 +751,7 @@ RSpec.describe UploadsController do
 
       context "when the upload is an attachment file" do
         before { upload.update(original_filename: "test.pdf") }
+
         it "redirects to the signed_url_for_path" do
           sign_in(user)
           get secure_url

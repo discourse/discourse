@@ -174,6 +174,7 @@ describe "Welcome banner" do
 
       context "for text color setting" do
         let(:red) { "#ff0000" }
+
         before { SiteSetting.welcome_banner_text_color = red }
 
         it "doesn't set text color without background image" do

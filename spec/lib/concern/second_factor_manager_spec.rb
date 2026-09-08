@@ -47,12 +47,14 @@ RSpec.describe SecondFactorManager do
         "otpauth://totp/#{SiteSetting.title}:#{ERB::Util.url_encode(user.email)}?secret=#{user_second_factor_totp.data}&issuer=#{SiteSetting.title}",
       )
     end
+
     it "should handle a colon in the site title" do
       SiteSetting.title = "Spaceballs: The Discourse"
       expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
         "otpauth://totp/Spaceballs%20The%20Discourse:#{ERB::Util.url_encode(user.email)}?secret=#{user_second_factor_totp.data}&issuer=Spaceballs%20The%20Discourse",
       )
     end
+
     it "should handle a two words before a colon in the title" do
       SiteSetting.title = "Our Spaceballs: The Discourse"
       expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
@@ -330,6 +332,7 @@ RSpec.describe SecondFactorManager do
             second_factor_method: UserSecondFactor.methods[:security_key],
           }
         end
+
         it "returns OK" do
           expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
@@ -353,6 +356,7 @@ RSpec.describe SecondFactorManager do
             second_factor_method: UserSecondFactor.methods[:security_key],
           }
         end
+
         it "returns not OK" do
           result = user.authenticate_second_factor(params, server_session)
           expect(result.ok).to eq(false)
@@ -372,6 +376,7 @@ RSpec.describe SecondFactorManager do
             second_factor_method: UserSecondFactor.methods[:totp],
           }
         end
+
         it "returns OK" do
           expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
@@ -387,6 +392,7 @@ RSpec.describe SecondFactorManager do
         let(:params) do
           { second_factor_token: "blah", second_factor_method: UserSecondFactor.methods[:totp] }
         end
+
         it "returns not OK" do
           result = user.authenticate_second_factor(params, server_session)
           expect(result.ok).to eq(false)
@@ -434,6 +440,7 @@ RSpec.describe SecondFactorManager do
 
           context "when the user does not have TOTP enabled" do
             let(:token) { "test" }
+
             before { user.totps.destroy_all }
 
             it "returns an error" do
@@ -458,6 +465,7 @@ RSpec.describe SecondFactorManager do
           let(:params) do
             { second_factor_token: valid_security_key_auth_post_data, second_factor_method: method }
           end
+
           it "returns OK" do
             expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
           end

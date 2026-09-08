@@ -93,6 +93,7 @@ RSpec.describe UserBadgesController do
     fab!(:private_message_post)
     let(:topic) { post.topic }
     let(:private_message_topic) { private_message_post.topic }
+
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
     fab!(:restricted_topic) { Fabricate(:topic, category: private_category) }

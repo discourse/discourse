@@ -376,6 +376,7 @@ RSpec.describe User do
     describe "#user_fields" do
       fab!(:user_field) { Fabricate(:user_field, show_on_profile: true) }
       let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
       fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
 
       before { user.set_user_field(user_field.id, value) }
@@ -397,6 +398,7 @@ RSpec.describe User do
 
             it { is_expected.to be_valid }
           end
+
           context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
             before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
 
@@ -452,6 +454,7 @@ RSpec.describe User do
               user.save!
               expect(user_field_value).to eq "word replaced"
             end
+
             context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
               before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
 
@@ -530,6 +533,7 @@ RSpec.describe User do
 
         context "with a censored word" do
           let(:value) { %w[Axe bad Sword] }
+
           before { watched_word.action = WatchedWord.actions[:censor] }
 
           it "does not censor the word since it is not user generated-content" do
@@ -555,6 +559,7 @@ RSpec.describe User do
 
         context "with a censored word" do
           let(:value) { true }
+
           before { watched_word.action = WatchedWord.actions[:censor] }
 
           it "does not censor the word since it is not user generated-content" do
@@ -588,6 +593,7 @@ RSpec.describe User do
       Fabricate(:user, created_at: 2.days.ago)
       Fabricate(:user, created_at: 4.days.ago)
     end
+
     let(:signups_by_day) do
       { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 }
     end
@@ -664,6 +670,7 @@ RSpec.describe User do
 
   describe "reviewable" do
     let(:user) { Fabricate(:user, active: false) }
+
     fab!(:admin)
 
     before { Jobs.run_immediately! }
@@ -767,6 +774,7 @@ RSpec.describe User do
     fab!(:posts) { [post1, post2, post3] }
     fab!(:post_ids) { [post1.id, post2.id, post3.id] }
     let(:guardian) { Guardian.new(Fabricate(:admin)) }
+
     fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }
 
     it "deletes only one batch of posts" do
@@ -1502,6 +1510,7 @@ RSpec.describe User do
     context "if timezone is provided" do
       context "if the timezone is valid" do
         let(:timezone) { "Australia/Melbourne" }
+
         context "if no timezone exists on user option" do
           it "sets the timezone for the user" do
             user.update_timezone_if_missing(timezone)
@@ -1512,6 +1521,7 @@ RSpec.describe User do
 
       context "if the timezone is not valid" do
         let(:timezone) { "Jupiter" }
+
         context "if no timezone exists on user option" do
           it "does not set the timezone for the user" do
             user.update_timezone_if_missing(timezone)
@@ -1717,11 +1727,13 @@ RSpec.describe User do
         expect(Fabricate(:user, username: "foo", name: nil).readable_name).to eq("foo")
       end
     end
+
     context "when name and username are identical" do
       it "returns just the username" do
         expect(Fabricate(:user, username: "foo", name: "foo").readable_name).to eq("foo")
       end
     end
+
     context "when name and username are not identical" do
       it "returns the name and username" do
         expect(Fabricate(:user, username: "foo", name: "Bar Baz").readable_name).to eq(
@@ -2049,6 +2061,7 @@ RSpec.describe User do
     context "with a UserVisit record" do
       fab!(:user)
       let!(:now) { Time.zone.now }
+
       before { user.update_last_seen!(now) }
       after { reset_last_seen_cache!(user) }
 
@@ -3093,6 +3106,7 @@ RSpec.describe User do
 
   describe "#email=" do
     let(:new_email) { "newprimary@example.com" }
+
     it "sets the primary email" do
       user.update!(email: new_email)
       expect(User.find(user.id).email).to eq(new_email)
@@ -3456,6 +3470,7 @@ RSpec.describe User do
     describe "#create_or_fetch_secure_identifier" do
       context "if the user already has a secure identifier" do
         let(:sec_ident) { SecureRandom.hex(20) }
+
         before { user.update(secure_identifier: sec_ident) }
 
         it "returns the identifier" do

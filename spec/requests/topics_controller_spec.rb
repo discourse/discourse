@@ -3902,6 +3902,7 @@ RSpec.describe TopicsController do
       let(:deleted_private_topic) { @deleted_private_topic }
 
       let!(:nonexistent_topic_id) { Topic.last.id + 10_000 }
+
       fab!(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
       shared_examples "various scenarios" do |expected, request_json:|
@@ -3942,6 +3943,7 @@ RSpec.describe TopicsController do
 
         context "when anonymous with login required" do
           before { SiteSetting.login_required = true }
+
           expected = {
             normal_topic: 302,
             secure_topic: 302,
@@ -3957,6 +3959,7 @@ RSpec.describe TopicsController do
 
         context "when anonymous with login required, requesting json" do
           before { SiteSetting.login_required = true }
+
           expected = {
             normal_topic: 403,
             secure_topic: 403,
@@ -4054,6 +4057,7 @@ RSpec.describe TopicsController do
 
         context "when anonymous with login required" do
           before { SiteSetting.login_required = true }
+
           expected = {
             normal_topic: 302,
             secure_topic: 302,
@@ -5238,6 +5242,7 @@ RSpec.describe TopicsController do
       fab!(:topic_2, :topic)
 
       before { sign_in(user) }
+
       let!(:operation) { { type: "change_category", category_id: "1", silent: true } }
       let!(:topic_ids) { [1, 2, 3] }
 
@@ -7018,6 +7023,7 @@ RSpec.describe TopicsController do
 
     context "when logged in as a TL4 user" do
       before { SiteSetting.enable_category_group_moderation = true }
+
       it "raises an error if the user can't see the topic" do
         user.update!(trust_level: TrustLevel[4])
         sign_in(user)

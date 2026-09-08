@@ -316,6 +316,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   describe "update" do
     let(:title) { "New title" }
     let(:params) { { title: title } }
+
     fab!(:thread) do
       Fabricate(:chat_thread, channel: public_channel, original_message_user: current_user)
     end

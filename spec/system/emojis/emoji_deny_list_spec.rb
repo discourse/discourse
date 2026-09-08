@@ -4,12 +4,14 @@ describe "Emoji deny list" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
+
   fab!(:admin)
 
   before { sign_in(admin) }
 
   describe "when editing admin settings" do
     before { SiteSetting.emoji_deny_list = "" }
+
     let(:site_settings_page) { PageObjects::Pages::AdminSiteSettings.new }
 
     it "allows admin to update emoji deny list" do

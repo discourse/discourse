@@ -160,11 +160,13 @@ RSpec.describe TranslationOverride do
           "This has {COUNT, plural, one{one member} other{# members}}.",
         ).for(:value).against(:base)
       end
+
       it do
         is_expected.not_to allow_value(
           "This has {COUNT, plural, one{one member} many{# members} other{# members}}.",
         ).for(:value).with_message(/plural case many is not valid/, against: :base)
       end
+
       it do
         is_expected.not_to allow_value("This has {COUNT, ").for(:value).with_message(
           /invalid syntax/,

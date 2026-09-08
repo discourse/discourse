@@ -141,6 +141,7 @@ RSpec.describe SiteSettings::Validations do
         let(:error_message) do
           I18n.t("errors.site_settings.second_factor_cannot_be_enforced_with_disabled_local_login")
         end
+
         before { SiteSetting.enable_local_logins = false }
 
         it "should raise an error" do
@@ -165,6 +166,7 @@ RSpec.describe SiteSettings::Validations do
             "errors.site_settings.second_factor_cannot_be_enforced_with_discourse_connect_enabled",
           )
         end
+
         before do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
           SiteSetting.discourse_connect_secret = "x" * 10
@@ -236,6 +238,7 @@ RSpec.describe SiteSettings::Validations do
 
         context "if secure uploads is enabled" do
           let(:error_message) { I18n.t("errors.site_settings.page_publishing_requirements") }
+
           before { enable_secure_uploads }
 
           it "is not ok" do

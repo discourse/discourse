@@ -747,6 +747,7 @@ RSpec.describe Middleware::RequestTracker do
 
       context "when SiteSetting.trigger_browser_pageview_events is true" do
         before { SiteSetting.trigger_browser_pageview_events = true }
+
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
           DiscourseIpInfo.stubs(:get).returns(country_code: "AU")

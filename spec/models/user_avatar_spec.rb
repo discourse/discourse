@@ -6,6 +6,7 @@ RSpec.describe UserAvatar do
 
   describe "#update_gravatar!" do
     let(:temp) { Tempfile.new("test") }
+
     fab!(:upload) { Fabricate(:upload, user: user) }
 
     describe "when working" do

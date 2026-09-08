@@ -105,6 +105,7 @@ RSpec.describe Search do
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
+
       fab!(:topic) { Fabricate(:topic, tags: [hidden_tag]) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -3115,6 +3116,7 @@ RSpec.describe Search do
 
   describe "ignore_diacritics" do
     before { SiteSetting.search_ignore_accents = true }
+
     let!(:post1) { Fabricate(:post, raw: "สวัสดี Rágis hello") }
 
     it("allows strips correctly") do
@@ -3137,6 +3139,7 @@ RSpec.describe Search do
 
   describe "include_diacritics" do
     before { SiteSetting.search_ignore_accents = false }
+
     let!(:post1) { Fabricate(:post, raw: "สวัสดี Régis hello") }
 
     it("allows strips correctly") do
@@ -3332,7 +3335,9 @@ RSpec.describe Search do
 
   describe "exclude_topics filter" do
     before { SiteSetting.tagging_enabled = true }
+
     let!(:user) { Fabricate(:user) }
+
     fab!(:group) { Fabricate(:group, name: "bruce-world-fans") }
     fab!(:topic) { Fabricate(:topic, title: "Bruce topic not a result") }
 
@@ -3393,6 +3398,7 @@ RSpec.describe Search do
       SearchIndexer.enable
       DiscoursePluginRegistry.clear_modifiers!
     end
+
     after do
       SearchIndexer.disable
 

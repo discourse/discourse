@@ -4,6 +4,7 @@ RSpec.describe BasicGroupSerializer do
   subject(:serializer) { described_class.new(group, scope: guardian, root: false) }
 
   let(:guardian) { Guardian.new }
+
   fab!(:group)
 
   describe "#display_name" do

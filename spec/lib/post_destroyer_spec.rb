@@ -353,6 +353,7 @@ RSpec.describe PostDestroyer do
 
             context "when the topic is deleted" do
               before { @reply.topic.trash! }
+
               it "changes deleted_at to nil" do
                 changes_deleted_at_to_nil
               end

@@ -161,6 +161,7 @@ RSpec.describe EmailLog do
 
   describe ".addressed_to_user scope" do
     let(:user) { Fabricate(:user, email: "test@test.com") }
+
     before do
       Fabricate(:email_log, to_address: "john@smith.com")
       Fabricate(:email_log, cc_addresses: "jane@jones.com;elle@someplace.org")

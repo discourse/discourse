@@ -4,6 +4,7 @@ RSpec.describe Tag do
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
+
   fab!(:user)
 
   before do

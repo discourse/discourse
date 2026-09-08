@@ -313,6 +313,7 @@ RSpec.describe Email::Styles do
     end
 
     let(:attachments) { { "testimage.png" => stub(url: "email/test.png") } }
+
     it "replaces secure uploads within a link with a placeholder" do
       frag =
         html_fragment(
@@ -534,6 +535,7 @@ RSpec.describe Email::Styles do
   <div style="clear: both"></div>
 </aside>
           HTML
+
         it "keeps the special onebox styles" do
           strip_and_inline
           expect(@frag.to_s).to include("cid:email/test.png")

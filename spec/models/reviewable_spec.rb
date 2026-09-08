@@ -309,6 +309,7 @@ RSpec.describe Reviewable, type: :model do
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       let(:topic) { Fabricate(:topic, category: category) }
       let(:post) { Fabricate(:post, topic: topic) }
+
       fab!(:moderator)
       fab!(:admin)
 

@@ -2,6 +2,7 @@
 
 describe DiscourseAi::Translation::PostLocaleDetector do
   before { enable_current_plugin }
+
   describe ".detect_locale" do
     fab!(:post) { Fabricate(:post, cooked: "Hello world", locale: nil) }
 

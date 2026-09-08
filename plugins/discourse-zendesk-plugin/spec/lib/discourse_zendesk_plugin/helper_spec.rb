@@ -161,6 +161,7 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
 
       context "with different author" do
         let(:post_user) { other_user }
+
         it "should be true" do
           expect(eligible).to be_truthy
         end
@@ -178,6 +179,7 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
 
       context "with different author" do
         let(:post_user) { other_user }
+
         it "should be false" do
           expect(eligible).to be_falsey
         end

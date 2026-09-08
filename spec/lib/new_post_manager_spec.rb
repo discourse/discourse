@@ -149,6 +149,7 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 0
       end
+
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
@@ -162,6 +163,7 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 1
       end
+
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
@@ -203,6 +205,7 @@ RSpec.describe NewPostManager do
 
     context "with a high trust level setting" do
       before { SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
@@ -251,6 +254,7 @@ RSpec.describe NewPostManager do
       before do
         SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
+
       it "doesn't return a result action" do
         result = NewPostManager.default_handler(manager)
         expect(result).to eq(nil)
@@ -397,10 +401,12 @@ RSpec.describe NewPostManager do
     let(:manager) do
       NewPostManager.new(user, raw: "this is new topic content", title: "new topic title")
     end
+
     context "with a high trust level setting for new topics" do
       before do
         SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
+
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
@@ -645,6 +651,7 @@ RSpec.describe NewPostManager do
         context "when there is a minimum number of tags required from a certain tag group for the category" do
           let(:tag_group) { Fabricate(:tag_group) }
           let(:tag) { Fabricate(:tag) }
+
           before do
             TagGroupMembership.create(tag: tag, tag_group: tag_group)
             category.update(

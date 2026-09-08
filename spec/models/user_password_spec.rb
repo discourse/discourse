@@ -3,6 +3,7 @@
 RSpec.describe UserPassword do
   describe "#ensure_password_is_hashed" do
     let(:password) { SecureRandom.hex }
+
     fab!(:user_password)
 
     it "ensures password_hash, password_salt, password_algorithm are saved correctly" do

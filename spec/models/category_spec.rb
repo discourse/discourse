@@ -759,6 +759,7 @@ RSpec.describe Category do
       let(:new_category) do
         Fabricate(:category_with_definition, name: "2nd Category", user: category.user)
       end
+
       before do
         topic.change_category_to_id(new_category.id)
         topic.reload
@@ -1507,6 +1508,7 @@ RSpec.describe Category do
   describe "#cannot_delete_reason" do
     fab!(:admin)
     let(:guardian) { Guardian.new(admin) }
+
     fab!(:category)
 
     describe "when category is uncategorized" do
@@ -1637,6 +1639,7 @@ RSpec.describe Category do
 
   describe "allowed_tags=" do
     let(:category) { Fabricate(:category) }
+
     fab!(:tag)
     fab!(:tag2, :tag)
 

@@ -4,6 +4,7 @@ require "email/sender"
 
 RSpec.describe Email::Sender do
   before { SiteSetting.secure_uploads_allow_embed_images_in_emails = false }
+
   fab!(:post)
   let(:mock_smtp_transaction_response) do
     "250 Ok: queued as 2l3Md07BObzB8kRyHZeoN0baSUAhzc7A-NviRioOr80=@mailhog.example"

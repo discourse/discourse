@@ -7,6 +7,7 @@ RSpec.describe ReviewableUser, type: :model do
     user.activate
     user
   end
+
   fab!(:admin)
 
   describe "#actions_for" do

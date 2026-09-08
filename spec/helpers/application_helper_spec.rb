@@ -253,6 +253,7 @@ RSpec.describe ApplicationHelper do
     it "encodes tags" do
       expect(helper.escape_unicode("<tag>")).to eq("\u003ctag>")
     end
+
     it "survives junk text" do
       expect(helper.escape_unicode("hello \xc3\x28 world")).to match(/hello.*world/)
     end
@@ -287,6 +288,7 @@ RSpec.describe ApplicationHelper do
           expect(helper.render_sitelinks_search_tag).to be_nil
         end
       end
+
       context "when not on homepage" do
         it "will not return sitelinks search tag" do
           helper.stubs(:current_page?).returns(true)
@@ -296,6 +298,7 @@ RSpec.describe ApplicationHelper do
         end
       end
     end
+
     context "for subfolder install" do
       context "when on homepage" do
         it "will return sitelinks search tag" do
@@ -306,6 +309,7 @@ RSpec.describe ApplicationHelper do
           expect(helper.render_sitelinks_search_tag).to include("subfolder-base-path")
         end
       end
+
       context "when not on homepage" do
         it "will not return sitelinks search tag" do
           Discourse.stubs(:base_path).returns("/subfolder-base-path/")

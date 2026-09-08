@@ -825,6 +825,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
           *[{ type: :user, id: user.username, content: third_post.raw }],
         )
       end
+
       it "starts from the last compressed checkpoint" do
         builder.push(type: :user, content: "Old request")
         builder.push(type: :model, content: "Old response")
@@ -1109,6 +1110,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
           ],
         )
       end
+
       it "normalizes saved thinking provider info" do
         custom_prompt = [
           [

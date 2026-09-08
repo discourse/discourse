@@ -461,6 +461,7 @@ RSpec.describe PostGuardian do
       fab!(:private_message) { Fabricate(:system_message_topic, user: user) }
 
       before { user.save! }
+
       it "allows the user to reply to system messages" do
         expect(Guardian.new(user).can_create_post?(private_message)).to eq(true)
         SiteSetting.enable_system_message_replies = false
@@ -1040,6 +1041,7 @@ RSpec.describe PostGuardian do
         SiteSetting.allow_likes_in_anonymous_mode = false
         SiteSetting.allow_anonymous_mode = true
       end
+
       describe "an anonymous user" do
         let(:post_action) do
           user.id = anon.id

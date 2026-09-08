@@ -1132,6 +1132,7 @@ RSpec.describe DiscourseTagging do
     let!(:staff_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
+
     fab!(:topic) { Fabricate(:topic, tags: [tag1, tag2, tag3, hidden_tag]) }
 
     it "returns all tags to staff" do
@@ -1397,6 +1398,7 @@ RSpec.describe DiscourseTagging do
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
+
       fab!(:topic) { Fabricate(:topic, user: user) }
       fab!(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
 

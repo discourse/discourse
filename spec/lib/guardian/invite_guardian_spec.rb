@@ -120,6 +120,7 @@ RSpec.describe InviteGuardian do
         SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         user.update!(trust_level: 2)
       end
+
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       fab!(:topic)
       fab!(:private_topic) { Fabricate(:topic, category: category) }

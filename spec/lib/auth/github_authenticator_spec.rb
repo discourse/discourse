@@ -18,6 +18,7 @@ end
 
 RSpec.describe Auth::GithubAuthenticator do
   let(:authenticator) { described_class.new }
+
   fab!(:user)
 
   describe "after_authenticate" do

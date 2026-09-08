@@ -15,6 +15,7 @@ RSpec.describe FileStore::S3Store do
   fab!(:optimized_image)
   let(:optimized_image_file) { file_from_fixtures("logo.png") }
   let(:uploaded_file) { file_from_fixtures("logo.png") }
+
   fab!(:upload) { Fabricate(:upload, sha1: Digest::SHA1.hexdigest("secret image string")) }
 
   before do

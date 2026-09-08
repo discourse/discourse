@@ -348,6 +348,7 @@ RSpec.describe CategoryUser do
 
     context "for anon" do
       let(:user) { nil }
+
       before do
         SiteSetting.default_categories_watching = category1.id.to_s
         SiteSetting.default_categories_tracking = category2.id.to_s
@@ -355,6 +356,7 @@ RSpec.describe CategoryUser do
         SiteSetting.default_categories_normal = category4.id.to_s
         SiteSetting.default_categories_muted = category5.id.to_s
       end
+
       it "every category from the default_categories_* site settings get overridden to regular, except for muted" do
         levels = CategoryUser.notification_levels_for(user)
         expect(levels[category1.id]).to eq(CategoryUser.notification_levels[:regular])
@@ -393,6 +395,7 @@ RSpec.describe CategoryUser do
           notification_level: CategoryUser.notification_levels[:muted],
         )
       end
+
       it "gets the category_user notification levels for all categories the user is tracking and does not
       include categories the user is not tracking at all" do
         category6 = Fabricate(:category)
@@ -462,6 +465,7 @@ RSpec.describe CategoryUser do
         category2
         category3
       end
+
       it "calculates muted categories based on parent category state" do
         expect(CategoryUser.indirectly_muted_category_ids(user)).to eq([])
 

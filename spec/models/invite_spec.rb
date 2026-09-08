@@ -472,6 +472,7 @@ RSpec.describe Invite do
         user = invite.redeem
         expect(user.groups).to contain_exactly(group)
       end
+
       it "should not raise error when both group & site tag preferences same" do
         tag = Fabricate(:tag)
         group.tracking_tags = [tag.name]

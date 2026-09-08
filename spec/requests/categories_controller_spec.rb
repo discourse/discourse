@@ -3,6 +3,7 @@
 RSpec.describe CategoriesController do
   let!(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
+
   fab!(:user)
 
   describe "#index" do

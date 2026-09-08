@@ -360,6 +360,7 @@ RSpec.describe SessionController do
               expect(session[:current_user_id]).to eq(nil)
             end
           end
+
           context "when using backup code method" do
             it "does not log in with incorrect backup code" do
               post "/session/email-login/#{email_token.token}.json",
@@ -390,6 +391,7 @@ RSpec.describe SessionController do
               expect(session[:current_user_id]).to eq(user.id)
             end
           end
+
           context "when using backup code method" do
             it "logs in correctly" do
               post "/session/email-login/#{email_token.token}.json",
@@ -2098,6 +2100,7 @@ RSpec.describe SessionController do
   describe "#sso_provider" do
     let(:headers) { { host: Discourse.current_hostname } }
     let(:logo_fixture) { "http://#{Discourse.current_hostname}/uploads/logo.png" }
+
     fab!(:user) { Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true) }
 
     before do
@@ -2567,6 +2570,7 @@ RSpec.describe SessionController do
 
         post "/session.json", params: { login: user.username, password: "myawesomepassword" }
       end
+
       it_behaves_like "failed to continue local login"
     end
 
@@ -2578,6 +2582,7 @@ RSpec.describe SessionController do
 
         post "/session.json", params: { login: user.username, password: "myawesomepassword" }
       end
+
       it_behaves_like "failed to continue local login"
     end
 
@@ -2586,6 +2591,7 @@ RSpec.describe SessionController do
         SiteSetting.enable_local_logins_via_email = false
         EmailToken.confirm(email_token.token)
       end
+
       it "doesn't matter, logs in correctly" do
         post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         expect(response.status).to eq(200)
@@ -3554,6 +3560,7 @@ RSpec.describe SessionController do
           SiteSetting.enable_local_logins = false
           post "/session/forgot_password.json", params: { login: user.username }
         end
+
         it_behaves_like "failed to continue local login"
       end
 
@@ -3565,6 +3572,7 @@ RSpec.describe SessionController do
 
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         end
+
         it_behaves_like "failed to continue local login"
       end
 
@@ -3574,11 +3582,13 @@ RSpec.describe SessionController do
 
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         end
+
         it_behaves_like "failed to continue local login"
       end
 
       context "when local logins via email are disabled" do
         before { SiteSetting.enable_local_logins_via_email = false }
+
         it "does not matter, generates a new token for a made up username" do
           expect do
             post "/session/forgot_password.json", params: { login: user.username }

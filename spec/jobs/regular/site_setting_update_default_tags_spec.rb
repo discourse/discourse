@@ -12,6 +12,7 @@ describe Jobs::SiteSettingUpdateDefaultTags do
       let(:tracking) { NotificationLevels.all[:tracking] }
 
       let(:tags) { 3.times.collect { Fabricate(:tag) } }
+
       before do
         SiteSetting.default_tags_watching = tags.first(2).pluck(:name).join("|")
         TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)

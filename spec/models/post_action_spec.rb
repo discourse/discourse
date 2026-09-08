@@ -601,6 +601,7 @@ RSpec.describe PostAction do
       post.reload
       expect(post.hidden).to eq(true)
     end
+
     it "hide tl0 posts that are flagged as spam by a tl3 user" do
       newuser = Fabricate(:newuser, refresh_auto_groups: true)
       post = create_post(user: newuser)

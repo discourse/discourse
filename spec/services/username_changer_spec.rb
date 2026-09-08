@@ -377,6 +377,7 @@ RSpec.describe UsernameChanger do
 
         context "when using Unicode usernames" do
           before { SiteSetting.unicode_usernames = true }
+
           let(:user) { Fabricate(:user, username: "թռչուն") }
 
           it "it correctly updates mentions" do

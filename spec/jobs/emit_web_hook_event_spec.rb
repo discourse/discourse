@@ -351,6 +351,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
           headers
         end
       end
+
       it "Allows for header modifications" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:web_hook_event_headers, &modifier_block)

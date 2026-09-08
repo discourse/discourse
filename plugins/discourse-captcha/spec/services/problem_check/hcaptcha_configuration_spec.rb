@@ -42,6 +42,7 @@ RSpec.describe ProblemCheck::HcaptchaConfiguration do
         SiteSetting.hcaptcha_secret_key = "just a string"
         SiteSetting.hcaptcha_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end
@@ -70,6 +71,7 @@ RSpec.describe ProblemCheck::HcaptchaConfiguration do
         SiteSetting.hcaptcha_secret_key = "just a string"
         SiteSetting.hcaptcha_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end
