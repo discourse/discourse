@@ -586,13 +586,6 @@ after_initialize do
   require_relative "jobs/scheduled/delete_expired_event_posts"
   require_relative "jobs/scheduled/monitor_event_dates"
   require_relative "jobs/scheduled/update_holiday_usernames"
-  require_relative "lib/discourse_events/calendar/extractor"
-  require_relative "lib/discourse_events/calendar/validator"
-  require_relative "lib/discourse_events/calendar/event_validator"
-  require_relative "lib/discourse_events/group_timezones/extractor"
-  require_relative "lib/discourse_events/holidays/finder"
-  require_relative "lib/discourse_events/holidays/status"
-  require_relative "lib/discourse_events/holidays/users_on_holiday"
 
   register_post_custom_field_type(DiscourseEvents::CALENDAR_CUSTOM_FIELD, :string)
   register_post_custom_field_type(DiscourseEvents::GROUP_TIMEZONES_CUSTOM_FIELD, :json)
