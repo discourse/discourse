@@ -4,7 +4,7 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "devDependencies": {
-    "@discourse/lint-configs": "^3.3.0",
+    "@discourse/lint-configs": "^3.6.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.3.1",
     "@glint/ember-tsc": "^1.11.4",
@@ -20,8 +20,8 @@
     "lint-to-the-future-eslint": "^4.0.0",
     "playwright": "1.62.1",
     "postcss-selector-parser": "^7.1.4",
-    "prettier": "3.8.1",
     "postcss-value-parser": "^4.2.0",
+    "prettier": "3.8.1",
     "stylelint": "17.5.0",
     "typescript": "^6.0.3"
   },
