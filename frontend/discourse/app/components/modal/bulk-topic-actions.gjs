@@ -6,9 +6,9 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { Promise } from "rsvp";
 import ManageTagsForm from "discourse/components/modal/bulk-topic-actions/manage-tags-form";
 import BulkPinOptions from "discourse/components/modal/feature-topic/bulk-pin-options";
+import { extractError } from "discourse/lib/ajax-error";
 import { topicLevels } from "discourse/lib/notification-levels";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -362,7 +362,7 @@ export default class BulkTopicActions extends Component {
     return chunks;
   }
 
-  _processChunks(operation) {
+  async _processChunks(operation) {
     const allTopics = this.model.bulkSelectHelper.selected;
     const topicChunks = this._generateTopicChunks(allTopics);
     const topicIds = [];
@@ -382,59 +382,47 @@ export default class BulkTopicActions extends Component {
       options.asJSON = true;
     }
 
-    const tasks = topicChunks.map((topics) => async () => {
-      const result = await Topic.bulkOperation(topics, operation, options);
-      this.processedTopicCount += topics.length;
-      return result;
-    });
+    for (const topics of topicChunks) {
+      try {
+        const result = await Topic.bulkOperation(topics, operation, options);
+        this.processedTopicCount += topics.length;
 
-    return new Promise((resolve, reject) => {
-      const resolveNextTask = async () => {
-        if (tasks.length === 0) {
-          const topics = topicIds.map((id) =>
-            allTopics.find((value) => value.id === id)
-          );
-          const errors = Object.keys(mergedErrors).length ? mergedErrors : null;
-          const tagCategoryErrors = Object.values(mergedTagCategoryErrors);
-          return resolve({
-            topics,
-            errors,
-            tagCategoryErrors: tagCategoryErrors.length
-              ? tagCategoryErrors
-              : null,
-          });
+        if (result?.topic_ids) {
+          topicIds.push(...result.topic_ids);
         }
-
-        const task = tasks.shift();
-
-        try {
-          const result = await task();
-          if (result?.topic_ids) {
-            topicIds.push(...result.topic_ids);
+        if (result?.errors) {
+          for (const [msg, count] of Object.entries(result.errors)) {
+            mergedErrors[msg] = (mergedErrors[msg] || 0) + count;
           }
-          if (result?.errors) {
-            for (const [msg, count] of Object.entries(result.errors)) {
-              mergedErrors[msg] = (mergedErrors[msg] || 0) + count;
+        }
+        if (result?.tag_category_errors) {
+          for (const error of result.tag_category_errors) {
+            const key = `${error.category_id}:${error.tag_names.join(",")}`;
+            if (mergedTagCategoryErrors[key]) {
+              mergedTagCategoryErrors[key].count += error.count;
+            } else {
+              mergedTagCategoryErrors[key] = { ...error };
             }
           }
-          if (result?.tag_category_errors) {
-            for (const error of result.tag_category_errors) {
-              const key = `${error.category_id}:${error.tag_names.join(",")}`;
-              if (mergedTagCategoryErrors[key]) {
-                mergedTagCategoryErrors[key].count += error.count;
-              } else {
-                mergedTagCategoryErrors[key] = { ...error };
-              }
-            }
-          }
-          resolveNextTask();
-        } catch {
-          reject();
         }
-      };
+      } catch (error) {
+        const message = extractError(error);
+        mergedErrors[message] = (mergedErrors[message] || 0) + topics.length;
+        break;
+      }
+    }
 
-      resolveNextTask();
-    });
+    const topics = topicIds.map((id) =>
+      allTopics.find((value) => value.id === id)
+    );
+    const errors = Object.keys(mergedErrors).length ? mergedErrors : null;
+    const tagCategoryErrors = Object.values(mergedTagCategoryErrors);
+
+    return {
+      topics,
+      errors,
+      tagCategoryErrors: tagCategoryErrors.length ? tagCategoryErrors : null,
+    };
   }
 
   _buildTagCategoryError(error) {

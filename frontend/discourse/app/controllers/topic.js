@@ -23,7 +23,11 @@ import JumpToPost from "discourse/components/modal/jump-to-post";
 import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  isRateLimitError,
+  popupAjaxError,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
@@ -1604,35 +1608,28 @@ export default class TopicController extends Controller {
 
     if (this._retryInProgress) {
       discourseLater(() => {
-        this.retryOnRateLimit(times, promise, topicId);
+        this.retryOnRateLimit(times, promise, topicId)?.catch(() => {});
       }, 100);
       return;
     }
 
     this._retryInProgress = true;
 
-    promise()
+    return promise()
       .catch((e) => {
-        const xhr = e.jqXHR;
-        if (
-          xhr &&
-          xhr.status === 429 &&
-          xhr.responseJSON &&
-          xhr.responseJSON.extras &&
-          xhr.responseJSON.extras.wait_seconds
-        ) {
-          let waitSeconds = xhr.responseJSON.extras.wait_seconds;
-          if (waitSeconds < 5) {
-            waitSeconds = 5;
-          }
-
-          this._retryRateLimited = true;
-
-          discourseLater(() => {
-            this._retryRateLimited = false;
-            this.retryOnRateLimit(times - 1, promise, topicId);
-          }, waitSeconds * 1000);
+        if (!isRateLimitError(e)) {
+          throw e;
         }
+
+        this._retryRateLimited = true;
+
+        discourseLater(
+          () => {
+            this._retryRateLimited = false;
+            this.retryOnRateLimit(times - 1, promise, topicId)?.catch(() => {});
+          },
+          rateLimitWaitSeconds(e) * 1000
+        );
       })
       .finally(() => {
         this._retryInProgress = false;
@@ -1755,7 +1752,7 @@ export default class TopicController extends Controller {
               this._newPostsInStream = postIds.concat(this._newPostsInStream);
               throw e;
             });
-        });
+        })?.catch(() => {});
 
         if (this.get("currentUser.id") !== data.user_id) {
           this.documentTitle.incrementBackgroundContextCount();
