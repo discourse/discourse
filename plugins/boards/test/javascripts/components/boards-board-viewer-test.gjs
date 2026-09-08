@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
@@ -8,6 +14,12 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import {
+  centerOf,
+  dragEvent,
+  dragOver,
+  startDrag,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import BoardsBoardViewer from "discourse/plugins/boards/discourse/components/boards-board-viewer";
 import BoardsFabricators from "discourse/plugins/boards/discourse/lib/fabricators";
 
@@ -98,18 +110,24 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     this.dragCard = async (cardId) => {
       this.dragDataTransfer = new DataTransfer();
       stubCardRect(cardId);
-
-      await triggerEvent(cardSelector(cardId), "dragstart", {
-        clientX: 10,
-        clientY: 10,
+      this.dragSource = find(cardSelector(cardId));
+      await startDrag(cardSelector(cardId), {
         dataTransfer: this.dragDataTransfer,
       });
     };
 
-    this.dropOnColumn = async (columnId, { clientY = 0 } = {}) => {
-      await triggerEvent(columnSelector(columnId), "drop", {
-        clientY,
-        dataTransfer: this.dragDataTransfer,
+    this.dropOnColumn = async (columnId, { clientY } = {}) => {
+      const target = columnSelector(columnId);
+      const coordinates = centerOf(target);
+      if (clientY !== undefined) {
+        coordinates.clientY = clientY;
+      }
+      const dataTransfer = this.dragDataTransfer;
+      await dragOver(target, { dataTransfer, coordinates });
+      await dragEvent(target, "drop", { dataTransfer, ...coordinates });
+      await dragEvent(this.dragSource, "dragend", {
+        dataTransfer,
+        ...coordinates,
       });
     };
   });

@@ -4,17 +4,16 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import TopicStatus from "discourse/components/topic-status";
 import DMenu from "discourse/float-kit/components/d-menu";
-import discourseLater from "discourse/lib/later";
 import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -22,6 +21,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { boardsBoardUrl, boardsCardUrl } from "../lib/boards-urls";
 import AutoLinkedText from "./auto-linked-text";
@@ -29,33 +30,12 @@ import BoardsCardDetailModal from "./modal/boards-card-detail";
 import BoardsFloaterAssignModal from "./modal/boards-floater-assign";
 import BoardsTopicCardDetailModal from "./modal/boards-topic-card-detail";
 
-export function shouldInsertSourceDropIndicator(root = document) {
-  return !root.querySelector(
-    ".discourse-boards-column__drop-indicator:not(.discourse-boards-column__drop-indicator--source)"
-  );
-}
-
 export default class BoardsCard extends Component {
   @service currentUser;
   @service modal;
   @service siteSettings;
 
   @tracked dragging = false;
-  dragHideTimer = null;
-  dragImageElement = null;
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    const isActiveDragSource =
-      this.dragging || this.dragHideTimer || this.dragImageElement;
-
-    this.#clearDragHideTimer();
-    this.#cleanupDragImage();
-
-    if (isActiveDragSource) {
-      this.#removeDropIndicators();
-    }
-  }
 
   get isTopicCard() {
     return this.args.card.card_type === "topic" && this.args.card.topic;
@@ -401,113 +381,28 @@ export default class BoardsCard extends Component {
     this.args.onDeleteCard(this.args.card.id);
   }
 
-  @action
-  dragStart(event) {
-    if (!this.args.canWrite) {
-      event.preventDefault();
-      return;
-    }
-
-    const cardRect = event.currentTarget.getBoundingClientRect();
-    this.#setDragImage(event, event.currentTarget, cardRect);
-
-    this.args.onDragStart({
+  /**
+   * Payload the drop targets read. The indicator is the target's own now, so
+   * the card's measured height is no longer part of it.
+   */
+  get dragData() {
+    return {
       cardId: this.args.card.id,
       topicId: this.args.card.topic_id,
       fromColumnId: this.args.card.column_id,
-      cardHeight: cardRect.height,
-      hasPlacedIndicator: false,
-    });
-    event.dataTransfer.effectAllowed = "move";
-    event.stopPropagation();
-
-    this.#scheduleDragSourceHide(event.currentTarget, cardRect.height);
+    };
   }
 
   @action
-  dragEnd() {
+  onDragStart({ source }) {
+    this.args.onDragStart?.(source.data);
+    this.dragging = true;
+  }
+
+  @action
+  onDragEnd() {
     this.args.onDragEnd?.(this.args.card.id);
-    this.#clearDragHideTimer();
-    this.#removeDropIndicators();
     this.dragging = false;
-    this.#cleanupDragImage();
-  }
-
-  #scheduleDragSourceHide(cardElement, cardHeight) {
-    this.#clearDragHideTimer();
-
-    this.dragHideTimer = discourseLater(this, () => {
-      this.dragHideTimer = null;
-
-      if (!this.isDestroying) {
-        if (shouldInsertSourceDropIndicator()) {
-          this.#insertSourceDropIndicator(cardElement, cardHeight);
-        }
-        this.dragging = true;
-      }
-    });
-  }
-
-  #clearDragHideTimer() {
-    if (this.dragHideTimer) {
-      cancel(this.dragHideTimer);
-      this.dragHideTimer = null;
-    }
-  }
-
-  #setDragImage(event, cardElement, cardRect) {
-    if (!event.dataTransfer?.setDragImage) {
-      return;
-    }
-
-    this.#cleanupDragImage();
-
-    const dragImage = cardElement.cloneNode(true);
-    dragImage.classList.remove("discourse-boards-card--dragging");
-    dragImage.classList.add("discourse-boards-card--drag-image");
-    dragImage.style.width = `${cardRect.width}px`;
-    dragImage.style.height = `${cardRect.height}px`;
-    dragImage.setAttribute("aria-hidden", "true");
-
-    document.body.append(dragImage);
-    this.dragImageElement = dragImage;
-
-    // Fallback for programmatic or test drags where the pointer coordinates are 0.
-    const offsetX =
-      event.clientX > 0 ? Math.max(event.clientX - cardRect.left, 0) : 24;
-    const offsetY =
-      event.clientY > 0 ? Math.max(event.clientY - cardRect.top, 0) : 24;
-
-    event.dataTransfer.setDragImage(dragImage, offsetX, offsetY);
-  }
-
-  #cleanupDragImage() {
-    this.dragImageElement?.remove();
-    this.dragImageElement = null;
-  }
-
-  #insertSourceDropIndicator(cardElement, cardHeight) {
-    const cardsContainer = cardElement.closest(
-      ".discourse-boards-column__cards"
-    );
-    if (!cardsContainer) {
-      return;
-    }
-
-    this.#removeDropIndicators();
-
-    const indicator = document.createElement("div");
-    indicator.className =
-      "discourse-boards-column__drop-indicator discourse-boards-column__drop-indicator--source";
-    indicator.style.height = `${cardHeight}px`;
-
-    cardsContainer.insertBefore(indicator, cardElement);
-  }
-
-  #removeDropIndicators() {
-    document
-      .querySelectorAll(".discourse-boards-column__drop-indicator")
-      .forEach((indicator) => indicator.remove());
   }
 
   <template>
@@ -520,15 +415,29 @@ export default class BoardsCard extends Component {
         (if @isDropHighlighted "discourse-boards-card--drop-highlighted")
         (if @isLinkHighlighted "discourse-boards-card--link-highlighted")
       }}
-      draggable={{if @canWrite "true" "false"}}
       role="button"
       tabindex="0"
       data-card-id={{@card.id}}
       data-topic-id={{@card.topic_id}}
-      {{on "dragstart" this.dragStart}}
-      {{on "dragend" this.dragEnd}}
       {{on "click" this.onCardClick}}
       {{on "keydown" this.onCardKeydown}}
+      {{dDragAndDropSource
+        type="boards-card"
+        data=this.dragData
+        disabled=(not @canWrite)
+        onDragStart=this.onDragStart
+        onDragEnd=this.onDragEnd
+      }}
+      {{! Also a target: the column resolves a drop position against the card
+      the pointer is over, which one target on the column could not do. It
+      accepts itself so a card released on its own slot resolves there rather
+      than falling through to the column and being appended to the end. }}
+      {{dDragAndDropTarget
+        accepts="boards-card"
+        acceptsSelf=true
+        canDrop=@canDropCard
+        onDrop=(fn @onDropOnCard @card.id)
+      }}
     >
       <div class="discourse-boards-card__row discourse-boards-card__title-row">
 

@@ -502,7 +502,9 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     border-left: 2px solid var(--discourse-boards-column-color);
   }
 
-  &[draggable="false"] {
+  // The primitive owns registration, so a card that is not a registered source
+  // is the one that cannot be dragged.
+  &:not([data-drag-source]) {
     cursor: default;
   }
 

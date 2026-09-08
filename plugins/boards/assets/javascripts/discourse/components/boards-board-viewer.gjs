@@ -27,11 +27,9 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import { i18n } from "discourse-i18n";
-import {
-  autoScrollSpeedForPointer,
-  dragToScroll,
-} from "../lib/boards-auto-scroll";
+import { dragToScroll } from "../lib/boards-auto-scroll";
 import {
   isRecencyColumn,
   sortCardsForColumn,
@@ -121,23 +119,6 @@ export default class BoardsBoardViewer extends Component {
   @tracked linkHighlightCardId = null;
   @tracked linkedCardId = null;
 
-  horizontalAutoScrollFrame = null;
-  horizontalAutoScrollSpeed = 0;
-  horizontalAutoScrollContainer = null;
-  horizontalAutoScrollHasDocumentListeners = false;
-  stopHorizontalAutoScroll = () => this.#stopHorizontalAutoScroll();
-  updateHorizontalAutoScroll = (event) => {
-    if (!this.dragData || !this.horizontalAutoScrollContainer) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    this.#updateHorizontalAutoScroll(
-      this.horizontalAutoScrollContainer,
-      event.clientX
-    );
-  };
-
   setupMessageBus = modifier((element) => {
     const channel = `/boards/${this.board.id}`;
     this.messageBus.subscribe(channel, this.onBoardMessage);
@@ -200,7 +181,6 @@ export default class BoardsBoardViewer extends Component {
     super.willDestroy(...arguments);
     this._clearDropHighlight();
     this._cleanupPromotion();
-    this.#stopHorizontalAutoScroll();
   }
 
   @bind
@@ -398,30 +378,6 @@ export default class BoardsBoardViewer extends Component {
   }
 
   @action
-  dragOverBoardContainer(event) {
-    const dragData = this.dragData;
-    if (!dragData) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    event.preventDefault();
-    this.#updateHorizontalAutoScroll(event.currentTarget, event.clientX);
-  }
-
-  @action
-  dragLeaveBoardContainer(event) {
-    if (!this.dragData && !event.currentTarget.contains(event.relatedTarget)) {
-      this.#stopHorizontalAutoScroll();
-    }
-  }
-
-  @action
-  dropBoardContainer() {
-    this.#stopHorizontalAutoScroll();
-  }
-
-  @action
   async onDrop(cardId, toColumnId, afterCardId, fromColumnId) {
     if (!fromColumnId) {
       return;
@@ -545,102 +501,6 @@ export default class BoardsBoardViewer extends Component {
       this.columns = snapshot;
       popupAjaxError(error);
     }
-  }
-
-  #updateHorizontalAutoScroll(container, clientX) {
-    const speed = autoScrollSpeedForPointer(
-      clientX,
-      container.getBoundingClientRect(),
-      "x"
-    );
-
-    if (
-      (speed < 0 && container.scrollLeft <= 0) ||
-      (speed > 0 &&
-        container.scrollLeft + container.clientWidth >= container.scrollWidth)
-    ) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    this.horizontalAutoScrollSpeed = speed;
-    this.horizontalAutoScrollContainer = container;
-    this.#ensureHorizontalAutoScrollDocumentListeners();
-
-    if (speed === 0) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    if (!this.horizontalAutoScrollFrame) {
-      this.#horizontalAutoScroll();
-    }
-  }
-
-  #horizontalAutoScroll() {
-    this.horizontalAutoScrollFrame = requestAnimationFrame(() => {
-      this.horizontalAutoScrollFrame = null;
-
-      const container = this.horizontalAutoScrollContainer;
-      if (!container || this.horizontalAutoScrollSpeed === 0) {
-        return;
-      }
-
-      const previousScrollLeft = container.scrollLeft;
-      container.scrollLeft += this.horizontalAutoScrollSpeed;
-
-      if (container.scrollLeft === previousScrollLeft) {
-        this.#stopHorizontalAutoScroll();
-        return;
-      }
-
-      this.#horizontalAutoScroll();
-    });
-  }
-
-  #ensureHorizontalAutoScrollDocumentListeners() {
-    if (this.horizontalAutoScrollHasDocumentListeners) {
-      return;
-    }
-
-    document.addEventListener(
-      "dragover",
-      this.updateHorizontalAutoScroll,
-      true
-    );
-    document.addEventListener("dragend", this.stopHorizontalAutoScroll, true);
-    document.addEventListener("drop", this.stopHorizontalAutoScroll, true);
-    this.horizontalAutoScrollHasDocumentListeners = true;
-  }
-
-  #removeHorizontalAutoScrollDocumentListeners() {
-    if (!this.horizontalAutoScrollHasDocumentListeners) {
-      return;
-    }
-
-    document.removeEventListener(
-      "dragover",
-      this.updateHorizontalAutoScroll,
-      true
-    );
-    document.removeEventListener(
-      "dragend",
-      this.stopHorizontalAutoScroll,
-      true
-    );
-    document.removeEventListener("drop", this.stopHorizontalAutoScroll, true);
-    this.horizontalAutoScrollHasDocumentListeners = false;
-  }
-
-  #stopHorizontalAutoScroll() {
-    if (this.horizontalAutoScrollFrame) {
-      cancelAnimationFrame(this.horizontalAutoScrollFrame);
-      this.horizontalAutoScrollFrame = null;
-    }
-
-    this.horizontalAutoScrollSpeed = 0;
-    this.horizontalAutoScrollContainer = null;
-    this.#removeHorizontalAutoScrollDocumentListeners();
   }
 
   _showConstraintFixModal(topic, column, mismatches) {
@@ -1475,9 +1335,7 @@ export default class BoardsBoardViewer extends Component {
       {{#if this.columns.length}}
         <div
           class="discourse-boards-board-container"
-          {{on "dragover" this.dragOverBoardContainer}}
-          {{on "dragleave" this.dragLeaveBoardContainer}}
-          {{on "drop" this.dropBoardContainer}}
+          {{dDragAndDropAutoScroll types="boards-card" axis="horizontal"}}
           {{dragToScroll}}
         >
           {{#each this.columns key="id" as |column|}}
