@@ -46,6 +46,8 @@ ignored:
 reviewed:
   bundler:
     - activerecord # MIT
+    - anonymous_loader # MIT
+    - auth-sanitizer # MIT
     - benchmark # Ruby
     - coderay # MIT
     - concurrent-ruby # MIT
@@ -71,6 +73,8 @@ reviewed:
     - net-pop # Ruby (bundled gem)
     - net-smtp # Ruby (bundled gem)
     - nio4r # MIT + BSD
+    - oauth # MIT
+    - oauth-tty # MIT
     - omniauth # MIT
     - pg # Ruby
     - pitchfork # Ruby or GPLv2/GPLv3
