@@ -236,6 +236,15 @@ export interface MenuOptions extends TooltipOptions {
    */
   contentRole: FloatContentRole;
 
+  /**
+   * Where focus returns when the menu closes, resolved **at close time** rather than when the
+   * menu opens. A menu anchored to a virtual reference has no trigger element to fall back on
+   * (`triggerElement` is `null` for one). An element captured at open time is also frequently
+   * stale by the time the menu closes, because an item that mutates the DOM often destroys it.
+   * Returning `null` leaves focus alone. Falls back to the trigger element when unset.
+   */
+  focusTarget: (() => HTMLElement | null) | null;
+
   /** Whether to focus the content when the menu opens. */
   autofocus: boolean;
 
@@ -417,6 +426,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     ariaLabel: null,
     arrow: false,
     autofocus: false,
+    focusTarget: null,
     beforeTrigger: null,
     closeOnEscape: true,
     closeOnClickOutside: true,

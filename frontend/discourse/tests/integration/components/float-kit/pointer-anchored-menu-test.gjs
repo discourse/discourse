@@ -15,6 +15,63 @@ module(
   "Integration | Component | FloatKit | PointerAnchoredMenu",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    // Defect 1: frontend/discourse/float-kit/lib/d-menu-instance.ts:127 ignores a virtual trigger's focus target.
+    test("pointer-oracle: closing a virtual-trigger menu resolves focusTarget at close time", async function (assert) {
+      await render(
+        <template>
+          {{#if this.replaceTarget}}
+            <button type="button" class="focus-target">Replacement target</button>
+          {{else}}
+            <button type="button" class="focus-target">Original target</button>
+          {{/if}}
+          <DMenus />
+        </template>
+      );
+
+      const originalTarget = find(".focus-target");
+      const anchorRect = originalTarget.getBoundingClientRect();
+      const virtualTrigger = { getBoundingClientRect: () => anchorRect };
+      await focus(originalTarget);
+
+      await this.owner.lookup("service:menu").show(virtualTrigger, {
+        component: CloseMenu,
+        autofocus: false,
+        focusTarget: () => find(".focus-target"),
+      });
+      await settled();
+      assert
+        .dom(".fk-d-menu .close-menu")
+        .exists(
+          "the virtual trigger and intended option render without throwing"
+        );
+
+      await focus(".close-menu");
+      this.set("replaceTarget", true);
+      await settled();
+
+      const replacementTarget = find(".focus-target");
+      assert.notStrictEqual(
+        replacementTarget,
+        originalTarget,
+        "the focus destination is a new element created after opening"
+      );
+      assert.false(
+        originalTarget.isConnected,
+        "the original target is detached"
+      );
+      assert.dom(".close-menu").isFocused("the menu owns focus before closing");
+
+      await click(".close-menu");
+
+      assert.dom(".fk-d-menu").doesNotExist("the menu has closed");
+      assert.strictEqual(
+        document.activeElement,
+        replacementTarget,
+        "closing the virtual-trigger menu focuses the current focusTarget element"
+      );
+    });
+
     // Defect 2: frontend/discourse/float-kit/components/d-float-body.gts:145 emits an id with no label element.
     test("pointer-oracle: an idless service trigger gives the menu a usable label", async function (assert) {
       await render(
