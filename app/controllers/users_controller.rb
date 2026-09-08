@@ -612,10 +612,19 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
+    # Anonymous callers are only ever running signup, so once local registration
+    # is closed the endpoint would just be a username-existence oracle.
+    if !current_user &&
+         (!SiteSetting.allow_new_registrations || SiteSetting.enable_discourse_connect)
+      raise Discourse::InvalidAccess
+    end
+
+    # The check is advisory and `create` re-validates, so a throttled caller gets
+    # an optimistic answer rather than an error that blocks the signup form.
     begin
-      RateLimiter.new(current_user, "check-username-#{request.remote_ip}", 10, 1.minute).performed!
+      RateLimiter.new(current_user, "check-username-#{request.remote_ip}", 60, 1.minute).performed!
     rescue RateLimiter::LimitExceeded
-      return render json: failed_json.merge(errors: [I18n.t("rate_limiter.slow_down")])
+      return render_available_true
     end
 
     if !params[:username].present?
