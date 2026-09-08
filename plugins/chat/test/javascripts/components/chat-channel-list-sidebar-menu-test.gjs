@@ -15,12 +15,23 @@ import DMenus from "discourse/float-kit/components/d-menus";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatChannelListFilterMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-filter-menu";
-import ChatChannelListOptionsMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-options-menu";
+import ChatChannelListOptionsButton from "discourse/plugins/chat/discourse/components/chat-channel-list-options-button";
+import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
 import ChatChannelListSortMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sort-menu";
-import ChatSidebarChannelsFilterEmptyState from "discourse/plugins/chat/discourse/components/chat-sidebar-channels-filter-empty-state";
+import ChatSidebarChannelListFilterEmptyState from "discourse/plugins/chat/discourse/components/chat-sidebar-channel-list-filter-empty-state";
+import { CHANNEL_LIST_SECTION_OPTIONS } from "discourse/plugins/chat/discourse/lib/chat-channel-list-options";
+
+const sectionData = (section) => ({
+  section,
+  ...CHANNEL_LIST_SECTION_OPTIONS[section],
+});
+
+const CHANNELS_DATA = sectionData("channels");
+const STARRED_DATA = sectionData("starred");
+const DMS_DATA = sectionData("dms");
 
 module(
-  "Integration | Component | ChatChannelListOptionsMenu",
+  "Integration | Component | ChatChannelListSidebarMenu",
   function (hooks) {
     setupRenderingTest(hooks, { stubRouter: true });
 
@@ -28,12 +39,12 @@ module(
       const preferences = getOwner(this).lookup(
         "service:chat-channel-list-preferences"
       );
-      preferences.filter = "unread";
-      preferences.sort = "priority";
+      preferences.channelsFilter = "unread";
+      preferences.channelsSort = "priority";
 
       await render(
         <template>
-          <ChatChannelListOptionsMenu />
+          <ChatChannelListSidebarMenu @data={{CHANNELS_DATA}} />
           <DMenus />
         </template>
       );
@@ -58,7 +69,7 @@ module(
     test("opens the filter submenu", async function (assert) {
       await render(
         <template>
-          <ChatChannelListOptionsMenu />
+          <ChatChannelListSidebarMenu @data={{CHANNELS_DATA}} />
           <DMenus />
         </template>
       );
@@ -83,7 +94,7 @@ module(
     test("opens the sort submenu", async function (assert) {
       await render(
         <template>
-          <ChatChannelListOptionsMenu />
+          <ChatChannelListSidebarMenu @data={{CHANNELS_DATA}} />
           <DMenus />
         </template>
       );
@@ -105,6 +116,202 @@ module(
         .hasAttribute("aria-checked", "true", "the default sort is selected");
     });
 
+    test("shows the filter, sort, and no top-level actions for the starred header", async function (assert) {
+      await render(
+        <template>
+          <ChatChannelListSidebarMenu @data={{STARRED_DATA}} />
+          <DMenus />
+        </template>
+      );
+
+      assert
+        .dom('[data-menu-option-id="browseChannels"]')
+        .doesNotExist("the browse option is hidden");
+      assert
+        .dom('[data-menu-option-id="startDm"]')
+        .doesNotExist("the new message action is hidden");
+      assert
+        .dom('[data-menu-option-id="filterChannels"]')
+        .exists("the filter option is shown");
+      assert
+        .dom('[data-menu-option-id="sortChannels"]')
+        .exists("the sort option is shown behind a fly-out submenu");
+    });
+
+    test("shows the new message, filter, and sort options for the direct messages header", async function (assert) {
+      sinon
+        .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
+        .value(true);
+      const preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      preferences.dmsSort = "recent_activity";
+
+      await render(
+        <template>
+          <ChatChannelListSidebarMenu @data={{DMS_DATA}} />
+          <DMenus />
+        </template>
+      );
+
+      assert
+        .dom('[data-menu-option-id="startDm"]')
+        .hasText("Create a personal chat", "the new message action is shown");
+      assert
+        .dom('[data-menu-option-id="browseChannels"]')
+        .doesNotExist("the browse option is hidden");
+      assert
+        .dom('[data-menu-option-id="filterChannels"]')
+        .exists("the filter option is shown");
+      assert
+        .dom('[data-menu-option-id="sortChannels"]')
+        .exists("the sort option is shown behind a fly-out submenu");
+
+      await click('[data-menu-option-id="sortChannels"]');
+
+      assert
+        .dom(".chat-channel-list-sort-menu__recent-activity")
+        .hasAttribute(
+          "aria-checked",
+          "true",
+          "the current sort choice is selected"
+        );
+      assert
+        .dom('.chat-channel-list-options-menu [aria-checked="true"]')
+        .exists({ count: 1 }, "exactly one sort choice is checked");
+    });
+
+    test("starts a personal chat from the direct messages header menu", async function (assert) {
+      sinon
+        .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
+        .value(true);
+
+      await render(
+        <template>
+          <button class="menu-trigger" type="button">Open</button>
+          <DMenus />
+          <ModalContainer />
+        </template>
+      );
+      const menu = getOwner(this).lookup("service:menu");
+      await menu.show(find(".menu-trigger"), {
+        component: ChatChannelListSidebarMenu,
+        contentRole: "menu",
+        identifier: "chat-channel-list-options-menu",
+        data: DMS_DATA,
+      });
+
+      await click('[data-menu-option-id="startDm"]');
+
+      assert
+        .dom(".chat-modal-new-message")
+        .exists("the new message modal opens");
+      assert
+        .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
+        .doesNotExist("the menu closes");
+    });
+
+    test("hides the new message option when the user cannot send direct messages", async function (assert) {
+      await render(
+        <template>
+          <ChatChannelListSidebarMenu @data={{DMS_DATA}} />
+          <DMenus />
+        </template>
+      );
+
+      assert
+        .dom('[data-menu-option-id="startDm"]')
+        .doesNotExist("the new message action is hidden without permission");
+      assert
+        .dom(".dropdown-menu__divider")
+        .doesNotExist(
+          "the top-level divider is dropped with no actions above it"
+        );
+      assert
+        .dom('[data-menu-option-id="filterChannels"]')
+        .exists("the filter option is still shown");
+    });
+
+    test("hides the create channel option for non-staff", async function (assert) {
+      await render(
+        <template>
+          <ChatChannelListSidebarMenu @data={{CHANNELS_DATA}} />
+          <DMenus />
+        </template>
+      );
+
+      assert
+        .dom('[data-menu-option-id="createChannel"]')
+        .doesNotExist("create channel is hidden for non-staff");
+    });
+
+    test("creates a channel from the channels header menu", async function (assert) {
+      getOwner(this).lookup("service:current-user").set("admin", true);
+
+      await render(
+        <template>
+          <button class="menu-trigger" type="button">Open</button>
+          <DMenus />
+          <ModalContainer />
+        </template>
+      );
+      const menu = getOwner(this).lookup("service:menu");
+      await menu.show(find(".menu-trigger"), {
+        component: ChatChannelListSidebarMenu,
+        contentRole: "menu",
+        identifier: "chat-channel-list-options-menu",
+        data: CHANNELS_DATA,
+      });
+
+      assert
+        .dom('[data-menu-option-id="createChannel"]')
+        .hasText("New channel", "the create channel action is shown for staff");
+
+      await click('[data-menu-option-id="createChannel"]');
+
+      assert
+        .dom(".chat-modal-create-channel")
+        .exists("the create channel modal opens");
+      assert
+        .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
+        .doesNotExist("the menu closes");
+    });
+
+    test("selecting a sort choice from the sort fly-out saves it", async function (assert) {
+      const preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      const setSort = sinon.stub(preferences, "setSort").resolves(true);
+
+      await render(
+        <template>
+          <button class="menu-trigger" type="button">Open</button>
+          <DMenus />
+        </template>
+      );
+      const menu = getOwner(this).lookup("service:menu");
+      await menu.show(find(".menu-trigger"), {
+        component: ChatChannelListSidebarMenu,
+        contentRole: "menu",
+        identifier: "chat-channel-list-options-menu",
+        data: STARRED_DATA,
+      });
+
+      await click('[data-menu-option-id="sortChannels"]');
+      await click(".chat-channel-list-sort-menu__priority");
+
+      assert.true(
+        setSort.calledWith("starred", "priority"),
+        "the selected sort is saved for the starred section"
+      );
+      assert
+        .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
+        .doesNotExist("the header menu closes after selection");
+      assert
+        .dom(".menu-trigger")
+        .isFocused("focus returns to the trigger after selection");
+    });
+
     test("switches between submenus without closing the parent", async function (assert) {
       await render(
         <template>
@@ -114,9 +321,10 @@ module(
       );
       const menu = getOwner(this).lookup("service:menu");
       await menu.show(find(".menu-trigger"), {
-        component: ChatChannelListOptionsMenu,
+        component: ChatChannelListSidebarMenu,
         contentRole: "menu",
         identifier: "chat-channel-list-options-menu",
+        data: CHANNELS_DATA,
       });
 
       await click('[data-menu-option-id="filterChannels"]');
@@ -151,9 +359,10 @@ module(
       );
       const menu = getOwner(this).lookup("service:menu");
       await menu.show(find(".menu-trigger"), {
-        component: ChatChannelListOptionsMenu,
+        component: ChatChannelListSidebarMenu,
         contentRole: "menu",
         identifier: "chat-channel-list-options-menu",
+        data: CHANNELS_DATA,
       });
       await click('[data-menu-option-id="sortChannels"]');
 
@@ -190,10 +399,11 @@ module(
       );
       const menu = getOwner(this).lookup("service:menu");
       await menu.show(find(".menu-trigger"), {
-        component: ChatChannelListOptionsMenu,
+        component: ChatChannelListSidebarMenu,
         contentRole: "menu",
         identifier: "chat-channel-list-options-menu",
         modalForMobile: true,
+        data: CHANNELS_DATA,
       });
       await click('[data-menu-option-id="filterChannels"]');
 
@@ -223,9 +433,10 @@ module(
       );
       const menu = getOwner(this).lookup("service:menu");
       await menu.show(find(".menu-trigger"), {
-        component: ChatChannelListOptionsMenu,
+        component: ChatChannelListSidebarMenu,
         contentRole: "menu",
         identifier: "chat-channel-list-options-menu",
+        data: CHANNELS_DATA,
       });
       await click('[data-menu-option-id="filterChannels"]');
       await focus(".chat-channel-list-filter-menu__mentions");
@@ -242,9 +453,10 @@ module(
         .isFocused("focus returns to the outer trigger");
 
       await menu.show(find(".menu-trigger"), {
-        component: ChatChannelListOptionsMenu,
+        component: ChatChannelListSidebarMenu,
         contentRole: "menu",
         identifier: "chat-channel-list-options-menu",
+        data: CHANNELS_DATA,
       });
       await focus('[data-menu-option-id="filterChannels"]');
       // Key events from test helpers do not synthesize the native button click.
@@ -253,7 +465,7 @@ module(
       await triggerKeyEvent(document.activeElement, "keydown", "Enter");
 
       assert.true(
-        setFilter.calledWith("mentions"),
+        setFilter.calledWith("channels", "mentions"),
         "keyboard selection saves the filter"
       );
       assert
@@ -278,9 +490,10 @@ module(
       const router = getOwner(this).lookup("service:router");
       router.transitionTo = sinon.spy();
       await menu.show(find(".menu-trigger"), {
-        component: ChatChannelListOptionsMenu,
+        component: ChatChannelListSidebarMenu,
         contentRole: "menu",
         identifier: "chat-channel-list-options-menu",
+        data: CHANNELS_DATA,
       });
       await click('[data-menu-option-id="sortChannels"]');
 
@@ -307,7 +520,7 @@ module("Integration | Component | ChatChannelListFilterMenu", function (hooks) {
     const preferences = getOwner(this).lookup(
       "service:chat-channel-list-preferences"
     );
-    preferences.filter = "unread";
+    preferences.channelsFilter = "unread";
     const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
 
     await render(<template><ChatChannelListFilterMenu /></template>);
@@ -324,8 +537,8 @@ module("Integration | Component | ChatChannelListFilterMenu", function (hooks) {
     await click(".chat-channel-list-filter-menu__mentions");
 
     assert.true(
-      setFilter.calledWith("mentions"),
-      "the selected filter is saved"
+      setFilter.calledWith("channels", "mentions"),
+      "the selected filter is saved for the channels section"
     );
   });
 
@@ -333,7 +546,7 @@ module("Integration | Component | ChatChannelListFilterMenu", function (hooks) {
     const preferences = getOwner(this).lookup(
       "service:chat-channel-list-preferences"
     );
-    preferences.filter = "active";
+    preferences.channelsFilter = "active";
 
     await render(<template><ChatChannelListFilterMenu /></template>);
 
@@ -364,10 +577,12 @@ module("Integration | Component | ChatChannelListSortMenu", function (hooks) {
     const preferences = getOwner(this).lookup(
       "service:chat-channel-list-preferences"
     );
-    preferences.sort = "priority";
+    preferences.channelsSort = "priority";
     const setSort = sinon.stub(preferences, "setSort").resolves(true);
 
-    await render(<template><ChatChannelListSortMenu /></template>);
+    await render(
+      <template><ChatChannelListSortMenu @section="channels" /></template>
+    );
 
     assert
       .dom(".chat-channel-list-sort-menu__priority")
@@ -383,14 +598,14 @@ module("Integration | Component | ChatChannelListSortMenu", function (hooks) {
     await click(".chat-channel-list-sort-menu__recent-activity");
 
     assert.true(
-      setSort.calledWith("recent_activity"),
+      setSort.calledWith("channels", "recent_activity"),
       "the selected sort is saved"
     );
   });
 });
 
 module(
-  "Integration | Component | ChatSidebarChannelsFilterEmptyState",
+  "Integration | Component | ChatSidebarChannelListFilterEmptyState",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -401,7 +616,7 @@ module(
       await render(
         <template>
           <ul>
-            <ChatSidebarChannelsFilterEmptyState />
+            <ChatSidebarChannelListFilterEmptyState />
           </ul>
         </template>
       );
@@ -411,7 +626,7 @@ module(
         .doesNotExist("the channel-filter reset is hidden during text search");
     });
 
-    test("resets the channel filter", async function (assert) {
+    test("resets the channels filter by default", async function (assert) {
       const preferences = getOwner(this).lookup(
         "service:chat-channel-list-preferences"
       );
@@ -420,7 +635,7 @@ module(
       await render(
         <template>
           <ul>
-            <ChatSidebarChannelsFilterEmptyState />
+            <ChatSidebarChannelListFilterEmptyState />
           </ul>
         </template>
       );
@@ -435,7 +650,137 @@ module(
 
       await click(".chat-sidebar-channels-filter-empty-state__reset");
 
-      assert.true(setFilter.calledWith("all"), "the filter is reset");
+      assert.true(
+        setFilter.calledWith("channels", "all"),
+        "the channels filter is reset"
+      );
+    });
+
+    test("resets the filter of the section it is rendered for", async function (assert) {
+      const preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
+
+      await render(
+        <template>
+          <ul>
+            <ChatSidebarChannelListFilterEmptyState @section="starred" />
+            <ChatSidebarChannelListFilterEmptyState @section="dms" />
+          </ul>
+        </template>
+      );
+
+      await click(".chat-sidebar-channels-filter-empty-state__reset");
+
+      assert.true(
+        setFilter.calledWith("starred", "all"),
+        "the starred filter is reset"
+      );
+
+      const resets = document.querySelectorAll(
+        ".chat-sidebar-channels-filter-empty-state__reset"
+      );
+      await click(resets[1]);
+
+      assert.true(
+        setFilter.calledWith("dms", "all"),
+        "the dms filter is reset"
+      );
+    });
+
+    test("renders an illustrated state matching the no-channels layout", async function (assert) {
+      const preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
+
+      await render(
+        <template>
+          <ChatSidebarChannelListFilterEmptyState
+            @layout="empty-state"
+            @section="dms"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".empty-state__image")
+        .exists("the same illustration as the no-channels state is shown");
+      assert
+        .dom(".empty-state__title")
+        .hasText(
+          "No channels match this filter.",
+          "the title explains the filter"
+        );
+
+      await click(".empty-state__cta .btn");
+
+      assert.true(
+        setFilter.calledWith("dms", "all"),
+        "the show all action resets the dms filter"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | Component | ChatChannelListOptionsButton",
+  function (hooks) {
+    setupRenderingTest(hooks, { stubRouter: true });
+
+    test("opens the shared channel list menu for its section", async function (assert) {
+      sinon
+        .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
+        .value(true);
+
+      await render(
+        <template>
+          <ChatChannelListOptionsButton @section="dms" />
+          <DMenus />
+        </template>
+      );
+
+      await click(".chat-channel-list-options-button");
+
+      assert
+        .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
+        .hasAttribute("role", "menu", "the shared channel list menu opens");
+      assert
+        .dom('[data-menu-option-id="startDm"]')
+        .exists("the new message action is exposed");
+      assert
+        .dom('[data-menu-option-id="filterChannels"]')
+        .exists("the filter action is exposed");
+      assert
+        .dom('[data-menu-option-id="sortChannels"]')
+        .exists("the sort action is exposed");
+    });
+
+    test("saves a sort from the shared menu for the trigger's section", async function (assert) {
+      const preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      const setSort = sinon.stub(preferences, "setSort").resolves(true);
+
+      await render(
+        <template>
+          <ChatChannelListOptionsButton @section="dms" />
+          <DMenus />
+        </template>
+      );
+
+      await click(".chat-channel-list-options-button");
+      await click('[data-menu-option-id="sortChannels"]');
+      await click(".chat-channel-list-sort-menu__recent-activity");
+
+      assert.true(
+        setSort.calledWith("dms", "recent_activity"),
+        "the selected sort is saved for the section"
+      );
+      assert
+        .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
+        .doesNotExist("the menu closes after selection");
     });
   }
 );

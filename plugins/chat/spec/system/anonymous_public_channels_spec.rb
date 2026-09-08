@@ -30,7 +30,7 @@ RSpec.describe "Anonymous public chat channels" do
 
     expect(chat_page).to have_public_channel(public_channel)
     expect(chat_page).to have_no_public_channel(private_channel)
-    expect(chat_page).to have_no_browse_page_button
+    expect(chat_page).to have_no_channel_list_options_button
 
     chat_page.open_public_channel(public_channel)
 

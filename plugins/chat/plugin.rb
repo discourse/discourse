@@ -92,7 +92,11 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
   UserUpdater::OPTION_ATTR.push(:chat_announce_new_messages)
   UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_dms)
   UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_dms)
   UserUpdater::OPTION_ATTR.push(:chat_new_message_sound)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
@@ -321,6 +325,36 @@ after_initialize do
   add_to_serializer(:user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
 
   add_to_serializer(:current_user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_dms) { object.chat_channel_list_sort_dms }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_dms) do
+    object.chat_channel_list_sort_dms
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
 
   add_to_serializer(:current_user_option, :chat_announce_new_messages) do
     object.chat_announce_new_messages
