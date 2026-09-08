@@ -1,161 +1,60 @@
-import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
-import ChatChannelCard from "discourse/plugins/chat/discourse/components/chat-channel-card";
-import ChatChannelPreviewCard from "discourse/plugins/chat/discourse/components/chat-channel-preview-card";
-import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { LIVESTREAM_CHAT_CONTEXT } from "discourse/plugins/discourse-events/discourse/components/livestream/embeddable-chat-channel";
+import EmbeddableChatChannel from "discourse/plugins/discourse-events/discourse/components/livestream/embeddable-chat-channel";
 
+// The rest of the RSVP cases are acceptance tests. This one needs the livestream context, which
+// only exists when the chat channel is embedded in the topic it belongs to.
 module("Events | Component | LivestreamRsvp", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.channel = new ChatFabricators(getOwner(this)).channel({
-      chatable_type: "Category",
-    });
-    this.channel.title = "livestream chat";
-    this.channel.meta = { can_join_chat_channel: true };
-    this.currentUser.set("has_chat_enabled", true);
     this.siteSettings.chat_enabled = true;
+    this.currentUser.set("has_chat_enabled", true);
 
-    this.setLivestreamTopic = (overrides = {}) => {
-      this.channel.livestreamTopic = {
-        id: 1,
-        title: "Watching the birds",
-        slug: "watching-the-birds",
-        url: "/t/watching-the-birds/1",
-        event_id: 99,
-        can_update_attendance: true,
-        watching_invitee_status: null,
-        ...overrides,
-      };
-    };
-  });
-
-  test("replaces the join button with a linked RSVP message for livestream channels", async function (assert) {
-    this.setLivestreamTopic();
-
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
+    pretender.get("/chat/api/channels/11", () =>
+      response({
+        channel: {
+          id: 11,
+          title: "livestream chat",
+          slug: "livestream-chat",
+          chatable_id: 1,
+          chatable_type: "Category",
+          chatable: { id: 1, color: "ff0000", name: "livestream" },
+          status: "open",
+          memberships_count: 0,
+          current_user_membership: { following: false },
+          livestream_topic: {
+            id: 1,
+            title: "Watching the birds",
+            slug: "watching-the-birds",
+            url: "/t/watching-the-birds/1",
+            event_id: 99,
+            can_update_attendance: true,
+            watching_invitee_status: null,
+          },
+          meta: { can_join_chat_channel: true, message_bus_last_ids: {} },
+        },
+      })
     );
 
-    assert
-      .dom(".livestream-rsvp__message a[href='/t/watching-the-birds/1']")
-      .exists("links to the livestream topic");
-    assert
-      .dom(".chat-channel-preview-card__actions .livestream-rsvp__going-button")
-      .exists("renders the RSVP button in the preview card actions");
-    assert.dom(".toggle-channel-membership-button.-join").doesNotExist();
+    pretender.get("/chat/api/channels/11/messages", () =>
+      response({ messages: [], meta: { can_delete_self: true } })
+    );
+
+    pretender.post("/chat/api/channels/11/drafts", () => response({}));
   });
 
   test("does not link the topic when rendered within the livestream topic", async function (assert) {
-    this.setLivestreamTopic();
-
     await render(
-      <template>
-        <ChatChannelPreviewCard
-          @channel={{this.channel}}
-          @context={{LIVESTREAM_CHAT_CONTEXT}}
-        />
-      </template>
+      <template><EmbeddableChatChannel @chatChannelId={{11}} /></template>
     );
 
     assert
       .dom(".livestream-rsvp__message")
       .hasText(i18n("discourse_events.livestream.chat.rsvp_to_event"));
     assert.dom(".livestream-rsvp__message a").doesNotExist();
-  });
-
-  test("keeps the default join button when the user cannot join the event", async function (assert) {
-    this.setLivestreamTopic({ can_update_attendance: false });
-
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
-    );
-
-    assert.dom(".toggle-channel-membership-button.-join").exists();
-    assert.dom(".livestream-rsvp__going-button").doesNotExist();
-  });
-
-  test("keeps the default join button when the user is already going", async function (assert) {
-    this.setLivestreamTopic({ watching_invitee_status: "going" });
-
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
-    );
-
-    assert.dom(".toggle-channel-membership-button.-join").exists();
-    assert.dom(".livestream-rsvp__going-button").doesNotExist();
-  });
-
-  test("keeps the default join button for regular channels", async function (assert) {
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
-    );
-
-    assert.dom(".toggle-channel-membership-button.-join").exists();
-    assert.dom(".livestream-rsvp__going-button").doesNotExist();
-  });
-
-  test("does not render the RSVP replacement when the livestream topic is absent", async function (assert) {
-    this.channel.livestreamTopic = undefined;
-
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
-    );
-
-    assert.dom(".livestream-rsvp").doesNotExist();
-    assert.dom(".livestream-rsvp__message").doesNotExist();
-    assert.dom(".livestream-rsvp__going-button").doesNotExist();
-    assert.dom(".toggle-channel-membership-button.-join").exists();
-  });
-
-  module("browse channels card", function () {
-    test("replaces the join button with the RSVP button for livestream channels", async function (assert) {
-      this.setLivestreamTopic();
-
-      await render(
-        <template><ChatChannelCard @channel={{this.channel}} /></template>
-      );
-
-      assert
-        .dom(".chat-channel-card__cta .livestream-rsvp__going-button")
-        .exists("renders the RSVP button in the card CTA");
-      assert.dom(".toggle-channel-membership-button.-join").doesNotExist();
-    });
-
-    test("keeps the default join button when the user cannot join the event", async function (assert) {
-      this.setLivestreamTopic({ can_update_attendance: false });
-
-      await render(
-        <template><ChatChannelCard @channel={{this.channel}} /></template>
-      );
-
-      assert.dom(".toggle-channel-membership-button.-join").exists();
-      assert.dom(".livestream-rsvp__going-button").doesNotExist();
-    });
-
-    test("keeps the default join button for regular channels", async function (assert) {
-      await render(
-        <template><ChatChannelCard @channel={{this.channel}} /></template>
-      );
-
-      assert.dom(".toggle-channel-membership-button.-join").exists();
-      assert.dom(".livestream-rsvp__going-button").doesNotExist();
-    });
-
-    test("keeps the leave button for existing chat members", async function (assert) {
-      this.setLivestreamTopic();
-      this.channel.currentUserMembership = { following: true };
-
-      await render(
-        <template><ChatChannelCard @channel={{this.channel}} /></template>
-      );
-
-      assert.dom(".toggle-channel-membership-button.-leave").exists();
-      assert.dom(".livestream-rsvp__going-button").doesNotExist();
-    });
   });
 });

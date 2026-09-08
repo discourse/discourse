@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
-import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import showNewMessageModal from "discourse/plugins/chat/discourse/lib/show-new-message-modal";
 
 export default {
   name: "chat-keyboard-shortcuts",
@@ -29,7 +29,7 @@ export default {
       }
       e.preventDefault();
       e.stopPropagation();
-      modal.show(ChatModalNewMessage);
+      showNewMessageModal(modal);
     };
 
     const handleMoveUpShortcut = (e) => {
