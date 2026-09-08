@@ -30,7 +30,7 @@ export default class TabsVerticalExample extends Component {
         </tabs.Tab>
         <tabs.Tab @id="interface" @label="Interface">
           <p>Placing the strip beside the panel is the consumer's layout; the
-            widget only flips the key axis.</p>
+            widget stacks the strip and wraps long labels itself.</p>
         </tabs.Tab>
         <tabs.Tab @id="security" @label="Security">
           <p>Home and End jump to the first and last tab on either axis.</p>

@@ -180,7 +180,8 @@ function concat(prefix: string, edge: string) {
  * state; the `scroll-strip` stylesheet mixin reads them for the fade. The
  * fade is a mask, so it shows whatever background lies behind the scroller
  * and the scroller itself must not paint one. `--fade-width` sizes the
- * fade and `--fade-color` colors the chevron buttons only. The chevrons
+ * fade, `--fade-color` colors the chevron buttons only, and `--fade-inset`
+ * holds the fade clear of the chevrons and is set by the wrapper. The chevrons
  * and their scrolling follow the document's direction; `reveal` follows
  * the scroller's.
  */
@@ -411,12 +412,12 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       return;
     }
 
-    // iOS Safari doesn't clamp smooth programmatic scrolls, so an
-    // out-of-bounds target rubber-bands into blank overscroll space
     const options: ScrollToOptions = {
       behavior: prefersReducedMotion() ? "instant" : "smooth",
     };
 
+    // iOS Safari doesn't clamp smooth programmatic scrolls, so an
+    // out-of-bounds target rubber-bands into blank overscroll space
     if (dx) {
       const max = element.scrollWidth - element.offsetWidth;
       const target = element.scrollLeft + dx * element.offsetWidth;

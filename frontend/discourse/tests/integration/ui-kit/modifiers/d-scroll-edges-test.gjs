@@ -144,7 +144,7 @@ module("Integration | ui-kit | Modifier | dScrollEdges", function (hooks) {
     assert.dom(".strip").doesNotHaveAttribute("data-d-scroll-at-start");
   });
 
-  test("overflow strip: follows an axis change", async function (assert) {
+  test("follows an axis change", async function (assert) {
     class AxisState {
       @tracked axis = "horizontal";
     }

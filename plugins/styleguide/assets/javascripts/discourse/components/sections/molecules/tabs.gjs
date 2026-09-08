@@ -58,7 +58,7 @@ export default <template>
   <StyleguideExample
     @title="<DTabs> — vertical orientation"
     @code={{tabsVerticalSource}}
-    @description="The orientation argument flips the arrow-key axis and announces it on the tablist. Laying the strip out beside the panel is the consumer's job, since the widget only owns the interaction."
+    @description="The orientation argument flips the arrow-key axis and announces it on the tablist. Placing the strip beside the panel is the consumer's layout; the widget stacks the strip and wraps long labels itself."
   >
     <:tryThis>
       Up and Down move between tabs. Left and Right do nothing. Home and End

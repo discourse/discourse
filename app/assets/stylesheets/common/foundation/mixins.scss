@@ -306,9 +306,12 @@ $hpad: 0.65em;
 // A strip that hides its scrollbar and fades the edge beyond which more
 // content lies. The fade reads the data-d-scroll-* attributes stamped by
 // the scroll-edges watcher, which DOverflowControls and the dScrollEdges
-// modifier both run. Its first --fade-inset is fully transparent, so a
-// chevron sitting on the edge is not masked over. #000 is deliberate: a
-// mask reads only alpha, so a colour token would be wrong here.
+// modifier both run. The band starts fully transparent across --fade-inset
+// so strip content never shows through a chevron parked on the edge, which
+// assumes the chevron covers that band: a wrapper that pads the scroller's
+// scrolling edge moves the chevron off it and hides content under nothing.
+// #000 is deliberate: a mask reads only alpha, so a colour token would be
+// wrong here.
 @mixin scroll-strip() {
   // The bands are capped so the two ends cannot cross on a narrow strip.
   // Crossed bands leave no opaque middle.
@@ -398,6 +401,8 @@ $hpad: 0.65em;
       }
     }
 
+    // The .rtl copy only exists to outrank the .rtl at-start/at-end rules
+    // above, which score a class higher than the bare selector.
     &[data-d-scroll-overflow][data-d-scroll-at-start][data-d-scroll-at-end],
     .rtl
       &[data-d-scroll-overflow][data-d-scroll-at-start][data-d-scroll-at-end] {

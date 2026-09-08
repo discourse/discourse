@@ -42,6 +42,7 @@ export default class Tablist extends Component<DTabsTablistSignature> {
           wrap=true
           itemsKey=@tabs.tabsVersion
           resetKey=@tabs.active
+          tabStopAnchor="selection"
           disabledItems="focusable"
           onActivate=@tabs.activateFromElement
         }}

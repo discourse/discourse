@@ -24,7 +24,11 @@ export interface ScrollEdgesSnapshot {
   horizontal: ScrollEdgeState | null;
   /** The vertical axis, or `null` when the container cannot scroll on it. */
   vertical: ScrollEdgeState | null;
-  /** The axis whose state is stamped on the element, if any axis can scroll. */
+  /**
+   * The axis whose state is stamped on the element. In `"auto"` it is `null`
+   * when no axis can scroll; an explicit axis is always reported, even when
+   * the container cannot scroll on it and its state is `null`.
+   */
   primary: ScrollAxis | null;
 }
 

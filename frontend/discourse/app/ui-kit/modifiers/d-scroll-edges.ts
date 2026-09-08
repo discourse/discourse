@@ -6,6 +6,9 @@ import {
   ScrollEdgesWatcher,
 } from "discourse/ui-kit/-internals/scroll-strip/edges";
 
+/** The axis `dScrollEdges` reports on. */
+export type DScrollEdgesAxis = ScrollAxis;
+
 interface DScrollEdgesSignature {
   /** The scroll container being observed. */
   Element: HTMLElement;

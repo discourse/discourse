@@ -75,9 +75,14 @@ export interface DTabsBag {
 /** What the `<:header>` block receives: the placeable tablist. */
 export interface DTabsHeaderBag {
   /**
-   * The real tablist element, pre-wired with the keyboard engine. A header
-   * block must place it exactly once and keep it in that place: moving it
-   * between branches remounts every tab and the active panel content.
+   * The tablist, pre-wired with the keyboard engine. Placing it renders the
+   * strip's scroll wrapper around the tablist element, so a header row lays
+   * out that wrapper; splattributes still land on the tablist itself.
+   *
+   * Place it exactly once, on the first render, and keep it in that place:
+   * nothing renders until it exists, and moving it between branches remounts
+   * every tab and the active panel content. Placing it behind a condition
+   * that starts false is a DEBUG error, not a way to defer the strip.
    */
   Tablist: ComponentLike<{ Element: DTabsTablistSignature["Element"] }>;
 }
@@ -110,7 +115,8 @@ export interface DTabsSignature {
 
     /**
      * The arrow-key axis. `"vertical"` also announces the orientation,
-     * which assistive technology otherwise assumes horizontal.
+     * which assistive technology otherwise assumes horizontal. It is also
+     * the strip's scroll axis: the chevrons and the edge fade follow it.
      */
     orientation?: DTabsOrientation;
   };
@@ -124,8 +130,9 @@ export interface DTabsSignature {
 
     /**
      * Replaces the default strip row. The block must place the yielded
-     * `Tablist` exactly once; the tabs render inside it. With this block
-     * present, the tabs go in an explicit `<:default>` block.
+     * `Tablist` on the first render and exactly once; the tabs render
+     * inside it, so a block that omits it renders no tabs at all. With this
+     * block present, the tabs go in an explicit `<:default>` block.
      */
     header: [header: DTabsHeaderBag];
   };

@@ -849,10 +849,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     state.active = ids[1];
     await settled();
 
-    assert.notStrictEqual(
+    assert.strictEqual(
       document.activeElement,
-      find('[role="tabpanel"]'),
-      "a later swap does not act on the stale focus flag"
+      document.body,
+      "a later swap does not act on the stale focus flag, rescuing nothing"
     );
   });
 
@@ -1358,6 +1358,61 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     );
   });
 
+  test("arrow focus leaves the Tab stop on the selected tab", async function (assert) {
+    const ids = ["first", "second", "third"];
+    const onActivate = sinon.spy();
+
+    await render(
+      <template>
+        <DTabs
+          @active={{get ids "0"}}
+          @label="Anchored tab stop"
+          @onActivate={{onActivate}}
+          as |tabs|
+        >
+          {{#each ids as |id|}}<tabs.Tab
+              @id={{id}}
+              @label={{id}}
+            >{{id}}</tabs.Tab>{{/each}}
+        </DTabs>
+      </template>
+    );
+
+    const tabs = requireTabs(assert, ids.length);
+    if (!tabs) {
+      return;
+    }
+
+    await focus(tabs[0]);
+    await triggerKeyEvent(tabs[0], "keydown", "ArrowRight");
+
+    assert.dom(tabs[1]).isFocused("ArrowRight moves focus to the next tab");
+    assert
+      .dom(tabs[1])
+      .hasAttribute(
+        "aria-selected",
+        "false",
+        "manual activation leaves the arrowed-to tab unselected"
+      );
+    assert
+      .dom(tabs[0])
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "the selected tab keeps the Tab stop, so returning focus reopens the shown panel"
+      );
+    assert
+      .dom(tabs[1])
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "a focused but unselected tab does not take over the Tab stop"
+      );
+    assert
+      .dom('[role="tab"][tabindex="0"]')
+      .exists({ count: 1 }, "the tablist retains exactly one Tab stop");
+  });
+
   test("Home and End move focus to measured strip boundaries", async function (assert) {
     const ids = ["home", "middle", "end"];
     const onActivate = sinon.spy();
@@ -1419,6 +1474,12 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       return;
     }
 
+    // On document, so it observes the event after the tablist's own handler
+    // has had its chance to prevent it.
+    const prevented = [];
+    const recordPrevented = (event) => prevented.push(event.defaultPrevented);
+    document.addEventListener("keydown", recordPrevented);
+
     await focus(tabs[1]);
     await triggerKeyEvent(tabs[1], "keydown", "Enter");
     assert.true(
@@ -1431,6 +1492,13 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     assert.true(
       onActivate.calledOnceWithExactly(ids[1]),
       "Space requests the focused id exactly once"
+    );
+
+    document.removeEventListener("keydown", recordPrevented);
+    assert.deepEqual(
+      prevented,
+      [true, true],
+      "both keys are default-prevented, so a real press synthesises no second activation from a native click"
     );
     assert
       .dom(tabs[0])
@@ -2246,5 +2314,135 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       document.documentElement.classList.remove("rtl");
       resetSiteDirForTesting();
     }
+  });
+
+  test("vertical tabs keep the height their wrapped labels need", async function (assert) {
+    const ids = Array.from({ length: 6 }, (_, index) => `tab-${index + 1}`);
+    const onActivate = sinon.spy();
+    const longLabel = "Notifications, email and messaging preferences";
+
+    await render(
+      <template>
+        <DTabs
+          @active={{get ids "0"}}
+          @label="Bounded vertical labels"
+          @onActivate={{onActivate}}
+          @orientation="vertical"
+        >
+          <:header as |header|>
+            <header.Tablist style="width: 110px; height: 120px" />
+          </:header>
+          <:default as |tabs|>
+            {{#each ids as |id|}}
+              <tabs.Tab @id={{id}} @label={{longLabel}}>Panel {{id}}</tabs.Tab>
+            {{/each}}
+          </:default>
+        </DTabs>
+      </template>
+    );
+    await nextFrame();
+
+    const tabs = requireTabs(assert, ids.length);
+    if (!tabs) {
+      return;
+    }
+
+    const tablist = find('[role="tablist"]');
+    assert.true(
+      tablist.scrollHeight > tablist.clientHeight,
+      "the fixture overflows its bounded height, so the strip scrolls"
+    );
+    for (const [index, tab] of tabs.entries()) {
+      assert.true(
+        tab.scrollHeight <= tab.clientHeight,
+        `tab ${index + 1} is tall enough to contain its own wrapped label`
+      );
+    }
+  });
+
+  test("keyboard activation reports the declared id, not a stringified copy", async function (assert) {
+    const ids = [1, 2, 3];
+    const onActivate = sinon.spy();
+
+    await render(
+      <template>
+        <DTabs
+          @active={{get ids "0"}}
+          @label="Numeric ids"
+          @onActivate={{onActivate}}
+          as |tabs|
+        >
+          {{#each ids as |id|}}<tabs.Tab @id={{id}} @label={{id}}>Panel
+              {{id}}</tabs.Tab>{{/each}}
+        </DTabs>
+      </template>
+    );
+
+    const tabs = requireTabs(assert, ids.length);
+    if (!tabs) {
+      return;
+    }
+
+    await click(tabs[1]);
+    assert.true(
+      onActivate.calledOnceWithExactly(2),
+      "clicking reports the declared numeric id"
+    );
+
+    onActivate.resetHistory();
+    await focus(tabs[0]);
+    await triggerKeyEvent(tabs[0], "keydown", "ArrowRight");
+    await triggerKeyEvent(tabs[1], "keydown", "Enter");
+    assert.true(
+      onActivate.calledOnceWithExactly(2),
+      "Enter reports the same declared id the click reported, not its string form"
+    );
+  });
+
+  test("a later tab registering leaves the strip scrolled where the reader left it", async function (assert) {
+    const state = new TabsState(
+      "tab-1",
+      Array.from({ length: 10 }, (_, index) => `tab-${index + 1}`)
+    );
+    const onActivate = sinon.spy();
+
+    await render(
+      <template>
+        <div style="width: 200px">
+          <DTabs
+            @active={{state.active}}
+            @label="Late registration"
+            @onActivate={{onActivate}}
+            as |tabs|
+          >
+            {{#each state.items key="id" as |id|}}
+              <tabs.Tab style="flex: 0 0 80px" @id={{id}} @label={{id}}>Panel
+                {{id}}</tabs.Tab>
+            {{/each}}
+          </DTabs>
+        </div>
+      </template>
+    );
+    await nextFrame();
+
+    const tablist = find('[role="tablist"]');
+    tablist.scrollLeft = tablist.scrollWidth - tablist.clientWidth;
+    await nextFrame();
+    const scrolledTo = tablist.scrollLeft;
+    assert.true(
+      scrolledTo > 0,
+      "the reader scrolled the strip away from the selected tab"
+    );
+
+    state.items = [...state.items, "tab-11"];
+    await settled();
+    await nextFrame();
+
+    requireTabs(assert, 11);
+    assert.strictEqual(
+      tablist.scrollLeft,
+      scrolledTo,
+      "registering an unrelated tab does not drag the strip back to the selected one"
+    );
   });
 });

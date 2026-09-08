@@ -40,6 +40,9 @@ const NEVER_RENDERED = Symbol("never rendered");
  * Activation is manual: arrow keys move focus only, and a tab is selected
  * by click, Enter, or Space.
  *
+ * A strip wider than its container scrolls rather than wraps, and the
+ * selected tab is brought into view without the page moving.
+ *
  * The declaration block renders inside the tablist element, wherever that
  * element sits. A `<:header>` block can place the yielded `Tablist` among
  * its own controls; the tabs still land in it.
@@ -104,7 +107,13 @@ export default class DTabs extends Component<DTabsSignature> {
     }
 
     this.#tabs.set(id, element);
-    this.#queueReveal();
+    this.#tabIds.set(element, id);
+    // Only the selected tab's own arrival can leave it out of view. Revealing
+    // on any registration would drag the strip back while the reader is
+    // reading somewhere else in it.
+    if (id === this.args.active) {
+      this.#queueReveal();
+    }
     this.#deferTrackedWrite(() => {
       if (this.#tabs.get(id) === element) {
         this._tabsVersion++;
@@ -205,6 +214,9 @@ export default class DTabs extends Component<DTabsSignature> {
       // The outgoing content detaches in the `actions` queue, which the
       // runloop rewinds to after this render. `destroy` is the last queue,
       // so by then focus has already left. Earlier, it still looks held.
+      // Being last also means this runs after the incoming content's own
+      // effects, so a consumer restoring a per-tab scroll offset on mount
+      // must do it after this, not during render.
       this.#swapPending = true;
       schedule("destroy", () => {
         this.#swapPending = false;
@@ -235,6 +247,14 @@ export default class DTabs extends Component<DTabsSignature> {
   #tabs = new Map<string, Element>();
 
   /**
+   * The id each tab element registered under. Read back rather than the
+   * `data-d-tab` attribute, which is the same id stringified: a consumer
+   * whose ids are not strings would otherwise be handed a different value
+   * by the keyboard than by a click.
+   */
+  #tabIds = new WeakMap<Element, string>();
+
+  /**
    * Opaque DOM-id suffixes per tab id. Consumer ids cannot go into DOM ids:
    * `aria-labelledby` splits on whitespace, so "account settings" would
    * point at two missing elements.
@@ -247,7 +267,8 @@ export default class DTabs extends Component<DTabsSignature> {
    * twins are written one hop later, because a tracked write from a modifier
    * lands inside the transaction that already read it.
    *
-   * The DEBUG guards read these so they never race the deferral.
+   * The DEBUG guards and the post-render reveal read these, so neither
+   * races the deferral.
    */
   #tablistActual: HTMLElement | null = null;
   #panelActual: HTMLElement | null = null;
@@ -304,7 +325,7 @@ export default class DTabs extends Component<DTabsSignature> {
       tabDomIdFor: (id: string) => this.#tabDomIdFor(id),
       activate: (id: string) => this.args.onActivate(id),
       activateFromElement: (item: HTMLElement) => {
-        const id = item.dataset.dTab;
+        const id = this.#tabIds.get(item);
         if (id !== undefined) {
           this.args.onActivate(id);
         }
@@ -327,6 +348,12 @@ export default class DTabs extends Component<DTabsSignature> {
     };
   })();
   @tracked _panelElement: HTMLElement | null = null;
+
+  /**
+   * Bumped whenever the tab registry changes. The registry is a plain Map, so
+   * a getter that reads it must consume this tag to recompute; the `void`
+   * reads below are load-bearing, not dead statements.
+   */
   @tracked _tabsVersion = 0;
 
   constructor(owner: Owner, args: DTabsSignature["Args"]) {
@@ -383,7 +410,7 @@ export default class DTabs extends Component<DTabsSignature> {
     return this.#tabDomIdFor(active);
   }
 
-  /** The widget-level name stands in while no tab labels the panel. */
+  /** Names the panel while it has tabs but none of them is selected. */
   get panelAriaLabel() {
     if (this.hasTabs && this.activeTabDomId === undefined) {
       return this.args.label;
@@ -474,8 +501,9 @@ export default class DTabs extends Component<DTabsSignature> {
 
   /**
    * Queues one post-render sweep of the tablist for content that is not a
-   * tab. Queued from tab registration rather than construction so it runs
-   * after the declaration block has actually landed in the tablist.
+   * tab. Never queued from construction: it must run after the declaration
+   * block has actually landed in the tablist. Tab registration queues it,
+   * and so do the tablist's own child mutations.
    */
   #queueStrayContentScan() {
     if (this.#strayScanQueued || this.#guardTripped) {
@@ -511,11 +539,15 @@ export default class DTabs extends Component<DTabsSignature> {
 
     for (const node of tablist.childNodes) {
       // An unregistered role="tab" element is as stray as a div. It would
-      // join the keyboard cursor without joining the group.
+      // join the keyboard cursor without joining the group. Identity, not the
+      // data attribute: the attribute is the id stringified, so a non-string
+      // id would fail the lookup and report a stray tab that is not one.
+      const registeredId = node instanceof Element && this.#tabIds.get(node);
       const isStrayElement =
         node instanceof Element &&
         (node.getAttribute("role") !== "tab" ||
-          this.#tabs.get(node.getAttribute("data-d-tab") ?? "") !== node);
+          registeredId === undefined ||
+          this.#tabs.get(registeredId) !== node);
       const isStrayText =
         node.nodeType === Node.TEXT_NODE &&
         (node.textContent ?? "").trim() !== "";

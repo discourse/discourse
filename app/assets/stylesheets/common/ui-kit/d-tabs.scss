@@ -32,6 +32,11 @@
       .d-tabs__tab {
         white-space: normal;
         overflow-wrap: anywhere;
+
+        // The explicit min-height below replaces the flex automatic minimum,
+        // so a bounded strip would otherwise crush a wrapped label out of its
+        // own button rather than scroll.
+        flex-shrink: 0;
       }
     }
   }

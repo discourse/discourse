@@ -135,7 +135,7 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
       .doesNotExist("owned mode renders no generated content scroller");
   });
 
-  test("overflow strip: resolves the wrapper fade width to the nav scale", async function (assert) {
+  test("overflow strip: exposes the wrapper fade width as the nav scale", async function (assert) {
     await render(
       <template>
         <DHorizontalOverflowNav @ariaLabel="Fade width navigation">

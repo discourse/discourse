@@ -9,7 +9,9 @@
   min-width: 0;
   min-height: 0;
 
-  // The chevron sits over the strip's edge, so the fade starts beyond it.
+  // The chevron is positioned against this wrapper, so it sits over the
+  // strip's edge and the fade starts beyond it. Pad this wrapper on a
+  // scrolling edge and that stops being true; pad the scroller instead.
   > [data-d-scroll-axis] {
     --fade-inset: var(--d-overflow-controls-btn-size);
   }
