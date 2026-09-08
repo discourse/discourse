@@ -31,17 +31,6 @@ after_initialize do
       config
     elsif topic_id = channel_name[%r{/discourse-presence/whisper/(\d+)}, 1]
       topic = Topic.find(topic_id)
-      config = PresenceChannel::Config.new
-
-      if topic.private_message?
-        config.allowed_user_ids = topic.allowed_users.pluck(:id)
-        config.allowed_group_ids = topic.allowed_groups.pluck(:id).presence
-      else
-        config.allowed_group_ids = SiteSetting.whispers_allowed_groups_map
-        config.allowed_group_ids &= topic.secure_group_ids if topic.secure_group_ids
-      end
-
-      config
       whisper_allowed_group_ids = SiteSetting.whispers_allowed_groups_map
 
       if !topic.private_message? && topic.shared_draft?

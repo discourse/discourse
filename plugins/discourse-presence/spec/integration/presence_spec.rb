@@ -285,6 +285,7 @@ RSpec.describe "discourse-presence" do
   describe "PresenceController#get" do
     fab!(:editor, :trust_level_1)
     fab!(:attacker, :trust_level_1)
+    fab!(:outside_user, :trust_level_1)
 
     fab!(:private_group) { Fabricate(:group).tap { |private_group| private_group.add(editor) } }
 
@@ -320,7 +321,7 @@ RSpec.describe "discourse-presence" do
     it "hides topic-backed presence from capability groups without topic access" do
       capability_group = Fabricate(:group)
       capability_group.add(editor)
-      capability_group.add(attacker)
+      capability_group.add(outside_user)
       whisper_post = Fabricate(:whisper, topic: private_topic, user: editor)
       editable_post = Fabricate(:post, topic: private_topic, user: editor)
       translation_post = Fabricate(:post, topic: private_topic, user: editor)
@@ -342,7 +343,7 @@ RSpec.describe "discourse-presence" do
       SiteSetting.content_localization_allowed_groups = "#{capability_group.id}|#{private_group.id}"
 
       expect(editor.guardian.can_see?(private_topic)).to eq(true)
-      expect(attacker.guardian.can_see?(private_topic)).to eq(false)
+      expect(outside_user.guardian.can_see?(private_topic)).to eq(false)
 
       sign_in(editor)
       post "/presence/update.json",
@@ -353,17 +354,18 @@ RSpec.describe "discourse-presence" do
       expect(response.status).to eq(200)
       expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, true] })
 
-      sign_in(attacker)
+      sign_in(outside_user)
       get "/presence/get", params: { channels: channel_names }
       expect(response.status).to eq(200)
       expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, nil] })
     end
 
     it "removes edit and translate presence access when post authors lose topic access" do
-      private_group.add(attacker)
-      private_category_post = Fabricate(:post, topic: private_topic, user: attacker, wiki: true)
-      private_message = Fabricate(:private_message_topic, user: editor, recipient: attacker)
-      private_message_post = Fabricate(:post, topic: private_message, user: attacker, wiki: true)
+      private_group.add(outside_user)
+      private_category_post = Fabricate(:post, topic: private_topic, user: outside_user, wiki: true)
+      private_message = Fabricate(:private_message_topic, user: editor, recipient: outside_user)
+      private_message_post =
+        Fabricate(:post, topic: private_message, user: outside_user, wiki: true)
       channel_names = [
         "/discourse-presence/edit/#{private_category_post.id}",
         "/discourse-presence/translate/#{private_category_post.id}",
@@ -376,10 +378,10 @@ RSpec.describe "discourse-presence" do
       SiteSetting.content_localization_allowed_groups = private_group.id
       SiteSetting.content_localization_allow_author_localization = true
 
-      expect(attacker.guardian.can_see?(private_topic)).to eq(true)
-      expect(attacker.guardian.can_see?(private_message)).to eq(true)
+      expect(outside_user.guardian.can_see?(private_topic)).to eq(true)
+      expect(outside_user.guardian.can_see?(private_message)).to eq(true)
 
-      sign_in(attacker)
+      sign_in(outside_user)
       post "/presence/update.json",
            params: {
              client_id: SecureRandom.hex,
@@ -388,12 +390,12 @@ RSpec.describe "discourse-presence" do
       expect(response.status).to eq(200)
       expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, true] })
 
-      private_group.remove(attacker)
-      private_message.remove_allowed_user(editor, attacker)
+      private_group.remove(outside_user)
+      private_message.remove_allowed_user(editor, outside_user)
       PresenceChannel.clear_all!
 
-      expect(attacker.guardian.can_see?(private_topic)).to eq(false)
-      expect(attacker.guardian.can_see?(private_message)).to eq(false)
+      expect(outside_user.guardian.can_see?(private_topic)).to eq(false)
+      expect(outside_user.guardian.can_see?(private_message)).to eq(false)
 
       sign_in(editor)
       post "/presence/update.json",
@@ -404,7 +406,7 @@ RSpec.describe "discourse-presence" do
       expect(response.status).to eq(200)
       expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, true] })
 
-      sign_in(attacker)
+      sign_in(outside_user)
       get "/presence/get", params: { channels: channel_names }
       expect(response.status).to eq(200)
       expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, nil] })
