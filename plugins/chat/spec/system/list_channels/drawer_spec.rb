@@ -98,21 +98,21 @@ RSpec.describe "List channels | Drawer" do
         older_message =
           Fabricate(
             :chat_message,
-            chat_channel: channel_2,
+            chat_channel: channel_1,
             user: current_user,
             use_service: true,
             created_at: 3.days.ago,
           )
-        channel_2.update!(last_message: older_message, messages_count: 1)
+        channel_1.update!(last_message: older_message, messages_count: 1)
         recent_message =
           Fabricate(
             :chat_message,
-            chat_channel: channel_1,
+            chat_channel: channel_2,
             user: current_user,
             use_service: true,
             created_at: 1.hour.ago,
           )
-        channel_1.update!(last_message: recent_message, messages_count: 1)
+        channel_2.update!(last_message: recent_message, messages_count: 1)
 
         drawer_page.visit_index
 
@@ -259,16 +259,24 @@ RSpec.describe "List channels | Drawer" do
         before do
           dm_channel_3.membership_for(current_user).mark_read!(message_1.id)
           dm_channel_4.membership_for(current_user).mark_read!(message_2.id)
-
-          drawer_page.visit_index
-          drawer_page.click_direct_messages
         end
 
         it "sorts channels with unread threads by last reply" do
           current_user.user_option.update!(chat_channel_list_sort_dms: "recent_activity")
 
-          Fabricate(:chat_message, thread: thread_1, user: user_2, use_service: true)
-          Fabricate(:chat_message, thread: thread_2, user: user_3, use_service: true)
+          drawer_page.visit_index
+          drawer_page.click_direct_messages
+
+          # Distinct timestamps: `use_service: true` stamps its own `created_at`
+          # and the serializer truncates to whole seconds, so back-to-back
+          # replies tie on recency and fall through to title order. They must
+          # also land after the `mark_read!` above to still count as unread.
+          freeze_time(1.minute.from_now) do
+            Fabricate(:chat_message, thread: thread_1, user: user_2, use_service: true)
+          end
+          freeze_time(2.minutes.from_now) do
+            Fabricate(:chat_message, thread: thread_2, user: user_3, use_service: true)
+          end
 
           expect(drawer_page).to have_channel_at_position(dm_channel_4, 1)
           expect(drawer_page).to have_unread_channel(dm_channel_4)
@@ -279,6 +287,9 @@ RSpec.describe "List channels | Drawer" do
 
         it "sorts channels with unread threads by importance" do
           current_user.user_option.update!(chat_channel_list_sort_dms: "priority")
+
+          drawer_page.visit_index
+          drawer_page.click_direct_messages
 
           thread_1.membership_for(current_user).update!(
             notification_level: ::Chat::NotificationLevels.all[:watching],

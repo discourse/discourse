@@ -87,9 +87,11 @@ export default class ChannelsListDirect extends Component {
 
         <span class="channel-title">{{i18n "chat.direct_messages.title"}}</span>
 
-        <div class="chat-channel-divider__actions">
-          <ChatChannelListOptionsButton @section="dms" />
-        </div>
+        {{#if this.site.desktopView}}
+          <div class="chat-channel-divider__actions">
+            <ChatChannelListOptionsButton @section="dms" />
+          </div>
+        {{/if}}
       </div>
     {{/if}}
 
