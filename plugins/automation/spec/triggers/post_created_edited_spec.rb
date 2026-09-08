@@ -415,7 +415,7 @@ describe "PostCreatedEdited" do
         expect(list[0]["kind"]).to eq("post_created_edited")
       end
 
-      it "will not fire on unrelated categories" do
+      it "does not fire on unrelated categories" do
         list =
           capture_contexts do
             PostCreator.create(user, basic_topic_params.merge({ category: another_category.id }))

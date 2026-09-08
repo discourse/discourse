@@ -4,6 +4,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import CategoryRow from "discourse/select-kit/components/category-row";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n, { i18n } from "discourse-i18n";
@@ -15,6 +16,35 @@ module(
 
     hooks.beforeEach(function () {
       this.set("subject", selectKit());
+    });
+
+    test("suppresses hover during teardown", function (assert) {
+      const item = { id: 1 };
+      const selectKitApi = {
+        onHover() {
+          assert.step("hover");
+        },
+      };
+      const context = {
+        args: { item, selectKit: selectKitApi },
+        isDestroyed: false,
+        isDestroying: false,
+        rowValue: item.id,
+        site: { mobileView: false },
+      };
+      const handleMouseEnter = Object.getOwnPropertyDescriptor(
+        CategoryRow.prototype,
+        "handleMouseEnter"
+      ).get.call(context);
+
+      handleMouseEnter();
+      context.isDestroying = true;
+      handleMouseEnter();
+
+      assert.verifySteps(
+        ["hover"],
+        "dispatches hover only while the row is live"
+      );
     });
 
     test("with value", async function (assert) {

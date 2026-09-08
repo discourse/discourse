@@ -388,6 +388,9 @@ sw:
         reviewable_ai_post:
           noun: "ujumbe"
       user_label: "Mtumiaji"
+      author_penalty:
+        toast:
+          undo: "Tendua"
       notes:
         delete: "Futa"
       topic_label: "Mada"
@@ -724,7 +727,6 @@ sw:
       admin: "%{mtumiaji} ni kiongozi"
       moderator_tooltip: "Mtumiaji huyu ni msimamizi"
       admin_tooltip: "Mtumiaji huyu ni kiongozi"
-      silenced_tooltip: "Mtumiaji amenyamazishwa"
       suspended_notice: "Akaunti imesitishwa mpaka %{tarehe}."
       suspended_permanently: "Mtumiaji amesitishwa."
       suspended_reason: "Sababu:"

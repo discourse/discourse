@@ -28,7 +28,7 @@ export default class DCalendarDateTimeInput extends Component {
   @action
   setupPikaday(element) {
     this.#setupPicker(element).then((picker) => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

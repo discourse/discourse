@@ -5,7 +5,7 @@ RSpec.describe Jobs::DownloadBackupEmail do
 
   before { SiteSetting.simple_email_subject = true }
 
-  it "should work" do
+  it "emails a tokenized backup download link" do
     described_class.new.execute(user_id: user.id, backup_file_path: "http://some.example.test/")
 
     email = ActionMailer::Base.deliveries.last

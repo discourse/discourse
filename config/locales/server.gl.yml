@@ -3550,8 +3550,6 @@ gl:
         title: "Si"
       approve_and_unhide:
         title: "Si"
-      delete_post:
-        complete: "Publicación eliminada"
       delete_user:
         complete: "Usuario eliminado"
         reason: "Eliminado a través da cola de revisións"

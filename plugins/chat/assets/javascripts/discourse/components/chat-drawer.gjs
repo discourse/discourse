@@ -157,7 +157,7 @@ export default class ChatDrawer extends Component {
   }
 
   _performCheckSize() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

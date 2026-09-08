@@ -439,6 +439,7 @@ pl_PL:
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
     ai_bot:
+      ai_users: "Użytkownicy AI"
       errors:
         invalid_agent_id: "Określony agent AI nie istnieje lub nie masz do niego dostępu"
         cannot_send_pm_to_agent: "Nie możesz wysyłać wiadomości osobistych do tego agenta AI"
@@ -700,6 +701,7 @@ pl_PL:
           name: "Wykonywanie kodu (natywne)"
           help: "Umożliwia modelowi pisanie i uruchamianie kodu Python w piaskownicy dostawcy, gdy agent jest wymuszony do obsługiwanego Gemini LLM."
       tool_summary:
+        load_discourse_website_page: "Załaduj stronę internetową Discourse"
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
         view_image: "Sprawdź obraz"
@@ -758,6 +760,7 @@ pl_PL:
         researcher: "Badanie"
         researcher_dry_run: "Przygotowywanie badań"
       tool_help:
+        load_discourse_website_page: "Załaduj nazwaną stronę z oficjalnej witryny Discourse"
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         search_uploaded_documents: "Wyszukaj dokumenty przesłane do tego agenta"
         view_image: "Sprawdź obraz dostępny podczas tego zadania"
@@ -815,6 +818,7 @@ pl_PL:
         javascript_evaluator: "Oceń JavaScript"
         researcher: "Informacje o forum badawczym z wykorzystaniem bota AI"
       tool_description:
+        load_discourse_website_page: "Załadowano stronę %{page_name} z oficjalnej witryny Discourse"
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         view_image: "Przeanalizowano obraz dostępny podczas tego zadania"
         search_uploaded_documents:
@@ -1125,6 +1129,10 @@ pl_PL:
           hidden: "Ustawienie witryny '%{setting_name}' jest ukryte i nie można go tutaj odczytać."
           secret: "Ustawienie witryny '%{setting_name}' zawiera klucz tajny i nie można go tutaj odczytać."
           themeable: "Ustawienia witryny '%{setting_name}' wymagają motywu i nie można ich tutaj odczytać."
+      load_discourse_website_page:
+        errors:
+          page_not_found: "Strona internetowa Discourse '%{page_name}' jest niedostępna."
+          fetch_failed: "Nie udało się załadować strony „%{page_name}” z oficjalnej witryny Discourse."
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"

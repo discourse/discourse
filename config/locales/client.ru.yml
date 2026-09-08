@@ -1150,6 +1150,9 @@ ru:
         note_added: "Примечание модератора"
         note_added_by: "Примечание модератора %{username} · %{relativeDate}"
         no_events: "Событий в хронологии нет"
+      author_penalty:
+        toast:
+          undo: "Отменить"
       notes:
         add_note_description: "Добавьте примечание, чтобы предоставить контекст другим модераторам."
         add_note_button: "Добавить примечание"
@@ -1829,7 +1832,6 @@ ru:
       admin: "%{user} — администратор"
       moderator_tooltip: "Модератор"
       admin_tooltip: "Администратор"
-      silenced_tooltip: "Этот пользователь заморожен"
       suspended_notice: "Пользователь заблокирован до %{date}."
       suspended_permanently: "Этот пользователь заблокирован."
       suspended_reason: "Причина: "

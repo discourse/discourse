@@ -178,7 +178,7 @@ export default class CategoryRow extends Component {
       return;
     }
 
-    if (!this.isDestroying || !this.isDestroyed) {
+    if (!this.isDestroying) {
       this.args.selectKit.onHover(this.rowValue, this.args.item);
     }
     return false;

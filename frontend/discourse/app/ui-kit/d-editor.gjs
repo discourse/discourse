@@ -233,18 +233,13 @@ export default class DEditor extends Component {
   }
 
   async _updatePreview() {
-    if (
-      this._state !== "inDOM" ||
-      !this.processPreview ||
-      this.isDestroying ||
-      this.isDestroyed
-    ) {
+    if (this._state !== "inDOM" || !this.processPreview || this.isDestroying) {
       return;
     }
 
     const cooked = await this.cachedCookAsync(this.value, this.markdownOptions);
 
-    if (this.preview === cooked || this.isDestroying || this.isDestroyed) {
+    if (this.preview === cooked || this.isDestroying) {
       return;
     }
 
@@ -564,7 +559,7 @@ export default class DEditor extends Component {
 
   @action
   handleFocusOut() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

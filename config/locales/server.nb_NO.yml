@@ -1455,8 +1455,6 @@ nb_NO:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      delete_post:
-        complete: "Post slettet"
       delete_user:
         complete: "Bruker slettet"
   fallback_username: "bruker"

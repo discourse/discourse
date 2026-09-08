@@ -7,7 +7,7 @@ RSpec.describe UserActionsController do
     context "when 'username' is not specified" do
       let(:params) { {} }
 
-      it "fails" do
+      it "returns 400 when username is missing" do
         user_actions
         expect(response).to have_http_status :bad_request
       end
@@ -103,7 +103,7 @@ RSpec.describe UserActionsController do
         context "when `allow_users_to_hide_profile` is disabled" do
           before { SiteSetting.allow_users_to_hide_profile = false }
 
-          it "succeeds" do
+          it "returns user actions when profile hiding is disabled" do
             user_actions
             expect(response).to have_http_status :ok
           end

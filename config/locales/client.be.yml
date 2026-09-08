@@ -738,6 +738,9 @@ be:
         reviewable_ai_post:
           noun: "пост"
       user_label: "Карыстальнік"
+      author_penalty:
+        toast:
+          undo: "Адрабіць"
       notes:
         delete: "выдаляць"
       topic_label: "Тэма"

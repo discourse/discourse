@@ -69,7 +69,7 @@ export default class ComposerActions extends Component {
     }
 
     requestAnimationFrame(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

@@ -4630,9 +4630,6 @@ fi:
         title: "Piilota viesti"
         description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
         complete: "Viesti piilotettu, käyttäjälle on ilmoitettu."
-      agree_and_edit:
-        description: "Hyväksy lipulla ja avaa kirjoitusikkuna viestin muokkaamiseksi."
-        complete: "Lippu vahvistettu, voit nyt muokata viestiä."
       delete:
         title: "Poista"
         complete: "Viesti poistettu."
@@ -4723,14 +4720,6 @@ fi:
       approve_and_unhide:
         title: "Kyllä"
         complete: "Viesti hyväksytty ja näkyvissä"
-      delete_post:
-        title: "Poista viesti"
-        complete: "Viesti poistettu"
-      hide_post:
-        title: "Piilota viesti"
-      restore_post:
-        title: "Palauta viesti"
-        complete: "Viesti palautettu"
       silence_user:
         title: "Hiljennä käyttäjä"
         complete: "Käyttäjä hiljennetty"

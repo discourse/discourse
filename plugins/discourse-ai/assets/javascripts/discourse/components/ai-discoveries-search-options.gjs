@@ -376,7 +376,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
         {{/each}}
         <DButton
           class="btn-default btn-small ai-discoveries-search-options__option --advanced"
-          data-search-menu-navigation-item
           @action={{@openAdvancedSearch}}
           @ariaLabel="search.open_advanced"
           @icon="sliders"

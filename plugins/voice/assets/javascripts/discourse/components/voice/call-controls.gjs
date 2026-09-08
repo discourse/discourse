@@ -314,7 +314,7 @@ export default class VoiceCallControls extends Component {
       prefetchEngineAssets(engine).catch(() => {});
     }
     const { inputs, outputs } = await enumerateAudioDevices();
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
     const defaultDevice = this.#systemDefaultDevice();
@@ -325,7 +325,7 @@ export default class VoiceCallControls extends Component {
   @action
   async loadVideoDevices() {
     const inputs = await enumerateVideoDevices();
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
     this.videoInputDevices = [this.#systemDefaultDevice(), ...inputs];

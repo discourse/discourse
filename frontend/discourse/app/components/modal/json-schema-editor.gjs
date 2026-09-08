@@ -51,6 +51,9 @@ export default class JsonSchemaEditorModal extends Component {
     };
     JSONEditor.defaults.options.iconlib = "discourseIcons";
 
+    // Theme settings may hold HTML; keep string values as typed.
+    JSONEditor.AbstractEditor.prototype.purify = (value) => value;
+
     this.editor = new JSONEditor(element, {
       schema: this.args.model.jsonSchema,
       disable_array_delete_all_rows: true,

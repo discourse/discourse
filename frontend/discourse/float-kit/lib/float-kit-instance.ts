@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { isDestroyed, isDestroying } from "@ember/destroyable";
+import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import type {
@@ -234,7 +235,7 @@ export default abstract class FloatKitInstance {
     element.addEventListener("touchcancel", this.onTouchCancel, TOUCH_OPTIONS);
     element.addEventListener("touchend", this.onTouchCancel, TOUCH_OPTIONS);
     this.touchTimeout = discourseLater(() => {
-      if (isDestroying(this) || isDestroyed(this)) {
+      if (isDestroying(getOwner(this)!)) {
         return;
       }
 

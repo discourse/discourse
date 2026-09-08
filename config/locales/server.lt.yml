@@ -2712,8 +2712,6 @@ lt:
         title: "Taip"
       approve_and_unhide:
         title: "Taip"
-      delete_post:
-        complete: "Įrašas ištrintas"
       delete_user:
         complete: "Naudotojas ištrintas"
   create_linked_topic:

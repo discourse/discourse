@@ -441,7 +441,7 @@ export default class AdminReport extends Component {
   fetchOrRender() {
     if (this.args.preloadedData) {
       next(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         this._renderReport(this._loadReport(this.args.preloadedData));
@@ -514,7 +514,7 @@ export default class AdminReport extends Component {
       let payload = this._buildPayload(["prev_period"]);
 
       const callback = (response) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 

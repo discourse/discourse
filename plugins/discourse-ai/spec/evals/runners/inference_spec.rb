@@ -13,6 +13,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
       read_buffered_property: %w[concept_a concept_b],
     )
   end
+
   before do
     stub_runner_bot(agent: DiscourseAi::Agents::ConceptFinder.new) do |blk|
       blk.call(structured_output, nil, :structured_output)

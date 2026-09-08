@@ -92,7 +92,7 @@ export default class GifsModal extends Component {
     try {
       const response = await fetch(getURL(GIFS_CATEGORIES_URL));
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -102,7 +102,7 @@ export default class GifsModal extends Component {
 
       const data = await response.json();
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -169,7 +169,7 @@ export default class GifsModal extends Component {
     try {
       const response = await fetch(this.getEndpoint(this.query, this.offset));
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -178,7 +178,7 @@ export default class GifsModal extends Component {
       }
 
       const data = await response.json();
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

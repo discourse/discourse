@@ -12,7 +12,7 @@ export default class AutoLinkedText extends Component {
     if (!this.linkify) {
       generateLinkifyFunction({}).then((instance) => {
         cachedLinkify = instance;
-        if (!this.isDestroying && !this.isDestroyed) {
+        if (!this.isDestroying) {
           this.linkify = instance;
         }
       });

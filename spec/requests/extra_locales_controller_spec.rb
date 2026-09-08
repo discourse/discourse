@@ -8,7 +8,7 @@ RSpec.describe ExtraLocalesController do
   let(:fake_digest) { "a" * 40 }
 
   describe "#show" do
-    it "won't work with a weird parameter" do
+    it "rejects an invalid parameter" do
       get "/extra-locales/#{fake_digest}/en/-invalid..character!!.js"
       expect(response.status).to eq(404)
     end
@@ -238,7 +238,7 @@ RSpec.describe ExtraLocalesController do
   end
 
   describe ".url" do
-    it "works" do
+    it "builds the locale bundle URL with a version digest" do
       expect(ExtraLocalesController.url("admin")).to match(
         %r{\A/extra-locales/\h{40}/en/admin\.js\z},
       )

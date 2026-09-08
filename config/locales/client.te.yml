@@ -662,6 +662,9 @@ te:
         reviewable_ai_post:
           noun: "పోస్ట్"
       user_label: "సభ్యుడు"
+      author_penalty:
+        toast:
+          undo: "రద్దు చేయండి"
       notes:
         delete: "తొలగించు"
       topic_label: "విషయం"
@@ -1216,7 +1219,6 @@ te:
       admin: "%{user} ఒక నిర్వాహకుడు"
       moderator_tooltip: "ఈ సభ్యుడు ఒక నిర్వాహకుడు"
       admin_tooltip: "ఈ సభ్యుడు ఒక నిర్వాహకుడు"
-      silenced_tooltip: "ఈ సభ్యుడు నిశ్శబ్దం చేయబడ్డారు"
       suspended_notice: "ఈ సభ్యుడు %{date} వరకూ సస్పెండయ్యాడు"
       suspended_permanently: "ఈ సభ్యుడు సస్పెండ్ చేయబడ్డారు."
       suspended_reason: "కారణం:"

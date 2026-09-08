@@ -73,7 +73,7 @@ export default class TagGroupChooser extends MultiSelectComponent {
 
   @bind
   _transformJson(json) {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return [];
     }
     return json.results

@@ -1279,7 +1279,21 @@ pl_PL:
         view_conversation: "zobacz PW"
         note_added: "Uwaga moderatora"
         note_added_by: "Uwaga moderatora %{username} - %{relativeDate}"
+        author_silenced_by: "Autor wyciszony przez %{username} · %{relativeDate}"
+        author_silenced_automatically: "Autor wyciszony automatycznie · %{relativeDate}"
+        author_suspended_by: "Autor zawieszony przez %{username} · %{relativeDate}"
+        author_suspended_automatically: "Autor zawieszony automatycznie · %{relativeDate}"
         no_events: "Brak zdarzeń na osi czasu do wyświetlenia"
+      author_penalty:
+        effect:
+          retains_silence: "Autor pozostaje wyciszony."
+          retains_suspension: "Autor pozostaje zawieszony."
+          retains_silence_and_suspension: "Autor pozostaje wyciszony i zawieszony."
+          lifts_silence: "Autor nie będzie wyciszony."
+        toast:
+          still_silenced: "%{username} jest nadal wyciszony."
+          undo: "Cofnij"
+          undone: "%{username} nie jest już wyciszony."
       notes:
         add_note_description: "Dodaj uwagę, aby zapewnić kontekst innym moderatorom."
         add_note_button: "Dodaj uwagę"
@@ -1987,7 +2001,6 @@ pl_PL:
       admin: "%{user} jest adminem"
       moderator_tooltip: "Ten użytkownik jest moderatorem"
       admin_tooltip: "Ten użytkownik jest administratorem"
-      silenced_tooltip: "Ten użytkownik jest wyciszony"
       suspended_notice: "ten użytkownik jest zawieszony do %{date}."
       suspended_permanently: "Ten użytkownik jest zawieszony"
       suspended_reason: "Powód: "

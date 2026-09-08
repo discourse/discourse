@@ -79,14 +79,14 @@ RSpec.describe Email::Styles do
       expect(frag.at("a")["href"]).to eq(iframe_url)
     end
 
-    it "won't allow non URLs in iframe src, strips them with no link" do
+    it "strips non-URL iframe sources without adding a link" do
       iframe_url = "alert('xss hole')"
       frag = html_fragment("<iframe src=\"#{iframe_url}\"></iframe>")
       expect(frag.at("iframe")).to be_blank
       expect(frag.at("a")).to be_blank
     end
 
-    it "won't allow empty iframe src, strips them with no link" do
+    it "strips empty iframe sources without adding a link" do
       frag = html_fragment("<iframe src=''></iframe>")
       expect(frag.at("iframe")).to be_blank
       expect(frag.at("a")).to be_blank
@@ -313,6 +313,7 @@ RSpec.describe Email::Styles do
     end
 
     let(:attachments) { { "testimage.png" => stub(url: "email/test.png") } }
+
     it "replaces secure uploads within a link with a placeholder" do
       frag =
         html_fragment(
@@ -534,6 +535,7 @@ RSpec.describe Email::Styles do
   <div style="clear: both"></div>
 </aside>
           HTML
+
         it "keeps the special onebox styles" do
           strip_and_inline
           expect(@frag.to_s).to include("cid:email/test.png")

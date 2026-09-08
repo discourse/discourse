@@ -935,7 +935,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
     end
   end
 
-  describe "DELETE #destroy" do
+  describe "DELETE #destroy with a parent agent" do
     it "removes the deleted agent from parent subagent IDs" do
       child = Fabricate(:ai_agent)
       parent = Fabricate(:ai_agent, subagent_ids: [child.id])

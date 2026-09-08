@@ -1,3 +1,4 @@
+import { dependentKeyCompat } from "@ember/object/compat";
 import {
   exposeExtraAttributes,
   extraAttributesFor,
@@ -193,6 +194,11 @@ export function defineFieldForwarders(Klass, schema) {
         }
       };
     }
-    Object.defineProperty(proto, name, descriptor);
+    // Classic computed consumers observe the wrapper, not the cached record.
+    Object.defineProperty(
+      proto,
+      name,
+      dependentKeyCompat(proto, name, descriptor)
+    );
   }
 }

@@ -917,6 +917,9 @@ ro:
         note_added: "Notă moderator"
         note_added_by: "Notă moderator de la %{username} · %{relativeDate}"
         no_events: "Nu există evenimente cronologice de afișat"
+      author_penalty:
+        toast:
+          undo: "Anulează"
       notes:
         add_note_description: "Adaugă o notă pentru a oferi context celorlalți moderatori."
         add_note_button: "Adaugă notă"
@@ -1459,7 +1462,6 @@ ro:
       admin: "%{user} este admin"
       moderator_tooltip: "Acest utilizator este moderator"
       admin_tooltip: "Acest utilizator este admin"
-      silenced_tooltip: "Acest utilizator este silențios"
       suspended_notice: "Acest utilizator este suspendat până la %{date}."
       suspended_permanently: "Acest utilizator este suspendat."
       suspended_reason: "Motiv: "

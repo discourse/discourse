@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Enable Topic Voting badges by default upcoming change" do
+RSpec.describe "Topic Voting badge seeds" do
   let(:badge_names) { DiscourseTopicVoting::BADGE_NAMES }
 
   describe "seeding the Topic Voting badges on a new site" do

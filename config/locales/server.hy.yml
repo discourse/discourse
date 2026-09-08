@@ -2894,8 +2894,6 @@ hy:
         title: "Այո"
       approve_and_unhide:
         title: "Այո"
-      delete_post:
-        complete: "Գրառումը ջնջված է"
       delete_user:
         complete: "Օգտատերը ջնջված է"
   fallback_username: "օգտատեր"

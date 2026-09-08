@@ -167,7 +167,7 @@ export default class DesignWizardControls extends Component {
       </header>
 
       {{#if this.designWizard.showIntro}}
-        <IntroSection @onStart={{this.startFlow}} />
+        <IntroSection />
       {{else}}
         <div class="design-wizard__sections">
           {{#if (eq this.currentStep "theme")}}
@@ -232,7 +232,16 @@ export default class DesignWizardControls extends Component {
           {{/if}}
         </div>
 
-        <footer class="design-wizard__actions">
+      {{/if}}
+
+      <footer class="design-wizard__actions">
+        {{#if this.designWizard.showIntro}}
+          <DButton
+            class="btn-primary design-wizard__intro-start"
+            @action={{this.startFlow}}
+            @label="design_wizard.intro.start"
+          />
+        {{else}}
           <div class="design-wizard__step-dots">
             {{#each STEPS as |step index|}}
               <button
@@ -269,8 +278,8 @@ export default class DesignWizardControls extends Component {
               class="btn-primary design-wizard__next"
             />
           {{/if}}
-        </footer>
-      {{/if}}
+        {{/if}}
+      </footer>
     </div>
   </template>
 }

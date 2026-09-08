@@ -36,7 +36,7 @@ describe "Category Localizations" do
   context "when content localization setting is disabled" do
     before { SiteSetting.content_localization_enabled = false }
 
-    it "should not show the localization tab" do
+    it "hides the localization tab" do
       sign_in(admin)
 
       category_page.visit_settings(category)
@@ -68,7 +68,7 @@ describe "Category Localizations" do
     describe "Category Settings" do
       before { sign_in(admin) }
 
-      it "should show the localization tab" do
+      it "shows the localization tab" do
         category_page.visit_settings(category)
         expect(category_page).to have_setting_tab("localizations")
       end
@@ -99,12 +99,12 @@ describe "Category Localizations" do
       describe "when editing a category with no category localizations" do
         fab!(:mono_category, :category)
 
-        it "should show info hint to add new localizations" do
+        it "shows a hint to add new localizations" do
           category_page.visit_edit_localizations(mono_category)
           expect(form).to have_an_alert(I18n.t("js.category.localization.hint"))
         end
 
-        it "should allow you to add new localizations" do
+        it "allows adding new localizations" do
           category_page.visit_edit_localizations(mono_category)
           category_page.find(".edit-category-tab-localizations .add-localization").click
           form.field("localizations.0.locale").select("es")

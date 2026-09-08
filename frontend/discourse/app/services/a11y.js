@@ -265,7 +265,7 @@ export default class A11y extends Service {
     // awaited by `settled()`; a live region is polled asynchronously, so the one-tick
     // delay is imperceptible.
     next(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

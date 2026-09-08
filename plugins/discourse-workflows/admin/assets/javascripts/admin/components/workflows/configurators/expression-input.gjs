@@ -245,7 +245,7 @@ export default class ExpressionInput extends Component {
   @action
   handleFocusOut() {
     this.#focusOutTimer = discourseLater(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
       const editor = this.wrapperElement?.querySelector(".cm-editor");

@@ -5536,8 +5536,6 @@ fr:
         complete: "Publication masquée. L'utilisateur a été averti."
       agree_and_edit:
         title: "Modifier la publication"
-        description: "Acceptez le signalement et ouvrez une fenêtre de composition pour modifier le message."
-        complete: "Signalement confirmé, vous pouvez maintenant modifier la publication."
       delete:
         title: "Supprimer"
         complete: "Publication supprimée."
@@ -5645,30 +5643,6 @@ fr:
       approve_and_unhide:
         title: "Oui"
         complete: "Publication approuvée et visible"
-      post_actions:
-        bundle_title: "Que souhaitez-vous faire de la publication ?"
-      delete_post:
-        title: "Supprimer la publication"
-        description: "Supprimer cette publication"
-        complete: "Publication supprimée"
-      hide_post:
-        title: "Masquer la publication"
-        description: "Masquer cette publication au public"
-        complete: "Publication masquée"
-      unhide_post:
-        title: "Afficher la publication"
-        description: "Rendre cette publication visible pour tous les utilisateurs"
-        complete: "Publication de nouveau visible"
-      restore_post:
-        title: "Rétablir la publication"
-        description: "Restaurer cette publication supprimée"
-        complete: "Publication restaurée"
-      edit_post:
-        title: "Modifier la publication"
-        description: "Modifier le contenu de cette publication"
-        complete: "Publication modifiée"
-      user_actions:
-        bundle_title: "Que souhaitez-vous faire concernant cet utilisateur ?"
       silence_user:
         title: "Désactiver l'utilisateur"
         complete: "Utilisateur désactivé"

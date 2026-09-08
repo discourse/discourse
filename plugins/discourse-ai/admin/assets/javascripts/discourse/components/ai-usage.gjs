@@ -147,11 +147,7 @@ export default class AiUsage extends Component {
       { data: this.reportParams }
     );
 
-    if (
-      requestId !== this._dataRequestId ||
-      this.isDestroying ||
-      this.isDestroyed
-    ) {
+    if (requestId !== this._dataRequestId || this.isDestroying) {
       return;
     }
 
@@ -170,11 +166,7 @@ export default class AiUsage extends Component {
       { data: this.baseReportParams }
     );
 
-    if (
-      requestId !== this._filterOptionsRequestId ||
-      this.isDestroying ||
-      this.isDestroyed
-    ) {
+    if (requestId !== this._filterOptionsRequestId || this.isDestroying) {
       return;
     }
 

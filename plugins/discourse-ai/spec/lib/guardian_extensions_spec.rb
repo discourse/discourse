@@ -53,6 +53,7 @@ describe DiscourseAi::GuardianExtensions do
 
     context "when the topic is a PM" do
       before { assign_agent_to(:ai_summarization_agent, [group.id]) }
+
       let(:pm) { Fabricate(:private_message_topic) }
 
       it "returns false" do
@@ -95,6 +96,7 @@ describe DiscourseAi::GuardianExtensions do
 
   describe "#can_see_gists?" do
     before { assign_agent_to(:ai_summary_gists_agent, [group.id]) }
+
     let(:guardian) { Guardian.new(user) }
 
     context "when access is restricted to the user's group" do

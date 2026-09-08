@@ -86,7 +86,7 @@ export default class TaskActions extends Service {
 
     const response = await ajax("/assign/suggestions", { data });
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

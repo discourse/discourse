@@ -82,7 +82,7 @@ export default class PollBreakdownModal extends Component {
         }
       })
       .then((result) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 

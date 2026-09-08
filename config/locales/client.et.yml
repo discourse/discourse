@@ -494,6 +494,9 @@ et:
       user_label: "Kasutaja"
       timeline:
         target_deleted: "Postitus kustutatud"
+      author_penalty:
+        toast:
+          undo: "Ennista"
       notes:
         delete: "Kustuta"
       topic_label: "Teema"
@@ -907,7 +910,6 @@ et:
       admin: "%{user} on adminn"
       moderator_tooltip: "See kasutaja on moderaator"
       admin_tooltip: "See kasutaja on adminn"
-      silenced_tooltip: "See kasutaja on vaigistatud"
       suspended_notice: "Selle kasutaja ligipääs on ajutiselt peatatud kuni %{date}."
       suspended_permanently: "Selle kasutaja konto on peatatud."
       suspended_reason: "Põhjus:"

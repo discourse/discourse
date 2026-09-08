@@ -1029,6 +1029,9 @@ nl:
         note_added: "Moderatoropmerking"
         note_added_by: "Moderatoropmerking door %{username} · %{relativeDate}"
         no_events: "Geen tijdlijngebeurtenissen om weer te geven"
+      author_penalty:
+        toast:
+          undo: "Ongedaan maken"
       notes:
         add_note_description: "Voeg een notitie toe voor context aan andere moderators."
         add_note_button: "Opmerking toevoegen"
@@ -1675,7 +1678,6 @@ nl:
       admin: "%{user} is een beheerder"
       moderator_tooltip: "Deze gebruiker is een moderator"
       admin_tooltip: "Deze gebruiker is een beheerder"
-      silenced_tooltip: "Deze gebruiker is gedempt"
       suspended_notice: "Deze gebruiker is geschorst tot %{date}."
       suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "

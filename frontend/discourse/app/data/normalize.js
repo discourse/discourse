@@ -47,15 +47,16 @@ function userBadgeResource(raw, lookup, includedIds) {
   const resource = resourceFrom("user-badge", UserBadgeSchema, raw);
   const { attributes } = resource;
   // Inline sideloads as plain objects so templates can read arbitrary fields
-  // without hitting LegacyMode's strict schema check on cached records.
-  if (raw.user_id != null) {
-    attributes.user = lookup.user(raw.user_id);
-  }
-  if (raw.granted_by_id != null) {
-    attributes.granted_by = lookup.user(raw.granted_by_id);
-  }
-  if (raw.topic_id != null) {
-    attributes.topic = lookup.topic(raw.topic_id);
+  // without hitting LegacyMode's strict schema check on cached records. Assign
+  // only what this payload sideloads, or a thinner endpoint clears the rest.
+  for (const [name, entry] of [
+    ["user", lookup.user(raw.user_id)],
+    ["granted_by", lookup.user(raw.granted_by_id)],
+    ["topic", lookup.topic(raw.topic_id)],
+  ]) {
+    if (entry) {
+      attributes[name] = entry;
+    }
   }
 
   const relationships = {};

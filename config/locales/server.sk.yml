@@ -4957,9 +4957,6 @@ sk:
         title: "Skryť príspevok"
         description: "Súhlasiť s označením a skryť tento príspevok + automaticky odoslať používateľovi správu, ktorá ho vyzve, aby ho upravil."
         complete: "Príspevok skrytý, používateľ bol upozornený."
-      agree_and_edit:
-        description: "Súhlasím s príznakom a otvorte okno kompozície na úpravu príspevku."
-        complete: "Príznak bol potvrdený, teraz môžete príspevok upraviť."
       delete:
         title: "Odstrániť"
         complete: "Príspevok zmazaný."
@@ -5050,14 +5047,6 @@ sk:
       approve_and_unhide:
         title: "Áno"
         complete: "Príspevok schválený a odkrytý"
-      delete_post:
-        title: "Odstrániť príspevok"
-        complete: "Príspevok zmazaný"
-      hide_post:
-        title: "Skryť príspevok"
-      restore_post:
-        title: "Obnoviť príspevok"
-        complete: "Príspevok bol obnovený"
       silence_user:
         title: "Umlčať používateľa"
         complete: "Používateľ umlčaný"

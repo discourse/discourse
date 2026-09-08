@@ -495,6 +495,8 @@ module Discourse
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
+    request_path = args[:request]&.path&.delete_prefix(Discourse.base_path)&.delete_prefix("/")
+
     assets = []
 
     plugins.each do |plugin|
@@ -508,6 +510,8 @@ module Discourse
             importmap_name: "discourse/plugins/#{plugin.name}",
             external_plugin_imports:
               Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
+            route_bundle:
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "main", request_path),
           }
         end
       end
@@ -530,6 +534,8 @@ module Discourse
             type_module: true,
             external_plugin_imports:
               Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
+            route_bundle:
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "admin", request_path),
           }
         end
       end

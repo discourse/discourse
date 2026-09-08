@@ -648,7 +648,7 @@ export default class FullPageSearchController extends Controller {
     this.set("searchTerm", "");
 
     schedule("afterRender", () => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -669,7 +669,7 @@ export default class FullPageSearchController extends Controller {
     }
 
     schedule("afterRender", () => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

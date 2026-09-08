@@ -249,7 +249,7 @@ export default class VoiceRoomPage extends Component {
     }
 
     next(this, () => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -266,7 +266,7 @@ export default class VoiceRoomPage extends Component {
   @action
   watchRoom() {
     next(this, () => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

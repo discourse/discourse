@@ -798,6 +798,9 @@ fa_IR:
       user_label: "کاربر"
       timeline:
         target_deleted: "نوشته حذف شده"
+      author_penalty:
+        toast:
+          undo: "بی‌اثر کردن"
       notes:
         delete: "حذف"
       topic_label: "موضوع"
@@ -1383,7 +1386,6 @@ fa_IR:
       admin: "%{user} یک مدیر ارشد است"
       moderator_tooltip: "این کاربر یک ناظر است"
       admin_tooltip: "این کاربر یک ادمین است"
-      silenced_tooltip: "صدای این کاربر قطع شده است"
       suspended_notice: "این کاربر تا %{date} در وضعیت معلق است."
       suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "

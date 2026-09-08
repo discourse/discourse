@@ -171,7 +171,7 @@ export default class ChatMessage {
   }
 
   async cook() {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return;
     }
     await this.#ensureCookFunctionInitialized();
@@ -205,7 +205,7 @@ export default class ChatMessage {
     this.highlighted = true;
 
     discourseLater(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
