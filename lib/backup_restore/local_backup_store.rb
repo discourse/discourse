@@ -2,22 +2,24 @@
 
 module BackupRestore
   class LocalBackupStore < BackupStore
-    def self.base_directory(db: nil, root_directory: nil)
-      current_db = db || RailsMultisite::ConnectionManagement.current_db
-      root_directory ||= Rails.public_path.join("backups").to_s
+    class << self
+      def base_directory(db: nil, root_directory: nil)
+        current_db = db || RailsMultisite::ConnectionManagement.current_db
+        root_directory ||= Rails.public_path.join("backups").to_s
 
-      base_directory = File.join(root_directory, current_db)
-      FileUtils.mkdir_p(base_directory) unless Dir.exist?(base_directory)
-      base_directory
-    end
+        base_directory = File.join(root_directory, current_db)
+        FileUtils.mkdir_p(base_directory) unless Dir.exist?(base_directory)
+        base_directory
+      end
 
-    def self.chunk_path(identifier, filename, chunk_number)
-      File.join(
-        LocalBackupStore.base_directory,
-        "tmp",
-        identifier,
-        "#{filename}.part#{chunk_number}",
-      )
+      def chunk_path(identifier, filename, chunk_number)
+        File.join(
+          LocalBackupStore.base_directory,
+          "tmp",
+          identifier,
+          "#{filename}.part#{chunk_number}",
+        )
+      end
     end
 
     def initialize(opts = {})

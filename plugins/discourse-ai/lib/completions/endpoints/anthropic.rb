@@ -7,8 +7,10 @@ module DiscourseAi
         include AnthropicPromptCache
         include AnthropicShared
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "anthropic"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "anthropic"
+          end
         end
 
         def default_options(dialect)

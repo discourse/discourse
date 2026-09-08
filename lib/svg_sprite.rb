@@ -308,315 +308,324 @@ module SvgSprite
 
   MAX_THEME_SPRITE_SIZE = 1024.kilobytes
 
-  def self.preload
-    settings_icons
-    group_icons
-    badge_icons
-  end
+  class << self
+    def preload
+      settings_icons
+      group_icons
+      badge_icons
+    end
 
-  def self.symbols_for(svg_filename, sprite, strict:)
-    if strict
-      Nokogiri.XML(sprite) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
-    else
-      Nokogiri.XML(sprite)
-    end.css("symbol")
-      .filter_map do |sym|
-        icon_id = prepare_symbol(sym, svg_filename)
-        if icon_id.present?
-          sym.attributes["id"].value = icon_id
-          sym.css("title").each(&:remove)
-          [icon_id, sym.to_xml]
+    def symbols_for(svg_filename, sprite, strict:)
+      if strict
+        Nokogiri.XML(sprite) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
+      else
+        Nokogiri.XML(sprite)
+      end.css("symbol")
+        .filter_map do |sym|
+          icon_id = prepare_symbol(sym, svg_filename)
+          if icon_id.present?
+            sym.attributes["id"].value = icon_id
+            sym.css("title").each(&:remove)
+            [icon_id, sym.to_xml]
+          end
         end
-      end
-      .to_h
-  end
+        .to_h
+    end
 
-  def self.core_svgs_files
-    @svg_files ||= Dir.glob("#{Rails.root.join("vendor/assets/svg-icons/**/*.svg")}")
-  end
+    def core_svgs_files
+      @svg_files ||= Dir.glob("#{Rails.root.join("vendor/assets/svg-icons/**/*.svg")}")
+    end
 
-  def self.core_svgs
-    @core_svgs ||=
-      core_svgs_files.reduce({}) do |symbols, path|
-        symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
-      end
-  end
-
-  # Just used in tests
-  def self.clear_plugin_svg_sprite_cache!
-    @plugin_svgs = nil
-  end
-
-  def self.plugin_svgs
-    @plugin_svgs ||=
-      begin
-        plugin_paths = []
-        Discourse
-          .plugins
-          .map { |plugin| File.dirname(plugin.path) }
-          .each { |path| plugin_paths << "#{path}/svg-icons/*.svg" }
-
-        custom_sprite_paths = Dir.glob(plugin_paths)
-
-        custom_sprite_paths.reduce({}) do |symbols, path|
+    def core_svgs
+      @core_svgs ||=
+        core_svgs_files.reduce({}) do |symbols, path|
           symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
         end
-      end
-  end
+    end
 
-  def self.theme_svgs(theme_id)
-    if theme_id.present?
-      cache
-        .defer_get_set_bulk(
-          Theme.transform_ids(theme_id),
-          lambda { |_theme_id| "theme_svg_sprites_#{_theme_id}" },
-        ) do |theme_ids|
-          theme_field_uploads =
-            ThemeField.where(
-              type_id: ThemeField.types[:theme_upload_var],
-              name: THEME_SPRITE_VAR_NAME,
-              theme_id: theme_ids,
-            ).pluck(:upload_id)
+    # Just used in tests
+    def clear_plugin_svg_sprite_cache!
+      @plugin_svgs = nil
+    end
 
-          theme_sprites =
-            ThemeSvgSprite.where(theme_id: theme_ids).pluck(:theme_id, :upload_id, :sprite)
-          missing_sprites = (theme_field_uploads - theme_sprites.map(&:second))
+    def plugin_svgs
+      @plugin_svgs ||=
+        begin
+          plugin_paths = []
+          Discourse
+            .plugins
+            .map { |plugin| File.dirname(plugin.path) }
+            .each { |path| plugin_paths << "#{path}/svg-icons/*.svg" }
 
-          if missing_sprites.present?
-            Rails.logger.warn(
-              "Missing ThemeSvgSprites for theme #{theme_id}, uploads #{missing_sprites.join(", ")}",
-            )
+          custom_sprite_paths = Dir.glob(plugin_paths)
+
+          custom_sprite_paths.reduce({}) do |symbols, path|
+            symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
           end
+        end
+    end
 
-          theme_sprites
-            .map do |(_theme_id, upload_id, sprite)|
-              [_theme_id, symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false)]
-            rescue => e
+    def theme_svgs(theme_id)
+      if theme_id.present?
+        cache
+          .defer_get_set_bulk(
+            Theme.transform_ids(theme_id),
+            lambda { |_theme_id| "theme_svg_sprites_#{_theme_id}" },
+          ) do |theme_ids|
+            theme_field_uploads =
+              ThemeField.where(
+                type_id: ThemeField.types[:theme_upload_var],
+                name: THEME_SPRITE_VAR_NAME,
+                theme_id: theme_ids,
+              ).pluck(:upload_id)
+
+            theme_sprites =
+              ThemeSvgSprite.where(theme_id: theme_ids).pluck(:theme_id, :upload_id, :sprite)
+            missing_sprites = (theme_field_uploads - theme_sprites.map(&:second))
+
+            if missing_sprites.present?
               Rails.logger.warn(
-                "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
+                "Missing ThemeSvgSprites for theme #{theme_id}, uploads #{missing_sprites.join(", ")}",
               )
             end
-            .compact
-            .to_h
-            .values_at(*theme_ids)
-        end
-        .values
-        .compact
-        .reduce({}) { |a, b| a.merge!(b) }
-    else
-      {}
+
+            theme_sprites
+              .map do |(_theme_id, upload_id, sprite)|
+                [
+                  _theme_id,
+                  symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false),
+                ]
+              rescue => e
+                Rails.logger.warn(
+                  "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
+                )
+              end
+              .compact
+              .to_h
+              .values_at(*theme_ids)
+          end
+          .values
+          .compact
+          .reduce({}) { |a, b| a.merge!(b) }
+      else
+        {}
+      end
     end
-  end
 
-  def self.custom_svgs(theme_id)
-    plugin_svgs.merge(theme_svgs(theme_id))
-  end
-
-  def self.all_icons(theme_id = nil)
-    get_set_cache("icons_#{Theme.transform_ids(theme_id).join(",")}") do
-      Set
-        .new()
-        .merge(settings_icons)
-        .merge(plugin_icons)
-        .merge(plugin_icon_sources)
-        .merge(badge_icons)
-        .merge(group_icons)
-        .merge(theme_icons(theme_id))
-        .merge(custom_icons(theme_id))
-        .delete_if { |i| i.blank? || i.include?("/") }
-        .map!(&:strip)
-        .merge(SVG_ICONS)
-        .sort
+    def custom_svgs(theme_id)
+      plugin_svgs.merge(theme_svgs(theme_id))
     end
-  end
 
-  def self.version(theme_id = nil)
-    get_set_cache("version_#{Theme.transform_ids(theme_id).join(",")}") do
-      Digest::SHA1.hexdigest(bundle(theme_id))
+    def all_icons(theme_id = nil)
+      get_set_cache("icons_#{Theme.transform_ids(theme_id).join(",")}") do
+        Set
+          .new()
+          .merge(settings_icons)
+          .merge(plugin_icons)
+          .merge(plugin_icon_sources)
+          .merge(badge_icons)
+          .merge(group_icons)
+          .merge(theme_icons(theme_id))
+          .merge(custom_icons(theme_id))
+          .delete_if { |i| i.blank? || i.include?("/") }
+          .map!(&:strip)
+          .merge(SVG_ICONS)
+          .sort
+      end
     end
-  end
 
-  def self.path(theme_id = nil)
-    "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme_id}-#{version(theme_id)}.js"
-  end
+    def version(theme_id = nil)
+      get_set_cache("version_#{Theme.transform_ids(theme_id).join(",")}") do
+        Digest::SHA1.hexdigest(bundle(theme_id))
+      end
+    end
 
-  def self.expire_cache
-    cache&.clear
-  end
+    def path(theme_id = nil)
+      "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme_id}-#{version(theme_id)}.js"
+    end
 
-  def self.svgs_for(theme_id)
-    svgs = core_svgs
-    svgs = svgs.merge(custom_svgs(theme_id)) if theme_id.present?
-    svgs
-  end
+    def expire_cache
+      cache&.clear
+    end
 
-  def self.bundle(theme_id = nil)
-    icons = all_icons(theme_id)
+    def svgs_for(theme_id)
+      svgs = core_svgs
+      svgs = svgs.merge(custom_svgs(theme_id)) if theme_id.present?
+      svgs
+    end
 
-    svg_subset =
-      "" \
-        "<!--
+    def bundle(theme_id = nil)
+      icons = all_icons(theme_id)
+
+      svg_subset =
+        "" \
+          "<!--
 Discourse SVG subset of Font Awesome Free by @fontawesome - https://fontawesome.com
 License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
 -->
 <svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
 " \
-        "".dup
+          "".dup
 
-    svg_subset << core_svgs.slice(*icons).values.join
-    svg_subset << custom_svgs(theme_id).values.join
+      svg_subset << core_svgs.slice(*icons).values.join
+      svg_subset << custom_svgs(theme_id).values.join
 
-    svg_subset << "</svg>"
-  end
-
-  def self.search(searched_icon)
-    svgs_for(SiteSetting.default_theme_id)[searched_icon.strip] || false
-  end
-
-  def self.icon_picker_search(keyword, only_available, page:, per_page:, theme_id: nil)
-    ids = picker_icon_ids(theme_id, only_available)
-
-    if keyword.present?
-      downcased_keyword = keyword.downcase
-      ids = ids.lazy.select { |id| id.downcase.include?(downcased_keyword) }
+      svg_subset << "</svg>"
     end
 
-    ids = ids.drop(page * per_page).first(per_page + 1)
-
-    has_more = ids.size > per_page
-    ids = ids.take(per_page)
-
-    missing = only_available ? [] : (ids - picker_icon_ids(theme_id, true)).to_set
-    return { icons: ids.map { |id| { id: } }, has_more: } if missing.empty?
-
-    custom = theme_id.present? ? custom_svgs(theme_id) : {}
-    icons =
-      ids.map { |id| missing.include?(id) ? { id:, symbol: custom[id] || core_svgs[id] } : { id: } }
-    { icons:, has_more: }
-  end
-
-  def self.picker_icon_ids(theme_id, only_available)
-    get_set_cache("picker_icon_ids_#{Theme.transform_ids(theme_id).join(",")}_#{only_available}") do
-      symbols = svgs_for(theme_id)
-      in_sprite = all_icons(theme_id).select { |id| symbols.key?(id) }
-
-      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite).sort
+    def search(searched_icon)
+      svgs_for(SiteSetting.default_theme_id)[searched_icon.strip] || false
     end
-  end
 
-  # For use in no_ember .html.erb layouts
-  def self.raw_svg(name)
-    get_set_cache("raw_svg_#{name}") do
-      symbol = search(name)
-      break "" unless symbol
-      symbol = Nokogiri.XML(symbol).children.first
-      symbol.name = "svg"
-      <<~HTML
+    def icon_picker_search(keyword, only_available, page:, per_page:, theme_id: nil)
+      ids = picker_icon_ids(theme_id, only_available)
+
+      if keyword.present?
+        downcased_keyword = keyword.downcase
+        ids = ids.lazy.select { |id| id.downcase.include?(downcased_keyword) }
+      end
+
+      ids = ids.drop(page * per_page).first(per_page + 1)
+
+      has_more = ids.size > per_page
+      ids = ids.take(per_page)
+
+      missing = only_available ? [] : (ids - picker_icon_ids(theme_id, true)).to_set
+      return { icons: ids.map { |id| { id: } }, has_more: } if missing.empty?
+
+      custom = theme_id.present? ? custom_svgs(theme_id) : {}
+      icons =
+        ids.map do |id|
+          missing.include?(id) ? { id:, symbol: custom[id] || core_svgs[id] } : { id: }
+        end
+      { icons:, has_more: }
+    end
+
+    def picker_icon_ids(theme_id, only_available)
+      get_set_cache(
+        "picker_icon_ids_#{Theme.transform_ids(theme_id).join(",")}_#{only_available}",
+      ) do
+        symbols = svgs_for(theme_id)
+        in_sprite = all_icons(theme_id).select { |id| symbols.key?(id) }
+
+        only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite).sort
+      end
+    end
+
+    # For use in no_ember .html.erb layouts
+    def raw_svg(name)
+      get_set_cache("raw_svg_#{name}") do
+        symbol = search(name)
+        break "" unless symbol
+        symbol = Nokogiri.XML(symbol).children.first
+        symbol.name = "svg"
+        <<~HTML
         <svg class="fa d-icon svg-icon svg-node" aria-hidden="true">#{symbol}</svg>
       HTML
-    end.html_safe
-  end
-
-  def self.theme_sprite_variable_name
-    THEME_SPRITE_VAR_NAME
-  end
-
-  def self.prepare_symbol(symbol, svg_filename = nil)
-    icon_id = symbol.attr("id")
-
-    case svg_filename
-    when "regular"
-      icon_id = icon_id.prepend("far-")
-    when "brands"
-      icon_id = icon_id.prepend("fab-")
+      end.html_safe
     end
 
-    icon_id
-  end
+    def theme_sprite_variable_name
+      THEME_SPRITE_VAR_NAME
+    end
 
-  def self.settings_icons
-    get_set_cache("settings_icons") do
-      # includes svg_icon_subset, icon type settings, icon properties of objects
-      # type settings, and any settings containing _icon (incl. plugin settings)
-      site_setting_icons = []
+    def prepare_symbol(symbol, svg_filename = nil)
+      icon_id = symbol.attr("id")
 
-      SiteSetting.settings_hash.each do |key, value|
-        next unless String === value
-
-        if key.to_s.include?("_icon") || SiteSetting.type_supervisor.get_type(key) == :icon
-          site_setting_icons |= value.split("|")
-        elsif SiteSetting.type_supervisor.get_type(key) == :objects && value.present?
-          schema = SiteSetting.type_supervisor.type_hash(key)[:schema]
-          site_setting_icons |= objects_setting_icons(schema, JSON.parse(value)) if schema
-        end
+      case svg_filename
+      when "regular"
+        icon_id = icon_id.prepend("far-")
+      when "brands"
+        icon_id = icon_id.prepend("fab-")
       end
 
-      site_setting_icons
+      icon_id
     end
-  end
 
-  def self.plugin_icons
-    DiscoursePluginRegistry.svg_icons
-  end
+    def settings_icons
+      get_set_cache("settings_icons") do
+        # includes svg_icon_subset, icon type settings, icon properties of objects
+        # type settings, and any settings containing _icon (incl. plugin settings)
+        site_setting_icons = []
 
-  def self.plugin_icon_sources
-    DiscoursePluginRegistry.svg_icon_sources.flat_map { |source| Array(source.call) }
-  end
+        SiteSetting.settings_hash.each do |key, value|
+          next unless String === value
 
-  def self.badge_icons
-    get_set_cache("badge_icons") { Badge.pluck(:icon).uniq }
-  end
-
-  def self.group_icons
-    get_set_cache("group_icons") { Group.pluck(:flair_icon).uniq }
-  end
-
-  def self.theme_icons(theme_id)
-    return [] if theme_id.blank?
-
-    theme_icon_settings = []
-    theme_ids = Theme.transform_ids(theme_id)
-
-    # Need to load full records for default values
-    Theme
-      .where(id: theme_ids)
-      .each do |theme|
-        settings = theme.cached_settings
-        type_info = settings["theme_setting_type_info"] || {}
-
-        settings.each do |key, value|
-          if String === value
-            if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
-              theme_icon_settings |= value.split("|")
-            end
-          elsif type_info.dig(key, :type) == "objects" && value.is_a?(Array)
-            schema = type_info.dig(key, :schema)
-            theme_icon_settings |= objects_setting_icons(schema, value) if schema
+          if key.to_s.include?("_icon") || SiteSetting.type_supervisor.get_type(key) == :icon
+            site_setting_icons |= value.split("|")
+          elsif SiteSetting.type_supervisor.get_type(key) == :objects && value.present?
+            schema = SiteSetting.type_supervisor.type_hash(key)[:schema]
+            site_setting_icons |= objects_setting_icons(schema, JSON.parse(value)) if schema
           end
         end
+
+        site_setting_icons
       end
+    end
 
-    theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
+    def plugin_icons
+      DiscoursePluginRegistry.svg_icons
+    end
 
-    theme_icon_settings
-  end
+    def plugin_icon_sources
+      DiscoursePluginRegistry.svg_icon_sources.flat_map { |source| Array(source.call) }
+    end
 
-  def self.objects_setting_icons(schema, objects)
-    SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type: "icon").grep(
-      String,
-    )
-  end
+    def badge_icons
+      get_set_cache("badge_icons") { Badge.pluck(:icon).uniq }
+    end
 
-  def self.custom_icons(theme_id)
-    # Automatically register icons in sprites added via themes or plugins
-    custom_svgs(theme_id).keys
-  end
+    def group_icons
+      get_set_cache("group_icons") { Group.pluck(:flair_icon).uniq }
+    end
 
-  def self.get_set_cache(key, &block)
-    cache.defer_get_set(key, &block)
-  end
+    def theme_icons(theme_id)
+      return [] if theme_id.blank?
 
-  def self.cache
-    @cache ||= DistributedCache.new("svg_sprite")
+      theme_icon_settings = []
+      theme_ids = Theme.transform_ids(theme_id)
+
+      # Need to load full records for default values
+      Theme
+        .where(id: theme_ids)
+        .each do |theme|
+          settings = theme.cached_settings
+          type_info = settings["theme_setting_type_info"] || {}
+
+          settings.each do |key, value|
+            if String === value
+              if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
+                theme_icon_settings |= value.split("|")
+              end
+            elsif type_info.dig(key, :type) == "objects" && value.is_a?(Array)
+              schema = type_info.dig(key, :schema)
+              theme_icon_settings |= objects_setting_icons(schema, value) if schema
+            end
+          end
+        end
+
+      theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
+
+      theme_icon_settings
+    end
+
+    def objects_setting_icons(schema, objects)
+      SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type: "icon").grep(
+        String,
+      )
+    end
+
+    def custom_icons(theme_id)
+      # Automatically register icons in sprites added via themes or plugins
+      custom_svgs(theme_id).keys
+    end
+
+    def get_set_cache(key, &block)
+      cache.defer_get_set(key, &block)
+    end
+
+    def cache
+      @cache ||= DistributedCache.new("svg_sprite")
+    end
   end
 end

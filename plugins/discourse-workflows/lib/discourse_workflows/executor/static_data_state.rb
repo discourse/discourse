@@ -19,12 +19,14 @@ module DiscourseWorkflows
     class StaticDataState
       attr_reader :global, :node
 
-      def self.from_workflow(workflow)
-        normalized = workflow.normalized_static_data
-        new(
-          global: normalized[DiscourseWorkflows::Workflow::STATIC_DATA_GLOBAL_KEY].deep_dup,
-          node: workflow.node_static_data_entries.deep_dup,
-        )
+      class << self
+        def from_workflow(workflow)
+          normalized = workflow.normalized_static_data
+          new(
+            global: normalized[DiscourseWorkflows::Workflow::STATIC_DATA_GLOBAL_KEY].deep_dup,
+            node: workflow.node_static_data_entries.deep_dup,
+          )
+        end
       end
 
       def initialize(global: {}, node: {})

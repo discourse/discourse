@@ -22,24 +22,26 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `user_field_values` record in the IntermediateDB.
-        #
-        # @param user_id                [Integer, String]
-        # @param field_id               [Integer, String]
-        # @param value                  [String]
-        # @param created_at             [Time, nil]
-        # @param is_multiselect_field   [Boolean, nil]
-        #
-        # @return [void]
-        def self.create(user_id:, field_id:, value:, created_at: nil, is_multiselect_field: nil)
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            user_id,
-            field_id,
-            value,
-            Migrations::Database.format_datetime(created_at),
-            Migrations::Database.format_boolean(is_multiselect_field),
-          )
+        class << self
+          # Creates a new `user_field_values` record in the IntermediateDB.
+          #
+          # @param user_id                [Integer, String]
+          # @param field_id               [Integer, String]
+          # @param value                  [String]
+          # @param created_at             [Time, nil]
+          # @param is_multiselect_field   [Boolean, nil]
+          #
+          # @return [void]
+          def create(user_id:, field_id:, value:, created_at: nil, is_multiselect_field: nil)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              user_id,
+              field_id,
+              value,
+              Migrations::Database.format_datetime(created_at),
+              Migrations::Database.format_boolean(is_multiselect_field),
+            )
+          end
         end
       end
     end

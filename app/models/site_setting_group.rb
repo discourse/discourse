@@ -9,25 +9,27 @@ class SiteSettingGroup < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
-  def self.setting_group_ids
-    return {} unless can_access_db?
+  class << self
+    def setting_group_ids
+      return {} unless can_access_db?
 
-    DB
-      .query("SELECT name, group_ids FROM site_setting_groups")
-      .each_with_object({}) do |row, hash|
-        hash[row.name.to_sym] = row.group_ids.split("|").map(&:to_i)
-      end
-  end
+      DB
+        .query("SELECT name, group_ids FROM site_setting_groups")
+        .each_with_object({}) do |row, hash|
+          hash[row.name.to_sym] = row.group_ids.split("|").map(&:to_i)
+        end
+    end
 
-  def self.generate_setting_group_map
-    return {} unless can_access_db?
+    def generate_setting_group_map
+      return {} unless can_access_db?
 
-    Hash[*SiteSettingGroup.setting_group_ids.flatten]
-  end
+      Hash[*SiteSettingGroup.setting_group_ids.flatten]
+    end
 
-  def self.can_access_db?
-    !GlobalSetting.skip_redis? && !GlobalSetting.skip_db? &&
-      ActiveRecord::Base.connection.table_exists?(table_name)
+    def can_access_db?
+      !GlobalSetting.skip_redis? && !GlobalSetting.skip_db? &&
+        ActiveRecord::Base.connection.table_exists?(table_name)
+    end
   end
 end
 

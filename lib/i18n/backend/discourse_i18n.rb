@@ -8,6 +8,25 @@ module I18n
       include I18n::Backend::Fallbacks
       include I18n::Backend::Pluralization
 
+      class << self
+        def sort_locale_files(files)
+          files.sort.sort_by do |filename|
+            matches = /(?:client|server)-([1-9]|[1-9][0-9]|100)\..+\.yml/.match(filename)
+            matches&.[](1).to_i
+          end
+        end
+
+        def create_search_regexp(query, as_string: false)
+          regexp = Regexp.escape(query)
+
+          regexp.gsub!(/['‘’‚‹›]/, "['‘’‚‹›]")
+          regexp.gsub!(/["“”„«»]/, '["“”„«»]')
+          regexp.gsub!(/(?:\\\.\\\.\\\.|…)/, '(?:\.\.\.|…)')
+
+          as_string ? regexp : /#{regexp}/i
+        end
+      end
+
       def available_locales
         LocaleSiteSetting.supported_locales.map(&:to_sym)
       end
@@ -31,23 +50,6 @@ module I18n
       rescue I18n::InvalidPluralizationData => e
         raise e if I18n.fallbacks[locale] == [locale]
         throw(:exception, e)
-      end
-
-      def self.sort_locale_files(files)
-        files.sort.sort_by do |filename|
-          matches = /(?:client|server)-([1-9]|[1-9][0-9]|100)\..+\.yml/.match(filename)
-          matches&.[](1).to_i
-        end
-      end
-
-      def self.create_search_regexp(query, as_string: false)
-        regexp = Regexp.escape(query)
-
-        regexp.gsub!(/['‘’‚‹›]/, "['‘’‚‹›]")
-        regexp.gsub!(/["“”„«»]/, '["“”„«»]')
-        regexp.gsub!(/(?:\\\.\\\.\\\.|…)/, '(?:\.\.\.|…)')
-
-        as_string ? regexp : /#{regexp}/i
       end
 
       def search(locale, query)

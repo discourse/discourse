@@ -3,20 +3,22 @@
 class MessageBusDiags
   @host_info = {}
 
-  def self.my_id
-    @my_id ||= "#{Discourse.os_hostname}-#{Process.pid}"
-  end
+  class << self
+    def my_id
+      @my_id ||= "#{Discourse.os_hostname}-#{Process.pid}"
+    end
 
-  def self.seen_host(name)
-    @host_info[name] = DateTime.now
-  end
+    def seen_host(name)
+      @host_info[name] = DateTime.now
+    end
 
-  def self.establish_peer_names
-    MessageBus.publish "/server-name", channel: "/server-name-reply/#{my_id}"
-  end
+    def establish_peer_names
+      MessageBus.publish "/server-name", channel: "/server-name-reply/#{my_id}"
+    end
 
-  def self.seen_hosts
-    @host_info
+    def seen_hosts
+      @host_info
+    end
   end
 
   unless @subscribed

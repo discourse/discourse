@@ -3,8 +3,16 @@
 module Autospec
   class RspecRunner < BaseRunner
     WATCHERS = {}
-    def self.watch(pattern, &blk)
-      WATCHERS[pattern] = blk
+    RELOADERS = Set.new
+
+    class << self
+      def watch(pattern, &blk)
+        WATCHERS[pattern] = blk
+      end
+
+      def reload(pattern)
+        RELOADERS << pattern
+      end
     end
 
     def watchers
@@ -35,11 +43,6 @@ module Autospec
     watch(%r{\A(plugins/.*/)plugin\.rb}) { |m| "#{m[1]}spec" }
     watch(%r{\A(plugins/.*)/(lib|app)}) { |m| "#{m[1]}/spec/integration" }
     watch(%r{\A(plugins/.*)/lib/(.*)\.rb}) { |m| "#{m[1]}/spec/lib/#{m[2]}_spec.rb" }
-
-    RELOADERS = Set.new
-    def self.reload(pattern)
-      RELOADERS << pattern
-    end
 
     def reloaders
       RELOADERS

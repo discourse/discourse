@@ -2,8 +2,10 @@
 
 module Jobs
   class BadgeGrant < ::Jobs::Scheduled
-    def self.run
-      new.execute(nil)
+    class << self
+      def run
+        new.execute(nil)
+      end
     end
 
     every 1.day

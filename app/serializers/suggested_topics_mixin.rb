@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 module SuggestedTopicsMixin
-  def self.included(klass)
-    klass.attributes :related_messages
-    klass.attributes :suggested_topics
-    klass.attributes :suggested_group_name
+  class << self
+    def included(klass)
+      klass.attributes :related_messages
+      klass.attributes :suggested_topics
+      klass.attributes :suggested_group_name
+    end
   end
 
   def include_related_messages?

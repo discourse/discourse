@@ -10,6 +10,9 @@ module PageObjects
       RICH_EDITOR = ".d-editor-input.ProseMirror"
       POST_LANGUAGE_SELECTOR = ".post-language-selector-trigger"
 
+      EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"
+      FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
+
       def initialize(composer_id = COMPOSER_ID)
         @composer_id = composer_id
       end
@@ -275,8 +278,6 @@ module PageObjects
         has_css?("#{AUTOCOMPLETE_MENU} ul li:nth-child(#{index}) a.selected")
       end
 
-      EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"
-
       def has_emoji_suggestion?(emoji)
         has_css?(EMOJI_SUGGESTION_SELECTOR, text: emoji)
       end
@@ -334,8 +335,6 @@ module PageObjects
           ".form-template-field[data-field-type='#{field}'] .form-template-field__required-indicator",
         )
       end
-
-      FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
 
       def has_no_form_template_chooser?
         page.has_no_css?(FORM_TEMPLATE_CHOOSER_SELECTOR)

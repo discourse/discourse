@@ -8,36 +8,49 @@ module Stylesheet
 
     THEME_TARGETS = %w[embedded_theme common_theme mobile_theme desktop_theme]
 
-    def self.plugin_assets
-      @plugin_assets ||= {}
-    end
+    class << self
+      def plugin_assets
+        @plugin_assets ||= {}
+      end
 
-    def self.register_imports!
-      Discourse.plugins.each do |plugin|
-        plugin_directory_name = plugin.directory_name
+      def register_imports!
+        Discourse.plugins.each do |plugin|
+          plugin_directory_name = plugin.directory_name
 
-        ["", "mobile", "desktop", "admin"].each do |type|
-          asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
-          stylesheets =
-            (
-              if type.present?
-                DiscoursePluginRegistry.send("#{type}_stylesheets")
-              else
-                DiscoursePluginRegistry.stylesheets
-              end
-            )
+          ["", "mobile", "desktop", "admin"].each do |type|
+            asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
+            stylesheets =
+              (
+                if type.present?
+                  DiscoursePluginRegistry.send("#{type}_stylesheets")
+                else
+                  DiscoursePluginRegistry.stylesheets
+                end
+              )
 
-          if plugin_directory_name.present?
-            plugin_assets[asset_name] = {
-              plugin_path: plugin.path,
-              stylesheets: stylesheets[plugin_directory_name],
-            }
+            if plugin_directory_name.present?
+              plugin_assets[asset_name] = {
+                plugin_path: plugin.path,
+                stylesheets: stylesheets[plugin_directory_name],
+              }
+            end
           end
         end
       end
     end
 
     register_imports!
+
+    def initialize(options)
+      @theme = options[:theme]
+      @theme_id = options[:theme_id]
+      @color_scheme_id = options[:color_scheme_id]
+
+      if @theme && !@theme_id
+        # make up an id so other stuff does not bail out
+        @theme_id = @theme.id || -1
+      end
+    end
 
     def font
       body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
@@ -178,17 +191,6 @@ module Stylesheet
 
     def prepended_scss
       "#{color_variables} #{public_image_path} @import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; "
-    end
-
-    def initialize(options)
-      @theme = options[:theme]
-      @theme_id = options[:theme_id]
-      @color_scheme_id = options[:color_scheme_id]
-
-      if @theme && !@theme_id
-        # make up an id so other stuff does not bail out
-        @theme_id = @theme.id || -1
-      end
     end
 
     def theme_import(target)

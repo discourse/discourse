@@ -6,6 +6,12 @@ module Migrations
       class Uploads
         attr_reader :settings, :databases
 
+        class << self
+          def perform!(settings = {})
+            new(settings).perform!
+          end
+        end
+
         def initialize(settings)
           @settings = settings
           @databases = setup_databases
@@ -17,10 +23,6 @@ module Migrations
           tasks.each { |task| task.run!(databases, settings) }
         ensure
           cleanup_resources
-        end
-
-        def self.perform!(settings = {})
-          new(settings).perform!
         end
 
         private

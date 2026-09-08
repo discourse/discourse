@@ -3,6 +3,11 @@
 class Unread
   # This module helps us calculate unread post counts
 
+  DO_NOT_NOTIFY_LEVELS = [
+    TopicUser.notification_levels[:muted],
+    TopicUser.notification_levels[:regular],
+  ]
+
   def initialize(topic, topic_user, guardian)
     @guardian = guardian
     @topic = topic
@@ -24,11 +29,6 @@ class Unread
   end
 
   protected
-
-  DO_NOT_NOTIFY_LEVELS = [
-    TopicUser.notification_levels[:muted],
-    TopicUser.notification_levels[:regular],
-  ]
 
   def do_not_notify?(notification_level)
     DO_NOT_NOTIFY_LEVELS.include?(notification_level)

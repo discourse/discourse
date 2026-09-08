@@ -7,6 +7,11 @@ class SiteSettings::LocalProcessProvider
   class Setting
     attr_accessor :name, :data_type, :value
 
+    def initialize(name, data_type)
+      self.name = name
+      self.data_type = data_type
+    end
+
     def value_changed?
       false
     end
@@ -14,19 +19,14 @@ class SiteSettings::LocalProcessProvider
     def saved_change_to_value?
       true
     end
-
-    def initialize(name, data_type)
-      self.name = name
-      self.data_type = data_type
-    end
-  end
-
-  def settings
-    @settings[current_site] ||= {}
   end
 
   def initialize
     @settings = {}
+  end
+
+  def settings
+    @settings[current_site] ||= {}
   end
 
   def all

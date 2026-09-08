@@ -73,8 +73,10 @@ RSpec.describe Migrations::Database::IntermediateDB do
     it "reads the strategy from the model, so a new `OR IGNORE` model flips it" do
       model =
         Module.new do
-          def self.conflict_strategy
-            :ignore
+          class << self
+            def conflict_strategy
+              :ignore
+            end
           end
         end
       stub_const("#{described_class}::Widget", model)

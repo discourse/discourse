@@ -44,8 +44,10 @@ module DiscourseAi
           1 => "I",
         }
 
-        def self.from_xml(xml)
-          new.tap { |numbering| numbering.parse(xml) }
+        class << self
+          def from_xml(xml)
+            new.tap { |numbering| numbering.parse(xml) }
+          end
         end
 
         def initialize
@@ -274,8 +276,10 @@ module DiscourseAi
         end
       end
 
-      def self.convert(path)
-        new(path).convert
+      class << self
+        def convert(path)
+          new(path).convert
+        end
       end
 
       def initialize(path)

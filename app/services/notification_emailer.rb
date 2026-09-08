@@ -4,6 +4,26 @@ class NotificationEmailer
   class EmailUser
     attr_reader :notification, :no_delay
 
+    EMAILABLE_POST_TYPES = Post.types.values_at(:regular, :whisper, :moderator_action).to_set
+
+    class << self
+      def notification_params(notification, type)
+        post_id = (notification.data_hash[:original_post_id] || notification.post_id).to_i
+        notification_type = Notification.types[notification.notification_type]
+
+        hash = {
+          type: type.to_s,
+          user_id: notification.user_id,
+          notification_id: notification.id,
+          notification_data_hash: notification.data_hash,
+          notification_type: notification_type.to_s,
+        }
+
+        hash[:post_id] = post_id if post_id > 0 && notification_type != :post_approved
+        hash
+      end
+    end
+
     def initialize(notification, no_delay: false)
       @notification = notification
       @no_delay = no_delay
@@ -57,25 +77,7 @@ class NotificationEmailer
       enqueue(:user_invited_to_topic, private_delay)
     end
 
-    def self.notification_params(notification, type)
-      post_id = (notification.data_hash[:original_post_id] || notification.post_id).to_i
-      notification_type = Notification.types[notification.notification_type]
-
-      hash = {
-        type: type.to_s,
-        user_id: notification.user_id,
-        notification_id: notification.id,
-        notification_data_hash: notification.data_hash,
-        notification_type: notification_type.to_s,
-      }
-
-      hash[:post_id] = post_id if post_id > 0 && notification_type != :post_approved
-      hash
-    end
-
     private
-
-    EMAILABLE_POST_TYPES = Post.types.values_at(:regular, :whisper, :moderator_action).to_set
 
     def enqueue(type, delay = default_delay)
       return if notification.user.user_option.email_level == UserOption.email_level_types[:never]
@@ -131,26 +133,28 @@ class NotificationEmailer
     end
   end
 
-  def self.disable
-    @disabled = true
-  end
-
-  def self.enable
-    @disabled = false
-  end
-
-  def self.process_notification(notification, no_delay: false)
-    return if @disabled
-
-    email_user = EmailUser.new(notification, no_delay: no_delay)
-    email_method = Notification.types[notification.notification_type]
-
-    if DiscoursePluginRegistry.email_notification_filters.any? { |filter|
-         !filter.call(notification)
-       }
-      return
+  class << self
+    def disable
+      @disabled = true
     end
 
-    email_user.public_send(email_method) if email_user.respond_to? email_method
+    def enable
+      @disabled = false
+    end
+
+    def process_notification(notification, no_delay: false)
+      return if @disabled
+
+      email_user = EmailUser.new(notification, no_delay: no_delay)
+      email_method = Notification.types[notification.notification_type]
+
+      if DiscoursePluginRegistry.email_notification_filters.any? { |filter|
+           !filter.call(notification)
+         }
+        return
+      end
+
+      email_user.public_send(email_method) if email_user.respond_to? email_method
+    end
   end
 end

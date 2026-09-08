@@ -9,8 +9,10 @@ module Onebox
       matches_domain("coub.com")
       always_https
 
-      def self.matches_path(path)
-        path.start_with?("/view/")
+      class << self
+        def matches_path(path)
+          path.start_with?("/view/")
+        end
       end
 
       def placeholder_html

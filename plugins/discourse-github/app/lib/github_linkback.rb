@@ -15,6 +15,12 @@ class GithubLinkback
     end
   end
 
+  class << self
+    def field_for(url)
+      "github-linkback:#{Digest::SHA1.hexdigest(url)[0..15]}"
+    end
+  end
+
   def initialize(post)
     @post = post
   end
@@ -125,10 +131,6 @@ class GithubLinkback
     end
 
     links
-  end
-
-  def self.field_for(url)
-    "github-linkback:#{Digest::SHA1.hexdigest(url)[0..15]}"
   end
 
   private

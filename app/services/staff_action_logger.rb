@@ -2,26 +2,47 @@
 
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
-  def self.base_attrs
-    %i[
-      topic_id
-      post_id
-      category_id
-      context
-      subject
-      ip_address
-      previous_value
-      new_value
-      reviewable_id
-    ]
+  USER_FIELDS = %i[id username name created_at trust_level last_seen_at last_emailed_at]
+  BADGE_FIELDS = %i[
+    id
+    name
+    description
+    long_description
+    icon
+    image_upload_id
+    badge_type_id
+    badge_grouping_id
+    query
+    allow_title
+    multiple_grant
+    listable
+    target_posts
+    enabled
+    auto_revoke
+    show_posts
+    system
+  ]
+
+  class << self
+    def base_attrs
+      %i[
+        topic_id
+        post_id
+        category_id
+        context
+        subject
+        ip_address
+        previous_value
+        new_value
+        reviewable_id
+      ]
+    end
   end
 
   def initialize(admin)
     @admin = admin
     raise Discourse::InvalidParameters.new(:admin) unless @admin && @admin.is_a?(User)
   end
-
-  USER_FIELDS = %i[id username name created_at trust_level last_seen_at last_emailed_at]
 
   def log_user_deletion(deleted_user, opts = {})
     unless deleted_user && deleted_user.is_a?(User)
@@ -565,26 +586,6 @@ class StaffActionLogger
       ),
     )
   end
-
-  BADGE_FIELDS = %i[
-    id
-    name
-    description
-    long_description
-    icon
-    image_upload_id
-    badge_type_id
-    badge_grouping_id
-    query
-    allow_title
-    multiple_grant
-    listable
-    target_posts
-    enabled
-    auto_revoke
-    show_posts
-    system
-  ]
 
   def log_badge_creation(badge)
     raise Discourse::InvalidParameters.new(:badge) unless badge

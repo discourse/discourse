@@ -14,17 +14,19 @@ class LlmCreditDailyUsage < ActiveRecord::Base
               greater_than_or_equal_to: 0,
             }
 
-  def self.find_or_create_for_today(llm_model)
-    find_or_create_by!(llm_model: llm_model, usage_date: Date.current)
-  end
+  class << self
+    def find_or_create_for_today(llm_model)
+      find_or_create_by!(llm_model: llm_model, usage_date: Date.current)
+    end
 
-  def self.increment_usage!(llm_model, credits)
-    usage = find_or_create_for_today(llm_model)
-    usage.with_lock { usage.increment!(:credits_used, credits) }
-  end
+    def increment_usage!(llm_model, credits)
+      usage = find_or_create_for_today(llm_model)
+      usage.with_lock { usage.increment!(:credits_used, credits) }
+    end
 
-  def self.usage_for_date(llm_model, date)
-    find_by(llm_model: llm_model, usage_date: date)&.credits_used || 0
+    def usage_for_date(llm_model, date)
+      find_by(llm_model: llm_model, usage_date: date)&.credits_used || 0
+    end
   end
 end
 

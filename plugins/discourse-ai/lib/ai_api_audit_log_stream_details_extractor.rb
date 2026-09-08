@@ -24,8 +24,10 @@ module DiscourseAi
         end
       end
 
-    def self.extract(events, stream_terminated: false)
-      new(events, stream_terminated:).extract
+    class << self
+      def extract(events, stream_terminated: false)
+        new(events, stream_terminated:).extract
+      end
     end
 
     def initialize(events, stream_terminated:)

@@ -27,8 +27,10 @@ module CanonicalURL
         end
     end
 
-    def self.included(base)
-      base.helper_method :default_canonical
+    class << self
+      def included(base)
+        base.helper_method :default_canonical
+      end
     end
 
     private

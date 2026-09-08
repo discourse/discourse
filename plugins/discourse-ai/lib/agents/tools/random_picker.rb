@@ -4,26 +4,28 @@ module DiscourseAi
   module Agents
     module Tools
       class RandomPicker < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Handles a variety of random decisions based on the format of each input element",
-            parameters: [
-              {
-                name: "options",
-                description:
-                  "An array where each element is either a range (e.g., '1-6') or a comma-separated list of options (e.g., 'sam,jane,joe')",
-                type: "array",
-                item_type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Handles a variety of random decisions based on the format of each input element",
+              parameters: [
+                {
+                  name: "options",
+                  description:
+                    "An array where each element is either a range (e.g., '1-6') or a comma-separated list of options (e.g., 'sam,jane,joe')",
+                  type: "array",
+                  item_type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "random_picker"
+          def name
+            "random_picker"
+          end
         end
 
         def options

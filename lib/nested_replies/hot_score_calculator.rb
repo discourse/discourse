@@ -10,120 +10,121 @@ module NestedReplies
 
     HOT_SCORE_FLOOR = 0.0
 
-    def self.formula_settings
-      {
-        like_weight: SiteSetting.nested_replies_hot_like_weight.to_f,
-        reply_weight: SiteSetting.nested_replies_hot_reply_weight.to_f,
-        freshness_max_bonus: SiteSetting.nested_replies_hot_freshness_max_bonus.to_f,
-        freshness_half_life_seconds:
-          SiteSetting.nested_replies_hot_freshness_half_life_hours.to_f.hours.to_f,
-        child_penalty: SiteSetting.nested_replies_hot_child_penalty.to_f,
-      }
-    end
+    class << self
+      def formula_settings
+        {
+          like_weight: SiteSetting.nested_replies_hot_like_weight.to_f,
+          reply_weight: SiteSetting.nested_replies_hot_reply_weight.to_f,
+          freshness_max_bonus: SiteSetting.nested_replies_hot_freshness_max_bonus.to_f,
+          freshness_half_life_seconds:
+            SiteSetting.nested_replies_hot_freshness_half_life_hours.to_f.hours.to_f,
+          child_penalty: SiteSetting.nested_replies_hot_child_penalty.to_f,
+        }
+      end
 
-    def self.public_post_types
-      [Post.types[:regular], Post.types[:moderator_action]]
-    end
+      def public_post_types
+        [Post.types[:regular], Post.types[:moderator_action]]
+      end
 
-    def self.carrier_post_sql(table_name)
-      "#{table_name}.post_type IN (#{public_post_types.join(", ")})"
-    end
+      def carrier_post_sql(table_name)
+        "#{table_name}.post_type IN (#{public_post_types.join(", ")})"
+      end
 
-    def self.public_post_sql(table_name)
-      <<~SQL.squish
+      def public_post_sql(table_name)
+        <<~SQL.squish
         #{carrier_post_sql(table_name)}
         AND #{table_name}.deleted_at IS NULL
         AND NOT #{table_name}.hidden
         AND NOT #{table_name}.user_deleted
       SQL
-    end
+      end
 
-    def self.hot_score_sql(
-      table_name,
-      reply_count_sql: "0",
-      now_sql: "CURRENT_TIMESTAMP",
-      formula: formula_settings
-    )
-      engagement_sql =
-        "COALESCE(#{table_name}.like_score, 0) * #{formula.fetch(:like_weight)} + " \
-          "COALESCE(#{reply_count_sql}, 0) * #{formula.fetch(:reply_weight)}"
-      age_seconds_sql = "GREATEST(EXTRACT(EPOCH FROM #{now_sql} - #{table_name}.created_at), 0)"
-      freshness_sql =
-        "#{formula.fetch(:freshness_max_bonus)} * " \
-          "POWER(0.5, #{age_seconds_sql} / #{formula.fetch(:freshness_half_life_seconds)})"
+      def hot_score_sql(
+        table_name,
+        reply_count_sql: "0",
+        now_sql: "CURRENT_TIMESTAMP",
+        formula: formula_settings
+      )
+        engagement_sql =
+          "COALESCE(#{table_name}.like_score, 0) * #{formula.fetch(:like_weight)} + " \
+            "COALESCE(#{reply_count_sql}, 0) * #{formula.fetch(:reply_weight)}"
+        age_seconds_sql = "GREATEST(EXTRACT(EPOCH FROM #{now_sql} - #{table_name}.created_at), 0)"
+        freshness_sql =
+          "#{formula.fetch(:freshness_max_bonus)} * " \
+            "POWER(0.5, #{age_seconds_sql} / #{formula.fetch(:freshness_half_life_seconds)})"
 
-      <<~SQL.squish
+        <<~SQL.squish
         CASE
           WHEN #{public_post_sql(table_name)}
           THEN LN(1 + GREATEST(#{engagement_sql}, 0)) + #{freshness_sql}
           ELSE #{HOT_SCORE_FLOOR}
         END
       SQL
-    end
-
-    def self.score_for(post, direct_reply_count: 0, now: Time.current)
-      return HOT_SCORE_FLOOR unless public_post?(post)
-
-      formula = formula_settings
-      engagement =
-        post.like_score.to_f * formula.fetch(:like_weight) +
-          direct_reply_count.to_f * formula.fetch(:reply_weight)
-      age_seconds = [now.to_f - post.created_at.to_f, 0.0].max
-      freshness =
-        formula.fetch(:freshness_max_bonus) *
-          0.5**(age_seconds / formula.fetch(:freshness_half_life_seconds))
-      Math.log(1 + [engagement, 0.0].max) + freshness
-    end
-
-    def self.public_post?(post)
-      public_post_types.include?(post.post_type) && post.deleted_at.nil? && !post.hidden? &&
-        !post.user_deleted?
-    end
-
-    def self.recalculate_topic(topic_id, timeout_ms: nil)
-      return 0 if topic_id.blank?
-
-      calculated_at = Time.current
-      formula = formula_settings
-      max_timeout_ms = SiteSetting.nested_replies_hot_max_statement_timeout_ms
-      timeout_ms = (timeout_ms || max_timeout_ms).to_i.clamp(1, max_timeout_ms)
-      result =
-        ActiveRecord::Base.transaction do
-          DB.exec "SET LOCAL statement_timeout = #{timeout_ms}"
-          DB.exec(
-            "SET LOCAL lock_timeout = #{[timeout_ms, SiteSetting.nested_replies_hot_lock_timeout_ms].min}",
-          )
-          DB.query(refresh_sql, topic_id: topic_id, calculated_at: calculated_at, **formula).first
-        end
-
-      raise InvalidTree, "Cycle in nested replies for topic #{topic_id}" if result.invalid_tree
-      unless result.snapshot_written
-        raise MissingOriginalPost, "Missing original post for topic #{topic_id}"
       end
 
-      result.rows_written.to_i
-    end
+      def score_for(post, direct_reply_count: 0, now: Time.current)
+        return HOT_SCORE_FLOOR unless public_post?(post)
 
-    def self.refresh_sql
-      @refresh_sql ||=
-        begin
-          own_score_sql =
-            hot_score_sql(
-              "topic_posts",
-              reply_count_sql: "direct_reply_counts.direct_reply_count",
-              now_sql: ":calculated_at::timestamp",
-              formula: {
-                like_weight: ":like_weight",
-                reply_weight: ":reply_weight",
-                freshness_max_bonus: ":freshness_max_bonus",
-                freshness_half_life_seconds: ":freshness_half_life_seconds",
-              },
+        formula = formula_settings
+        engagement =
+          post.like_score.to_f * formula.fetch(:like_weight) +
+            direct_reply_count.to_f * formula.fetch(:reply_weight)
+        age_seconds = [now.to_f - post.created_at.to_f, 0.0].max
+        freshness =
+          formula.fetch(:freshness_max_bonus) *
+            0.5**(age_seconds / formula.fetch(:freshness_half_life_seconds))
+        Math.log(1 + [engagement, 0.0].max) + freshness
+      end
+
+      def public_post?(post)
+        public_post_types.include?(post.post_type) && post.deleted_at.nil? && !post.hidden? &&
+          !post.user_deleted?
+      end
+
+      def recalculate_topic(topic_id, timeout_ms: nil)
+        return 0 if topic_id.blank?
+
+        calculated_at = Time.current
+        formula = formula_settings
+        max_timeout_ms = SiteSetting.nested_replies_hot_max_statement_timeout_ms
+        timeout_ms = (timeout_ms || max_timeout_ms).to_i.clamp(1, max_timeout_ms)
+        result =
+          ActiveRecord::Base.transaction do
+            DB.exec "SET LOCAL statement_timeout = #{timeout_ms}"
+            DB.exec(
+              "SET LOCAL lock_timeout = #{[timeout_ms, SiteSetting.nested_replies_hot_lock_timeout_ms].min}",
             )
-          public_topic_post_sql = public_post_sql("posts")
-          carrier_topic_post_sql = carrier_post_sql("posts")
-          carrier_parent_post_sql = carrier_post_sql("parent")
+            DB.query(refresh_sql, topic_id: topic_id, calculated_at: calculated_at, **formula).first
+          end
 
-          <<~SQL
+        raise InvalidTree, "Cycle in nested replies for topic #{topic_id}" if result.invalid_tree
+        unless result.snapshot_written
+          raise MissingOriginalPost, "Missing original post for topic #{topic_id}"
+        end
+
+        result.rows_written.to_i
+      end
+
+      def refresh_sql
+        @refresh_sql ||=
+          begin
+            own_score_sql =
+              hot_score_sql(
+                "topic_posts",
+                reply_count_sql: "direct_reply_counts.direct_reply_count",
+                now_sql: ":calculated_at::timestamp",
+                formula: {
+                  like_weight: ":like_weight",
+                  reply_weight: ":reply_weight",
+                  freshness_max_bonus: ":freshness_max_bonus",
+                  freshness_half_life_seconds: ":freshness_half_life_seconds",
+                },
+              )
+            public_topic_post_sql = public_post_sql("posts")
+            carrier_topic_post_sql = carrier_post_sql("posts")
+            carrier_parent_post_sql = carrier_post_sql("parent")
+
+            <<~SQL
             WITH RECURSIVE
             topic_posts AS MATERIALIZED (
               SELECT posts.id,
@@ -314,8 +315,10 @@ module NestedReplies
                    EXISTS (SELECT 1 FROM upserted_snapshot) AS snapshot_written
             FROM tree_validation
           SQL
-        end
+          end
+      end
     end
+
     private_class_method :refresh_sql
   end
 end

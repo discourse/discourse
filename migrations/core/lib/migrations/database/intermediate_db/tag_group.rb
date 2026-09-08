@@ -22,30 +22,26 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `tag_groups` record in the IntermediateDB.
-        #
-        # @param original_id     [Integer, String]
-        # @param created_at      [Time, nil]
-        # @param name            [String]
-        # @param one_per_topic   [Boolean, nil]
-        # @param parent_tag_id   [Integer, String, nil]
-        #
-        # @return [void]
-        def self.create(
-          original_id:,
-          created_at: nil,
-          name:,
-          one_per_topic: nil,
-          parent_tag_id: nil
-        )
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            original_id,
-            Migrations::Database.format_datetime(created_at),
-            name,
-            Migrations::Database.format_boolean(one_per_topic),
-            parent_tag_id,
-          )
+        class << self
+          # Creates a new `tag_groups` record in the IntermediateDB.
+          #
+          # @param original_id     [Integer, String]
+          # @param created_at      [Time, nil]
+          # @param name            [String]
+          # @param one_per_topic   [Boolean, nil]
+          # @param parent_tag_id   [Integer, String, nil]
+          #
+          # @return [void]
+          def create(original_id:, created_at: nil, name:, one_per_topic: nil, parent_tag_id: nil)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              original_id,
+              Migrations::Database.format_datetime(created_at),
+              name,
+              Migrations::Database.format_boolean(one_per_topic),
+              parent_tag_id,
+            )
+          end
         end
       end
     end

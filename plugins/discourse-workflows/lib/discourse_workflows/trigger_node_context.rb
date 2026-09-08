@@ -4,8 +4,10 @@ module DiscourseWorkflows
   class TriggerNodeContext
     MISSING = Object.new.freeze
 
-    def self.from_published_trigger(published_trigger)
-      new(published_trigger.trigger_node)
+    class << self
+      def from_published_trigger(published_trigger)
+        new(published_trigger.trigger_node)
+      end
     end
 
     def initialize(trigger_node)

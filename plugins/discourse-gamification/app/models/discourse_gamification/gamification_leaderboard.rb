@@ -38,6 +38,30 @@ module DiscourseGamification
         ],
       ).freeze
 
+    class << self
+      def find_position_by(leaderboard_id:, for_user_id:, period: nil)
+        scores_for(leaderboard_id, for_user_id: for_user_id, period: period).first
+      end
+
+      def scores_for(leaderboard_id, page: 0, for_user_id: false, period: nil, user_limit: nil)
+        offset = PAGE_SIZE * page
+        limit = user_limit || PAGE_SIZE
+        period = period || "all_time"
+
+        leaderboard = find(leaderboard_id)
+
+        return [] unless leaderboard
+
+        LeaderboardCachedView.new(leaderboard).scores(
+          page: page,
+          for_user_id: for_user_id,
+          period: period,
+          limit: limit,
+          offset: offset,
+        )
+      end
+    end
+
     def score_override_for(key)
       score_overrides&.dig(key)
     end
@@ -46,28 +70,6 @@ module DiscourseGamification
       return given_period if self.class.periods.key?(given_period)
 
       self.class.periods.key(default_period) || "all_time"
-    end
-
-    def self.find_position_by(leaderboard_id:, for_user_id:, period: nil)
-      scores_for(leaderboard_id, for_user_id: for_user_id, period: period).first
-    end
-
-    def self.scores_for(leaderboard_id, page: 0, for_user_id: false, period: nil, user_limit: nil)
-      offset = PAGE_SIZE * page
-      limit = user_limit || PAGE_SIZE
-      period = period || "all_time"
-
-      leaderboard = find(leaderboard_id)
-
-      return [] unless leaderboard
-
-      LeaderboardCachedView.new(leaderboard).scores(
-        page: page,
-        for_user_id: for_user_id,
-        period: period,
-        limit: limit,
-        offset: offset,
-      )
     end
 
     private

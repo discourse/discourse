@@ -3,8 +3,10 @@
 class PostMover
   attr_reader :original_topic, :destination_topic, :user, :post_ids
 
-  def self.move_types
-    @move_types ||= Enum.new(:new_topic, :existing_topic)
+  class << self
+    def move_types
+      @move_types ||= Enum.new(:new_topic, :existing_topic)
+    end
   end
 
   # options:

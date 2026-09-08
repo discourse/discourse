@@ -6,21 +6,70 @@ class Bookmark < ActiveRecord::Base
     RegisteredBookmarkable.new(TopicBookmarkable),
   ]
 
-  def self.registered_bookmarkables
-    Set.new(DEFAULT_BOOKMARKABLES | DiscoursePluginRegistry.bookmarkables)
-  end
+  class << self
+    def registered_bookmarkables
+      Set.new(DEFAULT_BOOKMARKABLES | DiscoursePluginRegistry.bookmarkables)
+    end
 
-  def self.registered_bookmarkable_from_type(type)
-    resolved_type = Bookmark.polymorphic_class_for(type).name
-    Bookmark.registered_bookmarkables.find { |bm| bm.model.name == resolved_type }
+    def registered_bookmarkable_from_type(type)
+      resolved_type = Bookmark.polymorphic_class_for(type).name
+      Bookmark.registered_bookmarkables.find { |bm| bm.model.name == resolved_type }
 
-    # If the class cannot be found from the provided type using polymorphic_class_for,
-    # then the type is not valid and thus there will not be any registered bookmarkable.
-  rescue NameError
-  end
+      # If the class cannot be found from the provided type using polymorphic_class_for,
+      # then the type is not valid and thus there will not be any registered bookmarkable.
+    rescue NameError
+    end
 
-  def self.valid_bookmarkable_types
-    Bookmark.registered_bookmarkables.map { |bm| bm.model.polymorphic_name }
+    def valid_bookmarkable_types
+      Bookmark.registered_bookmarkables.map { |bm| bm.model.polymorphic_name }
+    end
+
+    public
+
+    def auto_delete_preferences
+      @auto_delete_preferences ||=
+        Enum.new(never: 0, when_reminder_sent: 1, on_owner_reply: 2, clear_reminder: 3)
+    end
+
+    def select_type(bookmarks_relation, type)
+      bookmarks_relation.select { |bm| bm.bookmarkable_type == type }
+    end
+
+    public
+
+    def count_per_day(opts = nil)
+      opts ||= {}
+      result =
+        where(
+          "bookmarks.created_at >= ?",
+          opts[:start_date] || (opts[:since_days_ago] || 30).days.ago,
+        )
+
+      result = result.where("bookmarks.created_at <= ?", opts[:end_date]) if opts[:end_date]
+
+      if opts[:category_id]
+        result =
+          result
+            .joins(
+              "LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'",
+            )
+            .joins(
+              "LEFT JOIN topics ON (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic') OR (topics.id = posts.topic_id)",
+            )
+            .where("topics.deleted_at IS NULL AND posts.deleted_at IS NULL")
+            .merge(Topic.in_category_and_subcategories(opts[:category_id]))
+      end
+
+      result.group("date(bookmarks.created_at)").order("date(bookmarks.created_at)").count
+    end
+
+    ##
+    # Deletes bookmarks that are attached to the bookmarkable records that were deleted
+    # more than X days ago. We don't delete bookmarks instantly when trashable bookmarkables
+    # are deleted so that there is a grace period to un-delete.
+    def cleanup!
+      Bookmark.registered_bookmarkables.each(&:cleanup_deleted)
+    end
   end
 
   belongs_to :user
@@ -44,15 +93,6 @@ class Bookmark < ActiveRecord::Base
            foreign_key: :user_id,
            primary_key: :user_id,
            dependent: :destroy
-
-  def self.auto_delete_preferences
-    @auto_delete_preferences ||=
-      Enum.new(never: 0, when_reminder_sent: 1, on_owner_reply: 2, clear_reminder: 3)
-  end
-
-  def self.select_type(bookmarks_relation, type)
-    bookmarks_relation.select { |bm| bm.bookmarkable_type == type }
-  end
 
   validate :polymorphic_columns_present, on: %i[create update]
   validate :valid_bookmarkable_type, on: %i[create update]
@@ -170,40 +210,6 @@ class Bookmark < ActiveRecord::Base
             topic_id: topic_id,
           )
         end
-
-  def self.count_per_day(opts = nil)
-    opts ||= {}
-    result =
-      where(
-        "bookmarks.created_at >= ?",
-        opts[:start_date] || (opts[:since_days_ago] || 30).days.ago,
-      )
-
-    result = result.where("bookmarks.created_at <= ?", opts[:end_date]) if opts[:end_date]
-
-    if opts[:category_id]
-      result =
-        result
-          .joins(
-            "LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'",
-          )
-          .joins(
-            "LEFT JOIN topics ON (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic') OR (topics.id = posts.topic_id)",
-          )
-          .where("topics.deleted_at IS NULL AND posts.deleted_at IS NULL")
-          .merge(Topic.in_category_and_subcategories(opts[:category_id]))
-    end
-
-    result.group("date(bookmarks.created_at)").order("date(bookmarks.created_at)").count
-  end
-
-  ##
-  # Deletes bookmarks that are attached to the bookmarkable records that were deleted
-  # more than X days ago. We don't delete bookmarks instantly when trashable bookmarkables
-  # are deleted so that there is a grace period to un-delete.
-  def self.cleanup!
-    Bookmark.registered_bookmarkables.each(&:cleanup_deleted)
-  end
 end
 
 # == Schema Information

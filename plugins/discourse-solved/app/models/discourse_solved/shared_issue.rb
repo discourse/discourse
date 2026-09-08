@@ -10,8 +10,10 @@ module DiscourseSolved
     validates :topic_id, presence: true, uniqueness: { scope: :user_id }
     validates :user_id, presence: true
 
-    def self.count_for(topic)
-      where(topic: topic).count
+    class << self
+      def count_for(topic)
+        where(topic: topic).count
+      end
     end
   end
 end

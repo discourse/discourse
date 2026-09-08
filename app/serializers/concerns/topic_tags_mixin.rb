@@ -3,9 +3,11 @@
 module TopicTagsMixin
   DESCRIPTION_LIMIT = 80
 
-  def self.included(klass)
-    klass.attributes :tags
-    klass.attributes :tags_descriptions
+  class << self
+    def included(klass)
+      klass.attributes :tags
+      klass.attributes :tags_descriptions
+    end
   end
 
   def include_tags?

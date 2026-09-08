@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class BrowserPageviewCrawlerDailyRollup < ActiveRecord::Base
-  def self.aggregate(start_date:, end_date:)
-    start_date = start_date.to_date
-    end_date = end_date.to_date + 1
+  class << self
+    def aggregate(start_date:, end_date:)
+      start_date = start_date.to_date
+      end_date = end_date.to_date + 1
 
-    DB.exec(<<~SQL, start_date:, end_date:, threshold: CrawlerScorer::BOT_SCORE_THRESHOLD)
+      DB.exec(<<~SQL, start_date:, end_date:, threshold: CrawlerScorer::BOT_SCORE_THRESHOLD)
       INSERT INTO browser_pageview_crawler_daily_rollups (date, logged_in, count)
       SELECT
         created_at::date AS date,
@@ -20,6 +21,7 @@ class BrowserPageviewCrawlerDailyRollup < ActiveRecord::Base
       ON CONFLICT (date, logged_in) DO UPDATE
       SET count = EXCLUDED.count
     SQL
+    end
   end
 end
 

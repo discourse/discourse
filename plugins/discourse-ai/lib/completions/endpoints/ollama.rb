@@ -4,8 +4,10 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Ollama < Base
-        def self.can_contact?(llm_model)
-          llm_model.provider == "ollama"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "ollama"
+          end
         end
 
         def normalize_model_params(model_params)

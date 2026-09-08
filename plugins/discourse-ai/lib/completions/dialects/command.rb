@@ -6,8 +6,10 @@ module DiscourseAi
   module Completions
     module Dialects
       class Command < Dialect
-        def self.can_translate?(llm_model)
-          llm_model.provider == "cohere"
+        class << self
+          def can_translate?(llm_model)
+            llm_model.provider == "cohere"
+          end
         end
 
         def translate

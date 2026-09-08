@@ -4,39 +4,41 @@ module DiscourseAi
   module Agents
     module Tools
       class LockPost < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Locks or unlocks a post based on the locked parameter.",
-            parameters: [
-              {
-                name: "post_id",
-                description: "The ID of the post",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "locked",
-                description: "true to lock the post, false to unlock it",
-                type: "boolean",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the post is being locked or unlocked",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Locks or unlocks a post based on the locked parameter.",
+              parameters: [
+                {
+                  name: "post_id",
+                  description: "The ID of the post",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "locked",
+                  description: "true to lock the post, false to unlock it",
+                  type: "boolean",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the post is being locked or unlocked",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "lock_post"
-        end
+          def name
+            "lock_post"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

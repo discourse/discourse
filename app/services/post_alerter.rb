@@ -3,98 +3,126 @@
 class PostAlerter
   USER_BATCH_SIZE = 100
 
-  def self.post_created(post, opts = {})
-    PostAlerter.new(opts).after_save_post(post, true)
-    post
-  end
+  NOTIFIABLE_TYPES =
+    %i[
+      mentioned
+      replied
+      quoted
+      posted
+      linked
+      private_message
+      group_mentioned
+      watching_first_post
+      watching_category_or_tag
+      event_reminder
+      event_invitation
+    ].map { |t| Notification.types[t] }
+  COLLAPSED_NOTIFICATION_TYPES = [
+    Notification.types[:replied],
+    Notification.types[:posted],
+    Notification.types[:private_message],
+    Notification.types[:watching_category_or_tag],
+  ]
 
-  def self.post_edited(post, opts = {})
-    PostAlerter.new(opts).after_save_post(post, false)
-    post
-  end
+  class << self
+    def post_created(post, opts = {})
+      PostAlerter.new(opts).after_save_post(post, true)
+      post
+    end
 
-  def self.create_notification_alert(
-    user:,
-    post:,
-    notification_type:,
-    excerpt: nil,
-    username: nil,
-    group_name: nil
-  )
-    return if user.suspended?
+    def post_edited(post, opts = {})
+      PostAlerter.new(opts).after_save_post(post, false)
+      post
+    end
 
-    if post_url = post.url
-      payload = {
-        notification_type: notification_type,
-        post_number: post.post_number,
-        topic_title: post.topic.title,
-        topic_id: post.topic.id,
-        post_id: post.id,
-        excerpt:
-          excerpt ||
-            post.excerpt(
-              400,
-              text_entities: true,
-              strip_links: true,
-              remap_emoji: true,
-              plain_hashtags: true,
-            ),
-        username: username || post.username,
-        post_url: post_url,
-      }
-      payload[:group_name] = group_name if group_name.present?
+    def create_notification_alert(
+      user:,
+      post:,
+      notification_type:,
+      excerpt: nil,
+      username: nil,
+      group_name: nil
+    )
+      return if user.suspended?
 
-      DiscourseEvent.trigger(:pre_notification_alert, user, payload)
+      if post_url = post.url
+        payload = {
+          notification_type: notification_type,
+          post_number: post.post_number,
+          topic_title: post.topic.title,
+          topic_id: post.topic.id,
+          post_id: post.id,
+          excerpt:
+            excerpt ||
+              post.excerpt(
+                400,
+                text_entities: true,
+                strip_links: true,
+                remap_emoji: true,
+                plain_hashtags: true,
+              ),
+          username: username || post.username,
+          post_url: post_url,
+        }
+        payload[:group_name] = group_name if group_name.present?
 
-      if user.allow_live_notifications?
-        send_notification =
-          DiscoursePluginRegistry.push_notification_filters.all? do |filter|
-            filter.call(user, payload)
+        DiscourseEvent.trigger(:pre_notification_alert, user, payload)
+
+        if user.allow_live_notifications?
+          send_notification =
+            DiscoursePluginRegistry.push_notification_filters.all? do |filter|
+              filter.call(user, payload)
+            end
+
+          if send_notification
+            payload =
+              DiscoursePluginRegistry.apply_modifier(
+                :post_alerter_live_notification_payload,
+                payload,
+                user,
+              )
+            MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
           end
-
-        if send_notification
-          payload =
-            DiscoursePluginRegistry.apply_modifier(
-              :post_alerter_live_notification_payload,
-              payload,
-              user,
-            )
-          MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
         end
+
+        push_notification(user, payload)
+
+        # deprecated. use push_notification instead
+        DiscourseEvent.trigger(:post_notification_alert, user, payload)
+      end
+    end
+
+    def push_notification(user, payload)
+      return if user.do_not_disturb?
+
+      # This DiscourseEvent needs to be independent of the push_notification_filters for some use cases.
+      # If the subscriber of this event wants to filter usage by push_notification_filters as well,
+      # implement same logic as below (`if DiscoursePluginRegistry.push_notification_filters.any?...`)
+      DiscourseEvent.trigger(:push_notification, user, payload)
+
+      if DiscoursePluginRegistry.push_notification_filters.any? { |filter|
+           !filter.call(user, payload)
+         }
+        return
       end
 
-      push_notification(user, payload)
+      return unless user.push_subscriptions.exists? || UserApiKey.push_clients_for(user).any?
 
-      # deprecated. use push_notification instead
-      DiscourseEvent.trigger(:post_notification_alert, user, payload)
-    end
-  end
+      push_window = SiteSetting.push_notification_time_window_mins
+      if push_window > 0 && user.seen_since?(push_window.minutes.ago)
+        delay = (push_window - (Time.now - user.last_seen_at) / 60)
+      end
 
-  def self.push_notification(user, payload)
-    return if user.do_not_disturb?
-
-    # This DiscourseEvent needs to be independent of the push_notification_filters for some use cases.
-    # If the subscriber of this event wants to filter usage by push_notification_filters as well,
-    # implement same logic as below (`if DiscoursePluginRegistry.push_notification_filters.any?...`)
-    DiscourseEvent.trigger(:push_notification, user, payload)
-
-    if DiscoursePluginRegistry.push_notification_filters.any? { |filter|
-         !filter.call(user, payload)
-       }
-      return
-    end
-
-    return unless user.push_subscriptions.exists? || UserApiKey.push_clients_for(user).any?
-
-    push_window = SiteSetting.push_notification_time_window_mins
-    if push_window > 0 && user.seen_since?(push_window.minutes.ago)
-      delay = (push_window - (Time.now - user.last_seen_at) / 60)
-    end
-
-    if delay.present?
-      Jobs.enqueue_in(delay.minutes, :deliver_push_notification, user_id: user.id, payload: payload)
-    else
-      Jobs.enqueue(:deliver_push_notification, user_id: user.id, payload: payload)
+      if delay.present?
+        Jobs.enqueue_in(
+          delay.minutes,
+          :deliver_push_notification,
+          user_id: user.id,
+          payload: payload,
+        )
+      else
+        Jobs.enqueue(:deliver_push_notification, user_id: user.id, payload: payload)
+      end
     end
   end
 
@@ -424,21 +452,6 @@ class PostAlerter
     end
   end
 
-  NOTIFIABLE_TYPES =
-    %i[
-      mentioned
-      replied
-      quoted
-      posted
-      linked
-      private_message
-      group_mentioned
-      watching_first_post
-      watching_category_or_tag
-      event_reminder
-      event_invitation
-    ].map { |t| Notification.types[t] }
-
   def group_stats(topic)
     sql = <<~SQL
       SELECT COUNT(*) FROM topics t
@@ -519,13 +532,6 @@ class PostAlerter
       false
     end
   end
-
-  COLLAPSED_NOTIFICATION_TYPES = [
-    Notification.types[:replied],
-    Notification.types[:posted],
-    Notification.types[:private_message],
-    Notification.types[:watching_category_or_tag],
-  ]
 
   def create_notification(user, type, post, opts = {})
     opts = @default_opts.merge(opts)

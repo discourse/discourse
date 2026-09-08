@@ -20,25 +20,27 @@ module DiscourseWorkflows
 
     scope :active, -> { where(status: statuses.values_at(:pending, :running, :waiting)) }
 
-    def self.remove_execution_references(execution_ids)
-      return if execution_ids.blank?
+    class << self
+      def remove_execution_references(execution_ids)
+        return if execution_ids.blank?
 
-      where(child_execution_id: execution_ids).update_all(child_execution_id: nil)
-      where(parent_execution_id: execution_ids).delete_all
-    end
+        where(child_execution_id: execution_ids).update_all(child_execution_id: nil)
+        where(parent_execution_id: execution_ids).delete_all
+      end
 
-    def self.claim_pending(run)
-      now = Time.current
-      affected =
-        where(id: run.id, status: statuses[:pending]).update_all(
-          status: statuses[:running],
-          updated_at: now,
-        )
-      return if affected.zero?
+      def claim_pending(run)
+        now = Time.current
+        affected =
+          where(id: run.id, status: statuses[:pending]).update_all(
+            status: statuses[:running],
+            updated_at: now,
+          )
+        return if affected.zero?
 
-      run.status = :running
-      run.updated_at = now
-      run
+        run.status = :running
+        run.updated_at = now
+        run
+      end
     end
   end
 end

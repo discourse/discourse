@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class TrustLevelGranter
-  def initialize(trust_level, user)
-    @trust_level, @user = trust_level, user
+  class << self
+    def grant(trust_level, user)
+      TrustLevelGranter.new(trust_level, user).grant
+    end
   end
 
-  def self.grant(trust_level, user)
-    TrustLevelGranter.new(trust_level, user).grant
+  def initialize(trust_level, user)
+    @trust_level, @user = trust_level, user
   end
 
   def grant

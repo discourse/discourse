@@ -6,59 +6,61 @@ module DiscourseAi
       class EditCategory < Tool
         EDITABLE_PARAMS = %i[name description color text_color].freeze
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Edits an existing category's name, description, or colors. At least one editable field must be provided.",
-            parameters: [
-              {
-                name: "category_id",
-                description: "The ID of the category to edit",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "name",
-                description: "The new display name for the category",
-                type: "string",
-              },
-              {
-                name: "description",
-                description:
-                  "The new description for the category. Pass an empty string to clear the existing description.",
-                type: "string",
-              },
-              {
-                name: "color",
-                description: "The new background color, as a 6 digit hex code (e.g. 0088CC)",
-                type: "string",
-              },
-              {
-                name: "text_color",
-                description: "The new text color, as a 6 digit hex code (e.g. FFFFFF)",
-                type: "string",
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the category is being edited",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Edits an existing category's name, description, or colors. At least one editable field must be provided.",
+              parameters: [
+                {
+                  name: "category_id",
+                  description: "The ID of the category to edit",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "name",
+                  description: "The new display name for the category",
+                  type: "string",
+                },
+                {
+                  name: "description",
+                  description:
+                    "The new description for the category. Pass an empty string to clear the existing description.",
+                  type: "string",
+                },
+                {
+                  name: "color",
+                  description: "The new background color, as a 6 digit hex code (e.g. 0088CC)",
+                  type: "string",
+                },
+                {
+                  name: "text_color",
+                  description: "The new text color, as a 6 digit hex code (e.g. FFFFFF)",
+                  type: "string",
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the category is being edited",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "edit_category"
-        end
+          def name
+            "edit_category"
+          end
 
-        def self.requires_approval?
-          true
-        end
+          def requires_approval?
+            true
+          end
 
-        def self.attribute_to_approver?
-          true
+          def attribute_to_approver?
+            true
+          end
         end
 
         def invoke

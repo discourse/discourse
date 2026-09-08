@@ -4,9 +4,11 @@ require "yaml"
 
 module ImportScripts::Mbox
   class Settings
-    def self.load(filename)
-      yaml = YAML.load_file(filename)
-      Settings.new(yaml)
+    class << self
+      def load(filename)
+        yaml = YAML.load_file(filename)
+        Settings.new(yaml)
+      end
     end
 
     attr_reader :data_dir

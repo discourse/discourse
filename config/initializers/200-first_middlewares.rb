@@ -46,12 +46,14 @@ if Rails.env.test?
 
     @@block_requests = false
 
-    def self.block_requests!
-      @@block_requests = true
-    end
+    class << self
+      def block_requests!
+        @@block_requests = true
+      end
 
-    def self.allow_requests!
-      @@block_requests = false
+      def allow_requests!
+        @@block_requests = false
+      end
     end
 
     def initialize(app)

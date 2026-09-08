@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class TopicView
+  include PostDependentCache
   MEGA_TOPIC_POSTS_COUNT = 10_000
   MIN_POST_READ_TIME = 4.0
-
-  include PostDependentCache
 
   memoize_for_posts :all_post_actions
   memoize_for_posts :ignored_user_like_counts
@@ -20,19 +19,83 @@ class TopicView
   memoize_for_posts :last_post
   memoize_for_posts :preloaded_post_data_store
 
-  def self.on_preload(&blk)
-    (@preload ||= Set.new) << blk
-  end
+  CHUNK_SIZE = 20
+  MAX_PARTICIPANTS = 24
+  # if a topic has more that N posts no longer attempt to
+  # get accurate participant count, instead grab cached count
+  # from topic
+  MAX_POSTS_COUNT_PARTICIPANTS = 500
 
-  def self.cancel_preload(&blk)
-    if @preload
-      @preload.delete blk
-      @preload = nil if @preload.length == 0
+  class << self
+    def on_preload(&blk)
+      (@preload ||= Set.new) << blk
     end
-  end
 
-  def self.preload(topic_view)
-    @preload.each { |preload| preload.call(topic_view) } if @preload
+    def cancel_preload(&blk)
+      if @preload
+        @preload.delete blk
+        @preload = nil if @preload.length == 0
+      end
+    end
+
+    def preload(topic_view)
+      @preload.each { |preload| preload.call(topic_view) } if @preload
+    end
+
+    public
+
+    def print_chunk_size
+      1000
+    end
+
+    def chunk_size
+      CHUNK_SIZE
+    end
+
+    def default_post_custom_fields
+      @default_post_custom_fields ||= [Post::NOTICE, "action_code_who", "action_code_path"]
+    end
+
+    def post_custom_fields_allowlisters
+      @post_custom_fields_allowlisters ||= Set.new
+    end
+
+    def add_post_custom_fields_allowlister(&block)
+      post_custom_fields_allowlisters << block
+    end
+
+    def allowed_post_custom_fields(user, topic)
+      wpcf =
+        default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user, topic) }
+      wpcf.flatten.uniq
+    end
+
+    def add_custom_filter(key, enabled: -> { true }, &block)
+      custom_filters[key] = { block:, enabled: }
+    end
+
+    def custom_filters
+      @custom_filters ||= {}
+    end
+
+    # Configure a default scope to be applied to @filtered_posts.
+    # The registered block is called with @filtered_posts and an instance of
+    # `TopicView`.
+    #
+    # This API should be considered experimental until it is exposed in
+    # `Plugin::Instance`.
+    def apply_custom_default_scope(&block)
+      custom_default_scopes << block
+    end
+
+    def custom_default_scopes
+      @custom_default_scopes ||= []
+    end
+
+    # For testing
+    def reset_custom_default_scopes
+      @custom_default_scopes = nil
+    end
   end
 
   attr_reader(
@@ -61,75 +124,6 @@ class TopicView
     :include_suggested,
     :include_related,
   )
-
-  # Generic store for plugins to stash per-post preloaded data (keyed by post_id)
-  # on the TopicView rather than on Post objects. Cleared automatically when the
-  # post collection changes via reset_post_collection.
-  def preloaded_post_data(namespace)
-    @preloaded_post_data_store&.dig(namespace)
-  end
-
-  def set_preloaded_post_data(namespace, data)
-    @preloaded_post_data_store ||= {}
-    @preloaded_post_data_store[namespace] = data
-  end
-
-  delegate :category, to: :topic, allow_nil: true, private: true
-
-  def self.print_chunk_size
-    1000
-  end
-
-  CHUNK_SIZE = 20
-
-  def self.chunk_size
-    CHUNK_SIZE
-  end
-
-  def self.default_post_custom_fields
-    @default_post_custom_fields ||= [Post::NOTICE, "action_code_who", "action_code_path"]
-  end
-
-  def self.post_custom_fields_allowlisters
-    @post_custom_fields_allowlisters ||= Set.new
-  end
-
-  def self.add_post_custom_fields_allowlister(&block)
-    post_custom_fields_allowlisters << block
-  end
-
-  def self.allowed_post_custom_fields(user, topic)
-    wpcf =
-      default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user, topic) }
-    wpcf.flatten.uniq
-  end
-
-  def self.add_custom_filter(key, enabled: -> { true }, &block)
-    custom_filters[key] = { block:, enabled: }
-  end
-
-  def self.custom_filters
-    @custom_filters ||= {}
-  end
-
-  # Configure a default scope to be applied to @filtered_posts.
-  # The registered block is called with @filtered_posts and an instance of
-  # `TopicView`.
-  #
-  # This API should be considered experimental until it is exposed in
-  # `Plugin::Instance`.
-  def self.apply_custom_default_scope(&block)
-    custom_default_scopes << block
-  end
-
-  def self.custom_default_scopes
-    @custom_default_scopes ||= []
-  end
-
-  # For testing
-  def self.reset_custom_default_scopes
-    @custom_default_scopes = nil
-  end
 
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
@@ -190,6 +184,20 @@ class TopicView
         (@guardian.authenticated? && @guardian.reply_posting_review_required?(@topic.category))
     @personal_message = @topic.private_message?
   end
+
+  # Generic store for plugins to stash per-post preloaded data (keyed by post_id)
+  # on the TopicView rather than on Post objects. Cleared automatically when the
+  # post collection changes via reset_post_collection.
+  def preloaded_post_data(namespace)
+    @preloaded_post_data_store&.dig(namespace)
+  end
+
+  def set_preloaded_post_data(namespace, data)
+    @preloaded_post_data_store ||= {}
+    @preloaded_post_data_store[namespace] = data
+  end
+
+  delegate :category, to: :topic, allow_nil: true, private: true
 
   def has_localized_content?
     return @has_localized_content if defined?(@has_localized_content)
@@ -621,8 +629,6 @@ class TopicView
       )
   end
 
-  MAX_PARTICIPANTS = 24
-
   def post_counts_by_user
     @post_counts_by_user ||=
       if is_mega_topic?
@@ -650,11 +656,6 @@ class TopicView
         ]
       end
   end
-
-  # if a topic has more that N posts no longer attempt to
-  # get accurate participant count, instead grab cached count
-  # from topic
-  MAX_POSTS_COUNT_PARTICIPANTS = 500
 
   def participant_count
     @participant_count ||=

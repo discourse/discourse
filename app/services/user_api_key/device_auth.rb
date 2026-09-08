@@ -121,56 +121,61 @@ class UserApiKey::DeviceAuth
   TRACE_FILTERED_KEYS = %i[key nonce payload public_key].freeze
   TRACE_MAX_VALUE_LENGTH = 256
 
-  def self.clear!
-    UserApiKey::DeviceAuth::GrantStore.clear!
-    UserApiKey::DeviceAuth::CodeRegistry.clear!
-  end
+  class << self
+    def clear!
+      UserApiKey::DeviceAuth::GrantStore.clear!
+      UserApiKey::DeviceAuth::CodeRegistry.clear!
+    end
 
-  def self.trace(event, **payload)
-    event = event.to_s
-    payload = normalize_trace_payload(payload)
+    def trace(event, **payload)
+      event = event.to_s
+      payload = normalize_trace_payload(payload)
 
-    DiscourseEvent.trigger(TRACE_EVENT, event, payload, continue_on_error: true)
+      DiscourseEvent.trigger(TRACE_EVENT, event, payload, continue_on_error: true)
 
-    return if !SiteSetting.verbose_user_api_key_device_auth_logging
+      return if !SiteSetting.verbose_user_api_key_device_auth_logging
 
-    Rails.logger.info({ message: "user_api_key.device_auth", event: event }.merge(payload).to_json)
-  rescue StandardError => exception
-    Discourse.warn_exception(
-      exception,
-      message: "User API key device auth trace failed",
-      env: {
-        event: event,
-      },
-    )
-    nil
-  end
+      Rails.logger.info(
+        { message: "user_api_key.device_auth", event: event }.merge(payload).to_json,
+      )
+    rescue StandardError => exception
+      Discourse.warn_exception(
+        exception,
+        message: "User API key device auth trace failed",
+        env: {
+          event: event,
+        },
+      )
+      nil
+    end
 
-  def self.trace_id_for(value)
-    return if value.nil? || value.to_s.empty?
+    def trace_id_for(value)
+      return if value.nil? || value.to_s.empty?
 
-    Digest::SHA256.hexdigest(value.to_s)[0, TRACE_HASH_LENGTH]
-  end
+      Digest::SHA256.hexdigest(value.to_s)[0, TRACE_HASH_LENGTH]
+    end
 
-  def self.normalize_trace_payload(payload)
-    payload.each_with_object({}) do |(key, value), sanitized|
-      key = key.to_sym
-      next if value.nil? || (value.respond_to?(:empty?) && value.empty?)
+    def normalize_trace_payload(payload)
+      payload.each_with_object({}) do |(key, value), sanitized|
+        key = key.to_sym
+        next if value.nil? || (value.respond_to?(:empty?) && value.empty?)
 
-      if TRACE_HASH_KEYS.include?(key)
-        sanitized[:"#{key}_hash"] = trace_id_for(value)
-      elsif TRACE_FILTERED_KEYS.include?(key)
-        sanitized[:"#{key}_present"] = true
-      elsif value.is_a?(Exception)
-        sanitized[:exception_class] = value.class.name
-      elsif value.respond_to?(:iso8601)
-        sanitized[key] = value.iso8601
-      elsif value.is_a?(String)
-        sanitized[key] = value.first(TRACE_MAX_VALUE_LENGTH)
-      else
-        sanitized[key] = value
+        if TRACE_HASH_KEYS.include?(key)
+          sanitized[:"#{key}_hash"] = trace_id_for(value)
+        elsif TRACE_FILTERED_KEYS.include?(key)
+          sanitized[:"#{key}_present"] = true
+        elsif value.is_a?(Exception)
+          sanitized[:exception_class] = value.class.name
+        elsif value.respond_to?(:iso8601)
+          sanitized[key] = value.iso8601
+        elsif value.is_a?(String)
+          sanitized[key] = value.first(TRACE_MAX_VALUE_LENGTH)
+        else
+          sanitized[key] = value
+        end
       end
     end
   end
+
   private_class_method :normalize_trace_payload
 end

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 module DiscourseTemplates::TopicExtension
-  def self.prepended(base)
-    base.has_one :template_item_usage,
-                 class_name: "DiscourseTemplates::UsageCount",
-                 dependent: :destroy
+  class << self
+    def prepended(base)
+      base.has_one :template_item_usage,
+                   class_name: "DiscourseTemplates::UsageCount",
+                   dependent: :destroy
+    end
   end
 
   def template_item_usage_count

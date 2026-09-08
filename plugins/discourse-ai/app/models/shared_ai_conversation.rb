@@ -14,46 +14,139 @@ class SharedAiConversation < ActiveRecord::Base
 
   before_validation :generate_share_key, on: :create
 
-  def self.share_conversation(user, target, max_posts: DEFAULT_MAX_POSTS)
-    raise "Target must be a topic for now" if !target.is_a?(Topic)
+  class << self
+    def share_conversation(user, target, max_posts: DEFAULT_MAX_POSTS)
+      raise "Target must be a topic for now" if !target.is_a?(Topic)
 
-    conversation = find_by(user: user, target: target)
-    conversation_data = build_conversation_data(target, max_posts: max_posts)
+      conversation = find_by(user: user, target: target)
+      conversation_data = build_conversation_data(target, max_posts: max_posts)
 
-    shared =
-      if conversation
-        conversation.update(**conversation_data)
-      else
-        conversation = create(user_id: user.id, target: target, **conversation_data)
-        conversation.persisted?
+      shared =
+        if conversation
+          conversation.update(**conversation_data)
+        else
+          conversation = create(user_id: user.id, target: target, **conversation_data)
+          conversation.persisted?
+        end
+
+      if shared
+        share_artifacts(target, max_posts: max_posts)
+        ::Jobs.enqueue(
+          :shared_conversation_adjust_upload_security,
+          conversation_id: conversation.id,
+        )
       end
 
-    if shared
-      share_artifacts(target, max_posts: max_posts)
-      ::Jobs.enqueue(:shared_conversation_adjust_upload_security, conversation_id: conversation.id)
+      conversation
     end
 
-    conversation
-  end
+    def destroy_conversation(conversation)
+      target_id = conversation.target_id
+      target_type = conversation.target_type
+      target_topic = conversation.target_topic(with_deleted: true)
 
-  def self.destroy_conversation(conversation)
-    target_id = conversation.target_id
-    target_type = conversation.target_type
-    target_topic = conversation.target_topic(with_deleted: true)
+      conversation.destroy
 
-    conversation.destroy
+      if target_topic
+        AiArtifact.where(post: target_topic.posts.with_deleted).update_all(
+          "metadata = jsonb_set(COALESCE(metadata, '{}'), '{public}', 'false')",
+        )
+      end
 
-    if target_topic
-      AiArtifact.where(post: target_topic.posts.with_deleted).update_all(
-        "metadata = jsonb_set(COALESCE(metadata, '{}'), '{public}', 'false')",
+      ::Jobs.enqueue(
+        :shared_conversation_adjust_upload_security,
+        target_id: target_id,
+        target_type: target_type,
       )
     end
 
-    ::Jobs.enqueue(
-      :shared_conversation_adjust_upload_security,
-      target_id: target_id,
-      target_type: target_type,
-    )
+    public
+
+    def excerpt(posts)
+      excerpt = +""
+      posts.each do |post|
+        excerpt << "#{post.user.display_name}: #{post.excerpt(100)} "
+        break if excerpt.length > 1000
+      end
+      excerpt
+    end
+
+    def build_conversation_data(topic, max_posts: DEFAULT_MAX_POSTS, include_usernames: false)
+      allowed_user_ids = topic.topic_allowed_users.pluck(:user_id)
+      ai_bot_participant = DiscourseAi::AiBot::EntryPoint.find_participant_in(allowed_user_ids)
+
+      llm_name = ai_bot_participant&.llm
+
+      llm_name = ActiveSupport::Inflector.humanize(llm_name) if llm_name
+      llm_name ||= I18n.t("discourse_ai.unknown_model")
+
+      agent = nil
+      if agent_id = topic.custom_fields["ai_agent_id"]
+        agent = AiAgent.find_by(id: agent_id.to_i)&.name
+      end
+
+      posts = conversation_posts(topic, max_posts: max_posts)
+
+      {
+        llm_name: llm_name,
+        title: topic.title,
+        excerpt: excerpt(posts),
+        context:
+          posts.map do |post|
+            mapped = {
+              id: post.id,
+              user_id: post.user_id,
+              created_at: post.created_at,
+              cooked: cook_artifacts(post),
+            }
+
+            mapped[:agent] = agent if ai_bot_participant&.id == post.user_id
+            mapped[:username] = post.user&.username if include_usernames
+            mapped
+          end,
+      }
+    end
+
+    def cook_artifacts(post)
+      html = post.cooked
+      return html if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
+
+      doc = Nokogiri::HTML5.fragment(html)
+      doc
+        .css("div.ai-artifact")
+        .each do |node|
+          id = node["data-ai-artifact-id"].to_i
+          version = node["data-ai-artifact-version"]
+          version_number = version.to_i if version
+          node.replace(AiArtifact.iframe_for(id, version_number)) if id > 0
+        end
+
+      doc.to_s
+    end
+
+    def share_artifacts(topic, max_posts: DEFAULT_MAX_POSTS)
+      return if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
+
+      conversation_posts(topic, max_posts: max_posts).each do |post|
+        doc = Nokogiri::HTML5.fragment(post.cooked)
+        doc
+          .css("div.ai-artifact")
+          .each do |node|
+            id = node["data-ai-artifact-id"].to_i
+            AiArtifact.share_publicly(id: id, post: post) if id > 0
+          end
+      end
+    end
+
+    def conversation_posts(topic, max_posts: DEFAULT_MAX_POSTS)
+      topic
+        .posts
+        .by_post_number
+        .where(post_type: Post.types[:regular])
+        .where.not(cooked: nil)
+        .where(deleted_at: nil)
+        .limit(max_posts)
+    end
   end
 
   # Technically this may end up being a chat message
@@ -153,94 +246,8 @@ class SharedAiConversation < ActiveRecord::Base
     HTML
   end
 
-  def self.excerpt(posts)
-    excerpt = +""
-    posts.each do |post|
-      excerpt << "#{post.user.display_name}: #{post.excerpt(100)} "
-      break if excerpt.length > 1000
-    end
-    excerpt
-  end
-
   def formatted_excerpt
     I18n.t("discourse_ai.share_ai.formatted_excerpt", llm_name: llm_name, excerpt: excerpt)
-  end
-
-  def self.build_conversation_data(topic, max_posts: DEFAULT_MAX_POSTS, include_usernames: false)
-    allowed_user_ids = topic.topic_allowed_users.pluck(:user_id)
-    ai_bot_participant = DiscourseAi::AiBot::EntryPoint.find_participant_in(allowed_user_ids)
-
-    llm_name = ai_bot_participant&.llm
-
-    llm_name = ActiveSupport::Inflector.humanize(llm_name) if llm_name
-    llm_name ||= I18n.t("discourse_ai.unknown_model")
-
-    agent = nil
-    if agent_id = topic.custom_fields["ai_agent_id"]
-      agent = AiAgent.find_by(id: agent_id.to_i)&.name
-    end
-
-    posts = conversation_posts(topic, max_posts: max_posts)
-
-    {
-      llm_name: llm_name,
-      title: topic.title,
-      excerpt: excerpt(posts),
-      context:
-        posts.map do |post|
-          mapped = {
-            id: post.id,
-            user_id: post.user_id,
-            created_at: post.created_at,
-            cooked: cook_artifacts(post),
-          }
-
-          mapped[:agent] = agent if ai_bot_participant&.id == post.user_id
-          mapped[:username] = post.user&.username if include_usernames
-          mapped
-        end,
-    }
-  end
-
-  def self.cook_artifacts(post)
-    html = post.cooked
-    return html if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
-
-    doc = Nokogiri::HTML5.fragment(html)
-    doc
-      .css("div.ai-artifact")
-      .each do |node|
-        id = node["data-ai-artifact-id"].to_i
-        version = node["data-ai-artifact-version"]
-        version_number = version.to_i if version
-        node.replace(AiArtifact.iframe_for(id, version_number)) if id > 0
-      end
-
-    doc.to_s
-  end
-
-  def self.share_artifacts(topic, max_posts: DEFAULT_MAX_POSTS)
-    return if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
-
-    conversation_posts(topic, max_posts: max_posts).each do |post|
-      doc = Nokogiri::HTML5.fragment(post.cooked)
-      doc
-        .css("div.ai-artifact")
-        .each do |node|
-          id = node["data-ai-artifact-id"].to_i
-          AiArtifact.share_publicly(id: id, post: post) if id > 0
-        end
-    end
-  end
-
-  def self.conversation_posts(topic, max_posts: DEFAULT_MAX_POSTS)
-    topic
-      .posts
-      .by_post_number
-      .where(post_type: Post.types[:regular])
-      .where.not(cooked: nil)
-      .where(deleted_at: nil)
-      .limit(max_posts)
   end
 
   private

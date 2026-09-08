@@ -3,8 +3,10 @@
 module DiscourseWorkflows
   module Schema
     class GraphResolver
-      def self.call(nodes, connections)
-        new(nodes, connections).call
+      class << self
+        def call(nodes, connections)
+          new(nodes, connections).call
+        end
       end
 
       def initialize(nodes, connections)

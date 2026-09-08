@@ -94,29 +94,31 @@ module Reports
       end
     end
 
-    def self.call(guardian:)
-      page_view_req_report_methods =
-        ["page_view_total_reqs"] +
-          ApplicationRequest
-            .req_types
-            .keys
-            .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ && r !~ /beacon/ }
-            .map { |r| r + "_reqs" }
+    class << self
+      def call(guardian:)
+        page_view_req_report_methods =
+          ["page_view_total_reqs"] +
+            ApplicationRequest
+              .req_types
+              .keys
+              .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ && r !~ /beacon/ }
+              .map { |r| r + "_reqs" }
 
-      if !SiteSetting.use_legacy_pageviews
-        page_view_req_report_methods << "page_view_legacy_total_reqs"
-      end
-
-      reports_methods =
-        page_view_req_report_methods +
-          Report.singleton_methods.grep(/\Areport_(?!about|storage_stats)/)
-
-      reports_methods
-        .filter_map do |report_name|
-          report = Reports::ListQuery::FormattedReport.new(report_name)
-          report.to_h if report.visible?(guardian:)
+        if !SiteSetting.use_legacy_pageviews
+          page_view_req_report_methods << "page_view_legacy_total_reqs"
         end
-        .sort_by { |report| report[:title] }
+
+        reports_methods =
+          page_view_req_report_methods +
+            Report.singleton_methods.grep(/\Areport_(?!about|storage_stats)/)
+
+        reports_methods
+          .filter_map do |report_name|
+            report = Reports::ListQuery::FormattedReport.new(report_name)
+            report.to_h if report.visible?(guardian:)
+          end
+          .sort_by { |report| report[:title] }
+      end
     end
   end
 end

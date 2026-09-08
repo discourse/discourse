@@ -6,9 +6,11 @@ require_relative "../../base"
 
 module ImportScripts::PhpBB3
   class Settings
-    def self.load(filename)
-      yaml = YAML.load_file(filename)
-      Settings.new(yaml.deep_stringify_keys.with_indifferent_access)
+    class << self
+      def load(filename)
+        yaml = YAML.load_file(filename)
+        Settings.new(yaml.deep_stringify_keys.with_indifferent_access)
+      end
     end
 
     attr_reader :site_name

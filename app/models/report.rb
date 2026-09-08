@@ -1,106 +1,6 @@
 # frozen_string_literal: true
 
 class Report
-  # Change this line each time report format change
-  # and you want to ensure cache is reset
-  SCHEMA_VERSION = 5
-
-  RELATED_ITEMS_LIMIT = 50
-
-  FILTERS = %i[
-    name
-    start_date
-    end_date
-    category
-    group
-    trust_level
-    file_extension
-    include_subcategories
-    hidden_labels
-  ]
-
-  MODES = {
-    table: :table,
-    chart: :chart,
-    stacked_chart: :stacked_chart,
-    stacked_line_chart: :stacked_line_chart,
-    radar: :radar,
-    counters: :counters,
-    inline_table: :inline_table,
-    storage_stats: :storage_stats,
-  }
-
-  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs top_entry_urls]
-
-  HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
-    consolidated_page_views_browser_detection
-    page_view_anon_reqs
-    page_view_logged_in_reqs
-  ]
-
-  ADMIN_ONLY_REPORTS = %w[
-    admin_logins
-    top_uploads
-    topic_view_stats
-    top_entry_urls
-    top_referrers_by_browser_pageviews
-    top_countries_by_browser_pageviews
-  ]
-  ADMIN_ONLY_RELATED_ITEMS_REPORTS = %w[new_contributors signups]
-  IP_ADDRESS_REPORTS = %w[suspicious_logins]
-  BROWSER_PAGEVIEW_REPORTS = %w[
-    top_countries_by_browser_pageviews
-    top_entry_urls
-    top_referrers_by_browser_pageviews
-  ]
-
-  def self.hidden?(type, guardian:)
-    return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
-    if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
-      return true
-    end
-
-    hidden_reports =
-      SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
-    hidden_reports.include?(type)
-  end
-
-  COLORS = {
-    turquoise: "#1EB8D1",
-    lime: "#9BC53D",
-    purple: "#721D8D",
-    magenta: "#E84A5F",
-    brown: "#8A6916",
-    yellow: "#FFCD56",
-  }
-
-  LEGACY_REPORTS = %w[
-    associated_accounts_by_provider
-    bookmarks
-    consolidated_api_requests
-    flags
-    flags_status
-    likes
-    moderator_warning_private_messages
-    mobile_visits
-    notify_moderators_private_messages
-    notify_user_private_messages
-    post_edits
-    profile_views
-    reactions
-    suspicious_logins
-    system_private_messages
-    top_referrers
-    top_users_by_likes_received_from_inferior_trust_level
-    top_users_by_likes_received_from_a_variety_of_people
-    trust_level_growth
-    user_flagging_ratio
-    user_to_user_private_messages
-    web_hook_events_daily_aggregate
-  ]
-
-  INTERNAL_REPORT_TYPES = %w[posters_by_member_type_members]
-
   include Reports::AssociatedAccountsByProvider
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
@@ -155,6 +55,406 @@ class Report
   include Reports::Visits
   include Reports::WebCrawlers
   include Reports::WebHookEventsDailyAggregate
+  # Change this line each time report format change
+  # and you want to ensure cache is reset
+  SCHEMA_VERSION = 5
+
+  RELATED_ITEMS_LIMIT = 50
+
+  FILTERS = %i[
+    name
+    start_date
+    end_date
+    category
+    group
+    trust_level
+    file_extension
+    include_subcategories
+    hidden_labels
+  ]
+
+  MODES = {
+    table: :table,
+    chart: :chart,
+    stacked_chart: :stacked_chart,
+    stacked_line_chart: :stacked_line_chart,
+    radar: :radar,
+    counters: :counters,
+    inline_table: :inline_table,
+    storage_stats: :storage_stats,
+  }
+
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs top_entry_urls]
+
+  HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
+    consolidated_page_views_browser_detection
+    page_view_anon_reqs
+    page_view_logged_in_reqs
+  ]
+
+  ADMIN_ONLY_REPORTS = %w[
+    admin_logins
+    top_uploads
+    topic_view_stats
+    top_entry_urls
+    top_referrers_by_browser_pageviews
+    top_countries_by_browser_pageviews
+  ]
+  ADMIN_ONLY_RELATED_ITEMS_REPORTS = %w[new_contributors signups]
+  IP_ADDRESS_REPORTS = %w[suspicious_logins]
+  BROWSER_PAGEVIEW_REPORTS = %w[
+    top_countries_by_browser_pageviews
+    top_entry_urls
+    top_referrers_by_browser_pageviews
+  ]
+
+  COLORS = {
+    turquoise: "#1EB8D1",
+    lime: "#9BC53D",
+    purple: "#721D8D",
+    magenta: "#E84A5F",
+    brown: "#8A6916",
+    yellow: "#FFCD56",
+  }
+  LEGACY_REPORTS = %w[
+    associated_accounts_by_provider
+    bookmarks
+    consolidated_api_requests
+    flags
+    flags_status
+    likes
+    moderator_warning_private_messages
+    mobile_visits
+    notify_moderators_private_messages
+    notify_user_private_messages
+    post_edits
+    profile_views
+    reactions
+    suspicious_logins
+    system_private_messages
+    top_referrers
+    top_users_by_likes_received_from_inferior_trust_level
+    top_users_by_likes_received_from_a_variety_of_people
+    trust_level_growth
+    user_flagging_ratio
+    user_to_user_private_messages
+    web_hook_events_daily_aggregate
+  ]
+  INTERNAL_REPORT_TYPES = %w[posters_by_member_type_members]
+
+  class << self
+    def hidden?(type, guardian:)
+      return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
+      if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
+        return true
+      end
+
+      hidden_reports =
+        SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
+      hidden_reports.include?(type)
+    end
+
+    public
+
+    def default_days
+      30
+    end
+
+    def default_labels
+      [
+        { type: :date, property: :x, title: I18n.t("reports.default.labels.day") },
+        { type: :number, property: :y, title: I18n.t("reports.default.labels.count") },
+      ]
+    end
+
+    def cache_key(report)
+      guardian = report.guardian || report.current_user&.guardian
+
+      [
+        "reports",
+        report.type,
+        report.start_date.to_date.strftime("%Y%m%d"),
+        report.end_date.to_date.strftime("%Y%m%d"),
+        report.facets,
+        report.limit,
+        report.filters.blank? ? nil : MultiJson.dump(report.filters),
+        SCHEMA_VERSION,
+        guardian&.user&.id || report.current_user&.id,
+        guardian&.can_see_ip?,
+        CrawlerScorer.enabled?,
+      ].compact.map(&:to_s).join(":")
+    end
+
+    def clear_cache(type = nil)
+      pattern = type ? "reports:#{type}:*" : "reports:*"
+
+      Discourse.cache.keys(pattern).each { |key| Discourse.cache.redis.del(key) }
+    end
+
+    def wrap_slow_query(timeout = 20_000)
+      ActiveRecord::Base.connection.transaction do
+        # Allows only read only transactions. Skipped in tests, where threads
+        # share one connection and read-only would break concurrent writes.
+        DB.exec "SET TRANSACTION READ ONLY" if !Rails.env.test?
+        # Set a statement timeout so we can't tie up the server
+        DB.exec "SET LOCAL statement_timeout = #{timeout}"
+        yield
+      end
+    end
+
+    def _get(type, opts = nil)
+      opts ||= {}
+      type = type.to_s
+
+      # Load the report
+      report = Report.new(type)
+      report.start_date = opts[:start_date] if opts[:start_date]
+      report.end_date = opts[:end_date] if opts[:end_date]
+      report.facets = opts[:facets] || %i[total prev30Days]
+      report.limit = opts[:limit] if opts[:limit]
+      report.average = opts[:average] if opts[:average]
+      report.percent = opts[:percent] if opts[:percent]
+      report.filters = opts[:filters] if opts[:filters]
+      report.guardian = opts[:guardian] if opts[:guardian]
+      report.current_user = opts[:current_user] if opts[:current_user]
+      report.current_user ||= report.guardian&.user
+      report.guardian ||= report.current_user&.guardian
+      report.include_related_items =
+        opts[:include_related_items] &&
+          (
+            report.guardian&.is_admin? ||
+              !admin_only_related_items_report_types.include?(report.type)
+          )
+      report.labels = Report.default_labels
+
+      report.legacy = LEGACY_REPORTS.include?(type)
+
+      report
+    end
+
+    def find_cached(type, opts = nil)
+      report = _get(type, opts)
+      return if report.include_related_items
+
+      Discourse.cache.read(cache_key(report))
+    end
+
+    def cache(report)
+      return if report.include_related_items
+
+      duration = report.error == :exception ? 1.minute : 60.minutes
+      Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
+    end
+
+    def find(type, opts = nil)
+      opts ||= {}
+
+      begin
+        report = _get(type, opts)
+        report_method = :"report_#{type}"
+
+        begin
+          wrap_slow_query do
+            if respond_to?(report_method)
+              public_send(report_method, report)
+            elsif type =~ /_reqs\z/
+              req_report(report, type.split(/_reqs\z/)[0].to_sym)
+            else
+              return nil
+            end
+          end
+        rescue ActiveRecord::QueryCanceled, PG::QueryCanceled => e
+          report.error = :timeout
+        end
+      rescue Exception => e
+        # In test mode, don't swallow exceptions by default to help debug errors.
+        raise if Rails.env.test? && !opts[:wrap_exceptions_in_test]
+
+        # ensures that if anything unexpected prevents us from
+        # creating a report object we fail elegantly and log an error
+        if !report
+          Rails.logger.error("Couldn’t create report `#{type}`: <#{e.class} #{e.message}>")
+          return nil
+        end
+
+        report.error = :exception
+
+        # given reports can be added by plugins we don’t want dashboard failures
+        # on report computation, however we do want to log which report is provoking
+        # an error
+        Rails.logger.error(
+          "Error while computing report `#{report.type}`: #{e.message}\n#{e.backtrace.join("\n")}",
+        )
+      end
+
+      report
+    end
+
+    # NOTE: Once use_legacy_pageviews is always false or no longer needed
+    # we will no longer support the page_view_anon and page_view_logged_in reports,
+    # they can be removed.
+    def req_report(report, filter = nil)
+      data =
+        # For this report we intentionally do not want to count mobile pageviews.
+        if filter == :page_view_total
+          SiteSetting.use_legacy_pageviews ? legacy_page_view_requests : page_view_requests
+          # This is a separate report because if people have switched over
+          # to _not_ use legacy pageviews, we want to show both a Pageviews
+          # and Legacy Pageviews report.
+        elsif filter == :page_view_legacy_total
+          legacy_page_view_requests
+        else
+          ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
+        end
+
+      report.icon = "file" if filter == :page_view_total
+
+      report.data = []
+      data
+        .where("date >= ? AND date <= ?", report.start_date, report.end_date)
+        .order(date: :asc)
+        .group(:date)
+        .sum(:count)
+        .each { |date, count| report.data << { x: date, y: count } }
+
+      report.total = data.sum(:count)
+
+      report.prev30Days =
+        data.where("date >= ? AND date < ?", report.start_date - 31.days, report.start_date).sum(
+          :count,
+        )
+    end
+
+    # We purposefully exclude "browser" pageviews. See
+    # `ConsolidatedPageViewsBrowserDetection` for browser pageviews.
+    def legacy_page_view_requests
+      ApplicationRequest.where(
+        req_type: [
+          ApplicationRequest.req_types[:page_view_crawler],
+          ApplicationRequest.req_types[:page_view_anon],
+          ApplicationRequest.req_types[:page_view_logged_in],
+        ].flatten,
+      )
+    end
+
+    # We purposefully exclude "crawler" pageviews here and by
+    # only doing browser pageviews we are excluding "other" pageviews
+    # too. This is to reflect what is shown in the "Site traffic" report
+    # by default.
+    def page_view_requests
+      ApplicationRequest.where(
+        req_type: [
+          ApplicationRequest.req_types[:page_view_anon_browser],
+          ApplicationRequest.req_types[:page_view_logged_in_browser],
+        ].flatten,
+      )
+    end
+
+    def report_about(report, subject_class, report_method = :count_per_day)
+      data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
+      counts = subject_class.public_send(report_method, data_start, report.end_date)
+
+      prev_period_count = nil
+
+      if report.facets.include?(:prev_period)
+        counts, prev_counts = split_date_counts(counts, report.start_date)
+        prev_period_count = prev_counts.sum { |_date, count| count }
+      end
+
+      report.data = counts.map { |date, count| { x: date, y: count } }
+
+      add_counts report, subject_class, prev_period_count: prev_period_count
+    end
+
+    def basic_report_about(report, subject_class, report_method, *args)
+      report.data = []
+
+      subject_class
+        .public_send(report_method, *args)
+        .each { |date, count| report.data << { x: date, y: count } }
+    end
+
+    def split_date_counts(counts, current_start)
+      current_start_date = current_start.to_date
+      counts.partition { |date, _count| date.to_date >= current_start_date }
+    end
+
+    def add_prev_data(report, subject_class, report_method, *args)
+      if report.modes.include?(Report::MODES[:chart]) && report.facets.include?(:prev_period)
+        prev_data = subject_class.public_send(report_method, *args)
+        report.prev_data = prev_data.map { |k, v| { x: k, y: v } }
+      end
+    end
+
+    def add_counts(report, subject_class, query_column = "created_at", prev_period_count: nil)
+      if report.facets.include?(:prev_period)
+        report.prev_period =
+          if prev_period_count
+            prev_period_count
+          else
+            subject_class.where(
+              "#{query_column} >= ? and #{query_column} < ?",
+              report.prev_start_date,
+              report.prev_end_date,
+            ).count
+          end
+      end
+
+      report.total = subject_class.count if report.facets.include?(:total)
+
+      if report.facets.include?(:prev30Days)
+        report.prev30Days =
+          subject_class.where(
+            "#{query_column} >= ? and #{query_column} < ?",
+            report.start_date - 30.days,
+            report.start_date,
+          ).count
+      end
+    end
+
+    def post_action_report(report, post_action_type)
+      category_id, include_subcategories = report.add_category_filter
+
+      report.data = []
+      PostAction
+        .count_per_day_for_type(
+          post_action_type,
+          category_id: category_id,
+          include_subcategories: include_subcategories,
+          start_date: report.start_date,
+          end_date: report.end_date,
+        )
+        .each { |date, count| report.data << { x: date, y: count } }
+
+      countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
+      if category_id
+        if include_subcategories
+          countable =
+            countable.joins(post: :topic).where(
+              "topics.category_id IN (?)",
+              Category.subcategory_ids(category_id),
+            )
+        else
+          countable = countable.joins(post: :topic).where("topics.category_id = ?", category_id)
+        end
+      end
+
+      add_counts report, countable, "post_actions.created_at"
+    end
+
+    def private_messages_report(report, topic_subtype)
+      report.icon = "envelope"
+      subject = Topic.where("topics.user_id > 0")
+      basic_report_about report,
+                         subject,
+                         :private_message_topics_count_per_day,
+                         report.start_date,
+                         report.end_date,
+                         topic_subtype
+      subject = Topic.private_messages.where("topics.user_id > 0").with_subtype(topic_subtype)
+      add_counts report, subject, "topics.created_at"
+    end
+  end
 
   attr_accessor :type,
                 :data,
@@ -187,17 +487,6 @@ class Report
                 :related_items,
                 :related_items_totals
 
-  def self.default_days
-    30
-  end
-
-  def self.default_labels
-    [
-      { type: :date, property: :x, title: I18n.t("reports.default.labels.day") },
-      { type: :number, property: :y, title: I18n.t("reports.default.labels.count") },
-    ]
-  end
-
   def initialize(type)
     @type = type
     @start_date ||= Report.default_days.days.ago.utc.beginning_of_day
@@ -215,24 +504,6 @@ class Report
     tertiary = ColorScheme.hex_for_name("tertiary") || "0088cc"
     @primary_color = rgba_color(tertiary)
     @secondary_color = rgba_color(tertiary, 0.1)
-  end
-
-  def self.cache_key(report)
-    guardian = report.guardian || report.current_user&.guardian
-
-    [
-      "reports",
-      report.type,
-      report.start_date.to_date.strftime("%Y%m%d"),
-      report.end_date.to_date.strftime("%Y%m%d"),
-      report.facets,
-      report.limit,
-      report.filters.blank? ? nil : MultiJson.dump(report.filters),
-      SCHEMA_VERSION,
-      guardian&.user&.id || report.current_user&.id,
-      guardian&.can_see_ip?,
-      CrawlerScorer.enabled?,
-    ].compact.map(&:to_s).join(":")
   end
 
   def add_filter(name, options = {})
@@ -256,23 +527,6 @@ class Report
     )
 
     [category_id, include_subcategories]
-  end
-
-  def self.clear_cache(type = nil)
-    pattern = type ? "reports:#{type}:*" : "reports:*"
-
-    Discourse.cache.keys(pattern).each { |key| Discourse.cache.redis.del(key) }
-  end
-
-  def self.wrap_slow_query(timeout = 20_000)
-    ActiveRecord::Base.connection.transaction do
-      # Allows only read only transactions. Skipped in tests, where threads
-      # share one connection and read-only would break concurrent writes.
-      DB.exec "SET TRANSACTION READ ONLY" if !Rails.env.test?
-      # Set a statement timeout so we can't tie up the server
-      DB.exec "SET LOCAL statement_timeout = #{timeout}"
-      yield
-    end
   end
 
   def prev_start_date
@@ -364,256 +618,6 @@ class Report
 
   def Report.registered_admin_only_related_items_report_types
     @registered_admin_only_related_items_report_types ||= Set.new
-  end
-
-  def self._get(type, opts = nil)
-    opts ||= {}
-    type = type.to_s
-
-    # Load the report
-    report = Report.new(type)
-    report.start_date = opts[:start_date] if opts[:start_date]
-    report.end_date = opts[:end_date] if opts[:end_date]
-    report.facets = opts[:facets] || %i[total prev30Days]
-    report.limit = opts[:limit] if opts[:limit]
-    report.average = opts[:average] if opts[:average]
-    report.percent = opts[:percent] if opts[:percent]
-    report.filters = opts[:filters] if opts[:filters]
-    report.guardian = opts[:guardian] if opts[:guardian]
-    report.current_user = opts[:current_user] if opts[:current_user]
-    report.current_user ||= report.guardian&.user
-    report.guardian ||= report.current_user&.guardian
-    report.include_related_items =
-      opts[:include_related_items] &&
-        (report.guardian&.is_admin? || !admin_only_related_items_report_types.include?(report.type))
-    report.labels = Report.default_labels
-
-    report.legacy = LEGACY_REPORTS.include?(type)
-
-    report
-  end
-
-  def self.find_cached(type, opts = nil)
-    report = _get(type, opts)
-    return if report.include_related_items
-
-    Discourse.cache.read(cache_key(report))
-  end
-
-  def self.cache(report)
-    return if report.include_related_items
-
-    duration = report.error == :exception ? 1.minute : 60.minutes
-    Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
-  end
-
-  def self.find(type, opts = nil)
-    opts ||= {}
-
-    begin
-      report = _get(type, opts)
-      report_method = :"report_#{type}"
-
-      begin
-        wrap_slow_query do
-          if respond_to?(report_method)
-            public_send(report_method, report)
-          elsif type =~ /_reqs\z/
-            req_report(report, type.split(/_reqs\z/)[0].to_sym)
-          else
-            return nil
-          end
-        end
-      rescue ActiveRecord::QueryCanceled, PG::QueryCanceled => e
-        report.error = :timeout
-      end
-    rescue Exception => e
-      # In test mode, don't swallow exceptions by default to help debug errors.
-      raise if Rails.env.test? && !opts[:wrap_exceptions_in_test]
-
-      # ensures that if anything unexpected prevents us from
-      # creating a report object we fail elegantly and log an error
-      if !report
-        Rails.logger.error("Couldn’t create report `#{type}`: <#{e.class} #{e.message}>")
-        return nil
-      end
-
-      report.error = :exception
-
-      # given reports can be added by plugins we don’t want dashboard failures
-      # on report computation, however we do want to log which report is provoking
-      # an error
-      Rails.logger.error(
-        "Error while computing report `#{report.type}`: #{e.message}\n#{e.backtrace.join("\n")}",
-      )
-    end
-
-    report
-  end
-
-  # NOTE: Once use_legacy_pageviews is always false or no longer needed
-  # we will no longer support the page_view_anon and page_view_logged_in reports,
-  # they can be removed.
-  def self.req_report(report, filter = nil)
-    data =
-      # For this report we intentionally do not want to count mobile pageviews.
-      if filter == :page_view_total
-        SiteSetting.use_legacy_pageviews ? legacy_page_view_requests : page_view_requests
-        # This is a separate report because if people have switched over
-        # to _not_ use legacy pageviews, we want to show both a Pageviews
-        # and Legacy Pageviews report.
-      elsif filter == :page_view_legacy_total
-        legacy_page_view_requests
-      else
-        ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
-      end
-
-    report.icon = "file" if filter == :page_view_total
-
-    report.data = []
-    data
-      .where("date >= ? AND date <= ?", report.start_date, report.end_date)
-      .order(date: :asc)
-      .group(:date)
-      .sum(:count)
-      .each { |date, count| report.data << { x: date, y: count } }
-
-    report.total = data.sum(:count)
-
-    report.prev30Days =
-      data.where("date >= ? AND date < ?", report.start_date - 31.days, report.start_date).sum(
-        :count,
-      )
-  end
-
-  # We purposefully exclude "browser" pageviews. See
-  # `ConsolidatedPageViewsBrowserDetection` for browser pageviews.
-  def self.legacy_page_view_requests
-    ApplicationRequest.where(
-      req_type: [
-        ApplicationRequest.req_types[:page_view_crawler],
-        ApplicationRequest.req_types[:page_view_anon],
-        ApplicationRequest.req_types[:page_view_logged_in],
-      ].flatten,
-    )
-  end
-
-  # We purposefully exclude "crawler" pageviews here and by
-  # only doing browser pageviews we are excluding "other" pageviews
-  # too. This is to reflect what is shown in the "Site traffic" report
-  # by default.
-  def self.page_view_requests
-    ApplicationRequest.where(
-      req_type: [
-        ApplicationRequest.req_types[:page_view_anon_browser],
-        ApplicationRequest.req_types[:page_view_logged_in_browser],
-      ].flatten,
-    )
-  end
-
-  def self.report_about(report, subject_class, report_method = :count_per_day)
-    data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
-    counts = subject_class.public_send(report_method, data_start, report.end_date)
-
-    prev_period_count = nil
-
-    if report.facets.include?(:prev_period)
-      counts, prev_counts = split_date_counts(counts, report.start_date)
-      prev_period_count = prev_counts.sum { |_date, count| count }
-    end
-
-    report.data = counts.map { |date, count| { x: date, y: count } }
-
-    add_counts report, subject_class, prev_period_count: prev_period_count
-  end
-
-  def self.basic_report_about(report, subject_class, report_method, *args)
-    report.data = []
-
-    subject_class
-      .public_send(report_method, *args)
-      .each { |date, count| report.data << { x: date, y: count } }
-  end
-
-  def self.split_date_counts(counts, current_start)
-    current_start_date = current_start.to_date
-    counts.partition { |date, _count| date.to_date >= current_start_date }
-  end
-
-  def self.add_prev_data(report, subject_class, report_method, *args)
-    if report.modes.include?(Report::MODES[:chart]) && report.facets.include?(:prev_period)
-      prev_data = subject_class.public_send(report_method, *args)
-      report.prev_data = prev_data.map { |k, v| { x: k, y: v } }
-    end
-  end
-
-  def self.add_counts(report, subject_class, query_column = "created_at", prev_period_count: nil)
-    if report.facets.include?(:prev_period)
-      report.prev_period =
-        if prev_period_count
-          prev_period_count
-        else
-          subject_class.where(
-            "#{query_column} >= ? and #{query_column} < ?",
-            report.prev_start_date,
-            report.prev_end_date,
-          ).count
-        end
-    end
-
-    report.total = subject_class.count if report.facets.include?(:total)
-
-    if report.facets.include?(:prev30Days)
-      report.prev30Days =
-        subject_class.where(
-          "#{query_column} >= ? and #{query_column} < ?",
-          report.start_date - 30.days,
-          report.start_date,
-        ).count
-    end
-  end
-
-  def self.post_action_report(report, post_action_type)
-    category_id, include_subcategories = report.add_category_filter
-
-    report.data = []
-    PostAction
-      .count_per_day_for_type(
-        post_action_type,
-        category_id: category_id,
-        include_subcategories: include_subcategories,
-        start_date: report.start_date,
-        end_date: report.end_date,
-      )
-      .each { |date, count| report.data << { x: date, y: count } }
-
-    countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
-    if category_id
-      if include_subcategories
-        countable =
-          countable.joins(post: :topic).where(
-            "topics.category_id IN (?)",
-            Category.subcategory_ids(category_id),
-          )
-      else
-        countable = countable.joins(post: :topic).where("topics.category_id = ?", category_id)
-      end
-    end
-
-    add_counts report, countable, "post_actions.created_at"
-  end
-
-  def self.private_messages_report(report, topic_subtype)
-    report.icon = "envelope"
-    subject = Topic.where("topics.user_id > 0")
-    basic_report_about report,
-                       subject,
-                       :private_message_topics_count_per_day,
-                       report.start_date,
-                       report.end_date,
-                       topic_subtype
-    subject = Topic.private_messages.where("topics.user_id > 0").with_subtype(topic_subtype)
-    add_counts report, subject, "topics.created_at"
   end
 
   def rgba_color(hex, opacity = 1)

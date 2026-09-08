@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
 class RateLimiter
-  def self.time_left(available_in)
-    if available_in <= 3
-      I18n.t("rate_limiter.short_time")
-    elsif available_in < 1.minute.to_i
-      I18n.t("rate_limiter.seconds", count: available_in)
-    elsif available_in < 1.hour.to_i
-      I18n.t("rate_limiter.minutes", count: (available_in / 1.minute.to_i))
-    else
-      I18n.t("rate_limiter.hours", count: (available_in / 1.hour.to_i))
+  class << self
+    def time_left(available_in)
+      if available_in <= 3
+        I18n.t("rate_limiter.short_time")
+      elsif available_in < 1.minute.to_i
+        I18n.t("rate_limiter.seconds", count: available_in)
+      elsif available_in < 1.hour.to_i
+        I18n.t("rate_limiter.minutes", count: (available_in / 1.minute.to_i))
+      else
+        I18n.t("rate_limiter.hours", count: (available_in / 1.hour.to_i))
+      end
     end
   end
 

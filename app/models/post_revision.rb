@@ -10,9 +10,10 @@ class PostRevision < ActiveRecord::Base
 
   after_create :create_notification
 
-  def self.ensure_consistency!
-    # 1 - fix the numbers
-    DB.exec <<-SQL
+  class << self
+    def ensure_consistency!
+      # 1 - fix the numbers
+      DB.exec <<-SQL
       UPDATE post_revisions
          SET number = pr.rank
         FROM (SELECT id, 1 + ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY number, created_at, updated_at) AS rank FROM post_revisions) AS pr
@@ -20,14 +21,26 @@ class PostRevision < ActiveRecord::Base
          AND post_revisions.number <> pr.rank
     SQL
 
-    # 2 - fix the versions on the posts
-    DB.exec <<-SQL
+      # 2 - fix the versions on the posts
+      DB.exec <<-SQL
       UPDATE posts
          SET version = 1 + (SELECT COUNT(*) FROM post_revisions WHERE post_id = posts.id),
              public_version = 1 + (SELECT COUNT(*) FROM post_revisions pr WHERE post_id = posts.id AND pr.hidden = 'f')
        WHERE version <> 1 + (SELECT COUNT(*) FROM post_revisions WHERE post_id = posts.id)
           OR public_version <> 1 + (SELECT COUNT(*) FROM post_revisions pr WHERE post_id = posts.id AND pr.hidden = 'f')
     SQL
+    end
+
+    def copy(original_post, target_post)
+      cols_to_copy = (column_names - %w[id post_id]).join(", ")
+
+      DB.exec <<~SQL
+    INSERT INTO post_revisions(post_id, #{cols_to_copy})
+    SELECT #{target_post.id}, #{cols_to_copy}
+    FROM post_revisions
+    WHERE post_id = #{original_post.id}
+    SQL
+    end
   end
 
   def categories
@@ -46,17 +59,6 @@ class PostRevision < ActiveRecord::Base
 
   def create_notification
     PostActionNotifier.after_create_post_revision(self)
-  end
-
-  def self.copy(original_post, target_post)
-    cols_to_copy = (column_names - %w[id post_id]).join(", ")
-
-    DB.exec <<~SQL
-    INSERT INTO post_revisions(post_id, #{cols_to_copy})
-    SELECT #{target_post.id}, #{cols_to_copy}
-    FROM post_revisions
-    WHERE post_id = #{original_post.id}
-    SQL
   end
 end
 

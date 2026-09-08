@@ -4,13 +4,15 @@ module DiscourseWorkflows
   class ExecutionStat < ActiveRecord::Base
     self.table_name = "discourse_workflows_execution_stats"
 
-    def self.log(workflow_id, date: Date.current)
-      DB.exec(<<~SQL, workflow_id: workflow_id, date: date)
+    class << self
+      def log(workflow_id, date: Date.current)
+        DB.exec(<<~SQL, workflow_id: workflow_id, date: date)
         INSERT INTO discourse_workflows_execution_stats (workflow_id, date, total_runs)
         VALUES (:workflow_id, :date, 1)
         ON CONFLICT (workflow_id, date)
         DO UPDATE SET total_runs = discourse_workflows_execution_stats.total_runs + 1
       SQL
+      end
     end
   end
 end

@@ -10,6 +10,14 @@ class LocaleFileChecker
   TYPE_INVALID_MESSAGE_FORMAT = 4
   TYPE_INVALID_MARKDOWN_LINK = 5
 
+  YML_DIRS = %w[config/locales plugins/**/locales]
+  PLURALS_FILE = "config/locales/plurals.rb"
+  REFERENCE_LOCALE = "en"
+  REFERENCE_PLURAL_KEYS = %w[one other]
+  # Some languages should always use %{count} in pluralized strings.
+  # https://meta.discourse.org/t/always-use-count-variable-when-translating-pluralized-strings/83969
+  FORCE_PLURAL_COUNT_LOCALES = %w[bs fr lt lv ru sl sr uk]
+
   def check(locale)
     @errors = {}
     @locale = locale.to_s
@@ -34,15 +42,6 @@ class LocaleFileChecker
   end
 
   private
-
-  YML_DIRS = %w[config/locales plugins/**/locales]
-  PLURALS_FILE = "config/locales/plurals.rb"
-  REFERENCE_LOCALE = "en"
-  REFERENCE_PLURAL_KEYS = %w[one other]
-
-  # Some languages should always use %{count} in pluralized strings.
-  # https://meta.discourse.org/t/always-use-count-variable-when-translating-pluralized-strings/83969
-  FORCE_PLURAL_COUNT_LOCALES = %w[bs fr lt lv ru sl sr uk]
 
   def locale_files
     YML_DIRS

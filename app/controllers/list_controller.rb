@@ -129,6 +129,71 @@ class ListController < ApplicationController
     end
   end
 
+  class << self
+    def generate_message_route(action)
+      define_method action do
+        message_route(action)
+      end
+    end
+
+    def feed_route_exists?(filter)
+      @feed_route_exists ||= {}
+      @feed_route_exists.fetch(filter) do
+        @feed_route_exists[filter] = begin
+          Rails.application.routes.url_for(
+            controller: "list",
+            action: "#{filter}_feed",
+            only_path: true,
+          )
+          true
+        rescue ActionController::UrlGenerationError
+          false
+        end
+      end
+    end
+
+    def best_period_for(previous_visit_at, category_id = nil)
+      default_period =
+        (
+          (category_id && Category.where(id: category_id).pick(:default_top_period)) ||
+            SiteSetting.top_page_default_timeframe
+        ).to_sym
+
+      default_period = SiteSetting.top_page_default_timeframe.to_sym if TopTopic.periods.exclude?(
+        default_period,
+      )
+
+      best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
+    end
+
+    def best_period_with_topics_for(
+      previous_visit_at,
+      category_id = nil,
+      default_period = SiteSetting.top_page_default_timeframe
+    )
+      best_periods_for(previous_visit_at, default_period.to_sym).find do |period|
+        top_topics = TopTopic.where("#{TopTopic.score_column_for_period(period)} > 0")
+        top_topics =
+          top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
+        top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)
+        top_topics.count == SiteSetting.topics_per_period_in_top_page
+      end
+    end
+
+    def best_periods_for(date, default_period = :all)
+      return [default_period, :all].uniq unless date
+
+      periods = []
+      periods << :daily if date > (1.week + 1.day).ago
+      periods << :weekly if date > (1.month + 1.week).ago
+      periods << :monthly if date > (3.months + 3.weeks).ago
+      periods << :quarterly if date > (1.year + 1.month).ago
+      periods << :yearly if date > 3.years.ago
+      periods << :all
+      periods
+    end
+  end
+
   def filter
     topic_query_opts = { no_definitions: !SiteSetting.show_category_definitions_in_topic_lists }
 
@@ -185,12 +250,6 @@ class ListController < ApplicationController
     list.more_topics_url = construct_url_with(:next, list_opts)
     list.prev_topics_url = construct_url_with(:prev, list_opts)
     respond_with_list(list)
-  end
-
-  def self.generate_message_route(action)
-    define_method action do
-      message_route(action)
-    end
   end
 
   def message_route(action)
@@ -388,22 +447,6 @@ class ListController < ApplicationController
 
   private
 
-  def self.feed_route_exists?(filter)
-    @feed_route_exists ||= {}
-    @feed_route_exists.fetch(filter) do
-      @feed_route_exists[filter] = begin
-        Rails.application.routes.url_for(
-          controller: "list",
-          action: "#{filter}_feed",
-          only_path: true,
-        )
-        true
-      rescue ActionController::UrlGenerationError
-        false
-      end
-    end
-  end
-
   def feed_route_exists?(filter)
     self.class.feed_route_exists?(filter)
   end
@@ -536,46 +579,5 @@ class ListController < ApplicationController
 
   def ensure_can_see_profile!(target_user = nil)
     raise Discourse::NotFound unless guardian.can_see_profile?(target_user)
-  end
-
-  def self.best_period_for(previous_visit_at, category_id = nil)
-    default_period =
-      (
-        (category_id && Category.where(id: category_id).pick(:default_top_period)) ||
-          SiteSetting.top_page_default_timeframe
-      ).to_sym
-
-    default_period = SiteSetting.top_page_default_timeframe.to_sym if TopTopic.periods.exclude?(
-      default_period,
-    )
-
-    best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
-  end
-
-  def self.best_period_with_topics_for(
-    previous_visit_at,
-    category_id = nil,
-    default_period = SiteSetting.top_page_default_timeframe
-  )
-    best_periods_for(previous_visit_at, default_period.to_sym).find do |period|
-      top_topics = TopTopic.where("#{TopTopic.score_column_for_period(period)} > 0")
-      top_topics =
-        top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
-      top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)
-      top_topics.count == SiteSetting.topics_per_period_in_top_page
-    end
-  end
-
-  def self.best_periods_for(date, default_period = :all)
-    return [default_period, :all].uniq unless date
-
-    periods = []
-    periods << :daily if date > (1.week + 1.day).ago
-    periods << :weekly if date > (1.month + 1.week).ago
-    periods << :monthly if date > (3.months + 3.weeks).ago
-    periods << :quarterly if date > (1.year + 1.month).ago
-    periods << :yearly if date > 3.years.ago
-    periods << :all
-    periods
   end
 end

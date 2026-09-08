@@ -13,58 +13,60 @@ class ScreenedEmail < ActiveRecord::Base
 
   before_save :downcase_email
 
-  def downcase_email
-    self.email = email.downcase
-  end
-
-  def self.canonical(email)
-    name, domain = email.split("@", 2)
-    name = name.gsub(/\+.*/, "")
-    name = name.gsub(".", "") if %w[gmail.com googlemail.com].include?(domain.downcase)
-    "#{name}@#{domain}".downcase
-  end
-
-  def self.block(email, opts = {})
-    email = canonical(email)
-    find_by_email(email) || create!(opts.slice(:action_type, :ip_address).merge(email: email))
-  end
-
-  def self.should_block?(email)
-    email = canonical(email)
-
-    screened_emails = ScreenedEmail.order(created_at: :desc).limit(100)
-
-    distances = {}
-    screened_emails.each do |se|
-      distances[se.email] = levenshtein(se.email.downcase, email.downcase)
+  class << self
+    def canonical(email)
+      name, domain = email.split("@", 2)
+      name = name.gsub(/\+.*/, "")
+      name = name.gsub(".", "") if %w[gmail.com googlemail.com].include?(domain.downcase)
+      "#{name}@#{domain}".downcase
     end
 
-    max_distance = SiteSetting.levenshtein_distance_spammer_emails
-    screened_email =
-      screened_emails
-        .select { |se| distances[se.email] <= max_distance }
-        .sort { |se| distances[se.email] }
-        .first
+    def block(email, opts = {})
+      email = canonical(email)
+      find_by_email(email) || create!(opts.slice(:action_type, :ip_address).merge(email: email))
+    end
 
-    screened_email.record_match! if screened_email
+    def should_block?(email)
+      email = canonical(email)
 
-    screened_email.try(:action_type) == actions[:block]
-  end
+      screened_emails = ScreenedEmail.order(created_at: :desc).limit(100)
 
-  def self.levenshtein(first, second)
-    matrix = [(0..first.length).to_a]
-    (1..second.length).each { |j| matrix << [j] + [0] * first.length }
+      distances = {}
+      screened_emails.each do |se|
+        distances[se.email] = levenshtein(se.email.downcase, email.downcase)
+      end
 
-    (1..second.length).each do |i|
-      (1..first.length).each do |j|
-        if first[j - 1] == second[i - 1]
-          matrix[i][j] = matrix[i - 1][j - 1]
-        else
-          matrix[i][j] = [matrix[i - 1][j], matrix[i][j - 1], matrix[i - 1][j - 1]].min + 1
+      max_distance = SiteSetting.levenshtein_distance_spammer_emails
+      screened_email =
+        screened_emails
+          .select { |se| distances[se.email] <= max_distance }
+          .sort { |se| distances[se.email] }
+          .first
+
+      screened_email.record_match! if screened_email
+
+      screened_email.try(:action_type) == actions[:block]
+    end
+
+    def levenshtein(first, second)
+      matrix = [(0..first.length).to_a]
+      (1..second.length).each { |j| matrix << [j] + [0] * first.length }
+
+      (1..second.length).each do |i|
+        (1..first.length).each do |j|
+          if first[j - 1] == second[i - 1]
+            matrix[i][j] = matrix[i - 1][j - 1]
+          else
+            matrix[i][j] = [matrix[i - 1][j], matrix[i][j - 1], matrix[i - 1][j - 1]].min + 1
+          end
         end
       end
+      matrix.last.last
     end
-    matrix.last.last
+  end
+
+  def downcase_email
+    self.email = email.downcase
   end
 end
 

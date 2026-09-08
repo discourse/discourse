@@ -7,23 +7,25 @@ module DiscourseAi
         MAX_HTML_SIZE = 30.kilobytes
         MAX_CSS_FILES = 5
 
-        def self.name
-          "read_artifact"
-        end
+        class << self
+          def name
+            "read_artifact"
+          end
 
-        def self.signature
-          {
-            name: "read_artifact",
-            description: "Read an artifact from a URL and convert to a local artifact",
-            parameters: [
-              {
-                name: "url",
-                type: "string",
-                description: "URL of the artifact to read",
-                required: true,
-              },
-            ],
-          }
+          def signature
+            {
+              name: "read_artifact",
+              description: "Read an artifact from a URL and convert to a local artifact",
+              parameters: [
+                {
+                  name: "url",
+                  type: "string",
+                  description: "URL of the artifact to read",
+                  required: true,
+                },
+              ],
+            }
+          end
         end
 
         def invoke

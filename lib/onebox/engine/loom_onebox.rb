@@ -10,8 +10,10 @@ module Onebox
       always_https
       requires_iframe_origins "https://www.loom.com"
 
-      def self.matches_path(path)
-        path.match?(%r{^/share/\w+(/\w+)?/?$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/share/\w+(/\w+)?/?$})
+        end
       end
 
       def placeholder_html

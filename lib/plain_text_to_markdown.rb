@@ -2,6 +2,9 @@
 
 class PlainTextToMarkdown
   SIGNATURE_SEPARATOR = "-- "
+  URL_REGEX = URI.regexp(%w[http https ftp mailto])
+  BEFORE = Regexp.escape(%Q|([<«"“'‘|)
+  AFTER = Regexp.escape(%Q|)]>»"”'’|)
 
   def initialize(plaintext, opts = {})
     @plaintext = plaintext
@@ -152,10 +155,6 @@ class PlainTextToMarkdown
     converted_text = indent_with_non_breaking_spaces(converted_text)
     converted_text
   end
-
-  URL_REGEX = URI.regexp(%w[http https ftp mailto])
-  BEFORE = Regexp.escape(%Q|([<«"“'‘|)
-  AFTER = Regexp.escape(%Q|)]>»"”'’|)
 
   def replace_duplicate_links(text)
     urls = Set.new

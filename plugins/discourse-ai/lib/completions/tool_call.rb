@@ -6,10 +6,6 @@ module DiscourseAi
       attr_reader :id, :name, :parameters, :provider_data
       attr_accessor :partial
 
-      def partial?
-        !!@partial
-      end
-
       def initialize(id:, name:, parameters: nil, provider_data: nil)
         @id = id
         @name = name
@@ -18,6 +14,10 @@ module DiscourseAi
         self.provider_data = provider_data if provider_data
         @provider_data ||= {}
         @partial = false
+      end
+
+      def partial?
+        !!@partial
       end
 
       def parameters=(parameters)

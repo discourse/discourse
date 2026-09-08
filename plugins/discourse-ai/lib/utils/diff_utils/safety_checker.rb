@@ -6,8 +6,10 @@ module DiscourseAi
   module Utils
     module DiffUtils
       class SafetyChecker
-        def self.safe_to_stream?(html_text)
-          new(html_text).safe?
+        class << self
+          def safe_to_stream?(html_text)
+            new(html_text).safe?
+          end
         end
 
         def initialize(html_text)

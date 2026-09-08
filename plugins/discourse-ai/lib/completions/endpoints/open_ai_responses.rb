@@ -6,9 +6,11 @@ module DiscourseAi
       class OpenAiResponses < Base
         include OpenAiShared
 
-        def self.can_contact?(llm_model)
-          %w[open_ai azure].include?(llm_model.provider) &&
-            llm_model.url.to_s.include?("/v1/responses")
+        class << self
+          def can_contact?(llm_model)
+            %w[open_ai azure].include?(llm_model.provider) &&
+              llm_model.url.to_s.include?("/v1/responses")
+          end
         end
 
         private

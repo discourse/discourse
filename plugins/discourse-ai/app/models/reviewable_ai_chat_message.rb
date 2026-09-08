@@ -3,17 +3,19 @@
 require_dependency "reviewable"
 
 class ReviewableAiChatMessage < Reviewable
-  def self.action_aliases
-    {
-      agree_and_keep_hidden: :agree_and_delete,
-      agree_and_silence: :agree_and_delete,
-      agree_and_suspend: :agree_and_delete,
-      delete_and_agree: :agree_and_delete,
-    }
-  end
+  class << self
+    def action_aliases
+      {
+        agree_and_keep_hidden: :agree_and_delete,
+        agree_and_silence: :agree_and_delete,
+        agree_and_suspend: :agree_and_delete,
+        delete_and_agree: :agree_and_delete,
+      }
+    end
 
-  def self.score_to_silence_user
-    sensitivity_score(SiteSetting.chat_silence_user_sensitivity, scale: 0.6)
+    def score_to_silence_user
+      sensitivity_score(SiteSetting.chat_silence_user_sensitivity, scale: 0.6)
+    end
   end
 
   def chat_message

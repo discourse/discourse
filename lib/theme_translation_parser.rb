@@ -2,18 +2,21 @@
 
 class ThemeTranslationParser
   INTERNAL_KEYS = [:theme_metadata]
+
   class InvalidYaml < StandardError
+  end
+
+  class << self
+    def check_contains_hashes(hash)
+      hash.all? do |_key, value|
+        value.is_a?(String) || (value.is_a?(Hash) && check_contains_hashes(value))
+      end
+    end
   end
 
   def initialize(setting_field, internal: false)
     @setting_field = setting_field
     @internal = internal
-  end
-
-  def self.check_contains_hashes(hash)
-    hash.all? do |_key, value|
-      value.is_a?(String) || (value.is_a?(Hash) && check_contains_hashes(value))
-    end
   end
 
   def load

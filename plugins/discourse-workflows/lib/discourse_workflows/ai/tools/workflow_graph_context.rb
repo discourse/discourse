@@ -4,24 +4,26 @@ module DiscourseWorkflows
   module Ai
     module Tools
       class WorkflowGraphContext < Base
-        def self.signature
-          {
-            name: name,
-            description:
-              "Returns the current draft workflow graph in a compact form for AI workflow authoring.",
-            parameters: [
-              {
-                name: "workflow_id",
-                description: "The workflow ID. Omit when creating a new workflow.",
-                type: "integer",
-                required: false,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Returns the current draft workflow graph in a compact form for AI workflow authoring.",
+              parameters: [
+                {
+                  name: "workflow_id",
+                  description: "The workflow ID. Omit when creating a new workflow.",
+                  type: "integer",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "workflow_graph_context"
+          def name
+            "workflow_graph_context"
+          end
         end
 
         def invoke

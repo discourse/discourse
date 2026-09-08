@@ -17,57 +17,59 @@ class LlmQuota < ActiveRecord::Base
 
   validate :at_least_one_limit
 
-  def self.check_quotas!(llm, user)
-    return true if user.blank?
-    quotas = joins(:group).where(llm_model: llm).where(group: user.groups)
+  class << self
+    def check_quotas!(llm, user)
+      return true if user.blank?
+      quotas = joins(:group).where(llm_model: llm).where(group: user.groups)
 
-    return true if quotas.empty?
-    errors =
-      quotas.map do |quota|
-        usage = LlmQuotaUsage.find_or_create_for(user: user, llm_quota: quota)
-        begin
-          usage.check_quota!
-          nil
-        rescue LlmQuotaUsage::QuotaExceededError => e
-          e
+      return true if quotas.empty?
+      errors =
+        quotas.map do |quota|
+          usage = LlmQuotaUsage.find_or_create_for(user: user, llm_quota: quota)
+          begin
+            usage.check_quota!
+            nil
+          rescue LlmQuotaUsage::QuotaExceededError => e
+            e
+          end
         end
+
+      return if errors.include?(nil)
+
+      raise errors.first
+    end
+
+    def log_usage(
+      llm,
+      user,
+      request_tokens:,
+      response_tokens:,
+      cache_read_tokens: 0,
+      cache_write_tokens: 0,
+      estimated_cost: nil
+    )
+      return if user.blank?
+
+      estimated_cost ||=
+        llm.estimated_cost_for_tokens(
+          request_tokens: request_tokens,
+          response_tokens: response_tokens,
+          cache_read_tokens: cache_read_tokens,
+          cache_write_tokens: cache_write_tokens,
+        )
+
+      quotas = joins(:group).where(llm_model: llm).where(group: user.groups)
+
+      quotas.each do |quota|
+        usage = LlmQuotaUsage.find_or_create_for(user: user, llm_quota: quota)
+        usage.increment_usage!(
+          input_tokens: request_tokens,
+          output_tokens: response_tokens,
+          cache_read_tokens: cache_read_tokens,
+          cache_write_tokens: cache_write_tokens,
+          cost: estimated_cost,
+        )
       end
-
-    return if errors.include?(nil)
-
-    raise errors.first
-  end
-
-  def self.log_usage(
-    llm,
-    user,
-    request_tokens:,
-    response_tokens:,
-    cache_read_tokens: 0,
-    cache_write_tokens: 0,
-    estimated_cost: nil
-  )
-    return if user.blank?
-
-    estimated_cost ||=
-      llm.estimated_cost_for_tokens(
-        request_tokens: request_tokens,
-        response_tokens: response_tokens,
-        cache_read_tokens: cache_read_tokens,
-        cache_write_tokens: cache_write_tokens,
-      )
-
-    quotas = joins(:group).where(llm_model: llm).where(group: user.groups)
-
-    quotas.each do |quota|
-      usage = LlmQuotaUsage.find_or_create_for(user: user, llm_quota: quota)
-      usage.increment_usage!(
-        input_tokens: request_tokens,
-        output_tokens: response_tokens,
-        cache_read_tokens: cache_read_tokens,
-        cache_write_tokens: cache_write_tokens,
-        cost: estimated_cost,
-      )
     end
   end
 

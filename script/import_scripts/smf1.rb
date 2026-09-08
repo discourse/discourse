@@ -8,6 +8,30 @@ class ImportScripts::Smf1 < ImportScripts::Base
   BATCH_SIZE = 5000
   UPLOADS_DIR = ENV["UPLOADS_DIR"].presence
   FORUM_URL = ENV["FORUM_URL"].presence
+  FEEDBACKS = -"feedbacks"
+
+  IGNORED_BBCODE = %w[
+    black
+    blue
+    center
+    color
+    email
+    flash
+    font
+    glow
+    green
+    iurl
+    left
+    list
+    move
+    red
+    right
+    shadown
+    size
+    table
+    time
+    white
+  ]
 
   def initialize
     fail "UPLOADS_DIR env variable is required (example: '/path/to/attachments')" unless UPLOADS_DIR
@@ -492,8 +516,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
     end
   end
 
-  FEEDBACKS = -"feedbacks"
-
   def import_feedbacks
     return if mysql_query("SHOW TABLES LIKE 'smf_feedback'").first.nil?
 
@@ -612,29 +634,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
     puts "", "Rolling up..."
     ScreenedIpAddress.roll_up
   end
-
-  IGNORED_BBCODE = %w[
-    black
-    blue
-    center
-    color
-    email
-    flash
-    font
-    glow
-    green
-    iurl
-    left
-    list
-    move
-    red
-    right
-    shadown
-    size
-    table
-    time
-    white
-  ]
 
   def pre_process_raw(raw)
     return "" if raw.blank?

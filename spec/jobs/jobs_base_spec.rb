@@ -25,20 +25,22 @@ RSpec.describe ::Jobs::Base do
   class ConcurrentJob < ::Jobs::Base
     cluster_concurrency 1
 
-    def self.stop!
-      @stop = true
-    end
+    class << self
+      def stop!
+        @stop = true
+      end
 
-    def self.stop
-      @stop
-    end
+      def stop
+        @stop
+      end
 
-    def self.running?
-      @running
-    end
+      def running?
+        @running
+      end
 
-    def self.running=(val)
-      @running = val
+      def running=(val)
+        @running = val
+      end
     end
 
     def execute(args)

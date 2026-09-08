@@ -11,8 +11,10 @@ module Onebox
       always_https
       requires_iframe_origins "https://www.instagram.com"
 
-      def self.matches_path(path)
-        path.match?(%r{^/(?:[\w\-]+/)?(?:p|tv)/[a-zA-Z\d_-]+/?(?:\?.*)?$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/(?:[\w\-]+/)?(?:p|tv)/[a-zA-Z\d_-]+/?(?:\?.*)?$})
+        end
       end
 
       def clean_url

@@ -57,20 +57,22 @@ module Concurrency
         end
       end
 
-      def self.run(&blk)
-        path = Path.new
-        possibilities = []
+      class << self
+        def run(&blk)
+          path = Path.new
+          possibilities = []
 
-        while true
-          begin
-            possibilities << blk.call(path)
-          rescue DeadEnd
+          while true
+            begin
+              possibilities << blk.call(path)
+            rescue DeadEnd
+            end
+
+            break unless path.next
           end
 
-          break unless path.next
+          possibilities
         end
-
-        possibilities
       end
     end
 
@@ -109,28 +111,32 @@ module Concurrency
         end
       end
 
-      def self.run(seed, runs, &blk)
-        seed = seed.to_i
-        possibilities = []
+      class << self
+        def run(seed, runs, &blk)
+          seed = seed.to_i
+          possibilities = []
 
-        runs.times do |i|
-          path = Path.new(Random.new(seed + i))
+          runs.times do |i|
+            path = Path.new(Random.new(seed + i))
 
-          begin
-            possibilities << blk.call(path)
-          rescue DeadEnd
+            begin
+              possibilities << blk.call(path)
+            rescue DeadEnd
+            end
           end
-        end
 
-        possibilities
+          possibilities
+        end
       end
     end
 
-    def self.run(seed: nil, runs: nil, &blk)
-      if runs.present?
-        Sampling.run(seed, runs, &blk)
-      else
-        Complete.run(&blk)
+    class << self
+      def run(seed: nil, runs: nil, &blk)
+        if runs.present?
+          Sampling.run(seed, runs, &blk)
+        else
+          Complete.run(&blk)
+        end
       end
     end
   end

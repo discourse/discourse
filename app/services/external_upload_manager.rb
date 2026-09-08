@@ -21,74 +21,76 @@ class ExternalUploadManager
 
   attr_reader :external_upload_stub
 
-  def self.ban_user_from_external_uploads!(user:, ban_minutes: 5)
-    Discourse.redis.setex("#{BAN_USER_REDIS_PREFIX}#{user.id}", ban_minutes.minutes.to_i, "1")
-  end
+  class << self
+    def ban_user_from_external_uploads!(user:, ban_minutes: 5)
+      Discourse.redis.setex("#{BAN_USER_REDIS_PREFIX}#{user.id}", ban_minutes.minutes.to_i, "1")
+    end
 
-  def self.user_banned?(user)
-    Discourse.redis.get("#{BAN_USER_REDIS_PREFIX}#{user.id}") == "1"
-  end
+    def user_banned?(user)
+      Discourse.redis.get("#{BAN_USER_REDIS_PREFIX}#{user.id}") == "1"
+    end
 
-  def self.create_direct_upload(current_user:, file_name:, file_size:, upload_type:, metadata: {})
-    store = store_for_upload_type(upload_type, guardian: current_user.guardian)
-    url, signed_headers = store.signed_request_for_temporary_upload(file_name, metadata: metadata)
-    key = store.s3_helper.path_from_url(url)
+    def create_direct_upload(current_user:, file_name:, file_size:, upload_type:, metadata: {})
+      store = store_for_upload_type(upload_type, guardian: current_user.guardian)
+      url, signed_headers = store.signed_request_for_temporary_upload(file_name, metadata: metadata)
+      key = store.s3_helper.path_from_url(url)
 
-    upload_stub =
-      ExternalUploadStub.create!(
+      upload_stub =
+        ExternalUploadStub.create!(
+          key: key,
+          created_by: current_user,
+          original_filename: file_name,
+          upload_type: upload_type,
+          filesize: file_size,
+        )
+
+      {
+        url: url,
         key: key,
-        created_by: current_user,
-        original_filename: file_name,
-        upload_type: upload_type,
-        filesize: file_size,
-      )
+        unique_identifier: upload_stub.unique_identifier,
+        signed_headers: signed_headers,
+      }
+    end
 
-    {
-      url: url,
-      key: key,
-      unique_identifier: upload_stub.unique_identifier,
-      signed_headers: signed_headers,
-    }
-  end
+    def create_direct_multipart_upload(
+      current_user:,
+      file_name:,
+      file_size:,
+      upload_type:,
+      metadata: {}
+    )
+      content_type = MiniMime.lookup_by_filename(file_name)&.content_type
+      store = store_for_upload_type(upload_type, guardian: current_user.guardian)
+      multipart_upload = store.create_multipart(file_name, content_type, metadata: metadata)
 
-  def self.create_direct_multipart_upload(
-    current_user:,
-    file_name:,
-    file_size:,
-    upload_type:,
-    metadata: {}
-  )
-    content_type = MiniMime.lookup_by_filename(file_name)&.content_type
-    store = store_for_upload_type(upload_type, guardian: current_user.guardian)
-    multipart_upload = store.create_multipart(file_name, content_type, metadata: metadata)
+      upload_stub =
+        ExternalUploadStub.create!(
+          key: multipart_upload[:key],
+          created_by: current_user,
+          original_filename: file_name,
+          upload_type: upload_type,
+          external_upload_identifier: multipart_upload[:upload_id],
+          multipart: true,
+          filesize: file_size,
+        )
 
-    upload_stub =
-      ExternalUploadStub.create!(
-        key: multipart_upload[:key],
-        created_by: current_user,
-        original_filename: file_name,
-        upload_type: upload_type,
-        external_upload_identifier: multipart_upload[:upload_id],
-        multipart: true,
-        filesize: file_size,
-      )
+      {
+        external_upload_identifier: upload_stub.external_upload_identifier,
+        key: upload_stub.key,
+        unique_identifier: upload_stub.unique_identifier,
+      }
+    end
 
-    {
-      external_upload_identifier: upload_stub.external_upload_identifier,
-      key: upload_stub.key,
-      unique_identifier: upload_stub.unique_identifier,
-    }
-  end
-
-  def self.store_for_upload_type(upload_type, guardian:)
-    if upload_type == "backup"
-      if !guardian.is_admin? || !SiteSetting.enable_backups? ||
-           SiteSetting.backup_location != BackupLocationSiteSetting::S3
-        raise Discourse::InvalidAccess.new
+    def store_for_upload_type(upload_type, guardian:)
+      if upload_type == "backup"
+        if !guardian.is_admin? || !SiteSetting.enable_backups? ||
+             SiteSetting.backup_location != BackupLocationSiteSetting::S3
+          raise Discourse::InvalidAccess.new
+        end
+        BackupRestore::BackupStore.create
+      else
+        Discourse.store
       end
-      BackupRestore::BackupStore.create
-    else
-      Discourse.store
     end
   end
 

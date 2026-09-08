@@ -5,10 +5,6 @@ module DiscourseAi
     class RtfToText
       include TextNormalization
 
-      def normalize_document_text(text)
-        super.gsub(/\n[ \t]+/, "\n")
-      end
-
       MAX_INPUT_BYTES = 2 * 1024 * 1024
       MAX_GROUP_DEPTH = 100
       MAX_CONTROL_WORD_CHARS = 64
@@ -135,12 +131,18 @@ module DiscourseAi
       class ParseLimitError < StandardError
       end
 
-      def self.convert(path)
-        new(path).convert
+      class << self
+        def convert(path)
+          new(path).convert
+        end
       end
 
       def initialize(path)
         @path = path
+      end
+
+      def normalize_document_text(text)
+        super.gsub(/\n[ \t]+/, "\n")
       end
 
       def convert

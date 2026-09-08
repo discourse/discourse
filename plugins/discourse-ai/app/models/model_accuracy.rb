@@ -1,23 +1,25 @@
 # frozen_string_literal: true
 
 class ModelAccuracy < ActiveRecord::Base
-  def self.adjust_model_accuracy(new_status, reviewable)
-    return if %i[approved rejected].exclude?(new_status)
-    return if [ReviewableAiPost, ReviewableAiChatMessage].exclude?(reviewable.class)
+  class << self
+    def adjust_model_accuracy(new_status, reviewable)
+      return if %i[approved rejected].exclude?(new_status)
+      return if [ReviewableAiPost, ReviewableAiChatMessage].exclude?(reviewable.class)
 
-    verdicts = reviewable.payload.to_h["verdicts"] || {}
+      verdicts = reviewable.payload.to_h["verdicts"] || {}
 
-    verdicts.each do |model_name, verdict|
-      accuracy_model = find_by(model: model_name)
+      verdicts.each do |model_name, verdict|
+        accuracy_model = find_by(model: model_name)
 
-      attribute =
-        if verdict
-          new_status == :approved ? :flags_agreed : :flags_disagreed
-        else
-          new_status == :rejected ? :flags_agreed : :flags_disagreed
-        end
+        attribute =
+          if verdict
+            new_status == :approved ? :flags_agreed : :flags_disagreed
+          else
+            new_status == :rejected ? :flags_agreed : :flags_disagreed
+          end
 
-      accuracy_model.increment!(attribute)
+        accuracy_model.increment!(attribute)
+      end
     end
   end
 

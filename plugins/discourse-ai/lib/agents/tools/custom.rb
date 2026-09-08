@@ -4,87 +4,89 @@ module DiscourseAi
   module Agents
     module Tools
       class Custom < Tool
-        def self.class_instance(tool_id)
-          klass = Class.new(self)
-          klass.tool_id = tool_id
-          klass
-        end
-
-        def self.custom?
-          true
-        end
-
-        def self.tool_id
-          @tool_id
-        end
-
-        def self.tool_id=(tool_id)
-          @tool_id = tool_id
-        end
-
-        def self.signature
-          AiTool.find(tool_id).signature
-        end
-
-        # Backwards compatibility: if tool_name is not set (existing custom tools), use name
-        def self.name
-          name, tool_name = AiTool.where(id: tool_id).pluck(:name, :tool_name).first
-          tool_name.presence || name
-        end
-
-        def self.has_custom_context?
-          # note on safety, this can be cached safely, we bump the whole agent cache when an ai tool is saved
-          # which will expire this class
-          return @has_custom_context if defined?(@has_custom_context)
-
-          @has_custom_context = false
-          ai_tool = AiTool.find_by(id: tool_id)
-          if ai_tool.script.include?("customContext")
-            runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: nil)
-            @has_custom_context = runner.has_custom_context?
+        class << self
+          def class_instance(tool_id)
+            klass = Class.new(self)
+            klass.tool_id = tool_id
+            klass
           end
 
-          @has_custom_context
-        end
-
-        def self.has_custom_system_message?
-          # cached safely - agent cache is bumped when an ai tool is saved, expiring this class
-          return @has_custom_system_message if defined?(@has_custom_system_message)
-
-          @has_custom_system_message = false
-          ai_tool = AiTool.find_by(id: tool_id)
-          if ai_tool&.script&.include?("customSystemMessage")
-            runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: nil)
-            @has_custom_system_message = runner.has_custom_system_message?
+          def custom?
+            true
           end
 
-          @has_custom_system_message
-        end
+          def tool_id
+            @tool_id
+          end
 
-        def self.inject_prompt(prompt:, context:, agent:)
-          needs_context = has_custom_context?
-          needs_system_message = has_custom_system_message?
-          return unless needs_context || needs_system_message
+          def tool_id=(tool_id)
+            @tool_id = tool_id
+          end
 
-          ai_tool = AiTool.find_by(id: tool_id)
-          return unless ai_tool
+          def signature
+            AiTool.find(tool_id).signature
+          end
 
-          runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: context)
+          # Backwards compatibility: if tool_name is not set (existing custom tools), use name
+          def name
+            name, tool_name = AiTool.where(id: tool_id).pluck(:name, :tool_name).first
+            tool_name.presence || name
+          end
 
-          if needs_context
-            custom_context = runner.custom_context
-            if custom_context.present?
-              last_message = prompt.messages.last
-              last_message[:content] = "#{custom_context}\n\n#{last_message[:content]}"
+          def has_custom_context?
+            # note on safety, this can be cached safely, we bump the whole agent cache when an ai tool is saved
+            # which will expire this class
+            return @has_custom_context if defined?(@has_custom_context)
+
+            @has_custom_context = false
+            ai_tool = AiTool.find_by(id: tool_id)
+            if ai_tool.script.include?("customContext")
+              runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: nil)
+              @has_custom_context = runner.has_custom_context?
             end
+
+            @has_custom_context
           end
 
-          if needs_system_message
-            system_msg = runner.custom_system_message
-            if system_msg.is_a?(String) && system_msg.present?
-              system_message = prompt.messages.first
-              if system_message && system_message[:type] == :system
-                system_message[:content] = "#{system_message[:content]}\n#{system_msg}"
+          def has_custom_system_message?
+            # cached safely - agent cache is bumped when an ai tool is saved, expiring this class
+            return @has_custom_system_message if defined?(@has_custom_system_message)
+
+            @has_custom_system_message = false
+            ai_tool = AiTool.find_by(id: tool_id)
+            if ai_tool&.script&.include?("customSystemMessage")
+              runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: nil)
+              @has_custom_system_message = runner.has_custom_system_message?
+            end
+
+            @has_custom_system_message
+          end
+
+          def inject_prompt(prompt:, context:, agent:)
+            needs_context = has_custom_context?
+            needs_system_message = has_custom_system_message?
+            return unless needs_context || needs_system_message
+
+            ai_tool = AiTool.find_by(id: tool_id)
+            return unless ai_tool
+
+            runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: context)
+
+            if needs_context
+              custom_context = runner.custom_context
+              if custom_context.present?
+                last_message = prompt.messages.last
+                last_message[:content] = "#{custom_context}\n\n#{last_message[:content]}"
+              end
+            end
+
+            if needs_system_message
+              system_msg = runner.custom_system_message
+              if system_msg.is_a?(String) && system_msg.present?
+                system_message = prompt.messages.first
+                if system_message && system_message[:type] == :system
+                  system_message[:content] = "#{system_message[:content]}\n#{system_msg}"
+                end
               end
             end
           end

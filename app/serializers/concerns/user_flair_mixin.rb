@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module UserFlairMixin
-  def self.included(klass)
-    klass.attributes :flair_name, :flair_url, :flair_bg_color, :flair_color, :flair_group_id
+  class << self
+    def included(klass)
+      klass.attributes :flair_name, :flair_url, :flair_bg_color, :flair_color, :flair_group_id
+    end
   end
 
   def flair_name

@@ -11,6 +11,25 @@ module DiscourseDev
 
     attr_reader :model, :type
 
+    class << self
+      def populate!(**args)
+        new(**args).populate!
+      end
+
+      def random(model, use_existing_records: true)
+        if !use_existing_records && model.new.respond_to?(:custom_fields)
+          model.joins(:_custom_fields).where(
+            "#{model.to_s.underscore}_custom_fields.name = '#{AUTO_POPULATED}'",
+          )
+        end
+        count = model.count
+        raise "#{model} records are not yet populated" if count == 0
+
+        offset = Faker::Number.between(from: 0, to: count - 1)
+        model.offset(offset).first
+      end
+    end
+
     def initialize(model, count = DEFAULT_COUNT)
       @@initialized ||=
         begin
@@ -66,23 +85,6 @@ module DiscourseDev
 
     def current_count
       model.count
-    end
-
-    def self.populate!(**args)
-      new(**args).populate!
-    end
-
-    def self.random(model, use_existing_records: true)
-      if !use_existing_records && model.new.respond_to?(:custom_fields)
-        model.joins(:_custom_fields).where(
-          "#{model.to_s.underscore}_custom_fields.name = '#{AUTO_POPULATED}'",
-        )
-      end
-      count = model.count
-      raise "#{model} records are not yet populated" if count == 0
-
-      offset = Faker::Number.between(from: 0, to: count - 1)
-      model.offset(offset).first
     end
   end
 end

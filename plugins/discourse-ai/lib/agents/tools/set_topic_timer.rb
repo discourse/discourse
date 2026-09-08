@@ -6,46 +6,48 @@ module DiscourseAi
       class SetTopicTimer < Tool
         TIMER_TYPES = %w[close open delete silent_close bump].freeze
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Sets or removes a timer on a topic. Timers can close, open, delete, silently close, or bump a topic after a specified duration.",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The ID of the topic",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "timer_type",
-                description: "The type of timer: close, open, delete, silent_close, or bump",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "duration_hours",
-                description:
-                  "Number of hours from now until the timer fires. Set to null to remove an existing timer.",
-                type: "integer",
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the timer is being set",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Sets or removes a timer on a topic. Timers can close, open, delete, silently close, or bump a topic after a specified duration.",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The ID of the topic",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "timer_type",
+                  description: "The type of timer: close, open, delete, silent_close, or bump",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "duration_hours",
+                  description:
+                    "Number of hours from now until the timer fires. Set to null to remove an existing timer.",
+                  type: "integer",
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the timer is being set",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "set_topic_timer"
-        end
+          def name
+            "set_topic_timer"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

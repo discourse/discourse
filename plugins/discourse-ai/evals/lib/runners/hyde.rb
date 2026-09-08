@@ -6,8 +6,10 @@ module DiscourseAi
   module Evals
     module Runners
       class Hyde < Base
-        def self.can_handle?(feature_name)
-          feature_name&.start_with?("embeddings:hyde")
+        class << self
+          def can_handle?(feature_name)
+            feature_name&.start_with?("embeddings:hyde")
+          end
         end
 
         def run(eval_case, llm, execution_context:)

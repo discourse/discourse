@@ -83,7 +83,9 @@ class EmailSettingsExceptionHandler
     end
   end
 
-  def self.friendly_exception_message(exception, host)
-    EmailSettingsExceptionHandler::GenericProvider.new(exception).message
+  class << self
+    def friendly_exception_message(exception, host)
+      EmailSettingsExceptionHandler::GenericProvider.new(exception).message
+    end
   end
 end

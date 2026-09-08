@@ -14,49 +14,51 @@ class EmbeddableHost < ActiveRecord::Base
     host.sub!(%r{/.*\z}, "")
   end
 
-  def self.record_for_url(uri)
-    if uri.is_a?(String)
+  class << self
+    def record_for_url(uri)
+      if uri.is_a?(String)
+        uri =
+          begin
+            URI(UrlHelper.normalized_encode(uri))
+          rescue URI::Error, Addressable::URI::InvalidURIError
+          end
+      end
+
+      return false if uri.blank?
+
+      host = uri.host
+      return false if host.blank?
+
+      host << ":#{uri.port}" if uri.port.present? && uri.port != 80 && uri.port != 443
+
+      path = uri.path
+      path << "?" << uri.query if uri.query.present?
+
+      where("lower(host) = ?", host).each do |eh|
+        return eh if eh.allowed_paths.blank?
+
+        begin
+          path_regexp = Regexp.new(eh.allowed_paths)
+          return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
+        rescue RegexpError
+          next
+        end
+      end
+
+      nil
+    end
+
+    def url_allowed?(url)
+      return false if url.nil?
+
       uri =
         begin
-          URI(UrlHelper.normalized_encode(uri))
-        rescue URI::Error, Addressable::URI::InvalidURIError
+          URI(UrlHelper.normalized_encode(url))
+        rescue URI::Error
         end
+
+      uri.present? && record_for_url(uri).present?
     end
-
-    return false if uri.blank?
-
-    host = uri.host
-    return false if host.blank?
-
-    host << ":#{uri.port}" if uri.port.present? && uri.port != 80 && uri.port != 443
-
-    path = uri.path
-    path << "?" << uri.query if uri.query.present?
-
-    where("lower(host) = ?", host).each do |eh|
-      return eh if eh.allowed_paths.blank?
-
-      begin
-        path_regexp = Regexp.new(eh.allowed_paths)
-        return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
-      rescue RegexpError
-        next
-      end
-    end
-
-    nil
-  end
-
-  def self.url_allowed?(url)
-    return false if url.nil?
-
-    uri =
-      begin
-        URI(UrlHelper.normalized_encode(url))
-      rescue URI::Error
-      end
-
-    uri.present? && record_for_url(uri).present?
   end
 
   private

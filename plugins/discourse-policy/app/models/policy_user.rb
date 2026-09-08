@@ -8,36 +8,38 @@ class PolicyUser < ActiveRecord::Base
   scope :revoked, -> { where.not(revoked_at: nil).where(accepted_at: nil, expired_at: nil) }
   scope :with_version, ->(version) { where(version: version) }
 
-  def self.add!(user, post_policy)
-    post_policy
-      .policy_users
-      .revoked
-      .with_version(post_policy.version)
-      .where(user: user)
-      .update_all(accepted_at: Time.zone.now)
+  class << self
+    def add!(user, post_policy)
+      post_policy
+        .policy_users
+        .revoked
+        .with_version(post_policy.version)
+        .where(user: user)
+        .update_all(accepted_at: Time.zone.now)
 
-    create!(
-      post_policy_id: post_policy.id,
-      user_id: user.id,
-      accepted_at: Time.zone.now,
-      version: post_policy.version,
-    )
-  end
+      create!(
+        post_policy_id: post_policy.id,
+        user_id: user.id,
+        accepted_at: Time.zone.now,
+        version: post_policy.version,
+      )
+    end
 
-  def self.remove!(user, post_policy)
-    post_policy
-      .policy_users
-      .accepted
-      .with_version(post_policy.version)
-      .where(user: user)
-      .update_all(revoked_at: Time.zone.now)
+    def remove!(user, post_policy)
+      post_policy
+        .policy_users
+        .accepted
+        .with_version(post_policy.version)
+        .where(user: user)
+        .update_all(revoked_at: Time.zone.now)
 
-    create!(
-      post_policy_id: post_policy.id,
-      user_id: user.id,
-      revoked_at: Time.zone.now,
-      version: post_policy.version,
-    )
+      create!(
+        post_policy_id: post_policy.id,
+        user_id: user.id,
+        revoked_at: Time.zone.now,
+        version: post_policy.version,
+      )
+    end
   end
 end
 

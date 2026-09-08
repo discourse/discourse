@@ -7,15 +7,17 @@ class UserApiKeyClient < ActiveRecord::Base
            foreign_key: "user_api_key_client_id",
            dependent: :destroy
 
-  def allowed_scopes
-    Set.new(scopes.map(&:name))
+  class << self
+    def invalid_auth_redirect?(auth_redirect)
+      SiteSetting
+        .allowed_user_api_auth_redirects
+        .split("|")
+        .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
+    end
   end
 
-  def self.invalid_auth_redirect?(auth_redirect)
-    SiteSetting
-      .allowed_user_api_auth_redirects
-      .split("|")
-      .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
+  def allowed_scopes
+    Set.new(scopes.map(&:name))
   end
 end
 

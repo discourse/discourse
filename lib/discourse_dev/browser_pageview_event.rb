@@ -37,6 +37,12 @@ module DiscourseDev
       nil,
     ].freeze
 
+    class << self
+      def populate!(count: nil)
+        new(count: count || DEFAULT_COUNT).populate!
+      end
+    end
+
     def initialize(count: DEFAULT_COUNT)
       @count = count
     end
@@ -54,10 +60,6 @@ module DiscourseDev
 
       puts "Enabled persist_browser_pageview_events and inserted #{rows.size} events."
       rows.size
-    end
-
-    def self.populate!(count: nil)
-      new(count: count || DEFAULT_COUNT).populate!
     end
 
     private

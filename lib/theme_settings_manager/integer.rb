@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager::Integer < ThemeSettingsManager
-  def self.cast(value)
-    value.to_i
+  class << self
+    def cast(value)
+      value.to_i
+    end
   end
 
   def value

@@ -4,48 +4,51 @@ module DiscourseAi
   module Agents
     module Tools
       class ChangeTopicCategory < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Moves a topic to a different category.",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The ID of the topic to move",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "category_id",
-                description: "The ID of the target category",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the topic is being moved",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "public_edit_reason",
-                description: "Whether the reason should be visible in the post's revision history",
-                type: "boolean",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Moves a topic to a different category.",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The ID of the topic to move",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "category_id",
+                  description: "The ID of the target category",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the topic is being moved",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "public_edit_reason",
+                  description:
+                    "Whether the reason should be visible in the post's revision history",
+                  type: "boolean",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "change_topic_category"
-        end
+          def name
+            "change_topic_category"
+          end
 
-        def self.requires_approval?
-          true
-        end
+          def requires_approval?
+            true
+          end
 
-        def self.attribute_to_approver?
-          true
+          def attribute_to_approver?
+            true
+          end
         end
 
         def invoke

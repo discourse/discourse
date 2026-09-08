@@ -10,22 +10,24 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
   MIN_FAILED_CALLS = 3
   FAILURE_RATE_THRESHOLD = 0.5
 
-  def self.problem_details(model, failed_calls, total_calls, lookback_hours)
-    {
-      target: model.id,
-      model_name: model.display_name,
-      failed_calls: failed_calls,
-      total_calls: total_calls,
-      count: lookback_hours,
-    }
-  end
+  class << self
+    def problem_details(model, failed_calls, total_calls, lookback_hours)
+      {
+        target: model.id,
+        model_name: model.display_name,
+        failed_calls: failed_calls,
+        total_calls: total_calls,
+        count: lookback_hours,
+      }
+    end
 
-  def self.fast_track_problem!(model, failed_calls, lookback_hours)
-    return if model.blank? || model.new_record?
+    def fast_track_problem!(model, failed_calls, lookback_hours)
+      return if model.blank? || model.new_record?
 
-    tracker = ProblemCheckTracker[:ai_llm_status, model.id]
-    details = problem_details(model, failed_calls, failed_calls, lookback_hours)
-    tracker.problem!(details: details)
+      tracker = ProblemCheckTracker[:ai_llm_status, model.id]
+      details = problem_details(model, failed_calls, failed_calls, lookback_hours)
+      tracker.problem!(details: details)
+    end
   end
 
   def call

@@ -131,20 +131,22 @@ module DiscourseNarrativeBot
       },
     }
 
-    def self.badge_name
-      BADGE_NAME
-    end
+    class << self
+      def badge_name
+        BADGE_NAME
+      end
 
-    def self.search_answer
-      ":herb:"
-    end
+      def search_answer
+        ":herb:"
+      end
 
-    def self.search_answer_emoji
-      "\u{1F33F}"
-    end
+      def search_answer_emoji
+        "\u{1F33F}"
+      end
 
-    def self.reset_trigger
-      I18n.t("discourse_narrative_bot.new_user_narrative.reset_trigger")
+      def reset_trigger
+        I18n.t("discourse_narrative_bot.new_user_narrative.reset_trigger")
+      end
     end
 
     def reset_bot(user, post)

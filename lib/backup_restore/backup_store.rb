@@ -6,15 +6,17 @@ module BackupRestore
     BackupFileExists = Class.new(RuntimeError)
     StorageError = Class.new(RuntimeError)
 
-    # @return [BackupStore]
-    def self.create(opts = {})
-      case opts[:location] || SiteSetting.backup_location
-      when BackupLocationSiteSetting::LOCAL
-        require "backup_restore/local_backup_store"
-        BackupRestore::LocalBackupStore.new(opts)
-      when BackupLocationSiteSetting::S3
-        require "backup_restore/s3_backup_store"
-        BackupRestore::S3BackupStore.new(opts)
+    class << self
+      # @return [BackupStore]
+      def create(opts = {})
+        case opts[:location] || SiteSetting.backup_location
+        when BackupLocationSiteSetting::LOCAL
+          require "backup_restore/local_backup_store"
+          BackupRestore::LocalBackupStore.new(opts)
+        when BackupLocationSiteSetting::S3
+          require "backup_restore/s3_backup_store"
+          BackupRestore::S3BackupStore.new(opts)
+        end
       end
     end
 

@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 class DraftSequence < ActiveRecord::Base
-  def self.next!(user, key)
-    return nil if !user
+  class << self
+    def next!(user, key)
+      return nil if !user
 
-    user_id = user
-    user_id = user.id unless user.is_a?(Integer)
+      user_id = user
+      user_id = user.id unless user.is_a?(Integer)
 
-    return 0 if !User.human_user_id?(user_id)
+      return 0 if !User.human_user_id?(user_id)
 
-    sequence = DB.query_single(<<~SQL, user_id: user_id, draft_key: key).first
+      sequence = DB.query_single(<<~SQL, user_id: user_id, draft_key: key).first
         INSERT INTO draft_sequences (user_id, draft_key, sequence)
         VALUES (:user_id, :draft_key, 1)
         ON CONFLICT (user_id, draft_key) DO
@@ -20,29 +21,30 @@ class DraftSequence < ActiveRecord::Base
         RETURNING sequence
       SQL
 
-    Draft.where(user_id: user_id, draft_key: key).destroy_all
+      Draft.where(user_id: user_id, draft_key: key).destroy_all
 
-    UserStat.update_draft_count(user_id)
+      UserStat.update_draft_count(user_id)
 
-    sequence
-  end
+      sequence
+    end
 
-  def self.current(user, key)
-    return nil if !user
+    def current(user, key)
+      return nil if !user
 
-    user_id = user
-    user_id = user.id unless user.is_a?(Integer)
+      user_id = user
+      user_id = user.id unless user.is_a?(Integer)
 
-    return 0 if !User.human_user_id?(user_id)
+      return 0 if !User.human_user_id?(user_id)
 
-    # perf critical path
-    r, _ =
-      DB.query_single(
-        "select sequence from draft_sequences where user_id = ? and draft_key = ?",
-        user_id,
-        key,
-      )
-    r.to_i
+      # perf critical path
+      r, _ =
+        DB.query_single(
+          "select sequence from draft_sequences where user_id = ? and draft_key = ?",
+          user_id,
+          key,
+        )
+      r.to_i
+    end
   end
 end
 

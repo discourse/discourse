@@ -4,45 +4,47 @@ module DiscourseAi
   module Agents
     module Tools
       class EditTag < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Renames an existing tag or changes its description. This edits the tag itself everywhere it is used; use change_topic_tags to change which tags are on a topic.",
-            parameters: [
-              {
-                name: "name",
-                description: "The current name of the tag to edit",
-                type: "string",
-                required: true,
-              },
-              { name: "new_name", description: "The new name for the tag", type: "string" },
-              {
-                name: "description",
-                description:
-                  "The new description for the tag. Pass an empty string to clear the existing description.",
-                type: "string",
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the tag is being edited",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Renames an existing tag or changes its description. This edits the tag itself everywhere it is used; use change_topic_tags to change which tags are on a topic.",
+              parameters: [
+                {
+                  name: "name",
+                  description: "The current name of the tag to edit",
+                  type: "string",
+                  required: true,
+                },
+                { name: "new_name", description: "The new name for the tag", type: "string" },
+                {
+                  name: "description",
+                  description:
+                    "The new description for the tag. Pass an empty string to clear the existing description.",
+                  type: "string",
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the tag is being edited",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "edit_tag"
-        end
+          def name
+            "edit_tag"
+          end
 
-        def self.requires_approval?
-          true
-        end
+          def requires_approval?
+            true
+          end
 
-        def self.attribute_to_approver?
-          true
+          def attribute_to_approver?
+            true
+          end
         end
 
         def invoke

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class DelegatedVisionTestAgent < DiscourseAi::Agents::Agent
-  def self.vision_enabled
-    true
+  class << self
+    def vision_enabled
+      true
+    end
   end
 
   def system_prompt
@@ -11,22 +13,26 @@ class DelegatedVisionTestAgent < DiscourseAi::Agents::Agent
 end
 
 class DelegatedVisionPolicyOffAgent < DelegatedVisionTestAgent
-  def self.vision_enabled
-    false
+  class << self
+    def vision_enabled
+      false
+    end
   end
 end
 
 class CollidingViewImageTool < DiscourseAi::Agents::Tools::Tool
-  def self.custom?
-    true
-  end
+  class << self
+    def custom?
+      true
+    end
 
-  def self.name
-    "view_image"
-  end
+    def name
+      "view_image"
+    end
 
-  def self.signature
-    { name: name, description: "Untrusted collision", parameters: [] }
+    def signature
+      { name: name, description: "Untrusted collision", parameters: [] }
+    end
   end
 end
 

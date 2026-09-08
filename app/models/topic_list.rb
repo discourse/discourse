@@ -6,33 +6,35 @@ class TopicList
   cattr_accessor :preloaded_custom_fields
   self.preloaded_custom_fields = Set.new
 
-  def self.on_preload(&blk)
-    (@preload ||= Set.new) << blk
-  end
-
-  def self.cancel_preload(&blk)
-    if @preload
-      @preload.delete blk
-      @preload = nil if @preload.length == 0
+  class << self
+    def on_preload(&blk)
+      (@preload ||= Set.new) << blk
     end
-  end
 
-  def self.preload(topics, object)
-    @preload.each { |preload| preload.call(topics, object) } if @preload
-  end
-
-  def self.on_preload_user_ids(enabled: -> { true }, &block)
-    (@preload_user_ids ||= Set.new) << { block:, enabled: }
-  end
-
-  def self.preload_user_ids(topics, user_ids, object)
-    if @preload_user_ids
-      @preload_user_ids.each do |preload_user_ids|
-        next unless preload_user_ids[:enabled].call
-        user_ids = preload_user_ids[:block].call(topics, user_ids, object)
+    def cancel_preload(&blk)
+      if @preload
+        @preload.delete blk
+        @preload = nil if @preload.length == 0
       end
     end
-    user_ids
+
+    def preload(topics, object)
+      @preload.each { |preload| preload.call(topics, object) } if @preload
+    end
+
+    def on_preload_user_ids(enabled: -> { true }, &block)
+      (@preload_user_ids ||= Set.new) << { block:, enabled: }
+    end
+
+    def preload_user_ids(topics, user_ids, object)
+      if @preload_user_ids
+        @preload_user_ids.each do |preload_user_ids|
+          next unless preload_user_ids[:enabled].call
+          user_ids = preload_user_ids[:block].call(topics, user_ids, object)
+        end
+      end
+      user_ids
+    end
   end
 
   attr_accessor(

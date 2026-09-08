@@ -16,27 +16,39 @@ class FinalDestination
   MAX_REQUEST_TIME_SECONDS = 10
   MAX_REQUEST_SIZE_BYTES = 5_242_880 # 1024 * 1024 * 5
 
-  def self.clear_https_cache!(domain)
-    key = redis_https_key(domain)
-    Discourse.redis.without_namespace.del(key)
-  end
-
-  def self.cache_https_domain(domain)
-    key = redis_https_key(domain)
-    Discourse.redis.without_namespace.setex(key, 1.day.to_i, "1")
-  end
-
-  def self.is_https_domain?(domain)
-    key = redis_https_key(domain)
-    Discourse.redis.without_namespace.get(key).present?
-  end
-
-  def self.redis_https_key(domain)
-    "HTTPS_DOMAIN_#{domain}"
-  end
-
   DEFAULT_USER_AGENT =
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+  class << self
+    def clear_https_cache!(domain)
+      key = redis_https_key(domain)
+      Discourse.redis.without_namespace.del(key)
+    end
+
+    def cache_https_domain(domain)
+      key = redis_https_key(domain)
+      Discourse.redis.without_namespace.setex(key, 1.day.to_i, "1")
+    end
+
+    def is_https_domain?(domain)
+      key = redis_https_key(domain)
+      Discourse.redis.without_namespace.get(key).present?
+    end
+
+    def redis_https_key(domain)
+      "HTTPS_DOMAIN_#{domain}"
+    end
+
+    public
+
+    def connection_timeout
+      20
+    end
+
+    def resolve(url, opts = nil)
+      new(url, opts).resolve
+    end
+  end
 
   attr_reader :status, :cookie, :status_code, :content_type, :ignored
 
@@ -89,14 +101,6 @@ class FinalDestination
       )
     @stop_at_blocked_pages = @opts[:stop_at_blocked_pages]
     @extra_headers = @opts[:headers]
-  end
-
-  def self.connection_timeout
-    20
-  end
-
-  def self.resolve(url, opts = nil)
-    new(url, opts).resolve
   end
 
   def http_verb(force_get_hosts, follow_canonical)

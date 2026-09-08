@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module UserStatusMixin
-  def self.included(klass)
-    klass.attributes :status
+  class << self
+    def included(klass)
+      klass.attributes :status
+    end
   end
 
   def include_status?

@@ -24,20 +24,22 @@ class CustomEmoji::ImportRow
               :existing_group,
               :upload_id
 
-  def self.from_h(hash)
-    hash = hash.deep_symbolize_keys
-    new(
-      index: hash[:index],
-      name: hash[:name].to_s,
-      group: CustomEmoji.normalize_group(hash[:group]),
-      filename: hash[:filename].to_s,
-      errors: Array(hash[:errors]),
-      category: hash[:category],
-      incoming_url: hash[:incoming_url],
-      existing_url: hash[:existing_url],
-      existing_group: CustomEmoji.normalize_group(hash[:existing_group]),
-      upload_id: hash[:upload_id],
-    )
+  class << self
+    def from_h(hash)
+      hash = hash.deep_symbolize_keys
+      new(
+        index: hash[:index],
+        name: hash[:name].to_s,
+        group: CustomEmoji.normalize_group(hash[:group]),
+        filename: hash[:filename].to_s,
+        errors: Array(hash[:errors]),
+        category: hash[:category],
+        incoming_url: hash[:incoming_url],
+        existing_url: hash[:existing_url],
+        existing_group: CustomEmoji.normalize_group(hash[:existing_group]),
+        upload_id: hash[:upload_id],
+      )
+    end
   end
 
   def initialize(

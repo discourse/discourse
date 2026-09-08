@@ -9,8 +9,10 @@ module Onebox
       always_https
       matches_domain("asciinema.org")
 
-      def self.matches_path(path)
-        path.match?(%r{^/a/[\p{Alnum}_\-]+$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/a/[\p{Alnum}_\-]+$})
+        end
       end
 
       def to_html

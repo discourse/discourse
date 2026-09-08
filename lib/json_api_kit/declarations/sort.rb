@@ -5,9 +5,11 @@ module JsonApiKit
     class Sort
       SEPARATOR = "."
 
-      def self.for(name, ...)
-        return Related.new(name, ...) if name.to_s.include?(SEPARATOR)
-        new(name, ...)
+      class << self
+        def for(name, ...)
+          return Related.new(name, ...) if name.to_s.include?(SEPARATOR)
+          new(name, ...)
+        end
       end
 
       attr_reader :name

@@ -2,16 +2,18 @@
 
 module FakeExternalPlugin
   class FakeExternalTool < DiscourseAi::Agents::Tools::Tool
-    def self.signature
-      { name: "fake_external_tool", description: "A fake tool", parameters: [] }
-    end
+    class << self
+      def signature
+        { name: "fake_external_tool", description: "A fake tool", parameters: [] }
+      end
 
-    def self.custom?
-      true
-    end
+      def custom?
+        true
+      end
 
-    def self.name
-      "fake_external_tool"
+      def name
+        "fake_external_tool"
+      end
     end
 
     def invoke
@@ -31,8 +33,10 @@ class FakeExternalAgent < DiscourseAi::Agents::Agent
 end
 
 class FakeExternalBotAgent < FakeExternalAgent
-  def self.supports_bot_user?
-    true
+  class << self
+    def supports_bot_user?
+      true
+    end
   end
 end
 

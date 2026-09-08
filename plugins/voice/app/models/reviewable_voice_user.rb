@@ -3,12 +3,14 @@
 class ReviewableVoiceUser < Reviewable
   include ReviewableActionBuilder
 
-  def serializer
-    ReviewableVoiceUserSerializer
+  class << self
+    def action_aliases
+      { agree_and_suspend: :agree_and_keep, agree_and_silence: :agree_and_keep }
+    end
   end
 
-  def self.action_aliases
-    { agree_and_suspend: :agree_and_keep, agree_and_silence: :agree_and_keep }
+  def serializer
+    ReviewableVoiceUserSerializer
   end
 
   def session

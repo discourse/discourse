@@ -10,219 +10,225 @@ class NewPostManager
 
   FAST_TYPING_THRESHOLD_MAP = { disabled: 0, low: 1000, standard: 3000, high: 5000 }
 
-  def self.sorted_handlers
-    @sorted_handlers ||= clear_handlers!
-  end
-
-  def self.handlers
-    sorted_handlers.map { |h| h[:proc] }
-  end
-
-  def self.plugin_payload_attributes
-    @payload_attributes ||= []
-  end
-
-  def self.add_plugin_payload_attribute(attribute)
-    plugin_payload_attributes << attribute
-  end
-
-  def self.clear_handlers!
-    @sorted_handlers = []
-  end
-
-  def self.add_handler(priority = 0, &block)
-    sorted_handlers << { priority: priority, proc: block }
-    @sorted_handlers.sort_by! { |h| -h[:priority] }
-  end
-
-  def self.is_first_post?(manager)
-    user = manager.user
-    args = manager.args
-
-    !!(args[:first_post_checks] && user.post_count == 0 && user.topic_count == 0)
-  end
-
-  def self.is_fast_typer?(manager)
-    args = manager.args
-
-    is_first_post?(manager) &&
-      args[:typing_duration_msecs].to_i <
-        FAST_TYPING_THRESHOLD_MAP[SiteSetting.fast_typing_threshold.to_sym] &&
-      SiteSetting.auto_silence_fast_typers_on_first_post &&
-      manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
-  end
-
-  def self.auto_silence?(manager)
-    is_first_post?(manager) &&
-      WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").should_silence?
-  end
-
-  def self.matches_auto_silence_regex?(manager)
-    args = manager.args
-
-    pattern = SiteSetting.auto_silence_first_post_regex
-
-    return false if pattern.blank?
-    return false unless is_first_post?(manager)
-
-    begin
-      regex = Regexp.new(pattern, Regexp::IGNORECASE)
-    rescue => e
-      Rails.logger.warn "Invalid regex in auto_silence_first_post_regex #{e}"
-      return false
+  class << self
+    def sorted_handlers
+      @sorted_handlers ||= clear_handlers!
     end
 
-    "#{args[:title]} #{args[:raw]}" =~ regex
-  end
-
-  def self.exempt_user?(user)
-    user.staff?
-  end
-
-  def self.post_needs_approval?(manager)
-    user = manager.user
-
-    return :email_auth_res_enqueue if manager.args[:email_auth_res_action] == :enqueue
-
-    return :skip if exempt_user?(user)
-
-    return :email_spam if manager.args[:email_spam]
-
-    if user.trust_level <= TrustLevel.levels[:basic] &&
-         (user.post_count + user.topic_count) < SiteSetting.approve_post_count
-      return :post_count
+    def handlers
+      sorted_handlers.map { |h| h[:proc] }
     end
 
-    if !user.staged? && !user.in_any_groups?(SiteSetting.approve_unless_allowed_groups_map)
-      return :group
+    def plugin_payload_attributes
+      @payload_attributes ||= []
     end
 
-    if manager.args[:title].present? && !user.staged? &&
-         !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
-      return :new_topics_unless_allowed_groups
+    def add_plugin_payload_attribute(attribute)
+      plugin_payload_attributes << attribute
     end
 
-    if WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
-      return :watched_word
+    def clear_handlers!
+      @sorted_handlers = []
     end
 
-    return :fast_typer if is_fast_typer?(manager)
-
-    return :auto_silence_regex if auto_silence?(manager) || matches_auto_silence_regex?(manager)
-
-    return :staged if SiteSetting.approve_unless_staged? && user.staged?
-
-    return :category if post_needs_approval_in_its_category?(manager)
-
-    unless user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
-      return :contains_media if contains_embedded_media?(manager.args)
+    def add_handler(priority = 0, &block)
+      sorted_handlers << { priority: priority, proc: block }
+      @sorted_handlers.sort_by! { |h| -h[:priority] }
     end
 
-    :skip
-  end
+    def is_first_post?(manager)
+      user = manager.user
+      args = manager.args
 
-  def self.contains_embedded_media?(args)
-    return true if args[:image_sizes].present?
-
-    Post.new(raw: args[:raw], topic_id: args[:topic_id]).embedded_media_count.positive?
-  end
-
-  def self.post_needs_approval_in_its_category?(manager)
-    guardian = manager.user.guardian
-
-    if manager.args[:topic_id].present?
-      topic = Topic.find_by(id: manager.args[:topic_id])
-      return false unless topic&.category
-
-      guardian.reply_posting_review_required?(topic.category) && !guardian.can_review_topic?(topic)
-    elsif manager.args[:category].present?
-      category = Category.find(manager.args[:category])
-
-      guardian.topic_posting_review_required?(category) &&
-        !guardian.is_category_group_moderator?(category)
-    else
-      false
+      !!(args[:first_post_checks] && user.post_count == 0 && user.topic_count == 0)
     end
-  end
 
-  def self.default_handler(manager)
-    reason = post_needs_approval?(manager)
-    return if reason == :skip
+    def is_fast_typer?(manager)
+      args = manager.args
 
-    validator = PostValidator.new
-    post = Post.new(raw: manager.args[:raw])
-    post.user = manager.user
-    validator.validate(post)
+      is_first_post?(manager) &&
+        args[:typing_duration_msecs].to_i <
+          FAST_TYPING_THRESHOLD_MAP[SiteSetting.fast_typing_threshold.to_sym] &&
+        SiteSetting.auto_silence_fast_typers_on_first_post &&
+        manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
+    end
 
-    if post.errors[:raw].present?
-      result = NewPostResult.new(:created_post, false)
-      result.errors.add(:base, post.errors[:raw])
-      return result
-    elsif manager.args[:topic_id]
-      topic = Topic.unscoped.where(id: manager.args[:topic_id]).first
+    def auto_silence?(manager)
+      is_first_post?(manager) &&
+        WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").should_silence?
+    end
 
-      unless manager.user.guardian.can_create_post_on_topic?(topic)
-        result = NewPostResult.new(:created_post, false)
-        result.errors.add(:base, I18n.t(:topic_not_found))
-        return result
+    def matches_auto_silence_regex?(manager)
+      args = manager.args
+
+      pattern = SiteSetting.auto_silence_first_post_regex
+
+      return false if pattern.blank?
+      return false unless is_first_post?(manager)
+
+      begin
+        regex = Regexp.new(pattern, Regexp::IGNORECASE)
+      rescue => e
+        Rails.logger.warn "Invalid regex in auto_silence_first_post_regex #{e}"
+        return false
       end
-    elsif manager.args[:category]
-      category = Category.find_by(id: manager.args[:category])
-      skip_topic_validations =
-        manager.args[:via_email] && manager.user.staged? && manager.args[:skip_validations]
 
-      unless skip_topic_validations || manager.user.guardian.can_create_topic_on_category?(category)
-        result = NewPostResult.new(:created_post, false)
-        result.errors.add(:base, I18n.t("js.errors.reasons.forbidden"))
-        return result
+      "#{args[:title]} #{args[:raw]}" =~ regex
+    end
+
+    def exempt_user?(user)
+      user.staff?
+    end
+
+    def post_needs_approval?(manager)
+      user = manager.user
+
+      return :email_auth_res_enqueue if manager.args[:email_auth_res_action] == :enqueue
+
+      return :skip if exempt_user?(user)
+
+      return :email_spam if manager.args[:email_spam]
+
+      if user.trust_level <= TrustLevel.levels[:basic] &&
+           (user.post_count + user.topic_count) < SiteSetting.approve_post_count
+        return :post_count
+      end
+
+      if !user.staged? && !user.in_any_groups?(SiteSetting.approve_unless_allowed_groups_map)
+        return :group
+      end
+
+      if manager.args[:title].present? && !user.staged? &&
+           !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
+        return :new_topics_unless_allowed_groups
+      end
+
+      if WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
+        return :watched_word
+      end
+
+      return :fast_typer if is_fast_typer?(manager)
+
+      return :auto_silence_regex if auto_silence?(manager) || matches_auto_silence_regex?(manager)
+
+      return :staged if SiteSetting.approve_unless_staged? && user.staged?
+
+      return :category if post_needs_approval_in_its_category?(manager)
+
+      unless user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+        return :contains_media if contains_embedded_media?(manager.args)
+      end
+
+      :skip
+    end
+
+    def contains_embedded_media?(args)
+      return true if args[:image_sizes].present?
+
+      Post.new(raw: args[:raw], topic_id: args[:topic_id]).embedded_media_count.positive?
+    end
+
+    def post_needs_approval_in_its_category?(manager)
+      guardian = manager.user.guardian
+
+      if manager.args[:topic_id].present?
+        topic = Topic.find_by(id: manager.args[:topic_id])
+        return false unless topic&.category
+
+        guardian.reply_posting_review_required?(topic.category) &&
+          !guardian.can_review_topic?(topic)
+      elsif manager.args[:category].present?
+        category = Category.find(manager.args[:category])
+
+        guardian.topic_posting_review_required?(category) &&
+          !guardian.is_category_group_moderator?(category)
+      else
+        false
       end
     end
 
-    creator_opts = skip_topic_validations ? { skip_validations: true } : {}
-    result = manager.enqueue(reason, creator_opts: creator_opts)
+    def default_handler(manager)
+      reason = post_needs_approval?(manager)
+      return if reason == :skip
 
-    if result.success? || (reason == :email_spam && is_first_post?(manager))
-      reviewable_id = result.reviewable&.id
+      validator = PostValidator.new
+      post = Post.new(raw: manager.args[:raw])
+      post.user = manager.user
+      validator.validate(post)
 
-      I18n.with_locale(SiteSetting.default_locale) do
-        if is_fast_typer?(manager)
-          UserSilencer.auto_silence(
-            manager.user,
-            Discourse.system_user,
-            keep_posts: true,
-            reason: I18n.t("user.new_user_typed_too_fast"),
-            reviewable_id:,
-          )
-        elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
-          UserSilencer.auto_silence(
-            manager.user,
-            Discourse.system_user,
-            keep_posts: true,
-            reason: I18n.t("user.content_matches_auto_silence_regex"),
-            reviewable_id:,
-          )
-        elsif reason == :email_spam && is_first_post?(manager)
-          UserSilencer.auto_silence(
-            manager.user,
-            Discourse.system_user,
-            keep_posts: true,
-            reason: I18n.t("user.email_in_spam_header"),
-            reviewable_id:,
-          )
+      if post.errors[:raw].present?
+        result = NewPostResult.new(:created_post, false)
+        result.errors.add(:base, post.errors[:raw])
+        return result
+      elsif manager.args[:topic_id]
+        topic = Topic.unscoped.where(id: manager.args[:topic_id]).first
+
+        unless manager.user.guardian.can_create_post_on_topic?(topic)
+          result = NewPostResult.new(:created_post, false)
+          result.errors.add(:base, I18n.t(:topic_not_found))
+          return result
+        end
+      elsif manager.args[:category]
+        category = Category.find_by(id: manager.args[:category])
+        skip_topic_validations =
+          manager.args[:via_email] && manager.user.staged? && manager.args[:skip_validations]
+
+        unless skip_topic_validations ||
+                 manager.user.guardian.can_create_topic_on_category?(category)
+          result = NewPostResult.new(:created_post, false)
+          result.errors.add(:base, I18n.t("js.errors.reasons.forbidden"))
+          return result
         end
       end
+
+      creator_opts = skip_topic_validations ? { skip_validations: true } : {}
+      result = manager.enqueue(reason, creator_opts: creator_opts)
+
+      if result.success? || (reason == :email_spam && is_first_post?(manager))
+        reviewable_id = result.reviewable&.id
+
+        I18n.with_locale(SiteSetting.default_locale) do
+          if is_fast_typer?(manager)
+            UserSilencer.auto_silence(
+              manager.user,
+              Discourse.system_user,
+              keep_posts: true,
+              reason: I18n.t("user.new_user_typed_too_fast"),
+              reviewable_id:,
+            )
+          elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
+            UserSilencer.auto_silence(
+              manager.user,
+              Discourse.system_user,
+              keep_posts: true,
+              reason: I18n.t("user.content_matches_auto_silence_regex"),
+              reviewable_id:,
+            )
+          elsif reason == :email_spam && is_first_post?(manager)
+            UserSilencer.auto_silence(
+              manager.user,
+              Discourse.system_user,
+              keep_posts: true,
+              reason: I18n.t("user.email_in_spam_header"),
+              reviewable_id:,
+            )
+          end
+        end
+      end
+
+      result
     end
 
-    result
-  end
-
-  def self.queue_enabled?
-    SiteSetting.approve_post_count > 0 ||
-      !SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0]) ||
-      !SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
-        Group::AUTO_GROUPS[:trust_level_0],
-      ) || SiteSetting.approve_unless_staged ||
-      WordWatcher.words_for_action_exist?(:require_approval) || handlers.size > 1
+    def queue_enabled?
+      SiteSetting.approve_post_count > 0 ||
+        !SiteSetting.approve_unless_allowed_groups_map.include?(
+          Group::AUTO_GROUPS[:trust_level_0],
+        ) ||
+        !SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
+          Group::AUTO_GROUPS[:trust_level_0],
+        ) || SiteSetting.approve_unless_staged ||
+        WordWatcher.words_for_action_exist?(:require_approval) || handlers.size > 1
+    end
   end
 
   def initialize(user, args)

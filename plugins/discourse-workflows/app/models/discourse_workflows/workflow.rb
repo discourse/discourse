@@ -104,13 +104,28 @@ module DiscourseWorkflows
               SQL
           end
 
-    def self.filtered(name: nil, trigger_type: nil, exclude_id: nil, tags: nil)
-      scope = all
-      scope = scope.filter_by_name(name) if name.present?
-      scope = scope.filter_by_trigger_type(trigger_type) if trigger_type.present?
-      scope = scope.filter_by_tags(tags) if tags.present?
-      scope = scope.where.not(id: exclude_id) if exclude_id
-      scope
+    class << self
+      def filtered(name: nil, trigger_type: nil, exclude_id: nil, tags: nil)
+        scope = all
+        scope = scope.filter_by_name(name) if name.present?
+        scope = scope.filter_by_trigger_type(trigger_type) if trigger_type.present?
+        scope = scope.filter_by_tags(tags) if tags.present?
+        scope = scope.where.not(id: exclude_id) if exclude_id
+        scope
+      end
+
+      def static_data_node_key(node_name)
+        "#{STATIC_DATA_NODE_PREFIX}#{node_name}"
+      end
+
+      def static_data_slot(value)
+        value.is_a?(Hash) ? value : {}
+      end
+
+      def valid_static_data_map?(value)
+        value.is_a?(Hash) &&
+          value.all? { |key, slot| key.to_s != "node" && static_data_slot(slot) == slot }
+      end
     end
 
     def find_node(node_id)
@@ -290,19 +305,6 @@ module DiscourseWorkflows
 
     def static_data_node_key(node_name)
       self.class.static_data_node_key(node_name)
-    end
-
-    def self.static_data_node_key(node_name)
-      "#{STATIC_DATA_NODE_PREFIX}#{node_name}"
-    end
-
-    def self.static_data_slot(value)
-      value.is_a?(Hash) ? value : {}
-    end
-
-    def self.valid_static_data_map?(value)
-      value.is_a?(Hash) &&
-        value.all? { |key, slot| key.to_s != "node" && static_data_slot(slot) == slot }
     end
 
     def node_trigger_state(node_id)

@@ -2,9 +2,11 @@
 
 # A very simple formatter for imported emails
 class EmailCook
-  def self.raw_regexp
-    @raw_regexp ||=
-      %r{\A\[plaintext\]$\n(.*)\n^\[/plaintext\]$(?:\s^\[attachments\]$\n(.*)\n^\[/attachments\]$)?(?:\s^\[elided\]$\n(.*)\n^\[/elided\]$)?}m
+  class << self
+    def raw_regexp
+      @raw_regexp ||=
+        %r{\A\[plaintext\]$\n(.*)\n^\[/plaintext\]$(?:\s^\[attachments\]$\n(.*)\n^\[/attachments\]$)?(?:\s^\[elided\]$\n(.*)\n^\[/elided\]$)?}m
+    end
   end
 
   def initialize(raw)

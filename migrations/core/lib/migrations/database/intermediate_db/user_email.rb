@@ -21,22 +21,24 @@ module Migrations
         SQL
         private_constant :SQL
 
-        # Creates a new `user_emails` record in the IntermediateDB.
-        #
-        # @param user_id      [Integer, String]
-        # @param email        [String]
-        # @param created_at   [Time, nil]
-        # @param primary      [Boolean, nil]
-        #
-        # @return [void]
-        def self.create(user_id:, email:, created_at: nil, primary: nil)
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            user_id,
-            email,
-            Migrations::Database.format_datetime(created_at),
-            Migrations::Database.format_boolean(primary),
-          )
+        class << self
+          # Creates a new `user_emails` record in the IntermediateDB.
+          #
+          # @param user_id      [Integer, String]
+          # @param email        [String]
+          # @param created_at   [Time, nil]
+          # @param primary      [Boolean, nil]
+          #
+          # @return [void]
+          def create(user_id:, email:, created_at: nil, primary: nil)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              user_id,
+              email,
+              Migrations::Database.format_datetime(created_at),
+              Migrations::Database.format_boolean(primary),
+            )
+          end
         end
       end
     end

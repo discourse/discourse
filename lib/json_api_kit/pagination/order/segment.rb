@@ -6,14 +6,16 @@ module JsonApiKit
       class Segment
         NO_CONDITION = ->(scope) { scope }
 
-        def self.split(keyset, digest: nil, id: 0)
-          return [new(id:, keyset:, digest:)] unless keyset.split?
+        class << self
+          def split(keyset, digest: nil, id: 0)
+            return [new(id:, keyset:, digest:)] unless keyset.split?
 
-          valued =
-            new(id:, keyset: keyset.without_nulls, digest:, condition: keyset.valued_condition)
-          nulls =
-            split(keyset.rest, digest:, id: id + 1).map { it.narrowed_by(keyset.null_condition) }
-          keyset.nulls_read_first? ? [*nulls, valued] : [valued, *nulls]
+            valued =
+              new(id:, keyset: keyset.without_nulls, digest:, condition: keyset.valued_condition)
+            nulls =
+              split(keyset.rest, digest:, id: id + 1).map { it.narrowed_by(keyset.null_condition) }
+            keyset.nulls_read_first? ? [*nulls, valued] : [valued, *nulls]
+          end
         end
 
         attr_reader :id, :keyset, :digest

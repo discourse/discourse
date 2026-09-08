@@ -25,12 +25,14 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
 
   option :enabled
 
-  def call
-    enabled ? enable : disable
+  class << self
+    def should_display_upcoming_change?
+      SiteSetting.allow_uncategorized_topics || UpcomingChanges.enabled?(UPCOMING_CHANGE)
+    end
   end
 
-  def self.should_display_upcoming_change?
-    SiteSetting.allow_uncategorized_topics || UpcomingChanges.enabled?(UPCOMING_CHANGE)
+  def call
+    enabled ? enable : disable
   end
 
   private

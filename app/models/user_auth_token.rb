@@ -19,6 +19,9 @@ class UserAuthToken < ActiveRecord::Base
 
   USER_ACTIONS = ["generate"]
 
+  RAD_PER_DEG = Math::PI / 180
+  EARTH_RADIUS_KM = 6371 # kilometers
+
   attr_accessor :unhashed_auth_token
 
   before_destroy do
@@ -30,6 +33,198 @@ class UserAuthToken < ActiveRecord::Base
       client_ip: client_ip,
       auth_token: auth_token,
     )
+  end
+
+  class << self
+    def log(info)
+      UserAuthTokenLog.create!(info)
+    end
+
+    def log_verbose(info)
+      log(info) if SiteSetting.verbose_auth_token_logging
+    end
+
+    def login_location(ip)
+      ipinfo = DiscourseIpInfo.get(ip)
+
+      ipinfo[:latitude] && ipinfo[:longitude] ? [ipinfo[:latitude], ipinfo[:longitude]] : nil
+    end
+
+    def distance(loc1, loc2)
+      lat1_rad, lon1_rad = loc1[0] * RAD_PER_DEG, loc1[1] * RAD_PER_DEG
+      lat2_rad, lon2_rad = loc2[0] * RAD_PER_DEG, loc2[1] * RAD_PER_DEG
+
+      a =
+        Math.sin((lat2_rad - lat1_rad) / 2)**2 +
+          Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin((lon2_rad - lon1_rad) / 2)**2
+      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+      c * EARTH_RADIUS_KM
+    end
+
+    def is_suspicious(user_id, user_ip)
+      return false unless User.find_by(id: user_id)&.staff?
+
+      ips = UserAuthTokenLog.where(user_id: user_id).pluck(:client_ip)
+      ips.delete_at(ips.index(user_ip) || ips.length) # delete one occurrence (current)
+      ips.uniq!
+      return false if ips.empty? # first login is never suspicious
+
+      if user_location = login_location(user_ip)
+        ips.none? do |ip|
+          if location = login_location(ip)
+            distance(user_location, location) < SiteSetting.max_suspicious_distance_km
+          end
+        end
+      end
+    end
+
+    def generate!(
+      user_id:,
+      user_agent: nil,
+      client_ip: nil,
+      path: nil,
+      staff: nil,
+      impersonate: false,
+      authenticated_with_oauth: false
+    )
+      token = SecureRandom.hex(16)
+      hashed_token = hash_token(token)
+      user_auth_token =
+        UserAuthToken.create!(
+          user_id: user_id,
+          user_agent: user_agent,
+          client_ip: client_ip,
+          auth_token: hashed_token,
+          prev_auth_token: hashed_token,
+          rotated_at: Time.zone.now,
+          authenticated_with_oauth: !!authenticated_with_oauth,
+        )
+      user_auth_token.unhashed_auth_token = token
+
+      log(
+        action: "generate",
+        user_auth_token_id: user_auth_token.id,
+        user_id: user_id,
+        user_agent: user_agent,
+        client_ip: client_ip,
+        path: path,
+        auth_token: hashed_token,
+      )
+
+      if staff && !impersonate
+        Jobs.enqueue(
+          :suspicious_login,
+          user_id: user_id,
+          client_ip: client_ip,
+          user_agent: user_agent,
+        )
+      end
+
+      user_auth_token
+    end
+
+    def lookup(unhashed_token, opts = nil)
+      mark_seen = opts && opts[:seen]
+
+      token = hash_token(unhashed_token)
+
+      user_token = unexpired.where("auth_token = :token OR prev_auth_token = :token", token: token)
+
+      if SiteSetting.verbose_auth_token_logging && path = opts.dig(:path)
+        user_token = user_token.annotate("path:#{path}")
+      end
+
+      user_token = user_token.first
+
+      if !user_token
+        log_verbose(
+          action: "miss token",
+          user_id: nil,
+          auth_token: token,
+          user_agent: opts && opts[:user_agent],
+          path: opts && opts[:path],
+          client_ip: opts && opts[:client_ip],
+        )
+
+        return nil
+      end
+
+      if user_token.auth_token != token && user_token.prev_auth_token == token &&
+           user_token.auth_token_seen
+        changed_rows =
+          UserAuthToken
+            .where("rotated_at < ?", 1.minute.ago)
+            .where(id: user_token.id, prev_auth_token: token)
+            .update_all(auth_token_seen: false)
+
+        # not updating AR model cause we want to give it one more req
+        # with wrong cookie
+        UserAuthToken.log_verbose(
+          action: changed_rows == 0 ? "prev seen token unchanged" : "prev seen token",
+          user_auth_token_id: user_token.id,
+          user_id: user_token.user_id,
+          auth_token: user_token.auth_token,
+          user_agent: opts && opts[:user_agent],
+          path: opts && opts[:path],
+          client_ip: opts && opts[:client_ip],
+        )
+      end
+
+      if mark_seen && user_token && !user_token.auth_token_seen && user_token.auth_token == token
+        # we must protect against concurrency issues here
+        changed_rows =
+          UserAuthToken.where(id: user_token.id, auth_token: token).update_all(
+            auth_token_seen: true,
+            seen_at: Time.zone.now,
+          )
+
+        if changed_rows == 1
+          # not doing a reload so we don't risk loading a rotated token
+          user_token.auth_token_seen = true
+          user_token.seen_at = Time.zone.now
+        end
+
+        log_verbose(
+          action: changed_rows == 0 ? "seen wrong token" : "seen token",
+          user_auth_token_id: user_token.id,
+          user_id: user_token.user_id,
+          auth_token: user_token.auth_token,
+          user_agent: opts && opts[:user_agent],
+          path: opts && opts[:path],
+          client_ip: opts && opts[:client_ip],
+        )
+      end
+
+      user_token
+    end
+
+    def hash_token(token)
+      Digest::SHA1.base64digest("#{token}#{GlobalSetting.safe_secret_key_base}")
+    end
+
+    def cleanup!
+      UserAuthTokenLog.where(
+        "created_at < :time AND action NOT IN (:preserved_actions)",
+        time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
+        preserved_actions: %w[suspicious generate],
+      ).delete_all
+
+      where(
+        "rotated_at < :time",
+        time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
+      ).delete_all
+    end
+
+    def enforce_session_count_limit!(user_id)
+      tokens_to_destroy =
+        where(user_id: user_id)
+          .where("rotated_at > ?", SiteSetting.maximum_session_age.hours.ago)
+          .order("rotated_at DESC")
+          .offset(MAX_SESSION_COUNT)
+
+      tokens_to_destroy.delete_all # Returns the number of deleted rows
+    end
   end
 
   def user
@@ -49,189 +244,6 @@ class UserAuthToken < ActiveRecord::Base
       user.is_impersonating = true
       user.impersonation_expires_at = impersonation_expires_at
     end
-  end
-
-  def self.log(info)
-    UserAuthTokenLog.create!(info)
-  end
-
-  def self.log_verbose(info)
-    log(info) if SiteSetting.verbose_auth_token_logging
-  end
-
-  RAD_PER_DEG = Math::PI / 180
-  EARTH_RADIUS_KM = 6371 # kilometers
-
-  def self.login_location(ip)
-    ipinfo = DiscourseIpInfo.get(ip)
-
-    ipinfo[:latitude] && ipinfo[:longitude] ? [ipinfo[:latitude], ipinfo[:longitude]] : nil
-  end
-
-  def self.distance(loc1, loc2)
-    lat1_rad, lon1_rad = loc1[0] * RAD_PER_DEG, loc1[1] * RAD_PER_DEG
-    lat2_rad, lon2_rad = loc2[0] * RAD_PER_DEG, loc2[1] * RAD_PER_DEG
-
-    a =
-      Math.sin((lat2_rad - lat1_rad) / 2)**2 +
-        Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin((lon2_rad - lon1_rad) / 2)**2
-    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-    c * EARTH_RADIUS_KM
-  end
-
-  def self.is_suspicious(user_id, user_ip)
-    return false unless User.find_by(id: user_id)&.staff?
-
-    ips = UserAuthTokenLog.where(user_id: user_id).pluck(:client_ip)
-    ips.delete_at(ips.index(user_ip) || ips.length) # delete one occurrence (current)
-    ips.uniq!
-    return false if ips.empty? # first login is never suspicious
-
-    if user_location = login_location(user_ip)
-      ips.none? do |ip|
-        if location = login_location(ip)
-          distance(user_location, location) < SiteSetting.max_suspicious_distance_km
-        end
-      end
-    end
-  end
-
-  def self.generate!(
-    user_id:,
-    user_agent: nil,
-    client_ip: nil,
-    path: nil,
-    staff: nil,
-    impersonate: false,
-    authenticated_with_oauth: false
-  )
-    token = SecureRandom.hex(16)
-    hashed_token = hash_token(token)
-    user_auth_token =
-      UserAuthToken.create!(
-        user_id: user_id,
-        user_agent: user_agent,
-        client_ip: client_ip,
-        auth_token: hashed_token,
-        prev_auth_token: hashed_token,
-        rotated_at: Time.zone.now,
-        authenticated_with_oauth: !!authenticated_with_oauth,
-      )
-    user_auth_token.unhashed_auth_token = token
-
-    log(
-      action: "generate",
-      user_auth_token_id: user_auth_token.id,
-      user_id: user_id,
-      user_agent: user_agent,
-      client_ip: client_ip,
-      path: path,
-      auth_token: hashed_token,
-    )
-
-    if staff && !impersonate
-      Jobs.enqueue(
-        :suspicious_login,
-        user_id: user_id,
-        client_ip: client_ip,
-        user_agent: user_agent,
-      )
-    end
-
-    user_auth_token
-  end
-
-  def self.lookup(unhashed_token, opts = nil)
-    mark_seen = opts && opts[:seen]
-
-    token = hash_token(unhashed_token)
-
-    user_token = unexpired.where("auth_token = :token OR prev_auth_token = :token", token: token)
-
-    if SiteSetting.verbose_auth_token_logging && path = opts.dig(:path)
-      user_token = user_token.annotate("path:#{path}")
-    end
-
-    user_token = user_token.first
-
-    if !user_token
-      log_verbose(
-        action: "miss token",
-        user_id: nil,
-        auth_token: token,
-        user_agent: opts && opts[:user_agent],
-        path: opts && opts[:path],
-        client_ip: opts && opts[:client_ip],
-      )
-
-      return nil
-    end
-
-    if user_token.auth_token != token && user_token.prev_auth_token == token &&
-         user_token.auth_token_seen
-      changed_rows =
-        UserAuthToken
-          .where("rotated_at < ?", 1.minute.ago)
-          .where(id: user_token.id, prev_auth_token: token)
-          .update_all(auth_token_seen: false)
-
-      # not updating AR model cause we want to give it one more req
-      # with wrong cookie
-      UserAuthToken.log_verbose(
-        action: changed_rows == 0 ? "prev seen token unchanged" : "prev seen token",
-        user_auth_token_id: user_token.id,
-        user_id: user_token.user_id,
-        auth_token: user_token.auth_token,
-        user_agent: opts && opts[:user_agent],
-        path: opts && opts[:path],
-        client_ip: opts && opts[:client_ip],
-      )
-    end
-
-    if mark_seen && user_token && !user_token.auth_token_seen && user_token.auth_token == token
-      # we must protect against concurrency issues here
-      changed_rows =
-        UserAuthToken.where(id: user_token.id, auth_token: token).update_all(
-          auth_token_seen: true,
-          seen_at: Time.zone.now,
-        )
-
-      if changed_rows == 1
-        # not doing a reload so we don't risk loading a rotated token
-        user_token.auth_token_seen = true
-        user_token.seen_at = Time.zone.now
-      end
-
-      log_verbose(
-        action: changed_rows == 0 ? "seen wrong token" : "seen token",
-        user_auth_token_id: user_token.id,
-        user_id: user_token.user_id,
-        auth_token: user_token.auth_token,
-        user_agent: opts && opts[:user_agent],
-        path: opts && opts[:path],
-        client_ip: opts && opts[:client_ip],
-      )
-    end
-
-    user_token
-  end
-
-  def self.hash_token(token)
-    Digest::SHA1.base64digest("#{token}#{GlobalSetting.safe_secret_key_base}")
-  end
-
-  def self.cleanup!
-    UserAuthTokenLog.where(
-      "created_at < :time AND action NOT IN (:preserved_actions)",
-      time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
-      preserved_actions: %w[suspicious generate],
-    ).delete_all
-
-    where(
-      "rotated_at < :time",
-      time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
-    ).delete_all
   end
 
   def rotate!(info = nil)
@@ -280,16 +292,6 @@ class UserAuthToken < ActiveRecord::Base
     else
       false
     end
-  end
-
-  def self.enforce_session_count_limit!(user_id)
-    tokens_to_destroy =
-      where(user_id: user_id)
-        .where("rotated_at > ?", SiteSetting.maximum_session_age.hours.ago)
-        .order("rotated_at DESC")
-        .offset(MAX_SESSION_COUNT)
-
-    tokens_to_destroy.delete_all # Returns the number of deleted rows
   end
 end
 

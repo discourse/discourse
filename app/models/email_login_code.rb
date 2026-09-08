@@ -19,25 +19,27 @@ class EmailLoginCode < ActiveRecord::Base
         end
   scope :for_email, ->(email) { where("lower(email) = ?", email.downcase) }
 
-  def self.generate!(email:)
-    email = email.downcase
+  class << self
+    def generate!(email:)
+      email = email.downcase
 
-    code = SecureRandom.random_number(10**CODE_LENGTH).to_s.rjust(CODE_LENGTH, "0")
+      code = SecureRandom.random_number(10**CODE_LENGTH).to_s.rjust(CODE_LENGTH, "0")
 
-    record = nil
-    transaction do
-      where("lower(email) = ?", email).delete_all
-      record = create!(email: email, code_hash: hash_code(code), expires_at: VALID_FOR.from_now)
+      record = nil
+      transaction do
+        where("lower(email) = ?", email).delete_all
+        record = create!(email: email, code_hash: hash_code(code), expires_at: VALID_FOR.from_now)
+      end
+
+      record.instance_variable_set(:@code, code)
+      record
     end
 
-    record.instance_variable_set(:@code, code)
-    record
-  end
-
-  def self.hash_code(code)
-    # Keyed with the server secret so a database snapshot alone can't be used
-    # to enumerate the small (6-digit) code space offline.
-    OpenSSL::HMAC.hexdigest("SHA256", GlobalSetting.safe_secret_key_base, code)
+    def hash_code(code)
+      # Keyed with the server secret so a database snapshot alone can't be used
+      # to enumerate the small (6-digit) code space offline.
+      OpenSSL::HMAC.hexdigest("SHA256", GlobalSetting.safe_secret_key_base, code)
+    end
   end
 
   def code

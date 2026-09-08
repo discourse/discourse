@@ -23,8 +23,10 @@ module DiscourseAi
 
         SANITIZE_REGEX = Regexp.new(SANITIZE_REGEX_STR, Regexp::IGNORECASE | Regexp::MULTILINE)
 
-        def self.can_handle?(feature_name)
-          feature_name&.start_with?("ai_helper:")
+        class << self
+          def can_handle?(feature_name)
+            feature_name&.start_with?("ai_helper:")
+          end
         end
 
         def initialize(feature_name, agent_prompt_override = nil)

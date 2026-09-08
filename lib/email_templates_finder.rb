@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class EmailTemplatesFinder
-  def self.list
-    path = Rails.root.join("config/locales/server.en.yml").to_s
-    yaml = YAML.load_file(path, aliases: true)
-    new(yaml).list
+  class << self
+    def list
+      path = Rails.root.join("config/locales/server.en.yml").to_s
+      yaml = YAML.load_file(path, aliases: true)
+      new(yaml).list
+    end
   end
 
   attr_reader :list

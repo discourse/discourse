@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 module DiscourseDataExplorer
   class ResultFormatConverter
-    def self.convert(file_type, result, opts = {})
-      new(result, opts).send("to_#{file_type}")
+    class << self
+      def convert(file_type, result, opts = {})
+        new(result, opts).send("to_#{file_type}")
+      end
     end
 
     def initialize(result, opts)

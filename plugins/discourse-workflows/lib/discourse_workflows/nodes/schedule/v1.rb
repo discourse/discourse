@@ -193,12 +193,17 @@ module DiscourseWorkflows
           },
         )
 
-        def initialize(*)
-          super(parameters: {})
+        class << self
+          def validate_configuration(configuration, errors)
+            Rules.validate(
+              CollectionParameters.rows(configuration, :rule, group: "interval"),
+              errors,
+            )
+          end
         end
 
-        def self.validate_configuration(configuration, errors)
-          Rules.validate(CollectionParameters.rows(configuration, :rule, group: "interval"), errors)
+        def initialize(*)
+          super(parameters: {})
         end
 
         def trigger(trigger_ctx)

@@ -2,16 +2,18 @@
 
 # This is used in topic lists
 class TopicPostersSummary
-  # localization is fast, but this allows us to avoid
-  # calling it in a loop which adds up
-  def self.translations
-    {
-      original_poster: I18n.t(:original_poster),
-      most_recent_poster: I18n.t(:most_recent_poster),
-      frequent_poster: I18n.t(:frequent_poster),
-      recent_poster: I18n.t(:recent_poster),
-      joiner: I18n.t(:poster_description_joiner),
-    }
+  class << self
+    # localization is fast, but this allows us to avoid
+    # calling it in a loop which adds up
+    def translations
+      {
+        original_poster: I18n.t(:original_poster),
+        most_recent_poster: I18n.t(:most_recent_poster),
+        frequent_poster: I18n.t(:frequent_poster),
+        recent_poster: I18n.t(:recent_poster),
+        joiner: I18n.t(:poster_description_joiner),
+      }
+    end
   end
 
   attr_reader :topic, :options

@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class TestEngine
-  def self.===(uri)
-    true
-  end
+  class << self
+    def ===(uri)
+      true
+    end
 
-  def self.iframe_origins
-    %w[https://example.com https://example2.com]
+    def iframe_origins
+      %w[https://example.com https://example2.com]
+    end
   end
 end
 

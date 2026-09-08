@@ -487,12 +487,14 @@ RSpec.describe CategorySerializer do
       Class.new(Categories::Types::Base) do
         type_id :test_type_a
 
-        def self.category_matches?(_category)
-          true
-        end
+        class << self
+          def category_matches?(_category)
+            true
+          end
 
-        def self.read_category_settings(_category)
-          { foo: "from_a" }
+          def read_category_settings(_category)
+            { foo: "from_a" }
+          end
         end
       end
     end
@@ -501,12 +503,14 @@ RSpec.describe CategorySerializer do
       Class.new(Categories::Types::Base) do
         type_id :test_type_b
 
-        def self.category_matches?(_category)
-          true
-        end
+        class << self
+          def category_matches?(_category)
+            true
+          end
 
-        def self.read_category_settings(_category)
-          { bar: "from_b" }
+          def read_category_settings(_category)
+            { bar: "from_b" }
+          end
         end
       end
     end
@@ -515,12 +519,14 @@ RSpec.describe CategorySerializer do
       Class.new(Categories::Types::Base) do
         type_id :test_type_off
 
-        def self.category_matches?(_category)
-          false
-        end
+        class << self
+          def category_matches?(_category)
+            false
+          end
 
-        def self.read_category_settings(_category)
-          { baz: "should_not_appear" }
+          def read_category_settings(_category)
+            { baz: "should_not_appear" }
+          end
         end
       end
     end

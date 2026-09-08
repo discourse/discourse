@@ -5,6 +5,11 @@ require_relative "markdown_node"
 
 module ImportScripts::PhpBB3::BBCode
   class XmlToMarkdown
+    IGNORED_ELEMENTS = %w[s e i]
+    ELEMENTS_WITHOUT_LEADING_WHITESPACES = %w[LIST LI]
+    ELEMENTS_WITH_HARD_LINEBREAKS = %w[B I U]
+    EXPLICIT_LINEBREAK_THRESHOLD = 2
+
     def initialize(xml, opts = {})
       @username_from_user_id = opts[:username_from_user_id]
       @smilie_to_emoji = opts[:smilie_to_emoji]
@@ -27,11 +32,6 @@ module ImportScripts::PhpBB3::BBCode
     end
 
     private
-
-    IGNORED_ELEMENTS = %w[s e i]
-    ELEMENTS_WITHOUT_LEADING_WHITESPACES = %w[LIST LI]
-    ELEMENTS_WITH_HARD_LINEBREAKS = %w[B I U]
-    EXPLICIT_LINEBREAK_THRESHOLD = 2
 
     def preprocess_xml
       @doc.traverse do |node|

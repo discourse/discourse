@@ -6,14 +6,16 @@ class WebHookEventsDailyAggregate < ActiveRecord::Base
   default_scope { order("created_at DESC") }
   before_create :aggregate!
 
-  def self.purge_old
-    where("created_at < ?", SiteSetting.retain_web_hook_events_aggregate_days.days.ago).delete_all
-  end
+  class << self
+    def purge_old
+      where("created_at < ?", SiteSetting.retain_web_hook_events_aggregate_days.days.ago).delete_all
+    end
 
-  def self.by_day(start_date, end_date, web_hook_id = nil)
-    result = where("date >= ? AND date <= ?", start_date.to_date, end_date.to_date)
-    result = result.where(web_hook_id: web_hook_id) if web_hook_id
-    result
+    def by_day(start_date, end_date, web_hook_id = nil)
+      result = where("date >= ? AND date <= ?", start_date.to_date, end_date.to_date)
+      result = result.where(web_hook_id: web_hook_id) if web_hook_id
+      result
+    end
   end
 
   def aggregate!

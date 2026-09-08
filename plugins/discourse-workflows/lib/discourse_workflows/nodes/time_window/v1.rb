@@ -87,56 +87,62 @@ module DiscourseWorkflows
           },
         )
 
-        def self.validate_configuration(configuration, errors)
-          config = (configuration || {}).deep_stringify_keys
+        class << self
+          def validate_configuration(configuration, errors)
+            config = (configuration || {}).deep_stringify_keys
 
-          day_mode = config["day_mode"].presence || "all"
-          if DAY_MODES.exclude?(day_mode.to_s)
-            errors.add(
-              :base,
-              I18n.t("discourse_workflows.errors.time_window.invalid_day_mode", mode: day_mode),
-            )
-          end
-
-          if day_mode.to_s == "custom"
-            days = Array.wrap(config["days"])
-            if days.empty?
-              errors.add(:base, I18n.t("discourse_workflows.errors.time_window.days_required"))
-            elsif days.any? { |day| !valid_wday?(day) }
-              errors.add(:base, I18n.t("discourse_workflows.errors.time_window.invalid_days"))
+            day_mode = config["day_mode"].presence || "all"
+            if DAY_MODES.exclude?(day_mode.to_s)
+              errors.add(
+                :base,
+                I18n.t("discourse_workflows.errors.time_window.invalid_day_mode", mode: day_mode),
+              )
             end
-          end
 
-          if ActiveModel::Type::Boolean.new.cast(config["use_time_range"])
-            start_value = config["start_time"]
-            end_value = config["end_time"]
-            static_values = [start_value, end_value].reject { |value| expression_value?(value) }
-
-            if static_values.any? { |value| parse_minutes(value).nil? }
-              errors.add(:base, I18n.t("discourse_workflows.errors.time_window.invalid_time_range"))
-            elsif static_values.size == 2 && parse_minutes(start_value) == parse_minutes(end_value)
-              errors.add(:base, I18n.t("discourse_workflows.errors.time_window.start_end_equal"))
+            if day_mode.to_s == "custom"
+              days = Array.wrap(config["days"])
+              if days.empty?
+                errors.add(:base, I18n.t("discourse_workflows.errors.time_window.days_required"))
+              elsif days.any? { |day| !valid_wday?(day) }
+                errors.add(:base, I18n.t("discourse_workflows.errors.time_window.invalid_days"))
+              end
             end
+
+            if ActiveModel::Type::Boolean.new.cast(config["use_time_range"])
+              start_value = config["start_time"]
+              end_value = config["end_time"]
+              static_values = [start_value, end_value].reject { |value| expression_value?(value) }
+
+              if static_values.any? { |value| parse_minutes(value).nil? }
+                errors.add(
+                  :base,
+                  I18n.t("discourse_workflows.errors.time_window.invalid_time_range"),
+                )
+              elsif static_values.size == 2 &&
+                    parse_minutes(start_value) == parse_minutes(end_value)
+                errors.add(:base, I18n.t("discourse_workflows.errors.time_window.start_end_equal"))
+              end
+            end
+
+            validate_timezone_configuration(configuration, errors)
           end
 
-          validate_timezone_configuration(configuration, errors)
-        end
+          def valid_wday?(value)
+            (0..6).cover?(Integer(value))
+          rescue ArgumentError, TypeError
+            false
+          end
 
-        def self.valid_wday?(value)
-          (0..6).cover?(Integer(value))
-        rescue ArgumentError, TypeError
-          false
-        end
+          def parse_minutes(value)
+            match = TIME_FORMAT.match(value.to_s.strip)
+            return if match.nil?
 
-        def self.parse_minutes(value)
-          match = TIME_FORMAT.match(value.to_s.strip)
-          return if match.nil?
+            hour = match[1].to_i
+            minute = match[2].to_i
+            return if hour > 23 || minute > 59
 
-          hour = match[1].to_i
-          minute = match[2].to_i
-          return if hour > 23 || minute > 59
-
-          hour * 60 + minute
+            hour * 60 + minute
+          end
         end
 
         def execute(exec_ctx)

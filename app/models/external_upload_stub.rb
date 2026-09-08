@@ -39,13 +39,15 @@ class ExternalUploadStub < ActiveRecord::Base
     self.status = ExternalUploadStub.statuses[:created] if status.blank?
   end
 
-  def self.statuses
-    @statuses ||= Enum.new(created: 1, uploaded: 2, failed: 3)
-  end
+  class << self
+    def statuses
+      @statuses ||= Enum.new(created: 1, uploaded: 2, failed: 3)
+    end
 
-  def self.cleanup!
-    expired_created.delete_all
-    expired_uploaded.delete_all
+    def cleanup!
+      expired_created.delete_all
+      expired_uploaded.delete_all
+    end
   end
 end
 

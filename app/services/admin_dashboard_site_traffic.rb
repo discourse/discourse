@@ -14,8 +14,10 @@ class AdminDashboardSiteTraffic
   private_constant :TOP_CARD_LIMIT
   private_constant :SERIES_LABEL_REQS
 
-  def self.build(start_date:, end_date:, guardian:)
-    new(start_date: start_date, end_date: end_date, guardian: guardian).build
+  class << self
+    def build(start_date:, end_date:, guardian:)
+      new(start_date: start_date, end_date: end_date, guardian: guardian).build
+    end
   end
 
   def initialize(start_date:, end_date:, guardian:)

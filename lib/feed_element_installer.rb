@@ -6,11 +6,13 @@ require "rss"
 class FeedElementInstaller
   private_class_method :new
 
-  def self.install(element_name, feed)
-    # RSS Specification at http://cyber.harvard.edu/rss/rss.html#extendingRss
-    # > A RSS feed may contain [non-standard elements], only if those elements are *defined in a namespace*
+  class << self
+    def install(element_name, feed)
+      # RSS Specification at http://cyber.harvard.edu/rss/rss.html#extendingRss
+      # > A RSS feed may contain [non-standard elements], only if those elements are *defined in a namespace*
 
-    new(element_name, feed).install if element_name.include?(":")
+      new(element_name, feed).install if element_name.include?(":")
+    end
   end
 
   attr_reader :feed, :original_name, :element_namespace, :element_name, :element_accessor

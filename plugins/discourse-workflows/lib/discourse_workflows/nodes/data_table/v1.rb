@@ -175,18 +175,20 @@ module DiscourseWorkflows
           },
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "data_tables"
-            result =
-              context.helpers.get_data_table_aggregate_proxy.get_many_and_count(
-                filter: {
-                  name: context.filter,
-                },
-                sort_by: "name:asc",
-              )
+        class << self
+          def load_options_context(context)
+            case context.method_name
+            when "data_tables"
+              result =
+                context.helpers.get_data_table_aggregate_proxy.get_many_and_count(
+                  filter: {
+                    name: context.filter,
+                  },
+                  sort_by: "name:asc",
+                )
 
-            result[:data]
+              result[:data]
+            end
           end
         end
 

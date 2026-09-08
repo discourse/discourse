@@ -6,28 +6,30 @@ module DiscourseDataExplorer
       MAX_ROWS = 20
       MAX_CELL_LENGTH = 200
 
-      def self.signature
-        {
-          name: name,
-          description:
-            "Runs a SQL query in Data Explorer and returns the results. Use this to verify a query produces correct output.",
-          parameters: [
-            {
-              name: "sql",
-              description: "the SQL query to run (without semicolons)",
-              type: "string",
-              required: true,
-            },
-          ],
-        }
-      end
+      class << self
+        def signature
+          {
+            name: name,
+            description:
+              "Runs a SQL query in Data Explorer and returns the results. Use this to verify a query produces correct output.",
+            parameters: [
+              {
+                name: "sql",
+                description: "the SQL query to run (without semicolons)",
+                type: "string",
+                required: true,
+              },
+            ],
+          }
+        end
 
-      def self.custom?
-        true
-      end
+        def custom?
+          true
+        end
 
-      def self.name
-        "run_sql"
+        def name
+          "run_sql"
+        end
       end
 
       def invoke

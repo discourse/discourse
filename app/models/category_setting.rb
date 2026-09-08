@@ -18,6 +18,8 @@ class CategorySetting < ActiveRecord::Base
   after_save :clear_nested_replies_conversion_completed,
              if: :saved_change_to_nested_replies_default?
 
+  GROUP_BASED_MODES = %w[everyone_except no_one_except].freeze
+
   def require_topic_approval=(value)
     self.topic_posting_review_mode =
       ActiveModel::Type::Boolean.new.cast(value) ? :everyone : :no_one
@@ -32,8 +34,6 @@ class CategorySetting < ActiveRecord::Base
   alias_method :require_topic_approval?, :topic_posting_review_mode_everyone?
   alias_method :require_reply_approval, :reply_posting_review_mode_everyone?
   alias_method :require_reply_approval?, :reply_posting_review_mode_everyone?
-
-  GROUP_BASED_MODES = %w[everyone_except no_one_except].freeze
 
   validates :num_auto_bump_daily,
             numericality: {

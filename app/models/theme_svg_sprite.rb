@@ -3,9 +3,11 @@
 class ThemeSvgSprite < ActiveRecord::Base
   belongs_to :theme
 
-  def self.refetch!
-    ThemeField.svg_sprite_fields.find_each(&:upsert_svg_sprite!)
-    SvgSprite.expire_cache
+  class << self
+    def refetch!
+      ThemeField.svg_sprite_fields.find_each(&:upsert_svg_sprite!)
+      SvgSprite.expire_cache
+    end
   end
 end
 

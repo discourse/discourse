@@ -29,55 +29,56 @@ module Chat
   #   where the user has > 0 unread messages. If include_missing_memberships is
   #   also true, this overrides that option.
   class TrackingStateReportQuery
-    def self.call(
-      guardian:,
-      channel_ids: nil,
-      thread_ids: nil,
-      include_missing_memberships: false,
-      include_threads: false,
-      include_read: true,
-      include_last_reply_details: false
-    )
-      report = ::Chat::TrackingStateReport.new
+    class << self
+      def call(
+        guardian:,
+        channel_ids: nil,
+        thread_ids: nil,
+        include_missing_memberships: false,
+        include_threads: false,
+        include_read: true,
+        include_last_reply_details: false
+      )
+        report = ::Chat::TrackingStateReport.new
 
-      if channel_ids.blank?
-        report.channel_tracking = {}
-      else
-        report.channel_tracking =
-          ::Chat::ChannelUnreadsQuery
-            .call(
+        if channel_ids.blank?
+          report.channel_tracking = {}
+        else
+          report.channel_tracking =
+            ::Chat::ChannelUnreadsQuery
+              .call(
+                channel_ids: channel_ids,
+                user_id: guardian.user.id,
+                include_missing_memberships: include_missing_memberships,
+                include_read: include_read,
+              )
+              .map do |ct|
+                [
+                  ct.channel_id,
+                  {
+                    mention_count: ct.mention_count,
+                    unread_count: ct.unread_count,
+                    watched_threads_unread_count: ct.watched_threads_unread_count,
+                  },
+                ]
+              end
+              .to_h
+        end
+
+        if !include_threads || (thread_ids.blank? && channel_ids.blank?)
+          report.thread_tracking = {}
+        else
+          tracking =
+            ::Chat::ThreadUnreadsQuery.call(
               channel_ids: channel_ids,
+              thread_ids: thread_ids,
               user_id: guardian.user.id,
               include_missing_memberships: include_missing_memberships,
               include_read: include_read,
             )
-            .map do |ct|
-              [
-                ct.channel_id,
-                {
-                  mention_count: ct.mention_count,
-                  unread_count: ct.unread_count,
-                  watched_threads_unread_count: ct.watched_threads_unread_count,
-                },
-              ]
-            end
-            .to_h
-      end
 
-      if !include_threads || (thread_ids.blank? && channel_ids.blank?)
-        report.thread_tracking = {}
-      else
-        tracking =
-          ::Chat::ThreadUnreadsQuery.call(
-            channel_ids: channel_ids,
-            thread_ids: thread_ids,
-            user_id: guardian.user.id,
-            include_missing_memberships: include_missing_memberships,
-            include_read: include_read,
-          )
-
-        last_reply_details =
-          DB.query(<<~SQL, tracking.map(&:thread_id)) if include_last_reply_details
+          last_reply_details =
+            DB.query(<<~SQL, tracking.map(&:thread_id)) if include_last_reply_details
             SELECT chat_threads.id AS thread_id, last_message.created_at
             FROM chat_threads
             INNER JOIN chat_messages AS last_message ON last_message.id = chat_threads.last_message_id
@@ -85,28 +86,29 @@ module Chat
               AND last_message.deleted_at IS NULL
           SQL
 
-        report.thread_tracking =
-          tracking
-            .map do |tt|
-              data = {
-                channel_id: tt.channel_id,
-                mention_count: tt.mention_count,
-                unread_count: tt.unread_count,
-                watched_threads_unread_count: tt.watched_threads_unread_count,
-              }
+          report.thread_tracking =
+            tracking
+              .map do |tt|
+                data = {
+                  channel_id: tt.channel_id,
+                  mention_count: tt.mention_count,
+                  unread_count: tt.unread_count,
+                  watched_threads_unread_count: tt.watched_threads_unread_count,
+                }
 
-              if include_last_reply_details
-                data[:last_reply_created_at] = last_reply_details
-                  .find { |details| details.thread_id == tt.thread_id }
-                  &.created_at
+                if include_last_reply_details
+                  data[:last_reply_created_at] = last_reply_details
+                    .find { |details| details.thread_id == tt.thread_id }
+                    &.created_at
+                end
+
+                [tt.thread_id, data]
               end
+              .to_h
+        end
 
-              [tt.thread_id, data]
-            end
-            .to_h
+        report
       end
-
-      report
     end
   end
 end

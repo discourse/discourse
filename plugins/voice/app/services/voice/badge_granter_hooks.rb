@@ -2,56 +2,56 @@
 
 module Voice
   class BadgeGranterHooks
-    def self.on_leave(user, session)
-      return unless badges_enabled?
-      return if session&.left_at.blank?
-
-      grant("Mic Check", user) if mic_check?(session)
-      grant("Night Owl", user) if night_owl?(user, session)
-      grant("Early Bird", user) if early_bird?(user, session)
-      grant("Marathoner", user) if marathoner?(session)
-    end
-
-    def self.on_join(user, room, participants)
-      return unless badges_enabled?
-
-      grant("Packed House", user) if room_full?(room, participants)
-      grant("Icebreaker", user) if icebreaker?(user, participants)
-    end
-
-    def self.on_room_create(user)
-      return unless badges_enabled?
-      grant("Host", user)
-    end
-
-    def self.on_invite_redeemed(invite)
-      return unless badges_enabled?
-
-      inviter = invite.invited_by
-      grant("Plus One", inviter) if inviter
-    end
-
     BADGE_GROUP_NAME = "Voice"
 
-    # The site setting is a master switch over the whole grouping. Badges are
-    # flipped in bulk, so the per-badge save callbacks that keep user badge
-    # counts consistent run once here instead.
-    def self.enable_all!
-      badges = voice_badges
-      badges.update_all(enabled: true)
-      sync_user_badges!
-      badges
-        .where.not(query: nil)
-        .pluck(:id)
-        .each { |badge_id| Jobs.enqueue(:backfill_badge, badge_id: badge_id) }
-    end
-
-    def self.disable_all!
-      voice_badges.update_all(enabled: false)
-      sync_user_badges!
-    end
-
     class << self
+      def on_leave(user, session)
+        return unless badges_enabled?
+        return if session&.left_at.blank?
+
+        grant("Mic Check", user) if mic_check?(session)
+        grant("Night Owl", user) if night_owl?(user, session)
+        grant("Early Bird", user) if early_bird?(user, session)
+        grant("Marathoner", user) if marathoner?(session)
+      end
+
+      def on_join(user, room, participants)
+        return unless badges_enabled?
+
+        grant("Packed House", user) if room_full?(room, participants)
+        grant("Icebreaker", user) if icebreaker?(user, participants)
+      end
+
+      def on_room_create(user)
+        return unless badges_enabled?
+        grant("Host", user)
+      end
+
+      def on_invite_redeemed(invite)
+        return unless badges_enabled?
+
+        inviter = invite.invited_by
+        grant("Plus One", inviter) if inviter
+      end
+
+      # The site setting is a master switch over the whole grouping. Badges are
+      # flipped in bulk, so the per-badge save callbacks that keep user badge
+      # counts consistent run once here instead.
+      def enable_all!
+        badges = voice_badges
+        badges.update_all(enabled: true)
+        sync_user_badges!
+        badges
+          .where.not(query: nil)
+          .pluck(:id)
+          .each { |badge_id| Jobs.enqueue(:backfill_badge, badge_id: badge_id) }
+      end
+
+      def disable_all!
+        voice_badges.update_all(enabled: false)
+        sync_user_badges!
+      end
+
       private
 
       def grant(badge_name, user)

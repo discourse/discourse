@@ -16,45 +16,47 @@ module DiscourseAi
           settings_are_configurable
         ].freeze
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Changes the value of a site setting. Look up the exact setting name first (e.g. with the search_settings tool); never guess it.",
-            parameters: [
-              {
-                name: "setting_name",
-                description: "The exact name of the site setting to change",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "value",
-                description:
-                  "The new value for the setting, as a string. Use 'true' or 'false' for boolean settings, plain digits for numeric settings, and pipe-delimited entries (one|two|three) for list settings.",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the setting is being changed",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Changes the value of a site setting. Look up the exact setting name first (e.g. with the search_settings tool); never guess it.",
+              parameters: [
+                {
+                  name: "setting_name",
+                  description: "The exact name of the site setting to change",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "value",
+                  description:
+                    "The new value for the setting, as a string. Use 'true' or 'false' for boolean settings, plain digits for numeric settings, and pipe-delimited entries (one|two|three) for list settings.",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the setting is being changed",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "change_site_setting"
-        end
+          def name
+            "change_site_setting"
+          end
 
-        def self.requires_approval?
-          true
-        end
+          def requires_approval?
+            true
+          end
 
-        def self.attribute_to_approver?
-          true
+          def attribute_to_approver?
+            true
+          end
         end
 
         def invoke

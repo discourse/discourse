@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 module CurrentUser
-  def self.has_auth_cookie?(env)
-    Discourse.current_user_provider.new(env).has_auth_cookie?
-  end
+  class << self
+    def has_auth_cookie?(env)
+      Discourse.current_user_provider.new(env).has_auth_cookie?
+    end
 
-  def self.lookup_from_env(env)
-    Discourse.current_user_provider.new(env).current_user
+    def lookup_from_env(env)
+      Discourse.current_user_provider.new(env).current_user
+    end
   end
 
   # can be used to pretend current user does no exist, for CSRF attacks

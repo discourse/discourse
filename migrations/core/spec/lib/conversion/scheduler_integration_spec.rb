@@ -740,10 +740,12 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
               end
             end
 
-            def self.combine_results(results, tracker)
-              total = results.sum { |result| result["count"] }
-              tracker.log_warning("total=#{total}")
-              tracker.log_error("reducer error")
+            class << self
+              def combine_results(results, tracker)
+                total = results.sum { |result| result["count"] }
+                tracker.log_warning("total=#{total}")
+                tracker.log_error("reducer error")
+              end
             end
           end,
         )
@@ -802,8 +804,10 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
               end
             end
 
-            def self.combine_results(results, tracker)
-              tracker.log_info("with:#{results.size}")
+            class << self
+              def combine_results(results, tracker)
+                tracker.log_info("with:#{results.size}")
+              end
             end
           end,
         )
@@ -826,8 +830,10 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
               end
             end
 
-            def self.combine_results(results, tracker)
-              tracker.log_info("empty:#{results.size}")
+            class << self
+              def combine_results(results, tracker)
+                tracker.log_info("empty:#{results.size}")
+              end
             end
           end,
         )
@@ -935,9 +941,11 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
               end
             end
 
-            def self.combine_results(results, tracker)
-              total = results.sum { |result| result["count"] }
-              tracker.log_warning("total=#{total}")
+            class << self
+              def combine_results(results, tracker)
+                total = results.sum { |result| result["count"] }
+                tracker.log_warning("total=#{total}")
+              end
             end
           end,
         )

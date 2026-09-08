@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PostActionType < ActiveRecord::Base
+  include AnonCacheInvalidator
   POST_ACTION_TYPE_ALL_FLAGS_KEY = "post_action_type_all_flags"
   POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY = "post_action_public_type_ids"
   LIKE_POST_ACTION_ID = 2
@@ -9,21 +10,6 @@ class PostActionType < ActiveRecord::Base
   after_destroy { expire_cache if !skip_expire_cache_callback }
 
   attr_accessor :skip_expire_cache_callback
-
-  include AnonCacheInvalidator
-
-  def expire_cache
-    Discourse.cache.redis.del(
-      *I18n.available_locales.map do |locale|
-        Discourse.cache.normalize_key("post_action_types_#{locale}")
-      end,
-      *I18n.available_locales.map do |locale|
-        Discourse.cache.normalize_key("post_action_flag_types_#{locale}")
-      end,
-      Discourse.cache.normalize_key(POST_ACTION_TYPE_ALL_FLAGS_KEY),
-      Discourse.cache.normalize_key(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY),
-    )
-  end
 
   class << self
     attr_reader :flag_settings
@@ -67,6 +53,19 @@ class PostActionType < ActiveRecord::Base
     ].each do |method_name|
       define_method(method_name) { |*args| PostActionTypeView.new.send(method_name, *args) }
     end
+  end
+
+  def expire_cache
+    Discourse.cache.redis.del(
+      *I18n.available_locales.map do |locale|
+        Discourse.cache.normalize_key("post_action_types_#{locale}")
+      end,
+      *I18n.available_locales.map do |locale|
+        Discourse.cache.normalize_key("post_action_flag_types_#{locale}")
+      end,
+      Discourse.cache.normalize_key(POST_ACTION_TYPE_ALL_FLAGS_KEY),
+      Discourse.cache.normalize_key(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY),
+    )
   end
 
   initialize_flag_settings

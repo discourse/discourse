@@ -58,8 +58,10 @@ RSpec.describe VideoConversion::BaseAdapter do
         adapter_name_const = adapter_name
         Class.new(VideoConversion::BaseAdapter) do
           const_set(:ADAPTER_NAME, adapter_name_const)
-          def self.name
-            "TestAdapter"
+          class << self
+            def name
+              "TestAdapter"
+            end
           end
         end
       end

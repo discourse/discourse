@@ -19,16 +19,17 @@ class AiArtifact < ActiveRecord::Base
     https://esm.sh
   ]
 
-  def self.artifact_version_attribute(version)
-    if version
-      "data-artifact-version='#{version}'"
-    else
-      ""
+  class << self
+    def artifact_version_attribute(version)
+      if version
+        "data-artifact-version='#{version}'"
+      else
+        ""
+      end
     end
-  end
 
-  def self.iframe_for(id, version = nil)
-    <<~HTML
+    def iframe_for(id, version = nil)
+      <<~HTML
       <div class='ai-artifact'>
         <iframe src='#{url(id, version)}' frameborder="0" height="100%" width="100%"></iframe>
         <div class='ai-artifact-controls'>
@@ -37,29 +38,30 @@ class AiArtifact < ActiveRecord::Base
         </div>
       </div>
     HTML
-  end
-
-  def self.url(id, version = nil)
-    url = Discourse.base_url + "/discourse-ai/ai-bot/artifacts/#{id}"
-    if version
-      "#{url}/#{version}"
-    else
-      url
     end
-  end
 
-  def self.share_publicly(id:, post:)
-    artifact = AiArtifact.find_by(id: id)
-    if artifact&.post&.topic&.id == post.topic.id
-      artifact.metadata ||= {}
-      artifact.metadata[:public] = true
-      artifact.save!
+    def url(id, version = nil)
+      url = Discourse.base_url + "/discourse-ai/ai-bot/artifacts/#{id}"
+      if version
+        "#{url}/#{version}"
+      else
+        url
+      end
     end
-  end
 
-  def self.unshare_publicly(id:)
-    artifact = AiArtifact.find_by(id: id)
-    artifact&.update!(metadata: { public: false })
+    def share_publicly(id:, post:)
+      artifact = AiArtifact.find_by(id: id)
+      if artifact&.post&.topic&.id == post.topic.id
+        artifact.metadata ||= {}
+        artifact.metadata[:public] = true
+        artifact.save!
+      end
+    end
+
+    def unshare_publicly(id:)
+      artifact = AiArtifact.find_by(id: id)
+      artifact&.update!(metadata: { public: false })
+    end
   end
 
   def url

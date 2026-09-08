@@ -12,10 +12,12 @@ class CategoryPostingReviewGroup < ActiveRecord::Base
 
   enum :post_type, { topic: 0, reply: 1 }
 
-  def self.user_in_group?(category:, user:, post_type:)
-    where(category: category, post_type: post_type).where(
-      group_id: [Group::AUTO_GROUPS[:everyone]] + user.belonging_to_group_ids,
-    ).exists?
+  class << self
+    def user_in_group?(category:, user:, post_type:)
+      where(category: category, post_type: post_type).where(
+        group_id: [Group::AUTO_GROUPS[:everyone]] + user.belonging_to_group_ids,
+      ).exists?
+    end
   end
 end
 

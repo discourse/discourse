@@ -6,15 +6,20 @@ require_relative "../github_access"
 module Onebox
   module Engine
     class GithubBlobOnebox
-      def self.git_regexp
-        %r{^https?://(www\.)?github\.com.*/blob/}
-      end
+      # GitBlobOnebox's inclusion hook calls git_regexp.
+      # rubocop:disable Layout/ClassStructure
+      class << self
+        def git_regexp
+          %r{^https?://(www\.)?github\.com.*/blob/}
+        end
 
-      def self.onebox_name
-        "githubblob"
+        def onebox_name
+          "githubblob"
+        end
       end
 
       include Onebox::Mixins::GitBlobOnebox
+      # rubocop:enable Layout/ClassStructure
 
       def i18n
         {

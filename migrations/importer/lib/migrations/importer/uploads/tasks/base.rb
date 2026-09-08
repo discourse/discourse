@@ -23,6 +23,12 @@ module Migrations
                       :missing_count,
                       :skipped_count
 
+          class << self
+            def run!(databases, settings)
+              new(databases, settings).run!
+            end
+          end
+
           def initialize(databases, settings)
             @uploads_db = databases[:uploads_db]
             @intermediate_db = databases[:intermediate_db]
@@ -41,10 +47,6 @@ module Migrations
 
           def run!
             raise NotImplementedError
-          end
-
-          def self.run!(databases, settings)
-            new(databases, settings).run!
           end
 
           private

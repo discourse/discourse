@@ -10,61 +10,63 @@ module Onebox
       include StandardEmbed
       include LayoutSupport
 
-      def self.priority
-        200
-      end
+      class << self
+        def priority
+          200
+        end
 
-      # Often using the `html` attribute is not what we want, like for some blogs that
-      # include the entire page HTML. However for some providers like Flickr it allows us
-      # to return gifv and galleries.
-      def self.default_html_providers
-        { "Flickr" => ["flickr.com"], "Meetup" => ["meetup.com"] }
-      end
+        # Often using the `html` attribute is not what we want, like for some blogs that
+        # include the entire page HTML. However for some providers like Flickr it allows us
+        # to return gifv and galleries.
+        def default_html_providers
+          { "Flickr" => ["flickr.com"], "Meetup" => ["meetup.com"] }
+        end
 
-      def self.html_providers
-        @html_providers ||= default_html_providers.dup
-      end
+        def html_providers
+          @html_providers ||= default_html_providers.dup
+        end
 
-      def self.html_providers=(new_provs)
-        @html_providers = new_provs
-      end
+        def html_providers=(new_provs)
+          @html_providers = new_provs
+        end
 
-      # A re-written URL converts http:// -> https://
-      def self.rewrites
-        @rewrites ||= https_hosts.dup
-      end
+        # A re-written URL converts http:// -> https://
+        def rewrites
+          @rewrites ||= https_hosts.dup
+        end
 
-      def self.rewrites=(new_list)
-        @rewrites = new_list
-      end
+        def rewrites=(new_list)
+          @rewrites = new_list
+        end
 
-      def self.https_hosts
-        %w[slideshare.net dailymotion.com livestream.com imgur.com flickr.com]
-      end
+        def https_hosts
+          %w[slideshare.net dailymotion.com livestream.com imgur.com flickr.com]
+        end
 
-      def self.article_html_hosts
-        %w[imdb.com]
-      end
+        def article_html_hosts
+          %w[imdb.com]
+        end
 
-      def self.host_matches(uri, list)
-        !!list.find { |h| /(^|\.)#{Regexp.escape(h)}$/.match(uri.host) }
-      end
+        def host_matches(uri, list)
+          !!list.find { |h| /(^|\.)#{Regexp.escape(h)}$/.match(uri.host) }
+        end
 
-      def self.allowed_twitter_labels
-        ["brand", "price", "usd", "cad", "reading time", "likes"]
-      end
+        def allowed_twitter_labels
+          ["brand", "price", "usd", "cad", "reading time", "likes"]
+        end
 
-      def self.===(other)
-        if other.is_a?(URI)
-          (
-            begin
-              IPAddr.new(other.hostname)
-            rescue StandardError
-              nil
-            end
-          ).nil?
-        else
-          true
+        def ===(other)
+          if other.is_a?(URI)
+            (
+              begin
+                IPAddr.new(other.hostname)
+              rescue StandardError
+                nil
+              end
+            ).nil?
+          else
+            true
+          end
         end
       end
 

@@ -6,8 +6,10 @@ RSpec.describe AccessControlListManager do
 
     self.table_name = "categories"
 
-    def self.name
-      "AclTargetSpecTarget"
+    class << self
+      def name
+        "AclTargetSpecTarget"
+      end
     end
   end
 

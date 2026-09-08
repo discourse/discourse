@@ -9,9 +9,11 @@ module Onebox
       matches_domain("gfycat.com")
       always_https
 
-      # This engine should have priority over AllowlistedGenericOnebox.
-      def self.priority
-        1
+      class << self
+        # This engine should have priority over AllowlistedGenericOnebox.
+        def priority
+          1
+        end
       end
 
       def to_html

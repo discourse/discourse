@@ -10,8 +10,10 @@ module DiscourseAi
 
       FetchError = Class.new(StandardError)
 
-      def self.fetch(url:, etag: nil, last_modified: nil)
-        new(url:, etag:, last_modified:).fetch
+      class << self
+        def fetch(url:, etag: nil, last_modified: nil)
+          new(url:, etag:, last_modified:).fetch
+        end
       end
 
       def initialize(url:, etag:, last_modified:)

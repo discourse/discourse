@@ -11,8 +11,10 @@ module Voice
         :recording,
       )
 
-    def self.preload(rooms)
-      new(rooms).preload
+    class << self
+      def preload(rooms)
+        new(rooms).preload
+      end
     end
 
     def initialize(rooms)

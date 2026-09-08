@@ -8,34 +8,83 @@ class ReviewableScore < ActiveRecord::Base
 
   enum :status, { pending: 0, agreed: 1, disagreed: 2, ignored: 3 }
 
-  # To keep things simple the types correspond to `PostActionType` for backwards
-  # compatibility, but we can add extra reasons for scores.
-  def self.types
-    PostActionType.flag_types.merge(PostActionType.score_types).merge(@api_types || {})
-  end
+  class << self
+    # To keep things simple the types correspond to `PostActionType` for backwards
+    # compatibility, but we can add extra reasons for scores.
+    def types
+      PostActionType.flag_types.merge(PostActionType.score_types).merge(@api_types || {})
+    end
 
-  def self.type_title(type)
-    I18n.t("post_action_types.#{type}.title", default: nil) ||
-      I18n.t("reviewable_score_types.#{type}.title", default: nil) ||
-      PostActionType.names[types[type]]
-  end
+    def type_title(type)
+      I18n.t("post_action_types.#{type}.title", default: nil) ||
+        I18n.t("reviewable_score_types.#{type}.title", default: nil) ||
+        PostActionType.names[types[type]]
+    end
 
-  # When extending post action flags, we need to call this method in order to
-  # get the latests flags.
-  def self.reload_types
-    @api_types = nil
-    types
-  end
+    # When extending post action flags, we need to call this method in order to
+    # get the latests flags.
+    def reload_types
+      @api_types = nil
+      types
+    end
 
-  def self.add_new_types(type_names)
-    @api_types ||= {}
-    next_id = types.values.max + 1
+    def add_new_types(type_names)
+      @api_types ||= {}
+      next_id = types.values.max + 1
 
-    type_names.each_with_index { |name, idx| @api_types[name] = next_id + idx }
-  end
+      type_names.each_with_index { |name, idx| @api_types[name] = next_id + idx }
+    end
 
-  def self.score_transitions
-    { approved: statuses[:agreed], rejected: statuses[:disagreed], ignored: statuses[:ignored] }
+    def score_transitions
+      { approved: statuses[:agreed], rejected: statuses[:disagreed], ignored: statuses[:ignored] }
+    end
+
+    def calculate_score(user, type_bonus, take_action_bonus)
+      score = user_flag_score(user) + type_bonus + take_action_bonus
+      score > 0 ? score : 0
+    end
+
+    # A user's flag score is:
+    #   1.0 + trust_level + user_accuracy_bonus
+    #   (trust_level is 5 for staff)
+    def user_flag_score(user)
+      1.0 + (user.staff? ? 5.0 : user.trust_level.to_f) + user_accuracy_bonus(user)
+    end
+
+    # A user's accuracy bonus is:
+    #   if 5 or less flags => 0.0
+    #   if > 5 flags => (agreed flags / total flags) * 5.0
+    def user_accuracy_bonus(user)
+      user_stat = user&.user_stat
+      return 0.0 if user_stat.blank? || user.bot?
+
+      calc_user_accuracy_bonus(user_stat.flags_agreed, user_stat.flags_disagreed)
+    end
+
+    def calc_user_accuracy_bonus(agreed, disagreed)
+      agreed ||= 0
+      disagreed ||= 0
+
+      total = (agreed + disagreed).to_f
+      return 0.0 if total <= 5
+      accuracy_axis = 0.7
+
+      percent_correct = agreed / total
+      positive_accuracy = percent_correct >= accuracy_axis
+
+      bottom = positive_accuracy ? accuracy_axis : 0.0
+      top = positive_accuracy ? 1.0 : accuracy_axis
+
+      absolute_distance = positive_accuracy ? percent_correct - bottom : top - percent_correct
+
+      axis_distance_multiplier = 1.0 / (top - bottom)
+      positivity_multiplier = positive_accuracy ? 1.0 : -1.0
+
+      (
+        absolute_distance * axis_distance_multiplier * positivity_multiplier *
+          (Math.log(total, 4) * 5.0)
+      ).round(2)
+    end
   end
 
   def score_type
@@ -44,53 +93,6 @@ class ReviewableScore < ActiveRecord::Base
 
   def took_action?
     take_action_bonus > 0
-  end
-
-  def self.calculate_score(user, type_bonus, take_action_bonus)
-    score = user_flag_score(user) + type_bonus + take_action_bonus
-    score > 0 ? score : 0
-  end
-
-  # A user's flag score is:
-  #   1.0 + trust_level + user_accuracy_bonus
-  #   (trust_level is 5 for staff)
-  def self.user_flag_score(user)
-    1.0 + (user.staff? ? 5.0 : user.trust_level.to_f) + user_accuracy_bonus(user)
-  end
-
-  # A user's accuracy bonus is:
-  #   if 5 or less flags => 0.0
-  #   if > 5 flags => (agreed flags / total flags) * 5.0
-  def self.user_accuracy_bonus(user)
-    user_stat = user&.user_stat
-    return 0.0 if user_stat.blank? || user.bot?
-
-    calc_user_accuracy_bonus(user_stat.flags_agreed, user_stat.flags_disagreed)
-  end
-
-  def self.calc_user_accuracy_bonus(agreed, disagreed)
-    agreed ||= 0
-    disagreed ||= 0
-
-    total = (agreed + disagreed).to_f
-    return 0.0 if total <= 5
-    accuracy_axis = 0.7
-
-    percent_correct = agreed / total
-    positive_accuracy = percent_correct >= accuracy_axis
-
-    bottom = positive_accuracy ? accuracy_axis : 0.0
-    top = positive_accuracy ? 1.0 : accuracy_axis
-
-    absolute_distance = positive_accuracy ? percent_correct - bottom : top - percent_correct
-
-    axis_distance_multiplier = 1.0 / (top - bottom)
-    positivity_multiplier = positive_accuracy ? 1.0 : -1.0
-
-    (
-      absolute_distance * axis_distance_multiplier * positivity_multiplier *
-        (Math.log(total, 4) * 5.0)
-    ).round(2)
   end
 
   def reviewable_conversation

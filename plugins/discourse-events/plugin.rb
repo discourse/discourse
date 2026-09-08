@@ -77,91 +77,93 @@ module ::DiscourseEvents
   module Livestream
     LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL = "/discourse-calendar/livestream/chat-status"
 
-    def self.handle_topic_chat_channel_creation(topic)
-      return if topic.category.blank?
-      return if DiscourseEvents::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
-      return unless topic.first_post&.event&.livestream?
+    class << self
+      def handle_topic_chat_channel_creation(topic)
+        return if topic.category.blank?
+        return if DiscourseEvents::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
+        return unless topic.first_post&.event&.livestream?
 
-      channel =
-        Chat::Channel.create!(
-          chatable_id: topic.category.id,
-          chatable_type: "Category",
-          name: topic.title,
-          emoji: "spiral_calendar",
-          status: Chat::Channel.statuses[:open],
-          type: "CategoryChannel",
-          allow_channel_wide_mentions: true,
+        channel =
+          Chat::Channel.create!(
+            chatable_id: topic.category.id,
+            chatable_type: "Category",
+            name: topic.title,
+            emoji: "spiral_calendar",
+            status: Chat::Channel.statuses[:open],
+            type: "CategoryChannel",
+            allow_channel_wide_mentions: true,
+          )
+
+        DiscourseEvents::Livestream::TopicChatChannel.create!(topic: topic, chat_channel: channel)
+        channel.user_chat_channel_memberships.create!(user: topic.user, following: false)
+        pin_topic_reference_message(topic, channel)
+      end
+
+      def pin_topic_reference_message(topic, channel)
+        guardian = Discourse.system_user.guardian
+        message = nil
+
+        Chat::CreateMessage.call(
+          guardian:,
+          params: {
+            chat_channel_id: channel.id,
+            message:
+              I18n.t(
+                "discourse_events.livestream.chat.topic_reference_message",
+                title: topic.markdown_link_title,
+                url: topic.relative_url,
+              ),
+          },
+          options: {
+            enforce_membership: true,
+          },
+        ) do |create_result|
+          on_success { |message_instance:| message = message_instance }
+          on_failure do
+            Rails.logger.warn(
+              "Failed to create livestream topic reference message for channel #{channel.id}: #{create_result.inspect_steps}",
+            )
+          end
+        end
+
+        return if message.blank?
+
+        DiscourseEvents::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).update_all(
+          reference_message_id: message.id,
         )
 
-      DiscourseEvents::Livestream::TopicChatChannel.create!(topic: topic, chat_channel: channel)
-      channel.user_chat_channel_memberships.create!(user: topic.user, following: false)
-      pin_topic_reference_message(topic, channel)
-    end
+        return if !SiteSetting.chat_pinned_messages
 
-    def self.pin_topic_reference_message(topic, channel)
-      guardian = Discourse.system_user.guardian
-      message = nil
-
-      Chat::CreateMessage.call(
-        guardian:,
-        params: {
-          chat_channel_id: channel.id,
-          message:
-            I18n.t(
-              "discourse_events.livestream.chat.topic_reference_message",
-              title: topic.markdown_link_title,
-              url: topic.relative_url,
-            ),
-        },
-        options: {
-          enforce_membership: true,
-        },
-      ) do |create_result|
-        on_success { |message_instance:| message = message_instance }
-        on_failure do
-          Rails.logger.warn(
-            "Failed to create livestream topic reference message for channel #{channel.id}: #{create_result.inspect_steps}",
-          )
+        Chat::PinMessage.call(
+          guardian:,
+          params: {
+            message_id: message.id,
+            channel_id: channel.id,
+          },
+        ) do |pin_result|
+          on_failure do
+            Rails.logger.warn(
+              "Failed to pin livestream topic reference message for channel #{channel.id}: #{pin_result.inspect_steps}",
+            )
+          end
         end
+      rescue StandardError => e
+        Rails.logger.warn(
+          "Failed to post livestream topic reference message for channel #{channel.id}: #{e.message}",
+        )
       end
 
-      return if message.blank?
-
-      DiscourseEvents::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).update_all(
-        reference_message_id: message.id,
-      )
-
-      return if !SiteSetting.chat_pinned_messages
-
-      Chat::PinMessage.call(
-        guardian:,
-        params: {
-          message_id: message.id,
-          channel_id: channel.id,
-        },
-      ) do |pin_result|
-        on_failure do
-          Rails.logger.warn(
-            "Failed to pin livestream topic reference message for channel #{channel.id}: #{pin_result.inspect_steps}",
-          )
-        end
+      def livestream_chat_status_channel(user_id)
+        "#{LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL}/#{user_id}"
       end
-    rescue StandardError => e
-      Rails.logger.warn(
-        "Failed to post livestream topic reference message for channel #{channel.id}: #{e.message}",
-      )
-    end
 
-    def self.livestream_chat_status_channel(user_id)
-      "#{LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL}/#{user_id}"
-    end
-
-    def self.publish_livestream_chat_status(membership, user:)
-      MessageBus.publish(
-        livestream_chat_status_channel(user.id),
-        Chat::UserChannelMembershipSerializer.new(membership, scope: user.guardian).to_json,
-        user_ids: [user.id],
-      )
+      def publish_livestream_chat_status(membership, user:)
+        MessageBus.publish(
+          livestream_chat_status_channel(user.id),
+          Chat::UserChannelMembershipSerializer.new(membership, scope: user.guardian).to_json,
+          user_ids: [user.id],
+        )
+      end
     end
 
     class ChannelSerializationContext
@@ -202,12 +204,14 @@ module ::DiscourseEvents
     end
   end
 
-  def self.users_on_holiday
-    PluginStore.get(PLUGIN_STORE_NAME, USERS_ON_HOLIDAY_KEY) || []
-  end
+  class << self
+    def users_on_holiday
+      PluginStore.get(PLUGIN_STORE_NAME, USERS_ON_HOLIDAY_KEY) || []
+    end
 
-  def self.users_on_holiday=(usernames)
-    PluginStore.set(PLUGIN_STORE_NAME, USERS_ON_HOLIDAY_KEY, usernames)
+    def users_on_holiday=(usernames)
+      PluginStore.set(PLUGIN_STORE_NAME, USERS_ON_HOLIDAY_KEY, usernames)
+    end
   end
 end
 

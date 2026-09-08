@@ -3,28 +3,30 @@
 class ThemeSettingsManager
   attr_reader :name, :theme, :default, :opts
 
-  def self.types
-    ThemeSetting.types
-  end
+  class << self
+    def types
+      ThemeSetting.types
+    end
 
-  def self.cast_row_value(row)
-    type_name = types.invert[row.data_type].downcase.capitalize
-    klass = "ThemeSettingsManager::#{type_name}".constantize
-    klass.cast(klass.extract_value_from_row(row))
-  end
+    def cast_row_value(row)
+      type_name = types.invert[row.data_type].downcase.capitalize
+      klass = "ThemeSettingsManager::#{type_name}".constantize
+      klass.cast(klass.extract_value_from_row(row))
+    end
 
-  def self.create(name, default, type, theme, opts = {})
-    type_name = types.invert[type].downcase.capitalize
-    klass = "ThemeSettingsManager::#{type_name}".constantize
-    klass.new(name, default, theme, opts)
-  end
+    def create(name, default, type, theme, opts = {})
+      type_name = types.invert[type].downcase.capitalize
+      klass = "ThemeSettingsManager::#{type_name}".constantize
+      klass.new(name, default, theme, opts)
+    end
 
-  def self.cast(value)
-    value
-  end
+    def cast(value)
+      value
+    end
 
-  def self.extract_value_from_row(row)
-    row.value
+    def extract_value_from_row(row)
+      row.value
+    end
   end
 
   def initialize(name, default, theme, opts = {})

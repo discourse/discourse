@@ -3,8 +3,10 @@
 module DiscourseAi
   module Automation
     class ReportContextGenerator
-      def self.generate(**args)
-        new(**args).generate
+      class << self
+        def generate(**args)
+          new(**args).generate
+        end
       end
 
       def initialize(

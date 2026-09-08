@@ -2,34 +2,36 @@
 
 module Voice
   class RoomBroadcaster
-    def self.publish_participants(room)
-      new(room).publish_participants
-    end
+    class << self
+      def publish_participants(room)
+        new(room).publish_participants
+      end
 
-    def self.publish_participants_if_changed(room)
-      new(room).publish_participants_if_changed
-    end
+      def publish_participants_if_changed(room)
+        new(room).publish_participants_if_changed
+      end
 
-    def self.publish_kick(room, user_id)
-      new(room).publish_kick(user_id)
-    end
+      def publish_kick(room, user_id)
+        new(room).publish_kick(user_id)
+      end
 
-    def self.publish_role_change(room, user_id, new_role)
-      new(room).publish_role_change(user_id, new_role)
-    end
+      def publish_role_change(room, user_id, new_role)
+        new(room).publish_role_change(user_id, new_role)
+      end
 
-    def self.publish_hand_raise(room, user_id, raised:, raised_at: nil, reason: nil)
-      new(room).publish_hand_raise(user_id, raised: raised, raised_at: raised_at, reason: reason)
-    end
+      def publish_hand_raise(room, user_id, raised:, raised_at: nil, reason: nil)
+        new(room).publish_hand_raise(user_id, raised: raised, raised_at: raised_at, reason: reason)
+      end
 
-    # Someone in the room started ringing `user` — lets open room pages show
-    # a pending tile for them without refetching the room.
-    def self.publish_ringing(room, user, notified_at:)
-      new(room).publish_room(
-        type: "ringing",
-        user: BasicUserSerializer.new(user, scope: Guardian.new(nil), root: false).as_json,
-        notified_at: notified_at,
-      )
+      # Someone in the room started ringing `user` — lets open room pages show
+      # a pending tile for them without refetching the room.
+      def publish_ringing(room, user, notified_at:)
+        new(room).publish_room(
+          type: "ringing",
+          user: BasicUserSerializer.new(user, scope: Guardian.new(nil), root: false).as_json,
+          notified_at: notified_at,
+        )
+      end
     end
 
     def initialize(room)

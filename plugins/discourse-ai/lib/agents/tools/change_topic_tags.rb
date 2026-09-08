@@ -4,53 +4,56 @@ module DiscourseAi
   module Agents
     module Tools
       class ChangeTopicTags < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Adds, replaces, or removes tags on a topic. By default appends the given tags to the existing ones; with replace set, the given list becomes the topic's complete tag set and any omitted tag is removed.",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The ID of the topic",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "tags",
-                description:
-                  "Array of tag names to apply. In replace mode this is the topic's full resulting tag list",
-                type: "array",
-                item_type: "string",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the tags are being changed",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "replace",
-                description:
-                  "When true, replaces all existing tags with the given list. Defaults to false (append).",
-                type: "boolean",
-              },
-              {
-                name: "public_edit_reason",
-                description: "Whether the reason should be visible in the post's revision history",
-                type: "boolean",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Adds, replaces, or removes tags on a topic. By default appends the given tags to the existing ones; with replace set, the given list becomes the topic's complete tag set and any omitted tag is removed.",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The ID of the topic",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "tags",
+                  description:
+                    "Array of tag names to apply. In replace mode this is the topic's full resulting tag list",
+                  type: "array",
+                  item_type: "string",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the tags are being changed",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "replace",
+                  description:
+                    "When true, replaces all existing tags with the given list. Defaults to false (append).",
+                  type: "boolean",
+                },
+                {
+                  name: "public_edit_reason",
+                  description:
+                    "Whether the reason should be visible in the post's revision history",
+                  type: "boolean",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "change_topic_tags"
-        end
+          def name
+            "change_topic_tags"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

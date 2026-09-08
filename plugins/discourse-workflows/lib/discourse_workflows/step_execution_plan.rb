@@ -8,14 +8,16 @@ module DiscourseWorkflows
       Executor::Step::SKIPPED,
     ].freeze
 
-    def self.run_matches_node?(run, node)
-      run_node_id = run["node_id"]
-      return false if run_node_id.present? && run_node_id.to_s != node.id.to_s
+    class << self
+      def run_matches_node?(run, node)
+        run_node_id = run["node_id"]
+        return false if run_node_id.present? && run_node_id.to_s != node.id.to_s
 
-      run_node_type = run["node_type"]
-      return false if run_node_type.present? && run_node_type != node.type
+        run_node_type = run["node_type"]
+        return false if run_node_type.present? && run_node_type != node.type
 
-      true
+        true
+      end
     end
 
     attr_reader :target

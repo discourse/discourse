@@ -17,8 +17,138 @@ class UserAvatar < ActiveRecord::Base
     Discourse::SYSTEM_USER_ID => User.email_hash("info@discourse.org"),
   }
 
-  def self.register_custom_user_gravatar_email_hash(user_id, email)
-    @@custom_user_gravatar_email_hash[user_id] = User.email_hash(email)
+  class << self
+    def register_custom_user_gravatar_email_hash(user_id, email)
+      @@custom_user_gravatar_email_hash[user_id] = User.email_hash(email)
+    end
+
+    def local_avatar_url(hostname, username, upload_id, size)
+      local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
+    end
+
+    def local_avatar_template(hostname, username, upload_id)
+      version = self.version(upload_id)
+      "#{Discourse.base_path}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
+    end
+
+    def external_avatar_url(user_id, upload_id, size)
+      external_avatar_template(user_id, upload_id).gsub("{size}", size.to_s)
+    end
+
+    def external_avatar_template(user_id, upload_id)
+      version = self.version(upload_id)
+      "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/{size}/#{version}.png"
+    end
+
+    def version(upload_id)
+      "#{upload_id}_#{OptimizedImage::VERSION}"
+    end
+
+    def import_url_for_user(avatar_url, user, options = nil)
+      if SiteSetting.verbose_upload_logging
+        Rails.logger.warn("Verbose Upload Logging: Downloading sso-avatar from #{avatar_url}")
+      end
+
+      tempfile =
+        FileHelper.download(
+          avatar_url,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: "sso-avatar",
+          follow_redirect: true,
+          skip_rate_limit: !!options&.fetch(:skip_rate_limit, false),
+        )
+
+      return unless tempfile
+
+      ext = FastImage.type(tempfile).to_s
+      tempfile.rewind
+
+      upload =
+        UploadCreator.new(
+          tempfile,
+          "external-avatar." + ext,
+          origin: avatar_url,
+          type: "avatar",
+        ).create_for(user.id)
+
+      user.create_user_avatar! unless user.user_avatar
+
+      if !user.user_avatar.contains_upload?(upload.id)
+        user.user_avatar.update!(custom_upload_id: upload.id)
+        override_gravatar = !options || options[:override_gravatar]
+
+        if user.uploaded_avatar_id.nil? ||
+             !user.user_avatar.contains_upload?(user.uploaded_avatar_id) || override_gravatar
+          user.update!(uploaded_avatar_id: upload.id)
+        end
+      end
+    rescue Net::ReadTimeout, OpenURI::HTTPError, FinalDestination::SSRFError
+      # Skip saving. We are not connected to the net, or SSRF checks failed.
+    ensure
+      tempfile.close! if tempfile && tempfile.respond_to?(:close!)
+    end
+
+    def ensure_consistency!(max_optimized_avatars_to_remove: 20_000)
+      DB.exec <<~SQL
+      DELETE FROM user_avatars
+      USING user_avatars ua
+      LEFT JOIN users u ON ua.user_id = u.id
+      WHERE user_avatars.id = ua.id AND u.id IS NULL
+    SQL
+
+      DB.exec <<~SQL
+      UPDATE user_avatars
+      SET gravatar_upload_id = NULL
+      WHERE gravatar_upload_id IN (
+        SELECT u1.gravatar_upload_id FROM user_avatars u1
+        LEFT JOIN uploads up
+          ON u1.gravatar_upload_id = up.id
+        WHERE u1.gravatar_upload_id IS NOT NULL AND
+          up.id IS NULL
+      )
+    SQL
+
+      DB.exec <<~SQL
+      UPDATE user_avatars
+      SET custom_upload_id = NULL
+      WHERE custom_upload_id IN (
+        SELECT u1.custom_upload_id FROM user_avatars u1
+        LEFT JOIN uploads up
+          ON u1.custom_upload_id = up.id
+        WHERE u1.custom_upload_id IS NOT NULL AND
+          up.id IS NULL
+      )
+    SQL
+
+      ids =
+        DB.query_single(
+          <<~SQL,
+      SELECT oi.id FROM (
+        SELECT custom_upload_id FROM user_avatars
+        EXCEPT
+        SELECT upload_id FROM  upload_references WHERE target_type <> 'UserAvatar'
+        AND upload_id IS NOT NULL
+      ) AS a
+      JOIN optimized_images oi ON oi.upload_id = a.custom_upload_id
+      WHERE oi.width not in (:sizes) AND oi.height not in (:sizes)
+      LIMIT :limit
+    SQL
+          sizes: Discourse.avatar_sizes,
+          limit: max_optimized_avatars_to_remove,
+        )
+
+      warnings_reported = 0
+
+      ids.each do |id|
+        OptimizedImage.find(id).destroy!
+      rescue ActiveRecord::RecordNotFound
+      rescue => e
+        if warnings_reported < 10
+          Discourse.warn_exception(e, message: "Failed to remove optimized image")
+          warnings_reported += 1
+        end
+      end
+    end
   end
 
   def contains_upload?(id)
@@ -80,130 +210,6 @@ class UserAvatar < ActiveRecord::Base
       raise e if e.io&.status&.[](0).to_i != 404
     ensure
       tempfile&.close!
-    end
-  end
-
-  def self.local_avatar_url(hostname, username, upload_id, size)
-    local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
-  end
-
-  def self.local_avatar_template(hostname, username, upload_id)
-    version = self.version(upload_id)
-    "#{Discourse.base_path}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
-  end
-
-  def self.external_avatar_url(user_id, upload_id, size)
-    external_avatar_template(user_id, upload_id).gsub("{size}", size.to_s)
-  end
-
-  def self.external_avatar_template(user_id, upload_id)
-    version = self.version(upload_id)
-    "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/{size}/#{version}.png"
-  end
-
-  def self.version(upload_id)
-    "#{upload_id}_#{OptimizedImage::VERSION}"
-  end
-
-  def self.import_url_for_user(avatar_url, user, options = nil)
-    if SiteSetting.verbose_upload_logging
-      Rails.logger.warn("Verbose Upload Logging: Downloading sso-avatar from #{avatar_url}")
-    end
-
-    tempfile =
-      FileHelper.download(
-        avatar_url,
-        max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-        tmp_file_name: "sso-avatar",
-        follow_redirect: true,
-        skip_rate_limit: !!options&.fetch(:skip_rate_limit, false),
-      )
-
-    return unless tempfile
-
-    ext = FastImage.type(tempfile).to_s
-    tempfile.rewind
-
-    upload =
-      UploadCreator.new(
-        tempfile,
-        "external-avatar." + ext,
-        origin: avatar_url,
-        type: "avatar",
-      ).create_for(user.id)
-
-    user.create_user_avatar! unless user.user_avatar
-
-    if !user.user_avatar.contains_upload?(upload.id)
-      user.user_avatar.update!(custom_upload_id: upload.id)
-      override_gravatar = !options || options[:override_gravatar]
-
-      if user.uploaded_avatar_id.nil? ||
-           !user.user_avatar.contains_upload?(user.uploaded_avatar_id) || override_gravatar
-        user.update!(uploaded_avatar_id: upload.id)
-      end
-    end
-  rescue Net::ReadTimeout, OpenURI::HTTPError, FinalDestination::SSRFError
-    # Skip saving. We are not connected to the net, or SSRF checks failed.
-  ensure
-    tempfile.close! if tempfile && tempfile.respond_to?(:close!)
-  end
-
-  def self.ensure_consistency!(max_optimized_avatars_to_remove: 20_000)
-    DB.exec <<~SQL
-      DELETE FROM user_avatars
-      USING user_avatars ua
-      LEFT JOIN users u ON ua.user_id = u.id
-      WHERE user_avatars.id = ua.id AND u.id IS NULL
-    SQL
-
-    DB.exec <<~SQL
-      UPDATE user_avatars
-      SET gravatar_upload_id = NULL
-      WHERE gravatar_upload_id IN (
-        SELECT u1.gravatar_upload_id FROM user_avatars u1
-        LEFT JOIN uploads up
-          ON u1.gravatar_upload_id = up.id
-        WHERE u1.gravatar_upload_id IS NOT NULL AND
-          up.id IS NULL
-      )
-    SQL
-
-    DB.exec <<~SQL
-      UPDATE user_avatars
-      SET custom_upload_id = NULL
-      WHERE custom_upload_id IN (
-        SELECT u1.custom_upload_id FROM user_avatars u1
-        LEFT JOIN uploads up
-          ON u1.custom_upload_id = up.id
-        WHERE u1.custom_upload_id IS NOT NULL AND
-          up.id IS NULL
-      )
-    SQL
-
-    ids =
-      DB.query_single(<<~SQL, sizes: Discourse.avatar_sizes, limit: max_optimized_avatars_to_remove)
-      SELECT oi.id FROM (
-        SELECT custom_upload_id FROM user_avatars
-        EXCEPT
-        SELECT upload_id FROM  upload_references WHERE target_type <> 'UserAvatar'
-        AND upload_id IS NOT NULL
-      ) AS a
-      JOIN optimized_images oi ON oi.upload_id = a.custom_upload_id
-      WHERE oi.width not in (:sizes) AND oi.height not in (:sizes)
-      LIMIT :limit
-    SQL
-
-    warnings_reported = 0
-
-    ids.each do |id|
-      OptimizedImage.find(id).destroy!
-    rescue ActiveRecord::RecordNotFound
-    rescue => e
-      if warnings_reported < 10
-        Discourse.warn_exception(e, message: "Failed to remove optimized image")
-        warnings_reported += 1
-      end
     end
   end
 end

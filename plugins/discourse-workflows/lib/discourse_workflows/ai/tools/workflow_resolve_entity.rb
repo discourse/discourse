@@ -7,30 +7,32 @@ module DiscourseWorkflows
         SUPPORTED_KINDS = %w[category tag tag_group user group badge data_table].freeze
         MAX_RESULTS = 10
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Resolves Discourse entity names to IDs or names that can be used in workflow node parameters.",
-            parameters: [
-              {
-                name: "kind",
-                description: "One of: #{SUPPORTED_KINDS.join(", ")}",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "query",
-                description: "Name, slug, username, or partial text to search for",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Resolves Discourse entity names to IDs or names that can be used in workflow node parameters.",
+              parameters: [
+                {
+                  name: "kind",
+                  description: "One of: #{SUPPORTED_KINDS.join(", ")}",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "query",
+                  description: "Name, slug, username, or partial text to search for",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "workflow_resolve_entity"
+          def name
+            "workflow_resolve_entity"
+          end
         end
 
         def invoke

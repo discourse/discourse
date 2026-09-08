@@ -6,8 +6,10 @@ module DiscourseAi
   module Evals
     module Runners
       class Summarization < Base
-        def self.can_handle?(full_feature_name)
-          full_feature_name&.start_with?("summarization:")
+        class << self
+          def can_handle?(full_feature_name)
+            full_feature_name&.start_with?("summarization:")
+          end
         end
 
         def run(eval_case, llm, execution_context:)

@@ -4,12 +4,13 @@ module DiscourseAi
   module Agents
     module Tools
       class CreateArtifact < Tool
-        def self.name
-          "create_artifact"
-        end
+        class << self
+          def name
+            "create_artifact"
+          end
 
-        def self.specification_description
-          <<~DESC
+          def specification_description
+            <<~DESC
             A detailed description of the web artifact you want to create. Your specification should include:
 
             1. Purpose and functionality
@@ -45,42 +46,99 @@ module DiscourseAi
             - Include accessibility requirements
             - Include code snippets to help ground the specification
           DESC
-        end
+          end
 
-        def self.signature
-          {
-            name: "create_artifact",
-            description: "Creates a web artifact based on a specification",
-            parameters: [
-              {
-                name: "name",
-                description: "A name for the artifact (max 255 chars)",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "specification",
-                type: "string",
-                description: specification_description,
-                required: true,
-              },
-              {
-                name: "requires_storage",
-                description:
-                  "Does the artifact require storage for data? (e.g., user input, settings)",
-                type: "boolean",
-                required: true,
-              },
-            ],
-          }
-        end
+          def signature
+            {
+              name: "create_artifact",
+              description: "Creates a web artifact based on a specification",
+              parameters: [
+                {
+                  name: "name",
+                  description: "A name for the artifact (max 255 chars)",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "specification",
+                  type: "string",
+                  description: specification_description,
+                  required: true,
+                },
+                {
+                  name: "requires_storage",
+                  description:
+                    "Does the artifact require storage for data? (e.g., user input, settings)",
+                  type: "boolean",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.accepted_options
-          [option(:creator_llm, type: :llm)]
-        end
+          def accepted_options
+            [option(:creator_llm, type: :llm)]
+          end
 
-        def self.allow_partial_tool_calls?
-          true
+          def allow_partial_tool_calls?
+            true
+          end
+
+          def storage_api
+            <<~API
+            ## Storage API
+
+            Your artifact has access to a persistent key-value storage system via `window.discourseArtifact`:
+
+            ### Methods Available:
+
+            **get(key)**
+            - Parameters: key (string) - The key to retrieve
+            - Returns: Promise<string|null> - The stored value or null if not found
+            - Example: `const value = await window.discourseArtifact.get('user_name');`
+
+            **set(key, value, options)**
+            - Parameters:
+              - key (string) - The key to store (max 50 characters)
+              - value (string) - The value to store (max 5000 characters)
+              - options (object, optional) - { public: boolean } - Whether other users can read this value
+            - Returns: Promise<object> - The created/updated key-value record
+            - Example: `await window.discourseArtifact.set('score', '100', { public: true });`
+
+            **delete(key)**
+            - Parameters: key (string) - The key to delete
+            - Returns: Promise<boolean> - true if successful
+            - Example: `await window.discourseArtifact.delete('temp_data');`
+
+            **index(filter)**
+            - Parameters: filter (object, optional) - Filtering options:
+              - key (string) - Filter by specific key
+              - all_users (boolean) - Include other users' public values
+              - keys_only (boolean) - Return only keys, not values
+              - page (number) - Page number for pagination
+              - per_page (number) - Items per page (max 100, default 100)
+            - Returns: Promise<object> - { key_values: Array(key, value, user(username, name, avatar_template)), has_more: boolean, total_count: number }
+            - Example: `const result = await window.discourseArtifact.index({ keys_only: true });`
+
+            - avatar_template: string - URL template for user avatars, MUST replace {size} with desired size in pixels (eg: 22)
+
+            ### User info:
+
+            To get current user info:
+            const initData = await window.discourseArtifactReady;
+            initData.username; // current username
+            initData.name; // current user's name
+            initData.user_id; // current user ID
+
+            ### Storage Rules:
+            - Each user can store up to 100 keys per artifact
+            - Keys are scoped to the current user and artifact
+            - Private values are only accessible to the user who created them
+            - Public values can be read by anyone who can view the artifact
+            - All operations are asynchronous and return Promises
+            ```
+          API
+          end
         end
 
         def partial_invoke
@@ -277,62 +335,6 @@ module DiscourseAi
         def storage_api
           return if !parameters[:requires_storage]
           self.class.storage_api
-        end
-
-        def self.storage_api
-          <<~API
-            ## Storage API
-
-            Your artifact has access to a persistent key-value storage system via `window.discourseArtifact`:
-
-            ### Methods Available:
-
-            **get(key)**
-            - Parameters: key (string) - The key to retrieve
-            - Returns: Promise<string|null> - The stored value or null if not found
-            - Example: `const value = await window.discourseArtifact.get('user_name');`
-
-            **set(key, value, options)**
-            - Parameters:
-              - key (string) - The key to store (max 50 characters)
-              - value (string) - The value to store (max 5000 characters)
-              - options (object, optional) - { public: boolean } - Whether other users can read this value
-            - Returns: Promise<object> - The created/updated key-value record
-            - Example: `await window.discourseArtifact.set('score', '100', { public: true });`
-
-            **delete(key)**
-            - Parameters: key (string) - The key to delete
-            - Returns: Promise<boolean> - true if successful
-            - Example: `await window.discourseArtifact.delete('temp_data');`
-
-            **index(filter)**
-            - Parameters: filter (object, optional) - Filtering options:
-              - key (string) - Filter by specific key
-              - all_users (boolean) - Include other users' public values
-              - keys_only (boolean) - Return only keys, not values
-              - page (number) - Page number for pagination
-              - per_page (number) - Items per page (max 100, default 100)
-            - Returns: Promise<object> - { key_values: Array(key, value, user(username, name, avatar_template)), has_more: boolean, total_count: number }
-            - Example: `const result = await window.discourseArtifact.index({ keys_only: true });`
-
-            - avatar_template: string - URL template for user avatars, MUST replace {size} with desired size in pixels (eg: 22)
-
-            ### User info:
-
-            To get current user info:
-            const initData = await window.discourseArtifactReady;
-            initData.username; // current username
-            initData.name; // current user's name
-            initData.user_id; // current user ID
-
-            ### Storage Rules:
-            - Each user can store up to 100 keys per artifact
-            - Keys are scoped to the current user and artifact
-            - Private values are only accessible to the user who created them
-            - Public values can be read by anyone who can view the artifact
-            - All operations are asynchronous and return Promises
-            ```
-          API
         end
 
         def update_custom_html(artifact)

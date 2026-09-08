@@ -3,14 +3,16 @@
 class Jobs::ReviewablePriorities < ::Jobs::Scheduled
   every 1.day
 
-  # We need this many reviewables before we'll calculate priorities
-  def self.min_reviewables
-    15
-  end
+  class << self
+    # We need this many reviewables before we'll calculate priorities
+    def min_reviewables
+      15
+    end
 
-  # We want to look at scores for items with this many reviewables (flags) attached
-  def self.target_count
-    2
+    # We want to look at scores for items with this many reviewables (flags) attached
+    def target_count
+      2
+    end
   end
 
   def execute(args)

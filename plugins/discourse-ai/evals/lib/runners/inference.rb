@@ -24,8 +24,10 @@ module DiscourseAi
           },
         }.freeze
 
-        def self.can_handle?(feature_name)
-          feature_name&.start_with?("inference:")
+        class << self
+          def can_handle?(feature_name)
+            feature_name&.start_with?("inference:")
+          end
         end
 
         def run(eval_case, llm, execution_context:)

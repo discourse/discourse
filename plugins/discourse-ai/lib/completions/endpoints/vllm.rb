@@ -17,8 +17,10 @@ module DiscourseAi
           "max" => "high",
         }.freeze
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "vllm"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "vllm"
+          end
         end
 
         def provider_id

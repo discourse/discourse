@@ -5,43 +5,45 @@ class UserCardSerializer < BasicUserSerializer
 
   attr_accessor :topic_post_count
 
-  def initialize(object, options = {})
-    super
-    options[:include_status] = true
-  end
-
-  def self.staff_attributes(*attrs)
-    attributes(*attrs)
-    attrs.each do |attr|
-      define_method "include_#{attr}?" do
-        scope.is_staff?
+  class << self
+    def staff_attributes(*attrs)
+      attributes(*attrs)
+      attrs.each do |attr|
+        define_method "include_#{attr}?" do
+          scope.is_staff?
+        end
       end
     end
-  end
 
-  def self.private_attributes(*attrs)
-    attributes(*attrs)
-    attrs.each do |attr|
-      define_method "include_#{attr}?" do
-        if defined?(super)
-          super() && can_edit
-        else
-          can_edit
+    def private_attributes(*attrs)
+      attributes(*attrs)
+      attrs.each do |attr|
+        define_method "include_#{attr}?" do
+          if defined?(super)
+            super() && can_edit
+          else
+            can_edit
+          end
+        end
+      end
+    end
+
+    # attributes that are hidden for TL0 users when seen by anonymous
+    def untrusted_attributes(*attrs)
+      attributes(*attrs)
+      attrs.each do |attr|
+        method_name = "include_#{attr}?"
+        define_method(method_name) do
+          return false unless include_profile_details?
+          public_send(attr).present?
         end
       end
     end
   end
 
-  # attributes that are hidden for TL0 users when seen by anonymous
-  def self.untrusted_attributes(*attrs)
-    attributes(*attrs)
-    attrs.each do |attr|
-      method_name = "include_#{attr}?"
-      define_method(method_name) do
-        return false unless include_profile_details?
-        public_send(attr).present?
-      end
-    end
+  def initialize(object, options = {})
+    super
+    options[:include_status] = true
   end
 
   attributes :email,

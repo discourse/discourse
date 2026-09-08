@@ -18,8 +18,10 @@ module Voice
     # waking up to a stale MessageBus backlog can discard expired rings.
     RING_SECONDS = 60
 
-    def self.invite!(room:, inviter:, users:)
-      users.filter_map { |user| new(room: room, inviter: inviter, user: user).invite! }
+    class << self
+      def invite!(room:, inviter:, users:)
+        users.filter_map { |user| new(room: room, inviter: inviter, user: user).invite! }
+      end
     end
 
     def initialize(room:, inviter:, user:)

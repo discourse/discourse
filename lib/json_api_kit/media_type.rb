@@ -6,7 +6,9 @@ module JsonApiKit
     ALLOWED = %w[ext profile].freeze
     WEIGHT = "q"
 
-    def self.parse(header) = header.to_s.split(",").filter_map { new(it) if it.present? }
+    class << self
+      def parse(header) = header.to_s.split(",").filter_map { new(it) if it.present? }
+    end
 
     def initialize(declaration)
       @declaration = declaration.strip

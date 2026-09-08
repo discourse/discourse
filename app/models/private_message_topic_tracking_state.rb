@@ -23,30 +23,31 @@ class PrivateMessageTopicTrackingState
   READ_MESSAGE_TYPE = "read"
   GROUP_ARCHIVE_MESSAGE_TYPE = "group_archive"
 
-  def self.report(user)
-    sql = new_and_unread_sql(user)
+  class << self
+    def report(user)
+      sql = new_and_unread_sql(user)
 
-    DB.query(
-      sql + "\n\n LIMIT :max_topics",
-      {
-        max_topics: TopicTrackingState::MAX_TOPICS,
-        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
-      },
-    )
-  end
+      DB.query(
+        sql + "\n\n LIMIT :max_topics",
+        {
+          max_topics: TopicTrackingState::MAX_TOPICS,
+          min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
+        },
+      )
+    end
 
-  def self.new_and_unread_sql(user)
-    sql = report_raw_sql(user, skip_unread: true)
-    sql << "\nUNION ALL\n\n"
-    sql << report_raw_sql(user, skip_new: true)
-  end
+    def new_and_unread_sql(user)
+      sql = report_raw_sql(user, skip_unread: true)
+      sql << "\nUNION ALL\n\n"
+      sql << report_raw_sql(user, skip_new: true)
+    end
 
-  def self.report_raw_sql(user, skip_unread: false, skip_new: false)
-    unread =
-      if skip_unread
-        "1=0"
-      else
-        first_unread_pm_at = DB.query_single(<<~SQL, user_id: user.id).first
+    def report_raw_sql(user, skip_unread: false, skip_new: false)
+      unread =
+        if skip_unread
+          "1=0"
+        else
+          first_unread_pm_at = DB.query_single(<<~SQL, user_id: user.id).first
         SELECT
           LEAST(
             MIN(user_stats.first_unread_pm_at),
@@ -58,20 +59,20 @@ class PrivateMessageTopicTrackingState
         WHERE group_users.user_id = :user_id;
         SQL
 
-        <<~SQL
+          <<~SQL
         #{TopicTrackingState.unread_filter_sql(whisperer: user.whisperer?)}
         #{first_unread_pm_at ? "AND topics.updated_at > '#{first_unread_pm_at}'" : ""}
         SQL
-      end
+        end
 
-    new =
-      if skip_new
-        "1=0"
-      else
-        TopicTrackingState.new_filter_sql
-      end
+      new =
+        if skip_new
+          "1=0"
+        else
+          TopicTrackingState.new_filter_sql
+        end
 
-    +<<~SQL
+      +<<~SQL
       SELECT
         DISTINCT topics.id AS topic_id,
         u.id AS user_id,
@@ -94,118 +95,119 @@ class PrivateMessageTopicTrackingState
         topics.deleted_at IS NULL
         #{user.staff? ? "" : "AND topics.visible"}
     SQL
-  end
-
-  def self.publish_unread(post)
-    topic = post.topic
-    return unless topic.private_message?
-    return if post.small_action?
-
-    scope = TopicUser.tracking(post.topic_id).includes(user: %i[user_stat user_option])
-
-    group_ids = post.whisper? ? [Group::AUTO_GROUPS[:staff]] : topic.allowed_groups.pluck(:id)
-
-    if group_ids.present?
-      scope =
-        scope.joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id").where(
-          "gu.group_id IN (?)",
-          group_ids,
-        )
     end
 
-    # Note: At some point we may want to make the same performance optimisation
-    # here as we did with the other topic tracking state, where we only send
-    # one 'unread' update to all users, not a more accurate unread update to
-    # each individual user with their own read state.
-    #
-    # cf. f6c852bf8e7f4dea519425ba87a114f22f52a8f4
-    scope
-      .select(%i[user_id last_read_post_number notification_level])
-      .each do |tu|
-        next if tu.user_id == post.user_id # skip post creator
+    def publish_unread(post)
+      topic = post.topic
+      return unless topic.private_message?
+      return if post.small_action?
 
-        if tu.last_read_post_number.nil? &&
-             topic.created_at < tu.user.user_option.treat_as_new_topic_start_date
-          next
+      scope = TopicUser.tracking(post.topic_id).includes(user: %i[user_stat user_option])
+
+      group_ids = post.whisper? ? [Group::AUTO_GROUPS[:staff]] : topic.allowed_groups.pluck(:id)
+
+      if group_ids.present?
+        scope =
+          scope.joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id").where(
+            "gu.group_id IN (?)",
+            group_ids,
+          )
+      end
+
+      # Note: At some point we may want to make the same performance optimisation
+      # here as we did with the other topic tracking state, where we only send
+      # one 'unread' update to all users, not a more accurate unread update to
+      # each individual user with their own read state.
+      #
+      # cf. f6c852bf8e7f4dea519425ba87a114f22f52a8f4
+      scope
+        .select(%i[user_id last_read_post_number notification_level])
+        .each do |tu|
+          next if tu.user_id == post.user_id # skip post creator
+
+          if tu.last_read_post_number.nil? &&
+               topic.created_at < tu.user.user_option.treat_as_new_topic_start_date
+            next
+          end
+
+          message = {
+            topic_id: post.topic_id,
+            message_type: UNREAD_MESSAGE_TYPE,
+            payload: {
+              last_read_post_number: tu.last_read_post_number,
+              highest_post_number: post.post_number,
+              notification_level: tu.notification_level,
+              group_ids: group_ids,
+              created_by_user_id: post.user_id,
+            },
+          }
+
+          MessageBus.publish(user_channel(tu.user_id), message.as_json, user_ids: [tu.user_id])
+        end
+    end
+
+    def publish_new(topic)
+      return unless topic.private_message?
+
+      message = {
+        message_type: NEW_MESSAGE_TYPE,
+        topic_id: topic.id,
+        payload: {
+          last_read_post_number: nil,
+          highest_post_number: 1,
+          group_ids: topic.allowed_groups.pluck(:id),
+          created_by_user_id: topic.user_id,
+        },
+      }.as_json
+
+      topic
+        .allowed_users
+        .pluck(:id)
+        .each do |user_id|
+          next if user_id == topic.user_id # skip topic creator
+          MessageBus.publish(user_channel(user_id), message, user_ids: [user_id])
         end
 
-        message = {
-          topic_id: post.topic_id,
-          message_type: UNREAD_MESSAGE_TYPE,
-          payload: {
-            last_read_post_number: tu.last_read_post_number,
-            highest_post_number: post.post_number,
-            notification_level: tu.notification_level,
-            group_ids: group_ids,
-            created_by_user_id: post.user_id,
-          },
-        }
+      topic
+        .allowed_groups
+        .pluck(:id)
+        .each do |group_id|
+          MessageBus.publish(group_channel(group_id), message, group_ids: [group_id])
+        end
+    end
 
-        MessageBus.publish(user_channel(tu.user_id), message.as_json, user_ids: [tu.user_id])
-      end
-  end
+    def publish_group_archived(topic:, group_id:, acting_user_id: nil)
+      return unless topic.private_message?
 
-  def self.publish_new(topic)
-    return unless topic.private_message?
+      message = {
+        message_type: GROUP_ARCHIVE_MESSAGE_TYPE,
+        topic_id: topic.id,
+        payload: {
+          group_ids: [group_id],
+          acting_user_id: acting_user_id,
+        },
+      }.as_json
 
-    message = {
-      message_type: NEW_MESSAGE_TYPE,
-      topic_id: topic.id,
-      payload: {
-        last_read_post_number: nil,
-        highest_post_number: 1,
-        group_ids: topic.allowed_groups.pluck(:id),
-        created_by_user_id: topic.user_id,
-      },
-    }.as_json
+      MessageBus.publish(group_channel(group_id), message, group_ids: [group_id])
+    end
 
-    topic
-      .allowed_users
-      .pluck(:id)
-      .each do |user_id|
-        next if user_id == topic.user_id # skip topic creator
-        MessageBus.publish(user_channel(user_id), message, user_ids: [user_id])
-      end
+    def publish_read(topic_id, last_read_post_number, user, notification_level = nil)
+      publish_read_message(
+        message_type: READ_MESSAGE_TYPE,
+        channel_name: user_channel(user.id),
+        topic_id: topic_id,
+        user: user,
+        last_read_post_number: last_read_post_number,
+        notification_level: notification_level,
+      )
+    end
 
-    topic
-      .allowed_groups
-      .pluck(:id)
-      .each do |group_id|
-        MessageBus.publish(group_channel(group_id), message, group_ids: [group_id])
-      end
-  end
+    def user_channel(user_id)
+      "#{CHANNEL_PREFIX}/user/#{user_id}"
+    end
 
-  def self.publish_group_archived(topic:, group_id:, acting_user_id: nil)
-    return unless topic.private_message?
-
-    message = {
-      message_type: GROUP_ARCHIVE_MESSAGE_TYPE,
-      topic_id: topic.id,
-      payload: {
-        group_ids: [group_id],
-        acting_user_id: acting_user_id,
-      },
-    }.as_json
-
-    MessageBus.publish(group_channel(group_id), message, group_ids: [group_id])
-  end
-
-  def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
-    publish_read_message(
-      message_type: READ_MESSAGE_TYPE,
-      channel_name: user_channel(user.id),
-      topic_id: topic_id,
-      user: user,
-      last_read_post_number: last_read_post_number,
-      notification_level: notification_level,
-    )
-  end
-
-  def self.user_channel(user_id)
-    "#{CHANNEL_PREFIX}/user/#{user_id}"
-  end
-
-  def self.group_channel(group_id)
-    "#{CHANNEL_PREFIX}/group/#{group_id}"
+    def group_channel(group_id)
+      "#{CHANNEL_PREFIX}/group/#{group_id}"
+    end
   end
 end

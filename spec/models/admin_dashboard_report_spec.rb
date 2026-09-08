@@ -2,7 +2,11 @@
 
 RSpec.describe AdminDashboardReport do
   let(:another_provider) do
-    Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "another_source" }
+    Class.new(AdminDashboard::Reports::SourceProvider) do
+      class << self
+        def source_name = "another_source"
+      end
+    end
   end
 
   before do

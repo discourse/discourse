@@ -5,6 +5,12 @@ class Users::AssociateAccountsController < ApplicationController
 
   before_action :ensure_logged_in
 
+  class << self
+    def key(token)
+      "#{SERVER_SESSION_PREFIX}_#{token}"
+    end
+  end
+
   def connect_info
     account_description = authenticator.description_for_auth_hash(auth_hash)
     existing_account_description = authenticator.description_for_user(current_user).presence
@@ -51,9 +57,5 @@ class Users::AssociateAccountsController < ApplicationController
       raise Discourse::InvalidAccess.new(I18n.t("authenticator_no_connect"))
     end
     authenticator
-  end
-
-  def self.key(token)
-    "#{SERVER_SESSION_PREFIX}_#{token}"
   end
 end

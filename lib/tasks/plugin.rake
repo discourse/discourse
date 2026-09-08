@@ -289,23 +289,25 @@ end
 desc "create a new plugin based on template"
 task "plugin:create", [:name] do |t, args|
   class StringHelpers
-    def self.to_snake_case(string)
-      return string if string.match?(/\A[a-z0-9_]+\z/)
-      string.dup.gsub!("-", "_")
-    end
+    class << self
+      def to_snake_case(string)
+        return string if string.match?(/\A[a-z0-9_]+\z/)
+        string.dup.gsub!("-", "_")
+      end
 
-    def self.to_pascal_case(string)
-      return string if string.match?(/\A[A-Z][a-z0-9]+([A-Z][a-z0-9]+)*\z/)
-      string.dup.split("-").map(&:capitalize).join
-    end
+      def to_pascal_case(string)
+        return string if string.match?(/\A[A-Z][a-z0-9]+([A-Z][a-z0-9]+)*\z/)
+        string.dup.split("-").map(&:capitalize).join
+      end
 
-    def self.to_pascal_spaced_case(string)
-      return string if string.match?(/\A[A-Z][a-z0-9]+([A-Z][a-z0-9]+)*\z/)
-      string.dup.split("-").map(&:capitalize).join(" ")
-    end
+      def to_pascal_spaced_case(string)
+        return string if string.match?(/\A[A-Z][a-z0-9]+([A-Z][a-z0-9]+)*\z/)
+        string.dup.split("-").map(&:capitalize).join(" ")
+      end
 
-    def self.is_in_kebab_case?(string)
-      string.match?(/\A[a-z0-9]+(-[a-z0-9]+)*\z/)
+      def is_in_kebab_case?(string)
+        string.match?(/\A[a-z0-9]+(-[a-z0-9]+)*\z/)
+      end
     end
   end
 

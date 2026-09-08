@@ -6,8 +6,10 @@ module DiscourseAi
       class OpenRouter < OpenAi
         OPEN_ROUTER_REASONING_EFFORTS = %w[none minimal low medium high xhigh max].freeze
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "open_router"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "open_router"
+          end
         end
 
         def resolve_thinking_config(model_params)

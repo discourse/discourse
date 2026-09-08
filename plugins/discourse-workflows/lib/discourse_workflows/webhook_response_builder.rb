@@ -2,12 +2,14 @@
 
 module DiscourseWorkflows
   class WebhookResponseBuilder
-    def self.immediate(parameters)
-      new(parameters).immediate
-    end
+    class << self
+      def immediate(parameters)
+        new(parameters).immediate
+      end
 
-    def self.last_node(execution, parameters)
-      new(parameters).last_node(execution)
+      def last_node(execution, parameters)
+        new(parameters).last_node(execution)
+      end
     end
 
     def initialize(parameters)

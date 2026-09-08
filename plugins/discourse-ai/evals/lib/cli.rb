@@ -19,96 +19,100 @@ class DiscourseAi::Evals::Cli
                 :comparison_mode,
                 :dataset_path
 
-  def self.parse_options!(features_registry)
-    cli = new
+  class << self
+    def parse_options!(features_registry)
+      cli = new
 
-    parser =
-      OptionParser.new do |opts|
-        opts.banner = "Usage: evals/run [options]"
+      parser =
+        OptionParser.new do |opts|
+          opts.banner = "Usage: evals/run [options]"
 
-        opts.on("-e", "--eval NAME", "Name of the evaluation to run") do |eval_name|
-          cli.eval_name = eval_name
+          opts.on("-e", "--eval NAME", "Name of the evaluation to run") do |eval_name|
+            cli.eval_name = eval_name
+          end
+
+          opts.on("--list-models", "List models") { cli.list_models = true }
+          opts.on("--list-features", "List features available for evals") do
+            cli.list_features = true
+          end
+          opts.on("--list-agents", "List agent definitions available to evals") do
+            cli.list_agents = true
+          end
+
+          opts.on(
+            "-m",
+            "--models NAME",
+            "Models to evaluate (comma separated, defaults to all)",
+          ) { |models| cli.models = models }
+
+          opts.on("-l", "--list", "List evals") { cli.list = true }
+
+          opts.on(
+            "-f",
+            "--feature KEY",
+            "Feature key to evaluate (module_name:feature_name)",
+          ) { |key| cli.feature_key = key }
+
+          opts.on(
+            "-j",
+            "--judge NAME",
+            "LLM config used to judge eval outputs (defaults to gpt-4o when available)",
+          ) { |judge| cli.judge_name = judge }
+
+          opts.on(
+            "--agent-keys KEYS",
+            "Comma-separated list of agent keys to run sequentially",
+          ) { |keys| keys.split(",").each { |key| cli.add_agent_key(key) } }
+
+          opts.on("--compare MODE", "Comparison mode (agents or llms)") do |mode|
+            cli.comparison_mode = mode
+          end
+
+          opts.on("--dataset PATH", "Path to a CSV dataset file (requires --feature)") do |path|
+            cli.dataset_path = path
+          end
         end
 
-        opts.on("--list-models", "List models") { cli.list_models = true }
-        opts.on("--list-features", "List features available for evals") { cli.list_features = true }
-        opts.on("--list-agents", "List agent definitions available to evals") do
-          cli.list_agents = true
-        end
+      show_help = ARGV.empty?
+      parser.parse!
 
-        opts.on(
-          "-m",
-          "--models NAME",
-          "Models to evaluate (comma separated, defaults to all)",
-        ) { |models| cli.models = models }
+      if show_help
+        puts parser
+        exit 0
+      end
 
-        opts.on("-l", "--list", "List evals") { cli.list = true }
+      if cli.feature_key && !features_registry.valid_feature_key?(cli.feature_key)
+        STDERR.puts(
+          "Unknown feature '#{cli.feature_key}'. Run with --list-features to view valid keys.",
+        )
+        exit 1
+      end
 
-        opts.on(
-          "-f",
-          "--feature KEY",
-          "Feature key to evaluate (module_name:feature_name)",
-        ) { |key| cli.feature_key = key }
+      if cli.comparison_mode.present?
+        normalized = cli.comparison_mode.to_s.downcase.strip
+        cli.comparison_mode =
+          case normalized
+          when "agent", "agents"
+            :agents
+          when "llms", "models"
+            :llms
+          else
+            STDERR.puts("Unknown comparison mode '#{cli.comparison_mode}'. Use Agents or LLMs.")
+            exit 1
+          end
 
-        opts.on(
-          "-j",
-          "--judge NAME",
-          "LLM config used to judge eval outputs (defaults to gpt-4o when available)",
-        ) { |judge| cli.judge_name = judge }
-
-        opts.on(
-          "--agent-keys KEYS",
-          "Comma-separated list of agent keys to run sequentially",
-        ) { |keys| keys.split(",").each { |key| cli.add_agent_key(key) } }
-
-        opts.on("--compare MODE", "Comparison mode (agents or llms)") do |mode|
-          cli.comparison_mode = mode
-        end
-
-        opts.on("--dataset PATH", "Path to a CSV dataset file (requires --feature)") do |path|
-          cli.dataset_path = path
+        if cli.comparison_mode == :agents
+          cli.add_agent_key(DiscourseAi::Evals::AgentPromptLoader::DEFAULT_AGENT_KEY)
         end
       end
 
-    show_help = ARGV.empty?
-    parser.parse!
-
-    if show_help
-      puts parser
-      exit 0
-    end
-
-    if cli.feature_key && !features_registry.valid_feature_key?(cli.feature_key)
-      STDERR.puts(
-        "Unknown feature '#{cli.feature_key}'. Run with --list-features to view valid keys.",
-      )
-      exit 1
-    end
-
-    if cli.comparison_mode.present?
-      normalized = cli.comparison_mode.to_s.downcase.strip
-      cli.comparison_mode =
-        case normalized
-        when "agent", "agents"
-          :agents
-        when "llms", "models"
-          :llms
-        else
-          STDERR.puts("Unknown comparison mode '#{cli.comparison_mode}'. Use Agents or LLMs.")
-          exit 1
-        end
-
-      if cli.comparison_mode == :agents
-        cli.add_agent_key(DiscourseAi::Evals::AgentPromptLoader::DEFAULT_AGENT_KEY)
+      if cli.dataset_path.present? && cli.feature_key.blank?
+        STDERR.puts("--dataset requires a --feature flag identifying the eval feature to run.")
+        exit 1
       end
-    end
 
-    if cli.dataset_path.present? && cli.feature_key.blank?
-      STDERR.puts("--dataset requires a --feature flag identifying the eval feature to run.")
-      exit 1
+      cli
     end
-
-    cli
   end
 
   def initialize

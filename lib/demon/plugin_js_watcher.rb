@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Demon::PluginJsWatcher < ::Demon::Base
-  def self.prefix
-    "plugin_js_watcher"
+  class << self
+    def prefix
+      "plugin_js_watcher"
+    end
   end
 
   def after_fork

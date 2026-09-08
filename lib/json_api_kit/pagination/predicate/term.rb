@@ -7,7 +7,9 @@ module JsonApiKit
         delegate :identifier, :operator, to: :key
         delegate :name, :nulls_trailing?, :nulls_read_first?, to: :key, private: true
 
-        def self.for(key, value) = value.nil? ? Null.new(key) : new(key, value)
+        class << self
+          def for(key, value) = value.nil? ? Null.new(key) : new(key, value)
+        end
 
         def initialize(key, value)
           @key = key

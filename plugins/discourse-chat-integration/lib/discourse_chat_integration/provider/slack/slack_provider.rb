@@ -23,443 +23,445 @@ module DiscourseChatIntegration::Provider::SlackProvider
     :string,
   )
 
-  def self.setup(current_user, provider_site_settings = {})
-    token = provider_site_settings[:chat_integration_slack_access_token].to_s.strip
-    webhook_url = provider_site_settings[:chat_integration_slack_outbound_webhook_url].to_s.strip
+  class << self
+    def setup(current_user, provider_site_settings = {})
+      token = provider_site_settings[:chat_integration_slack_access_token].to_s.strip
+      webhook_url = provider_site_settings[:chat_integration_slack_outbound_webhook_url].to_s.strip
 
-    if token.blank? && webhook_url.blank?
-      raise DiscourseChatIntegration::ProviderError.new(
-              info: {
-                error_key: "chat_integration.provider.slack.errors.at_least_one_required",
-              },
-            )
+      if token.blank? && webhook_url.blank?
+        raise DiscourseChatIntegration::ProviderError.new(
+                info: {
+                  error_key: "chat_integration.provider.slack.errors.at_least_one_required",
+                },
+              )
+      end
+
+      verify_slack_access_token!(token) if token.present?
+
+      # Incoming webhooks have no auth.test equivalent; validate URL shape only (no live POST to avoid posting to the channel).
+      if webhook_url.present? && !valid_slack_incoming_webhook_url?(webhook_url)
+        raise DiscourseChatIntegration::ProviderError.new(
+                info: {
+                  error_key: "chat_integration.provider.slack.errors.invalid_webhook_url",
+                },
+              )
+      end
+
+      settings = []
+
+      if token.present?
+        settings.push({ setting_name: :chat_integration_slack_access_token, value: token })
+      end
+
+      if webhook_url.present?
+        settings.push(
+          { setting_name: :chat_integration_slack_outbound_webhook_url, value: webhook_url },
+        )
+      end
+
+      setting_update_result =
+        SiteSetting::Update.call(params: { settings: }, guardian: current_user.guardian)
+
+      if !setting_update_result.success?
+        raise DiscourseChatIntegration::ProviderError.new(
+                info: {
+                  error_key: "chat_integration.errors.setting_update_failed",
+                  response_body: setting_update_result.errors,
+                },
+              )
+      end
+
+      # The enable setting update needs to be separate because we have a site
+      # setting validator that depends on the other settings being set.
+      setting_update_result =
+        SiteSetting::Update.call(
+          params: {
+            settings: [{ setting_name: PROVIDER_ENABLED_SETTING, value: true }],
+          },
+          guardian: current_user.guardian,
+        )
+
+      if !setting_update_result.success?
+        raise DiscourseChatIntegration::ProviderError.new(
+                info: {
+                  error_key: "chat_integration.errors.setting_update_failed",
+                  response_body: setting_update_result.errors,
+                },
+              )
+      end
     end
 
-    verify_slack_access_token!(token) if token.present?
+    def verify_slack_access_token!(token)
+      http = slack_api_http
+      req = Net::HTTP::Post.new(URI("https://slack.com/api/auth.test"))
+      req.set_form_data(token: token)
+      response = http.request(req)
 
-    # Incoming webhooks have no auth.test equivalent; validate URL shape only (no live POST to avoid posting to the channel).
-    if webhook_url.present? && !valid_slack_incoming_webhook_url?(webhook_url)
-      raise DiscourseChatIntegration::ProviderError.new(
-              info: {
-                error_key: "chat_integration.provider.slack.errors.invalid_webhook_url",
-              },
-            )
-    end
-
-    settings = []
-
-    if token.present?
-      settings.push({ setting_name: :chat_integration_slack_access_token, value: token })
-    end
-
-    if webhook_url.present?
-      settings.push(
-        { setting_name: :chat_integration_slack_outbound_webhook_url, value: webhook_url },
-      )
-    end
-
-    setting_update_result =
-      SiteSetting::Update.call(params: { settings: }, guardian: current_user.guardian)
-
-    if !setting_update_result.success?
-      raise DiscourseChatIntegration::ProviderError.new(
-              info: {
-                error_key: "chat_integration.errors.setting_update_failed",
-                response_body: setting_update_result.errors,
-              },
-            )
-    end
-
-    # The enable setting update needs to be separate because we have a site
-    # setting validator that depends on the other settings being set.
-    setting_update_result =
-      SiteSetting::Update.call(
-        params: {
-          settings: [{ setting_name: PROVIDER_ENABLED_SETTING, value: true }],
-        },
-        guardian: current_user.guardian,
-      )
-
-    if !setting_update_result.success?
-      raise DiscourseChatIntegration::ProviderError.new(
-              info: {
-                error_key: "chat_integration.errors.setting_update_failed",
-                response_body: setting_update_result.errors,
-              },
-            )
-    end
-  end
-
-  def self.verify_slack_access_token!(token)
-    http = slack_api_http
-    req = Net::HTTP::Post.new(URI("https://slack.com/api/auth.test"))
-    req.set_form_data(token: token)
-    response = http.request(req)
-
-    unless response.kind_of?(Net::HTTPSuccess)
-      raise DiscourseChatIntegration::ProviderError.new(
-              info: {
-                error_key: "chat_integration.provider.slack.errors.auth_error",
-                response_code: response.code,
-                response_body: response.body,
-              },
-            )
-    end
-
-    json =
-      begin
-        JSON.parse(response.body)
-      rescue JSON::ParserError
+      unless response.kind_of?(Net::HTTPSuccess)
         raise DiscourseChatIntegration::ProviderError.new(
                 info: {
                   error_key: "chat_integration.provider.slack.errors.auth_error",
+                  response_code: response.code,
                   response_body: response.body,
                 },
               )
       end
 
-    unless json["ok"] == true
-      raise DiscourseChatIntegration::ProviderError.new(
-              info: {
-                error_key: "chat_integration.provider.slack.errors.auth_error",
-                response_body: json,
-              },
-            )
+      json =
+        begin
+          JSON.parse(response.body)
+        rescue JSON::ParserError
+          raise DiscourseChatIntegration::ProviderError.new(
+                  info: {
+                    error_key: "chat_integration.provider.slack.errors.auth_error",
+                    response_body: response.body,
+                  },
+                )
+        end
+
+      unless json["ok"] == true
+        raise DiscourseChatIntegration::ProviderError.new(
+                info: {
+                  error_key: "chat_integration.provider.slack.errors.auth_error",
+                  response_body: json,
+                },
+              )
+      end
     end
-  end
 
-  def self.valid_slack_incoming_webhook_url?(url)
-    uri = URI.parse(url)
-    return false unless uri.is_a?(URI::HTTPS) && uri.host == "hooks.slack.com"
+    def valid_slack_incoming_webhook_url?(url)
+      uri = URI.parse(url)
+      return false unless uri.is_a?(URI::HTTPS) && uri.host == "hooks.slack.com"
 
-    uri.path.start_with?("/services/") || uri.path.start_with?("/workflows/")
-  rescue URI::InvalidURIError
-    false
-  end
+      uri.path.start_with?("/services/") || uri.path.start_with?("/workflows/")
+    rescue URI::InvalidURIError
+      false
+    end
 
-  def self.excerpt(post, max_length = SiteSetting.chat_integration_slack_excerpt_length)
-    doc =
-      Nokogiri::HTML5.fragment(
-        post.excerpt(max_length, remap_emoji: true, keep_onebox_source: true),
-      )
-
-    SlackMessageFormatter.format(doc.to_html)
-  end
-
-  def self.slack_message(post, channel, filter)
-    display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
-
-    topic = post.topic
-
-    category = ""
-    if topic.category&.uncategorized?
-      category = "[#{I18n.t("uncategorized_category_name")}]"
-    elsif topic.category
-      category =
-        (
-          if topic.category.parent_category
-            "[#{topic.category.parent_category.name}/#{topic.category.name}]"
-          else
-            "[#{topic.category.name}]"
-          end
+    def excerpt(post, max_length = SiteSetting.chat_integration_slack_excerpt_length)
+      doc =
+        Nokogiri::HTML5.fragment(
+          post.excerpt(max_length, remap_emoji: true, keep_onebox_source: true),
         )
+
+      SlackMessageFormatter.format(doc.to_html)
     end
 
-    icon_url =
-      if SiteSetting.chat_integration_slack_icon_url.present?
-        "#{Discourse.base_url}#{SiteSetting.chat_integration_slack_icon_url}"
-      elsif (url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url).present?
-        "#{Discourse.base_url}#{url}"
+    def slack_message(post, channel, filter)
+      display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+
+      topic = post.topic
+
+      category = ""
+      if topic.category&.uncategorized?
+        category = "[#{I18n.t("uncategorized_category_name")}]"
+      elsif topic.category
+        category =
+          (
+            if topic.category.parent_category
+              "[#{topic.category.parent_category.name}/#{topic.category.name}]"
+            else
+              "[#{topic.category.name}]"
+            end
+          )
       end
 
-    slack_username =
-      SiteSetting.chat_integration_slack_username.presence || SiteSetting.title || "Discourse"
+      icon_url =
+        if SiteSetting.chat_integration_slack_icon_url.present?
+          "#{Discourse.base_url}#{SiteSetting.chat_integration_slack_icon_url}"
+        elsif (url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url).present?
+          "#{Discourse.base_url}#{url}"
+        end
 
-    message = { channel: channel, username: slack_username, icon_url: icon_url, attachments: [] }
+      slack_username =
+        SiteSetting.chat_integration_slack_username.presence || SiteSetting.title || "Discourse"
 
-    if filter == "thread" && thread_ts = get_slack_thread_ts(topic, channel)
-      message[:thread_ts] = thread_ts
+      message = { channel: channel, username: slack_username, icon_url: icon_url, attachments: [] }
+
+      if filter == "thread" && thread_ts = get_slack_thread_ts(topic, channel)
+        message[:thread_ts] = thread_ts
+      end
+
+      summary = {
+        fallback: "#{topic.title} - #{display_name}",
+        author_name: display_name,
+        author_icon: post.user.small_avatar_url,
+        color: topic.category ? "##{topic.category.color}" : nil,
+        text: excerpt(post),
+        mrkdwn_in: ["text"],
+        title:
+          "#{topic.title} #{category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
+        title_link: post.full_url,
+        thumb_url: post.full_url,
+      }
+
+      message[:attachments].push(summary)
+
+      message
     end
 
-    summary = {
-      fallback: "#{topic.title} - #{display_name}",
-      author_name: display_name,
-      author_icon: post.user.small_avatar_url,
-      color: topic.category ? "##{topic.category.color}" : nil,
-      text: excerpt(post),
-      mrkdwn_in: ["text"],
-      title:
-        "#{topic.title} #{category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
-      title_link: post.full_url,
-      thumb_url: post.full_url,
-    }
+    def create_slack_message(context:, content:, url:, channel_name:)
+      sender = DiscourseChatIntegration::Helper.formatted_display_name(Discourse.system_user)
 
-    message[:attachments].push(summary)
+      content = replace_placehoders(content, context) if context["kind"] ==
+        DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
 
-    message
-  end
+      full_content =
+        if context["kind"] == DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
+          content
+        else
+          "#{content} - #{url}"
+        end
 
-  def self.create_slack_message(context:, content:, url:, channel_name:)
-    sender = DiscourseChatIntegration::Helper.formatted_display_name(Discourse.system_user)
+      icon_url =
+        if SiteSetting.chat_integration_slack_icon_url.present?
+          "#{Discourse.base_url}#{SiteSetting.chat_integration_slack_icon_url}"
+        elsif (url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url).present?
+          "#{Discourse.base_url}#{url}"
+        end
 
-    content = replace_placehoders(content, context) if context["kind"] ==
-      DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
+      slack_username =
+        SiteSetting.chat_integration_slack_username.presence || SiteSetting.title || "Discourse"
 
-    full_content =
+      message = {
+        channel: "##{channel_name}",
+        username: slack_username,
+        icon_url: icon_url,
+        attachments: [],
+      }
+
+      summary = {
+        fallback: content.truncate(100),
+        author_name: sender,
+        color: nil,
+        text: full_content,
+        mrkdwn_in: ["text"],
+        title: content.truncate(100),
+        title_link: url,
+        thumb_url: nil,
+      }
+
       if context["kind"] == DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
-        content
-      else
-        "#{content} - #{url}"
+        topic = context["topic"]
+        category =
+          if topic.category&.uncategorized?
+            "[#{I18n.t("uncategorized_category_name")}]"
+          elsif topic.category
+            if topic.category.parent_category
+              "[#{topic.category.parent_category.name}/#{topic.category.name}]"
+            else
+              "[#{topic.category.name}]"
+            end
+          end
+        summary[:title_link] = topic.posts.first.full_url
+        summary[
+          :title
+        ] = "#{topic.title} #{category} #{topic.tags.present? ? topic.tags.map(&:name).join(", ") : ""}"
+        summary[:thumb_url]
       end
 
-    icon_url =
-      if SiteSetting.chat_integration_slack_icon_url.present?
-        "#{Discourse.base_url}#{SiteSetting.chat_integration_slack_icon_url}"
-      elsif (url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url).present?
-        "#{Discourse.base_url}#{url}"
+      message[:attachments].push(summary)
+      message
+    end
+
+    def send_via_api(post, channel, message)
+      http = slack_api_http
+
+      response = nil
+      uri = ""
+
+      # <!--SLACK_CHANNEL_ID=#{@channel_id};SLACK_TS=#{@requested_thread_ts}-->
+      slack_thread_regex = /<!--SLACK_CHANNEL_ID=([^;.]+);SLACK_TS=([0-9]{10}.[0-9]{6})-->/
+
+      req = Net::HTTP::Post.new(URI("https://slack.com/api/chat.postMessage"))
+
+      data = {
+        token: SiteSetting.chat_integration_slack_access_token,
+        username: message[:username],
+        icon_url: message[:icon_url],
+        channel: message[:channel].gsub("#", ""),
+        attachments: message[:attachments].to_json,
+      }
+
+      if post
+        if message.key?(:thread_ts)
+          data[:thread_ts] = message[:thread_ts]
+        elsif (match = slack_thread_regex.match(post.raw)) && match.captures[0] == channel
+          data[:thread_ts] = match.captures[1]
+          set_slack_thread_ts(post.topic, channel, match.captures[1]) if post.topic.id.present?
+        end
       end
 
-    slack_username =
-      SiteSetting.chat_integration_slack_username.presence || SiteSetting.title || "Discourse"
+      req.set_form_data(data)
 
-    message = {
-      channel: "##{channel_name}",
-      username: slack_username,
-      icon_url: icon_url,
-      attachments: [],
-    }
+      response = http.request(req)
 
-    summary = {
-      fallback: content.truncate(100),
-      author_name: sender,
-      color: nil,
-      text: full_content,
-      mrkdwn_in: ["text"],
-      title: content.truncate(100),
-      title_link: url,
-      thumb_url: nil,
-    }
+      unless response.kind_of? Net::HTTPSuccess
+        raise DiscourseChatIntegration::ProviderError.new info: {
+                                                            error_key:
+                                                              "chat_integration.provider.slack.errors.auth_error",
+                                                            request: uri,
+                                                            response_code: response.code,
+                                                            response_body: response.body,
+                                                          }
+      end
 
-    if context["kind"] == DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
-      topic = context["topic"]
-      category =
-        if topic.category&.uncategorized?
-          "[#{I18n.t("uncategorized_category_name")}]"
-        elsif topic.category
-          if topic.category.parent_category
-            "[#{topic.category.parent_category.name}/#{topic.category.name}]"
+      json = JSON.parse(response.body)
+
+      unless json["ok"] == true
+        if json.key?("error")
+          if json["error"] == "channel_not_found" || json["error"] == "is_archived"
+            error_key = "chat_integration.provider.slack.errors.channel_not_found"
+          elsif json["error"] == "invalid_auth"
+            error_key = "chat_integration.provider.slack.errors.auth_error"
+          elsif %w[not_in_channel no_permission restricted_action].include?(json["error"])
+            error_key = "chat_integration.provider.slack.errors.action_prohibited"
           else
-            "[#{topic.category.name}]"
+            error_key = nil
           end
         end
-      summary[:title_link] = topic.posts.first.full_url
-      summary[
-        :title
-      ] = "#{topic.title} #{category} #{topic.tags.present? ? topic.tags.map(&:name).join(", ") : ""}"
-      summary[:thumb_url]
-    end
-
-    message[:attachments].push(summary)
-    message
-  end
-
-  def self.send_via_api(post, channel, message)
-    http = slack_api_http
-
-    response = nil
-    uri = ""
-
-    # <!--SLACK_CHANNEL_ID=#{@channel_id};SLACK_TS=#{@requested_thread_ts}-->
-    slack_thread_regex = /<!--SLACK_CHANNEL_ID=([^;.]+);SLACK_TS=([0-9]{10}.[0-9]{6})-->/
-
-    req = Net::HTTP::Post.new(URI("https://slack.com/api/chat.postMessage"))
-
-    data = {
-      token: SiteSetting.chat_integration_slack_access_token,
-      username: message[:username],
-      icon_url: message[:icon_url],
-      channel: message[:channel].gsub("#", ""),
-      attachments: message[:attachments].to_json,
-    }
-
-    if post
-      if message.key?(:thread_ts)
-        data[:thread_ts] = message[:thread_ts]
-      elsif (match = slack_thread_regex.match(post.raw)) && match.captures[0] == channel
-        data[:thread_ts] = match.captures[1]
-        set_slack_thread_ts(post.topic, channel, match.captures[1]) if post.topic.id.present?
+        raise DiscourseChatIntegration::ProviderError.new info: {
+                                                            error_key: error_key,
+                                                            request: uri,
+                                                            response_code: response.code,
+                                                            response_body: response.body,
+                                                          }
       end
+
+      ts = json.dig("message", "thread_ts") || json["ts"]
+      set_slack_thread_ts(post.topic, channel, ts) if ts.present? && post&.topic&.id.present?
+
+      response
     end
 
-    req.set_form_data(data)
+    def send_via_webhook(message)
+      http = FinalDestination::HTTP.new("hooks.slack.com", 443)
+      http.use_ssl = true
+      req =
+        Net::HTTP::Post.new(
+          URI(SiteSetting.chat_integration_slack_outbound_webhook_url),
+          "Content-Type" => "application/json",
+        )
+      req.body = message.to_json
+      response = http.request(req)
 
-    response = http.request(req)
-
-    unless response.kind_of? Net::HTTPSuccess
-      raise DiscourseChatIntegration::ProviderError.new info: {
-                                                          error_key:
-                                                            "chat_integration.provider.slack.errors.auth_error",
-                                                          request: uri,
-                                                          response_code: response.code,
-                                                          response_body: response.body,
-                                                        }
-    end
-
-    json = JSON.parse(response.body)
-
-    unless json["ok"] == true
-      if json.key?("error")
-        if json["error"] == "channel_not_found" || json["error"] == "is_archived"
-          error_key = "chat_integration.provider.slack.errors.channel_not_found"
-        elsif json["error"] == "invalid_auth"
-          error_key = "chat_integration.provider.slack.errors.auth_error"
-        elsif %w[not_in_channel no_permission restricted_action].include?(json["error"])
+      unless response.kind_of? Net::HTTPSuccess
+        if response.code.to_s == "403"
           error_key = "chat_integration.provider.slack.errors.action_prohibited"
+        elsif response.body == "channel_not_found" || response.body == "channel_is_archived"
+          error_key = "chat_integration.provider.slack.errors.channel_not_found"
         else
           error_key = nil
         end
+        raise DiscourseChatIntegration::ProviderError.new info: {
+                                                            error_key: error_key,
+                                                            request: req.body,
+                                                            response_code: response.code,
+                                                            response_body: response.body,
+                                                          }
       end
-      raise DiscourseChatIntegration::ProviderError.new info: {
-                                                          error_key: error_key,
-                                                          request: uri,
-                                                          response_code: response.code,
-                                                          response_body: response.body,
-                                                        }
     end
 
-    ts = json.dig("message", "thread_ts") || json["ts"]
-    set_slack_thread_ts(post.topic, channel, ts) if ts.present? && post&.topic&.id.present?
+    def trigger_notification(post, channel, rule)
+      channel_id = channel.data["identifier"]
+      filter = rule.nil? ? "" : rule.filter
+      message = slack_message(post, channel_id, filter)
 
-    response
-  end
-
-  def self.send_via_webhook(message)
-    http = FinalDestination::HTTP.new("hooks.slack.com", 443)
-    http.use_ssl = true
-    req =
-      Net::HTTP::Post.new(
-        URI(SiteSetting.chat_integration_slack_outbound_webhook_url),
-        "Content-Type" => "application/json",
-      )
-    req.body = message.to_json
-    response = http.request(req)
-
-    unless response.kind_of? Net::HTTPSuccess
-      if response.code.to_s == "403"
-        error_key = "chat_integration.provider.slack.errors.action_prohibited"
-      elsif response.body == "channel_not_found" || response.body == "channel_is_archived"
-        error_key = "chat_integration.provider.slack.errors.channel_not_found"
+      if SiteSetting.chat_integration_slack_access_token.empty?
+        send_via_webhook(message)
       else
-        error_key = nil
+        send_via_api(post, channel_id, message)
       end
-      raise DiscourseChatIntegration::ProviderError.new info: {
-                                                          error_key: error_key,
-                                                          request: req.body,
-                                                          response_code: response.code,
-                                                          response_body: response.body,
-                                                        }
-    end
-  end
-
-  def self.trigger_notification(post, channel, rule)
-    channel_id = channel.data["identifier"]
-    filter = rule.nil? ? "" : rule.filter
-    message = slack_message(post, channel_id, filter)
-
-    if SiteSetting.chat_integration_slack_access_token.empty?
-      send_via_webhook(message)
-    else
-      send_via_api(post, channel_id, message)
-    end
-  end
-
-  def self.slack_api_http
-    http = FinalDestination::HTTP.new("slack.com", 443)
-    http.use_ssl = true
-    http.read_timeout = 5 # seconds
-    http
-  end
-
-  def self.get_slack_thread_ts(topic, channel)
-    field = TopicCustomField.where(topic: topic, name: "#{THREAD_CUSTOM_FIELD_PREFIX}#{channel}")
-    field.pick(:value) || topic.custom_fields[THREAD_LEGACY]
-  end
-
-  def self.set_slack_thread_ts(topic, channel, value)
-    TopicCustomField.upsert(
-      {
-        topic_id: topic.id,
-        name: "#{THREAD_CUSTOM_FIELD_PREFIX}#{channel}",
-        value: value,
-        created_at: Time.zone.now,
-        updated_at: Time.zone.now,
-      },
-      unique_by: :index_topic_custom_fields_on_topic_id_and_slack_thread_id,
-    )
-  end
-
-  def self.replace_placehoders(content, context)
-    if context["topic"] && content.include?("${TOPIC}")
-      topic = context["topic"]
-      content = content.gsub("${TOPIC}", topic.title)
     end
 
-    if content.include?("${REMOVED_TAGS}")
-      if context["removed_tags"].empty?
-        raise StandardError.new "No tags but content includes reference."
+    def slack_api_http
+      http = FinalDestination::HTTP.new("slack.com", 443)
+      http.use_ssl = true
+      http.read_timeout = 5 # seconds
+      http
+    end
+
+    def get_slack_thread_ts(topic, channel)
+      field = TopicCustomField.where(topic: topic, name: "#{THREAD_CUSTOM_FIELD_PREFIX}#{channel}")
+      field.pick(:value) || topic.custom_fields[THREAD_LEGACY]
+    end
+
+    def set_slack_thread_ts(topic, channel, value)
+      TopicCustomField.upsert(
+        {
+          topic_id: topic.id,
+          name: "#{THREAD_CUSTOM_FIELD_PREFIX}#{channel}",
+          value: value,
+          created_at: Time.zone.now,
+          updated_at: Time.zone.now,
+        },
+        unique_by: :index_topic_custom_fields_on_topic_id_and_slack_thread_id,
+      )
+    end
+
+    def replace_placehoders(content, context)
+      if context["topic"] && content.include?("${TOPIC}")
+        topic = context["topic"]
+        content = content.gsub("${TOPIC}", topic.title)
       end
-      removed_tags_names = create_tag_list(context["removed_tags"])
-      content = content.gsub("${REMOVED_TAGS}", removed_tags_names)
-    end
 
-    if content.include?("${ADDED_TAGS}")
-      if context["added_tags"].empty?
-        raise StandardError.new "No tags but content includes reference."
-      end
-      added_tags_names = create_tag_list(context["added_tags"])
-      content = content.gsub("${ADDED_TAGS}", added_tags_names)
-    end
-
-    if content.include?("${ADDED_AND_REMOVED}")
-      added_tags = context["added_tags"]
-      missing_tags = context["removed_tags"]
-
-      text =
-        if !added_tags.empty? && !missing_tags.empty?
-          I18n.t(
-            "chat_integration.provider.slack.messaging.topic_tag_changed.added_and_removed",
-            added: create_tag_list(added_tags),
-            removed: create_tag_list(missing_tags),
-          )
-        elsif !added_tags.empty?
-          I18n.t(
-            "chat_integration.provider.slack.messaging.topic_tag_changed.added",
-            added: create_tag_list(added_tags),
-          )
-        elsif !missing_tags.empty?
-          I18n.t(
-            "chat_integration.provider.slack.messaging.topic_tag_changed.removed",
-            removed: create_tag_list(missing_tags),
-          )
+      if content.include?("${REMOVED_TAGS}")
+        if context["removed_tags"].empty?
+          raise StandardError.new "No tags but content includes reference."
         end
+        removed_tags_names = create_tag_list(context["removed_tags"])
+        content = content.gsub("${REMOVED_TAGS}", removed_tags_names)
+      end
 
-      content = content.gsub("${ADDED_AND_REMOVED}", text)
+      if content.include?("${ADDED_TAGS}")
+        if context["added_tags"].empty?
+          raise StandardError.new "No tags but content includes reference."
+        end
+        added_tags_names = create_tag_list(context["added_tags"])
+        content = content.gsub("${ADDED_TAGS}", added_tags_names)
+      end
+
+      if content.include?("${ADDED_AND_REMOVED}")
+        added_tags = context["added_tags"]
+        missing_tags = context["removed_tags"]
+
+        text =
+          if !added_tags.empty? && !missing_tags.empty?
+            I18n.t(
+              "chat_integration.provider.slack.messaging.topic_tag_changed.added_and_removed",
+              added: create_tag_list(added_tags),
+              removed: create_tag_list(missing_tags),
+            )
+          elsif !added_tags.empty?
+            I18n.t(
+              "chat_integration.provider.slack.messaging.topic_tag_changed.added",
+              added: create_tag_list(added_tags),
+            )
+          elsif !missing_tags.empty?
+            I18n.t(
+              "chat_integration.provider.slack.messaging.topic_tag_changed.removed",
+              removed: create_tag_list(missing_tags),
+            )
+          end
+
+        content = content.gsub("${ADDED_AND_REMOVED}", text)
+      end
+
+      content = content.gsub("${URL}", url) if content.include?("${URL}")
+
+      content
     end
 
-    content = content.gsub("${URL}", url) if content.include?("${URL}")
+    def create_tag_list(tag_list)
+      tag_list.map { |tag_name| "<#{Tag.find_by_name(tag_name).full_url}|#{tag_name}>" }.join(", ")
+    end
 
-    content
-  end
-
-  def self.create_tag_list(tag_list)
-    tag_list.map { |tag_name| "<#{Tag.find_by_name(tag_name).full_url}|#{tag_name}>" }.join(", ")
-  end
-
-  def self.get_channel_by_name(name)
-    DiscourseChatIntegration::Channel
-      .with_provider(PROVIDER_NAME)
-      .with_data_value(CHANNEL_IDENTIFIER_KEY, name)
-      .first
+    def get_channel_by_name(name)
+      DiscourseChatIntegration::Channel
+        .with_provider(PROVIDER_NAME)
+        .with_data_value(CHANNEL_IDENTIFIER_KEY, name)
+        .first
+    end
   end
 end
 

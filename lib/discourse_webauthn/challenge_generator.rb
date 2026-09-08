@@ -14,8 +14,10 @@ module DiscourseWebauthn
       end
     end
 
-    def self.generate
-      ChallengeSession.new(challenge: SecureRandom.hex(30))
+    class << self
+      def generate
+        ChallengeSession.new(challenge: SecureRandom.hex(30))
+      end
     end
   end
 end

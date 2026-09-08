@@ -6,8 +6,10 @@ class EmailUpdater
   attr_reader :user
   attr_reader :change_req
 
-  def self.human_attribute_name(name, options = {})
-    User.human_attribute_name(name, options)
+  class << self
+    def human_attribute_name(name, options = {})
+      User.human_attribute_name(name, options)
+    end
   end
 
   def initialize(guardian: nil, user: nil)

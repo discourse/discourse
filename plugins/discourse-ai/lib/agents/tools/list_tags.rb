@@ -4,15 +4,17 @@ module DiscourseAi
   module Agents
     module Tools
       class ListTags < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Will list the 100 most popular tags on the current discourse instance",
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Will list the 100 most popular tags on the current discourse instance",
+            }
+          end
 
-        def self.name
-          "tags"
+          def name
+            "tags"
+          end
         end
 
         def invoke

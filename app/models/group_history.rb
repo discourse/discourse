@@ -9,41 +9,43 @@ class GroupHistory < ActiveRecord::Base
   validates :group_id, presence: true
   validates :action, presence: true
 
-  def self.actions
-    @actions ||=
-      Enum.new(
-        change_group_setting: 1,
-        add_user_to_group: 2,
-        remove_user_from_group: 3,
-        make_user_group_owner: 4,
-        remove_user_as_group_owner: 5,
-      )
-  end
-
-  def self.filters
-    %i[acting_user target_user action subject]
-  end
-
-  def self.with_filters(group, params = {})
-    records =
-      includes(:acting_user, :target_user).where(group_id: group.id).order(
-        "group_histories.created_at DESC",
-      )
-
-    if params.present?
-      params = params.slice(*filters)
-      records = records.where(action: actions[params[:action].to_sym]) if params[:action].present?
-      records = records.where(subject: params[:subject]) if params[:subject].present?
-
-      %i[acting_user target_user].each do |filter|
-        if params[filter].present?
-          id = User.where(username_lower: params[filter]).pluck(:id)
-          records = records.where("#{filter}_id" => id)
-        end
-      end
+  class << self
+    def actions
+      @actions ||=
+        Enum.new(
+          change_group_setting: 1,
+          add_user_to_group: 2,
+          remove_user_from_group: 3,
+          make_user_group_owner: 4,
+          remove_user_as_group_owner: 5,
+        )
     end
 
-    records
+    def filters
+      %i[acting_user target_user action subject]
+    end
+
+    def with_filters(group, params = {})
+      records =
+        includes(:acting_user, :target_user).where(group_id: group.id).order(
+          "group_histories.created_at DESC",
+        )
+
+      if params.present?
+        params = params.slice(*filters)
+        records = records.where(action: actions[params[:action].to_sym]) if params[:action].present?
+        records = records.where(subject: params[:subject]) if params[:subject].present?
+
+        %i[acting_user target_user].each do |filter|
+          if params[filter].present?
+            id = User.where(username_lower: params[filter]).pluck(:id)
+            records = records.where("#{filter}_id" => id)
+          end
+        end
+      end
+
+      records
+    end
   end
 end
 
