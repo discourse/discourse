@@ -1,4 +1,4 @@
-import { find, render, settled } from "@ember/test-helpers";
+import { click, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DMenus from "discourse/float-kit/components/d-menus";
 import dContextMenu from "discourse/float-kit/modifiers/d-context-menu";
@@ -236,6 +236,68 @@ module("Integration | Component | FloatKit | dContextMenu", function (hooks) {
     assert
       .dom(".fk-d-menu")
       .exists({ count: 1 }, "still exactly one menu after reopening");
+  });
+
+  test("ctx-oracle: a keyboard-invoked right-click takes focus and gives it back, with nothing wired", async function (assert) {
+    await render(
+      <template>
+        <div class="ctx-host" tabindex="0" {{dContextMenu component=Actions}}>
+          host
+        </div>
+        <DMenus />
+      </template>
+    );
+
+    // The platform dispatches this same event for the context-menu key, so a focusable target
+    // is the whole consumer obligation.
+    find(".ctx-host").focus();
+    await rightClick(".ctx-host");
+
+    assert.true(
+      find(".fk-d-menu").contains(document.activeElement),
+      "focus moved into the menu, so the items are reachable without a pointer"
+    );
+
+    await click(".fk-d-menu .ctx-action");
+
+    assert
+      .dom(".ctx-host")
+      .isFocused(
+        "closing returned focus to the element the modifier is installed on"
+      );
+  });
+
+  test("ctx-oracle: the focus defaults are overridable in both directions", async function (assert) {
+    const elsewhere = () => find(".ctx-elsewhere");
+
+    await render(
+      <template>
+        <div
+          class="ctx-host"
+          tabindex="0"
+          {{dContextMenu component=Actions autofocus=false}}
+        >host</div>
+        <div
+          class="ctx-other"
+          tabindex="0"
+          {{dContextMenu component=Actions focusTarget=elsewhere}}
+        >other</div>
+        <button type="button" class="ctx-elsewhere">elsewhere</button>
+        <DMenus />
+      </template>
+    );
+
+    find(".ctx-host").focus();
+    await rightClick(".ctx-host");
+    assert.dom(".ctx-host").isFocused("autofocus=false keeps focus outside");
+    await click(".fk-d-menu .ctx-action");
+
+    find(".ctx-other").focus();
+    await rightClick(".ctx-other");
+    await click(".fk-d-menu .ctx-action");
+    assert
+      .dom(".ctx-elsewhere")
+      .isFocused("an explicit focusTarget still wins over the element default");
   });
 
   test("ctx-oracle: removing the element closes the menu it opened", async function (assert) {

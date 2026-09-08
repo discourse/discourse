@@ -71,7 +71,12 @@ export default class FloatKitContextMenu extends Modifier<FloatKitContextMenuSig
       event.preventDefault();
       event.stopPropagation();
 
+      // Defaults first: a named argument overrides them, a per-gesture decision overrides both.
+      // A virtual reference has no trigger element, so focus return has nothing to fall back to
+      // unless this modifier names the element the gesture came from.
       const menuOptions = {
+        autofocus: true,
+        focusTarget: () => element,
         ...options,
         ...(typeof decision === "object" ? decision : {}),
       };
