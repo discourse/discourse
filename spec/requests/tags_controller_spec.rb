@@ -2397,6 +2397,21 @@ RSpec.describe TagsController do
           expect(response.status).to eq(422)
         end.not_to change { [Tag.count, TagGroup.count] }
       end
+
+      it "fails if the CSV has too many rows" do
+        sign_in(moderator)
+
+        expect do
+          stub_const(TagsController, "MAX_CSV_ROWS", 2) do
+            post "/tags/upload.json", params: { file: file, name: filename }
+          end
+        end.not_to change { [Tag.count, TagGroup.count] }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("tags.upload_too_many_rows", count: 2),
+        )
+      end
     end
   end
 
