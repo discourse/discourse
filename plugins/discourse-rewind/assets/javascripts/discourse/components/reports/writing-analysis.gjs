@@ -19,32 +19,6 @@ export default class WritingAnalysis extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  @action
-  setupKeyListener(element) {
-    document.addEventListener("keydown", this.handleKeyDown);
-    this.element = element;
-  }
-
-  @action
-  teardownKeyListener() {
-    document.removeEventListener("keydown", this.handleKeyDown);
-  }
-
-  handleKeyDown(event) {
-    if (event.key === "F1") {
-      event.preventDefault();
-      this.cycleColor();
-    }
-  }
-
-  @action
-  cycleColor() {
-    this.currentColorIndex =
-      (this.currentColorIndex + 1) % this.terminalColors.length;
-    const newColor = this.terminalColors[this.currentColorIndex];
-    document.documentElement.style.setProperty("--rewind-green", newColor);
-  }
-
   get scoreLabel() {
     const score = this.args.report.data.readability_score;
     const randomNum = Math.floor(Math.random() * 4) + 1;
@@ -78,6 +52,32 @@ export default class WritingAnalysis extends Component {
       this.args.report.data.total_words >= 100 &&
       this.args.report.data.total_posts >= 5
     );
+  }
+
+  @action
+  setupKeyListener(element) {
+    document.addEventListener("keydown", this.handleKeyDown);
+    this.element = element;
+  }
+
+  @action
+  teardownKeyListener() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
+
+  handleKeyDown(event) {
+    if (event.key === "F1") {
+      event.preventDefault();
+      this.cycleColor();
+    }
+  }
+
+  @action
+  cycleColor() {
+    this.currentColorIndex =
+      (this.currentColorIndex + 1) % this.terminalColors.length;
+    const newColor = this.terminalColors[this.currentColorIndex];
+    document.documentElement.style.setProperty("--rewind-green", newColor);
   }
 
   <template>

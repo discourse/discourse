@@ -2,6 +2,7 @@
 
 describe "Admin site setting category" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
   fab!(:admin)
   fab!(:category)
 

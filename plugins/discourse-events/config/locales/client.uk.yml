@@ -381,6 +381,11 @@ uk:
       edit_event: "Редагувати подію"
       export_event: "Експорт події"
       created_by: "Створено"
+      other_hosts:
+        one: "та %{count} інший"
+        few: "та %{count} інші"
+        many: "та %{count} інші"
+        other: "та %{count} інші"
       bulk_invite: "Масове запрошення"
       close_event: "Закрити подію"
       open_event: "Відкрити подію"
@@ -614,6 +619,8 @@ uk:
           placeholder: "Необов'язково, типові значення для назви теми"
         invitees:
           label: "Запрошені групи"
+        hosts:
+          label: "Хости"
         event_type:
           label: "Тип відвідуваності"
           public:

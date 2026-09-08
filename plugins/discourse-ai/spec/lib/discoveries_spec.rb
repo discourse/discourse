@@ -21,7 +21,7 @@ describe DiscourseAi::Discoveries do
   end
 
   describe ".enabled_for_user?" do
-    it "allows a user who satisfies the site, agent, model, and retrieval policies" do
+    it "allows a user who satisfies the site, agent, and model policies" do
       expect(described_class.enabled_for_user?(user)).to eq(true)
     end
 
@@ -49,10 +49,34 @@ describe DiscourseAi::Discoveries do
       expect(described_class.enabled_for_user?(user)).to eq(true)
     end
 
-    it "requires semantic search" do
+    it "allows Ask AI when full-page semantic search is disabled" do
       SiteSetting.ai_embeddings_semantic_search_enabled = false
 
-      expect(described_class.enabled_for_user?(user)).to eq(false)
+      expect(described_class.enabled_for_user?(user)).to eq(true)
+    end
+
+    it "allows Ask AI when embeddings are disabled and no embedding model is selected" do
+      SiteSetting.ai_embeddings_enabled = false
+      SiteSetting.ai_embeddings_selected_model = ""
+
+      expect(described_class.enabled_for_user?(user)).to eq(true)
+    end
+  end
+
+  describe ".enqueue_reply" do
+    it "records a failed ask if the job cannot be queued" do
+      allow(Jobs).to receive(:enqueue).and_raise(StandardError, "queue unavailable")
+
+      expect {
+        described_class.enqueue_reply(user:, request_id: SecureRandom.uuid, query: "猫")
+      }.to raise_error(StandardError, "queue unavailable")
+
+      expect(AskAiLog.last).to have_attributes(
+        user_id: user.id,
+        query: "猫",
+        ask_outcome: "failed",
+        failure_stage: nil,
+      )
     end
   end
 

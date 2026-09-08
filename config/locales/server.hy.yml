@@ -570,6 +570,7 @@ hy:
       windows: "Microsoft Windows"
       unknown: "անհայտ օպերացիոն համակարգ"
   admin_site_traffic_explorer:
+    unknown: "Անհայտ"
     traffic_types:
       anonymous: "Անանուն"
   change_email:
@@ -1470,7 +1471,6 @@ hy:
     errors:
       invalid_email: "Անվավեր էլ. հասցե:"
       invalid_username: "Այդ օգտանվամբ օգտատեր չկա:"
-      invalid_group: "Այդպիսի անունով խումբ չկա:"
       invalid_integer_min_max: "Արժեքը պետք է լինի %{min} -ի և %{max} -ի միջև:"
       invalid_integer_min: "Արժեքը պետք է լինի %{min} կամ ավելի:"
       invalid_integer_max: "Արժեքը չի կարող լինել %{max} -ից բարձր:"
@@ -2894,8 +2894,6 @@ hy:
         title: "Այո"
       approve_and_unhide:
         title: "Այո"
-      delete_post:
-        complete: "Գրառումը ջնջված է"
       delete_user:
         complete: "Օգտատերը ջնջված է"
   fallback_username: "օգտատեր"

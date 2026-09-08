@@ -323,8 +323,8 @@ module(
               onBoundary=onBoundary
             }}
           >
-            <button role="option" aria-disabled="true">ARIA disabled</button>
-            <button role="option" disabled>Native disabled</button>
+            <button aria-disabled="true" role="option">ARIA disabled</button>
+            <button disabled role="option">Native disabled</button>
             <button
               role="option"
               style="visibility: hidden; width: 40px; height: 20px;"
@@ -372,8 +372,8 @@ module(
               onBoundary=onBoundary
             }}
           >
-            <button role="option" aria-disabled="true">ARIA disabled</button>
-            <button role="option" disabled>Native disabled</button>
+            <button aria-disabled="true" role="option">ARIA disabled</button>
+            <button disabled role="option">Native disabled</button>
             <button
               role="option"
               style="visibility: hidden; width: 40px; height: 20px;"
@@ -418,9 +418,9 @@ module(
               onRegisterApi=register
             }}
           >
-            <button role="option" aria-disabled="true">ARIA disabled</button>
+            <button aria-disabled="true" role="option">ARIA disabled</button>
             <button class="navigable" role="option">Navigable</button>
-            <button role="option" disabled>Native disabled</button>
+            <button disabled role="option">Native disabled</button>
             <button
               role="option"
               style="visibility: hidden; width: 40px; height: 20px;"
@@ -477,27 +477,27 @@ module(
           >
             <button
               class="cell"
-              role="option"
-              data-row="start"
               data-column="start"
+              data-row="start"
+              role="option"
             >A</button>
             <button
               class="cell"
-              role="option"
-              data-row="start"
               data-column="end"
+              data-row="start"
+              role="option"
             >B</button>
             <button
               class="cell"
-              role="option"
-              data-row="end"
               data-column="start"
+              data-row="end"
+              role="option"
             >C</button>
             <button
               class="cell"
-              role="option"
-              data-row="end"
               data-column="end"
+              data-row="end"
+              role="option"
             >D</button>
           </div>
         </template>
@@ -586,27 +586,27 @@ module(
           >
             <button
               class="cell"
-              role="option"
-              data-row="start"
               data-column="start"
+              data-row="start"
+              role="option"
             >A</button>
             <button
               class="cell"
-              role="option"
-              data-row="start"
               data-column="end"
+              data-row="start"
+              role="option"
             >B</button>
             <button
               class="cell"
-              role="option"
-              data-row="end"
               data-column="start"
+              data-row="end"
+              role="option"
             >C</button>
             <button
               class="cell"
-              role="option"
-              data-row="end"
               data-column="end"
+              data-row="end"
+              role="option"
             >D</button>
           </div>
         </template>
@@ -680,7 +680,7 @@ module(
 
       await render(
         <template>
-          <input class="controller" role="combobox" aria-controls="rf-lb" />
+          <input aria-controls="rf-lb" class="controller" role="combobox" />
           <div
             id="rf-lb"
             role="listbox"
@@ -753,9 +753,9 @@ module(
             role="listbox"
             {{dRovingFocus itemSelector="[role=option]" onRegisterApi=register}}
           >
-            <button class="item" role="option" data-label="alpha">A</button>
-            <button class="item" role="option" data-label="beta">B</button>
-            <button class="item" role="option" data-label="gamma">C</button>
+            <button class="item" data-label="alpha" role="option">A</button>
+            <button class="item" data-label="beta" role="option">B</button>
+            <button class="item" data-label="gamma" role="option">C</button>
           </div>
         </template>
       );
@@ -810,41 +810,41 @@ module(
           >
             <button
               class="item navigable"
-              role="option"
               data-label="alpha"
+              role="option"
             >A</button>
             <button
               class="item hidden"
+              data-label="hidden-one"
               role="option"
               style="display: none;"
-              data-label="hidden-one"
             >Hidden one</button>
             <button
               class="item navigable"
-              role="option"
               data-label="beta"
+              role="option"
             >B</button>
             <button
               class="item hidden"
+              data-label="hidden-zero-size"
               role="option"
               style="visibility: hidden; width: 0; height: 0; padding: 0; border: 0;"
-              data-label="hidden-zero-size"
             >Hidden zero size</button>
             <button
               class="item navigable"
-              role="option"
               data-label="gamma"
+              role="option"
             >C</button>
             <button
               class="item hidden"
+              data-label="hidden-two"
               role="option"
               style="display: none;"
-              data-label="hidden-two"
             >Hidden two</button>
             <button
               class="item navigable"
-              role="option"
               data-label="delta"
+              role="option"
             >D</button>
           </div>
         </template>
@@ -910,9 +910,9 @@ module(
             >Hidden</button>
             <button class="item navigable" role="option">B</button>
             <button
+              aria-disabled="true"
               class="item"
               role="option"
-              aria-disabled="true"
             >Disabled</button>
             <button class="item navigable" role="option">C</button>
           </div>

@@ -621,6 +621,7 @@ pt:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Desconhecido"
     traffic_types:
       anonymous: "Anónimo"
   change_email:
@@ -2202,8 +2203,6 @@ pt:
         title: "Sim"
       approve_and_unhide:
         title: "Sim"
-      delete_post:
-        complete: "Publicação eliminada"
       silence_user:
         title: "Silenciar utilizador"
       delete_user:

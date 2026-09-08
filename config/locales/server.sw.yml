@@ -414,6 +414,7 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   admin_site_traffic_explorer:
+    unknown: "Haijulikani"
     traffic_types:
       anonymous: "Asiyejulikana"
   change_email:

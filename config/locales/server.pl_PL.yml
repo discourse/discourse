@@ -1248,6 +1248,7 @@ pl_PL:
       unknown: "nieznany system operacyjny"
   admin_site_traffic_explorer:
     direct_or_unknown: "Bezpośredni / nieznany"
+    unknown: "Nieznane"
     traffic_types:
       logged_in: "Zalogowani"
       anonymous: "Anonimowi"
@@ -2041,6 +2042,7 @@ pl_PL:
     min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości"
     max_emojis_in_title: "Maksymalna dozwolona liczba emoji w tytule tematu. Jeśli ustawiona wartość wynosi zero, uniemożliwia to użycie jakichkolwiek emoji w tytułach tematów."
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
+    allow_anonymous_search: "Zezwól anonimowym użytkownikom na korzystanie z /search. Po wyłączeniu, anonimowi użytkownicy nie będą mogli uzyskać dostępu do /search, a kontrolki interfejsu korzystające z /search będą ukryte."
     search_tokenize_chinese: "Wymuś na wyszukiwarce tokenizację języka chińskiego nawet na stronach, które nie są chińskie"
     search_tokenize_japanese: "Wymuś na wyszukiwarce tokenizację języka japońskiego nawet na stronach, które nie są japońskie"
     search_prefer_recent_posts: "Jeśli wyszukiwanie na twoim dużym forum jest wolne, ta opcja pozwala zindeskować najpierw ostanie wpisy."
@@ -2224,7 +2226,7 @@ pl_PL:
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     allow_username_in_share_links: "Zezwalaj na umieszczanie nazw użytkowników w linkach do udostępniania. Jest to przydatne, aby nagradzać odznaki na podstawie unikalnych odwiedzających."
     site_contact_username: "Nazwa użytkownika, spod której wysyłane będą automatyczne wiadomości. Jeśli pusta, użyte będzie domyślne konto System."
-    site_contact_group_name: "Prawidłowa nazwa grupy, która zostaje zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości."
+    site_contact_group_name: "Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości."
     send_welcome_message: "Wyślij wszystkim nowym użytkownikom powitalną wiadomość z krótkim przewodnikiem."
     send_tl1_welcome_message: "Wyślij wiadomość powitalną do nowych użytkowników poziomu zaufania 1."
     send_tl2_promotion_message: "Wyślij nowym użytkownikom poziomu zaufania 2 wiadomość o promocji."
@@ -2962,7 +2964,7 @@ pl_PL:
       invalid_email: "Nieprawidłowy adres e-mail."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
       valid_username: "Istnieje użytkownik o tej nazwie."
-      invalid_group: "Nie ma grupy o takiej nazwie."
+      invalid_group: "Nie ma takiej grupy."
       invalid_svg: "Obraz SVG jest nieprawidłowy. Musi zawierać element SVG i nie zawierać skryptów ani procedur obsługi zdarzeń."
       invalid_upload: "Przesłanie jest nieprawidłowe lub nie istnieje."
       invalid_topic: "Nie ma tematu o takim identyfikatorze."
@@ -6063,8 +6065,8 @@ pl_PL:
         complete: "Post ukryty, użytkownik został powiadomiony."
       agree_and_edit:
         title: "Edytuj wpis"
-        description: "Zgódź się z flagą i otwórz okno kompozytora, aby edytować post."
-        complete: "Flaga potwierdzona, możesz teraz edytować post."
+        description: "Zgadzam się z flagą po zapisaniu edycji."
+        complete: "Wpis edytowany, zgłoszenie wysłane."
       delete:
         title: "Usuń"
         complete: "Wpis usunięty."
@@ -6114,6 +6116,10 @@ pl_PL:
         title: "Wyłącz wyciszenie użytkownika i zignoruj"
         description: "Wyłącz wyciszenie użytkownika i usuń flagę z kolejki bez przywracania usuniętego wpisu."
         complete: "Użytkownik został wyłączony, a flaga zignorowana."
+      unsilence_user:
+        title: "Autor bez wyciszenia"
+        description: "Zakończ wyciszenie autora. Ta flaga pozostaje w kolejce."
+        complete: "Autor już nie jest wyciszony."
       approve:
         title: "Tak"
         complete: "Post zatwierdzony."
@@ -6182,30 +6188,6 @@ pl_PL:
       approve_and_unhide:
         title: "Tak"
         complete: "Post zatwierdzony i nieukryty"
-      post_actions:
-        bundle_title: "Co chcesz zrobić z tym wpisem?"
-      delete_post:
-        title: "Usuń wpis"
-        description: "Usuń ten wpis"
-        complete: "Wpis usunięty"
-      hide_post:
-        title: "Ukryj wpis"
-        description: "Ukryj ten wpis przed widokiem publicznym"
-        complete: "Wpis ukryty"
-      unhide_post:
-        title: "Odkryj wpis"
-        description: "Udostępnij ten wpis wszystkim użytkownikom"
-        complete: "Wpis nieukryty"
-      restore_post:
-        title: "Przywróć wpis"
-        description: "Przywróć ten usunięty wpis"
-        complete: "Wpis przywrócony"
-      edit_post:
-        title: "Edytuj wpis"
-        description: "Edytuj treść tego wpisu"
-        complete: "Wpis edytowany"
-      user_actions:
-        bundle_title: "Co chcesz zrobić z użytkownikiem?"
       silence_user:
         title: "Wycisz użytkownika"
         description: "Zablokuj użytkownikowi możliwość publikowania lub wysyłania wiadomości"

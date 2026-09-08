@@ -28,19 +28,19 @@ export default <template>
     <div class="group-members-actions">
       {{#if @controller.canManageGroup}}
         <DButton
-          @icon="list"
-          @action={{@controller.toggleBulkSelect}}
-          @title="topics.bulk.toggle"
           class="btn-default bulk-select"
+          @action={{@controller.toggleBulkSelect}}
+          @icon="list"
+          @title="topics.bulk.toggle"
         />
       {{/if}}
 
       {{#if @controller.model.can_see_members}}
         <DTextField
-          @value={{@controller.filterInput}}
-          @placeholderKey={{@controller.filterPlaceholder}}
-          @autocomplete="off"
           class="group-username-filter no-blur"
+          @autocomplete="off"
+          @placeholderKey={{@controller.filterPlaceholder}}
+          @value={{@controller.filterInput}}
         />
       {{/if}}
 
@@ -59,36 +59,36 @@ export default <template>
               />
 
               <DButton
-                @action={{@controller.bulkClearAll}}
-                @label="topics.bulk.clear_all"
-                @icon="far-square"
                 class="bulk-select-clear"
+                @action={{@controller.bulkClearAll}}
+                @icon="far-square"
+                @label="topics.bulk.clear_all"
               />
             {{/if}}
 
             <DButton
-              @action={{@controller.bulkSelectAll}}
-              @label="topics.bulk.select_all"
-              @icon="square-check"
               class="bulk-select-all"
+              @action={{@controller.bulkSelectAll}}
+              @icon="square-check"
+              @label="topics.bulk.select_all"
             />
           </span>
         {{/if}}
 
         <div class="group-members-manage">
           <DButton
-            @icon="plus"
-            @action={{routeAction "showAddMembersModal"}}
-            @label="groups.manage.add_members"
             class="btn-default group-members-add"
+            @action={{routeAction "showAddMembersModal"}}
+            @icon="plus"
+            @label="groups.manage.add_members"
           />
 
           {{#if @controller.currentUser.can_invite_to_forum}}
             <DButton
-              @icon="plus"
-              @action={{routeAction "showInviteModal"}}
-              @label="groups.manage.invite_members"
               class="btn-default group-members-invite"
+              @action={{routeAction "showInviteModal"}}
+              @icon="plus"
+              @label="groups.manage.invite_members"
             />
           {{/if}}
         </div>
@@ -104,14 +104,14 @@ export default <template>
         >
           <:header>
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @order={{@controller.order}}
+              class="directory-table__column-header--username username"
               @asc={{@controller.asc}}
-              @field="username_lower"
-              @labelKey="username"
               @automatic={{true}}
               @colspan="2"
-              class="directory-table__column-header--username username"
+              @field="username_lower"
+              @labelKey="username"
+              @onToggle={{@controller.updateOrder}}
+              @order={{@controller.order}}
             />
 
             <div
@@ -128,31 +128,31 @@ export default <template>
             />
 
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @order={{@controller.order}}
+              class="directory-table__column-header--added"
               @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="added_at"
               @labelKey="groups.member_added"
-              @automatic={{true}}
-              class="directory-table__column-header--added"
-            />
-            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
+            />
+            <DTableHeaderToggle
+              class="directory-table__column-header--last-posted"
               @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="last_posted_at"
               @labelKey="last_post"
-              @automatic={{true}}
-              class="directory-table__column-header--last-posted"
-            />
-            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
+            />
+            <DTableHeaderToggle
+              class="directory-table__column-header--last-seen"
               @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="last_seen_at"
               @labelKey="last_seen"
-              @automatic={{true}}
-              class="directory-table__column-header--last-seen"
+              @onToggle={{@controller.updateOrder}}
+              @order={{@controller.order}}
             />
 
             {{#if @controller.canManageGroup}}
@@ -172,17 +172,17 @@ export default <template>
                   {{#if @controller.canManageGroup}}
                     {{#if @controller.isBulk}}
                       <Input
-                        @type="checkbox"
                         class="bulk-select"
+                        @type="checkbox"
                         {{on "click" (fn @controller.selectMember m)}}
                       />
                     {{/if}}
                   {{/if}}
                   <DUserInfo
-                    @user={{m}}
-                    @skipName={{@controller.skipName}}
                     @showStatus={{true}}
                     @showStatusTooltip={{true}}
+                    @skipName={{@controller.skipName}}
+                    @user={{m}}
                   />
                 </div>
 
@@ -256,9 +256,9 @@ export default <template>
                     class="directory-table__cell directory-table__cell--member-settings member-settings"
                   >
                     <GroupMemberDropdown
-                      @member={{m}}
                       @canAdminGroup={{@controller.model.can_admin_group}}
                       @canEditGroup={{@controller.model.can_edit_group}}
+                      @member={{m}}
                       @onChange={{fn @controller.actOnGroup m}}
                     />
                     {{! group parameter is used by plugins }}

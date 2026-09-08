@@ -364,6 +364,9 @@ tr_TR:
       edit_event: "Etkinliği düzenle"
       export_event: "Etkinliği dışa aktar"
       created_by: "Oluşturan:"
+      other_hosts:
+        one: "ve %{count} üye daha"
+        other: "ve %{count} üye daha"
       bulk_invite: "Toplu Davet"
       close_event: "Etkinliği kapat"
       open_event: "Etkinliği aç"
@@ -531,6 +534,8 @@ tr_TR:
           placeholder: "İsteğe bağlı, varsayılan olarak konu başlığı"
         invitees:
           label: "Davet edilen gruplar"
+        hosts:
+          label: "Sunucular"
         event_type:
           public:
             title: "Genel"

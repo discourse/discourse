@@ -1008,6 +1008,7 @@ zh_CN:
       unknown: "未知操作系统"
   admin_site_traffic_explorer:
     direct_or_unknown: "直接 / 未知"
+    unknown: "未知"
     traffic_types:
       logged_in: "登录成员"
       anonymous: "匿名"
@@ -1795,6 +1796,7 @@ zh_CN:
     min_personal_message_title_length: "消息允许的最小标题长度（以字符为单位）"
     max_emojis_in_title: "话题标题中允许的最大表情符号数。如果将值设置为零，则会阻止在话题标题中使用任何表情符号。"
     min_search_term_length: "最小有效搜索词长度（以字符为单位）"
+    allow_anonymous_search: "允许匿名访客使用 /search 命令。禁用后，匿名访客将无法访问 /search 命令，并且使用 /search 命令的界面控件将被隐藏。"
     search_tokenize_chinese: "即使在非中文网站上也强制搜索将中文词例化"
     search_tokenize_japanese: "即使在非日语网站上也强制搜索将日语词例化"
     search_prefer_recent_posts: "如果搜索大型论坛的速度很慢，此选项会首先尝试索引最近的帖子"
@@ -1978,7 +1980,7 @@ zh_CN:
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
     site_contact_username: "用于发送所有自动消息的有效管理人员用户名。如果留空，将使用默认系统帐户。"
-    site_contact_group_name: "受邀接收所有自动发送的个人消息的群组的有效名称。"
+    site_contact_group_name: "受邀接收所有自动发送的个人消息的群组。"
     send_welcome_message: "向所有新用户发送带有快速入门指南的欢迎消息。"
     send_tl1_welcome_message: "向新的信任级别 1 用户发送欢迎消息。"
     send_tl2_promotion_message: "向新的信任级别 2 用户发送有关升级的消息。"
@@ -2716,7 +2718,7 @@ zh_CN:
       invalid_email: "无效的电子邮件地址。"
       invalid_username: "没有使用该用户名的用户。"
       valid_username: "存在一个使用该用户名的用户。"
-      invalid_group: "没有使用该名称的群组。"
+      invalid_group: "没有这样的群组。"
       invalid_svg: "SVG 图片无效。它必须包含 SVG 元素，且不能包含任何脚本或事件处理程序。"
       invalid_upload: "上传内容无效或不存在。"
       invalid_topic: "没有与该 ID 匹配的话题。"
@@ -5407,8 +5409,8 @@ zh_CN:
         complete: "帖子已隐藏，用户已被通知。"
       agree_and_edit:
         title: "编辑帖子"
-        description: "同意举报并打开编辑器窗口以编辑帖子。"
-        complete: "举报已确认，您现在可以编辑该帖子。"
+        description: "保存编辑后，请确认同意标记。"
+        complete: "帖子已编辑，标记已确认。"
       delete:
         title: "删除"
         complete: "帖子已被删除。"
@@ -5458,6 +5460,10 @@ zh_CN:
         title: "解除用户禁言并忽略"
         description: "解除对用户的禁言，并从队列中移除该举报，但不恢复已删除的帖子。"
         complete: "用户已被解除禁言，举报已被忽略。"
+      unsilence_user:
+        title: "取消禁言作者"
+        description: "解除对作者的禁言。此标志保留在队列中。"
+        complete: "作者不再禁言。"
       approve:
         title: "是"
         complete: "帖子已被批准。"
@@ -5526,30 +5532,6 @@ zh_CN:
       approve_and_unhide:
         title: "是"
         complete: "帖子已获批准并取消隐藏"
-      post_actions:
-        bundle_title: "您想如何处理该帖子？"
-      delete_post:
-        title: "删除帖子"
-        description: "删除此帖子"
-        complete: "帖子已删除"
-      hide_post:
-        title: "隐藏帖子"
-        description: "隐藏此帖子，不让公众查看"
-        complete: "帖子已隐藏"
-      unhide_post:
-        title: "取消隐藏帖子"
-        description: "将此帖子设为对所有用户可见"
-        complete: "帖子已取消隐藏"
-      restore_post:
-        title: "恢复帖子"
-        description: "恢复已删除的帖子"
-        complete: "帖子已恢复"
-      edit_post:
-        title: "编辑帖子"
-        description: "编辑此帖子内容"
-        complete: "帖子已编辑"
-      user_actions:
-        bundle_title: "您想如何处理该用户？"
       silence_user:
         title: "将用户禁言"
         description: "禁止用户发帖或发送消息"

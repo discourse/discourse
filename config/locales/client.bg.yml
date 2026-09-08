@@ -631,6 +631,9 @@ bg:
       user_label: "Потребител"
       timeline:
         target_deleted: "Публикацията е изтрита"
+      author_penalty:
+        toast:
+          undo: "Отмени"
       notes:
         delete: "Изтрий"
       topic_label: "Тема"
@@ -1174,7 +1177,6 @@ bg:
       admin: "%{user} е админ"
       moderator_tooltip: "Този потребител е модератор"
       admin_tooltip: "Този потребител е админ"
-      silenced_tooltip: "Този потребител е заглушен"
       suspended_notice: "Този потребител е отстранен до %{date}."
       suspended_permanently: "Този потребител е спрян."
       suspended_reason: "Причина:"

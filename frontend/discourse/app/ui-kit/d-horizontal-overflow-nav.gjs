@@ -146,46 +146,46 @@ export default class DHorizontalOverflowNav extends Component {
     {{! eslint-disable ember/template-no-invalid-interactive }}
 
     <nav
-      class="horizontal-overflow-nav {{if this.hasScroll 'has-scroll'}}"
       aria-label={{@ariaLabel}}
+      class="horizontal-overflow-nav {{if this.hasScroll 'has-scroll'}}"
     >
       {{#if this.hasScroll}}
         <a
-          role="button"
-          {{on "mousedown" this.horizontalScroll}}
-          {{on "mouseup" this.stopScroll}}
-          {{on "mouseleave" this.stopScroll}}
-          data-direction="left"
           class={{dConcatClass
             "horizontal-overflow-nav__scroll-left"
             (if this.hideLeftScroll "disabled")
           }}
+          data-direction="left"
+          role="button"
+          {{on "mousedown" this.horizontalScroll}}
+          {{on "mouseup" this.stopScroll}}
+          {{on "mouseleave" this.stopScroll}}
         >
           {{dIcon "chevron-left"}}
         </a>
       {{/if}}
 
       <ul
+        class="nav-pills action-list {{@className}}"
+        ...attributes
         {{dOnResize this.onResize}}
         {{on "scroll" this.onScroll}}
         {{didInsert this.setup}}
         {{on "mousedown" this.scrollDrag}}
-        class="nav-pills action-list {{@className}}"
-        ...attributes
       >
         {{yield}}
       </ul>
 
       {{#if this.hasScroll}}
         <a
-          role="button"
-          {{on "mousedown" this.horizontalScroll}}
-          {{on "mouseup" this.stopScroll}}
-          {{on "mouseleave" this.stopScroll}}
           class={{dConcatClass
             "horizontal-overflow-nav__scroll-right"
             (if this.hideRightScroll "disabled")
           }}
+          role="button"
+          {{on "mousedown" this.horizontalScroll}}
+          {{on "mouseup" this.stopScroll}}
+          {{on "mouseleave" this.stopScroll}}
         >
           {{dIcon "chevron-right"}}
         </a>

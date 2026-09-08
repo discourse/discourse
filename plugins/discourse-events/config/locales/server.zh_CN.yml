@@ -155,6 +155,9 @@ zh_CN:
           acting_user_not_allowed_to_create_event: "当前用户不能创建活动。"
           acting_user_not_allowed_to_act_on_this_event: "当前用户不能在此活动上执行操作。"
           invalid_allowed_groups: "允许的群组无效。"
+          invalid_hosts: "此活动不能添加一个或多个主持人。"
+          too_many_hosts:
+            other: "活动仅限 %{count} 位主持人。"
           acting_user_not_allowed_to_invite_these_groups: "当前用户不能邀请这些群组。"
           custom_field_is_invalid: "不允许自定义字段 `%{field}`。"
           name:

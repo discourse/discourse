@@ -87,9 +87,9 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @onReachEnd={{explode}}
           as |item|
         >
@@ -131,11 +131,11 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @pinnedIndices={{explode}}
           @overscan={{0}}
+          @pinnedIndices={{explode}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -183,9 +183,9 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @overscan={{0}}
           as |item|
         >
@@ -223,9 +223,9 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @overscan={{0}}
           as |item|
         >

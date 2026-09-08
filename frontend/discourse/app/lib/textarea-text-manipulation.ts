@@ -365,156 +365,6 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
   }
 
-  #applyWholeLineSurround(
-    sel: SelectedText,
-    head: string | ((previous?: string) => string),
-    tail: string,
-    opts: SurroundOptions
-  ): void {
-    const [hval, hlen] = getHead(head);
-    const lines = sel.value.split("\n");
-    const formattedLines = lines.filter(
-      (line) => opts.applyEmptyLines || line.length > 0
-    );
-    const removing =
-      formattedLines.length > 0 &&
-      formattedLines.every(
-        (line) => line.startsWith(hval) && line.endsWith(tail)
-      );
-
-    const contents = lines
-      .map((line) => {
-        if (!opts.applyEmptyLines && line.length === 0) {
-          return line;
-        }
-        if (removing) {
-          return line.slice(hlen, tail.length ? -tail.length : undefined);
-        }
-        let content = line;
-        if (hval) {
-          content = content.replaceAll(hval, "");
-        }
-        if (tail) {
-          content = content.replaceAll(tail, "");
-        }
-        return `${hval}${content}${tail}`;
-      })
-      .join("\n");
-
-    this._insertAt(sel.start, sel.end, contents);
-
-    if (lines.length === 1) {
-      this.selectText(
-        sel.start + (removing ? 0 : hlen),
-        removing ? contents.length : contents.length - hlen - tail.length
-      );
-    } else {
-      this.selectText(sel.start, contents.length);
-    }
-  }
-
-  #expandToLines(sel: SelectedText): SelectedText {
-    const value = this.value;
-    const start = value.lastIndexOf("\n", sel.start - 1) + 1;
-    const endAnchor =
-      sel.end > sel.start && value[sel.end - 1] === "\n"
-        ? sel.end - 1
-        : sel.end;
-    const nextNewline = value.indexOf("\n", endAnchor);
-    const end = nextNewline === -1 ? value.length : nextNewline;
-
-    return {
-      start,
-      end,
-      value: value.slice(start, end),
-      pre: value.slice(0, start),
-      post: value.slice(end),
-      lineVal: value.slice(start, end),
-    };
-  }
-
-  // perform the same operation over many lines of text
-  _getMultilineContents(
-    lines: string[],
-    head: string | ((previous?: string) => string),
-    hval: string,
-    hlen: number,
-    tail: string,
-    tlen: number,
-    opts?: SurroundOptions
-  ): string {
-    let operation = OP.NONE;
-
-    const applyEmptyLines = opts && opts.applyEmptyLines;
-
-    return lines
-      .map((l) => {
-        if (!applyEmptyLines && l.length === 0) {
-          return l;
-        }
-
-        if (
-          operation !== OP.ADDED &&
-          l.slice(0, hlen) === hval &&
-          (tlen === 0 || l.slice(-tlen) === tail)
-        ) {
-          operation = OP.REMOVED;
-          if (tlen === 0) {
-            const result = l.slice(hlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          } else if (l.slice(-tlen) === tail) {
-            const result = l.slice(hlen, -tlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          }
-        } else if (operation === OP.NONE) {
-          operation = OP.ADDED;
-        } else if (operation === OP.REMOVED) {
-          return l;
-        }
-
-        const result = `${hval}${l}${tail}`;
-        [hval, hlen] = getHead(head, hval);
-        return result;
-      })
-      .join("\n");
-  }
-
-  _addBlock(sel: SelectedText, text: string): void {
-    text = (text || "").trim();
-    if (text.length === 0) {
-      return;
-    }
-
-    let start = sel.start;
-    let end = sel.end;
-
-    const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
-    if (newLinesBeforeSelection) {
-      start -= newLinesBeforeSelection;
-    }
-
-    if (sel.pre.length > 0) {
-      text = `\n\n${text}`;
-    }
-
-    const newLinesAfterSelection = sel.post?.match(/^\n*/)?.[0]?.length;
-    if (newLinesAfterSelection) {
-      end += newLinesAfterSelection;
-    }
-
-    if (sel.post.length > 0) {
-      text = `${text}\n\n`;
-    } else {
-      text = `${text}\n`;
-    }
-
-    this._insertAt(start, end, text);
-    this.textarea.setSelectionRange(start + text.length, start + text.length);
-    schedule("afterRender", this, this.blurAndFocus);
-  }
-
   applyLink(url: string): void {
     const sel = this.getSelected();
     if (sel.start === sel.end) {
@@ -540,15 +390,6 @@ export default class TextareaTextManipulation implements TextManipulation {
 
     this._insertAt(sel.start, sel.end, text);
     this.blurAndFocus();
-  }
-
-  _insertAt(
-    start: number,
-    end: number,
-    text: string,
-    opts: InsertAtOptions = {}
-  ): void {
-    insertAtTextarea(this.textarea, start, end, text, opts);
   }
 
   extractTable(text: string): string | null {
@@ -708,44 +549,6 @@ export default class TextareaTextManipulation implements TextManipulation {
     if (handled || (canUpload && !plainText)) {
       e.preventDefault();
     }
-  }
-
-  /**
-   * Removes the provided char from the provided str up
-   * until the limit, or until a character that is _not_
-   * the provided one is encountered.
-   */
-  _deindentLine(str: string, char: string, limit: number): string {
-    let eaten = 0;
-    for (let i = 0; i < str.length; i++) {
-      if (eaten < limit && str[i] === char) {
-        eaten += 1;
-      } else {
-        return str.slice(eaten);
-      }
-    }
-    return str;
-  }
-
-  _updateListNumbers(text: string, currentNumber: number): string {
-    return text
-      .split("\n")
-      .map((line) => {
-        if (line.replace(/^\s+/, "").startsWith(`${currentNumber}.`)) {
-          const result = line.replace(
-            `${currentNumber}`,
-            `${currentNumber + 1}`
-          );
-          currentNumber += 1;
-          return result;
-        }
-        return line;
-      })
-      .join("\n");
-  }
-
-  #isAfterStartedCodeFence(beforeText: string): number | null {
-    return this.isInside(beforeText, /(^|\n)```/g);
   }
 
   maybeContinueList(): void {
@@ -1209,6 +1012,203 @@ export default class TextareaTextManipulation implements TextManipulation {
       options
     );
   }
+
+  #applyWholeLineSurround(
+    sel: SelectedText,
+    head: string | ((previous?: string) => string),
+    tail: string,
+    opts: SurroundOptions
+  ): void {
+    const [hval, hlen] = getHead(head);
+    const lines = sel.value.split("\n");
+    const formattedLines = lines.filter(
+      (line) => opts.applyEmptyLines || line.length > 0
+    );
+    const removing =
+      formattedLines.length > 0 &&
+      formattedLines.every(
+        (line) => line.startsWith(hval) && line.endsWith(tail)
+      );
+
+    const contents = lines
+      .map((line) => {
+        if (!opts.applyEmptyLines && line.length === 0) {
+          return line;
+        }
+        if (removing) {
+          return line.slice(hlen, tail.length ? -tail.length : undefined);
+        }
+        let content = line;
+        if (hval) {
+          content = content.replaceAll(hval, "");
+        }
+        if (tail) {
+          content = content.replaceAll(tail, "");
+        }
+        return `${hval}${content}${tail}`;
+      })
+      .join("\n");
+
+    this._insertAt(sel.start, sel.end, contents);
+
+    if (lines.length === 1) {
+      this.selectText(
+        sel.start + (removing ? 0 : hlen),
+        removing ? contents.length : contents.length - hlen - tail.length
+      );
+    } else {
+      this.selectText(sel.start, contents.length);
+    }
+  }
+
+  #expandToLines(sel: SelectedText): SelectedText {
+    const value = this.value;
+    const start = value.lastIndexOf("\n", sel.start - 1) + 1;
+    const endAnchor =
+      sel.end > sel.start && value[sel.end - 1] === "\n"
+        ? sel.end - 1
+        : sel.end;
+    const nextNewline = value.indexOf("\n", endAnchor);
+    const end = nextNewline === -1 ? value.length : nextNewline;
+
+    return {
+      start,
+      end,
+      value: value.slice(start, end),
+      pre: value.slice(0, start),
+      post: value.slice(end),
+      lineVal: value.slice(start, end),
+    };
+  }
+
+  #isAfterStartedCodeFence(beforeText: string): number | null {
+    return this.isInside(beforeText, /(^|\n)```/g);
+  }
+
+  // perform the same operation over many lines of text
+  _getMultilineContents(
+    lines: string[],
+    head: string | ((previous?: string) => string),
+    hval: string,
+    hlen: number,
+    tail: string,
+    tlen: number,
+    opts?: SurroundOptions
+  ): string {
+    let operation = OP.NONE;
+
+    const applyEmptyLines = opts && opts.applyEmptyLines;
+
+    return lines
+      .map((l) => {
+        if (!applyEmptyLines && l.length === 0) {
+          return l;
+        }
+
+        if (
+          operation !== OP.ADDED &&
+          l.slice(0, hlen) === hval &&
+          (tlen === 0 || l.slice(-tlen) === tail)
+        ) {
+          operation = OP.REMOVED;
+          if (tlen === 0) {
+            const result = l.slice(hlen);
+            [hval, hlen] = getHead(head, hval);
+            return result;
+          } else if (l.slice(-tlen) === tail) {
+            const result = l.slice(hlen, -tlen);
+            [hval, hlen] = getHead(head, hval);
+            return result;
+          }
+        } else if (operation === OP.NONE) {
+          operation = OP.ADDED;
+        } else if (operation === OP.REMOVED) {
+          return l;
+        }
+
+        const result = `${hval}${l}${tail}`;
+        [hval, hlen] = getHead(head, hval);
+        return result;
+      })
+      .join("\n");
+  }
+
+  _addBlock(sel: SelectedText, text: string): void {
+    text = (text || "").trim();
+    if (text.length === 0) {
+      return;
+    }
+
+    let start = sel.start;
+    let end = sel.end;
+
+    const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
+    if (newLinesBeforeSelection) {
+      start -= newLinesBeforeSelection;
+    }
+
+    if (sel.pre.length > 0) {
+      text = `\n\n${text}`;
+    }
+
+    const newLinesAfterSelection = sel.post?.match(/^\n*/)?.[0]?.length;
+    if (newLinesAfterSelection) {
+      end += newLinesAfterSelection;
+    }
+
+    if (sel.post.length > 0) {
+      text = `${text}\n\n`;
+    } else {
+      text = `${text}\n`;
+    }
+
+    this._insertAt(start, end, text);
+    this.textarea.setSelectionRange(start + text.length, start + text.length);
+    schedule("afterRender", this, this.blurAndFocus);
+  }
+
+  _insertAt(
+    start: number,
+    end: number,
+    text: string,
+    opts: InsertAtOptions = {}
+  ): void {
+    insertAtTextarea(this.textarea, start, end, text, opts);
+  }
+
+  /**
+   * Removes the provided char from the provided str up
+   * until the limit, or until a character that is _not_
+   * the provided one is encountered.
+   */
+  _deindentLine(str: string, char: string, limit: number): string {
+    let eaten = 0;
+    for (let i = 0; i < str.length; i++) {
+      if (eaten < limit && str[i] === char) {
+        eaten += 1;
+      } else {
+        return str.slice(eaten);
+      }
+    }
+    return str;
+  }
+
+  _updateListNumbers(text: string, currentNumber: number): string {
+    return text
+      .split("\n")
+      .map((line) => {
+        if (line.replace(/^\s+/, "").startsWith(`${currentNumber}.`)) {
+          const result = line.replace(
+            `${currentNumber}`,
+            `${currentNumber + 1}`
+          );
+          currentNumber += 1;
+          return result;
+        }
+        return line;
+      })
+      .join("\n");
+  }
 }
 
 function insertAtTextarea(
@@ -1279,62 +1279,6 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
     this.textManipulation = textManipulation;
   }
 
-  #uploadPlaceholder(file: UppyFile, currentMarkdown: string): string {
-    const clipboard = i18n("clipboard");
-    const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(
-      file,
-      currentMarkdown
-    );
-    const filename = uploadFilenamePlaceholder
-      ? uploadFilenamePlaceholder
-      : clipboard;
-
-    let placeholder = `[${i18n("uploading_filename", { filename })}]()\n`;
-    if (!this.#cursorIsOnEmptyLine()) {
-      placeholder = `\n${placeholder}`;
-    }
-
-    return placeholder;
-  }
-
-  #cursorIsOnEmptyLine(): boolean {
-    const selectionStart = this.textManipulation.textarea.selectionStart;
-    return (
-      selectionStart === 0 ||
-      this.textManipulation.value.charAt(selectionStart - 1) === "\n"
-    );
-  }
-
-  #uploadFilenamePlaceholder(file: UppyFile, currentMarkdown: string): string {
-    const filename = this.#filenamePlaceholder(file);
-
-    // when adding two separate files with the same filename search for matching
-    // placeholder already existing in the editor ie [Uploading: test.png…]
-    // and add order nr to the next one: [Uploading: test.png(1)…]
-    const escapedFilename = escapeRegExp(filename);
-    const regexString = `\\[${i18n("uploading_filename", {
-      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
-    })}\\]\\(\\)`;
-    const globalRegex = new RegExp(regexString, "g");
-    const matchingPlaceholder = currentMarkdown.match(globalRegex);
-    if (matchingPlaceholder) {
-      // get last matching placeholder and its consecutive nr in regex
-      // capturing group and apply +1 to the placeholder
-      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
-      const regex = new RegExp(regexString);
-      const orderNr = regex.exec(lastMatch)![1]
-        ? parseInt(regex.exec(lastMatch)![1]!, 10) + 1
-        : 1;
-      return `${filename}(${orderNr})`;
-    }
-
-    return filename;
-  }
-
-  #filenamePlaceholder(data: UppyFile): string {
-    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
-  }
-
   insert(file: UppyFile): void {
     const placeholder = this.#uploadPlaceholder(
       file,
@@ -1394,5 +1338,61 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
       this.#placeholders[file.id].uploadPlaceholder.trim(),
       markdown
     );
+  }
+
+  #uploadPlaceholder(file: UppyFile, currentMarkdown: string): string {
+    const clipboard = i18n("clipboard");
+    const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(
+      file,
+      currentMarkdown
+    );
+    const filename = uploadFilenamePlaceholder
+      ? uploadFilenamePlaceholder
+      : clipboard;
+
+    let placeholder = `[${i18n("uploading_filename", { filename })}]()\n`;
+    if (!this.#cursorIsOnEmptyLine()) {
+      placeholder = `\n${placeholder}`;
+    }
+
+    return placeholder;
+  }
+
+  #cursorIsOnEmptyLine(): boolean {
+    const selectionStart = this.textManipulation.textarea.selectionStart;
+    return (
+      selectionStart === 0 ||
+      this.textManipulation.value.charAt(selectionStart - 1) === "\n"
+    );
+  }
+
+  #uploadFilenamePlaceholder(file: UppyFile, currentMarkdown: string): string {
+    const filename = this.#filenamePlaceholder(file);
+
+    // when adding two separate files with the same filename search for matching
+    // placeholder already existing in the editor ie [Uploading: test.png…]
+    // and add order nr to the next one: [Uploading: test.png(1)…]
+    const escapedFilename = escapeRegExp(filename);
+    const regexString = `\\[${i18n("uploading_filename", {
+      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
+    })}\\]\\(\\)`;
+    const globalRegex = new RegExp(regexString, "g");
+    const matchingPlaceholder = currentMarkdown.match(globalRegex);
+    if (matchingPlaceholder) {
+      // get last matching placeholder and its consecutive nr in regex
+      // capturing group and apply +1 to the placeholder
+      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
+      const regex = new RegExp(regexString);
+      const orderNr = regex.exec(lastMatch)![1]
+        ? parseInt(regex.exec(lastMatch)![1]!, 10) + 1
+        : 1;
+      return `${filename}(${orderNr})`;
+    }
+
+    return filename;
+  }
+
+  #filenamePlaceholder(data: UppyFile): string {
+    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
   }
 }

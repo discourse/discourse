@@ -76,7 +76,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
         end
 
         context "when the message doesn’t exist" do
-          it "fails" do
+          it "fails to find the message" do
             params[:message_id] = 999
             is_expected.to fail_to_find_a_model(:message)
           end

@@ -1227,7 +1227,21 @@ en:
         view_conversation: "view PM"
         note_added: "Moderator note"
         note_added_by: "Moderator note by %{username} · %{relativeDate}"
+        author_silenced_by: "Author silenced by %{username} · %{relativeDate}"
+        author_silenced_automatically: "Author silenced automatically · %{relativeDate}"
+        author_suspended_by: "Author suspended by %{username} · %{relativeDate}"
+        author_suspended_automatically: "Author suspended automatically · %{relativeDate}"
         no_events: "No timeline events to display"
+      author_penalty:
+        effect:
+          retains_silence: "The author stays silenced."
+          retains_suspension: "The author stays suspended."
+          retains_silence_and_suspension: "The author stays silenced and suspended."
+          lifts_silence: "The author will be unsilenced."
+        toast:
+          still_silenced: "%{username} is still silenced."
+          undo: "Undo"
+          undone: "%{username} is no longer silenced."
       notes:
         add_note_description: "Add a note to provide context to other moderators."
         add_note_button: "Add note"
@@ -1914,7 +1928,6 @@ en:
       admin: "%{user} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
-      silenced_tooltip: "This user is silenced"
       suspended_notice: "This user is suspended until %{date}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
@@ -7371,6 +7384,9 @@ en:
           browser:
             one: "Filtering to %{count} browser"
             other: "Filtering to %{count} browsers"
+          language:
+            one: "Filtering to %{count} language"
+            other: "Filtering to %{count} languages"
           ip:
             one: "Filtering to %{count} IP address"
             other: "Filtering to %{count} IP addresses"
@@ -7397,6 +7413,7 @@ en:
           top_urls: "Top URLs"
           entry_urls: "Entry URLs"
           browsers: "Browsers"
+          languages: "Languages"
           ip_addresses: "IP addresses"
         filters:
           traffic_type: "Traffic type"
@@ -7406,6 +7423,7 @@ en:
           country: "Country"
           network: "Network"
           browser: "Browser"
+          language: "Language"
           ip: "IP address"
         headline:
           one: "%{formatted_count} pageview"

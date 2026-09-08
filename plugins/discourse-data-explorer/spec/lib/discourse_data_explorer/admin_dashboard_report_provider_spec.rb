@@ -31,6 +31,7 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
   let(:user_guardian) { user.guardian }
 
   before { SiteSetting.data_explorer_enabled = true }
+
   let(:query_ids_to_invalidate) { [visible_query.id] }
 
   after do
@@ -350,7 +351,7 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
 
       payload = result[query.id.to_s]
       expect(payload[:success]).to eq(true)
-      expect(payload[:rows]).to eq([["2026-01-01"]])
+      expect(payload[:rows]).to eq([[Date.parse("2026-01-01")]])
     end
   end
 

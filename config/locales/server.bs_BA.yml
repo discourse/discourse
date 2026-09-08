@@ -334,6 +334,7 @@ bs_BA:
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
   admin_site_traffic_explorer:
+    unknown: "Unknown"
     traffic_types:
       anonymous: "Anoniman"
   change_email:
@@ -1167,8 +1168,6 @@ bs_BA:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "user"

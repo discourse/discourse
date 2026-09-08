@@ -170,6 +170,63 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     )
   end
 
+  it "maps Gemini 3.8 agent and LLM minimal thinking settings to low" do
+    model.update!(name: "gemini-3.8-flash", provider_params: { thinking_level: "minimal" })
+    request_bodies = []
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_bodies << JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    expect(llm.generate("Think", user:)).to eq("Done")
+    expect(llm.generate("Think", user:, thinking_effort: "minimal")).to eq("Done")
+    expect(request_bodies.map { |body| body.dig(:generation_config, :thinking_level) }).to eq(
+      %w[low low],
+    )
+  end
+
+  it "strips deprecated agent sampling settings and unsupported extra parameters for Gemini 3.8" do
+    SiteSetting.ai_llm_temperature_top_p_enabled = true
+    model.update!(name: "gemini-3.8-flash")
+    request_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_body = JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    expect(
+      llm.generate(
+        "Think",
+        user:,
+        temperature: 0.4,
+        top_p: 0.8,
+        extra_model_params: {
+          top_k: 40,
+          thinking_budget: 1_000,
+        },
+      ),
+    ).to eq("Done")
+    expect(request_body).not_to have_key(:generation_config)
+  end
+
   it "omits the unsupported disabled thinking override for Gemini 2.5" do
     request_body = nil
     stub_request(:post, url).with(

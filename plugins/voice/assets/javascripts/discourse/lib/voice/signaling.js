@@ -1,13 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 
 export default class SignalingManager {
-  static #defaultCandidateBatchDelayMs = 75;
-  static #defaultCandidateBatchSize = 5;
-  static #defaultHttpBatchDelayMs = 200;
-  // The server rejects batches with more than 25 events for one recipient;
-  // flushing at 20 keeps a candidate batch appended mid-window under that cap.
-  static #httpFlushEventThreshold = 20;
-
   static peerKey(roomId, userId) {
     return `${roomId}:${userId}`;
   }
@@ -36,6 +29,15 @@ export default class SignalingManager {
       })),
     };
   }
+
+  static #defaultCandidateBatchDelayMs = 75;
+  static #defaultCandidateBatchSize = 5;
+
+  static #defaultHttpBatchDelayMs = 200;
+
+  // The server rejects batches with more than 25 events for one recipient;
+  // flushing at 20 keeps a candidate batch appended mid-window under that cap.
+  static #httpFlushEventThreshold = 20;
 
   #candidateBatchDelayMs;
   #candidateBatchSize;
@@ -106,6 +108,114 @@ export default class SignalingManager {
     await this.#postSignals(roomId, recipientId, [payload]);
   }
 
+  async flushQueued(roomId, recipientId) {
+    const key = SignalingManager.peerKey(roomId, recipientId);
+    const queue = this.#signalQueues.get(key);
+
+    if (!queue?.length) {
+      return;
+    }
+
+    this.#signalQueues.delete(key);
+
+    const timer = this.#signalFlushTimers.get(key);
+    if (timer) {
+      clearTimeout(timer);
+      this.#signalFlushTimers.delete(key);
+    }
+
+    if (!this.#isActiveRoom(roomId) || !this.#hasPeer(roomId, recipientId)) {
+      return;
+    }
+
+    await this.#postSignals(roomId, recipientId, queue);
+  }
+
+  clearForPeer(roomId, recipientId) {
+    const key = SignalingManager.peerKey(roomId, recipientId);
+    const timer = this.#signalFlushTimers.get(key);
+
+    if (timer) {
+      clearTimeout(timer);
+      this.#signalFlushTimers.delete(key);
+    }
+
+    this.#signalQueues.delete(key);
+
+    const entry = this.#httpSignalQueues.get(roomId);
+    if (!entry) {
+      return;
+    }
+
+    entry.recipients?.delete?.(recipientId);
+
+    const [clearedPending, retainedPending] = this.#partitionPending(
+      entry.pending,
+      new Set(),
+      recipientId
+    );
+
+    entry.pending = retainedPending;
+    this.#settlePending(clearedPending, "resolve");
+
+    if (!entry.recipients.size && !entry.pending.length) {
+      this.#httpSignalQueues.delete(roomId);
+    }
+  }
+
+  clearForRoom(roomId) {
+    const prefix = `${roomId}:`;
+
+    Array.from(this.#signalQueues.keys()).forEach((key) => {
+      if (!key.startsWith(prefix)) {
+        return;
+      }
+
+      const timer = this.#signalFlushTimers.get(key);
+
+      if (timer) {
+        clearTimeout(timer);
+        this.#signalFlushTimers.delete(key);
+      }
+
+      this.#signalQueues.delete(key);
+    });
+  }
+
+  clearHttpQueue(roomId) {
+    const timer = this.#httpSignalFlushTimers.get(roomId);
+    if (timer) {
+      clearTimeout(timer);
+      this.#httpSignalFlushTimers.delete(roomId);
+    }
+
+    const entry = this.#httpSignalQueues.get(roomId);
+    if (!entry) {
+      return;
+    }
+
+    entry.recipients?.clear?.();
+    this.#settlePending(entry.pending || [], "resolve");
+    entry.pending = [];
+    this.#httpSignalQueues.delete(roomId);
+  }
+
+  // Terminal: no further signals are queued or flushed afterwards, so a
+  // continuation resumed after teardown cannot schedule a late HTTP flush.
+  destroy() {
+    this.#destroyed = true;
+
+    this.#signalFlushTimers.forEach((timer) => clearTimeout(timer));
+    this.#signalFlushTimers.clear();
+    this.#httpSignalFlushTimers.forEach((timer) => clearTimeout(timer));
+    this.#httpSignalFlushTimers.clear();
+    this.#httpSignalQueues.forEach((entry) => {
+      this.#settlePending(entry?.pending || [], "resolve");
+    });
+    this.#httpSignalQueues.clear();
+    this.#signalQueues.clear();
+  }
+
   #queue(roomId, recipientId, payload) {
     const key = SignalingManager.peerKey(roomId, recipientId);
     const queue = this.#signalQueues.get(key) || [];
@@ -134,29 +244,6 @@ export default class SignalingManager {
     }, this.#candidateBatchDelayMs);
 
     this.#signalFlushTimers.set(key, timer);
-  }
-
-  async flushQueued(roomId, recipientId) {
-    const key = SignalingManager.peerKey(roomId, recipientId);
-    const queue = this.#signalQueues.get(key);
-
-    if (!queue?.length) {
-      return;
-    }
-
-    this.#signalQueues.delete(key);
-
-    const timer = this.#signalFlushTimers.get(key);
-    if (timer) {
-      clearTimeout(timer);
-      this.#signalFlushTimers.delete(key);
-    }
-
-    if (!this.#isActiveRoom(roomId) || !this.#hasPeer(roomId, recipientId)) {
-      return;
-    }
-
-    await this.#postSignals(roomId, recipientId, queue);
   }
 
   async #postSignals(roomId, recipientId, events) {
@@ -304,91 +391,6 @@ export default class SignalingManager {
         this.#httpSignalQueues.delete(roomId);
       }
     }
-  }
-
-  clearForPeer(roomId, recipientId) {
-    const key = SignalingManager.peerKey(roomId, recipientId);
-    const timer = this.#signalFlushTimers.get(key);
-
-    if (timer) {
-      clearTimeout(timer);
-      this.#signalFlushTimers.delete(key);
-    }
-
-    this.#signalQueues.delete(key);
-
-    const entry = this.#httpSignalQueues.get(roomId);
-    if (!entry) {
-      return;
-    }
-
-    entry.recipients?.delete?.(recipientId);
-
-    const [clearedPending, retainedPending] = this.#partitionPending(
-      entry.pending,
-      new Set(),
-      recipientId
-    );
-
-    entry.pending = retainedPending;
-    this.#settlePending(clearedPending, "resolve");
-
-    if (!entry.recipients.size && !entry.pending.length) {
-      this.#httpSignalQueues.delete(roomId);
-    }
-  }
-
-  clearForRoom(roomId) {
-    const prefix = `${roomId}:`;
-
-    Array.from(this.#signalQueues.keys()).forEach((key) => {
-      if (!key.startsWith(prefix)) {
-        return;
-      }
-
-      const timer = this.#signalFlushTimers.get(key);
-
-      if (timer) {
-        clearTimeout(timer);
-        this.#signalFlushTimers.delete(key);
-      }
-
-      this.#signalQueues.delete(key);
-    });
-  }
-
-  clearHttpQueue(roomId) {
-    const timer = this.#httpSignalFlushTimers.get(roomId);
-    if (timer) {
-      clearTimeout(timer);
-      this.#httpSignalFlushTimers.delete(roomId);
-    }
-
-    const entry = this.#httpSignalQueues.get(roomId);
-    if (!entry) {
-      return;
-    }
-
-    entry.recipients?.clear?.();
-    this.#settlePending(entry.pending || [], "resolve");
-    entry.pending = [];
-    this.#httpSignalQueues.delete(roomId);
-  }
-
-  // Terminal: no further signals are queued or flushed afterwards, so a
-  // continuation resumed after teardown cannot schedule a late HTTP flush.
-  destroy() {
-    this.#destroyed = true;
-
-    this.#signalFlushTimers.forEach((timer) => clearTimeout(timer));
-    this.#signalFlushTimers.clear();
-    this.#httpSignalFlushTimers.forEach((timer) => clearTimeout(timer));
-    this.#httpSignalFlushTimers.clear();
-    this.#httpSignalQueues.forEach((entry) => {
-      this.#settlePending(entry?.pending || [], "resolve");
-    });
-    this.#httpSignalQueues.clear();
-    this.#signalQueues.clear();
   }
 
   #partitionPending(pending, allowedRecipientIds, clearedRecipientId = null) {

@@ -387,6 +387,13 @@ zh_CN:
       edit_event: "编辑活动"
       export_event: "导出活动"
       created_by: "创建者"
+      created_and_hosted_by: "创建和托管人"
+      hosted_by: "托管人"
+      co_hosted_by: "共同主办方"
+      other_hosts:
+        other: "和其他 %{count} 人"
+      all_hosts:
+        other: "%{count} 主机"
       bulk_invite: "批量邀请"
       close_event: "关闭活动"
       open_event: "开放活动"
@@ -593,6 +600,9 @@ zh_CN:
           placeholder: "可选，默认为话题标题"
         invitees:
           label: "受邀群组"
+        hosts:
+          label: "主机"
+          description: "主持人会和活动创建者一起显示在活动页面上。"
         event_type:
           label: "出席类型"
           public:

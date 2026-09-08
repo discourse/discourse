@@ -367,6 +367,11 @@ ru:
       edit_event: "Изменить мероприятие"
       export_event: "Экспорт мероприятия"
       created_by: "Создано"
+      other_hosts:
+        one: "и ещё %{count}"
+        few: "и ещё %{count}"
+        many: "и ещё %{count}"
+        other: "и ещё %{count}"
       bulk_invite: "Массовое приглашение"
       close_event: "Закрыть мероприятие"
       open_event: "Открыть мероприятие"
@@ -583,6 +588,8 @@ ru:
           placeholder: "Необязательно, по умолчанию используется заголовок темы"
         invitees:
           label: "Приглашённые группы"
+        hosts:
+          label: "Хосты"
         event_type:
           label: "Тип посещаемости"
           public:

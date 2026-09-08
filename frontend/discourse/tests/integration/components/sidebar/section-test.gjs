@@ -56,11 +56,11 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   test("default displaySection value for section", async function (assert) {
     const template = <template>
       <Section
-        @sectionName="test"
+        @headerActions={{this.headerActions}}
+        @headerActionsIcon="plus"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}}
+        @sectionName="test"
       />
     </template>;
 
@@ -75,12 +75,12 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   test("displaySection is dynamic based on argument", async function (assert) {
     const template = <template>
       <Section
-        @sectionName="test"
+        @displaySection={{this.displaySection}}
+        @headerActions={{this.headerActions}}
+        @headerActionsIcon="plus"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}}
-        @displaySection={{this.displaySection}}
+        @sectionName="test"
       />
     </template>;
 
@@ -99,12 +99,12 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   test("can expand and collapse content when section is collapsible", async function (assert) {
     const template = <template>
       <Section
-        @sectionName="test"
+        @collapsable={{true}}
+        @headerActions={{this.headerActions}}
+        @headerActionsIcon="plus"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}}
-        @collapsable={{true}}
+        @sectionName="test"
       />
     </template>;
 
@@ -134,10 +134,10 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
           @onLinkDrop={{this.onLinkDrop}}
+          @sectionName="test"
         >
           <li data-sidebar-custom-link="true">First link</li>
           <li data-sidebar-custom-link="true">Second link</li>
@@ -176,9 +176,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
+          @sectionName="test"
         />
       </template>
     );
@@ -199,9 +199,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
+          @sectionName="test"
         />
       </template>
     );
@@ -243,9 +243,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
+          @sectionName="test"
         />
       </template>
     );
@@ -272,10 +272,10 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
           @onLinkDrop={{this.onLinkDrop}}
+          @sectionName="test"
         />
       </template>
     );
@@ -296,10 +296,10 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{false}}
           @onLinkDrop={{this.onLinkDrop}}
+          @sectionName="test"
         />
       </template>
     );
@@ -317,11 +317,11 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   module("dragging over a collapsed section", function () {
     const collapsedSection = <template>
       <Section
-        @sectionName="test"
-        @headerLinkText="test header"
         @collapsable={{true}}
+        @headerLinkText="test header"
         @linkDropEnabled={{true}}
         @onLinkDrop={{@onLinkDrop}}
+        @sectionName="test"
       >
         <li data-sidebar-custom-link="true">First link</li>
         <li data-sidebar-custom-link="true">Second link</li>

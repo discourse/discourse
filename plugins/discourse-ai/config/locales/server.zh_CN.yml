@@ -124,6 +124,7 @@ zh_CN:
     ai_helper_post_illustrator_agent: "用于 AI 助手插图帖子功能的智能体。注意：您还必须创建一个图像生成工具（管理 > 插件 > Discourse AI > 工具），此功能才能正常工作。"
     ai_helper_chat_thread_title_agent: "用于生成聊天消息串标题的智能体。"
     ai_embeddings_selected_model: "使用所选模型生成嵌入向量。"
+    ai_embeddings_generate_for_pms: "为个人信息生成词嵌入。Ask AI 中语义化的个人信息结果也需要用到这一步骤。"
     ai_embeddings_semantic_related_topics_enabled: "将语义搜索用于相关话题。"
     ai_embeddings_semantic_related_topics: "在相关话题部分中显示的最大话题数。"
     ai_embeddings_backfill_batch_size: "每 15 分钟回填的嵌入向量数。"
@@ -162,6 +163,7 @@ zh_CN:
     ai_ask_ai_agent: "选择来源并撰写 Ask AI 答案的智能体。"
     ai_ask_ai_query_rewriter_agent: "该智能体用于为 Ask AI 准备单独的关键词查询和语义查询。如果该智能体或其模型不可用，Ask AI 将使用用户的原始查询进行搜索。"
     ai_ask_ai_follow_up_agent: "当用户想要跟进“Ask AI”的查询结果时，可以使用此智能体。所选智能体必须已启用、允许发送私人消息，并且对用户可用。"
+    ai_ask_ai_allowed_groups: "允许使用 Ask AI 及其后续交接的群组。Ask AI 代理的权限、后续代理的权限以及常规的主题、类别和私人消息可见性仍然有效。语义私人消息搜索需要 {{setting:ai_embeddings_generate_for_pms}}。对已授权用户可见的内容（包括受限主题和私人消息）可能会发送到已配置的 LLM 提供商。"
     ai_google_custom_search_api_key: "Google 自定义搜索 API 的 API 密钥，请参阅：https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "Google 自定义搜索 API 的 CX"
     ai_discord_search_enabled: "启用 Discord 搜索功能"
@@ -428,6 +430,7 @@ zh_CN:
       configuration_missing: "缺少 AI 垃圾信息检测配置。请先在“管理 > 插件 > Discourse AI > 垃圾信息”中添加配置，然后再启用。"
       logging_subject: "垃圾信息检测"
     ai_bot:
+      ai_users: "AI 用户"
       errors:
         invalid_agent_id: "指定的 AI 智能体不存在，或者您没有访问权限。"
         cannot_send_pm_to_agent: "您无法向该 AI 智能体发送个人信息"
@@ -689,6 +692,7 @@ zh_CN:
           name: "代码执行（本机）"
           help: "当代理被迫使用受支持的 Gemini LLM 时，允许模型在提供商的沙箱中编写和运行 Python 代码。"
       tool_summary:
+        load_discourse_website_page: "加载 Discourse 网站页面"
         read_artifact: "阅读 Web 工件"
         search_uploaded_documents: "搜索已上传的文档"
         view_image: "检查图像"
@@ -747,6 +751,7 @@ zh_CN:
         researcher: "研究"
         researcher_dry_run: "准备研究"
       tool_help:
+        load_discourse_website_page: "从 Discourse 官方网站加载命名页面"
         read_artifact: "使用 AI 机器人阅读 Web 工件"
         search_uploaded_documents: "搜索上传至此智能体的文档"
         view_image: "检查此任务期间可用的图像"
@@ -804,6 +809,7 @@ zh_CN:
         javascript_evaluator: "评估 JavaScript"
         researcher: "使用 AI 机器人研究论坛信息"
       tool_description:
+        load_discourse_website_page: "已从 Discourse 官方网站加载 %{page_name} 页面"
         read_artifact: "使用 AI 机器人阅读 Web 工件"
         view_image: "检查了此任务期间可用的图像"
         search_uploaded_documents:
@@ -1081,6 +1087,10 @@ zh_CN:
           hidden: "站点设置 '%{setting_name}' 已被隐藏，无法在此处读取。"
           secret: "站点设置 '%{setting_name}' 包含密钥，无法在此处读取。"
           themeable: "站点设置 '%{setting_name}' 需要主题，无法在此处读取。"
+      load_discourse_website_page:
+        errors:
+          page_not_found: "Discourse 网站页面 '%{page_name}' 不可用。"
+          fetch_failed: "无法加载 Discourse 官方网站上的 '%{page_name}' 页面。"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"

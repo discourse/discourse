@@ -1139,6 +1139,7 @@ cs:
       windows: "Microsoft Windows"
       unknown: "neznámý operační systém"
   admin_site_traffic_explorer:
+    unknown: "Neznámá"
     traffic_types:
       anonymous: "Anonymní"
   change_email:
@@ -1997,7 +1998,7 @@ cs:
     share_links: "Určete, které položky se zobrazí v dialogovém okně sdílení a v jakém pořadí."
     allow_username_in_share_links: "Povolit zahrnutí uživatelských jmen do odkazů pro sdílení. To je užitečné pro odměňování odznaky na základě unikátních návštěvníků."
     site_contact_username: "Platné uživatelské jméno člena redakce, ze kterého lze odesílat všechny automatizované zprávy. Pokud zůstane prázdné, použije se výchozí systémový účet."
-    site_contact_group_name: "Platný název skupiny, která bude zvána do všech automaticky zasílaných soukromých zpráv."
+    site_contact_group_name: "Skupina, která dostane pozvánku ke všem automaticky zasílaným soukromým zprávám."
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
     send_tl1_welcome_message: "Pslat novým uživatelům úrovně důvěry 1 uvítací zprávu."
     send_tl2_promotion_message: "Poslat novým uživatelům s úrovní důvěry 2 zprávu o povýšení."
@@ -4447,8 +4448,6 @@ cs:
         complete: "Příspěvek byl skryt a uživatel byl upozorněn."
       agree_and_edit:
         title: "Upravit příspěvek"
-        description: "Souhlasit s nahlášením a otevřít okno editoru pro úpravu příspěvku."
-        complete: "Nahlášení potvrzeno, nyní můžete příspěvek upravit."
       delete:
         title: "Smazat"
         complete: "Příspěvek smazán."
@@ -4541,30 +4540,6 @@ cs:
       approve_and_unhide:
         title: "Ano"
         complete: "Příspěvek schválen a zviditelněn"
-      post_actions:
-        bundle_title: "Co chcete s příspěvkem udělat?"
-      delete_post:
-        title: "Odstranit příspěvek"
-        description: "Smazat příspěvek"
-        complete: "Příspěvek smazán"
-      hide_post:
-        title: "Skrýt příspěvek"
-        description: "Skrýt tento příspěvek z veřejného zobrazení"
-        complete: "Příspěvek byl skryt"
-      unhide_post:
-        title: "Zviditelnit příspěvek"
-        description: "Zviditelnit tento příspěvek všem uživatelům"
-        complete: "Příspěvek byl zviditelněn"
-      restore_post:
-        title: "Obnovit příspěvek"
-        description: "Obnovit tento smazaný příspěvek"
-        complete: "Příspěvek obnoven"
-      edit_post:
-        title: "Upravit příspěvek"
-        description: "Upravit obsah tohoto příspěvku"
-        complete: "Příspěvek upraven"
-      user_actions:
-        bundle_title: "Co chcete udělat s tímto uživatelem?"
       silence_user:
         title: "Ztišit uživatele"
         complete: "Uživatel ztišen"

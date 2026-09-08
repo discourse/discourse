@@ -35,7 +35,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         )
       end
 
-      it "works" do
+      it "returns the requested thread" do
         get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
         expect(response.status).to eq(200)
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
@@ -316,6 +316,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   describe "update" do
     let(:title) { "New title" }
     let(:params) { { title: title } }
+
     fab!(:thread) do
       Fabricate(:chat_thread, channel: public_channel, original_message_user: current_user)
     end

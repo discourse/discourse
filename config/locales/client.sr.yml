@@ -822,6 +822,9 @@ sr:
       user_label: "Korisnik"
       timeline:
         target_deleted: "Post izbrisan"
+      author_penalty:
+        toast:
+          undo: "Vrati na prethodno"
       notes:
         delete: "Obriši"
       topic_label: "Tema"

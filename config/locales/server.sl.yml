@@ -492,6 +492,7 @@ sl:
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   admin_site_traffic_explorer:
+    unknown: "Neznano"
     traffic_types:
       anonymous: "Anonimni"
   change_email:
@@ -2093,8 +2094,6 @@ sl:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Prispevek izbrisan"
       delete_user:
         complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"

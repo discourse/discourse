@@ -135,6 +135,7 @@ RSpec.describe "JSON:API queries", type: :request do
 
     context "when the request includes the author and the groups" do
       let(:query_parameters) { { include: "user,groups" } }
+
       it "sends every related record under its own namespace" do
         expect(parsed_body["included"]).to contain_exactly(
           {

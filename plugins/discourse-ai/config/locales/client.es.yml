@@ -962,11 +962,6 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-7: "El modelo antrópico más inteligente"
-          anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
-          anthropic-claude-haiku-4-5: "Rápido y rentable"
-          google-gemini-3-1-pro-preview: "El modelo de Google más inteligente"
-          open_router-moonshotai-kimi-k2-6: "Modelo multimodal de Moonshot con capacidades de visión"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
           title: "LLM configurados"

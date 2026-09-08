@@ -22,9 +22,9 @@ export default class DUserStatusMessage extends Component {
   <template>
     {{#if @status}}
       <DTooltip
-        @identifier="user-status-message-tooltip"
         class="user-status-message"
         ...attributes
+        @identifier="user-status-message-tooltip"
       >
         <:trigger>
           {{dEmoji @status.emoji skipTitle=true}}

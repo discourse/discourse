@@ -23,32 +23,32 @@ export default class VoiceVoiceCanvas extends Component {
     <section class="voice-voice-canvas">
       {{#if this.localStream}}
         <audio
+          autoplay
+          muted
+          playsinline
           {{didInsert (fn this.voiceWebrtc.attachStream this.localStream)}}
           {{didUpdate
             (fn this.voiceWebrtc.attachStream this.localStream)
             this.localStream
           }}
-          autoplay
-          muted
-          playsinline
         />
       {{/if}}
 
       {{#each this.remoteStreams key="id" as |stream|}}
         <audio
-          {{didInsert (fn this.voiceWebrtc.attachStream stream)}}
-          {{didUpdate (fn this.voiceWebrtc.attachStream stream) stream}}
           autoplay
           playsinline
+          {{didInsert (fn this.voiceWebrtc.attachStream stream)}}
+          {{didUpdate (fn this.voiceWebrtc.attachStream stream) stream}}
         />
       {{/each}}
 
       {{#each this.remoteScreenAudioStreams key="id" as |stream|}}
         <audio
-          {{didInsert (fn this.voiceWebrtc.attachStream stream)}}
-          {{didUpdate (fn this.voiceWebrtc.attachStream stream) stream}}
           autoplay
           playsinline
+          {{didInsert (fn this.voiceWebrtc.attachStream stream)}}
+          {{didUpdate (fn this.voiceWebrtc.attachStream stream) stream}}
         />
       {{/each}}
     </section>

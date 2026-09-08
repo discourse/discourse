@@ -7,8 +7,8 @@ const SolvedStatus = <template>
     (or @outletArgs.topic.has_accepted_answer @outletArgs.topic.accepted_answer)
   ~}}
     <span
-      title={{i18n "topic_statuses.solved.help"}}
       class="topic-status --solved"
+      title={{i18n "topic_statuses.solved.help"}}
     >{{dIcon "far-square-check"}}</span>
   {{~else if
     (and
@@ -16,8 +16,8 @@ const SolvedStatus = <template>
     )
   ~}}
     <span
-      title={{i18n "solved.has_no_accepted_answer"}}
       class="topic-status --unsolved"
+      title={{i18n "solved.has_no_accepted_answer"}}
     >{{dIcon "far-square"}}</span>
   {{~/if~}}
 </template>;

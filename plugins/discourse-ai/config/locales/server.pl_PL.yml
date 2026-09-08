@@ -127,6 +127,7 @@ pl_PL:
     ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
+    ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych. Jest to również wymagane do uzyskania wyników semantycznych wiadomości osobistych w Zapytaj AI."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
     ai_embeddings_semantic_related_topics: "Maksymalna liczba tematów do wyświetlenia w sekcji powiązanych tematów."
     ai_embeddings_backfill_batch_size: "Liczba osadzań do uzupełnienia co 15 minut."
@@ -165,6 +166,7 @@ pl_PL:
     ai_ask_ai_agent: "Agent wybierający źródła i piszący odpowiedzi Zapytaj AI."
     ai_ask_ai_query_rewriter_agent: "Agent używany do przygotowywania oddzielnych zapytań dotyczących słów kluczowych i semantyki dla Zapytaj AI. Jeśli ten agent lub jego model są niedostępne, Zapytaj AI wyszukuje według oryginalnego zapytania użytkownika."
     ai_ask_ai_follow_up_agent: "Agent używany, gdy użytkownik chce śledzić wynik Zapytaj AI. Wybrany agent musi być włączony, zezwalać na wiadomości prywatne i być dostępny dla użytkownika."
+    ai_ask_ai_allowed_groups: "Grupy mogą korzystać z Zapytaj AI i funkcji przekazywania kolejnych wiadomości. Uprawnienia agenta Zapytaj AI, agenta przekazującego kolejne wiadomości oraz standardowe tematy, kategorie i widoczność wiadomości osobistych nadal obowiązują. Semantyczne wyszukiwanie wiadomości osobistych wymaga wartości {{setting:ai_embeddings_generate_for_pms}}. Treści widoczne dla uprawnionego użytkownika, w tym tematy zastrzeżone i wiadomości osobiste, mogą być wysyłane do skonfigurowanego dostawcy LLM."
     ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX dla Google Custom Search API"
     ai_discord_search_enabled: "Włącza funkcję wyszukiwania w serwisie Discord"
@@ -437,6 +439,7 @@ pl_PL:
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
     ai_bot:
+      ai_users: "Użytkownicy AI"
       errors:
         invalid_agent_id: "Określony agent AI nie istnieje lub nie masz do niego dostępu"
         cannot_send_pm_to_agent: "Nie możesz wysyłać wiadomości osobistych do tego agenta AI"
@@ -698,6 +701,7 @@ pl_PL:
           name: "Wykonywanie kodu (natywne)"
           help: "Umożliwia modelowi pisanie i uruchamianie kodu Python w piaskownicy dostawcy, gdy agent jest wymuszony do obsługiwanego Gemini LLM."
       tool_summary:
+        load_discourse_website_page: "Załaduj stronę internetową Discourse"
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
         view_image: "Sprawdź obraz"
@@ -756,6 +760,7 @@ pl_PL:
         researcher: "Badanie"
         researcher_dry_run: "Przygotowywanie badań"
       tool_help:
+        load_discourse_website_page: "Załaduj nazwaną stronę z oficjalnej witryny Discourse"
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         search_uploaded_documents: "Wyszukaj dokumenty przesłane do tego agenta"
         view_image: "Sprawdź obraz dostępny podczas tego zadania"
@@ -813,6 +818,7 @@ pl_PL:
         javascript_evaluator: "Oceń JavaScript"
         researcher: "Informacje o forum badawczym z wykorzystaniem bota AI"
       tool_description:
+        load_discourse_website_page: "Załadowano stronę %{page_name} z oficjalnej witryny Discourse"
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         view_image: "Przeanalizowano obraz dostępny podczas tego zadania"
         search_uploaded_documents:
@@ -1123,6 +1129,10 @@ pl_PL:
           hidden: "Ustawienie witryny '%{setting_name}' jest ukryte i nie można go tutaj odczytać."
           secret: "Ustawienie witryny '%{setting_name}' zawiera klucz tajny i nie można go tutaj odczytać."
           themeable: "Ustawienia witryny '%{setting_name}' wymagają motywu i nie można ich tutaj odczytać."
+      load_discourse_website_page:
+        errors:
+          page_not_found: "Strona internetowa Discourse '%{page_name}' jest niedostępna."
+          fetch_failed: "Nie udało się załadować strony „%{page_name}” z oficjalnej witryny Discourse."
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"

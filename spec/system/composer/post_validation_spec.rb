@@ -35,11 +35,13 @@ describe "Composer Post Validations" do
 
   describe "trust level 0 user" do
     before { sign_in(tl0_user) }
+
     include_examples "post length validation"
   end
 
   describe "trust level 1 user" do
     before { sign_in(tl1_user) }
+
     include_examples "post length validation"
   end
 

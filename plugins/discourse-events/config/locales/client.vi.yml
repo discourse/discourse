@@ -310,6 +310,8 @@ vi:
           add: "Thêm liên kết (URL)"
         description:
           label: "Mô tả"
+        hosts:
+          label: "Máy chủ"
         event_type:
           public:
             title: "Công khai"

@@ -197,15 +197,6 @@ export default class SiteSetting extends EmberObject {
     return this.buffered.get("value");
   }
 
-  commit() {
-    this.validationMessage = null;
-    this.buffered.applyChanges();
-  }
-
-  rollback() {
-    this.buffered.discardChanges();
-  }
-
   get requiresConfirmation() {
     switch (this.requires_confirmation) {
       case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple:
@@ -229,6 +220,15 @@ export default class SiteSetting extends EmberObject {
 
   get affectsExistingUsers() {
     return DEFAULT_USER_PREFERENCES.includes(this.setting);
+  }
+
+  commit() {
+    this.validationMessage = null;
+    this.buffered.applyChanges();
+  }
+
+  rollback() {
+    this.buffered.discardChanges();
   }
 
   @bind

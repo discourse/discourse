@@ -995,6 +995,7 @@ hu:
       windows: "Microsoft Windows"
       unknown: "ismeretlen operációs rendszer"
   admin_site_traffic_explorer:
+    unknown: "Ismeretlen"
     traffic_types:
       anonymous: "Névtelen"
   change_email:
@@ -1860,7 +1861,7 @@ hu:
     share_links: "Határozza meg, mely elemek jelenjenek meg a megosztási párbeszédablakban, és milyen sorrendben."
     allow_username_in_share_links: "Engedélyezze, hogy a felhasználónevek szerepeljenek a megosztási linkekben. Ez hasznos a jelvények jutalmazásához egyedi látogatók alapján."
     site_contact_username: "Stábtag felhasználónév, amelyről minden automatikus levél küldésre kerül. Ha üresen hagyja, akkor az alapértelmezett rendszerfiók kerül felhasználásra."
-    site_contact_group_name: "Egy csoport érvényes neve, amely meghívást kap minden automatikusan elküldött személyes üzenetre."
+    site_contact_group_name: "Egy olyan csoport, amely meghívást kap minden automatikusan elküldött személyes üzenetre."
     send_welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak."
     send_tl1_welcome_message: "Küldjön üdvözlő üzenetet az új 1-es megbízhatósági szintű felhasználóknak."
     send_tl2_promotion_message: "Küldjön üzenetet az új 2-es megbízhatósági szintű felhasználóknak az előléptetésükről."
@@ -2466,7 +2467,6 @@ hu:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
       valid_username: "Van egy ilyen nevű felhasználó."
-      invalid_group: "Nincs ilyen nevű csoport."
       invalid_svg: "Az SVG kép érvénytelen. Tartalmaznia kell egy SVG elemet, továbbá nem tartalmazhat szkripteket vagy eseménykezelőket."
       invalid_upload: "A feltöltés érvénytelen vagy nem létezik."
       invalid_topic: "Nincs ilyen azonosítóval rendelkező téma."
@@ -4870,8 +4870,6 @@ hu:
         complete: "A bejegyzés elrejtve, a felhasználó értesítést kapott."
       agree_and_edit:
         title: "Bejegyzés szerkesztése"
-        description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
-        complete: "Megjelölés tudomásul véve, most már szerkesztheti a bejegyzést."
       delete:
         title: "Törlés"
         complete: "Bejegyzés törölve."
@@ -4975,30 +4973,6 @@ hu:
       approve_and_unhide:
         title: "Igen"
         complete: "Bejegyzés jóváhagyva és felfedve"
-      post_actions:
-        bundle_title: "Mit akarsz csinálni a bejegyzéssel?"
-      delete_post:
-        title: "Bejegyzés törlése"
-        description: "Bejegyzés törlése"
-        complete: "Bejegyzés törölve"
-      hide_post:
-        title: "Bejegyzés elrejtése"
-        description: "Rejtse el ezt a bejegyzést a nyilvánosság elől"
-        complete: "Bejegyzés elrejtve"
-      unhide_post:
-        title: "Bejegyzés elrejtésének felfedése"
-        description: "Tedd ezt a bejegyzést láthatóvá minden felhasználó számára"
-        complete: "Bejegyzés felfedve"
-      restore_post:
-        title: "Bejegyzés visszaállítása"
-        description: "Törölt bejegyzés visszaállítása"
-        complete: "A bejegyzés visszaállítva"
-      edit_post:
-        title: "Bejegyzés szerkesztése"
-        description: "A bejegyzés tartalmának szerkesztése"
-        complete: "Bejegyzés szerkesztve"
-      user_actions:
-        bundle_title: "Mit szeretnél csinálni a felhasználóval?"
       silence_user:
         title: "Felhasználó némítása"
         complete: "Felhasználó elnémítva"

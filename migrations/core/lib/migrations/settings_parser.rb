@@ -4,6 +4,7 @@ module Migrations
   class SettingsParser
     class InvalidYaml < StandardError
     end
+
     class ValidationError < StandardError
     end
 

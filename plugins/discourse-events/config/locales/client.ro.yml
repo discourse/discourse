@@ -135,6 +135,8 @@ ro:
           add: "Adaugă URL"
         description:
           label: "Descriere"
+        hosts:
+          label: "Gazde"
         event_type:
           public:
             title: "Public"

@@ -97,13 +97,6 @@ export default class UpsertCategoryModeration extends Component {
     this.args.form.set("default_slow_mode_seconds", seconds);
   }
 
-  #updateCategorySetting(key, value) {
-    this.args.form.set("category_setting", {
-      ...(this.categorySetting || {}),
-      [key]: value,
-    });
-  }
-
   @action
   onCategoryModeratingGroupsChange(groupIds) {
     this.args.form.set("moderating_group_ids", groupIds);
@@ -146,39 +139,46 @@ export default class UpsertCategoryModeration extends Component {
     }
   }
 
+  #updateCategorySetting(key, value) {
+    this.args.form.set("category_setting", {
+      ...(this.categorySetting || {}),
+      [key]: value,
+    });
+  }
+
   <template>
     {{#if this.siteSettings.enable_category_group_moderation}}
       <@form.Container @title={{i18n "category.reviewable_by_group"}}>
         <GroupChooser
           @content={{this.site.groups}}
-          @value={{this.moderatingGroupIds}}
           @onChange={{this.onCategoryModeratingGroupsChange}}
+          @value={{this.moderatingGroupIds}}
         />
       </@form.Container>
     {{/if}}
 
     <@form.Container @title={{i18n "category.default_slow_mode"}}>
       <DRelativeTimePicker
-        @id="category-default-slow-mode"
         @durationMinutes={{this.defaultSlowModeMinutes}}
+        @id="category-default-slow-mode"
         @onChange={{this.onDefaultSlowModeDurationChange}}
       />
     </@form.Container>
 
     <@form.Container @title={{i18n "topic.auto_close.label"}}>
       <DRelativeTimePicker
-        @id="topic-auto-close"
         @durationHours={{this.autoCloseHours}}
         @hiddenIntervals={{this.hiddenRelativeIntervals}}
+        @id="topic-auto-close"
         @onChange={{this.onAutoCloseDurationChange}}
       />
     </@form.Container>
 
     <@form.Field
+      @format="full"
       @name="auto_close_based_on_last_post"
       @title={{i18n "topic.auto_close.based_on_last_post"}}
       @type="checkbox"
-      @format="full"
       as |field|
     >
       <field.Control />
@@ -186,50 +186,50 @@ export default class UpsertCategoryModeration extends Component {
 
     <@form.Container @title={{i18n "category.num_auto_bump_daily"}}>
       <input
-        {{on "input" (withEventValue this.onNumAutoBumpDailyChange)}}
-        value={{this.numAutoBumpDaily}}
-        type="number"
-        min="0"
         id="category-number-daily-bump"
+        min="0"
+        type="number"
+        value={{this.numAutoBumpDaily}}
+        {{on "input" (withEventValue this.onNumAutoBumpDailyChange)}}
       />
     </@form.Container>
 
     <@form.Container @title={{i18n "category.auto_bump_cooldown_days"}}>
       <input
-        {{on "input" (withEventValue this.onAutoBumpCooldownDaysChange)}}
-        value={{this.autoBumpCooldownDays}}
-        type="number"
-        min="0"
         id="category-auto-bump-cooldown-days"
+        min="0"
+        type="number"
+        value={{this.autoBumpCooldownDays}}
+        {{on "input" (withEventValue this.onAutoBumpCooldownDaysChange)}}
       />
     </@form.Container>
 
     <@form.Section @title={{i18n "category.new_topic_approval"}}>
       <@form.Object @name="category_setting" as |object|>
         <object.Field
+          @format="full"
           @name="topic_posting_review_mode"
           @title={{i18n "category.require_topic_approval_for"}}
           @type="custom"
-          @format="full"
           as |field|
         >
           <field.Control>
             <ComboBox
-              @valueProperty="value"
               @content={{this.postingReviewModeOptions}}
-              @value={{field.value}}
               @onChange={{this.onTopicPostingReviewModeChange}}
               @options={{hash placementStrategy="absolute"}}
+              @value={{field.value}}
+              @valueProperty="value"
             />
           </field.Control>
         </object.Field>
 
         {{#if this.topicModeRequiresGroups}}
           <@form.Field
+            @format="full"
             @name="topic_posting_review_group_ids"
             @title={{this.topicGroupChooserTitle}}
             @type="custom"
-            @format="full"
             @validate={{this.validatePostingReviewGroups}}
             as |field|
           >
@@ -237,11 +237,11 @@ export default class UpsertCategoryModeration extends Component {
               <GroupChooser
                 class="posting-review-group-chooser"
                 @content={{this.site.groups}}
-                @value={{field.value}}
                 @onChange={{field.set}}
                 @options={{hash
                   none="category.posting_review_groups_placeholder"
                 }}
+                @value={{field.value}}
               />
             </field.Control>
           </@form.Field>
@@ -252,29 +252,29 @@ export default class UpsertCategoryModeration extends Component {
     <@form.Section @title={{i18n "category.new_reply_approval"}}>
       <@form.Object @name="category_setting" as |object|>
         <object.Field
+          @format="full"
           @name="reply_posting_review_mode"
           @title={{i18n "category.require_reply_approval_for"}}
           @type="custom"
-          @format="full"
           as |field|
         >
           <field.Control>
             <ComboBox
-              @valueProperty="value"
               @content={{this.postingReviewModeOptions}}
-              @value={{field.value}}
               @onChange={{this.onReplyPostingReviewModeChange}}
               @options={{hash placementStrategy="absolute"}}
+              @value={{field.value}}
+              @valueProperty="value"
             />
           </field.Control>
         </object.Field>
 
         {{#if this.replyModeRequiresGroups}}
           <@form.Field
+            @format="full"
             @name="reply_posting_review_group_ids"
             @title={{this.replyGroupChooserTitle}}
             @type="custom"
-            @format="full"
             @validate={{this.validatePostingReviewGroups}}
             as |field|
           >
@@ -282,11 +282,11 @@ export default class UpsertCategoryModeration extends Component {
               <GroupChooser
                 class="posting-review-group-chooser"
                 @content={{this.site.groups}}
-                @value={{field.value}}
                 @onChange={{field.set}}
                 @options={{hash
                   none="category.posting_review_groups_placeholder"
                 }}
+                @value={{field.value}}
               />
             </field.Control>
           </@form.Field>

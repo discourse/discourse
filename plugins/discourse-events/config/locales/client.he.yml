@@ -524,6 +524,8 @@ he:
           placeholder: "רשות, ברירת המחדל היא כותרת הנושא"
         invitees:
           label: "קבוצות שהוזמנו"
+        hosts:
+          label: "מארחים"
         event_type:
           public:
             title: "ציבורי"

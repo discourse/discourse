@@ -357,6 +357,11 @@ cs:
       edit_event: "Upravit událost"
       export_event: "Exportovat událost"
       created_by: "Vytvořil/a"
+      other_hosts:
+        one: "a %{count} další"
+        few: "a %{count} další"
+        many: "a %{count} dalších"
+        other: "a %{count} dalších"
       bulk_invite: "Hromadné pozvání"
       close_event: "Zavřít událost"
       open_event: "Otevřít událost"
@@ -536,6 +541,8 @@ cs:
           placeholder: "Volitelný, ve výchozím stavu název tématu"
         invitees:
           label: "Pozvané skupiny"
+        hosts:
+          label: "Hostitelé"
         event_type:
           public:
             title: "Veřejná"

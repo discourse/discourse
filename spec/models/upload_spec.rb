@@ -278,7 +278,7 @@ RSpec.describe Upload do
     expect(created_upload.extension).to eq("png")
   end
 
-  it "should create an invalid upload when the filename is blank" do
+  it "creates an invalid upload when the filename is blank" do
     SiteSetting.authorized_extensions = "*"
     created_upload = UploadCreator.new(attachment, nil).create_for(user_id)
     expect(created_upload.valid?).to eq(false)
@@ -287,7 +287,7 @@ RSpec.describe Upload do
   describe ".extract_url" do
     let(:url) { "https://example.com/uploads/default/original/1X/d1c2d40ab994e8410c.png" }
 
-    it "should return the right part of url" do
+    it "extracts the original upload path" do
       expect(Upload.extract_url(url).to_s).to eq("/original/1X/d1c2d40ab994e8410c.png")
     end
   end
@@ -306,12 +306,12 @@ RSpec.describe Upload do
         upload.reload
       end
 
-      it "should return the right upload" do
+      it "finds the upload by its extensionless URL" do
         expect(Upload.get_from_url(upload.url)).to eq(upload)
       end
     end
 
-    it "should return the right upload as long as the upload's URL matches" do
+    it "finds an upload only when its full path matches" do
       upload.update!(url: "/uploads/default/12345/971308e535305c51.png")
 
       expect(Upload.get_from_url(upload.url)).to eq(upload)
@@ -327,7 +327,7 @@ RSpec.describe Upload do
         )
       end
 
-      it "should return the right upload" do
+      it "finds the upload by its nested directory URL" do
         expect(Upload.get_from_url(upload.url)).to eq(upload)
       end
     end
@@ -341,7 +341,7 @@ RSpec.describe Upload do
       Rails.configuration.action_controller.asset_host = original_asset_host
     end
 
-    it "should return the right upload when using the full URL" do
+    it "finds the upload by its full URL" do
       expect(
         Upload.get_from_url(URI.join("http://discourse.some.com:3000/", upload.url).to_s),
       ).to eq(upload)
@@ -365,7 +365,7 @@ RSpec.describe Upload do
         expect(upload.content).to eq("hello")
       end
 
-      it "should return the right upload when using base url (not CDN) for s3" do
+      it "finds the S3 upload by its base URL" do
         upload
         expect(Upload.get_from_url(upload.url)).to eq(upload)
       end
@@ -375,7 +375,7 @@ RSpec.describe Upload do
 
         before { SiteSetting.s3_cdn_url = s3_cdn_url }
 
-        it "should return the right upload" do
+        it "finds the matching upload" do
           upload
           expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
         end
@@ -383,14 +383,14 @@ RSpec.describe Upload do
         describe "when upload bucket contains subfolder" do
           before { SiteSetting.s3_upload_bucket = "s3-upload-bucket/path/path2" }
 
-          it "should return the right upload" do
+          it "finds the matching upload" do
             upload
             expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
           end
         end
       end
 
-      it "should return the right upload when using one CDN for both s3 and assets" do
+      it "finds the upload when S3 and assets share a CDN" do
         original_asset_host = Rails.configuration.action_controller.asset_host
         cdn_url = "http://my.cdn.com"
         Rails.configuration.action_controller.asset_host = cdn_url
@@ -455,13 +455,13 @@ RSpec.describe Upload do
   end
 
   describe ".generate_digest" do
-    it "should return the right digest" do
+    it "returns the upload's digest" do
       expect(Upload.generate_digest(image.path)).to eq("bc975735dfc6409c1c2aa5ebf2239949bcbdbd65")
     end
   end
 
   describe ".short_url" do
-    it "should generate a correct short url" do
+    it "generates the short URL" do
       upload = Upload.new(sha1: "bda2c513e1da04f7b4e99230851ea2aafeb8cc4e", extension: "png")
       expect(upload.short_url).to eq("upload://r3AYqESanERjladb4vBB7VsMBm6.png")
 
@@ -471,7 +471,7 @@ RSpec.describe Upload do
   end
 
   describe ".sha1_from_short_url" do
-    it "should be able to look up sha1" do
+    it "looks up the SHA1" do
       sha1 = "bda2c513e1da04f7b4e99230851ea2aafeb8cc4e"
 
       expect(Upload.sha1_from_short_url("upload://r3AYqESanERjladb4vBB7VsMBm6.png")).to eq(sha1)
@@ -479,14 +479,14 @@ RSpec.describe Upload do
       expect(Upload.sha1_from_short_url("r3AYqESanERjladb4vBB7VsMBm6")).to eq(sha1)
     end
 
-    it "should be able to look up sha1 even with leading zeros" do
+    it "looks up the SHA1 with leading zeros" do
       sha1 = "0000c513e1da04f7b4e99230851ea2aafeb8cc4e"
       expect(Upload.sha1_from_short_url("upload://1Eg9p8rrCURq4T3a6iJUk0ri6.png")).to eq(sha1)
     end
   end
 
   describe ".sha1_from_long_url" do
-    it "should be able to get the sha1 from a regular upload URL" do
+    it "extracts the SHA1 from a regular upload URL" do
       expect(
         Upload.sha1_from_long_url(
           "https://cdn.test.com/test/original/4X/7/6/5/1b6453892473a467d07372d45eb05abc2031647a.png",
@@ -494,7 +494,7 @@ RSpec.describe Upload do
       ).to eq("1b6453892473a467d07372d45eb05abc2031647a")
     end
 
-    it "should be able to get the sha1 from a secure upload URL" do
+    it "extracts the SHA1 from a secure upload URL" do
       expect(
         Upload.sha1_from_long_url(
           "#{Discourse.base_url}\/secure-uploads/original/1X/1b6453892473a467d07372d45eb05abc2031647a.png",
@@ -512,14 +512,14 @@ RSpec.describe Upload do
   end
 
   describe "#base62_sha1" do
-    it "should return the right value" do
+    it "encodes the SHA1 in base 62" do
       upload.update!(sha1: "0000c513e1da04f7b4e99230851ea2aafeb8cc4e")
       expect(upload.base62_sha1).to eq("1Eg9p8rrCURq4T3a6iJUk0ri6")
     end
   end
 
   describe ".sha1_from_short_path" do
-    it "should be able to lookup sha1" do
+    it "looks up the SHA1 from a short path with or without an extension" do
       path = "/uploads/short-url/3UjQ4jHoyeoQndk5y3qHzm3QVTQ.png"
       sha1 = "1b6453892473a467d07372d45eb05abc2031647a"
 
@@ -529,13 +529,13 @@ RSpec.describe Upload do
   end
 
   describe "#to_s" do
-    it "should return the right value" do
+    it "returns the upload URL" do
       expect(upload.to_s).to eq(upload.url)
     end
   end
 
   describe ".migrate_to_new_scheme" do
-    it "should not migrate system uploads" do
+    it "does not migrate system uploads" do
       SiteSetting.migrate_to_new_scheme = true
 
       expect { Upload.migrate_to_new_scheme }.to_not change { Upload.pluck(:url) }
@@ -1096,7 +1096,7 @@ RSpec.describe Upload do
   end
 
   describe ".mark_invalid_s3_uploads_as_missing" do
-    it "should update all upload records with a `verification_status` of `invalid_etag` to `s3_file_missing`" do
+    it "changes invalid_etag verification statuses to s3_file_missing" do
       upload_1 =
         Fabricate(:upload_s3, verification_status: Upload.verification_statuses[:invalid_etag])
 

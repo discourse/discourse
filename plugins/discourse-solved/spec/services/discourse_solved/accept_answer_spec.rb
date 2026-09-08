@@ -103,6 +103,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
         describe "with multiple solutions enabled" do
           before { SiteSetting.solved_allow_multiple_solutions = true }
+
           it "keeps both solutions" do
             expect { result }.to change { DiscourseSolved::TopicAnswer.count }.by(1)
           end

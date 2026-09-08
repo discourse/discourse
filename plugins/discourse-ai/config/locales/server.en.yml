@@ -448,6 +448,7 @@ en:
       logging_subject: "Spam detection"
 
     ai_bot:
+      ai_users: "AI users"
       errors:
         invalid_agent_id: "The specified AI agent does not exist or you do not have access to it"
         cannot_send_pm_to_agent: "You cannot send personal messages to this AI agent"
@@ -710,6 +711,7 @@ en:
           name: "Code execution (native)"
           help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
+        load_discourse_website_page: "Load Discourse website page"
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
         view_image: "Inspect image"
@@ -768,6 +770,7 @@ en:
         researcher: "Researching"
         researcher_dry_run: "Preparing research"
       tool_help:
+        load_discourse_website_page: "Load a named page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
         search_uploaded_documents: "Search documents uploaded to this agent"
         view_image: "Inspect an image available during this task"
@@ -825,6 +828,7 @@ en:
         javascript_evaluator: "Evaluate JavaScript"
         researcher: "Research forum information using the AI Bot"
       tool_description:
+        load_discourse_website_page: "Loaded the %{page_name} page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
         view_image: "Inspected an image available during this task"
         search_uploaded_documents:
@@ -1137,6 +1141,10 @@ en:
           hidden: "Site setting '%{setting_name}' is hidden and cannot be read here."
           secret: "Site setting '%{setting_name}' contains a secret and cannot be read here."
           themeable: "Site setting '%{setting_name}' requires a theme and cannot be read here."
+      load_discourse_website_page:
+        errors:
+          page_not_found: "The Discourse website page '%{page_name}' is not available."
+          fetch_failed: "The '%{page_name}' page from the official Discourse website could not be loaded."
 
     reviewables:
       ai_tool_action:

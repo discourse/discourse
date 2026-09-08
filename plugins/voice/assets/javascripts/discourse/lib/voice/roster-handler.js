@@ -198,6 +198,47 @@ export default class RosterHandler {
     }
   }
 
+  async handleRoleChange(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const newRole = payload.role;
+
+    if (targetUserId === this.#getCurrentUserId()) {
+      await this.#handleOwnRoleChange(roomId, newRole);
+    } else {
+      this.#handlePeerRoleChange(roomId, targetUserId);
+    }
+  }
+
+  handleHandRaise(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const isSelf = targetUserId === this.#getCurrentUserId();
+
+    if (isSelf && !payload.raised && payload.reason === "dismissed") {
+      this.#toasts.default({
+        duration: 5000,
+        data: { message: i18n("voice.stage.request_dismissed") },
+      });
+      return;
+    }
+
+    const room = this.#getRoom(roomId);
+    if (!isSelf && payload.raised && room?.can_manage) {
+      const participant = (room.active_participants || []).find(
+        (p) => Number(p?.id) === targetUserId
+      );
+      if (participant) {
+        this.#toasts.default({
+          duration: 5000,
+          data: {
+            message: i18n("voice.stage.hand_raised_toast", {
+              username: participant.username,
+            }),
+          },
+        });
+      }
+    }
+  }
+
   #syncRemoteVideoTracks(roomId, participants) {
     for (const participant of participants || []) {
       const participantId = Number(participant?.id);
@@ -239,17 +280,6 @@ export default class RosterHandler {
       if (!allowedToPublish.has(userId)) {
         this.#removeRemoteStream(roomId, userId);
       }
-    }
-  }
-
-  async handleRoleChange(roomId, payload) {
-    const targetUserId = Number(payload.user_id);
-    const newRole = payload.role;
-
-    if (targetUserId === this.#getCurrentUserId()) {
-      await this.#handleOwnRoleChange(roomId, newRole);
-    } else {
-      this.#handlePeerRoleChange(roomId, targetUserId);
     }
   }
 
@@ -319,36 +349,6 @@ export default class RosterHandler {
           `[voice-livekit] failed to refresh publications after a role change in room ${roomId}`,
           error
         );
-      }
-    }
-  }
-
-  handleHandRaise(roomId, payload) {
-    const targetUserId = Number(payload.user_id);
-    const isSelf = targetUserId === this.#getCurrentUserId();
-
-    if (isSelf && !payload.raised && payload.reason === "dismissed") {
-      this.#toasts.default({
-        duration: 5000,
-        data: { message: i18n("voice.stage.request_dismissed") },
-      });
-      return;
-    }
-
-    const room = this.#getRoom(roomId);
-    if (!isSelf && payload.raised && room?.can_manage) {
-      const participant = (room.active_participants || []).find(
-        (p) => Number(p?.id) === targetUserId
-      );
-      if (participant) {
-        this.#toasts.default({
-          duration: 5000,
-          data: {
-            message: i18n("voice.stage.hand_raised_toast", {
-              username: participant.username,
-            }),
-          },
-        });
       }
     }
   }

@@ -25,9 +25,9 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     await render(
       <template>
         <ConfigureMenu
-          @sections={{sections}}
           @onReorder={{noop}}
           @onToggleVisibility={{noop}}
+          @sections={{sections}}
         />
       </template>
     );
@@ -48,9 +48,9 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     await render(
       <template>
         <ConfigureMenu
-          @sections={{sections}}
           @onReorder={{noop}}
           @onToggleVisibility={{onToggle}}
+          @sections={{sections}}
         />
       </template>
     );
@@ -68,9 +68,9 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     await render(
       <template>
         <ConfigureMenu
-          @sections={{sections}}
           @onReorder={{onReorder}}
           @onToggleVisibility={{noop}}
+          @sections={{sections}}
         />
       </template>
     );
@@ -97,9 +97,9 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     await render(
       <template>
         <ConfigureMenu
-          @sections={{sections}}
           @onReorder={{noop}}
           @onToggleVisibility={{noop}}
+          @sections={{sections}}
         />
       </template>
     );
@@ -125,9 +125,9 @@ module(
       await render(
         <template>
           <ConfigureMenu
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -145,9 +145,9 @@ module(
       await render(
         <template>
           <ConfigureMenu
-            @sections={{sections}}
             @onReorder={{onReorder}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -170,9 +170,9 @@ module(
       await render(
         <template>
           <ConfigureMenu
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );

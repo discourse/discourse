@@ -262,6 +262,9 @@ el:
       edit_event: "Επεξεργασία εκδήλωσης"
       export_event: "Εξαγωγή εκδήλωσης"
       created_by: "Δημιουργήθηκε από"
+      other_hosts:
+        one: "και %{count} ακόμα"
+        other: "και %{count} ακόμα"
       bulk_invite: "Μαζική πρόσκληση"
       close_event: "Κλείσιμο εκδήλωσης"
       open_event: "Άνοιγμα εκδήλωσης"

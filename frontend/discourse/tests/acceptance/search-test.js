@@ -426,6 +426,31 @@ acceptance("Search - Anonymous", function (needs) {
   });
 });
 
+acceptance("Search - Anonymous search disabled", function (needs) {
+  needs.site({ can_search: false });
+  needs.settings({ enable_welcome_banner: true });
+
+  test("removes global search and sends anonymous users to login", async function (assert) {
+    await visit("/");
+
+    assert.dom(".welcome-banner").exists("keeps the welcome banner");
+    assert
+      .dom(".welcome-banner__search-menu")
+      .doesNotExist("hides welcome banner search");
+    assert.dom("#search-button").doesNotExist("hides header search");
+
+    await triggerKeyEvent(document, "keypress", "/".charCodeAt(0));
+
+    assert
+      .dom(".search-menu-panel")
+      .doesNotExist("does not open search from the keyboard shortcut");
+
+    await visit("/search");
+
+    assert.strictEqual(currentURL(), "/login", "opens the login page");
+  });
+});
+
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
   needs.settings({

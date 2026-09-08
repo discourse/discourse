@@ -90,14 +90,14 @@ export default class AdminConfigAreasThemes extends Component {
 
   <template>
     <DPageSubheader
-      @titleLabel={{i18n
-        "admin.config_areas.themes_and_components.themes.title"
-      }}
       @descriptionLabel={{i18n
         "admin.config_areas.themes_and_components.themes.description"
         themeSiteSettingsUrl=(getURL
           "/admin/config/customize/theme-site-settings"
         )
+      }}
+      @titleLabel={{i18n
+        "admin.config_areas.themes_and_components.themes.title"
       }}
     >
       <:actions as |actions|>
@@ -106,21 +106,21 @@ export default class AdminConfigAreasThemes extends Component {
           @outletArgs={{lazyHash actions=actions}}
         >
           <actions.Primary
-            @label="admin.config_areas.themes_and_components.themes.install"
             @action={{this.installModal}}
+            @label="admin.config_areas.themes_and_components.themes.install"
           />
         </PluginOutlet>
       </:actions>
     </DPageSubheader>
-    <ThemesGrid @themes={{@themes}} @openInstallModal={{this.installModal}} />
+    <ThemesGrid @openInstallModal={{this.installModal}} @themes={{@themes}} />
 
     {{#if this.currentUser.can_run_design_wizard}}
       <div class="admin-config-area-themes__design-wizard">
         <DButton
-          @label="design_wizard.launch"
-          @icon="wand-magic"
-          @action={{this.launchDesignWizard}}
           class="btn-default admin-config-area-themes__design-wizard-button"
+          @action={{this.launchDesignWizard}}
+          @icon="wand-magic"
+          @label="design_wizard.launch"
         />
         <span class="admin-config-area-themes__design-wizard-description">
           {{i18n "design_wizard.launch_description"}}

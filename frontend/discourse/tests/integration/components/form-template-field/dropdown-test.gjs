@@ -55,8 +55,8 @@ module(
       await render(
         <template>
           <Dropdown
-            @choices={{this.choices}}
             @attributes={{this.attributes}}
+            @choices={{this.choices}}
             @onChange={{noop}}
           />
         </template>

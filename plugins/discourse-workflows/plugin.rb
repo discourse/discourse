@@ -81,15 +81,15 @@ after_initialize do
   DiscourseWorkflows::Registry.reset_indexes!
 
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::BasicAuth,
+    "DiscourseWorkflows::CredentialTypes::BasicAuth",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::BearerToken,
+    "DiscourseWorkflows::CredentialTypes::BearerToken",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::HeaderAuth,
+    "DiscourseWorkflows::CredentialTypes::HeaderAuth",
     self,
   )
 

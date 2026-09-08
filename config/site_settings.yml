@@ -3806,6 +3806,9 @@ search:
       zh_TW: 1
       ko: 1
       ja: 1
+  allow_anonymous_search:
+    default: true
+    refresh: true
   search_tokenize_chinese:
     default: false
     validator: "SearchTokenizeChineseValidator"
@@ -4898,7 +4901,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/407727"
   update_pending_users_reminder_default:

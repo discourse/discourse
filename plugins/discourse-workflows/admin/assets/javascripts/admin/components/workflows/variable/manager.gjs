@@ -92,32 +92,32 @@ export default class VariablesManager extends PaginatedListManager {
 
   <template>
     <AdminTable
-      @items={{this.items}}
-      @isLoading={{this.isLoading}}
       @canLoadMore={{this.canLoadMore}}
-      @loadMore={{this.loadMore}}
+      @isLoading={{this.isLoading}}
+      @items={{this.items}}
       @loadingMore={{this.loadingMore}}
+      @loadMore={{this.loadMore}}
     >
       <:empty>
         <EmptyState
+          @buttonLabel="discourse_workflows.variables.add_first"
+          @description={{i18n
+            "discourse_workflows.variables.empty_description"
+          }}
           @emoji="wave"
+          @onAction={{this.addVariable}}
           @title={{i18n
             "discourse_workflows.variables.empty_title"
             username=this.currentUser.displayName
           }}
-          @description={{i18n
-            "discourse_workflows.variables.empty_description"
-          }}
-          @buttonLabel="discourse_workflows.variables.add_first"
-          @onAction={{this.addVariable}}
         />
       </:empty>
       <:toolbar>
         <DButton
-          @action={{this.addVariable}}
-          @label="discourse_workflows.variables.add"
-          @icon="plus"
           class="btn-primary btn-small"
+          @action={{this.addVariable}}
+          @icon="plus"
+          @label="discourse_workflows.variables.add"
         />
       </:toolbar>
       <:head>
@@ -150,8 +150,8 @@ export default class VariablesManager extends PaginatedListManager {
             {{i18n "discourse_workflows.variables.creator"}}
           </div>
           <a
-            href={{userPath variable.created_by.username}}
             class="workflows-variables__creator"
+            href={{userPath variable.created_by.username}}
           >
             {{dAvatar variable.created_by imageSize="tiny"}}
             <span>{{variable.created_by.username}}</span>
@@ -162,35 +162,35 @@ export default class VariablesManager extends PaginatedListManager {
             {{i18n "discourse_workflows.variables.usage_syntax"}}
           </div>
           <DButton
+            class="btn-flat btn-small"
             @action={{fn this.copySyntax variable.key}}
-            @translatedLabel={{concat "$vars." variable.key}}
             @icon="copy"
             @title="discourse_workflows.variables.copy_syntax"
-            class="btn-flat btn-small"
+            @translatedLabel={{concat "$vars." variable.key}}
           />
         </td>
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">
             <DButton
+              class="btn-default btn-small"
               @action={{fn this.editVariable variable}}
               @label="discourse_workflows.edit"
               @title="discourse_workflows.variables.edit"
-              class="btn-default btn-small"
             />
             <DMenu
+              @icon="ellipsis-vertical"
               @identifier="workflows-variable-menu"
               @title={{i18n "discourse_workflows.more_options"}}
-              @icon="ellipsis-vertical"
               @triggerClass="btn-default"
             >
               <:content>
                 <DDropdownMenu as |dropdown|>
                   <dropdown.item>
                     <DButton
+                      class="btn-danger"
                       @action={{fn this.deleteVariable variable}}
                       @icon="trash-can"
                       @label="discourse_workflows.delete"
-                      class="btn-danger"
                     />
                   </dropdown.item>
                 </DDropdownMenu>

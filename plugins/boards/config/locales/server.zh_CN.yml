@@ -6,7 +6,7 @@
 
 zh_CN:
   site_settings:
-    boards_enabled: "将主题和轻量级的独立“浮动”卡片组织成可配置的、拖放式的看板，所有这些都通过专门设计的管理用户界面和每个看板的访问控制来实现。"
+    boards_enabled: "将主题和轻量级的独立“浮动”卡片组织成可配置的、拖放式的看板式面板和列，所有这些都通过专门设计的管理用户界面和每个面板的访问控制来实现。"
     boards_manage_board_allowed_groups: "允许创建和配置看板的群组。"
   access_control_list:
     errors:

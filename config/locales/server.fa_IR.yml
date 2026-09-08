@@ -911,6 +911,7 @@ fa_IR:
       windows: "مایکروسافت ویندوز"
       unknown: "سیستم‌عامل ناشناخته"
   admin_site_traffic_explorer:
+    unknown: "ناشناس"
     traffic_types:
       anonymous: "ناشناس"
   change_email:
@@ -2925,11 +2926,6 @@ fa_IR:
         title: "بله"
       approve_and_unhide:
         title: "بله"
-      delete_post:
-        title: "حذف نوشته"
-        complete: "نوشته حذف شده"
-      restore_post:
-        title: "بازیابی نوشته"
       suspend_user:
         title: "کاربر تعلیق شده"
       delete_user:

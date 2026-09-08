@@ -18,11 +18,11 @@ export default class PluginOutletDebugButton extends Component {
 
   <template>
     <button
-      title={{i18n "dev_tools.toggle_plugin_outlet_debug"}}
       class={{dConcatClass
         "toggle-plugin-outlets"
         (if devToolsState.pluginOutletDebug "--active")
       }}
+      title={{i18n "dev_tools.toggle_plugin_outlet_debug"}}
       {{on "click" this.togglePluginOutlets}}
     >
       {{dIcon "plug"}}

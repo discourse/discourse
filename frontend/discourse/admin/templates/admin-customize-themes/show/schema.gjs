@@ -7,9 +7,9 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="customize-show-schema__header row">
     <LinkTo
-      @route="adminCustomizeThemes.show"
-      @model={{@model.theme.id}}
       class="btn-transparent customize-show-schema__back"
+      @model={{@model.theme.id}}
+      @route="adminCustomizeThemes.show"
     >
       {{dIcon "arrow-left"}}{{@model.theme.name}}
     </LinkTo>

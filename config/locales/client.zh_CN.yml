@@ -1082,7 +1082,21 @@ zh_CN:
         view_conversation: "查看私信"
         note_added: "版主注释"
         note_added_by: "%{username} 的版主注释 · %{relativeDate}"
+        author_silenced_by: "作者已被 %{username} · %{relativeDate} 禁言"
+        author_silenced_automatically: "作者已自动禁言 · %{relativeDate}"
+        author_suspended_by: "作者已被 %{username} · %{relativeDate} 停用"
+        author_suspended_automatically: "作者已被自动停用 · %{relativeDate}"
         no_events: "没有可显示的时间线事件"
+      author_penalty:
+        effect:
+          retains_silence: "作者保持禁言。"
+          retains_suspension: "作者仍处于停用状态。"
+          retains_silence_and_suspension: "作者保持禁言和暂停。"
+          lifts_silence: "作者已取消禁言。"
+        toast:
+          still_silenced: "%{username} 仍然处于禁言状态。"
+          undo: "撤消"
+          undone: "%{username} 不再处于禁言状态。"
       notes:
         add_note_description: "添加注释以向其他版主提供背景信息。"
         add_note_button: "添加注释"
@@ -1727,7 +1741,6 @@ zh_CN:
       admin: "%{user} 是管理员"
       moderator_tooltip: "此用户是版主"
       admin_tooltip: "此用户是管理员"
-      silenced_tooltip: "此用户已被禁言"
       suspended_notice: "此用户已被封禁至 %{date}。"
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
@@ -6633,6 +6646,8 @@ zh_CN:
             other: "筛选出 %{count} 网络"
           browser:
             other: "筛选出 %{count} 浏览器"
+          language:
+            other: "筛选出 %{count} 种语言"
           ip:
             other: "筛选出 %{count} IP 地址"
         remove_filter_value: "移除 %{value}"
@@ -6656,6 +6671,7 @@ zh_CN:
           top_urls: "热门网址"
           entry_urls: "入口网址"
           browsers: "浏览器"
+          languages: "语言"
           ip_addresses: "IP 地址"
         filters:
           traffic_type: "流量类型"
@@ -6665,6 +6681,7 @@ zh_CN:
           country: "国家/地区"
           network: "网络"
           browser: "浏览器"
+          language: "语言"
           ip: "IP 地址"
         headline:
           other: "%{formatted_count} 页面浏览量"
@@ -8534,6 +8551,7 @@ zh_CN:
             admin_onboarding_step_completed: "完成管理员入门步骤"
             admin_onboarding_completed: "完成管理员入门"
             admin_onboarding_dismissed: "忽略管理员入门"
+            create_group: "创建群组"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

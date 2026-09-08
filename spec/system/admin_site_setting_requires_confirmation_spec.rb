@@ -3,6 +3,7 @@
 describe "Admin Site Setting Requires Confirmation" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+
   fab!(:admin)
 
   before do

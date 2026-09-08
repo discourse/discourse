@@ -83,16 +83,19 @@ RSpec.describe Badge do
 
     context "when system badge" do
       before { badge.system = true }
+
       it { is_expected.to be false }
     end
 
     context "when has query" do
       before { badge.query = "SELECT id FROM users" }
+
       it { is_expected.to be true }
     end
 
     context "when not a system badge" do
       before { badge.update_columns(system: false) }
+
       it { is_expected.to be true }
     end
   end
@@ -164,6 +167,7 @@ RSpec.describe Badge do
 
     context "when a translation key not for a badge is provided" do
       let(:translation_key) { "reports.flags.title" }
+
       it "returns nil" do
         expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(nil)
       end

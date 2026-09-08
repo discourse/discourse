@@ -378,6 +378,8 @@ zh_TW:
       edit_event: "編輯活動"
       export_event: "匯出活動"
       created_by: "建立者"
+      other_hosts:
+        other: "與其他 %{count} 人"
       bulk_invite: "大量邀請"
       close_event: "關閉活動"
       open_event: "開啟活動"
@@ -584,6 +586,8 @@ zh_TW:
           placeholder: "選填，預設為主題標題"
         invitees:
           label: "受邀群組"
+        hosts:
+          label: "主機"
         event_type:
           label: "出席類型"
           public:

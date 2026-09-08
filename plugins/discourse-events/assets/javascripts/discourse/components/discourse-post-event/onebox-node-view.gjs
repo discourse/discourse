@@ -60,8 +60,8 @@ export default class DiscoursePostEventOneboxNodeView extends Component {
 
   <template>
     <DiscoursePostEventOneboxPreview
-      @topicId={{this.topicId}}
       @fallbackHtml={{@node.attrs.html}}
+      @topicId={{this.topicId}}
     />
   </template>
 }

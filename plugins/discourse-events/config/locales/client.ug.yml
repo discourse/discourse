@@ -42,6 +42,9 @@ ug:
       show_all: "ھەممىنى كۆرسەت"
       add_to_calendar: "يىلنامەگە قوش"
       created_by: "قۇرغۇچى"
+      other_hosts:
+        one: "ۋە باشقا %{count}"
+        other: "ۋە باشقا %{count}"
       bulk_invite: "توپ تەكلىپ"
       bulk_invite_modal:
         confirm: "جەزملە"
@@ -104,6 +107,8 @@ ug:
           add: "تور ئادرېسى قوش"
         description:
           label: "چۈشەندۈرۈش"
+        hosts:
+          label: "مۇلازىمېتىر"
         event_type:
           public:
             title: "ئاممىۋى"

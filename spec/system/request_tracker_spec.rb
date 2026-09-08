@@ -479,6 +479,7 @@ describe "Request tracking" do
         end
 
         expect(beacon_event[:session_id]).to eq(non_beacon_event[:session_id])
+        expect(beacon_event[:language]).to eq(page.evaluate_script("navigator.language"))
 
         all_events =
           DiscourseEvent.track_events do
@@ -752,6 +753,8 @@ describe "Request tracking" do
             expect(event[:session_id]).to be_present
             expect(event[:topic_id]).to eq(topic.id)
           end
+
+          expect(beacon_event[:language]).to eq(page.evaluate_script("navigator.language"))
         end
       end
 
@@ -962,6 +965,7 @@ describe "Request tracking" do
 
     context "when logged in" do
       before { sign_in(user) }
+
       let(:expected_username) { user.username }
 
       include_examples "logs piggyback and beacon entries on home and topic"

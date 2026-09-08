@@ -10,16 +10,16 @@ export default class TopicNotificationsTracking extends Component {
 
   <template>
     <NotificationsTracking
-      @onChange={{@onChange}}
+      class="topic-notifications-tracking"
+      @contentClass={{@contentClass}}
       @levelId={{@levelId}}
+      @levels={{topicLevels}}
+      @onChange={{@onChange}}
+      @prefix="topic.notifications"
       @showCaret={{@showCaret}}
       @showFullTitle={{@showFullTitle}}
-      @prefix="topic.notifications"
-      @title={{i18n "topic.notifications.title"}}
-      class="topic-notifications-tracking"
-      @levels={{topicLevels}}
       @suffix={{this.suffix}}
-      @contentClass={{@contentClass}}
+      @title={{i18n "topic.notifications.title"}}
       @topic={{@topic}}
     />
   </template>

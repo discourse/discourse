@@ -16,8 +16,8 @@ export default class CharCounterExample extends Component {
   <template>
     <DCharCounter @max="50" @value={{this.content}}>
       <textarea
-        {{on "input" (withEventValue this.updateContent)}}
         class="styleguide--char-counter"
+        {{on "input" (withEventValue this.updateContent)}}
       ></textarea>
     </DCharCounter>
   </template>

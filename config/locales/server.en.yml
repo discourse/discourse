@@ -1179,6 +1179,7 @@ en:
 
   admin_site_traffic_explorer:
     direct_or_unknown: "Direct / unknown"
+    unknown: "Unknown"
     traffic_types:
       logged_in: "Logged in"
       anonymous: "Anonymous"
@@ -1987,6 +1988,7 @@ en:
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
     max_emojis_in_title: "Maximum allowed emojis in topic title.  If the set value is zero, it prevents the use of any emojis in topic titles."
     min_search_term_length: "Minimum valid search term length in characters"
+    allow_anonymous_search: "Allow anonymous visitors to use /search. When disabled, anonymous visitors cannot access /search and interface controls that use /search are hidden."
     search_tokenize_chinese: "Force search to tokenize Chinese even on non Chinese sites"
     search_tokenize_japanese: "Force search to tokenize Japanese even on non Japanese sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
@@ -6290,8 +6292,8 @@ en:
         complete: "Post hidden, user has been notified."
       agree_and_edit:
         title: "Edit post"
-        description: "Agree with flag and open a composer window to edit the post."
-        complete: "Flag acknowledged, you can now edit the post."
+        description: "Agree with flag once you save the edit."
+        complete: "Post edited and flag acknowledged."
       delete:
         title: "Delete"
         complete: "Post deleted."
@@ -6341,6 +6343,10 @@ en:
         title: "Unsilence user and ignore"
         description: "Unsilence the user and remove the flag from the queue without restoring the deleted post."
         complete: "User unsilenced and flag ignored."
+      unsilence_user:
+        title: "Unsilence author"
+        description: "Lift the silence on the author. This flag stays in the queue."
+        complete: "Author unsilenced."
       approve:
         title: "Yes"
         complete: "Post approved."
@@ -6409,31 +6415,6 @@ en:
       approve_and_unhide:
         title: "Yes"
         complete: "Post approved and unhidden"
-      # New separated post actions
-      post_actions:
-        bundle_title: "What do you want to do with the post?"
-      delete_post:
-        title: "Delete post"
-        description: "Delete this post"
-        complete: "Post deleted"
-      hide_post:
-        title: "Hide post"
-        description: "Hide this post from public view"
-        complete: "Post hidden"
-      unhide_post:
-        title: "Unhide post"
-        description: "Make this post visible to all users"
-        complete: "Post unhidden"
-      restore_post:
-        title: "Restore post"
-        description: "Restore this deleted post"
-        complete: "Post restored"
-      edit_post:
-        title: "Edit post"
-        description: "Edit this post content"
-        complete: "Post edited"
-      user_actions:
-        bundle_title: "What do you want to do with the user?"
       silence_user:
         title: "Silence user"
         description: "Prevent the user from posting or sending messages"

@@ -42,6 +42,10 @@ export default class WrapAttributesModal extends Component {
     };
   }
 
+  get hasAttributeRows() {
+    return this.formApi?.get("attributes")?.length > 0;
+  }
+
   @action
   onSubmit(data) {
     const attrsString = serializeFromForm(data.name, data.attributes);
@@ -53,10 +57,6 @@ export default class WrapAttributesModal extends Component {
   unwrap() {
     this.args.model.onRemove?.();
     this.args.closeModal();
-  }
-
-  get hasAttributeRows() {
-    return this.formApi?.get("attributes")?.length > 0;
   }
 
   @action
@@ -76,15 +76,15 @@ export default class WrapAttributesModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "composer.wrap_modal.title"}}
-      @closeModal={{@closeModal}}
       class="wrap-attributes-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "composer.wrap_modal.title"}}
     >
       <:body>
         <Form
           @data={{this.initialData}}
-          @onSubmit={{this.onSubmit}}
           @onRegisterApi={{this.onRegisterApi}}
+          @onSubmit={{this.onSubmit}}
           as |form|
         >
           <form.Field
@@ -108,8 +108,8 @@ export default class WrapAttributesModal extends Component {
                 <div class="wrap-modal__attribute-row">
                   <object.Field
                     @name="key"
-                    @type="input"
                     @title={{i18n "composer.wrap_modal.attribute_key"}}
+                    @type="input"
                     @validation="required"
                     as |field|
                   >
@@ -118,8 +118,8 @@ export default class WrapAttributesModal extends Component {
 
                   <object.Field
                     @name="value"
-                    @type="input"
                     @title={{i18n "composer.wrap_modal.attribute_value"}}
+                    @type="input"
                     @validation="required"
                     as |field|
                   >
@@ -127,9 +127,9 @@ export default class WrapAttributesModal extends Component {
                   </object.Field>
 
                   <DButton
+                    class="btn-default btn-small"
                     @action={{fn collection.remove index}}
                     @icon="trash-can"
-                    class="btn-default btn-small"
                     @title="composer.wrap_modal.remove_attribute"
                   />
                 </div>
@@ -137,12 +137,12 @@ export default class WrapAttributesModal extends Component {
             </form.Collection>
 
             <form.Button
+              class="btn-default btn-small"
               @action={{fn
                 form.addItemToCollection
                 "attributes"
                 (hash key="" value="")
               }}
-              class="btn-default btn-small"
             >
               {{i18n "composer.wrap_modal.add_attribute"}}
             </form.Button>
@@ -152,16 +152,16 @@ export default class WrapAttributesModal extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.submitForm}}
           @label="composer.wrap_modal.apply"
-          class="btn-primary"
         />
-        <DButton @action={{this.cancel}} @label="cancel" class="btn-default" />
+        <DButton class="btn-default" @action={{this.cancel}} @label="cancel" />
         {{#if @model.onRemove}}
           <DButton
+            class="btn-danger wrap-attributes-modal__unwrap"
             @action={{this.unwrap}}
             @label="composer.wrap_modal.unwrap"
-            class="btn-danger wrap-attributes-modal__unwrap"
           />
         {{/if}}
       </:footer>

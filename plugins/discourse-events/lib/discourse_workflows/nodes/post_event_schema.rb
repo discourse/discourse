@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module DiscourseEvents
-  module Events
-    module Workflows
-      module Schema
+if defined?(DiscourseWorkflows)
+  module DiscourseWorkflows
+    module Nodes
+      module PostEventSchema
         EVENT_PROPERTIES = JSON.parse(<<~JSON).freeze
         {
           "id": { "type": "integer" },

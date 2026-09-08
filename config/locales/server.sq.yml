@@ -360,6 +360,7 @@ sq:
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
   admin_site_traffic_explorer:
+    unknown: "I panjohur"
     traffic_types:
       anonymous: "Anonim"
   change_email:
@@ -1526,8 +1527,6 @@ sq:
         title: "Po"
       approve_and_unhide:
         title: "Po"
-      delete_post:
-        complete: "Postimi u fshi"
       delete_user:
         complete: "Përdoruesi u fshi"
   fallback_username: "përdorues"

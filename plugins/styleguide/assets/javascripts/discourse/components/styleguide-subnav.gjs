@@ -26,12 +26,12 @@ const StyleguideSubnav = <template>
       {{#each @groups key="id" as |group|}}
         <li>
           <LinkTo
-            @route="styleguide.show"
+            aria-current={{if (eq group.id @activeId) "page"}}
+            class={{if (eq group.id @activeId) "active"}}
+            data-test-styleguide-subnav-link={{group.id}}
             @models={{array @section.category @section.id}}
             @query={{hash group=group.id}}
-            class={{if (eq group.id @activeId) "active"}}
-            aria-current={{if (eq group.id @activeId) "page"}}
-            data-test-styleguide-subnav-link={{group.id}}
+            @route="styleguide.show"
           >
             {{group.title}}
           </LinkTo>
