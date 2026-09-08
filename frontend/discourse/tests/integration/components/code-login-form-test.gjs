@@ -126,6 +126,41 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .doesNotExist("the scoped invitation address cannot be changed");
   });
 
+  test("runs create-account behavior transformers before verifying a signup code", async function (assert) {
+    stubCodeRequest();
+
+    let transformed = false;
+    let verificationRequests = 0;
+    withPluginApi((api) =>
+      api.registerBehaviorTransformer("create-account", async ({ next }) => {
+        transformed = true;
+        return next();
+      })
+    );
+    pretender.post("/session/login-code/verify", () => {
+      verificationRequests++;
+      return response({ error: i18n("email_login_code.invalid_code") });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "000000");
+
+    assert.true(
+      transformed,
+      "the signup verification passes through the transformer"
+    );
+    assert.strictEqual(
+      verificationRequests,
+      1,
+      "the transformer continues to code verification"
+    );
+  });
+
   test("shows a request error without advancing to the code step", async function (assert) {
     const error =
       "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member.";
