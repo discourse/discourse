@@ -59,6 +59,7 @@ RSpec.describe "discourse-presence" do
     end
 
     it "handles secure category permissions for edit" do
+      group.add(private_topic.user)
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.can_view?(user_id: user.id)).to eq(false)
@@ -314,6 +315,109 @@ RSpec.describe "discourse-presence" do
       get "/presence/get", params: { channels: [channel_name] }
       expect(response.status).to eq(200)
       expect(response.parsed_body[channel_name]).to eq(nil)
+    end
+
+    it "hides topic-backed presence from capability groups without topic access" do
+      capability_group = Fabricate(:group)
+      capability_group.add(editor)
+      capability_group.add(attacker)
+      whisper_post = Fabricate(:whisper, topic: private_topic, user: editor)
+      editable_post = Fabricate(:post, topic: private_topic, user: editor)
+      translation_post = Fabricate(:post, topic: private_topic, user: editor)
+      private_message = Fabricate(:private_message_topic, user: editor)
+      private_message_whisper = Fabricate(:whisper, topic: private_message, user: editor)
+      channel_names = [
+        "/discourse-presence/whisper/#{private_topic.id}",
+        "/discourse-presence/edit/#{whisper_post.id}",
+        "/discourse-presence/edit/#{editable_post.id}",
+        "/discourse-presence/translate/#{translation_post.id}",
+        "/discourse-presence/whisper/#{private_message.id}",
+        "/discourse-presence/edit/#{private_message_whisper.id}",
+      ]
+
+      Fabricate(:category_moderation_group, category: private_category, group: capability_group)
+      SiteSetting.enable_category_group_moderation = true
+      SiteSetting.whispers_allowed_groups = "#{capability_group.id}|#{private_group.id}"
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = "#{capability_group.id}|#{private_group.id}"
+
+      expect(editor.guardian.can_see?(private_topic)).to eq(true)
+      expect(attacker.guardian.can_see?(private_topic)).to eq(false)
+
+      sign_in(editor)
+      post "/presence/update.json",
+           params: {
+             client_id: SecureRandom.hex,
+             present_channels: channel_names,
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, true] })
+
+      sign_in(attacker)
+      get "/presence/get", params: { channels: channel_names }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, nil] })
+    end
+
+    it "removes edit and translate presence access when post authors lose topic access" do
+      private_group.add(attacker)
+      private_category_post = Fabricate(:post, topic: private_topic, user: attacker, wiki: true)
+      private_message = Fabricate(:private_message_topic, user: editor, recipient: attacker)
+      private_message_post = Fabricate(:post, topic: private_message, user: attacker, wiki: true)
+      channel_names = [
+        "/discourse-presence/edit/#{private_category_post.id}",
+        "/discourse-presence/translate/#{private_category_post.id}",
+        "/discourse-presence/edit/#{private_message_post.id}",
+        "/discourse-presence/translate/#{private_message_post.id}",
+      ]
+
+      SiteSetting.edit_wiki_post_allowed_groups = private_group.id
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = private_group.id
+      SiteSetting.content_localization_allow_author_localization = true
+
+      expect(attacker.guardian.can_see?(private_topic)).to eq(true)
+      expect(attacker.guardian.can_see?(private_message)).to eq(true)
+
+      sign_in(attacker)
+      post "/presence/update.json",
+           params: {
+             client_id: SecureRandom.hex,
+             present_channels: channel_names,
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, true] })
+
+      private_group.remove(attacker)
+      private_message.remove_allowed_user(editor, attacker)
+      PresenceChannel.clear_all!
+
+      expect(attacker.guardian.can_see?(private_topic)).to eq(false)
+      expect(attacker.guardian.can_see?(private_message)).to eq(false)
+
+      sign_in(editor)
+      post "/presence/update.json",
+           params: {
+             client_id: SecureRandom.hex,
+             present_channels: channel_names,
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, true] })
+
+      sign_in(attacker)
+      get "/presence/get", params: { channels: channel_names }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(channel_names.to_h { |channel_name| [channel_name, nil] })
+
+      post "/presence/update.json",
+           params: {
+             client_id: SecureRandom.hex,
+             present_channels: channel_names,
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(
+        channel_names.to_h { |channel_name| [channel_name, false] },
+      )
     end
   end
 end
