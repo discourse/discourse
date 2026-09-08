@@ -156,16 +156,16 @@ export default class PollNodeView extends Component {
     <div class="composer-poll-node__info" contenteditable="false">
       {{#let this.pollInfo as |info|}}
         <PollInfo
-          @voters={{0}}
-          @isMultiple={{info.isMultiple}}
-          @isPublic={{info.isPublic}}
-          @isDynamic={{info.isDynamic}}
-          @results={{info.results}}
-          @min={{info.min}}
-          @max={{info.max}}
           @closesAt={{info.closesAt}}
           @isAutomaticallyClosed={{info.isAutomaticallyClosed}}
+          @isDynamic={{info.isDynamic}}
+          @isMultiple={{info.isMultiple}}
+          @isPublic={{info.isPublic}}
+          @max={{info.max}}
+          @min={{info.min}}
           @options={{info.options}}
+          @results={{info.results}}
+          @voters={{0}}
         />
       {{/let}}
     </div>
