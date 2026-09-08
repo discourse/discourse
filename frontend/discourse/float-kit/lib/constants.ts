@@ -91,6 +91,19 @@ export interface TooltipOptions {
   /** Whether to animate the float as it opens and closes. */
   animated: boolean;
 
+  /**
+   * An accessible name for the float's content, already translated. Needed whenever the float
+   * cannot borrow a name from its trigger: a float opened through the service anchors to an
+   * element that carries no `id`, and one anchored to a virtual reference has no trigger element
+   * at all, so in both cases the trigger-derived `aria-labelledby` is dropped and the float would
+   * otherwise be announced unnamed.
+   *
+   * Setting it takes precedence over the trigger-derived name. Like every option it is read once
+   * when the instance is built, so a name that changes while the float is open belongs on the
+   * trigger rather than here.
+   */
+  ariaLabel: string | null;
+
   /** Whether to render a directional arrow pointing at the trigger. */
   arrow: boolean;
 
@@ -365,6 +378,7 @@ export interface ToastOptions {
 export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
   options: {
     animated: true,
+    ariaLabel: null,
     arrow: true,
     beforeTrigger: null,
     closeOnClickOutside: true,
@@ -400,6 +414,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
 export const MENU: { options: MenuOptions; portalOutletId: string } = {
   options: {
     animated: true,
+    ariaLabel: null,
     arrow: false,
     autofocus: false,
     beforeTrigger: null,

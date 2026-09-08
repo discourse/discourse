@@ -308,6 +308,7 @@ export default class DMenu<Data = unknown> extends Component<
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
           @autofocus={{this.options.autofocus}}
+          aria-label={{this.options.ariaLabel}}
           class={{dConcatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
