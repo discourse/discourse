@@ -423,3 +423,7 @@ en:
           title: "Segmented Control (Button toggle group)"
         virtual_list:
           title: "Virtual list"
+        tabs:
+          title: "Tabs"
+        overflow_controls:
+          title: "Overflow controls"

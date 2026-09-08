@@ -13,7 +13,7 @@ import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
  *
  * `DHorizontalOverflowNav` renders the `<ul class="nav-pills">` itself, so this yields bare
  * `<li>` elements into it; wrapping them in another `<ul>` would break both `.nav-pills > li > a`
- * styling and the component's own drag-scroll lookup.
+ * styling and the component's active-item reveal lookup.
  *
  * Active state is computed from `@activeId` rather than left to `<LinkTo>`: the default group
  * carries no `?group=` in the URL, so Ember would never mark it active. The class goes on the

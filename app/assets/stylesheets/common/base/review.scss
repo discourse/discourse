@@ -325,9 +325,14 @@
   &__insights {
     padding-inline: var(--review-item-padding);
 
+    // The border goes on the nav, not the ul: the ul is the strip's scroller
+    // and its edge fade would mask a border painted there.
+    .horizontal-overflow-nav {
+      border-bottom: 1px solid var(--content-border-color);
+    }
+
     .nav-pills.action-list {
       margin-bottom: 0;
-      border-bottom: 1px solid var(--content-border-color);
     }
   }
 
