@@ -4965,7 +4965,9 @@ RSpec.describe UsersController do
       end
 
       it "can be updated" do
+        SiteSetting.must_approve_users = true
         user = post_user
+        user.update!(approved: true, approved_by: admin, approved_at: 1.day.ago)
         token = user.email_tokens.first
 
         put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
@@ -4979,6 +4981,7 @@ RSpec.describe UsersController do
         ).to be_present
 
         expect(EmailToken.find_by(id: token.id)).to eq(nil)
+        expect(user).to be_approved
       end
 
       it "tells the user to slow down after many requests" do
@@ -5002,6 +5005,14 @@ RSpec.describe UsersController do
     end
 
     context "with a username and password" do
+      let(:approved_inactive_user) do
+        Fabricate(:user, active: true, approved: true, password: "qwerqwer123").tap do |user|
+          user.update!(approved_by: admin, approved_at: 1.day.ago)
+          Fabricate(:email_token, user: user, email: user.email, confirmed: true)
+          user.deactivate(admin)
+        end
+      end
+
       it "raises an error with an invalid username" do
         put "/u/update-activation-email.json",
             params: {
@@ -5079,6 +5090,38 @@ RSpec.describe UsersController do
         ).to be_present
 
         expect(EmailToken.find_by(id: token.id)).to eq(nil)
+      end
+
+      it "revokes approval when changing a confirmed email" do
+        SiteSetting.must_approve_users = true
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: approved_inactive_user.username,
+              password: "qwerqwer123",
+              email: "updatedemail@example.com",
+            }
+
+        expect(response.status).to eq(200)
+
+        approved_inactive_user.reload
+        expect(approved_inactive_user).not_to be_approved
+        expect(approved_inactive_user.approved_by).to be_nil
+        expect(approved_inactive_user.approved_at).to be_nil
+      end
+
+      it "retains approval when the email change fails" do
+        SiteSetting.must_approve_users = true
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: approved_inactive_user.username,
+              password: "qwerqwer123",
+              email: user.email,
+            }
+
+        expect(response.status).to eq(422)
+        expect(approved_inactive_user.reload).to be_approved
       end
 
       it "tells the user to slow down after many requests" do
