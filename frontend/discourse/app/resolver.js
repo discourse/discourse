@@ -131,6 +131,7 @@ export function expireModuleTrieCache() {
   moduleSuffixTrie = null;
 }
 
+/** @returns {typeof Resolver} */
 export function buildResolver(baseName) {
   return class extends Resolver {
     resolveRouter(/* parsedName */) {
