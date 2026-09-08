@@ -671,11 +671,7 @@ class UsersController < ApplicationController
   end
 
   def check_email
-    begin
-      RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
-    rescue RateLimiter::LimitExceeded
-      return render json: success_json
-    end
+    RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
 
     email = Email.downcase((params[:email] || "").strip)
 
