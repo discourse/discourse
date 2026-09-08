@@ -2,6 +2,18 @@ import { registerDestructor } from "@ember/destroyable";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 
+/**
+ * @typedef DCloseOnClickOutsideOptions
+ * @property {string} [targetSelector]
+ * @property {string} [secondaryTargetSelector]
+ * @property {Element | null} [target]
+ */
+
+/**
+ * @typedef {{ Args: { Positional: [closeFn: (event: PointerEvent) => void, options?: DCloseOnClickOutsideOptions] } }} DCloseOnClickOutsideSignature
+ */
+
+/** @extends {Modifier<DCloseOnClickOutsideSignature>} */
 export default class DCloseOnClickOutside extends Modifier {
   constructor(owner, args) {
     super(owner, args);
