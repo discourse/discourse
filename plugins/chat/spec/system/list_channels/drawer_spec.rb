@@ -58,7 +58,16 @@ RSpec.describe "List channels | Drawer" do
         channel_4.add(current_user)
       end
 
-      it "sorts them by urgent, unread messages or threads, then by slug" do
+      it "shows the channel list sort toggle" do
+        drawer_page.visit_index
+
+        expect(drawer_page.channels_index.component).to have_css(
+          ".chat-channel-list-options-button",
+        )
+      end
+
+      it "sorts by urgent, unread messages or threads first when priority is selected" do
+        current_user.user_option.update!(chat_channel_list_sort: "priority")
         drawer_page.visit_index
 
         Fabricate(
@@ -74,15 +83,71 @@ RSpec.describe "List channels | Drawer" do
         expect(drawer_page).to have_channel_at_position(channel_2, 4)
       end
 
-      it "sorts by slug when multiple channels have the same unread count" do
+      it "sorts channels alphabetically by default even with unreads" do
         drawer_page.visit_index
         Fabricate(:chat_message, chat_channel: channel_2, use_service: true)
         Fabricate(:chat_message, chat_channel: channel_4, use_service: true)
 
-        expect(drawer_page).to have_channel_at_position(channel_2, 1)
-        expect(drawer_page).to have_channel_at_position(channel_3, 2)
-        expect(drawer_page).to have_channel_at_position(channel_4, 3)
-        expect(drawer_page).to have_channel_at_position(channel_1, 4)
+        expect(drawer_page).to have_channel_at_position(channel_1, 1)
+        expect(drawer_page).to have_channel_at_position(channel_2, 2)
+        expect(drawer_page).to have_channel_at_position(channel_3, 3)
+        expect(drawer_page).to have_channel_at_position(channel_4, 4)
+      end
+
+      it "sorts by recent activity from the sort menu and persists the choice" do
+        older_message =
+          Fabricate(
+            :chat_message,
+            chat_channel: channel_2,
+            user: current_user,
+            use_service: true,
+            created_at: 3.days.ago,
+          )
+        channel_2.update!(last_message: older_message, messages_count: 1)
+        recent_message =
+          Fabricate(
+            :chat_message,
+            chat_channel: channel_1,
+            user: current_user,
+            use_service: true,
+            created_at: 1.hour.ago,
+          )
+        channel_1.update!(last_message: recent_message, messages_count: 1)
+
+        drawer_page.visit_index
+
+        ids = page.all(".chat-channel-row").map { |c| c["data-chat-channel-id"] }
+        expect(ids.index(channel_1.id.to_s)).to be < ids.index(channel_2.id.to_s)
+
+        drawer_page.channels_index.set_channel_sort("recent_activity")
+
+        try_until_success do
+          ids = page.all(".chat-channel-row").map { |c| c["data-chat-channel-id"] }
+          expect(ids.index(channel_2.id.to_s)).to be < ids.index(channel_1.id.to_s)
+        end
+        try_until_success do
+          expect(current_user.user_option.reload.chat_channel_list_sort).to eq("recent_activity")
+        end
+      end
+
+      it "filters the channel list from the shared options menu" do
+        unread_channel = Fabricate(:category_channel, name: "unread channel")
+        unread_channel.add(current_user)
+        Fabricate(
+          :chat_message,
+          chat_channel: unread_channel,
+          user: Fabricate(:user),
+          use_service: true,
+        )
+
+        drawer_page.visit_index
+
+        drawer_page.channels_index.set_channel_filter("unread")
+
+        try_until_success do
+          expect(drawer_page).to have_channel(unread_channel)
+          expect(drawer_page).to have_no_channel(channel_1)
+        end
       end
     end
   end
@@ -131,6 +196,8 @@ RSpec.describe "List channels | Drawer" do
       end
 
       it "sorts them by latest activity" do
+        current_user.user_option.update!(chat_channel_list_sort_dms: "priority")
+
         Fabricate(
           :chat_message,
           chat_channel: dm_channel_2,
@@ -153,8 +220,6 @@ RSpec.describe "List channels | Drawer" do
         expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
         expect(drawer_page).to have_urgent_channel(dm_channel_2)
         expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
-        expect(drawer_page).to have_channel_at_position(dm_channel_1, 3)
-        expect(drawer_page).to have_channel_at_position(dm_channel_3, 4)
       end
 
       context "with unread threads" do
@@ -200,6 +265,8 @@ RSpec.describe "List channels | Drawer" do
         end
 
         it "sorts channels with unread threads by last reply" do
+          current_user.user_option.update!(chat_channel_list_sort_dms: "recent_activity")
+
           Fabricate(:chat_message, thread: thread_1, user: user_2, use_service: true)
           Fabricate(:chat_message, thread: thread_2, user: user_3, use_service: true)
 
@@ -211,6 +278,8 @@ RSpec.describe "List channels | Drawer" do
         end
 
         it "sorts channels with unread threads by importance" do
+          current_user.user_option.update!(chat_channel_list_sort_dms: "priority")
+
           thread_1.membership_for(current_user).update!(
             notification_level: ::Chat::NotificationLevels.all[:watching],
           )

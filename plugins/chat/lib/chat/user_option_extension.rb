@@ -67,12 +67,44 @@ module Chat
                   validate: true
       end
 
+      if !base.method_defined?(:chat_channel_list_filter_starred_all?)
+        base.enum :chat_channel_list_filter_starred,
+                  base.chat_channel_list_filters,
+                  prefix: true,
+                  scopes: false,
+                  validate: true
+      end
+
+      if !base.method_defined?(:chat_channel_list_filter_dms_all?)
+        base.enum :chat_channel_list_filter_dms,
+                  base.chat_channel_list_filters,
+                  prefix: true,
+                  scopes: false,
+                  validate: true
+      end
+
       def base.chat_channel_list_sorts
         @chat_channel_list_sorts ||= { alphabetical: 0, recent_activity: 1, priority: 2 }
       end
 
       if !base.method_defined?(:chat_channel_list_sort_alphabetical?)
         base.enum :chat_channel_list_sort,
+                  base.chat_channel_list_sorts,
+                  prefix: true,
+                  scopes: false,
+                  validate: true
+      end
+
+      if !base.method_defined?(:chat_channel_list_sort_starred_alphabetical?)
+        base.enum :chat_channel_list_sort_starred,
+                  base.chat_channel_list_sorts,
+                  prefix: true,
+                  scopes: false,
+                  validate: true
+      end
+
+      if !base.method_defined?(:chat_channel_list_sort_dms_alphabetical?)
+        base.enum :chat_channel_list_sort_dms,
                   base.chat_channel_list_sorts,
                   prefix: true,
                   scopes: false,

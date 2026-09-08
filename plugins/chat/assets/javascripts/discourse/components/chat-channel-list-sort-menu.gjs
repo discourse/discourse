@@ -1,105 +1,29 @@
-import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { eq } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
-import { CHAT_CHANNEL_LIST_SORTS } from "discourse/plugins/chat/discourse/lib/chat-constants";
+import ChatChannelListSortChoice, {
+  SORT_OPTIONS,
+} from "./chat-channel-list-sort-choice";
 
-export default class ChatChannelListSortMenu extends Component {
-  @service chatChannelListPreferences;
+export default <template>
+  <DDropdownMenu
+    aria-label={{i18n "chat.channel_list.sort.title"}}
+    class="chat-channel-list-sort-menu"
+    role="group"
+    ...attributes
+    as |dropdown|
+  >
+    <dropdown.subheader role="presentation">
+      {{i18n "chat.channel_list.sort.title"}}
+    </dropdown.subheader>
 
-  @action
-  async selectSort(sort) {
-    const preferences = this.chatChannelListPreferences;
-    await this.args.closeSubmenu?.();
-    await this.args.closeParent?.();
-    await preferences.setSort(sort);
-  }
-
-  <template>
-    <DDropdownMenu
-      aria-label={{i18n "chat.channel_list.sort.title"}}
-      class="chat-channel-list-sort-menu"
-      role="group"
-      ...attributes
-      as |dropdown|
-    >
-      <dropdown.subheader role="presentation">
-        {{i18n "chat.channel_list.sort.title"}}
-      </dropdown.subheader>
-
-      <dropdown.item role="none">
-        <DButton
-          aria-checked={{if
-            (eq
-              this.chatChannelListPreferences.sort
-              CHAT_CHANNEL_LIST_SORTS.ALPHABETICAL
-            )
-            "true"
-            "false"
-          }}
-          class="chat-channel-list-sort-menu__alphabetical"
-          data-menu-option-id="alphabetical"
-          role="menuitemradio"
-          @action={{this.selectSort}}
-          @actionParam={{CHAT_CHANNEL_LIST_SORTS.ALPHABETICAL}}
-          @disabled={{this.chatChannelListPreferences.isSavingSort}}
-          @icon="check"
-          @label="chat.channel_list.sort.alphabetical"
-        />
-      </dropdown.item>
-
-      <dropdown.item role="none">
-        <DButton
-          aria-checked={{if
-            (eq
-              this.chatChannelListPreferences.sort
-              CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY
-            )
-            "true"
-            "false"
-          }}
-          class="chat-channel-list-sort-menu__recent-activity"
-          data-menu-option-id="recent_activity"
-          role="menuitemradio"
-          @action={{this.selectSort}}
-          @actionParam={{CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY}}
-          @disabled={{this.chatChannelListPreferences.isSavingSort}}
-          @icon="check"
-          @label="chat.channel_list.sort.recent_activity"
-        />
-      </dropdown.item>
-
-      <dropdown.item role="none">
-        <DButton
-          aria-checked={{if
-            (eq
-              this.chatChannelListPreferences.sort
-              CHAT_CHANNEL_LIST_SORTS.PRIORITY
-            )
-            "true"
-            "false"
-          }}
-          class="chat-channel-list-sort-menu__priority --with-description"
-          data-menu-option-id="priority"
-          role="menuitemradio"
-          @action={{this.selectSort}}
-          @actionParam={{CHAT_CHANNEL_LIST_SORTS.PRIORITY}}
-          @disabled={{this.chatChannelListPreferences.isSavingSort}}
-          @icon="check"
-        >
-          <span class="chat-channel-list-sort-menu__label">
-            <span class="chat-channel-list-sort-menu__label-title">
-              {{i18n "chat.channel_list.sort.priority"}}
-            </span>
-            <span class="chat-channel-list-sort-menu__label-description">
-              {{i18n "chat.channel_list.sort.priority_description"}}
-            </span>
-          </span>
-        </DButton>
-      </dropdown.item>
-    </DDropdownMenu>
-  </template>
-}
+    {{#each SORT_OPTIONS as |choice|}}
+      <ChatChannelListSortChoice
+        @choice={{choice}}
+        @section={{@section}}
+        @closeSubmenu={{@closeSubmenu}}
+        @close={{@close}}
+        @closeParent={{@closeParent}}
+      />
+    {{/each}}
+  </DDropdownMenu>
+</template>

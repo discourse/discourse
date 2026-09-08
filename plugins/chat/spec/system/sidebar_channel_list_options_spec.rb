@@ -76,4 +76,76 @@ RSpec.describe "Chat sidebar channel list options" do
       expect(current_user.user_option.reload.chat_channel_list_filter).to eq("all")
     end
   end
+
+  it "opens the new channel modal for staff from the channels options menu" do
+    current_user.update!(admin: true)
+    visit("/")
+
+    menu = chat_sidebar.open_channel_list_options
+    menu.option('[data-menu-option-id="createChannel"]').click
+
+    expect(page).to have_css(".chat-modal-create-channel")
+  end
+
+  it "keeps the starred section visible when the starred filter hides its channels" do
+    read_channel.membership_for(current_user).update!(starred: true)
+
+    visit("/")
+
+    within(chat_sidebar.starred_section) { expect(page).to have_css(".channel-#{read_channel.id}") }
+
+    chat_sidebar.set_starred_filter("unread")
+
+    within(chat_sidebar.starred_section) do
+      expect(page).to have_no_css(".channel-#{read_channel.id}")
+    end
+    expect(page).to have_css(
+      ".sidebar-section[data-section-name='chat-starred-channels']",
+      text: "No channels match this filter.",
+    )
+    try_until_success(reason: "starred filter preference saves asynchronously") do
+      expect(current_user.user_option.reload.chat_channel_list_filter_starred).to eq("unread")
+    end
+
+    chat_sidebar.show_all_channels
+
+    within(chat_sidebar.starred_section) { expect(page).to have_css(".channel-#{read_channel.id}") }
+    try_until_success(reason: "reset starred filter preference saves asynchronously") do
+      expect(current_user.user_option.reload.chat_channel_list_filter_starred).to eq("all")
+    end
+  end
+
+  it "hides the starred section when a filter is set but nothing is starred" do
+    current_user.user_option.update!(chat_channel_list_filter_starred: "unread")
+
+    visit("/")
+
+    expect(chat_sidebar).to have_no_starred_channels_section
+  end
+
+  it "keeps the DM section visible when the DM filter hides its channels" do
+    dm_channel = Fabricate(:direct_message_channel, users: [current_user, message_author])
+
+    visit("/")
+
+    within(chat_sidebar.dms_section) { expect(page).to have_css(".channel-#{dm_channel.id}") }
+
+    chat_sidebar.set_dm_filter("unread")
+
+    within(chat_sidebar.dms_section) { expect(page).to have_no_css(".channel-#{dm_channel.id}") }
+    expect(page).to have_css(
+      ".sidebar-section[data-section-name='chat-dms']",
+      text: "No channels match this filter.",
+    )
+    try_until_success(reason: "DM filter preference saves asynchronously") do
+      expect(current_user.user_option.reload.chat_channel_list_filter_dms).to eq("unread")
+    end
+
+    chat_sidebar.show_all_channels
+
+    within(chat_sidebar.dms_section) { expect(page).to have_css(".channel-#{dm_channel.id}") }
+    try_until_success(reason: "reset DM filter preference saves asynchronously") do
+      expect(current_user.user_option.reload.chat_channel_list_filter_dms).to eq("all")
+    end
+  end
 end

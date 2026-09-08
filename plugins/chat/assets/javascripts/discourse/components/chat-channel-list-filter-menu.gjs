@@ -13,14 +13,27 @@ import {
 export default class ChatChannelListFilterMenu extends Component {
   @service chatChannelListPreferences;
 
+  get section() {
+    return this.args.section ?? "channels";
+  }
+
+  get currentFilter() {
+    return this.chatChannelListPreferences.filterFor(this.section);
+  }
+
+  get isSaving() {
+    return this.chatChannelListPreferences.isSavingFilterFor(this.section);
+  }
+
   @action
   async selectFilter(filter) {
     const preferences = this.chatChannelListPreferences;
     const { closeParent, closeSubmenu } = this.args;
+    const section = this.section;
 
     await closeSubmenu?.();
     await closeParent?.();
-    await preferences.setFilter(filter);
+    await preferences.setFilter(section, filter);
   }
 
   <template>
@@ -38,10 +51,7 @@ export default class ChatChannelListFilterMenu extends Component {
       <dropdown.item role="none">
         <DButton
           aria-checked={{if
-            (eq
-              this.chatChannelListPreferences.filter
-              CHAT_CHANNEL_LIST_FILTERS.ALL
-            )
+            (eq this.currentFilter CHAT_CHANNEL_LIST_FILTERS.ALL)
             "true"
             "false"
           }}
@@ -50,7 +60,7 @@ export default class ChatChannelListFilterMenu extends Component {
           role="menuitemradio"
           @action={{this.selectFilter}}
           @actionParam={{CHAT_CHANNEL_LIST_FILTERS.ALL}}
-          @disabled={{this.chatChannelListPreferences.isSavingFilter}}
+          @disabled={{this.isSaving}}
           @icon="check"
           @label="chat.channel_list.filter.all"
         />
@@ -59,10 +69,7 @@ export default class ChatChannelListFilterMenu extends Component {
       <dropdown.item role="none">
         <DButton
           aria-checked={{if
-            (eq
-              this.chatChannelListPreferences.filter
-              CHAT_CHANNEL_LIST_FILTERS.ACTIVE
-            )
+            (eq this.currentFilter CHAT_CHANNEL_LIST_FILTERS.ACTIVE)
             "true"
             "false"
           }}
@@ -71,7 +78,7 @@ export default class ChatChannelListFilterMenu extends Component {
           role="menuitemradio"
           @action={{this.selectFilter}}
           @actionParam={{CHAT_CHANNEL_LIST_FILTERS.ACTIVE}}
-          @disabled={{this.chatChannelListPreferences.isSavingFilter}}
+          @disabled={{this.isSaving}}
           @icon="check"
         >
           <span class="chat-channel-list-filter-menu__label">
@@ -91,10 +98,7 @@ export default class ChatChannelListFilterMenu extends Component {
       <dropdown.item role="none">
         <DButton
           aria-checked={{if
-            (eq
-              this.chatChannelListPreferences.filter
-              CHAT_CHANNEL_LIST_FILTERS.UNREAD
-            )
+            (eq this.currentFilter CHAT_CHANNEL_LIST_FILTERS.UNREAD)
             "true"
             "false"
           }}
@@ -103,7 +107,7 @@ export default class ChatChannelListFilterMenu extends Component {
           role="menuitemradio"
           @action={{this.selectFilter}}
           @actionParam={{CHAT_CHANNEL_LIST_FILTERS.UNREAD}}
-          @disabled={{this.chatChannelListPreferences.isSavingFilter}}
+          @disabled={{this.isSaving}}
           @icon="check"
           @label="chat.channel_list.filter.unread"
         />
@@ -112,10 +116,7 @@ export default class ChatChannelListFilterMenu extends Component {
       <dropdown.item role="none">
         <DButton
           aria-checked={{if
-            (eq
-              this.chatChannelListPreferences.filter
-              CHAT_CHANNEL_LIST_FILTERS.MENTIONS
-            )
+            (eq this.currentFilter CHAT_CHANNEL_LIST_FILTERS.MENTIONS)
             "true"
             "false"
           }}
@@ -124,7 +125,7 @@ export default class ChatChannelListFilterMenu extends Component {
           role="menuitemradio"
           @action={{this.selectFilter}}
           @actionParam={{CHAT_CHANNEL_LIST_FILTERS.MENTIONS}}
-          @disabled={{this.chatChannelListPreferences.isSavingFilter}}
+          @disabled={{this.isSaving}}
           @icon="check"
           @label="chat.channel_list.filter.mentions"
         />

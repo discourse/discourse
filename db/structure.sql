@@ -12169,7 +12169,11 @@ CREATE TABLE public.user_options (
     send_shortcut integer DEFAULT 0 NOT NULL,
     ai_ask_ai_default boolean DEFAULT true NOT NULL,
     chat_channel_list_filter integer DEFAULT 0 NOT NULL,
-    chat_channel_list_sort integer DEFAULT 0 NOT NULL
+    chat_channel_list_sort integer DEFAULT 0 NOT NULL,
+    chat_channel_list_sort_starred integer DEFAULT 0 NOT NULL,
+    chat_channel_list_sort_dms integer DEFAULT 2 NOT NULL,
+    chat_channel_list_filter_starred integer DEFAULT 0 NOT NULL,
+    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL
 );
 
 
@@ -24410,6 +24414,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260908160656'),
+('20260908153158'),
 ('20260904065041'),
 ('20260904063128'),
 ('20260904000537'),

@@ -6,13 +6,14 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, not, or } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import ChatChannelListOptionsButton from "./chat-channel-list-options-button";
 import ChatChannelRow from "./chat-channel-row";
+import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state";
 import ChatZero from "./svg/chat-zero";
 
 export default class ChannelsListDirect extends Component {
@@ -23,14 +24,6 @@ export default class ChannelsListDirect extends Component {
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
-  }
-
-  get createDirectMessageChannelLabel() {
-    if (!this.canCreateDirectMessageChannel) {
-      return "chat.direct_messages.cannot_create";
-    }
-
-    return "chat.direct_messages.new";
   }
 
   get showDirectMessageChannels() {
@@ -51,8 +44,8 @@ export default class ChannelsListDirect extends Component {
     if (this.inSidebar) {
       return this.chatChannelsManager.sidebarDirectMessageChannels;
     }
-    // In mobile/drawer, show all channels including starred, sorted by activity
-    return this.chatChannelsManager.truncatedDirectMessageChannelsByActivity;
+    // In mobile/drawer, show all channels including starred, sorted by preference
+    return this.chatChannelsManager.truncatedDirectMessageChannelsByPreference;
   }
 
   @action
@@ -94,14 +87,9 @@ export default class ChannelsListDirect extends Component {
 
         <span class="channel-title">{{i18n "chat.direct_messages.title"}}</span>
 
-        {{#if this.canCreateDirectMessageChannel}}
-          <DButton
-            @icon="plus"
-            class="no-text btn-flat open-new-message-btn"
-            @action={{this.openNewMessageModal}}
-            title={{i18n this.createDirectMessageChannelLabel}}
-          />
-        {{/if}}
+        <div class="chat-channel-divider__actions">
+          <ChatChannelListOptionsButton @section="dms" />
+        </div>
       </div>
     {{/if}}
 
@@ -131,6 +119,13 @@ export default class ChannelsListDirect extends Component {
             @channel={{channel}}
             @options={{hash leaveButton=true}}
           />
+        {{else}}
+          {{#unless this.inSidebar}}
+            <ChatSidebarChannelListFilterEmptyState
+              @layout="empty-state"
+              @section="dms"
+            />
+          {{/unless}}
         {{/each}}
       {{/if}}
     </div>

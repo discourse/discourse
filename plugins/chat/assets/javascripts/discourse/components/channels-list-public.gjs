@@ -11,7 +11,9 @@ import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ChatChannelListOptionsButton from "./chat-channel-list-options-button";
 import ChatChannelRow from "./chat-channel-row";
+import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state";
 import ChatZero from "./svg/chat-zero";
 
 export default class ChannelsListPublic extends Component {
@@ -41,8 +43,8 @@ export default class ChannelsListPublic extends Component {
     if (this.inSidebar) {
       return this.chatChannelsManager.unstarredPublicMessageChannelsByActivity;
     }
-    // In mobile/drawer, show all channels including starred, sorted by activity
-    return this.chatChannelsManager.allPublicChannelsByActivity;
+    // In mobile/drawer, show all channels including starred, sorted by preference
+    return this.chatChannelsManager.publicMessageChannelsByPreference;
   }
 
   @action
@@ -90,13 +92,9 @@ export default class ChannelsListPublic extends Component {
         <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
 
         {{#if this.canBrowseChannels}}
-          <LinkTo
-            @route="chat.browse"
-            class="btn no-text btn-flat open-browse-page-btn title-action"
-            title={{i18n "chat.channels_list_popup.browse"}}
-          >
-            {{dIcon "pencil"}}
-          </LinkTo>
+          <div class="chat-channel-divider__actions">
+            <ChatChannelListOptionsButton @section="channels" />
+          </div>
         {{/if}}
       </div>
     {{/if}}
@@ -129,6 +127,13 @@ export default class ChannelsListPublic extends Component {
             @channel={{channel}}
             @options={{hash settingsButton=true}}
           />
+        {{else}}
+          {{#unless this.inSidebar}}
+            <ChatSidebarChannelListFilterEmptyState
+              @layout="empty-state"
+              @section="channels"
+            />
+          {{/unless}}
         {{/each}}
       {{/if}}
     </div>
