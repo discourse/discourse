@@ -6,7 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { closeCompletion, completionStatus } from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
-import { EditorState } from "@codemirror/state";
+import { Compartment, EditorState } from "@codemirror/state";
 import {
   EditorView,
   keymap,
@@ -14,19 +14,27 @@ import {
   placeholder,
   ViewPlugin,
 } from "@codemirror/view";
+import { loadCodemirrorLanguage } from "discourse/lib/codemirror-languages";
 import { bind } from "discourse/lib/decorators";
 import { buildCmParams } from "../build-extensions";
+import { defaultHighlighting } from "../highlight-style";
 
 export default class CodemirrorEditor extends Component {
   @tracked view = null;
   #lastValue;
   #suppressChange = false;
+  #language = new Compartment();
+  #readOnly = new Compartment();
 
   @action
   setup(container) {
     const extensions = [
+      // Ahead of the defaults, so a host's own shortcut wins the binding.
+      keymap.of(this.#commandKeymap),
       history(),
       keymap.of([...defaultKeymap, ...historyKeymap]),
+      this.#language.of([]),
+      this.#readOnly.of(this.#readOnlyExtensions),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           const value = update.state.doc.toString();
@@ -55,13 +63,6 @@ export default class CodemirrorEditor extends Component {
 
     if (this.args.lineWrapping) {
       extensions.push(EditorView.lineWrapping);
-    }
-
-    if (this.args.readOnly) {
-      extensions.push(
-        EditorState.readOnly.of(true),
-        EditorView.editable.of(false)
-      );
     }
 
     if (this.args.singleLine) {
@@ -119,7 +120,71 @@ export default class CodemirrorEditor extends Component {
 
     this.#lastValue = initialValue;
 
+    this.updateLanguage();
     this.args.onSetup?.(this.view);
+  }
+
+  get #commandKeymap() {
+    const bindings = [];
+
+    if (this.args.save) {
+      bindings.push({
+        key: "Mod-s",
+        preventDefault: true,
+        run: () => {
+          this.args.save();
+          return true;
+        },
+      });
+    }
+
+    if (this.args.submit) {
+      bindings.push({
+        key: "Mod-Enter",
+        preventDefault: true,
+        run: () => {
+          this.args.submit();
+          return true;
+        },
+      });
+    }
+
+    return bindings;
+  }
+
+  get #readOnlyExtensions() {
+    if (!this.args.readOnly) {
+      return [];
+    }
+
+    return [EditorState.readOnly.of(true), EditorView.editable.of(false)];
+  }
+
+  @bind
+  async updateLanguage() {
+    const name = this.args.language;
+    const support = name ? await loadCodemirrorLanguage(name) : null;
+
+    // The editor can be torn down, or the language changed again, while the
+    // module is loading.
+    if (!this.view || this.args.language !== name) {
+      return;
+    }
+
+    // A shortcut brings the shared palette with it; consumers that build their
+    // own extensions style them however they like.
+    this.view.dispatch({
+      effects: this.#language.reconfigure(
+        support ? [support(buildCmParams()), defaultHighlighting()] : []
+      ),
+    });
+  }
+
+  @bind
+  updateReadOnly() {
+    this.view?.dispatch({
+      effects: this.#readOnly.reconfigure(this.#readOnlyExtensions),
+    });
   }
 
   @bind
@@ -156,6 +221,8 @@ export default class CodemirrorEditor extends Component {
       class="codemirror-editor {{@class}}"
       {{didInsert this.setup}}
       {{didUpdate this.updateValue @value}}
+      {{didUpdate this.updateLanguage @language}}
+      {{didUpdate this.updateReadOnly @readOnly}}
       {{willDestroy this.teardown}}
     ></div>
   </template>
