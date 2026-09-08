@@ -36,8 +36,13 @@ export function resetCurrentReaction() {
 }
 
 function buildFakeReaction(reactionId) {
+  const emojiUrl = emojiUrlFor(reactionId);
+  if (!emojiUrl) {
+    return null;
+  }
+
   const img = document.createElement("img");
-  img.src = emojiUrlFor(reactionId);
+  img.src = emojiUrl;
   img.classList.add(
     "btn-toggle-reaction-emoji",
     "reaction-button",
@@ -59,6 +64,10 @@ function moveReactionAnimation(
   }
 
   const fakeReaction = buildFakeReaction(reactionId);
+  if (!fakeReaction) {
+    return run(complete);
+  }
+
   const reactionButton = postContainer.querySelector(".reaction-button");
 
   reactionButton.appendChild(fakeReaction);
@@ -340,7 +349,9 @@ export default class DiscourseReactionsActions extends Component {
       const pickedReaction = this.containerElement?.querySelector(
         `.discourse-reactions-picker .pickable-reaction.${CSS.escape(
           params.reaction
-        )} .emoji`
+        )} .emoji, .discourse-reactions-picker .pickable-reaction.${CSS.escape(
+          params.reaction
+        )} .d-icon`
       );
 
       const scales = [1.0, 1.75];

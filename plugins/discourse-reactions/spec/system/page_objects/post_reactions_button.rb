@@ -31,6 +31,12 @@ module PageObjects
         has_css?(".pickable-reaction.#{emoji}")
       end
 
+      def has_reaction_icon?(reaction, icon)
+        context_component.has_css?(
+          ".pickable-reaction[data-reaction='#{reaction}'] .d-icon-#{icon}",
+        )
+      end
+
       def pick_reaction(emoji)
         find(".pickable-reaction.#{emoji}").click
       end
