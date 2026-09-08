@@ -310,13 +310,9 @@ shared_examples "login scenarios" do
     fab!(:other_user) { Fabricate(:user, username: "jane", password: "supersecurepassword") }
 
     before do
-      user_second_factor
-      Fabricate(:user_second_factor_backup, user: user)
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       EmailToken.confirm(Fabricate(:email_token, user: other_user).token)
     end
-
-    fab!(:other_user) { Fabricate(:user, username: "jane", password: "supersecurepassword") }
 
     context "when it is required" do
       before { SiteSetting.enforce_second_factor = "all" }
