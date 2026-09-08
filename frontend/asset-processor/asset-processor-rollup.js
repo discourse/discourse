@@ -19,8 +19,12 @@ import discourseExternalLoader from "./rollup-plugins/discourse-external-loader"
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
 import discourseGjs from "./rollup-plugins/discourse-gjs";
 import discourseHbs from "./rollup-plugins/discourse-hbs";
+import discourseRegisterComponents from "./rollup-plugins/discourse-register-components";
+import discourseRouteMaps from "./rollup-plugins/discourse-route-maps";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
+import { labelFor, routeNamesFor } from "./rollup-virtual-imports";
+import { urlTableFor } from "./route-map-parser";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 import transformActionSyntax from "./transform-action-syntax";
 import createVirtualFs from "./virtual-fs";
@@ -40,6 +44,10 @@ async function performRollup(modules, opts) {
 
   const fs = createVirtualFs(modules, basePath);
 
+  // Filled in by `discourse-route-maps` before the entrypoint is generated from it.
+  const routeTables = { bundleByRoute: {}, derived: [] };
+  opts.routeTables = routeTables;
+
   const cache = opts.pluginName ? caches.get(opts.pluginName) : false;
 
   const result = await rollup({
@@ -55,6 +63,12 @@ async function performRollup(modules, opts) {
       console.info(level, message);
     },
     plugins: [
+      discourseRouteMaps({
+        modules,
+        label: labelFor(opts),
+        tables: routeTables,
+        staticModules: !!opts.frontendConfig?.staticModules,
+      }),
       discourseSourceImports({ fs }),
       discourseFileSearch(),
       discourseVirtualLoader({
@@ -119,6 +133,7 @@ async function performRollup(modules, opts) {
       }),
       discourseHbs(),
       discourseGjs(),
+      discourseRegisterComponents({ basePath }),
       discourseTerser({ opts }),
     ],
   });
@@ -144,6 +159,55 @@ async function performRollup(modules, opts) {
     ),
   ];
 
+  const routeVirtualPrefix = `${basePath}virtual:route:`;
+
+  // Keyed by the qualified `<entrypoint>:<bundle>` from the module id, because two entrypoints
+  // can each have a bundle of the same name.
+  const bundleNameByFile = {};
+  for (const chunk of bundle.output) {
+    if (chunk.facadeModuleId?.startsWith(routeVirtualPrefix)) {
+      bundleNameByFile[chunk.fileName] = chunk.facadeModuleId.slice(
+        routeVirtualPrefix.length
+      );
+    }
+  }
+
+  // Rollup may hoist the entrypoint module into a shared chunk, so find where it landed.
+  function routeBundlesForEntry(entryName) {
+    const entrypointModuleId = `${basePath}virtual:entrypoint:${entryName}`;
+
+    const owner = bundle.output.find((chunk) =>
+      chunk.moduleIds?.includes(entrypointModuleId)
+    );
+
+    const fileNameByBundle = {};
+
+    for (const fileName of owner?.dynamicImports ?? []) {
+      const qualified = bundleNameByFile[fileName];
+
+      if (qualified?.startsWith(`${entryName}:`)) {
+        fileNameByBundle[qualified.slice(entryName.length + 1)] = fileName;
+      }
+    }
+
+    // A bundle name means a different bundle in each entrypoint.
+    const owned = routeNamesFor(
+      opts.entrypoints[entryName].modules,
+      routeTables.bundleByRoute
+    );
+    const urls = urlTableFor(
+      routeTables.derived.filter((route) => owned.has(route.name))
+    );
+
+    // Already ordered most specific first, which is the order Ruby matches them in.
+    return urls
+      .filter(({ bundleName }) => fileNameByBundle[bundleName])
+      .map(({ bundleName, url }) => ({
+        url,
+        fileName: fileNameByBundle[bundleName],
+      }));
+  }
+
   const chunks = Object.fromEntries(
     bundle.output
       .filter((c) => c.code)
@@ -158,6 +222,9 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            routeBundles: chunk.isEntry
+              ? routeBundlesForEntry(chunk.name)
+              : undefined,
             externalPluginImports,
           },
         ];

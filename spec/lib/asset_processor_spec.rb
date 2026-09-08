@@ -478,8 +478,9 @@ RSpec.describe AssetProcessor do
 
     expect(entrypoint(result, "main")["code"]).to include("setComponentTemplate")
     expect(entrypoint(result, "main")["code"]).to include(
-      "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
+      "= setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
     )
+    expect(entrypoint(result, "main")["code"]).to include('registerModuleForModifyClass("bar",')
   end
 
   it "handles colocation of connectors" do
