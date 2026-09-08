@@ -4,10 +4,10 @@ import TopicStatus from "discourse/components/topic-status";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 
 const FeaturedTopic = <template>
-  <div data-topic-id={{@topic.id}} class="featured-topic --glimmer">
-    <TopicStatus @topic={{@topic}} @context="topic-list" />
+  <div class="featured-topic --glimmer" data-topic-id={{@topic.id}}>
+    <TopicStatus @context="topic-list" @topic={{@topic}} />
 
-    <a href={{@topic.lastUnreadUrl}} class="title">{{trustHTML
+    <a class="title" href={{@topic.lastUnreadUrl}}>{{trustHTML
         @topic.fancyTitle
       }}</a>
 
@@ -17,7 +17,7 @@ const FeaturedTopic = <template>
       @url={{@topic.lastUnreadUrl}}
     />
 
-    <a href={{@topic.lastPostUrl}} class="last-posted-at">{{dAgeWithTooltip
+    <a class="last-posted-at" href={{@topic.lastPostUrl}}>{{dAgeWithTooltip
         @topic.last_posted_at
       }}</a>
   </div>

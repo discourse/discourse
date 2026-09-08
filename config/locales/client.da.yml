@@ -837,6 +837,9 @@ da:
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
         note_added: "Moderator note"
+      author_penalty:
+        toast:
+          undo: "Fortryd"
       notes:
         add_note_button: "Tilføj note"
         placeholder: "Skriv din note her..."
@@ -1422,7 +1425,6 @@ da:
       admin: "%{user} er en admin"
       moderator_tooltip: "Denne bruger er en moderator"
       admin_tooltip: "Denne bruger er en administrator"
-      silenced_tooltip: "Denne bruger er mådeholdt (silenced)"
       suspended_notice: "Denne bruger er suspenderet indtil %{date}."
       suspended_permanently: "Denne bruger er suspenderet."
       suspended_reason: "Begrundelse: "

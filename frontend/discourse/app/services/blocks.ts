@@ -142,6 +142,29 @@ export default class Blocks extends Service {
   #prepareControllers = new Map<string, AbortController>();
 
   /*
+   * Debug Methods
+   */
+
+  /**
+   * Returns whether the debug visual overlay is enabled.
+   *
+   * Container blocks can use this to conditionally render ghost blocks
+   * for children they choose not to display.
+   *
+   * @returns True if the visual overlay (ghost blocks) is enabled.
+   *
+   * @example
+   * ```javascript
+   * if (this.blocks.showGhosts) {
+   *   // Render ghost blocks for hidden children
+   * }
+   * ```
+   */
+  get showGhosts(): boolean {
+    return debugHooks.isGhostBlocksEnabled;
+  }
+
+  /*
    * Block Outlet Methods
    */
 
@@ -573,6 +596,58 @@ export default class Blocks extends Service {
     }
   }
 
+  /**
+   * Validates condition specs at block registration time.
+   * Recursively validates nested conditions in `any` and `not` combinators.
+   *
+   * Throws BlockError objects so callers can decide how to format
+   * the final error with appropriate context. The error object includes a
+   * `path` property indicating where in the conditions the error occurred
+   * (relative to the conditions root, e.g., "params.categoryId").
+   *
+   * @param conditionSpec - Condition spec(s) to validate.
+   * @throws A `BlockError` if validation fails.
+   */
+  validate(conditionSpec: LayoutEntry["conditions"]): void {
+    this.#lazilyInitializeConditionInstances();
+    validateConditions(conditionSpec, this.#conditionInstances);
+  }
+
+  /**
+   * Evaluates condition specs at render time.
+   * Recursively evaluates nested conditions with AND/OR/NOT logic.
+   *
+   * @param conditionSpec - Condition spec(s) to evaluate.
+   * @param context - Evaluation context.
+   * @returns True if conditions pass, false otherwise.
+   */
+  evaluate(
+    conditionSpec: LayoutEntry["conditions"],
+    context: ConditionEvaluationContext = {}
+  ): boolean {
+    this.#lazilyInitializeConditionInstances();
+    return evaluateConditions(conditionSpec, this.#conditionInstances, context);
+  }
+
+  /**
+   * Checks if a condition type is registered.
+   *
+   * @param type - The condition type name
+   */
+  hasConditionType(type: string): boolean {
+    this.#lazilyInitializeConditionInstances();
+    return this.#conditionInstances.has(type);
+  }
+
+  /**
+   * Returns all registered condition type names.
+   * Useful for debugging and error messages.
+   */
+  getRegisteredConditionTypes(): string[] {
+    this.#lazilyInitializeConditionInstances();
+    return [...this.#conditionInstances.keys()];
+  }
+
   async #prepareData(
     scope: string,
     options: PrepareDataOptions = {}
@@ -746,80 +821,5 @@ export default class Blocks extends Service {
     // undefined here.
     setOwner(instance, getOwner(this)!);
     this.#conditionInstances.set(type, instance);
-  }
-
-  /**
-   * Validates condition specs at block registration time.
-   * Recursively validates nested conditions in `any` and `not` combinators.
-   *
-   * Throws BlockError objects so callers can decide how to format
-   * the final error with appropriate context. The error object includes a
-   * `path` property indicating where in the conditions the error occurred
-   * (relative to the conditions root, e.g., "params.categoryId").
-   *
-   * @param conditionSpec - Condition spec(s) to validate.
-   * @throws A `BlockError` if validation fails.
-   */
-  validate(conditionSpec: LayoutEntry["conditions"]): void {
-    this.#lazilyInitializeConditionInstances();
-    validateConditions(conditionSpec, this.#conditionInstances);
-  }
-
-  /**
-   * Evaluates condition specs at render time.
-   * Recursively evaluates nested conditions with AND/OR/NOT logic.
-   *
-   * @param conditionSpec - Condition spec(s) to evaluate.
-   * @param context - Evaluation context.
-   * @returns True if conditions pass, false otherwise.
-   */
-  evaluate(
-    conditionSpec: LayoutEntry["conditions"],
-    context: ConditionEvaluationContext = {}
-  ): boolean {
-    this.#lazilyInitializeConditionInstances();
-    return evaluateConditions(conditionSpec, this.#conditionInstances, context);
-  }
-
-  /**
-   * Checks if a condition type is registered.
-   *
-   * @param type - The condition type name
-   */
-  hasConditionType(type: string): boolean {
-    this.#lazilyInitializeConditionInstances();
-    return this.#conditionInstances.has(type);
-  }
-
-  /**
-   * Returns all registered condition type names.
-   * Useful for debugging and error messages.
-   */
-  getRegisteredConditionTypes(): string[] {
-    this.#lazilyInitializeConditionInstances();
-    return [...this.#conditionInstances.keys()];
-  }
-
-  /*
-   * Debug Methods
-   */
-
-  /**
-   * Returns whether the debug visual overlay is enabled.
-   *
-   * Container blocks can use this to conditionally render ghost blocks
-   * for children they choose not to display.
-   *
-   * @returns True if the visual overlay (ghost blocks) is enabled.
-   *
-   * @example
-   * ```javascript
-   * if (this.blocks.showGhosts) {
-   *   // Render ghost blocks for hidden children
-   * }
-   * ```
-   */
-  get showGhosts(): boolean {
-    return debugHooks.isGhostBlocksEnabled;
   }
 }

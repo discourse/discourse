@@ -9,28 +9,28 @@ import UserNavPillsExample from "../../examples/molecules/user-nav-pills";
 import userNavPillsSource from "../../examples/molecules/user-nav-pills?source=file";
 
 export default <template>
-  <StyleguideExample @title="<NavigationBar>" @code={{navigationBarSource}}>
+  <StyleguideExample @code={{navigationBarSource}} @title="<NavigationBar>">
     <NavigationBarExample @navItems={{@dummy.navItems}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title=".user-main .nav-pills"
     @code={{userNavPillsSource}}
+    @title=".user-main .nav-pills"
   >
     <UserNavPillsExample @navItems={{@dummy.navItems}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="group page <NavigationBar>"
     @code={{groupNavPillsSource}}
+    @title="group page <NavigationBar>"
   >
     <GroupNavPillsExample @navItems={{@dummy.navItems}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DHorizontalOverflowNav> — more items than fit"
     @code={{overflowingNavSource}}
     @description="A navigation bar that outgrows its width scrolls sideways instead of wrapping. The edge with more items fades out under a chevron, a click scrolls one viewport, holding the chevron keeps scrolling, and the active item is brought into view when the bar mounts."
+    @title="<DHorizontalOverflowNav> — more items than fit"
   >
     <:tryThis>
       The active item started off screen and was centered on mount. Click or

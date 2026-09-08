@@ -37,14 +37,14 @@ export default class TabsHeaderExample extends Component {
           </div>
         </:header>
         <:default as |tabs|>
-          <tabs.Tab @id="summary" @label="Summary">
+          <tabs.Tab @key="summary" @label="Summary">
             <p>Refreshed
               {{this.refreshCount}}
               times. The refresh button shares the strip row without being a
               tab, so it stays outside the arrow key cycle and out of the
               tablist's ARIA contents.</p>
           </tabs.Tab>
-          <tabs.Tab @id="details" @label="Details">
+          <tabs.Tab @key="details" @label="Details">
             <p>The tab buttons still render inside the placed tablist, wherever
               the header block put it.</p>
           </tabs.Tab>

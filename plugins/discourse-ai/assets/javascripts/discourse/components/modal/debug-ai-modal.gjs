@@ -74,66 +74,12 @@ export default class DebugAiModal extends Component {
     );
   }
 
-  async loadLog(logId) {
-    this.showRawResponse = false;
-
-    try {
-      await ajax(`/discourse-ai/ai-bot/show-debug-info/${logId}.json`).then(
-        (result) => {
-          this.info = result;
-        }
-      );
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  @action
-  prevLog() {
-    this.loadLog(this.info.prev_log_id);
-  }
-
-  @action
-  nextLog() {
-    this.loadLog(this.info.next_log_id);
-  }
-
-  loadApiRequestInfo() {
-    this.showRawResponse = false;
-    ajax(`/discourse-ai/ai-bot/post/${this.args.model.id}/show-debug-info.json`)
-      .then((result) => {
-        this.info = result;
-      })
-      .catch((e) => {
-        popupAjaxError(e);
-      });
-  }
-
   get requestActive() {
     return this.activeTab === "request" ? "active" : "";
   }
 
   get responseActive() {
     return this.activeTab === "response" ? "active" : "";
-  }
-
-  @action
-  requestClicked(e) {
-    this.activeTab = "request";
-    this.showRawResponse = false;
-    e.preventDefault();
-  }
-
-  @action
-  responseClicked(e) {
-    this.activeTab = "response";
-    this.showRawResponse = false;
-    e.preventDefault();
-  }
-
-  @action
-  toggleResponseView() {
-    this.showRawResponse = !this.showRawResponse;
   }
 
   get formattedDurationSummary() {
@@ -157,10 +103,6 @@ export default class DebugAiModal extends Component {
       duration_seconds: durationSeconds,
       first_token_seconds: firstTokenSeconds,
     });
-  }
-
-  seconds(milliseconds) {
-    return milliseconds == null ? null : (milliseconds / 1000).toFixed(1);
   }
 
   get formattedSpending() {
@@ -199,6 +141,64 @@ export default class DebugAiModal extends Component {
     );
   }
 
+  async loadLog(logId) {
+    this.showRawResponse = false;
+
+    try {
+      await ajax(`/discourse-ai/ai-bot/show-debug-info/${logId}.json`).then(
+        (result) => {
+          this.info = result;
+        }
+      );
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  prevLog() {
+    this.loadLog(this.info.prev_log_id);
+  }
+
+  @action
+  nextLog() {
+    this.loadLog(this.info.next_log_id);
+  }
+
+  loadApiRequestInfo() {
+    this.showRawResponse = false;
+    ajax(`/discourse-ai/ai-bot/post/${this.args.model.id}/show-debug-info.json`)
+      .then((result) => {
+        this.info = result;
+      })
+      .catch((e) => {
+        popupAjaxError(e);
+      });
+  }
+
+  @action
+  requestClicked(e) {
+    this.activeTab = "request";
+    this.showRawResponse = false;
+    e.preventDefault();
+  }
+
+  @action
+  responseClicked(e) {
+    this.activeTab = "response";
+    this.showRawResponse = false;
+    e.preventDefault();
+  }
+
+  @action
+  toggleResponseView() {
+    this.showRawResponse = !this.showRawResponse;
+  }
+
+  seconds(milliseconds) {
+    return milliseconds == null ? null : (milliseconds / 1000).toFixed(1);
+  }
+
   cacheLabel(read, write) {
     const hasRead = read && read > 0;
     const hasWrite = write && write > 0;
@@ -233,19 +233,19 @@ export default class DebugAiModal extends Component {
   <template>
     <DModal
       class="ai-debug-modal"
-      @title={{i18n "discourse_ai.ai_bot.debug_ai_modal.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.ai_bot.debug_ai_modal.title"}}
     >
       <:body>
         <ul class="nav nav-pills ai-debug-modal__nav">
           <li><a
-              href=""
               class={{this.requestActive}}
+              href=""
               {{on "click" this.requestClicked}}
             >{{i18n "discourse_ai.ai_bot.debug_ai_modal.request"}}</a></li>
           <li><a
-              href=""
               class={{this.responseActive}}
+              href=""
               {{on "click" this.responseClicked}}
             >{{i18n "discourse_ai.ai_bot.debug_ai_modal.response"}}</a></li>
         </ul>
@@ -308,11 +308,11 @@ export default class DebugAiModal extends Component {
           {{else}}
             <AiPayloadViewer
               class="ai-debug-modal__preview"
-              @payload={{this.activePayload}}
-              @unbounded={{true}}
               @emptyMessage={{i18n
                 "discourse_ai.ai_bot.debug_ai_modal.payload_unavailable"
               }}
+              @payload={{this.activePayload}}
+              @unbounded={{true}}
             />
           {{/if}}
         {{/if}}
@@ -322,16 +322,16 @@ export default class DebugAiModal extends Component {
         {{#if this.info.prev_log_id}}
           <DButton
             class="btn ai-debug-modal__previous"
-            @icon="angles-left"
             @action={{this.prevLog}}
+            @icon="angles-left"
             @label="discourse_ai.ai_bot.debug_ai_modal.previous_log"
           />
         {{/if}}
         {{#if this.info.next_log_id}}
           <DButton
             class="btn ai-debug-modal__next"
-            @icon="angles-right"
             @action={{this.nextLog}}
+            @icon="angles-right"
             @label="discourse_ai.ai_bot.debug_ai_modal.next_log"
           />
         {{/if}}
@@ -345,17 +345,17 @@ export default class DebugAiModal extends Component {
           {{/if}}
           {{#if this.copyValue}}
             <DCopyButton
-              @value={{this.copyValue}}
               @copyClass="btn-default ai-debug-modal__copy"
               @translatedLabel={{this.activeCopyLabel}}
               @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}
+              @value={{this.copyValue}}
             />
           {{else}}
             <DButton
               class="btn-default ai-debug-modal__copy"
+              @disabled={{true}}
               @icon="copy"
               @translatedLabel={{this.activeCopyLabel}}
-              @disabled={{true}}
             />
           {{/if}}
         </div>

@@ -16,10 +16,10 @@ export default <template>
       </label>
 
       <input
-        type="text"
-        name="product_name"
-        value={{@controller.model.product.name}}
         disabled
+        name="product_name"
+        type="text"
+        value={{@controller.model.product.name}}
       />
     </p>
 
@@ -29,13 +29,13 @@ export default <template>
       </label>
 
       <input
+        name="name"
+        type="text"
+        value={{@controller.model.plan.nickname}}
         {{on
           "input"
           (withEventValue (fn (mut @controller.model.plan.nickname)))
         }}
-        type="text"
-        name="name"
-        value={{@controller.model.plan.nickname}}
       />
 
       <div class="control-instructions">
@@ -49,10 +49,10 @@ export default <template>
       </label>
 
       <ComboBox
-        @valueProperty="name"
         @content={{@controller.availableGroups}}
-        @value={{@controller.selectedGroup}}
         @onChange={{fn (mut @controller.model.plan.metadata.group_name)}}
+        @value={{@controller.selectedGroup}}
+        @valueProperty="name"
       />
 
       <div class="control-instructions">
@@ -74,23 +74,23 @@ export default <template>
         />
       {{else}}
         <ComboBox
-          @disabled={{@controller.planFieldDisabled}}
           @content={{@controller.currencies}}
-          @value={{@controller.model.plan.currency}}
+          @disabled={{@controller.planFieldDisabled}}
           @onChange={{fn (mut @controller.model.plan.currency)}}
+          @value={{@controller.model.plan.currency}}
         />
       {{/if}}
 
       <input
+        class="plan-amount"
+        disabled={{@controller.planFieldDisabled}}
+        name="name"
+        type="text"
+        value={{@controller.model.plan.amountDollars}}
         {{on
           "input"
           (withEventValue (fn (mut @controller.model.plan.amountDollars)))
         }}
-        class="plan-amount"
-        type="text"
-        name="name"
-        value={{@controller.model.plan.amountDollars}}
-        disabled={{@controller.planFieldDisabled}}
       />
     </p>
 
@@ -101,16 +101,16 @@ export default <template>
 
       {{#if @controller.planFieldDisabled}}
         <Input
-          @type="checkbox"
+          disabled
           name="recurring"
           @checked={{@controller.model.plan.isRecurring}}
-          disabled
+          @type="checkbox"
         />
       {{else}}
         <Input
-          @type="checkbox"
           name="recurring"
           @checked={{@controller.model.plan.isRecurring}}
+          @type="checkbox"
           {{on "change" @controller.changeRecurring}}
         />
       {{/if}}
@@ -126,10 +126,10 @@ export default <template>
           <input disabled type="text" value={{@controller.selectedInterval}} />
         {{else}}
           <ComboBox
-            @valueProperty="name"
             @content={{@controller.availableIntervals}}
-            @value={{@controller.selectedInterval}}
             @onChange={{fn (mut @controller.selectedInterval)}}
+            @value={{@controller.selectedInterval}}
+            @valueProperty="name"
           />
         {{/if}}
       </p>
@@ -141,13 +141,13 @@ export default <template>
         </label>
 
         <input
+          name="trial"
+          type="text"
+          value={{@controller.model.plan.trial_period_days}}
           {{on
             "input"
             (withEventValue (fn (mut @controller.model.plan.trial_period_days)))
           }}
-          type="text"
-          name="trial"
-          value={{@controller.model.plan.trial_period_days}}
         />
 
         <div class="control-instructions">
@@ -161,9 +161,9 @@ export default <template>
         {{i18n "discourse_subscriptions.admin.plans.plan.active"}}
       </label>
       <Input
-        @type="checkbox"
         name="active"
         @checked={{@controller.model.plan.active}}
+        @type="checkbox"
       />
     </p>
   </form>
@@ -178,17 +178,17 @@ export default <template>
     <div class="pull-right">
       {{#if @controller.model.plan.isNew}}
         <DButton
-          @label="discourse_subscriptions.admin.plans.operations.create"
+          class="btn btn-primary"
           @action={{@controller.createPlan}}
           @icon="plus"
-          class="btn btn-primary"
+          @label="discourse_subscriptions.admin.plans.operations.create"
         />
       {{else}}
         <DButton
-          @label="discourse_subscriptions.admin.plans.operations.update"
+          class="btn btn-primary"
           @action={{@controller.updatePlan}}
           @icon="check"
-          class="btn btn-primary"
+          @label="discourse_subscriptions.admin.plans.operations.update"
         />
       {{/if}}
     </div>

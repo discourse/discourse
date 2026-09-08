@@ -1081,6 +1081,9 @@ cs:
         note_added: "Poznámka moderátora"
         note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
         no_events: "Na časové ose nejsou k zobrazení žádné události"
+      author_penalty:
+        toast:
+          undo: "Zpět"
       notes:
         add_note_description: "Přidejte poznámku, která poskytne ostatním moderátorům kontext."
         add_note_button: "Přidat poznámku"
@@ -1768,7 +1771,6 @@ cs:
       admin: "%{user} je administrátor"
       moderator_tooltip: "Tento uživatel je moderátor"
       admin_tooltip: "Tento uživatel je správce"
-      silenced_tooltip: "Tento uživatel je ztišen."
       suspended_notice: "Uživatel je pozastaven do %{date}."
       suspended_permanently: "Tento uživatel je pozastaven."
       suspended_reason: "Důvod: "

@@ -1347,6 +1347,9 @@ ar:
         note_added: "ملاحظة المشرف"
         note_added_by: "ملاحظة المشرف من قِبل %{username} · %{relativeDate}"
         no_events: "لا توجد أحداث زمنية متاحة للعرض"
+      author_penalty:
+        toast:
+          undo: "تراجع"
       notes:
         add_note_description: "أضف ملاحظة لتوضيح السياق للمشرفين الآخرين."
         add_note_button: "أضف ملاحظة"
@@ -2091,7 +2094,6 @@ ar:
       admin: "‏%{user} مسؤول في الموقع"
       moderator_tooltip: "هذا المستخدم مشرف في الموقع"
       admin_tooltip: "هذا المستخدم مسؤول في الموقع"
-      silenced_tooltip: "أُسكت هذا العضو"
       suspended_notice: "هذا المستخدم معلَّق حتى تاريخ %{date}."
       suspended_permanently: "هذا المستخدم معلَّق."
       suspended_reason: "السبب: "

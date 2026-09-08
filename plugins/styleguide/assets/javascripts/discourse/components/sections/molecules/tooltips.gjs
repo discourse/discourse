@@ -31,10 +31,6 @@ export default class Tooltips extends Component {
   @tracked offset = TOOLTIP.options.offset;
   @tracked _content = "Hello World!";
 
-  get triggersByDevice() {
-    return this.site.mobileView ? "mobile" : "desktop";
-  }
-
   get content() {
     return this._content;
   }
@@ -43,41 +39,8 @@ export default class Tooltips extends Component {
     this._content = trustHTML(value);
   }
 
-  @action
-  toggleArrow() {
-    this.arrow = !this.arrow;
-  }
-
-  @action
-  toggleInteractive() {
-    this.interactive = !this.interactive;
-  }
-
-  @action
-  toggleInline() {
-    this.inline = !this.inline;
-  }
-
-  @action
-  registerTooltip() {
-    this.tooltipInstance?.destroy();
-    this.tooltipInstance = this.tooltip.register(
-      document.querySelector("#tooltip-instance"),
-      this.options
-    );
-  }
-
-  @action
-  registerTooltipWithComponent() {
-    this.tooltipInstanceWithComponent?.destroy();
-    this.tooltipInstanceWithComponent = this.tooltip.register(
-      document.querySelector("#tooltip-instance-with-component"),
-      {
-        ...this.options,
-        component: DummyComponent,
-        data: { foo: 1 },
-      }
-    );
+  get triggersByDevice() {
+    return this.site.mobileView ? "mobile" : "desktop";
   }
 
   get options() {
@@ -221,45 +184,82 @@ export default class MyComponent extends Component {
     `.trim();
   }
 
+  @action
+  toggleArrow() {
+    this.arrow = !this.arrow;
+  }
+
+  @action
+  toggleInteractive() {
+    this.interactive = !this.interactive;
+  }
+
+  @action
+  toggleInline() {
+    this.inline = !this.inline;
+  }
+
+  @action
+  registerTooltip() {
+    this.tooltipInstance?.destroy();
+    this.tooltipInstance = this.tooltip.register(
+      document.querySelector("#tooltip-instance"),
+      this.options
+    );
+  }
+
+  @action
+  registerTooltipWithComponent() {
+    this.tooltipInstanceWithComponent?.destroy();
+    this.tooltipInstanceWithComponent = this.tooltip.register(
+      document.querySelector("#tooltip-instance-with-component"),
+      {
+        ...this.options,
+        component: DummyComponent,
+        data: { foo: 1 },
+      }
+    );
+  }
+
   <template>
     <StyleguideExample
-      @title="DTooltip - with @label"
       @code={{this.tooltipCode}}
+      @title="DTooltip - with @label"
     >
       <StyleguideComponent @tag="tooltip component">
         <:sample>
           <DTooltip
-            @label={{this.label}}
-            @offset={{this.offset}}
             @arrow={{this.arrow}}
-            @maxWidth={{this.maxWidth}}
+            @content={{this.content}}
             @identifier={{this.identifier}}
+            @inline={{this.inline}}
             @interactive={{this.interactive}}
+            @label={{this.label}}
+            @maxWidth={{this.maxWidth}}
+            @offset={{this.offset}}
             @triggers={{this.triggers}}
             @untriggers={{this.untriggers}}
-            @content={{this.content}}
-            @inline={{this.inline}}
           />
         </:sample>
       </StyleguideComponent>
     </StyleguideExample>
 
     <StyleguideExample
-      @title="DTooltip - with named blocks"
       @code={{this.tooltipBlocksCode}}
+      @title="DTooltip - with named blocks"
     >
       <StyleguideComponent @tag="tooltip component">
         <:sample>
           <DTooltip
-            @offset={{this.offset}}
             @arrow={{this.arrow}}
-            @maxWidth={{this.maxWidth}}
+            @content={{this.content}}
             @identifier={{this.identifier}}
+            @inline={{this.inline}}
             @interactive={{this.interactive}}
+            @maxWidth={{this.maxWidth}}
+            @offset={{this.offset}}
             @triggers={{this.triggers}}
             @untriggers={{this.untriggers}}
-            @content={{this.content}}
-            @inline={{this.inline}}
           >
             <:trigger>
               {{this.label}}
@@ -273,8 +273,8 @@ export default class MyComponent extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title="Tooltip Service"
       @code={{this.tooltipServiceCode}}
+      @title="Tooltip Service"
     >
       <StyleguideComponent @tag="tooltip service">
         <:sample>
@@ -287,8 +287,8 @@ export default class MyComponent extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title="Tooltip Service - with component"
       @code={{this.tooltipServiceComponentCode}}
+      @title="Tooltip Service - with component"
     >
       <StyleguideComponent @tag="tooltip service">
         <:sample>
@@ -305,51 +305,51 @@ export default class MyComponent extends Component {
     <Controls>
       <Row @name="Example label">
         <input
-          {{on "input" (withEventValue (fn (mut this.label)))}}
           type="text"
           value={{this.label}}
+          {{on "input" (withEventValue (fn (mut this.label)))}}
         />
       </Row>
       <Row @name="[@content]">
         <input
-          {{on "input" (withEventValue (fn (mut this.content)))}}
           type="text"
           value={{this.content}}
+          {{on "input" (withEventValue (fn (mut this.content)))}}
         />
       </Row>
       <Row @name="[@identifier]">
         <input
-          {{on "input" (withEventValue (fn (mut this.identifier)))}}
           type="text"
           value={{this.identifier}}
+          {{on "input" (withEventValue (fn (mut this.identifier)))}}
         />
       </Row>
       <Row @name="[@offset]">
         <input
-          {{on "input" (withEventValue (fn (mut this.offset)))}}
           type="number"
           value={{this.offset}}
+          {{on "input" (withEventValue (fn (mut this.offset)))}}
         />
       </Row>
       <Row @name="[@triggers]">
         <input
-          {{on "input" (withEventValue (fn (mut this.triggers)))}}
           type="text"
           value={{this.triggers}}
+          {{on "input" (withEventValue (fn (mut this.triggers)))}}
         />
       </Row>
       <Row @name="[@untriggers]">
         <input
-          {{on "input" (withEventValue (fn (mut this.untriggers)))}}
           type="text"
           value={{this.untriggers}}
+          {{on "input" (withEventValue (fn (mut this.untriggers)))}}
         />
       </Row>
       <Row @name="[@maxWidth]">
         <input
-          {{on "input" (withEventValue (fn (mut this.maxWidth)))}}
           type="number"
           value={{this.maxWidth}}
+          {{on "input" (withEventValue (fn (mut this.maxWidth)))}}
         />
       </Row>
       <Row @name="[@interactive]">

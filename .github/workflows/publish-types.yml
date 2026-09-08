@@ -29,7 +29,7 @@ jobs:
         with:
           ruby-version: "3.4"
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v7
         with:

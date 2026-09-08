@@ -21,18 +21,18 @@ export default <template>
       <DPageSubheader @titleLabel={{i18n "explorer.queries"}}>
         <:actions as |actions|>
           <actions.Primary
-            @route="adminPlugins.show.explorer.new"
             @icon="plus"
             @label="explorer.create"
+            @route="adminPlugins.show.explorer.new"
           />
           <actions.Wrapped>
             <DPickFilesButton
-              @label="explorer.import.label"
-              @icon="upload"
-              @acceptedFormatsOverride={{@controller.acceptedImportFileTypes}}
-              @showButton="true"
-              @onFilesPicked={{@controller.import}}
               class="d-page-action-button btn-small"
+              @acceptedFormatsOverride={{@controller.acceptedImportFileTypes}}
+              @icon="upload"
+              @label="explorer.import.label"
+              @onFilesPicked={{@controller.import}}
+              @showButton="true"
             />
           </actions.Wrapped>
         </:actions>
@@ -41,10 +41,10 @@ export default <template>
       <DFilterControls
         @array={{@controller.model.content}}
         @inputPlaceholder={{i18n "explorer.search_placeholder"}}
-        @noResultsMessage={{i18n "explorer.no_search_results"}}
-        @onTextFilterChange={{@controller.onTextFilterChange}}
-        @onResetFilters={{@controller.onResetFilters}}
         @loading={{@controller.searchLoading}}
+        @noResultsMessage={{i18n "explorer.no_search_results"}}
+        @onResetFilters={{@controller.onResetFilters}}
+        @onTextFilterChange={{@controller.onTextFilterChange}}
       >
         <:aboveFilters>
           {{#if @controller.othersDirty}}
@@ -65,37 +65,37 @@ export default <template>
                   <thead class="d-table__header heading-container">
                     <th class="col heading name">
                       <div
-                        role="button"
                         class="heading-toggle"
+                        role="button"
                         {{on
                           "click"
                           (fn @controller.updateSortProperty "name")
                         }}
                       >
                         <DTableHeaderToggle
+                          @asc={{not @controller.sortDescending}}
+                          @automatic="true"
                           @field="name"
                           @labelKey="explorer.query_name"
                           @order={{@controller.order}}
-                          @asc={{not @controller.sortDescending}}
-                          @automatic="true"
                         />
                       </div>
                     </th>
                     <th class="col heading created-by">
                       <div
-                        role="button"
                         class="heading-toggle"
+                        role="button"
                         {{on
                           "click"
                           (fn @controller.updateSortProperty "username")
                         }}
                       >
                         <DTableHeaderToggle
+                          @asc={{not @controller.sortDescending}}
+                          @automatic="true"
                           @field="username"
                           @labelKey="explorer.query_user"
                           @order={{@controller.order}}
-                          @asc={{not @controller.sortDescending}}
-                          @automatic="true"
                         />
                       </div>
                     </th>
@@ -106,19 +106,19 @@ export default <template>
                     </th>
                     <th class="col heading created-at">
                       <div
-                        role="button"
                         class="heading-toggle"
+                        role="button"
                         {{on
                           "click"
                           (fn @controller.updateSortProperty "last_run_at")
                         }}
                       >
                         <DTableHeaderToggle
+                          @asc={{not @controller.sortDescending}}
+                          @automatic="true"
                           @field="last_run_at"
                           @labelKey="explorer.query_time"
                           @order={{@controller.order}}
-                          @asc={{not @controller.sortDescending}}
-                          @automatic="true"
                         />
                       </div>
                     </th>
@@ -129,8 +129,8 @@ export default <template>
                         <td class="d-table__cell --overview">
                           <LinkTo
                             class="d-table__overview-link"
-                            @route="adminPlugins.show.explorer.edit"
                             @model={{query.id}}
+                            @route="adminPlugins.show.explorer.edit"
                           >
                             <div
                               class="d-table__overview-name query-name"
@@ -154,8 +154,8 @@ export default <template>
                           {{#if query.username}}
                             <div>
                               <LinkTo
-                                @route="user.summary"
                                 @model={{query.username}}
+                                @route="user.summary"
                               >
                                 {{query.username}}
                               </LinkTo>
@@ -200,10 +200,10 @@ export default <template>
                         <td class="d-table__cell-controls">
                           <div class="d-table__cell-actions">
                             <LinkTo
-                              {{on "click" @controller.scrollTop}}
-                              @route="adminPlugins.show.explorer.edit"
-                              @model={{query.id}}
                               class="btn btn-text btn-default btn-small"
+                              @model={{query.id}}
+                              @route="adminPlugins.show.explorer.edit"
+                              {{on "click" @controller.scrollTop}}
                             >
                               {{i18n "edit"}}
                             </LinkTo>

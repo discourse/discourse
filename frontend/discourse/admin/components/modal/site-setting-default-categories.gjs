@@ -20,8 +20,8 @@ export default class SiteSettingDefaultCategories extends Component {
 
   <template>
     <DModal
-      @title={{trustHTML @model.siteSetting.key}}
       @closeModal={{this.cancel}}
+      @title={{trustHTML @model.siteSetting.key}}
     >
       <:body>
         {{i18n
@@ -31,13 +31,13 @@ export default class SiteSettingDefaultCategories extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.updateExistingUsers}}
           class="btn-primary"
+          @action={{this.updateExistingUsers}}
           @label="admin.site_settings.default_categories.modal_yes"
         />
         <DButton
-          @action={{this.cancel}}
           class="btn-default"
+          @action={{this.cancel}}
           @label="admin.site_settings.default_categories.modal_no"
         />
       </:footer>

@@ -30,6 +30,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/categories", title: "Categories" },
       { href: "/molecules/char-counter", title: "Character Counter" },
       { href: "/molecules/combo-button", title: "Combo Button" },
+      { href: "/molecules/context-menu", title: "Context menu" },
       { href: "/molecules/empty-state", title: "Empty State" },
       { href: "/molecules/menus", title: "Menus" },
       { href: "/molecules/navigation-bar", title: "Navigation Bar" },

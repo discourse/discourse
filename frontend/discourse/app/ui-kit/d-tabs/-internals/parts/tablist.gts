@@ -33,9 +33,9 @@ export default class Tablist extends Component<DTabsTablistSignature> {
       <div
         class="d-tabs__tablist"
         ...attributes
-        role={{if @tabs.hasTabs "tablist"}}
         aria-label={{if @tabs.hasTabs @tabs.label}}
         aria-orientation={{if (and @tabs.hasTabs this.isVertical) "vertical"}}
+        role={{if @tabs.hasTabs "tablist"}}
         {{dRovingFocus
           orientation=@tabs.orientation
           itemSelector="[role='tab']"

@@ -20,9 +20,9 @@ export default class SelectedChoiceCategory extends SelectedChoiceComponent {
 
   <template>
     <SelectedChoiceComponent
+      @extraClass={{this.extraClass}}
       @item={{this.item}}
       @selectKit={{this.selectKit}}
-      @extraClass={{this.extraClass}}
     >
       {{this.badge}}
     </SelectedChoiceComponent>

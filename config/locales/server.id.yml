@@ -1591,8 +1591,6 @@ id:
       agree_and_hide:
         title: "Sembunyikan pos"
         description: "Setuju dengan penanda dan sembunyikan kiriman ini + secara otomatis mengirimkan pesan kepada pengguna yang mendesak mereka untuk mengeditnya."
-      agree_and_edit:
-        description: "Setuju dengan bendera dan buka jendela komposer untuk mengedit post."
       delete:
         title: "Hapus"
         complete: "Pos dihapus."
@@ -1652,13 +1650,6 @@ id:
         title: "Ya"
       approve_and_unhide:
         title: "Ya"
-      delete_post:
-        title: "Hapus postingan"
-        complete: "Pos dihapus"
-      hide_post:
-        title: "Sembunyikan pos"
-      restore_post:
-        title: "Pulihkan post"
       silence_user:
         title: "Senyapkan pengguna"
       suspend_user:

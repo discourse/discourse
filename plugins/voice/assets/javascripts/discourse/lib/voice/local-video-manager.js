@@ -52,6 +52,7 @@ export default class LocalVideoManager {
   #isBlurAllowed;
   #setParticipantVideoState;
   #showError;
+  #onScreenShareEnded;
 
   constructor(options) {
     this.#peerManager = options.peerManager;
@@ -71,6 +72,7 @@ export default class LocalVideoManager {
     this.#isBlurAllowed = options.isBlurAllowed;
     this.#setParticipantVideoState = options.setParticipantVideoState;
     this.#showError = options.showError;
+    this.#onScreenShareEnded = options.onScreenShareEnded;
   }
 
   get blurSupported() {
@@ -138,14 +140,304 @@ export default class LocalVideoManager {
     await this.start("screen");
   }
 
+  toggleBlur() {
+    return this.#enqueueOp(() => this.#toggleBlurOp());
+  }
+
+  setBlurAmount(value) {
+    const clamped = Math.max(0, Math.min(100, Math.round(value)));
+    this.blurAmount = clamped;
+    BackgroundBlurManager.storeAmount(clamped);
+    this.#backgroundBlur?.setAmount(clamped);
+  }
+
+  setInputDevice(deviceId) {
+    return this.#enqueueOp(() => this.#setInputDeviceOp(deviceId));
+  }
+
+  async start(kind, { shouldContinue, silent = false } = {}) {
+    const roomId = this.#getFirstActiveRoomId();
+    if (!roomId) {
+      return;
+    }
+
+    if (!this.#canPublishVideo(roomId)) {
+      if (!silent) {
+        this.#showError("voice.video.publisher_limit");
+      }
+      return;
+    }
+
+    // Capture must be the first await: Firefox only allows getDisplayMedia
+    // while the click's transient activation is alive, and awaiting anything
+    // else first (e.g. stopping the current camera) consumes it. The old
+    // stream is torn down after the picker succeeds, which also keeps the
+    // camera running when the user cancels the picker.
+    let stream;
+    try {
+      if (kind === "screen") {
+        // Tab/system audio rides along for watch-along use. Voice processing
+        // is disabled because it is tuned for speech and mangles content
+        // audio; browsers without display-audio support just return no audio
+        // track. The user can still untick audio in the picker.
+        stream = await navigator.mediaDevices.getDisplayMedia({
+          video: {
+            frameRate: {
+              max: screenCaptureFramerate(this.#getScreenQuality(roomId)),
+            },
+          },
+          audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false,
+          },
+          systemAudio: "include",
+        });
+      } else {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: cameraConstraints(
+            this.inputDeviceId,
+            this.#getCameraQuality(roomId)
+          ),
+        });
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn(`[voice] failed to obtain ${kind} stream`, error);
+      if (
+        !silent &&
+        error?.name !== "NotAllowedError" &&
+        error?.name !== "AbortError"
+      ) {
+        this.#showError("voice.video.capture_failed");
+      }
+      return;
+    }
+
+    // The user may have left the room while the capture picker was open.
+    if (!this.#isActiveRoom(roomId) || (shouldContinue && !shouldContinue())) {
+      stream.getTracks().forEach((streamTrack) => streamTrack.stop());
+      return;
+    }
+
+    if (this.kind) {
+      await this.stop({ broadcast: false });
+    }
+
+    const track = stream.getVideoTracks()[0];
+    if (!track) {
+      stream.getTracks().forEach((streamTrack) => streamTrack.stop());
+      return;
+    }
+
+    // Steers the encoder's sharpness/smoothness trade-off; the matching
+    // degradationPreference is applied per-sender in applyVideoQuality.
+    if (kind === "screen" && "contentHint" in track) {
+      track.contentHint =
+        this.#getScreenContent() === SCREEN_CONTENT_MOTION
+          ? "motion"
+          : "detail";
+    }
+
+    const epoch = ++this.#epoch;
+
+    track.contentHint = kind === "screen" ? "detail" : "motion";
+    track.addEventListener("ended", () => this.#handleTrackEnded(epoch, kind), {
+      once: true,
+    });
+
+    const audioTrack =
+      kind === "screen" ? stream.getAudioTracks()[0] : undefined;
+    if (audioTrack) {
+      audioTrack.contentHint = "music";
+    }
+
+    let outgoingStream = stream;
+    if (
+      kind === "camera" &&
+      this.blurEnabled &&
+      this.#isBlurAllowed() &&
+      this.blurSupported
+    ) {
+      const result = await this.#createBackgroundBlur(stream);
+
+      if (
+        epoch !== this.#epoch ||
+        !this.#isActiveRoom(roomId) ||
+        (shouldContinue && !shouldContinue())
+      ) {
+        result?.manager.teardown();
+        stream.getTracks().forEach((streamTrack) => streamTrack.stop());
+        return;
+      }
+
+      if (result) {
+        this.#backgroundBlur = result.manager;
+        this.#rawStream = stream;
+        outgoingStream = result.processed;
+      } else {
+        this.#revertBlurPreference({ silent });
+      }
+    }
+
+    this.stream = outgoingStream;
+    this.kind = kind;
+
+    try {
+      await this.#broadcastState(roomId);
+    } catch (error) {
+      await this.stop({ broadcast: false });
+      if (!silent) {
+        popupAjaxError(error);
+      }
+      return;
+    }
+
+    if (!this.#ownsPipeline(epoch, outgoingStream, kind)) {
+      return;
+    }
+    if (shouldContinue && !shouldContinue()) {
+      await this.stop();
+      return;
+    }
+
+    await this.syncSenders(roomId);
+
+    if (!this.#ownsPipeline(epoch, outgoingStream, kind)) {
+      return;
+    }
+    if (shouldContinue && !shouldContinue()) {
+      await this.stop();
+      return;
+    }
+
+    // Applies any blur preference change that raced this startup (e.g. the
+    // toggle was flipped while the model loaded for the initial wrap).
+    this.#enqueueOp(() => this.#reconcileBlurOp());
+  }
+
+  async stop({ broadcast = true } = {}) {
+    // Invalidates any queued pipeline op that is mid-await on this session.
+    this.#epoch++;
+
+    const roomId = this.#getFirstActiveRoomId();
+    const stream = this.stream;
+
+    this.stream = null;
+    this.kind = null;
+
+    stream?.getTracks().forEach((track) => track.stop());
+    this.#teardownEffects();
+
+    if (roomId) {
+      await this.syncSenders(roomId);
+      if (broadcast) {
+        await this.#broadcastState(roomId).catch(() => {});
+      }
+    }
+  }
+
+  // Live re-apply after a preference change: encoder ceilings are cheap
+  // (setParameters, no renegotiation) and camera capture follows via
+  // applyConstraints. Screen capture framerate and LiveKit publish options
+  // are fixed at capture/publish time and pick up the change on the next
+  // share or join.
+  async refreshQuality({ contentHintChanged = false } = {}) {
+    if (contentHintChanged) {
+      this.#applyContentHint();
+    }
+
+    const roomId = this.#getActiveRoomId();
+    if (!roomId || !this.kind) {
+      return;
+    }
+
+    if (this.kind === "camera") {
+      const track =
+        this.#rawStream?.getVideoTracks?.()?.[0] ??
+        this.stream?.getVideoTracks?.()?.[0];
+      if (track) {
+        try {
+          await track.applyConstraints(
+            cameraConstraints(
+              this.inputDeviceId,
+              this.#getCameraQuality(roomId)
+            )
+          );
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.warn("[voice] failed to re-apply camera constraints", error);
+        }
+      }
+    }
+
+    await this.#applyQuality(roomId);
+  }
+
+  // Each peer has a dedicated sender, so video is only attached toward peers
+  // currently watching the room page — every skipped peer saves an entire
+  // encoder session, not just bandwidth.
+  async syncSenders(roomId) {
+    if (!this.#isMeshRoom(roomId)) {
+      // The SFU is published to once regardless of watchers; per-watcher
+      // receive gating happens on the subscriber side instead
+      // (setVideoSubscriptionsEnabled).
+      await this.#getLivekitSession(roomId)?.syncLocalVideo(
+        this.track,
+        this.screenAudioTrack,
+        this.kind
+      );
+      return;
+    }
+
+    const peers = this.#peerManager.getRoomPeers(roomId);
+    if (!peers) {
+      return;
+    }
+
+    for (const [remoteUserId, pc] of peers) {
+      const desired = this.trackFor(roomId, remoteUserId);
+
+      const transceiver = PeerManager.videoTransceiverFor(pc);
+      if (transceiver && transceiver.sender.track !== desired) {
+        try {
+          await transceiver.sender.replaceTrack(desired);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `[voice] failed to sync video sender for user ${remoteUserId}`,
+            error
+          );
+        }
+      }
+
+      // Screen audio follows the same watching gate as the video track, so
+      // non-watchers don't get a soundtrack without a picture.
+      const desiredAudio = desired ? this.screenAudioTrack : null;
+      const audioTransceiver = PeerManager.screenAudioTransceiverFor(pc);
+      if (audioTransceiver && audioTransceiver.sender.track !== desiredAudio) {
+        try {
+          await audioTransceiver.sender.replaceTrack(desiredAudio);
+          if (desiredAudio) {
+            await applyScreenAudioQuality(audioTransceiver.sender);
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `[voice] failed to sync screen audio sender for user ${remoteUserId}`,
+            error
+          );
+        }
+      }
+    }
+
+    await this.#applyQuality(roomId);
+  }
+
   #enqueueOp(operation) {
     const run = this.#queue.then(operation, operation);
     this.#queue = run.catch(() => {});
     return run;
-  }
-
-  toggleBlur() {
-    return this.#enqueueOp(() => this.#toggleBlurOp());
   }
 
   async #toggleBlurOp() {
@@ -207,21 +499,12 @@ export default class LocalVideoManager {
     }
   }
 
-  #revertBlurPreference() {
+  #revertBlurPreference({ silent = false } = {}) {
     this.blurEnabled = false;
     BackgroundBlurManager.setPreference(false);
-    this.#showError("voice.video_settings.blur_failed");
-  }
-
-  setBlurAmount(value) {
-    const clamped = Math.max(0, Math.min(100, Math.round(value)));
-    this.blurAmount = clamped;
-    BackgroundBlurManager.storeAmount(clamped);
-    this.#backgroundBlur?.setAmount(clamped);
-  }
-
-  setInputDevice(deviceId) {
-    return this.#enqueueOp(() => this.#setInputDeviceOp(deviceId));
+    if (!silent) {
+      this.#showError("voice.video_settings.blur_failed");
+    }
   }
 
   async #setInputDeviceOp(deviceId) {
@@ -334,9 +617,6 @@ export default class LocalVideoManager {
     }
 
     track.contentHint = "motion";
-    track.addEventListener("ended", () => this.#handleTrackEnded(), {
-      once: true,
-    });
 
     const oldStream = this.stream;
     const oldRaw = this.#rawStream;
@@ -368,6 +648,13 @@ export default class LocalVideoManager {
     this.#backgroundBlur = blurResult?.manager ?? null;
     this.#rawStream = blurResult ? newStream : null;
     this.stream = outgoingStream;
+
+    const swappedEpoch = ++this.#epoch;
+    track.addEventListener(
+      "ended",
+      () => this.#handleTrackEnded(swappedEpoch, "camera"),
+      { once: true }
+    );
 
     oldStream?.getTracks().forEach((streamTrack) => streamTrack.stop());
     if (oldRaw && oldRaw !== oldStream) {
@@ -414,168 +701,26 @@ export default class LocalVideoManager {
     }
   }
 
-  async start(kind) {
-    const roomId = this.#getFirstActiveRoomId();
-    if (!roomId) {
-      return;
-    }
-
-    if (!this.#canPublishVideo(roomId)) {
-      this.#showError("voice.video.publisher_limit");
-      return;
-    }
-
-    // Capture must be the first await: Firefox only allows getDisplayMedia
-    // while the click's transient activation is alive, and awaiting anything
-    // else first (e.g. stopping the current camera) consumes it. The old
-    // stream is torn down after the picker succeeds, which also keeps the
-    // camera running when the user cancels the picker.
-    let stream;
-    try {
-      if (kind === "screen") {
-        // Tab/system audio rides along for watch-along use. Voice processing
-        // is disabled because it is tuned for speech and mangles content
-        // audio; browsers without display-audio support just return no audio
-        // track. The user can still untick audio in the picker.
-        stream = await navigator.mediaDevices.getDisplayMedia({
-          video: {
-            frameRate: {
-              max: screenCaptureFramerate(this.#getScreenQuality(roomId)),
-            },
-          },
-          audio: {
-            echoCancellation: false,
-            noiseSuppression: false,
-            autoGainControl: false,
-          },
-          systemAudio: "include",
-        });
-      } else {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: cameraConstraints(
-            this.inputDeviceId,
-            this.#getCameraQuality(roomId)
-          ),
-        });
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(`[voice] failed to obtain ${kind} stream`, error);
-      if (error?.name !== "NotAllowedError" && error?.name !== "AbortError") {
-        this.#showError("voice.video.capture_failed");
-      }
-      return;
-    }
-
-    // The user may have left the room while the capture picker was open.
-    if (!this.#isActiveRoom(roomId)) {
-      stream.getTracks().forEach((streamTrack) => streamTrack.stop());
-      return;
-    }
-
-    if (this.kind) {
-      await this.stop({ broadcast: false });
-    }
-
-    const track = stream.getVideoTracks()[0];
-    if (!track) {
-      stream.getTracks().forEach((streamTrack) => streamTrack.stop());
-      return;
-    }
-
-    // Steers the encoder's sharpness/smoothness trade-off; the matching
-    // degradationPreference is applied per-sender in applyVideoQuality.
-    if (kind === "screen" && "contentHint" in track) {
-      track.contentHint =
-        this.#getScreenContent() === SCREEN_CONTENT_MOTION
-          ? "motion"
-          : "detail";
-    }
-
-    const epoch = ++this.#epoch;
-
-    track.contentHint = kind === "screen" ? "detail" : "motion";
-    track.addEventListener("ended", () => this.#handleTrackEnded(), {
-      once: true,
-    });
-
-    const audioTrack =
-      kind === "screen" ? stream.getAudioTracks()[0] : undefined;
-    if (audioTrack) {
-      audioTrack.contentHint = "music";
-    }
-
-    let outgoingStream = stream;
-    if (
-      kind === "camera" &&
-      this.blurEnabled &&
-      this.#isBlurAllowed() &&
-      this.blurSupported
-    ) {
-      const result = await this.#createBackgroundBlur(stream);
-
-      if (epoch !== this.#epoch || !this.#isActiveRoom(roomId)) {
-        result?.manager.teardown();
-        stream.getTracks().forEach((streamTrack) => streamTrack.stop());
-        return;
-      }
-
-      if (result) {
-        this.#backgroundBlur = result.manager;
-        this.#rawStream = stream;
-        outgoingStream = result.processed;
-      } else {
-        this.#revertBlurPreference();
-      }
-    }
-
-    this.stream = outgoingStream;
-    this.kind = kind;
-
-    try {
-      await this.#broadcastState(roomId);
-    } catch (error) {
-      await this.stop({ broadcast: false });
-      popupAjaxError(error);
-      return;
-    }
-
-    await this.syncSenders(roomId);
-
-    // Applies any blur preference change that raced this startup (e.g. the
-    // toggle was flipped while the model loaded for the initial wrap).
-    this.#enqueueOp(() => this.#reconcileBlurOp());
+  #ownsPipeline(epoch, stream, kind) {
+    return (
+      epoch === this.#epoch && this.stream === stream && this.kind === kind
+    );
   }
 
-  async stop({ broadcast = true } = {}) {
-    // Invalidates any queued pipeline op that is mid-await on this session.
-    this.#epoch++;
-
-    const roomId = this.#getFirstActiveRoomId();
-    const stream = this.stream;
-
-    this.stream = null;
-    this.kind = null;
-
-    stream?.getTracks().forEach((track) => track.stop());
-    this.#teardownEffects();
-
-    if (roomId) {
-      await this.syncSenders(roomId);
-      if (broadcast) {
-        this.#broadcastState(roomId).catch(() => {});
-      }
-    }
-  }
-
-  #handleTrackEnded() {
-    if (!this.kind) {
+  #handleTrackEnded(epoch, endedKind) {
+    if (epoch !== this.#epoch || endedKind !== this.kind) {
       return;
     }
-    this.stop().catch((error) => {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to stop local video", error);
-    });
+    this.stop()
+      .then(() => {
+        if (endedKind === "screen") {
+          this.#onScreenShareEnded?.();
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.warn("[voice] failed to stop local video", error);
+      });
   }
 
   #applyContentHint() {
@@ -589,103 +734,6 @@ export default class LocalVideoManager {
           ? "motion"
           : "detail";
     }
-  }
-
-  // Live re-apply after a preference change: encoder ceilings are cheap
-  // (setParameters, no renegotiation) and camera capture follows via
-  // applyConstraints. Screen capture framerate and LiveKit publish options
-  // are fixed at capture/publish time and pick up the change on the next
-  // share or join.
-  async refreshQuality({ contentHintChanged = false } = {}) {
-    if (contentHintChanged) {
-      this.#applyContentHint();
-    }
-
-    const roomId = this.#getActiveRoomId();
-    if (!roomId || !this.kind) {
-      return;
-    }
-
-    if (this.kind === "camera") {
-      const track =
-        this.#rawStream?.getVideoTracks?.()?.[0] ??
-        this.stream?.getVideoTracks?.()?.[0];
-      if (track) {
-        try {
-          await track.applyConstraints(
-            cameraConstraints(
-              this.inputDeviceId,
-              this.#getCameraQuality(roomId)
-            )
-          );
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to re-apply camera constraints", error);
-        }
-      }
-    }
-
-    await this.#applyQuality(roomId);
-  }
-
-  // Each peer has a dedicated sender, so video is only attached toward peers
-  // currently watching the room page — every skipped peer saves an entire
-  // encoder session, not just bandwidth.
-  async syncSenders(roomId) {
-    if (!this.#isMeshRoom(roomId)) {
-      // The SFU is published to once regardless of watchers; per-watcher
-      // receive gating happens on the subscriber side instead
-      // (setVideoSubscriptionsEnabled).
-      await this.#getLivekitSession(roomId)?.syncLocalVideo(
-        this.track,
-        this.screenAudioTrack,
-        this.kind
-      );
-      return;
-    }
-
-    const peers = this.#peerManager.getRoomPeers(roomId);
-    if (!peers) {
-      return;
-    }
-
-    for (const [remoteUserId, pc] of peers) {
-      const desired = this.trackFor(roomId, remoteUserId);
-
-      const transceiver = PeerManager.videoTransceiverFor(pc);
-      if (transceiver && transceiver.sender.track !== desired) {
-        try {
-          await transceiver.sender.replaceTrack(desired);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[voice] failed to sync video sender for user ${remoteUserId}`,
-            error
-          );
-        }
-      }
-
-      // Screen audio follows the same watching gate as the video track, so
-      // non-watchers don't get a soundtrack without a picture.
-      const desiredAudio = desired ? this.screenAudioTrack : null;
-      const audioTransceiver = PeerManager.screenAudioTransceiverFor(pc);
-      if (audioTransceiver && audioTransceiver.sender.track !== desiredAudio) {
-        try {
-          await audioTransceiver.sender.replaceTrack(desiredAudio);
-          if (desiredAudio) {
-            await applyScreenAudioQuality(audioTransceiver.sender);
-          }
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[voice] failed to sync screen audio sender for user ${remoteUserId}`,
-            error
-          );
-        }
-      }
-    }
-
-    await this.#applyQuality(roomId);
   }
 
   async #applyQuality(roomId) {

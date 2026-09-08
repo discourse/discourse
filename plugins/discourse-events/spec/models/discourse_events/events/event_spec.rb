@@ -440,6 +440,7 @@ describe DiscourseEvents::Events::Event do
             expect(second_post.topic.custom_fields).to be_blank
           end
         end
+
         describe "notify an user" do
           describe "before the event starts" do
             it "does notify the user" do
@@ -448,6 +449,7 @@ describe DiscourseEvents::Events::Event do
               }.by(1)
             end
           end
+
           describe "after the event starts" do
             it "doesn't notify the user" do
               expect { late_event.create_notification!(notified_user, first_post) }.not_to change {

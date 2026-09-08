@@ -1512,13 +1512,6 @@ bg:
         title: "Да"
       approve_and_unhide:
         title: "Да"
-      delete_post:
-        title: "Изтрий публикацията"
-        complete: "Публикацията е изтрита"
-      hide_post:
-        title: "Скриване на публикацията"
-      restore_post:
-        title: "Възстановяване на публикацията"
       silence_user:
         title: "Заглушаване на потребителя"
       suspend_user:

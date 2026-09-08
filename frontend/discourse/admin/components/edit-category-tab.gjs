@@ -35,15 +35,6 @@ export default class EditCategoryTab extends Component {
     return this.tabTitle ?? i18n(`category.${underscore(this.tab)}`);
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    scheduleOnce("afterRender", this, this._addToCollection);
-  }
-
-  _addToCollection() {
-    addUniqueValueToArray(this.panels, this.tabClassName);
-  }
-
   @computed("params.slug", "params.parentSlug")
   get fullSlug() {
     const slugPart =
@@ -51,6 +42,11 @@ export default class EditCategoryTab extends Component {
         ? `${this.params?.parentSlug}/${this.params?.slug}`
         : this.params?.slug;
     return getURL(`/c/${slugPart}/edit/${this.tab}`);
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    scheduleOnce("afterRender", this, this._addToCollection);
   }
 
   @action
@@ -68,12 +64,16 @@ export default class EditCategoryTab extends Component {
     }
   }
 
+  _addToCollection() {
+    addUniqueValueToArray(this.panels, this.tabClassName);
+  }
+
   <template>
     <li
       class={{dConcatClass (if this.active "active") this.tabClassName}}
       ...attributes
     >
-      <a href {{on "click" this.select}} class={{if this.active "active"}}>
+      <a class={{if this.active "active"}} href {{on "click" this.select}}>
         {{this.title}}
       </a>
     </li>

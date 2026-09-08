@@ -48,10 +48,6 @@ export default class GrantBadgeModal extends Component {
     );
   }
 
-  #updateAvailableBadges() {
-    this.availableBadges = grantableBadges(this.allBadges, this.userBadges);
-  }
-
   @action
   async loadBadges() {
     this.loading = true;
@@ -93,14 +89,18 @@ export default class GrantBadgeModal extends Component {
     }
   }
 
+  #updateAvailableBadges() {
+    this.availableBadges = grantableBadges(this.allBadges, this.userBadges);
+  }
+
   <template>
     <DModal
+      class="grant-badge-modal"
       @bodyClass="grant-badge"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
       @title={{i18n "admin.badges.grant_badge"}}
-      class="grant-badge-modal"
       {{didInsert this.loadBadges}}
     >
       <:body>
@@ -110,10 +110,10 @@ export default class GrantBadgeModal extends Component {
           {{else}}
             <p>
               <ComboBox
-                @value={{this.selectedBadgeId}}
                 @content={{this.badgeOptions}}
                 @onChange={{fn (mut this.selectedBadgeId)}}
                 @options={{hash filterable=true none="badges.none"}}
+                @value={{this.selectedBadgeId}}
               />
             </p>
           {{/if}}
@@ -121,10 +121,10 @@ export default class GrantBadgeModal extends Component {
       </:body>
       <:footer>
         <DButton
-          @disabled={{this.buttonDisabled}}
-          @action={{this.performGrantBadge}}
-          @label="admin.badges.grant"
           class="btn-primary"
+          @action={{this.performGrantBadge}}
+          @disabled={{this.buttonDisabled}}
+          @label="admin.badges.grant"
         />
       </:footer>
     </DModal>

@@ -15,7 +15,6 @@ module DiscourseEvents
           .then { |query| filter_by_tags(query, params, guardian) }
           .then { |query| filter_by_search(query, params) }
           .then { |query| filter_by_status(query, params) }
-          .then { |query| filter_by_format(query, params) }
           .then { |query| apply_ordering(query, params) }
           .then { |query| apply_limit(query, params) }
       end
@@ -252,21 +251,6 @@ module DiscourseEvents
         return events.none if statuses.empty?
 
         events.where(status: statuses)
-      end
-
-      def self.filter_by_format(events, params)
-        case params[:event_format]
-        when nil, ""
-          events
-        when "virtual"
-          events.where.not(url: nil).where(location: [nil, ""])
-        when "in_person"
-          events.where(url: [nil, ""]).where.not(location: nil).where.not(location: "")
-        when "hybrid"
-          events.where.not(url: [nil, ""]).where.not(location: [nil, ""])
-        else
-          events.none
-        end
       end
 
       def self.apply_ordering(events, params)

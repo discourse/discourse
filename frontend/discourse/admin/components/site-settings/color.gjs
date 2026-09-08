@@ -58,12 +58,12 @@ export default class Color extends Component {
 
   <template>
     <ColorInput
-      @hexValue={{readonly @value}}
       @fallbackHexValue={{this.fallbackColor}}
-      @valid={{@valid}}
+      @hexValue={{readonly @value}}
+      @onChangeColor={{@changeValueCallback}}
       @onlyHex={{false}}
       @styleSelection={{false}}
-      @onChangeColor={{@changeValueCallback}}
+      @valid={{@valid}}
     />
   </template>
 }

@@ -61,8 +61,8 @@ export default class DSegmentedControl extends Component {
   <template>
     <fieldset
       class={{this.classNames}}
-      {{this.positionSlider @value}}
       ...attributes
+      {{this.positionSlider @value}}
     >
       {{#if this.legend}}
         <legend class="d-segmented-control__legend">
@@ -83,13 +83,13 @@ export default class DSegmentedControl extends Component {
           {{on "click" (fn this.handleClick item.value)}}
         >
           <input
-            type="radio"
-            name={{@name}}
-            value={{item.value}}
-            checked={{eq @value item.value}}
-            disabled={{item.disabled}}
-            class="d-segmented-control__input"
             aria-label={{item.title}}
+            checked={{eq @value item.value}}
+            class="d-segmented-control__input"
+            disabled={{item.disabled}}
+            name={{@name}}
+            type="radio"
+            value={{item.value}}
             {{on "change" (fn this.handleChange item.value)}}
           />
           {{! The title doubles as the hover tooltip (on the label) and the

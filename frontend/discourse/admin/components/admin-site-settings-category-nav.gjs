@@ -43,10 +43,10 @@ export default class AdminSiteSettingsCategoryNav extends Component {
           }}
         >
           <LinkTo
-            @route="adminSiteSettingsCategory"
-            @model={{category.nameKey}}
             class={{category.nameKey}}
             title={{category.name}}
+            @model={{category.nameKey}}
+            @route="adminSiteSettingsCategory"
             {{on "click" this.onLinkClick}}
           >
             {{category.name}}

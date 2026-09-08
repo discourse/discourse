@@ -31,7 +31,7 @@ describe "Thread list in side panel | full page" do
 
     before { chat_system_user_bootstrap(user: other_user, channel: channel) }
 
-    it "it shows threads in the channel even if the user is not tracking them" do
+    it "shows threads in the channel even if the user is not tracking them" do
       thread_1 =
         Fabricate(
           :chat_thread,

@@ -29,13 +29,13 @@ RSpec.describe FilterBestPosts do
   describe "processing options" do
     before { @filtered_posts = TopicView.new(topic.id, nil, best: 99).filtered_posts }
 
-    it "should not get the status post" do
+    it "excludes the status post" do
       best = FilterBestPosts.new(topic, @filtered_posts, 99)
       expect(best.filtered_posts.size).to eq(3)
       expect(best.posts.map(&:id)).to match_array([p2.id, p3.id])
     end
 
-    it "should get no results for trust level too low" do
+    it "returns no results below the minimum trust level" do
       best =
         FilterBestPosts.new(
           topic,
@@ -46,17 +46,17 @@ RSpec.describe FilterBestPosts do
       expect(best.posts.count).to eq(0)
     end
 
-    it "should filter out the posts with a score that is too low" do
+    it "excludes posts below the minimum score" do
       best = FilterBestPosts.new(topic, @filtered_posts, 99, min_score: 99)
       expect(best.posts.count).to eq(0)
     end
 
-    it "should filter out everything if min replies not met" do
+    it "returns no posts below the minimum reply count" do
       best = FilterBestPosts.new(topic, @filtered_posts, 99, min_replies: 99)
       expect(best.posts.count).to eq(0)
     end
 
-    it "should punch through posts if the score is high enough" do
+    it "includes posts whose score exceeds the threshold" do
       p2.update_column(:score, 100)
 
       best =
@@ -70,7 +70,7 @@ RSpec.describe FilterBestPosts do
       expect(best.posts.count).to eq(1)
     end
 
-    it "should bypass trust level score" do
+    it "bypasses the trust-level score" do
       best =
         FilterBestPosts.new(
           topic,
@@ -82,7 +82,7 @@ RSpec.describe FilterBestPosts do
       expect(best.posts.count).to eq(0)
     end
 
-    it "should return none if restricted to posts a moderator liked" do
+    it "returns none when no posts were liked by a moderator" do
       best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(0)
     end
@@ -93,7 +93,7 @@ RSpec.describe FilterBestPosts do
       expect(best.posts.count).to eq(0)
     end
 
-    it "should find the post liked by the moderator" do
+    it "returns a post liked by a moderator" do
       PostActionCreator.like(moderator, p2)
       best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(1)

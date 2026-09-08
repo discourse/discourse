@@ -148,24 +148,24 @@ export default class AiLogRetentionModal extends Component {
   <template>
     <DModal
       class="ai-log-retention-modal"
-      @title={{i18n "discourse_ai.logs.retention.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.logs.retention.title"}}
     >
       <:body>
         <div
+          aria-label={{i18n "discourse_ai.logs.retention.lifecycle_label"}}
           class="ai-log-retention-modal__lifecycle"
           role="img"
-          aria-label={{i18n "discourse_ai.logs.retention.lifecycle_label"}}
         >
           <span>{{i18n "discourse_ai.logs.retention.detailed_stage"}}</span>
           <span
-            class="ai-log-retention-modal__lifecycle-arrow"
             aria-hidden="true"
+            class="ai-log-retention-modal__lifecycle-arrow"
           >→</span>
           <span>{{i18n "discourse_ai.logs.retention.summary_stage"}}</span>
           <span
-            class="ai-log-retention-modal__lifecycle-arrow"
             aria-hidden="true"
+            class="ai-log-retention-modal__lifecycle-arrow"
           >→</span>
           <span>{{i18n "discourse_ai.logs.retention.deleted_stage"}}</span>
         </div>
@@ -175,32 +175,32 @@ export default class AiLogRetentionModal extends Component {
 
         <Form
           @data={{this.formData}}
-          @validate={{this.validate}}
           @onSubmit={{this.save}}
+          @validate={{this.validate}}
           as |form data|
         >
           <form.Field
+            @description={{i18n "discourse_ai.logs.retention.detailed_help"}}
+            @format="large"
             @name="detailed_days"
             @title={{i18n "discourse_ai.logs.retention.detailed_title"}}
-            @description={{i18n "discourse_ai.logs.retention.detailed_help"}}
-            @validation="required|number"
-            @format="large"
             @type="input-number"
+            @validation="required|number"
             as |field|
           >
-            <field.Control min="0" max={{MAX_RETENTION_DAYS}} step="1" />
+            <field.Control max={{MAX_RETENTION_DAYS}} min="0" step="1" />
           </form.Field>
 
           <form.Field
+            @description={{i18n "discourse_ai.logs.retention.summary_help"}}
+            @format="large"
             @name="summary_days"
             @title={{i18n "discourse_ai.logs.retention.summary_title"}}
-            @description={{i18n "discourse_ai.logs.retention.summary_help"}}
-            @validation="required|number"
-            @format="large"
             @type="input-number"
+            @validation="required|number"
             as |field|
           >
-            <field.Control min="0" max={{MAX_RETENTION_DAYS}} step="1" />
+            <field.Control max={{MAX_RETENTION_DAYS}} min="0" step="1" />
           </form.Field>
 
           <p class="ai-log-retention-modal__preview">

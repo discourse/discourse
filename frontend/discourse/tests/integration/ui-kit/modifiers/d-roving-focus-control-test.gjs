@@ -17,9 +17,9 @@ module(
       await render(
         <template>
           <div
+            aria-controls="rf-lb"
             class="controller"
             role="combobox"
-            aria-controls="rf-lb"
             tabindex="0"
           ></div>
           <div
@@ -82,9 +82,9 @@ module(
       await render(
         <template>
           <div
+            aria-controls="rf-lb"
             class="controller"
             role="combobox"
-            aria-controls="rf-lb"
             tabindex="0"
           ></div>
           <div
@@ -294,14 +294,14 @@ module(
             }}
           >
             <button
+              aria-selected="true"
               class="anchor-item"
               role="tab"
-              aria-selected="true"
             >A</button>
             <button
+              aria-selected="false"
               class="anchor-item"
               role="tab"
-              aria-selected="false"
             >B</button>
           </div>
         </template>
@@ -337,14 +337,14 @@ module(
             }}
           >
             <button
+              aria-selected="true"
               class="anchor-item"
               role="tab"
-              aria-selected="true"
             >A</button>
             <button
+              aria-selected="false"
               class="anchor-item"
               role="tab"
-              aria-selected="false"
             >B</button>
           </div>
         </template>

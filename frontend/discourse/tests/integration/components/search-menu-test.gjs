@@ -70,6 +70,9 @@ module("Integration | Component | SearchMenu", function (hooks) {
     assert
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
+    assert
+      .dom("#icon-search-input")
+      .isFocused("search results keep input focus");
 
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
@@ -129,9 +132,9 @@ module("Integration | Component | SearchMenu", function (hooks) {
     await render(
       <template>
         <SearchMenu
+          @hideResults={{state.hidden}}
           @location="test"
           @searchInputId="icon-search-input"
-          @hideResults={{state.hidden}}
         />
       </template>
     );

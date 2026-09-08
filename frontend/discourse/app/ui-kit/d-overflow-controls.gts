@@ -150,10 +150,10 @@ interface EdgeButtonSignature {
 const EdgeButton: TOC<EdgeButtonSignature> = <template>
   {{! eslint-disable ember/template-no-pointer-down-event-binding }}
   <button
-    type="button"
     aria-hidden="true"
     class={{dConcatClass "d-overflow-controls__btn" (concat "--" @edge) @class}}
     tabindex="-1"
+    type="button"
     {{on "mousedown" preventFocusGrab}}
     {{on "click" @onClick}}
     {{@hold @edge}}
@@ -444,18 +444,18 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       >
         {{#if this.hasTopScroll}}
           <EdgeButton
-            @edge="up"
             @class={{dConcatClass @buttonClass (get @edgeButtonClasses "up")}}
-            @onClick={{this.scrollUp}}
+            @edge="up"
             @hold={{this.hold}}
+            @onClick={{this.scrollUp}}
           />
         {{/if}}
         {{#if this.hasLeftScroll}}
           <EdgeButton
-            @edge="left"
             @class={{dConcatClass @buttonClass (get @edgeButtonClasses "left")}}
-            @onClick={{this.scrollLeft}}
+            @edge="left"
             @hold={{this.hold}}
+            @onClick={{this.scrollLeft}}
           />
         {{/if}}
 
@@ -463,21 +463,21 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
 
         {{#if this.hasRightScroll}}
           <EdgeButton
-            @edge="right"
             @class={{dConcatClass
               @buttonClass
               (get @edgeButtonClasses "right")
             }}
-            @onClick={{this.scrollRight}}
+            @edge="right"
             @hold={{this.hold}}
+            @onClick={{this.scrollRight}}
           />
         {{/if}}
         {{#if this.hasBottomScroll}}
           <EdgeButton
-            @edge="down"
             @class={{dConcatClass @buttonClass (get @edgeButtonClasses "down")}}
-            @onClick={{this.scrollDown}}
+            @edge="down"
             @hold={{this.hold}}
+            @onClick={{this.scrollDown}}
           />
         {{/if}}
       </div>
@@ -485,18 +485,18 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       <div class={{dConcatClass "d-overflow-controls" @wrapperClass}}>
         {{#if this.hasTopScroll}}
           <EdgeButton
-            @edge="up"
             @class={{dConcatClass @buttonClass (get @edgeButtonClasses "up")}}
-            @onClick={{this.scrollUp}}
+            @edge="up"
             @hold={{this.hold}}
+            @onClick={{this.scrollUp}}
           />
         {{/if}}
         {{#if this.hasLeftScroll}}
           <EdgeButton
-            @edge="left"
             @class={{dConcatClass @buttonClass (get @edgeButtonClasses "left")}}
-            @onClick={{this.scrollLeft}}
+            @edge="left"
             @hold={{this.hold}}
+            @onClick={{this.scrollLeft}}
           />
         {{/if}}
 
@@ -510,21 +510,21 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
 
         {{#if this.hasRightScroll}}
           <EdgeButton
-            @edge="right"
             @class={{dConcatClass
               @buttonClass
               (get @edgeButtonClasses "right")
             }}
-            @onClick={{this.scrollRight}}
+            @edge="right"
             @hold={{this.hold}}
+            @onClick={{this.scrollRight}}
           />
         {{/if}}
         {{#if this.hasBottomScroll}}
           <EdgeButton
-            @edge="down"
             @class={{dConcatClass @buttonClass (get @edgeButtonClasses "down")}}
-            @onClick={{this.scrollDown}}
+            @edge="down"
             @hold={{this.hold}}
+            @onClick={{this.scrollDown}}
           />
         {{/if}}
       </div>

@@ -26,8 +26,8 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="foo" @title="Foo" @type="calendar" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -47,7 +47,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="calendar" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -59,7 +59,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="calendar" as |field|>
               <field.Control @includeTime={{false}} />
             </form.Field>
           </Form>
@@ -73,7 +73,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="calendar" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -86,7 +86,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="calendar" as |field|>
               <field.Control @expandedDatePickerOnDesktop={{false}} />
             </form.Field>
           </Form>
@@ -105,12 +105,12 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
             <form.Field
-              @type="calendar"
-              @validation={{validation}}
               @name="foo"
               @title="Foo"
+              @type="calendar"
+              @validation={{validation}}
               as |field|
             >
               <field.Control />
@@ -139,12 +139,12 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
             <form.Field
-              @type="calendar"
-              @validation={{validation}}
               @name="foo"
               @title="Foo"
+              @type="calendar"
+              @validation={{validation}}
               as |field|
             >
               <field.Control />
@@ -170,10 +170,10 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="calendar"
+              @disabled={{true}}
               @name="foo"
               @title="Foo"
-              @disabled={{true}}
+              @type="calendar"
               as |field|
             >
               <field.Control />

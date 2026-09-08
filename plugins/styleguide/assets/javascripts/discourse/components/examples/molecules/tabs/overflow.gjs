@@ -56,7 +56,7 @@ export default class TabsOverflowExample extends Component {
         as |tabs|
       >
         {{#each this.sections as |section|}}
-          <tabs.Tab @id={{section}} @label={{section}}>
+          <tabs.Tab @key={{section}} @label={{section}}>
             <p>The
               {{section}}
               tab is selected. The strip scrolled only as far as it needed to

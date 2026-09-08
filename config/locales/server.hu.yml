@@ -4870,8 +4870,6 @@ hu:
         complete: "A bejegyzés elrejtve, a felhasználó értesítést kapott."
       agree_and_edit:
         title: "Bejegyzés szerkesztése"
-        description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
-        complete: "Megjelölés tudomásul véve, most már szerkesztheti a bejegyzést."
       delete:
         title: "Törlés"
         complete: "Bejegyzés törölve."
@@ -4975,30 +4973,6 @@ hu:
       approve_and_unhide:
         title: "Igen"
         complete: "Bejegyzés jóváhagyva és felfedve"
-      post_actions:
-        bundle_title: "Mit akarsz csinálni a bejegyzéssel?"
-      delete_post:
-        title: "Bejegyzés törlése"
-        description: "Bejegyzés törlése"
-        complete: "Bejegyzés törölve"
-      hide_post:
-        title: "Bejegyzés elrejtése"
-        description: "Rejtse el ezt a bejegyzést a nyilvánosság elől"
-        complete: "Bejegyzés elrejtve"
-      unhide_post:
-        title: "Bejegyzés elrejtésének felfedése"
-        description: "Tedd ezt a bejegyzést láthatóvá minden felhasználó számára"
-        complete: "Bejegyzés felfedve"
-      restore_post:
-        title: "Bejegyzés visszaállítása"
-        description: "Törölt bejegyzés visszaállítása"
-        complete: "A bejegyzés visszaállítva"
-      edit_post:
-        title: "Bejegyzés szerkesztése"
-        description: "A bejegyzés tartalmának szerkesztése"
-        complete: "Bejegyzés szerkesztve"
-      user_actions:
-        bundle_title: "Mit szeretnél csinálni a felhasználóval?"
       silence_user:
         title: "Felhasználó némítása"
         complete: "Felhasználó elnémítva"

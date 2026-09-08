@@ -747,6 +747,7 @@ RSpec.describe Middleware::RequestTracker do
 
       context "when SiteSetting.trigger_browser_pageview_events is true" do
         before { SiteSetting.trigger_browser_pageview_events = true }
+
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
           DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
@@ -1484,7 +1485,7 @@ RSpec.describe Middleware::RequestTracker do
 
       after { Middleware::RequestTracker.unregister_ip_skipper }
 
-      it "won't block if the ip is skipped" do
+      it "does not block skipped IP addresses" do
         env1 = env("REMOTE_ADDR" => "1.1.1.2")
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)

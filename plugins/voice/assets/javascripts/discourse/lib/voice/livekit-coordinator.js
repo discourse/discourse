@@ -159,75 +159,6 @@ export default class LivekitCoordinator {
     return true;
   }
 
-  #buildSession(roomId) {
-    return new LivekitRoomSession({
-      roomId,
-      currentUserId: this.#getCurrentUserId(),
-      getLocalStream: this.#getLocalStream,
-      getLocalVideoTrack: this.#getLocalVideoTrack,
-      getLocalScreenAudioTrack: this.#getLocalScreenAudioTrack,
-      getLocalVideoKind: this.#getLocalVideoKind,
-      getVideoPublisherCount: () => this.#getVideoPublisherCount(roomId),
-      onTrack: (id, userId, track, streams) =>
-        this.#onTrack(id, userId, track, streams),
-      onParticipantGone: (id, userId) => this.#removeRemoteStream(id, userId),
-      onDisconnected: (kind, reason) =>
-        this.#handleDisconnected(roomId, kind, reason),
-      onConnectionChange: () => this.#bumpConnectionRevision(),
-      mintToken: async () => {
-        const response = await ajax(`/voice/rooms/${roomId}/livekit_token`, {
-          type: "POST",
-        });
-        // The token endpoint re-establishes presence, so it rotates the
-        // participant session heartbeat/state must keep sending.
-        this.#onParticipantSessionRenewed(
-          roomId,
-          response?.participant_session_id
-        );
-        return response;
-      },
-      getQualityTiers: () => this.#getQualityTiers(roomId),
-    });
-  }
-
-  async #handleDisconnected(roomId, kind, reason) {
-    const session = this.#sessions.get(roomId);
-    if (!session || !this.#isActiveRoom(roomId)) {
-      return;
-    }
-
-    // eslint-disable-next-line no-console
-    console.warn(
-      `[voice-livekit] disconnected from the media server for room ${roomId} (${reason})`
-    );
-
-    if (kind === "duplicate_identity") {
-      // A newer tab for the same user took over the media session. Its join
-      // overwrote our session id server-side, so a normal leave would close
-      // the new tab's session row and drop the user from the roster —
-      // tear down locally only.
-      this.#leave(roomId, { skipServer: true });
-      this.#showNotice("voice.livekit.duplicate_tab");
-      return;
-    }
-
-    this.#bumpConnectionRevision();
-    const outcome = await session.reconnectWithToken();
-
-    if (outcome === "reconnected") {
-      this.#bumpConnectionRevision();
-    } else if (outcome === "gone") {
-      // The room instance ended while we were disconnected; leave cleanly
-      // and offer a rejoin.
-      this.#leave(roomId);
-      this.#showNotice("voice.livekit.room_ended");
-    } else if (outcome === "failed") {
-      this.#leave(roomId);
-      this.#showError("voice.livekit.reconnect_failed");
-    }
-    // "aborted": the session was torn down (leave, new join) mid-ladder.
-  }
-
   // Mesh gets participant cleanup for free by destroying peers on the roster
   // diff. The SFU doesn't consult our roster, so a participant expelled from
   // it (heartbeat TTL expiry, kick with a failed server-side eviction) would
@@ -299,5 +230,74 @@ export default class LivekitCoordinator {
         );
       }
     }
+  }
+
+  #buildSession(roomId) {
+    return new LivekitRoomSession({
+      roomId,
+      currentUserId: this.#getCurrentUserId(),
+      getLocalStream: this.#getLocalStream,
+      getLocalVideoTrack: this.#getLocalVideoTrack,
+      getLocalScreenAudioTrack: this.#getLocalScreenAudioTrack,
+      getLocalVideoKind: this.#getLocalVideoKind,
+      getVideoPublisherCount: () => this.#getVideoPublisherCount(roomId),
+      onTrack: (id, userId, track, streams) =>
+        this.#onTrack(id, userId, track, streams),
+      onParticipantGone: (id, userId) => this.#removeRemoteStream(id, userId),
+      onDisconnected: (kind, reason) =>
+        this.#handleDisconnected(roomId, kind, reason),
+      onConnectionChange: () => this.#bumpConnectionRevision(),
+      mintToken: async () => {
+        const response = await ajax(`/voice/rooms/${roomId}/livekit_token`, {
+          type: "POST",
+        });
+        // The token endpoint re-establishes presence, so it rotates the
+        // participant session heartbeat/state must keep sending.
+        this.#onParticipantSessionRenewed(
+          roomId,
+          response?.participant_session_id
+        );
+        return response;
+      },
+      getQualityTiers: () => this.#getQualityTiers(roomId),
+    });
+  }
+
+  async #handleDisconnected(roomId, kind, reason) {
+    const session = this.#sessions.get(roomId);
+    if (!session || !this.#isActiveRoom(roomId)) {
+      return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[voice-livekit] disconnected from the media server for room ${roomId} (${reason})`
+    );
+
+    if (kind === "duplicate_identity") {
+      // A newer tab for the same user took over the media session. Its join
+      // overwrote our session id server-side, so a normal leave would close
+      // the new tab's session row and drop the user from the roster —
+      // tear down locally only.
+      this.#leave(roomId, { skipServer: true });
+      this.#showNotice("voice.livekit.duplicate_tab");
+      return;
+    }
+
+    this.#bumpConnectionRevision();
+    const outcome = await session.reconnectWithToken();
+
+    if (outcome === "reconnected") {
+      this.#bumpConnectionRevision();
+    } else if (outcome === "gone") {
+      // The room instance ended while we were disconnected; leave cleanly
+      // and offer a rejoin.
+      this.#leave(roomId);
+      this.#showNotice("voice.livekit.room_ended");
+    } else if (outcome === "failed") {
+      this.#leave(roomId);
+      this.#showError("voice.livekit.reconnect_failed");
+    }
+    // "aborted": the session was torn down (leave, new join) mid-ladder.
   }
 }

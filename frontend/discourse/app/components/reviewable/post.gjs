@@ -60,7 +60,10 @@ export default class ReviewablePost extends Component {
       <div class="review-item__meta-label">{{this.userLabel}}</div>
 
       <div class="review-item__meta-flagged-user">
-        <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
+        <ReviewableCreatedBy
+          @penalties={{@reviewable.author_penalties}}
+          @user={{@reviewable.target_created_by}}
+        />
       </div>
     </div>
 
@@ -73,16 +76,16 @@ export default class ReviewablePost extends Component {
         {{else}}
           <DDecoratedHtml
             @className="review-item__post-content"
-            @html={{trustHTML @reviewable.cooked}}
             @decorate={{this.decorate}}
+            @html={{trustHTML @reviewable.cooked}}
             @model={{@reviewable}}
           />
         {{/if}}
 
         <span>
           <PluginOutlet
-            @name={{this.pluginOutletName}}
             @connectorTagName="div"
+            @name={{this.pluginOutletName}}
             @outletArgs={{lazyHash model=@reviewable}}
           />
         </span>

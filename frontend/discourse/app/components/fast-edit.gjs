@@ -84,19 +84,19 @@ export default class FastEdit extends Component {
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div class="fast-edit-container" {{on "keydown" this.onKeydown}}>
       <textarea
-        {{on "input" this.updateValue}}
         id="fast-edit-input"
+        {{on "input" this.updateValue}}
         {{preventScrollOnFocus}}
         {{dAutoFocus}}
       >{{this.value}}</textarea>
 
       <div class="fast-edit-container__footer">
         <DButton
-          class="btn-small btn-primary save-fast-edit"
           aria-keyshortcuts={{if
             this.capabilities.hasKeyboard
             this.shortcut.aria
           }}
+          class="btn-small btn-primary save-fast-edit"
           @action={{this.save}}
           @disabled={{this.disabled}}
           @icon="pencil"
@@ -106,8 +106,8 @@ export default class FastEdit extends Component {
         />
 
         <PluginOutlet
-          @name="fast-edit-footer-after"
           @defaultGlimmer={{true}}
+          @name="fast-edit-footer-after"
           @outletArgs={{lazyHash
             initialValue=@initialValue
             newValue=@newValue

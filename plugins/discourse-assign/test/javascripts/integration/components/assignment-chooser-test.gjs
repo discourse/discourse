@@ -27,13 +27,13 @@ module("Integration | Component | AssignmentChooser", function (hooks) {
     await render(
       <template>
         <AssignmentChooser
-          @value={{this.assignee}}
           @onChange={{this.onChange}}
           @options={{hash
             includeGroups=true
             assignmentGroups=this.assignmentGroups
             customSearchOptions=(hash assignableGroups=true)
           }}
+          @value={{this.assignee}}
         />
       </template>
     );
@@ -57,13 +57,13 @@ module("Integration | Component | AssignmentChooser", function (hooks) {
     await render(
       <template>
         <AssignmentChooser
-          @value={{this.assignee}}
           @onChange={{this.onChange}}
           @options={{hash
             includeGroups=true
             assignmentGroups=this.assignmentGroups
             customSearchOptions=(hash assignableGroups=true)
           }}
+          @value={{this.assignee}}
         />
       </template>
     );

@@ -689,6 +689,9 @@ sv:
       user_label: "Användare"
       timeline:
         target_deleted: "Inlägg raderat"
+      author_penalty:
+        toast:
+          undo: "Ångra"
       notes:
         delete: "Radera"
       topic_label: "Ämne"
@@ -1248,7 +1251,6 @@ sv:
       admin: "%{user} är en administrator"
       moderator_tooltip: "Den här användaren är moderator"
       admin_tooltip: "Den här användaren är administrator"
-      silenced_tooltip: "Denna användare är tystad."
       suspended_notice: "Den här användaren är avstängd till %{date}."
       suspended_permanently: "Denna användare är avstängd."
       suspended_reason: "Anledning: "

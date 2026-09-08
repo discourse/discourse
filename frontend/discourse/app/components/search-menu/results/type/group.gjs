@@ -6,10 +6,10 @@ const Group = <template>
   <div class="group-result {{if @result.flairUrl '--with-flair'}}">
     {{#if @result.flairUrl}}
       <DAvatarFlair
-        @flairName={{@result.name}}
-        @flairUrl={{@result.flairUrl}}
         @flairBgColor={{@result.flairBgColor}}
         @flairColor={{@result.flairColor}}
+        @flairName={{@result.name}}
+        @flairUrl={{@result.flairUrl}}
       />
     {{else}}
       {{dIcon "users"}}

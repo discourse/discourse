@@ -166,7 +166,7 @@ RSpec.describe ::Jobs::Base do
       FileUtils.rm(tmp_log_file_path)
     end
 
-    it "should log the job in the sidekiq log file" do
+    it "writes the job to the Sidekiq log" do
       job = GoodJob.new
       job.perform({ some_param: "some_value" })
 

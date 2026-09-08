@@ -16,6 +16,35 @@ module Voice
       update!(left_at: at)
     end
 
+    # Seconds of this session during which someone else was in the room.
+    # Concurrent companions are merged so a crowded hour counts once.
+    def accompanied_seconds
+      finish = left_at || Time.current
+      intervals =
+        self
+          .class
+          .where(room_id: room_id)
+          .where.not(user_id: user_id)
+          .where("joined_at < ?", finish)
+          .where("left_at IS NULL OR left_at > ?", joined_at)
+          .order(:joined_at)
+          .pluck(:joined_at, :left_at)
+          .map { |start, stop| [[start, joined_at].max, [stop || Time.current, finish].min] }
+
+      total = 0
+      merged_start = merged_end = nil
+      intervals.each do |start, stop|
+        if merged_end && start <= merged_end
+          merged_end = [merged_end, stop].max
+        else
+          total += merged_end - merged_start if merged_end
+          merged_start, merged_end = start, stop
+        end
+      end
+      total += merged_end - merged_start if merged_end
+      total.to_i
+    end
+
     # A session's recorded end can be far later than the user's actual leave —
     # the orphan sweep stamps left_at when it finally runs, and until then an
     # abandoned session is open-ended — so any single shared interval is

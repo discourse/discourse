@@ -1328,6 +1328,50 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: ask_ai_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_logs (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    query text NOT NULL,
+    keyword_query text,
+    semantic_query text,
+    query_locale character varying,
+    candidate_post_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    source_post_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    answer_title text,
+    answer text,
+    suggested_follow_up text,
+    ask_outcome integer,
+    failure_stage integer,
+    asked_at timestamp(6) without time zone NOT NULL,
+    time_to_first_answer_ms integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ask_ai_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_logs_id_seq OWNED BY public.ask_ai_logs.id;
+
+
+--
 -- Name: assignments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13377,6 +13421,13 @@ ALTER TABLE ONLY public.application_requests ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: ask_ai_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_logs ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_logs_id_seq'::regclass);
+
+
+--
 -- Name: assignments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15783,6 +15834,14 @@ ALTER TABLE ONLY public.application_requests
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: ask_ai_logs ask_ai_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_logs
+    ADD CONSTRAINT ask_ai_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -19848,6 +19907,20 @@ CREATE INDEX index_api_keys_on_user_id ON public.api_keys USING btree (user_id);
 --
 
 CREATE UNIQUE INDEX index_application_requests_on_date_and_req_type ON public.application_requests USING btree (date, req_type);
+
+
+--
+-- Name: index_ask_ai_logs_on_asked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_logs_on_asked_at ON public.ask_ai_logs USING btree (asked_at);
+
+
+--
+-- Name: index_ask_ai_logs_on_user_id_and_asked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_logs_on_user_id_and_asked_at ON public.ask_ai_logs USING btree (user_id, asked_at);
 
 
 --
@@ -24534,15 +24607,19 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260908112615'),
 ('20260904065041'),
 ('20260904063128'),
+('20260903195501'),
 ('20260903065141'),
 ('20260902150024'),
 ('20260901020329'),
 ('20260831162602'),
 ('20260828145150'),
 ('20260827064809'),
+('20260826133816'),
 ('20260826124054'),
+('20260826121453'),
 ('20260826090055'),
 ('20260824214608'),
 ('20260824214603'),

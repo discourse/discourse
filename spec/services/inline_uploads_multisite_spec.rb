@@ -15,7 +15,7 @@ RSpec.describe InlineUploads, type: :multisite do
         SiteSetting.s3_cdn_url = "https://s3.cdn.com"
       end
 
-      it "should correct image URLs in multisite" do
+      it "corrects image URLs in multisite" do
         md = <<~MD
         https:#{upload2.url} https:#{upload2.url}
         #{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path)}

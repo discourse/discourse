@@ -25,8 +25,8 @@ export default class ChangeCategory extends Component {
 
     <p>
       <CategoryChooser
-        @value={{this.categoryId}}
         @onChange={{fn (mut this.categoryId)}}
+        @value={{this.categoryId}}
       />
     </p>
 

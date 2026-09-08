@@ -36,7 +36,7 @@ export default class AssignedToFilter extends Component {
         </label>
 
         <EmailGroupUserChooser
-          @value={{this.outletArgs.additionalFilters.assigned_to}}
+          autocomplete="off"
           @onChange={{this.updateAssignedTo}}
           @options={{hash
             maximum=1
@@ -44,7 +44,7 @@ export default class AssignedToFilter extends Component {
             includeGroups=false
             groupMembersOf=this.allowedGroups
           }}
-          autocomplete="off"
+          @value={{this.outletArgs.additionalFilters.assigned_to}}
         />
       </div>
     </div>

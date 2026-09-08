@@ -4,38 +4,38 @@ import DNativeSelect from "discourse/ui-kit/d-native-select";
 
 export default <template>
   <Form @data={{hash length=100 unit="px"}} as |form data|>
-    <form.Field @title="Username" @name="username" @type="input" as |field|>
+    <form.Field @name="username" @title="Username" @type="input" as |field|>
       <field.Control placeholder="Username" />
     </form.Field>
-    <form.Field @title="Age" @name="age" @type="input-number" as |field|>
+    <form.Field @name="age" @title="Age" @type="input-number" as |field|>
       <field.Control placeholder="Age" @format="small" />
     </form.Field>
-    <form.Field @title="Website" @name="website" @type="input" as |field|>
-      <field.Control @before="https://" @after=".com" @format="large" />
+    <form.Field @name="website" @title="Website" @type="input" as |field|>
+      <field.Control @after=".com" @before="https://" @format="large" />
     </form.Field>
-    <form.Field @title="After" @name="after" @type="input" as |field|>
+    <form.Field @name="after" @title="After" @type="input" as |field|>
       <field.Control @after=".com" />
     </form.Field>
-    <form.Field @title="Before" @name="before" @type="input" as |field|>
+    <form.Field @name="before" @title="Before" @type="input" as |field|>
       <field.Control @before="https://" />
     </form.Field>
     <form.Field
-      @title="Percentage"
       @name="percentage"
+      @title="Percentage"
       @type="input-number"
       as |field|
     >
       <field.Control @after="%" />
     </form.Field>
-    <form.Field @title="Length" @name="length" @type="input-number" as |field|>
+    <form.Field @name="length" @title="Length" @type="input-number" as |field|>
       <field.Control>
         <:after>
           <DNativeSelect
             aria-label="Length unit"
             disabled={{field.disabled}}
             @includeNone={{false}}
-            @value={{data.unit}}
             @onChange={{fn form.set "unit"}}
+            @value={{data.unit}}
             as |select|
           >
             <select.Option @value="px">px</select.Option>
@@ -46,9 +46,9 @@ export default <template>
       </field.Control>
     </form.Field>
     <form.Field
-      @title="Secret"
-      @name="secret"
       @description="An important password"
+      @name="secret"
+      @title="Secret"
       @type="password"
       as |field|
     >

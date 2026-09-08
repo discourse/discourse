@@ -571,6 +571,9 @@ bs_BA:
       user_label: "User"
       timeline:
         target_deleted: "Post izbrisan"
+      author_penalty:
+        toast:
+          undo: "Vrati nazad"
       notes:
         delete: "Delete"
       topic_label: "Topic"
@@ -1001,7 +1004,6 @@ bs_BA:
       admin: "%{user} je admin"
       moderator_tooltip: "Ovaj korisnik je moderator"
       admin_tooltip: "Ovaj korisnik je admin"
-      silenced_tooltip: "Ovaj korisnik je ušutkan"
       suspended_notice: "Ovaj korisnike je suspendovan sve do %{date}."
       suspended_permanently: "Ovaj korisnik je suspendovan."
       suspended_reason: "Razlog: "

@@ -114,55 +114,8 @@ export default class CategorySectionLink {
     this.refreshCounts();
   }
 
-  #countables() {
-    const countables = [];
-
-    if (this.#unifiedNewEnabled) {
-      countables.push(UNREAD_AND_NEW_COUNTABLE);
-    } else {
-      countables.push(...DEFAULT_COUNTABLES);
-    }
-
-    if (customCountables.length > 0) {
-      customCountables.forEach((customCountable) => {
-        if (
-          !customCountable.shouldRegister ||
-          customCountable.shouldRegister({ category: this.category })
-        ) {
-          if (
-            customCountable?.prioritizeOverDefaults({
-              category: this.category,
-              currentUser: this.currentUser,
-            })
-          ) {
-            countables.unshift(customCountable);
-          } else {
-            countables.push(customCountable);
-          }
-        }
-      });
-    }
-
-    return countables;
-  }
-
   get showCount() {
     return this.currentUser?.sidebarShowCountOfNewItems;
-  }
-
-  @bind
-  refreshCounts() {
-    this.countables = this.#countables();
-
-    this.activeCountable = this.countables.find((countable) => {
-      const count = countable.refreshCountFunction({
-        topicTrackingState: this.topicTrackingState,
-        category: this.category,
-      });
-
-      set(this, countable.propertyName, count);
-      return count > 0;
-    });
   }
 
   get name() {
@@ -288,5 +241,52 @@ export default class CategorySectionLink {
 
   get #unifiedNewEnabled() {
     return !!this.currentUser?.unified_new_enabled;
+  }
+
+  @bind
+  refreshCounts() {
+    this.countables = this.#countables();
+
+    this.activeCountable = this.countables.find((countable) => {
+      const count = countable.refreshCountFunction({
+        topicTrackingState: this.topicTrackingState,
+        category: this.category,
+      });
+
+      set(this, countable.propertyName, count);
+      return count > 0;
+    });
+  }
+
+  #countables() {
+    const countables = [];
+
+    if (this.#unifiedNewEnabled) {
+      countables.push(UNREAD_AND_NEW_COUNTABLE);
+    } else {
+      countables.push(...DEFAULT_COUNTABLES);
+    }
+
+    if (customCountables.length > 0) {
+      customCountables.forEach((customCountable) => {
+        if (
+          !customCountable.shouldRegister ||
+          customCountable.shouldRegister({ category: this.category })
+        ) {
+          if (
+            customCountable?.prioritizeOverDefaults({
+              category: this.category,
+              currentUser: this.currentUser,
+            })
+          ) {
+            countables.unshift(customCountable);
+          } else {
+            countables.push(customCountable);
+          }
+        }
+      });
+    }
+
+    return countables;
   }
 }

@@ -20,10 +20,10 @@ module("Integration | Component | DSegmentedControl", function (hooks) {
     await render(
       <template>
         <DSegmentedControl
-          @name="period"
           @items={{ITEMS}}
-          @value={{this.selected}}
+          @name="period"
           @onSelect={{handleSelect}}
+          @value={{this.selected}}
         />
       </template>
     );
@@ -45,10 +45,10 @@ module("Integration | Component | DSegmentedControl", function (hooks) {
     await render(
       <template>
         <DSegmentedControl
-          @name="period"
           @items={{ITEMS}}
-          @value="day"
           @label="test.periodLabel"
+          @name="period"
+          @value="day"
         />
       </template>
     );
@@ -62,10 +62,10 @@ module("Integration | Component | DSegmentedControl", function (hooks) {
     await render(
       <template>
         <DSegmentedControl
-          @name="period"
           @items={{ITEMS}}
-          @value="day"
+          @name="period"
           @translatedLabel="Time period"
+          @value="day"
         />
       </template>
     );

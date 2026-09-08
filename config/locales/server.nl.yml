@@ -5116,8 +5116,6 @@ nl:
         complete: "Bericht verborgen, gebruiker is geïnformeerd."
       agree_and_edit:
         title: "Bericht bewerken"
-        description: "Ga akkoord met de markering en open een editorvenster om het bericht te bewerken."
-        complete: "Markering bevestigd, je kunt het bericht nu bewerken."
       delete:
         title: "Verwijderen"
         complete: "Bericht verwijderd."
@@ -5221,30 +5219,6 @@ nl:
       approve_and_unhide:
         title: "Ja"
         complete: "Bericht goedgekeurd en zichtbaar gemaakt"
-      post_actions:
-        bundle_title: "Wat wil je met het bericht doen?"
-      delete_post:
-        title: "Bericht verwijderen"
-        description: "Dit bericht verwijderen"
-        complete: "Bericht verwijderd"
-      hide_post:
-        title: "Bericht verbergen"
-        description: "Dit bericht verbergen voor publieke weergave"
-        complete: "Bericht verborgen"
-      unhide_post:
-        title: "Bericht weergeven"
-        description: "Maak dit bericht zichtbaar voor alle gebruikers"
-        complete: "Bericht weergegeven"
-      restore_post:
-        title: "Bericht herstellen"
-        description: "Herstel dit verwijderde bericht"
-        complete: "Bericht hersteld"
-      edit_post:
-        title: "Bericht bewerken"
-        description: "Bewerk deze berichtinhoud"
-        complete: "Bericht bewerkt"
-      user_actions:
-        bundle_title: "Wat wil je met de gebruiker doen?"
       silence_user:
         title: "Gebruiker dempen"
         complete: "Gebruiker gedempt"

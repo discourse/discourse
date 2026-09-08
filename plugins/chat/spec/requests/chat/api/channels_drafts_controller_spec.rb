@@ -13,7 +13,7 @@ RSpec.describe Chat::Api::ChannelsDraftsController do
 
   describe "#create" do
     describe "success" do
-      it "works" do
+      it "creates the draft" do
         post "/chat/api/channels/#{channel_1.id}/drafts", params: { data: { message: "a" } }
 
         expect(response.status).to eq(200)

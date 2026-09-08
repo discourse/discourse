@@ -164,6 +164,7 @@ RSpec.describe Admin::StaffActionLogsController do
 
       context "when staff actions are extended" do
         let(:plugin_extended_action) { :confirmed_ham }
+
         before { UserHistory.stubs(:staff_actions).returns([plugin_extended_action]) }
         after { UserHistory.unstub(:staff_actions) }
 

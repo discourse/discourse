@@ -1066,6 +1066,7 @@ ur:
         count: "دھاگے"
         share: "اشتراک"
       types:
+        new_members: "نئے اراکین"
         returning: "دوبارہ جڑنے والے"
         staff: "عملہ"
     posters_by_member_type_members:
@@ -1125,6 +1126,7 @@ ur:
         page_view_other: "دیگر ٹریفک"
       yaxis: "دن"
     dau_by_mau:
+      title: "DAU / MAU"
       xaxis: "دن"
       yaxis: "DAU/MAU"
     daily_engaged_users:
@@ -1205,7 +1207,7 @@ ur:
       yaxis: "پیغامات کی تعداد"
       description: "تمام نئے ذاتی پیغامات اور جوابات کی تعداد۔"
     system_private_messages:
-      title: "سِسٹَم"
+      title: "نظام"
       xaxis: "دن"
       yaxis: "پیغامات کی تعداد"
       description: "سِسٹم کے ذریعہ خود کار طریقہ سے بھیجے جانے والے ذاتی پیغامات کی تعداد۔"
@@ -3742,9 +3744,6 @@ ur:
         title: "جی ہاں"
       approve_and_unhide:
         title: "جی ہاں"
-      delete_post:
-        title: "پوسٹ کو حذف"
-        complete: "دھاگہ مٹا دیا"
       delete_user:
         complete: "صارف مٹادیا گیا"
         reason: "بذریعہ نظر ثانی قطار کے حذف کر دیا گیا"

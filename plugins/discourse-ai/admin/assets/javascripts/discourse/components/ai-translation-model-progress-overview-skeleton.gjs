@@ -4,9 +4,9 @@ const PLACEHOLDERS = [0, 1, 2, 3];
 
 export default <template>
   <div
+    aria-label={{i18n "discourse_ai.translations.model_progress.loading"}}
     class="ai-translation-model-progress-overview-skeleton --animation"
     role="status"
-    aria-label={{i18n "discourse_ai.translations.model_progress.loading"}}
   >
     {{#each PLACEHOLDERS}}
       <div class="ai-translation-model-progress-overview-skeleton__card">

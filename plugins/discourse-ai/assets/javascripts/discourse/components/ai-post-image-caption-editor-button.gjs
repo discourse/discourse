@@ -25,11 +25,11 @@ export default class AiPostImageCaptionEditorButton extends Component {
   <template>
     {{#if this.caption}}
       <DButton
+        class="btn-transparent ai-post-image-caption-editor__button"
         @action={{this.openEditor}}
         @ariaLabel="discourse_ai.post_image_captions.edit"
         @icon="pencil"
         @title="discourse_ai.post_image_captions.edit"
-        class="btn-transparent ai-post-image-caption-editor__button"
       />
     {{/if}}
   </template>

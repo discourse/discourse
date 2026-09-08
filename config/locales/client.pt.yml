@@ -900,6 +900,9 @@ pt:
         view_conversation: "ver PM"
         note_added: "Nota do moderador"
         note_added_by: "Nota do moderador por %{username} · %{relativeDate}"
+      author_penalty:
+        toast:
+          undo: "Desfazer"
       notes:
         add_note_button: "Adicionar nota"
         placeholder: "Escreva aqui a sua nota..."
@@ -1509,7 +1512,6 @@ pt:
       admin: "%{user} é um administrador"
       moderator_tooltip: "Este utilizador é um moderador"
       admin_tooltip: "Este utilizador é um administrador"
-      silenced_tooltip: "Este utilizador está silenciado"
       suspended_notice: "Este utilizador está suspenso até %{date}."
       suspended_permanently: "Este utilizador está suspenso"
       suspended_reason: "Motivo: "

@@ -885,6 +885,9 @@ vi:
         note_added: "Ghi chú của người kiểm duyệt"
         note_added_by: "Ghi chú kiểm duyệt của %{username} · %{relativeDate}"
         no_events: "Không có sự kiện nào trên dòng thời gian để hiển thị"
+      author_penalty:
+        toast:
+          undo: "Hoàn tác"
       notes:
         add_note_description: "Thêm ghi chú để cung cấp ngữ cảnh cho các kiểm duyệt viên khác."
         add_note_button: "Thêm ghi chú"
@@ -1510,7 +1513,6 @@ vi:
       admin: "%{user} là người điều hành"
       moderator_tooltip: "Thành viên này là Mod"
       admin_tooltip: "Thành viên này là Admin"
-      silenced_tooltip: "Thành viên này đã bị hạn chế"
       suspended_notice: "Thành viên này bị đình chỉ đến %{date}."
       suspended_permanently: "Thành viên này đã bị đình chỉ."
       suspended_reason: "Lý do: "

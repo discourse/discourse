@@ -21,9 +21,7 @@ export default class Group extends FilterComponent {
   <template>
     <div class="group-filter" ...attributes>
       <ComboBox
-        @valueProperty="value"
         @content={{this.groupOptions}}
-        @value={{this.groupId}}
         @onChange={{this.onChange}}
         @options={{hash
           allowAny=this.filter.allow_any
@@ -31,6 +29,8 @@ export default class Group extends FilterComponent {
           filterable=true
           none="admin.dashboard.reports.groups"
         }}
+        @value={{this.groupId}}
+        @valueProperty="value"
       />
     </div>
   </template>

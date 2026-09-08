@@ -1111,3 +1111,44 @@
     border-bottom: 1px solid var(--primary-very-low);
   }
 }
+
+.context-menu-demo {
+  &__surface {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75em;
+    padding: 1em;
+    border: 1px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    cursor: context-menu;
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+    }
+
+    &.--nested {
+      align-self: stretch;
+      border-style: solid;
+      border-color: var(--tertiary);
+      background: var(--secondary);
+    }
+  }
+
+  &__label {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__field {
+    width: 100%;
+    max-width: 24em;
+  }
+
+  &__decision {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+}

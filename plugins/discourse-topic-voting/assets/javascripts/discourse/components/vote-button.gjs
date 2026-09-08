@@ -133,10 +133,10 @@ export default class VoteButton extends Component {
       <DTooltip @identifier="vote-closed-tooltip" @placement="right">
         <:trigger>
           <DButton
-            @icon={{this.buttonIcon}}
-            @disabled={{true}}
-            @translatedAriaLabel={{this.ariaLabel}}
             class={{this.buttonClasses}}
+            @disabled={{true}}
+            @icon={{this.buttonIcon}}
+            @translatedAriaLabel={{this.ariaLabel}}
           />
         </:trigger>
         <:content>
@@ -145,15 +145,15 @@ export default class VoteButton extends Component {
       </DTooltip>
     {{else if this.currentUser}}
       <DMenu
-        @identifier="topic-voting-menu"
-        @icon={{this.buttonIcon}}
-        @onShow={{this.onShowMenu}}
-        @onClose={{this.onCloseMenu}}
-        @title={{this.ariaLabel}}
-        @ariaLabel={{this.ariaLabel}}
         class={{this.buttonClasses}}
+        @ariaLabel={{this.ariaLabel}}
+        @icon={{this.buttonIcon}}
+        @identifier="topic-voting-menu"
+        @onClose={{this.onCloseMenu}}
         @onRegisterApi={{this.onRegisterApi}}
+        @onShow={{this.onShowMenu}}
         @placement="right"
+        @title={{this.ariaLabel}}
       >
         <:content>
           <DDropdownMenu as |dropdown|>
@@ -166,32 +166,32 @@ export default class VoteButton extends Component {
               {{#if this.limitsEnabled}}
                 <dropdown.item class="topic-voting-menu__votes-left">
                   <DButton
+                    class="btn-transparent see-votes topic-voting-menu__row-btn"
+                    @href={{getURL "/my/activity/votes"}}
+                    @icon="check-to-slot"
                     @translatedLabel={{i18n
                       "topic_voting.see_votes"
                       count=this.currentUser.votes_left
                       max=this.currentUser.vote_limit
                     }}
-                    @href={{getURL "/my/activity/votes"}}
-                    @icon="check-to-slot"
-                    class="btn-transparent see-votes topic-voting-menu__row-btn"
                   />
                 </dropdown.item>
               {{/if}}
               {{#if this.showVotedActions}}
                 <dropdown.item class="topic-voting-menu__row">
                   <DButton
-                    @translatedLabel={{i18n "topic_voting.remove_vote"}}
+                    class="btn-transparent remove-vote topic-voting-menu__row-btn"
                     @action={{this.removeVote}}
                     @icon="arrow-rotate-left"
-                    class="btn-transparent remove-vote topic-voting-menu__row-btn"
+                    @translatedLabel={{i18n "topic_voting.remove_vote"}}
                   />
                 </dropdown.item>
                 <dropdown.item class="topic-voting-menu__watch-toggle">
                   <DButton
-                    @translatedLabel={{i18n "topic_voting.watch_topic"}}
+                    class="btn-transparent topic-voting-menu__row-btn"
                     @action={{this.toggleWatching}}
                     @icon={{if this.isWatching "toggle-on" "toggle-off"}}
-                    class="btn-transparent topic-voting-menu__row-btn"
+                    @translatedLabel={{i18n "topic_voting.watch_topic"}}
                   />
                 </dropdown.item>
               {{/if}}
@@ -201,11 +201,11 @@ export default class VoteButton extends Component {
       </DMenu>
     {{else}}
       <DButton
-        @icon={{this.buttonIcon}}
-        @action={{this.onShowMenu}}
-        @translatedTitle={{this.ariaLabel}}
-        @translatedAriaLabel={{this.ariaLabel}}
         class={{this.buttonClasses}}
+        @action={{this.onShowMenu}}
+        @icon={{this.buttonIcon}}
+        @translatedAriaLabel={{this.ariaLabel}}
+        @translatedTitle={{this.ariaLabel}}
       />
     {{/if}}
   </template>

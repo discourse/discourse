@@ -135,20 +135,20 @@ export default class FKControlInput extends FKBaseControl {
       {{/if}}
 
       <input
-        type={{this.type}}
-        dir={{this.dir}}
-        value={{this.displayValue}}
+        aria-describedby={{@field.describedBy}}
+        aria-invalid={{if @field.error "true"}}
         class={{dConcatClass
           "form-kit__control-input"
           (if (or @before (has-block "before")) "has-prefix")
           (if (or @after (has-block "after")) "has-suffix")
         }}
+        dir={{this.dir}}
         disabled={{@field.disabled}}
         id={{@field.id}}
         name={{@field.name}}
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{@field.describedBy}}
         placeholder={{@field.placeholder}}
+        type={{this.type}}
+        value={{this.displayValue}}
         ...attributes
         {{on "focus" this.handleFocus}}
         {{on "blur" this.handleBlur}}

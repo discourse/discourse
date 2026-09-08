@@ -770,8 +770,6 @@ sr:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "korisnik"

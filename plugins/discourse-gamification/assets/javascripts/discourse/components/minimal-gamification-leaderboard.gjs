@@ -27,14 +27,14 @@ export default class extends Component {
   <template>
     {{#if this.model}}
       <MinimalGamificationLeaderboardView
+        @avatarSize={{@avatarSize}}
+        @footerLinkLabel={{@footerLinkLabel}}
         @model={{this.model}}
+        @showColumnHeaders={{@showColumnHeaders}}
+        @showFooterLink={{@showFooterLink}}
+        @showRank={{@showRank}}
         @title={{@title}}
         @titleIcon={{@titleIcon}}
-        @showColumnHeaders={{@showColumnHeaders}}
-        @showRank={{@showRank}}
-        @avatarSize={{@avatarSize}}
-        @showFooterLink={{@showFooterLink}}
-        @footerLinkLabel={{@footerLinkLabel}}
       />
     {{/if}}
   </template>

@@ -7,10 +7,10 @@ const Avatar = <template>
       <ChatEmojiAvatar @emoji={{@message.chatWebhookEvent.emoji}} />
     {{else}}
       <ChatUserAvatar
-        @user={{@message.user}}
+        @ariaHidden={{true}}
         @avatarSize="medium"
         @interactive={{@interactive}}
-        @ariaHidden={{true}}
+        @user={{@message.user}}
       />
     {{/if}}
   </div>

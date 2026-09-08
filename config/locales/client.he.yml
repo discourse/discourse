@@ -1079,6 +1079,9 @@ he:
         note_added: "הערת פיקוח"
         note_added_by: "הערת פיקוח מאת %{username} · %{relativeDate}"
         no_events: "אין אירועי ציר זמן להצגה"
+      author_penalty:
+        toast:
+          undo: "ביטול פעולה"
       notes:
         add_note_description: "אפשר להוסיף הערה כדי לספק הקשר למפקחים האחרים."
         add_note_button: "הוספת הערה"
@@ -1741,7 +1744,6 @@ he:
       admin: "%{user} הוא מנהל מערכת"
       moderator_tooltip: "משתמש זה הוא מפקח"
       admin_tooltip: "משתמש זה חבר הנהלה"
-      silenced_tooltip: "משתמש זה מושתק"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: %{date}."
       suspended_permanently: "משתמש זה מושעה."
       suspended_reason: "הסיבה: "

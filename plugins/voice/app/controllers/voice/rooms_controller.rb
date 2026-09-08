@@ -371,7 +371,7 @@ module Voice
       end
       Voice::UserStatusManager.clear_voice_status(current_user)
       Voice::RoomBroadcaster.publish_participants(@room)
-      Voice::BadgeGranterHooks.on_leave(current_user, session, room: @room)
+      Voice::BadgeGranterHooks.on_leave(current_user, session)
       head :no_content
     end
 
@@ -505,7 +505,7 @@ module Voice
       kicked_user = User.find_by(id: user_id)
       Voice::UserStatusManager.clear_voice_status(kicked_user) if kicked_user
 
-      Voice::BadgeGranterHooks.on_leave(kicked_user, session, room: @room) if kicked_user
+      Voice::BadgeGranterHooks.on_leave(kicked_user, session) if kicked_user
       Voice::RoomBroadcaster.publish_kick(@room, user_id)
       Voice::RoomBroadcaster.publish_participants(@room)
 

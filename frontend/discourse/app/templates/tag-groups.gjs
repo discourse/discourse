@@ -19,7 +19,7 @@ export default <template>
           <ul>
             {{#each @controller.model.content as |tagGroup|}}
               <li>
-                <LinkTo @route="tagGroups.edit" @model={{tagGroup}}>
+                <LinkTo @model={{tagGroup}} @route="tagGroups.edit">
                   {{tagGroup.name}}
                 </LinkTo>
               </li>
@@ -27,10 +27,10 @@ export default <template>
           </ul>
 
           <DButton
+            class="btn-default"
             @action={{@controller.newTagGroup}}
             @icon="plus"
             @label="tagging.groups.new"
-            class="btn-default"
           />
         </div>
       {{/if}}

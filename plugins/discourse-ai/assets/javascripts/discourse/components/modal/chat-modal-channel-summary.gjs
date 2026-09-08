@@ -67,18 +67,18 @@ export default class ChatModalChannelSummary extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="chat-modal-channel-summary"
+      @closeModal={{@closeModal}}
       @title={{i18n "discourse_ai.summarization.chat.title"}}
     >
       <:body>
         <span>{{i18n "discourse_ai.summarization.chat.description"}}</span>
         <ComboBox
-          @value={{this.sinceHours}}
+          class="summarization-since"
           @content={{this.sinceOptions}}
           @onChange={{this.summarize}}
+          @value={{this.sinceHours}}
           @valueProperty="value"
-          class="summarization-since"
         />
         <DConditionalLoadingSection @isLoading={{this.loading}}>
           <p class="summary-area">{{this.summary}}</p>

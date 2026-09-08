@@ -47,8 +47,8 @@ export default class ActivationEdit extends Component {
   <template>
     <DModal
       @closeModal={{@closeModal}}
-      @title={{i18n "login.change_email"}}
       @flash={{this.flash}}
+      @title={{i18n "login.change_email"}}
     >
       <:body>
         <ActivationEmailForm
@@ -58,10 +58,10 @@ export default class ActivationEdit extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.changeEmail}}
-          @label="login.submit_new_email"
-          @disabled={{this.submitDisabled}}
           class="btn-primary"
+          @action={{this.changeEmail}}
+          @disabled={{this.submitDisabled}}
+          @label="login.submit_new_email"
         />
         <DButton @action={{@closeModal}} @label="close" />
       </:footer>

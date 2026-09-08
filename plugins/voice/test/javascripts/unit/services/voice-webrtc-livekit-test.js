@@ -486,6 +486,9 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
     setPeerTimingForTesting(SAFE_PEER_TIMING);
     this.currentUser = logIn(this.owner);
     this.currentUser.id = 10;
+    this.keyValueStore = this.owner.lookup("service:key-value-store");
+    this.cameraPreferenceKey = `voice-camera-enabled-${this.currentUser.id}`;
+    this.keyValueStore.remove(this.cameraPreferenceKey);
     this.siteSettings = this.owner.lookup("service:site-settings");
     this.siteSettings.voice_auto_status_enabled = true;
     this.siteSettings.voice_video_enabled = true;
@@ -612,6 +615,7 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
 
   hooks.afterEach(function () {
     this.subject?.leave({ id: 1 }, { keepLocalStream: true });
+    this.keyValueStore.remove(this.cameraPreferenceKey);
 
     setPeerTimingForTesting(null);
     setLivekitSdkLoaderForTesting(null);
@@ -994,6 +998,35 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       this.toasts.errors.length,
       1,
       "tells the user the connection could not be recovered"
+    );
+  });
+
+  test("a remembered camera publishes after the LiveKit call becomes visible", async function (assert) {
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    await this.subject.join(this.room);
+    this.subject.setWatching(1, true);
+    await waitUntil(() =>
+      this.stateRequests.some(({ video }) => video === "true")
+    );
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    const publication = lkRoom.localParticipant.published.find(
+      ({ track }) => track.mediaStreamTrack === this.cameraTrack
+    );
+
+    assert.notStrictEqual(
+      publication,
+      undefined,
+      "publishes the remembered camera track"
+    );
+    assert.deepEqual(
+      this.stateRequests.at(-1),
+      { video: "true", screen: "false" },
+      "broadcasts the restored camera state"
     );
   });
 

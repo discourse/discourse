@@ -723,6 +723,9 @@ sq:
       user_label: "User"
       timeline:
         target_deleted: "Postimi u fshi"
+      author_penalty:
+        toast:
+          undo: "Zhbëj"
       notes:
         delete: "Fshij"
       topic_label: "Topic"
@@ -1303,7 +1306,6 @@ sq:
       admin: "%{user} është admin"
       moderator_tooltip: "Ky anëtar është moderator"
       admin_tooltip: "Ky anëtar është administrator"
-      silenced_tooltip: "Ky përdorues është heshtur"
       suspended_notice: "Ky anëtar është përjashtuar deri më %{date}."
       suspended_permanently: "Ky përdorues është pezulluar."
       suspended_reason: "Arsyeja:"

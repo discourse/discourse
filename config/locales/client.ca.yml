@@ -629,6 +629,9 @@ ca:
       user_label: "Usuari"
       timeline:
         target_deleted: "Publicació suprimida"
+      author_penalty:
+        toast:
+          undo: "Desfés"
       notes:
         delete: "Suprimeix"
       topic_label: "Tema"
@@ -1041,7 +1044,6 @@ ca:
       admin: "%{user} és un administrador"
       moderator_tooltip: "Aquest usuari és un moderador."
       admin_tooltip: "Aquest usuari és un administrador"
-      silenced_tooltip: "Aquest usuari és silenciat"
       suspended_notice: "Aquest usuari és suspès fins a %{date}."
       suspended_permanently: "Aquest usuari és suspès."
       suspended_reason: "Motiu:"

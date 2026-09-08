@@ -57,9 +57,9 @@ export default class VoicePttKeyCapture extends Component {
   <template>
     <div
       class="voice-ptt-key-capture"
+      tabindex="0"
       {{on "keydown" this.onKeyDown}}
       {{this.autoFocus}}
-      tabindex="0"
     >
       <span
         class="voice-ptt-key-capture__display
@@ -70,15 +70,15 @@ export default class VoicePttKeyCapture extends Component {
       </span>
       <div class="voice-ptt-key-capture__actions">
         <DButton
-          @action={{this.confirm}}
-          @icon="check"
-          @disabled={{if this.capturedKey false true}}
           class="btn-flat btn-small voice-ptt-key-capture__confirm"
+          @action={{this.confirm}}
+          @disabled={{if this.capturedKey false true}}
+          @icon="check"
         />
         <DButton
+          class="btn-flat btn-small voice-ptt-key-capture__cancel"
           @action={{this.cancel}}
           @icon="xmark"
-          class="btn-flat btn-small voice-ptt-key-capture__cancel"
         />
       </div>
     </div>

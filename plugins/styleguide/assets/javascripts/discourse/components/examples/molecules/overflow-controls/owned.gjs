@@ -17,8 +17,8 @@ export default <template>
   <div class="styleguide-overflow-controls --narrow">
     <DOverflowControls @axis="horizontal" @ownedScroller={{true}} as |strip|>
       <ul
-        class="styleguide-overflow-controls__list"
         aria-label="Owned scroller"
+        class="styleguide-overflow-controls__list"
         {{strip.scroller}}
       >
         {{#each SECTIONS as |section|}}

@@ -20,6 +20,14 @@ export default class AboutPageExtraGroups extends Component {
     this.loadGroups();
   }
 
+  get showGroupDescription() {
+    return this.siteSettings.about_page_extra_groups_show_description;
+  }
+
+  get showInitialMembers() {
+    return this.siteSettings.about_page_extra_groups_initial_members;
+  }
+
   groupName(group) {
     return group.full_name || group.name.replace(/[_-]/g, " ");
   }
@@ -101,14 +109,6 @@ export default class AboutPageExtraGroups extends Component {
     }
   }
 
-  get showGroupDescription() {
-    return this.siteSettings.about_page_extra_groups_show_description;
-  }
-
-  get showInitialMembers() {
-    return this.siteSettings.about_page_extra_groups_initial_members;
-  }
-
   <template>
     <DConditionalLoadingSpinner @condition={{this.loading}}>
       {{#each this.groups as |group|}}
@@ -124,8 +124,8 @@ export default class AboutPageExtraGroups extends Component {
             <p>{{trustHTML group.bio_cooked}}</p>
           {{/if}}
           <AboutPageUsers
-            @users={{group.members}}
             @truncateAt={{this.showInitialMembers}}
+            @users={{group.members}}
           />
         </section>
       {{/each}}

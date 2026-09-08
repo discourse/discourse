@@ -87,6 +87,7 @@ describe Chat do
     let!(:user) { Fabricate(:user) }
     let!(:guardian) { Guardian.new(user) }
     let(:serializer) { UserCardSerializer.new(target_user, scope: guardian) }
+
     fab!(:group)
 
     context "when chat enabled" do

@@ -10,9 +10,9 @@ import overflowControlsVerticalSource from "../../examples/molecules/overflow-co
 
 export default <template>
   <StyleguideExample
-    @title="<DOverflowControls> — a horizontal strip"
     @code={{overflowControlsHorizontalSource}}
     @description="Content wider than its container scrolls sideways with the scrollbar hidden. The edge that has more content fades out, and a chevron sits on it. A click scrolls one viewport; holding the chevron keeps scrolling until you release."
+    @title="<DOverflowControls> — a horizontal strip"
   >
     <:tryThis>
       Click the right chevron once, then press and hold it. Swipe or
@@ -25,9 +25,9 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DOverflowControls> — a vertical column"
     @code={{overflowControlsVerticalSource}}
     @description="The same controls follow whichever axis the content's overflow lets it scroll on, so a bounded column gets up and down chevrons with no extra arguments."
+    @title="<DOverflowControls> — a vertical column"
   >
     <:tryThis>
       Scroll the column and watch the top chevron appear once the first row
@@ -39,9 +39,9 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DOverflowControls> — a consumer-owned scroller"
     @code={{overflowControlsOwnedSource}}
     @description="With the owned-scroller argument the consumer renders the scrolling element itself and applies the yielded modifier to it. That keeps the element's own role and styling, which is how the navigation bar and the tab strip use it."
+    @title="<DOverflowControls> — a consumer-owned scroller"
   >
     <:tryThis>
       Inspect the list: it is a plain list element with its own class and
@@ -54,9 +54,9 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DOverflowControls> — revealing an item"
     @code={{overflowControlsRevealSource}}
     @description="The yielded reveal function scrolls the strip, and only the strip, until an element is inside it. Nearest moves the least distance that clears the fade band; center puts the element in the middle. The page never moves."
+    @title="<DOverflowControls> — revealing an item"
   >
     <:tryThis>
       Use the buttons above the strip. Nearest brings item 9 to the trailing

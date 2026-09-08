@@ -141,9 +141,9 @@ export default class AiLogRow extends Component {
             <DTooltip @content={{i18n "discourse_ai.logs.retried"}}>
               <:trigger>
                 <span
+                  aria-label={{i18n "discourse_ai.logs.retried"}}
                   class="ai-logs__flag"
                   role="img"
-                  aria-label={{i18n "discourse_ai.logs.retried"}}
                 >
                   {{dIcon "arrows-rotate"}}
                 </span>
@@ -166,9 +166,9 @@ export default class AiLogRow extends Component {
       <td class="d-table__cell ai-logs__col-user">
         {{#if @log.username}}
           <DUserLink
-            @user={{@log}}
             class="ai-logs__user"
             title={{@log.username}}
+            @user={{@log}}
           >
             {{dAvatar
               @log
@@ -211,9 +211,9 @@ export default class AiLogRow extends Component {
         <DButton
           class="btn-default btn-small"
           @action={{fn @onOpen @log.id}}
+          @ariaLabel="discourse_ai.logs.view_details"
           @icon="far-file-lines"
           @title="discourse_ai.logs.view_details"
-          @ariaLabel="discourse_ai.logs.view_details"
         />
       </td>
     </tr>

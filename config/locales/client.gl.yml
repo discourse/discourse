@@ -558,6 +558,9 @@ gl:
       user_label: "Usuario"
       timeline:
         target_deleted: "Publicación eliminada"
+      author_penalty:
+        toast:
+          undo: "Desfacer"
       notes:
         delete: "Eliminar"
       topic_label: "Tema"
@@ -1045,7 +1048,6 @@ gl:
       admin: "%{user} é administrador"
       moderator_tooltip: "Este usuario é un moderador"
       admin_tooltip: "Este usuario é un administrador"
-      silenced_tooltip: "Este usuario está silenciado"
       suspended_notice: "Este usuario está suspendido ata o %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Razón: "

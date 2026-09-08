@@ -71,7 +71,7 @@ export default class DHorizontalOverflowNav extends Component<DHorizontalOverflo
   );
 
   <template>
-    <nav class="horizontal-overflow-nav" aria-label={{@ariaLabel}}>
+    <nav aria-label={{@ariaLabel}} class="horizontal-overflow-nav">
       <DOverflowControls
         @axis="horizontal"
         @edgeButtonClasses={{EDGE_CLASSES}}

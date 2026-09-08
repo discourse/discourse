@@ -204,21 +204,6 @@ export default class AiBotDockedComposer extends Component {
     this.showToolbar = !this.showToolbar;
   }
 
-  #swapPlaceholderForPost(postId) {
-    // data-post-id is the database ID; the DOM id uses post_number instead.
-    const postEl = document.querySelector(`[data-post-id="${postId}"]`);
-    if (!postEl) {
-      return false;
-    }
-    postEl.classList.add("ai-bot-streaming-placeholder");
-    if (this.#placeholderEl) {
-      this.#placeholderEl.style.display = "none";
-      this.#placeholderEl = null;
-    }
-    this.pendingBotReply = false;
-    return true;
-  }
-
   @action
   handleBotReplyStarted({ topicId, postId }) {
     if (topicId !== this.topicId || !postId) {
@@ -324,15 +309,6 @@ export default class AiBotDockedComposer extends Component {
     }
   }
 
-  async #startEditing(post) {
-    const fullPost = await this.store.find("post", post.id);
-    this.editingPost = fullPost;
-    this.#composerApi?.setReply(fullPost.raw);
-    schedule("afterRender", () => {
-      this.#composerEl?.querySelector(".d-editor-input")?.focus();
-    });
-  }
-
   @action
   cancelEditing() {
     this.editingPost = null;
@@ -367,29 +343,6 @@ export default class AiBotDockedComposer extends Component {
       }
     }
     return result;
-  }
-
-  async #submitEdit(raw) {
-    const post = this.editingPost;
-
-    const result = await ajax(`/posts/${post.id}.json`, {
-      type: "PUT",
-      data: { post: { raw } },
-    });
-
-    const topic = this.topic;
-    const loadedPost = topic?.postStream?.findLoadedPost(post.id);
-    if (loadedPost) {
-      loadedPost.setProperties({
-        raw: result.post.raw,
-        cooked: result.post.cooked,
-        version: result.post.version,
-        updated_at: result.post.updated_at,
-      });
-    }
-
-    this.editingPost = null;
-    return { ok: true };
   }
 
   @action
@@ -465,6 +418,53 @@ export default class AiBotDockedComposer extends Component {
     });
   }
 
+  #swapPlaceholderForPost(postId) {
+    // data-post-id is the database ID; the DOM id uses post_number instead.
+    const postEl = document.querySelector(`[data-post-id="${postId}"]`);
+    if (!postEl) {
+      return false;
+    }
+    postEl.classList.add("ai-bot-streaming-placeholder");
+    if (this.#placeholderEl) {
+      this.#placeholderEl.style.display = "none";
+      this.#placeholderEl = null;
+    }
+    this.pendingBotReply = false;
+    return true;
+  }
+
+  async #startEditing(post) {
+    const fullPost = await this.store.find("post", post.id);
+    this.editingPost = fullPost;
+    this.#composerApi?.setReply(fullPost.raw);
+    schedule("afterRender", () => {
+      this.#composerEl?.querySelector(".d-editor-input")?.focus();
+    });
+  }
+
+  async #submitEdit(raw) {
+    const post = this.editingPost;
+
+    const result = await ajax(`/posts/${post.id}.json`, {
+      type: "PUT",
+      data: { post: { raw } },
+    });
+
+    const topic = this.topic;
+    const loadedPost = topic?.postStream?.findLoadedPost(post.id);
+    if (loadedPost) {
+      loadedPost.setProperties({
+        raw: result.post.raw,
+        cooked: result.post.cooked,
+        version: result.post.version,
+        updated_at: result.post.updated_at,
+      });
+    }
+
+    this.editingPost = null;
+    return { ok: true };
+  }
+
   <template>
     {{#if this.showPlaceholder}}
       <div
@@ -484,23 +484,23 @@ export default class AiBotDockedComposer extends Component {
       </div>
     {{/if}}
     <DockedComposer
-      @show={{this.isBotPm}}
-      @class={{this.composerClass}}
-      @bodyClassName="has-ai-bot-docked-composer"
-      @topicId={{this.topicId}}
-      @draftKey={{this.draftKey}}
-      @uploaderId="ai-bot-docked-file-uploader"
-      @uploadType="ai-bot-conversation"
-      @minLength={{this.minLength}}
-      @placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
-      @submitTitle={{i18n "discourse_ai.ai_bot.conversations.header"}}
-      @uploadTitle="discourse_ai.ai_bot.conversations.upload_files"
-      @onSubmit={{this.onSubmit}}
-      @onRegisterApi={{this.registerComposerApi}}
-      @isSubmitting={{this.aiBotDockedSubmit.loading}}
-      @disabled={{this.isStreaming}}
       @autoResize={{true}}
+      @bodyClassName="has-ai-bot-docked-composer"
+      @class={{this.composerClass}}
+      @disabled={{this.isStreaming}}
+      @draftKey={{this.draftKey}}
+      @isSubmitting={{this.aiBotDockedSubmit.loading}}
       @maxResizeOffset={{this.maxResizeOffset}}
+      @minLength={{this.minLength}}
+      @onRegisterApi={{this.registerComposerApi}}
+      @onSubmit={{this.onSubmit}}
+      @placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
+      @show={{this.isBotPm}}
+      @submitTitle={{i18n "discourse_ai.ai_bot.conversations.header"}}
+      @topicId={{this.topicId}}
+      @uploaderId="ai-bot-docked-file-uploader"
+      @uploadTitle="discourse_ai.ai_bot.conversations.upload_files"
+      @uploadType="ai-bot-conversation"
       {{didInsert this.setupScrollListener}}
       {{willDestroy this.teardownScrollListener}}
     >
@@ -512,46 +512,45 @@ export default class AiBotDockedComposer extends Component {
               {{i18n "discourse_ai.ai_bot.conversations.editing_post"}}
             </span>
             <DButton
-              @icon="xmark"
-              @action={{this.cancelEditing}}
               class="btn-transparent ai-bot-docked-composer__editing-dismiss"
+              @action={{this.cancelEditing}}
+              @icon="xmark"
             />
           </div>
         {{/if}}
       </:header>
       <:submit as |ctx|>
         <DButton
-          @icon={{if this.showToolbar "xmark" "plus"}}
+          class="ai-bot-docked-composer__toolbar-toggle"
           @action={{this.toggleToolbar}}
+          @icon={{if this.showToolbar "xmark" "plus"}}
           @title={{if
             this.showToolbar
             "discourse_ai.ai_bot.conversations.hide_toolbar"
             "discourse_ai.ai_bot.conversations.show_toolbar"
           }}
-          class="ai-bot-docked-composer__toolbar-toggle"
         />
         {{#if this.isStreaming}}
           <DButton
-            @icon="pause"
-            @action={{this.onStopStreaming}}
-            @title="discourse_ai.ai_bot.cancel_streaming"
             class="docked-composer__submit-btn"
+            @action={{this.onStopStreaming}}
+            @icon="pause"
+            @title="discourse_ai.ai_bot.cancel_streaming"
           />
         {{else}}
           <DButton
-            @icon="paper-plane"
+            class="docked-composer__submit-btn"
             @action={{ctx.submit}}
             @disabled={{ctx.disabled}}
+            @icon="paper-plane"
             @isLoading={{ctx.isSubmitting}}
             @title="discourse_ai.ai_bot.conversations.header"
-            class="docked-composer__submit-btn"
           />
         {{/if}}
       </:submit>
       <:default>
         {{#if this.showScrollIndicator}}
           <button
-            type="button"
             aria-label={{if
               this.isStreaming
               (i18n "discourse_ai.ai_bot.conversations.streaming_below")
@@ -561,6 +560,7 @@ export default class AiBotDockedComposer extends Component {
               "ai-bot-scroll-indicator"
               (if this.isStreaming "ai-bot-scroll-indicator--streaming")
             }}
+            type="button"
             {{on "click" this.scrollToBottom}}
           >
             {{#if this.isStreaming}}

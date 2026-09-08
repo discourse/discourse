@@ -585,7 +585,7 @@ RSpec.describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(2)
     end
 
-    it "won't notify the user a second time on revision" do
+    it "does not notify the user again on revision" do
       p1 = create_post_with_alerts(raw: '[quote="Evil Trout, post:1"]whatup[/quote]')
       expect {
         p1.revise(p1.user, raw: '[quote="Evil Trout, post:1"]whatup now?[/quote]')
@@ -677,7 +677,7 @@ RSpec.describe PostAlerter do
 
     before { Jobs.run_immediately! }
 
-    it "will notify correctly on linking" do
+    it "notifies the linked user" do
       linking_post
 
       expect(user.notifications.count).to eq(1)
@@ -757,6 +757,7 @@ RSpec.describe PostAlerter do
     let(:post) do
       create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic)
     end
+
     fab!(:other_post) { Fabricate(:post, topic: topic) }
 
     before { Jobs.run_immediately! }
@@ -813,6 +814,7 @@ RSpec.describe PostAlerter do
       Fabricate(:group, name: "group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
     end
     let(:post) { create_post_with_alerts(raw: "Hello @group how are you?") }
+
     before { group.add(evil_trout) }
 
     it "notifies users correctly" do
@@ -871,7 +873,7 @@ RSpec.describe PostAlerter do
       expect { mention_post }.to change(evil_trout.notifications, :count).by(1)
     end
 
-    it "won't notify the user a second time on revision" do
+    it "does not notify the user again on revision" do
       mention_post
       expect {
         mention_post.revise(
@@ -980,6 +982,7 @@ RSpec.describe PostAlerter do
         %i[watching tracking regular].each do |notification_level|
           context "when notification level is '#{notification_level}'" do
             before { set_topic_notification_level(alice, pm_topic, notification_level) }
+
             let(:expected_notification) do
               notification_level == :watching ? :private_message : :mentioned
             end
@@ -1873,7 +1876,7 @@ RSpec.describe PostAlerter do
       ).to eq(true)
     end
 
-    it "it doesn't notify about small action posts when the topic author is watching the topic " do
+    it "does not notify the watching topic author about small action posts" do
       Jobs.run_immediately!
 
       u1 = Fabricate(:admin)
@@ -2740,7 +2743,7 @@ RSpec.describe PostAlerter do
         )
       end
 
-      it "should use the first post of the topic" do
+      it "uses the first post of the topic" do
         topic_link
         expect(PostAlerter.new.extract_linked_users(post.reload)).to eq([post2.user])
       end

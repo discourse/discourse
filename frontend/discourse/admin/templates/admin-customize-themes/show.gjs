@@ -32,8 +32,8 @@ export default <template>
 
     <span>
       <PluginOutlet
-        @name="admin-customize-themes-show-top"
         @connectorTagName="div"
+        @name="admin-customize-themes-show-top"
         @outletArgs={{lazyHash theme=@controller.model}}
       />
     </span>
@@ -41,25 +41,25 @@ export default <template>
     <div class="title admin-customize-themes-show__title">
       {{#if @controller.editingName}}
         <div class="container-edit-title">
-          <DTextField @value={{@controller.model.name}} @autofocus="true" />
+          <DTextField @autofocus="true" @value={{@controller.model.name}} />
           <DButton
+            class="btn-primary btn-small submit-edit"
             @action={{@controller.finishedEditingName}}
             @icon="check"
-            class="btn-primary btn-small submit-edit"
           />
           <DButton
+            class="btn-default btn-small cancel-edit"
             @action={{@controller.cancelEditingName}}
             @icon="xmark"
-            class="btn-default btn-small cancel-edit"
           />
         </div>
       {{else}}
         <DButton
-          @action={{@controller.startEditingName}}
+          aria-label="Edit theme name: {{@controller.model.name}}"
+          aria-level="2"
           class="btn-transparent title-button"
           role="heading"
-          aria-level="2"
-          aria-label="Edit theme name: {{@controller.model.name}}"
+          @action={{@controller.startEditingName}}
         >
           <span>{{@controller.model.name}}</span>
           {{#unless @controller.model.system}}
@@ -108,16 +108,16 @@ export default <template>
         {{/if}}
 
         <DButton
+          class="btn-primary finish-install"
           @action={{@controller.updateToLatest}}
           @icon="download"
           @label="admin.customize.theme.finish_install"
-          class="btn-primary finish-install"
         />
         <DButton
-          @action={{@controller.destroyTheme}}
-          @label="admin.customize.delete"
-          @icon="trash-can"
           class="btn-danger"
+          @action={{@controller.destroyTheme}}
+          @icon="trash-can"
+          @label="admin.customize.delete"
         />
 
         <span class="status-message">
@@ -160,10 +160,10 @@ export default <template>
             {{i18n "admin.customize.theme.disabled"}}
           {{/if}}
           <DButton
+            class="btn-default"
             @action={{@controller.enableComponent}}
             @icon="check"
             @label="admin.customize.theme.enable"
-            class="btn-default"
           />
         </div>
       {{/unless}}

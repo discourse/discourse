@@ -8,6 +8,7 @@ RSpec.describe Chat::AddUsersToChannel do
     let(:groups) { "group1" }
 
     it { is_expected.to validate_presence_of :channel_id }
+
     it do
       is_expected.to validate_length_of(:usernames)
         .is_at_most(SiteSetting.chat_max_direct_message_users)

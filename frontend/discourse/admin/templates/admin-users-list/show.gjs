@@ -42,15 +42,15 @@ export default <template>
       {{#if @controller.canCheckEmails}}
         {{#if @controller.showEmails}}
           <actions.Default
+            class="admin-users__subheader-hide-emails"
             @action={{@controller.toggleEmailVisibility}}
             @label="admin.users.hide_emails"
-            class="admin-users__subheader-hide-emails"
           />
         {{else}}
           <actions.Default
+            class="admin-users__subheader-show-emails"
             @action={{@controller.toggleEmailVisibility}}
             @label="admin.users.show_emails"
-            class="admin-users__subheader-show-emails"
           />
         {{/if}}
       {{/if}}
@@ -61,19 +61,19 @@ export default <template>
 
   <DFilterControls
     @array={{@controller.users}}
-    @inputPlaceholder={{@controller.searchHint}}
-    @initialTextFilter={{@controller.initialFilter}}
-    @textFilterQueryParam="filter"
-    @noResultsMessage={{i18n "search.no_results"}}
-    @onTextFilterChange={{@controller.onListFilterChange}}
-    @onResetFilters={{@controller.onResetFilters}}
-    @loading={{@controller.refreshing}}
     @dropdownOptions={{if
       @controller.showActivationFilter
       ACTIVATION_FILTER_OPTIONS
     }}
     @dropdownValue={{or @controller.activation "all"}}
+    @initialTextFilter={{@controller.initialFilter}}
+    @inputPlaceholder={{@controller.searchHint}}
+    @loading={{@controller.refreshing}}
+    @noResultsMessage={{i18n "search.no_results"}}
     @onDropdownFilterChange={{@controller.onActivationChange}}
+    @onResetFilters={{@controller.onResetFilters}}
+    @onTextFilterChange={{@controller.onListFilterChange}}
+    @textFilterQueryParam="filter"
   >
     <:actions>
       {{#if @controller.displayBulkActions}}
@@ -94,22 +94,22 @@ export default <template>
               <DDropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
+                    class="bulk-suspend btn-danger"
+                    @action={{@controller.openBulkSuspendConfirmation}}
+                    @icon="ban"
                     @translatedLabel={{i18n
                       "admin.users.bulk_actions.suspend.label"
                     }}
-                    @icon="ban"
-                    @action={{@controller.openBulkSuspendConfirmation}}
-                    class="bulk-suspend btn-danger"
                   />
                 </dropdown.item>
                 <dropdown.item>
                   <DButton
+                    class="bulk-delete btn-danger"
+                    @action={{@controller.openBulkDeleteConfirmation}}
+                    @icon="trash-can"
                     @translatedLabel={{i18n
                       "admin.users.bulk_actions.delete.label"
                     }}
-                    @icon="trash-can"
-                    @action={{@controller.openBulkDeleteConfirmation}}
-                    class="bulk-delete btn-danger"
                   />
                 </dropdown.item>
               </DDropdownMenu>
@@ -133,10 +133,10 @@ export default <template>
     </:aboveContent>
 
     <:content as |users|>
-      <DLoadMore @action={{@controller.loadMore}} class="users-list-container">
+      <DLoadMore class="users-list-container" @action={{@controller.loadMore}}>
         <DResponsiveTable
-          @className={{dConcatClass "users-list" @controller.query}}
           @ariaLabel={{@controller.title}}
+          @className={{dConcatClass "users-list" @controller.query}}
           @style={{trustHTML
             (concat
               "grid-template-columns: minmax(min-content, 2fr) repeat("
@@ -149,116 +149,116 @@ export default <template>
             <div class="directory-table__column-header-wrapper">
               <DButton
                 class="btn-flat bulk-select"
-                @icon="list-check"
                 @action={{@controller.toggleBulkSelect}}
+                @icon="list-check"
               />
               {{#if @controller.bulkSelect}}
                 <DButton
                   class="btn-flat bulk-select-all"
-                  @label="admin.users.bulk_actions.select_all"
                   @action={{@controller.bulkSelectAll}}
+                  @label="admin.users.bulk_actions.select_all"
                 />
                 <DButton
                   class="btn-flat bulk-clear-all"
-                  @label="admin.users.bulk_actions.clear_all"
                   @action={{@controller.bulkClearAll}}
+                  @label="admin.users.bulk_actions.clear_all"
                 />
               {{/if}}
               <DTableHeaderToggle
-                @onToggle={{@controller.updateOrder}}
-                @field="username"
-                @labelKey="username"
-                @order={{@controller.order}}
+                class="directory-table__column-header--username"
                 @asc={{@controller.asc}}
                 @automatic={{true}}
-                class="directory-table__column-header--username"
+                @field="username"
+                @labelKey="username"
+                @onToggle={{@controller.updateOrder}}
+                @order={{@controller.order}}
               />
             </div>
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @field="email"
-              @labelKey="email"
-              @order={{@controller.order}}
-              @asc={{@controller.asc}}
-              @automatic={{true}}
               class={{if
                 @controller.showEmails
                 "directory-table__column-header--email"
                 "hidden"
               }}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
+              @field="email"
+              @labelKey="email"
+              @onToggle={{@controller.updateOrder}}
+              @order={{@controller.order}}
             />
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="last_emailed"
               @labelKey="admin.users.last_emailed"
+              @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
-              @asc={{@controller.asc}}
-              @automatic={{true}}
             />
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @field="seen"
-              @labelKey="last_seen"
-              @order={{@controller.order}}
               @asc={{@controller.asc}}
               @automatic={{true}}
+              @field="seen"
+              @labelKey="last_seen"
+              @onToggle={{@controller.updateOrder}}
+              @order={{@controller.order}}
             />
             {{#unless
               (or @controller.showSilenceReason @controller.showSuspendReason)
             }}
               <DTableHeaderToggle
-                @onToggle={{@controller.updateOrder}}
-                @field="topics_viewed"
-                @labelKey="admin.user.topics_entered"
-                @order={{@controller.order}}
                 @asc={{@controller.asc}}
                 @automatic={{true}}
+                @field="topics_viewed"
+                @labelKey="admin.user.topics_entered"
+                @onToggle={{@controller.updateOrder}}
+                @order={{@controller.order}}
               />
             {{/unless}}
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="posts_read"
               @labelKey="admin.user.posts_read_count"
+              @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
-              @asc={{@controller.asc}}
-              @automatic={{true}}
             />
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="read_time"
               @labelKey="admin.user.time_read"
+              @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
-              @asc={{@controller.asc}}
-              @automatic={{true}}
             />
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @field="created"
-              @labelKey="created"
-              @order={{@controller.order}}
               @asc={{@controller.asc}}
               @automatic={{true}}
+              @field="created"
+              @labelKey="created"
+              @onToggle={{@controller.updateOrder}}
+              @order={{@controller.order}}
             />
             {{#if @controller.showSilenceReason}}
               <DTableHeaderToggle
-                @onToggle={{@controller.updateOrder}}
-                @field="silence_reason"
-                @labelKey="admin.users.silence_reason"
-                @order={{@controller.order}}
+                class="directory-table__column-header--silence-reason"
                 @asc={{@controller.asc}}
                 @automatic={{true}}
-                class="directory-table__column-header--silence-reason"
+                @field="silence_reason"
+                @labelKey="admin.users.silence_reason"
+                @onToggle={{@controller.updateOrder}}
+                @order={{@controller.order}}
               />
             {{/if}}
             {{#if @controller.showSuspendReason}}
               <DTableHeaderToggle
-                @onToggle={{@controller.updateOrder}}
-                @field="suspend_reason"
-                @labelKey="admin.users.suspend_reason"
-                @order={{@controller.order}}
+                class="directory-table__column-header--suspend-reason"
                 @asc={{@controller.asc}}
                 @automatic={{true}}
-                class="directory-table__column-header--suspend-reason"
+                @field="suspend_reason"
+                @labelKey="admin.users.suspend_reason"
+                @onToggle={{@controller.updateOrder}}
+                @order={{@controller.order}}
               />
             {{/if}}
             <PluginOutlet
@@ -291,10 +291,10 @@ export default <template>
                   {{#if @controller.bulkSelect}}
                     {{#if (or user.can_be_deleted user.can_be_suspended)}}
                       <input
-                        type="checkbox"
-                        class="directory-table__cell-bulk-select"
                         checked={{get @controller.bulkSelectedUsersMap user.id}}
+                        class="directory-table__cell-bulk-select"
                         data-user-id={{user.id}}
+                        type="checkbox"
                         {{on
                           "click"
                           (fn @controller.bulkSelectItemToggle user.id)
@@ -307,9 +307,9 @@ export default <template>
                       >
                         <:trigger>
                           <input
-                            type="checkbox"
                             class="directory-table__cell-bulk-select"
                             disabled={{true}}
+                            type="checkbox"
                           />
                         </:trigger>
                         <:content>
@@ -322,12 +322,12 @@ export default <template>
                   {{/if}}
                   <a
                     class="avatar"
-                    href={{user.path}}
                     data-user-card={{user.username}}
+                    href={{user.path}}
                   >
                     {{dAvatar user imageSize="small"}}
                   </a>
-                  <LinkTo @route="adminUser" @model={{user}}>
+                  <LinkTo @model={{user}} @route="adminUser">
                     {{user.username}}
                   </LinkTo>
                   {{#if user.staged}}
@@ -493,8 +493,8 @@ export default <template>
                     {{/if}}
                   </span>
                   <PluginOutlet
-                    @name="admin-users-list-icon"
                     @connectorTagName="div"
+                    @name="admin-users-list-icon"
                     @outletArgs={{lazyHash user=user query=@controller.query}}
                   />
                 </div>

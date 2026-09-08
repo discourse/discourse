@@ -33,8 +33,8 @@ export default class MinimalGamificationLeaderboardRow extends Component {
 
   <template>
     <div
-      id="leaderboard-user-{{@rank.id}}"
       class={{dConcatClass "user" (if @rank.isCurrentUser "user-highlight")}}
+      id="leaderboard-user-{{@rank.id}}"
     >
       {{#if this.showRank}}
         <div class={{dConcatClass "user__rank" (if @rank.topRanked "-winner")}}>
@@ -46,9 +46,9 @@ export default class MinimalGamificationLeaderboardRow extends Component {
         </div>
       {{/if}}
       <div
-        role="button"
-        data-user-card={{@rank.username}}
         class="user__avatar clickable"
+        data-user-card={{@rank.username}}
+        role="button"
       >
         {{dAvatar @rank imageSize=this.avatarSize}}
 

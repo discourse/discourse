@@ -18,6 +18,7 @@ RSpec.describe "a listing read from a cursor" do
       expect(sorted_listing[:data].map { it[:meta][:page][:cursor] }).to all(be_present)
     end
   end
+
   let(:pages) do
     sorted_listing[:data].map do
       listing_of({ sort:, page: { after: cursor_of(it) }, fields: { topics: [:title] } })

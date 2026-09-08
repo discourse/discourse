@@ -4937,8 +4937,6 @@ pt_BR:
         complete: "Postagem oculta, o(a) usuário(a) recebeu uma notificação."
       agree_and_edit:
         title: "Editar postagem"
-        description: "Concorde com o sinalizador e abra uma janela do compositor para editar a postagem."
-        complete: "Sinalizador reconhecido, você pode editar a postagem."
       delete:
         title: "Excluir"
         complete: "Postagem excluída."
@@ -5042,30 +5040,6 @@ pt_BR:
       approve_and_unhide:
         title: "Sim"
         complete: "Postagem aprovada e revelada"
-      post_actions:
-        bundle_title: "O que você deseja fazer com a postagem?"
-      delete_post:
-        title: "Excluir postagem"
-        description: "Excluir esta postagem"
-        complete: "Postagem excluída"
-      hide_post:
-        title: "Ocultar postagem"
-        description: "Ocultar esta postagem da visualização pública"
-        complete: "Postagem oculta"
-      unhide_post:
-        title: "Reexibir postagem"
-        description: "Tornar esta postagem visível para todos os usuários."
-        complete: "Postagem não mais oculta"
-      restore_post:
-        title: "Restaurar postagem"
-        description: "Restaurar esta postagem excluída"
-        complete: "Postagem restaurada"
-      edit_post:
-        title: "Editar postagem"
-        description: "Editar o conteúdo desta postagem"
-        complete: "Postagem editada"
-      user_actions:
-        bundle_title: "O que você deseja fazer com o(a) usuário(a)?"
       silence_user:
         title: "Silenciar usuário(a)"
         complete: "Usuário(a) silenciado(a)"

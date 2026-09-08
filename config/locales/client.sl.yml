@@ -645,6 +645,9 @@ sl:
       user_label: "Uporabnik"
       timeline:
         target_deleted: "Prispevek izbrisan"
+      author_penalty:
+        toast:
+          undo: "Razveljavi"
       notes:
         delete: "Izbriši"
       topic_label: "Tema"
@@ -1175,7 +1178,6 @@ sl:
       admin: "%{user} je administrator"
       moderator_tooltip: "Uporabnik je moderator"
       admin_tooltip: "Uporabnik je administrator"
-      silenced_tooltip: "Ta uporabnik je utišan"
       suspended_notice: "Ta uporabnik je suspendiran do %{date}."
       suspended_permanently: "Ta uporabnik je suspendiran"
       suspended_reason: "Razlog: "

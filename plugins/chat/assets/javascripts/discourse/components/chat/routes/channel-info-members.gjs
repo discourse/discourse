@@ -90,6 +90,24 @@ export default class ChatRouteChannelInfoMembers extends Component {
     return this.chatApi.listChannelMemberships(this.args.channel.id, params);
   }
 
+  get addMembersMode() {
+    return MODES.add_members;
+  }
+
+  get canAddMembers() {
+    if (
+      !this.args.channel.isDirectMessageChannel ||
+      !this.chatGuardian.canUseGroupChat()
+    ) {
+      return false;
+    }
+
+    return (
+      this.args.channel.chatable.group ||
+      !this.args.channel.lastMessage?.message
+    );
+  }
+
   @action
   load() {
     discourseDebounce(this, this.debouncedLoad, INPUT_DELAY);
@@ -137,31 +155,13 @@ export default class ChatRouteChannelInfoMembers extends Component {
     this.loadingSlider.transitionEnded();
   }
 
-  get addMembersMode() {
-    return MODES.add_members;
-  }
-
-  get canAddMembers() {
-    if (
-      !this.args.channel.isDirectMessageChannel ||
-      !this.chatGuardian.canUseGroupChat()
-    ) {
-      return false;
-    }
-
-    return (
-      this.args.channel.chatable.group ||
-      !this.args.channel.lastMessage?.message
-    );
-  }
-
   <template>
     <div class="c-routes --channel-info-members">
       {{#if this.site.mobileView}}
         <LinkTo
           class="c-back-button"
-          @route="chat.channel.info.settings"
           @model={{@channel}}
+          @route="chat.channel.info.settings"
         >
           {{dIcon "chevron-left"}}
           {{i18n "chat.members_view.back_to_settings"}}
@@ -169,19 +169,19 @@ export default class ChatRouteChannelInfoMembers extends Component {
       {{/if}}
       {{#if this.showAddMembers}}
         <MessageCreator
-          @mode={{this.addMembersMode}}
           @channel={{@channel}}
-          @onClose={{this.hideAddMember}}
+          @mode={{this.addMembersMode}}
           @onCancel={{this.hideAddMember}}
+          @onClose={{this.hideAddMember}}
         />
       {{else}}
         <div class="c-channel-members">
           <DFilterInput
-            {{dAutoFocus}}
+            placeholder={{this.filterPlaceholder}}
+            @containerClass="c-channel-members__filter"
             @filterAction={{this.mutFilter}}
             @icons={{hash right="magnifying-glass"}}
-            @containerClass="c-channel-members__filter"
-            placeholder={{this.filterPlaceholder}}
+            {{dAutoFocus}}
           />
 
           <ul class="c-channel-members__list" {{this.fill}}>
@@ -189,9 +189,9 @@ export default class ChatRouteChannelInfoMembers extends Component {
               <li
                 class="c-channel-members__list-item -add-member"
                 role="button"
+                tabindex="0"
                 {{on "click" this.addMember}}
                 {{this.onEnter this.addMember}}
-                tabindex="0"
               >
                 {{dIcon "plus"}}
                 <span>{{this.addMemberLabel}}</span>
@@ -206,18 +206,18 @@ export default class ChatRouteChannelInfoMembers extends Component {
                   {{this.onEnter (fn this.openMemberCard membership.user)}}
                 >
                   <ChatUserInfo
-                    @user={{membership.user}}
                     @avatarSize="tiny"
                     @interactive={{false}}
                     @showStatus={{true}}
                     @showStatusDescription={{true}}
+                    @user={{membership.user}}
                   />
                 </div>
                 {{#if (this.canRemoveMember membership.user)}}
                   <DButton
+                    class="btn-flat -remove-member"
                     @action={{fn this.removeMember membership.user}}
                     @label="chat.channel_info.remove_member"
-                    class="btn-flat -remove-member"
                   />
                 {{/if}}
               </li>

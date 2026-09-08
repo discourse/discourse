@@ -9,12 +9,12 @@ declare const variant: string;
 // glint-expect-error directives).
 const Test = <template>
   {{! The group's own arguments, with the halves carrying theirs }}
-  <DComboButton @hasMenu={{hasDrafts}} @btnTypeClass={{variant}} as |combo|>
-    <combo.Button @label="topic.create" @icon="plus" @disabled={{false}} />
+  <DComboButton @btnTypeClass={{variant}} @hasMenu={{hasDrafts}} as |combo|>
+    <combo.Button @disabled={{false}} @icon="plus" @label="topic.create" />
     <combo.Menu
+      @autofocus={{true}}
       @identifier="drafts"
       @placement="bottom-end"
-      @autofocus={{true}}
     >
       content
     </combo.Menu>
@@ -27,9 +27,9 @@ const Test = <template>
   </DComboButton>
 
   {{! Attributes reach the group's element and both halves }}
-  <DComboButton class="group" aria-label="Group" as |combo|>
+  <DComboButton aria-label="Group" class="group" as |combo|>
     <combo.Button class="half" id="act" />
-    <combo.Menu class="half" aria-label="More" />
+    <combo.Menu aria-label="More" class="half" />
   </DComboButton>
 
   {{! @glint-expect-error - @hasMenu is a boolean, not a string }}

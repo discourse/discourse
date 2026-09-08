@@ -26,9 +26,6 @@ loaderShim("@ember/component/helper", () =>
 loaderShim("@ember/component/template-only", () =>
   importSync("@ember/component/template-only")
 );
-loaderShim("@ember/component/template-only", () =>
-  importSync("@ember/component/template-only")
-);
 loaderShim("@ember/controller", () => importSync("@ember/controller"));
 loaderShim("@ember/debug", () => importSync("@ember/debug"));
 loaderShim("@ember/destroyable", () => importSync("@ember/destroyable"));
