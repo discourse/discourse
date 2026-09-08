@@ -19,6 +19,7 @@ import { i18n } from "discourse-i18n";
 export default class InvitesShowController extends Controller {
   @tracked accountPassword;
   @tracked accountUsername;
+  @tracked codeInviteStep = "email";
   @tracked isDeveloper;
   @autoTrackedArray rejectedEmails = [];
 
@@ -196,6 +197,26 @@ export default class InvitesShowController extends Controller {
   @computed("externalAuthsOnly", "discourseConnectEnabled")
   get showSignupProgressBar() {
     return !(this.externalAuthsOnly || this.discourseConnectEnabled);
+  }
+
+  @computed("codeInviteStep", "showCodeInviteForm", "successMessage")
+  get progressBarStep() {
+    if (this.showCodeInviteForm) {
+      if (this.codeInviteStep === "complete") {
+        return "login";
+      }
+
+      if (this.codeInviteStep !== "email") {
+        return "activate";
+      }
+    }
+
+    return this.successMessage ? "activate" : "signup";
+  }
+
+  @action
+  updateCodeInviteStep(step) {
+    this.codeInviteStep = step;
   }
 
   @computed(

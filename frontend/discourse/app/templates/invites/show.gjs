@@ -31,9 +31,7 @@ export default <template>
     <div class="container invites-show clearfix">
       {{#if @controller.showWelcomeHeader}}
         {{#if @controller.showSignupProgressBar}}
-          <SignupProgressBar
-            @step={{if @controller.successMessage "activate" "signup"}}
-          />
+          <SignupProgressBar @step={{@controller.progressBarStep}} />
           <WelcomeHeader @header={{@controller.welcomeTitle}} />
         {{/if}}
       {{/if}}
@@ -102,6 +100,7 @@ export default <template>
                   @emailLocked={{not @controller.isInviteLink}}
                   @initialEmail={{@controller.email}}
                   @inviteKey={{@controller.model.token}}
+                  @onStepChange={{@controller.updateCodeInviteStep}}
                 />
               {{else}}
                 <form>
