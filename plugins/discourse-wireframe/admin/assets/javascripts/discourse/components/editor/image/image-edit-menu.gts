@@ -230,14 +230,14 @@ export default class ImageEditMenu extends Component<ImageEditMenuSignature> {
         class="wireframe-image-editor-menu__action"
         @action={{this.pickFile}}
         @disabled={{this.uploading}}
-        @label={{this.changeLabel}}
         @isLoading={{this.uploading}}
+        @label={{this.changeLabel}}
       />
       <input
-        id="wireframe-image-upload-current"
-        type="file"
         accept="image/*"
         hidden
+        id="wireframe-image-upload-current"
+        type="file"
         {{didInsert this.registerFileInput}}
         {{on "change" (fn this.replace this.visibleVariant)}}
       />
@@ -249,10 +249,10 @@ export default class ImageEditMenu extends Component<ImageEditMenuSignature> {
           @label="wireframe.inspector.image.add_dark"
         />
         <input
-          id="wireframe-image-upload-dark"
-          type="file"
           accept="image/*"
           hidden
+          id="wireframe-image-upload-dark"
+          type="file"
           {{didInsert this.registerDarkFileInput}}
           {{on "change" (fn this.replace "dark")}}
         />

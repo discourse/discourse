@@ -7,16 +7,16 @@ interface TableThumbnailSignature {
 /** Palette thumbnail for the `table` block: a grid with a header row. */
 const TableThumbnail: TemplateOnlyComponent<TableThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="14"
-        y="16"
-        width="92"
+        fill="var(--secondary)"
         height="48"
         rx="4"
-        fill="var(--secondary)"
         stroke="var(--primary-low-mid)"
         stroke-width="1.5"
+        width="92"
+        x="14"
+        y="16"
       />
       <path
         d="M14 30 H106"
@@ -29,28 +29,28 @@ const TableThumbnail: TemplateOnlyComponent<TableThumbnailSignature> =
         stroke-width="1.5"
       />
       <rect
+        fill="var(--primary-medium)"
+        height="4"
+        rx="2"
+        width="16"
         x="20"
         y="21"
-        width="16"
-        height="4"
-        rx="2"
-        fill="var(--primary-medium)"
       />
       <rect
+        fill="var(--primary-medium)"
+        height="4"
+        rx="2"
+        width="16"
         x="50"
         y="21"
-        width="16"
-        height="4"
-        rx="2"
-        fill="var(--primary-medium)"
       />
       <rect
-        x="80"
-        y="21"
-        width="16"
+        fill="var(--primary-medium)"
         height="4"
         rx="2"
-        fill="var(--primary-medium)"
+        width="16"
+        x="80"
+        y="21"
       />
     </svg>
   </template>;

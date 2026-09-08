@@ -186,12 +186,12 @@ export default class ConditionsFloatingPanel extends Component {
   <template>
     {{#if this.isOpen}}
       <div
-        class="wireframe-conditions-floating"
-        style={{this.panelStyle}}
-        role="dialog"
         aria-label={{i18n
           "wireframe.inspector.conditions.floating_panel_title"
         }}
+        class="wireframe-conditions-floating"
+        role="dialog"
+        style={{this.panelStyle}}
         {{this.observeResize}}
       >
         <div
@@ -215,9 +215,9 @@ export default class ConditionsFloatingPanel extends Component {
           <div class="wireframe-conditions-floating__actions">
             <DButton
               class="wireframe-conditions-floating__btn"
+              @action={{this.redock}}
               @icon="down-left-and-up-right-to-center"
               @title="wireframe.inspector.conditions.redock_panel"
-              @action={{this.redock}}
             />
           </div>
         </div>

@@ -215,10 +215,10 @@ export default class InspectorSegmentedField extends Component<InspectorSegmente
       <ComboBox
         class="wireframe-segmented-field__dropdown"
         @content={{this.items}}
-        @value={{this.currentValue}}
         @nameProperty="label"
-        @valueProperty="value"
         @onChange={{this.commit}}
+        @value={{this.currentValue}}
+        @valueProperty="value"
       />
     {{else}}
       <DFitSwap @remeasureOn={{this.items}}>
@@ -226,19 +226,19 @@ export default class InspectorSegmentedField extends Component<InspectorSegmente
           <DSegmentedControl
             class="wireframe-segmented-field"
             @items={{this.segmentItems}}
-            @value={{this.currentValue}}
             @name={{this.name}}
             @onSelect={{this.commit}}
+            @value={{this.currentValue}}
           />
         </:full>
         <:collapsed>
           <ComboBox
             class="wireframe-segmented-field__dropdown"
             @content={{this.items}}
-            @value={{this.currentValue}}
             @nameProperty="label"
-            @valueProperty="value"
             @onChange={{this.commit}}
+            @value={{this.currentValue}}
+            @valueProperty="value"
           />
         </:collapsed>
       </DFitSwap>

@@ -71,35 +71,35 @@ export default class Image extends Component<ImageSignature> {
       {{#if @caption}}
         <figure class="d-block-image">
           {{#if @link}}
-            <a href={{@link}} data-block-arg="link">
+            <a data-block-arg="link" href={{@link}}>
               <BlockImage
                 data-block-arg="image"
                 data-drop-fills-block
-                @image={{@image}}
                 @alt={{@alt}}
+                @image={{@image}}
               />
             </a>
           {{else}}
             <BlockImage
               data-block-arg="image"
               data-drop-fills-block
-              @image={{@image}}
               @alt={{@alt}}
+              @image={{@image}}
             />
           {{/if}}
           <figcaption class="d-block-image__caption">{{@caption}}</figcaption>
         </figure>
       {{else if @link}}
-        <a href={{@link}} class="d-block-image" data-block-arg="link">
-          <BlockImage data-block-arg="image" @image={{@image}} @alt={{@alt}} />
+        <a class="d-block-image" data-block-arg="link" href={{@link}}>
+          <BlockImage data-block-arg="image" @alt={{@alt}} @image={{@image}} />
         </a>
       {{else}}
         <BlockImage
           class="d-block-image"
           data-block-arg="image"
           data-drop-fills-block
-          @image={{@image}}
           @alt={{@alt}}
+          @image={{@image}}
         />
       {{/if}}
     {{else}}

@@ -238,8 +238,8 @@ export default class Carousel extends Component<CarouselSignature> {
         control to the root, then to the marked viewport). }}
     <div
       class="d-block-carousel"
-      style={{this.viewStyle}}
       data-wf-carousel={{if this.isEditing "true"}}
+      style={{this.viewStyle}}
     >
       {{! In an editing context the viewport is marked as the drop container so
           in-session editing tooling projects drops onto the slides directly
@@ -250,9 +250,6 @@ export default class Carousel extends Component<CarouselSignature> {
           slide terms. All omitted on the live page. }}
       <div
         class="d-block-carousel__viewport"
-        tabindex="0"
-        data-wf-drop-container={{if this.isEditing "true"}}
-        data-wf-drop-axis={{if this.isEditing "x"}}
         data-wf-child-noun={{if
           this.isEditing
           (i18n "blocks.builtin.carousel.slide_noun")
@@ -261,6 +258,9 @@ export default class Carousel extends Component<CarouselSignature> {
           this.isEditing
           (i18n "blocks.builtin.carousel.slide_noun_plural")
         }}
+        data-wf-drop-axis={{if this.isEditing "x"}}
+        data-wf-drop-container={{if this.isEditing "true"}}
+        tabindex="0"
         {{this.setupTrack}}
         {{on "keydown" this.onKeyDown}}
       >
@@ -281,10 +281,10 @@ export default class Carousel extends Component<CarouselSignature> {
           data-wf-drop-exclude={{if this.isEditing "true"}}
         >
           <button
-            type="button"
-            class="d-block-carousel__nav d-block-carousel__nav--prev"
             aria-label={{i18n "carousel.previous"}}
+            class="d-block-carousel__nav d-block-carousel__nav--prev"
             data-wf-carousel-nav={{if this.isEditing "true"}}
+            type="button"
             {{on "click" (fn this.scrollToIndex this.prevIndex)}}
           >
             {{dIcon "chevron-left"}}
@@ -294,13 +294,13 @@ export default class Carousel extends Component<CarouselSignature> {
             <div class="d-block-carousel__dots">
               {{#each this.slides key="key" as |_child index|}}
                 <button
-                  type="button"
+                  aria-current={{if (eq this.currentIndex index) "true"}}
+                  aria-label={{i18n "carousel.go_to_slide" index=index}}
                   class="d-block-carousel__dot
                     {{if (eq this.currentIndex index) 'is-active'}}"
-                  aria-label={{i18n "carousel.go_to_slide" index=index}}
-                  aria-current={{if (eq this.currentIndex index) "true"}}
                   data-wf-carousel-nav={{if this.isEditing "true"}}
                   data-wf-carousel-slide-index={{if this.isEditing index}}
+                  type="button"
                   {{on "click" (fn this.scrollToIndex index)}}
                 ></button>
               {{/each}}
@@ -308,10 +308,10 @@ export default class Carousel extends Component<CarouselSignature> {
           {{/if}}
 
           <button
-            type="button"
-            class="d-block-carousel__nav d-block-carousel__nav--next"
             aria-label={{i18n "carousel.next"}}
+            class="d-block-carousel__nav d-block-carousel__nav--next"
             data-wf-carousel-nav={{if this.isEditing "true"}}
+            type="button"
             {{on "click" (fn this.scrollToIndex this.nextIndex)}}
           >
             {{dIcon "chevron-right"}}

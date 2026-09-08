@@ -41,8 +41,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="section"
             @blockKey="section:child"
+            @blockName="section"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedTabPanel}}
           />

@@ -15,6 +15,7 @@ import type WireframeLayoutQueryService from "discourse/plugins/discourse-wirefr
 export default class WireframeDropAuthorityService extends Service {
   /** Identifies the block and source outlet of the current drag. */
   @service declare wireframeDragSession: WireframeDragSessionService;
+
   /** Resolves block entries and their registered outlet restrictions. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
 

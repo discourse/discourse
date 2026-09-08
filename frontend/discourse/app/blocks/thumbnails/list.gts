@@ -6,45 +6,45 @@ interface ListThumbnailSignature {
 
 /** Palette thumbnail for the `list` block: a bulleted list. */
 const ListThumbnail: TemplateOnlyComponent<ListThumbnailSignature> = <template>
-  <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
-    <circle cx="22" cy="22" r="2.5" fill="var(--primary-medium)" />
+  <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
+    <circle cx="22" cy="22" fill="var(--primary-medium)" r="2.5" />
     <rect
+      fill="var(--primary-low-mid)"
+      height="5"
+      rx="2"
+      width="72"
       x="32"
       y="20"
-      width="72"
-      height="5"
-      rx="2"
-      fill="var(--primary-low-mid)"
     />
 
-    <circle cx="22" cy="34" r="2.5" fill="var(--primary-medium)" />
+    <circle cx="22" cy="34" fill="var(--primary-medium)" r="2.5" />
     <rect
+      fill="var(--primary-low-mid)"
+      height="5"
+      rx="2"
+      width="62"
       x="32"
       y="32"
-      width="62"
-      height="5"
-      rx="2"
-      fill="var(--primary-low-mid)"
     />
 
-    <circle cx="22" cy="46" r="2.5" fill="var(--primary-medium)" />
+    <circle cx="22" cy="46" fill="var(--primary-medium)" r="2.5" />
     <rect
+      fill="var(--primary-low-mid)"
+      height="5"
+      rx="2"
+      width="70"
       x="32"
       y="44"
-      width="70"
-      height="5"
-      rx="2"
-      fill="var(--primary-low-mid)"
     />
 
-    <circle cx="22" cy="58" r="2.5" fill="var(--primary-medium)" />
+    <circle cx="22" cy="58" fill="var(--primary-medium)" r="2.5" />
     <rect
-      x="32"
-      y="56"
-      width="54"
+      fill="var(--primary-low-mid)"
       height="5"
       rx="2"
-      fill="var(--primary-low-mid)"
+      width="54"
+      x="32"
+      y="56"
     />
   </svg>
 </template>;

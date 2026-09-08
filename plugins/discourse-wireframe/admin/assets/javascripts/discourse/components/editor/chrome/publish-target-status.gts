@@ -22,6 +22,7 @@ import type WireframeStagingService from "discourse/plugins/discourse-wireframe/
 export default class PublishTargetStatus extends Component {
   /** Exposes publish-target resolution state. */
   @service declare wireframeStaging: WireframeStagingService;
+
   /** Resolves the themes receiving staged changes. */
   @service declare wireframePublishTarget: WireframePublishTargetService;
 

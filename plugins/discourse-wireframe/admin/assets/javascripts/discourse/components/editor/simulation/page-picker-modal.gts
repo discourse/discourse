@@ -118,9 +118,9 @@ export default class PagePickerModal extends Component<PagePickerModalSignature>
 
   <template>
     <DModal
-      @title={{i18n "wireframe.page_picker.title"}}
-      @closeModal={{@closeModal}}
       class="wireframe-page-picker"
+      @closeModal={{@closeModal}}
+      @title={{i18n "wireframe.page_picker.title"}}
     >
       <:body>
         <p>
@@ -131,8 +131,8 @@ export default class PagePickerModal extends Component<PagePickerModalSignature>
             <li>
               <DButton
                 class="btn-default"
-                @label={{concat "wireframe.page_picker.pages." page.labelKey}}
                 @action={{fn this.navigate page}}
+                @label={{concat "wireframe.page_picker.pages." page.labelKey}}
               />
             </li>
           {{/each}}

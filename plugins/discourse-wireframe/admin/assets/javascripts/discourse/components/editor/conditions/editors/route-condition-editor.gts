@@ -72,17 +72,22 @@ const PAGE_LABELS: Readonly<Record<string, string>> = {
 export default class RouteConditionEditor extends Component<RouteConditionEditorSignature> {
   /** Whether the advanced JSON editors are expanded. */
   @tracked advancedOpen = false;
+
   /** Editable JSON representation of route parameters. */
   @tracked
   paramsJson: string | undefined = serialiseJson(this.args.leaf?.params);
+
   /** Editable JSON representation of query parameters. */
   @tracked queryParamsJson: string | undefined = serialiseJson(
     this.args.leaf?.queryParams
   );
+
   /** Current route-parameter parse error. */
   @tracked paramsError: string | null = null;
+
   /** Current query-parameter parse error. */
   @tracked queryParamsError: string | null = null;
+
   /**
    * Checks whether a page type is selected.
    *
@@ -241,9 +246,9 @@ export default class RouteConditionEditor extends Component<RouteConditionEditor
                 "wireframe-condition-editor__chip"
                 (if (this.isPageSelected page.id) "--active")
               }}
+              @action={{fn this.togglePage page.id}}
               @ariaPressed={{this.isPageSelected page.id}}
               @translatedLabel={{page.label}}
-              @action={{fn this.togglePage page.id}}
             />
           {{/each}}
         </div>
@@ -255,10 +260,10 @@ export default class RouteConditionEditor extends Component<RouteConditionEditor
         </span>
         <textarea
           class="wireframe-condition-editor__textarea"
-          rows="3"
           placeholder={{i18n
             "wireframe.inspector.conditions.route_editor.urls_placeholder"
           }}
+          rows="3"
           {{on "input" this.setUrls}}
         >{{this.urlsText}}</textarea>
         <span class="wireframe-condition-editor__help">
@@ -268,13 +273,13 @@ export default class RouteConditionEditor extends Component<RouteConditionEditor
 
       <DButton
         class="wireframe-condition-editor__advanced-toggle"
+        @action={{this.toggleAdvanced}}
         @ariaExpanded={{this.advancedOpen}}
         @label={{if
           this.advancedOpen
           "wireframe.inspector.conditions.advanced_hide"
           "wireframe.inspector.conditions.advanced_show"
         }}
-        @action={{this.toggleAdvanced}}
       />
 
       {{#if this.advancedOpen}}
@@ -284,8 +289,8 @@ export default class RouteConditionEditor extends Component<RouteConditionEditor
           </span>
           <textarea
             class="wireframe-condition-editor__textarea --mono"
-            rows="3"
             placeholder='{"categorySlug": "support"}'
+            rows="3"
             {{on "input" this.setParamsJson}}
           >{{this.paramsJson}}</textarea>
           {{#if this.paramsError}}
@@ -303,8 +308,8 @@ export default class RouteConditionEditor extends Component<RouteConditionEditor
           </span>
           <textarea
             class="wireframe-condition-editor__textarea --mono"
-            rows="3"
             placeholder='{"filter": "solved"}'
+            rows="3"
             {{on "input" this.setQueryParamsJson}}
           >{{this.queryParamsJson}}</textarea>
           {{#if this.queryParamsError}}

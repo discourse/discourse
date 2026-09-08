@@ -49,9 +49,9 @@ module(
         <template>
           <BlockToolbar
             @blockKey={{this.blockKey}}
-            @outletName={{OUTLET}}
             @displayName="Heading"
             @isSelected={{true}}
+            @outletName={{OUTLET}}
           />
         </template>
       );
@@ -75,9 +75,9 @@ module(
         <template>
           <BlockToolbar
             @blockKey={{this.blockKey}}
-            @outletName={{OUTLET}}
             @displayName="Heading"
             @isSelected={{true}}
+            @outletName={{OUTLET}}
           />
         </template>
       );
@@ -104,10 +104,10 @@ module(
         <template>
           <BlockToolbar
             @blockKey={{this.blockKey}}
-            @outletName={{OUTLET}}
             @displayName="Hero"
             @isOutletRoot={{true}}
             @isSelected={{true}}
+            @outletName={{OUTLET}}
           />
         </template>
       );

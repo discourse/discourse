@@ -367,9 +367,9 @@ export default class InspectorForm extends Component {
         {{didUpdate this.syncErrors this.fieldErrors}}
       >
         <Form
+          class="wireframe-inspector-form"
           @data={{this.values}}
           @onRegisterApi={{this.registerFormApi}}
-          class="wireframe-inspector-form"
           as |form|
         >
           {{#each this.fieldGroups as |group|}}
@@ -386,12 +386,12 @@ export default class InspectorForm extends Component {
                   {{#each (this.visibleFields group.fields) as |field|}}
                     <InspectorField
                       @blockKey={{this.wireframeSelection.selectedBlockKey}}
-                      @form={{form}}
-                      @field={{field}}
-                      @values={{this.values}}
-                      @validationRuleFor={{this.validationRuleFor}}
-                      @onFieldSet={{this.onFieldSet}}
                       @disabled={{this.isFieldDisabled field}}
+                      @field={{field}}
+                      @form={{form}}
+                      @onFieldSet={{this.onFieldSet}}
+                      @validationRuleFor={{this.validationRuleFor}}
+                      @values={{this.values}}
                     />
                   {{/each}}
                 </div>
@@ -401,12 +401,12 @@ export default class InspectorForm extends Component {
                 {{#each (this.visibleFields group.fields) as |field|}}
                   <InspectorField
                     @blockKey={{this.wireframeSelection.selectedBlockKey}}
-                    @form={{form}}
-                    @field={{field}}
-                    @values={{this.values}}
-                    @validationRuleFor={{this.validationRuleFor}}
-                    @onFieldSet={{this.onFieldSet}}
                     @disabled={{this.isFieldDisabled field}}
+                    @field={{field}}
+                    @form={{form}}
+                    @onFieldSet={{this.onFieldSet}}
+                    @validationRuleFor={{this.validationRuleFor}}
+                    @values={{this.values}}
                   />
                 {{/each}}
               </form.Section>

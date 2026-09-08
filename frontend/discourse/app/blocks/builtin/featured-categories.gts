@@ -100,9 +100,6 @@ export default class FeaturedCategories extends Component<FeaturedCategoriesSign
         {{#each this.featuredCategories as |category|}}
           <CategoryCard
             @category={{category}}
-            @href={{category.url}}
-            @showDescription={{@description}}
-            @description={{category.description_excerpt}}
             @class={{concat
               "d-block-featured-categories__card"
               (if
@@ -110,6 +107,9 @@ export default class FeaturedCategories extends Component<FeaturedCategoriesSign
                 " d-block-featured-categories__card--has-description"
               )
             }}
+            @description={{category.description_excerpt}}
+            @href={{category.url}}
+            @showDescription={{@description}}
           />
         {{/each}}
       </div>

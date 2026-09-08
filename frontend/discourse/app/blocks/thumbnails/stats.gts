@@ -7,42 +7,42 @@ interface StatsThumbnailSignature {
 /** Palette thumbnail for the `stats` block: a row of number tiles. */
 const StatsThumbnail: TemplateOnlyComponent<StatsThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
-      <rect x="20" y="26" width="20" height="16" rx="2" fill="var(--primary)" />
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
+      <rect fill="var(--primary)" height="16" rx="2" width="20" x="20" y="26" />
       <rect
+        fill="var(--primary-medium)"
+        height="4"
+        rx="2"
+        width="24"
         x="18"
         y="48"
-        width="24"
-        height="4"
-        rx="2"
-        fill="var(--primary-medium)"
       />
 
       <rect
-        x="50"
-        y="26"
-        width="20"
+        fill="var(--tertiary)"
         height="16"
         rx="2"
-        fill="var(--tertiary)"
+        width="20"
+        x="50"
+        y="26"
       />
       <rect
+        fill="var(--primary-medium)"
+        height="4"
+        rx="2"
+        width="24"
         x="48"
         y="48"
-        width="24"
-        height="4"
-        rx="2"
-        fill="var(--primary-medium)"
       />
 
-      <rect x="80" y="26" width="20" height="16" rx="2" fill="var(--primary)" />
+      <rect fill="var(--primary)" height="16" rx="2" width="20" x="80" y="26" />
       <rect
-        x="78"
-        y="48"
-        width="24"
+        fill="var(--primary-medium)"
         height="4"
         rx="2"
-        fill="var(--primary-medium)"
+        width="24"
+        x="78"
+        y="48"
       />
     </svg>
   </template>;

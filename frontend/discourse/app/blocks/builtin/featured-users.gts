@@ -122,7 +122,7 @@ export default class FeaturedUsers extends Component<FeaturedUsersSignature> {
           <ul class="d-block-featured-users__list">
             {{#each items as |item|}}
               <li class="d-block-featured-users__item">
-                <DUserAvatar @user={{item.user}} @size="medium" />
+                <DUserAvatar @size="medium" @user={{item.user}} />
                 <DUserLink
                   @user={{item.user}}
                 >{{item.user.username}}</DUserLink>

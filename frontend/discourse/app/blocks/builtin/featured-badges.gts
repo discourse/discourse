@@ -111,7 +111,7 @@ export default class FeaturedBadges extends Component<FeaturedBadgesSignature> {
           <ul class="d-block-featured-badges__list">
             {{#each grants key="id" as |grant|}}
               <li class="d-block-featured-badges__item">
-                <DUserAvatar @user={{grant.user}} @size="medium" />
+                <DUserAvatar @size="medium" @user={{grant.user}} />
                 <div class="d-block-featured-badges__details">
                   <DUserLink
                     @user={{grant.user}}

@@ -7,38 +7,38 @@ interface LayoutGridThumbnailSignature {
 /** Palette thumbnail for an explicitly placed grid layout. */
 const LayoutGridThumbnail: TemplateOnlyComponent<LayoutGridThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="14"
-        y="14"
-        width="58"
+        fill="var(--primary-low)"
         height="24"
         rx="3"
-        fill="var(--primary-low)"
+        width="58"
+        x="14"
+        y="14"
       />
       <rect
-        x="78"
-        y="14"
-        width="28"
+        fill="var(--primary-low)"
         height="52"
         rx="3"
-        fill="var(--primary-low)"
+        width="28"
+        x="78"
+        y="14"
       />
       <rect
+        fill="var(--primary-low)"
+        height="22"
+        rx="3"
+        width="27"
         x="14"
         y="44"
-        width="27"
-        height="22"
-        rx="3"
-        fill="var(--primary-low)"
       />
       <rect
-        x="47"
-        y="44"
-        width="25"
+        fill="var(--primary-low)"
         height="22"
         rx="3"
-        fill="var(--primary-low)"
+        width="25"
+        x="47"
+        y="44"
       />
     </svg>
   </template>;

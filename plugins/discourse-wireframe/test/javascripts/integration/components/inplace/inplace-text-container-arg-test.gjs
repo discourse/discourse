@@ -75,16 +75,16 @@ module(
       await render(
         <template>
           <span
+            data-wf-container-arg-field="label"
             data-wf-container-arg-key={{keyA}}
             data-wf-container-arg-namespace="tab"
-            data-wf-container-arg-field="label"
           >
             <span class="host-a" data-wf-rich-text-arg="label"></span>
           </span>
           <span
+            data-wf-container-arg-field="label"
             data-wf-container-arg-key={{keyB}}
             data-wf-container-arg-namespace="tab"
-            data-wf-container-arg-field="label"
           >
             <span class="host-b" data-wf-rich-text-arg="label"></span>
           </span>

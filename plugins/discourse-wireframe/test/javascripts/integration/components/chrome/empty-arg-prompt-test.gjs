@@ -46,8 +46,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="topic-card"
             @blockKey={{blockKey}}
+            @blockName="topic-card"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedTopicCard}}
           />
@@ -83,8 +83,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="topic-card"
             @blockKey={{blockKey}}
+            @blockName="topic-card"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedTopicCard}}
           />
@@ -108,8 +108,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="section"
             @blockKey={{blockKey}}
+            @blockName="section"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedEmptySection}}
           />
@@ -148,8 +148,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="section"
             @blockKey={{blockKey}}
+            @blockName="section"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedEmptySection}}
           />

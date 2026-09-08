@@ -64,9 +64,9 @@ module(
         <template>
           <BlockToolbar
             @blockKey={{this.blockKey}}
-            @outletName={{OUTLET}}
             @displayName="Heading"
             @isSelected={{true}}
+            @outletName={{OUTLET}}
           />
         </template>
       );
@@ -98,9 +98,9 @@ module(
         <template>
           <BlockToolbar
             @blockKey={{this.blockKey}}
-            @outletName={{OUTLET}}
             @displayName="Heading"
             @isSelected={{true}}
+            @outletName={{OUTLET}}
           />
         </template>
       );
@@ -129,9 +129,9 @@ module(
           <div class="wireframe-block-chrome">
             <BlockToolbar
               @blockKey={{this.blockKey}}
-              @outletName={{OUTLET}}
               @displayName="Heading"
               @isSelected={{true}}
+              @outletName={{OUTLET}}
             />
           </div>
         </template>
@@ -152,9 +152,9 @@ module(
         <template>
           <BlockToolbar
             @blockKey={{this.blockKey}}
-            @outletName={{OUTLET}}
             @displayName="Heading"
             @isSelected={{false}}
+            @outletName={{OUTLET}}
           />
         </template>
       );
@@ -185,9 +185,9 @@ module(
         <template>
           <BlockToolbar
             @blockKey={{this.blockKey}}
-            @outletName={{OUTLET}}
             @displayName="Heading"
             @isSelected={{true}}
+            @outletName={{OUTLET}}
           />
         </template>
       );

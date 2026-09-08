@@ -84,8 +84,8 @@ export default class MinimalGamificationLeaderboardView extends Component {
     <div class="leaderboard -minimal">
       <div class="page__header">
         <LinkTo
-          @route="gamificationLeaderboard.byName"
           @model={{@model.leaderboard.id}}
+          @route="gamificationLeaderboard.byName"
         >
           <h3 class="page__title">
             {{#if @titleIcon}}
@@ -125,10 +125,10 @@ export default class MinimalGamificationLeaderboardView extends Component {
 
       {{#each @model.users as |rank index|}}
         <MinimalGamificationLeaderboardRow
-          @rank={{rank}}
-          @index={{index}}
-          @showRank={{this.showRank}}
           @avatarSize={{this.avatarSize}}
+          @index={{index}}
+          @rank={{rank}}
+          @showRank={{this.showRank}}
         />
       {{/each}}
 
@@ -136,8 +136,8 @@ export default class MinimalGamificationLeaderboardView extends Component {
         <div class="leaderboard__footer">
           <LinkTo
             class="leaderboard__footer-link"
-            @route="gamificationLeaderboard.byName"
             @model={{@model.leaderboard.id}}
+            @route="gamificationLeaderboard.byName"
           >
             {{this.footerLinkLabel}}
           </LinkTo>

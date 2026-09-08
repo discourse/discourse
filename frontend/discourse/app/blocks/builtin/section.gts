@@ -193,14 +193,14 @@ export default class Section extends Component<SectionSignature> {
   }
 
   <template>
-    <section class={{this.className}} aria-label={{this.accessibleLabel}}>
+    <section aria-label={{this.accessibleLabel}} class={{this.className}}>
       <div
         class="d-block-section__backdrop"
         data-block-arg="backgroundImage"
         data-drop-passive
       >
         {{#if @backgroundImage.url}}
-          <BlockImage @image={{@backgroundImage}} @fill={{true}} />
+          <BlockImage @fill={{true}} @image={{@backgroundImage}} />
         {{/if}}
       </div>
 

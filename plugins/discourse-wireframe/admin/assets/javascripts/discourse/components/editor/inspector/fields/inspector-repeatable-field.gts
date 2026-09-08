@@ -305,8 +305,8 @@ export default class InspectorRepeatableField extends Component<InspectorRepeata
                 </span>
                 {{#if (eq field.control "toggle")}}
                   <input
-                    type="checkbox"
                     checked={{fieldAttrValue (get item field.name)}}
+                    type="checkbox"
                     {{on "change" (fn this.commitToggle index field.name)}}
                   />
                 {{else if (eq field.control "number")}}
@@ -319,8 +319,8 @@ export default class InspectorRepeatableField extends Component<InspectorRepeata
                   <select {{on "change" (fn this.commitText index field.name)}}>
                     {{#each field.options as |opt|}}
                       <option
-                        value={{opt}}
                         selected={{eq opt (get item field.name)}}
+                        value={{opt}}
                       >
                         {{opt}}
                       </option>
@@ -328,9 +328,9 @@ export default class InspectorRepeatableField extends Component<InspectorRepeata
                   </select>
                 {{else}}
                   <input
+                    placeholder={{field.placeholder}}
                     type="text"
                     value={{fieldAttrValue (get item field.name)}}
-                    placeholder={{field.placeholder}}
                     {{on "blur" (fn this.commitText index field.name)}}
                   />
                 {{/if}}
@@ -340,25 +340,25 @@ export default class InspectorRepeatableField extends Component<InspectorRepeata
 
           <div class="wireframe-repeatable__row-actions">
             <button
-              type="button"
               class="btn btn-flat wireframe-repeatable__move-up"
               title={{i18n "wireframe.inspector.repeatable.move_up"}}
+              type="button"
               {{on "click" (fn this.moveItem index -1)}}
             >
               {{dIcon "arrow-up"}}
             </button>
             <button
-              type="button"
               class="btn btn-flat wireframe-repeatable__move-down"
               title={{i18n "wireframe.inspector.repeatable.move_down"}}
+              type="button"
               {{on "click" (fn this.moveItem index 1)}}
             >
               {{dIcon "arrow-down"}}
             </button>
             <button
-              type="button"
               class="btn btn-flat wireframe-repeatable__remove"
               title={{i18n "wireframe.inspector.repeatable.remove_item"}}
+              type="button"
               {{on "click" (fn this.removeItem index)}}
             >
               {{dIcon "trash-can"}}
@@ -368,8 +368,8 @@ export default class InspectorRepeatableField extends Component<InspectorRepeata
       {{/each}}
 
       <button
-        type="button"
         class="btn btn-default wireframe-repeatable__add"
+        type="button"
         {{on "click" this.addItem}}
       >
         {{dIcon "plus"}}
@@ -382,18 +382,18 @@ export default class InspectorRepeatableField extends Component<InspectorRepeata
           }}</summary>
         <textarea
           class="wireframe-repeatable__import-input"
-          value={{this.importDraft}}
           placeholder={{i18n
             "wireframe.inspector.repeatable.import_placeholder"
           }}
+          value={{this.importDraft}}
           {{on "input" this.updateImportDraft}}
         ></textarea>
         {{#if this.importError}}
           <p class="wireframe-repeatable__import-error">{{this.importError}}</p>
         {{/if}}
         <button
-          type="button"
           class="btn btn-default wireframe-repeatable__import-apply"
+          type="button"
           {{on "click" this.importJson}}
         >
           {{i18n "wireframe.inspector.repeatable.import_apply"}}

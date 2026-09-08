@@ -112,7 +112,7 @@ module(
 
       await render(
         <template>
-          <EditorBlockPickerMenu @data={{data}} @close={{close}} />
+          <EditorBlockPickerMenu @close={{close}} @data={{data}} />
         </template>
       );
 

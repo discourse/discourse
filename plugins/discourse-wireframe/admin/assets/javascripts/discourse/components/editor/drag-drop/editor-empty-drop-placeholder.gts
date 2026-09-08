@@ -166,9 +166,9 @@ export default class EditorEmptyDropPlaceholder extends Component<EditorEmptyDro
     {{#if this.usesActionGroup}}
       <div class="wireframe-empty-drop-actions">
         <button
-          type="button"
-          class="wireframe-empty-drop-placeholder"
           aria-label={{@hint}}
+          class="wireframe-empty-drop-placeholder"
+          type="button"
           {{didInsert this.captureButton}}
           {{on "click" this.openPicker}}
         >
@@ -180,14 +180,14 @@ export default class EditorEmptyDropPlaceholder extends Component<EditorEmptyDro
         {{#if @onAddBackground}}
           <DButton
             class="wireframe-empty-drop-actions__background btn-flat"
+            @action={{this.openBackgroundPicker}}
             @icon="image"
             @translatedLabel={{@backgroundHint}}
-            @action={{this.openBackgroundPicker}}
           />
           <input
-            type="file"
             accept="image/*"
             hidden
+            type="file"
             {{didInsert this.captureBackgroundInput}}
             {{on "change" this.addBackground}}
           />
@@ -195,9 +195,9 @@ export default class EditorEmptyDropPlaceholder extends Component<EditorEmptyDro
       </div>
     {{else}}
       <button
-        type="button"
-        class="wireframe-empty-drop-placeholder"
         aria-label={{@hint}}
+        class="wireframe-empty-drop-placeholder"
+        type="button"
         {{didInsert this.captureButton}}
         {{on "click" this.openPicker}}
       >

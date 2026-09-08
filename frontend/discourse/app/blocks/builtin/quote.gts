@@ -84,9 +84,9 @@ export default class Quote extends Component<QuoteSignature> {
       <blockquote class="d-block-quote__content">
         <RichTextRenderer
           @arg="content"
+          @placeholder={{i18n "blocks.builtin.placeholders.quote_content"}}
           @schema="paragraph"
           @value={{@content}}
-          @placeholder={{i18n "blocks.builtin.placeholders.quote_content"}}
           as |R|
         >
           <R.Content />
@@ -97,27 +97,27 @@ export default class Quote extends Component<QuoteSignature> {
         {{#if @avatar.url}}
           <DLightDarkImg
             class="d-block-quote__avatar"
-            @lightImg={{@avatar}}
             @darkImg={{@avatar.dark}}
+            @lightImg={{@avatar}}
           />
         {{/if}}
         <span class="d-block-quote__identity">
           <RichTextRenderer
             @arg="attribution"
-            @schema="plain"
-            @value={{@attribution}}
             @placeholder={{i18n
               "blocks.builtin.placeholders.quote_attribution"
             }}
+            @schema="plain"
+            @value={{@attribution}}
             as |R|
           >
             <span class="d-block-quote__attribution"><R.Content /></span>
           </RichTextRenderer>
           <RichTextRenderer
             @arg="role"
+            @placeholder={{i18n "blocks.builtin.placeholders.quote_role"}}
             @schema="plain"
             @value={{@role}}
-            @placeholder={{i18n "blocks.builtin.placeholders.quote_role"}}
             as |R|
           >
             <span class="d-block-quote__role"><R.Content /></span>

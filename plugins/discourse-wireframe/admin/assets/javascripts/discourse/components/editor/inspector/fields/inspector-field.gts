@@ -272,13 +272,13 @@ export function fieldTypeFor(control: string): string {
 const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
   <template>
     <@form.Field
-      @name={{@field.name}}
-      @title={{@field.title}}
-      @helpText={{@field.helpText}}
-      @validation={{if @validationRuleFor (@validationRuleFor @field)}}
-      @type={{fieldTypeFor @field.control}}
-      @onSet={{@onFieldSet}}
       @disabled={{@disabled}}
+      @helpText={{@field.helpText}}
+      @name={{@field.name}}
+      @onSet={{@onFieldSet}}
+      @title={{@field.title}}
+      @type={{fieldTypeFor @field.control}}
+      @validation={{if @validationRuleFor (@validationRuleFor @field)}}
       as |formField|
     >
       {{#if (eq @field.control "select")}}
@@ -297,9 +297,9 @@ const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
         <formField.Control>
           <InspectorSegmentedField
             @custom={{formField}}
-            @options={{@field.options}}
             @optionIcons={{@field.optionIcons}}
             @optionLabels={{@field.optionLabels}}
+            @options={{@field.options}}
           />
         </formField.Control>
       {{else if (eq @field.control "image")}}

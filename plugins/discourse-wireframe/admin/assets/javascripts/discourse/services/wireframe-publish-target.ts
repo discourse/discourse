@@ -108,12 +108,16 @@ export interface OutletOwner {
 export default class WireframePublishTargetService extends Service {
   /** Resolves outlet ownership metadata from active block layers. */
   @service declare blocks: BlocksService;
+
   /** Gates the homepage opt-in on admin-only server endpoints. */
   @service declare currentUser: CurrentUserService | null;
+
   /** Names the route the homepage opt-in is offered on. */
   @service declare router: RouterService;
+
   /** Supplies selectable themes when preload metadata is unavailable. */
   @service declare site: SiteService;
+
   /** Supplies the reactive set of edited outlets. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
 

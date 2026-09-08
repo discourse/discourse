@@ -131,10 +131,10 @@ export default class InspectorTopicField extends Component<InspectorTopicFieldSi
 
   <template>
     <TopicChooser
-      @value={{@custom.value}}
       @content={{this.selectedTopicContent}}
       @onChange={{this.onChange}}
       @options={{hash castInteger=true}}
+      @value={{@custom.value}}
     />
   </template>
 }

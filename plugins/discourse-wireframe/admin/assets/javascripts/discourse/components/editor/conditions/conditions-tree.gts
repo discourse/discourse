@@ -330,10 +330,10 @@ export default class ConditionsTree extends Component {
               <DButton
                 class="wireframe-conditions-tree__seed-chip"
                 role="menuitem"
+                @action={{fn this.seedFromEmpty typeMeta.type}}
                 @icon={{this.iconFor typeMeta.type}}
                 @translatedLabel={{typeMeta.displayName}}
                 @translatedTitle={{typeMeta.description}}
-                @action={{fn this.seedFromEmpty typeMeta.type}}
               />
             {{/each}}
           </div>
@@ -343,27 +343,27 @@ export default class ConditionsTree extends Component {
             array, so this branch is for back-compat with older data. }}
         <div class="wireframe-conditions-tree__leaf-root">
           <ConditionRule
-            @node={{this.rootLeaf}}
-            @typeMeta={{this.metaFor this.rootLeaf}}
             @conditionTypes={{this.conditionTypes}}
-            @onUpdate={{this.handleRootLeafUpdate}}
+            @node={{this.rootLeaf}}
             @onChangeType={{this.handleRootLeafChangeType}}
             @onRemove={{this.handleRootLeafRemove}}
+            @onUpdate={{this.handleRootLeafUpdate}}
             @startExpanded={{true}}
+            @typeMeta={{this.metaFor this.rootLeaf}}
           />
         </div>
       {{else if this.rootGroup}}
         <ConditionGroup
-          @node={{this.rootGroup}}
-          @path={{this.emptyPath}}
           @conditionTypes={{this.conditionTypes}}
-          @onInsertLeaf={{this.handleInsertLeaf}}
-          @onInsertGroup={{this.handleInsertGroup}}
-          @onSetCombinator={{this.handleSetCombinator}}
-          @onRemoveNode={{this.handleRemoveNode}}
-          @onUpdateLeaf={{this.handleUpdateLeaf}}
-          @newlyAddedPath={{this.newlyAddedPath}}
           @isRoot={{true}}
+          @newlyAddedPath={{this.newlyAddedPath}}
+          @node={{this.rootGroup}}
+          @onInsertGroup={{this.handleInsertGroup}}
+          @onInsertLeaf={{this.handleInsertLeaf}}
+          @onRemoveNode={{this.handleRemoveNode}}
+          @onSetCombinator={{this.handleSetCombinator}}
+          @onUpdateLeaf={{this.handleUpdateLeaf}}
+          @path={{this.emptyPath}}
         />
       {{/if}}
 
@@ -371,9 +371,9 @@ export default class ConditionsTree extends Component {
         <div class="wireframe-conditions-tree__footer">
           <DButton
             class="btn-flat btn-small wireframe-conditions-tree__clear"
+            @action={{this.clearAll}}
             @icon="trash-can"
             @label="wireframe.inspector.conditions.clear_all"
-            @action={{this.clearAll}}
           />
         </div>
       {{/unless}}

@@ -7,30 +7,30 @@ interface LayoutStackThumbnailSignature {
 /** Palette thumbnail for a vertical stack layout. */
 const LayoutStackThumbnail: TemplateOnlyComponent<LayoutStackThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
+        fill="var(--primary-low)"
+        height="14"
+        rx="3"
+        width="80"
         x="20"
         y="12"
-        width="80"
-        height="14"
-        rx="3"
-        fill="var(--primary-low)"
       />
       <rect
+        fill="var(--primary-low)"
+        height="14"
+        rx="3"
+        width="80"
         x="20"
         y="33"
-        width="80"
-        height="14"
-        rx="3"
-        fill="var(--primary-low)"
       />
       <rect
-        x="20"
-        y="54"
-        width="80"
+        fill="var(--primary-low)"
         height="14"
         rx="3"
-        fill="var(--primary-low)"
+        width="80"
+        x="20"
+        y="54"
       />
     </svg>
   </template>;

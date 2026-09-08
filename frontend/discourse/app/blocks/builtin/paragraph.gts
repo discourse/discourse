@@ -63,9 +63,9 @@ export default class Paragraph extends Component<ParagraphSignature> {
   <template>
     <RichTextRenderer
       @arg="text"
+      @placeholder={{i18n "blocks.builtin.placeholders.paragraph_text"}}
       @schema="paragraph"
       @value={{@text}}
-      @placeholder={{i18n "blocks.builtin.placeholders.paragraph_text"}}
       as |R|
     >
       <p class="{{this.className}} {{if R.isEmpty 'd-block-paragraph--empty'}}">

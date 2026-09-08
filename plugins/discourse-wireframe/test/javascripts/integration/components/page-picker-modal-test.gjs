@@ -23,8 +23,8 @@ module(
       await render(
         <template>
           <PagePickerModal
-            @model={{hash theme=theme}}
             @closeModal={{closeModal}}
+            @model={{hash theme=theme}}
           />
         </template>
       );

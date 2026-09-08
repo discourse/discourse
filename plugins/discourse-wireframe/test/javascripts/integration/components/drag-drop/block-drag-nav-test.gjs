@@ -31,15 +31,15 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
       <template>
         <div class="d-block-tabs">
           <button
+            data-wf-tab-panel-key="a"
             id="tab-a"
             type="button"
-            data-wf-tab-panel-key="a"
             {{on "click" (fn record "a")}}
           >A</button>
           <button
+            data-wf-tab-panel-key="b"
             id="tab-b"
             type="button"
-            data-wf-tab-panel-key="b"
             {{on "click" (fn record "b")}}
           >B</button>
         </div>
@@ -66,10 +66,10 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
     await render(
       <template>
         <button
-          id="tab-a"
-          type="button"
           data-wf-tab-panel-key="a"
+          id="tab-a"
           style="width: 120px;"
+          type="button"
           {{on "click" (fn record "a")}}
         >A</button>
       </template>
@@ -94,9 +94,9 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
     await render(
       <template>
         <button
+          data-wf-tab-panel-key="a"
           id="tab-a"
           type="button"
-          data-wf-tab-panel-key="a"
           {{on "click" (fn record "a")}}
         >A</button>
       </template>
@@ -120,9 +120,9 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
     await render(
       <template>
         <button
+          data-wf-tab-panel-key="a"
           id="tab-a"
           type="button"
-          data-wf-tab-panel-key="a"
           {{on "click" (fn record "a")}}
         >A</button>
       </template>
@@ -148,10 +148,10 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
             <div class="slide" id="slide-1">1</div>
           </div>
           <button
-            id="dot-1"
-            type="button"
             data-wf-carousel-nav="true"
             data-wf-carousel-slide-index="1"
+            id="dot-1"
+            type="button"
           ></button>
         </div>
       </template>

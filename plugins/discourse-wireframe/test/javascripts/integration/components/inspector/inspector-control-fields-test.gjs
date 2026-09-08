@@ -103,10 +103,10 @@ module(
       await render(
         <template>
           <ImagePositionPicker
-            @value={{value}}
-            @onPreview={{preview}}
-            @onChange={{commit}}
             @onCancel={{cancel}}
+            @onChange={{commit}}
+            @onPreview={{preview}}
+            @value={{value}}
           />
         </template>
       );
@@ -162,10 +162,10 @@ module(
       await render(
         <template>
           <ImagePositionPicker
-            @value={{value}}
-            @onPreview={{preview}}
-            @onChange={{commit}}
             @onCancel={{cancel}}
+            @onChange={{commit}}
+            @onPreview={{preview}}
+            @value={{value}}
           />
         </template>
       );
@@ -201,14 +201,14 @@ module(
       await render(
         <template>
           <InspectorDimensionField
-            @value={{1}}
-            @onChange={{onChange}}
-            @unitless={{true}}
-            @unit="rem"
-            @slider={{true}}
-            @min={{0}}
             @max={{4}}
+            @min={{0}}
+            @onChange={{onChange}}
+            @slider={{true}}
             @step={{0.25}}
+            @unit="rem"
+            @unitless={{true}}
+            @value={{1}}
           />
         </template>
       );
@@ -245,11 +245,11 @@ module(
       await render(
         <template>
           <InspectorDimensionField
-            @value={{1}}
+            @max={{4}}
+            @min={{0}}
             @onChange={{onChange}}
             @unitless={{true}}
-            @min={{0}}
-            @max={{4}}
+            @value={{1}}
           />
         </template>
       );
@@ -268,9 +268,9 @@ module(
       await render(
         <template>
           <InspectorDimensionField
-            @value="16px"
             @onChange={{onChange}}
             @units={{units}}
+            @value="16px"
           />
         </template>
       );
@@ -303,19 +303,19 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="custom"
+              @disabled={{true}}
               @name="size"
               @title="Size"
-              @disabled={{true}}
+              @type="custom"
               as |field|
             >
               <field.Control>
                 <InspectorDimensionField
                   @custom={{field}}
-                  @units={{units}}
-                  @slider={{true}}
-                  @min={{0}}
                   @max={{100}}
+                  @min={{0}}
+                  @slider={{true}}
+                  @units={{units}}
                 />
               </field.Control>
             </form.Field>
@@ -353,10 +353,10 @@ module(
       await render(
         <template>
           <InspectorStepperField
-            @value={{3}}
-            @onChange={{onChange}}
-            @min={{1}}
             @max={{12}}
+            @min={{1}}
+            @onChange={{onChange}}
+            @value={{3}}
           />
         </template>
       );
@@ -375,10 +375,10 @@ module(
       await render(
         <template>
           <InspectorStepperField
-            @value={{3}}
-            @onChange={{onChange}}
-            @min={{1}}
             @max={{12}}
+            @min={{1}}
+            @onChange={{onChange}}
+            @value={{3}}
           />
         </template>
       );

@@ -75,9 +75,9 @@ export default class Callout extends Component<CalloutSignature> {
       </span>
       <RichTextRenderer
         @arg="body"
+        @placeholder={{i18n "blocks.builtin.placeholders.callout_body"}}
         @schema="paragraph"
         @value={{@body}}
-        @placeholder={{i18n "blocks.builtin.placeholders.callout_body"}}
         as |R|
       >
         <span class="d-block-callout__body">

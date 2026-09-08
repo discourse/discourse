@@ -812,9 +812,9 @@ export default class InspectorLayoutForm extends Component {
       {{didUpdate this.syncErrors this.fieldErrors this.mode}}
     >
       <Form
+        class="wireframe-inspector-form"
         @data={{this.argsSnapshot}}
         @onRegisterApi={{this.registerFormApi}}
-        class="wireframe-inspector-form"
         as |form|
       >
         {{! Mode is service-live: it drives the conditional visibility below and
@@ -829,9 +829,9 @@ export default class InspectorLayoutForm extends Component {
           <f.Control>
             <InspectorSegmentedField
               @items={{this.modeItems}}
-              @value={{this.mode}}
-              @onChange={{this.setMode}}
               @name="wireframe-layout-mode"
+              @onChange={{this.setMode}}
+              @value={{this.mode}}
             />
           </f.Control>
         </form.Field>
@@ -850,9 +850,9 @@ export default class InspectorLayoutForm extends Component {
             <f.Control>
               <InspectorSegmentedField
                 @items={{this.autoCollapseItems}}
-                @value={{this.autoCollapse}}
-                @onChange={{this.setAutoCollapse}}
                 @name="wireframe-layout-auto-collapse"
+                @onChange={{this.setAutoCollapse}}
+                @value={{this.autoCollapse}}
               />
             </f.Control>
           </form.Field>
@@ -876,27 +876,27 @@ export default class InspectorLayoutForm extends Component {
                   "wireframe-layout-form__source-option"
                   (if this.isFree "--active")
                 }}
+                @action={{this.chooseFree}}
                 @ariaPressed={{this.isFree}}
                 @icon="table-cells"
                 @label="wireframe.inspector.layout.free"
-                @action={{this.chooseFree}}
               />
               <DMenu
-                @identifier="wireframe-grid-templates"
-                @placement="bottom-start"
-                @icon="chevron-down"
-                @label={{this.templateButtonLabel}}
                 class={{dConcatClass
                   "wireframe-layout-form__source-option"
                   "wireframe-layout-form__template-dropdown"
                   (unless this.isFree "--active")
                 }}
+                @icon="chevron-down"
+                @identifier="wireframe-grid-templates"
+                @label={{this.templateButtonLabel}}
+                @placement="bottom-start"
               >
                 <:content as |args|>
                   <TemplateMenuList
-                    @options={{this.templateOptions}}
-                    @onPick={{this.applyTemplate}}
                     @close={{args.close}}
+                    @onPick={{this.applyTemplate}}
+                    @options={{this.templateOptions}}
                   />
                 </:content>
               </DMenu>
@@ -916,11 +916,11 @@ export default class InspectorLayoutForm extends Component {
             >
               <f.Control>
                 <InspectorStepperField
-                  @value={{this.columns}}
-                  @onChange={{this.setColumns}}
-                  @min={{COLUMNS_MIN}}
-                  @max={{COLUMNS_MAX}}
                   @ariaLabel={{i18n "wireframe.inspector.layout.columns"}}
+                  @max={{COLUMNS_MAX}}
+                  @min={{COLUMNS_MIN}}
+                  @onChange={{this.setColumns}}
+                  @value={{this.columns}}
                 />
               </f.Control>
             </form.Field>
@@ -932,11 +932,11 @@ export default class InspectorLayoutForm extends Component {
             >
               <f.Control>
                 <InspectorStepperField
-                  @value={{this.rows}}
-                  @onChange={{this.setRows}}
-                  @min={{ROWS_MIN}}
-                  @max={{ROWS_MAX}}
                   @ariaLabel={{i18n "wireframe.inspector.layout.rows"}}
+                  @max={{ROWS_MAX}}
+                  @min={{ROWS_MIN}}
+                  @onChange={{this.setRows}}
+                  @value={{this.rows}}
                 />
               </f.Control>
             </form.Field>
@@ -956,8 +956,8 @@ export default class InspectorLayoutForm extends Component {
                   }}</p>
                 <DButton
                   class="btn-small btn-danger"
-                  @label="wireframe.inspector.layout.out_of_bounds_fix"
                   @action={{this.fixOutOfBoundsSlots}}
+                  @label="wireframe.inspector.layout.out_of_bounds_fix"
                 />
               </div>
             </div>
@@ -970,36 +970,36 @@ export default class InspectorLayoutForm extends Component {
           component getters, so they flip with the current mode. }}
         <form.Field
           @name="gap"
+          @onSet={{this.onFieldSet}}
           @title={{i18n "wireframe.inspector.layout.gap_legend"}}
           @type="custom"
-          @onSet={{this.onFieldSet}}
           @validation={{this.validationRuleFor "gap"}}
           as |f|
         >
           <f.Control>
             <InspectorDimensionField
               @custom={{f}}
-              @unitless={{true}}
-              @unit="rem"
-              @slider={{true}}
-              @min={{GAP_MIN}}
               @max={{GAP_MAX}}
+              @min={{GAP_MIN}}
+              @slider={{true}}
               @step={{GAP_STEP}}
+              @unit="rem"
+              @unitless={{true}}
             />
           </f.Control>
         </form.Field>
 
         <form.Field
           @name="align"
+          @onSet={{this.onFieldSet}}
           @title={{i18n "wireframe.inspector.layout.align_legend"}}
           @type="custom"
-          @onSet={{this.onFieldSet}}
           as |f|
         >
           <f.Control>
             <InspectorSegmentedField
-              @items={{this.alignItems}}
               @custom={{f}}
+              @items={{this.alignItems}}
               @name="wireframe-layout-align"
             />
           </f.Control>
@@ -1007,15 +1007,15 @@ export default class InspectorLayoutForm extends Component {
 
         <form.Field
           @name="justifyContent"
+          @onSet={{this.onFieldSet}}
           @title={{i18n "wireframe.inspector.layout.justify_content_legend"}}
           @type="custom"
-          @onSet={{this.onFieldSet}}
           as |f|
         >
           <f.Control>
             <InspectorSegmentedField
-              @items={{this.justifyContentItems}}
               @custom={{f}}
+              @items={{this.justifyContentItems}}
               @name="wireframe-layout-justify-content"
             />
           </f.Control>
@@ -1024,9 +1024,9 @@ export default class InspectorLayoutForm extends Component {
         {{#if this.isFlex}}
           <form.Field
             @name="reverse"
+            @onSet={{this.onFieldSet}}
             @title={{i18n "wireframe.inspector.layout.reverse_legend"}}
             @type="toggle"
-            @onSet={{this.onFieldSet}}
             as |f|
           >
             <f.Control />
@@ -1035,15 +1035,15 @@ export default class InspectorLayoutForm extends Component {
           {{#if this.isRow}}
             <form.Field
               @name="wrap"
+              @onSet={{this.onFieldSet}}
               @title={{i18n "wireframe.inspector.layout.wrap_legend"}}
               @type="custom"
-              @onSet={{this.onFieldSet}}
               as |f|
             >
               <f.Control>
                 <InspectorSegmentedField
-                  @items={{this.wrapItems}}
                   @custom={{f}}
+                  @items={{this.wrapItems}}
                   @name="wireframe-layout-wrap"
                 />
               </f.Control>
@@ -1054,15 +1054,15 @@ export default class InspectorLayoutForm extends Component {
         {{#if this.isGrid}}
           <form.Field
             @name="justifyItems"
+            @onSet={{this.onFieldSet}}
             @title={{i18n "wireframe.inspector.layout.justify_items_legend"}}
             @type="custom"
-            @onSet={{this.onFieldSet}}
             as |f|
           >
             <f.Control>
               <InspectorSegmentedField
-                @items={{this.justifyItemsItems}}
                 @custom={{f}}
+                @items={{this.justifyItemsItems}}
                 @name="wireframe-layout-justify-items"
               />
             </f.Control>
@@ -1070,15 +1070,15 @@ export default class InspectorLayoutForm extends Component {
 
           <form.Field
             @name="alignContent"
+            @onSet={{this.onFieldSet}}
             @title={{i18n "wireframe.inspector.layout.align_content_legend"}}
             @type="custom"
-            @onSet={{this.onFieldSet}}
             as |f|
           >
             <f.Control>
               <InspectorSegmentedField
-                @items={{this.alignContentItems}}
                 @custom={{f}}
+                @items={{this.alignContentItems}}
                 @name="wireframe-layout-align-content"
               />
             </f.Control>
@@ -1086,9 +1086,9 @@ export default class InspectorLayoutForm extends Component {
 
           <form.Field
             @name="dense"
+            @onSet={{this.onFieldSet}}
             @title={{i18n "wireframe.inspector.layout.dense_legend"}}
             @type="toggle"
-            @onSet={{this.onFieldSet}}
             as |f|
           >
             <f.Control />
@@ -1107,17 +1107,17 @@ export default class InspectorLayoutForm extends Component {
               </span>
               <div class="wireframe-layout-form__template-row">
                 <input
+                  placeholder="1fr 2fr 1fr"
                   type="text"
                   value={{this.columnTemplate}}
-                  placeholder="1fr 2fr 1fr"
                   {{on "input" this.setColumnTemplate}}
                 />
                 {{#if this.columnTemplate}}
                   <DButton
                     class="btn-flat btn-small"
+                    @action={{this.clearColumnTemplate}}
                     @icon="rotate-left"
                     @title="wireframe.inspector.layout.template_clear"
-                    @action={{this.clearColumnTemplate}}
                   />
                 {{/if}}
               </div>
@@ -1128,17 +1128,17 @@ export default class InspectorLayoutForm extends Component {
               </span>
               <div class="wireframe-layout-form__template-row">
                 <input
+                  placeholder="auto 1fr"
                   type="text"
                   value={{this.rowTemplate}}
-                  placeholder="auto 1fr"
                   {{on "input" this.setRowTemplate}}
                 />
                 {{#if this.rowTemplate}}
                   <DButton
                     class="btn-flat btn-small"
+                    @action={{this.clearRowTemplate}}
                     @icon="rotate-left"
                     @title="wireframe.inspector.layout.template_clear"
-                    @action={{this.clearRowTemplate}}
                   />
                 {{/if}}
               </div>
@@ -1185,6 +1185,7 @@ class TemplateMenuList extends Component<{
             (unless option.canApply "--disabled")
           }}
           role="menuitemradio"
+          @action={{fn this.pick option.template}}
           @ariaPressed={{option.isActive}}
           @disabled={{unless option.canApply true}}
           @translatedTitle={{if
@@ -1196,7 +1197,6 @@ class TemplateMenuList extends Component<{
             )
             (i18n "wireframe.inspector.layout.template_cant_fit")
           }}
-          @action={{fn this.pick option.template}}
         >
           <span class="wireframe-template-menu__preview">
             <TemplatePreview @template={{option.template}} />

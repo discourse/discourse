@@ -80,8 +80,10 @@ export default class ActivityBar extends Component {
 
   /** Registers activity-entry hover cards. */
   @service declare tooltip: TooltipService;
+
   /** Owns the active and collapsed rail-panel state. */
   @service declare wireframeRail: WireframeRailService;
+
   /** Supplies the live issue count. */
   @service declare wireframeValidation: WireframeValidationService;
 
@@ -143,10 +145,10 @@ export default class ActivityBar extends Component {
 
   <template>
     <div
+      aria-label={{i18n "wireframe.chrome.activity_bar_label"}}
+      aria-orientation="vertical"
       class="wireframe-activity-bar"
       role="toolbar"
-      aria-orientation="vertical"
-      aria-label={{i18n "wireframe.chrome.activity_bar_label"}}
       {{! One vertical rove over the panel entries and the bottom collapse
         chevron: the whole strip is a single tab stop, Up/Down move between its
         buttons, Enter/Space activate. }}
@@ -165,15 +167,15 @@ export default class ActivityBar extends Component {
               "btn-flat wireframe-activity-bar__entry"
               (if (this.wireframeRail.isPanelOpen entry.tab) "--active")
             }}
-            @icon={{entry.icon}}
-            @ariaLabel={{unless entry.translatedAriaLabel entry.label}}
-            @translatedAriaLabel={{entry.translatedAriaLabel}}
-            @ariaPressed={{this.wireframeRail.isPanelOpen entry.tab}}
             @action={{fn this.wireframeRail.activatePanel entry.tab}}
+            @ariaLabel={{unless entry.translatedAriaLabel entry.label}}
+            @ariaPressed={{this.wireframeRail.isPanelOpen entry.tab}}
+            @icon={{entry.icon}}
+            @translatedAriaLabel={{entry.translatedAriaLabel}}
             {{this.registerTooltip entry}}
           />
           {{#if entry.badgeCount}}
-            <span class="wireframe-activity-bar__badge" aria-hidden="true">
+            <span aria-hidden="true" class="wireframe-activity-bar__badge">
               {{entry.badgeCount}}
             </span>
           {{/if}}
@@ -185,23 +187,23 @@ export default class ActivityBar extends Component {
           it survives collapse and keeps focus inside the rail. }}
       <DButton
         class="btn-flat wireframe-activity-bar__collapse"
-        @icon={{if
-          this.wireframeRail.leftCollapsed
-          "chevron-right"
-          "chevron-left"
-        }}
+        @action={{this.wireframeRail.toggleLeftCollapsed}}
         @ariaExpanded={{if this.wireframeRail.leftCollapsed false true}}
-        @title={{if
-          this.wireframeRail.leftCollapsed
-          "wireframe.chrome.expand_panel"
-          "wireframe.chrome.collapse_panel"
-        }}
         @ariaLabel={{if
           this.wireframeRail.leftCollapsed
           "wireframe.chrome.expand_panel"
           "wireframe.chrome.collapse_panel"
         }}
-        @action={{this.wireframeRail.toggleLeftCollapsed}}
+        @icon={{if
+          this.wireframeRail.leftCollapsed
+          "chevron-right"
+          "chevron-left"
+        }}
+        @title={{if
+          this.wireframeRail.leftCollapsed
+          "wireframe.chrome.expand_panel"
+          "wireframe.chrome.collapse_panel"
+        }}
       />
     </div>
   </template>

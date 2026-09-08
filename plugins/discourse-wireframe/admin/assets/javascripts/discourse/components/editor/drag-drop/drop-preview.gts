@@ -53,13 +53,13 @@ export default class DropPreview extends Component {
   <template>
     {{#if this.preview}}
       <div
+        aria-hidden="true"
         class={{dConcatClass
           "wireframe-drop-preview"
           (concat "wireframe-drop-preview--" this.preview.previewKind)
           (concat "wireframe-drop-preview--" this.preview.validity)
         }}
         style={{this.style}}
-        aria-hidden="true"
       >
         {{#if this.preview.label}}
           <span class="wireframe-drop-preview__label">

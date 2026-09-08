@@ -129,6 +129,7 @@ export default class ConditionGroup extends Component<ConditionGroupSignature> {
    * lets us close the picker as soon as the user clicks a type.
    */
   @tracked picking = false;
+
   /**
    * Whether a given child path matches the most-recently-inserted
    * path. Compared structurally — `@newlyAddedPath` is an array.
@@ -148,6 +149,7 @@ export default class ConditionGroup extends Component<ConditionGroupSignature> {
     }
     return true;
   };
+
   /**
    * Resolves the icon for a condition type.
    *
@@ -301,45 +303,45 @@ export default class ConditionGroup extends Component<ConditionGroupSignature> {
     >
       <div class="wireframe-condition-group__header">
         <div
+          aria-label={{i18n "wireframe.inspector.conditions.group_label"}}
           class="wireframe-condition-group__combinator-toggle"
           role="radiogroup"
-          aria-label={{i18n "wireframe.inspector.conditions.group_label"}}
         >
           <DButton
             class={{dConcatClass
               "wireframe-condition-group__combinator-chip"
               (if (eq this.combinator "and") "--active")
             }}
+            @action={{fn this.setCombinator "and"}}
             @ariaPressed={{eq this.combinator "and"}}
             @label="wireframe.inspector.conditions.combinator_all_of"
-            @action={{fn this.setCombinator "and"}}
           />
           <DButton
             class={{dConcatClass
               "wireframe-condition-group__combinator-chip"
               (if (eq this.combinator "or") "--active")
             }}
+            @action={{fn this.setCombinator "or"}}
             @ariaPressed={{eq this.combinator "or"}}
             @label="wireframe.inspector.conditions.combinator_any_of"
-            @action={{fn this.setCombinator "or"}}
           />
           <DButton
             class={{dConcatClass
               "wireframe-condition-group__combinator-chip"
               (if (eq this.combinator "not") "--active")
             }}
+            @action={{fn this.setCombinator "not"}}
             @ariaPressed={{eq this.combinator "not"}}
             @label="wireframe.inspector.conditions.combinator_none_of"
-            @action={{fn this.setCombinator "not"}}
           />
         </div>
 
         {{#unless @isRoot}}
           <DButton
             class="wireframe-condition-group__remove"
+            @action={{this.removeSelf}}
             @icon="xmark"
             @title="wireframe.inspector.conditions.remove_group"
-            @action={{this.removeSelf}}
           />
         {{/unless}}
       </div>
@@ -349,26 +351,26 @@ export default class ConditionGroup extends Component<ConditionGroupSignature> {
           {{#each this.children as |child|}}
             {{#if child.group}}
               <ConditionGroup
-                @node={{child.group}}
-                @path={{child.path}}
                 @conditionTypes={{@conditionTypes}}
-                @onInsertLeaf={{@onInsertLeaf}}
-                @onInsertGroup={{@onInsertGroup}}
-                @onSetCombinator={{@onSetCombinator}}
-                @onRemoveNode={{@onRemoveNode}}
-                @onUpdateLeaf={{@onUpdateLeaf}}
-                @newlyAddedPath={{@newlyAddedPath}}
                 @isRoot={{false}}
+                @newlyAddedPath={{@newlyAddedPath}}
+                @node={{child.group}}
+                @onInsertGroup={{@onInsertGroup}}
+                @onInsertLeaf={{@onInsertLeaf}}
+                @onRemoveNode={{@onRemoveNode}}
+                @onSetCombinator={{@onSetCombinator}}
+                @onUpdateLeaf={{@onUpdateLeaf}}
+                @path={{child.path}}
               />
             {{else}}
               <ConditionRule
-                @node={{child.leaf}}
-                @typeMeta={{this.metaFor child.leaf}}
                 @conditionTypes={{@conditionTypes}}
-                @onUpdate={{fn this.updateChildLeaf child.path}}
+                @node={{child.leaf}}
                 @onChangeType={{fn this.changeChildType child.path}}
                 @onRemove={{fn this.removeChild child.path}}
+                @onUpdate={{fn this.updateChildLeaf child.path}}
                 @startExpanded={{this.isNewlyAdded child.path}}
+                @typeMeta={{this.metaFor child.leaf}}
               />
             {{/if}}
           {{/each}}
@@ -385,17 +387,17 @@ export default class ConditionGroup extends Component<ConditionGroupSignature> {
                 "wireframe-condition-group__add-rule"
                 (if this.picking "--active")
               }}
+              @action={{this.togglePicker}}
               @ariaExpanded={{this.picking}}
               @icon="plus"
               @label="wireframe.inspector.conditions.add_rule"
-              @action={{this.togglePicker}}
             />
 
             <DButton
               class="wireframe-condition-group__add-group"
+              @action={{this.addGroup}}
               @icon="object-group"
               @label="wireframe.inspector.conditions.add_group"
-              @action={{this.addGroup}}
             />
           </div>
 
@@ -405,10 +407,10 @@ export default class ConditionGroup extends Component<ConditionGroupSignature> {
                 <DButton
                   class="wireframe-condition-group__type-chip"
                   role="menuitem"
+                  @action={{fn this.pickType typeMeta.type}}
                   @icon={{this.iconFor typeMeta.type}}
                   @translatedLabel={{typeMeta.displayName}}
                   @translatedTitle={{typeMeta.description}}
-                  @action={{fn this.pickType typeMeta.type}}
                 />
               {{/each}}
             </div>

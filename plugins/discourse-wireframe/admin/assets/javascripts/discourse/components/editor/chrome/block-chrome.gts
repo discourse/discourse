@@ -1291,6 +1291,17 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   }
 
   /**
+   * Whether this chrome is a container slot that accepts a dropped file as
+   * a new image block (the slot-insert path). Grid surfaces are owned by
+   * the grid overlay and leaves defer to their parent, so neither qualifies.
+   *
+   */
+  get #isImageDropSlot(): boolean {
+    const mode = this.containerDropMode;
+    return mode === "stack" || mode === "row" || mode === "cell";
+  }
+
+  /**
    * Resize drag's live preview handler. Applies the proposed
    * dimensions directly to the IMAGE MARKER (not the chrome) via
    * inline style so the user sees the size change as they drag
@@ -1581,30 +1592,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     this.#endGridResize();
   }
 
-  /** Paints a proposed grid placement onto the resize ghost. */
-  #applyGhostStyle(
-    /** Ghost element to update. */
-    ghost: HTMLElement,
-    /** Resolved placement to preview. */
-    placement: EdgeRect
-  ): void {
-    // Rewritten on every pointer-move as the resize preview follows the cursor —
-    // too high-frequency for a template binding. The committed placement flows
-    // through the layout model in onGridResizeEnd; this only paints the preview.
-    ghost.style.gridColumn = `${placement.column.start} / ${placement.column.end}`;
-    ghost.style.gridRow = `${placement.row.start} / ${placement.row.end}`;
-  }
-
-  /** Clears the current grid-resize preview session. */
-  #endGridResize(): void {
-    const ghost = this.#gridResize?.ghost;
-    ghost?.classList.remove("--visible");
-    if (ghost) {
-      ghost.style.display = "none";
-    }
-    this.#gridResize = null;
-  }
-
   /**
    * Captures the click only when editor is active. Stops propagation so the
    * host page's own click handlers (links, buttons inside the block) don't
@@ -1824,39 +1811,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   }
 
   /**
-   * Whether this chrome is a container slot that accepts a dropped file as
-   * a new image block (the slot-insert path). Grid surfaces are owned by
-   * the grid overlay and leaves defer to their parent, so neither qualifies.
-   *
-   */
-  get #isImageDropSlot(): boolean {
-    const mode = this.containerDropMode;
-    return mode === "stack" || mode === "row" || mode === "cell";
-  }
-
-  /**
-   * Builds (once per drag) the geometry resolver the slot-insert path uses
-   * to turn the cursor position into a drop descriptor — the same resolver
-   * the `containerDropTarget` modifier uses for block drags.
-   *
-   */
-  #ensureExternalDropResolver(): ContainerDropResolver {
-    const chromeElement = this.chromeEl;
-    if (!chromeElement) {
-      throw new Error("Cannot resolve an external drop before chrome mounts");
-    }
-    this.#externalDropResolver ||= createContainerDropResolver({
-      layoutQuery: this.wireframeLayoutQuery,
-      dropAuthority: this.wireframeDropAuthority,
-      chromeElement,
-      containerKey: this.args.blockKey,
-      outletName: this.args.outletName,
-      mode: this.containerDropMode,
-    });
-    return this.#externalDropResolver;
-  }
-
-  /**
    * Claims the single drag-overlay slot as a file is dragged over this block.
    * A background block claims the passive image-arg overlay (its tint then
    * shows via the coordinator); a container slot claims the slot-insert
@@ -1889,33 +1843,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     location: ExternalDragLocation;
   }): void {
     this.#claimExternalOverlay(location.current.input);
-  }
-
-  /** Claims the relevant background or structural external-drop overlay. */
-  #claimExternalOverlay(
-    /** Current external-drag pointer coordinates. */
-    input: PointerInput
-  ): void {
-    if (this.canDropBackgroundFile()) {
-      const argName = this.#passiveImageArgName();
-      if (!argName) {
-        return;
-      }
-      this.#releaseDrop = this.wireframeDragOverlay.claimImageArg({
-        blockKey: this.args.blockKey,
-        argName,
-        isPassive: true,
-      });
-      return;
-    }
-    if (this.#isImageDropSlot) {
-      this.#releaseDrop = this.wireframeDragOverlay.claimSlotInsert(
-        this.#ensureExternalDropResolver().descriptorFor(
-          EXTERNAL_IMAGE_DROP_SOURCE,
-          input
-        )
-      );
-    }
   }
 
   @action
@@ -1962,6 +1889,79 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       return;
     }
     this.wireframeImageUpload.completeExternalImageDrop(file);
+  }
+
+  /** Paints a proposed grid placement onto the resize ghost. */
+  #applyGhostStyle(
+    /** Ghost element to update. */
+    ghost: HTMLElement,
+    /** Resolved placement to preview. */
+    placement: EdgeRect
+  ): void {
+    // Rewritten on every pointer-move as the resize preview follows the cursor —
+    // too high-frequency for a template binding. The committed placement flows
+    // through the layout model in onGridResizeEnd; this only paints the preview.
+    ghost.style.gridColumn = `${placement.column.start} / ${placement.column.end}`;
+    ghost.style.gridRow = `${placement.row.start} / ${placement.row.end}`;
+  }
+
+  /** Clears the current grid-resize preview session. */
+  #endGridResize(): void {
+    const ghost = this.#gridResize?.ghost;
+    ghost?.classList.remove("--visible");
+    if (ghost) {
+      ghost.style.display = "none";
+    }
+    this.#gridResize = null;
+  }
+
+  /**
+   * Builds (once per drag) the geometry resolver the slot-insert path uses
+   * to turn the cursor position into a drop descriptor — the same resolver
+   * the `containerDropTarget` modifier uses for block drags.
+   *
+   */
+  #ensureExternalDropResolver(): ContainerDropResolver {
+    const chromeElement = this.chromeEl;
+    if (!chromeElement) {
+      throw new Error("Cannot resolve an external drop before chrome mounts");
+    }
+    this.#externalDropResolver ||= createContainerDropResolver({
+      layoutQuery: this.wireframeLayoutQuery,
+      dropAuthority: this.wireframeDropAuthority,
+      chromeElement,
+      containerKey: this.args.blockKey,
+      outletName: this.args.outletName,
+      mode: this.containerDropMode,
+    });
+    return this.#externalDropResolver;
+  }
+
+  /** Claims the relevant background or structural external-drop overlay. */
+  #claimExternalOverlay(
+    /** Current external-drag pointer coordinates. */
+    input: PointerInput
+  ): void {
+    if (this.canDropBackgroundFile()) {
+      const argName = this.#passiveImageArgName();
+      if (!argName) {
+        return;
+      }
+      this.#releaseDrop = this.wireframeDragOverlay.claimImageArg({
+        blockKey: this.args.blockKey,
+        argName,
+        isPassive: true,
+      });
+      return;
+    }
+    if (this.#isImageDropSlot) {
+      this.#releaseDrop = this.wireframeDragOverlay.claimSlotInsert(
+        this.#ensureExternalDropResolver().descriptorFor(
+          EXTERNAL_IMAGE_DROP_SOURCE,
+          input
+        )
+      );
+    }
   }
 
   /**
@@ -2111,9 +2111,11 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             (if this.isEmptyCell "--cell")
             (if this.isPart "--part")
           }}
-          data-wf-block-name={{@blockName}}
           data-wf-block-key={{@blockKey}}
+          data-wf-block-name={{@blockName}}
           data-wf-empty={{this.isEmptyContainer}}
+          role="button"
+          tabindex="0"
           {{didInsert this.captureChromeEl}}
           {{containerDropTarget
             containerKey=@blockKey
@@ -2144,8 +2146,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             onDrop=this.onExternalImageDrop
           }}
           {{on "click" this.onClick}}
-          role="button"
-          tabindex="0"
         >
           {{! A read-only (LOCKED) outlet shows no toolbar — no drag handle, no
             actions — so its programmatic layout can't be edited. For the outlet
@@ -2156,20 +2156,20 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
           {{#unless this.isReadOnlyOutlet}}
             <BlockToolbar
               @blockKey={{@blockKey}}
-              @outletName={{@outletName}}
+              @canResetImage={{this.imageIsResized}}
+              @chromeEl={{this.optionalChromeEl}}
+              @displayChip={{this.childOrdinal}}
               @displayName={{this.displayName}}
               @displayTitle={{this.childTooltip}}
-              @displayChip={{this.childOrdinal}}
-              @moveAxis={{this.siblingMoveAxis}}
-              @isOutletRoot={{this.isOutletRoot}}
-              @outletState={{this.outletState}}
               @isOutletEditing={{this.isOutletEditing}}
-              @showOutletStatus={{this.showOutletStatus}}
-              @chromeEl={{this.optionalChromeEl}}
+              @isOutletRoot={{this.isOutletRoot}}
               @isSelected={{this.isSelected}}
-              @canResetImage={{this.imageIsResized}}
-              @onResetImage={{this.resetImageToNaturalSize}}
+              @moveAxis={{this.siblingMoveAxis}}
               @onEditImage={{if this.editableImageArg this.editImage}}
+              @onResetImage={{this.resetImageToNaturalSize}}
+              @outletName={{@outletName}}
+              @outletState={{this.outletState}}
+              @showOutletStatus={{this.showOutletStatus}}
             />
           {{/unless}}
 
@@ -2210,10 +2210,10 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             >
               <EditorEmptyDropPlaceholder
                 @hint={{i18n "wireframe.canvas.empty_hint"}}
-                @palette={{this.palette}}
-                @targetOutletName={{@outletName}}
                 @onActivate={{this.selectSelf}}
                 @onPick={{this.pickBlockForCell}}
+                @palette={{this.palette}}
+                @targetOutletName={{@outletName}}
               />
             </div>
           {{else if this.isGridCell}}
@@ -2240,20 +2240,20 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
           {{#if this.repositionTarget}}
             {{#if this.repositionFrame}}
               <ImageReposition
-                @target={{this.repositionTarget}}
-                @frame={{this.repositionFrame}}
                 @chrome={{this.chromeEl}}
+                @frame={{this.repositionFrame}}
+                @target={{this.repositionTarget}}
               />
             {{/if}}
           {{/if}}
 
           {{#each this.imageArgEntries key="key" as |imageArg|}}
             <ImageArgOverlay
-              @blockKey={{@blockKey}}
-              @argName={{imageArg.name}}
               @argDef={{imageArg.def}}
-              @isEmpty={{imageArg.isEmpty}}
+              @argName={{imageArg.name}}
+              @blockKey={{@blockKey}}
               @getChromeEl={{this.getChromeEl}}
+              @isEmpty={{imageArg.isEmpty}}
               @pendingFile={{this.optionalPendingBackgroundFile}}
               @suppressEmptyPrompt={{this.ownsEmptyPrompt}}
             />
@@ -2261,9 +2261,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
 
           {{#each this.emptyPromptArgEntries key="name" as |emptyArg|}}
             <EmptyArgPrompt
-              @prompt={{emptyArg.prompt}}
               @icon={{this.metadata.icon}}
               @onActivate={{this.selectSelf}}
+              @prompt={{emptyArg.prompt}}
             />
           {{/each}}
 
@@ -2280,13 +2280,13 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
               them on hover or when the cell is selected (matching the empty-cell
               merge handles), so pointer-events stay off until then. }}
             <DResizeHandles
-              @handleClass="wireframe-block-chrome__resize-handle"
               @directions={{this.gridResizeDirections}}
-              @onResizeStart={{this.onGridResizeStart}}
-              @onResize={{this.onGridResize}}
-              @onResizeEnd={{this.onGridResizeEnd}}
-              @onResizeCancel={{this.onGridResizeCancel}}
               @draggingClass="--dragging"
+              @handleClass="wireframe-block-chrome__resize-handle"
+              @onResize={{this.onGridResize}}
+              @onResizeCancel={{this.onGridResizeCancel}}
+              @onResizeEnd={{this.onGridResizeEnd}}
+              @onResizeStart={{this.onGridResizeStart}}
             />
           {{/if}}
 
@@ -2294,13 +2294,13 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             {{#let this.resizableImageArg as |imageArg|}}
               {{#if imageArg}}
                 <ImageResizeOverlay
-                  @blockKey={{@blockKey}}
                   @argName={{imageArg.name}}
+                  @aspectRatio={{this.imageResizeAspectRatio}}
+                  @blockKey={{@blockKey}}
                   @getChromeEl={{this.getChromeEl}}
                   @getMarkerEl={{this.getImageMarkerEl}}
-                  @aspectRatio={{this.imageResizeAspectRatio}}
-                  @onPreview={{this.previewImageResize}}
                   @onCommit={{this.commitImageResize}}
+                  @onPreview={{this.previewImageResize}}
                 />
               {{/if}}
             {{/let}}
@@ -2310,28 +2310,28 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             {{#if this.emptyHost}}
               {{#in-element this.emptyHost insertBefore=null}}
                 <EditorEmptyDropPlaceholder
-                  @hint={{this.emptyActionHint}}
                   @backgroundHint={{i18n
                     "wireframe.canvas.add_background_image"
                   }}
                   @groupActions={{true}}
-                  @palette={{this.palette}}
-                  @targetOutletName={{@outletName}}
+                  @hint={{this.emptyActionHint}}
                   @onActivate={{this.selectSelf}}
-                  @onPick={{this.pickBlockForContainer}}
                   @onAddBackground={{if
                     this.emptyBackgroundArgName
                     this.addBackgroundImage
                   }}
+                  @onPick={{this.pickBlockForContainer}}
+                  @palette={{this.palette}}
+                  @targetOutletName={{@outletName}}
                 />
               {{/in-element}}
             {{else}}
               <EditorEmptyDropPlaceholder
                 @hint={{this.emptyHint}}
-                @palette={{this.palette}}
-                @targetOutletName={{@outletName}}
                 @onActivate={{this.selectSelf}}
                 @onPick={{this.pickBlockForContainer}}
+                @palette={{this.palette}}
+                @targetOutletName={{@outletName}}
               />
             {{/if}}
           {{/if}}

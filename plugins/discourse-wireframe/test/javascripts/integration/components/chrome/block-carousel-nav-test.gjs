@@ -9,7 +9,7 @@ import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/compone
 const WrappedCarousel = <template>
   <div class="d-block-carousel">
     <span class="body">slide</span>
-    <button type="button" class="nav" data-wf-carousel-nav="true">›</button>
+    <button class="nav" data-wf-carousel-nav="true" type="button">›</button>
   </div>
 </template>;
 
@@ -39,8 +39,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="carousel"
             @blockKey="carousel:test"
+            @blockName="carousel"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedCarousel}}
           />

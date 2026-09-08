@@ -125,18 +125,25 @@ export default class WireframeStagingService extends Service {
 
   /** Flushes pending inspector edits before staging operations. */
   @service declare wireframeInspectorArgs: WireframeInspectorArgsService;
+
   /** Reads and writes the current user's persisted drafts. */
   @service declare wireframeDrafts: WireframeDraftsService;
+
   /** Tracks mutations, dirty outlets, snapshots, and undo state. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
   /** Commits active in-place text edits before staging operations. */
   @service declare wireframeInplaceText: WireframeInplaceTextService;
+
   /** Resolves editable outlets, layout entries, and block metadata. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   /** Reads and publishes live theme layouts. */
   @service declare wireframeLiveLayout: WireframeLiveLayoutService;
+
   /** Reports whether an editor session remains active. */
   @service declare wireframeEditMode: WireframeEditModeService;
+
   /** Resolves the active theme and per-outlet publish destinations. */
   @service declare wireframePublishTarget: WireframePublishTargetService;
 

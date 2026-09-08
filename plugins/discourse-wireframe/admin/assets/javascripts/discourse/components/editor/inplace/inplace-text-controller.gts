@@ -78,6 +78,7 @@ export default class InplaceTextController extends Component {
 
   /** Selection range preserved while the URL editor owns focus. */
   #savedLinkRange: SavedLinkRange | null = null;
+
   /**
    * Tracked counter bumped on every PM transaction. Read by
    * `markState` / `selectionEmpty` getters to participate in Glimmer's

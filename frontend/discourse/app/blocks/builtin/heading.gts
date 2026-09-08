@@ -105,9 +105,9 @@ export default class Heading extends Component<HeadingSignature> {
   <template>
     <RichTextRenderer
       @arg="text"
+      @placeholder={{i18n "blocks.builtin.placeholders.heading_text"}}
       @schema="heading"
       @value={{@text}}
-      @placeholder={{i18n "blocks.builtin.placeholders.heading_text"}}
       as |R|
     >
       <this.headingTag

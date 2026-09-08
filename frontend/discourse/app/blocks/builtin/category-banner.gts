@@ -268,15 +268,15 @@ export default class CategoryBanner extends Component<CategoryBannerSignature> {
 
             {{#if this.hasSubcategories}}
               <ul
-                class="d-block-category-banner__subcategories"
                 aria-label="Subcategories"
+                class="d-block-category-banner__subcategories"
               >
                 {{#each this.category.subcategories as |subcategory|}}
                   <li class="d-block-category-banner__subcategory">
                     <CategoryCard
                       @category={{subcategory}}
-                      @href={{subcategory.url}}
                       @class="d-block-category-banner__subcategory-card"
+                      @href={{subcategory.url}}
                     />
                   </li>
                 {{/each}}

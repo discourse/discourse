@@ -105,17 +105,17 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="input" @name="prefix" @title="Prefix" as |field|>
+            <form.Field @name="prefix" @title="Prefix" @type="input" as |field|>
               <field.Control @after=".com">
                 <:before><strong>https://</strong></:before>
               </field.Control>
             </form.Field>
-            <form.Field @type="input" @name="suffix" @title="Suffix" as |field|>
+            <form.Field @name="suffix" @title="Suffix" @type="input" as |field|>
               <field.Control @before="https://">
                 <:after><strong>.com</strong></:after>
               </field.Control>
             </form.Field>
-            <form.Field @type="input" @name="both" @title="Both" as |field|>
+            <form.Field @name="both" @title="Both" @type="input" as |field|>
               <field.Control>
                 <:before><strong>Before</strong></:before>
                 <:after><strong>After</strong></:after>
@@ -145,10 +145,10 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="input-number"
+              @disabled={{this.disabled}}
               @name="size"
               @title="Size"
-              @disabled={{this.disabled}}
+              @type="input-number"
               as |field|
             >
               <field.Control>
@@ -157,8 +157,8 @@ module(
                     aria-label="Unit"
                     disabled={{field.disabled}}
                     @includeNone={{false}}
-                    @value={{this.unit}}
                     @onChange={{changeUnit}}
+                    @value={{this.unit}}
                     as |select|
                   >
                     <select.Option @value="px">px</select.Option>
@@ -197,9 +197,9 @@ module(
             <div dir={{direction}} style="width: 160px;">
               <Form as |form|>
                 <form.Field
-                  @type="input-number"
                   @name="size"
                   @title="Size"
+                  @type="input-number"
                   as |field|
                 >
                   <field.Control @before="$">
@@ -282,7 +282,7 @@ module(
           await render(
             <template>
               <Form as |form|>
-                <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+                <form.Field @name="foo" @title="Foo" @type="input" as |field|>
                   {{#if before}}
                     <field.Control @before={{value}}><:before
                       >Prefix</:before></field.Control>
@@ -310,7 +310,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="input" as |field|>
               <field.Control @after={{this.after}}><:after
                 >Suffix</:after></field.Control>
             </form.Field>

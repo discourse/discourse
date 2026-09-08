@@ -239,7 +239,7 @@ export default class WireframeSelectionService extends Service {
   #onCanvasMouseUp = (event: MouseEvent): void => {
     const downTarget = this.#selectionMousedownTarget;
     this.#selectionMousedownTarget = null;
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return;
     }
     if (!this.wireframeEditMode.active || !this.selectedBlockKey) {

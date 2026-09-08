@@ -168,11 +168,11 @@ export default class NewTopicButton extends Component<NewTopicButtonSignature> {
       </span>
       <RichTextRenderer
         @arg="label"
-        @schema="plain"
-        @value={{@label}}
         @placeholder={{i18n
           "blocks.builtin.placeholders.new_topic_button_label"
         }}
+        @schema="plain"
+        @value={{@label}}
         as |R|
       >
         <span class="d-button-label"><R.Content /></span>

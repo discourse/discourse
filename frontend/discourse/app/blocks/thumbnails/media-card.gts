@@ -7,42 +7,42 @@ interface MediaCardThumbnailSignature {
 /** Palette thumbnail for the `media-card` block: a card with a media header and text. */
 const MediaCardThumbnail: TemplateOnlyComponent<MediaCardThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="24"
-        y="14"
-        width="72"
+        fill="var(--secondary)"
         height="52"
         rx="6"
-        fill="var(--secondary)"
         stroke="var(--primary-low)"
         stroke-width="2"
-      />
-      <rect
+        width="72"
         x="24"
         y="14"
-        width="72"
+      />
+      <rect
+        fill="var(--primary-low)"
         height="24"
         rx="6"
-        fill="var(--primary-low)"
+        width="72"
+        x="24"
+        y="14"
       />
-      <circle cx="60" cy="26" r="6" fill="var(--tertiary)" />
+      <circle cx="60" cy="26" fill="var(--tertiary)" r="6" />
       <path d="M58 23 L63 26 L58 29 Z" fill="var(--secondary)" />
       <rect
-        x="32"
-        y="46"
-        width="44"
+        fill="var(--primary-low-mid)"
         height="5"
         rx="2"
-        fill="var(--primary-low-mid)"
+        width="44"
+        x="32"
+        y="46"
       />
       <rect
-        x="32"
-        y="55"
-        width="32"
+        fill="var(--primary-low-mid)"
         height="4"
         rx="2"
-        fill="var(--primary-low-mid)"
+        width="32"
+        x="32"
+        y="55"
       />
     </svg>
   </template>;

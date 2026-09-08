@@ -159,11 +159,11 @@ export default class InspectorContainerArgsForm extends Component {
         <form.Section @title={{section.label}}>
           {{#each section.fields as |field|}}
             <InspectorField
-              @form={{form}}
-              @field={{field}}
-              @values={{section.values}}
-              @onFieldSet={{fn this.onFieldSet section.namespace}}
               @disabled={{this.disabled}}
+              @field={{field}}
+              @form={{form}}
+              @onFieldSet={{fn this.onFieldSet section.namespace}}
+              @values={{section.values}}
             />
           {{/each}}
         </form.Section>

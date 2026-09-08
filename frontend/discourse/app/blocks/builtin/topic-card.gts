@@ -142,16 +142,16 @@ export default class TopicCard extends Component<TopicCardSignature> {
             </div>
 
             <a
+              aria-label={{topic.title}}
               class="d-block-stretched-link"
               href={{topic.url}}
-              aria-label={{topic.title}}
             ></a>
           {{/let}}
         </:content>
         <:loading>
           <div
-            class="d-block-topic-card__details d-block-topic-card__skeleton"
             aria-hidden="true"
+            class="d-block-topic-card__details d-block-topic-card__skeleton"
           >
             <DSkeleton
               class="d-block-topic-card__skeleton-category"
@@ -162,7 +162,7 @@ export default class TopicCard extends Component<TopicCardSignature> {
               <DSkeleton @variant="text" @width="22ch" />
             </h3>
             {{#if (and @showExcerpt (not @image.url))}}
-              <DSkeleton @variant="text" @count={{3}} @lastLineWidth="18ch" />
+              <DSkeleton @count={{3}} @lastLineWidth="18ch" @variant="text" />
             {{/if}}
           </div>
         </:loading>

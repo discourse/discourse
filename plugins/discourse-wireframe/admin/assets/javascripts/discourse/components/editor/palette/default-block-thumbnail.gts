@@ -23,30 +23,30 @@ const DefaultBlockThumbnail: TemplateOnlyComponent<DefaultBlockThumbnailSignatur
   <template>
     <span class="wireframe-block-thumbnail-default" ...attributes>
       <svg
-        class="wireframe-block-thumbnail-default__frame"
-        viewBox="0 0 120 80"
-        fill="none"
         aria-hidden="true"
+        class="wireframe-block-thumbnail-default__frame"
+        fill="none"
+        viewBox="0 0 120 80"
       >
         <rect
-          x="6"
-          y="6"
-          width="108"
+          fill="var(--primary-low)"
           height="68"
           rx="9"
-          fill="var(--primary-low)"
+          width="108"
+          x="6"
+          y="6"
         />
         <rect
-          x="16"
-          y="14"
-          width="88"
+          fill="var(--secondary)"
           height="52"
           rx="7"
-          fill="var(--secondary)"
           stroke="var(--primary-low-mid)"
           stroke-width="1.5"
+          width="88"
+          x="16"
+          y="14"
         />
-        <circle cx="97" cy="59" r="3" fill="var(--tertiary)" />
+        <circle cx="97" cy="59" fill="var(--tertiary)" r="3" />
       </svg>
       <span class="wireframe-block-thumbnail-default__icon">{{dIcon
           @icon

@@ -15,6 +15,7 @@ import { diffLayouts } from "../lib/outlet-change-summary";
 export default class WireframePublishPreviewService extends Service {
   /** Resolves the published layout used as the comparison baseline. */
   @service declare blocks: BlocksService;
+
   /** Resolves the edited layout shown in the publish preview. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
 

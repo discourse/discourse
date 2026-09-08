@@ -244,9 +244,9 @@ export default class Table extends Component<TableSignature> {
             {{#each row.cells key="key" as |cell|}}
               {{#if cell.isHeader}}
                 <th
-                  scope={{cell.scope}}
                   colspan={{cell.colspan}}
                   rowspan={{cell.rowspan}}
+                  scope={{cell.scope}}
                 >
                   {{#if cell.child}}<cell.child.Component />{{/if}}
                 </th>

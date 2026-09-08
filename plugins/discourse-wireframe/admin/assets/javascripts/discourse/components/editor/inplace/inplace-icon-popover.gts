@@ -58,8 +58,8 @@ interface InplaceIconPopoverSignature {
 const InplaceIconPopover: TemplateOnlyComponent<InplaceIconPopoverSignature> =
   <template>
     <DIconGridPickerContent
-      @value={{@data.value}}
       @onSelect={{@data.onSelect}}
+      @value={{@data.value}}
     />
   </template>;
 

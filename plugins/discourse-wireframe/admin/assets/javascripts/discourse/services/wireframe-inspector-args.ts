@@ -33,8 +33,10 @@ const FLUSH_DELAY_MS = 200;
 export default class WireframeInspectorArgsService extends Service {
   /** Records argument batches and structural part overrides. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
   /** Resolves selected entries, outlets, and synthesized part contexts. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   /** Supplies the block targeted by inspector argument edits. */
   @service declare wireframeSelection: WireframeSelectionService;
 

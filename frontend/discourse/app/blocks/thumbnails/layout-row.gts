@@ -7,30 +7,30 @@ interface LayoutRowThumbnailSignature {
 /** Palette thumbnail for a horizontal row layout. */
 const LayoutRowThumbnail: TemplateOnlyComponent<LayoutRowThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
+        fill="var(--primary-low)"
+        height="48"
+        rx="3"
+        width="25"
         x="14"
         y="16"
-        width="25"
-        height="48"
-        rx="3"
-        fill="var(--primary-low)"
       />
       <rect
+        fill="var(--primary-low)"
+        height="48"
+        rx="3"
+        width="25"
         x="47.5"
         y="16"
-        width="25"
-        height="48"
-        rx="3"
-        fill="var(--primary-low)"
       />
       <rect
-        x="81"
-        y="16"
-        width="25"
+        fill="var(--primary-low)"
         height="48"
         rx="3"
-        fill="var(--primary-low)"
+        width="25"
+        x="81"
+        y="16"
       />
     </svg>
   </template>;

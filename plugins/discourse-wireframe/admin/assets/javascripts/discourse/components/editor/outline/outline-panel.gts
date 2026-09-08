@@ -125,20 +125,28 @@ const ROW_ACTIONS_MENU = "wireframe-outline-row-actions";
 export default class OutlinePanel extends Component<OutlinePanelSignature> {
   /** Resolves registered block metadata and conditions. */
   @service declare blocks: BlocksService;
+
   /** Opens the per-row action menu. */
   @service declare menu: MenuService;
+
   /** Applies structural mutations initiated from the outline. */
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
+
   /** Scrolls and flashes selected blocks on the canvas. */
   @service declare wireframeBlockReveal: WireframeBlockRevealService;
+
   /** Owns active outline drag state. */
   @service declare wireframeDragSession: WireframeDragSessionService;
+
   /** Exposes layout snapshots used by the outline projection. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
   /** Invalidates the outline after layout changes. */
   @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
+
   /** Owns the current block selection. */
   @service declare wireframeSelection: WireframeSelectionService;
+
   /** Exposes whether the editor is active. */
   @service declare wireframeEditMode: WireframeEditModeService;
 
@@ -154,8 +162,10 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * `"conditions"` shows rows that have conditions at all. Single-select.
    */
   @tracked statusFilter: OutlineStatusFilter = "all";
+
   /** Drag kinds accepted by outline drop targets. */
   acceptedDragKinds: OutlineDragKind[] = ["wf-block", "wf-palette-block"];
+
   /**
    * Checks whether a status-filter chip is selected.
    *
@@ -163,6 +173,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    */
   isStatusFilter: (filter: OutlineStatusFilter) => boolean = (filter) =>
     this.statusFilter === filter;
+
   /**
    * Whether a container row is collapsed. A row the user has explicitly toggled
    * uses that choice; otherwise it falls back to the default — collapsed when
@@ -173,6 +184,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   isRowCollapsed: (row: OutlineRow) => boolean = (row) =>
     this.#collapseOverrides.get(row.blockKey) ??
     row.childCount > CHILD_COUNT_THRESHOLD;
+
   /**
    * Checks whether an outlet group is collapsed.
    *
@@ -190,6 +202,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   isOutletSelected: (rootKey: string | null) => boolean = (rootKey) => {
     return rootKey != null && this.wireframeSelection.isBlockSelected(rootKey);
   };
+
   /**
    * Explicit per-row collapse choices keyed by `blockKey` (`true` = collapsed,
    * `false` = expanded). Only rows the user has toggled appear here; everything
@@ -362,54 +375,6 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   }
 
   /**
-   * Builds the selection payload for a row (the shape `selectBlock` and the
-   * multi-select gestures expect).
-   *
-   * @param outletName - Outlet containing the row.
-   * @param row - Outline row to project.
-   * @returns Selection payload for the row.
-   */
-  #rowData(outletName: string, row: OutlineRow): SelectedBlockData {
-    return {
-      key: row.blockKey,
-      name: row.blockName,
-      id: row.blockId,
-      args: row.args,
-      conditions: row.conditions,
-      outletName,
-      metadata: this.lookupMetadataFor(row.blockName),
-    };
-  }
-
-  /**
-   * The block keys spanning the current primary selection and `toRow`, within
-   * the clicked outlet's visible rows — the shift-click range. Returns `null`
-   * when there's no anchor or either endpoint isn't a visible row (e.g. the
-   * anchor is in another outlet or hidden under a collapsed container), so the
-   * caller falls back to a plain single select.
-   *
-   * @param outletName - Outlet whose visible rows define the range.
-   * @param toRow - Row terminating the range.
-   * @returns Contiguous block keys, or `null` without a visible anchor.
-   */
-  #rangeKeys(outletName: string, toRow: OutlineRow): string[] | null {
-    const anchorKey = this.wireframeSelection.selectedBlockKey;
-    if (!anchorKey) {
-      return null;
-    }
-    const group = this.decoratedGroups.find((g) => g.outletName === outletName);
-    const rows = group?.rows ?? [];
-    const anchorIndex = rows.findIndex((r) => r.blockKey === anchorKey);
-    const toIndex = rows.findIndex((r) => r.blockKey === toRow.blockKey);
-    if (anchorIndex === -1 || toIndex === -1) {
-      return null;
-    }
-    const [lo, hi] =
-      anchorIndex <= toIndex ? [anchorIndex, toIndex] : [toIndex, anchorIndex];
-    return rows.slice(lo, hi + 1).map((r) => r.blockKey);
-  }
-
-  /**
    * Selects an outlet by selecting its implicit root layout — the outline
    * header acts as the outlet's selection target, surfacing the layout form.
    *
@@ -526,27 +491,6 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
         onDelete: () => this.wireframeBlockMutations.removeBlock(row.blockKey),
       },
     });
-  }
-
-  /**
-   * Resolves a decorated row (and its owning outlet) from a block key by
-   * scanning the current groups. Called only on a keyboard activation, so the
-   * linear scan is cheap relative to a per-render index.
-   *
-   * @param blockKey - Composite row key to locate.
-   * @returns The row and owning outlet, or `null` when absent.
-   */
-  #findRow(blockKey: string | undefined): LocatedOutlineRow | null {
-    if (!blockKey) {
-      return null;
-    }
-    for (const group of this.decoratedGroups) {
-      const row = group.rows.find((r) => r.blockKey === blockKey);
-      if (row) {
-        return { outletName: group.outletName, row };
-      }
-    }
-    return null;
   }
 
   /**
@@ -674,6 +618,75 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   @action
   clearQuery(): void {
     this.query = "";
+  }
+
+  /**
+   * Builds the selection payload for a row (the shape `selectBlock` and the
+   * multi-select gestures expect).
+   *
+   * @param outletName - Outlet containing the row.
+   * @param row - Outline row to project.
+   * @returns Selection payload for the row.
+   */
+  #rowData(outletName: string, row: OutlineRow): SelectedBlockData {
+    return {
+      key: row.blockKey,
+      name: row.blockName,
+      id: row.blockId,
+      args: row.args,
+      conditions: row.conditions,
+      outletName,
+      metadata: this.lookupMetadataFor(row.blockName),
+    };
+  }
+
+  /**
+   * The block keys spanning the current primary selection and `toRow`, within
+   * the clicked outlet's visible rows — the shift-click range. Returns `null`
+   * when there's no anchor or either endpoint isn't a visible row (e.g. the
+   * anchor is in another outlet or hidden under a collapsed container), so the
+   * caller falls back to a plain single select.
+   *
+   * @param outletName - Outlet whose visible rows define the range.
+   * @param toRow - Row terminating the range.
+   * @returns Contiguous block keys, or `null` without a visible anchor.
+   */
+  #rangeKeys(outletName: string, toRow: OutlineRow): string[] | null {
+    const anchorKey = this.wireframeSelection.selectedBlockKey;
+    if (!anchorKey) {
+      return null;
+    }
+    const group = this.decoratedGroups.find((g) => g.outletName === outletName);
+    const rows = group?.rows ?? [];
+    const anchorIndex = rows.findIndex((r) => r.blockKey === anchorKey);
+    const toIndex = rows.findIndex((r) => r.blockKey === toRow.blockKey);
+    if (anchorIndex === -1 || toIndex === -1) {
+      return null;
+    }
+    const [lo, hi] =
+      anchorIndex <= toIndex ? [anchorIndex, toIndex] : [toIndex, anchorIndex];
+    return rows.slice(lo, hi + 1).map((r) => r.blockKey);
+  }
+
+  /**
+   * Resolves a decorated row (and its owning outlet) from a block key by
+   * scanning the current groups. Called only on a keyboard activation, so the
+   * linear scan is cheap relative to a per-render index.
+   *
+   * @param blockKey - Composite row key to locate.
+   * @returns The row and owning outlet, or `null` when absent.
+   */
+  #findRow(blockKey: string | undefined): LocatedOutlineRow | null {
+    if (!blockKey) {
+      return null;
+    }
+    for (const group of this.decoratedGroups) {
+      const row = group.rows.find((r) => r.blockKey === blockKey);
+      if (row) {
+        return { outletName: group.outletName, row };
+      }
+    }
+    return null;
   }
 
   /**
@@ -891,14 +904,14 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
           proper container-level focus ring (a bare input would render the
           global input focus shadow as a stray inner ring). }}
         <DFilterInput
-          @value={{this.query}}
-          @filterAction={{this.onQueryInput}}
-          @onClearInput={{this.clearQuery}}
-          @icons={{hash left="magnifying-glass"}}
-          placeholder={{i18n "wireframe.outline.filter.placeholder"}}
           aria-label={{i18n "wireframe.outline.filter.placeholder"}}
-          spellcheck="false"
           autocomplete="off"
+          placeholder={{i18n "wireframe.outline.filter.placeholder"}}
+          spellcheck="false"
+          @filterAction={{this.onQueryInput}}
+          @icons={{hash left="magnifying-glass"}}
+          @onClearInput={{this.clearQuery}}
+          @value={{this.query}}
         />
         <div class="wireframe-outline__chips" role="tablist">
           <DButton
@@ -906,26 +919,26 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
               "wireframe-outline__chip"
               (if (this.isStatusFilter "all") "--active")
             }}
-            @label="wireframe.outline.filter.chip_all"
             @action={{fn this.setStatusFilter "all"}}
+            @label="wireframe.outline.filter.chip_all"
           />
           <DButton
             class={{dConcatClass
               "wireframe-outline__chip"
               (if (this.isStatusFilter "errors") "--active")
             }}
+            @action={{fn this.setStatusFilter "errors"}}
             @icon="triangle-exclamation"
             @label="wireframe.outline.filter.chip_errors"
-            @action={{fn this.setStatusFilter "errors"}}
           />
           <DButton
             class={{dConcatClass
               "wireframe-outline__chip"
               (if (this.isStatusFilter "conditions") "--active")
             }}
+            @action={{fn this.setStatusFilter "conditions"}}
             @icon="filter"
             @label="wireframe.outline.filter.chip_conditions"
-            @action={{fn this.setStatusFilter "conditions"}}
           />
         </div>
       </div>
@@ -938,9 +951,9 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
           Right bubble to onTreeKeydown for expand/collapse. itemsKey re-seeds
           the tab stop whenever the row set changes (filter, collapse, delete). }}
         <div
+          aria-label={{i18n "wireframe.outline.tree_label"}}
           class="wireframe-outline__tree"
           role="tree"
-          aria-label={{i18n "wireframe.outline.tree_label"}}
           {{dRovingFocus
             orientation="vertical"
             itemSelector=".outline-outlet__header, .outline-block"
@@ -958,42 +971,42 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
               outlet (its implicit root layout) so the inspector shows the
               layout form. Two distinct interactions, so two controls. }}
               <div
-                class={{dConcatClass
-                  "outline-outlet__header"
-                  (if (this.isOutletSelected group.rootKey) "--selected")
-                }}
-                role="treeitem"
-                aria-level="1"
                 aria-expanded={{if
                   (this.isOutletCollapsed group.outletName)
                   "false"
                   "true"
                 }}
+                aria-level="1"
                 aria-selected={{if
                   (this.isOutletSelected group.rootKey)
                   "true"
                   "false"
                 }}
+                class={{dConcatClass
+                  "outline-outlet__header"
+                  (if (this.isOutletSelected group.rootKey) "--selected")
+                }}
                 data-outlet-name={{group.outletName}}
+                role="treeitem"
               >
                 <DButton
                   class="outline-outlet__toggle"
+                  @action={{fn this.toggleOutlet group.outletName}}
                   @ariaExpanded={{if
                     (this.isOutletCollapsed group.outletName)
                     false
                     true
-                  }}
-                  @icon={{if
-                    (this.isOutletCollapsed group.outletName)
-                    "chevron-right"
-                    "chevron-down"
                   }}
                   @ariaLabel={{if
                     (this.isOutletCollapsed group.outletName)
                     "wireframe.outline.expand_row"
                     "wireframe.outline.collapse_row"
                   }}
-                  @action={{fn this.toggleOutlet group.outletName}}
+                  @icon={{if
+                    (this.isOutletCollapsed group.outletName)
+                    "chevron-right"
+                    "chevron-down"
+                  }}
                 />
                 <DButton
                   class="outline-outlet__label"
@@ -1013,6 +1026,16 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
               {{#unless (this.isOutletCollapsed group.outletName)}}
                 {{#each group.rows key="blockKey" as |row|}}
                   <div
+                    aria-expanded={{if
+                      row.hasChildren
+                      (if (this.isRowCollapsed row) "false" "true")
+                    }}
+                    aria-level={{row.ariaLevel}}
+                    aria-selected={{if
+                      (this.wireframeSelection.isBlockSelected row.blockKey)
+                      "true"
+                      "false"
+                    }}
                     class={{dConcatClass
                       "outline-block"
                       (if
@@ -1024,19 +1047,9 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
                       (if row.isMuted "--muted")
                       (if row.isPart "--part")
                     }}
-                    role="treeitem"
-                    aria-level={{row.ariaLevel}}
-                    aria-selected={{if
-                      (this.wireframeSelection.isBlockSelected row.blockKey)
-                      "true"
-                      "false"
-                    }}
-                    aria-expanded={{if
-                      row.hasChildren
-                      (if (this.isRowCollapsed row) "false" "true")
-                    }}
                     data-block-key={{row.blockKey}}
                     data-outlet-name={{group.outletName}}
+                    role="treeitem"
                     style={{rowPadding row.depth}}
                     {{on "click" (fn this.selectRow group.outletName row)}}
                     {{dDragAndDropSource
@@ -1060,7 +1073,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
                     modifiers above), so the grip is decorative; parts aren't
                     reorderable, so they get none. }}
                     {{#unless row.isPart}}
-                      <span class="outline-block__grip" aria-hidden="true">
+                      <span aria-hidden="true" class="outline-block__grip">
                         {{dIcon "grip-vertical"}}
                       </span>
                     {{/unless}}
@@ -1072,17 +1085,17 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
 
                       <DButton
                         class="outline-block__toggle"
-                        @icon={{if
-                          (this.isRowCollapsed row)
-                          "chevron-right"
-                          "chevron-down"
-                        }}
+                        @action={{fn this.toggleCollapse row}}
                         @ariaLabel={{if
                           (this.isRowCollapsed row)
                           "wireframe.outline.expand_row"
                           "wireframe.outline.collapse_row"
                         }}
-                        @action={{fn this.toggleCollapse row}}
+                        @icon={{if
+                          (this.isRowCollapsed row)
+                          "chevron-right"
+                          "chevron-down"
+                        }}
                       />
                     {{else}}
                       {{! An empty spacer sized to match the chevron so leaf rows
@@ -1093,7 +1106,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
                     {{! The block-type icon, shown on every row (container and
                     leaf) so the tree reads at a glance. Decorative; the block
                     name below is the row's accessible label. }}
-                    <span class="outline-block__type" aria-hidden="true">
+                    <span aria-hidden="true" class="outline-block__type">
                       {{dIcon row.typeIcon}}
                     </span>
                     {{! The author-facing block or palette-variant name is the
@@ -1127,9 +1140,9 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
                     {{/if}}
                     {{#if row.statusIcon}}
                       <span
+                        aria-label={{row.statusTooltip}}
                         class="outline-block__status"
                         title={{row.statusTooltip}}
-                        aria-label={{row.statusTooltip}}
                       >
                         {{dIcon row.statusIcon}}
                       </span>
@@ -1142,11 +1155,11 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
                     {{#unless row.isPart}}
                       <DButton
                         class="outline-block__actions btn-flat"
-                        @icon="ellipsis-vertical"
-                        @ariaLabel="wireframe.outline.actions_label"
-                        @actionParam={{row}}
                         @action={{this.openRowActions}}
+                        @actionParam={{row}}
+                        @ariaLabel="wireframe.outline.actions_label"
                         @forwardEvent={{true}}
+                        @icon="ellipsis-vertical"
                       />
                     {{/unless}}
                   </div>

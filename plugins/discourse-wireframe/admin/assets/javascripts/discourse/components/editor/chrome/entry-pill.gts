@@ -19,8 +19,10 @@ import type WireframeWorkspaceService from "discourse/plugins/discourse-wirefram
 export default class EntryPill extends Component {
   /** Orchestrates entering the editor workspace. */
   @service declare wireframeWorkspace: WireframeWorkspaceService;
+
   /** Exposes editable outlets on the current page. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   /** Owns editor permission and active state. */
   @service declare wireframeEditMode: WireframeEditModeService;
 
@@ -51,9 +53,9 @@ export default class EntryPill extends Component {
     {{#if this.visible}}
       <DButton
         class="wireframe-pill"
+        @action={{this.enter}}
         @icon="wand-magic-sparkles"
         @translatedLabel={{this.label}}
-        @action={{this.enter}}
       />
     {{/if}}
   </template>

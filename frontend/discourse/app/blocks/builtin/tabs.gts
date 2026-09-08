@@ -222,9 +222,6 @@ export default class Tabs extends Component<TabsSignature> {
             attributes are omitted on the live page. }}
         <div
           class="d-block-tabs__tablist"
-          role="tablist"
-          data-wf-drop-container={{if this.isEditing "true"}}
-          data-wf-drop-axis={{if this.isEditing "x"}}
           data-wf-child-noun={{if
             this.isEditing
             (i18n "blocks.builtin.tabs.tab_noun")
@@ -233,16 +230,19 @@ export default class Tabs extends Component<TabsSignature> {
             this.isEditing
             (i18n "blocks.builtin.tabs.tab_noun_plural")
           }}
+          data-wf-drop-axis={{if this.isEditing "x"}}
+          data-wf-drop-container={{if this.isEditing "true"}}
+          role="tablist"
         >
           {{#each this.panels key="key" as |child index|}}
             {{#let (eq child.key this.activePanelKey) as |isActive|}}
               <button
-                type="button"
-                class="d-block-tabs__tab {{if isActive 'is-active'}}"
-                role="tab"
                 aria-selected={{if isActive "true" "false"}}
-                data-wf-tab-panel-key={{if this.isEditing child.key}}
-                data-wf-drop-child-key={{if this.isEditing child.key}}
+                class="d-block-tabs__tab {{if isActive 'is-active'}}"
+                data-wf-container-arg-field={{if
+                  (and this.isEditing isActive)
+                  "label"
+                }}
                 data-wf-container-arg-key={{if
                   (and this.isEditing isActive)
                   child.key
@@ -251,17 +251,17 @@ export default class Tabs extends Component<TabsSignature> {
                   (and this.isEditing isActive)
                   "tab"
                 }}
-                data-wf-container-arg-field={{if
-                  (and this.isEditing isActive)
-                  "label"
-                }}
+                data-wf-drop-child-key={{if this.isEditing child.key}}
+                data-wf-tab-panel-key={{if this.isEditing child.key}}
+                role="tab"
+                type="button"
                 {{on "click" (fn this.selectTab child.key)}}
               >
                 <RichTextRenderer
                   @arg="label"
+                  @placeholder={{this.fallbackLabel index}}
                   @schema="plain"
                   @value={{this.labelValue child}}
-                  @placeholder={{this.fallbackLabel index}}
                   as |R|
                 >
                   {{#if this.isEditing}}
@@ -294,10 +294,10 @@ export default class Tabs extends Component<TabsSignature> {
               carries no behaviour here; external edit-driven tooling detects
               the data attribute and appends a new panel. }}
           <button
-            type="button"
+            aria-label={{i18n "blocks.builtin.tabs.add_tab"}}
             class="d-block-tabs__add-tab"
             data-wf-append-child="true"
-            aria-label={{i18n "blocks.builtin.tabs.add_tab"}}
+            type="button"
           >
             {{dIcon "plus"}}
           </button>

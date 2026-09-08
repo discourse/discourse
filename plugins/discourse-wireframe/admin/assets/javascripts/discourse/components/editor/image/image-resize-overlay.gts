@@ -421,8 +421,8 @@ export default class ImageResizeOverlay extends Component<ImageResizeOverlaySign
       {{! Marching-ants dashed selection ring tracing the marker's edges. Pure
         CSS — animation defined in wireframe-chrome.scss. }}
       <span
-        class="wireframe-image-resize-overlay__ring"
         aria-hidden="true"
+        class="wireframe-image-resize-overlay__ring"
       ></span>
 
       {{! 8 resize handles. The drag math anchors to the MARKER's rect (read on
@@ -430,10 +430,10 @@ export default class ImageResizeOverlay extends Component<ImageResizeOverlaySign
         display size — not the chrome's. }}
       <DResizeHandles
         @handleClass="wireframe-image-resize-overlay__handle"
-        @onResizeStart={{this.onImageResizeStart}}
         @onResize={{this.onImageResize}}
-        @onResizeEnd={{this.onImageResizeEnd}}
         @onResizeCancel={{this.onImageResizeCancel}}
+        @onResizeEnd={{this.onImageResizeEnd}}
+        @onResizeStart={{this.onImageResizeStart}}
       />
     </div>
   </template>

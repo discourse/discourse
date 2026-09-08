@@ -73,15 +73,15 @@ interface VideoSignature {
 export default class Video extends Component<VideoSignature> {
   <template>
     <video
-      class="d-block-video"
-      src={{@source}}
-      poster={{@poster.url}}
       autoplay={{@autoplay}}
+      class="d-block-video"
+      controls={{@controls}}
+      data-block-arg="source"
       loop={{@loop}}
       muted={{@muted}}
-      controls={{@controls}}
       playsinline
-      data-block-arg="source"
+      poster={{@poster.url}}
+      src={{@source}}
     ></video>
   </template>
 }

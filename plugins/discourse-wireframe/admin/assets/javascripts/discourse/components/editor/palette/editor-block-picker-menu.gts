@@ -82,6 +82,7 @@ interface EditorBlockPickerMenuSignature {
 export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMenuSignature> {
   /** Validates block insertion against the target outlet. */
   @service declare wireframeDropAuthority: WireframeDropAuthorityService;
+
   /** Opens the full palette when requested. */
   @service declare wireframeRail: WireframeRailService;
 
@@ -190,13 +191,13 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
   <template>
     <div class="wireframe-block-picker">
       <input
-        type="search"
-        role="combobox"
+        aria-controls={{this.listboxId}}
+        aria-expanded="true"
+        aria-label={{i18n "wireframe.canvas.grid_overlay.pick_block"}}
         class="wireframe-block-picker__search"
         placeholder={{i18n "wireframe.palette.search_placeholder"}}
-        aria-label={{i18n "wireframe.canvas.grid_overlay.pick_block"}}
-        aria-expanded="true"
-        aria-controls={{this.listboxId}}
+        role="combobox"
+        type="search"
         value={{this.searchTerm}}
         {{on "input" this.updateSearch}}
         {{didInsert this.captureInput}}
@@ -204,8 +205,8 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
       />
 
       <div
-        id={{this.listboxId}}
         class="wireframe-block-picker__results"
+        id={{this.listboxId}}
         role="listbox"
         {{dRovingFocus
           focusStrategy="active-descendant"
@@ -229,8 +230,8 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
 
       <DButton
         class="wireframe-block-picker__browse-all btn-flat"
-        @label="wireframe.inserter.browse_all"
         @action={{this.browseAll}}
+        @label="wireframe.inserter.browse_all"
       />
     </div>
   </template>

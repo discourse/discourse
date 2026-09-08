@@ -121,10 +121,13 @@ export default class PublishReviewDrawer extends Component {
 
   /** In-flight save or publish; disables the action buttons while awaiting. */
   @tracked isSaving = false;
+
   /** Banner message for a failed save/publish, or null. */
   @tracked saveError: string | null = null;
+
   /** In-flight theme-producing escape-hatch action (create component / duplicate). */
   @tracked isWorking = false;
+
   /** Inline error from an escape-hatch action, or null. */
   @tracked actionError: string | null = null;
   @tracked activeTab = "details";
@@ -140,6 +143,7 @@ export default class PublishReviewDrawer extends Component {
   isOutletPublished = (outletName: string) =>
     this.wireframeLayoutQuery.outletState(outletName) ===
     OUTLET_STATE.PUBLISHED;
+
   /** Outlets whose raw-layout view is expanded on the Changes tab. */
   #expandedRaw = trackedSet<string>();
 
@@ -457,9 +461,9 @@ export default class PublishReviewDrawer extends Component {
   <template>
     {{#if this.isOpen}}
       <div
+        aria-label={{i18n "wireframe.review.title"}}
         class="wireframe-review wireframe-editor-overlay"
         role="dialog"
-        aria-label={{i18n "wireframe.review.title"}}
         {{! Clicking anywhere outside the drawer closes it; the toolbar Save
             button and target indicator that open it are excluded so re-clicking
             them doesn't close-then-reopen. }}
@@ -478,9 +482,9 @@ export default class PublishReviewDrawer extends Component {
           </span>
           <DButton
             class="btn-flat wireframe-review__close"
-            @icon="xmark"
-            @ariaLabel="wireframe.review.close"
             @action={{this.close}}
+            @ariaLabel="wireframe.review.close"
+            @icon="xmark"
           />
         </div>
 
@@ -490,19 +494,19 @@ export default class PublishReviewDrawer extends Component {
               "btn-flat wireframe-review__tab"
               (if (this.isTabActive "details") "--active")
             }}
-            @label="wireframe.review.tab_details"
             @action={{fn this.setTab "details"}}
+            @label="wireframe.review.tab_details"
           />
           <DButton
             class={{dConcatClass
               "btn-flat wireframe-review__tab"
               (if (this.isTabActive "changes") "--active")
             }}
+            @action={{fn this.setTab "changes"}}
             @translatedLabel={{i18n
               "wireframe.review.tab_changes"
               count=this.editedOutlets.length
             }}
-            @action={{fn this.setTab "changes"}}
           />
         </div>
 
@@ -519,18 +523,18 @@ export default class PublishReviewDrawer extends Component {
                 </p>
                 <DButton
                   class="btn-primary wireframe-review__create-component"
+                  @action={{this.confirmCreateComponent}}
+                  @disabled={{this.isWorking}}
                   @label="wireframe.outlet.create_component"
                   @title={{i18n "wireframe.outlet.create_component_title"}}
-                  @disabled={{this.isWorking}}
-                  @action={{this.confirmCreateComponent}}
                 />
                 {{#unless this.activeThemeTarget.isSystem}}
                   <DButton
                     class="btn-default wireframe-review__duplicate"
+                    @action={{this.confirmDuplicate}}
+                    @disabled={{this.isWorking}}
                     @label="wireframe.outlet.duplicate"
                     @title={{i18n "wireframe.outlet.duplicate_title"}}
-                    @disabled={{this.isWorking}}
-                    @action={{this.confirmDuplicate}}
                   />
                 {{/unless}}
                 {{#if this.actionError}}
@@ -545,21 +549,21 @@ export default class PublishReviewDrawer extends Component {
               <section class="wireframe-review__homepage">
                 <div class="wireframe-review__homepage-row">
                   <DToggleSwitch
-                    @state={{this.homepageDesired}}
-                    @translatedLabel={{i18n "wireframe.review.use_as_homepage"}}
-                    aria-label={{i18n "wireframe.review.use_as_homepage"}}
                     aria-describedby={{if
                       this.homepageToggleDisabled
                       "wireframe-review-homepage-hint"
                     }}
+                    aria-label={{i18n "wireframe.review.use_as_homepage"}}
                     disabled={{this.homepageToggleDisabled}}
+                    @state={{this.homepageDesired}}
+                    @translatedLabel={{i18n "wireframe.review.use_as_homepage"}}
                     {{on "click" this.toggleHomepageIntent}}
                   />
                 </div>
                 {{#if this.homepageToggleDisabled}}
                   <p
-                    id="wireframe-review-homepage-hint"
                     class="wireframe-review__homepage-hint"
+                    id="wireframe-review-homepage-hint"
                   >
                     {{i18n "wireframe.review.use_as_homepage_empty"}}
                   </p>
@@ -601,18 +605,18 @@ export default class PublishReviewDrawer extends Component {
                         {{#if group.isGit}}
                           <DButton
                             class="btn-flat wireframe-review__export"
+                            @action={{fn this.exportOutlet outletName}}
+                            @disabled={{this.isWorking}}
                             @icon="download"
                             @label="wireframe.outlet.export"
                             @title={{i18n "wireframe.outlet.export_title"}}
-                            @disabled={{this.isWorking}}
-                            @action={{fn this.exportOutlet outletName}}
                           />
                         {{else if (this.isOutletPublished outletName)}}
                           {{#if group.publishable}}
                             <DButton
                               class="btn-flat btn-danger wireframe-review__reset"
-                              @label="wireframe.outlet.reset_to_default"
                               @action={{fn this.confirmReset outletName}}
+                              @label="wireframe.outlet.reset_to_default"
                             />
                           {{/if}}
                         {{/if}}
@@ -678,6 +682,7 @@ export default class PublishReviewDrawer extends Component {
                     </span>
                     <DButton
                       class="btn-flat wireframe-review__raw-toggle"
+                      @action={{fn this.toggleRaw outletName}}
                       @icon={{if
                         (this.isRawExpanded outletName)
                         "chevron-up"
@@ -688,7 +693,6 @@ export default class PublishReviewDrawer extends Component {
                         "wireframe.review.hide_raw"
                         "wireframe.review.view_raw"
                       }}
-                      @action={{fn this.toggleRaw outletName}}
                     />
                   </div>
                   {{#if (this.isRawExpanded outletName)}}
@@ -716,21 +720,21 @@ export default class PublishReviewDrawer extends Component {
         <div class="wireframe-review__footer">
           <DButton
             class="btn-flat wireframe-review__discard"
-            @label="wireframe.review.discard_all"
-            @disabled={{unless this.wireframeMutationEngine.isDirty true}}
             @action={{this.discardAll}}
+            @disabled={{unless this.wireframeMutationEngine.isDirty true}}
+            @label="wireframe.review.discard_all"
           />
           <DButton
             class="btn-default wireframe-review__save-draft"
-            @label="wireframe.review.save_draft"
-            @disabled={{unless this.canSaveDraft true}}
             @action={{this.saveDrafts}}
+            @disabled={{unless this.canSaveDraft true}}
+            @label="wireframe.review.save_draft"
           />
           <DButton
             class="btn-primary wireframe-review__publish"
-            @label="wireframe.review.publish"
-            @disabled={{unless this.canPublish true}}
             @action={{this.publish}}
+            @disabled={{unless this.canPublish true}}
+            @label="wireframe.review.publish"
           />
         </div>
       </div>

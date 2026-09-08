@@ -59,17 +59,17 @@ const BlockData: TemplateOnlyComponent<BlockDataSignature> = <template>
   {{! The boundary stays layout-neutral (display: contents) so it doesn't
       disturb the block's own layout; it carries aria-busy so assistive
       technology is told the region is loading. }}
-  <div class="block-data" aria-busy={{if @state.isPending "true" "false"}}>
+  <div aria-busy={{if @state.isPending "true" "false"}} class="block-data">
     <DAsyncContent @asyncData={{@state}}>
       <:loading>
         {{#if (has-block "loading")}}
           {{yield to="loading"}}
         {{else}}
           <DSkeleton
-            @variant={{@skeletonShape.variant}}
             @count={{@skeletonShape.count}}
-            @width={{@skeletonShape.width}}
             @height={{@skeletonShape.height}}
+            @variant={{@skeletonShape.variant}}
+            @width={{@skeletonShape.width}}
           />
         {{/if}}
       </:loading>

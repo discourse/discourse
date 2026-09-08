@@ -109,6 +109,7 @@ export default class PalettePanel extends Component {
 
   /** The search input, which `dRovingFocus` drives as the listbox controller. */
   @tracked searchInput: HTMLInputElement | null = null;
+
   /**
    * The selected block key at the moment the hint was shown. The hint is about
    * that selection, so once the selection changes the hint is stale (see
@@ -416,13 +417,13 @@ export default class PalettePanel extends Component {
   <template>
     <div class="wireframe-palette">
       <input
-        type="search"
-        role="combobox"
+        aria-controls={{this.listboxId}}
+        aria-expanded="true"
+        aria-label={{i18n "wireframe.palette.search_placeholder"}}
         class="wireframe-palette__search"
         placeholder={{i18n "wireframe.palette.search_placeholder"}}
-        aria-label={{i18n "wireframe.palette.search_placeholder"}}
-        aria-expanded="true"
-        aria-controls={{this.listboxId}}
+        role="combobox"
+        type="search"
         value={{this.searchTerm}}
         {{on "input" this.updateSearchTerm}}
         {{didInsert this.captureInput}}
@@ -433,17 +434,17 @@ export default class PalettePanel extends Component {
           announce service (see `#showInsertHint`), so this stays aria-hidden to
           avoid announcing it twice. }}
       {{#if this.insertHint}}
-        <div class="wireframe-palette__hint" aria-hidden="true">
+        <div aria-hidden="true" class="wireframe-palette__hint">
           {{this.insertHint}}
         </div>
       {{/if}}
 
       {{#if this.filteredRowsByCategory.length}}
         <div
-          id={{this.listboxId}}
-          class="wireframe-palette__list"
-          role="listbox"
           aria-label={{i18n "wireframe.palette.list_label"}}
+          class="wireframe-palette__list"
+          id={{this.listboxId}}
+          role="listbox"
           {{dRovingFocus
             focusStrategy="active-descendant"
             controllerElement=this.searchInput
@@ -461,9 +462,9 @@ export default class PalettePanel extends Component {
             <div class="wireframe-palette__recent">
               {{#each this.recentRows key="id" as |row|}}
                 <BlockTile
+                  @activateOn="dblclick"
                   @entry={{row}}
                   @onActivate={{this.insertFromPalette}}
-                  @activateOn="dblclick"
                   {{dDragAndDropSource
                     type="wf-palette-block"
                     data=(hash
@@ -487,9 +488,9 @@ export default class PalettePanel extends Component {
             </div>
             {{#each section.rows key="id" as |row|}}
               <BlockRow
+                @activateOn="dblclick"
                 @entry={{row}}
                 @onActivate={{this.insertFromPalette}}
-                @activateOn="dblclick"
                 {{! The offset pushes the ghost ahead of the pointer so it
                     doesn't cover the drop point. }}
                 {{dDragAndDropSource

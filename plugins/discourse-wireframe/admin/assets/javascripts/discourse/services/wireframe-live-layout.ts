@@ -209,79 +209,6 @@ export default class WireframeLiveLayoutService extends Service {
   }
 
   /**
-   * Publishes one outlet and appends its outcome to an aggregate result.
-   *
-   * @param outlet - Outlet identifier to publish.
-   * @param fallbackThemeId - Destination when the outlet has no owner.
-   * @param result - Aggregate result receiving this outlet's outcome.
-   */
-  async #publishOne(
-    outlet: string,
-    fallbackThemeId: number | null | undefined,
-    result: LiveLayoutPublishResult
-  ): Promise<void> {
-    const owner = this.wireframePublishTarget.outletOwner(outlet);
-    // An active editor session always has an owner, explicit fallback, or
-    // default theme target; retain the existing runtime fallback chain.
-    const themeId =
-      owner.themeId ??
-      fallbackThemeId ??
-      this.wireframePublishTarget.defaultThemeId!;
-
-    if (owner.isGit) {
-      // Never write a Git-managed theme's live field (Export/Duplicate is a
-      // later phase); leave the outlet edited and its draft intact so the work
-      // isn't lost.
-      result.skipped.push({ outlet, themeId, reason: "git" });
-      return;
-    }
-
-    try {
-      const response = await this.#publishRequest(
-        outlet,
-        themeId,
-        this.tokenFor(themeId, outlet)
-      );
-      await this.#afterPublishSuccess(outlet, themeId, response.version_token);
-      result.saved.push({ outlet, themeId });
-    } catch (error) {
-      // TODO(devxp-typescript-pending): remove once core's `ajax` rejection
-      // type exposes the jqXHR response metadata.
-      const ajaxError = error as AjaxError;
-      const conflict = ajaxError.jqXHR?.status === 409;
-      const body = ajaxError.jqXHR?.responseJSON;
-      result.errors.push({
-        outlet,
-        themeId,
-        message: this.#extractErrorMessage(ajaxError),
-        conflict,
-        currentVersion: conflict ? body?.current_version : undefined,
-        publishedAt: conflict ? body?.published_at : undefined,
-      });
-      // Keep a conflicted (or failed) outlet in `editedOutlets` so the edit
-      // isn't lost; the caller surfaces the conflict prompt.
-    }
-  }
-
-  /**
-   * Reconciles local layers, version state, and drafts after publication.
-   *
-   * @param outlet - Published outlet identifier.
-   * @param themeId - Destination theme ID.
-   * @param versionToken - New live version returned by the server.
-   */
-  async #afterPublishSuccess(
-    outlet: string,
-    themeId: number,
-    versionToken: string
-  ): Promise<void> {
-    this.#publishToThemeLayer(outlet, themeId);
-    this.#setToken(themeId, outlet, versionToken);
-    this.wireframeMutationEngine.markOutletPublished(outlet);
-    await this.wireframeDrafts.deleteDraft(themeId, outlet);
-  }
-
-  /**
    * Exports a single outlet's layout as the repo-file JSON and triggers a
    * download. With `useDraft`, the current (possibly unpublished) draft is sent
    * as the source; otherwise the server exports the live field.
@@ -359,6 +286,95 @@ export default class WireframeLiveLayoutService extends Service {
       type: "POST",
       data: { theme_id: themeId, drafts: this.#editedDrafts() },
     }) as Promise<ThemeActionResponse>;
+  }
+
+  /**
+   * The baseline token for an outlet: this tab's last-observed live version.
+   * Seeded once from the boot preload; an outlet with no live field resolves to
+   * `""` (an empty token matches an absent field, so a first publish succeeds
+   * yet still 409s if another admin created the field meanwhile). Public so the
+   * drafts service can stamp a draft's `base_version_token`.
+   *
+   * @param themeId - ID of the theme owning the outlet.
+   * @param outlet - Outlet identifier.
+   * @returns Last-observed live version token, or `""`.
+   */
+  tokenFor(themeId: number, outlet: string): string {
+    this.#seedTokens();
+    return this.#versionTokens.get(this.#tokenKey(themeId, outlet)) ?? "";
+  }
+
+  /**
+   * Publishes one outlet and appends its outcome to an aggregate result.
+   *
+   * @param outlet - Outlet identifier to publish.
+   * @param fallbackThemeId - Destination when the outlet has no owner.
+   * @param result - Aggregate result receiving this outlet's outcome.
+   */
+  async #publishOne(
+    outlet: string,
+    fallbackThemeId: number | null | undefined,
+    result: LiveLayoutPublishResult
+  ): Promise<void> {
+    const owner = this.wireframePublishTarget.outletOwner(outlet);
+    // An active editor session always has an owner, explicit fallback, or
+    // default theme target; retain the existing runtime fallback chain.
+    const themeId =
+      owner.themeId ??
+      fallbackThemeId ??
+      this.wireframePublishTarget.defaultThemeId!;
+
+    if (owner.isGit) {
+      // Never write a Git-managed theme's live field (Export/Duplicate is a
+      // later phase); leave the outlet edited and its draft intact so the work
+      // isn't lost.
+      result.skipped.push({ outlet, themeId, reason: "git" });
+      return;
+    }
+
+    try {
+      const response = await this.#publishRequest(
+        outlet,
+        themeId,
+        this.tokenFor(themeId, outlet)
+      );
+      await this.#afterPublishSuccess(outlet, themeId, response.version_token);
+      result.saved.push({ outlet, themeId });
+    } catch (error) {
+      // TODO(devxp-typescript-pending): remove once core's `ajax` rejection
+      // type exposes the jqXHR response metadata.
+      const ajaxError = error as AjaxError;
+      const conflict = ajaxError.jqXHR?.status === 409;
+      const body = ajaxError.jqXHR?.responseJSON;
+      result.errors.push({
+        outlet,
+        themeId,
+        message: this.#extractErrorMessage(ajaxError),
+        conflict,
+        currentVersion: conflict ? body?.current_version : undefined,
+        publishedAt: conflict ? body?.published_at : undefined,
+      });
+      // Keep a conflicted (or failed) outlet in `editedOutlets` so the edit
+      // isn't lost; the caller surfaces the conflict prompt.
+    }
+  }
+
+  /**
+   * Reconciles local layers, version state, and drafts after publication.
+   *
+   * @param outlet - Published outlet identifier.
+   * @param themeId - Destination theme ID.
+   * @param versionToken - New live version returned by the server.
+   */
+  async #afterPublishSuccess(
+    outlet: string,
+    themeId: number,
+    versionToken: string
+  ): Promise<void> {
+    this.#publishToThemeLayer(outlet, themeId);
+    this.#setToken(themeId, outlet, versionToken);
+    this.wireframeMutationEngine.markOutletPublished(outlet);
+    await this.wireframeDrafts.deleteDraft(themeId, outlet);
   }
 
   /**
@@ -448,22 +464,6 @@ export default class WireframeLiveLayoutService extends Service {
    */
   #tokenKey(themeId: number, outlet: string): string {
     return `${themeId}:${outlet}`;
-  }
-
-  /**
-   * The baseline token for an outlet: this tab's last-observed live version.
-   * Seeded once from the boot preload; an outlet with no live field resolves to
-   * `""` (an empty token matches an absent field, so a first publish succeeds
-   * yet still 409s if another admin created the field meanwhile). Public so the
-   * drafts service can stamp a draft's `base_version_token`.
-   *
-   * @param themeId - ID of the theme owning the outlet.
-   * @param outlet - Outlet identifier.
-   * @returns Last-observed live version token, or `""`.
-   */
-  tokenFor(themeId: number, outlet: string): string {
-    this.#seedTokens();
-    return this.#versionTokens.get(this.#tokenKey(themeId, outlet)) ?? "";
   }
 
   /**

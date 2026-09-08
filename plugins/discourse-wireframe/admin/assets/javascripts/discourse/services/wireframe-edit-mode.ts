@@ -32,6 +32,7 @@ interface CurrentUserService extends User {
 export default class WireframeEditModeService extends Service {
   /** Signed-in user with the server-computed editor capability. */
   @service declare currentUser: CurrentUserService | null;
+
   /** Plugin settings that enable and scope editor access. */
   @service declare siteSettings: WireframeSiteSettingsService;
 

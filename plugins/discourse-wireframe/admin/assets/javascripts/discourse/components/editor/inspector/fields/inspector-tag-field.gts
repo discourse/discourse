@@ -71,9 +71,9 @@ export default class InspectorTagField extends Component<InspectorTagFieldSignat
 
   <template>
     <MiniTagChooser
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @options={{hash maximum=1}}
+      @value={{this.value}}
     />
   </template>
 }

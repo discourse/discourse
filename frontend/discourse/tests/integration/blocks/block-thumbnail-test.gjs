@@ -21,9 +21,9 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
     await render(
       <template>
         <BlockThumbnail
-          @thumbnail={{StubThumbnail}}
-          @icon="cube"
           class="sized"
+          @icon="cube"
+          @thumbnail={{StubThumbnail}}
         />
       </template>
     );
@@ -39,7 +39,7 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
 
     await render(
       <template>
-        <BlockThumbnail @thumbnail={{loader}} @icon="cube" class="sized" />
+        <BlockThumbnail class="sized" @icon="cube" @thumbnail={{loader}} />
       </template>
     );
 
@@ -55,7 +55,7 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
 
     await render(
       <template>
-        <BlockThumbnail @thumbnail={{loader}} @icon="cube" class="sized" />
+        <BlockThumbnail class="sized" @icon="cube" @thumbnail={{loader}} />
       </template>
     );
 
@@ -69,7 +69,7 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
 
     await render(
       <template>
-        <BlockThumbnail @thumbnail={{loader}} @icon="star" class="sized" />
+        <BlockThumbnail class="sized" @icon="star" @thumbnail={{loader}} />
       </template>
     );
 
@@ -87,10 +87,10 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
     await render(
       <template>
         <BlockThumbnail
-          @thumbnail={{loader}}
-          @icon="star"
-          @fallback={{StubFallback}}
           class="sized"
+          @fallback={{StubFallback}}
+          @icon="star"
+          @thumbnail={{loader}}
         />
       </template>
     );
@@ -105,9 +105,9 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
     await render(
       <template>
         <BlockThumbnail
-          @thumbnail="/uploads/heading.png"
-          @icon="cube"
           class="sized"
+          @icon="cube"
+          @thumbnail="/uploads/heading.png"
         />
       </template>
     );
@@ -125,7 +125,7 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
 
     await render(
       <template>
-        <BlockThumbnail @thumbnail={{pair}} @icon="cube" class="sized" />
+        <BlockThumbnail class="sized" @icon="cube" @thumbnail={{pair}} />
       </template>
     );
 
@@ -139,7 +139,7 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
 
   test("renders the icon when nothing is declared", async function (assert) {
     await render(
-      <template><BlockThumbnail @icon="star" class="sized" /></template>
+      <template><BlockThumbnail class="sized" @icon="star" /></template>
     );
 
     assert
@@ -150,7 +150,7 @@ module("Integration | Component | blocks/block-thumbnail", function (hooks) {
   test("renders the @fallback when nothing is declared", async function (assert) {
     await render(
       <template>
-        <BlockThumbnail @icon="star" @fallback={{StubFallback}} class="sized" />
+        <BlockThumbnail class="sized" @fallback={{StubFallback}} @icon="star" />
       </template>
     );
 

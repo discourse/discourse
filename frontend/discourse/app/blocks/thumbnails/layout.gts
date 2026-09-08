@@ -13,46 +13,46 @@ interface LayoutThumbnailSignature {
  */
 const LayoutThumbnail: TemplateOnlyComponent<LayoutThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="14"
-        y="16"
-        width="24"
+        fill="var(--primary-low)"
         height="21"
         rx="3"
-        fill="var(--primary-low)"
+        width="24"
+        x="14"
+        y="16"
       />
       <rect
+        fill="var(--primary-low)"
+        height="21"
+        rx="3"
+        width="24"
         x="14"
         y="43"
-        width="24"
-        height="21"
-        rx="3"
-        fill="var(--primary-low)"
       />
       <rect
-        x="48"
-        y="16"
-        width="24"
+        fill="var(--primary-low)"
         height="48"
         rx="3"
-        fill="var(--primary-low)"
+        width="24"
+        x="48"
+        y="16"
       />
       <rect
+        fill="var(--primary-low)"
+        height="21"
+        rx="3"
+        width="24"
         x="82"
         y="16"
-        width="24"
-        height="21"
-        rx="3"
-        fill="var(--primary-low)"
       />
       <rect
-        x="82"
-        y="43"
-        width="24"
+        fill="var(--primary-low)"
         height="21"
         rx="3"
-        fill="var(--primary-low)"
+        width="24"
+        x="82"
+        y="43"
       />
     </svg>
   </template>;

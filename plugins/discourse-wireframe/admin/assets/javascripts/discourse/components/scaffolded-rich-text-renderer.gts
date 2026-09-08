@@ -68,8 +68,8 @@ const ScaffoldedRichTextRenderer: TemplateOnlyComponent<ScaffoldedRichTextRender
         data-wf-placeholder={{if @isEmpty @placeholder}}
       >{{#each @runs as |run|}}{{#if (eq run.type "hard_break")}}<br
             />{{else}}<MarkedText
-              @text={{run.text}}
               @marks={{run.marks}}
+              @text={{run.text}}
             />{{/if}}{{/each}}</span></span>
   </template>;
 

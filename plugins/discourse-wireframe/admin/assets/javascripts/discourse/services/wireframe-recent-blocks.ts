@@ -60,6 +60,11 @@ export default class WireframeRecentBlocksService extends Service {
     return this.keyValueStore.getObject<string[]>(key) ?? [];
   }
 
+  get #key(): string | null {
+    const themeId = this.wireframePublishTarget.activeThemeId;
+    return themeId == null ? null : `${KEY_PREFIX}${themeId}`;
+  }
+
   /**
    * Notes that a block was just inserted. Moves it to the front of the active
    * theme's list, dropping the oldest entry past the limit; ignored when no
@@ -78,10 +83,5 @@ export default class WireframeRecentBlocksService extends Service {
     ].slice(0, RECENT_BLOCKS_LIMIT);
     this.keyValueStore.setObject({ key, value: list });
     this._current = { key, list };
-  }
-
-  get #key(): string | null {
-    const themeId = this.wireframePublishTarget.activeThemeId;
-    return themeId == null ? null : `${KEY_PREFIX}${themeId}`;
   }
 }

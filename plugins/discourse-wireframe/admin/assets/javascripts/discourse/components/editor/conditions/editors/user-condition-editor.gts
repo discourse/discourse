@@ -245,27 +245,27 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
               "wireframe-condition-editor__segment"
               (if (eq this.loginMode "any") "--active")
             }}
+            @action={{fn this.setLoginMode "any"}}
             @ariaPressed={{eq this.loginMode "any"}}
             @label="wireframe.inspector.conditions.user_editor.login_any"
-            @action={{fn this.setLoginMode "any"}}
           />
           <DButton
             class={{dConcatClass
               "wireframe-condition-editor__segment"
               (if (eq this.loginMode "logged-in") "--active")
             }}
+            @action={{fn this.setLoginMode "logged-in"}}
             @ariaPressed={{eq this.loginMode "logged-in"}}
             @label="wireframe.inspector.conditions.user_editor.login_logged_in"
-            @action={{fn this.setLoginMode "logged-in"}}
           />
           <DButton
             class={{dConcatClass
               "wireframe-condition-editor__segment"
               (if (eq this.loginMode "anonymous") "--active")
             }}
+            @action={{fn this.setLoginMode "anonymous"}}
             @ariaPressed={{eq this.loginMode "anonymous"}}
             @label="wireframe.inspector.conditions.user_editor.login_anonymous"
-            @action={{fn this.setLoginMode "anonymous"}}
           />
         </div>
       </div>
@@ -277,8 +277,8 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
         <div class="wireframe-condition-editor__check-row">
           <label class="wireframe-condition-editor__check">
             <input
-              type="checkbox"
               checked={{@leaf.admin}}
+              type="checkbox"
               {{on "change" (fn this.toggleRole "admin")}}
             />
             <span>{{i18n
@@ -287,8 +287,8 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
           </label>
           <label class="wireframe-condition-editor__check">
             <input
-              type="checkbox"
               checked={{@leaf.moderator}}
+              type="checkbox"
               {{on "change" (fn this.toggleRole "moderator")}}
             />
             <span>{{i18n
@@ -297,8 +297,8 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
           </label>
           <label class="wireframe-condition-editor__check">
             <input
-              type="checkbox"
               checked={{@leaf.staff}}
+              type="checkbox"
               {{on "change" (fn this.toggleRole "staff")}}
             />
             <span>{{i18n
@@ -318,13 +318,13 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
                 "wireframe.inspector.conditions.user_editor.trust_min"
               }}</span>
             <select {{on "change" (fn this.setTrustLevel "minTrustLevel")}}>
-              <option value="" selected={{eq @leaf.minTrustLevel undefined}}>
+              <option selected={{eq @leaf.minTrustLevel undefined}} value="">
                 —
               </option>
               {{#each TRUST_LEVELS as |tl|}}
                 <option
-                  value={{tl.value}}
                   selected={{eq @leaf.minTrustLevel tl.value}}
+                  value={{tl.value}}
                 >{{tl.label}}</option>
               {{/each}}
             </select>
@@ -334,13 +334,13 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
                 "wireframe.inspector.conditions.user_editor.trust_max"
               }}</span>
             <select {{on "change" (fn this.setTrustLevel "maxTrustLevel")}}>
-              <option value="" selected={{eq @leaf.maxTrustLevel undefined}}>
+              <option selected={{eq @leaf.maxTrustLevel undefined}} value="">
                 —
               </option>
               {{#each TRUST_LEVELS as |tl|}}
                 <option
-                  value={{tl.value}}
                   selected={{eq @leaf.maxTrustLevel tl.value}}
+                  value={{tl.value}}
                 >{{tl.label}}</option>
               {{/each}}
             </select>
@@ -354,13 +354,13 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
         </span>
         <GroupChooser
           @content={{this.availableGroups}}
-          @value={{this.selectedGroupNames}}
-          @valueProperty="name"
           @labelProperty="name"
           @onChange={{this.setGroups}}
           @options={{hash
             filterPlaceholder="wireframe.inspector.conditions.user_editor.groups_placeholder"
           }}
+          @value={{this.selectedGroupNames}}
+          @valueProperty="name"
         />
       </div>
     </div>

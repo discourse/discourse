@@ -212,10 +212,10 @@ export default class MediaCard extends Component<MediaCardSignature> {
       <div
         class="d-block-media-card__backdrop
           {{unless this.backdropStyle 'd-block-media-card__backdrop--empty'}}"
-        style={{this.backdropStyle}}
         data-block-arg="image"
-        data-drop-passive
         data-drop-fills-block
+        data-drop-passive
+        style={{this.backdropStyle}}
       ></div>
 
       <div class="d-block-media-card__top">
@@ -226,10 +226,10 @@ export default class MediaCard extends Component<MediaCardSignature> {
             collapses on the reader page and is revealed during editing. }}
         {{#if @avatar.url}}
           <img
-            class="d-block-media-card__avatar"
-            src={{@avatar.url}}
             alt={{@name}}
+            class="d-block-media-card__avatar"
             data-block-arg="avatar"
+            src={{@avatar.url}}
           />
         {{else}}
           <div
@@ -241,9 +241,9 @@ export default class MediaCard extends Component<MediaCardSignature> {
         <div class="d-block-media-card__identity">
           <RichTextRenderer
             @arg="name"
+            @placeholder={{i18n "blocks.builtin.placeholders.media_card_name"}}
             @schema="plain"
             @value={{@name}}
-            @placeholder={{i18n "blocks.builtin.placeholders.media_card_name"}}
             as |R|
           >
             <span class="d-block-media-card__name">
@@ -252,9 +252,9 @@ export default class MediaCard extends Component<MediaCardSignature> {
           </RichTextRenderer>
           <RichTextRenderer
             @arg="role"
+            @placeholder={{i18n "blocks.builtin.placeholders.media_card_role"}}
             @schema="plain"
             @value={{@role}}
-            @placeholder={{i18n "blocks.builtin.placeholders.media_card_role"}}
             as |R|
           >
             <span class="d-block-media-card__role">
@@ -283,11 +283,11 @@ export default class MediaCard extends Component<MediaCardSignature> {
           {{/if}}
           <RichTextRenderer
             @arg="badgeLabel"
-            @schema="plain"
-            @value={{@badgeLabel}}
             @placeholder={{i18n
               "blocks.builtin.placeholders.media_card_badge_label"
             }}
+            @schema="plain"
+            @value={{@badgeLabel}}
             as |R|
           >
             <span class="d-block-media-card__badge-label">
@@ -298,9 +298,9 @@ export default class MediaCard extends Component<MediaCardSignature> {
 
         <RichTextRenderer
           @arg="title"
+          @placeholder={{i18n "blocks.builtin.placeholders.media_card_title"}}
           @schema="paragraph"
           @value={{@title}}
-          @placeholder={{i18n "blocks.builtin.placeholders.media_card_title"}}
           as |R|
         >
           <h4
@@ -317,18 +317,18 @@ export default class MediaCard extends Component<MediaCardSignature> {
             while editing. }}
         <RichTextRenderer
           @arg="ctaLabel"
-          @schema="plain"
-          @value={{@ctaLabel}}
           @placeholder={{i18n
             "blocks.builtin.placeholders.media_card_cta_label"
           }}
+          @schema="plain"
+          @value={{@ctaLabel}}
           as |R|
         >
           <a
             class="d-block-media-card__cta
               {{if R.isEmpty 'd-block-media-card__cta--empty'}}"
-            href={{@ctaHref}}
             data-block-arg="ctaHref"
+            href={{@ctaHref}}
           >
             <R.Content />
           </a>

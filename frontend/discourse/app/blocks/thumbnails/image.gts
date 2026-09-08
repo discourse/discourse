@@ -7,18 +7,18 @@ interface ImageThumbnailSignature {
 /** Palette thumbnail for the `image` block: a framed picture with sun and hills. */
 const ImageThumbnail: TemplateOnlyComponent<ImageThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="14"
-        y="14"
-        width="92"
+        fill="var(--primary-low)"
         height="52"
         rx="5"
-        fill="var(--primary-low)"
         stroke="var(--primary-low-mid)"
         stroke-width="1.5"
+        width="92"
+        x="14"
+        y="14"
       />
-      <circle cx="40" cy="31" r="7" fill="var(--tertiary)" />
+      <circle cx="40" cy="31" fill="var(--tertiary)" r="7" />
       <path
         d="M18 62 L44 40 L60 54 L74 44 L102 62 Z"
         fill="var(--primary-medium)"

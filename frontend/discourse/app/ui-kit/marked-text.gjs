@@ -37,18 +37,18 @@ export default class MarkedText extends Component {
   <template>
     {{#if (gt @marks.length 0)}}
       {{#if (eq this.head.type "strong")}}
-        <strong><MarkedText @text={{@text}} @marks={{this.rest}} /></strong>
+        <strong><MarkedText @marks={{this.rest}} @text={{@text}} /></strong>
       {{else if (eq this.head.type "em")}}
-        <em><MarkedText @text={{@text}} @marks={{this.rest}} /></em>
+        <em><MarkedText @marks={{this.rest}} @text={{@text}} /></em>
       {{else if (eq this.head.type "link")}}
         <a
           href={{safeHref this.head.attrs.href}}
           rel="noopener nofollow ugc"
-        ><MarkedText @text={{@text}} @marks={{this.rest}} /></a>
+        ><MarkedText @marks={{this.rest}} @text={{@text}} /></a>
       {{else}}
         {{! Unknown mark — validator should have caught this; recurse to
             skip the head and apply the rest. }}
-        <MarkedText @text={{@text}} @marks={{this.rest}} />
+        <MarkedText @marks={{this.rest}} @text={{@text}} />
       {{/if}}
     {{else}}
       {{@text}}

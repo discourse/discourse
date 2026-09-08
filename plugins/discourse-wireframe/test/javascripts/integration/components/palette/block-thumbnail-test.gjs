@@ -17,9 +17,9 @@ module(
       await render(
         <template>
           <BlockThumbnail
-            @thumbnail={{StubThumbnail}}
-            @icon="cube"
             class="sized"
+            @icon="cube"
+            @thumbnail={{StubThumbnail}}
           />
         </template>
       );
@@ -37,7 +37,7 @@ module(
       // core renderer's fallback, so an undeclared thumbnail still reads as a
       // designed tile carrying the block's icon.
       await render(
-        <template><BlockThumbnail @icon="cube" class="sized" /></template>
+        <template><BlockThumbnail class="sized" @icon="cube" /></template>
       );
 
       assert

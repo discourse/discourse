@@ -134,7 +134,7 @@ module("Integration | ui-kit | DFitSwap", function (hooks) {
     await render(
       <template>
         <div style="width: 300px">
-          <DFitSwap @remeasureOn={{state.contentWidth}} @onFit={{onFit}}>
+          <DFitSwap @onFit={{onFit}} @remeasureOn={{state.contentWidth}}>
             <:full><div style={{state.widthStyle}}>content</div></:full>
             <:collapsed><div class="collapsed-marker">c</div></:collapsed>
           </DFitSwap>

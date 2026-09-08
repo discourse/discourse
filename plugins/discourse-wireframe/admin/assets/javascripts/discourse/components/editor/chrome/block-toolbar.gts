@@ -210,18 +210,25 @@ const dFit = dFitUntyped as unknown as ModifierLike<{
 export default class BlockToolbar extends Component<BlockToolbarSignature> {
   /** Applies structural mutations for toolbar actions. */
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
+
   /** Owns the active block drag payload. */
   @service declare wireframeDragSession: WireframeDragSessionService;
+
   /** Applies selected-entry configuration changes. */
   @service declare wireframeEntryConfig: WireframeEntryConfigService;
+
   /** Owns per-block edit-presentation overrides. */
   @service declare wireframeForceExpand: WireframeForceExpandService;
+
   /** Coordinates the active in-place text editor. */
   @service declare wireframeInplaceText: WireframeInplaceTextService;
+
   /** Reads metadata and layout placement for the represented block. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   /** Exposes the shared layout invalidation signal. */
   @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
+
   /** Owns selection state and sibling-movement availability. */
   @service declare wireframeSelection: WireframeSelectionService;
 
@@ -730,14 +737,14 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
 
   <template>
     <div
-      class="wireframe-block-toolbar"
-      role={{unless this.isUrlFieldEditing "toolbar"}}
-      aria-label={{i18n "wireframe.canvas.toolbar_label" name=@displayName}}
       {{! An idle toolbar sits at opacity:0 but stays in the a11y tree, so every
         unselected block would otherwise leak a phantom named toolbar to
         assistive tech. Hide those. The outlet root stays exposed: its always-on
         status chip is information its region should announce. }}
       aria-hidden={{unless (or @isSelected @isOutletRoot) "true"}}
+      aria-label={{i18n "wireframe.canvas.toolbar_label" name=@displayName}}
+      class="wireframe-block-toolbar"
+      role={{unless this.isUrlFieldEditing "toolbar"}}
       {{dFit
         this.computeFit
         observedEl=@chromeEl
@@ -831,9 +838,9 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
       {{#if @isSelected}}
         {{#if this.isUrlFieldEditing}}
           <input
-            type="url"
             class="wireframe-block-toolbar__url-input"
             placeholder="https://..."
+            type="url"
             value={{this.editorValue}}
             {{didInsert this.seedFieldEditorValue}}
             {{on "input" this.onUrlInput}}
@@ -841,29 +848,29 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
           />
           <DButton
             class="btn-flat wireframe-block-toolbar__btn"
-            @icon="check"
-            @title="wireframe.canvas.toolbar.link_apply"
-            @ariaLabel="wireframe.canvas.toolbar.link_apply"
             @action={{this.applyFieldEditor}}
+            @ariaLabel="wireframe.canvas.toolbar.link_apply"
+            @icon="check"
             @preventFocus={{true}}
+            @title="wireframe.canvas.toolbar.link_apply"
           />
           {{#if this.wireframeInplaceText.fieldEditor.remove}}
             <DButton
               class="btn-flat wireframe-block-toolbar__btn"
-              @icon="link-slash"
-              @title="wireframe.canvas.toolbar.link_remove"
-              @ariaLabel="wireframe.canvas.toolbar.link_remove"
               @action={{this.removeFieldEditor}}
+              @ariaLabel="wireframe.canvas.toolbar.link_remove"
+              @icon="link-slash"
               @preventFocus={{true}}
+              @title="wireframe.canvas.toolbar.link_remove"
             />
           {{/if}}
           <DButton
             class="btn-flat wireframe-block-toolbar__btn"
-            @icon="xmark"
-            @title="wireframe.canvas.toolbar.link_cancel"
-            @ariaLabel="wireframe.canvas.toolbar.link_cancel"
             @action={{this.cancelFieldEditor}}
+            @ariaLabel="wireframe.canvas.toolbar.link_cancel"
+            @icon="xmark"
             @preventFocus={{true}}
+            @title="wireframe.canvas.toolbar.link_cancel"
           />
         {{else}}
           {{! Collapsible structural actions. The inline row and the hamburger
@@ -874,8 +881,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
             {{#each this.actionItems as |item|}}
               {{#if item.separatorBefore}}
                 <span
-                  class="wireframe-block-toolbar__separator"
                   aria-hidden="true"
+                  class="wireframe-block-toolbar__separator"
                 ></span>
               {{/if}}
               <DButton
@@ -886,12 +893,12 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
                   (if item.danger "wireframe-block-toolbar__btn--danger")
                 }}
                 data-toolbar-action={{item.id}}
+                @action={{item.action}}
+                @ariaLabel={{item.title}}
+                @ariaPressed={{item.active}}
+                @disabled={{item.disabled}}
                 @icon={{item.icon}}
                 @title={{item.title}}
-                @ariaLabel={{item.title}}
-                @disabled={{item.disabled}}
-                @ariaPressed={{item.active}}
-                @action={{item.action}}
               />
             {{/each}}
           </div>
@@ -903,11 +910,11 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
           {{#if this.isCollapsible}}
             <DMenu
               class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__more"
-              @identifier="wireframe-toolbar-more"
+              @ariaLabel="wireframe.canvas.toolbar.more"
               @icon="ellipsis-vertical"
+              @identifier="wireframe-toolbar-more"
               @placement="bottom-start"
               @title="wireframe.canvas.toolbar.more"
-              @ariaLabel="wireframe.canvas.toolbar.more"
             >
               <:content as |args|>
                 <DDropdownMenu as |dropdown|>
@@ -926,14 +933,14 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
                             item.danger "wireframe-block-toolbar__btn--danger"
                           )
                         }}
-                        @icon={{item.icon}}
-                        @translatedLabel={{i18n item.title}}
-                        @disabled={{item.disabled}}
                         @action={{fn
                           this.invokeFromMenu
                           item.action
                           args.close
                         }}
+                        @disabled={{item.disabled}}
+                        @icon={{item.icon}}
+                        @translatedLabel={{i18n item.title}}
                       />
                     </dropdown.item>
                   {{/each}}
@@ -949,8 +956,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
           {{#if this.showInlineFormat}}
             <div class="wireframe-block-toolbar__format">
               <span
-                class="wireframe-block-toolbar__separator"
                 aria-hidden="true"
+                class="wireframe-block-toolbar__separator"
               ></span>
               <DButton
                 class={{if
@@ -958,12 +965,12 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
                   "btn-flat wireframe-block-toolbar__btn --active"
                   "btn-flat wireframe-block-toolbar__btn"
                 }}
-                @icon="bold"
-                @title="wireframe.canvas.toolbar.bold"
+                @action={{this.toggleBold}}
                 @ariaLabel="wireframe.canvas.toolbar.bold"
                 @ariaPressed={{this.markState.strong}}
-                @action={{this.toggleBold}}
+                @icon="bold"
                 @preventFocus={{true}}
+                @title="wireframe.canvas.toolbar.bold"
               />
               <DButton
                 class={{if
@@ -971,12 +978,12 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
                   "btn-flat wireframe-block-toolbar__btn --active"
                   "btn-flat wireframe-block-toolbar__btn"
                 }}
-                @icon="italic"
-                @title="wireframe.canvas.toolbar.italic"
+                @action={{this.toggleItalic}}
                 @ariaLabel="wireframe.canvas.toolbar.italic"
                 @ariaPressed={{this.markState.em}}
-                @action={{this.toggleItalic}}
+                @icon="italic"
                 @preventFocus={{true}}
+                @title="wireframe.canvas.toolbar.italic"
               />
               <DButton
                 class={{if
@@ -984,12 +991,12 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
                   "btn-flat wireframe-block-toolbar__btn --active"
                   "btn-flat wireframe-block-toolbar__btn"
                 }}
-                @icon="link"
-                @title="wireframe.canvas.toolbar.link"
+                @action={{this.startLinkEdit}}
                 @ariaLabel="wireframe.canvas.toolbar.link"
                 @ariaPressed={{this.markState.link}}
-                @action={{this.startLinkEdit}}
+                @icon="link"
                 @preventFocus={{true}}
+                @title="wireframe.canvas.toolbar.link"
               />
             </div>
           {{/if}}

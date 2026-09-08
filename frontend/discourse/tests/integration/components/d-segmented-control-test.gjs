@@ -81,7 +81,7 @@ module("Integration | Component | DSegmentedControl", function (hooks) {
 
     await render(
       <template>
-        <DSegmentedControl @name="align" @items={{iconItems}} @value="left" />
+        <DSegmentedControl @items={{iconItems}} @name="align" @value="left" />
       </template>
     );
 

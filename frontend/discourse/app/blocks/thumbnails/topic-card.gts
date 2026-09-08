@@ -7,42 +7,42 @@ interface TopicCardThumbnailSignature {
 /** Palette thumbnail for the `topic-card` block: a card with avatar, title and meta. */
 const TopicCardThumbnail: TemplateOnlyComponent<TopicCardThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="18"
-        y="16"
-        width="84"
+        fill="var(--secondary)"
         height="48"
         rx="6"
-        fill="var(--secondary)"
         stroke="var(--primary-low)"
         stroke-width="2"
+        width="84"
+        x="18"
+        y="16"
       />
-      <circle cx="34" cy="34" r="9" fill="var(--primary-low)" />
-      <rect x="50" y="26" width="42" height="6" rx="3" fill="var(--primary)" />
+      <circle cx="34" cy="34" fill="var(--primary-low)" r="9" />
+      <rect fill="var(--primary)" height="6" rx="3" width="42" x="50" y="26" />
       <rect
+        fill="var(--primary-medium)"
+        height="4"
+        rx="2"
+        width="34"
         x="50"
         y="37"
-        width="34"
-        height="4"
-        rx="2"
-        fill="var(--primary-medium)"
       />
       <rect
+        fill="var(--primary-low-mid)"
+        height="4"
+        rx="2"
+        width="30"
         x="26"
         y="52"
-        width="30"
-        height="4"
-        rx="2"
-        fill="var(--primary-low-mid)"
       />
       <rect
-        x="66"
-        y="52"
-        width="20"
+        fill="var(--primary-low-mid)"
         height="4"
         rx="2"
-        fill="var(--primary-low-mid)"
+        width="20"
+        x="66"
+        y="52"
       />
     </svg>
   </template>;

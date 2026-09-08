@@ -15,10 +15,10 @@ module(
         <template>
           <ScaffoldedRichTextRenderer
             @arg="title"
-            @schema="paragraph"
             @isEmpty={{true}}
             @placeholder="Title"
             @runs={{NO_RUNS}}
+            @schema="paragraph"
           />
         </template>
       );

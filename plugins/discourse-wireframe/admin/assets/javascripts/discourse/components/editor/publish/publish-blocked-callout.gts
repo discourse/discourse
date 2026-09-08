@@ -20,6 +20,7 @@ import type WireframeStagingService from "discourse/plugins/discourse-wireframe/
 export default class PublishBlockedCallout extends Component {
   /** Owns the review drawer and publish-target resolution state. */
   @service declare wireframeStaging: WireframeStagingService;
+
   /** Resolves the active theme's publishability. */
   @service declare wireframePublishTarget: WireframePublishTargetService;
 
@@ -62,14 +63,14 @@ export default class PublishBlockedCallout extends Component {
         </span>
         <DButton
           class="btn-primary btn-small wireframe-blocked-callout__setup"
-          @label="wireframe.review.set_up"
           @action={{this.wireframeStaging.openReviewDrawer}}
+          @label="wireframe.review.set_up"
         />
         <DButton
           class="btn-flat btn-small wireframe-blocked-callout__dismiss"
-          @icon="xmark"
-          @ariaLabel="wireframe.review.dismiss"
           @action={{this.dismiss}}
+          @ariaLabel="wireframe.review.dismiss"
+          @icon="xmark"
         />
       </div>
     {{/if}}

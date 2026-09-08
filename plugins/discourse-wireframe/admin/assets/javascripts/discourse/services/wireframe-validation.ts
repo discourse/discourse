@@ -44,6 +44,7 @@ export interface ValidationIssue {
 export default class WireframeValidationService extends Service {
   /** Resolves registered blocks and their metadata. */
   @service declare blocks: BlocksService;
+
   /** Invalidates warning projections after structural layout changes. */
   @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
 

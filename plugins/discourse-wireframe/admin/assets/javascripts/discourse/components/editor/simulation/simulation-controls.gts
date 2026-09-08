@@ -348,10 +348,10 @@ export default class SimulationControls extends Component {
           one-click reset; otherwise a short intro explains what simulating does. }}
       {{#if this.wireframeSimulation.isSimulating}}
         <FKAlert
-          @type="info"
-          @icon="wf-info"
           class="wireframe-simulation__status"
           role="note"
+          @icon="wf-info"
+          @type="info"
         >
           <span class="wireframe-simulation__status-text">
             <strong>{{i18n "wireframe.chrome.simulation.active_title"}}</strong>
@@ -359,9 +359,9 @@ export default class SimulationControls extends Component {
           </span>
           <DButton
             class="btn-default btn-small wireframe-simulation__clear"
+            @action={{this.clear}}
             @icon="wf-rotate-ccw"
             @label="wireframe.chrome.simulation.clear"
-            @action={{this.clear}}
           />
         </FKAlert>
       {{else}}
@@ -377,9 +377,9 @@ export default class SimulationControls extends Component {
         <DropdownSelectBox
           class="wireframe-simulation__persona"
           @content={{this.personaOptions}}
-          @value={{this.currentPersona}}
           @onChange={{this.handlePersonaChange}}
           @options={{hash showCaret=true}}
+          @value={{this.currentPersona}}
         />
       </div>
 
@@ -389,10 +389,10 @@ export default class SimulationControls extends Component {
         </span>
         <DSegmentedControl
           class="wireframe-simulation__viewport"
-          @name="wireframe-viewport"
           @items={{this.viewportItems}}
-          @value={{this.currentViewport}}
+          @name="wireframe-viewport"
           @onSelect={{this.handleViewportChange}}
+          @value={{this.currentViewport}}
         />
       </div>
 

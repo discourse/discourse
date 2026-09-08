@@ -36,10 +36,13 @@ export type ClipboardMode = "copy" | "cut";
 export default class WireframeClipboardService extends Service {
   /** Removes a selected block after a successful cut. */
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
+
   /** Records paste operations inside the structural undo boundary. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
   /** Resolves selected entries and their containing outlets. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   /** Supplies the block targeted by clipboard commands. */
   @service declare wireframeSelection: WireframeSelectionService;
 

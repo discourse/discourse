@@ -89,10 +89,10 @@ export default class InspectorMetadataSection extends Component {
     >
       <DButton
         class="wireframe-inspector-metadata__summary"
+        @action={{this.toggle}}
         @ariaExpanded={{this.expanded}}
         @icon={{if this.expanded "chevron-down" "chevron-right"}}
         @label="wireframe.inspector.metadata.section_title"
-        @action={{this.toggle}}
       />
 
       {{#if this.expanded}}
@@ -102,14 +102,14 @@ export default class InspectorMetadataSection extends Component {
               {{i18n "wireframe.inspector.metadata.id_label"}}
             </span>
             <input
-              type="text"
+              aria-label={{i18n "wireframe.inspector.metadata.id_label"}}
+              autocomplete="off"
               class="wireframe-inspector-metadata__input"
-              value={{this.currentId}}
+              disabled={{this.disabled}}
               placeholder="hero"
               spellcheck="false"
-              autocomplete="off"
-              disabled={{this.disabled}}
-              aria-label={{i18n "wireframe.inspector.metadata.id_label"}}
+              type="text"
+              value={{this.currentId}}
               {{on "input" this.onIdInput}}
             />
             {{#if this.error}}

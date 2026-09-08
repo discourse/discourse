@@ -7,38 +7,38 @@ interface NewTopicButtonThumbnailSignature {
 /** Palette thumbnail for the `new-topic-button` block: a button with a plus. */
 const NewTopicButtonThumbnail: TemplateOnlyComponent<NewTopicButtonThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="28"
-        y="30"
-        width="64"
+        fill="var(--tertiary)"
         height="20"
         rx="6"
-        fill="var(--tertiary)"
+        width="64"
+        x="28"
+        y="30"
       />
       <rect
-        x="38"
-        y="38.75"
-        width="9"
+        fill="var(--secondary)"
         height="2.5"
         rx="1.25"
-        fill="var(--secondary)"
+        width="9"
+        x="38"
+        y="38.75"
       />
       <rect
-        x="41.25"
-        y="35.5"
-        width="2.5"
+        fill="var(--secondary)"
         height="9"
         rx="1.25"
-        fill="var(--secondary)"
+        width="2.5"
+        x="41.25"
+        y="35.5"
       />
       <rect
-        x="52"
-        y="38"
-        width="30"
+        fill="var(--secondary)"
         height="4"
         rx="2"
-        fill="var(--secondary)"
+        width="30"
+        x="52"
+        y="38"
       />
     </svg>
   </template>;

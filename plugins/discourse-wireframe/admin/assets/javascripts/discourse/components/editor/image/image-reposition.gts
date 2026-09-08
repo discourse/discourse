@@ -165,9 +165,9 @@ export default class ImageReposition extends Component<ImageRepositionSignature>
   <template>
     <div class="wireframe-image-reposition" style={{this.style}}>
       <button
-        type="button"
-        class="wireframe-image-reposition__surface"
         aria-label={{i18n "wireframe.inspector.image.reposition_help"}}
+        class="wireframe-image-reposition__surface"
+        type="button"
         {{didInsert this.focus}}
         {{on "click" this.stop}}
         {{on "keydown" this.keyDown}}
@@ -180,8 +180,8 @@ export default class ImageReposition extends Component<ImageRepositionSignature>
         }}
       ></button>
       <div class="wireframe-image-reposition__actions">
-        <DButton class="btn-primary" @label="done" @action={{this.done}} />
-        <DButton class="btn-default" @label="cancel" @action={{this.cancel}} />
+        <DButton class="btn-primary" @action={{this.done}} @label="done" />
+        <DButton class="btn-default" @action={{this.cancel}} @label="cancel" />
       </div>
     </div>
   </template>

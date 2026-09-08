@@ -51,7 +51,7 @@ interface ThumbnailPlaceholderSignature {
 const ThumbnailPlaceholder: TemplateOnlyComponent<ThumbnailPlaceholderSignature> =
   <template>
     {{#if @fallback}}
-      <@fallback @icon={{@icon}} ...attributes />
+      <@fallback ...attributes @icon={{@icon}} />
     {{else}}
       <span class="block-thumbnail__icon" ...attributes>{{dIcon @icon}}</span>
     {{/if}}
@@ -195,9 +195,9 @@ export default class BlockThumbnail extends Component<BlockThumbnailSignature> {
   <template>
     {{#if this.isRaster}}
       <DLightDarkImg
-        @lightImg={{this.lightImg}}
-        @darkImg={{this.darkImg}}
         ...attributes
+        @darkImg={{this.darkImg}}
+        @lightImg={{this.lightImg}}
       />
     {{else if this.isComponent}}
       <@thumbnail ...attributes />
@@ -205,9 +205,9 @@ export default class BlockThumbnail extends Component<BlockThumbnailSignature> {
       <DAsyncContent @asyncData={{this.thumbnailData}}>
         <:loading>
           <DSkeleton
-            @variant="rect"
             class="block-thumbnail__skeleton"
             ...attributes
+            @variant="rect"
           />
         </:loading>
         <:content as |ResolvedThumbnail|>
@@ -215,17 +215,17 @@ export default class BlockThumbnail extends Component<BlockThumbnailSignature> {
         </:content>
         <:error>
           <ThumbnailPlaceholder
+            ...attributes
             @fallback={{@fallback}}
             @icon={{@icon}}
-            ...attributes
           />
         </:error>
       </DAsyncContent>
     {{else}}
       <ThumbnailPlaceholder
+        ...attributes
         @fallback={{@fallback}}
         @icon={{@icon}}
-        ...attributes
       />
     {{/if}}
   </template>

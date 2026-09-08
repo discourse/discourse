@@ -34,9 +34,9 @@ module(
             class="wireframe-block-chrome"
             {{proxyDragSources outletName="hero" version=1}}
           >
-            <button id="p1" type="button" data-wf-drop-child-key="layout:p1">Tab
+            <button data-wf-drop-child-key="layout:p1" id="p1" type="button">Tab
               1</button>
-            <button id="p2" type="button" data-wf-drop-child-key="layout:p2">Tab
+            <button data-wf-drop-child-key="layout:p2" id="p2" type="button">Tab
               2</button>
           </div>
         </template>

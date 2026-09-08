@@ -1,20 +1,20 @@
 /** Palette thumbnail for the `chat:featured-channels` block: a cluster of chat speech bubbles. */
 const FeaturedChatChannelsThumbnail = <template>
-  <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+  <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
     {{! Top-left bubble (tail bottom-left) }}
     <path
       d="M 14,10 H 46 Q 52,10 52,16 V 26 Q 52,32 46,32 H 26 L 16,40 L 20,32 H 14 Q 8,32 8,26 V 16 Q 8,10 14,10 Z"
       fill="var(--primary-very-low)"
       stroke="var(--primary-low)"
     />
-    <circle cx="18" cy="21" r="3" fill="var(--tertiary)" />
+    <circle cx="18" cy="21" fill="var(--tertiary)" r="3" />
     <rect
-      x="26"
-      y="18"
-      width="20"
+      fill="var(--primary-low-mid)"
       height="5"
       rx="2"
-      fill="var(--primary-low-mid)"
+      width="20"
+      x="26"
+      y="18"
     />
 
     {{! Top-right bubble (tail bottom-right) }}
@@ -23,14 +23,14 @@ const FeaturedChatChannelsThumbnail = <template>
       fill="var(--primary-very-low)"
       stroke="var(--primary-low)"
     />
-    <circle cx="78" cy="21" r="3" fill="var(--success)" />
+    <circle cx="78" cy="21" fill="var(--success)" r="3" />
     <rect
-      x="86"
-      y="18"
-      width="18"
+      fill="var(--primary-low-mid)"
       height="5"
       rx="2"
-      fill="var(--primary-low-mid)"
+      width="18"
+      x="86"
+      y="18"
     />
 
     {{! Bottom-center bubble (tail bottom-left) }}
@@ -39,14 +39,14 @@ const FeaturedChatChannelsThumbnail = <template>
       fill="var(--primary-very-low)"
       stroke="var(--primary-low)"
     />
-    <circle cx="48" cy="53" r="3" fill="var(--love)" />
+    <circle cx="48" cy="53" fill="var(--love)" r="3" />
     <rect
-      x="56"
-      y="50"
-      width="20"
+      fill="var(--primary-low-mid)"
       height="5"
       rx="2"
-      fill="var(--primary-low-mid)"
+      width="20"
+      x="56"
+      y="50"
     />
   </svg>
 </template>;

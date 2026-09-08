@@ -88,9 +88,9 @@ interface ViewDrawerSignature {
 const ViewDrawer: TemplateOnlyComponent<ViewDrawerSignature> = <template>
   {{#if @isOpen}}
     <div
+      aria-label={{i18n "wireframe.chrome.view_menu"}}
       class="wireframe-view-drawer wireframe-editor-overlay"
       role="dialog"
-      aria-label={{i18n "wireframe.chrome.view_menu"}}
       {{dCloseOnClickOutside
         @onClose
         (hash targetSelector=".wireframe-view-toggle")
@@ -103,17 +103,17 @@ const ViewDrawer: TemplateOnlyComponent<ViewDrawerSignature> = <template>
         </span>
         <DButton
           class="btn-flat wireframe-view-drawer__close"
-          @icon="xmark"
-          @ariaLabel="wireframe.chrome.view_close"
           @action={{@onClose}}
+          @ariaLabel="wireframe.chrome.view_close"
+          @icon="xmark"
         />
       </div>
 
       <div class="wireframe-view-drawer__body">
         <div class="wireframe-view-drawer__dim">
           <DToggleSwitch
-            @state={{@dimNonEditable}}
             @label="wireframe.chrome.dim_non_editable_title"
+            @state={{@dimNonEditable}}
             {{on "click" @onToggleDim}}
           />
           <p class="wireframe-view-drawer__dim-description">

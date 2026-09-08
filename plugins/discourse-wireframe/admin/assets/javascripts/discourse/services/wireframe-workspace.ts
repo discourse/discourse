@@ -40,14 +40,19 @@ import type WireframeStagingService from "./wireframe-staging";
 export default class WireframeWorkspaceService extends Service {
   /** Core block registry and thumbnail preloader. */
   @service declare blocks: BlocksService;
+
   /** Clears inspector argument edits when a workspace closes. */
   @service declare wireframeInspectorArgs: WireframeInspectorArgsService;
+
   /** Resets reveal and flash state around workspace teardown. */
   @service declare wireframeBlockReveal: WireframeBlockRevealService;
+
   /** Owns the current visual drop preview. */
   @service declare wireframeDragOverlay: WireframeDragOverlayService;
+
   /** Owns the current drag source. */
   @service declare wireframeDragSession: WireframeDragSessionService;
+
   /** Owns layout blocks temporarily expanded for editing. */
   @service declare wireframeForceExpand: WireframeForceExpandService;
 
@@ -58,10 +63,13 @@ export default class WireframeWorkspaceService extends Service {
 
   /** Owns the currently selected block. */
   @service declare wireframeSelection: WireframeSelectionService;
+
   /** Controls whether the editor session is active and allowed. */
   @service declare wireframeEditMode: WireframeEditModeService;
+
   /** Seeds and tears down editable layout drafts. */
   @service declare wireframeStaging: WireframeStagingService;
+
   /** Tracks the theme that receives published changes. */
   @service declare wireframePublishTarget: WireframePublishTargetService;
 

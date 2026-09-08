@@ -116,7 +116,7 @@ export default class WFGhostBlock extends Component<WFGhostBlockSignature> {
   <template>
     <div class={{dConcatClass "wf-ghost-block" (if this.isError "--error")}}>
       <div class="wf-ghost-block__header">
-        <span class="wf-ghost-block__icon" aria-hidden="true">
+        <span aria-hidden="true" class="wf-ghost-block__icon">
           {{dIcon this.iconName}}
         </span>
         <span class="wf-ghost-block__name">{{@blockName}}</span>

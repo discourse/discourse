@@ -319,6 +319,17 @@ class _PluginApi {
   }
 
   /**
+   * The set of layer names accepted by `api.setLayoutLayer` /
+   * `api.clearLayoutLayer`, exposed as a constant for callers that want to
+   * avoid duplicating the string literals.
+   *
+   * @returns {Readonly<{SESSION_DRAFT: string, THEME: string, CODE_DEFAULT: string}>}
+   */
+  get LAYOUT_LAYERS() {
+    return LAYOUT_LAYERS;
+  }
+
+  /**
    * Use this function to retrieve the currently logged in user within your plugin.
    * If the user is not logged in, it will be `null`.
    **/
@@ -3858,17 +3869,6 @@ class _PluginApi {
    */
   clearLayoutLayer(outletName, layer, options = {}) {
     _clearLayoutLayer(outletName, layer, options);
-  }
-
-  /**
-   * The set of layer names accepted by `api.setLayoutLayer` /
-   * `api.clearLayoutLayer`, exposed as a constant for callers that want to
-   * avoid duplicating the string literals.
-   *
-   * @returns {Readonly<{SESSION_DRAFT: string, THEME: string, CODE_DEFAULT: string}>}
-   */
-  get LAYOUT_LAYERS() {
-    return LAYOUT_LAYERS;
   }
 
   /**

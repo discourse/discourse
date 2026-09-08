@@ -31,6 +31,7 @@ const FLASH_DURATION_MS = 1100;
 export default class WireframeBlockRevealService extends Service {
   /** Resolves entries and ancestry in the current draft layouts. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   /** Notifies this service when the primary block selection changes. */
   @service declare wireframeSelection: WireframeSelectionService;
 
@@ -42,6 +43,7 @@ export default class WireframeBlockRevealService extends Service {
 
   /** Timer that removes the current one-shot flash class. */
   #flashTimer: Timer | null = null;
+
   /** Element carrying the current one-shot flash class. */
   #flashedEl: HTMLElement | null = null;
 

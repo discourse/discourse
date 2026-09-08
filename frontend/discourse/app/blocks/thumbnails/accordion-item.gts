@@ -8,54 +8,54 @@ interface AccordionItemThumbnailSignature {
 /** Palette thumbnail for the `accordion-item` block: a single expanded row. */
 const AccordionItemThumbnail: TemplateOnlyComponent<AccordionItemThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="16"
-        y="20"
-        width="88"
+        fill="var(--primary-low)"
         height="18"
         rx="4"
-        fill="var(--primary-low)"
+        width="88"
+        x="16"
+        y="20"
       />
       <rect
-        x="24"
-        y="27"
-        width="44"
+        fill="var(--primary-medium)"
         height="5"
         rx="2"
-        fill="var(--primary-medium)"
+        width="44"
+        x="24"
+        y="27"
       />
       <path
         d="M92 27 L96 31 L100 27"
         stroke="var(--primary-medium)"
-        stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
+        stroke-width="2"
       />
 
       <rect
+        fill="var(--primary-low-mid)"
+        height="4"
+        rx="2"
+        width="72"
         x="24"
         y="46"
-        width="72"
-        height="4"
-        rx="2"
-        fill="var(--primary-low-mid)"
       />
       <rect
+        fill="var(--primary-low-mid)"
+        height="4"
+        rx="2"
+        width="60"
         x="24"
         y="54"
-        width="60"
-        height="4"
-        rx="2"
-        fill="var(--primary-low-mid)"
       />
       <rect
-        x="24"
-        y="62"
-        width="40"
+        fill="var(--primary-low-mid)"
         height="4"
         rx="2"
-        fill="var(--primary-low-mid)"
+        width="40"
+        x="24"
+        y="62"
       />
     </svg>
   </template>;

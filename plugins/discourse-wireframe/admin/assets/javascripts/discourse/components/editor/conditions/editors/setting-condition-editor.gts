@@ -239,12 +239,12 @@ export default class SettingConditionEditor extends Component<SettingConditionEd
           {{i18n "wireframe.inspector.conditions.setting_editor.name_legend"}}
         </span>
         <input
-          type="text"
           list="wf-setting-names"
-          value={{@leaf.name}}
           placeholder={{i18n
             "wireframe.inspector.conditions.setting_editor.name_placeholder"
           }}
+          type="text"
+          value={{@leaf.name}}
           {{on "input" this.setName}}
         />
         <datalist id="wf-setting-names">
@@ -267,12 +267,12 @@ export default class SettingConditionEditor extends Component<SettingConditionEd
                 "wireframe-condition-editor__segment"
                 (if (eq this.currentOperator op) "--active")
               }}
+              @action={{fn this.setOperator op}}
               @ariaPressed={{eq this.currentOperator op}}
               @label={{concat
                 "wireframe.inspector.conditions.setting_editor.operator_"
                 op
               }}
-              @action={{fn this.setOperator op}}
             />
           {{/each}}
         </div>
@@ -291,18 +291,18 @@ export default class SettingConditionEditor extends Component<SettingConditionEd
                 "wireframe-condition-editor__segment"
                 (if this.enabledValue "--active")
               }}
+              @action={{fn this.setEnabled true}}
               @ariaPressed={{this.enabledValue}}
               @label="wireframe.inspector.conditions.setting_editor.value_enabled"
-              @action={{fn this.setEnabled true}}
             />
             <DButton
               class={{dConcatClass
                 "wireframe-condition-editor__segment"
                 (if (eq this.enabledValue false) "--active")
               }}
+              @action={{fn this.setEnabled false}}
               @ariaPressed={{eq this.enabledValue false}}
               @label="wireframe.inspector.conditions.setting_editor.value_disabled"
-              @action={{fn this.setEnabled false}}
             />
           </div>
         </div>
@@ -341,10 +341,10 @@ export default class SettingConditionEditor extends Component<SettingConditionEd
           </span>
           <textarea
             class="wireframe-condition-editor__textarea"
-            rows="3"
             placeholder={{i18n
               "wireframe.inspector.conditions.setting_editor.value_list_placeholder"
             }}
+            rows="3"
             {{on "input" (fn this.setListValue this.currentOperator)}}
           >{{this.listValueText}}</textarea>
           <span class="wireframe-condition-editor__help">

@@ -167,8 +167,8 @@ export default class ImageCompositionControls extends Component<ImageComposition
           {{#unless @compact}}
             <DButton
               class="btn-transparent btn-small"
-              @label="wireframe.inspector.image.reset_composition"
               @action={{this.reset}}
+              @label="wireframe.inspector.image.reset_composition"
             />
           {{/unless}}
         </span>
@@ -176,9 +176,9 @@ export default class ImageCompositionControls extends Component<ImageComposition
       <div class="wireframe-image-composition__fit">
         <span>{{i18n "wireframe.inspector.image.fit"}}</span>
         <InspectorSegmentedField
-          @value={{this.composition.fit}}
           @items={{this.fitOptions}}
           @onChange={{this.changeFit}}
+          @value={{this.composition.fit}}
         />
       </div>
       {{#unless @compact}}
@@ -196,8 +196,8 @@ export default class ImageCompositionControls extends Component<ImageComposition
           {{! Native events retain raw drafts and the preview/commit boundaries. }}
           <FKControlInput
             aria-label={{i18n "wireframe.inspector.image.zoom"}}
-            min="100"
             max="250"
+            min="100"
             step="1"
             @after="%"
             @field={{hash hasExplicitType=true value=this.zoomValue set=(noop)}}
@@ -207,11 +207,11 @@ export default class ImageCompositionControls extends Component<ImageComposition
             {{on "keydown" this.keyDown}}
           />
           <input
-            type="range"
             aria-label={{i18n "wireframe.inspector.image.zoom"}}
-            min="100"
             max="250"
+            min="100"
             step="1"
+            type="range"
             value={{this.composition.zoom}}
             {{on "input" (fn this.zoom false)}}
             {{on "change" (fn this.zoom true)}}
@@ -226,12 +226,12 @@ export default class ImageCompositionControls extends Component<ImageComposition
             "wireframe-image-editor-menu__action"
             "btn-default"
           }}
+          @action={{this.reposition}}
           @label={{if
             @compact
             "wireframe.inspector.image.reposition_short"
             "wireframe.inspector.image.reposition"
           }}
-          @action={{this.reposition}}
         />
       </div>
     </fieldset>

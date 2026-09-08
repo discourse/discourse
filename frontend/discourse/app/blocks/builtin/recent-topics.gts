@@ -152,7 +152,7 @@ export default class RecentTopics extends Component<RecentTopicsSignature> {
       <@Data>
         <:content as |topics|>
           <div class="d-block-recent-topics__list">
-            <BasicTopicList @topics={{topics}} @showPosters="true" />
+            <BasicTopicList @showPosters="true" @topics={{topics}} />
 
             {{#if @linkHref}}
               <div class="d-block-recent-topics__footer">

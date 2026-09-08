@@ -59,9 +59,9 @@ module(
       await render(
         <template>
           <BlockRow
+            @activateOn="dblclick"
             @entry={{ENTRY}}
             @onActivate={{onActivate}}
-            @activateOn="dblclick"
           />
         </template>
       );
@@ -73,7 +73,7 @@ module(
 
     test("passes attributes through to the row element", async function (assert) {
       await render(
-        <template><BlockRow @entry={{ENTRY}} data-test-row="yes" /></template>
+        <template><BlockRow data-test-row="yes" @entry={{ENTRY}} /></template>
       );
       assert.dom(".wireframe-block-row").hasAttribute("data-test-row", "yes");
       assert

@@ -8,31 +8,31 @@ interface CategoryBannerThumbnailSignature {
 /** Palette thumbnail for the `category-banner` block: a banner with a category swatch. */
 const CategoryBannerThumbnail: TemplateOnlyComponent<CategoryBannerThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="12"
-        y="18"
-        width="96"
+        fill="var(--primary-low)"
         height="44"
         rx="6"
-        fill="var(--primary-low)"
+        width="96"
+        x="12"
+        y="18"
       />
       <rect
-        x="24"
-        y="28"
-        width="12"
+        fill="var(--tertiary)"
         height="24"
         rx="3"
-        fill="var(--tertiary)"
+        width="12"
+        x="24"
+        y="28"
       />
-      <rect x="44" y="30" width="40" height="7" rx="3" fill="var(--primary)" />
+      <rect fill="var(--primary)" height="7" rx="3" width="40" x="44" y="30" />
       <rect
-        x="44"
-        y="43"
-        width="52"
+        fill="var(--primary-medium)"
         height="4"
         rx="2"
-        fill="var(--primary-medium)"
+        width="52"
+        x="44"
+        y="43"
       />
     </svg>
   </template>;

@@ -195,10 +195,10 @@ export default class Card extends Component<CardSignature> {
           otherwise. The empty slot collapses on the reader page. }}
       {{#if @image.url}}
         <img
-          class="d-block-card__image"
-          src={{@image.url}}
           alt={{this.imageAlt}}
+          class="d-block-card__image"
           data-block-arg="image"
+          src={{@image.url}}
         />
       {{else}}
         <div
@@ -217,9 +217,9 @@ export default class Card extends Component<CardSignature> {
 
         <RichTextRenderer
           @arg="title"
+          @placeholder={{i18n "blocks.builtin.placeholders.card_title"}}
           @schema="paragraph"
           @value={{@title}}
-          @placeholder={{i18n "blocks.builtin.placeholders.card_title"}}
           as |R|
         >
           <h3
@@ -232,9 +232,9 @@ export default class Card extends Component<CardSignature> {
 
         <RichTextRenderer
           @arg="meta"
+          @placeholder={{i18n "blocks.builtin.placeholders.card_meta"}}
           @schema="plain"
           @value={{@meta}}
-          @placeholder={{i18n "blocks.builtin.placeholders.card_meta"}}
           as |R|
         >
           <span
@@ -247,9 +247,9 @@ export default class Card extends Component<CardSignature> {
 
         <RichTextRenderer
           @arg="body"
+          @placeholder={{i18n "blocks.builtin.placeholders.card_body"}}
           @schema="paragraph"
           @value={{@body}}
-          @placeholder={{i18n "blocks.builtin.placeholders.card_body"}}
           as |R|
         >
           <p
@@ -263,12 +263,12 @@ export default class Card extends Component<CardSignature> {
 
       {{#if @href}}
         <a
-          class="d-block-stretched-link"
-          href={{@href}}
-          target={{if @external "_blank"}}
-          rel={{if @external "noopener"}}
           aria-label={{@linkLabel}}
+          class="d-block-stretched-link"
           data-block-arg="href"
+          href={{@href}}
+          rel={{if @external "noopener"}}
+          target={{if @external "_blank"}}
         ></a>
       {{/if}}
     </div>

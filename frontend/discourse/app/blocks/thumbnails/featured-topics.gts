@@ -8,43 +8,43 @@ interface FeaturedTopicsThumbnailSignature {
 /** Palette thumbnail for the `featured-topics` block: a highlighted topic over a list. */
 const FeaturedTopicsThumbnail: TemplateOnlyComponent<FeaturedTopicsThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="14"
-        y="14"
-        width="92"
+        fill="var(--tertiary-low)"
         height="20"
         rx="4"
-        fill="var(--tertiary-low)"
+        width="92"
+        x="14"
+        y="14"
       />
-      <circle cx="24" cy="24" r="5" fill="var(--tertiary)" />
+      <circle cx="24" cy="24" fill="var(--tertiary)" r="5" />
       <rect
-        x="34"
-        y="21"
-        width="60"
+        fill="var(--primary-medium)"
         height="6"
         rx="2"
-        fill="var(--primary-medium)"
+        width="60"
+        x="34"
+        y="21"
       />
 
-      <circle cx="24" cy="45" r="5" fill="var(--primary-low-mid)" />
+      <circle cx="24" cy="45" fill="var(--primary-low-mid)" r="5" />
       <rect
+        fill="var(--primary-low-mid)"
+        height="5"
+        rx="2"
+        width="66"
         x="34"
         y="42"
-        width="66"
-        height="5"
-        rx="2"
-        fill="var(--primary-low-mid)"
       />
 
-      <circle cx="24" cy="62" r="5" fill="var(--primary-low-mid)" />
+      <circle cx="24" cy="62" fill="var(--primary-low-mid)" r="5" />
       <rect
-        x="34"
-        y="59"
-        width="52"
+        fill="var(--primary-low-mid)"
         height="5"
         rx="2"
-        fill="var(--primary-low-mid)"
+        width="52"
+        x="34"
+        y="59"
       />
     </svg>
   </template>;

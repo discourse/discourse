@@ -310,13 +310,13 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
     >
       {{#if this.showSlider}}
         <input
-          type="range"
           class="wireframe-dimension-field__slider"
-          min={{this.min}}
-          max={{this.max}}
-          step={{this.step}}
-          value={{this.numberValue}}
           disabled={{@custom.disabled}}
+          max={{this.max}}
+          min={{this.min}}
+          step={{this.step}}
+          type="range"
+          value={{this.numberValue}}
           {{on "input" this.setSlider}}
         />
       {{/if}}
@@ -340,8 +340,8 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
           {{#if this.isUnitless}}
             <FKControlInput
               class="wireframe-dimension-field__number"
-              min={{this.min}}
               max={{this.max}}
+              min={{this.min}}
               step={{this.step}}
               @after={{this.defaultUnit}}
               @field={{field}}
@@ -351,8 +351,8 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
           {{else}}
             <FKControlInput
               class="wireframe-dimension-field__number"
-              min={{this.min}}
               max={{this.max}}
+              min={{this.min}}
               step={{this.step}}
               @field={{field}}
               @type="number"
@@ -360,9 +360,9 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
             >
               <:after>
                 <DNativeSelect
+                  aria-label={{i18n "wireframe.inspector.dimension_unit"}}
                   class="wireframe-dimension-field__unit"
                   disabled={{@custom.disabled}}
-                  aria-label={{i18n "wireframe.inspector.dimension_unit"}}
                   @includeNone={{false}}
                   @onChange={{this.setUnit}}
                   @value={{this.displayUnit}}

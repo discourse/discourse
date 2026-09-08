@@ -48,9 +48,9 @@ export default class EmptyArgPrompt extends Component<EmptyArgPromptSignature> {
 
   <template>
     <button
-      type="button"
-      class="wireframe-empty-arg-prompt"
       aria-label={{@prompt}}
+      class="wireframe-empty-arg-prompt"
+      type="button"
       {{on "click" this.activate}}
     >
       {{#if @icon}}

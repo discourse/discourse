@@ -9,9 +9,9 @@ import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/compone
 const WrappedTabs = <template>
   <div class="d-block-tabs">
     <button
-      type="button"
       class="d-block-tabs__tab"
       data-wf-tab-panel-key="layout:panel-b"
+      type="button"
     >Tab B</button>
     <span class="body">panel</span>
   </div>
@@ -43,8 +43,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="tabs"
             @blockKey="tabs:test"
+            @blockName="tabs"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedTabs}}
           />

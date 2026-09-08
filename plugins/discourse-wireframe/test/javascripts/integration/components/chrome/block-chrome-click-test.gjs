@@ -10,7 +10,7 @@ import { queryOf } from "../../../helpers/wireframe-peers";
 // `data-block-arg` markup a real `button-link` renders: a native
 // `<button>` for the `href` (URL) arg with the label nested inside it.
 const WrappedButtonLink = <template>
-  <button type="button" data-block-arg="href">
+  <button data-block-arg="href" type="button">
     <span data-block-arg="label">Label</span>
   </button>
 </template>;
@@ -39,8 +39,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="button-link"
             @blockKey={{blockKey}}
+            @blockName="button-link"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedButtonLink}}
           />

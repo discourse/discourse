@@ -32,8 +32,10 @@ type IssueGroup = {
 export default class IssuesPanel extends Component {
   /** Produces the current page's validation issues. */
   @service declare wireframeValidation: WireframeValidationService;
+
   /** Owns the selected block. */
   @service declare wireframeSelection: WireframeSelectionService;
+
   /** Scrolls and flashes selected blocks on the canvas. */
   @service declare wireframeBlockReveal: WireframeBlockRevealService;
 
@@ -95,9 +97,9 @@ export default class IssuesPanel extends Component {
 
   <template>
     <div
+      aria-label={{i18n "wireframe.chrome.panel_issues"}}
       class="wireframe-issues"
       role="region"
-      aria-label={{i18n "wireframe.chrome.panel_issues"}}
     >
       {{#if this.groups.length}}
         {{#each this.groups key="outletName" as |group|}}

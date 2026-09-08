@@ -34,11 +34,13 @@ import type WireframeSelectionService from "discourse/plugins/discourse-wirefram
 export default class InspectorRawJson extends Component {
   /** Applies validated raw-entry replacements. */
   @service declare wireframeEntryConfig: WireframeEntryConfigService;
+
   /** Exposes the selected entry and its stable key. */
   @service declare wireframeSelection: WireframeSelectionService;
 
   /** Editable JSON text. */
   @tracked draft = "";
+
   /** Current parse or validation error. */
   @tracked error: string | null = null;
 
@@ -163,10 +165,10 @@ export default class InspectorRawJson extends Component {
   <template>
     <div class="wireframe-inspector-raw-json">
       <textarea
-        class="wireframe-inspector-raw-json__textarea"
-        spellcheck="false"
-        disabled={{this.readonly}}
         aria-label={{i18n "wireframe.inspector.raw_json.aria_label"}}
+        class="wireframe-inspector-raw-json__textarea"
+        disabled={{this.readonly}}
+        spellcheck="false"
         {{didInsert this.seedDraft}}
         {{didUpdate this.seedDraft this.selectionKey}}
         {{on "input" this.handleInput}}
@@ -182,21 +184,21 @@ export default class InspectorRawJson extends Component {
       <div class="wireframe-inspector-raw-json__actions">
         <DButton
           class="btn-primary btn-small"
-          @label="wireframe.inspector.raw_json.apply"
-          @disabled={{this.editDisabled}}
           @action={{this.apply}}
-        />
-        <DButton
-          class="btn-flat btn-small"
-          @label="wireframe.inspector.raw_json.reset"
           @disabled={{this.editDisabled}}
-          @action={{this.reset}}
+          @label="wireframe.inspector.raw_json.apply"
         />
         <DButton
           class="btn-flat btn-small"
+          @action={{this.reset}}
+          @disabled={{this.editDisabled}}
+          @label="wireframe.inspector.raw_json.reset"
+        />
+        <DButton
+          class="btn-flat btn-small"
+          @action={{this.copy}}
           @icon="copy"
           @label="wireframe.inspector.raw_json.copy"
-          @action={{this.copy}}
         />
       </div>
     </div>

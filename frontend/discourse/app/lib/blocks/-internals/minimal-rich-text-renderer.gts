@@ -59,7 +59,7 @@ const MinimalRichTextRenderer: TemplateOnlyComponent<MinimalRichTextRendererSign
       {{~#if (eq run.type "hard_break")~}}
         <br />
       {{~else~}}
-        <MarkedText @text={{run.text}} @marks={{run.marks}} />
+        <MarkedText @marks={{run.marks}} @text={{run.text}} />
       {{~/if~}}
     {{~/each~}}
   </template>;

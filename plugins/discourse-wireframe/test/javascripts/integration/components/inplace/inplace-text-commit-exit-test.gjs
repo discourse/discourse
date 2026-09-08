@@ -118,20 +118,20 @@ module(
           <div class="card-block" data-wf-block-key={{cardKey}}>
             <span
               class="f-title"
-              data-wf-rich-text-arg="title"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="title"
             ></span>
             <span
               class="f-subtitle"
-              data-wf-rich-text-arg="subtitle"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="subtitle"
             ></span>
           </div>
           <div class="leaf-block" data-wf-block-key={{leafKey}}>
             <span
               class="f-text"
-              data-wf-rich-text-arg="text"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="text"
             ></span>
           </div>
           <InplaceTextController />
@@ -171,20 +171,20 @@ module(
           <div class="card-block" data-wf-block-key={{cardKey}}>
             <span
               class="f-title"
-              data-wf-rich-text-arg="title"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="title"
             ></span>
             <span
               class="f-subtitle"
-              data-wf-rich-text-arg="subtitle"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="subtitle"
             ></span>
           </div>
           <div class="leaf-block" data-wf-block-key={{leafKey}}>
             <span
               class="f-text"
-              data-wf-rich-text-arg="text"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="text"
             ></span>
           </div>
           <InplaceTextController />
@@ -220,20 +220,20 @@ module(
           <div class="card-block" data-wf-block-key={{cardKey}}>
             <span
               class="f-title"
-              data-wf-rich-text-arg="title"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="title"
             ></span>
             <span
               class="f-subtitle"
-              data-wf-rich-text-arg="subtitle"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="subtitle"
             ></span>
           </div>
           <div class="leaf-block" data-wf-block-key={{leafKey}}>
             <span
               class="f-text"
-              data-wf-rich-text-arg="text"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="text"
             ></span>
           </div>
           <InplaceTextController />
@@ -271,15 +271,15 @@ module(
           <div class="card-block" data-wf-block-key={{cardKey}}>
             <span
               class="f-title"
-              data-wf-rich-text-arg="title"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="title"
             ></span>
           </div>
           <div class="leaf-block" data-wf-block-key={{leafKey}}>
             <span
               class="f-text"
-              data-wf-rich-text-arg="text"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="text"
             ></span>
           </div>
           <InplaceTextController />
@@ -315,21 +315,21 @@ module(
           <div class="card-block" data-wf-block-key={{cardKey}}>
             <span
               class="f-title"
-              data-wf-rich-text-arg="title"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="title"
             ></span>
             <span
               class="f-subtitle"
-              data-wf-rich-text-arg="subtitle"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="subtitle"
             ></span>
             <span class="card-padding">padding</span>
           </div>
           <div class="leaf-block" data-wf-block-key={{leafKey}}>
             <span
               class="f-text"
-              data-wf-rich-text-arg="text"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="text"
             ></span>
           </div>
           <InplaceTextController />
@@ -369,20 +369,20 @@ module(
           <div class="card-block" data-wf-block-key={{cardKey}}>
             <span
               class="f-title"
-              data-wf-rich-text-arg="title"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="title"
             ></span>
             <span
               class="f-subtitle"
-              data-wf-rich-text-arg="subtitle"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="subtitle"
             ></span>
           </div>
           <div class="leaf-block" data-wf-block-key={{leafKey}}>
             <span
               class="f-text"
-              data-wf-rich-text-arg="text"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="text"
             ></span>
           </div>
           <InplaceTextController />
@@ -422,19 +422,19 @@ module(
           <div class="card-block" data-wf-block-key={{cardKey}}>
             <span
               class="f-title"
-              data-wf-rich-text-arg="title"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="title"
             ></span>
           </div>
           <div class="leaf-block" data-wf-block-key={{leafKey}}>
             <span
               class="f-text"
-              data-wf-rich-text-arg="text"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="text"
             ></span>
           </div>
           <div class="wireframe-block-toolbar">
-            <button type="button" class="tb-btn">B</button>
+            <button class="tb-btn" type="button">B</button>
           </div>
           <InplaceTextController />
         </template>
@@ -464,15 +464,15 @@ module(
           <div class="card-block" data-wf-block-key={{cardKey}}>
             <span
               class="f-title"
-              data-wf-rich-text-arg="title"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="title"
             ></span>
           </div>
           <div class="leaf-block" data-wf-block-key={{leafKey}}>
             <span
               class="f-text"
-              data-wf-rich-text-arg="text"
               data-block-arg-schema="heading"
+              data-wf-rich-text-arg="text"
             ></span>
           </div>
           <InplaceTextController />

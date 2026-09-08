@@ -186,15 +186,19 @@ interface ContainerDropTargetSignature {
 export default class ContainerDropTargetModifier extends Modifier<ContainerDropTargetSignature> {
   /** Owns the single drop-preview overlay claim. */
   @service declare wireframeDragOverlay: WireframeDragOverlayService;
+
   /** Validates proposed insertions and moves. */
   @service declare wireframeDropAuthority: WireframeDropAuthorityService;
+
   /** Resolves layout entries and metadata for labels and geometry. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
 
   /** Cleanup for the active auto-scroll registration. */
   #autoScrollCleanup: (() => void) | null = null;
+
   /** Cleanup for the active drop-target registration. */
   #cleanup: (() => void) | null = null;
+
   /** Releases this modifier's current overlay claim. */
   #releaseDrop: (() => void) | null = null;
 

@@ -190,12 +190,12 @@ export default class ViewportConditionEditor extends Component<ViewportCondition
                 "wireframe-condition-editor__viewport-chip"
                 (if (eq this.currentRange range.id) "--active")
               }}
+              @action={{fn this.pickRange range.id}}
               @icon={{range.icon}}
               @label={{concat
                 "wireframe.inspector.conditions.viewport_editor."
                 range.label
               }}
-              @action={{fn this.pickRange range.id}}
             />
           {{/each}}
         </div>
@@ -212,12 +212,12 @@ export default class ViewportConditionEditor extends Component<ViewportCondition
                 "wireframe-condition-editor__segment"
                 (if (eq this.touchMode mode.id) "--active")
               }}
+              @action={{fn this.setTouch mode.id}}
               @ariaPressed={{eq this.touchMode mode.id}}
               @label={{concat
                 "wireframe.inspector.conditions.viewport_editor."
                 mode.label
               }}
-              @action={{fn this.setTouch mode.id}}
             />
           {{/each}}
         </div>

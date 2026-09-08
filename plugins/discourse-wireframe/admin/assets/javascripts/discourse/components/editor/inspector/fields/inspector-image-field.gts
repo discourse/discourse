@@ -190,8 +190,8 @@ class ImageSource extends Component<ImageSourceSignature> {
     {{else}}
       <details ...attributes>
         <summary
-          class="wireframe-image-field__source"
           aria-busy={{if this.uploading "true"}}
+          class="wireframe-image-field__source"
           {{dDragAndDropExternalTarget
             accepts="files"
             canDrop=this.canDrop
@@ -199,7 +199,7 @@ class ImageSource extends Component<ImageSourceSignature> {
           }}
         >
           {{#if @value.url}}
-            <img src={{@value.url}} alt="" />
+            <img alt="" src={{@value.url}} />
           {{else}}
             <span class="wireframe-image-field__placeholder">{{dIcon
                 "plus"
@@ -714,7 +714,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
         <div class="wireframe-image-field__source-editor">
           <div class="wireframe-image-field__tabs" role="tablist">
             <button
-              type="button"
+              aria-selected={{eq this.lightTab "upload"}}
               class={{dConcatClass
                 "wireframe-image-field__tab"
                 (if
@@ -723,13 +723,13 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
                 )
               }}
               role="tab"
-              aria-selected={{eq this.lightTab "upload"}}
+              type="button"
               {{on "click" (fn this.setLightTab "upload")}}
             >
               {{i18n "wireframe.inspector.image.tab_upload"}}
             </button>
             <button
-              type="button"
+              aria-selected={{eq this.lightTab "url"}}
               class={{dConcatClass
                 "wireframe-image-field__tab"
                 (if
@@ -737,7 +737,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
                 )
               }}
               role="tab"
-              aria-selected={{eq this.lightTab "url"}}
+              type="button"
               {{on "click" (fn this.setLightTab "url")}}
             >
               {{i18n "wireframe.inspector.image.tab_url"}}
@@ -748,17 +748,17 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
             <UppyImageUploader
               class="wireframe-image-field__uploader"
               @id="{{@custom.id}}-{{@custom.name}}-light"
+              @onUploadDeleted={{this.onLightUploadDeleted}}
               @onUploadDone={{this.onLightUploadDone}}
               @onUploadStart={{this.onLightUploadStart}}
-              @onUploadDeleted={{this.onLightUploadDeleted}}
               @type="composer"
             />
           {{else}}
             <input
-              type="url"
               aria-label={{i18n "wireframe.inspector.image.tab_url"}}
               class="wireframe-image-field__url-input"
               placeholder={{i18n "wireframe.inspector.image.url_placeholder"}}
+              type="url"
               value={{this.lightUrlDraft}}
               {{on "input" this.onLightUrlDraftInput}}
               {{on "blur" this.commitLightUrl}}
@@ -768,9 +768,9 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
           {{#if this.lightVariant.url}}
             <DButton
               class="wireframe-image-field__remove btn-transparent btn-small --danger"
+              @action={{this.onLightUploadDeleted}}
               @icon="trash-can"
               @label="wireframe.inspector.image.remove"
-              @action={{this.onLightUploadDeleted}}
             />
           {{/if}}
 
@@ -810,7 +810,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
             {{#if this.lightVariant.url}}
               <div class="wireframe-image-field__tabs" role="tablist">
                 <button
-                  type="button"
+                  aria-selected={{eq this.darkTab "upload"}}
                   class={{dConcatClass
                     "wireframe-image-field__tab"
                     (if
@@ -819,13 +819,13 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
                     )
                   }}
                   role="tab"
-                  aria-selected={{eq this.darkTab "upload"}}
+                  type="button"
                   {{on "click" (fn this.setDarkTab "upload")}}
                 >
                   {{i18n "wireframe.inspector.image.tab_upload"}}
                 </button>
                 <button
-                  type="button"
+                  aria-selected={{eq this.darkTab "url"}}
                   class={{dConcatClass
                     "wireframe-image-field__tab"
                     (if
@@ -834,7 +834,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
                     )
                   }}
                   role="tab"
-                  aria-selected={{eq this.darkTab "url"}}
+                  type="button"
                   {{on "click" (fn this.setDarkTab "url")}}
                 >
                   {{i18n "wireframe.inspector.image.tab_url"}}
@@ -845,19 +845,19 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
                 <UppyImageUploader
                   class="wireframe-image-field__uploader"
                   @id="{{@custom.id}}-{{@custom.name}}-dark"
+                  @onUploadDeleted={{this.onDarkUploadDeleted}}
                   @onUploadDone={{this.onDarkUploadDone}}
                   @onUploadStart={{this.onDarkUploadStart}}
-                  @onUploadDeleted={{this.onDarkUploadDeleted}}
                   @type="composer"
                 />
               {{else}}
                 <input
-                  type="url"
                   aria-label={{i18n "wireframe.inspector.image.tab_url"}}
                   class="wireframe-image-field__url-input"
                   placeholder={{i18n
                     "wireframe.inspector.image.url_placeholder"
                   }}
+                  type="url"
                   value={{this.darkUrlDraft}}
                   {{on "input" this.onDarkUrlDraftInput}}
                   {{on "blur" this.commitDarkUrl}}
@@ -867,9 +867,9 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
               {{#if this.darkVariant.url}}
                 <DButton
                   class="wireframe-image-field__remove btn-transparent btn-small --danger"
+                  @action={{this.onDarkUploadDeleted}}
                   @icon="trash-can"
                   @label="wireframe.inspector.image.remove"
-                  @action={{this.onDarkUploadDeleted}}
                 />
               {{/if}}
 
@@ -898,9 +898,9 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       {{#if @schema.allowComposition}}
         {{#if this.lightVariant.url}}
           <ImageCompositionControls
+            @onReposition={{@onReposition}}
             @target={{this.target}}
             @value={{this.liveValue}}
-            @onReposition={{@onReposition}}
           />
         {{/if}}
       {{/if}}
@@ -912,9 +912,9 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
             <span>{{i18n "wireframe.inspector.image.grid_size"}}</span>
             <DButton
               class="btn-transparent btn-small"
-              @title="wireframe.inspector.image.grid_size_help"
               @action={{this.editGrid}}
               @label="wireframe.inspector.image.edit_grid"
+              @title="wireframe.inspector.image.grid_size_help"
             />
           </div>
         </fieldset>
@@ -927,13 +927,13 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
               }}<FKControlInput
                 aria-label={{i18n "wireframe.inspector.image.frame_width"}}
                 min="1"
-                @type="number"
                 @after="px"
                 @field={{hash
                   hasExplicitType=true
                   value=this.frameSize.width
                   set=(noop)
                 }}
+                @type="number"
                 {{on "blur" (fn this.resizeFrame "width")}}
                 {{on "keydown" (fn this.frameKeyDown "width")}}
               /></label>
@@ -942,13 +942,13 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
               }}<FKControlInput
                 aria-label={{i18n "wireframe.inspector.image.frame_height"}}
                 min="1"
-                @type="number"
                 @after="px"
                 @field={{hash
                   hasExplicitType=true
                   value=this.frameSize.height
                   set=(noop)
                 }}
+                @type="number"
                 {{on "blur" (fn this.resizeFrame "height")}}
                 {{on "keydown" (fn this.frameKeyDown "height")}}
               /></label>

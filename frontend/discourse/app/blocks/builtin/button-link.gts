@@ -78,7 +78,7 @@ export default class ButtonLink extends Component<ButtonLinkSignature> {
     {{! Block-form DButton (rather than the icon and translatedLabel args) so
         the icon and label each render in their own click-to-edit wrapper while
         still matching DButton's spacing. }}
-    <DButton class={{this.btnClass}} @href={{@href}} data-block-arg="href">
+    <DButton class={{this.btnClass}} data-block-arg="href" @href={{@href}}>
       <span
         class="d-block-inline-icon
           {{unless @icon 'd-block-inline-icon--empty'}}"
@@ -90,9 +90,9 @@ export default class ButtonLink extends Component<ButtonLinkSignature> {
       </span>
       <RichTextRenderer
         @arg="label"
+        @placeholder={{i18n "blocks.builtin.placeholders.button_link_label"}}
         @schema="plain"
         @value={{@label}}
-        @placeholder={{i18n "blocks.builtin.placeholders.button_link_label"}}
         as |R|
       >
         <span class="d-button-label"><R.Content /></span>

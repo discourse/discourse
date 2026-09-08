@@ -69,9 +69,9 @@ export default class InspectorGroupField extends Component<InspectorGroupFieldSi
 
   <template>
     <GroupChooser
-      @selected={{this.value}}
       @onChange={{this.onChange}}
       @options={{hash maximum=1}}
+      @selected={{this.value}}
     />
   </template>
 }

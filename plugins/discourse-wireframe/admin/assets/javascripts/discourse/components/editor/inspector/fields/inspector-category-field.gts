@@ -170,8 +170,8 @@ export default class InspectorCategoryField extends Component<InspectorCategoryF
       </div>
     {{else}}
       <CategoryChooser
-        @value={{@custom.value}}
         @onChange={{this.onChangeSingle}}
+        @value={{@custom.value}}
       />
     {{/if}}
   </template>

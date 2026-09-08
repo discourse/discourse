@@ -68,9 +68,9 @@ export default class InspectorUserField extends Component<InspectorUserFieldSign
 
   <template>
     <UserChooser
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @options={{hash maximum=1}}
+      @value={{this.value}}
     />
   </template>
 }

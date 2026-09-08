@@ -29,8 +29,10 @@ interface InspectorOutletSectionSignature {
 export default class InspectorOutletSection extends Component<InspectorOutletSectionSignature> {
   /** Reports whether the selected outlet has unsaved mutations. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
   /** Resolves the selected outlet's persistence state. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   /** Resolves the theme owning the selected outlet. */
   @service declare wireframePublishTarget: WireframePublishTargetService;
 

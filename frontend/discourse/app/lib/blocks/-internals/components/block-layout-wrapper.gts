@@ -183,10 +183,10 @@ class WrappedBlockLayout extends Component<WrappedBlockLayoutSignature> {
         @decoratorClassNames
         @classNames
       }}
-      style={{@style}}
       data-block-id={{@id}}
       data-block-name={{@name}}
       data-block-namespace={{@namespace}}
+      style={{@style}}
     >
       {{! A block that declares data receives Data, a bound boundary it places
           around its data region so its surrounding markup stays outside and

@@ -51,6 +51,7 @@ interface OutletArgConditionEditorSignature {
 export default class OutletArgConditionEditor extends Component<OutletArgConditionEditorSignature> {
   /** Editable JSON representation of the match value. */
   @tracked valueJson: string | undefined = serialiseJson(this.args.leaf?.value);
+
   /** Current JSON parse error. */
   @tracked valueError: string | null = null;
 
@@ -151,11 +152,11 @@ export default class OutletArgConditionEditor extends Component<OutletArgConditi
           }}
         </span>
         <input
-          type="text"
-          value={{@leaf.path}}
           placeholder={{i18n
             "wireframe.inspector.conditions.outlet_arg_editor.path_placeholder"
           }}
+          type="text"
+          value={{@leaf.path}}
           {{on "input" this.setPath}}
         />
         <span class="wireframe-condition-editor__help">
@@ -175,27 +176,27 @@ export default class OutletArgConditionEditor extends Component<OutletArgConditi
               "wireframe-condition-editor__segment"
               (if (eq this.currentOperator "equals") "--active")
             }}
+            @action={{fn this.setOperator "equals"}}
             @ariaPressed={{eq this.currentOperator "equals"}}
             @label="wireframe.inspector.conditions.outlet_arg_editor.operator_equals"
-            @action={{fn this.setOperator "equals"}}
           />
           <DButton
             class={{dConcatClass
               "wireframe-condition-editor__segment"
               (if (eq this.currentOperator "exists") "--active")
             }}
+            @action={{fn this.setOperator "exists"}}
             @ariaPressed={{eq this.currentOperator "exists"}}
             @label="wireframe.inspector.conditions.outlet_arg_editor.operator_exists"
-            @action={{fn this.setOperator "exists"}}
           />
           <DButton
             class={{dConcatClass
               "wireframe-condition-editor__segment"
               (if (eq this.currentOperator "missing") "--active")
             }}
+            @action={{fn this.setOperator "missing"}}
             @ariaPressed={{eq this.currentOperator "missing"}}
             @label="wireframe.inspector.conditions.outlet_arg_editor.operator_missing"
-            @action={{fn this.setOperator "missing"}}
           />
         </div>
       </div>
@@ -209,8 +210,8 @@ export default class OutletArgConditionEditor extends Component<OutletArgConditi
           </span>
           <textarea
             class="wireframe-condition-editor__textarea --mono"
-            rows="2"
             placeholder='"open" or {"any": [1, 2, 3]}'
+            rows="2"
             {{on "input" this.setValueJson}}
           >{{this.valueJson}}</textarea>
           {{#if this.valueError}}

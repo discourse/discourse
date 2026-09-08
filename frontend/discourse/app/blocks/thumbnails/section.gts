@@ -6,49 +6,49 @@ interface SectionThumbnailSignature {
 
 const SectionThumbnail: TemplateOnlyComponent<SectionThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="10"
-        y="10"
-        width="100"
+        fill="var(--primary-very-low)"
         height="60"
         rx="6"
-        fill="var(--primary-very-low)"
         stroke="var(--primary-low-mid)"
         stroke-width="2"
+        width="100"
+        x="10"
+        y="10"
       />
       <rect
-        x="20"
-        y="20"
-        width="80"
+        fill="var(--secondary)"
         height="40"
         rx="4"
-        fill="var(--secondary)"
         stroke="var(--primary-low)"
+        width="80"
+        x="20"
+        y="20"
       />
       <rect
-        x="29"
-        y="30"
-        width="42"
+        fill="var(--primary-medium)"
         height="5"
         rx="2.5"
-        fill="var(--primary-medium)"
+        width="42"
+        x="29"
+        y="30"
       />
       <rect
+        fill="var(--primary-low)"
+        height="4"
+        rx="2"
+        width="62"
         x="29"
         y="41"
-        width="62"
-        height="4"
-        rx="2"
-        fill="var(--primary-low)"
       />
       <rect
-        x="29"
-        y="49"
-        width="50"
+        fill="var(--primary-low)"
         height="4"
         rx="2"
-        fill="var(--primary-low)"
+        width="50"
+        x="29"
+        y="49"
       />
     </svg>
   </template>;

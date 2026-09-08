@@ -177,27 +177,27 @@ export default class InspectorStepperField extends Component<InspectorStepperFie
     <div class="wireframe-stepper-field">
       <DButton
         class="btn-flat wireframe-stepper-field__btn"
-        @icon="minus"
-        @disabled={{this.atMin}}
         @action={{this.decrement}}
         @ariaLabel="wireframe.inspector.controls.decrement"
+        @disabled={{this.atMin}}
+        @icon="minus"
       />
       <input
-        type="number"
-        class="wireframe-stepper-field__number"
-        min={{this.min}}
-        max={{this.max}}
-        step={{this.step}}
-        value={{this.numberValue}}
         aria-label={{@ariaLabel}}
+        class="wireframe-stepper-field__number"
+        max={{this.max}}
+        min={{this.min}}
+        step={{this.step}}
+        type="number"
+        value={{this.numberValue}}
         {{on "change" this.setNumber}}
       />
       <DButton
         class="btn-flat wireframe-stepper-field__btn"
-        @icon="plus"
-        @disabled={{this.atMax}}
         @action={{this.increment}}
         @ariaLabel="wireframe.inspector.controls.increment"
+        @disabled={{this.atMax}}
+        @icon="plus"
       />
     </div>
   </template>

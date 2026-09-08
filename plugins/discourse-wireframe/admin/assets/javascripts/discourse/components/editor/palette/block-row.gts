@@ -56,25 +56,25 @@ export default class BlockRow extends Component<BlockRowSignature> {
 
   <template>
     <div
-      class="wireframe-block-row"
-      role="option"
-      aria-label={{@entry.displayName}}
       aria-describedby={{this.descriptionId}}
-      data-palette-id={{@entry.id}}
+      aria-label={{@entry.displayName}}
+      class="wireframe-block-row"
       data-block-name={{@entry.blockName}}
-      {{on this.activateOn this.activate}}
+      data-palette-id={{@entry.id}}
+      role="option"
       ...attributes
+      {{on this.activateOn this.activate}}
     >
       <BlockThumbnail
         class="wireframe-block-row__thumbnail"
-        @thumbnail={{@entry.thumbnail}}
         @icon={{@entry.icon}}
+        @thumbnail={{@entry.thumbnail}}
       />
       <span class="wireframe-block-row__text">
         <span class="wireframe-block-row__name">{{@entry.displayName}}</span>
         <span
-          id={{this.descriptionId}}
           class="wireframe-block-row__description"
+          id={{this.descriptionId}}
         >{{@entry.description}}</span>
       </span>
     </div>

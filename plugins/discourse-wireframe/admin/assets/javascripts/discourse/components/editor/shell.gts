@@ -233,17 +233,17 @@ export default class EditorShell extends Component {
             <span class="toolbar-title">Wireframe</span>
             <DButton
               class="btn-flat wireframe-btn-undo"
+              @action={{this.undo}}
+              @disabled={{if this.wireframeMutationEngine.canUndo false true}}
               @icon="arrow-rotate-left"
               @title="wireframe.chrome.undo"
-              @disabled={{if this.wireframeMutationEngine.canUndo false true}}
-              @action={{this.undo}}
             />
             <DButton
               class="btn-flat wireframe-btn-redo"
+              @action={{this.redo}}
+              @disabled={{if this.wireframeMutationEngine.canRedo false true}}
               @icon="arrow-rotate-right"
               @title="wireframe.chrome.redo"
-              @disabled={{if this.wireframeMutationEngine.canRedo false true}}
-              @action={{this.redo}}
             />
           </div>
 
@@ -259,26 +259,26 @@ export default class EditorShell extends Component {
                 "btn-flat wireframe-view-toggle"
                 (if this.wireframeSimulation.isSimulating "--active")
               }}
+              @action={{this.toggleViewSettings}}
+              @ariaExpanded={{this.viewSettingsOpen}}
               @icon="sliders"
               @label="wireframe.chrome.view_menu"
-              @ariaExpanded={{this.viewSettingsOpen}}
-              @action={{this.toggleViewSettings}}
             />
             <DButton
               class="btn-primary wireframe-btn-save"
               data-wf-save-state={{this.saveDirtiness}}
+              @action={{this.wireframeStaging.openReviewDrawer}}
+              @disabled={{unless this.canOpenReviewDrawer true}}
               @icon="cloud-arrow-up"
               @label="wireframe.review.open"
               @title={{this.saveTitleKey}}
-              @disabled={{unless this.canOpenReviewDrawer true}}
-              @action={{this.wireframeStaging.openReviewDrawer}}
             />
             <DButton
               class="btn-flat wireframe-btn-exit"
+              @action={{this.exit}}
+              @ariaLabel="wireframe.chrome.exit"
               @icon="xmark"
               @title="wireframe.chrome.exit"
-              @ariaLabel="wireframe.chrome.exit"
-              @action={{this.exit}}
             />
           </div>
         </div>
@@ -328,6 +328,12 @@ export default class EditorShell extends Component {
           <div class="panel-header">
             <DButton
               class="btn-flat panel-collapse-toggle"
+              @action={{this.wireframeRail.toggleRightCollapsed}}
+              @ariaLabel={{if
+                this.wireframeRail.rightCollapsed
+                "wireframe.chrome.expand_panel"
+                "wireframe.chrome.collapse_panel"
+              }}
               @icon={{if
                 this.wireframeRail.rightCollapsed
                 "chevron-left"
@@ -338,12 +344,6 @@ export default class EditorShell extends Component {
                 "wireframe.chrome.expand_panel"
                 "wireframe.chrome.collapse_panel"
               }}
-              @ariaLabel={{if
-                this.wireframeRail.rightCollapsed
-                "wireframe.chrome.expand_panel"
-                "wireframe.chrome.collapse_panel"
-              }}
-              @action={{this.wireframeRail.toggleRightCollapsed}}
             />
             {{#unless this.wireframeRail.rightCollapsed}}
               <span>{{i18n "wireframe.chrome.panel_inspector"}}</span>
@@ -361,10 +361,10 @@ export default class EditorShell extends Component {
       <DropPreview />
       <PublishReviewDrawer />
       <ViewDrawer
-        @isOpen={{this.viewSettingsOpen}}
         @dimNonEditable={{this.dimNonEditable}}
-        @onToggleDim={{this.toggleDimNonEditable}}
+        @isOpen={{this.viewSettingsOpen}}
         @onClose={{this.closeViewSettings}}
+        @onToggleDim={{this.toggleDimNonEditable}}
       />
     {{/if}}
   </template>

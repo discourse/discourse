@@ -28,8 +28,8 @@ const BlockPreviewCard: TemplateOnlyComponent<BlockPreviewCardSignature> =
     <div class="wireframe-block-preview">
       <BlockThumbnail
         class="wireframe-block-preview__thumbnail"
-        @thumbnail={{@data.entry.thumbnail}}
         @icon={{@data.entry.icon}}
+        @thumbnail={{@data.entry.thumbnail}}
       />
       <span
         class="wireframe-block-preview__name"

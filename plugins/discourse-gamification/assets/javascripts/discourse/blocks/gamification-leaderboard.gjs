@@ -159,14 +159,14 @@ export default class GamificationLeaderboardBlock extends Component {
       <@Data>
         <:content as |model|>
           <MinimalGamificationLeaderboardView
+            @avatarSize={{@avatarSize}}
+            @footerLinkLabel={{@footerLinkLabel}}
             @model={{model}}
+            @showColumnHeaders={{@showColumnHeaders}}
+            @showFooterLink={{@showFooterLink}}
+            @showRank={{@showRank}}
             @title={{@title}}
             @titleIcon={{@titleIcon}}
-            @showColumnHeaders={{@showColumnHeaders}}
-            @showRank={{@showRank}}
-            @avatarSize={{@avatarSize}}
-            @showFooterLink={{@showFooterLink}}
-            @footerLinkLabel={{@footerLinkLabel}}
           />
         </:content>
       </@Data>

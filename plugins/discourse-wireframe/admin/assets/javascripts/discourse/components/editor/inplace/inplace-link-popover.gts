@@ -203,9 +203,9 @@ export default class InplaceLinkPopover extends Component<InplaceLinkPopoverSign
     <div class="wf-inplace-link-popover" {{willDestroy this.onTeardown}}>
       {{#if this.editing}}
         <input
-          type="url"
           class="wf-inplace-link-popover__input"
           placeholder="https://..."
+          type="url"
           value={{this.value}}
           {{didInsert this.seedInputValue}}
           {{on "input" this.onInput}}
@@ -213,34 +213,34 @@ export default class InplaceLinkPopover extends Component<InplaceLinkPopoverSign
         />
         <DButton
           class="btn-flat wf-inplace-link-popover__btn"
-          @icon="check"
-          @title="wireframe.canvas.toolbar.link_apply"
-          @ariaLabel="wireframe.canvas.toolbar.link_apply"
           @action={{this.applyEdit}}
+          @ariaLabel="wireframe.canvas.toolbar.link_apply"
+          @icon="check"
           @preventFocus={{true}}
+          @title="wireframe.canvas.toolbar.link_apply"
         />
         {{#if this.currentValue}}
           <DButton
             class="btn-flat wf-inplace-link-popover__btn"
-            @icon="link-slash"
-            @title="wireframe.canvas.toolbar.link_remove"
-            @ariaLabel="wireframe.canvas.toolbar.link_remove"
             @action={{this.removeEdit}}
+            @ariaLabel="wireframe.canvas.toolbar.link_remove"
+            @icon="link-slash"
             @preventFocus={{true}}
+            @title="wireframe.canvas.toolbar.link_remove"
           />
         {{/if}}
         <DButton
           class="btn-flat wf-inplace-link-popover__btn"
-          @icon="xmark"
-          @title="wireframe.canvas.toolbar.link_cancel"
-          @ariaLabel="wireframe.canvas.toolbar.link_cancel"
           @action={{this.cancelEdit}}
+          @ariaLabel="wireframe.canvas.toolbar.link_cancel"
+          @icon="xmark"
           @preventFocus={{true}}
+          @title="wireframe.canvas.toolbar.link_cancel"
         />
       {{else}}
         <button
-          type="button"
           class="wf-inplace-link-popover__chip"
+          type="button"
           {{on "click" this.startEdit}}
         >
           {{dIcon "link"}}

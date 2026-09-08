@@ -69,24 +69,24 @@ export default class BlockTile extends Component<BlockTileSignature> {
 
   <template>
     <div
-      class="wireframe-block-tile"
-      role="option"
-      aria-label={{@entry.displayName}}
       aria-describedby={{this.descriptionId}}
-      data-palette-id={{@entry.id}}
+      aria-label={{@entry.displayName}}
+      class="wireframe-block-tile"
       data-block-name={{@entry.blockName}}
-      {{on this.activateOn this.activate}}
+      data-palette-id={{@entry.id}}
+      role="option"
       ...attributes
+      {{on this.activateOn this.activate}}
     >
       <BlockThumbnail
         class="wireframe-block-tile__thumbnail"
-        @thumbnail={{@entry.thumbnail}}
         @icon={{@entry.icon}}
+        @thumbnail={{@entry.thumbnail}}
       />
       <span class="wireframe-block-tile__label">{{@entry.displayName}}</span>
       <span
-        id={{this.descriptionId}}
         class="sr-only"
+        id={{this.descriptionId}}
       >{{@entry.description}}</span>
     </div>
   </template>

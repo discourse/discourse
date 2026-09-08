@@ -7,40 +7,40 @@ interface CardThumbnailSignature {
 
 /** Palette thumbnail for the `card` block: a framed card with media and text. */
 const CardThumbnail: TemplateOnlyComponent<CardThumbnailSignature> = <template>
-  <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+  <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
     <rect
-      x="22"
-      y="14"
-      width="76"
+      fill="var(--secondary)"
       height="52"
       rx="6"
-      fill="var(--secondary)"
       stroke="var(--primary-low)"
       stroke-width="2"
+      width="76"
+      x="22"
+      y="14"
     />
     <rect
-      x="30"
-      y="22"
-      width="60"
+      fill="var(--primary-low)"
       height="20"
       rx="3"
-      fill="var(--primary-low)"
+      width="60"
+      x="30"
+      y="22"
     />
     <rect
+      fill="var(--primary-low-mid)"
+      height="5"
+      rx="2"
+      width="44"
       x="30"
       y="48"
-      width="44"
-      height="5"
-      rx="2"
-      fill="var(--primary-low-mid)"
     />
     <rect
-      x="30"
-      y="57"
-      width="32"
+      fill="var(--primary-low-mid)"
       height="5"
       rx="2"
-      fill="var(--primary-low-mid)"
+      width="32"
+      x="30"
+      y="57"
     />
   </svg>
 </template>;

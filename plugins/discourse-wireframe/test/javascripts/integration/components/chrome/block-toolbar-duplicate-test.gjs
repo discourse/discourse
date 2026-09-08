@@ -53,9 +53,9 @@ module(
           <div class="wireframe-block-chrome">
             <BlockToolbar
               @blockKey={{this.blockKey}}
-              @outletName={{OUTLET}}
               @displayName="Heading"
               @isSelected={{true}}
+              @outletName={{OUTLET}}
             />
           </div>
         </template>

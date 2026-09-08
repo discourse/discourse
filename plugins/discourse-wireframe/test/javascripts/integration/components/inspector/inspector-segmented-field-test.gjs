@@ -54,8 +54,8 @@ module("Integration | Wireframe | InspectorSegmentedField", function (hooks) {
     await render(
       <template>
         <InspectorSegmentedField
-          @options={{options}}
           @optionLabels={{optionLabels}}
+          @options={{options}}
           @value="transparent"
         />
       </template>
@@ -94,8 +94,8 @@ module("Integration | Wireframe | InspectorSegmentedField", function (hooks) {
       <template>
         <InspectorSegmentedField
           @items={{items}}
-          @value="a"
           @onChange={{onChange}}
+          @value="a"
         />
       </template>
     );

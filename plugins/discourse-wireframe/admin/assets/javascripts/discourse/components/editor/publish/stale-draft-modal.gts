@@ -56,9 +56,9 @@ interface StaleDraftModalSignature {
 const StaleDraftModal: TemplateOnlyComponent<StaleDraftModalSignature> =
   <template>
     <DModal
-      @title={{i18n "wireframe.stale_draft.title"}}
-      @closeModal={{@closeModal}}
       class="wireframe-stale-draft"
+      @closeModal={{@closeModal}}
+      @title={{i18n "wireframe.stale_draft.title"}}
     >
       <:body>
         <p>{{i18n "wireframe.stale_draft.description"}}</p>
@@ -66,13 +66,13 @@ const StaleDraftModal: TemplateOnlyComponent<StaleDraftModalSignature> =
       <:footer>
         <DButton
           class="btn-primary"
-          @label="wireframe.stale_draft.keep"
           @action={{fn @closeModal (hash choice="keep")}}
+          @label="wireframe.stale_draft.keep"
         />
         <DButton
           class="btn-default"
-          @label="wireframe.stale_draft.start_fresh"
           @action={{fn @closeModal (hash choice="fresh")}}
+          @label="wireframe.stale_draft.start_fresh"
         />
       </:footer>
     </DModal>

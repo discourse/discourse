@@ -169,7 +169,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @data={{hash foo=1}} @validate={{validate}} as |form|>
-          <form.Field @type="input" @name="foo" @title="Foo" />
+          <form.Field @name="foo" @title="Foo" @type="input" />
         </Form>
       </template>
     );

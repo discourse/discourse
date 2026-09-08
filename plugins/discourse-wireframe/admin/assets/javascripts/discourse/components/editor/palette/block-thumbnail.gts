@@ -26,10 +26,10 @@ interface PaletteBlockThumbnailSignature {
 const PaletteBlockThumbnail: TemplateOnlyComponent<PaletteBlockThumbnailSignature> =
   <template>
     <BlockThumbnail
-      @thumbnail={{@thumbnail}}
-      @icon={{@icon}}
-      @fallback={{DefaultBlockThumbnail}}
       ...attributes
+      @fallback={{DefaultBlockThumbnail}}
+      @icon={{@icon}}
+      @thumbnail={{@thumbnail}}
     />
   </template>;
 

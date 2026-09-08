@@ -249,7 +249,7 @@ export default class InspectorRichTextField extends Component<InspectorRichTextF
   async mountEditor(container: HTMLElement): Promise<void> {
     const pm = await loadInlineRichEditor();
     // The field may have torn down while the PM chunk loaded.
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
     this.#pm = pm;
@@ -515,30 +515,30 @@ export default class InspectorRichTextField extends Component<InspectorRichTextF
               "wireframe-inspector-rich-text__btn"
               (if this.markState.strong "--active")
             }}
-            @icon="bold"
-            @disabled={{this.readOnly}}
             @action={{fn this.toggleMark "strong"}}
             @ariaLabel="wireframe.inspector.controls.bold"
+            @disabled={{this.readOnly}}
+            @icon="bold"
           />
           <DButton
             class={{dConcatClass
               "wireframe-inspector-rich-text__btn"
               (if this.markState.em "--active")
             }}
-            @icon="italic"
-            @disabled={{this.readOnly}}
             @action={{fn this.toggleMark "em"}}
             @ariaLabel="wireframe.inspector.controls.italic"
+            @disabled={{this.readOnly}}
+            @icon="italic"
           />
           <DButton
             class={{dConcatClass
               "wireframe-inspector-rich-text__btn"
               (if this.markState.link "--active")
             }}
-            @icon="link"
-            @disabled={{this.readOnly}}
             @action={{this.enterLinkMode}}
             @ariaLabel="wireframe.inspector.controls.link"
+            @disabled={{this.readOnly}}
+            @icon="link"
           />
         </div>
       {{/if}}
@@ -546,28 +546,28 @@ export default class InspectorRichTextField extends Component<InspectorRichTextF
       {{#if this.linkMode}}
         <div class="wireframe-inspector-rich-text__link-input">
           <input
+            placeholder="https://"
             type="url"
             value={{this.linkValue}}
-            placeholder="https://"
             {{on "input" this.setLinkValue}}
           />
           <DButton
             class="btn-small"
-            @icon="check"
             @action={{this.applyLink}}
             @ariaLabel="wireframe.inspector.controls.link_apply"
+            @icon="check"
           />
           <DButton
             class="btn-small btn-flat"
-            @icon="trash-can"
             @action={{this.removeLink}}
             @ariaLabel="wireframe.inspector.controls.link_remove"
+            @icon="trash-can"
           />
           <DButton
             class="btn-small btn-flat"
-            @icon="xmark"
             @action={{this.cancelLink}}
             @ariaLabel="wireframe.inspector.controls.link_cancel"
+            @icon="xmark"
           />
         </div>
       {{/if}}

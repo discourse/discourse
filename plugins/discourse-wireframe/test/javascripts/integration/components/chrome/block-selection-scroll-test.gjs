@@ -64,8 +64,8 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="button-link"
             @blockKey={{blockKey}}
+            @blockName="button-link"
             @outletName="test-outlet"
             @WrappedComponent={{WrappedBlock}}
           />

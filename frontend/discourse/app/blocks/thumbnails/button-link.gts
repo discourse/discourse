@@ -8,22 +8,22 @@ interface ButtonLinkThumbnailSignature {
 /** Palette thumbnail for the `button-link` block: a single pill button. */
 const ButtonLinkThumbnail: TemplateOnlyComponent<ButtonLinkThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="34"
-        y="30"
-        width="52"
+        fill="var(--tertiary)"
         height="20"
         rx="10"
-        fill="var(--tertiary)"
+        width="52"
+        x="34"
+        y="30"
       />
       <rect
-        x="46"
-        y="38"
-        width="28"
+        fill="var(--secondary)"
         height="4"
         rx="2"
-        fill="var(--secondary)"
+        width="28"
+        x="46"
+        y="38"
       />
     </svg>
   </template>;

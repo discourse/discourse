@@ -200,7 +200,7 @@ export default class WireframeImageUploadService extends Service {
         uploadDone: (result: ImageUploadPayload) => {
           // The upload can resolve after the editor session is torn down; bail
           // before writing so we don't resolve a dependency on a dead owner.
-          if (this.isDestroyed || this.isDestroying) {
+          if (this.isDestroying) {
             finish(null);
             return;
           }
@@ -430,7 +430,7 @@ export default class WireframeImageUploadService extends Service {
       return;
     }
     this.#handleFileDragOver = (event: DragEvent) => {
-      if (this.isDestroyed || this.isDestroying) {
+      if (this.isDestroying) {
         return;
       }
       if (!this.wireframeEditMode.active) {
@@ -442,7 +442,7 @@ export default class WireframeImageUploadService extends Service {
       event.preventDefault();
     };
     this.#handleFileDrop = (event: DragEvent) => {
-      if (this.isDestroyed || this.isDestroying) {
+      if (this.isDestroying) {
         return;
       }
       if (!this.wireframeEditMode.active) {
@@ -490,7 +490,7 @@ export default class WireframeImageUploadService extends Service {
       return;
     }
     this.#handleImagePaste = (event: ClipboardEvent) => {
-      if (this.isDestroyed || this.isDestroying) {
+      if (this.isDestroying) {
         return;
       }
       this.#onImagePaste(event);

@@ -499,9 +499,9 @@ module(
      */
     const Slides = <template>
       <div
-        id="container"
         data-wf-child-noun="slide"
         data-wf-child-noun-plural="slides"
+        id="container"
         style="position: fixed; top: 0; left: 0; display: flex; height: 60px;"
       >
         <div class="wireframe-block-chrome-wrapper" style="width: 100px;">
@@ -593,16 +593,16 @@ module(
       await render(
         <template>
           <div
-            id="chrome"
             class="wireframe-block-chrome"
+            id="chrome"
             style="position: fixed; top: 0; left: 0; width: 200px;"
           >
             <div data-wf-drop-container="true" style="height: 80px;">
               <div id="viewport"></div>
             </div>
             <div
-              id="controls"
               data-wf-drop-exclude="true"
+              id="controls"
               style="height: 40px;"
             ></div>
           </div>
@@ -632,14 +632,14 @@ module(
       await render(
         <template>
           <div
-            id="outer"
             class="wireframe-block-chrome"
+            id="outer"
             style="position: fixed; top: 0; left: 0; width: 200px;"
           >
             <div class="wireframe-block-chrome" style="height: 60px;">
               <div
-                id="inner-controls"
                 data-wf-drop-exclude="true"
+                id="inner-controls"
                 style="height: 60px;"
               ></div>
             </div>
@@ -664,9 +664,9 @@ module(
       await render(
         <template>
           <div
-            id="container"
             data-wf-child-noun="slide"
             data-wf-child-noun-plural="slides"
+            id="container"
             style="position: fixed; top: 0; left: 0; display: flex; height: 60px;"
           >
             <div class="wireframe-block-chrome-wrapper" style="width: 100px;">
@@ -709,9 +709,9 @@ module(
      */
     const TabStrip = <template>
       <div
-        id="strip"
         data-wf-child-noun="tab"
         data-wf-child-noun-plural="tabs"
+        id="strip"
         style="position: fixed; top: 0; left: 0; display: flex; height: 40px;"
       >
         <button data-wf-drop-child-key="P1" style="width: 100px;">Tab 1</button>
@@ -791,9 +791,9 @@ module(
       await render(
         <template>
           <div
-            id="empty-strip"
             data-wf-child-noun="tab"
             data-wf-child-noun-plural="tabs"
+            id="empty-strip"
             style="position: fixed; top: 0; left: 0; display: flex; height: 40px; width: 200px;"
           ></div>
         </template>

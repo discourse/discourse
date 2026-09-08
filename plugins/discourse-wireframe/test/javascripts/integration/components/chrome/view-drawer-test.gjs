@@ -27,10 +27,10 @@ module(
       await render(
         <template>
           <ViewDrawer
-            @isOpen={{true}}
             @dimNonEditable={{true}}
-            @onToggleDim={{noop}}
+            @isOpen={{true}}
             @onClose={{noop}}
+            @onToggleDim={{noop}}
           />
         </template>
       );
@@ -54,10 +54,10 @@ module(
       await render(
         <template>
           <ViewDrawer
-            @isOpen={{true}}
             @dimNonEditable={{true}}
-            @onToggleDim={{noop}}
+            @isOpen={{true}}
             @onClose={{noop}}
+            @onToggleDim={{noop}}
           />
         </template>
       );
@@ -80,10 +80,10 @@ module(
       await render(
         <template>
           <ViewDrawer
-            @isOpen={{true}}
             @dimNonEditable={{true}}
-            @onToggleDim={{noop}}
+            @isOpen={{true}}
             @onClose={{noop}}
+            @onToggleDim={{noop}}
           />
         </template>
       );
@@ -97,10 +97,10 @@ module(
       await render(
         <template>
           <ViewDrawer
-            @isOpen={{true}}
             @dimNonEditable={{true}}
-            @onToggleDim={{noop}}
+            @isOpen={{true}}
             @onClose={{noop}}
+            @onToggleDim={{noop}}
           />
         </template>
       );
@@ -139,10 +139,10 @@ module(
       await render(
         <template>
           <ViewDrawer
-            @isOpen={{true}}
             @dimNonEditable={{true}}
-            @onToggleDim={{noop}}
+            @isOpen={{true}}
             @onClose={{noop}}
+            @onToggleDim={{noop}}
           />
         </template>
       );
@@ -175,10 +175,10 @@ module(
       await render(
         <template>
           <ViewDrawer
-            @isOpen={{false}}
             @dimNonEditable={{true}}
-            @onToggleDim={{noop}}
+            @isOpen={{false}}
             @onClose={{noop}}
+            @onToggleDim={{noop}}
           />
         </template>
       );
@@ -196,10 +196,10 @@ module(
       await render(
         <template>
           <ViewDrawer
-            @isOpen={{true}}
             @dimNonEditable={{false}}
-            @onToggleDim={{onToggle}}
+            @isOpen={{true}}
             @onClose={{onClose}}
+            @onToggleDim={{onToggle}}
           />
         </template>
       );

@@ -38,8 +38,10 @@ export interface InplaceArgEditTarget {
 export default class InplaceArgEditSession extends Service {
   /** Records the final argument change and its undo entry. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
   /** Commits any active text edit before another inline editor opens. */
   @service declare wireframeInplaceText: WireframeInplaceTextService;
+
   /** Resolves the entry and outlet that own the edited argument. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
 

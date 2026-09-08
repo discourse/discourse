@@ -187,36 +187,36 @@ export default class ConditionLeafArgs extends Component<ConditionLeafArgsSignat
 
           {{#if row.hasEnum}}
             <select {{on "change" (fn this.handleEnumInput row.name)}}>
-              <option value="" selected={{eq row.value undefined}}>—</option>
+              <option selected={{eq row.value undefined}} value="">—</option>
               {{#each row.enumValues as |enumValue|}}
-                <option value={{enumValue}} selected={{eq row.value enumValue}}>
+                <option selected={{eq row.value enumValue}} value={{enumValue}}>
                   {{enumValue}}
                 </option>
               {{/each}}
             </select>
           {{else if (eq row.schema.type "boolean")}}
             <select {{on "change" (fn this.handleBooleanInput row.name)}}>
-              <option value="" selected={{eq row.value undefined}}>—</option>
-              <option value="true" selected={{eq row.value true}}>
+              <option selected={{eq row.value undefined}} value="">—</option>
+              <option selected={{eq row.value true}} value="true">
                 true
               </option>
-              <option value="false" selected={{eq row.value false}}>
+              <option selected={{eq row.value false}} value="false">
                 false
               </option>
             </select>
           {{else if (eq row.schema.type "number")}}
             <input
+              max={{row.schema.max}}
+              min={{row.schema.min}}
               type="number"
               value={{row.value}}
-              min={{row.schema.min}}
-              max={{row.schema.max}}
               {{on "input" (fn this.handleNumberInput row.name)}}
             />
           {{else if (eq row.schema.type "array")}}
             <input
+              placeholder="comma, separated, values"
               type="text"
               value={{row.displayValue}}
-              placeholder="comma, separated, values"
               {{on "input" (fn this.handleArrayInput row.name)}}
             />
           {{else}}

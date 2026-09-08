@@ -7,25 +7,25 @@ interface TagBannerThumbnailSignature {
 /** Palette thumbnail for the `tag-banner` block: a banner with a tag pill and title. */
 const TagBannerThumbnail: TemplateOnlyComponent<TagBannerThumbnailSignature> =
   <template>
-    <svg viewBox="0 0 120 80" fill="none" aria-hidden="true" ...attributes>
+    <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
       <rect
-        x="12"
-        y="18"
-        width="96"
+        fill="var(--primary-low)"
         height="44"
         rx="6"
-        fill="var(--primary-low)"
+        width="96"
+        x="12"
+        y="18"
       />
       <rect
-        x="24"
-        y="26"
-        width="26"
+        fill="var(--tertiary-low)"
         height="12"
         rx="6"
-        fill="var(--tertiary-low)"
+        width="26"
+        x="24"
+        y="26"
       />
-      <rect x="29" y="30" width="16" height="4" rx="2" fill="var(--tertiary)" />
-      <rect x="24" y="44" width="52" height="7" rx="3" fill="var(--primary)" />
+      <rect fill="var(--tertiary)" height="4" rx="2" width="16" x="29" y="30" />
+      <rect fill="var(--primary)" height="7" rx="3" width="52" x="24" y="44" />
     </svg>
   </template>;
 

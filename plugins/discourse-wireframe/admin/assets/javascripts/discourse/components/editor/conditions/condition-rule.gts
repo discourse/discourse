@@ -214,19 +214,19 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
     >
       <DButton
         class="wireframe-condition-rule__header"
-        @ariaExpanded={{this.expanded}}
         @action={{this.toggleExpanded}}
+        @ariaExpanded={{this.expanded}}
       >
         <span class="wireframe-condition-rule__chevron">
           {{dIcon "chevron-right"}}
         </span>
-        <span class="wireframe-condition-rule__icon" aria-hidden="true">{{dIcon
+        <span aria-hidden="true" class="wireframe-condition-rule__icon">{{dIcon
             this.icon
           }}</span>
         <span class="wireframe-condition-rule__label">
           {{@typeMeta.displayName}}
         </span>
-        <span class="wireframe-condition-rule__sep" aria-hidden="true">
+        <span aria-hidden="true" class="wireframe-condition-rule__sep">
           —
         </span>
         <span class="wireframe-condition-rule__summary">
@@ -240,9 +240,9 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
         though the linter can't tell with this layout. }}
       <DButton
         class="wireframe-condition-rule__remove"
+        @action={{this.remove}}
         @icon="xmark"
         @title="wireframe.inspector.conditions.remove_condition"
-        @action={{this.remove}}
       />
 
       {{#if this.expanded}}
@@ -252,8 +252,8 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
             <select {{on "change" this.changeType}}>
               {{#each @conditionTypes as |typeMeta|}}
                 <option
-                  value={{typeMeta.type}}
                   selected={{this.isTypeSelected typeMeta.type}}
+                  value={{typeMeta.type}}
                 >{{typeMeta.displayName}}</option>
               {{/each}}
             </select>
@@ -267,8 +267,8 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
           {{else}}
             <ConditionLeafArgs
               @node={{@node}}
-              @typeMeta={{@typeMeta}}
               @onChange={{this.onArgChange}}
+              @typeMeta={{@typeMeta}}
             />
           {{/if}}
         </div>

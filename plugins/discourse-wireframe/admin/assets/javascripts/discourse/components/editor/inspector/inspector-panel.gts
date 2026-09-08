@@ -329,9 +329,9 @@ export default class InspectorPanel extends Component {
         </span>
         <DButton
           class="btn-danger wireframe-inspector__multi-delete"
+          @action={{this.removeSelectedBlocks}}
           @icon="trash-can"
           @label="wireframe.inspector.multi.delete"
-          @action={{this.removeSelectedBlocks}}
         />
       </div>
     {{else if this.hasSelection}}
@@ -346,8 +346,8 @@ export default class InspectorPanel extends Component {
             {{else}}
               <BlockThumbnail
                 class="wireframe-inspector__thumbnail"
-                @thumbnail={{this.metadata.thumbnail}}
                 @icon={{or this.metadata.icon "cube"}}
+                @thumbnail={{this.metadata.thumbnail}}
               />
             {{/if}}
           </div>
@@ -357,9 +357,9 @@ export default class InspectorPanel extends Component {
         </span>
         {{#if this.metadataTooltip}}
           <span
+            aria-label={{this.metadataTooltip}}
             class="wireframe-inspector__metadata-info"
             title={{this.metadataTooltip}}
-            aria-label={{this.metadataTooltip}}
           >
             {{dIcon "circle-info"}}
           </span>
@@ -368,10 +368,10 @@ export default class InspectorPanel extends Component {
 
       {{#if this.isUnregistered}}
         <FKAlert
-          @type="error"
-          @icon="triangle-exclamation"
           class="wireframe-inspector__unregistered-notice"
           role="note"
+          @icon="triangle-exclamation"
+          @type="error"
         >
           <strong>{{i18n
               "wireframe.inspector.unregistered_notice_title"
@@ -379,9 +379,9 @@ export default class InspectorPanel extends Component {
           <span>{{i18n "wireframe.inspector.unregistered_notice"}}</span>
           <DButton
             class="btn-danger btn-small wireframe-inspector__unregistered-notice-action"
+            @action={{this.removeSelectedBlock}}
             @icon="trash-can"
             @label="wireframe.inspector.unregistered_notice_remove"
-            @action={{this.removeSelectedBlock}}
           />
         </FKAlert>
       {{/if}}
@@ -399,9 +399,9 @@ export default class InspectorPanel extends Component {
             (if (this.isTabActive "args") "--active")
             (if this.argsTabHasErrors "--has-errors")
           }}
-          @label="wireframe.inspector.tab_args"
-          @icon={{if this.argsTabHasErrors "triangle-exclamation"}}
           @action={{fn this.setTab "args"}}
+          @icon={{if this.argsTabHasErrors "triangle-exclamation"}}
+          @label="wireframe.inspector.tab_args"
         />
         {{#unless (or this.isOutletRoot this.isPart)}}
           <DButton
@@ -409,8 +409,8 @@ export default class InspectorPanel extends Component {
               "btn-flat wireframe-inspector__tab"
               (if (this.isTabActive "conditions") "--active")
             }}
-            @label="wireframe.inspector.tab_conditions"
             @action={{fn this.setTab "conditions"}}
+            @label="wireframe.inspector.tab_conditions"
           />
         {{/unless}}
         {{#unless this.isPart}}
@@ -419,8 +419,8 @@ export default class InspectorPanel extends Component {
               "btn-flat wireframe-inspector__tab"
               (if (this.isTabActive "raw") "--active")
             }}
-            @label="wireframe.inspector.tab_raw"
             @action={{fn this.setTab "raw"}}
+            @label="wireframe.inspector.tab_raw"
           />
         {{/unless}}
       </div>
@@ -443,6 +443,7 @@ export default class InspectorPanel extends Component {
           <div class="wireframe-inspector__conditions-header">
             <DButton
               class="btn-flat wireframe-inspector__detach-btn"
+              @action={{this.toggleDetachConditions}}
               @icon={{if
                 this.wireframeConditionsPanel.detached
                 "down-left-and-up-right-to-center"
@@ -454,7 +455,6 @@ export default class InspectorPanel extends Component {
                 "wireframe.inspector.conditions.detach_panel"
               }}
               @title="wireframe.inspector.conditions.detach_panel"
-              @action={{this.toggleDetachConditions}}
             />
           </div>
           {{#if this.wireframeConditionsPanel.detached}}

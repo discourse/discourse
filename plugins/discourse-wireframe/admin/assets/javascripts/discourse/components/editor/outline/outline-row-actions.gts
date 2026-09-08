@@ -52,17 +52,17 @@ export default class OutlineRowActions extends Component<OutlineRowActionsSignat
         <dropdown.item>
           <DButton
             class="btn-flat"
+            @action={{this.duplicate}}
             @icon="copy"
             @label="wireframe.outline.action.duplicate"
-            @action={{this.duplicate}}
           />
         </dropdown.item>
         <dropdown.item>
           <DButton
             class="btn-flat wireframe-outline__row-action--danger"
+            @action={{this.remove}}
             @icon="trash-can"
             @label="wireframe.outline.action.delete"
-            @action={{this.remove}}
           />
         </dropdown.item>
       </DDropdownMenu>

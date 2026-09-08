@@ -183,9 +183,9 @@ export default class CtaBanner extends Component<CtaBannerSignature> {
           {{/if}}
           <RichTextRenderer
             @arg="title"
+            @placeholder={{i18n "blocks.builtin.placeholders.cta_banner_title"}}
             @schema="heading"
             @value={{@title}}
-            @placeholder={{i18n "blocks.builtin.placeholders.cta_banner_title"}}
             as |R|
           >
             <h3
@@ -197,11 +197,11 @@ export default class CtaBanner extends Component<CtaBannerSignature> {
           </RichTextRenderer>
           <RichTextRenderer
             @arg="content"
-            @schema="paragraph"
-            @value={{@content}}
             @placeholder={{i18n
               "blocks.builtin.placeholders.cta_banner_content"
             }}
+            @schema="paragraph"
+            @value={{@content}}
             as |R|
           >
             <p
@@ -218,19 +218,19 @@ export default class CtaBanner extends Component<CtaBannerSignature> {
             {{#if @linkHref}}
               <DButton
                 class="btn btn-primary"
-                @href={{@linkHref}}
-                @translatedLabel={{@linkLabel}}
+                data-block-arg="linkHref"
+                rel={{if @external "noopener"}}
                 {{! @glint-expect-error: DButton renders an anchor when a link href is set, so the anchor-only target attribute is valid at runtime }}
                 target={{if @external "_blank"}}
-                rel={{if @external "noopener"}}
-                data-block-arg="linkHref"
+                @href={{@linkHref}}
+                @translatedLabel={{@linkLabel}}
               />
             {{/if}}
             {{#if @dismissable}}
               <DButton
                 class="d-block-cta-banner__close"
-                @icon="xmark"
                 @action={{this.dismissBanner}}
+                @icon="xmark"
               />
             {{/if}}
           </div>

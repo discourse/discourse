@@ -112,6 +112,7 @@ export default class WireframeRail extends Service {
    */
   isLeftPanelTabActive = (tab: WireframeRailPanel): boolean =>
     this.leftPanelTab === tab;
+
   /**
    * Whether `tab`'s panel is currently OPEN — active and not collapsed. Drives
    * the activity bar's pressed/selected state: a collapsed rail has no open
@@ -121,8 +122,10 @@ export default class WireframeRail extends Service {
    */
   isPanelOpen = (tab: WireframeRailPanel): boolean =>
     this.leftPanelTab === tab && !this.leftCollapsed;
+
   /** Internal left panel width in pixels, exposed through `leftPanelWidth`. */
   @tracked declare _leftPanelWidth: number;
+
   /** Internal right rail width in pixels, exposed through `rightRailWidth`. */
   @tracked declare _rightRailWidth: number;
 

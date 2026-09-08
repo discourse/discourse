@@ -138,14 +138,14 @@ export default class RailResizeHandle extends Component<RailResizeHandleSignatur
         (if this._resizing "--resizing")
       }}
       @axis="horizontal"
-      @side={{this.side}}
       @label={{this.label}}
-      @value={{this.width}}
-      @min={{this.min}}
       @max={{this.max}}
-      @onResizeStart={{this.onResizeStart}}
+      @min={{this.min}}
       @onResize={{this.onResize}}
       @onResizeEnd={{this.onResizeEnd}}
+      @onResizeStart={{this.onResizeStart}}
+      @side={{this.side}}
+      @value={{this.width}}
     />
   </template>
 }

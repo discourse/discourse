@@ -184,8 +184,8 @@ export default class ImagePositionPicker extends Component<ImagePositionPickerSi
             }}</span>
           <FKControlInput
             aria-label={{i18n "wireframe.position_picker.horizontal"}}
-            min="0"
             max="100"
+            min="0"
             step="1"
             @after="%"
             @field={{hash
@@ -205,8 +205,8 @@ export default class ImagePositionPicker extends Component<ImagePositionPickerSi
             }}</span>
           <FKControlInput
             aria-label={{i18n "wireframe.position_picker.vertical"}}
-            min="0"
             max="100"
+            min="0"
             step="1"
             @after="%"
             @field={{hash
@@ -222,10 +222,10 @@ export default class ImagePositionPicker extends Component<ImagePositionPickerSi
         </label>
       </div>
       <div
-        class="wireframe-image-position-picker__pad"
-        tabindex="-1"
-        role="group"
         aria-label={{i18n "wireframe.position_picker.label"}}
+        class="wireframe-image-position-picker__pad"
+        role="group"
+        tabindex="-1"
         {{dPointerDrag
           onDragStart=this.dragStart
           onDrag=this.drag
@@ -235,12 +235,12 @@ export default class ImagePositionPicker extends Component<ImagePositionPickerSi
       >
         {{#each this.presets as |preset|}}
           <button
-            type="button"
+            aria-label={{preset.label}}
+            aria-pressed={{preset.selected}}
             class="wireframe-image-position-picker__preset"
             data-x={{preset.x}}
             data-y={{preset.y}}
-            aria-label={{preset.label}}
-            aria-pressed={{preset.selected}}
+            type="button"
             {{on "click" (fn this.select preset)}}
           ></button>
         {{/each}}

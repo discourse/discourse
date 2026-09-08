@@ -108,9 +108,9 @@ export default class WireframeButton extends Component<WireframeButtonSignature>
   <template>
     <DButton
       class="btn-default wireframe-open-button"
-      @icon="wand-magic-sparkles"
       @action={{this.openPagePicker}}
       @disabled={{this.isOpening}}
+      @icon="wand-magic-sparkles"
       @label="wireframe.theme_admin.open_button"
       @title="wireframe.theme_admin.open_button_title"
     />

@@ -68,19 +68,19 @@ export default class BlockBreadcrumb extends Component {
   <template>
     {{#if this.hasSelection}}
       <nav
-        class="wireframe-breadcrumb"
         aria-label={{i18n "wireframe.canvas.breadcrumb_label"}}
+        class="wireframe-breadcrumb"
       >
         {{#each this.segments as |segment index|}}
           {{#if index}}
-            <span class="wireframe-breadcrumb__separator" aria-hidden="true">
+            <span aria-hidden="true" class="wireframe-breadcrumb__separator">
               {{dIcon "chevron-right"}}
             </span>
           {{/if}}
           <DButton
             class="wireframe-breadcrumb__segment"
-            @translatedLabel={{segment.displayName}}
             @action={{fn this.pickSegment segment}}
+            @translatedLabel={{segment.displayName}}
           />
         {{/each}}
       </nav>

@@ -55,9 +55,9 @@ interface ConflictModalSignature {
  */
 const ConflictModal: TemplateOnlyComponent<ConflictModalSignature> = <template>
   <DModal
-    @title={{i18n "wireframe.conflict.title"}}
-    @closeModal={{@closeModal}}
     class="wireframe-conflict"
+    @closeModal={{@closeModal}}
+    @title={{i18n "wireframe.conflict.title"}}
   >
     <:body>
       <p>{{i18n "wireframe.conflict.description"}}</p>
@@ -65,13 +65,13 @@ const ConflictModal: TemplateOnlyComponent<ConflictModalSignature> = <template>
     <:footer>
       <DButton
         class="btn-danger"
-        @label="wireframe.conflict.overwrite"
         @action={{fn @closeModal (hash choice="overwrite")}}
+        @label="wireframe.conflict.overwrite"
       />
       <DButton
         class="btn-default"
-        @label="wireframe.conflict.cancel"
         @action={{@closeModal}}
+        @label="wireframe.conflict.cancel"
       />
     </:footer>
   </DModal>

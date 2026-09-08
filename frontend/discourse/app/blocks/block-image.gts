@@ -60,10 +60,10 @@ export default class BlockImage extends Component<BlockImageSignature> {
       ...attributes
     >
       <DLightDarkImg
-        class="d-block-image-frame__image"
         alt={{this.alt}}
-        @lightImg={{@image}}
+        class="d-block-image-frame__image"
         @darkImg={{this.darkSource}}
+        @lightImg={{@image}}
       />
     </div>
   </template>

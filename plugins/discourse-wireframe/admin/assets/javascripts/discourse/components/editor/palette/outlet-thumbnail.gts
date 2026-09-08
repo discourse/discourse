@@ -21,36 +21,36 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 const OutletThumbnail: TemplateOnlyComponent<OutletThumbnailSignature> =
   <template>
     <svg
-      class="wireframe-outlet-thumbnail"
-      viewBox="0 0 120 80"
-      fill="none"
       aria-hidden="true"
+      class="wireframe-outlet-thumbnail"
+      fill="none"
+      viewBox="0 0 120 80"
       ...attributes
     >
       {{! Two base squares side by side, with the accent square centered above them }}
       <rect
+        fill="var(--primary-low)"
+        height="28"
+        rx="4"
+        width="30"
         x="25"
         y="44"
-        width="30"
-        height="28"
-        rx="4"
-        fill="var(--primary-low)"
       />
       <rect
+        fill="var(--primary-low)"
+        height="28"
+        rx="4"
+        width="30"
         x="65"
         y="44"
-        width="30"
-        height="28"
-        rx="4"
-        fill="var(--primary-low)"
       />
       <rect
-        x="45"
-        y="12"
-        width="30"
+        fill="var(--tertiary)"
         height="28"
         rx="4"
-        fill="var(--tertiary)"
+        width="30"
+        x="45"
+        y="12"
       />
     </svg>
   </template>;

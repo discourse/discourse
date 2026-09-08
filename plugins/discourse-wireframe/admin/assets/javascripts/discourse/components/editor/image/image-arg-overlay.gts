@@ -144,6 +144,7 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
    * unprefixed. Set during `measure`.
    */
   @tracked markerPassive = false;
+
   /**
    * `true` when the resolved marker carries `data-drop-fills-block` —
    * the image owns the whole block, so the overlay spans the chrome.
@@ -151,6 +152,7 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
    * so it stays unprefixed. Set during `measure`.
    */
   @tracked markerFillsBlock = false;
+
   /**
    * `true` after an upload through this overlay's pipeline failed, until the
    * next upload starts or succeeds. Drives the in-place "Upload failed" retry
@@ -597,17 +599,6 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
     this.#closeVariantPopover();
   }
 
-  /** Claims this image argument as the active drop target. */
-  #claimImageArg(
-    /** Image variant targeted by the drop. */
-    variant: "light" | "dark"
-  ): void {
-    this.#releaseDrop = this.wireframeDragOverlay.claimImageArg({
-      ...this.#imageArgIdentity,
-      variant,
-    });
-  }
-
   /**
    * Opens / closes the dark-variant popover to follow the active overlay.
    * Opens when this image arg becomes the active overlay (foreground drag OR
@@ -642,6 +633,17 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
       return;
     }
     this.#bootUppy().addFiles(this.args.pendingFile);
+  }
+
+  /** Claims this image argument as the active drop target. */
+  #claimImageArg(
+    /** Image variant targeted by the drop. */
+    variant: "light" | "dark"
+  ): void {
+    this.#releaseDrop = this.wireframeDragOverlay.claimImageArg({
+      ...this.#imageArgIdentity,
+      variant,
+    });
   }
 
   /** Lazily creates this overlay's upload pipeline. */
@@ -875,8 +877,8 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
       }}
       data-block-arg={{@argName}}
       role={{if this.isInteractiveEmpty "button"}}
-      tabindex={{if this.isInteractiveEmpty "0"}}
       style={{this.overlayStyle}}
+      tabindex={{if this.isInteractiveEmpty "0"}}
       {{didInsert this.registerOverlay}}
       {{didInsert this.setupPositioning}}
       {{didUpdate this.measure this.remeasureSignal}}
@@ -934,10 +936,10 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
     </div>
     {{#if this.isInteractiveEmpty}}
       <input
-        type="file"
         accept="image/*"
         class="wireframe-image-arg-overlay__file-input"
         hidden
+        type="file"
         {{didInsert this.registerFileInput}}
       />
     {{/if}}
