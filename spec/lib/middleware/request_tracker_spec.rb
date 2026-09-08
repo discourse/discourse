@@ -1385,6 +1385,42 @@ RSpec.describe Middleware::RequestTracker do
       expect(status).to eq(429)
     end
 
+    it "counts a blocked request as a 4xx" do
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, "block"
+
+      env1 = env("REMOTE_ADDR" => "1.1.1.1")
+      middleware.call(env1)
+
+      CachedCounting.flush
+      previous_4xx = ApplicationRequest.http_4xx.sum(:count)
+      previous_total = ApplicationRequest.http_total.sum(:count)
+
+      status, _ = middleware.call(env1)
+      expect(status).to eq(429)
+
+      CachedCounting.flush
+
+      expect(ApplicationRequest.http_4xx.sum(:count) - previous_4xx).to eq(1)
+      expect(ApplicationRequest.http_total.sum(:count) - previous_total).to eq(1)
+    end
+
+    it "counts a blocked crawler request as a 4xx" do
+      SiteSetting.slow_down_crawler_user_agents = "badcrawler"
+
+      middleware.call(env("HTTP_USER_AGENT" => "badcrawler"))
+
+      CachedCounting.flush
+      previous_4xx = ApplicationRequest.http_4xx.sum(:count)
+
+      status, _ = middleware.call(env("HTTP_USER_AGENT" => "badcrawler"))
+      expect(status).to eq(429)
+
+      CachedCounting.flush
+
+      expect(ApplicationRequest.http_4xx.sum(:count) - previous_4xx).to eq(1)
+    end
+
     it "doesn't block if rate limiter is enabled but IP is on the static exception list" do
       stub_const(
         Middleware::RequestTracker,
