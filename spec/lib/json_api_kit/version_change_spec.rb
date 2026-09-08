@@ -22,6 +22,18 @@ module JsonApiKitSpec
     end
   end
 
+  class MergeThingsDateAndTimeIntoPostedAt < JsonApiKit::VersionChange
+    version "2026-09-20"
+    description "The `posted_date` and `posted_time` attributes of the things resource become `posted_at`."
+
+    resource :things do
+      merged_attributes from: %i[posted_date posted_time],
+                        to: :posted_at,
+                        up: ->(date, time) { "#{date} #{time}" },
+                        down: ->(posted_at) { posted_at.to_s.split(" ") }
+    end
+  end
+
   class RenameThingsAndPeople < JsonApiKit::VersionChange
     version "2026-10-01"
     description "Two resources change their names."
@@ -105,13 +117,13 @@ RSpec.describe JsonApiKit::VersionChange do
     context "when a change renames one name twice" do
       let(:directory) { "api_changes_with_two_renames_from_one_name" }
 
-      it { expect { changes }.to raise_error(ArgumentError, /renames label twice/) }
+      it { expect { changes }.to raise_error(ArgumentError, /changes label twice/) }
     end
 
     context "when a change renames two names to one name" do
       let(:directory) { "api_changes_with_two_renames_to_one_name" }
 
-      it { expect { changes }.to raise_error(ArgumentError, /renames two names to title/) }
+      it { expect { changes }.to raise_error(ArgumentError, /changes two names into title/) }
     end
   end
 
@@ -137,28 +149,18 @@ RSpec.describe JsonApiKit::VersionChange do
   end
 
   describe ".resource" do
-    context "when a rename declares one converter only" do
-      subject(:declaration) do
-        Class.new(described_class) do
-          version "2026-09-15"
-          description "Half a shape change."
-          resource(:things) { renamed_attribute from: :a, to: :b, down: ->(value) { value } }
-        end
-      end
+    subject(:transformations) { change_class.transformations }
 
-      it { expect { declaration }.to raise_error(ArgumentError, /both up: and down:/) }
+    it "collects a rename for each name the attribute derives" do
+      expect(transformations).to all(be_a(JsonApiKit::VersionChange::Rename))
     end
 
-    context "when a converter is not callable" do
-      subject(:declaration) do
-        Class.new(described_class) do
-          version "2026-09-15"
-          description "A converter that is not one."
-          resource(:things) { renamed_attribute from: :a, to: :b, up: nil, down: nil }
-        end
-      end
+    context "when the resource merges attributes" do
+      let(:change_class) { JsonApiKitSpec::MergeThingsDateAndTimeIntoPostedAt }
 
-      it { expect { declaration }.to raise_error(ArgumentError, /must respond to call/) }
+      it "collects a merge for each name the attribute derives" do
+        expect(transformations).to all(be_a(JsonApiKit::VersionChange::Merge))
+      end
     end
   end
 
@@ -207,9 +209,17 @@ RSpec.describe JsonApiKit::VersionChange do
       end
     end
 
-    context "with several resources" do
-      subject(:change) { JsonApiKitSpec::RenameThingsAndPeople.new(__FILE__) }
+    context "when the change merges the name into another" do
+      let(:change_class) { JsonApiKitSpec::MergeThingsDateAndTimeIntoPostedAt }
+      let(:name) { JsonApiKit::Name::Field.new(value: "posted_time", type: "things") }
 
+      it "returns the name it merges into" do
+        expect(current_name).to eq(name.with(value: "posted_at"))
+      end
+    end
+
+    context "with several resources" do
+      let(:change_class) { JsonApiKitSpec::RenameThingsAndPeople }
       let(:other_name) { JsonApiKit::Name::Field.new(value: "handle", type: "people") }
 
       it "renames the names of every resource" do
@@ -232,6 +242,17 @@ RSpec.describe JsonApiKit::VersionChange do
 
     it "keeps an attribute the change does not rename" do
       expect(current_attributes).to include(other_name => "B")
+    end
+
+    context "when the change merges two attributes" do
+      let(:change_class) { JsonApiKitSpec::MergeThingsDateAndTimeIntoPostedAt }
+      let(:attributes) { { name => "2026-08-01", other_name => "00:00:00" } }
+      let(:name) { JsonApiKit::Name::Field.new(value: "posted_date", type: "things") }
+      let(:other_name) { JsonApiKit::Name::Field.new(value: "posted_time", type: "things") }
+
+      it "returns one attribute under the name they merge into" do
+        expect(current_attributes).to eq(name.with(value: "posted_at") => "2026-08-01 00:00:00")
+      end
     end
 
     context "when the change reshapes the value" do
@@ -261,6 +282,36 @@ RSpec.describe JsonApiKit::VersionChange do
     it "returns the name before the change" do
       expect(previous_name).to eq(name.with(value: "label"))
     end
+
+    context "when the change merges several names into the name" do
+      let(:change_class) { JsonApiKitSpec::MergeThingsDateAndTimeIntoPostedAt }
+      let(:name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "things") }
+
+      it "returns the first of them" do
+        expect(previous_name).to eq(name.with(value: "posted_date"))
+      end
+    end
+  end
+
+  describe "#previous_names" do
+    subject(:previous_names) { change.previous_names(name) }
+
+    let(:name) { JsonApiKit::Name::Field.new(value: "name", type: "things") }
+
+    it "returns the name before the change" do
+      expect(previous_names).to eq([name.with(value: "label")])
+    end
+
+    context "when the change merges several names into the name" do
+      let(:change_class) { JsonApiKitSpec::MergeThingsDateAndTimeIntoPostedAt }
+      let(:name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "things") }
+
+      it "returns every one of them" do
+        expect(previous_names).to eq(
+          [name.with(value: "posted_date"), name.with(value: "posted_time")],
+        )
+      end
+    end
   end
 
   describe "#previous_attributes" do
@@ -276,6 +327,19 @@ RSpec.describe JsonApiKit::VersionChange do
 
     it "keeps an attribute the change does not rename" do
       expect(previous_attributes).to include(other_name => "B")
+    end
+
+    context "when the change merges two attributes" do
+      let(:change_class) { JsonApiKitSpec::MergeThingsDateAndTimeIntoPostedAt }
+      let(:attributes) { { name => "2026-08-01 00:00:00" } }
+      let(:name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "things") }
+
+      it "returns the two attributes under their names before the change" do
+        expect(previous_attributes).to eq(
+          name.with(value: "posted_date") => "2026-08-01",
+          name.with(value: "posted_time") => "00:00:00",
+        )
+      end
     end
 
     context "when the change reshapes the value" do

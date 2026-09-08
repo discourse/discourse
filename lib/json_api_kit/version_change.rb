@@ -53,8 +53,8 @@ module JsonApiKit
 
     def initialize(source)
       @source = source
-      @upward = index_by(&:from)
-      @downward = index_by(&:to)
+      @upward = index_by(&:previous_names)
+      @downward = index_by { [it.current] }
     end
 
     def verify!
@@ -64,8 +64,10 @@ module JsonApiKit
         raise ArgumentError, "#{source} is dated on or before the first release."
       end
       raise ArgumentError, "#{source} has no description." if description.blank?
-      duplicate_name(:from).try { raise ArgumentError, "#{source} renames #{it} twice." }
-      duplicate_name(:to).try { raise ArgumentError, "#{source} renames two names to #{it}." }
+      duplicate_name(&:previous_names).try { raise ArgumentError, "#{source} changes #{it} twice." }
+      duplicate_name { [it.current] }.try do
+        raise ArgumentError, "#{source} changes two names into #{it}."
+      end
       return if File.basename(source).start_with?(version.to_s)
       raise ArgumentError, "The file name must start with the version #{version}: #{source}."
     end
@@ -73,10 +75,12 @@ module JsonApiKit
     def current(name) = upward[name].current
 
     def current_attributes(attributes)
-      attributes.flat_map { |name, value| upward[name].current_pairs(value) }.to_h
+      attributes.keys.map { upward[it] }.uniq.flat_map { it.current_pairs(attributes) }.to_h
     end
 
-    def previous(name) = downward[name].previous
+    def previous(name) = downward[name].previous_names.first
+
+    def previous_names(name) = downward[name].previous_names
 
     def previous_attributes(attributes)
       attributes.flat_map { |name, value| downward[name].previous_pairs(value) }.to_h
@@ -86,10 +90,15 @@ module JsonApiKit
 
     attr_reader :upward, :downward
 
-    def index_by(&) = transformations.index_by(&).tap { it.default_proc = PASS_THROUGH }
+    def index_by(&names)
+      transformations
+        .flat_map { |transformation| names.call(transformation).map { [it, transformation] } }
+        .to_h
+        .tap { it.default_proc = PASS_THROUGH }
+    end
 
-    def duplicate_name(field)
-      transformations.map(&field).tally.detect { |_name, count| count > 1 }&.first
+    def duplicate_name(&)
+      transformations.flat_map(&).tally.detect { |_name, count| count > 1 }&.first
     end
   end
 end

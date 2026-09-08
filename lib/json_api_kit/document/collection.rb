@@ -16,7 +16,9 @@ module JsonApiKit
       def primary_records = query.records
 
       def data
-        contents.primary.map { ResourceObject.new(it, urls:, glossary:, meta: page_meta(it)).to_h }
+        contents.primary.map do
+          ResourceObject.new(it, urls:, glossary:, fieldsets:, meta: page_meta(it)).to_h
+        end
       end
 
       def page_meta(record)

@@ -10,7 +10,7 @@ module JsonApiKit
           def cast_value(value)
             case value
             when String
-              value.split(",")
+              value.split(LIST)
             else
               value
             end

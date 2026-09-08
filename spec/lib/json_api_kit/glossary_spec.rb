@@ -12,6 +12,12 @@ module JsonApiKitSpec
       def member_attributes(attributes) = attributes.transform_keys { member_name(it) }
     end
 
+  module BrokenRule
+    def self.declared_name(name) = name
+
+    def self.declared_attributes(_attributes) = raise NoMethodError, "a fault in the kit"
+  end
+
   class GlossaryChange < JsonApiKit::VersionChange
     version "2026-09-15"
     description "The `posted_at` attribute of the topics resource is renamed to `created_at`."
@@ -122,6 +128,25 @@ RSpec.describe JsonApiKit::Glossary do
         it "raises with the name of this version" do
           expect { declared_attributes }.to raise_error(/Use words, not title\./)
         end
+      end
+
+      context "when a converter cannot convert a value" do
+        let(:attributes) { { name => 5, name.with(value: "size") => "L" } }
+
+        it "raises a bad value with the names of that attribute only" do
+          expect { declared_attributes }.to raise_error(
+            described_class::BadValue,
+            /cannot convert the value of words\./,
+          )
+        end
+      end
+    end
+
+    context "when a rule raises" do
+      subject(:glossary) { described_class.new([JsonApiKitSpec::BrokenRule]) }
+
+      it "raises the error of the rule" do
+        expect { declared_attributes }.to raise_error(NoMethodError, /a fault in the kit/)
       end
     end
 

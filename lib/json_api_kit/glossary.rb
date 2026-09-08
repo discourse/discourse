@@ -11,21 +11,35 @@ module JsonApiKit
       end
     end
 
-    class NotAMemberName < BadRequest
+    class NotAMemberName < BadParameter
       attr_reader :raw, :member
 
       def initialize(raw, member, parameter: nil)
         @raw = raw
         @member = member
-        @parameter = parameter
-        super("Use #{member}, not #{raw}.")
+        super("Use #{member}, not #{raw}.", parameter:)
       end
 
       def title = "Invalid member name"
 
-      def source = { parameter: @parameter }.compact
+      private
 
-      def at(parameter) = self.class.new(raw, member, parameter:)
+      def arguments = [raw, member]
+    end
+
+    class BadValue < BadParameter
+      def initialize(names, parameter: nil)
+        @names = names
+        super("This version cannot convert the value of #{names.join(", ")}.", parameter:)
+      end
+
+      def title = "Invalid value"
+
+      private
+
+      attr_reader :names
+
+      def arguments = [names]
     end
 
     class << self
@@ -43,6 +57,8 @@ module JsonApiKit
     def declared_attributes(attributes)
       attributes.each_key { declared_name(it) }
       rules.reduce(attributes) { |result, rule| rule.declared_attributes(result) }
+    rescue VersionChange::Converter::Failure => failure
+      raise BadValue.new(failure.names.map { member_name(it) })
     end
 
     def declared_name(name)

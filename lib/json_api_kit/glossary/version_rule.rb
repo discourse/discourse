@@ -12,7 +12,7 @@ module JsonApiKit
       end
 
       def declared_name(name)
-        current_name(name).tap { raise Correction.new(it) unless member_name(it) == name }
+        current_name(name).tap { raise Correction.new(it) if member_names(it).exclude?(name) }
       end
 
       def member_name(name)
@@ -30,6 +30,12 @@ module JsonApiKit
       attr_reader :changes
 
       def current_name(name) = changes.reduce(name) { |result, change| change.current(result) }
+
+      def member_names(name)
+        changes
+          .reverse_each
+          .reduce([name]) { |names, change| names.flat_map { change.previous_names(it) } }
+      end
     end
   end
 end

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::ResourceObject do
-  subject(:resource_object) { described_class.new(record, urls:, glossary:, meta:) }
-
-  let(:glossary) { JsonApiKit::Glossary.kit }
+  subject(:resource_object) { described_class.new(record, urls:, glossary:, fieldsets:, meta:) }
 
   fab!(:topic) { Fabricate(:topic, title: "A row a document renders") }
-
+  let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:guardian) { Guardian.new }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
@@ -57,6 +56,22 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       end
     end
 
+    context "when a fieldset holds some of the attributes" do
+      let(:resource) do
+        Class.new(JsonApiKit::Resource) do
+          model Topic
+          type :topics
+          attribute :title
+          attribute :closed
+        end
+      end
+      let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse("topics" => "closed") }
+
+      it "renders those attributes only" do
+        expect(resource_object.to_h[:attributes]).to eq("closed" => false)
+      end
+    end
+
     context "when the record holds no attribute" do
       let(:fields) { resource.fields(["secrets"], guardian:) }
 
@@ -104,7 +119,6 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
 
     context "when the record holds a relationship to many records" do
       fab!(:post)
-
       let(:posts_resource) do
         Class.new(JsonApiKit::Resource) do
           model Post
