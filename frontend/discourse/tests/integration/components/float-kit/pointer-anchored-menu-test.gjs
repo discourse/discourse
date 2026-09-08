@@ -1,6 +1,7 @@
-import { click, find, render, settled } from "@ember/test-helpers";
+import { click, find, focus, render, settled, tab } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ModalContainer from "discourse/components/modal-container";
+import DMenu from "discourse/float-kit/components/d-menu";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -14,7 +15,6 @@ module(
   "Integration | Component | FloatKit | PointerAnchoredMenu",
   function (hooks) {
     setupRenderingTest(hooks);
-
     // Defect 2: frontend/discourse/float-kit/components/d-float-body.gts:145 emits an id with no label element.
     test("pointer-oracle: an idless service trigger gives the menu a usable label", async function (assert) {
       await render(
@@ -59,6 +59,108 @@ module(
           expectedLabel,
           "the menu exposes the supplied label measured from its trigger"
         );
+    });
+
+    // Defect 3: frontend/discourse/app/ui-kit/modifiers/d-trap-tab.ts:94 retains a hidden first input.
+    test("pointer-oracle: Tab wraps past a hidden input to the first visible control", async function (assert) {
+      await render(
+        <template>
+          <DMenu
+            @autofocus={{false}}
+            @inline={{true}}
+            @label="Actions"
+            @trapTab={{true}}
+          >
+            <:content>
+              <input hidden aria-label="Hidden input" />
+              <input class="visible-input" aria-label="Visible input" />
+              <button type="button" class="first-button">First action</button>
+              <button type="button" class="last-button">Last action</button>
+            </:content>
+          </DMenu>
+        </template>
+      );
+
+      await click(".fk-d-menu__trigger");
+      const visibleInput = find(".fk-d-menu .visible-input");
+      const firstButton = find(".fk-d-menu .first-button");
+      const lastButton = find(".fk-d-menu .last-button");
+      assert
+        .dom(".fk-d-menu input[hidden]")
+        .isNotVisible("the leading input is hidden");
+
+      await focus(visibleInput);
+      await tab();
+      assert.strictEqual(
+        document.activeElement,
+        firstButton,
+        "Tab reaches the first visible button"
+      );
+      await tab();
+      assert.strictEqual(
+        document.activeElement,
+        lastButton,
+        "Tab reaches the last visible button"
+      );
+      await tab();
+      assert.strictEqual(
+        document.activeElement,
+        visibleInput,
+        "Tab wraps to the visible input instead of stalling on the hidden input"
+      );
+    });
+
+    // Defect 3: frontend/discourse/app/ui-kit/modifiers/d-trap-tab.ts:94 retains a CSS-hidden last input.
+    test("pointer-oracle: Shift+Tab wraps past a CSS-hidden input to the last visible control", async function (assert) {
+      await render(
+        <template>
+          <DMenu
+            @autofocus={{false}}
+            @inline={{true}}
+            @label="Actions"
+            @trapTab={{true}}
+          >
+            <:content>
+              <button type="button" class="first-button">First action</button>
+              <button type="button" class="last-button">Last action</button>
+              <input class="visible-input" aria-label="Visible input" />
+              <input
+                class="css-hidden-input"
+                style="display: none"
+                aria-label="CSS-hidden input"
+              />
+            </:content>
+          </DMenu>
+        </template>
+      );
+
+      await click(".fk-d-menu__trigger");
+      const firstButton = find(".fk-d-menu .first-button");
+      const lastButton = find(".fk-d-menu .last-button");
+      const visibleInput = find(".fk-d-menu .visible-input");
+      assert
+        .dom(".css-hidden-input")
+        .isNotVisible("the trailing input is hidden by CSS");
+
+      await focus(visibleInput);
+      await tab({ backwards: true });
+      assert.strictEqual(
+        document.activeElement,
+        lastButton,
+        "Shift+Tab reaches the last visible button"
+      );
+      await tab({ backwards: true });
+      assert.strictEqual(
+        document.activeElement,
+        firstButton,
+        "Shift+Tab reaches the first visible button"
+      );
+      await tab({ backwards: true });
+      assert.strictEqual(
+        document.activeElement,
+        visibleInput,
+        "Shift+Tab wraps to the visible input instead of stalling on the CSS-hidden input"
+      );
     });
 
     test("pointer-oracle: a service menu rendered as a mobile modal exposes its supplied label", async function (assert) {
