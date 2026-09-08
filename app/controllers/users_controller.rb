@@ -1199,11 +1199,15 @@ class UsersController < ApplicationController
     end
 
     User.transaction do
+      @user = User.lock.find(@user.id)
+      revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
+
       primary_email = @user.primary_email
       primary_email.email = params[:email]
       primary_email.skip_validate_email = false
 
       if primary_email.save
+        @user.revoke_approval! if revoke_approval
         @email_token =
           @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
         EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)

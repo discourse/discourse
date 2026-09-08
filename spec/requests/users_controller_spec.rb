@@ -4996,6 +4996,51 @@ RSpec.describe UsersController do
         expect(EmailToken.find_by(id: token.id)).to eq(nil)
       end
 
+      context "when the user is approved" do
+        let(:approved_user) do
+          Fabricate(
+            :user,
+            active: false,
+            approved: true,
+            approved_by: admin,
+            approved_at: 1.day.ago,
+            password: "qwerqwer123",
+          )
+        end
+
+        before { SiteSetting.must_approve_users = true }
+
+        it "preserves approval when correcting an unconfirmed email" do
+          put "/u/update-activation-email.json",
+              params: {
+                username: approved_user.username,
+                password: "qwerqwer123",
+                email: "updatedemail@example.com",
+              }
+
+          expect(response.status).to eq(200)
+          expect(approved_user.reload).to be_approved
+        end
+
+        it "revokes approval when changing a confirmed email" do
+          approved_user.email_tokens.find_by(email: approved_user.email).update!(confirmed: true)
+
+          put "/u/update-activation-email.json",
+              params: {
+                username: approved_user.username,
+                password: "qwerqwer123",
+                email: "updatedemail@example.com",
+              }
+
+          expect(response.status).to eq(200)
+
+          approved_user.reload
+          expect(approved_user).not_to be_approved
+          expect(approved_user.approved_by).to be_nil
+          expect(approved_user.approved_at).to be_nil
+        end
+      end
+
       it "tells the user to slow down after many requests" do
         RateLimiter.enable
         freeze_time
