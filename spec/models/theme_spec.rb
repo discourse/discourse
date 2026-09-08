@@ -794,6 +794,19 @@ RSpec.describe Theme do
         end
     end
 
+    it "rebuilds the javascript cache when saved with a stale compiler version" do
+      theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
+      theme.save!
+      theme.reload.javascript_cache.update_columns(content: "stale")
+
+      theme.save!
+      expect(theme.reload.javascript_cache.content).to eq("stale")
+
+      ThemeField.where(theme_id: theme.id).update_all(compiler_version: "OLD_HASH")
+      theme.save!
+      expect(theme.reload.javascript_cache.content).to include("compatModules")
+    end
+
     it "recompiles when the hostname changes" do
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
       theme.set_field(
