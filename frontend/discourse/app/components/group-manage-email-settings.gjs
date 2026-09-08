@@ -17,26 +17,9 @@ export default class GroupManageEmailSettings extends Component {
 
   smtpSettingsValid = false;
 
-  @onEvent("init")
-  _determineSettingsValid() {
-    this.set(
-      "smtpSettingsValid",
-      this.group.smtp_enabled && this.group.smtp_server
-    );
-  }
-
   @computed("smtpSettingsValid", "group.smtp_enabled")
   get emailSettingsValid() {
     return !this.group?.smtp_enabled || this.smtpSettingsValid;
-  }
-
-  _anySmtpFieldsFilled() {
-    return [
-      this.group.smtp_server,
-      this.group.smtp_port,
-      this.group.email_username,
-      this.group.email_password,
-    ].some((value) => !isEmpty(value));
   }
 
   @action
@@ -65,6 +48,23 @@ export default class GroupManageEmailSettings extends Component {
     this.store.find("group", this.group.name).then(() => {
       this._determineSettingsValid();
     });
+  }
+
+  @onEvent("init")
+  _determineSettingsValid() {
+    this.set(
+      "smtpSettingsValid",
+      this.group.smtp_enabled && this.group.smtp_server
+    );
+  }
+
+  _anySmtpFieldsFilled() {
+    return [
+      this.group.smtp_server,
+      this.group.smtp_port,
+      this.group.email_username,
+      this.group.email_password,
+    ].some((value) => !isEmpty(value));
   }
 
   <template>

@@ -52,6 +52,14 @@ export default class RagUploader extends Component {
     );
   }
 
+  get acceptedFileTypes() {
+    if (this.args?.allowImages) {
+      return ".txt,.md,.png,.jpg,.jpeg";
+    } else {
+      return ".txt,.md,.pdf";
+    }
+  }
+
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
 
@@ -76,18 +84,6 @@ export default class RagUploader extends Component {
       this,
       "_updateTargetWithUploads"
     );
-  }
-
-  _updateTargetWithUploads() {
-    this.updateUploads(this.ragUploads);
-  }
-
-  get acceptedFileTypes() {
-    if (this.args?.allowImages) {
-      return ".txt,.md,.png,.jpg,.jpeg";
-    } else {
-      return ".txt,.md,.pdf";
-    }
   }
 
   @action
@@ -127,6 +123,10 @@ export default class RagUploader extends Component {
     this.onRemove(upload);
 
     this.debouncedSearch();
+  }
+
+  _updateTargetWithUploads() {
+    this.updateUploads(this.ragUploads);
   }
 
   <template>

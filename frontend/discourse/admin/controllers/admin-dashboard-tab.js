@@ -35,21 +35,6 @@ export default class AdminDashboardTabController extends Controller {
     };
   }
 
-  #calculateStartDate() {
-    const fullDay = moment().locale("en").utc().endOf("day");
-
-    switch (this.period) {
-      case "yearly":
-        return fullDay.subtract(1, "year").startOf("day");
-      case "quarterly":
-        return fullDay.subtract(3, "month").startOf("day");
-      case "weekly":
-        return fullDay.subtract(6, "days").startOf("day");
-      default:
-        return fullDay.subtract(1, "month").startOf("day");
-    }
-  }
-
   @action
   setCustomDateRange(startDate, endDate) {
     this.period = "custom";
@@ -63,5 +48,20 @@ export default class AdminDashboardTabController extends Controller {
     this.period = period;
     this.dashboardController.start_date = null;
     this.dashboardController.end_date = null;
+  }
+
+  #calculateStartDate() {
+    const fullDay = moment().locale("en").utc().endOf("day");
+
+    switch (this.period) {
+      case "yearly":
+        return fullDay.subtract(1, "year").startOf("day");
+      case "quarterly":
+        return fullDay.subtract(3, "month").startOf("day");
+      case "weekly":
+        return fullDay.subtract(6, "days").startOf("day");
+      default:
+        return fullDay.subtract(1, "month").startOf("day");
+    }
   }
 }

@@ -27,22 +27,6 @@ export default class AiArtifactComponent extends Component {
     window.removeEventListener("popstate", this.popStateHandler);
   }
 
-  @action
-  handleKeydown(event) {
-    if (event.key === "Escape" || event.key === "Esc") {
-      history.back();
-    }
-  }
-
-  @action
-  handlePopState(event) {
-    const state = event.state;
-    this.expanded = state?.artifactId === this.args.artifactId;
-    if (!this.expanded) {
-      window.removeEventListener("keydown", this.keydownHandler);
-    }
-  }
-
   get requireClickToRun() {
     if (this.showingArtifact) {
       return false;
@@ -73,39 +57,10 @@ export default class AiArtifactComponent extends Component {
     return url;
   }
 
-  @action
-  showArtifact() {
-    this.showingArtifact = true;
-  }
-
-  @action
-  toggleView() {
-    if (!this.expanded) {
-      window.history.pushState(
-        { artifactId: this.args.artifactId },
-        "",
-        window.location.href + "#artifact-fullscreen"
-      );
-      window.addEventListener("keydown", this.keydownHandler);
-    } else {
-      history.back();
-    }
-    this.expanded = !this.expanded;
-  }
-
   get wrapperClasses() {
     return `ai-artifact__wrapper ${
       this.expanded ? "ai-artifact__expanded" : ""
     } ${this.seamless ? "ai-artifact__seamless" : ""}`;
-  }
-
-  @action
-  setDataAttributes(element) {
-    if (this.args.dataAttributes) {
-      Object.entries(this.args.dataAttributes).forEach(([key, value]) => {
-        element.setAttribute(key, value);
-      });
-    }
   }
 
   get heightStyle() {
@@ -133,6 +88,51 @@ export default class AiArtifactComponent extends Component {
 
   get showFooter() {
     return !this.seamless && !this.requireClickToRun;
+  }
+
+  @action
+  handleKeydown(event) {
+    if (event.key === "Escape" || event.key === "Esc") {
+      history.back();
+    }
+  }
+
+  @action
+  handlePopState(event) {
+    const state = event.state;
+    this.expanded = state?.artifactId === this.args.artifactId;
+    if (!this.expanded) {
+      window.removeEventListener("keydown", this.keydownHandler);
+    }
+  }
+
+  @action
+  showArtifact() {
+    this.showingArtifact = true;
+  }
+
+  @action
+  toggleView() {
+    if (!this.expanded) {
+      window.history.pushState(
+        { artifactId: this.args.artifactId },
+        "",
+        window.location.href + "#artifact-fullscreen"
+      );
+      window.addEventListener("keydown", this.keydownHandler);
+    } else {
+      history.back();
+    }
+    this.expanded = !this.expanded;
+  }
+
+  @action
+  setDataAttributes(element) {
+    if (this.args.dataAttributes) {
+      Object.entries(this.args.dataAttributes).forEach(([key, value]) => {
+        element.setAttribute(key, value);
+      });
+    }
   }
 
   <template>

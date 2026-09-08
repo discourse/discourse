@@ -11,11 +11,6 @@ import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 export default class EmojiPicker extends Component {
   @tracked menu = null;
 
-  @action
-  onRegisterMenu(api) {
-    this.menu = api;
-  }
-
   get icon() {
     return this.args.icon === undefined ? "far-face-smile" : this.args.icon;
   }
@@ -44,6 +39,11 @@ export default class EmojiPicker extends Component {
 
   get hasLabel() {
     return this.args.emoji && this.triggerLabel;
+  }
+
+  @action
+  onRegisterMenu(api) {
+    this.menu = api;
   }
 
   <template>

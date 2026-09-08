@@ -181,11 +181,6 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
-  @action
-  markStepCompleted(name) {
-    this.completedStepNames.add(name);
-  }
-
   get shouldDisplay() {
     if (this.dismissed) {
       return false;
@@ -201,6 +196,11 @@ export default class AdminOnboardingBanner extends Component {
 
   get completedSteps() {
     return this.completedStepNames.size;
+  }
+
+  @action
+  markStepCompleted(name) {
+    this.completedStepNames.add(name);
   }
 
   @action

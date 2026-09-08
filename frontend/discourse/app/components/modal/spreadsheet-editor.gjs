@@ -62,6 +62,13 @@ export default class SpreadsheetEditor extends Component {
     }
   }
 
+  get hasChanges() {
+    return (
+      this.initialSnapshot !== null &&
+      this.captureSnapshot() !== this.initialSnapshot
+    );
+  }
+
   @action
   createSpreadsheet(spreadsheet) {
     this.spreadsheet = spreadsheet;
@@ -120,13 +127,6 @@ export default class SpreadsheetEditor extends Component {
       headers: this.spreadsheet.getHeaders(),
       data: this.spreadsheet.getData(),
     });
-  }
-
-  get hasChanges() {
-    return (
-      this.initialSnapshot !== null &&
-      this.captureSnapshot() !== this.initialSnapshot
-    );
   }
 
   async loadJspreadsheet() {

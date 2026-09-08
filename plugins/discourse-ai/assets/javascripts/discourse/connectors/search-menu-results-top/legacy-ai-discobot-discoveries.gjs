@@ -32,6 +32,10 @@ export default class LegacyAiDiscobotDiscoveries extends Component {
     this._checkCredits();
   }
 
+  get shouldShow() {
+    return this.creditCheckComplete && this.creditsAvailable;
+  }
+
   async _checkCredits() {
     try {
       this.creditsAvailable =
@@ -40,10 +44,6 @@ export default class LegacyAiDiscobotDiscoveries extends Component {
       this.creditsAvailable = true;
     }
     this.creditCheckComplete = true;
-  }
-
-  get shouldShow() {
-    return this.creditCheckComplete && this.creditsAvailable;
   }
 
   <template>

@@ -39,6 +39,10 @@ export default class DPageHeader extends Component {
     this.router.off("routeDidChange", this, this.#checkIfShouldDisplay);
   }
 
+  get shouldCollapseActionsOnMobile() {
+    return this.site.mobileView && this.args.collapseActionsOnMobile !== false;
+  }
+
   @bind
   #checkIfShouldDisplay() {
     if (this.args.shouldDisplay !== undefined) {
@@ -57,10 +61,6 @@ export default class DPageHeader extends Component {
     this.shouldDisplay =
       !pathSegments.includes("admin") ||
       !HEADLESS_ACTIONS.find((segment) => pathSegments.includes(segment));
-  }
-
-  get shouldCollapseActionsOnMobile() {
-    return this.site.mobileView && this.args.collapseActionsOnMobile !== false;
   }
 
   <template>

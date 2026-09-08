@@ -21,34 +21,6 @@ export default class AiDefaultLlmSelector extends Component {
     this.#loadData();
   }
 
-  async #loadData() {
-    try {
-      const modelsResponse = await ajax(
-        "/admin/plugins/discourse-ai/ai-llms.json"
-      );
-      this.llmModels = modelsResponse.ai_llms || [];
-
-      const { site_settings } = await ajax("/admin/config/site_settings.json", {
-        data: {
-          plugin: "discourse-ai",
-          category: "discourse_ai",
-        },
-      });
-
-      const defaultLlmSetting = site_settings.find(
-        (setting) => setting.setting === "ai_default_llm_model"
-      );
-
-      const rawValue = defaultLlmSetting?.value;
-      this.selectedValue =
-        rawValue === null || rawValue === undefined || rawValue === ""
-          ? "none"
-          : String(rawValue);
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
   get content() {
     const noneOption = {
       id: "none",
@@ -94,6 +66,34 @@ export default class AiDefaultLlmSelector extends Component {
       }
     } finally {
       this.isSaving = false;
+    }
+  }
+
+  async #loadData() {
+    try {
+      const modelsResponse = await ajax(
+        "/admin/plugins/discourse-ai/ai-llms.json"
+      );
+      this.llmModels = modelsResponse.ai_llms || [];
+
+      const { site_settings } = await ajax("/admin/config/site_settings.json", {
+        data: {
+          plugin: "discourse-ai",
+          category: "discourse_ai",
+        },
+      });
+
+      const defaultLlmSetting = site_settings.find(
+        (setting) => setting.setting === "ai_default_llm_model"
+      );
+
+      const rawValue = defaultLlmSetting?.value;
+      this.selectedValue =
+        rawValue === null || rawValue === undefined || rawValue === ""
+          ? "none"
+          : String(rawValue);
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 

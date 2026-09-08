@@ -12,14 +12,14 @@ export default class DSaveControls extends Component {
     return this.model?.isSaving || this.saveDisabled;
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.set("saved", false);
-  }
-
   @computed("model.isSaving")
   get savingText() {
     return this.model?.isSaving ? "saving" : "save";
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.set("saved", false);
   }
 
   <template>

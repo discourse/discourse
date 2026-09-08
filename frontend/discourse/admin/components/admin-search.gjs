@@ -41,6 +41,10 @@ export default class AdminSearch extends Component {
     });
   }
 
+  get showLoadingSpinner() {
+    return this.filter !== "" && (this.loading || !this.dataReady);
+  }
+
   @action
   changeSearchTerm(event) {
     this.searchResults = [];
@@ -117,10 +121,6 @@ export default class AdminSearch extends Component {
   #search() {
     this.searchResults = this.adminSearchDataSource.search(this.filter);
     this.loading = false;
-  }
-
-  get showLoadingSpinner() {
-    return this.filter !== "" && (this.loading || !this.dataReady);
   }
 
   <template>

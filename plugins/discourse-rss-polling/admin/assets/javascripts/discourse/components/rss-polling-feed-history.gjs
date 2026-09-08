@@ -43,15 +43,6 @@ export default class RssPollingFeedHistory extends Component {
     return `/rss-polling/feeds/${this.args.model.id}`;
   }
 
-  @action
-  onAttempt(attempt) {
-    if (this.rawAttempts.some((existing) => existing.id === attempt.id)) {
-      return;
-    }
-
-    this.rawAttempts = [attempt, ...this.rawAttempts].slice(0, KEEP_LIMIT);
-  }
-
   @cached
   get attempts() {
     return this.rawAttempts.map((attempt) => ({
@@ -81,6 +72,15 @@ export default class RssPollingFeedHistory extends Component {
     return i18n("admin.rss_polling.history.show_older", {
       count: this.attempts.length - VISIBLE_LIMIT,
     });
+  }
+
+  @action
+  onAttempt(attempt) {
+    if (this.rawAttempts.some((existing) => existing.id === attempt.id)) {
+      return;
+    }
+
+    this.rawAttempts = [attempt, ...this.rawAttempts].slice(0, KEEP_LIMIT);
   }
 
   @action

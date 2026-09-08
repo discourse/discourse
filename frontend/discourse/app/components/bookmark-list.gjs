@@ -55,6 +55,11 @@ export default class BookmarkList extends Component {
     return this.selected?.length || 0;
   }
 
+  @dependentKeyCompat // for the classNameBindings
+  get bulkSelectEnabled() {
+    return this.bulkSelectHelper?.bulkSelectEnabled;
+  }
+
   @action
   removeBookmark(bookmark) {
     return new Promise((resolve, reject) => {
@@ -151,9 +156,23 @@ export default class BookmarkList extends Component {
       .forEach((el) => el.click());
   }
 
-  @dependentKeyCompat // for the classNameBindings
-  get bulkSelectEnabled() {
-    return this.bulkSelectHelper?.bulkSelectEnabled;
+  click(e) {
+    const onClick = (sel, callback) => {
+      let target = e.target.closest(sel);
+
+      if (target) {
+        callback(target);
+      }
+    };
+
+    onClick("input.bulk-select", () => {
+      const target = e.target;
+      const bookmarkId = target.dataset.id;
+      const bookmark = this.content.find(
+        (item) => item.id.toString() === bookmarkId
+      );
+      this._toggleSelection(target, bookmark, this.lastChecked && e.shiftKey);
+    });
   }
 
   _removeBookmarkFromList(bookmark) {
@@ -187,25 +206,6 @@ export default class BookmarkList extends Component {
       removeValueFromArray(selected, bookmark);
       this.set("lastChecked", null);
     }
-  }
-
-  click(e) {
-    const onClick = (sel, callback) => {
-      let target = e.target.closest(sel);
-
-      if (target) {
-        callback(target);
-      }
-    };
-
-    onClick("input.bulk-select", () => {
-      const target = e.target;
-      const bookmarkId = target.dataset.id;
-      const bookmark = this.content.find(
-        (item) => item.id.toString() === bookmarkId
-      );
-      this._toggleSelection(target, bookmark, this.lastChecked && e.shiftKey);
-    });
   }
 
   <template>

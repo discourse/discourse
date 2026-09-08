@@ -69,6 +69,10 @@ export default class NoAnswer extends Component {
     );
   }
 
+  get confettiParticles() {
+    return Array.from({ length: CONFETTI_PARTICLE_COUNT }, (_, i) => i);
+  }
+
   hidePopup() {
     if (!this.show) {
       return;
@@ -79,10 +83,6 @@ export default class NoAnswer extends Component {
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       this.showConfetti = true;
     }
-  }
-
-  get confettiParticles() {
-    return Array.from({ length: CONFETTI_PARTICLE_COUNT }, (_, i) => i);
   }
 
   <template>

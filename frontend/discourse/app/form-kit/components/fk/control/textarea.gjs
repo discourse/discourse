@@ -9,6 +9,18 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 export default class FKControlTextarea extends FKBaseControl {
   static controlType = "textarea";
 
+  get style() {
+    if (!this.args.height) {
+      return;
+    }
+
+    return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
+  }
+
+  get textareaElement() {
+    return this.args.autoResize ? DExpandingTextArea : dElement("textarea");
+  }
+
   @action
   handleInput(event) {
     this.args.field.set(event.target.value);
@@ -32,18 +44,6 @@ export default class FKControlTextarea extends FKBaseControl {
         new Event("submit", { bubbles: true, cancelable: true })
       );
     }
-  }
-
-  get style() {
-    if (!this.args.height) {
-      return;
-    }
-
-    return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
-  }
-
-  get textareaElement() {
-    return this.args.autoResize ? DExpandingTextArea : dElement("textarea");
   }
 
   <template>

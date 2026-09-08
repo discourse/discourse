@@ -50,48 +50,6 @@ export default class AiFullPageSearch extends Component {
     );
   }
 
-  @action
-  onSearch() {
-    if (!this.searchEnabled) {
-      return;
-    }
-
-    this.searching = true;
-    this.hasCompletedSearch = false;
-    this.autoEnabledForZeroResults = false;
-    this.shouldAutoEnableWhenAiReady = false;
-    this.resetAiResults();
-    return this.performHyDESearch();
-  }
-
-  @action
-  onSearchResultsLoaded() {
-    // enable AI results if we have zero regular results and AI results are ready
-    if (
-      this.hasZeroRegularResults &&
-      !this.showingAiResults &&
-      !this.autoEnabledForZeroResults &&
-      this.AiResults.length > 0
-    ) {
-      this.autoEnabledForZeroResults = true;
-      this.showingAiResults = true;
-      this.args.addSearchResults(this.AiResults, "topic_id");
-      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
-        enabled: true,
-        autoEnabled: true,
-      });
-    }
-    // AI results not ready yet, auto-enable when ready
-    else if (
-      this.hasZeroRegularResults &&
-      !this.showingAiResults &&
-      !this.autoEnabledForZeroResults &&
-      this.AiResults.length === 0
-    ) {
-      this.shouldAutoEnableWhenAiReady = true;
-    }
-  }
-
   get disableToggleSwitch() {
     if (
       this.searching ||
@@ -196,6 +154,48 @@ export default class AiFullPageSearch extends Component {
       return "in-progress";
     } else if (this.noResults) {
       return "no-results";
+    }
+  }
+
+  @action
+  onSearch() {
+    if (!this.searchEnabled) {
+      return;
+    }
+
+    this.searching = true;
+    this.hasCompletedSearch = false;
+    this.autoEnabledForZeroResults = false;
+    this.shouldAutoEnableWhenAiReady = false;
+    this.resetAiResults();
+    return this.performHyDESearch();
+  }
+
+  @action
+  onSearchResultsLoaded() {
+    // enable AI results if we have zero regular results and AI results are ready
+    if (
+      this.hasZeroRegularResults &&
+      !this.showingAiResults &&
+      !this.autoEnabledForZeroResults &&
+      this.AiResults.length > 0
+    ) {
+      this.autoEnabledForZeroResults = true;
+      this.showingAiResults = true;
+      this.args.addSearchResults(this.AiResults, "topic_id");
+      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
+        enabled: true,
+        autoEnabled: true,
+      });
+    }
+    // AI results not ready yet, auto-enable when ready
+    else if (
+      this.hasZeroRegularResults &&
+      !this.showingAiResults &&
+      !this.autoEnabledForZeroResults &&
+      this.AiResults.length === 0
+    ) {
+      this.shouldAutoEnableWhenAiReady = true;
     }
   }
 

@@ -103,6 +103,30 @@ export default class ChatComposer extends Component {
     );
   }
 
+  get hasContent() {
+    const minLength = this.siteSettings.chat_minimum_message_length || 1;
+    return (
+      this.draft?.message?.length >= minLength ||
+      (this.canAttachUploads && this.hasUploads)
+    );
+  }
+
+  get hasUploads() {
+    return this.draft?.uploads?.length > 0;
+  }
+
+  get sendEnabled() {
+    return (
+      (this.hasContent || this.draft?.editing) &&
+      !this.pane.sending &&
+      !this.inProgressUploadsCount > 0
+    );
+  }
+
+  get disabled() {
+    return !this.currentUser || this.args.disabled;
+  }
+
   @action
   persistDraft() {}
 
@@ -156,30 +180,6 @@ export default class ChatComposer extends Component {
     event.stopPropagation();
 
     buttonAction();
-  }
-
-  get hasContent() {
-    const minLength = this.siteSettings.chat_minimum_message_length || 1;
-    return (
-      this.draft?.message?.length >= minLength ||
-      (this.canAttachUploads && this.hasUploads)
-    );
-  }
-
-  get hasUploads() {
-    return this.draft?.uploads?.length > 0;
-  }
-
-  get sendEnabled() {
-    return (
-      (this.hasContent || this.draft?.editing) &&
-      !this.pane.sending &&
-      !this.inProgressUploadsCount > 0
-    );
-  }
-
-  get disabled() {
-    return !this.currentUser || this.args.disabled;
   }
 
   @action

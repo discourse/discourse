@@ -166,6 +166,34 @@ export default class ChatPinnedMessagesList extends Component {
     this.a11y.announce(i18n("chat.pinned_messages.message_unpinned"), "polite");
   }
 
+  handlePinMessage(data) {
+    this.#inFlightUnpins.delete(data.chat_message_id);
+
+    const existingPin = this.pinnedMessages.find(
+      (pin) => pin.message.id === data.chat_message_id
+    );
+
+    if (existingPin) {
+      return;
+    }
+
+    this.#loadPins(this.args.channel).then(() => {
+      // If current user pinned this message, update timestamp so it doesn't show as unseen
+      if (
+        this.args.channel.currentUserMembership &&
+        data.pinned_by_id === this.currentUser.id
+      ) {
+        this.args.channel.currentUserMembership.lastViewedPinsAt = new Date();
+      }
+    });
+  }
+
+  handleUnpinMessage(data) {
+    this.pinnedMessages = this.pinnedMessages.filter(
+      (pin) => pin.message.id !== data.chat_message_id
+    );
+  }
+
   #restorePin(pin) {
     if (this.isDestroying || this.pinnedMessages.includes(pin)) {
       return;
@@ -215,40 +243,12 @@ export default class ChatPinnedMessagesList extends Component {
     }
   }
 
-  handlePinMessage(data) {
-    this.#inFlightUnpins.delete(data.chat_message_id);
-
-    const existingPin = this.pinnedMessages.find(
-      (pin) => pin.message.id === data.chat_message_id
-    );
-
-    if (existingPin) {
-      return;
-    }
-
-    this.#loadPins(this.args.channel).then(() => {
-      // If current user pinned this message, update timestamp so it doesn't show as unseen
-      if (
-        this.args.channel.currentUserMembership &&
-        data.pinned_by_id === this.currentUser.id
-      ) {
-        this.args.channel.currentUserMembership.lastViewedPinsAt = new Date();
-      }
-    });
-  }
-
   #markPinsAsRead(channel) {
     if (channel.currentUserMembership) {
       channel.currentUserMembership.lastViewedPinsAt = new Date();
       channel.currentUserMembership.hasUnseenPins = false;
       this.chatApi.markPinsAsRead(channel.id).catch(() => {});
     }
-  }
-
-  handleUnpinMessage(data) {
-    this.pinnedMessages = this.pinnedMessages.filter(
-      (pin) => pin.message.id !== data.chat_message_id
-    );
   }
 
   <template>

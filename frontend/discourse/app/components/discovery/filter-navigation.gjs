@@ -13,15 +13,6 @@ export default class DiscoveryFilterNavigation extends Component {
 
   @resettableTracked filterQueryString = this.args.queryString;
 
-  @bind
-  updateQueryString(newQueryString, refresh) {
-    this.filterQueryString = newQueryString;
-
-    if (refresh) {
-      this.args.updateTopicsListQueryParams(newQueryString);
-    }
-  }
-
   get showBulkSelectInNavControls() {
     const enableOnDesktop = applyValueTransformer(
       "bulk-select-in-nav-controls",
@@ -30,6 +21,15 @@ export default class DiscoveryFilterNavigation extends Component {
     );
 
     return this.args.canBulkSelect && (this.site.mobileView || enableOnDesktop);
+  }
+
+  @bind
+  updateQueryString(newQueryString, refresh) {
+    this.filterQueryString = newQueryString;
+
+    if (refresh) {
+      this.args.updateTopicsListQueryParams(newQueryString);
+    }
   }
 
   <template>

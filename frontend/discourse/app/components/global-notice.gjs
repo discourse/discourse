@@ -68,16 +68,6 @@ export default class GlobalNotice extends Component {
     this.logsNoticeService.addObserver("text", this._handleLogsNoticeUpdate);
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
-    this.logsNoticeService.removeObserver(
-      "hidden",
-      this._handleLogsNoticeUpdate
-    );
-  }
-
   get visible() {
     return !this.router.currentRouteName.startsWith("wizard.");
   }
@@ -226,6 +216,16 @@ export default class GlobalNotice extends Component {
         return false;
       }
     });
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
+    this.logsNoticeService.removeObserver(
+      "hidden",
+      this._handleLogsNoticeUpdate
+    );
   }
 
   @action

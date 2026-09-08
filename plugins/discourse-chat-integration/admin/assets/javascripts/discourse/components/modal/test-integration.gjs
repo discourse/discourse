@@ -15,6 +15,10 @@ export default class TestIntegration extends Component {
   @tracked flashType = "success";
   @tracked topicId = null;
 
+  get canSend() {
+    return !isBlank(this.topicId);
+  }
+
   @action
   newTopicSelected(topic) {
     this.topicId = topic?.id;
@@ -36,10 +40,6 @@ export default class TestIntegration extends Component {
     } catch (e) {
       popupAjaxError(e);
     }
-  }
-
-  get canSend() {
-    return !isBlank(this.topicId);
   }
 
   <template>

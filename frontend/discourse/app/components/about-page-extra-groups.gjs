@@ -20,6 +20,14 @@ export default class AboutPageExtraGroups extends Component {
     this.loadGroups();
   }
 
+  get showGroupDescription() {
+    return this.siteSettings.about_page_extra_groups_show_description;
+  }
+
+  get showInitialMembers() {
+    return this.siteSettings.about_page_extra_groups_initial_members;
+  }
+
   groupName(group) {
     return group.full_name || group.name.replace(/[_-]/g, " ");
   }
@@ -99,14 +107,6 @@ export default class AboutPageExtraGroups extends Component {
       console.error(`Error loading members for group ${groupName}:`, error);
       return [];
     }
-  }
-
-  get showGroupDescription() {
-    return this.siteSettings.about_page_extra_groups_show_description;
-  }
-
-  get showInitialMembers() {
-    return this.siteSettings.about_page_extra_groups_initial_members;
   }
 
   <template>

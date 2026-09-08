@@ -23,13 +23,6 @@ export default class NotificationConsentBanner extends Component {
     );
   }
 
-  setBannerDismissed(value) {
-    pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
-    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
-      userDismissedPromptKey
-    );
-  }
-
   get showNotificationPromptBanner() {
     return (
       this.siteSettings.push_notifications_prompt &&
@@ -40,6 +33,13 @@ export default class NotificationConsentBanner extends Component {
       Notification.permission !== "granted" &&
       !this.desktopNotifications.isEnabled &&
       !this.bannerDismissed
+    );
+  }
+
+  setBannerDismissed(value) {
+    pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
+    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
+      userDismissedPromptKey
     );
   }
 

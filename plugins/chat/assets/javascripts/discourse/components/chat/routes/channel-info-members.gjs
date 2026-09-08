@@ -90,6 +90,24 @@ export default class ChatRouteChannelInfoMembers extends Component {
     return this.chatApi.listChannelMemberships(this.args.channel.id, params);
   }
 
+  get addMembersMode() {
+    return MODES.add_members;
+  }
+
+  get canAddMembers() {
+    if (
+      !this.args.channel.isDirectMessageChannel ||
+      !this.chatGuardian.canUseGroupChat()
+    ) {
+      return false;
+    }
+
+    return (
+      this.args.channel.chatable.group ||
+      !this.args.channel.lastMessage?.message
+    );
+  }
+
   @action
   load() {
     discourseDebounce(this, this.debouncedLoad, INPUT_DELAY);
@@ -135,24 +153,6 @@ export default class ChatRouteChannelInfoMembers extends Component {
     this.loadingSlider.transitionStarted();
     await this.members.load({ limit: 20 });
     this.loadingSlider.transitionEnded();
-  }
-
-  get addMembersMode() {
-    return MODES.add_members;
-  }
-
-  get canAddMembers() {
-    if (
-      !this.args.channel.isDirectMessageChannel ||
-      !this.chatGuardian.canUseGroupChat()
-    ) {
-      return false;
-    }
-
-    return (
-      this.args.channel.chatable.group ||
-      !this.args.channel.lastMessage?.message
-    );
   }
 
   <template>

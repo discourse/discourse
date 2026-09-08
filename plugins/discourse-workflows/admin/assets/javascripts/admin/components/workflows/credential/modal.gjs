@@ -39,11 +39,6 @@ export default class CredentialModal extends Component {
     this.#loadCredentialTypes();
   }
 
-  async #loadCredentialTypes() {
-    await this.workflowsNodeTypes.load();
-    this.credentialTypes = this.workflowsNodeTypes.credentialTypes || [];
-  }
-
   get isEditing() {
     return !!this.args.model.credential;
   }
@@ -94,6 +89,11 @@ export default class CredentialModal extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  async #loadCredentialTypes() {
+    await this.workflowsNodeTypes.load();
+    this.credentialTypes = this.workflowsNodeTypes.credentialTypes || [];
   }
 
   <template>

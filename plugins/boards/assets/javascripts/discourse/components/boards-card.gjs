@@ -334,21 +334,6 @@ export default class BoardsCard extends Component {
     }
   }
 
-  #openFloaterAssignModal() {
-    const assignedTo = this.args.card.assigned_to;
-    this.modal.show(BoardsFloaterAssignModal, {
-      model: {
-        currentAssignee: assignedTo?.username || assignedTo?.name || null,
-        onSave: async (name) => {
-          await this.args.onUpdateCard?.(this.args.card.id, {
-            assigned_to_name: name,
-          });
-          this.args.onRefreshBoard?.();
-        },
-      },
-    });
-  }
-
   @action
   async unassignFromMenu(close) {
     close?.();
@@ -431,6 +416,21 @@ export default class BoardsCard extends Component {
     this.#removeDropIndicators();
     this.dragging = false;
     this.#cleanupDragImage();
+  }
+
+  #openFloaterAssignModal() {
+    const assignedTo = this.args.card.assigned_to;
+    this.modal.show(BoardsFloaterAssignModal, {
+      model: {
+        currentAssignee: assignedTo?.username || assignedTo?.name || null,
+        onSave: async (name) => {
+          await this.args.onUpdateCard?.(this.args.card.id, {
+            assigned_to_name: name,
+          });
+          this.args.onRefreshBoard?.();
+        },
+      },
+    });
   }
 
   #scheduleDragSourceHide(cardElement, cardHeight) {

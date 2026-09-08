@@ -51,19 +51,6 @@ export default class UserStatusModal extends Component {
     return [TIME_SHORTCUT_TYPES.LAST_CUSTOM];
   }
 
-  #buildTimeShortcuts() {
-    const shortcuts = timeShortcuts(this.currentUser.user_option.timezone);
-    return [shortcuts.oneHour(), shortcuts.twoHours(), shortcuts.tomorrow()];
-  }
-
-  #handleError(e) {
-    if (typeof e === "string") {
-      this.dialog.alert(e);
-    } else {
-      popupAjaxError(e);
-    }
-  }
-
   @action
   onTimeSelected(_, time) {
     this.status.endsAt = time;
@@ -95,6 +82,19 @@ export default class UserStatusModal extends Component {
       this.args.closeModal();
     } catch (e) {
       this.#handleError(e);
+    }
+  }
+
+  #buildTimeShortcuts() {
+    const shortcuts = timeShortcuts(this.currentUser.user_option.timezone);
+    return [shortcuts.oneHour(), shortcuts.twoHours(), shortcuts.tomorrow()];
+  }
+
+  #handleError(e) {
+    if (typeof e === "string") {
+      this.dialog.alert(e);
+    } else {
+      popupAjaxError(e);
     }
   }
 

@@ -76,27 +76,6 @@ export default class SearchMenu extends Component {
     );
   }
 
-  @bind
-  setupEventListeners() {
-    // We only need to register click events when the search menu is rendered outside of the header.
-    // The header handles clicking outside.
-    if (!this.args.inlineResults) {
-      document.addEventListener("mousedown", this.onDocumentPress);
-      document.addEventListener("touchend", this.onDocumentPress);
-    }
-  }
-
-  @bind
-  onDocumentPress(event) {
-    if (!this.menuPanelOpen) {
-      return;
-    }
-
-    if (!event.target.closest(".search-menu-container.menu-panel-results")) {
-      this.close();
-    }
-  }
-
   get searchInputWrapperClasses() {
     const extra = applyValueTransformer(
       "search-menu-input-wrapper-classes",
@@ -164,6 +143,35 @@ export default class SearchMenu extends Component {
       this.inPMInboxContext ||
       searchTermScopesToPMs(this.search.activeGlobalSearchTerm)
     );
+  }
+
+  get displayMenuPanelResults() {
+    if (this.args.inlineResults || this.args.hideResults) {
+      return false;
+    }
+
+    return this.menuPanelOpen;
+  }
+
+  @bind
+  setupEventListeners() {
+    // We only need to register click events when the search menu is rendered outside of the header.
+    // The header handles clicking outside.
+    if (!this.args.inlineResults) {
+      document.addEventListener("mousedown", this.onDocumentPress);
+      document.addEventListener("touchend", this.onDocumentPress);
+    }
+  }
+
+  @bind
+  onDocumentPress(event) {
+    if (!this.menuPanelOpen) {
+      return;
+    }
+
+    if (!event.target.closest(".search-menu-container.menu-panel-results")) {
+      this.close();
+    }
   }
 
   @action
@@ -236,14 +244,6 @@ export default class SearchMenu extends Component {
       DiscourseURL.routeTo(url);
     }
     this.close();
-  }
-
-  get displayMenuPanelResults() {
-    if (this.args.inlineResults || this.args.hideResults) {
-      return false;
-    }
-
-    return this.menuPanelOpen;
   }
 
   @bind

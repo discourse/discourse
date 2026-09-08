@@ -127,6 +127,52 @@ export default class ImageNodeView extends Component {
     return !!this.args.node.attrs.placeholder;
   }
 
+  get maxDimensions() {
+    if (!this.imageLoaded) {
+      return null;
+    }
+
+    const widthRatio =
+      this.siteSettings.max_image_width / this.image.naturalWidth;
+    const heightRatio =
+      this.siteSettings.max_image_height / this.image.naturalHeight;
+
+    const ratio = Math.min(widthRatio, heightRatio);
+
+    return {
+      width: Math.floor(this.image.naturalWidth * ratio),
+      height: Math.floor(this.image.naturalHeight * ratio),
+    };
+  }
+
+  get imageStyle() {
+    const width = this.args.node.attrs.width ?? this.maxDimensions?.width;
+    if (!width) {
+      return null;
+    }
+
+    const scale = (this.args.node.attrs.scale ?? 100) / 100;
+
+    return trustHTML(`width: ${width * scale}px`);
+  }
+
+  get isInGrid() {
+    const pos = this.args.getPos();
+    const $pos = this.args.view.state.doc.resolve(pos);
+
+    for (let depth = $pos.depth; depth >= 0; depth--) {
+      if ($pos.node(depth).type.name === "grid") {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  get altInputHasFocus() {
+    return !!this.altMenuInstance?.content?.contains(document.activeElement);
+  }
+
   stopEvent(event) {
     if (["dragover", "dragend", "drop", "dragleave"].includes(event.type)) {
       return false;
@@ -314,48 +360,6 @@ export default class ImageNodeView extends Component {
     this.altMenuInstance = null;
   }
 
-  get maxDimensions() {
-    if (!this.imageLoaded) {
-      return null;
-    }
-
-    const widthRatio =
-      this.siteSettings.max_image_width / this.image.naturalWidth;
-    const heightRatio =
-      this.siteSettings.max_image_height / this.image.naturalHeight;
-
-    const ratio = Math.min(widthRatio, heightRatio);
-
-    return {
-      width: Math.floor(this.image.naturalWidth * ratio),
-      height: Math.floor(this.image.naturalHeight * ratio),
-    };
-  }
-
-  get imageStyle() {
-    const width = this.args.node.attrs.width ?? this.maxDimensions?.width;
-    if (!width) {
-      return null;
-    }
-
-    const scale = (this.args.node.attrs.scale ?? 100) / 100;
-
-    return trustHTML(`width: ${width * scale}px`);
-  }
-
-  get isInGrid() {
-    const pos = this.args.getPos();
-    const $pos = this.args.view.state.doc.resolve(pos);
-
-    for (let depth = $pos.depth; depth >= 0; depth--) {
-      if ($pos.node(depth).type.name === "grid") {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   @action
   addToGrid() {
     const pos = this.args.getPos();
@@ -377,6 +381,121 @@ export default class ImageNodeView extends Component {
         state,
         view
       );
+    }
+  }
+
+  @action
+  moveOutsideGrid() {
+    if (!this.isInGrid) {
+      return;
+    }
+
+    const pos = this.args.getPos();
+    const view = this.args.view;
+    const { state } = view;
+    const { tr } = state;
+    const imageNode = this.args.node;
+
+    const $pos = state.doc.resolve(pos);
+    let gridDepth = null;
+    let gridPos = null;
+
+    for (let depth = $pos.depth; depth >= 0; depth--) {
+      if ($pos.node(depth).type.name === "grid") {
+        gridDepth = depth;
+        gridPos = $pos.start(depth);
+        break;
+      }
+    }
+
+    if (gridDepth === null) {
+      return;
+    }
+
+    const gridNode = $pos.node(gridDepth);
+
+    const willGridBeEmpty =
+      gridNode.childCount === 1 &&
+      gridNode.firstChild.type.name === "paragraph" &&
+      gridNode.firstChild.content.size === 1 &&
+      gridNode.firstChild.firstChild.type.name === "image";
+
+    const gridEndPos = gridPos + gridNode.nodeSize - 1;
+    const paragraphWithImage = state.schema.nodes.paragraph.create(
+      null,
+      imageNode
+    );
+
+    if (willGridBeEmpty) {
+      tr.replaceWith(
+        gridPos - 1,
+        gridPos + gridNode.nodeSize,
+        paragraphWithImage
+      );
+      tr.setSelection(NodeSelection.create(tr.doc, gridPos)).scrollIntoView();
+    } else {
+      tr.delete(pos - 1, pos + 1);
+
+      const adjustedGridEndPos = tr.mapping.map(gridEndPos);
+      tr.insert(adjustedGridEndPos, paragraphWithImage);
+
+      const newImagePos = adjustedGridEndPos + 1; // Insert position + paragraph boundary
+      tr.setSelection(
+        NodeSelection.create(tr.doc, newImagePos)
+      ).scrollIntoView();
+    }
+
+    view.dispatch(tr);
+  }
+
+  onUploadProgress(percentage) {
+    this.uploadProgress = percentage;
+  }
+
+  @action
+  cancelUpload(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.appEvents.trigger("composer:cancel-upload", {
+      fileId: this.args.node.attrs.title,
+    });
+  }
+
+  @action
+  updateImageLoaded() {
+    this.imageLoaded = true;
+  }
+
+  @action
+  handleImageMouseDown(event) {
+    // keep the alt input focused so handleImageClick treats this click as
+    // a dismissal — ProseMirror also ignores default-prevented events
+    if (event.button === 0 && this.altInputHasFocus) {
+      event.preventDefault();
+    }
+  }
+
+  @action
+  async handleImageClick(event) {
+    if (this.altInputHasFocus) {
+      event.preventDefault();
+      this.args.view.focus();
+      return;
+    }
+
+    if (this.image.classList.contains("ProseMirror-selectednode")) {
+      event?.preventDefault();
+      event?.stopPropagation();
+
+      await openLightbox(this.args.view.dom, this.image);
+
+      const pos = this.args.getPos();
+      if (pos !== null && pos >= 0) {
+        const tr = this.args.view.state.tr.setSelection(
+          NodeSelection.create(this.args.view.state.doc, pos)
+        );
+        this.args.view.dispatch(tr);
+      }
     }
   }
 
@@ -527,125 +646,6 @@ export default class ImageNodeView extends Component {
     }
 
     return null;
-  }
-
-  @action
-  moveOutsideGrid() {
-    if (!this.isInGrid) {
-      return;
-    }
-
-    const pos = this.args.getPos();
-    const view = this.args.view;
-    const { state } = view;
-    const { tr } = state;
-    const imageNode = this.args.node;
-
-    const $pos = state.doc.resolve(pos);
-    let gridDepth = null;
-    let gridPos = null;
-
-    for (let depth = $pos.depth; depth >= 0; depth--) {
-      if ($pos.node(depth).type.name === "grid") {
-        gridDepth = depth;
-        gridPos = $pos.start(depth);
-        break;
-      }
-    }
-
-    if (gridDepth === null) {
-      return;
-    }
-
-    const gridNode = $pos.node(gridDepth);
-
-    const willGridBeEmpty =
-      gridNode.childCount === 1 &&
-      gridNode.firstChild.type.name === "paragraph" &&
-      gridNode.firstChild.content.size === 1 &&
-      gridNode.firstChild.firstChild.type.name === "image";
-
-    const gridEndPos = gridPos + gridNode.nodeSize - 1;
-    const paragraphWithImage = state.schema.nodes.paragraph.create(
-      null,
-      imageNode
-    );
-
-    if (willGridBeEmpty) {
-      tr.replaceWith(
-        gridPos - 1,
-        gridPos + gridNode.nodeSize,
-        paragraphWithImage
-      );
-      tr.setSelection(NodeSelection.create(tr.doc, gridPos)).scrollIntoView();
-    } else {
-      tr.delete(pos - 1, pos + 1);
-
-      const adjustedGridEndPos = tr.mapping.map(gridEndPos);
-      tr.insert(adjustedGridEndPos, paragraphWithImage);
-
-      const newImagePos = adjustedGridEndPos + 1; // Insert position + paragraph boundary
-      tr.setSelection(
-        NodeSelection.create(tr.doc, newImagePos)
-      ).scrollIntoView();
-    }
-
-    view.dispatch(tr);
-  }
-
-  onUploadProgress(percentage) {
-    this.uploadProgress = percentage;
-  }
-
-  @action
-  cancelUpload(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.appEvents.trigger("composer:cancel-upload", {
-      fileId: this.args.node.attrs.title,
-    });
-  }
-
-  @action
-  updateImageLoaded() {
-    this.imageLoaded = true;
-  }
-
-  get altInputHasFocus() {
-    return !!this.altMenuInstance?.content?.contains(document.activeElement);
-  }
-
-  @action
-  handleImageMouseDown(event) {
-    // keep the alt input focused so handleImageClick treats this click as
-    // a dismissal — ProseMirror also ignores default-prevented events
-    if (event.button === 0 && this.altInputHasFocus) {
-      event.preventDefault();
-    }
-  }
-
-  @action
-  async handleImageClick(event) {
-    if (this.altInputHasFocus) {
-      event.preventDefault();
-      this.args.view.focus();
-      return;
-    }
-
-    if (this.image.classList.contains("ProseMirror-selectednode")) {
-      event?.preventDefault();
-      event?.stopPropagation();
-
-      await openLightbox(this.args.view.dom, this.image);
-
-      const pos = this.args.getPos();
-      if (pos !== null && pos >= 0) {
-        const tr = this.args.view.state.tr.setSelection(
-          NodeSelection.create(this.args.view.state.doc, pos)
-        );
-        this.args.view.dispatch(tr);
-      }
-    }
   }
 
   <template>

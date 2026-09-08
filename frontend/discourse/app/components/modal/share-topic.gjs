@@ -39,41 +39,6 @@ export default class ShareTopicModal extends Component {
     return this.model?.allowInvites;
   }
 
-  didInsertElement() {
-    this._showRestrictedGroupWarning();
-    this._selectUrl();
-    super.didInsertElement();
-  }
-
-  @afterRender
-  _showRestrictedGroupWarning() {
-    if (!this.category) {
-      return;
-    }
-
-    Category.fetchVisibleGroups(this.category.id).then((result) => {
-      if (result.groups.length > 0) {
-        this.setProperties({
-          flash: i18n("topic.share.restricted_groups", {
-            count: result.groups.length,
-            groupNames: result.groups.join(", "),
-          }),
-          flashType: "warning",
-        });
-      }
-    });
-  }
-
-  @afterRender
-  _selectUrl() {
-    const input = document.querySelector("input.invite-link");
-    if (input && this.site.desktopView) {
-      // if the input is auto-focused on mobile, iOS requires two taps of the copy button
-      input.setSelectionRange(0, this.url.length);
-      input.focus();
-    }
-  }
-
   @computed("post.shareUrl", "topic.shareUrl")
   get url() {
     if (this.post?.shareUrl) {
@@ -101,6 +66,12 @@ export default class ShareTopicModal extends Component {
       this.topic?.category?.read_restricted;
 
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
+  }
+
+  didInsertElement() {
+    this._showRestrictedGroupWarning();
+    this._selectUrl();
+    super.didInsertElement();
   }
 
   @action
@@ -131,6 +102,35 @@ export default class ShareTopicModal extends Component {
     const topicController = getOwner(this).lookup("controller:topic");
     topicController.actions.replyAsNewTopic.call(topicController, post);
     this.closeModal();
+  }
+
+  @afterRender
+  _showRestrictedGroupWarning() {
+    if (!this.category) {
+      return;
+    }
+
+    Category.fetchVisibleGroups(this.category.id).then((result) => {
+      if (result.groups.length > 0) {
+        this.setProperties({
+          flash: i18n("topic.share.restricted_groups", {
+            count: result.groups.length,
+            groupNames: result.groups.join(", "),
+          }),
+          flashType: "warning",
+        });
+      }
+    });
+  }
+
+  @afterRender
+  _selectUrl() {
+    const input = document.querySelector("input.invite-link");
+    if (input && this.site.desktopView) {
+      // if the input is auto-focused on mobile, iOS requires two taps of the copy button
+      input.setSelectionRange(0, this.url.length);
+      input.focus();
+    }
   }
 
   <template>

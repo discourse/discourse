@@ -20,20 +20,6 @@ export default class Credential extends Component {
     this.#loadCredentials();
   }
 
-  async #loadCredentials() {
-    try {
-      const credentialType =
-        this.credentialTypes.length === 1 ? this.credentialTypes[0] : null;
-      const url = credentialType
-        ? `/admin/plugins/discourse-workflows/credentials.json?type=${credentialType}`
-        : "/admin/plugins/discourse-workflows/credentials.json";
-      const result = await ajax(url);
-      this.credentials = result.credentials;
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
   get credentialTypes() {
     return [
       this.args.credentialTypes ||
@@ -97,6 +83,20 @@ export default class Credential extends Component {
         },
       },
     });
+  }
+
+  async #loadCredentials() {
+    try {
+      const credentialType =
+        this.credentialTypes.length === 1 ? this.credentialTypes[0] : null;
+      const url = credentialType
+        ? `/admin/plugins/discourse-workflows/credentials.json?type=${credentialType}`
+        : "/admin/plugins/discourse-workflows/credentials.json";
+      const result = await ajax(url);
+      this.credentials = result.credentials;
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   <template>

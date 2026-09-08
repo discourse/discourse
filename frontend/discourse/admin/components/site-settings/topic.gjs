@@ -20,18 +20,18 @@ export default class Topic extends Component {
     }
   }
 
-  @action
-  onChangeTopicSetting(topicId, topic) {
-    this.args.changeValueCallback(topicId);
-    this.selectedTopicId = topicId;
-    this.selectedTopic = topic;
-  }
-
   get selectedTopicContent() {
     if (this.topicLoading || !this.selectedTopicId) {
       return [];
     }
     return [this.selectedTopic];
+  }
+
+  @action
+  onChangeTopicSetting(topicId, topic) {
+    this.args.changeValueCallback(topicId);
+    this.selectedTopicId = topicId;
+    this.selectedTopic = topic;
   }
 
   async loadSelectedTopic() {

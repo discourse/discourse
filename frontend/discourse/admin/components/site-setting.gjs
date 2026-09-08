@@ -140,19 +140,6 @@ export default class SiteSettingComponent extends Component {
     }
   }
 
-  @action
-  syncFormValue(_element, [wireValue]) {
-    scheduleOnce("afterRender", this, this.applyFormValue, wireValue);
-  }
-
-  applyFormValue(wireValue) {
-    const name = this.setting.setting;
-
-    if (this.toWire(this.formApi.get(name)) !== wireValue) {
-      this.formApi.set(name, this.fromWire(wireValue));
-    }
-  }
-
   get canSubscribeToSettingsJobs() {
     const settingName = this.setting?.setting;
 
@@ -164,22 +151,6 @@ export default class SiteSettingComponent extends Component {
 
   get defaultTheme() {
     return this.site.user_themes.find((theme) => theme.default);
-  }
-
-  @bind
-  async onMessage(membership) {
-    this.status = membership.status;
-    this.progress = membership.progress;
-  }
-
-  @action
-  async _handleKeydown(event) {
-    if (
-      event.key === "Enter" &&
-      event.target.classList.contains("input-setting-string")
-    ) {
-      await this.save();
-    }
   }
 
   get resolvedComponent() {
@@ -202,14 +173,6 @@ export default class SiteSettingComponent extends Component {
   get groupedOverridden() {
     return [this.setting, ...this.inlineDependentSettings].some((setting) =>
       this.settingIsOverridden(setting)
-    );
-  }
-
-  settingIsOverridden(setting) {
-    return !this.#valuesEqual(
-      setting.default,
-      setting.buffered.get("value"),
-      setting
     );
   }
 
@@ -318,35 +281,6 @@ export default class SiteSettingComponent extends Component {
     return [this.setting, ...this.inlineDependentSettings].filter((setting) =>
       this.settingIsDirty(setting)
     );
-  }
-
-  settingIsDirty(setting) {
-    let bufferVal = this.buffered.get("value");
-    let settingVal = setting?.value;
-
-    if (setting !== this.setting) {
-      bufferVal = setting.buffered.get("value");
-    }
-
-    if (isNone(bufferVal)) {
-      bufferVal = "";
-    }
-
-    if (isNone(settingVal)) {
-      settingVal = "";
-    }
-
-    const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
-
-    if (this.trackChanges) {
-      if (dirty) {
-        this.siteSettingChangeTracker.add(setting);
-      } else {
-        this.siteSettingChangeTracker.remove(setting);
-      }
-    }
-
-    return dirty;
   }
 
   get preview() {
@@ -512,6 +446,62 @@ export default class SiteSettingComponent extends Component {
     } else {
       return false;
     }
+  }
+
+  @action
+  syncFormValue(_element, [wireValue]) {
+    scheduleOnce("afterRender", this, this.applyFormValue, wireValue);
+  }
+
+  applyFormValue(wireValue) {
+    const name = this.setting.setting;
+
+    if (this.toWire(this.formApi.get(name)) !== wireValue) {
+      this.formApi.set(name, this.fromWire(wireValue));
+    }
+  }
+
+  @bind
+  async onMessage(membership) {
+    this.status = membership.status;
+    this.progress = membership.progress;
+  }
+
+  settingIsOverridden(setting) {
+    return !this.#valuesEqual(
+      setting.default,
+      setting.buffered.get("value"),
+      setting
+    );
+  }
+
+  settingIsDirty(setting) {
+    let bufferVal = this.buffered.get("value");
+    let settingVal = setting?.value;
+
+    if (setting !== this.setting) {
+      bufferVal = setting.buffered.get("value");
+    }
+
+    if (isNone(bufferVal)) {
+      bufferVal = "";
+    }
+
+    if (isNone(settingVal)) {
+      settingVal = "";
+    }
+
+    const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
+
+    if (this.trackChanges) {
+      if (dirty) {
+        this.siteSettingChangeTracker.add(setting);
+      } else {
+        this.siteSettingChangeTracker.remove(setting);
+      }
+    }
+
+    return dirty;
   }
 
   @action
@@ -689,6 +679,24 @@ export default class SiteSettingComponent extends Component {
     this.setting.validationMessage = null;
   }
 
+  #valuesEqual(a, b, setting = this.setting) {
+    if (setting.json_schema || setting.schema || setting.objects_schema) {
+      return deepEqual(a, b);
+    } else {
+      return a?.toString() === b?.toString();
+    }
+  }
+
+  @action
+  async _handleKeydown(event) {
+    if (
+      event.key === "Enter" &&
+      event.target.classList.contains("input-setting-string")
+    ) {
+      await this.save();
+    }
+  }
+
   _save(settings) {
     if (settings.length === 1) {
       const setting = settings[0].buffered;
@@ -706,14 +714,6 @@ export default class SiteSettingComponent extends Component {
     });
 
     return SiteSetting.bulkUpdate(params);
-  }
-
-  #valuesEqual(a, b, setting = this.setting) {
-    if (setting.json_schema || setting.schema || setting.objects_schema) {
-      return deepEqual(a, b);
-    } else {
-      return a?.toString() === b?.toString();
-    }
   }
 
   <template>

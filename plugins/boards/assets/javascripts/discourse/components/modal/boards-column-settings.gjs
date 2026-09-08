@@ -78,6 +78,14 @@ export default class BoardsColumnSettings extends Component {
     return this.args.model.board?.category_ids?.[0] || null;
   }
 
+  get showMoveToCategoryField() {
+    const boardCategoryCount = this.args.model.board?.category_ids?.length ?? 0;
+    if (boardCategoryCount === 1) {
+      return !!this.args.model.column?.move_to_category_id;
+    }
+    return true;
+  }
+
   @action
   onDefaultSortChange(field, value) {
     field.set(value || "priority");
@@ -107,14 +115,6 @@ export default class BoardsColumnSettings extends Component {
   @action
   onStatusChange(field, value) {
     field.set(value);
-  }
-
-  get showMoveToCategoryField() {
-    const boardCategoryCount = this.args.model.board?.category_ids?.length ?? 0;
-    if (boardCategoryCount === 1) {
-      return !!this.args.model.column?.move_to_category_id;
-    }
-    return true;
   }
 
   @action

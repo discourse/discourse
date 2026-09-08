@@ -327,6 +327,20 @@ export default class CreateInviteWithRoles extends Component {
     return rows;
   }
 
+  get submitDisabled() {
+    return this.saving || this.submitForcedDisabled;
+  }
+
+  get isLinkCreation() {
+    return !this.inviteCreated && !this.isEmailDelivery;
+  }
+
+  get emailFieldLabel() {
+    return this.isAdminInvite
+      ? i18n("user.invited.invite_roles.admin_email_label")
+      : i18n("user.invited.invite_roles.member_email_label");
+  }
+
   expiresAtFrom(data) {
     if (data.expiresAt) {
       return data.expiresAt;
@@ -360,14 +374,6 @@ export default class CreateInviteWithRoles extends Component {
     }
   }
 
-  get submitDisabled() {
-    return this.saving || this.submitForcedDisabled;
-  }
-
-  get isLinkCreation() {
-    return !this.inviteCreated && !this.isEmailDelivery;
-  }
-
   @action
   onRoleChange(value) {
     if (this.inviteCreated) {
@@ -388,12 +394,6 @@ export default class CreateInviteWithRoles extends Component {
   @action
   setDelivery(value) {
     this.delivery = value;
-  }
-
-  get emailFieldLabel() {
-    return this.isAdminInvite
-      ? i18n("user.invited.invite_roles.admin_email_label")
-      : i18n("user.invited.invite_roles.member_email_label");
   }
 
   @action

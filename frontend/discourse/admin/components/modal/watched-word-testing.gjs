@@ -20,11 +20,6 @@ export default class WatchedWordTesting extends Component {
     return this.args.model.watchedWord.nameKey === "link";
   }
 
-  cleanErrorMessage(message) {
-    const parts = message.split(": ");
-    return parts[parts.length - 1];
-  }
-
   @cached
   get matchesAndErrors() {
     const errors = {};
@@ -143,6 +138,11 @@ export default class WatchedWordTesting extends Component {
 
   get regexErrors() {
     return this.matchesAndErrors.errors;
+  }
+
+  cleanErrorMessage(message) {
+    const parts = message.split(": ");
+    return parts[parts.length - 1];
   }
 
   <template>

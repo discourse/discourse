@@ -57,6 +57,14 @@ export default class DNativeSelect extends Component {
     return value;
   }
 
+  get hasSelectedValue() {
+    return this.htmlSelectValue !== NO_VALUE_OPTION;
+  }
+
+  get includeNone() {
+    return this.args.includeNone ?? true;
+  }
+
   @action
   handleInput(event) {
     // if an option has no value, event.target.value will be the content of the option
@@ -64,14 +72,6 @@ export default class DNativeSelect extends Component {
     this.args.onChange(
       event.target.value === NO_VALUE_OPTION ? null : event.target.value
     );
-  }
-
-  get hasSelectedValue() {
-    return this.htmlSelectValue !== NO_VALUE_OPTION;
-  }
-
-  get includeNone() {
-    return this.args.includeNone ?? true;
   }
 
   <template>

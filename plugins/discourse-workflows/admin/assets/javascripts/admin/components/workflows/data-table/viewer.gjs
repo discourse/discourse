@@ -55,42 +55,8 @@ export default class DataTableViewer extends Component {
     return `/admin/plugins/discourse-workflows/data-tables/${this.args.dataTableId}`;
   }
 
-  async loadTable() {
-    try {
-      const [tableResult, rowsResult] = await Promise.all([
-        ajax(`${this.apiBasePath}.json`),
-        ajax(`${this.apiBasePath}/rows.json`),
-      ]);
-      this.dataTable = tableResult.data_table;
-      this.rows = rowsResult.rows;
-      this.totalCount = rowsResult.count;
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
   get canLoadMore() {
     return this.rows && this.rows.length < this.totalCount;
-  }
-
-  @action
-  async loadMore() {
-    if (!this.canLoadMore || this.loadingMore) {
-      return;
-    }
-
-    this.loadingMore = true;
-    try {
-      const result = await ajax(`${this.apiBasePath}/rows.json`, {
-        data: { offset: this.rows.length },
-      });
-      this.rows = [...this.rows, ...result.rows];
-      this.totalCount = result.count;
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.loadingMore = false;
-    }
   }
 
   get isLoading() {
@@ -116,6 +82,40 @@ export default class DataTableViewer extends Component {
 
   get isIndeterminate() {
     return this.hasSelection && !this.allSelected;
+  }
+
+  async loadTable() {
+    try {
+      const [tableResult, rowsResult] = await Promise.all([
+        ajax(`${this.apiBasePath}.json`),
+        ajax(`${this.apiBasePath}/rows.json`),
+      ]);
+      this.dataTable = tableResult.data_table;
+      this.rows = rowsResult.rows;
+      this.totalCount = rowsResult.count;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  async loadMore() {
+    if (!this.canLoadMore || this.loadingMore) {
+      return;
+    }
+
+    this.loadingMore = true;
+    try {
+      const result = await ajax(`${this.apiBasePath}/rows.json`, {
+        data: { offset: this.rows.length },
+      });
+      this.rows = [...this.rows, ...result.rows];
+      this.totalCount = result.count;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingMore = false;
+    }
   }
 
   @action

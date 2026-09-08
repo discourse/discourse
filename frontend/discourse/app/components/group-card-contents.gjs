@@ -34,6 +34,15 @@ export default class GroupCardContents extends CardContentsBase {
 
   group = null;
 
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
+
   @computed("siteSettings.allow_profile_backgrounds")
   get allowBackgrounds() {
     return this.siteSettings.allow_profile_backgrounds;
@@ -42,15 +51,6 @@ export default class GroupCardContents extends CardContentsBase {
   @computed("siteSettings.enable_badges")
   get showBadges() {
     return this.siteSettings.enable_badges;
-  }
-
-  @computed("topic.postStream")
-  get postStream() {
-    return this.topic?.postStream;
-  }
-
-  set postStream(value) {
-    set(this, "topic.postStream", value);
   }
 
   @computed("moreMembersCount")
@@ -76,6 +76,40 @@ export default class GroupCardContents extends CardContentsBase {
   @computed("group")
   get groupPath() {
     return groupPath(this.group.name);
+  }
+
+  @action
+  close(event) {
+    event?.preventDefault();
+    this._close();
+  }
+
+  @action
+  handleShowGroup(event) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
+    // refactoring this to a glimmer component.
+    this.showGroup(this.group);
+    this._close();
+  }
+
+  @action
+  cancelFilter() {
+    this.postStream.cancelFilter();
+    this.postStream.refresh();
+    this._close();
+  }
+
+  @action
+  messageGroup() {
+    this.composer.openNewMessage({
+      recipients: this.get("group.name"),
+      hasGroups: true,
+    });
   }
 
   @onEvent("didInsertElement")
@@ -113,40 +147,6 @@ export default class GroupCardContents extends CardContentsBase {
     this.set("group", null);
 
     super._close(...arguments);
-  }
-
-  @action
-  close(event) {
-    event?.preventDefault();
-    this._close();
-  }
-
-  @action
-  handleShowGroup(event) {
-    if (wantsNewWindow(event)) {
-      return;
-    }
-
-    event.preventDefault();
-    // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
-    // refactoring this to a glimmer component.
-    this.showGroup(this.group);
-    this._close();
-  }
-
-  @action
-  cancelFilter() {
-    this.postStream.cancelFilter();
-    this.postStream.refresh();
-    this._close();
-  }
-
-  @action
-  messageGroup() {
-    this.composer.openNewMessage({
-      recipients: this.get("group.name"),
-      hasGroups: true,
-    });
   }
 
   <template>

@@ -24,18 +24,25 @@ export default class FooterNav extends Component {
     "signup",
   ];
 
-  _modalOn() {
-    postRNWebviewMessage("headerBg", "rgb(0, 0, 0)");
+  get isVisible() {
+    const { currentRouteName } = this.router;
+
+    return (
+      [UNSCROLLED, SCROLLED_UP].includes(
+        this.scrollDirection.lastScrollDirection
+      ) &&
+      !this.composer.isOpen &&
+      (this.capabilities.isAppWebview || this.canGoBack || this.canGoForward) &&
+      !this.EXCLUDE_IN_ROUTES.includes(currentRouteName)
+    );
   }
 
-  _modalOff() {
-    const header = document.querySelector(".d-header-wrap .d-header");
-    if (header) {
-      postRNWebviewMessage(
-        "headerBg",
-        window.getComputedStyle(header).backgroundColor
-      );
-    }
+  get canGoBack() {
+    return this.historyStore.hasPastEntries || !!document.referrer;
+  }
+
+  get canGoForward() {
+    return this.historyStore.hasFutureEntries;
   }
 
   @action
@@ -73,25 +80,18 @@ export default class FooterNav extends Component {
     event.preventDefault();
   }
 
-  get isVisible() {
-    const { currentRouteName } = this.router;
-
-    return (
-      [UNSCROLLED, SCROLLED_UP].includes(
-        this.scrollDirection.lastScrollDirection
-      ) &&
-      !this.composer.isOpen &&
-      (this.capabilities.isAppWebview || this.canGoBack || this.canGoForward) &&
-      !this.EXCLUDE_IN_ROUTES.includes(currentRouteName)
-    );
+  _modalOn() {
+    postRNWebviewMessage("headerBg", "rgb(0, 0, 0)");
   }
 
-  get canGoBack() {
-    return this.historyStore.hasPastEntries || !!document.referrer;
-  }
-
-  get canGoForward() {
-    return this.historyStore.hasFutureEntries;
+  _modalOff() {
+    const header = document.querySelector(".d-header-wrap .d-header");
+    if (header) {
+      postRNWebviewMessage(
+        "headerBg",
+        window.getComputedStyle(header).backgroundColor
+      );
+    }
   }
 
   <template>

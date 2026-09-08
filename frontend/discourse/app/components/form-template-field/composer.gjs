@@ -79,39 +79,6 @@ export default class FormTemplateFieldComposer extends Component {
     }
   }
 
-  // reapplies the full state rather than toggling it, because switching
-  // between markdown and rich modes replaces the editor element
-  #syncEditorAccessibility() {
-    const editor = this.#editorTarget;
-
-    if (!editor) {
-      return;
-    }
-
-    // the label is only rendered when the template defines one
-    if (this.args.attributes?.label) {
-      editor.setAttribute("aria-labelledby", this.labelId);
-    } else {
-      editor.removeAttribute("aria-labelledby");
-    }
-
-    // the asterisk marking the field required is decorative, and the input
-    // carrying `required` is hidden, so the editor has to state it itself
-    if (this.args.validations?.required) {
-      editor.setAttribute("aria-required", "true");
-    } else {
-      editor.removeAttribute("aria-required");
-    }
-
-    if (this.#validationFailed) {
-      editor.setAttribute("aria-invalid", "true");
-      editor.setAttribute("aria-describedby", this.errorId);
-    } else {
-      editor.removeAttribute("aria-invalid");
-      editor.removeAttribute("aria-describedby");
-    }
-  }
-
   @action
   handleInput(event) {
     this.composerValue = event.target.value;
@@ -152,6 +119,39 @@ export default class FormTemplateFieldComposer extends Component {
 
     for (const event of ["focusin", "dragenter", "dragover"]) {
       this.#editorTarget.addEventListener(event, claimUploadTarget, { signal });
+    }
+  }
+
+  // reapplies the full state rather than toggling it, because switching
+  // between markdown and rich modes replaces the editor element
+  #syncEditorAccessibility() {
+    const editor = this.#editorTarget;
+
+    if (!editor) {
+      return;
+    }
+
+    // the label is only rendered when the template defines one
+    if (this.args.attributes?.label) {
+      editor.setAttribute("aria-labelledby", this.labelId);
+    } else {
+      editor.removeAttribute("aria-labelledby");
+    }
+
+    // the asterisk marking the field required is decorative, and the input
+    // carrying `required` is hidden, so the editor has to state it itself
+    if (this.args.validations?.required) {
+      editor.setAttribute("aria-required", "true");
+    } else {
+      editor.removeAttribute("aria-required");
+    }
+
+    if (this.#validationFailed) {
+      editor.setAttribute("aria-invalid", "true");
+      editor.setAttribute("aria-describedby", this.errorId);
+    } else {
+      editor.removeAttribute("aria-invalid");
+      editor.removeAttribute("aria-describedby");
     }
   }
 

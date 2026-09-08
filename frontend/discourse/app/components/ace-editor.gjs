@@ -114,6 +114,18 @@ export default class AceEditor extends Component {
     this.appEvents.off("ace:resize", this.resize);
   }
 
+  get mode() {
+    return this.args.mode || "css";
+  }
+
+  get cssClasses() {
+    let cssClasses = ["ace"];
+    if (this.args.resizable) {
+      cssClasses.push("ace_editor--resizable");
+    }
+    return cssClasses.join(" ");
+  }
+
   @bind
   setupAce(element) {
     if (this.args.htmlPlaceholder) {
@@ -171,18 +183,6 @@ export default class AceEditor extends Component {
     }
 
     this.setAceTheme();
-  }
-
-  get mode() {
-    return this.args.mode || "css";
-  }
-
-  get cssClasses() {
-    let cssClasses = ["ace"];
-    if (this.args.resizable) {
-      cssClasses.push("ace_editor--resizable");
-    }
-    return cssClasses.join(" ");
   }
 
   @bind

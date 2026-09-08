@@ -90,6 +90,24 @@ export default class DAutocompleteModifier extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
+  get shouldDebounce() {
+    return this.options.debounced ?? false;
+  }
+
+  // [introduced in https://github.com/discourse/discourse/commit/e02cc98092f5a889d0313cd741b29926be7430ab]
+  // By default, when the autocomplete popup is rendered it has the
+  // first suggestion 'selected', and pressing enter key inserts
+  // the first suggestion into the input box.
+  // If you want to stop that behavior, i.e. have the popup renders
+  // with no suggestions selected, set the `autoSelectFirstSuggestion`
+  // option to false.
+  // With this option set to false, users will have to select
+  // a suggestion via the up/down arrow keys and then press enter
+  // to insert it.
+  get autoSelectFirstSuggestion() {
+    return this.options.autoSelectFirstSuggestion ?? true;
+  }
+
   @action
   handleKeyUp(event) {
     // Skip if modifier keys are pressed or other keys handled in KeyDown
@@ -235,24 +253,6 @@ export default class DAutocompleteModifier extends Modifier {
 
     document.removeEventListener("click", this.handleGlobalClick);
     this.menu.close("d-autocomplete");
-  }
-
-  get shouldDebounce() {
-    return this.options.debounced ?? false;
-  }
-
-  // [introduced in https://github.com/discourse/discourse/commit/e02cc98092f5a889d0313cd741b29926be7430ab]
-  // By default, when the autocomplete popup is rendered it has the
-  // first suggestion 'selected', and pressing enter key inserts
-  // the first suggestion into the input box.
-  // If you want to stop that behavior, i.e. have the popup renders
-  // with no suggestions selected, set the `autoSelectFirstSuggestion`
-  // option to false.
-  // With this option set to false, users will have to select
-  // a suggestion via the up/down arrow keys and then press enter
-  // to insert it.
-  get autoSelectFirstSuggestion() {
-    return this.options.autoSelectFirstSuggestion ?? true;
   }
 
   async performAutocomplete() {

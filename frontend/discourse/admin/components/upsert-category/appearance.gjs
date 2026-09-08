@@ -47,25 +47,6 @@ export default class UpsertCategoryAppearance extends Component {
     return this.args.category.isParent || !parentCategoryId;
   }
 
-  @action
-  async onSortOrderSet(value, { name, set }) {
-    await set(name, value);
-
-    if (!value) {
-      await set("sort_ascending", null);
-    }
-  }
-
-  @action
-  onUploadDone(field, upload) {
-    this.args.form.set(field, { url: upload.url, id: upload.id });
-  }
-
-  @action
-  onUploadDeleted(field) {
-    this.args.form.set(field, { id: null, url: null });
-  }
-
   get subcategoryListStyles() {
     const styles = [
       { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
@@ -145,6 +126,25 @@ export default class UpsertCategoryAppearance extends Component {
       { name: i18n("category.sort_ascending"), value: true },
       { name: i18n("category.sort_descending"), value: false },
     ];
+  }
+
+  @action
+  async onSortOrderSet(value, { name, set }) {
+    await set(name, value);
+
+    if (!value) {
+      await set("sort_ascending", null);
+    }
+  }
+
+  @action
+  onUploadDone(field, upload) {
+    this.args.form.set(field, { url: upload.url, id: upload.id });
+  }
+
+  @action
+  onUploadDeleted(field) {
+    this.args.form.set(field, { id: null, url: null });
   }
 
   <template>

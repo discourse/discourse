@@ -126,13 +126,23 @@ export default class ComposerEditor extends Component {
     });
   }
 
-  get composerRedesign() {
-    return this.siteSettings.enable_composer_redesign;
+  @computed("composer.formTemplateIds")
+  get selectedFormTemplateId() {
+    if (this._selectedFormTemplateId) {
+      return this._selectedFormTemplateId;
+    }
+
+    return (
+      this.composer.model.formTemplateId || this.composer.formTemplateIds?.[0]
+    );
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.uppyComposerUpload.teardown();
+  set selectedFormTemplateId(value) {
+    this._selectedFormTemplateId = value;
+  }
+
+  get composerRedesign() {
+    return this.siteSettings.enable_composer_redesign;
   }
 
   get topic() {
@@ -176,35 +186,6 @@ export default class ComposerEditor extends Component {
     return this.currentUser && this.currentUser.link_posting_access !== "none";
   }
 
-  @observes("composer.focusTarget")
-  setFocus() {
-    if (this.composer.focusTarget === "editor") {
-      this.textManipulation.putCursorAtEnd();
-    }
-  }
-
-  @bind
-  lookupAvatarTemplateByPostNumber(postNumber, topicId) {
-    const topic = this.topic;
-    if (!topic || topicId !== topic.get("id")) {
-      return;
-    }
-
-    const quotedPost = topic
-      .get("postStream.posts")
-      ?.find((p) => p.post_number === postNumber);
-
-    if (!quotedPost) {
-      return;
-    }
-
-    return applyValueTransformer(
-      "composer-editor-quoted-post-avatar-template",
-      quotedPost.get("avatar_template"),
-      { post: quotedPost }
-    );
-  }
-
   @computed
   get markdownOptions() {
     return {
@@ -242,6 +223,297 @@ export default class ComposerEditor extends Component {
         this.site.hashtag_configurations["topic-composer"],
       hashtagIcons: this.site.hashtag_icons,
     };
+  }
+
+  @computed(
+    "composer.model.reply",
+    "composer.model.replyLength",
+    "composer.model.missingReplyCharacters",
+    "composer.model.minimumPostLength",
+    "composer.lastValidatedAt"
+  )
+  get validation() {
+    const postType = this.get("composer.post.post_type");
+    if (postType === this.site.get("post_types.small_action")) {
+      return;
+    }
+
+    let reason;
+    if (this.composer?.model?.missingReplyCharacters > 0) {
+      if (this.composer?.model?.replyLength < 1) {
+        reason = i18n("composer.error.post_missing");
+      } else {
+        reason = i18n("composer.error.post_length", {
+          count: this.composer?.model?.minimumPostLength,
+        });
+        const tl = this.get("currentUser.trust_level");
+        if ((tl === 0 || tl === 1) && !this._isNewTopic) {
+          reason +=
+            "<br/>" +
+            i18n("composer.error.try_like", {
+              heart: iconHTML("heart", {
+                label: i18n("likes_lowercase", { count: 1 }),
+              }),
+            });
+        }
+      }
+    }
+
+    if (reason) {
+      return EmberObject.create({
+        failed: true,
+        reason,
+        lastShownAt: this.composer?.lastValidatedAt,
+      });
+    }
+  }
+
+  @computed("composer.{creatingTopic,editingFirstPost,creatingSharedDraft}")
+  get _isNewTopic() {
+    return (
+      this.composer.model.creatingTopic ||
+      this.composer.model.editingFirstPost ||
+      this.composer.model.creatingSharedDraft
+    );
+  }
+
+  get showTranslationEditor() {
+    const post = this.get("composer.model.post");
+    if (!post?.can_localize_post) {
+      return false;
+    }
+
+    if (this.composer.model?.action === Composer.ADD_TRANSLATION) {
+      return true;
+    }
+
+    return false;
+  }
+
+  @computed(
+    "composer.formTemplateIds",
+    "composer.model.replyingToTopic",
+    "composer.model.editingPost"
+  )
+  get showFormTemplateForm() {
+    return (
+      this.composer?.formTemplateIds?.length > 0 &&
+      !this.composer?.model?.replyingToTopic &&
+      !this.composer?.model?.editingPost
+    );
+  }
+
+  @computed("composer.model")
+  get forceEditorMode() {
+    return applyValueTransformer("composer-force-editor-mode", null, {
+      model: this.composer.model,
+    });
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.uppyComposerUpload.teardown();
+  }
+
+  @observes("composer.focusTarget")
+  setFocus() {
+    if (this.composer.focusTarget === "editor") {
+      this.textManipulation.putCursorAtEnd();
+    }
+  }
+
+  @bind
+  lookupAvatarTemplateByPostNumber(postNumber, topicId) {
+    const topic = this.topic;
+    if (!topic || topicId !== topic.get("id")) {
+      return;
+    }
+
+    const quotedPost = topic
+      .get("postStream.posts")
+      ?.find((p) => p.post_number === postNumber);
+
+    if (!quotedPost) {
+      return;
+    }
+
+    return applyValueTransformer(
+      "composer-editor-quoted-post-avatar-template",
+      quotedPost.get("avatar_template"),
+      { post: quotedPost }
+    );
+  }
+
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
+  @bind
+  setupEditor(textManipulation) {
+    this.textManipulation = textManipulation;
+    this.uppyComposerUpload.textManipulation = textManipulation;
+
+    const input = this.element.querySelector(".d-editor-input");
+
+    input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
+
+    this.composer.set("allowPreview", this.textManipulation.allowPreview);
+
+    if (
+      // Focus on the editor unless we have a title
+      !this.get("composer.model.canEditTitle") ||
+      // Or focus is in the body (e.g. when the editor is destroyed)
+      document.activeElement.tagName === "BODY"
+    ) {
+      this.textManipulation.putCursorAtEnd();
+    }
+
+    const destroyComposerPosition = setupComposerPosition(input, {
+      swipeToCollapse: this.siteSettings.enable_composer_redesign,
+    });
+
+    return () => {
+      destroyComposerPosition();
+
+      input.removeEventListener(
+        "scroll",
+        this._throttledSyncEditorAndPreviewScroll
+      );
+    };
+  }
+
+  resetImageControls(buttonWrapper) {
+    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
+
+    const readonlyContainer = buttonWrapper.querySelector(
+      ".alt-text-readonly-container"
+    );
+    const editContainer = buttonWrapper.querySelector(
+      ".alt-text-edit-container"
+    );
+
+    imageResize.removeAttribute("hidden");
+    imageDelete.removeAttribute("hidden");
+
+    readonlyContainer.removeAttribute("hidden");
+    buttonWrapper.removeAttribute("editing");
+    editContainer.setAttribute("hidden", "true");
+  }
+
+  commitAltText(buttonWrapper) {
+    const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
+    const matchingPlaceholder = this.get("composer.model.reply").match(
+      IMAGE_MARKDOWN_REGEX
+    );
+    const match = matchingPlaceholder[index];
+    const input = buttonWrapper.querySelector("input.alt-text-input");
+    const replacement = match.replace(
+      IMAGE_MARKDOWN_REGEX,
+      `![${input.value}|$2$3$4]($5)`
+    );
+
+    this.appEvents.trigger(
+      `${this.composerEventPrefix}:replace-text`,
+      match,
+      replacement
+    );
+
+    this.resetImageControls(buttonWrapper);
+  }
+
+  @action
+  onExpandPopupMenuOptions(toolbarEvent) {
+    const selected = toolbarEvent.selected;
+    toolbarEvent.selectText(selected.start, selected.end - selected.start);
+    this.composer.storeToolbarState(toolbarEvent);
+
+    window.getSelection().removeAllRanges();
+  }
+
+  showPreview() {
+    this.composer.togglePreview();
+  }
+
+  @action
+  extraButtons(toolbar) {
+    const composerRedesign = this.siteSettings.enable_composer_redesign;
+
+    if (
+      this.composer.allowUpload &&
+      this.composer.uploadIcon &&
+      (composerRedesign || this.site.desktopView)
+    ) {
+      toolbar.addButton({
+        id: "upload",
+        group: "insertions",
+        icon: this.composer.uploadIcon,
+        title: "upload",
+        sendAction: this.showUploadModal,
+      });
+    }
+
+    toolbar.addButton({
+      id: "options",
+      group: "extras",
+      icon: composerRedesign ? "discourse-circle-plus" : "circle-plus",
+      title: "composer.options",
+      sendAction: this.onExpandPopupMenuOptions.bind(this),
+      popupMenu: {
+        options: () => this.composer.popupMenuOptions,
+        action: this.composer.onPopupMenuAction,
+      },
+    });
+  }
+
+  @action
+  replyChanged() {
+    this.appEvents.trigger("composer:reply-changed", this.composer.model);
+  }
+
+  @action
+  previewUpdated(preview, helper) {
+    this._renderMentions(preview);
+    this._renderHashtags(preview);
+    this._refreshOneboxes(preview);
+    this._expandShortUrls(preview);
+
+    this._decorateCookedElement(preview, helper);
+
+    this.composer.afterRefresh(preview);
+  }
+
+  @action
+  async updateFormPreview() {
+    const formTemplateData = prepareFormTemplateData(
+      document.querySelector("#form-template-form"),
+      this.composer.selectedFormTemplate,
+      false
+    );
+
+    this.composer.model.set("reply", formTemplateData);
+
+    this.preview = await this.cachedCookAsync(
+      formTemplateData,
+      this.markdownOptions
+    );
+  }
+
+  async cachedCookAsync(text, options) {
+    this._cachedCookFunction ||= await generateCookFunction(options || {});
+    return await this._cachedCookFunction(text);
+  }
+
+  @action
+  updateSelectedFormTemplateId(formTemplateId) {
+    this.selectedFormTemplateId = formTemplateId;
+  }
+
+  @action
+  showUploadModal() {
+    document.getElementById(this.fileUploadElementId).click();
   }
 
   @on("didInsertElement")
@@ -312,98 +584,6 @@ export default class ComposerEditor extends Component {
     if (this.composer.allowUpload) {
       this.uppyComposerUpload.setup(formEl);
     }
-  }
-
-  /**
-   * Sets up the editor with the given text manipulation instance
-   *
-   * @param {TextManipulation} textManipulation The text manipulation instance
-   * @returns {(() => void)} destructor function
-   */
-  @bind
-  setupEditor(textManipulation) {
-    this.textManipulation = textManipulation;
-    this.uppyComposerUpload.textManipulation = textManipulation;
-
-    const input = this.element.querySelector(".d-editor-input");
-
-    input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
-
-    this.composer.set("allowPreview", this.textManipulation.allowPreview);
-
-    if (
-      // Focus on the editor unless we have a title
-      !this.get("composer.model.canEditTitle") ||
-      // Or focus is in the body (e.g. when the editor is destroyed)
-      document.activeElement.tagName === "BODY"
-    ) {
-      this.textManipulation.putCursorAtEnd();
-    }
-
-    const destroyComposerPosition = setupComposerPosition(input, {
-      swipeToCollapse: this.siteSettings.enable_composer_redesign,
-    });
-
-    return () => {
-      destroyComposerPosition();
-
-      input.removeEventListener(
-        "scroll",
-        this._throttledSyncEditorAndPreviewScroll
-      );
-    };
-  }
-
-  @computed(
-    "composer.model.reply",
-    "composer.model.replyLength",
-    "composer.model.missingReplyCharacters",
-    "composer.model.minimumPostLength",
-    "composer.lastValidatedAt"
-  )
-  get validation() {
-    const postType = this.get("composer.post.post_type");
-    if (postType === this.site.get("post_types.small_action")) {
-      return;
-    }
-
-    let reason;
-    if (this.composer?.model?.missingReplyCharacters > 0) {
-      if (this.composer?.model?.replyLength < 1) {
-        reason = i18n("composer.error.post_missing");
-      } else {
-        reason = i18n("composer.error.post_length", {
-          count: this.composer?.model?.minimumPostLength,
-        });
-        const tl = this.get("currentUser.trust_level");
-        if ((tl === 0 || tl === 1) && !this._isNewTopic) {
-          reason +=
-            "<br/>" +
-            i18n("composer.error.try_like", {
-              heart: iconHTML("heart", {
-                label: i18n("likes_lowercase", { count: 1 }),
-              }),
-            });
-        }
-      }
-    }
-
-    if (reason) {
-      return EmberObject.create({
-        failed: true,
-        reason,
-        lastShownAt: this.composer?.lastValidatedAt,
-      });
-    }
-  }
-
-  @computed("composer.{creatingTopic,editingFirstPost,creatingSharedDraft}")
-  get _isNewTopic() {
-    return (
-      this.composer.model.creatingTopic ||
-      this.composer.model.editingFirstPost ||
-      this.composer.model.creatingSharedDraft
-    );
   }
 
   @bind
@@ -611,46 +791,6 @@ export default class ComposerEditor extends Component {
     return;
   }
 
-  resetImageControls(buttonWrapper) {
-    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
-    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
-
-    const readonlyContainer = buttonWrapper.querySelector(
-      ".alt-text-readonly-container"
-    );
-    const editContainer = buttonWrapper.querySelector(
-      ".alt-text-edit-container"
-    );
-
-    imageResize.removeAttribute("hidden");
-    imageDelete.removeAttribute("hidden");
-
-    readonlyContainer.removeAttribute("hidden");
-    buttonWrapper.removeAttribute("editing");
-    editContainer.setAttribute("hidden", "true");
-  }
-
-  commitAltText(buttonWrapper) {
-    const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
-    const matchingPlaceholder = this.get("composer.model.reply").match(
-      IMAGE_MARKDOWN_REGEX
-    );
-    const match = matchingPlaceholder[index];
-    const input = buttonWrapper.querySelector("input.alt-text-input");
-    const replacement = match.replace(
-      IMAGE_MARKDOWN_REGEX,
-      `![${input.value}|$2$3$4]($5)`
-    );
-
-    this.appEvents.trigger(
-      `${this.composerEventPrefix}:replace-text`,
-      match,
-      replacement
-    );
-
-    this.resetImageControls(buttonWrapper);
-  }
-
   @bind
   _handleAltTextInputKeypress(event) {
     if (!event.target.classList.contains("alt-text-input")) {
@@ -784,19 +924,6 @@ export default class ComposerEditor extends Component {
     );
   }
 
-  @action
-  onExpandPopupMenuOptions(toolbarEvent) {
-    const selected = toolbarEvent.selected;
-    toolbarEvent.selectText(selected.start, selected.end - selected.start);
-    this.composer.storeToolbarState(toolbarEvent);
-
-    window.getSelection().removeAllRanges();
-  }
-
-  showPreview() {
-    this.composer.togglePreview();
-  }
-
   _isInQuote(element) {
     let parent = element.parentElement;
     while (parent && !this._isPreviewRoot(parent)) {
@@ -819,133 +946,6 @@ export default class ComposerEditor extends Component {
 
   _isQuote(element) {
     return element.tagName === "ASIDE" && element.classList.contains("quote");
-  }
-
-  @action
-  extraButtons(toolbar) {
-    const composerRedesign = this.siteSettings.enable_composer_redesign;
-
-    if (
-      this.composer.allowUpload &&
-      this.composer.uploadIcon &&
-      (composerRedesign || this.site.desktopView)
-    ) {
-      toolbar.addButton({
-        id: "upload",
-        group: "insertions",
-        icon: this.composer.uploadIcon,
-        title: "upload",
-        sendAction: this.showUploadModal,
-      });
-    }
-
-    toolbar.addButton({
-      id: "options",
-      group: "extras",
-      icon: composerRedesign ? "discourse-circle-plus" : "circle-plus",
-      title: "composer.options",
-      sendAction: this.onExpandPopupMenuOptions.bind(this),
-      popupMenu: {
-        options: () => this.composer.popupMenuOptions,
-        action: this.composer.onPopupMenuAction,
-      },
-    });
-  }
-
-  @action
-  replyChanged() {
-    this.appEvents.trigger("composer:reply-changed", this.composer.model);
-  }
-
-  @action
-  previewUpdated(preview, helper) {
-    this._renderMentions(preview);
-    this._renderHashtags(preview);
-    this._refreshOneboxes(preview);
-    this._expandShortUrls(preview);
-
-    this._decorateCookedElement(preview, helper);
-
-    this.composer.afterRefresh(preview);
-  }
-
-  @computed("composer.formTemplateIds")
-  get selectedFormTemplateId() {
-    if (this._selectedFormTemplateId) {
-      return this._selectedFormTemplateId;
-    }
-
-    return (
-      this.composer.model.formTemplateId || this.composer.formTemplateIds?.[0]
-    );
-  }
-
-  set selectedFormTemplateId(value) {
-    this._selectedFormTemplateId = value;
-  }
-
-  get showTranslationEditor() {
-    const post = this.get("composer.model.post");
-    if (!post?.can_localize_post) {
-      return false;
-    }
-
-    if (this.composer.model?.action === Composer.ADD_TRANSLATION) {
-      return true;
-    }
-
-    return false;
-  }
-
-  @action
-  async updateFormPreview() {
-    const formTemplateData = prepareFormTemplateData(
-      document.querySelector("#form-template-form"),
-      this.composer.selectedFormTemplate,
-      false
-    );
-
-    this.composer.model.set("reply", formTemplateData);
-
-    this.preview = await this.cachedCookAsync(
-      formTemplateData,
-      this.markdownOptions
-    );
-  }
-
-  async cachedCookAsync(text, options) {
-    this._cachedCookFunction ||= await generateCookFunction(options || {});
-    return await this._cachedCookFunction(text);
-  }
-
-  @action
-  updateSelectedFormTemplateId(formTemplateId) {
-    this.selectedFormTemplateId = formTemplateId;
-  }
-
-  @computed(
-    "composer.formTemplateIds",
-    "composer.model.replyingToTopic",
-    "composer.model.editingPost"
-  )
-  get showFormTemplateForm() {
-    return (
-      this.composer?.formTemplateIds?.length > 0 &&
-      !this.composer?.model?.replyingToTopic &&
-      !this.composer?.model?.editingPost
-    );
-  }
-
-  @computed("composer.model")
-  get forceEditorMode() {
-    return applyValueTransformer("composer-force-editor-mode", null, {
-      model: this.composer.model,
-    });
-  }
-
-  @action
-  showUploadModal() {
-    document.getElementById(this.fileUploadElementId).click();
   }
 
   <template>

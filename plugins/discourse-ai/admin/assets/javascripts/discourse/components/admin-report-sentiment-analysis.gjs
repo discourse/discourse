@@ -46,46 +46,6 @@ export default class AdminReportSentimentAnalysis extends Component {
       .classList.add("active");
   });
 
-  clearActiveFilters(element) {
-    const filterButtons = element.querySelectorAll("li button");
-    for (let button of filterButtons) {
-      button.classList.remove("active");
-    }
-  }
-
-  calculateNeutralScore(data) {
-    return data.total_count - (data.positive_count + data.negative_count);
-  }
-
-  sentimentMapping(sentiment) {
-    switch (sentiment) {
-      case "positive":
-        return {
-          id: "positive",
-          text: i18n(
-            "discourse_ai.sentiments.sentiment_analysis.filter_types.positive"
-          ),
-          icon: "face-smile",
-        };
-      case "neutral":
-        return {
-          id: "neutral",
-          text: i18n(
-            "discourse_ai.sentiments.sentiment_analysis.filter_types.neutral"
-          ),
-          icon: "face-meh",
-        };
-      case "negative":
-        return {
-          id: "negative",
-          text: i18n(
-            "discourse_ai.sentiments.sentiment_analysis.filter_types.negative"
-          ),
-          icon: "face-angry",
-        };
-    }
-  }
-
   get groupingType() {
     const dataSample = this.args.model.data[0];
     const localePrefix =
@@ -199,6 +159,46 @@ export default class AdminReportSentimentAnalysis extends Component {
         },
       },
     ];
+  }
+
+  clearActiveFilters(element) {
+    const filterButtons = element.querySelectorAll("li button");
+    for (let button of filterButtons) {
+      button.classList.remove("active");
+    }
+  }
+
+  calculateNeutralScore(data) {
+    return data.total_count - (data.positive_count + data.negative_count);
+  }
+
+  sentimentMapping(sentiment) {
+    switch (sentiment) {
+      case "positive":
+        return {
+          id: "positive",
+          text: i18n(
+            "discourse_ai.sentiments.sentiment_analysis.filter_types.positive"
+          ),
+          icon: "face-smile",
+        };
+      case "neutral":
+        return {
+          id: "neutral",
+          text: i18n(
+            "discourse_ai.sentiments.sentiment_analysis.filter_types.neutral"
+          ),
+          icon: "face-meh",
+        };
+      case "negative":
+        return {
+          id: "negative",
+          text: i18n(
+            "discourse_ai.sentiments.sentiment_analysis.filter_types.negative"
+          ),
+          icon: "face-angry",
+        };
+    }
   }
 
   async postRequest() {

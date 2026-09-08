@@ -22,16 +22,16 @@ export default class FKErrorsSummary extends Component {
     }
   };
 
-  concatErrors(errors) {
-    return errors.join(", ");
-  }
-
   get errorCount() {
     return Object.keys(this.args.errors).length;
   }
 
   get hasErrors() {
     return this.errorCount > 0;
+  }
+
+  concatErrors(errors) {
+    return errors.join(", ");
   }
 
   normalizeName(name) {

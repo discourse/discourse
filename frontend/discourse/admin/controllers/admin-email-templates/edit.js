@@ -54,6 +54,18 @@ export default class AdminEmailTemplatesEditController extends Controller {
     }
   }
 
+  @computed(
+    "buffered.subject",
+    "buffered.body",
+    "emailTemplate.interpolation_keys"
+  )
+  get interpolationKeysWithStatus() {
+    return computeInterpolationKeysWithStatus(
+      `${this.get("buffered.subject") || ""} ${this.get("buffered.body") || ""}`,
+      this.emailTemplate.interpolation_keys
+    );
+  }
+
   @action
   trackTextarea(event) {
     const target = event.target;
@@ -134,17 +146,5 @@ export default class AdminEmailTemplatesEditController extends Controller {
           .catch(popupAjaxError);
       },
     });
-  }
-
-  @computed(
-    "buffered.subject",
-    "buffered.body",
-    "emailTemplate.interpolation_keys"
-  )
-  get interpolationKeysWithStatus() {
-    return computeInterpolationKeysWithStatus(
-      `${this.get("buffered.subject") || ""} ${this.get("buffered.body") || ""}`,
-      this.emailTemplate.interpolation_keys
-    );
   }
 }

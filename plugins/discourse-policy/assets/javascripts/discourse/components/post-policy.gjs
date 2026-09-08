@@ -40,31 +40,6 @@ export default class PostPolicy extends Component {
     return this.args.policy;
   }
 
-  @bind
-  async policyChanged(data) {
-    if (data.message.id !== this.post.id) {
-      return;
-    }
-
-    const stream = data.controller.get("model.postStream");
-    const post = stream.findLoadedPost(data.message.id);
-
-    if (post) {
-      const result = await ajax(`/posts/${post.id}.json`);
-
-      this.post.setProperties({
-        policy_can_accept: result.policy_can_accept,
-        policy_can_revoke: result.policy_can_revoke,
-        policy_accepted: result.policy_accepted,
-        policy_revoked: result.policy_revoked,
-        policy_not_accepted_by: result.policy_not_accepted_by || [],
-        policy_not_accepted_by_count: result.policy_not_accepted_by_count,
-        policy_accepted_by: result.policy_accepted_by || [],
-        policy_accepted_by_count: result.policy_accepted_by_count,
-      });
-    }
-  }
-
   get policyHasUsers() {
     return (
       (this.post?.policy_not_accepted_by_count ||
@@ -117,6 +92,31 @@ export default class PostPolicy extends Component {
       (this.currentUser.staff ||
         this.currentUser.id === this.post?.get("user_id"))
     );
+  }
+
+  @bind
+  async policyChanged(data) {
+    if (data.message.id !== this.post.id) {
+      return;
+    }
+
+    const stream = data.controller.get("model.postStream");
+    const post = stream.findLoadedPost(data.message.id);
+
+    if (post) {
+      const result = await ajax(`/posts/${post.id}.json`);
+
+      this.post.setProperties({
+        policy_can_accept: result.policy_can_accept,
+        policy_can_revoke: result.policy_can_revoke,
+        policy_accepted: result.policy_accepted,
+        policy_revoked: result.policy_revoked,
+        policy_not_accepted_by: result.policy_not_accepted_by || [],
+        policy_not_accepted_by_count: result.policy_not_accepted_by_count,
+        policy_accepted_by: result.policy_accepted_by || [],
+        policy_accepted_by_count: result.policy_accepted_by_count,
+      });
+    }
   }
 
   @action

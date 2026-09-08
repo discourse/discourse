@@ -31,6 +31,14 @@ export default class ChatDrawer extends Component {
   hasUnreadMessages = false;
   drawerStyle = null;
 
+  get drawerActions() {
+    return {
+      openInFullPage: this.openInFullPage,
+      close: this.close,
+      toggleExpand: this.toggleExpand,
+    };
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
 
@@ -92,11 +100,6 @@ export default class ChatDrawer extends Component {
     }
   }
 
-  @observes("chatStateManager.isDrawerActive")
-  _fireHiddenAppEvents() {
-    this.appEvents.trigger("chat:rerender-header");
-  }
-
   computeDrawerStyle() {
     const { width, height } = this.chatDrawerSize.size;
     let style = `width: ${escapeExpression((width || "0").toString())}px;`;
@@ -104,12 +107,50 @@ export default class ChatDrawer extends Component {
     this.set("drawerStyle", trustHTML(style));
   }
 
-  get drawerActions() {
-    return {
-      openInFullPage: this.openInFullPage,
-      close: this.close,
-      toggleExpand: this.toggleExpand,
-    };
+  @action
+  openURL(url = null) {
+    this.chat.activeChannel = null;
+    this.chatDrawerRouter.stateFor(this._routeFromURL(url));
+    this.chatStateManager.didOpenDrawer(url);
+  }
+
+  @action
+  async openInFullPage() {
+    this.chatStateManager.storeAppURL();
+    this.chatStateManager.prefersFullPage();
+    this.chat.activeChannel = null;
+
+    await new Promise((resolve) => next(resolve));
+
+    return DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
+  }
+
+  @action
+  toggleExpand() {
+    this.computeDrawerStyle();
+    this.chatStateManager.didToggleDrawer();
+    this.appEvents.trigger(
+      "chat:toggle-expand",
+      this.chatStateManager.isDrawerExpanded
+    );
+  }
+
+  @action
+  close() {
+    this.computeDrawerStyle();
+    this.chatStateManager.didCloseDrawer();
+    this.chat.activeChannel = null;
+  }
+
+  @action
+  didResize(element, { width, height }) {
+    this.chatDrawerSize.size = { width, height };
+    this._checkSize();
+  }
+
+  @observes("chatStateManager.isDrawerActive")
+  _fireHiddenAppEvents() {
+    this.appEvents.trigger("chat:rerender-header");
   }
 
   @bind
@@ -200,13 +241,6 @@ export default class ChatDrawer extends Component {
     drawerContainer.classList.toggle("above-composer", aboveComposer);
   }
 
-  @action
-  openURL(url = null) {
-    this.chat.activeChannel = null;
-    this.chatDrawerRouter.stateFor(this._routeFromURL(url));
-    this.chatStateManager.didOpenDrawer(url);
-  }
-
   _routeFromURL(url) {
     let route = this.router.recognize(getURL(url || "/"));
 
@@ -216,40 +250,6 @@ export default class ChatDrawer extends Component {
     }
 
     return route;
-  }
-
-  @action
-  async openInFullPage() {
-    this.chatStateManager.storeAppURL();
-    this.chatStateManager.prefersFullPage();
-    this.chat.activeChannel = null;
-
-    await new Promise((resolve) => next(resolve));
-
-    return DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
-  }
-
-  @action
-  toggleExpand() {
-    this.computeDrawerStyle();
-    this.chatStateManager.didToggleDrawer();
-    this.appEvents.trigger(
-      "chat:toggle-expand",
-      this.chatStateManager.isDrawerExpanded
-    );
-  }
-
-  @action
-  close() {
-    this.computeDrawerStyle();
-    this.chatStateManager.didCloseDrawer();
-    this.chat.activeChannel = null;
-  }
-
-  @action
-  didResize(element, { width, height }) {
-    this.chatDrawerSize.size = { width, height };
-    this._checkSize();
   }
 
   <template>

@@ -37,13 +37,6 @@ export default class CategoryTopicTemplateEditor extends Component {
     this._localTopicTitlePlaceholder = value;
   }
 
-  get showInsertLinkButton() {
-    if (this.args.showInsertLinkButton === undefined) {
-      return true;
-    }
-    return this.args.showInsertLinkButton;
-  }
-
   get showFormTemplate() {
     if (this._showFormTemplateOverride !== undefined) {
       return this._showFormTemplateOverride;
@@ -55,6 +48,13 @@ export default class CategoryTopicTemplateEditor extends Component {
 
   set showFormTemplate(value) {
     this._showFormTemplateOverride = value;
+  }
+
+  get showInsertLinkButton() {
+    if (this.args.showInsertLinkButton === undefined) {
+      return true;
+    }
+    return this.args.showInsertLinkButton;
   }
 
   get templateTypeToggleLabel() {

@@ -93,57 +93,6 @@ export default class VoiceChatPanel extends Component {
     }
   }
 
-  async #applyState(data) {
-    if (!data?.channel_id || !data?.thread_id) {
-      return;
-    }
-    if (this.thread?.id === data.thread_id && this.channel) {
-      return;
-    }
-
-    const channel = await this.chatChannelsManager.find(data.channel_id);
-    if (!channel.isFollowing) {
-      // The server already followed us when the session was ensured; this only
-      // refreshes a channel that was cached client-side before that happened.
-      await this.chatChannelsManager.follow(channel);
-    }
-    const thread = await channel.threadsManager.find(
-      channel.id,
-      data.thread_id
-    );
-
-    this.channel = channel;
-    this.thread = thread;
-
-    // ChatThreadPane and the composer resolve "the current thread" from this
-    // global active state, exactly like the chat drawer's router sets it —
-    // without it, sending and message actions break outside chat's own routes.
-    this.chat.activeChannel = channel;
-    channel.activeThread = thread;
-  }
-
-  #deactivate() {
-    if (this.channel && this.chat.activeChannel === this.channel) {
-      // Also clears the channel's activeThread (the setter handles it).
-      this.chat.activeChannel = null;
-    }
-  }
-
-  #subscribeSession() {
-    if (this.#sessionPath) {
-      return;
-    }
-    this.#sessionPath = `/voice/rooms/${this.room.id}/chat`;
-    this.messageBus.subscribe(this.#sessionPath, this.onSessionMessage);
-  }
-
-  #unsubscribeSession() {
-    if (this.#sessionPath) {
-      this.messageBus.unsubscribe(this.#sessionPath, this.onSessionMessage);
-      this.#sessionPath = null;
-    }
-  }
-
   @action
   interceptEscape(event) {
     if (event.key !== "Escape") {
@@ -241,6 +190,57 @@ export default class VoiceChatPanel extends Component {
       popupAjaxError(e);
     } finally {
       this.sending = false;
+    }
+  }
+
+  async #applyState(data) {
+    if (!data?.channel_id || !data?.thread_id) {
+      return;
+    }
+    if (this.thread?.id === data.thread_id && this.channel) {
+      return;
+    }
+
+    const channel = await this.chatChannelsManager.find(data.channel_id);
+    if (!channel.isFollowing) {
+      // The server already followed us when the session was ensured; this only
+      // refreshes a channel that was cached client-side before that happened.
+      await this.chatChannelsManager.follow(channel);
+    }
+    const thread = await channel.threadsManager.find(
+      channel.id,
+      data.thread_id
+    );
+
+    this.channel = channel;
+    this.thread = thread;
+
+    // ChatThreadPane and the composer resolve "the current thread" from this
+    // global active state, exactly like the chat drawer's router sets it —
+    // without it, sending and message actions break outside chat's own routes.
+    this.chat.activeChannel = channel;
+    channel.activeThread = thread;
+  }
+
+  #deactivate() {
+    if (this.channel && this.chat.activeChannel === this.channel) {
+      // Also clears the channel's activeThread (the setter handles it).
+      this.chat.activeChannel = null;
+    }
+  }
+
+  #subscribeSession() {
+    if (this.#sessionPath) {
+      return;
+    }
+    this.#sessionPath = `/voice/rooms/${this.room.id}/chat`;
+    this.messageBus.subscribe(this.#sessionPath, this.onSessionMessage);
+  }
+
+  #unsubscribeSession() {
+    if (this.#sessionPath) {
+      this.messageBus.unsubscribe(this.#sessionPath, this.onSessionMessage);
+      this.#sessionPath = null;
     }
   }
 

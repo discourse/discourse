@@ -118,12 +118,6 @@ export default class TagGroupsForm extends Component {
       .catch(popupAjaxError);
   }
 
-  #serializeTag(t) {
-    return typeof t.id === "number"
-      ? { id: t.id, name: t.name }
-      : { name: t.name };
-  }
-
   @action
   destroyTagGroup() {
     return this.dialog.yesNoConfirm({
@@ -131,6 +125,12 @@ export default class TagGroupsForm extends Component {
       didConfirm: () =>
         this.model.destroyRecord().then(() => this.onDestroy?.()),
     });
+  }
+
+  #serializeTag(t) {
+    return typeof t.id === "number"
+      ? { id: t.id, name: t.name }
+      : { name: t.name };
   }
 
   <template>

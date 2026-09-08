@@ -29,6 +29,10 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
     };
   }
 
+  get orderings() {
+    return this.args.extraGroups.aboutPageExtraGroupsOrder.choices;
+  }
+
   @action
   async save(data) {
     this.args.setGlobalSavingStatus(true);
@@ -55,10 +59,6 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
     } finally {
       this.args.setGlobalSavingStatus(false);
     }
-  }
-
-  get orderings() {
-    return this.args.extraGroups.aboutPageExtraGroupsOrder.choices;
   }
 
   <template>

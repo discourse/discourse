@@ -125,22 +125,6 @@ export default class History extends Component {
     );
   }
 
-  @action
-  async calculateBodyDiff(_, [bodyDiff]) {
-    let html = bodyDiff;
-    if (this.viewMode !== "side_by_side_markdown") {
-      const opts = {
-        features: { editHistory: true, historyOneboxes: true },
-        allowListed: {
-          editHistory: { custom: (tag, attr) => attr === "class" },
-          historyOneboxes: ["header", "article", "div[style]"],
-        },
-      };
-      html = await sanitizeAsync(html, opts);
-    }
-    this.bodyDiff = html;
-  }
-
   get previousTagChanges() {
     const previousArray = customTagArray(
       this.postRevision?.tags_changes?.previous
@@ -187,6 +171,74 @@ export default class History extends Component {
         revision: this.previousVersion,
       });
     }
+  }
+
+  get editButtonLabel() {
+    return `post.revisions.controls.${
+      this.postRevision?.wiki ? "edit_wiki" : "edit_post"
+    }`;
+  }
+
+  get hiddenClasses() {
+    if (this.diffHidden) {
+      return null;
+    }
+
+    if (this.viewMode === "inline") {
+      return this.postRevision?.previous_hidden ||
+        this.postRevision?.current_hidden
+        ? "hidden-revision-either"
+        : null;
+    } else {
+      let result = [];
+      if (this.postRevision?.previous_hidden) {
+        result.push("hidden-revision-previous");
+      }
+      if (this.postRevision?.current_hidden) {
+        result.push("hidden-revision-current");
+      }
+      return result.join(" ");
+    }
+  }
+
+  get previousCategory() {
+    if (this.postRevision?.category_id_changes?.previous) {
+      let category = Category.findById(
+        this.postRevision?.category_id_changes.previous
+      );
+      return categoryBadgeHTML(category, {
+        allowUncategorized: true,
+        extraClasses: "diff-del",
+      });
+    }
+  }
+
+  get currentCategory() {
+    if (this.postRevision?.category_id_changes?.current) {
+      let category = Category.findById(
+        this.postRevision?.category_id_changes.current
+      );
+      return categoryBadgeHTML(category, {
+        allowUncategorized: true,
+        extraClasses: "diff-ins",
+      });
+    }
+  }
+
+  @action
+  async calculateBodyDiff(_, [bodyDiff]) {
+    let html = bodyDiff;
+    if (this.viewMode !== "side_by_side_markdown") {
+      const opts = {
+        features: { editHistory: true, historyOneboxes: true },
+        allowListed: {
+          editHistory: { custom: (tag, attr) => attr === "class" },
+          historyOneboxes: ["header", "article", "div[style]"],
+        },
+      };
+      html = await sanitizeAsync(html, opts);
+    }
+    this.bodyDiff = html;
   }
 
   async refresh(postId, postVersion) {
@@ -259,58 +311,6 @@ export default class History extends Component {
       if (e.jqXHR.responseJSON?.errors?.[0]) {
         this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
       }
-    }
-  }
-
-  get editButtonLabel() {
-    return `post.revisions.controls.${
-      this.postRevision?.wiki ? "edit_wiki" : "edit_post"
-    }`;
-  }
-
-  get hiddenClasses() {
-    if (this.diffHidden) {
-      return null;
-    }
-
-    if (this.viewMode === "inline") {
-      return this.postRevision?.previous_hidden ||
-        this.postRevision?.current_hidden
-        ? "hidden-revision-either"
-        : null;
-    } else {
-      let result = [];
-      if (this.postRevision?.previous_hidden) {
-        result.push("hidden-revision-previous");
-      }
-      if (this.postRevision?.current_hidden) {
-        result.push("hidden-revision-current");
-      }
-      return result.join(" ");
-    }
-  }
-
-  get previousCategory() {
-    if (this.postRevision?.category_id_changes?.previous) {
-      let category = Category.findById(
-        this.postRevision?.category_id_changes.previous
-      );
-      return categoryBadgeHTML(category, {
-        allowUncategorized: true,
-        extraClasses: "diff-del",
-      });
-    }
-  }
-
-  get currentCategory() {
-    if (this.postRevision?.category_id_changes?.current) {
-      let category = Category.findById(
-        this.postRevision?.category_id_changes.current
-      );
-      return categoryBadgeHTML(category, {
-        allowUncategorized: true,
-        extraClasses: "diff-ins",
-      });
     }
   }
 

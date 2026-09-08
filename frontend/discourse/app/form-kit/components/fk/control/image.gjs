@@ -6,6 +6,10 @@ import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 export default class FKControlImage extends FKBaseControl {
   static controlType = "image";
 
+  get imageUrl() {
+    return isBlank(this.args.field.value) ? null : this.args.field.value;
+  }
+
   @action
   setImage(upload) {
     this.args.field.set(upload);
@@ -14,10 +18,6 @@ export default class FKControlImage extends FKBaseControl {
   @action
   removeImage() {
     this.setImage(null);
-  }
-
-  get imageUrl() {
-    return isBlank(this.args.field.value) ? null : this.args.field.value;
   }
 
   <template>

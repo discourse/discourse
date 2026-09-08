@@ -62,6 +62,18 @@ export default class SidebarSection extends Component {
     this.args.willDestroy?.();
   }
 
+  get activeExpanded() {
+    return this.sidebarState.activeExpandedSections.has(this.args.sectionName);
+  }
+
+  set activeExpanded(value) {
+    if (value) {
+      this.sidebarState.activeExpandedSections.add(this.args.sectionName);
+    } else {
+      this.sidebarState.activeExpandedSections.delete(this.args.sectionName);
+    }
+  }
+
   get isCollapsed() {
     if (!this.args.collapsable) {
       return false;
@@ -82,16 +94,42 @@ export default class SidebarSection extends Component {
     return !!this.args.activeLink;
   }
 
-  get activeExpanded() {
-    return this.sidebarState.activeExpandedSections.has(this.args.sectionName);
+  get displaySectionContent() {
+    if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
+      return true;
+    }
+
+    if (this.activeExpanded) {
+      return true;
+    }
+
+    return !this.sidebarState.collapsedSections.has(
+      this.collapsedSidebarSectionKey
+    );
   }
 
-  set activeExpanded(value) {
-    if (value) {
-      this.sidebarState.activeExpandedSections.add(this.args.sectionName);
-    } else {
-      this.sidebarState.activeExpandedSections.delete(this.args.sectionName);
+  get linkDropAtEnd() {
+    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
+  }
+
+  get headerCaretIcon() {
+    return this.displaySectionContent ? "angle-down" : "angle-right";
+  }
+
+  get isSingleHeaderAction() {
+    return this.args.headerActions?.length === 1;
+  }
+
+  get isMultipleHeaderActions() {
+    return this.args.headerActions?.length > 1;
+  }
+
+  get displaySection() {
+    if (this.args.displaySection === undefined) {
+      return true;
     }
+
+    return this.args.displaySection;
   }
 
   @bind
@@ -118,20 +156,6 @@ export default class SidebarSection extends Component {
     }
 
     this.activeExpanded = this.args.expandWhenActive && this.isActive;
-  }
-
-  get displaySectionContent() {
-    if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
-      return true;
-    }
-
-    if (this.activeExpanded) {
-      return true;
-    }
-
-    return !this.sidebarState.collapsedSections.has(
-      this.collapsedSidebarSectionKey
-    );
   }
 
   @action
@@ -163,10 +187,6 @@ export default class SidebarSection extends Component {
     if (this.args.toggleNavigationMenu) {
       next(this.args.toggleNavigationMenu);
     }
-  }
-
-  get linkDropAtEnd() {
-    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
   }
 
   /**
@@ -296,26 +316,6 @@ export default class SidebarSection extends Component {
     }
 
     this.#collapseIfOpenedForDrag();
-  }
-
-  get headerCaretIcon() {
-    return this.displaySectionContent ? "angle-down" : "angle-right";
-  }
-
-  get isSingleHeaderAction() {
-    return this.args.headerActions?.length === 1;
-  }
-
-  get isMultipleHeaderActions() {
-    return this.args.headerActions?.length > 1;
-  }
-
-  get displaySection() {
-    if (this.args.displaySection === undefined) {
-      return true;
-    }
-
-    return this.args.displaySection;
   }
 
   #collapseIfOpenedForDrag() {

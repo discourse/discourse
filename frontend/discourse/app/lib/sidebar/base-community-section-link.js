@@ -25,16 +25,6 @@ export default class BaseCommunitySectionLink {
   }
 
   /**
-   * Called when state has changed in the TopicTrackingState service
-   */
-  onTopicTrackingStateChange() {}
-
-  /**
-   * Called when community-section component is torn down.
-   */
-  teardown() {}
-
-  /**
    * @returns {string} The name of the section link. Needs to be dasherized and lowercase.
    */
   get name() {
@@ -119,6 +109,16 @@ export default class BaseCommunitySectionLink {
   get prefixValue() {
     return this.overriddenIcon || this.defaultPrefixValue;
   }
+
+  /**
+   * Called when state has changed in the TopicTrackingState service
+   */
+  onTopicTrackingStateChange() {}
+
+  /**
+   * Called when community-section component is torn down.
+   */
+  teardown() {}
 
   _notImplemented() {
     throw "not implemented";

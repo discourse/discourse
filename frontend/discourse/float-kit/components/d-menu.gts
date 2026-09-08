@@ -171,39 +171,6 @@ export default class DMenu<Data = unknown> extends Component<
 
   #body: HTMLElement | null = null;
 
-  @action
-  teardownFloatBody() {
-    this.#body = null;
-  }
-
-  @action
-  forwardTabToContent(event: KeyboardEvent) {
-    // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
-    const parentHandlerResult = this.args.onKeydown?.(event);
-
-    // Inline ordering owns Tab on the trigger, in the capture phase, and decides whether the
-    // panel is entered. Pulling focus into the body here would override a decision to pass over
-    // a panel that offers no stop.
-    if (!this.#body || this.options.inlineTabOrder) {
-      return parentHandlerResult;
-    }
-
-    if (event.key === "Tab") {
-      event.preventDefault();
-
-      const firstFocusable = this.#body.querySelector<HTMLElement>(
-        'button, a, input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-
-      firstFocusable?.focus();
-      this.#body.focus();
-
-      return true;
-    }
-
-    return parentHandlerResult;
-  }
-
   get options(): MenuOptions {
     return this.menuInstance?.options ?? ({} as MenuOptions);
   }
@@ -276,6 +243,39 @@ export default class DMenu<Data = unknown> extends Component<
       }
     }
     return properties;
+  }
+
+  @action
+  teardownFloatBody() {
+    this.#body = null;
+  }
+
+  @action
+  forwardTabToContent(event: KeyboardEvent) {
+    // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
+    const parentHandlerResult = this.args.onKeydown?.(event);
+
+    // Inline ordering owns Tab on the trigger, in the capture phase, and decides whether the
+    // panel is entered. Pulling focus into the body here would override a decision to pass over
+    // a panel that offers no stop.
+    if (!this.#body || this.options.inlineTabOrder) {
+      return parentHandlerResult;
+    }
+
+    if (event.key === "Tab") {
+      event.preventDefault();
+
+      const firstFocusable = this.#body.querySelector<HTMLElement>(
+        'button, a, input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      firstFocusable?.focus();
+      this.#body.focus();
+
+      return true;
+    }
+
+    return parentHandlerResult;
   }
 
   <template>

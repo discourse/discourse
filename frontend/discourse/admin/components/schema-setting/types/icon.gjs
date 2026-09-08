@@ -12,13 +12,6 @@ export default class SchemaSettingTypeIcon extends Component {
   @tracked value = this.args.value;
   required = this.args.spec.required;
 
-  @action
-  onChange(newValue) {
-    this.touched = true;
-    this.value = newValue;
-    this.args.onChange(newValue);
-  }
-
   get validationErrorMessage() {
     if (!this.touched) {
       return;
@@ -27,6 +20,13 @@ export default class SchemaSettingTypeIcon extends Component {
     if (!this.value && this.required) {
       return i18n("admin.customize.schema.fields.required");
     }
+  }
+
+  @action
+  onChange(newValue) {
+    this.touched = true;
+    this.value = newValue;
+    this.args.onChange(newValue);
   }
 
   <template>

@@ -31,6 +31,36 @@ export default class AiAgentLlmSelector extends Component {
     }
   }
 
+  get value() {
+    return this._value;
+  }
+
+  set value(newValue) {
+    this._value = newValue;
+    this.keyValueStore.setItem(AGENT_SELECTOR_KEY, newValue);
+    this.args.setAgentId(newValue);
+    this.setAllowLLMSelector();
+    this.resetTargetRecipients();
+    this.notifySelectionChanged();
+  }
+
+  get currentLlm() {
+    return this.llm;
+  }
+
+  set currentLlm(newValue) {
+    this.llm = newValue;
+    this.keyValueStore.setItem(LLM_SELECTOR_KEY, newValue);
+
+    // Pass the LLM model ID (not user ID) for credit checking
+    const bot = this.currentUser.ai_enabled_chat_bots.find(
+      (b) => b.id === newValue
+    );
+    this.args.setLlmId?.(bot?.llm_model_id);
+    this.resetTargetRecipients();
+    this.notifySelectionChanged();
+  }
+
   get composer() {
     return this.args?.outletArgs?.model;
   }
@@ -73,17 +103,27 @@ export default class AiAgentLlmSelector extends Component {
     return this.botOptions.length > 8;
   }
 
-  get value() {
-    return this._value;
+  get llmOptions() {
+    const availableBots = this.currentUser.ai_enabled_chat_bots
+      .filter((bot) => !bot.is_agent)
+      .filter(Boolean);
+
+    return availableBots
+      .map((bot) => {
+        return {
+          id: bot.id,
+          name: bot.display_name,
+        };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  set value(newValue) {
-    this._value = newValue;
-    this.keyValueStore.setItem(AGENT_SELECTOR_KEY, newValue);
-    this.args.setAgentId(newValue);
-    this.setAllowLLMSelector();
-    this.resetTargetRecipients();
-    this.notifySelectionChanged();
+  get showAgentSelector() {
+    return this.botOptions?.length > 1;
+  }
+
+  get showLLMSelector() {
+    return this.allowLLMSelector && this.llmOptions.length > 1;
   }
 
   setAllowLLMSelector() {
@@ -97,23 +137,6 @@ export default class AiAgentLlmSelector extends Component {
     );
 
     this.allowLLMSelector = !agent?.force_default_llm;
-  }
-
-  get currentLlm() {
-    return this.llm;
-  }
-
-  set currentLlm(newValue) {
-    this.llm = newValue;
-    this.keyValueStore.setItem(LLM_SELECTOR_KEY, newValue);
-
-    // Pass the LLM model ID (not user ID) for credit checking
-    const bot = this.currentUser.ai_enabled_chat_bots.find(
-      (b) => b.id === newValue
-    );
-    this.args.setLlmId?.(bot?.llm_model_id);
-    this.resetTargetRecipients();
-    this.notifySelectionChanged();
   }
 
   notifySelectionChanged() {
@@ -150,29 +173,6 @@ export default class AiAgentLlmSelector extends Component {
       );
       this.args.setTargetRecipient(agent.username || "");
     }
-  }
-
-  get llmOptions() {
-    const availableBots = this.currentUser.ai_enabled_chat_bots
-      .filter((bot) => !bot.is_agent)
-      .filter(Boolean);
-
-    return availableBots
-      .map((bot) => {
-        return {
-          id: bot.id,
-          name: bot.display_name,
-        };
-      })
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  get showAgentSelector() {
-    return this.botOptions?.length > 1;
-  }
-
-  get showLLMSelector() {
-    return this.allowLLMSelector && this.llmOptions.length > 1;
   }
 
   #getAgentIdFromAttrs() {

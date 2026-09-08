@@ -88,6 +88,12 @@ export default class AiToolEditorForm extends Component {
     return this.args.secrets || [];
   }
 
+  get ragUploadsDescription() {
+    return this.siteSettings.rag_images_enabled
+      ? i18n("discourse_ai.rag.uploads.description_with_images")
+      : i18n("discourse_ai.rag.uploads.description");
+  }
+
   @action
   toggleIsEnum(value, { name, parentName, set }) {
     if (value) {
@@ -213,12 +219,6 @@ export default class AiToolEditorForm extends Component {
 
   currentParameterSelection(data, index) {
     return data.parameters[index].type;
-  }
-
-  get ragUploadsDescription() {
-    return this.siteSettings.rag_images_enabled
-      ? i18n("discourse_ai.rag.uploads.description_with_images")
-      : i18n("discourse_ai.rag.uploads.description");
   }
 
   @action

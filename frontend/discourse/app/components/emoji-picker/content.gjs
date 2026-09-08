@@ -108,12 +108,6 @@ export default class EmojiPicker extends Component {
     return ["favorites", ...[...pinned, "smileys_&_emotion"].slice(0, 3)];
   }
 
-  addVisibleSections(sections) {
-    this.visibleSections = uniqueItemsFromArray(
-      makeArray(this.visibleSections).concat(makeArray(sections))
-    );
-  }
-
   get sections() {
     return !this.loading && this.emojiStore.list
       ? Object.keys(this.emojiStore.list)
@@ -138,6 +132,12 @@ export default class EmojiPicker extends Component {
       ...favorites,
       ...this.emojiStore.list,
     };
+  }
+
+  addVisibleSections(sections) {
+    this.visibleSections = uniqueItemsFromArray(
+      makeArray(this.visibleSections).concat(makeArray(sections))
+    );
   }
 
   @action
@@ -352,6 +352,27 @@ export default class EmojiPicker extends Component {
     });
   }
 
+  @action
+  async loadEmojis() {
+    if (this.emojiStore.list) {
+      this.didInputFilter(this.term);
+      return;
+    }
+
+    this.loading = true;
+
+    try {
+      this.emojiStore.list = await ajax("/emojis.json");
+
+      // we cant filter an empty list so have to wait for it
+      this.didInputFilter(this.term);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
   // re-enables the scroll observer only once the final scroll has happened, so
   // the expand-and-retry path below doesn't let it re-detect a section mid-jump
   _scrollToSection(section) {
@@ -385,27 +406,6 @@ export default class EmojiPicker extends Component {
 
     node.scrollTop = Math.min(desiredScrollTop, maxScrollTop);
     this.scrollObserverEnabled = true;
-  }
-
-  @action
-  async loadEmojis() {
-    if (this.emojiStore.list) {
-      this.didInputFilter(this.term);
-      return;
-    }
-
-    this.loading = true;
-
-    try {
-      this.emojiStore.list = await ajax("/emojis.json");
-
-      // we cant filter an empty list so have to wait for it
-      this.didInputFilter(this.term);
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-    }
   }
 
   @bind

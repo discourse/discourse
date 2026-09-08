@@ -8,16 +8,6 @@ import { i18n } from "discourse-i18n";
 export default class AdminSiteSettingsChangesBanner extends Component {
   @service siteSettingChangeTracker;
 
-  @action
-  async save() {
-    await this.siteSettingChangeTracker.save();
-  }
-
-  @action
-  discard() {
-    this.siteSettingChangeTracker.discard();
-  }
-
   get dirtyCount() {
     return this.siteSettingChangeTracker.count;
   }
@@ -38,6 +28,16 @@ export default class AdminSiteSettingsChangesBanner extends Component {
     return i18n("admin.site_settings.discard", {
       count: this.dirtyCount,
     });
+  }
+
+  @action
+  async save() {
+    await this.siteSettingChangeTracker.save();
+  }
+
+  @action
+  discard() {
+    this.siteSettingChangeTracker.discard();
   }
 
   <template>

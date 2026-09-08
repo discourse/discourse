@@ -48,10 +48,6 @@ export default class GrantBadgeModal extends Component {
     );
   }
 
-  #updateAvailableBadges() {
-    this.availableBadges = grantableBadges(this.allBadges, this.userBadges);
-  }
-
   @action
   async loadBadges() {
     this.loading = true;
@@ -91,6 +87,10 @@ export default class GrantBadgeModal extends Component {
     } finally {
       this.saving = false;
     }
+  }
+
+  #updateAvailableBadges() {
+    this.availableBadges = grantableBadges(this.allBadges, this.userBadges);
   }
 
   <template>

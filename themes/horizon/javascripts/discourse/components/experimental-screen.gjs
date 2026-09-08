@@ -20,13 +20,6 @@ export default class ExperimentalScreen extends Component {
     this.resizeObserver.disconnect();
   }
 
-  @bind
-  calculateDistance(element) {
-    const distance = element.getBoundingClientRect();
-    this.left = distance.left;
-    this.right = distance.right;
-  }
-
   get distanceStyles() {
     return trustHTML(
       `--left-distance: ${this.left}px; --right-distance: ${this.right}px;`
@@ -35,6 +28,13 @@ export default class ExperimentalScreen extends Component {
 
   get shouldRender() {
     return !DO_NOT_RENDER_LIST.includes(this.router.currentRouteName);
+  }
+
+  @bind
+  calculateDistance(element) {
+    const distance = element.getBoundingClientRect();
+    this.left = distance.left;
+    this.right = distance.right;
   }
 
   @action

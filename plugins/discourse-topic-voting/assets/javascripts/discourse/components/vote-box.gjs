@@ -9,6 +9,16 @@ import VoteCount from "./vote-count";
 export default class VoteBox extends Component {
   @service currentUser;
 
+  @action
+  addVote() {
+    return this.#sendVote("/voting/vote", true);
+  }
+
+  @action
+  removeVote() {
+    return this.#sendVote("/voting/unvote", false);
+  }
+
   #sendVote(url, userVoted) {
     const topic = this.args.topic;
 
@@ -26,16 +36,6 @@ export default class VoteBox extends Component {
         this.currentUser.votes_left = result.votes_left;
       })
       .catch(popupAjaxError);
-  }
-
-  @action
-  addVote() {
-    return this.#sendVote("/voting/vote", true);
-  }
-
-  @action
-  removeVote() {
-    return this.#sendVote("/voting/unvote", false);
   }
 
   <template>

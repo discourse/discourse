@@ -97,13 +97,6 @@ export default class UpsertCategoryModeration extends Component {
     this.args.form.set("default_slow_mode_seconds", seconds);
   }
 
-  #updateCategorySetting(key, value) {
-    this.args.form.set("category_setting", {
-      ...(this.categorySetting || {}),
-      [key]: value,
-    });
-  }
-
   @action
   onCategoryModeratingGroupsChange(groupIds) {
     this.args.form.set("moderating_group_ids", groupIds);
@@ -144,6 +137,13 @@ export default class UpsertCategoryModeration extends Component {
         message: i18n("category.validations.groups_required"),
       });
     }
+  }
+
+  #updateCategorySetting(key, value) {
+    this.args.form.set("category_setting", {
+      ...(this.categorySetting || {}),
+      [key]: value,
+    });
   }
 
   <template>

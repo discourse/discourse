@@ -115,6 +115,10 @@ export default class VoiceVoiceSettingsModal extends Component {
     return trustHTML(`left: ${this.gateThreshold}%`);
   }
 
+  get subtitlesAvailable() {
+    return this.voiceWebrtc.subtitlesAvailable;
+  }
+
   async startPreview() {
     this.#stopPreview();
     this.micError = false;
@@ -219,10 +223,6 @@ export default class VoiceVoiceSettingsModal extends Component {
     );
     // Processing changes swap the capture out from under the level meter.
     await this.startPreview();
-  }
-
-  get subtitlesAvailable() {
-    return this.voiceWebrtc.subtitlesAvailable;
   }
 
   @action

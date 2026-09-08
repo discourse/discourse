@@ -16,24 +16,6 @@ export default class DiscourseReactionsPicker extends Component {
 
   emojiPickerIsOpen = false;
 
-  @action
-  pointerOut(event) {
-    if (event.pointerType !== "mouse" || this.emojiPickerIsOpen) {
-      return;
-    }
-
-    this.args.scheduleCollapse("collapseReactionsPicker");
-  }
-
-  @action
-  pointerOver(event) {
-    if (event.pointerType !== "mouse") {
-      return;
-    }
-
-    this.args.cancelCollapse();
-  }
-
   get reactionInfo() {
     const reactions = this.siteSettings.discourse_reactions_enabled_reactions
       .split("|")
@@ -131,6 +113,24 @@ export default class DiscourseReactionsPicker extends Component {
     }
 
     return x;
+  }
+
+  @action
+  pointerOut(event) {
+    if (event.pointerType !== "mouse" || this.emojiPickerIsOpen) {
+      return;
+    }
+
+    this.args.scheduleCollapse("collapseReactionsPicker");
+  }
+
+  @action
+  pointerOver(event) {
+    if (event.pointerType !== "mouse") {
+      return;
+    }
+
+    this.args.cancelCollapse();
   }
 
   @action

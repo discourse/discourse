@@ -38,6 +38,19 @@ export default class Menus extends Component {
     this._content = trustHTML(value);
   }
 
+  get options() {
+    return {
+      offset: this.offset,
+      arrow: this.arrow,
+      maxWidth: this.maxWidth,
+      identifier: this.identifier,
+      interactive: this.interactive,
+      triggers: this.triggers ?? ["click"],
+      untriggers: this.untriggers ?? ["click"],
+      content: this.content,
+    };
+  }
+
   @action
   toggleArrow() {
     this.arrow = !this.arrow;
@@ -73,19 +86,6 @@ export default class Menus extends Component {
         data: { foo: 1 },
       }
     );
-  }
-
-  get options() {
-    return {
-      offset: this.offset,
-      arrow: this.arrow,
-      maxWidth: this.maxWidth,
-      identifier: this.identifier,
-      interactive: this.interactive,
-      triggers: this.triggers ?? ["click"],
-      untriggers: this.untriggers ?? ["click"],
-      content: this.content,
-    };
   }
 
   <template>

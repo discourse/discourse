@@ -79,27 +79,6 @@ export default class ImageCarousel extends Component {
   #trackDirection = 1;
   #slides = new Map();
 
-  #calculateNearestIndex(track) {
-    if (!track) {
-      return this.currentIndex;
-    }
-
-    const trackCenter = track.scrollLeft + track.clientWidth / 2;
-    let bestIndex = 0;
-    let minDistance = Infinity;
-
-    this.#slides.forEach((slide, index) => {
-      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
-      const distance = Math.abs(slideCenter - trackCenter);
-      if (distance < minDistance) {
-        minDistance = distance;
-        bestIndex = index;
-      }
-    });
-
-    return bestIndex;
-  }
-
   get #scrollBehavior() {
     return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
       ? "auto"
@@ -147,11 +126,6 @@ export default class ImageCarousel extends Component {
     }
   }
 
-  #navigateByKey(direction) {
-    const goNext = (direction === "right") === (this.#trackDirection === 1);
-    this.scrollToIndex(goNext ? this.nextIndex : this.prevIndex);
-  }
-
   @action
   onKeyDown(event) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
@@ -161,6 +135,32 @@ export default class ImageCarousel extends Component {
     event.preventDefault();
     const direction = event.key === "ArrowLeft" ? "left" : "right";
     throttle(this, this.#navigateByKey, direction, KEYBOARD_THROTTLE_MS);
+  }
+
+  #calculateNearestIndex(track) {
+    if (!track) {
+      return this.currentIndex;
+    }
+
+    const trackCenter = track.scrollLeft + track.clientWidth / 2;
+    let bestIndex = 0;
+    let minDistance = Infinity;
+
+    this.#slides.forEach((slide, index) => {
+      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+      const distance = Math.abs(slideCenter - trackCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        bestIndex = index;
+      }
+    });
+
+    return bestIndex;
+  }
+
+  #navigateByKey(direction) {
+    const goNext = (direction === "right") === (this.#trackDirection === 1);
+    this.scrollToIndex(goNext ? this.nextIndex : this.prevIndex);
   }
 
   <template>

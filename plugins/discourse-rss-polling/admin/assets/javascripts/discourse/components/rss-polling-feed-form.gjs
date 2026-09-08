@@ -88,17 +88,6 @@ export default class RssPollingFeedForm extends Component {
     return previewSummary(this.testResults);
   }
 
-  @action
-  dismissTest() {
-    this.testResults = null;
-    this.testError = null;
-  }
-
-  @action
-  markDirty() {
-    this.dirty = true;
-  }
-
   get pollNowTitle() {
     if (this.dirty) {
       return "admin.rss_polling.history.poll_now_dirty";
@@ -109,6 +98,17 @@ export default class RssPollingFeedForm extends Component {
     }
 
     return null;
+  }
+
+  @action
+  dismissTest() {
+    this.testResults = null;
+    this.testError = null;
+  }
+
+  @action
+  markDirty() {
+    this.dirty = true;
   }
 
   @action

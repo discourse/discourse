@@ -18,6 +18,34 @@ class ConfigureRow extends Component {
   @tracked dragCssClass;
   dragCount = 0;
 
+  get sectionLabel() {
+    return i18n(`admin.dashboard.sections.${this.args.section.id}.title`);
+  }
+
+  get reorderUpLabel() {
+    return i18n("admin.dashboard.configure.reorder_up", {
+      label: this.sectionLabel,
+    });
+  }
+
+  get reorderDownLabel() {
+    return i18n("admin.dashboard.configure.reorder_down", {
+      label: this.sectionLabel,
+    });
+  }
+
+  get dragHandleLabel() {
+    return i18n("admin.dashboard.configure.drag_handle", {
+      label: this.sectionLabel,
+    });
+  }
+
+  get toggleLabel() {
+    return i18n("admin.dashboard.configure.toggle_visibility", {
+      label: this.sectionLabel,
+    });
+  }
+
   isAboveElement(event) {
     event.preventDefault();
     const target = event.currentTarget;
@@ -72,34 +100,6 @@ class ConfigureRow extends Component {
   dragEnd() {
     this.dragCount = 0;
     this.dragCssClass = null;
-  }
-
-  get sectionLabel() {
-    return i18n(`admin.dashboard.sections.${this.args.section.id}.title`);
-  }
-
-  get reorderUpLabel() {
-    return i18n("admin.dashboard.configure.reorder_up", {
-      label: this.sectionLabel,
-    });
-  }
-
-  get reorderDownLabel() {
-    return i18n("admin.dashboard.configure.reorder_down", {
-      label: this.sectionLabel,
-    });
-  }
-
-  get dragHandleLabel() {
-    return i18n("admin.dashboard.configure.drag_handle", {
-      label: this.sectionLabel,
-    });
-  }
-
-  get toggleLabel() {
-    return i18n("admin.dashboard.configure.toggle_visibility", {
-      label: this.sectionLabel,
-    });
   }
 
   <template>

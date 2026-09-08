@@ -16,6 +16,18 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
   @service modal;
   @service toasts;
 
+  get availableColumns() {
+    return this.args.data.board.columns.filter(
+      (column) => !column.topic_is_member
+    );
+  }
+
+  get alreadyAddedColumns() {
+    return this.args.data.board.columns.filter(
+      (column) => column.topic_is_member
+    );
+  }
+
   @action
   async addToColumn(column) {
     const response = await this.#checkConstraints(column);
@@ -55,6 +67,16 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  columnStyle(column) {
+    if (!isValidHex(column.color)) {
+      return null;
+    }
+
+    return trustHTML(
+      `--discourse-boards-column-icon-color: #${normalizeHex(column.color)};`
+    );
   }
 
   async #checkConstraints(column) {
@@ -129,28 +151,6 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
       popupAjaxError(error);
       return;
     }
-  }
-
-  get availableColumns() {
-    return this.args.data.board.columns.filter(
-      (column) => !column.topic_is_member
-    );
-  }
-
-  get alreadyAddedColumns() {
-    return this.args.data.board.columns.filter(
-      (column) => column.topic_is_member
-    );
-  }
-
-  columnStyle(column) {
-    if (!isValidHex(column.color)) {
-      return null;
-    }
-
-    return trustHTML(
-      `--discourse-boards-column-icon-color: #${normalizeHex(column.color)};`
-    );
   }
 
   <template>

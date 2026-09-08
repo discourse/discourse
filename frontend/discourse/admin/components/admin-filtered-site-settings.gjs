@@ -26,11 +26,6 @@ export default class AdminFilteredSiteSettings extends Component {
     this.filterChanged({ filter: "", onlyOverridden: false });
   }
 
-  @action
-  filterChanged(filterData) {
-    this._debouncedOnChangeFilter(filterData);
-  }
-
   get visibleSettings() {
     return this.matchedSettings?.filter((setting) =>
       this.adminSiteSettingStore.isVisible(setting, this.activeFilter)
@@ -41,14 +36,9 @@ export default class AdminFilteredSiteSettings extends Component {
     return isEmpty(this.visibleSettings) && !this.loading;
   }
 
-  _debouncedOnChangeFilter(filterData) {
-    cancel(this.onChangeFilterHandler);
-    this.onChangeFilterHandler = discourseDebounce(
-      this,
-      this.filterSettings,
-      filterData,
-      100
-    );
+  @action
+  filterChanged(filterData) {
+    this._debouncedOnChangeFilter(filterData);
   }
 
   filterSettings(filterData) {
@@ -63,6 +53,16 @@ export default class AdminFilteredSiteSettings extends Component {
       }
     )[0]?.siteSettings;
     this.loading = false;
+  }
+
+  _debouncedOnChangeFilter(filterData) {
+    cancel(this.onChangeFilterHandler);
+    this.onChangeFilterHandler = discourseDebounce(
+      this,
+      this.filterSettings,
+      filterData,
+      100
+    );
   }
 
   <template>

@@ -27,128 +27,9 @@ export default class ChatChannelsManager extends Service {
   @tracked userHasThreads = false;
   @tracked _cached = trackedObject();
 
-  async find(id, options = { fetchIfNotFound: true }) {
-    const existingChannel = this.#findStale(id);
-    if (existingChannel) {
-      return Promise.resolve(existingChannel);
-    } else if (options.fetchIfNotFound) {
-      return await this.#find(id);
-    } else {
-      return Promise.resolve();
-    }
-  }
-
   @cached
   get channels() {
     return Object.values(this._cached);
-  }
-
-  store(channelObject, options = {}) {
-    let model;
-
-    if (!options.replace) {
-      model = this.#findStale(channelObject.id);
-    }
-
-    if (!model) {
-      if (channelObject instanceof ChatChannel) {
-        model = channelObject;
-      } else {
-        model = ChatChannel.create(channelObject);
-      }
-      this.#cache(model);
-    }
-
-    if (
-      channelObject.meta?.message_bus_last_ids?.channel_message_bus_last_id !==
-      undefined
-    ) {
-      model.channelMessageBusLastId =
-        channelObject.meta.message_bus_last_ids.channel_message_bus_last_id;
-    }
-
-    this.#storeDraftsForChannel(model);
-
-    return model;
-  }
-
-  #storeDraftsForChannel(channel) {
-    const userChatDrafts = this.currentUser?.chat_drafts;
-
-    if (!userChatDrafts) {
-      return;
-    }
-
-    const storedDrafts = userChatDrafts.filter(
-      (draft) => draft.channel_id === channel.id
-    );
-
-    storedDrafts.forEach((storedDraft) => {
-      if (
-        this.chatDraftsManager.get(
-          storedDraft.channel_id,
-          storedDraft.thread_id
-        )
-      ) {
-        return;
-      }
-
-      this.chatDraftsManager.add(
-        ChatMessage.createDraftMessage(
-          channel,
-          Object.assign(
-            { user: this.currentUser },
-            JSON.parse(storedDraft.data)
-          )
-        ),
-        storedDraft.channel_id,
-        storedDraft.thread_id,
-        false
-      );
-    });
-  }
-
-  async follow(model) {
-    if (!this.currentUser || !model.currentUserMembership) {
-      return model;
-    }
-
-    this.chatSubscriptionsManager.startChannelSubscription(model);
-
-    if (!model.currentUserMembership.following) {
-      return this.chatApi.followChannel(model.id).then((membership) => {
-        model.currentUserMembership = membership;
-        return model;
-      });
-    } else {
-      return model;
-    }
-  }
-
-  async unfollow(model) {
-    try {
-      this.chatSubscriptionsManager.stopChannelSubscription(model);
-      model.currentUserMembership = await this.chatApi.unfollowChannel(
-        model.id
-      );
-      return model;
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
-  @debounce(300)
-  async markAllChannelsRead() {
-    // The user tracking state for each channel marked read will be propagated by MessageBus
-    return this.chatApi.markAllChannelsAsRead();
-  }
-
-  remove(model) {
-    if (!model) {
-      return;
-    }
-    this.chatSubscriptionsManager.stopChannelSubscription(model);
-    delete this._cached[model.id];
   }
 
   @cached
@@ -369,35 +250,6 @@ export default class ChatChannelsManager extends Service {
     });
   }
 
-  #getChannelUrgentCount(channel) {
-    if (channel.isDirectMessageChannel) {
-      return (
-        channel.tracking.unreadCount +
-        channel.tracking.mentionCount +
-        channel.tracking.watchedThreadsUnreadCount
-      );
-    }
-    return (
-      channel.tracking.mentionCount + channel.tracking.watchedThreadsUnreadCount
-    );
-  }
-
-  #getChannelUnreadCount(channel) {
-    return (
-      channel.tracking.unreadCount + channel.unreadThreadsCountSinceLastViewed
-    );
-  }
-
-  #compareByLastActivity(a, b) {
-    const aDate = a.lastMessage?.createdAt
-      ? new Date(a.lastMessage.createdAt)
-      : new Date(0);
-    const bDate = b.lastMessage?.createdAt
-      ? new Date(b.lastMessage.createdAt)
-      : new Date(0);
-    return bDate - aDate;
-  }
-
   /**
    * Returns public message channels that are not starred.
    * Falls back to all public channels if starring is disabled.
@@ -445,15 +297,6 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
-  async #find(id) {
-    try {
-      const result = await this.chatApi.channel(id);
-      return this.store(result.channel);
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
   get publicMessageChannelsEmpty() {
     return (
       this.publicMessageChannels?.length === 0 &&
@@ -478,6 +321,163 @@ export default class ChatChannelsManager extends Service {
     }
 
     return true;
+  }
+
+  async find(id, options = { fetchIfNotFound: true }) {
+    const existingChannel = this.#findStale(id);
+    if (existingChannel) {
+      return Promise.resolve(existingChannel);
+    } else if (options.fetchIfNotFound) {
+      return await this.#find(id);
+    } else {
+      return Promise.resolve();
+    }
+  }
+
+  store(channelObject, options = {}) {
+    let model;
+
+    if (!options.replace) {
+      model = this.#findStale(channelObject.id);
+    }
+
+    if (!model) {
+      if (channelObject instanceof ChatChannel) {
+        model = channelObject;
+      } else {
+        model = ChatChannel.create(channelObject);
+      }
+      this.#cache(model);
+    }
+
+    if (
+      channelObject.meta?.message_bus_last_ids?.channel_message_bus_last_id !==
+      undefined
+    ) {
+      model.channelMessageBusLastId =
+        channelObject.meta.message_bus_last_ids.channel_message_bus_last_id;
+    }
+
+    this.#storeDraftsForChannel(model);
+
+    return model;
+  }
+
+  async follow(model) {
+    if (!this.currentUser || !model.currentUserMembership) {
+      return model;
+    }
+
+    this.chatSubscriptionsManager.startChannelSubscription(model);
+
+    if (!model.currentUserMembership.following) {
+      return this.chatApi.followChannel(model.id).then((membership) => {
+        model.currentUserMembership = membership;
+        return model;
+      });
+    } else {
+      return model;
+    }
+  }
+
+  async unfollow(model) {
+    try {
+      this.chatSubscriptionsManager.stopChannelSubscription(model);
+      model.currentUserMembership = await this.chatApi.unfollowChannel(
+        model.id
+      );
+      return model;
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @debounce(300)
+  async markAllChannelsRead() {
+    // The user tracking state for each channel marked read will be propagated by MessageBus
+    return this.chatApi.markAllChannelsAsRead();
+  }
+
+  remove(model) {
+    if (!model) {
+      return;
+    }
+    this.chatSubscriptionsManager.stopChannelSubscription(model);
+    delete this._cached[model.id];
+  }
+
+  #storeDraftsForChannel(channel) {
+    const userChatDrafts = this.currentUser?.chat_drafts;
+
+    if (!userChatDrafts) {
+      return;
+    }
+
+    const storedDrafts = userChatDrafts.filter(
+      (draft) => draft.channel_id === channel.id
+    );
+
+    storedDrafts.forEach((storedDraft) => {
+      if (
+        this.chatDraftsManager.get(
+          storedDraft.channel_id,
+          storedDraft.thread_id
+        )
+      ) {
+        return;
+      }
+
+      this.chatDraftsManager.add(
+        ChatMessage.createDraftMessage(
+          channel,
+          Object.assign(
+            { user: this.currentUser },
+            JSON.parse(storedDraft.data)
+          )
+        ),
+        storedDraft.channel_id,
+        storedDraft.thread_id,
+        false
+      );
+    });
+  }
+
+  #getChannelUrgentCount(channel) {
+    if (channel.isDirectMessageChannel) {
+      return (
+        channel.tracking.unreadCount +
+        channel.tracking.mentionCount +
+        channel.tracking.watchedThreadsUnreadCount
+      );
+    }
+    return (
+      channel.tracking.mentionCount + channel.tracking.watchedThreadsUnreadCount
+    );
+  }
+
+  #getChannelUnreadCount(channel) {
+    return (
+      channel.tracking.unreadCount + channel.unreadThreadsCountSinceLastViewed
+    );
+  }
+
+  #compareByLastActivity(a, b) {
+    const aDate = a.lastMessage?.createdAt
+      ? new Date(a.lastMessage.createdAt)
+      : new Date(0);
+    const bDate = b.lastMessage?.createdAt
+      ? new Date(b.lastMessage.createdAt)
+      : new Date(0);
+    return bDate - aDate;
+  }
+
+  async #find(id) {
+    try {
+      const result = await this.chatApi.channel(id);
+      return this.store(result.channel);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   #cache(channel) {

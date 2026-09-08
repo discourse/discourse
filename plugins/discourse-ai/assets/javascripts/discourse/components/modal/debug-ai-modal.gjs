@@ -74,66 +74,12 @@ export default class DebugAiModal extends Component {
     );
   }
 
-  async loadLog(logId) {
-    this.showRawResponse = false;
-
-    try {
-      await ajax(`/discourse-ai/ai-bot/show-debug-info/${logId}.json`).then(
-        (result) => {
-          this.info = result;
-        }
-      );
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  @action
-  prevLog() {
-    this.loadLog(this.info.prev_log_id);
-  }
-
-  @action
-  nextLog() {
-    this.loadLog(this.info.next_log_id);
-  }
-
-  loadApiRequestInfo() {
-    this.showRawResponse = false;
-    ajax(`/discourse-ai/ai-bot/post/${this.args.model.id}/show-debug-info.json`)
-      .then((result) => {
-        this.info = result;
-      })
-      .catch((e) => {
-        popupAjaxError(e);
-      });
-  }
-
   get requestActive() {
     return this.activeTab === "request" ? "active" : "";
   }
 
   get responseActive() {
     return this.activeTab === "response" ? "active" : "";
-  }
-
-  @action
-  requestClicked(e) {
-    this.activeTab = "request";
-    this.showRawResponse = false;
-    e.preventDefault();
-  }
-
-  @action
-  responseClicked(e) {
-    this.activeTab = "response";
-    this.showRawResponse = false;
-    e.preventDefault();
-  }
-
-  @action
-  toggleResponseView() {
-    this.showRawResponse = !this.showRawResponse;
   }
 
   get formattedDurationSummary() {
@@ -157,10 +103,6 @@ export default class DebugAiModal extends Component {
       duration_seconds: durationSeconds,
       first_token_seconds: firstTokenSeconds,
     });
-  }
-
-  seconds(milliseconds) {
-    return milliseconds == null ? null : (milliseconds / 1000).toFixed(1);
   }
 
   get formattedSpending() {
@@ -197,6 +139,64 @@ export default class DebugAiModal extends Component {
       this.info.conversation_cache_read_tokens > 0 ||
       this.info.conversation_cache_write_tokens > 0
     );
+  }
+
+  async loadLog(logId) {
+    this.showRawResponse = false;
+
+    try {
+      await ajax(`/discourse-ai/ai-bot/show-debug-info/${logId}.json`).then(
+        (result) => {
+          this.info = result;
+        }
+      );
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  prevLog() {
+    this.loadLog(this.info.prev_log_id);
+  }
+
+  @action
+  nextLog() {
+    this.loadLog(this.info.next_log_id);
+  }
+
+  loadApiRequestInfo() {
+    this.showRawResponse = false;
+    ajax(`/discourse-ai/ai-bot/post/${this.args.model.id}/show-debug-info.json`)
+      .then((result) => {
+        this.info = result;
+      })
+      .catch((e) => {
+        popupAjaxError(e);
+      });
+  }
+
+  @action
+  requestClicked(e) {
+    this.activeTab = "request";
+    this.showRawResponse = false;
+    e.preventDefault();
+  }
+
+  @action
+  responseClicked(e) {
+    this.activeTab = "response";
+    this.showRawResponse = false;
+    e.preventDefault();
+  }
+
+  @action
+  toggleResponseView() {
+    this.showRawResponse = !this.showRawResponse;
+  }
+
+  seconds(milliseconds) {
+    return milliseconds == null ? null : (milliseconds / 1000).toFixed(1);
   }
 
   cacheLabel(read, write) {

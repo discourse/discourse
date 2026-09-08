@@ -276,19 +276,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
   }
 
   @action
-  async _updateChannelProperty(channel, property, value) {
-    try {
-      const result = await this.chatApi.updateChannel(channel.id, {
-        [property]: value,
-      });
-      this.toasts.success({ data: { message: i18n("saved") } });
-      return result;
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
-  @action
   async onToggleThreadingEnabled(value) {
     try {
       this.args.channel.threadingEnabled = !value;
@@ -342,6 +329,19 @@ export default class ChatRouteChannelInfoSettings extends Component {
     return this.modal.show(ChatModalEditChannelDescription, {
       model: this.args.channel,
     });
+  }
+
+  @action
+  async _updateChannelProperty(channel, property, value) {
+    try {
+      const result = await this.chatApi.updateChannel(channel.id, {
+        [property]: value,
+      });
+      this.toasts.success({ data: { message: i18n("saved") } });
+      return result;
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>

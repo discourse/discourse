@@ -12,17 +12,17 @@ import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class AdminUserUpcomingChanges extends Component {
-  @bind
-  reasonKey(reason) {
-    return `user.upcoming_changes.why_reasons.${reason}`;
-  }
-
   get description() {
     return trustHTML(
       i18n("admin.user.upcoming_changes.description", {
         basePath: getUrl(""),
       })
     );
+  }
+
+  @bind
+  reasonKey(reason) {
+    return `user.upcoming_changes.why_reasons.${reason}`;
   }
 
   @bind

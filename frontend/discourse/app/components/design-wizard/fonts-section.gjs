@@ -28,16 +28,16 @@ export default class DesignWizardFontsSection extends Component {
     return this.#fontName(this.args.headingFont);
   }
 
-  #fontName(selectedKey) {
-    return (
-      ALL_FONTS.find((font) => font.key === selectedKey)?.name ?? selectedKey
-    );
-  }
-
   @action
   async selectFont(onSelect, fontKey, dMenu) {
     await dMenu.close();
     onSelect(fontKey);
+  }
+
+  #fontName(selectedKey) {
+    return (
+      ALL_FONTS.find((font) => font.key === selectedKey)?.name ?? selectedKey
+    );
   }
 
   <template>

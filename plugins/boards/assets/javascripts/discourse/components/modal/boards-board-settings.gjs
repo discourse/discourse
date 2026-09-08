@@ -176,48 +176,6 @@ export default class BoardsBoardSettings extends Component {
     this._checkConstraints(null, names);
   }
 
-  _checkConstraints(categoryIds, tagNames) {
-    if (this.isNew) {
-      return;
-    }
-    cancel(this._constraintCheckTimer);
-    this._constraintCheckTimer = discourseDebounce(
-      this,
-      this._fetchConstraintPreview,
-      categoryIds,
-      tagNames,
-      500
-    );
-  }
-
-  async _fetchConstraintPreview(categoryIds, tagNames) {
-    const boardId = this.args.model.board?.id;
-    if (!boardId) {
-      return;
-    }
-
-    try {
-      const result = await ajax(
-        `/boards/api/boards/${boardId}/constraint-preview`,
-        {
-          type: "POST",
-          data: {
-            category_ids: categoryIds ?? this.formApi?.get("category_ids"),
-            tag_names: tagNames ?? this.formApi?.get("tag_names"),
-          },
-        }
-      );
-      this.constraintWarning =
-        result.cards_to_remove > 0
-          ? i18n("boards.manage.constraint_warning", {
-              count: result.cards_to_remove,
-            })
-          : null;
-    } catch {
-      this.constraintWarning = null;
-    }
-  }
-
   @action
   onRegisterApi(api) {
     this.formApi = api;
@@ -234,15 +192,6 @@ export default class BoardsBoardSettings extends Component {
     }
 
     await this._performSave(data);
-  }
-
-  async _performSave(data) {
-    try {
-      await this.args.model.onSave(data);
-      this.args.closeModal({ reloadAfterSave: this.reloadAfterSave });
-    } catch (error) {
-      popupAjaxError(error);
-    }
   }
 
   @action
@@ -315,6 +264,57 @@ export default class BoardsBoardSettings extends Component {
     }
 
     return defaultAcl;
+  }
+
+  _checkConstraints(categoryIds, tagNames) {
+    if (this.isNew) {
+      return;
+    }
+    cancel(this._constraintCheckTimer);
+    this._constraintCheckTimer = discourseDebounce(
+      this,
+      this._fetchConstraintPreview,
+      categoryIds,
+      tagNames,
+      500
+    );
+  }
+
+  async _fetchConstraintPreview(categoryIds, tagNames) {
+    const boardId = this.args.model.board?.id;
+    if (!boardId) {
+      return;
+    }
+
+    try {
+      const result = await ajax(
+        `/boards/api/boards/${boardId}/constraint-preview`,
+        {
+          type: "POST",
+          data: {
+            category_ids: categoryIds ?? this.formApi?.get("category_ids"),
+            tag_names: tagNames ?? this.formApi?.get("tag_names"),
+          },
+        }
+      );
+      this.constraintWarning =
+        result.cards_to_remove > 0
+          ? i18n("boards.manage.constraint_warning", {
+              count: result.cards_to_remove,
+            })
+          : null;
+    } catch {
+      this.constraintWarning = null;
+    }
+  }
+
+  async _performSave(data) {
+    try {
+      await this.args.model.onSave(data);
+      this.args.closeModal({ reloadAfterSave: this.reloadAfterSave });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>

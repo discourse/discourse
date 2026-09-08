@@ -58,27 +58,6 @@ export default class BoardsAddTopicAsCard extends Component {
     }
   }
 
-  #topicIdFromInput(value) {
-    const input = (value ?? "").trim();
-    if (!input || !DiscourseURL.isInternal(input)) {
-      return null;
-    }
-
-    let pathname;
-    try {
-      pathname = new URL(input, DiscourseURL.origin).pathname;
-    } catch {
-      return null;
-    }
-
-    const stripped = withoutPrefix(pathname);
-    const match = TOPIC_URL_REGEXP.exec(stripped);
-    if (!match || match.index !== 0 || match[0].length !== stripped.length) {
-      return null;
-    }
-    return parseInt(match[2], 10);
-  }
-
   async triggerSearch(value) {
     const looksLikeUrl = /^(?:https?:)?\/\//i.test(value ?? "");
     if (!value || value.length < 4 || looksLikeUrl) {
@@ -179,6 +158,27 @@ export default class BoardsAddTopicAsCard extends Component {
       this.args.model.onAddTopicAsCard({ topicId, title: value });
       this.args.closeModal();
     }
+  }
+
+  #topicIdFromInput(value) {
+    const input = (value ?? "").trim();
+    if (!input || !DiscourseURL.isInternal(input)) {
+      return null;
+    }
+
+    let pathname;
+    try {
+      pathname = new URL(input, DiscourseURL.origin).pathname;
+    } catch {
+      return null;
+    }
+
+    const stripped = withoutPrefix(pathname);
+    const match = TOPIC_URL_REGEXP.exec(stripped);
+    if (!match || match.index !== 0 || match[0].length !== stripped.length) {
+      return null;
+    }
+    return parseInt(match[2], 10);
   }
 
   <template>

@@ -55,14 +55,6 @@ export default class AdminEditLeaderboard extends Component {
     );
   }
 
-  async updateSelectedScorableCategories(ids, previousRequest) {
-    const categories = ids?.length ? await Category.asyncFindByIds(ids) : [];
-
-    await previousRequest;
-
-    this.selectedScorableCategories = categories;
-  }
-
   get formData() {
     const overrides = this.args.leaderboard.scoreOverrides || {};
 
@@ -84,6 +76,14 @@ export default class AdminEditLeaderboard extends Component {
     }
 
     return data;
+  }
+
+  async updateSelectedScorableCategories(ids, previousRequest) {
+    const categories = ids?.length ? await Category.asyncFindByIds(ids) : [];
+
+    await previousRequest;
+
+    this.selectedScorableCategories = categories;
   }
 
   @action

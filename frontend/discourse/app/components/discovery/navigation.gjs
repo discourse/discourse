@@ -74,6 +74,15 @@ export default class DiscoveryNavigation extends Component {
     }
   }
 
+  get headingClasses() {
+    return dConcatClass(
+      "category-heading",
+      this.args.category?.uploaded_logo?.url
+        ? "--has-logo discovery-heading"
+        : null
+    );
+  }
+
   @action
   editCategory() {
     DiscourseURL.routeTo(`/c/${Category.slugFor(this.args.category)}/edit`);
@@ -87,15 +96,6 @@ export default class DiscoveryNavigation extends Component {
   @action
   reorderCategories() {
     this.modal.show(ReorderCategories);
-  }
-
-  get headingClasses() {
-    return dConcatClass(
-      "category-heading",
-      this.args.category?.uploaded_logo?.url
-        ? "--has-logo discovery-heading"
-        : null
-    );
   }
 
   <template>

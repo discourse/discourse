@@ -14,15 +14,15 @@ export default class ScrubRejectedUserModal extends Component {
   @tracked isScrubbing = false;
   @tracked scrubReason = "";
 
+  get scrubButtonDisabled() {
+    return isEmpty(this.scrubReason);
+  }
+
   @action
   async confirmScrub() {
     this.isScrubbing = true;
     await this.args.model.confirmScrub(this.scrubReason);
     this.args.closeModal();
-  }
-
-  get scrubButtonDisabled() {
-    return isEmpty(this.scrubReason);
   }
 
   <template>

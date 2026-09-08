@@ -10,12 +10,6 @@ export default class PostVotingCommentComposer extends Component {
 
   @tracked value = this.args.raw ?? "";
 
-  @action
-  onInput(event) {
-    this.value = event.target.value;
-    this.args.onInput?.(event.target.value);
-  }
-
   get errorMessage() {
     if (this.value.length < this.siteSettings.min_post_length) {
       return i18n("post_voting.post.post_voting_comment.composer.too_short", {
@@ -36,6 +30,12 @@ export default class PostVotingCommentComposer extends Component {
     return (
       this.siteSettings.post_voting_comment_max_raw_length - this.value.length
     );
+  }
+
+  @action
+  onInput(event) {
+    this.value = event.target.value;
+    this.args.onInput?.(event.target.value);
   }
 
   <template>

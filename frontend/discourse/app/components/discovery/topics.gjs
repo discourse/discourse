@@ -67,26 +67,6 @@ export default class DiscoveryTopics extends Component {
     return filterTypeForMode(this.args.model.filter) === "unread";
   }
 
-  // Show newly inserted topics
-  @action
-  async showInserted(event) {
-    event?.preventDefault();
-
-    if (this.args.model.loadingBefore) {
-      return; // Already loading
-    }
-
-    const { topicTrackingState } = this;
-
-    try {
-      const topicIds = [...topicTrackingState.newIncoming];
-      await this.args.model.loadBefore(topicIds, true);
-      topicTrackingState.clearIncoming(topicIds);
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
   get showTopicsAndRepliesToggle() {
     return this.new && this.currentUser?.unified_new_enabled;
   }
@@ -147,6 +127,26 @@ export default class DiscoveryTopics extends Component {
 
   get showBottomDismissButtons() {
     return this.allLoaded && !this.site.mobileView;
+  }
+
+  // Show newly inserted topics
+  @action
+  async showInserted(event) {
+    event?.preventDefault();
+
+    if (this.args.model.loadingBefore) {
+      return; // Already loading
+    }
+
+    const { topicTrackingState } = this;
+
+    try {
+      const topicIds = [...topicTrackingState.newIncoming];
+      await this.args.model.loadBefore(topicIds, true);
+      topicTrackingState.clearIncoming(topicIds);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   @action

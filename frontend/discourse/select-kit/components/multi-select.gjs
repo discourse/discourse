@@ -45,6 +45,38 @@ export default class MultiSelect extends SelectKitComponent {
       : "plus";
   }
 
+  @computed("value.[]", "content.[]", "selectKit.noneItem")
+  get selectedContent() {
+    const value = makeArray(this.value).map((v) =>
+      this.selectKit.options.castInteger && isNumeric(v) ? Number(v) : v
+    );
+
+    if (value.length) {
+      let content = [];
+
+      value.forEach((v) => {
+        if (this.selectKit.valueProperty) {
+          // extract ID from object values for comparison
+          const vId = this.getValue(v);
+          const c = makeArray(this.content).find(
+            (item) => item[this.selectKit.valueProperty] === vId
+          );
+          if (c) {
+            content.push(c);
+          }
+        } else {
+          if (makeArray(this.content).includes(v)) {
+            content.push(v);
+          }
+        }
+      });
+
+      return this.selectKit.modifySelection(content);
+    }
+
+    return null;
+  }
+
   search(filter) {
     return super
       .search(filter)
@@ -139,38 +171,6 @@ export default class MultiSelect extends SelectKitComponent {
           : makeArray(this.defaultItem(value, value))
       );
     }
-  }
-
-  @computed("value.[]", "content.[]", "selectKit.noneItem")
-  get selectedContent() {
-    const value = makeArray(this.value).map((v) =>
-      this.selectKit.options.castInteger && isNumeric(v) ? Number(v) : v
-    );
-
-    if (value.length) {
-      let content = [];
-
-      value.forEach((v) => {
-        if (this.selectKit.valueProperty) {
-          // extract ID from object values for comparison
-          const vId = this.getValue(v);
-          const c = makeArray(this.content).find(
-            (item) => item[this.selectKit.valueProperty] === vId
-          );
-          if (c) {
-            content.push(c);
-          }
-        } else {
-          if (makeArray(this.content).includes(v)) {
-            content.push(v);
-          }
-        }
-      });
-
-      return this.selectKit.modifySelection(content);
-    }
-
-    return null;
   }
 
   _onKeydown(event) {

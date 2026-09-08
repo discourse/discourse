@@ -39,6 +39,13 @@ export default class BasicTopicList extends Component {
     }
   }
 
+  @computed("topics")
+  get showUnreadIndicator() {
+    return this.topics.some(
+      (topic) => typeof topic.unread_by_group_member !== "undefined"
+    );
+  }
+
   @observes("topicList.[]")
   _topicListChanged() {
     this._initFromTopicList(this.topicList);
@@ -49,13 +56,6 @@ export default class BasicTopicList extends Component {
       this.set("topics", topicList.get("topics"));
       this.rerender();
     }
-  }
-
-  @computed("topics")
-  get showUnreadIndicator() {
-    return this.topics.some(
-      (topic) => typeof topic.unread_by_group_member !== "undefined"
-    );
   }
 
   <template>

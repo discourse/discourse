@@ -64,6 +64,10 @@ export default class PostTranslationsModal extends Component {
     }));
   }
 
+  get canLocalizePost() {
+    return this.post.can_localize_post;
+  }
+
   localeLabel(locale) {
     return `${this.languageNameLookup.getLanguageName(locale)} (${locale})`;
   }
@@ -85,10 +89,6 @@ export default class PostTranslationsModal extends Component {
     } finally {
       this.loading = false;
     }
-  }
-
-  get canLocalizePost() {
-    return this.post.can_localize_post;
   }
 
   @action

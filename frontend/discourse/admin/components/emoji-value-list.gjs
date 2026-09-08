@@ -30,6 +30,10 @@ export default class EmojiValueList extends Component {
       });
   }
 
+  get showUpDownButtons() {
+    return this.collection.length > 1;
+  }
+
   @action
   emojiSelected(code) {
     if (!this.#validateInput(code)) {
@@ -57,10 +61,6 @@ export default class EmojiValueList extends Component {
     }
 
     this.#saveValues(newCollection);
-  }
-
-  get showUpDownButtons() {
-    return this.collection.length > 1;
   }
 
   @action

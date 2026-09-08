@@ -22,6 +22,30 @@ export default class DiscourseReactionsCounter extends Component {
     return this.menu.getByIdentifier(MENU_IDENTIFIER)?.id === this.elementId;
   }
 
+  get classes() {
+    const classes = ["discourse-reactions-counter"];
+    const mainReaction =
+      this.siteSettings.discourse_reactions_reaction_for_like;
+
+    const { reactions } = this.args.post;
+
+    if (
+      reactions &&
+      reactions.length === 1 &&
+      reactions[0].id === mainReaction
+    ) {
+      classes.push("only-like");
+    }
+
+    return classes.join(" ");
+  }
+
+  get counterAriaLabel() {
+    return i18n("discourse_reactions.counter.aria_label", {
+      count: this.args.post.reaction_users_count,
+    });
+  }
+
   @action
   mouseDown(event) {
     event.stopImmediatePropagation();
@@ -45,30 +69,6 @@ export default class DiscourseReactionsCounter extends Component {
     event.stopPropagation();
     event.preventDefault();
     this.#toggleMenu(event.currentTarget);
-  }
-
-  get classes() {
-    const classes = ["discourse-reactions-counter"];
-    const mainReaction =
-      this.siteSettings.discourse_reactions_reaction_for_like;
-
-    const { reactions } = this.args.post;
-
-    if (
-      reactions &&
-      reactions.length === 1 &&
-      reactions[0].id === mainReaction
-    ) {
-      classes.push("only-like");
-    }
-
-    return classes.join(" ");
-  }
-
-  get counterAriaLabel() {
-    return i18n("discourse_reactions.counter.aria_label", {
-      count: this.args.post.reaction_users_count,
-    });
   }
 
   #toggleMenu(trigger) {

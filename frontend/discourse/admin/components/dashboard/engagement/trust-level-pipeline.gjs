@@ -54,13 +54,6 @@ export default class TrustLevelPipeline extends Component {
     });
   }
 
-  #barWidth(value, max) {
-    if (max === 0 || value === 0) {
-      return 0;
-    }
-    return Math.round((value / max) * 100);
-  }
-
   get trendClass() {
     const direction = this.args.data?.trend?.direction;
     if (direction === "climbing") {
@@ -84,6 +77,13 @@ export default class TrustLevelPipeline extends Component {
       `admin.dashboard.sections.engagement.trust_level_pipeline.trend.${trend.direction}`,
       { count: trend.net }
     );
+  }
+
+  #barWidth(value, max) {
+    if (max === 0 || value === 0) {
+      return 0;
+    }
+    return Math.round((value / max) * 100);
   }
 
   <template>

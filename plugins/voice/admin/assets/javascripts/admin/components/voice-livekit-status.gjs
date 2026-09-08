@@ -26,28 +26,6 @@ export default class VoiceLivekitStatus extends Component {
     this.load();
   }
 
-  @action
-  async load({ refreshProbe = false } = {}) {
-    this.loading = true;
-    this.loadFailed = false;
-
-    try {
-      this.status = await ajax(
-        `/admin/plugins/voice/livekit/${refreshProbe ? "probe" : "status"}.json`,
-        refreshProbe ? { type: "POST" } : {}
-      );
-    } catch {
-      this.loadFailed = true;
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  @action
-  async refresh() {
-    await this.load({ refreshProbe: true });
-  }
-
   // Pure-mesh installs (no LiveKit setting touched) never see the card.
   get visible() {
     if (this.loading && !this.status) {
@@ -196,6 +174,28 @@ export default class VoiceLivekitStatus extends Component {
         missingInPresence: this.#usernames(room.missing_in_presence),
       };
     });
+  }
+
+  @action
+  async load({ refreshProbe = false } = {}) {
+    this.loading = true;
+    this.loadFailed = false;
+
+    try {
+      this.status = await ajax(
+        `/admin/plugins/voice/livekit/${refreshProbe ? "probe" : "status"}.json`,
+        refreshProbe ? { type: "POST" } : {}
+      );
+    } catch {
+      this.loadFailed = true;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  @action
+  async refresh() {
+    await this.load({ refreshProbe: true });
   }
 
   #usernames(userIds) {

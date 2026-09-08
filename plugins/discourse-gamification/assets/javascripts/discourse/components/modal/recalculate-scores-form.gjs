@@ -58,15 +58,6 @@ export default class RecalculateScoresForm extends Component {
     this.messageBus.unsubscribe("/recalculate_scores", this.onMessage);
   }
 
-  @bind
-  onMessage(message) {
-    if (message.success) {
-      this.status = "complete";
-      this.args.model.recalculate_scores_remaining = message.remaining;
-      this.remaining = message.remaining;
-    }
-  }
-
   get remainingText() {
     return i18n("gamification.daily_update_scores_availability", {
       count: this.remaining,
@@ -95,6 +86,15 @@ export default class RecalculateScoresForm extends Component {
     return `${pastDate} - ${today.format(
       i18n("dates.long_with_year_no_time")
     )}`;
+  }
+
+  @bind
+  onMessage(message) {
+    if (message.success) {
+      this.status = "complete";
+      this.args.model.recalculate_scores_remaining = message.remaining;
+      this.remaining = message.remaining;
+    }
   }
 
   @bind

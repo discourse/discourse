@@ -63,18 +63,6 @@ export default class OutletInfoComponent extends Component {
     return this.partOfWrapper ? this.baseName : this.args.outletName;
   }
 
-  @action
-  checkIsWrapper(element) {
-    const parent = element.parentElement;
-    this.partOfWrapper = [
-      this.baseName,
-      `${this.baseName}__before`,
-      `${this.baseName}__after`,
-    ].every((name) =>
-      parent.querySelector(`:scope > [data-outlet-name="${name}"]`)
-    );
-  }
-
   get isWrapper() {
     return this.partOfWrapper && !this.isBeforeOrAfter;
   }
@@ -129,6 +117,18 @@ export default class OutletInfoComponent extends Component {
    */
   get headingModifier() {
     return this.partOfWrapper ? "--wrapper-outlet" : "--plugin-outlet";
+  }
+
+  @action
+  checkIsWrapper(element) {
+    const parent = element.parentElement;
+    this.partOfWrapper = [
+      this.baseName,
+      `${this.baseName}__before`,
+      `${this.baseName}__after`,
+    ].every((name) =>
+      parent.querySelector(`:scope > [data-outlet-name="${name}"]`)
+    );
   }
 
   <template>

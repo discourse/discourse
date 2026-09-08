@@ -25,18 +25,6 @@ export default class TopicTimerInfo extends Component {
   removeTopicTimer = null;
   _delayedRerender = null;
 
-  @on("didReceiveAttrs")
-  setupRenderer() {
-    this.renderTopicTimer();
-  }
-
-  @on("willDestroyElement")
-  cancelDelayedRenderer() {
-    if (this._delayedRerender) {
-      cancel(this._delayedRerender);
-    }
-  }
-
   @computed("currentUser.canSetTopicTimer")
   get canModifyTimer() {
     return this.currentUser?.get("canSetTopicTimer");
@@ -50,6 +38,18 @@ export default class TopicTimerInfo extends Component {
   @computed("canModifyTimer", "showTopicTimerModal")
   get showEdit() {
     return this.canModifyTimer && this.showTopicTimerModal;
+  }
+
+  @on("didReceiveAttrs")
+  setupRenderer() {
+    this.renderTopicTimer();
+  }
+
+  @on("willDestroyElement")
+  cancelDelayedRenderer() {
+    if (this._delayedRerender) {
+      cancel(this._delayedRerender);
+    }
   }
 
   additionalOpts() {

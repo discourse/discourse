@@ -76,6 +76,10 @@ export default class ChatComposerUploads extends Component {
     return this.uppyUpload.inProgressUploads;
   }
 
+  get showUploadsContainer() {
+    return this.uploads?.length > 0 || this.inProgressUploads.length > 0;
+  }
+
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     if (this.inProgressUploads?.length > 0) {
@@ -98,10 +102,6 @@ export default class ChatComposerUploads extends Component {
       "paste",
       this._pasteEventListener
     );
-  }
-
-  get showUploadsContainer() {
-    return this.uploads?.length > 0 || this.inProgressUploads.length > 0;
   }
 
   @action

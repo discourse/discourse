@@ -79,16 +79,6 @@ export default class DMultiSelect extends Component {
     return new TrackedAsyncData(promise);
   }
 
-  #debounceSearch() {
-    discourseDebounce(
-      this,
-      this.#resolveAsyncData,
-      this.args.loadFn,
-      this.searchTerm,
-      INPUT_DELAY
-    );
-  }
-
   get availableOptions() {
     if (!this.data.isResolved || !this.data.value) {
       return this.data.value;
@@ -219,6 +209,16 @@ export default class DMultiSelect extends Component {
 
   getDisplayText(item) {
     return item?.name;
+  }
+
+  #debounceSearch() {
+    discourseDebounce(
+      this,
+      this.#resolveAsyncData,
+      this.args.loadFn,
+      this.searchTerm,
+      INPUT_DELAY
+    );
   }
 
   #resolveAsyncData(asyncData, context) {

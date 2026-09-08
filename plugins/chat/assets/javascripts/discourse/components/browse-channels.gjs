@@ -43,22 +43,6 @@ export default class BrowseChannels extends Component {
     ];
   }
 
-  @action
-  setJoinedFilter(value) {
-    this.selectedJoinedFilter = value;
-  }
-
-  @action
-  filterChannelsByJoined(listItems) {
-    if (this.selectedJoinedFilter === "joined") {
-      return listItems.filter((channel) => channel.isFollowing);
-    } else if (this.selectedJoinedFilter === "not-joined") {
-      return listItems.filter((channel) => !channel.isFollowing);
-    } else {
-      return listItems;
-    }
-  }
-
   @cached
   get channelsCollection() {
     return this.chatApi.channels({
@@ -72,6 +56,22 @@ export default class BrowseChannels extends Component {
       return TABS;
     } else {
       return TABS.filter((item) => item !== ARCHIVED);
+    }
+  }
+
+  @action
+  setJoinedFilter(value) {
+    this.selectedJoinedFilter = value;
+  }
+
+  @action
+  filterChannelsByJoined(listItems) {
+    if (this.selectedJoinedFilter === "joined") {
+      return listItems.filter((channel) => channel.isFollowing);
+    } else if (this.selectedJoinedFilter === "not-joined") {
+      return listItems.filter((channel) => !channel.isFollowing);
+    } else {
+      return listItems;
     }
   }
 

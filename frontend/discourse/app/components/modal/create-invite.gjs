@@ -98,6 +98,53 @@ export default class CreateInvite extends Component {
     return data;
   }
 
+  get descriptionValidation() {
+    return `length:0,${INVITE_DESCRIPTION_MAX_LENGTH}`;
+  }
+
+  get maxRedemptionsAllowedLimit() {
+    if (this.currentUser.staff) {
+      return this.siteSettings.invite_link_max_redemptions_limit;
+    }
+
+    return this.siteSettings.invite_link_max_redemptions_limit_users;
+  }
+
+  get defaultRedemptionsAllowed() {
+    const max = this.maxRedemptionsAllowedLimit;
+    const val = this.currentUser.staff ? 100 : 10;
+    return Math.min(max, val);
+  }
+
+  get canInviteToGroup() {
+    return (
+      this.currentUser.staff ||
+      this.currentUser.visibleGroups.some((g) => g.group_user?.owner)
+    );
+  }
+
+  get canArriveAtTopic() {
+    return this.currentUser.staff && !this.siteSettings.must_approve_users;
+  }
+
+  get canSendEmailInvite() {
+    return this.isEmailInvite && this.siteSettings.allow_email_invites;
+  }
+
+  get linkOptionsLabel() {
+    return this.siteSettings.allow_email_invites
+      ? i18n("user.invited.invite.edit_link_options")
+      : i18n("user.invited.invite.edit_link_options_only");
+  }
+
+  get simpleMode() {
+    return !this.args.model.editing && !this.displayAdvancedOptions;
+  }
+
+  get inviteCreated() {
+    return !!this.invite.get("id");
+  }
+
   async save(data) {
     let isLink = true;
     const restrictTo = data.emailOrDomain;
@@ -168,53 +215,6 @@ export default class CreateInvite extends Component {
     } finally {
       this.saving = false;
     }
-  }
-
-  get descriptionValidation() {
-    return `length:0,${INVITE_DESCRIPTION_MAX_LENGTH}`;
-  }
-
-  get maxRedemptionsAllowedLimit() {
-    if (this.currentUser.staff) {
-      return this.siteSettings.invite_link_max_redemptions_limit;
-    }
-
-    return this.siteSettings.invite_link_max_redemptions_limit_users;
-  }
-
-  get defaultRedemptionsAllowed() {
-    const max = this.maxRedemptionsAllowedLimit;
-    const val = this.currentUser.staff ? 100 : 10;
-    return Math.min(max, val);
-  }
-
-  get canInviteToGroup() {
-    return (
-      this.currentUser.staff ||
-      this.currentUser.visibleGroups.some((g) => g.group_user?.owner)
-    );
-  }
-
-  get canArriveAtTopic() {
-    return this.currentUser.staff && !this.siteSettings.must_approve_users;
-  }
-
-  get canSendEmailInvite() {
-    return this.isEmailInvite && this.siteSettings.allow_email_invites;
-  }
-
-  get linkOptionsLabel() {
-    return this.siteSettings.allow_email_invites
-      ? i18n("user.invited.invite.edit_link_options")
-      : i18n("user.invited.invite.edit_link_options_only");
-  }
-
-  get simpleMode() {
-    return !this.args.model.editing && !this.displayAdvancedOptions;
-  }
-
-  get inviteCreated() {
-    return !!this.invite.get("id");
   }
 
   @action

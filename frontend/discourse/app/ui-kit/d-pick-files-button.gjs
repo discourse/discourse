@@ -35,6 +35,29 @@ export default class DPickFilesButton extends Component {
   allowMultiple = false;
   showButton = false;
 
+  @computed()
+  get acceptsAllFormats() {
+    return (
+      this.capabilities.isIOS ||
+      authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
+    );
+  }
+
+  @computed()
+  get acceptedFormats() {
+    // the acceptedFormatsOverride can be a list of extensions or mime types
+    if (!isBlank(this.acceptedFormatsOverride)) {
+      return this.acceptedFormatsOverride;
+    }
+
+    const extensions = authorizedExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
+
+    return extensions.map((ext) => `.${ext}`).join();
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
 
@@ -57,29 +80,6 @@ export default class DPickFilesButton extends Component {
   onChange() {
     const files = this.fileInput.files;
     this._filesPicked(files);
-  }
-
-  @computed()
-  get acceptsAllFormats() {
-    return (
-      this.capabilities.isIOS ||
-      authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
-    );
-  }
-
-  @computed()
-  get acceptedFormats() {
-    // the acceptedFormatsOverride can be a list of extensions or mime types
-    if (!isBlank(this.acceptedFormatsOverride)) {
-      return this.acceptedFormatsOverride;
-    }
-
-    const extensions = authorizedExtensions(
-      this.currentUser.staff,
-      this.siteSettings
-    );
-
-    return extensions.map((ext) => `.${ext}`).join();
   }
 
   @action

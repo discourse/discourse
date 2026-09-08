@@ -29,16 +29,6 @@ export default class AdminBadgesAward extends Component {
     return this.adminBadges.badges;
   }
 
-  resetState() {
-    this.saving = false;
-    this.unmatchedEntries = null;
-    this.resultsMessage = null;
-    this.success = false;
-    this.unmatchedEntriesCount = 0;
-
-    this.updateFileSelected();
-  }
-
   get massAwardButtonDisabled() {
     return !this.fileSelected || this.saving;
   }
@@ -47,6 +37,16 @@ export default class AdminBadgesAward extends Component {
     let count = this.unmatchedEntriesCount;
     let length = this.unmatchedEntries.length;
     return count && length && count > length;
+  }
+
+  resetState() {
+    this.saving = false;
+    this.unmatchedEntries = null;
+    this.resultsMessage = null;
+    this.success = false;
+    this.unmatchedEntriesCount = 0;
+
+    this.updateFileSelected();
   }
 
   @action

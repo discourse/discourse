@@ -134,18 +134,6 @@ export default class DiscoursePostEvent extends Component {
     return this.isLoading && this.isPartialEvent;
   }
 
-  getDisplayTime(time) {
-    if (this.event.allDay) {
-      return moment(time, "YYYY-MM-DD");
-    } else if (this.event.showLocalTime) {
-      return moment.tz(time, this.event.timezone || "UTC");
-    } else {
-      return moment
-        .utc(time)
-        .tz(this.currentUser?.user_option?.timezone || moment.tz.guess());
-    }
-  }
-
   get clampDescription() {
     return this.args.clampDescription ?? false;
   }
@@ -210,6 +198,18 @@ export default class DiscoursePostEvent extends Component {
       `discourse_post_event.builder_modal.recurrence.${this.event.recurrence}`,
       recurrenceContext(recurrenceRef(this.event))
     );
+  }
+
+  getDisplayTime(time) {
+    if (this.event.allDay) {
+      return moment(time, "YYYY-MM-DD");
+    } else if (this.event.showLocalTime) {
+      return moment.tz(time, this.event.timezone || "UTC");
+    } else {
+      return moment
+        .utc(time)
+        .tz(this.currentUser?.user_option?.timezone || moment.tz.guess());
+    }
   }
 
   async loadEvent() {

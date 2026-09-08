@@ -64,6 +64,34 @@ export default class VoiceInviteUsersModal extends Component {
     }
   }
 
+  @action
+  setSelectedUsernames(usernames) {
+    this.selectedUsernames = usernames;
+  }
+
+  @action
+  async inviteSelected() {
+    if (!this.selectedUsernames.length) {
+      return;
+    }
+    await this.#invite(this.selectedUsernames);
+    this.selectedUsernames = [];
+  }
+
+  @action
+  async inviteSuggestion(suggestion) {
+    await this.#invite([suggestion.username]);
+  }
+
+  @action
+  copyLink() {
+    clipboardCopy(this.inviteUrl);
+    this.toasts.success({
+      duration: "short",
+      data: { message: i18n("voice.room.link_copied") },
+    });
+  }
+
   async #invite(usernames) {
     this.inviting = true;
     try {
@@ -101,34 +129,6 @@ export default class VoiceInviteUsersModal extends Component {
     } finally {
       this.inviting = false;
     }
-  }
-
-  @action
-  setSelectedUsernames(usernames) {
-    this.selectedUsernames = usernames;
-  }
-
-  @action
-  async inviteSelected() {
-    if (!this.selectedUsernames.length) {
-      return;
-    }
-    await this.#invite(this.selectedUsernames);
-    this.selectedUsernames = [];
-  }
-
-  @action
-  async inviteSuggestion(suggestion) {
-    await this.#invite([suggestion.username]);
-  }
-
-  @action
-  copyLink() {
-    clipboardCopy(this.inviteUrl);
-    this.toasts.success({
-      duration: "short",
-      data: { message: i18n("voice.room.link_copied") },
-    });
   }
 
   <template>

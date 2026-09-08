@@ -54,6 +54,16 @@ export default class EmbedableChatChannel extends Component {
     return messageId ? [Number(messageId)] : [];
   }
 
+  // Inline means the channel is laid out by its parent rather than pinned over
+  // the page, so neither the visibility toggle nor a way to dismiss it applies.
+  get showCloseButton() {
+    if (this.args.inline) {
+      return false;
+    }
+
+    return this.args.onClose || !this.embeddableChat.isMobileModal;
+  }
+
   @bind
   async onMessage(message) {
     const membership = JSON.parse(message).user_channel_membership;
@@ -63,16 +73,6 @@ export default class EmbedableChatChannel extends Component {
     }
 
     this.activeChannel.currentUserMembership = membership;
-  }
-
-  // Inline means the channel is laid out by its parent rather than pinned over
-  // the page, so neither the visibility toggle nor a way to dismiss it applies.
-  get showCloseButton() {
-    if (this.args.inline) {
-      return false;
-    }
-
-    return this.args.onClose || !this.embeddableChat.isMobileModal;
   }
 
   @action

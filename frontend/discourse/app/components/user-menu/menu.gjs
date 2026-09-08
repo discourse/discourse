@@ -214,11 +214,6 @@ export default class UserMenu extends Component {
     this.router.off("routeDidChange", this.onRouteChange);
   }
 
-  @bind
-  onRouteChange() {
-    this.args.closeUserMenu();
-  }
-
   get classNames() {
     let classes = ["user-menu", "revamped", "menu-panel", "drop-down"];
     if (this.siteSettings.show_user_menu_avatars) {
@@ -287,14 +282,9 @@ export default class UserMenu extends Component {
     });
   }
 
-  #notificationTypesForTheOtherTab(tabs) {
-    const usedNotificationTypes = tabs
-      .filter((tab) => tab.notificationTypes)
-      .map((tab) => tab.notificationTypes)
-      .flat();
-    return Object.keys(this.site.notification_types).filter(
-      (notificationType) => !usedNotificationTypes.includes(notificationType)
-    );
+  @bind
+  onRouteChange() {
+    this.args.closeUserMenu();
   }
 
   @action
@@ -328,6 +318,16 @@ export default class UserMenu extends Component {
   @action
   focusFirstTab(topTabsContainerElement) {
     topTabsContainerElement.querySelector(".btn.active")?.focus();
+  }
+
+  #notificationTypesForTheOtherTab(tabs) {
+    const usedNotificationTypes = tabs
+      .filter((tab) => tab.notificationTypes)
+      .map((tab) => tab.notificationTypes)
+      .flat();
+    return Object.keys(this.site.notification_types).filter(
+      (notificationType) => !usedNotificationTypes.includes(notificationType)
+    );
   }
 
   <template>

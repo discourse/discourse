@@ -71,6 +71,14 @@ export default class DOTP extends Component {
     return this.slots + Math.floor((this.slots - 1) / this.groupSize);
   }
 
+  get isFilled() {
+    return this.otp.every((char) => !isBlank(char));
+  }
+
+  get value() {
+    return this.otp.join("");
+  }
+
   normalizeInput(value) {
     if (this.args.normalizeInput) {
       return this.args.normalizeInput(value);
@@ -86,14 +94,6 @@ export default class DOTP extends Component {
       index < this.otp.length - 1 &&
       (index + 1) % this.groupSize === 0
     );
-  }
-
-  get isFilled() {
-    return this.otp.every((char) => !isBlank(char));
-  }
-
-  get value() {
-    return this.otp.join("");
   }
 
   @action

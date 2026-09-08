@@ -36,16 +36,6 @@ export default class TagSettings extends Component {
     this.loadTags();
   }
 
-  async loadTags() {
-    try {
-      const tags = await this.store.findAll("tag");
-      this.tags = tags.content.map((tag) => ({
-        id: tag.id,
-        name: tag.name,
-      }));
-    } catch {}
-  }
-
   get tagNames() {
     return this.tags.map((t) => t.name);
   }
@@ -124,6 +114,20 @@ export default class TagSettings extends Component {
     return parts.join(" ");
   }
 
+  get blockedTags() {
+    return [this.args.tag?.name].filter(Boolean);
+  }
+
+  async loadTags() {
+    try {
+      const tags = await this.store.findAll("tag");
+      this.tags = tags.content.map((tag) => ({
+        id: tag.id,
+        name: tag.name,
+      }));
+    } catch {}
+  }
+
   @action
   async save(data) {
     const newSynonyms = data.new_synonyms || [];
@@ -140,40 +144,6 @@ export default class TagSettings extends Component {
       });
     } else {
       await this.#performSave(data);
-    }
-  }
-
-  async #performSave(data) {
-    const tag = this.args.tag;
-
-    try {
-      const result = await ajax(`/tag/${tag.id}/settings.json`, {
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify({ tag_settings: data }),
-      });
-
-      if (result.tag_settings) {
-        this.args.tag.setProperties(result.tag_settings);
-
-        if (result.tag_settings.slug !== this.args.parentParams.tag_slug) {
-          this.router.replaceWith(
-            "tag.edit.tab",
-            result.tag_settings.slug,
-            result.tag_settings.id,
-            this.args.selectedTab
-          );
-        }
-
-        this.appEvents.trigger("tag-info:updated", result.tag_settings.id);
-      }
-
-      this.toasts.success({
-        duration: "short",
-        data: { message: i18n("tagging.settings.saved") },
-      });
-    } catch (error) {
-      popupAjaxError(error);
     }
   }
 
@@ -220,10 +190,6 @@ export default class TagSettings extends Component {
     this.form?.set("new_synonyms", newSynonyms);
   }
 
-  get blockedTags() {
-    return [this.args.tag?.name].filter(Boolean);
-  }
-
   @action
   validateSlug(name, slug, { addError }) {
     if (slug?.trim() && slug !== slugify(slug)) {
@@ -231,6 +197,40 @@ export default class TagSettings extends Component {
         title: i18n("tagging.settings.slug"),
         message: i18n("tagging.settings.invalid_slug"),
       });
+    }
+  }
+
+  async #performSave(data) {
+    const tag = this.args.tag;
+
+    try {
+      const result = await ajax(`/tag/${tag.id}/settings.json`, {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({ tag_settings: data }),
+      });
+
+      if (result.tag_settings) {
+        this.args.tag.setProperties(result.tag_settings);
+
+        if (result.tag_settings.slug !== this.args.parentParams.tag_slug) {
+          this.router.replaceWith(
+            "tag.edit.tab",
+            result.tag_settings.slug,
+            result.tag_settings.id,
+            this.args.selectedTab
+          );
+        }
+
+        this.appEvents.trigger("tag-info:updated", result.tag_settings.id);
+      }
+
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("tagging.settings.saved") },
+      });
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 

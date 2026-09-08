@@ -114,15 +114,6 @@ export default class WorkflowsForm extends Component {
     });
   }
 
-  @action
-  focusFirstField(formElement) {
-    schedule("afterRender", () => {
-      formElement
-        .querySelector("input:not([type='hidden']), textarea, select")
-        ?.focus({ preventScroll: true });
-    });
-  }
-
   @cached
   get completionHtml() {
     const completion = this.completionData || {};
@@ -136,6 +127,15 @@ export default class WorkflowsForm extends Component {
 
   get isTestMode() {
     return this.formSchema.form_mode === "test";
+  }
+
+  @action
+  focusFirstField(formElement) {
+    schedule("afterRender", () => {
+      formElement
+        .querySelector("input:not([type='hidden']), textarea, select")
+        ?.focus({ preventScroll: true });
+    });
   }
 
   @action

@@ -89,30 +89,6 @@ export default class DataTableConditionBuilder extends Component {
     };
   }
 
-  #fieldTypeForColumn(columnName) {
-    const field = this.fieldOptions.find((f) => f.id === columnName);
-    return field?.type || "string";
-  }
-
-  #initSchemas() {
-    const items = this.args.formApi?.get(this.args.fieldName) || [];
-    return items.map((item) => this.#buildSchema(item));
-  }
-
-  #buildSchema(item) {
-    const fieldType = this.#fieldTypeForColumn(item?.columnName);
-    return {
-      conditionSchema: conditionSchema(fieldType),
-      singleValue: isSingleValueOperator(item?.operator?.operation),
-    };
-  }
-
-  #updateSchemaAt(index, schema) {
-    const updated = [...this.schemas];
-    updated[index] = schema;
-    this.schemas = updated;
-  }
-
   @action
   emptyItem() {
     return {
@@ -171,6 +147,30 @@ export default class DataTableConditionBuilder extends Component {
       ...this.schemas[index],
       singleValue: isSingleValueOperator(value),
     });
+  }
+
+  #fieldTypeForColumn(columnName) {
+    const field = this.fieldOptions.find((f) => f.id === columnName);
+    return field?.type || "string";
+  }
+
+  #initSchemas() {
+    const items = this.args.formApi?.get(this.args.fieldName) || [];
+    return items.map((item) => this.#buildSchema(item));
+  }
+
+  #buildSchema(item) {
+    const fieldType = this.#fieldTypeForColumn(item?.columnName);
+    return {
+      conditionSchema: conditionSchema(fieldType),
+      singleValue: isSingleValueOperator(item?.operator?.operation),
+    };
+  }
+
+  #updateSchemaAt(index, schema) {
+    const updated = [...this.schemas];
+    updated[index] = schema;
+    this.schemas = updated;
   }
 
   <template>

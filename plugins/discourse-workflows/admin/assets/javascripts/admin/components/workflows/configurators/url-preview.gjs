@@ -136,6 +136,25 @@ export default class UrlPreview extends Component {
     return this.isTestMode && !this.canStartTestSession;
   }
 
+  get expiresInSeconds() {
+    const expiresAt = this.webhookTestListener?.expiresAt;
+    if (!expiresAt) {
+      return null;
+    }
+
+    return Math.max(0, Math.ceil((Date.parse(expiresAt) - this.now) / 1000));
+  }
+
+  get statusText() {
+    if (!this.isWebhookTrigger || !this.webhookTestListener) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.webhook.listening_seconds", {
+      seconds: this.expiresInSeconds,
+    });
+  }
+
   @action
   setMode(mode) {
     this.mode = mode;
@@ -209,25 +228,6 @@ export default class UrlPreview extends Component {
     }
 
     await this.copy();
-  }
-
-  get expiresInSeconds() {
-    const expiresAt = this.webhookTestListener?.expiresAt;
-    if (!expiresAt) {
-      return null;
-    }
-
-    return Math.max(0, Math.ceil((Date.parse(expiresAt) - this.now) / 1000));
-  }
-
-  get statusText() {
-    if (!this.isWebhookTrigger || !this.webhookTestListener) {
-      return null;
-    }
-
-    return i18n("discourse_workflows.webhook.listening_seconds", {
-      seconds: this.expiresInSeconds,
-    });
   }
 
   startCountdown() {

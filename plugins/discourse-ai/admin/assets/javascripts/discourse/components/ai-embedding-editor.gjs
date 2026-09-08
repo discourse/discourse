@@ -108,17 +108,6 @@ export default class AiEmbeddingEditor extends Component {
     return !this.selectedPreset && this.args.model.isNew;
   }
 
-  fieldTypeForProviderParam(type) {
-    switch (type) {
-      case "enum":
-        return "select";
-      case "checkbox":
-        return "checkbox";
-      default:
-        return `input-${type}`;
-    }
-  }
-
   get metaProviderParams() {
     const provider = this.currentProvider;
     if (!provider) {
@@ -142,6 +131,43 @@ export default class AiEmbeddingEditor extends Component {
 
   get seeded() {
     return this.args.model.id < 0;
+  }
+
+  get providerParams() {
+    const normalizeParam = (value) => {
+      if (!value) {
+        return { type: "text" };
+      }
+
+      if (typeof value === "string") {
+        return { type: value };
+      }
+
+      return {
+        type: value.type || "text",
+        values: (value.values || []).map((v) => ({ id: v, name: v })),
+        default: value.default,
+      };
+    };
+
+    return Object.entries(this.metaProviderParams).reduce(
+      (acc, [field, value]) => {
+        acc[field] = normalizeParam(value);
+        return acc;
+      },
+      {}
+    );
+  }
+
+  fieldTypeForProviderParam(type) {
+    switch (type) {
+      case "enum":
+        return "select";
+      case "checkbox":
+        return "checkbox";
+      default:
+        return `input-${type}`;
+    }
   }
 
   @action
@@ -176,32 +202,6 @@ export default class AiEmbeddingEditor extends Component {
     }
 
     set("provider_params", initialParams);
-  }
-
-  get providerParams() {
-    const normalizeParam = (value) => {
-      if (!value) {
-        return { type: "text" };
-      }
-
-      if (typeof value === "string") {
-        return { type: value };
-      }
-
-      return {
-        type: value.type || "text",
-        values: (value.values || []).map((v) => ({ id: v, name: v })),
-        default: value.default,
-      };
-    };
-
-    return Object.entries(this.metaProviderParams).reduce(
-      (acc, [field, value]) => {
-        acc[field] = normalizeParam(value);
-        return acc;
-      },
-      {}
-    );
   }
 
   @action

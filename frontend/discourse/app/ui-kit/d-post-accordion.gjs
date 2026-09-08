@@ -14,6 +14,14 @@ export default class DPostAccordion extends Component {
     this.resetExpandedIds();
   }
 
+  get posts() {
+    return this.args.posts ?? [];
+  }
+
+  get allExpanded() {
+    return this.posts.every((post) => this.expandedIds.has(post.id));
+  }
+
   @action
   resetExpandedIds() {
     const defaultExpanded = this.args.defaultExpanded;
@@ -34,14 +42,6 @@ export default class DPostAccordion extends Component {
           this.expandedIds.add(firstPostId);
         }
     }
-  }
-
-  get posts() {
-    return this.args.posts ?? [];
-  }
-
-  get allExpanded() {
-    return this.posts.every((post) => this.expandedIds.has(post.id));
   }
 
   @action

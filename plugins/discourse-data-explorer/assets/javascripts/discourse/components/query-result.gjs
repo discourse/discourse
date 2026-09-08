@@ -80,45 +80,8 @@ export default class QueryResult extends Component {
     return this.args.view ?? this.internalView;
   }
 
-  @action
-  setView(value) {
-    if (this.args.onSetView) {
-      this.args.onSetView(value);
-      return;
-    }
-    this.internalView = value;
-    const queryId = this.args.query?.id;
-    if (queryId) {
-      dataExplorerStore.set({ key: `view_${queryId}`, value });
-    }
-  }
-
-  @action
-  viewTable() {
-    this.setView("table");
-  }
-
-  @action
-  setChartForm(value) {
-    this.internalChartForm = value;
-    const queryId = this.args.query?.id;
-    if (queryId) {
-      dataExplorerStore.set({ key: `chart_form_${queryId}`, value });
-    }
-  }
-
   get showExpandButton() {
     return this.hasOverflow && !this.tableExpanded;
-  }
-
-  @action
-  checkOverflow(element) {
-    this.hasOverflow = element.scrollHeight > element.clientHeight;
-  }
-
-  @action
-  expandTable() {
-    this.tableExpanded = true;
   }
 
   @cached
@@ -372,6 +335,43 @@ export default class QueryResult extends Component {
     }
 
     return this.rows.map((r) => this._cutChartLabel(r[0]));
+  }
+
+  @action
+  setView(value) {
+    if (this.args.onSetView) {
+      this.args.onSetView(value);
+      return;
+    }
+    this.internalView = value;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      dataExplorerStore.set({ key: `view_${queryId}`, value });
+    }
+  }
+
+  @action
+  viewTable() {
+    this.setView("table");
+  }
+
+  @action
+  setChartForm(value) {
+    this.internalChartForm = value;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      dataExplorerStore.set({ key: `chart_form_${queryId}`, value });
+    }
+  }
+
+  @action
+  checkOverflow(element) {
+    this.hasOverflow = element.scrollHeight > element.clientHeight;
+  }
+
+  @action
+  expandTable() {
+    this.tableExpanded = true;
   }
 
   lookupUser(id) {

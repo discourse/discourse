@@ -15,28 +15,6 @@ export default class SchemaSettingNumberField extends Component {
   max = this.args.spec.validations?.max;
   required = this.args.spec.required;
 
-  @action
-  onInput(event) {
-    this.touched = true;
-    let inputValue = event.currentTarget.value;
-
-    if (isNaN(inputValue)) {
-      this.value = null;
-    } else {
-      this.value = this.parseValue(inputValue);
-    }
-
-    this.args.onChange(this.value);
-  }
-
-  /**
-   * @param {string} value - The value of the input field to parse into a number
-   * @returns {number}
-   */
-  parseFunc() {
-    throw "Not implemented";
-  }
-
   get validationErrorMessage() {
     if (!this.touched) {
       return;
@@ -61,6 +39,28 @@ export default class SchemaSettingNumberField extends Component {
         count: this.max,
       });
     }
+  }
+
+  @action
+  onInput(event) {
+    this.touched = true;
+    let inputValue = event.currentTarget.value;
+
+    if (isNaN(inputValue)) {
+      this.value = null;
+    } else {
+      this.value = this.parseValue(inputValue);
+    }
+
+    this.args.onChange(this.value);
+  }
+
+  /**
+   * @param {string} value - The value of the input field to parse into a number
+   * @returns {number}
+   */
+  parseFunc() {
+    throw "Not implemented";
   }
 
   <template>

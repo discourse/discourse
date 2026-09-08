@@ -95,19 +95,6 @@ export default class ArgsTable extends Component {
   }
 
   /**
-   * Extracts deprecation info from a deprecated argument for display.
-   *
-   * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
-   * @returns {{message: string, since: string|undefined}}
-   */
-  #getDeprecationInfo(deprecatedArg) {
-    return {
-      message: deprecatedArg.message,
-      since: deprecatedArg.options?.since,
-    };
-  }
-
-  /**
    * Logs the argument value to the console and stores it in a global variable
    * for easy inspection. The variable is named `arg1`, `arg2`, etc.
    *
@@ -120,6 +107,19 @@ export default class ArgsTable extends Component {
       value: entry.value,
       prefix: this.args.prefix,
     });
+  }
+
+  /**
+   * Extracts deprecation info from a deprecated argument for display.
+   *
+   * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
+   * @returns {{message: string, since: string|undefined}}
+   */
+  #getDeprecationInfo(deprecatedArg) {
+    return {
+      message: deprecatedArg.message,
+      since: deprecatedArg.options?.since,
+    };
   }
 
   <template>

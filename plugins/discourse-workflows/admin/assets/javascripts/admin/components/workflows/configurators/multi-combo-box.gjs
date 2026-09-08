@@ -153,6 +153,11 @@ export default class MultiComboBox extends Component {
     );
   }
 
+  get value() {
+    const val = this.args.field.value;
+    return Array.isArray(val) ? val : [];
+  }
+
   formatOptions(options) {
     return options.map((option) => ({
       id: optionValue(option, this.valueProperty),
@@ -190,11 +195,6 @@ export default class MultiComboBox extends Component {
     );
 
     return this.formatOptions(options);
-  }
-
-  get value() {
-    const val = this.args.field.value;
-    return Array.isArray(val) ? val : [];
   }
 
   @action

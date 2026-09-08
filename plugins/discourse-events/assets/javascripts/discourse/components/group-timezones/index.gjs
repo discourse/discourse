@@ -86,6 +86,11 @@ export default class GroupTimezones extends Component {
     return groupedTimezones;
   }
 
+  @action
+  handleFilterChange(event) {
+    this.filter = event.target.value;
+  }
+
   #shouldAddMemberToGroup(filter, member) {
     if (filter) {
       filter = filter.toLowerCase();
@@ -153,11 +158,6 @@ export default class GroupTimezones extends Component {
       .split("|")
       .filter(Boolean)
       .map((x) => getIsoWeekday(x));
-  }
-
-  @action
-  handleFilterChange(event) {
-    this.filter = event.target.value;
   }
 
   <template>

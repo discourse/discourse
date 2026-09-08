@@ -14,6 +14,12 @@ export default class AiAgentCollapsableExample extends Component {
     return this.collapsed ? "angle-right" : "angle-down";
   }
 
+  get exampleTitle() {
+    return i18n("discourse_ai.ai_agent.examples.collapsable_title", {
+      number: this.args.exampleNumber + 1,
+    });
+  }
+
   @action
   toggleExample() {
     this.collapsed = !this.collapsed;
@@ -23,12 +29,6 @@ export default class AiAgentCollapsableExample extends Component {
   deletePair() {
     this.collapsed = true;
     this.args.examplesCollection.remove(this.args.exampleNumber);
-  }
-
-  get exampleTitle() {
-    return i18n("discourse_ai.ai_agent.examples.collapsable_title", {
-      number: this.args.exampleNumber + 1,
-    });
   }
 
   <template>

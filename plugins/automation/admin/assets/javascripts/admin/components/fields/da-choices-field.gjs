@@ -9,13 +9,8 @@ import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";
 
 export default class ChoicesField extends BaseField {
-  @action
-  onChangeChoices(choices) {
-    if (isBlank(choices)) {
-      choices = undefined;
-    }
-
-    this.mutValue(choices);
+  get multiselect() {
+    return !!this.args.field.extra.multiselect;
   }
 
   <template>
@@ -52,10 +47,6 @@ export default class ChoicesField extends BaseField {
     </div>
   </template>
 
-  get multiselect() {
-    return !!this.args.field.extra.multiselect;
-  }
-
   get replacedContent() {
     return (this.args.field.extra.content || []).map((r) => {
       return {
@@ -63,5 +54,14 @@ export default class ChoicesField extends BaseField {
         name: r.translated_name || i18n(r.name),
       };
     });
+  }
+
+  @action
+  onChangeChoices(choices) {
+    if (isBlank(choices)) {
+      choices = undefined;
+    }
+
+    this.mutValue(choices);
   }
 }

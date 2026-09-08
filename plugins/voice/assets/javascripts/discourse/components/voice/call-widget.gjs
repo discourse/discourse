@@ -98,64 +98,6 @@ export default class VoiceCallWidget extends Component {
     this.stopWatchingWidgetRoom();
   }
 
-  #loadSize() {
-    const raw = this.keyValueStore.get(WIDGET_SIZE_KEY);
-    if (!raw) {
-      return;
-    }
-    try {
-      const { width, height, extraMinimized } = JSON.parse(raw);
-      this.extraMinimized = !!extraMinimized;
-      this.widgetWidth = this.extraMinimized ? null : this.#clampWidth(width);
-      this.widgetHeight = this.extraMinimized
-        ? null
-        : this.#clampHeight(height);
-    } catch {
-      this.widgetWidth = null;
-      this.widgetHeight = null;
-      this.extraMinimized = false;
-    }
-  }
-
-  #saveSize() {
-    this.keyValueStore.set({
-      key: WIDGET_SIZE_KEY,
-      value: JSON.stringify({
-        width: this.widgetWidth,
-        height: this.widgetHeight,
-        extraMinimized: this.extraMinimized,
-      }),
-    });
-  }
-
-  #clampWidth(width) {
-    if (!width) {
-      return null;
-    }
-    return clamp(
-      width,
-      WIDGET_MIN_WIDTH,
-      Math.min(
-        window.innerWidth * WIDGET_MAX_WIDTH_RATIO,
-        window.innerWidth - WIDGET_VIEWPORT_MARGIN * 2
-      )
-    );
-  }
-
-  #clampHeight(height) {
-    if (!height) {
-      return null;
-    }
-    return clamp(
-      height,
-      WIDGET_MIN_HEIGHT,
-      Math.min(
-        window.innerHeight * WIDGET_MAX_HEIGHT_RATIO,
-        window.innerHeight - WIDGET_VIEWPORT_MARGIN * 2
-      )
-    );
-  }
-
   get room() {
     const activeRoomId = this.voiceWebrtc.activeRoomId;
     if (!activeRoomId) {
@@ -238,24 +180,6 @@ export default class VoiceCallWidget extends Component {
     return this.participants.filter(
       (participant) => !visibleIds.has(participant.id)
     );
-  }
-
-  #tileRank(participant) {
-    if (participant.id === this.currentUser?.id) {
-      const kind = this.voiceWebrtc.localVideoKind;
-      return kind === "screen" ? 0 : kind ? 1 : 2;
-    }
-    if (participant.is_screen_sharing) {
-      return 0;
-    }
-    return participant.is_video_on ? 1 : 2;
-  }
-
-  #isPublishing(participant) {
-    if (participant.id === this.currentUser?.id) {
-      return !!this.voiceWebrtc.localVideoKind;
-    }
-    return participant.is_video_on || participant.is_screen_sharing;
   }
 
   get tiles() {
@@ -576,28 +500,6 @@ export default class VoiceCallWidget extends Component {
     this.#saveSize();
   }
 
-  #removeResizeListeners() {
-    window.removeEventListener("mousemove", this.resizeWidget);
-    window.removeEventListener("touchmove", this.resizeWidget);
-    window.removeEventListener("mouseup", this.stopResize);
-    window.removeEventListener("touchend", this.stopResize);
-  }
-
-  #removeDragListeners() {
-    window.removeEventListener("mousemove", this.dragWidget);
-    window.removeEventListener("touchmove", this.dragWidget);
-    window.removeEventListener("mouseup", this.stopDrag);
-    window.removeEventListener("touchend", this.stopDrag);
-  }
-
-  #eventPoint(event) {
-    const touch =
-      event.touches?.[0] ||
-      event.changedTouches?.[0] ||
-      (event.clientX != null ? event : null);
-    return touch ? { x: touch.clientX, y: touch.clientY } : null;
-  }
-
   @action
   leaveRoom() {
     this.voiceWebrtc.leave(this.room);
@@ -677,6 +579,104 @@ export default class VoiceCallWidget extends Component {
     if (roomId) {
       this.voiceWebrtc.setWatching(roomId, false, { keepVideo: true });
     }
+  }
+
+  #loadSize() {
+    const raw = this.keyValueStore.get(WIDGET_SIZE_KEY);
+    if (!raw) {
+      return;
+    }
+    try {
+      const { width, height, extraMinimized } = JSON.parse(raw);
+      this.extraMinimized = !!extraMinimized;
+      this.widgetWidth = this.extraMinimized ? null : this.#clampWidth(width);
+      this.widgetHeight = this.extraMinimized
+        ? null
+        : this.#clampHeight(height);
+    } catch {
+      this.widgetWidth = null;
+      this.widgetHeight = null;
+      this.extraMinimized = false;
+    }
+  }
+
+  #saveSize() {
+    this.keyValueStore.set({
+      key: WIDGET_SIZE_KEY,
+      value: JSON.stringify({
+        width: this.widgetWidth,
+        height: this.widgetHeight,
+        extraMinimized: this.extraMinimized,
+      }),
+    });
+  }
+
+  #clampWidth(width) {
+    if (!width) {
+      return null;
+    }
+    return clamp(
+      width,
+      WIDGET_MIN_WIDTH,
+      Math.min(
+        window.innerWidth * WIDGET_MAX_WIDTH_RATIO,
+        window.innerWidth - WIDGET_VIEWPORT_MARGIN * 2
+      )
+    );
+  }
+
+  #clampHeight(height) {
+    if (!height) {
+      return null;
+    }
+    return clamp(
+      height,
+      WIDGET_MIN_HEIGHT,
+      Math.min(
+        window.innerHeight * WIDGET_MAX_HEIGHT_RATIO,
+        window.innerHeight - WIDGET_VIEWPORT_MARGIN * 2
+      )
+    );
+  }
+
+  #tileRank(participant) {
+    if (participant.id === this.currentUser?.id) {
+      const kind = this.voiceWebrtc.localVideoKind;
+      return kind === "screen" ? 0 : kind ? 1 : 2;
+    }
+    if (participant.is_screen_sharing) {
+      return 0;
+    }
+    return participant.is_video_on ? 1 : 2;
+  }
+
+  #isPublishing(participant) {
+    if (participant.id === this.currentUser?.id) {
+      return !!this.voiceWebrtc.localVideoKind;
+    }
+    return participant.is_video_on || participant.is_screen_sharing;
+  }
+
+  #removeResizeListeners() {
+    window.removeEventListener("mousemove", this.resizeWidget);
+    window.removeEventListener("touchmove", this.resizeWidget);
+    window.removeEventListener("mouseup", this.stopResize);
+    window.removeEventListener("touchend", this.stopResize);
+  }
+
+  #removeDragListeners() {
+    window.removeEventListener("mousemove", this.dragWidget);
+    window.removeEventListener("touchmove", this.dragWidget);
+    window.removeEventListener("mouseup", this.stopDrag);
+    window.removeEventListener("touchend", this.stopDrag);
+  }
+
+  #eventPoint(event) {
+    const touch =
+      event.touches?.[0] ||
+      event.changedTouches?.[0] ||
+      (event.clientX != null ? event : null);
+    return touch ? { x: touch.clientX, y: touch.clientY } : null;
   }
 
   <template>

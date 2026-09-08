@@ -42,17 +42,17 @@ export default class FileSizeInput extends Component {
     }
   }
 
-  @action
-  keyDown(event) {
-    allowOnlyNumericInput(event);
-  }
-
   get dropdownOptions() {
     return [
       { label: i18n("number.human.storage_units.units.kb"), value: UNIT_KB },
       { label: i18n("number.human.storage_units.units.mb"), value: UNIT_MB },
       { label: i18n("number.human.storage_units.units.gb"), value: UNIT_GB },
     ];
+  }
+
+  @action
+  keyDown(event) {
+    allowOnlyNumericInput(event);
   }
 
   @action

@@ -42,6 +42,10 @@ export default class WrapAttributesModal extends Component {
     };
   }
 
+  get hasAttributeRows() {
+    return this.formApi?.get("attributes")?.length > 0;
+  }
+
   @action
   onSubmit(data) {
     const attrsString = serializeFromForm(data.name, data.attributes);
@@ -53,10 +57,6 @@ export default class WrapAttributesModal extends Component {
   unwrap() {
     this.args.model.onRemove?.();
     this.args.closeModal();
-  }
-
-  get hasAttributeRows() {
-    return this.formApi?.get("attributes")?.length > 0;
   }
 
   @action

@@ -441,6 +441,22 @@ export default class PostMenu extends Component {
     );
   }
 
+  @cached
+  get #hiddenItems() {
+    const setting = this.siteSettings.post_menu_hidden_items;
+
+    if (isEmpty(setting)) {
+      return [];
+    }
+
+    return setting
+      .split("|")
+      .filter(
+        (itemKey) =>
+          !this.args.post.bookmarked || itemKey !== buttonKeys.BOOKMARK
+      );
+  }
+
   @action
   async toggleLike() {
     await applyBehaviorTransformer(
@@ -527,22 +543,6 @@ export default class PostMenu extends Component {
     }
 
     this.#fetchWhoRead();
-  }
-
-  @cached
-  get #hiddenItems() {
-    const setting = this.siteSettings.post_menu_hidden_items;
-
-    if (isEmpty(setting)) {
-      return [];
-    }
-
-    return setting
-      .split("|")
-      .filter(
-        (itemKey) =>
-          !this.args.post.bookmarked || itemKey !== buttonKeys.BOOKMARK
-      );
   }
 
   async #fetchWhoRead() {

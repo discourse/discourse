@@ -56,6 +56,19 @@ export default class ComposerMessages extends Component {
     return !this.composer?.viewOpenOrFullscreen;
   }
 
+  get shareModalData() {
+    const { topic } = this.composer;
+    return {
+      topic,
+      category: topic.category,
+      allowInvites:
+        topic.details.can_invite_to &&
+        !topic.archived &&
+        !topic.closed &&
+        !topic.deleted,
+    };
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
 
@@ -81,6 +94,52 @@ export default class ComposerMessages extends Component {
       this,
       this._resetEducationMessageState
     );
+  }
+
+  // Resets all active messages.
+  // For example if composing a new post.
+  reset() {
+    this.setProperties({
+      messages: [],
+      messagesByTemplate: {},
+      queuedForTyping: [],
+      checkedMessages: false,
+      similarTopics: [],
+    });
+  }
+
+  @action
+  closeMessage(message, event) {
+    event?.preventDefault();
+    this._removeMessage(message);
+  }
+
+  @action
+  hideMessage(message) {
+    this._removeMessage(message);
+
+    // kind of hacky but the visibility depends on this
+    this.messagesByTemplate[message.templateName] = undefined;
+  }
+
+  @action
+  popup(message) {
+    if (this.messages.length) {
+      return;
+    }
+
+    if (!this.messagesByTemplate[message.templateName]) {
+      this.messages.push(message);
+      this.set("messageCount", this.messages.length);
+      this.messagesByTemplate[message.templateName] = message;
+    }
+  }
+
+  @action
+  switchPM(message) {
+    this.composer.set("action", "privateMessage");
+    this.composer.set("targetRecipients", message.reply_username);
+    this._removeMessage(message);
   }
 
   _closeTop() {
@@ -110,18 +169,6 @@ export default class ComposerMessages extends Component {
 
   _resetEducationMessageState() {
     _educationMessageShown = false;
-  }
-
-  // Resets all active messages.
-  // For example if composing a new post.
-  reset() {
-    this.setProperties({
-      messages: [],
-      messagesByTemplate: {},
-      queuedForTyping: [],
-      checkedMessages: false,
-      similarTopics: [],
-    });
   }
 
   // Called after the user has typed a reply.
@@ -337,53 +384,6 @@ export default class ComposerMessages extends Component {
         }
       }
     });
-  }
-
-  @action
-  closeMessage(message, event) {
-    event?.preventDefault();
-    this._removeMessage(message);
-  }
-
-  @action
-  hideMessage(message) {
-    this._removeMessage(message);
-
-    // kind of hacky but the visibility depends on this
-    this.messagesByTemplate[message.templateName] = undefined;
-  }
-
-  @action
-  popup(message) {
-    if (this.messages.length) {
-      return;
-    }
-
-    if (!this.messagesByTemplate[message.templateName]) {
-      this.messages.push(message);
-      this.set("messageCount", this.messages.length);
-      this.messagesByTemplate[message.templateName] = message;
-    }
-  }
-
-  get shareModalData() {
-    const { topic } = this.composer;
-    return {
-      topic,
-      category: topic.category,
-      allowInvites:
-        topic.details.can_invite_to &&
-        !topic.archived &&
-        !topic.closed &&
-        !topic.deleted,
-    };
-  }
-
-  @action
-  switchPM(message) {
-    this.composer.set("action", "privateMessage");
-    this.composer.set("targetRecipients", message.reply_username);
-    this._removeMessage(message);
   }
 
   <template>

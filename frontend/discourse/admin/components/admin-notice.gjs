@@ -9,13 +9,13 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 export default class AdminNotice extends Component {
   @service currentUser;
 
+  get canDismiss() {
+    return this.currentUser.admin;
+  }
+
   @action
   dismiss() {
     this.args.dismissCallback(this.args.problem);
-  }
-
-  get canDismiss() {
-    return this.currentUser.admin;
   }
 
   <template>

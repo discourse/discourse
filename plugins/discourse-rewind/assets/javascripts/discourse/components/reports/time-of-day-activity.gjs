@@ -46,14 +46,6 @@ export default class TimeOfDayActivity extends Component {
     };
   }
 
-  calculatePoint(hour) {
-    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
-    const count = this.activityByHour[hour] || 0;
-    const x = padding + (hour / 23) * plotWidth;
-    const y = height - padding - (count / this.maxActivity) * plotHeight;
-    return { x, y };
-  }
-
   get personalizedAudioParams() {
     const username = this.args.user?.username || "default";
 
@@ -164,20 +156,28 @@ export default class TimeOfDayActivity extends Component {
     return { x, y };
   }
 
-  formatHour(hour) {
-    const hourNum = parseInt(hour, 10);
-    const period = hourNum >= 12 ? "PM" : "AM";
-    const displayHour =
-      hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
-    return `${displayHour}${period}`;
-  }
-
   get playButtonText() {
     return i18nForOwner(
       "discourse_rewind.reports.time_of_day_activity.play_button",
       this.args.isOwnRewind,
       { username: this.args.user?.username }
     );
+  }
+
+  calculatePoint(hour) {
+    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
+    const count = this.activityByHour[hour] || 0;
+    const x = padding + (hour / 23) * plotWidth;
+    const y = height - padding - (count / this.maxActivity) * plotHeight;
+    return { x, y };
+  }
+
+  formatHour(hour) {
+    const hourNum = parseInt(hour, 10);
+    const period = hourNum >= 12 ? "PM" : "AM";
+    const displayHour =
+      hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
+    return `${displayHour}${period}`;
   }
 
   @action

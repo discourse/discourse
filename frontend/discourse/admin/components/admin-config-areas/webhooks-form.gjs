@@ -54,27 +54,6 @@ export default class AdminConfigAreasWebhookForm extends Component {
     };
   }
 
-  async #loadExtras() {
-    try {
-      this.loadingExtras = true;
-
-      const webhooks = await this.store.findAll("web-hook");
-
-      this.groupedEventTypes = webhooks.extras.grouped_event_types;
-      this.defaultEventTypes = webhooks.extras.default_event_types;
-      this.contentTypes = webhooks.extras.content_types;
-      this.deliveryStatuses = webhooks.extras.delivery_statuses;
-
-      if (this.webhook.isNew) {
-        this.webhookEventTypes = [...this.defaultEventTypes];
-      } else {
-        this.webhookEventTypes = [...this.webhook.web_hook_event_types];
-      }
-    } finally {
-      this.loadingExtras = false;
-    }
-  }
-
   get showTagsFilter() {
     return this.siteSettings.tagging_enabled;
   }
@@ -104,6 +83,27 @@ export default class AdminConfigAreasWebhookForm extends Component {
       }
     } catch (e) {
       popupAjaxError(e);
+    }
+  }
+
+  async #loadExtras() {
+    try {
+      this.loadingExtras = true;
+
+      const webhooks = await this.store.findAll("web-hook");
+
+      this.groupedEventTypes = webhooks.extras.grouped_event_types;
+      this.defaultEventTypes = webhooks.extras.default_event_types;
+      this.contentTypes = webhooks.extras.content_types;
+      this.deliveryStatuses = webhooks.extras.delivery_statuses;
+
+      if (this.webhook.isNew) {
+        this.webhookEventTypes = [...this.defaultEventTypes];
+      } else {
+        this.webhookEventTypes = [...this.webhook.web_hook_event_types];
+      }
+    } finally {
+      this.loadingExtras = false;
     }
   }
 

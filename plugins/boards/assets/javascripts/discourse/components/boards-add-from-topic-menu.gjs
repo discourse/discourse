@@ -34,6 +34,14 @@ export default class BoardsAddFromTopicMenu extends Component {
   skeletonRows = SKELETON_ROWS;
   #requestedBoards = false;
 
+  get availableBoards() {
+    return this.boards.filter((board) => !board.topic_is_member);
+  }
+
+  get alreadyAddedBoards() {
+    return this.boards.filter((board) => board.topic_is_member);
+  }
+
   @action
   loadBoards() {
     if (this.#requestedBoards) {
@@ -42,21 +50,6 @@ export default class BoardsAddFromTopicMenu extends Component {
 
     this.#requestedBoards = true;
     this.#fetchBoards();
-  }
-
-  async #fetchBoards() {
-    try {
-      const result = await ajax(
-        `/boards/api/boards/available?topic_id=${this.args.data.topic.id}&allowed_permissions=edit,manage`
-      );
-      this.boards = result.boards
-        .filter((board) => board.columns?.length)
-        .map((board) => Board.create(board));
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-    }
   }
 
   @action
@@ -76,12 +69,19 @@ export default class BoardsAddFromTopicMenu extends Component {
     });
   }
 
-  get availableBoards() {
-    return this.boards.filter((board) => !board.topic_is_member);
-  }
-
-  get alreadyAddedBoards() {
-    return this.boards.filter((board) => board.topic_is_member);
+  async #fetchBoards() {
+    try {
+      const result = await ajax(
+        `/boards/api/boards/available?topic_id=${this.args.data.topic.id}&allowed_permissions=edit,manage`
+      );
+      this.boards = result.boards
+        .filter((board) => board.columns?.length)
+        .map((board) => Board.create(board));
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   <template>

@@ -24,6 +24,20 @@ export default class FKControlCalendar extends FKBaseControl {
     return this.args.includeTime ?? true;
   }
 
+  get minDate() {
+    return this.args.field.rules?.dateAfterOrEqual?.date;
+  }
+
+  get maxDate() {
+    return this.args.field.rules?.dateBeforeOrEqual?.date;
+  }
+
+  get expandedDatePicker() {
+    return (
+      (this.args.expandedDatePickerOnDesktop ?? true) && this.site.desktopView
+    );
+  }
+
   @action
   setTime(time) {
     const [hours, minutes] = time.split(":").map(Number);
@@ -53,20 +67,6 @@ export default class FKControlCalendar extends FKBaseControl {
   @action
   formatForInput(date) {
     return moment(date).format("YYYY-MM-DD");
-  }
-
-  get minDate() {
-    return this.args.field.rules?.dateAfterOrEqual?.date;
-  }
-
-  get maxDate() {
-    return this.args.field.rules?.dateBeforeOrEqual?.date;
-  }
-
-  get expandedDatePicker() {
-    return (
-      (this.args.expandedDatePickerOnDesktop ?? true) && this.site.desktopView
-    );
   }
 
   <template>

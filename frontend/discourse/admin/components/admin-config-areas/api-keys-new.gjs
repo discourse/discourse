@@ -74,6 +74,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     };
   }
 
+  get scopeModeLabel() {
+    return i18n(`admin.api.scopes.${this.createdKeyData.scopeMode}`);
+  }
+
   @action
   updateUsername(field, selected) {
     this.username = selected[0];
@@ -115,10 +119,6 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     }
   }
 
-  get scopeModeLabel() {
-    return i18n(`admin.api.scopes.${this.createdKeyData.scopeMode}`);
-  }
-
   @action
   async copyApiKey() {
     await clipboardCopy(this.generatedApiKey);
@@ -126,28 +126,6 @@ export default class AdminConfigAreasApiKeysNew extends Component {
       data: { message: i18n("admin.api_keys.key_copied_to_clipboard") },
       duration: "short",
     });
-  }
-
-  #selectedScopes(scopes) {
-    const enabledScopes = [];
-
-    for (const [resource, resourceScopes] of Object.entries(scopes)) {
-      enabledScopes.push(
-        resourceScopes
-          .filter((s) => s.enabled)
-          .map((s) => {
-            return {
-              scope_id: `${resource}:${s.key}`,
-              key: s.key,
-              name: s.key,
-              params: Object.keys(s.params),
-              ...s.params,
-            };
-          })
-      );
-    }
-
-    return enabledScopes.flat();
   }
 
   @bind
@@ -172,6 +150,38 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     });
   }
 
+  @action
+  paramsObjectKeys(paramsObjectData) {
+    return Object.keys(paramsObjectData);
+  }
+
+  @action
+  scopesDataKeys(scopesData) {
+    return Object.keys(scopesData).sort();
+  }
+
+  #selectedScopes(scopes) {
+    const enabledScopes = [];
+
+    for (const [resource, resourceScopes] of Object.entries(scopes)) {
+      enabledScopes.push(
+        resourceScopes
+          .filter((s) => s.enabled)
+          .map((s) => {
+            return {
+              scope_id: `${resource}:${s.key}`,
+              key: s.key,
+              name: s.key,
+              params: Object.keys(s.params),
+              ...s.params,
+            };
+          })
+      );
+    }
+
+    return enabledScopes.flat();
+  }
+
   async #loadScopes() {
     try {
       this.loadingScopes = true;
@@ -186,16 +196,6 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     } finally {
       this.loadingScopes = false;
     }
-  }
-
-  @action
-  paramsObjectKeys(paramsObjectData) {
-    return Object.keys(paramsObjectData);
-  }
-
-  @action
-  scopesDataKeys(scopesData) {
-    return Object.keys(scopesData).sort();
   }
 
   <template>

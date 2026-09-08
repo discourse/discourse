@@ -116,44 +116,6 @@ export default class EditTopicTimer extends Component {
     return types;
   }
 
-  _setTimer(time, durationMinutes, statusType, basedOnLastPost, categoryId) {
-    this.loading = true;
-
-    TopicTimer.update(
-      this.args.model.topic.id,
-      time,
-      basedOnLastPost,
-      statusType,
-      categoryId,
-      durationMinutes
-    )
-      .then((result) => {
-        if (time || durationMinutes) {
-          this.args.model.updateTopicTimerProperty(
-            "execute_at",
-            result.execute_at
-          );
-          this.args.model.updateTopicTimerProperty(
-            "duration_minutes",
-            result.duration_minutes
-          );
-          this.args.model.updateTopicTimerProperty(
-            "category_id",
-            result.category_id
-          );
-          this.args.model.updateTopicTimerProperty("closed", result.closed);
-          this.args.closeModal();
-        } else {
-          const topicTimer = this.createDefaultTimer();
-          this.topicTimer = topicTimer;
-          this.args.model.setTopicTimer(topicTimer);
-          this.onChangeInput(null, null);
-        }
-      })
-      .catch(popupAjaxError)
-      .finally(() => (this.loading = false));
-  }
-
   @action
   createDefaultTimer() {
     const defaultTimer = TopicTimer.create({
@@ -248,6 +210,44 @@ export default class EditTopicTimer extends Component {
     // timer has been removed and we are removing `execute_at`
     // which will hide the remove timer button from the modal
     this.topicTimer.execute_at = null;
+  }
+
+  _setTimer(time, durationMinutes, statusType, basedOnLastPost, categoryId) {
+    this.loading = true;
+
+    TopicTimer.update(
+      this.args.model.topic.id,
+      time,
+      basedOnLastPost,
+      statusType,
+      categoryId,
+      durationMinutes
+    )
+      .then((result) => {
+        if (time || durationMinutes) {
+          this.args.model.updateTopicTimerProperty(
+            "execute_at",
+            result.execute_at
+          );
+          this.args.model.updateTopicTimerProperty(
+            "duration_minutes",
+            result.duration_minutes
+          );
+          this.args.model.updateTopicTimerProperty(
+            "category_id",
+            result.category_id
+          );
+          this.args.model.updateTopicTimerProperty("closed", result.closed);
+          this.args.closeModal();
+        } else {
+          const topicTimer = this.createDefaultTimer();
+          this.topicTimer = topicTimer;
+          this.args.model.setTopicTimer(topicTimer);
+          this.onChangeInput(null, null);
+        }
+      })
+      .catch(popupAjaxError)
+      .finally(() => (this.loading = false));
   }
 
   <template>

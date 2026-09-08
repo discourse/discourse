@@ -86,26 +86,6 @@ export default class DAccessControl extends Component {
   }
 
   /**
-   * If a transformPermissionOptions function is provided, it is passed all
-   * default permissions and can change the name, description, or level of
-   * these options, OR add new options, returning the new array.
-   *
-   * The level property is used to sort the options, and is an indicator
-   * of the level of access the permission provides, since e.g. Edit is a
-   * higher level of access than View, and to Edit by definition you need
-   * to be able to View.
-   *
-   * Otherwise, the default permissions are used.
-   */
-  buildPermissionOptions() {
-    const permissions =
-      this.args.transformPermissionOptions?.(defaultPermissions()) ||
-      defaultPermissions();
-
-    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
-  }
-
-  /**
    * Mandatory permissions are defined per-target server-side via a mandatory_acl
    * method, which is attached to the Site JSON. Any mandatory permissions will
    * be added to the ACL and cannot be removed or changed in the UI.
@@ -277,6 +257,26 @@ export default class DAccessControl extends Component {
         return availablePermissions.length === 0;
       })
       .map((group) => granteeValue("group", group.id));
+  }
+
+  /**
+   * If a transformPermissionOptions function is provided, it is passed all
+   * default permissions and can change the name, description, or level of
+   * these options, OR add new options, returning the new array.
+   *
+   * The level property is used to sort the options, and is an indicator
+   * of the level of access the permission provides, since e.g. Edit is a
+   * higher level of access than View, and to Edit by definition you need
+   * to be able to View.
+   *
+   * Otherwise, the default permissions are used.
+   */
+  buildPermissionOptions() {
+    const permissions =
+      this.args.transformPermissionOptions?.(defaultPermissions()) ||
+      defaultPermissions();
+
+    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
   }
 
   /**

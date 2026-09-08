@@ -486,6 +486,16 @@ export default class TopicTimelineScrollArea extends Component {
     return this.scrollareaHeight - SCROLLER_HEIGHT;
   }
 
+  @action
+  registerScrollarea(element) {
+    this.scrollareaElement = element;
+  }
+
+  @action
+  registerScroller(element) {
+    this.scrollerElement = element;
+  }
+
   _percentFor(topic, postIndex) {
     const total = topic.postStream.filteredPostsCount;
     switch (postIndex) {
@@ -499,16 +509,6 @@ export default class TopicTimelineScrollArea extends Component {
       default:
         return this.clamp(parseFloat(postIndex) / total);
     }
-  }
-
-  @action
-  registerScrollarea(element) {
-    this.scrollareaElement = element;
-  }
-
-  @action
-  registerScroller(element) {
-    this.scrollerElement = element;
   }
 
   <template>

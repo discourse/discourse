@@ -28,23 +28,6 @@ export default class GroupManageSaveButton extends Component {
     return this.saving ? i18n("saving") : i18n("save");
   }
 
-  _wouldLoseAccess() {
-    if (this.currentUser.admin) {
-      return false;
-    }
-
-    const group = this.model;
-
-    if (
-      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
-      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
-    ) {
-      return !group.is_group_owner_display;
-    }
-
-    return false;
-  }
-
   @action
   async save(updateExistingUsers = null) {
     if (this.beforeSave) {
@@ -113,6 +96,23 @@ export default class GroupManageSaveButton extends Component {
       { model: { count } }
     );
     this.save(updateExistingUsers);
+  }
+
+  _wouldLoseAccess() {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    const group = this.model;
+
+    if (
+      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
+      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
+    ) {
+      return !group.is_group_owner_display;
+    }
+
+    return false;
   }
 
   <template>

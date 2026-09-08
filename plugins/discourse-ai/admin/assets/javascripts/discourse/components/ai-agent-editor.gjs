@@ -73,18 +73,6 @@ export default class AgentEditor extends Component {
     return data;
   }
 
-  formDataFor(model) {
-    const data = model.toPOJO();
-
-    if (data.tools) {
-      data.toolOptions = this.mapToolOptions(data.toolOptions, data.tools);
-    }
-
-    data.compression_threshold ??= 80;
-
-    return data;
-  }
-
   get chatPluginEnabled() {
     return this.siteSettings.chat_enabled;
   }
@@ -99,39 +87,6 @@ export default class AgentEditor extends Component {
 
   get allMcpServers() {
     return this.args.agents.resultSetMeta.mcp_servers || [];
-  }
-
-  @action
-  subagentCandidates(selectedIds = []) {
-    const selected = new Set(selectedIds);
-
-    return this.args.agents.content
-      .filter((agent) => agent.id !== this.args.model.id)
-      .filter((agent) => agent.enabled || selected.has(agent.id))
-      .map((agent) => {
-        const localizedName = agent.enabled
-          ? agent.name
-          : i18n("discourse_ai.ai_agent.subagent_disabled", {
-              name: agent.name,
-            });
-        return {
-          id: agent.id,
-          name: localizedName,
-          disabled: !agent.enabled,
-        };
-      });
-  }
-
-  @action
-  subagentTool(selectedIds = []) {
-    if (!selectedIds.length) {
-      return null;
-    }
-
-    return {
-      name: i18n("discourse_ai.ai_agent.subagent_tool_name"),
-      tokenCount: this.args.model.subagent_tool_token_count || 0,
-    };
   }
 
   get maxPixelValues() {
@@ -178,6 +133,71 @@ export default class AgentEditor extends Component {
     });
 
     return content;
+  }
+
+  get supportsAddressing() {
+    return this.args.model.isNew || this.args.model.can_have_bot_user;
+  }
+
+  get adminUser() {
+    // Work around user not being extensible.
+    const userClone = Object.assign({}, this.args.model?.user);
+
+    return AdminUser.create(userClone);
+  }
+
+  @cached
+  get llmsById() {
+    const map = {};
+    for (const llm of this.args.agents.resultSetMeta.llms || []) {
+      map[llm.id] = llm;
+    }
+    return map;
+  }
+
+  formDataFor(model) {
+    const data = model.toPOJO();
+
+    if (data.tools) {
+      data.toolOptions = this.mapToolOptions(data.toolOptions, data.tools);
+    }
+
+    data.compression_threshold ??= 80;
+
+    return data;
+  }
+
+  @action
+  subagentCandidates(selectedIds = []) {
+    const selected = new Set(selectedIds);
+
+    return this.args.agents.content
+      .filter((agent) => agent.id !== this.args.model.id)
+      .filter((agent) => agent.enabled || selected.has(agent.id))
+      .map((agent) => {
+        const localizedName = agent.enabled
+          ? agent.name
+          : i18n("discourse_ai.ai_agent.subagent_disabled", {
+              name: agent.name,
+            });
+        return {
+          id: agent.id,
+          name: localizedName,
+          disabled: !agent.enabled,
+        };
+      });
+  }
+
+  @action
+  subagentTool(selectedIds = []) {
+    if (!selectedIds.length) {
+      return null;
+    }
+
+    return {
+      name: i18n("discourse_ai.ai_agent.subagent_tool_name"),
+      tokenCount: this.args.model.subagent_tool_token_count || 0,
+    };
   }
 
   @action
@@ -234,17 +254,6 @@ export default class AgentEditor extends Component {
         this.isSaving = false;
       }, 1000);
     }
-  }
-
-  get supportsAddressing() {
-    return this.args.model.isNew || this.args.model.can_have_bot_user;
-  }
-
-  get adminUser() {
-    // Work around user not being extensible.
-    const userClone = Object.assign({}, this.args.model?.user);
-
-    return AdminUser.create(userClone);
   }
 
   @action
@@ -331,15 +340,6 @@ export default class AgentEditor extends Component {
   @action
   availableForcedTools(tools) {
     return this.allTools.filter((tool) => tools.includes(tool.id));
-  }
-
-  @cached
-  get llmsById() {
-    const map = {};
-    for (const llm of this.args.agents.resultSetMeta.llms || []) {
-      map[llm.id] = llm;
-    }
-    return map;
   }
 
   // Provider-native tools are only offered when the agent forces a default LLM
@@ -658,19 +658,6 @@ export default class AgentEditor extends Component {
     }
   }
 
-  #sortAgents() {
-    // .sort is done in place and agents.content is a tracked array.
-    this.args.agents.content.sort((a, b) => {
-      if (a.priority && !b.priority) {
-        return -1;
-      } else if (!a.priority && b.priority) {
-        return 1;
-      } else {
-        return a.name.localeCompare(b.name);
-      }
-    });
-  }
-
   @action
   exportAgent() {
     const exportUrl = `/admin/plugins/discourse-ai/ai-agents/${this.args.model.id}/export.json`;
@@ -698,6 +685,19 @@ export default class AgentEditor extends Component {
     const { height } = actionsElement.getBoundingClientRect();
     actionsElement.style.width = `${width}px`;
     formElement.style.setProperty("--ai-agent-actions-height", `${height}px`);
+  }
+
+  #sortAgents() {
+    // .sort is done in place and agents.content is a tracked array.
+    this.args.agents.content.sort((a, b) => {
+      if (a.priority && !b.priority) {
+        return -1;
+      } else if (!a.priority && b.priority) {
+        return 1;
+      } else {
+        return a.name.localeCompare(b.name);
+      }
+    });
   }
 
   <template>

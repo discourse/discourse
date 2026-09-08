@@ -27,6 +27,18 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
     };
   }
 
+  get #savePath() {
+    if (this.args.isDefaultLocale) {
+      return "/admin/config/about.json";
+    }
+
+    return "/admin/config/about/localizations.json";
+  }
+
+  get nameValidation() {
+    return this.args.isDefaultLocale ? "required" : null;
+  }
+
   @action
   async save(data) {
     try {
@@ -50,16 +62,9 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
     }
   }
 
-  get #savePath() {
-    if (this.args.isDefaultLocale) {
-      return "/admin/config/about.json";
-    }
-
-    return "/admin/config/about/localizations.json";
-  }
-
-  get nameValidation() {
-    return this.args.isDefaultLocale ? "required" : null;
+  @action
+  setImage(upload, { set }) {
+    set("aboutBannerImage", upload?.url ?? null);
   }
 
   #saveData(data) {
@@ -86,11 +91,6 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
     }
 
     return this.args.localizations?.[settingName]?.value ?? "";
-  }
-
-  @action
-  setImage(upload, { set }) {
-    set("aboutBannerImage", upload?.url ?? null);
   }
 
   <template>

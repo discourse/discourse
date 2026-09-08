@@ -82,61 +82,11 @@ export default class ActivityByCategory extends Component {
     return (this.activity?.rows ?? []).length > 0;
   }
 
-  #safeHex(color) {
-    return /^[0-9a-fA-F]{6}$/.test(color) ? color : "cccccc";
-  }
-
-  #topicQuery(categorySlug, dateFilter) {
-    const terms = [];
-
-    if (this.args.startDate) {
-      terms.push(
-        `${dateFilter}-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
-      );
-    }
-    if (this.args.endDate) {
-      terms.push(
-        `${dateFilter}-before:${moment(this.args.endDate)
-          .add(1, "day")
-          .format("YYYY-MM-DD")}`
-      );
-    }
-    terms.push(`=category:${categorySlug}`);
-
-    return { q: terms.join(" ") };
-  }
-
   @action
   onCategoriesChange(categories) {
     this.selectedCategories = categories;
     this.refetch();
     this.#persistSelection();
-  }
-
-  #persistSelection() {
-    if (!this.currentUser?.admin) {
-      return;
-    }
-
-    ajax(
-      "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
-      {
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify({
-          category_ids: this.selectedCategories.map((c) => c.id),
-        }),
-      }
-    ).catch(() => {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: i18n(
-            "admin.dashboard.sections.engagement.activity_by_category.save_error"
-          ),
-        },
-      });
-    });
   }
 
   @action
@@ -184,6 +134,56 @@ export default class ActivityByCategory extends Component {
     } finally {
       this.loading = false;
     }
+  }
+
+  #safeHex(color) {
+    return /^[0-9a-fA-F]{6}$/.test(color) ? color : "cccccc";
+  }
+
+  #topicQuery(categorySlug, dateFilter) {
+    const terms = [];
+
+    if (this.args.startDate) {
+      terms.push(
+        `${dateFilter}-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
+      );
+    }
+    if (this.args.endDate) {
+      terms.push(
+        `${dateFilter}-before:${moment(this.args.endDate)
+          .add(1, "day")
+          .format("YYYY-MM-DD")}`
+      );
+    }
+    terms.push(`=category:${categorySlug}`);
+
+    return { q: terms.join(" ") };
+  }
+
+  #persistSelection() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax(
+      "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+      {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+          category_ids: this.selectedCategories.map((c) => c.id),
+        }),
+      }
+    ).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n(
+            "admin.dashboard.sections.engagement.activity_by_category.save_error"
+          ),
+        },
+      });
+    });
   }
 
   <template>

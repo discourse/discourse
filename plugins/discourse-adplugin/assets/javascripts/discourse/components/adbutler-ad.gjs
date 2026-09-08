@@ -73,44 +73,6 @@ export default class AdbutlerAd extends AdComponent {
     super.init();
   }
 
-  _triggerAds() {
-    if (isTesting()) {
-      return; // Don't load external JS during tests
-    }
-
-    const adserverHostname = this.siteSettings.adbutler_adserver_hostname;
-
-    loadAdbutler(adserverHostname).then(
-      function () {
-        if (this.divs.length > 0) {
-          let abkw = window.abkw || "";
-          window.AdButler.ads.push({
-            handler: function (opt) {
-              window.AdButler.register(
-                opt.place.publisherId,
-                opt.place.zoneId,
-                opt.place.dimensions,
-                opt.place.divId,
-                opt
-              );
-            },
-            opt: {
-              place: this.divs.pop(),
-              keywords: abkw,
-              domain: adserverHostname,
-              click: "CLICK_MACRO_PLACEHOLDER",
-            },
-          });
-        }
-      }.bind(this)
-    );
-  }
-
-  didInsertElement() {
-    super.didInsertElement();
-    scheduleOnce("afterRender", this, this._triggerAds);
-  }
-
   @computed
   get showAdbutlerAds() {
     if (!this.currentUser) {
@@ -145,6 +107,11 @@ export default class AdbutlerAd extends AdComponent {
     return this.isNthPost(parseInt(this.siteSettings.adbutler_nth_post, 10));
   }
 
+  didInsertElement() {
+    super.didInsertElement();
+    scheduleOnce("afterRender", this, this._triggerAds);
+  }
+
   buildImpressionPayload() {
     return {
       ad_plugin_impression: {
@@ -153,6 +120,39 @@ export default class AdbutlerAd extends AdComponent {
         placement: this.placement,
       },
     };
+  }
+
+  _triggerAds() {
+    if (isTesting()) {
+      return; // Don't load external JS during tests
+    }
+
+    const adserverHostname = this.siteSettings.adbutler_adserver_hostname;
+
+    loadAdbutler(adserverHostname).then(
+      function () {
+        if (this.divs.length > 0) {
+          let abkw = window.abkw || "";
+          window.AdButler.ads.push({
+            handler: function (opt) {
+              window.AdButler.register(
+                opt.place.publisherId,
+                opt.place.zoneId,
+                opt.place.dimensions,
+                opt.place.divId,
+                opt
+              );
+            },
+            opt: {
+              place: this.divs.pop(),
+              keywords: abkw,
+              domain: adserverHostname,
+              click: "CLICK_MACRO_PLACEHOLDER",
+            },
+          });
+        }
+      }.bind(this)
+    );
   }
 
   <template>

@@ -28,16 +28,6 @@ export default class DUserInfo extends Component {
     set(this, "user.username", value);
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.user?.statusManager?.trackStatus();
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.user?.statusManager?.stopTrackingStatus();
-  }
-
   @computed("user.username")
   get userPath() {
     return userPath(this.user?.username);
@@ -46,6 +36,16 @@ export default class DUserInfo extends Component {
   @computed("user.name")
   get nameFirst() {
     return prioritizeNameInUx(this.user?.name);
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.user?.statusManager?.trackStatus();
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.user?.statusManager?.stopTrackingStatus();
   }
 
   <template>

@@ -35,17 +35,17 @@ export default class ThemeCardPreview extends Component {
       : i18n("admin_onboarding_banner.select_theme.show_dark_screenshot");
   }
 
+  @action
+  toggleScreenshot() {
+    this.showingDarkScreenshot = !this.showingDarkScreenshot;
+  }
+
   #shouldShowDarkByDefault() {
     return (
       this.interfaceColor?.colorModeIsDark ||
       window.matchMedia("(prefers-color-scheme: dark)").matches ||
       this.session?.defaultColorSchemeIsDark
     );
-  }
-
-  @action
-  toggleScreenshot() {
-    this.showingDarkScreenshot = !this.showingDarkScreenshot;
   }
 
   <template>

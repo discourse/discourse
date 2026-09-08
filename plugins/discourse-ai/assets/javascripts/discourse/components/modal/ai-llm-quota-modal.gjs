@@ -13,20 +13,6 @@ import DurationSelector from "../ai-quota-duration-selector";
 export default class AiLlmQuotaModal extends Component {
   @service site;
 
-  @action
-  save(data) {
-    const quota = { ...data };
-    quota.group_name = this.site.groupName(data.group_id);
-    quota.llm_model_id = this.args.model.id;
-
-    this.args.model.addItemToCollection(quota);
-    this.args.closeModal();
-
-    if (this.args.model.onSave) {
-      this.args.model.onSave();
-    }
-  }
-
   get availableGroups() {
     const existingQuotaGroupIds =
       this.args.model.llm.llm_quotas.map((q) => q.group_id) || [];
@@ -48,6 +34,20 @@ export default class AiLlmQuotaModal extends Component {
       max_cost: null,
       duration_seconds: moment.duration(1, "day").asSeconds(),
     };
+  }
+
+  @action
+  save(data) {
+    const quota = { ...data };
+    quota.group_name = this.site.groupName(data.group_id);
+    quota.llm_model_id = this.args.model.id;
+
+    this.args.model.addItemToCollection(quota);
+    this.args.closeModal();
+
+    if (this.args.model.onSave) {
+      this.args.model.onSave();
+    }
   }
 
   @action

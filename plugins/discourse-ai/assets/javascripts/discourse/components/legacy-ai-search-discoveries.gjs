@@ -49,29 +49,6 @@ export default class LegacyAiSearchDiscoveries extends Component {
     );
   }
 
-  @bind
-  _updateDiscovery(update) {
-    if (this.query === update.query && !update.request_id) {
-      this.legacyDiscoveries.onDiscoveryUpdate(update);
-    }
-  }
-
-  @bind
-  unsubscribe() {
-    this.messageBus.unsubscribe(
-      "/discourse-ai/discoveries",
-      this._updateDiscovery
-    );
-  }
-
-  @bind
-  subscribe() {
-    this.messageBus.subscribe(
-      "/discourse-ai/discoveries",
-      this._updateDiscovery
-    );
-  }
-
   get discoveryPreviewLength() {
     return this.args.discoveryPreviewLength || 150;
   }
@@ -135,6 +112,22 @@ export default class LegacyAiSearchDiscoveries extends Component {
     }
 
     return "discourse_ai.discobot_discoveries.legacy.continue_convo";
+  }
+
+  @bind
+  unsubscribe() {
+    this.messageBus.unsubscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
+  }
+
+  @bind
+  subscribe() {
+    this.messageBus.subscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
   }
 
   @action
@@ -201,6 +194,13 @@ export default class LegacyAiSearchDiscoveries extends Component {
       popupAjaxError(e);
     } finally {
       this.loadingConversationTopic = false;
+    }
+  }
+
+  @bind
+  _updateDiscovery(update) {
+    if (this.query === update.query && !update.request_id) {
+      this.legacyDiscoveries.onDiscoveryUpdate(update);
     }
   }
 

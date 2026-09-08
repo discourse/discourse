@@ -47,6 +47,20 @@ export default class Sidebar extends Component {
     return this.currentUser && this.sidebarState.showMainPanel;
   }
 
+  get switchPanelButtons() {
+    if (
+      !this.sidebarState.displaySwitchPanelButtons ||
+      this.sidebarState.panels.length === 1 ||
+      !this.currentUser
+    ) {
+      return [];
+    }
+
+    return this.sidebarState.panels.filter(
+      (panel) => panel !== this.sidebarState.currentPanel && !panel.hidden
+    );
+  }
+
   /**
    * The target stays registered whatever the sidebar is showing, and refuses
    * here instead, so a panel switch cannot leave a half-built registration
@@ -60,20 +74,6 @@ export default class Sidebar extends Component {
     return (
       Boolean(this.#canAcceptLinkDrop) &&
       !webLinkPayload(source).containsFiles()
-    );
-  }
-
-  get switchPanelButtons() {
-    if (
-      !this.sidebarState.displaySwitchPanelButtons ||
-      this.sidebarState.panels.length === 1 ||
-      !this.currentUser
-    ) {
-      return [];
-    }
-
-    return this.sidebarState.panels.filter(
-      (panel) => panel !== this.sidebarState.currentPanel && !panel.hidden
     );
   }
 

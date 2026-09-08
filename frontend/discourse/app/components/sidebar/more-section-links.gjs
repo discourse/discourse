@@ -50,19 +50,6 @@ export default class SidebarMoreSectionLinks extends Component {
     }
   }
 
-  #filterActiveSectionLink(sectionLinks) {
-    return sectionLinks.filter((sectionLink) => {
-      return sectionLink.name !== this.activeSectionLink.name;
-    });
-  }
-
-  #setActiveSectionLink() {
-    this.activeSectionLink = findActiveLink(
-      this.args.sectionLinks,
-      this.router
-    );
-  }
-
   @cached
   get triggerComponent() {
     return curryComponent(
@@ -85,6 +72,19 @@ export default class SidebarMoreSectionLinks extends Component {
     if (this.args.toggleNavigationMenu) {
       this.args.toggleNavigationMenu();
     }
+  }
+
+  #filterActiveSectionLink(sectionLinks) {
+    return sectionLinks.filter((sectionLink) => {
+      return sectionLink.name !== this.activeSectionLink.name;
+    });
+  }
+
+  #setActiveSectionLink() {
+    this.activeSectionLink = findActiveLink(
+      this.args.sectionLinks,
+      this.router
+    );
   }
 
   <template>

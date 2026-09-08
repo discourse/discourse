@@ -129,23 +129,6 @@ export default class AiPostHelperMenu extends Component {
     return this.lastSelectedOption?.name === "explain";
   }
 
-  _showUserCustomPrompts() {
-    return this.currentUser?.can_use_custom_prompts;
-  }
-
-  _sanitizeForFootnote(text) {
-    // Remove line breaks (line-breaks breaks the inline footnote display)
-    text = text.replace(/[\r\n]+/g, " ");
-
-    // Remove headings (headings don't work in inline footnotes)
-    text = text.replace(/^(#+)\s+/gm, "");
-
-    // Trim excess space
-    text = text.trim();
-
-    return sanitize(text);
-  }
-
   set progressChannel(value) {
     if (this._progressChannel) {
       this.unsubscribe();
@@ -165,19 +148,6 @@ export default class AiPostHelperMenu extends Component {
     }
     this.messageBus.unsubscribe(this._progressChannel, this._updateResult);
     this._progressChannel = null;
-  }
-
-  @bind
-  async _updateResult(result) {
-    if (isAiCreditLimitError(result)) {
-      this.loading = false;
-      this.menuState = this.MENU_STATES.options;
-      popupAiCreditLimitError(result);
-      return;
-    }
-
-    this.streaming = !result.done;
-    await this.smoothStreamer.updateResult(result, "result");
   }
 
   @action
@@ -230,47 +200,6 @@ export default class AiPostHelperMenu extends Component {
     }
 
     return this._activeAiRequest;
-  }
-
-  _handleStreamedResult(option) {
-    this.menuState = this.MENU_STATES.result;
-    const menu = this.menu.getByIdentifier("post-text-selection-toolbar");
-    if (menu) {
-      menu.options.placement = "bottom";
-    }
-    const fetchUrl = `/discourse-ai/ai-helper/stream_suggestion`;
-
-    this._activeAiRequest = ajax(fetchUrl, {
-      method: "POST",
-      data: {
-        location: "post",
-        mode: option.name,
-        text: this.args.data.quoteState.buffer,
-        post_id: this.args.data.quoteState.postId,
-        custom_prompt: this.customPromptValue,
-        client_id: this.messageBus.clientId,
-      },
-    });
-
-    return this._activeAiRequest;
-  }
-
-  _handleProofreadOption() {
-    this.showAiButtons = false;
-
-    if (this.site.desktopView) {
-      this.showFastEdit = true;
-      return;
-    } else {
-      return this.modal.show(FastEditModal, {
-        model: {
-          initialValue: this.args.data.quoteState.buffer,
-          newValue: this.suggestion,
-          post: this.args.data.post,
-          close: this.closeFastEdit,
-        },
-      });
-    }
   }
 
   @action
@@ -338,6 +267,77 @@ export default class AiPostHelperMenu extends Component {
         this.isSavingFootnote = false;
         await this.closeMenu();
       }
+    }
+  }
+
+  _showUserCustomPrompts() {
+    return this.currentUser?.can_use_custom_prompts;
+  }
+
+  _sanitizeForFootnote(text) {
+    // Remove line breaks (line-breaks breaks the inline footnote display)
+    text = text.replace(/[\r\n]+/g, " ");
+
+    // Remove headings (headings don't work in inline footnotes)
+    text = text.replace(/^(#+)\s+/gm, "");
+
+    // Trim excess space
+    text = text.trim();
+
+    return sanitize(text);
+  }
+
+  @bind
+  async _updateResult(result) {
+    if (isAiCreditLimitError(result)) {
+      this.loading = false;
+      this.menuState = this.MENU_STATES.options;
+      popupAiCreditLimitError(result);
+      return;
+    }
+
+    this.streaming = !result.done;
+    await this.smoothStreamer.updateResult(result, "result");
+  }
+
+  _handleStreamedResult(option) {
+    this.menuState = this.MENU_STATES.result;
+    const menu = this.menu.getByIdentifier("post-text-selection-toolbar");
+    if (menu) {
+      menu.options.placement = "bottom";
+    }
+    const fetchUrl = `/discourse-ai/ai-helper/stream_suggestion`;
+
+    this._activeAiRequest = ajax(fetchUrl, {
+      method: "POST",
+      data: {
+        location: "post",
+        mode: option.name,
+        text: this.args.data.quoteState.buffer,
+        post_id: this.args.data.quoteState.postId,
+        custom_prompt: this.customPromptValue,
+        client_id: this.messageBus.clientId,
+      },
+    });
+
+    return this._activeAiRequest;
+  }
+
+  _handleProofreadOption() {
+    this.showAiButtons = false;
+
+    if (this.site.desktopView) {
+      this.showFastEdit = true;
+      return;
+    } else {
+      return this.modal.show(FastEditModal, {
+        model: {
+          initialValue: this.args.data.quoteState.buffer,
+          newValue: this.suggestion,
+          post: this.args.data.post,
+          close: this.closeFastEdit,
+        },
+      });
     }
   }
 

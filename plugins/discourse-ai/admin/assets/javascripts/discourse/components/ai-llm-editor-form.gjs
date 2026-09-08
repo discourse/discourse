@@ -145,19 +145,6 @@ export default class AiLlmEditorForm extends Component {
     );
   }
 
-  fieldTypeForProviderParam(type) {
-    switch (type) {
-      case "enum":
-        return "select";
-      case "checkbox":
-        return "checkbox";
-      case "secret":
-        return "custom";
-      default:
-        return `input-${type}`;
-    }
-  }
-
   get adminUser() {
     return AdminUser.create(this.args.model?.user);
   }
@@ -202,6 +189,19 @@ export default class AiLlmEditorForm extends Component {
       settings: this.modulesUsingModel,
       count: this.args.model.used_by.length,
     });
+  }
+
+  fieldTypeForProviderParam(type) {
+    switch (type) {
+      case "enum":
+        return "select";
+      case "checkbox":
+        return "checkbox";
+      case "secret":
+        return "custom";
+      default:
+        return `input-${type}`;
+    }
   }
 
   computeProviderParams(provider, currentParams = {}) {

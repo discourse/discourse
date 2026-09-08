@@ -16,6 +16,15 @@ export default class DDatePicker extends Component {
   maxDate = null;
   _picker = null;
 
+  @computed("_placeholder")
+  get placeholder() {
+    return this._placeholder || i18n("dates.placeholder");
+  }
+
+  set placeholder(value) {
+    this.set("_placeholder", value);
+  }
+
   @computed("site.mobileView")
   get inputType() {
     return this.site?.mobileView ? "date" : "text";
@@ -93,15 +102,6 @@ export default class DDatePicker extends Component {
       this._picker.destroy();
       this._picker = null;
     }
-  }
-
-  @computed("_placeholder")
-  get placeholder() {
-    return this._placeholder || i18n("dates.placeholder");
-  }
-
-  set placeholder(value) {
-    this.set("_placeholder", value);
   }
 
   _opts() {

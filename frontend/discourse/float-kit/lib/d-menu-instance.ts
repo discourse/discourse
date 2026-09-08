@@ -70,13 +70,6 @@ export default class DMenuInstance extends FloatKitInstance {
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
-  get portalOutletElement() {
-    return (
-      this.portalOutletOverrideElement ||
-      document.getElementById("d-menu-portals")
-    );
-  }
-
   get trigger() {
     return this._trigger;
   }
@@ -86,6 +79,13 @@ export default class DMenuInstance extends FloatKitInstance {
     this.id =
       (element instanceof HTMLElement && element.id) || guidFor(element);
     this.setupListeners();
+  }
+
+  get portalOutletElement() {
+    return (
+      this.portalOutletOverrideElement ||
+      document.getElementById("d-menu-portals")
+    );
   }
 
   get shouldTrapPointerDown() {
@@ -99,6 +99,27 @@ export default class DMenuInstance extends FloatKitInstance {
    */
   get #ownsFocus(): boolean {
     return !!this.content?.contains(document.activeElement);
+  }
+
+  /**
+   * Where focus goes once the menu has closed. `focusTarget` is resolved here rather than when
+   * the menu opened, so an action that replaces or removes the element it named still returns
+   * focus to whatever now stands in its place. The trigger element is the fallback, and is
+   * `null` for a menu anchored to a virtual reference — which is exactly the case `focusTarget`
+   * exists to serve.
+   */
+  get #focusReturnTarget(): HTMLElement | null {
+    const { focusTarget } = this.options;
+
+    // An absent thunk means "no opinion", so the trigger is the fallback. A thunk that returns
+    // `null` is an opinion — the caller looked and decided nothing should take focus — so it is
+    // honoured rather than falling through to the trigger.
+    return focusTarget ? focusTarget() : this.triggerElement;
+  }
+
+  get #focusIsUnowned(): boolean {
+    const { activeElement } = document;
+    return !activeElement || activeElement === document.body;
   }
 
   @action
@@ -128,27 +149,6 @@ export default class DMenuInstance extends FloatKitInstance {
     }
 
     await super.close(options);
-  }
-
-  /**
-   * Where focus goes once the menu has closed. `focusTarget` is resolved here rather than when
-   * the menu opened, so an action that replaces or removes the element it named still returns
-   * focus to whatever now stands in its place. The trigger element is the fallback, and is
-   * `null` for a menu anchored to a virtual reference — which is exactly the case `focusTarget`
-   * exists to serve.
-   */
-  get #focusReturnTarget(): HTMLElement | null {
-    const { focusTarget } = this.options;
-
-    // An absent thunk means "no opinion", so the trigger is the fallback. A thunk that returns
-    // `null` is an opinion — the caller looked and decided nothing should take focus — so it is
-    // honoured rather than falling through to the trigger.
-    return focusTarget ? focusTarget() : this.triggerElement;
-  }
-
-  get #focusIsUnowned(): boolean {
-    const { activeElement } = document;
-    return !activeElement || activeElement === document.body;
   }
 
   @action

@@ -31,10 +31,6 @@ export default class Tooltips extends Component {
   @tracked offset = TOOLTIP.options.offset;
   @tracked _content = "Hello World!";
 
-  get triggersByDevice() {
-    return this.site.mobileView ? "mobile" : "desktop";
-  }
-
   get content() {
     return this._content;
   }
@@ -43,41 +39,8 @@ export default class Tooltips extends Component {
     this._content = trustHTML(value);
   }
 
-  @action
-  toggleArrow() {
-    this.arrow = !this.arrow;
-  }
-
-  @action
-  toggleInteractive() {
-    this.interactive = !this.interactive;
-  }
-
-  @action
-  toggleInline() {
-    this.inline = !this.inline;
-  }
-
-  @action
-  registerTooltip() {
-    this.tooltipInstance?.destroy();
-    this.tooltipInstance = this.tooltip.register(
-      document.querySelector("#tooltip-instance"),
-      this.options
-    );
-  }
-
-  @action
-  registerTooltipWithComponent() {
-    this.tooltipInstanceWithComponent?.destroy();
-    this.tooltipInstanceWithComponent = this.tooltip.register(
-      document.querySelector("#tooltip-instance-with-component"),
-      {
-        ...this.options,
-        component: DummyComponent,
-        data: { foo: 1 },
-      }
-    );
+  get triggersByDevice() {
+    return this.site.mobileView ? "mobile" : "desktop";
   }
 
   get options() {
@@ -219,6 +182,43 @@ export default class MyComponent extends Component {
   <DButton @action={{this.registerTooltipWithComponent}}>Register</DButton>
 </template>
     `.trim();
+  }
+
+  @action
+  toggleArrow() {
+    this.arrow = !this.arrow;
+  }
+
+  @action
+  toggleInteractive() {
+    this.interactive = !this.interactive;
+  }
+
+  @action
+  toggleInline() {
+    this.inline = !this.inline;
+  }
+
+  @action
+  registerTooltip() {
+    this.tooltipInstance?.destroy();
+    this.tooltipInstance = this.tooltip.register(
+      document.querySelector("#tooltip-instance"),
+      this.options
+    );
+  }
+
+  @action
+  registerTooltipWithComponent() {
+    this.tooltipInstanceWithComponent?.destroy();
+    this.tooltipInstanceWithComponent = this.tooltip.register(
+      document.querySelector("#tooltip-instance-with-component"),
+      {
+        ...this.options,
+        component: DummyComponent,
+        data: { foo: 1 },
+      }
+    );
   }
 
   <template>

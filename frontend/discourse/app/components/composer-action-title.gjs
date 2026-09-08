@@ -28,11 +28,6 @@ export default class ComposerActionTitle extends Component {
     );
   }
 
-  @action
-  openChangeReplyToModal() {
-    this.composer.openChangeReplyToModal();
-  }
-
   @computed("options.originalUser")
   get replyTargetSegment() {
     const originalUser = this.options?.originalUser;
@@ -44,6 +39,11 @@ export default class ComposerActionTitle extends Component {
        ${originalUser.avatar}
        <span class="original-username">${escape(originalUser.username)}</span>`
     );
+  }
+
+  @action
+  openChangeReplyToModal() {
+    this.composer.openChangeReplyToModal();
   }
 
   <template>

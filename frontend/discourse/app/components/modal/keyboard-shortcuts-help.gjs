@@ -336,11 +336,6 @@ export default class KeyboardShortcutsHelp extends Component {
     return shortcuts;
   }
 
-  @action
-  filterShortcuts(event) {
-    this.searchTerm = event.target.value.toLowerCase();
-  }
-
   get filteredShortcuts() {
     const searchTokens = this.searchTerm.trim().split(/\s+/).filter(Boolean);
     return Object.entries(this.shortcuts).reduce(
@@ -384,6 +379,11 @@ export default class KeyboardShortcutsHelp extends Component {
       },
       {}
     );
+  }
+
+  @action
+  filterShortcuts(event) {
+    this.searchTerm = event.target.value.toLowerCase();
   }
 
   _buildExtraShortcuts(shortcuts) {

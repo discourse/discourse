@@ -50,6 +50,15 @@ export default class AdminBackupsIndexController extends Controller {
     }
   }
 
+  @computed("status.isOperationRunning")
+  get deleteTitle() {
+    if (this.status.isOperationRunning) {
+      return "admin.backups.operations.is_running";
+    }
+
+    return "admin.backups.operations.destroy.title";
+  }
+
   @action
   async download(backup) {
     try {
@@ -58,14 +67,5 @@ export default class AdminBackupsIndexController extends Controller {
     } catch (err) {
       popupAjaxError(err);
     }
-  }
-
-  @computed("status.isOperationRunning")
-  get deleteTitle() {
-    if (this.status.isOperationRunning) {
-      return "admin.backups.operations.is_running";
-    }
-
-    return "admin.backups.operations.destroy.title";
   }
 }

@@ -72,6 +72,14 @@ class NotificationsTrackingTrigger extends Component {
 }
 
 export default class NotificationsTracking extends Component {
+  get selectedLevel() {
+    return buttonDetails(this.args.levelId);
+  }
+
+  get levels() {
+    return this.args.levels ?? allLevels;
+  }
+
   @action
   registerDmenuApi(api) {
     this.dmenuApi = api;
@@ -105,14 +113,6 @@ export default class NotificationsTracking extends Component {
   @action
   isSelectedClass(level) {
     return this.args.levelId === level.id ? "-selected" : "";
-  }
-
-  get selectedLevel() {
-    return buttonDetails(this.args.levelId);
-  }
-
-  get levels() {
-    return this.args.levels ?? allLevels;
   }
 
   <template>
