@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import FormTemplateValidationOptionsModal from "discourse/admin/components/modal/form-template-validation-options";
 import { templateFormFields } from "discourse/admin/lib/template-form-fields";
 import FormTemplate from "discourse/admin/models/form-template";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import FormTemplateFormPreview from "discourse/components/modal/form-template-form-preview";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
@@ -194,10 +194,10 @@ export default class FormTemplateForm extends Component {
       </div>
 
       <div class="control-group">
-        <AceEditor
-          @content={{this.templateContent}}
-          @mode="yaml"
+        <CodeEditor
+          @language="yaml"
           @onChange={{fn (mut this.templateContent)}}
+          @value={{this.templateContent}}
         />
       </div>
 

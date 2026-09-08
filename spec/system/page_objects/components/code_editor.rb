@@ -7,9 +7,10 @@ module PageObjects
         @selector = selector
       end
 
+      # Written into the document rather than sent as keystrokes, which the
+      # editor would auto-indent as it went.
       def type_input(content)
-        editor_content.send_keys(content)
-        self
+        set_input(value.to_s + content)
       end
 
       # The editor paints a contenteditable, so the document is set through it
@@ -44,6 +45,10 @@ module PageObjects
 
       def has_content?(content)
         value == content
+      end
+
+      def has_text?(content)
+        value.include?(content)
       end
     end
   end

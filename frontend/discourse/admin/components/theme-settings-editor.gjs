@@ -4,7 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -213,10 +213,10 @@ export default class ThemeSettingsEditor extends Component {
   <template>
     <div class="settings-editor">
       <div>
-        <AceEditor
-          @content={{this.editedContent}}
-          @mode="html"
+        <CodeEditor
+          @language="json"
           @onChange={{fn (mut this.editedContent)}}
+          @value={{this.editedContent}}
         />
 
         {{#each this.errors as |error|}}

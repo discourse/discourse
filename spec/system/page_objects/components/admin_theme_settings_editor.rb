@@ -4,7 +4,7 @@ module PageObjects
   module Components
     class AdminThemeSettingsEditor < Base
       def opened?
-        page.has_css?(".ace_editor")
+        page.has_css?(".cm-editor")
         self
       end
 
@@ -21,7 +21,7 @@ module PageObjects
       private
 
       def editor
-        @editor ||= within(".settings-editor") { AceEditor.new }
+        @editor ||= CodeEditor.new(".settings-editor .code-editor")
       end
     end
   end
