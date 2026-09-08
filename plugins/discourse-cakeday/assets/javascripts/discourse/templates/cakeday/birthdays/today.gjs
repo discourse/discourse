@@ -6,9 +6,9 @@ import UserInfoList from "../../../components/user-info-list";
 export default <template>
   <h2 class="cakeday-header">{{@controller.title}}</h2>
 
-  <DLoadMore @selector=".user-info" @action={{@controller.loadMore}}>
+  <DLoadMore @action={{@controller.loadMore}} @selector=".user-info">
     <DConditionalLoadingSpinner @condition={{@controller.model.loading}}>
-      <UserInfoList @users={{@controller.model}} @isBirthday={{true}}>
+      <UserInfoList @isBirthday={{true}} @users={{@controller.model}}>
         {{i18n "birthdays.today.empty"}}
       </UserInfoList>
     </DConditionalLoadingSpinner>

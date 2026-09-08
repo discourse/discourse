@@ -116,10 +116,10 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_server"
-              @type="input"
-              @title={{i18n "groups.manage.email.credentials.smtp_server"}}
-              @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_server"}}
+              @title={{i18n "groups.manage.email.credentials.smtp_server"}}
+              @type="input"
+              @validation="required"
               as |field|
             >
               <field.Control />
@@ -128,10 +128,10 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="email_username"
-              @type="input"
-              @title={{i18n "groups.manage.email.credentials.username"}}
-              @validation="required"
               @onSet={{fn this.resetTestingSettings "email_username"}}
+              @title={{i18n "groups.manage.email.credentials.username"}}
+              @type="input"
+              @validation="required"
               as |field|
             >
               <field.Control />
@@ -141,10 +141,10 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_port"
-              @type="input-number"
-              @title={{i18n "groups.manage.email.credentials.smtp_port"}}
-              @validation="required|integer"
               @onSet={{fn this.resetTestingSettings "smtp_port"}}
+              @title={{i18n "groups.manage.email.credentials.smtp_port"}}
+              @type="input-number"
+              @validation="required|integer"
               as |field|
             >
               <field.Control />
@@ -153,10 +153,10 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="email_password"
-              @type="password"
-              @title={{i18n "groups.manage.email.credentials.password"}}
-              @validation="required"
               @onSet={{fn this.resetTestingSettings "email_password"}}
+              @title={{i18n "groups.manage.email.credentials.password"}}
+              @type="password"
+              @validation="required"
               as |field|
             >
               <field.Control />
@@ -166,10 +166,10 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_ssl_mode"
-              @type="select"
-              @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
-              @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_ssl_mode"}}
+              @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
+              @type="select"
+              @validation="required"
               as |field|
             >
               <field.Control as |select|>
@@ -183,12 +183,12 @@ export default class GroupSmtpEmailSettings extends Component {
           </row.Col>
           <row.Col @size={{6}}>
             <form.Field
-              @name="email_from_alias"
-              @type="input"
-              @title={{i18n "groups.manage.email.settings.from_alias"}}
               @description={{i18n
                 "groups.manage.email.settings.from_alias_hint"
               }}
+              @name="email_from_alias"
+              @title={{i18n "groups.manage.email.settings.from_alias"}}
+              @type="input"
               as |field|
             >
               <field.Control />
@@ -197,12 +197,12 @@ export default class GroupSmtpEmailSettings extends Component {
         </form.Row>
 
         <form.Submit
+          class="btn-primary group-smtp-form__test-smtp-settings"
+          tabindex="7"
           @disabled={{or this.testingSettings}}
           @icon="gear"
           @label="groups.manage.email.test_settings"
           @title="groups.manage.email.settings_required"
-          tabindex="7"
-          class="btn-primary group-smtp-form__test-smtp-settings"
         />
 
         <form.Container class="group-smtp-prefill-options">
@@ -210,22 +210,22 @@ export default class GroupSmtpEmailSettings extends Component {
           <ul>
             <li>
               <a
-                id="prefill_smtp_gmail"
                 href
+                id="prefill_smtp_gmail"
                 {{on "click" (fn this.prefillSettings "gmail" form.set)}}
               >{{i18n "groups.manage.email.prefill.gmail"}}</a>
             </li>
             <li>
               <a
-                id="prefill_smtp_outlook"
                 href
+                id="prefill_smtp_outlook"
                 {{on "click" (fn this.prefillSettings "outlook" form.set)}}
               >{{i18n "groups.manage.email.prefill.outlook"}}</a>
             </li>
             <li>
               <a
-                id="prefill_smtp_office365"
                 href
+                id="prefill_smtp_office365"
                 {{on "click" (fn this.prefillSettings "office365" form.set)}}
               >{{i18n "groups.manage.email.prefill.office365"}}</a>
             </li>
@@ -243,8 +243,8 @@ export default class GroupSmtpEmailSettings extends Component {
               }}</strong>
             {{i18n "groups.manage.email.last_updated_by"}}
             <LinkTo
-              @route="user"
               @model={{@group.smtp_updated_by.username}}
+              @route="user"
             >{{@group.smtp_updated_by.username}}</LinkTo>
           </small>
         </div>

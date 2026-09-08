@@ -91,10 +91,10 @@ export default class ChatThreadHeader extends Component {
       {{/if}}
 
       <navbar.Title
+        class={{if this.openThreadTitleModal "clickable"}}
+        role={{if this.openThreadTitleModal "button"}}
         @title={{dReplaceEmoji this.headerTitle}}
         {{on "click" (or this.openThreadTitleModal noop)}}
-        role={{if this.openThreadTitleModal "button"}}
-        class={{if this.openThreadTitleModal "clickable"}}
       />
       <navbar.Actions as |action|>
         <PluginOutlet

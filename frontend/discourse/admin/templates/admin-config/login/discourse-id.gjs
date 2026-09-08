@@ -98,8 +98,8 @@ class DiscourseIdAdmin extends Component {
             {{i18n "admin.config.discourse_id.description"}}
             <a
               href="https://id.discourse.com"
-              target="_blank"
               rel="noopener noreferrer"
+              target="_blank"
             >{{i18n "admin.config.discourse_id.learn_more"}}</a>
           </p>
 
@@ -133,11 +133,11 @@ class DiscourseIdAdmin extends Component {
 
             <div class="discourse-id-footer">
               <DButton
+                class="btn-default btn-small"
                 @action={{this.regenerateCredentials}}
-                @label="admin.config.discourse_id.regenerate_credentials"
                 @disabled={{this.regenerateDisabled}}
                 @isLoading={{this.isRegenerating}}
-                class="btn-default btn-small"
+                @label="admin.config.discourse_id.regenerate_credentials"
               />
             </div>
           </div>

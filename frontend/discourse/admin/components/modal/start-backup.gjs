@@ -42,9 +42,9 @@ export default class StartBackup extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.backups.operations.backup.confirm"}}
-      @closeModal={{@closeModal}}
       class="start-backup-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "admin.backups.operations.backup.confirm"}}
     >
       <:body>
         {{#if this.warningMessage}}
@@ -54,7 +54,7 @@ export default class StartBackup extends Component {
         {{/if}}
         {{#if this.canManageUploadsInBackup}}
           <label class="checkbox-label">
-            <Input @type="checkbox" @checked={{this.includeUploads}} />
+            <Input @checked={{this.includeUploads}} @type="checkbox" />
             {{i18n "admin.backups.operations.backup.include_uploads"}}
           </label>
         {{/if}}

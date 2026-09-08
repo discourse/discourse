@@ -41,15 +41,15 @@ export default class GroupsField extends BaseField {
   <template>
     <section class="field group-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <GroupChooser
             @content={{this.allGroups}}
-            @value={{readonly @field.metadata.value}}
             @labelProperty="name"
             @onChange={{this.setGroupField}}
             @options={{hash maximum=this.maximum disabled=@field.isDisabled}}
+            @value={{readonly @field.metadata.value}}
           />
 
           <DAFieldDescription @description={{@description}} />

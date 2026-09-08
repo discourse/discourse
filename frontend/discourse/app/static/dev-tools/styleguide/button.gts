@@ -10,11 +10,11 @@ export default class StyleguideButton extends Component {
   <template>
     {{#if this.site.can_see_styleguide}}
       <a
-        href={{getURL "/styleguide"}}
-        title={{i18n "dev_tools.open_styleguide"}}
         aria-label={{i18n "dev_tools.open_styleguide"}}
         class="dev-tools-toolbar__link open-styleguide"
         data-auto-route="true"
+        href={{getURL "/styleguide"}}
+        title={{i18n "dev_tools.open_styleguide"}}
       >
         {{dIcon "paintbrush"}}
       </a>

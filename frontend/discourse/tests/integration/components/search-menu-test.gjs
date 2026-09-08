@@ -132,9 +132,9 @@ module("Integration | Component | SearchMenu", function (hooks) {
     await render(
       <template>
         <SearchMenu
+          @hideResults={{state.hidden}}
           @location="test"
           @searchInputId="icon-search-input"
-          @hideResults={{state.hidden}}
         />
       </template>
     );

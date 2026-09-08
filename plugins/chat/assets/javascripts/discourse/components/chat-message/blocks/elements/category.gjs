@@ -23,7 +23,7 @@ export default class CategoryElement extends Component {
       <div class="block__category-inner">
         <div class="block__category-heading">
           {{#if @definition.url}}
-            <a href={{@definition.url}} class="block__category-link">
+            <a class="block__category-link" href={{@definition.url}}>
               <span class="badge-category --style-square">
                 <span class="badge-category__name">{{@definition.title}}</span>
               </span>

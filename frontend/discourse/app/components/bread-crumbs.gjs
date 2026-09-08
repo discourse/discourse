@@ -60,8 +60,17 @@ export default class BreadCrumbs extends Component {
       ...attributes
     >
       <PluginOutlet
-        @name="bread-crumbs-left"
         @connectorTagName="li"
+        @deprecatedArgs={{lazyHash
+          tagId=(deprecatedOutletArgument
+            value=this.tag.name
+            message="The argument 'tagId' is deprecated on the outlet 'bread-crumbs-left', use 'tag.name' instead"
+            id="discourse.plugin-connector.deprecated-arg.bread-crumbs-left"
+            since="2025.12.0-latest"
+            silence="discourse.header-service-topic"
+          )
+        }}
+        @name="bread-crumbs-left"
         @outletArgs={{lazyHash
           tag=this.tag
           additionalTags=this.additionalTags
@@ -71,15 +80,6 @@ export default class BreadCrumbs extends Component {
           categoryBreadcrumbs=this.categoryBreadcrumbs
           editingCategory=this.editingCategory
           editingCategoryTab=this.editingCategoryTab
-        }}
-        @deprecatedArgs={{lazyHash
-          tagId=(deprecatedOutletArgument
-            value=this.tag.name
-            message="The argument 'tagId' is deprecated on the outlet 'bread-crumbs-left', use 'tag.name' instead"
-            id="discourse.plugin-connector.deprecated-arg.bread-crumbs-left"
-            since="2025.12.0-latest"
-            silence="discourse.header-service-topic"
-          )
         }}
       />
 
@@ -92,9 +92,13 @@ export default class BreadCrumbs extends Component {
             }}
           >
             <CategoryDrop
-              @category={{breadcrumb.category}}
+              class={{if
+                breadcrumb.isSubcategory
+                "category-breadcrumb__subcategory-selector"
+                "category-breadcrumb__category-selector"
+              }}
               @categories={{breadcrumb.options}}
-              @tag={{this.tag}}
+              @category={{breadcrumb.category}}
               @editingCategory={{this.editingCategory}}
               @editingCategoryTab={{this.editingCategoryTab}}
               @options={{hash
@@ -102,11 +106,7 @@ export default class BreadCrumbs extends Component {
                 subCategory=breadcrumb.isSubcategory
                 noSubcategories=breadcrumb.noSubcategories
               }}
-              class={{if
-                breadcrumb.isSubcategory
-                "category-breadcrumb__subcategory-selector"
-                "category-breadcrumb__category-selector"
-              }}
+              @tag={{this.tag}}
             />
           </li>
         {{/if}}
@@ -116,9 +116,9 @@ export default class BreadCrumbs extends Component {
         {{#if this.additionalTags}}
           <li>
             <TagsIntersectionChooser
+              @additionalTags={{this.additionalTags}}
               @currentCategory={{this.category}}
               @mainTag={{this.tag}}
-              @additionalTags={{this.additionalTags}}
               @options={{hash categoryId=this.category.id}}
             />
           </li>
@@ -134,8 +134,17 @@ export default class BreadCrumbs extends Component {
       {{/if}}
 
       <PluginOutlet
-        @name="bread-crumbs-right"
         @connectorTagName="li"
+        @deprecatedArgs={{lazyHash
+          tagId=(deprecatedOutletArgument
+            value=this.tag.name
+            message="The argument 'tagId' is deprecated on the outlet 'bread-crumbs-right', use 'tag.name' instead"
+            id="discourse.plugin-connector.deprecated-arg.bread-crumbs-right"
+            since="2025.12.0-latest"
+            silence="discourse.header-service-topic"
+          )
+        }}
+        @name="bread-crumbs-right"
         @outletArgs={{lazyHash
           tag=this.tag
           additionalTags=this.additionalTags
@@ -145,15 +154,6 @@ export default class BreadCrumbs extends Component {
           categoryBreadcrumbs=this.categoryBreadcrumbs
           editingCategory=this.editingCategory
           editingCategoryTab=this.editingCategoryTab
-        }}
-        @deprecatedArgs={{lazyHash
-          tagId=(deprecatedOutletArgument
-            value=this.tag.name
-            message="The argument 'tagId' is deprecated on the outlet 'bread-crumbs-right', use 'tag.name' instead"
-            id="discourse.plugin-connector.deprecated-arg.bread-crumbs-right"
-            since="2025.12.0-latest"
-            silence="discourse.header-service-topic"
-          )
         }}
       />
     </ol>

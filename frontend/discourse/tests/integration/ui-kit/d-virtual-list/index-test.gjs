@@ -38,7 +38,7 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
 
     await render(
       <template>
-        <DVirtualList @items={{items}} @estimateSize={{estimate}} as |item|>
+        <DVirtualList @estimateSize={{estimate}} @items={{items}} as |item|>
           <span class="row">{{item.text}}</span>
         </DVirtualList>
       </template>
@@ -60,7 +60,7 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
 
     await render(
       <template>
-        <DVirtualList @items={{items}} @estimateSize={{estimate}} as |item|>
+        <DVirtualList @estimateSize={{estimate}} @items={{items}} as |item|>
           <span class="row">{{item.text}}</span>
         </DVirtualList>
       </template>
@@ -100,10 +100,10 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
     await render(
       <template>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{estimate}}
-          @role="listbox"
           @itemRole="option"
+          @items={{items}}
+          @role="listbox"
           as |item|
         >
           <span class="row">{{item.text}}</span>
@@ -133,7 +133,7 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
 
     await render(
       <template>
-        <DVirtualList @items={{items}} @estimateSize={{estimate}}>
+        <DVirtualList @estimateSize={{estimate}} @items={{items}}>
           <:default as |item|><span>{{item.text}}</span></:default>
           <:empty><span class="empty">Nothing here</span></:empty>
         </DVirtualList>
@@ -205,7 +205,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DVirtualList @items={{items}} @estimateSize={{estimate}} as |item|>
+        <DVirtualList @estimateSize={{estimate}} @items={{items}} as |item|>
           <div class="row" style="height: 40px">{{item.text}}</div>
         </DVirtualList>
       </template>
@@ -247,11 +247,11 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
         </style>
 
         <DVirtualList
-          @items={{items}}
-          @estimateSize={{estimate}}
           @as="ul"
-          @role="listbox"
+          @estimateSize={{estimate}}
+          @items={{items}}
           @ownedRow={{true}}
+          @role="listbox"
           as |item row|
         >
           {{! deliberately NO data-index attribute — the modifiers must supply it.
@@ -294,7 +294,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DVirtualList @items={{items}} @estimateSize={{estimate}} as |item|>
+        <DVirtualList @estimateSize={{estimate}} @items={{items}} as |item|>
           <div class="row" style="height: 40px">{{item.text}}</div>
         </DVirtualList>
       </template>
@@ -342,8 +342,8 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{state.value}}
+          @items={{items}}
           @onVisibleRangeChange={{onVisibleRangeChange}}
           as |item|
         >
@@ -388,8 +388,8 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{state.value}}
           @estimateSize={{estimate}}
+          @items={{state.value}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -446,11 +446,11 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{state.value}}
           @estimateSize={{estimate}}
+          @items={{state.value}}
           as |item row|
         >
-          <div class="row" style="height: 40px" data-key={{row.key}}>
+          <div class="row" data-key={{row.key}} style="height: 40px">
             {{item.text}}
           </div>
         </DVirtualList>

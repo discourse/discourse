@@ -53,7 +53,7 @@ export default class UserFlagPercentage extends Component {
 
   <template>
     {{#if (gte this.percentage.total 3)}}
-      <div title={{this.percentage.title}} class="user-flag-percentage">
+      <div class="user-flag-percentage" title={{this.percentage.title}}>
         <span
           class="percentage-label {{this.percentage.className}}"
         >{{this.percentage.label}}</span>

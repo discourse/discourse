@@ -61,8 +61,8 @@ module("Component | ChatMessageReaction", function (hooks) {
     await render(
       <template>
         <ChatMessageReaction
-          @reaction={{hash emoji="heart"}}
           @interactive={{false}}
+          @reaction={{hash emoji="heart"}}
         />
       </template>
     );
@@ -91,7 +91,7 @@ module("Component | ChatMessageReaction", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <ChatMessageReaction @reaction={{reaction}} @message={{message}} />
+        <ChatMessageReaction @message={{message}} @reaction={{reaction}} />
       </template>
     );
 
@@ -256,8 +256,8 @@ module("Component | ChatMessageReaction", function (hooks) {
       <template>
         <ChatMessageReaction
           class="show"
-          @reaction={{hash emoji="heart" count=this.count}}
           @onReaction={{this.react}}
+          @reaction={{hash emoji="heart" count=this.count}}
         />
       </template>
     );

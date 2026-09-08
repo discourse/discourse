@@ -6,7 +6,6 @@ import { i18n } from "discourse-i18n";
 
 const MessagesListEmptyState = <template>
   <DEmptyState
-    @title={{i18n "user.no_messages_title"}}
     @body={{trustHTML
       (i18n
         "user.no_messages_body"
@@ -14,6 +13,7 @@ const MessagesListEmptyState = <template>
         aboutUrl=(getUrl "/about")
       )
     }}
+    @title={{i18n "user.no_messages_title"}}
   />
 </template>;
 

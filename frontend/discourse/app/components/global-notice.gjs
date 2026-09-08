@@ -68,16 +68,6 @@ export default class GlobalNotice extends Component {
     this.logsNoticeService.addObserver("text", this._handleLogsNoticeUpdate);
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
-    this.logsNoticeService.removeObserver(
-      "hidden",
-      this._handleLogsNoticeUpdate
-    );
-  }
-
   get visible() {
     return !this.router.currentRouteName.startsWith("wizard.");
   }
@@ -228,6 +218,16 @@ export default class GlobalNotice extends Component {
     });
   }
 
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
+    this.logsNoticeService.removeObserver(
+      "hidden",
+      this._handleLogsNoticeUpdate
+    );
+  }
+
   @action
   dismissNotice(notice) {
     notice.options.onDismiss?.(notice);
@@ -267,8 +267,8 @@ export default class GlobalNotice extends Component {
         {{#each this.notices as |notice|}}
           <div class="row">
             <div
-              id="global-notice-{{notice.id}}"
               class="alert alert-{{notice.options.level}} {{notice.id}}"
+              id="global-notice-{{notice.id}}"
             >
               {{#if notice.options.html}}
                 {{trustHTML notice.options.html}}
@@ -278,9 +278,9 @@ export default class GlobalNotice extends Component {
 
               {{#if notice.options.dismissable}}
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.dismissNotice notice}}
                   class="btn-transparent close"
+                  @action={{fn this.dismissNotice notice}}
+                  @icon="xmark"
                 />
               {{/if}}
             </div>

@@ -103,9 +103,9 @@ export default class Info extends Component {
           <h1 class="header-title">
             {{#if this.showPM}}
               <a
+                aria-label={{i18n "user.messages.inbox"}}
                 class="private-message-glyph-wrapper"
                 href={{this.pmHref}}
-                aria-label={{i18n "user.messages.inbox"}}
               >
                 {{dIcon "envelope" class="private-message-glyph"}}
               </a>
@@ -113,16 +113,16 @@ export default class Info extends Component {
 
             {{#if (and @topicInfo.fancyTitle @topicInfo.url)}}
               <TopicStatus
-                @topic={{@topicInfo}}
-                @disableActions={{@disableActions}}
                 @context="header"
+                @disableActions={{@disableActions}}
+                @topic={{@topicInfo}}
               />
 
               <a
                 class="topic-link"
-                {{on "click" this.jumpToTopPost}}
-                href={{@topicInfo.url}}
                 data-topic-id={{@topicInfo.id}}
+                href={{@topicInfo.url}}
+                {{on "click" this.jumpToTopPost}}
               >
                 <span>{{trustHTML @topicInfo.fancyTitle}}</span>
               </a>
@@ -183,8 +183,8 @@ export default class Info extends Component {
                 <div class="topic-header-participants">
                   {{#each this.participants as |participant|}}
                     <Participant
-                      @user={{participant}}
                       @type={{if participant.username "user" "group"}}
+                      @user={{participant}}
                       {{! username for user, name for group }}
                       @username={{or participant.username participant.name}}
                     />
@@ -193,9 +193,9 @@ export default class Info extends Component {
                   {{#if (gt this.totalParticipants this.maxExtraItems)}}
                     <a
                       class="more-participants"
-                      {{on "click" this.jumpToTopPost}}
-                      href={{@topicInfo.url}}
                       data-topic-id={{@topicInfo.id}}
+                      href={{@topicInfo.url}}
+                      {{on "click" this.jumpToTopPost}}
                     >
                       +{{this.remainingParticipantCount}}
                     </a>

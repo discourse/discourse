@@ -72,24 +72,6 @@ export default class DashboardSearch extends Component {
     };
   }
 
-  #direction(kpi, change) {
-    if (kpi.value == null) {
-      return "unavailable";
-    }
-
-    if (kpi.previous_value == null || kpi.previous_value === 0) {
-      return kpi.value > 0 ? "up" : "flat";
-    }
-
-    if (change > 0) {
-      return "up";
-    } else if (change < 0) {
-      return "down";
-    }
-
-    return "flat";
-  }
-
   get totalSearchesValue() {
     return formatCount(this.args.search.kpis.total_searches.value);
   }
@@ -137,12 +119,30 @@ export default class DashboardSearch extends Component {
     return this.args.search.trending_period;
   }
 
+  #direction(kpi, change) {
+    if (kpi.value == null) {
+      return "unavailable";
+    }
+
+    if (kpi.previous_value == null || kpi.previous_value === 0) {
+      return kpi.value > 0 ? "up" : "flat";
+    }
+
+    if (change > 0) {
+      return "up";
+    } else if (change < 0) {
+      return "down";
+    }
+
+    return "flat";
+  }
+
   <template>
     <DashboardSection
-      @title={{i18n "admin.dashboard.sections.search.title"}}
-      @startDate={{@startDate}}
-      @endDate={{@endDate}}
       ...attributes
+      @endDate={{@endDate}}
+      @startDate={{@startDate}}
+      @title={{i18n "admin.dashboard.sections.search.title"}}
     >
       {{#if @fetchError}}
         <div class="db-section__error" role="alert">
@@ -184,8 +184,8 @@ export default class DashboardSearch extends Component {
                 }}
                 <DTooltip
                   class="db-section__info"
-                  @identifier="search-total-searches-tooltip"
                   @icon="far-circle-question"
+                  @identifier="search-total-searches-tooltip"
                 >
                   <:content>
                     {{i18n
@@ -219,8 +219,8 @@ export default class DashboardSearch extends Component {
                 }}
                 <DTooltip
                   class="db-section__info"
-                  @identifier="search-no-result-rate-tooltip"
                   @icon="far-circle-question"
+                  @identifier="search-no-result-rate-tooltip"
                 >
                   <:content>
                     {{i18n
@@ -244,8 +244,8 @@ export default class DashboardSearch extends Component {
               {{i18n "admin.dashboard.sections.search.trending.title"}}
               <DTooltip
                 class="db-section__info"
-                @identifier="search-trending-tooltip"
                 @icon="far-circle-question"
+                @identifier="search-trending-tooltip"
               >
                 <:content>
                   {{i18n "admin.dashboard.sections.search.trending.tooltip"}}
@@ -269,13 +269,13 @@ export default class DashboardSearch extends Component {
                     <tr data-test-search-term-row>
                       <td>
                         <LinkTo
-                          @route="adminSearchLogs.term"
+                          title={{row.term}}
                           @query={{hash
                             term=row.term
                             period=this.trendingTermPeriod
                             searchType=@search.search_type
                           }}
-                          title={{row.term}}
+                          @route="adminSearchLogs.term"
                         >
                           {{row.term}}
                         </LinkTo>
@@ -318,9 +318,9 @@ export default class DashboardSearch extends Component {
                     <tr data-test-search-term-row>
                       <td>
                         <LinkTo
-                          @route="full-page-search"
-                          @query={{hash q=row.term}}
                           title={{row.term}}
+                          @query={{hash q=row.term}}
+                          @route="full-page-search"
                         >
                           {{row.term}}
                         </LinkTo>

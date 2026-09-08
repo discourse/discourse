@@ -73,14 +73,14 @@ export default class EmptyTopicFilter extends Component {
 
   <template>
     <DEmptyState
-      @identifier="empty-topic-filter"
-      @title={{this.educationText}}
+      @ctaAction={{this.ctaLabelWithAction.action}}
       @ctaLabel={{this.ctaLabelWithAction.label}}
       @ctaRoute={{this.ctaRoute}}
-      @ctaAction={{this.ctaLabelWithAction.action}}
+      @identifier="empty-topic-filter"
+      @svgContent={{SvgDocumentsCheckmark}}
       @tipIcon="circle-info"
       @tipText={{trustHTML this.tipText}}
-      @svgContent={{SvgDocumentsCheckmark}}
+      @title={{this.educationText}}
     />
   </template>
 }

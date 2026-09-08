@@ -48,10 +48,10 @@ module(
       await render(
         <template>
           <AdminReportRelatedItems
+            @endDate="2026-08-18"
             @relatedItems={{this.relatedItems}}
             @relatedItemsTotals={{this.relatedItemsTotals}}
             @startDate="2026-07-17"
-            @endDate="2026-08-18"
             @type="accepted_solutions"
           />
         </template>
@@ -109,9 +109,9 @@ module(
       await render(
         <template>
           <AdminReportRelatedItems
+            @endDate={{this.endDate}}
             @relatedItems={{this.relatedItems}}
             @startDate={{this.startDate}}
-            @endDate={{this.endDate}}
             @type="accepted_solutions"
           />
         </template>

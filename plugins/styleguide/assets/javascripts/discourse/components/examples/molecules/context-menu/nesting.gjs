@@ -7,14 +7,14 @@ const BlockActions = <template>
   <DDropdownMenu as |dropdown|>
     <dropdown.item>
       <DButton
-        @label="styleguide.sections.context_menu.actions.duplicate"
         @action={{@close}}
+        @label="styleguide.sections.context_menu.actions.duplicate"
       />
     </dropdown.item>
     <dropdown.item>
       <DButton
-        @label="styleguide.sections.context_menu.actions.delete"
         @action={{@close}}
+        @label="styleguide.sections.context_menu.actions.delete"
       />
     </dropdown.item>
   </DDropdownMenu>
@@ -24,8 +24,8 @@ const RowActions = <template>
   <DDropdownMenu as |dropdown|>
     <dropdown.item>
       <DButton
-        @label="styleguide.sections.context_menu.actions.rename"
         @action={{@close}}
+        @label="styleguide.sections.context_menu.actions.rename"
       />
     </dropdown.item>
   </DDropdownMenu>

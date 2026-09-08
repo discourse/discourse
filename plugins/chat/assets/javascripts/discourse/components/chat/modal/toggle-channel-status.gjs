@@ -57,8 +57,8 @@ export default class ChatModalToggleChannelStatus extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="chat-modal-toggle-channel-status"
+      @closeModal={{@closeModal}}
       @inline={{@inline}}
       @title={{i18n this.modalTitle}}
     >
@@ -69,10 +69,10 @@ export default class ChatModalToggleChannelStatus extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
+          id="chat-channel-toggle-btn"
           @action={{this.onStatusChange}}
           @label={{this.buttonLabel}}
-          id="chat-channel-toggle-btn"
-          class="btn-primary"
         />
       </:footer>
     </DModal>

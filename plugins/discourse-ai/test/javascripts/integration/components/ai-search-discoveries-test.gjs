@@ -122,9 +122,9 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
+          @fullPage={{true}}
           @searchTerm="miyazaki"
           @showHeading={{true}}
-          @fullPage={{true}}
         />
       </template>
     );
@@ -614,8 +614,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
-          @searchTerm="test search"
           @closeSearchMenu={{this.closeSearchMenu}}
+          @searchTerm="test search"
         />
       </template>
     );
@@ -674,8 +674,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
-          @searchTerm="test search"
           @closeSearchMenu={{this.closeSearchMenu}}
+          @searchTerm="test search"
         />
       </template>
     );
@@ -731,8 +731,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
-          @searchTerm="test search"
           @closeSearchMenu={{this.closeSearchMenu}}
+          @searchTerm="test search"
         />
       </template>
     );
@@ -1027,8 +1027,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
-          @searchTerm="how do i catch a pokemon"
           @closeSearchMenu={{this.closeSearchMenu}}
+          @searchTerm="how do i catch a pokemon"
         />
       </template>
     );

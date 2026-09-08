@@ -79,8 +79,8 @@ export default class HandlesExample extends Component {
         {{this.readout}}
         <DResizeHandles
           @handleClass="styleguide-drag-and-drop__handle"
-          @onResizeStart={{this.onResizeStart}}
           @onResize={{this.onResize}}
+          @onResizeStart={{this.onResizeStart}}
         />
       </div>
     </div>

@@ -31,10 +31,10 @@ export default class ChatNavbarPinnedMessagesButton extends Component {
   <template>
     {{#if this.showButton}}
       <LinkTo
-        @route="chat.channel.pins"
-        @models={{@channel.routeModels}}
-        title={{this.pinnedMessagesLabel}}
         class="c-navbar__pinned-messages-btn btn no-text btn-transparent"
+        title={{this.pinnedMessagesLabel}}
+        @models={{@channel.routeModels}}
+        @route="chat.channel.pins"
         {{on "click" this.handleClick}}
       >
         {{! no unread dot: a pin newer than the dismissal brings the bar itself

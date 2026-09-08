@@ -28,11 +28,6 @@ export default class ValueList extends Component {
 
   @tracked _noneKeyOverride;
 
-  @computed("newValue")
-  get inputInvalid() {
-    return isEmpty(this.newValue);
-  }
-
   @computed("addKey")
   get noneKey() {
     if (this._noneKeyOverride !== undefined) {
@@ -43,6 +38,21 @@ export default class ValueList extends Component {
 
   set noneKey(value) {
     this._noneKeyOverride = value;
+  }
+
+  @computed("newValue")
+  get inputInvalid() {
+    return isEmpty(this.newValue);
+  }
+
+  @computed("choices.[]", "collection.[]")
+  get filteredChoices() {
+    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
+  }
+
+  @computed("collection")
+  get showUpDownButtons() {
+    return this.collection.length - 1 ? true : false;
   }
 
   didReceiveAttrs() {
@@ -57,11 +67,6 @@ export default class ValueList extends Component {
       "collection",
       this._splitValues(this.values, this.inputDelimiter || "\n")
     );
-  }
-
-  @computed("choices.[]", "collection.[]")
-  get filteredChoices() {
-    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
   }
 
   keyDown(event) {
@@ -158,11 +163,6 @@ export default class ValueList extends Component {
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
   }
 
-  @computed("collection")
-  get showUpDownButtons() {
-    return this.collection.length - 1 ? true : false;
-  }
-
   _splitValues(values, delimiter) {
     if (values && values.length) {
       return values.split(delimiter).filter((x) => x);
@@ -175,30 +175,30 @@ export default class ValueList extends Component {
     {{#if this.collection}}
       <div class="values">
         {{#each this.collection as |value index|}}
-          <div data-index={{index}} class="value">
+          <div class="value" data-index={{index}}>
             <DButton
+              class="btn-default remove-value-btn btn-small"
               @action={{fn this.removeValue value}}
               @icon="xmark"
-              class="btn-default remove-value-btn btn-small"
             />
 
             <Input
+              class="value-input"
               title={{value}}
               @value={{value}}
-              class="value-input"
               {{on "focusout" (fn this.changeValue index)}}
             />
 
             {{#if this.showUpDownButtons}}
               <DButton
+                class="btn-default shift-up-value-btn btn-small"
                 @action={{fn this.shift -1 index}}
                 @icon="arrow-up"
-                class="btn-default shift-up-value-btn btn-small"
               />
               <DButton
+                class="btn-default shift-down-value-btn btn-small"
                 @action={{fn this.shift 1 index}}
                 @icon="arrow-down"
-                class="btn-default shift-down-value-btn btn-small"
               />
             {{/if}}
           </div>
@@ -207,12 +207,12 @@ export default class ValueList extends Component {
     {{/if}}
 
     <ComboBox
-      @valueProperty={{null}}
-      @nameProperty={{null}}
-      @value={{this.newValue}}
       @content={{this.filteredChoices}}
+      @nameProperty={{null}}
       @onChange={{this.selectChoice}}
       @options={{hash allowAny=true none=this.noneKey disabled=@disabled}}
+      @value={{this.newValue}}
+      @valueProperty={{null}}
     />
   </template>
 }

@@ -114,6 +114,18 @@ export default class AceEditor extends Component {
     this.appEvents.off("ace:resize", this.resize);
   }
 
+  get mode() {
+    return this.args.mode || "css";
+  }
+
+  get cssClasses() {
+    let cssClasses = ["ace"];
+    if (this.args.resizable) {
+      cssClasses.push("ace_editor--resizable");
+    }
+    return cssClasses.join(" ");
+  }
+
   @bind
   setupAce(element) {
     if (this.args.htmlPlaceholder) {
@@ -171,18 +183,6 @@ export default class AceEditor extends Component {
     }
 
     this.setAceTheme();
-  }
-
-  get mode() {
-    return this.args.mode || "css";
-  }
-
-  get cssClasses() {
-    let cssClasses = ["ace"];
-    if (this.args.resizable) {
-      cssClasses.push("ace_editor--resizable");
-    }
-    return cssClasses.join(" ");
   }
 
   @bind
@@ -286,25 +286,25 @@ export default class AceEditor extends Component {
     <div class="ace-wrapper">
       <DConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
         <div
+          class={{dConcatClass this.cssClasses}}
+          ...attributes
           {{didInsert this.setupAce}}
           {{this.setContent}}
           {{didUpdate this.editorIdChanged @editorId}}
           {{didUpdate this.modeChanged @mode}}
           {{didUpdate this.placeholderChanged @placeholder}}
           {{didUpdate this.changeDisabledState @disabled}}
-          class={{dConcatClass this.cssClasses}}
-          ...attributes
         >
         </div>
         {{#if @resizable}}
           <DResizeSeparator
             class="grippie"
             @axis="vertical"
-            @side="start"
-            @measure={{this.editorContainer}}
             @label={{i18n "ace_editor.resize"}}
+            @measure={{this.editorContainer}}
             @onResize={{this.onResizeDrag}}
             @onResizeEnd={{this.onResizeEnd}}
+            @side="start"
           />
         {{/if}}
       </DConditionalLoadingSpinner>

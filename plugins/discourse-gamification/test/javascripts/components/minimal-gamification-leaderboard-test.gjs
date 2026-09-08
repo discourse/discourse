@@ -36,7 +36,7 @@ module(
 
       await render(
         <template>
-          <MinimalGamificationLeaderboard @id="3" @count="5" />
+          <MinimalGamificationLeaderboard @count="5" @id="3" />
         </template>
       );
 

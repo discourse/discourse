@@ -48,12 +48,12 @@ function initializeAiArtifacts(api) {
             artifactElement,
             <template>
               <AiArtifact
+                @artifactHeight={{artifactHeight}}
                 @artifactId={{artifactId}}
                 @artifactVersion={{artifactVersion}}
-                @artifactHeight={{artifactHeight}}
                 @autorun={{autorun}}
-                @seamless={{seamless}}
                 @dataAttributes={{dataAttributes}}
+                @seamless={{seamless}}
               />
             </template>
           );

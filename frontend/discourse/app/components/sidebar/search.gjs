@@ -24,18 +24,18 @@ export default class Search extends Component {
       <div class="sidebar-search">
         <div class="sidebar-search__input-container">
           <DButton
+            class="btn-transparent sidebar-search__icon"
             @action={{this.onClick}}
             @icon="magnifying-glass"
-            class="btn-transparent sidebar-search__icon"
           />
           <DShortcut @keys="mod+/" as |shortcut|>
             {{! eslint-disable ember/template-no-pointer-down-event-binding }}
             <input
+              aria-keyshortcuts={{shortcut.aria}}
+              class="sidebar-search__input"
+              enterkeyhint="done"
               placeholder={{i18n "sidebar.search"}}
               type="text"
-              enterkeyhint="done"
-              class="sidebar-search__input"
-              aria-keyshortcuts={{shortcut.aria}}
               {{on "mousedown" this.onClick}}
             />
             <shortcut.Kbd class="sidebar-search__shortcut-hint" />

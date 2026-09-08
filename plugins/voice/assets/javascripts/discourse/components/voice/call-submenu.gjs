@@ -19,13 +19,13 @@ export default class VoiceCallSubmenu extends Component {
       {{#each @data.items key="id" as |item|}}
         <dropdown.item>
           <DButton
-            @action={{fn this.select item.id}}
-            @icon={{item.icon}}
-            @translatedLabel={{item.label}}
             class={{dConcatClass
               "btn-transparent"
               (if item.selected "-selected")
             }}
+            @action={{fn this.select item.id}}
+            @icon={{item.icon}}
+            @translatedLabel={{item.label}}
           />
         </dropdown.item>
       {{/each}}

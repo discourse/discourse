@@ -306,34 +306,34 @@ export default class InstallThemeModal extends Component {
 
   <template>
     <DModal
-      @bodyClass="install-theme"
       class="admin-install-theme-modal --large"
-      @title={{i18n "admin.customize.theme.install"}}
+      @bodyClass="install-theme"
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.customize.theme.install"}}
     >
       <:body>
         {{#unless this.directRepoInstall}}
           <div class="install-theme-items">
             <InstallThemeItem
-              @value="popular"
-              @selection={{this.selection}}
               @label="admin.customize.theme.install_popular"
+              @selection={{this.selection}}
+              @value="popular"
             />
             <InstallThemeItem
-              @value="local"
-              @selection={{this.selection}}
               @label="admin.customize.theme.install_upload"
+              @selection={{this.selection}}
+              @value="local"
             />
             <InstallThemeItem
-              @value="remote"
-              @selection={{this.selection}}
               @label="admin.customize.theme.install_git_repo"
+              @selection={{this.selection}}
+              @value="remote"
             />
             <InstallThemeItem
-              @value="create"
-              @selection={{this.selection}}
               @label="admin.customize.theme.install_create"
+              @selection={{this.selection}}
               @showIcon={{true}}
+              @value="create"
             />
           </div>
         {{/unless}}
@@ -384,10 +384,10 @@ export default class InstallThemeModal extends Component {
                       {{else}}
                         <DButton
                           class="btn-primary"
-                          @label="admin.customize.theme.install"
+                          @action={{fn this.installThemeFromList theme.value}}
                           @disabled={{this.installDisabled}}
                           @icon="upload"
-                          @action={{fn this.installThemeFromList theme.value}}
+                          @label="admin.customize.theme.install"
                         />
 
                         {{#if theme.preview}}
@@ -409,10 +409,10 @@ export default class InstallThemeModal extends Component {
             {{#if this.local}}
               <div class="inputs">
                 <input
-                  {{on "change" this.uploadLocaleFile}}
-                  type="file"
-                  id="file-input"
                   accept=".tar.gz,application/x-gzip,.zip,application/zip"
+                  id="file-input"
+                  type="file"
+                  {{on "change" this.uploadLocaleFile}}
                 />
                 <br />
                 <span class="description">
@@ -428,8 +428,8 @@ export default class InstallThemeModal extends Component {
                   </div>
                   <input
                     type="text"
-                    {{on "input" (withEventValue (fn (mut this.uploadUrl)))}}
                     value={{this.uploadUrl}}
+                    {{on "input" (withEventValue (fn (mut this.uploadUrl)))}}
                   />
                 </div>
                 <DButton
@@ -443,12 +443,12 @@ export default class InstallThemeModal extends Component {
                       {{i18n "admin.customize.theme.remote_branch"}}
                     </div>
                     <input
-                      type="text"
-                      {{on "input" (withEventValue (fn (mut this.branch)))}}
-                      value={{this.branch}}
                       placeholder={{i18n
                         "admin.customize.theme.remote_branch_placeholder"
                       }}
+                      type="text"
+                      value={{this.branch}}
+                      {{on "input" (withEventValue (fn (mut this.branch)))}}
                     />
                   </div>
                 {{/if}}
@@ -463,8 +463,8 @@ export default class InstallThemeModal extends Component {
                           <Placeholder @name="link">
                             <a
                               href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#set-up-deploy-keys"
-                              target="_blank"
                               rel="noopener noreferrer"
+                              target="_blank"
                             >{{i18n
                                 "admin.customize.theme.deploy_key_instructions"
                               }}</a>
@@ -478,11 +478,11 @@ export default class InstallThemeModal extends Component {
                       <textarea
                         class="public-key-value"
                         readonly="true"
+                        value={{this.publicKey}}
                         {{on
                           "input"
                           (withEventValue (fn (mut this.publicKey)))
                         }}
-                        value={{this.publicKey}}
                         {{didInsert this.generatePublicKey}}
                       />
                       <DCopyButton @selector="textarea.public-key-value" />
@@ -498,19 +498,19 @@ export default class InstallThemeModal extends Component {
                   }}</div>
                 <input
                   class="install-theme-content__theme-name"
-                  type="text"
-                  {{on "input" (withEventValue (fn (mut this.name)))}}
-                  value={{this.name}}
                   placeholder={{this.placeholder}}
+                  type="text"
+                  value={{this.name}}
+                  {{on "input" (withEventValue (fn (mut this.name)))}}
                 />
                 <div class="label">{{i18n
                     "admin.customize.theme.create_type"
                   }}</div>
                 <ComboBox
-                  @valueProperty="value"
                   @content={{CREATE_TYPES}}
-                  @value={{this.selectedType}}
                   @onChange={{this.updateSelectedType}}
+                  @value={{this.selectedType}}
+                  @valueProperty="value"
                 />
               </div>
             {{/if}}
@@ -545,16 +545,16 @@ export default class InstallThemeModal extends Component {
             </div>
           {{/if}}
           <DButton
+            class={{if this.themeCannotBeInstalled "btn-default" "btn-primary"}}
             @action={{this.installTheme}}
             @disabled={{this.installDisabled}}
-            class={{if this.themeCannotBeInstalled "btn-default" "btn-primary"}}
             @label={{this.submitLabel}}
           />
           {{#if this.showStageButton}}
             <DButton
+              class="btn-default create-placeholder"
               @action={{this.stageTheme}}
               @disabled={{this.installDisabled}}
-              class="btn-default create-placeholder"
               @label="admin.customize.theme.create_placeholder"
             />
           {{/if}}

@@ -18,27 +18,27 @@ export default <template>
   </p>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.context_menu.nesting.example"}}
-    @kind="modifier"
+    @code={{contextMenuNestingSource}}
     @description={{i18n
       "styleguide.sections.context_menu.nesting.example_description"
     }}
-    @tryThis={{i18n "styleguide.sections.context_menu.nesting.try_this"}}
+    @kind="modifier"
     @note={{i18n "styleguide.sections.context_menu.nesting.note"}}
-    @code={{contextMenuNestingSource}}
+    @title={{i18n "styleguide.sections.context_menu.nesting.example"}}
+    @tryThis={{i18n "styleguide.sections.context_menu.nesting.try_this"}}
   >
     <ContextMenuNestingExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.context_menu.declining.example"}}
-    @kind="modifier"
+    @code={{contextMenuDecliningSource}}
     @description={{i18n
       "styleguide.sections.context_menu.declining.example_description"
     }}
-    @tryThis={{i18n "styleguide.sections.context_menu.declining.try_this"}}
+    @kind="modifier"
     @note={{i18n "styleguide.sections.context_menu.declining.note"}}
-    @code={{contextMenuDecliningSource}}
+    @title={{i18n "styleguide.sections.context_menu.declining.example"}}
+    @tryThis={{i18n "styleguide.sections.context_menu.declining.try_this"}}
   >
     <ContextMenuDecliningExample />
   </StyleguideExample>

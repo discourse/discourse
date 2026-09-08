@@ -56,16 +56,16 @@ export default class ComposerToggles extends Component {
 
   <template>
     <div class={{dConcatClass "composer-controls" this.additionalClasses}}>
-      <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
+      <PluginOutlet @connectorTagName="div" @name="before-composer-toggles" />
 
       {{#unless this.siteSettings.enable_composer_redesign}}
         {{#if this.showToolbarToggle}}
           <DButton
-            @icon="bars"
-            @action={{@toggleToolbar}}
-            @title={{this.toggleToolbarTitle}}
-            @preventFocus={{true}}
             class="btn-transparent toggle-toolbar btn-small"
+            @action={{@toggleToolbar}}
+            @icon="bars"
+            @preventFocus={{true}}
+            @title={{this.toggleToolbarTitle}}
           />
         {{/if}}
       {{/unless}}
@@ -77,40 +77,40 @@ export default class ComposerToggles extends Component {
         )
       }}
         <DButton
-          @action={{this.composer.togglePreview}}
-          @translatedTitle={{this.composer.toggleText}}
-          @icon="angles-left"
           class={{dConcatClass
             "btn-transparent btn-mini-toggle toggle-preview"
             (unless this.composer.isPreviewVisible "active")
           }}
+          @action={{this.composer.togglePreview}}
+          @icon="angles-left"
+          @translatedTitle={{this.composer.toggleText}}
         />
       {{/if}}
 
       {{#if this.showFullScreenButton}}
         <DButton
-          @icon={{this.fullscreenIcon}}
-          @action={{@toggleFullscreen}}
-          @title={{this.fullscreenTitle}}
           class="btn-transparent toggle-fullscreen btn-small"
+          @action={{@toggleFullscreen}}
+          @icon={{this.fullscreenIcon}}
+          @title={{this.fullscreenTitle}}
         />
       {{/if}}
 
       {{#if this.showCollapseButton}}
         <DButton
-          @icon="minus"
-          @action={{@toggleComposer}}
-          @title="composer.collapse"
           class="btn-transparent toggler toggle-minimize btn-small"
+          @action={{@toggleComposer}}
+          @icon="minus"
+          @title="composer.collapse"
         />
       {{/if}}
 
       {{#if @saveAndClose}}
         <DButton
-          @icon="xmark"
-          @action={{@saveAndClose}}
-          @title="composer.save_and_close"
           class="btn-transparent toggler toggle-save-and-close btn-small"
+          @action={{@saveAndClose}}
+          @icon="xmark"
+          @title="composer.save_and_close"
         />
       {{/if}}
     </div>

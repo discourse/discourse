@@ -18,8 +18,8 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
       <template>
         <DDateTimeInputRange
           @from={{this.state.from}}
-          @to={{this.state.to}}
           @onChange={{fn (mut this.state)}}
+          @to={{this.state.to}}
         />
       </template>
     );
@@ -57,9 +57,9 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
       <template>
         <DDateTimeInputRange
           @from={{this.state.from}}
-          @to={{this.state.to}}
-          @relativeDate={{this.state.from}}
           @onChange={{fn (mut this.state)}}
+          @relativeDate={{this.state.from}}
+          @to={{this.state.to}}
         />
       </template>
     );
@@ -85,9 +85,9 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
       <template>
         <DDateTimeInputRange
           @from={{this.state.from}}
-          @to={{this.state.to}}
           @onChange={{fn (mut this.state)}}
           @timezone="Europe/Paris"
+          @to={{this.state.to}}
         />
       </template>
     );

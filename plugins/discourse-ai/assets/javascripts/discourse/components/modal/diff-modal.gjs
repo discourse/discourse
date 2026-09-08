@@ -206,11 +206,11 @@ export default class ModalDiffModal extends Component {
   <template>
     <DModal
       class="composer-ai-helper-modal"
-      @title={{i18n "discourse_ai.ai_helper.context_menu.changes"}}
       @closeModal={{this.cleanupAndClose}}
+      @title={{i18n "discourse_ai.ai_helper.context_menu.changes"}}
     >
       <:body>
-        <div {{willDestroy this.cleanup}} class="text-preview">
+        <div class="text-preview" {{willDestroy this.cleanup}}>
           <div
             class={{dConcatClass
               "composer-ai-helper-modal__suggestion"
@@ -226,8 +226,8 @@ export default class ModalDiffModal extends Component {
             {{else}}
               {{#if (or this.loading this.smoothStreamer.isStreaming)}}
                 <DCookText
-                  @rawText={{this.smoothStreamerResult}}
                   class="cooked"
+                  @rawText={{this.smoothStreamerResult}}
                 />
               {{else}}
                 <div class="composer-ai-helper-modal__old-value">
@@ -235,8 +235,8 @@ export default class ModalDiffModal extends Component {
                 </div>
                 <div class="composer-ai-helper-modal__new-value">
                   <DCookText
-                    @rawText={{this.smoothStreamerResult}}
                     class="cooked"
+                    @rawText={{this.smoothStreamerResult}}
                   />
                 </div>
               {{/if}}
@@ -248,8 +248,8 @@ export default class ModalDiffModal extends Component {
       <:footer>
         <DButton
           class="btn-primary confirm"
-          @disabled={{this.primaryBtnDisabled}}
           @action={{this.triggerConfirmChanges}}
+          @disabled={{this.primaryBtnDisabled}}
           @translatedLabel={{this.primaryBtnLabel}}
           {{didUpdate this.focusConfirmBtn this.isStreaming}}
         >
@@ -264,8 +264,8 @@ export default class ModalDiffModal extends Component {
         />
         <DButton
           class="regenerate"
-          @icon="arrows-rotate"
           @action={{this.suggestChanges}}
+          @icon="arrows-rotate"
           @label="discourse_ai.ai_helper.context_menu.regen"
         />
       </:footer>

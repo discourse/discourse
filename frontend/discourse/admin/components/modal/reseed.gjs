@@ -32,10 +32,6 @@ export default class Reseed extends Component {
     }
   }
 
-  _extractSelectedIds(items) {
-    return items.filter((item) => item.selected).map((item) => item.id);
-  }
-
   @action
   async reseed() {
     try {
@@ -57,13 +53,17 @@ export default class Reseed extends Component {
     }
   }
 
+  _extractSelectedIds(items) {
+    return items.filter((item) => item.selected).map((item) => item.id);
+  }
+
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "admin.reseed.modal.title"}}
-      @subtitle={{i18n "admin.reseed.modal.subtitle"}}
       class="reseed-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @subtitle={{i18n "admin.reseed.modal.subtitle"}}
+      @title={{i18n "admin.reseed.modal.title"}}
     >
       <:body>
         <DConditionalLoadingSpinner @condition={{this.loading}}>
@@ -76,8 +76,8 @@ export default class Reseed extends Component {
                 <label>
                   <Input
                     class="option"
-                    @type="checkbox"
                     @checked={{category.selected}}
+                    @type="checkbox"
                   />
                   <span>{{category.name}}</span>
                 </label>
@@ -94,8 +94,8 @@ export default class Reseed extends Component {
                 <label>
                   <Input
                     class="option"
-                    @type="checkbox"
                     @checked={{topic.selected}}
+                    @type="checkbox"
                   />
                   <span>{{topic.name}}</span>
                 </label>
@@ -106,10 +106,10 @@ export default class Reseed extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.reseed}}
-          @label="admin.reseed.modal.replace"
-          @isLoading={{this.reseeding}}
           class="btn-danger"
+          @action={{this.reseed}}
+          @isLoading={{this.reseeding}}
+          @label="admin.reseed.modal.replace"
         />
 
         {{#unless this.reseeding}}

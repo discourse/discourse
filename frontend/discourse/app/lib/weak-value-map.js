@@ -33,38 +33,6 @@ class WeakValueMap {
   }
 
   /**
-   * Scans the map and removes entries whose values have been garbage collected.
-   *
-   * This method serves as a backup cleanup mechanism in case the
-   * FinalizationRegistry doesn't run promptly. It uses an early-exit
-   * optimization: if the first SAMPLE_SIZE entries are all live, we assume
-   * the registry is doing its job and skip the full scan. If any dead entry
-   * is found in the sample, we continue scanning the entire map since dead
-   * refs tend to cluster (e.g., after route transitions drop many models).
-   */
-  #sweep() {
-    const SAMPLE_SIZE = 20;
-    let checked = 0;
-    let foundDead = false;
-
-    for (const [key, ref] of this.#map) {
-      const dead = ref.deref() === undefined;
-
-      if (dead) {
-        this.#map.delete(key);
-        foundDead = true;
-      }
-
-      checked++;
-
-      // Early exit: if first N entries are all live, assume registry is working
-      if (!foundDead && checked >= SAMPLE_SIZE) {
-        return;
-      }
-    }
-  }
-
-  /**
    * Returns the number of entries in the map.
    *
    * Note: This value may be inaccurate because it can include entries whose
@@ -75,6 +43,15 @@ class WeakValueMap {
    */
   get size() {
     return this.#map.size;
+  }
+
+  /**
+   * Returns the string tag for the object, used by Object.prototype.toString().
+   *
+   * @returns {string}
+   */
+  get [Symbol.toStringTag]() {
+    return "WeakValueMap";
   }
 
   /**
@@ -240,12 +217,35 @@ class WeakValueMap {
   }
 
   /**
-   * Returns the string tag for the object, used by Object.prototype.toString().
+   * Scans the map and removes entries whose values have been garbage collected.
    *
-   * @returns {string}
+   * This method serves as a backup cleanup mechanism in case the
+   * FinalizationRegistry doesn't run promptly. It uses an early-exit
+   * optimization: if the first SAMPLE_SIZE entries are all live, we assume
+   * the registry is doing its job and skip the full scan. If any dead entry
+   * is found in the sample, we continue scanning the entire map since dead
+   * refs tend to cluster (e.g., after route transitions drop many models).
    */
-  get [Symbol.toStringTag]() {
-    return "WeakValueMap";
+  #sweep() {
+    const SAMPLE_SIZE = 20;
+    let checked = 0;
+    let foundDead = false;
+
+    for (const [key, ref] of this.#map) {
+      const dead = ref.deref() === undefined;
+
+      if (dead) {
+        this.#map.delete(key);
+        foundDead = true;
+      }
+
+      checked++;
+
+      // Early exit: if first N entries are all live, assume registry is working
+      if (!foundDead && checked >= SAMPLE_SIZE) {
+        return;
+      }
+    }
   }
 }
 

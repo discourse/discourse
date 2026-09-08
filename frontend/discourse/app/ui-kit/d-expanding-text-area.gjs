@@ -4,7 +4,6 @@ import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 const DExpandingTextArea = <template>
   <div class="expanding-text-area" data-replicated-value={{@value}}>
     <textarea
-      {{(if @autoFocus dAutoFocus)}}
       {{! deprecated args: }}
       autocorrect={{@autocorrect}}
       class="--expandable {{@class}}"
@@ -12,8 +11,9 @@ const DExpandingTextArea = <template>
       name={{@name}}
       rows={{@rows}}
       value={{@value}}
-      {{(if @input (modifier on "input" @input))}}
       ...attributes
+      {{(if @autoFocus dAutoFocus)}}
+      {{(if @input (modifier on "input" @input))}}
     ></textarea>
   </div>
 </template>;

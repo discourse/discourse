@@ -183,12 +183,12 @@ export default class TopicList extends Component {
   <template>
     {{! eslint-disable ember/template-table-groups }}
     <table
+      aria-labelledby={{@ariaLabelledby}}
       class={{dConcatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header bulk-select-enabled")
         this.additionalClasses
       }}
-      aria-labelledby={{@ariaLabelledby}}
       ...attributes
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
@@ -199,19 +199,19 @@ export default class TopicList extends Component {
         }}
       >
         <Header
-          @columns={{this.columns}}
-          @canBulkSelect={{@canBulkSelect}}
-          @toggleInTitle={{this.toggleInTitle}}
-          @category={{@category}}
-          @hideCategory={{@hideCategory}}
-          @order={{@order}}
-          @changeSort={{@changeSort}}
           @ascending={{@ascending}}
-          @sortable={{@changeSort}}
-          @listTitle={{or @listTitle "topic.title"}}
-          @bulkSelectHelper={{@bulkSelectHelper}}
           @bulkSelectEnabled={{this.bulkSelectEnabled}}
+          @bulkSelectHelper={{@bulkSelectHelper}}
+          @canBulkSelect={{@canBulkSelect}}
           @canDoBulkActions={{this.canDoBulkActions}}
+          @category={{@category}}
+          @changeSort={{@changeSort}}
+          @columns={{this.columns}}
+          @hideCategory={{@hideCategory}}
+          @listTitle={{or @listTitle "topic.title"}}
+          @order={{@order}}
+          @sortable={{@changeSort}}
+          @toggleInTitle={{this.toggleInTitle}}
         />
       </thead>
 
@@ -230,21 +230,21 @@ export default class TopicList extends Component {
       <tbody class="topic-list-body">
         {{#each @topics as |topic index|}}
           <Item
-            @columns={{this.columns}}
-            @topic={{topic}}
-            @bulkSelectHelper={{@bulkSelectHelper}}
             @bulkSelectEnabled={{this.bulkSelectEnabled}}
-            @showTopicPostBadges={{this.showTopicPostBadges}}
-            @hideCategory={{@hideCategory}}
-            @expandGloballyPinned={{@expandGloballyPinned}}
-            @expandAllPinned={{@expandAllPinned}}
-            @lastVisitedTopic={{this.lastVisitedTopic}}
-            @selected={{this.selected}}
-            @tagsForUser={{@tagsForUser}}
-            @focusLastVisitedTopic={{@focusLastVisitedTopic}}
-            @index={{index}}
-            @listContext={{@listContext}}
+            @bulkSelectHelper={{@bulkSelectHelper}}
             @category={{this.topicTrackingState.filterCategory}}
+            @columns={{this.columns}}
+            @expandAllPinned={{@expandAllPinned}}
+            @expandGloballyPinned={{@expandGloballyPinned}}
+            @focusLastVisitedTopic={{@focusLastVisitedTopic}}
+            @hideCategory={{@hideCategory}}
+            @index={{index}}
+            @lastVisitedTopic={{this.lastVisitedTopic}}
+            @listContext={{@listContext}}
+            @selected={{this.selected}}
+            @showTopicPostBadges={{this.showTopicPostBadges}}
+            @tagsForUser={{@tagsForUser}}
+            @topic={{topic}}
           />
 
           {{#if (eq topic this.lastVisitedTopic)}}
@@ -258,9 +258,9 @@ export default class TopicList extends Component {
           {{/if}}
 
           <PluginOutlet
+            @connectorTagName="tr"
             @name="after-topic-list-item"
             @outletArgs={{lazyHash topic=topic index=index}}
-            @connectorTagName="tr"
           />
         {{/each}}
       </tbody>

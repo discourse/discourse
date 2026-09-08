@@ -59,10 +59,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     );
   }
 
-  _onNotificationsChanged() {
-    this._refreshTimer = discourseDebounce(this, this.refreshList, 500);
-  }
-
   get filterByTypes() {
     return this.args.filterByTypes;
   }
@@ -254,5 +250,9 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     } else {
       this.performDismiss();
     }
+  }
+
+  _onNotificationsChanged() {
+    this._refreshTimer = discourseDebounce(this, this.refreshList, 500);
   }
 }

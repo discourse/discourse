@@ -50,15 +50,15 @@ export default class ChatHeader extends Component {
     {{#if this.shouldRender}}
       <div class="c-header">
         <a
-          href={{this.forumLink}}
           class="btn-flat back-to-forum"
+          href={{this.forumLink}}
           title={{this.title}}
         >
           {{dIcon "arrow-left"}}
           {{this.title}}
         </a>
 
-        <LinkTo @route="chat.index" class="c-heading">{{this.heading}}</LinkTo>
+        <LinkTo class="c-heading" @route="chat.index">{{this.heading}}</LinkTo>
       </div>
     {{else}}
       {{yield}}

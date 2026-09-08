@@ -443,9 +443,9 @@ export default class BulkSelectTopicsDropdown extends Component {
 
   <template>
     <DMenu
-      @modalForMobile={{true}}
       @autofocus={{true}}
       @identifier="bulk-select-topics-dropdown"
+      @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
       @triggerClass="btn-default"
     >
@@ -461,10 +461,10 @@ export default class BulkSelectTopicsDropdown extends Component {
           {{#each this.buttons as |button|}}
             <dropdown.item>
               <DButton
-                @translatedLabel={{button.name}}
-                @icon={{button.icon}}
                 class={{dConcatClass "btn-transparent" button.id button.class}}
                 @action={{fn this.onSelect button.id}}
+                @icon={{button.icon}}
+                @translatedLabel={{button.name}}
               />
             </dropdown.item>
           {{/each}}

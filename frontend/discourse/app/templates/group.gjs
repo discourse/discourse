@@ -15,8 +15,8 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <span>
     <PluginOutlet
-      @name="before-group-container"
       @connectorTagName="div"
+      @name="before-group-container"
       @outletArgs={{lazyHash group=@controller.model}}
     />
   </span>
@@ -39,13 +39,13 @@ export default <template>
         }}
           <div class="group-avatar-flair">
             <DAvatarFlair
+              @flairBgColor={{@controller.model.flair_bg_color}}
+              @flairColor={{@controller.model.flair_color}}
               @flairName={{@controller.model.name}}
               @flairUrl={{or
                 @controller.model.flair_icon
                 @controller.model.flair_url
               }}
-              @flairBgColor={{@controller.model.flair_bg_color}}
-              @flairColor={{@controller.model.flair_color}}
             />
           </div>
         {{/if}}
@@ -75,36 +75,36 @@ export default <template>
           {{#if @controller.currentUser.admin}}
             {{#if @controller.model.automatic}}
               <DButton
+                class="btn-default"
                 @action={{@controller.toggleDeleteTooltip}}
                 @icon="circle-question"
                 @label="admin.groups.delete"
-                class="btn-default"
               />
             {{else}}
               <DButton
+                class="btn-danger"
+                data-test-selector="delete-group-button"
                 @action={{@controller.destroyGroup}}
                 @disabled={{@controller.destroying}}
                 @icon="trash-can"
                 @label="admin.groups.delete"
-                class="btn-danger"
-                data-test-selector="delete-group-button"
               />
             {{/if}}
           {{/if}}
 
           {{#if @controller.displayGroupMessageButton}}
             <DButton
+              class="btn-primary group-message-button"
               @action={{@controller.messageGroup}}
               @icon="envelope"
               @label="groups.message"
-              class="btn-primary group-message-button"
             />
           {{/if}}
         </div>
 
         <PluginOutlet
-          @name="group-details-after"
           @connectorTagName="div"
+          @name="group-details-after"
           @outletArgs={{lazyHash model=@controller.model}}
         />
       </div>
@@ -120,8 +120,8 @@ export default <template>
     <div class="user-content-wrapper">
       <section class="user-primary-navigation">
         <GroupNavigation
-          @group={{@controller.model}}
           @currentPath={{@controller.currentPath}}
+          @group={{@controller.model}}
           @tabs={{@controller.tabs}}
         />
       </section>

@@ -62,8 +62,8 @@ module("Integration | Component | TextField", function (hooks) {
     await render(
       <template>
         <DTextField
-          @placeholderKey="placeholder.i18n.key"
           @placeholder={{null}}
+          @placeholderKey="placeholder.i18n.key"
         />
       </template>
     );
@@ -129,8 +129,8 @@ module("Integration | Component | TextField", function (hooks) {
       <template>
         <DTextField
           class="tf-test"
-          @value={{this.value}}
           @onChange={{this.changed}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -156,8 +156,8 @@ module("Integration | Component | TextField", function (hooks) {
       <template>
         <DTextField
           class="tf-test"
-          @value={{this.value}}
           @onChangeImmediate={{this.changed}}
+          @value={{this.value}}
         />
       </template>
     );

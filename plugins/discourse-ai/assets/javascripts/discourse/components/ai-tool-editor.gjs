@@ -26,17 +26,17 @@ export default class AiToolEditor extends Component {
 
   <template>
     <BackButton
-      @route="adminPlugins.show.discourse-ai-tools"
       @label="discourse_ai.tools.back"
+      @route="adminPlugins.show.discourse-ai-tools"
     />
 
     <AiToolEditorForm
-      @model={{@model}}
-      @tools={{@tools}}
-      @secrets={{@secrets}}
       @editingModel={{this.editingModel}}
       @isNew={{@model.isNew}}
+      @model={{@model}}
+      @secrets={{@secrets}}
       @selectedPreset={{this.selectedPreset}}
+      @tools={{@tools}}
     />
   </template>
 }
