@@ -1,5 +1,10 @@
 import { AbortController, createAbortError, delay } from "@uppy/utils";
 import { Promise } from "rsvp";
+import {
+  isRateLimitError,
+  MAX_RATE_LIMIT_RETRY_SECONDS,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 
 const MB = 1024 * 1024;
 
@@ -35,10 +40,8 @@ export default class UppyChunkedUpload {
     };
     this.file = file;
 
-    if (!this.options.getChunkSize) {
-      this.options.getChunkSize = defaultOptions.getChunkSize;
-      this.chunkSize = this.options.getChunkSize(this.file);
-    }
+    this.options.getChunkSize ??= defaultOptions.getChunkSize;
+    this.chunkSize = this.options.getChunkSize(this.file);
 
     this.abortController = new AbortController();
     this._initChunks();
@@ -149,7 +152,8 @@ export default class UppyChunkedUpload {
         status === 0 ||
         status === 409 ||
         status === 423 ||
-        (status >= 500 && status < 600)
+        (status >= 500 && status < 600) ||
+        isRateLimitError(err)
       );
     }
     return false;
@@ -163,21 +167,33 @@ export default class UppyChunkedUpload {
       before();
     }
 
-    const doAttempt = (retryAttempt) =>
+    const doAttempt = (retryAttempt, rateLimitWaited) =>
       attempt().catch((err) => {
         if (this._aborted()) {
           throw createAbortError();
         }
 
-        if (this._shouldRetry(err) && retryAttempt < retryDelays.length) {
+        if (!this._shouldRetry(err) || retryAttempt >= retryDelays.length) {
+          throw err;
+        }
+
+        if (!isRateLimitError(err)) {
           return delay(retryDelays[retryAttempt], { signal }).then(() =>
-            doAttempt(retryAttempt + 1)
+            doAttempt(retryAttempt + 1, rateLimitWaited)
           );
         }
-        throw err;
+
+        const waitSeconds = rateLimitWaitSeconds(err);
+        if (rateLimitWaited + waitSeconds > MAX_RATE_LIMIT_RETRY_SECONDS) {
+          throw err;
+        }
+
+        return delay(waitSeconds * 1000, { signal }).then(() =>
+          doAttempt(retryAttempt + 1, rateLimitWaited + waitSeconds)
+        );
       });
 
-    return doAttempt(0).then(
+    return doAttempt(0, 0).then(
       (result) => {
         if (after) {
           after();
@@ -241,10 +257,11 @@ export default class UppyChunkedUpload {
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
+      const onAbortSignal = () => xhr.abort();
       function cleanup() {
-        signal.removeEventListener("abort", () => xhr.abort());
+        signal.removeEventListener("abort", onAbortSignal);
       }
-      signal.addEventListener("abort", xhr.abort());
+      signal.addEventListener("abort", onAbortSignal);
 
       xhr.open(this.options.method || "POST", url, true);
       if (headers) {
@@ -263,21 +280,23 @@ export default class UppyChunkedUpload {
 
       xhr.addEventListener("abort", () => {
         cleanup();
-        this.chunkState[index].busy = false;
 
         reject(createAbortError());
       });
 
       xhr.addEventListener("load", (ev) => {
         cleanup();
-        this.chunkState[index].busy = false;
 
         if (ev.target.status < 200 || ev.target.status >= 300) {
+          this._onChunkProgress(index, 0);
+
           const error = new Error("Non 2xx");
           error.source = ev.target;
           reject(error);
           return;
         }
+
+        this.chunkState[index].busy = false;
 
         // This avoids the net::ERR_OUT_OF_MEMORY in Chromium Browsers.
         this.chunks[index] = null;
@@ -290,7 +309,7 @@ export default class UppyChunkedUpload {
 
       xhr.addEventListener("error", (ev) => {
         cleanup();
-        this.chunkState[index].busy = false;
+        this._onChunkProgress(index, 0);
 
         const error = new Error("Unknown error");
         error.source = ev.target;
