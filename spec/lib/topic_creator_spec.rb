@@ -92,16 +92,14 @@ RSpec.describe TopicCreator do
           expect(topic.participant_count).to eq(3)
         end
 
-        describe "locale" do
-          it "updates the locale of the topic" do
-            topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: "ja"))
-            expect(topic.locale).to eq("ja")
-          end
+        it "updates the locale of the topic" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: "ja"))
+          expect(topic.locale).to eq("ja")
+        end
 
-          it "sets the locale of the topic to nil if blank" do
-            topic1 = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: ""))
-            expect(topic1.locale).to eq(nil)
-          end
+        it "sets the locale of the topic to nil if blank" do
+          topic1 = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: ""))
+          expect(topic1.locale).to eq(nil)
         end
       end
     end
@@ -483,65 +481,63 @@ RSpec.describe TopicCreator do
           )
         end
 
-        context "when allowing other tags" do
-          before { category.update!(allow_global_tags: true) }
-
-          it "allows topics to use tags that aren't restricted by any category" do
-            tc =
-              TopicCreator.new(
-                user,
-                Guardian.new(user),
-                title: "hello this is a test topic with tags",
-                raw: "hello this is a test topic with tags",
-                category: category.id,
-                tags: [tag1.name, tag2.name, tag3.name, tag5.name],
-              )
-            expect(tc.valid?).to eq(true)
-            expect(tc.errors).to be_empty
-            topic = tc.create
-            expect(topic.tags).to contain_exactly(tag1, tag2, tag3, tag5)
-          end
-
-          it "rejects topics if they use restricted tags of another category" do
-            Fabricate(:category, tags: [tag5], tag_groups: [tag_group2])
-            tc =
-              TopicCreator.new(
-                user,
-                Guardian.new(user),
-                title: "hello this is a test topic with tags",
-                raw: "hello this is a test topic with tags",
-                category: category.id,
-                tags: [tag1.name, tag5.name],
-              )
-            expect(tc.valid?).to eq(false)
-            expect(tc.errors.full_messages).to contain_exactly(
-              I18n.t(
-                "tags.forbidden.restricted_tags_cannot_be_used_in_category",
-                count: 1,
-                tags: tag5.name,
-                category: category.name,
-              ),
+        it "allows global tags that aren't restricted by any category" do
+          category.update!(allow_global_tags: true)
+          tc =
+            TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag2.name, tag3.name, tag5.name],
             )
+          expect(tc.valid?).to eq(true)
+          expect(tc.errors).to be_empty
+          topic = tc.create
+          expect(topic.tags).to contain_exactly(tag1, tag2, tag3, tag5)
+        end
 
-            tc =
-              TopicCreator.new(
-                user,
-                Guardian.new(user),
-                title: "hello this is a test topic with tags",
-                raw: "hello this is a test topic with tags",
-                category: category.id,
-                tags: [tag1.name, tag2.name, tag5.name],
-              )
-            expect(tc.valid?).to eq(false)
-            expect(tc.errors.full_messages).to contain_exactly(
-              I18n.t(
-                "tags.forbidden.restricted_tags_cannot_be_used_in_category",
-                count: 2,
-                tags: [tag2, tag5].map(&:name).sort.join(", "),
-                category: category.name,
-              ),
+        it "rejects global tags restricted to another category" do
+          category.update!(allow_global_tags: true)
+          Fabricate(:category, tags: [tag5], tag_groups: [tag_group2])
+          tc =
+            TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag5.name],
             )
-          end
+          expect(tc.valid?).to eq(false)
+          expect(tc.errors.full_messages).to contain_exactly(
+            I18n.t(
+              "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+              count: 1,
+              tags: tag5.name,
+              category: category.name,
+            ),
+          )
+
+          tc =
+            TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag2.name, tag5.name],
+            )
+          expect(tc.valid?).to eq(false)
+          expect(tc.errors.full_messages).to contain_exactly(
+            I18n.t(
+              "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+              count: 2,
+              tags: [tag2, tag5].map(&:name).sort.join(", "),
+              category: category.name,
+            ),
+          )
         end
       end
     end

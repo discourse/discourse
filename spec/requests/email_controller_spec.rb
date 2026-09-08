@@ -234,6 +234,8 @@ RSpec.describe EmailController do
   end
 
   describe "#unsubscribe" do
+    let(:unsubscribe_key) { UnsubscribeKey.create_key_for(user, key_type, post: post) }
+
     it "displays not found if key is not found" do
       navigate_to_unsubscribe(SecureRandom.hex)
 
@@ -252,8 +254,6 @@ RSpec.describe EmailController do
         CGI.escapeHTML(I18n.t("unsubscribe.user_not_found_description")),
       )
     end
-
-    let(:unsubscribe_key) { UnsubscribeKey.create_key_for(user, key_type, post: post) }
 
     context "when unsubscribing from digest" do
       let(:key_type) { UnsubscribeKey::DIGEST_TYPE }

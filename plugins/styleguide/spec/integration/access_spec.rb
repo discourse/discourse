@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "SiteSetting.styleguide_allowed_groups" do
+RSpec.describe "Styleguide access" do
   before { SiteSetting.styleguide_enabled = true }
 
   context "when styleguide is admin only" do
@@ -53,51 +53,51 @@ RSpec.describe "SiteSetting.styleguide_allowed_groups" do
       end
     end
   end
-end
 
-RSpec.describe "SiteSetting.styleguide_enabled" do
-  before { sign_in(Fabricate(:admin)) }
+  context "when checking whether the styleguide is enabled" do
+    before { sign_in(Fabricate(:admin)) }
 
-  context "when style is enabled" do
-    before { SiteSetting.styleguide_enabled = true }
+    context "when style is enabled" do
+      before { SiteSetting.styleguide_enabled = true }
 
-    it "shows the styleguide" do
-      get "/styleguide"
-      expect(response.status).to eq(200)
+      it "shows the styleguide" do
+        get "/styleguide"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when styleguide is disabled" do
+      before { SiteSetting.styleguide_enabled = false }
+
+      it "returns a page not found" do
+        get "/styleguide"
+        expect(response.status).to eq(404)
+      end
     end
   end
 
-  context "when styleguide is disabled" do
-    before { SiteSetting.styleguide_enabled = false }
-
-    it "returns a page not found" do
-      get "/styleguide"
-      expect(response.status).to eq(404)
+  context "when serializing site capabilities" do
+    before do
+      SiteSetting.styleguide_enabled = true
+      SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:admins]
     end
-  end
-end
 
-RSpec.describe "Styleguide site capability" do
-  before do
-    SiteSetting.styleguide_enabled = true
-    SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:admins]
-  end
+    it "reflects whether the visitor can access the styleguide" do
+      sign_in(Fabricate(:admin))
+      get "/site.json"
+      expect(response.parsed_body["can_see_styleguide"]).to eq(true)
 
-  it "reflects whether the visitor can access the styleguide" do
-    sign_in(Fabricate(:admin))
-    get "/site.json"
-    expect(response.parsed_body["can_see_styleguide"]).to eq(true)
+      sign_in(Fabricate(:user))
+      get "/site.json"
+      expect(response.parsed_body["can_see_styleguide"]).to eq(false)
+    end
 
-    sign_in(Fabricate(:user))
-    get "/site.json"
-    expect(response.parsed_body["can_see_styleguide"]).to eq(false)
-  end
+    it "is omitted when the plugin is disabled" do
+      SiteSetting.styleguide_enabled = false
 
-  it "is omitted when the plugin is disabled" do
-    SiteSetting.styleguide_enabled = false
+      get "/site.json"
 
-    get "/site.json"
-
-    expect(response.parsed_body).not_to have_key("can_see_styleguide")
+      expect(response.parsed_body).not_to have_key("can_see_styleguide")
+    end
   end
 end

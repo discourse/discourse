@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe DiscourseGamification do
-  context "with the user card integration" do
+RSpec.describe DiscourseGamification do
+  context "with user card serialization" do
     fab!(:user)
     fab!(:leaderboard, :gamification_leaderboard)
 
@@ -21,7 +21,7 @@ describe DiscourseGamification do
     end
   end
 
-  context "with the site settings integration" do
+  context "with site serialization" do
     let(:guardian) { Guardian.new }
     let!(:default_gamification_leaderboard) { Fabricate(:gamification_leaderboard) }
 
@@ -34,28 +34,28 @@ describe DiscourseGamification do
       )
     end
   end
-end
 
-context "when merging users" do
-  fab!(:user_1, :user)
-  fab!(:user_2, :user)
-  fab!(:leaderboard, :gamification_leaderboard)
+  context "when merging users" do
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
+    fab!(:leaderboard, :gamification_leaderboard)
 
-  before do
-    SiteSetting.discourse_gamification_enabled = true
-    DiscourseGamification::LeaderboardCachedView.create_all
-    Fabricate.times(1, :topic, user: user_1)
-    Fabricate.times(1, :topic, user: user_2)
-    DiscourseGamification::GamificationLeaderboardScore.calculate_all
-    DiscourseGamification::LeaderboardCachedView.refresh_all
-  end
+    before do
+      SiteSetting.discourse_gamification_enabled = true
+      DiscourseGamification::LeaderboardCachedView.create_all
+      Fabricate.times(1, :topic, user: user_1)
+      Fabricate.times(1, :topic, user: user_2)
+      DiscourseGamification::GamificationLeaderboardScore.calculate_all
+      DiscourseGamification::LeaderboardCachedView.refresh_all
+    end
 
-  it "sums the scores" do
-    expect(user_2.gamification_score).to eq(5)
+    it "sums the scores" do
+      expect(user_2.gamification_score).to eq(5)
 
-    UserMerger.new(user_1, user_2, Discourse.system_user).merge!
-    DiscourseGamification::LeaderboardCachedView.refresh_all
+      UserMerger.new(user_1, user_2, Discourse.system_user).merge!
+      DiscourseGamification::LeaderboardCachedView.refresh_all
 
-    expect(user_2.gamification_score).to eq(10)
+      expect(user_2.gamification_score).to eq(10)
+    end
   end
 end

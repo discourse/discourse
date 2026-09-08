@@ -18,74 +18,72 @@ RSpec.describe DiscourseSolved::SolvedTopic do
     it { is_expected.to validate_presence_of(:topic_id) }
   end
 
-  describe "Callbacks" do
-    describe "#auto_close_topic_timer" do
-      subject(:solved) { described_class.create(topic:) }
+  describe "#auto_close_topic_timer" do
+    subject(:solved) { described_class.create(topic:) }
 
-      context "when auto close hours is greater than zero" do
-        before { SiteSetting.solved_topics_auto_close_hours = 2 }
+    context "when auto close hours is greater than zero" do
+      before { SiteSetting.solved_topics_auto_close_hours = 2 }
 
-        it "creates a silent close timer based on last post" do
-          expect(solved.topic_timer).to have_attributes(
-            topic:,
-            status_type: TopicTimer.types[:silent_close],
-            based_on_last_post: true,
-            duration_minutes: 120,
-          )
-        end
-
-        context "when the topic is already closed" do
-          before { topic.update!(closed: true) }
-
-          it "does not create a timer" do
-            expect(solved.topic_timer).to be_nil
-          end
-        end
+      it "creates a silent close timer based on last post" do
+        expect(solved.topic_timer).to have_attributes(
+          topic:,
+          status_type: TopicTimer.types[:silent_close],
+          based_on_last_post: true,
+          duration_minutes: 120,
+        )
       end
 
-      context "when auto close hours is zero" do
-        before { SiteSetting.solved_topics_auto_close_hours = 0 }
+      context "when the topic is already closed" do
+        before { topic.update!(closed: true) }
 
         it "does not create a timer" do
           expect(solved.topic_timer).to be_nil
         end
       end
+    end
 
-      context "when category overrides auto close hours" do
-        fab!(:category)
+    context "when auto close hours is zero" do
+      before { SiteSetting.solved_topics_auto_close_hours = 0 }
 
-        before do
-          topic.update!(category:)
-          category.custom_fields["solved_topics_auto_close_hours"] = 5
-          category.save!
-          SiteSetting.solved_topics_auto_close_hours = 2
-        end
+      it "does not create a timer" do
+        expect(solved.topic_timer).to be_nil
+      end
+    end
 
-        it "uses the category value" do
-          expect(solved.topic_timer).to have_attributes(duration_minutes: 300)
-        end
+    context "when category overrides auto close hours" do
+      fab!(:category)
+
+      before do
+        topic.update!(category:)
+        category.custom_fields["solved_topics_auto_close_hours"] = 5
+        category.save!
+        SiteSetting.solved_topics_auto_close_hours = 2
       end
 
-      describe "with multiple solutions enabled" do
-        fab!(:post2) { Fabricate(:post, topic: topic) }
-        before do
-          SiteSetting.solved_allow_multiple_solutions = true
-          SiteSetting.solved_topics_auto_close_hours = 2
-        end
+      it "uses the category value" do
+        expect(solved.topic_timer).to have_attributes(duration_minutes: 300)
+      end
+    end
 
-        it "only creates one timer" do
-          expect(solved.topic_timer).to have_attributes(
-            topic:,
-            status_type: TopicTimer.types[:silent_close],
-            based_on_last_post: true,
-            duration_minutes: 120,
-          )
+    describe "with multiple solutions enabled" do
+      fab!(:post2) { Fabricate(:post, topic: topic) }
+      before do
+        SiteSetting.solved_allow_multiple_solutions = true
+        SiteSetting.solved_topics_auto_close_hours = 2
+      end
 
-          topic_timer_id = solved.topic_timer.id
-          Fabricate(:topic_answer, solved_topic: solved, post: post2)
+      it "only creates one timer" do
+        expect(solved.topic_timer).to have_attributes(
+          topic:,
+          status_type: TopicTimer.types[:silent_close],
+          based_on_last_post: true,
+          duration_minutes: 120,
+        )
 
-          expect(solved.reload.topic_timer.id).to eq(topic_timer_id)
-        end
+        topic_timer_id = solved.topic_timer.id
+        Fabricate(:topic_answer, solved_topic: solved, post: post2)
+
+        expect(solved.reload.topic_timer.id).to eq(topic_timer_id)
       end
     end
   end

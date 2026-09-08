@@ -13,13 +13,13 @@ RSpec.describe MigrateDiscourseKanbanToBoards do
   end
   fab!(:group)
 
-  before do
-    @original_verbose = ActiveRecord::Migration.verbose
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
-  end
 
-  after do
-    ActiveRecord::Migration.verbose = @original_verbose
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
     Discourse.clear_site_creation_date_cache
   end
 

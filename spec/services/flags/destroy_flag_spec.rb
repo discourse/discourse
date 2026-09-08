@@ -38,7 +38,7 @@ RSpec.describe(Flags::DestroyFlag) do
     end
 
     context "when the flag has been used" do
-      let!(:post_action) { Fabricate(:post_action, post_action_type_id: flag.id) }
+      before { Fabricate(:post_action, post_action_type_id: flag.id) }
 
       it { is_expected.to fail_a_policy(:not_used) }
     end

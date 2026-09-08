@@ -13,6 +13,21 @@ RSpec.describe TopicUser do
     TopicUser.notification_levels[:tracking]
   end
 
+  let(:yesterday) { DateTime.now.yesterday }
+  let(:topic_new_user) { TopicUser.get(topic, new_user) }
+  let(:new_user) do
+    u = Fabricate(:user)
+    u.user_option.update_columns(auto_track_topics_after_msecs: 1000)
+    u
+  end
+  let(:topic_creator_user) { TopicUser.get(topic, topic.user) }
+  let(:topic_user) { TopicUser.get(topic, user) }
+  let(:topic) do
+    u = Fabricate(:user, refresh_auto_groups: true)
+    guardian = Guardian.new(u)
+    TopicCreator.create(u, guardian, title: "this is my topic title")
+  end
+
   describe "#notification_levels" do
     context "when verifying enum sequence" do
       let(:notification_levels) { TopicUser.notification_levels }
@@ -45,23 +60,6 @@ RSpec.describe TopicUser do
   it { is_expected.to belong_to :topic }
 
   fab!(:user)
-
-  let(:topic) do
-    u = Fabricate(:user, refresh_auto_groups: true)
-    guardian = Guardian.new(u)
-    TopicCreator.create(u, guardian, title: "this is my topic title")
-  end
-  let(:topic_user) { TopicUser.get(topic, user) }
-  let(:topic_creator_user) { TopicUser.get(topic, topic.user) }
-
-  let(:new_user) do
-    u = Fabricate(:user)
-    u.user_option.update_columns(auto_track_topics_after_msecs: 1000)
-    u
-  end
-
-  let(:topic_new_user) { TopicUser.get(topic, new_user) }
-  let(:yesterday) { DateTime.now.yesterday }
 
   def ensure_topic_user
     TopicUser.change(user, topic, last_emailed_post_number: 1)

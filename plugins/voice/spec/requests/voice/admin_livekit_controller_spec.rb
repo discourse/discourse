@@ -25,6 +25,7 @@ RSpec.describe Voice::AdminLivekitController do
       end
     end
     Voice::Room.reset_column_information
+    SiteSetting.voice_enabled = true
   end
 
   fab!(:admin)
@@ -32,8 +33,6 @@ RSpec.describe Voice::AdminLivekitController do
   fab!(:other_user, :user)
   fab!(:ghost_user, :user)
   fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before { SiteSetting.voice_enabled = true }
 
   after do
     Voice::ParticipantTracker.clear(room.id)

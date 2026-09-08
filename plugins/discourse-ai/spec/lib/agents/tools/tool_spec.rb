@@ -12,15 +12,12 @@ RSpec.describe DiscourseAi::Agents::Tools::Tool do
   before { enable_current_plugin }
 
   describe "#read_response_body" do
-    class FakeResponse
-      def initialize(chunk)
-        @chunk = chunk
+    FakeResponse =
+      Data.define(:chunk) do
+        def read_body
+          yield chunk while true
+        end
       end
-
-      def read_body
-        yield @chunk while true
-      end
-    end
 
     it "never returns a corrupt string" do
       response = FakeResponse.new(corrupt_string)

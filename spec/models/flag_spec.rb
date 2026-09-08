@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Flag, type: :model do
-  after(:each) { Flag.reset_flag_settings! }
+  after { Flag.reset_flag_settings! }
 
   it "has id lower than 1000 for system flags" do
     flag = Fabricate(:flag, id: 1)

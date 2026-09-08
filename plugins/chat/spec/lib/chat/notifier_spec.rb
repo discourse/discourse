@@ -5,15 +5,12 @@ describe Chat::Notifier do
     fab!(:channel, :category_channel)
     fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:user_2, :user)
+    fab!(:chat_group) do
+      Fabricate(:group, users: [user_1, user_2], mentionable_level: Group::ALIAS_LEVELS[:everyone])
+    end
 
     before do
-      @chat_group =
-        Fabricate(
-          :group,
-          users: [user_1, user_2],
-          mentionable_level: Group::ALIAS_LEVELS[:everyone],
-        )
-      SiteSetting.chat_allowed_groups = @chat_group.id
+      SiteSetting.chat_allowed_groups = chat_group.id
 
       [user_1, user_2].each do |u|
         Fabricate(:user_chat_channel_membership, chat_channel: channel, user: u)
@@ -104,7 +101,7 @@ describe Chat::Notifier do
     shared_examples "ensure only channel members are notified" do
       it "excludes users outside the channel" do
         user3 = Fabricate(:user)
-        @chat_group.add(user3)
+        chat_group.add(user3)
         another_channel = Fabricate(:category_channel)
         Fabricate(:user_chat_channel_membership, chat_channel: another_channel, user: user3)
         msg = build_cooked_msg(mention, user_1)
@@ -116,7 +113,7 @@ describe Chat::Notifier do
 
       it "excludes users who no longer follow the channel" do
         user3 = Fabricate(:user)
-        @chat_group.add(user3)
+        chat_group.add(user3)
         Fabricate(
           :user_chat_channel_membership,
           following: false,
@@ -132,7 +129,7 @@ describe Chat::Notifier do
 
       it "excludes suspended users" do
         user3 = Fabricate(:user, suspended_till: 2.years.from_now)
-        @chat_group.add(user3)
+        chat_group.add(user3)
         Fabricate(
           :user_chat_channel_membership,
           following: true,
@@ -258,7 +255,7 @@ describe Chat::Notifier do
     describe "direct_mentions" do
       it "only include mentioned users who are already in the channel" do
         user_3 = Fabricate(:user)
-        @chat_group.add(user_3)
+        chat_group.add(user_3)
         another_channel = Fabricate(:category_channel)
         Fabricate(:user_chat_channel_membership, chat_channel: another_channel, user: user_3)
         msg = build_cooked_msg("Is @#{user_3.username} here? And @#{user_2.username}", user_1)
@@ -345,7 +342,7 @@ describe Chat::Notifier do
       end
       fab!(:other_channel, :category_channel)
 
-      before { @chat_group.add(user_3) }
+      before { chat_group.add(user_3) }
 
       let(:mention) { "hello @#{group.name}!" }
       let(:list_key) { group.name }
@@ -365,19 +362,19 @@ describe Chat::Notifier do
           user: user_3,
           following: true,
         )
-        msg = build_cooked_msg("Hello @#{@chat_group.name} and @#{group.name}", user_1)
+        msg = build_cooked_msg("Hello @#{chat_group.name} and @#{group.name}", user_1)
 
         to_notify = described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[@chat_group.name]).to contain_exactly(user_2.id, user_3.id)
+        expect(to_notify[chat_group.name]).to contain_exactly(user_2.id, user_3.id)
         expect(to_notify[list_key]).to be_empty
 
-        second_msg = build_cooked_msg("Hello @#{group.name} and @#{@chat_group.name}", user_1)
+        second_msg = build_cooked_msg("Hello @#{group.name} and @#{chat_group.name}", user_1)
 
         to_notify_2 = described_class.new(second_msg, second_msg.created_at).notify_new
 
         expect(to_notify_2[list_key]).to contain_exactly(user_2.id, user_3.id)
-        expect(to_notify_2[@chat_group.name]).to be_empty
+        expect(to_notify_2[chat_group.name]).to be_empty
       end
 
       it "skips groups with too many members" do
@@ -497,7 +494,7 @@ describe Chat::Notifier do
           result.channel
         end
 
-        before { @chat_group.add(user_3) }
+        before { chat_group.add(user_3) }
 
         it "notify posts of users who are not participating in a personal message" do
           msg =
@@ -552,7 +549,7 @@ describe Chat::Notifier do
     describe "users who can be invited to join the channel" do
       fab!(:user_3, :user)
 
-      before { @chat_group.add(user_3) }
+      before { chat_group.add(user_3) }
 
       it "can invite chat user without channel membership" do
         msg = build_cooked_msg("Hello @#{user_3.username}", user_1)

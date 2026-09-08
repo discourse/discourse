@@ -5,12 +5,14 @@ require Rails.root.join(
         )
 
 RSpec.describe AddPostingReviewModesToCategorySettings do
+  let(:original_verbose) { ActiveRecord::Migration.verbose }
+
   before do
-    @original_verbose = ActiveRecord::Migration.verbose
+    original_verbose
     ActiveRecord::Migration.verbose = false
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
+  after { ActiveRecord::Migration.verbose = original_verbose }
 
   it "backfills posting review modes from category_posting_review_groups" do
     topic_approval_category = Fabricate(:category)

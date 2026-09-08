@@ -76,7 +76,7 @@ RSpec.describe UserApiKey::DeviceAuth::CreateRequest do
     end
 
     context "with a registered client" do
-      let!(:client) do
+      before do
         UserApiKeyClient.create!(
           client_id: "device-client",
           application_name: "Stored Client Name",

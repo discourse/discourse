@@ -17,77 +17,73 @@ describe Jobs::ExportCsvFile do
       let(:post1) { Fabricate(:post, topic: topic) }
       let(:post_event) { Fabricate(:event, post: post1) }
 
-      context "when the event exists" do
-        context "when the event has invitees" do
-          before do
-            post_event.create_invitees([{ user_id: user_1.id, status: nil }])
-            post_event.create_invitees([{ user_id: user_2.id, status: 2 }])
-          end
+      context "when the event has invitees" do
+        before do
+          post_event.create_invitees([{ user_id: user_1.id, status: nil }])
+          post_event.create_invitees([{ user_id: user_2.id, status: 2 }])
+        end
 
-          context "when the user requesting the upload is admin" do
-            it "generates the upload and notify the user" do
-              expect do
-                Jobs::ExportCsvFile.new.execute(
-                  user_id: user.id,
-                  entity: "post_event",
-                  args: {
-                    id: post_event.id,
-                  },
-                )
-              end.to change { Upload.count }.by(1)
+        it "generates the upload and notify the user" do
+          expect do
+            Jobs::ExportCsvFile.new.execute(
+              user_id: user.id,
+              entity: "post_event",
+              args: {
+                id: post_event.id,
+              },
+            )
+          end.to change { Upload.count }.by(1)
 
-              system_message = user.topics_allowed.last
+          system_message = user.topics_allowed.last
 
-              expect(system_message.title).to eq(
-                I18n.t(
-                  "system_messages.csv_export_succeeded.subject_template",
-                  export_title: "Post Event",
-                ),
+          expect(system_message.title).to eq(
+            I18n.t(
+              "system_messages.csv_export_succeeded.subject_template",
+              export_title: "Post Event",
+            ),
+          )
+
+          upload = Upload.last
+
+          expect(system_message.first_post.raw).to include(
+            I18n.t(
+              "system_messages.csv_export_succeeded.text_body_template",
+              download_link:
+                "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)",
+            ).chomp,
+          )
+
+          expect(system_message.id).to eq(UserExport.last.topic_id)
+          expect(system_message.closed).to eq(true)
+
+          files = []
+          Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
+            zip_file.each do |entry|
+              files << entry.name
+
+              input_stream = entry.get_input_stream
+              parsed_csv = CSV.parse(input_stream.read)
+
+              expect(parsed_csv[0]).to eq(%w[username status first_answered_at last_updated_at])
+              invitee_1 = post_event.invitees.find_by(user_id: user_1.id)
+              expect(parsed_csv[1]).to eq(
+                [user_1.username, nil, invitee_1.created_at.to_s, invitee_1.updated_at.to_s],
               )
-
-              upload = Upload.last
-
-              expect(system_message.first_post.raw).to include(
-                I18n.t(
-                  "system_messages.csv_export_succeeded.text_body_template",
-                  download_link:
-                    "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)",
-                ).chomp,
+              invitee_2 = post_event.invitees.find_by(user_id: user_2.id)
+              expect(parsed_csv[2]).to eq(
+                [
+                  user_2.username,
+                  "not_going",
+                  invitee_2.created_at.to_s,
+                  invitee_2.updated_at.to_s,
+                ],
               )
-
-              expect(system_message.id).to eq(UserExport.last.topic_id)
-              expect(system_message.closed).to eq(true)
-
-              files = []
-              Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
-                zip_file.each do |entry|
-                  files << entry.name
-
-                  input_stream = entry.get_input_stream
-                  parsed_csv = CSV.parse(input_stream.read)
-
-                  expect(parsed_csv[0]).to eq(%w[username status first_answered_at last_updated_at])
-                  invitee_1 = post_event.invitees.find_by(user_id: user_1.id)
-                  expect(parsed_csv[1]).to eq(
-                    [user_1.username, nil, invitee_1.created_at.to_s, invitee_1.updated_at.to_s],
-                  )
-                  invitee_2 = post_event.invitees.find_by(user_id: user_2.id)
-                  expect(parsed_csv[2]).to eq(
-                    [
-                      user_2.username,
-                      "not_going",
-                      invitee_2.created_at.to_s,
-                      invitee_2.updated_at.to_s,
-                    ],
-                  )
-                end
-              end
-
-              expect(files.size).to eq(1)
-            ensure
-              user.uploads.each(&:destroy!)
             end
           end
+
+          expect(files.size).to eq(1)
+        ensure
+          user.uploads.each(&:destroy!)
         end
       end
     end

@@ -217,7 +217,7 @@ RSpec.describe UserDestroyer do
     end
 
     context "with a draft" do
-      let!(:draft) { Draft.set(user, "test", 0, "test") }
+      before { Draft.set(user, "test", 0, "test") }
 
       it "removed the draft" do
         UserDestroyer.new(admin).destroy(user)
@@ -226,9 +226,13 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user has posts" do
+      subject(:destroy) { UserDestroyer.new(admin).destroy(user, destroy_opts) }
+
+      let(:destroy_opts) { { delete_posts: true } }
       let!(:topic_starter) { Fabricate(:user) }
       let!(:topic) { Fabricate(:topic, user: topic_starter) }
-      let!(:first_post) { Fabricate(:post, user: topic_starter, topic: topic) }
+      before { Fabricate(:post, user: topic_starter, topic: topic) }
+
       let!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       context "when delete_posts is false" do
@@ -246,131 +250,123 @@ RSpec.describe UserDestroyer do
         end
       end
 
-      context "when delete_posts is true" do
-        let(:destroy_opts) { { delete_posts: true } }
+      include_examples "successfully destroy a user"
+      include_examples "email block list"
 
-        context "when staff deletes user" do
-          subject(:destroy) { UserDestroyer.new(admin).destroy(user, destroy_opts) }
+      it "deletes the posts" do
+        destroy
+        expect(post.reload.deleted_at).not_to eq(nil)
+        expect(post.user_id).to eq(nil)
+      end
 
-          include_examples "successfully destroy a user"
-          include_examples "email block list"
+      it "does not delete topics started by others in which the user has replies" do
+        destroy
+        expect(topic.reload.deleted_at).to eq(nil)
+        expect(topic.user_id).not_to eq(nil)
+      end
 
-          it "deletes the posts" do
-            destroy
-            expect(post.reload.deleted_at).not_to eq(nil)
-            expect(post.user_id).to eq(nil)
-          end
+      it "deletes topics started by the deleted user" do
+        spammer_topic = Fabricate(:topic, user: user)
+        Fabricate(:post, user: user, topic: spammer_topic)
+        destroy
+        expect(spammer_topic.reload.deleted_at).not_to eq(nil)
+        expect(spammer_topic.user_id).to eq(nil)
+      end
 
-          it "does not delete topics started by others in which the user has replies" do
-            destroy
-            expect(topic.reload.deleted_at).to eq(nil)
-            expect(topic.user_id).not_to eq(nil)
-          end
+      context "when delete_as_spammer is true" do
+        before { destroy_opts[:delete_as_spammer] = true }
 
-          it "deletes topics started by the deleted user" do
-            spammer_topic = Fabricate(:topic, user: user)
-            Fabricate(:post, user: user, topic: spammer_topic)
-            destroy
-            expect(spammer_topic.reload.deleted_at).not_to eq(nil)
-            expect(spammer_topic.user_id).to eq(nil)
-          end
+        it "approves reviewable flags" do
+          spammer_post = Fabricate(:post, user: user)
+          reviewable = PostActionCreator.inappropriate(admin, spammer_post).reviewable
+          expect(reviewable).to be_pending
 
-          context "when delete_as_spammer is true" do
-            before { destroy_opts[:delete_as_spammer] = true }
+          destroy
 
-            it "approves reviewable flags" do
-              spammer_post = Fabricate(:post, user: user)
-              reviewable = PostActionCreator.inappropriate(admin, spammer_post).reviewable
-              expect(reviewable).to be_pending
-
-              destroy
-
-              reviewable.reload
-              expect(reviewable).to be_approved
-            end
-
-            it "rejects pending posts" do
-              post = Fabricate(:post, user: user)
-              reviewable =
-                Fabricate(
-                  :reviewable,
-                  type: "ReviewablePost",
-                  target_type: "Post",
-                  target_id: post.id,
-                  created_by: Discourse.system_user,
-                  target_created_by: user,
-                )
-
-              expect(reviewable).to be_pending
-
-              destroy
-
-              reviewable.reload
-              expect(reviewable).to be_rejected
-            end
-
-            it "approves reviewable flags on hidden posts" do
-              spammer_post = Fabricate(:post, user: user)
-              reviewable = PostActionCreator.inappropriate(admin, spammer_post).reviewable
-              spammer_post.update!(
-                hidden: true,
-                hidden_at: Time.zone.now,
-                hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
-              )
-              expect(reviewable).to be_pending
-
-              destroy
-
-              expect(reviewable.reload).to be_approved
-            end
-
-            it "rejects queued posts" do
-              reviewable =
-                Fabricate(
-                  :reviewable_queued_post,
-                  created_by: Discourse.system_user,
-                  target_created_by: user,
-                )
-              expect(reviewable).to be_pending
-
-              destroy
-
-              expect(reviewable.reload).to be_rejected
-            end
-
-            it "rejects the user's account reviewable when reviewable_id is a different reviewable" do
-              flag_reviewable =
-                PostActionCreator.inappropriate(admin, Fabricate(:post, user: user)).reviewable
-              account_reviewable = ReviewableUser.create_for(user)
-              destroy_opts[:reviewable_id] = flag_reviewable.id
-
-              destroy
-
-              expect(account_reviewable.reload).to be_rejected
-            end
-
-            it "leaves the user's account reviewable pending when reviewable_id is its id" do
-              account_reviewable = ReviewableUser.create_for(user)
-              destroy_opts[:reviewable_id] = account_reviewable.id
-
-              destroy
-
-              expect(account_reviewable.reload).to be_pending
-            end
-          end
+          reviewable.reload
+          expect(reviewable).to be_approved
         end
 
-        context "when users deletes self" do
-          subject(:destroy) { UserDestroyer.new(user).destroy(user, destroy_opts) }
+        it "rejects pending posts" do
+          post = Fabricate(:post, user: user)
+          reviewable =
+            Fabricate(
+              :reviewable,
+              type: "ReviewablePost",
+              target_type: "Post",
+              target_id: post.id,
+              created_by: Discourse.system_user,
+              target_created_by: user,
+            )
 
-          include_examples "successfully destroy a user"
-          include_examples "email block list"
+          expect(reviewable).to be_pending
 
-          it "deletes the posts" do
-            destroy
-            expect(post.reload.deleted_at).not_to eq(nil)
-            expect(post.user_id).to eq(nil)
-          end
+          destroy
+
+          reviewable.reload
+          expect(reviewable).to be_rejected
+        end
+
+        it "approves reviewable flags on hidden posts" do
+          spammer_post = Fabricate(:post, user: user)
+          reviewable = PostActionCreator.inappropriate(admin, spammer_post).reviewable
+          spammer_post.update!(
+            hidden: true,
+            hidden_at: Time.zone.now,
+            hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+          )
+          expect(reviewable).to be_pending
+
+          destroy
+
+          expect(reviewable.reload).to be_approved
+        end
+
+        it "rejects queued posts" do
+          reviewable =
+            Fabricate(
+              :reviewable_queued_post,
+              created_by: Discourse.system_user,
+              target_created_by: user,
+            )
+          expect(reviewable).to be_pending
+
+          destroy
+
+          expect(reviewable.reload).to be_rejected
+        end
+
+        it "rejects the user's account reviewable when reviewable_id is a different reviewable" do
+          flag_reviewable =
+            PostActionCreator.inappropriate(admin, Fabricate(:post, user: user)).reviewable
+          account_reviewable = ReviewableUser.create_for(user)
+          destroy_opts[:reviewable_id] = flag_reviewable.id
+
+          destroy
+
+          expect(account_reviewable.reload).to be_rejected
+        end
+
+        it "leaves the user's account reviewable pending when reviewable_id is its id" do
+          account_reviewable = ReviewableUser.create_for(user)
+          destroy_opts[:reviewable_id] = account_reviewable.id
+
+          destroy
+
+          expect(account_reviewable.reload).to be_pending
+        end
+      end
+
+      context "when users deletes self" do
+        subject(:destroy) { UserDestroyer.new(user).destroy(user, destroy_opts) }
+
+        include_examples "successfully destroy a user"
+        include_examples "email block list"
+
+        it "deletes the posts" do
+          destroy
+          expect(post.reload.deleted_at).not_to eq(nil)
+          expect(post.user_id).to eq(nil)
         end
       end
     end
@@ -412,7 +408,8 @@ RSpec.describe UserDestroyer do
       let!(:topic) { Fabricate(:topic, user: user) }
       let!(:first_post) { Fabricate(:post, user: user, topic: topic) }
       let!(:second_post) { Fabricate(:post, user: user, topic: topic) }
-      let!(:category) { Fabricate(:category, user: user, topic_id: topic.id) }
+
+      before { Fabricate(:category, user: user, topic_id: topic.id) }
 
       it "changes author of first category post to system user and still deletes second post" do
         UserDestroyer.new(admin).destroy(user, delete_posts: true)
@@ -471,8 +468,8 @@ RSpec.describe UserDestroyer do
     context "when user has posts with links" do
       context "with external links" do
         before do
-          @post = Fabricate(:post_with_external_links, user: user)
-          TopicLink.extract_from(@post)
+          post = Fabricate(:post_with_external_links, user: user)
+          TopicLink.extract_from(post)
         end
 
         it "doesn't add ScreenedUrl records by default" do
@@ -488,8 +485,8 @@ RSpec.describe UserDestroyer do
 
       context "with internal links" do
         before do
-          @post = Fabricate(:post_with_external_links, user: user)
-          TopicLink.extract_from(@post)
+          post = Fabricate(:post_with_external_links, user: user)
+          TopicLink.extract_from(post)
           TopicLink.where(user: user).update_all(internal: true)
         end
 
@@ -501,8 +498,8 @@ RSpec.describe UserDestroyer do
 
       context "with oneboxed links" do
         before do
-          @post = Fabricate(:post_with_youtube, user: user)
-          TopicLink.extract_from(@post)
+          post = Fabricate(:post_with_youtube, user: user)
+          TopicLink.extract_from(post)
         end
 
         it "doesn't add ScreenedUrl records" do
@@ -548,7 +545,7 @@ RSpec.describe UserDestroyer do
     end
 
     describe "Destroying a user with security key" do
-      let!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user) }
+      before { Fabricate(:user_security_key_with_random_credential, user: user) }
 
       it "removes the security key" do
         UserDestroyer.new(admin).destroy(user)
@@ -557,7 +554,7 @@ RSpec.describe UserDestroyer do
     end
 
     describe "Destroying a user with a bookmark" do
-      let!(:bookmark) { Fabricate(:bookmark, user: user) }
+      before { Fabricate(:bookmark, user: user) }
 
       it "removes the bookmark" do
         UserDestroyer.new(admin).destroy(user)
@@ -567,7 +564,8 @@ RSpec.describe UserDestroyer do
 
     describe "Destroying a user with a reviewable claimed topic" do
       let!(:topic) { Fabricate(:topic) }
-      let!(:claimed_topic) { Fabricate(:reviewable_claimed_topic, user: user, topic: topic) }
+
+      before { Fabricate(:reviewable_claimed_topic, user: user, topic: topic) }
 
       it "removes the reviewable claimed topic" do
         UserDestroyer.new(admin).destroy(user)
@@ -576,17 +574,16 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user liked things" do
-      before do
-        @topic = Fabricate(:topic, user: Fabricate(:user))
-        @post = Fabricate(:post, user: @topic.user, topic: @topic)
-        PostActionCreator.like(user, @post)
+      let(:post) do
+        topic = Fabricate(:topic, user: Fabricate(:user))
+        Fabricate(:post, user: topic.user, topic: topic)
       end
 
       it "destroys the like" do
         expect { UserDestroyer.new(admin).destroy(user, delete_posts: true) }.to change {
           PostAction.count
         }.by(-1)
-        expect(@post.reload.like_count).to eq(0)
+        expect(post.reload.like_count).to eq(0)
       end
     end
 
@@ -648,7 +645,7 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user got an email" do
-      let!(:email_log) { Fabricate(:email_log, user: user) }
+      before { Fabricate(:email_log, user: user) }
 
       it "does not delete the email log" do
         expect { UserDestroyer.new(admin).destroy(user, delete_posts: true) }.to_not change {

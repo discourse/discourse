@@ -7,6 +7,15 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   fab!(:bot_user, :user)
   fab!(:other_user, :user)
 
+  let(:document_upload) do
+    Fabricate(:upload, user: user, original_filename: "notes.txt", extension: "txt")
+  end
+
+  before do
+    enable_current_plugin
+    SiteSetting.authorized_extensions = "*"
+  end
+
   describe ".filtered_upload_ids_for_prompt" do
     def filter(upload_ids, guardian)
       described_class.filtered_upload_ids_for_prompt(
@@ -42,14 +51,6 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   end
   fab!(:image_upload2) do
     Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
-  end
-  let(:document_upload) do
-    Fabricate(:upload, user: user, original_filename: "notes.txt", extension: "txt")
-  end
-
-  before do
-    enable_current_plugin
-    SiteSetting.authorized_extensions = "*"
   end
 
   it "correctly merges user messages with uploads" do

@@ -118,7 +118,8 @@ describe DiscourseEvents::Events::Finder do
         target_usernames: "#{another_user.username}",
       )
     end
-    let!(:event) { Fabricate(:event, post: post1) }
+
+    before { Fabricate(:event, post: post1) }
 
     it "doesn’t return the event" do
       expect(finder.search(current_user)).to match_array([])
@@ -176,7 +177,8 @@ describe DiscourseEvents::Events::Finder do
           raw: "The boat market is very active lately.",
         )
       end
-      let!(:event1) { Fabricate(:event, post: post1) }
+      before { Fabricate(:event, post: post1) }
+
       let!(:event2) { Fabricate(:event, post: post2) }
 
       it "returns only the specified event" do
@@ -187,7 +189,8 @@ describe DiscourseEvents::Events::Finder do
     describe "with a limit parameter provided" do
       let!(:event1) { Fabricate(:event) }
       let!(:event2) { Fabricate(:event) }
-      let!(:event3) { Fabricate(:event) }
+
+      before { Fabricate(:event) }
 
       it "returns the correct number of events" do
         expect(finder.search(current_user, { limit: 2 })).to match_array([event1, event2])
@@ -195,7 +198,8 @@ describe DiscourseEvents::Events::Finder do
     end
 
     describe "with a before parameter provided" do
-      let!(:event1) { Fabricate(:event, original_starts_at: 2.minutes.from_now) }
+      before { Fabricate(:event, original_starts_at: 2.minutes.from_now) }
+
       let!(:event2) { Fabricate(:event, original_starts_at: 1.minute.from_now) }
       let!(:event3) { Fabricate(:event, original_starts_at: 2.hours.ago) }
 

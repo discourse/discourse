@@ -294,9 +294,11 @@ RSpec.shared_examples "a chat channel model" do
   end
 
   describe "#remove" do
+    let(:membership) { private_category_channel.add(user1) }
+
     before do
       group.add(user1)
-      @membership = private_category_channel.add(user1)
+      membership
       private_category_channel.reload
       private_category_channel.update!(user_count_stale: false)
     end
@@ -305,7 +307,7 @@ RSpec.shared_examples "a chat channel model" do
       membership = private_category_channel.remove(user1)
       private_category_channel.reload
 
-      expect(@membership.reload.following).to eq(false)
+      expect(membership.reload.following).to eq(false)
       expect(private_category_channel.user_count_stale).to eq(true)
       expect_job_enqueued(
         job: Jobs::Chat::UpdateChannelUserCount,
@@ -320,7 +322,7 @@ RSpec.shared_examples "a chat channel model" do
     end
 
     it "does nothing if the user is not following the channel" do
-      @membership.update!(following: false)
+      membership.update!(following: false)
 
       private_category_channel.remove(user1)
       private_category_channel.reload

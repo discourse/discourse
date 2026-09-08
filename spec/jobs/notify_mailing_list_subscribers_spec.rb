@@ -5,9 +5,8 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
 
   before do
     mailing_list_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
+    SiteSetting.tagging_enabled = true
   end
-
-  before { SiteSetting.tagging_enabled = true }
 
   fab!(:tag)
   fab!(:topic) { Fabricate(:topic, tags: [tag]) }

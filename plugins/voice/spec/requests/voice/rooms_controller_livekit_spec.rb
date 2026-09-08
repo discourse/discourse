@@ -25,17 +25,14 @@ RSpec.describe Voice::RoomsController do
       end
     end
     Voice::Room.reset_column_information
+    SiteSetting.voice_enabled = true
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
   end
 
   fab!(:user)
   fab!(:other_user, :user)
   fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before do
-    SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups =
-      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
-  end
 
   after { Voice::ParticipantTracker.clear(room.id) }
 

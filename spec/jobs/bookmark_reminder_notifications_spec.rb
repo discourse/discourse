@@ -8,10 +8,9 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   let(:bookmark1) { Fabricate(:bookmark, user: user) }
   let(:bookmark2) { Fabricate(:bookmark, user: user) }
   let(:bookmark3) { Fabricate(:bookmark, user: user) }
-  let!(:bookmarks) { [bookmark1, bookmark2, bookmark3] }
 
   before do
-    # this is done to avoid model validations on Bookmark
+    [bookmark1, bookmark2, bookmark3]
     bookmark1.update_column(:reminder_at, five_minutes_ago - 10.minutes)
     bookmark2.update_column(:reminder_at, five_minutes_ago - 5.minutes)
     bookmark3.update_column(:reminder_at, five_minutes_ago)

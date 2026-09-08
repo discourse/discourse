@@ -1644,7 +1644,7 @@ RSpec.describe Admin::UsersController do
         end
 
         context "when user has reviewable flagged post which was handled" do
-          let!(:reviewable) do
+          before do
             Fabricate(
               :reviewable_flagged_post,
               created_by: admin,
@@ -1716,15 +1716,17 @@ RSpec.describe Admin::UsersController do
       end
 
       context "with param block_url" do
-        before do
-          @post = Fabricate(:post_with_external_links, user: delete_me)
-          TopicLink.extract_from(@post)
+        let(:post_with_external_links) { Fabricate(:post_with_external_links, user: delete_me) }
+        let(:urls) do
+          TopicLink
+            .where(user: delete_me, internal: false)
+            .pluck(:url)
+            .map { |url| ScreenedUrl.normalize_url(url) }
+        end
 
-          @urls =
-            TopicLink
-              .where(user: delete_me, internal: false)
-              .pluck(:url)
-              .map { |url| ScreenedUrl.normalize_url(url) }
+        before do
+          TopicLink.extract_from(post_with_external_links)
+          urls
         end
 
         it "blocks the urls if block_url param is true" do
@@ -1734,7 +1736,7 @@ RSpec.describe Admin::UsersController do
                    block_urls: true,
                  }
           expect(response.status).to eq(200)
-          expect(ScreenedUrl.exists?(url: @urls)).to eq(true)
+          expect(ScreenedUrl.exists?(url: urls)).to eq(true)
         end
 
         it "does not block the urls if block_url param is false" do
@@ -1744,13 +1746,13 @@ RSpec.describe Admin::UsersController do
                    block_urls: false,
                  }
           expect(response.status).to eq(200)
-          expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
+          expect(ScreenedUrl.exists?(url: urls)).to eq(false)
         end
 
         it "does not block the urls by default" do
           delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true }
           expect(response.status).to eq(200)
-          expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
+          expect(ScreenedUrl.exists?(url: urls)).to eq(false)
         end
       end
 

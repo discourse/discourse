@@ -13,7 +13,7 @@ RSpec.describe Admin::ThemesController do
     MockGitImporter.register("https://github.com/discourse/discourse-brand-header.git", repo)
   end
 
-  around(:each) { |group| MockGitImporter.with_mock { group.run } }
+  around { |group| MockGitImporter.with_mock { group.run } }
 
   describe "#generate_key_pair" do
     context "when logged in as an admin" do

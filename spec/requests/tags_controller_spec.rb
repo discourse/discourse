@@ -1605,35 +1605,35 @@ RSpec.describe TagsController do
           expect(response.status).to eq(200)
         end
 
-        context "with muted tags" do
-          before do
-            TagUser.create!(
-              user_id: user.id,
-              tag_id: tag.id,
-              notification_level: CategoryUser.notification_levels[:muted],
-            )
-          end
+        it "includes topics when filtered by muted tag" do
+          TagUser.create!(
+            user_id: user.id,
+            tag_id: tag.id,
+            notification_level: CategoryUser.notification_levels[:muted],
+          )
+          single_tag_topic
 
-          it "includes topics when filtered by muted tag" do
-            single_tag_topic
+          get "/tag/#{tag.name}/l/latest.json"
+          expect(response.status).to eq(200)
 
-            get "/tag/#{tag.name}/l/latest.json"
-            expect(response.status).to eq(200)
+          topic_ids = parse_topic_ids
+          expect(topic_ids).to include(single_tag_topic.id)
+        end
 
-            topic_ids = parse_topic_ids
-            expect(topic_ids).to include(single_tag_topic.id)
-          end
+        it "includes topics when filtered by category and muted tag" do
+          TagUser.create!(
+            user_id: user.id,
+            tag_id: tag.id,
+            notification_level: CategoryUser.notification_levels[:muted],
+          )
+          category = Fabricate(:category)
+          single_tag_topic.update!(category: category)
 
-          it "includes topics when filtered by category and muted tag" do
-            category = Fabricate(:category)
-            single_tag_topic.update!(category: category)
+          get "/tags/c/#{category.slug}/#{tag.name}/l/latest.json"
+          expect(response.status).to eq(200)
 
-            get "/tags/c/#{category.slug}/#{tag.name}/l/latest.json"
-            expect(response.status).to eq(200)
-
-            topic_ids = parse_topic_ids
-            expect(topic_ids).to include(single_tag_topic.id)
-          end
+          topic_ids = parse_topic_ids
+          expect(topic_ids).to include(single_tag_topic.id)
         end
       end
     end
@@ -2249,7 +2249,7 @@ RSpec.describe TagsController do
       before { sign_in(admin) }
 
       context "with some tags" do
-        let!(:tags) do
+        before do
           [
             Fabricate(
               :tag,
@@ -2617,7 +2617,7 @@ RSpec.describe TagsController do
 
     fab!(:staff_only_tag) { Fabricate(:tag, name: "tag4") }
 
-    let!(:staff_tag_group) do
+    before do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [staff_only_tag.name])
     end
 

@@ -630,203 +630,200 @@ RSpec.describe UploadsController do
     end
   end
 
-  describe "#show_secure" do
-    describe "local store" do
-      fab!(:image_upload) { upload_file("smallest.png") }
+  describe "local store" do
+    fab!(:image_upload) { upload_file("smallest.png") }
 
-      it "does not return secure uploads when using local store" do
-        secure_url = image_upload.url.sub("/uploads", "/secure-uploads")
+    it "does not return secure uploads when using local store" do
+      secure_url = image_upload.url.sub("/uploads", "/secure-uploads")
+      get secure_url
+
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "s3 store" do
+    let(:upload) { Fabricate(:upload_s3) }
+    let(:secure_url) { upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads") }
+
+    before do
+      setup_s3
+      SiteSetting.authorized_extensions = "*"
+      SiteSetting.secure_uploads = true
+    end
+
+    it "returns 404 for anonymous requests" do
+      get secure_url
+      expect(response.status).to eq(404)
+    end
+
+    it "returns a signed URL for an authorized request" do
+      sign_in(user)
+      get secure_url
+
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to match("Amz-Expires")
+      expect(response.redirect_url).to include("response-content-disposition=inline")
+    end
+
+    it "returns signed url for legitimate request with no extension" do
+      upload.update!(extension: nil, url: upload.url.sub(".png", ""))
+      sign_in(user)
+      get secure_url
+
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to match("Amz-Expires")
+      expect(response.location).not_to include(".?")
+      expect(response.redirect_url).to include("response-content-disposition=inline")
+    end
+
+    it "returns the secure-upload URL during lookup" do
+      upload.update_column(:secure, true)
+      sign_in(user)
+
+      post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+      expect(response.status).to eq(200)
+
+      result = response.parsed_body
+      expect(result[0]["url"]).to match("secure-uploads")
+    end
+
+    context "when the upload cannot be found from the URL" do
+      it "returns a 404" do
+        sign_in(user)
+        upload.update(sha1: "test")
+
         get secure_url
-
         expect(response.status).to eq(404)
       end
     end
 
-    describe "s3 store" do
-      let(:upload) { Fabricate(:upload_s3) }
-      let(:secure_url) { upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads") }
+    context "when the access_control_post_id has been set for the upload" do
+      let(:post) { Fabricate(:post) }
+      let!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
-      before do
-        setup_s3
-        SiteSetting.authorized_extensions = "*"
-        SiteSetting.secure_uploads = true
-      end
+      before { upload.update(access_control_post_id: post.id) }
 
-      it "returns 404 for anonymous requests" do
+      it "returns signed url for public posts" do
         get secure_url
-        expect(response.status).to eq(404)
-      end
-
-      it "returns a signed URL for an authorized request" do
-        sign_in(user)
-        get secure_url
-
         expect(response.status).to eq(302)
         expect(response.redirect_url).to match("Amz-Expires")
-        expect(response.redirect_url).to include("response-content-disposition=inline")
       end
 
-      it "returns signed url for legitimate request with no extension" do
-        upload.update!(extension: nil, url: upload.url.sub(".png", ""))
-        sign_in(user)
+      it "returns 403 for deleted posts" do
+        post.trash!
         get secure_url
-
-        expect(response.status).to eq(302)
-        expect(response.redirect_url).to match("Amz-Expires")
-        expect(response.location).not_to include(".?")
-        expect(response.redirect_url).to include("response-content-disposition=inline")
+        expect(response.status).to eq(403)
       end
 
-      it "returns the secure-upload URL during lookup" do
-        upload.update_column(:secure, true)
-        sign_in(user)
+      context "when a signed-out user does not have access to the post via guardian" do
+        before { post.topic.change_category_to_id(private_category.id) }
 
-        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
-        expect(response.status).to eq(200)
-
-        result = response.parsed_body
-        expect(result[0]["url"]).to match("secure-uploads")
-      end
-
-      context "when the upload cannot be found from the URL" do
-        it "returns a 404" do
-          sign_in(user)
-          upload.update(sha1: "test")
-
+        it "returns a 403" do
           get secure_url
-          expect(response.status).to eq(404)
+          expect(response.status).to eq(403)
         end
       end
 
-      context "when the access_control_post_id has been set for the upload" do
-        let(:post) { Fabricate(:post) }
-        let!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      context "when the user has access to the post via guardian" do
+        before { sign_in(user) }
 
-        before { upload.update(access_control_post_id: post.id) }
-
-        context "when the user is anon" do
-          it "returns a signed URL for public posts" do
-            get secure_url
-            expect(response.status).to eq(302)
-            expect(response.redirect_url).to match("Amz-Expires")
-          end
-
-          it "returns 403 for deleted posts" do
-            post.trash!
-            get secure_url
-            expect(response.status).to eq(403)
-          end
-
-          context "when the user does not have access to the post via guardian" do
-            before { post.topic.change_category_to_id(private_category.id) }
-
-            it "returns a 403" do
-              get secure_url
-              expect(response.status).to eq(403)
-            end
-          end
-        end
-
-        context "when the user is logged in" do
-          before { sign_in(user) }
-
-          context "when the user has access to the post via guardian" do
-            it "returns a signed URL for an authorized request" do
-              get secure_url
-              expect(response.status).to eq(302)
-              expect(response.redirect_url).to match("Amz-Expires")
-            end
-          end
-
-          context "when the user does not have access to the post via guardian" do
-            before { post.topic.change_category_to_id(private_category.id) }
-
-            it "returns a 403" do
-              get secure_url
-              expect(response.status).to eq(403)
-            end
-          end
-        end
-      end
-
-      context "when the upload is an attachment file" do
-        before { upload.update(original_filename: "test.pdf") }
-
-        it "redirects to the signed_url_for_path" do
-          sign_in(user)
+        it "returns signed url for legitimate request" do
           get secure_url
           expect(response.status).to eq(302)
           expect(response.redirect_url).to match("Amz-Expires")
         end
+      end
 
-        context "when the user does not have access to the access control post via guardian" do
-          let(:post) { Fabricate(:post) }
-          let!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
-
-          before do
-            post.topic.change_category_to_id(private_category.id)
-            upload.update(access_control_post_id: post.id)
-          end
-
-          it "returns a 403" do
-            sign_in(user)
-            get secure_url
-            expect(response.status).to eq(403)
-          end
+      context "when a signed-in user does not have access to the post via guardian" do
+        before do
+          sign_in(user)
+          post.topic.change_category_to_id(private_category.id)
         end
 
-        context "when login is required and user is not signed in" do
-          let(:post) { Fabricate(:post) }
+        it "returns a 403" do
+          get secure_url
+          expect(response.status).to eq(403)
+        end
+      end
+    end
 
-          before do
-            SiteSetting.login_required = true
-            upload.update(access_control_post_id: post.id)
-          end
+    context "when the upload is an attachment file" do
+      before { upload.update(original_filename: "test.pdf") }
 
-          it "returns a 403" do
-            get secure_url
-            expect(response.status).to eq(403)
-          end
+      it "redirects to the signed_url_for_path" do
+        sign_in(user)
+        get secure_url
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to match("Amz-Expires")
+      end
+
+      context "when the user does not have access to the access control post via guardian" do
+        let(:post) { Fabricate(:post) }
+        let!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+        before do
+          post.topic.change_category_to_id(private_category.id)
+          upload.update(access_control_post_id: post.id)
         end
 
-        context "when the prevent_anons_from_downloading_files setting is enabled and the user is anon" do
-          before { SiteSetting.prevent_anons_from_downloading_files = true }
-
-          it "returns a 404" do
-            delete "/session/#{user.username}.json"
-            get secure_url
-            expect(response.status).to eq(404)
-          end
+        it "returns a 403" do
+          sign_in(user)
+          get secure_url
+          expect(response.status).to eq(403)
         end
       end
 
-      context "when secure uploads is disabled" do
-        before { SiteSetting.secure_uploads = false }
+      context "when login is required and user is not signed in" do
+        let(:post) { Fabricate(:post) }
 
-        context "if the upload is secure false, meaning the ACL is probably public" do
-          before { upload.update(secure: false) }
-
-          it "redirects to the regular show route" do
-            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads")
-            sign_in(user)
-            get secure_url
-
-            expect(response.status).to eq(302)
-            expect(response.redirect_url).to eq(Discourse.store.cdn_url(upload.url))
-          end
+        before do
+          SiteSetting.login_required = true
+          upload.update(access_control_post_id: post.id)
         end
 
-        context "if the upload is secure true, meaning the ACL is probably private" do
-          before { upload.update(secure: true) }
+        it "returns a 403" do
+          get secure_url
+          expect(response.status).to eq(403)
+        end
+      end
 
-          it "redirects to the presigned URL" do
-            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads")
-            sign_in(user)
-            get secure_url
+      context "when the prevent_anons_from_downloading_files setting is enabled and the user is anon" do
+        before { SiteSetting.prevent_anons_from_downloading_files = true }
 
-            expect(response.status).to eq(302)
-            expect(response.redirect_url).to match("Amz-Expires")
-          end
+        it "returns a 404" do
+          delete "/session/#{user.username}.json"
+          get secure_url
+          expect(response.status).to eq(404)
+        end
+      end
+    end
+
+    context "when secure uploads is disabled" do
+      before { SiteSetting.secure_uploads = false }
+
+      context "if the upload is secure false, meaning the ACL is probably public" do
+        before { upload.update(secure: false) }
+
+        it "redirects to the regular show route" do
+          secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads")
+          sign_in(user)
+          get secure_url
+
+          expect(response.status).to eq(302)
+          expect(response.redirect_url).to eq(Discourse.store.cdn_url(upload.url))
+        end
+      end
+
+      context "if the upload is secure true, meaning the ACL is probably private" do
+        before { upload.update(secure: true) }
+
+        it "redirects to the presigned URL" do
+          secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads")
+          sign_in(user)
+          get secure_url
+
+          expect(response.status).to eq(302)
+          expect(response.redirect_url).to match("Amz-Expires")
         end
       end
     end

@@ -219,6 +219,8 @@ RSpec.describe UrlHelper do
       UrlHelper.cook_url(url, secure: secure)
     end
 
+    after { Rails.configuration.action_controller.asset_host = nil }
+
     context "when the upload for the url is secure" do
       let(:secure) { true }
 
@@ -248,8 +250,6 @@ RSpec.describe UrlHelper do
         )
       end
     end
-
-    after { Rails.configuration.action_controller.asset_host = nil }
   end
 
   describe "rails_route_from_url" do

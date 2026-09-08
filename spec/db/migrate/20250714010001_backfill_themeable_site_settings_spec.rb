@@ -7,9 +7,12 @@ RSpec.describe BackfillThemeableSiteSettings do
   fab!(:theme_2, :theme)
   fab!(:theme_3) { Fabricate(:theme, component: true) }
 
-  before do
-    @original_verbose = ActiveRecord::Migration.verbose
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
   end
 
   after { ActiveRecord::Migration.verbose = @original_verbose }

@@ -41,6 +41,18 @@ RSpec.describe S3Inventory do
   end
 
   describe "verifying uploads" do
+    let(:upload_1) { Fabricate(:upload, etag: "ETag", updated_at: 1.day.ago) }
+    let(:upload_2) { Fabricate(:upload, etag: "ETag2", updated_at: Time.now) }
+    let(:no_etag) { Fabricate(:upload, updated_at: 2.days.ago) }
+    let(:confirmed_missing_upload) do
+      Fabricate(
+        :upload,
+        etag: "ETag3",
+        updated_at: 2.days.ago,
+        verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
+      )
+    end
+
     before do
       freeze_time
 
@@ -59,17 +71,10 @@ RSpec.describe S3Inventory do
         )
       end
 
-      @upload_1 = Fabricate(:upload, etag: "ETag", updated_at: 1.day.ago)
-      @upload_2 = Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
-      @no_etag = Fabricate(:upload, updated_at: 2.days.ago)
-
-      @upload_3 =
-        Fabricate(
-          :upload,
-          etag: "ETag3",
-          updated_at: 2.days.ago,
-          verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
-        )
+      upload_1
+      upload_2
+      no_etag
+      confirmed_missing_upload
 
       inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
       inventory.expects(:inventory_date).times(2).returns(Time.now)
@@ -79,7 +84,7 @@ RSpec.describe S3Inventory do
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
       expect(output).to eq(
-        "#{system_themes_screenshots}\n#{@upload_1.url}\n#{@no_etag.url}\n6 of 10 uploads are missing\n",
+        "#{system_themes_screenshots}\n#{upload_1.url}\n#{no_etag.url}\n6 of 10 uploads are missing\n",
       )
       expect(Discourse.stats.get("missing_s3_uploads")).to eq(6)
     end
@@ -97,8 +102,8 @@ RSpec.describe S3Inventory do
         #{system_themes_screenshots}
         #{upload_with_differing_tag_1.url} has different etag
         #{upload_with_differing_tag_2.url} has different etag
-        #{@upload_1.url}
-        #{@no_etag.url}
+        #{upload_1.url}
+        #{no_etag.url}
         8 of 10 uploads are missing
         2 of these are caused by differing etags
         Null the etag column and re-run for automatic backfill
@@ -128,15 +133,15 @@ RSpec.describe S3Inventory do
     end
 
     it "does not affect the updated_at date of uploads" do
-      upload_1_updated = @upload_1.updated_at
-      upload_2_updated = @upload_2.updated_at
-      no_etag_updated = @no_etag.updated_at
+      upload_1_updated = upload_1.updated_at
+      upload_2_updated = upload_2.updated_at
+      no_etag_updated = no_etag.updated_at
 
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
-      expect(@upload_1.reload.updated_at).to eq_time(upload_1_updated)
-      expect(@upload_2.reload.updated_at).to eq_time(upload_2_updated)
-      expect(@no_etag.reload.updated_at).to eq_time(no_etag_updated)
+      expect(upload_1.reload.updated_at).to eq_time(upload_1_updated)
+      expect(upload_2.reload.updated_at).to eq_time(upload_2_updated)
+      expect(no_etag.reload.updated_at).to eq_time(no_etag_updated)
     end
   end
 

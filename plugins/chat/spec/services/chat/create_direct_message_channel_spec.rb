@@ -43,145 +43,143 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     let(:params) { { target_usernames:, name: } }
     let(:dependencies) { { guardian: } }
 
-    context "when all steps pass" do
-      it { is_expected.to run_successfully }
+    it { is_expected.to run_successfully }
 
-      it "updates user count" do
-        expect(result.channel.user_count).to eq(3) # current user + user_1 + user_2
-      end
+    it "updates user count" do
+      expect(result.channel.user_count).to eq(3) # current user + user_1 + user_2
+    end
 
-      it "creates the channel" do
-        expect { result }.to change { Chat::Channel.count }
-        expect(result.channel.chatable).to have_attributes(
-          user_ids: match_array([current_user.id, user_1.id, user_2.id]),
+    it "creates the channel" do
+      expect { result }.to change { Chat::Channel.count }
+      expect(result.channel.chatable).to have_attributes(
+        user_ids: match_array([current_user.id, user_1.id, user_2.id]),
+      )
+    end
+
+    it "makes all target users a member of the channel and sets new memberships to following" do
+      expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3)
+      expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to match_array(
+        [current_user.id, user_1.id, user_2.id],
+      )
+      result.channel.user_chat_channel_memberships.each do |membership|
+        should_follow = membership.user_id == current_user.id
+        expect(membership).to have_attributes(
+          following: should_follow,
+          muted: false,
+          notification_level: "always",
         )
       end
+    end
 
-      it "makes all target users a member of the channel and sets new memberships to following" do
+    it "includes users from target groups" do
+      params.delete(:target_usernames)
+      params.merge!(target_groups: [group.name])
+
+      expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to include(user_3.id)
+    end
+
+    it "combines target_usernames and target_groups" do
+      params.merge!(target_groups: [group.name])
+
+      expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to contain_exactly(
+        current_user.id,
+        user_1.id,
+        user_2.id,
+        user_3.id,
+      )
+    end
+
+    context "with user count validation" do
+      before { SiteSetting.chat_max_direct_message_users = 4 }
+
+      it "succeeds when target_usernames does not exceed limit" do
         expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3)
-        expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to match_array(
-          [current_user.id, user_1.id, user_2.id],
-        )
-        result.channel.user_chat_channel_memberships.each do |membership|
-          should_follow = membership.user_id == current_user.id
-          expect(membership).to have_attributes(
-            following: should_follow,
-            muted: false,
-            notification_level: "always",
-          )
-        end
+        expect(result).to be_a_success
       end
 
-      it "includes users from target groups" do
-        params.delete(:target_usernames)
+      it "succeeds when target_usernames and target_groups does not exceed limit" do
         params.merge!(target_groups: [group.name])
 
-        expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to include(user_3.id)
+        expect { result }.to change { Chat::UserChatChannelMembership.count }.by(4)
+        expect(result).to be_a_success
       end
 
-      it "combines target_usernames and target_groups" do
-        params.merge!(target_groups: [group.name])
+      it "succeeds when target_usernames is equal to max direct users" do
+        SiteSetting.chat_max_direct_message_users = 2
 
-        expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to contain_exactly(
-          current_user.id,
-          user_1.id,
-          user_2.id,
-          user_3.id,
-        )
+        expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3) # current user + user_1 + user_2
+        expect(result).to be_a_success
       end
+    end
 
-      context "with user count validation" do
-        before { SiteSetting.chat_max_direct_message_users = 4 }
-
-        it "succeeds when target_usernames does not exceed limit" do
-          expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3)
-          expect(result).to be_a_success
-        end
-
-        it "succeeds when target_usernames and target_groups does not exceed limit" do
-          params.merge!(target_groups: [group.name])
-
-          expect { result }.to change { Chat::UserChatChannelMembership.count }.by(4)
-          expect(result).to be_a_success
-        end
-
-        it "succeeds when target_usernames is equal to max direct users" do
-          SiteSetting.chat_max_direct_message_users = 2
-
-          expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3) # current user + user_1 + user_2
-          expect(result).to be_a_success
-        end
-      end
-
-      context "when there is an existing direct message channel for the target users" do
-        context "when a name has been given" do
-          let(:target_usernames) { [user_1.username] }
-          let(:name) { "Monkey Island" }
-
-          it "creates a second channel" do
-            described_class.call(params:, **dependencies)
-
-            expect { result }.to change { Chat::Channel.count }.and change {
-                    Chat::DirectMessage.count
-                  }
-          end
-        end
-
-        context "when the channel has more than one user" do
-          let(:target_usernames) { [user_1.username, user_2.username] }
-
-          it "creates a second channel" do
-            described_class.call(params:, **dependencies)
-
-            expect { result }.to change { Chat::Channel.count }.and change {
-                    Chat::DirectMessage.count
-                  }
-          end
-        end
-
-        context "when the channel has one user and no name" do
-          let(:target_usernames) { [user_1.username] }
-          let(:existing_channel) { described_class.call(params:, **dependencies).channel }
-
-          it "reuses the existing channel" do
-            expect(result.channel.id).to eq(existing_channel.id)
-          end
-
-          it "respects membership settings for existing users" do
-            mention_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:mention]
-
-            membership =
-              Chat::UserChatChannelMembership.find_by(
-                user_id: user_1.id,
-                chat_channel_id: existing_channel.id,
-              )
-
-            membership.update!(muted: true, notification_level: mention_level)
-
-            expect { result }.not_to change { membership.reload.attributes }
-          end
-        end
-
-        context "when theres also a group channel with same users" do
-          let(:target_usernames) { [user_1.username] }
-
-          it "returns the non group existing channel" do
-            group_channel =
-              described_class.call(params: params.merge(name: "cats"), **dependencies).channel
-            channel = described_class.call(params:, **dependencies).channel
-
-            expect(result.channel.id).to_not eq(group_channel.id)
-            expect(result.channel.id).to eq(channel.id)
-          end
-        end
-      end
-
-      context "when a name is given" do
+    context "when there is an existing direct message channel for the target users" do
+      context "when a name has been given" do
+        let(:target_usernames) { [user_1.username] }
         let(:name) { "Monkey Island" }
 
-        it "sets it as the channel name" do
-          expect(result.channel.name).to eq(name)
+        it "creates a second channel" do
+          described_class.call(params:, **dependencies)
+
+          expect { result }.to change { Chat::Channel.count }.and change {
+                  Chat::DirectMessage.count
+                }
         end
+      end
+
+      context "when the channel has more than one user" do
+        let(:target_usernames) { [user_1.username, user_2.username] }
+
+        it "creates a second channel" do
+          described_class.call(params:, **dependencies)
+
+          expect { result }.to change { Chat::Channel.count }.and change {
+                  Chat::DirectMessage.count
+                }
+        end
+      end
+
+      context "when the channel has one user and no name" do
+        let(:target_usernames) { [user_1.username] }
+        let(:existing_channel) { described_class.call(params:, **dependencies).channel }
+
+        it "reuses the existing channel" do
+          expect(result.channel.id).to eq(existing_channel.id)
+        end
+
+        it "respects membership settings for existing users" do
+          mention_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:mention]
+
+          membership =
+            Chat::UserChatChannelMembership.find_by(
+              user_id: user_1.id,
+              chat_channel_id: existing_channel.id,
+            )
+
+          membership.update!(muted: true, notification_level: mention_level)
+
+          expect { result }.not_to change { membership.reload.attributes }
+        end
+      end
+
+      context "when theres also a group channel with same users" do
+        let(:target_usernames) { [user_1.username] }
+
+        it "returns the non group existing channel" do
+          group_channel =
+            described_class.call(params: params.merge(name: "cats"), **dependencies).channel
+          channel = described_class.call(params:, **dependencies).channel
+
+          expect(result.channel.id).to_not eq(group_channel.id)
+          expect(result.channel.id).to eq(channel.id)
+        end
+      end
+    end
+
+    context "when a name is given" do
+      let(:name) { "Monkey Island" }
+
+      it "sets it as the channel name" do
+        expect(result.channel.name).to eq(name)
       end
     end
 

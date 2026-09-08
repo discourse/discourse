@@ -67,7 +67,7 @@ RSpec.describe CurrentUserSerializer do
   describe "#muted_tag" do
     fab!(:tag)
 
-    let!(:tag_user) do
+    before do
       TagUser.create!(
         user_id: user.id,
         notification_level: TagUser.notification_levels[:muted],

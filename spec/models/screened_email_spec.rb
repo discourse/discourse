@@ -93,7 +93,7 @@ RSpec.describe ScreenedEmail do
     end
 
     context "when action_type is :block" do
-      let!(:screened_email) do
+      let(:screened_email) do
         Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:block])
       end
 
@@ -103,7 +103,7 @@ RSpec.describe ScreenedEmail do
     end
 
     context "when action_type is :do_nothing" do
-      let!(:screened_email) do
+      let(:screened_email) do
         Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:do_nothing])
       end
 

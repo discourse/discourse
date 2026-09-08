@@ -10,21 +10,19 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
   let(:context) { { "$trigger" => { "topic_id" => 42, "tags" => %w[bug help] } } }
 
-  before do
-    @resolvers_under_test = []
-    @sandboxes_under_test = []
-  end
+  let(:resolvers_under_test) { [] }
+  let(:sandboxes_under_test) { [] }
 
   after do
-    @resolvers_under_test.each(&:dispose)
-    @sandboxes_under_test.each(&:dispose)
+    resolvers_under_test.each(&:dispose)
+    sandboxes_under_test.each(&:dispose)
   end
 
   def build_resolver(ctx, **kwargs)
     sandbox = DiscourseWorkflows::JsSandbox.new(ctx)
-    @sandboxes_under_test << sandbox
+    sandboxes_under_test << sandbox
     resolver = described_class.new(ctx, sandbox: sandbox, **kwargs)
-    @resolvers_under_test << resolver
+    resolvers_under_test << resolver
     resolver
   end
 

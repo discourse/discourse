@@ -13,8 +13,8 @@ describe DiscoursePolicy do
         policy_email_frequency: UserOption.policy_email_frequencies[:when_away],
       )
 
-      @plugin = Plugin::Instance.new
-      @plugin.add_to_serializer(:user_option, :policy_email_frequency) do
+      plugin = Plugin::Instance.new
+      plugin.add_to_serializer(:user_option, :policy_email_frequency) do
         object.policy_email_frequency
       end
 

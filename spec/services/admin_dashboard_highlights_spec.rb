@@ -64,18 +64,21 @@ describe AdminDashboardHighlights do
     end
 
     describe "plugin-registered KPIs" do
-      let(:kpi_entry) { { type: :extra_kpi, report: "signups", enabled: -> { @kpi_enabled } } }
+      let(:kpi_state) { { enabled: false } }
+      let(:kpi_entry) do
+        { type: :extra_kpi, report: "signups", enabled: -> { kpi_state[:enabled] } }
+      end
 
       before { DiscoursePluginRegistry.stubs(:admin_dashboard_highlight_kpis).returns([kpi_entry]) }
 
       it "includes a registered KPI when its enabled proc returns true" do
-        @kpi_enabled = true
+        kpi_state[:enabled] = true
         result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
         expect(result[:kpis].map { |k| k[:type] }).to include(:extra_kpi)
       end
 
       it "omits a registered KPI when its enabled proc returns false" do
-        @kpi_enabled = false
+        kpi_state[:enabled] = false
         result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
         expect(result[:kpis].map { |k| k[:type] }).not_to include(:extra_kpi)
       end
@@ -203,15 +206,15 @@ describe AdminDashboardHighlights do
       end
 
       it "re-evaluates plugin enabled procs on every build (no outer cache)" do
-        @kpi_enabled = true
+        kpi_state = { enabled: true }
         DiscoursePluginRegistry.stubs(:admin_dashboard_highlight_kpis).returns(
-          [{ type: :toggleable_kpi, report: "signups", enabled: -> { @kpi_enabled } }],
+          [{ type: :toggleable_kpi, report: "signups", enabled: -> { kpi_state[:enabled] } }],
         )
 
         first = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
         expect(first[:kpis].map { |k| k[:type] }).to include(:toggleable_kpi)
 
-        @kpi_enabled = false
+        kpi_state[:enabled] = false
         second = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
         expect(second[:kpis].map { |k| k[:type] }).not_to include(:toggleable_kpi)
       end

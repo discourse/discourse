@@ -117,52 +117,50 @@ RSpec.describe AccessControlListManager do
       end
     end
 
-    describe "mandatory ACL" do
-      context "when the target does not have mandatory ACLs" do
-        it "does not modify the flattened ACL" do
-          result
+    context "when the target does not have mandatory ACLs" do
+      it "does not modify the flattened ACL" do
+        result
 
-          expect(AccessControlList.where(target: target).pluck(:permission)).to contain_exactly(
-            "edit",
-            "view",
-          )
-        end
+        expect(AccessControlList.where(target: target).pluck(:permission)).to contain_exactly(
+          "edit",
+          "view",
+        )
+      end
+    end
+
+    context "when the target has mandatory ACLs" do
+      before do
+        AclTargetSpecTarget.stubs(:mandatory_acl).returns(
+          [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }],
+        )
       end
 
-      context "when the target has mandatory ACLs" do
-        before do
-          AclTargetSpecTarget.stubs(:mandatory_acl).returns(
-            [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }],
-          )
+      it "injects the mandatory ACL into the list of ACLs to be created" do
+        result
+
+        expect(AccessControlList.where(target: target).pluck(:permission)).to contain_exactly(
+          "view",
+          "edit",
+          "manage",
+        )
+
+        manage_acl = AccessControlList.find_by(target: target, permission: "manage")
+        expect(manage_acl.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
+      end
+
+      context "when the mandatory ACL is already included in the flattened ACL" do
+        let(:flattened_acl) do
+          [
+            { type: "group", id: group.id, permission: "view" },
+            { type: "group", id: other_group.id, permission: "edit" },
+            { type: "group", id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+          ]
         end
 
-        it "injects the mandatory ACL into the list of ACLs to be created" do
+        it "does not create duplicate ACLs" do
           result
 
-          expect(AccessControlList.where(target: target).pluck(:permission)).to contain_exactly(
-            "view",
-            "edit",
-            "manage",
-          )
-
-          manage_acl = AccessControlList.find_by(target: target, permission: "manage")
-          expect(manage_acl.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
-        end
-
-        context "when the mandatory ACL is already included in the flattened ACL" do
-          let(:flattened_acl) do
-            [
-              { type: "group", id: group.id, permission: "view" },
-              { type: "group", id: other_group.id, permission: "edit" },
-              { type: "group", id: Group::AUTO_GROUPS[:admins], permission: "manage" },
-            ]
-          end
-
-          it "does not create duplicate ACLs" do
-            result
-
-            expect(AccessControlList.where(target: target, permission: "manage").count).to eq(1)
-          end
+          expect(AccessControlList.where(target: target, permission: "manage").count).to eq(1)
         end
       end
     end

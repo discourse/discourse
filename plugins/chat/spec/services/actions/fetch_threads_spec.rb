@@ -102,7 +102,8 @@ RSpec.describe Chat::Action::FetchThreads do
 
   context "when there are threads in other channels" do
     let(:thread_4) { Fabricate(:chat_thread) }
-    let!(:message) do
+
+    before do
       Fabricate(
         :chat_message,
         user: current_user,

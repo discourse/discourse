@@ -116,7 +116,7 @@ RSpec.describe "User menu notifications | sidebar" do
       end
 
       context "when @username" do
-        let!(:message) do
+        let(:message) do
           Fabricate(
             :chat_message,
             chat_channel: channel_1,
@@ -127,6 +127,7 @@ RSpec.describe "User menu notifications | sidebar" do
         end
 
         it "shows a mention notification" do
+          message
           visit("/discuss")
 
           find(".header-dropdown-toggle.current-user").click
@@ -141,8 +142,8 @@ RSpec.describe "User menu notifications | sidebar" do
           )
         end
 
-        context "when the message is in a thread" do
-          let!(:message) do
+        it "shows a mention notification when the message is in a thread" do
+          threaded_message =
             Fabricate(
               :chat_message,
               thread: Fabricate(:chat_thread, channel: channel_1),
@@ -150,22 +151,19 @@ RSpec.describe "User menu notifications | sidebar" do
               message: "this is fine @#{current_user.username}",
               use_service: true,
             )
+          visit("/discuss")
+
+          find(".header-dropdown-toggle.current-user").click
+          within("#user-menu-button-chat-notifications") do |panel|
+            expect(panel).to have_content(1)
+            panel.click
           end
 
-          it "shows a mention notification when the message is in a thread" do
-            visit("/discuss")
-
-            find(".header-dropdown-toggle.current-user").click
-            within("#user-menu-button-chat-notifications") do |panel|
-              expect(panel).to have_content(1)
-              panel.click
-            end
-
-            expect(find("#quick-access-chat-notifications")).to have_link(
-              I18n.t("js.notifications.popup.chat_mention.direct", channel: channel_1.name),
-              href: "/discuss/chat/c/#{channel_1.slug}/#{channel_1.id}/t/#{message.thread_id}",
-            )
-          end
+          expect(find("#quick-access-chat-notifications")).to have_link(
+            I18n.t("js.notifications.popup.chat_mention.direct", channel: channel_1.name),
+            href:
+              "/discuss/chat/c/#{channel_1.slug}/#{channel_1.id}/t/#{threaded_message.thread_id}",
+          )
         end
       end
 

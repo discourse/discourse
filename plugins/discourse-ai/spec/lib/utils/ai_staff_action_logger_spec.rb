@@ -408,10 +408,7 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
     end
 
     context "with LlmModel quotas" do
-      before do
-        # Create a quota for the model
-        @quota = Fabricate(:llm_quota, llm_model: llm_model, group: group, max_tokens: 1000)
-      end
+      fab!(:quota) { Fabricate(:llm_quota, llm_model: llm_model, group: group, max_tokens: 1000) }
 
       it "handles quota changes in log_llm_model_creation" do
         # Setup
@@ -462,7 +459,7 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
         initial_quotas = llm_model.llm_quotas.map(&:attributes)
 
         # Update the quota
-        @quota.update!(max_tokens: 2000)
+        quota.update!(max_tokens: 2000)
         current_quotas = llm_model.llm_quotas.reload.map(&:attributes)
 
         # Setup

@@ -6,31 +6,33 @@ RSpec.describe CommonPasswords do
   end
 
   describe "#common_password?" do
-    subject(:common_password) { described_class.common_password? @password }
+    subject(:common_password) { described_class.common_password?(password_state[:value]) }
+
+    let(:password_state) { {} }
 
     before { described_class.stubs(:redis).returns(stub_everything) }
 
     it "returns false if password isn't in the common passwords list" do
       described_class.stubs(:password_list).returns(stub_everything(include?: false))
-      @password = "uncommonPassword"
+      password_state[:value] = "uncommonPassword"
       expect(common_password).to eq(false)
     end
 
     it "returns false if password is nil" do
       described_class.expects(:password_list).never
-      @password = nil
+      password_state[:value] = nil
       expect(common_password).to eq(false)
     end
 
     it "returns false if password is blank" do
       described_class.expects(:password_list).never
-      @password = ""
+      password_state[:value] = ""
       expect(common_password).to eq(false)
     end
 
     it "returns true if password is in the common passwords list" do
       described_class.stubs(:password_list).returns(stub_everything(include?: true))
-      @password = "password"
+      password_state[:value] = "password"
       expect(common_password).to eq(true)
     end
   end

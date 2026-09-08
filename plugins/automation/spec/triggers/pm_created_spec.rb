@@ -212,24 +212,19 @@ describe "PMCreated" do
           expect(list[0]["kind"]).to eq("pm_created")
         end
 
-        context "when ignore_automated is true" do
-          before do
-            automation.upsert_field!(
-              "ignore_automated",
-              "boolean",
-              { value: true },
-              target: "trigger",
-            )
-          end
+        it "doesn't fire the trigger when ignore_automated is true" do
+          automation.upsert_field!(
+            "ignore_automated",
+            "boolean",
+            { value: true },
+            target: "trigger",
+          )
+          list =
+            capture_contexts do
+              Email::Receiver.new(email("email_to_group_email_username_auto_generated")).process!
+            end
 
-          it "doesn't fire the trigger" do
-            list =
-              capture_contexts do
-                Email::Receiver.new(email("email_to_group_email_username_auto_generated")).process!
-              end
-
-            expect(list).to be_blank
-          end
+          expect(list).to be_blank
         end
       end
     end

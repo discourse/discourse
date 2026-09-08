@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe "SMTP Settings Integration" do
+  let(:original_smtp_settings) { ActionMailer::Base.smtp_settings }
+  let(:original_delivery_method) { ActionMailer::Base.delivery_method }
+
   before do
-    @original_action_mailer_smtp_settings = ActionMailer::Base.smtp_settings
-    @original_action_mailer_delivery_method = ActionMailer::Base.delivery_method
+    original_smtp_settings
+    original_delivery_method
     ActionMailer::Base.delivery_method = :smtp
   end
 
   after do
-    ActionMailer::Base.smtp_settings = @original_action_mailer_smtp_settings
-    ActionMailer::Base.delivery_method = @original_action_mailer_delivery_method
+    ActionMailer::Base.smtp_settings = original_smtp_settings
+    ActionMailer::Base.delivery_method = original_delivery_method
   end
 
   it "disables starttls_auto when TLS is enabled" do

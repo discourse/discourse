@@ -90,13 +90,10 @@ RSpec.describe Chat::Api::ChannelThreadsController do
           expect(response.status).to eq(404)
         end
 
-        context "when the current user is a moderator" do
-          before { current_user.update!(moderator: true) }
-
-          it "returns 200" do
-            get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
-            expect(response.status).to eq(200)
-          end
+        it "returns 200 when the current user is a moderator" do
+          current_user.update!(moderator: true)
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+          expect(response.status).to eq(200)
         end
       end
 

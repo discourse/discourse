@@ -213,7 +213,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
     before { contract.valid? }
 
-    it do
+    it "validates the page size" do
       is_expected.to validate_numericality_of(:size)
         .only_integer
         .is_greater_than(0)
@@ -275,7 +275,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
     before { contract.valid? }
 
-    it do
+    it "validates the anchor's before size" do
       is_expected.to validate_numericality_of(:before_size)
         .only_integer
         .is_greater_than_or_equal_to(0)

@@ -9,9 +9,11 @@ RSpec.describe ImportScripts::Base do
   end
 
   class MockSpecImporter < ImportScripts::Base
+    attr_accessor :import_data
+
     def initialize(data)
       super()
-      @import_data = data
+      self.import_data = data
     end
 
     def execute
@@ -21,12 +23,12 @@ RSpec.describe ImportScripts::Base do
     end
 
     def import_users
-      users = @import_data[:users]
+      users = import_data[:users]
       create_users(users) { |row| { email: row[:email], id: row[:id] } }
     end
 
     def import_posts
-      posts = @import_data[:posts]
+      posts = import_data[:posts]
       create_posts(posts) do |row|
         user_id = @lookup.user_id_from_imported_user_id(row[:user_id]) || -1
         { user_id: user_id, raw: row[:raw], id: row[:id], title: "Test topic for post #{row[:id]}" }
@@ -34,7 +36,7 @@ RSpec.describe ImportScripts::Base do
     end
 
     def import_bookmarks
-      bookmarks = @import_data[:bookmarks]
+      bookmarks = import_data[:bookmarks]
       create_bookmarks(bookmarks) { |row| { post_id: row[:post_id], user_id: row[:user_id] } }
     end
   end

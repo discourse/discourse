@@ -229,16 +229,12 @@ RSpec.describe Email::AuthenticationResults do
       context "with no email_in_authserv_id set" do
         before { SiteSetting.email_in_authserv_id = "" }
 
-        context "with a fail" do
-          let(:headers) { "foobar.com; dmarc=fail" }
-
-          include_examples "is verdict", :gray
+        it "returns gray for a fail" do
+          expect(described_class.new("foobar.com; dmarc=fail").verdict).to eq(:gray)
         end
 
-        context "with a pass" do
-          let(:headers) { "foobar.com; dmarc=pass" }
-
-          include_examples "is verdict", :gray
+        it "returns gray for a pass" do
+          expect(described_class.new("foobar.com; dmarc=pass").verdict).to eq(:gray)
         end
       end
     end
@@ -265,10 +261,9 @@ RSpec.describe Email::AuthenticationResults do
       context "with no email_in_authserv_id set" do
         before { SiteSetting.email_in_authserv_id = "" }
 
-        context "with an error, and a pass" do
-          let(:headers) { ["foobar.com; dmarc=foobar", "foobar.com; dmarc=pass"] }
-
-          include_examples "is verdict", :gray
+        it "returns gray for an error and a pass" do
+          headers = ["foobar.com; dmarc=foobar", "foobar.com; dmarc=pass"]
+          expect(described_class.new(headers).verdict).to eq(:gray)
         end
       end
     end

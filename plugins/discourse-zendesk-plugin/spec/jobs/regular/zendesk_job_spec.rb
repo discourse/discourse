@@ -53,46 +53,58 @@ RSpec.describe Jobs::ZendeskJob do
     context "when topic has existing zendesk ticket" do
       let(:ticket_id) { "1234" }
 
-      context "when category is NOT in autogenerate list" do
+      context "when category is not in the autogenerate list and author-only posting is disabled" do
         before do
           Post.expects(:find_by).with(id: post.id).returns(post).once
           job.expects(:create_ticket).never
         end
 
-        context "with zendesk_job_push_only_author_posts disabled" do
-          it "adds the comment" do
-            job.expects(:add_comment).with(post, ticket_id).once
-            execute
-          end
+        it "adds a comment from the topic author" do
+          job.expects(:add_comment).with(post, ticket_id).once
+          execute
+        end
+      end
 
-          context "when post not from topic author" do
-            let(:post_user) { other_user }
+      context "when author-only posting is disabled and the post is from another user" do
+        let(:post_user) { other_user }
 
-            it "adds the comment" do
-              job.expects(:add_comment).with(post, ticket_id).once
-              execute
-            end
-          end
+        before do
+          Post.expects(:find_by).with(id: post.id).returns(post).once
+          job.expects(:create_ticket).never
         end
 
-        context "with zendesk_job_push_only_author_posts enabled" do
-          let(:zendesk_job_push_only_author_posts) { true }
+        it "adds the comment" do
+          job.expects(:add_comment).with(post, ticket_id).once
+          execute
+        end
+      end
 
-          context "with post from topic author" do
-            it "adds the comment" do
-              job.expects(:add_comment).with(post, ticket_id).once
-              execute
-            end
-          end
+      context "when author-only posting is enabled and the post is from the topic author" do
+        let(:zendesk_job_push_only_author_posts) { true }
 
-          context "with post not from topic author" do
-            let(:post_user) { other_user }
+        before do
+          Post.expects(:find_by).with(id: post.id).returns(post).once
+          job.expects(:create_ticket).never
+        end
 
-            it "does not add the comment" do
-              job.expects(:add_comment).never
-              execute
-            end
-          end
+        it "adds the comment" do
+          job.expects(:add_comment).with(post, ticket_id).once
+          execute
+        end
+      end
+
+      context "when author-only posting is enabled and the post is from another user" do
+        let(:zendesk_job_push_only_author_posts) { true }
+        let(:post_user) { other_user }
+
+        before do
+          Post.expects(:find_by).with(id: post.id).returns(post).once
+          job.expects(:create_ticket).never
+        end
+
+        it "does not add the comment" do
+          job.expects(:add_comment).never
+          execute
         end
       end
 

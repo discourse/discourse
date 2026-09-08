@@ -31,7 +31,7 @@ RSpec.describe ProblemCheck::EmailSendingFailures do
         )
       end
 
-      it do
+      it "reports persistent email failures" do
         expect(check).to(
           have_a_problem.with_priority("low").with_message(
             "Email sending has failed once in the past 24 hours. Check the <a href='/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details.",

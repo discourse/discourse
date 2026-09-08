@@ -254,7 +254,7 @@ plugin_checksums:
   discourse-captcha: fd538c1338062354276ccfda4cbafd55
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
   discourse-data-explorer: fb71ab79dbe07af481ba147ea526406f
-  discourse-events: 6a305b06fa9121f17245cefbc726ce20
+  discourse-events: 29f470be77cc937093576f548b7d0cb4
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 8a1835520fbf8f7f5d1ef8a25d737e20
@@ -269,7 +269,7 @@ plugin_checksums:
   discourse-reactions: e9de82d2ebb48eb434be2b646c7fec26
   discourse-rewind: 1e0f2acf6e8409f2d2f011e14405fa06
   discourse-rss-polling: 526db84c3d2ade0fa03497031fea2333
-  discourse-solved: 67743e14f4c5c2fae4487193c374e429
+  discourse-solved: 795e49ad397ee639af63bfb993cb07c3
   discourse-subscriptions: 05eb12877a6a842a290a98fa0e70d462
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 5464e186402b9589d71f338c704a7d21

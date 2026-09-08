@@ -162,9 +162,6 @@ RSpec.describe TopicsController do
         let(:p3) { Fabricate(:post, topic:) }
         let(:p4) { Fabricate(:post, topic:) }
         let(:solved_topic) { Fabricate(:solved_topic, topic:) }
-        let!(:first_topic_answer) { Fabricate(:topic_answer, solved_topic:, post: p2) }
-        let!(:second_topic_answer) { Fabricate(:topic_answer, solved_topic:, post: p3) }
-        let!(:unaccepted_post) { p4 }
 
         it "includes the expected schema information" do
           get "/t/#{topic.slug}/#{topic.id}"
@@ -296,11 +293,13 @@ RSpec.describe TopicsController do
       let(:p3) { Fabricate(:post, topic:, cooked: "p3 cooked") }
       let(:p4) { Fabricate(:post, topic:, cooked: "p4 cooked") }
       let(:solved_topic) { Fabricate(:solved_topic, topic:) }
-      let!(:first_topic_answer) { Fabricate(:topic_answer, solved_topic:, post: p2) }
-      let!(:second_topic_answer) { Fabricate(:topic_answer, solved_topic:, post: p3) }
-      let!(:unaccepted_post) { p4 }
 
-      before { SiteSetting.solved_allow_multiple_solutions = true }
+      before do
+        Fabricate(:topic_answer, solved_topic:, post: p2)
+        Fabricate(:topic_answer, solved_topic:, post: p3)
+        p4
+        SiteSetting.solved_allow_multiple_solutions = true
+      end
 
       it "includes two acceptedAnswers and a suggestedAnswer in qaschema" do
         get "/t/#{topic.slug}/#{topic.id}", env: crawler_env

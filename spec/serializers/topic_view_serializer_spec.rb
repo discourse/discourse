@@ -509,23 +509,21 @@ RSpec.describe TopicViewSerializer do
         end
       end
 
-      context "when staff" do
-        it "returns the published page" do
-          json = serialize_topic(topic, admin)
-          expect(json[:published_page]).to be_present
-          expect(json[:published_page][:slug]).to eq(published_page.slug)
+      it "returns the published page to staff" do
+        json = serialize_topic(topic, admin)
+        expect(json[:published_page]).to be_present
+        expect(json[:published_page][:slug]).to eq(published_page.slug)
+      end
+
+      context "when staff uses secure uploads" do
+        before do
+          setup_s3
+          SiteSetting.secure_uploads = true
         end
 
-        context "when secure uploads is enabled" do
-          before do
-            setup_s3
-            SiteSetting.secure_uploads = true
-          end
-
-          it "doesn't return the published page" do
-            json = serialize_topic(topic, admin)
-            expect(json[:published_page]).to be_blank
-          end
+        it "doesn't return the published page" do
+          json = serialize_topic(topic, admin)
+          expect(json[:published_page]).to be_blank
         end
       end
     end

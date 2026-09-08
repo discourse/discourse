@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe OptimizedVideo do
-  before(:each) do
+  before do
     # Add video extensions to authorized extensions
     extensions = SiteSetting.authorized_extensions.split("|")
     SiteSetting.authorized_extensions = (extensions | %w[mp4 mov avi mkv]).join("|")

@@ -155,74 +155,74 @@ RSpec.describe UserOption do
       expect(user.user_option.redirected_to_top).to eq(nil)
     end
 
-    context "when `SiteSetting.redirect_users_to_top_page` is enabled" do
-      before { SiteSetting.redirect_users_to_top_page = true }
+    it "has no reason when top is not in the `SiteSetting.top_menu`" do
+      SiteSetting.redirect_users_to_top_page = true
+      SiteSetting.top_menu = "latest"
+      expect(user.user_option.redirected_to_top).to eq(nil)
+    end
 
-      it "has no reason when top is absent from the top menu" do
-        SiteSetting.top_menu = "latest"
+    context "when top is in the `SiteSetting.top_menu`" do
+      before do
+        SiteSetting.redirect_users_to_top_page = true
+        SiteSetting.top_menu = "latest|top"
+      end
+
+      it "has no reason when there are too few topics" do
+        SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
         expect(user.user_option.redirected_to_top).to eq(nil)
       end
 
-      context "when top is in the `SiteSetting.top_menu`" do
-        before { SiteSetting.top_menu = "latest|top" }
-
-        it "has no reason when there are too few topics" do
-          SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
-          expect(user.user_option.redirected_to_top).to eq(nil)
+      describe "a new user when there are enough topics" do
+        before do
+          SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly)
+          user.stubs(:trust_level).returns(0)
+          user.stubs(:last_seen_at).returns(5.minutes.ago)
         end
 
-        context "when there are enough topics" do
-          before { SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly) }
+        after { Discourse.redis.flushdb }
 
-          describe "a new user" do
-            before do
-              user.stubs(:trust_level).returns(0)
-              user.stubs(:last_seen_at).returns(5.minutes.ago)
-            end
+        it "has a reason for the first visit" do
+          freeze_time do
+            delay = SiteSetting.active_user_rate_limit_secs / 2
 
-            after { Discourse.redis.flushdb }
-
-            it "has a reason for the first visit" do
-              freeze_time do
-                delay = SiteSetting.active_user_rate_limit_secs / 2
-
-                expect_enqueued_with(
-                  job: :update_top_redirection,
-                  args: {
-                    user_id: user.id,
-                    redirected_at: Time.zone.now.to_s,
-                  },
-                  at: Time.zone.now + delay,
-                ) do
-                  expect(user.user_option.redirected_to_top).to eq(
-                    reason: I18n.t("redirected_to_top_reasons.new_user"),
-                    period: :monthly,
-                  )
-                end
-              end
-            end
-
-            it "has no reason for later visits" do
-              user.user_option.expects(:last_redirected_to_top_at).returns(10.minutes.ago)
-              user.user_option.expects(:update_last_redirected_to_top!).never
-
-              expect(user.user_option.redirected_to_top).to eq(nil)
-            end
-          end
-
-          describe "an older user" do
-            before { user.stubs(:trust_level).returns(1) }
-
-            it "has a reason when the user has been absent for a month" do
-              user.last_seen_at = 2.months.ago
-              user.user_option.expects(:update_last_redirected_to_top!).once
-
+            expect_enqueued_with(
+              job: :update_top_redirection,
+              args: {
+                user_id: user.id,
+                redirected_at: Time.zone.now.to_s,
+              },
+              at: Time.zone.now + delay,
+            ) do
               expect(user.user_option.redirected_to_top).to eq(
-                reason: I18n.t("redirected_to_top_reasons.not_seen_in_a_month"),
+                reason: I18n.t("redirected_to_top_reasons.new_user"),
                 period: :monthly,
               )
             end
           end
+        end
+
+        it "has no reason for later visits" do
+          user.user_option.expects(:last_redirected_to_top_at).returns(10.minutes.ago)
+          user.user_option.expects(:update_last_redirected_to_top!).never
+
+          expect(user.user_option.redirected_to_top).to eq(nil)
+        end
+      end
+
+      describe "an older user when there are enough topics" do
+        before do
+          SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly)
+          user.stubs(:trust_level).returns(1)
+        end
+
+        it "has a reason when the user has been absent for a month" do
+          user.last_seen_at = 2.months.ago
+          user.user_option.expects(:update_last_redirected_to_top!).once
+
+          expect(user.user_option.redirected_to_top).to eq(
+            reason: I18n.t("redirected_to_top_reasons.not_seen_in_a_month"),
+            period: :monthly,
+          )
         end
       end
     end

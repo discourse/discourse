@@ -44,18 +44,7 @@ RSpec.describe "Local Dates" do
     expect(cooked).to include("05/08/2018 4:30:00 PM")
   end
 
-  it "preserves a date tag without attributes as plain text" do
-    post = Fabricate(:post, raw: <<~MD)
-      [date]
-    MD
-
-    cooked = post.cooked
-
-    expect(post.cooked).to include("<p>[date]</p>")
-    expect(cooked).to_not include("data-date=")
-  end
-
-  it "omits date metadata for a date tag without attributes" do
+  it "requires the right attributes to convert to a local date" do
     post = Fabricate(:post, raw: <<~MD)
       [date]
     MD

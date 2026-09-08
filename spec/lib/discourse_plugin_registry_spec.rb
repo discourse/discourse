@@ -280,12 +280,14 @@ RSpec.describe DiscoursePluginRegistry do
     after { DiscoursePluginRegistry.clear_modifiers! }
 
     class TestFilterPlugInstance < Plugin::Instance
+      attr_accessor :disabled
+
       def enabled?
-        !@disabled
+        !disabled
       end
 
       def enabled=(value)
-        @disabled = !value
+        self.disabled = !value
       end
     end
 

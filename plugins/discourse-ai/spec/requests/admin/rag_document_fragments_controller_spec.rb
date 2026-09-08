@@ -13,7 +13,9 @@ RSpec.describe DiscourseAi::Admin::RagDocumentFragmentsController do
     SiteSetting.ai_embeddings_enabled = true
   end
 
-  after { @cleanup_files&.each(&:unlink) }
+  let(:cleanup_files) { [] }
+
+  after { cleanup_files.each(&:unlink) }
 
   describe "GET #indexing_status_check" do
     it "works for AiAgent" do
@@ -26,11 +28,10 @@ RSpec.describe DiscourseAi::Admin::RagDocumentFragmentsController do
 
   describe "POST #upload_file" do
     let :fake_image do
-      @cleanup_files ||= []
       tempfile = Tempfile.new(%w[test .png])
       tempfile.write("fake image")
       tempfile.rewind
-      @cleanup_files << tempfile
+      cleanup_files << tempfile
       tempfile
     end
 

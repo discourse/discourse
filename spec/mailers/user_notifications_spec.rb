@@ -524,9 +524,7 @@ RSpec.describe UserNotifications do
     let(:tag3) { Fabricate(:tag, name: "Teggo", public_topic_count: 2) }
 
     let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
-    let!(:hidden_tag_group) do
-      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
-    end
+    before { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
     let(:topic) do
       Fabricate(

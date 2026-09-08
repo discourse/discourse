@@ -17,6 +17,7 @@ RSpec.describe Voice::AdminRoomsController do
       end
     end
     Voice::Room.reset_column_information
+    SiteSetting.voice_enabled = true
   end
 
   fab!(:admin)
@@ -24,8 +25,6 @@ RSpec.describe Voice::AdminRoomsController do
   fab!(:user)
   fab!(:room) { Fabricate(:voice_room, creator: admin, public: true, name: "Test Room") }
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-
-  before { SiteSetting.voice_enabled = true }
 
   describe "#index" do
     it "returns 403 for non-staff users" do

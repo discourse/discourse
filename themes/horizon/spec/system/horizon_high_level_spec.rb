@@ -71,7 +71,7 @@ describe "Horizon theme | High level" do
     expect(topic_page).to have_topic_title(topic_1.title)
   end
 
-  it "works for anon" do
+  it "passes all high-level checks for anonymous users" do
     visit "/"
     run_all_high_level_tests
   end

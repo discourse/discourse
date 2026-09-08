@@ -217,6 +217,11 @@ RSpec.describe Reviewable, type: :model do
       context "as an admin" do
         before { user.update_columns(moderator: false, admin: true) }
 
+        let(:queued_user) { Fabricate(:reviewable_user, score: 0, force_review: true) }
+        let(:queued_post) do
+          Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
+        end
+
         it "can filter by the target_created_by_id attribute" do
           different_reviewable = Fabricate(:reviewable)
           reviewables =
@@ -279,28 +284,25 @@ RSpec.describe Reviewable, type: :model do
           expect(list[1].id).to eq(r1.id)
         end
 
-        describe "Including pending queued posts even if they don't pass the minimum priority threshold" do
-          let(:queued_post) do
-            Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
-          end
-          let(:queued_user) { Fabricate(:reviewable_user, score: 0, force_review: true) }
+        it "includes low-priority queued posts when searching for pending reviewables" do
+          SiteSetting.reviewable_default_visibility = :high
+          Reviewable.set_priorities(high: 10)
 
-          before do
-            SiteSetting.reviewable_default_visibility = :high
-            Reviewable.set_priorities(high: 10)
-          end
+          expect(Reviewable.list_for(user)).to contain_exactly(queued_post, queued_user)
+        end
 
-          it "includes queued posts when searching for pending reviewables" do
-            expect(Reviewable.list_for(user)).to contain_exactly(queued_post, queued_user)
-          end
+        it "excludes low-priority queued posts when applying a different status filter" do
+          SiteSetting.reviewable_default_visibility = :high
+          Reviewable.set_priorities(high: 10)
 
-          it "excludes pending queued posts when applying a different status filter" do
-            expect(Reviewable.list_for(user, status: :deleted)).to be_empty
-          end
+          expect(Reviewable.list_for(user, status: :deleted)).to be_empty
+        end
 
-          it "excludes pending queued posts when applying a different type filter" do
-            expect(Reviewable.list_for(user, type: ReviewableFlaggedPost.name)).to be_empty
-          end
+        it "excludes low-priority queued posts when applying a different type filter" do
+          SiteSetting.reviewable_default_visibility = :high
+          Reviewable.set_priorities(high: 10)
+
+          expect(Reviewable.list_for(user, type: ReviewableFlaggedPost.name)).to be_empty
         end
       end
     end

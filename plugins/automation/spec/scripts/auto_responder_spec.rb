@@ -177,7 +177,7 @@ describe "AutoResponder" do
       end
     end
 
-    context "when post contains two keywords" do
+    context "when post contains two whole-word keywords" do
       it "creates an answer with both answers" do
         post = create_post(topic: topic, raw: "this is a post with foo and bar")
         automation.trigger!("post" => post)

@@ -218,50 +218,45 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe "when user replies to the topic" do
-        it "reminds the user to bookmark the post" do
-          narrative.expects(:enqueue_timeout_job).with(user).once
+      it "reminds the user to bookmark the post" do
+        narrative.expects(:enqueue_timeout_job).with(user).once
 
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expect(new_post.raw).to eq(
+          I18n.t("discourse_narrative_bot.new_user_narrative.bookmark.not_found", base_uri: ""),
+        )
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_bookmark)
+      end
+
+      describe "when rate_limit_new_user_create_post site setting is disabled" do
+        before { SiteSetting.rate_limit_new_user_create_post = 0 }
+
+        it "posts the bookmark reminder" do
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
           expect(new_post.raw).to eq(
             I18n.t("discourse_narrative_bot.new_user_narrative.bookmark.not_found", base_uri: ""),
           )
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_bookmark)
         end
+      end
 
-        describe "when rate_limit_new_user_create_post site setting is disabled" do
-          before { SiteSetting.rate_limit_new_user_create_post = 0 }
+      describe "when reply contains the skip trigger" do
+        it "creates the right reply" do
+          post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-          it "posts the bookmark reminder" do
-            narrative.input(:reply, user, post: post)
-            new_post = Post.last
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            expect(new_post.raw).to eq(
-              I18n.t("discourse_narrative_bot.new_user_narrative.bookmark.not_found", base_uri: ""),
-            )
-          end
-        end
+          new_post = Post.last
 
-        describe "when reply contains the skip trigger" do
-          it "posts the onebox tutorial instructions" do
-            post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+          expect(new_post.raw).to eq(
+            I18n.t("discourse_narrative_bot.new_user_narrative.onebox.instructions", base_uri: ""),
+          )
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.onebox.instructions",
-                base_uri: "",
-              ),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
         end
       end
 
@@ -351,7 +346,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       describe "when post does not contain onebox" do
-        it "reminds the user to include a onebox" do
+        it "creates the right reply" do
           narrative.expects(:enqueue_timeout_job).with(user)
           narrative.input(:reply, user, post: post)
           new_post = Post.last
@@ -363,79 +358,64 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe "when user has not liked bot's post" do
-        it "posts the missing onebox reminder" do
-          narrative.expects(:enqueue_timeout_job).with(user)
-          narrative.input(:reply, user, post: post)
+      describe "when the reply contains the skip trigger" do
+        it "posts the emoji tutorial instructions" do
+          post.update!(raw: skip_trigger.upcase)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+
           new_post = Post.last
 
           expect(new_post.raw).to eq(
-            I18n.t("discourse_narrative_bot.new_user_narrative.onebox.not_found", base_uri: ""),
+            I18n.t("discourse_narrative_bot.new_user_narrative.emoji.instructions", base_uri: ""),
           )
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
         end
       end
 
-      describe "when user replies to the topic" do
-        describe "when reply contains the skip trigger" do
-          it "posts the emoji tutorial instructions" do
-            post.update!(raw: skip_trigger.upcase)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+      describe "when emoji is disabled" do
+        before { SiteSetting.enable_emoji = false }
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to eq(
-              I18n.t("discourse_narrative_bot.new_user_narrative.emoji.instructions", base_uri: ""),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
-          end
-        end
-
-        describe "when emoji is disabled" do
-          before { SiteSetting.enable_emoji = false }
-
-          it "acknowledges the onebox and starts the mention tutorial" do
-            post.update!(raw: "https://en.wikipedia.org/wiki/Death_by_coconut")
-
-            narrative.input(:reply, user, post: post)
-            new_post = Post.last
-
-            expected_raw = <<~RAW
-              #{I18n.t("discourse_narrative_bot.new_user_narrative.onebox.reply", base_uri: "")}
-
-              #{
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.mention.instructions",
-                discobot_username: discobot_username,
-                base_uri: "",
-              )
-            }
-            RAW
-
-            expect(new_post.raw).to eq(expected_raw.chomp)
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
-          end
-        end
-
-        it "acknowledges the onebox and starts the emoji tutorial" do
+        it "acknowledges the onebox and starts the mention tutorial" do
           post.update!(raw: "https://en.wikipedia.org/wiki/Death_by_coconut")
 
-          narrative.expects(:enqueue_timeout_job).with(user)
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
           expected_raw = <<~RAW
+              #{I18n.t("discourse_narrative_bot.new_user_narrative.onebox.reply", base_uri: "")}
+
+              #{
+            I18n.t(
+              "discourse_narrative_bot.new_user_narrative.mention.instructions",
+              discobot_username: discobot_username,
+              base_uri: "",
+            )
+          }
+            RAW
+
+          expect(new_post.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
+        end
+      end
+
+      it "acknowledges the onebox and starts the emoji tutorial" do
+        post.update!(raw: "https://en.wikipedia.org/wiki/Death_by_coconut")
+
+        narrative.expects(:enqueue_timeout_job).with(user)
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expected_raw = <<~RAW
             #{I18n.t("discourse_narrative_bot.new_user_narrative.onebox.reply", base_uri: "")}
 
             #{I18n.t("discourse_narrative_bot.new_user_narrative.emoji.instructions", base_uri: "")}
           RAW
 
-          expect(new_post.raw).to eq(expected_raw.chomp)
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
-        end
+        expect(new_post.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
       end
     end
 
@@ -462,38 +442,34 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe "when user replies to the topic" do
-        describe "when reply contains the skip trigger" do
-          it "posts the flag tutorial instructions" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+      it "creates the next tutorial reply when the user sends the skip trigger" do
+        post.update!(raw: skip_trigger)
+        described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+        DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+        new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.flag.instructions",
-                guidelines_url: Discourse.base_url + "/guidelines",
-                about_url: Discourse.base_url + "/about",
-                base_uri: "",
-              ),
-            )
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.new_user_narrative.flag.instructions",
+            guidelines_url: Discourse.base_url + "/guidelines",
+            about_url: Discourse.base_url + "/about",
+            base_uri: "",
+          ),
+        )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
-          end
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+      end
 
-          describe "when allow_flagging_staff is false" do
-            it "skips to the search tutorial" do
-              SiteSetting.allow_flagging_staff = false
-              post.update!(raw: skip_trigger)
+      describe "when allow_flagging_staff is false" do
+        it "goes to the right state" do
+          SiteSetting.allow_flagging_staff = false
+          post.update!(raw: skip_trigger)
 
-              DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-              expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
-            end
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
         end
       end
 
@@ -638,56 +614,52 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe "when user replies to the topic" do
-        describe "when reply contains the skip trigger" do
-          it "posts the flag tutorial instructions" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+      it "creates the next tutorial reply when the user sends the skip trigger" do
+        post.update!(raw: skip_trigger)
+        described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+        DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+        new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.flag.instructions",
-                guidelines_url: Discourse.base_url + "/guidelines",
-                about_url: Discourse.base_url + "/about",
-                base_uri: "",
-              ),
-            )
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.new_user_narrative.flag.instructions",
+            guidelines_url: Discourse.base_url + "/guidelines",
+            about_url: Discourse.base_url + "/about",
+            base_uri: "",
+          ),
+        )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
-          end
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+      end
 
-          describe "when allow_flagging_staff is false" do
-            it "skips to the search tutorial" do
-              SiteSetting.allow_flagging_staff = false
-              post.update!(raw: skip_trigger)
+      describe "when allow_flagging_staff is false" do
+        it "goes to the right state" do
+          SiteSetting.allow_flagging_staff = false
+          post.update!(raw: skip_trigger)
 
-              DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-              expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
-            end
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
         end
+      end
 
-        it "reminds the user to like the post" do
-          narrative.expects(:enqueue_timeout_job).with(user).once
+      it "reminds the user to like the post" do
+        narrative.expects(:enqueue_timeout_job).with(user).once
 
-          narrative.input(:reply, user, post: post)
-          new_post = Post.last
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
 
-          expect(new_post.raw).to eq(
-            I18n.t(
-              "discourse_narrative_bot.new_user_narrative.likes.not_found",
-              url: post_2.url,
-              base_uri: "",
-            ),
-          )
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.new_user_narrative.likes.not_found",
+            url: post_2.url,
+            base_uri: "",
+          ),
+        )
 
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_likes)
-        end
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_likes)
       end
 
       describe "when the post is liked" do
@@ -738,25 +710,20 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe "when user replies to the topic" do
-        describe "when reply contains the skip trigger" do
-          it "posts the quoting tutorial instructions" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+      describe "when the reply contains the skip trigger" do
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+          new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.quoting.instructions",
-                base_uri: "",
-              ),
-            )
+          expect(new_post.raw).to eq(
+            I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: ""),
+          )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
         end
       end
 
@@ -805,60 +772,43 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe "when user replies to the topic" do
-        describe "when reply contains the skip trigger" do
-          it "posts the images tutorial instructions" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+      describe "when the reply contains the skip trigger" do
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+          new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.images.instructions",
-                base_uri: "",
-              ),
-            )
+          expect(new_post.raw).to eq(
+            I18n.t("discourse_narrative_bot.new_user_narrative.images.instructions", base_uri: ""),
+          )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
-          end
-
-          it "includes the subfolder in image paths" do
-            GlobalSetting.stubs(:relative_url_root).returns("/forum")
-            Discourse.stubs(:base_path).returns("/forum")
-
-            post.update!(raw: skip_trigger)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to include("/forum/plugins/discourse-narrative-bot/images")
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
         end
 
-        describe "when embedded_media_post_allowed_groups does not include the user" do
-          before do
-            SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-            Group.refresh_automatic_groups!
-          end
+        it "includes the subfolder in image paths" do
+          GlobalSetting.stubs(:relative_url_root).returns("/forum")
+          Discourse.stubs(:base_path).returns("/forum")
 
-          it "skips the images tutorial step" do
-            post.update!(
-              raw:
-                "[quote=\"#{post.user}, post:#{post.post_number}, topic:#{topic.id}\"]\n:monkey: :fries:\n[/quote]",
-            )
+          post.update!(raw: skip_trigger)
 
-            narrative.expects(:enqueue_timeout_job).with(user)
-            narrative.input(:reply, user, post: post)
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_likes)
-          end
+          new_post = Post.last
+
+          expect(new_post.raw).to include("/forum/plugins/discourse-narrative-bot/images")
+        end
+      end
+
+      describe "when embedded_media_post_allowed_groups does not include the user" do
+        before do
+          SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+          Group.refresh_automatic_groups!
         end
 
-        it "acknowledges the quote and starts the images tutorial" do
+        it "skips the images tutorial step" do
           post.update!(
             raw:
               "[quote=\"#{post.user}, post:#{post.post_number}, topic:#{topic.id}\"]\n:monkey: :fries:\n[/quote]",
@@ -866,17 +816,29 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
 
           narrative.expects(:enqueue_timeout_job).with(user)
           narrative.input(:reply, user, post: post)
-          new_post = Post.last
 
-          expected_raw = <<~RAW
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_likes)
+        end
+      end
+
+      it "acknowledges the quote and starts the images tutorial" do
+        post.update!(
+          raw:
+            "[quote=\"#{post.user}, post:#{post.post_number}, topic:#{topic.id}\"]\n:monkey: :fries:\n[/quote]",
+        )
+
+        narrative.expects(:enqueue_timeout_job).with(user)
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expected_raw = <<~RAW
             #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.reply", base_uri: "")}
 
             #{I18n.t("discourse_narrative_bot.new_user_narrative.images.instructions", base_uri: "")}
           RAW
 
-          expect(new_post.raw).to eq(expected_raw.chomp)
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
-        end
+        expect(new_post.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
       end
     end
 
@@ -905,26 +867,24 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe "when user replies to the topic" do
-        describe "when reply contains the skip trigger" do
-          it "posts the mention tutorial instructions" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+      describe "when the reply contains the skip trigger" do
+        it "posts the mention tutorial instructions" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+          new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.mention.instructions",
-                discobot_username: discobot_username,
-                base_uri: "",
-              ),
-            )
+          expect(new_post.raw).to eq(
+            I18n.t(
+              "discourse_narrative_bot.new_user_narrative.mention.instructions",
+              discobot_username: discobot_username,
+              base_uri: "",
+            ),
+          )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
         end
       end
 
@@ -1064,9 +1024,9 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       describe "when post flagged is not for the right topic" do
-        it "leaves the flag tutorial unchanged" do
+        it "does not do anything" do
           narrative.expects(:enqueue_timeout_job).with(user).never
-          flag.update!(post: other_post)
+          flag.update!(post: Fabricate(:post, user: discobot_user))
 
           expect { narrative.input(:flag, user, post: flag.post) }.to_not change { Post.count }
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
@@ -1087,7 +1047,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       describe "when post being flagged does not belong to discobot " do
-        it "ignores flags on posts that do not belong to discobot" do
+        it "does not do anything" do
           narrative.expects(:enqueue_timeout_job).with(user).never
           flag.update!(post: other_post)
 
@@ -1096,35 +1056,30 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe "when user replies to the topic" do
-        it "reminds the user to flag the post" do
-          narrative.input(:reply, user, post: other_post)
+      it "reminds the user to flag the post" do
+        narrative.input(:reply, user, post: other_post)
+        new_post = Post.last
+
+        expect(new_post.raw).to eq(
+          I18n.t("discourse_narrative_bot.new_user_narrative.flag.not_found", base_uri: ""),
+        )
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+      end
+
+      describe "when reply contains the skip trigger" do
+        it "creates the right reply" do
+          other_post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: other_post.id).select
+
           new_post = Post.last
 
           expect(new_post.raw).to eq(
-            I18n.t("discourse_narrative_bot.new_user_narrative.flag.not_found", base_uri: ""),
+            I18n.t("discourse_narrative_bot.new_user_narrative.search.instructions", base_uri: ""),
           )
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
-        end
 
-        describe "when reply contains the skip trigger" do
-          it "posts the search tutorial instructions" do
-            other_post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: other_post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.search.instructions",
-                base_uri: "",
-              ),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
         end
       end
 

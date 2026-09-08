@@ -382,12 +382,6 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_theme_setting_change" do
-    it "raises an error when params are invalid" do
-      expect { logger.log_theme_setting_change(nil, nil, nil, nil) }.to raise_error(
-        Discourse::InvalidParameters,
-      )
-    end
-
     let! :theme do
       Fabricate(:theme)
     end
@@ -395,6 +389,12 @@ RSpec.describe StaffActionLogger do
     before do
       theme.set_field(target: :settings, name: :yaml, value: "custom_setting: special")
       theme.save!
+    end
+
+    it "raises an error when params are invalid" do
+      expect { logger.log_theme_setting_change(nil, nil, nil, nil) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
 
     it "raises an error when theme setting is invalid" do

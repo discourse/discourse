@@ -4,15 +4,16 @@ describe "Secure uploads" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:group)
   fab!(:secure_category) { Fabricate(:private_category, group: group) }
+  let(:original_provider) { SiteSetting.provider }
 
   before do
     Jobs.run_immediately!
 
     # this is done so the after_save callbacks for site settings to make
     # UploadReference records works
-    @original_provider = SiteSetting.provider
+    original_provider
     SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
-    @original_provider.all.each { |setting| SiteSetting.set(setting.name, setting.value) }
+    original_provider.all.each { |setting| SiteSetting.set(setting.name, setting.value) }
     setup_s3
     stub_s3_store
     SiteSetting.secure_uploads = true
@@ -20,7 +21,7 @@ describe "Secure uploads" do
     user.reload
   end
 
-  after { SiteSetting.provider = @original_provider }
+  after { SiteSetting.provider = original_provider }
 
   def create_upload
     filename = "logo.png"

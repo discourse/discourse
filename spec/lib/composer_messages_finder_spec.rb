@@ -473,13 +473,12 @@ RSpec.describe ComposerMessagesFinder do
     fab!(:user)
     fab!(:topic) { Fabricate(:post).topic }
 
-    let!(:post) do
+    before do
       PostCreator.create!(user, topic_id: topic.id, post_number: 1, raw: "omg my first post")
+      SiteSetting.educate_until_posts = 2
     end
 
     let(:edit_post_finder) { ComposerMessagesFinder.new(user, composer_action: "edit") }
-
-    before { SiteSetting.educate_until_posts = 2 }
 
     it "returns nothing even if it normally would" do
       expect(edit_post_finder.find).to eq(nil)

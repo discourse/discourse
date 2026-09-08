@@ -15,7 +15,7 @@ RSpec.describe ProblemCheck::EmailPollingErroredRecently do
     context "when jobs are failing" do
       let(:error_count) { 1 }
 
-      it do
+      it "reports recent email polling errors" do
         expect(check).to(
           have_a_problem.with_priority("low").with_message(
             "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details.",

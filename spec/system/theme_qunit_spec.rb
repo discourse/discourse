@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 describe "Theme qunit testing" do
-  let!(:theme_without_tests) { Fabricate(:theme, name: "no-tests-guy") }
+  before { Fabricate(:theme, name: "no-tests-guy") }
+
   let!(:theme_with_test) do
     t = Fabricate(:theme, name: "Theme With Tests")
     t.set_field(target: :tests_js, type: :js, name: "acceptance/some-test.js", value: <<~JS)

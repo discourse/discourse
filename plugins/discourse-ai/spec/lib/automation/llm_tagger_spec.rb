@@ -372,7 +372,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
     end
 
     describe "multi-post context" do
-      let!(:reply_post1) do
+      before do
         Fabricate(
           :post,
           topic: topic,
@@ -380,8 +380,6 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           post_number: 2,
           raw: "This is about features and performance",
         )
-      end
-      let!(:reply_post2) do
         Fabricate(
           :post,
           topic: topic,

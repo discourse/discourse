@@ -46,10 +46,31 @@ Lint/Debugger:
     SystemHelpers:
       - pause_test
 
+RSpec/HooksBeforeExamples:
+  Enabled: true
+
 RSpec/InstanceVariable:
   Enabled: true
-  Include:
-    - spec/models/**/*
+  AssignmentOnly: true
+
+RSpec/LetBeforeExamples:
+  Enabled: true
+
+RSpec/MultipleDescribes:
+  Enabled: true
+
+RSpec/NestedGroups:
+  Enabled: true
+  Max: 4
+
+RSpec/RepeatedExample:
+  Enabled: true
+
+RSpec/RepeatedExampleGroupBody:
+  Enabled: true
+
+RSpec/ScatteredSetup:
+  Enabled: true
 
 Style/AccessModifierDeclarations:
   Enabled: true

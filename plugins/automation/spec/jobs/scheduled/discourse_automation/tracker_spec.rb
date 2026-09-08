@@ -183,7 +183,7 @@ describe Jobs::DiscourseAutomation::Tracker do
     context "when target user changes username after pending PM creation" do
       fab!(:target_user) { Fabricate(:user, username: "original_name") }
 
-      let!(:pending_pm_with_rename) do
+      before do
         automation.pending_pms.create!(
           title: "Test PM",
           raw: "Test content",

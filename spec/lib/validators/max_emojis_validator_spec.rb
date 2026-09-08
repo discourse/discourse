@@ -4,9 +4,10 @@
 RSpec.describe MaxEmojisValidator do
   # simulate Rails behavior (singleton)
   def validate
-    @validator ||= MaxEmojisValidator.new(attributes: :title)
-    @validator.validate_each(record, :title, record.title)
+    validator.validate_each(record, :title, record.title)
   end
+
+  let(:validator) { MaxEmojisValidator.new(attributes: :title) }
 
   shared_examples "validating any topic title" do
     before do

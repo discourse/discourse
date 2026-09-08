@@ -39,9 +39,7 @@ RSpec.describe TopicsFilter do
   describe "topic votes filtering" do
     fab!(:voting_category, :category)
     fab!(:non_voting_category, :category)
-    let!(:_category_setting) do
-      DiscourseTopicVoting::CategorySetting.create!(category: voting_category)
-    end
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
 
     fab!(:topic_high) do
       topic = Fabricate(:topic, category: voting_category)

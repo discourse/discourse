@@ -4,11 +4,12 @@ require "s3_helper"
 
 RSpec.describe "S3Helper" do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
+  let(:lifecycle_state) { {} }
 
   before do
     setup_s3
 
-    @lifecycle = <<~XML
+    lifecycle_state[:xml] = <<~XML
       <?xml version="1.0" encoding="UTF-8"?>
       <LifecycleConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
         <Rule>
@@ -42,7 +43,7 @@ RSpec.describe "S3Helper" do
     stub_request(
       :get,
       "https://bob.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle",
-    ).to_return(status: 200, body: @lifecycle, headers: {})
+    ).to_return(status: 200, body: lifecycle_state[:xml], headers: {})
 
     stub_request(:put, "https://bob.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle")
       .with do |req|

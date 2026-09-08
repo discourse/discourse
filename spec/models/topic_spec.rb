@@ -81,79 +81,75 @@ RSpec.describe Topic do
     end
 
     describe "#title" do
+      after { Discourse.redis.flushdb }
+
       it { is_expected.to validate_presence_of :title }
 
-      describe "censored words" do
-        after { Discourse.redis.flushdb }
+      describe "when title contains censored words" do
+        after { WordWatcher.clear_cache! }
 
-        describe "when title contains censored words" do
-          after { WordWatcher.clear_cache! }
-
-          it "rejects titles containing censored words" do
-            %w[pineapple pen].each do |w|
-              Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
-            end
-
-            topic.title = "pen PinEapple apple pen is a complete sentence"
-
-            expect(topic).to_not be_valid
-
-            expect(topic.errors.full_messages.first).to include(
-              I18n.t("errors.messages.contains_censored_words", censored_words: "pen, pineapple"),
-            )
-          end
-        end
-
-        describe "titles with censored words not on boundaries" do
-          it "accepts titles with censored words embedded in other words" do
-            Fabricate(:watched_word, word: "apple", action: WatchedWord.actions[:censor])
-            topic.title = "Pineapples are great fruit! Applebee's is a great restaurant"
-            expect(topic).to be_valid
-          end
-        end
-
-        describe "when title does not contain censored words" do
-          it "accepts titles without censored words" do
-            topic.title = "The cake is a lie"
-
-            expect(topic).to be_valid
-          end
-        end
-
-        describe "escape special characters in censored words" do
-          before do
-            %w[co(onut coconut a**le].each do |w|
-              Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
-            end
+        it "rejects titles containing censored words" do
+          %w[pineapple pen].each do |w|
+            Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
           end
 
-          it "rejects titles matching censored word patterns" do
-            topic.title = "I have a co(onut a**le"
+          topic.title = "pen PinEapple apple pen is a complete sentence"
 
-            expect(topic.valid?).to eq(false)
+          expect(topic).to_not be_valid
 
-            expect(topic.errors.full_messages.first).to include(
-              I18n.t("errors.messages.contains_censored_words", censored_words: "co(onut, a**le"),
-            )
-          end
+          expect(topic.errors.full_messages.first).to include(
+            I18n.t("errors.messages.contains_censored_words", censored_words: "pen, pineapple"),
+          )
         end
       end
 
-      describe "blocked words" do
-        describe "when title contains watched words" do
-          after { WordWatcher.clear_cache! }
+      describe "titles with censored words not on boundaries" do
+        it "accepts titles with censored words embedded in other words" do
+          Fabricate(:watched_word, word: "apple", action: WatchedWord.actions[:censor])
+          topic.title = "Pineapples are great fruit! Applebee's is a great restaurant"
+          expect(topic).to be_valid
+        end
+      end
 
-          it "rejects titles containing blocked words" do
-            Fabricate(:watched_word, word: "pineapple", action: WatchedWord.actions[:block])
+      describe "when title does not contain censored words" do
+        it "accepts titles without censored words" do
+          topic.title = "The cake is a lie"
 
-            topic.title = "pen PinEapple apple pen is a complete sentence"
+          expect(topic).to be_valid
+        end
+      end
 
-            expect(topic).to_not be_valid
-
-            expect(topic.errors.full_messages.first).to include(
-              I18n.t("contains_blocked_word", word: "PinEapple"),
-            )
+      describe "escape special characters in censored words" do
+        before do
+          %w[co(onut coconut a**le].each do |w|
+            Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
           end
+        end
+
+        it "rejects titles matching censored word patterns" do
+          topic.title = "I have a co(onut a**le"
+
+          expect(topic.valid?).to eq(false)
+
+          expect(topic.errors.full_messages.first).to include(
+            I18n.t("errors.messages.contains_censored_words", censored_words: "co(onut, a**le"),
+          )
+        end
+      end
+
+      describe "when title contains blocked watched words" do
+        after { WordWatcher.clear_cache! }
+
+        it "rejects titles containing blocked words" do
+          Fabricate(:watched_word, word: "pineapple", action: WatchedWord.actions[:block])
+
+          topic.title = "pen PinEapple apple pen is a complete sentence"
+
+          expect(topic).to_not be_valid
+
+          expect(topic.errors.full_messages.first).to include(
+            I18n.t("contains_blocked_word", word: "PinEapple"),
+          )
         end
       end
     end
@@ -246,8 +242,8 @@ RSpec.describe Topic do
 
       context "for numbers" do
         let!(:title) { "123456789" }
-        let!(:slug) { "topic" }
-        let!(:topic) { Fabricate.build(:topic, title: title) }
+
+        before { Fabricate.build(:topic, title: title) }
 
         it "generates default slug" do
           Slug.expects(:for).with(title).returns("topic")
@@ -259,9 +255,11 @@ RSpec.describe Topic do
     context "with none generator" do
       let!(:title) { "熱帶風暴畫眉" }
       let!(:slug) { "topic" }
-      let!(:topic) { Fabricate.build(:topic, title: title) }
 
-      before { SiteSetting.slug_generation_method = "none" }
+      before do
+        Fabricate.build(:topic, title: title)
+        SiteSetting.slug_generation_method = "none"
+      end
 
       it "returns a Slug for a title" do
         Slug.expects(:for).with(title).returns("topic")
@@ -275,7 +273,8 @@ RSpec.describe Topic do
       context "with ascii letters" do
         let!(:title) { "hello world topic" }
         let!(:slug) { "hello-world-topic" }
-        let!(:topic) { Fabricate.build(:topic, title: title) }
+
+        before { Fabricate.build(:topic, title: title) }
 
         it "returns a Slug for a title" do
           Slug.expects(:for).with(title).returns(slug)
@@ -285,8 +284,8 @@ RSpec.describe Topic do
 
       context "for cjk characters" do
         let!(:title) { "熱帶風暴畫眉" }
-        let!(:slug) { "topic" }
-        let!(:topic) { Fabricate.build(:topic, title: title) }
+
+        before { Fabricate.build(:topic, title: title) }
 
         it "returns 'topic' when the slug is empty (say, non-latin characters)" do
           Slug.expects(:for).with(title).returns("topic")
@@ -307,6 +306,8 @@ RSpec.describe Topic do
       let!(:other_slug) { "other-title".reverse }
       let!(:topic) { Fabricate.build(:topic, title: title) }
 
+      after { Topic.slug_computed_callbacks.clear }
+
       it "returns a reversed slug for a title" do
         expect(topic.title).to eq(title)
         expect(topic.slug).to eq(slug)
@@ -320,8 +321,6 @@ RSpec.describe Topic do
         expect(topic.title).to eq(other_title)
         expect(topic.slug).to eq(other_slug)
       end
-
-      after { Topic.slug_computed_callbacks.clear }
     end
   end
 
@@ -411,7 +410,7 @@ RSpec.describe Topic do
 
       before { SiteSetting.duplicate_topic_titles = "disallowed" }
 
-      it "rejects another topic with the same title" do
+      it "does not allow another topic to be created with the same name" do
         expect(new_topic).not_to be_valid
       end
 
@@ -526,7 +525,7 @@ RSpec.describe Topic do
         expect(new_topic_different_cat).to be_valid
       end
 
-      it "rejects the same title in the same category" do
+      it "does not allow another topic to be created with the same name in same category" do
         expect(new_topic).not_to be_valid
       end
     end
@@ -933,9 +932,13 @@ RSpec.describe Topic do
 
   describe "post_numbers" do
     let!(:topic) { Fabricate(:topic) }
-    let!(:p1) { Fabricate(:post, topic: topic, user: topic.user) }
-    let!(:p2) { Fabricate(:post, topic: topic, user: topic.user) }
-    let!(:p3) { Fabricate(:post, topic: topic, user: topic.user) }
+    let(:p2) { Fabricate(:post, topic: topic, user: topic.user) }
+
+    before do
+      Fabricate(:post, topic: topic, user: topic.user)
+      p2
+      Fabricate(:post, topic: topic, user: topic.user)
+    end
 
     it "returns the post numbers of the topic" do
       expect(topic.post_numbers).to eq([1, 2, 3])
@@ -1045,145 +1048,137 @@ RSpec.describe Topic do
       fab!(:user) { trust_level_2 }
       fab!(:topic) { Fabricate(:private_message_topic, user: trust_level_2) }
 
-      describe "by username" do
-        it "invites a user to the PM" do
-          expect(topic.invite(user, user1.username)).to eq(true)
-          expect(topic.allowed_users).to include(user1)
-          expect(Post.last.action_code).to eq("invited_user")
+      it "invites a user to the PM" do
+        expect(topic.invite(user, user1.username)).to eq(true)
+        expect(topic.allowed_users).to include(user1)
+        expect(Post.last.action_code).to eq("invited_user")
 
-          notification = Notification.last
+        notification = Notification.last
 
-          expect(notification.notification_type).to eq(
-            Notification.types[:invited_to_private_message],
-          )
+        expect(notification.notification_type).to eq(
+          Notification.types[:invited_to_private_message],
+        )
 
-          expect(topic.remove_allowed_user(user, user1.username)).to eq(true)
-          expect(topic.reload.allowed_users).to_not include(user1)
-          expect(Post.last.action_code).to eq("removed_user")
-        end
+        expect(topic.remove_allowed_user(user, user1.username)).to eq(true)
+        expect(topic.reload.allowed_users).to_not include(user1)
+        expect(Post.last.action_code).to eq("removed_user")
+      end
 
-        it "omits a small action when the user already has access through a group" do
-          group = Fabricate(:group, users: [user, user1])
-          expect(topic.invite_group(user, group)).to eq(true)
+      it "omits a small action when the user already has access through a group" do
+        group = Fabricate(:group, users: [user, user1])
+        expect(topic.invite_group(user, group)).to eq(true)
 
-          expect { topic.invite(user, user1.username) }.to change { Notification.count }.by(
-            1,
-          ).and not_change { Post.where(post_type: Post.types[:small_action]).count }
-        end
+        expect { topic.invite(user, user1.username) }.to change { Notification.count }.by(
+          1,
+        ).and not_change { Post.where(post_type: Post.types[:small_action]).count }
+      end
 
-        it "sets invited user to watch the PM" do
-          expect { topic.invite(user, user1.username) }.to change {
-            TopicUser.get(topic, user1).try(:notification_level)
-          }.to TopicUser.notification_levels[:watching]
-        end
+      it "sets invited user to watch the PM" do
+        expect { topic.invite(user, user1.username) }.to change {
+          TopicUser.get(topic, user1).try(:notification_level)
+        }.to TopicUser.notification_levels[:watching]
+      end
 
-        context "when from a muted user" do
-          before { Fabricate(:muted_user, user: user1, muted_user: user) }
+      context "when from a muted user" do
+        before { Fabricate(:muted_user, user: user1, muted_user: user) }
 
-          it "fails with an error" do
-            expect { topic.invite(user, user1.username) }.to raise_error(Topic::NotAllowed)
-            expect(topic.allowed_users).to_not include(user1)
-            expect(Post.last).to be_blank
-            expect(Notification.last).to be_blank
-          end
-        end
-
-        context "when from a ignored user" do
-          before { Fabricate(:ignored_user, user: user1, ignored_user: user) }
-
-          it "fails with an error" do
-            expect { topic.invite(user, user1.username) }.to raise_error(Topic::NotAllowed)
-            expect(topic.allowed_users).to_not include(user1)
-            expect(Post.last).to be_blank
-            expect(Notification.last).to be_blank
-          end
-        end
-
-        context "when PMs are enabled for TL3 or higher only" do
-          before do
-            SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
-          end
-
-          it "raises UserExists when PM access is restricted" do
-            expect { topic.invite(user, user1.username) }.to raise_error(Topic::UserExists)
-          end
-        end
-
-        context "when invited_user has enabled allow_list" do
-          fab!(:pm) do
-            Fabricate(
-              :private_message_topic,
-              user: user,
-              topic_allowed_users: [
-                Fabricate.build(:topic_allowed_user, user: user),
-                Fabricate.build(:topic_allowed_user, user: user2),
-              ],
-            )
-          end
-
-          before { user1.user_option.update!(enable_allowed_pm_users: true) }
-
-          it "succeeds when inviter is in allowed list" do
-            AllowedPmUser.create!(user: user1, allowed_pm_user: user)
-            expect(topic.invite(user, user1.username)).to eq(true)
-          end
-
-          it "rejects an inviter outside the recipient's allowed list" do
-            AllowedPmUser.create!(user: user1, allowed_pm_user: user2)
-            expect { topic.invite(user, user1.username) }.to raise_error(
-              Topic::NotAllowed,
-            ).with_message(I18n.t("topic_invite.receiver_does_not_allow_pm"))
-          end
-
-          it "allows inviting staff outside the allowed list" do
-            AllowedPmUser.create!(user: user1, allowed_pm_user: user2)
-            expect(topic.invite(user1, admin.username)).to eq(true)
-          end
-
-          it "rejects a recipient outside the inviter's allowed list" do
-            user.user_option.update!(enable_allowed_pm_users: true)
-            AllowedPmUser.create!(user: user1, allowed_pm_user: user)
-            expect { topic.invite(user, user1.username) }.to raise_error(
-              Topic::NotAllowed,
-            ).with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
-          end
-
-          it "succeeds when inviter is in allowed list even though other participants are not in allowed list" do
-            AllowedPmUser.create!(user: user1, allowed_pm_user: user)
-            expect(pm.invite(user, user1.username)).to eq(true)
-          end
+        it "fails with an error" do
+          expect { topic.invite(user, user1.username) }.to raise_error(Topic::NotAllowed)
+          expect(topic.allowed_users).to_not include(user1)
+          expect(Post.last).to be_blank
+          expect(Notification.last).to be_blank
         end
       end
 
-      describe "by email" do
-        it "invites an existing user by email" do
-          expect(topic.invite(user, user1.email)).to eq(true)
-          expect(topic.allowed_users).to include(user1)
+      context "when from a ignored user" do
+        before { Fabricate(:ignored_user, user: user1, ignored_user: user) }
 
-          expect(Notification.last.notification_type).to eq(
-            Notification.types[:invited_to_private_message],
+        it "fails with an error" do
+          expect { topic.invite(user, user1.username) }.to raise_error(Topic::NotAllowed)
+          expect(topic.allowed_users).to_not include(user1)
+          expect(Post.last).to be_blank
+          expect(Notification.last).to be_blank
+        end
+      end
+
+      context "when PMs are enabled for TL3 or higher only" do
+        before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
+        it "raises UserExists when PM access is restricted" do
+          expect { topic.invite(user, user1.username) }.to raise_error(Topic::UserExists)
+        end
+      end
+
+      context "when invited_user has enabled allow_list" do
+        fab!(:pm) do
+          Fabricate(
+            :private_message_topic,
+            user: user,
+            topic_allowed_users: [
+              Fabricate.build(:topic_allowed_user, user: user),
+              Fabricate.build(:topic_allowed_user, user: user2),
+            ],
           )
         end
 
-        describe "when user is not found" do
-          it "creates an email invitation" do
-            expect(topic.invite(user, "test@email.com")).to eq(true)
+        before { user1.user_option.update!(enable_allowed_pm_users: true) }
 
-            invite = Invite.last
+        it "succeeds when inviter is in allowed list" do
+          AllowedPmUser.create!(user: user1, allowed_pm_user: user)
+          expect(topic.invite(user, user1.username)).to eq(true)
+        end
 
-            expect(invite.email).to eq("test@email.com")
-            expect(invite.invited_by).to eq(user)
-          end
+        it "rejects an inviter outside the recipient's allowed list" do
+          AllowedPmUser.create!(user: user1, allowed_pm_user: user2)
+          expect { topic.invite(user, user1.username) }.to raise_error(
+            Topic::NotAllowed,
+          ).with_message(I18n.t("topic_invite.receiver_does_not_allow_pm"))
+        end
 
-          describe "when user does not have sufficient trust level" do
-            before { user.change_trust_level!(TrustLevel[1]) }
+        it "allows inviting staff outside the allowed list" do
+          AllowedPmUser.create!(user: user1, allowed_pm_user: user2)
+          expect(topic.invite(user1, admin.username)).to eq(true)
+        end
 
-            it "does not create an invitation" do
-              expect do expect(topic.invite(user, "test@email.com")).to eq(nil) end.to_not change {
-                Invite.count
-              }
-            end
-          end
+        it "rejects a recipient outside the inviter's allowed list" do
+          user.user_option.update!(enable_allowed_pm_users: true)
+          AllowedPmUser.create!(user: user1, allowed_pm_user: user)
+          expect { topic.invite(user, user1.username) }.to raise_error(
+            Topic::NotAllowed,
+          ).with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
+        end
+
+        it "succeeds when inviter is in allowed list even though other participants are not in allowed list" do
+          AllowedPmUser.create!(user: user1, allowed_pm_user: user)
+          expect(pm.invite(user, user1.username)).to eq(true)
+        end
+      end
+
+      it "invites an existing user by email" do
+        expect(topic.invite(user, user1.email)).to eq(true)
+        expect(topic.allowed_users).to include(user1)
+
+        expect(Notification.last.notification_type).to eq(
+          Notification.types[:invited_to_private_message],
+        )
+      end
+
+      it "creates an email invitation" do
+        expect(topic.invite(user, "test@email.com")).to eq(true)
+
+        invite = Invite.last
+
+        expect(invite.email).to eq("test@email.com")
+        expect(invite.invited_by).to eq(user)
+      end
+
+      describe "when user does not have sufficient trust level" do
+        before { user.change_trust_level!(TrustLevel[1]) }
+
+        it "does not create an invitation" do
+          expect do expect(topic.invite(user, "test@email.com")).to eq(nil) end.to_not change {
+            Invite.count
+          }
         end
       end
     end
@@ -1210,88 +1205,80 @@ RSpec.describe Topic do
         end
       end
 
-      describe "by email" do
-        it "invites and notifies the user by email" do
-          expect(topic.invite(user, user1.email)).to eq(true)
-          expect_the_right_notification_to_be_created(user, user1)
-        end
+      it "invites and notifies the user by email" do
+        expect(topic.invite(user, user1.email)).to eq(true)
+        expect_the_right_notification_to_be_created(user, user1)
+      end
 
-        describe "when topic belongs to a private category" do
-          fab!(:category) do
-            Fabricate(:category_with_definition, groups: [group]).tap do |category|
-              category.set_permissions(group => :full)
-              category.save!
-            end
-          end
-
-          fab!(:topic) { Fabricate(:topic, category: category) }
-          fab!(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
-          fab!(:invitee, :user)
-
-          describe "as a group owner" do
-            it "invites the user with group membership" do
-              expect do
-                expect(topic.invite(inviter, invitee.email, [group.id])).to eq(true)
-              end.to change { Notification.count } & change { GroupHistory.count }
-
-              expect_the_right_notification_to_be_created(inviter, invitee)
-
-              group_history = GroupHistory.last
-
-              expect(group_history.acting_user).to eq(inviter)
-              expect(group_history.target_user).to eq(invitee)
-
-              expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
-            end
-
-            describe "when group ids are not given" do
-              it "does not invite the user" do
-                expect do
-                  expect(topic.invite(inviter, invitee.email)).to eq(false)
-                end.to_not change { Notification.count }
-              end
-            end
-          end
-
-          describe "as a normal user" do
-            it "rejects the invitation from an unauthorized user" do
-              expect do
-                expect(topic.invite(Fabricate(:user), invitee.email, [group.id])).to eq(false)
-              end.to_not change { Notification.count }
-            end
+      describe "when topic belongs to a private category" do
+        fab!(:category) do
+          Fabricate(:category_with_definition, groups: [group]).tap do |category|
+            category.set_permissions(group => :full)
+            category.save!
           end
         end
 
-        context "for a muted topic" do
-          before do
-            TopicUser.change(
-              user1.id,
-              topic.id,
-              notification_level: TopicUser.notification_levels[:muted],
-            )
-          end
+        fab!(:topic) { Fabricate(:topic, category: category) }
+        fab!(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
+        fab!(:invitee, :user)
 
-          it "fails with an error message" do
-            expect { topic.invite(user, user1.username) }.to raise_error(Topic::NotAllowed)
-            expect(topic.allowed_users).to_not include(user1)
-            expect(Post.last).to be_blank
-            expect(Notification.last).to be_blank
-          end
+        it "invites the user with group membership" do
+          expect do
+            expect(topic.invite(inviter, invitee.email, [group.id])).to eq(true)
+          end.to change { Notification.count } & change { GroupHistory.count }
+
+          expect_the_right_notification_to_be_created(inviter, invitee)
+
+          group_history = GroupHistory.last
+
+          expect(group_history.acting_user).to eq(inviter)
+          expect(group_history.target_user).to eq(invitee)
+
+          expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
         end
 
-        describe "when user can invite via email" do
-          before { user.change_trust_level!(TrustLevel[2]) }
+        it "does not invite the user" do
+          expect do expect(topic.invite(inviter, invitee.email)).to eq(false) end.to_not change {
+            Notification.count
+          }
+        end
 
-          it "creates an email invitation" do
-            Jobs.run_immediately!
-            expect(topic.invite(user, "test@email.com")).to eq(true)
+        it "rejects the invitation from an unauthorized user" do
+          expect do
+            expect(topic.invite(Fabricate(:user), invitee.email, [group.id])).to eq(false)
+          end.to_not change { Notification.count }
+        end
+      end
 
-            invite = Invite.last
+      context "for a muted topic" do
+        before do
+          TopicUser.change(
+            user1.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:muted],
+          )
+        end
 
-            expect(invite.email).to eq("test@email.com")
-            expect(invite.invited_by).to eq(user)
-            expect(ActionMailer::Base.deliveries.last.body).to include(topic.title)
-          end
+        it "fails with an error message" do
+          expect { topic.invite(user, user1.username) }.to raise_error(Topic::NotAllowed)
+          expect(topic.allowed_users).to_not include(user1)
+          expect(Post.last).to be_blank
+          expect(Notification.last).to be_blank
+        end
+      end
+
+      describe "when user can invite via email" do
+        before { user.change_trust_level!(TrustLevel[2]) }
+
+        it "creates an email invitation" do
+          Jobs.run_immediately!
+          expect(topic.invite(user, "test@email.com")).to eq(true)
+
+          invite = Invite.last
+
+          expect(invite.email).to eq("test@email.com")
+          expect(invite.invited_by).to eq(user)
+          expect(ActionMailer::Base.deliveries.last.body).to include(topic.title)
         end
       end
     end
@@ -1321,144 +1308,142 @@ RSpec.describe Topic do
     end
 
     context "with invite" do
-      context "with existing user" do
-        context "when using group name" do
-          it "can add admin to allowed groups" do
-            admins = Group[:admins]
-            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+      context "when using an existing group name" do
+        it "can add admin to allowed groups" do
+          admins = Group[:admins]
+          admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
 
-            expect(topic.invite_group(topic.user, admins)).to eq(true)
-            expect(topic.allowed_groups.include?(admins)).to eq(true)
-            expect(topic.remove_allowed_group(topic.user, "admins")).to eq(true)
-            expect(topic.allowed_groups.include?(admins)).to eq(false)
-          end
+          expect(topic.invite_group(topic.user, admins)).to eq(true)
+          expect(topic.allowed_groups.include?(admins)).to eq(true)
+          expect(topic.remove_allowed_group(topic.user, "admins")).to eq(true)
+          expect(topic.allowed_groups.include?(admins)).to eq(false)
+        end
 
-          it "sets has_messages to true on the invited group" do
-            group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone], has_messages: false)
+        it "sets has_messages to true on the invited group" do
+          group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone], has_messages: false)
 
-            topic.invite_group(topic.user, group)
+          topic.invite_group(topic.user, group)
 
-            expect(group.reload.has_messages).to eq(true)
-          end
+          expect(group.reload.has_messages).to eq(true)
+        end
 
-          def set_state!(group, user, state)
-            group
-              .group_users
-              .find_by(user_id: user.id)
-              .update!(notification_level: NotificationLevels.all[state])
-          end
+        def set_state!(group, user, state)
+          group
+            .group_users
+            .find_by(user_id: user.id)
+            .update!(notification_level: NotificationLevels.all[state])
+        end
 
-          it "creates a notification for each user in the group" do
-            # trigger notification
-            user_watching_first = Fabricate(:user)
-            user_watching = Fabricate(:user)
+        it "creates a notification for each user in the group" do
+          # trigger notification
+          user_watching_first = Fabricate(:user)
+          user_watching = Fabricate(:user)
 
-            # trigger rollup
-            user_tracking = Fabricate(:user)
+          # trigger rollup
+          user_tracking = Fabricate(:user)
 
-            # trigger nothing
-            user_normal = Fabricate(:user)
-            user_muted = Fabricate(:user)
+          # trigger nothing
+          user_normal = Fabricate(:user)
+          user_muted = Fabricate(:user)
 
-            Fabricate(:post, topic: topic)
+          Fabricate(:post, topic: topic)
 
-            group.add(topic.user) # no notification even though watching
-            group.add(user_watching_first)
-            group.add(user_watching)
-            group.add(user_normal)
-            group.add(user_muted)
-            group.add(user_tracking)
+          group.add(topic.user) # no notification even though watching
+          group.add(user_watching_first)
+          group.add(user_watching)
+          group.add(user_normal)
+          group.add(user_muted)
+          group.add(user_tracking)
 
-            set_state!(group, topic.user, :watching)
-            set_state!(group, user_watching, :watching)
-            set_state!(group, user_watching_first, :watching_first_post)
-            set_state!(group, user_tracking, :tracking)
-            set_state!(group, user_normal, :regular)
-            set_state!(group, user_muted, :muted)
+          set_state!(group, topic.user, :watching)
+          set_state!(group, user_watching, :watching)
+          set_state!(group, user_watching_first, :watching_first_post)
+          set_state!(group, user_tracking, :tracking)
+          set_state!(group, user_normal, :regular)
+          set_state!(group, user_muted, :muted)
 
-            Notification.delete_all
-            Jobs.run_immediately!
-            topic.invite_group(topic.user, group)
+          Notification.delete_all
+          Jobs.run_immediately!
+          topic.invite_group(topic.user, group)
 
-            expect(Notification.count).to eq(3)
+          expect(Notification.count).to eq(3)
 
-            [user_watching, user_watching_first].each do |u|
-              notifications = Notification.where(user_id: u.id).to_a
-              expect(notifications.length).to eq(1)
-
-              notification = notifications.first
-
-              expect(notification.topic).to eq(topic)
-              expect(notification.notification_type).to eq(
-                Notification.types[:invited_to_private_message],
-              )
-            end
-
-            notifications = Notification.where(user_id: user_tracking.id).to_a
+          [user_watching, user_watching_first].each do |u|
+            notifications = Notification.where(user_id: u.id).to_a
             expect(notifications.length).to eq(1)
+
             notification = notifications.first
 
-            expect(notification.notification_type).to eq(Notification.types[:group_message_summary])
+            expect(notification.topic).to eq(topic)
+            expect(notification.notification_type).to eq(
+              Notification.types[:invited_to_private_message],
+            )
           end
 
-          it "does not create notifications if invite is set to skip notifications" do
-            Fabricate(:post, topic: topic)
-            user_watching = Fabricate(:user)
+          notifications = Notification.where(user_id: user_tracking.id).to_a
+          expect(notifications.length).to eq(1)
+          notification = notifications.first
 
-            group.add(topic.user)
-            group.add(user_watching)
+          expect(notification.notification_type).to eq(Notification.types[:group_message_summary])
+        end
 
-            set_state!(group, topic.user, :watching)
-            set_state!(group, user_watching, :watching)
+        it "does not create notifications if invite is set to skip notifications" do
+          Fabricate(:post, topic: topic)
+          user_watching = Fabricate(:user)
 
-            Notification.delete_all
-            Jobs.run_immediately!
-            topic.invite_group(topic.user, group, should_notify: false)
+          group.add(topic.user)
+          group.add(user_watching)
 
-            expect(Notification.count).to eq(0)
-          end
+          set_state!(group, topic.user, :watching)
+          set_state!(group, user_watching, :watching)
 
-          it "removes users in topic_allowed_users who are part of the added group" do
-            admins = Group[:admins]
-            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+          Notification.delete_all
+          Jobs.run_immediately!
+          topic.invite_group(topic.user, group, should_notify: false)
 
-            # clear up the state so we can be more explicit with the test
-            TopicAllowedUser.where(topic: topic).delete_all
-            user0 = topic.user
-            user3 = Fabricate(:user)
-            Fabricate(:topic_allowed_user, topic: topic, user: user0)
-            Fabricate(:topic_allowed_user, topic: topic, user: user1)
-            Fabricate(:topic_allowed_user, topic: topic, user: user2)
-            Fabricate(:topic_allowed_user, topic: topic, user: user3)
+          expect(Notification.count).to eq(0)
+        end
 
-            admins.add(user1)
-            admins.add(user2)
+        it "removes users in topic_allowed_users who are part of the added group" do
+          admins = Group[:admins]
+          admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
 
-            other_topic = Fabricate(:topic)
-            Fabricate(:topic_allowed_user, user: user1, topic: other_topic)
+          # clear up the state so we can be more explicit with the test
+          TopicAllowedUser.where(topic: topic).delete_all
+          user0 = topic.user
+          user3 = Fabricate(:user)
+          Fabricate(:topic_allowed_user, topic: topic, user: user0)
+          Fabricate(:topic_allowed_user, topic: topic, user: user1)
+          Fabricate(:topic_allowed_user, topic: topic, user: user2)
+          Fabricate(:topic_allowed_user, topic: topic, user: user3)
 
-            expect(topic.invite_group(topic.user, admins)).to eq(true)
-            expect(topic.posts.last.action_code).to eq("removed_user")
-            expect(topic.allowed_users).to match_array([user0, user3])
-            expect(other_topic.allowed_users).to match_array([user1])
-          end
+          admins.add(user1)
+          admins.add(user2)
 
-          it "does not remove the OP from topic_allowed_users if they are part of an added group" do
-            admins = Group[:admins]
-            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+          other_topic = Fabricate(:topic)
+          Fabricate(:topic_allowed_user, user: user1, topic: other_topic)
 
-            # clear up the state so we can be more explicit with the test
-            TopicAllowedUser.where(topic: topic).delete_all
-            user0 = topic.user
-            Fabricate(:topic_allowed_user, topic: topic, user: user0)
-            Fabricate(:topic_allowed_user, topic: topic, user: user1)
+          expect(topic.invite_group(topic.user, admins)).to eq(true)
+          expect(topic.posts.last.action_code).to eq("removed_user")
+          expect(topic.allowed_users).to match_array([user0, user3])
+          expect(other_topic.allowed_users).to match_array([user1])
+        end
 
-            admins.add(topic.user)
-            admins.add(user1)
+        it "does not remove the OP from topic_allowed_users if they are part of an added group" do
+          admins = Group[:admins]
+          admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
 
-            expect(topic.invite_group(topic.user, admins)).to eq(true)
-            expect(topic.allowed_users).to match_array([topic.user])
-          end
+          # clear up the state so we can be more explicit with the test
+          TopicAllowedUser.where(topic: topic).delete_all
+          user0 = topic.user
+          Fabricate(:topic_allowed_user, topic: topic, user: user0)
+          Fabricate(:topic_allowed_user, topic: topic, user: user1)
+
+          admins.add(topic.user)
+          admins.add(user1)
+
+          expect(topic.invite_group(topic.user, admins)).to eq(true)
+          expect(topic.allowed_users).to match_array([topic.user])
         end
       end
     end
@@ -2001,268 +1986,255 @@ RSpec.describe Topic do
         expect(topic.category_id).to eq(category.id)
       end
 
-      describe "to a different category" do
-        fab!(:new_category) do
-          Fabricate(:category_with_definition, user: user, name: "2nd category")
+      fab!(:new_category) { Fabricate(:category_with_definition, user: user, name: "2nd category") }
+
+      it "moves the topic and updates both category counts" do
+        topic.change_category_to_id(new_category.id)
+
+        expect(topic.reload.category).to eq(new_category)
+        expect(new_category.reload.topic_count).to eq(1)
+        expect(category.reload.topic_count).to eq(0)
+      end
+
+      it "triggers a topic_category_changed event" do
+        events =
+          DiscourseEvent.track_events(:topic_category_changed) do
+            topic.change_category_to_id(new_category.id)
+          end
+
+        expect(events.length).to eq(1)
+        expect(events.first[:params][0]).to eq(topic)
+        expect(events.first[:params][1]).to eq(category)
+      end
+
+      describe "user that is watching the new category" do
+        before do
+          Jobs.run_immediately!
+
+          topic.posts << Fabricate(:post)
+
+          CategoryUser.set_notification_level_for_category(
+            user,
+            CategoryUser.notification_levels[:watching],
+            new_category.id,
+          )
+
+          CategoryUser.set_notification_level_for_category(
+            user1,
+            CategoryUser.notification_levels[:watching_first_post],
+            new_category.id,
+          )
         end
 
-        it "moves the topic and updates both category counts" do
+        it "generates the topic notification" do
+          expect do topic.change_category_to_id(new_category.id) end.to change {
+            Notification.count
+          }.by(2)
+
+          expect(
+            Notification.where(
+              user_id: user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:posted],
+            ).exists?,
+          ).to eq(true)
+
+          expect(
+            Notification.where(
+              user_id: user1.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:watching_first_post],
+            ).exists?,
+          ).to eq(true)
+        end
+
+        it "omits the notification when category edit notifications are disabled" do
+          SiteSetting.disable_category_edit_notifications = true
+
+          expect do topic.change_category_to_id(new_category.id) end.not_to change {
+            Notification.count
+          }
+
+          expect(topic.category_id).to eq(new_category.id)
+        end
+
+        it "omits the notification when silent is true" do
+          expect do topic.change_category_to_id(new_category.id, silent: true) end.not_to change {
+            Notification.count
+          }
+
+          expect(topic.category_id).to eq(new_category.id)
+        end
+
+        it "generates the modified notification when the topic was already seen" do
+          TopicUser.create!(
+            topic_id: topic.id,
+            last_read_post_number: topic.posts.first.post_number,
+            user_id: user.id,
+          )
+
+          expect do topic.change_category_to_id(new_category.id) end.to change {
+            Notification.count
+          }.by(2)
+
+          expect(
+            Notification.where(
+              user_id: user.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:edited],
+            ).exists?,
+          ).to eq(true)
+
+          expect(
+            Notification.where(
+              user_id: user1.id,
+              topic_id: topic.id,
+              post_number: 1,
+              notification_type: Notification.types[:watching_first_post],
+            ).exists?,
+          ).to eq(true)
+        end
+
+        it "omits notifications for unlisted topics" do
+          topic.update_column(:visible, false)
+
+          expect do topic.change_category_to_id(new_category.id) end.not_to change {
+            Notification.count
+          }
+        end
+      end
+
+      describe "when new category is set to auto close by default" do
+        before do
+          freeze_time
+          new_category.update!(auto_close_hours: 5)
+          topic.user.update!(admin: true)
+        end
+
+        it "sets a topic timer" do
+          now = Time.zone.now
+
+          expect { topic.change_category_to_id(new_category.id) }.to change { TopicTimer.count }.by(
+            1,
+          )
+
+          expect(topic.reload.category).to eq(new_category)
+
+          topic_timer = TopicTimer.last
+
+          expect(topic_timer.user).to eq(Discourse.system_user)
+          expect(topic_timer.topic).to eq(topic)
+          expect(topic_timer.execute_at).to be_within_one_minute_of(now + 5.hours)
+        end
+
+        it "does not set a topic timer when the topic is already closed" do
+          topic.update_status("closed", true, Discourse.system_user)
+          expect { topic.change_category_to_id(new_category.id) }.not_to change {
+            TopicTimer.with_deleted.count
+          }
+
+          expect(topic.closed).to eq(true)
+          expect(topic.reload.category).to eq(new_category)
+        end
+
+        it "does not inherit category auto-close hours when a topic timer exists" do
+          topic_timer = Fabricate(:topic_timer, topic: topic)
           topic.change_category_to_id(new_category.id)
 
           expect(topic.reload.category).to eq(new_category)
-          expect(new_category.reload.topic_count).to eq(1)
-          expect(category.reload.topic_count).to eq(0)
+          expect(topic.public_topic_timer).to eq(topic_timer)
+          expect(topic.public_topic_timer.execute_at).to eq_time(topic_timer.execute_at)
+        end
+      end
+
+      describe "when the topic title is not valid" do
+        fab!(:topic_title) { topic.title }
+        fab!(:topic_slug) { topic.slug }
+        fab!(:topic_2, :topic)
+
+        it "does not save title or slug when title repeats letters" do
+          topic.title = "a" * 50
+          topic.change_category_to_id(new_category.id)
+
+          expect(topic.reload.title).to eq(topic_title)
+          expect(topic.reload.slug).to eq(topic_slug)
         end
 
-        it "triggers a topic_category_changed event" do
-          events =
-            DiscourseEvent.track_events(:topic_category_changed) do
-              topic.change_category_to_id(new_category.id)
-            end
+        it "does not save title or slug when title is too long" do
+          SiteSetting.max_topic_title_length = 200
 
-          expect(events.length).to eq(1)
-          expect(events.first[:params][0]).to eq(topic)
-          expect(events.first[:params][1]).to eq(category)
+          topic.title = "Neque porro quisquam est qui dolorem ipsum quia dolor amet" * 100
+          topic.change_category_to_id(new_category.id)
+
+          expect(topic.reload.title).to eq(topic_title)
+          expect(topic.reload.slug).to eq(topic_slug)
         end
 
-        describe "user that is watching the new category" do
-          before do
-            Jobs.run_immediately!
-
-            topic.posts << Fabricate(:post)
-
-            CategoryUser.set_notification_level_for_category(
-              user,
-              CategoryUser.notification_levels[:watching],
-              new_category.id,
-            )
-
-            CategoryUser.set_notification_level_for_category(
-              user1,
-              CategoryUser.notification_levels[:watching_first_post],
-              new_category.id,
-            )
-          end
-
-          it "generates the topic notification" do
-            expect do topic.change_category_to_id(new_category.id) end.to change {
-              Notification.count
-            }.by(2)
-
-            expect(
-              Notification.where(
-                user_id: user.id,
-                topic_id: topic.id,
-                post_number: 1,
-                notification_type: Notification.types[:posted],
-              ).exists?,
-            ).to eq(true)
-
-            expect(
-              Notification.where(
-                user_id: user1.id,
-                topic_id: topic.id,
-                post_number: 1,
-                notification_type: Notification.types[:watching_first_post],
-              ).exists?,
-            ).to eq(true)
-          end
-
-          it "omits the notification when category edit notifications are disabled" do
-            SiteSetting.disable_category_edit_notifications = true
-
-            expect do topic.change_category_to_id(new_category.id) end.not_to change {
-              Notification.count
-            }
-
-            expect(topic.category_id).to eq(new_category.id)
-          end
-
-          it "omits the notification when silent is true" do
-            expect do topic.change_category_to_id(new_category.id, silent: true) end.not_to change {
-              Notification.count
-            }
-
-            expect(topic.category_id).to eq(new_category.id)
-          end
-
-          it "generates the modified notification when the topic was already seen" do
-            TopicUser.create!(
-              topic_id: topic.id,
-              last_read_post_number: topic.posts.first.post_number,
-              user_id: user.id,
-            )
-
-            expect do topic.change_category_to_id(new_category.id) end.to change {
-              Notification.count
-            }.by(2)
-
-            expect(
-              Notification.where(
-                user_id: user.id,
-                topic_id: topic.id,
-                post_number: 1,
-                notification_type: Notification.types[:edited],
-              ).exists?,
-            ).to eq(true)
-
-            expect(
-              Notification.where(
-                user_id: user1.id,
-                topic_id: topic.id,
-                post_number: 1,
-                notification_type: Notification.types[:watching_first_post],
-              ).exists?,
-            ).to eq(true)
-          end
-
-          it "omits notifications for unlisted topics" do
-            topic.update_column(:visible, false)
-
-            expect do topic.change_category_to_id(new_category.id) end.not_to change {
-              Notification.count
-            }
-          end
+        it "does not save title when it is too short" do
+          SiteSetting.min_topic_title_length = 15
+          topic.title = "Hello world"
+          expect { topic.change_category_to_id(new_category.id) }.not_to change {
+            topic.reload.title
+          }
         end
 
-        describe "when new category is set to auto close by default" do
-          before do
-            freeze_time
-            new_category.update!(auto_close_hours: 5)
-            topic.user.update!(admin: true)
-          end
-
-          it "sets a topic timer" do
-            now = Time.zone.now
-
-            expect { topic.change_category_to_id(new_category.id) }.to change {
-              TopicTimer.count
-            }.by(1)
-
-            expect(topic.reload.category).to eq(new_category)
-
-            topic_timer = TopicTimer.last
-
-            expect(topic_timer.user).to eq(Discourse.system_user)
-            expect(topic_timer.topic).to eq(topic)
-            expect(topic_timer.execute_at).to be_within_one_minute_of(now + 5.hours)
-          end
-
-          describe "when topic is already closed" do
-            before { topic.update_status("closed", true, Discourse.system_user) }
-
-            it "does not set a topic timer" do
-              expect { topic.change_category_to_id(new_category.id) }.not_to change {
-                TopicTimer.with_deleted.count
-              }
-
-              expect(topic.closed).to eq(true)
-              expect(topic.reload.category).to eq(new_category)
-            end
-          end
-
-          describe "when topic has an existing topic timer" do
-            let(:topic_timer) { Fabricate(:topic_timer, topic: topic) }
-
-            it "does not inherit the category's auto close hours" do
-              topic_timer
-              topic.change_category_to_id(new_category.id)
-
-              expect(topic.reload.category).to eq(new_category)
-              expect(topic.public_topic_timer).to eq(topic_timer)
-              expect(topic.public_topic_timer.execute_at).to eq_time(topic_timer.execute_at)
-            end
-          end
+        it "does not save title when it is a duplicate" do
+          topic_2.title = topic_title
+          expect { topic_2.change_category_to_id(new_category.id) }.not_to change {
+            topic_2.reload.title
+          }
         end
 
-        describe "when the topic title is not valid" do
-          fab!(:topic_title) { topic.title }
-          fab!(:topic_slug) { topic.slug }
-          fab!(:topic_2, :topic)
-
-          it "does not save title or slug when title repeats letters" do
-            topic.title = "a" * 50
-            topic.change_category_to_id(new_category.id)
-
-            expect(topic.reload.title).to eq(topic_title)
-            expect(topic.reload.slug).to eq(topic_slug)
-          end
-
-          it "does not save title or slug when title is too long" do
-            SiteSetting.max_topic_title_length = 200
-
-            topic.title = "Neque porro quisquam est qui dolorem ipsum quia dolor amet" * 100
-            topic.change_category_to_id(new_category.id)
-
-            expect(topic.reload.title).to eq(topic_title)
-            expect(topic.reload.slug).to eq(topic_slug)
-          end
-
-          it "does not save title when it is too short" do
-            SiteSetting.min_topic_title_length = 15
-            topic.title = "Hello world"
-            expect { topic.change_category_to_id(new_category.id) }.not_to change {
-              topic.reload.title
-            }
-          end
-
-          it "does not save title when it is a duplicate" do
-            topic_2.title = topic_title
-            expect { topic_2.change_category_to_id(new_category.id) }.not_to change {
-              topic_2.reload.title
-            }
-          end
-
-          it "does not save title when it is blank" do
-            topic.title = ""
-            expect { topic.change_category_to_id(new_category.id) }.not_to change {
-              topic.reload.title
-            }
-          end
-
-          it "does not save title when there are too many emojis" do
-            SiteSetting.max_emojis_in_title = 2
-
-            topic.title = "Dummy topic title " + "😀" * 5
-            expect { topic.change_category_to_id(new_category.id) }.not_to change {
-              topic.reload.title
-            }
-          end
+        it "does not save title when it is blank" do
+          topic.title = ""
+          expect { topic.change_category_to_id(new_category.id) }.not_to change {
+            topic.reload.title
+          }
         end
 
-        describe "tracking state notifications" do
-          before { SiteSetting.experimental_topic_category_change_notification = true }
+        it "does not save title when there are too many emojis" do
+          SiteSetting.max_emojis_in_title = 2
 
-          it "publishes category change when moving to a restricted category" do
-            restricted_category =
-              Fabricate(:category_with_definition, read_restricted: true, user: user)
+          topic.title = "Dummy topic title " + "😀" * 5
+          expect { topic.change_category_to_id(new_category.id) }.not_to change {
+            topic.reload.title
+          }
+        end
+      end
 
-            messages =
-              MessageBus.track_publish { topic.change_category_to_id(restricted_category.id) }
+      describe "tracking state notifications" do
+        before { SiteSetting.experimental_topic_category_change_notification = true }
 
-            delete_message = messages.find { |m| m.channel == "/delete" }
-            latest_message = messages.find { |m| m.channel == "/latest" }
+        it "publishes category change when moving to a restricted category" do
+          restricted_category =
+            Fabricate(:category_with_definition, read_restricted: true, user: user)
 
-            expect(delete_message).to be_present
-            expect(delete_message.data["topic_id"]).to eq(topic.id)
+          messages =
+            MessageBus.track_publish { topic.change_category_to_id(restricted_category.id) }
 
-            expect(latest_message).to be_present
-            expect(latest_message.data["topic_id"]).to eq(topic.id)
-          end
+          delete_message = messages.find { |m| m.channel == "/delete" }
+          latest_message = messages.find { |m| m.channel == "/latest" }
 
-          it "publishes latest when moving between public categories" do
-            another_category =
-              Fabricate(:category_with_definition, read_restricted: false, user: user)
+          expect(delete_message).to be_present
+          expect(delete_message.data["topic_id"]).to eq(topic.id)
 
-            messages =
-              MessageBus.track_publish("/latest") do
-                topic.change_category_to_id(another_category.id)
-              end
+          expect(latest_message).to be_present
+          expect(latest_message.data["topic_id"]).to eq(topic.id)
+        end
 
-            expect(messages.length).to eq(1)
-            expect(messages.first.data["topic_id"]).to eq(topic.id)
-            expect(messages.first.data["payload"]["category_id"]).to eq(another_category.id)
-          end
+        it "publishes latest when moving between public categories" do
+          another_category =
+            Fabricate(:category_with_definition, read_restricted: false, user: user)
+
+          messages =
+            MessageBus.track_publish("/latest") { topic.change_category_to_id(another_category.id) }
+
+          expect(messages.length).to eq(1)
+          expect(messages.first.data["topic_id"]).to eq(topic.id)
+          expect(messages.first.data["payload"]["category_id"]).to eq(another_category.id)
         end
       end
 
@@ -2832,7 +2804,7 @@ RSpec.describe Topic do
   end
 
   describe "#listable_count_per_day" do
-    before(:each) do
+    before do
       freeze_time_safe
 
       Fabricate(:topic)
@@ -3721,7 +3693,7 @@ RSpec.describe Topic do
       https://meta.discourse.org/?filter=test
       https://meta.discourse.org/t/中國/1
     ].each do |featured_link|
-      it "extracts the root domain from #{featured_link}" do
+      it "extracts the root domain from #{featured_link} correctly" do
         topic.featured_link = featured_link
         expect(topic.featured_link_root_domain).to eq("discourse.org")
       end
@@ -3987,7 +3959,7 @@ RSpec.describe Topic do
       )
     end
 
-    let!(:incoming1) do
+    before do
       Fabricate(
         :incoming_email,
         to_addresses: "discourse@example.com",
@@ -3996,8 +3968,6 @@ RSpec.describe Topic do
         post: topic.posts.first,
         created_at: 20.minutes.ago,
       )
-    end
-    let!(:incoming2) do
       Fabricate(
         :incoming_email,
         from_address: "discourse@example.com",
@@ -4006,8 +3976,7 @@ RSpec.describe Topic do
         post: Fabricate(:post, topic: topic),
         created_at: 10.minutes.ago,
       )
-    end
-    let!(:incoming3) do
+
       Fabricate(
         :incoming_email,
         to_addresses: "discourse@example.com",
@@ -4017,8 +3986,7 @@ RSpec.describe Topic do
         cc_addresses: "otherguy@user.com",
         created_at: 2.minutes.ago,
       )
-    end
-    let!(:incoming4) do
+
       Fabricate(
         :incoming_email,
         to_addresses: "unrelated@test.com",

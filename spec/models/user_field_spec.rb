@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserField do
-  it do
+  it "defines the requirement values" do
     is_expected.to define_enum_for(:requirement).with_values(%w[optional for_all_users on_signup])
   end
 

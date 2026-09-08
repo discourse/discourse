@@ -198,9 +198,9 @@ RSpec.describe Jobs::PollMailbox do
 
     let(:plugin) { Plugin::Instance.new }
 
-    before(:each) { plugin.register_email_poller(poller_plugin) }
+    before { plugin.register_email_poller(poller_plugin) }
 
-    after(:each) do
+    after do
       Discourse.plugins.delete plugin
       DiscoursePluginRegistry.reset!
     end

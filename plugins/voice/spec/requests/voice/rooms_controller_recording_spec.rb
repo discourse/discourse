@@ -22,13 +22,6 @@ RSpec.describe Voice::RoomsController do
     end
     Voice::Room.reset_column_information
     Voice::Recording.reset_column_information
-  end
-
-  fab!(:creator, :user)
-  fab!(:participant, :user)
-  fab!(:room) { Fabricate(:voice_room, public: true, creator: creator) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_allowed_groups =
       "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
@@ -39,6 +32,10 @@ RSpec.describe Voice::RoomsController do
     SiteSetting.voice_livekit_recording_enabled = true
     Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
   end
+
+  fab!(:creator, :user)
+  fab!(:participant, :user)
+  fab!(:room) { Fabricate(:voice_room, public: true, creator: creator) }
 
   after { Voice::ParticipantTracker.clear(room.id) }
 

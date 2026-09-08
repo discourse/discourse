@@ -63,7 +63,7 @@ describe "Flagging post" do
   describe "As Illegal" do
     before { sign_in(current_user) }
 
-    it do
+    it "submits an illegal-content flag" do
       topic_page.visit_topic(topic)
       topic_page.expand_post_actions(post_to_flag)
       topic_page.click_post_action_button(post_to_flag, :flag)
@@ -88,7 +88,7 @@ describe "Flagging post" do
       sign_in(current_user)
     end
 
-    it do
+    it "submits a notify-user flag in the user's locale" do
       topic_page.visit_topic(topic)
       topic_page.expand_post_actions(post_to_flag)
       topic_page.click_post_action_button(post_to_flag, :flag)

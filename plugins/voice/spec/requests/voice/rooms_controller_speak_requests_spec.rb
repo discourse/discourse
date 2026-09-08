@@ -16,6 +16,13 @@ RSpec.describe Voice::RoomsController do
       end
     end
     Voice::Room.reset_column_information
+    SiteSetting.voice_enabled = true
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
+    SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
+    room.update!(room_type: Voice::Room::ROOM_TYPE_STAGE)
+    Voice::ParticipantTracker.add(room.id, listener.id)
+    listener_session_id
   end
 
   fab!(:staff, :admin)
@@ -26,23 +33,16 @@ RSpec.describe Voice::RoomsController do
   fab!(:room_moderator) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:room) { Fabricate(:voice_room, creator: room_owner, public: true) }
 
+  let(:listener_session_id) do
+    Voice::ParticipantTracker.create_participant_session!(room.id, listener.id)
+  end
+
   fab!(:speaker_membership) do
     room.room_memberships.create!(user: room_speaker, role: Voice::RoomMembership::ROLE_SPEAKER)
   end
 
   fab!(:moderator_membership) do
     room.room_memberships.create!(user: room_moderator, role: Voice::RoomMembership::ROLE_MODERATOR)
-  end
-
-  before do
-    SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups =
-      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
-    SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
-    room.update!(room_type: Voice::Room::ROOM_TYPE_STAGE)
-    Voice::ParticipantTracker.add(room.id, listener.id)
-    @listener_session_id =
-      Voice::ParticipantTracker.create_participant_session!(room.id, listener.id)
   end
 
   after { Voice::ParticipantTracker.clear(room.id) }
@@ -55,7 +55,7 @@ RSpec.describe Voice::RoomsController do
         MessageBus.track_publish(Voice.room_channel(room.id)) do
           post "/voice/rooms/#{room.id}/request_to_speak.json",
                params: {
-                 participant_session_id: @listener_session_id,
+                 participant_session_id: listener_session_id,
                }
         end
 
@@ -79,7 +79,7 @@ RSpec.describe Voice::RoomsController do
       sign_in(listener)
       post "/voice/rooms/#{room.id}/request_to_speak.json",
            params: {
-             participant_session_id: @listener_session_id,
+             participant_session_id: listener_session_id,
            }
       original = Voice::ParticipantTracker.get_metadata(room.id, listener.id)[:hand_raised_at]
 
@@ -87,7 +87,7 @@ RSpec.describe Voice::RoomsController do
         MessageBus.track_publish(Voice.room_channel(room.id)) do
           post "/voice/rooms/#{room.id}/request_to_speak.json",
                params: {
-                 participant_session_id: @listener_session_id,
+                 participant_session_id: listener_session_id,
                }
         end
 
@@ -142,7 +142,7 @@ RSpec.describe Voice::RoomsController do
 
       post "/voice/rooms/#{room.id}/request_to_speak.json",
            params: {
-             participant_session_id: @listener_session_id,
+             participant_session_id: listener_session_id,
            }
 
       expect(response.status).to eq(403)
@@ -170,7 +170,7 @@ RSpec.describe Voice::RoomsController do
         MessageBus.track_publish(Voice.room_channel(room.id)) do
           delete "/voice/rooms/#{room.id}/request_to_speak.json",
                  params: {
-                   participant_session_id: @listener_session_id,
+                   participant_session_id: listener_session_id,
                  }
         end
 
@@ -195,7 +195,7 @@ RSpec.describe Voice::RoomsController do
         MessageBus.track_publish(Voice.room_channel(room.id)) do
           delete "/voice/rooms/#{room.id}/request_to_speak.json",
                  params: {
-                   participant_session_id: @listener_session_id,
+                   participant_session_id: listener_session_id,
                  }
         end
 

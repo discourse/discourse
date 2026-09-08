@@ -306,6 +306,9 @@ RSpec.describe Stylesheet::Manager do
   describe "digest" do
     after { DiscoursePluginRegistry.reset! }
 
+    let(:image2) { file_from_fixtures("logo-dev.png") }
+    let(:image) { file_from_fixtures("logo.png") }
+
     it "can correctly account for plugins in default digest" do
       builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
       digest1 = builder.digest
@@ -360,9 +363,6 @@ RSpec.describe Stylesheet::Manager do
 
       expect(digest1).not_to eq(digest2)
     end
-
-    let(:image) { file_from_fixtures("logo.png") }
-    let(:image2) { file_from_fixtures("logo-dev.png") }
 
     it "can correctly account for theme uploads in digest" do
       theme = Fabricate(:theme)

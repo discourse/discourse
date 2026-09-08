@@ -21,7 +21,7 @@ RSpec.describe ProblemCheck::ImageMagick do
       context "when Image Magick is not installed" do
         let(:installed) { false }
 
-        it do
+        it "reports unavailable ImageMagick support" do
           expect(check).to have_a_problem.with_priority("low").with_message(
             'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.',
           )

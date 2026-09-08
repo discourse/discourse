@@ -34,23 +34,21 @@ RSpec.describe Chat::ListChannelThreadMessages do
         end
       end
 
-      context "when page_size is set" do
-        context "when page_size is greater than max_page_size" do
-          before { contract.page_size = options.max_page_size + 1 }
+      context "when page_size is greater than max_page_size" do
+        before { contract.page_size = options.max_page_size + 1 }
 
-          it "sets page_size to options.max_page_size" do
-            contract.validate
-            expect(contract.page_size).to eq(options.max_page_size)
-          end
+        it "sets page_size to options.max_page_size" do
+          contract.validate
+          expect(contract.page_size).to eq(options.max_page_size)
         end
+      end
 
-        context "when page_size is lesser than max_page_size" do
-          before { contract.page_size = 5 }
+      context "when page_size is lesser than max_page_size" do
+        before { contract.page_size = 5 }
 
-          it "does not change the value" do
-            contract.validate
-            expect(contract.page_size).to eq(5)
-          end
+        it "does not change the value" do
+          contract.validate
+          expect(contract.page_size).to eq(5)
         end
       end
     end

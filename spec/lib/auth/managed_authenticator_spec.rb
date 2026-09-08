@@ -215,7 +215,7 @@ RSpec.describe Auth::ManagedAuthenticator do
 
     describe "avatar on update" do
       fab!(:user)
-      let!(:associated) do
+      before do
         UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
       end
 
@@ -258,7 +258,7 @@ RSpec.describe Auth::ManagedAuthenticator do
 
     describe "profile on update" do
       fab!(:user)
-      let!(:associated) do
+      before do
         UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
       end
 

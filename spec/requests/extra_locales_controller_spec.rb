@@ -256,13 +256,6 @@ RSpec.describe ExtraLocalesController do
       )
     end
 
-    it "includes hostname param for site-specific bundles" do
-      set_cdn_url "https://cdn.example.com"
-      expect(ExtraLocalesController.url("admin")).to start_with(
-        "https://cdn.example.com/extra-locales/",
-      )
-    end
-
     it "includes locale correctly" do
       expect(ExtraLocalesController.url("admin")).to include("/en/admin.js")
       I18n.with_locale(:fr) do

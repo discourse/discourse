@@ -34,13 +34,14 @@ RSpec.describe TagUser do
         notification_level: TagUser.notification_levels[:watching],
       )
     end
-    let!(:tag_user2) do
+    before do
       TagUser.create(
         user: user1,
         tag: tag2,
         notification_level: TagUser.notification_levels[:tracking],
       )
     end
+
     let!(:tag_user3) do
       TagUser.create(
         user: user2,

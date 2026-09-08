@@ -213,11 +213,13 @@ RSpec.describe PostDestroyer do
     end
 
     describe "post_count recovery" do
+      let(:reply_user) { post.user }
+      let(:reply) { create_post(topic: post.topic, user: reply_user) }
+
       before do
         post
-        @user = post.user
-        @reply = create_post(topic: post.topic, user: @user)
-        expect(@user.user_stat.post_count).to eq(1)
+        reply
+        expect(reply_user.user_stat.post_count).to eq(1)
       end
 
       it "Recovers the post correctly" do
@@ -233,32 +235,32 @@ RSpec.describe PostDestroyer do
 
       context "with recover" do
         it "doesn't raise an error when the raw doesn't change" do
-          PostRevisor.new(@reply).revise!(
-            @user,
+          PostRevisor.new(reply).revise!(
+            reply_user,
             { edit_reason: "made a change" },
             force_new_version: true,
           )
-          PostDestroyer.new(@user, @reply.reload).recover
+          PostDestroyer.new(reply_user, reply.reload).recover
         end
 
-        it "does not recover a post that was not deleted by its author" do
-          PostRevisor.new(@reply).revise!(
+        it "does not recover a non user-deleted post" do
+          PostRevisor.new(reply).revise!(
             admin,
             { raw: "this is a change to the post" },
             force_new_version: true,
           )
-          PostDestroyer.new(@user, @reply.reload).recover
-          expect(@reply.reload.raw).to eq("this is a change to the post")
+          PostDestroyer.new(reply_user, reply.reload).recover
+          expect(reply.reload.raw).to eq("this is a change to the post")
         end
 
         it "increments the user's post count" do
-          PostDestroyer.new(@user, @reply).destroy
-          expect(@user.user_stat.topic_count).to eq(1)
-          expect(@user.user_stat.post_count).to eq(1)
+          PostDestroyer.new(reply_user, reply).destroy
+          expect(reply_user.user_stat.topic_count).to eq(1)
+          expect(reply_user.user_stat.post_count).to eq(1)
 
-          PostDestroyer.new(@user, @reply.reload).recover
-          expect(@user.user_stat.topic_count).to eq(1)
-          expect(@user.reload.user_stat.post_count).to eq(1)
+          PostDestroyer.new(reply_user, reply.reload).recover
+          expect(reply_user.user_stat.topic_count).to eq(1)
+          expect(reply_user.reload.user_stat.post_count).to eq(1)
 
           expect(
             UserAction.where(
@@ -272,93 +274,83 @@ RSpec.describe PostDestroyer do
         end
 
         it "runs the SyncTopicUserBookmarked for the topic that the post is in so topic_users.bookmarked is correct" do
-          PostDestroyer.new(@user, @reply).destroy
+          PostDestroyer.new(reply_user, reply).destroy
           expect_enqueued_with(
             job: :sync_topic_user_bookmarked,
             args: {
-              topic_id: @reply.topic_id,
+              topic_id: reply.topic_id,
             },
-          ) { PostDestroyer.new(@user, @reply.reload).recover }
+          ) { PostDestroyer.new(reply_user, reply.reload).recover }
         end
       end
 
-      context "when recovered by admin" do
-        it "sets user_deleted to false" do
-          PostDestroyer.new(@user, @reply).destroy
-          expect(@reply.reload.user_deleted).to eq(true)
+      it "sets user_deleted to false when recovered by admin" do
+        PostDestroyer.new(reply_user, reply).destroy
+        expect(reply.reload.user_deleted).to eq(true)
 
-          PostDestroyer.new(admin, @reply).recover
-          expect(@reply.reload.user_deleted).to eq(false)
+        PostDestroyer.new(admin, reply).recover
+        expect(reply.reload.user_deleted).to eq(false)
+      end
+
+      it "increments the user's post count when recovered by admin" do
+        PostDestroyer.new(moderator, reply).destroy
+        expect(reply_user.reload.user_stat.topic_count).to eq(1)
+        expect(reply_user.user_stat.post_count).to eq(0)
+
+        PostDestroyer.new(admin, reply).recover
+        expect(reply_user.reload.user_stat.topic_count).to eq(1)
+        expect(reply_user.user_stat.post_count).to eq(1)
+
+        PostDestroyer.new(moderator, post).destroy
+        expect(reply_user.reload.user_stat.topic_count).to eq(0)
+        expect(reply_user.user_stat.post_count).to eq(0)
+
+        PostDestroyer.new(admin, post).recover
+        expect(reply_user.reload.user_stat.topic_count).to eq(1)
+        expect(reply_user.user_stat.post_count).to eq(1)
+
+        expect(
+          UserAction.where(
+            target_topic_id: post.topic_id,
+            action_type: UserAction::NEW_TOPIC,
+          ).count,
+        ).to eq(1)
+        expect(
+          UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count,
+        ).to eq(1)
+      end
+
+      context "when recovered by user with access to moderate topic category" do
+        fab!(:review_user, :user)
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          review_group = Fabricate(:group)
+          review_category = Fabricate(:category)
+          Fabricate(:category_moderation_group, category: review_category, group: review_group)
+          reply.topic.update!(category: review_category)
+          review_group.users << review_user
+          ReviewableFlaggedPost.needs_review!(target: reply, created_by: Fabricate(:user))
         end
 
-        it "increments the user's post count" do
-          PostDestroyer.new(moderator, @reply).destroy
-          expect(@user.reload.user_stat.topic_count).to eq(1)
-          expect(@user.user_stat.post_count).to eq(0)
+        def changes_deleted_at_to_nil
+          PostDestroyer.new(Discourse.system_user, reply, context: "Automated testing").destroy
+          reply.reload
+          expect(reply.user_deleted).to eq(false)
+          expect(reply.deleted_at).not_to eq(nil)
 
-          PostDestroyer.new(admin, @reply).recover
-          expect(@user.reload.user_stat.topic_count).to eq(1)
-          expect(@user.user_stat.post_count).to eq(1)
-
-          PostDestroyer.new(moderator, post).destroy
-          expect(@user.reload.user_stat.topic_count).to eq(0)
-          expect(@user.user_stat.post_count).to eq(0)
-
-          PostDestroyer.new(admin, post).recover
-          expect(@user.reload.user_stat.topic_count).to eq(1)
-          expect(@user.user_stat.post_count).to eq(1)
-
-          expect(
-            UserAction.where(
-              target_topic_id: post.topic_id,
-              action_type: UserAction::NEW_TOPIC,
-            ).count,
-          ).to eq(1)
-          expect(
-            UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count,
-          ).to eq(1)
+          PostDestroyer.new(review_user, reply).recover
+          reply.reload
+          expect(reply.deleted_at).to eq(nil)
         end
 
-        context "when recovered by user with access to moderate topic category" do
-          fab!(:review_user, :user)
+        it "changes deleted_at to nil for a post with a Reviewable record" do
+          changes_deleted_at_to_nil
+        end
 
-          before do
-            SiteSetting.enable_category_group_moderation = true
-            review_group = Fabricate(:group)
-            review_category = Fabricate(:category)
-            Fabricate(:category_moderation_group, category: review_category, group: review_group)
-            @reply.topic.update!(category: review_category)
-            review_group.users << review_user
-          end
-
-          context "when the post has a Reviewable record" do
-            before do
-              ReviewableFlaggedPost.needs_review!(target: @reply, created_by: Fabricate(:user))
-            end
-
-            def changes_deleted_at_to_nil
-              PostDestroyer.new(Discourse.system_user, @reply, context: "Automated testing").destroy
-              @reply.reload
-              expect(@reply.user_deleted).to eq(false)
-              expect(@reply.deleted_at).not_to eq(nil)
-
-              PostDestroyer.new(review_user, @reply).recover
-              @reply.reload
-              expect(@reply.deleted_at).to eq(nil)
-            end
-
-            it "changes deleted_at to nil" do
-              changes_deleted_at_to_nil
-            end
-
-            context "when the topic is deleted" do
-              before { @reply.topic.trash! }
-
-              it "changes deleted_at to nil" do
-                changes_deleted_at_to_nil
-              end
-            end
-          end
+        it "changes deleted_at to nil when the topic is deleted" do
+          reply.topic.trash!
+          changes_deleted_at_to_nil
         end
       end
     end
@@ -452,7 +444,7 @@ RSpec.describe PostDestroyer do
 
       DiscourseEvent.on(:topic_destroyed, &topic_destroyed)
 
-      @orig = post2.cooked
+      original_cooked = post2.cooked
       # Guardian.new(post2.user).can_delete_post?(post2) == false
       PostDestroyer.new(post2.user, post2).destroy
       post2.reload
@@ -480,7 +472,7 @@ RSpec.describe PostDestroyer do
       post2.reload
       expect(post2.version).to eq(3)
       expect(post2.user_deleted).to eq(false)
-      expect(post2.cooked).to eq(@orig)
+      expect(post2.cooked).to eq(original_cooked)
       expect(called).to eq(1)
       expect(user_stat.reload.post_count).to eq(0)
       expect(user_stat.reload.topic_count).to eq(1)
@@ -1050,7 +1042,7 @@ RSpec.describe PostDestroyer do
 
     context "with a reply" do
       fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
-      let!(:post_reply) { PostReply.create(post_id: post.id, reply_post_id: reply.id) }
+      before { PostReply.create(post_id: post.id, reply_post_id: reply.id) }
 
       it "changes the post count of the topic" do
         post.reload
@@ -1250,7 +1242,8 @@ RSpec.describe PostDestroyer do
 
   describe "internal links" do
     fab!(:topic)
-    let!(:second_post) { Fabricate(:post, topic: topic) }
+    before { Fabricate(:post, topic: topic) }
+
     fab!(:other_topic, :topic)
     let!(:other_post) { Fabricate(:post, topic: other_topic) }
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }

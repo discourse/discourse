@@ -386,7 +386,7 @@ RSpec.describe JsonApiKit::Resource do
     end
 
     context "when no resource matches the name" do
-      it do
+      it "raises a missing-resource error" do
         expect { Class.new(described_class) { has_one :nobody } }.to raise_error(
           JsonApiKit::ResourceLookup::MissingResource,
         )

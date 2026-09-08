@@ -16,6 +16,10 @@ RSpec.describe Voice::InvitesController do
       end
     end
     Voice::Room.reset_column_information
+    SiteSetting.voice_enabled = true
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
+    SiteSetting.voice_analytics_enabled = true
   end
 
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
@@ -23,13 +27,6 @@ RSpec.describe Voice::InvitesController do
   fab!(:room_owner) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:room) { Fabricate(:voice_room, creator: room_owner, public: true) }
   fab!(:private_room) { Fabricate(:voice_room, creator: room_owner, public: false) }
-
-  before do
-    SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups =
-      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
-    SiteSetting.voice_analytics_enabled = true
-  end
 
   describe "#create" do
     it "records the invite and notifies the invitee, including a live alert with the invite URL" do

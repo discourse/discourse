@@ -19,7 +19,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
   end
 
   describe "uploading to s3" do
-    before(:each) { setup_s3 }
+    before { setup_s3 }
 
     describe "#store_upload" do
       let(:s3_client) { Aws::S3::Client.new(stub_responses: true) }
@@ -116,13 +116,13 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
 
     describe "#remove_upload" do
       let(:store) { FileStore::S3Store.new }
+      let(:fake_s3) { FakeS3.create }
 
       let(:upload) { build_upload }
       let(:upload_key) { "#{upload_path}/original/1X/#{upload.sha1}.png" }
 
       def prepare_fake_s3
-        @fake_s3 = FakeS3.create
-        bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+        bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
         bucket.put_object(key: upload_key, size: upload.filesize, last_modified: upload.created_at)
         bucket
       end
@@ -201,13 +201,12 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
     let(:s3_helper) { store.s3_helper }
     let(:s3_object) { stub }
 
-    before(:each) do
+    before do
       setup_s3
       SiteSetting.s3_upload_bucket = "some-really-cool-bucket"
       SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
+      s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "etag"))
     end
-
-    before { s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "etag")) }
 
     describe "when secure attachments are enabled" do
       it "returns signed URL with correct path" do

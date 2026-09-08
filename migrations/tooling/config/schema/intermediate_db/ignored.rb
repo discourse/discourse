@@ -24,6 +24,7 @@ Migrations::Tooling::Schema.ignored do
   plugin :discourse_topic_voting, "Not migrated yet"
   plugin :discourse_workflows, "Not migrated yet"
   plugin :poll, "Not migrated yet"
+  plugin :voice, "Not migrated yet"
 
   # Core tables excluded from the intermediate database
 

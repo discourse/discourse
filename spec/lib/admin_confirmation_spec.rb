@@ -13,23 +13,25 @@ RSpec.describe AdminConfirmation do
   end
 
   describe "email_confirmed!" do
-    before do
+    let(:token) do
       ac = AdminConfirmation.new(user, admin)
       ac.create_confirmation
-      @token = ac.token
+      ac.token
     end
 
+    before { token }
+
     it "cannot confirm if the user loses admin access" do
-      ac = AdminConfirmation.find_by_code(@token)
+      ac = AdminConfirmation.find_by_code(token)
       ac.performed_by.update_column(:admin, false)
       expect { ac.email_confirmed! }.to raise_error(Discourse::InvalidAccess)
     end
 
     it "can confirm admin accounts" do
-      ac = AdminConfirmation.find_by_code(@token)
+      ac = AdminConfirmation.find_by_code(token)
       expect(ac.performed_by).to eq(admin)
       expect(ac.target_user).to eq(user)
-      expect(ac.token).to eq(@token)
+      expect(ac.token).to eq(token)
 
       expect_enqueued_with(
         job: :send_system_message,

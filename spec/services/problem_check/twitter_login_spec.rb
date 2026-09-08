@@ -30,7 +30,7 @@ RSpec.describe ProblemCheck::TwitterLogin do
         Discourse.stubs(:base_path).returns("foo.bar")
       end
 
-      it do
+      it "reports a failed Twitter login check" do
         expect(check).to have_a_problem.with_priority("high").with_message(
           'Twitter login appears to not be working at the moment. Check the credentials in <a href="foo.bar/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.',
         )

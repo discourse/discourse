@@ -11,13 +11,14 @@ RSpec.describe UsernameChanger do
 
       it "changes the username" do
         new_username = "#{user.username}1234"
+        result = nil
 
         events =
           DiscourseEvent
-            .track_events { @result = UsernameChanger.change(user, new_username) }
+            .track_events { result = UsernameChanger.change(user, new_username) }
             .last(2)
 
-        expect(@result).to eq(true)
+        expect(result).to eq(true)
 
         event = events.first
         expect(event[:event_name]).to eq(:username_changed)
@@ -35,11 +36,11 @@ RSpec.describe UsernameChanger do
 
       it "do nothing if the new username is the same" do
         new_username = user.username
+        result = nil
 
-        events =
-          DiscourseEvent.track_events { @result = UsernameChanger.change(user, new_username) }
+        events = DiscourseEvent.track_events { result = UsernameChanger.change(user, new_username) }
 
-        expect(@result).to eq(false)
+        expect(result).to eq(false)
         expect(events.count).to be_zero
       end
     end
@@ -50,8 +51,8 @@ RSpec.describe UsernameChanger do
       let(:username_lower_before_change) { user.username_lower }
 
       it "does not change the username" do
-        @result = UsernameChanger.change(user, wrong_username)
-        expect(@result).to eq(false)
+        result = UsernameChanger.change(user, wrong_username)
+        expect(result).to eq(false)
 
         user.reload
         expect(user.username).to eq(username_before_change)
@@ -82,18 +83,17 @@ RSpec.describe UsernameChanger do
     end
 
     describe "allow custom minimum username length from site settings" do
-      before do
-        @custom_min = 2
-        SiteSetting.min_username_length = @custom_min
-      end
+      let(:custom_min) { 2 }
 
-      it "allows a username shorter than the default minimum" do
-        result = UsernameChanger.change(user, "a" * @custom_min)
+      before { SiteSetting.min_username_length = custom_min }
+
+      it "allows a shorter username than default" do
+        result = UsernameChanger.change(user, "a" * custom_min)
         expect(result).not_to eq(false)
       end
 
-      it "rejects a username shorter than the configured minimum" do
-        result = UsernameChanger.change(user, "a" * (@custom_min - 1))
+      it "does not allow a shorter username than limit" do
+        result = UsernameChanger.change(user, "a" * (custom_min - 1))
         expect(result).to eq(false)
       end
 
@@ -374,51 +374,51 @@ RSpec.describe UsernameChanger do
             %Q(<p>Hello <a class="mention" href="/u/bar">@bar</a>!!</p>),
           )
         end
+      end
 
-        context "when using Unicode usernames" do
-          before { SiteSetting.unicode_usernames = true }
+      context "when using Unicode usernames" do
+        before { SiteSetting.unicode_usernames = true }
 
-          let(:user) { Fabricate(:user, username: "թռչուն") }
+        let(:user) { Fabricate(:user, username: "թռչուն") }
 
-          it "updates mentions" do
-            post = create_post_and_change_username(raw: "Hello @թռչուն", target_username: "птица")
+        it "updates mentions" do
+          post = create_post_and_change_username(raw: "Hello @թռչուն", target_username: "птица")
 
-            expect(post.raw).to eq("Hello @птица")
-            expect(post.cooked).to eq(
-              %Q(<p>Hello <a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a></p>),
+          expect(post.raw).to eq("Hello @птица")
+          expect(post.cooked).to eq(
+            %Q(<p>Hello <a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a></p>),
+          )
+        end
+
+        it "does not replace mentions when there are leading alphanumeric chars" do
+          post =
+            create_post_and_change_username(
+              raw: "Hello @թռչուն 鳥@թռչուն 2@թռչուն ٩@թռչուն",
+              target_username: "птица",
             )
-          end
 
-          it "does not replace mentions when there are leading alphanumeric chars" do
-            post =
-              create_post_and_change_username(
-                raw: "Hello @թռչուն 鳥@թռչուն 2@թռչուն ٩@թռչուն",
-                target_username: "птица",
-              )
+          expect(post.raw).to eq("Hello @птица 鳥@թռչուն 2@թռչուն ٩@թռչուն")
+          expect(post.cooked).to eq(
+            %Q(<p>Hello <a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a> 鳥@թռչուն 2@թռչուն ٩@թռչուն</p>),
+          )
+        end
 
-            expect(post.raw).to eq("Hello @птица 鳥@թռչուն 2@թռչուն ٩@թռչուն")
-            expect(post.cooked).to eq(
-              %Q(<p>Hello <a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a> 鳥@թռչուն 2@թռչուն ٩@թռչուն</p>),
+        it "does not replace username in a mention of a similar username" do
+          Fabricate(:user, username: "թռչուն鳥")
+          Fabricate(:user, username: "թռչուն-鳥")
+          Fabricate(:user, username: "թռչուն_鳥")
+          Fabricate(:user, username: "թռչուն٩")
+
+          post =
+            create_post_and_change_username(
+              raw: "@թռչուն @թռչուն鳥 @թռչուն-鳥 @թռչուն_鳥 @թռչուն٩",
+              target_username: "птица",
             )
-          end
 
-          it "does not replace username in a mention of a similar username" do
-            Fabricate(:user, username: "թռչուն鳥")
-            Fabricate(:user, username: "թռչուն-鳥")
-            Fabricate(:user, username: "թռչուն_鳥")
-            Fabricate(:user, username: "թռչուն٩")
-
-            post =
-              create_post_and_change_username(
-                raw: "@թռչուն @թռչուն鳥 @թռչուն-鳥 @թռչուն_鳥 @թռչուն٩",
-                target_username: "птица",
-              )
-
-            expect(post.raw).to eq("@птица @թռչուն鳥 @թռչուն-鳥 @թռչուն_鳥 @թռչուն٩")
-            expect(post.cooked).to match_html <<~HTML
+          expect(post.raw).to eq("@птица @թռչուն鳥 @թռչուն-鳥 @թռչուն_鳥 @թռչուն٩")
+          expect(post.cooked).to match_html <<~HTML
               <p><a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a> <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6%E9%B3%A5">@թռչուն鳥</a> <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6-%E9%B3%A5">@թռչուն-鳥</a> <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6_%E9%B3%A5">@թռչուն_鳥</a> <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6%D9%A9">@թռչուն٩</a></p>
             HTML
-          end
         end
       end
 
@@ -529,9 +529,15 @@ RSpec.describe UsernameChanger do
             <p>dolor sit amet</p>
           HTML
         end
+      end
 
-        context "when there is a simple quote" do
-          let(:raw) { <<~RAW }
+      context "when there is a simple quote" do
+        let(:quoted_post) do
+          create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
+        end
+        let(:avatar_url) { user.avatar_template_url.gsub("{size}", "48") }
+
+        let(:raw) { <<~RAW }
               Lorem ipsum
 
               [quote="foo, post:1, topic:#{quoted_post.topic.id}"]
@@ -539,7 +545,7 @@ RSpec.describe UsernameChanger do
               [/quote]
             RAW
 
-          let(:expected_raw) { <<~RAW.strip }
+        let(:expected_raw) { <<~RAW.strip }
               Lorem ipsum
 
               [quote="bar, post:1, topic:#{quoted_post.topic.id}"]
@@ -547,7 +553,7 @@ RSpec.describe UsernameChanger do
               [/quote]
             RAW
 
-          let(:expected_cooked) { <<~HTML.rstrip }
+        let(:expected_cooked) { <<~HTML.rstrip }
               <p>Lorem ipsum</p>
               <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
               <div class="title">
@@ -559,15 +565,14 @@ RSpec.describe UsernameChanger do
               </aside>
             HTML
 
-          it "replaces the username in quote tags when the post is deleted" do
-            post =
-              create_post_and_change_username(raw: raw) do |p|
-                PostDestroyer.new(Discourse.system_user, p, context: "Automated testing").destroy
-              end
+        it "replaces the username in quote tags when the post is deleted" do
+          post =
+            create_post_and_change_username(raw: raw) do |p|
+              PostDestroyer.new(Discourse.system_user, p, context: "Automated testing").destroy
+            end
 
-            expect(post.raw).to eq(expected_raw)
-            expect(post.cooked).to match_html(expected_cooked)
-          end
+          expect(post.raw).to eq(expected_raw)
+          expect(post.cooked).to match_html(expected_cooked)
         end
       end
 

@@ -5,11 +5,11 @@ RSpec.describe DiscourseWorkflows::Registry do
   let(:directory) { Dir.mktmpdir("workflow-reload") }
   let(:plugin) { Plugin::Instance.new }
   let(:handled) { [] }
+  let!(:registered_nodes) { DiscoursePluginRegistry._raw_discourse_workflows_nodes.dup }
+  let!(:credential_types) { DiscoursePluginRegistry._raw_discourse_workflows_credential_types.dup }
+  let!(:node_classes) { DiscourseWorkflows::NodeType.registered_nodes.dup }
 
   before do
-    @registered_nodes = DiscoursePluginRegistry._raw_discourse_workflows_nodes.dup
-    @credential_types = DiscoursePluginRegistry._raw_discourse_workflows_credential_types.dup
-    @node_classes = DiscourseWorkflows::NodeType.registered_nodes.dup
     FileUtils.mkdir_p("#{directory}/workflow_reload_spec")
     write_helper("orange")
     File.write("#{directory}/workflow_reload_spec/node.rb", <<~RUBY)
@@ -66,9 +66,9 @@ RSpec.describe DiscourseWorkflows::Registry do
 
   after do
     DiscourseEvent.all_off(:workflow_reload_test)
-    DiscoursePluginRegistry._raw_discourse_workflows_nodes.replace(@registered_nodes)
-    DiscoursePluginRegistry._raw_discourse_workflows_credential_types.replace(@credential_types)
-    DiscourseWorkflows::NodeType.registered_nodes.replace(@node_classes)
+    DiscoursePluginRegistry._raw_discourse_workflows_nodes.replace(registered_nodes)
+    DiscoursePluginRegistry._raw_discourse_workflows_credential_types.replace(credential_types)
+    DiscourseWorkflows::NodeType.registered_nodes.replace(node_classes)
     described_class.reset_indexes!
     loader.unload
     loader.unregister
