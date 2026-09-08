@@ -564,7 +564,7 @@ RSpec.describe Jobs::ExportCsvFile do
 
     user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
 
-    expect(user["location"]).to eq('"La,La Land"')
+    expect(user["location"]).to eq("La,La Land")
     expect(user["external_id"]).to eq("123")
     expect(user["external_email"]).to eq("test@test.com")
   end

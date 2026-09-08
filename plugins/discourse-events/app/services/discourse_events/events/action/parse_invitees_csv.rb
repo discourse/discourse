@@ -17,9 +17,7 @@ module DiscourseEvents
             invitees << { identifier: identifier, attendance: attendance || DEFAULT_ATTENDANCE }
           end
           invitees
-        rescue StandardError
-          # A malformed or unreadable file yields no invitees; the empty result
-          # is surfaced as an upload error downstream.
+        rescue CSV::MalformedCSVError
           []
         end
       end

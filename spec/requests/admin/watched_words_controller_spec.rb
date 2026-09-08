@@ -320,8 +320,8 @@ RSpec.describe Admin::WatchedWordsController do
         expect(WatchedWord.count).to eq(6)
       end
 
-      it "handles files with invalid UTF-8 sequences" do
-        content = String.new("h\xE9llo\nworld\x99").force_encoding("Windows-1250")
+      it "preserves non-ASCII words in a UTF-8 file without a BOM" do
+        content = (1..30).map { |i| "badword#{i}" }.join("\n") + "\nCafé"
 
         post "/admin/customize/watched_words/upload.json",
              params: {
@@ -330,7 +330,7 @@ RSpec.describe Admin::WatchedWordsController do
              }
 
         expect(response.status).to eq(200)
-        expect(WatchedWord.pluck(:word)).to contain_exactly("héllo", "world™")
+        expect(WatchedWord.pluck(:word)).to include("Café")
       end
     end
   end
@@ -362,22 +362,54 @@ RSpec.describe Admin::WatchedWordsController do
 
         get "/admin/customize/watched_words/action/block/download"
         expect(response.status).to eq(200)
-        block_words = response.body.split("\n")
-        expect(block_words).to contain_exactly(block_word_1.word, block_word_2.word)
+        expect(response.body).to start_with(Encodings::BOM)
+        block_words = response.body.delete_prefix(Encodings::BOM).split("\n").map(&:parse_csv)
+        expect(block_words).to contain_exactly(
+          [block_word_1.word, nil, "false"],
+          [block_word_2.word, nil, "false"],
+        )
 
         get "/admin/customize/watched_words/action/censor/download"
         expect(response.status).to eq(200)
-        censor_words = response.body.split("\n")
-        expect(censor_words).to contain_exactly(censor_word_1.word)
+        censor_words = response.body.delete_prefix(Encodings::BOM).split("\n").map(&:parse_csv)
+        expect(censor_words).to contain_exactly([censor_word_1.word, nil, "false"])
 
         get "/admin/customize/watched_words/action/tag/download"
         expect(response.status).to eq(200)
-        tag_words = response.body.split("\n").map(&:parse_csv)
+        tag_words = response.body.delete_prefix(Encodings::BOM).split("\n").map(&:parse_csv)
         expect(tag_words).to contain_exactly(
-          [autotag_1.word, autotag_1.replacement],
-          [autotag_2.word, autotag_2.replacement],
+          [autotag_1.word, autotag_1.replacement, "false"],
+          [autotag_2.word, autotag_2.replacement, "false"],
         )
       end
+    end
+  end
+
+  describe "#download then #upload" do
+    before { sign_in(admin) }
+
+    it "round-trips delimiters and case sensitivity" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:block],
+        word: 'MiXeD,"word"',
+        case_sensitive: true,
+      )
+
+      get "/admin/customize/watched_words/action/block/download"
+      expect(response.status).to eq(200)
+      exported = response.body
+
+      WatchedWord.delete_all
+
+      post "/admin/customize/watched_words/upload.json",
+           params: {
+             action_key: "block",
+             file: Rack::Test::UploadedFile.new(file_from_contents(exported, "words.csv")),
+           }
+
+      expect(response.status).to eq(200)
+      expect(WatchedWord.pluck(:word, :case_sensitive)).to eq([['MiXeD,"word"', true]])
     end
   end
 
