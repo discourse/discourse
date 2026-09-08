@@ -53,7 +53,6 @@ module DiscourseAi
         return false if !SiteSetting.discourse_ai_enabled || !SiteSetting.ai_ask_ai_enabled
         return false if !user.in_any_groups?(SiteSetting.ai_ask_ai_allowed_groups_map)
         return false if Guardian.new(user).is_silenced?
-        return false if !retrieval_configured?
 
         agent = discover_agent
         if agent.nil? || !agent.enabled? || !user.in_any_groups?(agent.allowed_group_ids.to_a)
@@ -241,10 +240,6 @@ module DiscourseAi
 
       def work_token(user_id, request_id)
         "#{user_id}:#{request_id.downcase}"
-      end
-
-      def retrieval_configured?
-        SiteSetting.ai_embeddings_enabled && SiteSetting.ai_embeddings_semantic_search_enabled
       end
     end
   end

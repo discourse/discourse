@@ -29,6 +29,19 @@ describe DiscourseAi::Discover::DiscoveriesController do
       allowed_group.add(user)
     end
 
+    it "queues an Ask AI reply when embeddings and semantic search are disabled" do
+      group.add(user)
+      SiteSetting.ai_embeddings_enabled = false
+      SiteSetting.ai_embeddings_semantic_search_enabled = false
+
+      expect_enqueued_with(job: :stream_discover_reply, args: { user_id: user.id, request_id: }) do
+        post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?", request_id: }
+      end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["request_id"]).to eq(request_id)
+    end
+
     context "when the user doesn't have access to the agent" do
       it "returns a 403" do
         post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?", request_id: }

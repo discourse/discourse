@@ -116,6 +116,9 @@ describe Jobs::StreamDiscoverReply do
   end
 
   it "publishes searching, validated sources, streamed answer, and completion events" do
+    SiteSetting.ai_embeddings_enabled = false
+    SiteSetting.ai_embeddings_semantic_search_enabled = false
+
     messages =
       MessageBus
         .track_publish("/discourse-ai/discoveries") do
