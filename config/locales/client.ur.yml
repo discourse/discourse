@@ -6813,7 +6813,8 @@ ur:
                 no_match: "مماثلت نہیں"
                 poor_match: "ناقص مماثلت"
           system:
-            title: "سِسٹَم"
+            title: "نظام"
+            storage: "سٹوریج"
             status: "حیثیت"
             discourse_updated: "Discourse اَپ ڈیٹ کیا گیا"
             dashboard_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا"
