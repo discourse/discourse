@@ -236,17 +236,17 @@ export default class VideoNodeView extends Component {
 
   <template>
     <video
+      aria-label={{@node.attrs.alt}}
       class={{dConcatClass
         "composer-video-node__video"
         (unless this.isActivated "is-inactive")
       }}
-      aria-label={{@node.attrs.alt}}
-      src={{if this.isPlaybackRequested this.source}}
-      poster={{this.poster}}
+      contenteditable="false"
       controls
       playsinline
+      poster={{this.poster}}
       preload="metadata"
-      contenteditable="false"
+      src={{if this.isPlaybackRequested this.source}}
       {{didInsert this.setupVideo}}
       {{on "click" this.selectVideo}}
       {{on "error" this.handlePlaybackError}}
