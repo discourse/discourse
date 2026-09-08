@@ -2972,6 +2972,20 @@ RSpec.describe User do
     end
   end
 
+  describe "#revoke_approval!" do
+    fab!(:admin)
+    fab!(:user) { Fabricate(:user, approved: true, approved_by: admin, approved_at: 1.day.ago) }
+
+    it "clears the approval and its audit fields" do
+      user.revoke_approval!
+      user.reload
+
+      expect(user).not_to be_approved
+      expect(user.approved_by).to be_nil
+      expect(user.approved_at).to be_nil
+    end
+  end
+
   def filter_by(method)
     username = "someuniqueusername"
     user.update!(username: username)
