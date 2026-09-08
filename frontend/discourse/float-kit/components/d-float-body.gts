@@ -229,16 +229,18 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
       @portalOutletElement={{@instance.portalOutletElement}}
     >
       <div
+        aria-label={{this.contentAriaLabel}}
+        aria-labelledby={{this.contentAriaLabelledby}}
         class={{dConcatClass
           @mainClass
           (if this.options.animated "-animated")
           (if @instance.expanded "-expanded")
         }}
-        data-identifier={{this.options.identifier}}
         data-content
-        aria-labelledby={{this.contentAriaLabelledby}}
-        aria-label={{this.contentAriaLabel}}
+        data-identifier={{this.options.identifier}}
         role={{@role}}
+        style={{this.style}}
+        ...attributes
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
         {{this.trapInteractionPropagation}}
         {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
@@ -264,8 +266,6 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
         )}}
         {{(if this.supportsCloseOnScroll (modifier this.closeOnScroll))}}
         {{(if this.supportsHoverGrace (modifier this.hoverGrace))}}
-        style={{this.style}}
-        ...attributes
       >
         <div class={{@innerClass}}>
           {{yield}}

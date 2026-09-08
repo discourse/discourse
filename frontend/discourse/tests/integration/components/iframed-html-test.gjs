@@ -10,8 +10,8 @@ module("Integration | Component | IframedHtml", function (hooks) {
     await render(
       <template>
         <IframedHtml
-          @html="<h1 id='find-me'>hello</h1>"
           class="this-is-an-iframe"
+          @html="<h1 id='find-me'>hello</h1>"
         />
       </template>
     );

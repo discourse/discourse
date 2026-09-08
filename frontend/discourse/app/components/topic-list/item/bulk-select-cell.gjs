@@ -3,9 +3,9 @@ import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-chec
 const BulkSelectCell = <template>
   <td class="bulk-select topic-list-data">
     <BulkSelectCheckbox
-      @topic={{@topic}}
       @isSelected={{@isSelected}}
       @onToggle={{@onBulkSelectToggle}}
+      @topic={{@topic}}
     />
   </td>
 </template>;

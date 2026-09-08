@@ -95,26 +95,26 @@ export default class ScreenedIpAddressForm extends Component {
   <template>
     <label>{{i18n "admin.logs.screened_ips.form.label"}}</label>
     <DTextField
-      @value={{this.ip_address}}
+      class="ip-address-input"
+      @autocapitalize="off"
+      @autocorrect="off"
       @disabled={{this.formSubmitted}}
       @placeholderKey="admin.logs.screened_ips.form.ip_address"
-      @autocorrect="off"
-      @autocapitalize="off"
-      class="ip-address-input"
+      @value={{this.ip_address}}
     />
 
     <ComboBox
       @content={{this.actionNames}}
-      @value={{this.actionName}}
       @onChange={{fn (mut this.actionName)}}
+      @value={{this.actionName}}
     />
 
     <DButton
+      class="btn-default"
+      type="submit"
       @action={{this.submitForm}}
       @disabled={{this.formSubmitted}}
       @label="admin.logs.screened_ips.form.add"
-      type="submit"
-      class="btn-default"
     />
   </template>
 }

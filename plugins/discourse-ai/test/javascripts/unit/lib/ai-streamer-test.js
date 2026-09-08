@@ -29,6 +29,10 @@ class FakeStreamUpdater {
     return this._raw;
   }
 
+  get element() {
+    return this._element;
+  }
+
   async setRaw(value) {
     this._raw = value;
     // just fake it, calling cook is tricky
@@ -39,10 +43,6 @@ class FakeStreamUpdater {
   async setCooked(value) {
     this._cooked = value;
     this._element.innerHTML = value;
-  }
-
-  get element() {
-    return this._element;
   }
 }
 

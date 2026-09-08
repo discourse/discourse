@@ -43,10 +43,6 @@ export default class SubscribeShowController extends Controller {
     return !this.currentUser;
   }
 
-  alert(path) {
-    this.dialog.alert(i18n(`discourse_subscriptions.${path}`));
-  }
-
   @computed("model.product.repurchaseable", "model.product.subscribed")
   get canPurchase() {
     if (
@@ -57,6 +53,10 @@ export default class SubscribeShowController extends Controller {
     }
 
     return true;
+  }
+
+  alert(path) {
+    this.dialog.alert(i18n(`discourse_subscriptions.${path}`));
   }
 
   createSubscription(plan) {
@@ -102,18 +102,6 @@ export default class SubscribeShowController extends Controller {
           return result;
         }
       });
-  }
-
-  _advanceSuccessfulTransaction(plan) {
-    this.alert("plans.success");
-    this.set("loading", false);
-
-    this.router.transitionTo(
-      plan.type === "recurring"
-        ? "user.billing.subscriptions"
-        : "user.billing.payments",
-      this.currentUser.username.toLowerCase()
-    );
   }
 
   @action
@@ -193,5 +181,17 @@ export default class SubscribeShowController extends Controller {
         );
         this.set("loading", false);
       });
+  }
+
+  _advanceSuccessfulTransaction(plan) {
+    this.alert("plans.success");
+    this.set("loading", false);
+
+    this.router.transitionTo(
+      plan.type === "recurring"
+        ? "user.billing.subscriptions"
+        : "user.billing.payments",
+      this.currentUser.username.toLowerCase()
+    );
   }
 }

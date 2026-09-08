@@ -13,10 +13,10 @@ export default class FKControlToggle extends FKBaseControl {
 
   <template>
     <DToggleSwitch
-      @state={{@field.value}}
-      disabled={{@field.disabled}}
-      {{on "click" this.handleInput}}
       class="form-kit__control-toggle"
+      disabled={{@field.disabled}}
+      @state={{@field.value}}
+      {{on "click" this.handleInput}}
     />
   </template>
 }

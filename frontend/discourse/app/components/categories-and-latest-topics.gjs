@@ -15,13 +15,13 @@ export default class CategoriesAndLatestTopics extends Component {
 
       <div class="column">
         <CategoriesTopicList
-          @topics={{this.topics}}
-          @filter="latest"
           class="latest-topic-list"
+          @filter="latest"
+          @topics={{this.topics}}
         />
       </div>
 
-      <PluginOutlet @name="extra-categories-column" @connectorTagName="div" />
+      <PluginOutlet @connectorTagName="div" @name="extra-categories-column" />
     </div>
   </template>
 }

@@ -62,6 +62,18 @@ export default class SidebarSection extends Component {
     this.args.willDestroy?.();
   }
 
+  get activeExpanded() {
+    return this.sidebarState.activeExpandedSections.has(this.args.sectionName);
+  }
+
+  set activeExpanded(value) {
+    if (value) {
+      this.sidebarState.activeExpandedSections.add(this.args.sectionName);
+    } else {
+      this.sidebarState.activeExpandedSections.delete(this.args.sectionName);
+    }
+  }
+
   get isCollapsed() {
     if (!this.args.collapsable) {
       return false;
@@ -82,16 +94,42 @@ export default class SidebarSection extends Component {
     return !!this.args.activeLink;
   }
 
-  get activeExpanded() {
-    return this.sidebarState.activeExpandedSections.has(this.args.sectionName);
+  get displaySectionContent() {
+    if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
+      return true;
+    }
+
+    if (this.activeExpanded) {
+      return true;
+    }
+
+    return !this.sidebarState.collapsedSections.has(
+      this.collapsedSidebarSectionKey
+    );
   }
 
-  set activeExpanded(value) {
-    if (value) {
-      this.sidebarState.activeExpandedSections.add(this.args.sectionName);
-    } else {
-      this.sidebarState.activeExpandedSections.delete(this.args.sectionName);
+  get linkDropAtEnd() {
+    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
+  }
+
+  get headerCaretIcon() {
+    return this.displaySectionContent ? "angle-down" : "angle-right";
+  }
+
+  get isSingleHeaderAction() {
+    return this.args.headerActions?.length === 1;
+  }
+
+  get isMultipleHeaderActions() {
+    return this.args.headerActions?.length > 1;
+  }
+
+  get displaySection() {
+    if (this.args.displaySection === undefined) {
+      return true;
     }
+
+    return this.args.displaySection;
   }
 
   @bind
@@ -118,20 +156,6 @@ export default class SidebarSection extends Component {
     }
 
     this.activeExpanded = this.args.expandWhenActive && this.isActive;
-  }
-
-  get displaySectionContent() {
-    if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
-      return true;
-    }
-
-    if (this.activeExpanded) {
-      return true;
-    }
-
-    return !this.sidebarState.collapsedSections.has(
-      this.collapsedSidebarSectionKey
-    );
   }
 
   @action
@@ -163,10 +187,6 @@ export default class SidebarSection extends Component {
     if (this.args.toggleNavigationMenu) {
       next(this.args.toggleNavigationMenu);
     }
-  }
-
-  get linkDropAtEnd() {
-    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
   }
 
   /**
@@ -298,26 +318,6 @@ export default class SidebarSection extends Component {
     this.#collapseIfOpenedForDrag();
   }
 
-  get headerCaretIcon() {
-    return this.displaySectionContent ? "angle-down" : "angle-right";
-  }
-
-  get isSingleHeaderAction() {
-    return this.args.headerActions?.length === 1;
-  }
-
-  get isMultipleHeaderActions() {
-    return this.args.headerActions?.length > 1;
-  }
-
-  get displaySection() {
-    if (this.args.displaySection === undefined) {
-      return true;
-    }
-
-    return this.args.displaySection;
-  }
-
   #collapseIfOpenedForDrag() {
     if (this.#openedForDrag) {
       this.#openedForDrag = false;
@@ -377,10 +377,10 @@ export default class SidebarSection extends Component {
           <div class="sidebar-section-header-wrapper sidebar-row">
             <SectionHeader
               @collapsable={{@collapsable}}
+              @isActive={{this.isActive}}
+              @isExpanded={{this.displaySectionContent}}
               @sidebarSectionContentId={{this.sidebarSectionContentId}}
               @toggleSectionDisplay={{this.toggleSectionDisplay}}
-              @isExpanded={{this.displaySectionContent}}
-              @isActive={{this.isActive}}
             >
               {{#if @collapsable}}
                 <span class="sidebar-section-header-caret">
@@ -394,8 +394,8 @@ export default class SidebarSection extends Component {
 
               {{#if @indicatePublic}}
                 <DTooltip
-                  @icon="globe"
                   class="sidebar-section-header-global-indicator"
+                  @icon="globe"
                 >
                   <span
                     class="sidebar-section-header-global-indicator__content"
@@ -410,11 +410,11 @@ export default class SidebarSection extends Component {
             {{#if this.isSingleHeaderAction}}
               {{#each @headerActions as |headerAction|}}
                 <button
-                  {{on "click" headerAction.action}}
-                  type="button"
-                  title={{headerAction.title}}
                   aria-label={{headerAction.title}}
                   class="sidebar-section-header-button btn-icon btn-flat"
+                  title={{headerAction.title}}
+                  type="button"
+                  {{on "click" headerAction.action}}
                 >
                   {{dIcon @headerActionsIcon}}
                 </button>
@@ -423,24 +423,24 @@ export default class SidebarSection extends Component {
 
             {{#if this.isMultipleHeaderActions}}
               <DMenu
-                @identifier="sidebar-section-header-dropdown-menu"
-                @title={{i18n "sidebar.sections.more_options.title"}}
-                @icon="ellipsis-vertical"
-                @onRegisterApi={{this.onRegisterApi}}
                 class="sidebar-section-header-dropdown btn-flat"
+                @icon="ellipsis-vertical"
+                @identifier="sidebar-section-header-dropdown-menu"
+                @onRegisterApi={{this.onRegisterApi}}
+                @title={{i18n "sidebar.sections.more_options.title"}}
               >
                 <:content>
                   <DDropdownMenu as |dropdown|>
                     {{#each @headerActions as |headerAction|}}
                       <dropdown.item>
                         <DButton
+                          class="btn-transparent sidebar-section-header-dropdown__item"
+                          data-menu-option-id={{headerAction.id}}
                           @action={{fn
                             this.handleHeaderActionClick
                             headerAction.action
                           }}
                           @translatedLabel={{headerAction.title}}
-                          class="btn-transparent sidebar-section-header-dropdown__item"
-                          data-menu-option-id={{headerAction.id}}
                         />
                       </dropdown.item>
                     {{/each}}
@@ -453,8 +453,8 @@ export default class SidebarSection extends Component {
 
         {{#if this.displaySectionContent}}
           <ul
-            id={{this.sidebarSectionContentId}}
             class="sidebar-section-content"
+            id={{this.sidebarSectionContentId}}
           >
             {{yield (hash linkDropIndex=this.linkDropIndex)}}
           </ul>
@@ -462,8 +462,8 @@ export default class SidebarSection extends Component {
 
         {{#if this.linkDropAtEnd}}
           <div
-            class="sidebar-section-link-drop-indicator"
             aria-hidden="true"
+            class="sidebar-section-link-drop-indicator"
           ></div>
         {{/if}}
       </div>

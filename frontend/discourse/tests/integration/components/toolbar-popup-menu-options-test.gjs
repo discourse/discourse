@@ -24,8 +24,8 @@ module("Integration | Component | ToolbarPopupMenuOptions", function (hooks) {
       <template>
         <div style="height: 200px;">
           <ToolbarPopupMenuOptions
-            @content={{content}}
             @class="options-content"
+            @content={{content}}
             @icon="cog"
             @onChange={{fn (mut this.value)}}
           />
@@ -47,8 +47,8 @@ module("Integration | Component | ToolbarPopupMenuOptions", function (hooks) {
       <template>
         <div>
           <ToolbarPopupMenuOptions
-            @content={{content}}
             @class="options-content"
+            @content={{content}}
             @icon="cog"
             @onChange={{fn (mut this.value)}}
           />

@@ -21,9 +21,9 @@ module(
       await render(
         <template>
           {{#if this.replaceTarget}}
-            <button type="button" class="focus-target">Replacement target</button>
+            <button class="focus-target" type="button">Replacement target</button>
           {{else}}
-            <button type="button" class="focus-target">Original target</button>
+            <button class="focus-target" type="button">Original target</button>
           {{/if}}
           <DMenus />
         </template>
@@ -76,7 +76,7 @@ module(
     test("pointer-oracle: an idless service trigger gives the menu a usable label", async function (assert) {
       await render(
         <template>
-          <button type="button" class="menu-trigger">Pointer actions</button>
+          <button class="menu-trigger" type="button">Pointer actions</button>
           <DMenus />
         </template>
       );
@@ -129,10 +129,10 @@ module(
             @trapTab={{true}}
           >
             <:content>
-              <input hidden aria-label="Hidden input" />
-              <input class="visible-input" aria-label="Visible input" />
-              <button type="button" class="first-button">First action</button>
-              <button type="button" class="last-button">Last action</button>
+              <input aria-label="Hidden input" hidden />
+              <input aria-label="Visible input" class="visible-input" />
+              <button class="first-button" type="button">First action</button>
+              <button class="last-button" type="button">Last action</button>
             </:content>
           </DMenu>
         </template>
@@ -178,13 +178,13 @@ module(
             @trapTab={{true}}
           >
             <:content>
-              <button type="button" class="first-button">First action</button>
-              <button type="button" class="last-button">Last action</button>
-              <input class="visible-input" aria-label="Visible input" />
+              <button class="first-button" type="button">First action</button>
+              <button class="last-button" type="button">Last action</button>
+              <input aria-label="Visible input" class="visible-input" />
               <input
+                aria-label="CSS-hidden input"
                 class="css-hidden-input"
                 style="display: none"
-                aria-label="CSS-hidden input"
               />
             </:content>
           </DMenu>
@@ -225,7 +225,7 @@ module(
 
       await render(
         <template>
-          <button type="button" class="menu-trigger">Open actions</button>
+          <button class="menu-trigger" type="button">Open actions</button>
           <DMenus />
           <ModalContainer />
         </template>

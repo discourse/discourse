@@ -51,109 +51,109 @@ import validationSource from "../../examples/atoms/forms/validation?source=file"
 export default <template>
   <h2>Controls</h2>
 
-  <StyleguideExample @title="Input" @code={{inputSource}}>
+  <StyleguideExample @code={{inputSource}} @title="Input">
     <InputExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Question" @code={{questionSource}}>
+  <StyleguideExample @code={{questionSource}} @title="Question">
     <QuestionExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Toggle" @code={{toggleSource}}>
+  <StyleguideExample @code={{toggleSource}} @title="Toggle">
     <ToggleExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Composer" @code={{composerSource}}>
+  <StyleguideExample @code={{composerSource}} @title="Composer">
     <ComposerExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Code" @code={{codeSource}}>
+  <StyleguideExample @code={{codeSource}} @title="Code">
     <CodeExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Textarea" @code={{textareaSource}}>
+  <StyleguideExample @code={{textareaSource}} @title="Textarea">
     <TextareaExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Select" @code={{selectSource}}>
+  <StyleguideExample @code={{selectSource}} @title="Select">
     <SelectExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="CheckboxGroup" @code={{checkboxGroupSource}}>
+  <StyleguideExample @code={{checkboxGroupSource}} @title="CheckboxGroup">
     <CheckboxGroupExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Image" @code={{imageSource}}>
+  <StyleguideExample @code={{imageSource}} @title="Image">
     <ImageExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Icon" @code={{iconSource}}>
+  <StyleguideExample @code={{iconSource}} @title="Icon">
     <IconExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="TagChooser" @code={{tagChooserSource}}>
+  <StyleguideExample @code={{tagChooserSource}} @title="TagChooser">
     <TagChooserExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Menu" @code={{menuSource}}>
+  <StyleguideExample @code={{menuSource}} @title="Menu">
     <MenuExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="RadioGroup" @code={{radioGroupSource}}>
+  <StyleguideExample @code={{radioGroupSource}} @title="RadioGroup">
     <RadioGroupExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Color" @code={{colorSource}}>
+  <StyleguideExample @code={{colorSource}} @title="Color">
     <ColorExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Color with swatches" @code={{colorSwatchesSource}}>
+  <StyleguideExample @code={{colorSwatchesSource}} @title="Color with swatches">
     <ColorSwatchesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="Color with named colors"
     @code={{colorNamedSource}}
+    @title="Color with named colors"
   >
     <ColorNamedExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="Color with # prefix in value"
     @code={{colorPrefixHexSource}}
+    @title="Color with # prefix in value"
   >
     <ColorPrefixHexExample />
   </StyleguideExample>
 
   <h2>Layout</h2>
 
-  <StyleguideExample @title="Section" @code={{sectionSource}}>
+  <StyleguideExample @code={{sectionSource}} @title="Section">
     <SectionExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Alert" @code={{alertSource}}>
+  <StyleguideExample @code={{alertSource}} @title="Alert">
     <AlertExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="InputGroup" @code={{inputGroupSource}}>
+  <StyleguideExample @code={{inputGroupSource}} @title="InputGroup">
     <InputGroupExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Collection" @code={{collectionSource}}>
+  <StyleguideExample @code={{collectionSource}} @title="Collection">
     <CollectionExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Row/Col" @code={{rowColSource}}>
+  <StyleguideExample @code={{rowColSource}} @title="Row/Col">
     <RowColExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Multiline" @code={{multilineSource}}>
+  <StyleguideExample @code={{multilineSource}} @title="Multiline">
     <MultilineExample />
   </StyleguideExample>
 
   <h2>Validation</h2>
 
-  <StyleguideExample @title="Input" @code={{validationSource}}>
+  <StyleguideExample @code={{validationSource}} @title="Input">
     <ValidationExample />
   </StyleguideExample>
 </template>

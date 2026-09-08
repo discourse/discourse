@@ -32,39 +32,23 @@ export default class PluginsExplorerController extends Controller {
     return this.params ? JSON.parse(this.params) : null;
   }
 
+  get _fetchParams() {
+    const params = {};
+    if (this._currentFilter) {
+      params.filter = this._currentFilter;
+    }
+    if (this.sortByProperty !== "last_run_at") {
+      params.order = this.sortByProperty;
+    }
+    if (!this.sortDescending) {
+      params.ascending = "true";
+    }
+    return params;
+  }
+
   addCreatedRecord(record) {
     this.model.content.push(record);
     this.router.transitionTo("adminPlugins.show.explorer.edit", record.id);
-  }
-
-  async _importQuery(file) {
-    const json = await this._readFileAsTextAsync(file);
-    const query = this._parseQuery(json);
-    const record = this.store.createRecord("query", query);
-    const response = await record.save();
-    return response.target;
-  }
-
-  _parseQuery(json) {
-    const parsed = JSON.parse(json);
-    const query = parsed.query;
-    if (!query || !query.sql) {
-      throw new TypeError();
-    }
-    query.id = 0; // 0 means no Id yet
-    return query;
-  }
-
-  _readFileAsTextAsync(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = reject;
-
-      reader.readAsText(file);
-    });
   }
 
   @bind
@@ -130,18 +114,34 @@ export default class PluginsExplorerController extends Controller {
     }
   }
 
-  get _fetchParams() {
-    const params = {};
-    if (this._currentFilter) {
-      params.filter = this._currentFilter;
+  async _importQuery(file) {
+    const json = await this._readFileAsTextAsync(file);
+    const query = this._parseQuery(json);
+    const record = this.store.createRecord("query", query);
+    const response = await record.save();
+    return response.target;
+  }
+
+  _parseQuery(json) {
+    const parsed = JSON.parse(json);
+    const query = parsed.query;
+    if (!query || !query.sql) {
+      throw new TypeError();
     }
-    if (this.sortByProperty !== "last_run_at") {
-      params.order = this.sortByProperty;
-    }
-    if (!this.sortDescending) {
-      params.ascending = "true";
-    }
-    return params;
+    query.id = 0; // 0 means no Id yet
+    return query;
+  }
+
+  _readFileAsTextAsync(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
   }
 
   async _fetchQueries() {

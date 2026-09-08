@@ -115,18 +115,19 @@ export default class ToggleChannelMembershipButton extends Component {
   <template>
     {{#if this.isFollowing}}
       <DButton
-        @action={{this.onLeaveChannel}}
-        @translatedLabel={{this.label}}
-        @translatedTitle={{this.options.leaveTitle}}
-        @icon={{this.options.leaveIcon}}
-        @disabled={{this.isLoading}}
         class={{dConcatClass
           "toggle-channel-membership-button -leave"
           this.options.leaveClass
         }}
+        @action={{this.onLeaveChannel}}
+        @disabled={{this.isLoading}}
+        @icon={{this.options.leaveIcon}}
+        @translatedLabel={{this.label}}
+        @translatedTitle={{this.options.leaveTitle}}
       />
     {{else}}
       <PluginOutlet
+        @defaultGlimmer={{true}}
         @name="chat-join-channel-button"
         @outletArgs={{lazyHash
           onJoinChannel=this.onJoinChannel
@@ -136,18 +137,17 @@ export default class ToggleChannelMembershipButton extends Component {
           label=this.label
           disabled=this.isLoading
         }}
-        @defaultGlimmer={{true}}
       >
         <DButton
-          @action={{this.onJoinChannel}}
-          @translatedLabel={{this.label}}
-          @translatedTitle={{this.options.joinTitle}}
-          @icon={{this.options.joinIcon}}
-          @disabled={{this.isLoading}}
           class={{dConcatClass
             "toggle-channel-membership-button -join"
             this.options.joinClass
           }}
+          @action={{this.onJoinChannel}}
+          @disabled={{this.isLoading}}
+          @icon={{this.options.joinIcon}}
+          @translatedLabel={{this.label}}
+          @translatedTitle={{this.options.joinTitle}}
         />
       </PluginOutlet>
     {{/if}}

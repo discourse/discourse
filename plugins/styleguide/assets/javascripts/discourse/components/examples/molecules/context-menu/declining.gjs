@@ -10,8 +10,8 @@ const SurfaceActions = <template>
   <DDropdownMenu as |dropdown|>
     <dropdown.item>
       <DButton
-        @label="styleguide.sections.context_menu.actions.duplicate"
         @action={{@close}}
+        @label="styleguide.sections.context_menu.actions.duplicate"
       />
     </dropdown.item>
   </DDropdownMenu>

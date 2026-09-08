@@ -30,11 +30,11 @@ export default class PostMetaDataReplyToTab extends Component {
 
   <template>
     <a
-      href
+      aria-expanded={{if this.site.desktopView @hasRepliesAbove}}
       class="reply-to-tab"
       disabled={{@repliesAbove.isPending}}
+      href
       role={{if this.site.desktopView "button"}}
-      aria-expanded={{if this.site.desktopView @hasRepliesAbove}}
       title={{i18n "post.in_reply_to"}}
       {{on "click" this.handleClick}}
     >

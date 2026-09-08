@@ -50,9 +50,9 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
     await render(
       <template>
         <DDecoratedHtml
+          @decorate={{decorate}}
           @html={{state.html}}
           @preservePointerTarget={{true}}
-          @decorate={{decorate}}
         />
       </template>
     );
@@ -191,7 +191,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
 
     await render(
       <template>
-        <DDecoratedHtml @html={{state.html}} @decorate={{decorate}} />
+        <DDecoratedHtml @decorate={{decorate}} @html={{state.html}} />
       </template>
     );
 
@@ -221,7 +221,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
 
     await render(
       <template>
-        <DDecoratedHtml @html={{state.html}} @decorate={{decorate}} />
+        <DDecoratedHtml @decorate={{decorate}} @html={{state.html}} />
       </template>
     );
 
@@ -262,8 +262,8 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
     await render(
       <template>
         <DDecoratedHtml
-          @html={{trustHTML "<div>Content</div>"}}
           @decorate={{customDecorator}}
+          @html={{trustHTML "<div>Content</div>"}}
         />
       </template>
     );

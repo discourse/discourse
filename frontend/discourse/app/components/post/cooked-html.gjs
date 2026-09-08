@@ -53,6 +53,37 @@ export default class PostCookedHtml extends Component {
     return this.args.selectionBarrier ?? true;
   }
 
+  get className() {
+    return this.args.className ?? "cooked";
+  }
+
+  get cooked() {
+    if (this.isIgnored) {
+      return i18n("post.ignored");
+    }
+
+    return this.args.cooked ?? this.args.post.cooked;
+  }
+
+  get highlightTerm() {
+    return this.args.highlightTerm;
+  }
+
+  get extraDecorators() {
+    return makeArray(this.args.extraDecorators);
+  }
+
+  get ignoredUsers() {
+    return this.currentUser?.ignored_users;
+  }
+
+  get isIgnored() {
+    return (
+      (this.args.post.firstPost || this.args.embeddedPost) &&
+      this.ignoredUsers?.includes?.(this.args.post.username)
+    );
+  }
+
   @bind
   decorate(element, helper, args) {
     this.#cleanupDecorations();
@@ -143,37 +174,6 @@ export default class PostCookedHtml extends Component {
     ];
 
     this.#pendingDecoratorCleanup.push(...cleanUpFns);
-  }
-
-  get className() {
-    return this.args.className ?? "cooked";
-  }
-
-  get cooked() {
-    if (this.isIgnored) {
-      return i18n("post.ignored");
-    }
-
-    return this.args.cooked ?? this.args.post.cooked;
-  }
-
-  get highlightTerm() {
-    return this.args.highlightTerm;
-  }
-
-  get extraDecorators() {
-    return makeArray(this.args.extraDecorators);
-  }
-
-  get ignoredUsers() {
-    return this.currentUser?.ignored_users;
-  }
-
-  get isIgnored() {
-    return (
-      (this.args.post.firstPost || this.args.embeddedPost) &&
-      this.ignoredUsers?.includes?.(this.args.post.username)
-    );
   }
 
   #cleanupDecorations() {

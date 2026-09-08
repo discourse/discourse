@@ -26,10 +26,10 @@ export default class AnonymousFlagModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "anonymous_flagging.title"}}
-      @closeModal={{@closeModal}}
-      @bodyClass="anonymous-flag-modal__body"
       class="anonymous-flag-modal"
+      @bodyClass="anonymous-flag-modal__body"
+      @closeModal={{@closeModal}}
+      @title={{i18n "anonymous_flagging.title"}}
     >
       <:body>
         <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>

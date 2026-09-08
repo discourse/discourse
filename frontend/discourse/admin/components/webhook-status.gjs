@@ -18,7 +18,7 @@ export default class WebhookStatus extends Component {
   }
 
   <template>
-    <div role="status" class="status-label {{this.statusClass}}">
+    <div class="status-label {{this.statusClass}}" role="status">
       <div class="status-label-indicator">
       </div>
       <div class="status-label-text">

@@ -68,6 +68,28 @@ export default class Invite extends EmberObject {
     set(this, "topics.firstObject.title", value);
   }
 
+  @computed("invite_key")
+  get shortKey() {
+    return this.invite_key.slice(0, 4) + "...";
+  }
+
+  @computed("groups")
+  get groupIds() {
+    return this.groups ? this.groups.map((group) => group.id) : [];
+  }
+
+  @computed("topics.firstObject")
+  get topic() {
+    return this.topics?.firstObject
+      ? Topic.create(this.topics?.firstObject)
+      : null;
+  }
+
+  @computed("email", "domain")
+  get emailOrDomain() {
+    return this.email || this.domain;
+  }
+
   save(data) {
     const promise = this.id
       ? ajax(`/invites/${this.id}`, { type: "PUT", data })
@@ -90,27 +112,5 @@ export default class Invite extends EmberObject {
     })
       .then(() => this.set("reinvited", true))
       .catch(popupAjaxError);
-  }
-
-  @computed("invite_key")
-  get shortKey() {
-    return this.invite_key.slice(0, 4) + "...";
-  }
-
-  @computed("groups")
-  get groupIds() {
-    return this.groups ? this.groups.map((group) => group.id) : [];
-  }
-
-  @computed("topics.firstObject")
-  get topic() {
-    return this.topics?.firstObject
-      ? Topic.create(this.topics?.firstObject)
-      : null;
-  }
-
-  @computed("email", "domain")
-  get emailOrDomain() {
-    return this.email || this.domain;
   }
 }

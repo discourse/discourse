@@ -115,33 +115,6 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
       return [...this.inputHandleEntries.values()];
     }
 
-    async #handleRender(context) {
-      if (context.data.filled) {
-        return context;
-      }
-
-      const { data } = context;
-      switch (data.type) {
-        case "node":
-          data.element.classList.add("workflow-rete-node-view");
-          this.nodeEntries.set(data.payload.id, {
-            element: data.element,
-            node: data.payload,
-          });
-          break;
-        case "connection":
-          data.element.style.zIndex = "0";
-          await this.renderConnection(data);
-          break;
-        case "socket":
-          break;
-        default:
-          return context;
-      }
-
-      return { ...context, data: { ...data, filled: true } };
-    }
-
     scheduleConnectionUpdate(nodeId) {
       if (nodeId) {
         this.dirtyNodeIds ??= new Set();
@@ -165,42 +138,6 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
         cancelAnimationFrame(this.connectionUpdateFrame);
         this.connectionUpdateFrame = null;
       }
-    }
-
-    #ensureConnectionElement(id) {
-      let entry = this.connectionElements.get(id);
-      if (!entry) {
-        entry = {};
-        this.connectionElements.set(id, entry);
-      }
-      return entry;
-    }
-
-    #createConnectionEntry(element, payload, isPseudo, isLoopBack) {
-      return {
-        element,
-        isPseudo,
-        isLoopBack,
-        loopNodeClientId: isLoopBack ? payload.source : null,
-        connectionInfo:
-          isPseudo || isLoopBack
-            ? null
-            : {
-                sourceClientId: payload.source,
-                targetClientId: payload.target,
-                sourceOutput: payload.sourceOutput,
-                sourceOutputIndex: payload.sourceOutputIndex,
-                targetInput: payload.targetInput,
-                targetInputIndex: payload.targetInputIndex,
-              },
-        pathD: "",
-        arrowTransform: "",
-        toolbarX: 0,
-        toolbarY: 0,
-        loopArrowPoints: "",
-        loopButtonX: 0,
-        loopButtonY: 0,
-      };
     }
 
     async renderConnection(data) {
@@ -260,74 +197,6 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
 
     destroyMeasureSvg() {
       this.measureSvg?.remove();
-    }
-
-    #updateConnectionEntry(id, updates) {
-      const tracked = this.connectionEntries.get(id);
-      if (tracked) {
-        this.connectionEntries.set(id, { ...tracked, ...updates });
-      }
-    }
-
-    #applyPathToEntry(connectionId, pathD) {
-      this.#updateConnectionEntry(connectionId, {
-        pathD,
-        ...this.computeArrowLayout(pathD),
-      });
-    }
-
-    #hasRealConnections() {
-      return [...this.connectionElements.values()].some(
-        (entry) => entry.payload && !entry.payload.isPseudo
-      );
-    }
-
-    #shouldPulseSockets() {
-      const hasRealConnections = this.#hasRealConnections();
-      this.hasSeenRealConnection ||= hasRealConnections;
-      return !hasRealConnections && !this.hasSeenRealConnection;
-    }
-
-    #updateSocketPulseState(socketElement, { side, key } = {}) {
-      const isConnectableSocket = side !== "output" || key !== "loop";
-      socketElement.classList.toggle(
-        "is-connectable-hint",
-        isConnectableSocket && this.#shouldPulseSockets()
-      );
-    }
-
-    #updateAllSocketPulseStates() {
-      const shouldPulse = this.#shouldPulseSockets();
-
-      for (const { element } of this.nodeEntries.values()) {
-        for (const socketElement of element.querySelectorAll(
-          ".workflow-rete-node__socket"
-        )) {
-          socketElement.classList.toggle(
-            "is-connectable-hint",
-            shouldPulse && !socketElement.classList.contains("--loop")
-          );
-        }
-      }
-    }
-
-    async #updateLoopBackEntry(payload) {
-      const [startPos, endPos] = await Promise.all([
-        this.getSocketCanvasPos(payload.source, "output", "loop"),
-        this.getSocketCanvasPos(payload.source, "input", "main"),
-      ]);
-
-      if (!startPos || !endPos) {
-        return;
-      }
-
-      const layout = loopBackLayout(startPos, endPos);
-      this.#updateConnectionEntry(payload.id, {
-        pathD: layout.d,
-        loopArrowPoints: layout.arrowPoints,
-        loopButtonX: layout.buttonPosition.x,
-        loopButtonY: layout.buttonPosition.y,
-      });
     }
 
     async computeConnectionPath(payload, { explicitStart, explicitEnd } = {}) {
@@ -466,6 +335,137 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
       );
 
       this.#updateAllSocketPulseStates();
+    }
+
+    async #handleRender(context) {
+      if (context.data.filled) {
+        return context;
+      }
+
+      const { data } = context;
+      switch (data.type) {
+        case "node":
+          data.element.classList.add("workflow-rete-node-view");
+          this.nodeEntries.set(data.payload.id, {
+            element: data.element,
+            node: data.payload,
+          });
+          break;
+        case "connection":
+          data.element.style.zIndex = "0";
+          await this.renderConnection(data);
+          break;
+        case "socket":
+          break;
+        default:
+          return context;
+      }
+
+      return { ...context, data: { ...data, filled: true } };
+    }
+
+    #ensureConnectionElement(id) {
+      let entry = this.connectionElements.get(id);
+      if (!entry) {
+        entry = {};
+        this.connectionElements.set(id, entry);
+      }
+      return entry;
+    }
+
+    #createConnectionEntry(element, payload, isPseudo, isLoopBack) {
+      return {
+        element,
+        isPseudo,
+        isLoopBack,
+        loopNodeClientId: isLoopBack ? payload.source : null,
+        connectionInfo:
+          isPseudo || isLoopBack
+            ? null
+            : {
+                sourceClientId: payload.source,
+                targetClientId: payload.target,
+                sourceOutput: payload.sourceOutput,
+                sourceOutputIndex: payload.sourceOutputIndex,
+                targetInput: payload.targetInput,
+                targetInputIndex: payload.targetInputIndex,
+              },
+        pathD: "",
+        arrowTransform: "",
+        toolbarX: 0,
+        toolbarY: 0,
+        loopArrowPoints: "",
+        loopButtonX: 0,
+        loopButtonY: 0,
+      };
+    }
+
+    #updateConnectionEntry(id, updates) {
+      const tracked = this.connectionEntries.get(id);
+      if (tracked) {
+        this.connectionEntries.set(id, { ...tracked, ...updates });
+      }
+    }
+
+    #applyPathToEntry(connectionId, pathD) {
+      this.#updateConnectionEntry(connectionId, {
+        pathD,
+        ...this.computeArrowLayout(pathD),
+      });
+    }
+
+    #hasRealConnections() {
+      return [...this.connectionElements.values()].some(
+        (entry) => entry.payload && !entry.payload.isPseudo
+      );
+    }
+
+    #shouldPulseSockets() {
+      const hasRealConnections = this.#hasRealConnections();
+      this.hasSeenRealConnection ||= hasRealConnections;
+      return !hasRealConnections && !this.hasSeenRealConnection;
+    }
+
+    #updateSocketPulseState(socketElement, { side, key } = {}) {
+      const isConnectableSocket = side !== "output" || key !== "loop";
+      socketElement.classList.toggle(
+        "is-connectable-hint",
+        isConnectableSocket && this.#shouldPulseSockets()
+      );
+    }
+
+    #updateAllSocketPulseStates() {
+      const shouldPulse = this.#shouldPulseSockets();
+
+      for (const { element } of this.nodeEntries.values()) {
+        for (const socketElement of element.querySelectorAll(
+          ".workflow-rete-node__socket"
+        )) {
+          socketElement.classList.toggle(
+            "is-connectable-hint",
+            shouldPulse && !socketElement.classList.contains("--loop")
+          );
+        }
+      }
+    }
+
+    async #updateLoopBackEntry(payload) {
+      const [startPos, endPos] = await Promise.all([
+        this.getSocketCanvasPos(payload.source, "output", "loop"),
+        this.getSocketCanvasPos(payload.source, "input", "main"),
+      ]);
+
+      if (!startPos || !endPos) {
+        return;
+      }
+
+      const layout = loopBackLayout(startPos, endPos);
+      this.#updateConnectionEntry(payload.id, {
+        pathD: layout.d,
+        loopArrowPoints: layout.arrowPoints,
+        loopButtonX: layout.buttonPosition.x,
+        loopButtonY: layout.buttonPosition.y,
+      });
     }
   };
 }

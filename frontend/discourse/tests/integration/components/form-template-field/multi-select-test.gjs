@@ -56,8 +56,8 @@ module(
       await render(
         <template>
           <MultiSelect
-            @choices={{this.choices}}
             @attributes={{this.attributes}}
+            @choices={{this.choices}}
             @onChange={{noop}}
           />
         </template>

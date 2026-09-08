@@ -119,31 +119,31 @@ export default class DataExplorerWorkflowAiQuery extends Component {
   <template>
     {{#if this.shouldRender}}
       <section
-        class="data-explorer-workflow-ai-query"
         aria-labelledby="data-explorer-workflow-ai-query-title"
+        class="data-explorer-workflow-ai-query"
       >
         <header class="data-explorer-workflow-ai-query__header">
           <span class="data-explorer-workflow-ai-query__icon">
             {{dIcon "discourse-sparkles"}}
           </span>
           <h3
-            id="data-explorer-workflow-ai-query-title"
             class="data-explorer-workflow-ai-query__title"
+            id="data-explorer-workflow-ai-query-title"
           >
             {{i18n "explorer.ai.workflow_title"}}
           </h3>
         </header>
         <QueryAiPrompt
-          @value={{this.prompt}}
+          class="data-explorer-workflow-ai-query__prompt"
+          @actionClass="btn-primary"
+          @actionLabel={{this.actionLabel}}
+          @disabled={{this.disabled}}
+          @generating={{this.generating}}
           @onChange={{this.updatePrompt}}
           @onRegenerate={{this.generate}}
-          @regenerateDisabled={{this.generateDisabled}}
-          @generating={{this.generating}}
-          @disabled={{this.disabled}}
-          @actionLabel={{this.actionLabel}}
-          @actionClass="btn-primary"
           @placeholder={{this.placeholder}}
-          class="data-explorer-workflow-ai-query__prompt"
+          @regenerateDisabled={{this.generateDisabled}}
+          @value={{this.prompt}}
         />
       </section>
     {{/if}}

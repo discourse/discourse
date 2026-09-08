@@ -11,20 +11,20 @@ import { i18n } from "discourse-i18n";
 
 const GroupCard = <template>
   <LinkTo
-    @route="group.members"
-    @model={{@group.name}}
     class="group-box"
     data-group-name={{@group.name}}
+    @model={{@group.name}}
+    @route="group.members"
   >
     <div class="group-box-inner">
       <div class="group-info-wrapper">
         {{#if @group.flair_url}}
           <span class="group-avatar-flair">
             <DAvatarFlair
-              @flairName={{@group.name}}
-              @flairUrl={{@group.flair_url}}
               @flairBgColor={{@group.flair_bg_color}}
               @flairColor={{@group.flair_color}}
+              @flairName={{@group.name}}
+              @flairUrl={{@group.flair_url}}
             />
           </span>
         {{/if}}
@@ -71,8 +71,8 @@ const GroupCard = <template>
 
         <span>
           <PluginOutlet
-            @name="group-index-box-after"
             @connectorTagName="div"
+            @name="group-index-box-after"
             @outletArgs={{lazyHash model=@group}}
           />
         </span>

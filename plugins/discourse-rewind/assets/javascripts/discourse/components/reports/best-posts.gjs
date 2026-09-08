@@ -8,10 +8,6 @@ import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class BestPosts extends Component {
-  rankClass(idx) {
-    return `rank-${idx + 1}`;
-  }
-
   get titleText() {
     return i18nForOwner(
       "discourse_rewind.reports.best_posts.title",
@@ -21,6 +17,10 @@ export default class BestPosts extends Component {
         username: this.args.user?.username,
       }
     );
+  }
+
+  rankClass(idx) {
+    return `rank-${idx + 1}`;
   }
 
   <template>

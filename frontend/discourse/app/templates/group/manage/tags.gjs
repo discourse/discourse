@@ -10,8 +10,8 @@ export default <template>
   <form class="groups-form form-vertical groups-notifications-form">
 
     <PluginOutlet
-      @name="before-manage-group-tags"
       @connectorTagName="div"
+      @name="before-manage-group-tags"
       @outletArgs={{lazyHash model=@controller.model}}
     />
 
@@ -27,11 +27,11 @@ export default <template>
         {{i18n "groups.notifications.watching.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.watching_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.watching_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">
@@ -44,11 +44,11 @@ export default <template>
         {{i18n "groups.notifications.tracking.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.tracking_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.tracking_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">
@@ -61,11 +61,11 @@ export default <template>
         {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.watching_first_post_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.watching_first_post_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">
@@ -78,11 +78,11 @@ export default <template>
         {{i18n "groups.notifications.regular.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.regular_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.regular_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">
@@ -95,11 +95,11 @@ export default <template>
         {{i18n "groups.notifications.muted.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.muted_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.muted_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">

@@ -65,6 +65,34 @@ export default class Chat extends Service {
     }
   }
 
+  get activeChannel() {
+    return this._activeChannel;
+  }
+
+  set activeChannel(channel) {
+    if (!channel) {
+      this._activeMessage = null;
+    }
+
+    if (this._activeChannel) {
+      this._activeChannel.activeThread = null;
+    }
+
+    this._activeChannel = channel;
+  }
+
+  get activeMessage() {
+    return this._activeMessage;
+  }
+
+  set activeMessage(hash) {
+    if (hash) {
+      this._activeMessage = hash;
+    } else {
+      this._activeMessage = null;
+    }
+  }
+
   @computed("currentUser.has_chat_enabled", "siteSettings.chat_enabled")
   get userCanChat() {
     return (
@@ -93,22 +121,6 @@ export default class Chat extends Service {
     return this.userCanChat || this.anonymousUserCanViewPublicChat;
   }
 
-  get activeChannel() {
-    return this._activeChannel;
-  }
-
-  set activeChannel(channel) {
-    if (!channel) {
-      this._activeMessage = null;
-    }
-
-    if (this._activeChannel) {
-      this._activeChannel.activeThread = null;
-    }
-
-    this._activeChannel = channel;
-  }
-
   @computed("currentUser.staff")
   get userCanDirectMessage() {
     if (!this.currentUser) {
@@ -130,18 +142,6 @@ export default class Chat extends Service {
   @computed("activeChannel.userSilenced")
   get userCanInteractWithChat() {
     return !this.activeChannel?.userSilenced;
-  }
-
-  get activeMessage() {
-    return this._activeMessage;
-  }
-
-  set activeMessage(hash) {
-    if (hash) {
-      this._activeMessage = hash;
-    } else {
-      this._activeMessage = null;
-    }
   }
 
   @bind
@@ -338,6 +338,86 @@ export default class Chat extends Service {
     }
   }
 
+  async followChannel(channel) {
+    return this.chatChannelsManager.follow(channel);
+  }
+
+  async unfollowChannel(channel) {
+    return this.chatChannelsManager.unfollow(channel).then(() => {
+      if (channel === this.activeChannel && channel.isDirectMessageChannel) {
+        this.router.transitionTo("chat");
+      }
+    });
+  }
+
+  upsertDmChannelForUser(channel, user) {
+    const usernames = uniqueItemsFromArray(
+      (channel.chatable.users || [])
+        .map((item) => item.username)
+        .concat(user.username)
+    );
+
+    return this.upsertDmChannel({ usernames });
+  }
+
+  // @param {object} targets - The targets to create or fetch the direct message
+  // channel for. The current user will automatically be included in the channel when it is created.
+  // @param {array} [targets.usernames] - The usernames to include in the direct message channel.
+  // @param {array} [targets.groups] - The groups to include in the direct message channel.
+  // @param {object} opts - Optional values when fetching or creating the direct message channel.
+  // @param {string|null} [opts.name] - Name for the direct message channel.
+  // @param {boolean} [opts.upsert] - Should we attempt to fetch existing channel before creating a new one.
+  createDmChannel(targets, opts = { name: null, upsert: false }) {
+    return ajax("/chat/api/direct-message-channels.json", {
+      method: "POST",
+      data: {
+        target_usernames: targets.usernames
+          ? uniqueItemsFromArray(targets.usernames)
+          : null,
+        target_groups: targets.groups
+          ? uniqueItemsFromArray(targets.groups)
+          : null,
+        upsert: opts.upsert,
+        name: opts.name,
+      },
+    })
+      .then((response) => {
+        const channel = this.chatChannelsManager.store(response.channel);
+        this.chatChannelsManager.follow(channel);
+        return channel;
+      })
+      .catch(popupAjaxError);
+  }
+
+  upsertDmChannel(targets, name = null) {
+    return this.createDmChannel(targets, { name, upsert: true });
+  }
+
+  // @param {array} usernames - The usernames to fetch the direct message
+  // channel for. The current user will automatically be included as a
+  // participant to fetch the channel for.
+  getDmChannelForUsernames(usernames) {
+    return ajax("/chat/direct_messages.json", {
+      data: { usernames: uniqueItemsFromArray(usernames).join(",") },
+    });
+  }
+
+  addToolbarButton() {
+    deprecated(
+      "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`",
+      { id: "discourse.chat.addToolbarButton" }
+    );
+  }
+
+  @action
+  toggleDrawer() {
+    this.chatStateManager.didToggleDrawer();
+    this.appEvents.trigger(
+      "chat:toggle-expand",
+      this.chatStateManager.isDrawerExpanded
+    );
+  }
+
   /**
    * Returns channels in sidebar display order: starred, public, DMs.
    *
@@ -419,85 +499,5 @@ export default class Chat extends Service {
           messageId
         )
       : this.router.transitionTo("chat.channel", ...channel.routeModels);
-  }
-
-  async followChannel(channel) {
-    return this.chatChannelsManager.follow(channel);
-  }
-
-  async unfollowChannel(channel) {
-    return this.chatChannelsManager.unfollow(channel).then(() => {
-      if (channel === this.activeChannel && channel.isDirectMessageChannel) {
-        this.router.transitionTo("chat");
-      }
-    });
-  }
-
-  upsertDmChannelForUser(channel, user) {
-    const usernames = uniqueItemsFromArray(
-      (channel.chatable.users || [])
-        .map((item) => item.username)
-        .concat(user.username)
-    );
-
-    return this.upsertDmChannel({ usernames });
-  }
-
-  // @param {object} targets - The targets to create or fetch the direct message
-  // channel for. The current user will automatically be included in the channel when it is created.
-  // @param {array} [targets.usernames] - The usernames to include in the direct message channel.
-  // @param {array} [targets.groups] - The groups to include in the direct message channel.
-  // @param {object} opts - Optional values when fetching or creating the direct message channel.
-  // @param {string|null} [opts.name] - Name for the direct message channel.
-  // @param {boolean} [opts.upsert] - Should we attempt to fetch existing channel before creating a new one.
-  createDmChannel(targets, opts = { name: null, upsert: false }) {
-    return ajax("/chat/api/direct-message-channels.json", {
-      method: "POST",
-      data: {
-        target_usernames: targets.usernames
-          ? uniqueItemsFromArray(targets.usernames)
-          : null,
-        target_groups: targets.groups
-          ? uniqueItemsFromArray(targets.groups)
-          : null,
-        upsert: opts.upsert,
-        name: opts.name,
-      },
-    })
-      .then((response) => {
-        const channel = this.chatChannelsManager.store(response.channel);
-        this.chatChannelsManager.follow(channel);
-        return channel;
-      })
-      .catch(popupAjaxError);
-  }
-
-  upsertDmChannel(targets, name = null) {
-    return this.createDmChannel(targets, { name, upsert: true });
-  }
-
-  // @param {array} usernames - The usernames to fetch the direct message
-  // channel for. The current user will automatically be included as a
-  // participant to fetch the channel for.
-  getDmChannelForUsernames(usernames) {
-    return ajax("/chat/direct_messages.json", {
-      data: { usernames: uniqueItemsFromArray(usernames).join(",") },
-    });
-  }
-
-  addToolbarButton() {
-    deprecated(
-      "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`",
-      { id: "discourse.chat.addToolbarButton" }
-    );
-  }
-
-  @action
-  toggleDrawer() {
-    this.chatStateManager.didToggleDrawer();
-    this.appEvents.trigger(
-      "chat:toggle-expand",
-      this.chatStateManager.isDrawerExpanded
-    );
   }
 }

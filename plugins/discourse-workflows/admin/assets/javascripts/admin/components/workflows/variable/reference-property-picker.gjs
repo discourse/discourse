@@ -122,14 +122,14 @@ export default class ReferencePropertyPicker extends Component {
       <div class="workflows-reference-picker__header">
         {{#if this.hasProperties}}
           <input
-            type="text"
+            aria-label={{i18n
+              "discourse_workflows.reference_pill.filter_placeholder"
+            }}
             class="workflows-reference-picker__filter"
             placeholder={{i18n
               "discourse_workflows.reference_pill.filter_placeholder"
             }}
-            aria-label={{i18n
-              "discourse_workflows.reference_pill.filter_placeholder"
-            }}
+            type="text"
             {{didInsert this.focusFilter}}
             {{on "input" this.updateQuery}}
             {{on "keydown" this.onKeydown}}
@@ -141,8 +141,8 @@ export default class ReferencePropertyPicker extends Component {
         {{/if}}
 
         <button
-          type="button"
           class="workflows-reference-picker__edit"
+          type="button"
           {{on "click" this.edit}}
         >
           {{dIcon "code"}}
@@ -160,12 +160,12 @@ export default class ReferencePropertyPicker extends Component {
           {{#each this.filteredProperties as |property index|}}
             <li>
               <button
-                type="button"
                 class={{dConcatClass
                   "workflows-reference-picker__option"
                   (if (eq index this.activeIndex) "--active")
                   (if (eq property.name this.current) "--current")
                 }}
+                type="button"
                 {{on "click" (fn this.select property.name)}}
                 {{on "mouseenter" (fn this.setActive index)}}
               >

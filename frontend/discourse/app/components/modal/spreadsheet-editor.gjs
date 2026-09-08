@@ -62,6 +62,13 @@ export default class SpreadsheetEditor extends Component {
     }
   }
 
+  get hasChanges() {
+    return (
+      this.initialSnapshot !== null &&
+      this.captureSnapshot() !== this.initialSnapshot
+    );
+  }
+
   @action
   createSpreadsheet(spreadsheet) {
     this.spreadsheet = spreadsheet;
@@ -120,13 +127,6 @@ export default class SpreadsheetEditor extends Component {
       headers: this.spreadsheet.getHeaders(),
       data: this.spreadsheet.getData(),
     });
-  }
-
-  get hasChanges() {
-    return (
-      this.initialSnapshot !== null &&
-      this.captureSnapshot() !== this.initialSnapshot
-    );
   }
 
   async loadJspreadsheet() {
@@ -355,17 +355,17 @@ export default class SpreadsheetEditor extends Component {
 
   <template>
     <DModal
-      @title={{i18n this.modalAttributes.title}}
-      @closeModal={{@closeModal}}
-      @beforeClose={{this.confirmClose}}
       class="insert-table-modal"
+      @beforeClose={{this.confirmClose}}
+      @closeModal={{@closeModal}}
+      @title={{i18n this.modalAttributes.title}}
     >
       <:body>
         <DConditionalLoadingSpinner @condition={{this.loading}}>
           <div
-            {{didInsert this.createSpreadsheet}}
-            tabindex="1"
             class="jexcel_container"
+            tabindex="1"
+            {{didInsert this.createSpreadsheet}}
           ></div>
         </DConditionalLoadingSpinner>
       </:body>
@@ -374,10 +374,10 @@ export default class SpreadsheetEditor extends Component {
         {{#unless this.loading}}
           <div class="primary-actions">
             <DButton
-              @label={{this.modalAttributes.insertTable.title}}
-              @icon={{this.modalAttributes.insertTable.icon}}
-              @action={{this.insertTable}}
               class="btn-insert-table"
+              @action={{this.insertTable}}
+              @icon={{this.modalAttributes.insertTable.icon}}
+              @label={{this.modalAttributes.insertTable.title}}
             />
 
             <DModalCancel @close={{this.cancelClose}} />
@@ -387,23 +387,23 @@ export default class SpreadsheetEditor extends Component {
             {{#if this.isEditingTable}}
               <div class="edit-reason">
                 <DButton
+                  class="btn-edit-reason"
+                  @action={{this.showEditReasonField}}
                   @icon="circle-info"
                   @title="table_builder.edit.modal.trigger_reason"
-                  @action={{this.showEditReasonField}}
-                  class="btn-edit-reason"
                 />
                 {{#if this.showEditReason}}
                   <DTextField
-                    @value={{this.editReason}}
                     @placeholderKey="table_builder.edit.modal.reason"
+                    @value={{this.editReason}}
                   />
                 {{/if}}
               </div>
             {{/if}}
             <DTooltip
-              @icon="question"
-              @arrow={{false}}
               class="btn btn-icon no-text"
+              @arrow={{false}}
+              @icon="question"
             >
               <ul>
                 <h4>{{i18n "table_builder.modal.help.title"}}</h4>

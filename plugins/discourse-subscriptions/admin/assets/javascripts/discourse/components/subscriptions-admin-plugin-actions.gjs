@@ -77,16 +77,16 @@ export default class SubscriptionsAdminPluginActions extends Component {
     {{#if this.stripeConfigured}}
       {{#if this.campaignEnabled}}
         <@actions.Default
-          @label="discourse_subscriptions.campaign.refresh_campaign"
-          @icon="rotate"
           @action={{this.triggerManualRefresh}}
+          @icon="rotate"
+          @label="discourse_subscriptions.campaign.refresh_campaign"
         />
       {{else if (not this.campaignProductSet)}}
         <@actions.Default
-          @label="discourse_subscriptions.campaign.one_click_campaign"
-          @icon="square-plus"
           @action={{this.createOneClickCampaign}}
+          @icon="square-plus"
           @isLoading={{this.loading}}
+          @label="discourse_subscriptions.campaign.one_click_campaign"
         />
       {{/if}}
     {{/if}}

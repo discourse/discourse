@@ -200,12 +200,12 @@ export default class DSkeleton extends Component<DSkeletonSignature> {
 
   <template>
     <div
+      aria-hidden="true"
       class={{dConcatClass
         "d-skeleton"
         (concat "d-skeleton--" this.variant)
         (if this.multiline "d-skeleton--multiline")
       }}
-      aria-hidden="true"
       ...attributes
       style={{this.dimensionStyle}}
     >

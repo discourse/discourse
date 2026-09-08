@@ -18,20 +18,20 @@ export default <template>
     >
       <label>{{i18n "user.like_notification_frequency.title"}}</label>
       <ComboBox
-        @valueProperty="value"
         @content={{@controller.likeNotificationFrequencies}}
-        @value={{@controller.model.user_option.like_notification_frequency}}
         @onChange={{fn
           (mut @controller.model.user_option.like_notification_frequency)
         }}
+        @value={{@controller.model.user_option.like_notification_frequency}}
+        @valueProperty="value"
       />
     </div>
 
     <PreferenceCheckbox
-      @labelKey="user.notify_on_linked_posts"
-      @checked={{@controller.model.user_option.notify_on_linked_posts}}
-      data-setting-name="user-notify-on-linked-posts"
       class="pref-notify-on-linked-posts"
+      data-setting-name="user-notify-on-linked-posts"
+      @checked={{@controller.model.user_option.notify_on_linked_posts}}
+      @labelKey="user.notify_on_linked_posts"
     />
   </div>
 
@@ -49,8 +49,8 @@ export default <template>
         }}</div>
       <span>
         <PluginOutlet
-          @name="user-preferences-desktop-notifications"
           @connectorTagName="div"
+          @name="user-preferences-desktop-notifications"
           @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
         />
       </span>
@@ -64,10 +64,10 @@ export default <template>
         }}</label>
 
       <PreferenceCheckbox
-        @labelKey="user.upcoming_changes.enable_available_notifications"
-        @checked={{@controller.model.user_option.enable_upcoming_change_available_notifications}}
-        data-setting-name="user-enable-upcoming-change-available-notifications"
         class="pref-enable-upcoming-change-available-notifications"
+        data-setting-name="user-enable-upcoming-change-available-notifications"
+        @checked={{@controller.model.user_option.enable_upcoming_change_available_notifications}}
+        @labelKey="user.upcoming_changes.enable_available_notifications"
       />
     </div>
   {{/if}}
@@ -76,8 +76,8 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-preferences-notifications"
       @connectorTagName="div"
+      @name="user-preferences-notifications"
       @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
     />
   </span>
@@ -86,15 +86,15 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@controller.model}}
     />
   </span>
 
   <DSaveControls
-    @model={{@controller.model}}
     @action={{@controller.save}}
+    @model={{@controller.model}}
     @saved={{@controller.saved}}
   />
 </template>

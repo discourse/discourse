@@ -18,7 +18,7 @@ module("Integration | Component | BoardsCard", function (hooks) {
   test("renders basic card", async function (assert) {
     await render(
       <template>
-        <BoardsCard @card={{this.card}} @board={{this.board}} />
+        <BoardsCard @board={{this.board}} @card={{this.card}} />
       </template>
     );
     assert.dom(".discourse-boards-card").exists();
@@ -31,7 +31,7 @@ module("Integration | Component | BoardsCard", function (hooks) {
 
     await render(
       <template>
-        <BoardsCard @card={{this.card}} @board={{this.board}} />
+        <BoardsCard @board={{this.board}} @card={{this.card}} />
       </template>
     );
 
@@ -48,7 +48,7 @@ module("Integration | Component | BoardsCard", function (hooks) {
 
     await render(
       <template>
-        <BoardsCard @card={{this.card}} @board={{this.board}} />
+        <BoardsCard @board={{this.board}} @card={{this.card}} />
       </template>
     );
 
@@ -71,7 +71,7 @@ module("Integration | Component | BoardsCard", function (hooks) {
 
     await render(
       <template>
-        <BoardsCard @card={{this.card}} @board={{this.board}} />
+        <BoardsCard @board={{this.board}} @card={{this.card}} />
       </template>
     );
 
@@ -94,7 +94,7 @@ module("Integration | Component | BoardsCard", function (hooks) {
 
     await render(
       <template>
-        <BoardsCard @card={{this.card}} @board={{this.board}} />
+        <BoardsCard @board={{this.board}} @card={{this.card}} />
       </template>
     );
 
@@ -113,7 +113,7 @@ module("Integration | Component | BoardsCard", function (hooks) {
 
     await render(
       <template>
-        <BoardsCard @card={{this.card}} @board={{this.board}} />
+        <BoardsCard @board={{this.board}} @card={{this.card}} />
       </template>
     );
 
@@ -136,8 +136,8 @@ module("Integration | Component | BoardsCard", function (hooks) {
     await render(
       <template>
         <BoardsCard
-          @card={{this.card}}
           @board={{this.board}}
+          @card={{this.card}}
           @columnTags={{this.columnTags}}
         />
       </template>
@@ -168,9 +168,9 @@ module(
       await render(
         <template>
           <BoardsCard
-            @card={{this.card}}
             @board={{this.board}}
             @canWrite={{this.board.can_write}}
+            @card={{this.card}}
           />
         </template>
       );
@@ -182,9 +182,9 @@ module(
       await render(
         <template>
           <BoardsCard
-            @card={{this.card}}
             @board={{this.board}}
             @canWrite={{this.board.can_write}}
+            @card={{this.card}}
           />
         </template>
       );
@@ -200,9 +200,9 @@ module(
       await render(
         <template>
           <BoardsCard
-            @card={{this.card}}
             @board={{this.board}}
             @canWrite={{this.board.can_write}}
+            @card={{this.card}}
           />
         </template>
       );
@@ -219,9 +219,9 @@ module(
       await render(
         <template>
           <BoardsCard
-            @card={{this.card}}
             @board={{this.board}}
             @canWrite={{this.board.can_write}}
+            @card={{this.card}}
           />
         </template>
       );

@@ -89,10 +89,10 @@ export default class AiTranslationModelProgressOverviewCard extends Component {
 
   <template>
     <button
-      type="button"
+      aria-expanded={{if @expanded "true" "false"}}
       class="ai-translation-model-progress-overview-card"
       data-target-type={{@target.target_type}}
-      aria-expanded={{if @expanded "true" "false"}}
+      type="button"
       {{on "click" this.toggle}}
     >
       <span class="ai-translation-model-progress-overview-card__header">
@@ -110,12 +110,12 @@ export default class AiTranslationModelProgressOverviewCard extends Component {
 
       {{#if this.isFullyTranslated}}
         <span
-          class="ai-translation-model-progress-overview-card__subheader"
           aria-hidden="true"
+          class="ai-translation-model-progress-overview-card__subheader"
         ></span>
         <span
-          class="ai-translation-model-progress-overview-card__subheader"
           aria-hidden="true"
+          class="ai-translation-model-progress-overview-card__subheader"
         ></span>
       {{else}}
         <span
@@ -131,8 +131,8 @@ export default class AiTranslationModelProgressOverviewCard extends Component {
       {{/if}}
 
       <span
-        class="ai-translation-model-progress-overview-card__meter"
         aria-hidden="true"
+        class="ai-translation-model-progress-overview-card__meter"
       >
         <span
           class="ai-translation-model-progress-overview-card__meter-translated"
