@@ -290,16 +290,13 @@ export function moveRow(from, to, tableTarget) {
 }
 
 /**
- * Rebuilds the table with the rows in their new order. Crossing the header
- * boundary re-types every cell in the rows that swap sections, which is simpler
- * and safer to express as one replacement than as surgery across two sections.
+ * Rebuilds the table from `order`, re-typing every cell to match the section it
+ * lands in. Simpler and safer to express as one replacement than as surgery
+ * across two sections, so everything that changes which row is first goes
+ * through it.
  */
-function reorderAcrossHeader(tr, table, from, to) {
+function replaceRows(tr, table, order) {
   const schema = table.node.type.schema;
-  const order = table.grid.rows.map((row) => row.node);
-  const [moved] = order.splice(from, 1);
-  const landing = to > from ? to - 1 : to;
-  order.splice(landing, 0, moved);
 
   const rows = order.map((row, index) => {
     const type = cellType(schema, index === 0);
@@ -317,6 +314,46 @@ function reorderAcrossHeader(tr, table, from, to) {
     table.pos,
     table.pos + table.node.nodeSize,
     replacement
+  );
+}
+
+function reorderAcrossHeader(tr, table, from, to) {
+  const order = table.grid.rows.map((row) => row.node);
+  const [moved] = order.splice(from, 1);
+  order.splice(to > from ? to - 1 : to, 0, moved);
+
+  return replaceRows(tr, table, order);
+}
+
+/**
+ * Inserts an empty header row above the current one, which demotes it to the
+ * first body row. Markdown allows a single header, so gaining one necessarily
+ * costs the old one its section; that trade is the command, not a side effect
+ * of it.
+ */
+export function addHeaderRow(target) {
+  return tableCommand(
+    target,
+    (tr, table) => {
+      const schema = table.node.type.schema;
+      const cells = Array.from({ length: table.grid.width }, (_, col) =>
+        cellType(schema, true).createAndFill({
+          // Alignment belongs to the column, and is read off the first row, so
+          // the incoming header has to carry it or the column would lose it.
+          alignment: columnAlignment(table, col),
+        })
+      );
+
+      const header = schema.nodes.table_row.create(null, Fragment.from(cells));
+      const order = [header, ...table.grid.rows.map((row) => row.node)];
+
+      // The head's own row holds the first cell two positions in.
+      return selectCellContent(
+        replaceRows(tr, table, order),
+        table.start + 2
+      ).scrollIntoView();
+    },
+    (table) => !!table.grid.head
   );
 }
 

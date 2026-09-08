@@ -12,6 +12,7 @@ import { module, test } from "qunit";
 import { forceMobile } from "discourse/lib/mobile";
 import {
   addColumn,
+  addHeaderRow,
   addRow,
   deleteColumn,
   deleteRow,
@@ -35,6 +36,7 @@ import {
 } from "discourse/tests/helpers/rich-editor-helper";
 
 const TABLE = `| h1 | h2 | h3 |\n| --- | --- | --- |\n| a1 | a2 | a3 |\n| b1 | b2 | b3 |`;
+const UNEVEN_TABLE = `| short | a much longer heading | x |\n| --- | --- | --- |\n| one | a much longer value | three |`;
 
 function locateTable(view) {
   let node = null;
@@ -488,17 +490,54 @@ module(
       );
     });
 
-    test("the header row is never offered an insert above", async function (assert) {
+    test("the header row is offered a header above instead of a plain row", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
 
       await selectCell(view, 0, 0);
-      const items = cellMenuItems(view, menuTargetFor(view.state));
+      const classNames = cellMenuItems(view, menuTargetFor(view.state)).map(
+        (item) => item.className
+      );
 
       assert.false(
-        items.some(
-          (item) => item.className === "composer-table-menu__insert-above"
-        )
+        classNames.includes("composer-table-menu__insert-above"),
+        "a row cannot be inserted above the header"
+      );
+      assert.true(
+        classNames.includes("composer-table-menu__insert-header-above"),
+        "a new header can be"
+      );
+    });
+
+    test("inserting a header above demotes the one it replaces", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `| left | right |\n| :--- | ---: |\n| a1 | a2 |`
+      );
+      const { view } = editor;
+
+      await selectCell(view, 0, 0);
+      await apply(view, addHeaderRow());
+
+      assert.strictEqual(
+        editor.value,
+        `|  |  |\n|:---|---:|\n| left | right |\n| a1 | a2 |\n\n`,
+        "the old header becomes a body row and the column alignment survives"
+      );
+    });
+
+    test("an inserted header row undoes in one step", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+
+      await selectCell(view, 0, 0);
+      await apply(view, addHeaderRow());
+      await apply(view, undo);
+
+      assert.strictEqual(
+        editor.value,
+        `| h1 | h2 | h3 |\n|----|----|----|\n| a1 | a2 | a3 |\n| b1 | b2 | b3 |\n\n`,
+        "the table returns to its original shape"
       );
     });
 
@@ -531,51 +570,33 @@ module(
       );
     });
 
-    test("clicking a row grip opens its rendered action menu", async function (assert) {
-      await setupRichEditor(assert, TABLE, { withMenus: true });
-      const grip = document.querySelectorAll(".composer-table__grip.--row")[1];
+    ["row", "column"].forEach((kind) => {
+      test(`clicking a ${kind} grip opens its rendered action menu`, async function (assert) {
+        await setupRichEditor(assert, TABLE, { withMenus: true });
+        const grip = findAll(`.composer-table__grip.--${kind}`)[1];
 
-      await click(grip);
-      await waitFor('.fk-d-menu[data-identifier="composer-table-menu"]');
+        await click(grip);
+        await waitFor('.fk-d-menu[data-identifier="composer-table-menu"]');
 
-      assert
-        .dom(".composer-table-menu__duplicate-row")
-        .exists("the selected row's actions are rendered");
-      assert
-        .dom(".composer-table-menu__clear-contents")
-        .exists("the menu can clear the targeted row");
-      assert
-        .dom(grip)
-        .hasAttribute("aria-expanded", "true", "the grip exposes menu state");
+        assert
+          .dom(`.composer-table-menu__duplicate-${kind}`)
+          .exists(`the selected ${kind}'s actions are rendered`);
+        assert
+          .dom(".composer-table-menu__clear-contents")
+          .exists(`the menu can clear the targeted ${kind}`);
+        assert
+          .dom(grip)
+          .hasAttribute("aria-expanded", "true", "the grip exposes menu state");
 
-      const menuBounds = find(
-        '.fk-d-menu[data-identifier="composer-table-menu"]'
-      ).getBoundingClientRect();
-      assert.notDeepEqual(
-        [Math.round(menuBounds.left), Math.round(menuBounds.top)],
-        [0, 0],
-        "the menu is positioned from its connected grip"
-      );
-    });
-
-    test("clicking a column grip opens its rendered action menu", async function (assert) {
-      await setupRichEditor(assert, TABLE, { withMenus: true });
-      const grip = document.querySelectorAll(
-        ".composer-table__grip.--column"
-      )[1];
-
-      await click(grip);
-      await waitFor('.fk-d-menu[data-identifier="composer-table-menu"]');
-
-      assert
-        .dom(".composer-table-menu__duplicate-column")
-        .exists("the selected column's actions are rendered");
-      assert
-        .dom(".composer-table-menu__clear-contents")
-        .exists("the menu can clear the targeted column");
-      assert
-        .dom(grip)
-        .hasAttribute("aria-expanded", "true", "the grip exposes menu state");
+        const menuBounds = find(
+          '.fk-d-menu[data-identifier="composer-table-menu"]'
+        ).getBoundingClientRect();
+        assert.notDeepEqual(
+          [Math.round(menuBounds.left), Math.round(menuBounds.top)],
+          [0, 0],
+          "the menu is positioned from its connected grip"
+        );
+      });
     });
 
     test("tapping a grip opens the table actions on mobile", async function (assert) {
@@ -1578,57 +1599,44 @@ module(
       );
     });
 
-    test("dragging a column grip to the right reorders unequal cells", async function (assert) {
-      const [editor] = await setupRichEditor(
-        assert,
-        `| short | a much longer heading | x |\n| --- | --- | --- |\n| one | a much longer value | three |`
-      );
+    Object.entries({
+      right: [
+        0,
+        2,
+        `| a much longer heading | x | short |\n|----|----|----|\n| a much longer value | three | one |\n\n`,
+      ],
+      left: [
+        2,
+        0,
+        `| x | short | a much longer heading |\n|----|----|----|\n| three | one | a much longer value |\n\n`,
+      ],
+    }).forEach(([direction, [from, to, expected]]) => {
+      test(`dragging a column grip to the ${direction} reorders unequal cells`, async function (assert) {
+        const [editor] = await setupRichEditor(assert, UNEVEN_TABLE);
+        const grips = findAll(".composer-table__grip.--column");
+        const cells = findAll(".ProseMirror .composer-table table th");
 
-      const grips = [
-        ...document.querySelectorAll(".composer-table__grip.--column"),
-      ];
-      const cells = [
-        ...document.querySelectorAll(".ProseMirror .composer-table table th"),
-      ];
-      await dragGrip(grips[0], cells[2], () => {
-        assert.true(
-          !!document.querySelector(".composer-table__drag-avatar.--column"),
-          "the portaled active grip follows the pointer during the drag"
-        );
-        assert.true(
-          document
-            .querySelector(".composer-table__drag-avatar.--column")
-            .style.transform.startsWith("translateX("),
-          "the avatar carries the same horizontal drag offset"
+        await dragGrip(grips[from], cells[to], () => {
+          // Portaled to the body, so out of reach of the container-scoped `find`.
+          const avatar = document.querySelector(
+            ".composer-table__drag-avatar.--column"
+          );
+          assert.true(
+            !!avatar,
+            "the portaled active grip follows the pointer during the drag"
+          );
+          assert.true(
+            avatar.style.transform.startsWith("translateX("),
+            "the avatar carries the same horizontal drag offset"
+          );
+        });
+
+        assert.strictEqual(
+          editor.value,
+          expected,
+          "the dragged column lands past the one it was dropped over"
         );
       });
-
-      assert.strictEqual(
-        editor.value,
-        `| a much longer heading | x | short |\n|----|----|----|\n| a much longer value | three | one |\n\n`,
-        "the dragged column lands past the one it was dropped over"
-      );
-    });
-
-    test("dragging a column grip to the left reorders unequal cells", async function (assert) {
-      const [editor] = await setupRichEditor(
-        assert,
-        `| short | a much longer heading | x |\n| --- | --- | --- |\n| one | a much longer value | three |`
-      );
-      const grips = [
-        ...document.querySelectorAll(".composer-table__grip.--column"),
-      ];
-      const cells = [
-        ...document.querySelectorAll(".ProseMirror .composer-table table th"),
-      ];
-
-      await dragGrip(grips[2], cells[0]);
-
-      assert.strictEqual(
-        editor.value,
-        `| x | short | a much longer heading |\n|----|----|----|\n| three | one | a much longer value |\n\n`,
-        "the reverse direction uses the same insertion geometry"
-      );
     });
   }
 );

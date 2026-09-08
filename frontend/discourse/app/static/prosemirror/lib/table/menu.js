@@ -2,6 +2,7 @@ import NodeMenu from "discourse/components/composer/node-menu";
 import { i18n } from "discourse-i18n";
 import {
   addColumn,
+  addHeaderRow,
   addRow,
   ALIGNMENTS,
   clearCellContents,
@@ -110,6 +111,13 @@ const ITEMS = {
     className: "composer-table-menu__insert-above",
     announcement: i18n("composer.table.row_inserted"),
     action: () => runCommand(view, addRow(-1, target)),
+  }),
+  insertHeaderAbove: (view, target) => ({
+    icon: "arrow-up",
+    label: i18n("composer.table.insert_header_above"),
+    className: "composer-table-menu__insert-header-above",
+    announcement: i18n("composer.table.header_inserted"),
+    action: () => runCommand(view, addHeaderRow(target)),
   }),
   insertRowBelow: (view, target) => ({
     icon: "arrow-down",
@@ -232,10 +240,11 @@ function alignmentItems(view, alignment, target) {
   }));
 }
 
-// A markdown table's first row is its header, so nothing goes above it.
+// A markdown table's first row is its header, so the only row that can go above
+// it is another header — which is a different offer, and says so.
 function insertRowAboveItems(view, table, row, target) {
   return table.grid.rows[row].header
-    ? []
+    ? [ITEMS.insertHeaderAbove(view, target)]
     : [ITEMS.insertRowAbove(view, target)];
 }
 
