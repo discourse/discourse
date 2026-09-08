@@ -1199,7 +1199,7 @@ class UsersController < ApplicationController
     end
 
     User.transaction do
-      @user.lock!
+      @user = User.lock.find(@user.id)
       revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
 
       primary_email = @user.primary_email
