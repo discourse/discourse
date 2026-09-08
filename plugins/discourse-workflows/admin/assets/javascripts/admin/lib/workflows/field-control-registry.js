@@ -14,6 +14,7 @@ import FieldPathControl from "../../components/workflows/configurators/field-pat
 import FilterQuery from "../../components/workflows/configurators/filter-query";
 import GroupSelect from "../../components/workflows/configurators/group-select";
 import IconControl from "../../components/workflows/configurators/icon-control";
+import LiquidControl from "../../components/workflows/configurators/liquid-control";
 import MultiComboBox from "../../components/workflows/configurators/multi-combo-box";
 import MultiInput from "../../components/workflows/configurators/multi-input";
 import NoticeControl from "../../components/workflows/configurators/notice-control";
@@ -48,6 +49,7 @@ const FIELD_CONTROL_REGISTRY = {
   },
 
   code: { kind: "field", type: "code", renderer: CodeControl },
+  liquid: { kind: "field", type: "custom", renderer: LiquidControl },
   combo_box: { kind: "field", type: "custom", renderer: ComboBox },
   credential: { kind: "field", type: "custom", renderer: Credential },
   data_table_select: {

@@ -1,0 +1,39 @@
+.workflows-liquid-control {
+  display: flex;
+  width: 100%;
+
+  // The height comes from the field's control options, so the editor fills it
+  // and scrolls rather than growing the configurator.
+  .workflows-variable-input.--liquid {
+    height: 100%;
+    overflow: hidden;
+
+    .cm-editor {
+      height: 100%;
+    }
+
+    .cm-scroller {
+      overflow: auto;
+    }
+
+    .cm-content {
+      min-height: 0;
+      padding: 0.5em 0;
+      font-family: var(--d-font-family--monospace), monospace;
+      font-size: var(--font-down-1);
+    }
+
+    .cm-gutters {
+      border: 0;
+      background: transparent;
+      color: var(--primary-low-mid);
+      font-family: var(--d-font-family--monospace), monospace;
+      font-size: var(--font-down-1);
+    }
+
+    .cm-activeLineGutter {
+      background: transparent;
+      color: var(--primary-medium);
+    }
+  }
+}
