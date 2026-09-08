@@ -283,7 +283,7 @@ module(
 
       await render(<template><EditorShell /></template>);
       await click(".wireframe-btn-save");
-      await click(".wireframe-review__tab.--active + .wireframe-review__tab");
+      await click('.wireframe-review__tab[data-d-tab="changes"]');
 
       assert
         .dom(".wireframe-review__change")

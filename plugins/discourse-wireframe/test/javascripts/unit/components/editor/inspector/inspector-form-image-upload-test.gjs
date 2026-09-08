@@ -1,5 +1,12 @@
 import Service from "@ember/service";
-import { click, render, settled } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  focus,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
@@ -100,6 +107,67 @@ module(
   "Integration | Wireframe | InspectorForm | image arg control",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("DTabs adoption focuses a requested empty image after mounting its chooser", async function (assert) {
+      stubWireframe(this.owner, {
+        key: "image-focus",
+        metadata: { args: { image: { type: "image" } } },
+        argsSnapshot: {},
+      });
+      const rail = this.owner.lookup("service:wireframe-rail");
+      rail.showInspector({
+        blockKey: "image-focus",
+        argName: "image",
+        imageVariant: "light",
+      });
+      await render(<template><InspectorForm /></template>);
+      assert
+        .dom('.wireframe-image-field__tab[aria-selected="true"]')
+        .isFocused("the requested image chooser receives focus");
+      assert.strictEqual(
+        rail.inspectorField,
+        null,
+        "the fulfilled request is consumed"
+      );
+    });
+
+    test("DTabs adoption keeps default and dark source selection independent", async function (assert) {
+      stubWireframe(this.owner, {
+        key: "image-tabs",
+        metadata: { args: { image: { type: "image", allowDark: true } } },
+        argsSnapshot: {
+          image: { url: "/uploads/cat.png", width: 400, height: 300 },
+        },
+      });
+      await render(<template><InspectorForm /></template>);
+      await click(".wireframe-image-field__variant summary");
+      await click(".wireframe-image-field__dark summary");
+      const light = '.wireframe-image-field__variant [data-d-tab="upload"]';
+      const dark = '.wireframe-image-field__dark [data-d-tab="upload"]';
+      await focus(dark);
+      await triggerKeyEvent(dark, "keydown", "ArrowRight");
+      assert
+        .dom(light)
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "the other group remains selected"
+        );
+      await triggerKeyEvent(
+        find('.wireframe-image-field__dark [data-d-tab="url"]'),
+        "keydown",
+        "Enter"
+      );
+      assert
+        .dom(".wireframe-image-field__dark .wireframe-image-field__url-input")
+        .exists("the dark URL panel mounts");
+      assert
+        .dom(".wireframe-image-field__dark .file-uploader")
+        .doesNotExist("the dark uploader is destroyed");
+      assert
+        .dom(".wireframe-image-field__variant .file-uploader")
+        .exists("the default uploader stays mounted");
+    });
 
     test("empty image exposes its chooser without a disclosure or dark variant", async function (assert) {
       stubWireframe(this.owner, {

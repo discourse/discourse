@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, find, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockOutlet, {
   _renderBlocks,
@@ -10,6 +10,10 @@ import Layout from "discourse/blocks/builtin/layout";
 import Tabs from "discourse/blocks/builtin/tabs";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import {
+  centerOf,
+  dragEvent,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { setupBlockLayoutDraftsStub } from "../../../helpers/stub-block-layout-drafts";
 import { queryOf } from "../../../helpers/wireframe-peers";
@@ -59,6 +63,54 @@ module(
     hooks.afterEach(function () {
       this.editor.exit();
       _resetOutletLayoutsForTesting();
+    });
+
+    test("DTabs adoption registers tab dragging on initial mount", async function (assert) {
+      await render(<template><BlockOutlet @name={{OUTLET}} /></template>);
+      const key = entryKey(tabsEntry(this.editor).children[0]);
+      const selector = ".d-block-tabs__tab";
+      const dataTransfer = new DataTransfer();
+      await dragEvent(selector, "dragstart", {
+        dataTransfer,
+        ...centerOf(selector),
+      });
+      assert.strictEqual(
+        this.owner.lookup("service:wireframe-drag-session").sourceKey,
+        key,
+        "the tab can be dragged before any structural edits"
+      );
+      await dragEvent(selector, "dragend", {
+        dataTransfer,
+        ...centerOf(selector),
+      });
+    });
+
+    test("DTabs adoption keeps overflow navigation interactive without selecting the container", async function (assert) {
+      await render(
+        <template>
+          <div style="width: 180px;"><BlockOutlet @name={{OUTLET}} /></div>
+        </template>
+      );
+      for (let index = 0; index < 5; index++) {
+        await click("[data-wf-append-child]");
+      }
+      const selection = this.editor.wireframeSelection.selectedBlockKey;
+      const selector = ".d-block-tabs__strip .d-overflow-controls__btn";
+      await waitUntil(() => find(selector));
+      assert.strictEqual(
+        getComputedStyle(find(selector)).pointerEvents,
+        "auto",
+        "the overflow control can receive a real pointer click"
+      );
+      const strip = find(".d-block-tabs__tablist");
+      const before = strip.scrollLeft;
+      await click(selector, { detail: 1 });
+      await waitUntil(() => strip.scrollLeft !== before);
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockKey,
+        selection,
+        "scrolling the strip preserves the selected panel"
+      );
     });
 
     test("clicking the + adds a new layout tab panel", async function (assert) {

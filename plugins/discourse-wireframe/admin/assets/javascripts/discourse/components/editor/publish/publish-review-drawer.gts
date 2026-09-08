@@ -12,6 +12,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import type SiteSettingsService from "discourse/services/site-settings";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DTabs from "discourse/ui-kit/d-tabs";
 import DToggleSwitchUntyped from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -132,7 +133,6 @@ export default class PublishReviewDrawer extends Component {
   @tracked actionError: string | null = null;
   @tracked activeTab = "details";
 
-  isTabActive = (tab: string) => this.activeTab === tab;
   isRawExpanded = (outletName: string) => this.#expandedRaw.has(outletName);
   outletState = (outletName: string) =>
     this.wireframeLayoutQuery.outletState(outletName);
@@ -488,30 +488,18 @@ export default class PublishReviewDrawer extends Component {
           />
         </div>
 
-        <div class="wireframe-review__tabs" role="tablist">
-          <DButton
-            class={{dConcatClass
-              "btn-flat wireframe-review__tab"
-              (if (this.isTabActive "details") "--active")
-            }}
-            @action={{fn this.setTab "details"}}
-            @label="wireframe.review.tab_details"
-          />
-          <DButton
-            class={{dConcatClass
-              "btn-flat wireframe-review__tab"
-              (if (this.isTabActive "changes") "--active")
-            }}
-            @action={{fn this.setTab "changes"}}
-            @translatedLabel={{i18n
-              "wireframe.review.tab_changes"
-              count=this.editedOutlets.length
-            }}
-          />
-        </div>
-
-        <div class="wireframe-review__body">
-          {{#if (this.isTabActive "details")}}
+        <DTabs
+          class="wireframe-review__sections"
+          @active={{this.activeTab}}
+          @label={{i18n "wireframe.review.title"}}
+          @onActivate={{this.setTab}}
+          as |tabs|
+        >
+          <tabs.Tab
+            class="wireframe-review__tab"
+            @key="details"
+            @label={{i18n "wireframe.review.tab_details"}}
+          >
             {{#if this.showActiveThemeEscapeHatch}}
               <section class="wireframe-review__escape">
                 <p class="wireframe-review__escape-notice">
@@ -630,7 +618,15 @@ export default class PublishReviewDrawer extends Component {
                 {{i18n "wireframe.review.no_changes"}}
               </p>
             {{/each}}
-          {{else}}
+          </tabs.Tab>
+          <tabs.Tab
+            class="wireframe-review__tab"
+            @key="changes"
+            @label={{i18n
+              "wireframe.review.tab_changes"
+              count=this.editedOutlets.length
+            }}
+          >
             {{#each this.editedOutlets as |outletName|}}
               {{#let (this.summaryFor outletName) as |summary|}}
                 <section class="wireframe-review__change">
@@ -707,8 +703,8 @@ export default class PublishReviewDrawer extends Component {
                 {{i18n "wireframe.review.no_changes"}}
               </p>
             {{/each}}
-          {{/if}}
-        </div>
+          </tabs.Tab>
+        </DTabs>
 
         {{#if this.saveError}}
           <div class="wireframe-review__error" role="alert">

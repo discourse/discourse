@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { type ComponentLike } from "@glint/template";
@@ -8,6 +7,7 @@ import { isPartKey } from "discourse/lib/blocks/-internals/composite";
 import type BlocksService from "discourse/services/blocks";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DTabs from "discourse/ui-kit/d-tabs";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -60,8 +60,6 @@ export default class InspectorPanel extends Component {
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
   @service declare wireframeRail: WireframeRailService;
   @service declare wireframeSelection: WireframeSelectionService;
-
-  isTabActive = (tab: string) => this.currentTab === tab;
 
   /**
    * The effective active tab. The outlet root has no Conditions tab (a page
@@ -392,82 +390,83 @@ export default class InspectorPanel extends Component {
         <InspectorMetadataSection />
       {{/if}}
 
-      <div class="wireframe-inspector__tabs" role="tablist">
-        <DButton
+      <DTabs
+        class="wireframe-inspector__sections"
+        @active={{this.currentTab}}
+        @label={{i18n "wireframe.chrome.panel_inspector"}}
+        @onActivate={{this.setTab}}
+        as |tabs|
+      >
+        <tabs.Tab
           class={{dConcatClass
-            "btn-flat wireframe-inspector__tab"
-            (if (this.isTabActive "args") "--active")
+            "wireframe-inspector__tab"
             (if this.argsTabHasErrors "--has-errors")
           }}
-          @action={{fn this.setTab "args"}}
-          @icon={{if this.argsTabHasErrors "triangle-exclamation"}}
-          @label="wireframe.inspector.tab_args"
-        />
+          @key="args"
+        >
+          <:label>
+            {{#if this.argsTabHasErrors}}{{dIcon "triangle-exclamation"}}{{/if}}
+            {{i18n "wireframe.inspector.tab_args"}}
+          </:label>
+          <:default>
+            <div class="wireframe-inspector__body">
+              {{#if this.hasCustomLayoutForm}}
+                <InspectorLayoutForm />
+              {{else if this.hasArgsSchema}}
+                <InspectorForm />
+              {{else}}
+                <div class="panel-empty">
+                  {{i18n "wireframe.inspector.label_no_args"}}
+                </div>
+              {{/if}}
+              {{#if this.hasContainerArgsForm}}
+                <InspectorContainerArgsForm />
+              {{/if}}
+            </div>
+          </:default>
+        </tabs.Tab>
         {{#unless (or this.isOutletRoot this.isPart)}}
-          <DButton
-            class={{dConcatClass
-              "btn-flat wireframe-inspector__tab"
-              (if (this.isTabActive "conditions") "--active")
-            }}
-            @action={{fn this.setTab "conditions"}}
-            @label="wireframe.inspector.tab_conditions"
-          />
+          <tabs.Tab
+            class="wireframe-inspector__tab"
+            @key="conditions"
+            @label={{i18n "wireframe.inspector.tab_conditions"}}
+          >
+            <div class="wireframe-inspector__conditions-header">
+              <DButton
+                class="btn-flat wireframe-inspector__detach-btn"
+                @action={{this.toggleDetachConditions}}
+                @icon={{if
+                  this.wireframeConditionsPanel.detached
+                  "down-left-and-up-right-to-center"
+                  "up-right-and-down-left-from-center"
+                }}
+                @label={{if
+                  this.wireframeConditionsPanel.detached
+                  "wireframe.inspector.conditions.redock_panel"
+                  "wireframe.inspector.conditions.detach_panel"
+                }}
+                @title="wireframe.inspector.conditions.detach_panel"
+              />
+            </div>
+            {{#if this.wireframeConditionsPanel.detached}}
+              <p class="wireframe-inspector__conditions-stub">
+                {{i18n "wireframe.inspector.conditions.detached_stub"}}
+              </p>
+            {{else}}
+              <ConditionsTree />
+            {{/if}}
+          </tabs.Tab>
         {{/unless}}
         {{#unless this.isPart}}
-          <DButton
-            class={{dConcatClass
-              "btn-flat wireframe-inspector__tab"
-              (if (this.isTabActive "raw") "--active")
-            }}
-            @action={{fn this.setTab "raw"}}
-            @label="wireframe.inspector.tab_raw"
-          />
+          <tabs.Tab
+            class="wireframe-inspector__tab"
+            @key="raw"
+            @label={{i18n "wireframe.inspector.tab_raw"}}
+          >
+            <InspectorRawJson />
+          </tabs.Tab>
         {{/unless}}
-      </div>
-
-      <div class="wireframe-inspector__body">
-        {{#if (this.isTabActive "args")}}
-          {{#if this.hasCustomLayoutForm}}
-            <InspectorLayoutForm />
-          {{else if this.hasArgsSchema}}
-            <InspectorForm />
-          {{else}}
-            <div class="panel-empty">
-              {{i18n "wireframe.inspector.label_no_args"}}
-            </div>
-          {{/if}}
-          {{#if this.hasContainerArgsForm}}
-            <InspectorContainerArgsForm />
-          {{/if}}
-        {{else if (this.isTabActive "conditions")}}
-          <div class="wireframe-inspector__conditions-header">
-            <DButton
-              class="btn-flat wireframe-inspector__detach-btn"
-              @action={{this.toggleDetachConditions}}
-              @icon={{if
-                this.wireframeConditionsPanel.detached
-                "down-left-and-up-right-to-center"
-                "up-right-and-down-left-from-center"
-              }}
-              @label={{if
-                this.wireframeConditionsPanel.detached
-                "wireframe.inspector.conditions.redock_panel"
-                "wireframe.inspector.conditions.detach_panel"
-              }}
-              @title="wireframe.inspector.conditions.detach_panel"
-            />
-          </div>
-          {{#if this.wireframeConditionsPanel.detached}}
-            <p class="wireframe-inspector__conditions-stub">
-              {{i18n "wireframe.inspector.conditions.detached_stub"}}
-            </p>
-          {{else}}
-            <ConditionsTree />
-          {{/if}}
-        {{else}}
-          <InspectorRawJson />
-        {{/if}}
-      </div>
+      </DTabs>
     {{else}}
       <div class="panel-empty">{{i18n "wireframe.inspector.empty"}}</div>
     {{/if}}

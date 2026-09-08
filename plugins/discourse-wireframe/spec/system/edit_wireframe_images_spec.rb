@@ -179,18 +179,21 @@ describe "Edit wireframe images" do
     image_editor.open_source
     expect(image_editor).to have_compact_source_chooser
     screenshot_marker(label: "wireframe-image-source-chooser", only: :desktop)
+    screenshot_marker(label: "wireframe-dtabs-image-source", only: :desktop)
 
     image_editor.upload_default_source(file_from_fixtures("logo.png", "images").path)
     expect(image_editor).to have_uploaded_grid_image
     expect(image_editor).to have_compact_source_chooser
     image_editor.open_source(variant: :dark)
     screenshot_marker(label: "wireframe-image-dark-source-chooser", only: :desktop)
+    screenshot_marker(label: "wireframe-dtabs-dark-source", only: :desktop)
     image_editor.remove_dark_source
     expect(image_editor).to have_no_dark_grid_image
     expect(image_editor).to have_uploaded_grid_image
     image_editor.remove_default_source
     expect(image_editor).to have_empty_image_chooser
     screenshot_marker(label: "wireframe-image-empty-source", only: :desktop)
+    screenshot_marker(label: "wireframe-dtabs-empty-source", only: :desktop)
   end
 
   it "lets an author move between consistent block inspectors" do

@@ -1,4 +1,10 @@
-import { click, render } from "@ember/test-helpers";
+import {
+  click,
+  findAll,
+  focus,
+  render,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockOutlet, {
   _resetOutletLayoutsForTesting,
@@ -33,6 +39,48 @@ module("Integration | Blocks | tabs", function (hooks) {
   hooks.afterEach(function () {
     _resetOutletLayoutsForTesting();
     debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, null);
+  });
+
+  test("DTabs adoption pairs the active panel and uses manual keyboard activation", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Tabs,
+          children: [
+            panel("Inside first", "First"),
+            panel("Inside second", "Second"),
+          ],
+        },
+      ])
+    );
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    const [first, second] = findAll(".d-block-tabs__tab");
+    await focus(first);
+    await triggerKeyEvent(first, "keydown", "ArrowRight");
+    assert
+      .dom(second)
+      .isFocused("arrows move focus without replacing the panel");
+    assert
+      .dom(".d-block-tabs__panel")
+      .hasText("Inside first", "the first panel stays active");
+    await triggerKeyEvent(second, "keydown", "Enter");
+    assert
+      .dom(".d-block-tabs__panel")
+      .hasText("Inside second", "Enter activates the focused tab");
+    assert
+      .dom(".d-block-tabs [role=tabpanel]")
+      .exists({ count: 1 }, "one panel owns the semantics");
+    assert
+      .dom(".d-block-tabs [role=tabpanel]")
+      .hasAttribute(
+        "aria-labelledby",
+        second.id,
+        "the active label names the panel"
+      );
+    assert
+      .dom(first)
+      .hasAttribute("tabindex", "-1", "only the selected tab is a tab stop");
   });
 
   test("renders a strip from child labels and only the active panel", async function (assert) {

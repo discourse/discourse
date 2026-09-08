@@ -124,7 +124,7 @@ export default class ImageEditMenu extends Component<ImageEditMenuSignature> {
     if (source instanceof HTMLDetailsElement && !source.open) {
       return true;
     }
-    const tabs = source?.querySelector(".wireframe-image-field__tabs");
+    const tabs = source?.querySelector(".d-tabs__tablist");
     if (!panel || !tabs) {
       return true;
     }

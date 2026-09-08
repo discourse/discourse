@@ -1690,6 +1690,14 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       return;
     }
 
+    if (
+      target?.closest(
+        ".d-block-tabs__strip > .d-tabs__strip-controls > .d-overflow-controls__btn"
+      )
+    ) {
+      return;
+    }
+
     const argEl = target?.closest<HTMLElement>("[data-block-arg]");
     const argName = argEl?.dataset?.blockArg;
     const kind = argName ? kindForArg(this.metadata, argName) : null;

@@ -1,5 +1,11 @@
 import Service from "@ember/service";
-import { click, render } from "@ember/test-helpers";
+import {
+  click,
+  findAll,
+  focus,
+  render,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -122,6 +128,53 @@ module(
   "Integration | discourse-wireframe | Component | publish review drawer",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("DTabs adoption preserves publication intent across manual keyboard activation", async function (assert) {
+      stubWireframe(this.owner, {
+        homepageToggleAvailable: true,
+        renderableOutlets: ["homepage-blocks"],
+      });
+      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
+        false;
+
+      await render(<template><PublishReviewDrawer /></template>);
+      await click(".wireframe-review__homepage .d-toggle-switch__checkbox");
+
+      const [details, changes] = findAll(".wireframe-review__tab");
+      await focus(details);
+      await triggerKeyEvent(details, "keydown", "ArrowRight");
+      assert.dom(changes).isFocused("arrows move focus to Changes");
+      assert
+        .dom(details)
+        .hasAttribute("aria-selected", "true", "focus does not activate a tab");
+
+      await triggerKeyEvent(changes, "keydown", "Enter");
+      assert
+        .dom(changes)
+        .hasAttribute("aria-selected", "true", "Enter activates Changes");
+      assert
+        .dom(".wireframe-review__homepage")
+        .doesNotExist("inactive content is unmounted");
+      assert
+        .dom(".wireframe-review [role=tabpanel]")
+        .hasAttribute(
+          "aria-labelledby",
+          changes.id,
+          "the active tab labels the panel"
+        );
+
+      await click(details);
+      assert
+        .dom(".wireframe-review__homepage .d-toggle-switch__checkbox")
+        .hasAttribute(
+          "aria-checked",
+          "true",
+          "the publication choice survives the panel swap"
+        );
+      assert
+        .dom(".wireframe-review__publish")
+        .isNotDisabled("the staged choice remains publishable");
+    });
 
     test("a publishable theme renders a group that will publish, with Publish enabled", async function (assert) {
       stubWireframe(this.owner, {

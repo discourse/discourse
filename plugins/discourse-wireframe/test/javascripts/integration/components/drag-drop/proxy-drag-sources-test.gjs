@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -11,6 +11,51 @@ module(
   "Integration | discourse-wireframe | proxy drag sources",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("DTabs adoption follows proxies mounted after the initial render without a version change", async function (assert) {
+      this.set("showProxy", false);
+      await render(
+        <template>
+          <div
+            class="wireframe-block-chrome"
+            {{proxyDragSources outletName="hero" version=1}}
+          >
+            {{#if this.showProxy}}
+              <button
+                data-wf-drop-child-key="layout:late"
+                id="late-proxy"
+                type="button"
+              >Late tab</button>
+            {{/if}}
+          </div>
+        </template>
+      );
+      this.set("showProxy", true);
+      await settled();
+      const proxy = find("#late-proxy");
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#late-proxy", "dragstart", {
+        dataTransfer,
+        ...centerOf("#late-proxy"),
+      });
+      assert.strictEqual(
+        this.owner.lookup("service:wireframe-drag-session").sourceKey,
+        "layout:late",
+        "a deferred proxy becomes draggable without a structural edit"
+      );
+      await dragEvent("#late-proxy", "dragend", {
+        dataTransfer,
+        ...centerOf("#late-proxy"),
+      });
+      this.set("showProxy", false);
+      await settled();
+      assert
+        .dom(proxy)
+        .doesNotHaveAttribute(
+          "data-drag-source",
+          "a removed proxy releases its source registration"
+        );
+    });
 
     test("makes each proxy child a wf-block drag source for its own block", async function (assert) {
       const drags = [];

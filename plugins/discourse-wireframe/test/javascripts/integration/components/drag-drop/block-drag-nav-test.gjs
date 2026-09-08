@@ -1,6 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { render, settled } from "@ember/test-helpers";
+import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -17,6 +17,102 @@ function dragAt({ clientX, clientY }) {
 
 module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("DTabs adoption ignores tab rectangles outside the visible scroll strip", async function (assert) {
+    const service = this.owner.lookup("service:wireframe-drag-dwell");
+    const clicks = [];
+    const record = (key) => clicks.push(key);
+    await render(
+      <template>
+        <div
+          data-wf-drop-axis="x"
+          style="width: 120px; overflow: auto; display: flex;"
+        >
+          <button
+            data-wf-tab-panel-key="visible"
+            id="visible-tab"
+            style="flex: 0 0 120px;"
+            type="button"
+            {{on "click" (fn record "visible")}}
+          >Visible</button>
+          <button
+            data-wf-tab-panel-key="clipped"
+            id="clipped-tab"
+            style="flex: 0 0 120px;"
+            type="button"
+            {{on "click" (fn record "clipped")}}
+          >Clipped</button>
+        </div>
+      </template>
+    );
+    service.handleDragStart();
+    service.handleDrag(dragAt(centerOf("#clipped-tab")));
+    await settled();
+    assert.deepEqual(
+      clicks,
+      [],
+      "offscreen tab geometry cannot trigger a reveal"
+    );
+    service.handleDrag(dragAt(centerOf("#visible-tab")));
+    await settled();
+    assert.deepEqual(
+      clicks,
+      ["visible"],
+      "a visible center still reveals its tab"
+    );
+  });
+
+  for (const direction of ["ltr", "rtl"]) {
+    test(`DTabs adoption clips partial tab targets in ${direction}`, async function (assert) {
+      const service = this.owner.lookup("service:wireframe-drag-dwell");
+      const clicks = [];
+      const record = () => clicks.push("second");
+      await render(
+        <template>
+          <div
+            data-test-strip
+            dir={{direction}}
+            style="width: 120px; overflow: auto; display: flex;"
+          >
+            <button style="flex: 0 0 120px;" type="button">First</button>
+            <button
+              data-test-second
+              data-wf-tab-panel-key="second"
+              style="flex: 0 0 120px;"
+              type="button"
+              {{on "click" record}}
+            >Second</button>
+          </div>
+        </template>
+      );
+      const strip = find("[data-test-strip]");
+      const second = find("[data-test-second]");
+      const sign = direction === "rtl" ? -1 : 1;
+      strip.scrollLeft = sign * 50;
+      service.handleDragStart();
+      service.handleDrag(dragAt(centerOf("[data-test-second]")));
+      await settled();
+      assert.deepEqual(
+        [...clicks],
+        [],
+        "a partially visible tab cannot receive dwell outside the clip"
+      );
+      strip.scrollLeft = sign * 80;
+      const rect = second.getBoundingClientRect();
+      service.handleDrag(
+        dragAt({
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height / 2,
+        })
+      );
+      await settled();
+      assert.deepEqual(
+        clicks,
+        ["second"],
+        "the same tab reveals once its center is visible"
+      );
+    });
+  }
 
   test("dwelling a tab reveals it by clicking the tab button", async function (assert) {
     const service = this.owner.lookup("service:wireframe-drag-dwell");

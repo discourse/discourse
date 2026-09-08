@@ -174,11 +174,43 @@ export default class WireframeDragDwellService extends Service {
   #elementAt(x: number, y: number, selector: string): HTMLElement | null {
     for (const el of document.querySelectorAll<HTMLElement>(selector)) {
       const r = el.getBoundingClientRect();
-      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+      if (
+        x >= r.left &&
+        x <= r.right &&
+        y >= r.top &&
+        y <= r.bottom &&
+        this.#insideClip(el, x, y)
+      ) {
         return el;
       }
     }
     return null;
+  }
+
+  #insideClip(element: HTMLElement, x: number, y: number): boolean {
+    for (
+      let parent = element.parentElement;
+      parent;
+      parent = parent.parentElement
+    ) {
+      const style = getComputedStyle(parent);
+      const rect = parent.getBoundingClientRect();
+      const scaleX = parent.offsetWidth ? rect.width / parent.offsetWidth : 1;
+      const scaleY = parent.offsetHeight
+        ? rect.height / parent.offsetHeight
+        : 1;
+      const left = rect.left + parent.clientLeft * scaleX;
+      const top = rect.top + parent.clientTop * scaleY;
+      if (
+        (style.overflowX !== "visible" &&
+          (x < left || x > left + parent.clientWidth * scaleX)) ||
+        (style.overflowY !== "visible" &&
+          (y < top || y > top + parent.clientHeight * scaleY))
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

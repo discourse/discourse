@@ -209,7 +209,8 @@ body.wireframe-active {
        stays clickable even on an unselected tabs block. */
 
     .d-block-tabs__tab,
-    .d-block-tabs__add-tab {
+    .d-block-tabs__add-tab,
+    .d-block-tabs__strip > .d-tabs__strip-controls > .d-overflow-controls__btn {
       pointer-events: auto;
     }
 
@@ -2165,42 +2166,8 @@ body.wireframe-active {
   }
 }
 
-.wireframe-inspector__tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-  background: var(--primary-very-low);
-  border-radius: 4px;
-  padding: 2px;
-  margin-bottom: 0.5rem;
-}
-
-.wireframe-inspector__tab {
-  flex: 1 1 auto;
-  min-width: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  background: transparent;
-  border: none;
-  padding: 0.3rem 0.5rem;
-  cursor: pointer;
-  color: var(--primary-medium);
-  border-radius: 3px;
-  font-size: var(--font-down-1);
-
-  @container wireframe-inspector (width < 15rem) {
-    padding-inline: var(--space-1);
-  }
-
-  &:hover {
-    color: var(--primary);
-  }
-
-  &.--active {
-    background: var(--secondary);
-    color: var(--primary);
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
-  }
+.wireframe-inspector__sections .d-tabs__strip-controls {
+  margin-block-end: var(--space-2);
 }
 
 .wireframe-inspector__body {
@@ -3936,30 +3903,23 @@ body.wf-conditions-panel-dragging {
     }
   }
 
-  &__tabs {
-    display: flex;
-    gap: 0;
-    padding: 0.5rem 1rem 0;
-    border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__tab {
-    border-radius: 0;
-    border-bottom: 2px solid transparent;
-
-    &.--active {
-      border-bottom-color: var(--tertiary);
-      color: var(--tertiary);
-    }
-  }
-
-  &__body {
+  &__sections {
     flex: 1 1 auto;
-    overflow: auto;
-    padding: 0.75rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    min-height: 0;
+
+    .d-tabs__strip-controls {
+      margin: var(--space-2) var(--space-4) 0;
+    }
+
+    > .d-tabs__panel {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: var(--space-3) var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
   }
 
   &__empty {
@@ -5896,30 +5856,8 @@ body.wireframe-active--dim-non-editable
     color: var(--primary-high);
   }
 
-  &__tabs {
-    display: flex;
-    gap: 0.25rem;
-    border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__tab {
-    background: none;
-    border: 0;
-    padding: 0.35rem 0.6rem;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-
-    &:hover {
-      color: var(--primary);
-    }
-
-    &--active {
-      color: var(--primary);
-      border-bottom-color: var(--tertiary);
-    }
+  .d-tabs__strip-controls {
+    margin-block-end: var(--space-2);
   }
 
   &__url-row {

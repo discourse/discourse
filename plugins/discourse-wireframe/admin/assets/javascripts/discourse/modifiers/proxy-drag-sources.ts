@@ -39,18 +39,15 @@ interface ProxyDragSourcesSignature {
  * stand-in then moves its child, landing through the container's normal drop
  * target (the proxy strip), exactly like the block's own handle would.
  *
- * Re-scans whenever `version` changes (pass the editor's structural version) so
- * added / removed children gain / lose a source; every registration is torn
- * down on teardown or before a re-scan. The rendered block stays a pure
- * renderer — the drag-to-reorder behaviour lives here, keyed off the passive
- * `data-wf-drop-child-key` marker.
+ * Observes mounted proxies as well as structural edits: portalled controls can
+ * appear after the chrome's initial render. Registrations follow DOM identity.
  */
 export default class ProxyDragSourcesModifier extends Modifier<ProxyDragSourcesSignature> {
   /** Tracks the active drag lifecycle. */
   @service declare wireframeDragSession: WireframeDragSessionService;
 
-  /** Cleanup callbacks for each registered proxy drag source. */
-  #cleanups: Array<() => void> = [];
+  #cleanups = new Map<HTMLElement, () => void>();
+  #observer: MutationObserver | null = null;
 
   /**
    * Creates the modifier and registers teardown.
@@ -79,17 +76,41 @@ export default class ProxyDragSourcesModifier extends Modifier<ProxyDragSourcesS
     // source set follows added / removed children.
     void version;
     this.#teardown();
+    this.#refresh(element, outletName);
+    this.#observer = new MutationObserver(() =>
+      this.#refresh(element, outletName)
+    );
+    this.#observer.observe(element, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-wf-drop-child-key"],
+    });
+  }
+
+  #refresh(element: HTMLElement, outletName: string): void {
     // Only this chrome's own proxies — a nested container's stand-ins belong to
     // its own chrome (same scoping as the container drop target).
-    const proxies = Array.from(
-      element.querySelectorAll<HTMLElement>("[data-wf-drop-child-key]")
-    ).filter((el) => el.closest(".wireframe-block-chrome") === element);
+    const proxies = new Set(
+      Array.from(
+        element.querySelectorAll<HTMLElement>("[data-wf-drop-child-key]")
+      ).filter((el) => el.closest(".wireframe-block-chrome") === element)
+    );
+    for (const [proxy, cleanup] of this.#cleanups) {
+      if (!proxies.has(proxy)) {
+        cleanup();
+        this.#cleanups.delete(proxy);
+      }
+    }
     for (const proxy of proxies) {
-      const blockKey = proxy.dataset.wfDropChildKey;
-      this.#cleanups.push(
+      if (this.#cleanups.has(proxy)) {
+        continue;
+      }
+      this.#cleanups.set(
+        proxy,
         registerDragAndDropSource(proxy, () => ({
           type: "wf-block",
-          data: { blockKey, outletName },
+          data: { blockKey: proxy.dataset.wfDropChildKey, outletName },
           onDragStart: ({ source }: { source: DragSource }) =>
             this.wireframeDragSession.startDrag(
               source.data as unknown as BlockDragPayload
@@ -104,7 +125,9 @@ export default class ProxyDragSourcesModifier extends Modifier<ProxyDragSourcesS
 
   /** Clears every proxy drag-source registration. */
   #teardown(): void {
+    this.#observer?.disconnect();
+    this.#observer = null;
     this.#cleanups.forEach((cleanup) => cleanup());
-    this.#cleanups = [];
+    this.#cleanups.clear();
   }
 }

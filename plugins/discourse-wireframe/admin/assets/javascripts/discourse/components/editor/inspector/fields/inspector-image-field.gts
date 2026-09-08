@@ -15,9 +15,9 @@ import UppyImageUploaderUntyped from "discourse/components/uppy-image-uploader";
 import FKControlInputUntyped from "discourse/form-kit/components/fk/control/input";
 import noop from "discourse/helpers/noop";
 import type A11yService from "discourse/services/a11y";
-import { and, eq } from "discourse/truth-helpers";
+import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DTabs from "discourse/ui-kit/d-tabs";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget, {
   type ExternalDropTargetEvent,
@@ -424,8 +424,10 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
 
   @action
   focusRequestedField(element: HTMLElement): void {
+    const root = element.closest<HTMLElement>(".wireframe-image-field");
     const field = this.wireframeRail.inspectorField;
     if (
+      !root ||
       !field ||
       field.blockKey !== this.blockKey ||
       field.argName !== this.args.custom.name
@@ -438,18 +440,22 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       }
       const dark =
         field.imageVariant === "dark"
-          ? element.querySelector<HTMLDetailsElement>(
+          ? root.querySelector<HTMLDetailsElement>(
               ".wireframe-image-field__dark"
             )
           : null;
       if (dark) {
         dark.open = true;
       }
-      const target = dark ?? element;
+      const target = dark ?? root;
+      const control = target.querySelector<HTMLElement>(
+        "summary, button, input:not([type=file])"
+      );
+      if (!control) {
+        return;
+      }
       target.scrollIntoView({ block: "nearest" });
-      target
-        .querySelector<HTMLElement>("summary, button, input:not([type=file])")
-        ?.focus();
+      control.focus();
       this.wireframeRail.inspectorField = null;
     });
   }
@@ -712,58 +718,43 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
         @value={{this.lightVariant}}
       >
         <div class="wireframe-image-field__source-editor">
-          <div class="wireframe-image-field__tabs" role="tablist">
-            <button
-              aria-selected={{eq this.lightTab "upload"}}
-              class={{dConcatClass
-                "wireframe-image-field__tab"
-                (if
-                  (eq this.lightTab "upload")
-                  "wireframe-image-field__tab--active"
-                )
-              }}
-              role="tab"
-              type="button"
-              {{on "click" (fn this.setLightTab "upload")}}
+          <DTabs
+            @active={{this.lightTab}}
+            @label={{i18n "wireframe.inspector.image.default_label"}}
+            @onActivate={{this.setLightTab}}
+            as |tabs|
+          >
+            <tabs.Tab
+              class="wireframe-image-field__tab"
+              @key="upload"
+              @label={{i18n "wireframe.inspector.image.tab_upload"}}
+              {{didInsert this.focusRequestedField}}
             >
-              {{i18n "wireframe.inspector.image.tab_upload"}}
-            </button>
-            <button
-              aria-selected={{eq this.lightTab "url"}}
-              class={{dConcatClass
-                "wireframe-image-field__tab"
-                (if
-                  (eq this.lightTab "url") "wireframe-image-field__tab--active"
-                )
-              }}
-              role="tab"
-              type="button"
-              {{on "click" (fn this.setLightTab "url")}}
+              <UppyImageUploader
+                class="wireframe-image-field__uploader"
+                @id="{{@custom.id}}-{{@custom.name}}-light"
+                @onUploadDeleted={{this.onLightUploadDeleted}}
+                @onUploadDone={{this.onLightUploadDone}}
+                @onUploadStart={{this.onLightUploadStart}}
+                @type="composer"
+              />
+            </tabs.Tab>
+            <tabs.Tab
+              class="wireframe-image-field__tab"
+              @key="url"
+              @label={{i18n "wireframe.inspector.image.tab_url"}}
             >
-              {{i18n "wireframe.inspector.image.tab_url"}}
-            </button>
-          </div>
-
-          {{#if (eq this.lightTab "upload")}}
-            <UppyImageUploader
-              class="wireframe-image-field__uploader"
-              @id="{{@custom.id}}-{{@custom.name}}-light"
-              @onUploadDeleted={{this.onLightUploadDeleted}}
-              @onUploadDone={{this.onLightUploadDone}}
-              @onUploadStart={{this.onLightUploadStart}}
-              @type="composer"
-            />
-          {{else}}
-            <input
-              aria-label={{i18n "wireframe.inspector.image.tab_url"}}
-              class="wireframe-image-field__url-input"
-              placeholder={{i18n "wireframe.inspector.image.url_placeholder"}}
-              type="url"
-              value={{this.lightUrlDraft}}
-              {{on "input" this.onLightUrlDraftInput}}
-              {{on "blur" this.commitLightUrl}}
-            />
-          {{/if}}
+              <input
+                aria-label={{i18n "wireframe.inspector.image.tab_url"}}
+                class="wireframe-image-field__url-input"
+                placeholder={{i18n "wireframe.inspector.image.url_placeholder"}}
+                type="url"
+                value={{this.lightUrlDraft}}
+                {{on "input" this.onLightUrlDraftInput}}
+                {{on "blur" this.commitLightUrl}}
+              />
+            </tabs.Tab>
+          </DTabs>
 
           {{#if this.lightVariant.url}}
             <DButton
@@ -808,61 +799,45 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
             </p>
 
             {{#if this.lightVariant.url}}
-              <div class="wireframe-image-field__tabs" role="tablist">
-                <button
-                  aria-selected={{eq this.darkTab "upload"}}
-                  class={{dConcatClass
-                    "wireframe-image-field__tab"
-                    (if
-                      (eq this.darkTab "upload")
-                      "wireframe-image-field__tab--active"
-                    )
-                  }}
-                  role="tab"
-                  type="button"
-                  {{on "click" (fn this.setDarkTab "upload")}}
+              <DTabs
+                @active={{this.darkTab}}
+                @label={{i18n "wireframe.inspector.image.dark_label"}}
+                @onActivate={{this.setDarkTab}}
+                as |tabs|
+              >
+                <tabs.Tab
+                  class="wireframe-image-field__tab"
+                  @key="upload"
+                  @label={{i18n "wireframe.inspector.image.tab_upload"}}
+                  {{didInsert this.focusRequestedField}}
                 >
-                  {{i18n "wireframe.inspector.image.tab_upload"}}
-                </button>
-                <button
-                  aria-selected={{eq this.darkTab "url"}}
-                  class={{dConcatClass
-                    "wireframe-image-field__tab"
-                    (if
-                      (eq this.darkTab "url")
-                      "wireframe-image-field__tab--active"
-                    )
-                  }}
-                  role="tab"
-                  type="button"
-                  {{on "click" (fn this.setDarkTab "url")}}
+                  <UppyImageUploader
+                    class="wireframe-image-field__uploader"
+                    @id="{{@custom.id}}-{{@custom.name}}-dark"
+                    @onUploadDeleted={{this.onDarkUploadDeleted}}
+                    @onUploadDone={{this.onDarkUploadDone}}
+                    @onUploadStart={{this.onDarkUploadStart}}
+                    @type="composer"
+                  />
+                </tabs.Tab>
+                <tabs.Tab
+                  class="wireframe-image-field__tab"
+                  @key="url"
+                  @label={{i18n "wireframe.inspector.image.tab_url"}}
                 >
-                  {{i18n "wireframe.inspector.image.tab_url"}}
-                </button>
-              </div>
-
-              {{#if (eq this.darkTab "upload")}}
-                <UppyImageUploader
-                  class="wireframe-image-field__uploader"
-                  @id="{{@custom.id}}-{{@custom.name}}-dark"
-                  @onUploadDeleted={{this.onDarkUploadDeleted}}
-                  @onUploadDone={{this.onDarkUploadDone}}
-                  @onUploadStart={{this.onDarkUploadStart}}
-                  @type="composer"
-                />
-              {{else}}
-                <input
-                  aria-label={{i18n "wireframe.inspector.image.tab_url"}}
-                  class="wireframe-image-field__url-input"
-                  placeholder={{i18n
-                    "wireframe.inspector.image.url_placeholder"
-                  }}
-                  type="url"
-                  value={{this.darkUrlDraft}}
-                  {{on "input" this.onDarkUrlDraftInput}}
-                  {{on "blur" this.commitDarkUrl}}
-                />
-              {{/if}}
+                  <input
+                    aria-label={{i18n "wireframe.inspector.image.tab_url"}}
+                    class="wireframe-image-field__url-input"
+                    placeholder={{i18n
+                      "wireframe.inspector.image.url_placeholder"
+                    }}
+                    type="url"
+                    value={{this.darkUrlDraft}}
+                    {{on "input" this.onDarkUrlDraftInput}}
+                    {{on "blur" this.commitDarkUrl}}
+                  />
+                </tabs.Tab>
+              </DTabs>
 
               {{#if this.darkVariant.url}}
                 <DButton

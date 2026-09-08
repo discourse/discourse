@@ -1,11 +1,19 @@
 import { getOwner } from "@ember/owner";
-import { click, render } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  focus,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import Heading from "discourse/blocks/builtin/heading";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-panel";
+import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { setupBlockLayoutDraftsStub } from "../../../helpers/stub-block-layout-drafts";
 import { queryOf } from "../../../helpers/wireframe-peers";
 
@@ -42,6 +50,51 @@ module(
 
     hooks.afterEach(function () {
       this.editor.exit();
+    });
+
+    test("DTabs adoption preserves inspector selection and conditional-tab fallback", async function (assert) {
+      this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
+      await render(
+        <template>
+          <div class="wireframe-shell"><InspectorPanel /></div>
+        </template>
+      );
+      const args = '.wireframe-inspector__tab[data-d-tab="args"]';
+      const conditions = '.wireframe-inspector__tab[data-d-tab="conditions"]';
+      await focus(args);
+      await triggerKeyEvent(args, "keydown", "ArrowRight");
+      assert.dom(conditions).isFocused("arrow focus reaches Conditions");
+      assert
+        .dom(args)
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "focus alone leaves Settings active"
+        );
+      await triggerKeyEvent(conditions, "keydown", "Enter");
+      assert
+        .dom(conditions)
+        .hasAttribute("aria-selected", "true", "Enter activates Conditions");
+      assert
+        .dom('.wireframe-inspector__sections > [role="tabpanel"]')
+        .hasAttribute(
+          "aria-labelledby",
+          find(conditions).id,
+          "the panel is labelled by its active tab"
+        );
+      const root = queryOf(this.editor).readResolvedLayout(OUTLET)[0];
+      this.editor.wireframeSelection.selectBlock({ key: entryKey(root) });
+      await settled();
+      assert
+        .dom(conditions)
+        .doesNotExist("outlet roots do not expose Conditions");
+      assert
+        .dom(args)
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "the consumer falls back to Settings"
+        );
     });
 
     test("shows the per-block form for a single selection", async function (assert) {

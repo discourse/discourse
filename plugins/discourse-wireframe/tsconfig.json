@@ -6,6 +6,7 @@
     "test/javascripts/**/*"
   ],
   "compilerOptions": {
+    "preserveSymlinks": true,
     "paths": {
       "discourse/plugins/discourse-wireframe/*": [
         "./assets/javascripts/*",

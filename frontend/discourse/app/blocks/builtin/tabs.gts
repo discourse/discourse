@@ -1,7 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { modifier } from "ember-modifier";
@@ -10,6 +8,7 @@ import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
 import { and, eq } from "discourse/truth-helpers";
+import DTabs from "discourse/ui-kit/d-tabs";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -177,20 +176,6 @@ export default class Tabs extends Component<TabsSignature> {
     return panels[0]?.key;
   }
 
-  /**
-   * The single child currently shown.
-   *
-   * @returns The active panel entry, or `undefined` when there are no panels.
-   */
-  get activePanel() {
-    return this.panels.find((panel) => panel.key === this.activePanelKey);
-  }
-
-  /**
-   * Root class carrying the strip-alignment modifier.
-   *
-   * @returns The root class list.
-   */
   get rootClass() {
     const align = VALID_ALIGNS.includes(this.args.align)
       ? this.args.align
@@ -204,59 +189,62 @@ export default class Tabs extends Component<TabsSignature> {
   }
 
   <template>
-    <div class={{this.rootClass}} {{this.revealAddedPanel this.panels.length}}>
-      <div class="d-block-tabs__strip">
-        {{! The tabs live in their own tablist so the editor-only append
-            affordance can sit in the strip without being inside the tablist
-            (a tablist holds only tabs). In an edit-driven context each tab
-            carries its panel key so a click can select that panel's layout;
-            the inline-edit markers + editable region are added ONLY to the
-            active tab, so the label of the tab you're on can be edited in place
-            while the others stay plain.
-
-            In an edit-driven context the tablist also doubles as a horizontal
-            insert track: it is marked as a drop container on the x axis, and
-            each tab carries the panel's key so external tooling can resolve a
-            drop between tabs to a new panel at that position. The child-noun
-            attributes let the drop messages read in tab terms. All these
-            attributes are omitted on the live page. }}
-        <div
-          class="d-block-tabs__tablist"
-          data-wf-child-noun={{if
-            this.isEditing
-            (i18n "blocks.builtin.tabs.tab_noun")
-          }}
-          data-wf-child-noun-plural={{if
-            this.isEditing
-            (i18n "blocks.builtin.tabs.tab_noun_plural")
-          }}
-          data-wf-drop-axis={{if this.isEditing "x"}}
-          data-wf-drop-container={{if this.isEditing "true"}}
-          role="tablist"
-        >
-          {{#each this.panels key="key" as |child index|}}
-            {{#let (eq child.key this.activePanelKey) as |isActive|}}
-              <button
-                aria-selected={{if isActive "true" "false"}}
-                class="d-block-tabs__tab {{if isActive 'is-active'}}"
-                data-wf-container-arg-field={{if
-                  (and this.isEditing isActive)
-                  "label"
-                }}
-                data-wf-container-arg-key={{if
-                  (and this.isEditing isActive)
-                  child.key
-                }}
-                data-wf-container-arg-namespace={{if
-                  (and this.isEditing isActive)
-                  "tab"
-                }}
-                data-wf-drop-child-key={{if this.isEditing child.key}}
-                data-wf-tab-panel-key={{if this.isEditing child.key}}
-                role="tab"
-                type="button"
-                {{on "click" (fn this.selectTab child.key)}}
-              >
+    <DTabs
+      class={{this.rootClass}}
+      @active={{this.activePanelKey}}
+      @label={{i18n "blocks.builtin.tabs.label"}}
+      @onActivate={{this.selectTab}}
+      {{this.revealAddedPanel this.panels.length}}
+    >
+      <:header as |header|>
+        <div class="d-block-tabs__strip">
+          <header.Tablist
+            class="d-block-tabs__tablist"
+            data-wf-child-noun={{if
+              this.isEditing
+              (i18n "blocks.builtin.tabs.tab_noun")
+            }}
+            data-wf-child-noun-plural={{if
+              this.isEditing
+              (i18n "blocks.builtin.tabs.tab_noun_plural")
+            }}
+            data-wf-drop-axis={{if this.isEditing "x"}}
+            data-wf-drop-container={{if this.isEditing "true"}}
+          />
+          {{#if this.isEditing}}
+            <button
+              aria-label={{i18n "blocks.builtin.tabs.add_tab"}}
+              class="d-block-tabs__add-tab"
+              data-wf-append-child="true"
+              type="button"
+            >
+              {{dIcon "plus"}}
+            </button>
+          {{/if}}
+        </div>
+      </:header>
+      <:default as |tabs|>
+        {{#each this.panels key="key" as |child index|}}
+          {{#let (eq child.key this.activePanelKey) as |isActive|}}
+            <tabs.Tab
+              class="d-block-tabs__tab"
+              data-wf-container-arg-field={{if
+                (and this.isEditing isActive)
+                "label"
+              }}
+              data-wf-container-arg-key={{if
+                (and this.isEditing isActive)
+                child.key
+              }}
+              data-wf-container-arg-namespace={{if
+                (and this.isEditing isActive)
+                "tab"
+              }}
+              data-wf-drop-child-key={{if this.isEditing child.key}}
+              data-wf-tab-panel-key={{if this.isEditing child.key}}
+              @key={{child.key}}
+            >
+              <:label>
                 <RichTextRenderer
                   @arg="label"
                   @placeholder={{this.fallbackLabel index}}
@@ -265,18 +253,8 @@ export default class Tabs extends Component<TabsSignature> {
                   as |R|
                 >
                   {{#if this.isEditing}}
-                    {{! Editing: render the editable region for EVERY tab (even
-                        when empty, so an unlabelled tab can still be clicked
-                        into — the placeholder shows the "Tab N" hint). Gating
-                        this on the active tab instead would move the content
-                        component between conditional branches when a tab
-                        activates, which makes Glimmer destroy and rebuild the
-                        just-clicked span — detaching it before edit-driven
-                        click handling resolves it, so selecting an inactive tab
-                        by its text silently failed.
-                        Which tab is the inline-edit TARGET is carried by the
-                        container-arg data attributes below (active-only),
-                        not by this branch. }}
+                    {{! Keep label DOM stable across activation so bubbling clicks
+                        can still resolve the original target. }}
                     <R.Content />
                   {{else if R.isEmpty}}
                     {{this.fallbackLabel index}}
@@ -284,33 +262,14 @@ export default class Tabs extends Component<TabsSignature> {
                     <R.Content />
                   {{/if}}
                 </RichTextRenderer>
-              </button>
-            {{/let}}
-          {{/each}}
-        </div>
-
-        {{#if this.isEditing}}
-          {{! Append-tab affordance, shown only under edit presentation. It
-              carries no behaviour here; external edit-driven tooling detects
-              the data attribute and appends a new panel. }}
-          <button
-            aria-label={{i18n "blocks.builtin.tabs.add_tab"}}
-            class="d-block-tabs__add-tab"
-            data-wf-append-child="true"
-            type="button"
-          >
-            {{dIcon "plus"}}
-          </button>
-        {{/if}}
-      </div>
-
-      {{#if this.activePanel}}
-        <div class="d-block-tabs__panels">
-          <div class="d-block-tabs__panel" role="tabpanel">
-            <this.activePanel.Component />
-          </div>
-        </div>
-      {{/if}}
-    </div>
+              </:label>
+              <:default>
+                <div class="d-block-tabs__panel"><child.Component /></div>
+              </:default>
+            </tabs.Tab>
+          {{/let}}
+        {{/each}}
+      </:default>
+    </DTabs>
   </template>
 }

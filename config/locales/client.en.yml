@@ -313,6 +313,7 @@ en:
           slide_noun_plural: "slides"
           slide_number: "Slide %{number}"
         tabs:
+          label: "Tabs"
           align: "Alignment"
           tab: "Tab"
           tab_label: "Label"

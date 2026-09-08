@@ -262,7 +262,7 @@ module PageObjects
         selector =
           variant == :dark ? ".wireframe-image-field__dark" : ".wireframe-image-field__variant"
         within(".wireframe-panel.--right #{selector}") do
-          find("summary").click unless has_css?(".wireframe-image-field__tabs", wait: 0)
+          find("summary").click unless has_css?(".d-tabs__tablist", wait: 0)
           find("[role='tab']", text: "Upload", exact_text: true).click
         end
       end
@@ -719,7 +719,7 @@ module PageObjects
       def has_contained_inspector_actions?
         has_css?(".wireframe-panel.--right") { |panel| panel.evaluate_script(<<~JS) }
             (() => {
-              const tabs = this.querySelector('.wireframe-inspector__tabs');
+              const tabs = this.querySelector('.wireframe-inspector__sections .d-tabs__tablist');
               const composition = this.querySelector('.wireframe-image-composition');
               const contained = (parent, children) => {
                 const bounds = parent.getBoundingClientRect();
