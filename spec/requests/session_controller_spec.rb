@@ -978,6 +978,36 @@ RSpec.describe SessionController do
       expect(response.location).to start_with("http://ask.example.com/sso")
     end
 
+    context "when a pending DiscourseConnect provider handoff meets an invite" do
+      let(:invite) { Fabricate(:invite, email: "invited@example.com") }
+      let(:login_code) { EmailLoginCode.generate!(email: invite.email) }
+
+      it "hands the provider URL to a newly created account instead of the invite topic" do
+        invite.update!(topics: [Fabricate(:topic)])
+        begin_discourse_connect_provider_handoff
+
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["account_created"]).to eq(true)
+        expect(response.parsed_body["redirect_url"]).to include("/session/sso_provider?sso=")
+        expect(cookies[:sso_payload]).to be_blank
+      end
+
+      it "follows the handoff for an existing user rather than dropping it" do
+        user.update!(email: invite.email)
+        begin_discourse_connect_provider_handoff
+
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(302)
+        expect(response.location).to start_with("http://ask.example.com/sso")
+        expect(session[:current_user_id]).to eq(user.id)
+        expect(invite.reload).to be_redeemed
+        expect(cookies[:sso_payload]).to be_blank
+      end
+    end
+
     it "does not log in with a code issued for a normalized email alias" do
       SiteSetting.normalize_emails = true
       user.update!(email: "foobar@example.com")

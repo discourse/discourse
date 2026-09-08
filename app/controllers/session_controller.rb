@@ -1014,16 +1014,14 @@ class SessionController < ApplicationController
                  # the avatar picker needs the upload permission passed through.
                  can_upload_avatar:
                    user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map),
-                 # Only set when a DiscourseConnect provider handoff is pending.
-                 redirect_url: redirect_url || deferred_sso_provider_url,
+                 # A pending provider handoff takes precedence, since an external
+                 # site is waiting on the answer. Reading it unconditionally also
+                 # consumes the cookie, so a caller-supplied redirect can't leave
+                 # a signed payload behind to be replayed on a later login.
+                 redirect_url: deferred_sso_provider_url || redirect_url,
                )
-    elsif redirect_url
-      session.delete(ACTIVATE_USER_KEY)
-      user.update_timezone_if_missing(params[:timezone])
-      log_on_user(user, replay_anonymous_action: true)
-      render json: success_json.merge(redirect_url:)
     else
-      login(user)
+      login(user, redirect_url:)
     end
   end
 
@@ -1162,7 +1160,7 @@ class SessionController < ApplicationController
     { error: user.suspended_message, reason: "suspended" }
   end
 
-  def login(user, passkey_login: false, second_factor_auth_result: nil)
+  def login(user, passkey_login: false, second_factor_auth_result: nil, redirect_url: nil)
     session.delete(ACTIVATE_USER_KEY)
     user.update_timezone_if_missing(params[:timezone])
     log_on_user(user, replay_anonymous_action: true)
@@ -1175,6 +1173,8 @@ class SessionController < ApplicationController
               second_factor_auth_result.used_2fa_method != UserSecondFactor.methods[:backup_codes]
           )
       sso_provider(payload, confirmed_2fa_during_login)
+    elsif redirect_url
+      render json: success_json.merge(redirect_url:)
     else
       render_serialized(user, UserSerializer)
     end
