@@ -20,33 +20,31 @@ RSpec.describe Chat::UnfollowChannel do
 
     before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
-    context "when all steps pass" do
-      context "with existing membership" do
-        let(:membership) { channel_1.membership_for(current_user) }
+    context "with existing membership" do
+      let(:membership) { channel_1.membership_for(current_user) }
 
-        before { channel_1.add(current_user) }
+      before { channel_1.add(current_user) }
 
-        it { is_expected.to run_successfully }
+      it { is_expected.to run_successfully }
 
-        it "unfollows the channel" do
-          expect { result }.to change { membership.reload.following }.from(true).to(false)
-        end
-
-        context "when channel is starred" do
-          before { membership.update!(starred: true) }
-
-          it "unstars the channel" do
-            expect { result }.to change { membership.reload.starred }.from(true).to(false)
-          end
-        end
+      it "unfollows the channel" do
+        expect { result }.to change { membership.reload.following }.from(true).to(false)
       end
 
-      context "with no existing membership" do
-        it { is_expected.to run_successfully }
+      context "when channel is starred" do
+        before { membership.update!(starred: true) }
 
-        it "does nothing" do
-          expect { result }.to_not change { Chat::UserChatChannelMembership }
+        it "unstars the channel" do
+          expect { result }.to change { membership.reload.starred }.from(true).to(false)
         end
+      end
+    end
+
+    context "with no existing membership" do
+      it { is_expected.to run_successfully }
+
+      it "does nothing" do
+        expect { result }.to_not change { Chat::UserChatChannelMembership }
       end
     end
 

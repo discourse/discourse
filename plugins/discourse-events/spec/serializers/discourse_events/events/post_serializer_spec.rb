@@ -11,7 +11,8 @@ describe PostSerializer do
     let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic_1) { Fabricate(:topic, user: user) }
     let(:post_1) { Fabricate(:post, topic: topic_1) }
-    let!(:post_event_1) { Fabricate(:event, post: post_1) }
+
+    before { Fabricate(:event, post: post_1) }
 
     it "serializes the associated event" do
       json = PostSerializer.new(post_1, scope: Guardian.new).as_json

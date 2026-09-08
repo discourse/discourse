@@ -21,7 +21,7 @@ RSpec.describe ProblemCheck::ChannelErrors do
     context "when an enabled channel has errors" do
       before { Fabricate(:channel, provider: "dummy", error_key: "whoops") }
 
-      it do
+      it "reports the channel errors" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "Some chat integration channels have errors. Visit <a href='/admin/plugins/discourse-chat-integration'>the chat integration section</a> to find out more.",
         )

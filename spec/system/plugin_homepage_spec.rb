@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe "Plugin homepages" do
+  let(:plugins) { [] }
+  let(:plugin_class) do
+    Class.new(Plugin::Instance) do
+      attr_accessor :enabled
+
+      def enabled?
+        enabled
+      end
+    end
+  end
+
   before do
     Object.const_set(
       :PluginHomepageSystemSpecController,
@@ -22,12 +33,12 @@ RSpec.describe "Plugin homepages" do
         end
       end,
     )
-    @plugins = []
+    plugins
   end
 
   after do
     DiscoursePluginRegistry._raw_homepage_options.reject! do |registration|
-      @plugins.include?(registration[:plugin])
+      plugins.include?(registration[:plugin])
     end
     Rails.application.reload_routes!
     Site.clear_cache
@@ -106,7 +117,7 @@ RSpec.describe "Plugin homepages" do
       anonymous:,
       server_side:,
     )
-    @plugins << plugin
+    plugins << plugin
     plugin
   end
 
@@ -114,16 +125,5 @@ RSpec.describe "Plugin homepages" do
     SiteSetting.default_homepage = id
     Rails.application.reload_routes!
     Site.clear_cache
-  end
-
-  def plugin_class
-    @plugin_class ||=
-      Class.new(Plugin::Instance) do
-        attr_accessor :enabled
-
-        def enabled?
-          enabled
-        end
-      end
   end
 end

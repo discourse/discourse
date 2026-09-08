@@ -181,9 +181,9 @@ describe "Uploading files in the composer" do
     before { SiteSetting.enable_auto_grid_images = true }
 
     %w[en fr de].each do |locale|
-      before { SiteSetting.default_locale = locale }
-
       context "when the locale is #{locale}" do
+        before { SiteSetting.default_locale = locale }
+
         it "automatically wraps images in [grid] tags on 3 or more images" do
           visit "/new-topic"
           expect(composer).to be_opened

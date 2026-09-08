@@ -12,7 +12,7 @@ RSpec.describe ProblemCheck::WatchedWords do
   context "when regular expressions are invalid" do
     before { WordWatcher.stubs(:compiled_regexps_for_action).raises(RegexpError.new) }
 
-    it do
+    it "reports invalid watched-word regular expressions" do
       expect(check).to have_a_problem.with_priority("low").with_message(
         "The regular expression for 'Block', 'Censor', 'Require Approval', 'Flag', 'Link', 'Replace', 'Tag', 'Silence' watched words is invalid. Please check your <a href='/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting.",
       )

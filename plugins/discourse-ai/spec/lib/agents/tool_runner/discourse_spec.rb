@@ -267,7 +267,7 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
     end
 
     context "when using the chat API" do
-      before(:each) do
+      before do
         skip "Chat plugin tests skipped because Chat module is not defined." unless defined?(Chat)
         SiteSetting.chat_enabled = true
       end

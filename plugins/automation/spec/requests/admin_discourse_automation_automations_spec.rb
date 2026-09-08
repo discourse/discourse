@@ -469,32 +469,27 @@ describe DiscourseAutomation::AdminAutomationsController do
           expect(automation2_response["stats"]["last_month"]["total_errors"]).to eq(0)
         end
 
-        context "when automation has errors" do
-          before do
-            freeze_time DateTime.parse("2023-01-01")
+        it "includes error counts when an automation has errors" do
+          freeze_time DateTime.parse("2023-01-01")
 
-            # Simulate 3 runs with 2 errors for automation1
-            DiscourseAutomation::Stat.log(automation1.id) { "success" }
-            expect {
-              DiscourseAutomation::Stat.log(automation1.id) { raise "error 1" }
-            }.to raise_error(RuntimeError)
-            expect {
-              DiscourseAutomation::Stat.log(automation1.id) { raise "error 2" }
-            }.to raise_error(RuntimeError)
-          end
+          # Simulate 3 runs with 2 errors for automation1
+          DiscourseAutomation::Stat.log(automation1.id) { "success" }
+          expect {
+            DiscourseAutomation::Stat.log(automation1.id) { raise "error 1" }
+          }.to raise_error(RuntimeError)
+          expect {
+            DiscourseAutomation::Stat.log(automation1.id) { raise "error 2" }
+          }.to raise_error(RuntimeError)
+          get "/admin/plugins/automation/automations.json"
 
-          it "includes error counts in the response" do
-            get "/admin/plugins/automation/automations.json"
+          expect(response.status).to eq(200)
 
-            expect(response.status).to eq(200)
+          parsed_response = response.parsed_body
+          automation1_response =
+            parsed_response["automations"].find { |a| a["id"] == automation1.id }
 
-            parsed_response = response.parsed_body
-            automation1_response =
-              parsed_response["automations"].find { |a| a["id"] == automation1.id }
-
-            expect(automation1_response["stats"]["last_day"]["total_runs"]).to eq(5) # 2 from before + 3 new
-            expect(automation1_response["stats"]["last_day"]["total_errors"]).to eq(2)
-          end
+          expect(automation1_response["stats"]["last_day"]["total_runs"]).to eq(5) # 2 from before + 3 new
+          expect(automation1_response["stats"]["last_day"]["total_errors"]).to eq(2)
         end
       end
     end

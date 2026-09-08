@@ -207,14 +207,12 @@ RSpec.describe SiteSettings::DefaultsProvider do
           expect(settings.defaults.all[:suggested_topics_max_days_old]).to eq(1000)
         end
 
-        context "when include_upcoming_changes_overrides is false" do
-          it "does not use upcoming change default overrides" do
-            expect(
-              settings.defaults.all(include_upcoming_changes_overrides: false)[
-                :suggested_topics_max_days_old
-              ],
-            ).to eq(365)
-          end
+        it "does not use the override when include_upcoming_changes_overrides is false" do
+          expect(
+            settings.defaults.all(include_upcoming_changes_overrides: false)[
+              :suggested_topics_max_days_old
+            ],
+          ).to eq(365)
         end
       end
 

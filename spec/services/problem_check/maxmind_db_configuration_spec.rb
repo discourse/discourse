@@ -4,13 +4,18 @@ RSpec.describe ProblemCheck::MaxmindDbConfiguration do
   subject(:check) { described_class.new }
 
   context "when `maxmind_license_key` and `maxmind_account_id` global settings are not set" do
-    it "reports no problem" do
+    it "does not raise any warning message" do
       expect(check).to be_chill_about_it
     end
   end
 
   context "when `maxmind_license_key` and `maxmind_account_id` global settings are set" do
-    it "reports no problem" do
+    before do
+      global_setting :maxmind_license_key, "license_key"
+      global_setting :maxmind_account_id, "account_id"
+    end
+
+    it "does not raise any warning message" do
       expect(check).to be_chill_about_it
     end
   end

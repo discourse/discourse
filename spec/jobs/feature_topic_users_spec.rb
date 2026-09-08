@@ -12,10 +12,13 @@ RSpec.describe Jobs::FeatureTopicUsers do
   context "with a topic" do
     let!(:post) { create_post }
     let(:topic) { post.topic }
+
     fab!(:coding_horror)
     fab!(:evil_trout)
-    let!(:second_post) { create_post(topic: topic, user: coding_horror) }
-    let!(:third_post) { create_post(topic: topic, user: evil_trout) }
+    before do
+      create_post(topic: topic, user: coding_horror)
+      create_post(topic: topic, user: evil_trout)
+    end
 
     it "does not feature the original poster" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)

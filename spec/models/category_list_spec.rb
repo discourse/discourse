@@ -199,7 +199,11 @@ RSpec.describe CategoryList do
     end
 
     context "with pinned topics in a category" do
-      let!(:topic1) { Fabricate(:topic, category: topic_category, bumped_at: 8.minutes.ago) }
+      before do
+        Fabricate(:topic, category: topic_category, bumped_at: 8.minutes.ago)
+        Fabricate(:dismissed_topic_user, topic: topic2, user: user)
+      end
+
       let!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
       let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
       let!(:pinned) do
@@ -210,7 +214,6 @@ RSpec.describe CategoryList do
           bumped_at: 10.minutes.ago,
         )
       end
-      let!(:dismissed_topic_user) { Fabricate(:dismissed_topic_user, topic: topic2, user: user) }
 
       def displayable_topics
         category_list = CategoryList.new(Guardian.new(user), include_topics: true)

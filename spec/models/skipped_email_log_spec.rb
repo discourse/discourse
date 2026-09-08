@@ -7,55 +7,53 @@ RSpec.describe SkippedEmailLog, type: :model do
 
   let(:skipped_email_log) { Fabricate.build(:skipped_email_log) }
 
-  describe "validations" do
-    it { is_expected.to validate_presence_of(:email_type) }
-    it { is_expected.to validate_presence_of(:to_address) }
-    it { is_expected.to validate_presence_of(:reason_type) }
+  it { is_expected.to validate_presence_of(:email_type) }
+  it { is_expected.to validate_presence_of(:to_address) }
+  it { is_expected.to validate_presence_of(:reason_type) }
 
-    describe "#reason_type" do
-      describe "when reason_type is not valid" do
+  describe "#reason_type" do
+    describe "when reason_type is not valid" do
+      it "is invalid" do
+        skipped_email_log.reason_type = 999_999
+
+        expect(skipped_email_log.valid?).to eq(false)
+        expect(skipped_email_log.errors.messages).to include(:reason_type)
+      end
+    end
+  end
+
+  describe "#custom_reason" do
+    describe "when log is a custom reason type" do
+      describe "when custom reason is blank" do
         it "is invalid" do
-          skipped_email_log.reason_type = 999_999
+          expect(custom_skipped_email_log.valid?).to eq(false)
 
-          expect(skipped_email_log.valid?).to eq(false)
-          expect(skipped_email_log.errors.messages).to include(:reason_type)
+          expect(custom_skipped_email_log.errors.messages).to include(:custom_reason)
+        end
+      end
+
+      describe "when custom reason is not blank" do
+        it "is valid" do
+          custom_skipped_email_log.custom_reason = "test"
+
+          expect(custom_skipped_email_log.valid?).to eq(true)
         end
       end
     end
 
-    describe "#custom_reason" do
-      describe "when log is a custom reason type" do
-        describe "when custom reason is blank" do
-          it "is invalid" do
-            expect(custom_skipped_email_log.valid?).to eq(false)
-
-            expect(custom_skipped_email_log.errors.messages).to include(:custom_reason)
-          end
-        end
-
-        describe "when custom reason is not blank" do
-          it "is valid" do
-            custom_skipped_email_log.custom_reason = "test"
-
-            expect(custom_skipped_email_log.valid?).to eq(true)
-          end
+    describe "when log is not a custom reason type" do
+      describe "when custom reason is blank" do
+        it "is valid" do
+          expect(skipped_email_log.valid?).to eq(true)
         end
       end
 
-      describe "when log is not a custom reason type" do
-        describe "when custom reason is blank" do
-          it "is valid" do
-            expect(skipped_email_log.valid?).to eq(true)
-          end
-        end
+      describe "when custom reason is not blank" do
+        it "is invalid" do
+          skipped_email_log.custom_reason = "test"
 
-        describe "when custom reason is not blank" do
-          it "is invalid" do
-            skipped_email_log.custom_reason = "test"
-
-            expect(skipped_email_log.valid?).to eq(false)
-            expect(skipped_email_log.errors.messages).to include(:custom_reason)
-          end
+          expect(skipped_email_log.valid?).to eq(false)
+          expect(skipped_email_log.errors.messages).to include(:custom_reason)
         end
       end
     end

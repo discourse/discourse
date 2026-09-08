@@ -249,7 +249,7 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe ".normalize_url_for_output" do
-    it do
+    it "encodes spaces" do
       expect(described_class.normalize_url_for_output("http://example.com/fo o")).to eq(
         "http://example.com/fo%20o",
       )
@@ -297,7 +297,7 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe ".get_absolute_image_url" do
-    it do
+    it "adds the HTTPS scheme to protocol-relative images" do
       expect(
         described_class.get_absolute_image_url(
           "//meta.discourse.org/favicon.ico",
@@ -350,7 +350,7 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe ".uri_encode" do
-    it do
+    it "encodes unsafe characters in paths and query keys" do
       expect(described_class.uri_encode('http://example.com/f"o&o?[b"ar]')).to eq(
         "http://example.com/f%22o&o?%5Bb%22ar%5D",
       )
@@ -412,7 +412,7 @@ RSpec.describe Onebox::Helpers do
       ).to eq("https://en.wiktionary.org/wiki/greengrocer%27s_apostrophe")
     end
 
-    it do
+    it "does not double-encode paths and queries" do
       expect(
         described_class.uri_encode("https://example.com/random%2Bpath?q=random%2Bquery"),
       ).to eq("https://example.com/random%2Bpath?q=random%2Bquery")

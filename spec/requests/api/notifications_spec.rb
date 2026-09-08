@@ -3,9 +3,9 @@ require "swagger_helper"
 
 RSpec.describe "notifications" do
   let(:admin) { Fabricate(:admin) }
-  let!(:notification) { Fabricate(:notification, user: admin) }
 
   before do
+    Fabricate(:notification, user: admin)
     Jobs.run_immediately!
     sign_in(admin)
   end

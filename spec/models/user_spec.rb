@@ -15,7 +15,7 @@ RSpec.describe User do
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
   end
 
-  it do
+  it "associates pending posts by their creator" do
     expect(described_class.allocate).to have_many(:pending_posts).class_name(
       "ReviewableQueuedPost",
     ).with_foreign_key(:target_created_by_id)
@@ -30,11 +30,11 @@ RSpec.describe User do
       expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
     end
 
-    it "recognizes membership in the logged_in_users automatic group" do
+    it "returns true if any of the group IDs are the 'logged_in_users' auto group" do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
     end
 
-    it "excludes regular users from the anonymous_users automatic group" do
+    it "never returns true for the 'anonymous_users' auto group — logged-in users are not anonymous" do
       GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
       Discourse.system_user.reload
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(false)
@@ -65,19 +65,6 @@ RSpec.describe User do
       expect(Discourse.system_user.in_any_groups?([group.id])).to eq(false)
       expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(true)
       expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
-    end
-
-    it "accepts logged_in_users as the sole requested group" do
-      expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
-    end
-
-    it "excludes the system user from the anonymous_users automatic group" do
-      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
-      Discourse.system_user.reload
-      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(false)
-      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(
-        false,
-      )
     end
 
     context "with granular_anonymous_and_logged_in_groups_permissions enabled" do
@@ -243,348 +230,338 @@ RSpec.describe User do
     end
   end
 
-  describe "Validations" do
-    describe "#username" do
-      it { is_expected.to validate_presence_of :username }
+  describe "#username" do
+    it { is_expected.to validate_presence_of :username }
 
-      describe "when username already exists" do
-        it "rejects a username already used by another user" do
-          new_user = Fabricate.build(:user, username: user.username.upcase)
+    describe "when username already exists" do
+      it "rejects a username already used by another user" do
+        new_user = Fabricate.build(:user, username: user.username.upcase)
 
-          expect(new_user).to_not be_valid
+        expect(new_user).to_not be_valid
 
-          expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
-        end
-      end
-
-      describe "when group with a same name already exists" do
-        fab!(:group)
-
-        it "rejects a username already used by a group" do
-          new_user = Fabricate.build(:user, username: group.name.upcase)
-
-          expect(new_user).to_not be_valid
-
-          expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
-        end
-      end
-
-      it "is not valid if username changes to be same as password" do
-        user.username = "myawesomepassword"
-        expect(user).to_not be_valid
-        expect(user.errors.full_messages.first).to include(
-          user_error_message(:username, :same_as_password),
-        )
-      end
-
-      it "is not valid if username lowercase changes to be same as password" do
-        user.username = "MyAwesomePassword"
-        expect(user).to_not be_valid
-        expect(user.errors.full_messages.first).to include(
-          user_error_message(:username, :same_as_password),
-        )
-      end
-
-      describe "when a username is an integer" do
-        it "is converted to a string on normalization" do
-          expect(User.normalize_username(123)).to eq("123") # This is possible via the API
-        end
+        expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
       end
     end
 
-    describe "name" do
-      it "is not valid if it changes to be the same as the password" do
-        user.name = "myawesomepassword"
-        expect(user).to_not be_valid
-        expect(user.errors.full_messages.first).to include(
-          user_error_message(:name, :same_as_password),
-        )
-      end
+    describe "when group with a same name already exists" do
+      fab!(:group)
 
-      it "is not valid if name lowercase changes to be the same as the password" do
-        user.name = "MyAwesomePassword"
-        expect(user).to_not be_valid
-        expect(user.errors.full_messages.first).to include(
-          user_error_message(:name, :same_as_password),
-        )
-      end
+      it "rejects a username already used by a group" do
+        new_user = Fabricate.build(:user, username: group.name.upcase)
 
-      it "doesn't raise an error if the name is longer than the max password length" do
-        user.name = "x" * (User.max_password_length + 1)
+        expect(new_user).to_not be_valid
+
+        expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
+      end
+    end
+
+    it "is not valid if username changes to be same as password" do
+      user.username = "myawesomepassword"
+      expect(user).to_not be_valid
+      expect(user.errors.full_messages.first).to include(
+        user_error_message(:username, :same_as_password),
+      )
+    end
+
+    it "is not valid if username lowercase changes to be same as password" do
+      user.username = "MyAwesomePassword"
+      expect(user).to_not be_valid
+      expect(user.errors.full_messages.first).to include(
+        user_error_message(:username, :same_as_password),
+      )
+    end
+
+    describe "when a username is an integer" do
+      it "is converted to a string on normalization" do
+        expect(User.normalize_username(123)).to eq("123") # This is possible via the API
+      end
+    end
+  end
+
+  describe "name" do
+    it "is not valid if it changes to be the same as the password" do
+      user.name = "myawesomepassword"
+      expect(user).to_not be_valid
+      expect(user.errors.full_messages.first).to include(
+        user_error_message(:name, :same_as_password),
+      )
+    end
+
+    it "is not valid if name lowercase changes to be the same as the password" do
+      user.name = "MyAwesomePassword"
+      expect(user).to_not be_valid
+      expect(user.errors.full_messages.first).to include(
+        user_error_message(:name, :same_as_password),
+      )
+    end
+
+    it "doesn't raise an error if the name is longer than the max password length" do
+      user.name = "x" * (User.max_password_length + 1)
+      expect(user).to be_valid
+    end
+  end
+
+  describe "emails" do
+    let(:user) { Fabricate.build(:user) }
+
+    it { is_expected.to validate_presence_of :primary_email }
+
+    describe "when record has a valid email" do
+      it "accepts a valid email address" do
+        user.email = "test@gmail.com"
+
         expect(user).to be_valid
       end
     end
 
-    describe "emails" do
-      it { is_expected.to validate_presence_of :primary_email }
+    describe "when record has an invalid email" do
+      it "rejects a malformed email address" do
+        user.email = "test@gmailcom"
 
-      let(:user) { Fabricate.build(:user) }
-
-      describe "when record has a valid email" do
-        it "accepts a valid email address" do
-          user.email = "test@gmail.com"
-
-          expect(user).to be_valid
-        end
-      end
-
-      describe "when record has an invalid email" do
-        it "rejects a malformed email address" do
-          user.email = "test@gmailcom"
-
-          expect(user).to_not be_valid
-          expect(user.errors.messages.keys).to contain_exactly(:primary_email)
-        end
-      end
-
-      describe "when record has an email that as already been taken" do
-        it "rejects an email already used by another user" do
-          user2 = Fabricate(:user)
-          user.email = user2.email.upcase
-
-          expect(user).to_not be_valid
-
-          expect(user.errors.messages[:primary_email]).to include(
-            I18n.t("activerecord.errors.messages.taken"),
-          )
-        end
-      end
-
-      describe "when user is staged" do
-        it "requires a primary email for staged users" do
-          user.staged = true
-          user.email = nil
-
-          expect(user).to_not be_valid
-          expect(user.errors.messages).to include(:primary_email)
-        end
-      end
-
-      describe "when primary_email is being reassigned to another user" do
-        it "rejects assigning another user's primary email record" do
-          user2 = Fabricate.build(:user, email: nil)
-          user.save!
-          user2.primary_email = user.primary_email
-
-          expect(user2).to_not be_valid
-          expect(user2.errors.messages).to include(:primary_email)
-          expect(user2.primary_email.errors.messages).to include(:user_id)
-        end
+        expect(user).to_not be_valid
+        expect(user.errors.messages.keys).to contain_exactly(:primary_email)
       end
     end
 
-    describe "#user_fields" do
-      fab!(:user_field) { Fabricate(:user_field, show_on_profile: true) }
-      let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+    describe "when record has an email that as already been taken" do
+      it "rejects an email already used by another user" do
+        user2 = Fabricate(:user)
+        user.email = user2.email.upcase
 
-      fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
+        expect(user).to_not be_valid
 
-      before { user.set_user_field(user_field.id, value) }
+        expect(user.errors.messages[:primary_email]).to include(
+          I18n.t("activerecord.errors.messages.taken"),
+        )
+      end
+    end
 
-      context "when user fields contain watched words" do
-        context "when watched words are of type 'Block'" do
-          let(:value) { "bad user field value" }
+    describe "when user is staged" do
+      it "requires a primary email for staged users" do
+        user.staged = true
+        user.email = nil
 
-          context "when user field is public" do
-            it "is not valid" do
-              user.valid?
-              expect(user.errors[:base].size).to eq(1)
-              expect(user.errors.messages[:base]).to include(/you can't post the word/)
-            end
-          end
+        expect(user).to_not be_valid
+        expect(user.errors.messages).to include(:primary_email)
+      end
+    end
 
-          context "when user field is private" do
-            before { user_field.update(show_on_profile: false) }
+    describe "when primary_email is being reassigned to another user" do
+      it "rejects assigning another user's primary email record" do
+        user2 = Fabricate.build(:user, email: nil)
+        user.save!
+        user2.primary_email = user.primary_email
 
-            it { is_expected.to be_valid }
-          end
+        expect(user2).to_not be_valid
+        expect(user2.errors.messages).to include(:primary_email)
+        expect(user2.primary_email.errors.messages).to include(:user_id)
+      end
+    end
+  end
 
-          context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
-            before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+  describe "#user_fields" do
+    fab!(:user_field) { Fabricate(:user_field, show_on_profile: true) }
+    let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
 
-            it { is_expected.to be_valid }
-          end
-        end
+    fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
 
-        context "when watched words are of type 'Censor'" do
-          let!(:censored_word) do
-            Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
-          end
-          let(:value) { "censored word" }
+    before { user.set_user_field(user_field.id, value) }
 
-          context "when user field is public" do
-            it "censors the words upon saving" do
-              user.save!
-              expect(user_field_value).to eq "■■■■■■■■ word"
-            end
+    context "when watched words are of type 'Block'" do
+      let(:value) { "bad user field value" }
 
-            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
-              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
-
-              it "does not censor the words upon saving" do
-                user.save!
-                expect(user_field_value).to eq "censored word"
-              end
-            end
-          end
-
-          context "when user field is private" do
-            before { user_field.update(show_on_profile: false) }
-
-            it "does not censor anything" do
-              user.save!
-              expect(user_field_value).to eq "censored word"
-            end
-          end
-        end
-
-        context "when watched words are of type 'Replace'" do
-          let(:value) { "word to replace" }
-          let!(:replace_word) do
-            Fabricate(
-              :watched_word,
-              word: "to replace",
-              replacement: "replaced",
-              action: WatchedWord.actions[:replace],
-            )
-          end
-
-          context "when user field is public" do
-            it "replaces the words upon saving" do
-              user.save!
-              expect(user_field_value).to eq "word replaced"
-            end
-
-            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
-              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
-
-              it "does not replace anything" do
-                user.save!
-                expect(user_field_value).to eq "word to replace"
-              end
-            end
-          end
-
-          context "when user field is private" do
-            before { user_field.update(show_on_profile: false) }
-
-            it "does not replace anything" do
-              user.save!
-              expect(user_field_value).to eq "word to replace"
-            end
-          end
-        end
-
-        context "when watched words are of type 'link'" do
-          let(:value) { "don't replace me" }
-          let!(:replace_word) do
-            Fabricate(
-              :watched_word,
-              word: "replace",
-              replacement: "touch",
-              action: WatchedWord.actions[:link],
-            )
-          end
-
-          it "does not replace anything" do
-            user.save!
-            expect(user_field_value).to eq value
-          end
+      context "when user field is public" do
+        it "is not valid" do
+          user.valid?
+          expect(user.errors[:base].size).to eq(1)
+          expect(user.errors.messages[:base]).to include(/you can't post the word/)
         end
       end
 
-      context "when user fields do not contain watched words" do
-        let(:value) { "good user field value" }
+      context "when user field is private" do
+        before { user_field.update(show_on_profile: false) }
 
         it { is_expected.to be_valid }
       end
 
-      context "when user fields contain URL" do
-        let(:value) { "https://discourse.org" }
+      context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+        before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
 
-        it "is not cooked" do
+        it { is_expected.to be_valid }
+      end
+    end
+
+    context "when watched words are of type 'Censor'" do
+      before { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+
+      let(:value) { "censored word" }
+
+      context "when user field is public" do
+        it "censors the words upon saving" do
           user.save!
-          expect(user_field_value).to eq "https://discourse.org"
-        end
-      end
-
-      context "with a multiselect user field" do
-        fab!(:user_field) do
-          Fabricate(:user_field, field_type: "multiselect", show_on_profile: true) do
-            user_field_options do
-              [
-                Fabricate(:user_field_option, value: "Axe"),
-                Fabricate(:user_field_option, value: "Sword"),
-              ]
-            end
-          end
+          expect(user_field_value).to eq "■■■■■■■■ word"
         end
 
-        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
-
-        context "with a blocked word" do
-          let(:value) { %w[Axe bad Sword] }
-
-          it "does not block the word since it is not user generated-content" do
-            user.save!
-            expect(user_field_value).to eq %w[Axe bad Sword]
-          end
-        end
-
-        context "with a censored word" do
-          let(:value) { %w[Axe bad Sword] }
-
-          before { watched_word.action = WatchedWord.actions[:censor] }
-
-          it "does not censor the word since it is not user generated-content" do
-            user.save!
-            expect(user_field_value).to eq %w[Axe bad Sword]
-          end
-        end
-      end
-
-      context "with a confirm user field" do
-        fab!(:user_field) { Fabricate(:user_field, field_type: "confirm", show_on_profile: true) }
-
-        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
-
-        context "with a blocked word" do
-          let(:value) { true }
-
-          it "does not block the word since it is not user generated-content" do
-            user.save!
-            expect(user_field_value).to eq true
-          end
-        end
-
-        context "with a censored word" do
-          let(:value) { true }
-
-          before { watched_word.action = WatchedWord.actions[:censor] }
-
-          it "does not censor the word since it is not user generated-content" do
-            user.save!
-            expect(user_field_value).to eq true
-          end
-        end
-      end
-
-      context "when resetting user fields" do
-        let!(:censored_word) do
-          Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
-        end
-        let(:value) { nil }
-
-        it "saves a nil user field value" do
+        it "does not censor words when watched-word checking for user fields is disabled" do
+          SiteSetting.disable_watched_word_checking_in_user_fields = true
           user.save!
-          expect(user_field_value).to eq nil
+          expect(user_field_value).to eq "censored word"
         end
+      end
+
+      context "when user field is private" do
+        before { user_field.update(show_on_profile: false) }
+
+        it "does not censor anything" do
+          user.save!
+          expect(user_field_value).to eq "censored word"
+        end
+      end
+    end
+
+    context "when watched words are of type 'Replace'" do
+      let(:value) { "word to replace" }
+
+      before do
+        Fabricate(
+          :watched_word,
+          word: "to replace",
+          replacement: "replaced",
+          action: WatchedWord.actions[:replace],
+        )
+      end
+
+      context "when user field is public" do
+        it "replaces the words upon saving" do
+          user.save!
+          expect(user_field_value).to eq "word replaced"
+        end
+
+        it "does not replace words when watched-word checking for user fields is disabled" do
+          SiteSetting.disable_watched_word_checking_in_user_fields = true
+          user.save!
+          expect(user_field_value).to eq "word to replace"
+        end
+      end
+
+      context "when user field is private" do
+        before { user_field.update(show_on_profile: false) }
+
+        it "does not replace anything" do
+          user.save!
+          expect(user_field_value).to eq "word to replace"
+        end
+      end
+    end
+
+    context "when watched words are of type 'link'" do
+      let(:value) { "don't replace me" }
+
+      before do
+        Fabricate(
+          :watched_word,
+          word: "replace",
+          replacement: "touch",
+          action: WatchedWord.actions[:link],
+        )
+      end
+
+      it "does not replace anything" do
+        user.save!
+        expect(user_field_value).to eq value
+      end
+    end
+
+    context "when user fields do not contain watched words" do
+      let(:value) { "good user field value" }
+
+      it { is_expected.to be_valid }
+    end
+
+    context "when user fields contain URL" do
+      let(:value) { "https://discourse.org" }
+
+      it "is not cooked" do
+        user.save!
+        expect(user_field_value).to eq "https://discourse.org"
+      end
+    end
+
+    context "with a multiselect user field" do
+      fab!(:user_field) do
+        Fabricate(:user_field, field_type: "multiselect", show_on_profile: true) do
+          user_field_options do
+            [
+              Fabricate(:user_field_option, value: "Axe"),
+              Fabricate(:user_field_option, value: "Sword"),
+            ]
+          end
+        end
+      end
+
+      let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+      context "with a blocked word" do
+        let(:value) { %w[Axe bad Sword] }
+
+        it "does not block the word since it is not user generated-content" do
+          user.save!
+          expect(user_field_value).to eq %w[Axe bad Sword]
+        end
+      end
+
+      context "with a censored word" do
+        let(:value) { %w[Axe bad Sword] }
+
+        before { watched_word.action = WatchedWord.actions[:censor] }
+
+        it "does not censor the word since it is not user generated-content" do
+          user.save!
+          expect(user_field_value).to eq %w[Axe bad Sword]
+        end
+      end
+    end
+
+    context "with a confirm user field" do
+      fab!(:user_field) { Fabricate(:user_field, field_type: "confirm", show_on_profile: true) }
+
+      let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+      context "with a blocked word" do
+        let(:value) { true }
+
+        it "does not block the word since it is not user generated-content" do
+          user.save!
+          expect(user_field_value).to eq true
+        end
+      end
+
+      context "with a censored word" do
+        let(:value) { true }
+
+        before { watched_word.action = WatchedWord.actions[:censor] }
+
+        it "does not censor the word since it is not user generated-content" do
+          user.save!
+          expect(user_field_value).to eq true
+        end
+      end
+    end
+
+    context "when resetting user fields" do
+      before { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+
+      let(:value) { nil }
+
+      it "saves a nil user field value" do
+        user.save!
+        expect(user_field_value).to eq nil
       end
     end
   end
 
   describe "#count_by_signup_date" do
-    before(:each) do
+    before do
       User.destroy_all
       freeze_time_safe
       Fabricate(:user)
@@ -1507,36 +1484,34 @@ RSpec.describe User do
       expect(user.reload.user_option.timezone).to eq(nil)
     end
 
-    context "if timezone is provided" do
-      context "if the timezone is valid" do
-        let(:timezone) { "Australia/Melbourne" }
+    context "if the provided timezone is valid" do
+      let(:timezone) { "Australia/Melbourne" }
 
-        context "if no timezone exists on user option" do
-          it "sets the timezone for the user" do
-            user.update_timezone_if_missing(timezone)
-            expect(user.reload.user_option.timezone).to eq(timezone)
-          end
-        end
-      end
-
-      context "if the timezone is not valid" do
-        let(:timezone) { "Jupiter" }
-
-        context "if no timezone exists on user option" do
-          it "does not set the timezone for the user" do
-            user.update_timezone_if_missing(timezone)
-            expect(user.reload.user_option.timezone).to eq(nil)
-          end
-        end
-      end
-
-      context "if a timezone already exists on user option" do
-        before { user.user_option.update_attribute(:timezone, "America/Denver") }
-
-        it "does not update the timezone" do
+      context "if no timezone exists on user option" do
+        it "sets the timezone for the user" do
           user.update_timezone_if_missing(timezone)
-          expect(user.reload.user_option.timezone).to eq("America/Denver")
+          expect(user.reload.user_option.timezone).to eq(timezone)
         end
+      end
+    end
+
+    context "if the timezone is not valid" do
+      let(:timezone) { "Jupiter" }
+
+      context "if no timezone exists on user option" do
+        it "does not set the timezone for the user" do
+          user.update_timezone_if_missing(timezone)
+          expect(user.reload.user_option.timezone).to eq(nil)
+        end
+      end
+    end
+
+    context "if a timezone already exists on user option" do
+      before { user.user_option.update_attribute(:timezone, "America/Denver") }
+
+      it "does not update the timezone" do
+        user.update_timezone_if_missing(timezone)
+        expect(user.reload.user_option.timezone).to eq("America/Denver")
       end
     end
   end
@@ -2683,23 +2658,20 @@ RSpec.describe User do
 
   describe "#featured_user_badges" do
     fab!(:user)
-    let!(:user_badge_tl1) do
+    before do
       UserBadge.create(
         badge_id: Badge::BasicUser,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
       )
-    end
-    let!(:user_badge_tl2) do
       UserBadge.create(
         badge_id: Badge::Member,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
       )
-    end
-    let!(:user_badge_like) do
+
       UserBadge.create(
         badge_id: Badge::FirstLike,
         user: user,
@@ -3502,42 +3474,40 @@ RSpec.describe User do
     end
   end
 
-  describe "Granting admin or moderator status" do
-    context "when granting admin status" do
-      context "when there is a reviewable" do
-        fab!(:user, :reviewable_user)
+  context "when granting admin status" do
+    context "when there is a reviewable" do
+      fab!(:user, :reviewable_user)
 
-        context "when the user isn’t approved yet" do
-          it "approves the associated reviewable" do
-            expect { user.target.grant_admin! }.to change { user.reload.dup }.to be_approved
-          end
-        end
-
-        context "when the user is already approved" do
-          before { user.perform(Discourse.system_user, :approve_user) }
-
-          it "does nothing" do
-            expect { user.target.grant_admin! }.not_to change { user.reload.approved? }
-          end
+      context "when the user isn’t approved yet" do
+        it "approves the associated reviewable" do
+          expect { user.target.grant_admin! }.to change { user.reload.dup }.to be_approved
         end
       end
 
-      context "when there is no reviewable" do
-        let(:user) { Fabricate(:user, approved: false) }
+      context "when the user is already approved" do
+        before { user.perform(Discourse.system_user, :approve_user) }
 
-        it "approves the user" do
-          expect { user.grant_admin! }.to change { user.reload.approved }.to true
+        it "does nothing" do
+          expect { user.target.grant_admin! }.not_to change { user.reload.approved? }
         end
       end
     end
 
-    context "when granting moderator status" do
-      context "when there is a reviewable" do
-        let(:user) { Fabricate(:reviewable_user) }
+    context "when there is no reviewable" do
+      let(:user) { Fabricate(:user, approved: false) }
 
-        it "approves the associated reviewable" do
-          expect { user.target.grant_moderation! }.to change { user.reload.dup }.to be_approved
-        end
+      it "approves the user" do
+        expect { user.grant_admin! }.to change { user.reload.approved }.to true
+      end
+    end
+  end
+
+  context "when granting moderator status" do
+    context "when there is a reviewable" do
+      let(:user) { Fabricate(:reviewable_user) }
+
+      it "approves the associated reviewable" do
+        expect { user.target.grant_moderation! }.to change { user.reload.dup }.to be_approved
       end
     end
   end
@@ -4058,8 +4028,11 @@ RSpec.describe User do
     let!(:required_field) do
       Fabricate(:user_field, name: "hairstyle", requirement: "for_all_users")
     end
-    let!(:signup_field) { Fabricate(:user_field, name: "haircolor", requirement: "on_signup") }
-    let!(:optional_field) { Fabricate(:user_field, name: "haircolor", requirement: "optional") }
+
+    before do
+      Fabricate(:user_field, name: "haircolor", requirement: "on_signup")
+      Fabricate(:user_field, name: "haircolor", requirement: "optional")
+    end
 
     context "when all required fields are populated" do
       before { user.set_user_field(required_field.id, "bald") }
@@ -4091,7 +4064,7 @@ RSpec.describe User do
   describe "#bump_required_fields_version" do
     let!(:version) { UserRequiredFieldsVersion.create! }
 
-    it do
+    it "uses the latest required-fields version" do
       expect { user.bump_required_fields_version }.to change { user.required_fields_version }.to(
         version.id,
       )

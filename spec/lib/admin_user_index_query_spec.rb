@@ -114,7 +114,7 @@ RSpec.describe AdminUserIndexQuery do
   end
 
   describe "correct order with nil values" do
-    before(:each) { Fabricate(:user, email: "test2@example.com", last_emailed_at: 1.hour.ago) }
+    before { Fabricate(:user, email: "test2@example.com", last_emailed_at: 1.hour.ago) }
 
     it "shows nil values first with asc" do
       users = ::AdminUserIndexQuery.new(order: "last_emailed", asc: true).find_users
@@ -244,7 +244,7 @@ RSpec.describe AdminUserIndexQuery do
     end
 
     context "with email fragment" do
-      before(:each) { Fabricate(:user, email: "test1@example.com") }
+      before { Fabricate(:user, email: "test1@example.com") }
 
       it "matches the email" do
         query = ::AdminUserIndexQuery.new(filter: " est1")
@@ -258,7 +258,7 @@ RSpec.describe AdminUserIndexQuery do
     end
 
     context "with username fragment" do
-      before(:each) { Fabricate(:user, username: "test_user_1") }
+      before { Fabricate(:user, username: "test_user_1") }
 
       it "matches the username" do
         query = ::AdminUserIndexQuery.new(filter: "user\n")

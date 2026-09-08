@@ -29,6 +29,7 @@ RSpec.describe Onebox::Engine::InstagramOnebox do
     let(:api_link) do
       "https://graph.facebook.com/v9.0/instagram_oembed?url=#{link}&access_token=#{access_token}"
     end
+    let(:previous_options) { Onebox.options.to_h }
 
     before do
       stub_request(:head, link)
@@ -37,11 +38,11 @@ RSpec.describe Onebox::Engine::InstagramOnebox do
         :get,
         "https://api.instagram.com/oembed/?url=https://www.instagram.com/p/CARbvuYDm3Q",
       ).to_return(status: 200, body: onebox_response("instagram"))
-      @previous_options = Onebox.options.to_h
+      previous_options
       Onebox.options = { facebook_app_access_token: access_token }
     end
 
-    after { Onebox.options = @previous_options }
+    after { Onebox.options = previous_options }
 
     it "renders preview with a placeholder" do
       expect(Oneboxer.preview(link, invalidate_oneboxes: true)).to include("placeholder-icon image")
@@ -58,15 +59,16 @@ RSpec.describe Onebox::Engine::InstagramOnebox do
   context "without access token" do
     let(:api_link) { "https://api.instagram.com/oembed/?url=#{link}" }
     let(:html) { described_class.new(link).to_html }
+    let(:previous_options) { Onebox.options.to_h }
 
     before do
       stub_request(:head, link)
       stub_request(:get, api_link).to_return(status: 200, body: onebox_response("instagram_old"))
-      @previous_options = Onebox.options.to_h
+      previous_options
       Onebox.options = {}
     end
 
-    after { Onebox.options = @previous_options }
+    after { Onebox.options = previous_options }
 
     it "renders preview with a placeholder" do
       expect(Oneboxer.preview(link, invalidate_oneboxes: true)).to include("placeholder-icon image")

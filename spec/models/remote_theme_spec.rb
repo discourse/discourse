@@ -12,6 +12,23 @@ RSpec.describe RemoteTheme do
       .returns([1024, 768])
   end
 
+  let(:gitlab_repo) do
+    RemoteTheme.create!(
+      remote_url: "https://gitlab.com/org/repo.git",
+      local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
+      remote_version: "21122230dbfed804067849393c3332083ddd0c07",
+      commits_behind: 5,
+    )
+  end
+  let(:github_repo) do
+    RemoteTheme.create!(
+      remote_url: "https://github.com/org/testtheme.git",
+      local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
+      remote_version: "21122230dbfed804067849393c3332083ddd0c07",
+      commits_behind: 2,
+    )
+  end
+
   describe "#import_theme" do
     def about_json(
       love_color: "FAFAFA",
@@ -106,7 +123,7 @@ RSpec.describe RemoteTheme do
 
     after { `rm -fr #{initial_repo}` }
 
-    around(:each) { |group| MockGitImporter.with_mock { group.run } }
+    around { |group| MockGitImporter.with_mock { group.run } }
 
     it "run pending theme settings migrations" do
       add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
@@ -663,24 +680,6 @@ RSpec.describe RemoteTheme do
         expect(SiteSetting.theme_site_settings[theme.id][:search_experience]).to eq("search_icon")
       end
     end
-  end
-
-  let(:github_repo) do
-    RemoteTheme.create!(
-      remote_url: "https://github.com/org/testtheme.git",
-      local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
-      remote_version: "21122230dbfed804067849393c3332083ddd0c07",
-      commits_behind: 2,
-    )
-  end
-
-  let(:gitlab_repo) do
-    RemoteTheme.create!(
-      remote_url: "https://gitlab.com/org/repo.git",
-      local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
-      remote_version: "21122230dbfed804067849393c3332083ddd0c07",
-      commits_behind: 5,
-    )
   end
 
   describe "#github_diff_link" do

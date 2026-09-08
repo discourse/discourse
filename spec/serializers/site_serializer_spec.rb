@@ -649,6 +649,7 @@ RSpec.describe SiteSerializer do
 
     it "is false when enable_names setting is true and full_name_requirement is hidden_at_signup" do
       SiteSetting.full_name_requirement = "hidden_at_signup"
+      SiteSetting.enable_names = true
       expect(site_json[:full_name_visible_in_signup]).to eq(false)
     end
   end

@@ -22,7 +22,7 @@ RSpec.describe UserVisit do
   end
 
   describe "#by_day" do
-    before(:each) do
+    before do
       freeze_time
       user.user_visits.create(visited_at: Time.zone.now)
       user.user_visits.create(visited_at: 1.day.ago)

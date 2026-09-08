@@ -324,7 +324,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
       let(:tagged_topic) { Fabricate(:topic, category_id: category.id, tags: [tag]) }
       let(:tagged_first_post) { Fabricate(:post, topic: tagged_topic) }
 
-      before(:each) { SiteSetting.tagging_enabled = true }
+      before { SiteSetting.tagging_enabled = true }
 
       it "matches rules without specified tags" do
         DiscourseChatIntegration::Rule.create!(channel: chan1, filter: "follow", category_id: nil) # Wildcard watch

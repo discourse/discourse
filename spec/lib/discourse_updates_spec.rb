@@ -188,7 +188,7 @@ RSpec.describe DiscourseUpdates do
       ]
     end
 
-    before(:each) do
+    before do
       stub_permanent_upcoming_changes!([])
 
       Discourse.redis.del "new_features_last_seen_user_#{admin.id}"

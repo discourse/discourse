@@ -352,7 +352,8 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       context "with default user options" do
-        let!(:user1) { Fabricate(:user) }
+        before { Fabricate(:user) }
+
         let!(:user2) { Fabricate(:user) }
 
         it "updates every existing user option" do

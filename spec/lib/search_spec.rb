@@ -110,12 +110,15 @@ RSpec.describe Search do
       fab!(:post) { Fabricate(:post, topic: topic) }
 
       before do
-        SiteSetting.tagging_enabled = true
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
 
         SearchIndexer.enable
         SearchIndexer.index(hidden_tag, force: true)
         SearchIndexer.index(topic, force: true)
       end
+
+      fab!(:topic) { Fabricate(:topic, tags: [hidden_tag]) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
 
       it "are visible to staff users" do
         result = Search.execute(hidden_tag.name, guardian: Guardian.new(Fabricate(:admin)))
@@ -209,7 +212,7 @@ RSpec.describe Search do
     end
   end
 
-  describe "users" do
+  describe "user matching" do
     fab!(:user) { Fabricate(:user, username: "DonaldDuck") }
     fab!(:user2, :user)
 
@@ -441,10 +444,8 @@ RSpec.describe Search do
   end
 
   describe "user indexing" do
-    before do
-      @user = Fabricate(:user, username: "fred", name: "bob jones")
-      @indexed = @user.user_search_data.search_data
-    end
+    let(:user) { Fabricate(:user, username: "fred", name: "bob jones") }
+    let(:indexed) { user.user_search_data.search_data }
 
     it "indexes the user's name" do
       expect(@indexed).to match(/fred/)
@@ -601,7 +602,8 @@ RSpec.describe Search do
   end
 
   describe "inactive users" do
-    let!(:inactive_user) { Fabricate(:inactive_user, active: false) }
+    before { Fabricate(:inactive_user, active: false) }
+
     let(:result) { Search.execute("bruce") }
 
     it "does not return a result" do
@@ -1484,7 +1486,8 @@ RSpec.describe Search do
 
       context "with restrict_to_archetype" do
         let(:personal_message) { Fabricate(:private_message_topic) }
-        let!(:p1) { Fabricate(:post, topic: personal_message, post_number: 1) }
+
+        before { Fabricate(:post, topic: personal_message, post_number: 1) }
 
         it "restricts result to topics" do
           result =
@@ -1612,7 +1615,7 @@ RSpec.describe Search do
     expect(Search.execute("canned").posts).to be_present
   end
 
-  describe "categories" do
+  describe "category matching" do
     let(:category) { Fabricate(:category_with_definition, name: "monkey Category 2") }
     let(:topic) { Fabricate(:topic, category: category) }
     let!(:post) { Fabricate(:post, topic: topic, raw: "snow monkey") }
@@ -1898,7 +1901,8 @@ RSpec.describe Search do
 
   describe "type_filter" do
     let!(:user) { Fabricate(:user, username: "amazing", email: "amazing@amazing.com") }
-    let!(:category) { Fabricate(:category_with_definition, name: "amazing category", user: user) }
+
+    before { Fabricate(:category_with_definition, name: "amazing category", user: user) }
 
     context "with user filter" do
       let(:results) { Search.execute("amazing", type_filter: "user") }
@@ -2018,14 +2022,19 @@ RSpec.describe Search do
     end
 
     describe ".execute" do
+      let(:old_min_search_term_length) { SiteSetting.defaults.get(:min_search_term_length) }
+
       before do
-        @old_default = SiteSetting.defaults.get(:min_search_term_length)
+        old_min_search_term_length
         SiteSetting.defaults.set_regardless_of_locale(:min_search_term_length, 1)
         SiteSetting.refresh!
       end
 
       after do
-        SiteSetting.defaults.set_regardless_of_locale(:min_search_term_length, @old_default)
+        SiteSetting.defaults.set_regardless_of_locale(
+          :min_search_term_length,
+          old_min_search_term_length,
+        )
         SiteSetting.refresh!
       end
 
@@ -2057,39 +2066,35 @@ RSpec.describe Search do
           expect(results.blurb(results.posts.first)).to include("ういかせ竹域")
         end
 
-        context "when searching for a topic in particular" do
-          subject(:results) do
-            described_class.execute(
-              term,
-              guardian: Discourse.system_user.guardian,
-              type_filter: "topic",
-              search_for_id: true,
-            )
-          end
+        def search_for_topic(term)
+          described_class.execute(
+            term,
+            guardian: Discourse.system_user.guardian,
+            type_filter: "topic",
+            search_for_id: true,
+          )
+        end
 
-          context "when searching by topic ID" do
-            let(:term) { topic.id }
+        it "finds the proper post when searching by topic ID" do
+          expect(search_for_topic(topic.id).posts.first).to have_attributes(
+            topic: topic,
+            post_number: 1,
+          )
+        end
 
-            it "finds the proper post" do
-              expect(results.posts.first).to have_attributes(topic: topic, post_number: 1)
-            end
-          end
+        it "finds the proper post when searching by topic URL" do
+          term = "http://#{Discourse.current_hostname}/t/-/#{topic.id}"
+          expect(search_for_topic(term).posts.first).to have_attributes(
+            topic: topic,
+            post_number: 1,
+          )
+        end
 
-          context "when searching by topic URL" do
-            let(:term) { "http://#{Discourse.current_hostname}/t/-/#{topic.id}" }
-
-            it "finds the proper post" do
-              expect(results.posts.first).to have_attributes(topic: topic, post_number: 1)
-            end
-          end
-
-          context "when searching by topic path" do
-            let(:term) { "/t/-/#{topic.id}" }
-
-            it "finds the proper post" do
-              expect(results.posts.first).to have_attributes(topic: topic, post_number: 1)
-            end
-          end
+        it "finds the proper post when searching by topic path" do
+          expect(search_for_topic("/t/-/#{topic.id}").posts.first).to have_attributes(
+            topic: topic,
+            post_number: 1,
+          )
         end
       end
     end
@@ -2160,7 +2165,8 @@ RSpec.describe Search do
     describe "bookmarks" do
       fab!(:user)
       let!(:bookmark_post1) { Fabricate(:post, raw: "boom this is a bookmarked post") }
-      let!(:bookmark_post2) { Fabricate(:post, raw: "wow some other cool thing") }
+
+      before { Fabricate(:post, raw: "wow some other cool thing") }
 
       def search_with_bookmarks
         Search.execute("boom in:bookmarks", guardian: Guardian.new(user))
@@ -2308,7 +2314,6 @@ RSpec.describe Search do
       fab!(:group) { Fabricate(:group, name: "Like_a_Boss").tap { |g| g.add(user) } }
       fab!(:group_2) { Fabricate(:group).tap { |g| g.add(user_2) } }
       let!(:post) { Fabricate(:post, raw: "hi this is a test 123 123", topic: topic, user: user) }
-      let!(:post_2) { Fabricate(:post, user: user_2) }
 
       it "returns no posts if the group does not exist" do
         group.update!(
@@ -2354,28 +2359,26 @@ RSpec.describe Search do
         ).to contain_exactly(post)
       end
 
-      context "with registered plugin callbacks" do
-        context "when :search_groups_set_query_callback is registered" do
-          it "changes the search results" do
-            group.update!(
-              visibility_level: Group.visibility_levels[:public],
-              members_visibility_level: Group.visibility_levels[:public],
-            )
+      context "when :search_groups_set_query_callback is registered" do
+        it "changes the search results" do
+          group.update!(
+            visibility_level: Group.visibility_levels[:public],
+            members_visibility_level: Group.visibility_levels[:public],
+          )
 
-            # initial result (without applying the plugin callback )
-            expect(Search.execute("group:like_a_boss").posts).to contain_exactly(post)
+          # initial result (without applying the plugin callback )
+          expect(Search.execute("group:like_a_boss").posts).to contain_exactly(post)
 
-            DiscoursePluginRegistry.register_search_groups_set_query_callback(
-              Proc.new { |query, term, guardian| query.where.not(name: "Like_a_Boss") },
-              Plugin::Instance.new,
-            )
+          DiscoursePluginRegistry.register_search_groups_set_query_callback(
+            Proc.new { |query, term, guardian| query.where.not(name: "Like_a_Boss") },
+            Plugin::Instance.new,
+          )
 
-            # after using the callback we expect the search result to be changed because the
-            # query was altered
-            expect(Search.execute("group:like_a_boss").posts).to be_blank
+          # after using the callback we expect the search result to be changed because the
+          # query was altered
+          expect(Search.execute("group:like_a_boss").posts).to be_blank
 
-            DiscoursePluginRegistry.reset_register!(:search_groups_set_query_callbacks)
-          end
+          DiscoursePluginRegistry.reset_register!(:search_groups_set_query_callbacks)
         end
       end
     end
@@ -3207,13 +3210,16 @@ RSpec.describe Search do
 
   describe "header in-topic search" do
     let!(:topic) { Fabricate(:topic, title: "This is a topic with a bunch of posts") }
-    let!(:post1) { Fabricate(:post, topic: topic, raw: "hola amiga") }
-    let!(:post2) { Fabricate(:post, topic: topic, raw: "hola amigo") }
-    let!(:post3) { Fabricate(:post, topic: topic, raw: "hola chica") }
-    let!(:post4) { Fabricate(:post, topic: topic, raw: "hola chico") }
-    let!(:post5) { Fabricate(:post, topic: topic, raw: "hola hermana") }
-    let!(:post6) { Fabricate(:post, topic: topic, raw: "hola hermano") }
-    let!(:post7) { Fabricate(:post, topic: topic, raw: "hola chiquito") }
+
+    before do
+      Fabricate(:post, topic: topic, raw: "hola amiga")
+      Fabricate(:post, topic: topic, raw: "hola amigo")
+      Fabricate(:post, topic: topic, raw: "hola chica")
+      Fabricate(:post, topic: topic, raw: "hola chico")
+      Fabricate(:post, topic: topic, raw: "hola hermana")
+      Fabricate(:post, topic: topic, raw: "hola hermano")
+      Fabricate(:post, topic: topic, raw: "hola chiquito")
+    end
 
     it "does not use per_facet pagination" do
       search = Search.new("hola", search_type: :header, search_context: topic)

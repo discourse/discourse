@@ -22,12 +22,6 @@ RSpec.describe Voice::RecordingManager do
     end
     Voice::Room.reset_column_information
     Voice::Recording.reset_column_information
-  end
-
-  fab!(:moderator, :user)
-  fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_livekit_url = "wss://livekit.example.com"
     SiteSetting.voice_livekit_api_key = "lk_api_key"
@@ -35,6 +29,9 @@ RSpec.describe Voice::RecordingManager do
     SiteSetting.voice_livekit_recording_enabled = true
     Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
   end
+
+  fab!(:moderator, :user)
+  fab!(:room) { Fabricate(:voice_room, public: true) }
 
   after { Voice::ParticipantTracker.clear(room.id) }
 

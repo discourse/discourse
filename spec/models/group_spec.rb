@@ -5,6 +5,10 @@ RSpec.describe Group do
   fab!(:user)
   fab!(:group)
 
+  after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
+  # UGLY but perf is horrible with this callback
+  before { User.set_callback(:create, :after, :ensure_in_trust_level_group) }
+
   it_behaves_like "it has custom fields"
 
   describe "Validations" do
@@ -137,10 +141,6 @@ RSpec.describe Group do
       end
     end
   end
-
-  # UGLY but perf is horrible with this callback
-  before { User.set_callback(:create, :after, :ensure_in_trust_level_group) }
-  after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
 
   describe "validation" do
     let(:group) { build(:group) }

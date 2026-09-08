@@ -10,8 +10,10 @@ RSpec.describe ThemeSettingsParser do
   end
 
   class Loader
+    attr_reader :settings
+
     def initialize
-      @settings = []
+      self.settings = []
       load_settings
     end
 
@@ -21,7 +23,7 @@ RSpec.describe ThemeSettingsParser do
 
       ThemeSettingsParser
         .new(field)
-        .load { |name, default, type, opts| @settings << setting(name, default, type, opts) }
+        .load { |name, default, type, opts| settings << setting(name, default, type, opts) }
     end
 
     def setting(name, default, type, opts = {})
@@ -29,8 +31,12 @@ RSpec.describe ThemeSettingsParser do
     end
 
     def find_by_name(name)
-      @settings.find { |setting| setting[:name] == name }
+      settings.find { |setting| setting[:name] == name }
     end
+
+    private
+
+    attr_writer :settings
   end
 
   let(:loader) { Loader.new }

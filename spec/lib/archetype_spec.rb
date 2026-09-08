@@ -14,22 +14,24 @@ RSpec.describe Archetype do
     end
 
     context "with duplicate" do
+      let(:old_size) { Archetype.list.size }
+
       before do
-        @old_size = Archetype.list.size
+        old_size
         Archetype.register(Archetype.default)
       end
 
       it "does not add the same archetype twice" do
-        expect(Archetype.list.size).to eq(@old_size)
+        expect(Archetype.list.size).to eq(old_size)
       end
     end
   end
 
   describe "register an archetype" do
     it "has one more element" do
-      @list = Archetype.list.dup
+      list = Archetype.list.dup
       Archetype.register("glados")
-      expect(Archetype.list.size).to eq(@list.size + 1)
+      expect(Archetype.list.size).to eq(list.size + 1)
       expect(Archetype.list.find { |a| a.id == "glados" }).to be_present
       Archetype.deregister("glados")
     end

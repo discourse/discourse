@@ -232,7 +232,7 @@ RSpec.describe PostAnalyzer do
       expect(post_analyzer.link_count).to eq(0)
     end
 
-    it "returns 0 links for a post with mentions" do
+    it "returns 0 links for a post with hashtags" do
       post_analyzer = PostAnalyzer.new(raw_post_with_mentions, default_topic_id)
       expect(post_analyzer.link_count).to eq(0)
     end

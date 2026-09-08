@@ -245,7 +245,7 @@ describe "Admin Customize Themes Config Area Page" do
 
       after { `rm -fr #{repo}` }
 
-      around(:each) { |group| MockGitImporter.with_mock { group.run } }
+      around { |group| MockGitImporter.with_mock { group.run } }
 
       it 'shows an "Update to latest" button if there is a new update' do
         config_area.visit
@@ -301,7 +301,7 @@ describe "Admin Customize Themes Config Area Page" do
 
       after { `rm -fr #{repo}` }
 
-      around(:each) { |group| MockGitImporter.with_mock { group.run } }
+      around { |group| MockGitImporter.with_mock { group.run } }
 
       it 'shows the "Check for updates" button after updating' do
         config_area.visit

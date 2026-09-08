@@ -9,7 +9,7 @@ RSpec.describe Category do
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
 
-  it do
+  it "validates the default slow-mode interval" do
     is_expected.to validate_numericality_of(:default_slow_mode_seconds).is_greater_than(
       0,
     ).only_integer

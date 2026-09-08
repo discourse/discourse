@@ -3,9 +3,12 @@
 require Rails.root.join("db/migrate/20250902072941_sync_timerable_id_topic_id.rb")
 
 RSpec.describe SyncTimerableIdTopicId do
-  before do
-    @original_verbose = ActiveRecord::Migration.verbose
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
   end
 
   after { ActiveRecord::Migration.verbose = @original_verbose }

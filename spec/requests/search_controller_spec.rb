@@ -26,26 +26,25 @@ RSpec.describe SearchController do
   end
 
   context "with integration" do
-    before { SearchIndexer.enable }
-
     before do
-      # TODO be a bit more strategic here instead of junking
-      # all of redis
+      SearchIndexer.enable
       Discourse.redis.flushdb
     end
 
     after { Discourse.redis.flushdb }
 
     context "when overloaded" do
-      before { global_setting :disable_search_queue_threshold, 0.2 }
-
-      let! :start_time do
+      let(:start_time) do
         freeze_time
         Time.now
       end
 
-      let! :current_time do
-        freeze_time 0.3.seconds.from_now
+      let(:current_time) { freeze_time 0.3.seconds.from_now }
+
+      before do
+        global_setting :disable_search_queue_threshold, 0.2
+        start_time
+        current_time
       end
 
       it "errors on #query" do

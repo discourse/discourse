@@ -321,25 +321,24 @@ RSpec.describe Service::Runner do
           end
         BLOCK
 
-      context "when the service policy fails" do
+      context "when the service policy fails without a block argument" do
         let(:service) { FailedPolicyService }
 
-        context "when not using the block argument" do
-          it "runs the provided block" do
-            expect(runner).to eq :policy_failure
-          end
+        it "runs the provided block" do
+          expect(runner).to eq :policy_failure
         end
+      end
 
-        context "when using the block argument" do
-          let(:actions) { <<-BLOCK }
+      context "when the service policy fails with a block argument" do
+        let(:service) { FailedPolicyService }
+        let(:actions) { <<-BLOCK }
               proc do |result|
                 on_failed_policy(:test) { |policy| policy == result["result.policy.test"] }
               end
             BLOCK
 
-          it "runs the provided block" do
-            expect(runner).to be true
-          end
+        it "runs the provided block" do
+          expect(runner).to be true
         end
       end
 
@@ -359,25 +358,24 @@ RSpec.describe Service::Runner do
           end
         BLOCK
 
-      context "when the service contract fails" do
+      context "when the service contract fails without a block argument" do
         let(:service) { FailedContractService }
 
-        context "when not using the block argument" do
-          it "runs the provided block" do
-            expect(runner).to eq :contract_failure
-          end
+        it "runs the provided block" do
+          expect(runner).to eq :contract_failure
         end
+      end
 
-        context "when using the block argument" do
-          let(:actions) { <<-BLOCK }
+      context "when the service contract fails with a block argument" do
+        let(:service) { FailedContractService }
+        let(:actions) { <<-BLOCK }
               proc do |result|
                 on_failed_contract { |contract| contract == result["result.contract.default"] }
               end
             BLOCK
 
-          it "runs the provided block" do
-            expect(runner).to be true
-          end
+        it "runs the provided block" do
+          expect(runner).to be true
         end
       end
 
@@ -398,87 +396,82 @@ RSpec.describe Service::Runner do
           end
         BLOCK
 
-      context "when fetching a single model" do
-        context "when the service uses an optional model" do
-          let(:service) { FailureWithOptionalModelService }
+      context "when fetching an optional single model" do
+        let(:service) { FailureWithOptionalModelService }
 
-          it "does not run the provided block" do
-            expect(runner).not_to include :no_model
-          end
-        end
-
-        context "when the service fails without a model" do
-          let(:service) { FailureWithModelService }
-
-          context "when not using the block argument" do
-            it "runs the provided block" do
-              expect(runner).to include :no_model
-            end
-          end
-
-          context "when using the block argument" do
-            let(:actions) { <<-BLOCK }
-                proc do |result|
-                  on_model_not_found(:fake_model) { |model| model == result["result.model.fake_model"] }
-                end
-              BLOCK
-
-            it "runs the provided block" do
-              expect(runner).to be true
-            end
-          end
-        end
-
-        context "when the service does not fail with a model" do
-          let(:service) { SuccessWithModelService }
-
-          it "does not run the provided block" do
-            expect(runner).not_to include :no_model
-          end
+        it "does not run the provided block" do
+          expect(runner).not_to include :no_model
         end
       end
 
-      context "when fetching a collection" do
-        context "when the service fails without a model" do
-          let(:service) { FailureWithCollectionModelService }
+      context "when fetching a missing single model without a block argument" do
+        let(:service) { FailureWithModelService }
 
-          it "runs the provided block" do
-            expect(runner).to include :no_model
-          end
-        end
-
-        context "when the service does not fail with a model" do
-          let(:service) { SuccessWithCollectionModelService }
-
-          it "does not run the provided block" do
-            expect(runner).not_to include :no_model
-          end
+        it "runs the provided block" do
+          expect(runner).to include :no_model
         end
       end
 
-      context "when fetching an ActiveRecord relation" do
+      context "when fetching a missing single model with a block argument" do
+        let(:service) { FailureWithModelService }
+        let(:actions) { <<-BLOCK }
+              proc do |result|
+                on_model_not_found(:fake_model) { |model| model == result["result.model.fake_model"] }
+              end
+            BLOCK
+
+        it "runs the provided block" do
+          expect(runner).to be true
+        end
+      end
+
+      context "when fetching an available single model" do
+        let(:service) { SuccessWithModelService }
+
+        it "does not run the provided block" do
+          expect(runner).not_to include :no_model
+        end
+      end
+
+      context "when fetching a missing model collection" do
+        let(:service) { FailureWithCollectionModelService }
+
+        it "runs the provided block" do
+          expect(runner).to include :no_model
+        end
+      end
+
+      context "when fetching an available model collection" do
+        let(:service) { SuccessWithCollectionModelService }
+
+        it "does not run the provided block" do
+          expect(runner).not_to include :no_model
+        end
+      end
+
+      context "when fetching a successful ActiveRecord relation" do
         let(:service) { RelationModelService }
 
-        context "when the service does not fail" do
-          before { Fabricate(:user) }
+        before { Fabricate(:user) }
 
-          it "does not run the provided block" do
-            expect(runner).not_to include :no_model
-          end
-
-          it "does not fetch records from the relation" do
-            expect(runner.last[:fake_model]).not_to be_loaded
-          end
+        it "does not run the provided block" do
+          expect(runner).not_to include :no_model
         end
 
-        context "when the service fails" do
-          it "runs the provided block" do
-            expect(runner).to include :no_model
-          end
+        it "does not fetch records from the relation" do
+          expect(runner.last[:fake_model]).not_to be_loaded
+        end
+      end
 
-          it "does not fetch records from the relation" do
-            expect(runner.last[:fake_model]).not_to be_loaded
-          end
+      context "when fetching a failed ActiveRecord relation" do
+        let(:service) { RelationModelService }
+
+        it "runs the provided block" do
+          expect(runner).to include :no_model
+        end
+
+        it "does not fetch records from the relation" do
+          expect(runner.last[:fake_model]).not_to be_loaded
         end
       end
     end
@@ -490,25 +483,24 @@ RSpec.describe Service::Runner do
           end
         BLOCK
 
-      context "when the service fails with a model containing errors" do
+      context "when a failing model has errors without a block argument" do
         let(:service) { FailureWithModelErrorsService }
 
-        context "when not using the block argument" do
-          it "runs the provided block" do
-            expect(runner).to eq :model_errors
-          end
+        it "runs the provided block" do
+          expect(runner).to eq :model_errors
         end
+      end
 
-        context "when using the block argument" do
-          let(:actions) { <<-BLOCK }
+      context "when a failing model has errors with a block argument" do
+        let(:service) { FailureWithModelErrorsService }
+        let(:actions) { <<-BLOCK }
               proc do
                 on_model_errors(:fake_model) { |model| model.invalid? }
               end
             BLOCK
 
-          it "runs the provided block" do
-            expect(runner).to be true
-          end
+        it "runs the provided block" do
+          expect(runner).to be true
         end
       end
 
@@ -548,10 +540,8 @@ RSpec.describe Service::Runner do
           expect(runner).to be_a RuntimeError
         end
 
-        context "when accessing the exception object" do
-          it "has access to a filtered backtrace" do
-            expect(runner.filtered_backtrace.size).to be < runner.backtrace.size
-          end
+        it "provides access to a filtered backtrace" do
+          expect(runner.filtered_backtrace.size).to be < runner.backtrace.size
         end
       end
 
@@ -588,7 +578,7 @@ RSpec.describe Service::Runner do
         end
       end
 
-      context "when the lock key resolves from context (not params)" do
+      shared_context "with a lock key resolved from context" do
         let(:service) { LockWithModelService }
         let(:dependencies) { { params: { topic_id: 123 } } }
         let(:actions) { <<-BLOCK }
@@ -597,28 +587,32 @@ RSpec.describe Service::Runner do
               on_lock_not_acquired(:topic) { :lock_not_acquired }
             end
           BLOCK
+      end
 
-        context "when the lock is acquired" do
-          before { allow(DistributedMutex).to receive(:synchronize).and_call_original }
+      context "when a context-resolved lock is acquired" do
+        include_context "with a lock key resolved from context"
 
-          it "runs the success block" do
-            expect(runner).to eq :success
-          end
+        before { allow(DistributedMutex).to receive(:synchronize).and_call_original }
 
-          it "uses the model's id in the lock name" do
-            runner
-            expect(DistributedMutex).to have_received(:synchronize).with(
-              "lock_with_model_service:topic:123",
-            )
-          end
+        it "runs the success block" do
+          expect(runner).to eq :success
         end
 
-        context "when the lock is not acquired" do
-          before { allow(DistributedMutex).to receive(:synchronize) }
+        it "uses the model's id in the lock name" do
+          runner
+          expect(DistributedMutex).to have_received(:synchronize).with(
+            "lock_with_model_service:topic:123",
+          )
+        end
+      end
 
-          it "runs the lock_not_acquired block" do
-            expect(runner).to eq :lock_not_acquired
-          end
+      context "when a context-resolved lock is not acquired" do
+        include_context "with a lock key resolved from context"
+
+        before { allow(DistributedMutex).to receive(:synchronize) }
+
+        it "runs the lock_not_acquired block" do
+          expect(runner).to eq :lock_not_acquired
         end
       end
     end

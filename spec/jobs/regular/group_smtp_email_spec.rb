@@ -133,7 +133,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_log.raw_headers).to include("From: Support Group <#{group.email_username}")
   end
 
-  it "creates an EmailLog record with the correct details" do
+  it "records the delivered message in the email log" do
     job.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
@@ -143,7 +143,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_log.message_id).to eq("discourse/post/#{post.id}@test.localhost")
   end
 
-  it "does not create a post reply key, it always replies to the group email_username" do
+  it "uses the group email address in the raw message" do
     job.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")

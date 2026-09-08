@@ -209,33 +209,38 @@ RSpec.describe TopicEmbed do
         before { SiteSetting.import_embed_unlisted = true }
 
         include_examples "topic is unlisted"
+      end
 
-        context "when embed unlisted is false" do
-          before { SiteSetting.embed_unlisted = false }
+      context "when import embed unlisted is true and embed unlisted is false" do
+        before do
+          SiteSetting.import_embed_unlisted = true
+          SiteSetting.embed_unlisted = false
+        end
 
-          include_examples "topic is unlisted"
+        include_examples "topic is unlisted"
+      end
+
+      context "when import embed unlisted and embed unlisted are false" do
+        before do
+          SiteSetting.import_embed_unlisted = false
+          SiteSetting.embed_unlisted = false
+        end
+
+        it "lists the topic" do
+          Jobs.run_immediately!
+          imported_post =
+            TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+          expect(imported_post.topic).to be_visible
         end
       end
 
-      context "when import embed unlisted is false" do
-        before { SiteSetting.import_embed_unlisted = false }
-
-        context "when embed unlisted is false" do
-          before { SiteSetting.embed_unlisted = false }
-
-          it "lists the topic" do
-            Jobs.run_immediately!
-            imported_post =
-              TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
-            expect(imported_post.topic).to be_visible
-          end
+      context "when import embed unlisted is false and embed unlisted is true" do
+        before do
+          SiteSetting.import_embed_unlisted = false
+          SiteSetting.embed_unlisted = true
         end
 
-        context "when embed unlisted is true" do
-          before { SiteSetting.embed_unlisted = true }
-
-          include_examples "topic is unlisted"
-        end
+        include_examples "topic is unlisted"
       end
 
       it "creates the topic in the category passed as a parameter" do
@@ -665,7 +670,7 @@ RSpec.describe TopicEmbed do
         '<html><head><meta name="author" content="eviltrout"></head><body>rich and morty</body></html>'
       end
 
-      before(:each) { stub_request(:get, url).to_return(status: 200, body: contents) }
+      before { stub_request(:get, url).to_return(status: 200, body: contents) }
 
       it "has no author tag" do
         response = TopicEmbed.find_remote(url)
@@ -682,7 +687,7 @@ RSpec.describe TopicEmbed do
       end
       let(:response) { TopicEmbed.find_remote(url) }
 
-      before(:each) do
+      before do
         SiteSetting.allowed_embed_classnames = ""
         stub_request(:get, url).to_return(status: 200, body: contents)
       end

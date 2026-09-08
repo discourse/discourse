@@ -174,17 +174,16 @@ RSpec.describe Discourse do
       end
     end
 
-    before { Discourse.plugins.append(plugin1, plugin2) }
+    before do
+      Discourse.plugins.append(plugin1, plugin2)
+      plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
+      plugin_class.any_instance.stubs(:js_asset_exists?).returns(true)
+    end
 
     after do
       Discourse.plugins.delete plugin1
       Discourse.plugins.delete plugin2
       DiscoursePluginRegistry.reset!
-    end
-
-    before do
-      plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
-      plugin_class.any_instance.stubs(:js_asset_exists?).returns(true)
     end
 
     it "can find plugins correctly" do
@@ -712,11 +711,6 @@ RSpec.describe Discourse do
       setup_s3
       SiteSetting.s3_cdn_url = "https://s3.cdn.com/gg"
       stub_s3_store
-    end
-
-    let!(:theme) { Fabricate(:theme) }
-    let!(:upload) { Fabricate(:s3_image_upload) }
-    let!(:upload_theme_field) do
       Fabricate(
         :theme_field,
         theme: theme,
@@ -726,8 +720,7 @@ RSpec.describe Discourse do
         name: "imajee",
         value: "",
       )
-    end
-    let!(:basic_html_field) do
+
       Fabricate(
         :theme_field,
         theme: theme,
@@ -740,8 +733,7 @@ RSpec.describe Discourse do
           </script>
         HTML
       )
-    end
-    let!(:js_field) do
+
       Fabricate(
         :theme_field,
         theme: theme,
@@ -752,8 +744,7 @@ RSpec.describe Discourse do
           console.log(settings.uploads.imajee);
         JS
       )
-    end
-    let!(:scss_field) do
+
       Fabricate(
         :theme_field,
         theme: theme,
@@ -765,6 +756,9 @@ RSpec.describe Discourse do
         SCSS
       )
     end
+
+    let!(:theme) { Fabricate(:theme) }
+    let!(:upload) { Fabricate(:s3_image_upload) }
 
     it "invalidates all theme settings and CSS caches" do
       Stylesheet::Manager.clear_theme_cache!

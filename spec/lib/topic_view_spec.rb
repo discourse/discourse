@@ -281,9 +281,8 @@ RSpec.describe TopicView do
 
       context "when a staff user is ignored" do
         let!(:admin) { Fabricate(:user, admin: true) }
-        let!(:admin_ignored_user) do
-          Fabricate(:ignored_user, user: evil_trout, ignored_user: admin)
-        end
+        before { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
+
         let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
 
         it "filters out ignored user excluding the staff user" do
@@ -503,12 +502,14 @@ RSpec.describe TopicView do
 
     describe "#next_page" do
       let!(:post) { Fabricate(:post, topic: topic, user: user) }
-      let!(:post2) { Fabricate(:post, topic: topic, user: user) }
-      let!(:post3) { Fabricate(:post, topic: topic, user: user) }
-      let!(:post4) { Fabricate(:post, topic: topic, user: user) }
-      let!(:post5) { Fabricate(:post, topic: topic, user: user) }
 
-      before { TopicView.stubs(:chunk_size).returns(2) }
+      before do
+        Fabricate(:post, topic: topic, user: user)
+        TopicView.stubs(:chunk_size).returns(2)
+        Fabricate(:post, topic: topic, user: user)
+        Fabricate(:post, topic: topic, user: user)
+        Fabricate(:post, topic: topic, user: user)
+      end
 
       it "returns the next page" do
         expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(3)
@@ -589,7 +590,8 @@ RSpec.describe TopicView do
       let!(:bookmark2) do
         Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
       end
-      let!(:bookmark3) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic)) }
+
+      before { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic)) }
 
       it "returns all the bookmarks in the topic for a user" do
         expect(TopicView.new(topic.id, user).bookmarks.pluck(:id)).to match_array(
@@ -957,43 +959,35 @@ RSpec.describe TopicView do
 
         it { is_expected.to eq(topic.title) }
 
-        context "with tagged topic" do
-          before { topic.tags << [tag1, tag2] }
+        it "includes the most popular tag when tagging is enabled" do
+          topic.tags << [tag1, tag2]
+          SiteSetting.tagging_enabled = true
+          is_expected.to start_with(topic.title)
+          is_expected.not_to include(tag1.name)
+          is_expected.to end_with(tag2.name) # tag2 has higher topic count
+        end
 
-          context "with tagging enabled" do
-            before { SiteSetting.tagging_enabled = true }
+        it "does not include tags when tagging is disabled" do
+          topic.tags << [tag1, tag2]
+          SiteSetting.tagging_enabled = false
+          is_expected.to start_with(topic.title)
+          is_expected.not_to include(tag1.name)
+          is_expected.not_to include(tag2.name)
+        end
 
-            it { is_expected.to start_with(topic.title) }
-            it { is_expected.not_to include(tag1.name) }
-            it { is_expected.to end_with(tag2.name) } # tag2 has higher topic count
-          end
+        it "does not include restricted tags" do
+          tag_group = Fabricate.build(:tag_group)
+          tag_group_permission = Fabricate.build(:tag_group_permission, tag_group: tag_group)
+          SiteSetting.tagging_enabled = true
+          topic.tags << [tag1, tag2]
+          # avoid triggering a `before_create` callback in `TagGroup` which
+          # messes with permissions
+          tag_group.tag_group_permissions << tag_group_permission
+          tag_group.save!
+          tag_group_permission.tag_group.tags << tag2
 
-          context "with tagging disabled" do
-            before { SiteSetting.tagging_enabled = false }
-
-            it { is_expected.to start_with(topic.title) }
-            it { is_expected.not_to include(tag1.name) }
-            it { is_expected.not_to include(tag2.name) }
-          end
-
-          context "with restricted tags" do
-            let(:tag_group) { Fabricate.build(:tag_group) }
-            let(:tag_group_permission) do
-              Fabricate.build(:tag_group_permission, tag_group: tag_group)
-            end
-
-            before do
-              SiteSetting.tagging_enabled = true
-              # avoid triggering a `before_create` callback in `TagGroup` which
-              # messes with permissions
-              tag_group.tag_group_permissions << tag_group_permission
-              tag_group.save!
-              tag_group_permission.tag_group.tags << tag2
-            end
-
-            it { is_expected.not_to include(tag2.name) }
-            it { is_expected.to include(tag1.name) }
-          end
+          is_expected.not_to include(tag2.name)
+          is_expected.to include(tag1.name)
         end
       end
     end
@@ -1036,16 +1030,13 @@ RSpec.describe TopicView do
         it { is_expected.to start_with(topic.title) }
         it { is_expected.to end_with(category.name) }
 
-        context "with tagged topic" do
-          before do
-            SiteSetting.tagging_enabled = true
-            topic.tags << [tag1, tag2]
-          end
-
-          it { is_expected.to start_with(topic.title) }
-          it { is_expected.to end_with(category.name) }
-          it { is_expected.not_to include(tag1.name) }
-          it { is_expected.not_to include(tag2.name) }
+        it "does not include tags for a categorized topic" do
+          SiteSetting.tagging_enabled = true
+          topic.tags << [tag1, tag2]
+          is_expected.to start_with(topic.title)
+          is_expected.to end_with(category.name)
+          is_expected.not_to include(tag1.name)
+          is_expected.not_to include(tag2.name)
         end
       end
     end
@@ -1091,9 +1082,8 @@ RSpec.describe TopicView do
   end
 
   describe "#read_time" do
-    let!(:post) { Fabricate(:post, topic: topic) }
-
     before do
+      Fabricate(:post, topic: topic)
       PostCreator.create!(
         Discourse.system_user,
         topic_id: topic.id,
@@ -1336,7 +1326,8 @@ RSpec.describe TopicView do
 
     context "with topic_view_suggested_topics_options modifier" do
       let!(:topic1) { Fabricate(:topic) }
-      let!(:topic2) { Fabricate(:topic) }
+      before { Fabricate(:topic) }
+
       let(:modifier) do
         Proc.new do |suggested_options, inner_topic_view|
           suggested_options.merge(include_random: false)

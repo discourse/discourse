@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 describe "DFP External Ads" do
-  before { enable_current_plugin }
-
-  fab!(:user) { Fabricate(:user, trust_level: 1) }
-  fab!(:topic)
-
   before do
+    enable_current_plugin
     SiteSetting.discourse_adplugin_enabled = true
     SiteSetting.dfp_publisher_id = "test_publisher_123"
     SiteSetting.dfp_through_trust_level = 2
@@ -14,6 +10,9 @@ describe "DFP External Ads" do
     # Create 20 posts so we ca` n test nth post ads
     20.times { Fabricate(:post, topic: topic) }
   end
+
+  fab!(:user) { Fabricate(:user, trust_level: 1) }
+  fab!(:topic)
 
   describe "DFP ads with impression tracking" do
     before do

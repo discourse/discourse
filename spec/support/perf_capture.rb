@@ -6,7 +6,7 @@ if ENV["DISCOURSE_RSPEC_PERFORMANCE_FORMATTER"] == "1"
   RSpec.configure do |config|
     config.before(:suite) { MethodProfiler.ensure_discourse_instrumentation! }
 
-    config.around(:each) do |example|
+    config.around do |example|
       test_summary = nil
       request_groups =
         RspecPerformanceFormatter.collect_requests do

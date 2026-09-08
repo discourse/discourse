@@ -3,12 +3,14 @@
 require Rails.root.join("db/post_migrate/20260807182856_cleanup_stranded_pm_notifications.rb")
 
 RSpec.describe CleanupStrandedPmNotifications do
+  let(:original_verbose) { ActiveRecord::Migration.verbose }
+
   before do
-    @original_verbose = ActiveRecord::Migration.verbose
+    original_verbose
     ActiveRecord::Migration.verbose = false
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
+  after { ActiveRecord::Migration.verbose = original_verbose }
 
   fab!(:user1, :user)
   fab!(:user2, :user)

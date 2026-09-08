@@ -88,7 +88,7 @@ describe DiscourseTemplates::TopicExtension do
       it "returns false unless SiteSetting.discourse_templates_enable_private_templates" do
         expect(private_template_tag_a.template?(user)).to eq(true)
 
-        SiteSetting.tagging_enabled = false
+        SiteSetting.discourse_templates_enable_private_templates = false
         expect(private_template_tag_a.template?(user)).to eq(false)
       end
 

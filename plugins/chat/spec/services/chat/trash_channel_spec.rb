@@ -29,7 +29,7 @@ RSpec.describe Chat::TrashChannel do
     end
 
     context "when user is not allowed to perform the action" do
-      let!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:invalid_access) }
     end

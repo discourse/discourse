@@ -117,9 +117,10 @@ RSpec.describe SitemapController do
   end
 
   describe "#news" do
-    let!(:sitemap) { Sitemap.touch(Sitemap::NEWS_SITEMAP_NAME) }
-
-    before { Discourse.cache.delete("sitemap/news") }
+    before do
+      Sitemap.touch(Sitemap::NEWS_SITEMAP_NAME)
+      Discourse.cache.delete("sitemap/news")
+    end
 
     it "returns a sitemap with topics bumped in the last 72 hours" do
       topic = Fabricate(:topic, bumped_at: 71.hours.ago)

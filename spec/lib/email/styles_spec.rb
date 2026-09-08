@@ -204,10 +204,10 @@ RSpec.describe Email::Styles do
       styler = Email::Styles.new(frag)
       styler.format_basic
       styler.format_html
-      @frag = Nokogiri::HTML5.fragment(styler.to_s)
+      frag = Nokogiri::HTML5.fragment(styler.to_s)
 
       # dark mode attribute
-      expect(@frag.css('[dm="body"]')).to be_present
+      expect(frag.css('[dm="body"]')).to be_present
     end
   end
 
@@ -389,22 +389,22 @@ RSpec.describe Email::Styles do
       # pass in the attachments to match uploads based on sha + original filename
       styler = Email::Styles.new(html)
       styler.inline_secure_images(attachments, attachments_index)
-      @frag = Nokogiri::HTML5.fragment(styler.to_s)
+      frag = Nokogiri::HTML5.fragment(styler.to_s)
     end
 
     it "inlines attachments where stripped-secure-media data attr is present" do
-      strip_and_inline
-      expect(@frag.to_s).to include("cid:email/test.png")
-      expect(@frag.css("[data-stripped-secure-upload]")).not_to be_present
-      expect(@frag.children.attr("style").value).to eq("width: 20px; height: 30px;")
+      frag = strip_and_inline
+      expect(frag.to_s).to include("cid:email/test.png")
+      expect(frag.css("[data-stripped-secure-upload]")).not_to be_present
+      expect(frag.children.attr("style").value).to eq("width: 20px; height: 30px;")
     end
 
     it "does not inline anything if the upload cannot be found" do
       upload.update(sha1: "blah12")
-      strip_and_inline
+      frag = strip_and_inline
 
-      expect(@frag.to_s).not_to include("cid:email/test.png")
-      expect(@frag.css("[data-stripped-secure-upload]")).to be_present
+      expect(frag.to_s).not_to include("cid:email/test.png")
+      expect(frag.css("[data-stripped-secure-upload]")).to be_present
     end
 
     context "when an optimized image is used instead of the original" do
@@ -414,10 +414,10 @@ RSpec.describe Email::Styles do
 
       it "inlines attachments where the stripped-secure-media data attr is present" do
         optimized = Fabricate(:optimized_image, upload: upload, width: 20, height: 30)
-        strip_and_inline
-        expect(@frag.to_s).to include("cid:email/test.png")
-        expect(@frag.css("[data-stripped-secure-upload]")).not_to be_present
-        expect(@frag.children.attr("style").value).to eq("width: 20px; height: 30px;")
+        frag = strip_and_inline
+        expect(frag.to_s).to include("cid:email/test.png")
+        expect(frag.css("[data-stripped-secure-upload]")).not_to be_present
+        expect(frag.children.attr("style").value).to eq("width: 20px; height: 30px;")
       end
     end
 
@@ -449,14 +449,14 @@ RSpec.describe Email::Styles do
 
       it "keeps the special site icon width and height and onebox styles" do
         optimized = Fabricate(:optimized_image, upload: upload, width: 20, height: 30)
-        strip_and_inline
-        expect(@frag.to_s).to include("cid:email/test.png")
-        expect(@frag.to_s).to include("cid:email/test2.ico")
-        expect(@frag.css("[data-stripped-secure-upload]")).not_to be_present
-        expect(@frag.css("[data-embedded-secure-image]")[0].attr("style")).to eq(
+        frag = strip_and_inline
+        expect(frag.to_s).to include("cid:email/test.png")
+        expect(frag.to_s).to include("cid:email/test2.ico")
+        expect(frag.css("[data-stripped-secure-upload]")).not_to be_present
+        expect(frag.css("[data-embedded-secure-image]")[0].attr("style")).to eq(
           "width: 16px; height: 16px;",
         )
-        expect(@frag.css("[data-embedded-secure-image]")[1].attr("style")).to eq(
+        expect(frag.css("[data-embedded-secure-image]")[1].attr("style")).to eq(
           "width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;",
         )
       end
@@ -483,11 +483,11 @@ RSpec.describe Email::Styles do
           HTML
 
         it "keeps the special onebox styles" do
-          strip_and_inline
-          expect(@frag.to_s).to include("cid:email/test.png")
-          expect(@frag.to_s).to include("cid:email/test2.ico")
-          expect(@frag.css("[data-stripped-secure-upload]")).not_to be_present
-          expect(@frag.css("[data-embedded-secure-image]")[1].attr("style")).to eq(
+          frag = strip_and_inline
+          expect(frag.to_s).to include("cid:email/test.png")
+          expect(frag.to_s).to include("cid:email/test2.ico")
+          expect(frag.css("[data-stripped-secure-upload]")).not_to be_present
+          expect(frag.css("[data-embedded-secure-image]")[1].attr("style")).to eq(
             "width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;",
           )
         end
@@ -537,10 +537,10 @@ RSpec.describe Email::Styles do
           HTML
 
         it "keeps the special onebox styles" do
-          strip_and_inline
-          expect(@frag.to_s).to include("cid:email/test.png")
-          expect(@frag.css("[data-stripped-secure-upload]")).not_to be_present
-          expect(@frag.css("[data-embedded-secure-image]")[0].attr("style")).to eq(
+          frag = strip_and_inline
+          expect(frag.to_s).to include("cid:email/test.png")
+          expect(frag.css("[data-stripped-secure-upload]")).not_to be_present
+          expect(frag.css("[data-embedded-secure-image]")[0].attr("style")).to eq(
             "width: 20px; height: 20px; float: none; vertical-align: middle; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;",
           )
         end

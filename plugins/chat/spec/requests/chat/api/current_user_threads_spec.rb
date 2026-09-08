@@ -11,7 +11,7 @@ describe Chat::Api::CurrentUserThreadsController do
 
   describe "#index" do
     describe "success" do
-      let!(:thread) do
+      before do
         Fabricate(
           :chat_thread,
           original_message_user: current_user,

@@ -16,8 +16,10 @@ describe AdPlugin::HouseAdsController do
     )
   end
 
-  before { enable_current_plugin }
-  before { SiteSetting.ad_plugin_routes_enabled = true }
+  before do
+    enable_current_plugin
+    SiteSetting.ad_plugin_routes_enabled = true
+  end
 
   describe "#create" do
     context "when used by admins" do

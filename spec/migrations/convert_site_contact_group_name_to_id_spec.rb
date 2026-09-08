@@ -5,12 +5,11 @@ require Rails.root.join("db/post_migrate/20260820092502_convert_site_contact_gro
 RSpec.describe ConvertSiteContactGroupNameToId do
   subject(:migrate) { described_class.new.up }
 
-  before do
-    @verbose = ActiveRecord::Migration.verbose
-    ActiveRecord::Migration.verbose = false
-  end
+  let!(:original_verbose) { ActiveRecord::Migration.verbose }
 
-  after { ActiveRecord::Migration.verbose = @verbose }
+  before { ActiveRecord::Migration.verbose = false }
+
+  after { ActiveRecord::Migration.verbose = original_verbose }
 
   def store(value)
     SiteSetting.create!(

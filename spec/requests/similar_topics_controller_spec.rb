@@ -41,39 +41,36 @@ RSpec.describe SimilarTopicsController do
     describe "minimum_topics_similar" do
       before { SiteSetting.minimum_topics_similar = 30 }
 
-      context "with enough topics" do
-        it "deletes to Topic.similar_to if there are more topics than `minimum_topics_similar`" do
-          Topic.stubs(:count).returns(50)
+      it "deletes to Topic.similar_to if there are more topics than `minimum_topics_similar`" do
+        Topic.stubs(:count).returns(50)
+        post
+        reindex_posts
+
+        get "/topics/similar_to.json", params: { title: title, raw: raw }
+
+        expect(response.status).to eq(200)
+        similar_topics = response.parsed_body["similar_topics"]
+        expect(similar_topics.size).to eq(1)
+        expect(similar_topics.first["topic_id"]).to eq(topic.id)
+      end
+
+      context "with a logged in user" do
+        before do
+          private_post
           post
           reindex_posts
+          Topic.stubs(:count).returns(50)
+          sign_in(Fabricate(:moderator))
+        end
 
+        it "passes a user through if logged in" do
           get "/topics/similar_to.json", params: { title: title, raw: raw }
 
           expect(response.status).to eq(200)
-          similar_topics = response.parsed_body["similar_topics"]
-          expect(similar_topics.size).to eq(1)
-          expect(similar_topics.first["topic_id"]).to eq(topic.id)
-        end
-
-        context "with a logged in user" do
-          before do
-            private_post
-            post
-            reindex_posts
-            Topic.stubs(:count).returns(50)
-            sign_in(Fabricate(:moderator))
-          end
-
-          it "passes a user through if logged in" do
-            get "/topics/similar_to.json", params: { title: title, raw: raw }
-
-            expect(response.status).to eq(200)
-            similar_topics =
-              response.parsed_body["similar_topics"].map { |topic| topic["topic_id"] }
-            expect(similar_topics.size).to eq(2)
-            expect(similar_topics).to include(topic.id)
-            expect(similar_topics).to include(private_topic.id)
-          end
+          similar_topics = response.parsed_body["similar_topics"].map { |topic| topic["topic_id"] }
+          expect(similar_topics.size).to eq(2)
+          expect(similar_topics).to include(topic.id)
+          expect(similar_topics).to include(private_topic.id)
         end
       end
 

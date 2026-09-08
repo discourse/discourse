@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
-  before { SiteSetting.discourse_automation_enabled = true }
+  before do
+    SiteSetting.discourse_automation_enabled = true
+    SiteSetting.tagging_enabled = true
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:everyone]
+  end
 
   fab!(:cool_tag, :tag)
   fab!(:bad_tag, :tag)
@@ -13,13 +19,6 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
-  end
-
-  before do
-    SiteSetting.tagging_enabled = true
-    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:everyone]
   end
 
   context "when watching a cool tag" do

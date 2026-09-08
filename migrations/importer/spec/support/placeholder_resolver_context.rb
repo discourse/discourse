@@ -46,7 +46,8 @@ RSpec.shared_context "with placeholder resolver" do
   let(:embed_owner) { Migrations::Database::IntermediateDB::Enums::EmbedOwner }
 
   let(:placeholder) { Migrations::Placeholder.new(nonce: "n") }
-  let(:intermediate_db) { @intermediate_db }
+  let(:database_context) { {} }
+  let(:intermediate_db) { database_context.fetch(:connection) }
   let(:maps) { FakePlaceholderMaps.new }
   let(:owner_type) { embed_owner::POST }
 
@@ -57,8 +58,8 @@ RSpec.shared_context "with placeholder resolver" do
         db_path,
         migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
       )
-      @intermediate_db = Migrations::Database.connect(db_path)
-      Migrations::Database::IntermediateDB.setup(@intermediate_db)
+      database_context[:connection] = Migrations::Database.connect(db_path)
+      Migrations::Database::IntermediateDB.setup(intermediate_db)
       example.run
     ensure
       Migrations::Database::IntermediateDB.setup(nil)

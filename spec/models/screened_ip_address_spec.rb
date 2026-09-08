@@ -158,20 +158,18 @@ RSpec.describe ScreenedIpAddress do
         include_examples "exact match of ip address"
       end
 
-      context "when using subnet mask 255.255.255.0" do
+      context "when using an exact address with subnet mask 255.255.255.0" do
         fab!(:existing) { Fabricate(:screened_ip_address, ip_address: "99.232.23.124/24") }
+        let(:ip_address_arg) { "99.232.23.124" }
 
-        context "with exact address" do
-          let(:ip_address_arg) { "99.232.23.124" }
+        include_examples "exact match of ip address"
+      end
 
-          include_examples "exact match of ip address"
-        end
+      context "with an address in the same subnet" do
+        fab!(:existing) { Fabricate(:screened_ip_address, ip_address: "99.232.23.124/24") }
+        let(:ip_address_arg) { "99.232.23.135" }
 
-        context "with address in same subnet" do
-          let(:ip_address_arg) { "99.232.23.135" }
-
-          include_examples "exact match of ip address"
-        end
+        include_examples "exact match of ip address"
       end
     end
 

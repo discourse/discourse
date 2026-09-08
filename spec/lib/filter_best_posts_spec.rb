@@ -27,7 +27,7 @@ RSpec.describe FilterBestPosts do
   end
 
   describe "processing options" do
-    before { @filtered_posts = TopicView.new(topic.id, nil, best: 99).filtered_posts }
+    let(:filtered_posts) { TopicView.new(topic.id, nil, best: 99).filtered_posts }
 
     it "excludes the status post" do
       best = FilterBestPosts.new(topic, @filtered_posts, 99)
@@ -39,7 +39,7 @@ RSpec.describe FilterBestPosts do
       best =
         FilterBestPosts.new(
           topic,
-          @filtered_posts,
+          filtered_posts,
           99,
           min_trust_level: coding_horror.trust_level + 1,
         )
@@ -62,7 +62,7 @@ RSpec.describe FilterBestPosts do
       best =
         FilterBestPosts.new(
           topic,
-          @filtered_posts,
+          filtered_posts,
           99,
           bypass_trust_level_score: 100,
           min_trust_level: coding_horror.trust_level + 1,
@@ -74,7 +74,7 @@ RSpec.describe FilterBestPosts do
       best =
         FilterBestPosts.new(
           topic,
-          @filtered_posts,
+          filtered_posts,
           99,
           bypass_trust_level_score: 0,
           min_trust_level: coding_horror.trust_level + 1,
@@ -89,13 +89,13 @@ RSpec.describe FilterBestPosts do
 
     it "doesn't count likes from admins" do
       PostActionCreator.like(admin, p3)
-      best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
+      best = FilterBestPosts.new(topic, filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(0)
     end
 
     it "returns a post liked by a moderator" do
       PostActionCreator.like(moderator, p2)
-      best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
+      best = FilterBestPosts.new(topic, filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(1)
     end
   end

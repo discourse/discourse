@@ -9,7 +9,7 @@ RSpec.describe ReleaseUtils::Version do
     context "with a release version" do
       let(:version_string) { "2025.10.1" }
 
-      it do
+      it "parses the release components" do
         is_expected.to have_attributes(major: 2025, minor: 10, patch: 1, pre: nil, revision: nil)
       end
     end
@@ -17,7 +17,7 @@ RSpec.describe ReleaseUtils::Version do
     context "with a development version" do
       let(:version_string) { "2025.10.0-latest" }
 
-      it do
+      it "parses the prerelease components" do
         is_expected.to have_attributes(
           major: 2025,
           minor: 10,
@@ -31,7 +31,7 @@ RSpec.describe ReleaseUtils::Version do
     context "with a development version with revision" do
       let(:version_string) { "2025.10.0-latest.3" }
 
-      it do
+      it "parses the prerelease revision" do
         is_expected.to have_attributes(major: 2025, minor: 10, patch: 0, pre: "latest", revision: 3)
       end
     end
@@ -227,7 +227,7 @@ RSpec.describe ReleaseUtils::Version do
     context "with development versions in different cycles" do
       let(:version_string) { "2025.10.0-latest" }
 
-      it do
+      it "does not match another development cycle" do
         is_expected.not_to share_development_cycle_with(described_class.new("2025.11.0-latest"))
       end
     end

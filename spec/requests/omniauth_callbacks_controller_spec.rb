@@ -817,15 +817,19 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       context "when sso_payload cookie exist" do
+        let(:sso) do
+          DiscourseConnectBase.new.tap do |payload|
+            payload.nonce = "mynonce"
+            payload.sso_secret = SiteSetting.discourse_connect_secret
+            payload.return_sso_url = "http://somewhere.over.rainbow/sso"
+          end
+        end
+
         before do
           SiteSetting.enable_discourse_connect_provider = true
           SiteSetting.discourse_connect_secret = "topsecret"
 
-          @sso = DiscourseConnectBase.new
-          @sso.nonce = "mynonce"
-          @sso.sso_secret = SiteSetting.discourse_connect_secret
-          @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
-          cookies[:sso_payload] = @sso.payload
+          cookies[:sso_payload] = sso.payload
 
           provider_uid = 12_345
           UserAssociatedAccount.create!(

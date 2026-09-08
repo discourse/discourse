@@ -16,6 +16,10 @@ RSpec.describe Voice::RoomMembershipsController do
       end
     end
     Voice::Room.reset_column_information
+    SiteSetting.voice_enabled = true
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
+    SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
   end
 
   fab!(:staff, :admin)
@@ -36,13 +40,6 @@ RSpec.describe Voice::RoomMembershipsController do
 
   fab!(:participant_membership) do
     room.room_memberships.create!(user: member, role: Voice::RoomMembership::ROLE_PARTICIPANT)
-  end
-
-  before do
-    SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups =
-      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
-    SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
   end
 
   describe "#index" do

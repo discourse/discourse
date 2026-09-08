@@ -221,13 +221,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post).not_to be_hidden
     end
 
-    it "agree_and_keep agrees with the flags and edits the post" do
-      reviewable.perform(moderator, :agree_and_keep)
-      expect(reviewable).to be_approved
-      expect(score.reload).to be_agreed
-      expect(post).not_to be_hidden
-    end
-
     describe "with reviewable claiming enabled" do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
 

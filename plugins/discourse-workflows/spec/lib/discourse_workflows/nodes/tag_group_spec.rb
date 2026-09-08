@@ -19,11 +19,12 @@ RSpec.describe DiscourseWorkflows::Nodes::TagGroup::V1 do
         "actor_username" => admin.username,
       }
 
-      expect { @result = execute_node(configuration: config, item: item) }.to change {
+      result = nil
+      expect { result = execute_node(configuration: config, item: item) }.to change {
         history_scope.count
       }.by(1)
 
-      expect(@result).to eq(
+      expect(result).to eq(
         "tag_group_id" => tag_group.id,
         "tag_group_name" => tag_group.name,
         "tag_names" => %w[alpha existing zulu-tag],
@@ -51,11 +52,12 @@ RSpec.describe DiscourseWorkflows::Nodes::TagGroup::V1 do
         "actor_username" => admin.username,
       }
 
-      expect { @result = execute_node(configuration: config, item: item) }.to change {
+      result = nil
+      expect { result = execute_node(configuration: config, item: item) }.to change {
         history_scope.count
       }.by(1)
 
-      expect(@result["tag_names"]).to eq(["existing"])
+      expect(result["tag_names"]).to eq(["existing"])
       expect(tag_group.reload.base_tags).to contain_exactly(tag)
       expect(Tag.find_by(id: removed_tag.id)).to eq(removed_tag)
     end
@@ -137,11 +139,12 @@ RSpec.describe DiscourseWorkflows::Nodes::TagGroup::V1 do
         "actor_username" => admin.username,
       }
 
-      expect { @result = execute_node(configuration: config, item: item) }.not_to change {
+      result = nil
+      expect { result = execute_node(configuration: config, item: item) }.not_to change {
         history_scope.count
       }
 
-      expect(@result["tag_names"]).to eq([tag.name])
+      expect(result["tag_names"]).to eq([tag.name])
       expect(tag_group.reload.tags).to contain_exactly(tag)
     end
 

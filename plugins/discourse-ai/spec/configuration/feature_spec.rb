@@ -4,13 +4,14 @@ RSpec.describe DiscourseAi::Configuration::Feature do
   fab!(:llm_model) { Fabricate(:llm_model, vision_enabled: true) }
   fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id, vision_enabled: true) }
 
-  before { assign_fake_provider_to(:ai_default_llm_model) }
+  before do
+    assign_fake_provider_to(:ai_default_llm_model)
+    enable_current_plugin
+  end
 
   def allow_configuring_setting(&block)
     DiscourseAi::Completions::Llm.with_prepared_responses(["OK"]) { block.call }
   end
-
-  before { enable_current_plugin }
 
   describe "#llm_model" do
     context "when agent is not found" do

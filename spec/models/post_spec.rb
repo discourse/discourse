@@ -7,6 +7,9 @@ RSpec.describe Post do
 
   before { Oneboxer.stubs :onebox }
 
+  let(:post_args) { { user: topic.user, topic: topic } }
+  let(:topic) { Fabricate(:topic, user: user) }
+
   it_behaves_like "it has custom fields"
 
   it { is_expected.to have_many(:reviewables).dependent(:destroy) }
@@ -75,8 +78,6 @@ RSpec.describe Post do
   it { is_expected.to rate_limit }
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  let(:topic) { Fabricate(:topic, user: user) }
-  let(:post_args) { { user: topic.user, topic: topic } }
 
   describe "scopes" do
     describe "#by_newest" do
@@ -161,79 +162,87 @@ RSpec.describe Post do
       expect(post.should_secure_uploads?).to eq(false)
     end
 
-    context "when secure uploads is enabled" do
+    context "if login_required with secure uploads enabled" do
+      before do
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_uploads = true
+        SiteSetting.login_required = true
+      end
+
+      it "returns true" do
+        expect(post.should_secure_uploads?).to eq(true)
+      end
+
+      context "if secure_uploads_pm_only" do
+        before { SiteSetting.secure_uploads_pm_only = true }
+
+        it "returns false" do
+          expect(post.should_secure_uploads?).to eq(false)
+        end
+      end
+    end
+
+    context "if the topic category is read_restricted" do
+      let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      before do
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_uploads = true
+        topic.change_category_to_id(category.id)
+      end
+
+      it "returns true" do
+        expect(post.should_secure_uploads?).to eq(true)
+      end
+
+      context "when the topic is deleted" do
+        before do
+          topic.trash!
+          post.reload
+        end
+
+        it "returns true" do
+          expect(post.should_secure_uploads?).to eq(true)
+        end
+      end
+
+      context "if secure_uploads_pm_only" do
+        before { SiteSetting.secure_uploads_pm_only = true }
+
+        it "returns false" do
+          expect(post.should_secure_uploads?).to eq(false)
+        end
+      end
+    end
+
+    context "if the post is in a PM topic" do
+      let(:topic) { Fabricate(:private_message_topic) }
+
       before do
         setup_s3
         SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
         SiteSetting.secure_uploads = true
       end
 
-      context "if login_required" do
-        before { SiteSetting.login_required = true }
+      it "returns true" do
+        expect(post.should_secure_uploads?).to eq(true)
+      end
+
+      context "when the topic is deleted" do
+        before { topic.trash! }
 
         it "returns true" do
           expect(post.should_secure_uploads?).to eq(true)
-        end
-
-        context "if secure_uploads_pm_only" do
-          before { SiteSetting.secure_uploads_pm_only = true }
-
-          it "returns false" do
-            expect(post.should_secure_uploads?).to eq(false)
-          end
         end
       end
 
-      context "if the topic category is read_restricted" do
-        let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
-
-        before { topic.change_category_to_id(category.id) }
+      context "if secure_uploads_pm_only" do
+        before { SiteSetting.secure_uploads_pm_only = true }
 
         it "returns true" do
           expect(post.should_secure_uploads?).to eq(true)
-        end
-
-        context "when the topic is deleted" do
-          before do
-            topic.trash!
-            post.reload
-          end
-
-          it "returns true" do
-            expect(post.should_secure_uploads?).to eq(true)
-          end
-        end
-
-        context "if secure_uploads_pm_only" do
-          before { SiteSetting.secure_uploads_pm_only = true }
-
-          it "returns false" do
-            expect(post.should_secure_uploads?).to eq(false)
-          end
-        end
-      end
-
-      context "if the post is in a PM topic" do
-        let(:topic) { Fabricate(:private_message_topic) }
-
-        it "returns true" do
-          expect(post.should_secure_uploads?).to eq(true)
-        end
-
-        context "when the topic is deleted" do
-          before { topic.trash! }
-
-          it "returns true" do
-            expect(post.should_secure_uploads?).to eq(true)
-          end
-        end
-
-        context "if secure_uploads_pm_only" do
-          before { SiteSetting.secure_uploads_pm_only = true }
-
-          it "returns true" do
-            expect(post.should_secure_uploads?).to eq(true)
-          end
         end
       end
     end
@@ -1011,7 +1020,8 @@ RSpec.describe Post do
   describe "summary" do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
-    let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
+
+    before { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
 
     fab!(:p4) { Fabricate(:post, percent_rank: 0.99) }
 
@@ -2020,13 +2030,10 @@ RSpec.describe Post do
           expect(video_upload.access_control_post_id).not_to eq(post.id)
         end
 
-        context "for custom emoji" do
-          before { CustomEmoji.create(name: "meme", upload: image_upload) }
-
-          it "never sets an access control post because they should not be secure" do
-            post.link_post_uploads
-            expect(image_upload.reload.access_control_post_id).to eq(nil)
-          end
+        it "never sets an access control post for custom emoji because they should not be secure" do
+          CustomEmoji.create(name: "meme", upload: image_upload)
+          post.link_post_uploads
+          expect(image_upload.reload.access_control_post_id).to eq(nil)
         end
       end
     end

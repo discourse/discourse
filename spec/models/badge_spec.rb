@@ -284,9 +284,7 @@ RSpec.describe Badge do
     let(:first_flag_badge) { Badge.find(Badge::FirstFlag) }
 
     context "when using an out-of-the-box flag" do
-      let!(:flag_post_action) do
-        Fabricate(:flag_post_action, post: flagged_post, user: flagging_user)
-      end
+      before { Fabricate(:flag_post_action, post: flagged_post, user: flagging_user) }
 
       it "grants the badge" do
         expect { BadgeGranter.backfill(first_flag_badge) }.to change {
@@ -296,8 +294,8 @@ RSpec.describe Badge do
     end
 
     context "when using a custom flag" do
-      let!(:custom_flag) { Fabricate(:flag, name: "stahp", applies_to: %w[Post]) }
-      let!(:flag_post_action) do
+      before do
+        Fabricate(:flag, name: "stahp", applies_to: %w[Post])
         Fabricate(
           :flag_post_action,
           post: flagged_post,
@@ -314,7 +312,7 @@ RSpec.describe Badge do
     end
 
     context "when the flag requires message" do
-      let!(:flag_post_action) do
+      before do
         Fabricate(
           :flag_post_action,
           post: flagged_post,
@@ -331,7 +329,7 @@ RSpec.describe Badge do
     end
 
     context "when the flag is a like" do
-      let!(:flag_post_action) do
+      before do
         Fabricate(
           :flag_post_action,
           post: flagged_post,

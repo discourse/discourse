@@ -66,7 +66,7 @@ RSpec.describe Chat::AutoJoinChannels do
           Fabricate(:chat_channel, chatable: public_category)
         end
 
-        let!(:user) { Fabricate(:user, trust_level:, last_seen_at:) }
+        before { Fabricate(:user, trust_level:, last_seen_at:) }
 
         it "doesn't automatically join users" do
           expect { result }.not_to change { Chat::UserChatChannelMembership.count }.from(0)

@@ -327,14 +327,14 @@ RSpec.describe PostGuardian do
 
           expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
         end
+      end
 
-        describe "when post's user has been deleted" do
-          it "allows a moderator to recover a post whose author was deleted" do
-            PostDestroyer.new(moderator, post).destroy
-            post.user.destroy!
+      describe "when post's user has been deleted" do
+        it "allows a moderator to recover a post whose author was deleted" do
+          PostDestroyer.new(moderator, post).destroy
+          post.user.destroy!
 
-            expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
-          end
+          expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
         end
       end
     end

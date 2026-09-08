@@ -103,32 +103,28 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
       relief: 0.00007470753,
     }
   end
-  let!(:classification_result_1) do
+
+  before do
     Fabricate(
       :sentiment_classification,
       target: post_1,
       model_used: model_used,
       classification: classification_1,
     )
-  end
-  let!(:classification_result_2) do
     Fabricate(
       :sentiment_classification,
       target: post_2,
       model_used: model_used,
       classification: classification_2,
     )
-  end
-  let!(:classification_result_3) do
+
     Fabricate(
       :sentiment_classification,
       target: post_3,
       model_used: model_used,
       classification: classification_3,
     )
-  end
 
-  before do
     enable_current_plugin
     described_class.register!(plugin)
   end

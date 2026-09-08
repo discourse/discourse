@@ -25,9 +25,8 @@ RSpec.describe UserStat do
 
       context "with a view" do
         fab!(:topic)
-        let!(:view) { TopicViewItem.add(topic.id, "127.0.0.1", user.id) }
-
         before do
+          TopicViewItem.add(topic.id, "127.0.0.1", user.id)
           user.update_column :last_seen_at, 1.second.ago
           stat.update_column :topics_entered, 0
         end
@@ -55,16 +54,14 @@ RSpec.describe UserStat do
 
       context "with a post timing" do
         let!(:post) { Fabricate(:post) }
-        let!(:post_timings) do
+
+        before do
           PostTiming.record_timing(
             msecs: 1234,
             topic_id: post.topic_id,
             user_id: user.id,
             post_number: post.post_number,
           )
-        end
-
-        before do
           user.update_column :last_seen_at, 1.second.ago
           stat.update_column :posts_read_count, 0
         end

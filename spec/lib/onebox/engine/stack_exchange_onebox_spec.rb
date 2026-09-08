@@ -21,7 +21,7 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
         expect(described_class === URI("http://#{domain}/q/55495")).to eq(true)
       end
 
-      it "matches question with long URL on #{domain}" do
+      it "matches a question with a long URL on #{domain}" do
         expect(described_class === URI("http://#{domain}/questions/55495/title-of-question")).to eq(
           true,
         )

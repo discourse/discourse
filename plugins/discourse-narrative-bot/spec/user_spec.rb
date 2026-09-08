@@ -67,8 +67,9 @@ RSpec.describe User do
           )
         end
 
-        describe "when send welcome message is selected" do
-          before { SiteSetting.discourse_narrative_bot_welcome_post_type = "welcome_message" }
+        it "sends the right welcome message when that post type is selected" do
+          SiteSetting.discourse_narrative_bot_welcome_post_type = "welcome_message"
+          expect { user }.to change { Topic.count }.by(1)
 
           it "sends the configured welcome message" do
             expect { user }.to change { Topic.count }.by(1)
@@ -83,8 +84,9 @@ RSpec.describe User do
           end
         end
 
-        describe "when welcome message is configured to be delayed" do
-          before { SiteSetting.discourse_narrative_bot_welcome_post_delay = 100 }
+        it "delays the welcome post until login when a delay is configured" do
+          SiteSetting.discourse_narrative_bot_welcome_post_delay = 100
+          user
 
           it "delays the welcome post until the user logs in" do
             user

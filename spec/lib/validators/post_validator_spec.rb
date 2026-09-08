@@ -164,6 +164,7 @@ RSpec.describe PostValidator do
     fab!(:pm_post) do
       Fabricate(:post, raw: "PM topic body", user: user, topic: Fabricate(:private_message_topic))
     end
+    let(:unique_key_state) { {} }
 
     before do
       SiteSetting.unique_posts_mins = 5
@@ -171,13 +172,13 @@ RSpec.describe PostValidator do
       post.store_unique_post_key
       pm_post.store_unique_post_key
 
-      @key = post.unique_post_key
-      @pm_key = pm_post.unique_post_key
+      unique_key_state[:post] = post.unique_post_key
+      unique_key_state[:pm] = pm_post.unique_post_key
     end
 
     after do
-      Discourse.redis.del(@key)
-      Discourse.redis.del(@pm_key)
+      Discourse.redis.del(unique_key_state[:post])
+      Discourse.redis.del(unique_key_state[:pm])
     end
 
     context "when post is unique" do

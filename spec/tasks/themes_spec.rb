@@ -225,7 +225,7 @@ RSpec.describe "tasks/themes" do
 
     let!(:theme) { RemoteTheme.import_theme(initial_repo_url) }
 
-    around(:each) { |group| MockGitImporter.with_mock { group.run } }
+    around { |group| MockGitImporter.with_mock { group.run } }
 
     after { `rm -fr #{initial_repo}` }
 

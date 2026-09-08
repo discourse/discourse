@@ -138,9 +138,10 @@ RSpec.describe ComposerMessagesController do
     end
 
     context "when logged in" do
-      let!(:user) { sign_in(Fabricate(:user)) }
-
-      before { SiteSetting.pm_warn_user_last_seen_months_ago = 24 }
+      before do
+        sign_in(Fabricate(:user))
+        SiteSetting.pm_warn_user_last_seen_months_ago = 24
+      end
 
       it "requires usernames parameter to be present" do
         get "/composer_messages/user_not_seen_in_a_while.json"

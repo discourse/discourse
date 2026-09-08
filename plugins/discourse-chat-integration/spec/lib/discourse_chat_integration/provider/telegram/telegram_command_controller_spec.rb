@@ -11,7 +11,8 @@ describe "Telegram Command Controller", type: :request do
       },
     )
   end
-  let!(:webhook_stub) do
+
+  before do
     stub_request(:post, "https://api.telegram.org/botTOKEN/setWebhook").to_return(
       body: "{\"ok\":true}",
     )
@@ -106,64 +107,62 @@ describe "Telegram Command Controller", type: :request do
 
       before { SiteSetting.chat_integration_telegram_enable_slash_commands = true }
 
-      describe "add new rule" do
-        it "adds a new rule" do
+      it "adds a new rule" do
+        post "/chat-integration/telegram/command/shhh.json",
+             params: {
+               message: {
+                 chat: {
+                   id: 123,
+                 },
+                 text: "/watch #{category.slug}",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(stub).to have_been_requested.once
+
+        rule = DiscourseChatIntegration::Rule.all.first
+        expect(rule.channel).to eq(chan1)
+        expect(rule.filter).to eq("watch")
+        expect(rule.category_id).to eq(category.id)
+        expect(rule.tags).to eq(nil)
+      end
+
+      it "adds a new rule using group chat syntax" do
+        post "/chat-integration/telegram/command/shhh.json",
+             params: {
+               message: {
+                 chat: {
+                   id: 123,
+                 },
+                 text: "/watch@my-awesome-bot #{category.slug}",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(stub).to have_been_requested.once
+
+        rule = DiscourseChatIntegration::Rule.all.first
+        expect(rule.channel).to eq(chan1)
+        expect(rule.filter).to eq("watch")
+        expect(rule.category_id).to eq(category.id)
+        expect(rule.tags).to eq(nil)
+      end
+
+      describe "from an unknown channel" do
+        it "does nothing" do
           post "/chat-integration/telegram/command/shhh.json",
                params: {
                  message: {
                    chat: {
-                     id: 123,
+                     id: 456,
                    },
                    text: "/watch #{category.slug}",
                  },
                }
 
-          expect(response.status).to eq(200)
-          expect(stub).to have_been_requested.once
-
-          rule = DiscourseChatIntegration::Rule.all.first
-          expect(rule.channel).to eq(chan1)
-          expect(rule.filter).to eq("watch")
-          expect(rule.category_id).to eq(category.id)
-          expect(rule.tags).to eq(nil)
-        end
-
-        it "adds a new rule using group chat syntax" do
-          post "/chat-integration/telegram/command/shhh.json",
-               params: {
-                 message: {
-                   chat: {
-                     id: 123,
-                   },
-                   text: "/watch@my-awesome-bot #{category.slug}",
-                 },
-               }
-
-          expect(response.status).to eq(200)
-          expect(stub).to have_been_requested.once
-
-          rule = DiscourseChatIntegration::Rule.all.first
-          expect(rule.channel).to eq(chan1)
-          expect(rule.filter).to eq("watch")
-          expect(rule.category_id).to eq(category.id)
-          expect(rule.tags).to eq(nil)
-        end
-
-        describe "from an unknown channel" do
-          it "does nothing" do
-            post "/chat-integration/telegram/command/shhh.json",
-                 params: {
-                   message: {
-                     chat: {
-                       id: 456,
-                     },
-                     text: "/watch #{category.slug}",
-                   },
-                 }
-
-            expect(DiscourseChatIntegration::Rule.all.size).to eq(0)
-            expect(DiscourseChatIntegration::Channel.all.size).to eq(1)
-          end
+          expect(DiscourseChatIntegration::Rule.all.size).to eq(0)
+          expect(DiscourseChatIntegration::Channel.all.size).to eq(1)
         end
       end
 

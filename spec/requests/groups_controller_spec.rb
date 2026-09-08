@@ -387,74 +387,72 @@ RSpec.describe GroupsController do
         )
       end
 
-      context "when filterable by type" do
-        def expect_type_to_return_right_groups(type, expected_group_ids)
-          get "/groups.json", params: { type: type }
+      def expect_type_to_return_right_groups(type, expected_group_ids)
+        get "/groups.json", params: { type: type }
 
-          expect(response.status).to eq(200)
+        expect(response.status).to eq(200)
 
-          body = response.parsed_body
-          group_ids = body["groups"].map { |g| g["id"] }
+        body = response.parsed_body
+        group_ids = body["groups"].map { |g| g["id"] }
 
-          expect(body["total_rows_groups"]).to eq(expected_group_ids.count)
-          expect(group_ids).to contain_exactly(*expected_group_ids)
+        expect(body["total_rows_groups"]).to eq(expected_group_ids.count)
+        expect(group_ids).to contain_exactly(*expected_group_ids)
+      end
+
+      describe "my groups" do
+        it "returns groups the admin belongs to" do
+          expect_type_to_return_right_groups("my", admin.group_users.map(&:group_id))
         end
+      end
 
-        describe "my groups" do
-          it "returns groups the admin belongs to" do
-            expect_type_to_return_right_groups("my", admin.group_users.map(&:group_id))
-          end
+      describe "owner groups" do
+        it "returns groups the admin owns" do
+          group2 = Fabricate(:group)
+          _group3 = Fabricate(:group)
+          group2.add_owner(admin)
+
+          expect_type_to_return_right_groups(
+            "owner",
+            admin.group_users.where(owner: true).map(&:group_id),
+          )
         end
+      end
 
-        describe "owner groups" do
-          it "returns groups the admin owns" do
-            group2 = Fabricate(:group)
-            _group3 = Fabricate(:group)
-            group2.add_owner(admin)
-
-            expect_type_to_return_right_groups(
-              "owner",
-              admin.group_users.where(owner: true).map(&:group_id),
-            )
-          end
+      describe "automatic groups" do
+        it "returns the expected response" do
+          expect_type_to_return_right_groups(
+            "automatic",
+            Group::AUTO_GROUP_IDS.keys -
+              [
+                Group::AUTO_GROUPS[:everyone],
+                Group::AUTO_GROUPS[:anonymous_users],
+                Group::AUTO_GROUPS[:logged_in_users],
+              ],
+          )
         end
+      end
 
-        describe "automatic groups" do
-          it "returns the expected response" do
-            expect_type_to_return_right_groups(
-              "automatic",
-              Group::AUTO_GROUP_IDS.keys -
-                [
-                  Group::AUTO_GROUPS[:everyone],
-                  Group::AUTO_GROUPS[:anonymous_users],
-                  Group::AUTO_GROUPS[:logged_in_users],
-                ],
-            )
-          end
+      describe "non automatic groups" do
+        it "returns the expected response" do
+          group2 = Fabricate(:group)
+          expect_type_to_return_right_groups("non_automatic", [group.id, group2.id])
         end
+      end
 
-        describe "non automatic groups" do
-          it "returns the expected response" do
-            group2 = Fabricate(:group)
-            expect_type_to_return_right_groups("non_automatic", [group.id, group2.id])
-          end
+      describe "public groups" do
+        it "returns the expected response" do
+          group2 = Fabricate(:group, public_admission: true)
+
+          expect_type_to_return_right_groups("public", [group2.id])
         end
+      end
 
-        describe "public groups" do
-          it "returns the expected response" do
-            group2 = Fabricate(:group, public_admission: true)
+      describe "close groups" do
+        it "returns the expected response" do
+          group2 = Fabricate(:group, public_admission: false)
+          _group3 = Fabricate(:group, public_admission: true)
 
-            expect_type_to_return_right_groups("public", [group2.id])
-          end
-        end
-
-        describe "close groups" do
-          it "returns the expected response" do
-            group2 = Fabricate(:group, public_admission: false)
-            _group3 = Fabricate(:group, public_admission: true)
-
-            expect_type_to_return_right_groups("close", [group.id, group2.id])
-          end
+          expect_type_to_return_right_groups("close", [group.id, group2.id])
         end
       end
     end
@@ -929,7 +927,7 @@ RSpec.describe GroupsController do
     end
   end
 
-  describe "#members membership changes" do
+  describe "#members parameter validation" do
     it "returns correct error code with invalid params" do
       sign_in(user)
 
@@ -1041,11 +1039,9 @@ RSpec.describe GroupsController do
     context "when include_custom_fields is true" do
       fab!(:user_field)
       let(:user_field_name) { "user_field_#{user_field.id}" }
-      let!(:custom_user_field) do
-        UserCustomField.create!(user_id: user.id, name: user_field_name, value: "A custom field")
-      end
 
       before do
+        UserCustomField.create!(user_id: user.id, name: user_field_name, value: "A custom field")
         sign_in(user)
         SiteSetting.public_user_custom_fields = user_field_name
       end
@@ -1242,18 +1238,19 @@ RSpec.describe GroupsController do
     let(:tag) { Fabricate(:tag) }
 
     context "with custom_fields" do
+      let(:custom_field_group) { Fabricate(:group) }
+
       before do
         user.update!(admin: true)
         sign_in(user)
         plugin = Plugin::Instance.new
         plugin.register_editable_group_custom_field :test
-        @group = Fabricate(:group)
       end
 
       after { DiscoursePluginRegistry.reset! }
 
       it "only updates allowed user fields" do
-        put "/groups/#{@group.id}.json",
+        put "/groups/#{custom_field_group.id}.json",
             params: {
               group: {
                 custom_fields: {
@@ -1263,16 +1260,16 @@ RSpec.describe GroupsController do
               },
             }
 
-        @group.reload
+        custom_field_group.reload
 
         expect(response.status).to eq(200)
-        expect(@group.custom_fields["test"]).to eq("hello1")
-        expect(@group.custom_fields["test2"]).to be_blank
+        expect(custom_field_group.custom_fields["test"]).to eq("hello1")
+        expect(custom_field_group.custom_fields["test2"]).to be_blank
       end
 
       it "is secure when there are no registered editable fields" do
         DiscoursePluginRegistry.reset!
-        put "/groups/#{@group.id}.json",
+        put "/groups/#{custom_field_group.id}.json",
             params: {
               group: {
                 custom_fields: {
@@ -1282,11 +1279,11 @@ RSpec.describe GroupsController do
               },
             }
 
-        @group.reload
+        custom_field_group.reload
 
         expect(response.status).to eq(200)
-        expect(@group.custom_fields["test"]).to be_blank
-        expect(@group.custom_fields["test2"]).to be_blank
+        expect(custom_field_group.custom_fields["test"]).to be_blank
+        expect(custom_field_group.custom_fields["test2"]).to be_blank
       end
     end
 
@@ -1940,7 +1937,7 @@ RSpec.describe GroupsController do
     fab!(:group)
 
     context "when user is not signed in" do
-      it "returns a forbidden response" do
+      it "is forbidden" do
         put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
         expect(response).to be_forbidden
 
@@ -2309,24 +2306,19 @@ RSpec.describe GroupsController do
         expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
       end
 
-      context "with public group" do
-        before { group.update!(public_admission: true, public_exit: true) }
+      it "allows an admin to make incremental adds to a public group" do
+        group.update!(public_admission: true, public_exit: true)
+        expect do
+          put "/groups/#{group.id}/members.json", params: { usernames: other_user.username }
+        end.to change { group.users.count }.by(1)
 
-        context "when admin" do
-          it "can make incremental adds" do
-            expect do
-              put "/groups/#{group.id}/members.json", params: { usernames: other_user.username }
-            end.to change { group.users.count }.by(1)
+        expect(response.status).to eq(200)
 
-            expect(response.status).to eq(200)
+        group_history = GroupHistory.last
 
-            group_history = GroupHistory.last
-
-            expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
-            expect(group_history.acting_user).to eq(admin)
-            expect(group_history.target_user).to eq(other_user)
-          end
-        end
+        expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
+        expect(group_history.acting_user).to eq(admin)
+        expect(group_history.target_user).to eq(other_user)
       end
     end
 
@@ -2412,44 +2404,38 @@ RSpec.describe GroupsController do
       context "when logged in as a moderator" do
         before { sign_in(moderator) }
 
-        context "with moderators_manage_groups enabled" do
-          before { SiteSetting.moderators_manage_groups = true }
+        it "adds owners when moderators_manage_groups is enabled" do
+          SiteSetting.moderators_manage_groups = true
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: [user.username, admin.username, moderator.username].join(","),
+              }
 
-          it "adds owners" do
-            put "/groups/#{group.id}/owners.json",
-                params: {
-                  usernames: [user.username, admin.username, moderator.username].join(","),
-                }
+          response_body = response.parsed_body
 
-            response_body = response.parsed_body
-
-            expect(response.status).to eq(200)
-            expect(response_body["usernames"]).to contain_exactly(
-              user.username,
-              admin.username,
-              moderator.username,
-            )
-            expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(
-              user,
-              admin,
-              moderator,
-            )
-          end
+          expect(response.status).to eq(200)
+          expect(response_body["usernames"]).to contain_exactly(
+            user.username,
+            admin.username,
+            moderator.username,
+          )
+          expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(
+            user,
+            admin,
+            moderator,
+          )
         end
 
-        context "with moderators_manage_groups disabled" do
-          before { SiteSetting.moderators_manage_groups = false }
+        it "prevents adding owners when moderators_manage_groups is disabled" do
+          SiteSetting.moderators_manage_groups = false
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: [user.username, admin.username, moderator.username].join(","),
+              }
 
-          it "prevents adding of owners with a 403 response" do
-            put "/groups/#{group.id}/owners.json",
-                params: {
-                  usernames: [user.username, admin.username, moderator.username].join(","),
-                }
-
-            expect(response.status).to eq(403)
-            expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
-            expect(group.group_users.where(owner: true).map(&:user)).to be_empty
-          end
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          expect(group.group_users.where(owner: true).map(&:user)).to be_empty
         end
       end
 
@@ -2625,89 +2611,89 @@ RSpec.describe GroupsController do
           expect(response.status).to eq(200)
         end
 
-        context "with public group" do
-          let(:group) { Fabricate(:public_group, users: [other_user]) }
+        it "allows an admin to remove a member from a public group by username" do
+          public_group = Fabricate(:public_group, users: [other_user])
+          expect do
+            delete "/groups/#{public_group.id}/members.json",
+                   params: {
+                     username: other_user.username,
+                   }
+          end.to change { public_group.users.count }.by(-1)
 
-          context "when admin" do
-            it "removes by username" do
-              expect do
-                delete "/groups/#{group.id}/members.json", params: { username: other_user.username }
-              end.to change { group.users.count }.by(-1)
+          expect(response.status).to eq(200)
+        end
 
-              expect(response.status).to eq(200)
-            end
-          end
+        it "does not allow an underprivileged user to remove another user from a public group" do
+          public_group = Fabricate(:public_group, users: [other_user])
+          sign_in(user)
 
-          it "does not allow an underprivileged user to remove another member" do
-            sign_in(user)
+          delete "/groups/#{public_group.id}/members.json",
+                 params: {
+                   username: other_user.username,
+                 }
 
-            delete "/groups/#{group.id}/members.json", params: { username: other_user.username }
-
-            expect(response).to be_forbidden
-          end
+          expect(response).to be_forbidden
         end
       end
 
-      describe "#remove_members" do
-        context "when is able to remove several members from a group" do
-          fab!(:user1, :user)
-          fab!(:user2) { Fabricate(:user, username: "UsEr2") }
-          let(:group1) { Fabricate(:group, users: [user1, user2]) }
+      context "when is able to remove several members from a group" do
+        fab!(:user1, :user)
+        fab!(:user2) { Fabricate(:user, username: "UsEr2") }
+        let(:group1) { Fabricate(:group, users: [user1, user2]) }
 
-          it "removes by username" do
-            expect do
-              delete "/groups/#{group1.id}/members.json",
-                     params: {
-                       usernames: [user1.username, user2.username.upcase].join(","),
-                     }
-            end.to change { group1.users.count }.by(-2)
-            expect(response.status).to eq(200)
-          end
-
-          it "removes by id" do
-            expect do
-              delete "/groups/#{group1.id}/members.json",
-                     params: {
-                       user_ids: [user1.id, user2.id].join(","),
-                     }
-            end.to change { group1.users.count }.by(-2)
-
-            expect(response.status).to eq(200)
-          end
-
-          it "removes by id with integer in json" do
-            expect do
-              headers = { CONTENT_TYPE: "application/json" }
-              delete "/groups/#{group1.id}/members.json",
-                     params: "{\"user_ids\":#{user1.id}}",
-                     headers: headers
-            end.to change { group1.users.count }.by(-1)
-
-            expect(response.status).to eq(200)
-          end
-
-          it "removes by email" do
-            expect do
-              delete "/groups/#{group1.id}/members.json",
-                     params: {
-                       user_emails: [user1.email, user2.email].join(","),
-                     }
-            end.to change { group1.users.count }.by(-2)
-
-            expect(response.status).to eq(200)
-          end
-
-          it "only removes users in that group" do
+        it "removes by username" do
+          expect do
             delete "/groups/#{group1.id}/members.json",
                    params: {
-                     usernames: [user.username, user2.username].join(","),
+                     usernames: [user1.username, user2.username.upcase].join(","),
                    }
+          end.to change { group1.users.count }.by(-2)
+          expect(response.status).to eq(200)
+        end
 
-            response_body = response.parsed_body
-            expect(response.status).to eq(200)
-            expect(response_body["usernames"].first).to eq(user2.username)
-            expect(response_body["skipped_usernames"].first).to eq(user.username)
-          end
+        it "removes by id" do
+          expect do
+            delete "/groups/#{group1.id}/members.json",
+                   params: {
+                     user_ids: [user1.id, user2.id].join(","),
+                   }
+          end.to change { group1.users.count }.by(-2)
+
+          expect(response.status).to eq(200)
+        end
+
+        it "removes by id with integer in json" do
+          expect do
+            headers = { CONTENT_TYPE: "application/json" }
+            delete "/groups/#{group1.id}/members.json",
+                   params: "{\"user_ids\":#{user1.id}}",
+                   headers: headers
+          end.to change { group1.users.count }.by(-1)
+
+          expect(response.status).to eq(200)
+        end
+
+        it "removes by email" do
+          expect do
+            delete "/groups/#{group1.id}/members.json",
+                   params: {
+                     user_emails: [user1.email, user2.email].join(","),
+                   }
+          end.to change { group1.users.count }.by(-2)
+
+          expect(response.status).to eq(200)
+        end
+
+        it "only removes users in that group" do
+          delete "/groups/#{group1.id}/members.json",
+                 params: {
+                   usernames: [user.username, user2.username].join(","),
+                 }
+
+          response_body = response.parsed_body
+          expect(response.status).to eq(200)
+          expect(response_body["usernames"].first).to eq(user2.username)
+          expect(response_body["skipped_usernames"].first).to eq(user.username)
         end
       end
     end

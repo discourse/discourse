@@ -82,30 +82,28 @@ RSpec.describe TopicTimer, type: :model do
     end
 
     describe "#category_id" do
-      describe "when #status_type is publish_to_category" do
-        describe "when #category_id is not present" do
-          it "is invalid" do
-            topic_timer =
-              Fabricate.build(:topic_timer, status_type: TopicTimer.types[:publish_to_category])
+      describe "when #category_id is not present for publish_to_category" do
+        it "is invalid" do
+          topic_timer =
+            Fabricate.build(:topic_timer, status_type: TopicTimer.types[:publish_to_category])
 
-            expect(topic_timer).to_not be_valid
-            expect(topic_timer.errors).to include(:category_id)
-          end
+          expect(topic_timer).to_not be_valid
+          expect(topic_timer.errors).to include(:category_id)
         end
+      end
 
-        describe "when #category_id is present" do
-          it "is valid" do
-            topic_timer =
-              Fabricate.build(
-                :topic_timer,
-                status_type: TopicTimer.types[:publish_to_category],
-                category_id: Fabricate(:category).id,
-                user: Fabricate(:user),
-                topic: Fabricate(:topic),
-              )
+      describe "when #category_id is present" do
+        it "is valid" do
+          topic_timer =
+            Fabricate.build(
+              :topic_timer,
+              status_type: TopicTimer.types[:publish_to_category],
+              category_id: Fabricate(:category).id,
+              user: Fabricate(:user),
+              topic: Fabricate(:topic),
+            )
 
-            expect(topic_timer).to be_valid
-          end
+          expect(topic_timer).to be_valid
         end
       end
     end

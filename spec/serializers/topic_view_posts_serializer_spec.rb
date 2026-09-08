@@ -4,7 +4,8 @@ RSpec.describe TopicViewPostsSerializer do
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post) }
   let(:topic) { post.topic }
-  let!(:reviewable) do
+
+  before do
     Fabricate(
       :reviewable_flagged_post,
       created_by: user,

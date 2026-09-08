@@ -5,14 +5,15 @@ require Rails.root.join(
         )
 
 RSpec.describe EnableVoiceBadgesByDefault do
+  let!(:original_verbose) { ActiveRecord::Migration.verbose }
+
   before do
-    @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
     SeedFu.seed(Rails.root.join("plugins/voice/db/fixtures"))
     Voice::BadgeGranterHooks.disable_all!
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
+  after { ActiveRecord::Migration.verbose = original_verbose }
 
   def voice_badges
     Badge.joins(:badge_grouping).where(badge_groupings: { name: "Voice" })

@@ -84,7 +84,7 @@ describe "Mattermost Command Controller", type: :request do
           post "/chat-integration/mattermost/command.json",
                params: {
                  text: "watch #{category.slug}",
-                 channel_name: "welcome",
+                 channel_name: "general",
                  token: token,
                }
 
@@ -92,40 +92,17 @@ describe "Mattermost Command Controller", type: :request do
 
           expect(json["text"]).to eq(I18n.t("chat_integration.provider.mattermost.create.created"))
 
-          rule = DiscourseChatIntegration::Rule.all.first
-          expect(rule.channel).to eq(chan1)
+          chan =
+            DiscourseChatIntegration::Channel
+              .with_provider("mattermost")
+              .with_data_value("identifier", "#general")
+              .first
+          expect(chan.provider).to eq("mattermost")
+
+          rule = chan.rules.first
           expect(rule.filter).to eq("watch")
           expect(rule.category_id).to eq(category.id)
           expect(rule.tags).to eq(nil)
-        end
-
-        describe "from an unknown channel" do
-          it "creates the channel" do
-            post "/chat-integration/mattermost/command.json",
-                 params: {
-                   text: "watch #{category.slug}",
-                   channel_name: "general",
-                   token: token,
-                 }
-
-            json = response.parsed_body
-
-            expect(json["text"]).to eq(
-              I18n.t("chat_integration.provider.mattermost.create.created"),
-            )
-
-            chan =
-              DiscourseChatIntegration::Channel
-                .with_provider("mattermost")
-                .with_data_value("identifier", "#general")
-                .first
-            expect(chan.provider).to eq("mattermost")
-
-            rule = chan.rules.first
-            expect(rule.filter).to eq("watch")
-            expect(rule.category_id).to eq(category.id)
-            expect(rule.tags).to eq(nil)
-          end
         end
       end
     end

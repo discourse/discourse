@@ -91,7 +91,7 @@ RSpec.describe ListController do
         expect(response.status).to eq(400)
       end
 
-      it "returns 400 when the list filter is not a string" do
+      it "returns a 400 response when `filter` param is not a string" do
         get "/latest?filter%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
@@ -128,11 +128,6 @@ RSpec.describe ListController do
 
       it "returns 400 when tags is neither an array nor a string" do
         get "/latest?tags[1]=hello"
-        expect(response.status).to eq(400)
-      end
-
-      it "returns 400 when the user filter is not a string" do
-        get "/latest?filter%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
@@ -643,7 +638,7 @@ RSpec.describe ListController do
       end
     end
 
-    describe "with unicode_usernames disabled" do
+    describe "with Unicode usernames disabled" do
       before do
         group.add(user)
         sign_in(user)
@@ -670,7 +665,7 @@ RSpec.describe ListController do
       end
     end
 
-    describe "with unicode_usernames enabled" do
+    describe "with Unicode usernames enabled" do
       before do
         sign_in(user)
         SiteSetting.unicode_usernames = true
@@ -699,7 +694,8 @@ RSpec.describe ListController do
 
     let!(:topic) { Fabricate(:topic, user: user) }
     let!(:topic2) { Fabricate(:topic, user: user2) }
-    let!(:another_topic) { Fabricate(:topic) }
+
+    before { Fabricate(:topic) }
 
     describe "when an invalid group name is given" do
       it "returns the expected response" do
@@ -722,7 +718,7 @@ RSpec.describe ListController do
       describe "group restricted to logged-on-users" do
         before { group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) }
 
-        it "returns the expected response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
@@ -732,7 +728,7 @@ RSpec.describe ListController do
       describe "restricted group" do
         before { group.update!(visibility_level: Group.visibility_levels[:staff]) }
 
-        it "returns the expected response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
@@ -744,7 +740,7 @@ RSpec.describe ListController do
           group.update!(members_visibility_level: Group.visibility_levels[:logged_on_users])
         end
 
-        it "returns the expected response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
@@ -758,7 +754,7 @@ RSpec.describe ListController do
       describe "restricted group" do
         before { group.update!(visibility_level: Group.visibility_levels[:staff]) }
 
-        it "returns the expected response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
@@ -1025,7 +1021,7 @@ RSpec.describe ListController do
       end
 
       context "with access to see the category" do
-        it "returns the category list" do
+        it "returns the category topic list" do
           get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
@@ -1036,7 +1032,7 @@ RSpec.describe ListController do
 
         before { SiteSetting.slug_generation_method = "encoded" }
 
-        it "returns the encoded-slug category list" do
+        it "accepts the encoded category slug" do
           get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
@@ -1045,18 +1041,14 @@ RSpec.describe ListController do
       context "with a link that has a parent slug, slug and id in its path" do
         let(:child_category) { Fabricate(:category_with_definition, parent_category: category) }
 
-        context "with valid slug" do
-          it "returns the child-category list" do
-            get "/c/#{category.slug}/#{child_category.slug}/#{child_category.id}/l/latest"
-            expect(response.status).to eq(200)
-          end
+        it "returns the child-category list" do
+          get "/c/#{category.slug}/#{child_category.slug}/#{child_category.id}/l/latest"
+          expect(response.status).to eq(200)
         end
 
-        context "with invalid slug" do
-          it "redirects" do
-            get "/c/random_slug/another_random_slug/#{child_category.id}/l/latest"
-            expect(response).to redirect_to("#{child_category.url}/l/latest")
-          end
+        it "redirects" do
+          get "/c/random_slug/another_random_slug/#{child_category.id}/l/latest"
+          expect(response).to redirect_to("#{child_category.url}/l/latest")
         end
       end
 
@@ -1082,18 +1074,14 @@ RSpec.describe ListController do
       context "with a child category" do
         let(:sub_category) { Fabricate(:category_with_definition, parent_category_id: category.id) }
 
-        context "when parent and child are requested" do
-          it "returns the nested child-category list" do
-            get "/c/#{category.slug}/#{sub_category.slug}/#{sub_category.id}/l/latest"
-            expect(response.status).to eq(200)
-          end
+        it "returns the nested child-category list" do
+          get "/c/#{category.slug}/#{sub_category.slug}/#{sub_category.id}/l/latest"
+          expect(response.status).to eq(200)
         end
 
-        context "when child is requested with the wrong parent" do
-          it "responds with a 404 error" do
-            get "/c/not-the-right-slug/#{sub_category.slug}/l/latest"
-            expect(response.status).to eq(404)
-          end
+        it "responds with a 404 error" do
+          get "/c/not-the-right-slug/#{sub_category.slug}/l/latest"
+          expect(response.status).to eq(404)
         end
       end
 

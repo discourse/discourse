@@ -16,16 +16,6 @@ RSpec.describe Voice::ChatThreadsController do
       end
     end
     Voice::Room.reset_column_information
-  end
-
-  fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-  fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-
-  fab!(:room) { Fabricate(:voice_room, public: true, chat_channel_id: channel.id) }
-
-  fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_chat_enabled = true
     SiteSetting.chat_enabled = true
@@ -37,6 +27,13 @@ RSpec.describe Voice::ChatThreadsController do
     # room visibility is decided by membership, not the create-room privilege.
     SiteSetting.voice_create_room_allowed_groups = Group::AUTO_GROUPS[:trust_level_4].to_s
   end
+
+  fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+
+  fab!(:room) { Fabricate(:voice_room, public: true, chat_channel_id: channel.id) }
+
+  fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
   def mark(chat_thread, voice_room)
     chat_thread.upsert_custom_fields(Voice::THREAD_ROOM_ID_FIELD => voice_room.id)

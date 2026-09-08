@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe "Multisite SiteSettings", type: :multisite do
+  let(:original_provider) { SiteSetting.provider }
+
   before do
-    @original_provider = SiteSetting.provider
+    original_provider
     SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
   end
 
-  after { SiteSetting.provider = @original_provider }
+  after { SiteSetting.provider = original_provider }
 
   describe "#default_locale" do
     it "returns the site's locale" do

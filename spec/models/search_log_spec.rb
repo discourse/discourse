@@ -3,7 +3,7 @@
 RSpec.describe SearchLog, type: :model do
   after { SearchLog.clear_debounce_cache! }
 
-  describe ".log" do
+  describe ".log validation and modifiers" do
     context "with invalid arguments" do
       it "no search type returns error" do
         status, _ =

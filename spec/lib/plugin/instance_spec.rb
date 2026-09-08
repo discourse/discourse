@@ -226,94 +226,94 @@ TEXT
         end
       end
 
-      before do
-        @plugin = TroutPlugin.new
-        @trout = Trout.new
+      let(:plugin) { TroutPlugin.new }
+      let(:trout) { Trout.new }
+      let(:hello_count) { { value: 0 } }
+      let(:increase_count) { -> { hello_count[:value] += 1 } }
+      let(:event_subscription) { plugin.on(:hello, &increase_count) }
+      let(:serializer) { TroutSerializer.new(trout) }
+      let(:child_serializer) { TroutJuniorSerializer.new(trout) }
 
-        poison = TroutSerializer.new(@trout)
+      before do
+        poison = TroutSerializer.new(trout)
         poison.attributes
 
-        poison = TroutJuniorSerializer.new(@trout)
+        poison = TroutJuniorSerializer.new(trout)
         poison.attributes
 
         # New method
-        @plugin.add_to_class(:trout, :status?) { "evil" }
+        plugin.add_to_class(:trout, :status?) { "evil" }
 
         # DiscourseEvent
-        @hello_count = 0
-        @increase_count = -> { @hello_count += 1 }
-        @set = @plugin.on(:hello, &@increase_count)
+        event_subscription
 
         # Serializer
-        @plugin.add_to_serializer(:trout, :scales) { 1024 }
-        @plugin.add_to_serializer(:trout, :unconditional_scales, respect_plugin_enabled: false) do
+        plugin.add_to_serializer(:trout, :scales) { 1024 }
+        plugin.add_to_serializer(:trout, :unconditional_scales, respect_plugin_enabled: false) do
           2048
         end
-        @plugin.add_to_serializer(
+        plugin.add_to_serializer(
           :trout,
           :conditional_scales,
           include_condition: -> { !!object.data&.[](:has_scales) },
         ) { 4096 }
-
-        @serializer = TroutSerializer.new(@trout)
-        @child_serializer = TroutJuniorSerializer.new(@trout)
       end
 
-      after { DiscourseEvent.off(:hello, &@set.first) }
+      after { DiscourseEvent.off(:hello, &event_subscription.first) }
 
       it "checks enabled/disabled functionality for extensions" do
         # with an enabled plugin
-        @plugin.enabled = true
-        expect(@trout.status?).to eq("evil")
+        plugin.enabled = true
+        expect(trout.status?).to eq("evil")
         DiscourseEvent.trigger(:hello)
-        expect(@hello_count).to eq(1)
-        expect(@serializer.scales).to eq(1024)
-        expect(@serializer.include_scales?).to eq(true)
+        expect(hello_count[:value]).to eq(1)
+        expect(serializer.scales).to eq(1024)
+        expect(serializer.include_scales?).to eq(true)
 
-        expect(@child_serializer.attributes[:scales]).to eq(1024)
+        expect(child_serializer.attributes[:scales]).to eq(1024)
 
         # When a plugin is disabled
-        @plugin.enabled = false
-        expect(@trout.status?).to eq(nil)
+        plugin.enabled = false
+        expect(trout.status?).to eq(nil)
         DiscourseEvent.trigger(:hello)
-        expect(@hello_count).to eq(1)
-        expect(@serializer.scales).to eq(1024)
-        expect(@serializer.include_scales?).to eq(false)
-        expect(@serializer.include_unconditional_scales?).to eq(true)
-        expect(@serializer.name).to eq("a trout")
+        expect(hello_count[:value]).to eq(1)
+        expect(serializer.scales).to eq(1024)
+        expect(serializer.include_scales?).to eq(false)
+        expect(serializer.include_unconditional_scales?).to eq(true)
+        expect(serializer.name).to eq("a trout")
 
-        expect(@child_serializer.scales).to eq(1024)
-        expect(@child_serializer.include_scales?).to eq(false)
-        expect(@child_serializer.name).to eq("a trout jr")
+        expect(child_serializer.scales).to eq(1024)
+        expect(child_serializer.include_scales?).to eq(false)
+        expect(child_serializer.name).to eq("a trout jr")
       end
 
       it "can control the include_* implementation" do
-        @plugin.enabled = true
+        plugin.enabled = true
 
-        expect(@serializer.scales).to eq(1024)
-        expect(@serializer.include_scales?).to eq(true)
+        expect(serializer.scales).to eq(1024)
+        expect(serializer.include_scales?).to eq(true)
 
-        expect(@serializer.unconditional_scales).to eq(2048)
-        expect(@serializer.include_unconditional_scales?).to eq(true)
+        expect(serializer.unconditional_scales).to eq(2048)
+        expect(serializer.include_unconditional_scales?).to eq(true)
 
-        expect(@serializer.include_conditional_scales?).to eq(false)
-        @trout.data = { has_scales: true }
-        expect(@serializer.include_conditional_scales?).to eq(true)
+        expect(serializer.include_conditional_scales?).to eq(false)
+        trout.data = { has_scales: true }
+        expect(serializer.include_conditional_scales?).to eq(true)
 
-        @plugin.enabled = false
-        expect(@serializer.include_scales?).to eq(false)
-        expect(@serializer.include_unconditional_scales?).to eq(true)
-        expect(@serializer.include_conditional_scales?).to eq(false)
+        plugin.enabled = false
+        expect(serializer.include_scales?).to eq(false)
+        expect(serializer.include_unconditional_scales?).to eq(true)
+        expect(serializer.include_conditional_scales?).to eq(false)
       end
 
       it "only returns HTML if enabled" do
         ctx = Trout.new
         ctx.data = "hello"
 
-        @plugin.register_html_builder("test:html") { |c| "<div>#{c.data}</div>" }
-        @plugin.enabled = false
+        plugin.register_html_builder("test:html") { |c| "<div>#{c.data}</div>" }
+        plugin.enabled = false
         expect(DiscoursePluginRegistry.build_html("test:html", ctx)).to eq("")
-        @plugin.enabled = true
+        plugin.enabled = true
         expect(DiscoursePluginRegistry.build_html("test:html", ctx)).to eq("<div>hello</div>")
       end
 

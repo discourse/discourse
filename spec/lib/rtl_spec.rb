@@ -33,15 +33,14 @@ RSpec.describe Rtl do
         end
       end
 
-      context "when site default locale is LTR" do
-        before { SiteSetting.default_locale = "en" }
+      context "when site default locale is LTR and user locale is RTL" do
+        before do
+          SiteSetting.default_locale = "en"
+          user.stubs(:locale).returns("he")
+        end
 
-        context "when user locale is RTL" do
-          before { user.stubs(:locale).returns("he") }
-
-          it "returns empty class" do
-            expect(Rtl.new(user).css_class).to eq("")
-          end
+        it "returns empty class" do
+          expect(Rtl.new(user).css_class).to eq("")
         end
       end
     end

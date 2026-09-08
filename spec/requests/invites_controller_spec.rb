@@ -590,29 +590,27 @@ RSpec.describe InvitesController do
         end
       end
 
-      context "when providing an email belonging to an existing user" do
+      context 'when inviting an existing user and "hide_email_address_taken" is disabled' do
         let(:email) { user.email }
 
-        before { SiteSetting.hide_email_address_taken = hide_email_address_taken }
+        before { SiteSetting.hide_email_address_taken = false }
 
-        context 'when "hide_email_address_taken" setting is disabled' do
-          let(:hide_email_address_taken) { false }
-
-          it "returns an error" do
-            create_invite
-            expect(response).to have_http_status :unprocessable_entity
-            expect(body).to match(/no need to invite/)
-          end
+        it "returns an error" do
+          create_invite
+          expect(response).to have_http_status :unprocessable_entity
+          expect(body).to match(/no need to invite/)
         end
+      end
 
-        context 'when "hide_email_address_taken" setting is enabled' do
-          let(:hide_email_address_taken) { true }
+      context 'when inviting an existing user and "hide_email_address_taken" is enabled' do
+        let(:email) { user.email }
 
-          it "doesn’t inform the user" do
-            create_invite
-            expect(response).to have_http_status :unprocessable_entity
-            expect(body).to match(/There was a problem with your request./)
-          end
+        before { SiteSetting.hide_email_address_taken = true }
+
+        it "doesn’t inform the user" do
+          create_invite
+          expect(response).to have_http_status :unprocessable_entity
+          expect(body).to match(/There was a problem with your request./)
         end
       end
     end
@@ -1220,29 +1218,27 @@ RSpec.describe InvitesController do
         end
       end
 
-      context "when providing an email belonging to an existing user" do
+      context "when updating an invite to an existing user's email and hiding is disabled" do
         subject(:update_invite) { put "/invites/#{invite.id}.json", params: { email: admin.email } }
 
-        before { SiteSetting.hide_email_address_taken = hide_email_address_taken }
+        before { SiteSetting.hide_email_address_taken = false }
 
-        context "when 'hide_email_address_taken' setting is disabled" do
-          let(:hide_email_address_taken) { false }
-
-          it "returns an error" do
-            update_invite
-            expect(response).to have_http_status :unprocessable_entity
-            expect(body).to match(/no need to invite/)
-          end
+        it "returns an error" do
+          update_invite
+          expect(response).to have_http_status :unprocessable_entity
+          expect(body).to match(/no need to invite/)
         end
+      end
 
-        context "when 'hide_email_address_taken' setting is enabled" do
-          let(:hide_email_address_taken) { true }
+      context "when updating an invite to an existing user's email and hiding is enabled" do
+        subject(:update_invite) { put "/invites/#{invite.id}.json", params: { email: admin.email } }
 
-          it "doesn't inform the user" do
-            update_invite
-            expect(response).to have_http_status :unprocessable_entity
-            expect(body).to match(/There was a problem with your request./)
-          end
+        before { SiteSetting.hide_email_address_taken = true }
+
+        it "doesn't inform the user" do
+          update_invite
+          expect(response).to have_http_status :unprocessable_entity
+          expect(body).to match(/There was a problem with your request./)
         end
       end
 
@@ -1505,113 +1501,107 @@ RSpec.describe InvitesController do
         end
       end
 
-      describe ".post_process_invite" do
-        it "sends a welcome message if set" do
-          SiteSetting.send_welcome_message = true
-          user.send_welcome_message = true
+      it "sends a welcome message if set" do
+        SiteSetting.send_welcome_message = true
+        user.send_welcome_message = true
+        put "/invites/show/#{invite.invite_key}.json"
+        expect(response.status).to eq(200)
+
+        expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
+      end
+
+      it "refreshes automatic groups if staff" do
+        topic.user.grant_admin!
+        invite.update!(moderator: true)
+
+        put "/invites/show/#{invite.invite_key}.json"
+        expect(response.status).to eq(200)
+
+        expect(invite.invited_users.first.user.groups.pluck(:name)).to contain_exactly(
+          "moderators",
+          "staff",
+        )
+      end
+
+      context "without password" do
+        it "sends password reset email" do
           put "/invites/show/#{invite.invite_key}.json"
           expect(response.status).to eq(200)
 
-          expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
+          expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(1)
+          expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
         end
+      end
 
-        it "refreshes automatic groups if staff" do
-          topic.user.grant_admin!
-          invite.update!(moderator: true)
+      context "when user was invited via email" do
+        before { invite.update_column(:emailed_status, Invite.emailed_status_types[:pending]) }
 
-          put "/invites/show/#{invite.invite_key}.json"
+        it "does not send an activation email and activates the user" do
+          expect do
+            put "/invites/show/#{invite.invite_key}.json",
+                params: {
+                  password: "verystrongpassword",
+                  email_token: invite.email_token,
+                }
+          end.to change { UserAuthToken.count }.by(1)
+
           expect(response.status).to eq(200)
 
-          expect(invite.invited_users.first.user.groups.pluck(:name)).to contain_exactly(
-            "moderators",
-            "staff",
-          )
+          expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
+          expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
+
+          invited_user = User.find_by_email(invite.email)
+          expect(invited_user.active).to eq(true)
+          expect(invited_user.email_confirmed?).to eq(true)
         end
 
-        context "without password" do
-          it "sends password reset email" do
-            put "/invites/show/#{invite.invite_key}.json"
-            expect(response.status).to eq(200)
+        it "does not activate user if email token is missing" do
+          expect do
+            put "/invites/show/#{invite.invite_key}.json",
+                params: {
+                  password: "verystrongpassword",
+                }
+          end.not_to change { UserAuthToken.count }
 
-            expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(1)
-            expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
-          end
+          expect(response.status).to eq(200)
+
+          expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
+          expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+
+          invited_user = User.find_by_email(invite.email)
+          expect(invited_user.active).to eq(false)
+          expect(invited_user.email_confirmed?).to eq(false)
         end
+      end
 
-        context "with password" do
-          context "when user was invited via email" do
-            before { invite.update_column(:emailed_status, Invite.emailed_status_types[:pending]) }
+      context "when user was invited via link" do
+        before { invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required]) }
 
-            it "does not send an activation email and activates the user" do
-              expect do
-                put "/invites/show/#{invite.invite_key}.json",
-                    params: {
-                      password: "verystrongpassword",
-                      email_token: invite.email_token,
-                    }
-              end.to change { UserAuthToken.count }.by(1)
+        it "sends an activation email and does not activate the user" do
+          expect do
+            put "/invites/show/#{invite.invite_key}.json",
+                params: {
+                  password: "verystrongpassword",
+                }
+          end.not_to change { UserAuthToken.count }
 
-              expect(response.status).to eq(200)
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
 
-              expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
-              expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
+          invited_user = User.find_by_email(invite.email)
+          expect(invited_user.active).to eq(false)
+          expect(invited_user.email_confirmed?).to eq(false)
 
-              invited_user = User.find_by_email(invite.email)
-              expect(invited_user.active).to eq(true)
-              expect(invited_user.email_confirmed?).to eq(true)
-            end
+          expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
+          expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
 
-            it "does not activate user if email token is missing" do
-              expect do
-                put "/invites/show/#{invite.invite_key}.json",
-                    params: {
-                      password: "verystrongpassword",
-                    }
-              end.not_to change { UserAuthToken.count }
+          tokens = EmailToken.where(user_id: invited_user.id, confirmed: false, expired: false)
+          expect(tokens.size).to eq(1)
 
-              expect(response.status).to eq(200)
-
-              expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
-              expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
-
-              invited_user = User.find_by_email(invite.email)
-              expect(invited_user.active).to eq(false)
-              expect(invited_user.email_confirmed?).to eq(false)
-            end
-          end
-
-          context "when user was invited via link" do
-            before do
-              invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required])
-            end
-
-            it "sends an activation email and does not activate the user" do
-              expect do
-                put "/invites/show/#{invite.invite_key}.json",
-                    params: {
-                      password: "verystrongpassword",
-                    }
-              end.not_to change { UserAuthToken.count }
-
-              expect(response.status).to eq(200)
-              expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
-
-              invited_user = User.find_by_email(invite.email)
-              expect(invited_user.active).to eq(false)
-              expect(invited_user.email_confirmed?).to eq(false)
-
-              expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
-              expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
-
-              tokens = EmailToken.where(user_id: invited_user.id, confirmed: false, expired: false)
-              expect(tokens.size).to eq(1)
-
-              job_args = Jobs::CriticalUserEmail.jobs.first["args"].first
-              expect(job_args["type"]).to eq("signup")
-              expect(job_args["user_id"]).to eq(invited_user.id)
-              expect(EmailToken.hash_token(job_args["email_token"])).to eq(tokens.first.token_hash)
-            end
-          end
+          job_args = Jobs::CriticalUserEmail.jobs.first["args"].first
+          expect(job_args["type"]).to eq("signup")
+          expect(job_args["user_id"]).to eq(invited_user.id)
+          expect(EmailToken.hash_token(job_args["email_token"])).to eq(tokens.first.token_hash)
         end
       end
     end

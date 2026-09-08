@@ -4,7 +4,13 @@ require "site_settings/yaml_loader"
 
 RSpec.describe SiteSettings::YamlLoader do
   class Receiver
-    attr_reader :settings, :client_settings, :categories
+    attr_accessor :settings, :client_settings, :categories
+
+    def initialize
+      self.settings = []
+      self.client_settings = []
+      self.categories = []
+    end
 
     def load_yaml(file_arg)
       SiteSettings::YamlLoader
@@ -13,13 +19,10 @@ RSpec.describe SiteSettings::YamlLoader do
     end
 
     def setting(category, name, default = nil, opts = {})
-      @settings ||= []
-      @client_settings ||= []
-      @settings << name
-      @categories ||= []
-      @categories << category
-      @categories.uniq!
-      @client_settings << name if opts.has_key?(:client)
+      settings << name
+      categories << category
+      categories.uniq!
+      client_settings << name if opts.has_key?(:client)
     end
   end
 

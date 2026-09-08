@@ -53,11 +53,14 @@ describe "Post stream" do
   end
 
   context "when hiding scrollable content" do
-    let!(:topic) { Fabricate(:topic) }
-    let!(:posts) { Fabricate.times(60, :post, topic: topic) }
-    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:topic) { Fabricate(:topic) }
 
-    before { sign_in(user) }
+    before do
+      Fabricate.times(60, :post, topic: topic)
+      sign_in(user)
+    end
+
+    let(:topic_page) { PageObjects::Pages::Topic.new }
 
     it "hides and shows content above the post stream based on loaded posts" do
       topic_page.visit_topic(topic, post_number: 30)

@@ -15,30 +15,28 @@ RSpec.describe SiteSettingExtension do
 
   after { MessageBus.on }
 
-  describe "#types" do
-    context "when verifying enum sequence" do
-      before { @types = SiteSetting.types }
-
-      it "'string' should be at 1st position" do
-        expect(@types[:string]).to eq(1)
-      end
-
-      it "'value_list' should be at 12th position" do
-        expect(@types[:value_list]).to eq(12)
-      end
-    end
+  let :settings2 do
+    new_settings(provider_local)
   end
-
+  let :settings do
+    new_settings(provider_local)
+  end
   let :provider_local do
     SiteSettings::LocalProcessProvider.new
   end
 
-  let :settings do
-    new_settings(provider_local)
-  end
+  describe "#types" do
+    context "when verifying enum sequence" do
+      let(:types) { SiteSetting.types }
 
-  let :settings2 do
-    new_settings(provider_local)
+      it "'string' should be at 1st position" do
+        expect(types[:string]).to eq(1)
+      end
+
+      it "'value_list' should be at 12th position" do
+        expect(types[:value_list]).to eq(12)
+      end
+    end
   end
 
   it "does not leak state cause changes are not linked" do
@@ -270,9 +268,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when overridden" do
-      after :each do
-        settings.remove_override!(:test_setting)
-      end
+      after { settings.remove_override!(:test_setting) }
 
       it "returns the overridden value" do
         settings.test_setting = 100
@@ -345,9 +341,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when overridden" do
-      after :each do
-        settings.remove_override!(:test_str)
-      end
+      after { settings.remove_override!(:test_str) }
 
       it "coerces an integer to a string" do
         settings.test_str = 100
@@ -475,9 +469,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when overridden" do
-      after :each do
-        settings.remove_override!(:validated_setting)
-      end
+      after { settings.remove_override!(:validated_setting) }
 
       it "stores valid values" do
         test_enum_class.expects(:valid_value?).with("fr").returns(true)
@@ -505,9 +497,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when overridden" do
-      after :each do
-        settings.remove_override!(:test_setting)
-      end
+      after { settings.remove_override!(:test_setting) }
 
       it "returns the overridden value" do
         settings.test_setting = 101
@@ -562,9 +552,7 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    after :each do
-      settings.remove_override!(:validated_setting)
-    end
+    after { settings.remove_override!(:validated_setting) }
 
     it "stores valid values" do
       EmailSettingValidator.any_instance.expects(:valid_value?).returns(true)
@@ -592,9 +580,7 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    after :each do
-      settings.remove_override!(:datetime_setting)
-    end
+    after { settings.remove_override!(:datetime_setting) }
 
     it "stores valid datetime values" do
       settings.datetime_setting = "2024-12-29T15:30:00Z"
@@ -741,49 +727,46 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       end
 
-      context "when the depends_on setting is an upcoming change" do
-        context "when the upcoming change is enabled by an admin" do
-          before do
-            settings.setting(
-              :enable_cool_thing,
-              true,
-              upcoming_change: {
-                status: :alpha,
-                impact: "feature,staff",
-              },
-            )
-            settings.refresh!
-            allow(UpcomingChanges).to receive(:enabled?).and_return(false)
-            allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
-          end
-
-          it "is present in all_settings" do
-            expect(
-              settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
-            ).not_to be_blank
-          end
+      context "when the depends_on setting is an upcoming change enabled by an admin" do
+        before do
+          settings.setting(
+            :enable_cool_thing,
+            true,
+            upcoming_change: {
+              status: :alpha,
+              impact: "feature,staff",
+            },
+          )
+          settings.refresh!
+          allow(UpcomingChanges).to receive(:enabled?).and_return(false)
+          allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
         end
 
-        context "when the upcoming change is automatically enabled because of the promotion status" do
-          before do
-            settings.setting(
-              :enable_cool_thing,
-              true,
-              upcoming_change: {
-                status: :alpha,
-                impact: "feature,staff",
-              },
-            )
-            settings.refresh!
-            allow(UpcomingChanges).to receive(:enabled?).and_return(false)
-            allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
-          end
+        it "is present in all_settings" do
+          expect(
+            settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
+          ).not_to be_blank
+        end
+      end
 
-          it "is present in all_settings" do
-            expect(
-              settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
-            ).not_to be_blank
-          end
+      context "when the depends_on setting is an upcoming change enabled by promotion status" do
+        before do
+          settings.setting(
+            :enable_cool_thing,
+            true,
+            upcoming_change: {
+              status: :alpha,
+              impact: "feature,staff",
+            },
+          )
+          settings.refresh!
+          allow(UpcomingChanges).to receive(:enabled?).and_return(true)
+        end
+
+        it "is present in all_settings" do
+          expect(
+            settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
+          ).not_to be_blank
         end
       end
 

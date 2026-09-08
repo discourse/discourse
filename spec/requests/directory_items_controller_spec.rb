@@ -20,9 +20,10 @@ RSpec.describe DirectoryItemsController do
   end
 
   context "with limit parameter" do
-    let!(:users) { Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) } }
-
-    before { DirectoryItem.refresh! }
+    before do
+      Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) }
+      DirectoryItem.refresh!
+    end
 
     it "limits the number of returned items" do
       get "/directory_items.json", params: { period: "all", limit: 2 }

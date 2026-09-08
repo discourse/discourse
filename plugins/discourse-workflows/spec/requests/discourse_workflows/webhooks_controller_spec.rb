@@ -310,6 +310,11 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
           nodes: nodes,
           connections: workflow_connections_for(nodes, %w[webhook-1 wait-1]),
         )
+        Fabricate(
+          :discourse_workflows_execution_data,
+          execution: waiting_execution,
+          workflow_data: DiscourseWorkflows::WorkflowSnapshot.from_workflow(workflow).to_h,
+        )
       end
 
       fab!(:waiting_execution) do
@@ -320,14 +325,6 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
           trigger_node_id: "webhook-1",
           waiting_node_id: "wait-1",
           resume_token: "resume-token",
-        )
-      end
-
-      before do
-        Fabricate(
-          :discourse_workflows_execution_data,
-          execution: waiting_execution,
-          workflow_data: DiscourseWorkflows::WorkflowSnapshot.from_workflow(workflow).to_h,
         )
       end
 

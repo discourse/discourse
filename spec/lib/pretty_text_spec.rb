@@ -915,12 +915,10 @@ RSpec.describe PrettyText do
           ).to eq("[car]")
         end
 
-        describe "when alt tag is empty" do
-          it "does not keep alt attributes" do
-            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt>", 100)).to eq(
-              "[#{I18n.t("excerpt_image")}]",
-            )
-          end
+        it "does not keep alt attributes" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt>", 100)).to eq(
+            "[#{I18n.t("excerpt_image")}]",
+          )
         end
       end
 
@@ -931,12 +929,10 @@ RSpec.describe PrettyText do
           )
         end
 
-        describe "when title tag is empty" do
-          it "does not keep title attributes" do
-            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title>", 100)).to eq(
-              "[#{I18n.t("excerpt_image")}]",
-            )
-          end
+        it "does not keep title attributes" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title>", 100)).to eq(
+            "[#{I18n.t("excerpt_image")}]",
+          )
         end
       end
 
@@ -3146,12 +3142,14 @@ HTML
   end
 
   describe "video thumbnails" do
+    let(:video_upload) { Fabricate(:upload, original_filename: "video.mp4", extension: "mp4") }
+
     before do
       SiteSetting.authorized_extensions = "mp4|png"
-      @video_upload = Fabricate(:upload, original_filename: "video.mp4", extension: "mp4")
+      video_upload
     end
 
-    after { Upload.where(original_filename: ["404.png", "#{@video_upload.sha1}.png"]).destroy_all }
+    after { Upload.where(original_filename: ["404.png", "#{video_upload.sha1}.png"]).destroy_all }
 
     it "does not link to a thumbnail image if the video source is missing" do
       Fabricate(:upload, original_filename: "404.png", extension: "png")
@@ -3179,18 +3177,18 @@ HTML
 
     it "links to a thumbnail image if the video source is valid" do
       thumbnail =
-        Fabricate(:upload, original_filename: "#{@video_upload.sha1}.png", extension: "png")
+        Fabricate(:upload, original_filename: "#{video_upload.sha1}.png", extension: "png")
 
       html = <<~HTML
-        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}"></div><p></p>
+        <p></p><div class="video-placeholder-container" data-video-src="#{video_upload.url}"></div><p></p>
       HTML
       doc = Nokogiri::HTML5.fragment(html)
       described_class.add_video_placeholder_image(doc)
 
-      video_base62_sha1 = "#{Upload.base62_sha1(@video_upload.sha1)}.#{@video_upload.extension}"
+      video_base62_sha1 = "#{Upload.base62_sha1(video_upload.sha1)}.#{video_upload.extension}"
 
       html_with_thumbnail = <<~HTML
-        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}" data-thumbnail-src="http://test.localhost#{thumbnail.url}" data-video-base62-sha1="#{video_base62_sha1}"></div><p></p>
+        <p></p><div class="video-placeholder-container" data-video-src="#{video_upload.url}" data-thumbnail-src="http://test.localhost#{thumbnail.url}" data-video-base62-sha1="#{video_base62_sha1}"></div><p></p>
       HTML
 
       expect(doc.to_html).to eq(html_with_thumbnail)

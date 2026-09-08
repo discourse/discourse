@@ -306,7 +306,7 @@ RSpec.describe Upload do
         upload.reload
       end
 
-      it "finds the upload by its extensionless URL" do
+      it "returns the right upload" do
         expect(Upload.get_from_url(upload.url)).to eq(upload)
       end
     end
@@ -327,7 +327,7 @@ RSpec.describe Upload do
         )
       end
 
-      it "finds the upload by its nested directory URL" do
+      it "returns the right upload" do
         expect(Upload.get_from_url(upload.url)).to eq(upload)
       end
     end
@@ -375,18 +375,15 @@ RSpec.describe Upload do
 
         before { SiteSetting.s3_cdn_url = s3_cdn_url }
 
-        it "finds the matching upload" do
+        it "returns the right upload" do
           upload
           expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
         end
 
-        describe "when upload bucket contains subfolder" do
-          before { SiteSetting.s3_upload_bucket = "s3-upload-bucket/path/path2" }
-
-          it "finds the matching upload" do
-            upload
-            expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
-          end
+        it "returns the right upload when the upload bucket contains a subfolder" do
+          SiteSetting.s3_upload_bucket = "s3-upload-bucket/path/path2"
+          upload
+          expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
         end
       end
 

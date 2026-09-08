@@ -17,14 +17,6 @@ RSpec.describe Voice::ChatSession do
       end
     end
     Voice::Room.reset_column_information
-  end
-
-  fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-  fab!(:other) { Fabricate(:user, trust_level: TrustLevel[2]) }
-  fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-  fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_chat_enabled = true
     SiteSetting.chat_enabled = true
@@ -33,6 +25,11 @@ RSpec.describe Voice::ChatSession do
     room.update!(chat_channel_id: channel.id, chat_idle_minutes: 15)
     described_class.clear(room.id)
   end
+
+  fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:other) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+  fab!(:room) { Fabricate(:voice_room, public: true) }
 
   after { described_class.clear(room.id) }
 

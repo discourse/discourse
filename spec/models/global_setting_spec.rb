@@ -113,109 +113,109 @@ RSpec.describe GlobalSetting do
       end
     end
   end
-end
 
-RSpec.describe GlobalSetting::EnvProvider do
-  it "can detect keys from env" do
-    ENV["DISCOURSE_BLA"] = "1"
-    ENV["DISCOURSE_BLA_2"] = "2"
-    expect(GlobalSetting::EnvProvider.new.keys).to include(:bla)
-    expect(GlobalSetting::EnvProvider.new.keys).to include(:bla_2)
-  end
-end
-
-RSpec.describe GlobalSetting::FileProvider do
-  it "can parse a simple file" do
-    f = Tempfile.new("foo")
-    f.write("  # this is a comment\n")
-    f.write("\n")
-    f.write(" a = 1000  # this is a comment\n")
-    f.write("b = \"10 # = 00\"  # this is a # comment\n")
-    f.write("c = \'10 # = 00\' # this is a # comment\n")
-    f.write("d =\n")
-    f.write("#f = 1\n")
-    f.write("a1 = 1\n")
-    f.close
-
-    provider = GlobalSetting::FileProvider.from(f.path)
-
-    expect(provider.lookup(:a, "")).to eq 1000
-    expect(provider.lookup(:b, "")).to eq "10 # = 00"
-    expect(provider.lookup(:c, "")).to eq "10 # = 00"
-    expect(provider.lookup(:d, "bob")).to eq nil
-    expect(provider.lookup(:e, "bob")).to eq "bob"
-    expect(provider.lookup(:f, "bob")).to eq "bob"
-    expect(provider.lookup(:a1, "")).to eq 1
-
-    expect(provider.keys.sort).to eq %i[a a1 b c d]
-
-    f.unlink
+  describe GlobalSetting::EnvProvider do
+    it "can detect keys from env" do
+      ENV["DISCOURSE_BLA"] = "1"
+      ENV["DISCOURSE_BLA_2"] = "2"
+      expect(GlobalSetting::EnvProvider.new.keys).to include(:bla)
+      expect(GlobalSetting::EnvProvider.new.keys).to include(:bla_2)
+    end
   end
 
-  it "uses ERB" do
-    f = Tempfile.new("foo")
-    f.write("a = <%= 500 %>  # this is a comment\n")
-    f.close
+  describe GlobalSetting::FileProvider do
+    it "can parse a simple file" do
+      f = Tempfile.new("foo")
+      f.write("  # this is a comment\n")
+      f.write("\n")
+      f.write(" a = 1000  # this is a comment\n")
+      f.write("b = \"10 # = 00\"  # this is a # comment\n")
+      f.write("c = \'10 # = 00\' # this is a # comment\n")
+      f.write("d =\n")
+      f.write("#f = 1\n")
+      f.write("a1 = 1\n")
+      f.close
 
-    provider = GlobalSetting::FileProvider.from(f.path)
+      provider = GlobalSetting::FileProvider.from(f.path)
 
-    expect(provider.lookup(:a, "")).to eq 500
+      expect(provider.lookup(:a, "")).to eq 1000
+      expect(provider.lookup(:b, "")).to eq "10 # = 00"
+      expect(provider.lookup(:c, "")).to eq "10 # = 00"
+      expect(provider.lookup(:d, "bob")).to eq nil
+      expect(provider.lookup(:e, "bob")).to eq "bob"
+      expect(provider.lookup(:f, "bob")).to eq "bob"
+      expect(provider.lookup(:a1, "")).to eq 1
 
-    f.unlink
-  end
+      expect(provider.keys.sort).to eq %i[a a1 b c d]
 
-  it "can coerce negative integers" do
-    f = Tempfile.new("foo")
-    f.write("negative_int = -1\n")
-    f.write("positive_int = 100\n")
-    f.write("zero = 0\n")
-    f.close
-
-    provider = GlobalSetting::FileProvider.from(f.path)
-
-    expect(provider.lookup(:negative_int, "")).to eq(-1)
-    expect(provider.lookup(:positive_int, "")).to eq(100)
-    expect(provider.lookup(:zero, "")).to eq(0)
-
-    f.unlink
-  end
-
-  describe ".load_plugins? and .plugins_to_load" do
-    around do |example|
-      original = ENV["LOAD_PLUGINS"]
-      example.run
-    ensure
-      original.nil? ? ENV.delete("LOAD_PLUGINS") : ENV["LOAD_PLUGINS"] = original
+      f.unlink
     end
 
-    it "treats `1` as load-all" do
-      ENV["LOAD_PLUGINS"] = "1"
-      expect(GlobalSetting.load_plugins?).to eq(true)
-      expect(GlobalSetting.plugins_to_load).to be_nil
+    it "uses ERB" do
+      f = Tempfile.new("foo")
+      f.write("a = <%= 500 %>  # this is a comment\n")
+      f.close
+
+      provider = GlobalSetting::FileProvider.from(f.path)
+
+      expect(provider.lookup(:a, "")).to eq 500
+
+      f.unlink
     end
 
-    it "treats `0` as load-none" do
-      ENV["LOAD_PLUGINS"] = "0"
-      expect(GlobalSetting.load_plugins?).to eq(false)
-      expect(GlobalSetting.plugins_to_load).to be_nil
+    it "can coerce negative integers" do
+      f = Tempfile.new("foo")
+      f.write("negative_int = -1\n")
+      f.write("positive_int = 100\n")
+      f.write("zero = 0\n")
+      f.close
+
+      provider = GlobalSetting::FileProvider.from(f.path)
+
+      expect(provider.lookup(:negative_int, "")).to eq(-1)
+      expect(provider.lookup(:positive_int, "")).to eq(100)
+      expect(provider.lookup(:zero, "")).to eq(0)
+
+      f.unlink
     end
 
-    it "parses a comma-separated list, stripping whitespace and empty entries" do
-      ENV["LOAD_PLUGINS"] = "  chat , automation ,, "
-      expect(GlobalSetting.load_plugins?).to eq(true)
-      expect(GlobalSetting.plugins_to_load).to eq(%w[chat automation])
-    end
+    describe ".load_plugins? and .plugins_to_load" do
+      around do |example|
+        original = ENV["LOAD_PLUGINS"]
+        example.run
+      ensure
+        original.nil? ? ENV.delete("LOAD_PLUGINS") : ENV["LOAD_PLUGINS"] = original
+      end
 
-    it "tolerates `plugins/foo` entries by taking the basename" do
-      ENV["LOAD_PLUGINS"] = "plugins/chat,plugins/automation"
-      expect(GlobalSetting.plugins_to_load).to eq(%w[chat automation])
-    end
+      it "treats `1` as load-all" do
+        ENV["LOAD_PLUGINS"] = "1"
+        expect(GlobalSetting.load_plugins?).to eq(true)
+        expect(GlobalSetting.plugins_to_load).to be_nil
+      end
 
-    it "raises when given a list outside of dev/test" do
-      ENV["LOAD_PLUGINS"] = "chat,automation"
-      allow(Rails.env).to receive(:local?).and_return(false)
-      expect { GlobalSetting.load_plugins? }.to raise_error(RuntimeError, /only supported/)
-      expect { GlobalSetting.plugins_to_load }.to raise_error(RuntimeError, /only supported/)
+      it "treats `0` as load-none" do
+        ENV["LOAD_PLUGINS"] = "0"
+        expect(GlobalSetting.load_plugins?).to eq(false)
+        expect(GlobalSetting.plugins_to_load).to be_nil
+      end
+
+      it "parses a comma-separated list, stripping whitespace and empty entries" do
+        ENV["LOAD_PLUGINS"] = "  chat , automation ,, "
+        expect(GlobalSetting.load_plugins?).to eq(true)
+        expect(GlobalSetting.plugins_to_load).to eq(%w[chat automation])
+      end
+
+      it "tolerates `plugins/foo` entries by taking the basename" do
+        ENV["LOAD_PLUGINS"] = "plugins/chat,plugins/automation"
+        expect(GlobalSetting.plugins_to_load).to eq(%w[chat automation])
+      end
+
+      it "raises when given a list outside of dev/test" do
+        ENV["LOAD_PLUGINS"] = "chat,automation"
+        allow(Rails.env).to receive(:local?).and_return(false)
+        expect { GlobalSetting.load_plugins? }.to raise_error(RuntimeError, /only supported/)
+        expect { GlobalSetting.plugins_to_load }.to raise_error(RuntimeError, /only supported/)
+      end
     end
   end
 end

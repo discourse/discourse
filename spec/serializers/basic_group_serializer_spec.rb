@@ -44,7 +44,7 @@ RSpec.describe BasicGroupSerializer do
     fab!(:group) { Fabricate(:group, has_messages: true) }
 
     describe "for a staff user" do
-      let!(:guardian) { Guardian.new(Fabricate(:moderator)) }
+      let(:guardian) { Guardian.new(Fabricate(:moderator)) }
 
       it "includes has_messages" do
         expect(serializer.as_json[:has_messages]).to eq(true)
