@@ -44,6 +44,19 @@ module PageObjects
         has_no_field?("new-account-password")
       end
 
+      def has_introduction?
+        has_css?(".login-welcome-header") && has_css?(".invited-by") && has_css?(".email-message")
+      end
+
+      def has_no_introduction?
+        has_no_css?(".login-welcome-header, .invited-by, .email-message")
+      end
+
+      def has_progress_steps?(completed:)
+        has_css?(".signup-progress-bar__segment", count: 3) &&
+          has_css?(".signup-progress-bar__segment.--completed", count: completed)
+      end
+
       def request_email_code
         find(".code-login-form__email-step .code-login-form__continue").click
       end

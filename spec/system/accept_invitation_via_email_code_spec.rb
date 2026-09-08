@@ -18,16 +18,21 @@ RSpec.describe "Accept invitation via email code" do
     invite_form.open(invite.invite_key)
 
     expect(invite_form).to have_email_code_request
+    expect(invite_form).to have_introduction
     expect(invite_form).to have_no_password_field
 
     invite_form.request_email_code
     expect(invite_form).to have_email_code_entry
+    expect(invite_form).to have_no_introduction
+    expect(invite_form).to have_progress_steps(completed: 1)
 
     mail = ActionMailer::Base.deliveries.last
     expect(mail.to).to contain_exactly(invite.email)
 
     invite_form.enter_email_code(mail.subject[/\d{6}/])
     expect(invite_form).to have_account_ready_step
+    expect(invite_form).to have_no_introduction
+    expect(invite_form).to have_progress_steps(completed: 2)
 
     invite_form.choose_code_signup_username("invited-person")
     invite_form.continue_code_signup

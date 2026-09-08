@@ -66,6 +66,23 @@ RSpec.describe InvitesController do
       end
     end
 
+    %i[enable_local_logins enable_local_logins_via_email].each do |setting|
+      it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.public_send("#{setting}=", false)
+        SiteSetting.enable_google_oauth2_logins = true
+
+        get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          invite_info = JSON.parse(JSON.parse(element.current_scope.text)["invite_info"])
+          expect(invite_info["email"]).to eq(invite.email)
+          expect(invite_info["email_verified_by_link"]).to eq(true)
+        end
+      end
+    end
+
     context "when email data is present in authentication data" do
       before { server_session[:authentication] = { email: invite.email } }
 
@@ -1339,6 +1356,20 @@ RSpec.describe InvitesController do
 
       before { SiteSetting.enable_local_logins_via_code = true }
 
+      it "accepts the legacy form when email login is disabled after enabling codes" do
+        SiteSetting.enable_local_logins_via_email = false
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email_token: invite.email_token,
+              password: "verystrongpassword",
+            }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload).to be_redeemed
+        expect(session[:current_user_id]).to eq(User.find_by_email(invite.email).id)
+      end
+
       it "does not allow the legacy password acceptance endpoint" do
         put "/invites/show/#{invite.invite_key}.json",
             params: {
@@ -1529,7 +1560,8 @@ RSpec.describe InvitesController do
           expect(user.user_associated_accounts.first.provider_name).to eq("google_oauth2")
         end
 
-        it "returns the right response even if local logins has been disabled" do
+        it "accepts external authentication when local logins are disabled after enabling codes" do
+          SiteSetting.enable_local_logins_via_code = true
           SiteSetting.enable_local_logins = false
           invite.update!(email: authenticated_email)
 

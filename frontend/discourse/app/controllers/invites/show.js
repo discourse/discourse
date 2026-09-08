@@ -194,6 +194,11 @@ export default class InvitesShowController extends Controller {
     return !this.existingUserId;
   }
 
+  @computed("codeInviteStep", "showCodeInviteForm")
+  get showInviteIntroduction() {
+    return !this.showCodeInviteForm || this.codeInviteStep === "email";
+  }
+
   @computed("externalAuthsOnly", "discourseConnectEnabled")
   get showSignupProgressBar() {
     return !(this.externalAuthsOnly || this.discourseConnectEnabled);

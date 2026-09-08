@@ -659,6 +659,20 @@ RSpec.describe SessionController do
         expect(EmailLoginCode.for_email(invite.email)).to be_empty
       end
 
+      it "returns generic success without emailing a code for a normalized-only match" do
+        SiteSetting.normalize_emails = true
+        user.update!(email: "foobar@example.com")
+        invite.update!(email: "foo.bar@example.com")
+
+        expect_not_enqueued_with(job: :send_email_login_code) do
+          post "/session/login-code.json", params: honeypot_magic(invite_key: invite.invite_key)
+        end
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(EmailLoginCode.for_email(invite.email)).to be_empty
+      end
+
       it "sends a code when the invite belongs to an existing user whose domain is blocked" do
         Fabricate(:user, email: invite.email)
         SiteSetting.blocked_email_domains = "example.com"
@@ -917,6 +931,23 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to be_nil
         expect(login_code.reload.consumed_at).to be_nil
       end
+    end
+
+    it "explains when the user has already redeemed a reusable invite without consuming the code" do
+      invite = Fabricate(:invite, email: nil, max_redemptions_allowed: 5)
+      Fabricate(:invited_user, invite:, user:)
+
+      post "/session/login-code/verify.json",
+           params: {
+             invite_key: invite.invite_key,
+             email: user.email,
+             code:,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["error"]).to eq(I18n.t("invite.existing_user_already_redemeed"))
+      expect(session[:current_user_id]).to be_nil
+      expect(login_code.reload.consumed_at).to be_nil
     end
 
     context "when verifying a code for a domain-scoped invite" do

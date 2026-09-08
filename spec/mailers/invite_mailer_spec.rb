@@ -42,6 +42,24 @@ RSpec.describe InviteMailer do
           expect(invite_mail.body.encoded).not_to include(invite.email_token)
         end
 
+        %i[enable_local_logins enable_local_logins_via_email].each do |setting|
+          it "includes the email token when #{setting} is disabled after enabling codes" do
+            SiteSetting.enable_local_logins_via_code = true
+            SiteSetting.public_send("#{setting}=", false)
+
+            expect(invite_mail.body.encoded).to include(invite.email_token)
+          end
+        end
+
+        it "includes the email token when DiscourseConnect is enabled" do
+          SiteSetting.enable_local_logins_via_code = true
+          SiteSetting.discourse_connect_url = "https://example.com/sso"
+          SiteSetting.discourse_connect_secret = "x" * 10
+          SiteSetting.enable_discourse_connect = true
+
+          expect(invite_mail.body.encoded).to include(invite.email_token)
+        end
+
         it "includes the email token when invite acceptance uses a password" do
           SiteSetting.enable_local_logins_via_code = false
 

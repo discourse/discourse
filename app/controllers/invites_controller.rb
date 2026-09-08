@@ -367,8 +367,8 @@ class InvitesController < ApplicationController
     # via the SSO flow (SessionController#sso_login)
     raise Discourse::NotFound if SiteSetting.enable_discourse_connect
 
-    if UpcomingChanges.enabled_for_user?(:enable_local_logins_via_code, current_user) &&
-         current_user.nil? && server_session[:authentication].blank?
+    if Invite.email_code_enabled?(current_user) && current_user.nil? &&
+         server_session[:authentication].blank?
       raise Discourse::NotFound
     end
 
@@ -607,7 +607,7 @@ class InvitesController < ApplicationController
     end
 
     email_verified_by_link =
-      !UpcomingChanges.enabled?(:enable_local_logins_via_code) && invite.email_token.present? &&
+      !Invite.email_code_enabled?(current_user) && invite.email_token.present? &&
         params[:t] == invite.email_token
 
     email = invite.email if email_verified_by_link

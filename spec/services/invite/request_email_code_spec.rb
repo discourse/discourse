@@ -61,6 +61,34 @@ RSpec.describe Invite::RequestEmailCode do
       it { is_expected.to fail_a_policy(:email_can_redeem_invite) }
     end
 
+    context "when the email only matches an existing account after normalization" do
+      fab!(:invite) { Fabricate(:invite, email: "foo.bar@example.com") }
+      fab!(:user) { Fabricate(:user, email: "foobar@example.com") }
+
+      before { SiteSetting.normalize_emails = true }
+
+      it "rejects the address without creating or emailing a code" do
+        expect_not_enqueued_with(job: :send_email_login_code) do
+          expect { result }.not_to change { EmailLoginCode.count }
+        end
+        expect(result).to fail_a_policy(:email_can_redeem_invite)
+      end
+    end
+
+    context "when the email is an explicitly registered secondary address" do
+      fab!(:user)
+      fab!(:secondary_email) { Fabricate(:secondary_email, user:, email: "invited@example.com") }
+
+      before { SiteSetting.normalize_emails = true }
+
+      it "creates and emails a code" do
+        expect_enqueued_with(job: :send_email_login_code, args: { to_address: email }) do
+          expect { result }.to change { EmailLoginCode.for_email(email).count }.by(1)
+        end
+        expect(result).to run_successfully
+      end
+    end
+
     context "when the registration IP has reached its account limit" do
       let(:ip_address) { "192.0.2.1" }
       let(:dependencies) { { ip_address: } }

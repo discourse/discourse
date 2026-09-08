@@ -1082,6 +1082,13 @@ class SessionController < ApplicationController
         render json: { error: I18n.t("login.missing_full_name") }
       end
       on_model_errors(:user) { |user| render json: login_code_account_error(user) }
+      on_model_not_found(:user) do |model_result|
+        if model_result.exception.is_a?(Invite::UserExists)
+          render json: { error: model_result.exception.message }
+        else
+          render json: invalid_login_code
+        end
+      end
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end

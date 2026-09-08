@@ -32,7 +32,9 @@ export default <template>
       {{#if @controller.showWelcomeHeader}}
         {{#if @controller.showSignupProgressBar}}
           <SignupProgressBar @step={{@controller.progressBarStep}} />
-          <WelcomeHeader @header={{@controller.welcomeTitle}} />
+          {{#if @controller.showInviteIntroduction}}
+            <WelcomeHeader @header={{@controller.welcomeTitle}} />
+          {{/if}}
         {{/if}}
       {{/if}}
 
@@ -45,27 +47,29 @@ export default <template>
               <p>{{trustHTML @controller.successMessage}}</p>
             </div>
           {{else}}
-            <div class="invited-by">
-              <p>{{i18n "invites.invited_by"}}</p>
-              <p>
-                <DUserInfo @user={{@controller.invitedBy}} />
-              </p>
-            </div>
+            {{#if @controller.showInviteIntroduction}}
+              <div class="invited-by">
+                <p>{{i18n "invites.invited_by"}}</p>
+                <p>
+                  <DUserInfo @user={{@controller.invitedBy}} />
+                </p>
+              </div>
 
-            {{#if @controller.associateHtml}}
-              <p class="create-account-associate-link">
-                {{trustHTML @controller.associateHtml}}
-              </p>
+              {{#if @controller.associateHtml}}
+                <p class="create-account-associate-link">
+                  {{trustHTML @controller.associateHtml}}
+                </p>
+              {{/if}}
+
+              {{#unless @controller.isInviteLink}}
+                <p class="email-message">
+                  {{trustHTML @controller.yourEmailMessage}}
+                  {{#if @controller.showSocialLoginAvailable}}
+                    {{i18n "invites.social_login_available"}}
+                  {{/if}}
+                </p>
+              {{/unless}}
             {{/if}}
-
-            {{#unless @controller.isInviteLink}}
-              <p class="email-message">
-                {{trustHTML @controller.yourEmailMessage}}
-                {{#if @controller.showSocialLoginAvailable}}
-                  {{i18n "invites.social_login_available"}}
-                {{/if}}
-              </p>
-            {{/unless}}
 
             {{#if @controller.externalAuthsOnly}}
               {{! authOptions are present once the user has followed the OmniAuth flow (e.g. twitter/google/etc) }}

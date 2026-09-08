@@ -39,6 +39,7 @@ class Invite::RequestEmailCode
     return if invite.email.present? && !invite.email_matches?(email)
     return if invite.domain.present? && !invite.domain_matches?(email)
     return true if User.real.where(staged: false).with_email(email).exists?
+    return if User::Action::FindByEmail.call(email: email).present?
     return if !EmailValidator.allowed?(email)
     return if ScreenedEmail.should_block?(email)
 
