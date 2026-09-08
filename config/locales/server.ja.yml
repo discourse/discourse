@@ -4759,8 +4759,6 @@ ja:
         complete: "投稿は非表示になり、ユーザーに通知されました。"
       agree_and_edit:
         title: "投稿を編集する"
-        description: "通報に同意し、コンポーザーウィンドウを開いて投稿を編集します。"
-        complete: "通報が承認され、投稿を編集できるようになりました。"
       delete:
         title: "削除"
         complete: "投稿は削除されました。"
@@ -4864,30 +4862,6 @@ ja:
       approve_and_unhide:
         title: "はい"
         complete: "投稿を承認して非表示状態を解除しました"
-      post_actions:
-        bundle_title: "投稿をどうしますか？"
-      delete_post:
-        title: "投稿を削除"
-        description: "この投稿を削除します"
-        complete: "削除された投稿"
-      hide_post:
-        title: "投稿を非表示にする"
-        description: "この投稿を非公開にします"
-        complete: "投稿は非表示になりました"
-      unhide_post:
-        title: "投稿を表示する"
-        description: "この投稿をすべてのユーザーに公開します"
-        complete: "投稿を公開しました"
-      restore_post:
-        title: "投稿を復元する"
-        description: "削除されたこの投稿を復元します"
-        complete: "投稿を復元しました"
-      edit_post:
-        title: "投稿を編集する"
-        description: "この投稿のコンテンツを編集します"
-        complete: "投稿を編集しました"
-      user_actions:
-        bundle_title: "ユーザーをどうしますか？"
       silence_user:
         title: "ユーザーを投稿禁止にする"
         complete: "ユーザーを投稿禁止にしました"

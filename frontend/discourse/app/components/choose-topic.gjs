@@ -48,7 +48,7 @@ export default class ChooseTopic extends Component {
       }
     }
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

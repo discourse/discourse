@@ -897,6 +897,9 @@ it:
         note_added: "Note del moderatore"
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
         no_events: "Nessun evento nella cronologia da visualizzare"
+      author_penalty:
+        toast:
+          undo: "Annulla"
       notes:
         add_note_button: "Aggiungi note"
         placeholder: "Scrivi qui le tue note..."
@@ -1511,7 +1514,6 @@ it:
       admin: "%{user} è un amministratore"
       moderator_tooltip: "Questo utente è un moderatore"
       admin_tooltip: "Questo utente è un amministratore"
-      silenced_tooltip: "Questo utente è silenziato"
       suspended_notice: "Questo utente è sospeso fino al %{date}."
       suspended_permanently: "Questo utente è sospeso."
       suspended_reason: "Motivo: "

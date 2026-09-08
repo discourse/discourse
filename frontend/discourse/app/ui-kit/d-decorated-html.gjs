@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { untrack } from "@glimmer/validator";
 import { trackedArray } from "@ember/reactive/collections";
+import { cancel, next } from "@ember/runloop";
 import { isHTMLSafe, trustHTML } from "@ember/template";
 import helperFn from "discourse/helpers/helper-fn";
 import {
@@ -107,19 +109,27 @@ export function resetHtmlDecorators() {
  * @param {Object} [context] - Context object passed to decorators via helper.context
  * @param {string} [className] - CSS class name for the wrapper div
  * @param {string} [id] - ID attribute for the wrapper div
+ * @param {boolean} [preservePointerTarget] - Defer replacement until a pointer activation finishes.
  */
 export default class DDecoratedHtml extends Component {
   renderGlimmerInfos = trackedArray();
-
-  decoratedContent = helperFn(({ decorateArgs }, on) => {
+  decoratedContent = helperFn(({ decorateArgs }) => {
+    // Releasing a deferred render must consume the latest arguments.
+    this._pointerRevision;
+    if (this.#pressedElement) {
+      this.#renderDeferred = true;
+      return this.#pressedElement;
+    }
     const cookedDiv = this.elementToDecorate;
 
+    // Helper cleanup must wait for replacement, not a deferred recomputation.
+    this.#htmlHelper?.teardown();
     const helper = new DecorateHtmlHelper({
       renderGlimmerInfos: this.renderGlimmerInfos,
       model: this.args.model,
       context: this.args.context,
     });
-    on.cleanup(() => helper.teardown());
+    this.#htmlHelper = helper;
 
     const decorateFn = this.args.decorate;
 
@@ -153,6 +163,30 @@ export default class DDecoratedHtml extends Component {
 
     return cookedDiv;
   });
+  #htmlHelper;
+  #renderDeferred = false;
+  #pressedElement;
+  #pointerListeners;
+  #pointerReleaseTimer;
+  #releasePointer = () => {
+    cancel(this.#pointerReleaseTimer);
+    this.#pointerReleaseTimer = undefined;
+    this.#pointerListeners?.abort();
+    this.#pointerListeners = undefined;
+    this.#pressedElement = undefined;
+    if (this.#renderDeferred && !this.isDestroying) {
+      this.#renderDeferred = false;
+      this._pointerRevision++;
+    }
+  };
+  @tracked _pointerRevision = 0;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#releasePointer();
+    this.#htmlHelper?.teardown();
+    this.#htmlHelper = undefined;
+  }
 
   get elementToDecorate() {
     const cooked = this.args.html || trustHTML("");
@@ -161,6 +195,13 @@ export default class DDecoratedHtml extends Component {
     }
     const cookedDiv = detachedDocument.createElement("div");
     cookedDiv.innerHTML = cooked.toString();
+    if (this.args.preservePointerTarget) {
+      cookedDiv.addEventListener(
+        "pointerdown",
+        (event) => this.#holdElement(event, cookedDiv),
+        true
+      );
+    }
 
     if (this.args.id) {
       cookedDiv.id = this.args.id;
@@ -196,6 +237,47 @@ export default class DDecoratedHtml extends Component {
     }
 
     return result;
+  }
+
+  #holdElement(event, element) {
+    if (event.button !== 0 || event.isPrimary === false) {
+      return;
+    }
+    this.#releasePointer();
+    this.#pressedElement = element;
+    this.#pointerListeners = new AbortController();
+    const options = { capture: true, signal: this.#pointerListeners.signal };
+    const afterClick = (releaseEvent) => {
+      if (releaseEvent.pointerId !== event.pointerId) {
+        return;
+      }
+      // Replacing the pressed target before click would discard its activation.
+      cancel(this.#pointerReleaseTimer);
+      this.#pointerReleaseTimer = next(this.#releasePointer);
+    };
+    document.addEventListener("pointerup", afterClick, options);
+    document.addEventListener("pointercancel", afterClick, options);
+    window.addEventListener(
+      "blur",
+      (blurEvent) => {
+        if (blurEvent.target === window) {
+          this.#releasePointer();
+        }
+      },
+      options
+    );
+    document.addEventListener(
+      "pointermove",
+      (moveEvent) => {
+        if (
+          moveEvent.pointerId === event.pointerId &&
+          moveEvent.buttons === 0
+        ) {
+          this.#releasePointer();
+        }
+      },
+      options
+    );
   }
 
   <template>

@@ -3,9 +3,17 @@
 module DiscourseAi
   module Translation
     class BaseTranslator
-      def initialize(text:, target_locale:, topic: nil, post: nil, llm_model: nil)
+      def initialize(
+        text:,
+        target_locale:,
+        content_description: nil,
+        topic: nil,
+        post: nil,
+        llm_model: nil
+      )
         @text = text
         @target_locale = target_locale
+        @content_description = content_description
         @topic = topic
         @post = post
         @llm_model = llm_model
@@ -38,9 +46,12 @@ module DiscourseAi
       private
 
       def formatted_content(content)
+        payload = { content:, target_locale: @target_locale }
+        payload[:content_description] = @content_description if @content_description.present?
+
         # JSON.generate over to_json: ActiveSupport HTML-escapes <, >, and & into
         # \uXXXX sequences, which models can mis-copy into control characters
-        JSON.generate({ content:, target_locale: @target_locale })
+        JSON.generate(payload)
       end
 
       # control characters are never valid in a translation, but models

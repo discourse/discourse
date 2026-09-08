@@ -1,10 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import {
-  isDestroyed,
-  isDestroying,
-  registerDestructor,
-} from "@ember/destroyable";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import { array } from "@ember/helper";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
@@ -203,7 +199,7 @@ export default class TopicNavigation extends Component {
       .forEach((el) => el.classList.remove("show"));
 
     discourseLater(() => {
-      if (isDestroying(this) || isDestroyed(this)) {
+      if (isDestroying(this)) {
         return;
       }
       this.info.topicProgressExpanded = false;

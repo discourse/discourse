@@ -342,7 +342,7 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   async performSearch(term) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

@@ -2881,9 +2881,6 @@ hr:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        title: "Izbrišite objavu"
-        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "korisnik"

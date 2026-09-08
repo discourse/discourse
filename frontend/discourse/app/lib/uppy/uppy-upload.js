@@ -568,7 +568,7 @@ export default class UppyUpload {
   }
 
   #allUploadsComplete() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

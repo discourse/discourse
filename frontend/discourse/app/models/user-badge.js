@@ -1,3 +1,4 @@
+import { dependentKeyCompat } from "@ember/object/compat";
 import {
   findUserBadgesByBadgeId,
   findUserBadgesByUsername,
@@ -16,6 +17,19 @@ import {
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Badge from "discourse/models/badge";
+import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
+
+// Restores the setter these getters displace, shadowing the getter from then
+// on so admin's read-then-write `groupedBadges` doesn't trip Glimmer.
+function shadow(instance, name, value) {
+  Object.defineProperty(instance, name, {
+    value,
+    writable: true,
+    configurable: true,
+    enumerable: true,
+  });
+}
 
 export default class UserBadge extends RestCompatModel {
   static type = "user-badge";
@@ -38,36 +52,56 @@ export default class UserBadge extends RestCompatModel {
     return requestOne(this, grantUserBadge(badgeId, username, reason));
   }
 
-  #badge;
-  #badgeResource;
+  #wrappers = new Map();
 
-  // Wraps the cached resource in a `Badge` so callers can read its computed
-  // getters (`.url`, `.badgeTypeClassName`, ...). Memoized against that
-  // resource — a fresh instance per read would fire `init` callbacks and break
-  // identity — while the unconditional read keeps its tracked tag consumed.
+  // Consumers read class getters off these (`badge.url`, `topic.fancyTitle`,
+  // `user.statusManager`), which the cached plain objects lack. Copy before
+  // wrapping — `RestModel.create` stamps `__munge` onto its argument — and
+  // apply `@dependentKeyCompat` by hand, since `defineFieldForwarders` skips
+  // names already on the prototype.
+  @dependentKeyCompat
   get badge() {
-    const resource = this.__resource?.badge;
-    if (resource !== this.#badgeResource) {
-      this.#badgeResource = resource;
-      this.#badge = resource ? new Badge(resource) : undefined;
-    }
-    return this.#badge;
+    return this.#wrap("badge", (raw) => new Badge(raw));
+  }
+
+  @dependentKeyCompat
+  get topic() {
+    return this.#wrap("topic", (raw) => Topic.create({ ...raw }));
+  }
+
+  set topic(value) {
+    shadow(this, "topic", value);
+  }
+
+  @dependentKeyCompat
+  get user() {
+    return this.#wrap("user", (raw) => User.create({ ...raw }));
+  }
+
+  set user(value) {
+    shadow(this, "user", value);
   }
 
   // Getter: null → undefined (test contract).
+  @dependentKeyCompat
   get granted_by() {
     return this.__resource?.granted_by ?? undefined;
   }
 
-  // Setter: shadows on the wrapper so admin's read-then-write `groupedBadges`
-  // doesn't trip Glimmer.
   set granted_by(value) {
-    Object.defineProperty(this, "granted_by", {
-      value,
-      writable: true,
-      configurable: true,
-      enumerable: true,
-    });
+    shadow(this, "granted_by", value);
+  }
+
+  // Memoized against the raw value: rebuilding per read would refire the
+  // model's `init` callbacks and hand out a new identity each render.
+  #wrap(name, build) {
+    const raw = this.__resource?.[name];
+    let cached = this.#wrappers.get(name);
+    if (!cached || cached.raw !== raw) {
+      cached = { raw, value: raw ? build(raw) : undefined };
+      this.#wrappers.set(name, cached);
+    }
+    return cached.value;
   }
 
   get grantedAt() {

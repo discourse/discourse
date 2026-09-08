@@ -897,6 +897,9 @@ fi:
         note_added: "Valvojan huomautus"
         note_added_by: "%{username} lisäsi valvojan huomautuksen · %{relativeDate}"
         no_events: "Ei näytettäviä aikajanan tapahtumia"
+      author_penalty:
+        toast:
+          undo: "Kumoa"
       notes:
         add_note_button: "Lisää huomautus"
         placeholder: "Kirjoita huomautuksesi tähän..."
@@ -1511,7 +1514,6 @@ fi:
       admin: "%{user} on ylläpitäjä"
       moderator_tooltip: "Tämä käyttäjä on valvoja"
       admin_tooltip: "Tämä käyttäjä on ylläpitäjä"
-      silenced_tooltip: "Käyttäjä on hiljennetty"
       suspended_notice: "Tämä käyttäjätili on estetty %{date} asti."
       suspended_permanently: "Käyttäjä on hyllytetty."
       suspended_reason: "Syy: "

@@ -169,7 +169,7 @@ export default class SelectKitRow extends Component {
 
   @action
   handleMouseEnter() {
-    if (!this.isDestroying || !this.isDestroyed) {
+    if (!this.isDestroying) {
       this.selectKit.onHover(this.rowValue, this.item);
     }
     return false;

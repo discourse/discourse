@@ -5076,8 +5076,6 @@ tr_TR:
         complete: "Gönderi gizlendi, kullanıcı bilgilendirildi."
       agree_and_edit:
         title: "Yazıyı düzenle"
-        description: "Bayrağı kabul edin ve gönderiyi düzenlemek için bir besteci penceresi açın."
-        complete: "Bayrak onaylandı, artık gönderiyi düzenleyebilirsiniz."
       delete:
         title: "Sil"
         complete: "Gönderi silindi."
@@ -5181,30 +5179,6 @@ tr_TR:
       approve_and_unhide:
         title: "Evet"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
-      post_actions:
-        bundle_title: "Bu gönderiyle ne yapmak istiyorsunuz?"
-      delete_post:
-        title: "Gönderiyi sil"
-        description: "Bu gönderiyi sil"
-        complete: "Gönderi silindi"
-      hide_post:
-        title: "Gönderiyi gizle"
-        description: "Bu gönderiyi herkesten gizle"
-        complete: "Gizli gönderi"
-      unhide_post:
-        title: "Gönderiyi göster"
-        description: "Bu gönderiyi tüm kullanıcılar için görünür hale getir"
-        complete: "Gönderi gizlilikten çıkarıldı"
-      restore_post:
-        title: "Gönderiyi geri yükle"
-        description: "Silinen bu gönderiyi geri yükle"
-        complete: "Gönderi geri yüklendi"
-      edit_post:
-        title: "Yazıyı düzenle"
-        description: "Bu gönderinin içeriğini düzenle"
-        complete: "Gönderi düzenlendi"
-      user_actions:
-        bundle_title: "Kullanıcıyla ne yapmak istiyorsunuz?"
       silence_user:
         title: "Kullanıcıyı sustur"
         complete: "Kullanıcı susturuldu"

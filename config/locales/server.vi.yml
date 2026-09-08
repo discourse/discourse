@@ -2866,8 +2866,6 @@ vi:
         title: "Đồng ý"
       approve_and_unhide:
         title: "Đồng ý"
-      delete_post:
-        complete: "Tút đã bị xóa"
       delete_user:
         complete: "Người dùng đã bị xóa"
   discord:

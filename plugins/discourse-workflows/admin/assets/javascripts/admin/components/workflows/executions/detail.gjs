@@ -378,7 +378,6 @@ export default class ExecutionDetail extends Component {
       );
       if (
         this.isDestroying ||
-        this.isDestroyed ||
         refreshToken !== this.#refreshToken ||
         executionId !== this.execution.id
       ) {
@@ -393,17 +392,13 @@ export default class ExecutionDetail extends Component {
       this.#progress.resetRetry();
       this.#syncLiveUpdates();
     } catch (error) {
-      if (
-        !this.isDestroying &&
-        !this.isDestroyed &&
-        refreshToken === this.#refreshToken
-      ) {
+      if (!this.isDestroying && refreshToken === this.#refreshToken) {
         this.#progress.scheduleRetry(error);
       }
     } finally {
       if (refreshToken === this.#refreshToken) {
         this.#refreshing = false;
-        if (this.#refreshRequested && !this.isDestroying && !this.isDestroyed) {
+        if (this.#refreshRequested && !this.isDestroying) {
           this.#refreshRequested = false;
           this.#refreshExecution();
         }

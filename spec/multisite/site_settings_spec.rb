@@ -9,7 +9,7 @@ RSpec.describe "Multisite SiteSettings", type: :multisite do
   after { SiteSetting.provider = @original_provider }
 
   describe "#default_locale" do
-    it "should return the right locale" do
+    it "returns the site's locale" do
       test_multisite_connection("default") { expect(SiteSetting.default_locale).to eq("en") }
 
       test_multisite_connection("second") do
@@ -65,7 +65,7 @@ RSpec.describe "Multisite SiteSettings", type: :multisite do
 
   describe "themeable site settings" do
     describe "#enable_welcome_banner" do
-      it "should return the right value" do
+      it "returns the site's setting value" do
         test_multisite_connection("default") do
           expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(true)
         end

@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import { find, render, tab } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { forceMobile } from "discourse/lib/mobile";
+import SelectKitRow from "discourse/select-kit/components/select-kit/select-kit-row";
 import SingleSelect from "discourse/select-kit/components/single-select";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -37,6 +38,35 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
 
   hooks.beforeEach(function () {
     this.set("subject", selectKit());
+  });
+
+  test("suppresses hover during teardown", function (assert) {
+    const item = { id: 1 };
+    const selectKitApi = {
+      onHover() {
+        assert.step("hover");
+      },
+    };
+    const context = {
+      isDestroyed: false,
+      isDestroying: false,
+      item,
+      rowValue: item.id,
+      selectKit: selectKitApi,
+    };
+    const handleMouseEnter = Object.getOwnPropertyDescriptor(
+      SelectKitRow.prototype,
+      "handleMouseEnter"
+    ).get.call(context);
+
+    handleMouseEnter();
+    context.isDestroying = true;
+    handleMouseEnter();
+
+    assert.verifySteps(
+      ["hover"],
+      "dispatches hover only while the row is live"
+    );
   });
 
   test("content", async function (assert) {

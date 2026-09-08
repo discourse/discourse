@@ -280,7 +280,7 @@ export default class InstallThemeModal extends Component {
   #backgroundLoading() {
     if (this.loading) {
       discourseLater(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 

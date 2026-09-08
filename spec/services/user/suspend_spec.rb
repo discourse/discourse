@@ -6,11 +6,13 @@ RSpec.describe User::Suspend do
     it { is_expected.to validate_presence_of(:reason) }
     it { is_expected.to validate_presence_of(:suspend_until) }
     it { is_expected.to validate_length_of(:reason).is_at_most(300) }
+
     it do
       is_expected.to validate_length_of(:other_user_ids).as_array.is_at_most(
         User::MAX_SIMILAR_USERS,
       )
     end
+
     it do
       is_expected.to validate_inclusion_of(:post_action).in_array(
         %w[delete delete_replies delete_all edit none],

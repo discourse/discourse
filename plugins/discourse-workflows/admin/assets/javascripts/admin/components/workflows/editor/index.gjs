@@ -319,8 +319,7 @@ export default class WorkflowsEditor extends Component {
     if (
       !this.args.initialNodeId ||
       this.initialNodeHandled ||
-      this.isDestroying ||
-      this.isDestroyed
+      this.isDestroying
     ) {
       return;
     }
@@ -790,7 +789,7 @@ export default class WorkflowsEditor extends Component {
         },
       })
       .finally(() => {
-        if (!this.isDestroying && !this.isDestroyed) {
+        if (!this.isDestroying) {
           DiscourseURL.replaceState(workflowUrl(this.args.workflow.id));
         }
       });

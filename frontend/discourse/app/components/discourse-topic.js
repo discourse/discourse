@@ -108,7 +108,7 @@ export default class DiscourseTopic extends Component {
   // The user has scrolled the window, or it is finished rendering and ready for processing.
   @bind
   scrolled() {
-    if (this.isDestroyed || this.isDestroying || this._state !== "inDOM") {
+    if (this.isDestroying || this._state !== "inDOM") {
       return;
     }
 

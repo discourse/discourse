@@ -45,7 +45,7 @@ export default class DCopyButton extends Component {
 
   @bind
   _restoreButton() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

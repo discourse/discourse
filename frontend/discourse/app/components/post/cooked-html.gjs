@@ -196,6 +196,7 @@ export default class PostCookedHtml extends Component {
       }}
       @html={{trustHTML this.cooked}}
       @model={{@post}}
+      @preservePointerTarget={{true}}
     />
   </template>
 }

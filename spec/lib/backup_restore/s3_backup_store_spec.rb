@@ -194,7 +194,7 @@ RSpec.describe BackupRestore::S3BackupStore do
   end
 
   describe "#create_multipart" do
-    it "should set the ACL context when `s3_use_acls` site setting is enabled" do
+    it "sets the ACL context when s3_use_acls is enabled" do
       SiteSetting.s3_use_acls = true
       response = store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
@@ -208,7 +208,7 @@ RSpec.describe BackupRestore::S3BackupStore do
       )
     end
 
-    it "should not set the ACL context when `s3_use_acls` site setting is disabled" do
+    it "omits the ACL context when s3_use_acls is disabled" do
       SiteSetting.s3_use_acls = false
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
@@ -220,7 +220,7 @@ RSpec.describe BackupRestore::S3BackupStore do
       expect(create_multipart_upload_request[:context].params[:acl]).to eq(nil)
     end
 
-    it "should set the tagging context when `s3_enable_access_control_tags` site setting is enabled" do
+    it "sets the tagging context when s3_enable_access_control_tags is enabled" do
       SiteSetting.s3_enable_access_control_tags = true
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
@@ -241,7 +241,7 @@ RSpec.describe BackupRestore::S3BackupStore do
     before { create_backups }
     after { remove_backups }
 
-    it "should set the ACL context when `s3_use_acls` site setting is enabled" do
+    it "sets the ACL context when s3_use_acls is enabled" do
       store.move_existing_stored_upload(
         existing_external_upload_key: "default/b.tar.gz",
         original_filename: "b.tar.gz",
@@ -256,7 +256,7 @@ RSpec.describe BackupRestore::S3BackupStore do
       )
     end
 
-    it "should not set the ACL context when `s3_use_acls` site setting is disabled" do
+    it "omits the ACL context when s3_use_acls is disabled" do
       SiteSetting.s3_use_acls = false
 
       store.move_existing_stored_upload(
@@ -271,7 +271,7 @@ RSpec.describe BackupRestore::S3BackupStore do
       expect(copy_object_request[:context].params[:acl]).to eq(nil)
     end
 
-    it "should set the tagging context when `s3_enable_access_control_tags` site setting is enabled" do
+    it "sets the tagging context when s3_enable_access_control_tags is enabled" do
       SiteSetting.s3_enable_access_control_tags = true
 
       store.move_existing_stored_upload(

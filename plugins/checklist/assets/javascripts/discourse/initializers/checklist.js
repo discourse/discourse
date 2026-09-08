@@ -1,31 +1,24 @@
+import { cancel } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
 import { registerOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import richEditorExtension from "../../lib/rich-editor-extension";
 
-const MINIMUM_PENDING_DURATION = 200;
+const SAVE_DEBOUNCE_DURATION = 150;
 const MAX_CONFLICT_RETRIES = 2;
+// Keep request batches within the toggle endpoint's contract.
+const MAX_BATCH_SIZE = 50;
+const REQUEST_TIMEOUT = 30000;
 
 function timestampsAreEqual(first, second) {
-  const firstTime = Date.parse(first);
-  const secondTime = Date.parse(second);
-  return (
-    !Number.isNaN(firstTime) &&
-    !Number.isNaN(secondTime) &&
-    firstTime === secondTime
-  );
+  return Date.parse(first) === Date.parse(second);
 }
 
 function timestampIsOlder(candidate, reference) {
-  const candidateTime = Date.parse(candidate);
-  const referenceTime = Date.parse(reference);
-  return (
-    !Number.isNaN(candidateTime) &&
-    !Number.isNaN(referenceTime) &&
-    candidateTime < referenceTime
-  );
+  return Date.parse(candidate) < Date.parse(reference);
 }
 
 function setCheckboxState(checkbox, checked) {
@@ -142,10 +135,8 @@ function configureAccessibility(box, editable) {
   }
 }
 
-const checklistStates = new WeakMap();
-
-function checkboxKey(renderedIndex, checkboxCount) {
-  return `${renderedIndex}:${checkboxCount}`;
+function checkboxKey(box, renderedIndex, checkboxCount) {
+  return box.dataset.chkSrc ?? `legacy:${renderedIndex}:${checkboxCount}`;
 }
 
 function checkboxTarget(box, renderedIndex, checkboxCount) {
@@ -154,13 +145,6 @@ function checkboxTarget(box, renderedIndex, checkboxCount) {
     checkboxSource: box.dataset.chkSrc,
     renderedIndex,
   };
-}
-
-function checklistBindingSignature(boxes) {
-  return boxes
-    .filter((box) => !box.classList.contains("permanent"))
-    .map((box) => `${box.dataset.chkSrc ?? "legacy"}:${checkboxLabel(box)}`)
-    .join("\0");
 }
 
 function checklistFingerprint(raw, checkboxSources, includesLegacy) {
@@ -181,7 +165,7 @@ function checklistFingerprint(raw, checkboxSources, includesLegacy) {
     sourcesByLine.get(line).add(nth);
   });
 
-  const lines = raw.split("\n");
+  const lines = raw.split(/\r\n?|\n/);
   let valid = true;
   sourcesByLine.forEach((indexes, lineNumber) => {
     if (lines[lineNumber] === undefined) {
@@ -201,168 +185,266 @@ function checklistFingerprint(raw, checkboxSources, includesLegacy) {
   return valid ? lines.join("\n") : undefined;
 }
 
-class ChecklistState {
+const activeChecklistOperations = new Map();
+const uncertainChecklistBaseline = Symbol("uncertain-checklist-baseline");
+
+function cookedChecklistFingerprint(cooked) {
+  if (typeof cooked !== "string") {
+    return;
+  }
+  const document = new DOMParser().parseFromString(cooked, "text/html");
+  document.querySelectorAll(".chcklst-box:not(.permanent)").forEach((box) => {
+    if (!isInsideSourcedQuote(box)) {
+      box.classList.remove("checked", "fa-square-o", "fa-square-check-o");
+    }
+  });
+  return document.body.innerHTML;
+}
+
+export function activeChecklistOperationCountForTesting() {
+  return activeChecklistOperations.size;
+}
+
+function checklistRendering(postModel, boxes) {
+  const mutableBoxes = boxes.filter(
+    (box) => !box.classList.contains("permanent")
+  );
+  const checkboxSources = mutableBoxes
+    .map((box) => box.dataset.chkSrc)
+    .filter(Boolean);
+  const includesLegacy = mutableBoxes.some((box) => !box.dataset.chkSrc);
+  const fingerprintFor = (raw) =>
+    checklistFingerprint(raw, checkboxSources, includesLegacy);
+  const fingerprint = fingerprintFor(postModel.raw);
+  const coverage = mutableBoxes
+    .map((box) => box.dataset.chkSrc ?? "legacy")
+    .join("\0");
+  const generation =
+    fingerprint === undefined
+      ? `${postModel.updated_at ?? "unknown"}\0${mutableBoxes
+          .map(
+            (box) => `${box.dataset.chkSrc ?? "legacy"}:${checkboxLabel(box)}`
+          )
+          .join("\0")}`
+      : `${fingerprint}\0${coverage}`;
+
+  return {
+    baselineUpdatedAt: postModel.updated_at,
+    coverage,
+    cookedFingerprint:
+      fingerprint === undefined
+        ? cookedChecklistFingerprint(postModel.cooked)
+        : undefined,
+    fingerprint,
+    fingerprintFor,
+    generation,
+    invalid: false,
+  };
+}
+
+function confirmChecklistPresentation(presentation, checked) {
+  const { control, token } = presentation;
+  if (control.state?.token === token) {
+    control.state.confirmed = checked;
+  }
+}
+
+function setChecklistPending(control, pending) {
+  control.box?.classList.toggle("is-pending", pending);
+  if (pending) {
+    control.box?.setAttribute("aria-busy", "true");
+  } else {
+    control.box?.removeAttribute("aria-busy");
+  }
+}
+
+function settleChecklistPresentation(presentation, checked) {
+  const { control, token } = presentation;
+  if (control.state?.token !== token) {
+    return;
+  }
+
+  control.state = undefined;
+  if (control.box) {
+    setCheckboxState(control.box, checked);
+  }
+  setChecklistPending(control, false);
+}
+
+function enqueueChecklistChange(change) {
+  const postId = change.postModel.id;
+  if (postId == null) {
+    settleChecklistPresentation(
+      { control: change.control, token: change.token },
+      change.confirmed
+    );
+    return;
+  }
+
+  let operation = activeChecklistOperations.get(postId);
+  if (!operation) {
+    operation = new ChecklistOperation(change.postModel);
+    activeChecklistOperations.set(postId, operation);
+  }
+  operation.enqueue(change);
+}
+
+function bindChecklist(boxes, postModel) {
+  const rendering = checklistRendering(postModel, boxes);
+  const abortController = new AbortController();
+  const controls = [];
+
+  boxes.forEach((box, renderedIndex) => {
+    if (box.classList.contains("permanent")) {
+      return;
+    }
+
+    const control = {
+      box,
+      key: checkboxKey(box, renderedIndex, boxes.length),
+      rendering,
+      state: undefined,
+      target: checkboxTarget(box, renderedIndex, boxes.length),
+    };
+    controls.push(control);
+
+    const activate = (event) => {
+      if (
+        event.type === "keydown" &&
+        event.key !== " " &&
+        event.key !== "Enter"
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      if (event.repeat || rendering.invalid) {
+        return;
+      }
+
+      const checked = !control.box.classList.contains("checked");
+      const token = Symbol();
+      const confirmed = control.state?.confirmed ?? !checked;
+      control.state = { confirmed, token };
+      setCheckboxState(control.box, checked);
+      setChecklistPending(control, true);
+      enqueueChecklistChange({
+        checked,
+        confirmed,
+        control,
+        key: control.key,
+        postModel,
+        rendering,
+        target: control.target,
+        token,
+      });
+    };
+
+    box.addEventListener("click", activate, {
+      signal: abortController.signal,
+    });
+    box.addEventListener("keydown", activate, {
+      signal: abortController.signal,
+    });
+    activeChecklistOperations.get(postModel.id)?.adopt(control);
+  });
+
+  return () => {
+    abortController.abort();
+    controls.forEach((control) => {
+      setChecklistPending(control, false);
+      control.box = undefined;
+      control.state = undefined;
+    });
+  };
+}
+
+class ChecklistOperation {
   #baselineRaw;
   #baselineUpdatedAt;
-  #binding;
-  #bindingSignature;
-  #checkboxSources = [];
-  #fingerprint;
-  #includesLegacy = false;
-  #indicators = new Map();
   #intents = new Map();
+  #inFlight = new Set();
+  #hydratedGenerations = new Map();
   #postModel;
   #revision = 0;
+  #saveTimer;
   #saving = false;
 
   constructor(postModel) {
     this.#postModel = postModel;
-    this.#baselineRaw = postModel.raw;
+    this.#baselineRaw = postModel[uncertainChecklistBaseline]
+      ? undefined
+      : postModel.raw;
     this.#baselineUpdatedAt = postModel.updated_at;
   }
 
-  bind(boxes, allBoxes = boxes) {
-    this.#binding?.cleanup();
-
-    const renderedIndexes = new Map(allBoxes.map((box, index) => [box, index]));
-    const mutableBoxes = allBoxes.filter(
-      (box) => !box.classList.contains("permanent")
+  adopt(control) {
+    this.#resolveGeneration(control.rendering);
+    const intent = this.#intents.get(
+      `${control.rendering.generation}\0${control.key}`
     );
-    const bindingSignature = checklistBindingSignature(allBoxes);
-    const checkboxSources = mutableBoxes
-      .map((box) => box.dataset.chkSrc)
-      .filter(Boolean);
-    const includesLegacy = mutableBoxes.some((box) => !box.dataset.chkSrc);
-    const raw = this.#postModel.raw ?? this.#baselineRaw;
-    const fingerprint = checklistFingerprint(
-      raw,
-      checkboxSources,
-      includesLegacy
+    if (!intent) {
+      return;
+    }
+
+    const token = Symbol();
+    control.state = { confirmed: intent.confirmed, token };
+    setCheckboxState(control.box, intent.checked);
+    setChecklistPending(control, true);
+    intent.presentations = intent.presentations.filter(
+      (presentation) =>
+        presentation.control.box && presentation.control !== control
     );
+    intent.presentations.push({ control, token });
+  }
 
+  enqueue(change) {
+    this.#observePostModel(change.postModel);
+    this.#resolveGeneration(change.rendering);
+
+    const intentKey = `${change.rendering.generation}\0${change.key}`;
+    const previous = this.#intents.get(intentKey);
+    const presentations = (previous?.presentations ?? []).filter(
+      (presentation) =>
+        presentation.control.box && presentation.control !== change.control
+    );
+    presentations.push({ control: change.control, token: change.token });
+    const confirmed = previous?.confirmed ?? change.confirmed;
     if (
-      (this.#fingerprint !== undefined &&
-        fingerprint !== undefined &&
-        this.#fingerprint !== fingerprint) ||
-      (this.#intents.size > 0 &&
-        fingerprint === undefined &&
-        this.#bindingSignature !== undefined &&
-        this.#bindingSignature !== bindingSignature)
+      (!this.#saving ||
+        (this.#inFlight.size > 0 && !this.#inFlight.has(intentKey))) &&
+      change.checked === confirmed
     ) {
-      this.#discardIntents();
+      this.#intents.delete(intentKey);
+      presentations.forEach((presentation) =>
+        settleChecklistPresentation(presentation, confirmed)
+      );
+      this.#retireIfDrained();
+      return;
     }
 
-    this.#bindingSignature = bindingSignature;
-    this.#checkboxSources = checkboxSources;
-    this.#includesLegacy = includesLegacy;
-    if (fingerprint !== undefined || this.#intents.size === 0) {
-      this.#fingerprint = fingerprint;
-    }
-
-    if (
-      !this.#saving &&
-      this.#intents.size === 0 &&
-      this.#postModel.raw != null &&
-      !timestampIsOlder(this.#postModel.updated_at, this.#baselineUpdatedAt)
-    ) {
-      this.#baselineRaw = this.#postModel.raw;
-      this.#baselineUpdatedAt = this.#postModel.updated_at;
-    }
-
-    const binding = {
-      cleaned: false,
-      cleanup: undefined,
-      cleanups: [],
-      controls: new Map(),
-    };
-
-    boxes.forEach((box) => {
-      if (box.classList.contains("permanent")) {
-        return;
-      }
-
-      const renderedIndex = renderedIndexes.get(box);
-      const key = checkboxKey(renderedIndex, allBoxes.length);
-      const target = checkboxTarget(box, renderedIndex, allBoxes.length);
-      binding.controls.set(key, box);
-
-      const toggle = () => {
-        const checked = !box.classList.contains("checked");
-        const previous = this.#intents.get(key);
-        this.#intents.set(key, {
-          checked,
-          confirmed: previous?.confirmed ?? !checked,
-          fingerprint: this.#fingerprint,
-          revision: (this.#revision += 1),
-          target,
-        });
-        setCheckboxState(box, checked);
-        this.#startIndicator(key);
-        void this.#save();
-      };
-      const onClick = (event) => {
-        event.preventDefault();
-        toggle();
-      };
-      const onKeyDown = (event) => {
-        if (event.key !== " " && event.key !== "Enter") {
-          return;
-        }
-
-        event.preventDefault();
-        toggle();
-      };
-
-      box.addEventListener("click", onClick);
-      box.addEventListener("keydown", onKeyDown);
-      binding.cleanups.push(() => {
-        box.removeEventListener("click", onClick);
-        box.removeEventListener("keydown", onKeyDown);
-      });
+    this.#intents.set(intentKey, {
+      checked: change.checked,
+      confirmed,
+      fingerprint: previous?.fingerprint ?? change.rendering.fingerprint,
+      presentations,
+      rendering: previous?.rendering ?? change.rendering,
+      revision: (this.#revision += 1),
+      target: change.target,
     });
 
-    for (const key of this.#intents.keys()) {
-      if (!binding.controls.has(key)) {
-        this.#discardIntent(key);
-      }
+    if (!this.#saving) {
+      this.#saveTimer = discourseDebounce(
+        this,
+        this.#save,
+        SAVE_DEBOUNCE_DURATION
+      );
     }
-
-    this.#binding = binding;
-    binding.controls.forEach((box, key) => this.#syncControl(key, box));
-
-    binding.cleanup = () => {
-      if (binding.cleaned) {
-        return;
-      }
-
-      binding.cleaned = true;
-      binding.cleanups.forEach((cleanup) => cleanup());
-      binding.controls.forEach((box) => {
-        box.classList.remove("is-pending");
-        box.removeAttribute("aria-busy");
-      });
-      if (this.#binding === binding) {
-        this.#binding = undefined;
-      }
-    };
-    return binding.cleanup;
   }
 
   #applyBaseline(raw, updatedAt) {
     this.#baselineRaw = raw;
     this.#baselineUpdatedAt = updatedAt;
-  }
-
-  #clearIndicator(key, indicator = this.#indicators.get(key)) {
-    if (!indicator || this.#indicators.get(key) !== indicator) {
-      return;
-    }
-
-    clearTimeout(indicator.timer);
-    this.#indicators.delete(key);
-    const box = this.#binding?.controls.get(key);
-    box?.classList.remove("is-pending");
-    box?.removeAttribute("aria-busy");
   }
 
   #completeBatch(entries) {
@@ -377,31 +459,32 @@ class ChecklistState {
         current.fingerprint === saved.fingerprint
       ) {
         this.#intents.delete(key);
-        this.#finishIndicator(key);
+        current.presentations.forEach((presentation) =>
+          settleChecklistPresentation(presentation, saved.checked)
+        );
       } else {
         current.confirmed = saved.checked;
+        current.presentations.forEach((presentation) =>
+          confirmChecklistPresentation(presentation, saved.checked)
+        );
       }
     });
   }
 
   #currentEntries(entries) {
-    return entries
-      .map(([key, saved]) => {
-        const current = this.#intents.get(key);
-        return current?.checked === saved.checked ? [key, saved] : undefined;
-      })
-      .filter(Boolean);
+    return entries.filter(
+      ([key, saved]) => this.#intents.get(key)?.checked === saved.checked
+    );
   }
 
-  #discardIntent(key) {
-    this.#intents.delete(key);
-    this.#clearIndicator(key);
-  }
-
-  #discardIntents() {
-    const keys = [...this.#intents.keys()];
-    this.#intents.clear();
-    keys.forEach((key) => this.#clearIndicator(key));
+  #entriesForNextGeneration() {
+    const first = this.#intents.values().next().value;
+    return [...this.#intents]
+      .filter(
+        ([, intent]) =>
+          intent.rendering.generation === first.rendering.generation
+      )
+      .slice(0, MAX_BATCH_SIZE);
   }
 
   #failBatch(entries) {
@@ -412,44 +495,28 @@ class ChecklistState {
       }
 
       this.#intents.delete(key);
-      const box = this.#binding?.controls.get(key);
-      if (box) {
-        setCheckboxState(box, failed.confirmed);
-      }
-      this.#finishIndicator(key);
+      current.presentations.forEach((presentation) =>
+        settleChecklistPresentation(presentation, current.confirmed)
+      );
     });
   }
 
-  #finishIndicator(key) {
-    const indicator = this.#indicators.get(key);
-    const box = this.#binding?.controls.get(key);
-    box?.removeAttribute("aria-busy");
-    if (!indicator) {
-      box?.classList.remove("is-pending");
-      return;
-    }
-
-    clearTimeout(indicator.timer);
-    const remaining = Math.max(
-      0,
-      MINIMUM_PENDING_DURATION - (performance.now() - indicator.startedAt)
+  #failGeneration(generation, invalidate = false) {
+    const entries = [...this.#intents].filter(
+      ([, intent]) => intent.rendering.generation === generation
     );
-    if (remaining === 0) {
-      this.#clearIndicator(key, indicator);
-    } else {
-      indicator.timer = setTimeout(
-        () => this.#clearIndicator(key, indicator),
-        remaining
-      );
+    if (invalidate) {
+      entries.forEach(([, intent]) => {
+        intent.rendering.invalid = true;
+        intent.presentations.forEach((presentation) => {
+          presentation.control.rendering.invalid = true;
+          if (presentation.control.box) {
+            configureAccessibility(presentation.control.box, false);
+          }
+        });
+      });
     }
-  }
-
-  #fingerprintFor(raw) {
-    return checklistFingerprint(
-      raw,
-      this.#checkboxSources,
-      this.#includesLegacy
-    );
+    this.#failBatch(entries);
   }
 
   #freshestBaseline(raw, updatedAt) {
@@ -468,6 +535,117 @@ class ChecklistState {
     return { raw, updatedAt };
   }
 
+  async #hydrate(entries) {
+    if (
+      this.#baselineRaw != null &&
+      entries.every(([, intent]) => intent.fingerprint !== undefined)
+    ) {
+      return true;
+    }
+
+    const rendering = entries[0][1].rendering;
+    try {
+      const post = await ajax(`/posts/${this.#postModel.id}`, {
+        timeout: REQUEST_TIMEOUT,
+        ignoreUnsent: false,
+      });
+      const baseline = this.#postModel[uncertainChecklistBaseline]
+        ? { raw: post.raw, updatedAt: post.updated_at }
+        : this.#freshestBaseline(post.raw, post.updated_at);
+      const fingerprint = rendering.fingerprintFor(baseline.raw);
+      const canUseBaseline = entries.every(([, intent]) => {
+        return (
+          timestampsAreEqual(
+            intent.rendering.baselineUpdatedAt,
+            baseline.updatedAt
+          ) ||
+          (intent.fingerprint !== undefined &&
+            intent.rendering.fingerprintFor(baseline.raw) ===
+              intent.fingerprint) ||
+          (intent.rendering.cookedFingerprint !== undefined &&
+            intent.rendering.cookedFingerprint ===
+              cookedChecklistFingerprint(post.cooked))
+        );
+      });
+      if (!canUseBaseline || fingerprint === undefined) {
+        this.#failGeneration(rendering.generation, true);
+        this.#refreshPost(true);
+        return false;
+      }
+
+      const oldGeneration = rendering.generation;
+      const resolved = {
+        fingerprint,
+        generation: `${fingerprint}\0${rendering.coverage}`,
+      };
+      this.#hydratedGenerations.set(oldGeneration, resolved);
+      for (const [key, intent] of [...this.#intents]) {
+        if (
+          intent.rendering.generation !== oldGeneration &&
+          !key.startsWith(`${oldGeneration}\0`)
+        ) {
+          continue;
+        }
+        this.#resolveGeneration(intent.rendering);
+        intent.fingerprint = fingerprint;
+        intent.presentations.forEach(({ control }) =>
+          this.#resolveGeneration(control.rendering)
+        );
+        const newKey = `${resolved.generation}${key.slice(oldGeneration.length)}`;
+        const existing = this.#intents.get(newKey);
+        let merged = intent;
+        if (existing && existing !== intent) {
+          const latest =
+            existing.revision > intent.revision ? existing : intent;
+          merged = {
+            ...latest,
+            presentations: [
+              ...existing.presentations,
+              ...intent.presentations,
+            ].filter(
+              ({ control, token }) =>
+                control.box && control.state?.token === token
+            ),
+          };
+        }
+        this.#intents.delete(key);
+        this.#intents.set(newKey, merged);
+        entries.forEach((entry) => {
+          if (entry[0] === key) {
+            entry[0] = newKey;
+            entry[1].fingerprint = fingerprint;
+            if (existing && existing !== intent) {
+              entry[1] = merged;
+            }
+          }
+        });
+      }
+      this.#applyBaseline(baseline.raw, baseline.updatedAt);
+      delete this.#postModel[uncertainChecklistBaseline];
+      if (this.#postModel.raw == null) {
+        this.#postModel.raw = baseline.raw;
+      }
+      return true;
+    } catch (error) {
+      this.#postModel[uncertainChecklistBaseline] = true;
+      this.#failGeneration(rendering.generation);
+      popupAjaxError(error);
+      return false;
+    }
+  }
+
+  #observePostModel(postModel) {
+    if (
+      this.#postModel.raw == null ||
+      timestampIsOlder(this.#postModel.updated_at, postModel.updated_at) ||
+      (Number.isFinite(postModel.version) &&
+        Number.isFinite(this.#postModel.version) &&
+        postModel.version > this.#postModel.version)
+    ) {
+      this.#postModel = postModel;
+    }
+  }
+
   #refreshPost(reportError = false) {
     const refresh = this.#postModel.topic?.postStream?.refreshPost(
       this.#postModel.id
@@ -477,7 +655,29 @@ class ChecklistState {
     }
   }
 
+  #resolveGeneration(rendering) {
+    const resolved = this.#hydratedGenerations.get(rendering.generation);
+    if (resolved) {
+      Object.assign(rendering, resolved);
+    }
+  }
+
+  #retireIfDrained() {
+    if (this.#saving || this.#intents.size > 0) {
+      return;
+    }
+
+    if (this.#saveTimer) {
+      cancel(this.#saveTimer);
+      this.#saveTimer = undefined;
+    }
+    if (activeChecklistOperations.get(this.#postModel.id) === this) {
+      activeChecklistOperations.delete(this.#postModel.id);
+    }
+  }
+
   async #save() {
+    this.#saveTimer = undefined;
     if (this.#saving) {
       return;
     }
@@ -485,10 +685,7 @@ class ChecklistState {
     this.#saving = true;
     try {
       while (this.#intents.size > 0) {
-        let entries = [...this.#intents].map(([key, intent]) => [
-          key,
-          { ...intent },
-        ]);
+        let entries = this.#entriesForNextGeneration();
         let retries = 0;
 
         while ((entries = this.#currentEntries(entries)).length > 0) {
@@ -500,16 +697,34 @@ class ChecklistState {
             break;
           }
 
+          if (
+            this.#postModel.raw != null &&
+            timestampIsOlder(
+              this.#baselineUpdatedAt,
+              this.#postModel.updated_at
+            )
+          ) {
+            this.#applyBaseline(
+              this.#postModel.raw,
+              this.#postModel.updated_at
+            );
+          }
+
+          const rendering = entries[0][1].rendering;
           const fingerprint = entries[0][1].fingerprint;
-          const baselineFingerprint = this.#fingerprintFor(this.#baselineRaw);
+          const baselineFingerprint = rendering.fingerprintFor(
+            this.#baselineRaw
+          );
+          const modelFingerprint = rendering.fingerprintFor(
+            this.#postModel.raw
+          );
           if (
             fingerprint === undefined ||
             baselineFingerprint === undefined ||
-            fingerprint !== baselineFingerprint
+            fingerprint !== baselineFingerprint ||
+            (this.#postModel.raw != null && fingerprint !== modelFingerprint)
           ) {
-            this.#failBatch(entries);
-            entries.forEach(([key]) => this.#clearIndicator(key));
-            this.#discardIntents();
+            this.#failGeneration(rendering.generation, true);
             this.#refreshPost(true);
             break;
           }
@@ -538,8 +753,11 @@ class ChecklistState {
           };
 
           try {
+            this.#inFlight = new Set(entries.map(([key]) => key));
             const response = await ajax("/checklist/toggle", {
               type: "PUT",
+              timeout: REQUEST_TIMEOUT,
+              ignoreUnsent: false,
               contentType: "application/json",
               data: JSON.stringify(data),
             });
@@ -571,7 +789,7 @@ class ChecklistState {
               );
               const canRetry =
                 retries < MAX_CONFLICT_RETRIES &&
-                this.#fingerprintFor(baseline.raw) === fingerprint;
+                rendering.fingerprintFor(baseline.raw) === fingerprint;
               this.#applyBaseline(baseline.raw, baseline.updatedAt);
               if (canRetry) {
                 retries += 1;
@@ -583,11 +801,12 @@ class ChecklistState {
               break;
             }
 
-            if (this.#fingerprint !== fingerprint) {
+            if (rendering.fingerprintFor(this.#postModel.raw) !== fingerprint) {
               this.#applyBaseline(
                 this.#postModel.raw,
                 this.#postModel.updated_at
               );
+              this.#failGeneration(rendering.generation, true);
               this.#refreshPost();
               break;
             }
@@ -598,9 +817,7 @@ class ChecklistState {
             this.#postModel.raw = response.raw;
             this.#applyBaseline(response.raw, response.updated_at);
             this.#completeBatch(entries);
-            if (this.#intents.size === 0) {
-              this.#postModel.cooked = response.cooked;
-            }
+            this.#postModel.cooked = response.cooked;
             break;
           } catch (error) {
             unregisterOptimisticUpdate();
@@ -614,7 +831,7 @@ class ChecklistState {
               conflict?.retryable &&
               baseline &&
               retries < MAX_CONFLICT_RETRIES &&
-              this.#fingerprintFor(baseline.raw) === entries[0][1].fingerprint;
+              rendering.fingerprintFor(baseline.raw) === fingerprint;
 
             if (canRetry) {
               this.#applyBaseline(baseline.raw, baseline.updatedAt);
@@ -622,11 +839,20 @@ class ChecklistState {
               continue;
             }
 
-            this.#failBatch(entries);
+            const structuralConflict =
+              error.jqXHR?.status === 409 &&
+              baseline &&
+              rendering.fingerprintFor(baseline.raw) !== fingerprint;
+            if (structuralConflict) {
+              this.#failGeneration(rendering.generation, true);
+            } else {
+              this.#failBatch(entries);
+            }
             if (baseline) {
               this.#applyBaseline(baseline.raw, baseline.updatedAt);
             } else if (!error.jqXHR || error.jqXHR.status === 0) {
               this.#baselineRaw = undefined;
+              this.#postModel[uncertainChecklistBaseline] = true;
             } else if (this.#postModel.raw != null) {
               this.#applyBaseline(
                 this.#postModel.raw,
@@ -636,82 +862,19 @@ class ChecklistState {
             this.#refreshPost();
             popupAjaxError(error);
             break;
+          } finally {
+            this.#inFlight.clear();
           }
         }
       }
+    } catch (error) {
+      this.#failBatch([...this.#intents]);
+      popupAjaxError(error);
     } finally {
       this.#saving = false;
+      this.#retireIfDrained();
     }
   }
-
-  async #hydrate(entries) {
-    if (this.#baselineRaw != null) {
-      return true;
-    }
-
-    try {
-      const post = await ajax(`/posts/${this.#postModel.id}`);
-      const baseline = this.#freshestBaseline(post.raw, post.updated_at);
-      const fingerprint = this.#fingerprintFor(baseline.raw);
-      const canUseBaseline =
-        timestampsAreEqual(this.#baselineUpdatedAt, baseline.updatedAt) ||
-        (this.#fingerprint !== undefined && fingerprint === this.#fingerprint);
-      if (!canUseBaseline || fingerprint === undefined) {
-        this.#failBatch(entries);
-        entries.forEach(([key]) => this.#clearIndicator(key));
-        this.#refreshPost(true);
-        return false;
-      }
-
-      this.#fingerprint = fingerprint;
-      entries.forEach(([, intent]) => (intent.fingerprint = fingerprint));
-      for (const intent of this.#intents.values()) {
-        intent.fingerprint ??= fingerprint;
-      }
-      this.#applyBaseline(baseline.raw, baseline.updatedAt);
-      if (this.#postModel.raw == null) {
-        this.#postModel.raw = baseline.raw;
-      }
-      return true;
-    } catch (error) {
-      this.#failBatch(entries);
-      popupAjaxError(error);
-      return false;
-    }
-  }
-
-  #startIndicator(key) {
-    const existing = this.#indicators.get(key);
-    clearTimeout(existing?.timer);
-    this.#indicators.set(key, { startedAt: performance.now() });
-    const box = this.#binding?.controls.get(key);
-    box?.classList.add("is-pending");
-    box?.setAttribute("aria-busy", "true");
-  }
-
-  #syncControl(key, box) {
-    const intent = this.#intents.get(key);
-    if (intent) {
-      setCheckboxState(box, intent.checked);
-    }
-
-    const indicator = this.#indicators.get(key);
-    box.classList.toggle("is-pending", Boolean(indicator));
-    if (intent) {
-      box.setAttribute("aria-busy", "true");
-    } else {
-      box.removeAttribute("aria-busy");
-    }
-  }
-}
-
-function addToggleBehavior(boxes, postModel, allBoxes = boxes) {
-  let checklistState = checklistStates.get(postModel);
-  if (!checklistState) {
-    checklistState = new ChecklistState(postModel);
-    checklistStates.set(postModel, checklistState);
-  }
-  return checklistState.bind(boxes, allBoxes);
 }
 
 function isInsideSourcedQuote(box) {
@@ -735,8 +898,8 @@ export function checklistSyntax(elem, postDecorator) {
     configureAccessibility(box, editable && interactiveBoxSet.has(box))
   );
 
-  if (editable) {
-    return addToggleBehavior(interactiveBoxes, postModel);
+  if (editable && interactiveBoxes.length > 0) {
+    return bindChecklist(interactiveBoxes, postModel);
   }
 }
 

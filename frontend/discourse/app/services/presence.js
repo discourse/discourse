@@ -514,7 +514,7 @@ export default class PresenceService extends Service {
   }
 
   async _updateServer() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -607,7 +607,7 @@ export default class PresenceService extends Service {
   // drop back to the last event via the regular throttle function.
   @bind
   _throttledUpdateServer() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

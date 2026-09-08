@@ -29,11 +29,25 @@ describe DiscourseAi::Discover::DiscoveriesController do
       allowed_group.add(user)
     end
 
+    it "queues an Ask AI reply when embeddings and semantic search are disabled" do
+      group.add(user)
+      SiteSetting.ai_embeddings_enabled = false
+      SiteSetting.ai_embeddings_semantic_search_enabled = false
+
+      expect_enqueued_with(job: :stream_discover_reply, args: { user_id: user.id, request_id: }) do
+        post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?", request_id: }
+      end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["request_id"]).to eq(request_id)
+    end
+
     context "when the user doesn't have access to the agent" do
       it "returns a 403" do
         post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?", request_id: }
 
         expect(response.status).to eq(403)
+        expect(AskAiLog.count).to eq(0)
       end
     end
 
@@ -64,10 +78,28 @@ describe DiscourseAi::Discover::DiscoveriesController do
         end
       end
 
+      it "logs each accepted ask once without consolidating repeated questions" do
+        query = "How do I search for 猫?"
+        params = { query:, request_id: }
+
+        expect {
+          2.times { post "/discourse-ai/discoveries/reply", params: }
+          post "/discourse-ai/discoveries/reply", params: { query:, request_id: SecureRandom.uuid }
+        }.to change(AskAiLog, :count).by(2)
+
+        logs = AskAiLog.order(:id).last(2)
+        expect(logs).to all(have_attributes(user_id: user.id, query:, ask_outcome: nil))
+        expect(logs.map(&:asked_at)).to all(be_present)
+        expect(
+          Jobs::StreamDiscoverReply.jobs.last(2).map { |job| job["args"].first["ask_ai_log_id"] },
+        ).to eq(logs.map(&:id))
+      end
+
       it "returns a 400 if the query is missing" do
         post "/discourse-ai/discoveries/reply", params: { request_id: }
 
         expect(response.status).to eq(400)
+        expect(AskAiLog.count).to eq(0)
       end
 
       it "returns a 400 if the request ID is invalid" do
@@ -77,6 +109,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
                request_id: "not-a-uuid",
              }
         expect(response.status).to eq(400)
+        expect(AskAiLog.count).to eq(0)
       end
 
       it "does not enqueue the same request twice" do
@@ -148,6 +181,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
     let(:query) { "What is Discourse?" }
     let(:context) { "Discourse is an open-source discussion platform." }
     let(:request_id) { SecureRandom.uuid }
+
     fab!(:source_post, :post)
 
     context "when the user is allowed to discover" do

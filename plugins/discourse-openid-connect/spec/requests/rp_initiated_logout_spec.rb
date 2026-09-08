@@ -14,6 +14,7 @@ describe "OIDC RP-Initiated Logout" do
       end_session_endpoint: "https://id.example.com/endsession",
     }
   end
+
   fab!(:user)
 
   before do

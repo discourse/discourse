@@ -2094,8 +2094,6 @@ sl:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Prispevek izbrisan"
       delete_user:
         complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"

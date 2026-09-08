@@ -5,6 +5,7 @@ RSpec.describe DiscourseAi::Configuration::LlmValidator do
 
   describe "#valid_value?" do
     let(:validator) { described_class.new(name: :ai_default_llm_model) }
+
     fab!(:llm_model)
 
     before do
@@ -44,6 +45,7 @@ RSpec.describe DiscourseAi::Configuration::LlmValidator do
 
   describe "#run_test" do
     let(:validator) { described_class.new }
+
     fab!(:llm_model)
 
     it "exercises both non-streaming and streaming completions" do

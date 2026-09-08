@@ -195,7 +195,7 @@ export default class DiscoursePostEventDates extends Component {
       // doesn’t work reliably without discourseLater
       discourseLater(() => {
         schedule("afterRender", () => {
-          if (this.isDestroying || this.isDestroyed) {
+          if (this.isDestroying) {
             return;
           }
 

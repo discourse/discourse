@@ -948,7 +948,7 @@ class ApplicationController < ActionController::Base
       end
     @subtitle = opts[:subtitle] || I18n.t("page_not_found.subtitle")
     @group = opts[:group]
-    @hide_search = true if SiteSetting.login_required
+    @hide_search = true if SiteSetting.login_required || !guardian.can_search?
 
     params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
     params[:id] = params[:id].first if params[:id].kind_of?(Array)

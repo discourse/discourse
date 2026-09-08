@@ -4,6 +4,7 @@ import {
   currentURL,
   fillIn,
   find,
+  findAll,
   settled,
   triggerKeyEvent,
   visit,
@@ -398,6 +399,68 @@ acceptance("AI Discoveries - header search", function (needs) {
     );
   });
 
+  test("all topics keeps the query editable and down enters the results", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    assert.dom("#icon-search-input").isFocused("typing keeps input focus");
+
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert
+      .dom("#icon-search-input")
+      .isFocused("results leave focus in the input");
+    await fillIn("#icon-search-input", "dev 猫");
+    assert
+      .dom("#icon-search-input")
+      .hasValue("dev 猫", "the query can be edited");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+    assert
+      .dom("#icon-search-input")
+      .isFocused("updated results leave focus in the input");
+
+    const results = findAll(".search-result-topic .search-link");
+    await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
+    assert
+      .dom(results[0])
+      .isFocused("down skips the buttons and enters the results");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert.dom(results[1]).isFocused("down moves to the second result");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    assert.dom(results[0]).isFocused("up returns to the first result");
+  });
+
+  test("an empty search keeps focus in the input", async function (assert) {
+    pretender.get("/search/query", () => response({}));
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "猫猫猫");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.dom(".no-results").exists("the empty state appears");
+    assert.dom("#icon-search-input").isFocused("the query remains editable");
+  });
+
+  test("results do not take focus after moving away during a search", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
+    );
+    find(".ai-discoveries-search-options__option.--ask").focus();
+    await settled();
+
+    assert.dom(".search-result-topic").exists("the results arrive");
+    assert
+      .dom(".ai-discoveries-search-options__option.--ask")
+      .isFocused("the user's new focus is preserved");
+  });
+
   test("scoping to a topic leaves the input alone", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
@@ -455,6 +518,37 @@ acceptance("AI Discoveries - header search", function (needs) {
     assert
       .dom(".ai-discoveries-search-options__option.--topic")
       .hasClass("is-active", "enter scopes the search to the topic");
+
+    const results = findAll(".search-result-post .search-link");
+    assert
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .isFocused("results leave focus on the selected scope button");
+
+    await click("#icon-search-input");
+    await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
+    assert.dom(results[0]).isFocused("down enters the matching posts");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert.dom(results[1]).isFocused("down moves to the second matching post");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    assert.dom(results[0]).isFocused("up returns to the first matching post");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    assert
+      .dom(".ai-discoveries-search-options__option.--search")
+      .isFocused("up from the first result skips advanced search");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert
+      .dom(results[0])
+      .isFocused("down from the buttons skips advanced search");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    assert
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .isFocused("the topic scope remains reachable with arrow keys");
   });
 
   test("still offers itself from a message inbox", async function (assert) {

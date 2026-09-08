@@ -1027,6 +1027,9 @@ es:
         note_added: "Nota del moderador"
         note_added_by: "Nota del moderador creada por %{username} · %{relativeDate}"
         no_events: "No hay eventos que mostrar en la línea de tiempo"
+      author_penalty:
+        toast:
+          undo: "Deshacer"
       notes:
         add_note_description: "Añade una nota para proporcionar contexto a otros moderadores."
         add_note_button: "Añadir nota"
@@ -1673,7 +1676,6 @@ es:
       admin: "%{user} es un administrador"
       moderator_tooltip: "Este usuario es un moderador"
       admin_tooltip: "Este usuario es un administrador"
-      silenced_tooltip: "Este usuario está silenciado"
       suspended_notice: "Este usuario ha sido suspendido hasta %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Motivo: "

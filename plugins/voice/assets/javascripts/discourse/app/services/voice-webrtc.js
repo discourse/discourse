@@ -1637,7 +1637,7 @@ export default class VoiceWebrtcService extends Service {
   }
 
   #handleRoomMessage(roomId, payload) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -1646,7 +1646,7 @@ export default class VoiceWebrtcService extends Service {
     // signals arriving mid-peer-setup, role changes overlapping signals).
     this.#roomMessageQueue
       .enqueue(roomId, () => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         return this.#processRoomMessage(roomId, payload);

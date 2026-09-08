@@ -17,7 +17,7 @@ export default class VariableInput extends Component {
       this.workflowsNodeTypes.loadWorkflowVars(),
     ]);
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

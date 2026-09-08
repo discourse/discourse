@@ -5382,8 +5382,6 @@ zh_TW:
         complete: "貼文已隱藏，使用者已被通知。"
       agree_and_edit:
         title: "編輯貼文"
-        description: "同意檢舉并打開編輯器窗口以編輯貼文。"
-        complete: "檢舉已確認，您現在可以編輯該貼文。"
       delete:
         title: "刪除"
         complete: "貼文已刪除。"
@@ -5501,30 +5499,6 @@ zh_TW:
       approve_and_unhide:
         title: "是"
         complete: "貼文已獲批準并取消隱藏"
-      post_actions:
-        bundle_title: "您想如何處理該貼文？"
-      delete_post:
-        title: "刪除貼文"
-        description: "刪除此貼文"
-        complete: "貼文已刪除"
-      hide_post:
-        title: "隱藏貼文"
-        description: "隱藏此貼文，不讓公眾查看"
-        complete: "貼文已隱藏"
-      unhide_post:
-        title: "取消隱藏貼文"
-        description: "將此貼文設為對所有使用者可見"
-        complete: "貼文已取消隱藏"
-      restore_post:
-        title: "還原貼文"
-        description: "恢復已刪除的貼文"
-        complete: "貼文已恢復"
-      edit_post:
-        title: "編輯貼文"
-        description: "編輯此貼文內容"
-        complete: "貼文已編輯"
-      user_actions:
-        bundle_title: "您想如何處理該使用者？"
       silence_user:
         title: "禁言使用者"
         description: "禁止使用者發帖或發送消息"

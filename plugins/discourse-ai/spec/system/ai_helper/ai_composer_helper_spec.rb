@@ -105,6 +105,7 @@ RSpec.describe "AI Composer helper" do
 
     context "when not a member of custom prompt group" do
       let(:mode) { DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT }
+
       before { custom_prompts_agent.update!(allowed_group_ids: [non_member_group.id]) }
 
       it "does not show custom prompt option" do
@@ -542,6 +543,7 @@ RSpec.describe "AI Composer helper" do
 
   context "when the suggestions feature is disabled" do
     let(:mode) { DiscourseAi::AiHelper::Assistant::GENERATE_TITLES }
+
     before { SiteSetting.ai_helper_enabled_features = "context_menu" }
 
     it "does not offer title suggestions in the AI helper menu" do
@@ -563,7 +565,7 @@ RSpec.describe "AI Composer helper" do
   end
 
   context "when triggering composer AI helper", mobile: true do
-    it "should close the composer helper before showing the diff modal" do
+    it "closes the composer helper before showing the diff modal" do
       visit("/latest")
       page.find("#create-topic").click
       composer.fill_content(input)

@@ -81,7 +81,7 @@ export default class ComposerBody extends Component {
   }
 
   composerResized() {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 

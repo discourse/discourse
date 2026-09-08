@@ -967,6 +967,9 @@ hr:
         note_added: "Napomena moderatora"
         note_added_by: "Napomena moderatora od %{username} · %{relativeDate}"
         no_events: "Nema događaja na vremenskoj liniji za prikaz"
+      author_penalty:
+        toast:
+          undo: "Vrati na prethodno"
       notes:
         add_note_button: "Dodaj bilješku"
         placeholder: "Ovdje napišite svoju bilješku..."
@@ -1597,7 +1600,6 @@ hr:
       admin: "%{user} je administrator"
       moderator_tooltip: "Ovaj korisnik je moderator."
       admin_tooltip: "Ovaj korisnik je administrator"
-      silenced_tooltip: "Ovaj korisnik je ušutkan"
       suspended_notice: "Ovaj korisnik je suspendiran do %{date}."
       suspended_permanently: "Ovaj korisnik je suspendiran."
       suspended_reason: "Razlog:"

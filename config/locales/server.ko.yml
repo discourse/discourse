@@ -3701,8 +3701,6 @@ ko:
         title: "예"
       approve_and_unhide:
         title: "예"
-      delete_post:
-        complete: "게시물 삭제됨"
       delete_user:
         complete: "사용자 삭제됨"
         reason: "검토 대기열을 통해 삭제됨"

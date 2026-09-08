@@ -53,7 +53,7 @@ export default class SignupPageController extends Controller {
     getAuthOptionsUsername: () => this.authOptions?.username,
     getForceValidationReason: () => this.forceValidationReason,
     siteSettings: this.siteSettings,
-    isInvalid: () => this.isDestroying || this.isDestroyed,
+    isInvalid: () => this.isDestroying,
     updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
     updateUsernames: (username) => {
       this.accountUsername = username;
@@ -342,7 +342,7 @@ export default class SignupPageController extends Controller {
 
     return User.checkEmail(this.accountEmail)
       .then((result) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -454,7 +454,7 @@ export default class SignupPageController extends Controller {
 
     this._hpPromise = ajax("/session/hp.json")
       .then((json) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -513,7 +513,7 @@ export default class SignupPageController extends Controller {
     this.set("formSubmitted", true);
     return User.createAccount(attrs).then(
       (result) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 

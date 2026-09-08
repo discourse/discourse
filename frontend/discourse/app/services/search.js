@@ -116,8 +116,12 @@ export default class Search extends Service {
       }
 
       if (index === -1 && e.key === "ArrowDown") {
-        // change focus from the search input to the first navigation item
-        const firstResult = navigationItems[0] || focusableItems[0];
+        const firstResult =
+          focused
+            .closest(".search-menu")
+            .querySelector(
+              ".search-result-topic .search-link, .search-result-post .search-link"
+            ) || navigationItems[0];
         firstResult.focus();
       } else if (index === 0 && e.key === "ArrowUp") {
         this.focusSearchInput();

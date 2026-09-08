@@ -80,6 +80,7 @@ RSpec.describe InviteMailer do
         fab!(:invite)
         let(:plugin) { Plugin::Instance.new }
         let(:custom_template) { "plugin_custom_invite_template" }
+
         before do
           I18n.backend.store_translations(
             :en,

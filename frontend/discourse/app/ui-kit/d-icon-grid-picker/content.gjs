@@ -392,7 +392,7 @@ export default class DIconGridPickerContent extends Component {
    * @returns {boolean}
    */
   #isCurrent(search) {
-    return this.#search === search && !this.isDestroying && !this.isDestroyed;
+    return this.#search === search && !this.isDestroying;
   }
 
   /**

@@ -42,6 +42,7 @@ RSpec.describe "Amazon Associated Account Preferences" do
 
     describe "with user revoke enabled" do
       before { SiteSetting.login_with_amazon_user_can_revoke = true }
+
       it "shows the revoke button" do
         sign_in(user)
         user_account_preferences_page.visit(user)
@@ -55,6 +56,7 @@ RSpec.describe "Amazon Associated Account Preferences" do
 
     describe "with user revoke disabled" do
       before { SiteSetting.login_with_amazon_user_can_revoke = false }
+
       it "shows the revoke button" do
         sign_in(user)
         user_account_preferences_page.visit(user)

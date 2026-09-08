@@ -538,6 +538,9 @@ th:
       user_label: "ผู้ใช้"
       timeline:
         target_deleted: "โพสต์ถูกลบ"
+      author_penalty:
+        toast:
+          undo: "เลิกทำ"
       notes:
         delete: "ลบ"
       topic_label: "หัวข้อ"

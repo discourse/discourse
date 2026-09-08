@@ -672,6 +672,9 @@ ko:
       user_label: "사용자"
       timeline:
         target_deleted: "게시물 삭제됨"
+      author_penalty:
+        toast:
+          undo: "실행 취소"
       notes:
         delete: "삭제하기"
       topic_label: "글"
@@ -1203,7 +1206,6 @@ ko:
       admin: "%{user} 님은 운영자입니다"
       moderator_tooltip: "이 사용자는 운영자입니다"
       admin_tooltip: "이 사용자는 운영자입니다"
-      silenced_tooltip: "이 사용자는 차단되었습니다"
       suspended_notice: "이 사용자는 %{date}까지 정지되었습니다."
       suspended_permanently: "이 사용자는 정지되었습니다."
       suspended_reason: "이유: "

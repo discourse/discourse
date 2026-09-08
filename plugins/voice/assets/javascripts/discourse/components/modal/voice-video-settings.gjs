@@ -126,13 +126,13 @@ export default class VoiceVideoSettingsModal extends Component {
         ),
       });
     } catch {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.previewError = true;
       }
       return;
     }
 
-    if (epoch !== this.#previewEpoch || this.isDestroying || this.isDestroyed) {
+    if (epoch !== this.#previewEpoch || this.isDestroying) {
       stream.getTracks().forEach((track) => track.stop());
       return;
     }
@@ -144,7 +144,7 @@ export default class VoiceVideoSettingsModal extends Component {
 
   async refreshDevices() {
     const inputs = await enumerateVideoDevices();
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -170,11 +170,7 @@ export default class VoiceVideoSettingsModal extends Component {
       const rawStream = this.#previewRawStream;
       try {
         const processed = await manager.setup(rawStream, this.blurAmount);
-        if (
-          epoch !== this.#previewEpoch ||
-          this.isDestroying ||
-          this.isDestroyed
-        ) {
+        if (epoch !== this.#previewEpoch || this.isDestroying) {
           manager.teardown();
           return;
         }
@@ -235,7 +231,7 @@ export default class VoiceVideoSettingsModal extends Component {
         await this.#applyPreviewEffect();
       }
     } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.busy = false;
       }
     }

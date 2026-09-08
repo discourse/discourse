@@ -269,7 +269,7 @@ export default class BoardsCard extends Component {
         },
       })
       .finally(() => {
-        if (!this.isDestroying && !this.isDestroyed) {
+        if (!this.isDestroying) {
           DiscourseURL.replaceState(boardUrl);
         }
       });
@@ -298,7 +298,7 @@ export default class BoardsCard extends Component {
         },
       })
       .finally(() => {
-        if (!navigatedAway && !this.isDestroying && !this.isDestroyed) {
+        if (!navigatedAway && !this.isDestroying) {
           DiscourseURL.replaceState(boardUrl);
         }
       });
@@ -439,7 +439,7 @@ export default class BoardsCard extends Component {
     this.dragHideTimer = discourseLater(this, () => {
       this.dragHideTimer = null;
 
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         if (shouldInsertSourceDropIndicator()) {
           this.#insertSourceDropIndicator(cardElement, cardHeight);
         }

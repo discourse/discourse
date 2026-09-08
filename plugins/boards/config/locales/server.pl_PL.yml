@@ -6,6 +6,7 @@
 
 pl_PL:
   site_settings:
+    boards_enabled: "Organizuj tematy i lekkie, samodzielne karty „pływające” w konfigurowalnych tablicach i kolumnach typu „przeciągnij i upuść” w stylu kanban, a wszystko to z wykorzystaniem specjalnie zaprojektowanego interfejsu użytkownika do zarządzania i kontroli dostępu do poszczególnych tablic"
     boards_manage_board_allowed_groups: "Grupy mogące tworzyć i konfigurować tablice."
   access_control_list:
     errors:

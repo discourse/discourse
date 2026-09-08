@@ -2042,6 +2042,7 @@ pl_PL:
     min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości"
     max_emojis_in_title: "Maksymalna dozwolona liczba emoji w tytule tematu. Jeśli ustawiona wartość wynosi zero, uniemożliwia to użycie jakichkolwiek emoji w tytułach tematów."
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
+    allow_anonymous_search: "Zezwól anonimowym użytkownikom na korzystanie z /search. Po wyłączeniu, anonimowi użytkownicy nie będą mogli uzyskać dostępu do /search, a kontrolki interfejsu korzystające z /search będą ukryte."
     search_tokenize_chinese: "Wymuś na wyszukiwarce tokenizację języka chińskiego nawet na stronach, które nie są chińskie"
     search_tokenize_japanese: "Wymuś na wyszukiwarce tokenizację języka japońskiego nawet na stronach, które nie są japońskie"
     search_prefer_recent_posts: "Jeśli wyszukiwanie na twoim dużym forum jest wolne, ta opcja pozwala zindeskować najpierw ostanie wpisy."
@@ -6064,8 +6065,8 @@ pl_PL:
         complete: "Post ukryty, użytkownik został powiadomiony."
       agree_and_edit:
         title: "Edytuj wpis"
-        description: "Zgódź się z flagą i otwórz okno kompozytora, aby edytować post."
-        complete: "Flaga potwierdzona, możesz teraz edytować post."
+        description: "Zgadzam się z flagą po zapisaniu edycji."
+        complete: "Wpis edytowany, zgłoszenie wysłane."
       delete:
         title: "Usuń"
         complete: "Wpis usunięty."
@@ -6115,6 +6116,10 @@ pl_PL:
         title: "Wyłącz wyciszenie użytkownika i zignoruj"
         description: "Wyłącz wyciszenie użytkownika i usuń flagę z kolejki bez przywracania usuniętego wpisu."
         complete: "Użytkownik został wyłączony, a flaga zignorowana."
+      unsilence_user:
+        title: "Autor bez wyciszenia"
+        description: "Zakończ wyciszenie autora. Ta flaga pozostaje w kolejce."
+        complete: "Autor już nie jest wyciszony."
       approve:
         title: "Tak"
         complete: "Post zatwierdzony."
@@ -6183,30 +6188,6 @@ pl_PL:
       approve_and_unhide:
         title: "Tak"
         complete: "Post zatwierdzony i nieukryty"
-      post_actions:
-        bundle_title: "Co chcesz zrobić z tym wpisem?"
-      delete_post:
-        title: "Usuń wpis"
-        description: "Usuń ten wpis"
-        complete: "Wpis usunięty"
-      hide_post:
-        title: "Ukryj wpis"
-        description: "Ukryj ten wpis przed widokiem publicznym"
-        complete: "Wpis ukryty"
-      unhide_post:
-        title: "Odkryj wpis"
-        description: "Udostępnij ten wpis wszystkim użytkownikom"
-        complete: "Wpis nieukryty"
-      restore_post:
-        title: "Przywróć wpis"
-        description: "Przywróć ten usunięty wpis"
-        complete: "Wpis przywrócony"
-      edit_post:
-        title: "Edytuj wpis"
-        description: "Edytuj treść tego wpisu"
-        complete: "Wpis edytowany"
-      user_actions:
-        bundle_title: "Co chcesz zrobić z użytkownikiem?"
       silence_user:
         title: "Wycisz użytkownika"
         description: "Zablokuj użytkownikowi możliwość publikowania lub wysyłania wiadomości"

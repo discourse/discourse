@@ -484,7 +484,7 @@ export default class SelectKit extends Component {
   }
 
   clearErrors() {
-    if (!this.element || this.isDestroyed || this.isDestroying) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 
@@ -576,7 +576,7 @@ export default class SelectKit extends Component {
 
       resolve(items);
     }).finally(() => {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         if (
           this.selectKit.options.closeOnChange ||
           (isPresent(value) && this.selectKit.options.maximum === 1)
@@ -670,7 +670,7 @@ export default class SelectKit extends Component {
   }
 
   _boundaryActionHandler(actionName, ...params) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 
@@ -734,7 +734,7 @@ export default class SelectKit extends Component {
   }
 
   _searchWrapper(filter) {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return Promise.resolve([]);
     }
 
@@ -749,7 +749,7 @@ export default class SelectKit extends Component {
 
     return Promise.resolve(this.search(filter))
       .then((result) => {
-        if (this.isDestroyed || this.isDestroying) {
+        if (this.isDestroying) {
           return [];
         }
 
@@ -818,7 +818,7 @@ export default class SelectKit extends Component {
         });
       })
       .finally(() => {
-        if (this.isDestroyed || this.isDestroying) {
+        if (this.isDestroying) {
           return;
         }
         this.set("selectKit.enterDisabled", false);
@@ -827,7 +827,7 @@ export default class SelectKit extends Component {
 
   _safeAfterRender(fn) {
     next(() => {
-      if (!this.element || this.isDestroyed || this.isDestroying) {
+      if (!this.element || this.isDestroying) {
         return;
       }
 
