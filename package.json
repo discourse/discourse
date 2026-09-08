@@ -23,7 +23,7 @@
     "prettier": "3.8.1",
     "postcss-value-parser": "^4.2.0",
     "stylelint": "17.5.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "scripts": {
     "dev": "bin/dev",
