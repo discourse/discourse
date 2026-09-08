@@ -320,6 +320,23 @@ RSpec.describe Admin::WatchedWordsController do
         expect(WatchedWord.count).to eq(6)
       end
 
+      it "rejects a CSV with more entries than the maximum number of words" do
+        stub_const(WatchedWord, "MAX_WORDS_PER_ACTION", 2) do
+          post "/admin/customize/watched_words/upload.json",
+               params: {
+                 action_key: "flag",
+                 file:
+                   Rack::Test::UploadedFile.new(file_from_contents("w1\nw2\nw3\n", "words.csv")),
+               }
+        end
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("watched_words.upload_too_many_csv_entries", count: 2)],
+        )
+        expect(WatchedWord.count).to eq(0)
+      end
+
       it "preserves non-ASCII words in a UTF-8 file without a BOM" do
         content = (1..30).map { |i| "badword#{i}" }.join("\n") + "\nCafé"
 

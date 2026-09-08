@@ -5983,6 +5983,11 @@ en:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports
 
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entry."
+      other: "Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entries."
+
   tags:
     title: "Tags"
     groups:
