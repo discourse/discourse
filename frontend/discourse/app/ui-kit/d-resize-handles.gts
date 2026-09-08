@@ -204,12 +204,16 @@ interface DResizeHandlesSignature<
       dragInfo: DResizeHandleDragInfo<NoInfer<Payload>, Session>
     ) => void;
 
-    /** A class toggled on the active handle while it is being dragged. */
+    /**
+     * A class toggled on the active handle while it is being dragged. Under a
+     * `@threshold` it waits for that distance, so a click on a handle never
+     * looks like a resize.
+     */
     draggingClass?: string;
 
     /**
-     * Pixels of travel before `@onResize` starts firing, to absorb the jitter of
-     * a click that was never meant to be a drag.
+     * Pixels of travel before `@onResize` starts firing and `@draggingClass`
+     * goes on, to absorb the jitter of a click that was never meant to be a drag.
      */
     threshold?: number;
 

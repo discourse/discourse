@@ -1,8 +1,20 @@
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
 import I18n, { i18n } from "discourse-i18n";
+
+/**
+ * Clicks the button without settling, so a test can observe what has and has
+ * not run while the dispatch is still on the stack.
+ */
+function dispatchClick() {
+  const event = new MouseEvent("click", { bubbles: true });
+  document.querySelector(".btn").dispatchEvent(event);
+  return event;
+}
 
 module("Integration | ui-kit | DButton", function (hooks) {
   setupRenderingTest(hooks);
@@ -239,6 +251,133 @@ module("Integration | ui-kit | DButton", function (hooks) {
     await click(".btn");
 
     assert.strictEqual(this.foo, "bar");
+  });
+
+  test("@action object form is triggered on click", async function (assert) {
+    // A method, not an arrow: an extracted-reference call would lose `this`
+    // and leave `seen` on the object untouched.
+    const handler = {
+      seen: null,
+      value(param) {
+        this.seen = param;
+      },
+    };
+
+    await render(
+      <template><DButton @action={{handler}} @actionParam="param" /></template>
+    );
+
+    await click(".btn");
+
+    assert.strictEqual(
+      handler.seen,
+      "param",
+      "invokes value() as a method, so it keeps its receiver"
+    );
+  });
+
+  test("@action object form resolves value at invocation time", async function (assert) {
+    sinon.stub(capabilities, "isIOS").get(() => false);
+
+    const calls = [];
+    const handler = { value: () => calls.push("original") };
+
+    await render(<template><DButton @action={{handler}} /></template>);
+
+    dispatchClick();
+    // Swapped after dispatch but before the deferred run: the replacement wins
+    // only if the lookup happens when the handler actually runs.
+    handler.value = () => calls.push("replacement");
+
+    await settled();
+
+    assert.deepEqual(calls, ["replacement"], "reads .value when it runs");
+  });
+
+  test("the action is deferred past the click dispatch", async function (assert) {
+    sinon.stub(capabilities, "isIOS").get(() => false);
+
+    let ran = false;
+    const handler = () => (ran = true);
+
+    await render(<template><DButton @action={{handler}} /></template>);
+
+    // Dispatched raw rather than through `click()`, which settles the runloop
+    // before returning and so cannot observe the deferral.
+    dispatchClick();
+
+    assert.false(ran, "has not run while the dispatch is still on the stack");
+
+    await settled();
+
+    assert.true(ran, "runs once the runloop flushes");
+  });
+
+  test("@immediate runs the action inside the click dispatch", async function (assert) {
+    sinon.stub(capabilities, "isIOS").get(() => false);
+
+    let ran = false;
+    const handler = () => (ran = true);
+
+    await render(
+      <template><DButton @immediate={{true}} @action={{handler}} /></template>
+    );
+
+    assert.false(ran, "has not run before anything was dispatched");
+
+    dispatchClick();
+
+    assert.true(
+      ran,
+      "runs before the dispatch returns, so transient user activation survives"
+    );
+
+    await settled();
+  });
+
+  test("@immediate forwards the event when asked", async function (assert) {
+    sinon.stub(capabilities, "isIOS").get(() => false);
+
+    const received = [];
+    const handler = (...args) => received.push(args);
+
+    await render(
+      <template>
+        <DButton
+          @immediate={{true}}
+          @forwardEvent={{true}}
+          @action={{handler}}
+        />
+      </template>
+    );
+
+    const dispatched = dispatchClick();
+
+    assert.strictEqual(received.length, 1, "runs exactly once");
+    assert.strictEqual(
+      received[0][1],
+      dispatched,
+      "receives the very event that was dispatched, not merely an Event"
+    );
+
+    await settled();
+
+    assert.strictEqual(received.length, 1, "and does not run again on settle");
+  });
+
+  test("iOS runs the action inside the dispatch without @immediate", async function (assert) {
+    sinon.stub(capabilities, "isIOS").get(() => true);
+
+    let ran = false;
+    const handler = () => (ran = true);
+
+    await render(<template><DButton @action={{handler}} /></template>);
+
+    dispatchClick();
+
+    assert.true(ran, "iOS never defers, so focus events still fire");
+
+    await settled();
   });
 
   test("ellipses", async function (assert) {

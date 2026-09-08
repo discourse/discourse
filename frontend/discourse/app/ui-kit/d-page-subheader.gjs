@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -13,16 +14,34 @@ import {
   WrappedActionListItem,
   WrappedButton,
 } from "discourse/ui-kit/d-page-action-button";
+import dElement from "discourse/ui-kit/helpers/d-element";
 import { i18n } from "discourse-i18n";
 
 export default class DPageSubheader extends Component {
   @service site;
 
+  /**
+   * The element the title renders as. A subheader nested under another heading
+   * needs to continue that heading structure rather than restart it at `h2`.
+   *
+   * @returns {object} A component wrapping the heading tag.
+   */
+  get titleTag() {
+    const level = this.args.titleHeadingLevel ?? 2;
+
+    assert(
+      `DPageSubheader @titleHeadingLevel must be 1-6, got ${level}`,
+      Number.isInteger(level) && level >= 1 && level <= 6
+    );
+
+    return dElement(`h${level}`);
+  }
+
   <template>
     <div class="d-page-subheader">
       <div class="d-page-subheader__title-row">
         {{#if @titleLabel}}
-          <h2 class="d-page-subheader__title">
+          <this.titleTag class="d-page-subheader__title">
             {{#if @titleUrl}}
               <a href={{@titleUrl}} class="d-page-subheader__title-link">
                 {{@titleLabel}}
@@ -30,7 +49,7 @@ export default class DPageSubheader extends Component {
             {{else}}
               {{@titleLabel}}
             {{/if}}
-          </h2>
+          </this.titleTag>
         {{/if}}
         {{#if (has-block "actions")}}
           <div class="d-page-subheader__actions">

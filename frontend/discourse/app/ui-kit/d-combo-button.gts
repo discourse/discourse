@@ -4,7 +4,10 @@ import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import type { WithBoundArgs } from "@glint/template";
 import curryComponent from "ember-curry-component";
-import DMenu, { DMenuSignature } from "discourse/float-kit/components/d-menu";
+import DMenu, {
+  DMenuComponentArgs,
+  DMenuSignature,
+} from "discourse/float-kit/components/d-menu";
 import { or } from "discourse/truth-helpers";
 import DButton, { DButtonSignature } from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -36,7 +39,8 @@ interface MenuSignature {
       /** Curried in by the group; the menu renders only when it is true. */
       hasMenu?: boolean;
     };
-  Blocks: { default: [] };
+  /** The menu's own API, forwarded so content can close the menu it sits in. */
+  Blocks: { default: [DMenuComponentArgs] };
 }
 
 class Button extends Component<ButtonSignature> {
@@ -77,8 +81,8 @@ class Menu extends Component<MenuSignature> {
           class={{dConcatClass "d-combo-button-menu" @btnTypeClass}}
           ...attributes
         >
-          <:content>
-            {{yield}}
+          <:content as |menu|>
+            {{yield menu}}
           </:content>
         </CurriedComponent>
       {{/let}}
@@ -110,12 +114,19 @@ interface DComboButtonSignature {
  * Pass `@hasMenu` rather than adding `--has-menu` by hand: the group publishes
  * that class itself and uses the same flag to decide whether the menu renders.
  *
+ * `combo.Menu` yields the menu's own API, so an item can close the menu it sits
+ * in without the call site registering the instance separately.
+ *
  * @example
  * ```gjs
  * <DComboButton @hasMenu={{this.hasDrafts}} @btnTypeClass="btn-default" as |combo|>
  *   <combo.Button @label="topic.create" @action={{this.createTopic}} />
- *   <combo.Menu @identifier="drafts">
- *     <DDropdownMenu as |dropdown|>…</DDropdownMenu>
+ *   <combo.Menu @identifier="drafts" as |menu|>
+ *     <DDropdownMenu as |dropdown|>
+ *       <dropdown.item>
+ *         <DButton @action={{fn this.openDraft menu.close}} @label="drafts.open" />
+ *       </dropdown.item>
+ *     </DDropdownMenu>
  *   </combo.Menu>
  * </DComboButton>
  * ```

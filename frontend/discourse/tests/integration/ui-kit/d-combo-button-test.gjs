@@ -1,7 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { render, rerender, triggerEvent } from "@ember/test-helpers";
+import { click, render, rerender, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 
 module("Integration | ui-kit | DComboButton", function (hooks) {
@@ -190,5 +191,31 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
       .hasClass("--has-menu", "the group's own token is not dropped");
     assert.dom(".d-combo-button").hasClass("second");
     assert.dom(".d-combo-button").doesNotHaveClass("first");
+  });
+
+  test("combo.Menu yields the menu API so its content can close it", async function (assert) {
+    await render(
+      <template>
+        <DComboButton @hasMenu={{true}} as |combo|>
+          <combo.Button @translatedLabel="Action" />
+          <combo.Menu @inline={{true}} @visibilityOptimizer="none" as |menu|>
+            <DButton
+              class="close-from-content"
+              @action={{menu.close}}
+              @translatedLabel="Close"
+            />
+          </combo.Menu>
+        </DComboButton>
+      </template>
+    );
+    await open();
+
+    assert.dom(".close-from-content").exists("the content block rendered");
+
+    await click(".close-from-content");
+
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist("the yielded close() shut the menu it belongs to");
   });
 });

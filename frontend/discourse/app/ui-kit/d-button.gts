@@ -33,6 +33,7 @@ export interface DButtonSignature {
     action?: DButtonAction;
     actionParam?: unknown;
     forwardEvent?: boolean;
+    immediate?: boolean;
     onKeyDown?: (event: KeyboardEvent) => void;
 
     // Navigation
@@ -175,45 +176,37 @@ export default class DButton extends Component<DButtonSignature> {
 
   _triggerAction(event: Event) {
     const { action: actionVal, route, routeModels } = this.args;
-    const isIOS = this.capabilities?.isIOS;
 
     if (actionVal || route) {
       if (actionVal) {
-        const { actionParam, forwardEvent } = this.args;
+        const { actionParam, forwardEvent, immediate } = this.args;
 
-        if (typeof actionVal === "object" && actionVal.value) {
-          if (isIOS) {
-            // Don't optimise INP in iOS
-            // it results in focus events not being triggered
-            if (forwardEvent) {
-              actionVal.value(actionParam, event);
-            } else {
-              actionVal.value(actionParam);
-            }
-          } else {
-            // Using `next()` to optimise INP
-            next(() =>
-              forwardEvent
-                ? actionVal.value(actionParam, event)
-                : actionVal.value(actionParam)
-            );
-          }
-        } else if (typeof actionVal === "function") {
-          if (isIOS) {
-            // Don't optimise INP in iOS
-            // it results in focus events not being triggered
-            if (forwardEvent) {
-              actionVal(actionParam, event);
-            } else {
-              actionVal(actionParam);
-            }
-          } else {
-            // Using `next()` to optimise INP
-            next(() =>
-              forwardEvent
+        const isFunction = typeof actionVal === "function";
+        const isCallableObject =
+          typeof actionVal === "object" && !!actionVal.value;
+
+        if (isFunction || isCallableObject) {
+          // `actionVal.value(…)` stays a member call rather than an extracted
+          // reference: the call binds `this` to the action object, and the
+          // lookup happens when the handler actually runs, so a `.value`
+          // replaced between dispatch and a deferred run still wins.
+          const invoke = () =>
+            isFunction
+              ? forwardEvent
                 ? actionVal(actionParam, event)
                 : actionVal(actionParam)
-            );
+              : forwardEvent
+                ? actionVal.value(actionParam, event)
+                : actionVal.value(actionParam);
+
+          // `next()` defers the handler so the browser can paint first (INP).
+          // Two cases must run inside the dispatch instead: iOS, where the
+          // deferral stops focus events firing, and handlers needing the
+          // click's transient user activation, which does not survive it.
+          if (immediate || this.capabilities?.isIOS) {
+            invoke();
+          } else {
+            next(invoke);
           }
         }
       } else if (route) {
