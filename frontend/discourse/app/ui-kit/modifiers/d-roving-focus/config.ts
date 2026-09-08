@@ -3,6 +3,7 @@ import type {
   DRovingFocusDisabledItems,
   DRovingFocusEntry,
   DRovingFocusStrategy,
+  DRovingFocusTabStopAnchor,
   Orientation,
 } from "./types";
 
@@ -22,6 +23,7 @@ export interface DRovingFocusConfig {
   onRegisterApi: DRovingFocusArgs["onRegisterApi"];
   wrap: boolean;
   tabStop: boolean;
+  tabStopAnchor: DRovingFocusTabStopAnchor;
   restoreLostFocus: boolean;
   activeClass: string | null;
   itemsKey: unknown;
@@ -51,6 +53,7 @@ export function normalizeConfig(named: DRovingFocusArgs): DRovingFocusConfig {
     onRegisterApi: named.onRegisterApi,
     wrap: named.wrap ?? false,
     tabStop: named.tabStop ?? true,
+    tabStopAnchor: named.tabStopAnchor ?? "focus",
     restoreLostFocus: named.restoreLostFocus ?? true,
     activeClass: named.activeClass ?? null,
     // This read is load-bearing even though the value is never consulted: consuming the

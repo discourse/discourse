@@ -1,4 +1,4 @@
-import { findAll, render } from "@ember/test-helpers";
+import { findAll, focus, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
@@ -280,6 +280,100 @@ module(
       assert
         .dom(".tab-stop-item[tabindex='0']")
         .exists({ count: 1 }, "the group retains exactly one Tab stop");
+    });
+
+    test("rovingControl moves the tab stop with arrow focus by default", async function (assert) {
+      await render(
+        <template>
+          <div
+            role="tablist"
+            {{dRovingFocus
+              orientation="horizontal"
+              itemSelector="[role=tab]"
+              wrap=true
+            }}
+          >
+            <button
+              class="anchor-item"
+              role="tab"
+              aria-selected="true"
+            >A</button>
+            <button
+              class="anchor-item"
+              role="tab"
+              aria-selected="false"
+            >B</button>
+          </div>
+        </template>
+      );
+
+      const items = findAll(".anchor-item");
+      await focus(items[0]);
+      await triggerKeyEvent(items[0], "keydown", "ArrowRight");
+
+      assert.dom(items[1]).isFocused("arrow focus reaches the unmarked item");
+      assert
+        .dom(items[1])
+        .hasAttribute(
+          "tabindex",
+          "0",
+          "the default anchor promotes whatever focus reaches"
+        );
+      assert
+        .dom(items[0])
+        .hasAttribute("tabindex", "-1", "the marked item yields the tab stop");
+    });
+
+    test("rovingControl tabStopAnchor='selection' keeps the tab stop on the marked item", async function (assert) {
+      await render(
+        <template>
+          <div
+            role="tablist"
+            {{dRovingFocus
+              orientation="horizontal"
+              itemSelector="[role=tab]"
+              tabStopAnchor="selection"
+              wrap=true
+            }}
+          >
+            <button
+              class="anchor-item"
+              role="tab"
+              aria-selected="true"
+            >A</button>
+            <button
+              class="anchor-item"
+              role="tab"
+              aria-selected="false"
+            >B</button>
+          </div>
+        </template>
+      );
+
+      const items = findAll(".anchor-item");
+      await focus(items[0]);
+      await triggerKeyEvent(items[0], "keydown", "ArrowRight");
+
+      assert
+        .dom(items[1])
+        .isFocused("arrow focus still reaches the unmarked item");
+      assert
+        .dom(items[0])
+        .hasAttribute(
+          "tabindex",
+          "0",
+          "the marked item keeps the tab stop while focus is elsewhere"
+        );
+      assert
+        .dom(items[1])
+        .hasAttribute(
+          "tabindex",
+          "-1",
+          "focus alone does not promote an unmarked item"
+        );
+      assert
+        .dom(".anchor-item[tabindex='0']")
+        .exists({ count: 1 }, "the group retains exactly one tab stop");
     });
 
     test("rovingControl registers a frozen shared API object", async function (assert) {
