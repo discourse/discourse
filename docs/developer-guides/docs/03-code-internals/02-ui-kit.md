@@ -234,3 +234,15 @@ A section should be designed, with multiple examples that each isolate one capab
 - [Designing for devices](28-designing-for-devices.md) and [responsive widths](29-designing-for-responsive-widths.md).
 - [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md) for the modifiers that handle input.
 - [Types](27-types.md) for the Glint and TypeScript conventions the kit follows.
+
+## Access control fields
+
+`DAccessControlField` accepts `@name` (default: `"acl"`) to bind an ACL to any
+FormKit field. When `@onChange` is omitted, it updates the field through FormKit;
+`@onSet`, `@validation`, and `@showOptional` are forwarded to the field. An explicit
+`@onChange` callback remains responsible for writing the value to form state.
+
+The `@aclTarget` descriptor accepts `{ type, key, id, name }`. `type` is the registered
+Ruby class name used for server evaluation and grantee searches. Optional `key`
+selects mandatory and banned ACL metadata and defaults to `type`. Supply it when
+the target's `acl_target_key` differs from its class name.

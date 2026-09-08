@@ -781,6 +781,56 @@ module("Integration | Component | DAccessControl", function (hooks) {
 module("Integration | Component | DAccessControlField", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("binds a named field and updates FormKit without an onChange callback", async function (assert) {
+    this.site.groups = GROUPS;
+    this.data = { permissions: [] };
+    this.onSubmit = sinon.spy();
+    pretender.post("/access-control/evaluate.json", (request) => {
+      const payload = JSON.parse(request.requestBody);
+      assert.strictEqual(
+        payload.target_type,
+        aclTarget.type,
+        "evaluates the target class"
+      );
+      assert.strictEqual(
+        payload.new_acl[0].id,
+        42,
+        "evaluates the named field value"
+      );
+      return response({});
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.data}} @onSubmit={{this.onSubmit}} as |form|>
+          <DAccessControlField
+            @aclTarget={{aclTarget}}
+            @form={{form}}
+            @name="permissions"
+            @title="Permissions"
+          />
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    const chooser = selectKit(".d-access-control__chooser");
+    await chooser.expand();
+    await chooser.selectRowByValue("group:42");
+    await formKit().submit();
+
+    const data = this.onSubmit.firstCall.args[0];
+    assert.strictEqual(
+      data.permissions[0].permission,
+      "edit",
+      "submits the updated permissions"
+    );
+    assert.false(
+      Object.hasOwn(data, "acl"),
+      "does not create the default acl field"
+    );
+  });
+
   test("reports confirmed access loss and allows submission", async function (assert) {
     const dialog = getOwner(this).lookup("service:dialog");
     sinon.stub(dialog, "confirm").resolves(true);

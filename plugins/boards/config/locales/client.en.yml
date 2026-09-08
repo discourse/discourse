@@ -1,5 +1,20 @@
 en:
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_boards: "Requires Boards to be enabled"
+      nodes:
+        "action:create_board": "Create board"
+      node_descriptions:
+        "action:create_board": "Create a board with access permissions and optional tag and category constraints"
+      create_board:
+        name: "Name"
+        slug: "Slug"
+        slug_description: "Leave blank to generate a slug from the board name."
+        tag_names: "Tags"
+        category_ids: "Categories"
+        acl: "Board access"
+        acl_description: "Choose who can view, edit, and manage the board."
     boards:
       filter_boards: "Filter boards"
       filter_boards_no_results: "No boards match your search"

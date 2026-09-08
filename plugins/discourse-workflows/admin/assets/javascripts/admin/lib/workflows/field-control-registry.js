@@ -1,3 +1,4 @@
+import AccessControlListControl from "../../components/workflows/configurators/access-control-list-control";
 import ActorControl from "../../components/workflows/configurators/actor-control";
 import BooleanControl from "../../components/workflows/configurators/boolean-control";
 import CategoryControl from "../../components/workflows/configurators/category-control";
@@ -28,6 +29,7 @@ import UserOrGroupControl from "../../components/workflows/configurators/user-or
 import UserSeenTriggerOptions from "../../components/workflows/configurators/user-seen-trigger-options";
 
 const FIELD_CONTROL_REGISTRY = {
+  access_control: { kind: "standalone", renderer: AccessControlListControl },
   notice: { kind: "standalone", renderer: NoticeControl },
   actor: { kind: "field", type: "custom", renderer: ActorControl },
   boolean: { kind: "standalone", renderer: BooleanControl },

@@ -117,7 +117,9 @@ export default class DAccessControl extends Component {
     }
 
     return (
-      this.site.access_control?.mandatory_acl?.[this.args.aclTarget.type] || []
+      this.site.access_control?.mandatory_acl?.[
+        this.args.aclTarget.key ?? this.args.aclTarget.type
+      ] || []
     );
   }
 
@@ -134,7 +136,9 @@ export default class DAccessControl extends Component {
     }
 
     return (
-      this.site.access_control?.banned_acl?.[this.args.aclTarget.type] || []
+      this.site.access_control?.banned_acl?.[
+        this.args.aclTarget.key ?? this.args.aclTarget.type
+      ] || []
     );
   }
 

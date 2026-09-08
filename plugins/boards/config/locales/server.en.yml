@@ -1,4 +1,11 @@
 en:
+  discourse_workflows:
+    errors:
+      create_board:
+        forbidden: "The workflow execution user does not have permission to create boards."
+        invalid_params: "Could not create board: %{errors}"
+        acl_failed: "Could not create the board's access permissions. Check the selected groups and permissions."
+        failed: "Could not create the board."
   site_settings:
     boards_enabled: "Organize topics, and lightweight standalone “floater” cards, into configurable, drag-and-drop kanban-style boards and columns, all with a purpose built management UI and per-board access control"
     boards_manage_board_allowed_groups: "Groups allowed to create and configure boards."
@@ -7,6 +14,9 @@ en:
       "Boards::Board_user_will_lose_permission": "You will lose permissions to manage this board if you make this change. Continue?"
       "Boards::Board_user_will_lose_permission_on_create": "If you create this board with these permissions, you will not be able to manage it. Continue?"
   boards:
+    board:
+      errors:
+        acl_create_failed: "Failed to create board permissions."
     errors:
       board_not_found: "Board not found"
       board_read_forbidden: "You do not have permission to view this board"
