@@ -56,7 +56,7 @@ class FileHelper
   end
 
   class FakeIO
-    attr_accessor :status
+    attr_accessor :status, :meta
   end
 
   def self.download(
@@ -97,6 +97,7 @@ class FileHelper
             # attempt error API compatibility
             io = FakeIO.new
             io.status = [response.code, ""]
+            io.meta = response.each_header.to_h
             raise OpenURI::HTTPError.new("#{response.code} Error", io)
           else
             log(:error, "FinalDestination did not work for: #{url}") if verbose
