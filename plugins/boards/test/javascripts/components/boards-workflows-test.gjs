@@ -134,14 +134,28 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
     await click(
       '.d-access-control__permission-option[data-permission-id="manage"]'
     );
-    assert
-      .dom('.workflows-access-control__permission option[value="manage"]')
-      .hasText(
-        i18n("boards.manage.board_access_permission_manager"),
-        "offers the shared board manager permission for input groups"
-      );
     await fillIn(".workflows-access-control__groups input", "[41,42]");
-    await fillIn(".workflows-access-control__permission select", "manage");
+    await click(
+      ".workflows-access-control__permission .d-access-control__permission"
+    );
+    assert
+      .dom('.d-access-control__permission-option[data-permission-id="manage"]')
+      .includesText(
+        i18n("boards.manage.board_access_permission_manager_description"),
+        "shows the board manager description for input groups"
+      );
+    assert
+      .dom('.d-access-control__permission-option[data-permission-id="view"]')
+      .includesText(
+        i18n("boards.manage.board_access_permission_viewer_description"),
+        "shares the board viewer description"
+      );
+    assert
+      .dom('.d-access-control__permission-option[data-permission-id="remove"]')
+      .doesNotExist("input groups do not offer Remove");
+    await click(
+      '.d-access-control__permission-option[data-permission-id="manage"]'
+    );
     await formKit().submit();
     assert.strictEqual(
       this.onSubmit.firstCall.args[0].acl.permission,

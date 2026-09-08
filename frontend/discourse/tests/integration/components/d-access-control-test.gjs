@@ -92,6 +92,31 @@ function rowNames() {
 module("Integration | Component | DAccessControl", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("renders additional rows without fixed ACL entries", async function (assert) {
+    const state = controlledState();
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        >
+          <:additionalRows>
+            <div class="d-access-control__row">Additional access</div>
+          </:additionalRows>
+        </DAccessControl>
+      </template>
+    );
+
+    assert
+      .dom(".d-access-control__rows")
+      .hasText(
+        "Additional access",
+        "keeps additional access inside the ACL list"
+      );
+  });
+
   test("adds a group with the default permission via the preloaded grantee chooser", async function (assert) {
     const state = controlledState();
 

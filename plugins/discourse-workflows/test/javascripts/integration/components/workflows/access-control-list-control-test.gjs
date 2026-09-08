@@ -209,7 +209,12 @@ module(
         await triggerEvent(".workflows-access-control__groups input", "drop", {
           dataTransfer: transfer,
         });
-        await fillIn(".workflows-access-control__permission select", "edit");
+        await click(
+          ".workflows-access-control__permission .d-access-control__permission"
+        );
+        await click(
+          '.d-access-control__permission-option[data-permission-id="edit"]'
+        );
         const chooser = selectKit(".d-access-control__chooser");
         await chooser.expand();
         await chooser.selectRowByValue("group:42");
@@ -261,9 +266,16 @@ module(
           .dom(".workflows-access-control__groups .cm-content")
           .exists("loads the saved expression");
         assert
-          .dom(".workflows-access-control__permission select")
-          .hasValue("edit", "loads its permission");
-        await fillIn(".workflows-access-control__permission select", "view");
+          .dom(
+            ".workflows-access-control__permission .d-access-control__permission"
+          )
+          .hasText("Editor", "loads its permission");
+        await click(
+          ".workflows-access-control__permission .d-access-control__permission"
+        );
+        await click(
+          '.d-access-control__permission-option[data-permission-id="view"]'
+        );
         await formKit().submit();
         assert.strictEqual(
           this.onSubmit.firstCall.args[0].permissions.group_ids,

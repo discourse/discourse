@@ -7,7 +7,7 @@ import FKOptional from "discourse/form-kit/components/fk/optional";
 import DAccessControl, {
   defaultPermissions,
 } from "discourse/ui-kit/d-access-control";
-import DNativeSelect from "discourse/ui-kit/d-native-select";
+import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 import ExpressionWrapper from "./expression-wrapper";
@@ -87,65 +87,55 @@ export default class AccessControlListInput extends Component {
         @groups={{this.site.groups}}
         @onChange={{this.setEntries}}
         @transformPermissionOptions={{@transformPermissionOptions}}
-      />
-      <div class="workflows-access-control__input-row">
-        <div class="workflows-access-control__groups">
-          <FKLabel
-            class="form-kit__container-title"
-            @fieldId="{{@field.id}}-groups"
+      >
+        <:additionalRows>
+          <div
+            class="d-access-control__row workflows-access-control__input-row"
           >
-            <span>{{i18n
-                "discourse_workflows.access_control.groups_from_input"
-              }}</span>
-            <FKOptional />
-          </FKLabel>
-          <ExpressionWrapper
-            @inputId="{{@field.id}}-groups"
-            @inputLabel={{i18n
-              "discourse_workflows.access_control.groups_from_input"
-            }}
-            @field={{this.groupField}}
-            @placeholder={{i18n
-              "discourse_workflows.access_control.input_placeholder"
-            }}
-            @schema={{GROUP_SCHEMA}}
-            @session={{@session}}
-            @supportsExpression={{true}}
-          >
-            <DTextField
-              id="{{@field.id}}-groups"
-              @placeholder={{i18n
-                "discourse_workflows.access_control.input_placeholder"
-              }}
-              @value={{readonly this.plainGroupIds}}
-              {{on "input" this.setPlainGroupIds}}
-            />
-          </ExpressionWrapper>
-        </div>
-        <div class="workflows-access-control__permission">
-          <FKLabel
-            class="form-kit__container-title"
-            @fieldId="{{@field.id}}-permission"
-          >
-            <span>{{i18n
-                "discourse_workflows.access_control.permission"
-              }}</span>
-          </FKLabel>
-          <DNativeSelect
-            id="{{@field.id}}-permission"
-            @includeNone={{false}}
-            @onChange={{this.setPermission}}
-            @value={{this.value.permission}}
-            as |select|
-          >
-            {{#each this.permissionOptions as |option|}}
-              <select.Option
-                @value={{option.id}}
-              >{{option.name}}</select.Option>
-            {{/each}}
-          </DNativeSelect>
-        </div>
-      </div>
+            <div class="workflows-access-control__groups">
+              <FKLabel
+                class="form-kit__container-title"
+                @fieldId="{{@field.id}}-groups"
+              >
+                <span>{{i18n
+                    "discourse_workflows.access_control.groups_from_input"
+                  }}</span>
+                <FKOptional />
+              </FKLabel>
+              <ExpressionWrapper
+                @inputId="{{@field.id}}-groups"
+                @inputLabel={{i18n
+                  "discourse_workflows.access_control.groups_from_input"
+                }}
+                @field={{this.groupField}}
+                @placeholder={{i18n
+                  "discourse_workflows.access_control.input_placeholder"
+                }}
+                @schema={{GROUP_SCHEMA}}
+                @session={{@session}}
+                @supportsExpression={{true}}
+              >
+                <DTextField
+                  id="{{@field.id}}-groups"
+                  @placeholder={{i18n
+                    "discourse_workflows.access_control.input_placeholder"
+                  }}
+                  @value={{readonly this.plainGroupIds}}
+                  {{on "input" this.setPlainGroupIds}}
+                />
+              </ExpressionWrapper>
+            </div>
+            <div class="workflows-access-control__permission">
+              <DAccessControlPermissionMenu
+                id="{{@field.id}}-permission"
+                @onChange={{this.setPermission}}
+                @options={{this.permissionOptions}}
+                @value={{this.value.permission}}
+              />
+            </div>
+          </div>
+        </:additionalRows>
+      </DAccessControl>
     </div>
   </template>
 }

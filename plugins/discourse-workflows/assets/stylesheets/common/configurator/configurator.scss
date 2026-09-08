@@ -468,14 +468,13 @@
 
 .workflows-access-control {
   &__input-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-top: var(--space-4);
+    align-items: flex-start;
+    gap: var(--space-12);
+    padding-block: var(--space-3);
   }
 
   &__groups {
-    flex: 1 1 16em;
+    flex: 1 1 0;
     min-width: 0;
 
     input {
@@ -485,10 +484,7 @@
   }
 
   &__permission {
-    flex: 0 1 10em;
-
-    select {
-      width: 100%;
-    }
+    flex: 0 0 auto;
+    text-align: end;
   }
 }
