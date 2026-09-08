@@ -1,4 +1,5 @@
 import { modifier } from "ember-modifier";
+import { registerPointerDrag } from "discourse/ui-kit/modifiers/d-pointer-drag";
 
 const DRAG_SCROLL_SKIP_SELECTOR =
   ".discourse-boards-card, button, a, input, textarea, select, [contenteditable=''], [contenteditable='true']";
@@ -8,12 +9,21 @@ const DRAG_SCROLL_MOMENTUM_MAX_PX_PER_FRAME = 4;
 const DRAG_SCROLL_MOMENTUM_MIN_PX_PER_FRAME = 0.5;
 const DRAG_SCROLL_VELOCITY_WINDOW_MS = 80;
 const DRAG_SCROLL_MS_PER_FRAME = 1000 / 60;
+const DRAG_SCROLL_THRESHOLD = 4;
 
+/**
+ * Grab-to-pan the board: press on empty background, drag, and the board scrolls
+ * with the pointer.
+ *
+ * `registerPointerDrag` owns the pointer lifecycle — capture, the primary-button
+ * gate, pointer identity, the movement threshold and cancellation. What stays
+ * here is what the gesture engine has no opinion about: which presses count,
+ * and the velocity sampling and coast that make the release feel like a flick.
+ */
 export const dragToScroll = modifier((element) => {
-  let activePointerId = null;
   let startX = 0;
   let startScrollLeft = 0;
-  let dragStarted = false;
+  let panning = false;
   let velocitySamples = [];
   let momentumFrame = null;
   let pendingMoveFrame = null;
@@ -38,11 +48,6 @@ export const dragToScroll = modifier((element) => {
     while (velocitySamples.length > 1 && velocitySamples[0].time < cutoff) {
       velocitySamples.shift();
     }
-  };
-
-  const recordSample = (event) => {
-    velocitySamples.push({ time: event.timeStamp, x: event.clientX });
-    pruneVelocitySamples(event.timeStamp);
   };
 
   const startMomentum = (endTime) => {
@@ -72,6 +77,9 @@ export const dragToScroll = modifier((element) => {
     const step = () => {
       const previous = element.scrollLeft;
       element.scrollLeft = previous + velocity;
+      // The read-back is the limit test; it holds because this container does
+      // not use `scroll-behavior: smooth`, under which the write would not be
+      // observable synchronously.
       if (element.scrollLeft === previous) {
         momentumFrame = null;
         return;
@@ -88,108 +96,110 @@ export const dragToScroll = modifier((element) => {
     momentumFrame = requestAnimationFrame(step);
   };
 
-  const onPointerDown = (event) => {
-    cancelMomentum();
-
-    if (event.button !== 0 || event.pointerType === "touch") {
-      return;
-    }
-    if (event.target.closest(DRAG_SCROLL_SKIP_SELECTOR)) {
-      return;
-    }
-    if (element.scrollWidth <= element.clientWidth) {
-      return;
-    }
-
-    activePointerId = event.pointerId;
-    startX = event.clientX;
-    startScrollLeft = element.scrollLeft;
-    dragStarted = false;
-    velocitySamples = [{ time: event.timeStamp, x: event.clientX }];
+  const stopPanning = () => {
+    panning = false;
+    element.classList.remove(
+      "discourse-boards-board-container--drag-scrolling"
+    );
   };
 
-  const onPointerMove = (event) => {
-    if (event.pointerId !== activePointerId) {
-      return;
-    }
+  const releaseGesture = registerPointerDrag(element, () => ({
+    // A large scroll surface, so native panning and pinch-zoom stay with the
+    // browser; the default would suppress both.
+    touchAction: "manipulation",
+    // Left at 0 so the latch below can measure HORIZONTAL travel. The engine's
+    // own threshold is a straight-line distance, which a vertical drag would
+    // cross without ever meaning to pan sideways.
+    threshold: 0,
 
-    const dx = event.clientX - startX;
-    if (!dragStarted) {
-      if (Math.abs(dx) < 4) {
-        return;
+    onDragStart: (event) => {
+      cancelMomentum();
+
+      // Touch scrolling is the browser's, and a press on anything interactive
+      // belongs to that element. Refusing here releases the capture the engine
+      // has already taken, so the click underneath still lands.
+      if (
+        event.pointerType === "touch" ||
+        event.target.closest(DRAG_SCROLL_SKIP_SELECTOR) ||
+        element.scrollWidth <= element.clientWidth
+      ) {
+        return false;
       }
-      dragStarted = true;
-      element.classList.add("discourse-boards-board-container--drag-scrolling");
-      try {
-        element.setPointerCapture(activePointerId);
-      } catch {
-        // pointer capture is best-effort
+
+      startX = event.clientX;
+      startScrollLeft = element.scrollLeft;
+      velocitySamples = [{ time: event.timeStamp, x: event.clientX }];
+    },
+
+    onDrag: (event) => {
+      if (!panning) {
+        if (Math.abs(event.clientX - startX) < DRAG_SCROLL_THRESHOLD) {
+          return;
+        }
+        // Applied here rather than through `draggingClass`. The engine puts
+        // that on when its own threshold engages, which at 0 means the press,
+        // and this class suppresses pointer events on descendants, so a plain
+        // click must never see it.
+        panning = true;
+        element.classList.add(
+          "discourse-boards-board-container--drag-scrolling"
+        );
       }
-    }
 
-    event.preventDefault();
-    latestClientX = event.clientX;
-    recordSample(event);
+      latestClientX = event.clientX;
+      velocitySamples.push({ time: event.timeStamp, x: event.clientX });
+      pruneVelocitySamples(event.timeStamp);
 
-    if (pendingMoveFrame === null) {
-      pendingMoveFrame = requestAnimationFrame(() => {
-        pendingMoveFrame = null;
-        element.scrollLeft = startScrollLeft - (latestClientX - startX);
-      });
-    }
-  };
-
-  const stopDrag = (event) => {
-    if (event.pointerId !== activePointerId) {
-      return;
-    }
-
-    cancelPendingMove();
-
-    const wasDragging = dragStarted;
-    if (dragStarted) {
-      try {
-        element.releasePointerCapture(activePointerId);
-      } catch {
-        // pointer capture release is best-effort
+      // Coalesced into a frame rather than written per event, as before the
+      // gesture engine took over the lifecycle.
+      if (pendingMoveFrame === null) {
+        pendingMoveFrame = requestAnimationFrame(() => {
+          pendingMoveFrame = null;
+          element.scrollLeft = startScrollLeft - (latestClientX - startX);
+        });
       }
-      element.classList.remove(
-        "discourse-boards-board-container--drag-scrolling"
-      );
-    }
+    },
 
-    activePointerId = null;
-    dragStarted = false;
+    onDragEnd: (event, info) => {
+      const wasPanning = panning;
+      cancelPendingMove();
+      stopPanning();
 
-    if (wasDragging && event.type === "pointerup") {
-      startMomentum(event.timeStamp);
-    }
-  };
+      if (wasPanning && info.moved) {
+        startMomentum(event.timeStamp);
+      }
+    },
 
+    onDragCancel: () => {
+      cancelPendingMove();
+      stopPanning();
+    },
+  }));
+
+  // Beside the gesture, not through it: a coast has to die on any press, and
+  // the engine returns before its callbacks for a non-primary button.
+  const onAnyPointerDown = () => cancelMomentum();
+  const onWheel = () => cancelMomentum();
+
+  // The engine does not suppress the click that follows a release, so a pan
+  // would otherwise also activate whatever sat under the pointer.
   const onClickCapture = (event) => {
-    if (dragStarted) {
+    if (panning) {
       event.stopPropagation();
       event.preventDefault();
     }
   };
 
-  const onWheel = () => cancelMomentum();
-
-  element.addEventListener("pointerdown", onPointerDown);
-  element.addEventListener("pointermove", onPointerMove);
-  element.addEventListener("pointerup", stopDrag);
-  element.addEventListener("pointercancel", stopDrag);
-  element.addEventListener("click", onClickCapture, true);
+  element.addEventListener("pointerdown", onAnyPointerDown);
   element.addEventListener("wheel", onWheel, { passive: true });
+  element.addEventListener("click", onClickCapture, true);
 
   return () => {
     cancelMomentum();
     cancelPendingMove();
-    element.removeEventListener("pointerdown", onPointerDown);
-    element.removeEventListener("pointermove", onPointerMove);
-    element.removeEventListener("pointerup", stopDrag);
-    element.removeEventListener("pointercancel", stopDrag);
-    element.removeEventListener("click", onClickCapture, true);
+    releaseGesture();
+    element.removeEventListener("pointerdown", onAnyPointerDown);
     element.removeEventListener("wheel", onWheel);
+    element.removeEventListener("click", onClickCapture, true);
   };
 });
