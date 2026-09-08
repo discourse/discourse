@@ -499,7 +499,7 @@ RSpec.describe Admin::BackupsController do
       before { sign_in(admin) }
 
       describe "when filename contains invalid characters" do
-        it "should raise an error" do
+        it "returns 415 for invalid filename characters" do
           ["灰色.tar.gz", '; echo \'haha\'.tar.gz'].each do |invalid_filename|
             described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
@@ -517,7 +517,7 @@ RSpec.describe Admin::BackupsController do
       end
 
       describe "when resumableIdentifier is invalid" do
-        it "should raise an error" do
+        it "returns 400 for an invalid upload identifier" do
           filename = "test_site-0123456789.tar.gz"
           @paths = [backup_path(File.join("tmp", "test", "#{filename}.part1"))]
 
@@ -537,7 +537,7 @@ RSpec.describe Admin::BackupsController do
       end
 
       describe "when filename is valid" do
-        it "should upload the file successfully" do
+        it "uploads the file" do
           freeze_time
           described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
@@ -753,7 +753,7 @@ RSpec.describe Admin::BackupsController do
       before { sign_in(admin) }
 
       describe "when resumableIdentifier is invalid" do
-        it "should raise an error" do
+        it "returns 400 for an invalid chunk identifier" do
           get "/admin/backups/upload",
               params: {
                 resumableidentifier: "../some_file",
@@ -836,7 +836,7 @@ RSpec.describe Admin::BackupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should rollback the restore" do
+      it "rolls back the restore" do
         BackupRestore.expects(:rollback!)
 
         post "/admin/backups/rollback.json"
@@ -844,7 +844,7 @@ RSpec.describe Admin::BackupsController do
         expect(response.status).to eq(200)
       end
 
-      it "should not allow rollback via a GET request" do
+      it "rejects rollback through a GET request" do
         get "/admin/backups/rollback.json"
         expect(response.status).to eq(404)
       end
@@ -852,7 +852,7 @@ RSpec.describe Admin::BackupsController do
       context "when readonly mode is enabled" do
         before { Discourse.enable_readonly_mode }
 
-        it "should rollback the restore" do
+        it "rolls back the restore" do
           BackupRestore.expects(:rollback!)
           post "/admin/backups/rollback.json"
           expect(response.status).to eq(200)
@@ -886,7 +886,7 @@ RSpec.describe Admin::BackupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should cancel an backup" do
+      it "cancels the backup" do
         BackupRestore.expects(:cancel!)
 
         delete "/admin/backups/cancel.json"
@@ -894,7 +894,7 @@ RSpec.describe Admin::BackupsController do
         expect(response.status).to eq(200)
       end
 
-      it "should not allow cancel via a GET request" do
+      it "rejects cancellation through a GET request" do
         get "/admin/backups/cancel.json"
         expect(response.status).to eq(404)
       end
@@ -902,7 +902,7 @@ RSpec.describe Admin::BackupsController do
       context "when readonly mode is enabled" do
         before { Discourse.enable_readonly_mode }
 
-        it "should cancel an backup" do
+        it "cancels the backup" do
           BackupRestore.expects(:cancel!)
 
           delete "/admin/backups/cancel.json"

@@ -2,6 +2,7 @@
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
+import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -66,6 +67,10 @@ import {
   _INTERNAL_SOURCE_KEY,
   CORE_SOURCE,
 } from "discourse/lib/customization-source";
+import {
+  deferClassModification,
+  lazyClassFor,
+} from "discourse/lib/deferred-class-modifications";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -230,19 +235,14 @@ class _PluginApi {
   }
 
   _lookupContainer(path) {
-    if (
-      !this.container ||
-      this.container.isDestroying ||
-      this.container.isDestroyed
-    ) {
+    if (!this.container || this.container.isDestroying) {
       return;
     }
 
     return this.container.lookup(path);
   }
 
-  _resolveClass(resolverName, opts) {
-    opts = opts || {};
+  _resolveClass(resolverName) {
     const normalized = this.container.registry.normalize(resolverName);
     if (
       this.container.cache[normalized] ||
@@ -259,18 +259,7 @@ class _PluginApi {
 
     let klass;
     if (!blockedModifications.includes(normalized)) {
-      klass = this.container.factoryFor(normalized);
-    }
-
-    if (!klass) {
-      if (!opts.ignoreMissing) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          consolePrefix(),
-          `"${normalized}" was not found by modifyClass`
-        );
-      }
-      return;
+      klass = this.container.factoryFor(normalized) || lazyClassFor(normalized);
     }
 
     return klass;
@@ -298,8 +287,11 @@ class _PluginApi {
   modifyClass(resolverName, changes, opts) {
     this.#deprecateModifyClass(resolverName, "modifyClass");
 
-    const klass = this._resolveClass(resolverName, opts);
+    const klass = this._resolveClass(resolverName);
     if (!klass) {
+      this.#deferModification(resolverName, () =>
+        this.modifyClass(resolverName, changes, opts)
+      );
       return;
     }
 
@@ -339,8 +331,11 @@ class _PluginApi {
   modifyClassStatic(resolverName, changes, opts) {
     this.#deprecateModifyClass(resolverName, "modifyClassStatic");
 
-    const klass = this._resolveClass(resolverName, opts);
+    const klass = this._resolveClass(resolverName);
     if (!klass) {
+      this.#deferModification(resolverName, () =>
+        this.modifyClassStatic(resolverName, changes, opts)
+      );
       return;
     }
 
@@ -3665,6 +3660,22 @@ class _PluginApi {
   }
 
   /**
+   * Registers components that render related items for an admin report.
+   *
+   * @param {String} reportType - The report's identifier
+   * @param {Object} renderer - The related-item renderer configuration
+   * @param {Class} [renderer.relatedItemsComponent] - Component for the report detail view
+   * @param {Object} [renderer.tableSummary] - Configuration for table cell summaries
+   * @param {Class} renderer.tableSummary.itemComponent - Component for each summary item
+   * @param {String} renderer.tableSummary.itemsKey - Related-items response key
+   * @param {String} [renderer.tableSummary.listClass] - Class for the summary list
+   * @param {String} renderer.tableSummary.titleKey - Summary title translation key
+   */
+  registerAdminReportRelatedItemsRenderer(reportType, renderer) {
+    registerAdminReportRelatedItemsRenderer(reportType, renderer);
+  }
+
+  /**
    * Registers an extension for the rich editor
    *
    * EXPERIMENTAL: This API will change without warning
@@ -3928,6 +3939,14 @@ class _PluginApi {
    */
   registerBlockConditionType(ConditionClass) {
     _registerConditionType(ConditionClass, this.source);
+  }
+
+  // The module may not have been evaluated yet, and registers itself when it is.
+  #deferModification(resolverName, retry) {
+    deferClassModification(
+      this.container.registry.normalize(resolverName),
+      retry
+    );
   }
 
   #deprecateModifyClass(resolverName, apiName) {

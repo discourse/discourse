@@ -52,7 +52,7 @@ export default class ReferencePropertyPicker extends Component {
   focusFilter(element) {
     // Next frame, so focus wins over the editor reclaiming it.
     requestAnimationFrame(() => {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         element.focus();
       }
     });

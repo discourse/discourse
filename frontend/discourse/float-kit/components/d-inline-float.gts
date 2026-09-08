@@ -49,6 +49,7 @@ const DInlineFloat: TemplateOnlyComponent<DInlineFloatSignature> = <template>
       <DModal
         @closeModal={{@instance.close}}
         @hideHeader={{true}}
+        aria-label={{@instance.options.ariaLabel}}
         data-identifier={{@instance.options.identifier}}
         data-content
         class={{dConcatClass

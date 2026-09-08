@@ -5,63 +5,1174 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "模型 ID"
+        max_prompt_tokens: "內容視窗"
+  dashboard:
+    problem:
+      ai_llm_status:
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> 需要留意。過去 %{count} 小時內，它在 %{total_calls} 次呼叫中有 %{failed_calls} 次未回應。"
+      ai_credit_soft_limit: "%{model_name} 僅剩 %{percentage_remaining}% 的點數。點數將於 %{reset_date} 重設。<a href='%{url}'>查看 AI 模型</a>"
+      ai_credit_hard_limit: "%{model_name} 的 AI 點數已用盡。AI 功能要到 %{reset_date} 後才能使用。<a href='%{url}'>查看 AI 模型</a>"
+      ai_image_caption_agent: "AI 圖像說明已啟用，但所選的圖像說明代理程式尚未就緒：%{reason}。<a href='%{url}'>檢查圖像說明代理程式</a>。"
+      ai_image_caption_agent_reasons:
+        agent_missing: "所選的代理程式不存在"
+        agent_vision_disabled: "代理程式不能包含圖像上傳"
+        llm_missing: "代理程式無法解析為 LLM"
+        llm_vision_disabled: "解析出的 LLM 不支援圖像輸入"
+      ai_llm_vision_delegation: "%{model_name} 無法使用其設定的視覺模型：%{reason}。<a href='%{url}'>檢查 AI 模型</a>。"
+      ai_llm_vision_delegation_reasons:
+        missing: "視覺模型已不存在"
+        native_and_delegated: "同時設定了原生圖像輸入與委派視覺功能"
+        self_reference: "模型無法將自己用於視覺功能"
+        delegated: "視覺模型將工作委派給另一個模型"
+        not_native: "視覺模型不支援原生圖像輸入"
+  discourse_automation:
+    ai:
+      flag_types:
+        review: "將貼文加入審核佇列"
+        review_hide: "將貼文加入審核佇列並隱藏貼文"
+        review_delete: "將貼文加入審核佇列並刪除貼文"
+        review_delete_silence: "將貼文加入審核佇列、刪除貼文並將使用者禁言"
+        spam: "標記為垃圾內容並隱藏貼文"
+        spam_silence: "標記為垃圾內容、隱藏貼文並將使用者禁言"
+    scriptables:
+      ai_tool_action:
+        title: AI 工具動作
+        description: 自動化觸發時執行 AI 工具
+      llm_agent_triage:
+        title: 使用 AI 代理程式分類處理貼文
+        description: "使用特定 AI 代理程式回覆貼文"
+      llm_triage:
+        title: 使用 AI 分類處理貼文
+        description: "使用大型語言模型分類處理貼文"
+        flagged_post: |
+          %{score_reason}
+          %{response}
+        flagged_post_response: "模型的回應：%{llm_response}"
+        flagged_post_score_reason: |
+          <b>由 <a href="%{base_path}/admin/plugins/automation/automation/%{automation_id}">%{automation_name}</a> 規則觸發。</b>
+        notify_author_pm:
+          subject: "你的貼文已暫時移除以供審核"
+          body: |
+            嗨 @%{username}，
+
+            你在「%{topic_title}」中的貼文已暫時移除並放入審核佇列，等待版主查看。核准後，貼文將自動還原。
+
+            參考：%{post_url}
+      llm_report:
+        title: 定期使用 AI 產生報告
+        description: "根據大型語言模型定期產生報告"
+      llm_tagger:
+        title: 使用 AI 標記主題
+        description: "使用 AI 自動標記主題"
+  site_settings:
+    discourse_ai_enabled: "啟用 Discourse AI 外掛。"
+    enable_ai_bot_starred_conversations: "允許使用者將 AI 機器人對話加上星號，並在側邊欄的「已加星號」區段中顯示。"
+    ai_default_llm_model: "所有 AI 功能預設使用的 LLM 模型"
+    ai_artifact_security: "AI 成品系統會產生包含可執行程式碼的 IFRAME。嚴格模式會要求額外點擊一次才執行程式碼；寬鬆模式會立即執行程式碼；混合模式允許使用者提供 data-ai-artifact-autorun，使其立即顯示；停用模式則會停用成品系統。"
+    ai_toxicity_enabled: "啟用有害內容模組。"
+    ai_toxicity_inference_service_api_endpoint: "有害內容模組 API 的執行 URL"
+    ai_toxicity_inference_service_api_key: "有害內容 API 的 API 金鑰"
+    ai_toxicity_inference_service_api_model: "用於推論的模型。多語言模型支援義大利文、法文、俄文、葡萄牙文、西班牙文和土耳其文。"
+    ai_toxicity_flag_automatically: "自動標記超過所設定門檻的貼文／聊天訊息。"
+    ai_toxicity_flag_threshold_toxicity: "有害內容：粗魯、不尊重或不合理的留言，可能使你離開討論或放棄分享觀點"
+    ai_toxicity_flag_threshold_severe_toxicity: "嚴重有害內容：充滿仇恨、攻擊性或極不尊重的留言，很可能使你離開討論或放棄分享觀點"
+    ai_toxicity_flag_threshold_obscene: "猥褻"
+    ai_toxicity_flag_threshold_identity_attack: "身分攻擊"
+    ai_toxicity_flag_threshold_insult: "侮辱"
+    ai_toxicity_flag_threshold_threat: "威脅"
+    ai_toxicity_flag_threshold_sexual_explicit: "性露骨內容"
+    ai_toxicity_groups_bypass: "這些群組中的使用者，其貼文不會由有害內容模組分類。"
+    ai_sentiment_enabled: "啟用情緒分析模組。"
+    ai_sentiment_inference_service_api_endpoint: "情緒分析模組 API 的執行 URL"
+    ai_sentiment_inference_service_api_key: "情緒分析 API 的 API 金鑰"
+    ai_sentiment_model_configs: "用於推論的分類模型端點。情感分析會將貼文分為正面、中性或負面；情緒分析會依支援的情緒標籤分類貼文。"
+    ai_sentiment_models: "用於推論的分類模型端點。情感分析會將貼文分為正面、中性或負面；情緒分析會依支援的情緒標籤分類貼文。"
+    ai_sentiment_sentiment_classification_strategy: "情感分類後端。"
+    ai_sentiment_sentiment_agent: "情感分析後端為代理程式時，用於情感分類的代理程式。"
+    ai_sentiment_emotion_classification_strategy: "情緒分類後端。"
+    ai_sentiment_emotion_agent: "情緒分析後端為代理程式時，用於情緒分類的代理程式。"
+    ai_nsfw_detection_enabled: "啟用 NSFW 模組。"
+    ai_nsfw_inference_service_api_endpoint: "NSFW 模組 API 的執行 URL"
+    ai_nsfw_inference_service_api_key: "NSFW API 的 API 金鑰"
+    ai_nsfw_flag_automatically: "自動標記超過所設定門檻的 NSFW 貼文。"
+    ai_nsfw_flag_threshold_general: "將圖像判定為 NSFW 的一般門檻。"
+    ai_nsfw_flag_threshold_drawings: "將繪圖判定為 NSFW 的門檻。"
+    ai_nsfw_flag_threshold_hentai: "將分類為 hentai 的圖像判定為 NSFW 的門檻。"
+    ai_nsfw_flag_threshold_porn: "將分類為色情內容的圖像判定為 NSFW 的門檻。"
+    ai_nsfw_flag_threshold_sexy: "將分類為性感內容的圖像判定為 NSFW 的門檻。"
+    ai_nsfw_models: "用於 NSFW 推論的模型。"
+    ai_spam_detection_enabled: "啟用 AI 垃圾內容偵測模組"
+    ai_spam_detection_max_post_count: "使用者擁有的貼文數超過此上限後，將不再掃描其垃圾內容"
+    ai_spam_detection_max_trust_level: "掃描垃圾內容的使用者最高信任等級"
+    ai_openai_api_key: "OpenAI API 的 API 金鑰。僅用於建立及編輯圖像。若要使用 GPT，請使用 LLM 設定分頁"
+    ai_helper_enabled: "啟用 AI 助理。"
+    composer_ai_helper_allowed_groups: "這些群組中的使用者會在編輯器中看到 AI 助理按鈕。"
+    ai_helper_allowed_in_pm: "在私人訊息中啟用編輯器的 AI 助理。"
+    ai_helper_automatic_chat_thread_title_delay: "AI 助理自動設定聊天討論串標題前要延遲的分鐘數。"
+    ai_helper_automatic_chat_thread_title: "根據討論串內容自動設定聊天討論串標題。"
+    ai_helper_enabled_features: "選擇要在 AI 助理中啟用的功能。編輯器中的標題建議會透過 AI 助理選單提供，且也需要 context_menu 功能。"
+    ai_image_caption_agent: "用於 AI 圖像說明的代理程式。自訂代理程式必須啟用圖像上傳，並使用具備視覺功能的 LLM。"
+    ai_post_image_captions_enabled: "啟用貼文圖像的 AI 說明。若要產生缺少的說明，必須設定 {{setting:ai_image_caption_agent}}。"
+    ai_post_image_captions_per_post_limit: "每篇貼文最多可產生說明的貼文圖像數量。"
+    ai_post_image_captions_backfill_hourly_rate: "每小時最多可使用 AI 產生的圖像說明回填幾篇貼文。設為 0 可停用回填。"
+    ai_post_image_captions_backfill_max_age_days: "使用 AI 產生的圖像說明進行回填時，貼文最長可距今幾天。"
+    post_ai_helper_allowed_groups: "允許在貼文中使用 AI 助理功能的使用者群組"
+    ai_helper_post_illustrator_agent: "用於 AI 助理「為貼文配圖」功能的代理程式。注意：你還必須建立圖像產生工具（管理 > 外掛 > Discourse AI > 工具），此功能才能運作。"
+    ai_helper_chat_thread_title_agent: "用於產生聊天討論串標題的代理程式。"
+    ai_embeddings_selected_model: "使用所選模型產生嵌入。"
+    ai_embeddings_semantic_related_topics_enabled: "使用語意搜尋尋找相關主題。"
+    ai_embeddings_semantic_related_topics: "相關主題區段中最多顯示的主題數量。"
+    ai_embeddings_backfill_batch_size: "每 15 分鐘要回填的嵌入數量。"
+    ai_embeddings_semantic_search_enabled: "啟用全頁語意搜尋。"
+    ai_embeddings_semantic_search_use_hyde: "全頁語意搜尋使用 HyDE。它會使用 LLM，依使用者的搜尋詞建立一篇假想貼文，以協助找到相符結果。"
+    ai_embeddings_semantic_quick_search_enabled: "在搜尋選單彈出視窗中啟用語意搜尋選項。"
+    ai_embeddings_semantic_related_include_closed_topics: "在語意搜尋結果中包含已關閉的主題"
+    ai_embeddings_semantic_related_age_penalty: "對語意搜尋結果中的主題套用指數式時間懲罰。0.0 = 無懲罰；0.3 = 稍微偏向近期活躍內容；1.0 以上 = 強烈偏向近期內容。"
+    ai_embeddings_semantic_related_age_time_scale: "計算時間懲罰時使用的天數尺度。若 penalty=1.0，停用達此天數的主題會受到約 50% 的懲罰。年度尺度請用 365，季度尺度請用 90。"
+    ai_embeddings_per_post_enabled: 為每篇貼文產生嵌入
+    ai_admin_dashboard_enabled: "在管理員控制面板上啟用 AI 功能。"
+    ai_admin_dashboard_highlights_agent: "在管理員控制面板上說明社群顯著變化的代理程式。"
+    ai_admin_dashboard_highlights_category_scope: "選擇 AI 重點摘要可使用的分類。包含與排除選項使用 {{setting:ai_admin_dashboard_highlights_categories}}。私人訊息一律排除。"
+    ai_admin_dashboard_highlights_categories: "當 AI 重點摘要的分類範圍設為<strong>包含</strong>或<strong>排除</strong>時所使用的分類。"
+    ai_summarization_enabled: "啟用摘要功能"
+    ai_summarization_agent: "摘要功能使用的代理程式"
+    ai_pm_summarization_allowed_groups: "允許在私人訊息中建立及查看摘要的群組。"
+    ai_summary_gists_enabled: "自動為主題中的最新回覆產生簡短摘要"
+    ai_summary_gists_agent: "用於產生簡短主題摘要的代理程式。摘要產生一律使用內建的 final-summary 工具；代理程式上設定的其他工具和結構化回應格式將被忽略。"
+    ai_summary_backfill_maximum_topics_per_hour: "每小時要回填的主題摘要數量。每個在地化摘要都會計入此限制。"
+    ai_bot_enabled: "啟用 AI 機器人模組。"
+    ai_bot_enabled_llms: "可供 AI 機器人對話選擇的 LLM"
+    ai_bot_enable_chat_warning: "發起私人訊息聊天時顯示警告。可編輯翻譯字串 discourse_ai.ai_bot.pm_warning 來覆寫"
+    ai_bot_allowed_groups: "當 GPT 機器人可存取私人訊息時，它會回覆這些群組的成員。"
+    ai_bot_debugging_allowed_groups: "允許這些群組在貼文上看到偵錯按鈕，以顯示原始 AI 請求與回應"
+    ai_bot_public_sharing_allowed_groups: "允許這些群組透過唯一的公開連結，向大眾分享 AI 私人訊息。注意：若網站要求登入，分享內容也會要求登入。"
+    ai_bot_add_to_header: "在頁首顯示按鈕，以開始與 AI 機器人的私人訊息"
+    ai_bot_add_to_community_section: "在側邊欄社群區段顯示連結，以開始與 AI 機器人的私人訊息"
+    ai_bot_github_access_token: "供 GitHub AI 工具使用的 GitHub 存取權杖（搜尋支援所必需）"
+    ai_bot_enable_docked_composer: "為 AI 機器人對話啟用停駐式聊天編輯器，而非標準的浮動編輯器。"
+    ai_discover_enabled: "啟用探索搜尋功能"
+    ai_discover_agent: "探索搜尋功能使用的代理程式"
+    ai_google_custom_search_api_key: "Google 自訂搜尋 API 的 API 金鑰，請參閱：https://developers.google.com/custom-search"
+    ai_google_custom_search_cx: "Google 自訂搜尋 API 的 CX"
+    ai_discord_search_enabled: "啟用 Discord 搜尋功能"
+    ai_discord_app_id: "要連接 Discord 搜尋的 Discord 應用程式 ID"
+    ai_discord_app_public_key: "要連接 Discord 搜尋的 Discord 應用程式公開金鑰"
+    ai_discord_search_mode: "選擇 Discord 搜尋使用的搜尋模式"
+    ai_discord_search_agent: "Discord 搜尋使用的代理程式。"
+    ai_discord_allowed_guilds: "允許機器人搜尋的 Discord 公會（伺服器）"
+    ai_translation_enabled: "啟用 AI 翻譯功能"
+    ai_translation_category_scope: "選擇 AI 翻譯可使用的分類。包含與排除選項使用 {{setting:ai_translation_categories}}。私人訊息由 {{setting:ai_translation_personal_messages}} 控制。"
+    ai_translation_categories: "當 AI 翻譯的分類範圍設為<strong>包含</strong>或<strong>排除</strong>時所使用的分類。"
+    ai_translation_personal_messages: "控制要翻譯哪些私人訊息。「none」會停用私人訊息翻譯；「group」只翻譯群組私人訊息；「all」則翻譯所有私人訊息。"
+    ai_translation_include_bot_content: "啟用後，由機器人（使用者 ID 小於 0）撰寫的內容也會送交翻譯。"
+    ai_translation_backfill_start_date: "要開始回填翻譯歷史貼文與主題的 UTC 日期。留白可停用回填；新內容仍會繼續翻譯。"
+    ai_translation_backfill_hourly_rate: "回填作業期間每小時要翻譯的貼文與主題數量。設為 0 可停用現有內容翻譯的自動回填。"
+    ai_translation_backfill_parallel_jobs: "每個回填週期要平行執行的貼文在地化工作數量。數值越高，處理量越大，但會消耗更多資源。"
+    ai_usage_rollup_after_days: "每項請求的 AI 使用統計資料保留天數，超過後會彙整為每日統計。設為 0 可停用彙整。"
+    ai_audit_logs_detailed_retention_days: "原始 AI 請求與回應承載資料的保留天數。設為 0 會保留承載資料，直到摘要記錄被刪除。原始承載資料可能包含私人或敏感內容。即使 AI 外掛已停用，清理作業仍會繼續。"
+    ai_audit_logs_purge_after_days: "AI API 稽核記錄摘要的保留天數，超過後會刪除整份記錄。設為 0 可永久保留摘要。即使 AI 外掛已停用，清理作業仍會繼續。"
+  reviewables:
+    reasons:
+      flagged_by_toxicity: AI 外掛將其分類為有害內容後標記了此項目。
+      flagged_by_nsfw: AI 外掛將至少一張附加圖像分類為 NSFW 後標記了此項目。
   reports:
+    sentiment_analysis:
+      title: "情感分析"
+      description: "此報告提供依分類分組的貼文情感分析，並列出每篇貼文及每個分類的正面、負面和中性分數。"
     overall_sentiment:
+      title: "整體情感"
+      description: "圖表比較分類為正面或負面的貼文數量。正面或負面分數高於設定的門檻分數時才會計入，因此不會顯示中性貼文，也會排除私人訊息。依所選的情感分類方法，貼文會由設定的情感分類模型（「cardiffnlp/twitter-roberta-base-sentiment-latest」）或設定的情感分類代理程式進行分類。"
+      xaxis: "正面（%）"
       yaxis: "日期"
+    emotion_admiration:
+      title: "🤩 欽佩"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「欽佩」情緒的貼文。"
+    emotion_amusement:
+      title: "😄 歡樂"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「歡樂」情緒的貼文。"
+    emotion_anger:
+      title: "😠 憤怒"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「憤怒」情緒的貼文。"
+    emotion_annoyance:
+      title: "😒 煩躁"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「煩躁」情緒的貼文。"
+    emotion_approval:
+      title: "👍 認同"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「認同」情緒的貼文。"
+    emotion_caring:
+      title: "🤗 關懷"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「關懷」情緒的貼文。"
+    emotion_confusion:
+      title: "😕 困惑"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「困惑」情緒的貼文。"
+    emotion_curiosity:
+      title: "🤔 好奇"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「好奇」情緒的貼文。"
+    emotion_desire:
+      title: "😍 渴望"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「渴望」情緒的貼文。"
+    emotion_disappointment:
+      title: "😞 失望"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「失望」情緒的貼文。"
+    emotion_disapproval:
+      title: "👎 不認同"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「不認同」情緒的貼文。"
+    emotion_disgust:
+      title: "🤢 厭惡"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「厭惡」情緒的貼文。"
+    emotion_embarrassment:
+      title: "😳 尷尬"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「尷尬」情緒的貼文。"
+    emotion_excitement:
+      title: "🤪 興奮"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「興奮」情緒的貼文。"
+    emotion_fear:
+      title: "😨 恐懼"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「恐懼」情緒的貼文。"
+    emotion_gratitude:
+      title: "🙏 感激"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「感激」情緒的貼文。"
+    emotion_grief:
+      title: "😢 悲痛"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「悲痛」情緒的貼文。"
+    emotion_joy:
+      title: "😊 喜悅"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「喜悅」情緒的貼文。"
+    emotion_love:
+      title: '❤️ 愛'
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「愛」情緒的貼文。"
+    emotion_nervousness:
+      title: "😰 緊張"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「緊張」情緒的貼文。"
     emotion_neutral:
       title: "😐 中性"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「中性」情緒的貼文。"
+    emotion_optimism:
+      title: "🌟 樂觀"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「樂觀」情緒的貼文。"
+    emotion_pride:
+      title: "🦁 自豪"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「自豪」情緒的貼文。"
+    emotion_realization:
+      title: "💡 領悟"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「領悟」情緒的貼文。"
+    emotion_relief:
+      title: "😌 如釋重負"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「如釋重負」情緒的貼文。"
+    emotion_remorse:
+      title: "😔 懊悔"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「懊悔」情緒的貼文。"
+    emotion_sadness:
+      title: "😭 悲傷"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「悲傷」情緒的貼文。"
+    emotion_surprise:
+      title: "😲 驚訝"
+      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「驚訝」情緒的貼文。"
   discourse_ai:
+    ai_artifact:
+      errors:
+        max_keys_exceeded:
+          other: "成品中只能有 %{count} 個索引鍵。"
+      link: "在新分頁中顯示"
+      copy_embed: "複製嵌入碼"
+      view_source: "檢視原始碼"
+      view_changes: "檢視變更"
+      change_description: "變更說明"
+      copied: "已複製到剪貼簿"
+    unknown_model: "未知的 AI 模型"
+    discourse_workflows:
+      ai_agent:
+        errors:
+          invalid_mode: "「%{mode}」不是支援的 AI 代理程式執行模式。"
+          locked_default_llm_missing: "代理程式「%{agent}」已鎖定使用其預設 LLM，但尚未設定有效的預設 LLM"
+          llm_not_found: "找不到 ID 為 %{llm_model_id} 的 LLM 模型"
+          no_llm_configured: "代理程式「%{agent}」尚未設定 LLM。請選擇 LLM 模型，或設定代理程式／網站的預設 LLM。"
     tools:
+      custom_name: "%{name}（自訂）"
       presets:
+        browse_web_jina:
+          name: "瀏覽網頁（jina.ai）"
+        exchange_rate:
+          name: "匯率"
+        stock_quote:
+          name: "股票報價（AlphaVantage）"
+        image_generation_category:
+          name: "圖像產生…"
         image_generation_custom:
-          name: "客製"
+          name: "自訂"
+        image_generation_openai:
+          name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
+        empty_tool:
+          name: "從空白開始…"
+      name:
+        characters: "只能包含數字、英文字母和底線"
+      secret_contracts:
+        invalid_payload: "密鑰契約必須是陣列。"
+        invalid_contract: "索引 %{index} 處的密鑰契約無效。"
+        alias_required: "索引 %{index} 處的密鑰契約必須包含別名。"
+        alias_too_long: "密鑰別名「%{alias}」過長。"
+        alias_invalid: "密鑰別名「%{alias}」只能包含數字、英文字母和底線。"
+        alias_not_unique: "密鑰別名「%{alias}」重複。"
+      secret_bindings:
+        invalid_payload: "密鑰綁定必須是陣列。"
+        secret_not_found: "所選的憑證不存在。"
+        alias_not_declared: "此工具中未宣告別名「%{alias}」。"
+      secret_runtime:
+        alias_not_declared: "此工具未宣告憑證別名「%{alias}」。"
+        missing_binding: "憑證別名「%{alias}」為必填，但尚未綁定。"
+        missing_required_aliases: "缺少下列別名所需的憑證綁定：%{aliases}。"
+        secret_not_found: "憑證別名「%{alias}」綁定到不存在的憑證。"
+        unknown_error: "無法解析要求的憑證。"
+    mcp_servers:
+      secret_not_found: "所選的憑證不存在。"
+      invalid_url_not_https: "必須是有效的 HTTPS URL"
+      invalid_url_not_reachable: "必須解析至可公開存取的位址"
+      oauth_client_id_required: "手動註冊用戶端時必須提供 OAuth 用戶端 ID。"
+      errors:
+        invalid_response: "MCP 伺服器傳回了無效回應。"
+        request_failed: "MCP 伺服器請求失敗，狀態碼為 %{status}。"
+        session_expired: "MCP 工作階段已過期。"
+        timeout: "MCP 伺服器請求逾時。"
+        oauth_authorization_required: "使用此 MCP 伺服器前必須完成 OAuth 授權。請從管理員介面將其連線至 %{issuer}。"
+        oauth_discovery_failed: "無法探索此 MCP 伺服器的 OAuth 授權詳細資料。"
+        oauth_discovery_failed_with_status: "OAuth 探索失敗，狀態碼為 %{status}。"
+        oauth_not_configured: "此 MCP 伺服器尚未設定 OAuth。"
+        oauth_refresh_token_missing: "缺少 OAuth 重新整理權杖。請重新連線此 MCP 伺服器。"
+        oauth_save_before_connect: "測試 OAuth 連線前，請先儲存 MCP 伺服器。"
+        oauth_state_invalid: "OAuth 授權狀態無效或已過期。請重新開始連線。"
+        oauth_token_exchange_failed: "OAuth 權杖交換失敗，狀態碼為 %{status}。"
+        oauth_https_required: "OAuth 要求你的網站透過 HTTPS 提供服務。"
+        oauth_callback_failed: "OAuth 連線失敗：%{message}"
+        oauth_refresh_token_required: "OAuth 授權伺服器未傳回重新整理權杖。請調整進階 OAuth 選項，然後重新連線此 MCP 伺服器。"
+        oauth_client_metadata_public_https_required: "用戶端中繼資料文件註冊需要公開的 HTTPS 網站 URL。目前的用戶端中繼資料 URL：%{url}"
+        oauth_registration_endpoint_missing: "OAuth 授權伺服器未公布註冊端點。"
+        oauth_manual_client_registration_required: "OAuth 授權伺服器 %{issuer} 未公布動態用戶端註冊。請將此 MCP 伺服器切換為手動用戶端憑證，並提供已註冊的 OAuth 用戶端 ID。"
+        oauth_client_secret_required: "OAuth 授權伺服器 %{issuer} 要求權杖端點用戶端驗證（%{methods}）。請設定含有用戶端密鑰的手動用戶端憑證。"
+        oauth_token_endpoint_auth_method_unsupported: "OAuth 授權伺服器 %{issuer} 僅公布不支援的權杖端點用戶端驗證方法（%{methods}）。此 MCP 伺服器目前支援 none、client_secret_basic 和 client_secret_post。"
+        oauth_client_registration_failed: "動態用戶端註冊失敗，狀態碼為 %{status}。"
+        oauth_client_registration_failed_no_id: "動態用戶端註冊成功，但未傳回 client_id。"
+      oauth_authorization_params_invalid: "OAuth 授權參數必須是 JSON 物件。"
+      oauth_token_params_invalid: "OAuth 權杖參數必須是 JSON 物件。"
+    ai_helper:
+      errors:
+        completion_request_failed: "提供建議時發生問題。請再試一次。"
+        no_illustrator_agent: "尚未設定貼文配圖代理程式。請檢查網站設定。"
+        no_image_generation_tool: "貼文配圖代理程式必須附加圖像產生工具。請在管理員面板中為此代理程式設定圖像產生工具。"
+        no_image_generated: "圖像產生失敗。請再試一次，或檢查工具設定。"
+        llm_model_not_configured: "尚未設定用於產生圖像的語言模型。請在網站設定中設定預設語言模型。"
+        unknown_error: "產生縮圖時發生未預期的錯誤。請再試一次。"
+      prompts:
+        translate: 翻譯成%{language}
+        generate_titles: 建議主題標題
+        proofread: 校對文字
+        markdown_table: 產生 Markdown 表格
+        custom_prompt: "自訂提示詞"
+        explain: "說明"
+        illustrate_post: "為貼文配圖"
+        replace_dates: "智慧日期"
+      image_caption:
+        aria_description: "%{description}（由 AI 加上說明）"
+    image_caption:
+      configuration:
+        agent_missing: "為 AI 圖像說明選擇現有的代理程式。"
+        agent_vision_disabled: "AI 圖像說明代理程式必須啟用圖像上傳。"
+        llm_missing: "AI 圖像說明代理程式必須使用 LLM。"
+        llm_vision_disabled: "AI 圖像說明代理程式必須使用具備視覺功能的 LLM。"
+    post_image_captions:
+      errors:
+        description_blank: "說明不得空白。"
+        description_too_long:
+          other: "說明不得超過 %{count} 個字元。"
+    share_ai:
+      read_more: "閱讀完整文字記錄"
+      onebox_title: "與 %{llm_name} 的 AI 對話"
+      formatted_excerpt: "與 %{llm_name} 的 AI 對話：\n%{excerpt}"
+      title: "%{title} - AI 對話 - %{site_name}"
+      errors:
+        not_allowed: "不允許你分享此主題"
+        other_people_in_pm: "無法公開分享與其他真人之間的私人訊息"
+        other_content_in_pm: "無法公開分享包含其他人貼文的私人訊息"
+        failed_to_share: "分享對話失敗"
+        conversation_deleted: "已成功刪除對話分享"
+    spam_detection:
+      flag_reason: "由 <a href='%{url}'>Discourse AI</a> 標記為垃圾內容"
+      silence_reason: "由 <a href='%{url}'>Discourse AI</a> 自動將使用者禁言"
+      invalid_error_type: "提供的錯誤類型無效"
+      unexpected: "發生未預期的錯誤"
+      bot_user_update_failed: "更新垃圾內容掃描機器人使用者失敗"
+      configuration_missing: "缺少 AI 垃圾內容偵測設定。啟用前，請在「管理 > 外掛 > Discourse AI > 垃圾內容」中新增設定。"
+      logging_subject: "垃圾內容偵測"
     ai_bot:
+      errors:
+        invalid_agent_id: "指定的 AI 代理程式不存在，或你沒有存取權"
+        cannot_send_pm_to_agent: "你無法向此 AI 代理程式傳送私人訊息"
+      reply_error: "很抱歉，系統嘗試回覆時似乎遇到未預期的問題。\n\n[details='錯誤詳細資料']\n%{details}\n[/details]"
+      default_pm_prefix: "[未命名的 AI 機器人私人訊息]"
+      thinking: "思考中"
+      tool_pending_approval: "執行此動作前需要版主核准。"
+      spawn_agent:
+        description: "將獨立完整的提示詞委派給其中一個允許的代理程式，並傳回其回應"
+        prompt_description: "傳送給所選代理程式並顯示於思考區塊中的完整獨立提示詞"
+        summary: "正在諮詢 %{agent}"
+        failed: "無法完成委派的工作。"
+        unknown_agent: "子代理程式"
       read_post:
         unknown_post: "貼文"
+      tool_errors:
+        invocation_limit_reached: "此工具已達設定的呼叫次數上限。請使用已收集的證據。"
+      subagent_errors:
+        invalid_agent: "要求的子代理程式無效。"
+        invalid_prompt: "必須提供委派提示詞。"
+        prompt_too_long: "委派提示詞過長。"
+        missing_user: "委派需要原始發起的使用者。"
+        depth_limit: "已達委派深度上限。"
+        unavailable_parent: "父代理程式已無法使用。"
+        agent_not_allowed: "不允許使用要求的子代理程式。"
+        unavailable_agent: "要求的子代理程式無法使用或無法存取。"
+        missing_model: "要求的子代理程式沒有可用的語言模型。"
+        call_limit: "已達委派呼叫次數上限。"
+        completion_limit: "已達委派完成次數上限。"
+        token_limit: "已達委派權杖預算上限。"
+        cancelled: "委派的工作已取消。"
+        execution_failed: "委派的工作失敗。"
+        approval_unavailable: "委派執行時無法使用需要核准的工具。"
+      chat_tool_approval:
+        approved: "已由 @%{username} 核准。"
+        rejected: "已由 @%{username} 拒絕。"
+        failed: "無法完成此動作：%{error}"
+        unexpected_error: "發生未預期的錯誤"
+      agents:
+        forced_default_llm_required: "要求此代理程式一律使用該語言模型前，請先選擇預設語言模型。"
+        bot_user_unsupported: "內部功能正在使用此代理程式，因此不能為其設定機器人使用者"
+        cannot_delete_system_agent: "無法刪除系統代理程式，請改為停用"
+        cannot_edit_system_agent: "系統代理程式只能重新命名；你無法編輯工具或系統提示詞，請改為停用後建立副本"
+        cannot_have_duplicate_tools: "不能有重複的工具"
+        native_tool_requires_forced_llm: "提供者原生工具需要啟用「強制使用預設 LLM」的預設 LLM"
+        native_tool_unsupported_by_llm: "所選的預設 LLM 不支援其中一個已啟用的提供者原生工具"
+        invalid_subagent_ids: "子代理程式 ID 必須是整數清單"
+        too_many_subagents: "代理程式最多可有 %{max} 個子代理程式"
+        too_many_rag_document_sources: "代理程式最多可有 %{max} 個 URL 來源"
+        subagent_self: "代理程式無法選擇自己作為子代理程式"
+        subagents_not_found: "以下所選的子代理程式 ID 不存在：%{ids}"
+        subagent_tool_collision: "具有子代理程式的代理程式無法設定名為 spawn_agent 的工具"
+        admin_dashboard_highlights:
+          name: "管理員控制面板重點摘要"
+          description: "撰寫顯示於管理員控制面板頂端的簡短摘要，說明這段期間有哪些變化及值得留意之處"
+        github_helper:
+          name: "GitHub 助理"
+          description: "專門協助處理 GitHub 相關工作與問題的 AI 機器人"
+        general:
+          name: 論壇助理
+          description: "能夠執行各種工作的通用 AI 機器人"
+        artist:
+          name: 藝術家
+          description: "專門產生圖像的 AI 機器人"
+        designer:
+          name: 設計師
+          description: "專門產生及編輯圖像的 AI 機器人"
+        forum_researcher:
+          name: 論壇研究員
+          description: "專門為論壇進行深度研究的 AI 機器人"
+        sql_helper:
+          name: SQL 助理
+          description: "專門協助為此 Discourse 執行個體撰寫 SQL 查詢的 AI 機器人"
+        settings_explorer:
+          name: 設定探索器
+          description: "專門協助探索 Discourse 網站設定的 AI 機器人"
+        researcher:
+          name: 網頁研究員
+          description: "可存取 Google，並能搜尋及閱讀網頁的 AI 機器人"
+        creative:
+          name: 創意助手
+          description: "沒有外部整合、專門處理創意工作的 AI 機器人"
+        dall_e3:
+          name: "DALL-E 3"
+          description: "專門使用 DALL-E 3 產生圖像的 AI 機器人"
+        discourse_helper:
+          name: "Discourse 助理"
+          description: "專門協助處理 Discourse 相關工作的 AI 機器人"
+        discourse_admin_assistant:
+          name: "Discourse 管理員助理"
+          description: "回答 Discourse 問題並協助管理員管理網站設定的 AI 機器人"
+        web_artifact_creator:
+          name: "網頁成品建立器"
+          description: "專門建立互動式網頁成品的 AI 機器人"
+        summarizer:
+          name: "摘要器"
+          description: "用於提供 AI 摘要功能的預設代理程式"
+        short_summarizer:
+          name: "摘要器（簡短版）"
+          description: "用於為主題清單項目提供 AI 簡短摘要的預設代理程式"
+        concept_finder:
+          name: "概念尋找器"
+          description: "專門識別內容中概念與主題的 AI 機器人"
+        concept_matcher:
+          name: "概念比對器"
+          description: "專門將內容與現有概念進行比對的 AI 機器人"
+        concept_deduplicator:
+          name: "概念去重器"
+          description: "專門移除重複概念的 AI 機器人"
+        custom_prompt:
+          name: "自訂提示詞"
+          description: "為助理的自訂提示詞功能提供支援的預設代理程式"
+        smart_dates:
+          name: "智慧日期"
+          description: "為助理的智慧日期功能提供支援的預設代理程式"
+        markdown_table_generator:
+          name: "Markdown 表格產生器"
+          description: "為助理的 Markdown 表格產生功能提供支援的預設代理程式"
+        post_illustrator:
+          name: "貼文配圖器"
+          description: "使用可用的圖像產生工具，產生用來說明貼文的圖像"
+        proofreader:
+          name: "校對助手"
+          description: "為助理的文字校對功能提供支援的預設代理程式"
+        titles_generator:
+          name: "標題產生器"
+          description: "為助理的主題標題建議功能提供支援的預設代理程式"
+        tutor:
+          name: "導師"
+          description: "為助理的說明功能提供支援的預設代理程式"
+        translator:
+          name: "翻譯器"
+          description: "為助理的翻譯功能提供支援的預設代理程式"
+        image_captioner:
+          name: "圖像說明"
+          description: "為圖像說明功能提供支援的預設代理程式"
+        locale_detector:
+          name: "語系偵測器"
+          description: "偵測指定文字（貼文、標題等）的語系，為翻譯功能提供支援"
+        post_raw_translator:
+          name: "貼文翻譯器"
+          description: "翻譯包含 Discourse Markdown 的貼文，為翻譯功能提供支援"
+        topic_title_translator:
+          name: "主題標題翻譯器"
+          description: "翻譯主題標題，為翻譯功能提供支援"
+        short_text_translator:
+          name: "短文字翻譯器"
+          description: "作為通用文字翻譯器，翻譯分類名稱或標籤等短文字，為翻譯功能提供支援"
+        spam_detector:
+          name: "垃圾內容偵測器"
+          description: "為垃圾內容偵測功能提供支援的預設代理程式"
+        content_creator:
+          name: "內容建立器"
+          description: "為 HyDE 搜尋提供支援的預設代理程式"
+        report_runner:
+          name: "報告執行器"
+          description: "報告自動化指令碼使用的預設代理程式"
+        discover:
+          name: "探索"
+          description: "探索功能（補充搜尋）使用的預設代理程式"
+        chat_thread_titler:
+          name: "聊天討論串標題產生器"
+          description: "為自動產生聊天討論串標題提供支援的預設代理程式"
+        sentiment_classifier:
+          name: "情感分類器"
+          description: "為情感分類提供支援的預設代理程式"
+        emotion_classifier:
+          name: "情緒分類器"
+          description: "為情緒分類提供支援的預設代理程式"
+      topic_not_found: "無法取得摘要，找不到主題！"
+      summarizing: "正在摘要主題"
+      searching: "正在搜尋：「%{query}」"
+      tool_options:
+        researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "研究使用的語言模型（預設為目前代理程式的 LLM）"
+          max_tokens_per_batch:
+            name: "每批次的權杖數上限"
+            description: "研究中每個批次可使用的權杖數上限"
+          max_tokens_per_post:
+            name: "每篇貼文的權杖數上限"
+            description: "研究中每篇貼文可使用的權杖數上限"
+          max_results:
+            name: "結果數量上限"
+            description: "篩選條件中可包含的結果數量上限"
+          include_private:
+            name: "包含私人內容"
+            description: "在篩選條件中包含私人主題"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "建立成品使用的語言模型"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "編輯成品使用的語言模型"
+          update_algorithm:
+            name: "更新演算法"
+            description: "要求 LLM 完整取代，或使用差異內容進行更新"
+          do_not_echo_artifact:
+            name: "不要回顯成品"
+            description: "這會限制費用，但成品更新的成效也會降低"
+        google:
+          base_query:
+            name: "基本搜尋查詢"
+            description: "搜尋時使用的基本查詢。例如：「site:example.com」只會包含 example.com 的結果；before:2022-01-01 只會包含 2021 年及更早的結果。此文字會加到搜尋查詢前面。"
+        read:
+          read_private:
+            name: "讀取私人內容"
+            description: "允許存取使用者可存取的所有主題（預設只包含公開主題）"
+        read_post:
+          read_private:
+            name: "讀取私人內容"
+            description: "允許存取提出請求的使用者可見的貼文（預設只包含公開貼文）"
+          max_invocations:
+            name: "呼叫次數上限"
+            description: "此工具在一個代理程式回合中可執行的次數上限；留白表示不設限"
+        search:
+          search_private:
+            name: "搜尋私人內容"
+            description: "在搜尋結果中包含使用者可存取的所有主題（預設只包含公開主題）"
+          max_results:
+            name: "結果數量上限"
+            description: "搜尋中可包含的結果數量上限。留白時會使用預設規則，並依所用模型調整數量。最高值為 100。"
+          base_query:
+            name: "基本搜尋查詢"
+            description: "搜尋時使用的基本查詢。例如：「#urgent」會將「#urgent」加到搜尋查詢前面，且只包含具有 urgent 分類或標籤的主題。"
+          max_invocations:
+            name: "呼叫次數上限"
+            description: "此工具在一個代理程式回合中可執行的次數上限；留白表示不設限"
+          ignore_user_filter:
+            name: "忽略使用者篩選條件"
+            description: "忽略模型提供的使用者名稱，讓搜尋能找到歸屬錯誤的內容"
+          absolute_urls:
+            name: "絕對 URL"
+            description: "傳回完整來源 URL，而不是論壇相對路徑"
+        flag_post:
+          flag_type:
+            name: "標記類型"
+            description: "控制要審核、隱藏、刪除貼文，或將其視為垃圾內容。"
+      native_tools:
+        web_search:
+          name: "網頁搜尋（原生）"
+          help: "代理程式強制使用支援的 LLM 時，允許模型使用提供者的內建搜尋功能搜尋網頁。"
+        web_fetch:
+          name: "網頁擷取（原生）"
+          help: "代理程式強制使用支援的 LLM 時，允許模型使用提供者的內建網頁存取功能開啟及閱讀網頁。"
+        google_maps:
+          name: "Google 地圖（原生）"
+          help: "代理程式強制使用支援的 Gemini LLM 時，允許模型使用最新的 Google 地圖地點與位置資料。"
+        code_execution:
+          name: "程式碼執行（原生）"
+          help: "代理程式強制使用支援的 Gemini LLM 時，允許模型在提供者的沙箱中撰寫及執行 Python 程式碼。"
       tool_summary:
-        silence_user: "使用者靜音"
+        read_artifact: "讀取網頁成品"
+        search_uploaded_documents: "搜尋已上傳的文件"
+        view_image: "檢查圖像"
+        update_artifact: "更新網頁成品"
+        create_artifact: "建立網頁成品"
+        web_browser: "瀏覽網頁"
+        github_search_files: "搜尋 GitHub 檔案"
+        github_search_code: "搜尋 GitHub 程式碼"
+        github_file_content: "取得 GitHub 檔案內容"
+        github_diff: "取得 GitHub 差異內容"
+        random_picker: "隨機挑選器"
+        categories: "列出分類"
+        users: "列出使用者"
+        flag_post: "標記貼文"
+        close_topic: "關閉主題"
+        suspend_user: "停權使用者"
+        silence_user: "將使用者禁言"
+        unlist_topic: "將主題從清單移除"
+        lock_post: "鎖定貼文"
+        delete_topic: "刪除主題"
+        edit_post: "編輯貼文"
+        change_topic_tags: "編輯主題標籤"
+        create_tag: "建立標籤"
+        edit_tag: "編輯標籤"
+        create_category: "建立分類"
+        edit_category: "編輯分類"
+        change_topic_category: "變更主題分類"
+        set_topic_timer: "設定主題計時器"
+        set_slow_mode: "設定慢速模式"
+        move_posts: "移動貼文"
+        grant_badge: "授予徽章"
+        list_reviewables: "列出審核佇列"
+        perform_reviewable_action: "執行審核佇列動作"
+        add_reviewable_note: "新增審核佇列備註"
+        assign: "指派主題"
+        mark_as_solved: "標記為已解決"
         search: "搜尋"
+        tags: "列出標籤"
         time: "時間"
-        summarize: "總結"
+        summarize: "摘要"
+        set_topic_summary: "設定主題摘要"
+        image: "產生圖像"
+        google: "搜尋 Google"
+        read: "讀取主題"
+        read_post: "讀取貼文"
+        setting_context: "查詢網站設定的 context"
+        schema: "查詢資料庫結構描述"
+        search_settings: "正在搜尋網站設定"
+        read_site_setting: "讀取網站設定"
+        change_site_setting: "變更網站設定"
+        dall_e: "產生圖像"
+        search_meta_discourse: "搜尋 Meta Discourse"
+        javascript_evaluator: "評估 JavaScript"
+        create_image: "正在建立圖像"
+        edit_image: "正在編輯圖像"
+        researcher: "正在研究"
+        researcher_dry_run: "正在準備研究"
+      tool_help:
+        read_artifact: "使用 AI 機器人讀取網頁成品"
+        search_uploaded_documents: "搜尋上傳至此代理程式的文件"
+        view_image: "檢查此工作期間可用的圖像"
+        update_artifact: "使用 AI 機器人更新網頁成品"
+        create_artifact: "使用 AI 機器人建立網頁成品"
+        web_browser: "使用 AI 機器人瀏覽網頁"
+        github_search_code: "在 GitHub 存放庫中搜尋程式碼"
+        github_search_files: "在 GitHub 存放庫中搜尋檔案"
+        github_file_content: "取得 GitHub 存放庫中的檔案內容"
+        github_diff: "取得 GitHub 提取要求或提交的差異內容"
+        random_picker: "隨機挑選一個數字或清單中的元素"
+        categories: "列出論壇上所有公開可見的分類"
+        users: "列出論壇上的使用者"
+        flag_post: "標記目前貼文以供工作人員審核"
+        close_topic: "關閉或開啟主題"
+        suspend_user: "停權（封鎖）使用者，使其無法登入或發文"
+        silence_user: "將使用者禁言，使其仍可閱讀但無法發文"
+        unlist_topic: "將主題加入清單或從清單移除"
+        lock_post: "鎖定或解除鎖定貼文"
+        delete_topic: "刪除主題"
+        edit_post: "編輯貼文內容"
+        change_topic_tags: "編輯主題的標籤"
+        create_tag: "建立新標籤"
+        edit_tag: "重新命名標籤或變更其說明"
+        create_category: "建立新的分類"
+        edit_category: "編輯既有分類的名稱、說明或顏色"
+        change_topic_category: "將主題移至其他分類"
+        set_topic_timer: "在主題上設定計時器，以將其關閉、開啟、刪除或推升"
+        set_slow_mode: "啟用或停用主題的慢速模式"
+        move_posts: "將貼文移至新主題或現有主題"
+        grant_badge: "授予使用者徽章"
+        list_reviewables: "列出待處理的審核佇列項目，並可選擇套用篩選條件"
+        perform_reviewable_action: "對審核佇列項目執行動作"
+        add_reviewable_note: "為審核佇列項目新增備註"
+        assign: "將主題指派給使用者或群組，或取消指派"
+        mark_as_solved: "將貼文標記或取消標記為接受的解決方案"
+        search: "搜尋論壇上的所有公開主題"
+        tags: "列出論壇上的所有標籤"
+        time: "查詢不同時區的時間"
+        summary: "摘要主題"
+        set_topic_summary: "設定最終的簡短主題摘要"
+        image: "使用 Stable Diffusion 產生圖像"
+        create_image: "使用 OpenAI GPT 圖像模型產生圖像"
+        edit_image: "使用 OpenAI GPT 圖像模型編輯圖像"
+        google: "在 Google 搜尋查詢內容"
+        read: "讀取論壇上的公開主題"
+        read_post: "讀取論壇上的一篇指定貼文"
+        setting_context: "查詢網站設定的 context"
+        schema: "查詢資料庫結構描述"
+        search_settings: "搜尋網站設定"
+        read_site_setting: "讀取網站設定的目前值"
+        change_site_setting: "變更網站設定值"
+        dall_e: "使用 DALL-E 3 產生圖像"
+        search_meta_discourse: "搜尋 Meta Discourse"
+        javascript_evaluator: "評估 JavaScript"
+        researcher: "使用 AI 機器人研究論壇資訊"
+      tool_description:
+        read_artifact: "使用 AI 機器人讀取網頁成品"
+        view_image: "已檢查此工作期間可用的圖像"
+        search_uploaded_documents:
+          other: "找到 %{count} 個符合「%{query}」的已上傳文件摘錄"
+        update_artifact: "已使用 AI 機器人更新網頁成品"
+        create_artifact: "已建立網頁成品：%{name} - %{specification}"
+        web_browser: "正在讀取 <a href='%{url}'>%{url}</a>"
+        github_search_files: "已在 %{repo}/%{branch} 中搜尋「%{keywords}」"
+        github_search_code: "已在 %{repo} 中搜尋「%{query}」"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
+        github_file_content: "已從 %{repo_name}@%{branch} 取得 %{file_paths} 的內容"
+        random_picker: "從 %{options} 中挑選，結果：%{result}"
+        flag_post: "正在標記貼文 %{post_id}（flag_post：%{flag_post}）"
+        close_topic: "正在關閉主題 %{topic_id}（closed：%{closed}）"
+        suspend_user: "正在將 %{username} 停權 %{duration_days} 天"
+        silence_user: "正在將 %{username} 禁言 %{duration_days} 天"
+        unlist_topic: "正在將主題 %{topic_id} 從清單移除（unlisted：%{unlisted}）"
+        lock_post: "正在鎖定貼文 %{post_id}（locked：%{locked}）"
+        delete_topic: "正在刪除主題 %{topic_id}（deleted：%{deleted}）"
+        edit_post: "正在編輯貼文 %{post_id}"
+        change_topic_tags: "正在編輯主題 %{topic_id} 的標籤：%{tags}"
+        create_tag: "正在建立標籤 %{name}"
+        edit_tag: "正在編輯標籤 %{name}（%{fields}）"
+        create_category: "正在建立分類 %{name}"
+        edit_category: "正在編輯分類 %{category_id}（%{fields}）"
+        change_topic_category: "正在將主題 %{topic_id} 移至分類 %{category_id}"
+        set_topic_timer: "正在為主題 %{topic_id} 設定 %{timer_type} 計時器（%{duration_hours} 小時）"
+        set_slow_mode: "正在為主題 %{topic_id} 設定慢速模式（%{slow_mode_seconds} 秒）"
+        move_posts: "正在從主題 %{topic_id} 移動貼文 %{post_ids}"
+        grant_badge: "正在將徽章「%{badge_name}」授予 %{username}"
+        list_reviewables: "正在列出審核佇列項目（類型：%{type}）"
+        perform_reviewable_action: "正在對可審核項目 %{reviewable_id} 執行 %{action}"
+        add_reviewable_note: "正在為可審核項目 %{reviewable_id} 新增備註"
+        assign: "正在指派主題 %{topic_id}（assigned：%{assigned}）"
+        mark_as_solved: "正在將貼文 %{post_id} 標記為已解決（solved：%{solved}）"
+        read: "正在讀取：<a href='%{url}'>%{title}</a>"
+        read_post: "正在讀取貼文：<a href='%{url}'>%{title}</a>"
+        time: "%{timezone} 的時間是 %{time}"
+        summarize: "已摘要 <a href='%{url}'>%{title}</a>"
+        set_topic_summary: "已設定最終的簡短主題摘要"
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          other: "找到 %{count} 個分類"
+        users:
+          other: "找到 %{count} 位使用者"
+        tags:
+          other: "找到 %{count} 個標籤"
+        search:
+          other: "找到 %{count} 個符合「%{query}」的<a href='%{url}'>結果</a>"
+        search_meta_discourse:
+          other: "找到 %{count} 個符合「%{query}」的<a href='%{url}'>結果</a>"
+        google:
+          other: "找到 %{count} 個符合「%{query}」的<a href='%{url}'>結果</a>"
+        setting_context: "正在讀取以下設定的 context：%{setting_name}"
+        schema: "%{tables}"
+        researcher_dry_run:
+          other: "建議的目標：%{goals}\n\n找到 %{count} 篇符合「%{filter}」的貼文"
+        researcher:
+          other: "正在研究：%{goals}\n\n找到 %{count} 篇符合「%{filter}」的貼文"
+        search_settings:
+          other: "找到 %{count} 個符合「%{query}」的結果"
+        read_site_setting: "正在讀取網站設定 %{setting_name}"
+        change_site_setting: "正在將網站設定 %{setting_name} 變更為「%{value}」"
+      flag_post:
+        errors:
+          no_context: "沒有可用來標記的貼文 context。"
+          no_reason: "標記貼文時必須提供原因。"
+          invalid_flag_type: "標記類型無效。"
+        skipped: "判定結果為 false，因此未建立標記。"
+        already_flagged: "貼文已標記為待審核。"
+        flagged: "已將貼文標記為待審核。"
+        reason: "AI 機器人已標記此貼文。\n\n原因：%{reason}"
+        score_reason: "AI 機器人已標記此貼文。"
       close_topic:
         errors:
-          not_found: "未找到話題."
+          not_found: "找不到主題。"
+          not_allowed: "不允許你關閉或開啟此主題。"
+          no_reason: "關閉或開啟主題時必須提供原因。"
+        success: "已成功更新主題。"
+      suspend_user:
+        errors:
+          not_found: "找不到使用者。"
+          not_allowed: "不允許你停權此使用者。"
+          no_reason: "停權使用者時必須提供原因。"
+          invalid_duration: "持續時間必須是正整數天數，最多 %{max} 天。"
+          failed: "停權使用者失敗。"
+        success: "使用者 %{username} 已被停權。"
+      silence_user:
+        errors:
+          not_found: "找不到使用者。"
+          not_allowed: "不允許你將此使用者禁言。"
+          no_reason: "將使用者禁言時必須提供原因。"
+          invalid_duration: "持續時間必須是正整數天數，最多 %{max} 天。"
+          failed: "將使用者禁言失敗。"
+        success: "使用者 %{username} 已被禁言。"
       unlist_topic:
         errors:
-          not_found: "未找到話題."
+          not_found: "找不到主題。"
+          not_allowed: "不允許你將此主題加入清單或從清單移除。"
+          no_reason: "將主題加入清單或從清單移除時必須提供原因。"
+        success: "已成功更新主題。"
+      lock_post:
+        errors:
+          not_found: "找不到貼文。"
+          not_allowed: "不允許你鎖定或解除鎖定此貼文。"
+          no_reason: "鎖定或解除鎖定貼文時必須提供原因。"
+        success: "已成功更新貼文。"
       delete_topic:
         errors:
-          not_found: "未找到話題."
-      edit_tags:
+          not_found: "找不到主題。"
+          not_allowed: "不允許你刪除或復原此主題。"
+          no_reason: "刪除或復原主題時必須提供原因。"
+        success: "已成功更新主題。"
+      edit_post:
+        errors:
+          not_found: "找不到貼文。"
+          not_allowed: "不允許你編輯此貼文。"
+          nothing_to_edit: "必須提供 raw 或 title。"
+          no_reason: "必須提供編輯原因。"
+          revision_failed: "修改貼文失敗。"
+        success: "已成功編輯貼文。"
+      change_topic_tags:
         errors:
           not_found: "未找到話題."
+          not_allowed: "你無權編輯此主題的標籤。"
+          no_reason: "編輯標籤時必須提供原因。"
+          tagging_disabled: "此網站未啟用標籤功能。"
+        success: "標籤已成功更新。"
+      create_tag:
+        errors:
+          tagging_disabled: "此網站未啟用標籤功能。"
+          no_name: "建立標籤需要名稱。"
+          already_exists: "已經存在一個名為「%{name}」的標籤。"
+          not_allowed: "你無權建立標籤。"
+          no_reason: "建立標籤時必須提供原因。"
+        success: "標籤「%{name}」已成功建立。"
+      edit_tag:
+        errors:
+          tagging_disabled: "此網站未啟用標籤功能。"
+          not_found: "找不到標籤。"
+          not_allowed: "你無權編輯此標籤。"
+          nothing_to_edit: "必須提供 new_name 或 description。"
+          invalid_new_name: "「%{name}」不是有效的標籤名稱。"
+          no_reason: "編輯標籤時必須提供原因。"
+        success: "標籤「%{name}」已成功更新。"
+      create_category:
+        errors:
+          no_name: "建立分類需要名稱。"
+          not_allowed: "你無權建立分類。"
+          parent_not_found: "找不到上層分類。"
+          no_reason: "建立分類時必須提供原因。"
+        success: "分類「%{name}」已成功建立。"
       edit_category:
         errors:
+          not_found: "找不到分類。"
+          not_allowed: "你無權編輯此分類。"
+          nothing_to_edit: "name、description、color 或 text_color 至少須提供一項。"
+          no_reason: "編輯分類時必須提供原因。"
+        success: "分類「%{name}」已成功更新。"
+      change_topic_category:
+        errors:
           not_found: "未找到話題."
+          not_allowed: "你無權移動此主題。"
+          category_not_found: "找不到分類。"
+          no_reason: "移動主題時必須提供原因。"
+          revision_failed: "移動主題失敗。"
+        success: "主題已成功移動。"
       set_topic_timer:
         errors:
-          not_found: "未找到話題."
+          not_found: "找不到主題。"
+          not_allowed: "不允許你在此主題上設定計時器。"
+          no_reason: "設定主題計時器時必須提供原因。"
+          invalid_timer_type: "計時器類型無效。必須是以下其中一種：close、open、delete、silent_close、bump。"
+        success: "已成功更新主題計時器。"
       set_slow_mode:
         errors:
-          not_found: "未找到話題."
+          not_found: "找不到主題。"
+          not_allowed: "不允許你在此主題上設定慢速模式。"
+          no_reason: "設定慢速模式時必須提供原因。"
+        success: "已成功更新慢速模式。"
       move_posts:
         errors:
-          not_found: "未找到話題."
+          not_found: "找不到主題。"
+          not_allowed: "不允許你移動此主題中的貼文。"
+          no_reason: "移動貼文時必須提供原因。"
+          no_posts: "未提供貼文 ID。"
+          no_destination: "必須提供 destination_topic_id 或 new_title。"
+          move_failed: "移動貼文失敗。"
+        success: "已成功移動貼文。"
+      grant_badge:
+        errors:
+          user_not_found: "找不到使用者。"
+          badge_not_found: "找不到徽章。"
+          not_allowed: "不允許你授予徽章。"
+          no_reason: "授予徽章時必須提供原因。"
+          badge_disabled: "尚未啟用徽章。"
+          grant_failed: "授予徽章失敗。"
+        success: "已成功授予徽章。"
       assign:
         errors:
-          not_found: "未找到話題."
+          plugin_not_installed: "尚未安裝 discourse-assign 外掛。"
+          not_found: "找不到主題。"
+          not_allowed: "不允許你指派此主題。"
+          no_reason: "指派或取消指派主題時必須提供原因。"
+          assignee_not_found: "找不到使用者或群組。"
+          assign_failed: "指派主題失敗。"
+        success: "已成功更新主題指派。"
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "尚未安裝 discourse-solved 外掛。"
+          no_reason: "將貼文標記或取消標記為已解決時必須提供原因。"
+          action_failed: "更新已解決狀態失敗。"
+        success: "已成功更新已解決狀態。"
+      list_reviewables:
+        errors:
+          not_allowed: "不允許你查看審核佇列"
+          invalid_type: "可審核項目類型無效"
+          invalid_status: "狀態無效。必須是以下其中一種：pending、approved、rejected、ignored、deleted、reviewed、all。"
+        empty: "找不到符合指定篩選條件的審核佇列項目"
+        found:
+          other: "找到 %{count} 個審核佇列項目"
+      perform_reviewable_action:
+        errors:
+          not_allowed: "不允許你存取審核佇列"
+          not_found: "找不到審核佇列項目"
+          no_reason: "對審核佇列項目執行動作時必須提供原因"
+          invalid_action: "動作「%{action}」無效。可用的動作：%{available}"
+          conflict: "其他人已更新此審核佇列項目。請再試一次"
+          action_failed: "執行動作失敗"
+        success: "已成功對審核佇列項目 %{reviewable_id} 執行「%{action}」"
+      add_reviewable_note:
+        errors:
+          not_allowed: "不允許你存取審核佇列"
+          not_found: "找不到審核佇列項目"
+          no_note: "為審核佇列項目新增備註時必須提供備註"
+          failed: "新增備註失敗"
+        success: "已成功為審核佇列項目 %{reviewable_id} 新增備註"
+      change_site_setting:
+        errors:
+          no_reason: "變更網站設定時必須提供原因。"
+          not_found: "網站設定「%{setting_name}」不存在。"
+          not_allowed: "不允許你變更網站設定。"
+          hidden: "網站設定「%{setting_name}」已隱藏，無法在此變更。"
+          secret: "網站設定「%{setting_name}」包含密鑰，無法在此變更。"
+          themeable: "網站設定「%{setting_name}」需要佈景主題，無法在此變更。"
+          deprecated: "網站設定「%{setting_name}」已淘汰；請改用「%{new_name}」。"
+          shadowed: "網站設定「%{setting_name}」已被全域覆寫，無法變更。"
+          unconfigurable: "網站設定「%{setting_name}」屬於無法設定的外掛。"
+          unsupported_type: "AI 機器人無法變更類型為「%{type}」的網站設定。"
+          invalid_value: "值無效：%{error}"
+          failed: "變更網站設定失敗。"
+        success: "網站設定 %{setting_name} 已變更為「%{value}」。"
+      read_site_setting:
+        errors:
+          not_allowed: "不允許你讀取網站設定。"
+          not_found: "網站設定「%{setting_name}」不存在。"
+          hidden: "網站設定「%{setting_name}」已隱藏，無法在此讀取。"
+          secret: "網站設定「%{setting_name}」包含密鑰，無法在此讀取。"
+          themeable: "網站設定「%{setting_name}」需要佈景主題，無法在此讀取。"
     reviewables:
       ai_tool_action:
+        title: "AI 工具動作"
         approve:
-          title: "批准"
+          title: "核准"
         reject:
           title: "拒絕"
+        target_missing: "工具動作的目標已不存在。"
+        tool_not_found: "工具「%{tool_name}」已無法使用。"
+        bot_user_missing: "機器人使用者已不存在。"
+        performer_not_human: "此動作必須由真人核准或拒絕，不能由機器人處理。"
+        post_mismatch: "此核准卡片不屬於這篇貼文。"
+        execution_error: "工具執行失敗：%{error}"
+        execution_error_unknown: "發生未預期的錯誤"
+    summarization:
+      configuration_hint:
+        other: "請先設定以下設定：%{settings}"
+      chat:
+        no_targets: "所選期間內沒有任何訊息。"
     sentiment:
       reports:
+        overall_sentiment: "整體情感（正面－負面）"
         post_emotion:
+          sadness: "悲傷 😢"
+          surprise: "驚訝 😱"
           neutral: "中性 😐"
+          fear: "恐懼 😨"
+          anger: "憤怒 😡"
+          joy: "喜悅 😀"
+          disgust: "厭惡 🤢"
         sentiment_analysis:
+          positive: "正面"
+          negative: "負面"
           neutral: "中性"
+    discord:
+      configuration:
+        agent_user_required: "啟用 Discord 代理程式模式前，Discord 搜尋代理程式必須有一位關聯使用者。"
+    llm:
+      configuration:
+        create_llm: "啟用此功能前，你需要先設定 LLM"
+        disable_modules_first: "你必須先停用這些模組：%{settings}"
+        set_llm_first: "請先設定 %{setting}"
+        model_unreachable: "無法取得此模型的回應。請先檢查設定。"
+        empty_response: "模型傳回了空白回應。"
+        invalid_seeded_model: "你無法將此模型用於這項功能"
+        invalid_agent_response_format: "所選的代理程式必須具有回應格式，且其中包含一個名為「spam」的布林欄位"
+        must_select_model: "你必須先選擇 LLM"
+        invalid_llm_id: "所選的 LLM 模型無效"
+      endpoints:
+        not_configured: "%{display_name}（尚未設定）"
+        configuration_hint:
+          other: "請確認已設定以下設定：%{settings}"
+      delete_failed:
+        other: "%{settings} 正在使用此模型，因此無法刪除。請更新這些設定後再試一次。"
+      cannot_edit_builtin: "無法編輯內建模型。"
+    agents:
+      malformed_examples: "提供的範例格式錯誤。"
+    embeddings:
+      delete_failed: "目前正在使用此模型。請先更新「ai embeddings selected model」。"
+      cannot_edit_builtin: "無法編輯內建模型。"
+      secret_required: "必須選擇憑證"
+      secret_not_found: "所選的憑證不存在"
+      configuration:
+        disable_embeddings: "你必須先停用「ai embeddings enabled」。"
+        choose_model: "請先設定「ai embeddings selected model」。"
+        model_test_failed: "無法使用此模型產生測試嵌入。請確認模型設定正確。"
+    secrets:
+      delete_failed_in_use: "一或多個 LLM、嵌入模型或工具正在使用此憑證，因此無法刪除。"
+    llm_models:
+      missing_provider_param: "%{param} 不得空白"
+      invalid_provider_param: "%{param} 的格式無效"
+      reasoning_mode_requirements: "Pro 推理模式需要 Responses API"
+      secret_required: "必須選擇憑證"
+      secret_not_found: "所選的憑證不存在"
+      bedrock_invalid_url: "請填寫所有欄位以使用此模型。"
+      bedrock_missing_auth: "AWS Bedrock 必須設定存取金鑰 ID 或角色 ARN"
+      native_vision_cannot_delegate: "原生圖像輸入無法使用其他視覺模型"
+      vision_model_required: "必須選擇視覺模型"
+      vision_model_not_found: "所選的視覺模型不存在"
+      vision_model_cannot_be_self: "模型無法將自己用作視覺模型"
+      vision_model_must_be_native: "所選的視覺模型必須支援原生圖像輸入"
+      vision_model_has_dependents: "此模型為以下模型提供視覺功能：%{models}。請先重新設定那些模型。"
     ai_staff_action_logger:
-      updated: "更新時間"
+      updated: "已更新"
+      set: "設定"
       removed: "已移除"
+    translation:
+      errors:
+        disabled: "AI 翻譯功能尚未完整設定。"
+        all_posts_translated: "此主題中的所有貼文都已翻譯。"
+    llm_credit_allocation:
+      limit_exceeded_user: "此社群今天的 AI 點數已達上限。請在 %{reset_time} 後再試一次，或聯絡網站管理員以取得更多資訊。"
+      limit_exceeded_admin: "你的 AI 點數已達上限。請在 %{reset_time} 後再試一次。"
+    errors:
+      quota_exceeded: "你已超過此模型的配額。請在 %{relative_time} 後再試一次。"
+      quota_required: "你必須為此模型指定權杖數上限、使用次數上限或費用上限"
+      no_query_specified: 必須提供 query 參數，請指定該參數。
+      no_user_for_agent: 指定的代理程式沒有關聯使用者。
+      agent_not_found: "指定的代理程式不存在。請檢查 agent_name 或 agent_id 參數（舊版：persona_name 或 persona_id）。"
+      no_user_specified: 必須提供 username 或 user_unique_id 參數，請指定該參數。
+      user_not_found: 指定的使用者不存在。請檢查 username 參數。
+      agent_disabled: "指定的代理程式已停用。請檢查 agent_name 或 agent_id 參數（舊版：persona_name 或 persona_id）。"
+      no_default_llm: 沒有可用的預設語言模型。請為代理程式或網站設定模型。
+      user_not_allowed: 不允許此使用者參與該主題。
+      invalid_stream_resume_token: resume_token 無效或已過期。
+      no_tool_results_specified: 繼續串流時必須提供 tool_results 參數。
+      invalid_custom_tools: "custom_tools 參數無效：%{details}"
+      duplicate_custom_tools: "custom_tools 參數包含重複的工具名稱：%{names}"
+      too_many_custom_tools: "custom_tools 參數最多可包含 %{max} 個工具。"
+      custom_tool_definition_too_large: "每個自訂工具定義最多可使用 %{max} 位元組。"
+      invalid_stream_param: "%{key} 參數無效：%{details}"
+      expected_array: "預期為陣列"
+      expected_object: "預期為物件"
+      ambiguous_tool_results: "請指定 tool_results 或 tool_result，勿同時指定兩者。"
+      invalid_tool_results: "tool_results 參數無效：%{details}"
+      too_many_tool_results: "tool_results 參數最多可包含 %{max} 個項目。"
+      no_pending_tool_calls: 此繼續權杖沒有待處理的工具呼叫。
+      missing_tool_results: "缺少以下 tool_call_id 的工具結果：%{ids}"
+      unexpected_tool_results: "收到非預期 tool_call_id 的工具結果：%{ids}"
+      invalid_tool_result_content: "%{id} 的工具結果必須包含內容"
+      tool_result_content_too_large: "每個工具結果的內容承載資料最多可使用 %{max} 位元組。"
+      stream_reply_max_resume_rounds_reached: 已達自訂工具繼續執行的回合數上限（%{max}）。
+      stream_reply_state_too_large: "串流狀態過大，無法保存（上限為 %{max} 位元組）。"
+      stream_reply_unexpected_error: 串流回覆時發生未預期的錯誤。
+      prompt_message_length: 訊息 %{idx} 超過 1000 個字元的限制。
+      agent_already_exists: 名稱為 %{name} 的代理程式已存在。
+      custom_tool_exists:
+        other: "名稱為 %{names} 的自訂工具已存在。"
+      mcp_server_missing: "此網站尚未設定以下 MCP 伺服器：%{names}。"
+      subagents_missing: "此網站尚未設定以下子代理程式：%{names}。"
+      mcp_server_tools_not_found: "此網站沒有來自 MCP 伺服器 %{name} 的相符工具。"

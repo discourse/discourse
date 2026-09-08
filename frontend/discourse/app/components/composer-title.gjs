@@ -133,7 +133,7 @@ export default class ComposerTitle extends Component {
   }
 
   _checkForUrl() {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 

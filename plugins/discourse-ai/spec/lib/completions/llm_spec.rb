@@ -71,6 +71,29 @@ RSpec.describe DiscourseAi::Completions::Llm do
     SSE
   end
 
+  describe ".text_from_response" do
+    it "returns only text from heterogeneous completion responses" do
+      thinking = DiscourseAi::Completions::Thinking.new(message: "Private reasoning")
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(id: "tool-1", name: "search", parameters: {})
+      structured_output =
+        DiscourseAi::Completions::StructuredOutput.new(message: { type: "string" })
+      structured_output << '{"message":"Visible response"}'
+      structured_output.finish
+
+      expect(described_class.text_from_response(["Visible", thinking, " response"])).to eq(
+        "Visible response",
+      )
+      expect(described_class.text_from_response("Visible response")).to eq("Visible response")
+      expect(described_class.text_from_response(structured_output)).to eq(
+        '{"message":"Visible response"}',
+      )
+      expect(described_class.text_from_response(thinking)).to eq("")
+      expect(described_class.text_from_response(tool_call)).to eq("")
+      expect(described_class.text_from_response(nil)).to eq("")
+    end
+  end
+
   describe ".proxy" do
     it "raises for unknown model identifiers" do
       expect { described_class.proxy("unknown:v2") }.to raise_error(described_class::UNKNOWN_MODEL)

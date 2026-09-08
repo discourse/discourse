@@ -3,6 +3,7 @@
     { "path": "frontend/discourse" },
     { "path": "frontend/discourse-i18n" },
     { "path": "plugins/automation" },
+    { "path": "plugins/boards" },
     { "path": "plugins/chat" },
     { "path": "plugins/checklist" },
     { "path": "plugins/discourse-adplugin" },

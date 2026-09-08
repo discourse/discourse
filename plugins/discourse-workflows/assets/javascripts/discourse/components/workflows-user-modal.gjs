@@ -49,7 +49,7 @@ export default class WorkflowsUserModal extends Component {
     // While awaiting, the server's close_modal broadcast may have already
     // closed this modal — and the workflow may have shown the next one.
     // Closing again here would close that new modal instead.
-    if (!this.isDestroying && !this.isDestroyed) {
+    if (!this.isDestroying) {
       this.args.closeModal();
     }
   }

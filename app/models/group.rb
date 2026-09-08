@@ -776,6 +776,14 @@ class Group < ActiveRecord::Base
     relation
   end
 
+  def self.find_by_id_or_name(value)
+    value = value.to_s.strip
+    return if value.blank?
+    return find_by(id: value) if value.match?(/\A\d+\z/)
+
+    find_by("lower(name) = ?", value.downcase)
+  end
+
   def self.lookup_group(name)
     if id = AUTO_GROUPS[name]
       Group.find_by(id: id)

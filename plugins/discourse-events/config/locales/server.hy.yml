@@ -9,7 +9,7 @@ hy:
     currently_away:
       labels:
         username: Օգտանուն
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Օր"

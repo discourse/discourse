@@ -95,6 +95,11 @@ ru:
           solved: "Решённые"
           unsolved: "Нерешённые"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Тема"
+            category: "Категория"
       web_hooks:
         solved_event:
           group_name: "Событие решения вопроса"

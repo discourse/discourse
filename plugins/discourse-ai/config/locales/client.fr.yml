@@ -332,9 +332,11 @@ fr:
         search:
           name: "Rechercher"
           description: "Améliore l'expérience de recherche en fournissant des réponses générées par l'IA aux requêtes"
-          discoveries: "Découvertes"
+          ask_ai: "Demander à l'IA"
           setting_groups:
             settings: "Paramètres de base"
+            agents: "Agents"
+            access_control: "Contrôle d'accès"
         embeddings:
           name: "Intégrations"
           description: "Alimente des fonctionnalités telles que les sujets connexes et la recherche IA en générant des représentations sémantiques du texte"
@@ -644,8 +646,6 @@ fr:
         successful: "Succès"
         failed: "Échec"
         unknown: "Inconnu"
-        topic_id: "ID du sujet"
-        post_id: "ID du message"
         time: "Heure"
         when: "Date"
         outcome: "Résultat"
@@ -661,9 +661,7 @@ fr:
         duration: "Durée "
         cost: "Coût"
         actions: "Actions"
-        filters:
-          title: "Filtres"
-          period: "Période"
+        view_details: "Détails"
         periods:
           hour: "Dernière heure"
           day: "Ces dernières 24 heures"
@@ -730,7 +728,6 @@ fr:
         create_user: Créer un utilisateur
         create_user_help: Vous pouvez facultativement associer un utilisateur à cet agent. Dans ce cas, l'IA utilisera cet utilisateur pour répondre aux requêtes.
         default_llm: Modèle linguistique par défaut
-        default_llm_help: Modèle de langage par défaut à utiliser pour cet agent. Il est requis si vous souhaitez mentionner l'agent dans des publications publiques.
         system_prompt: Invite du système
         forced_tool_strategy: Stratégie d'outil forcé
         allow_chat_direct_messages: "Autoriser les messages directs de discussion"
@@ -1086,18 +1083,6 @@ fr:
           other: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, les fonctionnalités ne fonctionneront pas comme prévu. "
         model_description:
           none: "Paramètres généraux qui fonctionnent pour la plupart des modèles linguistiques"
-          anthropic-claude-opus-4-7: "Le modèle le plus intelligent d'Anthropic"
-          anthropic-claude-sonnet-4-6: "Équilibre optimal entre vitesse et coût"
-          anthropic-claude-haiku-4-5: "Rapide et économique"
-          open_ai-gpt-5-6-sol: "Le modèle de pointe d'OpenAI pour les travaux professionnels complexes"
-          open_ai-gpt-5-6-terra: "Concilie intelligence et coût pour les charges de travail exigeantes"
-          open_ai-gpt-5-6-luna: "Optimisé pour les charges de travail à volume élevé et sensibles aux coûts"
-          open_router-moonshotai-kimi-k2-6: "Le modèle multimodal de Moonshot doté de capacités de vision"
-          open_router-deepseek-deepseek-v4-flash: "Le dernier modèle haute performance de DeepSeek avec 1M de contexte"
-          open_router-minimax-minimax-m2-7: "Le modèle de MiniMax avec un large contexte"
-          open_router-x-ai-grok-4-1-fast: "Le modèle multimodal rapide de xAI avec un contexte très large"
-          open_router-z-ai-glm-5-1: "Le modèle axé sur le raisonnement de Z-AI"
-          open_router-qwen-qwen3-6-plus: "Le modèle multimodal de Qwen avec un contexte de 1M"
         preseeded_model_description: "Modèle open source préconfiguré utilisant %{model}"
         configured:
           title: "LLM configurés"
@@ -1297,17 +1282,10 @@ fr:
         provider_fields:
           model_name: "Nom du modèle"
         semantic_search: "Sujets (sémantiques)"
-        semantic_search_results:
-          toggle: "Résultats de l'IA"
-          unavailable: "Résultats de l'IA indisponibles"
-          zero_results_expanded: "Aucun résultat trouvé, affichage de %{count} résultats de l'IA"
         semantic_search_tooltips:
           results_explanation: "Lorsque cette option est activée, des résultats de recherche IA supplémentaires seront ajoutés ci-dessous."
-          invalid_sort: "Les résultats de la recherche doivent être triés par pertinence pour afficher les résultats de l'IA"
           not_submitted: "Lancez une recherche pour activer les résultats de l'IA"
           no_results: "Aucun résultat de l'IA trouvé pour cette recherche"
-        semantic_search_unavailable_tooltip: "Les résultats de la recherche doivent être triés par pertinence pour afficher les résultats de l'IA"
-        ai_generated_result: "Résultat de recherche trouvé à l'aide de l'IA"
         ai_results_notice:
           no_results: "Aucune correspondance exacte, mais voici quelques résultats connexes."
           few_results:
@@ -1457,20 +1435,30 @@ fr:
             expanded: "Étendu"
             expanded_description: "avec des résumés d'IA"
       discobot_discoveries:
-        main_title: "Découvertes de Discobot"
-        regular_results: "Sujets"
-        tell_me_more: "Dites-m'en plus..."
-        continue_convo: "Continuer la conversation..."
+        main_title: "Demander à l'IA"
         loading_convo: "Chargement de la conversation"
-        collapse: "Réduire"
-        timed_out: "Discobot n'a trouvé aucune découverte. Un problème est survenu."
+        create_topic: "Créer un sujet"
         user_setting: "Activer les découvertes de recherche par l'IA"
-        tooltip:
-          header: "Recherche alimentée par l'IA"
-          content: "Recherche en langage naturel propulsée par %{model}"
-          actions:
-            info: "Comment ça fonctionne ?"
-            disable: "Désactiver"
+        legacy:
+          main_title: "Découvertes de Discobot"
+          regular_results: "Sujets"
+          tell_me_more: "Dites-m'en plus..."
+          continue_convo: "Continuer la conversation..."
+          loading_convo: "Chargement de la conversation"
+          collapse: "Réduire"
+          timed_out: "Discobot n'a trouvé aucune découverte. Un problème est survenu."
+          tooltip:
+            header: "Recherche alimentée par l'IA"
+            content: "Recherche en langage naturel propulsée par %{model}"
+            actions:
+              info: "Comment ça fonctionne ?"
+              disable: "Désactiver"
+        search_type: "IA"
+        search_all_topics: "Tous les sujets"
+        search_messages: "Messages directs"
+        ask_ai: "IA"
+        sources:
+          related_discussions: "Sujets connexes"
       user_preferences:
         empty: "Aucun paramètre pertinent n'est disponible pour le moment"
     review:

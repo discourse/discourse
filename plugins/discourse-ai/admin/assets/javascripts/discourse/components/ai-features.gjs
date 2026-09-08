@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
-import DSelect from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiFeaturesList from "./ai-features-list";
@@ -193,7 +193,7 @@ export default class AiFeatures extends Component {
       />
 
       <div class="ai-features__controls">
-        <DSelect
+        <DNativeSelect
           @value={{this.selectedFeatureGroup}}
           @includeNone={{false}}
           @onChange={{this.onFeatureGroupChange}}
@@ -204,7 +204,7 @@ export default class AiFeatures extends Component {
               {{option.label}}
             </select.Option>
           {{/each}}
-        </DSelect>
+        </DNativeSelect>
 
         <DFilterInput
           placeholder={{i18n "discourse_ai.features.filters.text"}}

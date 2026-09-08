@@ -77,7 +77,7 @@ RSpec.describe "S3Helper" do
     end
   end
 
-  it "should prefix bucket folder path only if not exists" do
+  it "prefixes the bucket folder path only when it is missing" do
     s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
 
     object1 = s3_helper.object("original/1X/def.xyz")
@@ -86,7 +86,7 @@ RSpec.describe "S3Helper" do
     expect(object1.key).to eq(object2.key)
   end
 
-  it "should not prefix the bucket folder path if the key begins with the temporary upload prefix" do
+  it "does not prefix keys that begin with the temporary upload prefix" do
     s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
 
     object1 = s3_helper.object("original/1X/def.xyz")
@@ -241,7 +241,7 @@ RSpec.describe "S3Helper" do
   describe "#delete_objects" do
     let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
 
-    it "works" do
+    it "deletes the object from S3" do
       # The S3::Client with `stub_responses: true` includes validation of requests.
       # If the request were invalid, this spec would raise an error
       s3_helper.delete_objects(%w[object/one.txt object/two.txt])

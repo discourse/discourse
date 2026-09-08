@@ -18,6 +18,7 @@ const FILTER_KEYS = [
   "country",
   "network",
   "browser",
+  "language",
   "ip",
 ];
 
@@ -35,6 +36,7 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     country: { refreshModel: true },
     network: { refreshModel: true },
     browser: { refreshModel: true },
+    language: { refreshModel: true },
     ip: { refreshModel: true },
   };
   #refreshTransition = null;
@@ -149,7 +151,7 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     }
 
     if (value === "") {
-      return key === "referrer" ? [value] : [];
+      return ["referrer", "language"].includes(key) ? [value] : [];
     }
 
     if (value.startsWith("[")) {

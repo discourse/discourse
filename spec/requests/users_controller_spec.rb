@@ -25,7 +25,7 @@ RSpec.describe UsersController do
   describe "#full account registration flow" do
     let(:server_session) { request.server_session }
 
-    it "will correctly handle honeypot and challenge" do
+    it "handles the honeypot and challenge fields" do
       get "/session/hp.json"
       expect(response.status).to eq(200)
 
@@ -128,7 +128,7 @@ RSpec.describe UsersController do
       context "when user is not approved" do
         before { SiteSetting.must_approve_users = true }
 
-        it "should return the right response" do
+        it "returns the pending-approval response" do
           put "/u/activate-account/#{email_token.token}"
           expect(response.status).to eq(200)
 
@@ -152,7 +152,7 @@ RSpec.describe UsersController do
 
     context "when cookies contains a destination URL" do
       context "when the destination URL has a query" do
-        it "should redirect to the URL and preserve the query" do
+        it "redirects to the URL and preserves its query" do
           destination_url = "http://thisisasite.com/somepath?latest=1"
           cookies[:destination_url] = destination_url
 
@@ -162,8 +162,9 @@ RSpec.describe UsersController do
           expect(response.parsed_body["redirect_to"]).to eq(destination_url)
         end
       end
+
       context "when destination URL doesn't have a query" do
-        it "should redirect to the URL" do
+        it "redirects to the URL" do
           destination_url = "http://thisisasite.com/somepath"
           cookies[:destination_url] = destination_url
 
@@ -185,7 +186,7 @@ RSpec.describe UsersController do
         invite.reload
       end
 
-      it "should redirect to the topic" do
+      it "redirects to the topic" do
         put "/u/activate-account/#{email_token.token}"
 
         expect(response.status).to eq(200)
@@ -833,8 +834,35 @@ RSpec.describe UsersController do
       post "/u.json", params: post_user_params.merge(extra_params)
     end
 
+    it "rejects signup from a logged-in browser session" do
+      sign_in(user1)
+
+      expect { post_user }.not_to change { User.count }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects signup from an admin browser session" do
+      sign_in(admin)
+
+      expect { post_user }.not_to change { User.count }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "allows signup with an API key" do
+      api_key = Fabricate(:api_key, user: user1)
+
+      expect do
+        post "/u.json", params: post_user_params, headers: { HTTP_API_KEY: api_key.key }
+      end.to change { User.count }.by(1)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+    end
+
     context "when email params is missing" do
-      it "should raise the right error" do
+      it "returns the missing-email error" do
         post "/u.json",
              params: {
                name: @user.name,
@@ -1002,6 +1030,7 @@ RSpec.describe UsersController do
         end
 
         after { DiscoursePluginRegistry.reset! }
+
         it "creates User record" do
           params = {
             username: "foobar",
@@ -1184,7 +1213,7 @@ RSpec.describe UsersController do
     end
 
     context "when creating as active" do
-      it "won't create the user as active" do
+      it "does not create the user as active" do
         post "/u.json", params: post_user_params.merge(active: true)
         expect(response.status).to eq(200)
         expect(response.parsed_body["active"]).to be_falsey
@@ -1193,7 +1222,7 @@ RSpec.describe UsersController do
       context "with a regular api key" do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user1) }
 
-        it "won't create the user as active with a regular key" do
+        it "does not activate the user with a regular API key" do
           post "/u.json",
                params: post_user_params.merge(active: true),
                headers: {
@@ -1232,7 +1261,7 @@ RSpec.describe UsersController do
           expect(new_user.email_tokens.where(confirmed: true, email: new_user.email)).to exist
         end
 
-        it "will create a reviewable when a user is created as active but not approved" do
+        it "creates a reviewable for an active unapproved user" do
           Jobs.run_immediately!
           SiteSetting.must_approve_users = true
 
@@ -1251,7 +1280,7 @@ RSpec.describe UsersController do
           expect(ReviewableUser.pending.find_by(target: new_user)).to be_present
         end
 
-        it "won't create a reviewable when a user is not active" do
+        it "does not create a reviewable for an inactive user" do
           Jobs.run_immediately!
           SiteSetting.must_approve_users = true
 
@@ -1266,7 +1295,7 @@ RSpec.describe UsersController do
           expect(ReviewableUser.pending.find_by(target: new_user)).to be_blank
         end
 
-        it "won't create the developer as active" do
+        it "does not create the developer as active" do
           UsernameCheckerService.expects(:is_developer?).returns(true)
 
           post "/u.json",
@@ -1278,7 +1307,7 @@ RSpec.describe UsersController do
           expect(response.parsed_body["active"]).to be_falsy
         end
 
-        it "won't set the new user's locale to the admin's locale" do
+        it "does not copy the administrator's locale to the new user" do
           SiteSetting.allow_user_locale = true
           admin.update!(locale: :fr)
 
@@ -1294,7 +1323,7 @@ RSpec.describe UsersController do
           expect(new_user.locale).not_to eq("fr")
         end
 
-        it "will auto approve user if the user email domain matches auto_approve_email_domains setting" do
+        it "automatically approves a user from a configured email domain" do
           Jobs.run_immediately!
           SiteSetting.must_approve_users = true
           SiteSetting.auto_approve_email_domains = "example.com"
@@ -1317,7 +1346,7 @@ RSpec.describe UsersController do
     end
 
     context "when creating as staged" do
-      it "won't create the user as staged" do
+      it "does not create the user as staged" do
         post "/u.json", params: post_user_params.merge(staged: true)
         expect(response.status).to eq(200)
         new_user = User.where(username: post_user_params[:username]).first
@@ -1327,7 +1356,7 @@ RSpec.describe UsersController do
       context "with a regular api key" do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user1) }
 
-        it "won't create the user as staged with a regular key" do
+        it "does not stage the user with a regular API key" do
           post "/u.json",
                params: post_user_params.merge(staged: true),
                headers: {
@@ -1356,7 +1385,7 @@ RSpec.describe UsersController do
           expect(new_user.staged?).to eq(true)
         end
 
-        it "won't create the developer as staged" do
+        it "does not create the developer as staged" do
           UsernameCheckerService.expects(:is_developer?).returns(true)
           post "/u.json",
                params: post_user_params.merge(staged: true),
@@ -1392,7 +1421,7 @@ RSpec.describe UsersController do
         expect(response.parsed_body["message"]).to eq(I18n.t "login.active")
       end
 
-      it "should be logged in" do
+      it "logs in the new user" do
         User.any_instance.expects(:enqueue_welcome_message)
         post_user
         expect(response.status).to eq(200)
@@ -1442,7 +1471,7 @@ RSpec.describe UsersController do
           OmniAuth.config.test_mode = false
         end
 
-        it "should create twitter user info if required" do
+        it "creates Twitter user information when required" do
           post "/u.json",
                params: {
                  name: "Test Osama",
@@ -1470,7 +1499,7 @@ RSpec.describe UsersController do
           expect(json["message"]).to be_present
         end
 
-        it "will create the user successfully if email validation is required" do
+        it "creates the user when email validation is required" do
           post "/u.json",
                params: {
                  name: "Test Osama",
@@ -1524,7 +1553,7 @@ RSpec.describe UsersController do
           OmniAuth.config.test_mode = false
         end
 
-        it "will create the user successfully" do
+        it "creates the user" do
           Rails.application.env_config["omniauth.auth"].info.email = nil
 
           post "/u.json",
@@ -1551,7 +1580,7 @@ RSpec.describe UsersController do
     end
 
     shared_examples "honeypot fails" do
-      it "should not create a new user" do
+      it "does not create a new user" do
         User.any_instance.expects(:enqueue_welcome_message).never
 
         expect { post "/u.json", params: create_params }.to_not change { User.count }
@@ -1569,6 +1598,7 @@ RSpec.describe UsersController do
 
     context "when honeypot value is wrong" do
       before { UsersController.any_instance.stubs(:honeypot_value).returns("abc") }
+
       let(:create_params) do
         {
           name: @user.name,
@@ -1578,11 +1608,13 @@ RSpec.describe UsersController do
           password_confirmation: "wrong",
         }
       end
+
       include_examples "honeypot fails"
     end
 
     context "when challenge answer is wrong" do
       before { UsersController.any_instance.stubs(:challenge_value).returns("abc") }
+
       let(:create_params) do
         {
           name: @user.name,
@@ -1592,6 +1624,7 @@ RSpec.describe UsersController do
           challenge: "abc",
         }
       end
+
       include_examples "honeypot fails"
     end
 
@@ -1611,12 +1644,12 @@ RSpec.describe UsersController do
     end
 
     shared_examples "failed signup" do
-      it "should not create a new User" do
+      it "does not create a new user" do
         expect { post "/u.json", params: create_params }.to_not change { User.count }
         expect(response.status).to eq(200)
       end
 
-      it "should report failed" do
+      it "reports the failed signup" do
         post "/u.json", params: create_params
         json = response.parsed_body
         expect(json["success"]).not_to eq(true)
@@ -1631,6 +1664,7 @@ RSpec.describe UsersController do
       let(:create_params) do
         { name: @user.name, username: @user.username, password: "", email: @user.email }
       end
+
       include_examples "failed signup"
     end
 
@@ -1643,6 +1677,7 @@ RSpec.describe UsersController do
           email: @user.email,
         }
       end
+
       include_examples "failed signup"
     end
 
@@ -1661,6 +1696,7 @@ RSpec.describe UsersController do
 
     context "when password param is missing" do
       let(:create_params) { { name: @user.name, username: @user.username, email: @user.email } }
+
       include_examples "failed signup"
     end
 
@@ -1668,7 +1704,9 @@ RSpec.describe UsersController do
       let(:create_params) do
         { name: @user.name, username: "Reserved", email: @user.email, password: "strongpassword" }
       end
+
       before { SiteSetting.reserved_usernames = "a|reserved|b" }
+
       include_examples "failed signup"
     end
 
@@ -1681,13 +1719,14 @@ RSpec.describe UsersController do
           password: "strongpassword",
         }
       end
+
       include_examples "failed signup"
     end
 
     context "with a missing username" do
       let(:create_params) { { name: @user.name, email: @user.email, password: "x" * 20 } }
 
-      it "should not create a new User" do
+      it "does not create a new user" do
         expect { post "/u.json", params: create_params }.to_not change { User.count }
         expect(response.status).to eq(400)
       end
@@ -1735,6 +1774,7 @@ RSpec.describe UsersController do
         let(:create_params) do
           { name: @user.name, password: "watwatwat", username: @user.username, email: @user.email }
         end
+
         include_examples "failed signup"
       end
 
@@ -1742,9 +1782,9 @@ RSpec.describe UsersController do
         let(:update_user_url) { "/u/#{user1.username}.json" }
         let(:field_id) { user_field.id.to_s }
 
-        before { sign_in(user1) }
-
         context "with multple select fields" do
+          before { sign_in(user1) }
+
           let(:valid_options) { %w[Axe Sword] }
 
           fab!(:user_field) do
@@ -1758,7 +1798,7 @@ RSpec.describe UsersController do
             end
           end
 
-          it "should allow single values and not just arrays" do
+          it "accepts a single value as well as an array" do
             expect do
               put update_user_url, params: { user_fields: { field_id => "Axe" } }
             end.to change { user1.reload.user_fields[field_id] }.from(nil).to("Axe")
@@ -1768,13 +1808,13 @@ RSpec.describe UsersController do
             end.to change { user1.reload.user_fields[field_id] }.from("Axe").to(%w[Axe Sword])
           end
 
-          it "shouldn't allow unregistered field values" do
+          it "rejects unregistered field values" do
             expect do
               put update_user_url, params: { user_fields: { field_id => %w[Juice] } }
             end.not_to change { user1.reload.user_fields[field_id] }
           end
 
-          it "should filter valid values" do
+          it "filters valid field values" do
             expect do
               put update_user_url, params: { user_fields: { field_id => %w[Axe Juice Sword] } }
             end.to change { user1.reload.user_fields[field_id] }.from(nil).to(valid_options)
@@ -1830,6 +1870,8 @@ RSpec.describe UsersController do
         end
 
         context "with dropdown fields" do
+          before { sign_in(user1) }
+
           let(:valid_options) { ["Black Mesa", "Fox Hound"] }
 
           fab!(:user_field) do
@@ -1843,7 +1885,7 @@ RSpec.describe UsersController do
             end
           end
 
-          it "shouldn't allow unregistered field values" do
+          it "rejects unregistered field values" do
             expect do
               put update_user_url, params: { user_fields: { field_id => "Umbrella Corporation" } }
             end.not_to change { user1.reload.user_fields[field_id] }
@@ -1889,7 +1931,7 @@ RSpec.describe UsersController do
           }
         end
 
-        it "should succeed without the optional field" do
+        it "creates the user without the optional field" do
           post "/u.json", params: create_params
           expect(response.status).to eq(200)
           inserted = User.find_by_email(@user.email)
@@ -1900,7 +1942,7 @@ RSpec.describe UsersController do
           expect(inserted.custom_fields["user_field_#{optional_field.id}"]).to be_blank
         end
 
-        it "should succeed with the optional field" do
+        it "creates the user with the optional field" do
           create_params[:user_fields][optional_field.id.to_s] = "value3"
           post "/u.json", params: create_params.merge(create_params)
           expect(response.status).to eq(200)
@@ -1937,7 +1979,7 @@ RSpec.describe UsersController do
           }
         end
 
-        it "should succeed" do
+        it "creates the user without optional field values" do
           post "/u.json", params: create_params
           expect(response.status).to eq(200)
           inserted = User.find_by_email(@user.email)
@@ -1958,7 +2000,7 @@ RSpec.describe UsersController do
 
       fab!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
 
-      it "succeeds" do
+      it "claims the staged account" do
         post "/u.json",
              params:
                honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
@@ -2020,6 +2062,7 @@ RSpec.describe UsersController do
     context "while logged in" do
       let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
+
       fab!(:user) { Fabricate(:user, username: "OrigUsername", refresh_auto_groups: true) }
 
       before do
@@ -2069,7 +2112,7 @@ RSpec.describe UsersController do
         expect(user.reload.username).to eq(old_username)
       end
 
-      it "should succeed in normal circumstances" do
+      it "returns the username availability" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
         expect(response).to be_successful
@@ -2117,7 +2160,7 @@ RSpec.describe UsersController do
         expect(response.parsed_body["errors"].first).to include("Username must be unique")
       end
 
-      it "should fail if the user is old" do
+      it "rejects the change for an old account" do
         # Older than the change period and >1 post
         user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
         PostCreator.new(
@@ -2132,7 +2175,7 @@ RSpec.describe UsersController do
         expect(user.reload.username).to eq(old_username)
       end
 
-      it "should create a staff action log when a staff member changes the username" do
+      it "logs a staff member's username change" do
         acting_user = admin
         sign_in(acting_user)
 
@@ -2149,13 +2192,13 @@ RSpec.describe UsersController do
         expect(user.reload.username).to eq(new_username)
       end
 
-      it "should return a JSON response with the updated username" do
+      it "returns the updated username as JSON" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
         expect(response.parsed_body["username"]).to eq(new_username)
       end
 
-      it "should respond with proper error message if auth_overrides_username is enabled" do
+      it "returns an error when authentication overrides usernames" do
         SiteSetting.discourse_connect_url = "http://someurl.com"
         SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
@@ -2179,29 +2222,61 @@ RSpec.describe UsersController do
       expect(response.status).to eq(400)
     end
 
-    it "rate limits requests per IP" do
-      RateLimiter.enable
+    describe "rate limiting" do
+      before { RateLimiter.enable }
 
-      10.times { get "/u/check_username.json", params: { username: "available" } }
-      get "/u/check_username.json", params: { username: "available" }
+      it "reports a taken username as available once the per IP limit is exceeded" do
+        60.times { get "/u/check_username.json", params: { username: user1.username } }
+        expect(response.parsed_body["available"]).to eq(false)
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body).not_to have_key("available")
-      expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("rate_limiter.slow_down"))
+        get "/u/check_username.json", params: { username: user1.username }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("available" => true)
+      end
+
+      it "does not rate limit staff" do
+        sign_in(moderator)
+
+        61.times { get "/u/check_username.json", params: { username: user1.username } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["available"]).to eq(false)
+      end
     end
 
-    it "does not rate limit staff" do
-      RateLimiter.enable
-      sign_in(moderator)
+    describe "when new registrations are closed" do
+      it "denies anonymous requests when new registrations are disabled" do
+        SiteSetting.allow_new_registrations = false
 
-      11.times { get "/u/check_username.json", params: { username: "available" } }
+        get "/u/check_username.json", params: { username: user1.username }
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["available"]).to eq(true)
+        expect(response.status).to eq(403)
+      end
+
+      it "denies anonymous requests when DiscourseConnect is enabled" do
+        SiteSetting.discourse_connect_url = "http://example.com/sso"
+        SiteSetting.discourse_connect_secret = "sso_secret_12345"
+        SiteSetting.enable_discourse_connect = true
+
+        get "/u/check_username.json", params: { username: user1.username }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "still answers logged in users" do
+        SiteSetting.allow_new_registrations = false
+        sign_in(user1)
+
+        get "/u/check_username.json", params: { username: "BruceWayne" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["available"]).to eq(true)
+      end
     end
 
     shared_examples "when username is unavailable" do
-      it "should return available as false in the JSON and return a suggested username" do
+      it "returns unavailable with a suggested username" do
         expect(response.status).to eq(200)
         expect(response.parsed_body["available"]).to eq(false)
         expect(response.parsed_body["suggestion"]).to be_present
@@ -2209,7 +2284,7 @@ RSpec.describe UsersController do
     end
 
     shared_examples "when username is available" do
-      it "should return available in the JSON" do
+      it "returns the username's availability" do
         expect(response.status).to eq(200)
         expect(response.parsed_body["available"]).to eq(true)
       end
@@ -2222,11 +2297,13 @@ RSpec.describe UsersController do
 
     context "when username is available" do
       before { get "/u/check_username.json", params: { username: "BruceWayne" } }
+
       include_examples "when username is available"
     end
 
     context "when username is unavailable" do
       before { get "/u/check_username.json", params: { username: user1.username } }
+
       include_examples "when username is unavailable"
     end
 
@@ -2235,6 +2312,7 @@ RSpec.describe UsersController do
 
       context "when checking a reserved username" do
         before { get "/u/check_username.json", params: { username: "reserved" } }
+
         include_examples "when username is unavailable"
       end
 
@@ -2244,18 +2322,20 @@ RSpec.describe UsersController do
         context "when user already exists" do
           fab!(:user) { Fabricate(:user, username: "reserved") }
           before { get "/u/check_username.json", params: { username: "reserved" } }
+
           include_examples "when username is unavailable"
         end
 
         context "when user does not exist" do
           before { get "/u/check_username.json", params: { username: "reserved" } }
+
           include_examples "when username is available"
         end
       end
     end
 
     shared_examples "checking an invalid username" do
-      it "should not return an available key but should return an error message" do
+      it "returns an error without an availability key" do
         expect(response.status).to eq(200)
         expect(response.parsed_body["available"]).to eq(nil)
         expect(response.parsed_body["errors"]).to be_present
@@ -2264,9 +2344,10 @@ RSpec.describe UsersController do
 
     context "when has invalid characters" do
       before { get "/u/check_username.json", params: { username: "bad username" } }
+
       include_examples "checking an invalid username"
 
-      it "should return the invalid characters message" do
+      it "returns the invalid-characters message" do
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to include(I18n.t(:"user.username.characters"))
       end
@@ -2279,9 +2360,10 @@ RSpec.describe UsersController do
               username: SecureRandom.alphanumeric(SiteSetting.max_username_length.to_i + 1),
             }
       end
+
       include_examples "checking an invalid username"
 
-      it 'should return the "too long" message' do
+      it 'returns the "too long" message' do
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to include(
           I18n.t(:"user.username.long", count: SiteSetting.max_username_length),
@@ -2297,6 +2379,7 @@ RSpec.describe UsersController do
 
           get "/u/check_username.json", params: { username: "HanSolo" }
         end
+
         include_examples "when username is available"
       end
 
@@ -2308,6 +2391,7 @@ RSpec.describe UsersController do
 
           get "/u/check_username.json", params: { username: "HanSolo" }
         end
+
         include_examples "when username is unavailable"
       end
 
@@ -2318,6 +2402,7 @@ RSpec.describe UsersController do
 
           get "/u/check_username.json", params: { username: "HanSolo", for_user_id: user.id }
         end
+
         include_examples "when username is available"
       end
     end
@@ -2705,7 +2790,7 @@ RSpec.describe UsersController do
 
       fab!(:user) { Fabricate(:user, username: "test.test", name: "Test User") }
 
-      it "should be able to update a user" do
+      it "updates the user" do
         put "/u/#{user.username}", params: { name: "test.test" }
 
         expect(response.status).to eq(200)
@@ -2869,7 +2954,7 @@ RSpec.describe UsersController do
             fab!(:user_field) { Fabricate(:user_field, requirement: "for_all_users") }
             fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
-            it "should update the user field" do
+            it "updates the user field" do
               put "/u/#{user.username}.json",
                   params: {
                     name: "Jim Tom",
@@ -2907,7 +2992,7 @@ RSpec.describe UsersController do
               expect(user.user_fields[user_field.id.to_s].size).to eq(UserField.max_length)
             end
 
-            it "should retain existing user fields" do
+            it "retains existing user fields" do
               put "/u/#{user.username}.json",
                   params: {
                     name: "Jim Tom",
@@ -3121,7 +3206,7 @@ RSpec.describe UsersController do
             end.to_not change { user.sidebar_section_links.count }
           end
 
-          it "should allow user to remove all category sidebar section links" do
+          it "allows removal of all category sidebar links" do
             Fabricate(:category_sidebar_section_link, user: user)
 
             expect do
@@ -3131,7 +3216,7 @@ RSpec.describe UsersController do
             end.to change { user.sidebar_section_links.count }.from(1).to(0)
           end
 
-          it "should allow user to only modify category sidebar section links for categories they have access to" do
+          it "allows category sidebar links only for accessible categories" do
             category = Fabricate(:category)
             group = Fabricate(:group)
             restricted_category = Fabricate(:private_category, group: group)
@@ -3166,7 +3251,7 @@ RSpec.describe UsersController do
             )
           end
 
-          it "should allow user to remove all tag sidebar section links" do
+          it "allows removal of all tag sidebar links" do
             SiteSetting.tagging_enabled = true
 
             Fabricate(:tag_sidebar_section_link, user: user)
@@ -3178,7 +3263,7 @@ RSpec.describe UsersController do
             end.to change { user.sidebar_section_links.count }.from(1).to(0)
           end
 
-          it "should not allow user to add tag sidebar section links when tagging is disabled" do
+          it "rejects tag sidebar links when tagging is disabled" do
             SiteSetting.tagging_enabled = false
 
             tag = Fabricate(:tag)
@@ -3189,7 +3274,7 @@ RSpec.describe UsersController do
             expect(user.reload.sidebar_section_links.count).to eq(0)
           end
 
-          it "should allow user to add tag sidebar section links only for tags that the user can browse" do
+          it "allows tag sidebar links only for browsable tags" do
             SiteSetting.tagging_enabled = true
 
             tag = Fabricate(:tag)
@@ -3701,7 +3786,7 @@ RSpec.describe UsersController do
 
     context "for an existing user" do
       context "for an activated account with email confirmed" do
-        it "fails" do
+        it "rejects an already activated account" do
           user = post_user
           email_token = Fabricate(:email_token, user: user).token
           EmailToken.confirm(email_token)
@@ -3715,7 +3800,7 @@ RSpec.describe UsersController do
       end
 
       context "for an activated account with unconfirmed email" do
-        it "should send an email" do
+        it "sends an activation email" do
           user = post_user
           user.update!(active: true)
           Fabricate(:email_token, user: user)
@@ -3737,7 +3822,7 @@ RSpec.describe UsersController do
       context "when approval is enabled" do
         before { SiteSetting.must_approve_users = true }
 
-        it "should raise an error" do
+        it "returns the approval error" do
           user = post_user
           user.update(active: true)
           user.save!
@@ -3749,12 +3834,12 @@ RSpec.describe UsersController do
       end
 
       describe "when user does not have a valid session" do
-        it "should not be valid" do
+        it "rejects a non-staff request" do
           post "/u/action/send_activation_email.json", params: { username: user.username }
           expect(response.status).to eq(403)
         end
 
-        it "should allow staff regardless" do
+        it "allows staff to send the activation email" do
           sign_in(admin)
           user = Fabricate(:user, active: false)
           post "/u/action/send_activation_email.json", params: { username: user.username }
@@ -3763,7 +3848,7 @@ RSpec.describe UsersController do
       end
 
       context "with a valid email_token" do
-        it "should send the activation email" do
+        it "sends the activation email" do
           user = post_user
 
           expect_enqueued_with(job: :critical_user_email, args: { type: :signup }) do
@@ -3777,18 +3862,19 @@ RSpec.describe UsersController do
 
       context "without an existing email_token" do
         let(:user) { post_user }
+
         before do
           user.email_tokens.each { |t| t.destroy }
           user.reload
         end
 
-        it "should generate a new token" do
+        it "generates a new activation token" do
           expect {
             post "/u/action/send_activation_email.json", params: { username: user.username }
           }.to change { user.reload.email_tokens.count }.by(1)
         end
 
-        it "should send an email" do
+        it "sends the new activation email" do
           expect do
             post "/u/action/send_activation_email.json", params: { username: user.username }
           end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
@@ -3799,7 +3885,7 @@ RSpec.describe UsersController do
     end
 
     context "when username does not exist" do
-      it "should not send an email" do
+      it "does not send an activation email" do
         post "/u/action/send_activation_email.json", params: { username: "nopenopenopenope" }
         expect(response.status).to eq(404)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -4354,12 +4440,12 @@ RSpec.describe UsersController do
     context "when the user is logged in" do
       before { sign_in(user1) }
 
-      it "will not redirect to an invalid path" do
+      it "does not redirect to an invalid path" do
         get "/my/wat/..password.txt"
         expect(response).not_to be_redirect
       end
 
-      it "will redirect to an valid path" do
+      it "redirects to a valid path" do
         get "/my/preferences"
         expect(response).to redirect_to("/u/#{user1.username}/preferences")
       end
@@ -4541,6 +4627,7 @@ RSpec.describe UsersController do
 
   describe "#update_primary_email" do
     let(:user_email) { user1.primary_email }
+
     fab!(:other_email) { Fabricate(:secondary_email, user: user1) }
 
     it "requires login" do
@@ -4732,6 +4819,22 @@ RSpec.describe UsersController do
       user.user_stat.update!(post_count: 1)
       user1.user_stat.update!(post_count: 1)
       user_deferred.user_stat.update!(post_count: 1)
+    end
+
+    it "caches separately per automatic translation preference" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.set_locale_from_accept_language_header = true
+      topic = Fabricate(:topic, user: user, locale: "en")
+      Fabricate(:post, topic: topic, user: user)
+      Fabricate(:topic_localization, topic: topic, locale: "ja", fancy_title: "翻訳された題名")
+
+      cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "false"
+      get "/u/#{user.username_lower}/summary.json", headers: { "HTTP_ACCEPT_LANGUAGE" => "ja" }
+      expect(response.parsed_body["topics"].first["fancy_title"]).to eq(topic.fancy_title)
+
+      cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "true"
+      get "/u/#{user.username_lower}/summary.json", headers: { "HTTP_ACCEPT_LANGUAGE" => "ja" }
+      expect(response.parsed_body["topics"].first["fancy_title"]).to eq("翻訳された題名")
     end
 
     it "generates summary info" do
@@ -5003,8 +5106,8 @@ RSpec.describe UsersController do
       end
 
       it "raises an error when logged in" do
-        sign_in(moderator)
         post_user
+        sign_in(moderator)
 
         put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
 
@@ -5144,6 +5247,51 @@ RSpec.describe UsersController do
         expect(EmailToken.find_by(id: token.id)).to eq(nil)
       end
 
+      context "when the user is approved" do
+        let(:approved_user) do
+          Fabricate(
+            :user,
+            active: false,
+            approved: true,
+            approved_by: admin,
+            approved_at: 1.day.ago,
+            password: "qwerqwer123",
+          )
+        end
+
+        before { SiteSetting.must_approve_users = true }
+
+        it "preserves approval when correcting an unconfirmed email" do
+          put "/u/update-activation-email.json",
+              params: {
+                username: approved_user.username,
+                password: "qwerqwer123",
+                email: "updatedemail@example.com",
+              }
+
+          expect(response.status).to eq(200)
+          expect(approved_user.reload).to be_approved
+        end
+
+        it "revokes approval when changing a confirmed email" do
+          approved_user.email_tokens.find_by(email: approved_user.email).update!(confirmed: true)
+
+          put "/u/update-activation-email.json",
+              params: {
+                username: approved_user.username,
+                password: "qwerqwer123",
+                email: "updatedemail@example.com",
+              }
+
+          expect(response.status).to eq(200)
+
+          approved_user.reload
+          expect(approved_user).not_to be_approved
+          expect(approved_user.approved_by).to be_nil
+          expect(approved_user.approved_at).to be_nil
+        end
+      end
+
       it "tells the user to slow down after many requests" do
         RateLimiter.enable
         freeze_time
@@ -5195,7 +5343,7 @@ RSpec.describe UsersController do
         expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
-      it "should 403 for anonymous user when profiles are hidden" do
+      it "returns 403 to anonymous users when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
         expect(response.headers["X-Robots-Tag"]).to eq("noindex")
@@ -5204,7 +5352,7 @@ RSpec.describe UsersController do
         expect(response).to have_http_status(:forbidden)
       end
 
-      it "should 403 correctly for crawlers when profiles are hidden" do
+      it "returns 403 to crawlers when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}", headers: { "User-Agent" => "Googlebot" }
         expect(response).to have_http_status(:forbidden)
@@ -5213,7 +5361,7 @@ RSpec.describe UsersController do
       end
 
       describe "user profile views" do
-        it "should track a user profile view for an anon user" do
+        it "tracks an anonymous profile view" do
           get "/"
           UserProfileView.expects(:add).with(another_user.user_profile.id, request.remote_ip, nil)
           get "/u/#{another_user.username}.json"
@@ -5267,7 +5415,7 @@ RSpec.describe UsersController do
       end
 
       describe "user profile views" do
-        it "should track a user profile view for a signed in user" do
+        it "tracks a signed-in user's profile view" do
           UserProfileView.expects(:add).with(
             another_user.user_profile.id,
             request.remote_ip,
@@ -5276,7 +5424,7 @@ RSpec.describe UsersController do
           get "/u/#{another_user.username}.json"
         end
 
-        it "should not track a user profile view for a user viewing his own profile" do
+        it "does not track a user viewing their own profile" do
           UserProfileView.expects(:add).never
           get "/u/#{user1.username}.json"
         end
@@ -5372,14 +5520,14 @@ RSpec.describe UsersController do
       end
     end
 
-    it "should be able to view a user" do
+    it "returns the user" do
       get "/u/#{user1.username}"
 
       expect(response.status).to eq(200)
       expect(response.body).to include(user1.username)
     end
 
-    it "should not be able to view a private user profile" do
+    it "does not return a private user profile" do
       user1.user_profile.update!(bio_raw: "Hello world!")
       user1.user_option.update!(hide_profile: true)
 
@@ -5392,7 +5540,7 @@ RSpec.describe UsersController do
     describe "when username contains a period" do
       before_all { user1.update!(username: "test.test") }
 
-      it "should be able to view a user" do
+      it "returns the user" do
         get "/u/#{user1.username}"
 
         expect(response.status).to eq(200)
@@ -5488,7 +5636,7 @@ RSpec.describe UsersController do
         expect(user_json["silence_reason"]).to eq("public  reason")
       end
 
-      it "should have http status 403 for anonymous user when profiles are hidden" do
+      it "returns 403 to anonymous users when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}/card.json"
         expect(response).to have_http_status(:forbidden)
@@ -5610,7 +5758,7 @@ RSpec.describe UsersController do
       expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
     end
 
-    it "should have http status 403 for anonymous user when profiles are hidden" do
+    it "returns 403 to anonymous users when profiles are hidden" do
       SiteSetting.hide_user_profiles_from_public = true
       get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
       expect(response).to have_http_status(:forbidden)
@@ -5672,7 +5820,7 @@ RSpec.describe UsersController do
     end
 
     context "when cookies contains a destination URL" do
-      it "should redirect to the URL" do
+      it "redirects to the URL" do
         sign_in(user1)
 
         destination_url = "http://thisisasite.com/somepath"
@@ -6075,7 +6223,7 @@ RSpec.describe UsersController do
       end
 
       describe "when not signed in" do
-        it "should not include mentionable/messageable groups" do
+        it "omits mentionable and messageable groups" do
           get "/u/search/users.json",
               params: {
                 include_mentionable_groups: "false",
@@ -6347,14 +6495,14 @@ RSpec.describe UsersController do
     describe "when enable_local_logins_via_email is disabled" do
       before { SiteSetting.enable_local_logins_via_email = false }
 
-      it "should return the right response" do
+      it "returns the disabled-login error" do
         post "/u/email-login.json", params: { login: user1.email }
         expect(response.status).to eq(404)
       end
     end
 
     describe "when username or email is not valid" do
-      it "should not enqueue the email to login" do
+      it "does not enqueue the login email" do
         post "/u/email-login.json", params: { login: "@random" }
 
         expect(response.status).to eq(200)
@@ -6366,7 +6514,7 @@ RSpec.describe UsersController do
     end
 
     describe "when hide_email_address_taken is true" do
-      it "should return the right response" do
+      it "returns a generic response" do
         SiteSetting.hide_email_address_taken = true
         post "/u/email-login.json", params: { login: user1.email }
 
@@ -6378,7 +6526,7 @@ RSpec.describe UsersController do
     end
 
     describe "when user is already logged in" do
-      it "should redirect to the root path" do
+      it "redirects to the root path" do
         sign_in(user1)
         post "/u/email-login.json", params: { login: user1.email }
 
@@ -6389,7 +6537,7 @@ RSpec.describe UsersController do
 
   describe "#create_second_factor_totp" do
     context "when not logged in" do
-      it "should return the right response" do
+      it "requires authentication" do
         post "/users/second_factors.json", params: { password: "wrongpassword" }
 
         expect(response.status).to eq(403)
@@ -6411,7 +6559,7 @@ RSpec.describe UsersController do
         end
 
         describe "when local logins are disabled" do
-          it "should return the right response" do
+          it "rejects TOTP creation when local logins are disabled" do
             SiteSetting.enable_local_logins = false
 
             post "/users/create_second_factor_totp.json"
@@ -6421,7 +6569,7 @@ RSpec.describe UsersController do
         end
 
         describe "when SSO is enabled" do
-          it "should return the right response" do
+          it "rejects TOTP creation when SSO is enabled" do
             SiteSetting.discourse_connect_url = "http://someurl.com"
             SiteSetting.discourse_connect_secret = "x" * 10
             SiteSetting.enable_discourse_connect = true
@@ -6531,6 +6679,7 @@ RSpec.describe UsersController do
                second_factor_token: "123456",
              }
       end
+
       it "shows a helpful error message to the user" do
         expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
       end
@@ -6541,6 +6690,7 @@ RSpec.describe UsersController do
         create_totp
         post "/users/enable_second_factor_totp.json", params: { second_factor_token: "123456" }
       end
+
       it "shows a helpful error message to the user" do
         expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_second_factor_name"))
       end
@@ -6551,6 +6701,7 @@ RSpec.describe UsersController do
         create_totp
         post "/users/enable_second_factor_totp.json", params: { name: "test" }
       end
+
       it "shows a helpful error message to the user" do
         expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_second_factor_code"))
       end
@@ -6599,7 +6750,7 @@ RSpec.describe UsersController do
     fab!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user1) }
 
     context "when not logged in" do
-      it "should return the right response" do
+      it "requires authentication" do
         put "/users/second_factor.json"
 
         expect(response.status).to eq(403)
@@ -6625,7 +6776,8 @@ RSpec.describe UsersController do
 
         context "when token is valid" do
           before { stub_server_session_confirmed }
-          it "should allow second factor for the user to be renamed" do
+
+          it "renames the user's second factor" do
             put "/users/second_factor.json",
                 params: {
                   name: "renamed",
@@ -6637,7 +6789,7 @@ RSpec.describe UsersController do
             expect(user1.reload.user_second_factors.totps.first.name).to eq("renamed")
           end
 
-          it "should allow second factor for the user to be disabled" do
+          it "disables the user's second factor" do
             put "/users/second_factor.json",
                 params: {
                   disable: "true",
@@ -6670,7 +6822,8 @@ RSpec.describe UsersController do
               .stubs(:server_session)
               .returns("confirmed-session-#{user1.id}" => "true")
           end
-          it "should allow second factor backup for the user to be disabled" do
+
+          it "disables the user's backup codes" do
             put "/users/second_factor.json",
                 params: {
                   second_factor_target: UserSecondFactor.methods[:backup_codes],
@@ -6689,7 +6842,7 @@ RSpec.describe UsersController do
     fab!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user1) }
 
     context "when not logged in" do
-      it "should return the right response" do
+      it "requires authentication" do
         put "/users/second_factors_backup.json",
             params: {
               second_factor_token: "wrongtoken",
@@ -6715,7 +6868,7 @@ RSpec.describe UsersController do
         end
 
         describe "when local logins are disabled" do
-          it "should return the right response" do
+          it "rejects backup-code creation when local logins are disabled" do
             SiteSetting.enable_local_logins = false
 
             put "/users/second_factors_backup.json"
@@ -6725,7 +6878,7 @@ RSpec.describe UsersController do
         end
 
         describe "when SSO is enabled" do
-          it "should return the right response" do
+          it "rejects backup-code creation when SSO is enabled" do
             SiteSetting.discourse_connect_url = "http://someurl.com"
             SiteSetting.discourse_connect_secret = "x" * 10
             SiteSetting.enable_discourse_connect = true
@@ -6889,7 +7042,7 @@ RSpec.describe UsersController do
           Fabricate(:passkey_with_random_credential, user: user1)
         end
 
-        it "should disable all totp and security keys (but not passkeys)" do
+        it "disables all TOTP factors and security keys but preserves passkeys" do
           expect_enqueued_with(
             job: :critical_user_email,
             args: {
@@ -7009,6 +7162,7 @@ RSpec.describe UsersController do
 
   describe "#delete_passkey" do
     before { SiteSetting.enable_passkeys = true }
+
     fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
 
     it "fails if user does not have a confirmed session" do
@@ -7252,7 +7406,7 @@ RSpec.describe UsersController do
           expect(response.status).to eq(200)
         end
 
-        it "works" do
+        it "revokes the account through the external provider" do
           authenticator.can_revoke = true
 
           post "/u/#{user1.username}/preferences/revoke-account.json",

@@ -14,6 +14,7 @@ describe "OIDC RP-Initiated Logout" do
       end_session_endpoint: "https://id.example.com/endsession",
     }
   end
+
   fab!(:user)
 
   before do
@@ -120,6 +121,18 @@ describe "OIDC RP-Initiated Logout" do
         expect(response.status).to eq(200)
         expect(response.parsed_body["redirect_url"]).to eq(
           "https://id.example.com/endsession?id_token_hint=myoidctoken&client_id=test-client-id",
+        )
+      end
+    end
+
+    context "with state included in logout endpoint" do
+      before { SiteSetting.openid_connect_rp_initiated_logout_include_state = true }
+
+      it "appends a random state param to the logout endpoint url" do
+        delete "/session/#{user.username}", xhr: true
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to match(
+          %r{\Ahttps://id\.example\.com/endsession\?id_token_hint=myoidctoken&state=[0-9a-f]{32}\z},
         )
       end
     end

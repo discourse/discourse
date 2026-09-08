@@ -22,6 +22,8 @@ ko:
         search: "검색"
         time: "시간"
         summarize: "요약하기"
+      tool_help:
+        create_category: "새 카테고리 만들기"
       close_topic:
         errors:
           not_found: "글을 찾을 수 없음."
@@ -31,10 +33,13 @@ ko:
       delete_topic:
         errors:
           not_found: "글을 찾을 수 없음."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "글을 찾을 수 없음."
       edit_category:
+        errors:
+          not_found: "카테고리를 찾을수 없습니다."
+      change_topic_category:
         errors:
           not_found: "글을 찾을 수 없음."
           category_not_found: "카테고리를 찾을수 없습니다."

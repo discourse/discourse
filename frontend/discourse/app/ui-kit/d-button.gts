@@ -69,7 +69,7 @@ export interface DButtonSignature {
     class?: string;
   };
 
-  Element: HTMLButtonElement;
+  Element: HTMLButtonElement | HTMLAnchorElement;
 
   // Optional yield
   Blocks: {

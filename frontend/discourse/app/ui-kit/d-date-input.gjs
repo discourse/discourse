@@ -36,7 +36,7 @@ export default class DDateInput extends Component {
     super.didInsertElement(...arguments);
 
     schedule("afterRender", () => {
-      if (!this.element || this.isDestroying || this.isDestroying) {
+      if (!this.element || this.isDestroying) {
         return;
       }
 
@@ -135,7 +135,7 @@ export default class DDateInput extends Component {
   }
 
   _handleSelection(value) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 

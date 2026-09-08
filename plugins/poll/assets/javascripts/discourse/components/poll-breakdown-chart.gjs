@@ -24,6 +24,9 @@ export default class PollBreakdownChart extends Component {
   _previousHighlightedSliceIndex = null;
   _previousDisplayMode = null;
 
+  /** @type {import("chart.js").Chart | null} */
+  _chart = null;
+
   init() {
     super.init(...arguments);
     this._optionToSlice = {};

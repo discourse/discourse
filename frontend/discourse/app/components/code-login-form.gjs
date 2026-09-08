@@ -22,6 +22,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
@@ -241,6 +242,44 @@ export default class CodeLoginForm extends Component {
     this.codeError = null;
   }
 
+  // A signup flow can gather the required signup fields before the code is
+  // verified — a themed landing page that asks for them up front, say. Taking
+  // those answers here lets the extra step be skipped entirely.
+  //
+  // Returns whether they can be submitted along with the code. The server
+  // reads any `user_fields` it receives as the complete answer, so a partial
+  // set would fail the signup outright rather than prompting for the rest:
+  // hold them back unless every required field ends up answered.
+  #prefillUserFields() {
+    const values = applyValueTransformer(
+      "code-login-user-field-values",
+      {},
+      { signup: this.isSignup }
+    );
+
+    if (!values || Object.keys(values).length === 0) {
+      return false;
+    }
+
+    let prefilled = false;
+
+    this.userFields.forEach((f) => {
+      const value = values[f.field.id];
+
+      if (value !== undefined) {
+        f.value = value;
+        prefilled = true;
+      }
+    });
+
+    return (
+      prefilled &&
+      this.userFields.every(
+        (f) => !f.field.required || (f.value && f.value !== "false")
+      )
+    );
+  }
+
   @action
   async verifyCode(code) {
     if (typeof code === "string") {
@@ -267,7 +306,7 @@ export default class CodeLoginForm extends Component {
       data.second_factor_method = this.secondFactorMethod;
     }
 
-    if (this.isUserFieldsStep) {
+    if (this.isUserFieldsStep || this.#prefillUserFields()) {
       data.user_fields = {};
       this.userFields.forEach((f) => (data.user_fields[f.field.id] = f.value));
       if (this.nameRequired) {
@@ -567,14 +606,20 @@ export default class CodeLoginForm extends Component {
 
     try {
       const honeypot = await ajax("/session/hp.json");
-      await ajax("/session/login-code", {
+      const result = await ajax("/session/login-code", {
         type: "POST",
         data: {
           email: this.email,
+          signup: this.isSignup,
           password_confirmation: honeypot.value,
           challenge: honeypot.challenge.split("").reverse().join(""),
         },
       });
+
+      if (result?.error) {
+        this.codeError = result.error;
+        return false;
+      }
 
       this.step = "code";
       this.startResendCooldown();
@@ -678,6 +723,20 @@ export default class CodeLoginForm extends Component {
           >
             <field.Control autofocus="autofocus" autocomplete="username" />
           </form.Field>
+
+          {{! Lets a signup flow add its own fields to this form — an agreement
+          it needs accepted before the account exists, say — so they are
+          validated and submitted together with the email. }}
+          <PluginOutlet
+            @name="code-login-email-step-fields"
+            @outletArgs={{lazyHash form=form context=@context}}
+          />
+
+          {{#if this.codeError}}
+            <div class="code-login-form__error" aria-live="polite" role="alert">
+              {{this.codeError}}
+            </div>
+          {{/if}}
 
           <div class="code-login-form__email-actions">
             <form.Submit

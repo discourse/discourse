@@ -99,6 +99,29 @@ pt_BR:
           title: "Mais tópicos"
         post_menu:
           title: "Menu de postagem"
+        roving_focus:
+          toolbar:
+            copy: "Copiar"
+          tags:
+            remove: "Remover %{tag}"
+            design: "Design"
+            support: "Apoio"
+          adjacent:
+            label: "Filtros"
+            field: "Pesquisar"
+            placeholder: "Tópicos de pesquisa"
+            open: "Aberto (open)"
+            recent: "Recente"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "A cada dia"
+            weekly: "A cada semana"
+            monthly: "Todo mês"
+            never: "Nunca"
+          tree:
+            components: "Componentes"
+            select: "Selecionar"
         modal:
           title: "Modal"
           header: "Título do modal"

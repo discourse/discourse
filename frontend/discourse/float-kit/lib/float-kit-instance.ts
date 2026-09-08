@@ -1,6 +1,8 @@
+import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
-import { isDestroyed, isDestroying } from "@ember/destroyable";
+import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import type {
@@ -234,7 +236,7 @@ export default abstract class FloatKitInstance {
     element.addEventListener("touchcancel", this.onTouchCancel, TOUCH_OPTIONS);
     element.addEventListener("touchend", this.onTouchCancel, TOUCH_OPTIONS);
     this.touchTimeout = discourseLater(() => {
-      if (isDestroying(this) || isDestroyed(this)) {
+      if (isDestroying(getOwner(this)!)) {
         return;
       }
 
@@ -294,6 +296,10 @@ export default abstract class FloatKitInstance {
       return;
     }
 
+    if (DEBUG) {
+      this.#warnUnknownUntriggers();
+    }
+
     makeArray(this.triggers)
       .filter(Boolean)
       .forEach((trigger) => {
@@ -336,6 +342,11 @@ export default abstract class FloatKitInstance {
           case "click":
             element.removeEventListener("click", this.onClick);
             break;
+          default:
+            if (DEBUG) {
+              // eslint-disable-next-line no-console
+              console.warn(`FloatKit: unknown trigger "${trigger}".`);
+            }
         }
       });
 
@@ -350,6 +361,10 @@ export default abstract class FloatKitInstance {
 
     if (!this.options?.listeners || !element) {
       return;
+    }
+
+    if (DEBUG) {
+      this.#warnUnknownUntriggers();
     }
 
     makeArray(this.triggers)
@@ -410,6 +425,11 @@ export default abstract class FloatKitInstance {
               passive: true,
             });
             break;
+          default:
+            if (DEBUG) {
+              // eslint-disable-next-line no-console
+              console.warn(`FloatKit: unknown trigger "${trigger}".`);
+            }
         }
       });
   }
@@ -440,5 +460,23 @@ export default abstract class FloatKitInstance {
 
   get shouldTrapPointerDown() {
     return true;
+  }
+
+  /** Untriggers need validation even though only triggers install listeners. */
+  #warnUnknownUntriggers() {
+    const supported = [
+      "hold",
+      "focus",
+      "focusin",
+      "hover",
+      "delayed-hover",
+      "click",
+    ];
+    for (const untrigger of makeArray(this.untriggers).filter(Boolean)) {
+      if (!supported.includes(untrigger)) {
+        // eslint-disable-next-line no-console
+        console.warn(`FloatKit: unknown untrigger "${untrigger}".`);
+      }
+    }
   }
 }

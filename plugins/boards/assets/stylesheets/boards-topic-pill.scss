@@ -1,0 +1,82 @@
+.discourse-boards-topic-pill {
+  .d-icon {
+    margin-right: 0.25em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    .title-wrapper & {
+      vertical-align: center;
+    }
+  }
+
+  &__label::first-letter {
+    text-transform: uppercase;
+  }
+
+  &--multiple {
+    cursor: pointer;
+  }
+}
+
+// Menu listing each board a topic is on, matching core's
+// .notifications-tracking-btn / .composer-actions-btn pattern
+.discourse-boards-boards-menu__item.btn {
+  display: flex;
+  flex: 1 0 auto;
+  box-sizing: border-box;
+  align-items: center;
+
+  .discourse-boards-boards-menu__item-texts {
+    line-height: var(--line-height-medium);
+    flex: 1 1 0%;
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .discourse-boards-boards-menu__item-label {
+    flex: 1 1 auto;
+    font-weight: bold;
+    font-size: var(--font-0);
+    color: var(--primary);
+    max-width: 100%;
+
+    @include ellipsis;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  // mirrors the board's column chip (.discourse-boards-column__title),
+  // on its own line below the board name
+  .discourse-boards-boards-menu__column {
+    text-transform: uppercase;
+    font-size: var(--font-down-2);
+    font-weight: 500;
+    padding: var(--space-half) var(--space-1);
+    background: light-dark(
+      oklch(from var(--discourse-boards-column-color) 97% calc(c * 0.3) h),
+      oklch(from var(--discourse-boards-column-color) 45% calc(c * 0.5) h)
+    );
+    border-radius: var(--d-border-radius);
+    color: light-dark(
+      oklch(from var(--discourse-boards-column-color) 20% calc(c * 1) h),
+      oklch(from var(--discourse-boards-column-color) 100% calc(c * 0.9) h)
+    );
+    max-width: 25ch;
+
+    .d-icon {
+      color: currentcolor;
+      font-size: 0.9em;
+      width: auto;
+    }
+  }
+}
+
+.discourse-no-touch .discourse-boards-boards-menu__item.btn:hover,
+.discourse-boards-boards-menu__item.btn:focus-visible {
+  background: var(--d-hover);
+}

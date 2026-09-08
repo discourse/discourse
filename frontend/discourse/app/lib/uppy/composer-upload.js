@@ -273,7 +273,7 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
       run(() => {
-        if (this.composer.isDestroying || this.composer.isDestroyed) {
+        if (this.composer.isDestroying) {
           return;
         }
 
@@ -305,7 +305,7 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("upload-progress", (file, progress) => {
       run(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         const upload = this.#inProgressUploads.find(

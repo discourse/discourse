@@ -349,11 +349,7 @@ export default class AiLogs extends Component {
       const result = await ajax("/admin/plugins/discourse-ai/ai-logs.json", {
         data: this.requestParams,
       });
-      if (
-        requestId !== this._requestId ||
-        this.isDestroying ||
-        this.isDestroyed
-      ) {
+      if (requestId !== this._requestId || this.isDestroying) {
         return;
       }
 
@@ -382,19 +378,11 @@ export default class AiLogs extends Component {
         }
       }
     } catch (error) {
-      if (
-        requestId === this._requestId &&
-        !this.isDestroying &&
-        !this.isDestroyed
-      ) {
+      if (requestId === this._requestId && !this.isDestroying) {
         popupAjaxError(error);
       }
     } finally {
-      if (
-        requestId === this._requestId &&
-        !this.isDestroying &&
-        !this.isDestroyed
-      ) {
+      if (requestId === this._requestId && !this.isDestroying) {
         if (!quiet) {
           this.loading = false;
         }
@@ -418,8 +406,7 @@ export default class AiLogs extends Component {
       if (
         requestId !== this._requestId ||
         cursor !== this.meta.next_cursor ||
-        this.isDestroying ||
-        this.isDestroyed
+        this.isDestroying
       ) {
         return;
       }
@@ -428,19 +415,11 @@ export default class AiLogs extends Component {
       this.features = this.mergedFeatures(this.features, result.logs);
       this.meta = { ...this.meta, ...result.meta };
     } catch (error) {
-      if (
-        requestId === this._requestId &&
-        !this.isDestroying &&
-        !this.isDestroyed
-      ) {
+      if (requestId === this._requestId && !this.isDestroying) {
         popupAjaxError(error);
       }
     } finally {
-      if (
-        requestId === this._requestId &&
-        !this.isDestroying &&
-        !this.isDestroyed
-      ) {
+      if (requestId === this._requestId && !this.isDestroying) {
         this.loadingMore = false;
       }
     }
@@ -462,7 +441,7 @@ export default class AiLogs extends Component {
 
   schedulePoll() {
     clearTimeout(this._pollTimer);
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -483,7 +462,7 @@ export default class AiLogs extends Component {
   @action
   async pollForNewLogs() {
     clearTimeout(this._pollTimer);
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -507,7 +486,7 @@ export default class AiLogs extends Component {
           data: { ...this.requestParams, since_id: this._sinceId },
         }
       );
-      if (this.isDestroying || this.isDestroyed || epoch !== this._pollEpoch) {
+      if (this.isDestroying || epoch !== this._pollEpoch) {
         return;
       }
       if (result.new_logs_count !== undefined) {

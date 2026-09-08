@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    discourse_rewind_enabled: "啟用 Discourse Rewind，為成員提供有趣的社群年終活動摘要。"
+  discourse_rewind:
+    report_failed: "無法產生 Discourse Rewind 報告。"
+    invalid_year: "僅能在一月或十二月產生 Rewind。"
+    user_not_found: "找不到使用者，或無法查看該使用者。"
+    reports_not_cached: "尚未產生報告。請重新整理頁面。"
+    report_not_found: "找不到報告。"
+    cannot_share_when_profile_hidden: "若要分享 Rewind，您必須允許其他人查看您的公開個人資料。"

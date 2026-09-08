@@ -193,7 +193,7 @@ class Stylesheet::Manager::Builder
   def theme_digest
     Digest::SHA1.hexdigest(
       scss_digest.to_s + color_scheme_digest.to_s + settings_digest + uploads_digest +
-        current_hostname,
+        current_hostname + Stylesheet::Manager.fs_asset_cachebuster,
     )
   end
 

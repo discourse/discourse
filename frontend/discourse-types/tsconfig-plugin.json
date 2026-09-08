@@ -6,11 +6,33 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "skipLibCheck": true,
+    "strict": false,
+    "noUncheckedSideEffectImports": false,
     "noEmit": true,
     "noEmitOnError": false,
     "declaration": true,
     "outDir": "declarations",
     "composite": true,
-    "typeRoots": ["./external-types"]
+    "typeRoots": ["./external-types"],
+    "types": [
+      "discourse-i18n",
+      "ember-compat__tracked-built-ins",
+      "ember-modifier",
+      "ember-qunit",
+      "ember-source",
+      "ember-truth-helpers",
+      "ember__render-modifiers",
+      "ember__string",
+      "ember__test-helpers",
+      "floating-ui__dom",
+      "glimmer__component",
+      "glimmer__syntax",
+      "glint__template",
+      "jquery",
+      "pretender",
+      "qunit",
+      "rsvp",
+      "sinon"
+    ]
   }
 }

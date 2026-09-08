@@ -36,6 +36,12 @@ module Chat
       @flagged_by_user_ids ||= reviewable_scores.map(&:user_id)
     end
 
+    def silenced_for_this_message?
+      return false if !chat_message_creator&.silenced?
+
+      chat_message_creator.silenced_record&.reviewable_id == id
+    end
+
     def post
       nil
     end
@@ -95,6 +101,31 @@ module Chat
       unless chat_message.deleted_at?
         build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
       end
+
+      build_unsilence_action(actions, guardian)
+    end
+
+    def build_unsilence_action(actions, guardian)
+      return if !chat_message_creator&.silenced?
+      return if !guardian.can_unsilence_user?(chat_message_creator)
+
+      build_action(actions, :unsilence_user, icon: "microphone-slash")
+    end
+
+    def penalty_effect_for(action_id)
+      return if author_penalties.empty?
+
+      lifts_silence =
+        case action_id
+        when :disagree, :disagree_and_restore
+          silenced_for_this_message?
+        when :unsilence_user
+          true
+        else
+          false
+        end
+
+      lifts_silence ? :lifts_penalty : :retains_penalty
     end
 
     def perform_agree_and_keep_message(performed_by, args)
@@ -110,15 +141,21 @@ module Chat
     end
 
     def perform_disagree_and_restore(performed_by, args)
-      disagree { chat_message.recover! }
+      disagree(performed_by) { chat_message.recover! }
     end
 
     def perform_disagree(performed_by, args)
-      disagree
+      disagree(performed_by)
     end
 
     def perform_ignore(performed_by, args)
       ignore
+    end
+
+    def perform_unsilence_user(performed_by, _args)
+      UserSilencer.unsilence(chat_message_creator, performed_by, reviewable_id: id)
+
+      create_result(:success) { |result| result.remove_reviewable_ids = [] }
     end
 
     def perform_delete_and_ignore(performed_by, args)
@@ -139,10 +176,12 @@ module Chat
       end
     end
 
-    def disagree
+    def disagree(performed_by)
       yield if block_given?
 
-      UserSilencer.unsilence(chat_message_creator)
+      if silenced_for_this_message?
+        UserSilencer.unsilence(chat_message_creator, performed_by, reviewable_id: id)
+      end
 
       create_result(:success, :rejected) do |result|
         result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }

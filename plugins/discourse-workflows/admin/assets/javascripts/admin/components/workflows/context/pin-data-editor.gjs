@@ -171,7 +171,7 @@ export default class PinDataEditor extends Component {
   async loadEditor() {
     const Editor = await loadCodemirrorEditor();
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
     this.Editor = Editor;

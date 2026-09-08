@@ -193,7 +193,7 @@ export default class TagChooser extends MultiSelectComponent {
 
   @bind
   _transformJson(json, { skipSort = false } = {}) {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return [];
     }
 

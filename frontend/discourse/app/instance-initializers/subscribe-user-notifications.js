@@ -86,7 +86,7 @@ class SubscribeUserNotificationsInit {
           this.router,
           this.appEvents
         );
-      } else {
+      } else if (!this.currentUser.isInDoNotDisturb()) {
         unsubscribePushNotifications(this.currentUser);
       }
     }

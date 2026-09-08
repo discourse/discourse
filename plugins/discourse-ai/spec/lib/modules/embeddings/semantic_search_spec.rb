@@ -23,13 +23,13 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
 
     after { described_class.clear_cache_for(query) }
 
-    def insert_candidate(candidate)
-      DiscourseAi::Embeddings::Schema.for(Topic).store(candidate, hyde_embedding, "digest")
+    def insert_candidate(candidate, embedding = hyde_embedding)
+      DiscourseAi::Embeddings::Schema.for(Topic).store(candidate, embedding, "digest")
     end
 
-    def trigger_search(query)
+    def trigger_search(query, **options)
       DiscourseAi::Completions::Llm.with_prepared_responses([hypothetical_post]) do
-        semantic_search.search_for_topics(query)
+        semantic_search.search_for_topics(query, **options)
       end
     end
 
@@ -75,6 +75,55 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
           posts = trigger_search(query)
 
           expect(posts).to be_empty
+        end
+      end
+
+      context "when personal messages are requested" do
+        it "returns no results for an anonymous user" do
+          insert_candidate(Fabricate(:private_message_post).topic)
+
+          posts =
+            described_class.new(Guardian.new(nil)).search_for_topics(query, private_messages: true)
+
+          expect(posts).to be_empty
+        end
+
+        it "returns only personal messages the user can see" do
+          visible_pm = Fabricate(:private_message_post, recipient: user)
+          hidden_pm = Fabricate(:private_message_post)
+          insert_candidate(visible_pm.topic)
+          insert_candidate(hidden_pm.topic)
+
+          posts = trigger_search(query, private_messages: true)
+
+          expect(posts).to contain_exactly(visible_pm)
+        end
+
+        it "limits vector ranking to personal messages the user can see" do
+          SiteSetting.search_page_size = 0
+          visible_pm = Fabricate(:private_message_post, recipient: user)
+          distant_embedding = [1.0] + Array.new(vector_def.dimensions - 1, 0.0)
+          insert_candidate(visible_pm.topic, distant_embedding)
+
+          9.times { insert_candidate(Fabricate(:private_message_post).topic) }
+
+          posts = trigger_search(query, private_messages: true)
+
+          expect(posts).to contain_exactly(visible_pm)
+        end
+      end
+
+      context "when public topics are requested" do
+        it "excludes personal messages before vector ranking" do
+          SiteSetting.search_page_size = 0
+          distant_embedding = [1.0] + Array.new(vector_def.dimensions - 1, 0.0)
+          insert_candidate(post.topic, distant_embedding)
+
+          9.times { insert_candidate(Fabricate(:private_message_post).topic) }
+
+          posts = trigger_search(query)
+
+          expect(posts).to contain_exactly(post)
         end
       end
 

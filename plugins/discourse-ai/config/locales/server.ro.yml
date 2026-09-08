@@ -48,6 +48,8 @@ ro:
         search: "Caută"
         time: "Oră"
         summarize: "Rezumat"
+      tool_help:
+        create_category: "Creează o categorie nouă"
       close_topic:
         errors:
           not_found: "Subiectul nu a fost găsit."
@@ -57,10 +59,10 @@ ro:
       delete_topic:
         errors:
           not_found: "Subiectul nu a fost găsit."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Subiectul nu a fost găsit."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Subiectul nu a fost găsit."
       set_topic_timer:

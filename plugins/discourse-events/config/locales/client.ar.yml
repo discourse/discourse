@@ -7,11 +7,10 @@
 ar:
   admin_js:
     admin:
-      calendar: "الأحداث"
       site_settings:
         categories:
           discourse_post_event: "حدث Discourse"
-          discourse_calendar: "الأحداث"
+          discourse_events: "الأحداث"
       web_hooks:
         calendar_event:
           group_name: "حدث تقويم"
@@ -32,7 +31,8 @@ ar:
           fields:
             topic_id:
               label: معرِّف الموضوع
-    discourse_calendar:
+    discourse_events:
+      title: "الأحداث"
       livestream:
         zoom:
           join: "الانضمام إلى Zoom"
@@ -44,7 +44,6 @@ ar:
           rsvp_to_event: "أكِّد حضورك للحدث لبدء الدردشة"
           rsvp_to_event_with_link: "أكِّد حضورك <a href='%{url}'>للحدث</a> لبدء الدردشة"
           rsvp_body: "تواصل مع الحضور الآخرين قبل الحدث وأثنائه وبعده."
-      invite_user_notification: "دعاك %{username} إلى: %{description}"
       preferences:
         all_events_description: "جميع أحداث المنتدى"
         my_events_description: "الأحداث التي ستحضرها أو المهتم بها"
@@ -338,9 +337,14 @@ ar:
         week: "الأسبوع"
         day: "اليوم"
         year: "العام"
+    discourse_calendar:
+      invite_user_notification: "دعاك %{username} إلى: %{description}"
     group_timezones:
       search: "بحث..."
       group_availability: "توافر %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "معرِّف الموضوع"
     discourse_post_event:
       new_event: "حدث جديد"
       notifications:
@@ -626,6 +630,8 @@ ar:
           placeholder: "اختياري، الإعدادات الافتراضية لعنوان الموضوع"
         invitees:
           label: "المجموعات المدعوة"
+        hosts:
+          label: "المضيفون"
         event_type:
           label: "نوع الحضور"
           public:

@@ -60,11 +60,7 @@ export default class CategoryControl extends Component {
 
     await previousRequest;
 
-    if (
-      this.isDestroying ||
-      this.isDestroyed ||
-      !this.#sameIds(this.categoryIds, requestedIds)
-    ) {
+    if (this.isDestroying || !this.#sameIds(this.categoryIds, requestedIds)) {
       return;
     }
 

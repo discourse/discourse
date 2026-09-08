@@ -25,7 +25,7 @@ def setup_message_bus_env(env)
   end
 
   host = RailsMultisite::ConnectionManagement.host(env)
-  RailsMultisite::ConnectionManagement.with_hostname(host) do
+  RailsMultisite::ConnectionManagement.with_hostname(host, raise_on_missing: false) do
     cors_origin = Discourse.base_url_no_prefix
 
     if GlobalSetting.enable_cors && SiteSetting.cors_origins.present?

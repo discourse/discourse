@@ -46,6 +46,23 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(jobs).to be_empty
   end
 
+  it "enqueues tag created workflows with the tag payload" do
+    create_published_workflow("tag-created-trigger", "trigger:tag_created")
+
+    created_tag = Fabricate(:tag, name: "new-workflow-tag")
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("tag-created-trigger")
+    expect(trigger_data_for("tag-created-trigger")).to include(
+      "tag" =>
+        include(
+          "id" => created_tag.id,
+          "name" => created_tag.name,
+          "slug" => created_tag.slug,
+          "description" => created_tag.description,
+        ),
+    )
+  end
+
   it "only enqueues topic closed workflows matching the category and tags" do
     topic.tags << tag
     create_published_workflow(
@@ -191,6 +208,27 @@ RSpec.describe DiscourseWorkflows::EventListener do
     PostRevisor.new(post).revise!(admin, { raw: "Edited by workflow" }, skip_workflows: true)
 
     expect(enqueued_trigger_node_ids).not_to include("post-edited-trigger")
+  end
+
+  it "enqueues post destroyed workflows only when the deletion does not skip them" do
+    post = create_post(category: category)
+    skipped = create_post(category: category)
+    create_published_workflow("post-destroyed-trigger", "trigger:post_destroyed")
+
+    PostDestroyer.new(admin, skipped, skip_workflows: true).destroy
+    PostDestroyer.new(admin, post).destroy
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("post-destroyed-trigger")
+  end
+
+  it "enqueues post recovered workflows from the post recovered event" do
+    post = create_post(category: category)
+    PostDestroyer.new(admin, post).destroy
+    create_published_workflow("post-recovered-trigger", "trigger:post_recovered")
+
+    PostDestroyer.new(admin, post.reload).recover
+
+    expect(enqueued_trigger_node_ids).to include("post-recovered-trigger")
   end
 
   it "only enqueues reviewable approved workflows matching the reviewable type" do

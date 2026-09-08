@@ -19,8 +19,8 @@ he:
       event_started:
         title: האירוע התחיל
   system_messages:
-    discourse_calendar_holiday_region_invalid: "אזור החג שסיפקת לא קיים."
-    discourse_calendar_enable_holiday_failed: "לא ניתן היה לאפשר את החג הזה, הוא כבר מאופשר או שהוא לא מושבת."
+    discourse_events_holiday_region_invalid: "אזור החג שסיפקת לא קיים."
+    discourse_events_enable_holiday_failed: "לא ניתן היה לאפשר את החג הזה, הוא כבר מאופשר או שהוא לא מושבת."
     discourse_post_event_bulk_invite_succeeded:
       title: "אירוע - הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה המרוכזת עובדה בהצלחה"
@@ -63,7 +63,7 @@ he:
     event_participation_buttons: "רשימת כפתורי השתתפות באירועים לשימוש המשתמשים."
     sidebar_show_upcoming_events: "הצגת קישור לאירועים קרובים בסרגל הצד תחת ‚עוד’."
     calendar_first_day_of_week: "הגדרת היום הראשון בשבוע לתצוגת לוח שנה. האפשרויות הן שבת, ראשון או שני."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "יום"

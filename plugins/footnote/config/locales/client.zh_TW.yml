@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse 註腳"
+  js:
+    footnote:
+      title: "註腳"
+      add: "新增註腳"

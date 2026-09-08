@@ -178,11 +178,7 @@ export default class NestedPostChildren extends Component {
       const data = await ajax(
         `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
       );
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        this.identityKey !== identityKey
-      ) {
+      if (this.isDestroying || this.identityKey !== identityKey) {
         return;
       }
       this.childNodes = this._childrenForTopic(data.children, topicId).map(
@@ -194,11 +190,11 @@ export default class NestedPostChildren extends Component {
       this._fetchedFromServer = true;
       this._reportToCache();
     } catch (e) {
-      if (!(this.isDestroying || this.isDestroyed)) {
+      if (!this.isDestroying) {
         popupAjaxError(e);
       }
     } finally {
-      if (!(this.isDestroying || this.isDestroyed)) {
+      if (!this.isDestroying) {
         this.loading = false;
       }
     }
@@ -227,11 +223,7 @@ export default class NestedPostChildren extends Component {
       const data = await ajax(
         `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
       );
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        this.identityKey !== identityKey
-      ) {
+      if (this.isDestroying || this.identityKey !== identityKey) {
         return;
       }
       const newNodes = this._childrenForTopic(data.children, topicId).map(
@@ -260,11 +252,11 @@ export default class NestedPostChildren extends Component {
       this.hasMore = data.has_more || false;
       this._reportToCache();
     } catch (e) {
-      if (!(this.isDestroying || this.isDestroyed)) {
+      if (!this.isDestroying) {
         popupAjaxError(e);
       }
     } finally {
-      if (!(this.isDestroying || this.isDestroyed)) {
+      if (!this.isDestroying) {
         this.loadingMore = false;
       }
     }

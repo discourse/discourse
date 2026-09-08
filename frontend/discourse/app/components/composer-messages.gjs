@@ -84,7 +84,7 @@ export default class ComposerMessages extends Component {
   }
 
   _closeTop() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -98,7 +98,7 @@ export default class ComposerMessages extends Component {
   }
 
   _create(info) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -128,7 +128,7 @@ export default class ComposerMessages extends Component {
   // Some messages only get shown after being typed.
   @debounce(INPUT_DELAY)
   async _typedReply() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -185,7 +185,7 @@ export default class ComposerMessages extends Component {
           }
         );
 
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -225,7 +225,7 @@ export default class ComposerMessages extends Component {
   }
 
   async _findSimilar() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -269,7 +269,7 @@ export default class ComposerMessages extends Component {
       raw,
     });
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -285,7 +285,7 @@ export default class ComposerMessages extends Component {
 
   // Figure out if there are any messages that should be displayed above the composer.
   async _findMessages() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -312,7 +312,7 @@ export default class ComposerMessages extends Component {
       messages = _messagesCache.messages;
     } else {
       messages = await this.composer.store.find("composer-message", args);
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

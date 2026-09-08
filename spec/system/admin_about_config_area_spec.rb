@@ -25,7 +25,7 @@ describe "Admin About Config Area Page" do
       SiteSetting.contact_email = "kitty@litterbox.com"
       SiteSetting.contact_url = "https://hello.com"
       SiteSetting.site_contact_username = admin.username
-      SiteSetting.site_contact_group_name = admin.groups.first.name
+      SiteSetting.site_contact_group_name = admin.groups.first.id.to_s
 
       SiteSetting.company_name = "kitty company inc."
       SiteSetting.company_url = "https://kitty.company"
@@ -219,7 +219,7 @@ describe "Admin About Config Area Page" do
       expect(SiteSetting.contact_email).to eq("owneremail@owner.com")
       expect(SiteSetting.contact_url).to eq("https://website.owner.com/blah")
       expect(SiteSetting.site_contact_username).to eq(admin.username)
-      expect(SiteSetting.site_contact_group_name).to eq(group.name)
+      expect(SiteSetting.site_contact_group_name).to eq(group.id.to_s)
     end
   end
 

@@ -90,7 +90,7 @@ export default class AceEditor extends Component {
     super(...arguments);
 
     loadAce().then((ace) => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

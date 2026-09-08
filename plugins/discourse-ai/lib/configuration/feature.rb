@@ -34,6 +34,7 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::SEARCH_ID,
               DiscourseAi::Configuration::Module::SEARCH,
               enabled_by_setting: "ai_discover_enabled",
+              visible_if: -> { SiteSetting.ai_discover_enabled },
             ),
             new(
               "ask_ai",
@@ -388,7 +389,8 @@ module DiscourseAi
         enabled_by_setting: "",
         agent_ids_lookup: nil,
         llm_models_lookup: nil,
-        require_enabled_agent: false
+        require_enabled_agent: false,
+        visible_if: nil
       )
         @name = name
         @agent_setting = agent_setting
@@ -398,6 +400,7 @@ module DiscourseAi
         @agent_ids_lookup = agent_ids_lookup
         @llm_models_lookup = llm_models_lookup
         @require_enabled_agent = require_enabled_agent
+        @visible_if = visible_if
       end
 
       def llm_models
@@ -437,6 +440,10 @@ module DiscourseAi
       end
 
       attr_reader :name, :agent_setting, :module_id, :module_name
+
+      def visible?
+        @visible_if.blank? || @visible_if.call
+      end
 
       def enabled?
         return agent_enabled? if @enabled_by_setting.blank?

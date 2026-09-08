@@ -18,6 +18,7 @@ RSpec.describe Email::Processor do
 
     context "when reply via email is too short" do
       let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
+
       fab!(:post)
       fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
 
@@ -52,6 +53,7 @@ RSpec.describe Email::Processor do
         )
       end
     end
+
     describe "from reply to email address" do
       let(:mail) do
         "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?"

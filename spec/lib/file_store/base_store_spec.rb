@@ -14,19 +14,19 @@ RSpec.describe FileStore::BaseStore do
     context "with empty URL" do
       before { upload.update!(url: "") }
 
-      it "should return the right path" do
+      it "builds the original upload path from its SHA1" do
         expect_correct_path("original/2X/4/4170ac2a2782a1516fe9e13d7322ae482c1bd594.png")
       end
 
       describe "when Upload#extension has not been set" do
-        it "should return the right path" do
+        it "infers the extension when building the upload path" do
           upload.update!(extension: nil)
           expect_correct_path("original/2X/4/4170ac2a2782a1516fe9e13d7322ae482c1bd594.png")
         end
       end
 
       describe "when id is negative" do
-        it "should return the right depth" do
+        it "uses a single directory level" do
           upload.update!(id: -999)
           expect_correct_path("original/1X/4170ac2a2782a1516fe9e13d7322ae482c1bd594.png")
         end
@@ -110,14 +110,14 @@ RSpec.describe FileStore::BaseStore do
     let!(:optimized_path) { "optimized/1X/#{upload.sha1}_1_100x200.png" }
 
     context "with empty URL" do
-      it "should return the right path" do
+      it "builds the optimized image path" do
         optimized = Fabricate.build(:optimized_image, upload: upload, version: 1)
         expect(FileStore::BaseStore.new.get_path_for_optimized_image(optimized)).to eq(
           optimized_path,
         )
       end
 
-      it "should return the right path for `nil` version" do
+      it "defaults a nil version to version 1 in the image path" do
         optimized = Fabricate.build(:optimized_image, upload: upload, version: nil)
         expect(FileStore::BaseStore.new.get_path_for_optimized_image(optimized)).to eq(
           optimized_path,
@@ -185,7 +185,7 @@ RSpec.describe FileStore::BaseStore do
     let(:upload_s3) { Fabricate(:upload_s3) }
     let(:store) { FileStore::BaseStore.new }
 
-    it "should return consistent encodings for fresh and cached downloads" do
+    it "returns consistent encodings for fresh and cached downloads" do
       first_encoding = File.read(store.download(upload_s3)).encoding
       second_encoding = File.read(store.download(upload_s3)).encoding
 
@@ -193,14 +193,14 @@ RSpec.describe FileStore::BaseStore do
       expect(second_encoding).to eq(Encoding::UTF_8)
     end
 
-    it "should return a file path" do
+    it "returns a file path" do
       path = store.download(upload_s3)
 
       expect(path).to be_a(String)
       expect(File.exist?(path)).to eq(true)
     end
 
-    it "should return the path when s3 cdn enabled" do
+    it "returns the path when the S3 CDN is enabled" do
       SiteSetting.s3_cdn_url = "https://cdn.s3.#{SiteSetting.s3_region}.amazonaws.com"
       stub_request(:get, Discourse.store.cdn_url(upload_s3.url)).to_return(
         status: 200,
@@ -213,7 +213,7 @@ RSpec.describe FileStore::BaseStore do
       expect(File.exist?(path)).to eq(true)
     end
 
-    it "should return the path when secure uploads are enabled" do
+    it "returns the path when secure uploads are enabled" do
       SiteSetting.login_required = true
       SiteSetting.secure_uploads = true
 

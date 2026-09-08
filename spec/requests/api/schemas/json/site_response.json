@@ -155,7 +155,7 @@
         "suggested_edit_accepted": {
           "type": "integer"
         },
-        "resenha_invitation": {
+        "voice_invitation": {
           "type": "integer"
         }
       },
@@ -515,6 +515,9 @@
       }
     },
     "can_create_tag": {
+      "type": "boolean"
+    },
+    "can_search": {
       "type": "boolean"
     },
     "can_tag_topics": {
@@ -1069,6 +1072,7 @@
     "post_action_types",
     "topic_flag_types",
     "can_create_tag",
+    "can_search",
     "can_tag_topics",
     "can_tag_pms",
     "tags_filter_regexp",

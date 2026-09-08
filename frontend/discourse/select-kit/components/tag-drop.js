@@ -203,7 +203,7 @@ export default class TagDrop extends ComboBoxComponent {
 
   @bind
   _transformJson(json) {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return [];
     }
 

@@ -7,3 +7,7 @@
 zh_CN:
   site_settings:
     checklist_enabled: "启用核对清单插件？"
+  checklist:
+    checkboxes_changed: "此帖子内容已更改，请刷新页面后重试。"
+    checkbox_locked: "此清单项目无法更改。"
+    revision_failed: "复选框无法更新。"

@@ -1,4 +1,4 @@
-import { find, focus, render } from "@ember/test-helpers";
+import { find, focus, render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
@@ -78,6 +78,8 @@ module("Integration | Component | A11y | SkipLinks", function (hooks) {
 
     await focus(skipLink);
     assert.dom(skipLink).isFocused("skip link receives focus");
+
+    await waitUntil(() => window.getComputedStyle(skipLink).top === "0px");
 
     computedStyle = window.getComputedStyle(skipLink);
     assert.strictEqual(

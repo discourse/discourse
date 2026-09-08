@@ -42,16 +42,16 @@ export default class AiLogDetailModal extends Component {
       const log = await ajax(
         `/admin/plugins/discourse-ai/ai-logs/${this.args.model.logId}.json`
       );
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.log = log;
       }
     } catch (error) {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.failed = true;
         this.notFound = error.jqXHR?.status === 404;
       }
     } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.loading = false;
       }
     }

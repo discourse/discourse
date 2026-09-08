@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import DSegmentedControl from "discourse/components/d-segmented-control";
-import MultiSelect from "discourse/select-kit/components/multi-select";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -103,10 +102,9 @@ export default class QueriesEdit extends Component {
             <div class="groups">
               <span class="label">{{i18n "explorer.allow_groups"}}</span>
               <span>
-                <MultiSelect
+                <GroupChooser
                   @value={{@controller.model.group_ids}}
                   @content={{@controller.groupOptions}}
-                  @options={{hash allowAny=false}}
                   @onChange={{@controller.updateGroupIds}}
                 />
               </span>

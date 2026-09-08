@@ -298,6 +298,10 @@ jobs:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
 
+      - name: Install playwright
+        if: matrix.build_type == 'system'
+        run: pnpm playwright-install
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
@@ -381,6 +385,7 @@ jobs:
           fi
 
       - name: Merge failed system test artifacts
+        id: merge-failed-system-test-artifacts
         if: steps.check-artifacts.outputs.has_failed_system == 'true'
         uses: actions/upload-artifact/merge@v7
         with:
@@ -389,9 +394,20 @@ jobs:
           delete-merged: true
 
       - name: Merge flaky test reports
+        id: merge-flaky-test-reports
         if: steps.check-artifacts.outputs.has_flaky == 'true'
         uses: actions/upload-artifact/merge@v7
         with:
           name: flaky-test-reports
           pattern: flaky-test-reports-*
           delete-merged: true
+
+      - name: Notify Patch Triage about flaky tests
+        if: steps.merge-flaky-test-reports.outputs.artifact-id != ''
+        continue-on-error: true
+        env:
+          PATCH_TRIAGE_FLAKY_TEST_REPORT_URL: ${{ secrets.PATCH_TRIAGE_FLAKY_TEST_REPORT_URL }}
+          PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET: ${{ secrets.PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET }}
+          REPORT_ARTIFACT_ID: ${{ steps.merge-flaky-test-reports.outputs.artifact-id }}
+          SCREENSHOT_ARTIFACT_ID: ${{ steps.merge-failed-system-test-artifacts.outputs.artifact-id }}
+        run: script/notify_patch_triage_of_flaky_tests

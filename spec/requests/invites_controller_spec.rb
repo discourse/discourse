@@ -412,7 +412,7 @@ RSpec.describe InvitesController do
     context "with invite to topic" do
       fab!(:topic)
 
-      it "works" do
+      it "enqueues an email invitation to the topic" do
         sign_in(user)
 
         post "/invites.json",
@@ -571,7 +571,7 @@ RSpec.describe InvitesController do
       context "when validations fail" do
         let(:email) { "test@mailinator.com" }
 
-        it "fails" do
+        it "returns validation errors for a blocked email domain" do
           create_invite
           expect(response).to have_http_status :unprocessable_entity
           expect(response.parsed_body["errors"]).to be_present
@@ -581,7 +581,7 @@ RSpec.describe InvitesController do
       context "when email address is too long" do
         let(:email) { "a" * 495 + "@example.com" }
 
-        it "fails" do
+        it "returns a validation error for an excessively long email address" do
           create_invite
           expect(response).to have_http_status :unprocessable_entity
           expect(response.parsed_body["errors"]).to be_present
@@ -618,7 +618,7 @@ RSpec.describe InvitesController do
     end
 
     context "with domain invite" do
-      it "works" do
+      it "creates a domain invitation" do
         sign_in(admin)
 
         post "/invites.json", params: { domain: "example.com" }
@@ -912,7 +912,7 @@ RSpec.describe InvitesController do
     end
 
     context "with link invite" do
-      it "works" do
+      it "creates a single-use link invitation without an email" do
         sign_in(admin)
 
         post "/invites.json"
@@ -1006,7 +1006,7 @@ RSpec.describe InvitesController do
     context "with invite to topic" do
       fab!(:topic)
 
-      it "works" do
+      it "enqueues topic invitation emails through the multiple-invite endpoint" do
         sign_in(admin)
 
         post "/invites/create-multiple.json",
@@ -1477,7 +1477,7 @@ RSpec.describe InvitesController do
           OmniAuth.config.test_mode = false
         end
 
-        it "should associate the invited user with authenticator records" do
+        it "associates the invited user with authenticator records" do
           SiteSetting.auth_overrides_name = true
           invite.update!(email: authenticated_email)
 

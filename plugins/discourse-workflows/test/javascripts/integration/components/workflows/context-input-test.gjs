@@ -430,6 +430,10 @@ module(
         '$("Trigger").item.json.trigger',
         "uses a safe linked-item expression when no item count exists"
       );
+      assert.false(
+        "text/plain" in dragged,
+        "does not make expression-disabled text controls native drop targets"
+      );
     });
 
     test("reuses one declared schema resolution across ancestor sections", async function (assert) {

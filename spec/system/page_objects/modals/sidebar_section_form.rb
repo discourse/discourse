@@ -60,7 +60,7 @@ module PageObjects
 
       def add_language(locale)
         find(".sidebar-section-translations__add-language").click
-        PageObjects::Components::DSelect.new(translation_language_selects.last).select(locale)
+        PageObjects::Components::DNativeSelect.new(translation_language_selects.last).select(locale)
       end
 
       def remove_language(locale)
@@ -216,9 +216,9 @@ module PageObjects
       end
 
       def select_source_language(locale)
-        PageObjects::Components::DSelect.new(".sidebar-section-form__source-locale-select").select(
-          locale,
-        )
+        PageObjects::Components::DNativeSelect.new(
+          ".sidebar-section-form__source-locale-select",
+        ).select(locale)
       end
 
       private

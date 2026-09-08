@@ -106,7 +106,7 @@ module Chat
         Chat::Message
           .includes(in_reply_to: [:user, chat_webhook_event: [:incoming_chat_webhook]])
           .includes(:revisions)
-          .includes(user: :primary_group)
+          .includes(user: %i[flair_group primary_group])
           .includes(chat_webhook_event: :incoming_chat_webhook)
           .includes(reactions: :user)
           .includes(uploads: { optimized_videos: :optimized_upload })

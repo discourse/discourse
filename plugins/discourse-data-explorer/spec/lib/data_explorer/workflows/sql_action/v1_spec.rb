@@ -20,6 +20,38 @@ RSpec.describe DiscourseDataExplorer::Workflows::SqlAction::V1 do
         expect(result["username"]).to eq(user.username)
       end
 
+      it "binds param values as data rather than splicing them into the SQL" do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "raw",
+              "query" => "SELECT :value AS echo",
+              "params" => {
+                "values" => [{ "name" => "value", "value" => "a'; DROP TABLE users --" }],
+              },
+            },
+          )
+
+        expect(result["echo"]).to eq("a'; DROP TABLE users --")
+      end
+
+      it "rejects a raw param inside a dollar-quoted literal" do
+        expect {
+          execute_node(
+            configuration: {
+              "operation" => "raw",
+              "query" => "SELECT $sql$:value$sql$ AS echo",
+              "params" => {
+                "values" => [{ "name" => "value", "value" => "x" }],
+              },
+            },
+          )
+        }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          "Parameters cannot be used inside dollar-quoted literals",
+        )
+      end
+
       it "resolves named params against the current input item" do
         result =
           execute_node(

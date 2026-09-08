@@ -105,6 +105,28 @@ ur:
           title: "مزید ٹاپک"
         post_menu:
           title: "پوسٹ فہرست"
+        roving_focus:
+          toolbar:
+            copy: "کاپی"
+          tags:
+            remove: "%{tag} ہٹائیں"
+            support: "تعاون"
+          adjacent:
+            label: "فِلٹر"
+            field: "تلاش کریں"
+            placeholder: "موضوعات تلاش کریں"
+            open: "کھولیں"
+            recent: "حالیہ"
+          listbox:
+            apple: "ایپل"
+          combobox:
+            daily: "روزانہ"
+            weekly: "ہفتہ وار"
+            monthly: "ماہانہ"
+            never: "کبھی نہیں"
+          tree:
+            components: "اجزاء"
+            select: "منتخب"
         docked_composer:
           title: "نصب شدہ کمپوزر"
         modal:

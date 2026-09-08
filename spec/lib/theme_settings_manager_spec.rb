@@ -159,6 +159,44 @@ RSpec.describe ThemeSettingsManager do
       expect(theme.reload.settings[:groups_setting].value).to eq("2|3")
     end
 
+    it "aliases everyone to logged_in_users at read time for group list settings" do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+      yaml = <<~YAML
+        groups_setting:
+          type: list
+          list_type: group
+          default: "0|5|2"
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      setting = theme.settings[:groups_setting]
+      setting.value = "0|5|1"
+      setting = theme.reload.settings[:groups_setting]
+
+      expect(setting.value).to eq("5|1")
+      expect(setting.default_value).to eq("5|2")
+      expect(setting.value_for_editing).to eq("0|5|1")
+      expect(theme.theme_settings.find_by(name: "groups_setting").value).to eq("0|5|1")
+    end
+
+    it "leaves everyone unchanged when granular group permissions are disabled" do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      yaml = <<~YAML
+        groups_setting:
+          type: list
+          list_type: group
+          default: "0|1"
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      setting = theme.settings[:groups_setting]
+
+      expect(setting.value).to eq("0|1")
+      expect(setting.default_value).to eq("0|1")
+    end
+
     describe "#resolve_group_membership?" do
       it "returns true when opted-in with list_type group" do
         yaml = <<~YAML

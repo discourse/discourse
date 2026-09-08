@@ -141,7 +141,7 @@ export default class NestedPost extends Component {
   }
 
   #registerPost() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -416,7 +416,6 @@ export default class NestedPost extends Component {
       );
       if (
         this.isDestroying ||
-        this.isDestroyed ||
         this.childCacheKey !== cacheKey ||
         [this.args.topic?.id, this.args.post.post_number, this.args.sort].join(
           ":"
@@ -440,12 +439,12 @@ export default class NestedPost extends Component {
       });
       return childNodes;
     } catch (e) {
-      if (!(this.isDestroying || this.isDestroyed)) {
+      if (!this.isDestroying) {
         popupAjaxError(e);
       }
       return null;
     } finally {
-      if (!(this.isDestroying || this.isDestroyed)) {
+      if (!this.isDestroying) {
         this.loadingReplies = false;
       }
     }
@@ -460,7 +459,7 @@ export default class NestedPost extends Component {
     if (this.mobileFocusEnabled) {
       const returnAnchor = this.args.captureScrollAnchor?.();
       const children = await this.childrenForMobileFocus();
-      if (children && !(this.isDestroying || this.isDestroyed)) {
+      if (children && !this.isDestroying) {
         this.args.focusPost(this.childPathWithChildren(children), returnAnchor);
       }
       return;

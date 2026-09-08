@@ -24,7 +24,7 @@ import { sanitize } from "discourse/lib/text";
 import Group from "discourse/models/group";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DSelect from "discourse/ui-kit/d-select";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -389,7 +389,7 @@ export default class UpcomingChangeItem extends Component {
           {{i18n "admin.upcoming_changes.enabled_for"}}
         </div>
 
-        <DSelect
+        <DNativeSelect
           @value={{this.bufferedEnabledFor}}
           @onChange={{this.enabledForChanged}}
           @includeNone={{false}}
@@ -402,7 +402,7 @@ export default class UpcomingChangeItem extends Component {
               {{option.label}}
             </select.Option>
           {{/each}}
-        </DSelect>
+        </DNativeSelect>
 
         {{#if this.showDependentSettingsLink}}
           <div class="upcoming-change__dependents">

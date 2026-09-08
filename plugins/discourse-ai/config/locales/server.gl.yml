@@ -21,6 +21,8 @@ gl:
       tool_summary:
         search: "Buscar"
         time: "Hora"
+      tool_help:
+        create_category: "Crear unha nova categoría"
       close_topic:
         errors:
           not_found: "Non foi posíbel atopar o tema."
@@ -30,10 +32,13 @@ gl:
       delete_topic:
         errors:
           not_found: "Non foi posíbel atopar o tema."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Non foi posíbel atopar o tema."
       edit_category:
+        errors:
+          not_found: "Non foi posíbel atopar a categoría."
+      change_topic_category:
         errors:
           not_found: "Non foi posíbel atopar o tema."
           category_not_found: "Non foi posíbel atopar a categoría."

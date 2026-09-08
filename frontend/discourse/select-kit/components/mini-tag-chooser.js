@@ -194,7 +194,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
   }
 
   _transformJson(json, { skipSort = false } = {}) {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return [];
     }
 

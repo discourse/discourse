@@ -77,6 +77,11 @@ fi:
           solved: "ovat ratkaistu"
           unsolved: "ovat ratkaisemattomia"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Ketju"
+            category: "Luokka"
       web_hooks:
         solved_event:
           group_name: "Ratkaistu-tapahtuma"

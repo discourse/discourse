@@ -29,6 +29,21 @@ hy:
           title: "Գրառում"
         more_topics:
           title: "Ավելի Շատ Թեմաներ"
+        roving_focus:
+          toolbar:
+            copy: "Կրկնօրինակել"
+          adjacent:
+            label: "Ֆիլտրներ"
+            field: "Որոնում"
+            open: "Բացել"
+            recent: "Վերջին "
+          combobox:
+            daily: "Օրվա Ընթացքում"
+            weekly: "Շաբաթվա Ընթացքում"
+            monthly: "Ամսվա Ընթացքում"
+            never: "Երբեք"
+          tree:
+            components: "Բաղադրիչներ"
         tooltips:
           description: "Նկարագրությունը"
           header: "Վերնամաս"

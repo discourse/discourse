@@ -3,9 +3,11 @@
 RSpec.describe DiscourseWorkflows::Template::Show do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:template_id) }
+
     it do
       is_expected.to allow_values("auto-tag-topics", "my_template", "test123").for(:template_id)
     end
+
     it do
       is_expected.not_to allow_values("../etc/passwd", "UPPER", "with spaces", "with/slash").for(
         :template_id,

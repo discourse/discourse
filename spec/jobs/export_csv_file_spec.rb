@@ -49,7 +49,7 @@ RSpec.describe Jobs::ExportCsvFile do
       end
     end
 
-    it "works" do
+    it "uploads the staff action export and sends the admin a download link" do
       action_log
 
       begin

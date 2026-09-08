@@ -99,7 +99,7 @@ export default class ExecutionsManager extends Component {
         ? `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/executions.json`
         : "/admin/plugins/discourse-workflows/executions.json";
       const result = await ajax(url);
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -110,7 +110,7 @@ export default class ExecutionsManager extends Component {
       this.#progress.subscribe(EXECUTIONS_CHANNEL);
       this.#syncTimer();
     } catch (error) {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.#progress.scheduleRetry(error);
       }
     } finally {
@@ -176,11 +176,7 @@ export default class ExecutionsManager extends Component {
     const loadMoreToken = ++this.#loadMoreToken;
     try {
       const result = await ajax(this.loadMoreUrl);
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        loadMoreToken !== this.#loadMoreToken
-      ) {
+      if (this.isDestroying || loadMoreToken !== this.#loadMoreToken) {
         return;
       }
 
@@ -196,11 +192,11 @@ export default class ExecutionsManager extends Component {
       this.loadMoreUrl = result.meta?.load_more_executions;
       this.#syncTimer();
     } catch (e) {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         popupAjaxError(e);
       }
     } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.loadingMore = false;
       }
     }

@@ -89,6 +89,11 @@ cs:
           solved: "jsou vyřešeny"
           unsolved: "nejsou vyřešeny"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Témata"
+            category: "Kategorie"
       web_hooks:
         solved_event:
           group_name: "Vyřešená událost"

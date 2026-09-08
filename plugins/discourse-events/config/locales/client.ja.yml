@@ -7,11 +7,10 @@
 ja:
   admin_js:
     admin:
-      calendar: "イベント"
       site_settings:
         categories:
           discourse_post_event: "Discourse イベント"
-          discourse_calendar: "イベント"
+          discourse_events: "イベント"
   js:
     notifications:
       titles:
@@ -26,8 +25,8 @@ ja:
           fields:
             topic_id:
               label: トピック ID
-    discourse_calendar:
-      invite_user_notification: "%{username} があなたを招待しました: %{description}"
+    discourse_events:
+      title: "イベント"
       on_holiday: "休暇中"
       disable_holiday: "無効化"
       enable_holiday: "有効化"
@@ -318,9 +317,14 @@ ja:
         week: "今週"
         day: "日"
         year: "今年"
+    discourse_calendar:
+      invite_user_notification: "%{username} があなたを招待しました: %{description}"
     group_timezones:
       search: "検索..."
       group_availability: "%{group} の空き状況"
+    discourse_workflows:
+      post_event:
+        topic_id: "トピック ID"
     discourse_post_event:
       notifications:
         before_event_reminder: "イベントが間もなく開始します"
@@ -350,6 +354,8 @@ ja:
       edit_event: "イベントを編集"
       export_event: "イベントをエクスポート"
       created_by: "作成者"
+      other_hosts:
+        other: "および他 %{count} 人"
       bulk_invite: "一括招待"
       close_event: "イベントを終了"
       open_event: "イベントを開く"
@@ -507,6 +513,8 @@ ja:
           placeholder: "オプション、デフォルトはトピックタイトル"
         invitees:
           label: "招待されたグループ"
+        hosts:
+          label: "ホスト"
         event_type:
           public:
             title: "公開"

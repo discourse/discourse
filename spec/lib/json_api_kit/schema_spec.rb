@@ -56,6 +56,7 @@ RSpec.describe JsonApiKit::Schema do
       end
     end
   end
+
   describe "#table_of" do
     subject(:table) { schema.table_of(:user) }
 

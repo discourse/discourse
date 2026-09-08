@@ -47,7 +47,7 @@ export default class FormTemplateChooser extends MultiSelectComponent {
 
     const result = await FormTemplate.findAll();
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

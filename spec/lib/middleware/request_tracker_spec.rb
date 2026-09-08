@@ -747,6 +747,7 @@ RSpec.describe Middleware::RequestTracker do
 
       context "when SiteSetting.trigger_browser_pageview_events is true" do
         before { SiteSetting.trigger_browser_pageview_events = true }
+
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
           DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
@@ -1134,6 +1135,7 @@ RSpec.describe Middleware::RequestTracker do
       SiteSetting.trigger_browser_pageview_events = true
       DiscourseIpInfo.stubs(:get).returns(country_code: "US")
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      language = "en-US"
 
       events =
         DiscourseEvent.track_events(:beacon_browser_pageview) do
@@ -1142,6 +1144,7 @@ RSpec.describe Middleware::RequestTracker do
               {
                 url: "https://test.com/t/topic/123",
                 referrer: "https://test.com/",
+                language:,
                 session_id: "abc123",
                 topic_id: 123,
               },
@@ -1159,6 +1162,7 @@ RSpec.describe Middleware::RequestTracker do
       event = events[0][:params].last
       expect(event[:url]).to eq("https://test.com/t/topic/123")
       expect(event[:referrer]).to eq("https://test.com/")
+      expect(event[:language]).to eq(language)
       expect(event[:session_id]).to eq("abc123")
       expect(event[:topic_id]).to eq(123)
       expect(event[:country_code]).to eq("US")
@@ -1178,6 +1182,7 @@ RSpec.describe Middleware::RequestTracker do
             {
               url: "https://test.com/t/topic/123",
               referrer: "https://test.com/",
+              language: "en-US",
               session_id: "abc123",
               topic_id: 123,
             },
@@ -1189,6 +1194,7 @@ RSpec.describe Middleware::RequestTracker do
       event = BrowserPageviewEvent.last
       expect(event.url).to eq("https://test.com/t/topic/123")
       expect(event.referrer).to eq("https://test.com/")
+      expect(event.language).to eq("en-US")
       expect(event.session_id).to eq("abc123")
       expect(event.topic_id).to eq(123)
       expect(event.country_code).to eq("US")
@@ -1479,7 +1485,7 @@ RSpec.describe Middleware::RequestTracker do
 
       after { Middleware::RequestTracker.unregister_ip_skipper }
 
-      it "won't block if the ip is skipped" do
+      it "does not block skipped IP addresses" do
         env1 = env("REMOTE_ADDR" => "1.1.1.2")
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)

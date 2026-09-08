@@ -7,11 +7,10 @@
 es:
   admin_js:
     admin:
-      calendar: "Eventos"
       site_settings:
         categories:
           discourse_post_event: "Evento de Discourse"
-          discourse_calendar: "Eventos"
+          discourse_events: "Eventos"
       web_hooks:
         calendar_event:
           group_name: "Evento del calendario"
@@ -32,8 +31,8 @@ es:
           fields:
             topic_id:
               label: ID del tema
-    discourse_calendar:
-      invite_user_notification: "%{username} te invitó a: %{description}"
+    discourse_events:
+      title: "Eventos"
       preferences:
         all_events_description: "Todos los eventos del foro"
         my_events_description: "Eventos a los que vas a asistir o que te interesan"
@@ -327,9 +326,14 @@ es:
         week: "Semana"
         day: "Día"
         year: "Año"
+    discourse_calendar:
+      invite_user_notification: "%{username} te invitó a: %{description}"
     group_timezones:
       search: "Buscar..."
       group_availability: "Disponibilidad de %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID del tema"
     discourse_post_event:
       notifications:
         before_event_reminder: "Un evento está a punto de comenzar"
@@ -360,6 +364,9 @@ es:
       edit_event: "Editar evento"
       export_event: "Exportar evento"
       created_by: "Creado por"
+      other_hosts:
+        one: "y %{count} otros"
+        other: "y %{count} otros"
       bulk_invite: "Invitaciones en masa"
       close_event: "Cerrar evento"
       open_event: "Abrir evento"
@@ -527,6 +534,8 @@ es:
           placeholder: "Opcional, por defecto es el título del tema"
         invitees:
           label: "Grupos invitados"
+        hosts:
+          label: "Anfitriones"
         event_type:
           public:
             title: "Público"

@@ -70,29 +70,26 @@ after_initialize do
   nodes_dir = File.join(File.dirname(__FILE__), "lib/discourse_workflows/nodes")
   Dir.glob(File.join(nodes_dir, "**/*.rb")).each { |f| Rails.autoloaders.main.load_file(f) }
 
-  DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
-    DiscoursePluginRegistry.register_discourse_workflows_node(node_class, self)
-
-    next unless node_class.respond_to?(:event_name) && node_class.event_name
-    on(node_class.event_name) do |*args|
-      DiscourseWorkflows::EventListener.handle(node_class, *args)
-    end
-  end
-
+  # Contributing plugins claim their nodes first so that ownership — and the
+  # enabled check that rides on it — lands on them rather than on this plugin.
   DiscourseWorkflows.node_registration_ready = true
   DiscourseWorkflows.flush_plugin_node_registrations!
+
+  DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
+    DiscourseWorkflows.register_node(node_class, self)
+  end
   DiscourseWorkflows::Registry.reset_indexes!
 
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::BasicAuth,
+    "DiscourseWorkflows::CredentialTypes::BasicAuth",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::BearerToken,
+    "DiscourseWorkflows::CredentialTypes::BearerToken",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::HeaderAuth,
+    "DiscourseWorkflows::CredentialTypes::HeaderAuth",
     self,
   )
 

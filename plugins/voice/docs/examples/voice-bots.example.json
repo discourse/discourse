@@ -1,0 +1,20 @@
+[
+  {
+    "username": "voice_bot_1",
+    "label": "Alice fake camera",
+    "color": "#2563eb",
+    "accent": "#f97316"
+  },
+  {
+    "username": "voice_bot_2",
+    "label": "Bob fake camera",
+    "color": "#16a34a",
+    "accent": "#7c3aed"
+  },
+  {
+    "username": "voice_bot_3",
+    "label": "Charlie fake camera",
+    "color": "#dc2626",
+    "accent": "#0891b2"
+  }
+]

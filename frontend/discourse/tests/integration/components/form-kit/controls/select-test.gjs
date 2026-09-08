@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
+import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 
 module(
   "Integration | Component | FormKit | Controls | Select",

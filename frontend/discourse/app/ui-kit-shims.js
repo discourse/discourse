@@ -48,9 +48,6 @@ loaderShim("discourse/components/d-page-header", () =>
 loaderShim("discourse/components/d-page-subheader", () =>
   importSync("discourse/ui-kit/d-page-subheader")
 );
-loaderShim("discourse/components/d-select", () =>
-  importSync("discourse/ui-kit/d-select")
-);
 loaderShim("discourse/components/d-stat-tiles", () =>
   importSync("discourse/ui-kit/d-stat-tiles")
 );
@@ -244,6 +241,14 @@ loaderShim("discourse/components/user-stat", () =>
 );
 loaderShim("discourse/components/user-status-message", () =>
   importSync("discourse/ui-kit/d-user-status-message")
+);
+
+// Components - renamed within ui-kit
+loaderShim("discourse/components/d-select", () =>
+  importSync("discourse/ui-kit/d-native-select")
+);
+loaderShim("discourse/ui-kit/d-select", () =>
+  importSync("discourse/ui-kit/d-native-select")
 );
 
 // Helpers

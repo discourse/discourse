@@ -241,7 +241,12 @@ class StaticController < ApplicationController
 
   def llms_txt
     upload = SiteSetting.llms_txt
-    return head(:not_found) if upload.blank?
+
+    if upload.blank?
+      return head(:not_found) if !UpcomingChanges.enabled?(:enable_generated_llms_txt)
+
+      return render plain: LlmsTxt.generate, content_type: "text/plain; charset=utf-8"
+    end
 
     if Discourse.store.external?
       content =

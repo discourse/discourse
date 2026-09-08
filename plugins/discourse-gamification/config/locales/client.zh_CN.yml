@@ -108,7 +108,17 @@ zh_CN:
         name: "名称"
         period: "时间段"
     discourse_workflows:
+      node_unavailable:
+        requires_gamification: "需要启用游戏化插件"
+      nodes:
+        "action:gamification_score": "获奖分数"
+      node_descriptions:
+        "action:gamification_score": "为用户增加或扣除游戏化积分"
       gamification_score:
         username: "用户"
+        points: "积分"
+        points_description: "奖励积分数量。使用负值表示扣分。"
         date: "日期"
+        date_description: "积分适用日期格式为（YYYY-MM-DD），默认为今天。"
         description: "描述"
+        description_description: "可选注释显示在分数事件旁边。"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 114
+  BASE_COMPILER_VERSION = 120
 
   BUNDLE =
     PrecompiledBundle.new(
@@ -10,6 +10,7 @@ class AssetProcessor
       dependency_globs: %w[
         node_modules/.pnpm/lock.yaml
         frontend/asset-processor/**/*.{js,mjs}
+        app/assets/stylesheets/variable-renames.json
         frontend/discourse/lib/babel-transform-module-renames.js
         frontend/discourse/lib/discourse-source-imports.mjs
         frontend/discourse/config/targets.js

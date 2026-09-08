@@ -73,7 +73,7 @@ class TagSettingsUpdater
   end
 
   def update_localizations(localizations)
-    return if localizations.blank?
+    return if localizations.nil?
 
     submitted_locales = []
 

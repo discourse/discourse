@@ -75,6 +75,7 @@ module Codecs
     def dump(data)
       Oj.dump(data, OJ_OBJECT_SETTINGS)
     end
+
     def load(string)
       Oj.load(string, OJ_OBJECT_SETTINGS)
     end
@@ -82,6 +83,7 @@ module Codecs
     def write(io, data)
       Oj.to_stream(io, data, OJ_OBJECT_SETTINGS)
     end
+
     def each(io, &)
       Oj.load(io, OJ_OBJECT_SETTINGS, &)
     end
@@ -95,6 +97,7 @@ module Codecs
     def dump(data)
       Oj.dump(data, OJ_COMPAT_DUMP_SETTINGS)
     end
+
     def load(string)
       Oj.load(string, OJ_COMPAT_LOAD_SETTINGS)
     end
@@ -102,6 +105,7 @@ module Codecs
     def write(io, data)
       Oj.to_stream(io, data, OJ_COMPAT_DUMP_SETTINGS)
     end
+
     def each(io, &)
       Oj.load(io, OJ_COMPAT_LOAD_SETTINGS, &)
     end
@@ -117,6 +121,7 @@ module Codecs
     def dump(data)
       Oj.dump(data, OJ_STRICT_DUMP_SETTINGS)
     end
+
     def load(string)
       Oj.load(string, OJ_STRICT_LOAD_SETTINGS)
     end
@@ -124,6 +129,7 @@ module Codecs
     def write(io, data)
       Oj.to_stream(io, data, OJ_STRICT_DUMP_SETTINGS)
     end
+
     def each(io, &)
       Oj.load(io, OJ_STRICT_LOAD_SETTINGS, &)
     end
@@ -137,6 +143,7 @@ module Codecs
     def dump(data)
       JSON.generate(data)
     end
+
     def load(string)
       JSON.parse(string, symbolize_names: true)
     end
@@ -160,6 +167,7 @@ module Codecs
     def dump(data)
       ::Marshal.dump(data)
     end
+
     def load(string)
       ::Marshal.load(string)
     end
@@ -184,6 +192,7 @@ module Codecs
     def dump(data)
       MessagePack.pack(data)
     end
+
     def load(string)
       MessagePack.unpack(string, symbolize_keys: true)
     end

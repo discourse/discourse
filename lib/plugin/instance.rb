@@ -250,8 +250,10 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def add_report(name, exclude_from_dashboard: false, &block)
-    reloadable_patch { |plugin| Report.add_report(name, exclude_from_dashboard:, &block) }
+  def add_report(name, exclude_from_dashboard: false, admin_only_related_items: false, &block)
+    reloadable_patch do |plugin|
+      Report.add_report(name, exclude_from_dashboard:, admin_only_related_items:, &block)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -760,6 +762,17 @@ class Plugin::Instance
 
   def register_svg_icon(icon)
     DiscoursePluginRegistry.register_svg_icon(icon)
+  end
+
+  # Registers a block returning icon names to include in the SVG sprite. Use this
+  # instead of `register_svg_icon` when the names are only known at runtime, such
+  # as when they are chosen by admins and stored in the database. The block is
+  # called while the sprite is built, so it must not run at boot, and its result
+  # is scoped to the current site.
+  #
+  # Call `SvgSprite.expire_cache` when the underlying data changes.
+  def register_svg_icon_source(&block)
+    DiscoursePluginRegistry.register_svg_icon_source(block, self)
   end
 
   def extend_content_security_policy(extension)

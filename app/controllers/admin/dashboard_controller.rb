@@ -225,13 +225,27 @@ class Admin::DashboardController < Admin::StaffController
     end
 
     params
-      .permit(items: %i[source identifier])
+      .permit(items: %i[source identifier rows cols])
       .fetch(:items, [])
       .map do |entry|
         source = entry[:source]
         identifier = entry[:identifier]
         raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
-        { source: source.to_s, identifier: identifier.to_s }
+
+        rows = Integer(entry[:rows].presence || 1, exception: false)
+        if rows.nil? || rows < 1 || rows > AdminDashboardReport::MAX_ROWS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+
+        cols = Integer(entry[:cols].presence || 1, exception: false)
+        if cols.nil? || cols < 1 || cols > AdminDashboardReport::MAX_COLS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+        if rows > 1 && cols != AdminDashboardReport::MAX_COLS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+
+        { source: source.to_s, identifier: identifier.to_s, rows: rows, cols: cols }
       end
   end
 end

@@ -35,6 +35,8 @@ OmniAuth.config.on_failure do |env|
 
   next OmniAuth::FailureEndpoint.call(env) if !is_rescued_error # let the default behavior handle it
 
+  require "oauth" if !defined?(OAuth)
+
   case exception
   when OAuth::Unauthorized
     # OAuth1 (i.e. Twitter) makes a web request during the setup phase

@@ -1227,7 +1227,21 @@ en:
         view_conversation: "view PM"
         note_added: "Moderator note"
         note_added_by: "Moderator note by %{username} · %{relativeDate}"
+        author_silenced_by: "Author silenced by %{username} · %{relativeDate}"
+        author_silenced_automatically: "Author silenced automatically · %{relativeDate}"
+        author_suspended_by: "Author suspended by %{username} · %{relativeDate}"
+        author_suspended_automatically: "Author suspended automatically · %{relativeDate}"
         no_events: "No timeline events to display"
+      author_penalty:
+        effect:
+          retains_silence: "The author stays silenced."
+          retains_suspension: "The author stays suspended."
+          retains_silence_and_suspension: "The author stays silenced and suspended."
+          lifts_silence: "The author will be unsilenced."
+        toast:
+          still_silenced: "%{username} is still silenced."
+          undo: "Undo"
+          undone: "%{username} is no longer silenced."
       notes:
         add_note_description: "Add a note to provide context to other moderators."
         add_note_button: "Add note"
@@ -1914,7 +1928,6 @@ en:
       admin: "%{user} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
-      silenced_tooltip: "This user is silenced"
       suspended_notice: "This user is suspended until %{date}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
@@ -6737,6 +6750,24 @@ en:
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
         chart:
           total: "Total: %{count}"
+        related_items:
+          showing: "Showing the newest %{shown} of %{total}."
+          users:
+            title: "Users"
+            signups:
+              description: "New accounts created between %{startDate} and %{endDate}, newest first."
+            new_contributors:
+              description: "Users who made their first post between %{startDate} and %{endDate}, newest first."
+          labels:
+            user: "User"
+            created_at: "Created at"
+            first_post: "First post created at"
+          table_summary:
+            trigger: "%{count}, show summary for %{date}"
+            users_title: "Users on %{date}"
+            loading: "Loading summary…"
+            empty: "No details are available."
+            error: "Couldn't load the summary."
 
       config_sections:
         account:
@@ -7353,6 +7384,9 @@ en:
           browser:
             one: "Filtering to %{count} browser"
             other: "Filtering to %{count} browsers"
+          language:
+            one: "Filtering to %{count} language"
+            other: "Filtering to %{count} languages"
           ip:
             one: "Filtering to %{count} IP address"
             other: "Filtering to %{count} IP addresses"
@@ -7379,6 +7413,7 @@ en:
           top_urls: "Top URLs"
           entry_urls: "Entry URLs"
           browsers: "Browsers"
+          languages: "Languages"
           ip_addresses: "IP addresses"
         filters:
           traffic_type: "Traffic type"
@@ -7388,6 +7423,7 @@ en:
           country: "Country"
           network: "Network"
           browser: "Browser"
+          language: "Language"
           ip: "IP address"
         headline:
           one: "%{formatted_count} pageview"
@@ -9322,6 +9358,7 @@ en:
             admin_onboarding_step_completed: "complete admin onboarding step"
             admin_onboarding_completed: "complete admin onboarding"
             admin_onboarding_dismissed: "dismiss admin onboarding"
+            create_group: "create group"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

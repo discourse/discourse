@@ -25,6 +25,7 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
       end
     end
   end
+
   let(:groups_resource) { Class.new(JsonApiKit::Resource) { type :groups } }
   let(:users_resource) do
     related = groups_resource

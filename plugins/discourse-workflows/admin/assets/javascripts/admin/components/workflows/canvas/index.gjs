@@ -8,6 +8,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import dContextMenu from "discourse/float-kit/modifiers/d-context-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
@@ -24,7 +25,10 @@ import {
   positionCanvasClipboardPayload,
   serializeCanvasClipboardPayload,
 } from "./canvas-clipboard";
-import CanvasContextMenu from "./canvas-context-menu";
+import CanvasContextMenu, {
+  CANVAS_CONTEXT_MENU_IDENTIFIER,
+  decideCanvasContextMenu,
+} from "./canvas-context-menu";
 import { runExecuteStep } from "./canvas-execute-step";
 import { exportWorkflowToFile, parseWorkflowImport } from "./canvas-file-io";
 import { setupCanvasKeyboard } from "./canvas-keyboard";
@@ -252,7 +256,7 @@ export default class WorkflowCanvas extends Component {
       onPaste: (event) => this.handlePasteEvent(event),
       onDelete: () => this.deleteSelected(),
       onEscape: () => {
-        this.contextMenuApi?.close();
+        this.menu.close(CANVAS_CONTEXT_MENU_IDENTIFIER);
         this.rete.selector.unselectAll();
         this.selectionVersion++;
       },
@@ -301,7 +305,7 @@ export default class WorkflowCanvas extends Component {
       onNodePicked: () => this.selectionVersion++,
       onCanvasPointerDown: () => {
         this.selectionVersion++;
-        this.contextMenuApi?.close();
+        this.menu.close(CANVAS_CONTEXT_MENU_IDENTIFIER);
         this.menu.close("workflows-canvas-menu");
         this.args.onCloseNodePanel?.();
       },
@@ -600,17 +604,33 @@ export default class WorkflowCanvas extends Component {
   }
 
   @action
-  registerContextMenu(api) {
-    this.contextMenuApi = api;
-  }
+  beforeContextMenu(event) {
+    const decision = decideCanvasContextMenu({
+      event,
+      rete: this.rete,
+      containerElement: this.containerElement,
+    });
 
-  @action
-  handleContextMenu(event) {
-    this.contextMenuApi?.open(event);
+    if (!decision) {
+      return false;
+    }
+
+    return {
+      data: {
+        ...decision.data,
+        onEditNode: this.args.onEditNode,
+        onDeleteSelected: this.deleteSelected,
+        onCut: this.cutSelected,
+        onCopy: this.copySelected,
+        onPaste: this.pasteFromClipboard,
+        onOpenNodePanel: this.args.onOpenNodePanel,
+        onAddStickyNote: this.args.onAddStickyNote,
+      },
+    };
   }
 
   #invokeAtViewportCenter(callback) {
-    this.contextMenuApi?.close();
+    this.menu.close(CANVAS_CONTEXT_MENU_IDENTIFIER);
     callback?.(this.rete.viewportCenter());
   }
 
@@ -703,13 +723,13 @@ export default class WorkflowCanvas extends Component {
 
   @action
   copySelected(selection = null) {
-    this.contextMenuApi?.close();
+    this.menu.close(CANVAS_CONTEXT_MENU_IDENTIFIER);
     this.#copySelectedPayload(selection);
   }
 
   @action
   cutSelected(selection = null) {
-    this.contextMenuApi?.close();
+    this.menu.close(CANVAS_CONTEXT_MENU_IDENTIFIER);
     const selectedIds = this.#selectedIds(selection);
 
     if (!this.#copySelectedPayload(selectedIds)) {
@@ -791,7 +811,7 @@ export default class WorkflowCanvas extends Component {
 
   @action
   async pasteFromClipboard(target = null) {
-    this.contextMenuApi?.close();
+    this.menu.close(CANVAS_CONTEXT_MENU_IDENTIFIER);
     const result = await this.#readClipboardPayload();
     const systemPayload = this.clipboardWritePending ? null : result.payload;
     const useLocalPayload = !systemPayload && this.clipboardPayload;
@@ -957,7 +977,11 @@ export default class WorkflowCanvas extends Component {
     <div
       class="workflows-canvas"
       tabindex="0"
-      {{on "contextmenu" this.handleContextMenu}}
+      {{dContextMenu
+        identifier=CANVAS_CONTEXT_MENU_IDENTIFIER
+        component=CanvasContextMenu
+        beforeContextMenu=this.beforeContextMenu
+      }}
       {{didInsert this.registerCanvas}}
       {{didUpdate this.syncToRete @nodes @connections @autoArrangeRequest}}
     >
@@ -1246,20 +1270,6 @@ export default class WorkflowCanvas extends Component {
             @onClose={{this.closeAiPanel}}
           />
         {{/if}}
-
-        <CanvasContextMenu
-          @canvasElement={{this.canvasElement}}
-          @containerElement={{this.containerElement}}
-          @rete={{this.rete}}
-          @onEditNode={{@onEditNode}}
-          @onDeleteSelected={{this.deleteSelected}}
-          @onCut={{this.cutSelected}}
-          @onCopy={{this.copySelected}}
-          @onPaste={{this.pasteFromClipboard}}
-          @onOpenNodePanel={{@onOpenNodePanel}}
-          @onAddStickyNote={{@onAddStickyNote}}
-          @onRegister={{this.registerContextMenu}}
-        />
       {{/if}}
     </div>
   </template>

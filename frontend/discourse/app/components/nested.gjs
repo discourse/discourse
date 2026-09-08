@@ -376,7 +376,7 @@ export default class Nested extends Component {
 
   @action
   persistScrollAnchor() {
-    if (this.isDestroying || this.isDestroyed || this.#restoringStoredScroll) {
+    if (this.isDestroying || this.#restoringStoredScroll) {
       return;
     }
 
@@ -569,7 +569,7 @@ export default class Nested extends Component {
 
   @action
   scrollMobileFocusIntoContext(element) {
-    if (!this.isMobileFocused || this.isDestroying || this.isDestroyed) {
+    if (!this.isMobileFocused || this.isDestroying) {
       return;
     }
 
@@ -630,7 +630,7 @@ export default class Nested extends Component {
 
   @action
   syncFocusFromURL() {
-    if (this.isDestroying || this.isDestroyed || !this.site.mobileView) {
+    if (this.isDestroying || !this.site.mobileView) {
       return;
     }
 
@@ -760,7 +760,7 @@ export default class Nested extends Component {
   }
 
   #scrollToTarget() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

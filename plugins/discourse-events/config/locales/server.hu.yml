@@ -20,8 +20,8 @@ hu:
       event_started:
         title: Az esemény elkezdődött
   system_messages:
-    discourse_calendar_holiday_region_invalid: "A megadott ünnepi régió nem létezik."
-    discourse_calendar_enable_holiday_failed: "Ez az ünnep nem engedélyezhető; már engedélyezve van, vagy nincs letiltva."
+    discourse_events_holiday_region_invalid: "A megadott ünnepi régió nem létezik."
+    discourse_events_enable_holiday_failed: "Ez az ünnep nem engedélyezhető; már engedélyezve van, vagy nincs letiltva."
     discourse_post_event_bulk_invite_succeeded:
       title: "Esemény – A csoportos meghívás sikeres"
       subject_template: "A csoportos meghívás feldolgozása sikeres"
@@ -65,7 +65,7 @@ hu:
     event_participation_buttons: "Az eseményeken való részvételhez használható gombok listája."
     sidebar_show_upcoming_events: "Közelgő események linkjének megjelenítése az oldalsávon a „Továbbiak” alatt."
     calendar_first_day_of_week: "A hét első napjának beállítása a naptár megjelenítéséhez. Választható lehetőségek: szombat, vasárnap vagy hétfő."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Nap"

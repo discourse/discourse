@@ -557,7 +557,13 @@ export default class DModal extends Component<DModalSignature> {
         data-keyboard="false"
         aria-modal="true"
         role="dialog"
-        aria-labelledby={{if @title "discourse-modal-title"}}
+        {{! The title element lives in the header, so hiding the header leaves this pointing at
+            nothing. A dangling reference is dropped when the accessible name is computed, which
+            leaves the dialog unnamed. Such a modal should supply its own label attribute. }}
+        aria-labelledby={{if
+          (and @title (not @hideHeader))
+          "discourse-modal-title"
+        }}
         ...attributes
         {{didInsert this.setupModal}}
         {{willDestroy this.cleanupModal}}
