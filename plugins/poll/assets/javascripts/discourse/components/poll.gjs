@@ -13,6 +13,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { afterRender } from "discourse/lib/decorators";
+import { triggerBlobDownload } from "discourse/lib/download-blob";
 import round from "discourse/lib/round";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -891,17 +892,13 @@ export default class PollComponent extends Component {
       },
     })
       .then((csvContent) => {
-        const downloadLink = document.createElement("a");
-        const blob = new Blob([csvContent], {
+        const blob = new Blob(["\uFEFF" + csvContent], {
           type: "text/csv;charset=utf-8;",
         });
-        downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.setAttribute(
-          "download",
-          `poll-export-${this.poll.name}-${this.post.id}.csv`
-        );
-        downloadLink.click();
-        downloadLink.remove();
+
+        triggerBlobDownload(blob, {
+          fallbackFilename: `poll-export-${this.poll.name}-${this.post.id}.csv`,
+        });
       })
       .catch((error) => {
         if (error) {

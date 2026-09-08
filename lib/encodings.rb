@@ -3,6 +3,8 @@
 require "rchardet"
 
 module Encodings
+  BOM = "\u{FEFF}"
+
   def self.to_utf8(string)
     result = CharDet.detect(string)
 
@@ -26,7 +28,7 @@ module Encodings
   end
 
   def self.delete_bom!(string)
-    string.presence&.sub!(/\A\xEF\xBB\xBF/, "")
+    string.presence&.delete_prefix!(BOM)
     string
   end
 end

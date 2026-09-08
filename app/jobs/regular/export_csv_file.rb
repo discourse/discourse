@@ -465,6 +465,7 @@ module Jobs
       FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
       begin
         CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
+          csv.to_io.write(Encodings::BOM)
           csv << get_header(entity[:name]) if entity[:name] != "report"
           public_send(entity[:method]) { |d| csv << d }
         end

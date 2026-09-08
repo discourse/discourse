@@ -166,6 +166,7 @@ module Jobs
           case component[:filetype]
           when :csv
             CSV.open("#{dirname}/#{component[:filename]}.csv", "w") do |csv|
+              csv.to_io.write(Encodings::BOM)
               csv << get_header(component[:name])
               public_send(component[:method]) { |d| csv << d }
             end

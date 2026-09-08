@@ -25,7 +25,7 @@ module DiscourseDataExplorer
 
     def to_csv
       require "csv"
-      CSV.generate do |csv|
+      CSV.generate(+Encodings::BOM) do |csv|
         csv << cols
         pg_result.values.each { |row| csv << row }
       end
