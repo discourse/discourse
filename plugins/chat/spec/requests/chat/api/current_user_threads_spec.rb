@@ -20,7 +20,7 @@ describe Chat::Api::CurrentUserThreadsController do
         )
       end
 
-      it "works" do
+      it "returns the current user's threads" do
         get "/chat/api/me/threads"
 
         expect(response).to have_http_status :ok

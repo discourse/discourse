@@ -146,7 +146,7 @@ RSpec.describe Email::Sender do
     context "when no plus addressing" do
       before { SiteSetting.reply_by_email_address = "%{reply_key}@test.com" }
 
-      it "should not set the return_path" do
+      it "leaves return_path unset" do
         email_sender.send
         expect(message.header[:return_path].to_s).to eq("")
       end
@@ -155,7 +155,7 @@ RSpec.describe Email::Sender do
     context "with plus addressing" do
       before { SiteSetting.reply_by_email_address = "replies+%{reply_key}@test.com" }
 
-      it "should set the return_path" do
+      it "sets return_path" do
         email_sender.send
         expect(message.header[:return_path].to_s).to eq(
           "replies+verp-#{EmailLog.last.bounce_key}@test.com",
@@ -173,7 +173,7 @@ RSpec.describe Email::Sender do
         message.header["X-Discourse-Topic-Id"] = topic.id
       end
 
-      it "should add the right header" do
+      it "adds the List-ID header" do
         email_sender.send
 
         expect(message.header["List-ID"]).to be_present
@@ -182,7 +182,7 @@ RSpec.describe Email::Sender do
     end
 
     context "when topic id is not present" do
-      it "should add the right header" do
+      it "adds the Message-ID header" do
         email_sender.send
 
         expect(message.header["Message-ID"]).to be_present
@@ -238,14 +238,14 @@ RSpec.describe Email::Sender do
         message.header["X-Discourse-Topic-Id"] = topic.id
       end
 
-      it "should add the right header" do
+      it "adds the Precedence header" do
         email_sender.send
         expect(message.header["Precedence"]).to be_present
       end
     end
 
     describe "removes custom Discourse headers from digest/registration/other mails" do
-      it "should remove the right headers" do
+      it "removes custom Discourse headers" do
         email_sender.send
         expect(message.header["X-Discourse-Topic-Id"]).not_to be_present
         expect(message.header["X-Discourse-Topic-Ids"]).not_to be_present
@@ -398,7 +398,7 @@ RSpec.describe Email::Sender do
         message.header["X-MC-Metadata"] = { foo: "bar" }.to_json
       end
 
-      it "should set the right header" do
+      it "adds the message ID to the Mandrill metadata" do
         email_sender.send
         expect(message.header["X-MC-Metadata"].to_s).to match(message.message_id)
       end
@@ -410,7 +410,7 @@ RSpec.describe Email::Sender do
         message.header["X-MSYS-API"] = { foo: "bar" }.to_json
       end
 
-      it "should set the right header" do
+      it "adds the message ID to the SparkPost metadata" do
         email_sender.send
         expect(message.header["X-MSYS-API"].to_s).to match(message.message_id)
       end
@@ -419,7 +419,7 @@ RSpec.describe Email::Sender do
     context "with email logs" do
       let(:email_log) { EmailLog.last }
 
-      it "should create the right log" do
+      it "creates an email log without a reply key" do
         expect do email_sender.send end.to_not change { PostReplyKey.count }
 
         expect(email_log).to be_present
@@ -489,7 +489,7 @@ RSpec.describe Email::Sender do
 
       let(:email_log) { EmailLog.last }
 
-      it "should create the right log" do
+      it "records the post and topic in the email log" do
         email_sender.send
         expect(email_log.post_id).to eq(post.id)
         expect(email_log.topic_id).to eq(topic.id)
@@ -498,7 +498,7 @@ RSpec.describe Email::Sender do
     end
 
     context "with email parts" do
-      it "should contain the right message" do
+      it "builds matching plain-text and HTML email parts" do
         email_sender.send
 
         expect(message).to be_multipart
@@ -880,7 +880,7 @@ RSpec.describe Email::Sender do
   end
 
   context "with a deleted post" do
-    it "should skip sending the email" do
+    it "skips the email and records the deleted-post reason" do
       post = Fabricate(:post, deleted_at: 1.day.ago)
 
       message = Mail::Message.new to: "disc@ourse.org", body: "some content"
@@ -897,7 +897,7 @@ RSpec.describe Email::Sender do
   end
 
   context "with a deleted topic" do
-    it "should skip sending the email" do
+    it "skips the email and records the deleted-topic reason" do
       post = Fabricate(:post, topic: Fabricate(:topic, deleted_at: 1.day.ago))
 
       message = Mail::Message.new to: "disc@ourse.org", body: "some content"
@@ -928,11 +928,11 @@ RSpec.describe Email::Sender do
       @email_log = EmailLog.last
     end
 
-    it "should have the current user_id" do
+    it "records the current user ID" do
       expect(@email_log.user_id).to eq(user.id)
     end
 
-    it "should have the smtp_transaction_response message" do
+    it "records the SMTP transaction response" do
       expect(@email_log.smtp_transaction_response).to eq(mock_smtp_transaction_response)
     end
 
@@ -945,7 +945,7 @@ RSpec.describe Email::Sender do
       end
 
       describe "when allow reply by email header is not present" do
-        it "should not create a post reply key" do
+        it "does not create a post reply key" do
           expect { email_sender.send }.to_not change { PostReplyKey.count }
         end
       end
@@ -955,7 +955,7 @@ RSpec.describe Email::Sender do
 
         before { message.header[header] = "test-%{reply_key}@test.com" }
 
-        it "should create a post reply key" do
+        it "creates a post reply key" do
           expect { email_sender.send }.to change { PostReplyKey.count }.by(1)
           post_reply_key = PostReplyKey.last
 
@@ -969,7 +969,7 @@ RSpec.describe Email::Sender do
           expect { email_sender.send }.not_to change { PostReplyKey.count }
         end
 
-        it "should find existing key" do
+        it "reuses the existing post reply key" do
           existing_post_reply_key = PostReplyKey.create(post_id: post.id, user_id: user.id)
           expect { email_sender.send }.not_to change { PostReplyKey.count }
           post_reply_key = PostReplyKey.last

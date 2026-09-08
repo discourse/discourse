@@ -310,7 +310,7 @@ RSpec.describe TopicView do
     fab!(:p2) { Fabricate(:post, topic: topic, user: evil_trout, percent_rank: 0.5) }
     fab!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
-    it "it can find the best responses" do
+    it "finds the best responses" do
       best2 = TopicView.new(topic.id, evil_trout, best: 2)
       expect(best2.posts.count).to eq(2)
       expect(best2.posts[0].id).to eq(p2.id)
@@ -510,7 +510,7 @@ RSpec.describe TopicView do
 
       before { TopicView.stubs(:chunk_size).returns(2) }
 
-      it "should return the next page" do
+      it "returns the next page" do
         expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(3)
       end
     end
@@ -581,7 +581,7 @@ RSpec.describe TopicView do
       end
     end
 
-    describe "#bookmarks" do
+    describe "#bookmarks for regular bookmarks" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) do
         Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
@@ -602,7 +602,7 @@ RSpec.describe TopicView do
       end
     end
 
-    describe "#bookmarks" do
+    describe "#bookmarks for next-business-day reminders" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) do
         Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.first_post, user: user)
@@ -718,7 +718,7 @@ RSpec.describe TopicView do
     end
 
     describe "contains_gaps?" do
-      it "works" do
+      it "returns the requested topic view" do
         # does not contain contains_gaps with default filtering
         expect(topic_view.contains_gaps?).to eq(false)
         # contains contains_gaps when filtered by username" do
@@ -768,7 +768,7 @@ RSpec.describe TopicView do
       describe "ascending" do
         let(:asc) { true }
 
-        it "should return the right posts" do
+        it "returns the expected posts" do
           topic_view = create_topic_view(p3.post_number)
 
           expect(topic_view.posts).to eq([p5])
@@ -781,7 +781,7 @@ RSpec.describe TopicView do
       describe "descending" do
         let(:asc) { false }
 
-        it "should return the right posts" do
+        it "returns the expected posts" do
           topic_view = create_topic_view(p7.post_number)
 
           expect(topic_view.posts).to eq([p5, p3, p2])
@@ -1056,12 +1056,12 @@ RSpec.describe TopicView do
     let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout, created_at: 6.hours.ago) }
     let!(:post3) { Fabricate(:post, topic: topic, user: first_poster) }
 
-    it "should return the right columns" do
+    it "returns the expected columns" do
       expect(topic_view.filtered_post_stream).to eq([[post.id, 1], [post2.id, 0], [post3.id, 0]])
     end
 
     describe "for mega topics" do
-      it "should return the right columns" do
+      it "returns the expected columns" do
         stub_const(TopicView, "MEGA_TOPIC_POSTS_COUNT", 2) do
           expect(topic_view.filtered_post_stream).to eq([post.id, post2.id, post3.id])
         end
@@ -1070,7 +1070,7 @@ RSpec.describe TopicView do
   end
 
   describe "#filtered_post_id" do
-    it "should return the right id" do
+    it "returns the expected ID" do
       post = Fabricate(:post, topic: topic)
 
       expect(topic_view.filtered_post_id(nil)).to eq(nil)
@@ -1085,7 +1085,7 @@ RSpec.describe TopicView do
 
     before { [p1, p2, p3].each_with_index { |post, index| post.update!(sort_order: index + 1) } }
 
-    it "should return the right id" do
+    it "returns the expected ID" do
       expect(topic_view.last_post_id).to eq(p3.id)
     end
   end
@@ -1102,7 +1102,7 @@ RSpec.describe TopicView do
       topic_view.topic.reload
     end
 
-    it "should return the right read time" do
+    it "returns the expected read time" do
       SiteSetting.read_time_word_count = 500
       expect(topic_view.read_time).to eq(1)
 

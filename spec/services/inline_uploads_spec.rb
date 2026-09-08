@@ -8,7 +8,7 @@ RSpec.describe InlineUploads do
       fab!(:upload2, :upload)
       fab!(:upload3, :upload)
 
-      it "should not correct existing inline uploads" do
+      it "does not change existing inline uploads" do
         md = <<~MD
         ![test](#{upload.short_url})haha
         [test]#{upload.short_url}
@@ -24,19 +24,19 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(md)
       end
 
-      it "should not escape existing content" do
+      it "does not escape existing content" do
         md = "1 > 2"
 
         expect(InlineUploads.process(md)).to eq(md)
       end
 
-      it "should not escape invalid HTML tags" do
+      it "does not escape invalid HTML tags" do
         md = "<x>.<y>"
 
         expect(InlineUploads.process(md)).to eq(md)
       end
 
-      it "should work with invalid img tags" do
+      it "handles invalid image tags" do
         md = <<~MD
         <img src="#{upload.url}">
 
@@ -53,7 +53,7 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(md)
       end
 
-      it "should not correct code blocks" do
+      it "does not change code blocks" do
         md = "`<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>`"
 
         expect(InlineUploads.process(md)).to eq(md)
@@ -63,7 +63,7 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(md)
       end
 
-      it "should not correct invalid links in quotes" do
+      it "does not change invalid links in quotes" do
         post = Fabricate(:post)
         user = Fabricate(:user)
 
@@ -102,7 +102,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct links in quotes" do
+      it "shortens upload links in quotes" do
         post = Fabricate(:post)
         user = Fabricate(:user)
 
@@ -127,7 +127,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct markdown linked images" do
+      it "shortens Markdown-linked images" do
         md = <<~MD
         [![](#{upload.url})](https://somelink.com)
 
@@ -141,7 +141,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct markdown images with title" do
+      it "shortens Markdown images with titles" do
         md = <<~MD
         ![](#{upload.url} "some alt")
         ![testing](#{upload2.url}  'some alt'  )
@@ -153,7 +153,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct bbcode img URLs to the short version" do
+      it "shortens BBCode image URLs" do
         md = <<~MD
         [img]http://some.external.img[/img]
         [img]#{upload.url}[/img]
@@ -177,7 +177,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct bbcode img URLs with non-standard dimension syntax" do
+      it "shortens BBCode image URLs with nonstandard dimensions" do
         md = <<~MD
         [img=100x200]#{upload.url}[/img]
         [IMG=640x480]#{upload2.url}[/IMG]
@@ -193,7 +193,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct markdown references" do
+      it "shortens Markdown references" do
         md = <<~MD
         [link3][3]
 
@@ -221,7 +221,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct html and markdown uppercase references" do
+      it "shortens uppercase HTML and Markdown references" do
         md = <<~MD
         [IMG]#{upload.url}[/IMG]
         <IMG src="#{upload2.url}" />
@@ -235,7 +235,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct image URLs with v parameters" do
+      it "shortens image URLs with version parameters" do
         md = <<~MD
         <img src="#{upload.url}?v=1">
 
@@ -264,7 +264,7 @@ RSpec.describe InlineUploads do
       context "with subfolder" do
         before { set_subfolder "/community" }
 
-        it "should correct subfolder images" do
+        it "shortens image URLs in subfolder installations" do
           md = <<~MD
             <img src="/community#{upload.url}">
 
@@ -279,7 +279,7 @@ RSpec.describe InlineUploads do
         end
       end
 
-      it "should correct raw image URLs to the short url and paths" do
+      it "shortens raw image URLs and paths" do
         md = <<~MD
         #{Discourse.base_url}#{upload.url}
 
@@ -301,7 +301,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct non image URLs to the short url" do
+      it "shortens non-image upload URLs" do
         SiteSetting.authorized_extensions = "mp4"
         upload = Fabricate(:video_upload)
         upload2 = Fabricate(:video_upload)
@@ -323,7 +323,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct img tags with uppercase upload extension" do
+      it "shortens image tags with uppercase upload extensions" do
         md = <<~MD
         test<img src="#{upload.url.sub(".png", ".PNG")}">
         MD
@@ -333,7 +333,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct image URLs that follows an image md" do
+      it "shortens image URLs following Markdown images" do
         md = <<~MD
         ![image|690x290](#{upload.short_url})#{Discourse.base_url}#{upload2.url}
 
@@ -347,7 +347,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct image URLs to the short version" do
+      it "shortens image URLs" do
         md = <<~MD
         ![image|690x290](#{upload.short_url})
 
@@ -399,7 +399,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should not replace identical markdown in code blocks", skip: "Known issue" do
+      it "does not replace identical Markdown in code blocks", skip: "Known issue" do
         md = <<~MD
         `![image|690x290](#{upload.url})`
         ![image|690x290](#{upload.url})
@@ -411,7 +411,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should not be affected by an emoji" do
+      it "preserves adjacent emoji" do
         CustomEmoji.create!(name: "test", upload: upload3)
         Emoji.clear_cache
 
@@ -428,7 +428,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correctly update images sources within anchor tags with indentation" do
+      it "updates indented image sources inside anchor tags" do
         md = <<~MD
         <h1></h1>
                         <a href="http://somelink.com">
@@ -459,7 +459,7 @@ RSpec.describe InlineUploads do
         )
       end
 
-      it "should correctly update image sources within anchor or paragraph tags" do
+      it "updates image sources inside anchor and paragraph tags" do
         md = <<~MD
         <a href="http://somelink.com">
           <img src="#{upload.url}" alt="test" width="500" height="500">
@@ -513,7 +513,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should not be affected by fake HTML tags" do
+      it "ignores fake HTML tags" do
         md = <<~MD
         ```
         This is some <img src=" and <a href="
@@ -543,7 +543,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should not be affected by an external or invalid links" do
+      it "ignores external and invalid links" do
         md = <<~MD
         <a id="test">invalid</a>
 
@@ -565,7 +565,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct attachment URLS to the short version when raw contains inline image" do
+      it "shortens attachment URLs alongside inline images" do
         md = <<~MD
         ![image](#{upload.short_url}) ![image](#{upload.short_url})
 
@@ -583,7 +583,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct attachment URLs to the short version" do
+      it "shortens attachment URLs" do
         md = <<~MD
         <a class="attachment" href="#{upload.url}">
           this
@@ -627,7 +627,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct full upload url to the shorter version" do
+      it "shortens full upload URLs" do
         md = <<~MD
         Some random text
 
@@ -694,7 +694,7 @@ RSpec.describe InlineUploads do
         SiteSetting.s3_cdn_url = "https://s3.cdn.com"
       end
 
-      it "should correct image URLs to the short version" do
+      it "shortens image URLs" do
         md = <<~MD
         #{upload.url}
         <img src="#{upload.url}" alt="some image">
@@ -710,7 +710,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should correct markdown references" do
+      it "shortens Markdown references" do
         md = <<~MD
         This is a [some reference] something
 

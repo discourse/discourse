@@ -134,18 +134,18 @@ RSpec.describe ApplicationController do
       SiteSetting.login_required = true
     end
 
-    it "should never cache a login redirect" do
+    it "does not cache login redirects" do
       get "/"
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
     end
 
-    it "should not redirect to login" do
+    it "does not redirect to login" do
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
     end
 
-    it "should redirect to SSO if enabled" do
+    it "redirects to SSO when enabled" do
       SiteSetting.discourse_connect_url = "http://someurl.com"
       SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
@@ -153,7 +153,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/session/sso")
     end
 
-    it "should redirect to authenticator if only one, and local logins disabled" do
+    it "redirects to the sole authenticator when local logins are disabled" do
       # Local logins and google enabled, show login UI
       SiteSetting.enable_google_oauth2_logins = true
       get "/"
@@ -172,7 +172,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect to SSO when auth_immediately is disabled" do
+    it "does not redirect to SSO when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
       SiteSetting.discourse_connect_url = "http://someurl.com"
       SiteSetting.discourse_connect_secret = "x" * 10
@@ -183,7 +183,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect to authenticator when auth_immediately is disabled" do
+    it "does not redirect to the authenticator when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
       SiteSetting.enable_google_oauth2_logins = true
       SiteSetting.enable_local_logins = false
@@ -213,7 +213,7 @@ RSpec.describe ApplicationController do
         OmniAuth.config.test_mode = false
       end
 
-      it "should not redirect to authenticator if registration in progress" do
+      it "does not redirect to the authenticator during registration" do
         SiteSetting.enable_local_logins = false
         SiteSetting.enable_google_oauth2_logins = true
 
@@ -267,7 +267,7 @@ RSpec.describe ApplicationController do
       admin # to skip welcome wizard at home page `/`
     end
 
-    it "should redirect admins when enforce_second_factor is 'all'" do
+    it "redirects admins when second factor is enforced for everyone" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(admin)
 
@@ -275,7 +275,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
     end
 
-    it "should properly redirect admins when enforce_second_factor is 'all' in subfolder" do
+    it "includes the subfolder when redirecting admins for enforced second factor" do
       set_subfolder "/forum"
       SiteSetting.enforce_second_factor = "all"
       sign_in(admin)
@@ -284,7 +284,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/forum/u/#{admin.username}/preferences/second-factor")
     end
 
-    it "should redirect users when enforce_second_factor is 'all'" do
+    it "redirects users when second factor is enforced for everyone" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
 
@@ -292,7 +292,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
-    it "should redirect users when enforce_second_factor is 'all' and authenticated via oauth" do
+    it "redirects OAuth users when second factor is enforced for everyone" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
       user.user_auth_tokens.last.update(authenticated_with_oauth: true)
@@ -301,7 +301,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
-    it "should not redirect users when enforce_second_factor is 'all', authenticated via oauth but enforce_second_factor_on_external_auth is false" do
+    it "exempts OAuth users when second factor enforcement excludes external authentication" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.enforce_second_factor_on_external_auth = false
       sign_in(user)
@@ -311,7 +311,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect anonymous users when enforce_second_factor is 'all'" do
+    it "does not redirect anonymous users for enforced second factor" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.allow_anonymous_mode = true
 
@@ -324,7 +324,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should redirect admins when enforce_second_factor is 'staff'" do
+    it "redirects admins when second factor is enforced for staff" do
       SiteSetting.enforce_second_factor = "staff"
       sign_in(admin)
 
@@ -332,7 +332,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
     end
 
-    it "should not redirect users when enforce_second_factor is 'staff'" do
+    it "does not redirect regular users when second factor is enforced for staff" do
       SiteSetting.enforce_second_factor = "staff"
       sign_in(user)
 
@@ -340,7 +340,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect admins when turned off" do
+    it "does not redirect admins when enforcement is disabled" do
       SiteSetting.enforce_second_factor = "no"
       sign_in(admin)
 
@@ -348,7 +348,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect users when turned off" do
+    it "does not redirect users when enforcement is disabled" do
       SiteSetting.enforce_second_factor = "no"
       sign_in(user)
 
@@ -444,7 +444,7 @@ RSpec.describe ApplicationController do
 
     after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
-    it "should not raise a 500 (nor should it log a warning) for bad params" do
+    it "handles invalid parameters without a 500 response or warning" do
       bad_str = (+"d\xDE").force_encoding("utf-8")
       expect(bad_str.valid_encoding?).to eq(false)
 
@@ -458,7 +458,7 @@ RSpec.describe ApplicationController do
   end
 
   describe "missing required param" do
-    it "should return a 400" do
+    it "returns 400" do
       get "/search/query.json", params: { trem: "misspelled term" }
 
       expect(response.status).to eq(400)
@@ -470,7 +470,7 @@ RSpec.describe ApplicationController do
 
   describe "build_not_found_page" do
     describe "topic not found" do
-      it "should not redirect to permalink if topic/category does not exist" do
+      it "does not redirect to a permalink for a missing topic or category" do
         topic = create_post.topic
         Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
         topic.trash!
@@ -484,7 +484,7 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(410)
       end
 
-      it "should return permalink for deleted topics" do
+      it "returns the permalink for deleted topics" do
         topic = create_post.topic
         external_url = "https://somewhere.over.rainbow"
         Permalink.create!(url: topic.relative_url, external_url: external_url)
@@ -533,7 +533,7 @@ RSpec.describe ApplicationController do
         )
       end
 
-      it "should return 404 and show Google search for an invalid topic route" do
+      it "returns 404 with Google search for an invalid topic route" do
         get "/t/nope-nope/99999999"
 
         expect(response.status).to eq(404)
@@ -544,7 +544,7 @@ RSpec.describe ApplicationController do
         expect(response_body).to have_tag("input", with: { value: "nope nope" })
       end
 
-      it "should not include Google search if login_required is enabled" do
+      it "omits Google search when login is required" do
         SiteSetting.login_required = true
         sign_in(Fabricate(:user))
         get "/t/nope-nope/99999999"
@@ -561,7 +561,7 @@ RSpec.describe ApplicationController do
         expect(response.body).not_to include(I18n.t("page_not_found.search_title"))
       end
 
-      it "should allow anchor tags in title" do
+      it "allows anchor tags in the title" do
         TranslationOverride.upsert!(
           I18n.locale,
           "page_not_found.title",
@@ -573,7 +573,7 @@ RSpec.describe ApplicationController do
         expect(response.body).to include('<a href="/search">search</a>')
       end
 
-      it "should sanitize unsafe HTML in title" do
+      it "sanitizes unsafe HTML in the title" do
         TranslationOverride.upsert!(
           I18n.locale,
           "page_not_found.title",
@@ -593,7 +593,7 @@ RSpec.describe ApplicationController do
 
         after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
-        it "should handle 404 to a css file" do
+        it "handles a missing CSS file" do
           Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
 
           topic1 = Fabricate(:topic)
@@ -618,7 +618,7 @@ RSpec.describe ApplicationController do
           expect(fake_logger.warnings.length).to eq(0)
         end
 
-        it "should render category badges with correct style classes on 404 page" do
+        it "renders category badge style classes on the 404 page" do
           Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
 
           square_cat = Fabricate(:category, style_type: :square)
@@ -694,7 +694,7 @@ RSpec.describe ApplicationController do
         end
       end
 
-      it "should cache results" do
+      it "caches results" do
         Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
         Discourse.cache.delete("page_not_found_topics:fr")
 
@@ -800,12 +800,12 @@ RSpec.describe ApplicationController do
   end
 
   describe "allow_embedding_site_in_an_iframe" do
-    it "should have the 'X-Frame-Options' header with value 'sameorigin'" do
+    it "sets X-Frame-Options to sameorigin" do
       get("/latest")
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
     end
 
-    it "should not include the 'X-Frame-Options' header" do
+    it "omits the X-Frame-Options header" do
       SiteSetting.allow_embedding_site_in_an_iframe = true
       get("/latest")
       expect(response.headers).not_to include("X-Frame-Options")
@@ -1436,7 +1436,7 @@ RSpec.describe ApplicationController do
         end
 
         context "with a logged in user" do
-          it "it uses the default locale" do
+          it "uses the default locale" do
             user = Fabricate(:user, locale: :fr)
             sign_in(user)
 

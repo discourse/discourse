@@ -190,7 +190,7 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
       expect(result).to eq("Hello World")
     end
 
-    it "will not timeout on slow HTTP reqs" do
+    it "does not time out on slow HTTP requests" do
       script = <<~JS
         function invoke(params) {
           result = http.get("https://example.com/" + params.query,

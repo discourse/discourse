@@ -62,7 +62,7 @@ RSpec.describe Jobs::ExportUserArchive do
       )
     end
 
-    it "works" do
+    it "creates the archive and sends its download link" do
       expect do Jobs::ExportUserArchive.new.execute(user_id: user.id) end.to change {
         Upload.count
       }.by(1)

@@ -8,7 +8,7 @@ RSpec.describe TopicsFilter do
   describe "#option_info" do
     let(:options) { TopicsFilter.option_info(Guardian.new) }
 
-    it "should return a correct hash with name and description keys for all" do
+    it "returns name and description keys for every option" do
       expect(options).to be_an(Array)
       expect(options).to all(be_a(Hash))
       expect(options).to all(include(:name, :description))
@@ -17,7 +17,7 @@ RSpec.describe TopicsFilter do
       expect(options.length).to be > 10
     end
 
-    it "should include nothing about tags when disabled" do
+    it "does not include tag options when tagging is disabled" do
       SiteSetting.tagging_enabled = false
 
       tag_options = options.find { |o| o[:name].include? "tag" }
@@ -30,7 +30,7 @@ RSpec.describe TopicsFilter do
       expect(tag_options).not_to be_nil
     end
 
-    it "should advertise the - prefix for the group: option" do
+    it "advertises the - prefix for the group: option" do
       group_option = options.find { |o| o[:name] == "group:" }
 
       expect(group_option[:prefixes]).to contain_exactly(
@@ -38,7 +38,7 @@ RSpec.describe TopicsFilter do
       )
     end
 
-    it "should not include user-specific options for anonymous users" do
+    it "does not include user-specific options for anonymous users" do
       anon_options = TopicsFilter.option_info(Guardian.new)
       logged_in_options = TopicsFilter.option_info(user.guardian)
 
@@ -63,7 +63,7 @@ RSpec.describe TopicsFilter do
       user_specific_options.each { |option| expect(logged_in_option_names).to include(option) }
     end
 
-    it "should apply the topics_filter_options modifier for authenticated users" do
+    it "applies the topics_filter_options modifier for authenticated users" do
       plugin_instance = Plugin::Instance.new
       DiscoursePluginRegistry.register_modifier(
         plugin_instance,
@@ -354,7 +354,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
       fab!(:closed_topic_with_tag2) { Fabricate(:topic, tags: [tag2], closed: true) }
 
-      it "should return the right topics when query string is `status:closed tags:tag1,tag2`" do
+      it "returns matching topics for `status:closed tags:tag1,tag2`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -376,7 +376,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `in:pinned`" do
-        it "should return topics that are pinned" do
+        it "returns pinned topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -385,7 +385,7 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(pinned_topic.id)
         end
 
-        it "should not return pinned topics that have expired" do
+        it "does not return expired pinned topics" do
           freeze_time(2.hours.from_now) do
             expect(
               TopicsFilter
@@ -481,7 +481,7 @@ RSpec.describe TopicsFilter do
           )
         end
 
-        it "should not return any topics when user is anonymous" do
+        it "returns no topics for an anonymous user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -490,7 +490,7 @@ RSpec.describe TopicsFilter do
           ).to eq([])
         end
 
-        it "should return topics that are bookmarked" do
+        it "returns bookmarked topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new(user))
@@ -501,7 +501,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `in:bookmarked in:pinnned`" do
-        it "should return topics that are bookmarked and pinned" do
+        it "returns topics that are bookmarked and pinned" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new(user))
@@ -535,7 +535,7 @@ RSpec.describe TopicsFilter do
             end
           end
 
-          it "should not return any topics if the user is anonymous" do
+          it "returns no topics when the user is anonymous" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -544,7 +544,7 @@ RSpec.describe TopicsFilter do
             ).to eq([])
           end
 
-          it "should return topics that the user has notification level set to #{notification_level}" do
+          it "returns topics set to the #{notification_level} notification level" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new(user))
@@ -587,7 +587,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `in:muted,invalid`" do
-          it "should ignore the invalid notification level" do
+          it "ignores the invalid notification level" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new(user))
@@ -598,7 +598,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `in:muted in:tracking`" do
-          it "should return topics that the user is tracking or has muted" do
+          it "returns topics that the user is tracking or has muted" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new(user))
@@ -609,7 +609,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `in:muted,tracking" do
-          it "should return topics that the user is tracking or has muted" do
+          it "returns tracked or muted topics" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new(user))
@@ -649,7 +649,7 @@ RSpec.describe TopicsFilter do
           )
         end
 
-        it "should not return any topics if the user is anonymous" do
+        it "returns no topics when the user is anonymous" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -658,7 +658,7 @@ RSpec.describe TopicsFilter do
           ).to be_empty
         end
 
-        it "should return the union of topics in watched categories and topics with watched tags" do
+        it "returns the union of watched-category and watched-tag topics" do
           ids =
             TopicsFilter
               .new(guardian: Guardian.new(user))
@@ -672,7 +672,7 @@ RSpec.describe TopicsFilter do
           )
         end
 
-        it "should work when combined with other filters" do
+        it "combines with other filters" do
           topic_in_watched_category.update!(closed: true)
 
           ids =
@@ -684,7 +684,7 @@ RSpec.describe TopicsFilter do
           expect(ids).to contain_exactly(topic_in_watched_category.id)
         end
 
-        it "should work with comma-separated notification levels" do
+        it "accepts comma-separated notification levels" do
           user_watching_topic =
             Fabricate(:topic).tap do |topic|
               TopicUser.change(
@@ -766,7 +766,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_in_category2_subcategory) { Fabricate(:topic, category: category2_subcategory) }
 
       describe "when query string is `category:category`" do
-        it "should return topics from specified category and its subcategories" do
+        it "returns topics from the specified category and its subcategories" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -775,7 +775,7 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_in_category.id, topic_in_category_subcategory.id)
         end
 
-        it "should return topics from specified category, its subcategories and sub-subcategories" do
+        it "returns topics from the specified category and all descendant categories" do
           SiteSetting.max_category_nesting = 3
 
           category_subcategory_subcategory =
@@ -802,7 +802,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `category:category,category2`" do
-        it "should return topics from any of the specified categories and its subcategories" do
+        it "returns topics from any specified category and its subcategories" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -818,7 +818,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `category:category category:category2`" do
-        it "should return topics from any of the specified categories and its subcategories" do
+        it "returns topics from any specified category and its descendants" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -834,7 +834,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `category:category =category:category2`" do
-        it "should return topics and subcategory topics from category but only topics from category2" do
+        it "includes descendants only for categories marked with the subcategory option" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -849,7 +849,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `-category:category`" do
-        it "should not return any topics from specified category or its subcategories" do
+        it "excludes topics from the specified category and its subcategories" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -860,7 +860,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `-category:category2,category`" do
-        it "should not return any topics from either specified categories or their subcategories" do
+        it "excludes topics from either specified category and their subcategories" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -871,7 +871,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `-category:category -category:category2-subcategory`" do
-        it "should not return any topics from either specified category or their subcategories" do
+        it "excludes topics from each specified category and its descendants" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -882,7 +882,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `-=category:category`" do
-        it "should not return any topics from the specified category only" do
+        it "excludes topics only from the specified category" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -897,7 +897,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `-=category:category,category2`" do
-        it "should not return any topics from the specified categories only" do
+        it "excludes topics only from the specified categories" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -908,7 +908,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `=category:category`" do
-        it "should not return topics from subcategories`" do
+        it "does not return topics from subcategories" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -919,7 +919,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `=category:category,category2`" do
-        it "should not return topics from subcategories" do
+        it "excludes subcategory topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -930,7 +930,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `category:category2 -=category:category2-subcategory`" do
-        it "should return topics from category2 and its subcategories but not from the category2-subcategory" do
+        it "returns category2 descendants except the excluded subcategory" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -953,7 +953,7 @@ RSpec.describe TopicsFilter do
 
           before { SiteSetting.max_category_nesting = 3 }
 
-          it "should return topics from category2, category2's sub-categories and category2's sub-sub-categories but not from the category2-subcategory only" do
+          it "returns category2 descendants except topics directly in the excluded subcategory" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -976,7 +976,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `category:日本語`" do
-          it 'should return topics from category with slug "日本語"' do
+          it 'returns topics from the category with slug "日本語"' do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -989,7 +989,7 @@ RSpec.describe TopicsFilter do
         describe "when query string is `category:日本語:안녕하세요`" do
           before { category_subcategory.update!(name: "안녕하세요 ", slug: "안녕하세요 ") }
 
-          it "should return topics from category with slug '안녕하세요'" do
+          it "returns topics from the category with slug '안녕하세요'" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -1013,7 +1013,7 @@ RSpec.describe TopicsFilter do
         fab!(:topic_in_category2_subcategory) { Fabricate(:topic, category: category2_subcategory) }
 
         describe "when query string is `category:subcategory`" do
-          it "should return topics from subcategories of both categories" do
+          it "returns topics from subcategories of both categories" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -1027,7 +1027,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `category:category:subcategory`" do
-          it "should return topics from subcategories of the specified category" do
+          it "returns topics from subcategories of the specified category" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -1038,7 +1038,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `category:category2:subcategory`" do
-          it "should return topics from subcategories of the specified category" do
+          it "returns matching topics from the specified category's subcategories" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -1049,7 +1049,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `category:category:subcategory,category2:subcategory`" do
-          it "should return topics from either subcategory" do
+          it "returns topics from either subcategory" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -1188,7 +1188,7 @@ RSpec.describe TopicsFilter do
         end
       end
 
-      it "should only return topics that have not been closed or archived when query string is `status:open`" do
+      it "returns only open topics for `status:open`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1197,7 +1197,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic.id)
       end
 
-      it "should only return topics that have been deleted when query string is `status:deleted` and user can see deleted topics" do
+      it "returns only deleted topics for authorized users with `status:deleted`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new(admin))
@@ -1206,7 +1206,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(deleted_topic_id)
       end
 
-      it "should ignore status filter when query string is `status:deleted` and user cannot see deleted topics" do
+      it "ignores `status:deleted` when the user cannot see deleted topics" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1215,7 +1215,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic.id, closed_topic.id, archived_topic.id, foobar_topic.id)
       end
 
-      it "should only return topics that have been archived when query string is `status:archived`" do
+      it "returns only archived topics for `status:archived`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1224,7 +1224,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(archived_topic.id)
       end
 
-      it "should only return topics that are visible when query string is `status:listed`" do
+      it "returns only visible topics for `status:listed`" do
         Topic.update_all(visible: false)
         topic.update!(visible: true)
 
@@ -1236,7 +1236,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic.id)
       end
 
-      it "should only return topics that are not visible when query string is `status:unlisted`" do
+      it "returns only unlisted topics for `status:unlisted`" do
         Topic.update_all(visible: true)
         topic.update!(visible: false)
 
@@ -1248,7 +1248,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic.id)
       end
 
-      it "should only return topics that are not in any read-restricted category when query string is `status:public`" do
+      it "returns only unrestricted topics for `status:public`" do
         private_category = Fabricate(:private_category, group: group)
         topic_in_private_category = Fabricate(:topic, category: private_category)
 
@@ -1267,7 +1267,7 @@ RSpec.describe TopicsFilter do
       describe "when query string is `status:closed status:unlisted`" do
         fab!(:closed_and_unlisted_topic) { Fabricate(:topic, closed: true, visible: false) }
 
-        it "should only return topics that have been closed and are not visible" do
+        it "returns only closed and unlisted topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1281,7 +1281,7 @@ RSpec.describe TopicsFilter do
         fab!(:topic_without_replies) { Fabricate(:topic, posts_count: 1) }
         fab!(:topic_with_replies) { Fabricate(:topic, posts_count: 2) }
 
-        it "should only return topics that have no replies" do
+        it "returns only topics without replies" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1295,7 +1295,7 @@ RSpec.describe TopicsFilter do
         fab!(:single_user_topic) { Fabricate(:topic, participant_count: 1) }
         fab!(:multi_user_topic) { Fabricate(:topic, participant_count: 2) }
 
-        it "should only return topics that have a single participant" do
+        it "returns only topics with one participant" do
           topic_ids =
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1334,7 +1334,7 @@ RSpec.describe TopicsFilter do
       fab!(:tag_synonym) { Fabricate(:tag, name: "synonym1", target_tag_id: tag.id) }
 
       describe "when filtering by a tag synonym" do
-        it "should return topics tagged with the target tag when query string is `tag:synonym1`" do
+        it "returns topics with the target tag for `tag:synonym1`" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1343,7 +1343,7 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
         end
 
-        it "should return topics tagged with the target tag or other tags when query string is `tags:synonym1,tag2`" do
+        it "returns topics with the target or other tags for `tags:synonym1,tag2`" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1352,7 +1352,7 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
         end
 
-        it "should exclude topics tagged with the target tag when query string is `-tag:synonym1`" do
+        it "excludes topics with the target tag for `-tag:synonym1`" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1366,7 +1366,7 @@ RSpec.describe TopicsFilter do
         end
       end
 
-      it "should not filter any topics by tags when tagging is disabled" do
+      it "does not filter topics by tag when tagging is disabled" do
         SiteSetting.tagging_enabled = false
 
         expect(
@@ -1384,7 +1384,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `tag:tag1+tag2`" do
-        it "should only return topics that are tagged with all of the specified tags" do
+        it "returns only topics with all specified tags" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1394,7 +1394,7 @@ RSpec.describe TopicsFilter do
         end
       end
 
-      it "should only return topics that are tagged with all of the specified tags when query string is `tags:tag1+tag2`" do
+      it "returns only topics with all tags for `tags:tag1+tag2`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1403,7 +1403,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag_and_tag2.id)
       end
 
-      it "should return topics tagged with period-delimited tag names" do
+      it "returns topics with period-delimited tag names" do
         tag_with_period = Fabricate(:tag, name: "node.js")
         topic_with_period_tag = Fabricate(:topic, tags: [tag_with_period])
 
@@ -1415,7 +1415,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_period_tag.id)
       end
 
-      it "should only return topics that are tagged with tag1 and tag2 when query string is `tags:tag1 tags:tag2`" do
+      it "returns only topics with tag1 and tag2 for repeated tag filters" do
         topic_with_tag_and_tag2_and_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
 
         expect(
@@ -1432,7 +1432,7 @@ RSpec.describe TopicsFilter do
         fab!(:pri_high) { Fabricate(:tag, name: "pri-high") }
         fab!(:pri_low) { Fabricate(:tag, name: "pri-low") }
 
-        it "should only return topics that are tagged with front-end+pri-high, front-end+pri-low, back-end+pri-high, back-end+pri-low" do
+        it "returns topics matching each requested tag combination" do
           topic_with_front_end_pri_high = Fabricate(:topic, tags: [front_end, pri_high])
           topic_with_front_end_pri_low = Fabricate(:topic, tags: [front_end, pri_low])
           topic_with_back_end_pri_high = Fabricate(:topic, tags: [back_end, pri_high])
@@ -1456,7 +1456,7 @@ RSpec.describe TopicsFilter do
           )
         end
 
-        it "should return topics that are tagged with front-end+back-end+pri-low or front-end+back-end+pri-high" do
+        it "returns topics matching either requested tag combination" do
           topic_with_front_end_back_end_pri_low =
             Fabricate(:topic, tags: [front_end, back_end, pri_low])
           topic_with_front_end_back_end_pri_high =
@@ -1484,7 +1484,7 @@ RSpec.describe TopicsFilter do
         fab!(:pri_high) { Fabricate(:tag, name: "pri-high") }
         fab!(:pri_low) { Fabricate(:tag, name: "pri-low") }
 
-        it "should only return topics tagged with front-end and or pri-high or pri-low" do
+        it "returns topics with front-end and either priority tag" do
           topic_with_front_end_pri_high = Fabricate(:topic, tags: [front_end, pri_high])
           topic_with_front_end_pri_low = Fabricate(:topic, tags: [front_end, pri_low])
           topic_with_front_end_pri_high_pri_low =
@@ -1522,7 +1522,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `tags:tag1,tag2,tag3`" do
-        it "should only return topics that are tagged with either tag1, tag2 or tag3" do
+        it "returns only topics with tag1, tag2, or tag3" do
           topic_with_tag3 = Fabricate(:topic, tags: [tag3])
 
           expect(
@@ -1540,7 +1540,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `tags:tag1+tag2+tag3`" do
-        it "should only return topics that are tagged with tag1, tag2 and tag3" do
+        it "returns only topics with tag1, tag2, and tag3" do
           topic_with_tag_tag2_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
 
           expect(
@@ -1552,7 +1552,7 @@ RSpec.describe TopicsFilter do
         end
       end
 
-      it "should only return topics that are tagged with tag1 and tag2 but not tag3 when query string is `tags:tag1 tags:tag2 -tags:tag3`" do
+      it "returns topics with tag1 and tag2 but without tag3" do
         _topic_with_tag_and_tag2_and_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
 
         expect(
@@ -1563,7 +1563,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag_and_tag2.id)
       end
 
-      it "should only return topics that are tagged with any of the specified tags when query string is `tags:tag1,tag2`" do
+      it "returns topics with any specified tag for `tags:tag1,tag2`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1572,7 +1572,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
       end
 
-      it "should not return any topics when query string is `tags:tag1+tag2+invalid`" do
+      it "returns no topics when an AND tag filter includes an invalid tag" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1581,7 +1581,7 @@ RSpec.describe TopicsFilter do
         ).to eq([])
       end
 
-      it "should still filter topics by specificed tags when query string is `tags:tag1,tag2,invalid`" do
+      it "filters by valid tags when an OR tag filter includes an invalid tag" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1590,7 +1590,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag_and_tag2.id, topic_with_tag.id, topic_with_tag2.id)
       end
 
-      it "should not return any topics when query string is `tags:group-only-tag` because specified tag is hidden to user" do
+      it "returns no topics when the specified tag is hidden from the user" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1599,7 +1599,7 @@ RSpec.describe TopicsFilter do
         ).to eq([])
       end
 
-      it "should return the right topics when query string is `tags:group-only-tag` and user has access to specified tag" do
+      it "returns matching topics when the user can access the specified tag" do
         group.add(admin)
 
         expect(
@@ -1610,7 +1610,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_group_only_tag.id)
       end
 
-      it "should only return topics that are not tagged with specified tag when query string is `-tags:tag1`" do
+      it "returns only topics without the specified tag for `-tags:tag1`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1619,7 +1619,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_without_tag.id, topic_with_tag2.id, topic_with_group_only_tag.id)
       end
 
-      it "should only return topics that are not tagged with all of the specified tags when query string is `-tags:tag1+tag2`" do
+      it "excludes topics with all specified tags for `-tags:tag1+tag2`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1633,7 +1633,7 @@ RSpec.describe TopicsFilter do
         )
       end
 
-      it "should only return topics that are not tagged with any of the specified tags when query string is `-tags:tag1,tag2`" do
+      it "excludes topics with any specified tag for `-tags:tag1,tag2`" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1645,7 +1645,7 @@ RSpec.describe TopicsFilter do
       describe "when query string is tag:日べé1" do
         before { tag.update!(name: "日べé1") }
 
-        it "should return topics that are tagged with the specified tag" do
+        it "returns topics with the specified tag" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1658,7 +1658,7 @@ RSpec.describe TopicsFilter do
       describe "when query string is `tags:tag_name`" do
         before { tag.update!(name: "tag_with_underscore") }
 
-        it "should return topics even when tag contains underscore" do
+        it "returns topics when the tag contains an underscore" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1674,7 +1674,7 @@ RSpec.describe TopicsFilter do
           tag2.update!(name: "tag_two")
         end
 
-        it "should return topics when filtering with comma-separated underscore tags" do
+        it "returns topics for comma-separated tags containing underscores" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1683,7 +1683,7 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
         end
 
-        it "should return topics when filtering with plus-separated underscore tags" do
+        it "returns topics for plus-separated tags containing underscores" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1722,7 +1722,7 @@ RSpec.describe TopicsFilter do
 
       fab!(:topic_with_staff_only_tag) { Fabricate(:topic, tags: [staff_only_tag]) }
 
-      it "should only return topics that are tagged with any of the specified tag_group when query string is tag_group:tag_group_name" do
+      it "returns topics with any tag in the specified tag group" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1731,7 +1731,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
       end
 
-      it "should only return topics that are not excluded by the specified tag_group when query string is -tag_group:tag_group_name" do
+      it "excludes topics with tags in the specified excluded tag group" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1740,7 +1740,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag3.id, topic_without_tag.id, topic_with_staff_only_tag.id)
       end
 
-      it "should return the right topics when query string is `tag_group:staff_tag_group` and user has access to specified tag" do
+      it "returns matching topics when the user can access the tag group" do
         group.add(admin)
 
         expect(
@@ -1751,7 +1751,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_staff_only_tag.id)
       end
 
-      it "should not return any topics when query string is `tag_group:staff_tag_group` because specified tag is hidden to user" do
+      it "returns no topics when the tag group is hidden from the user" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1775,7 +1775,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
       fab!(:topic_without_tag, :topic)
 
-      it "should filter by tag group name with spaces using double quotes" do
+      it "filters a double-quoted tag group name containing spaces" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1784,7 +1784,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag.id)
       end
 
-      it "should filter by tag group name with spaces using single quotes" do
+      it "filters a single-quoted tag group name containing spaces" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1793,7 +1793,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag.id)
       end
 
-      it "should filter by tag group name with ampersand" do
+      it "filters a tag group name containing an ampersand" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1802,7 +1802,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag.id)
       end
 
-      it "should filter by tag group name with parentheses" do
+      it "filters a tag group name containing parentheses" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1811,7 +1811,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag.id)
       end
 
-      it "should perform case-insensitive tag group lookup" do
+      it "looks up tag groups case-insensitively" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1820,7 +1820,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag.id)
       end
 
-      it "should handle exclude prefix with quoted tag group names" do
+      it "handles the exclusion prefix with quoted tag group names" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
@@ -1829,7 +1829,7 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_without_tag.id)
       end
 
-      it "should maintain backward compatibility with unquoted tag group names" do
+      it "supports unquoted tag group names" do
         simple_tag = Fabricate(:tag, name: "simple-tag")
         _simple_group = Fabricate(:tag_group, name: "simple", tag_names: [simple_tag.name])
         topic_simple = Fabricate(:topic, tags: [simple_tag])
@@ -1850,7 +1850,7 @@ RSpec.describe TopicsFilter do
       fab!(:no_locale_topic, :topic)
 
       describe "when query string is `locale:en`" do
-        it "should only return topics with locale en" do
+        it "returns only topics with the en locale" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1861,7 +1861,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `locale:ja,es`" do
-        it "should return topics with locale ja or es" do
+        it "returns topics with the ja or es locale" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1872,7 +1872,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `locale:ja locale:es`" do
-        it "should return topics with locale ja or es" do
+        it "returns topics matching either ja or es locale filter" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1883,7 +1883,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `-locale:en`" do
-        it "should return topics without locale en" do
+        it "returns topics without the en locale" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1894,7 +1894,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `-locale:en,ja`" do
-        it "should return topics without locale en or ja" do
+        it "returns topics without the en or ja locale" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1905,7 +1905,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `locale:invalid`" do
-        it "should return no topics" do
+        it "returns no topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1918,7 +1918,7 @@ RSpec.describe TopicsFilter do
       describe "when combining with other filters" do
         before { en_topic.update!(closed: true) }
 
-        it "should work with status:closed" do
+        it "combines with status:closed" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1936,7 +1936,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_by_user2) { Fabricate(:topic, user: user2) }
 
       describe "when query string is `created-by:@username`" do
-        it "should return the topics created by the specified user" do
+        it "returns topics created by the specified user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1947,7 +1947,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:@username2`" do
-        it "should return the topics created by the specified user" do
+        it "returns topics created by the named user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1958,7 +1958,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:@username created-by:@username2`" do
-        it "should return the topics created by either of the specified users" do
+        it "returns topics created by either specified user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1971,7 +1971,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:@username,invalid`" do
-        it "should only return the topics created by the user with the valid username" do
+        it "returns only topics created by the user with a valid username" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1982,7 +1982,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:@username,@username2`" do
-        it "should return the topics created by either of the specified users" do
+        it "returns topics created by any valid specified user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -1993,7 +1993,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:@invalid`" do
-        it "should not return any topics" do
+        it "returns no topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2004,7 +2004,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:me`" do
-        it "should return the topics created by the current user" do
+        it "returns topics created by the current user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new(user))
@@ -2013,7 +2013,7 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
         end
 
-        it "should not return any topics when there is no current user" do
+        it "returns no topics when there is no current user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2042,7 +2042,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_by_both_groups_user) { Fabricate(:topic, user: user_in_both_groups) }
 
       describe "when query string is `created-by:group1`" do
-        it "should return topics created by users in the specified group" do
+        it "returns topics created by users in the specified group" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2053,7 +2053,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:group2`" do
-        it "should return topics created by users in the specified group" do
+        it "returns topics from members of the named group" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2064,7 +2064,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:group1,group2`" do
-        it "should return topics created by users in any of the specified groups" do
+        it "returns topics created by users in any specified group" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2079,7 +2079,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:invalid`" do
-        it "should not return any topics" do
+        it "returns no topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2090,7 +2090,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `created-by:group1,invalid`" do
-        it "should only return topics created by users in the valid group" do
+        it "returns only topics created by users in the valid group" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2124,7 +2124,7 @@ RSpec.describe TopicsFilter do
         fab!(:topic_by_super_private_group_user) do
           Fabricate(:topic, user: user_in_super_private_group)
         end
-        it "should not return topics when user cannot see the group" do
+        it "returns no topics when the user cannot see the group" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2133,7 +2133,7 @@ RSpec.describe TopicsFilter do
           ).to eq([])
         end
 
-        it "should return topics when user is a member of the private group" do
+        it "returns topics when the user belongs to the private group" do
           private_group.add(user)
 
           expect(
@@ -2169,7 +2169,7 @@ RSpec.describe TopicsFilter do
 
     shared_examples "filtering for topics by counts" do |filter|
       describe "when query string is `#{filter}-min:1`" do
-        it "should only return topics with at least 1 #{filter}" do
+        it "returns only topics with at least one #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2180,7 +2180,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-min:3`" do
-        it "should only return topics with at least 3 #{filter}" do
+        it "returns only topics with at least three #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2191,7 +2191,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-max:1`" do
-        it "should only return topics with at most 1 #{filter}" do
+        it "returns only topics with at most one #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2202,7 +2202,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-max:3`" do
-        it "should only return topics with at most 3 #{filter}" do
+        it "returns only topics with at most three #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2213,7 +2213,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-min:1 #{filter}-max:2`" do
-        it "should only return topics with at least 1 like and at most 2 #{filter}" do
+        it "returns topics with at least one like and at most two #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2224,7 +2224,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-min:3 #{filter}-min:2 #{filter}-max:1 #{filter}-max:3`" do
-        it "should only return topics with at least 2 #{filter} and at most 3 #{filter} as it ignores earlier filters which are duplicated" do
+        it "uses the last duplicate filters to constrain the #{filter} count" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2237,7 +2237,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-min:invalid #{filter}-max:invalid`" do
-        it "should ignore the filters with invalid values" do
+        it "ignores filters with invalid values" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2304,7 +2304,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic2) { Fabricate(:topic, column => Time.zone.local(2023, 5, 12)) }
 
       describe "when query string is `#{filter}-after:invalid-date-test`" do
-        it "should ignore the filter" do
+        it "ignores the filter" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2315,7 +2315,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-after:2022-01-01`" do
-        it "should only return topics with #{description} after 2022-01-01" do
+        it "returns only topics with #{description} after 2022-01-01" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2326,7 +2326,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-after:2023-01-1`" do
-        it "should only return topics with #{description} after 2023-01-01" do
+        it "returns only topics with #{description} after 2023-01-01" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2337,7 +2337,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-after:2023-6-01`" do
-        it "should only return topics with #{description} after 2023-06-01" do
+        it "returns only topics with #{description} after 2023-06-01" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2348,7 +2348,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-before:2023-01-01`" do
-        it "should only return topics with #{description} before 2023-01-01" do
+        it "returns only topics with #{description} before 2023-01-01" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2359,7 +2359,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-before:2023-1-1`" do
-        it "should only return topics with #{description} before 2023-01-01" do
+        it "returns only matching topics with #{description} before 2023-01-01" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2370,7 +2370,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-before:2000-01-01`" do
-        it "should only return topics with #{description} before 2000-01-01" do
+        it "returns only topics with #{description} before 2000-01-01" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -2381,7 +2381,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-after:1`" do
-        it "should only return topics with #{description} after 1 day ago" do
+        it "returns only topics with #{description} after one day ago" do
           freeze_time do
             _old_topic = Fabricate(:topic, column => 2.days.ago)
             recent_topic = Fabricate(:topic, column => Time.zone.now)
@@ -2397,7 +2397,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-before:1`" do
-        it "should only return topics with #{description} before 1 day ago" do
+        it "returns only topics with #{description} before one day ago" do
           freeze_time do
             old_topic = Fabricate(:topic, column => 2.days.ago)
             recent_topic = Fabricate(:topic, column => Time.zone.now)
@@ -2415,7 +2415,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "when query string is `#{filter}-after:0`" do
-        it "should only return topics with #{description} after today" do
+        it "returns only topics with #{description} after today" do
           freeze_time do
             _old_topic = Fabricate(:topic, column => 2.days.ago)
             recent_topic = Fabricate(:topic, column => Time.zone.now)
@@ -2622,7 +2622,7 @@ RSpec.describe TopicsFilter do
       # when ordered by the given filter in descending order.
       shared_examples "ordering topics filters" do |order, order_description|
         describe "when query string is `order:#{order}`" do
-          it "should return topics ordered by #{order_description} in descending order" do
+          it "returns topics ordered by #{order_description} descending" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -2633,7 +2633,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `order:#{order}-asc`" do
-          it "should return topics ordered by #{order_description} in ascending order" do
+          it "returns topics ordered by #{order_description} ascending" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -2644,7 +2644,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `order:#{order}-invalid`" do
-          it "should return topics ordered by the database's default order" do
+          it "returns topics in the database's default order" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -2763,7 +2763,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `order:read`" do
-          it "should return topics ordered by last visited date in descending order for logged in users" do
+          it "orders topics by last visit descending for logged-in users" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new(user))
@@ -2772,7 +2772,7 @@ RSpec.describe TopicsFilter do
             ).to eq([topic2.id, topic.id, topic3.id])
           end
 
-          it "should not apply any special ordering for anonymous users" do
+          it "does not apply special ordering for anonymous users" do
             topics =
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -2784,7 +2784,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `order:read-asc`" do
-          it "should return topics ordered by last visited date in ascending order for logged in users" do
+          it "orders topics by last visit ascending for logged-in users" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new(user))
@@ -2801,7 +2801,7 @@ RSpec.describe TopicsFilter do
         fab!(:topic3) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1), views: 1) }
 
         describe "when query string is `order:created,views`" do
-          it "should return topics ordered by creation date in descending order and then number of views in descending order" do
+          it "orders topics by creation date and view count descending" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
@@ -2812,7 +2812,7 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `order:created order:views`" do
-          it "should return topics ordered by creation date in descending order and then number of views in descending order" do
+          it "uses creation date and view count as descending tie-breakers" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)

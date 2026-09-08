@@ -1069,7 +1069,7 @@ RSpec.describe FileStore::S3Store do
   describe "#create_multipart" do
     before { store.s3_helper.stub_client_responses! }
 
-    it "should create a multipart upload with the ACL parameter set to private canned ACL when `s3_use_acls` site setting is enabled" do
+    it "creates a multipart upload with a private canned ACL when `s3_use_acls` is enabled" do
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
       create_multipart_request =
@@ -1082,7 +1082,7 @@ RSpec.describe FileStore::S3Store do
       )
     end
 
-    it "should create a multipart upload with the ACL parameter set to nil when `s3_use_acls` site setting is disabled" do
+    it "creates a multipart upload without an ACL when `s3_use_acls` is disabled" do
       SiteSetting.s3_use_acls = false
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
@@ -1094,7 +1094,7 @@ RSpec.describe FileStore::S3Store do
       expect(create_multipart_request[:context].params[:acl]).to eq(nil)
     end
 
-    it "should create a multipart upload with the tagging parameter set to visibility tags when `s3_enable_access_control_tags` site setting is enabled" do
+    it "creates a multipart upload with visibility tags when access-control tags are enabled" do
       SiteSetting.s3_enable_access_control_tags = true
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 

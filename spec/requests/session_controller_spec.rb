@@ -10,7 +10,7 @@ RSpec.describe SessionController do
   let(:admin_email_token) { Fabricate(:email_token, user: admin) }
 
   shared_examples "failed to continue local login" do
-    it "should return the right response" do
+    it "returns a forbidden response" do
       expect(response).not_to be_successful
       expect(response.status).to eq(403)
     end
@@ -215,7 +215,7 @@ RSpec.describe SessionController do
       end
 
       context "when token has expired" do
-        it "should return the right response" do
+        it "returns the expired-token error" do
           email_token.update!(created_at: 999.years.ago)
 
           post "/session/email-login/#{email_token.token}.json"
@@ -1207,7 +1207,7 @@ RSpec.describe SessionController do
     describe "when in development mode" do
       before { Rails.env.stubs(:development?).returns(true) }
 
-      it "works" do
+      it "signs in as the requested user" do
         get "/session/#{user.username}/become"
 
         expect(response).to be_redirect
@@ -1352,7 +1352,7 @@ RSpec.describe SessionController do
       end.not_to change { UserAuthToken.count }
     end
 
-    it "will never redirect back to /session/sso path" do
+    it "never redirects back to the SSO path" do
       sso = get_sso("/session/sso?bla=1")
       sso.email = user.email
       sso.external_id = "abc"
@@ -1592,7 +1592,7 @@ RSpec.describe SessionController do
       expect(response).to redirect_to("/")
     end
 
-    it "redirects to root if the host of the return_path is different" do
+    it "redirects protocol-relative external return paths to root" do
       sso = get_sso("//eviltrout.com")
       sso.external_id = "666"
       sso.email = "bob@bob.com"
@@ -1603,7 +1603,7 @@ RSpec.describe SessionController do
       expect(response).to redirect_to("/")
     end
 
-    it "redirects to root if the host of the return_path is different" do
+    it "redirects absolute external return paths to root" do
       sso = get_sso("http://eviltrout.com")
       sso.external_id = "666"
       sso.email = "bob@bob.com"
@@ -2608,7 +2608,7 @@ RSpec.describe SessionController do
       end
 
       describe "invalid password" do
-        it "should return an error with an invalid password" do
+        it "returns an error for an invalid password" do
           post "/session.json", params: { login: user.username, password: "sssss" }
 
           expect(response.status).to eq(200)
@@ -2617,7 +2617,7 @@ RSpec.describe SessionController do
           )
         end
 
-        it "should return an error with an invalid password if too long" do
+        it "returns an error for an overlong password" do
           User.any_instance.expects(:confirm_password?).never
           post "/session.json",
                params: {
@@ -2633,7 +2633,7 @@ RSpec.describe SessionController do
       end
 
       describe "suspended user" do
-        it "should return an error" do
+        it "returns the suspension error" do
           user.suspended_till = 2.days.from_now
           user.suspended_at = Time.now
           user.save!
@@ -2669,7 +2669,7 @@ RSpec.describe SessionController do
       end
 
       describe "deactivated user" do
-        it "should return an error" do
+        it "returns the activation error" do
           user.active = false
           user.save!
 
@@ -2723,7 +2723,7 @@ RSpec.describe SessionController do
       describe "when user's password has been marked as expired" do
         before { RateLimiter.enable }
 
-        it "should return an error response code with the right error message" do
+        it "returns the expired-password error" do
           UserPasswordExpirer.expire_user_password(user)
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
@@ -2861,7 +2861,7 @@ RSpec.describe SessionController do
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
         describe "when second factor token is missing" do
-          it "should return the right response" do
+          it "returns the missing-second-factor error" do
             post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
             expect(response.status).to eq(200)
@@ -2873,7 +2873,7 @@ RSpec.describe SessionController do
 
         describe "when second factor token is invalid" do
           context "when using totp method" do
-            it "should return the right response" do
+            it "returns the invalid-TOTP error" do
               post "/session.json",
                    params: {
                      login: user.username,
@@ -2890,7 +2890,7 @@ RSpec.describe SessionController do
           end
 
           context "when using backup code method" do
-            it "should return the right response" do
+            it "returns the invalid-backup-code error" do
               post "/session.json",
                    params: {
                      login: user.username,
@@ -2909,7 +2909,7 @@ RSpec.describe SessionController do
 
         describe "when second factor token is valid" do
           context "when using totp method" do
-            it "should log the user in" do
+            it "logs the user in with TOTP" do
               post "/session.json",
                    params: {
                      login: user.username,
@@ -2932,7 +2932,7 @@ RSpec.describe SessionController do
           end
 
           context "when using backup code method" do
-            it "should log the user in" do
+            it "logs the user in with a backup code" do
               post "/session.json",
                    params: {
                      login: user.username,
@@ -3397,7 +3397,7 @@ RSpec.describe SessionController do
       end
 
       context "when token is valid" do
-        it "should display the form for GET" do
+        it "displays the one-time-password form" do
           token = SecureRandom.hex
           Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
 
@@ -3413,7 +3413,7 @@ RSpec.describe SessionController do
           expect(session[:current_user_id]).to eq(nil)
         end
 
-        it "should redirect on GET if already logged in" do
+        it "redirects an already logged-in user" do
           sign_in(user)
           token = SecureRandom.hex
           Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
@@ -3425,7 +3425,7 @@ RSpec.describe SessionController do
           expect(session[:current_user_id]).to eq(user.id)
         end
 
-        it "should authenticate user and delete token" do
+        it "authenticates the user and deletes the token" do
           user = Fabricate(:user)
 
           get "/session/current.json"
@@ -3483,7 +3483,7 @@ RSpec.describe SessionController do
       expect(response.status).to eq(400)
     end
 
-    it "should correctly screen ips" do
+    it "screens blocked IP addresses" do
       ScreenedIpAddress.create!(
         ip_address: "100.0.0.1",
         action_type: ScreenedIpAddress.actions[:block],
@@ -3505,7 +3505,7 @@ RSpec.describe SessionController do
     describe "rate limiting" do
       before { RateLimiter.enable }
 
-      it "should correctly rate limits" do
+      it "rate-limits repeated password-reset requests" do
         user = Fabricate(:user)
 
         3.times do

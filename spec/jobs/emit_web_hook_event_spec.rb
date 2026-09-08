@@ -26,7 +26,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     )
   end
 
-  it "should not destroy webhook event in case of error" do
+  it "retains the webhook event after an error" do
     stub_request(:post, post_hook.payload_url).to_return(status: 500)
 
     job.execute(

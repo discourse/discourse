@@ -173,7 +173,7 @@ RSpec.describe PostMover do
 
         context "with post replies" do
           describe "when a post with replies is moved" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               topic.move_posts(
                 user,
                 [p2.id],
@@ -198,7 +198,7 @@ RSpec.describe PostMover do
           end
 
           describe "when replies of a post have been moved" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               p5 =
                 Fabricate(
                   :post,
@@ -221,7 +221,7 @@ RSpec.describe PostMover do
           end
 
           context "when only one reply is left behind" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               p5 =
                 Fabricate(
                   :post,

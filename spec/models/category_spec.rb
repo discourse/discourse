@@ -123,7 +123,7 @@ RSpec.describe Category do
       expect { Fabricate(:category) }.to change { CategorySetting.count }.by(1)
     end
 
-    it "should delete associated sidebar_section_links when category is destroyed" do
+    it "deletes associated sidebar_section_links when the category is destroyed" do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
       category_sidebar_section_link_2 =
         Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
@@ -730,13 +730,13 @@ RSpec.describe Category do
       expect(permalink.url).to eq(old_url[1..-1])
     end
 
-    it "should not set its description topic to auto-close" do
+    it "does not set its description topic to auto-close" do
       category = Fabricate(:category_with_definition, name: "Closing Topics", auto_close_hours: 1)
       expect(category.topic.public_topic_timer).to eq(nil)
     end
 
     describe "creating a new category with the same slug" do
-      it "should have a blank slug if at the same level" do
+      it "has a blank slug at the same level" do
         category = Fabricate(:category_with_definition, name: "Amazing Categóry")
         expect(category.slug).to be_blank
         expect(category.slug_for_url).to eq("#{category.id}-category")
@@ -786,7 +786,7 @@ RSpec.describe Category do
   end
 
   describe "update" do
-    it "should enforce uniqueness of slug" do
+    it "enforces slug uniqueness" do
       Fabricate(:category_with_definition, slug: "the-slug")
       c2 = Fabricate(:category_with_definition, slug: "different-slug")
       c2.slug = "the-slug"
@@ -824,7 +824,7 @@ RSpec.describe Category do
   end
 
   describe "latest" do
-    it "should be updated correctly" do
+    it "updates correctly" do
       category = freeze_time(1.minute.ago) { Fabricate(:category_with_definition) }
       post = create_post(category: category.id, created_at: 15.seconds.ago)
 
@@ -1017,14 +1017,14 @@ RSpec.describe Category do
     end
 
     describe ".query_parent_category" do
-      it "should return the parent category id given a parent slug" do
+      it "returns the parent category ID for a parent slug" do
         parent_category.name = "Amazing Category"
         expect(parent_category.id).to eq(Category.query_parent_category(parent_category.slug))
       end
     end
 
     describe ".query_category" do
-      it "should return the category" do
+      it "returns the category" do
         category =
           Fabricate(
             :category_with_definition,
@@ -1125,7 +1125,7 @@ RSpec.describe Category do
   end
 
   describe "auto bump" do
-    it "should correctly automatically bump topics" do
+    it "automatically bumps topics correctly" do
       freeze_time
       category = Fabricate(:category_with_definition, created_at: 1.minute.ago)
       category.clear_auto_bump_cache!
@@ -1169,7 +1169,7 @@ RSpec.describe Category do
       expect(Category.auto_bump_topic!).to eq(false)
     end
 
-    it "should not auto-bump the same topic within the cooldown" do
+    it "does not auto-bump the same topic during the cooldown" do
       freeze_time
       category =
         Fabricate(
@@ -1203,7 +1203,7 @@ RSpec.describe Category do
       expect(Topic.where(bumped_at: time).count).to eq(1)
     end
 
-    it "should not automatically bump topics with a bump scheduled" do
+    it "does not auto-bump topics with a scheduled bump" do
       freeze_time
       category = Fabricate(:category_with_definition, created_at: 1.second.ago)
       category.clear_auto_bump_cache!
@@ -1251,7 +1251,7 @@ RSpec.describe Category do
     end
 
     context "when changing subcategory permissions" do
-      it "it is not valid if permissions are less restrictive" do
+      it "is invalid when permissions are less restrictive" do
         subcategory.set_permissions(group => :readonly)
         subcategory.save!
 
@@ -1347,13 +1347,13 @@ RSpec.describe Category do
         SQL
 
       describe "#depth_of_descendants" do
-        it "should produce max_depth" do
+        it "produces max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
       describe "#height_of_ancestors" do
-        it "should produce max_height" do
+        it "produces max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
       end
@@ -1363,13 +1363,13 @@ RSpec.describe Category do
       before { category.parent_category_id = category.id }
 
       describe "#depth_of_descendants" do
-        it "should produce max_depth" do
+        it "produces max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
       describe "#height_of_ancestors" do
-        it "should produce max_height" do
+        it "produces max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
       end
@@ -1379,34 +1379,34 @@ RSpec.describe Category do
       before { category.parent_category_id = subcategory.id }
 
       describe "#depth_of_descendants" do
-        it "should produce max_depth" do
+        it "produces max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
       describe "#height_of_ancestors" do
-        it "should produce max_height" do
+        it "produces max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
       end
     end
 
     describe "#depth_of_descendants" do
-      it "should be 0 when the category has no descendants" do
+      it "is 0 when the category has no descendants" do
         expect(subcategory.depth_of_descendants).to eq(0)
       end
 
-      it "should be 1 when the category has a descendant" do
+      it "is 1 when the category has a descendant" do
         expect(category.depth_of_descendants).to eq(1)
       end
     end
 
     describe "#height_of_ancestors" do
-      it "should be 0 when the category has no ancestors" do
+      it "is 0 when the category has no ancestors" do
         expect(category.height_of_ancestors).to eq(0)
       end
 
-      it "should be 1 when the category has an ancestor" do
+      it "is 1 when the category has an ancestor" do
         expect(subcategory.height_of_ancestors).to eq(1)
       end
     end
@@ -1512,7 +1512,7 @@ RSpec.describe Category do
     fab!(:category)
 
     describe "when category is uncategorized" do
-      it "should return the reason" do
+      it "returns the reason" do
         category = Category.find(SiteSetting.uncategorized_category_id)
 
         expect(category.cannot_delete_reason).to eq(I18n.t("category.cannot_delete.uncategorized"))
@@ -1520,7 +1520,7 @@ RSpec.describe Category do
     end
 
     describe "when category has subcategories" do
-      it "should return the right reason" do
+      it "returns the expected reason" do
         category.subcategories << Fabricate(:category)
 
         expect(category.cannot_delete_reason).to eq(
@@ -1530,7 +1530,7 @@ RSpec.describe Category do
     end
 
     describe "when category has topics" do
-      it "should return the right reason" do
+      it "returns the expected reason" do
         topic =
           Fabricate(
             :topic,
@@ -1555,7 +1555,7 @@ RSpec.describe Category do
   describe "#deleting the general category" do
     fab!(:category)
 
-    it "should empty out the general_category_id site_setting" do
+    it "clears the general_category_id site setting" do
       SiteSetting.general_category_id = category.id
       category.destroy
 

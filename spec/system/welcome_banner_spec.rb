@@ -221,7 +221,7 @@ describe "Welcome banner" do
 
         before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
 
-        it "should show on" do
+        it "shows on the homepage, preferences, and messages pages" do
           sign_in(current_user)
 
           visit "/"
@@ -234,7 +234,7 @@ describe "Welcome banner" do
           expect(banner).to be_visible
         end
 
-        it "should NOT show on" do
+        it "hides on authentication and admin pages" do
           visit "/login"
           expect(banner).to be_hidden
 
@@ -262,7 +262,7 @@ describe "Welcome banner" do
         end
       end
 
-      it "should show on discovery routes only" do
+      it "shows only on discovery routes" do
         sign_in(current_user)
         SiteSetting.welcome_banner_page_visibility = "discovery"
 
@@ -273,7 +273,7 @@ describe "Welcome banner" do
         expect(banner).to be_hidden
       end
 
-      it "should show on top menu pages only" do
+      it "shows only on top menu pages" do
         sign_in(current_user)
         SiteSetting.welcome_banner_page_visibility = "top_menu_pages"
         SiteSetting
@@ -288,7 +288,7 @@ describe "Welcome banner" do
         expect(banner).to be_hidden
       end
 
-      it "should show on homepage only" do
+      it "shows only on the homepage" do
         SiteSetting.welcome_banner_page_visibility = "homepage"
 
         visit "/"

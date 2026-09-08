@@ -619,7 +619,7 @@ RSpec.describe "Managing Posts solved status" do
         topic.reload
       end
 
-      it "should unmark the post as solved" do
+      it "unmarks the post as solved" do
         expect do post "/solution/unaccept.json", params: { id: p1.id } end.to change {
           topic.reload.public_topic_timer
         }.to(nil)
@@ -657,7 +657,7 @@ RSpec.describe "Managing Posts solved status" do
           topic.reload
         end
 
-        it "should unmark the post as solved only when last solution unaccepted" do
+        it "unmarks the post as solved only when the last solution is unaccepted" do
           expect do post "/solution/unaccept.json", params: { id: p1.id } end.not_to change {
             topic.reload.public_topic_timer
           }

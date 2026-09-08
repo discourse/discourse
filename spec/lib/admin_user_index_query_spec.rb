@@ -219,7 +219,7 @@ RSpec.describe AdminUserIndexQuery do
 
   describe "filtering" do
     context "with exact email bypass" do
-      it "can correctly bypass expensive ilike query" do
+      it "matches an exact email filter without ILIKE" do
         user = Fabricate(:user, email: "sam@Sam.com")
 
         query = AdminUserIndexQuery.new(filter: "Sam@sam.com").find_users_query
@@ -229,7 +229,7 @@ RSpec.describe AdminUserIndexQuery do
         expect(query.to_sql.downcase).not_to include("ilike")
       end
 
-      it "can correctly bypass expensive ilike query" do
+      it "matches the email parameter exactly without ILIKE" do
         user = Fabricate(:user, email: "sam2@Sam.com")
 
         query = AdminUserIndexQuery.new(email: "Sam@sam.com").find_users_query

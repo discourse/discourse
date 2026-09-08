@@ -620,7 +620,7 @@ RSpec.describe CategoriesController do
       end
 
       describe "success" do
-        it "works" do
+        it "creates the category with group permissions" do
           SiteSetting.enable_category_group_moderation = true
 
           readonly = CategoryGroup.permission_types[:readonly]
@@ -741,7 +741,7 @@ RSpec.describe CategoriesController do
             expect(SiteSetting.max_category_nesting).to eq(3)
           end
 
-          it "will set the schema value for site settings when overrides are not provided" do
+          it "uses the schema value when no site-setting override is provided" do
             SiteSetting.max_category_nesting = 3
             Categories::Types::Discussion.stubs(:configuration_schema).returns(
               { site_settings: { max_category_nesting: 2 } },
@@ -2391,7 +2391,7 @@ RSpec.describe CategoriesController do
     context "when in readonly mode" do
       before { Discourse.enable_readonly_mode }
 
-      it "works" do
+      it "returns category search results in read-only mode" do
         post "/categories/search.json", params: { term: "" }
 
         expect(response.status).to eq(200)

@@ -160,13 +160,13 @@ RSpec.describe TopicEmbed do
         expect(post.reload.cook_method).to eq(Post.cook_methods[:regular])
       end
 
-      it "Should leave uppercase Feed Entry URL untouched in content" do
+      it "leaves an uppercase feed entry URL untouched in content" do
         cased_url = "http://eviltrout.com/ABCD"
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
       end
 
-      it "Should leave lowercase Feed Entry URL untouched in content" do
+      it "leaves a lowercase feed entry URL untouched in content" do
         cased_url = "http://eviltrout.com/abcd"
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
@@ -331,7 +331,7 @@ RSpec.describe TopicEmbed do
           expect(imported_post.topic.title).to eq("MODIFIED: #{title}")
         end
 
-        it "will revert to defaults if the modifier returns nil" do
+        it "reverts to defaults when the modifier returns nil" do
           plugin = Plugin::Instance.new
           plugin.register_modifier(:topic_embed_import_create_args) { |args| nil }
 

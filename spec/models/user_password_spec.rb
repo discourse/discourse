@@ -104,7 +104,7 @@ RSpec.describe UserPassword do
   end
 
   context "for validations" do
-    it "should validate presence of user_id" do
+    it "requires user_id" do
       user_password = Fabricate.build(:user_password, user: nil)
 
       expect(user_password).not_to be_valid

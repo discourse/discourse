@@ -247,7 +247,7 @@ RSpec.describe SiteSetting do
   end
 
   describe "cached settings" do
-    it "should recalculate cached setting when dependent settings are changed" do
+    it "recalculates a cached setting when its dependencies change" do
       SiteSetting.blocked_attachment_filenames = "foo"
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo/)
 

@@ -442,7 +442,7 @@ RSpec.describe Admin::ReportsController do
         fab!(:topic) { Fabricate(:topic, category: category) }
         fab!(:other_topic, :topic)
 
-        it "should render the report as JSON" do
+        it "renders the report as JSON" do
           get "/admin/reports/topics.json", params: { category_id: category.id }
 
           expect(response.status).to eq(200)
@@ -459,7 +459,7 @@ RSpec.describe Admin::ReportsController do
         fab!(:other_user, :user)
         fab!(:group)
 
-        it "should render the report as JSON" do
+        it "renders the report as JSON" do
           group.add(user)
 
           get "/admin/reports/signups.json", params: { group_id: group.id }

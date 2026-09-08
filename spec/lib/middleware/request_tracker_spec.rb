@@ -1485,7 +1485,7 @@ RSpec.describe Middleware::RequestTracker do
 
       after { Middleware::RequestTracker.unregister_ip_skipper }
 
-      it "won't block if the ip is skipped" do
+      it "does not block skipped IP addresses" do
         env1 = env("REMOTE_ADDR" => "1.1.1.2")
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)

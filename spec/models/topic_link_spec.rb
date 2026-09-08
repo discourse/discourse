@@ -129,7 +129,7 @@ RSpec.describe TopicLink do
 
       let(:post) { Fabricate(:post, topic: other_topic, user: user, raw: "some content") }
 
-      it "works" do
+      it "preserves internal topic links and reflections across repeated extraction" do
         # ensure other_topic has a post
         post
 
@@ -413,7 +413,7 @@ RSpec.describe TopicLink do
   end
 
   describe "internal link from pm" do
-    it "works" do
+    it "records the PM's outgoing link without adding a public backlink" do
       pm = Fabricate(:topic, user: user, category_id: nil, archetype: "private_message")
       Fabricate(:post, topic: pm, user: user, raw: "some content")
 
@@ -430,7 +430,7 @@ RSpec.describe TopicLink do
   end
 
   describe "internal link from unlisted topic" do
-    it "works" do
+    it "records the unlisted topic's outgoing link without adding a public backlink" do
       unlisted_topic = Fabricate(:topic, user: user, visible: false)
       url = "http://#{test_uri.host}/t/topic-slug/#{topic.id}"
 
@@ -582,7 +582,7 @@ RSpec.describe TopicLink do
         expect(array[1].clicks).to eq(1)
       end
 
-      it "secures internal links correctly" do
+      it "hides restricted internal links from users without category access" do
         category = Fabricate(:category)
         secret_topic = Fabricate(:topic, category: category)
 
@@ -614,7 +614,7 @@ RSpec.describe TopicLink do
         expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(0)
       end
 
-      it "secures internal links correctly" do
+      it "excludes links to topics muted by the user" do
         other_topic = Fabricate(:topic)
         other_user = Fabricate(:user)
 
@@ -642,7 +642,7 @@ RSpec.describe TopicLink do
         Fabricate(:post, user: user, raw: "Check out this topic #{post.topic.url}/122131")
       end
 
-      it "should return the right response" do
+      it "returns metadata for the duplicate internal link" do
         TopicLink.extract_from(post_with_internal_link)
 
         result = TopicLink.duplicate_lookup(post_with_internal_link.topic)

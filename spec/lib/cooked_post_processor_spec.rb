@@ -82,7 +82,7 @@ RSpec.describe CookedPostProcessor do
         Oneboxer.invalidate(url)
       end
 
-      it "should respect SiteSetting.max_oneboxes_per_post" do
+      it "respects SiteSetting.max_oneboxes_per_post" do
         SiteSetting.max_oneboxes_per_post = 2
         SiteSetting.add_rel_nofollow_to_user_content = false
 
@@ -200,7 +200,7 @@ RSpec.describe CookedPostProcessor do
 
         after { urls.each { |url| InlineOneboxer.invalidate(url) } }
 
-        it "should convert the right links to inline oneboxes" do
+        it "converts eligible links to inline oneboxes" do
           cpp.post_process
           html = cpp.html
 
@@ -514,7 +514,7 @@ RSpec.describe CookedPostProcessor do
               )
           end
 
-          it "should not add lightbox" do
+          it "does not add a lightbox" do
             FastImage.expects(:size).returns([1750, 2000])
 
             cpp.post_process
@@ -534,7 +534,7 @@ RSpec.describe CookedPostProcessor do
             )
           end
 
-          it "should not add lightbox" do
+          it "does not add a lightbox" do
             FastImage.expects(:size).returns([1750, 2000])
 
             cpp.post_process
@@ -554,7 +554,7 @@ RSpec.describe CookedPostProcessor do
               )
             end
 
-            it "should not add lightbox" do
+            it "does not add a lightbox" do
               FastImage.expects(:size).returns([1750, 2000])
 
               cpp.post_process
@@ -767,7 +767,7 @@ RSpec.describe CookedPostProcessor do
           expect(cpp).to be_dirty
         end
 
-        it "should escape the filename" do
+        it "escapes the filename" do
           upload.update!(original_filename: "><img src=x onerror=alert('haha')>.png")
           cpp.post_process
 
@@ -1215,7 +1215,7 @@ RSpec.describe CookedPostProcessor do
         expect(doc.css("img.animated").size).to eq(1)
       end
 
-      it "marks giphy images as animated" do
+      it "marks Tenor images as animated" do
         post =
           Fabricate(
             :post,
@@ -2094,7 +2094,7 @@ RSpec.describe CookedPostProcessor do
         test
       MARKDOWN
 
-      it "should not be marked as modified" do
+      it "leaves the quote unmarked as modified" do
         cpp.post_process_quotes
         expect(cpp.doc.css("aside.quote.quote-modified")).to be_blank
       end
@@ -2108,7 +2108,7 @@ RSpec.describe CookedPostProcessor do
         test
       MARKDOWN
 
-      it "should be marked as modified" do
+      it "marks the quote as modified" do
         cpp.post_process_quotes
         expect(cpp.doc.css("aside.quote.quote-modified")).to be_present
       end
@@ -2122,7 +2122,7 @@ RSpec.describe CookedPostProcessor do
         and this is a reply
       MARKDOWN
 
-      it "it should be marked as missing" do
+      it "marks the quoted post as missing" do
         cpp.post_process_quotes
         expect(cpp.doc.css("aside.quote.quote-post-not-found")).to be_present
       end
@@ -2171,7 +2171,7 @@ RSpec.describe CookedPostProcessor do
 
     before { SiteSetting.remove_full_quote = true }
 
-    it "works" do
+    it "removes the full quote while preserving intervening hidden and action posts" do
       hidden =
         Fabricate(
           :post,

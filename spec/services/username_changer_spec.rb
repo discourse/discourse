@@ -9,7 +9,7 @@ RSpec.describe UsernameChanger do
     context "when everything goes well" do
       let!(:old_username) { user.username }
 
-      it "should change the username" do
+      it "changes the username" do
         new_username = "#{user.username}1234"
 
         events =
@@ -49,7 +49,7 @@ RSpec.describe UsernameChanger do
       let(:username_before_change) { user.username }
       let(:username_lower_before_change) { user.username_lower }
 
-      it "should not change the username" do
+      it "does not change the username" do
         @result = UsernameChanger.change(user, wrong_username)
         expect(@result).to eq(false)
 
@@ -62,7 +62,7 @@ RSpec.describe UsernameChanger do
     context "when changing the case of my username" do
       let!(:myself) { Fabricate(:user, username: "hansolo") }
 
-      it "should change the username" do
+      it "changes the username" do
         expect do
           expect(UsernameChanger.change(myself, "HanSolo", myself)).to eq(true)
         end.to change { UserHistory.count }.by(1)
@@ -87,17 +87,17 @@ RSpec.describe UsernameChanger do
         SiteSetting.min_username_length = @custom_min
       end
 
-      it "should allow a shorter username than default" do
+      it "allows a username shorter than the default minimum" do
         result = UsernameChanger.change(user, "a" * @custom_min)
         expect(result).not_to eq(false)
       end
 
-      it "should not allow a shorter username than limit" do
+      it "rejects a username shorter than the configured minimum" do
         result = UsernameChanger.change(user, "a" * (@custom_min - 1))
         expect(result).to eq(false)
       end
 
-      it "should not allow a longer username than limit" do
+      it "rejects a username longer than the maximum" do
         result = UsernameChanger.change(user, "a" * (User.username_length.end + 1))
         expect(result).to eq(false)
       end
@@ -380,7 +380,7 @@ RSpec.describe UsernameChanger do
 
           let(:user) { Fabricate(:user, username: "թռչուն") }
 
-          it "it correctly updates mentions" do
+          it "updates mentions" do
             post = create_post_and_change_username(raw: "Hello @թռչուն", target_username: "птица")
 
             expect(post.raw).to eq("Hello @птица")

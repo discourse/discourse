@@ -137,7 +137,7 @@ RSpec.describe UserProfile do
     context "with website validation" do
       let(:user_profile) { Fabricate.build(:user_profile, user: Fabricate(:user)) }
 
-      it "should not allow invalid URLs" do
+      it "rejects invalid URLs" do
         user_profile.website = "http://https://google.com"
         expect(user_profile).to_not be_valid
       end
@@ -192,7 +192,7 @@ RSpec.describe UserProfile do
       user.user_profile.reload
     end
 
-    it "should markdown the raw_bio and put it in cooked_bio" do
+    it "cooks raw_bio into cooked_bio" do
       expect(user.user_profile.bio_cooked).to eq("<p><strong>turtle power!</strong></p>")
     end
   end
@@ -328,7 +328,7 @@ RSpec.describe UserProfile do
     end
 
     describe "when profile_background_url returns an invalid status code" do
-      it "should not do anything" do
+      it "leaves the featured topic unchanged" do
         url = "http://thisfakesomething.something.com/"
 
         UserProfile.import_url_for_user(url, user, is_card_background: false)
@@ -340,7 +340,7 @@ RSpec.describe UserProfile do
     end
 
     describe "when card_background_url returns an invalid status code" do
-      it "should not do anything" do
+      it "leaves the featured topic unchanged" do
         url = "http://thisfakesomething.something.com/"
 
         UserProfile.import_url_for_user(url, user, is_card_background: true)

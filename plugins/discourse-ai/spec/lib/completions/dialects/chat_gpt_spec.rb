@@ -20,7 +20,7 @@ RSpec.describe DiscourseAi::Completions::Dialects::ChatGpt do
       expect(translated).to contain_exactly(*open_ai_version)
     end
 
-    it "will retain usernames for unicode usernames, correctly in mixed mode" do
+    it "retains Unicode usernames correctly in mixed mode" do
       prompt =
         DiscourseAi::Completions::Prompt.new(
           "You are a bot",

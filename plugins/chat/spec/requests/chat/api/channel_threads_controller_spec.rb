@@ -35,7 +35,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         )
       end
 
-      it "works" do
+      it "returns the requested thread" do
         get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
         expect(response.status).to eq(200)
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)

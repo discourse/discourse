@@ -3,7 +3,7 @@
 RSpec.shared_examples "a generic error" do
   let(:result) { creator.create_errors_json(obj) }
 
-  it "should have a result object" do
+  it "includes a result object" do
     expect(result).to be_present
   end
 

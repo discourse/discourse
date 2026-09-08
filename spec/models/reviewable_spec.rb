@@ -42,7 +42,7 @@ RSpec.describe Reviewable, type: :model do
     fab!(:admin)
     fab!(:user)
 
-    it "will return a new reviewable the first them, and re-use the second time" do
+    it "creates a reviewable on the first call and reuses it on the second" do
       r0 = ReviewableUser.needs_review!(target: user, created_by: admin)
       expect(r0).to be_present
 
@@ -53,14 +53,14 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
     end
 
-    it "will add a topic and category from a post" do
+    it "adds the topic and category from the post" do
       post = Fabricate(:post)
       reviewable = ReviewableFlaggedPost.needs_review!(target: post, created_by: Fabricate(:user))
       expect(reviewable.topic).to eq(post.topic)
       expect(reviewable.category).to eq(post.topic.category)
     end
 
-    it "will update the category if the topic category changes" do
+    it "updates the category when the topic's category changes" do
       post = Fabricate(:post)
       moderator = Fabricate(:moderator, refresh_auto_groups: true)
       reviewable = PostActionCreator.spam(moderator, post).reviewable
@@ -96,7 +96,7 @@ RSpec.describe Reviewable, type: :model do
       expect(r0.pending?).to eq(false)
     end
 
-    it "will create a new reviewable when an existing reviewable exists the same target with different type" do
+    it "creates a new reviewable when the target has a reviewable of another type" do
       r0 = Fabricate(:reviewable_queued_post)
       r0.perform(admin, :approve_post)
 
@@ -104,7 +104,7 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
     end
 
-    it "will not resurrect an approved queued reviewable when reusing a flagged reviewable for the same target" do
+    it "preserves an approved queued reviewable when reusing the target's flagged reviewable" do
       r0 = Fabricate(:reviewable_queued_post)
       r0.perform(admin, :approve_post)
       expect(r0.reload.status).to eq("approved")
@@ -681,7 +681,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe ".score_required_to_hide_post" do
-    it "will return the default visibility if it's higher" do
+    it "returns the default visibility when it is higher" do
       described_class.set_priorities(low: 40.0, high: 100.0)
       SiteSetting.hide_post_sensitivity = described_class.sensitivities[:high]
       expect(described_class.score_required_to_hide_post).to eq(40.0)
@@ -799,7 +799,7 @@ RSpec.describe Reviewable, type: :model do
       expect(Reviewable.min_score_for_priority(:high)).to eq(123.45)
     end
 
-    it "will return the default priority if none supplied" do
+    it "returns the default priority when none is supplied" do
       Reviewable.set_priorities(medium: 12.3, high: 45.6)
       expect(Reviewable.min_score_for_priority).to eq(0.0)
       SiteSetting.reviewable_default_visibility = "medium"
@@ -893,7 +893,7 @@ RSpec.describe Reviewable, type: :model do
     end
 
     context "when listing for a moderator with a custom filter that joins tables with same named columns" do
-      it "should not error" do
+      it "handles joins with matching column names without error" do
         first_reviewable = Fabricate(:reviewable)
         second_reviewable = Fabricate(:reviewable)
         custom_filter = [

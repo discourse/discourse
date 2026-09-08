@@ -320,7 +320,7 @@ RSpec.describe PostGuardian do
       fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       describe "when post has been deleted" do
-        it "should return the right value" do
+        it "allows a moderator to recover a post they deleted" do
           expect(Guardian.new(moderator).can_recover_post?(post)).to be_falsey
 
           PostDestroyer.new(moderator, post).destroy
@@ -329,7 +329,7 @@ RSpec.describe PostGuardian do
         end
 
         describe "when post's user has been deleted" do
-          it "should return the right value" do
+          it "allows a moderator to recover a post whose author was deleted" do
             PostDestroyer.new(moderator, post).destroy
             post.user.destroy!
 

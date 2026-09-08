@@ -18,7 +18,7 @@ describe Jobs::SiteSettingUpdateDefaultTags do
         TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
       end
 
-      it "should update existing users user preference" do
+      it "updates existing users' preferences" do
         job.execute(
           id: "default_tags_watching",
           value: tags.last(2).pluck(:name).join("|"),
@@ -31,7 +31,7 @@ describe Jobs::SiteSettingUpdateDefaultTags do
         )
       end
 
-      it "should publish a MessageBus informing the correct groups" do
+      it "publishes a MessageBus message for the affected groups" do
         messages =
           MessageBus.track_publish("/site_setting/default_tags_watching/process") do
             job.execute(

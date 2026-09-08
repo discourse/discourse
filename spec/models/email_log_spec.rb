@@ -116,7 +116,7 @@ RSpec.describe EmailLog do
   end
 
   describe "#bounce_key" do
-    it "should format the bounce_key correctly" do
+    it "formats the bounce_key correctly" do
       hex = SecureRandom.hex
       email_log = Fabricate(:email_log, user: user, bounce_key: hex)
 

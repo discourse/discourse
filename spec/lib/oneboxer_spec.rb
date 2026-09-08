@@ -172,7 +172,7 @@ RSpec.describe Oneboxer do
       expect(preview("/u/#{user.username}")).to include(user.name)
     end
 
-    it "should respect enable_names site setting" do
+    it "respects the enable_names site setting" do
       user = Fabricate(:user)
       user.user_stat.update!(post_count: 1)
 
@@ -386,7 +386,7 @@ RSpec.describe Oneboxer do
   end
 
   describe ".onebox_raw" do
-    it "should escape the onebox URL before processing" do
+    it "escapes the onebox URL before processing" do
       post = Fabricate(:post, raw: Discourse.base_url + "/new?'class=black")
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
       cpp.post_process_oneboxes

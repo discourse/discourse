@@ -495,7 +495,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
         expect(settings.type_supervisor.to_rb_value(:type_custom, "2|3")).to eq "2|3"
       end
 
-      it "should not modify the types of settings" do
+      it "does not modify setting types" do
         types = SiteSettings::TypeSupervisor.types
         settings.type_supervisor.to_rb_value(:default_locale, "fr", types[:enum])
         expect(settings.type_supervisor.to_db_value(:default_locale, "en")).to eq(
@@ -511,7 +511,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
       settings.setting(:type_upload, "", type: :upload)
     end
 
-    it "should return the right type that has been registered" do
+    it "returns the registered type" do
       expect(settings.type_supervisor.get_type(:type_null)).to eq(:null)
       expect(settings.type_supervisor.get_type(:type_upload)).to eq(:upload)
     end

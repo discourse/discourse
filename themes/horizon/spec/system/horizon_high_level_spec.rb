@@ -79,7 +79,7 @@ describe "Horizon theme | High level" do
   context "for signed in users" do
     before { sign_in(current_user) }
 
-    it "works" do
+    it "passes the high-level checks for a signed-in user" do
       visit "/"
       run_all_high_level_tests
     end

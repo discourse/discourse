@@ -154,7 +154,7 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
       let(:zendesk_job_push_only_author_posts) { false }
 
       context "with same author" do
-        it "should be true" do
+        it "marks the post as eligible" do
           expect(eligible).to be_truthy
         end
       end
@@ -162,7 +162,7 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
       context "with different author" do
         let(:post_user) { other_user }
 
-        it "should be true" do
+        it "marks the post as eligible" do
           expect(eligible).to be_truthy
         end
       end
@@ -172,7 +172,7 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
       let(:zendesk_job_push_only_author_posts) { true }
 
       context "with same author" do
-        it "should be true" do
+        it "marks the post as eligible" do
           expect(eligible).to be_truthy
         end
       end
@@ -180,7 +180,7 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
       context "with different author" do
         let(:post_user) { other_user }
 
-        it "should be false" do
+        it "marks the post as ineligible" do
           expect(eligible).to be_falsey
         end
       end

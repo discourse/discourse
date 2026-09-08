@@ -649,7 +649,7 @@ RSpec.describe AssetProcessor do
     expect(AssetProcessor.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
   end
 
-  it "errors on missing relative imports" do
+  it "errors on missing relative imports for a plugin without a hyphenated name" do
     mod_1 = <<~JS.chomp
       import SomeModule from "../some-module";
       console.log(SomeModule);

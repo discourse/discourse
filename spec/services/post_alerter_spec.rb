@@ -585,7 +585,7 @@ RSpec.describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(2)
     end
 
-    it "won't notify the user a second time on revision" do
+    it "does not notify the user again on revision" do
       p1 = create_post_with_alerts(raw: '[quote="Evil Trout, post:1"]whatup[/quote]')
       expect {
         p1.revise(p1.user, raw: '[quote="Evil Trout, post:1"]whatup now?[/quote]')
@@ -677,7 +677,7 @@ RSpec.describe PostAlerter do
 
     before { Jobs.run_immediately! }
 
-    it "will notify correctly on linking" do
+    it "notifies the linked user" do
       linking_post
 
       expect(user.notifications.count).to eq(1)
@@ -873,7 +873,7 @@ RSpec.describe PostAlerter do
       expect { mention_post }.to change(evil_trout.notifications, :count).by(1)
     end
 
-    it "won't notify the user a second time on revision" do
+    it "does not notify the user again on revision" do
       mention_post
       expect {
         mention_post.revise(
@@ -1876,7 +1876,7 @@ RSpec.describe PostAlerter do
       ).to eq(true)
     end
 
-    it "it doesn't notify about small action posts when the topic author is watching the topic " do
+    it "does not notify the watching topic author about small action posts" do
       Jobs.run_immediately!
 
       u1 = Fabricate(:admin)
@@ -2743,7 +2743,7 @@ RSpec.describe PostAlerter do
         )
       end
 
-      it "should use the first post of the topic" do
+      it "uses the first post of the topic" do
         topic_link
         expect(PostAlerter.new.extract_linked_users(post.reload)).to eq([post2.user])
       end

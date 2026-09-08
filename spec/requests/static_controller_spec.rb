@@ -156,7 +156,7 @@ RSpec.describe StaticController do
     end
 
     context "with a static file that's present" do
-      it "should return the right response for /faq" do
+      it "returns the expected response for /faq" do
         get "/faq"
 
         expect(response).to redirect_to("/guidelines")
@@ -244,31 +244,31 @@ RSpec.describe StaticController do
     end
 
     context "with a missing file" do
-      it "should respond 404" do
+      it "responds with 404" do
         get "/static/does-not-exist"
         expect(response.status).to eq(404)
       end
 
       context "with modal pages" do
-        it "should return the right response for /signup" do
+        it "returns the expected response for /signup" do
           get "/signup"
           expect(response.status).to eq(200)
         end
 
-        it "should return the right response for /password-reset" do
+        it "returns the expected response for /password-reset" do
           get "/password-reset"
           expect(response.status).to eq(200)
         end
       end
     end
 
-    it "should redirect to / when logged in and path is /login without redirect" do
+    it "redirects a logged-in user from /login to /" do
       sign_in(Fabricate(:user))
       get "/login"
       expect(response).to redirect_to("/")
     end
 
-    it "should display the login template when login is required" do
+    it "displays the login template when login is required" do
       SiteSetting.login_required = true
 
       get "/login"
@@ -311,7 +311,7 @@ RSpec.describe StaticController do
     end
 
     context "with crawler view" do
-      it "should include correct title" do
+      it "includes the correct title" do
         get "/guidelines", headers: { "HTTP_USER_AGENT" => "Googlebot" }
         expect(response.status).to eq(200)
         expect(response.body).to include("<title>Guidelines - Discourse</title>")
@@ -617,7 +617,7 @@ RSpec.describe StaticController do
   end
 
   describe "#service_worker_asset" do
-    it "works" do
+    it "renders the requested static page" do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("text/javascript")

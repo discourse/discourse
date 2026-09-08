@@ -30,13 +30,13 @@ RSpec.describe CategoryUser do
       ).pluck(:category_id)
     end
 
-    it "should add new records where required" do
+    it "adds missing category notification records" do
       CategoryUser.batch_set(user, :watching, [category.id])
 
       expect(category_ids_at_level(:watching)).to eq([category.id])
     end
 
-    it "should change existing records where required" do
+    it "updates existing category notification records" do
       CategoryUser.create!(
         user_id: user.id,
         category_id: category.id,
@@ -49,7 +49,7 @@ RSpec.describe CategoryUser do
       expect(category_ids_at_level(:muted)).to eq([])
     end
 
-    it "should delete extraneous records where required" do
+    it "deletes extraneous category notification records" do
       CategoryUser.create!(
         user_id: user.id,
         category_id: category.id,
@@ -61,18 +61,18 @@ RSpec.describe CategoryUser do
       expect(category_ids_at_level(:watching)).to eq([])
     end
 
-    it "should return true when something changed" do
+    it "returns true when something changes" do
       expect(CategoryUser.batch_set(user, :watching, [category.id])).to eq(true)
     end
 
-    it "should return false when nothing changed" do
+    it "returns false when nothing changes" do
       CategoryUser.batch_set(user, :watching, [category.id])
 
       expect(CategoryUser.batch_set(user, :watching, [category.id])).to eq(false)
     end
   end
 
-  it "should correctly auto_track" do
+  it "automatically tracks topics according to category preferences" do
     tracking_user = Fabricate(:user)
     topic = Fabricate(:post).topic
 
@@ -128,7 +128,7 @@ RSpec.describe CategoryUser do
       NotificationEmailer.enable
     end
 
-    it "should operate correctly" do
+    it "applies watched, muted, and tracked category preferences to topics" do
       watched_category = Fabricate(:category)
       muted_category = Fabricate(:category)
       tracked_category = Fabricate(:category)

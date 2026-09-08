@@ -30,7 +30,7 @@ RSpec.describe AiTool do
 
   before { enable_current_plugin }
 
-  it "it can run a basic tool" do
+  it "runs a basic tool" do
     tool = create_tool
 
     expect(tool.signature).to eq(

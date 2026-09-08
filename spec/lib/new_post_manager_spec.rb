@@ -6,7 +6,7 @@ RSpec.describe NewPostManager do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
 
-  describe "default action" do
+  describe "default action for regular posts" do
     it "creates the post by default" do
       manager = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id)
       result = manager.perform
@@ -18,7 +18,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  describe "default action" do
+  describe "default action for private messages" do
     fab!(:other_user, :user)
 
     it "doesn't enqueue private messages" do
@@ -150,7 +150,7 @@ RSpec.describe NewPostManager do
         topic.user.trust_level = 0
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -164,7 +164,7 @@ RSpec.describe NewPostManager do
         topic.user.trust_level = 1
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -178,7 +178,7 @@ RSpec.describe NewPostManager do
         user.update!(trust_level: 2)
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(result).to be_nil
       end
@@ -206,7 +206,7 @@ RSpec.describe NewPostManager do
     context "with a high trust level setting" do
       before { SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -220,7 +220,7 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         npm =
           NewPostManager.new(
             user,
@@ -242,7 +242,7 @@ RSpec.describe NewPostManager do
         user.update!(staged: true)
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -407,7 +407,7 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -872,7 +872,7 @@ RSpec.describe NewPostManager do
       topic.user.trust_level = 0
     end
 
-    it "will store via_email and raw_email in the enqueued post" do
+    it "stores via_email and raw_email in the enqueued post" do
       result = manager.perform
       expect(result.action).to eq(:enqueued)
       expect(result.reviewable).to be_present

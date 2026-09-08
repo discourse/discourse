@@ -21,7 +21,7 @@ describe "AutoTagTopic" do
   context "when there are tags" do
     before { automation.upsert_field!("tags", "tags", { value: %w[tag1 tag2] }) }
 
-    it "works" do
+    it "adds the configured tags" do
       post = create_post(topic: topic)
       automation.trigger!("post" => post)
 
@@ -46,7 +46,7 @@ describe "AutoTagTopic" do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["restricted"])
       end
 
-      it "works" do
+      it "adds a restricted tag" do
         post = create_post(topic: topic)
         automation.trigger!("post" => post)
         expect(topic.reload.tags.pluck(:name).sort).to match_array(["restricted"])
@@ -60,7 +60,7 @@ describe "AutoTagTopic" do
         CategoryTag.create!(category: restricted_category, tag: restricted_tag)
       end
 
-      it "works" do
+      it "adds a tag restricted to the topic category" do
         topic.update!(category: restricted_category)
         post = create_post(topic: topic)
         automation.trigger!("post" => post)
@@ -95,7 +95,7 @@ describe "AutoTagTopic" do
           )
         end
 
-        it "works" do
+        it "adds the configured tags after an automatic closure" do
           automation.trigger!("topic" => topic, "status" => :automatically)
 
           expect(topic.reload.tags.pluck(:name)).to match_array(%w[tag1 tag2])

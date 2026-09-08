@@ -116,7 +116,7 @@ RSpec.describe ScreenedIpAddress do
 
   describe "#watch" do
     context "when ip_address is not being watched" do
-      it "should create a new record" do
+      it "creates a new record" do
         record = described_class.watch(ip_address)
         expect(record).not_to be_new_record
         expect(record.action_type).to eq(described_class.actions[:block])
@@ -142,7 +142,7 @@ RSpec.describe ScreenedIpAddress do
 
     context "when ip_address is already being watched" do
       shared_examples "exact match of ip address" do
-        it "should not create a new record" do
+        it "does not create a new record" do
           expect { described_class.watch(ip_address_arg) }.to_not change { described_class.count }
         end
 

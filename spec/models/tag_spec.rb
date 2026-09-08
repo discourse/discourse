@@ -13,7 +13,7 @@ RSpec.describe Tag do
   end
 
   describe "Associations" do
-    it "should delete associated sidebar_section_links when tag is destroyed" do
+    it "deletes associated sidebar_section_links when the tag is destroyed" do
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
       tag_sidebar_section_link_2 =
         Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
@@ -362,7 +362,7 @@ RSpec.describe Tag do
   end
 
   describe ".ensure_consistency!" do
-    it "should exclude private message topics" do
+    it "excludes private-message topics" do
       topic
       Fabricate(:private_message_topic, tags: [tag])
       Tag.ensure_consistency!
@@ -371,7 +371,7 @@ RSpec.describe Tag do
       expect(tag.public_topic_count).to eq(1)
     end
 
-    it "should update Tag#topic_count and Tag#public_topic_count correctly" do
+    it "updates Tag#topic_count and Tag#public_topic_count correctly" do
       tag = Fabricate(:tag, name: "tag1")
       tag2 = Fabricate(:tag, name: "tag2")
       tag3 = Fabricate(:tag, name: "tag3")

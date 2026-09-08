@@ -33,7 +33,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
         describe "Can't post on parent category" do
           describe "Category has subcategory" do
-            it "should have 'New Topic' button enabled and default Subcategory set in the composer" do
+            it "enables New Topic and selects the default subcategory" do
               category_page.visit(category)
               expect(category_page).to have_button("New Topic", disabled: false)
               category_page.new_topic_button.click
@@ -44,7 +44,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
           end
 
           describe "Category does not have subcategory" do
-            it "should have the 'New Topic' button enabled and no category set in the composer" do
+            it "enables New Topic without selecting a category" do
               category_page.visit(category_with_no_subcategory)
               expect(category_page).to have_button("New Topic", disabled: false)
 
@@ -58,7 +58,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
         end
 
         describe "Can post on home page" do
-          it "should have the default category set in the composer" do
+          it "selects the default category in the composer" do
             page.visit("latest")
             expect(page).to have_button("New Topic", disabled: false)
             page.find("#create-topic").click

@@ -305,7 +305,7 @@ RSpec.describe UserBadgesController do
       )
     end
 
-    it "will trigger :user_badge_granted" do
+    it "triggers user_badge_granted" do
       sign_in(Fabricate(:admin))
 
       events =
@@ -431,7 +431,7 @@ RSpec.describe UserBadgesController do
       expect(UserHistory.where(acting_user: admin, target_user: user).count).to eq(1)
     end
 
-    it "will trigger :user_badge_removed" do
+    it "triggers user_badge_removed" do
       sign_in(Fabricate(:admin))
 
       events =

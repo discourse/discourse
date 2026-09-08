@@ -19,7 +19,7 @@ RSpec.describe TranslationOverride do
       end
 
       describe "when interpolation keys are missing" do
-        it "should not be valid" do
+        it "is invalid" do
           translation_override =
             TranslationOverride.upsert!(
               I18n.locale,
@@ -46,7 +46,7 @@ RSpec.describe TranslationOverride do
             user_notifications.visit_link_to_respond
             user_notifications.visit_link_to_respond_pm
           ].each do |i18n_key|
-            it "should validate keys for #{i18n_key}" do
+            it "validates keys for #{i18n_key}" do
               interpolation_key_names =
                 described_class.custom_interpolation_keys("user_notifications.user_")
 
@@ -70,7 +70,7 @@ RSpec.describe TranslationOverride do
             end
           end
 
-          it "should validate keys that shouldn't be used outside of user_notifications" do
+          it "validates keys reserved for user_notifications" do
             I18n.backend.store_translations(:en, "not_a_notification" => "Test %{key1}")
             translation_override =
               TranslationOverride.upsert!(
@@ -90,7 +90,7 @@ RSpec.describe TranslationOverride do
       end
 
       describe "with valid custom interpolation keys" do
-        it "works" do
+        it "creates a valid translation override" do
           translation_override =
             TranslationOverride.upsert!(
               I18n.locale,

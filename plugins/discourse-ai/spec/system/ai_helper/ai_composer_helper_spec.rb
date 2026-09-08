@@ -565,7 +565,7 @@ RSpec.describe "AI Composer helper" do
   end
 
   context "when triggering composer AI helper", mobile: true do
-    it "should close the composer helper before showing the diff modal" do
+    it "closes the composer helper before showing the diff modal" do
       visit("/latest")
       page.find("#create-topic").click
       composer.fill_content(input)

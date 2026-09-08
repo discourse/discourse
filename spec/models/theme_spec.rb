@@ -119,14 +119,14 @@ RSpec.describe Theme do
     )
   end
 
-  it "should correct bad html in body_tag_baked and head_tag_baked" do
+  it "corrects malformed HTML in body_tag_baked and head_tag_baked" do
     theme.set_field(target: :common, name: "head_tag", value: "<b>I am bold")
     theme.save!
 
     expect(Theme.lookup_field(theme.id, :desktop, "head_tag")).to eq("<b>I am bold</b>")
   end
 
-  it "should create body_tag_baked on demand if needed" do
+  it "creates body_tag_baked on demand" do
     theme.set_field(target: :common, name: :body_tag, value: "<b>test")
     theme.save
 

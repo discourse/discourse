@@ -171,16 +171,16 @@ RSpec.describe InviteGuardian do
 
         let(:topic) { Fabricate(:topic, category: category) }
 
-        it "should return true for an admin user" do
+        it "returns true for an admin" do
           expect(Guardian.new(admin).can_invite_to?(topic)).to eq(true)
         end
 
-        it "should return true for a group owner" do
+        it "returns true for a group owner" do
           group_owner.update!(trust_level: 2)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
         end
 
-        it "should return false for a normal user" do
+        it "returns false for a regular user" do
           expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)
         end
       end
@@ -193,7 +193,7 @@ RSpec.describe InviteGuardian do
         let(:group_owner) { Fabricate(:user).tap { |user| automatic_group.add_owner(user) } }
         let(:topic) { Fabricate(:topic, category: category) }
 
-        it "should return false for all type of users" do
+        it "returns false for every user type" do
           expect(Guardian.new(admin).can_invite_to?(topic)).to eq(false)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(false)
           expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)

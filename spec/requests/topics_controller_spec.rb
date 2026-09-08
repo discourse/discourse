@@ -236,7 +236,7 @@ RSpec.describe TopicsController do
         end
 
         describe "when topic has been deleted" do
-          it "should still be able to move posts" do
+          it "still allows posts to be moved" do
             PostDestroyer.new(admin, topic.first_post, context: "Automated testing").destroy
 
             expect(topic.reload.deleted_at).to_not be_nil
@@ -730,7 +730,7 @@ RSpec.describe TopicsController do
         end
 
         describe "when message has been deleted" do
-          it "should still be able to move posts" do
+          it "still allows posts to be moved" do
             PostDestroyer.new(admin, message.first_post).destroy
 
             expect(message.reload.deleted_at).to_not be_nil
@@ -1464,7 +1464,7 @@ RSpec.describe TopicsController do
         Fabricate(:post, user: post_author2, topic: topic, created_at: old_timestamp + 1.day)
       end
 
-      it "should update the timestamps of selected posts" do
+      it "updates timestamps for the selected posts" do
         # try to see if we fail with invalid first
         put "/t/1/change-timestamp.json"
         expect(response.status).to eq(400)
@@ -1477,7 +1477,7 @@ RSpec.describe TopicsController do
         expect(p2.reload.created_at).to eq_time(old_timestamp)
       end
 
-      it "should create a staff log entry" do
+      it "creates a staff log entry" do
         put "/t/#{topic.id}/change-timestamp.json", params: { timestamp: new_timestamp.to_f }
 
         log = UserHistory.last
@@ -1504,7 +1504,7 @@ RSpec.describe TopicsController do
       end
 
       describe "when the user can see the topic" do
-        it "succeeds" do
+        it "clears the topic pin" do
           expect do put "/t/#{topic.id}/clear-pin.json" end.to change {
             TopicUser.where(topic_id: topic.id, user_id: user.id).count
           }.by(1)
@@ -1544,7 +1544,7 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
-      it "should update the status of the topic correctly" do
+      it "updates the topic status" do
         closed_user_topic = Fabricate(:topic, user: user, closed: true)
         Fabricate(:topic_timer, topic: closed_user_topic, status_type: TopicTimer.types[:open])
 
@@ -1559,7 +1559,7 @@ RSpec.describe TopicsController do
         expect(body["topic_status_update"]).to eq(nil)
       end
 
-      it "should update the status when `enabled` is a truthy value" do
+      it "updates the status when enabled is truthy" do
         closed_user_topic = Fabricate(:topic, user: user, closed: false)
 
         put "/t/#{closed_user_topic.id}/status.json", params: { status: "closed", enabled: "t" }
@@ -1591,7 +1591,7 @@ RSpec.describe TopicsController do
         SiteSetting.enable_category_group_moderation = true
       end
 
-      it "should allow a group moderator to close a topic" do
+      it "allows a group moderator to close a topic" do
         put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: "true" }
 
         expect(response.status).to eq(200)
@@ -1599,7 +1599,7 @@ RSpec.describe TopicsController do
         expect(topic.posts.last.action_code).to eq("closed.enabled")
       end
 
-      it "should allow a group moderator to open a closed topic" do
+      it "allows a group moderator to reopen a topic" do
         topic.update!(closed: true)
 
         expect do
@@ -1611,7 +1611,7 @@ RSpec.describe TopicsController do
         expect(topic.posts.last.action_code).to eq("closed.disabled")
       end
 
-      it "should allow a group moderator to archive a topic" do
+      it "allows a group moderator to archive a topic" do
         expect do
           put "/t/#{topic.id}/status.json", params: { status: "archived", enabled: "true" }
         end.to change { topic.reload.posts.count }.by(1)
@@ -1621,7 +1621,7 @@ RSpec.describe TopicsController do
         expect(topic.posts.last.action_code).to eq("archived.enabled")
       end
 
-      it "should allow a group moderator to unarchive an archived topic" do
+      it "allows a group moderator to unarchive a topic" do
         topic.update!(archived: true)
 
         put "/t/#{topic.id}/status.json", params: { status: "archived", enabled: "false" }
@@ -1631,7 +1631,7 @@ RSpec.describe TopicsController do
         expect(topic.posts.last.action_code).to eq("archived.disabled")
       end
 
-      it "should allow a group moderator to pin a topic" do
+      it "allows a group moderator to pin a topic" do
         put "/t/#{topic.id}/status.json",
             params: {
               status: "pinned",
@@ -1643,14 +1643,14 @@ RSpec.describe TopicsController do
         expect(topic.reload.pinned_at).to_not eq(nil)
       end
 
-      it "should allow a group moderator to unpin a topic" do
+      it "allows a group moderator to unpin a topic" do
         put "/t/#{topic.id}/status.json", params: { status: "pinned", enabled: "false" }
 
         expect(response.status).to eq(200)
         expect(topic.reload.pinned_at).to eq(nil)
       end
 
-      it "should allow a group moderator to unlist a topic" do
+      it "allows a group moderator to unlist a topic" do
         put "/t/#{topic.id}/status.json", params: { status: "visible", enabled: "false" }
 
         expect(response.status).to eq(200)
@@ -1661,7 +1661,7 @@ RSpec.describe TopicsController do
         expect(topic.posts.last.action_code).to eq("visible.disabled")
       end
 
-      it "should allow a group moderator to list an unlisted topic" do
+      it "allows a group moderator to relist a topic" do
         topic.update!(visible: false)
 
         put "/t/#{topic.id}/status.json", params: { status: "visible", enabled: "true" }
@@ -1848,7 +1848,7 @@ RSpec.describe TopicsController do
     end
 
     context "for last post only" do
-      it "should allow you to retain topic timing but remove last post only" do
+      it "retains topic timing while removing only the last post" do
         freeze_time
 
         post1 = create_post
@@ -1968,7 +1968,7 @@ RSpec.describe TopicsController do
   end
 
   describe "#recover" do
-    it "won't allow us to recover a topic when we're not logged in" do
+    it "does not recover a topic for an anonymous user" do
       put "/t/1/recover.json"
       expect(response.status).to eq(403)
     end
@@ -2007,7 +2007,7 @@ RSpec.describe TopicsController do
       context "with permission" do
         before { sign_in(moderator) }
 
-        it "succeeds" do
+        it "recovers the topic" do
           put "/t/#{topic.id}/recover.json"
           topic.reload
           post.reload
@@ -2086,7 +2086,7 @@ RSpec.describe TopicsController do
   end
 
   describe "#delete" do
-    it "won't allow us to delete a topic when we're not logged in" do
+    it "does not delete a topic for an anonymous user" do
       delete "/t/1.json"
       expect(response.status).to eq(403)
     end
@@ -2106,7 +2106,7 @@ RSpec.describe TopicsController do
       describe "with permission" do
         before { sign_in(moderator) }
 
-        it "succeeds" do
+        it "deletes the topic" do
           delete "/t/#{topic.id}.json"
           expect(response.status).to eq(200)
           topic.reload
@@ -2272,7 +2272,7 @@ RSpec.describe TopicsController do
   end
 
   describe "#update" do
-    it "won't allow us to update a topic when we're not logged in" do
+    it "does not update a topic for an anonymous user" do
       put "/t/1.json", params: { slug: "xyz" }
       expect(response.status).to eq(403)
     end
@@ -2379,7 +2379,7 @@ RSpec.describe TopicsController do
         fab!(:post_hook, :post_web_hook)
         fab!(:topic_hook, :topic_web_hook)
 
-        it "succeeds" do
+        it "updates the topic" do
           put "/t/#{topic.slug}/#{topic.id}.json"
 
           expect(response.status).to eq(200)
@@ -2987,7 +2987,7 @@ RSpec.describe TopicsController do
             expect(topic.reload.tags.map(&:name)).not_to include(tag3.name)
           end
 
-          it "will clean tag params" do
+          it "cleans tag parameters" do
             restricted_category.allowed_tags = [tag2.name]
 
             put "/t/#{topic.slug}/#{topic.id}.json",
@@ -3214,7 +3214,7 @@ RSpec.describe TopicsController do
     end
 
     describe "when user does not have access to the topic" do
-      it "should return the right response" do
+      it "returns a not-found response" do
         sign_in(user)
 
         get "/t/external_id/private.json"
@@ -3230,7 +3230,7 @@ RSpec.describe TopicsController do
     fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
     describe "when topic is not allowed" do
-      it "should return the right response" do
+      it "returns a not-found response" do
         SiteSetting.detailed_404 = true
         sign_in(user)
 
@@ -3917,7 +3917,7 @@ RSpec.describe TopicsController do
         end
 
         expected_slug_response = expected[:secure_topic] == 200 ? 301 : expected[:secure_topic]
-        it "will return a #{expected_slug_response} when requesting a secure topic by slug" do
+        it "returns a #{expected_slug_response} for a secure topic requested by slug" do
           format = request_json ? ".json" : ""
           get "/t/#{secure_topic.slug}#{format}"
           expect(response.status).to eq(expected_slug_response)
@@ -4392,7 +4392,7 @@ RSpec.describe TopicsController do
         fab!(:quote_reply) { Fabricate(:basic_reply, user: user, topic: topic) }
         fab!(:post_reply) { PostReply.create(post_id: post2.id, reply_post_id: quote_reply.id) }
 
-        it "should return the right posts" do
+        it "returns replies to the selected post" do
           get "/t/#{topic.id}.json", params: { replies_to_post_number: post2.post_number }
 
           expect(response.status).to eq(200)
@@ -4434,7 +4434,7 @@ RSpec.describe TopicsController do
           )
         end
 
-        it "should return the right posts" do
+        it "returns top-level replies" do
           get "/t/#{topic.id}.json", params: { filter_top_level_replies: true }
 
           expect(response.status).to eq(200)
@@ -4469,7 +4469,7 @@ RSpec.describe TopicsController do
         end
         fab!(:post6) { Fabricate(:post, user: post_author6, topic: topic) }
 
-        it "should return the right posts" do
+        it "returns posts preceding the selected post" do
           get "/t/#{topic.id}.json", params: { filter_upwards_post_id: post5.id }
 
           expect(response.status).to eq(200)
@@ -4485,7 +4485,7 @@ RSpec.describe TopicsController do
           expect(ids).to eq([post.id, post4.id, post5.id, post6.id])
         end
 
-        it "should respect max_reply_history site setting" do
+        it "respects the max_reply_history site setting" do
           SiteSetting.max_reply_history = 2
 
           get "/t/#{topic.id}.json", params: { filter_upwards_post_id: post5.id }
@@ -4891,7 +4891,7 @@ RSpec.describe TopicsController do
         fab!(:post2) { Fabricate(:post, topic: topic, user: user) }
         fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
 
-        it "should return the right posts" do
+        it "returns post IDs matching the username filter" do
           get "/t/#{topic.id}/post_ids.json",
               params: {
                 post_number: post.post_number,
@@ -4910,7 +4910,7 @@ RSpec.describe TopicsController do
         fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic, percent_rank: 0.2) }
         fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
 
-        it "should return the right posts" do
+        it "returns summarized post IDs" do
           get "/t/#{topic.id}/post_ids.json",
               params: {
                 post_number: post.post_number,
@@ -4931,7 +4931,7 @@ RSpec.describe TopicsController do
 
         after { TopicView.custom_filters.clear }
 
-        it "should return the right posts" do
+        it "returns post IDs matching custom filters" do
           TopicView.add_custom_filter("percent") do |posts, topic_view|
             posts.where(percent_rank: 0.5)
           end
@@ -5013,7 +5013,7 @@ RSpec.describe TopicsController do
         fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic) }
         fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
 
-        it "should return the right posts" do
+        it "returns posts matching the username filter" do
           TopicView.stubs(:chunk_size).returns(2)
 
           get "/t/#{topic.id}/posts.json",
@@ -5035,7 +5035,7 @@ RSpec.describe TopicsController do
         fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic, percent_rank: 0.2) }
         fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
 
-        it "should return the right posts" do
+        it "returns summarized posts" do
           TopicView.stubs(:chunk_size).returns(2)
 
           get "/t/#{topic.id}/posts.json",
@@ -5788,7 +5788,7 @@ RSpec.describe TopicsController do
       expect(response.parsed_body["error_type"]).to eq("not_found")
     end
 
-    it "should remove bookmarks properly from non first post" do
+    it "removes bookmarks from a non-first post" do
       sign_in(user)
 
       post = create_post
@@ -5833,7 +5833,7 @@ RSpec.describe TopicsController do
       expect(response.parsed_body["error_type"]).to eq("not_found")
     end
 
-    it "should create a new bookmark for the topic" do
+    it "creates a topic bookmark" do
       post = create_post
       _post2 = create_post(topic_id: post.topic_id)
       put "/t/#{post.topic_id}/bookmark.json"
@@ -5852,7 +5852,7 @@ RSpec.describe TopicsController do
 
   describe "#reset_new" do
     context "when a user is not signed in" do
-      it "fails" do
+      it "requires authentication" do
         put "/topics/reset-new.json"
         expect(response.status).to eq(403)
       end
@@ -6707,7 +6707,7 @@ RSpec.describe TopicsController do
       Fabricate(:post, user: post_author1, topic: topic, post_type: Post.types[:whisper])
     end
 
-    it "should gracefully handle invalid timings sent in" do
+    it "ignores invalid timing values" do
       sign_in(user)
       params = {
         topic_id: topic.id,
@@ -6734,7 +6734,7 @@ RSpec.describe TopicsController do
       expect(tu.last_read_post_number).to eq(post_1.post_number)
     end
 
-    it "should gracefully handle invalid timings sent in from staff" do
+    it "ignores invalid timing values from staff" do
       sign_in(admin)
 
       post "/topics/timings.json",
@@ -6776,7 +6776,7 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "should record the timing" do
+    it "records the topic timing" do
       sign_in(user)
 
       post "/topics/timings.json",
@@ -6826,14 +6826,14 @@ RSpec.describe TopicsController do
 
   describe "#timer" do
     context "when a user is not logged in" do
-      it "should return the right response" do
+      it "requires authentication" do
         post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: TopicTimer.types[1] }
         expect(response.status).to eq(403)
       end
     end
 
     context "when does not have permission" do
-      it "should return the right response" do
+      it "forbids a user without permission" do
         sign_in(user)
 
         post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: TopicTimer.types[1] }
@@ -6889,7 +6889,7 @@ RSpec.describe TopicsController do
         sign_in(admin)
       end
 
-      it "should be able to create a topic status update" do
+      it "creates a topic status update" do
         post "/t/#{topic.id}/timer.json", params: { time: 24, status_type: TopicTimer.types[1] }
 
         expect(response.status).to eq(200)
@@ -6909,7 +6909,7 @@ RSpec.describe TopicsController do
         expect(json["closed"]).to eq(topic.reload.closed)
       end
 
-      it "should be able to delete a topic status update" do
+      it "deletes a topic status update" do
         Fabricate(:topic_timer, topic: topic)
 
         post "/t/#{topic.id}/timer.json", params: { time: nil, status_type: TopicTimer.types[1] }
@@ -6924,7 +6924,7 @@ RSpec.describe TopicsController do
         expect(json["closed"]).to eq(topic.closed)
       end
 
-      it "should be able to create a topic status update with duration" do
+      it "creates a topic status update with a duration" do
         post "/t/#{topic.id}/timer.json",
              params: {
                duration_minutes: 7200,
@@ -6948,7 +6948,7 @@ RSpec.describe TopicsController do
         expect(json["duration_minutes"]).to eq(topic_status_update.duration_minutes)
       end
 
-      it "should be able to delete a topic status update for delete_replies type" do
+      it "deletes a delete_replies topic status update" do
         Fabricate(:topic_timer, topic: topic, status_type: TopicTimer.types[:delete_replies])
 
         post "/t/#{topic.id}/timer.json", params: { time: nil, status_type: TopicTimer.types[7] }
@@ -6964,7 +6964,7 @@ RSpec.describe TopicsController do
       end
 
       describe "publishing topic to category in the future" do
-        it "should be able to create the topic status update" do
+        it "creates the topic status update" do
           post "/t/#{topic.id}/timer.json",
                params: {
                  time: 24,
@@ -6987,13 +6987,13 @@ RSpec.describe TopicsController do
       end
 
       describe "publishing topic to category without category_id" do
-        it "should return an error when setting a timer" do
+        it "returns an error when setting a timer" do
           post "/t/#{topic.id}/timer.json", params: { time: 24, status_type: "publish_to_category" }
 
           expect(response.status).to eq(404)
         end
 
-        it "should allow removing a timer" do
+        it "allows removing a timer" do
           topic.set_or_create_timer(
             TopicTimer.types[:publish_to_category],
             24,
@@ -7013,7 +7013,7 @@ RSpec.describe TopicsController do
       end
 
       describe "invalid status type" do
-        it "should raise the right error" do
+        it "returns the invalid-status error" do
           post "/t/#{topic.id}/timer.json", params: { time: 10, status_type: "something" }
           expect(response.status).to eq(400)
           expect(response.body).to include("status_type")
@@ -7243,7 +7243,7 @@ RSpec.describe TopicsController do
     describe "changes slow mode" do
       before { sign_in(admin) }
 
-      it "should create a staff log entry" do
+      it "creates a staff log entry" do
         put "/t/#{topic.id}/slow_mode.json", params: { seconds: "3600" }
 
         log = UserHistory.last
@@ -7263,7 +7263,7 @@ RSpec.describe TopicsController do
 
   describe "#invite" do
     context "when not logged in" do
-      it "should return the right response" do
+      it "requires authentication" do
         post "/t/#{topic.id}/invite.json", params: { email: "jake@adventuretime.ooo" }
 
         expect(response.status).to eq(403)
@@ -7276,7 +7276,7 @@ RSpec.describe TopicsController do
       context "when topic id is not PM" do
         fab!(:user_topic) { Fabricate(:topic, user: user) }
 
-        it "should return the right response" do
+        it "rejects a non-private-message topic" do
           user.update!(trust_level: TrustLevel[2])
 
           post "/t/#{user_topic.id}/invite.json", params: { email: "someguy@email.com" }
@@ -7286,7 +7286,7 @@ RSpec.describe TopicsController do
       end
 
       context "when topic id is invalid" do
-        it "should return the right response" do
+        it "returns a not-found response" do
           id = topic.id
           topic.destroy!
           post "/t/#{id}/invite.json", params: { email: user.email }
@@ -7367,7 +7367,7 @@ RSpec.describe TopicsController do
       context "when user does not have permission to invite to the topic" do
         fab!(:topic) { pm }
 
-        it "should return the right response" do
+        it "forbids a user without invitation permission" do
           post "/t/#{topic.id}/invite.json", params: { user: user.username }
 
           expect(response.status).to eq(403)
@@ -7387,7 +7387,7 @@ RSpec.describe TopicsController do
     before { admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     context "as an anon user" do
-      it "should be forbidden" do
+      it "forbids the invitation" do
         invite_group(pm, 403)
       end
     end
@@ -7396,7 +7396,7 @@ RSpec.describe TopicsController do
       before { sign_in(user) }
 
       context "when user does not have permission to view the topic" do
-        it "should be forbidden" do
+        it "forbids the invitation" do
           invite_group(pm, 403)
         end
       end
@@ -7404,7 +7404,7 @@ RSpec.describe TopicsController do
       context "when user has permission to view the topic" do
         before { pm.allowed_users << user }
 
-        it "should allow user to invite group to topic" do
+        it "allows the user to invite a group to the topic" do
           invite_group(pm, 200)
           expect(pm.allowed_groups.first.id).to eq(admins.id)
         end
@@ -7544,7 +7544,7 @@ RSpec.describe TopicsController do
       context "as staff" do
         before { sign_in(moderator) }
 
-        it "will publish the topic" do
+        it "publishes the topic" do
           put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
           expect(response.status).to eq(200)
           json = response.parsed_body["basic_topic"]
@@ -7947,7 +7947,7 @@ RSpec.describe TopicsController do
         end
       end
 
-      it "should fail for non-existent topic" do
+      it "returns an error for a missing topic" do
         max_id = Topic.maximum(:id)
         sign_in(admin)
         put "/t/#{max_id + 1}/reset-bump-date.json"
@@ -7963,7 +7963,7 @@ RSpec.describe TopicsController do
     end
 
     %i[admin moderator trust_level_4].each do |user|
-      it "should reset bumped_at as #{user}" do
+      it "resets bumped_at as #{user}" do
         sign_in(public_send(user))
         topic.update!(bumped_at: 1.hour.ago)
         timestamp = 1.day.ago
@@ -8129,7 +8129,7 @@ RSpec.describe TopicsController do
       ).topic
     end
 
-    it "should be able to archive a private message" do
+    it "archives a private message" do
       sign_in(user)
 
       message =

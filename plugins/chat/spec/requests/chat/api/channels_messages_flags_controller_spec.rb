@@ -35,7 +35,7 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
     end
 
     describe "success" do
-      it "works" do
+      it "flags the message" do
         post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
              params: params
 

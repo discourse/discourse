@@ -11,7 +11,7 @@ RSpec.describe BasicGroupSerializer do
     describe "automatic group" do
       let(:group) { Group.find(1) }
 
-      it "should include the display name" do
+      it "includes the display name" do
         expect(serializer.display_name).to eq(I18n.t("groups.default_names.admins"))
       end
     end
@@ -19,7 +19,7 @@ RSpec.describe BasicGroupSerializer do
     describe "normal group" do
       fab!(:group)
 
-      it "should not include the display name" do
+      it "does not include the display name" do
         expect(serializer.display_name).to eq(nil)
       end
     end
@@ -33,7 +33,7 @@ RSpec.describe BasicGroupSerializer do
     fab!(:group) { Fabricate(:group, bio_raw: "testing :slightly_smiling_face:") }
 
     describe "group owner" do
-      it "should include bio_raw" do
+      it "includes bio_raw" do
         expect(serializer.as_json[:bio_raw]).to eq("testing :slightly_smiling_face:")
         expect(serializer.as_json[:bio_excerpt]).to start_with("testing <img")
       end
@@ -46,7 +46,7 @@ RSpec.describe BasicGroupSerializer do
     describe "for a staff user" do
       let!(:guardian) { Guardian.new(Fabricate(:moderator)) }
 
-      it "should be present" do
+      it "includes has_messages" do
         expect(serializer.as_json[:has_messages]).to eq(true)
       end
     end
@@ -57,7 +57,7 @@ RSpec.describe BasicGroupSerializer do
 
       before { group.add(user) }
 
-      it "should be present" do
+      it "includes has_messages" do
         expect(serializer.as_json[:has_messages]).to eq(true)
       end
     end
@@ -65,7 +65,7 @@ RSpec.describe BasicGroupSerializer do
     describe "for a normal user" do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
-      it "should not be present" do
+      it "omits has_messages" do
         expect(serializer.as_json[:has_messages]).to eq(nil)
       end
     end
@@ -80,7 +80,7 @@ RSpec.describe BasicGroupSerializer do
 
       before { group.add(user) }
 
-      it "should be true" do
+      it "allows the member to see members" do
         expect(serializer.as_json[:can_see_members]).to eq(true)
       end
     end
@@ -88,7 +88,7 @@ RSpec.describe BasicGroupSerializer do
     describe "for a normal user" do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
-      it "should be false" do
+      it "does not allow the user to see members" do
         expect(serializer.as_json[:can_see_members]).to eq(false)
       end
     end

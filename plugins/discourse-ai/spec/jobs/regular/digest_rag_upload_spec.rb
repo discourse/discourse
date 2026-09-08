@@ -36,7 +36,7 @@ describe Jobs::DigestRagUpload do
 
   describe "#execute" do
     context "when processing an image upload" do
-      it "will reject the indexing if the site setting is not enabled" do
+      it "rejects indexing if the site setting is disabled" do
         SiteSetting.ai_rag_images_enabled = false
 
         expect {

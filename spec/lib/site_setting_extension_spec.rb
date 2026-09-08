@@ -72,7 +72,7 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    it "will reset to default if provider vanishes" do
+    it "resets to the default if the provider vanishes" do
       settings.setting(:hello, 1)
       settings.hello = 100
       expect(settings.hello).to eq(100)
@@ -83,7 +83,7 @@ RSpec.describe SiteSettingExtension do
       expect(settings.hello).to eq(1)
     end
 
-    it "will set to new value if provider changes" do
+    it "uses the new value if the provider changes" do
       settings.setting(:hello, 1)
       settings.hello = 100
       expect(settings.hello).to eq(100)
@@ -244,11 +244,11 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    it "should have a key in all_settings" do
+    it "includes the setting in all_settings" do
       expect(settings.all_settings.detect { |s| s[:setting] == :test_setting }).to be_present
     end
 
-    it "should have the correct desc" do
+    it "interpolates the base path in the setting description" do
       I18n.backend.store_translations(
         :en,
         site_settings: {
@@ -265,7 +265,7 @@ RSpec.describe SiteSettingExtension do
       )
     end
 
-    it "should have the correct default" do
+    it "returns the integer default" do
       expect(settings.test_setting).to eq(77)
     end
 
@@ -274,22 +274,22 @@ RSpec.describe SiteSettingExtension do
         settings.remove_override!(:test_setting)
       end
 
-      it "should have the correct override" do
+      it "returns the overridden value" do
         settings.test_setting = 100
         expect(settings.test_setting).to eq(100)
       end
 
-      it "should coerce correct string to int" do
+      it "coerces a numeric string to an integer" do
         settings.test_setting = "101"
         expect(settings.test_setting).to eq(101)
       end
 
-      it "should coerce incorrect string to 0" do
+      it "coerces a nonnumeric string to zero" do
         settings.test_setting = "pie"
         expect(settings.test_setting).to eq(0)
       end
 
-      it "should not set default when reset" do
+      it "preserves the override when the setting is redefined" do
         settings.test_setting = 100
         settings.setting(:test_setting, 77)
         settings.refresh!
@@ -301,7 +301,7 @@ RSpec.describe SiteSettingExtension do
         expect(settings.test_setting).to eq(12)
       end
 
-      it "should publish changes to clients" do
+      it "publishes changes to clients" do
         settings.setting("test_setting", 100)
         settings.setting("test_setting", nil, client: true)
 
@@ -340,7 +340,7 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    it "should have the correct default" do
+    it "returns the string default" do
       expect(settings.test_str).to eq("str")
     end
 
@@ -349,7 +349,7 @@ RSpec.describe SiteSettingExtension do
         settings.remove_override!(:test_str)
       end
 
-      it "should coerce int to string" do
+      it "coerces an integer to a string" do
         settings.test_str = 100
         expect(settings.test_str).to eq("100")
       end
@@ -384,29 +384,29 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    it "should have the correct default" do
+    it "returns the boolean default" do
       expect(settings.test_hello?).to eq(false)
     end
 
     context "when overridden" do
       after { settings.remove_override!(:test_hello?) }
 
-      it "should have the correct override" do
+      it "returns the overridden boolean" do
         settings.test_hello = true
         expect(settings.test_hello?).to eq(true)
       end
 
-      it "should coerce true strings to true" do
+      it "coerces true strings to true" do
         settings.test_hello = "true"
         expect(settings.test_hello?).to be(true)
       end
 
-      it "should coerce all other strings to false" do
+      it "coerces all other strings to false" do
         settings.test_hello = "f"
         expect(settings.test_hello?).to be(false)
       end
 
-      it "should not set default when reset" do
+      it "preserves the override when the setting is redefined" do
         settings.test_hello = true
         settings.setting(:test_hello?, false)
         settings.refresh!
@@ -431,7 +431,7 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
-    it "should coerce correctly" do
+    it "coerces an enum string to an integer" do
       settings.setting(:test_int_enum, 1, enum: TestIntEnumClass)
       settings.test_int_enum = "2"
       settings.refresh!
@@ -462,15 +462,15 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    it "should have the correct default" do
+    it "returns the enum default" do
       expect(settings.test_enum).to eq("en")
     end
 
-    it "should not hose all_settings" do
+    it "includes the enum in all_settings" do
       expect(settings.all_settings.detect { |s| s[:setting] == :test_enum }).to be_present
     end
 
-    it "should report error when being set other values" do
+    it "rejects values outside the enum" do
       expect { settings.test_enum = "not_in_enum" }.to raise_error(Discourse::InvalidParameters)
     end
 
@@ -498,7 +498,7 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    it "should return the category in all_settings" do
+    it "returns the category in all_settings" do
       expect(settings.all_settings.find { |s| s[:setting] == :test_setting }[:category]).to eq(
         :tests,
       )
@@ -509,12 +509,12 @@ RSpec.describe SiteSettingExtension do
         settings.remove_override!(:test_setting)
       end
 
-      it "should have the correct override" do
+      it "returns the overridden value" do
         settings.test_setting = 101
         expect(settings.test_setting).to eq(101)
       end
 
-      it "should still have the correct category" do
+      it "preserves the category after overriding the value" do
         settings.test_setting = 102
         expect(settings.all_settings.find { |s| s[:setting] == :test_setting }[:category]).to eq(
           :tests,
@@ -531,7 +531,7 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    it "should allow to filter by area" do
+    it "filters settings by area" do
       expect(settings.all_settings(filter_area: "flags").map { |s| s[:setting].to_sym }).to eq(
         %i[default_locale test_setting test_setting2],
       )
@@ -679,7 +679,7 @@ RSpec.describe SiteSettingExtension do
       expect(UserHistory.last.new_value).to eq("[FILTERED]")
     end
 
-    it "works" do
+    it "updates the setting and logs its previous and new values" do
       settings.set_and_log("title", "Discourse v2")
       expect(settings.title).to eq("Discourse v2")
       expect(UserHistory.last.previous_value).to eq("Discourse v1")
@@ -958,7 +958,7 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       end
 
-      it "should not add the key to the shadowed_settings collection" do
+      it "does not add the key to shadowed_settings" do
         expect(settings.shadowed_settings.include?(:trout_api_key)).to eq(false)
       end
 
@@ -980,7 +980,7 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       end
 
-      it "should return default cause nothing is set" do
+      it "returns the default when no value is set" do
         expect(settings.nada).to eq("nothing")
       end
     end
@@ -992,11 +992,11 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       end
 
-      it "should return default cause nothing is set" do
+      it "returns the default when no value is set" do
         expect(settings.bool).to eq(false)
       end
 
-      it "should not trigger any message bus work if you try to set it" do
+      it "does not publish MessageBus updates when assigned" do
         m =
           MessageBus.track_publish("/site_settings") do
             settings.bool = true
@@ -1013,16 +1013,16 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       end
 
-      it "should return the global setting instead of default" do
+      it "returns the global setting instead of the default" do
         expect(settings.trout_api_key).to eq("purringcat")
       end
 
-      it "should return the global setting after a refresh" do
+      it "returns the global setting after a refresh" do
         settings.refresh!
         expect(settings.trout_api_key).to eq("purringcat")
       end
 
-      it "should add the key to the hidden_settings collection" do
+      it "adds the key to hidden_settings" do
         expect(settings.hidden_settings.include?(:trout_api_key)).to eq(true)
 
         ["", nil].each_with_index do |setting, index|
@@ -1033,7 +1033,7 @@ RSpec.describe SiteSettingExtension do
         end
       end
 
-      it "should add the key to the shadowed_settings collection" do
+      it "adds the key to shadowed_settings" do
         expect(settings.shadowed_settings.include?(:trout_api_key)).to eq(true)
       end
     end
@@ -1199,7 +1199,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     describe "uploads settings" do
-      it "should return the right values" do
+      it "returns upload URLs for the current and default values" do
         negative_upload_id = [(Upload.minimum(:id) || 0) - 1, -10].min
         system_upload = Fabricate(:upload, id: negative_upload_id)
         settings.setting(:logo, system_upload.id, type: :upload)
@@ -1220,7 +1220,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     describe "objects settings with uploads" do
-      it "should hydrate upload IDs to URLs" do
+      it "hydrates upload IDs to URLs" do
         upload1 = Fabricate(:upload)
         upload2 = Fabricate(:upload)
         upload3 = Fabricate(:upload)
@@ -1269,7 +1269,7 @@ RSpec.describe SiteSettingExtension do
         expect(value[0]["links"][0]["link_image"]).to eq(upload3.url)
       end
 
-      it "should batch uploads query" do
+      it "batches the uploads query" do
         upload1 = Fabricate(:upload)
         upload2 = Fabricate(:upload)
         upload3 = Fabricate(:upload)
@@ -1346,7 +1346,7 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe ".client_settings_json_uncached" do
-    it "should return the right json value" do
+    it "serializes client settings and upload URLs as JSON" do
       upload = Fabricate(:upload)
       settings.setting(:upload_type, upload.id.to_s, type: :upload, client: true)
       settings.setting(:string_type, "haha", client: true)
@@ -1452,7 +1452,7 @@ RSpec.describe SiteSettingExtension do
       fab!(:upload)
       fab!(:upload2, :upload)
 
-      it "should return the upload record" do
+      it "returns the upload record" do
         settings.setting(:some_upload, upload.id.to_s, type: :upload)
 
         expect(settings.some_upload).to eq(upload)
