@@ -1,0 +1,3 @@
+The first final-selective run completed eleven cases, then failed before transforming jpeg-sampling-422.jpg. The case manifest incorrectly expected no orientation tag. Both unchanged sampling fixtures contain EXIF IFD0 tag 0x0112, SHORT count 1, value 1. The corrected manifest expects exactly 1; the harness assertion and fixture bytes are unchanged.
+
+production.log preserves the coordinator log. completed-samples-from-log.json contains its eleven complete sample records, not the full runtime report. Remote final-selective.json and outputs-final-selective must be archived here before rerunning because they were not present in the local bundle at correction time.

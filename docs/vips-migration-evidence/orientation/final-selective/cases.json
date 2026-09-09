@@ -1,0 +1,212 @@
+[
+  {
+    "filename": "grid-orientation-1.jpg",
+    "orientation": 1,
+    "expected_layout": [
+      [
+        "red",
+        "green",
+        "blue"
+      ],
+      [
+        "cyan",
+        "magenta",
+        "yellow"
+      ]
+    ],
+    "source": "/tmp/discourse-vips-orientation-01a0846e/spec/fixtures/images/exif_orientation.jpg",
+    "source_sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+    "sha256": "7a0f522a66f31fde3bf080e0092399b38881b46a635c3ccc4d446b90172310ff",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "grid-orientation-2.jpg",
+    "orientation": 2,
+    "expected_layout": [
+      [
+        "blue",
+        "green",
+        "red"
+      ],
+      [
+        "yellow",
+        "magenta",
+        "cyan"
+      ]
+    ],
+    "source": "/tmp/discourse-vips-orientation-01a0846e/spec/fixtures/images/exif_orientation.jpg",
+    "source_sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+    "sha256": "8ef8bd6c52caf1789f62ca94b5c47e192cac2f477fd35b2c70ed337de3e1fd99",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "grid-orientation-3.jpg",
+    "orientation": 3,
+    "expected_layout": [
+      [
+        "yellow",
+        "magenta",
+        "cyan"
+      ],
+      [
+        "blue",
+        "green",
+        "red"
+      ]
+    ],
+    "source": "/tmp/discourse-vips-orientation-01a0846e/spec/fixtures/images/exif_orientation.jpg",
+    "source_sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+    "sha256": "f7fa3151eec5591792200a9aaeccb19640b5f577d1578a4007085867d765c56f",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "grid-orientation-4.jpg",
+    "orientation": 4,
+    "expected_layout": [
+      [
+        "cyan",
+        "magenta",
+        "yellow"
+      ],
+      [
+        "red",
+        "green",
+        "blue"
+      ]
+    ],
+    "source": "/tmp/discourse-vips-orientation-01a0846e/spec/fixtures/images/exif_orientation.jpg",
+    "source_sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+    "sha256": "6039fa36294a893aaef59bc6f4f3b7557d601ff566f77a6d5a0b274481c93bcc",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "grid-orientation-5.jpg",
+    "orientation": 5,
+    "expected_layout": [
+      [
+        "red",
+        "cyan"
+      ],
+      [
+        "green",
+        "magenta"
+      ],
+      [
+        "blue",
+        "yellow"
+      ]
+    ],
+    "source": "/tmp/discourse-vips-orientation-01a0846e/spec/fixtures/images/exif_orientation.jpg",
+    "source_sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+    "sha256": "c897bf3196d0b1def223d7f95f8ea81fbc6b1ca86660dd1962483ef37bb9634e",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "grid-orientation-6.jpg",
+    "orientation": 6,
+    "expected_layout": [
+      [
+        "cyan",
+        "red"
+      ],
+      [
+        "magenta",
+        "green"
+      ],
+      [
+        "yellow",
+        "blue"
+      ]
+    ],
+    "source": "/tmp/discourse-vips-orientation-01a0846e/spec/fixtures/images/exif_orientation.jpg",
+    "source_sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+    "sha256": "684a4a7b75540be7d5e02e86d5a1a447aec28974d63eaa852ba3c808818f2052",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "grid-orientation-7.jpg",
+    "orientation": 7,
+    "expected_layout": [
+      [
+        "yellow",
+        "blue"
+      ],
+      [
+        "magenta",
+        "green"
+      ],
+      [
+        "cyan",
+        "red"
+      ]
+    ],
+    "source": "/tmp/discourse-vips-orientation-01a0846e/spec/fixtures/images/exif_orientation.jpg",
+    "source_sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+    "sha256": "1e241ff62ad2e3c3efb49e80d9f61743c8ec980d1553292752a491e3bcc84027",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "grid-orientation-8.jpg",
+    "orientation": 8,
+    "expected_layout": [
+      [
+        "blue",
+        "yellow"
+      ],
+      [
+        "green",
+        "magenta"
+      ],
+      [
+        "red",
+        "cyan"
+      ]
+    ],
+    "source": "/tmp/discourse-vips-orientation-01a0846e/spec/fixtures/images/exif_orientation.jpg",
+    "source_sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+    "sha256": "b1173466a307d990994a05b49993715e528bacbaba7191bb826841b6ea537031",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "photo-orientation-6.jpg",
+    "orientation": 6,
+    "source": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/jpeg-benchmark/inputs/photo.jpg",
+    "source_sha256": "f819dbad7ebd7007bd9104617147acc303b815bb9e3b85dad308d39a728851eb",
+    "sha256": "464cf9d54e632aad3b619186f38d5ad2ff41d348a7dd552441cc6d3ff64b8495",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "photo-icc-orientation-8.jpg",
+    "orientation": 8,
+    "source": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/jpeg-benchmark/inputs/photo-profile.jpg",
+    "source_sha256": "2969489fabe67653bef8d2765b8b7700bd2a8849d23b7aa957d9c3d3a06b008f",
+    "sha256": "f6c2ed95e455f49635e6214cca97adebca331d5f487075486dc9c1b734122eaf",
+    "recipe": "replace EXIF APP1 with the orientation tag; preserve JPEG scan and all other segments"
+  },
+  {
+    "filename": "photo-progressive-orientation-6.jpg",
+    "orientation": 6,
+    "generated_from": "photo-orientation-6.jpg",
+    "recipe": [
+      "jpegtran",
+      "-copy",
+      "all",
+      "-progressive",
+      "-outfile",
+      "inputs/photo-progressive-orientation-6.jpg",
+      "inputs/photo-orientation-6.jpg"
+    ]
+  },
+  {
+    "filename": "jpeg-sampling-422.jpg",
+    "orientation": 1,
+    "sha256": "120622f0d36ef5496900c839d035b435a9d8a597ddd2765c44d5983427a8faac",
+    "recipe": "unchanged valid production ImageMagick-generated Q89 fixture; identity orientation isolates uncommon source sampling"
+  },
+  {
+    "filename": "jpeg-sampling-440.jpg",
+    "orientation": 1,
+    "sha256": "67d612de5fbfa6294d9113ed26053acce5633522c2239dbf64d55fde663fe1d5",
+    "recipe": "unchanged valid production ImageMagick-generated Q89 fixture; identity orientation isolates uncommon source sampling"
+  }
+]

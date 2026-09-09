@@ -1,0 +1,23 @@
+{
+  "commit": "2ba8357019543403265a8b4cd24c906815484efe",
+  "source_status": "clean tracked production snapshot",
+  "previous_manifest": "history/pre-selective/source-manifest.json",
+  "files": {
+    "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+    "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+    "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+    "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+    "script/discourse_vips_worker": "0b204e2c3056bc9ce3a577cb35cc6bddb43e1088b1a9215fe4d23edc83a19d8a",
+    "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+    "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+    "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+    "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376"
+  },
+  "bundle_files": {
+    "Gemfile": "f2cc2c492b57826eb7857ffaaad36085772eba989cadb0f2a543fa5f4bc8fc92",
+    "Gemfile.lock": "4bab9d22287a112da89b1b6d147444f16b76a8b139ae4845fa0fb57b44f67346",
+    "boot.rb": "a419bfa4585e15de6c60b12159feff3c68b44951169ec22efb00dba3063aed71",
+    "orientation_evidence.rb": "b481d6b775b860ff2846c55d30308724c5d888cc8e76db305d926fac797cd7cf",
+    "cases.json": "95cc93a40e8a1cd38bb2acce957b306af4e20de5cf1f34a75e6651952b0efa34"
+  }
+}

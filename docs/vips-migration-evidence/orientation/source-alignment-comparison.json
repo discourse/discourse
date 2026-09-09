@@ -1,0 +1,554 @@
+[
+  {
+    "stage": 6,
+    "bundle": "ico/benchmark",
+    "operation": "ico_to_png",
+    "entries": [
+      {
+        "method": "block_loaders",
+        "status": "exact"
+      },
+      {
+        "method": "ico_to_png",
+        "status": "exact"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": false,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "lib/discourse_vips/ico_image.rb": false,
+      "facade.ico_to_png": true
+    }
+  },
+  {
+    "stage": 7,
+    "bundle": "jpeg/final-selective",
+    "operation": "convert_to_jpeg",
+    "entries": [
+      {
+        "method": "block_loaders",
+        "status": "exact"
+      },
+      {
+        "method": "convert_to_jpeg",
+        "status": "exact"
+      },
+      {
+        "method": "gif_icc_profile",
+        "status": "exact"
+      },
+      {
+        "method": "gif_subblocks",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_sampling_factors",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_subsample_mode",
+        "status": "exact"
+      },
+      {
+        "method": "load_image_for_orientation",
+        "status": "exact"
+      },
+      {
+        "method": "read_gif_bytes",
+        "status": "exact"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": true,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "lib/discourse_vips/ico_image.rb": false,
+      "facade.convert_to_jpeg": true
+    }
+  },
+  {
+    "stage": 8,
+    "bundle": "orientation/final-selective",
+    "operation": "auto_orient",
+    "entries": [
+      {
+        "method": "auto_orient",
+        "status": "exact",
+        "sha256": "7e0bc7bc38889c9d203be5464aebb0e50630364435eaad8972970ab7dce0a67f"
+      },
+      {
+        "method": "block_loaders",
+        "status": "exact",
+        "sha256": "46d753ca1db165c805eb1bc14a4efdd5cffc28dfa7e6639c4462098052c15405"
+      },
+      {
+        "method": "jpeg_sampling_factors",
+        "status": "exact",
+        "sha256": "90d120b562553eb7a5daf1427fc6ac2985ff642302bb34367ca2cb8476dc7945"
+      },
+      {
+        "method": "jpeg_subsample_mode",
+        "status": "exact",
+        "sha256": "4139b174758fd2f063559ecaa56678d50586c7c3f34fb937e052ea3aacabc0b4"
+      },
+      {
+        "method": "load_image_for_orientation",
+        "status": "exact",
+        "sha256": "7b094de0b8c1e8ca4098b8408f4a51aef49b9f3bdb34626f80b2a829208a96cf"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": true,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "facade.auto_orient": true
+    },
+    "compared_source_path": "/tmp/discourse-vips-orientation-01a0846e/public/discourse-task/orientation-benchmark"
+  },
+  {
+    "stage": 9,
+    "bundle": "downsize/benchmark",
+    "operation": "downsize",
+    "entries": [
+      {
+        "method": "block_loaders",
+        "status": "exact"
+      },
+      {
+        "method": "downsize",
+        "status": "exact"
+      },
+      {
+        "method": "downsize_dimensions",
+        "status": "exact"
+      },
+      {
+        "method": "gif_icc_profile",
+        "status": "exact"
+      },
+      {
+        "method": "gif_subblocks",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_sampling_factors",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_subsample_mode",
+        "status": "exact"
+      },
+      {
+        "method": "load_downsize_image",
+        "status": "different"
+      },
+      {
+        "method": "load_image_for_orientation",
+        "status": "exact"
+      },
+      {
+        "method": "load_svg",
+        "status": "exact"
+      },
+      {
+        "method": "read_gif_bytes",
+        "status": "exact"
+      },
+      {
+        "method": "resample_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "save_downsize_image",
+        "status": "exact"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": true,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "lib/discourse_vips/ico_image.rb": true,
+      "facade.downsize": true
+    }
+  },
+  {
+    "stage": 9,
+    "bundle": "downsize/svg-white/benchmark",
+    "operation": "downsize",
+    "entries": [
+      {
+        "method": "block_loaders",
+        "status": "exact"
+      },
+      {
+        "method": "downsize",
+        "status": "exact"
+      },
+      {
+        "method": "downsize_dimensions",
+        "status": "exact"
+      },
+      {
+        "method": "gif_icc_profile",
+        "status": "exact"
+      },
+      {
+        "method": "gif_subblocks",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_sampling_factors",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_subsample_mode",
+        "status": "exact"
+      },
+      {
+        "method": "load_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "load_image_for_orientation",
+        "status": "exact"
+      },
+      {
+        "method": "load_svg",
+        "status": "exact"
+      },
+      {
+        "method": "read_gif_bytes",
+        "status": "exact"
+      },
+      {
+        "method": "resample_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "save_downsize_image",
+        "status": "exact"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": true,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "lib/discourse_vips/ico_image.rb": true,
+      "facade.downsize": true
+    }
+  },
+  {
+    "stage": 10,
+    "bundle": "resize/benchmark",
+    "operation": "resize",
+    "entries": [
+      {
+        "method": "block_loaders",
+        "status": "exact"
+      },
+      {
+        "method": "gif_icc_profile",
+        "status": "exact"
+      },
+      {
+        "method": "gif_subblocks",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_sampling_factors",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_subsample_mode",
+        "status": "exact"
+      },
+      {
+        "method": "load_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "load_image_for_orientation",
+        "status": "exact"
+      },
+      {
+        "method": "load_svg",
+        "status": "exact"
+      },
+      {
+        "method": "read_gif_bytes",
+        "status": "exact"
+      },
+      {
+        "method": "resample_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize",
+        "status": "exact"
+      },
+      {
+        "method": "resize_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_thumbnail_image",
+        "status": "exact"
+      },
+      {
+        "method": "save_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "sharpen_resized_image",
+        "status": "exact"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": true,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "lib/discourse_vips/ico_image.rb": true,
+      "facade.resize": true
+    }
+  },
+  {
+    "stage": 11,
+    "bundle": "crop/benchmark",
+    "operation": "crop",
+    "entries": [
+      {
+        "method": "block_loaders",
+        "status": "exact"
+      },
+      {
+        "method": "crop",
+        "status": "exact"
+      },
+      {
+        "method": "gif_icc_profile",
+        "status": "exact"
+      },
+      {
+        "method": "gif_subblocks",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_sampling_factors",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_subsample_mode",
+        "status": "exact"
+      },
+      {
+        "method": "load_downsize_image",
+        "status": "different"
+      },
+      {
+        "method": "load_image_for_orientation",
+        "status": "exact"
+      },
+      {
+        "method": "load_svg",
+        "status": "exact"
+      },
+      {
+        "method": "read_gif_bytes",
+        "status": "exact"
+      },
+      {
+        "method": "resample_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_thumbnail_image",
+        "status": "exact"
+      },
+      {
+        "method": "save_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "sharpen_resized_image",
+        "status": "exact"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": true,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "lib/discourse_vips/ico_image.rb": true,
+      "facade.crop": true
+    }
+  },
+  {
+    "stage": 11,
+    "bundle": "crop/svg-white-false/benchmark",
+    "operation": "crop",
+    "entries": [
+      {
+        "method": "block_loaders",
+        "status": "exact"
+      },
+      {
+        "method": "crop",
+        "status": "exact"
+      },
+      {
+        "method": "gif_icc_profile",
+        "status": "exact"
+      },
+      {
+        "method": "gif_subblocks",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_sampling_factors",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_subsample_mode",
+        "status": "exact"
+      },
+      {
+        "method": "load_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "load_image_for_orientation",
+        "status": "exact"
+      },
+      {
+        "method": "load_svg",
+        "status": "exact"
+      },
+      {
+        "method": "read_gif_bytes",
+        "status": "exact"
+      },
+      {
+        "method": "resample_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_thumbnail_image",
+        "status": "exact"
+      },
+      {
+        "method": "save_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "sharpen_resized_image",
+        "status": "exact"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": true,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "lib/discourse_vips/ico_image.rb": true,
+      "facade.crop": true
+    }
+  },
+  {
+    "stage": 11,
+    "bundle": "crop/svg-white-true/benchmark",
+    "operation": "crop",
+    "entries": [
+      {
+        "method": "block_loaders",
+        "status": "exact"
+      },
+      {
+        "method": "crop",
+        "status": "exact"
+      },
+      {
+        "method": "gif_icc_profile",
+        "status": "exact"
+      },
+      {
+        "method": "gif_subblocks",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_sampling_factors",
+        "status": "exact"
+      },
+      {
+        "method": "jpeg_subsample_mode",
+        "status": "exact"
+      },
+      {
+        "method": "load_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "load_image_for_orientation",
+        "status": "exact"
+      },
+      {
+        "method": "load_svg",
+        "status": "exact"
+      },
+      {
+        "method": "read_gif_bytes",
+        "status": "exact"
+      },
+      {
+        "method": "resample_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "resize_thumbnail_image",
+        "status": "exact"
+      },
+      {
+        "method": "save_downsize_image",
+        "status": "exact"
+      },
+      {
+        "method": "sharpen_resized_image",
+        "status": "exact"
+      }
+    ],
+    "support_checks": {
+      "lib/discourse_vips/client.rb": true,
+      "lib/discourse_vips/worker_process.rb": true,
+      "lib/discourse/safe_exec.rb": true,
+      "lib/image_processing/instrumentation.rb": true,
+      "lib/discourse_vips/ico_image.rb": true,
+      "facade.crop": true
+    }
+  }
+]

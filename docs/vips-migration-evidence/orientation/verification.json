@@ -1,0 +1,22 @@
+{
+  "measured_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+  "aligned_review_head": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
+  "alignment_scope": "Coordinator source audit; not test or CI verdict",
+  "report_sha256": "225ce5ecf3d3897276d8728b078da41434959d07e72fa806038144484f0dd9b6",
+  "source_and_bundle_hashes_verified": 14,
+  "production_files_match_git_commit": 9,
+  "input_hashes_sizes_headers_verified": 13,
+  "output_hashes_sizes_headers_verified": 26,
+  "timing_median_p95_arrays_verified": 26,
+  "fresh_worker_output_hashes_headers_verified": 5,
+  "headers": [
+    "SOF dimensions",
+    "EXIF orientation",
+    "progressive/baseline marker",
+    "ICC payload hash"
+  ],
+  "errors": 0,
+  "slower_native_medians": 10,
+  "larger_native_outputs": 10,
+  "failed_run": "final-selective/history/failed-selective-orientation-expectation/"
+}

@@ -1,0 +1,31 @@
+{
+  "commit": "0708de39bcebe79c8469dfd88cd568c8e71b42c7",
+  "branch": "tgxworld/vips-auto-orientation",
+  "source_fix": {
+    "commit": "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948",
+    "methods": [
+      "auto_orient",
+      "load_image_for_orientation"
+    ]
+  },
+  "source_status": " M lib/discourse_vips.rb\n M script/discourse_vips_worker\n M spec/lib/discourse_vips_spec.rb\n",
+  "production_image": "discourse/base:2.0.20260812-0036",
+  "production_image_digest": "sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
+  "files": {
+    "lib/discourse_vips.rb": "ef040241b2a9fb6978c433f9bc2ad5ab12a577f607c3cc73ebab07a4e281b241",
+    "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+    "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
+    "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+    "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
+    "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+    "script/discourse_vips_worker": "072059e243f822c4232310a851645d9a5ef5ca37caae1abbcadc6160a51d0dbd"
+  },
+  "bundle_files": {
+    "Gemfile": "f2cc2c492b57826eb7857ffaaad36085772eba989cadb0f2a543fa5f4bc8fc92",
+    "Gemfile.lock": "4bab9d22287a112da89b1b6d147444f16b76a8b139ae4845fa0fb57b44f67346",
+    "boot.rb": "a419bfa4585e15de6c60b12159feff3c68b44951169ec22efb00dba3063aed71",
+    "orientation_evidence.rb": "8fc6106c980474b6a1284f6b3ffa234e5fe9779027175137f0bf680ce73598f5",
+    "prepare_bundle.py": "a6c8d46466b8875b2e2d1bd9b98d5f905fd072700163a17e540bf301a50d1729",
+    "cases.json": "018482147637d85940c511def7c527590c97cbc482d84b1554081d53f1a1ea6c"
+  }
+}
