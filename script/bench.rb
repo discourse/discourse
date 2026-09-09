@@ -300,10 +300,6 @@ begin
 
   run("RAILS_ENV=profile bundle exec rake assets:clean")
 
-  def get_mem(pid)
-    YAML.safe_load `ruby script/memstats.rb #{pid} --yaml`
-  end
-
   # Workers are forked from the mold, so most of their pages are shared
   # copy-on-write. Summing RSS across processes counts every shared page once
   # per process; PSS divides shared pages by the number of sharers, so the sum
@@ -326,7 +322,7 @@ begin
       end
     next if !role
 
-    stats = get_mem(proc_pid)
+    stats = YAML.safe_load `ruby script/memstats.rb #{proc_pid} --yaml`
     memory[role] = { "rss_kb" => stats["rss_kb"], "pss_kb" => stats["pss_kb"] }
   end
 
