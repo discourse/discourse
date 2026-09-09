@@ -112,6 +112,12 @@ RSpec.describe SiteSerializer do
       end
     end
 
+    around do |example|
+      stub_const(target_class, :ACL_PERMISSIONS, Acl::Permissions.new(:edit, :manage)) do
+        example.run
+      end
+    end
+
     after { DiscoursePluginRegistry.reset_register!(:acl_target_classes) }
 
     it "includes mandatory ACLs by target class" do
@@ -139,22 +145,21 @@ RSpec.describe SiteSerializer do
     end
 
     it "includes plugin-registered target classes" do
-      Object.const_set(:SiteSerializerSpecTarget, target_class)
-      AclTarget.loaded_target_classes.delete(target_class)
-      DiscoursePluginRegistry.register_acl_target_class(
-        "SiteSerializerSpecTarget",
-        Plugin::Instance.new,
-      )
+      stub_const(Object, :SiteSerializerSpecTarget, target_class) do
+        AclTarget.loaded_target_classes.delete(target_class)
+        DiscoursePluginRegistry.register_acl_target_class(
+          "SiteSerializerSpecTarget",
+          Plugin::Instance.new,
+        )
 
-      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+        serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
-        "SiteSerializerSpecTarget" => [
-          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
-        ],
-      )
-    ensure
-      Object.send(:remove_const, :SiteSerializerSpecTarget) if defined?(SiteSerializerSpecTarget)
+        expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+          "SiteSerializerSpecTarget" => [
+            { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+          ],
+        )
+      end
     end
   end
 
