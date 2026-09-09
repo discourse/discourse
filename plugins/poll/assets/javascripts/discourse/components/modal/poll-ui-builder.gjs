@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
+import { isBlank } from "@ember/utils";
 import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -50,10 +51,6 @@ const IMPLIED_ATTRS = {
   public: "false",
   chartType: BAR_CHART_TYPE,
 };
-
-function isBlank(value) {
-  return String(value ?? "").trim() === "";
-}
 
 export default class PollUiBuilderModal extends Component {
   @service currentUser;
