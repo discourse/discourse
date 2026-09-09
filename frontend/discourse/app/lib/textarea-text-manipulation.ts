@@ -474,7 +474,6 @@ export default class TextareaTextManipulation implements TextManipulation {
       plainText = plainText.replace(/\r/g, "");
       const table = this.extractTable(plainText);
       if (table) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.eventPrefix
           ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, table)
           : this.insertText(table);
@@ -531,7 +530,6 @@ export default class TextareaTextManipulation implements TextManipulation {
         }
 
         if (isComposer) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           this.eventPrefix
             ? this.appEvents.trigger(
                 `${this.eventPrefix}:insert-text`,
@@ -541,7 +539,6 @@ export default class TextareaTextManipulation implements TextManipulation {
           handled = true;
         }
       } else if (plainText && isComposer) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.eventPrefix
           ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
           : this.insertText(plainText);
