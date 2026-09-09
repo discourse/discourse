@@ -203,11 +203,7 @@ class DiscourseVipsWorker
       break if ready_ios.include?(@owner_reader)
 
       connection = @server.accept
-      if LINUX_PLATFORM
-        fork_connection_process(connection)
-      else
-        handle_connection(connection)
-      end
+      fork_connection_process(connection)
     end
   ensure
     @server.close unless @server.closed?
@@ -242,12 +238,7 @@ class DiscourseVipsWorker
   def handle_connection(connection)
     request = MessagePack.unpack(connection.read)
     operation = Operations.build(request.fetch("command"))
-    response =
-      if LINUX_PLATFORM
-        run_sandboxed(request:, operation:)
-      else
-        run_direct(operation)
-      end
+    response = run_sandboxed(request:, operation:)
     write_response(connection, response)
   rescue StandardError => error
     write_response(connection, "status" => "error", "message" => error.message.byteslice(0, 4096))
@@ -272,7 +263,7 @@ class DiscourseVipsWorker
           env: child_environment(scratch),
           unsetenv_others: true,
           rlimits: RLIMITS,
-          seccomp_deny_network: true,
+          seccomp_deny_network: LINUX_PLATFORM,
           on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|
           apply_nice(request)
@@ -287,10 +278,6 @@ class DiscourseVipsWorker
         { "status" => "error", "message" => "libvips operation failed" }
       end
     end
-  end
-
-  def run_direct(operation)
-    operation_response(operation)
   end
 
   def remove_socket_directory
