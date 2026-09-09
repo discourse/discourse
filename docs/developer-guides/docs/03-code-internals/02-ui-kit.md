@@ -107,6 +107,26 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DResizeHandles`, `DResizeSeparator`                    | User-resizable regions.                                                                                                                     | [Drag and drop](https://meta.discourse.org/styleguide/molecules/drag-and-drop)         |
 | `DSaveControls`                                         | The save button and "saved" feedback of a settings form.                                                                                    |                                                                                        |
 
+### A panel in a window of its own
+
+`DPanelDock` can move into a separate browser window. The window is a page the
+server renders, and the panel is rendered into it across documents by the page
+that opened it — one application, two documents. That shapes what content can go
+in a panel that is allowed to move:
+
+- Anything that renders into the application's own outlets — modals, dialogs,
+  toasts, user cards — appears in the opening page, not in the window.
+- Responsive rules follow the opening page, not the window's own size.
+- A link inside the panel routes the opening page instead of navigating the
+  window, which would destroy the tree rendered into it.
+- A float anchored to an element resolves the right document by itself; one
+  anchored to a position rather than an element needs its outlet passed
+  explicitly.
+- Navigating the window elsewhere ends window mode and returns the panel.
+- A stylesheet injected by script after boot does not reach the window. What the
+  server serves, the colour scheme, the icons, and the CSS the application
+  generates from its own state all do.
+
 ## Loading, empty, and feedback states
 
 | Primitive                                                  | Use it for                                                                                                                                                                                                                                                                                                          |
