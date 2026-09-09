@@ -1132,24 +1132,43 @@ body.wireframe-active {
   position: relative;
 }
 
-.wireframe-activity-bar {
-  grid-column: 1;
+.wireframe-panel-switcher {
+  grid-column: 1 / 3;
   grid-row: 3;
-  display: flex;
-  flex-direction: column;
-  gap: var(--wf-gap-tight);
-  padding: var(--wf-gap-tight) 0;
-  background: var(--secondary);
-  border-right: 1px solid var(--primary-low);
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: var(--wf-activity-bar) minmax(0, 1fr);
+  min-height: 0;
 
-  &__entry-wrap {
-    position: relative;
+  &__activity-bar {
+    grid-column: 1;
     display: flex;
+    flex-direction: column;
+    gap: var(--wf-gap-tight);
+    min-height: 0;
+    padding-block: var(--wf-gap-tight);
+    background: var(--secondary);
+    border-inline-end: 1px solid var(--primary-low);
+    overflow: hidden;
 
-    .wireframe-activity-bar__entry {
-      flex: 1;
+    .d-tabs__strip-controls {
+      flex: 0 1 auto;
+      min-height: 0;
     }
+
+    .d-tabs__tablist {
+      gap: var(--wf-gap-tight);
+    }
+  }
+
+  > .d-tabs__panel {
+    grid-column: 2;
+    display: flex;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &.--collapsed > .d-tabs__panel {
+    display: none;
   }
 
   &__badge {
@@ -1179,6 +1198,7 @@ body.wireframe-active {
     padding: 0.25rem;
     border: none;
     border-inline-start: 2px solid transparent;
+    border-radius: 0;
     background: transparent;
     color: var(--primary-medium);
     cursor: pointer;
@@ -1193,19 +1213,22 @@ body.wireframe-active {
       outline-offset: -2px;
     }
 
-    &.--active {
+    &[aria-selected="true"] {
       color: var(--primary);
       background: var(--primary-very-low);
       border-inline-start-color: var(--tertiary);
     }
 
     .d-icon {
+      margin: 0;
+      color: inherit;
       font-size: var(--font-up-3);
     }
   }
 
   &__collapse {
     margin-top: auto;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1369,9 +1392,9 @@ body.wireframe-active {
   overflow: hidden;
 
   &.--left {
-    grid-column: 2;
-    grid-row: 3;
-    border-right: 1px solid var(--primary-low);
+    flex: 1;
+    min-width: 0;
+    border-inline-end: 1px solid var(--primary-low);
   }
 
   &.--right {

@@ -5,8 +5,9 @@
 Exercise core's new `DTabs` API with the editor and the built-in Tabs block.
 The dependency first landed in `f765d3e052`. After discourse/discourse#43108
 merged upstream as `ed65dfa58f6`, `67020c15f0e` merged `main` into this branch.
-All four consumers now use `tabs.Tab @key`. The migration was restored after
-the lint-only commit `8d1eb191936`; its safety stash
+The first four consumers use `tabs.Tab @key` and were committed separately in
+`6d1f713553b`. The migration was restored after the lint-only commit
+`8d1eb191936`; its safety stash
 `263a28c98c8fe0c27c8086465ae893f19a84952c` is retained as a backup.
 Visual validation remains pending as listed below.
 
@@ -20,8 +21,9 @@ Use `discourse/ui-kit/d-tabs` directly, with consumer-owned `@active` and
 `@onActivate`, translated group labels, and declarative `tabs.Tab @key` panels.
 Do not introduce an editor wrapper or import primitive internals.
 
-Only the built-in Tabs block uses a custom header, for its add button and drag
-attributes. Inspector, image-source and publish tabs use the default header and
+The built-in Tabs block uses a custom header for its add button and drag
+attributes. The panel switcher uses one to keep the collapse action outside its
+vertical tablist. Inspector, image-source and publish tabs use the default header and
 scoped BEM hooks. Group-local keys need no duplicate-HTML-ID lint suppression.
 
 Preserve state ownership, inactive-panel destruction, conditional-tab fallbacks,
@@ -30,9 +32,17 @@ and stable panel keys. DTabs owns ARIA pairing, roving focus and overflow. Let
 overflow scroll instead of retaining the old wrapped tab rows. Remove duplicated
 tab visual styles; retain scoped layout and editor integration hooks.
 
-The outline status chips filter one tree and are not tabs. The activity bar is a
-toggle toolbar that allows no open panel. Neither belongs in this migration.
-Fill/Fit and alignment remain value controls.
+The outline status chips filter one tree and are not tabs. Fill/Fit and alignment
+remain value controls.
+
+The activity entries are a fifth consumer. `EditorPanelSwitcher` owns their
+vertical tablist and associated panel content, while the shell supplies the
+palette, outline and issues components. The rail service retains selection and
+collapse preferences. Pass `undefined` as the active key when collapsed, unmount
+inactive content and hide the persistent empty panel. Clicking the active tab
+still collapses the rail. Arrow keys move focus without activation; the collapse
+chevron is a separate button outside the tablist. The resize separator remains
+a direct child of the shell grid, positioned at the panel/canvas seam.
 
 ## Implementation order
 
@@ -116,6 +126,20 @@ quality.
 
 ## Verification receipts and remaining work
 
+- Panel-switcher follow-up: renamed the component to `EditorPanelSwitcher` and
+  the system-test page object to `WireframePanelSwitcher`
+  (`wireframe_panel_switcher.rb`). No `LeftRail` naming remains in these consumers.
+- Panel-switcher, shell save-flow and rail-service coverage: 27 QUnit tests
+  passed, seed `OksakAWU`. The tablist/panel-pairing regression was observed
+  failing against the original toolbar before the migration. Changed-file lint
+  passed. The focused plugin type check still reports 18 diagnostics outside
+  the changed panel-switcher and shell files.
+- Expanded and collapsed desktop screenshots were generated for both themes
+  and color modes under `tmp/wireframe-panel-switcher-screenshots/compare.html`.
+  The final screenshot-run summary was not retained, so these artifacts alone
+  are not a receipt for a passing full matrix. Initial browser verification
+  encountered stale stylesheet caches; moving `tmp/stylesheet-cache` and
+  `tmp/cache/assets` aside caused the updated grid styles to regenerate.
 - After merging main, adopting `@key` and fully rebuilding the frontend:
   all five focused system examples passed, seed `3892`, covering overflow,
   label editing, publish panels, image sources and inspector shortcuts.

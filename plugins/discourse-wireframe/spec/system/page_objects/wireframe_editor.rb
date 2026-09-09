@@ -105,7 +105,7 @@ module PageObjects
       end
 
       def open_outline
-        find(".wireframe-activity-bar__entry[aria-label='Layers']").click
+        find(".wireframe-panel-switcher__entry[aria-label='Layers']").click
       end
 
       def has_layout_variant_in_outline?(name)

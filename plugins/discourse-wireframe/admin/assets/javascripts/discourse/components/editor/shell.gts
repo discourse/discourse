@@ -7,14 +7,15 @@ import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import type DragAndDropService from "discourse/services/drag-and-drop";
 import type KeyValueStoreService from "discourse/services/key-value-store";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 import { i18n } from "discourse-i18n";
-import ActivityBar from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/activity-bar";
 import BlockBreadcrumb from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-breadcrumb";
+import EditorPanelSwitcher from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/panel-switcher";
 import PublishTargetStatus from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/publish-target-status";
 import RailResizeHandle from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/rail-resize-handle";
 import ViewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/view-drawer";
@@ -111,21 +112,6 @@ export default class EditorShell extends Component {
       classes.push("--dragging");
     }
     return classes.join(" ");
-  }
-
-  /**
-   * The i18n key for the active left panel's header title. Mirrors the activity
-   * bar's entry labels so the open panel and its rail entry read the same name.
-   */
-  get leftPanelTitleKey() {
-    switch (this.wireframeRail.leftPanelTab) {
-      case "outline":
-        return "wireframe.chrome.panel_layers";
-      case "issues":
-        return "wireframe.chrome.panel_issues";
-      default:
-        return "wireframe.chrome.panel_add";
-    }
   }
 
   /**
@@ -285,26 +271,17 @@ export default class EditorShell extends Component {
 
         <PublishBlockedCallout />
 
-        <ActivityBar />
+        <EditorPanelSwitcher as |panel|>
+          {{#if (eq panel "palette")}}
+            <PalettePanel />
+          {{else if (eq panel "outline")}}
+            <OutlinePanel />
+          {{else if (eq panel "issues")}}
+            <IssuesPanel />
+          {{/if}}
+        </EditorPanelSwitcher>
 
-        {{! The wide left panel is rendered ONLY when expanded; the activity bar
-            is the persistent collapsed state. Rendering it at zero width instead
-            would mount a clipped header and paint a stray border seam. }}
         {{#unless this.wireframeRail.leftCollapsed}}
-          <div class="wireframe-panel --left">
-            <div class="panel-header">
-              <span>{{i18n this.leftPanelTitleKey}}</span>
-            </div>
-            <div class="panel-body">
-              {{#if (this.wireframeRail.isLeftPanelTabActive "palette")}}
-                <PalettePanel />
-              {{else if (this.wireframeRail.isLeftPanelTabActive "outline")}}
-                <OutlinePanel />
-              {{else if (this.wireframeRail.isLeftPanelTabActive "issues")}}
-                <IssuesPanel />
-              {{/if}}
-            </div>
-          </div>
           {{! Resize handle on the left panel's inner (canvas-facing) seam;
               hidden while collapsed since a collapsed rail isn't resizable. }}
           <RailResizeHandle @side="left" />

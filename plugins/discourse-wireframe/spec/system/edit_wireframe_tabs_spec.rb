@@ -6,6 +6,7 @@ describe "Edit wireframe tabs" do
   fab!(:admin)
 
   let(:tabs_editor) { PageObjects::Components::WireframeTabsEditor.new }
+  let(:panel_switcher) { PageObjects::Components::WireframePanelSwitcher.new }
 
   before do
     SiteSetting.wireframe_enabled = true
@@ -21,6 +22,29 @@ describe "Edit wireframe tabs" do
   end
 
   after { Theme.clear_cache! }
+
+  it "switches, resizes and collapses activity panels beside the canvas" do
+    visit "/latest"
+    tabs_editor.enter
+    panel_switcher.open_layers
+    expect(panel_switcher).to have_layers_panel
+    expect(panel_switcher).to have_aligned_panel
+    screenshot_marker(label: "wireframe-activity-tabs", only: :desktop)
+
+    panel_switcher.resize_to_minimum
+    expect(panel_switcher).to have_minimum_width
+    expect(panel_switcher).to have_aligned_panel
+    panel_switcher.resize_to_maximum
+    expect(panel_switcher).to have_maximum_width
+    expect(panel_switcher).to have_aligned_panel
+
+    panel_switcher.open_layers
+    expect(panel_switcher).to have_collapsed_panel
+    screenshot_marker(label: "wireframe-activity-tabs-collapsed", only: :desktop)
+    panel_switcher.toggle_collapsed
+    expect(panel_switcher).to have_layers_panel
+    expect(panel_switcher).to have_aligned_panel
+  end
 
   it "scrolls overflowing tabs without changing the selected panel" do
     visit "/latest"
