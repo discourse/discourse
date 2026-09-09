@@ -23,6 +23,17 @@ module DiscourseDataExplorer
     PG_TYPE_OID_DATE = 1082
     PG_TYPE_OID_TIMESTAMP = 1114
 
+    JOIN_TABLE_ID_COLUMNS = %w[
+      user_badge_id
+      group_user_id
+      topic_user_id
+      category_user_id
+      topic_allowed_user_id
+      topic_allowed_group_id
+      associated_group_id
+      watched_word_group_id
+    ]
+
     # Run a data explorer query on the currently connected database.
     #
     # @param [Query] query the Query object to run
@@ -281,8 +292,8 @@ module DiscourseDataExplorer
         },
         badge: {
           class: Badge,
-          fields: %i[id name badge_type_id description icon],
-          include: [:badge_type],
+          fields: %i[id name badge_type_id description icon image_upload_id],
+          include: %i[badge_type image_upload],
           serializer: SmallBadgeSerializer,
         },
         post: {
@@ -333,9 +344,17 @@ module DiscourseDataExplorer
 
     def self.column_regexes
       @column_regexes ||=
-        extra_data_pluck_fields
-          .map { |key, val| /(#{val[:class].to_s.underscore})_id$/ if val[:class] }
-          .compact
+        extra_data_pluck_fields.filter_map do |key, val|
+          [/#{val[:class].to_s.underscore}_id$/, key] if val[:class]
+        end + [[/_(by|editor)_id$/, :user]]
+    end
+
+    def self.relation_for(col)
+      prefix = col[/^(\w+)\$/, 1]&.to_sym
+      return prefix if extra_data_pluck_fields.key?(prefix)
+      return if JOIN_TABLE_ID_COLUMNS.include?(col)
+
+      column_regexes.find { |rgx, _| rgx.match?(col) }&.last
     end
 
     def self.add_extra_data(pg_result, guardian: nil)
@@ -343,15 +362,8 @@ module DiscourseDataExplorer
       ret = {}
       col_map = {}
       pg_result.fields.each_with_index do |col, idx|
-        rgx = column_regexes.find { |r| r.match col }
-        if rgx
-          cls = (rgx.match col)[1].to_sym
-          needed_classes[cls] ||= []
-          needed_classes[cls] << idx
-        elsif col =~ /^(\w+)\$/
-          cls = $1.to_sym
-          needed_classes[cls] ||= []
-          needed_classes[cls] << idx
+        if (cls = relation_for(col))
+          (needed_classes[cls] ||= []) << idx
         elsif col =~ /^\w+_url$/
           col_map[idx] = "url"
         elsif col =~ /^\w+_payload$/ || col == "payload" ||
@@ -361,16 +373,11 @@ module DiscourseDataExplorer
       end
 
       needed_classes.each do |cls, column_nums|
-        next if column_nums.blank?
         support_info = extra_data_pluck_fields[cls]
         next unless support_info
 
         column_nums.each { |col_n| col_map[col_n] = cls }
-
-        if support_info[:ignore]
-          ret[cls] = []
-          next
-        end
+        next if support_info[:ignore]
 
         ids = Set.new
         column_nums.each { |col_n| ids.merge(pg_result.column_values(col_n)) }
@@ -411,41 +418,42 @@ module DiscourseDataExplorer
 
     def self.sensitive_column_names
       %w[
-        #_IP_Addresses
         topic_views.ip_address
         users.ip_address
         users.registration_ip_address
+        user_ip_address_histories.ip_address
+        user_auth_tokens.client_ip
+        user_auth_token_logs.client_ip
         incoming_links.ip_address
         topic_link_clicks.ip_address
         user_histories.ip_address
-        #_Emails
         email_tokens.email
-        users.email
+        user_emails.email
+        user_emails.normalized_email
         invites.email
         user_histories.email
         email_logs.to_address
         posts.raw_email
         badge_posts.raw_email
-        #_Secret_Tokens
-        email_tokens.token
-        email_logs.reply_key
-        api_keys.key
+        email_tokens.token_hash
+        post_reply_keys.reply_key
+        api_keys.key_hash
+        user_api_keys.key_hash
         site_settings.value
-        users.auth_token
-        users.password_hash
-        users.salt
-        #_Authentication_Info
+        user_auth_tokens.auth_token
+        user_auth_tokens.prev_auth_token
+        user_auth_token_logs.auth_token
+        user_passwords.password_hash
+        user_passwords.password_salt
         user_open_ids.email
         oauth2_user_infos.uid
         oauth2_user_infos.email
-        facebook_user_infos.facebook_user_id
-        facebook_user_infos.email
-        twitter_user_infos.twitter_user_id
-        github_user_infos.github_user_id
+        user_associated_accounts.provider_uid
+        user_associated_accounts.info
+        user_associated_accounts.credentials
+        user_associated_accounts.extra
         single_sign_on_records.external_email
         single_sign_on_records.external_id
-        google_user_infos.google_user_id
-        google_user_infos.email
       ]
     end
 
@@ -638,7 +646,6 @@ module DiscourseDataExplorer
         "topics.featured_user2_id": :users,
         "topics.featured_user3_id": :users,
         "topics.featured_user4_id": :users,
-        "topics.featured_user5_id": :users,
         "users.seen_notification_id": :notifications,
         "users.uploaded_avatar_id": :uploads,
         "users.primary_group_id": :groups,
@@ -648,20 +655,18 @@ module DiscourseDataExplorer
         "badges.badge_grouping_id": :badge_groupings,
         "post_actions.related_post_id": :posts,
         "color_scheme_colors.color_scheme_id": :color_schemes,
-        "color_schemes.versioned_id": :color_schemes,
         "incoming_links.incoming_referer_id": :incoming_referers,
         "incoming_referers.incoming_domain_id": :incoming_domains,
-        "post_replies.reply_id": :posts,
+        "post_replies.reply_post_id": :posts,
         "quoted_posts.quoted_post_id": :posts,
         "topic_link_clicks.topic_link_id": :topic_links,
-        "topic_link_clicks.link_topic_id": :topics,
-        "topic_link_clicks.link_post_id": :posts,
+        "topic_links.link_topic_id": :topics,
+        "topic_links.link_post_id": :posts,
         "user_actions.target_topic_id": :topics,
         "user_actions.target_post_id": :posts,
         "user_avatars.custom_upload_id": :uploads,
         "user_avatars.gravatar_upload_id": :uploads,
         "user_badges.notification_id": :notifications,
-        "user_profiles.card_image_badge_id": :badges,
       }.with_indifferent_access
     end
 
