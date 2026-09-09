@@ -100,7 +100,7 @@
     "prosemirror-model": "^1.25.11",
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.4",
-    "prosemirror-transform": "^1.12.0",
+    "prosemirror-transform": "^1.12.1",
     "prosemirror-view": "^1.42.3",
     "rete": "^2.0.6",
     "rete-area-plugin": "^2.3.2",
