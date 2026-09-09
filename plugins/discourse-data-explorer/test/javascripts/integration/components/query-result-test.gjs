@@ -1,8 +1,18 @@
-import { click, render } from "@ember/test-helpers";
+import { click, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import loadChartJS from "discourse/lib/load-chart-js";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import QueryResult from "../../discourse/components/query-result";
+
+function cell(row, col) {
+  return `table tbody tr:nth-child(${row}) td:nth-child(${col})`;
+}
+
+async function chartData() {
+  const Chart = await loadChartJS();
+  return Chart.getChart(find("canvas")).data;
+}
 
 module("Integration | Component | QueryResult", function (hooks) {
   setupRenderingTest(hooks);
@@ -43,10 +53,10 @@ module("Integration | Component | QueryResult", function (hooks) {
 
     assert.dom("table thead tr th:nth-child(1)").hasText("user_name");
     assert.dom("table thead tr th:nth-child(2)").hasText("like_count");
-    assert.dom("table tbody tr:nth-child(1) td:nth-child(1)").hasText("user1");
-    assert.dom("table tbody tr:nth-child(1) td:nth-child(2)").hasText("10");
-    assert.dom("table tbody tr:nth-child(2) td:nth-child(1)").hasText("user2");
-    assert.dom("table tbody tr:nth-child(2) td:nth-child(2)").hasText("20");
+    assert.dom(cell(1, 1)).hasText("user1");
+    assert.dom(cell(1, 2)).hasText("10");
+    assert.dom(cell(2, 1)).hasText("user2");
+    assert.dom(cell(2, 2)).hasText("20");
   });
 
   test("renders JSON columns as escaped text with a viewer action", async function (assert) {
@@ -60,16 +70,16 @@ module("Integration | Component | QueryResult", function (hooks) {
     await render(<template><QueryResult @content={{content}} /></template>);
 
     assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(2) .result-json-value")
+      .dom(`${cell(1, 2)} .result-json-value`)
       .hasText(
         '[{"key":"<img src=x onerror=alert(1)>"}]',
         "renders JSON as readable text without HTML entities"
       );
     assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(2) img")
+      .dom(`${cell(1, 2)} img`)
       .doesNotExist("does not render HTML from JSON values");
     assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(2) .result-json-button")
+      .dom(`${cell(1, 2)} .result-json-button`)
       .exists("renders a JSON viewer action");
   });
 
@@ -84,10 +94,10 @@ module("Integration | Component | QueryResult", function (hooks) {
     await render(<template><QueryResult @content={{content}} /></template>);
 
     assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(1)")
+      .dom(cell(1, 1))
       .hasText('{"key":"<script>alert(1)</script>"}', "renders readable text");
     assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(1) script")
+      .dom(`${cell(1, 1)} script`)
       .doesNotExist("does not render HTML from text values");
   });
 
@@ -112,9 +122,62 @@ module("Integration | Component | QueryResult", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
+    assert.dom(`${cell(1, 1)} span`).hasText("badge display name");
+    assert.dom(`${cell(1, 1)} svg`).exists("renders the icon as an svg");
     assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(1) span")
-      .hasText("badge display name");
+      .dom(`${cell(1, 1)} img`)
+      .doesNotExist("does not treat the icon name as an image url");
+  });
+
+  test("renders chart labels when a badge cannot be resolved", async function (assert) {
+    const content = {
+      colrender: { 0: "badge" },
+      relations: {
+        badge: [
+          { id: 1, name: "badge name", display_name: "badge display name" },
+        ],
+      },
+      result_count: 2,
+      columns: ["user_badge_id", "count"],
+      rows: [
+        [1, 10],
+        [999, 20],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert.deepEqual(
+      (await chartData()).labels,
+      ["badge name", "999"],
+      "falls back to the raw id for an unresolved badge"
+    );
+  });
+
+  test("renders the raw cell when a relation cannot be resolved", async function (assert) {
+    const content = {
+      colrender: { 0: "topic", 1: "user", 2: "badge", 3: "url" },
+      relations: { topic: [], user: [], badge: [] },
+      result_count: 1,
+      columns: ["topic_id", "user_id", "user_badge_id", "some_url"],
+      rows: [[42, "abc", 999, 1]],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom(cell(1, 1))
+      .hasText("42", "renders the unresolved topic id as text");
+    assert
+      .dom(`${cell(1, 1)} a`)
+      .doesNotExist("does not link to a topic that cannot be resolved");
+    assert.dom(cell(1, 2)).hasText("abc", "renders a non-numeric id verbatim");
+    assert
+      .dom(cell(1, 3))
+      .hasText("999", "renders the unresolved badge id as text");
+    assert
+      .dom(`${cell(1, 4)} a`)
+      .hasAttribute("href", "1", "renders a numeric url cell as a link");
   });
 
   test("renders a post in query results", async function (assert) {
@@ -140,12 +203,27 @@ module("Integration | Component | QueryResult", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
+    assert.dom(`${cell(1, 1)} aside`).hasAttribute("data-post", "1");
+    assert.dom(`${cell(1, 1)} aside`).hasAttribute("data-topic", "1");
+  });
+
+  test("resolves groups and categories the server did not send", async function (assert) {
+    const content = {
+      colrender: { 0: "group", 1: "category" },
+      relations: { group: [], category: [] },
+      result_count: 1,
+      columns: ["group_id", "category_id"],
+      rows: [[1, 3]],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
     assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(1) aside")
-      .hasAttribute("data-post", "1");
+      .dom(`${cell(1, 1)} a`)
+      .hasText("admins", "resolves the group from the site");
     assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(1) aside")
-      .hasAttribute("data-topic", "1");
+      .dom(`${cell(1, 2)} .badge-category__name`)
+      .hasText("meta", "resolves the category from the site");
   });
 
   test("renders a category_id in query results", async function (assert) {
@@ -171,9 +249,7 @@ module("Integration | Component | QueryResult", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
-    assert
-      .dom("table tbody tr:nth-child(1) td:nth-child(1) .badge-category__name")
-      .exists();
+    assert.dom(`${cell(1, 1)} .badge-category__name`).exists();
   });
 });
 
