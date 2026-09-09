@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
@@ -121,27 +122,27 @@ export default class TranscriptionCoordinator {
   }
 
   get recording() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.recording;
   }
 
   get roomId() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.roomId;
   }
 
   get entries() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.entries;
   }
 
   get entriesRoomId() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.entriesRoomId;
   }
 
   get startedAt() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.startedAt;
   }
 
