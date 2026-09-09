@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, next, schedule } from "@ember/runloop";
@@ -26,6 +25,7 @@ import { or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -1451,32 +1451,26 @@ export default class BoardsBoardViewer extends Component {
             />
           {{/each}}
           {{#if this.board.canManage}}
-            <button
-              class="discourse-boards-board-container__add-column"
-              title={{i18n "boards.board.add_column"}}
-              type="button"
-              {{on "click" this.openAddColumnModal}}
+            <DButton
+              class="btn-flat discourse-boards-board-container__add-column"
+              @icon="plus"
+              @title="boards.board.add_column"
+              @action={{this.openAddColumnModal}}
               {{matchLastColumnHeight}}
-            >
-              {{dIcon "plus"}}
-            </button>
+            />
           {{/if}}
         </div>
       {{else}}
         <div class="discourse-boards-board-viewer__empty">
-          <div class="discourse-boards-board-viewer__empty-column">
-            {{dIcon "table-columns"}}
-            <h3>{{i18n "boards.board.empty_board"}}</h3>
-            {{#if this.board.canManage}}
-              <p>{{i18n "boards.board.empty_board_cta"}}</p>
-              <DButton
-                class="btn-primary"
-                @action={{this.openAddColumnModal}}
-                @icon="plus"
-                @label="boards.board.add_column"
-              />
-            {{/if}}
-          </div>
+          <DEmptyState
+            @identifier="boards-board"
+            @icon="table-columns"
+            @title={{i18n "boards.board.empty_board"}}
+            @body={{if this.board.canManage (i18n "boards.board.empty_board_cta")}}
+            @ctaLabel={{if this.board.canManage (i18n "boards.board.add_column")}}
+            @ctaAction={{this.openAddColumnModal}}
+            @ctaIcon="plus"
+          />
         </div>
       {{/if}}
     </div>

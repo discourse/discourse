@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -481,13 +480,14 @@ export default class BoardsColumn extends Component {
         {{/if}}
 
         {{#if this.hiddenCardCount}}
-          <button
-            class="discourse-boards-column__show-all"
-            type="button"
-            {{on "click" this.showAllOlderCards}}
-          >
-            {{i18n "boards.board.show_older_cards" count=this.hiddenCardCount}}
-          </button>
+          <DButton
+            class="btn-flat discourse-boards-column__show-all"
+            @action={{this.showAllOlderCards}}
+            @translatedLabel={{i18n
+              "boards.board.show_older_cards"
+              count=this.hiddenCardCount
+            }}
+          />
         {{/if}}
       </div>
 
