@@ -128,7 +128,6 @@ async function pressGrip(
   await settled();
 }
 
-// Drags a grip far enough to pass the threshold and drops it over `target`.
 async function dragGrip(grip, target, beforeDrop) {
   const from = grip.getBoundingClientRect();
   const to = target.getBoundingClientRect();
@@ -197,9 +196,7 @@ async function dragAppend(button, distance) {
 
 // The editor's table carries its own chrome, which is not part of the document.
 function tableMarkup() {
-  const table = document
-    .querySelector(".ProseMirror .composer-table table")
-    .cloneNode(true);
+  const table = find(".ProseMirror .composer-table table").cloneNode(true);
   table.querySelectorAll(".composer-table__grip").forEach((el) => el.remove());
   table
     .querySelectorAll(
@@ -742,7 +739,7 @@ module(
 
     test("a canceled grip drag does not swallow the next click", async function (assert) {
       await setupRichEditor(assert, TABLE, { withMenus: true });
-      const grip = document.querySelectorAll(".composer-table__grip.--row")[1];
+      const grip = findAll(".composer-table__grip.--row")[1];
       const bounds = grip.getBoundingClientRect();
       const at = (y) => ({
         bubbles: true,
@@ -767,9 +764,7 @@ module(
         .dom('.fk-d-menu[data-identifier="composer-table-menu"]')
         .doesNotExist("canceling does not open a menu");
 
-      const currentGrip = document.querySelectorAll(
-        ".composer-table__grip.--row"
-      )[1];
+      const currentGrip = findAll(".composer-table__grip.--row")[1];
       currentGrip.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await waitFor('.fk-d-menu[data-identifier="composer-table-menu"]');
 
@@ -883,14 +878,12 @@ module(
         .dom(".composer-table__grip.is-visible")
         .doesNotExist("no pointer-specific handles are shown yet");
 
-      const cell = [
-        ...document.querySelectorAll(".ProseMirror .composer-table td"),
-      ].find((td) => td.textContent === "b2");
+      const cell = findAll(".ProseMirror .composer-table td").find(
+        (td) => td.textContent === "b2"
+      );
       await hoverCell(cell);
 
-      const shown = [
-        ...document.querySelectorAll(".composer-table__grip.is-visible"),
-      ];
+      const shown = findAll(".composer-table__grip.is-visible");
       assert.strictEqual(shown.length, 2, "one per axis, not the whole set");
 
       const cellOf = (grip) => grip.closest("th, td");
@@ -928,7 +921,7 @@ module(
 
       await selectCell(editor.view, 2, 1);
 
-      const grips = [...document.querySelectorAll(".composer-table__grip")];
+      const grips = findAll(".composer-table__grip");
       const exposed = grips.filter(
         (grip) => grip.getAttribute("aria-hidden") === "false"
       );
@@ -982,11 +975,9 @@ module(
 
       await pressGrip(findAll(".composer-table__grip.--row")[1]);
 
-      const edges = [
-        ...document.querySelectorAll(
-          ".ProseMirror .composer-table .is-structural-target"
-        ),
-      ].map((cell) =>
+      const edges = findAll(
+        ".ProseMirror .composer-table .is-structural-target"
+      ).map((cell) =>
         [...cell.classList]
           .filter((name) => name.startsWith("--edge"))
           .sort()
@@ -1000,12 +991,9 @@ module(
       );
     });
 
-    // A drag that ends away from the small append bar gets no click on it, so
-    // the flag that swallows the drag's click must not outlive the gesture.
     test("clicking an append bar after dragging it still adds one", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
-      const columns = () =>
-        document.querySelectorAll(".ProseMirror .composer-table th").length;
+      const columns = () => findAll(".ProseMirror .composer-table th").length;
       const button = find(".composer-table__append.--column");
       const rect = button.getBoundingClientRect();
       const at = (x) => ({
@@ -1266,7 +1254,7 @@ module(
       const [editor] = await setupRichEditor(assert, TABLE);
       const scroller = find(".composer-table");
       const inner = find(".composer-table__inner");
-      const grip = document.querySelectorAll(".composer-table__grip.--row")[1];
+      const grip = findAll(".composer-table__grip.--row")[1];
       Object.assign(scroller.style, {
         height: "70px",
         overflowY: "auto",
@@ -1913,12 +1901,8 @@ module(
     test("dragging a row grip past another row reorders them", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
 
-      const grips = [
-        ...document.querySelectorAll(".composer-table__grip.--row"),
-      ];
-      const rows = [
-        ...document.querySelectorAll(".ProseMirror .composer-table table tr"),
-      ];
+      const grips = findAll(".composer-table__grip.--row");
+      const rows = findAll(".ProseMirror .composer-table table tr");
       await dragGrip(grips[1], rows[2]);
 
       assert.strictEqual(

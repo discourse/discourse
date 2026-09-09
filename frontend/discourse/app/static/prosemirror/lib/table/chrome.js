@@ -19,12 +19,8 @@ const TOUCH_DRAG_THRESHOLD = 12;
 const TABLE_CHROME_KEY = new PluginKey("tableChrome");
 
 /**
- * The grips that sit above each column and beside each row.
- *
- * They are widget decorations inside the cells they belong to, so they track
- * cell geometry through CSS alone and never need measuring. Each grip resolves
- * its own row and column from its current position, which keeps them correct
- * after the grid is edited without rebuilding their DOM.
+ * Cell widgets position the grips through CSS. Resolving their row and column
+ * from the current document position keeps reused widgets correct after edits.
  */
 export function tableChrome(pluginParams) {
   const cache = new WeakMap();
@@ -393,15 +389,13 @@ function trackDrag(startEvent, context, target) {
     const landed = event.type === "pointercancel" ? null : dropIndex;
     stop();
 
-    if (dragging) {
-      if (landed !== null) {
-        const command =
-          kind === "row"
-            ? moveRow(index, landed, target.table)
-            : moveColumn(index, landed, target.table);
-        if (runCommand(view, command)) {
-          announceMove(context, index, landed);
-        }
+    if (dragging && landed !== null) {
+      const command =
+        kind === "row"
+          ? moveRow(index, landed, target.table)
+          : moveColumn(index, landed, target.table);
+      if (runCommand(view, command)) {
+        announceMove(context, index, landed);
       }
     }
   };
