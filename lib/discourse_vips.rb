@@ -75,4 +75,12 @@ module DiscourseVips
       timeout:,
     )
   end
+
+  def self.auto_orient(input_path:, output_path:, source_quality:, timeout:)
+    Client.call(
+      ["auto-orient", input_path, output_path, source_quality],
+      operation: :upload_auto_orient,
+      timeout:,
+    )
+  end
 end

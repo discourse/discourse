@@ -278,32 +278,35 @@ RSpec.describe UploadCreator do
         }
       end
 
-      it "honors every EXIF orientation when storing JPEG uploads" do
-        expected_color_grids.each do |orientation, expected_color_grid|
-          with_jpeg_orientation(
-            source_path: source_path,
-            orientation: orientation,
-          ) do |oriented_file|
-            upload =
-              described_class.new(
-                oriented_file,
-                "oriented-#{orientation}.jpg",
-                force_optimize: true,
-              ).create_for(user.id)
-            actual_color_grid =
-              stored_color_grid(
-                upload: upload,
-                rows: expected_color_grid.length,
-                columns: expected_color_grid.first.length,
-                palette: palette,
-              )
+      [false, true].each do |enable_vips|
+        it "honors every EXIF orientation with libvips #{enable_vips ? "enabled" : "disabled"}" do
+          global_setting :enable_vips_image_processing, enable_vips
+          expected_color_grids.each do |orientation, expected_color_grid|
+            with_jpeg_orientation(
+              source_path: source_path,
+              orientation: orientation,
+            ) do |oriented_file|
+              upload =
+                described_class.new(
+                  oriented_file,
+                  "oriented-#{orientation}.jpg",
+                  force_optimize: true,
+                ).create_for(user.id)
+              actual_color_grid =
+                stored_color_grid(
+                  upload: upload,
+                  rows: expected_color_grid.length,
+                  columns: expected_color_grid.first.length,
+                  palette: palette,
+                )
 
-            expect(upload).to be_persisted
-            expect(upload).to have_attributes(
-              width: expected_color_grid.first.length * 20,
-              height: expected_color_grid.length * 20,
-            )
-            expect(actual_color_grid).to eq(expected_color_grid)
+              expect(upload).to be_persisted
+              expect(upload).to have_attributes(
+                width: expected_color_grid.first.length * 20,
+                height: expected_color_grid.length * 20,
+              )
+              expect(actual_color_grid).to eq(expected_color_grid)
+            end
           end
         end
       end

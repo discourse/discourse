@@ -592,15 +592,33 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    ImageMagick.magick(
-      path,
-      "-auto-orient",
-      path,
-      operation: :upload_auto_orient,
-      read: [@file.path],
-      write: [@file.path, File.dirname(@file.path)],
-      timeout: MAX_FIX_ORIENTATION_TIME,
-    )
+    if GlobalSetting.enable_vips_image_processing
+      source_quality =
+        ImageMagick.image_quality(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+      oriented_file = Tempfile.new(%w[oriented .jpg])
+      begin
+        DiscourseVips.auto_orient(
+          input_path: @file.path,
+          output_path: oriented_file.path,
+          source_quality:,
+          timeout: MAX_FIX_ORIENTATION_TIME,
+        )
+        @file.respond_to?(:close!) ? @file.close! : @file.close
+        @file = oriented_file
+      ensure
+        oriented_file.close! unless @file.equal?(oriented_file)
+      end
+    else
+      ImageMagick.magick(
+        path,
+        "-auto-orient",
+        path,
+        operation: :upload_auto_orient,
+        read: [@file.path],
+        write: [@file.path, File.dirname(@file.path)],
+        timeout: MAX_FIX_ORIENTATION_TIME,
+      )
+    end
 
     extract_image_info!
   end

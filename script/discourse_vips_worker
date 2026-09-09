@@ -67,6 +67,12 @@ class DiscourseVipsWorker
         heif_to_jpeg(input_path: arguments[0], output_path: arguments[1])
       when "topic-og-render"
         topic_og_render(input_path: arguments[0], output_path: arguments[1])
+      when "auto-orient"
+        auto_orient(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          source_quality: arguments[2],
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -526,6 +532,33 @@ class DiscourseVipsWorker
       image
     end
     private_class_method :load_image_for_orientation
+
+    def self.auto_orient(input_path:, output_path:, source_quality:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        if File.expand_path(input_path) == File.expand_path(output_path) ||
+             (File.exist?(output_path) && File.identical?(input_path, output_path))
+          raise ArgumentError, "JPEG orientation requires separate input and output files"
+        end
+
+        quality = Integer(source_quality)
+        raise ArgumentError, "invalid JPEG quality" unless (1..100).cover?(quality)
+
+        block_loaders(allowed: %w[VipsForeignLoadJpeg])
+        begin
+          image = load_image_for_orientation(input_path:, loader: :jpegload)
+          image.autorot.jpegsave(
+            output_path,
+            Q: quality,
+            interlace: false,
+            subsample_mode: jpeg_subsample_mode(image:, input_path:),
+          )
+          nil
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :auto_orient
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)

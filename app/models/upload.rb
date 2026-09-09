@@ -451,15 +451,7 @@ class Upload < ActiveRecord::Base
   def target_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
-        ImageMagick.identify(
-          "-ping",
-          "-format",
-          "%Q",
-          local_path,
-          operation: :upload_quality_probe,
-          read: [local_path],
-          timeout: MAX_IDENTIFY_SECONDS,
-        ).to_i
+        ImageMagick.image_quality(input_path: local_path, timeout: MAX_IDENTIFY_SECONDS)
       rescue StandardError
         0
       end
