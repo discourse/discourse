@@ -402,6 +402,9 @@ jobs:
           pattern: flaky-test-reports-*
           delete-merged: true
 
+      - uses: actions/checkout@v7
+        if: steps.merge-flaky-test-reports.outputs.artifact-id != ''
+
       - name: Notify Patch Triage about flaky tests
         if: steps.merge-flaky-test-reports.outputs.artifact-id != ''
         continue-on-error: true
