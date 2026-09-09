@@ -309,8 +309,10 @@ begin
   # per process; PSS divides shared pages by the number of sharers, so the sum
   # of PSS across the cluster is the true aggregate footprint.
   memory = {}
-  `pgrep -fa pitchfork`.lines.each do |line|
+  processes = `ps -p #{pid} -o pid=,args=`.lines
+  processes.each do |line|
     proc_pid, title = line.strip.split(" ", 2)
+    processes.concat(`pgrep -P #{proc_pid} -fa pitchfork`.lines)
     role =
       case title
       when /worker\[(\d+)\]/
@@ -329,8 +331,8 @@ begin
   end
 
   worker_rss = memory.filter_map { |k, v| v["rss_kb"] if k.start_with?("worker") }
-  cluster_rss = memory.values.sum { |v| v["rss_kb"].to_i }
-  cluster_pss = memory.values.sum { |v| v["pss_kb"].to_i }
+  cluster_rss = memory.values.sum { |v| v["rss_kb"] }
+  cluster_pss = memory.values.sum { |v| v["pss_kb"] }
   memory["worker_avg_rss_kb"] = worker_rss.sum / worker_rss.size if worker_rss.any?
   memory["cluster_rss_kb"] = cluster_rss
   memory["cluster_pss_kb"] = cluster_pss
