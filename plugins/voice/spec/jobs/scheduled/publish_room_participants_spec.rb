@@ -104,9 +104,6 @@ RSpec.describe Jobs::PublishRoomParticipants do
   end
 
   describe "stale status sweep" do
-    # Only public rooms publish a status; a private room clears it instead.
-    fab!(:room) { Fabricate(:voice_room, public: true) }
-
     before do
       SiteSetting.enable_user_status = true
       SiteSetting.voice_auto_status_enabled = true
@@ -151,7 +148,7 @@ RSpec.describe Jobs::PublishRoomParticipants do
     end
 
     it "keeps a user's status while they are live in another active room" do
-      other_room = Fabricate(:voice_room, public: true)
+      other_room = Fabricate(:voice_room)
       Voice::ParticipantTracker.add(room.id, user1.id)
       Voice::UserStatusManager.set_voice_status(user1, other_room)
 
