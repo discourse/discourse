@@ -704,6 +704,8 @@ class PostsController < ApplicationController
 
     post.revise(current_user, wiki: params[:wiki])
 
+    return render_json_error(post) if post.errors.present?
+
     render body: nil
   end
 
