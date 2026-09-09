@@ -4,7 +4,7 @@ import { click, fillIn, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ReviewableItem from "discourse/components/reviewable/item";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { APPROVED, PENDING } from "discourse/models/reviewable";
+import { APPROVED, PENDING, REJECTED } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
@@ -27,6 +27,35 @@ function claimableReviewable(context, attrs = {}) {
 
 function plainReviewable(attrs = {}) {
   return { id: 456, topic: null, reviewable_scores: [], ...attrs };
+}
+
+function userReviewable(context, attrs = {}) {
+  return getOwner(context)
+    .lookup("service:store")
+    .createRecord("reviewable", {
+      id: 901,
+      type: "ReviewableUser",
+      status: PENDING,
+      topic: null,
+      reviewable_scores: [],
+      reviewable_histories: [],
+      claimed_by: null,
+      ...attrs,
+    });
+}
+
+function actionBundle(serverAction, label) {
+  return {
+    id: `901-${serverAction}`,
+    actions: [
+      {
+        id: `901-user-${serverAction}`,
+        action_name: `user-${serverAction}`,
+        server_action: serverAction,
+        label,
+      },
+    ],
+  };
 }
 
 function editableReviewable(id) {
@@ -101,6 +130,51 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
         `a.review-resources__link[href="https://meta.discourse.org/t/-/343541"]`
       )
       .exists();
+  });
+
+  test("keeps asking the approve question once a user reviewable is resolved but still approvable", async function (assert) {
+    const resolved = userReviewable(this, {
+      status: REJECTED,
+      bundled_actions: [actionBundle("approve_user", "Yes")],
+    });
+
+    await render(
+      <template><ReviewableItem @reviewable={{resolved}} /></template>
+    );
+
+    assert.dom(".review-item__aside-title").hasText("Approve this user?");
+  });
+
+  test("does not reuse the spam question once a user reviewable is resolved", async function (assert) {
+    const resolved = userReviewable(this, {
+      status: REJECTED,
+      reviewable_scores: [
+        {
+          reason_type: "suspect_user",
+          score_type: { type: "needs_approval", title: "Needs approval" },
+        },
+      ],
+      bundled_actions: [actionBundle("approve_user", "Yes")],
+    });
+
+    await render(
+      <template><ReviewableItem @reviewable={{resolved}} /></template>
+    );
+
+    assert.dom(".review-item__aside-title").hasText("Approve this user?");
+  });
+
+  test("falls back to the generic heading when a resolved user reviewable can only be scrubbed", async function (assert) {
+    const resolved = userReviewable(this, {
+      status: REJECTED,
+      bundled_actions: [actionBundle("scrub", "Scrub record")],
+    });
+
+    await render(
+      <template><ReviewableItem @reviewable={{resolved}} /></template>
+    );
+
+    assert.dom(".review-item__aside-title").hasText("Moderator actions");
   });
 
   test("does not render help resources when not required", async function (assert) {
