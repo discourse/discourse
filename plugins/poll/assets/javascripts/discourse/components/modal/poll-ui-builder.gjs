@@ -42,13 +42,18 @@ const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
-// the values the poll model already defaults to when the attribute is absent
+// the fixed values the poll model already defaults to when the attribute is
+// absent; a range has no fixed default, so it is worked out per poll
 const IMPLIED_ATTRS = {
   type: REGULAR_POLL_TYPE,
   results: ALWAYS_POLL_RESULT,
   public: "false",
   chartType: BAR_CHART_TYPE,
 };
+
+function isBlank(value) {
+  return String(value ?? "").trim() === "";
+}
 
 export default class PollUiBuilderModal extends Component {
   @service currentUser;
@@ -226,14 +231,8 @@ export default class PollUiBuilderModal extends Component {
         (existingPolls ? `poll${existingPolls.length + 1}` : null),
       type: this.pollType || null,
       results: this.pollResult || null,
-      min:
-        this.hasRange && Number.isFinite(Number(this.pollMin))
-          ? String(Number(this.pollMin))
-          : null,
-      max:
-        this.hasRange && Number(this.pollMax)
-          ? String(Number(this.pollMax))
-          : null,
+      min: this.#rangeAttr(this.pollMin),
+      max: this.#rangeAttr(this.pollMax),
       step: this.isNumber
         ? String(Math.max(Number(this.pollStep) || 1, 1))
         : null,
@@ -248,13 +247,28 @@ export default class PollUiBuilderModal extends Component {
 
     // a default is only worth writing if the poll already carried it, so
     // editing settings neither adds defaults nor drops what the author wrote
-    for (const [name, value] of Object.entries(IMPLIED_ATTRS)) {
+    for (const [name, value] of Object.entries(this.#impliedAttrs)) {
       if (poll && attrs[name] === value && !poll[name]) {
         attrs[name] = null;
       }
     }
 
     return attrs;
+  }
+
+  // an absent range is read off the poll itself, so pinning it here would stop
+  // the bounds following the options the author goes on to add or remove
+  get #impliedAttrs() {
+    return {
+      ...IMPLIED_ATTRS,
+      min: "1",
+      max: String(
+        this.isNumber
+          ? this.siteSettings.poll_maximum_options
+          : this.pollOptionsCount
+      ),
+      step: "1",
+    };
   }
 
   get minNumOfOptionsValidation() {
@@ -292,14 +306,18 @@ export default class PollUiBuilderModal extends Component {
     const pollMax = parseInt(this.pollMax, 10) || 0;
     const pollStep = parseInt(this.pollStep, 10) || 0;
 
-    if (pollMin < 0) {
+    if (isBlank(this.pollMin) || pollMin < 0) {
       return {
         failed: true,
         reason: i18n("poll.ui_builder.help.invalid_min_value"),
       };
     }
 
-    if (pollMax < 0 || (this.isMultiple && pollMax > this.pollOptionsCount)) {
+    if (
+      isBlank(this.pollMax) ||
+      pollMax < 0 ||
+      (this.isMultiple && pollMax > this.pollOptionsCount)
+    ) {
       return {
         failed: true,
         reason: i18n("poll.ui_builder.help.invalid_max_value"),
@@ -481,6 +499,15 @@ export default class PollUiBuilderModal extends Component {
         this.pollMax = this.pollOptionsCount;
       }
     }
+  }
+
+  // an emptied field is not a zero, and a zero is a bound like any other
+  #rangeAttr(value) {
+    if (!this.hasRange || isBlank(value) || !Number.isFinite(Number(value))) {
+      return null;
+    }
+
+    return String(Number(value));
   }
 
   _comboboxOptions(startIndex, endIndex) {

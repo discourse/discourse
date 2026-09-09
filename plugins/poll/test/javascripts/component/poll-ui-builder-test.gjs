@@ -96,6 +96,76 @@ module("Component | PollUiBuilder", function (hooks) {
     );
   });
 
+  test("editing leaves a range the poll did not carry to the options", async function (assert) {
+    const results = await setupBuilder({ type: "multiple", optionCount: 2 });
+
+    await click(".insert-poll");
+
+    assert.strictEqual(
+      results[0].min,
+      null,
+      "writes no minimum, so one option stays enough"
+    );
+    assert.strictEqual(
+      results[0].max,
+      null,
+      "and no maximum, so a later option is still selectable"
+    );
+  });
+
+  test("editing keeps a range the poll spelled out", async function (assert) {
+    const results = await setupBuilder({
+      type: "multiple",
+      optionCount: 3,
+      min: "1",
+      max: "2",
+    });
+
+    await click(".insert-poll");
+
+    assert.strictEqual(results[0].min, "1", "keeps the minimum it carried");
+    assert.strictEqual(results[0].max, "2", "and the maximum");
+  });
+
+  test("editing a number poll leaves its implied range out", async function (assert) {
+    const results = await setupBuilder({ type: "number" });
+
+    await click(".insert-poll");
+
+    assert.strictEqual(results[0].min, null, "writes no minimum");
+    assert.strictEqual(
+      results[0].max,
+      null,
+      "and no maximum, so the range still follows the setting"
+    );
+    assert.strictEqual(results[0].step, null, "nor a step of one");
+  });
+
+  test("editing keeps a number poll's own step", async function (assert) {
+    const results = await setupBuilder({ type: "number", step: "5" });
+
+    await click(".insert-poll");
+
+    assert.strictEqual(results[0].step, "5", "keeps the step it carried");
+  });
+
+  test("a range field cannot be dropped by emptying it", async function (assert) {
+    await setupBuilder({ type: "number", min: "1", max: "5", step: "1" });
+
+    assert.dom(".insert-poll").isEnabled("the poll starts out saveable");
+
+    await fillIn(".poll-options-max", "");
+    assert
+      .dom(".insert-poll")
+      .isDisabled("an empty maximum is refused, not read as having none");
+
+    await fillIn(".poll-options-max", "5");
+    await fillIn(".poll-options-min", "");
+    assert
+      .dom(".insert-poll")
+      .isDisabled("and an empty minimum is not read as zero");
+  });
+
   test("editing a ranked choice poll leaves range attributes out", async function (assert) {
     const results = await setupBuilder({
       type: "ranked_choice",
